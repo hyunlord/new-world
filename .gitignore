@@ -4,6 +4,10 @@
 *.import
 export_presets.cfg
 
+# OMC
+.omc/
+.omc*
+
 # Windows
 Thumbs.db
 desktop.ini
