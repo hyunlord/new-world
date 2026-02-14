@@ -3,8 +3,7 @@ Write-Host "[gate] repo:" (Get-Location)
 
 git status --porcelain | Out-Host
 
-# TODO: 아래는 프로젝트 스택에 맞게 하나만 남기면 됨.
-# Node(pnpm) 예시:
+# Node (pnpm) gate
 if (Test-Path "pnpm-lock.yaml") {
   if (!(Get-Command pnpm -ErrorAction SilentlyContinue)) { throw "pnpm not found" }
   pnpm install --frozen-lockfile
@@ -13,7 +12,7 @@ if (Test-Path "pnpm-lock.yaml") {
   exit 0
 }
 
-# Python(uv) 예시:
+# Python (uv) gate
 if (Test-Path "uv.lock") {
   if (!(Get-Command uv -ErrorAction SilentlyContinue)) { throw "uv not found (pip install -U uv)" }
   uv sync --frozen --all-extras
@@ -23,5 +22,4 @@ if (Test-Path "uv.lock") {
   exit 0
 }
 
-Write-Host "[gate] No known lockfile found (pnpm-lock.yaml or uv.lock). Configure gate.ps1"
-exit 1
+throw "No pnpm-lock.yaml or uv.lock found. Configure scripts/gate.ps1 for this repo."
