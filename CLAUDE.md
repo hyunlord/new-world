@@ -103,9 +103,11 @@ Player observes/intervenes as god; AI agents autonomously develop civilization.
 ```
 scripts/core/       — SimulationEngine, WorldData, EntityManager, EventLogger, SimulationBus, GameConfig
                       ResourceMap, Pathfinder, BuildingData, BuildingManager, SaveManager, EntityData
+                      SettlementData, SettlementManager
 scripts/ai/         — BehaviorSystem (Utility AI with job bonuses, resource/building awareness)
 scripts/systems/    — NeedsSystem, MovementSystem (A*), GatheringSystem, ConstructionSystem,
-                      BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem, PopulationSystem
+                      BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem, PopulationSystem,
+                      MigrationSystem
 scripts/ui/         — WorldRenderer, EntityRenderer (job shapes), BuildingRenderer, CameraController, HUD
 scenes/main/        — Main scene (main.tscn + main.gd)
 resources/          — Assets
@@ -144,7 +146,8 @@ Main._process(delta) → sim_engine.update(delta)
   ├ GatheringSystem      (prio=25, every 3 ticks)   — harvest tiles → entity inventory
   ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress from build_ticks config
   ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + auto-eat on arrival
-  └ PopulationSystem     (prio=50, every 60 ticks)  — births (relaxed) + natural death
+  ├ PopulationSystem     (prio=50, every 60 ticks)  — births (relaxed) + natural death
+  └ MigrationSystem      (prio=60, every 200 ticks) — settlement split + explorer dispatch
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
@@ -154,7 +157,8 @@ EntityManager (Dictionary) — entity lifecycle, inventory, jobs, pathfinding ca
 ResourceMap (PackedFloat32Arrays) — per-tile food/wood/stone
 BuildingManager (Dictionary) — building placement, queries, serialization
 Pathfinder — A* with Chebyshev heuristic, 8-dir, max 200 steps
-SaveManager — JSON save/load (F5/F9)
+SaveManager — JSON save/load (F5/F9, includes settlements)
+SettlementManager — settlement lifecycle, membership, nearest-lookup
 ```
 
 **Never** call UI from simulation code. **Never** call one system from another directly. Everything goes through SimulationBus.
@@ -553,6 +557,14 @@ When the user gives a feature request:
 - [x] Full system wiring (9 systems registered in main.gd)
 - [x] All tickets (300-440)
 - [x] Balance fix: survival → growth → economy loop (T-500..T-550)
+- [x] Visual + population fix (T-600 series)
+- [x] Settlement system (SettlementData, SettlementManager, migration triggers)
+- [x] MigrationSystem (overcrowding/food scarcity/explorer dispatch)
+- [x] 3-level zoom LOD with hysteresis (entity + building renderers)
+- [x] Resource overlay enhancement (stronger colors) + Tab toggle
+- [x] Save/Load settlement support (F5/F9)
+- [x] HUD settlement population breakdown + toast notifications
+- [x] All tickets (T-400..T-490) — Phase 1 Finale complete
 
 ## Phase 1 Balance Values (T-500..T-550)
 
@@ -611,6 +623,77 @@ Key tuning parameters that ensure the survival → building → growth loop work
 | entity_ate | entity_id, entity_name, hunger_after, tick |
 | auto_eat | entity_id, entity_name, amount, hunger_after, tick |
 | job_reassigned | entity_id, entity_name, from_job, to_job, tick |
+
+## Phase 1 Finale — Settlement + LOD + Save/Load (T-400 series)
+
+### Settlement System
+
+SettlementData (RefCounted, NO class_name) holds id, center, founding_tick, member_ids, building_ids.
+SettlementManager manages lifecycle: create, query, add/remove members/buildings, nearest lookup (Manhattan distance), serialization.
+
+- EntityData.settlement_id and BuildingData.settlement_id link entities/buildings to settlements
+- Founding settlement created at world center on game start
+- Newborns assigned to nearest settlement (PopulationSystem)
+- Buildings inherit builder's settlement_id (BehaviorSystem)
+
+### Migration System
+
+SimulationSystem priority=60, tick_interval=MIGRATION_TICK_INTERVAL (200).
+
+**Triggers (any one):**
+1. Overcrowded: settlement pop > shelters × 8
+2. Food scarce: food in radius 20 < pop × 0.5
+3. Explorer: pop > 40 AND 5% chance per check
+
+**Process:**
+1. Select 3-5 migrants sorted by social (ascending), builder guaranteed
+2. Search 20 random candidate sites in radius 30-80, min 25 tiles from existing settlements
+3. Create new settlement, reassign migrants, set action="migrate"
+
+**Events:** migration_started, settlement_founded
+
+### Zoom LOD (3 levels with hysteresis)
+
+| LOD | Zoom range | Entity | Building |
+|-----|-----------|--------|----------|
+| 0 (strategic) | < 1.3 | 1px white dot | 3px colored block |
+| 1 (town) | 1.3–4.2 | job shapes | shapes + border + progress |
+| 2 (detail) | > 4.2 | shapes + name | shapes + storage text |
+
+Hysteresis: 0↔1 boundary 1.3/1.7, 1↔2 boundary 3.8/4.2
+
+### Resource Overlay Colors
+- Food: bright yellow `Color(1.0, 0.9, 0.1)` alpha 0.3–0.6
+- Wood: emerald `Color(0.0, 0.7, 0.3)` alpha 0.2–0.5
+- Stone: sky blue `Color(0.5, 0.7, 1.0)` alpha 0.3–0.5
+
+### Key Bindings
+| Key | Action |
+|-----|--------|
+| Tab | Toggle resource overlay ON/OFF |
+| F5 | Quick save → user://quicksave.json |
+| F9 | Quick load |
+
+### Save/Load JSON Schema
+```json
+{
+  "version": 1,
+  "tick": 12345,
+  "speed_index": 2,
+  "entities": [ { ...EntityData.to_dict()... } ],
+  "buildings": [ { ...BuildingData.to_dict()... } ],
+  "settlements": [ { "id", "center_x", "center_y", "founding_tick", "member_ids", "building_ids" } ],
+  "resource_map": { "width", "height", "food": [...], "wood": [...], "stone": [...] }
+}
+```
+
+### Phase 1 Finale Events
+| Event | Fields |
+|-------|--------|
+| migration_started | settlement_id, migrant_ids, destination_x, destination_y, trigger, tick |
+| settlement_founded | settlement_id, center_x, center_y, founder_count, tick |
+| game_saved | path, tick |
+| game_loaded | path, tick |
 
 ## Known Limitations (Phase 1)
 

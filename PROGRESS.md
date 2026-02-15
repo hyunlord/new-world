@@ -99,3 +99,74 @@ Phase 1 밸런스 수정 후 시뮬레이션은 안정적이지만 시각적/성
 - 건물 시각적 식별 가능 (13px 채움 도형 vs 에이전트 3-5px)
 - 자원 밀집 지역 RGBA 오버레이로 구분 가능
 - 로그 노이즈 제거, 채집 요약 50틱 주기
+
+---
+
+## Phase 1 Finale — Settlement + LOD + Save/Load (T-400 series)
+
+### Context
+Phase 1 시뮬레이션은 안정적이지만 마무리 부족:
+- 건물/에이전트가 전부 한 곳에 몰려있음
+- 줌 아웃 시 시각 구분 약함
+- 자원 오버레이가 바이옴에 묻힘
+- 저장/로드에 정착지 미포함
+
+### Tickets
+| Ticket | Title | Action | Reason |
+|--------|-------|--------|--------|
+| T-400 | GameConfig 정착지/이주 상수 | DIRECT | game_config.gd 상수 추가, 다른 티켓의 기반 |
+| T-410 | Settlement data + manager | CODEX | 2개 신규 파일, 자체 완결적 |
+| T-420 | Entity/Building settlement_id | CODEX | entity_data + building_data 필드 추가 |
+| T-430 | Migration system | CODEX | 신규 파일, SimulationSystem 패턴 |
+| T-440 | Entity renderer LOD | CODEX | entity_renderer.gd 단일 파일, 3단계 LOD |
+| T-450 | Building renderer LOD | CODEX | building_renderer.gd 단일 파일, 3단계 LOD |
+| T-460 | Resource overlay 색상 강화 | CODEX | world_renderer.gd 색상 변경 |
+| T-470 | Save/Load settlement 지원 | CODEX | save_manager.gd 파라미터 추가 |
+| T-480 | HUD 정착지 + 토스트 | CODEX | hud.gd 정착지 인구 + 토스트 시스템 |
+| T-490 | Integration wiring | DIRECT | main.gd + behavior_system 통합 배선 |
+
+### Dispatch ratio: 8/10 = 80% ✅ (target: >60%)
+
+### 변경 파일 (14개)
+| File | Changes |
+|------|---------|
+| game_config.gd | 정착지/이주 상수 10개 (거리, 인구, 그룹 크기, 확률) |
+| settlement_data.gd | **신규** — RefCounted, id/center/founding_tick/member_ids/building_ids, 직렬화 |
+| settlement_manager.gd | **신규** — create/get/nearest/add_member/remove_member/add_building, save/load |
+| migration_system.gd | **신규** — SimulationSystem priority=60, 3가지 이주 트리거, 탐험대 파견 |
+| entity_data.gd | settlement_id 필드 + 직렬화 |
+| building_data.gd | settlement_id 필드 + 직렬화 |
+| entity_renderer.gd | 3단계 LOD (전략=1px, 마을=도형, 디테일=이름), 히스테리시스 ±0.2 |
+| building_renderer.gd | 3단계 LOD (전략=3px, 마을=도형+테두리, 디테일=저장량 텍스트) |
+| world_renderer.gd | 자원 색상 강화 (노랑/하늘/에메랄드), Tab 토글 함수 |
+| save_manager.gd | settlement_manager 파라미터 추가, 정착지 직렬화 |
+| hud.gd | 정착지별 인구 (S1:52 S2:35), 토스트 시스템 (저장/로드/신규 정착지) |
+| behavior_system.gd | migrate 스킵, settlement_manager 연동, 건물 settlement_id 배정 |
+| population_system.gd | 신생아 정착지 배정 (nearest settlement) |
+| main.gd | SettlementManager/MigrationSystem 초기화, Tab 토글, 건국 정착지 |
+
+### 키 바인딩 추가
+- **Tab**: 자원 오버레이 ON/OFF 토글
+- **F5/F9**: 정착지 데이터 포함 저장/로드
+
+### 줌 LOD 기준
+| LOD | 줌 범위 | 에이전트 | 건물 |
+|-----|---------|---------|------|
+| 0 (전략) | < 1.3 | 1px 흰 점 | 3px 색상 블록 |
+| 1 (마을) | 1.3~4.2 | 직업별 도형 | 도형+테두리+진행률 |
+| 2 (디테일) | > 4.2 | 도형+이름 | 도형+저장량 텍스트 |
+
+히스테리시스: 0↔1 경계 1.3/1.7, 1↔2 경계 3.8/4.2
+
+### 이주 트리거
+1. **과밀**: 인구 > 쉘터 × 8
+2. **식량 부족**: 반경 20타일 식량 < 인구 × 0.5
+3. **탐험**: 인구 > 40 AND 5% 확률
+
+### 결과
+- PR #8 merged → gate PASS ✅ (main `603c7e5`)
+- 24 files changed, 779 insertions(+), 40 deletions(-)
+- 정착지 분산 시스템 완성 (이주 그룹에 builder 보장)
+- 3단계 줌 LOD로 전략~디테일 뷰 전환
+- 저장/로드에 정착지 데이터 포함
+- HUD 토스트 알림 시스템
