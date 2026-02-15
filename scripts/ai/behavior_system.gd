@@ -51,6 +51,13 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		"socialize": _urgency_curve(social_deficit) * 0.8,
 	}
 
+	# ── Hunger override: ALL jobs prioritize food when starving ──
+	if entity.hunger < 0.3:
+		scores["gather_food"] = 1.0
+		# If entity has food in inventory, just eat (will auto-eat in needs_system)
+		if entity.inventory.get("food", 0.0) > 0.5:
+			scores["gather_food"] = 0.5  # lower because auto-eat handles it
+
 	# Resource gathering (requires resource_map)
 	if _resource_map != null:
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
@@ -60,13 +67,17 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 
 	# Building-related actions (requires building_manager)
 	if _building_manager != null:
-		# Deliver to stockpile when carrying a lot
-		if entity.get_total_carry() > 7.0:
+		# Deliver to stockpile — gradual threshold
+		var carry: float = entity.get_total_carry()
+		if carry > 3.0:
 			var stockpile = _building_manager.get_nearest_building(
 				entity.position.x, entity.position.y, "stockpile", true
 			)
 			if stockpile != null:
-				scores["deliver_to_stockpile"] = 0.9
+				if carry > 6.0:
+					scores["deliver_to_stockpile"] = 0.9
+				else:
+					scores["deliver_to_stockpile"] = 0.6
 
 		# Build when there are unbuilt buildings or we can place new ones
 		var unbuilt = _find_unbuilt_building(entity.position)
@@ -94,6 +105,13 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		"builder":
 			if scores.has("build"):
 				scores["build"] *= 1.5
+			# Builder should gather wood when can't afford any building
+			if _building_manager != null and _should_place_building():
+				if not _builder_can_afford_anything(entity):
+					if scores.has("gather_wood"):
+						scores["gather_wood"] *= 2.0
+					elif _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 20):
+						scores["gather_wood"] = 0.7
 		"miner":
 			if scores.has("gather_stone"):
 				scores["gather_stone"] *= 1.5
@@ -301,11 +319,21 @@ func _should_place_building() -> bool:
 		return true
 	var alive_count: int = _entity_manager.get_alive_count()
 	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
-	if shelters.size() * 4 < alive_count:
+	if shelters.size() * 6 < alive_count:
 		return true
 	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
 	if campfires.is_empty():
 		return true
+	return false
+
+
+func _builder_can_afford_anything(entity: RefCounted) -> bool:
+	var btypes: Array = ["stockpile", "campfire", "shelter"]
+	for i in range(btypes.size()):
+		var btype: String = btypes[i]
+		var cost: Dictionary = GameConfig.BUILDING_TYPES[btype]["cost"]
+		if _can_afford_building(entity, cost):
+			return true
 	return false
 
 
@@ -321,7 +349,7 @@ func _try_place_building(entity: RefCounted) -> RefCounted:
 
 	if stockpiles.is_empty():
 		btype = "stockpile"
-	elif shelters.size() * 4 < alive_count:
+	elif shelters.size() * 6 < alive_count:
 		btype = "shelter"
 	elif campfires.is_empty():
 		btype = "campfire"

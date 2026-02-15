@@ -30,16 +30,29 @@ func execute_tick(tick: int) -> void:
 		# Age
 		entity.age += 1
 
+		# Auto-eat from inventory when hungry
+		if entity.hunger < GameConfig.HUNGER_EAT_THRESHOLD:
+			var food_in_inv: float = entity.inventory.get("food", 0.0)
+			if food_in_inv > 0.0:
+				var eat_amount: float = minf(food_in_inv, 2.0)
+				entity.remove_item("food", eat_amount)
+				entity.hunger += eat_amount * GameConfig.FOOD_HUNGER_RESTORE
+
 		# Clamp all needs
 		entity.hunger = clampf(entity.hunger, 0.0, 1.0)
 		entity.energy = clampf(entity.energy, 0.0, 1.0)
 		entity.social = clampf(entity.social, 0.0, 1.0)
 
-		# Starvation check
+		# Starvation check with grace period
 		if entity.hunger <= 0.0:
-			emit_event("entity_starved", {
-				"entity_id": entity.id,
-				"entity_name": entity.entity_name,
-				"tick": tick,
-			})
-			_entity_manager.kill_entity(entity.id, "starvation")
+			entity.starving_timer += 1
+			if entity.starving_timer >= GameConfig.STARVATION_GRACE_TICKS:
+				emit_event("entity_starved", {
+					"entity_id": entity.id,
+					"entity_name": entity.entity_name,
+					"starving_ticks": entity.starving_timer,
+					"tick": tick,
+				})
+				_entity_manager.kill_entity(entity.id, "starvation")
+		else:
+			entity.starving_timer = 0

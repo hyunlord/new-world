@@ -136,15 +136,15 @@ scripts/            — gate.sh (build verification)
 
 ```
 Main._process(delta) → sim_engine.update(delta)
-  ├ ResourceRegenSystem  (prio=5,  every 100 ticks) — food/wood regen by biome
-  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs by ratio
-  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
+  ├ ResourceRegenSystem  (prio=5,  every 50 ticks)  — food/wood regen by biome
+  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs + dynamic rebalancing
+  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, auto-eat, starvation grace
   ├ BuildingEffectSystem (prio=15, every 10 ticks)  — campfire social, shelter energy
-  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + job bonuses + building AI
+  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + hunger override + builder wood fallback
   ├ GatheringSystem      (prio=25, every 3 ticks)   — harvest tiles → entity inventory
-  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress += 0.05
-  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + greedy fallback
-  └ PopulationSystem     (prio=50, every 100 ticks) — births + natural death
+  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress from build_ticks config
+  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + auto-eat on arrival
+  └ PopulationSystem     (prio=50, every 60 ticks)  — births (relaxed) + natural death
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
@@ -165,13 +165,14 @@ SaveManager — JSON save/load (F5/F9)
 
 Lead engineer: architecture, integration, refactors, data model boundaries.
 
+**Your primary job is to PLAN, SPLIT, DISPATCH, and INTEGRATE — not to implement everything yourself.**
+
 ## Worktree Rules
 
 | Worktree | Purpose | Agent |
 |----------|---------|-------|
 | `new-world-wt/lead` | Architecture, integration, refactors | Claude Code |
 | `new-world-wt/t-<id>-<slug>` | Isolated implementation tickets | Codex Pro (via CLI) |
-| `new-world-wt/gate` | Build verification | gate.sh |
 
 ## Guardrails
 
@@ -183,12 +184,42 @@ Lead engineer: architecture, integration, refactors, data model boundaries.
 
 ---
 
-## Codex Pro Auto-Dispatch
+## Codex Pro Auto-Dispatch [MANDATORY]
 
 Claude Code delegates implementation tickets to Codex Pro via Codex CLI.
-**This is the primary method for getting tickets implemented. Use it for all isolated implementation work.**
 
-### Dispatch a ticket
+### ⚠️ CRITICAL RULE: Default is DISPATCH, not implement directly.
+
+When you create tickets, the DEFAULT action is to dispatch them to Codex.
+You may only implement directly if ALL of the following are true:
+1. The change modifies shared interfaces (SimulationBus signals, GameConfig schema, EntityManager API)
+2. The change is pure integration wiring (<50 lines, connecting already-implemented pieces)
+3. The change cannot be split into any smaller independent unit
+
+If even ONE file in the ticket is a standalone change, split it out and dispatch that part.
+
+**You MUST justify in writing why you are NOT dispatching a ticket.**
+Write this justification in PROGRESS.md before implementing directly:
+```
+[DIRECT] t-XXX: <reason why this cannot be dispatched>
+```
+If you cannot articulate a clear reason, dispatch it.
+
+### How to split "cross-system" work for dispatch
+
+Most "cross-system" features CAN be split. "This is cross-system" is NOT a valid reason to skip dispatch.
+
+Example: "Add resource gathering system"
+- ❌ WRONG: "This is cross-system, I'll do it all myself"
+- ✅ RIGHT: Split into:
+  - t-301: Add ResourceMap data class (standalone new file) → 🟢 DISPATCH
+  - t-302: Add GatheringSystem (standalone new file, uses ResourceMap interface) → 🟢 DISPATCH
+  - t-303: Wire ResourceMap + GatheringSystem into main.gd, add signals → 🔴 DIRECT (integration)
+  - t-304: Add resource gathering tests → 🟢 DISPATCH
+
+The ONLY parts you implement directly are signal definitions and final wiring (usually <50 lines each).
+
+### Dispatch command
 
 ```bash
 bash tools/codex_dispatch.sh tickets/<ticket-file>.md [branch-name]
@@ -204,8 +235,9 @@ bash tools/codex_dispatch.sh tickets/t-010-fix-input.md
 bash tools/codex_dispatch.sh tickets/t-020-needs-tuning.md t/020-needs-tuning
 
 # Parallel dispatch (only when file scopes don't overlap, max 3)
-bash tools/codex_dispatch.sh tickets/t-010-fix-input.md &
-bash tools/codex_dispatch.sh tickets/t-011-fix-logging.md &
+bash tools/codex_dispatch.sh tickets/t-301-resource-map.md &
+bash tools/codex_dispatch.sh tickets/t-302-gathering-system.md &
+bash tools/codex_dispatch.sh tickets/t-304-gathering-tests.md &
 wait
 ```
 
@@ -221,13 +253,26 @@ bash tools/codex_status.sh
 bash tools/codex_apply.sh
 ```
 
-### Dispatch rules
+### Dispatch decision tree
 
-- **Always dispatch** isolated implementation tickets (single-file or single-system changes)
-- **Never dispatch** architecture changes, cross-system refactors, or shared interface modifications — do those in lead worktree directly
-- Max 3 parallel dispatches if file scopes don't overlap
-- If Codex fails gate, either fix locally or rewrite the ticket and re-dispatch
-- After applying Codex results, always run gate to verify integration
+```
+New ticket created
+  │
+  ├─ Pure new file? (new system, new data class, new test)
+  │   └─ ALWAYS DISPATCH. No exceptions.
+  │
+  ├─ Modifies ONLY shared interfaces? (signals, schemas, base APIs)
+  │   └─ Implement directly. Log reason in PROGRESS.md.
+  │
+  ├─ Modifies shared interfaces AND implementation files?
+  │   └─ SPLIT: shared interface changes → direct, implementation → dispatch
+  │
+  ├─ Single-file modification? (tuning, bug fix, config change)
+  │   └─ ALWAYS DISPATCH. No exceptions.
+  │
+  └─ Integration wiring? (<50 lines, connecting dispatched work)
+      └─ Implement directly. This is your core job.
+```
 
 ---
 
@@ -269,26 +314,59 @@ Files/dirs to touch:
 
 When the user gives a feature request:
 
-1. **Plan** — Create an implementation plan and split into 3–7 tickets. Surface any architectural decisions or tradeoffs before starting.
+1. **Plan** — Create an implementation plan and split into 5–10 tickets.
+   - Each ticket should target 1–2 files maximum.
+   - If a ticket touches 3+ files, split it further.
+   - Surface any architectural decisions or tradeoffs before starting.
+
 2. **Sequence** — Order tickets by dependency. Identify which can parallelize.
-3. **Delegate** — For isolated implementation tickets, dispatch to Codex Pro:
-   ```bash
-   bash tools/codex_dispatch.sh tickets/<ticket>.md
+
+3. **Classify each ticket**:
+   - 🟢 DISPATCH: New file, single system change, test addition, config change, bug fix
+   - 🔴 DIRECT: Shared interface modification, signal schema change, integration wiring (<50 lines)
+   - **If >40% of tickets are DIRECT, you have split them wrong. Re-split until dispatch ratio ≥60%.**
+
+4. **Log classifications** in PROGRESS.md:
    ```
-   - Dispatch up to 3 non-overlapping tickets in parallel
-   - Monitor with: `bash tools/codex_status.sh`
-   - Apply results: `bash tools/codex_apply.sh`
-4. **Implement directly** — Keep architecture/integration/refactor work in the lead worktree. Do not dispatch these to Codex.
-5. **Gate each ticket** — Run gate after each ticket lands:
+   | Ticket | Action | Reason |
+   |--------|--------|--------|
+   | t-301 | 🟢 DISPATCH | standalone new file |
+   | t-302 | 🟢 DISPATCH | single system, no shared interface |
+   | t-303 | 🔴 DIRECT | integration wiring, connects 3 systems |
+   | t-304 | 🟢 DISPATCH | test file only |
+   
+   Dispatch ratio: 3/4 = 75% ✅
+   ```
+
+5. **Dispatch first, then direct** — Send ALL 🟢 tickets to Codex BEFORE starting 🔴 work:
    ```bash
-   cd ~/github/new-world-wt/gate
-   git fetch origin
-   git reset --hard origin/lead/main
+   # Dispatch parallelizable tickets
+   bash tools/codex_dispatch.sh tickets/t-301-resource-map.md &
+   bash tools/codex_dispatch.sh tickets/t-302-gathering-system.md &
+   bash tools/codex_dispatch.sh tickets/t-304-gathering-tests.md &
+   wait
+   
+   # While Codex works on those, implement 🔴 DIRECT tickets
+   # (signal definitions, interface changes, wiring)
+   
+   # When Codex finishes, apply results
+   bash tools/codex_apply.sh
+   ```
+
+6. **Gate** — Run gate after each integration:
+   ```bash
    bash scripts/gate.sh
    ```
-6. **Fix failures** — If gate fails, analyze, fix, and re-run until it passes. If a Codex ticket caused the failure, either fix locally or rewrite and re-dispatch.
-7. **Do not ask** the user for additional commands. Only ask questions if something is truly ambiguous; otherwise make reasonable defaults.
-8. **Summarize** — End by listing what changed (files, systems, signals) and how to run the demo end-to-end.
+
+7. **Fix failures** — If gate fails, analyze and fix. If a Codex ticket caused it, fix locally or re-dispatch with a clearer ticket.
+
+8. **Do not ask** the user for additional commands. Make reasonable defaults.
+
+9. **Summarize** — End by listing:
+   - Dispatch ratio (🟢 dispatched / total tickets)
+   - What was dispatched vs implemented directly (with reasons for each DIRECT)
+   - Files changed
+   - How to run the demo
 
 ---
 
@@ -325,6 +403,44 @@ When the user gives a feature request:
 - [x] SaveManager (JSON save/load, F5/F9 quick save/load)
 - [x] Full system wiring (9 systems registered in main.gd)
 - [x] All tickets (300-440)
+- [x] Balance fix: survival → growth → economy loop (T-500..T-550)
+
+## Phase 1 Balance Values (T-500..T-550)
+
+Key tuning parameters that ensure the survival → building → growth loop works:
+
+| Parameter | Before | After | Rationale |
+|-----------|--------|-------|-----------|
+| HUNGER_DECAY_RATE | 0.005 | 0.002 | Entities survive ~100s at 1x, not 40s |
+| ENERGY_DECAY_RATE | 0.003 | 0.002 | Balanced with hunger |
+| STARVATION_GRACE_TICKS | 0 (instant) | 50 | Recovery chance before death |
+| FOOD_HUNGER_RESTORE | 0.2 | 0.3 | Each food unit restores 30% hunger |
+| HUNGER_EAT_THRESHOLD | n/a | 0.5 | Auto-eat triggers at 50% hunger |
+| GRASSLAND food | 3-5 | 5-10 | Abundant food near spawn |
+| FOREST food | 1-2 | 2-5 | Foraging possible in forests |
+| FOOD_REGEN_RATE | 0.5 | 1.0 | Food tiles recover faster |
+| RESOURCE_REGEN_INTERVAL | 100 | 50 | Regen twice as often |
+| GATHER_AMOUNT | 1.0 | 2.0 | Harvest 2x per gather tick |
+| Stockpile cost | wood:3 | wood:2 | First building achievable |
+| Shelter cost | wood:5+stone:2 | wood:4+stone:1 | Accessible housing |
+| Campfire cost | wood:2 | wood:1 | Cheap social building |
+| JOB_RATIOS gatherer | 0.4 | 0.5 | Food majority |
+| Small pop gatherer | 0.7 | 0.8 | Survival mode |
+| Deliver threshold | 7.0 | 3.0 | Deliver earlier |
+| Birth food threshold | pop*2 | pop*1 | Easier growth |
+| Shelter capacity | 4 | 6 | More per shelter |
+| BIRTH_FOOD_COST | 5.0 | 3.0 | Cheaper births |
+| POPULATION_TICK_INTERVAL | 100 | 60 | Check births more often |
+
+### Balance Mechanics
+
+- **Auto-eat**: NeedsSystem eats from inventory when hunger < 0.5. MovementSystem also auto-eats on any action completion.
+- **Hunger override**: ALL jobs force gather_food score=1.0 when hunger < 0.3 (behavior_system).
+- **Builder wood fallback**: Builders gather wood when they can't afford any building.
+- **Dynamic job rebalancing**: JobAssignmentSystem shifts to 60% gatherers during food crisis.
+- **Starvation grace**: 50-tick window at hunger=0 before death, allowing auto-eat or gather_food to save the entity.
+- **Construction uses config**: build_progress calculated from BUILDING_TYPES.build_ticks, not hardcoded.
+- **Population growth without shelters**: Up to 25 pop allowed without shelter buildings.
 
 ## Phase 1 Events
 
@@ -343,6 +459,9 @@ When the user gives a feature request:
 | entity_died_natural | entity_id, entity_name, age, tick |
 | game_saved | path, tick |
 | game_loaded | path, tick |
+| entity_ate | entity_id, entity_name, hunger_after, tick |
+| auto_eat | entity_id, entity_name, amount, hunger_after, tick |
+| job_reassigned | entity_id, entity_name, from_job, to_job, tick |
 
 ## Known Limitations (Phase 1)
 
@@ -371,3 +490,6 @@ When the user gives a feature request:
 11. **Writing Codex tickets without non-goals** — Codex will scope-creep into adjacent systems without explicit boundaries.
 12. **Dispatching architecture work to Codex** — shared interfaces, signal definitions, and cross-system refactors stay in lead. Always.
 13. **Dispatching overlapping tickets in parallel** — check file scopes before parallel dispatch. Merge conflicts waste more time than sequential execution.
+14. **Implementing tickets directly without justification** — default is DISPATCH. Log every DIRECT decision in PROGRESS.md with a reason.
+15. **Claiming "cross-system" to skip dispatch** — most cross-system features can be split into dispatchable units + small integration wiring. Split first, then decide.
+16. **Dispatch ratio below 60%** — if more than 40% of tickets are DIRECT, the split is wrong. Re-split.
