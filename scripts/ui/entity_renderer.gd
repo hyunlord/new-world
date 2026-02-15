@@ -5,6 +5,7 @@ const EntityDataClass = preload("res://scripts/core/entity_data.gd")
 const EntityManagerClass = preload("res://scripts/core/entity_manager.gd")
 
 var _entity_manager: RefCounted
+var _building_manager: RefCounted
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 
@@ -30,8 +31,9 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
+	_building_manager = building_manager
 
 
 func _process(_delta: float) -> void:
@@ -43,6 +45,8 @@ func _draw() -> void:
 		return
 	var cam := get_viewport().get_camera_2d()
 	var zl: float = cam.zoom.x if cam else 1.0
+
+	# LOD transitions with hysteresis
 	if _current_lod == 0 and zl > 1.7:
 		_current_lod = 1
 	elif _current_lod == 1 and zl < 1.3:
@@ -51,16 +55,33 @@ func _draw() -> void:
 		_current_lod = 2
 	elif _current_lod == 2 and zl < 3.8:
 		_current_lod = 1
+
+	# LOD 0: skip drawing entities entirely (strategic view)
+	if _current_lod == 0:
+		return
+
+	# Viewport culling: compute visible tile range
+	var viewport_size := get_viewport_rect().size
+	var cam_pos := cam.global_position if cam else Vector2.ZERO
+	var half_view := viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
+	var min_tile_x: int = int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2
+	var max_tile_x: int = int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2
+	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
+	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
+
 	var alive: Array = _entity_manager.get_alive_entities()
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 
 	for i in range(alive.size()):
 		var entity: RefCounted = alive[i]
-		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
 
-		if _current_lod == 0:
-			draw_circle(pos, 1.0, Color.WHITE)
+		# Viewport culling
+		if entity.position.x < min_tile_x or entity.position.x > max_tile_x:
 			continue
+		if entity.position.y < min_tile_y or entity.position.y > max_tile_y:
+			continue
+
+		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
 
 		var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
 		var size: float = vis["size"]
@@ -150,6 +171,15 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var world_pos: Vector2 = canvas_transform.affine_inverse() * screen_pos
 	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
 
+	# Check building at tile first
+	if _building_manager != null:
+		var building = _building_manager.get_building_at(tile.x, tile.y)
+		if building != null:
+			selected_entity_id = -1
+			SimulationBus.entity_deselected.emit()
+			SimulationBus.building_selected.emit(building.id)
+			return
+
 	# Find entity at or near this tile
 	var alive: Array = _entity_manager.get_alive_entities()
 	var best_entity: RefCounted = null
@@ -163,7 +193,9 @@ func _handle_click(screen_pos: Vector2) -> void:
 
 	if best_entity:
 		selected_entity_id = best_entity.id
+		SimulationBus.building_deselected.emit()
 		SimulationBus.entity_selected.emit(best_entity.id)
 	else:
 		selected_entity_id = -1
 		SimulationBus.entity_deselected.emit()
+		SimulationBus.building_deselected.emit()

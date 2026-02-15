@@ -2,11 +2,13 @@ class_name BuildingRenderer
 extends Node2D
 
 var _building_manager: RefCounted
+var _settlement_manager: RefCounted
 var _current_lod: int = 1
 
 
-func init(building_manager: RefCounted) -> void:
+func init(building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:
 	_building_manager = building_manager
+	_settlement_manager = settlement_manager
 
 
 func _process(_delta: float) -> void:
@@ -20,6 +22,15 @@ func _draw() -> void:
 	var zl: float = cam.zoom.x if cam else 1.0
 	_update_lod(zl)
 
+	# Viewport culling
+	var viewport_size := get_viewport_rect().size
+	var cam_pos := cam.global_position if cam else Vector2.ZERO
+	var half_view := viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
+	var min_tile_x: int = int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2
+	var max_tile_x: int = int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2
+	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
+	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
+
 	var buildings: Array = _building_manager.get_all_buildings()
 	var tile_size: int = GameConfig.TILE_SIZE
 	var half: float = tile_size * 0.5
@@ -28,6 +39,13 @@ func _draw() -> void:
 
 	for i in range(buildings.size()):
 		var b = buildings[i]
+
+		# Viewport culling
+		if b.tile_x < min_tile_x or b.tile_x > max_tile_x:
+			continue
+		if b.tile_y < min_tile_y or b.tile_y > max_tile_y:
+			continue
+
 		var cx: float = float(b.tile_x) * tile_size + half
 		var cy: float = float(b.tile_y) * tile_size + half
 		var alpha: float = 1.0 if b.is_built else 0.4
@@ -71,6 +89,17 @@ func _draw() -> void:
 			var text: String = "F:%d W:%d S:%d" % [food, wood, stone]
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
 
+	# Settlement labels in LOD 0
+	if _current_lod == 0 and _settlement_manager != null:
+		var active: Array = _settlement_manager.get_active_settlements()
+		for i in range(active.size()):
+			var s: RefCounted = active[i]
+			var sx: float = float(s.center_x) * tile_size + half
+			var sy: float = float(s.center_y) * tile_size + half
+			var pop: int = s.member_ids.size()
+			var label: String = "S%d: %d" % [s.id, pop]
+			draw_string(font, Vector2(sx - 15, sy - 8), label, HORIZONTAL_ALIGNMENT_CENTER, -1, 10, Color(1, 1, 0.6, 0.9))
+
 
 func _update_lod(zl: float) -> void:
 	match _current_lod:
@@ -93,9 +122,7 @@ func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int) -> void
 	var fill_color := Color(0.55, 0.35, 0.15, alpha)
 	var outline_color := Color(0.9, 0.7, 0.3, alpha)
 
-	# Filled rectangle
 	draw_rect(Rect2(cx - half_size, cy - half_size, size, size), fill_color, true)
-	# Bright yellow outline border
 	draw_rect(Rect2(cx - half_size, cy - half_size, size, size), outline_color, false, 2.0)
 
 
@@ -105,16 +132,13 @@ func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int) -> void:
 	var fill_color := Color(0.7, 0.4, 0.2, alpha)
 	var outline_color := Color(1.0, 0.8, 0.4, alpha)
 
-	# Triangle points: top vertex, bottom-left, bottom-right
 	var points := PackedVector2Array([
-		Vector2(cx, cy - half_size),           # Top vertex
-		Vector2(cx - half_size, cy + half_size),  # Bottom-left
-		Vector2(cx + half_size, cy + half_size),  # Bottom-right
+		Vector2(cx, cy - half_size),
+		Vector2(cx - half_size, cy + half_size),
+		Vector2(cx + half_size, cy + half_size),
 	])
 
-	# Filled triangle
 	draw_colored_polygon(points, fill_color)
-	# Light outline
 	draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[0]]), outline_color, 2.0)
 
 
@@ -124,7 +148,5 @@ func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int) -> void:
 	var fill_color := Color(1.0, 0.4, 0.1, alpha)
 	var glow_color := Color(1.0, 0.4, 0.1, alpha * 0.15)
 
-	# Filled circle
 	draw_circle(Vector2(cx, cy), radius, fill_color)
-	# Glow ring at 3x tile_size radius
 	draw_arc(Vector2(cx, cy), tile_size * 3.0, 0, TAU, 32, glow_color, 1.5)

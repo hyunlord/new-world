@@ -4,6 +4,63 @@
 
 ---
 
+## Phase 1.5: Visual Polish — Minimap, Stats, UI Overhaul (T-750 series)
+
+**gate PASS** | 8 code files changed + 6 docs updated
+
+### T-750: StatsRecorder 시스템
+- `scripts/systems/stats_recorder.gd` (신규) — SimulationSystem, priority=90, tick_interval=50
+- 인구/자원/직업 스냅샷 기록, MAX_HISTORY=200 (최근 10,000틱)
+
+### T-752: MinimapPanel
+- `scripts/ui/minimap_panel.gd` (신규) — 160×160px, 우상단
+- Image 기반 렌더링: 바이옴 색상, 건물 3×3px 마커, 에이전트 1px 점
+- 카메라 시야 흰색 사각형, 클릭-to-navigate
+- 정착지 라벨 표시, M 키 토글
+
+### T-753: StatsPanel
+- `scripts/ui/stats_panel.gd` (신규) — 160×200px, 미니맵 하단
+- 인구 그래프 (초록 polyline), 자원 그래프 (3색 선), 직업 분포 바
+- G 키 토글
+
+### T-755: 건물 선택 시스템
+- `scripts/core/simulation_bus.gd` — building_selected/building_deselected 시그널 추가
+- `scripts/ui/entity_renderer.gd` — 건물 우선 클릭, 뷰포트 컬링, LOD 0 에이전트 스킵
+
+### T-760: HUD 전면 재설계
+- `scripts/ui/hud.gd` — 전면 재작성 (726줄):
+  - 상단 바: 컴팩트 (상태+속도+시간+인구+색상코딩 자원+건물+FPS), 정착지 정보 제거
+  - 엔티티 패널: 직업 색상 원, 정착지 ID, 나이, 욕구 바 퍼센트, 배고픔 < 20% 깜빡임
+  - 건물 패널: 건물 선택 시 타입별 정보 (stockpile 저장량, shelter/campfire 설명)
+  - 토스트 알림: 최대 5개, 3초 지속, 이벤트별 색상
+  - 도움말 오버레이: H 키 토글, 전체 조작법
+  - 자원 범례: Tab 오버레이 시 좌상단 표시
+  - 키 힌트: M:Map G:Stats H:Help 추가
+  - 인구 마일스톤: 50명 단위 토스트 알림
+  - MinimapPanel/StatsPanel을 preload → call_deferred 생성
+
+### T-761: 렌더러 개선
+- `scripts/ui/building_renderer.gd` — 뷰포트 컬링, 정착지 라벨 (LOD 0)
+- `scripts/ui/entity_renderer.gd` — 뷰포트 컬링, LOD 0 에이전트 미표시
+
+### T-770: 낮/밤 사이클 + 자원 오버레이
+- `scripts/ui/world_renderer.gd` — is_resource_overlay_visible() 추가
+- `scenes/main/main.gd` — 전면 재작성:
+  - 낮/밤 사이클 (hour별 world_renderer.modulate)
+  - 미니맵 20틱 갱신, 자원 오버레이 100틱 갱신
+  - StatsRecorder 초기화/등록 (priority 90)
+  - M/G/H 키 바인딩, Tab → 범례 연동
+
+### 문서 업데이트
+- `docs/ARCHITECTURE.md` — StatsRecorder 추가, MinimapPanel/StatsPanel 파일맵, 다이어그램 갱신
+- `docs/GAME_BALANCE.md` — 통계 기록 간격, 미니맵 갱신 간격, 낮/밤 사이클 수치
+- `docs/SYSTEMS.md` — StatsRecorder 시스템, building_selected/deselected 시그널, 렌더러 섹션 갱신
+- `docs/CONTROLS.md` — M/G/H 키 추가, 건물 클릭, 미니맵 클릭, HUD 레이아웃 전면 갱신
+- `docs/VISUAL_GUIDE.md` — HUD/미니맵/통계/건물패널/토스트/도움말/범례/낮밤 전면 갱신
+- `docs/CHANGELOG.md` — Phase 1.5 전체 기록
+
+---
+
 ## Settlement Distribution Fix + Save/Load UI (T-700 series)
 
 **gate PASS** | 5 code files + 5 docs changed

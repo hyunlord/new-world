@@ -59,6 +59,11 @@ func toggle_resource_overlay() -> void:
 		_resource_overlay.visible = not _resource_overlay.visible
 
 
+## Check if resource overlay is currently visible
+func is_resource_overlay_visible() -> bool:
+	return _resource_overlay != null and _resource_overlay.visible
+
+
 ## Update resource overlay texture (call periodically, e.g., every 100 ticks)
 func update_resource_overlay() -> void:
 	if _resource_map_ref == null or _world_data_ref == null:

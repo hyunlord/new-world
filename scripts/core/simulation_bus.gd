@@ -8,6 +8,10 @@ signal ui_notification(message: String, type: String)
 signal entity_selected(entity_id: int)
 signal entity_deselected()
 
+## Building selection
+signal building_selected(building_id: int)
+signal building_deselected()
+
 ## Simulation state
 signal tick_completed(tick: int)
 signal speed_changed(speed_index: int)

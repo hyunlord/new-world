@@ -24,8 +24,10 @@
 │  ├ GatheringSystem     │  CameraController                   │
 │  ├ ConstructionSystem  │    └ WASD/마우스/트랙패드             │
 │  ├ MovementSystem      │  HUD                                │
-│  ├ PopulationSystem    │    └ 상단바 + 엔티티패널 + 토스트      │
-│  └ MigrationSystem     │                                     │
+│  ├ PopulationSystem    │  HUD                                │
+│  ├ MigrationSystem     │    ├ 상단바 + 엔티티/건물패널 + 토스트  │
+│  └ StatsRecorder       │    ├ MinimapPanel (우상단 160×160)    │
+│                        │    └ StatsPanel (미니맵 하단 160×200) │
 │                        │                                     │
 │ EntityManager          │                                     │
 │ BuildingManager        │                                     │
@@ -102,6 +104,7 @@ SimulationEngine.update(delta)
 | 파일 | 역할 |
 |------|------|
 | `resource_regen_system.gd` | 바이옴별 food/wood 재생 (stone 재생 안 함) |
+| `stats_recorder.gd` | 인구/자원/직업 스냅샷 기록 (prio 90, 50틱 간격, 최대 200) |
 | `job_assignment_system.gd` | 미배정 에이전트 직업 배정 + 동적 재배치 (소규모/식량위기 비율) |
 | `needs_system.gd` | hunger/energy/social 감소, 자동 식사, 아사 유예 판정 |
 | `building_effect_system.gd` | 건물 효과 적용 — campfire social (+0.01/+0.02), shelter energy (+0.01) |
@@ -119,7 +122,9 @@ SimulationEngine.update(delta)
 | `entity_renderer.gd` | 에이전트 도형 그리기, 3단계 LOD, 선택 표시, 배고픔/운반 표시 |
 | `building_renderer.gd` | 건물 도형 그리기, 3단계 LOD, 건설 진행 바, stockpile 저장량 텍스트 |
 | `camera_controller.gd` | WASD/마우스/트랙패드 카메라, 줌 보간, 드래그 팬 |
-| `hud.gd` | 상단 바 (시간/속도/인구/건물/자원/FPS), 엔티티 패널, 토스트 시스템 |
+| `hud.gd` | 상단 바 + 엔티티/건물 패널 + 토스트 + 도움말 + 범례 + 키힌트 |
+| `minimap_panel.gd` | 미니맵 (160×160, Image 기반, 클릭 이동, 정착지 라벨) |
+| `stats_panel.gd` | 통계 패널 (인구/자원 그래프, 직업 분포 바) |
 
 ---
 
@@ -177,6 +182,7 @@ sim_engine.register_system(ConstructionSystem.new())     # prio 28
 sim_engine.register_system(MovementSystem.new())         # prio 30
 sim_engine.register_system(PopulationSystem.new())       # prio 50
 sim_engine.register_system(MigrationSystem.new())        # prio 60
+sim_engine.register_system(StatsRecorder.new())          # prio 90
 ```
 
 ---
