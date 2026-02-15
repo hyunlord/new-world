@@ -4,6 +4,22 @@
 
 ---
 
+## Hotfix: Mass Starvation Bug (T-1200)
+
+### T-1200: Fix mass starvation — initial entities spawned as children
+- **Root cause**: `entity_manager.spawn_entity()` left age=0, making all initial entities "child" stage. Children can't gather food → all starve within ~1000 ticks.
+- `entity_manager.gd`:
+  - `spawn_entity()`: added `initial_age` parameter, sets `entity.age` before computing `age_stage`
+  - `kill_entity()`: added `tick` parameter, included in `entity_died` event (fixes "tick=-1" bug)
+- `main.gd`:
+  - Initial 20 entities now spawn with age 18~40 years (adult stage)
+  - Added 500-tick balance debug log: `[Balance] tick=X pop=X avg_hunger=X ...`
+- `needs_system.gd`: pass `tick` to `kill_entity()` for starvation deaths
+- `population_system.gd`: pass `tick` to `kill_entity()` for natural deaths
+- docs/GAME_BALANCE.md: added initial entity age + balance log documentation
+
+---
+
 ## Phase 2: Stats Panel + Final Docs (T-1130)
 
 ### T-1130: Stats Panel Extensions + Final Documentation

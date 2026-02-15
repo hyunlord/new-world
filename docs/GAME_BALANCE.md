@@ -30,6 +30,15 @@
 | elder | 55~80세 | 350,400 | `GameConfig.AGE_MAX` |
 | 임신 기간 | ~9개월 | 3,285 | `GameConfig.PREGNANCY_DURATION` |
 
+### 초기 에이전트 나이
+- 시작 시 20명 에이전트는 18~40세 성인으로 스폰 (`main.gd`)
+- `entity_manager.spawn_entity()` 의 `initial_age` 파라미터로 설정
+- FamilySystem 출산 시 아기는 age=0 (child)으로 스폰
+
+### 밸런스 디버그 로그
+- 500틱마다 `[Balance]` 로그 출력 (`main.gd`)
+- 포함 정보: tick, pop, avg_hunger, food_inv, food_stockpile, gatherers
+
 ---
 
 ## 욕구 감소

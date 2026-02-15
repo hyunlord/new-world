@@ -116,7 +116,7 @@ func _check_natural_deaths(tick: int) -> void:
 		# Scale to per-check probability
 		var check_prob: float = annual_death_prob * float(GameConfig.POPULATION_TICK_INTERVAL) / float(GameConfig.TICKS_PER_YEAR)
 		if _rng.randf() < check_prob:
-			_entity_manager.kill_entity(entity.id, "old_age")
+			_entity_manager.kill_entity(entity.id, "old_age", tick)
 			emit_event("entity_died_natural", {
 				"entity_id": entity.id,
 				"entity_name": entity.entity_name,

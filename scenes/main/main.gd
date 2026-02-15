@@ -214,7 +214,10 @@ func _spawn_initial_entities() -> void:
 		walkable_tiles[j] = tmp
 
 	for i in range(count):
-		entity_manager.spawn_entity(walkable_tiles[i])
+		# Initial entities are adults (18-40 years old)
+		var age_years: int = 18 + (sim_engine.rng.randi() % 23)
+		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR
+		entity_manager.spawn_entity(walkable_tiles[i], "", initial_age)
 
 	print("[Main] Spawned %d entities near world center." % count)
 
@@ -262,6 +265,7 @@ func _bootstrap_relationships(alive: Array) -> void:
 
 var _last_overlay_tick: int = 0
 var _last_minimap_tick: int = 0
+var _last_balance_tick: int = 0
 var _current_day_color: Color = Color(1.0, 1.0, 1.0)
 var _day_night_enabled: bool = true
 
@@ -281,6 +285,11 @@ func _process(delta: float) -> void:
 		if minimap != null:
 			minimap.request_update()
 			minimap.update_minimap()
+
+	# Balance debug log every 500 ticks
+	if current_tick - _last_balance_tick >= 500 and current_tick > 0:
+		_last_balance_tick = current_tick
+		_log_balance(current_tick)
 
 	# Day/night cycle (smooth lerp, slower at high speed)
 	if sim_engine and _day_night_enabled:
@@ -416,3 +425,29 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    Cmd+=/-/0      = UI Scale (%.1f)" % GameConfig.ui_scale)
 	print("    Double-click   = Open detail popup")
 	print("")
+
+
+func _log_balance(tick: int) -> void:
+	var alive: Array = entity_manager.get_alive_entities()
+	var pop: int = alive.size()
+	if pop == 0:
+		print("[Balance] tick=%d pop=0 ALL DEAD" % tick)
+		return
+	var total_hunger: float = 0.0
+	var total_food_inv: float = 0.0
+	var gatherers: int = 0
+	for i in range(alive.size()):
+		var e: RefCounted = alive[i]
+		total_hunger += e.hunger
+		total_food_inv += e.inventory.get("food", 0.0)
+		if e.current_action == "gather_food":
+			gatherers += 1
+	var avg_hunger: float = total_hunger / float(pop)
+	var food_in_stockpiles: float = 0.0
+	if building_manager != null:
+		var stockpiles: Array = building_manager.get_buildings_by_type("stockpile")
+		for i in range(stockpiles.size()):
+			if stockpiles[i].is_built:
+				food_in_stockpiles += stockpiles[i].storage.get("food", 0.0)
+	print("[Balance] tick=%d pop=%d avg_hunger=%.2f food_inv=%.1f food_stockpile=%.1f gatherers=%d" % [
+		tick, pop, avg_hunger, total_food_inv, food_in_stockpiles, gatherers])
