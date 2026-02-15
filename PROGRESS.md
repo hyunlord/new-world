@@ -206,3 +206,53 @@ Phase 1 완료 후 코드에서 추출한 정확한 문서 체계 구축. 6개 d
 - 6개 docs/ 문서 생성 완료
 - 모든 수치/색상/설정이 실제 코드에서 추출됨
 - CLAUDE.md에 영구 문서 규칙 추가됨
+
+---
+
+## Settlement Distribution Fix + Save/Load UI (T-700 series)
+
+### Context
+정착지 21개 난립하나 S10에 211명 몰림, 나머지 0~4명. 이주 시스템이 형식적으로만 작동:
+- 최소 인구 체크 버그 (MIGRATION_GROUP_SIZE_MIN=3 사용, MIGRATION_MIN_POP=40 무시)
+- 이주자가 맨손으로 도착 → 비축소 없이 굶어죽음
+- BehaviorSystem이 settlement_id 무시 → 다른 정착지 건물 사용
+- 정착지 수 캡 없음, 쿨다운 없음 → 무한 난립
+- 빈 정착지 정리 안 됨
+
+### Tickets
+| Ticket | Title | Action | Reason |
+|--------|-------|--------|--------|
+| T-700 | 이주 시스템 근본 재설계 | DIRECT | migration_system + game_config + settlement_manager 3파일, 밸런스 상수 공유 |
+| T-710 | BehaviorSystem settlement_id 필터 | DIRECT | behavior_system 전면 리팩토링, T-700 상수에 의존 |
+| T-720 | HUD 정착지 표시 + 키 힌트 | DIRECT | hud.gd, settlement_manager 메서드 사용 |
+
+### Dispatch ratio: 0/3 = 0% ❌ (target: >60%)
+
+### 낮은 dispatch 사유
+3개 티켓 모두 DIRECT 처리:
+1. **파일 중첩**: game_config.gd를 T-700/T-710이 공유, settlement_manager를 T-700/T-720이 공유
+2. **인터페이스 변경**: behavior_system.gd 함수 시그니처 변경 (pos→entity), 전체 일관성 필요
+3. **버그 수정 + 리팩토링 동시 진행**: migration_system 버그 수정과 패키지 방식 도입이 동시에 필요
+
+### 변경 파일 (5 코드 + 5 문서)
+| File | Changes |
+|------|---------|
+| game_config.gd | 신규 상수 6개 (MAX_SETTLEMENTS, COOLDOWN, STARTUP 자원, CLEANUP 간격), 그룹 크기 3~5→5~7 |
+| settlement_manager.gd | 신규 메서드 4개 (get_settlement_count, get_active_settlements, cleanup_empty_settlements, remove_settlement) |
+| migration_system.gd | 전면 재작성 — 최소 인구 버그 수정, 이주 패키지, 그룹 구성 보장, 캡/쿨다운, 빈 정착지 정리 |
+| behavior_system.gd | 전면 리팩토링 — settlement_id 필터 적용 (3개 신규 헬퍼, ~15개 건물 탐색 호출 수정) |
+| hud.gd | 활성 정착지 상위 5개만 표시 + 우하단 키 힌트 상시 표시 |
+| docs/GAME_BALANCE.md | 이주 섹션 대폭 확장 |
+| docs/SYSTEMS.md | MigrationSystem/BehaviorSystem/SettlementManager 설명 갱신 |
+| docs/VISUAL_GUIDE.md | HUD 정착지 표시 + 키 힌트 영역 추가 |
+| docs/CONTROLS.md | 우하단 키 힌트 섹션 추가 |
+| docs/CHANGELOG.md | T-700 시리즈 전체 기록 |
+
+### 결과
+- gate PASS
+- 이주 최소 인구 버그 수정 (3→40)
+- 이주 패키지 방식으로 새 정착지 자립 가능
+- settlement_id 필터로 정착지 간 건물 공유 차단
+- MAX_SETTLEMENTS=5 + 쿨다운 1000틱으로 난립 방지
+- 500틱마다 빈 정착지 자동 정리
+- HUD에 키 힌트 상시 표시

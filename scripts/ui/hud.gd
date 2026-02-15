@@ -28,6 +28,7 @@ var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 var _toast_label: Label
 var _toast_timer: float = 0.0
+var _hint_label: Label
 var _selected_entity_id: int = -1
 
 
@@ -45,6 +46,7 @@ func _ready() -> void:
 	_build_entity_panel()
 	_connect_signals()
 	_build_toast()
+	_build_key_hints()
 
 
 func _connect_signals() -> void:
@@ -163,12 +165,16 @@ func _process(delta: float) -> void:
 	if _entity_manager:
 		var total_pop: int = _entity_manager.get_alive_count()
 		if _settlement_manager != null:
-			var settlements: Array = _settlement_manager.get_all_settlements()
-			if settlements.size() > 1:
+			var active: Array = _settlement_manager.get_active_settlements()
+			if active.size() > 1:
+				# Sort by population descending
+				active.sort_custom(Callable(self, "_sort_settlement_pop_desc"))
+				# Show top 5
+				var show_count: int = mini(active.size(), 5)
 				var parts: String = ""
-				for i in range(settlements.size()):
-					var s: RefCounted = settlements[i]
-					var spop: int = _settlement_manager.get_settlement_population(s.id)
+				for i in range(show_count):
+					var s: RefCounted = active[i]
+					var spop: int = s.member_ids.size()
 					if i > 0:
 						parts += " "
 					parts += "S%d:%d" % [s.id, spop]
@@ -336,3 +342,21 @@ func _make_separator() -> HSeparator:
 	var sep := HSeparator.new()
 	sep.add_theme_constant_override("separation", 6)
 	return sep
+
+
+func _build_key_hints() -> void:
+	_hint_label = Label.new()
+	_hint_label.text = "F5:Save  F9:Load  Tab:Resources  Space:Pause"
+	_hint_label.add_theme_font_size_override("font_size", 11)
+	_hint_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 0.7))
+	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_hint_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_hint_label.offset_bottom = -8
+	_hint_label.offset_right = -10
+	_hint_label.offset_left = -350
+	_hint_label.offset_top = -24
+	add_child(_hint_label)
+
+
+func _sort_settlement_pop_desc(a: RefCounted, b: RefCounted) -> bool:
+	return a.member_ids.size() > b.member_ids.size()

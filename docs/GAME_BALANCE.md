@@ -182,14 +182,40 @@ urgency(deficit) = deficit^2 (지수 곡선)
 | 건물 최소 간격 | 2타일 | `GameConfig.BUILDING_MIN_SPACING` |
 | 이주 체크 간격 | 200틱 | `GameConfig.MIGRATION_TICK_INTERVAL` |
 | 이주 최소 인구 | 40 | `GameConfig.MIGRATION_MIN_POP` |
-| 이주 그룹 크기 | 3~5명 | `GameConfig.MIGRATION_GROUP_SIZE_MIN/MAX` |
+| 이주 그룹 크기 | 5~7명 | `GameConfig.MIGRATION_GROUP_SIZE_MIN/MAX` |
 | 탐험 확률 | 5% | `GameConfig.MIGRATION_CHANCE` |
 | 탐색 반경 | 30~80타일 | `GameConfig.MIGRATION_SEARCH_RADIUS_MIN/MAX` |
+| 최대 정착지 수 | 5 | `GameConfig.MAX_SETTLEMENTS` |
+| 이주 쿨다운 | 1,000틱 | `GameConfig.MIGRATION_COOLDOWN_TICKS` |
+| 이주 지참 식량 | 30.0 | `GameConfig.MIGRATION_STARTUP_FOOD` |
+| 이주 지참 목재 | 10.0 | `GameConfig.MIGRATION_STARTUP_WOOD` |
+| 이주 지참 석재 | 3.0 | `GameConfig.MIGRATION_STARTUP_STONE` |
+| 빈 정착지 정리 간격 | 500틱 | `GameConfig.SETTLEMENT_CLEANUP_INTERVAL` |
 
-### 이주 트리거 (하나 이상 충족)
+### 이주 트리거 (모든 전제조건 AND + 하나 이상 충족)
+
+**전제조건 (모두 충족 필수)**:
+1. 원래 정착지 인구 >= 40 (`MIGRATION_MIN_POP`)
+2. 활성 정착지 수 < 5 (`MAX_SETTLEMENTS`)
+3. 마지막 이주로부터 1,000틱 이상 경과 (`MIGRATION_COOLDOWN_TICKS`)
+
+**트리거 (하나 이상)**:
 1. **과밀**: 정착지 인구 > 쉘터 수 × 8
-2. **식량 부족**: 반경 20타일 food 총량 < 인구 × 0.5
-3. **탐험**: 인구 > 40 AND 5% 확률
+2. **식량 부족**: 반경 20타일 food 총량 < 인구 × 0.3
+3. **탐험**: 5% 확률
+
+### 이주 패키지 방식
+- 이주 그룹 구성 보장: builder 1 + gatherer 1 + lumberjack 1 포함
+- 출발 전 원래 정착지 비축소에서 자원 차감 (food 30, wood 10, stone 3)
+- 식량은 이주자에게 균등 분배, 목재/석재는 builder에게 집중
+- 도착 후 builder가 즉시 비축소 건설 가능
+
+### 빈 정착지 자동 정리
+- 500틱마다 인구 0인 정착지 삭제 (`cleanup_empty_settlements`)
+
+### settlement_id 필터
+- BehaviorSystem의 모든 건물 탐색이 entity.settlement_id로 필터됨
+- 비축소, 쉘터, 건설 위치, 자원 전달 모두 같은 정착지 내에서만 동작
 
 ---
 

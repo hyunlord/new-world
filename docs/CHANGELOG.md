@@ -4,6 +4,52 @@
 
 ---
 
+## Settlement Distribution Fix + Save/Load UI (T-700 series)
+
+**gate PASS** | 5 code files + 5 docs changed
+
+### T-700: 이주 시스템 근본 재설계
+- `game_config.gd` — 신규 상수 6개: MAX_SETTLEMENTS=5, MIGRATION_COOLDOWN_TICKS=1000, MIGRATION_STARTUP_FOOD/WOOD/STONE=30/10/3, SETTLEMENT_CLEANUP_INTERVAL=500. 그룹 크기 3~5 → 5~7
+- `migration_system.gd` — 전면 재작성:
+  - 최소 인구 버그 수정 (MIGRATION_GROUP_SIZE_MIN → MIGRATION_MIN_POP)
+  - 이주 패키지: 출발 전 원래 정착지 비축소에서 자원 차감 후 이주자에게 분배
+  - 그룹 구성 보장 (builder + gatherer + lumberjack)
+  - 식량은 균등 분배, 목재/석재는 builder에게 집중
+  - MAX_SETTLEMENTS 캡 + MIGRATION_COOLDOWN 쿨다운
+  - 500틱마다 cleanup_empty_settlements 호출
+  - 식량 부족 임계값 0.5 → 0.3 (더 엄격)
+  - 한 번에 하나의 이주만 실행 (break)
+- `settlement_manager.gd` — 신규 메서드 4개:
+  - get_settlement_count, get_active_settlements, cleanup_empty_settlements, remove_settlement
+
+### T-710: BehaviorSystem settlement_id 필터
+- `behavior_system.gd` — 전면 리팩토링:
+  - 신규 헬퍼: _find_nearest_building_in_settlement, _count_settlement_buildings, _count_settlement_alive
+  - 비축소/쉘터/건설 위치 탐색이 entity.settlement_id로 필터됨
+  - _find_unbuilt_building(pos) → _find_unbuilt_building(entity)
+  - _should_place_building() → _should_place_building(entity)
+  - _try_place_building 내부 건물 카운트 settlement 단위로 변경
+  - _can_afford_building, _consume_building_cost 내부 stockpile 탐색 settlement 필터
+  - 모든 직접 get_nearest_building 호출 → _find_nearest_building_in_settlement으로 교체
+
+### T-720: HUD 정착지 표시 + 키 힌트
+- `hud.gd` — 정착지 표시:
+  - get_all_settlements → get_active_settlements (인구 > 0만)
+  - 인구 내림차순 정렬, 상위 5개만 표시
+  - 신규 _sort_settlement_pop_desc 정렬 함수
+- `hud.gd` — 키 힌트:
+  - 우하단 상시 표시: "F5:Save  F9:Load  Tab:Resources  Space:Pause"
+  - 11px, Color(0.6, 0.6, 0.6, 0.7)
+
+### 문서 업데이트
+- `docs/GAME_BALANCE.md` — 이주 섹션 대폭 확장 (패키지, 전제조건, 쿨다운, 정리, 필터)
+- `docs/SYSTEMS.md` — MigrationSystem/BehaviorSystem/SettlementManager 설명 갱신
+- `docs/VISUAL_GUIDE.md` — HUD 정착지 표시 + 키 힌트 영역 추가
+- `docs/CONTROLS.md` — 우하단 키 힌트 섹션 추가
+- `docs/CHANGELOG.md` — 이번 수정 전체 기록
+
+---
+
 ## Phase 1 Finale — Settlement + LOD + Save/Load (T-400 series)
 
 **PR #8 merged → gate PASS** | 24 files changed, 779 insertions(+), 40 deletions(-)

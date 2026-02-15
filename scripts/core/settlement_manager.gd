@@ -78,6 +78,35 @@ func to_save_data() -> Array:
 	return result
 
 
+func get_settlement_count() -> int:
+	return _settlements.size()
+
+
+## Return settlements that have at least 1 member
+func get_active_settlements() -> Array:
+	var result: Array = []
+	var all_settlements: Array = _settlements.values()
+	for i in range(all_settlements.size()):
+		if all_settlements[i].member_ids.size() > 0:
+			result.append(all_settlements[i])
+	return result
+
+
+## Remove settlements with 0 members
+func cleanup_empty_settlements() -> void:
+	var to_remove: Array = []
+	var all_settlements: Array = _settlements.values()
+	for i in range(all_settlements.size()):
+		if all_settlements[i].member_ids.size() == 0:
+			to_remove.append(all_settlements[i].id)
+	for i in range(to_remove.size()):
+		_settlements.erase(to_remove[i])
+
+
+func remove_settlement(id: int) -> void:
+	_settlements.erase(id)
+
+
 func load_save_data(data: Array) -> void:
 	_settlements.clear()
 	_next_id = 1

@@ -15,12 +15,12 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 8 | JobAssignmentSystem | 50 | 미배정 에이전트 직업 배정 + 동적 재배치 | `scripts/systems/job_assignment_system.gd` |
 | 10 | NeedsSystem | 2 | hunger/energy/social 감소, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
 | 15 | BuildingEffectSystem | 10 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
-| 20 | BehaviorSystem | 10 | Utility AI 행동 결정 + 건물 배치 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
+| 20 | BehaviorSystem | 10 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
 | 25 | GatheringSystem | 3 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
 | 28 | ConstructionSystem | 5 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
 | 30 | MovementSystem | 3 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
 | 50 | PopulationSystem | 60 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
-| 60 | MigrationSystem | 200 | 정착지 분할, 이주 트리거 (과밀/식량/탐험) | `scripts/systems/migration_system.gd` |
+| 60 | MigrationSystem | 200 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 
 ---
 
@@ -31,7 +31,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | SimulationEngine | 틱 루프, 시스템 등록/실행, 일시정지/속도, RNG | `scripts/core/simulation_engine.gd` |
 | EntityManager | 에이전트 생성/삭제/조회, 위치 이동 | `scripts/core/entity_manager.gd` |
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
-| SettlementManager | 정착지 생성/조회/멤버 관리/직렬화 | `scripts/core/settlement_manager.gd` |
+| SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
 | SaveManager | JSON 저장/로드 (F5/F9) | `scripts/core/save_manager.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
