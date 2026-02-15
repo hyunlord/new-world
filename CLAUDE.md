@@ -17,6 +17,16 @@ When working on this project:
 - Understand that simulation correctness > rendering polish in Phase 0.
 - If a GDScript limitation is hit, flag it and propose the Rust GDExtension boundary — don't hack around it silently.
 
+## Professional Standard
+
+Act as a production-level Godot 4 developer.
+Before modifying scenes or scripts:
+- Check for signal connections.
+- Check for NodePath dependencies.
+- Ensure scene inheritance is preserved.
+- Do not break existing exports.
+- Do not refactor unrelated scenes.
+
 ---
 
 ## Behavioral Guidelines
@@ -54,39 +64,23 @@ Ask yourself: "Would a senior engine programmer say this is overcomplicated?" If
 When editing existing code:
 - Don't "improve" adjacent code, comments, or formatting.
 - Don't refactor things that aren't broken.
-- Match existing GDScript style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it — don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: **Every changed line should trace directly to the user's request.**
+- Don't change variable names for "clarity" unless they're genuinely confusing.
+- If you see a problem outside your scope, note it — don't fix it.
+- **WorldSim-specific:** Don't touch SimulationBus signal definitions, GameConfig constants, or EntityData fields unless the ticket explicitly requires it. These are shared interfaces.
 
 ### 4. Goal-Driven Execution
 
-**Define success criteria. Loop until verified.**
+**Every action should trace back to the original request. Maintain focus.**
 
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Add a new system" → "Register in SimulationEngine, emit signals on SimulationBus, verify via gate script"
+Before each step, verify:
+- "Does this directly serve the current ticket's objective?"
+- "Am I still solving the original problem, or have I drifted?"
+- Don't start side quests. Don't refactor infrastructure. Don't add logging "while you're at it."
 
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-**Always verify via gate script before declaring done:**
-```bash
-# Linux/Mac
-./scripts/gate.sh
-
-# Windows
-powershell -File scripts/gate.ps1
-```
+When your change is complete:
+- List what you changed and why.
+- List what you didn't change that might be related.
+- Call out any risks or follow-ups.
 
 ---
 
@@ -97,27 +91,28 @@ Player observes/intervenes as god; AI agents autonomously develop civilization.
 
 ## Tech Stack
 
-| Layer | Choice | Notes |
-|-------|--------|-------|
-| Engine | Godot 4.3+ (currently 4.6, Mobile renderer) | |
-| Language | GDScript (Phase 0–1) | Rust GDExtension later |
-| Architecture | Simulation (tick) ≠ Rendering (frame) | Fully separated |
-| Events | Event Sourcing | All state changes recorded as events |
-| AI | Utility AI (Phase 0) | → GOAP/BT → ML ONNX → Local LLM |
-| Data | In-memory (Phase 0) | → SQLite → SQLite + DuckDB |
+- Engine: Godot 4.3+ (currently 4.6, Mobile renderer)
+- Language: GDScript (Phase 0-1), Rust GDExtension later
+- Architecture: Simulation (tick) ≠ Rendering (frame) fully separated
+- Events: Event Sourcing — all state changes recorded as events
+- AI: Utility AI (Phase 0) → GOAP/BT → ML ONNX → Local LLM
+- Data: In-memory (Phase 0) → SQLite → SQLite + DuckDB
 
 ## Directory Structure
 
 ```
 scripts/core/       — SimulationEngine, WorldData, EntityManager, EventLogger, SimulationBus, GameConfig
-scripts/ai/         — BehaviorSystem (Utility AI)
-scripts/systems/    — NeedsSystem, MovementSystem
-scripts/ui/         — WorldRenderer, EntityRenderer, CameraController, HUD
+                      ResourceMap, Pathfinder, BuildingData, BuildingManager, SaveManager, EntityData
+scripts/ai/         — BehaviorSystem (Utility AI with job bonuses, resource/building awareness)
+scripts/systems/    — NeedsSystem, MovementSystem (A*), GatheringSystem, ConstructionSystem,
+                      BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem, PopulationSystem
+scripts/ui/         — WorldRenderer, EntityRenderer (job shapes), BuildingRenderer, CameraController, HUD
 scenes/main/        — Main scene (main.tscn + main.gd)
 resources/          — Assets
 tests/              — Test scripts
-tickets/            — Ticket files (010–150)
-scripts/            — gate.ps1, gate.sh (build verification)
+tickets/            — Ticket files (Phase 0: 0xx, Phase 1: 3xx-4xx)
+tools/              — Automation scripts (codex_dispatch.sh, codex_status.sh, codex_apply.sh)
+scripts/            — gate.sh (build verification)
 ```
 
 ## Autoloads
@@ -128,68 +123,174 @@ scripts/            — gate.ps1, gate.sh (build verification)
 
 ## Coding Conventions
 
-- `class_name` on Node-based scripts only (WorldRenderer, EntityRenderer, etc.)
-- **No `class_name` on RefCounted scripts** — Godot 4.6 headless mode fails to resolve them; use `preload()` + path-based `extends` instead
+- `class_name` at top of file
 - PascalCase classes, snake_case variables/functions
-- Signal names: past tense (`entity_spawned`, `tick_completed`)
+- Signal names: past tense (entity_spawned, tick_completed)
 - Type hints required: `var speed: float = 1.0`
 - System-to-system communication via SimulationBus (no direct references)
 - Use PackedArray for bulk data (performance)
 - No magic numbers → use GameConfig constants
 - Public functions get `##` doc comments
-- **Do NOT add `@onready` or `@export` in core simulation scripts** — they must stay decoupled from the scene tree
-- Prefer `PackedInt32Array` / `PackedFloat32Array` over `Array` for hot-path data
 
 ## Architecture
 
 ```
 Main._process(delta) → sim_engine.update(delta)
-  ├ NeedsSystem   (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
-  ├ BehaviorSystem (prio=20, every 10 ticks)  — Utility AI action selection
-  └ MovementSystem (prio=30, every 3 ticks)   — greedy 8-dir movement, arrival effects
+  ├ ResourceRegenSystem  (prio=5,  every 100 ticks) — food/wood regen by biome
+  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs by ratio
+  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
+  ├ BuildingEffectSystem (prio=15, every 10 ticks)  — campfire social, shelter energy
+  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + job bonuses + building AI
+  ├ GatheringSystem      (prio=25, every 3 ticks)   — harvest tiles → entity inventory
+  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress += 0.05
+  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + greedy fallback
+  └ PopulationSystem     (prio=50, every 100 ticks) — births + natural death
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
 
-WorldData (PackedArrays) — 256×256 tile grid
-EntityManager (Dictionary) — entity lifecycle
-```
-
-### Signal Flow (important — read before editing)
-
-```
-System detects change
-  → emits signal on SimulationBus
-    → EventLogger records it
-    → UI systems react (WorldRenderer, HUD, etc.)
+WorldData (PackedArrays) — 256×256 tile grid (biomes, elevation, moisture, temperature)
+EntityManager (Dictionary) — entity lifecycle, inventory, jobs, pathfinding cache
+ResourceMap (PackedFloat32Arrays) — per-tile food/wood/stone
+BuildingManager (Dictionary) — building placement, queries, serialization
+Pathfinder — A* with Chebyshev heuristic, 8-dir, max 200 steps
+SaveManager — JSON save/load (F5/F9)
 ```
 
 **Never** call UI from simulation code. **Never** call one system from another directly. Everything goes through SimulationBus.
 
-## Input Handling
+---
 
-- **No Input Map** — project.godot has no [input] section; all input handled via direct keycode/event checks
-- **Keyboard**: `_unhandled_input` with `event.keycode` match (KEY_SPACE, KEY_PERIOD, KEY_COMMA)
-- **WASD/Arrows**: `_process` with `Input.is_key_pressed()` for continuous movement
-- **Mouse**: `InputEventMouseButton` for wheel zoom, middle-click drag, and left-click drag pan
-- **Left-click drag**: Pan camera if moved > `DRAG_THRESHOLD` (5px); short click passes through to EntityRenderer for selection
-- **macOS Trackpad**: `InputEventMagnifyGesture` for pinch zoom, `InputEventPanGesture` for two-finger pan
-- **Entity selection**: Left click (< 5px movement) in EntityRenderer with canvas_transform conversion
-- **Input priority**: Camera node is after EntityRenderer in scene tree → receives `_unhandled_input` first, can consume drag events
+## Role
 
-## Simulation Speed Constants
+Lead engineer: architecture, integration, refactors, data model boundaries.
 
-Defined in GameConfig, referenced by each system's `_init()`:
-- `NEEDS_TICK_INTERVAL = 2` — needs decay every 2 ticks
-- `BEHAVIOR_TICK_INTERVAL = 10` — AI decision every 10 ticks (1 sec at 10 TPS)
-- `MOVEMENT_TICK_INTERVAL = 3` — movement every 3 ticks (~3.3 tiles/sec at 1x)
+## Worktree Rules
 
-## Log Policy
+| Worktree | Purpose | Agent |
+|----------|---------|-------|
+| `new-world-wt/lead` | Architecture, integration, refactors | Claude Code |
+| `new-world-wt/t-<id>-<slug>` | Isolated implementation tickets | Codex Pro (via CLI) |
+| `new-world-wt/gate` | Build verification | gate.sh |
 
-- `EventLogger.QUIET_EVENTS` suppresses high-frequency events from console (e.g., `entity_moved`)
-- All events still stored in EventLogger for queries
-- Console output uses formatted messages with event-type prefixes (+, x, ~, *)
-- `action_chosen` suppressed (covered by `action_changed`)
+## Guardrails
+
+- Simulation correctness and determinism are non-negotiable.
+- Separate simulation / rendering / UI — no cross-boundary coupling.
+- Add a smoke test for any system change.
+- Config files (GameConfig) are source of truth. No hardcoded overrides in code.
+- Signal definitions are schema — changes require explicit migration + changelog entry.
+
+---
+
+## Codex Pro Auto-Dispatch
+
+Claude Code delegates implementation tickets to Codex Pro via Codex CLI.
+**This is the primary method for getting tickets implemented. Use it for all isolated implementation work.**
+
+### Dispatch a ticket
+
+```bash
+bash tools/codex_dispatch.sh tickets/<ticket-file>.md [branch-name]
+```
+
+### Examples
+
+```bash
+# Single ticket
+bash tools/codex_dispatch.sh tickets/t-010-fix-input.md
+
+# With explicit branch name
+bash tools/codex_dispatch.sh tickets/t-020-needs-tuning.md t/020-needs-tuning
+
+# Parallel dispatch (only when file scopes don't overlap, max 3)
+bash tools/codex_dispatch.sh tickets/t-010-fix-input.md &
+bash tools/codex_dispatch.sh tickets/t-011-fix-logging.md &
+wait
+```
+
+### Check status
+
+```bash
+bash tools/codex_status.sh
+```
+
+### Apply completed results + gate verify
+
+```bash
+bash tools/codex_apply.sh
+```
+
+### Dispatch rules
+
+- **Always dispatch** isolated implementation tickets (single-file or single-system changes)
+- **Never dispatch** architecture changes, cross-system refactors, or shared interface modifications — do those in lead worktree directly
+- Max 3 parallel dispatches if file scopes don't overlap
+- If Codex fails gate, either fix locally or rewrite the ticket and re-dispatch
+- After applying Codex results, always run gate to verify integration
+
+---
+
+## Delegation Template for Codex Tickets
+
+Every ticket in `tickets/` must include:
+
+```
+## Objective
+[One sentence: what this ticket delivers]
+
+## Non-goals
+[What this ticket explicitly does NOT do]
+
+## Scope
+Files/dirs to touch:
+- path/to/file.gd — [what changes]
+- path/to/test.gd — [what test to add]
+
+## Acceptance Criteria
+- [ ] Tests pass: [specific test names or patterns]
+- [ ] Gate passes: bash scripts/gate.sh
+- [ ] Smoke test: [tiny-run command that completes in <30s]
+
+## Risk Notes
+- Perf: [expected impact on tick time]
+- Signals: [any signal changes]
+- Data: [any EntityData/WorldData changes]
+
+## Context
+[Links to relevant code, prior tickets, or architecture docs]
+```
+
+**Quality bar:** If Codex needs to ask a follow-up question, the ticket was underspecified. Rewrite it.
+
+---
+
+## Autopilot Workflow (NO follow-up questions)
+
+When the user gives a feature request:
+
+1. **Plan** — Create an implementation plan and split into 3–7 tickets. Surface any architectural decisions or tradeoffs before starting.
+2. **Sequence** — Order tickets by dependency. Identify which can parallelize.
+3. **Delegate** — For isolated implementation tickets, dispatch to Codex Pro:
+   ```bash
+   bash tools/codex_dispatch.sh tickets/<ticket>.md
+   ```
+   - Dispatch up to 3 non-overlapping tickets in parallel
+   - Monitor with: `bash tools/codex_status.sh`
+   - Apply results: `bash tools/codex_apply.sh`
+4. **Implement directly** — Keep architecture/integration/refactor work in the lead worktree. Do not dispatch these to Codex.
+5. **Gate each ticket** — Run gate after each ticket lands:
+   ```bash
+   cd ~/github/new-world-wt/gate
+   git fetch origin
+   git reset --hard origin/lead/main
+   bash scripts/gate.sh
+   ```
+6. **Fix failures** — If gate fails, analyze, fix, and re-run until it passes. If a Codex ticket caused the failure, either fix locally or rewrite and re-dispatch.
+7. **Do not ask** the user for additional commands. Only ask questions if something is truly ambiguous; otherwise make reasonable defaults.
+8. **Summarize** — End by listing what changed (files, systems, signals) and how to run the demo end-to-end.
+
+---
 
 ## Phase 0 Checklist
 
@@ -202,37 +303,71 @@ Defined in GameConfig, referenced by each system's `_init()`:
 - [x] Camera (CameraController)
 - [x] HUD (status bar + entity info panel)
 - [x] Main scene (wires everything together)
-- [x] Gate scripts (gate.ps1, gate.sh)
-- [x] Tickets (010–150)
-- [x] Keyboard input (direct keycode, no Input Map)
-- [x] macOS trackpad support (pinch zoom + pan)
-- [x] Speed tuning (relaxed ~3 tiles/sec at 1x)
-- [x] Log filtering (QUIET_EVENTS, formatted output)
-- [x] Startup banner (seed, world size, entity count)
+- [x] Gate scripts (gate.sh)
+- [x] Tickets (010-150)
 
-## Known Limitations (Phase 0)
+## Phase 1 Checklist
 
-- In-memory only (no persistence to disk beyond JSON)
-- Greedy movement (no A* pathfinding)
+- [x] ResourceMap (per-tile food/wood/stone, biome-based init, regen)
+- [x] Entity inventory + job system (add_item/remove_item, MAX_CARRY=10)
+- [x] GatheringSystem (harvest tiles → inventory)
+- [x] BuildingData + BuildingManager (stockpile/shelter/campfire)
+- [x] ConstructionSystem (build_progress, resource cost)
+- [x] BuildingEffectSystem (campfire social, shelter energy)
+- [x] JobAssignmentSystem (gatherer/lumberjack/builder/miner ratios)
+- [x] BehaviorSystem expanded (resource gathering, building, stockpile actions, job bonuses)
+- [x] A* Pathfinder (Chebyshev heuristic, cached paths, greedy fallback)
+- [x] MovementSystem A* integration (path caching, arrival effects)
+- [x] PopulationSystem (births from food/shelter, natural death by age)
+- [x] EntityRenderer visual upgrade (job-based shapes: circle/triangle/square/diamond)
+- [x] BuildingRenderer (stockpile/shelter/campfire shapes, construction progress)
+- [x] HUD extension (pop count, stockpile resources, entity job/inventory)
+- [x] SaveManager (JSON save/load, F5/F9 quick save/load)
+- [x] Full system wiring (9 systems registered in main.gd)
+- [x] All tickets (300-440)
+
+## Phase 1 Events
+
+| Event | Fields |
+|-------|--------|
+| resource_gathered | entity_id, entity_name, resource_type, amount, tile_x, tile_y, tick |
+| building_placed | building_id, building_type, tile_x, tile_y |
+| building_completed | building_id, building_type, tile_x, tile_y, tick |
+| building_destroyed | building_id, building_type, tile_x, tile_y |
+| job_assigned | entity_id, entity_name, job, tick |
+| action_changed | entity_id, entity_name, from, to, tick |
+| action_chosen | entity_id, entity_name, action, tick |
+| resources_delivered | entity_id, entity_name, building_id, amount, tick |
+| food_taken | entity_id, entity_name, building_id, amount, hunger_after, tick |
+| entity_born | entity_id, entity_name, reason, position_x, position_y, tick |
+| entity_died_natural | entity_id, entity_name, age, tick |
+| game_saved | path, tick |
+| game_loaded | path, tick |
+
+## Known Limitations (Phase 1)
+
 - O(n) entity queries (no spatial indexing)
-- No save/load UI (data structures support it)
 - No multiplayer
 - Entity cap ~500 before performance concerns
-- No diagonal movement cost multiplier
+- Save/load RNG state may lose precision for very large state values
+- Building placement AI is basic (expanding ring search)
+- No day/night visual cycle
+- No inter-entity relationships (families, social networks)
+
+---
 
 ## Common Mistakes to Avoid
 
-These are patterns that have caused bugs or wasted time in this project:
-
-1. **Adding `@export` or `@onready` to core scripts** — core/ scripts must not depend on scene tree
-2. **Emitting signals with wrong argument count** — check SimulationBus signal definitions before emitting
-3. **Modifying EntityData outside EntityManager** — always go through EntityManager's public API
-4. **Forgetting to register new systems in SimulationEngine** — system won't run if not added to the systems array
-5. **Touching WorldData directly from UI code** — read only; mutations go through systems
-6. **Adding new constants as literals** — put them in GameConfig
-7. **Running the game without gate check** — always run gate script after changes
-8. **Using `Node.get_node()` in simulation code** — simulation layer has no scene tree awareness
-9. **Creating new Resource types when a Dictionary suffices** — don't over-engineer data containers in Phase 0
-10. **Ignoring Godot's `_process` vs `_physics_process` distinction** — simulation uses its own fixed tick, not `_physics_process`
-11. **Using `class_name` on RefCounted scripts** — Godot 4.6 headless mode can't resolve them; use `preload("res://path.gd")` and path-based `extends "res://path.gd"` instead
-12. **Using typed vars (`:=`) with Dictionary/Array lookups** — Godot 4.6 treats Variant inference as error; use `var x = dict[key]` (untyped) or explicit `var x: Type = ...`
+1. **Adding `@export` or `@onready` to core scripts** — core/ scripts must not depend on scene tree.
+2. **Emitting signals with wrong argument count** — check SimulationBus signal definitions before emitting.
+3. **Modifying EntityData outside EntityManager** — always go through EntityManager's public API.
+4. **Forgetting to register new systems in SimulationEngine** — system won't run if not added to the systems array.
+5. **Touching WorldData directly from UI code** — read only; mutations go through systems.
+6. **Adding new constants as literals** — put them in GameConfig.
+7. **Running the game without gate check** — always run gate script after changes.
+8. **Using `Node.get_node()` in simulation code** — simulation layer has no scene tree awareness.
+9. **Creating new Resource types when a Dictionary suffices** — don't over-engineer data containers in Phase 0.
+10. **Ignoring Godot's `_process` vs `_physics_process` distinction** — simulation uses its own fixed tick, not `_physics_process`.
+11. **Writing Codex tickets without non-goals** — Codex will scope-creep into adjacent systems without explicit boundaries.
+12. **Dispatching architecture work to Codex** — shared interfaces, signal definitions, and cross-system refactors stay in lead. Always.
+13. **Dispatching overlapping tickets in parallel** — check file scopes before parallel dispatch. Merge conflicts waste more time than sequential execution.

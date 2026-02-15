@@ -4,20 +4,42 @@ const SimulationEngine = preload("res://scripts/core/simulation_engine.gd")
 const WorldData = preload("res://scripts/core/world_data.gd")
 const WorldGenerator = preload("res://scripts/core/world_generator.gd")
 const EntityManager = preload("res://scripts/core/entity_manager.gd")
+const ResourceMap = preload("res://scripts/core/resource_map.gd")
+const Pathfinder = preload("res://scripts/core/pathfinder.gd")
+const BuildingManager = preload("res://scripts/core/building_manager.gd")
+const SaveManager = preload("res://scripts/core/save_manager.gd")
 const NeedsSystem = preload("res://scripts/systems/needs_system.gd")
 const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
+const ResourceRegenSystem = preload("res://scripts/systems/resource_regen_system.gd")
+const GatheringSystem = preload("res://scripts/systems/gathering_system.gd")
+const ConstructionSystem = preload("res://scripts/systems/construction_system.gd")
+const BuildingEffectSystem = preload("res://scripts/systems/building_effect_system.gd")
+const JobAssignmentSystem = preload("res://scripts/systems/job_assignment_system.gd")
+const PopulationSystem = preload("res://scripts/systems/population_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
 var world_generator: RefCounted
 var entity_manager: RefCounted
+var resource_map: RefCounted
+var pathfinder: RefCounted
+var building_manager: RefCounted
+var save_manager: RefCounted
+
 var needs_system: RefCounted
 var behavior_system: RefCounted
 var movement_system: RefCounted
+var resource_regen_system: RefCounted
+var gathering_system: RefCounted
+var construction_system: RefCounted
+var building_effect_system: RefCounted
+var job_assignment_system: RefCounted
+var population_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
+@onready var building_renderer: Node2D = $BuildingRenderer
 @onready var camera: Camera2D = $Camera
 @onready var hud: CanvasLayer = $HUD
 
@@ -35,30 +57,72 @@ func _ready() -> void:
 	world_generator = WorldGenerator.new()
 	world_generator.generate(world_data, seed_value)
 
+	# Initialize resource map
+	resource_map = ResourceMap.new()
+	resource_map.init_resources(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
+	var res_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	res_rng.seed = seed_value + 100
+	resource_map.populate_from_biomes(world_data, res_rng)
+
 	# Initialize entity manager
 	entity_manager = EntityManager.new()
 	entity_manager.init(world_data, sim_engine.rng)
 
-	# Create and register simulation systems
+	# Initialize pathfinder
+	pathfinder = Pathfinder.new()
+
+	# Initialize building manager
+	building_manager = BuildingManager.new()
+
+	# Initialize save manager
+	save_manager = SaveManager.new()
+
+	# ── Create simulation systems ──────────────────────────
+	resource_regen_system = ResourceRegenSystem.new()
+	resource_regen_system.init(resource_map, world_data)
+
+	job_assignment_system = JobAssignmentSystem.new()
+	job_assignment_system.init(entity_manager, building_manager)
+
 	needs_system = NeedsSystem.new()
 	needs_system.init(entity_manager)
 
+	building_effect_system = BuildingEffectSystem.new()
+	building_effect_system.init(entity_manager, building_manager, sim_engine)
+
 	behavior_system = BehaviorSystem.new()
-	behavior_system.init(entity_manager, world_data, sim_engine.rng)
+	behavior_system.init(entity_manager, world_data, sim_engine.rng, resource_map, building_manager)
+
+	gathering_system = GatheringSystem.new()
+	gathering_system.init(entity_manager, resource_map)
+
+	construction_system = ConstructionSystem.new()
+	construction_system.init(entity_manager, building_manager)
 
 	movement_system = MovementSystem.new()
-	movement_system.init(entity_manager, world_data)
+	movement_system.init(entity_manager, world_data, pathfinder, building_manager)
 
-	sim_engine.register_system(needs_system)
-	sim_engine.register_system(behavior_system)
-	sim_engine.register_system(movement_system)
+	population_system = PopulationSystem.new()
+	population_system.init(entity_manager, building_manager, world_data, sim_engine.rng)
 
-	# Render world
-	world_renderer.render_world(world_data)
+	# ── Register all systems (auto-sorted by priority) ─────
+	sim_engine.register_system(resource_regen_system)     # priority 5
+	sim_engine.register_system(job_assignment_system)     # priority 8
+	sim_engine.register_system(needs_system)              # priority 10
+	sim_engine.register_system(building_effect_system)    # priority 15
+	sim_engine.register_system(behavior_system)           # priority 20
+	sim_engine.register_system(gathering_system)          # priority 25
+	sim_engine.register_system(construction_system)       # priority 28
+	sim_engine.register_system(movement_system)           # priority 30
+	sim_engine.register_system(population_system)         # priority 50
+
+	# Render world (with resource tinting)
+	world_renderer.render_world(world_data, resource_map)
 
 	# Init renderers
 	entity_renderer.init(entity_manager)
-	hud.init(sim_engine, entity_manager)
+	building_renderer.init(building_manager)
+	hud.init(sim_engine, entity_manager, building_manager)
 
 	# Spawn initial entities
 	_spawn_initial_entities()
@@ -109,15 +173,45 @@ func _unhandled_input(event: InputEvent) -> void:
 				sim_engine.increase_speed()
 			KEY_COMMA:
 				sim_engine.decrease_speed()
+			KEY_F5:
+				_save_game()
+			KEY_F9:
+				_load_game()
+
+
+func _save_game() -> void:
+	var path: String = "user://quicksave.json"
+	var was_paused: bool = sim_engine.is_paused
+	sim_engine.is_paused = true
+	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map)
+	if success:
+		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
+	else:
+		push_warning("[Main] Save failed!")
+	sim_engine.is_paused = was_paused
+
+
+func _load_game() -> void:
+	var path: String = "user://quicksave.json"
+	sim_engine.is_paused = true
+	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data)
+	if success:
+		# Re-render world with loaded resource data
+		world_renderer.render_world(world_data, resource_map)
+		print("[Main] Game loaded from %s (tick %d)" % [path, sim_engine.current_tick])
+	else:
+		push_warning("[Main] Load failed!")
+	sim_engine.is_paused = false
 
 
 func _print_startup_banner(seed_value: int) -> void:
 	print("")
-	print("╔══════════════════════════════════════╗")
-	print("║  WorldSim Phase 0                    ║")
-	print("║  Seed: %-30d ║" % seed_value)
-	print("║  World: %dx%d  |  Entities: %-8d ║" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
-	print("╚══════════════════════════════════════╝")
+	print("======================================")
+	print("  WorldSim Phase 1")
+	print("  Seed: %d" % seed_value)
+	print("  World: %dx%d  |  Entities: %d" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
+	print("  Systems: %d registered" % sim_engine._systems.size())
+	print("======================================")
 	print("")
 	print("  Controls:")
 	print("    WASD / Arrows  = Pan camera")
@@ -129,4 +223,6 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    Space          = Pause / Resume")
 	print("    . (period)     = Speed up")
 	print("    , (comma)      = Speed down")
+	print("    F5             = Quick Save")
+	print("    F9             = Quick Load")
 	print("")
