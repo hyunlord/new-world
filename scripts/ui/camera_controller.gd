@@ -5,6 +5,12 @@ var _target_zoom: float = 1.0
 var _is_dragging: bool = false
 var _drag_start: Vector2 = Vector2.ZERO
 
+## Left-click drag pan state
+var _left_dragging: bool = false
+var _left_drag_start: Vector2 = Vector2.ZERO
+var _left_was_dragged: bool = false
+const DRAG_THRESHOLD: float = 5.0
+
 
 func _ready() -> void:
 	# Start at world center
@@ -16,6 +22,18 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Left-click drag pan
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_left_dragging = true
+			_left_drag_start = event.position
+			_left_was_dragged = false
+		else:
+			_left_dragging = false
+			if _left_was_dragged:
+				# Was a drag — consume so EntityRenderer doesn't select
+				get_viewport().set_input_as_handled()
+
 	# Mouse wheel zoom
 	if event is InputEventMouseButton:
 		if event.pressed:
@@ -33,11 +51,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.button_index == MOUSE_BUTTON_MIDDLE:
 				_is_dragging = false
 
-	# Mouse drag pan
-	if event is InputEventMouseMotion and _is_dragging:
-		position += (_drag_start - event.position) / zoom.x
-		_drag_start = event.position
-		get_viewport().set_input_as_handled()
+	# Mouse motion: middle-click drag or left-click drag
+	if event is InputEventMouseMotion:
+		if _is_dragging:
+			position += (_drag_start - event.position) / zoom.x
+			_drag_start = event.position
+			get_viewport().set_input_as_handled()
+		elif _left_dragging:
+			var moved: float = event.position.distance_to(_left_drag_start)
+			if moved > DRAG_THRESHOLD:
+				_left_was_dragged = true
+			if _left_was_dragged:
+				position += -event.relative / zoom.x
+				get_viewport().set_input_as_handled()
 
 	# macOS trackpad: pinch zoom
 	if event is InputEventMagnifyGesture:
