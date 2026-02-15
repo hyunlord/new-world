@@ -319,10 +319,14 @@ func _should_place_building() -> bool:
 		return true
 	var alive_count: int = _entity_manager.get_alive_count()
 	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
-	if shelters.size() * 6 < alive_count:
+	# Preemptive: build when within 6 of shelter cap (not just at cap)
+	if shelters.size() * 6 < alive_count + 6:
 		return true
 	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
 	if campfires.is_empty():
+		return true
+	# More stockpiles as population grows
+	if stockpiles.size() < alive_count / 10 + 1:
 		return true
 	return false
 
@@ -349,7 +353,7 @@ func _try_place_building(entity: RefCounted) -> RefCounted:
 
 	if stockpiles.is_empty():
 		btype = "stockpile"
-	elif shelters.size() * 6 < alive_count:
+	elif shelters.size() * 6 < alive_count + 6:
 		btype = "shelter"
 	elif campfires.is_empty():
 		btype = "campfire"

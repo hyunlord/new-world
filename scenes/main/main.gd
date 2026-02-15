@@ -160,8 +160,15 @@ func _spawn_initial_entities() -> void:
 	print("[Main] Spawned %d entities near world center." % count)
 
 
+var _last_overlay_tick: int = 0
+
 func _process(delta: float) -> void:
 	sim_engine.update(delta)
+	# Refresh resource overlay every 100 ticks
+	var current_tick: int = sim_engine.current_tick
+	if current_tick - _last_overlay_tick >= 100:
+		_last_overlay_tick = current_tick
+		world_renderer.update_resource_overlay()
 
 
 func _unhandled_input(event: InputEvent) -> void:

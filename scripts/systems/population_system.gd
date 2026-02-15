@@ -28,6 +28,11 @@ func _check_births(tick: int) -> void:
 	if _building_manager == null:
 		return
 	var alive_count: int = _entity_manager.get_alive_count()
+
+	# Diagnostic logging every 500 ticks
+	if tick % 500 == 0 and alive_count >= 5:
+		_log_population_status(tick, alive_count)
+
 	if alive_count >= GameConfig.MAX_ENTITIES:
 		return
 
@@ -35,16 +40,13 @@ func _check_births(tick: int) -> void:
 	if alive_count < 5:
 		return
 
-	# Count shelters
+	# Count ALL shelters (built + under construction count toward housing)
 	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
-	var built_shelters: int = 0
-	for i in range(shelters.size()):
-		var s = shelters[i]
-		if s.is_built:
-			built_shelters += 1
+	var total_shelters: int = shelters.size()
 
 	# Housing check: allow up to 25 pop without shelters, then need shelters
-	if alive_count >= 25 and built_shelters * 6 <= alive_count:
+	# Use < instead of <= so growth is allowed at exact boundary
+	if alive_count >= 25 and total_shelters * 6 < alive_count:
 		return
 
 	# Sum food across all built stockpiles
@@ -62,7 +64,7 @@ func _check_births(tick: int) -> void:
 			best_food = food
 			best_stockpile = sp
 
-	# Food threshold: need food >= alive_count * 1.0 (relaxed from *2.0)
+	# Food threshold: need food >= alive_count * 1.0
 	if total_food < float(alive_count) * 1.0:
 		return
 	if best_stockpile == null:
@@ -109,6 +111,27 @@ func _check_natural_deaths(tick: int) -> void:
 				"age": entity.age,
 				"tick": tick,
 			})
+
+
+func _log_population_status(tick: int, alive_count: int) -> void:
+	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
+	var total_shelters: int = shelters.size()
+	var built_shelters: int = 0
+	for i in range(shelters.size()):
+		if shelters[i].is_built:
+			built_shelters += 1
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	var total_food: float = 0.0
+	for i in range(stockpiles.size()):
+		var sp = stockpiles[i]
+		if sp.is_built:
+			total_food += sp.storage.get("food", 0.0)
+	var housing_cap: int = 25 if total_shelters == 0 else total_shelters * 6
+	var food_ok: bool = total_food >= float(alive_count) * 1.0
+	var housing_ok: bool = alive_count < 25 or total_shelters * 6 >= alive_count
+	print("[Tick %d] [Pop] pop=%d food=%.0f shelters=%d(%d built) | housing_cap=%d food_ok=%s housing_ok=%s" % [
+		tick, alive_count, total_food, total_shelters, built_shelters, housing_cap, str(food_ok), str(housing_ok),
+	])
 
 
 func _find_walkable_near(cx: int, cy: int) -> Vector2i:

@@ -6,6 +6,7 @@ var _time_label: Label
 var _speed_label: Label
 var _tick_label: Label
 var _pop_label: Label
+var _building_label: Label
 var _resource_label: Label
 var _fps_label: Label
 
@@ -67,6 +68,7 @@ func _build_top_bar() -> void:
 	_speed_label = _make_label("1x")
 	_tick_label = _make_label("Tick: 0")
 	_pop_label = _make_label("Pop: 0")
+	_building_label = _make_label("Bld:0 Wip:0")
 	_resource_label = _make_label("Food:0 Wood:0 Stone:0")
 	_fps_label = _make_label("FPS: 60")
 
@@ -75,6 +77,7 @@ func _build_top_bar() -> void:
 	hbox.add_child(_speed_label)
 	hbox.add_child(_tick_label)
 	hbox.add_child(_pop_label)
+	hbox.add_child(_building_label)
 	hbox.add_child(_resource_label)
 	hbox.add_child(_fps_label)
 
@@ -154,6 +157,18 @@ func _process(_delta: float) -> void:
 	if _entity_manager:
 		_pop_label.text = "Pop: %d" % _entity_manager.get_alive_count()
 
+	# Building count
+	if _building_manager != null:
+		var all_buildings: Array = _building_manager.get_all_buildings()
+		var built_count: int = 0
+		var wip_count: int = 0
+		for i in range(all_buildings.size()):
+			if all_buildings[i].is_built:
+				built_count += 1
+			else:
+				wip_count += 1
+		_building_label.text = "Bld:%d Wip:%d" % [built_count, wip_count]
+
 	# Stockpile resource totals
 	if _building_manager != null:
 		var totals: Dictionary = _get_stockpile_totals()
@@ -177,6 +192,15 @@ func _process(_delta: float) -> void:
 			var action_text: String = entity.current_action
 			if entity.action_target != Vector2i(-1, -1):
 				action_text += " -> (%d,%d)" % [entity.action_target.x, entity.action_target.y]
+				# Add build progress if building
+				if entity.current_action == "build" and _building_manager != null:
+					var target: Vector2i = entity.action_target
+					var building = _building_manager.get_building_at(target.x, target.y)
+					if building != null and not building.is_built:
+						action_text += " [%d%%]" % int(building.build_progress * 100)
+			# Add path info if pathfinding
+			if entity.cached_path.size() > 0:
+				action_text += " Path: %d steps" % (entity.cached_path.size() - entity.path_index)
 			_entity_action_label.text = "Action: %s" % action_text
 			_entity_inventory_label.text = "Inv: F:%.1f W:%.1f S:%.1f / %.0f" % [
 				entity.inventory.get("food", 0.0),
