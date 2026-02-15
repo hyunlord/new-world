@@ -4,6 +4,28 @@
 
 ---
 
+## Phase 2: SocialEventSystem (T-1070)
+
+### T-1070: Social Event System
+- `social_event_system.gd` (NEW) — priority=37, tick_interval=30:
+  - 청크 기반 근접 체크 (같은 16x16 청크, 2타일 이내)
+  - 9종 이벤트: casual_talk, deep_talk, share_food, work_together, flirt, give_gift, proposal, console, argument
+  - 가중 랜덤 이벤트 선택 (성격/상황 기반 가중치)
+  - casual_talk: affinity+2, trust+1
+  - deep_talk: affinity+5, trust+3 (extraversion>0.4)
+  - share_food: affinity+8, trust+5, food 1.0 실전달
+  - work_together: affinity+3, trust+2 (같은 직업+행동)
+  - flirt: romantic_interest+8, close_friend→romantic 승격
+  - give_gift: affinity+10, romantic_interest+5, 자원 1.0 소비
+  - proposal: compatibility 기반 수락확률, partner 형성, 토스트
+  - console: grief-0.05, affinity+6, trust+3
+  - argument: affinity-5, trust-8, stress+0.1 양쪽
+  - 100틱마다 relationship decay 호출
+  - 틱당 에이전트당 1이벤트 제한 (스팸 방지)
+- `main.gd` — SocialEventSystem 초기화+등록 (priority 37)
+
+---
+
 ## Phase 2: RelationshipManager (T-1060)
 
 ### T-1060: Relationship Manager + Data

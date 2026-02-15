@@ -19,6 +19,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
 | 28 | ConstructionSystem | 5 | 행동 기반 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
 | 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
+| 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 (식량/주거 조건), 자연사 (60세+ 확률 증가) | `scripts/systems/population_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
@@ -140,6 +141,14 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|-----------|----------|----------|
 | building_placed | BehaviorSystem | building_id, building_type, tile_x, tile_y | ✅ |
 | building_completed | ConstructionSystem | building_id, building_type, tile_x, tile_y | ✅ `# BUILT: type at (x,y)` |
+
+### 사회 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| social_event | SocialEventSystem | type_name, entity_a_id, entity_a_name, entity_b_id, entity_b_name, relationship_type, affinity, tick | ✅ (casual_talk 제외) |
+| proposal_accepted | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ (HUD 토스트) |
+| proposal_rejected | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ |
 
 ### 정착지 이벤트
 
