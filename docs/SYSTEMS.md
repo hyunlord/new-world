@@ -21,6 +21,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 30 | MovementSystem | 3 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
 | 50 | PopulationSystem | 60 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
 | 60 | MigrationSystem | 200 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
+| 90 | StatsRecorder | 50 | 인구/자원/직업 스냅샷 기록 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
 ---
 
@@ -32,7 +33,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | EntityManager | 에이전트 생성/삭제/조회, 위치 이동 | `scripts/core/entity_manager.gd` |
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
-| SaveManager | JSON 저장/로드 (F5/F9) | `scripts/core/save_manager.gd` |
+| SaveManager | JSON 저장/로드 (Cmd+S/Cmd+L) | `scripts/core/save_manager.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
 ---
@@ -67,6 +68,8 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | `ui_notification(message: String, type: String)` | 메시지, 타입 | UI 알림 |
 | `entity_selected(entity_id: int)` | 엔티티 ID | 에이전트 선택 |
 | `entity_deselected()` | - | 선택 해제 |
+| `building_selected(building_id: int)` | 건물 ID | 건물 선택 |
+| `building_deselected()` | - | 건물 선택 해제 |
 | `tick_completed(tick: int)` | 현재 틱 | 틱 완료 알림 |
 | `speed_changed(speed_index: int)` | 속도 인덱스 | 속도 변경 |
 | `pause_changed(paused: bool)` | 일시정지 여부 | 일시정지 변경 |
@@ -151,4 +154,6 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | EntityRenderer | 에이전트 도형, 선택 표시, LOD (3단계) | `scripts/ui/entity_renderer.gd` |
 | BuildingRenderer | 건물 도형, 건설 바, LOD (3단계) | `scripts/ui/building_renderer.gd` |
 | CameraController | WASD/마우스/트랙패드 카메라, 줌 보간 | `scripts/ui/camera_controller.gd` |
-| HUD | 상단 바, 엔티티 패널, 토스트 | `scripts/ui/hud.gd` |
+| HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트 | `scripts/ui/hud.gd` |
+| MinimapPanel | 미니맵 (160×160, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨) | `scripts/ui/minimap_panel.gd` |
+| StatsPanel | 통계 패널 (인구/자원 그래프, 직업 분포 바) | `scripts/ui/stats_panel.gd` |

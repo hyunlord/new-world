@@ -19,6 +19,7 @@ const JobAssignmentSystem = preload("res://scripts/systems/job_assignment_system
 const PopulationSystem = preload("res://scripts/systems/population_system.gd")
 const SettlementManager = preload("res://scripts/core/settlement_manager.gd")
 const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
+const StatsRecorder = preload("res://scripts/systems/stats_recorder.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -29,6 +30,7 @@ var pathfinder: RefCounted
 var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
+var stats_recorder: RefCounted
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -115,6 +117,9 @@ func _ready() -> void:
 	migration_system = MigrationSystem.new()
 	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
 
+	stats_recorder = StatsRecorder.new()
+	stats_recorder.init(entity_manager, building_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
 	sim_engine.register_system(job_assignment_system)     # priority 8
@@ -126,14 +131,15 @@ func _ready() -> void:
 	sim_engine.register_system(movement_system)           # priority 30
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(migration_system)          # priority 60
+	sim_engine.register_system(stats_recorder)            # priority 90
 
 	# Render world (with resource tinting)
 	world_renderer.render_world(world_data, resource_map)
 
-	# Init renderers
-	entity_renderer.init(entity_manager)
-	building_renderer.init(building_manager)
-	hud.init(sim_engine, entity_manager, building_manager, settlement_manager)
+	# Init renderers with updated references
+	entity_renderer.init(entity_manager, building_manager)
+	building_renderer.init(building_manager, settlement_manager)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder)
 
 	# Spawn initial entities + create first settlement
 	_spawn_initial_entities()
@@ -181,14 +187,45 @@ func _spawn_initial_entities() -> void:
 
 
 var _last_overlay_tick: int = 0
+var _last_minimap_tick: int = 0
 
 func _process(delta: float) -> void:
 	sim_engine.update(delta)
-	# Refresh resource overlay every 100 ticks
 	var current_tick: int = sim_engine.current_tick
+
+	# Refresh resource overlay every 100 ticks
 	if current_tick - _last_overlay_tick >= 100:
 		_last_overlay_tick = current_tick
 		world_renderer.update_resource_overlay()
+
+	# Refresh minimap every 20 ticks
+	if current_tick - _last_minimap_tick >= 20:
+		_last_minimap_tick = current_tick
+		var minimap = hud.get_minimap()
+		if minimap != null:
+			minimap.request_update()
+			minimap.update_minimap()
+
+	# Day/night cycle
+	if sim_engine:
+		var gt: Dictionary = sim_engine.get_game_time()
+		var daylight: Color = _get_daylight_color(gt.hour)
+		world_renderer.modulate = daylight
+
+
+func _get_daylight_color(hour: int) -> Color:
+	match hour:
+		4:
+			return Color(0.55, 0.55, 0.73)
+		5:
+			return Color(0.85, 0.85, 0.93)
+		18:
+			return Color(1.0, 0.93, 0.85)
+		19:
+			return Color(0.7, 0.63, 0.65)
+	if hour >= 6 and hour <= 17:
+		return Color(1.0, 1.0, 1.0)
+	return Color(0.4, 0.4, 0.6)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -211,6 +248,13 @@ func _unhandled_input(event: InputEvent) -> void:
 					sim_engine.decrease_speed()
 				KEY_TAB:
 					world_renderer.toggle_resource_overlay()
+					hud.set_resource_legend_visible(world_renderer.is_resource_overlay_visible())
+				KEY_M:
+					hud.toggle_minimap()
+				KEY_G:
+					hud.toggle_stats()
+				KEY_H:
+					hud.toggle_help()
 
 
 func _save_game() -> void:
@@ -241,7 +285,7 @@ func _load_game() -> void:
 func _print_startup_banner(seed_value: int) -> void:
 	print("")
 	print("======================================")
-	print("  WorldSim Phase 1")
+	print("  WorldSim Phase 1.5")
 	print("  Seed: %d" % seed_value)
 	print("  World: %dx%d  |  Entities: %d" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
 	print("  Systems: %d registered" % sim_engine._systems.size())
@@ -253,11 +297,14 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    Trackpad Pinch = Zoom in/out")
 	print("    Two-finger Pan = Scroll camera")
 	print("    Middle Mouse   = Drag pan")
-	print("    Left Click     = Select entity")
+	print("    Left Click     = Select entity/building")
 	print("    Space          = Pause / Resume")
 	print("    . (period)     = Speed up")
 	print("    , (comma)      = Speed down")
 	print("    Tab            = Toggle resource overlay")
+	print("    M              = Toggle minimap")
+	print("    G              = Toggle stats")
+	print("    H              = Help overlay")
 	print("    Cmd+S          = Quick Save")
 	print("    Cmd+L          = Quick Load")
 	print("")

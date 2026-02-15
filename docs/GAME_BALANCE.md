@@ -219,6 +219,37 @@ urgency(deficit) = deficit^2 (지수 곡선)
 
 ---
 
+## 통계 기록 (StatsRecorder)
+
+| 항목 | 값 | 코드 위치 |
+|------|-----|----------|
+| 기록 간격 | 50틱 | `StatsRecorder.tick_interval = 50` |
+| 최대 기록 수 | 200 스냅샷 (= 10,000틱 ≈ 17분) | `StatsRecorder.MAX_HISTORY` |
+| 기록 항목 | tick, pop, food, wood, stone, gatherers, lumberjacks, builders, miners | `stats_recorder.gd` |
+
+## 미니맵 갱신
+
+| 항목 | 값 | 코드 위치 |
+|------|-----|----------|
+| 미니맵 갱신 간격 | 20틱 | `main.gd._process()` |
+| 자원 오버레이 갱신 | 100틱 | `main.gd._process()` |
+
+## 낮/밤 사이클
+
+| 시간대 (hour) | 색상 | Color 값 | 비고 |
+|--------------|------|----------|------|
+| 0~3 (밤) | 어두운 파랑 | `Color(0.4, 0.4, 0.6)` | |
+| 4 (새벽) | 보라 빛 | `Color(0.55, 0.55, 0.73)` | |
+| 5 (여명) | 밝은 회색 | `Color(0.85, 0.85, 0.93)` | |
+| 6~17 (낮) | 흰색 | `Color(1.0, 1.0, 1.0)` | 기본 |
+| 18 (석양) | 따뜻한 톤 | `Color(1.0, 0.93, 0.85)` | |
+| 19 (황혼) | 붉은 회색 | `Color(0.7, 0.63, 0.65)` | |
+| 20~23 (밤) | 어두운 파랑 | `Color(0.4, 0.4, 0.6)` | |
+
+적용: `world_renderer.modulate`를 시간에 따라 설정 (`main.gd._process`).
+
+---
+
 ## 경로 탐색
 
 | 항목 | 값 | 코드 위치 |
