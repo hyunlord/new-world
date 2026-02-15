@@ -144,9 +144,9 @@ scripts/            — gate.ps1, gate.sh (build verification)
 
 ```
 Main._process(delta) → sim_engine.update(delta)
-  ├ NeedsSystem   (prio=10, every tick)      — decay hunger/energy/social, starvation
-  ├ BehaviorSystem (prio=20, every 5 ticks)  — Utility AI action selection
-  └ MovementSystem (prio=30, every tick)     — greedy 8-dir movement, arrival effects
+  ├ NeedsSystem   (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
+  ├ BehaviorSystem (prio=20, every 10 ticks)  — Utility AI action selection
+  └ MovementSystem (prio=30, every 3 ticks)   — greedy 8-dir movement, arrival effects
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
@@ -166,6 +166,29 @@ System detects change
 
 **Never** call UI from simulation code. **Never** call one system from another directly. Everything goes through SimulationBus.
 
+## Input Handling
+
+- **No Input Map** — project.godot has no [input] section; all input handled via direct keycode/event checks
+- **Keyboard**: `_unhandled_input` with `event.keycode` match (KEY_SPACE, KEY_PERIOD, KEY_COMMA)
+- **WASD/Arrows**: `_process` with `Input.is_key_pressed()` for continuous movement
+- **Mouse**: `InputEventMouseButton` for wheel zoom and middle-click drag
+- **macOS Trackpad**: `InputEventMagnifyGesture` for pinch zoom, `InputEventPanGesture` for two-finger pan
+- **Entity selection**: Left click in EntityRenderer with canvas_transform conversion
+
+## Simulation Speed Constants
+
+Defined in GameConfig, referenced by each system's `_init()`:
+- `NEEDS_TICK_INTERVAL = 2` — needs decay every 2 ticks
+- `BEHAVIOR_TICK_INTERVAL = 10` — AI decision every 10 ticks (1 sec at 10 TPS)
+- `MOVEMENT_TICK_INTERVAL = 3` — movement every 3 ticks (~3.3 tiles/sec at 1x)
+
+## Log Policy
+
+- `EventLogger.QUIET_EVENTS` suppresses high-frequency events from console (e.g., `entity_moved`)
+- All events still stored in EventLogger for queries
+- Console output uses formatted messages with event-type prefixes (+, x, ~, *)
+- `action_chosen` suppressed (covered by `action_changed`)
+
 ## Phase 0 Checklist
 
 - [x] Fixed timestep tick loop (SimulationEngine)
@@ -179,6 +202,11 @@ System detects change
 - [x] Main scene (wires everything together)
 - [x] Gate scripts (gate.ps1, gate.sh)
 - [x] Tickets (010–150)
+- [x] Keyboard input (direct keycode, no Input Map)
+- [x] macOS trackpad support (pinch zoom + pan)
+- [x] Speed tuning (relaxed ~3 tiles/sec at 1x)
+- [x] Log filtering (QUIET_EVENTS, formatted output)
+- [x] Startup banner (seed, world size, entity count)
 
 ## Known Limitations (Phase 0)
 
