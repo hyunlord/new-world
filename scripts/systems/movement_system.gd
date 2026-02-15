@@ -137,13 +137,13 @@ func _apply_arrival_effect(entity: RefCounted, tick: int) -> void:
 		"gather_food":
 			# Eat gathered food from inventory
 			var food_in_inv: float = entity.inventory.get("food", 0.0)
-			var eat_amount: float = minf(food_in_inv, 2.0)
+			var eat_amount: float = minf(food_in_inv, 3.0)
 			if eat_amount > 0.0:
 				entity.remove_item("food", eat_amount)
-				entity.hunger = minf(entity.hunger + eat_amount * 0.2, 1.0)
+				entity.hunger = minf(entity.hunger + eat_amount * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
 			else:
 				# Minor foraging (backward compat with seek_food)
-				entity.hunger = minf(entity.hunger + 0.1, 1.0)
+				entity.hunger = minf(entity.hunger + 0.15, 1.0)
 			emit_event("entity_ate", {
 				"entity_id": entity.id,
 				"entity_name": entity.entity_name,
@@ -181,6 +181,27 @@ func _apply_arrival_effect(entity: RefCounted, tick: int) -> void:
 			_take_from_stockpile(entity, tick)
 		"gather_wood", "gather_stone", "build", "wander":
 			pass
+
+	# Auto-eat on any action completion when hungry
+	_try_auto_eat(entity, tick)
+
+
+func _try_auto_eat(entity: RefCounted, tick: int) -> void:
+	if entity.hunger >= GameConfig.HUNGER_EAT_THRESHOLD:
+		return
+	var food_in_inv: float = entity.inventory.get("food", 0.0)
+	if food_in_inv <= 0.0:
+		return
+	var eat_amount: float = minf(food_in_inv, 2.0)
+	entity.remove_item("food", eat_amount)
+	entity.hunger = minf(entity.hunger + eat_amount * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
+	emit_event("auto_eat", {
+		"entity_id": entity.id,
+		"entity_name": entity.entity_name,
+		"amount": eat_amount,
+		"hunger_after": entity.hunger,
+		"tick": tick,
+	})
 
 
 func _deliver_to_stockpile(entity: RefCounted, tick: int) -> void:
@@ -228,7 +249,7 @@ func _take_from_stockpile(entity: RefCounted, tick: int) -> void:
 	var take_amount: float = minf(available_food, 3.0)
 	if take_amount > 0.0:
 		stockpile.storage["food"] = available_food - take_amount
-		entity.hunger = minf(entity.hunger + take_amount * 0.15, 1.0)
+		entity.hunger = minf(entity.hunger + take_amount * 0.25, 1.0)
 		emit_event("food_taken", {
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,

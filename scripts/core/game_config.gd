@@ -71,10 +71,17 @@ const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
 ## Entity need decay rates (per needs tick)
-const HUNGER_DECAY_RATE: float = 0.005
-const ENERGY_DECAY_RATE: float = 0.003
-const ENERGY_ACTION_COST: float = 0.006
+const HUNGER_DECAY_RATE: float = 0.002
+const ENERGY_DECAY_RATE: float = 0.002
+const ENERGY_ACTION_COST: float = 0.004
 const SOCIAL_DECAY_RATE: float = 0.002
+
+## Starvation grace period
+const STARVATION_GRACE_TICKS: int = 50
+
+## Eating constants
+const FOOD_HUNGER_RESTORE: float = 0.3
+const HUNGER_EAT_THRESHOLD: float = 0.5
 
 ## World generation
 const WORLD_SEED: int = 42
@@ -90,8 +97,8 @@ enum ResourceType { FOOD, WOOD, STONE }
 
 ## Biome-resource mapping: biome -> {food_min, food_max, wood_min, wood_max, stone_min, stone_max}
 const BIOME_RESOURCES: Dictionary = {
-	Biome.GRASSLAND: {"food_min": 3.0, "food_max": 5.0, "wood_min": 0.0, "wood_max": 0.0, "stone_min": 0.0, "stone_max": 0.0},
-	Biome.FOREST: {"food_min": 1.0, "food_max": 2.0, "wood_min": 5.0, "wood_max": 8.0, "stone_min": 0.0, "stone_max": 0.0},
+	Biome.GRASSLAND: {"food_min": 5.0, "food_max": 10.0, "wood_min": 0.0, "wood_max": 0.0, "stone_min": 0.0, "stone_max": 0.0},
+	Biome.FOREST: {"food_min": 2.0, "food_max": 5.0, "wood_min": 5.0, "wood_max": 8.0, "stone_min": 0.0, "stone_max": 0.0},
 	Biome.DENSE_FOREST: {"food_min": 0.0, "food_max": 1.0, "wood_min": 8.0, "wood_max": 12.0, "stone_min": 0.0, "stone_max": 0.0},
 	Biome.HILL: {"food_min": 0.0, "food_max": 0.0, "wood_min": 0.0, "wood_max": 1.0, "stone_min": 3.0, "stone_max": 6.0},
 	Biome.MOUNTAIN: {"food_min": 0.0, "food_max": 0.0, "wood_min": 0.0, "wood_max": 0.0, "stone_min": 5.0, "stone_max": 10.0},
@@ -99,25 +106,25 @@ const BIOME_RESOURCES: Dictionary = {
 }
 
 ## Resource regen rates (per regen tick)
-const FOOD_REGEN_RATE: float = 0.5
+const FOOD_REGEN_RATE: float = 1.0
 const WOOD_REGEN_RATE: float = 0.3
 const STONE_REGEN_RATE: float = 0.0
 
 ## Resource regen tick interval
-const RESOURCE_REGEN_TICK_INTERVAL: int = 100
+const RESOURCE_REGEN_TICK_INTERVAL: int = 50
 
 ## Building type definitions
 const BUILDING_TYPES: Dictionary = {
-	"stockpile": {"cost": {"wood": 3.0}, "build_ticks": 50, "radius": 8},
-	"shelter": {"cost": {"wood": 5.0, "stone": 2.0}, "build_ticks": 80, "radius": 0},
-	"campfire": {"cost": {"wood": 2.0}, "build_ticks": 30, "radius": 5},
+	"stockpile": {"cost": {"wood": 2.0}, "build_ticks": 30, "radius": 8},
+	"shelter": {"cost": {"wood": 4.0, "stone": 1.0}, "build_ticks": 50, "radius": 0},
+	"campfire": {"cost": {"wood": 1.0}, "build_ticks": 20, "radius": 5},
 }
 
 ## Job ratios (target distribution)
 const JOB_RATIOS: Dictionary = {
-	"gatherer": 0.4,
-	"lumberjack": 0.3,
-	"builder": 0.2,
+	"gatherer": 0.5,
+	"lumberjack": 0.25,
+	"builder": 0.15,
 	"miner": 0.1,
 }
 
@@ -126,14 +133,14 @@ const GATHERING_TICK_INTERVAL: int = 3
 const CONSTRUCTION_TICK_INTERVAL: int = 5
 const BUILDING_EFFECT_TICK_INTERVAL: int = 10
 const JOB_ASSIGNMENT_TICK_INTERVAL: int = 50
-const POPULATION_TICK_INTERVAL: int = 100
+const POPULATION_TICK_INTERVAL: int = 60
 
 ## Entity inventory
 const MAX_CARRY: float = 10.0
-const GATHER_AMOUNT: float = 1.0
+const GATHER_AMOUNT: float = 2.0
 
 ## Population
-const BIRTH_FOOD_COST: float = 5.0
+const BIRTH_FOOD_COST: float = 3.0
 const OLD_AGE_TICKS: int = 8640
 const MAX_AGE_TICKS: int = 17280
 

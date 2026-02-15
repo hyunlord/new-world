@@ -31,7 +31,16 @@ func execute_tick(tick: int) -> void:
 		if dx > 1 or dy > 1:
 			continue
 
-		building.build_progress += 0.05
+		# Calculate progress per tick from build_ticks config
+		var build_ticks: int = GameConfig.BUILDING_TYPES.get(
+			building.building_type, {}
+		).get("build_ticks", 50)
+		var ticks_per_cycle: int = build_ticks / GameConfig.CONSTRUCTION_TICK_INTERVAL
+		if ticks_per_cycle < 1:
+			ticks_per_cycle = 1
+		var progress_per_tick: float = 1.0 / float(ticks_per_cycle)
+
+		building.build_progress += progress_per_tick
 		if building.build_progress >= 1.0:
 			building.build_progress = 1.0
 			building.is_built = true

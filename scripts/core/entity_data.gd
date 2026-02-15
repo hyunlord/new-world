@@ -21,6 +21,9 @@ var current_goal: String = ""
 var action_target: Vector2i = Vector2i(-1, -1)
 var action_timer: int = 0
 
+## Starvation grace period (ticks at hunger=0 before death)
+var starving_timer: int = 0
+
 ## Inventory (Phase 1)
 var inventory: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 
@@ -84,6 +87,7 @@ func to_dict() -> Dictionary:
 		"action_target_x": action_target.x,
 		"action_target_y": action_target.y,
 		"action_timer": action_timer,
+		"starving_timer": starving_timer,
 		"inventory": inventory.duplicate(),
 		"job": job,
 	}
@@ -107,6 +111,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.current_goal = data.get("current_goal", "")
 	e.action_target = Vector2i(data.get("action_target_x", -1), data.get("action_target_y", -1))
 	e.action_timer = data.get("action_timer", 0)
+	e.starving_timer = data.get("starving_timer", 0)
 	var inv_data: Dictionary = data.get("inventory", {})
 	e.inventory = {
 		"food": inv_data.get("food", 0.0),

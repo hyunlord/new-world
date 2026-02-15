@@ -31,6 +31,10 @@ func _check_births(tick: int) -> void:
 	if alive_count >= GameConfig.MAX_ENTITIES:
 		return
 
+	# Minimum population for births
+	if alive_count < 5:
+		return
+
 	# Count shelters
 	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
 	var built_shelters: int = 0
@@ -38,7 +42,9 @@ func _check_births(tick: int) -> void:
 		var s = shelters[i]
 		if s.is_built:
 			built_shelters += 1
-	if built_shelters * 4 <= alive_count:
+
+	# Housing check: allow up to 25 pop without shelters, then need shelters
+	if alive_count >= 25 and built_shelters * 6 <= alive_count:
 		return
 
 	# Sum food across all built stockpiles
@@ -56,7 +62,8 @@ func _check_births(tick: int) -> void:
 			best_food = food
 			best_stockpile = sp
 
-	if total_food < float(alive_count) * 2.0:
+	# Food threshold: need food >= alive_count * 1.0 (relaxed from *2.0)
+	if total_food < float(alive_count) * 1.0:
 		return
 	if best_stockpile == null:
 		return
