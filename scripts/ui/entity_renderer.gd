@@ -1,7 +1,10 @@
 class_name EntityRenderer
 extends Node2D
 
-var _entity_manager: EntityManager
+const EntityDataClass = preload("res://scripts/core/entity_data.gd")
+const EntityManagerClass = preload("res://scripts/core/entity_manager.gd")
+
+var _entity_manager: RefCounted
 var selected_entity_id: int = -1
 
 const DOT_RADIUS: float = 4.0
@@ -19,7 +22,7 @@ const ACTION_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: EntityManager) -> void:
+func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
@@ -30,10 +33,11 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if _entity_manager == null:
 		return
-	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
+	var alive: Array = _entity_manager.get_alive_entities()
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 
-	for entity: EntityData in alive:
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
 		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
 		var color: Color = ACTION_COLORS.get(entity.current_action, Color.WHITE)
 		draw_circle(pos, DOT_RADIUS, color)
@@ -65,10 +69,11 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
 
 	# Find entity at or near this tile
-	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
-	var best_entity: EntityData = null
+	var alive: Array = _entity_manager.get_alive_entities()
+	var best_entity: RefCounted = null
 	var best_dist: float = 3.0  # max click distance in tiles
-	for entity in alive:
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
 		var dist: float = Vector2(entity.position - tile).length()
 		if dist < best_dist:
 			best_dist = dist

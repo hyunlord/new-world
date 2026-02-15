@@ -1,17 +1,25 @@
 extends Node2D
 
-var sim_engine: SimulationEngine
-var world_data: WorldData
-var world_generator: WorldGenerator
-var entity_manager: EntityManager
-var needs_system: NeedsSystem
-var behavior_system: BehaviorSystem
-var movement_system: MovementSystem
+const SimulationEngine = preload("res://scripts/core/simulation_engine.gd")
+const WorldData = preload("res://scripts/core/world_data.gd")
+const WorldGenerator = preload("res://scripts/core/world_generator.gd")
+const EntityManager = preload("res://scripts/core/entity_manager.gd")
+const NeedsSystem = preload("res://scripts/systems/needs_system.gd")
+const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
+const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 
-@onready var world_renderer: WorldRenderer = $WorldRenderer
-@onready var entity_renderer: EntityRenderer = $EntityRenderer
-@onready var camera: CameraController = $Camera
-@onready var hud: HUD = $HUD
+var sim_engine: RefCounted
+var world_data: RefCounted
+var world_generator: RefCounted
+var entity_manager: RefCounted
+var needs_system: RefCounted
+var behavior_system: RefCounted
+var movement_system: RefCounted
+
+@onready var world_renderer: Sprite2D = $WorldRenderer
+@onready var entity_renderer: Node2D = $EntityRenderer
+@onready var camera: Camera2D = $Camera
+@onready var hud: CanvasLayer = $HUD
 
 
 func _ready() -> void:

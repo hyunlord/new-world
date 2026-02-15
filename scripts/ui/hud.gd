@@ -19,13 +19,13 @@ var _energy_bar: ProgressBar
 var _social_bar: ProgressBar
 var _entity_stats_label: Label
 
-var _sim_engine: SimulationEngine
-var _entity_manager: EntityManager
+var _sim_engine: RefCounted
+var _entity_manager: RefCounted
 var _selected_entity_id: int = -1
 
 
 ## Initialize HUD with system references
-func init(sim_engine: SimulationEngine, entity_manager: EntityManager) -> void:
+func init(sim_engine: RefCounted, entity_manager: RefCounted) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
 
@@ -58,7 +58,7 @@ func _build_top_bar() -> void:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 20)
 
-	_status_label = _make_label("▶")
+	_status_label = _make_label("\u25B6")
 	_time_label = _make_label("Y1 D1 H0")
 	_speed_label = _make_label("1x")
 	_tick_label = _make_label("Tick: 0")
@@ -150,7 +150,7 @@ func _process(_delta: float) -> void:
 
 	# Update selected entity info
 	if _selected_entity_id >= 0 and _entity_manager:
-		var entity: EntityData = _entity_manager.get_entity(_selected_entity_id)
+		var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
 		if entity and entity.is_alive:
 			_entity_name_label.text = entity.entity_name
 			_entity_pos_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]
@@ -200,9 +200,9 @@ func _make_bar(color: Color) -> ProgressBar:
 	var fill := StyleBoxFlat.new()
 	fill.bg_color = color
 	bar.add_theme_stylebox_override("fill", fill)
-	var bg := StyleBoxFlat.new()
-	bg.bg_color = Color(0.2, 0.2, 0.2, 0.8)
-	bar.add_theme_stylebox_override("background", bg)
+	var bg_style := StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.2, 0.2, 0.2, 0.8)
+	bar.add_theme_stylebox_override("background", bg_style)
 	return bar
 
 

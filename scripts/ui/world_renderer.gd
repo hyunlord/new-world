@@ -1,9 +1,11 @@
 class_name WorldRenderer
 extends Sprite2D
 
+const WorldDataClass = preload("res://scripts/core/world_data.gd")
+
 
 ## Render the entire world as a single image texture
-func render_world(world_data: WorldData) -> void:
+func render_world(world_data: RefCounted) -> void:
 	var w: int = world_data.width
 	var h: int = world_data.height
 	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
