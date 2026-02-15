@@ -1,7 +1,6 @@
-class_name NeedsSystem
-extends SimulationSystem
+extends "res://scripts/core/simulation_system.gd"
 
-var _entity_manager: EntityManager
+var _entity_manager: RefCounted
 
 
 func _init() -> void:
@@ -11,13 +10,14 @@ func _init() -> void:
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: EntityManager) -> void:
+func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
 func execute_tick(tick: int) -> void:
-	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
-	for entity: EntityData in alive:
+	var alive: Array = _entity_manager.get_alive_entities()
+	for i in range(alive.size()):
+		var entity = alive[i]
 		# Decay needs
 		entity.hunger -= GameConfig.HUNGER_DECAY_RATE
 		entity.energy -= GameConfig.ENERGY_DECAY_RATE

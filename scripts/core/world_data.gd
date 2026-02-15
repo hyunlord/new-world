@@ -1,4 +1,3 @@
-class_name WorldData
 extends RefCounted
 
 var width: int = 0
@@ -7,7 +6,7 @@ var biomes: PackedInt32Array
 var elevation: PackedFloat32Array
 var moisture: PackedFloat32Array
 var temperature: PackedFloat32Array
-var _entity_map: Dictionary = {}  # Vector2i → Array[int]
+var _entity_map: Dictionary = {}  # Vector2i -> Array[int]
 
 
 ## Initialize world arrays

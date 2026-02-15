@@ -1,4 +1,3 @@
-class_name EntityData
 extends RefCounted
 
 var id: int = -1
@@ -46,8 +45,9 @@ func to_dict() -> Dictionary:
 
 
 ## Deserialize from dictionary
-static func from_dict(data: Dictionary) -> EntityData:
-	var e := EntityData.new()
+static func from_dict(data: Dictionary) -> RefCounted:
+	var script = load("res://scripts/core/entity_data.gd")
+	var e = script.new()
 	e.id = data.get("id", -1)
 	e.entity_name = data.get("entity_name", "")
 	e.position = Vector2i(data.get("position_x", 0), data.get("position_y", 0))

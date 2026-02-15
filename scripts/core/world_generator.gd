@@ -1,9 +1,8 @@
-class_name WorldGenerator
 extends RefCounted
 
 
 ## Generate a procedural world using FastNoiseLite
-func generate(world_data: WorldData, seed_value: int) -> void:
+func generate(world_data: RefCounted, seed_value: int) -> void:
 	var elevation_noise := FastNoiseLite.new()
 	elevation_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	elevation_noise.fractal_octaves = GameConfig.NOISE_OCTAVES

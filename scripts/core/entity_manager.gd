@@ -1,9 +1,10 @@
-class_name EntityManager
 extends RefCounted
 
-var _entities: Dictionary = {}  # id → EntityData
+const EntityDataScript = preload("res://scripts/core/entity_data.gd")
+
+var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
-var _world_data: WorldData
+var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 
 const FIRST_NAMES: PackedStringArray = [
@@ -15,7 +16,7 @@ const FIRST_NAMES: PackedStringArray = [
 
 
 ## Initialize with world data and RNG reference
-func init(world_data: WorldData, rng: RandomNumberGenerator) -> void:
+func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	_world_data = world_data
 	_rng = rng
 
@@ -25,8 +26,8 @@ func _generate_name() -> String:
 
 
 ## Spawn a new entity at the given position
-func spawn_entity(pos: Vector2i) -> EntityData:
-	var entity := EntityData.new()
+func spawn_entity(pos: Vector2i) -> RefCounted:
+	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1
 	entity.entity_name = _generate_name()
@@ -48,8 +49,8 @@ func spawn_entity(pos: Vector2i) -> EntityData:
 
 
 ## Move an entity to a new position
-func move_entity(entity: EntityData, new_pos: Vector2i) -> void:
-	var old_pos := entity.position
+func move_entity(entity: RefCounted, new_pos: Vector2i) -> void:
+	var old_pos: Vector2i = entity.position
 	_world_data.move_entity(old_pos, new_pos, entity.id)
 	entity.position = new_pos
 
@@ -58,7 +59,7 @@ func move_entity(entity: EntityData, new_pos: Vector2i) -> void:
 func kill_entity(entity_id: int, cause: String) -> void:
 	if not _entities.has(entity_id):
 		return
-	var entity: EntityData = _entities[entity_id]
+	var entity = _entities[entity_id]
 	entity.is_alive = false
 	_world_data.unregister_entity(entity.position, entity.id)
 	SimulationBus.emit_event("entity_died", {
@@ -70,14 +71,16 @@ func kill_entity(entity_id: int, cause: String) -> void:
 
 
 ## Get entity by ID
-func get_entity(id: int) -> EntityData:
+func get_entity(id: int) -> RefCounted:
 	return _entities.get(id, null)
 
 
 ## Get all alive entities
-func get_alive_entities() -> Array[EntityData]:
-	var result: Array[EntityData] = []
-	for entity: EntityData in _entities.values():
+func get_alive_entities() -> Array:
+	var result: Array = []
+	var all_entities: Array = _entities.values()
+	for i in range(all_entities.size()):
+		var entity = all_entities[i]
 		if entity.is_alive:
 			result.append(entity)
 	return result
@@ -86,16 +89,20 @@ func get_alive_entities() -> Array[EntityData]:
 ## Get alive entity count
 func get_alive_count() -> int:
 	var count: int = 0
-	for entity: EntityData in _entities.values():
+	var all_entities: Array = _entities.values()
+	for i in range(all_entities.size()):
+		var entity = all_entities[i]
 		if entity.is_alive:
 			count += 1
 	return count
 
 
 ## Get entities within radius of position
-func get_entities_near(pos: Vector2i, radius: int) -> Array[EntityData]:
-	var result: Array[EntityData] = []
-	for entity: EntityData in _entities.values():
+func get_entities_near(pos: Vector2i, radius: int) -> Array:
+	var result: Array = []
+	var all_entities: Array = _entities.values()
+	for i in range(all_entities.size()):
+		var entity = all_entities[i]
 		if entity.is_alive:
 			var dist: int = absi(entity.position.x - pos.x) + absi(entity.position.y - pos.y)
 			if dist <= radius:
@@ -104,20 +111,23 @@ func get_entities_near(pos: Vector2i, radius: int) -> Array[EntityData]:
 
 
 ## Serialize all entities
-func to_save_data() -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	for entity: EntityData in _entities.values():
+func to_save_data() -> Array:
+	var result: Array = []
+	var all_entities: Array = _entities.values()
+	for i in range(all_entities.size()):
+		var entity = all_entities[i]
 		result.append(entity.to_dict())
 	return result
 
 
 ## Load entities from saved data
-func load_save_data(data: Array, world_data: WorldData) -> void:
+func load_save_data(data: Array, world_data: RefCounted) -> void:
 	_entities.clear()
 	_next_id = 1
-	for item: Variant in data:
+	for i in range(data.size()):
+		var item = data[i]
 		if item is Dictionary:
-			var entity := EntityData.from_dict(item)
+			var entity = EntityDataScript.from_dict(item)
 			_entities[entity.id] = entity
 			if entity.is_alive:
 				world_data.register_entity(entity.position, entity.id)

@@ -1,4 +1,3 @@
-class_name SimulationSystem
 extends RefCounted
 
 var system_name: String = "base"

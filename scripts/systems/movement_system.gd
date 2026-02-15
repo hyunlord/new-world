@@ -1,8 +1,7 @@
-class_name MovementSystem
-extends SimulationSystem
+extends "res://scripts/core/simulation_system.gd"
 
-var _entity_manager: EntityManager
-var _world_data: WorldData
+var _entity_manager: RefCounted
+var _world_data: RefCounted
 
 
 func _init() -> void:
@@ -12,14 +11,15 @@ func _init() -> void:
 
 
 ## Initialize with references
-func init(entity_manager: EntityManager, world_data: WorldData) -> void:
+func init(entity_manager: RefCounted, world_data: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_world_data = world_data
 
 
 func execute_tick(tick: int) -> void:
-	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
-	for entity: EntityData in alive:
+	var alive: Array = _entity_manager.get_alive_entities()
+	for i in range(alive.size()):
+		var entity = alive[i]
 		# Countdown action timer
 		if entity.action_timer > 0:
 			entity.action_timer -= 1
@@ -43,9 +43,9 @@ func execute_tick(tick: int) -> void:
 		_move_toward_target(entity, tick)
 
 
-func _move_toward_target(entity: EntityData, tick: int) -> void:
-	var pos := entity.position
-	var target := entity.action_target
+func _move_toward_target(entity: RefCounted, tick: int) -> void:
+	var pos: Vector2i = entity.position
+	var target: Vector2i = entity.action_target
 	var dx: int = signi(target.x - pos.x)
 	var dy: int = signi(target.y - pos.y)
 
@@ -58,9 +58,10 @@ func _move_toward_target(entity: EntityData, tick: int) -> void:
 	if dy != 0:
 		candidates.append(Vector2i(pos.x, pos.y + dy))
 
-	for candidate in candidates:
+	for j in range(candidates.size()):
+		var candidate: Vector2i = candidates[j]
 		if _world_data.is_walkable(candidate.x, candidate.y):
-			var old_pos := entity.position
+			var old_pos: Vector2i = entity.position
 			_entity_manager.move_entity(entity, candidate)
 			SimulationBus.emit_event("entity_moved", {
 				"entity_id": entity.id,
@@ -73,7 +74,7 @@ func _move_toward_target(entity: EntityData, tick: int) -> void:
 			return
 
 
-func _apply_arrival_effect(entity: EntityData, tick: int) -> void:
+func _apply_arrival_effect(entity: RefCounted, tick: int) -> void:
 	match entity.current_action:
 		"seek_food":
 			entity.hunger = minf(entity.hunger + 0.4, 1.0)

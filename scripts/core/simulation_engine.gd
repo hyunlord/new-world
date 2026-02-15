@@ -1,4 +1,3 @@
-class_name SimulationEngine
 extends RefCounted
 
 var current_tick: int = 0
@@ -7,7 +6,7 @@ var speed_index: int = 0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var _accumulator: float = 0.0
-var _systems: Array[SimulationSystem] = []
+var _systems: Array = []
 var _seed: int = 0
 
 
@@ -20,7 +19,7 @@ func init_with_seed(seed_value: int) -> void:
 
 
 ## Register a simulation system (sorted by priority)
-func register_system(system: SimulationSystem) -> void:
+func register_system(system: RefCounted) -> void:
 	_systems.append(system)
 	_systems.sort_custom(func(a, b): return a.priority < b.priority)
 
@@ -44,7 +43,8 @@ func update(delta: float) -> void:
 
 func _process_tick() -> void:
 	current_tick += 1
-	for system: SimulationSystem in _systems:
+	for i in range(_systems.size()):
+		var system = _systems[i]
 		if system.is_active and current_tick % system.tick_interval == 0:
 			system.execute_tick(current_tick)
 	SimulationBus.tick_completed.emit(current_tick)
