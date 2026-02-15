@@ -102,13 +102,15 @@ Player observes/intervenes as god; AI agents autonomously develop civilization.
 
 ```
 scripts/core/       — SimulationEngine, WorldData, EntityManager, EventLogger, SimulationBus, GameConfig
-scripts/ai/         — BehaviorSystem (Utility AI)
-scripts/systems/    — NeedsSystem, MovementSystem
-scripts/ui/         — WorldRenderer, EntityRenderer, CameraController, HUD
+                      ResourceMap, Pathfinder, BuildingData, BuildingManager, SaveManager, EntityData
+scripts/ai/         — BehaviorSystem (Utility AI with job bonuses, resource/building awareness)
+scripts/systems/    — NeedsSystem, MovementSystem (A*), GatheringSystem, ConstructionSystem,
+                      BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem, PopulationSystem
+scripts/ui/         — WorldRenderer, EntityRenderer (job shapes), BuildingRenderer, CameraController, HUD
 scenes/main/        — Main scene (main.tscn + main.gd)
 resources/          — Assets
 tests/              — Test scripts
-tickets/            — Ticket files
+tickets/            — Ticket files (Phase 0: 0xx, Phase 1: 3xx-4xx)
 tools/              — Automation scripts (codex_dispatch.sh, codex_status.sh, codex_apply.sh)
 scripts/            — gate.sh (build verification)
 ```
@@ -134,15 +136,25 @@ scripts/            — gate.sh (build verification)
 
 ```
 Main._process(delta) → sim_engine.update(delta)
-  ├ NeedsSystem   (prio=10, every tick)  — decay hunger/energy/social, starvation
-  ├ BehaviorSystem (prio=20, every 5 ticks) — Utility AI action selection
-  └ MovementSystem (prio=30, every tick)  — greedy 8-dir movement, arrival effects
+  ├ ResourceRegenSystem  (prio=5,  every 100 ticks) — food/wood regen by biome
+  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs by ratio
+  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
+  ├ BuildingEffectSystem (prio=15, every 10 ticks)  — campfire social, shelter energy
+  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + job bonuses + building AI
+  ├ GatheringSystem      (prio=25, every 3 ticks)   — harvest tiles → entity inventory
+  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress += 0.05
+  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + greedy fallback
+  └ PopulationSystem     (prio=50, every 100 ticks) — births + natural death
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
 
-WorldData (PackedArrays) — 256×256 tile grid
-EntityManager (Dictionary) — entity lifecycle
+WorldData (PackedArrays) — 256×256 tile grid (biomes, elevation, moisture, temperature)
+EntityManager (Dictionary) — entity lifecycle, inventory, jobs, pathfinding cache
+ResourceMap (PackedFloat32Arrays) — per-tile food/wood/stone
+BuildingManager (Dictionary) — building placement, queries, serialization
+Pathfinder — A* with Chebyshev heuristic, 8-dir, max 200 steps
+SaveManager — JSON save/load (F5/F9)
 ```
 
 **Never** call UI from simulation code. **Never** call one system from another directly. Everything goes through SimulationBus.
@@ -294,15 +306,53 @@ When the user gives a feature request:
 - [x] Gate scripts (gate.sh)
 - [x] Tickets (010-150)
 
-## Known Limitations (Phase 0)
+## Phase 1 Checklist
 
-- In-memory only (no persistence to disk beyond JSON)
-- Greedy movement (no A* pathfinding)
+- [x] ResourceMap (per-tile food/wood/stone, biome-based init, regen)
+- [x] Entity inventory + job system (add_item/remove_item, MAX_CARRY=10)
+- [x] GatheringSystem (harvest tiles → inventory)
+- [x] BuildingData + BuildingManager (stockpile/shelter/campfire)
+- [x] ConstructionSystem (build_progress, resource cost)
+- [x] BuildingEffectSystem (campfire social, shelter energy)
+- [x] JobAssignmentSystem (gatherer/lumberjack/builder/miner ratios)
+- [x] BehaviorSystem expanded (resource gathering, building, stockpile actions, job bonuses)
+- [x] A* Pathfinder (Chebyshev heuristic, cached paths, greedy fallback)
+- [x] MovementSystem A* integration (path caching, arrival effects)
+- [x] PopulationSystem (births from food/shelter, natural death by age)
+- [x] EntityRenderer visual upgrade (job-based shapes: circle/triangle/square/diamond)
+- [x] BuildingRenderer (stockpile/shelter/campfire shapes, construction progress)
+- [x] HUD extension (pop count, stockpile resources, entity job/inventory)
+- [x] SaveManager (JSON save/load, F5/F9 quick save/load)
+- [x] Full system wiring (9 systems registered in main.gd)
+- [x] All tickets (300-440)
+
+## Phase 1 Events
+
+| Event | Fields |
+|-------|--------|
+| resource_gathered | entity_id, entity_name, resource_type, amount, tile_x, tile_y, tick |
+| building_placed | building_id, building_type, tile_x, tile_y |
+| building_completed | building_id, building_type, tile_x, tile_y, tick |
+| building_destroyed | building_id, building_type, tile_x, tile_y |
+| job_assigned | entity_id, entity_name, job, tick |
+| action_changed | entity_id, entity_name, from, to, tick |
+| action_chosen | entity_id, entity_name, action, tick |
+| resources_delivered | entity_id, entity_name, building_id, amount, tick |
+| food_taken | entity_id, entity_name, building_id, amount, hunger_after, tick |
+| entity_born | entity_id, entity_name, reason, position_x, position_y, tick |
+| entity_died_natural | entity_id, entity_name, age, tick |
+| game_saved | path, tick |
+| game_loaded | path, tick |
+
+## Known Limitations (Phase 1)
+
 - O(n) entity queries (no spatial indexing)
-- No save/load UI (data structures support it)
 - No multiplayer
 - Entity cap ~500 before performance concerns
-- No diagonal movement cost multiplier
+- Save/load RNG state may lose precision for very large state values
+- Building placement AI is basic (expanding ring search)
+- No day/night visual cycle
+- No inter-entity relationships (families, social networks)
 
 ---
 
