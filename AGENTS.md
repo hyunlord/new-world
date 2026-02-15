@@ -17,6 +17,21 @@ Your operating mode:
 - You don't own shared interfaces (SimulationBus, EntityManager API, GameConfig schema). If a ticket requires changing them, stop and flag it for the lead.
 - Think in Godot-native terms: signals not callbacks, Resources not generic classes, PackedArrays not Array for hot paths.
 
+## How You Are Invoked
+
+You are dispatched automatically by Claude Code (the lead) via Codex CLI:
+
+```bash
+bash tools/codex_dispatch.sh tickets/<ticket-file>.md [branch-name]
+```
+
+This means:
+- Your ticket content comes from a file in `tickets/`. Read it carefully — it is your **sole source of truth**.
+- You are working on an isolated branch (e.g. `t/010-fix-input`). All commits go to this branch.
+- The lead may dispatch multiple tickets in parallel. **Do not touch files outside your ticket's Scope section.** File conflicts between parallel tickets will break the pipeline.
+- When you finish, the lead will run `codex apply` to pull your diff and `bash scripts/gate.sh` to verify. If gate fails because of your changes, your ticket will be rejected or re-dispatched.
+- You do not interact with the user. You do not ask questions. If something is unclear, **flag it in your summary report** and implement the most conservative interpretation.
+
 ---
 
 ## Behavioral Guidelines
@@ -58,6 +73,7 @@ Ask yourself: "Would the lead architect say this is overcomplicated?" If yes, si
 - If you notice unrelated dead code or bugs, mention them in your report — don't fix them.
 - Don't rename scenes or resources unless the ticket requires it.
 - Keep node paths stable.
+- **Parallel safety:** Other tickets may be running simultaneously. Touching files outside your scope risks merge conflicts that break the entire pipeline.
 
 When your changes create orphans:
 - Remove imports/variables/functions that YOUR changes made unused.
@@ -92,6 +108,7 @@ Before modifying ANY scene or script, complete this checklist mentally:
 - [ ] Scene inheritance — is this an inherited scene? Will changes propagate or conflict?
 - [ ] Exported properties — will `.tscn` files lose their overridden `@export` values?
 - [ ] Autoload dependencies — does this change affect SimulationBus / GameConfig / EventLogger contract?
+- [ ] Parallel ticket safety — am I touching only files listed in my ticket's Scope?
 
 If any answer is "unsure", investigate before writing code.
 
@@ -100,10 +117,12 @@ If any answer is "unsure", investigate before writing code.
 ### For each ticket:
 
 1. **Read** the ticket file in `tickets/###-*.md`. Read the entire file.
-2. **Plan** — mentally map which files change, which signals are affected, which tests to run. If scope is unclear, flag it.
-3. **Implement** exactly what the ticket asks. No extras. No "while I'm here" improvements.
-4. **Verify** — run the ticket's verification commands AND the gate script.
-5. **Report** with this structure:
+2. **Scope check** — verify the files listed in the ticket's Scope section. If you need to touch a file NOT listed, flag it in your report and ask whether to proceed. Do not silently expand scope.
+3. **Plan** — mentally map which files change, which signals are affected, which tests to run. If scope is unclear, flag it.
+4. **Implement** exactly what the ticket asks. No extras. No "while I'm here" improvements.
+5. **Verify** — run the ticket's verification commands AND the gate script.
+6. **Commit** all changes to the assigned branch with a clear message: `[t-XXX] <one-line summary>`
+7. **Report** with this structure:
 
 ```
 ## Summary
@@ -114,22 +133,26 @@ If any answer is "unsure", investigate before writing code.
 
 ## Verification
 - [command]: PASS / FAIL
-- ./scripts/gate.sh: PASS / FAIL
+- bash scripts/gate.sh: PASS / FAIL
 
 ## Risks / Edge Cases
 - [anything the lead should review]
 
 ## Out-of-Scope Issues Found
 - [bugs or tech debt spotted but NOT fixed]
+
+## Assumptions Made
+- [any ambiguities that were resolved by conservative interpretation]
 ```
 
 ### Non-negotiables
 
-- **One ticket = one PR/branch** (or one commit if working locally).
+- **One ticket = one branch.** All commits go to the branch assigned by dispatch.
 - Keep diffs minimal. Do NOT refactor unrelated code.
 - Do NOT touch secrets or add tokens.
 - Do NOT introduce breaking changes without migration notes.
 - Do NOT modify shared interfaces (SimulationBus signals, EntityManager API, GameConfig keys) without lead approval.
+- Do NOT touch files outside your ticket's Scope section. If parallel tickets are running, file conflicts will break the pipeline.
 
 ## Godot-Specific Conventions
 
@@ -149,7 +172,7 @@ If any answer is "unsure", investigate before writing code.
 
 ```bash
 # Linux/Mac
-./scripts/gate.sh
+bash scripts/gate.sh
 
 # Windows
 powershell -File scripts/gate.ps1
@@ -169,3 +192,6 @@ powershell -File scripts/gate.ps1
 8. **Forgetting to register a new system in SimulationEngine** — unregistered systems silently don't run
 9. **Modifying EntityData directly instead of through EntityManager API** — breaks event sourcing
 10. **Skipping gate because "it's a small change"** — small changes cause the most subtle bugs
+11. **Touching files outside ticket Scope** — parallel tickets may be modifying other files simultaneously; scope violations cause merge conflicts
+12. **Silently expanding scope** — if you need a file not listed in Scope, flag it; the lead decides whether to expand or split into a new ticket
+13. **Committing to the wrong branch** — always verify you're on the branch assigned by dispatch before committing
