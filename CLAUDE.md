@@ -136,15 +136,15 @@ scripts/            — gate.sh (build verification)
 
 ```
 Main._process(delta) → sim_engine.update(delta)
-  ├ ResourceRegenSystem  (prio=5,  every 100 ticks) — food/wood regen by biome
-  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs by ratio
-  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, starvation
+  ├ ResourceRegenSystem  (prio=5,  every 50 ticks)  — food/wood regen by biome
+  ├ JobAssignmentSystem  (prio=8,  every 50 ticks)  — auto-assign jobs + dynamic rebalancing
+  ├ NeedsSystem          (prio=10, every 2 ticks)   — decay hunger/energy/social, auto-eat, starvation grace
   ├ BuildingEffectSystem (prio=15, every 10 ticks)  — campfire social, shelter energy
-  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + job bonuses + building AI
+  ├ BehaviorSystem       (prio=20, every 10 ticks)  — Utility AI + hunger override + builder wood fallback
   ├ GatheringSystem      (prio=25, every 3 ticks)   — harvest tiles → entity inventory
-  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress += 0.05
-  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + greedy fallback
-  └ PopulationSystem     (prio=50, every 100 ticks) — births + natural death
+  ├ ConstructionSystem   (prio=28, every 5 ticks)   — build_progress from build_ticks config
+  ├ MovementSystem       (prio=30, every 3 ticks)   — A* pathfinding + auto-eat on arrival
+  └ PopulationSystem     (prio=50, every 60 ticks)  — births (relaxed) + natural death
 
 SimulationBus (signals) ← all events flow here
 EventLogger ← records all events from SimulationBus
@@ -403,6 +403,44 @@ When the user gives a feature request:
 - [x] SaveManager (JSON save/load, F5/F9 quick save/load)
 - [x] Full system wiring (9 systems registered in main.gd)
 - [x] All tickets (300-440)
+- [x] Balance fix: survival → growth → economy loop (T-500..T-550)
+
+## Phase 1 Balance Values (T-500..T-550)
+
+Key tuning parameters that ensure the survival → building → growth loop works:
+
+| Parameter | Before | After | Rationale |
+|-----------|--------|-------|-----------|
+| HUNGER_DECAY_RATE | 0.005 | 0.002 | Entities survive ~100s at 1x, not 40s |
+| ENERGY_DECAY_RATE | 0.003 | 0.002 | Balanced with hunger |
+| STARVATION_GRACE_TICKS | 0 (instant) | 50 | Recovery chance before death |
+| FOOD_HUNGER_RESTORE | 0.2 | 0.3 | Each food unit restores 30% hunger |
+| HUNGER_EAT_THRESHOLD | n/a | 0.5 | Auto-eat triggers at 50% hunger |
+| GRASSLAND food | 3-5 | 5-10 | Abundant food near spawn |
+| FOREST food | 1-2 | 2-5 | Foraging possible in forests |
+| FOOD_REGEN_RATE | 0.5 | 1.0 | Food tiles recover faster |
+| RESOURCE_REGEN_INTERVAL | 100 | 50 | Regen twice as often |
+| GATHER_AMOUNT | 1.0 | 2.0 | Harvest 2x per gather tick |
+| Stockpile cost | wood:3 | wood:2 | First building achievable |
+| Shelter cost | wood:5+stone:2 | wood:4+stone:1 | Accessible housing |
+| Campfire cost | wood:2 | wood:1 | Cheap social building |
+| JOB_RATIOS gatherer | 0.4 | 0.5 | Food majority |
+| Small pop gatherer | 0.7 | 0.8 | Survival mode |
+| Deliver threshold | 7.0 | 3.0 | Deliver earlier |
+| Birth food threshold | pop*2 | pop*1 | Easier growth |
+| Shelter capacity | 4 | 6 | More per shelter |
+| BIRTH_FOOD_COST | 5.0 | 3.0 | Cheaper births |
+| POPULATION_TICK_INTERVAL | 100 | 60 | Check births more often |
+
+### Balance Mechanics
+
+- **Auto-eat**: NeedsSystem eats from inventory when hunger < 0.5. MovementSystem also auto-eats on any action completion.
+- **Hunger override**: ALL jobs force gather_food score=1.0 when hunger < 0.3 (behavior_system).
+- **Builder wood fallback**: Builders gather wood when they can't afford any building.
+- **Dynamic job rebalancing**: JobAssignmentSystem shifts to 60% gatherers during food crisis.
+- **Starvation grace**: 50-tick window at hunger=0 before death, allowing auto-eat or gather_food to save the entity.
+- **Construction uses config**: build_progress calculated from BUILDING_TYPES.build_ticks, not hardcoded.
+- **Population growth without shelters**: Up to 25 pop allowed without shelter buildings.
 
 ## Phase 1 Events
 
@@ -421,6 +459,9 @@ When the user gives a feature request:
 | entity_died_natural | entity_id, entity_name, age, tick |
 | game_saved | path, tick |
 | game_loaded | path, tick |
+| entity_ate | entity_id, entity_name, hunger_after, tick |
+| auto_eat | entity_id, entity_name, amount, hunger_after, tick |
+| job_reassigned | entity_id, entity_name, from_job, to_job, tick |
 
 ## Known Limitations (Phase 1)
 
