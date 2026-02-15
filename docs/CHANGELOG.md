@@ -4,6 +4,24 @@
 
 ---
 
+## Phase 2: FamilySystem (T-1090)
+
+### T-1090: Family System — 임신, 출산, 사별
+- `family_system.gd` (NEW) — priority=52, tick_interval=50:
+  - 사별 처리: 파트너 사망 감지 → partner_id=-1, grief+0.8, partner_died 이벤트
+  - 임신 조건 (모든 AND): partner 관계, 여성 18~45세, 미임신, 자녀<4, 파트너 3타일 이내, love≥0.3, 정착지 식량≥인구×0.5, 5% 확률
+  - 출산: PREGNANCY_DURATION(3285틱≈9개월) 경과 후 아이 생성
+    - 부모 위치에 스폰, 성별 50:50, parent_ids/children_ids 설정
+    - 정착지 배정, 식량 3.0 소모 (인벤토리 → 스톡파일)
+    - child_born 이벤트 + HUD 토스트
+- `population_system.gd` — _check_births 비활성화 (무성생식 완전 제거)
+- `main.gd`:
+  - FamilySystem 초기화+등록 (priority 52)
+  - `_bootstrap_relationships()`: 초기 20명 중 3~4쌍 friend, 1~2쌍 close_friend (이성) 부트스트랩
+- docs/SYSTEMS.md: FamilySystem 추가, 가족 이벤트 3종, PopulationSystem 설명 갱신
+
+---
+
 ## Phase 2: EmotionSystem + AgeSystem (T-1080)
 
 ### T-1080: Emotion System + Age System + Age Restrictions

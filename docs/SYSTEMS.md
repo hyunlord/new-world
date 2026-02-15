@@ -22,7 +22,8 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
 | 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
-| 50 | PopulationSystem | 30 | 시간 기반 | 출생 (식량/주거 조건), 자연사 (60세+ 확률 증가) | `scripts/systems/population_system.gd` |
+| 50 | PopulationSystem | 30 | 시간 기반 | 자연사 (60세+ 확률 증가), 출생 비활성화 (FamilySystem으로 이관) | `scripts/systems/population_system.gd` |
+| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건 체크(partner+love+food), 출산, 사별 처리 | `scripts/systems/family_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
@@ -34,7 +35,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 
 **시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
 - ResourceRegenSystem: 120틱(10일), JobAssignmentSystem: 24틱(2일), PopulationSystem: 30틱(2.5일)
-- EmotionSystem: 12틱(1일), SocialEventSystem: 30틱(2.5일), AgeSystem: 50틱(~4일)
+- EmotionSystem: 12틱(1일), SocialEventSystem: 30틱(2.5일), AgeSystem: 50틱(~4일), FamilySystem: 50틱(~4일)
 - MigrationSystem: 100틱(~8일), StatsRecorder: 200틱
 
 **행동 기반 시스템** (tick_interval 변경 금지): 에이전트 체감 속도와 직결.
@@ -158,6 +159,14 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | social_event | SocialEventSystem | type_name, entity_a_id, entity_a_name, entity_b_id, entity_b_name, relationship_type, affinity, tick | ✅ (casual_talk 제외) |
 | proposal_accepted | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ (HUD 토스트) |
 | proposal_rejected | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ |
+
+### 가족 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| pregnancy_started | FamilySystem | entity_id, entity_name, partner_id, tick | ❌ QUIET |
+| child_born | FamilySystem | entity_id, entity_name, mother_id, mother_name, father_id, father_name, tick | ✅ (HUD 토스트) |
+| partner_died | FamilySystem | entity_id, entity_name, tick | ✅ |
 
 ### 정착지 이벤트
 

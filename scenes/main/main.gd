@@ -24,6 +24,7 @@ const RelationshipManagerScript = preload("res://scripts/core/relationship_manag
 const SocialEventSystem = preload("res://scripts/systems/social_event_system.gd")
 const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
 const AgeSystem = preload("res://scripts/systems/age_system.gd")
+const FamilySystem = preload("res://scripts/systems/family_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -50,6 +51,7 @@ var migration_system: RefCounted
 var social_event_system: RefCounted
 var emotion_system: RefCounted
 var age_system: RefCounted
+var family_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -137,6 +139,9 @@ func _ready() -> void:
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
 
+	family_system = FamilySystem.new()
+	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng)
+
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)
 
@@ -153,6 +158,7 @@ func _ready() -> void:
 	sim_engine.register_system(social_event_system)       # priority 37
 	sim_engine.register_system(age_system)                # priority 48
 	sim_engine.register_system(population_system)         # priority 50
+	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90
 
@@ -175,6 +181,9 @@ func _ready() -> void:
 		var e: RefCounted = initial_alive[i]
 		e.settlement_id = founding.id
 		settlement_manager.add_member(founding.id, e.id)
+
+	# Bootstrap initial relationships for faster couple formation
+	_bootstrap_relationships(initial_alive)
 
 	_print_startup_banner(seed_value)
 	hud.show_startup_toast(entity_manager.get_alive_count())
@@ -208,6 +217,47 @@ func _spawn_initial_entities() -> void:
 		entity_manager.spawn_entity(walkable_tiles[i])
 
 	print("[Main] Spawned %d entities near world center." % count)
+
+
+## Bootstrap initial relationships so couples can form quickly
+func _bootstrap_relationships(alive: Array) -> void:
+	if alive.size() < 4:
+		return
+	# Separate by gender for close_friend pairing (opposite gender needed for romance)
+	var males: Array = []
+	var females: Array = []
+	for i in range(alive.size()):
+		var e: RefCounted = alive[i]
+		if e.gender == "male":
+			males.append(e)
+		else:
+			females.append(e)
+
+	# 3-4 friend pairs (same or mixed gender)
+	var friend_count: int = mini(4, alive.size() / 4)
+	for i in range(friend_count):
+		var idx_a: int = (i * 2) % alive.size()
+		var idx_b: int = (i * 2 + 1) % alive.size()
+		if idx_a == idx_b:
+			continue
+		var rel: RefCounted = relationship_manager.get_or_create(alive[idx_a].id, alive[idx_b].id)
+		rel.affinity = 40.0
+		rel.trust = 55.0
+		rel.interaction_count = 12
+		rel.type = "friend"
+
+	# 1-2 close_friend pairs (opposite gender for romance path)
+	var close_count: int = mini(2, mini(males.size(), females.size()))
+	for i in range(close_count):
+		if i >= males.size() or i >= females.size():
+			break
+		var rel: RefCounted = relationship_manager.get_or_create(males[i].id, females[i].id)
+		rel.affinity = 65.0
+		rel.trust = 60.0
+		rel.interaction_count = 18
+		rel.type = "close_friend"
+
+	print("[Main] Bootstrapped %d friend + %d close_friend relationships." % [friend_count, close_count])
 
 
 var _last_overlay_tick: int = 0

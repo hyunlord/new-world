@@ -22,7 +22,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 
 
 func execute_tick(tick: int) -> void:
-	_check_births(tick)
+	# Births disabled: all reproduction handled by FamilySystem (T-1090)
 	_check_natural_deaths(tick)
 
 
