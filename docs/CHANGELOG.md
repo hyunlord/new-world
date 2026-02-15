@@ -4,6 +4,32 @@
 
 ---
 
+## Phase 2: 시간 체계 정립 (T-1000)
+
+**시간 상수 전면 교체 + 달력 시스템 + 나이 단계**
+
+### T-1000: Time System Constants
+- `game_config.gd` — 시간 상수 전면 교체:
+  - TICK_MINUTES=15 → TICK_HOURS=2, TICKS_PER_DAY=96→12, DAYS_PER_YEAR=360→365
+  - 신규: TICKS_PER_MONTH=365, TICKS_PER_YEAR=4380
+  - 나이 단계: AGE_CHILD_END=52560(12세), AGE_TEEN_END=78840(18세), AGE_ADULT_END=240900(55세), AGE_MAX=350400(80세)
+  - PREGNANCY_DURATION=3285 (~9개월)
+  - 욕구 감소율 재조정: hunger=0.002, energy=0.003, social=0.001
+  - STARVATION_GRACE_TICKS: 200→25 (~4일 유예)
+  - RESOURCE_REGEN_TICK_INTERVAL: 200→120 (10일)
+  - 건설 틱: stockpile=36(3일), shelter=60(5일), campfire=24(2일)
+  - 시간 기반 간격: JOB_ASSIGNMENT=24, POPULATION=30, MIGRATION=100, COOLDOWN=500, CLEANUP=250
+  - 삭제: OLD_AGE_TICKS, MAX_AGE_TICKS, TICK_MINUTES, HOURS_PER_DAY, AGE_DAYS_DIVISOR
+  - 신규 함수: tick_to_date(), get_age_years(), get_age_stage()
+- `simulation_engine.gd` — get_game_time() → GameConfig.tick_to_date() 위임
+- `needs_system.gd` — entity.age += tick_interval (sim 틱 단위 나이 카운트)
+- `population_system.gd` — 자연사: 60세+ 매년 5%씩 증가하는 사망 확률
+- `hud.gd` — 시간 표시 "Y3 M7 D15 14:00", 나이 년 단위
+- `entity_detail_panel.gd` — 나이 년 단위 표시
+- `main.gd` — 낮/밤 정수 시간 판정
+
+---
+
 ## Phase 1.5 팝업 시스템 전면 리팩터 (T-962)
 
 **PopupManager 아키텍처로 전면 교체**

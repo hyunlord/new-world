@@ -27,8 +27,8 @@ func execute_tick(tick: int) -> void:
 		if entity.current_action != "idle" and entity.current_action != "rest":
 			entity.energy -= GameConfig.ENERGY_ACTION_COST
 
-		# Age
-		entity.age += 1
+		# Age (increment by tick_interval so age counts in simulation ticks)
+		entity.age += tick_interval
 
 		# Auto-eat from inventory when hungry
 		if entity.hunger < GameConfig.HUNGER_EAT_THRESHOLD:

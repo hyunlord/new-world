@@ -9,27 +9,40 @@
 | 항목 | 값 | 코드 위치 |
 |------|-----|----------|
 | 틱/초 | 10 | `GameConfig.TICKS_PER_SECOND` |
-| 1틱 = 게임 시간 | 15분 | `GameConfig.TICK_MINUTES` |
-| 1일 | 96틱 (24시간 × 60분 / 15분) | `GameConfig.TICKS_PER_DAY` |
-| 1년 | 360일 = 34,560틱 | `GameConfig.DAYS_PER_YEAR` |
-| 1x에서 하루 | ~9.6초 (96틱 / 10틱/초) | |
-| 나이 표시 변환 | tick ÷ 96 = 일수 | `GameConfig.AGE_DAYS_DIVISOR` |
+| 1틱 = 게임 시간 | 2시간 | `GameConfig.TICK_HOURS` |
+| 1일 | 12틱 | `GameConfig.TICKS_PER_DAY` |
+| 1월 | 365틱 (~30.4일 × 12) | `GameConfig.TICKS_PER_MONTH` |
+| 1년 | 365일 = 4,380틱 | `GameConfig.TICKS_PER_YEAR` |
+| 1x에서 하루 | ~1.2초 (12틱 / 10틱/초) | |
+| 10x 20분에 | ~30년 (120,000틱 / 4,380) | |
+| HUD 시간 표시 | Y3 M7 D15 14:00 | `GameConfig.tick_to_date()` |
+| 나이 표시 | 년 단위 (age_ticks / TICKS_PER_YEAR) | `GameConfig.get_age_years()` |
 | 프레임당 최대 틱 | 5 | `GameConfig.MAX_TICKS_PER_FRAME` |
 | 속도 옵션 | 1x, 2x, 3x, 5x, 10x | `GameConfig.SPEED_OPTIONS` |
+
+### 나이 단계
+
+| 단계 | 나이 범위 | 임계값 (틱) | 코드 위치 |
+|------|----------|-----------|----------|
+| child | 0~12세 | 52,560 | `GameConfig.AGE_CHILD_END` |
+| teen | 12~18세 | 78,840 | `GameConfig.AGE_TEEN_END` |
+| adult | 18~55세 | 240,900 | `GameConfig.AGE_ADULT_END` |
+| elder | 55~80세 | 350,400 | `GameConfig.AGE_MAX` |
+| 임신 기간 | ~9개월 | 3,285 | `GameConfig.PREGNANCY_DURATION` |
 
 ---
 
 ## 욕구 감소
 
-| 욕구 | 감소율/틱 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
+| 욕구 | 감소율/needs틱 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
 |------|----------|-----------------|-----------|------|----------|
-| hunger | 0.0005 | - | 0.0 → starving | 200틱 유예 후 아사 | `GameConfig.HUNGER_DECAY_RATE` |
-| energy | 0.0005 | +0.001 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
-| social | 0.0005 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
+| hunger | 0.002 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE` |
+| energy | 0.003 | +0.005 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
+| social | 0.001 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
 
 ### 아사 메커니즘
 - hunger = 0이면 `starving_timer` 매 needs 틱마다 +1
-- `starving_timer >= 200` (STARVATION_GRACE_TICKS)이면 사망
+- `starving_timer >= 25` (STARVATION_GRACE_TICKS)이면 사망 (~4일 유예)
 - hunger > 0이면 starving_timer 초기화
 
 ### 자동 식사
@@ -61,8 +74,8 @@
 
 | 자원 | 재생율/틱 | 재생 간격 | 최대값 | 코드 위치 |
 |------|----------|----------|--------|----------|
-| Food | 1.0 | 200틱 | 바이옴 최대값 | `GameConfig.FOOD_REGEN_RATE`, `RESOURCE_REGEN_TICK_INTERVAL` |
-| Wood | 0.3 | 200틱 | 바이옴 최대값 | `GameConfig.WOOD_REGEN_RATE` |
+| Food | 1.0 | 120틱 (10일) | 바이옴 최대값 | `GameConfig.FOOD_REGEN_RATE`, `RESOURCE_REGEN_TICK_INTERVAL` |
+| Wood | 0.3 | 120틱 (10일) | 바이옴 최대값 | `GameConfig.WOOD_REGEN_RATE` |
 | Stone | 재생 안 함 | - | - | `GameConfig.STONE_REGEN_RATE = 0.0` |
 
 ### 채집
@@ -77,11 +90,11 @@
 
 ## 건물
 
-| 타입 | 비용 | 건설 틱 | 효과 반경 | 효과 | 코드 위치 |
-|------|------|---------|----------|------|----------|
-| stockpile | wood: 2.0 | 30 | 8 | 자원 저장/수령 거점 | `GameConfig.BUILDING_TYPES` |
-| shelter | wood: 4.0, stone: 1.0 | 50 | 0 (동일 타일) | 에너지 +0.01/effect틱 | |
-| campfire | wood: 1.0 | 20 | 5 | social +0.01 (낮), +0.02 (밤 20~06시) | |
+| 타입 | 비용 | 건설 틱 | 건설 일수 | 효과 반경 | 효과 | 코드 위치 |
+|------|------|---------|----------|----------|------|----------|
+| stockpile | wood: 2.0 | 36 | 3일 | 8 | 자원 저장/수령 거점 | `GameConfig.BUILDING_TYPES` |
+| shelter | wood: 4.0, stone: 1.0 | 60 | 5일 | 0 (동일 타일) | 에너지 +0.01/effect틱 | |
+| campfire | wood: 1.0 | 24 | 2일 | 5 | social +0.01 (낮), +0.02 (밤 20~06시) | |
 
 ### 건설 진행
 - progress_per_tick = 1.0 / (build_ticks / CONSTRUCTION_TICK_INTERVAL)
@@ -102,13 +115,13 @@
 |------|-----|----------|
 | 초기 인구 | 20 | `GameConfig.INITIAL_SPAWN_COUNT` |
 | 최대 인구 | 500 | `GameConfig.MAX_ENTITIES` |
-| 번식 체크 간격 | 240틱 | `GameConfig.POPULATION_TICK_INTERVAL` |
+| 번식 체크 간격 | 30틱 (~2.5일) | `GameConfig.POPULATION_TICK_INTERVAL` |
 | 번식 최소 인구 | 5 | `population_system.gd` |
 | 번식 조건: 식량 | stockpile 총 food >= alive_count × 0.5 | `population_system.gd` |
 | 번식 조건: 주거 | 25명 이하는 무조건 허용, 이후 shelters×6 > alive_count | `population_system.gd` |
 | 번식 식량 소모 | 3.0 | `GameConfig.BIRTH_FOOD_COST` |
-| 자연사 시작 나이 | 34,560틱 (1년 = 360일), 매 체크 2% 확률 | `GameConfig.OLD_AGE_TICKS` |
-| 확정 사망 나이 | 69,120틱 (2년), 매 체크 10% 확률 | `GameConfig.MAX_AGE_TICKS` |
+| 자연사 | 60세 이후 매년 사망 확률 5%씩 증가 (61세=5%, 62세=10%, ...) | `population_system.gd` |
+| 최대 수명 | 80세 (350,400틱) | `GameConfig.AGE_MAX` |
 
 ---
 
@@ -134,7 +147,7 @@
 재배치: surplus > 1.5 AND deficit > 1.5일 때 idle 에이전트 1명씩 재배치.
 
 ### 직업 배정 간격
-- 배정 체크 간격: 200틱 (`GameConfig.JOB_ASSIGNMENT_TICK_INTERVAL`)
+- 배정 체크 간격: 24틱 (~2일) (`GameConfig.JOB_ASSIGNMENT_TICK_INTERVAL`)
 
 ---
 
@@ -185,24 +198,24 @@ urgency(deficit) = deficit^2 (지수 곡선)
 | 정착지 최소 거리 | 25타일 | `GameConfig.SETTLEMENT_MIN_DISTANCE` |
 | 건물 배치 반경 | 15타일 | `GameConfig.SETTLEMENT_BUILD_RADIUS` |
 | 건물 최소 간격 | 2타일 | `GameConfig.BUILDING_MIN_SPACING` |
-| 이주 체크 간격 | 800틱 | `GameConfig.MIGRATION_TICK_INTERVAL` |
+| 이주 체크 간격 | 100틱 (~8일) | `GameConfig.MIGRATION_TICK_INTERVAL` |
 | 이주 최소 인구 | 40 | `GameConfig.MIGRATION_MIN_POP` |
 | 이주 그룹 크기 | 5~7명 | `GameConfig.MIGRATION_GROUP_SIZE_MIN/MAX` |
 | 탐험 확률 | 5% | `GameConfig.MIGRATION_CHANCE` |
 | 탐색 반경 | 30~80타일 | `GameConfig.MIGRATION_SEARCH_RADIUS_MIN/MAX` |
 | 최대 정착지 수 | 5 | `GameConfig.MAX_SETTLEMENTS` |
-| 이주 쿨다운 | 4,000틱 | `GameConfig.MIGRATION_COOLDOWN_TICKS` |
+| 이주 쿨다운 | 500틱 (~42일) | `GameConfig.MIGRATION_COOLDOWN_TICKS` |
 | 이주 지참 식량 | 30.0 | `GameConfig.MIGRATION_STARTUP_FOOD` |
 | 이주 지참 목재 | 10.0 | `GameConfig.MIGRATION_STARTUP_WOOD` |
 | 이주 지참 석재 | 3.0 | `GameConfig.MIGRATION_STARTUP_STONE` |
-| 빈 정착지 정리 간격 | 2,000틱 | `GameConfig.SETTLEMENT_CLEANUP_INTERVAL` |
+| 빈 정착지 정리 간격 | 250틱 (~21일) | `GameConfig.SETTLEMENT_CLEANUP_INTERVAL` |
 
 ### 이주 트리거 (모든 전제조건 AND + 하나 이상 충족)
 
 **전제조건 (모두 충족 필수)**:
 1. 원래 정착지 인구 >= 40 (`MIGRATION_MIN_POP`)
 2. 활성 정착지 수 < 5 (`MAX_SETTLEMENTS`)
-3. 마지막 이주로부터 4,000틱 이상 경과 (`MIGRATION_COOLDOWN_TICKS`)
+3. 마지막 이주로부터 500틱 이상 경과 (`MIGRATION_COOLDOWN_TICKS`)
 
 **트리거 (하나 이상)**:
 1. **과밀**: 정착지 인구 > 쉘터 수 × 8
@@ -216,7 +229,7 @@ urgency(deficit) = deficit^2 (지수 곡선)
 - 도착 후 builder가 즉시 비축소 건설 가능
 
 ### 빈 정착지 자동 정리
-- 2,000틱마다 인구 0인 정착지 삭제 (`cleanup_empty_settlements`)
+- 250틱마다 인구 0인 정착지 삭제 (`cleanup_empty_settlements`)
 
 ### settlement_id 필터
 - BehaviorSystem의 모든 건물 탐색이 entity.settlement_id로 필터됨
@@ -242,7 +255,7 @@ urgency(deficit) = deficit^2 (지수 곡선)
 ## 낮/밤 사이클
 
 N 키로 ON/OFF 토글 가능. 느린 lerp 보간으로 부드러운 전환.
-float 기반 시간 판정 (`float(hour) + float(minute) / 60.0`).
+정수 시간(2시간 단위: 0, 2, 4, ..., 22) 기반 판정.
 
 | 시간대 | 색상 | Color 값 | 비고 |
 |--------|------|----------|------|

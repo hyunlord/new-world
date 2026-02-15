@@ -180,7 +180,7 @@ func _build_top_bar() -> void:
 
 	_status_label = _make_label("\u25B6", "hud")
 	_speed_label = _make_label("1x", "hud")
-	_time_label = _make_label("Y1 D1 06:00", "hud")
+	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
 	_pop_label = _make_label("Pop: 0", "hud")
 	_food_label = _make_label("F:0", "hud", Color(0.4, 0.8, 0.2))
 	_wood_label = _make_label("W:0", "hud", Color(0.6, 0.4, 0.2))
@@ -467,7 +467,7 @@ func _process(delta: float) -> void:
 
 	if _sim_engine:
 		var gt: Dictionary = _sim_engine.get_game_time()
-		_time_label.text = "Y%d D%d %02d:%02d" % [gt.year, gt.day, gt.hour, gt.minute]
+		_time_label.text = "Y%d M%d D%d %02d:00" % [gt.year, gt.month, gt.day, gt.hour]
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
@@ -539,8 +539,8 @@ func _update_entity_panel(delta: float) -> void:
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
-	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
-	_entity_job_label.text = "%s%s | Age: %dd" % [entity.job.capitalize(), settlement_text, age_days]
+	var age_years: float = GameConfig.get_age_years(entity.age)
+	_entity_job_label.text = "%s%s | Age: %.1fy" % [entity.job.capitalize(), settlement_text, age_years]
 
 	# Position
 	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]

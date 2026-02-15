@@ -212,7 +212,7 @@ func _process(delta: float) -> void:
 	# Day/night cycle (smooth lerp, slower at high speed)
 	if sim_engine and _day_night_enabled:
 		var gt: Dictionary = sim_engine.get_game_time()
-		var hour_f: float = float(gt.hour) + float(gt.minute) / 60.0
+		var hour_f: float = float(gt.hour)
 		var target_color: Color = _get_daylight_color(hour_f)
 		var lerp_speed: float = 0.3 * delta
 		if sim_engine.speed_index >= 3:

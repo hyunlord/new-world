@@ -106,12 +106,16 @@ func _check_natural_deaths(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
-		if entity.age <= GameConfig.OLD_AGE_TICKS:
+		var age_years: float = GameConfig.get_age_years(entity.age)
+		if age_years < 60.0:
 			continue
-		var death_chance: float = 0.02
-		if entity.age > GameConfig.MAX_AGE_TICKS:
-			death_chance = 0.10
-		if _rng.randf() < death_chance:
+		# 5% annual death probability per year over 60, increasing each year
+		var years_over_60: int = int(age_years) - 60
+		var annual_death_prob: float = 0.05 * float(years_over_60 + 1)
+		annual_death_prob = minf(annual_death_prob, 1.0)
+		# Scale to per-check probability
+		var check_prob: float = annual_death_prob * float(GameConfig.POPULATION_TICK_INTERVAL) / float(GameConfig.TICKS_PER_YEAR)
+		if _rng.randf() < check_prob:
 			_entity_manager.kill_entity(entity.id, "old_age")
 			emit_event("entity_died_natural", {
 				"entity_id": entity.id,

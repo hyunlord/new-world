@@ -49,9 +49,9 @@ func _draw() -> void:
 	draw_string(font, Vector2(cx, cy), "%s - %s" % [entity.entity_name, entity.job.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
 	cy += 6.0
 
-	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
+	var age_years: float = GameConfig.get_age_years(entity.age)
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %dd  |  Pos: (%d, %d)" % [sid_text, age_days, entity.position.x, entity.position.y], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %.1fy  |  Pos: (%d, %d)" % [sid_text, age_years, entity.position.x, entity.position.y], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0

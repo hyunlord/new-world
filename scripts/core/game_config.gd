@@ -11,12 +11,19 @@ const MAX_ENTITIES: int = 500
 const INITIAL_SPAWN_COUNT: int = 20
 const MAX_TICKS_PER_FRAME: int = 5
 
-## Time conversion (1 tick = 15 game minutes)
-const TICK_MINUTES: int = 15
-const HOURS_PER_DAY: int = 24
-const DAYS_PER_YEAR: int = 360
-const TICKS_PER_DAY: int = HOURS_PER_DAY * 60 / TICK_MINUTES  # 96
-const AGE_DAYS_DIVISOR: int = TICKS_PER_DAY  # age_ticks / AGE_DAYS_DIVISOR = display days
+## Time conversion (1 tick = 2 game hours)
+const TICK_HOURS: int = 2
+const TICKS_PER_DAY: int = 12
+const DAYS_PER_YEAR: int = 365
+const TICKS_PER_MONTH: int = 365    # ~30.4 days * 12 ticks/day
+const TICKS_PER_YEAR: int = 4380    # 365 * 12
+
+## Age stage thresholds (in simulation ticks)
+const AGE_CHILD_END: int = 52560    # 12 years
+const AGE_TEEN_END: int = 78840     # 18 years
+const AGE_ADULT_END: int = 240900   # 55 years
+const AGE_MAX: int = 350400         # 80 years
+const PREGNANCY_DURATION: int = 3285  # ~9 months
 
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0
@@ -68,6 +75,34 @@ func get_font_size(key: String) -> int:
 
 func get_ui_size(key: String) -> int:
 	return maxi(20, int(UI_SIZES.get(key, 100) * ui_scale))
+
+
+## Convert simulation tick to calendar date
+static func tick_to_date(tick: int) -> Dictionary:
+	var total_days: int = tick / TICKS_PER_DAY
+	var year: int = total_days / DAYS_PER_YEAR + 1
+	var day_of_year: int = total_days % DAYS_PER_YEAR
+	var month: int = day_of_year / 30 + 1
+	var day: int = day_of_year % 30 + 1
+	var hour: int = (tick % TICKS_PER_DAY) * TICK_HOURS
+	return {"year": year, "month": month, "day": day, "hour": hour, "tick": tick}
+
+
+## Convert age in ticks to years (float)
+static func get_age_years(age_ticks: int) -> float:
+	return float(age_ticks) / float(TICKS_PER_YEAR)
+
+
+## Get age stage string from age in ticks
+static func get_age_stage(age_ticks: int) -> String:
+	if age_ticks < AGE_CHILD_END:
+		return "child"
+	elif age_ticks < AGE_TEEN_END:
+		return "teen"
+	elif age_ticks < AGE_ADULT_END:
+		return "adult"
+	else:
+		return "elder"
 
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]
@@ -123,14 +158,14 @@ const NEEDS_TICK_INTERVAL: int = 2
 const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
-## Entity need decay rates (per needs tick, adjusted for TICK_MINUTES=15)
-const HUNGER_DECAY_RATE: float = 0.0005
-const ENERGY_DECAY_RATE: float = 0.0005
-const ENERGY_ACTION_COST: float = 0.001
-const SOCIAL_DECAY_RATE: float = 0.0005
+## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
+const HUNGER_DECAY_RATE: float = 0.002
+const ENERGY_DECAY_RATE: float = 0.003
+const ENERGY_ACTION_COST: float = 0.005
+const SOCIAL_DECAY_RATE: float = 0.001
 
-## Starvation grace period (in NeedsSystem ticks)
-const STARVATION_GRACE_TICKS: int = 200
+## Starvation grace period (in NeedsSystem ticks, ~4 days)
+const STARVATION_GRACE_TICKS: int = 25
 
 ## Eating constants
 const FOOD_HUNGER_RESTORE: float = 0.3
@@ -163,14 +198,14 @@ const FOOD_REGEN_RATE: float = 1.0
 const WOOD_REGEN_RATE: float = 0.3
 const STONE_REGEN_RATE: float = 0.0
 
-## Resource regen tick interval (time-based, scaled for TICK_MINUTES=15)
-const RESOURCE_REGEN_TICK_INTERVAL: int = 200
+## Resource regen tick interval (time-based, 10 days)
+const RESOURCE_REGEN_TICK_INTERVAL: int = 120
 
 ## Building type definitions
 const BUILDING_TYPES: Dictionary = {
-	"stockpile": {"cost": {"wood": 2.0}, "build_ticks": 30, "radius": 8},
-	"shelter": {"cost": {"wood": 4.0, "stone": 1.0}, "build_ticks": 50, "radius": 0},
-	"campfire": {"cost": {"wood": 1.0}, "build_ticks": 20, "radius": 5},
+	"stockpile": {"cost": {"wood": 2.0}, "build_ticks": 36, "radius": 8},
+	"shelter": {"cost": {"wood": 4.0, "stone": 1.0}, "build_ticks": 60, "radius": 0},
+	"campfire": {"cost": {"wood": 1.0}, "build_ticks": 24, "radius": 5},
 }
 
 ## Job ratios (target distribution)
@@ -186,9 +221,9 @@ const GATHERING_TICK_INTERVAL: int = 3
 const CONSTRUCTION_TICK_INTERVAL: int = 5
 const BUILDING_EFFECT_TICK_INTERVAL: int = 10
 
-## Time-based tick intervals (scaled for TICK_MINUTES=15)
-const JOB_ASSIGNMENT_TICK_INTERVAL: int = 200
-const POPULATION_TICK_INTERVAL: int = 240
+## Time-based tick intervals (scaled for TICK_HOURS=2)
+const JOB_ASSIGNMENT_TICK_INTERVAL: int = 24
+const POPULATION_TICK_INTERVAL: int = 30
 
 ## Entity inventory
 const MAX_CARRY: float = 10.0
@@ -196,8 +231,6 @@ const GATHER_AMOUNT: float = 2.0
 
 ## Population
 const BIRTH_FOOD_COST: float = 3.0
-const OLD_AGE_TICKS: int = 34560
-const MAX_AGE_TICKS: int = 69120
 
 ## Pathfinding
 const PATHFIND_MAX_STEPS: int = 200
@@ -208,7 +241,7 @@ const PATHFIND_MAX_STEPS: int = 200
 const SETTLEMENT_MIN_DISTANCE: int = 25
 const SETTLEMENT_BUILD_RADIUS: int = 15
 const BUILDING_MIN_SPACING: int = 2
-const MIGRATION_TICK_INTERVAL: int = 800
+const MIGRATION_TICK_INTERVAL: int = 100
 const MIGRATION_MIN_POP: int = 40
 const MIGRATION_GROUP_SIZE_MIN: int = 5
 const MIGRATION_GROUP_SIZE_MAX: int = 7
@@ -216,8 +249,8 @@ const MIGRATION_CHANCE: float = 0.05
 const MIGRATION_SEARCH_RADIUS_MIN: int = 30
 const MIGRATION_SEARCH_RADIUS_MAX: int = 80
 const MAX_SETTLEMENTS: int = 5
-const MIGRATION_COOLDOWN_TICKS: int = 4000
+const MIGRATION_COOLDOWN_TICKS: int = 500
 const MIGRATION_STARTUP_FOOD: float = 30.0
 const MIGRATION_STARTUP_WOOD: float = 10.0
 const MIGRATION_STARTUP_STONE: float = 3.0
-const SETTLEMENT_CLEANUP_INTERVAL: int = 2000
+const SETTLEMENT_CLEANUP_INTERVAL: int = 250
