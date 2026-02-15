@@ -20,6 +20,7 @@ const PopulationSystem = preload("res://scripts/systems/population_system.gd")
 const SettlementManager = preload("res://scripts/core/settlement_manager.gd")
 const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
 const StatsRecorder = preload("res://scripts/systems/stats_recorder.gd")
+const RelationshipManagerScript = preload("res://scripts/core/relationship_manager.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -31,6 +32,7 @@ var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
 var stats_recorder: RefCounted
+var relationship_manager: RefCounted
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -85,6 +87,9 @@ func _ready() -> void:
 
 	# Initialize settlement manager + first settlement
 	settlement_manager = SettlementManager.new()
+
+	# Initialize relationship manager
+	relationship_manager = RelationshipManagerScript.new()
 
 	# ── Create simulation systems ──────────────────────────
 	resource_regen_system = ResourceRegenSystem.new()

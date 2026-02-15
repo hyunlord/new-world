@@ -4,6 +4,20 @@
 
 ---
 
+## Phase 2: RelationshipManager (T-1060)
+
+### T-1060: Relationship Manager + Data
+- `relationship_data.gd` (NEW) — 관계 데이터: affinity(0~100), trust(0~100), romantic_interest(0~100), interaction_count, last_interaction_tick, type
+- `relationship_manager.gd` (NEW) — 스파스 관계 저장소 (key="min_id:max_id"):
+  - get_or_create, record_interaction, promote_to_romantic/partner
+  - 단계 전환: stranger→acquaintance→friend→close_friend→romantic→partner, rival
+  - 자연 감소: 100틱 미상호작용 시 affinity -0.1, acquaintance affinity≤5 삭제
+  - get_relationships_for (affinity 정렬), get_partner_id
+  - to_save_data / load_save_data
+- `main.gd` — RelationshipManager 초기화 추가
+
+---
+
 ## Phase 2: Chunk Spatial Index (T-1050)
 
 ### T-1050: ChunkIndex + EntityManager 통합
