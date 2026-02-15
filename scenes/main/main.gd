@@ -62,8 +62,8 @@ func _ready() -> void:
 	sim_engine.register_system(behavior_system)
 	sim_engine.register_system(movement_system)
 
-	# Render world
-	world_renderer.render_world(world_data)
+	# Render world (with resource tinting)
+	world_renderer.render_world(world_data, resource_map)
 
 	# Init renderers
 	entity_renderer.init(entity_manager)
