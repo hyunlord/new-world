@@ -4,6 +4,19 @@
 
 ---
 
+## Phase 2: Entity Renderer Enhancements (T-1110)
+
+### T-1110: Entity Renderer — Gender Colors, Age Sizes, Partner Markers
+- `entity_renderer.gd`:
+  - 성별 틴트: male→푸른 틴트, female→붉은 틴트 (20% lerp blend)
+  - 나이 크기: child×0.6, teen×0.8, adult×1.0, elder×0.95
+  - elder 흰 점: 머리 위 백발 표시 (r=1.2px)
+  - 파트너 하트: 선택 시 파트너 위에 분홍 하트 + 분홍 점선 연결
+  - `_draw_heart()` 헬퍼 추가
+- docs/VISUAL_GUIDE: 성별 틴트, 나이 크기, 파트너 마커 섹션 추가
+
+---
+
 ## Phase 2: Binary Save/Load (T-1100)
 
 ### T-1100: Binary Save/Load System
