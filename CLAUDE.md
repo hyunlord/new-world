@@ -219,6 +219,49 @@ Example: "Add resource gathering system"
 
 The ONLY parts you implement directly are signal definitions and final wiring (usually <50 lines each).
 
+### How to dispatch coupled/balance changes (Config-first, then fan-out)
+
+"Files overlap so I can't dispatch" is NOT a valid reason for 0% dispatch.
+When files overlap, use **sequential dispatch** instead of parallel.
+
+**Pattern: Config-first, then fan-out**
+
+```
+Step 1: 🔴 DIRECT — Shared config changes (game_config.gd etc.) first. Commit.
+Step 2: 🟢 DISPATCH (sequential) — Systems that depend on config, one at a time:
+  t-501: entity_data.gd changes → dispatch, wait for completion
+  t-502: needs_system.gd changes → dispatch (depends on t-501)
+  t-503: construction_system.gd → dispatch (parallel with t-502, different file)
+  t-504: population_system.gd → dispatch (parallel with t-503, different file)
+Step 3: 🔴 DIRECT — Final integration wiring + balance verification
+```
+
+Key principles:
+- **Sequential dispatch is still dispatch.** It counts toward dispatch ratio.
+- Config first → all dependencies flow one direction (config → systems).
+- While Codex implements t-502, you can review t-501 results or do DIRECT work.
+- "Can't parallelize" ≠ "Can't dispatch". These are different things.
+
+❌ Bad (T-500 actual — 0% dispatch):
+```
+| t-500 | 🔴 DIRECT | config + entity + needs 3 files at once |
+| t-510 | 🔴 DIRECT | behavior + job 2 files at once |
+| t-520 | 🔴 DIRECT | config(overlap) + construction + behavior(overlap) |
+Dispatch ratio: 0/6 = 0% ❌
+```
+
+✅ Good (same work, re-split — 86% dispatch):
+```
+| t-500 | 🔴 DIRECT | game_config.gd balance constants (shared config) |
+| t-501 | 🟢 DISPATCH | entity_data.gd starving_timer field |
+| t-502 | 🟢 DISPATCH | needs_system.gd starvation grace + auto-eat (after t-501) |
+| t-503 | 🟢 DISPATCH | construction_system.gd build_ticks config (after t-500) |
+| t-504 | 🟢 DISPATCH | population_system.gd birth relaxation (after t-500) |
+| t-505 | 🟢 DISPATCH | behavior+job override (after t-500) |
+| t-506 | 🟢 DISPATCH | movement_system.gd auto-eat (after t-502) |
+Dispatch ratio: 6/7 = 86% ✅
+```
+
 ### Dispatch command
 
 ```bash
@@ -238,6 +281,13 @@ bash tools/codex_dispatch.sh tickets/t-020-needs-tuning.md t/020-needs-tuning
 bash tools/codex_dispatch.sh tickets/t-301-resource-map.md &
 bash tools/codex_dispatch.sh tickets/t-302-gathering-system.md &
 bash tools/codex_dispatch.sh tickets/t-304-gathering-tests.md &
+wait
+
+# Sequential dispatch (when files depend on earlier changes)
+bash tools/codex_dispatch.sh tickets/t-501-entity-data.md
+# wait for completion...
+bash tools/codex_dispatch.sh tickets/t-502-needs-system.md &
+bash tools/codex_dispatch.sh tickets/t-503-construction.md &
 wait
 ```
 
@@ -270,9 +320,62 @@ New ticket created
   ├─ Single-file modification? (tuning, bug fix, config change)
   │   └─ ALWAYS DISPATCH. No exceptions.
   │
+  ├─ Multiple files but they overlap with other tickets?
+  │   └─ DON'T skip dispatch. Use Config-first, then fan-out pattern.
+  │       1. DIRECT the shared config
+  │       2. Sequential DISPATCH the rest
+  │
   └─ Integration wiring? (<50 lines, connecting dispatched work)
       └─ Implement directly. This is your core job.
 ```
+
+---
+
+## PROGRESS.md — Mandatory Logging
+
+PROGRESS.md lives at the project root. Claude Code creates it if it doesn't exist and appends to it for every batch of work.
+
+### When to write to PROGRESS.md
+
+- **Before starting any batch of tickets**: Log the classification table
+- **Before each DIRECT implementation**: Log the `[DIRECT]` justification
+- **After completing a batch**: Log results (gate pass/fail, dispatch ratio, files changed)
+
+### PROGRESS.md format
+
+```markdown
+# Progress Log
+
+## [Phase/Feature Name] — [Date or Ticket Range]
+
+### Context
+[1-2 sentences: what problem this batch solves]
+
+### Tickets
+| Ticket | Title | Action | Reason |
+|--------|-------|--------|--------|
+| t-XXX | ... | 🟢 DISPATCH | standalone new file |
+| t-XXX | ... | 🟢 DISPATCH | single system, config-first done |
+| t-XXX | ... | 🔴 DIRECT | shared config (game_config.gd) |
+| t-XXX | ... | 🔴 DIRECT | integration wiring, <50 lines |
+
+### Dispatch ratio: X/Y = ZZ% ✅/❌ (target: ≥60%)
+
+### Dispatch strategy
+[If sequential dispatch was used, explain the order and dependencies]
+
+### Results
+- Gate: PASS / FAIL
+- Files changed: [count]
+- Key changes: [brief summary]
+
+---
+```
+
+### Rules
+- **Never delete past entries.** PROGRESS.md is append-only.
+- **Always log BEFORE implementing**, not after. This forces you to plan dispatch before coding.
+- **If dispatch ratio is <60%, stop and re-split** before proceeding.
 
 ---
 
@@ -319,37 +422,49 @@ When the user gives a feature request:
    - If a ticket touches 3+ files, split it further.
    - Surface any architectural decisions or tradeoffs before starting.
 
-2. **Sequence** — Order tickets by dependency. Identify which can parallelize.
+2. **Sequence** — Order tickets by dependency. Identify which can parallelize, which must be sequential.
 
 3. **Classify each ticket**:
    - 🟢 DISPATCH: New file, single system change, test addition, config change, bug fix
    - 🔴 DIRECT: Shared interface modification, signal schema change, integration wiring (<50 lines)
    - **If >40% of tickets are DIRECT, you have split them wrong. Re-split until dispatch ratio ≥60%.**
+   - **If files overlap between tickets, use Config-first then fan-out — do NOT mark all as DIRECT.**
 
-4. **Log classifications** in PROGRESS.md:
-   ```
-   | Ticket | Action | Reason |
-   |--------|--------|--------|
-   | t-301 | 🟢 DISPATCH | standalone new file |
-   | t-302 | 🟢 DISPATCH | single system, no shared interface |
-   | t-303 | 🔴 DIRECT | integration wiring, connects 3 systems |
-   | t-304 | 🟢 DISPATCH | test file only |
+4. **Write PROGRESS.md FIRST** — Log the classification table and dispatch strategy BEFORE writing any code:
+   ```markdown
+   ## [Feature Name] — [Ticket Range]
    
-   Dispatch ratio: 3/4 = 75% ✅
+   ### Context
+   [what this batch solves]
+   
+   ### Tickets
+   | Ticket | Title | Action | Reason |
+   |--------|-------|--------|--------|
+   | ... | ... | ... | ... |
+   
+   ### Dispatch ratio: X/Y = ZZ% ✅
+   
+   ### Dispatch strategy
+   [parallel / sequential / config-first-then-fan-out]
    ```
 
 5. **Dispatch first, then direct** — Send ALL 🟢 tickets to Codex BEFORE starting 🔴 work:
    ```bash
-   # Dispatch parallelizable tickets
+   # For parallel-safe tickets (no file overlap)
    bash tools/codex_dispatch.sh tickets/t-301-resource-map.md &
    bash tools/codex_dispatch.sh tickets/t-302-gathering-system.md &
-   bash tools/codex_dispatch.sh tickets/t-304-gathering-tests.md &
+   wait
+
+   # For sequential tickets (config-first pattern)
+   # Step 1: DIRECT the config change, commit
+   # Step 2: Dispatch dependent tickets sequentially
+   bash tools/codex_dispatch.sh tickets/t-502-needs-system.md
+   # Step 3: After t-502 completes, dispatch next batch
+   bash tools/codex_dispatch.sh tickets/t-503-construction.md &
+   bash tools/codex_dispatch.sh tickets/t-504-population.md &
    wait
    
-   # While Codex works on those, implement 🔴 DIRECT tickets
-   # (signal definitions, interface changes, wiring)
-   
-   # When Codex finishes, apply results
+   # Apply all results
    bash tools/codex_apply.sh
    ```
 
@@ -362,11 +477,19 @@ When the user gives a feature request:
 
 8. **Do not ask** the user for additional commands. Make reasonable defaults.
 
-9. **Summarize** — End by listing:
-   - Dispatch ratio (🟢 dispatched / total tickets)
-   - What was dispatched vs implemented directly (with reasons for each DIRECT)
-   - Files changed
-   - How to run the demo
+9. **Update PROGRESS.md** with results:
+   ```markdown
+   ### Results
+   - Gate: PASS ✅
+   - Dispatch ratio: 6/7 = 86%
+   - Files changed: 8
+   ```
+
+10. **Summarize** — End by listing:
+    - Dispatch ratio (🟢 dispatched / total tickets)
+    - What was dispatched vs implemented directly (with reasons for each DIRECT)
+    - Files changed
+    - How to run the demo
 
 ---
 
@@ -493,3 +616,5 @@ Key tuning parameters that ensure the survival → building → growth loop work
 14. **Implementing tickets directly without justification** — default is DISPATCH. Log every DIRECT decision in PROGRESS.md with a reason.
 15. **Claiming "cross-system" to skip dispatch** — most cross-system features can be split into dispatchable units + small integration wiring. Split first, then decide.
 16. **Dispatch ratio below 60%** — if more than 40% of tickets are DIRECT, the split is wrong. Re-split.
+17. **Claiming "files overlap" to skip dispatch** — use Config-first then fan-out pattern for sequential dispatch. "Can't parallelize" ≠ "can't dispatch".
+18. **Skipping PROGRESS.md** — always log the classification table BEFORE coding. If you didn't write PROGRESS.md first, you skipped the planning step.
