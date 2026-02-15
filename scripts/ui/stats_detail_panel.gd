@@ -52,13 +52,17 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var vp_size := get_viewport_rect().size
 		var panel_w: float = vp_size.x * 0.75
+		var panel_h: float = vp_size.y * 0.8
 		var panel_x: float = (vp_size.x - panel_w) * 0.5
-		var panel_y: float = (vp_size.y - vp_size.y * 0.8) * 0.5
-		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
+		var panel_y: float = (vp_size.y - panel_h) * 0.5
+		var panel_rect := Rect2(panel_x, panel_y, panel_w, panel_h)
 		var mb: InputEventMouseButton = event as InputEventMouseButton
-		if close_area.has_point(mb.position):
+		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
+		if close_area.has_point(mb.position) or not panel_rect.has_point(mb.position):
 			hide_panel()
 			accept_event()
+		else:
+			accept_event()  # Consume click inside panel to prevent passthrough
 
 
 func _draw() -> void:
@@ -84,8 +88,8 @@ func _draw() -> void:
 	var cy: float = panel_y + 30.0
 
 	# Title
-	draw_string(font, Vector2(cx, cy), "World Statistics", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color.WHITE)
-	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx, cy), "World Statistics", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color.WHITE)
+	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.7, 0.7))
 	cy += 15.0
 	draw_line(Vector2(cx, cy), Vector2(panel_x + panel_w - 20, cy), Color(0.3, 0.3, 0.4), 1.0)
 	cy += 10.0
@@ -102,16 +106,16 @@ func _draw() -> void:
 	_draw_settlements_section(font, cx + half_w + 20, cy, half_w)
 
 	# Footer
-	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[G: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, 12, Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[G: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color(0.5, 0.5, 0.5))
 
 
 func _draw_population_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.2, 1.0, 0.4))
+	draw_string(font, Vector2(x, y + 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.2, 1.0, 0.4))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
 	if history.size() < 2:
-		draw_string(font, Vector2(x, y + 12), "Waiting for data...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), "Waiting for data...", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.5, 0.5, 0.5))
 		return y + 20.0
 
 	var latest: Dictionary = history[history.size() - 1]
@@ -137,12 +141,12 @@ func _draw_population_section(font: Font, x: float, y: float, w: float) -> float
 		latest.pop, _stats_recorder.peak_pop,
 		_stats_recorder.total_deaths, _stats_recorder.total_births,
 	]
-	draw_string(font, Vector2(x, y + 12), pop_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(x, y + 12), pop_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
 
 func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.9, 0.8, 0.1))
+	draw_string(font, Vector2(x, y + 14), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.9, 0.8, 0.1))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -179,12 +183,12 @@ func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
 	var res_line: String = "Food: %d (%+.0f/100t)  |  Wood: %d (%+.0f/100t)  |  Stone: %d (%+.0f/100t)" % [
 		int(latest.food), deltas.food, int(latest.wood), deltas.wood, int(latest.stone), deltas.stone,
 	]
-	draw_string(font, Vector2(x, y + 12), res_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(x, y + 12), res_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
 
 func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.5, 0.7, 1.0))
+	draw_string(font, Vector2(x, y + 14), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.5, 0.7, 1.0))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -218,22 +222,22 @@ func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
 	for idx in range(job_data.size()):
 		var jd: Dictionary = job_data[idx]
 		var pct: int = int(float(jd.count) / float(total) * 100.0)
-		draw_string(font, Vector2(x + 4, y + 11), "%s: %d (%d%%)" % [jd.name, jd.count, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, jd.color)
+		draw_string(font, Vector2(x + 4, y + 11), "%s: %d (%d%%)" % [jd.name, jd.count, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, jd.color)
 		y += 14.0
 
 
 func _draw_settlements_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), "Settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.9, 0.6, 0.2))
+	draw_string(font, Vector2(x, y + 14), "Settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.9, 0.6, 0.2))
 	y += 20.0
 
 	var settlements: Array = _stats_recorder.get_settlement_stats()
 	if settlements.is_empty():
-		draw_string(font, Vector2(x, y + 12), "No settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), "No settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.5, 0.5, 0.5))
 		return
 
 	for i in range(settlements.size()):
 		var s: Dictionary = settlements[i]
-		draw_string(font, Vector2(x + 4, y + 11), "S%d: Pop %d, Bld %d" % [s.id, s.pop, s.buildings], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.8))
+		draw_string(font, Vector2(x + 4, y + 11), "S%d: Pop %d, Bld %d" % [s.id, s.pop, s.buildings], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 		y += 14.0
-		draw_string(font, Vector2(x + 4, y + 11), "  F:%d W:%d S:%d" % [int(s.food), int(s.wood), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(0.6, 0.6, 0.6))
+		draw_string(font, Vector2(x + 4, y + 11), "  F:%d W:%d S:%d" % [int(s.food), int(s.wood), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.6, 0.6, 0.6))
 		y += 14.0

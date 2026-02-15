@@ -9,9 +9,11 @@
 | 항목 | 값 | 코드 위치 |
 |------|-----|----------|
 | 틱/초 | 10 | `GameConfig.TICKS_PER_SECOND` |
-| 1틱 = 게임 시간 | 1시간 | `GameConfig.TICK_HOURS` |
-| 1일 | 24틱 | `GameConfig.HOURS_PER_DAY` |
-| 1년 | 360일 = 8,640틱 | `GameConfig.DAYS_PER_YEAR` |
+| 1틱 = 게임 시간 | 15분 | `GameConfig.TICK_MINUTES` |
+| 1일 | 96틱 (24시간 × 60분 / 15분) | `GameConfig.TICKS_PER_DAY` |
+| 1년 | 360일 = 34,560틱 | `GameConfig.DAYS_PER_YEAR` |
+| 1x에서 하루 | ~9.6초 (96틱 / 10틱/초) | |
+| 나이 표시 변환 | tick ÷ 96 = 일수 | `GameConfig.AGE_DAYS_DIVISOR` |
 | 프레임당 최대 틱 | 5 | `GameConfig.MAX_TICKS_PER_FRAME` |
 | 속도 옵션 | 1x, 2x, 3x, 5x, 10x | `GameConfig.SPEED_OPTIONS` |
 
@@ -21,13 +23,13 @@
 
 | 욕구 | 감소율/틱 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
 |------|----------|-----------------|-----------|------|----------|
-| hunger | 0.002 | - | 0.0 → starving | 50틱 유예 후 아사 | `GameConfig.HUNGER_DECAY_RATE` |
-| energy | 0.002 | +0.004 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
-| social | 0.002 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
+| hunger | 0.0005 | - | 0.0 → starving | 200틱 유예 후 아사 | `GameConfig.HUNGER_DECAY_RATE` |
+| energy | 0.0005 | +0.001 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
+| social | 0.0005 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
 
 ### 아사 메커니즘
 - hunger = 0이면 `starving_timer` 매 needs 틱마다 +1
-- `starving_timer >= 50` (STARVATION_GRACE_TICKS)이면 사망
+- `starving_timer >= 200` (STARVATION_GRACE_TICKS)이면 사망
 - hunger > 0이면 starving_timer 초기화
 
 ### 자동 식사
@@ -59,8 +61,8 @@
 
 | 자원 | 재생율/틱 | 재생 간격 | 최대값 | 코드 위치 |
 |------|----------|----------|--------|----------|
-| Food | 1.0 | 50틱 | 바이옴 최대값 | `GameConfig.FOOD_REGEN_RATE`, `RESOURCE_REGEN_TICK_INTERVAL` |
-| Wood | 0.3 | 50틱 | 바이옴 최대값 | `GameConfig.WOOD_REGEN_RATE` |
+| Food | 1.0 | 200틱 | 바이옴 최대값 | `GameConfig.FOOD_REGEN_RATE`, `RESOURCE_REGEN_TICK_INTERVAL` |
+| Wood | 0.3 | 200틱 | 바이옴 최대값 | `GameConfig.WOOD_REGEN_RATE` |
 | Stone | 재생 안 함 | - | - | `GameConfig.STONE_REGEN_RATE = 0.0` |
 
 ### 채집
@@ -100,13 +102,13 @@
 |------|-----|----------|
 | 초기 인구 | 20 | `GameConfig.INITIAL_SPAWN_COUNT` |
 | 최대 인구 | 500 | `GameConfig.MAX_ENTITIES` |
-| 번식 체크 간격 | 60틱 | `GameConfig.POPULATION_TICK_INTERVAL` |
+| 번식 체크 간격 | 240틱 | `GameConfig.POPULATION_TICK_INTERVAL` |
 | 번식 최소 인구 | 5 | `population_system.gd` |
 | 번식 조건: 식량 | stockpile 총 food >= alive_count × 1.0 | `population_system.gd` |
 | 번식 조건: 주거 | 25명 이하는 무조건 허용, 이후 shelters×6 > alive_count | `population_system.gd` |
 | 번식 식량 소모 | 3.0 | `GameConfig.BIRTH_FOOD_COST` |
-| 자연사 시작 나이 | 8,640틱 (1년), 매 체크 2% 확률 | `GameConfig.OLD_AGE_TICKS` |
-| 확정 사망 나이 | 17,280틱 (2년), 매 체크 10% 확률 | `GameConfig.MAX_AGE_TICKS` |
+| 자연사 시작 나이 | 34,560틱 (1년 = 360일), 매 체크 2% 확률 | `GameConfig.OLD_AGE_TICKS` |
+| 확정 사망 나이 | 69,120틱 (2년), 매 체크 10% 확률 | `GameConfig.MAX_AGE_TICKS` |
 
 ---
 
@@ -130,6 +132,9 @@
 | 기본 | 50% | 25% | 15% | 10% |
 
 재배치: surplus > 1.5 AND deficit > 1.5일 때 idle 에이전트 1명씩 재배치.
+
+### 직업 배정 간격
+- 배정 체크 간격: 200틱 (`GameConfig.JOB_ASSIGNMENT_TICK_INTERVAL`)
 
 ---
 
@@ -180,24 +185,24 @@ urgency(deficit) = deficit^2 (지수 곡선)
 | 정착지 최소 거리 | 25타일 | `GameConfig.SETTLEMENT_MIN_DISTANCE` |
 | 건물 배치 반경 | 15타일 | `GameConfig.SETTLEMENT_BUILD_RADIUS` |
 | 건물 최소 간격 | 2타일 | `GameConfig.BUILDING_MIN_SPACING` |
-| 이주 체크 간격 | 200틱 | `GameConfig.MIGRATION_TICK_INTERVAL` |
+| 이주 체크 간격 | 800틱 | `GameConfig.MIGRATION_TICK_INTERVAL` |
 | 이주 최소 인구 | 40 | `GameConfig.MIGRATION_MIN_POP` |
 | 이주 그룹 크기 | 5~7명 | `GameConfig.MIGRATION_GROUP_SIZE_MIN/MAX` |
 | 탐험 확률 | 5% | `GameConfig.MIGRATION_CHANCE` |
 | 탐색 반경 | 30~80타일 | `GameConfig.MIGRATION_SEARCH_RADIUS_MIN/MAX` |
 | 최대 정착지 수 | 5 | `GameConfig.MAX_SETTLEMENTS` |
-| 이주 쿨다운 | 1,000틱 | `GameConfig.MIGRATION_COOLDOWN_TICKS` |
+| 이주 쿨다운 | 4,000틱 | `GameConfig.MIGRATION_COOLDOWN_TICKS` |
 | 이주 지참 식량 | 30.0 | `GameConfig.MIGRATION_STARTUP_FOOD` |
 | 이주 지참 목재 | 10.0 | `GameConfig.MIGRATION_STARTUP_WOOD` |
 | 이주 지참 석재 | 3.0 | `GameConfig.MIGRATION_STARTUP_STONE` |
-| 빈 정착지 정리 간격 | 500틱 | `GameConfig.SETTLEMENT_CLEANUP_INTERVAL` |
+| 빈 정착지 정리 간격 | 2,000틱 | `GameConfig.SETTLEMENT_CLEANUP_INTERVAL` |
 
 ### 이주 트리거 (모든 전제조건 AND + 하나 이상 충족)
 
 **전제조건 (모두 충족 필수)**:
 1. 원래 정착지 인구 >= 40 (`MIGRATION_MIN_POP`)
 2. 활성 정착지 수 < 5 (`MAX_SETTLEMENTS`)
-3. 마지막 이주로부터 1,000틱 이상 경과 (`MIGRATION_COOLDOWN_TICKS`)
+3. 마지막 이주로부터 4,000틱 이상 경과 (`MIGRATION_COOLDOWN_TICKS`)
 
 **트리거 (하나 이상)**:
 1. **과밀**: 정착지 인구 > 쉘터 수 × 8
@@ -211,7 +216,7 @@ urgency(deficit) = deficit^2 (지수 곡선)
 - 도착 후 builder가 즉시 비축소 건설 가능
 
 ### 빈 정착지 자동 정리
-- 500틱마다 인구 0인 정착지 삭제 (`cleanup_empty_settlements`)
+- 2,000틱마다 인구 0인 정착지 삭제 (`cleanup_empty_settlements`)
 
 ### settlement_id 필터
 - BehaviorSystem의 모든 건물 탐색이 entity.settlement_id로 필터됨
@@ -223,8 +228,8 @@ urgency(deficit) = deficit^2 (지수 곡선)
 
 | 항목 | 값 | 코드 위치 |
 |------|-----|----------|
-| 기록 간격 | 50틱 | `StatsRecorder.tick_interval = 50` |
-| 최대 기록 수 | 200 스냅샷 (= 10,000틱 ≈ 17분) | `StatsRecorder.MAX_HISTORY` |
+| 기록 간격 | 200틱 | `StatsRecorder.tick_interval = 200` |
+| 최대 기록 수 | 200 스냅샷 (= 40,000틱 ≈ 67분) | `StatsRecorder.MAX_HISTORY` |
 | 기록 항목 | tick, pop, food, wood, stone, gatherers, lumberjacks, builders, miners | `stats_recorder.gd` |
 
 ## 미니맵 갱신
@@ -237,14 +242,14 @@ urgency(deficit) = deficit^2 (지수 곡선)
 ## 낮/밤 사이클
 
 N 키로 ON/OFF 토글 가능. 느린 lerp 보간으로 부드러운 전환.
+float 기반 시간 판정 (`float(hour) + float(minute) / 60.0`).
 
-| 시간대 (hour) | 색상 | Color 값 | 비고 |
-|--------------|------|----------|------|
-| 5 (여명) | 거의 밝음 | `Color(0.9, 0.9, 0.95)` | |
-| 6~17 (낮) | 흰색 | `Color(1.0, 1.0, 1.0)` | 기본 |
-| 18 (석양) | 아주 미세 | `Color(0.95, 0.9, 0.85)` | |
-| 19 (황혼) | 붉은 회색 | `Color(0.85, 0.82, 0.88)` | |
-| 그 외 (밤) | 약간 어둡게 | `Color(0.75, 0.75, 0.85)` | 이전보다 밝게 |
+| 시간대 | 색상 | Color 값 | 비고 |
+|--------|------|----------|------|
+| 7:00~17:00 (낮) | 흰색 | `Color(1.0, 1.0, 1.0)` | 기본 |
+| 17:00~19:00 (석양) | 따뜻한 톤 | `Color(1.0, 0.88, 0.75)` | 눈에 띄는 노을 |
+| 19:00~05:00 (밤) | 어두운 청색 | `Color(0.55, 0.55, 0.7)` | 확실히 어둡지만 눈 안 아픔 |
+| 05:00~07:00 (새벽) | 밝은 청색 | `Color(0.8, 0.8, 0.9)` | |
 
 적용: `_current_day_color.lerp(target_color, lerp_speed)` (`main.gd._process`).
 
@@ -271,6 +276,35 @@ N 키로 ON/OFF 토글 가능. 느린 lerp 보간으로 부드러운 전환.
 | 최대 탐색 스텝 | 200 | `GameConfig.PATHFIND_MAX_STEPS` |
 | 경로 재계산 | 50틱마다 또는 경로 소진 시 | `movement_system.gd` |
 | 실패 시 | 그리디 이동 (대각선 → 축 이동) | `movement_system.gd` |
+
+---
+
+## UI 폰트 사이즈 기준
+
+| 상수 | 값 | 용도 | 코드 위치 |
+|------|-----|------|----------|
+| UI_FONT_TITLE | 20 | 패널 제목, 팝업 헤더 | `GameConfig` |
+| UI_FONT_LARGE | 16 | 주요 수치 (인구, 자원, 시간) | `GameConfig` |
+| UI_FONT_BODY | 14 | 본문, 설명 텍스트 | `GameConfig` |
+| UI_FONT_SMALL | 12 | 보조 정보, 키 힌트 | `GameConfig` |
+| UI_FONT_TINY | 10 | 극소 보조 (거의 안 쓰임) | `GameConfig` |
+
+### 적용 현황
+
+| UI 요소 | 이전 크기 | 변경 후 |
+|---------|----------|---------|
+| 상단 HUD (시간, 인구, 자원) | ~10px | 16px |
+| 상단 HUD (속도, FPS) | ~10px | 14px |
+| 선택 패널 이름 | ~12px | 18px |
+| 선택 패널 본문 | ~10px | 14px |
+| 통계 상세창 제목 | ~14px | 22px |
+| 통계 상세창 본문 | ~10px | 14px |
+| 도움말 제목 | ~16px | 26px |
+| 도움말 본문 | ~12px | 16~18px |
+| 키 힌트 (하단) | ~8px | 12px |
+| 토스트 알림 | ~12px | 15px |
+| 미니맵 라벨 | ~8px | 12px |
+| 미니 통계 패널 | ~9~10px | 12~14px |
 
 ---
 

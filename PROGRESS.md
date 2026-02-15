@@ -256,3 +256,99 @@ Phase 1 완료 후 코드에서 추출한 정확한 문서 체계 구축. 6개 d
 - MAX_SETTLEMENTS=5 + 쿨다운 1000틱으로 난립 방지
 - 500틱마다 빈 정착지 자동 정리
 - HUD에 키 힌트 상시 표시
+
+---
+
+## Phase 1.5: Visual Polish — Minimap, Stats, UI Overhaul (T-750 series)
+
+### Context
+시뮬레이션은 안정적이지만 UI가 부족:
+- 미니맵/통계/도움말 없음
+- 건물 선택 불가
+- 낮/밤 효과 없음
+- 자원 오버레이 토글만 있고 범례 없음
+
+### Tickets
+| Ticket | Title | Action | Reason |
+|--------|-------|--------|--------|
+| T-750 | StatsRecorder 시스템 | DIRECT | 신규 SimulationSystem, main.gd 등록 필요 |
+| T-752 | MinimapPanel | DIRECT | 신규 UI, HUD 연동 |
+| T-753 | StatsPanel | DIRECT | 신규 UI, HUD 연동 |
+| T-755 | 건물 선택 시스템 | DIRECT | SimulationBus + entity_renderer 수정 |
+| T-760 | HUD 전면 재설계 | DIRECT | hud.gd 726줄 전면 재작성 |
+| T-761 | 렌더러 개선 | DIRECT | building_renderer + entity_renderer 뷰포트 컬링 |
+| T-770 | 낮/밤 + 자원 오버레이 | DIRECT | main.gd + world_renderer 수정 |
+
+### Dispatch ratio: 0/7 = 0% ❌ (대규모 UI 재작성, 파일 간 의존 높음)
+
+### 결과
+- gate PASS ✅
+- 8 code files changed + 6 docs updated
+- 미니맵, 통계, 건물 선택, 낮/밤, 도움말, 범례, 키힌트 추가
+
+---
+
+## Phase 1.5 UI/UX Fix — 사용자 피드백 8건 반영 (T-800 series)
+
+### Context
+Phase 1.5 시각 폴리싱 1차 완료 후 사용자 테스트에서 8가지 문제 발견:
+- 낮/밤 16x에서 깜빡거림
+- 통계 패널이 미니맵 위에 겹침
+- 통계/에이전트 정보가 160px 안에서 읽을 수 없음
+- 자원 오버레이가 바이옴에 묻힘
+- 도움말 작고 일시정지 안 됨
+- 토스트 알림 안 보임
+
+### Tickets
+| Ticket | Title | Action | Priority | Reason |
+|--------|-------|--------|----------|--------|
+| T-800 | 낮/밤 전환 속도 + 끄기 | DIRECT | Critical | main.gd lerp 보간 + N키 토글 |
+| T-810 | 우측 사이드바 레이아웃 | DIRECT | Critical | stats_panel.gd 위치 수정 |
+| T-820 | 통계 상세창 | DIRECT | Critical | 신규 stats_detail_panel.gd + stats_recorder 확장 |
+| T-830 | 에이전트/건물 상세보기 | DIRECT | Medium | 신규 entity_detail_panel.gd + building_detail_panel.gd |
+| T-840 | 자원 오버레이 강화 | DIRECT | Medium | world_renderer 색상 + entity_renderer F/W/S 마커 |
+| T-850 | 도움말 개선 | DIRECT | Low | hud.gd 600×440 두 컬럼 + 자동 일시정지 |
+| T-860 | 토스트 알림 가시성 | DIRECT | Low | hud.gd 좌측 배경 바 + 4초 |
+| T-870 | 문서 동기화 | DIRECT | — | 6개 docs/ 전체 업데이트 |
+
+### Dispatch ratio: 0/8 = 0% ❌ (target: >60%)
+
+### 낮은 dispatch 사유
+8개 티켓 모두 DIRECT 처리:
+1. **파일 중첩**: hud.gd를 T-810/T-820/T-830/T-850/T-860이 공유, main.gd를 T-800/T-830/T-850이 공유
+2. **이전 세션 연속**: 이전 컨텍스트에서 코드 변경이 시작되어 에이전트 위임 시 컨텍스트 손실 위험
+3. **UI 통합**: 상세 패널 3개가 모두 hud.gd에서 생성/관리되므로 일관성 필요
+
+### 변경 파일 (16 코드 + 6 문서 + 8 티켓)
+| File | Changes |
+|------|---------|
+| main.gd | 낮/밤 lerp 보간, N키 토글, E키 상세보기, 시작 토스트 |
+| hud.gd | 패널 확대, 상세패널 연동, 도움말 재작성, 토스트 재작성, 범례 색상 |
+| stats_panel.gd | 위치 고정, 숫자값, 클릭→상세 |
+| stats_recorder.gd | peak_pop, total_births/deaths, get_resource_deltas(), get_settlement_stats() |
+| entity_data.gd | total_gathered, buildings_built, action_history + 직렬화 |
+| entity_renderer.gd | resource_map 참조, F/W/S 문자 마커, resource_overlay_visible |
+| world_renderer.gd | 자원 오버레이 색상 강화 (alpha 0.45~0.65) |
+| behavior_system.gd | action_history 추적 (최대 20개) |
+| gathering_system.gd | total_gathered 추적 |
+| construction_system.gd | buildings_built 추적 |
+| stats_detail_panel.gd | **신규** — 75%×80% 통계 상세창 |
+| entity_detail_panel.gd | **신규** — 50%×65% 에이전트 상세창 |
+| building_detail_panel.gd | **신규** — 45%×50% 건물 상세창 |
+| docs/CONTROLS.md | G/E/H/N/Tab 키 업데이트 |
+| docs/VISUAL_GUIDE.md | 낮/밤, 자원, 패널, 도움말, 토스트, 상세패널 |
+| docs/SYSTEMS.md | EntityData 필드, StatsRecorder 메서드, 3개 상세 패널 |
+| docs/GAME_BALANCE.md | 낮/밤 색상/보간, 알림 수치 |
+| docs/ARCHITECTURE.md | 3개 신규 UI 파일 |
+| docs/CHANGELOG.md | Phase 1.5 UI/UX Fix 전체 기록 |
+
+### 결과
+- PR #12 merged → gate PASS ✅
+- 27 files changed, +1311 / -129 lines
+- 낮/밤 깜빡임 해소 (lerp 보간 + N키 끄기)
+- 미니맵/통계 겹침 해소
+- G키 통계 상세, E키 에이전트/건물 상세 팝업
+- 자원 오버레이 선명 + LOD 2에서 F/W/S 문자
+- 도움말 600×440 두 컬럼 + 자동 일시정지
+- 토스트 좌측 배경 바, 10명 마일스톤, 시작 토스트
+- 6개 docs/ 문서 전부 동기화

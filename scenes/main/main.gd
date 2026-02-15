@@ -212,7 +212,8 @@ func _process(delta: float) -> void:
 	# Day/night cycle (smooth lerp, slower at high speed)
 	if sim_engine and _day_night_enabled:
 		var gt: Dictionary = sim_engine.get_game_time()
-		var target_color: Color = _get_daylight_color(gt.hour)
+		var hour_f: float = float(gt.hour) + float(gt.minute) / 60.0
+		var target_color: Color = _get_daylight_color(hour_f)
 		var lerp_speed: float = 0.3 * delta
 		if sim_engine.speed_index >= 3:
 			lerp_speed = 0.05 * delta
@@ -220,18 +221,15 @@ func _process(delta: float) -> void:
 		world_renderer.modulate = _current_day_color
 
 
-func _get_daylight_color(hour: int) -> Color:
-	match hour:
-		5:
-			return Color(0.9, 0.9, 0.95)
-		18:
-			return Color(0.95, 0.9, 0.85)
-		19:
-			return Color(0.85, 0.82, 0.88)
-	if hour >= 6 and hour <= 17:
-		return Color(1.0, 1.0, 1.0)
-	# Night: only slightly dimmed (was 0.4,0.4,0.6 — too dark)
-	return Color(0.75, 0.75, 0.85)
+func _get_daylight_color(hour: float) -> Color:
+	if hour >= 7.0 and hour < 17.0:
+		return Color(1.0, 1.0, 1.0)           # Day
+	elif hour >= 17.0 and hour < 19.0:
+		return Color(1.0, 0.88, 0.75)          # Sunset
+	elif hour >= 19.0 or hour < 5.0:
+		return Color(0.55, 0.55, 0.7)          # Night
+	else:  # 5~7
+		return Color(0.8, 0.8, 0.9)            # Dawn
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -246,6 +244,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 		else:
 			match event.keycode:
+				KEY_ESCAPE:
+					hud.close_all_popups()
 				KEY_SPACE:
 					sim_engine.toggle_pause()
 				KEY_PERIOD:

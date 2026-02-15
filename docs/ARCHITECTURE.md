@@ -26,8 +26,8 @@
 │  ├ MovementSystem      │  HUD                                │
 │  ├ PopulationSystem    │  HUD                                │
 │  ├ MigrationSystem     │    ├ 상단바 + 엔티티/건물패널 + 토스트  │
-│  └ StatsRecorder       │    ├ MinimapPanel (우상단 160×160)    │
-│                        │    ├ StatsPanel (미니맵 하단 160×200) │
+│  └ StatsRecorder       │    ├ MinimapPanel (우상단 200×200)    │
+│                        │    ├ StatsPanel (우하단 160×200)     │
 │                        │    ├ StatsDetailPanel (G/클릭 상세)   │
 │                        │    ├ EntityDetailPanel (E 상세)       │
 │                        │    └ BuildingDetailPanel (E 상세)     │
@@ -107,7 +107,7 @@ SimulationEngine.update(delta)
 | 파일 | 역할 |
 |------|------|
 | `resource_regen_system.gd` | 바이옴별 food/wood 재생 (stone 재생 안 함) |
-| `stats_recorder.gd` | 인구/자원/직업 스냅샷 기록 (prio 90, 50틱 간격, 최대 200) |
+| `stats_recorder.gd` | 인구/자원/직업 스냅샷 기록 (prio 90, 200틱 간격, 최대 200) |
 | `job_assignment_system.gd` | 미배정 에이전트 직업 배정 + 동적 재배치 (소규모/식량위기 비율) |
 | `needs_system.gd` | hunger/energy/social 감소, 자동 식사, 아사 유예 판정 |
 | `building_effect_system.gd` | 건물 효과 적용 — campfire social (+0.01/+0.02), shelter energy (+0.01) |
@@ -126,8 +126,8 @@ SimulationEngine.update(delta)
 | `building_renderer.gd` | 건물 도형 그리기, 3단계 LOD, 건설 진행 바, stockpile 저장량 텍스트 |
 | `camera_controller.gd` | WASD/마우스/트랙패드 카메라, 줌 보간, 드래그 팬 |
 | `hud.gd` | 상단 바 + 엔티티/건물 패널 + 토스트 + 도움말 + 범례 + 키힌트 |
-| `minimap_panel.gd` | 미니맵 (160×160, Image 기반, 클릭 이동, 정착지 라벨) |
-| `stats_panel.gd` | 미니 통계 패널 (인구/자원 그래프, 직업 분포 바, 클릭→상세) |
+| `minimap_panel.gd` | 미니맵 (200×200 기본, M키 200/300/숨김 순환, Image 기반, 클릭 이동, 정착지 라벨) |
+| `stats_panel.gd` | 미니 통계 패널 (우하단 160×200, 인구/자원 그래프, 직업 분포 바, 클릭→상세) |
 | `stats_detail_panel.gd` | 통계 상세창 (75%×80%, 인구/자원/직업/정착지 비교, G키/클릭) |
 | `entity_detail_panel.gd` | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리, E키) |
 | `building_detail_panel.gd` | 건물 상세창 (45%×50%, 타입별 상세 정보, E키) |

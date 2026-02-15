@@ -4,6 +4,64 @@
 
 ---
 
+## Phase 1.5 UI/UX 긴급 수정 2차 (T-900 series)
+
+**gate PASS** | 11 code files changed + 6 docs updated
+
+### T-900: GameConfig 기반 상수 추가
+- `game_config.gd` — TICK_MINUTES=15 (기존 TICK_HOURS=1 대체), TICKS_PER_DAY=96, AGE_DAYS_DIVISOR=96
+- UI 폰트 상수: UI_FONT_TITLE=20, UI_FONT_LARGE=16, UI_FONT_BODY=14, UI_FONT_SMALL=12, UI_FONT_TINY=10
+- 욕구 감소율 ÷4: HUNGER/ENERGY/SOCIAL_DECAY_RATE 0.002→0.0005, ENERGY_ACTION_COST 0.004→0.001
+- 시간 기반 간격 ×4: RESOURCE_REGEN 50→200, JOB_ASSIGNMENT 50→200, POPULATION 60→240, MIGRATION 200→800, MIGRATION_COOLDOWN 1000→4000, SETTLEMENT_CLEANUP 500→2000, STARVATION_GRACE 50→200
+- 노화 ×4: OLD_AGE_TICKS 8640→34560, MAX_AGE_TICKS 17280→69120
+- `simulation_engine.gd` — get_game_time() TICK_MINUTES 기반 변환, minute 필드 추가
+- `stats_recorder.gd` — tick_interval 50→200
+
+### T-910: 전체 UI 폰트 사이즈 상향
+- `hud.gd` — 상단 바 높이 28→34px, 모든 라벨 폰트 +4~6px 상향
+  - 상단 바: 10→16px (주요), 10→14px (보조)
+  - 엔티티 패널: 이름 15→18, 본문 10→14, 바 라벨 10→12
+  - 건물 패널: 이름 15→18, 본문 11→14
+  - 도움말: 제목 24→26, 섹션 16→18, 항목 13→16
+  - 키 힌트: 10→12, 범례: 11→14/10→12, 토스트: 14→15
+- `stats_detail_panel.gd` — 제목 20→22, 본문 11→14, 섹션헤더 14→16
+- `entity_detail_panel.gd` — 헤더 18→20, 본문 11→14, 히스토리 10→13
+- `building_detail_panel.gd` — 헤더 18→20, 본문 11→14
+- `stats_panel.gd` — 전체 9~10→12~14px
+- `minimap_panel.gd` — 정착지 라벨 8→12px
+
+### T-920: 팝업 닫기 버그 수정 (3중 보장)
+- `stats_detail_panel.gd` — 배경 클릭 시 닫기 (panel_rect 밖 클릭 감지)
+- `entity_detail_panel.gd` — 동일한 배경 클릭 닫기 패턴
+- `building_detail_panel.gd` — 동일한 배경 클릭 닫기 패턴
+- `hud.gd` — toggle_stats() 토글 동작 (열려있으면 닫기)
+  - close_all_popups(): 통계→엔티티→건물→도움말 순서로 닫기
+- `main.gd` — KEY_ESCAPE → hud.close_all_popups()
+
+### T-930: 하루 속도 느리게 + 낮/밤 차이 강화
+- `main.gd` — _get_daylight_color() float 기반 판정 (hour + minute/60)
+  - 밤: Color(0.75, 0.75, 0.85) → Color(0.55, 0.55, 0.7) (확실히 어둡게)
+  - 석양: Color(0.95, 0.9, 0.85) → Color(1.0, 0.88, 0.75) (눈에 띄게)
+  - 새벽: Color(0.9, 0.9, 0.95) → Color(0.8, 0.8, 0.9)
+- `hud.gd` — 시간 표시 "HH:00" → "HH:MM" (gt.minute 반영)
+  - 나이 표시: entity.age / HOURS_PER_DAY → entity.age / AGE_DAYS_DIVISOR
+
+### T-940: 미니맵 크기 확대 + 위치 분리
+- `minimap_panel.gd` — 기본 크기 160→200px, resize(new_size) 함수 추가
+- `hud.gd` — MINIMAP_SIZES=[200,300,0], M키 순환 (200→300→숨김→200)
+- `stats_panel.gd` — 위치 PRESET_TOP_RIGHT → PRESET_BOTTOM_RIGHT (우하단, 키 힌트 위)
+  - 미니맵(우상단)과 미니통계(우하단) 절대 안 겹침
+
+### T-950: 문서 동기화
+- `docs/GAME_BALANCE.md` — TICK_MINUTES=15, 감소율/간격/나이 수치, UI_FONT_* 상수표, 낮/밤 색상
+- `docs/VISUAL_GUIDE.md` — 폰트 크기, 상단 바 34px/HH:MM, 미니맵 200px/순환, 통계 우하단, 레이아웃 다이어그램, 낮/밤 색상
+- `docs/SYSTEMS.md` — 시간/행동 기반 구분 컬럼, tick_interval 변경 설명
+- `docs/CONTROLS.md` — Esc키 팝업 닫기, M키 순환, 팝업 3중 닫기 보장, 상단 바 34px, 키힌트 12px
+- `docs/ARCHITECTURE.md` — 미니맵 200px, 통계 우하단, stats_recorder 200틱
+- `docs/CHANGELOG.md` — T-900 series 전체 기록
+
+---
+
 ## Phase 1.5 UI/UX Fix — 사용자 피드백 8건 반영 (T-800 series)
 
 **gate PASS** | 15+ code files changed + 6 docs updated

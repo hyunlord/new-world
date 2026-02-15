@@ -9,19 +9,31 @@
 SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 각 시스템은 tick_interval마다 한 번 실행됨 (`current_tick % tick_interval == 0`).
 
-| 우선순위 | 시스템 | 틱 간격 | 역할 | 파일 |
-|---------|--------|---------|------|------|
-| 5 | ResourceRegenSystem | 50 | 바이옴별 food/wood 재생 (stone 재생 안 함) | `scripts/systems/resource_regen_system.gd` |
-| 8 | JobAssignmentSystem | 50 | 미배정 에이전트 직업 배정 + 동적 재배치 | `scripts/systems/job_assignment_system.gd` |
-| 10 | NeedsSystem | 2 | hunger/energy/social 감소, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
-| 15 | BuildingEffectSystem | 10 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
-| 20 | BehaviorSystem | 10 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
-| 25 | GatheringSystem | 3 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
-| 28 | ConstructionSystem | 5 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
-| 30 | MovementSystem | 3 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
-| 50 | PopulationSystem | 60 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
-| 60 | MigrationSystem | 200 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
-| 90 | StatsRecorder | 50 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
+| 우선순위 | 시스템 | 틱 간격 | 시간/행동 | 역할 | 파일 |
+|---------|--------|---------|----------|------|------|
+| 5 | ResourceRegenSystem | 200 | 시간 기반 | 바이옴별 food/wood 재생 (stone 재생 안 함) | `scripts/systems/resource_regen_system.gd` |
+| 8 | JobAssignmentSystem | 200 | 시간 기반 | 미배정 에이전트 직업 배정 + 동적 재배치 | `scripts/systems/job_assignment_system.gd` |
+| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
+| 15 | BuildingEffectSystem | 10 | 행동 기반 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
+| 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
+| 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
+| 28 | ConstructionSystem | 5 | 행동 기반 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
+| 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
+| 50 | PopulationSystem | 240 | 시간 기반 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
+| 60 | MigrationSystem | 800 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
+| 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
+
+### TICK_MINUTES 변경 영향 (60→15)
+
+틱이 1시간→15분으로 변경되어 하루가 24틱→96틱으로 4배 늘어남.
+
+**시간 기반 시스템** (tick_interval ×4): 게임 시간 경과에 비례하는 효과. 틱 수가 4배 되므로 간격도 4배.
+- ResourceRegenSystem: 50→200, JobAssignmentSystem: 50→200, PopulationSystem: 60→240
+- MigrationSystem: 200→800, StatsRecorder: 50→200
+
+**행동 기반 시스템** (tick_interval 유지): 에이전트 체감 속도와 직결. 변경하면 움직임이 느려짐.
+- NeedsSystem: 2 (decay rate ÷4로 보상), BehaviorSystem: 10, GatheringSystem: 3
+- ConstructionSystem: 5, MovementSystem: 3, BuildingEffectSystem: 10
 
 ---
 

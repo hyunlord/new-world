@@ -11,10 +11,19 @@ const MAX_ENTITIES: int = 500
 const INITIAL_SPAWN_COUNT: int = 20
 const MAX_TICKS_PER_FRAME: int = 5
 
-## Time conversion (1 tick = 1 game hour)
-const TICK_HOURS: int = 1
+## Time conversion (1 tick = 15 game minutes)
+const TICK_MINUTES: int = 15
 const HOURS_PER_DAY: int = 24
 const DAYS_PER_YEAR: int = 360
+const TICKS_PER_DAY: int = HOURS_PER_DAY * 60 / TICK_MINUTES  # 96
+const AGE_DAYS_DIVISOR: int = TICKS_PER_DAY  # age_ticks / AGE_DAYS_DIVISOR = display days
+
+## UI Font sizes
+const UI_FONT_TITLE: int = 20
+const UI_FONT_LARGE: int = 16
+const UI_FONT_BODY: int = 14
+const UI_FONT_SMALL: int = 12
+const UI_FONT_TINY: int = 10
 
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]
@@ -70,14 +79,14 @@ const NEEDS_TICK_INTERVAL: int = 2
 const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
-## Entity need decay rates (per needs tick)
-const HUNGER_DECAY_RATE: float = 0.002
-const ENERGY_DECAY_RATE: float = 0.002
-const ENERGY_ACTION_COST: float = 0.004
-const SOCIAL_DECAY_RATE: float = 0.002
+## Entity need decay rates (per needs tick, adjusted for TICK_MINUTES=15)
+const HUNGER_DECAY_RATE: float = 0.0005
+const ENERGY_DECAY_RATE: float = 0.0005
+const ENERGY_ACTION_COST: float = 0.001
+const SOCIAL_DECAY_RATE: float = 0.0005
 
-## Starvation grace period
-const STARVATION_GRACE_TICKS: int = 50
+## Starvation grace period (in NeedsSystem ticks)
+const STARVATION_GRACE_TICKS: int = 200
 
 ## Eating constants
 const FOOD_HUNGER_RESTORE: float = 0.3
@@ -110,8 +119,8 @@ const FOOD_REGEN_RATE: float = 1.0
 const WOOD_REGEN_RATE: float = 0.3
 const STONE_REGEN_RATE: float = 0.0
 
-## Resource regen tick interval
-const RESOURCE_REGEN_TICK_INTERVAL: int = 50
+## Resource regen tick interval (time-based, scaled for TICK_MINUTES=15)
+const RESOURCE_REGEN_TICK_INTERVAL: int = 200
 
 ## Building type definitions
 const BUILDING_TYPES: Dictionary = {
@@ -128,12 +137,14 @@ const JOB_RATIOS: Dictionary = {
 	"miner": 0.1,
 }
 
-## New system tick intervals
+## Action-based tick intervals (NOT scaled — affect agent feel)
 const GATHERING_TICK_INTERVAL: int = 3
 const CONSTRUCTION_TICK_INTERVAL: int = 5
 const BUILDING_EFFECT_TICK_INTERVAL: int = 10
-const JOB_ASSIGNMENT_TICK_INTERVAL: int = 50
-const POPULATION_TICK_INTERVAL: int = 60
+
+## Time-based tick intervals (scaled for TICK_MINUTES=15)
+const JOB_ASSIGNMENT_TICK_INTERVAL: int = 200
+const POPULATION_TICK_INTERVAL: int = 240
 
 ## Entity inventory
 const MAX_CARRY: float = 10.0
@@ -141,8 +152,8 @@ const GATHER_AMOUNT: float = 2.0
 
 ## Population
 const BIRTH_FOOD_COST: float = 3.0
-const OLD_AGE_TICKS: int = 8640
-const MAX_AGE_TICKS: int = 17280
+const OLD_AGE_TICKS: int = 34560
+const MAX_AGE_TICKS: int = 69120
 
 ## Pathfinding
 const PATHFIND_MAX_STEPS: int = 200
@@ -153,7 +164,7 @@ const PATHFIND_MAX_STEPS: int = 200
 const SETTLEMENT_MIN_DISTANCE: int = 25
 const SETTLEMENT_BUILD_RADIUS: int = 15
 const BUILDING_MIN_SPACING: int = 2
-const MIGRATION_TICK_INTERVAL: int = 200
+const MIGRATION_TICK_INTERVAL: int = 800
 const MIGRATION_MIN_POP: int = 40
 const MIGRATION_GROUP_SIZE_MIN: int = 5
 const MIGRATION_GROUP_SIZE_MAX: int = 7
@@ -161,8 +172,8 @@ const MIGRATION_CHANCE: float = 0.05
 const MIGRATION_SEARCH_RADIUS_MIN: int = 30
 const MIGRATION_SEARCH_RADIUS_MAX: int = 80
 const MAX_SETTLEMENTS: int = 5
-const MIGRATION_COOLDOWN_TICKS: int = 1000
+const MIGRATION_COOLDOWN_TICKS: int = 4000
 const MIGRATION_STARTUP_FOOD: float = 30.0
 const MIGRATION_STARTUP_WOOD: float = 10.0
 const MIGRATION_STARTUP_STONE: float = 3.0
-const SETTLEMENT_CLEANUP_INTERVAL: int = 500
+const SETTLEMENT_CLEANUP_INTERVAL: int = 2000
