@@ -6,7 +6,7 @@ var _entity_manager: RefCounted
 func _init() -> void:
 	system_name = "needs"
 	priority = 10
-	tick_interval = 1
+	tick_interval = GameConfig.NEEDS_TICK_INTERVAL
 
 
 ## Initialize with entity manager reference

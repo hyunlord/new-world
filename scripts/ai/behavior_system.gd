@@ -8,7 +8,7 @@ var _rng: RandomNumberGenerator
 func _init() -> void:
 	system_name = "behavior"
 	priority = 20
-	tick_interval = 5
+	tick_interval = GameConfig.BEHAVIOR_TICK_INTERVAL
 
 
 ## Initialize with references
@@ -53,7 +53,16 @@ func _urgency_curve(deficit: float) -> float:
 
 
 func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
+	var old_action: String = entity.current_action
 	entity.current_action = action
+	if action != old_action:
+		emit_event("action_changed", {
+			"entity_id": entity.id,
+			"entity_name": entity.entity_name,
+			"from": old_action,
+			"to": action,
+			"tick": tick,
+		})
 	match action:
 		"wander":
 			entity.action_target = _find_random_walkable_nearby(entity.position, 5)

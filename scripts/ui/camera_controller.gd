@@ -20,10 +20,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed:
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				_target_zoom = clampf(_target_zoom + GameConfig.CAMERA_ZOOM_STEP, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+				_zoom_at_mouse(GameConfig.CAMERA_ZOOM_STEP)
 				get_viewport().set_input_as_handled()
 			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				_target_zoom = clampf(_target_zoom - GameConfig.CAMERA_ZOOM_STEP, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+				_zoom_at_mouse(-GameConfig.CAMERA_ZOOM_STEP)
 				get_viewport().set_input_as_handled()
 			elif event.button_index == MOUSE_BUTTON_MIDDLE:
 				_is_dragging = true
@@ -35,9 +35,19 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# Mouse drag pan
 	if event is InputEventMouseMotion and _is_dragging:
-		var delta_px: Vector2 = event.position - _drag_start
-		position -= delta_px / zoom.x
+		position += (_drag_start - event.position) / zoom.x
 		_drag_start = event.position
+		get_viewport().set_input_as_handled()
+
+	# macOS trackpad: pinch zoom
+	if event is InputEventMagnifyGesture:
+		var zoom_delta: float = (event.factor - 1.0) * 0.5
+		_zoom_at_mouse(zoom_delta)
+		get_viewport().set_input_as_handled()
+
+	# macOS trackpad: two-finger scroll pan
+	if event is InputEventPanGesture:
+		position += event.delta * 2.0 / zoom.x
 		get_viewport().set_input_as_handled()
 
 
@@ -63,3 +73,7 @@ func _process(delta: float) -> void:
 	var world_px := Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE
 	position.x = clampf(position.x, 0, world_px.x)
 	position.y = clampf(position.y, 0, world_px.y)
+
+
+func _zoom_at_mouse(delta: float) -> void:
+	_target_zoom = clampf(_target_zoom + delta, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)

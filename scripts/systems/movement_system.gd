@@ -7,7 +7,7 @@ var _world_data: RefCounted
 func _init() -> void:
 	system_name = "movement"
 	priority = 30
-	tick_interval = 1
+	tick_interval = GameConfig.MOVEMENT_TICK_INTERVAL
 
 
 ## Initialize with references
