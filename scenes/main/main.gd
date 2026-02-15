@@ -242,6 +242,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_L:
 					_load_game()
 					get_viewport().set_input_as_handled()
+				KEY_EQUAL:
+					GameConfig.ui_scale = minf(GameConfig.ui_scale + 0.1, GameConfig.UI_SCALE_MAX)
+					hud.apply_ui_scale()
+					get_viewport().set_input_as_handled()
+				KEY_MINUS:
+					GameConfig.ui_scale = maxf(GameConfig.ui_scale - 0.1, GameConfig.UI_SCALE_MIN)
+					hud.apply_ui_scale()
+					get_viewport().set_input_as_handled()
+				KEY_0:
+					GameConfig.ui_scale = 1.0
+					hud.apply_ui_scale()
+					get_viewport().set_input_as_handled()
 		else:
 			match event.keycode:
 				KEY_ESCAPE:
@@ -269,8 +281,11 @@ func _unhandled_input(event: InputEvent) -> void:
 						_current_day_color = Color(1.0, 1.0, 1.0)
 						world_renderer.modulate = Color(1.0, 1.0, 1.0)
 				KEY_E:
-					hud.open_entity_detail()
-					hud.open_building_detail()
+					if hud.is_detail_visible():
+						hud.close_detail()
+					else:
+						hud.open_entity_detail()
+						hud.open_building_detail()
 
 
 func _save_game() -> void:
@@ -325,4 +340,6 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    N              = Toggle day/night")
 	print("    Cmd+S          = Quick Save")
 	print("    Cmd+L          = Quick Load")
+	print("    Cmd+=/-/0      = UI Scale (%.1f)" % GameConfig.ui_scale)
+	print("    Double-click   = Open detail popup")
 	print("")

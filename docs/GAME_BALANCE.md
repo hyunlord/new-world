@@ -279,32 +279,60 @@ float 기반 시간 판정 (`float(hour) + float(minute) / 60.0`).
 
 ---
 
-## UI 폰트 사이즈 기준
+## UI_SCALE 시스템
 
-| 상수 | 값 | 용도 | 코드 위치 |
-|------|-----|------|----------|
-| UI_FONT_TITLE | 20 | 패널 제목, 팝업 헤더 | `GameConfig` |
-| UI_FONT_LARGE | 16 | 주요 수치 (인구, 자원, 시간) | `GameConfig` |
-| UI_FONT_BODY | 14 | 본문, 설명 텍스트 | `GameConfig` |
-| UI_FONT_SMALL | 12 | 보조 정보, 키 힌트 | `GameConfig` |
-| UI_FONT_TINY | 10 | 극소 보조 (거의 안 쓰임) | `GameConfig` |
+`GameConfig.ui_scale` (기본 1.0, 범위 0.7~1.5)로 모든 UI 크기를 제어.
+`Cmd+=` / `Cmd+-` / `Cmd+0` 으로 실시간 조절. 세이브 파일에 저장/복원.
 
-### 적용 현황
+### UI_FONT_SIZES (베이스 폰트, UI_SCALE 적용 전)
 
-| UI 요소 | 이전 크기 | 변경 후 |
-|---------|----------|---------|
-| 상단 HUD (시간, 인구, 자원) | ~10px | 16px |
-| 상단 HUD (속도, FPS) | ~10px | 14px |
-| 선택 패널 이름 | ~12px | 18px |
-| 선택 패널 본문 | ~10px | 14px |
-| 통계 상세창 제목 | ~14px | 22px |
-| 통계 상세창 본문 | ~10px | 14px |
-| 도움말 제목 | ~16px | 26px |
-| 도움말 본문 | ~12px | 16~18px |
-| 키 힌트 (하단) | ~8px | 12px |
-| 토스트 알림 | ~12px | 15px |
-| 미니맵 라벨 | ~8px | 12px |
-| 미니 통계 패널 | ~9~10px | 12~14px |
+| 키 | 값 | 용도 | 코드 위치 |
+|-----|-----|------|----------|
+| hud | 18 | 상단 HUD 주요 (시간, 인구, 자원) | `GameConfig.UI_FONT_SIZES` |
+| hud_secondary | 15 | HUD 보조 (속도, FPS) | |
+| panel_title | 18 | 선택 패널 이름 | |
+| panel_body | 14 | 선택 패널 본문 | |
+| panel_hint | 12 | 선택 패널 보조 힌트 | |
+| bar_label | 12 | 욕구 바 라벨 | |
+| popup_title | 22 | 팝업 제목 | |
+| popup_heading | 18 | 팝업 섹션 헤더 | |
+| popup_body | 14 | 팝업 본문 | |
+| popup_small | 12 | 팝업 보조 | |
+| popup_close | 18 | 팝업 닫기 버튼 | |
+| popup_close_btn | 16 | 팝업 닫기 텍스트 | |
+| help_title | 24 | 도움말 제목 | |
+| help_section | 16 | 도움말 섹션 헤더 | |
+| help_body | 13 | 도움말 항목 | |
+| help_footer | 12 | 도움말 하단 | |
+| legend_title | 14 | 범례 제목 | |
+| legend_body | 12 | 범례 본문 | |
+| hint | 13 | 키 힌트 | |
+| toast | 14 | 토스트 알림 | |
+| minimap_label | 13 | 미니맵 정착지 라벨 | |
+| stats_title | 14 | 미니통계 제목 | |
+| stats_body | 12 | 미니통계 본문 | |
+
+### UI_SIZES (베이스 크기, UI_SCALE 적용 전)
+
+| 키 | 값(px) | 용도 |
+|-----|--------|------|
+| minimap | 250 | 미니맵 기본 크기 |
+| minimap_large | 350 | 미니맵 큰 버전 |
+| mini_stats_width | 250 | 미니통계 너비 |
+| mini_stats_height | 220 | 미니통계 높이 |
+| select_panel_width | 320 | 선택 패널 너비 |
+| select_panel_height | 280 | 선택 패널 높이 |
+| hud_height | 34 | 상단 바 높이 |
+
+### 스케일 헬퍼
+
+```gdscript
+func get_font_size(key: String) -> int:
+    return maxi(8, int(UI_FONT_SIZES.get(key, 14) * ui_scale))
+
+func get_ui_size(key: String) -> int:
+    return maxi(20, int(UI_SIZES.get(key, 100) * ui_scale))
+```
 
 ---
 

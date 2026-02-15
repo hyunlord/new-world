@@ -26,8 +26,8 @@
 │  ├ MovementSystem      │  HUD                                │
 │  ├ PopulationSystem    │  HUD                                │
 │  ├ MigrationSystem     │    ├ 상단바 + 엔티티/건물패널 + 토스트  │
-│  └ StatsRecorder       │    ├ MinimapPanel (우상단 200×200)    │
-│                        │    ├ StatsPanel (우하단 160×200)     │
+│  └ StatsRecorder       │    ├ MinimapPanel (우상단 250×250)    │
+│                        │    ├ StatsPanel (우하단 250×220)     │
 │                        │    ├ StatsDetailPanel (G/클릭 상세)   │
 │                        │    ├ EntityDetailPanel (E 상세)       │
 │                        │    └ BuildingDetailPanel (E 상세)     │
@@ -82,7 +82,7 @@ SimulationEngine.update(delta)
 | `simulation_engine.gd` | 고정 타임스텝 틱 루프, 시스템 등록/실행, 일시정지/속도 제어, RNG |
 | `simulation_system.gd` | SimulationSystem 베이스 클래스 (priority, tick_interval, process_tick) |
 | `simulation_bus.gd` | 글로벌 시그널 허브 — simulation_event, entity_selected, tick_completed 등 |
-| `game_config.gd` | 전역 상수/열거형 — 바이옴, 건물, 직업 비율, 시뮬 파라미터 |
+| `game_config.gd` | 전역 상수/열거형 — 바이옴, 건물, 직업 비율, 시뮬 파라미터, UI_SCALE 시스템 (UI_FONT_SIZES, UI_SIZES, get_font_size(), get_ui_size()) |
 | `event_logger.gd` | SimulationBus 구독, 이벤트 메모리 저장, 콘솔 포맷팅, 채집 요약 |
 | `world_data.gd` | 256×256 타일 그리드 — 바이옴, 고도, 습도, 온도 (PackedInt32Array/PackedFloat32Array) |
 | `world_generator.gd` | 노이즈 기반 월드 생성 (바이옴, 고도, 습도, 온도 레이어) |
@@ -126,8 +126,8 @@ SimulationEngine.update(delta)
 | `building_renderer.gd` | 건물 도형 그리기, 3단계 LOD, 건설 진행 바, stockpile 저장량 텍스트 |
 | `camera_controller.gd` | WASD/마우스/트랙패드 카메라, 줌 보간, 드래그 팬 |
 | `hud.gd` | 상단 바 + 엔티티/건물 패널 + 토스트 + 도움말 + 범례 + 키힌트 |
-| `minimap_panel.gd` | 미니맵 (200×200 기본, M키 200/300/숨김 순환, Image 기반, 클릭 이동, 정착지 라벨) |
-| `stats_panel.gd` | 미니 통계 패널 (우하단 160×200, 인구/자원 그래프, 직업 분포 바, 클릭→상세) |
+| `minimap_panel.gd` | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 정착지 라벨, UI_SCALE 적용) |
+| `stats_panel.gd` | 미니 통계 패널 (우하단 250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) |
 | `stats_detail_panel.gd` | 통계 상세창 (75%×80%, 인구/자원/직업/정착지 비교, G키/클릭) |
 | `entity_detail_panel.gd` | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리, E키) |
 | `building_detail_panel.gd` | 건물 상세창 (45%×50%, 타입별 상세 정보, E키) |

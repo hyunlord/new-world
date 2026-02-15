@@ -18,12 +18,56 @@ const DAYS_PER_YEAR: int = 360
 const TICKS_PER_DAY: int = HOURS_PER_DAY * 60 / TICK_MINUTES  # 96
 const AGE_DAYS_DIVISOR: int = TICKS_PER_DAY  # age_ticks / AGE_DAYS_DIVISOR = display days
 
-## UI Font sizes
-const UI_FONT_TITLE: int = 20
-const UI_FONT_LARGE: int = 16
-const UI_FONT_BODY: int = 14
-const UI_FONT_SMALL: int = 12
-const UI_FONT_TINY: int = 10
+## UI Scale (adjustable at runtime, saved with game)
+var ui_scale: float = 1.0
+const UI_SCALE_MIN: float = 0.7
+const UI_SCALE_MAX: float = 1.5
+
+## Base font sizes (multiplied by ui_scale)
+const UI_FONT_SIZES: Dictionary = {
+	"hud": 18,
+	"hud_secondary": 15,
+	"panel_title": 18,
+	"panel_body": 14,
+	"panel_hint": 13,
+	"bar_label": 13,
+	"popup_title": 22,
+	"popup_heading": 16,
+	"popup_body": 14,
+	"popup_small": 13,
+	"popup_close": 14,
+	"popup_close_btn": 16,
+	"help_title": 26,
+	"help_section": 18,
+	"help_body": 16,
+	"help_footer": 14,
+	"legend_title": 14,
+	"legend_body": 12,
+	"hint": 13,
+	"toast": 15,
+	"minimap_label": 13,
+	"stats_title": 14,
+	"stats_body": 12,
+}
+
+## Base UI element sizes (multiplied by ui_scale)
+const UI_SIZES: Dictionary = {
+	"minimap": 250,
+	"minimap_large": 350,
+	"mini_stats_width": 250,
+	"mini_stats_height": 220,
+	"select_panel_width": 320,
+	"select_panel_height": 280,
+	"hud_height": 34,
+}
+
+
+func get_font_size(key: String) -> int:
+	return maxi(8, int(UI_FONT_SIZES.get(key, 14) * ui_scale))
+
+
+func get_ui_size(key: String) -> int:
+	return maxi(20, int(UI_SIZES.get(key, 100) * ui_scale))
 
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]

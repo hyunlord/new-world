@@ -9,6 +9,7 @@ func save_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted,
 			"seed": sim_engine._seed,
 			"speed_index": sim_engine.speed_index,
 			"rng_state": sim_engine.rng.state,
+			"ui_scale": GameConfig.ui_scale,
 		},
 		"entities": entity_manager.to_save_data(),
 		"buildings": building_manager.to_save_data(),
@@ -50,6 +51,7 @@ func load_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted,
 	sim_engine.speed_index = int(se_data.get("speed_index", 0))
 	if se_data.has("rng_state"):
 		sim_engine.rng.state = int(se_data.get("rng_state", 0))
+	GameConfig.ui_scale = float(se_data.get("ui_scale", 1.0))
 
 	# Clear world entity registrations before loading
 	world_data.clear_entities()
