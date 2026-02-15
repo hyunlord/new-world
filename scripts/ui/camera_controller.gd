@@ -41,7 +41,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# macOS trackpad: pinch zoom
 	if event is InputEventMagnifyGesture:
-		var zoom_delta := (event.factor - 1.0) * 0.5
+		var zoom_delta: float = (event.factor - 1.0) * 0.5
 		_zoom_at_mouse(zoom_delta)
 		get_viewport().set_input_as_handled()
 
