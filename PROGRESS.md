@@ -352,3 +352,53 @@ Phase 1.5 시각 폴리싱 1차 완료 후 사용자 테스트에서 8가지 문
 - 도움말 600×440 두 컬럼 + 자동 일시정지
 - 토스트 좌측 배경 바, 10명 마일스톤, 시작 토스트
 - 6개 docs/ 문서 전부 동기화
+
+---
+
+## Phase 1.5 UI/UX 긴급 수정 2차 (T-900 series)
+
+### Context
+Phase 1.5 UI 구현 완료 후 사용자 테스트에서 6가지 문제 발견:
+- 글씨가 전반적으로 너무 작음 (맥북 Retina에서 읽기 힘듦)
+- 팝업(통계/디테일)이 열면 닫히지 않음
+- 1배속에서 하루가 2.4초 (너무 빠름)
+- 밤이 낮과 구분 안 됨
+- 미니맵 작고 크기 변경 불가
+- 미니맵과 미니통계가 겹침
+
+### Tickets
+| Ticket | Title | Action | Priority | Reason |
+|--------|-------|--------|----------|--------|
+| T-900 | GameConfig 기반 상수 | DIRECT | Critical | TICK_MINUTES + UI_FONT_* + decay/interval 조정, 모든 티켓의 기반 |
+| T-910 | 전체 폰트 사이즈 상향 | DISPATCH (×3) | Critical | 6개 UI 파일 폰트 변경 |
+| T-920 | 팝업 닫기 버그 수정 | DISPATCH (×3) | Critical | 3개 상세 패널 + hud + main |
+| T-930 | 하루 속도 + 낮/밤 강화 | DISPATCH (×3) | Critical | main.gd + hud.gd 시간/색상 |
+| T-940 | 미니맵 크기 + 위치 분리 | DISPATCH (×3) | Medium | minimap + stats_panel + hud |
+| T-950 | 문서 동기화 | DIRECT | — | 6개 docs/ 전체 업데이트 |
+
+### Dispatch ratio: 4/6 = 67% ✅ (target: >60%)
+T-910/T-920/T-930+T-940 을 3개 병렬 executor 에이전트로 디스패치. T-900 (기반 상수)과 T-950 (문서)은 DIRECT.
+
+### 변경 파일 (11 코드 + 6 문서 + 6 티켓)
+| File | Changes |
+|------|---------|
+| game_config.gd | TICK_MINUTES=15, UI_FONT_*, decay÷4, intervals×4, age×4 |
+| simulation_engine.gd | get_game_time() TICK_MINUTES 기반 + minute 필드 |
+| stats_recorder.gd | tick_interval 50→200 |
+| hud.gd | 상단 바 34px, 전체 폰트 상향, HH:MM, toggle_stats 토글, close_all_popups, MINIMAP_SIZES 순환 |
+| stats_detail_panel.gd | 폰트 상향 + 배경 클릭 닫기 |
+| entity_detail_panel.gd | 폰트 상향 + 배경 클릭 닫기 + AGE_DAYS_DIVISOR |
+| building_detail_panel.gd | 폰트 상향 + 배경 클릭 닫기 |
+| minimap_panel.gd | 200px 기본, resize() 함수, 라벨 12px |
+| stats_panel.gd | 우하단 PRESET_BOTTOM_RIGHT, 폰트 상향 |
+| main.gd | KEY_ESCAPE→close_all_popups, _get_daylight_color float, 밤 Color(0.55,0.55,0.7) |
+| .gitignore | .omc/ 제외 |
+
+### 결과
+- PR #13 merged → gate PASS ✅
+- 23 files changed, +547 / -238 lines
+- 맥북 Retina에서 전체 UI 읽기 편함 (16px 기준)
+- 팝업 3중 닫기 보장 (키보드/X/배경클릭)
+- 1x에서 하루 ~10초, 밤 확실히 어둡지만 눈 안 아픔
+- 미니맵 200→300→숨김 순환, 미니맵(우상단)/통계(우하단) 분리
+- 6개 docs/ 문서 전부 동기화
