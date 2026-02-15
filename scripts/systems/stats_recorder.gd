@@ -13,7 +13,7 @@ var total_deaths: int = 0
 func _init() -> void:
 	system_name = "stats_recorder"
 	priority = 90
-	tick_interval = 50
+	tick_interval = 200
 
 
 func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:

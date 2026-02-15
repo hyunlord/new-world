@@ -14,11 +14,11 @@ func init(stats_recorder: RefCounted) -> void:
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	offset_right = -10
 	offset_left = -(10 + PANEL_W)
-	offset_top = 38 + 160 + 10  # Below minimap (38+160) + 10px gap
-	offset_bottom = 38 + 160 + 10 + PANEL_H
+	offset_bottom = -30  # Above key hints
+	offset_top = -(30 + PANEL_H)
 	custom_minimum_size = Vector2(PANEL_W, PANEL_H)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
@@ -34,8 +34,8 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 
 	if _stats_recorder == null or _stats_recorder.history.size() < 2:
-		draw_string(font, Vector2(4, 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
-		draw_string(font, Vector2(4, GRAPH_H + 18), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(font, Vector2(4, 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+		draw_string(font, Vector2(4, GRAPH_H + 18), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 		return
 
 	_draw_population_graph(font)
@@ -49,7 +49,7 @@ func _draw_population_graph(font: Font) -> void:
 
 	var history: Array = _stats_recorder.history
 	var latest: Dictionary = history[history.size() - 1]
-	draw_string(font, Vector2(4, 12), "Pop: %d" % latest.pop, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+	draw_string(font, Vector2(4, 12), "Pop: %d" % latest.pop, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
 	var max_pop: int = 1
 	for i in range(history.size()):
@@ -57,7 +57,7 @@ func _draw_population_graph(font: Font) -> void:
 		if p > max_pop:
 			max_pop = p
 
-	draw_string(font, Vector2(PANEL_W - 4, 12), str(max_pop), HORIZONTAL_ALIGNMENT_RIGHT, -1, 9, Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(PANEL_W - 4, 12), str(max_pop), HORIZONTAL_ALIGNMENT_RIGHT, -1, 12, Color(0.5, 0.5, 0.5))
 
 	var points := PackedVector2Array()
 	var count: int = history.size()
@@ -76,7 +76,7 @@ func _draw_resource_graph(font: Font) -> void:
 
 	var history: Array = _stats_recorder.history
 	var latest: Dictionary = history[history.size() - 1]
-	draw_string(font, Vector2(4, y_off + 12), "F:%d W:%d S:%d" % [int(latest.food), int(latest.wood), int(latest.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
+	draw_string(font, Vector2(4, y_off + 12), "F:%d W:%d S:%d" % [int(latest.food), int(latest.wood), int(latest.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
 	var max_res: float = 1.0
 	for i in range(history.size()):
 		var s: Dictionary = history[i]
@@ -109,7 +109,7 @@ func _draw_resource_graph(font: Font) -> void:
 
 func _draw_job_distribution(font: Font) -> void:
 	var y_off: float = GRAPH_H * 2 + 8
-	draw_string(font, Vector2(4, y_off + 12), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+	draw_string(font, Vector2(4, y_off + 12), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
 	var history: Array = _stats_recorder.history
 	if history.is_empty():
@@ -149,10 +149,10 @@ func _draw_job_distribution(font: Font) -> void:
 		draw_rect(Rect2(x, bar_y, nw, BAR_H), Color(0.4, 0.4, 0.4))
 
 	var label_y: float = bar_y + BAR_H + 10
-	draw_string(font, Vector2(4, label_y), "G:%d L:%d B:%d M:%d" % [snap.gatherers, snap.lumberjacks, snap.builders, snap.miners], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(4, label_y), "G:%d L:%d B:%d M:%d" % [snap.gatherers, snap.lumberjacks, snap.builders, snap.miners], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.7, 0.7, 0.7))
 
 	# Click hint
-	draw_string(font, Vector2(PANEL_W * 0.5 - 20, PANEL_H - 4), "G: Details", HORIZONTAL_ALIGNMENT_CENTER, -1, 9, Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(PANEL_W * 0.5 - 20, PANEL_H - 4), "G: Details", HORIZONTAL_ALIGNMENT_CENTER, -1, 12, Color(0.5, 0.5, 0.5))
 
 
 func _gui_input(event: InputEvent) -> void:

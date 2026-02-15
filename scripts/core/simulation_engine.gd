@@ -74,9 +74,11 @@ func decrease_speed() -> void:
 
 ## Convert current tick to game time
 func get_game_time() -> Dictionary:
-	var total_hours: int = current_tick * GameConfig.TICK_HOURS
+	var total_minutes: int = current_tick * GameConfig.TICK_MINUTES
+	var total_hours: int = total_minutes / 60
 	var hour: int = total_hours % GameConfig.HOURS_PER_DAY
+	var minute: int = total_minutes % 60
 	var total_days: int = total_hours / GameConfig.HOURS_PER_DAY
 	var day: int = total_days % GameConfig.DAYS_PER_YEAR + 1
 	var year: int = total_days / GameConfig.DAYS_PER_YEAR + 1
-	return {"year": year, "day": day, "hour": hour, "tick": current_tick}
+	return {"year": year, "day": day, "hour": hour, "minute": minute, "tick": current_tick}

@@ -69,6 +69,9 @@ var _stats_panel: Control
 var _minimap_visible: bool = true
 var _stats_visible: bool = true
 
+var _minimap_size_index: int = 0
+const MINIMAP_SIZES: Array[int] = [200, 300, 0]
+
 # Detail panels
 var _stats_detail_panel: Control
 var _entity_detail_panel: Control
@@ -152,7 +155,7 @@ func _connect_signals() -> void:
 func _build_top_bar() -> void:
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_bottom = 28
+	bar.offset_bottom = 34
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0, 0, 0, 0.6)
@@ -163,15 +166,15 @@ func _build_top_bar() -> void:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 14)
 
-	_status_label = _make_label("\u25B6", 12)
-	_speed_label = _make_label("1x", 12)
-	_time_label = _make_label("Y1 D1 06:00", 12)
-	_pop_label = _make_label("Pop: 0", 12)
-	_food_label = _make_label("F:0", 12, Color(0.4, 0.8, 0.2))
-	_wood_label = _make_label("W:0", 12, Color(0.6, 0.4, 0.2))
-	_stone_label = _make_label("S:0", 12, Color(0.7, 0.7, 0.7))
-	_building_label = _make_label("Bld:0", 12)
-	_fps_label = _make_label("60", 10, Color(0.5, 0.5, 0.5))
+	_status_label = _make_label("\u25B6", 16)
+	_speed_label = _make_label("1x", 16)
+	_time_label = _make_label("Y1 D1 06:00", 16)
+	_pop_label = _make_label("Pop: 0", 16)
+	_food_label = _make_label("F:0", 16, Color(0.4, 0.8, 0.2))
+	_wood_label = _make_label("W:0", 16, Color(0.6, 0.4, 0.2))
+	_stone_label = _make_label("S:0", 16, Color(0.7, 0.7, 0.7))
+	_building_label = _make_label("Bld:0", 16)
+	_fps_label = _make_label("60", 14, Color(0.5, 0.5, 0.5))
 
 	hbox.add_child(_status_label)
 	hbox.add_child(_speed_label)
@@ -212,11 +215,11 @@ func _build_entity_panel() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 3)
 
-	_entity_name_label = _make_label("Name", 15)
-	_entity_job_label = _make_label("Job", 11)
-	_entity_info_label = _make_label("", 10, Color(0.7, 0.7, 0.7))
-	_entity_action_label = _make_label("Action: idle", 10)
-	_entity_inventory_label = _make_label("Inv: empty", 10)
+	_entity_name_label = _make_label("Name", 18)
+	_entity_job_label = _make_label("Job", 14)
+	_entity_info_label = _make_label("", 14, Color(0.7, 0.7, 0.7))
+	_entity_action_label = _make_label("Action: idle", 14)
+	_entity_inventory_label = _make_label("Inv: empty", 14)
 
 	vbox.add_child(_entity_name_label)
 	vbox.add_child(_entity_job_label)
@@ -245,10 +248,10 @@ func _build_entity_panel() -> void:
 	vbox.add_child(social_row[2])
 
 	vbox.add_child(_make_separator())
-	_entity_stats_label = _make_label("SPD: 1.0 | STR: 1.0", 9, Color(0.6, 0.6, 0.6))
+	_entity_stats_label = _make_label("SPD: 1.0 | STR: 1.0", 12, Color(0.6, 0.6, 0.6))
 	vbox.add_child(_entity_stats_label)
 
-	var detail_hint := _make_label("E: Details", 9, Color(0.5, 0.5, 0.5))
+	var detail_hint := _make_label("E: Details", 12, Color(0.5, 0.5, 0.5))
 	detail_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(detail_hint)
 
@@ -280,10 +283,10 @@ func _build_building_panel() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 4)
 
-	_building_name_label = _make_label("Building", 15)
-	_building_info_label = _make_label("", 11)
-	_building_storage_label = _make_label("", 11)
-	_building_status_label = _make_label("", 10, Color(0.6, 0.6, 0.6))
+	_building_name_label = _make_label("Building", 18)
+	_building_info_label = _make_label("", 14)
+	_building_storage_label = _make_label("", 14)
+	_building_status_label = _make_label("", 14, Color(0.6, 0.6, 0.6))
 
 	vbox.add_child(_building_name_label)
 	vbox.add_child(_building_info_label)
@@ -291,7 +294,7 @@ func _build_building_panel() -> void:
 	vbox.add_child(_building_storage_label)
 	vbox.add_child(_building_status_label)
 
-	var bld_detail_hint := _make_label("E: Details", 9, Color(0.5, 0.5, 0.5))
+	var bld_detail_hint := _make_label("E: Details", 12, Color(0.5, 0.5, 0.5))
 	bld_detail_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(bld_detail_hint)
 
@@ -303,7 +306,7 @@ func _build_notification_area() -> void:
 	_notification_container = Control.new()
 	_notification_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_notification_container.offset_left = 20
-	_notification_container.offset_top = 40
+	_notification_container.offset_top = 44
 	_notification_container.offset_right = 360
 	_notification_container.offset_bottom = 250
 	_notification_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -338,7 +341,7 @@ func _build_help_overlay() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 6)
 
-	vbox.add_child(_make_label("WorldSim Controls", 24))
+	vbox.add_child(_make_label("WorldSim Controls", 26))
 	vbox.add_child(_make_separator())
 
 	# Two-column layout
@@ -349,40 +352,40 @@ func _build_help_overlay() -> void:
 	var left_col := VBoxContainer.new()
 	left_col.add_theme_constant_override("separation", 3)
 	left_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left_col.add_child(_make_label("Camera", 16, Color(0.7, 0.9, 1.0)))
-	left_col.add_child(_make_label("WASD/Arrows   Pan", 13))
-	left_col.add_child(_make_label("Mouse Wheel   Zoom", 13))
-	left_col.add_child(_make_label("Trackpad      Zoom/Pan", 13))
-	left_col.add_child(_make_label("Left Drag     Pan", 13))
-	left_col.add_child(_make_label("Left Click    Select", 13))
+	left_col.add_child(_make_label("Camera", 18, Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label("WASD/Arrows   Pan", 16))
+	left_col.add_child(_make_label("Mouse Wheel   Zoom", 16))
+	left_col.add_child(_make_label("Trackpad      Zoom/Pan", 16))
+	left_col.add_child(_make_label("Left Drag     Pan", 16))
+	left_col.add_child(_make_label("Left Click    Select", 16))
 	left_col.add_child(_make_label("", 8))
-	left_col.add_child(_make_label("Panels", 16, Color(0.7, 0.9, 1.0)))
-	left_col.add_child(_make_label("M             Minimap", 13))
-	left_col.add_child(_make_label("G             Statistics", 13))
-	left_col.add_child(_make_label("E             Details", 13))
-	left_col.add_child(_make_label("H             This help", 13))
+	left_col.add_child(_make_label("Panels", 18, Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label("M             Minimap", 16))
+	left_col.add_child(_make_label("G             Statistics", 16))
+	left_col.add_child(_make_label("E             Details", 16))
+	left_col.add_child(_make_label("H             This help", 16))
 
 	# Right column
 	var right_col := VBoxContainer.new()
 	right_col.add_theme_constant_override("separation", 3)
 	right_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right_col.add_child(_make_label("Game", 16, Color(0.7, 0.9, 1.0)))
-	right_col.add_child(_make_label("Space         Pause", 13))
-	right_col.add_child(_make_label(". (period)    Speed up", 13))
-	right_col.add_child(_make_label(", (comma)     Speed down", 13))
-	right_col.add_child(_make_label("\u2318S            Save", 13))
-	right_col.add_child(_make_label("\u2318L            Load", 13))
+	right_col.add_child(_make_label("Game", 18, Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label("Space         Pause", 16))
+	right_col.add_child(_make_label(". (period)    Speed up", 16))
+	right_col.add_child(_make_label(", (comma)     Speed down", 16))
+	right_col.add_child(_make_label("\u2318S            Save", 16))
+	right_col.add_child(_make_label("\u2318L            Load", 16))
 	right_col.add_child(_make_label("", 8))
-	right_col.add_child(_make_label("Display", 16, Color(0.7, 0.9, 1.0)))
-	right_col.add_child(_make_label("Tab           Resources", 13))
-	right_col.add_child(_make_label("N             Day/Night", 13))
+	right_col.add_child(_make_label("Display", 18, Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label("Tab           Resources", 16))
+	right_col.add_child(_make_label("N             Day/Night", 16))
 
 	columns.add_child(left_col)
 	columns.add_child(right_col)
 
 	vbox.add_child(columns)
 	vbox.add_child(_make_separator())
-	vbox.add_child(_make_label("Press H to close", 13, Color(0.6, 0.6, 0.6)))
+	vbox.add_child(_make_label("Press H to close", 14, Color(0.6, 0.6, 0.6)))
 
 	center.add_child(vbox)
 	_help_overlay.add_child(center)
@@ -409,10 +412,10 @@ func _build_resource_legend() -> void:
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 2)
-	vbox.add_child(_make_label("Resources", 11))
-	vbox.add_child(_make_label("  Food (F)", 10, Color(1.0, 0.85, 0.0)))
-	vbox.add_child(_make_label("  Wood (W)", 10, Color(0.0, 0.8, 0.2)))
-	vbox.add_child(_make_label("  Stone (S)", 10, Color(0.4, 0.6, 1.0)))
+	vbox.add_child(_make_label("Resources", 14))
+	vbox.add_child(_make_label("  Food (F)", 12, Color(1.0, 0.85, 0.0)))
+	vbox.add_child(_make_label("  Wood (W)", 12, Color(0.0, 0.8, 0.2)))
+	vbox.add_child(_make_label("  Stone (S)", 12, Color(0.4, 0.6, 1.0)))
 
 	_resource_legend.add_child(vbox)
 	add_child(_resource_legend)
@@ -421,7 +424,7 @@ func _build_resource_legend() -> void:
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
 	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  E:Details  N:Day/Night  H:Help  Space:Pause"
-	_hint_label.add_theme_font_size_override("font_size", 10)
+	_hint_label.add_theme_font_size_override("font_size", 12)
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hint_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -437,7 +440,7 @@ func _process(delta: float) -> void:
 
 	if _sim_engine:
 		var gt: Dictionary = _sim_engine.get_game_time()
-		_time_label.text = "Y%d D%d %02d:00" % [gt.year, gt.day, gt.hour]
+		_time_label.text = "Y%d D%d %02d:%02d" % [gt.year, gt.day, gt.hour, gt.minute]
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
@@ -509,7 +512,7 @@ func _update_entity_panel(delta: float) -> void:
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
-	var age_days: int = entity.age / GameConfig.HOURS_PER_DAY
+	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
 	_entity_job_label.text = "%s%s | Age: %dd" % [entity.job.capitalize(), settlement_text, age_days]
 
 	# Position
@@ -684,7 +687,7 @@ func _add_notification(text: String, color: Color) -> void:
 
 	var label := Label.new()
 	label.text = text
-	label.add_theme_font_size_override("font_size", 14)
+	label.add_theme_font_size_override("font_size", 15)
 	label.add_theme_color_override("font_color", color)
 	panel.add_child(label)
 
@@ -753,14 +756,25 @@ func _on_simulation_event(event: Dictionary) -> void:
 # --- Toggle functions ---
 
 func toggle_minimap() -> void:
-	if _minimap_panel != null:
-		_minimap_visible = not _minimap_visible
-		_minimap_panel.visible = _minimap_visible
+	if _minimap_panel == null:
+		return
+	_minimap_size_index = (_minimap_size_index + 1) % MINIMAP_SIZES.size()
+	var new_size: int = MINIMAP_SIZES[_minimap_size_index]
+	if new_size == 0:
+		_minimap_visible = false
+		_minimap_panel.visible = false
+	else:
+		_minimap_visible = true
+		_minimap_panel.visible = true
+		_minimap_panel.resize(new_size)
 
 
 func toggle_stats() -> void:
 	if _stats_detail_panel != null:
-		_stats_detail_panel.show_panel()
+		if _stats_detail_panel.visible:
+			_stats_detail_panel.hide_panel()
+		else:
+			_stats_detail_panel.show_panel()
 
 
 func toggle_help() -> void:
@@ -777,6 +791,21 @@ func toggle_help() -> void:
 		if _was_running_before_help and _sim_engine != null:
 			_sim_engine.is_paused = false
 			SimulationBus.pause_changed.emit(false)
+
+
+func close_all_popups() -> void:
+	if _stats_detail_panel != null and _stats_detail_panel.visible:
+		_stats_detail_panel.hide_panel()
+		return
+	if _entity_detail_panel != null and _entity_detail_panel.visible:
+		_entity_detail_panel.hide_panel()
+		return
+	if _building_detail_panel != null and _building_detail_panel.visible:
+		_building_detail_panel.hide_panel()
+		return
+	if _help_visible:
+		toggle_help()
+		return
 
 
 func open_entity_detail() -> void:
@@ -820,7 +849,7 @@ func _make_bar_row(label_text: String, color: Color) -> Array:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 
-	var name_label := _make_label(label_text + ":", 10)
+	var name_label := _make_label(label_text + ":", 12)
 	name_label.custom_minimum_size.x = 50
 
 	var bar := ProgressBar.new()
@@ -839,7 +868,7 @@ func _make_bar_row(label_text: String, color: Color) -> Array:
 	bg_style.bg_color = Color(0.2, 0.2, 0.2, 0.8)
 	bar.add_theme_stylebox_override("background", bg_style)
 
-	var pct_label := _make_label("100%", 9, Color(0.8, 0.8, 0.8))
+	var pct_label := _make_label("100%", 12, Color(0.8, 0.8, 0.8))
 	pct_label.custom_minimum_size.x = 32
 	pct_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 

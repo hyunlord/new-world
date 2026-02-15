@@ -16,8 +16,9 @@
 | A / ← | 카메라 왼쪽 이동 | `camera_controller.gd` |
 | D / → | 카메라 오른쪽 이동 | `camera_controller.gd` |
 | Tab | 자원 오버레이 ON/OFF 토글 + 범례 + F/W/S 문자 마커 | `main.gd` → `world_renderer.toggle_resource_overlay()` + `entity_renderer.resource_overlay_visible` + `hud.set_resource_legend_visible()` |
-| M | 미니맵 표시/숨김 토글 | `main.gd` → `hud.toggle_minimap()` |
-| G | 통계 상세창 열기 (일시정지, 인구/자원 그래프, 직업, 정착지) | `main.gd` → `hud.toggle_stats()` → `StatsDetailPanel.show_panel()` |
+| Esc | 열린 팝업 닫기 (통계→엔티티→건물→도움말 순서) | `main.gd` → `hud.close_all_popups()` |
+| M | 미니맵 크기 순환: 200px → 300px → 숨김 → 200px | `main.gd` → `hud.toggle_minimap()` |
+| G | 통계 상세창 열기/닫기 토글 (일시정지, 인구/자원 그래프, 직업, 정착지) | `main.gd` → `hud.toggle_stats()` |
 | E | 선택된 엔티티/건물 상세보기 (일시정지, 히스토리 포함) | `main.gd` → `hud.open_entity_detail()` / `hud.open_building_detail()` |
 | H | 도움말 오버레이 (열면 자동 일시정지, 닫으면 재개) | `main.gd` → `hud.toggle_help()` |
 | N | 낮/밤 효과 ON/OFF 토글 (OFF 시 항상 밝게) | `main.gd` → `_day_night_enabled` 토글 |
@@ -68,7 +69,7 @@
 
 ### 상단 바
 
-배경: 반투명 검정 (`Color(0, 0, 0, 0.6)`), 높이 24px
+배경: 반투명 검정 (`Color(0, 0, 0, 0.6)`), 높이 34px
 
 | 위치 | 표시 | 색상 | 예시 |
 |------|------|------|------|
@@ -86,7 +87,7 @@
 
 ### 우하단 키 힌트
 
-화면 우하단에 상시 표시 (10px, 회색 `Color(0.5, 0.5, 0.5, 0.6)`):
+화면 우하단에 상시 표시 (12px, 회색 `Color(0.5, 0.5, 0.5, 0.6)`):
 ```
 ⌘S:Save  ⌘L:Load  Tab:Resources  M:Map  G:Stats  E:Details  N:Day/Night  H:Help  Space:Pause
 ```
@@ -125,18 +126,27 @@
   - building_completed: 노랑 `Color(1.0, 0.9, 0.3)`
   - game_saved/loaded: 흰색 `Color(1.0, 1.0, 1.0)`
 
-### 미니맵 (우상단, M 토글)
+### 미니맵 (우상단, M 순환)
 
-- 크기: 160×160px, 반투명 검정 배경
-- 바이옴 색상 기반, 건물 3×3px 마커, 에이전트 1px 점
+- 기본 200×200px, M키로 크기 순환: 200 → 300 → 숨김
+- 반투명 검정 배경, 바이옴 색상 기반
+- 건물 3×3px 마커, 에이전트 1px 점
 - 카메라 시야 흰색 사각형
 - 좌클릭으로 카메라 이동
-- 정착지 라벨 표시
+- 정착지 라벨 표시 (12px)
 
-### 통계 패널 (미니맵 하단, G 토글)
+### 통계 패널 (우하단)
 
-- 크기: 160×200px
+- 크기: 160×200px, 키 힌트 위 배치
 - 인구 그래프 (초록 선), 자원 그래프 (3색 선), 직업 분포 바
+- 클릭 시 통계 상세창 열기
+
+### 팝업 닫기 (3중 보장)
+
+모든 팝업(통계/엔티티/건물 상세, 도움말)은 다음 3가지 방법으로 닫을 수 있음:
+1. **키보드**: G/E/Esc 키
+2. **[X] 버튼 클릭**: 팝업 우상단
+3. **배경(dim overlay) 클릭**: 팝업 바깥 영역
 
 ### 도움말 오버레이 (H 토글)
 

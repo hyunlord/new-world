@@ -52,12 +52,16 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var vp_size := get_viewport_rect().size
 		var panel_w: float = vp_size.x * 0.5
+		var panel_h: float = vp_size.y * 0.65
 		var panel_x: float = (vp_size.x - panel_w) * 0.5
-		var panel_y: float = (vp_size.y - vp_size.y * 0.65) * 0.5
-		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
+		var panel_y: float = (vp_size.y - panel_h) * 0.5
+		var panel_rect := Rect2(panel_x, panel_y, panel_w, panel_h)
 		var mb: InputEventMouseButton = event as InputEventMouseButton
-		if close_area.has_point(mb.position):
+		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
+		if close_area.has_point(mb.position) or not panel_rect.has_point(mb.position):
 			hide_panel()
+			accept_event()
+		else:
 			accept_event()
 
 
@@ -92,41 +96,41 @@ func _draw() -> void:
 	var jc: Color = job_colors.get(entity.job, Color.WHITE)
 
 	# Header
-	draw_string(font, Vector2(cx, cy), "%s - %s" % [entity.entity_name, entity.job.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, jc)
-	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx, cy), "%s - %s" % [entity.entity_name, entity.job.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, jc)
+	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.7, 0.7))
 	cy += 6.0
 
-	var age_days: int = entity.age / GameConfig.HOURS_PER_DAY
+	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %dd  |  Pos: (%d, %d)" % [sid_text, age_days, entity.position.x, entity.position.y], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %dd  |  Pos: (%d, %d)" % [sid_text, age_days, entity.position.x, entity.position.y], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	draw_line(Vector2(cx, cy), Vector2(panel_x + panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0
 
 	# Status
-	draw_string(font, Vector2(cx, cy + 12), "Status", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), "Status", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	cy += 18.0
 
 	var action_text: String = entity.current_action
 	if entity.action_target != Vector2i(-1, -1):
 		action_text += " -> (%d, %d)" % [entity.action_target.x, entity.action_target.y]
-	draw_string(font, Vector2(cx + 10, cy + 12), "Action: %s" % action_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "Action: %s" % action_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	cy += 16.0
 
 	if entity.cached_path.size() > 0:
 		var remaining: int = entity.cached_path.size() - entity.path_index
 		if remaining > 0:
-			draw_string(font, Vector2(cx + 10, cy + 12), "Path: %d steps remaining" % remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), "Path: %d steps remaining" % remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 			cy += 16.0
 
 	draw_string(font, Vector2(cx + 10, cy + 12), "Inventory: F:%.1f  W:%.1f  S:%.1f / %.0f" % [
 		entity.inventory.get("food", 0.0), entity.inventory.get("wood", 0.0),
 		entity.inventory.get("stone", 0.0), GameConfig.MAX_CARRY,
-	], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	cy += 22.0
 
 	# Needs
-	draw_string(font, Vector2(cx, cy + 12), "Needs", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), "Needs", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	cy += 18.0
 	cy = _draw_need_bar(font, cx + 10, cy, panel_w - 60, "Hunger", entity.hunger, Color(0.9, 0.2, 0.2))
 	cy = _draw_need_bar(font, cx + 10, cy, panel_w - 60, "Energy", entity.energy, Color(0.9, 0.8, 0.2))
@@ -134,33 +138,33 @@ func _draw() -> void:
 	cy += 8.0
 
 	# Stats
-	draw_string(font, Vector2(cx, cy + 12), "Stats", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), "Stats", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	cy += 18.0
-	draw_string(font, Vector2(cx + 10, cy + 12), "Speed: %.1f  |  Strength: %.1f" % [entity.speed, entity.strength], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "Speed: %.1f  |  Strength: %.1f" % [entity.speed, entity.strength], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	cy += 16.0
-	draw_string(font, Vector2(cx + 10, cy + 12), "Total gathered: %.0f  |  Buildings built: %d" % [entity.total_gathered, entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "Total gathered: %.0f  |  Buildings built: %d" % [entity.total_gathered, entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.8, 0.8))
 	cy += 22.0
 
 	# Action History
-	draw_string(font, Vector2(cx, cy + 12), "Recent Actions", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), "Recent Actions", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 	cy += 18.0
 	var hist: Array = entity.action_history
 	var idx: int = hist.size() - 1
 	while idx >= 0 and cy < panel_y + panel_h - 30:
 		var entry: Dictionary = hist[idx]
-		draw_string(font, Vector2(cx + 10, cy + 11), "Tick %d: %s" % [entry.tick, entry.action], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.6, 0.6, 0.6))
+		draw_string(font, Vector2(cx + 10, cy + 11), "Tick %d: %s" % [entry.tick, entry.action], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.6, 0.6, 0.6))
 		cy += 13.0
 		idx -= 1
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[E: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, 12, Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[E: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color(0.5, 0.5, 0.5))
 
 
 func _draw_need_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:
-	draw_string(font, Vector2(x, y + 11), label + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(x, y + 11), label + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.7, 0.7, 0.7))
 	var bar_x: float = x + 55.0
 	var bar_w: float = w - 100.0
 	var bar_h: float = 10.0
 	draw_rect(Rect2(bar_x, y + 2, bar_w, bar_h), Color(0.2, 0.2, 0.2, 0.8))
 	draw_rect(Rect2(bar_x, y + 2, bar_w * value, bar_h), color)
-	draw_string(font, Vector2(bar_x + bar_w + 5, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(bar_x + bar_w + 5, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.8))
 	return y + 16.0

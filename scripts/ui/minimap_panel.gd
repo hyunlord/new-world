@@ -11,7 +11,7 @@ var _minimap_texture: ImageTexture
 var _minimap_rect: TextureRect
 var _needs_update: bool = true
 
-const MINIMAP_SIZE: int = 160
+var minimap_size: int = 200
 
 
 func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted, camera: Camera2D) -> void:
@@ -25,10 +25,10 @@ func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	offset_right = -10
-	offset_left = -(10 + MINIMAP_SIZE)
+	offset_left = -(10 + minimap_size)
 	offset_top = 38
-	offset_bottom = 38 + MINIMAP_SIZE
-	custom_minimum_size = Vector2(MINIMAP_SIZE, MINIMAP_SIZE)
+	offset_bottom = 38 + minimap_size
+	custom_minimum_size = Vector2(minimap_size, minimap_size)
 
 	_minimap_rect = TextureRect.new()
 	_minimap_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -71,7 +71,7 @@ func _draw() -> void:
 			var sx: float = float(s.center_x) * scale_x
 			var sy: float = float(s.center_y) * scale_y
 			var label_text: String = "S%d" % s.id
-			draw_string(font, Vector2(sx + 3, sy - 2), label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(1, 1, 1, 0.8))
+			draw_string(font, Vector2(sx + 3, sy - 2), label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.8))
 
 
 func _process(_delta: float) -> void:
@@ -145,6 +145,15 @@ func _draw_marker(img: Image, tx: int, ty: int, color: Color, w: int, h: int) ->
 			var px: int = clampi(tx + dx, 0, w - 1)
 			var py: int = clampi(ty + dy, 0, h - 1)
 			img.set_pixel(px, py, color)
+
+
+func resize(new_size: int) -> void:
+	minimap_size = new_size
+	offset_left = -(10 + minimap_size)
+	offset_bottom = 38 + minimap_size
+	custom_minimum_size = Vector2(minimap_size, minimap_size)
+	size = Vector2(minimap_size, minimap_size)
+	_needs_update = true
 
 
 func _gui_input(event: InputEvent) -> void:
