@@ -29,7 +29,8 @@ func _generate_name() -> String:
 
 
 ## Spawn a new entity at the given position
-func spawn_entity(pos: Vector2i, gender_override: String = "") -> RefCounted:
+## initial_age: age in ticks (0 = newborn child, use AGE_TEEN_END+ for adults)
+func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int = 0) -> RefCounted:
 	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1
@@ -61,7 +62,8 @@ func spawn_entity(pos: Vector2i, gender_override: String = "") -> RefCounted:
 		"grief": 0.0,
 		"love": 0.0,
 	}
-	# Age stage
+	# Age and age stage
+	entity.age = initial_age
 	entity.age_stage = GameConfig.get_age_stage(entity.age)
 	_entities[entity.id] = entity
 	_world_data.register_entity(pos, entity.id)
@@ -84,7 +86,7 @@ func move_entity(entity: RefCounted, new_pos: Vector2i) -> void:
 
 
 ## Kill an entity
-func kill_entity(entity_id: int, cause: String) -> void:
+func kill_entity(entity_id: int, cause: String, tick: int = -1) -> void:
 	if not _entities.has(entity_id):
 		return
 	var entity = _entities[entity_id]
@@ -96,6 +98,7 @@ func kill_entity(entity_id: int, cause: String) -> void:
 		"entity_name": entity.entity_name,
 		"cause": cause,
 		"position": entity.position,
+		"tick": tick,
 	})
 
 

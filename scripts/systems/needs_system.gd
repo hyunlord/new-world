@@ -53,6 +53,6 @@ func execute_tick(tick: int) -> void:
 					"starving_ticks": entity.starving_timer,
 					"tick": tick,
 				})
-				_entity_manager.kill_entity(entity.id, "starvation")
+				_entity_manager.kill_entity(entity.id, "starvation", tick)
 		else:
 			entity.starving_timer = 0
