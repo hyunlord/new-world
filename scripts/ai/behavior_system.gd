@@ -3,6 +3,8 @@ extends "res://scripts/core/simulation_system.gd"
 var _entity_manager: RefCounted
 var _world_data: RefCounted
 var _rng: RandomNumberGenerator
+var _resource_map: RefCounted
+var _building_manager: RefCounted
 
 
 func _init() -> void:
@@ -11,11 +13,13 @@ func _init() -> void:
 	tick_interval = GameConfig.BEHAVIOR_TICK_INTERVAL
 
 
-## Initialize with references
-func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator) -> void:
+## Initialize with references (resource_map and building_manager optional for backward compat)
+func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator, resource_map: RefCounted = null, building_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_world_data = world_data
 	_rng = rng
+	_resource_map = resource_map
+	_building_manager = building_manager
 
 
 func execute_tick(tick: int) -> void:
@@ -39,12 +43,62 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	var hunger_deficit: float = 1.0 - entity.hunger
 	var energy_deficit: float = 1.0 - entity.energy
 	var social_deficit: float = 1.0 - entity.social
-	return {
+
+	var scores: Dictionary = {
 		"wander": 0.2 + _rng.randf() * 0.1,
-		"seek_food": _urgency_curve(hunger_deficit) * 1.5,
+		"gather_food": _urgency_curve(hunger_deficit) * 1.5,
 		"rest": _urgency_curve(energy_deficit) * 1.2,
 		"socialize": _urgency_curve(social_deficit) * 0.8,
 	}
+
+	# Resource gathering (requires resource_map)
+	if _resource_map != null:
+		if _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
+			scores["gather_wood"] = 0.3 + _rng.randf() * 0.1
+		if _has_nearby_resource(entity.position, GameConfig.ResourceType.STONE, 15):
+			scores["gather_stone"] = 0.2 + _rng.randf() * 0.1
+
+	# Building-related actions (requires building_manager)
+	if _building_manager != null:
+		# Deliver to stockpile when carrying a lot
+		if entity.get_total_carry() > 7.0:
+			var stockpile = _building_manager.get_nearest_building(
+				entity.position.x, entity.position.y, "stockpile", true
+			)
+			if stockpile != null:
+				scores["deliver_to_stockpile"] = 0.9
+
+		# Build when there are unbuilt buildings or we can place new ones
+		var unbuilt = _find_unbuilt_building(entity.position)
+		if unbuilt != null:
+			scores["build"] = 0.4 + _rng.randf() * 0.1
+		elif entity.job == "builder" and _should_place_building():
+			scores["build"] = 0.4 + _rng.randf() * 0.1
+
+		# Take from stockpile when hungry
+		if hunger_deficit > 0.3:
+			var stockpile = _building_manager.get_nearest_building(
+				entity.position.x, entity.position.y, "stockpile", true
+			)
+			if stockpile != null and stockpile.storage.get("food", 0.0) > 0.5:
+				scores["take_from_stockpile"] = _urgency_curve(hunger_deficit) * 1.3
+
+	# Apply job bonuses
+	match entity.job:
+		"gatherer":
+			if scores.has("gather_food"):
+				scores["gather_food"] *= 1.5
+		"lumberjack":
+			if scores.has("gather_wood"):
+				scores["gather_wood"] *= 1.5
+		"builder":
+			if scores.has("build"):
+				scores["build"] *= 1.5
+		"miner":
+			if scores.has("gather_stone"):
+				scores["gather_stone"] *= 1.5
+
+	return scores
 
 
 ## Exponential urgency: higher deficit = much higher urgency
@@ -55,7 +109,10 @@ func _urgency_curve(deficit: float) -> float:
 func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 	var old_action: String = entity.current_action
 	entity.current_action = action
+	# Clear cached path when action changes
 	if action != old_action:
+		entity.cached_path = []
+		entity.path_index = 0
 		emit_event("action_changed", {
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,
@@ -63,21 +120,62 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			"to": action,
 			"tick": tick,
 		})
+
 	match action:
 		"wander":
 			entity.action_target = _find_random_walkable_nearby(entity.position, 5)
 			entity.action_timer = 5
-		"seek_food":
-			var food_tile: Vector2i = _find_food_tile(entity.position, 10)
-			entity.action_target = food_tile
+		"gather_food":
+			if _resource_map != null:
+				entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.FOOD, 15)
+			else:
+				entity.action_target = _find_food_tile(entity.position, 10)
+			entity.action_timer = 20
+		"gather_wood":
+			entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.WOOD, 15)
+			entity.action_timer = 20
+		"gather_stone":
+			entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.STONE, 15)
+			entity.action_timer = 20
+		"deliver_to_stockpile":
+			var stockpile = _find_nearest_stockpile(entity.position)
+			if stockpile != null:
+				entity.action_target = Vector2i(stockpile.tile_x, stockpile.tile_y)
+			else:
+				entity.action_target = entity.position
+			entity.action_timer = 30
+		"build":
+			var building = _find_unbuilt_building(entity.position)
+			if building == null and _building_manager != null:
+				building = _try_place_building(entity)
+			if building != null:
+				entity.action_target = Vector2i(building.tile_x, building.tile_y)
+			else:
+				entity.action_target = entity.position
+			entity.action_timer = 25
+		"take_from_stockpile":
+			var stockpile = _find_nearest_stockpile(entity.position)
+			if stockpile != null:
+				entity.action_target = Vector2i(stockpile.tile_x, stockpile.tile_y)
+			else:
+				entity.action_target = entity.position
 			entity.action_timer = 15
 		"rest":
-			entity.action_target = entity.position
+			if _building_manager != null:
+				var shelter = _building_manager.get_nearest_building(
+					entity.position.x, entity.position.y, "shelter", true
+				)
+				if shelter != null:
+					entity.action_target = Vector2i(shelter.tile_x, shelter.tile_y)
+				else:
+					entity.action_target = entity.position
+			else:
+				entity.action_target = entity.position
 			entity.action_timer = 10
 		"socialize":
-			var neighbor: Vector2i = _find_nearest_entity(entity)
-			entity.action_target = neighbor
+			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 8
+
 	emit_event("action_chosen", {
 		"entity_id": entity.id,
 		"entity_name": entity.entity_name,
@@ -85,6 +183,8 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 		"tick": tick,
 	})
 
+
+## ─── Tile/Entity Finders ─────────────────────────────────
 
 func _find_random_walkable_nearby(pos: Vector2i, radius: int) -> Vector2i:
 	var candidates: Array[Vector2i] = []
@@ -132,3 +232,158 @@ func _find_nearest_entity(entity: RefCounted) -> Vector2i:
 	if best_dist == 999999:
 		return _find_random_walkable_nearby(entity.position, 5)
 	return best_pos
+
+
+## ─── Resource Finders ────────────────────────────────────
+
+func _has_nearby_resource(pos: Vector2i, resource_type: int, radius: int) -> bool:
+	if _resource_map == null:
+		return false
+	for dy in range(-radius, radius + 1, 3):
+		for dx in range(-radius, radius + 1, 3):
+			if _resource_map.get_resource(pos.x + dx, pos.y + dy, resource_type) >= 0.5:
+				return true
+	return false
+
+
+func _find_resource_tile(pos: Vector2i, resource_type: int, radius: int) -> Vector2i:
+	if _resource_map == null:
+		return _find_random_walkable_nearby(pos, radius)
+	var best_pos: Vector2i = pos
+	var best_dist: int = 999999
+	var best_amount: float = 0.0
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			var x: int = pos.x + dx
+			var y: int = pos.y + dy
+			var amount: float = _resource_map.get_resource(x, y, resource_type)
+			if amount >= 0.5:
+				var dist: int = absi(dx) + absi(dy)
+				if dist < best_dist or (dist == best_dist and amount > best_amount):
+					best_dist = dist
+					best_pos = Vector2i(x, y)
+					best_amount = amount
+	if best_dist == 999999:
+		return _find_random_walkable_nearby(pos, radius)
+	return best_pos
+
+
+## ─── Building Helpers ────────────────────────────────────
+
+func _find_nearest_stockpile(pos: Vector2i) -> RefCounted:
+	if _building_manager == null:
+		return null
+	return _building_manager.get_nearest_building(pos.x, pos.y, "stockpile", true)
+
+
+func _find_unbuilt_building(pos: Vector2i) -> RefCounted:
+	if _building_manager == null:
+		return null
+	var all_buildings: Array = _building_manager.get_all_buildings()
+	var nearest: RefCounted = null
+	var best_dist: float = 999999.0
+	for i in range(all_buildings.size()):
+		var building = all_buildings[i]
+		if building.is_built:
+			continue
+		var dist: float = float(absi(building.tile_x - pos.x) + absi(building.tile_y - pos.y))
+		if dist < best_dist:
+			best_dist = dist
+			nearest = building
+	return nearest
+
+
+func _should_place_building() -> bool:
+	if _building_manager == null:
+		return false
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	if stockpiles.is_empty():
+		return true
+	var alive_count: int = _entity_manager.get_alive_count()
+	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
+	if shelters.size() * 4 < alive_count:
+		return true
+	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
+	if campfires.is_empty():
+		return true
+	return false
+
+
+func _try_place_building(entity: RefCounted) -> RefCounted:
+	if _building_manager == null:
+		return null
+	# Determine what to build
+	var btype: String = ""
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
+	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
+	var alive_count: int = _entity_manager.get_alive_count()
+
+	if stockpiles.is_empty():
+		btype = "stockpile"
+	elif shelters.size() * 4 < alive_count:
+		btype = "shelter"
+	elif campfires.is_empty():
+		btype = "campfire"
+	elif stockpiles.size() < alive_count / 10 + 1:
+		btype = "stockpile"
+	else:
+		return null
+
+	var cost: Dictionary = GameConfig.BUILDING_TYPES[btype]["cost"]
+	if not _can_afford_building(entity, cost):
+		return null
+
+	var site: Vector2i = _find_building_site(entity.position)
+	if site == Vector2i(-1, -1):
+		return null
+
+	_consume_building_cost(entity, cost)
+	return _building_manager.place_building(btype, site.x, site.y)
+
+
+func _can_afford_building(entity: RefCounted, cost: Dictionary) -> bool:
+	var cost_keys: Array = cost.keys()
+	for i in range(cost_keys.size()):
+		var res: String = cost_keys[i]
+		var needed: float = cost[res]
+		var have: float = entity.inventory.get(res, 0.0)
+		if _building_manager != null:
+			var stockpile = _building_manager.get_nearest_building(
+				entity.position.x, entity.position.y, "stockpile", true
+			)
+			if stockpile != null:
+				have += stockpile.storage.get(res, 0.0)
+		if have < needed:
+			return false
+	return true
+
+
+func _consume_building_cost(entity: RefCounted, cost: Dictionary) -> void:
+	var cost_keys: Array = cost.keys()
+	for i in range(cost_keys.size()):
+		var res: String = cost_keys[i]
+		var needed: float = cost[res]
+		var from_entity: float = entity.remove_item(res, needed)
+		needed -= from_entity
+		if needed > 0.0 and _building_manager != null:
+			var stockpile = _building_manager.get_nearest_building(
+				entity.position.x, entity.position.y, "stockpile", true
+			)
+			if stockpile != null:
+				var available: float = stockpile.storage.get(res, 0.0)
+				var from_storage: float = minf(available, needed)
+				stockpile.storage[res] = available - from_storage
+
+
+func _find_building_site(pos: Vector2i) -> Vector2i:
+	for radius in range(1, 8):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if absi(dx) != radius and absi(dy) != radius:
+					continue
+				var x: int = pos.x + dx
+				var y: int = pos.y + dy
+				if _world_data.is_walkable(x, y) and _building_manager.get_building_at(x, y) == null:
+					return Vector2i(x, y)
+	return Vector2i(-1, -1)
