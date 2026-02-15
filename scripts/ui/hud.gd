@@ -346,7 +346,7 @@ func _make_separator() -> HSeparator:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "F5:Save  F9:Load  Tab:Resources  Space:Pause"
+	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  Space:Pause"
 	_hint_label.add_theme_font_size_override("font_size", 11)
 	_hint_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 0.7))
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
