@@ -53,6 +53,12 @@ func render_world(world_data: RefCounted, resource_map: RefCounted = null) -> vo
 		update_resource_overlay()
 
 
+## Toggle resource overlay visibility
+func toggle_resource_overlay() -> void:
+	if _resource_overlay != null:
+		_resource_overlay.visible = not _resource_overlay.visible
+
+
 ## Update resource overlay texture (call periodically, e.g., every 100 ticks)
 func update_resource_overlay() -> void:
 	if _resource_map_ref == null or _world_data_ref == null:
@@ -69,15 +75,15 @@ func update_resource_overlay() -> void:
 
 			var color := Color(0.0, 0.0, 0.0, 0.0)
 			# Priority: food > stone > wood (food is most important to see)
-			if food > 1.0:
-				var intensity: float = clampf(food / 10.0, 0.15, 0.5)
-				color = Color(0.9, 0.8, 0.2, intensity)
-			elif stone > 1.0:
-				var intensity: float = clampf(stone / 8.0, 0.15, 0.45)
-				color = Color(0.75, 0.75, 0.78, intensity)
-			elif wood > 2.0:
-				var intensity: float = clampf(wood / 12.0, 0.08, 0.3)
-				color = Color(0.15, 0.5, 0.1, intensity)
+			if food > 2.0:
+				var intensity: float = clampf(food / 8.0, 0.3, 0.6)
+				color = Color(1.0, 0.9, 0.1, intensity)
+			elif stone > 2.0:
+				var intensity: float = clampf(stone / 8.0, 0.3, 0.5)
+				color = Color(0.5, 0.7, 1.0, intensity)
+			elif wood > 3.0:
+				var intensity: float = clampf(wood / 10.0, 0.2, 0.5)
+				color = Color(0.0, 0.7, 0.3, intensity)
 
 			img.set_pixel(x, y, color)
 

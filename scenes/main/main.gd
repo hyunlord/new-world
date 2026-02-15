@@ -17,6 +17,8 @@ const ConstructionSystem = preload("res://scripts/systems/construction_system.gd
 const BuildingEffectSystem = preload("res://scripts/systems/building_effect_system.gd")
 const JobAssignmentSystem = preload("res://scripts/systems/job_assignment_system.gd")
 const PopulationSystem = preload("res://scripts/systems/population_system.gd")
+const SettlementManager = preload("res://scripts/core/settlement_manager.gd")
+const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -26,6 +28,7 @@ var resource_map: RefCounted
 var pathfinder: RefCounted
 var building_manager: RefCounted
 var save_manager: RefCounted
+var settlement_manager: RefCounted
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -36,6 +39,7 @@ var construction_system: RefCounted
 var building_effect_system: RefCounted
 var job_assignment_system: RefCounted
 var population_system: RefCounted
+var migration_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -77,6 +81,9 @@ func _ready() -> void:
 	# Initialize save manager
 	save_manager = SaveManager.new()
 
+	# Initialize settlement manager + first settlement
+	settlement_manager = SettlementManager.new()
+
 	# ── Create simulation systems ──────────────────────────
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -91,7 +98,7 @@ func _ready() -> void:
 	building_effect_system.init(entity_manager, building_manager, sim_engine)
 
 	behavior_system = BehaviorSystem.new()
-	behavior_system.init(entity_manager, world_data, sim_engine.rng, resource_map, building_manager)
+	behavior_system.init(entity_manager, world_data, sim_engine.rng, resource_map, building_manager, settlement_manager)
 
 	gathering_system = GatheringSystem.new()
 	gathering_system.init(entity_manager, resource_map)
@@ -103,7 +110,10 @@ func _ready() -> void:
 	movement_system.init(entity_manager, world_data, pathfinder, building_manager)
 
 	population_system = PopulationSystem.new()
-	population_system.init(entity_manager, building_manager, world_data, sim_engine.rng)
+	population_system.init(entity_manager, building_manager, world_data, sim_engine.rng, settlement_manager)
+
+	migration_system = MigrationSystem.new()
+	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -115,6 +125,7 @@ func _ready() -> void:
 	sim_engine.register_system(construction_system)       # priority 28
 	sim_engine.register_system(movement_system)           # priority 30
 	sim_engine.register_system(population_system)         # priority 50
+	sim_engine.register_system(migration_system)          # priority 60
 
 	# Render world (with resource tinting)
 	world_renderer.render_world(world_data, resource_map)
@@ -122,10 +133,19 @@ func _ready() -> void:
 	# Init renderers
 	entity_renderer.init(entity_manager)
 	building_renderer.init(building_manager)
-	hud.init(sim_engine, entity_manager, building_manager)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager)
 
-	# Spawn initial entities
+	# Spawn initial entities + create first settlement
 	_spawn_initial_entities()
+
+	# Create founding settlement at world center and assign all entities
+	var center := GameConfig.WORLD_SIZE / 2
+	var founding: RefCounted = settlement_manager.create_settlement(center.x, center.y, 0)
+	var initial_alive: Array = entity_manager.get_alive_entities()
+	for i in range(initial_alive.size()):
+		var e: RefCounted = initial_alive[i]
+		e.settlement_id = founding.id
+		settlement_manager.add_member(founding.id, e.id)
 
 	_print_startup_banner(seed_value)
 
@@ -180,6 +200,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				sim_engine.increase_speed()
 			KEY_COMMA:
 				sim_engine.decrease_speed()
+			KEY_TAB:
+				world_renderer.toggle_resource_overlay()
 			KEY_F5:
 				_save_game()
 			KEY_F9:
@@ -190,7 +212,7 @@ func _save_game() -> void:
 	var path: String = "user://quicksave.json"
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
-	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map)
+	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager)
 	if success:
 		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
@@ -201,7 +223,7 @@ func _save_game() -> void:
 func _load_game() -> void:
 	var path: String = "user://quicksave.json"
 	sim_engine.is_paused = true
-	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data)
+	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager)
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
@@ -230,6 +252,7 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    Space          = Pause / Resume")
 	print("    . (period)     = Speed up")
 	print("    , (comma)      = Speed down")
+	print("    Tab            = Toggle resource overlay")
 	print("    F5             = Quick Save")
 	print("    F9             = Quick Load")
 	print("")

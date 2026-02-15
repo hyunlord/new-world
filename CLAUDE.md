@@ -188,6 +188,28 @@ Lead engineer: architecture, integration, refactors, data model boundaries.
 
 Claude Code delegates implementation tickets to Codex Pro via Codex CLI.
 
+### ⚠️ DISPATCH TOOL ROUTING [ABSOLUTE RULE — READ THIS FIRST]
+
+You have multiple tools available. Only specific tools count as "dispatching to Codex":
+
+**✅ VALID Codex dispatch methods (use these):**
+- `bash tools/codex_dispatch.sh tickets/<file>.md` — shell script dispatch
+- `mcp__plugin_oh-my-claudecode_x__ask_codex` — MCP Codex dispatch
+
+**❌ INVALID — these are NOT Codex dispatch:**
+- `Task` tool (Claude sub-agent) — This sends work to another Claude instance, NOT to Codex. Using Task tool does not count as dispatch. Work done via Task tool counts as DIRECT.
+- Implementing the code yourself — Obviously not dispatch.
+
+**Before every dispatch action, check:**
+1. Am I about to call `ask_codex` or `codex_dispatch.sh`? → ✅ Proceed
+2. Am I about to call `Task` tool? → ❌ STOP. Route to `ask_codex` or `codex_dispatch.sh` instead.
+3. Am I about to write the code myself? → Only if ticket is classified 🔴 DIRECT with justification in PROGRESS.md.
+
+**Task tool is for lead-internal work only** (e.g. research, analysis, codebase exploration).
+Task tool must NEVER be used for implementation tickets classified as 🟢 DISPATCH.
+
+---
+
 ### ⚠️ CRITICAL RULE: Default is DISPATCH, not implement directly.
 
 When you create tickets, the DEFAULT action is to dispatch them to Codex.
@@ -309,7 +331,7 @@ bash tools/codex_apply.sh
 New ticket created
   │
   ├─ Pure new file? (new system, new data class, new test)
-  │   └─ ALWAYS DISPATCH. No exceptions.
+  │   └─ ALWAYS DISPATCH (via ask_codex or codex_dispatch.sh). No exceptions.
   │
   ├─ Modifies ONLY shared interfaces? (signals, schemas, base APIs)
   │   └─ Implement directly. Log reason in PROGRESS.md.
@@ -318,12 +340,12 @@ New ticket created
   │   └─ SPLIT: shared interface changes → direct, implementation → dispatch
   │
   ├─ Single-file modification? (tuning, bug fix, config change)
-  │   └─ ALWAYS DISPATCH. No exceptions.
+  │   └─ ALWAYS DISPATCH (via ask_codex or codex_dispatch.sh). No exceptions.
   │
   ├─ Multiple files but they overlap with other tickets?
   │   └─ DON'T skip dispatch. Use Config-first, then fan-out pattern.
   │       1. DIRECT the shared config
-  │       2. Sequential DISPATCH the rest
+  │       2. Sequential DISPATCH the rest (via ask_codex or codex_dispatch.sh)
   │
   └─ Integration wiring? (<50 lines, connecting dispatched work)
       └─ Implement directly. This is your core job.
@@ -352,12 +374,12 @@ PROGRESS.md lives at the project root. Claude Code creates it if it doesn't exis
 [1-2 sentences: what problem this batch solves]
 
 ### Tickets
-| Ticket | Title | Action | Reason |
-|--------|-------|--------|--------|
-| t-XXX | ... | 🟢 DISPATCH | standalone new file |
-| t-XXX | ... | 🟢 DISPATCH | single system, config-first done |
-| t-XXX | ... | 🔴 DIRECT | shared config (game_config.gd) |
-| t-XXX | ... | 🔴 DIRECT | integration wiring, <50 lines |
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-XXX | ... | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-XXX | ... | 🟢 DISPATCH | codex_dispatch.sh | single system, config-first done |
+| t-XXX | ... | 🔴 DIRECT | — | shared config (game_config.gd) |
+| t-XXX | ... | 🔴 DIRECT | — | integration wiring, <50 lines |
 
 ### Dispatch ratio: X/Y = ZZ% ✅/❌ (target: ≥60%)
 
@@ -376,6 +398,7 @@ PROGRESS.md lives at the project root. Claude Code creates it if it doesn't exis
 - **Never delete past entries.** PROGRESS.md is append-only.
 - **Always log BEFORE implementing**, not after. This forces you to plan dispatch before coding.
 - **If dispatch ratio is <60%, stop and re-split** before proceeding.
+- **Log which dispatch tool was used.** This makes it auditable that Codex (not Task tool) was used.
 
 ---
 
@@ -438,9 +461,9 @@ When the user gives a feature request:
    [what this batch solves]
    
    ### Tickets
-   | Ticket | Title | Action | Reason |
-   |--------|-------|--------|--------|
-   | ... | ... | ... | ... |
+   | Ticket | Title | Action | Dispatch Tool | Reason |
+   |--------|-------|--------|---------------|--------|
+   | ... | ... | ... | ... | ... |
    
    ### Dispatch ratio: X/Y = ZZ% ✅
    
@@ -448,7 +471,8 @@ When the user gives a feature request:
    [parallel / sequential / config-first-then-fan-out]
    ```
 
-5. **Dispatch first, then direct** — Send ALL 🟢 tickets to Codex BEFORE starting 🔴 work:
+5. **Dispatch first, then direct** — Send ALL 🟢 tickets to Codex BEFORE starting 🔴 work.
+   Use `ask_codex` or `codex_dispatch.sh` — **NEVER use Task tool for 🟢 tickets**:
    ```bash
    # For parallel-safe tickets (no file overlap)
    bash tools/codex_dispatch.sh tickets/t-301-resource-map.md &
@@ -483,10 +507,12 @@ When the user gives a feature request:
    - Gate: PASS ✅
    - Dispatch ratio: 6/7 = 86%
    - Files changed: 8
+   - Dispatch tool used: ask_codex (6 tickets)
    ```
 
 10. **Summarize** — End by listing:
     - Dispatch ratio (🟢 dispatched / total tickets)
+    - Which dispatch tool was used (ask_codex or codex_dispatch.sh)
     - What was dispatched vs implemented directly (with reasons for each DIRECT)
     - Files changed
     - How to run the demo
@@ -618,3 +644,4 @@ Key tuning parameters that ensure the survival → building → growth loop work
 16. **Dispatch ratio below 60%** — if more than 40% of tickets are DIRECT, the split is wrong. Re-split.
 17. **Claiming "files overlap" to skip dispatch** — use Config-first then fan-out pattern for sequential dispatch. "Can't parallelize" ≠ "can't dispatch".
 18. **Skipping PROGRESS.md** — always log the classification table BEFORE coding. If you didn't write PROGRESS.md first, you skipped the planning step.
+19. **Using Task tool for 🟢 DISPATCH tickets** — Task tool sends work to Claude sub-agents, NOT Codex. Only `ask_codex` or `codex_dispatch.sh` count as Codex dispatch. Task tool work counts as DIRECT.

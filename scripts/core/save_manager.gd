@@ -1,7 +1,7 @@
 extends RefCounted
 
 
-func save_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted) -> bool:
+func save_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, settlement_manager: RefCounted) -> bool:
 	var data: Dictionary = {
 		"version": 1,
 		"sim_engine": {
@@ -13,6 +13,7 @@ func save_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted,
 		"entities": entity_manager.to_save_data(),
 		"buildings": building_manager.to_save_data(),
 		"resource_map": resource_map.to_save_data(),
+		"settlements": settlement_manager.to_save_data(),
 	}
 	var json_string: String = JSON.stringify(data)
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
@@ -24,7 +25,7 @@ func save_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted,
 	return true
 
 
-func load_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, world_data: RefCounted) -> bool:
+func load_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, world_data: RefCounted, settlement_manager: RefCounted) -> bool:
 	if not FileAccess.file_exists(path):
 		push_warning("[SaveManager] Save file not found: %s" % path)
 		return false
@@ -66,6 +67,13 @@ func load_game(path: String, sim_engine: RefCounted, entity_manager: RefCounted,
 	for i in range(raw_buildings.size()):
 		building_data.append(raw_buildings[i])
 	building_manager.load_save_data(building_data)
+
+	# Restore settlements
+	var settlement_data: Array = []
+	var raw_settlements: Array = data.get("settlements", [])
+	for i in range(raw_settlements.size()):
+		settlement_data.append(raw_settlements[i])
+	settlement_manager.load_save_data(settlement_data)
 
 	# Restore resource map
 	var res_data: Dictionary = data.get("resource_map", {})

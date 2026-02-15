@@ -5,6 +5,7 @@ var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 var _resource_map: RefCounted
 var _building_manager: RefCounted
+var _settlement_manager: RefCounted
 
 
 func _init() -> void:
@@ -14,18 +15,21 @@ func _init() -> void:
 
 
 ## Initialize with references (resource_map and building_manager optional for backward compat)
-func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator, resource_map: RefCounted = null, building_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator, resource_map: RefCounted = null, building_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_world_data = world_data
 	_rng = rng
 	_resource_map = resource_map
 	_building_manager = building_manager
+	_settlement_manager = settlement_manager
 
 
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
+		if entity.current_action == "migrate":
+			continue
 		if entity.action_timer > 0:
 			continue
 		var scores: Dictionary = _evaluate_actions(entity)
@@ -371,7 +375,12 @@ func _try_place_building(entity: RefCounted) -> RefCounted:
 		return null
 
 	_consume_building_cost(entity, cost)
-	return _building_manager.place_building(btype, site.x, site.y)
+	var building: RefCounted = _building_manager.place_building(btype, site.x, site.y)
+	if building != null and entity.settlement_id > 0:
+		building.settlement_id = entity.settlement_id
+		if _settlement_manager != null:
+			_settlement_manager.add_building(entity.settlement_id, building.id)
+	return building
 
 
 func _can_afford_building(entity: RefCounted, cost: Dictionary) -> bool:

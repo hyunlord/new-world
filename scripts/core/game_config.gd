@@ -146,3 +146,17 @@ const MAX_AGE_TICKS: int = 17280
 
 ## Pathfinding
 const PATHFIND_MAX_STEPS: int = 200
+
+## ══════════════════════════════════════
+## Settlement & Migration
+## ══════════════════════════════════════
+const SETTLEMENT_MIN_DISTANCE: int = 25
+const SETTLEMENT_BUILD_RADIUS: int = 15
+const BUILDING_MIN_SPACING: int = 2
+const MIGRATION_TICK_INTERVAL: int = 200
+const MIGRATION_MIN_POP: int = 40
+const MIGRATION_GROUP_SIZE_MIN: int = 3
+const MIGRATION_GROUP_SIZE_MAX: int = 5
+const MIGRATION_CHANCE: float = 0.05
+const MIGRATION_SEARCH_RADIUS_MIN: int = 30
+const MIGRATION_SEARCH_RADIUS_MAX: int = 80
