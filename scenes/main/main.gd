@@ -22,6 +22,8 @@ const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
 const StatsRecorder = preload("res://scripts/systems/stats_recorder.gd")
 const RelationshipManagerScript = preload("res://scripts/core/relationship_manager.gd")
 const SocialEventSystem = preload("res://scripts/systems/social_event_system.gd")
+const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
+const AgeSystem = preload("res://scripts/systems/age_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -46,6 +48,8 @@ var job_assignment_system: RefCounted
 var population_system: RefCounted
 var migration_system: RefCounted
 var social_event_system: RefCounted
+var emotion_system: RefCounted
+var age_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -124,6 +128,12 @@ func _ready() -> void:
 	migration_system = MigrationSystem.new()
 	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
 
+	emotion_system = EmotionSystem.new()
+	emotion_system.init(entity_manager)
+
+	age_system = AgeSystem.new()
+	age_system.init(entity_manager)
+
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
 
@@ -139,7 +149,9 @@ func _ready() -> void:
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28
 	sim_engine.register_system(movement_system)           # priority 30
+	sim_engine.register_system(emotion_system)            # priority 32
 	sim_engine.register_system(social_event_system)       # priority 37
+	sim_engine.register_system(age_system)                # priority 48
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90

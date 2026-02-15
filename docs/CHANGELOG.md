@@ -4,6 +4,29 @@
 
 ---
 
+## Phase 2: EmotionSystem + AgeSystem (T-1080)
+
+### T-1080: Emotion System + Age System + Age Restrictions
+- `emotion_system.gd` (NEW) — priority=32, tick_interval=12 (1일 1회):
+  - happiness: lerp → (hunger+energy+social)/3
+  - loneliness: social<0.3이면 +0.02, 파트너/부모 3타일 이내 -0.05
+  - stress: hunger<0.2이면 +0.03, 아니면 -0.01×stability
+  - grief: -0.002×stability (서서히 회복)
+  - love: 파트너 3타일 이내 +0.03, 아니면 -0.01
+- `age_system.gd` (NEW) — priority=48, tick_interval=50:
+  - 나이 단계 전환 감지 (child→teen→adult→elder)
+  - 전환 시 토스트 + 이벤트 (age_stage_changed)
+  - elder 전환 시 builder 직업 해제
+- 나이별 제한 적용:
+  - `behavior_system.gd` — child: wander/rest/socialize만. teen: gather_food만 (wood/stone/build 불가). elder: build 불가
+  - `gathering_system.gd` — child 채집 불가, teen/elder 효율 50%
+  - `construction_system.gd` — adult만 건설 가능
+  - `job_assignment_system.gd` — child: 직업 없음, teen: gatherer만, elder: builder 제외
+  - `movement_system.gd` — child 50%, teen 80%, elder ~67% 이동속도
+- `main.gd` — EmotionSystem(priority 32) + AgeSystem(priority 48) 초기화/등록
+
+---
+
 ## Phase 2: SocialEventSystem (T-1070)
 
 ### T-1070: Social Event System

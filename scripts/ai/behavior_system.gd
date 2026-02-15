@@ -47,6 +47,15 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	var hunger_deficit: float = 1.0 - entity.hunger
 	var energy_deficit: float = 1.0 - entity.energy
 	var social_deficit: float = 1.0 - entity.social
+	var stage: String = entity.age_stage
+
+	# Child: wander, rest, socialize only
+	if stage == "child":
+		return {
+			"wander": 0.3 + _rng.randf() * 0.1,
+			"rest": _urgency_curve(energy_deficit) * 1.2,
+			"socialize": _urgency_curve(social_deficit) * 0.8,
+		}
 
 	var scores: Dictionary = {
 		"wander": 0.2 + _rng.randf() * 0.1,
@@ -55,6 +64,11 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		"socialize": _urgency_curve(social_deficit) * 0.8,
 	}
 
+	# Teen: gather_food only (no wood/stone/build)
+	if stage == "teen":
+		scores.erase("gather_wood")
+		scores.erase("gather_stone")
+
 	# ── Hunger override: ALL jobs prioritize food when starving ──
 	if entity.hunger < 0.3:
 		scores["gather_food"] = 1.0
@@ -62,15 +76,15 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if entity.inventory.get("food", 0.0) > 0.5:
 			scores["gather_food"] = 0.5  # lower because auto-eat handles it
 
-	# Resource gathering (requires resource_map)
-	if _resource_map != null:
+	# Resource gathering (requires resource_map) — teens cannot gather wood/stone
+	if _resource_map != null and stage != "teen":
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
 			scores["gather_wood"] = 0.3 + _rng.randf() * 0.1
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.STONE, 15):
 			scores["gather_stone"] = 0.2 + _rng.randf() * 0.1
 
-	# Building-related actions (requires building_manager)
-	if _building_manager != null:
+	# Building-related actions (requires building_manager) — adults only
+	if _building_manager != null and stage == "adult":
 		var sid: int = entity.settlement_id
 		# Deliver to stockpile — gradual threshold
 		var carry: float = entity.get_total_carry()

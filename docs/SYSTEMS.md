@@ -18,8 +18,10 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
 | 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
 | 28 | ConstructionSystem | 5 | 행동 기반 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
-| 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
+| 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
+| 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
+| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 (식량/주거 조건), 자연사 (60세+ 확률 증가) | `scripts/systems/population_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
@@ -32,6 +34,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 
 **시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
 - ResourceRegenSystem: 120틱(10일), JobAssignmentSystem: 24틱(2일), PopulationSystem: 30틱(2.5일)
+- EmotionSystem: 12틱(1일), SocialEventSystem: 30틱(2.5일), AgeSystem: 50틱(~4일)
 - MigrationSystem: 100틱(~8일), StatsRecorder: 200틱
 
 **행동 기반 시스템** (tick_interval 변경 금지): 에이전트 체감 속도와 직결.
@@ -141,6 +144,12 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|-----------|----------|----------|
 | building_placed | BehaviorSystem | building_id, building_type, tile_x, tile_y | ✅ |
 | building_completed | ConstructionSystem | building_id, building_type, tile_x, tile_y | ✅ `# BUILT: type at (x,y)` |
+
+### 성장 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| age_stage_changed | AgeSystem | entity_id, entity_name, from_stage, to_stage, age_years, tick | ✅ (HUD 토스트) |
 
 ### 사회 이벤트
 
