@@ -695,6 +695,30 @@ Hysteresis: 0↔1 boundary 1.3/1.7, 1↔2 boundary 3.8/4.2
 | game_saved | path, tick |
 | game_loaded | path, tick |
 
+## 문서 규칙 (영구)
+
+- 코드 변경 시 관련 docs/ 문서를 반드시 함께 업데이트
+- 새 시스템/이벤트/설정 추가 시 해당 문서에 항목 추가
+- 시각 요소 변경 시 docs/VISUAL_GUIDE.md 업데이트
+- 밸런스 수치 변경 시 docs/GAME_BALANCE.md 업데이트
+- 키 바인딩 변경 시 docs/CONTROLS.md 업데이트
+- 아키텍처 변경 시 docs/ARCHITECTURE.md 업데이트
+- 시스템/매니저/이벤트 변경 시 docs/SYSTEMS.md 업데이트
+- 티켓 완료 시 docs/CHANGELOG.md에 기록
+- 모든 티켓 Done Definition에 "관련 docs/ 문서 업데이트됨" 포함
+
+### docs/ 문서 목록
+| 문서 | 내용 |
+|------|------|
+| ARCHITECTURE.md | 아키텍처 다이어그램, 파일 맵, 설계 원칙 |
+| CHANGELOG.md | 변경 이력 (역순) |
+| CONTROLS.md | 키보드/마우스/트랙패드 바인딩, HUD 정보 |
+| GAME_BALANCE.md | 모든 밸런스 수치 (코드에서 추출) |
+| SYSTEMS.md | SimulationSystem, 매니저, 오토로드, 이벤트 |
+| VISUAL_GUIDE.md | 바이옴 색상, 에이전트/건물 시각, LOD |
+
+---
+
 ## Known Limitations (Phase 1)
 
 - O(n) entity queries (no spatial indexing)

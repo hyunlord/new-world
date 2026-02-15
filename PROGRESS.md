@@ -170,3 +170,39 @@ Phase 1 시뮬레이션은 안정적이지만 마무리 부족:
 - 3단계 줌 LOD로 전략~디테일 뷰 전환
 - 저장/로드에 정착지 데이터 포함
 - HUD 토스트 알림 시스템
+
+---
+
+## Documentation System (T-500 series, docs)
+
+### Context
+Phase 1 완료 후 코드에서 추출한 정확한 문서 체계 구축. 6개 docs/ 문서 생성 + CLAUDE.md 영구 문서 규칙 추가.
+
+### Tickets
+| Ticket | Title | Action | Reason |
+|--------|-------|--------|--------|
+| docs-1 | VISUAL_GUIDE.md | DIRECT | 코드 읽기 + 문서 작성, 구현 아님 |
+| docs-2 | GAME_BALANCE.md | DIRECT | 코드 읽기 + 문서 작성 |
+| docs-3 | SYSTEMS.md | DIRECT | 코드 읽기 + 문서 작성 |
+| docs-4 | CONTROLS.md | DIRECT | 코드 읽기 + 문서 작성 |
+| docs-5 | ARCHITECTURE.md | DIRECT | 코드 읽기 + 문서 작성 |
+| docs-6 | CHANGELOG.md | DIRECT | git 히스토리 + 문서 작성 |
+| docs-7 | CLAUDE.md 문서 규칙 | DIRECT | 영구 규칙 추가 |
+
+### Dispatch ratio: 0/7 = 0% (문서 전용 — 코드 변경 없음, dispatch 대상 아님)
+
+### 변경 파일 (7개)
+| File | Changes |
+|------|---------|
+| docs/VISUAL_GUIDE.md | **신규** — 바이옴 색상, 에이전트/건물 시각, 자원 오버레이, LOD, HUD |
+| docs/GAME_BALANCE.md | **신규** — 시뮬레이션 시간, 욕구, 자원, 건물, 인구, 직업, AI 점수, 정착지 |
+| docs/SYSTEMS.md | **신규** — 10개 시스템, 6개 매니저, 5개 데이터 클래스, 3개 오토로드, 시그널, 이벤트 |
+| docs/CONTROLS.md | **신규** — 키보드/마우스/트랙패드 바인딩, 카메라 설정, HUD 정보 |
+| docs/ARCHITECTURE.md | **신규** — 아키텍처 다이어그램, 31개 파일 맵, 설계 원칙 7개, 의존성 그래프 |
+| docs/CHANGELOG.md | **신규** — Phase 0~1 Finale 전체 변경 이력 (역순) |
+| CLAUDE.md | 문서 규칙 (영구) 섹션 추가 — 6개 문서 목록 + 업데이트 규칙 |
+
+### 결과
+- 6개 docs/ 문서 생성 완료
+- 모든 수치/색상/설정이 실제 코드에서 추출됨
+- CLAUDE.md에 영구 문서 규칙 추가됨
