@@ -32,6 +32,14 @@ This means:
 - When you finish, the lead will run `codex apply` to pull your diff and `bash scripts/gate.sh` to verify. If gate fails because of your changes, your ticket will be rejected or re-dispatched.
 - You do not interact with the user. You do not ask questions. If something is unclear, **flag it in your summary report** and implement the most conservative interpretation.
 
+### What the lead expects from you
+
+The lead's workflow is: plan → split → dispatch → integrate. You are the "dispatch" step.
+- The lead has already decided this ticket is suitable for isolated implementation.
+- The lead will handle integration wiring and shared interface changes separately.
+- Your job is to deliver a clean, minimal, gate-passing implementation of exactly what the ticket says.
+- The faster and cleaner you deliver, the faster the lead can integrate and move to the next batch.
+
 ---
 
 ## Behavioral Guidelines
@@ -118,11 +126,12 @@ If any answer is "unsure", investigate before writing code.
 
 1. **Read** the ticket file in `tickets/###-*.md`. Read the entire file.
 2. **Scope check** — verify the files listed in the ticket's Scope section. If you need to touch a file NOT listed, flag it in your report and ask whether to proceed. Do not silently expand scope.
-3. **Plan** — mentally map which files change, which signals are affected, which tests to run. If scope is unclear, flag it.
-4. **Implement** exactly what the ticket asks. No extras. No "while I'm here" improvements.
-5. **Verify** — run the ticket's verification commands AND the gate script.
-6. **Commit** all changes to the assigned branch with a clear message: `[t-XXX] <one-line summary>`
-7. **Report** with this structure:
+3. **Check for existing code** — before creating a new file, verify it doesn't already exist. Before modifying a function, read the current implementation. The lead may have already done interface prep work that you need to build on.
+4. **Plan** — mentally map which files change, which signals are affected, which tests to run. If scope is unclear, flag it.
+5. **Implement** exactly what the ticket asks. No extras. No "while I'm here" improvements.
+6. **Verify** — run the ticket's verification commands AND the gate script.
+7. **Commit** all changes to the assigned branch with a clear message: `[t-XXX] <one-line summary>`
+8. **Report** with this structure:
 
 ```
 ## Summary
@@ -153,6 +162,7 @@ If any answer is "unsure", investigate before writing code.
 - Do NOT introduce breaking changes without migration notes.
 - Do NOT modify shared interfaces (SimulationBus signals, EntityManager API, GameConfig keys) without lead approval.
 - Do NOT touch files outside your ticket's Scope section. If parallel tickets are running, file conflicts will break the pipeline.
+- Do NOT add new Autoloads or register new systems in SimulationEngine — that is lead integration work.
 
 ## Godot-Specific Conventions
 
@@ -189,9 +199,11 @@ powershell -File scripts/gate.ps1
 5. **Renaming a node without updating all NodePath references** — grep for the old name before committing
 6. **Adding constants as literals instead of GameConfig entries** — every number belongs in config
 7. **Fixing an unrelated bug inside a ticket's scope** — report it, don't fix it
-8. **Forgetting to register a new system in SimulationEngine** — unregistered systems silently don't run
+8. **Forgetting to register a new system in SimulationEngine** — unregistered systems silently don't run. BUT: registering new systems is lead work, not yours. Just create the system file.
 9. **Modifying EntityData directly instead of through EntityManager API** — breaks event sourcing
 10. **Skipping gate because "it's a small change"** — small changes cause the most subtle bugs
 11. **Touching files outside ticket Scope** — parallel tickets may be modifying other files simultaneously; scope violations cause merge conflicts
 12. **Silently expanding scope** — if you need a file not listed in Scope, flag it; the lead decides whether to expand or split into a new ticket
 13. **Committing to the wrong branch** — always verify you're on the branch assigned by dispatch before committing
+14. **Creating a file that already exists** — always check first; the lead may have prepped interfaces or stubs that you should build on
+15. **Adding new Autoloads or modifying project.godot** — project-level configuration is lead-only work
