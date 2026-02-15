@@ -4,6 +4,19 @@
 
 ---
 
+## Phase 2: Chunk Spatial Index (T-1050)
+
+### T-1050: ChunkIndex + EntityManager 통합
+- `chunk_index.gd` (NEW) — 16x16 타일 청크 기반 공간 인덱스
+  - add_entity, remove_entity, update_entity (이동 시 청크 변경만 처리)
+  - get_entities_in_chunk, get_nearby_entity_ids, get_same_chunk_entity_ids
+  - O(1) 청크 조회, O(chunk_size) 이웃 스캔
+- `entity_manager.gd` — ChunkIndex 통합:
+  - spawn/move/kill/load 시 chunk_index 자동 갱신
+  - get_entities_near() 청크 기반으로 교체 (O(n) → O(chunks×chunk_size))
+
+---
+
 ## Phase 2: EntityData 확장 (T-1010)
 
 ### T-1010: EntityData Extensions

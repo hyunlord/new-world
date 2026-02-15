@@ -44,7 +44,8 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 매니저 | 역할 | 파일 |
 |--------|------|------|
 | SimulationEngine | 틱 루프, 시스템 등록/실행, 일시정지/속도, RNG | `scripts/core/simulation_engine.gd` |
-| EntityManager | 에이전트 생성/삭제/조회, 위치 이동 | `scripts/core/entity_manager.gd` |
+| EntityManager | 에이전트 생성/삭제/조회, 위치 이동, ChunkIndex 통합 | `scripts/core/entity_manager.gd` |
+| ChunkIndex | 16x16 타일 청크 공간 인덱스, O(1) 청크 조회 | `scripts/core/chunk_index.gd` |
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
 | SaveManager | JSON 저장/로드 (Cmd+S/Cmd+L) | `scripts/core/save_manager.gd` |
