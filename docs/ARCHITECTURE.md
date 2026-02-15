@@ -128,8 +128,8 @@ SimulationEngine.update(delta)
 | `hud.gd` | 상단 바 + 엔티티/건물 패널 + 토스트 + 도움말 + 범례 + 키힌트 |
 | `minimap_panel.gd` | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 정착지 라벨, UI_SCALE 적용) |
 | `stats_panel.gd` | 미니 통계 패널 (우하단 250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) |
-| `stats_detail_panel.gd` | 통계 상세창 (75%×80%, 인구/자원/직업/정착지 비교, G키/클릭) |
-| `entity_detail_panel.gd` | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리, E키) |
+| `stats_detail_panel.gd` | 통계 상세창 (75%×80%, 스크롤, 인구/자원/인구통계(커플/나이분포/행복)/직업/정착지 비교, G키/클릭) |
+| `entity_detail_panel.gd` | 에이전트 상세창 (55%×85%, 스크롤, 상태/욕구/성격/감정/가족/관계/통계/행동히스토리, E키) |
 | `building_detail_panel.gd` | 건물 상세창 (45%×50%, 타입별 상세 정보, E키) |
 
 ---

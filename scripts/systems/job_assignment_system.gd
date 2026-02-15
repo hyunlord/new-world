@@ -23,6 +23,11 @@ func execute_tick(tick: int) -> void:
 	var unassigned: Array = []
 	for i in range(entities.size()):
 		var entity = entities[i]
+		# Children get no job
+		if entity.age_stage == "child":
+			if entity.job != "none":
+				entity.job = "none"
+			continue
 		if entity.job == "none":
 			unassigned.append(entity)
 		elif job_counts.has(entity.job):
@@ -34,7 +39,21 @@ func execute_tick(tick: int) -> void:
 	# Assign most-needed job to each unassigned entity
 	for i in range(unassigned.size()):
 		var entity = unassigned[i]
+		# Teen: gatherer only
+		if entity.age_stage == "teen":
+			entity.job = "gatherer"
+			job_counts["gatherer"] = job_counts.get("gatherer", 0) + 1
+			emit_event("job_assigned", {
+				"entity_id": entity.id,
+				"entity_name": entity.entity_name,
+				"job": "gatherer",
+				"tick": tick,
+			})
+			continue
 		var best_job: String = _find_most_needed_job(ratios, job_counts, alive_count)
+		# Elder: no builder
+		if entity.age_stage == "elder" and best_job == "builder":
+			best_job = "gatherer"
 		entity.job = best_job
 		job_counts[best_job] = job_counts.get(best_job, 0) + 1
 		emit_event("job_assigned", {

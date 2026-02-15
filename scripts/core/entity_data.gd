@@ -15,6 +15,35 @@ var age: int = 0
 var speed: float = 1.0
 var strength: float = 1.0
 
+## Phase 2: Identity
+var gender: String = "male"
+var age_stage: String = "adult"
+var birth_tick: int = 0
+
+## Phase 2: Family
+var partner_id: int = -1
+var parent_ids: Array[int] = []
+var children_ids: Array[int] = []
+var pregnancy_tick: int = -1
+
+## Phase 2: Personality (immutable after creation, 0.0~1.0)
+var personality: Dictionary = {
+	"openness": 0.5,
+	"agreeableness": 0.5,
+	"extraversion": 0.5,
+	"diligence": 0.5,
+	"emotional_stability": 0.5,
+}
+
+## Phase 2: Emotions (dynamic, updated by EmotionSystem)
+var emotions: Dictionary = {
+	"happiness": 0.5,
+	"loneliness": 0.0,
+	"stress": 0.0,
+	"grief": 0.0,
+	"love": 0.0,
+}
+
 ## AI State
 var current_action: String = "idle"
 var current_goal: String = ""
@@ -99,6 +128,15 @@ func to_dict() -> Dictionary:
 		"settlement_id": settlement_id,
 		"total_gathered": total_gathered,
 		"buildings_built": buildings_built,
+		"gender": gender,
+		"age_stage": age_stage,
+		"birth_tick": birth_tick,
+		"partner_id": partner_id,
+		"parent_ids": parent_ids.duplicate(),
+		"children_ids": children_ids.duplicate(),
+		"pregnancy_tick": pregnancy_tick,
+		"personality": personality.duplicate(),
+		"emotions": emotions.duplicate(),
 	}
 
 
@@ -131,4 +169,33 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.settlement_id = data.get("settlement_id", 0)
 	e.total_gathered = data.get("total_gathered", 0.0)
 	e.buildings_built = data.get("buildings_built", 0)
+	e.gender = data.get("gender", "male")
+	e.age_stage = data.get("age_stage", "adult")
+	e.birth_tick = data.get("birth_tick", 0)
+	e.partner_id = data.get("partner_id", -1)
+	var pids = data.get("parent_ids", [])
+	e.parent_ids = []
+	for i in range(pids.size()):
+		e.parent_ids.append(int(pids[i]))
+	var cids = data.get("children_ids", [])
+	e.children_ids = []
+	for i in range(cids.size()):
+		e.children_ids.append(int(cids[i]))
+	e.pregnancy_tick = data.get("pregnancy_tick", -1)
+	var p_data: Dictionary = data.get("personality", {})
+	e.personality = {
+		"openness": p_data.get("openness", 0.5),
+		"agreeableness": p_data.get("agreeableness", 0.5),
+		"extraversion": p_data.get("extraversion", 0.5),
+		"diligence": p_data.get("diligence", 0.5),
+		"emotional_stability": p_data.get("emotional_stability", 0.5),
+	}
+	var em_data: Dictionary = data.get("emotions", {})
+	e.emotions = {
+		"happiness": em_data.get("happiness", 0.5),
+		"loneliness": em_data.get("loneliness", 0.0),
+		"stress": em_data.get("stress", 0.0),
+		"grief": em_data.get("grief", 0.0),
+		"love": em_data.get("love", 0.0),
+	}
 	return e

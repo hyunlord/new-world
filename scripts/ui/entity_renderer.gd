@@ -23,6 +23,19 @@ const SELECTION_RADIUS: float = 7.0
 const HUNGER_WARNING_RADIUS: float = 2.0
 const HUNGER_WARNING_THRESHOLD: float = 0.2
 
+## Gender tint colors (blended with job color)
+const MALE_TINT: Color = Color(0.2, 0.4, 0.85)
+const FEMALE_TINT: Color = Color(0.9, 0.3, 0.45)
+const GENDER_TINT_WEIGHT: float = 0.2
+
+## Age size multipliers
+const AGE_SIZE_MULT: Dictionary = {
+	"child": 0.6,
+	"teen": 0.8,
+	"adult": 1.0,
+	"elder": 0.95,
+}
+
 ## Job visual definitions: shape, size, color
 const JOB_VISUALS: Dictionary = {
 	"none": {"size": 3.0, "color": Color(0.6, 0.6, 0.6)},
@@ -95,8 +108,15 @@ func _draw() -> void:
 		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
 
 		var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
-		var size: float = vis["size"]
+		var base_size: float = vis["size"]
 		var color: Color = vis["color"]
+
+		# Gender tint
+		var tint: Color = MALE_TINT if entity.gender == "male" else FEMALE_TINT
+		color = color.lerp(tint, GENDER_TINT_WEIGHT)
+
+		# Age size scaling
+		var size: float = base_size * AGE_SIZE_MULT.get(entity.age_stage, 1.0)
 
 		# Draw job-based shape
 		match entity.job:
@@ -108,6 +128,10 @@ func _draw() -> void:
 				_draw_diamond(pos, size, color)
 			_:
 				draw_circle(pos, size, color)
+
+		# Elder white dot (gray hair indicator)
+		if entity.age_stage == "elder":
+			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
 		if _current_lod >= 1:
 			# Carrying indicator (small dot above entity)
@@ -127,6 +151,13 @@ func _draw() -> void:
 				if entity.action_target != Vector2i(-1, -1):
 					var target_pos := Vector2(entity.action_target) * GameConfig.TILE_SIZE + half_tile
 					draw_dashed_line(pos, target_pos, Color(1, 1, 1, 0.3), 1.0, 4.0)
+				# Partner heart marker
+				if entity.partner_id != -1:
+					var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
+					if partner != null and partner.is_alive:
+						var ppos := Vector2(partner.position) * GameConfig.TILE_SIZE + half_tile
+						_draw_heart(ppos + Vector2(0, -(size + 6.0)), 3.0, Color(1.0, 0.3, 0.4))
+						draw_dashed_line(pos, ppos, Color(1.0, 0.3, 0.4, 0.3), 1.0, 4.0)
 				if _current_lod == 2:
 					var entity_name: String = entity.entity_name
 					draw_string(ThemeDB.fallback_font, pos + Vector2(size + 3.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
@@ -168,6 +199,18 @@ func _draw_diamond(center: Vector2, size: float, color: Color) -> void:
 		center + Vector2(size, 0),
 		center + Vector2(0, size),
 		center + Vector2(-size, 0),
+	])
+	draw_colored_polygon(points, color)
+
+
+func _draw_heart(center: Vector2, size: float, color: Color) -> void:
+	var points := PackedVector2Array([
+		center + Vector2(0, size * 0.4),
+		center + Vector2(-size, -size * 0.2),
+		center + Vector2(-size * 0.5, -size * 0.7),
+		center + Vector2(0, -size * 0.3),
+		center + Vector2(size * 0.5, -size * 0.7),
+		center + Vector2(size, -size * 0.2),
 	])
 	draw_colored_polygon(points, color)
 

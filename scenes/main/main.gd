@@ -20,6 +20,11 @@ const PopulationSystem = preload("res://scripts/systems/population_system.gd")
 const SettlementManager = preload("res://scripts/core/settlement_manager.gd")
 const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
 const StatsRecorder = preload("res://scripts/systems/stats_recorder.gd")
+const RelationshipManagerScript = preload("res://scripts/core/relationship_manager.gd")
+const SocialEventSystem = preload("res://scripts/systems/social_event_system.gd")
+const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
+const AgeSystem = preload("res://scripts/systems/age_system.gd")
+const FamilySystem = preload("res://scripts/systems/family_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -31,6 +36,7 @@ var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
 var stats_recorder: RefCounted
+var relationship_manager: RefCounted
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -42,6 +48,10 @@ var building_effect_system: RefCounted
 var job_assignment_system: RefCounted
 var population_system: RefCounted
 var migration_system: RefCounted
+var social_event_system: RefCounted
+var emotion_system: RefCounted
+var age_system: RefCounted
+var family_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -86,6 +96,9 @@ func _ready() -> void:
 	# Initialize settlement manager + first settlement
 	settlement_manager = SettlementManager.new()
 
+	# Initialize relationship manager
+	relationship_manager = RelationshipManagerScript.new()
+
 	# ── Create simulation systems ──────────────────────────
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -117,6 +130,18 @@ func _ready() -> void:
 	migration_system = MigrationSystem.new()
 	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
 
+	emotion_system = EmotionSystem.new()
+	emotion_system.init(entity_manager)
+
+	age_system = AgeSystem.new()
+	age_system.init(entity_manager)
+
+	social_event_system = SocialEventSystem.new()
+	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
+
+	family_system = FamilySystem.new()
+	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng)
+
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)
 
@@ -129,7 +154,11 @@ func _ready() -> void:
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28
 	sim_engine.register_system(movement_system)           # priority 30
+	sim_engine.register_system(emotion_system)            # priority 32
+	sim_engine.register_system(social_event_system)       # priority 37
+	sim_engine.register_system(age_system)                # priority 48
 	sim_engine.register_system(population_system)         # priority 50
+	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90
 
@@ -139,7 +168,7 @@ func _ready() -> void:
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map)
 	building_renderer.init(building_manager, settlement_manager)
-	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
 
 	# Spawn initial entities + create first settlement
 	_spawn_initial_entities()
@@ -152,6 +181,9 @@ func _ready() -> void:
 		var e: RefCounted = initial_alive[i]
 		e.settlement_id = founding.id
 		settlement_manager.add_member(founding.id, e.id)
+
+	# Bootstrap initial relationships for faster couple formation
+	_bootstrap_relationships(initial_alive)
 
 	_print_startup_banner(seed_value)
 	hud.show_startup_toast(entity_manager.get_alive_count())
@@ -187,6 +219,47 @@ func _spawn_initial_entities() -> void:
 	print("[Main] Spawned %d entities near world center." % count)
 
 
+## Bootstrap initial relationships so couples can form quickly
+func _bootstrap_relationships(alive: Array) -> void:
+	if alive.size() < 4:
+		return
+	# Separate by gender for close_friend pairing (opposite gender needed for romance)
+	var males: Array = []
+	var females: Array = []
+	for i in range(alive.size()):
+		var e: RefCounted = alive[i]
+		if e.gender == "male":
+			males.append(e)
+		else:
+			females.append(e)
+
+	# 3-4 friend pairs (same or mixed gender)
+	var friend_count: int = mini(4, alive.size() / 4)
+	for i in range(friend_count):
+		var idx_a: int = (i * 2) % alive.size()
+		var idx_b: int = (i * 2 + 1) % alive.size()
+		if idx_a == idx_b:
+			continue
+		var rel: RefCounted = relationship_manager.get_or_create(alive[idx_a].id, alive[idx_b].id)
+		rel.affinity = 40.0
+		rel.trust = 55.0
+		rel.interaction_count = 12
+		rel.type = "friend"
+
+	# 1-2 close_friend pairs (opposite gender for romance path)
+	var close_count: int = mini(2, mini(males.size(), females.size()))
+	for i in range(close_count):
+		if i >= males.size() or i >= females.size():
+			break
+		var rel: RefCounted = relationship_manager.get_or_create(males[i].id, females[i].id)
+		rel.affinity = 65.0
+		rel.trust = 60.0
+		rel.interaction_count = 18
+		rel.type = "close_friend"
+
+	print("[Main] Bootstrapped %d friend + %d close_friend relationships." % [friend_count, close_count])
+
+
 var _last_overlay_tick: int = 0
 var _last_minimap_tick: int = 0
 var _current_day_color: Color = Color(1.0, 1.0, 1.0)
@@ -212,7 +285,7 @@ func _process(delta: float) -> void:
 	# Day/night cycle (smooth lerp, slower at high speed)
 	if sim_engine and _day_night_enabled:
 		var gt: Dictionary = sim_engine.get_game_time()
-		var hour_f: float = float(gt.hour) + float(gt.minute) / 60.0
+		var hour_f: float = float(gt.hour)
 		var target_color: Color = _get_daylight_color(hour_f)
 		var lerp_speed: float = 0.3 * delta
 		if sim_engine.speed_index >= 3:
@@ -289,10 +362,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _save_game() -> void:
-	var path: String = "user://quicksave.json"
+	var path: String = "user://saves/quicksave"
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
-	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager)
+	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
@@ -301,9 +374,9 @@ func _save_game() -> void:
 
 
 func _load_game() -> void:
-	var path: String = "user://quicksave.json"
+	var path: String = "user://saves/quicksave"
 	sim_engine.is_paused = true
-	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager)
+	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)

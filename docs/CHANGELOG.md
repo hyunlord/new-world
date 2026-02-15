@@ -4,6 +4,207 @@
 
 ---
 
+## Phase 2: Stats Panel + Final Docs (T-1130)
+
+### T-1130: Stats Panel Extensions + Final Documentation
+- `stats_detail_panel.gd` (EXTENDED):
+  - 스크롤 지원: 마우스 휠로 긴 콘텐츠 스크롤
+  - Demographics 섹션 추가:
+    - Gender 분포 (M/F 카운트)
+    - Couples 수 / 미혼 성인 수
+    - 평균 행복도 바 (색상: 40%+ 노랑, 이하 빨강)
+    - 나이 분포 바 (Child/Teen/Adult/Elder, 색상 구분 + 범례)
+  - init() 확장: entity_manager, relationship_manager 파라미터 추가
+- `hud.gd`: stats_detail_panel.init()에 entity_manager, relationship_manager 전달
+- docs/SYSTEMS.md, ARCHITECTURE.md: StatsDetailPanel 설명 갱신
+
+---
+
+## Phase 2: Entity Detail Panel Extensions (T-1120)
+
+### T-1120: Entity Detail Panel — Personality, Emotions, Family, Relationships
+- `entity_detail_panel.gd` (REWRITTEN):
+  - 스크롤 지원: 마우스 휠로 긴 콘텐츠 스크롤
+  - 헤더 확장: 성별 아이콘(M/F, 색상 구분) + 나이 단계(Child/Teen/Adult/Elder) + 임신 표시
+  - Personality 섹션: 5종 바 (Openness, Agreeableness, Extraversion, Diligence, Stability) 고유 색상
+  - Emotions 섹션: 5종 바 (Happiness, Loneliness, Stress, Grief, Love) 고유 색상
+  - Family 섹션: Partner(이름+Love%), Parents(이름, 사망표시), Children(이름+나이, 줄바꿈)
+  - Key Relationships 섹션: 상위 5개 관계 (이름, 타입, affinity, trust, romantic_interest)
+    - 관계 타입별 색상: stranger(회색)→partner(분홍)→rival(빨강)
+  - init() 확장: relationship_manager 파라미터 추가
+- `hud.gd`:
+  - `_relationship_manager` 변수 추가
+  - init() 시그니처에 `relationship_manager` 파라미터 추가
+  - entity_detail_panel.init()에 relationship_manager 전달
+- `main.gd`: hud.init()에 relationship_manager 전달
+- `popup_manager.gd`: entity panel 크기 (0.5×0.65) → (0.55×0.85)
+- docs/SYSTEMS.md, ARCHITECTURE.md: EntityDetailPanel 설명 갱신
+
+---
+
+## Phase 2: Entity Renderer Enhancements (T-1110)
+
+### T-1110: Entity Renderer — Gender Colors, Age Sizes, Partner Markers
+- `entity_renderer.gd`:
+  - 성별 틴트: male→푸른 틴트, female→붉은 틴트 (20% lerp blend)
+  - 나이 크기: child×0.6, teen×0.8, adult×1.0, elder×0.95
+  - elder 흰 점: 머리 위 백발 표시 (r=1.2px)
+  - 파트너 하트: 선택 시 파트너 위에 분홍 하트 + 분홍 점선 연결
+  - `_draw_heart()` 헬퍼 추가
+- docs/VISUAL_GUIDE: 성별 틴트, 나이 크기, 파트너 마커 섹션 추가
+
+---
+
+## Phase 2: Binary Save/Load (T-1100)
+
+### T-1100: Binary Save/Load System
+- `save_manager.gd` (REWRITTEN) — JSON→바이너리 전환, 버전 2:
+  - 저장 구조: `user://saves/quicksave/` 디렉토리
+    - `meta.json`: version, tick, seed, rng_state, speed_index, ui_scale, population, game_date
+    - `entities.bin`: 엔티티 바이너리 (id, name, position, needs, age, gender, personality 5종, emotions 5종, job, family, inventory, AI state)
+    - `buildings.bin`: 건물 바이너리 (id, type, position, progress, storage)
+    - `relationships.bin`: 관계 바이너리 (pair IDs, affinity, trust, romantic_interest, interaction_count, type)
+    - `settlements.bin`: 정착지 바이너리 (id, center, founding_tick, member_ids, building_ids)
+    - `world.bin`: ResourceMap 바이너리 (width, height, food/wood/stone PackedFloat32Array)
+    - `stats.json`: 통계 히스토리 (peak_pop, total_births, total_deaths, history)
+  - signed 32-bit 변환 (`_s32`) for partner_id, pregnancy_tick, action_target
+  - enum 압축: gender(1B), age_stage(1B), job(1B), rel_type(1B)
+  - 크기 추정: 엔티티당 ~120B, 관계당 ~25B, 1만명+5만관계 ≈ 2.5MB
+- `main.gd` — save/load 경로 `user://saves/quicksave`, relationship_manager + stats_recorder 전달
+- 기존 JSON 세이브 호환 포기 (SAVE_VERSION=2)
+
+---
+
+## Phase 2: FamilySystem (T-1090)
+
+### T-1090: Family System — 임신, 출산, 사별
+- `family_system.gd` (NEW) — priority=52, tick_interval=50:
+  - 사별 처리: 파트너 사망 감지 → partner_id=-1, grief+0.8, partner_died 이벤트
+  - 임신 조건 (모든 AND): partner 관계, 여성 18~45세, 미임신, 자녀<4, 파트너 3타일 이내, love≥0.3, 정착지 식량≥인구×0.5, 5% 확률
+  - 출산: PREGNANCY_DURATION(3285틱≈9개월) 경과 후 아이 생성
+    - 부모 위치에 스폰, 성별 50:50, parent_ids/children_ids 설정
+    - 정착지 배정, 식량 3.0 소모 (인벤토리 → 스톡파일)
+    - child_born 이벤트 + HUD 토스트
+- `population_system.gd` — _check_births 비활성화 (무성생식 완전 제거)
+- `main.gd`:
+  - FamilySystem 초기화+등록 (priority 52)
+  - `_bootstrap_relationships()`: 초기 20명 중 3~4쌍 friend, 1~2쌍 close_friend (이성) 부트스트랩
+- docs/SYSTEMS.md: FamilySystem 추가, 가족 이벤트 3종, PopulationSystem 설명 갱신
+
+---
+
+## Phase 2: EmotionSystem + AgeSystem (T-1080)
+
+### T-1080: Emotion System + Age System + Age Restrictions
+- `emotion_system.gd` (NEW) — priority=32, tick_interval=12 (1일 1회):
+  - happiness: lerp → (hunger+energy+social)/3
+  - loneliness: social<0.3이면 +0.02, 파트너/부모 3타일 이내 -0.05
+  - stress: hunger<0.2이면 +0.03, 아니면 -0.01×stability
+  - grief: -0.002×stability (서서히 회복)
+  - love: 파트너 3타일 이내 +0.03, 아니면 -0.01
+- `age_system.gd` (NEW) — priority=48, tick_interval=50:
+  - 나이 단계 전환 감지 (child→teen→adult→elder)
+  - 전환 시 토스트 + 이벤트 (age_stage_changed)
+  - elder 전환 시 builder 직업 해제
+- 나이별 제한 적용:
+  - `behavior_system.gd` — child: wander/rest/socialize만. teen: gather_food만 (wood/stone/build 불가). elder: build 불가
+  - `gathering_system.gd` — child 채집 불가, teen/elder 효율 50%
+  - `construction_system.gd` — adult만 건설 가능
+  - `job_assignment_system.gd` — child: 직업 없음, teen: gatherer만, elder: builder 제외
+  - `movement_system.gd` — child 50%, teen 80%, elder ~67% 이동속도
+- `main.gd` — EmotionSystem(priority 32) + AgeSystem(priority 48) 초기화/등록
+
+---
+
+## Phase 2: SocialEventSystem (T-1070)
+
+### T-1070: Social Event System
+- `social_event_system.gd` (NEW) — priority=37, tick_interval=30:
+  - 청크 기반 근접 체크 (같은 16x16 청크, 2타일 이내)
+  - 9종 이벤트: casual_talk, deep_talk, share_food, work_together, flirt, give_gift, proposal, console, argument
+  - 가중 랜덤 이벤트 선택 (성격/상황 기반 가중치)
+  - casual_talk: affinity+2, trust+1
+  - deep_talk: affinity+5, trust+3 (extraversion>0.4)
+  - share_food: affinity+8, trust+5, food 1.0 실전달
+  - work_together: affinity+3, trust+2 (같은 직업+행동)
+  - flirt: romantic_interest+8, close_friend→romantic 승격
+  - give_gift: affinity+10, romantic_interest+5, 자원 1.0 소비
+  - proposal: compatibility 기반 수락확률, partner 형성, 토스트
+  - console: grief-0.05, affinity+6, trust+3
+  - argument: affinity-5, trust-8, stress+0.1 양쪽
+  - 100틱마다 relationship decay 호출
+  - 틱당 에이전트당 1이벤트 제한 (스팸 방지)
+- `main.gd` — SocialEventSystem 초기화+등록 (priority 37)
+
+---
+
+## Phase 2: RelationshipManager (T-1060)
+
+### T-1060: Relationship Manager + Data
+- `relationship_data.gd` (NEW) — 관계 데이터: affinity(0~100), trust(0~100), romantic_interest(0~100), interaction_count, last_interaction_tick, type
+- `relationship_manager.gd` (NEW) — 스파스 관계 저장소 (key="min_id:max_id"):
+  - get_or_create, record_interaction, promote_to_romantic/partner
+  - 단계 전환: stranger→acquaintance→friend→close_friend→romantic→partner, rival
+  - 자연 감소: 100틱 미상호작용 시 affinity -0.1, acquaintance affinity≤5 삭제
+  - get_relationships_for (affinity 정렬), get_partner_id
+  - to_save_data / load_save_data
+- `main.gd` — RelationshipManager 초기화 추가
+
+---
+
+## Phase 2: Chunk Spatial Index (T-1050)
+
+### T-1050: ChunkIndex + EntityManager 통합
+- `chunk_index.gd` (NEW) — 16x16 타일 청크 기반 공간 인덱스
+  - add_entity, remove_entity, update_entity (이동 시 청크 변경만 처리)
+  - get_entities_in_chunk, get_nearby_entity_ids, get_same_chunk_entity_ids
+  - O(1) 청크 조회, O(chunk_size) 이웃 스캔
+- `entity_manager.gd` — ChunkIndex 통합:
+  - spawn/move/kill/load 시 chunk_index 자동 갱신
+  - get_entities_near() 청크 기반으로 교체 (O(n) → O(chunks×chunk_size))
+
+---
+
+## Phase 2: EntityData 확장 (T-1010)
+
+### T-1010: EntityData Extensions
+- `entity_data.gd` — Phase 2 필드 추가:
+  - gender ("male"/"female"), age_stage, birth_tick
+  - partner_id, parent_ids, children_ids, pregnancy_tick
+  - personality dict (openness, agreeableness, extraversion, diligence, emotional_stability)
+  - emotions dict (happiness, loneliness, stress, grief, love)
+  - to_dict/from_dict 업데이트
+- `entity_manager.gd` — spawn_entity: 성별 50:50, 성격 랜덤(0.1~0.9), 감정 초기값, gender_override 파라미터
+- `game_config.gd` — personality_compatibility(a, b) 궁합 함수
+
+---
+
+## Phase 2: 시간 체계 정립 (T-1000)
+
+**시간 상수 전면 교체 + 달력 시스템 + 나이 단계**
+
+### T-1000: Time System Constants
+- `game_config.gd` — 시간 상수 전면 교체:
+  - TICK_MINUTES=15 → TICK_HOURS=2, TICKS_PER_DAY=96→12, DAYS_PER_YEAR=360→365
+  - 신규: TICKS_PER_MONTH=365, TICKS_PER_YEAR=4380
+  - 나이 단계: AGE_CHILD_END=52560(12세), AGE_TEEN_END=78840(18세), AGE_ADULT_END=240900(55세), AGE_MAX=350400(80세)
+  - PREGNANCY_DURATION=3285 (~9개월)
+  - 욕구 감소율 재조정: hunger=0.002, energy=0.003, social=0.001
+  - STARVATION_GRACE_TICKS: 200→25 (~4일 유예)
+  - RESOURCE_REGEN_TICK_INTERVAL: 200→120 (10일)
+  - 건설 틱: stockpile=36(3일), shelter=60(5일), campfire=24(2일)
+  - 시간 기반 간격: JOB_ASSIGNMENT=24, POPULATION=30, MIGRATION=100, COOLDOWN=500, CLEANUP=250
+  - 삭제: OLD_AGE_TICKS, MAX_AGE_TICKS, TICK_MINUTES, HOURS_PER_DAY, AGE_DAYS_DIVISOR
+  - 신규 함수: tick_to_date(), get_age_years(), get_age_stage()
+- `simulation_engine.gd` — get_game_time() → GameConfig.tick_to_date() 위임
+- `needs_system.gd` — entity.age += tick_interval (sim 틱 단위 나이 카운트)
+- `population_system.gd` — 자연사: 60세+ 매년 5%씩 증가하는 사망 확률
+- `hud.gd` — 시간 표시 "Y3 M7 D15 14:00", 나이 년 단위
+- `entity_detail_panel.gd` — 나이 년 단위 표시
+- `main.gd` — 낮/밤 정수 시간 판정
+
+---
+
 ## Phase 1.5 팝업 시스템 전면 리팩터 (T-962)
 
 **PopupManager 아키텍처로 전면 교체**

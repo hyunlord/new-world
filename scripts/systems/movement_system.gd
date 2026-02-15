@@ -37,6 +37,22 @@ func execute_tick(tick: int) -> void:
 			entity.path_index = 0
 			continue
 
+		# Age-based movement speed reduction (skip some movement ticks)
+		# child=50%, teen=80%, elder=~67%
+		var skip_move: bool = false
+		match entity.age_stage:
+			"child":
+				if (tick + entity.id) % 2 == 0:
+					skip_move = true
+			"teen":
+				if (tick + entity.id) % 5 == 0:
+					skip_move = true
+			"elder":
+				if (tick + entity.id) % 3 == 0:
+					skip_move = true
+		if skip_move:
+			continue
+
 		# Skip movement for rest/idle or if already at target
 		if entity.current_action == "rest" or entity.current_action == "idle":
 			continue

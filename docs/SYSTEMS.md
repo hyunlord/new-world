@@ -11,28 +11,35 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 
 | 우선순위 | 시스템 | 틱 간격 | 시간/행동 | 역할 | 파일 |
 |---------|--------|---------|----------|------|------|
-| 5 | ResourceRegenSystem | 200 | 시간 기반 | 바이옴별 food/wood 재생 (stone 재생 안 함) | `scripts/systems/resource_regen_system.gd` |
-| 8 | JobAssignmentSystem | 200 | 시간 기반 | 미배정 에이전트 직업 배정 + 동적 재배치 | `scripts/systems/job_assignment_system.gd` |
-| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
+| 5 | ResourceRegenSystem | 120 | 시간 기반 | 바이옴별 food/wood 재생 (stone 재생 안 함), 10일 간격 | `scripts/systems/resource_regen_system.gd` |
+| 8 | JobAssignmentSystem | 24 | 시간 기반 | 미배정 에이전트 직업 배정 + 동적 재배치, 2일 간격 | `scripts/systems/job_assignment_system.gd` |
+| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 나이 증가, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
 | 15 | BuildingEffectSystem | 10 | 행동 기반 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
 | 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
 | 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
 | 28 | ConstructionSystem | 5 | 행동 기반 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
-| 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
-| 50 | PopulationSystem | 240 | 시간 기반 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
-| 60 | MigrationSystem | 800 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
+| 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
+| 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
+| 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
+| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
+| 50 | PopulationSystem | 30 | 시간 기반 | 자연사 (60세+ 확률 증가), 출생 비활성화 (FamilySystem으로 이관) | `scripts/systems/population_system.gd` |
+| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건 체크(partner+love+food), 출산, 사별 처리 | `scripts/systems/family_system.gd` |
+| 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
-### TICK_MINUTES 변경 영향 (60→15)
+### 시간 체계 (Phase 2)
 
-틱이 1시간→15분으로 변경되어 하루가 24틱→96틱으로 4배 늘어남.
+1틱 = 2시간, 1일 = 12틱, 1년 = 365일 = 4,380틱.
+`GameConfig.tick_to_date(tick)` → `{year, month, day, hour}` 달력 변환.
+나이는 sim 틱 단위로 카운트 (`entity.age += tick_interval` in NeedsSystem).
 
-**시간 기반 시스템** (tick_interval ×4): 게임 시간 경과에 비례하는 효과. 틱 수가 4배 되므로 간격도 4배.
-- ResourceRegenSystem: 50→200, JobAssignmentSystem: 50→200, PopulationSystem: 60→240
-- MigrationSystem: 200→800, StatsRecorder: 50→200
+**시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
+- ResourceRegenSystem: 120틱(10일), JobAssignmentSystem: 24틱(2일), PopulationSystem: 30틱(2.5일)
+- EmotionSystem: 12틱(1일), SocialEventSystem: 30틱(2.5일), AgeSystem: 50틱(~4일), FamilySystem: 50틱(~4일)
+- MigrationSystem: 100틱(~8일), StatsRecorder: 200틱
 
-**행동 기반 시스템** (tick_interval 유지): 에이전트 체감 속도와 직결. 변경하면 움직임이 느려짐.
-- NeedsSystem: 2 (decay rate ÷4로 보상), BehaviorSystem: 10, GatheringSystem: 3
+**행동 기반 시스템** (tick_interval 변경 금지): 에이전트 체감 속도와 직결.
+- NeedsSystem: 2, BehaviorSystem: 10, GatheringSystem: 3
 - ConstructionSystem: 5, MovementSystem: 3, BuildingEffectSystem: 10
 
 ---
@@ -42,10 +49,13 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 매니저 | 역할 | 파일 |
 |--------|------|------|
 | SimulationEngine | 틱 루프, 시스템 등록/실행, 일시정지/속도, RNG | `scripts/core/simulation_engine.gd` |
-| EntityManager | 에이전트 생성/삭제/조회, 위치 이동 | `scripts/core/entity_manager.gd` |
+| EntityManager | 에이전트 생성/삭제/조회, 위치 이동, ChunkIndex 통합 | `scripts/core/entity_manager.gd` |
+| ChunkIndex | 16x16 타일 청크 공간 인덱스, O(1) 청크 조회 | `scripts/core/chunk_index.gd` |
+| RelationshipManager | 관계 저장 (sparse pairs), 단계 전환, 자연 감소, 직렬화 | `scripts/core/relationship_manager.gd` |
+| RelationshipData | 관계 데이터 (affinity, trust, romantic_interest, type) | `scripts/core/relationship_data.gd` |
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
-| SaveManager | JSON 저장/로드 (Cmd+S/Cmd+L) | `scripts/core/save_manager.gd` |
+| SaveManager | 바이너리 저장/로드 (Cmd+S/Cmd+L), `user://saves/quicksave/` 디렉토리 구조 (meta.json + *.bin + stats.json) | `scripts/core/save_manager.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
 ---
@@ -56,7 +66,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI 상태, 통계) | hunger, energy, social, job, inventory, settlement_id, total_gathered, buildings_built, action_history | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
 
@@ -136,6 +146,28 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | building_placed | BehaviorSystem | building_id, building_type, tile_x, tile_y | ✅ |
 | building_completed | ConstructionSystem | building_id, building_type, tile_x, tile_y | ✅ `# BUILT: type at (x,y)` |
 
+### 성장 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| age_stage_changed | AgeSystem | entity_id, entity_name, from_stage, to_stage, age_years, tick | ✅ (HUD 토스트) |
+
+### 사회 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| social_event | SocialEventSystem | type_name, entity_a_id, entity_a_name, entity_b_id, entity_b_name, relationship_type, affinity, tick | ✅ (casual_talk 제외) |
+| proposal_accepted | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ (HUD 토스트) |
+| proposal_rejected | SocialEventSystem | entity_a_id, entity_a_name, entity_b_id, entity_b_name, tick | ✅ |
+
+### 가족 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| pregnancy_started | FamilySystem | entity_id, entity_name, partner_id, tick | ❌ QUIET |
+| child_born | FamilySystem | entity_id, entity_name, mother_id, mother_name, father_id, father_name, tick | ✅ (HUD 토스트) |
+| partner_died | FamilySystem | entity_id, entity_name, tick | ✅ |
+
 ### 정착지 이벤트
 
 | 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
@@ -169,6 +201,6 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트, 상세패널 관리, UI_SCALE apply_ui_scale() | `scripts/ui/hud.gd` |
 | MinimapPanel | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨, UI_SCALE 적용) | `scripts/ui/minimap_panel.gd` |
 | StatsPanel | 미니 통계 패널 (250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) | `scripts/ui/stats_panel.gd` |
-| StatsDetailPanel | 통계 상세창 (75%×80%, 인구/자원 그래프, 직업, 정착지 비교) | `scripts/ui/stats_detail_panel.gd` |
-| EntityDetailPanel | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리) | `scripts/ui/entity_detail_panel.gd` |
+| StatsDetailPanel | 통계 상세창 (75%×80%, 스크롤, 인구/자원 그래프, 인구통계(커플/미혼/나이분포/평균행복), 직업, 정착지 비교) | `scripts/ui/stats_detail_panel.gd` |
+| EntityDetailPanel | 에이전트 상세창 (55%×85%, 스크롤, 상태/욕구/성격5종/감정5종/가족/관계Top5/통계/행동히스토리) | `scripts/ui/entity_detail_panel.gd` |
 | BuildingDetailPanel | 건물 상세창 (45%×50%, 타입별 상세 정보) | `scripts/ui/building_detail_panel.gd` |

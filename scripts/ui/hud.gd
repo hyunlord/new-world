@@ -16,6 +16,7 @@ var _settlement_manager: RefCounted
 var _world_data: RefCounted
 var _camera: Camera2D
 var _stats_recorder: RefCounted
+var _relationship_manager: RefCounted
 
 # Top bar labels
 var _status_label: Label
@@ -98,7 +99,7 @@ var _pop_milestone_init: bool = false
 var _last_pop_milestone: int = 0
 
 
-func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, world_data: RefCounted = null, camera: Camera2D = null, stats_recorder: RefCounted = null) -> void:
+func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, world_data: RefCounted = null, camera: Camera2D = null, stats_recorder: RefCounted = null, relationship_manager: RefCounted = null) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
 	_building_manager = building_manager
@@ -106,6 +107,7 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 	_world_data = world_data
 	_camera = camera
 	_stats_recorder = stats_recorder
+	_relationship_manager = relationship_manager
 
 
 func _ready() -> void:
@@ -139,12 +141,12 @@ func _build_minimap_and_stats() -> void:
 
 	if _stats_recorder != null:
 		_stats_detail_panel = StatsDetailPanelClass.new()
-		_stats_detail_panel.init(_stats_recorder, _settlement_manager)
+		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _entity_manager, _relationship_manager)
 		_popup_manager.add_stats_panel(_stats_detail_panel)
 
 	if _entity_manager != null:
 		_entity_detail_panel = EntityDetailPanelClass.new()
-		_entity_detail_panel.init(_entity_manager, _building_manager)
+		_entity_detail_panel.init(_entity_manager, _building_manager, _relationship_manager)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
 
 	if _building_manager != null:
@@ -180,7 +182,7 @@ func _build_top_bar() -> void:
 
 	_status_label = _make_label("\u25B6", "hud")
 	_speed_label = _make_label("1x", "hud")
-	_time_label = _make_label("Y1 D1 06:00", "hud")
+	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
 	_pop_label = _make_label("Pop: 0", "hud")
 	_food_label = _make_label("F:0", "hud", Color(0.4, 0.8, 0.2))
 	_wood_label = _make_label("W:0", "hud", Color(0.6, 0.4, 0.2))
@@ -467,7 +469,7 @@ func _process(delta: float) -> void:
 
 	if _sim_engine:
 		var gt: Dictionary = _sim_engine.get_game_time()
-		_time_label.text = "Y%d D%d %02d:%02d" % [gt.year, gt.day, gt.hour, gt.minute]
+		_time_label.text = "Y%d M%d D%d %02d:00" % [gt.year, gt.month, gt.day, gt.hour]
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
@@ -539,8 +541,8 @@ func _update_entity_panel(delta: float) -> void:
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
-	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
-	_entity_job_label.text = "%s%s | Age: %dd" % [entity.job.capitalize(), settlement_text, age_days]
+	var age_years: float = GameConfig.get_age_years(entity.age)
+	_entity_job_label.text = "%s%s | Age: %.1fy" % [entity.job.capitalize(), settlement_text, age_years]
 
 	# Position
 	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]
