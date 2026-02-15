@@ -86,7 +86,7 @@ const ISLAND_FALLOFF: float = 0.7
 ## ══════════════════════════════════════
 
 ## Resource types
-enum Resource { FOOD, WOOD, STONE }
+enum ResourceType { FOOD, WOOD, STONE }
 
 ## Biome-resource mapping: biome -> {food_min, food_max, wood_min, wood_max, stone_min, stone_max}
 const BIOME_RESOURCES: Dictionary = {

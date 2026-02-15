@@ -85,22 +85,22 @@ func set_stone(x: int, y: int, val: float) -> void:
 ## Generic accessors by resource type enum
 func get_resource(x: int, y: int, resource_type: int) -> float:
 	match resource_type:
-		GameConfig.Resource.FOOD:
+		GameConfig.ResourceType.FOOD:
 			return get_food(x, y)
-		GameConfig.Resource.WOOD:
+		GameConfig.ResourceType.WOOD:
 			return get_wood(x, y)
-		GameConfig.Resource.STONE:
+		GameConfig.ResourceType.STONE:
 			return get_stone(x, y)
 	return 0.0
 
 
 func set_resource(x: int, y: int, resource_type: int, val: float) -> void:
 	match resource_type:
-		GameConfig.Resource.FOOD:
+		GameConfig.ResourceType.FOOD:
 			set_food(x, y, val)
-		GameConfig.Resource.WOOD:
+		GameConfig.ResourceType.WOOD:
 			set_wood(x, y, val)
-		GameConfig.Resource.STONE:
+		GameConfig.ResourceType.STONE:
 			set_stone(x, y, val)
 
 
@@ -121,11 +121,11 @@ func get_max_for_biome(biome: int, resource_type: int) -> float:
 	if res_def.is_empty():
 		return 0.0
 	match resource_type:
-		GameConfig.Resource.FOOD:
+		GameConfig.ResourceType.FOOD:
 			return res_def.get("food_max", 0.0)
-		GameConfig.Resource.WOOD:
+		GameConfig.ResourceType.WOOD:
 			return res_def.get("wood_max", 0.0)
-		GameConfig.Resource.STONE:
+		GameConfig.ResourceType.STONE:
 			return res_def.get("stone_max", 0.0)
 	return 0.0
 
