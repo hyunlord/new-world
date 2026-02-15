@@ -171,9 +171,11 @@ System detects change
 - **No Input Map** — project.godot has no [input] section; all input handled via direct keycode/event checks
 - **Keyboard**: `_unhandled_input` with `event.keycode` match (KEY_SPACE, KEY_PERIOD, KEY_COMMA)
 - **WASD/Arrows**: `_process` with `Input.is_key_pressed()` for continuous movement
-- **Mouse**: `InputEventMouseButton` for wheel zoom and middle-click drag
+- **Mouse**: `InputEventMouseButton` for wheel zoom, middle-click drag, and left-click drag pan
+- **Left-click drag**: Pan camera if moved > `DRAG_THRESHOLD` (5px); short click passes through to EntityRenderer for selection
 - **macOS Trackpad**: `InputEventMagnifyGesture` for pinch zoom, `InputEventPanGesture` for two-finger pan
-- **Entity selection**: Left click in EntityRenderer with canvas_transform conversion
+- **Entity selection**: Left click (< 5px movement) in EntityRenderer with canvas_transform conversion
+- **Input priority**: Camera node is after EntityRenderer in scene tree → receives `_unhandled_input` first, can consume drag events
 
 ## Simulation Speed Constants
 
