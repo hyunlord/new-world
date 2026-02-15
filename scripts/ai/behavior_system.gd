@@ -136,6 +136,10 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 	if action != old_action:
 		entity.cached_path = []
 		entity.path_index = 0
+		# Track action history (max 20 entries)
+		if entity.action_history.size() >= 20:
+			entity.action_history.pop_front()
+		entity.action_history.append({"tick": tick, "action": action})
 		emit_event("action_changed", {
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,

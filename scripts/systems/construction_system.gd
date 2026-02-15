@@ -44,6 +44,7 @@ func execute_tick(tick: int) -> void:
 		if building.build_progress >= 1.0:
 			building.build_progress = 1.0
 			building.is_built = true
+			entity.buildings_built += 1
 			emit_event("building_completed", {
 				"building_id": building.id,
 				"building_type": building.building_type,

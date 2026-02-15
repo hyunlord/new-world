@@ -81,14 +81,14 @@ func update_resource_overlay() -> void:
 			var color := Color(0.0, 0.0, 0.0, 0.0)
 			# Priority: food > stone > wood (food is most important to see)
 			if food > 2.0:
-				var intensity: float = clampf(food / 8.0, 0.3, 0.6)
-				color = Color(1.0, 0.9, 0.1, intensity)
+				var intensity: float = clampf(food / 8.0, 0.45, 0.7)
+				color = Color(1.0, 0.85, 0.0, intensity)
 			elif stone > 2.0:
-				var intensity: float = clampf(stone / 8.0, 0.3, 0.5)
-				color = Color(0.5, 0.7, 1.0, intensity)
+				var intensity: float = clampf(stone / 8.0, 0.4, 0.65)
+				color = Color(0.4, 0.6, 1.0, intensity)
 			elif wood > 3.0:
-				var intensity: float = clampf(wood / 10.0, 0.2, 0.5)
-				color = Color(0.0, 0.7, 0.3, intensity)
+				var intensity: float = clampf(wood / 10.0, 0.35, 0.6)
+				color = Color(0.0, 0.8, 0.2, intensity)
 
 			img.set_pixel(x, y, color)
 

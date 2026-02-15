@@ -21,7 +21,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 30 | MovementSystem | 3 | A* 이동, 도착 효과, 자동 식사 | `scripts/systems/movement_system.gd` |
 | 50 | PopulationSystem | 60 | 출생 (식량/주거 조건), 자연사 (노화) | `scripts/systems/population_system.gd` |
 | 60 | MigrationSystem | 200 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
-| 90 | StatsRecorder | 50 | 인구/자원/직업 스냅샷 기록 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
+| 90 | StatsRecorder | 50 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
 ---
 
@@ -44,7 +44,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI 상태) | hunger, energy, social, job, inventory, settlement_id | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI 상태, 통계) | hunger, energy, social, job, inventory, settlement_id, total_gathered, buildings_built, action_history | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
 
@@ -154,6 +154,9 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | EntityRenderer | 에이전트 도형, 선택 표시, LOD (3단계) | `scripts/ui/entity_renderer.gd` |
 | BuildingRenderer | 건물 도형, 건설 바, LOD (3단계) | `scripts/ui/building_renderer.gd` |
 | CameraController | WASD/마우스/트랙패드 카메라, 줌 보간 | `scripts/ui/camera_controller.gd` |
-| HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트 | `scripts/ui/hud.gd` |
+| HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트, 상세패널 관리 | `scripts/ui/hud.gd` |
 | MinimapPanel | 미니맵 (160×160, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨) | `scripts/ui/minimap_panel.gd` |
-| StatsPanel | 통계 패널 (인구/자원 그래프, 직업 분포 바) | `scripts/ui/stats_panel.gd` |
+| StatsPanel | 미니 통계 패널 (인구/자원 그래프, 직업 분포 바, 클릭→상세) | `scripts/ui/stats_panel.gd` |
+| StatsDetailPanel | 통계 상세창 (75%×80%, 인구/자원 그래프, 직업, 정착지 비교) | `scripts/ui/stats_detail_panel.gd` |
+| EntityDetailPanel | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리) | `scripts/ui/entity_detail_panel.gd` |
+| BuildingDetailPanel | 건물 상세창 (45%×50%, 타입별 상세 정보) | `scripts/ui/building_detail_panel.gd` |

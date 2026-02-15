@@ -118,7 +118,7 @@ func _ready() -> void:
 	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
 
 	stats_recorder = StatsRecorder.new()
-	stats_recorder.init(entity_manager, building_manager)
+	stats_recorder.init(entity_manager, building_manager, settlement_manager)
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -137,7 +137,7 @@ func _ready() -> void:
 	world_renderer.render_world(world_data, resource_map)
 
 	# Init renderers with updated references
-	entity_renderer.init(entity_manager, building_manager)
+	entity_renderer.init(entity_manager, building_manager, resource_map)
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder)
 
@@ -154,6 +154,7 @@ func _ready() -> void:
 		settlement_manager.add_member(founding.id, e.id)
 
 	_print_startup_banner(seed_value)
+	hud.show_startup_toast(entity_manager.get_alive_count())
 
 
 func _spawn_initial_entities() -> void:
@@ -188,6 +189,8 @@ func _spawn_initial_entities() -> void:
 
 var _last_overlay_tick: int = 0
 var _last_minimap_tick: int = 0
+var _current_day_color: Color = Color(1.0, 1.0, 1.0)
+var _day_night_enabled: bool = true
 
 func _process(delta: float) -> void:
 	sim_engine.update(delta)
@@ -206,26 +209,29 @@ func _process(delta: float) -> void:
 			minimap.request_update()
 			minimap.update_minimap()
 
-	# Day/night cycle
-	if sim_engine:
+	# Day/night cycle (smooth lerp, slower at high speed)
+	if sim_engine and _day_night_enabled:
 		var gt: Dictionary = sim_engine.get_game_time()
-		var daylight: Color = _get_daylight_color(gt.hour)
-		world_renderer.modulate = daylight
+		var target_color: Color = _get_daylight_color(gt.hour)
+		var lerp_speed: float = 0.3 * delta
+		if sim_engine.speed_index >= 3:
+			lerp_speed = 0.05 * delta
+		_current_day_color = _current_day_color.lerp(target_color, minf(lerp_speed, 1.0))
+		world_renderer.modulate = _current_day_color
 
 
 func _get_daylight_color(hour: int) -> Color:
 	match hour:
-		4:
-			return Color(0.55, 0.55, 0.73)
 		5:
-			return Color(0.85, 0.85, 0.93)
+			return Color(0.9, 0.9, 0.95)
 		18:
-			return Color(1.0, 0.93, 0.85)
+			return Color(0.95, 0.9, 0.85)
 		19:
-			return Color(0.7, 0.63, 0.65)
+			return Color(0.85, 0.82, 0.88)
 	if hour >= 6 and hour <= 17:
 		return Color(1.0, 1.0, 1.0)
-	return Color(0.4, 0.4, 0.6)
+	# Night: only slightly dimmed (was 0.4,0.4,0.6 — too dark)
+	return Color(0.75, 0.75, 0.85)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -248,13 +254,23 @@ func _unhandled_input(event: InputEvent) -> void:
 					sim_engine.decrease_speed()
 				KEY_TAB:
 					world_renderer.toggle_resource_overlay()
-					hud.set_resource_legend_visible(world_renderer.is_resource_overlay_visible())
+					var overlay_vis: bool = world_renderer.is_resource_overlay_visible()
+					hud.set_resource_legend_visible(overlay_vis)
+					entity_renderer.resource_overlay_visible = overlay_vis
 				KEY_M:
 					hud.toggle_minimap()
 				KEY_G:
 					hud.toggle_stats()
 				KEY_H:
 					hud.toggle_help()
+				KEY_N:
+					_day_night_enabled = not _day_night_enabled
+					if not _day_night_enabled:
+						_current_day_color = Color(1.0, 1.0, 1.0)
+						world_renderer.modulate = Color(1.0, 1.0, 1.0)
+				KEY_E:
+					hud.open_entity_detail()
+					hud.open_building_detail()
 
 
 func _save_game() -> void:
@@ -303,8 +319,10 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    , (comma)      = Speed down")
 	print("    Tab            = Toggle resource overlay")
 	print("    M              = Toggle minimap")
-	print("    G              = Toggle stats")
-	print("    H              = Help overlay")
+	print("    G              = Statistics detail")
+	print("    E              = Entity/Building detail")
+	print("    H              = Help overlay (pauses)")
+	print("    N              = Toggle day/night")
 	print("    Cmd+S          = Quick Save")
 	print("    Cmd+L          = Quick Load")
 	print("")
