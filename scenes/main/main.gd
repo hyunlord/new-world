@@ -168,7 +168,7 @@ func _ready() -> void:
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map)
 	building_renderer.init(building_manager, settlement_manager)
-	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
 
 	# Spawn initial entities + create first settlement
 	_spawn_initial_entities()

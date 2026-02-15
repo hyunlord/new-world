@@ -202,5 +202,5 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | MinimapPanel | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨, UI_SCALE 적용) | `scripts/ui/minimap_panel.gd` |
 | StatsPanel | 미니 통계 패널 (250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) | `scripts/ui/stats_panel.gd` |
 | StatsDetailPanel | 통계 상세창 (75%×80%, 인구/자원 그래프, 직업, 정착지 비교) | `scripts/ui/stats_detail_panel.gd` |
-| EntityDetailPanel | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리) | `scripts/ui/entity_detail_panel.gd` |
+| EntityDetailPanel | 에이전트 상세창 (55%×85%, 스크롤, 상태/욕구/성격5종/감정5종/가족/관계Top5/통계/행동히스토리) | `scripts/ui/entity_detail_panel.gd` |
 | BuildingDetailPanel | 건물 상세창 (45%×50%, 타입별 상세 정보) | `scripts/ui/building_detail_panel.gd` |

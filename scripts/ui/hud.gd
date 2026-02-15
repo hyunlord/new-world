@@ -16,6 +16,7 @@ var _settlement_manager: RefCounted
 var _world_data: RefCounted
 var _camera: Camera2D
 var _stats_recorder: RefCounted
+var _relationship_manager: RefCounted
 
 # Top bar labels
 var _status_label: Label
@@ -98,7 +99,7 @@ var _pop_milestone_init: bool = false
 var _last_pop_milestone: int = 0
 
 
-func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, world_data: RefCounted = null, camera: Camera2D = null, stats_recorder: RefCounted = null) -> void:
+func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, world_data: RefCounted = null, camera: Camera2D = null, stats_recorder: RefCounted = null, relationship_manager: RefCounted = null) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
 	_building_manager = building_manager
@@ -106,6 +107,7 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 	_world_data = world_data
 	_camera = camera
 	_stats_recorder = stats_recorder
+	_relationship_manager = relationship_manager
 
 
 func _ready() -> void:
@@ -144,7 +146,7 @@ func _build_minimap_and_stats() -> void:
 
 	if _entity_manager != null:
 		_entity_detail_panel = EntityDetailPanelClass.new()
-		_entity_detail_panel.init(_entity_manager, _building_manager)
+		_entity_detail_panel.init(_entity_manager, _building_manager, _relationship_manager)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
 
 	if _building_manager != null:

@@ -77,7 +77,7 @@ func open_entity(entity_id: int) -> void:
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
 	_dim_bg.visible = true
-	_center_panel(_entity_panel, 0.5, 0.65)
+	_center_panel(_entity_panel, 0.55, 0.85)
 
 
 func open_building(building_id: int) -> void:

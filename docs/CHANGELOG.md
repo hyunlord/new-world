@@ -4,6 +4,28 @@
 
 ---
 
+## Phase 2: Entity Detail Panel Extensions (T-1120)
+
+### T-1120: Entity Detail Panel — Personality, Emotions, Family, Relationships
+- `entity_detail_panel.gd` (REWRITTEN):
+  - 스크롤 지원: 마우스 휠로 긴 콘텐츠 스크롤
+  - 헤더 확장: 성별 아이콘(M/F, 색상 구분) + 나이 단계(Child/Teen/Adult/Elder) + 임신 표시
+  - Personality 섹션: 5종 바 (Openness, Agreeableness, Extraversion, Diligence, Stability) 고유 색상
+  - Emotions 섹션: 5종 바 (Happiness, Loneliness, Stress, Grief, Love) 고유 색상
+  - Family 섹션: Partner(이름+Love%), Parents(이름, 사망표시), Children(이름+나이, 줄바꿈)
+  - Key Relationships 섹션: 상위 5개 관계 (이름, 타입, affinity, trust, romantic_interest)
+    - 관계 타입별 색상: stranger(회색)→partner(분홍)→rival(빨강)
+  - init() 확장: relationship_manager 파라미터 추가
+- `hud.gd`:
+  - `_relationship_manager` 변수 추가
+  - init() 시그니처에 `relationship_manager` 파라미터 추가
+  - entity_detail_panel.init()에 relationship_manager 전달
+- `main.gd`: hud.init()에 relationship_manager 전달
+- `popup_manager.gd`: entity panel 크기 (0.5×0.65) → (0.55×0.85)
+- docs/SYSTEMS.md, ARCHITECTURE.md: EntityDetailPanel 설명 갱신
+
+---
+
 ## Phase 2: Entity Renderer Enhancements (T-1110)
 
 ### T-1110: Entity Renderer — Gender Colors, Age Sizes, Partner Markers
