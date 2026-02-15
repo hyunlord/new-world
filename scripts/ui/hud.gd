@@ -5,15 +5,17 @@ var _status_label: Label
 var _time_label: Label
 var _speed_label: Label
 var _tick_label: Label
-var _entity_count_label: Label
-var _event_count_label: Label
+var _pop_label: Label
+var _resource_label: Label
 var _fps_label: Label
 
 var _entity_panel: PanelContainer
 var _entity_name_label: Label
+var _entity_job_label: Label
 var _entity_pos_label: Label
 var _entity_age_label: Label
 var _entity_action_label: Label
+var _entity_inventory_label: Label
 var _hunger_bar: ProgressBar
 var _energy_bar: ProgressBar
 var _social_bar: ProgressBar
@@ -21,13 +23,15 @@ var _entity_stats_label: Label
 
 var _sim_engine: RefCounted
 var _entity_manager: RefCounted
+var _building_manager: RefCounted
 var _selected_entity_id: int = -1
 
 
 ## Initialize HUD with system references
-func init(sim_engine: RefCounted, entity_manager: RefCounted) -> void:
+func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
+	_building_manager = building_manager
 
 
 func _ready() -> void:
@@ -56,22 +60,22 @@ func _build_top_bar() -> void:
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 20)
+	hbox.add_theme_constant_override("separation", 16)
 
 	_status_label = _make_label("\u25B6")
 	_time_label = _make_label("Y1 D1 H0")
 	_speed_label = _make_label("1x")
 	_tick_label = _make_label("Tick: 0")
-	_entity_count_label = _make_label("Entities: 0")
-	_event_count_label = _make_label("Events: 0")
+	_pop_label = _make_label("Pop: 0")
+	_resource_label = _make_label("Food:0 Wood:0 Stone:0")
 	_fps_label = _make_label("FPS: 60")
 
 	hbox.add_child(_status_label)
 	hbox.add_child(_time_label)
 	hbox.add_child(_speed_label)
 	hbox.add_child(_tick_label)
-	hbox.add_child(_entity_count_label)
-	hbox.add_child(_event_count_label)
+	hbox.add_child(_pop_label)
+	hbox.add_child(_resource_label)
 	hbox.add_child(_fps_label)
 
 	panel.add_child(hbox)
@@ -84,8 +88,8 @@ func _build_entity_panel() -> void:
 	_entity_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_entity_panel.offset_left = 10
 	_entity_panel.offset_bottom = -10
-	_entity_panel.offset_top = -250
-	_entity_panel.offset_right = 250
+	_entity_panel.offset_top = -290
+	_entity_panel.offset_right = 260
 	_entity_panel.visible = false
 
 	var bg := StyleBoxFlat.new()
@@ -104,14 +108,18 @@ func _build_entity_panel() -> void:
 	vbox.add_theme_constant_override("separation", 4)
 
 	_entity_name_label = _make_label("Name", 16)
+	_entity_job_label = _make_label("Job: none")
 	_entity_pos_label = _make_label("Pos: (0, 0)")
 	_entity_age_label = _make_label("Age: 0h")
 	_entity_action_label = _make_label("Action: idle")
+	_entity_inventory_label = _make_label("Inv: empty")
 
 	vbox.add_child(_entity_name_label)
+	vbox.add_child(_entity_job_label)
 	vbox.add_child(_entity_pos_label)
 	vbox.add_child(_entity_age_label)
 	vbox.add_child(_entity_action_label)
+	vbox.add_child(_entity_inventory_label)
 	vbox.add_child(_make_separator())
 
 	# Need bars
@@ -144,24 +152,58 @@ func _process(_delta: float) -> void:
 		_tick_label.text = "Tick: %d" % _sim_engine.current_tick
 
 	if _entity_manager:
-		_entity_count_label.text = "Entities: %d" % _entity_manager.get_alive_count()
+		_pop_label.text = "Pop: %d" % _entity_manager.get_alive_count()
 
-	_event_count_label.text = "Events: %d" % EventLogger.get_total_count()
+	# Stockpile resource totals
+	if _building_manager != null:
+		var totals: Dictionary = _get_stockpile_totals()
+		_resource_label.text = "Food:%d Wood:%d Stone:%d" % [
+			int(totals.get("food", 0.0)),
+			int(totals.get("wood", 0.0)),
+			int(totals.get("stone", 0.0)),
+		]
+	else:
+		_resource_label.text = ""
 
 	# Update selected entity info
 	if _selected_entity_id >= 0 and _entity_manager:
 		var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
 		if entity and entity.is_alive:
 			_entity_name_label.text = entity.entity_name
+			_entity_job_label.text = "Job: %s" % entity.job
 			_entity_pos_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]
-			_entity_age_label.text = "Age: %dh" % entity.age
-			_entity_action_label.text = "Action: %s" % entity.current_action
+			var age_days: int = entity.age / GameConfig.HOURS_PER_DAY
+			_entity_age_label.text = "Age: %dd" % age_days
+			var action_text: String = entity.current_action
+			if entity.action_target != Vector2i(-1, -1):
+				action_text += " -> (%d,%d)" % [entity.action_target.x, entity.action_target.y]
+			_entity_action_label.text = "Action: %s" % action_text
+			_entity_inventory_label.text = "Inv: F:%.1f W:%.1f S:%.1f / %.0f" % [
+				entity.inventory.get("food", 0.0),
+				entity.inventory.get("wood", 0.0),
+				entity.inventory.get("stone", 0.0),
+				GameConfig.MAX_CARRY,
+			]
 			_hunger_bar.value = entity.hunger * 100.0
 			_energy_bar.value = entity.energy * 100.0
 			_social_bar.value = entity.social * 100.0
 			_entity_stats_label.text = "SPD: %.1f | STR: %.1f" % [entity.speed, entity.strength]
 		else:
 			_on_entity_deselected()
+
+
+func _get_stockpile_totals() -> Dictionary:
+	var totals: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	for i in range(stockpiles.size()):
+		var sp = stockpiles[i]
+		if not sp.is_built:
+			continue
+		var keys: Array = sp.storage.keys()
+		for j in range(keys.size()):
+			var res: String = keys[j]
+			totals[res] = totals.get(res, 0.0) + sp.storage[res]
+	return totals
 
 
 func _on_entity_selected(entity_id: int) -> void:

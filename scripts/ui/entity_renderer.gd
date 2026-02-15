@@ -7,17 +7,24 @@ const EntityManagerClass = preload("res://scripts/core/entity_manager.gd")
 var _entity_manager: RefCounted
 var selected_entity_id: int = -1
 
-const DOT_RADIUS: float = 4.0
-const SELECTION_RADIUS: float = 6.0
-const WARNING_RADIUS: float = 2.0
+const SELECTION_RADIUS: float = 7.0
+const HUNGER_WARNING_RADIUS: float = 2.0
 const HUNGER_WARNING_THRESHOLD: float = 0.2
 
-const ACTION_COLORS: Dictionary = {
-	"idle": Color.WHITE,
-	"wander": Color(0.8, 0.8, 0.9),
-	"seek_food": Color(1.0, 0.9, 0.2),
-	"rest": Color(0.4, 0.4, 0.7),
-	"socialize": Color(0.2, 0.9, 0.9),
+## Job visual definitions: shape, size, color
+const JOB_VISUALS: Dictionary = {
+	"none": {"size": 3.0, "color": Color(0.6, 0.6, 0.6)},
+	"gatherer": {"size": 4.0, "color": Color(0.3, 0.8, 0.2)},
+	"lumberjack": {"size": 5.0, "color": Color(0.6, 0.35, 0.1)},
+	"builder": {"size": 5.0, "color": Color(0.9, 0.6, 0.1)},
+	"miner": {"size": 4.0, "color": Color(0.5, 0.6, 0.75)},
+}
+
+## Resource indicator colors
+const RES_COLORS: Dictionary = {
+	"food": Color(0.8, 0.9, 0.2),
+	"wood": Color(0.2, 0.5, 0.1),
+	"stone": Color(0.7, 0.7, 0.72),
 }
 
 
@@ -39,12 +46,30 @@ func _draw() -> void:
 	for i in range(alive.size()):
 		var entity: RefCounted = alive[i]
 		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
-		var color: Color = ACTION_COLORS.get(entity.current_action, Color.WHITE)
-		draw_circle(pos, DOT_RADIUS, color)
+		var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
+		var size: float = vis["size"]
+		var color: Color = vis["color"]
+
+		# Draw job-based shape
+		match entity.job:
+			"lumberjack":
+				_draw_triangle(pos, size, color)
+			"builder":
+				_draw_square(pos, size, color)
+			"miner":
+				_draw_diamond(pos, size, color)
+			_:
+				draw_circle(pos, size, color)
+
+		# Carrying indicator (small dot above entity)
+		if entity.get_total_carry() > 0.0:
+			var best_res: String = _get_dominant_resource(entity)
+			var dot_color: Color = RES_COLORS.get(best_res, Color.WHITE)
+			draw_circle(pos + Vector2(0, -(size + 3.0)), 1.5, dot_color)
 
 		# Hunger warning
 		if entity.hunger < HUNGER_WARNING_THRESHOLD:
-			draw_circle(pos + Vector2(0, -6), WARNING_RADIUS, Color.RED)
+			draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 
 		# Selection highlight
 		if entity.id == selected_entity_id:
@@ -53,6 +78,43 @@ func _draw() -> void:
 			if entity.action_target != Vector2i(-1, -1):
 				var target_pos := Vector2(entity.action_target) * GameConfig.TILE_SIZE + half_tile
 				draw_dashed_line(pos, target_pos, Color(1, 1, 1, 0.3), 1.0, 4.0)
+
+
+func _draw_triangle(center: Vector2, size: float, color: Color) -> void:
+	var points := PackedVector2Array([
+		center + Vector2(0, -size),
+		center + Vector2(-size * 0.87, size * 0.5),
+		center + Vector2(size * 0.87, size * 0.5),
+	])
+	draw_colored_polygon(points, color)
+
+
+func _draw_square(center: Vector2, size: float, color: Color) -> void:
+	var half: float = size * 0.5
+	draw_rect(Rect2(center.x - half, center.y - half, size, size), color)
+
+
+func _draw_diamond(center: Vector2, size: float, color: Color) -> void:
+	var points := PackedVector2Array([
+		center + Vector2(0, -size),
+		center + Vector2(size, 0),
+		center + Vector2(0, size),
+		center + Vector2(-size, 0),
+	])
+	draw_colored_polygon(points, color)
+
+
+func _get_dominant_resource(entity: RefCounted) -> String:
+	var best: String = "food"
+	var best_amount: float = 0.0
+	var keys: Array = entity.inventory.keys()
+	for j in range(keys.size()):
+		var res: String = keys[j]
+		var amount: float = entity.inventory[res]
+		if amount > best_amount:
+			best_amount = amount
+			best = res
+	return best
 
 
 func _unhandled_input(event: InputEvent) -> void:

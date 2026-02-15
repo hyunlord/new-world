@@ -110,3 +110,8 @@ func move_entity(from_pos: Vector2i, to_pos: Vector2i, entity_id: int) -> void:
 ## Get entity IDs at a position
 func get_entities_at(pos: Vector2i) -> Array:
 	return _entity_map.get(pos, [])
+
+
+## Clear all entity registrations (used during save/load)
+func clear_entities() -> void:
+	_entity_map.clear()
