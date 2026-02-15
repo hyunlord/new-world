@@ -65,11 +65,16 @@ const CAMERA_ZOOM_STEP: float = 0.1
 const CAMERA_PAN_SPEED: float = 500.0
 const CAMERA_ZOOM_SPEED: float = 0.15
 
-## Entity need decay rates (per tick)
-const HUNGER_DECAY_RATE: float = 0.003
-const ENERGY_DECAY_RATE: float = 0.002
-const ENERGY_ACTION_COST: float = 0.004
-const SOCIAL_DECAY_RATE: float = 0.001
+## System tick intervals
+const NEEDS_TICK_INTERVAL: int = 2
+const BEHAVIOR_TICK_INTERVAL: int = 10
+const MOVEMENT_TICK_INTERVAL: int = 3
+
+## Entity need decay rates (per needs tick)
+const HUNGER_DECAY_RATE: float = 0.005
+const ENERGY_DECAY_RATE: float = 0.003
+const ENERGY_ACTION_COST: float = 0.006
+const SOCIAL_DECAY_RATE: float = 0.002
 
 ## World generation
 const WORLD_SEED: int = 42

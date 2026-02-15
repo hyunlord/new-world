@@ -23,8 +23,6 @@ var movement_system: RefCounted
 
 
 func _ready() -> void:
-	_print_controls()
-
 	var seed_value: int = GameConfig.WORLD_SEED
 
 	# Initialize simulation engine
@@ -65,7 +63,7 @@ func _ready() -> void:
 	# Spawn initial entities
 	_spawn_initial_entities()
 
-	print("[Main] WorldSim Phase 0 initialized. Seed: %d" % seed_value)
+	_print_startup_banner(seed_value)
 
 
 func _spawn_initial_entities() -> void:
@@ -103,23 +101,32 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause_toggle"):
-		sim_engine.toggle_pause()
-	elif event.is_action_pressed("speed_up"):
-		sim_engine.increase_speed()
-	elif event.is_action_pressed("speed_down"):
-		sim_engine.decrease_speed()
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_SPACE:
+				sim_engine.toggle_pause()
+			KEY_PERIOD:
+				sim_engine.increase_speed()
+			KEY_COMMA:
+				sim_engine.decrease_speed()
 
 
-func _print_controls() -> void:
-	print("========================================")
-	print("  WorldSim Phase 0 - Controls")
-	print("========================================")
-	print("  WASD / Arrows  = Pan camera")
-	print("  Mouse Wheel    = Zoom in/out")
-	print("  Middle Mouse   = Drag pan")
-	print("  Left Click     = Select entity")
-	print("  Space          = Pause / Resume")
-	print("  . (period)     = Speed up")
-	print("  , (comma)      = Speed down")
-	print("========================================")
+func _print_startup_banner(seed_value: int) -> void:
+	print("")
+	print("╔══════════════════════════════════════╗")
+	print("║  WorldSim Phase 0                    ║")
+	print("║  Seed: %-30d ║" % seed_value)
+	print("║  World: %dx%d  |  Entities: %-8d ║" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
+	print("╚══════════════════════════════════════╝")
+	print("")
+	print("  Controls:")
+	print("    WASD / Arrows  = Pan camera")
+	print("    Mouse Wheel    = Zoom in/out")
+	print("    Trackpad Pinch = Zoom in/out")
+	print("    Two-finger Pan = Scroll camera")
+	print("    Middle Mouse   = Drag pan")
+	print("    Left Click     = Select entity")
+	print("    Space          = Pause / Resume")
+	print("    . (period)     = Speed up")
+	print("    , (comma)      = Speed down")
+	print("")
