@@ -65,7 +65,7 @@ func get_total_count() -> int:
 
 ## Most recent events
 func get_recent(count: int = 20) -> Array[Dictionary]:
-	var start := max(0, _events.size() - count)
+	var start: int = maxi(0, _events.size() - count)
 	return _events.slice(start)
 
 
