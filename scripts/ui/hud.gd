@@ -141,7 +141,7 @@ func _build_minimap_and_stats() -> void:
 
 	if _stats_recorder != null:
 		_stats_detail_panel = StatsDetailPanelClass.new()
-		_stats_detail_panel.init(_stats_recorder, _settlement_manager)
+		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _entity_manager, _relationship_manager)
 		_popup_manager.add_stats_panel(_stats_detail_panel)
 
 	if _entity_manager != null:

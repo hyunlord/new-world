@@ -241,22 +241,64 @@ Tab 키로 ON/OFF 토글. 100틱마다 자동 갱신.
 모든 UI 요소는 UI_SCALE (0.7~1.5) 적용. Cmd+=/Cmd+-/Cmd+0 으로 실시간 조절.
 
 ### 통계 상세 패널 (G 키, 화면 중앙):
-- 화면의 75%×80% 크기, 중앙 정렬
+- 화면의 75%×80% 크기, 중앙 정렬, 스크롤 지원 (마우스 휠)
 - 배경: `Color(0.05, 0.05, 0.1, 0.95)` 둥근 모서리 12px
 - dim 오버레이: `Color(0, 0, 0, 0.5)` 전체 화면
 - 자동 일시정지, G/Esc로 닫기
+- **Demographics 섹션** (Phase 2 추가):
+  - 성별 인구: Male/Female 카운트
+  - 커플/싱글: Couples (pair 수) / Single Adults 카운트
+  - 평균 행복도 바: `Color(1.0, 0.85, 0.2)` 채움, `Color(0.3, 0.3, 0.3)` 배경
+  - 나이 분포 스택 바:
+    - Child: `Color(0.5, 0.8, 1.0)` (하늘색)
+    - Teen: `Color(0.4, 0.9, 0.4)` (초록)
+    - Adult: `Color(0.9, 0.7, 0.2)` (주황)
+    - Elder: `Color(0.7, 0.5, 0.7)` (보라)
+  - 분포 바 아래 컬러 범례 표시
 - 인구 그래프 (초록 polyline, 피크/사망/출생 통계)
 - 자원 그래프 (3색 선, 100틱당 변화량)
 - 직업 분포 바 (% 표시)
 - 정착지 비교 (인구, 건물 수)
 
 ### 에이전트 상세 패널 (E 키, 에이전트 선택 시):
-- 화면의 50%×65% 크기, 중앙 정렬
-- 헤더: 직업 색상 원 + 이름 + 정착지
-- 상태: 행동, 경로, 인벤토리
-- 욕구 바 (hunger/energy/social)
-- 통계: speed, strength, total_gathered, buildings_built
-- 최근 행동 히스토리 (최대 20개)
+- 화면의 55%×85% 크기, 중앙 정렬, 스크롤 지원 (마우스 휠)
+- **헤더**: 직업 색상 원 + 이름 + 성별 아이콘 (♂ 파랑/♀ 분홍) + 나이 단계 + 정착지
+  - 임신 중: 분홍 `🤰 Pregnant (N months)` 표시
+- **Status**: 행동, 경로, 인벤토리
+- **Needs**: hunger/energy/social 바 (빨강/노랑/파랑)
+- **Personality 섹션** (Phase 2 추가):
+  - 5개 특성 바, 각각 고유 색상:
+    - Openness: `Color(0.3, 0.7, 1.0)` (하늘색)
+    - Agreeableness: `Color(0.4, 0.9, 0.5)` (초록)
+    - Extraversion: `Color(1.0, 0.8, 0.2)` (노랑)
+    - Diligence: `Color(0.9, 0.5, 0.2)` (주황)
+    - Stability: `Color(0.7, 0.5, 0.9)` (보라)
+  - 바 배경: `Color(0.15, 0.15, 0.2)`, 높이 12px
+- **Emotions 섹션** (Phase 2 추가):
+  - 5개 감정 바, 각각 고유 색상:
+    - Happiness: `Color(1.0, 0.85, 0.2)` (노랑)
+    - Loneliness: `Color(0.3, 0.5, 0.8)` (파랑)
+    - Stress: `Color(0.9, 0.4, 0.3)` (빨강)
+    - Grief: `Color(0.5, 0.3, 0.5)` (어두운 보라)
+    - Love: `Color(1.0, 0.4, 0.5)` (분홍)
+  - 바 배경: `Color(0.15, 0.15, 0.2)`, 높이 12px
+- **Family 섹션** (Phase 2 추가):
+  - Partner: 이름 + Love 퍼센트 (파트너 없으면 "None")
+  - Parents: 이름 목록 (사망 시 `†` 마커)
+  - Children: 이름(나이) 목록, 50자 초과 시 줄바꿈
+- **Key Relationships 섹션** (Phase 2 추가):
+  - 상위 5개 관계 (affinity 내림차순)
+  - 각 관계: 이름 + 타입 태그 + affinity/trust/romantic 수치
+  - 타입별 태그 색상:
+    - stranger: `Color(0.5, 0.5, 0.5)` (회색)
+    - acquaintance: `Color(0.6, 0.7, 0.8)` (밝은 회색)
+    - friend: `Color(0.3, 0.8, 0.4)` (초록)
+    - close_friend: `Color(0.2, 0.6, 1.0)` (파랑)
+    - romantic: `Color(1.0, 0.4, 0.6)` (분홍)
+    - partner: `Color(1.0, 0.3, 0.4)` (빨강)
+    - rival: `Color(0.8, 0.2, 0.2)` (어두운 빨강)
+- **Stats**: speed, strength, total_gathered, buildings_built
+- **Recent Actions**: 최근 행동 히스토리 (최대 5개)
 
 ### 건물 상세 패널 (E 키, 건물 선택 시):
 - 화면의 45%×50% 크기, 중앙 정렬

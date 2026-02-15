@@ -4,6 +4,22 @@
 
 ---
 
+## Phase 2: Stats Panel + Final Docs (T-1130)
+
+### T-1130: Stats Panel Extensions + Final Documentation
+- `stats_detail_panel.gd` (EXTENDED):
+  - 스크롤 지원: 마우스 휠로 긴 콘텐츠 스크롤
+  - Demographics 섹션 추가:
+    - Gender 분포 (M/F 카운트)
+    - Couples 수 / 미혼 성인 수
+    - 평균 행복도 바 (색상: 40%+ 노랑, 이하 빨강)
+    - 나이 분포 바 (Child/Teen/Adult/Elder, 색상 구분 + 범례)
+  - init() 확장: entity_manager, relationship_manager 파라미터 추가
+- `hud.gd`: stats_detail_panel.init()에 entity_manager, relationship_manager 전달
+- docs/SYSTEMS.md, ARCHITECTURE.md: StatsDetailPanel 설명 갱신
+
+---
+
 ## Phase 2: Entity Detail Panel Extensions (T-1120)
 
 ### T-1120: Entity Detail Panel — Personality, Emotions, Family, Relationships

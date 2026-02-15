@@ -125,6 +125,122 @@
 
 ---
 
+## 성격 시스템 (Phase 2)
+
+| 특성 | 범위 | 초기값 | 불변 | 영향 |
+|------|------|--------|------|------|
+| openness | 0.1~0.9 | randf | 예 | 이주 수락 확률 |
+| agreeableness | 0.1~0.9 | randf | 예 | 친밀도 상승 속도, 갈등 확률 감소 |
+| extraversion | 0.1~0.9 | randf | 예 | 사교 행동 빈도 |
+| diligence | 0.1~0.9 | randf | 예 | 작업 효율 ×(0.8~1.2) |
+| emotional_stability | 0.1~0.9 | randf | 예 | 감정 변동 폭, grief 회복 속도 |
+
+### 궁합 함수 (`GameConfig.personality_compatibility`)
+```
+score = (1 - |a.agree - b.agree|) + (1 - |a.stab - b.stab|)
+      + (1 - |a.extra - b.extra|) × 0.5
+      + (1 - |a.open - b.open|) × 0.5
+      + (1 - |a.dilig - b.dilig|) × 0.5
+result = score / 4.0  → 0.0~1.0
+```
+
+---
+
+## 감정 시스템 (Phase 2)
+
+EmotionSystem: priority=32, tick_interval=12 (하루 1회)
+
+| 감정 | 범위 | 초기값 | 갱신 규칙 |
+|------|------|--------|----------|
+| happiness | 0~1 | 0.5 | lerp → (hunger+energy+social)/3 |
+| loneliness | 0~1 | 0.0 | social<0.3: +0.02, 가족/파트너 근처: -0.05 |
+| stress | 0~1 | 0.0 | hunger<0.2: +0.03, 아니면 -0.01×stability |
+| grief | 0~1 | 0.0 | -0.002×stability (서서히 회복) |
+| love | 0~1 | 0.0 | 파트너 3타일 이내: +0.03, 아니면 -0.01 |
+
+### 감정 효과
+- happiness↑ → 작업효율↑, 친밀도 상승↑
+- loneliness↑ → socialize 유틸리티↑
+- stress↑ → 작업효율↓
+- grief↑ → 모든 활동 느림
+- love↑ → 파트너 근처 유지 유틸리티↑
+
+---
+
+## 관계 시스템 (Phase 2)
+
+SocialEventSystem: priority=37, tick_interval=30. 청크(16×16) 기반 근접 체크.
+
+### 관계 단계
+
+| 단계 | 전환 조건 |
+|------|----------|
+| stranger → acquaintance | 첫 상호작용 |
+| acquaintance → friend | affinity≥30 + interactions≥10 |
+| friend → close_friend | affinity≥60 + trust≥60 |
+| close_friend → romantic | affinity≥75 + romantic_interest≥50 + 이성 + 미혼 성인 |
+| romantic → partner | romantic_interest≥80 + interactions≥20 + 프로포즈 수락 |
+| any → rival | trust<20 + interactions≥5 |
+
+### 상호작용 이벤트
+
+| 이벤트 | 효과 | 조건 |
+|--------|------|------|
+| CASUAL_TALK | affinity+2, trust+1 | 항상 |
+| DEEP_TALK | affinity+5, trust+3 | extraversion>0.4 |
+| SHARE_FOOD | affinity+8, trust+5, food 1.0 전달 | food 있고 agreeableness 높음 |
+| WORK_TOGETHER | affinity+3, trust+2 | 같은 직업+행동 |
+| FLIRT | romantic_interest+8 | close_friend+ + 이성 + 미혼 |
+| GIVE_GIFT | affinity+10, romantic_interest+5, 자원 1.0 소모 | romantic + 자원 있음 |
+| PROPOSAL | partner 전환 시도 | romantic + romantic≥80 + interactions≥20 |
+| CONSOLE | grief-0.05, affinity+6, trust+3 | 상대 grief>0.3 |
+| ARGUMENT | affinity-5, trust-8, stress+0.1 | stress>0.5, (1-agree) 비례 |
+
+### 관계 감소
+- 100틱마다 상호작용 없는 관계: affinity -0.1
+- affinity≤5 + acquaintance: 관계 데이터 삭제
+
+---
+
+## 가족 시스템 (Phase 2)
+
+FamilySystem: priority=52, tick_interval=50
+
+### 출산 조건 (모든 AND)
+1. partner 관계
+2. 여성, 18~45세
+3. 임신 중 아님
+4. 자녀 < 4
+5. 정착지 식량 ≥ 인구×0.5
+6. 파트너 3타일 이내
+7. love 감정 ≥ 0.3
+8. 확률: 5%/체크
+
+### 임신/출산
+- 임신 기간: 3,285틱 (~9개월)
+- 출산 식량 소모: 3.0 (인벤토리 → 스톡파일)
+- 아이: 부모 위치에 스폰, 성별 50:50
+- parent_ids/children_ids 자동 설정
+
+### 사별
+- 배우자 사망: partner_id=-1, grief+0.8
+- 재혼: 사망 후 2년(8,760틱) 이후
+
+### 나이별 제한
+
+| 단계 | 직업 | 채집효율 | 건설 | 이동배율 | 크기 |
+|------|------|---------|------|---------|------|
+| child(0~12) | 없음 | 불가 | 불가 | 0.5x | 60% |
+| teen(12~18) | gatherer만 | 50% | 불가 | 0.8x | 80% |
+| adult(18~55) | 전체 | 100% | 가능 | 1.0x | 100% |
+| elder(55+) | 전체 | 50% | 불가 | 0.7x | 95% |
+
+### 초기 관계 부트스트랩
+- 시작 20명 중 3~4쌍 friend (affinity=40, trust=55)
+- 1~2쌍 close_friend (affinity=65, trust=60, 이성)
+
+---
+
 ## 직업 비율
 
 ### 기본 비율 (GameConfig.JOB_RATIOS)
