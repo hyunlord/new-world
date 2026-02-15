@@ -21,6 +21,49 @@ var current_goal: String = ""
 var action_target: Vector2i = Vector2i(-1, -1)
 var action_timer: int = 0
 
+## Inventory (Phase 1)
+var inventory: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
+
+## Job (Phase 1)
+var job: String = "none"
+
+## Pathfinding cache (runtime only, not serialized)
+var cached_path: Array = []
+var path_index: int = 0
+
+
+## Add resource to inventory, returns actual amount added (respects MAX_CARRY)
+func add_item(type: String, amount: float) -> float:
+	var total: float = get_total_carry()
+	var space: float = GameConfig.MAX_CARRY - total
+	var actual: float = minf(amount, space)
+	if actual > 0.0:
+		inventory[type] = inventory.get(type, 0.0) + actual
+	return actual
+
+
+## Remove resource from inventory, returns actual amount removed
+func remove_item(type: String, amount: float) -> float:
+	var current: float = inventory.get(type, 0.0)
+	var actual: float = minf(amount, current)
+	if actual > 0.0:
+		inventory[type] = current - actual
+	return actual
+
+
+## Get total weight of all carried resources
+func get_total_carry() -> float:
+	var total: float = 0.0
+	var keys: Array = inventory.keys()
+	for i in range(keys.size()):
+		total += inventory[keys[i]]
+	return total
+
+
+## Check if entity has at least min_amount of a resource
+func has_item(type: String, min_amount: float) -> bool:
+	return inventory.get(type, 0.0) >= min_amount
+
 
 ## Serialize to dictionary for save/load
 func to_dict() -> Dictionary:
@@ -41,6 +84,8 @@ func to_dict() -> Dictionary:
 		"action_target_x": action_target.x,
 		"action_target_y": action_target.y,
 		"action_timer": action_timer,
+		"inventory": inventory.duplicate(),
+		"job": job,
 	}
 
 
@@ -62,4 +107,11 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.current_goal = data.get("current_goal", "")
 	e.action_target = Vector2i(data.get("action_target_x", -1), data.get("action_target_y", -1))
 	e.action_timer = data.get("action_timer", 0)
+	var inv_data: Dictionary = data.get("inventory", {})
+	e.inventory = {
+		"food": inv_data.get("food", 0.0),
+		"wood": inv_data.get("wood", 0.0),
+		"stone": inv_data.get("stone", 0.0),
+	}
+	e.job = data.get("job", "none")
 	return e

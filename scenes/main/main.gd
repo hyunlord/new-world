@@ -4,6 +4,7 @@ const SimulationEngine = preload("res://scripts/core/simulation_engine.gd")
 const WorldData = preload("res://scripts/core/world_data.gd")
 const WorldGenerator = preload("res://scripts/core/world_generator.gd")
 const EntityManager = preload("res://scripts/core/entity_manager.gd")
+const ResourceMap = preload("res://scripts/core/resource_map.gd")
 const NeedsSystem = preload("res://scripts/systems/needs_system.gd")
 const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
@@ -12,6 +13,7 @@ var sim_engine: RefCounted
 var world_data: RefCounted
 var world_generator: RefCounted
 var entity_manager: RefCounted
+var resource_map: RefCounted
 var needs_system: RefCounted
 var behavior_system: RefCounted
 var movement_system: RefCounted
@@ -34,6 +36,13 @@ func _ready() -> void:
 	world_data.init_world(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
 	world_generator = WorldGenerator.new()
 	world_generator.generate(world_data, seed_value)
+
+	# Initialize resource map
+	resource_map = ResourceMap.new()
+	resource_map.init_resources(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
+	var res_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	res_rng.seed = seed_value + 100
+	resource_map.populate_from_biomes(world_data, res_rng)
 
 	# Initialize entity manager
 	entity_manager = EntityManager.new()
