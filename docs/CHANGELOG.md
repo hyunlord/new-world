@@ -4,6 +4,47 @@
 
 ---
 
+## Phase 1.5 UI 크기 + 클릭 디테일 + UI_SCALE (T-950 series)
+
+**gate PASS** | 11 code files changed + 6 docs updated
+
+### T-951: 더블클릭 디테일 팝업
+- `entity_renderer.gd` — 더블클릭 감지 (400ms 임계값, 5px 드래그 가드)
+  - 에이전트 더블클릭 → `SimulationBus.ui_notification("open_entity_detail")`
+  - 건물 더블클릭 → `SimulationBus.ui_notification("open_building_detail")`
+- `hud.gd` — `_on_ui_notification()` 핸들러 추가, "▶ Details (E)" 클릭 가능 Button 추가
+  - 엔티티/건물 선택 패널 하단에 호버 색상 변경 버튼
+
+### T-952: E키 토글 + 팝업 닫기 4중 보장
+- `main.gd` — KEY_E: `hud.is_detail_visible()` → `hud.close_detail()` / `hud.open_entity_detail()` + `hud.open_building_detail()`
+- 닫기 4중 보장: E 키 토글, Esc, [X] 버튼, 배경(dim) 클릭
+
+### T-953: UI_SCALE 시스템 도입
+- `game_config.gd` — `var ui_scale: float = 1.0` (0.7~1.5), `UI_FONT_SIZES` dict (22키), `UI_SIZES` dict (7키)
+  - `get_font_size(key)`, `get_ui_size(key)` 헬퍼 함수
+- `main.gd` — Cmd+= (확대), Cmd+- (축소), Cmd+0 (기본 복원) 키바인딩
+- `hud.gd` — `_tracked_labels` 배열, `_make_label()` 문자열 키 지원, `apply_ui_scale()` 메서드
+- `minimap_panel.gd` — 기본 250px, `apply_ui_scale(base_size)`, `GameConfig.get_font_size("minimap_label")`
+- `stats_panel.gd` — 250×220px, `apply_ui_scale()`, `GameConfig.get_font_size("stats_title"/"stats_body")`
+- `entity_detail_panel.gd` — 16개 폰트 → `GameConfig.get_font_size()` 호출
+- `building_detail_panel.gd` — 18개 폰트 → `GameConfig.get_font_size()` 호출
+- `stats_detail_panel.gd` — 14개 폰트 → `GameConfig.get_font_size()` 호출
+- `save_manager.gd` — `ui_scale` 저장/로드 추가
+
+### T-954: 미니맵/미니통계 베이스 크기 상향
+- 미니맵: 160→250px 기본, M키 순환 250→350→숨김→250 (UI_SCALE 적용)
+- 미니통계: 160×200→250×220px (UI_SCALE 적용)
+
+### T-955: 문서 동기화
+- `docs/CONTROLS.md` — 더블클릭, E키 토글, Cmd+=/Cmd+-/Cmd+0, 미니맵 250px, 디테일 여는 3가지 방법, 팝업 닫기 4중 보장
+- `docs/VISUAL_GUIDE.md` — HUD 폰트/패널 크기, 레이아웃 다이어그램 (250/220), 키 힌트 ⌘+/-:Scale, UI_SCALE 설명
+- `docs/GAME_BALANCE.md` — UI_FONT_SIZES 22키, UI_SIZES 7키, UI_SCALE 헬퍼 함수, 기존 UI_FONT_* 상수 대체
+- `docs/SYSTEMS.md` — MinimapPanel 250px, StatsPanel 250×220, HUD UI_SCALE apply_ui_scale()
+- `docs/ARCHITECTURE.md` — MinimapPanel 250×250, StatsPanel 250×220, GameConfig UI_SCALE 설명
+- `docs/CHANGELOG.md` — T-950 series 전체 기록
+
+---
+
 ## Phase 1.5 UI/UX 긴급 수정 2차 (T-900 series)
 
 **gate PASS** | 11 code files changed + 6 docs updated

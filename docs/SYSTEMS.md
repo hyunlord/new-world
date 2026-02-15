@@ -166,9 +166,9 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | EntityRenderer | 에이전트 도형, 선택 표시, LOD (3단계) | `scripts/ui/entity_renderer.gd` |
 | BuildingRenderer | 건물 도형, 건설 바, LOD (3단계) | `scripts/ui/building_renderer.gd` |
 | CameraController | WASD/마우스/트랙패드 카메라, 줌 보간 | `scripts/ui/camera_controller.gd` |
-| HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트, 상세패널 관리 | `scripts/ui/hud.gd` |
-| MinimapPanel | 미니맵 (160×160, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨) | `scripts/ui/minimap_panel.gd` |
-| StatsPanel | 미니 통계 패널 (인구/자원 그래프, 직업 분포 바, 클릭→상세) | `scripts/ui/stats_panel.gd` |
+| HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트, 상세패널 관리, UI_SCALE apply_ui_scale() | `scripts/ui/hud.gd` |
+| MinimapPanel | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨, UI_SCALE 적용) | `scripts/ui/minimap_panel.gd` |
+| StatsPanel | 미니 통계 패널 (250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) | `scripts/ui/stats_panel.gd` |
 | StatsDetailPanel | 통계 상세창 (75%×80%, 인구/자원 그래프, 직업, 정착지 비교) | `scripts/ui/stats_detail_panel.gd` |
 | EntityDetailPanel | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리) | `scripts/ui/entity_detail_panel.gd` |
 | BuildingDetailPanel | 건물 상세창 (45%×50%, 타입별 상세 정보) | `scripts/ui/building_detail_panel.gd` |

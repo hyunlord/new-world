@@ -11,7 +11,7 @@ var _minimap_texture: ImageTexture
 var _minimap_rect: TextureRect
 var _needs_update: bool = true
 
-var minimap_size: int = 200
+var minimap_size: int = 250
 
 
 func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted, camera: Camera2D) -> void:
@@ -71,7 +71,7 @@ func _draw() -> void:
 			var sx: float = float(s.center_x) * scale_x
 			var sy: float = float(s.center_y) * scale_y
 			var label_text: String = "S%d" % s.id
-			draw_string(font, Vector2(sx + 3, sy - 2), label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1, 0.8))
+			draw_string(font, Vector2(sx + 3, sy - 2), label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("minimap_label"), Color(1, 1, 1, 0.8))
 
 
 func _process(_delta: float) -> void:
@@ -154,6 +154,10 @@ func resize(new_size: int) -> void:
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
 	_needs_update = true
+
+
+func apply_ui_scale(base_size: int) -> void:
+	resize(base_size)
 
 
 func _gui_input(event: InputEvent) -> void:

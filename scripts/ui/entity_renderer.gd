@@ -11,6 +11,14 @@ var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
 
+## Double-click detection
+var _last_click_time: float = 0.0
+var _last_click_pos: Vector2 = Vector2.ZERO
+var _last_click_entity_id: int = -1
+var _last_click_building_id: int = -1
+const DOUBLE_CLICK_THRESHOLD: float = 0.4
+const DOUBLE_CLICK_DRAG_THRESHOLD: float = 5.0
+
 const SELECTION_RADIUS: float = 7.0
 const HUNGER_WARNING_RADIUS: float = 2.0
 const HUNGER_WARNING_THRESHOLD: float = 0.2
@@ -185,6 +193,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func _handle_click(screen_pos: Vector2) -> void:
 	if _entity_manager == null:
 		return
+	var now: float = Time.get_ticks_msec() / 1000.0
+
 	# Convert screen position to world position
 	var canvas_transform := get_canvas_transform()
 	var world_pos: Vector2 = canvas_transform.affine_inverse() * screen_pos
@@ -194,9 +204,21 @@ func _handle_click(screen_pos: Vector2) -> void:
 	if _building_manager != null:
 		var building = _building_manager.get_building_at(tile.x, tile.y)
 		if building != null:
+			var is_double: bool = (building.id == _last_click_building_id
+				and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
+				and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
+
 			selected_entity_id = -1
 			SimulationBus.entity_deselected.emit()
 			SimulationBus.building_selected.emit(building.id)
+
+			if is_double:
+				SimulationBus.ui_notification.emit("open_building_detail", "command")
+
+			_last_click_building_id = building.id
+			_last_click_entity_id = -1
+			_last_click_time = now
+			_last_click_pos = screen_pos
 			return
 
 	# Find entity at or near this tile
@@ -211,10 +233,24 @@ func _handle_click(screen_pos: Vector2) -> void:
 			best_entity = entity
 
 	if best_entity:
+		var is_double: bool = (best_entity.id == _last_click_entity_id
+			and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
+			and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
+
 		selected_entity_id = best_entity.id
 		SimulationBus.building_deselected.emit()
 		SimulationBus.entity_selected.emit(best_entity.id)
+
+		if is_double:
+			SimulationBus.ui_notification.emit("open_entity_detail", "command")
+
+		_last_click_entity_id = best_entity.id
+		_last_click_building_id = -1
+		_last_click_time = now
+		_last_click_pos = screen_pos
 	else:
 		selected_entity_id = -1
+		_last_click_entity_id = -1
+		_last_click_building_id = -1
 		SimulationBus.entity_deselected.emit()
 		SimulationBus.building_deselected.emit()
