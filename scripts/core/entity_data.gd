@@ -29,6 +29,7 @@ var inventory: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 
 ## Job (Phase 1)
 var job: String = "none"
+var settlement_id: int = 0
 
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
@@ -90,6 +91,7 @@ func to_dict() -> Dictionary:
 		"starving_timer": starving_timer,
 		"inventory": inventory.duplicate(),
 		"job": job,
+		"settlement_id": settlement_id,
 	}
 
 
@@ -119,4 +121,5 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"stone": inv_data.get("stone", 0.0),
 	}
 	e.job = data.get("job", "none")
+	e.settlement_id = data.get("settlement_id", 0)
 	return e

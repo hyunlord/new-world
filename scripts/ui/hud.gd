@@ -25,14 +25,18 @@ var _entity_stats_label: Label
 var _sim_engine: RefCounted
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
+var _settlement_manager: RefCounted
+var _toast_label: Label
+var _toast_timer: float = 0.0
 var _selected_entity_id: int = -1
 
 
 ## Initialize HUD with system references
-func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null) -> void:
+func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
 	_building_manager = building_manager
+	_settlement_manager = settlement_manager
 
 
 func _ready() -> void:
@@ -40,6 +44,7 @@ func _ready() -> void:
 	_build_top_bar()
 	_build_entity_panel()
 	_connect_signals()
+	_build_toast()
 
 
 func _connect_signals() -> void:
@@ -47,6 +52,7 @@ func _connect_signals() -> void:
 	SimulationBus.entity_deselected.connect(_on_entity_deselected)
 	SimulationBus.speed_changed.connect(_on_speed_changed)
 	SimulationBus.pause_changed.connect(_on_pause_changed)
+	SimulationBus.simulation_event.connect(_on_simulation_event)
 
 
 func _build_top_bar() -> void:
@@ -146,7 +152,7 @@ func _build_entity_panel() -> void:
 	add_child(_entity_panel)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 
 	if _sim_engine:
@@ -155,7 +161,22 @@ func _process(_delta: float) -> void:
 		_tick_label.text = "Tick: %d" % _sim_engine.current_tick
 
 	if _entity_manager:
-		_pop_label.text = "Pop: %d" % _entity_manager.get_alive_count()
+		var total_pop: int = _entity_manager.get_alive_count()
+		if _settlement_manager != null:
+			var settlements: Array = _settlement_manager.get_all_settlements()
+			if settlements.size() > 1:
+				var parts: String = ""
+				for i in range(settlements.size()):
+					var s: RefCounted = settlements[i]
+					var spop: int = _settlement_manager.get_settlement_population(s.id)
+					if i > 0:
+						parts += " "
+					parts += "S%d:%d" % [s.id, spop]
+				_pop_label.text = "Pop:%d (%s)" % [total_pop, parts]
+			else:
+				_pop_label.text = "Pop: %d" % total_pop
+		else:
+			_pop_label.text = "Pop: %d" % total_pop
 
 	# Building count
 	if _building_manager != null:
@@ -215,6 +236,14 @@ func _process(_delta: float) -> void:
 		else:
 			_on_entity_deselected()
 
+	# Toast fade
+	if _toast_timer > 0.0:
+		_toast_timer -= delta
+		if _toast_timer <= 0.5:
+			_toast_label.modulate.a = maxf(0.0, _toast_timer / 0.5)
+		if _toast_timer <= 0.0:
+			_toast_label.visible = false
+
 
 func _get_stockpile_totals() -> Dictionary:
 	var totals: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
@@ -246,6 +275,36 @@ func _on_speed_changed(speed_index: int) -> void:
 
 func _on_pause_changed(paused: bool) -> void:
 	_status_label.text = "\u23F8" if paused else "\u25B6"
+
+
+func _on_simulation_event(event_type: String, _data: Dictionary) -> void:
+	if event_type == "game_saved":
+		_show_toast("Game Saved!")
+	elif event_type == "game_loaded":
+		_show_toast("Game Loaded!")
+	elif event_type == "settlement_founded":
+		_show_toast("New Settlement Founded!")
+
+
+func _build_toast() -> void:
+	_toast_label = Label.new()
+	_toast_label.text = ""
+	_toast_label.add_theme_font_size_override("font_size", 20)
+	_toast_label.add_theme_color_override("font_color", Color(1.0, 1.0, 0.5, 1.0))
+	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_toast_label.offset_top = 40
+	_toast_label.offset_left = -200
+	_toast_label.offset_right = 200
+	_toast_label.visible = false
+	add_child(_toast_label)
+
+
+func _show_toast(message: String) -> void:
+	_toast_label.text = message
+	_toast_label.visible = true
+	_toast_label.modulate.a = 1.0
+	_toast_timer = 2.0
 
 
 func _make_label(text: String, size: int = 14) -> Label:

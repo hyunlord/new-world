@@ -7,6 +7,7 @@ var tile_y: int = 0
 var is_built: bool = false
 var build_progress: float = 0.0
 var storage: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
+var settlement_id: int = 0
 
 
 func to_dict() -> Dictionary:
@@ -18,6 +19,7 @@ func to_dict() -> Dictionary:
 		"is_built": is_built,
 		"build_progress": build_progress,
 		"storage": storage.duplicate(),
+		"settlement_id": settlement_id,
 	}
 
 
@@ -36,4 +38,5 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"wood": storage_data.get("wood", 0.0),
 		"stone": storage_data.get("stone", 0.0),
 	}
+	b.settlement_id = data.get("settlement_id", 0)
 	return b

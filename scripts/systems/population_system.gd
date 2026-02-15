@@ -4,6 +4,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _world_data: RefCounted
 var _rng: RandomNumberGenerator
+var _settlement_manager: RefCounted
 
 
 func _init() -> void:
@@ -12,11 +13,12 @@ func _init() -> void:
 	tick_interval = GameConfig.POPULATION_TICK_INTERVAL
 
 
-func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: RefCounted, rng: RandomNumberGenerator, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_world_data = world_data
 	_rng = rng
+	_settlement_manager = settlement_manager
 
 
 func execute_tick(tick: int) -> void:
@@ -84,6 +86,12 @@ func _check_births(tick: int) -> void:
 		return
 
 	var new_entity: RefCounted = _entity_manager.spawn_entity(spawn_pos)
+	# Assign to nearest settlement
+	if _settlement_manager != null:
+		var nearest_settlement: RefCounted = _settlement_manager.get_nearest_settlement(spawn_pos.x, spawn_pos.y)
+		if nearest_settlement != null:
+			new_entity.settlement_id = nearest_settlement.id
+			_settlement_manager.add_member(nearest_settlement.id, new_entity.id)
 	emit_event("entity_born", {
 		"entity_id": new_entity.id,
 		"entity_name": new_entity.entity_name,
