@@ -13,6 +13,14 @@
 - `entity_detail_panel.gd` — 동일 패턴 적용, "Click anywhere or E to close"
 - `building_detail_panel.gd` — 동일 패턴 적용, "Click anywhere or E to close"
 
+### T-961: 팝업 배경 클릭만 닫기 (T-960 핫픽스)
+- **문제**: T-960의 "아무 곳 클릭 = 닫기"가 팝업 내용 영역 클릭에도 닫힘
+- `stats_detail_panel.gd` — `_get_content_rect()` 히트테스트 추가, 배경 클릭만 닫힘
+- `entity_detail_panel.gd` — 동일 패턴 적용
+- `building_detail_panel.gd` — 동일 패턴 적용
+- 풋터 텍스트 "Click background or G/E to close"로 변경
+- `docs/CONTROLS.md` — 팝업 닫기 설명 업데이트 (배경 클릭만 닫힘)
+
 ### T-970: 인구 49 고정 버그 수정 [Critical]
 - **원인**: `total_food >= alive_count × 1.0` 조건이 너무 엄격 — pop 49에서 49 food 유지 불가
 - `population_system.gd` — 식량 임계값 `1.0` → `0.5` per capita

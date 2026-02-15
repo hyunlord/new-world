@@ -49,9 +49,21 @@ func _gui_input(event: InputEvent) -> void:
 		if event.keycode == KEY_E or event.keycode == KEY_ESCAPE:
 			hide_panel()
 			accept_event()
+			return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		hide_panel()
+		var content_rect := _get_content_rect()
+		if not content_rect.has_point(event.position):
+			hide_panel()
 		accept_event()
+
+
+func _get_content_rect() -> Rect2:
+	var vp_size := get_viewport_rect().size
+	var panel_w: float = vp_size.x * 0.5
+	var panel_h: float = vp_size.y * 0.65
+	var panel_x: float = (vp_size.x - panel_w) * 0.5
+	var panel_y: float = (vp_size.y - panel_h) * 0.5
+	return Rect2(panel_x, panel_y, panel_w, panel_h)
 
 
 func _draw() -> void:
@@ -145,7 +157,7 @@ func _draw() -> void:
 		cy += 13.0
 		idx -= 1
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click anywhere or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 
 
 func _draw_need_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:
