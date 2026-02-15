@@ -277,7 +277,8 @@ func _on_pause_changed(paused: bool) -> void:
 	_status_label.text = "\u23F8" if paused else "\u25B6"
 
 
-func _on_simulation_event(event_type: String, _data: Dictionary) -> void:
+func _on_simulation_event(event: Dictionary) -> void:
+	var event_type: String = event.get("type", "")
 	if event_type == "game_saved":
 		_show_toast("Game Saved!")
 	elif event_type == "game_loaded":
