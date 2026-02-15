@@ -4,6 +4,23 @@
 
 ---
 
+## Phase 1.5 팝업 시스템 전면 리팩터 (T-962)
+
+**PopupManager 아키텍처로 전면 교체**
+
+### T-962: PopupManager 기반 팝업 시스템 재작성
+- **문제**: T-960/T-961의 히트테스트 방식이 Godot CanvasLayer 좌표계 문제로 작동 안 함
+- **해결**: Godot 네이티브 입력 전파 시스템 활용
+  - `popup_manager.gd` (NEW) — CanvasLayer(layer=100), dim_bg(ColorRect, FULL_RECT, MOUSE_FILTER_STOP) + gui_input 시그널로 배경 클릭 감지
+  - 패널들은 dim_bg의 자식으로 추가, MOUSE_FILTER_STOP으로 클릭 차단 → 패널 내부 클릭은 dim_bg로 전파 안 됨
+- `stats_detail_panel.gd` — 팝업 인프라 제거 (\_gui_input, \_ready, show/hide_panel, \_sim_engine, \_was_paused), 로컬 좌표계로 전환
+- `entity_detail_panel.gd` — 동일 리팩터 + `set_entity_id()` 추가
+- `building_detail_panel.gd` — 동일 리팩터 + `set_building_id()` 추가
+- `hud.gd` — PopupManager 통합, 모든 팝업 조작을 PopupManager에 위임
+- 일시정지/재개 로직을 PopupManager가 일괄 관리 (중복 pause 방지)
+
+---
+
 ## Phase 1.5 팝업 닫기 + 인구 캡 버그 (T-960 series)
 
 **gate PASS** | 5 code files changed + 3 docs updated

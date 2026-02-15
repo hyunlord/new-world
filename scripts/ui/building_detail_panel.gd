@@ -3,67 +3,21 @@ extends Control
 
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
-var _sim_engine: RefCounted
 var _building_id: int = -1
-var _was_paused: bool = false
 
 
-func init(building_manager: RefCounted, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
+func init(building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
-	_sim_engine = sim_engine
 
 
-func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	visible = false
-	mouse_filter = Control.MOUSE_FILTER_STOP
-
-
-func show_building(building_id: int) -> void:
-	_building_id = building_id
-	if _sim_engine != null:
-		_was_paused = _sim_engine.is_paused
-		_sim_engine.is_paused = true
-		SimulationBus.pause_changed.emit(true)
-	visible = true
-
-
-func hide_panel() -> void:
-	visible = false
-	_building_id = -1
-	if _sim_engine != null and not _was_paused:
-		_sim_engine.is_paused = false
-		SimulationBus.pause_changed.emit(false)
+func set_building_id(id: int) -> void:
+	_building_id = id
 
 
 func _process(_delta: float) -> void:
 	if visible:
 		queue_redraw()
-
-
-func _gui_input(event: InputEvent) -> void:
-	if not visible:
-		return
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_E or event.keycode == KEY_ESCAPE:
-			hide_panel()
-			accept_event()
-			return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var content_rect := _get_content_rect()
-		if not content_rect.has_point(event.position):
-			hide_panel()
-		accept_event()
-
-
-func _get_content_rect() -> Rect2:
-	var vp_size := get_viewport_rect().size
-	var panel_w: float = vp_size.x * 0.45
-	var panel_h: float = vp_size.y * 0.5
-	var panel_x: float = (vp_size.x - panel_w) * 0.5
-	var panel_y: float = (vp_size.y - panel_h) * 0.5
-	return Rect2(panel_x, panel_y, panel_w, panel_h)
 
 
 func _draw() -> void:
@@ -77,23 +31,18 @@ func _draw() -> void:
 			building = all_buildings[i]
 			break
 	if building == null:
-		hide_panel()
+		visible = false
 		return
 
-	var vp_size := get_viewport_rect().size
-	draw_rect(Rect2(Vector2.ZERO, vp_size), Color(0, 0, 0, 0.7))
+	var panel_w: float = size.x
+	var panel_h: float = size.y
 
-	var panel_w: float = vp_size.x * 0.45
-	var panel_h: float = vp_size.y * 0.5
-	var panel_x: float = (vp_size.x - panel_w) * 0.5
-	var panel_y: float = (vp_size.y - panel_h) * 0.5
-	var pr := Rect2(panel_x, panel_y, panel_w, panel_h)
-	draw_rect(pr, Color(0.08, 0.06, 0.02, 0.95))
-	draw_rect(pr, Color(0.4, 0.3, 0.2), false, 1.0)
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.08, 0.06, 0.02, 0.95))
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.4, 0.3, 0.2), false, 1.0)
 
 	var font: Font = ThemeDB.fallback_font
-	var cx: float = panel_x + 20.0
-	var cy: float = panel_y + 28.0
+	var cx: float = 20.0
+	var cy: float = 28.0
 
 	# Header
 	var icon: String = "\u25A0"
@@ -106,13 +55,12 @@ func _draw() -> void:
 			icon = "\u25CF"
 			type_color = Color(1.0, 0.4, 0.1)
 	draw_string(font, Vector2(cx, cy), "%s %s" % [icon, building.building_type.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), type_color)
-	# (click anywhere to close)
 	cy += 8.0
 
 	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else "None"
 	draw_string(font, Vector2(cx, cy + 14), "Location: (%d, %d)  |  Settlement: %s" % [building.tile_x, building.tile_y, sid_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
-	draw_line(Vector2(cx, cy), Vector2(panel_x + panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
+	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0
 
 	# Status
@@ -166,4 +114,4 @@ func _draw() -> void:
 		cost_parts.append("%s: %.0f" % [cost_keys[i].capitalize(), cost[cost_keys[i]]])
 	draw_string(font, Vector2(cx + 10, cy + 12), " | ".join(cost_parts), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))

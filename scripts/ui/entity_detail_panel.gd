@@ -3,38 +3,16 @@ extends Control
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
-var _sim_engine: RefCounted
 var _entity_id: int = -1
-var _was_paused: bool = false
 
 
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
-	_sim_engine = sim_engine
 
 
-func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	visible = false
-	mouse_filter = Control.MOUSE_FILTER_STOP
-
-
-func show_entity(entity_id: int) -> void:
-	_entity_id = entity_id
-	if _sim_engine != null:
-		_was_paused = _sim_engine.is_paused
-		_sim_engine.is_paused = true
-		SimulationBus.pause_changed.emit(true)
-	visible = true
-
-
-func hide_panel() -> void:
-	visible = false
-	_entity_id = -1
-	if _sim_engine != null and not _was_paused:
-		_sim_engine.is_paused = false
-		SimulationBus.pause_changed.emit(false)
+func set_entity_id(id: int) -> void:
+	_entity_id = id
 
 
 func _process(_delta: float) -> void:
@@ -42,52 +20,23 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 
 
-func _gui_input(event: InputEvent) -> void:
-	if not visible:
-		return
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_E or event.keycode == KEY_ESCAPE:
-			hide_panel()
-			accept_event()
-			return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var content_rect := _get_content_rect()
-		if not content_rect.has_point(event.position):
-			hide_panel()
-		accept_event()
-
-
-func _get_content_rect() -> Rect2:
-	var vp_size := get_viewport_rect().size
-	var panel_w: float = vp_size.x * 0.5
-	var panel_h: float = vp_size.y * 0.65
-	var panel_x: float = (vp_size.x - panel_w) * 0.5
-	var panel_y: float = (vp_size.y - panel_h) * 0.5
-	return Rect2(panel_x, panel_y, panel_w, panel_h)
-
-
 func _draw() -> void:
 	if not visible or _entity_manager == null or _entity_id < 0:
 		return
 	var entity: RefCounted = _entity_manager.get_entity(_entity_id)
 	if entity == null or not entity.is_alive:
-		hide_panel()
+		visible = false
 		return
 
-	var vp_size := get_viewport_rect().size
-	draw_rect(Rect2(Vector2.ZERO, vp_size), Color(0, 0, 0, 0.7))
+	var panel_w: float = size.x
+	var panel_h: float = size.y
 
-	var panel_w: float = vp_size.x * 0.5
-	var panel_h: float = vp_size.y * 0.65
-	var panel_x: float = (vp_size.x - panel_w) * 0.5
-	var panel_y: float = (vp_size.y - panel_h) * 0.5
-	var pr := Rect2(panel_x, panel_y, panel_w, panel_h)
-	draw_rect(pr, Color(0.06, 0.1, 0.06, 0.95))
-	draw_rect(pr, Color(0.3, 0.4, 0.3), false, 1.0)
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.06, 0.1, 0.06, 0.95))
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.3, 0.4, 0.3), false, 1.0)
 
 	var font: Font = ThemeDB.fallback_font
-	var cx: float = panel_x + 20.0
-	var cy: float = panel_y + 28.0
+	var cx: float = 20.0
+	var cy: float = 28.0
 
 	var job_colors: Dictionary = {
 		"none": Color(0.6, 0.6, 0.6), "gatherer": Color(0.3, 0.8, 0.2),
@@ -98,14 +47,13 @@ func _draw() -> void:
 
 	# Header
 	draw_string(font, Vector2(cx, cy), "%s - %s" % [entity.entity_name, entity.job.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
-	# (click anywhere to close)
 	cy += 6.0
 
 	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
 	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %dd  |  Pos: (%d, %d)" % [sid_text, age_days, entity.position.x, entity.position.y], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
-	draw_line(Vector2(cx, cy), Vector2(panel_x + panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
+	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0
 
 	# Status
@@ -151,13 +99,13 @@ func _draw() -> void:
 	cy += 18.0
 	var hist: Array = entity.action_history
 	var idx: int = hist.size() - 1
-	while idx >= 0 and cy < panel_y + panel_h - 30:
+	while idx >= 0 and cy < panel_h - 30:
 		var entry: Dictionary = hist[idx]
 		draw_string(font, Vector2(cx + 10, cy + 11), "Tick %d: %s" % [entry.tick, entry.action], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		cy += 13.0
 		idx -= 1
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 
 
 func _draw_need_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:

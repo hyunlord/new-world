@@ -6,6 +6,7 @@ const StatsPanelClass = preload("res://scripts/ui/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/stats_detail_panel.gd")
 const EntityDetailPanelClass = preload("res://scripts/ui/entity_detail_panel.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel.gd")
+const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -76,7 +77,8 @@ var _tracked_labels: Array = []
 var _entity_detail_btn: Button
 var _building_detail_btn: Button
 
-# Detail panels
+# Detail panels (managed by PopupManager)
+var _popup_manager: Node
 var _stats_detail_panel: Control
 var _entity_detail_panel: Control
 var _building_detail_panel: Control
@@ -130,19 +132,25 @@ func _build_minimap_and_stats() -> void:
 		_stats_panel.init(_stats_recorder)
 		add_child(_stats_panel)
 
+	# PopupManager owns all detail panels
+	_popup_manager = PopupManagerClass.new()
+	_popup_manager.init(_sim_engine)
+	add_child(_popup_manager)
+
+	if _stats_recorder != null:
 		_stats_detail_panel = StatsDetailPanelClass.new()
-		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _sim_engine)
-		add_child(_stats_detail_panel)
+		_stats_detail_panel.init(_stats_recorder, _settlement_manager)
+		_popup_manager.add_stats_panel(_stats_detail_panel)
 
 	if _entity_manager != null:
 		_entity_detail_panel = EntityDetailPanelClass.new()
-		_entity_detail_panel.init(_entity_manager, _building_manager, _sim_engine)
-		add_child(_entity_detail_panel)
+		_entity_detail_panel.init(_entity_manager, _building_manager)
+		_popup_manager.add_entity_panel(_entity_detail_panel)
 
 	if _building_manager != null:
 		_building_detail_panel = BuildingDetailPanelClass.new()
-		_building_detail_panel.init(_building_manager, _settlement_manager, _sim_engine)
-		add_child(_building_detail_panel)
+		_building_detail_panel.init(_building_manager, _settlement_manager)
+		_popup_manager.add_building_panel(_building_detail_panel)
 
 
 func _connect_signals() -> void:
@@ -790,11 +798,8 @@ func toggle_minimap() -> void:
 
 
 func toggle_stats() -> void:
-	if _stats_detail_panel != null:
-		if _stats_detail_panel.visible:
-			_stats_detail_panel.hide_panel()
-		else:
-			_stats_detail_panel.show_panel()
+	if _popup_manager != null:
+		_popup_manager.open_stats()
 
 
 func toggle_help() -> void:
@@ -814,14 +819,8 @@ func toggle_help() -> void:
 
 
 func close_all_popups() -> void:
-	if _stats_detail_panel != null and _stats_detail_panel.visible:
-		_stats_detail_panel.hide_panel()
-		return
-	if _entity_detail_panel != null and _entity_detail_panel.visible:
-		_entity_detail_panel.hide_panel()
-		return
-	if _building_detail_panel != null and _building_detail_panel.visible:
-		_building_detail_panel.hide_panel()
+	if _popup_manager != null and _popup_manager.is_any_visible():
+		_popup_manager.close_all()
 		return
 	if _help_visible:
 		toggle_help()
@@ -829,13 +828,13 @@ func close_all_popups() -> void:
 
 
 func open_entity_detail() -> void:
-	if _entity_detail_panel != null and _selected_entity_id >= 0:
-		_entity_detail_panel.show_entity(_selected_entity_id)
+	if _popup_manager != null and _selected_entity_id >= 0:
+		_popup_manager.open_entity(_selected_entity_id)
 
 
 func open_building_detail() -> void:
-	if _building_detail_panel != null and _selected_building_id >= 0:
-		_building_detail_panel.show_building(_selected_building_id)
+	if _popup_manager != null and _selected_building_id >= 0:
+		_popup_manager.open_building(_selected_building_id)
 
 
 func show_startup_toast(pop_count: int) -> void:
@@ -860,18 +859,14 @@ func get_minimap() -> Control:
 
 
 func is_detail_visible() -> bool:
-	if _entity_detail_panel != null and _entity_detail_panel.visible:
-		return true
-	if _building_detail_panel != null and _building_detail_panel.visible:
-		return true
+	if _popup_manager != null:
+		return _popup_manager.is_detail_visible()
 	return false
 
 
 func close_detail() -> void:
-	if _entity_detail_panel != null and _entity_detail_panel.visible:
-		_entity_detail_panel.hide_panel()
-	if _building_detail_panel != null and _building_detail_panel.visible:
-		_building_detail_panel.hide_panel()
+	if _popup_manager != null:
+		_popup_manager.close_all()
 
 
 func apply_ui_scale() -> void:
