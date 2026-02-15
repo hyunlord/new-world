@@ -12,10 +12,16 @@ test -f project.godot || { echo "[gate] ERROR: project.godot not found (run in p
 GODOT_BIN="${GODOT:-}"
 
 if [ -z "$GODOT_BIN" ]; then
-  # Common path for Godot installed as .app in /Applications
-  if [ -x "/Applications/Godot.app/Contents/MacOS/Godot" ]; then
-    GODOT_BIN="/Applications/Godot.app/Contents/MacOS/Godot"
-  fi
+  # Common paths for Godot installed as .app
+  for candidate in \
+    "/Applications/Godot.app/Contents/MacOS/Godot" \
+    "$HOME/Downloads/Godot.app/Contents/MacOS/Godot" \
+    "$HOME/Applications/Godot.app/Contents/MacOS/Godot"; do
+    if [ -x "$candidate" ]; then
+      GODOT_BIN="$candidate"
+      break
+    fi
+  done
 fi
 
 if [ -z "$GODOT_BIN" ]; then
