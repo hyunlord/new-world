@@ -104,7 +104,7 @@
 | 최대 인구 | 500 | `GameConfig.MAX_ENTITIES` |
 | 번식 체크 간격 | 240틱 | `GameConfig.POPULATION_TICK_INTERVAL` |
 | 번식 최소 인구 | 5 | `population_system.gd` |
-| 번식 조건: 식량 | stockpile 총 food >= alive_count × 1.0 | `population_system.gd` |
+| 번식 조건: 식량 | stockpile 총 food >= alive_count × 0.5 | `population_system.gd` |
 | 번식 조건: 주거 | 25명 이하는 무조건 허용, 이후 shelters×6 > alive_count | `population_system.gd` |
 | 번식 식량 소모 | 3.0 | `GameConfig.BIRTH_FOOD_COST` |
 | 자연사 시작 나이 | 34,560틱 (1년 = 360일), 매 체크 2% 확률 | `GameConfig.OLD_AGE_TICKS` |

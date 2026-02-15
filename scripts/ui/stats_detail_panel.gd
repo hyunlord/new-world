@@ -50,19 +50,8 @@ func _gui_input(event: InputEvent) -> void:
 			hide_panel()
 			accept_event()
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var vp_size := get_viewport_rect().size
-		var panel_w: float = vp_size.x * 0.75
-		var panel_h: float = vp_size.y * 0.8
-		var panel_x: float = (vp_size.x - panel_w) * 0.5
-		var panel_y: float = (vp_size.y - panel_h) * 0.5
-		var panel_rect := Rect2(panel_x, panel_y, panel_w, panel_h)
-		var mb: InputEventMouseButton = event as InputEventMouseButton
-		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
-		if close_area.has_point(mb.position) or not panel_rect.has_point(mb.position):
-			hide_panel()
-			accept_event()
-		else:
-			accept_event()  # Consume click inside panel to prevent passthrough
+		hide_panel()
+		accept_event()
 
 
 func _draw() -> void:
@@ -89,7 +78,7 @@ func _draw() -> void:
 
 	# Title
 	draw_string(font, Vector2(cx, cy), "World Statistics", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
-	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_close_btn"), Color(0.7, 0.7, 0.7))
+	# (click anywhere to close)
 	cy += 15.0
 	draw_line(Vector2(cx, cy), Vector2(panel_x + panel_w - 20, cy), Color(0.3, 0.3, 0.4), 1.0)
 	cy += 10.0
@@ -105,8 +94,8 @@ func _draw() -> void:
 	_draw_jobs_section(font, cx, cy, half_w)
 	_draw_settlements_section(font, cx + half_w + 20, cy, half_w)
 
-	# Footer
-	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[G: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_close"), Color(0.5, 0.5, 0.5))
+	# Footer hint
+	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click anywhere or G to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 
 
 func _draw_population_section(font: Font, x: float, y: float, w: float) -> float:

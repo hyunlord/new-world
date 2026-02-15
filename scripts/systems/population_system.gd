@@ -31,8 +31,8 @@ func _check_births(tick: int) -> void:
 		return
 	var alive_count: int = _entity_manager.get_alive_count()
 
-	# Diagnostic logging every 500 ticks
-	if tick % 500 == 0 and alive_count >= 5:
+	# Diagnostic logging every 200 ticks (more frequent for debugging)
+	if tick % 200 == 0 and alive_count >= 5:
 		_log_population_status(tick, alive_count)
 
 	if alive_count >= GameConfig.MAX_ENTITIES:
@@ -66,8 +66,8 @@ func _check_births(tick: int) -> void:
 			best_food = food
 			best_stockpile = sp
 
-	# Food threshold: need food >= alive_count * 1.0
-	if total_food < float(alive_count) * 1.0:
+	# Food threshold: need food >= alive_count * 0.5 (lowered from 1.0 — was blocking growth at ~49)
+	if total_food < float(alive_count) * 0.5:
 		return
 	if best_stockpile == null:
 		return
@@ -135,10 +135,21 @@ func _log_population_status(tick: int, alive_count: int) -> void:
 		if sp.is_built:
 			total_food += sp.storage.get("food", 0.0)
 	var housing_cap: int = 25 if total_shelters == 0 else total_shelters * 6
-	var food_ok: bool = total_food >= float(alive_count) * 1.0
+	var food_threshold: float = float(alive_count) * 0.5
+	var food_ok: bool = total_food >= food_threshold
 	var housing_ok: bool = alive_count < 25 or total_shelters * 6 >= alive_count
-	print("[Tick %d] [Pop] pop=%d food=%.0f shelters=%d(%d built) | housing_cap=%d food_ok=%s housing_ok=%s" % [
-		tick, alive_count, total_food, total_shelters, built_shelters, housing_cap, str(food_ok), str(housing_ok),
+	var at_max: bool = alive_count >= GameConfig.MAX_ENTITIES
+	var block_reason: String = ""
+	if at_max:
+		block_reason = "MAX_ENTITIES(%d)" % GameConfig.MAX_ENTITIES
+	elif not food_ok:
+		block_reason = "food(%.0f < %.0f)" % [total_food, food_threshold]
+	elif not housing_ok:
+		block_reason = "housing(%d < %d)" % [total_shelters * 6, alive_count]
+	else:
+		block_reason = "NONE (birth allowed)"
+	print("[Tick %d] [Pop] pop=%d food=%.0f/%.0f shelters=%d(%d built) cap=%d max=%d | block=%s" % [
+		tick, alive_count, total_food, food_threshold, total_shelters, built_shelters, housing_cap, GameConfig.MAX_ENTITIES, block_reason,
 	])
 
 

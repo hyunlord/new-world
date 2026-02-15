@@ -4,6 +4,24 @@
 
 ---
 
+## Phase 1.5 팝업 닫기 + 인구 캡 버그 (T-960 series)
+
+**gate PASS** | 5 code files changed + 3 docs updated
+
+### T-960: 팝업 닫기 방식 변경
+- `stats_detail_panel.gd` — [X] 버튼 제거, 클릭 아무 곳 = 닫기, 풋터 "Click anywhere or G to close"
+- `entity_detail_panel.gd` — 동일 패턴 적용, "Click anywhere or E to close"
+- `building_detail_panel.gd` — 동일 패턴 적용, "Click anywhere or E to close"
+
+### T-970: 인구 49 고정 버그 수정 [Critical]
+- **원인**: `total_food >= alive_count × 1.0` 조건이 너무 엄격 — pop 49에서 49 food 유지 불가
+- `population_system.gd` — 식량 임계값 `1.0` → `0.5` per capita
+- 진단 로깅 강화: 200틱마다 block reason 출력 (food/housing/max 구분)
+- `docs/GAME_BALANCE.md` — 번식 식량 조건 1.0 → 0.5 반영
+- `docs/CONTROLS.md` — 팝업 닫기 방식 업데이트 (클릭=닫기, [X] 제거)
+
+---
+
 ## Phase 1.5 UI 크기 + 클릭 디테일 + UI_SCALE (T-950 series)
 
 **gate PASS** | 11 code files changed + 6 docs updated
