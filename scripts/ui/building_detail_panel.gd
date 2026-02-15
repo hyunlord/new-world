@@ -50,19 +50,8 @@ func _gui_input(event: InputEvent) -> void:
 			hide_panel()
 			accept_event()
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var vp_size := get_viewport_rect().size
-		var panel_w: float = vp_size.x * 0.45
-		var panel_h: float = vp_size.y * 0.5
-		var panel_x: float = (vp_size.x - panel_w) * 0.5
-		var panel_y: float = (vp_size.y - panel_h) * 0.5
-		var panel_rect := Rect2(panel_x, panel_y, panel_w, panel_h)
-		var mb: InputEventMouseButton = event as InputEventMouseButton
-		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
-		if close_area.has_point(mb.position) or not panel_rect.has_point(mb.position):
-			hide_panel()
-			accept_event()
-		else:
-			accept_event()
+		hide_panel()
+		accept_event()
 
 
 func _draw() -> void:
@@ -105,7 +94,7 @@ func _draw() -> void:
 			icon = "\u25CF"
 			type_color = Color(1.0, 0.4, 0.1)
 	draw_string(font, Vector2(cx, cy), "%s %s" % [icon, building.building_type.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), type_color)
-	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_close_btn"), Color(0.7, 0.7, 0.7))
+	# (click anywhere to close)
 	cy += 8.0
 
 	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else "None"
@@ -165,4 +154,4 @@ func _draw() -> void:
 		cost_parts.append("%s: %.0f" % [cost_keys[i].capitalize(), cost[cost_keys[i]]])
 	draw_string(font, Vector2(cx + 10, cy + 12), " | ".join(cost_parts), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[E: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_close"), Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click anywhere or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))

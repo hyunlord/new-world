@@ -50,19 +50,8 @@ func _gui_input(event: InputEvent) -> void:
 			hide_panel()
 			accept_event()
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var vp_size := get_viewport_rect().size
-		var panel_w: float = vp_size.x * 0.5
-		var panel_h: float = vp_size.y * 0.65
-		var panel_x: float = (vp_size.x - panel_w) * 0.5
-		var panel_y: float = (vp_size.y - panel_h) * 0.5
-		var panel_rect := Rect2(panel_x, panel_y, panel_w, panel_h)
-		var mb: InputEventMouseButton = event as InputEventMouseButton
-		var close_area := Rect2(panel_x + panel_w - 30, panel_y + 5, 25, 25)
-		if close_area.has_point(mb.position) or not panel_rect.has_point(mb.position):
-			hide_panel()
-			accept_event()
-		else:
-			accept_event()
+		hide_panel()
+		accept_event()
 
 
 func _draw() -> void:
@@ -97,7 +86,7 @@ func _draw() -> void:
 
 	# Header
 	draw_string(font, Vector2(cx, cy), "%s - %s" % [entity.entity_name, entity.job.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
-	draw_string(font, Vector2(panel_x + panel_w - 28, panel_y + 20), "[X]", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_close_btn"), Color(0.7, 0.7, 0.7))
+	# (click anywhere to close)
 	cy += 6.0
 
 	var age_days: int = entity.age / GameConfig.AGE_DAYS_DIVISOR
@@ -156,7 +145,7 @@ func _draw() -> void:
 		cy += 13.0
 		idx -= 1
 
-	draw_string(font, Vector2(vp_size.x * 0.5 - 30, panel_y + panel_h - 12), "[E: Close]", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_close"), Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(vp_size.x * 0.5 - 50, panel_y + panel_h - 12), "Click anywhere or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 
 
 func _draw_need_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:
