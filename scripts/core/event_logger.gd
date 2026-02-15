@@ -1,4 +1,3 @@
-class_name EventLogger
 extends Node
 
 var _events: Array[Dictionary] = []
@@ -47,7 +46,7 @@ func get_by_type(event_type: String, limit: int = 50) -> Array[Dictionary]:
 ## Query: events within a tick range
 func get_tick_range(from_tick: int, to_tick: int) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	for ev in _events:
+	for ev: Dictionary in _events:
 		var t: int = ev.get("tick", -1)
 		if t >= from_tick and t <= to_tick:
 			result.append(ev)
@@ -75,14 +74,13 @@ func to_save_data() -> Array[Dictionary]:
 	return _events.duplicate()
 
 
-func load_save_data(data: Array) -> void:
+func load_save_data(data: Array[Dictionary]) -> void:
 	_events.clear()
 	_type_counts.clear()
-	for item in data:
-		if item is Dictionary:
-			_events.append(item)
-			var etype: String = item.get("type", "unknown")
-			_type_counts[etype] = _type_counts.get(etype, 0) + 1
+	for item: Dictionary in data:
+		_events.append(item)
+		var etype: String = item.get("type", "unknown")
+		_type_counts[etype] = _type_counts.get(etype, 0) + 1
 
 
 func clear() -> void:

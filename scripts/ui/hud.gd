@@ -139,7 +139,7 @@ func _process(_delta: float) -> void:
 	_fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
 
 	if _sim_engine:
-		var gt := _sim_engine.get_game_time()
+		var gt: Dictionary = _sim_engine.get_game_time()
 		_time_label.text = "Y%d D%d H%d" % [gt.year, gt.day, gt.hour]
 		_tick_label.text = "Tick: %d" % _sim_engine.current_tick
 
@@ -150,7 +150,7 @@ func _process(_delta: float) -> void:
 
 	# Update selected entity info
 	if _selected_entity_id >= 0 and _entity_manager:
-		var entity := _entity_manager.get_entity(_selected_entity_id)
+		var entity: EntityData = _entity_manager.get_entity(_selected_entity_id)
 		if entity and entity.is_alive:
 			_entity_name_label.text = entity.entity_name
 			_entity_pos_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]

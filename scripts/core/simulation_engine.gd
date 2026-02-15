@@ -7,7 +7,7 @@ var speed_index: int = 0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var _accumulator: float = 0.0
-var _systems: Array = []
+var _systems: Array[SimulationSystem] = []
 var _seed: int = 0
 
 
@@ -44,7 +44,7 @@ func update(delta: float) -> void:
 
 func _process_tick() -> void:
 	current_tick += 1
-	for system in _systems:
+	for system: SimulationSystem in _systems:
 		if system.is_active and current_tick % system.tick_interval == 0:
 			system.execute_tick(current_tick)
 	SimulationBus.tick_completed.emit(current_tick)

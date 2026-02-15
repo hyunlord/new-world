@@ -16,8 +16,8 @@ func init(entity_manager: EntityManager) -> void:
 
 
 func execute_tick(tick: int) -> void:
-	var alive := _entity_manager.get_alive_entities()
-	for entity in alive:
+	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
+	for entity: EntityData in alive:
 		# Decay needs
 		entity.hunger -= GameConfig.HUNGER_DECAY_RATE
 		entity.energy -= GameConfig.ENERGY_DECAY_RATE

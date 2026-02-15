@@ -1,4 +1,3 @@
-class_name GameConfig
 extends Node
 
 ## World constants

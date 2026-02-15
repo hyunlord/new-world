@@ -30,10 +30,10 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if _entity_manager == null:
 		return
-	var alive := _entity_manager.get_alive_entities()
+	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 
-	for entity in alive:
+	for entity: EntityData in alive:
 		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
 		var color: Color = ACTION_COLORS.get(entity.current_action, Color.WHITE)
 		draw_circle(pos, DOT_RADIUS, color)
@@ -65,7 +65,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
 
 	# Find entity at or near this tile
-	var alive := _entity_manager.get_alive_entities()
+	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
 	var best_entity: EntityData = null
 	var best_dist: float = 3.0  # max click distance in tiles
 	for entity in alive:

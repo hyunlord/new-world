@@ -77,7 +77,7 @@ func get_entity(id: int) -> EntityData:
 ## Get all alive entities
 func get_alive_entities() -> Array[EntityData]:
 	var result: Array[EntityData] = []
-	for entity in _entities.values():
+	for entity: EntityData in _entities.values():
 		if entity.is_alive:
 			result.append(entity)
 	return result
@@ -86,7 +86,7 @@ func get_alive_entities() -> Array[EntityData]:
 ## Get alive entity count
 func get_alive_count() -> int:
 	var count: int = 0
-	for entity in _entities.values():
+	for entity: EntityData in _entities.values():
 		if entity.is_alive:
 			count += 1
 	return count
@@ -95,7 +95,7 @@ func get_alive_count() -> int:
 ## Get entities within radius of position
 func get_entities_near(pos: Vector2i, radius: int) -> Array[EntityData]:
 	var result: Array[EntityData] = []
-	for entity in _entities.values():
+	for entity: EntityData in _entities.values():
 		if entity.is_alive:
 			var dist: int = absi(entity.position.x - pos.x) + absi(entity.position.y - pos.y)
 			if dist <= radius:
@@ -106,7 +106,7 @@ func get_entities_near(pos: Vector2i, radius: int) -> Array[EntityData]:
 ## Serialize all entities
 func to_save_data() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	for entity in _entities.values():
+	for entity: EntityData in _entities.values():
 		result.append(entity.to_dict())
 	return result
 
@@ -115,7 +115,7 @@ func to_save_data() -> Array[Dictionary]:
 func load_save_data(data: Array, world_data: WorldData) -> void:
 	_entities.clear()
 	_next_id = 1
-	for item in data:
+	for item: Variant in data:
 		if item is Dictionary:
 			var entity := EntityData.from_dict(item)
 			_entities[entity.id] = entity

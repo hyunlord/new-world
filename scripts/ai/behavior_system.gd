@@ -20,14 +20,14 @@ func init(entity_manager: EntityManager, world_data: WorldData, rng: RandomNumbe
 
 
 func execute_tick(tick: int) -> void:
-	var alive := _entity_manager.get_alive_entities()
-	for entity in alive:
+	var alive: Array[EntityData] = _entity_manager.get_alive_entities()
+	for entity: EntityData in alive:
 		if entity.action_timer > 0:
 			continue
 		var scores := _evaluate_actions(entity)
 		var best_action: String = "wander"
 		var best_score: float = -1.0
-		for action in scores:
+		for action: String in scores:
 			if scores[action] > best_score:
 				best_score = scores[action]
 				best_action = action
@@ -111,7 +111,7 @@ func _find_nearest_entity(entity: EntityData) -> Vector2i:
 	var nearby := _entity_manager.get_entities_near(entity.position, 10)
 	var best_dist: int = 999999
 	var best_pos: Vector2i = entity.position
-	for other in nearby:
+	for other: EntityData in nearby:
 		if other.id == entity.id:
 			continue
 		var dist: int = absi(other.position.x - entity.position.x) + absi(other.position.y - entity.position.y)

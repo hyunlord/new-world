@@ -1,4 +1,3 @@
-class_name SimulationBus
 extends Node
 
 ## Core simulation events
