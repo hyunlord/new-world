@@ -4,6 +4,26 @@
 
 ---
 
+## Phase 2: Binary Save/Load (T-1100)
+
+### T-1100: Binary Save/Load System
+- `save_manager.gd` (REWRITTEN) — JSON→바이너리 전환, 버전 2:
+  - 저장 구조: `user://saves/quicksave/` 디렉토리
+    - `meta.json`: version, tick, seed, rng_state, speed_index, ui_scale, population, game_date
+    - `entities.bin`: 엔티티 바이너리 (id, name, position, needs, age, gender, personality 5종, emotions 5종, job, family, inventory, AI state)
+    - `buildings.bin`: 건물 바이너리 (id, type, position, progress, storage)
+    - `relationships.bin`: 관계 바이너리 (pair IDs, affinity, trust, romantic_interest, interaction_count, type)
+    - `settlements.bin`: 정착지 바이너리 (id, center, founding_tick, member_ids, building_ids)
+    - `world.bin`: ResourceMap 바이너리 (width, height, food/wood/stone PackedFloat32Array)
+    - `stats.json`: 통계 히스토리 (peak_pop, total_births, total_deaths, history)
+  - signed 32-bit 변환 (`_s32`) for partner_id, pregnancy_tick, action_target
+  - enum 압축: gender(1B), age_stage(1B), job(1B), rel_type(1B)
+  - 크기 추정: 엔티티당 ~120B, 관계당 ~25B, 1만명+5만관계 ≈ 2.5MB
+- `main.gd` — save/load 경로 `user://saves/quicksave`, relationship_manager + stats_recorder 전달
+- 기존 JSON 세이브 호환 포기 (SAVE_VERSION=2)
+
+---
+
 ## Phase 2: FamilySystem (T-1090)
 
 ### T-1090: Family System — 임신, 출산, 사별

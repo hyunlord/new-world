@@ -55,7 +55,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | RelationshipData | 관계 데이터 (affinity, trust, romantic_interest, type) | `scripts/core/relationship_data.gd` |
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
-| SaveManager | JSON 저장/로드 (Cmd+S/Cmd+L) | `scripts/core/save_manager.gd` |
+| SaveManager | 바이너리 저장/로드 (Cmd+S/Cmd+L), `user://saves/quicksave/` 디렉토리 구조 (meta.json + *.bin + stats.json) | `scripts/core/save_manager.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
 ---

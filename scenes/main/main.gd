@@ -362,10 +362,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _save_game() -> void:
-	var path: String = "user://quicksave.json"
+	var path: String = "user://saves/quicksave"
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
-	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager)
+	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
@@ -374,9 +374,9 @@ func _save_game() -> void:
 
 
 func _load_game() -> void:
-	var path: String = "user://quicksave.json"
+	var path: String = "user://saves/quicksave"
 	sim_engine.is_paused = true
-	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager)
+	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
