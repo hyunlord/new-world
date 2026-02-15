@@ -193,19 +193,24 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_SPACE:
-				sim_engine.toggle_pause()
-			KEY_PERIOD:
-				sim_engine.increase_speed()
-			KEY_COMMA:
-				sim_engine.decrease_speed()
-			KEY_TAB:
-				world_renderer.toggle_resource_overlay()
-			KEY_F5:
-				_save_game()
-			KEY_F9:
-				_load_game()
+		if event.ctrl_pressed:
+			match event.keycode:
+				KEY_S:
+					_save_game()
+					get_viewport().set_input_as_handled()
+				KEY_L:
+					_load_game()
+					get_viewport().set_input_as_handled()
+		else:
+			match event.keycode:
+				KEY_SPACE:
+					sim_engine.toggle_pause()
+				KEY_PERIOD:
+					sim_engine.increase_speed()
+				KEY_COMMA:
+					sim_engine.decrease_speed()
+				KEY_TAB:
+					world_renderer.toggle_resource_overlay()
 
 
 func _save_game() -> void:
@@ -253,6 +258,6 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    . (period)     = Speed up")
 	print("    , (comma)      = Speed down")
 	print("    Tab            = Toggle resource overlay")
-	print("    F5             = Quick Save")
-	print("    F9             = Quick Load")
+	print("    Cmd+S          = Quick Save")
+	print("    Cmd+L          = Quick Load")
 	print("")

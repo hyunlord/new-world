@@ -16,8 +16,8 @@
 | A / ← | 카메라 왼쪽 이동 | `camera_controller.gd` |
 | D / → | 카메라 오른쪽 이동 | `camera_controller.gd` |
 | Tab | 자원 오버레이 ON/OFF 토글 | `main.gd` → `world_renderer.toggle_resource_overlay()` |
-| F5 | 퀵 세이브 (`user://quicksave.json`) | `main.gd` → `_save_game()` |
-| F9 | 퀵 로드 | `main.gd` → `_load_game()` |
+| Cmd+S (Ctrl+S) | 퀵 세이브 (`user://quicksave.json`) | `main.gd` → `_save_game()` |
+| Cmd+L (Ctrl+L) | 퀵 로드 | `main.gd` → `_load_game()` |
 
 ---
 
@@ -78,7 +78,7 @@
 
 화면 우하단에 상시 표시 (11px, 회색 `Color(0.6, 0.6, 0.6, 0.7)`):
 ```
-F5:Save  F9:Load  Tab:Resources  Space:Pause
+⌘S:Save  ⌘L:Load  Tab:Resources  Space:Pause
 ```
 
 ### 엔티티 패널 (좌하단, 선택 시만)

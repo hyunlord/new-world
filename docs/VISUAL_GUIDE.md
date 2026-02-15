@@ -132,7 +132,7 @@ Tab 키로 ON/OFF 토글. 100틱마다 자동 갱신.
 
 우하단 키 힌트:
 - 11px 회색 텍스트 (`Color(0.6, 0.6, 0.6, 0.7)`)
-- `F5:Save  F9:Load  Tab:Resources  Space:Pause`
+- `⌘S:Save  ⌘L:Load  Tab:Resources  Space:Pause`
 
 중앙 상단 토스트:
 - 20px 노란색 텍스트, 2초 표시 후 0.5초 페이드아웃
