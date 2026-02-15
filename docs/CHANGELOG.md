@@ -4,6 +4,85 @@
 
 ---
 
+## Phase 1.5 UI/UX Fix — 사용자 피드백 8건 반영 (T-800 series)
+
+**gate PASS** | 15+ code files changed + 6 docs updated
+
+### T-800: 낮/밤 전환 속도 + 끄기 옵션 [Critical]
+- `main.gd` — 낮/밤 색상을 매 프레임 직접 설정 → 느린 lerp 보간으로 변경
+  - 기본 lerp 속도: `0.3 * delta`, 고속(speed_index >= 3): `0.05 * delta`
+  - 밤 색상 완화: `Color(0.4, 0.4, 0.6)` → `Color(0.75, 0.75, 0.85)` (덜 어둡게)
+  - 새벽/석양/황혼 색상 전체 완화
+- `main.gd` — N 키 토글: `_day_night_enabled` 플래그, OFF 시 `modulate = Color(1,1,1)`
+
+### T-810: 우측 사이드바 레이아웃 정리 [Critical]
+- `stats_panel.gd` — 위치 수정: 미니맵(38+160) 아래 10px 간격으로 고정 배치
+  - `mouse_filter = MOUSE_FILTER_STOP` (클릭 캡처)
+  - 숫자값 표시 추가 (Pop, F/W/S, G/L/B/M)
+  - "G: Details" 클릭 유도 텍스트
+
+### T-820: 통계 상세창 [Critical]
+- `stats_detail_panel.gd` (신규) — 화면 75%×80% 중앙 팝업
+  - dim 오버레이 + 둥근 모서리 패널
+  - 인구 그래프 (피크/사망/출생 통계), 자원 그래프 (100틱당 변화량)
+  - 직업 분포 바 (%), 정착지 비교 (인구/건물)
+  - 자동 일시정지, G/Esc로 닫기
+- `stats_recorder.gd` — 추가 필드: peak_pop, total_births, total_deaths
+  - 추가 메서드: `get_resource_deltas()`, `get_settlement_stats()`
+  - `settlement_manager` 참조 추가
+- `stats_panel.gd` — 클릭 시 `SimulationBus.ui_notification` → 상세창 열기
+
+### T-830: 에이전트/건물 패널 확대 + 상세보기 [Medium]
+- `hud.gd` — 엔티티 패널 250×220 → 320×280px, 건물 패널 크기 확대
+  - 양쪽 패널에 "E: Details" 힌트 텍스트 추가
+- `entity_detail_panel.gd` (신규) — 화면 50%×65% 중앙 팝업
+  - 헤더, 상태, 욕구 바, 통계(speed/strength/total_gathered/buildings_built)
+  - 최근 행동 히스토리 (최대 20개)
+- `building_detail_panel.gd` (신규) — 화면 45%×50% 중앙 팝업
+  - 건물 타입별 상세 정보, 건설 비용
+- `entity_data.gd` — 추가 필드: total_gathered, buildings_built, action_history
+  - to_dict/from_dict 직렬화 업데이트
+- `behavior_system.gd` — 행동 변경 시 action_history에 push (최대 20개)
+- `gathering_system.gd` — `entity.total_gathered += harvested` 추적
+- `construction_system.gd` — `entity.buildings_built += 1` 추적
+- `main.gd` — E 키 → `hud.open_entity_detail()` / `hud.open_building_detail()`
+
+### T-840: 자원 오버레이 강화 [Medium]
+- `world_renderer.gd` — 오버레이 색상 강화:
+  - food: `Color(1.0, 0.85, 0.0)` alpha 0.45~0.65
+  - wood: `Color(0.0, 0.8, 0.2)` alpha 0.35~0.55
+  - stone: `Color(0.4, 0.6, 1.0)` alpha 0.4~0.6
+- `entity_renderer.gd` — LOD 2 + 오버레이 ON 시 F/W/S 문자 마커 (8px)
+  - `resource_map` 참조 추가, `resource_overlay_visible` 플래그
+- `hud.gd` — 자원 범례 색상을 새 오버레이 색상과 일치
+
+### T-850: 도움말 개선 [Low]
+- `hud.gd` — 도움말 오버레이 전면 재작성:
+  - PanelContainer 600×440px, 둥근 모서리, 두 컬럼 레이아웃
+  - 제목 24px, 섹션 헤더 16px, 항목 13px
+  - Camera/Game, Panels/Display 4개 섹션
+  - N:Day/Night, E:Details 키 추가
+- `main.gd` — H 키: 열면 자동 일시정지, 닫으면 재개 (`_was_running_before_help`)
+
+### T-860: 토스트 알림 가시성 [Low]
+- `hud.gd` — 알림 시스템 재작성:
+  - 위치: 우측 → 좌측 (x=20, y=40), 32px 간격
+  - PanelContainer + StyleBoxFlat 배경 바, 14px 폰트
+  - 카테고리별 색상: 초록(성장), 갈색(건설), 빨강(위험), 회색(일반)
+  - 표시 시간: 3초 → 4초, 페이드아웃: 0.5초 → 1초
+  - 인구 마일스톤 간격: 50명 → 10명
+- `main.gd` — 시작 시 "WorldSim started! Pop: N" 토스트
+
+### T-870: 문서 동기화
+- `docs/CONTROLS.md` — G/E/H/N/Tab 키 설명 업데이트, 키힌트 갱신
+- `docs/VISUAL_GUIDE.md` — 낮/밤 색상, 자원 오버레이, 패널 크기, 도움말, 토스트, 상세패널
+- `docs/SYSTEMS.md` — EntityData 필드, StatsRecorder 메서드, 3개 상세 패널 렌더러
+- `docs/GAME_BALANCE.md` — 낮/밤 색상/보간, 알림 수치
+- `docs/ARCHITECTURE.md` — 3개 신규 UI 파일 (파일맵 + 다이어그램)
+- `docs/CHANGELOG.md` — Phase 1.5 UI/UX Fix 전체 기록
+
+---
+
 ## Phase 1.5: Visual Polish — Minimap, Stats, UI Overhaul (T-750 series)
 
 **gate PASS** | 8 code files changed + 6 docs updated

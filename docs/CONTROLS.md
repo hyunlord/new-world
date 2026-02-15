@@ -15,10 +15,12 @@
 | S / ↓ | 카메라 아래로 이동 | `camera_controller.gd` |
 | A / ← | 카메라 왼쪽 이동 | `camera_controller.gd` |
 | D / → | 카메라 오른쪽 이동 | `camera_controller.gd` |
-| Tab | 자원 오버레이 ON/OFF 토글 + 범례 표시 | `main.gd` → `world_renderer.toggle_resource_overlay()` + `hud.set_resource_legend_visible()` |
+| Tab | 자원 오버레이 ON/OFF 토글 + 범례 + F/W/S 문자 마커 | `main.gd` → `world_renderer.toggle_resource_overlay()` + `entity_renderer.resource_overlay_visible` + `hud.set_resource_legend_visible()` |
 | M | 미니맵 표시/숨김 토글 | `main.gd` → `hud.toggle_minimap()` |
-| G | 통계 패널 표시/숨김 토글 | `main.gd` → `hud.toggle_stats()` |
-| H | 도움말 오버레이 표시/숨김 토글 | `main.gd` → `hud.toggle_help()` |
+| G | 통계 상세창 열기 (일시정지, 인구/자원 그래프, 직업, 정착지) | `main.gd` → `hud.toggle_stats()` → `StatsDetailPanel.show_panel()` |
+| E | 선택된 엔티티/건물 상세보기 (일시정지, 히스토리 포함) | `main.gd` → `hud.open_entity_detail()` / `hud.open_building_detail()` |
+| H | 도움말 오버레이 (열면 자동 일시정지, 닫으면 재개) | `main.gd` → `hud.toggle_help()` |
+| N | 낮/밤 효과 ON/OFF 토글 (OFF 시 항상 밝게) | `main.gd` → `_day_night_enabled` 토글 |
 | Cmd+S (Ctrl+S) | 퀵 세이브 (`user://quicksave.json`) | `main.gd` → `_save_game()` |
 | Cmd+L (Ctrl+L) | 퀵 로드 | `main.gd` → `_load_game()` |
 
@@ -86,7 +88,7 @@
 
 화면 우하단에 상시 표시 (10px, 회색 `Color(0.5, 0.5, 0.5, 0.6)`):
 ```
-⌘S:Save  ⌘L:Load  Tab:Resources  M:Map  G:Stats  H:Help  Space:Pause
+⌘S:Save  ⌘L:Load  Tab:Resources  M:Map  G:Stats  E:Details  N:Day/Night  H:Help  Space:Pause
 ```
 
 ### 엔티티 패널 (좌하단, 선택 시만)

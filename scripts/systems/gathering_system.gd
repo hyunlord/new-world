@@ -45,6 +45,7 @@ func execute_tick(tick: int) -> void:
 		var harvested: float = _resource_map.harvest(x, y, res_type, amount)
 		if harvested > 0.0:
 			entity.add_item(res_name, harvested)
+			entity.total_gathered += harvested
 			emit_event("resource_gathered", {
 				"entity_id": entity.id,
 				"entity_name": entity.entity_name,

@@ -17,10 +17,10 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	offset_right = -10
 	offset_left = -(10 + PANEL_W)
-	offset_top = 38 + 160 + 4
-	offset_bottom = 38 + 160 + 4 + PANEL_H
+	offset_top = 38 + 160 + 10  # Below minimap (38+160) + 10px gap
+	offset_bottom = 38 + 160 + 10 + PANEL_H
 	custom_minimum_size = Vector2(PANEL_W, PANEL_H)
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func _process(_delta: float) -> void:
@@ -46,16 +46,18 @@ func _draw() -> void:
 func _draw_population_graph(font: Font) -> void:
 	var rect := Rect2(0, 0, PANEL_W, GRAPH_H)
 	draw_rect(rect, Color(0.1, 0.1, 0.1, 0.5))
-	draw_string(font, Vector2(4, 12), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
 
 	var history: Array = _stats_recorder.history
+	var latest: Dictionary = history[history.size() - 1]
+	draw_string(font, Vector2(4, 12), "Pop: %d" % latest.pop, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+
 	var max_pop: int = 1
 	for i in range(history.size()):
 		var p: int = history[i].pop
 		if p > max_pop:
 			max_pop = p
 
-	draw_string(font, Vector2(PANEL_W - 30, 12), str(max_pop), HORIZONTAL_ALIGNMENT_RIGHT, -1, 9, Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(PANEL_W - 4, 12), str(max_pop), HORIZONTAL_ALIGNMENT_RIGHT, -1, 9, Color(0.5, 0.5, 0.5))
 
 	var points := PackedVector2Array()
 	var count: int = history.size()
@@ -71,9 +73,10 @@ func _draw_resource_graph(font: Font) -> void:
 	var y_off: float = GRAPH_H + 4
 	var rect := Rect2(0, y_off, PANEL_W, GRAPH_H)
 	draw_rect(rect, Color(0.1, 0.1, 0.1, 0.5))
-	draw_string(font, Vector2(4, y_off + 12), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
 
 	var history: Array = _stats_recorder.history
+	var latest: Dictionary = history[history.size() - 1]
+	draw_string(font, Vector2(4, y_off + 12), "F:%d W:%d S:%d" % [int(latest.food), int(latest.wood), int(latest.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
 	var max_res: float = 1.0
 	for i in range(history.size()):
 		var s: Dictionary = history[i]
@@ -147,3 +150,12 @@ func _draw_job_distribution(font: Font) -> void:
 
 	var label_y: float = bar_y + BAR_H + 10
 	draw_string(font, Vector2(4, label_y), "G:%d L:%d B:%d M:%d" % [snap.gatherers, snap.lumberjacks, snap.builders, snap.miners], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(0.7, 0.7, 0.7))
+
+	# Click hint
+	draw_string(font, Vector2(PANEL_W * 0.5 - 20, PANEL_H - 4), "G: Details", HORIZONTAL_ALIGNMENT_CENTER, -1, 9, Color(0.5, 0.5, 0.5))
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		SimulationBus.ui_notification.emit("open_stats_detail", "command")
+		accept_event()

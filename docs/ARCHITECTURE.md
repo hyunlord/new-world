@@ -27,7 +27,10 @@
 │  ├ PopulationSystem    │  HUD                                │
 │  ├ MigrationSystem     │    ├ 상단바 + 엔티티/건물패널 + 토스트  │
 │  └ StatsRecorder       │    ├ MinimapPanel (우상단 160×160)    │
-│                        │    └ StatsPanel (미니맵 하단 160×200) │
+│                        │    ├ StatsPanel (미니맵 하단 160×200) │
+│                        │    ├ StatsDetailPanel (G/클릭 상세)   │
+│                        │    ├ EntityDetailPanel (E 상세)       │
+│                        │    └ BuildingDetailPanel (E 상세)     │
 │                        │                                     │
 │ EntityManager          │                                     │
 │ BuildingManager        │                                     │
@@ -124,7 +127,10 @@ SimulationEngine.update(delta)
 | `camera_controller.gd` | WASD/마우스/트랙패드 카메라, 줌 보간, 드래그 팬 |
 | `hud.gd` | 상단 바 + 엔티티/건물 패널 + 토스트 + 도움말 + 범례 + 키힌트 |
 | `minimap_panel.gd` | 미니맵 (160×160, Image 기반, 클릭 이동, 정착지 라벨) |
-| `stats_panel.gd` | 통계 패널 (인구/자원 그래프, 직업 분포 바) |
+| `stats_panel.gd` | 미니 통계 패널 (인구/자원 그래프, 직업 분포 바, 클릭→상세) |
+| `stats_detail_panel.gd` | 통계 상세창 (75%×80%, 인구/자원/직업/정착지 비교, G키/클릭) |
+| `entity_detail_panel.gd` | 에이전트 상세창 (50%×65%, 상태/욕구/통계/행동 히스토리, E키) |
+| `building_detail_panel.gd` | 건물 상세창 (45%×50%, 타입별 상세 정보, E키) |
 
 ---
 

@@ -31,6 +31,11 @@ var inventory: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 var job: String = "none"
 var settlement_id: int = 0
 
+## Lifetime stats (for detail panel)
+var total_gathered: float = 0.0
+var buildings_built: int = 0
+var action_history: Array = []
+
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
 var path_index: int = 0
@@ -92,6 +97,8 @@ func to_dict() -> Dictionary:
 		"inventory": inventory.duplicate(),
 		"job": job,
 		"settlement_id": settlement_id,
+		"total_gathered": total_gathered,
+		"buildings_built": buildings_built,
 	}
 
 
@@ -122,4 +129,6 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	}
 	e.job = data.get("job", "none")
 	e.settlement_id = data.get("settlement_id", 0)
+	e.total_gathered = data.get("total_gathered", 0.0)
+	e.buildings_built = data.get("buildings_built", 0)
 	return e

@@ -6,8 +6,10 @@ const EntityManagerClass = preload("res://scripts/core/entity_manager.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
+var _resource_map: RefCounted
 var selected_entity_id: int = -1
 var _current_lod: int = 1
+var resource_overlay_visible: bool = false
 
 const SELECTION_RADIUS: float = 7.0
 const HUNGER_WARNING_RADIUS: float = 2.0
@@ -31,9 +33,10 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted, building_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
+	_resource_map = resource_map
 
 
 func _process(_delta: float) -> void:
@@ -119,6 +122,22 @@ func _draw() -> void:
 				if _current_lod == 2:
 					var entity_name: String = entity.entity_name
 					draw_string(ThemeDB.fallback_font, pos + Vector2(size + 3.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
+
+	# Resource text markers at high zoom (LOD 2)
+	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
+		var res_font: Font = ThemeDB.fallback_font
+		for ty in range(maxi(0, min_tile_y), mini(_resource_map.height, max_tile_y + 1)):
+			for tx in range(maxi(0, min_tile_x), mini(_resource_map.width, max_tile_x + 1)):
+				var tpos := Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
+				var food: float = _resource_map.get_food(tx, ty)
+				var wood: float = _resource_map.get_wood(tx, ty)
+				var stone: float = _resource_map.get_stone(tx, ty)
+				if food > 2.0:
+					draw_string(res_font, tpos + Vector2(-3, 4), "F", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
+				elif stone > 2.0:
+					draw_string(res_font, tpos + Vector2(-3, 4), "S", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
+				elif wood > 3.0:
+					draw_string(res_font, tpos + Vector2(-3, 4), "W", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
 
 
 func _draw_triangle(center: Vector2, size: float, color: Color) -> void:

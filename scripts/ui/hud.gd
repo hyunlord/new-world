@@ -3,6 +3,9 @@ extends CanvasLayer
 
 const MinimapPanelClass = preload("res://scripts/ui/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/stats_panel.gd")
+const StatsDetailPanelClass = preload("res://scripts/ui/stats_detail_panel.gd")
+const EntityDetailPanelClass = preload("res://scripts/ui/entity_detail_panel.gd")
+const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -50,11 +53,12 @@ var _building_status_label: Label
 var _notification_container: Control
 var _notifications: Array = []
 const MAX_NOTIFICATIONS: int = 5
-const NOTIFICATION_DURATION: float = 3.0
+const NOTIFICATION_DURATION: float = 4.0
 
 # Help overlay
 var _help_overlay: Control
 var _help_visible: bool = false
+var _was_running_before_help: bool = false
 
 # Resource legend
 var _resource_legend: PanelContainer
@@ -64,6 +68,11 @@ var _minimap_panel: Control
 var _stats_panel: Control
 var _minimap_visible: bool = true
 var _stats_visible: bool = true
+
+# Detail panels
+var _stats_detail_panel: Control
+var _entity_detail_panel: Control
+var _building_detail_panel: Control
 
 # Key hints
 var _hint_label: Label
@@ -114,6 +123,20 @@ func _build_minimap_and_stats() -> void:
 		_stats_panel.init(_stats_recorder)
 		add_child(_stats_panel)
 
+		_stats_detail_panel = StatsDetailPanelClass.new()
+		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _sim_engine)
+		add_child(_stats_detail_panel)
+
+	if _entity_manager != null:
+		_entity_detail_panel = EntityDetailPanelClass.new()
+		_entity_detail_panel.init(_entity_manager, _building_manager, _sim_engine)
+		add_child(_entity_detail_panel)
+
+	if _building_manager != null:
+		_building_detail_panel = BuildingDetailPanelClass.new()
+		_building_detail_panel.init(_building_manager, _settlement_manager, _sim_engine)
+		add_child(_building_detail_panel)
+
 
 func _connect_signals() -> void:
 	SimulationBus.entity_selected.connect(_on_entity_selected)
@@ -123,6 +146,7 @@ func _connect_signals() -> void:
 	SimulationBus.speed_changed.connect(_on_speed_changed)
 	SimulationBus.pause_changed.connect(_on_pause_changed)
 	SimulationBus.simulation_event.connect(_on_simulation_event)
+	SimulationBus.ui_notification.connect(_on_ui_notification)
 
 
 func _build_top_bar() -> void:
@@ -169,8 +193,8 @@ func _build_entity_panel() -> void:
 	_entity_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_entity_panel.offset_left = 10
 	_entity_panel.offset_bottom = -10
-	_entity_panel.offset_top = -240
-	_entity_panel.offset_right = 260
+	_entity_panel.offset_top = -280
+	_entity_panel.offset_right = 320
 	_entity_panel.visible = false
 
 	var bg := StyleBoxFlat.new()
@@ -224,6 +248,10 @@ func _build_entity_panel() -> void:
 	_entity_stats_label = _make_label("SPD: 1.0 | STR: 1.0", 9, Color(0.6, 0.6, 0.6))
 	vbox.add_child(_entity_stats_label)
 
+	var detail_hint := _make_label("E: Details", 9, Color(0.5, 0.5, 0.5))
+	detail_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(detail_hint)
+
 	_entity_panel.add_child(vbox)
 	add_child(_entity_panel)
 
@@ -233,8 +261,8 @@ func _build_building_panel() -> void:
 	_building_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_building_panel.offset_left = 10
 	_building_panel.offset_bottom = -10
-	_building_panel.offset_top = -170
-	_building_panel.offset_right = 260
+	_building_panel.offset_top = -190
+	_building_panel.offset_right = 320
 	_building_panel.visible = false
 
 	var bg := StyleBoxFlat.new()
@@ -263,6 +291,10 @@ func _build_building_panel() -> void:
 	vbox.add_child(_building_storage_label)
 	vbox.add_child(_building_status_label)
 
+	var bld_detail_hint := _make_label("E: Details", 9, Color(0.5, 0.5, 0.5))
+	bld_detail_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(bld_detail_hint)
+
 	_building_panel.add_child(vbox)
 	add_child(_building_panel)
 
@@ -270,9 +302,9 @@ func _build_building_panel() -> void:
 func _build_notification_area() -> void:
 	_notification_container = Control.new()
 	_notification_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_notification_container.offset_left = 10
-	_notification_container.offset_top = 120
-	_notification_container.offset_right = 350
+	_notification_container.offset_left = 20
+	_notification_container.offset_top = 40
+	_notification_container.offset_right = 360
 	_notification_container.offset_bottom = 250
 	_notification_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_notification_container)
@@ -284,32 +316,75 @@ func _build_help_overlay() -> void:
 	_help_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_help_overlay.visible = false
 
-	var center := VBoxContainer.new()
+	var center := PanelContainer.new()
 	center.set_anchors_preset(Control.PRESET_CENTER)
-	center.offset_left = -200
-	center.offset_right = 200
-	center.offset_top = -180
-	center.offset_bottom = 180
-	center.add_theme_constant_override("separation", 4)
+	center.offset_left = -300
+	center.offset_right = 300
+	center.offset_top = -220
+	center.offset_bottom = 220
 
-	center.add_child(_make_label("WorldSim Controls", 18))
-	center.add_child(_make_separator())
-	center.add_child(_make_label("Space ............ Pause / Resume", 12))
-	center.add_child(_make_label(". / , ............ Speed up / down", 12))
-	center.add_child(_make_label("WASD / Arrows .... Pan camera", 12))
-	center.add_child(_make_label("Mouse Wheel ...... Zoom", 12))
-	center.add_child(_make_label("Left Click ....... Select", 12))
-	center.add_child(_make_label("Trackpad Pinch ... Zoom", 12))
-	center.add_child(_make_separator())
-	center.add_child(_make_label("\u2318S ............... Save game", 12))
-	center.add_child(_make_label("\u2318L ............... Load game", 12))
-	center.add_child(_make_label("Tab .............. Resource overlay", 12))
-	center.add_child(_make_label("M ................ Minimap toggle", 12))
-	center.add_child(_make_label("G ................ Stats toggle", 12))
-	center.add_child(_make_label("H ................ This help", 12))
-	center.add_child(_make_separator())
-	center.add_child(_make_label("Press H to close", 11, Color(0.6, 0.6, 0.6)))
+	var panel_bg := StyleBoxFlat.new()
+	panel_bg.bg_color = Color(0.06, 0.06, 0.1, 0.95)
+	panel_bg.corner_radius_top_left = 6
+	panel_bg.corner_radius_top_right = 6
+	panel_bg.corner_radius_bottom_left = 6
+	panel_bg.corner_radius_bottom_right = 6
+	panel_bg.content_margin_left = 20
+	panel_bg.content_margin_right = 20
+	panel_bg.content_margin_top = 16
+	panel_bg.content_margin_bottom = 16
+	center.add_theme_stylebox_override("panel", panel_bg)
 
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+
+	vbox.add_child(_make_label("WorldSim Controls", 24))
+	vbox.add_child(_make_separator())
+
+	# Two-column layout
+	var columns := HBoxContainer.new()
+	columns.add_theme_constant_override("separation", 30)
+
+	# Left column
+	var left_col := VBoxContainer.new()
+	left_col.add_theme_constant_override("separation", 3)
+	left_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_col.add_child(_make_label("Camera", 16, Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label("WASD/Arrows   Pan", 13))
+	left_col.add_child(_make_label("Mouse Wheel   Zoom", 13))
+	left_col.add_child(_make_label("Trackpad      Zoom/Pan", 13))
+	left_col.add_child(_make_label("Left Drag     Pan", 13))
+	left_col.add_child(_make_label("Left Click    Select", 13))
+	left_col.add_child(_make_label("", 8))
+	left_col.add_child(_make_label("Panels", 16, Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label("M             Minimap", 13))
+	left_col.add_child(_make_label("G             Statistics", 13))
+	left_col.add_child(_make_label("E             Details", 13))
+	left_col.add_child(_make_label("H             This help", 13))
+
+	# Right column
+	var right_col := VBoxContainer.new()
+	right_col.add_theme_constant_override("separation", 3)
+	right_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right_col.add_child(_make_label("Game", 16, Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label("Space         Pause", 13))
+	right_col.add_child(_make_label(". (period)    Speed up", 13))
+	right_col.add_child(_make_label(", (comma)     Speed down", 13))
+	right_col.add_child(_make_label("\u2318S            Save", 13))
+	right_col.add_child(_make_label("\u2318L            Load", 13))
+	right_col.add_child(_make_label("", 8))
+	right_col.add_child(_make_label("Display", 16, Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label("Tab           Resources", 13))
+	right_col.add_child(_make_label("N             Day/Night", 13))
+
+	columns.add_child(left_col)
+	columns.add_child(right_col)
+
+	vbox.add_child(columns)
+	vbox.add_child(_make_separator())
+	vbox.add_child(_make_label("Press H to close", 13, Color(0.6, 0.6, 0.6)))
+
+	center.add_child(vbox)
 	_help_overlay.add_child(center)
 	add_child(_help_overlay)
 
@@ -335,9 +410,9 @@ func _build_resource_legend() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 2)
 	vbox.add_child(_make_label("Resources", 11))
-	vbox.add_child(_make_label("  Food", 10, Color(1.0, 0.9, 0.1)))
-	vbox.add_child(_make_label("  Wood", 10, Color(0.0, 0.7, 0.3)))
-	vbox.add_child(_make_label("  Stone", 10, Color(0.5, 0.7, 1.0)))
+	vbox.add_child(_make_label("  Food (F)", 10, Color(1.0, 0.85, 0.0)))
+	vbox.add_child(_make_label("  Wood (W)", 10, Color(0.0, 0.8, 0.2)))
+	vbox.add_child(_make_label("  Stone (S)", 10, Color(0.4, 0.6, 1.0)))
 
 	_resource_legend.add_child(vbox)
 	add_child(_resource_legend)
@@ -345,7 +420,7 @@ func _build_resource_legend() -> void:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  H:Help  Space:Pause"
+	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  E:Details  N:Day/Night  H:Help  Space:Pause"
 	_hint_label.add_theme_font_size_override("font_size", 10)
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -371,10 +446,10 @@ func _process(delta: float) -> void:
 		# Population milestones
 		if not _pop_milestone_init:
 			_pop_milestone_init = true
-			_last_pop_milestone = (pop / 50) * 50
+			_last_pop_milestone = (pop / 10) * 10
 		else:
-			var m: int = (pop / 50) * 50
-			if m > _last_pop_milestone and m >= 50:
+			var m: int = (pop / 10) * 10
+			if m > _last_pop_milestone and m >= 10:
 				_last_pop_milestone = m
 				_add_notification("Population: %d!" % m, Color(0.3, 0.9, 0.3))
 
@@ -538,21 +613,21 @@ func _update_notifications(delta: float) -> void:
 	var i: int = _notifications.size() - 1
 	while i >= 0:
 		_notifications[i].timer -= delta
-		if _notifications[i].timer <= 0.5:
-			_notifications[i].alpha = maxf(0.0, _notifications[i].timer / 0.5)
+		if _notifications[i].timer <= 1.0:
+			_notifications[i].alpha = maxf(0.0, _notifications[i].timer / 1.0)
 		if _notifications[i].timer <= 0.0:
-			if _notifications[i].label != null:
-				_notifications[i].label.queue_free()
+			if _notifications[i].node != null:
+				_notifications[i].node.queue_free()
 			_notifications.remove_at(i)
 		else:
-			if _notifications[i].label != null:
-				_notifications[i].label.modulate.a = _notifications[i].alpha
+			if _notifications[i].node != null:
+				_notifications[i].node.modulate.a = _notifications[i].alpha
 		i -= 1
 
 	# Reposition remaining notifications
 	for j in range(_notifications.size()):
-		if _notifications[j].label != null:
-			_notifications[j].label.position.y = j * 22.0
+		if _notifications[j].node != null:
+			_notifications[j].node.position.y = j * 32.0
 
 
 func _get_stockpile_totals() -> Dictionary:
@@ -581,23 +656,47 @@ func _get_building_by_id(bid: int):
 
 func _add_notification(text: String, color: Color) -> void:
 	if _notifications.size() >= MAX_NOTIFICATIONS:
-		if _notifications[0].label != null:
-			_notifications[0].label.queue_free()
+		if _notifications[0].node != null:
+			_notifications[0].node.queue_free()
 		_notifications.remove_at(0)
+
+	# Determine background color based on text content
+	var bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)
+	if text.contains("Population") or text.contains("born") or text.contains("founded"):
+		bg_color = Color(0.1, 0.4, 0.1, 0.9)
+	elif text.contains("built") or text.contains("Build") or text.contains("construction"):
+		bg_color = Color(0.4, 0.3, 0.1, 0.9)
+	elif text.contains("starved") or text.contains("shortage") or text.contains("famine"):
+		bg_color = Color(0.5, 0.1, 0.1, 0.9)
+
+	var panel := PanelContainer.new()
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = bg_color
+	bg.corner_radius_top_left = 3
+	bg.corner_radius_top_right = 3
+	bg.corner_radius_bottom_left = 3
+	bg.corner_radius_bottom_right = 3
+	bg.content_margin_left = 8
+	bg.content_margin_right = 8
+	bg.content_margin_top = 4
+	bg.content_margin_bottom = 4
+	panel.add_theme_stylebox_override("panel", bg)
 
 	var label := Label.new()
 	label.text = text
-	label.add_theme_font_size_override("font_size", 12)
+	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", color)
-	label.position.y = _notifications.size() * 22.0
-	_notification_container.add_child(label)
+	panel.add_child(label)
+
+	panel.position.y = _notifications.size() * 32.0
+	_notification_container.add_child(panel)
 
 	_notifications.append({
 		"text": text,
 		"color": color,
 		"timer": NOTIFICATION_DURATION,
 		"alpha": 1.0,
-		"label": label,
+		"node": panel,
 	})
 
 
@@ -660,14 +759,43 @@ func toggle_minimap() -> void:
 
 
 func toggle_stats() -> void:
-	if _stats_panel != null:
-		_stats_visible = not _stats_visible
-		_stats_panel.visible = _stats_visible
+	if _stats_detail_panel != null:
+		_stats_detail_panel.show_panel()
 
 
 func toggle_help() -> void:
 	_help_visible = not _help_visible
 	_help_overlay.visible = _help_visible
+	if _help_visible:
+		if _sim_engine != null and not _sim_engine.is_paused:
+			_was_running_before_help = true
+			_sim_engine.is_paused = true
+			SimulationBus.pause_changed.emit(true)
+		else:
+			_was_running_before_help = false
+	else:
+		if _was_running_before_help and _sim_engine != null:
+			_sim_engine.is_paused = false
+			SimulationBus.pause_changed.emit(false)
+
+
+func open_entity_detail() -> void:
+	if _entity_detail_panel != null and _selected_entity_id >= 0:
+		_entity_detail_panel.show_entity(_selected_entity_id)
+
+
+func open_building_detail() -> void:
+	if _building_detail_panel != null and _selected_building_id >= 0:
+		_building_detail_panel.show_building(_selected_building_id)
+
+
+func show_startup_toast(pop_count: int) -> void:
+	_add_notification("WorldSim started! Pop: %d" % pop_count, Color.WHITE)
+
+
+func _on_ui_notification(msg: String, _category: String) -> void:
+	if msg == "open_stats_detail":
+		toggle_stats()
 
 
 func set_resource_legend_visible(vis: bool) -> void:
