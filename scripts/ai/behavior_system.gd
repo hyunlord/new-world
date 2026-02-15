@@ -71,11 +71,12 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 
 	# Building-related actions (requires building_manager)
 	if _building_manager != null:
+		var sid: int = entity.settlement_id
 		# Deliver to stockpile — gradual threshold
 		var carry: float = entity.get_total_carry()
 		if carry > 3.0:
-			var stockpile = _building_manager.get_nearest_building(
-				entity.position.x, entity.position.y, "stockpile", true
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
 			)
 			if stockpile != null:
 				if carry > 6.0:
@@ -84,16 +85,16 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 					scores["deliver_to_stockpile"] = 0.6
 
 		# Build when there are unbuilt buildings or we can place new ones
-		var unbuilt = _find_unbuilt_building(entity.position)
+		var unbuilt: RefCounted = _find_unbuilt_building(entity)
 		if unbuilt != null:
 			scores["build"] = 0.4 + _rng.randf() * 0.1
-		elif entity.job == "builder" and _should_place_building():
+		elif entity.job == "builder" and _should_place_building(entity):
 			scores["build"] = 0.4 + _rng.randf() * 0.1
 
 		# Take from stockpile when hungry
 		if hunger_deficit > 0.3:
-			var stockpile = _building_manager.get_nearest_building(
-				entity.position.x, entity.position.y, "stockpile", true
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
 			)
 			if stockpile != null and stockpile.storage.get("food", 0.0) > 0.5:
 				scores["take_from_stockpile"] = _urgency_curve(hunger_deficit) * 1.3
@@ -110,7 +111,7 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 			if scores.has("build"):
 				scores["build"] *= 1.5
 			# Builder should gather wood when can't afford any building
-			if _building_manager != null and _should_place_building():
+			if _building_manager != null and _should_place_building(entity):
 				if not _builder_can_afford_anything(entity):
 					if scores.has("gather_wood"):
 						scores["gather_wood"] *= 2.0
@@ -143,6 +144,8 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			"tick": tick,
 		})
 
+	var sid: int = entity.settlement_id
+
 	match action:
 		"wander":
 			entity.action_target = _find_random_walkable_nearby(entity.position, 5)
@@ -160,14 +163,16 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.STONE, 15)
 			entity.action_timer = 20
 		"deliver_to_stockpile":
-			var stockpile = _find_nearest_stockpile(entity.position)
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
+			)
 			if stockpile != null:
 				entity.action_target = Vector2i(stockpile.tile_x, stockpile.tile_y)
 			else:
 				entity.action_target = entity.position
 			entity.action_timer = 30
 		"build":
-			var building = _find_unbuilt_building(entity.position)
+			var building: RefCounted = _find_unbuilt_building(entity)
 			if building == null and _building_manager != null:
 				building = _try_place_building(entity)
 			if building != null:
@@ -176,7 +181,9 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 				entity.action_target = entity.position
 			entity.action_timer = 25
 		"take_from_stockpile":
-			var stockpile = _find_nearest_stockpile(entity.position)
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
+			)
 			if stockpile != null:
 				entity.action_target = Vector2i(stockpile.tile_x, stockpile.tile_y)
 			else:
@@ -184,8 +191,8 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			entity.action_timer = 15
 		"rest":
 			if _building_manager != null:
-				var shelter = _building_manager.get_nearest_building(
-					entity.position.x, entity.position.y, "shelter", true
+				var shelter: RefCounted = _find_nearest_building_in_settlement(
+					entity.position, "shelter", sid, true
 				)
 				if shelter != null:
 					entity.action_target = Vector2i(shelter.tile_x, shelter.tile_y)
@@ -290,47 +297,87 @@ func _find_resource_tile(pos: Vector2i, resource_type: int, radius: int) -> Vect
 	return best_pos
 
 
-## ─── Building Helpers ────────────────────────────────────
+## ─── Settlement-Aware Building Helpers ─────────────────────
 
-func _find_nearest_stockpile(pos: Vector2i) -> RefCounted:
-	if _building_manager == null:
-		return null
-	return _building_manager.get_nearest_building(pos.x, pos.y, "stockpile", true)
-
-
-func _find_unbuilt_building(pos: Vector2i) -> RefCounted:
+func _find_nearest_building_in_settlement(pos: Vector2i, btype: String, settlement_id: int, built_only: bool) -> RefCounted:
 	if _building_manager == null:
 		return null
 	var all_buildings: Array = _building_manager.get_all_buildings()
 	var nearest: RefCounted = null
-	var best_dist: float = 999999.0
+	var best_dist: int = 999999
 	for i in range(all_buildings.size()):
-		var building = all_buildings[i]
-		if building.is_built:
+		var building: RefCounted = all_buildings[i]
+		if building.building_type != btype:
 			continue
-		var dist: float = float(absi(building.tile_x - pos.x) + absi(building.tile_y - pos.y))
+		if settlement_id > 0 and building.settlement_id != settlement_id:
+			continue
+		if built_only and not building.is_built:
+			continue
+		var dist: int = absi(building.tile_x - pos.x) + absi(building.tile_y - pos.y)
 		if dist < best_dist:
 			best_dist = dist
 			nearest = building
 	return nearest
 
 
-func _should_place_building() -> bool:
+func _count_settlement_buildings(btype: String, settlement_id: int) -> int:
+	if _building_manager == null:
+		return 0
+	var buildings: Array = _building_manager.get_buildings_by_type(btype)
+	if settlement_id <= 0:
+		return buildings.size()
+	var count: int = 0
+	for i in range(buildings.size()):
+		if buildings[i].settlement_id == settlement_id:
+			count += 1
+	return count
+
+
+func _count_settlement_alive(settlement_id: int) -> int:
+	if settlement_id <= 0:
+		return _entity_manager.get_alive_count()
+	if _settlement_manager == null:
+		return _entity_manager.get_alive_count()
+	return _settlement_manager.get_settlement_population(settlement_id)
+
+
+func _find_unbuilt_building(entity: RefCounted) -> RefCounted:
+	if _building_manager == null:
+		return null
+	var sid: int = entity.settlement_id
+	var all_buildings: Array = _building_manager.get_all_buildings()
+	var nearest: RefCounted = null
+	var best_dist: float = 999999.0
+	for i in range(all_buildings.size()):
+		var building: RefCounted = all_buildings[i]
+		if building.is_built:
+			continue
+		if sid > 0 and building.settlement_id != sid:
+			continue
+		var dist: float = float(absi(building.tile_x - entity.position.x) + absi(building.tile_y - entity.position.y))
+		if dist < best_dist:
+			best_dist = dist
+			nearest = building
+	return nearest
+
+
+func _should_place_building(entity: RefCounted) -> bool:
 	if _building_manager == null:
 		return false
-	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-	if stockpiles.is_empty():
+	var sid: int = entity.settlement_id
+	var stockpile_count: int = _count_settlement_buildings("stockpile", sid)
+	if stockpile_count == 0:
 		return true
-	var alive_count: int = _entity_manager.get_alive_count()
-	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
+	var alive_count: int = _count_settlement_alive(sid)
+	var shelter_count: int = _count_settlement_buildings("shelter", sid)
 	# Preemptive: build when within 6 of shelter cap (not just at cap)
-	if shelters.size() * 6 < alive_count + 6:
+	if shelter_count * 6 < alive_count + 6:
 		return true
-	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
-	if campfires.is_empty():
+	var campfire_count: int = _count_settlement_buildings("campfire", sid)
+	if campfire_count == 0:
 		return true
 	# More stockpiles as population grows
-	if stockpiles.size() < alive_count / 10 + 1:
+	if stockpile_count < alive_count / 10 + 1:
 		return true
 	return false
 
@@ -348,20 +395,21 @@ func _builder_can_afford_anything(entity: RefCounted) -> bool:
 func _try_place_building(entity: RefCounted) -> RefCounted:
 	if _building_manager == null:
 		return null
+	var sid: int = entity.settlement_id
 	# Determine what to build
 	var btype: String = ""
-	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
-	var campfires: Array = _building_manager.get_buildings_by_type("campfire")
-	var alive_count: int = _entity_manager.get_alive_count()
+	var stockpile_count: int = _count_settlement_buildings("stockpile", sid)
+	var shelter_count: int = _count_settlement_buildings("shelter", sid)
+	var campfire_count: int = _count_settlement_buildings("campfire", sid)
+	var alive_count: int = _count_settlement_alive(sid)
 
-	if stockpiles.is_empty():
+	if stockpile_count == 0:
 		btype = "stockpile"
-	elif shelters.size() * 6 < alive_count + 6:
+	elif shelter_count * 6 < alive_count + 6:
 		btype = "shelter"
-	elif campfires.is_empty():
+	elif campfire_count == 0:
 		btype = "campfire"
-	elif stockpiles.size() < alive_count / 10 + 1:
+	elif stockpile_count < alive_count / 10 + 1:
 		btype = "stockpile"
 	else:
 		return null
@@ -376,22 +424,23 @@ func _try_place_building(entity: RefCounted) -> RefCounted:
 
 	_consume_building_cost(entity, cost)
 	var building: RefCounted = _building_manager.place_building(btype, site.x, site.y)
-	if building != null and entity.settlement_id > 0:
-		building.settlement_id = entity.settlement_id
+	if building != null and sid > 0:
+		building.settlement_id = sid
 		if _settlement_manager != null:
-			_settlement_manager.add_building(entity.settlement_id, building.id)
+			_settlement_manager.add_building(sid, building.id)
 	return building
 
 
 func _can_afford_building(entity: RefCounted, cost: Dictionary) -> bool:
+	var sid: int = entity.settlement_id
 	var cost_keys: Array = cost.keys()
 	for i in range(cost_keys.size()):
 		var res: String = cost_keys[i]
 		var needed: float = cost[res]
 		var have: float = entity.inventory.get(res, 0.0)
 		if _building_manager != null:
-			var stockpile = _building_manager.get_nearest_building(
-				entity.position.x, entity.position.y, "stockpile", true
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
 			)
 			if stockpile != null:
 				have += stockpile.storage.get(res, 0.0)
@@ -401,6 +450,7 @@ func _can_afford_building(entity: RefCounted, cost: Dictionary) -> bool:
 
 
 func _consume_building_cost(entity: RefCounted, cost: Dictionary) -> void:
+	var sid: int = entity.settlement_id
 	var cost_keys: Array = cost.keys()
 	for i in range(cost_keys.size()):
 		var res: String = cost_keys[i]
@@ -408,8 +458,8 @@ func _consume_building_cost(entity: RefCounted, cost: Dictionary) -> void:
 		var from_entity: float = entity.remove_item(res, needed)
 		needed -= from_entity
 		if needed > 0.0 and _building_manager != null:
-			var stockpile = _building_manager.get_nearest_building(
-				entity.position.x, entity.position.y, "stockpile", true
+			var stockpile: RefCounted = _find_nearest_building_in_settlement(
+				entity.position, "stockpile", sid, true
 			)
 			if stockpile != null:
 				var available: float = stockpile.storage.get(res, 0.0)
