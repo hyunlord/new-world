@@ -58,7 +58,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI 상태, 통계) | hunger, energy, social, job, inventory, settlement_id, total_gathered, buildings_built, action_history | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
 

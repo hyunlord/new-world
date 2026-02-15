@@ -26,7 +26,7 @@ func _generate_name() -> String:
 
 
 ## Spawn a new entity at the given position
-func spawn_entity(pos: Vector2i) -> RefCounted:
+func spawn_entity(pos: Vector2i, gender_override: String = "") -> RefCounted:
 	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1
@@ -37,6 +37,29 @@ func spawn_entity(pos: Vector2i) -> RefCounted:
 	entity.hunger = 0.7 + _rng.randf() * 0.3
 	entity.energy = 0.7 + _rng.randf() * 0.3
 	entity.social = 0.5 + _rng.randf() * 0.5
+	# Gender (50:50 or override)
+	if gender_override != "":
+		entity.gender = gender_override
+	else:
+		entity.gender = "female" if _rng.randf() < 0.5 else "male"
+	# Personality (immutable, randomized)
+	entity.personality = {
+		"openness": _rng.randf_range(0.1, 0.9),
+		"agreeableness": _rng.randf_range(0.1, 0.9),
+		"extraversion": _rng.randf_range(0.1, 0.9),
+		"diligence": _rng.randf_range(0.1, 0.9),
+		"emotional_stability": _rng.randf_range(0.1, 0.9),
+	}
+	# Emotions (defaults)
+	entity.emotions = {
+		"happiness": 0.5,
+		"loneliness": 0.0,
+		"stress": 0.0,
+		"grief": 0.0,
+		"love": 0.0,
+	}
+	# Age stage
+	entity.age_stage = GameConfig.get_age_stage(entity.age)
 	_entities[entity.id] = entity
 	_world_data.register_entity(pos, entity.id)
 	SimulationBus.emit_event("entity_spawned", {

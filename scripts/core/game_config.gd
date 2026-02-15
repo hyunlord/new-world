@@ -254,3 +254,16 @@ const MIGRATION_STARTUP_FOOD: float = 30.0
 const MIGRATION_STARTUP_WOOD: float = 10.0
 const MIGRATION_STARTUP_STONE: float = 3.0
 const SETTLEMENT_CLEANUP_INTERVAL: int = 250
+
+
+## ══════════════════════════════════════
+## Personality compatibility
+## ══════════════════════════════════════
+static func personality_compatibility(a: Dictionary, b: Dictionary) -> float:
+	var score: float = 0.0
+	score += 1.0 - absf(a.get("agreeableness", 0.5) - b.get("agreeableness", 0.5))
+	score += 1.0 - absf(a.get("emotional_stability", 0.5) - b.get("emotional_stability", 0.5))
+	score += 1.0 - absf(a.get("extraversion", 0.5) - b.get("extraversion", 0.5)) * 0.5
+	score += (1.0 - absf(a.get("openness", 0.5) - b.get("openness", 0.5))) * 0.5
+	score += (1.0 - absf(a.get("diligence", 0.5) - b.get("diligence", 0.5))) * 0.5
+	return score / 4.0

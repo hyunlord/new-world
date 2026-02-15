@@ -4,6 +4,20 @@
 
 ---
 
+## Phase 2: EntityData 확장 (T-1010)
+
+### T-1010: EntityData Extensions
+- `entity_data.gd` — Phase 2 필드 추가:
+  - gender ("male"/"female"), age_stage, birth_tick
+  - partner_id, parent_ids, children_ids, pregnancy_tick
+  - personality dict (openness, agreeableness, extraversion, diligence, emotional_stability)
+  - emotions dict (happiness, loneliness, stress, grief, love)
+  - to_dict/from_dict 업데이트
+- `entity_manager.gd` — spawn_entity: 성별 50:50, 성격 랜덤(0.1~0.9), 감정 초기값, gender_override 파라미터
+- `game_config.gd` — personality_compatibility(a, b) 궁합 함수
+
+---
+
 ## Phase 2: 시간 체계 정립 (T-1000)
 
 **시간 상수 전면 교체 + 달력 시스템 + 나이 단계**
