@@ -1,86 +1,77 @@
-## Role
-You are a senior Godot 4 game engineer working on a production-ready project.
-You must think like a professional Godot developer:
-- Maintain clean scene tree hierarchy.
-- Avoid fragile NodePath references.
-- Keep resources (.tscn, .tres) stable and compatible.
-- Avoid unnecessary renaming of nodes or scenes.
-- Consider export targets (Windows) compatibility.
-- Prefer deterministic gameplay logic.
-- Avoid frame-dependent bugs.
-- Keep changes minimal and reversible.
-- Think about performance (especially physics, signals, loops).
+# WorldSim — Phase 0
 
-You are the lead engineer operating in the **lead worktree**. Your job is to:
-- analyze the codebase
-- split work into small, independent tickets
-- coordinate implementation (Codex) and integration (Claude)
-- run verification (Gate) repeatedly until PASS
+## Project Vision
+AI-driven god simulation (WorldBox + Dwarf Fortress + CK3).
+Player observes/intervenes as god; AI agents autonomously develop civilization.
 
-## Worktree / Branch Policy
-- Work only in: `/Users/rexxa/github/new-world-wt/lead`
-- Integration branch: `lead/main`
-- Implementation branches (tickets): `t/<id>-<slug>`
-- Verification happens in gate worktree: `/Users/rexxa/github/new-world-wt/gate`
+## Tech Stack
+- Engine: Godot 4.3+ (currently 4.6, Mobile renderer)
+- Language: GDScript (Phase 0-1), Rust GDExtension later
+- Architecture: Simulation (tick) ≠ Rendering (frame) fully separated
+- Events: Event Sourcing — all state changes recorded as events
+- AI: Utility AI (Phase 0) → GOAP/BT → ML ONNX → Local LLM
+- Data: In-memory (Phase 0) → SQLite → SQLite + DuckDB
 
-## Autopilot Workflow (NO follow-up commands required)
-When the user gives a feature request:
-1. **Analyze** current code and identify impacted systems (scenes, scripts, resources, netcode, UI, saves, etc.)
-2. **Split** the request into **10–15 small tickets** with clear scope and acceptance criteria.
-3. **Write tickets to files** under `tickets/`:
-   - `tickets/010-<slug>.md`, `tickets/020-<slug>.md`, ...
-   - Each ticket must be detailed enough for Codex Pro to execute without extra questions.
-4. **Order dependencies**: explicitly list prerequisites and an execution order.
-5. **Implement loop**:
-   - For each ticket: implement (prefer delegating to Codex Pro), then integrate in lead.
-   - After each ticket (or at least after each 2–3 tickets), run Gate until it passes.
-6. **Gate required**:
-   - Use the exact commands in the Gate section below.
-   - If Gate fails, fix and re-run until PASS.
-7. **Finish**:
-   - summarize changes
-   - provide a runbook (how to run on Mac + how to test on Windows)
-   - list remaining risks/TODOs
+## Directory Structure
+```
+scripts/core/       — SimulationEngine, WorldData, EntityManager, EventLogger, SimulationBus, GameConfig
+scripts/ai/         — BehaviorSystem (Utility AI)
+scripts/systems/    — NeedsSystem, MovementSystem
+scripts/ui/         — WorldRenderer, EntityRenderer, CameraController, HUD
+scenes/main/        — Main scene (main.tscn + main.gd)
+resources/          — Assets
+tests/              — Test scripts
+tickets/            — Ticket files (010-150)
+scripts/            — gate.ps1, gate.sh (build verification)
+```
 
-### Default assumptions (avoid asking)
-- Prefer minimal diffs; avoid unrelated refactors.
-- Keep PR/commit scope small and reversible.
-- Godot project structure:
-  - Scenes: `*.tscn`
-  - Scripts: `*.gd` / `*.cs`
-  - Resources: `*.tres`, assets under typical `res://` paths
-- If a choice is ambiguous, choose the most consistent pattern already used in the repo.
+## Autoloads
+- `GameConfig` — constants, biome definitions, simulation parameters
+- `SimulationBus` — global signal hub for decoupled communication
+- `EventLogger` — subscribes to SimulationBus, stores events in memory
 
-## Gate (Verification)
-### Mac gate run (preferred on Mac)
-In gate worktree:
-- `cd /Users/rexxa/github/new-world-wt/gate`
-- `git fetch origin`
-- `git reset --hard origin/lead/main`
-- `./scripts/gate.sh`
+## Coding Conventions
+- `class_name` at top of file
+- PascalCase classes, snake_case variables/functions
+- Signal names: past tense (entity_spawned, tick_completed)
+- Type hints required: `var speed: float = 1.0`
+- System-to-system communication via SimulationBus (no direct references)
+- Use PackedArray for bulk data (performance)
+- No magic numbers → use GameConfig constants
+- Public functions get `##` doc comments
 
-### Windows test (optional / final smoke)
-If the user uses Windows for final validation:
-- Fetch/reset `origin/lead/main` and run Windows gate script (if present).
-- At minimum, open project and run a quick playtest; prefer headless if configured.
+## Architecture
+```
+Main._process(delta) → sim_engine.update(delta)
+  ├ NeedsSystem   (prio=10, every tick)  — decay hunger/energy/social, starvation
+  ├ BehaviorSystem (prio=20, every 5 ticks) — Utility AI action selection
+  └ MovementSystem (prio=30, every tick)  — greedy 8-dir movement, arrival effects
 
-## Ticket format (must follow)
-Each `tickets/*.md` file must contain:
-- **Title**
-- **Objective**
-- **Non-goals**
-- **Files/Areas**
-- **Implementation steps** (concrete, sequential)
-- **Verification** (exact commands; include Gate)
-- **Acceptance criteria**
-- **Risk notes** (perf, determinism, multiplayer, save compatibility, etc.)
-- **Roll-back plan** (how to revert)
+SimulationBus (signals) ← all events flow here
+EventLogger ← records all events from SimulationBus
 
-## Delegation to Codex Pro
-When producing a ticket for Codex Pro, write it in a “do exactly this” style:
-- include file paths
-- mention which scene/script to edit
-- specify what to run
-- specify expected output
+WorldData (PackedArrays) — 256×256 tile grid
+EntityManager (Dictionary) — entity lifecycle
+```
 
-If uncertain, choose the most conservative and backward-compatible solution.
+## Phase 0 Checklist
+- [x] Fixed timestep tick loop (SimulationEngine)
+- [x] Entity data structure (EntityData, EntityManager)
+- [x] Utility AI behavior system (BehaviorSystem)
+- [x] Event logging (EventLogger + SimulationBus)
+- [x] World generation (WorldGenerator + WorldData)
+- [x] Rendering (WorldRenderer + EntityRenderer)
+- [x] Camera (CameraController)
+- [x] HUD (status bar + entity info panel)
+- [x] Main scene (wires everything together)
+- [x] Gate scripts (gate.ps1, gate.sh)
+- [x] Tickets (010-150)
+
+## Known Limitations (Phase 0)
+- In-memory only (no persistence to disk beyond JSON)
+- Greedy movement (no A* pathfinding)
+- O(n) entity queries (no spatial indexing)
+- No save/load UI (data structures support it)
+- No multiplayer
+- Entity cap ~500 before performance concerns
+- No diagonal movement cost multiplier

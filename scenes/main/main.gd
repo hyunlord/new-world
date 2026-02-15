@@ -1,0 +1,117 @@
+extends Node2D
+
+var sim_engine: SimulationEngine
+var world_data: WorldData
+var world_generator: WorldGenerator
+var entity_manager: EntityManager
+var needs_system: NeedsSystem
+var behavior_system: BehaviorSystem
+var movement_system: MovementSystem
+
+@onready var world_renderer: WorldRenderer = $WorldRenderer
+@onready var entity_renderer: EntityRenderer = $EntityRenderer
+@onready var camera: CameraController = $Camera
+@onready var hud: HUD = $HUD
+
+
+func _ready() -> void:
+	_print_controls()
+
+	var seed_value: int = GameConfig.WORLD_SEED
+
+	# Initialize simulation engine
+	sim_engine = SimulationEngine.new()
+	sim_engine.init_with_seed(seed_value)
+
+	# Generate world
+	world_data = WorldData.new()
+	world_data.init_world(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
+	world_generator = WorldGenerator.new()
+	world_generator.generate(world_data, seed_value)
+
+	# Initialize entity manager
+	entity_manager = EntityManager.new()
+	entity_manager.init(world_data, sim_engine.rng)
+
+	# Create and register simulation systems
+	needs_system = NeedsSystem.new()
+	needs_system.init(entity_manager)
+
+	behavior_system = BehaviorSystem.new()
+	behavior_system.init(entity_manager, world_data, sim_engine.rng)
+
+	movement_system = MovementSystem.new()
+	movement_system.init(entity_manager, world_data)
+
+	sim_engine.register_system(needs_system)
+	sim_engine.register_system(behavior_system)
+	sim_engine.register_system(movement_system)
+
+	# Render world
+	world_renderer.render_world(world_data)
+
+	# Init renderers
+	entity_renderer.init(entity_manager)
+	hud.init(sim_engine, entity_manager)
+
+	# Spawn initial entities
+	_spawn_initial_entities()
+
+	print("[Main] WorldSim Phase 0 initialized. Seed: %d" % seed_value)
+
+
+func _spawn_initial_entities() -> void:
+	var center := GameConfig.WORLD_SIZE / 2
+	var spawn_radius: int = 30
+	var walkable_tiles: Array[Vector2i] = []
+
+	for dy in range(-spawn_radius, spawn_radius + 1):
+		for dx in range(-spawn_radius, spawn_radius + 1):
+			var x: int = center.x + dx
+			var y: int = center.y + dy
+			if world_data.is_walkable(x, y):
+				walkable_tiles.append(Vector2i(x, y))
+
+	if walkable_tiles.is_empty():
+		push_warning("[Main] No walkable tiles near center!")
+		return
+
+	var count: int = mini(GameConfig.INITIAL_SPAWN_COUNT, walkable_tiles.size())
+	# Shuffle using engine RNG for determinism
+	for i in range(walkable_tiles.size() - 1, 0, -1):
+		var j: int = sim_engine.rng.randi() % (i + 1)
+		var tmp := walkable_tiles[i]
+		walkable_tiles[i] = walkable_tiles[j]
+		walkable_tiles[j] = tmp
+
+	for i in range(count):
+		entity_manager.spawn_entity(walkable_tiles[i])
+
+	print("[Main] Spawned %d entities near world center." % count)
+
+
+func _process(delta: float) -> void:
+	sim_engine.update(delta)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause_toggle"):
+		sim_engine.toggle_pause()
+	elif event.is_action_pressed("speed_up"):
+		sim_engine.increase_speed()
+	elif event.is_action_pressed("speed_down"):
+		sim_engine.decrease_speed()
+
+
+func _print_controls() -> void:
+	print("========================================")
+	print("  WorldSim Phase 0 - Controls")
+	print("========================================")
+	print("  WASD / Arrows  = Pan camera")
+	print("  Mouse Wheel    = Zoom in/out")
+	print("  Middle Mouse   = Drag pan")
+	print("  Left Click     = Select entity")
+	print("  Space          = Pause / Resume")
+	print("  . (period)     = Speed up")
+	print("  , (comma)      = Speed down")
+	print("========================================")
