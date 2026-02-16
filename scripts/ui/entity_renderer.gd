@@ -28,6 +28,11 @@ const MALE_TINT: Color = Color(0.2, 0.4, 0.85)
 const FEMALE_TINT: Color = Color(0.9, 0.3, 0.45)
 const GENDER_TINT_WEIGHT: float = 0.2
 
+## Entity outline for visibility
+const OUTLINE_COLOR: Color = Color(1.0, 1.0, 1.0, 0.7)
+const OUTLINE_WIDTH: float = 1.5
+const FOLLOW_HIGHLIGHT_COLOR: Color = Color(0.3, 0.6, 1.0)
+
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
 	"infant": 0.45,
@@ -110,6 +115,7 @@ func _draw() -> void:
 			color = color.lerp(tint, GENDER_TINT_WEIGHT)
 			# Minimum 3px dot ensures visibility at any zoom level
 			var dot_size: float = maxf(3.0, 2.0 / zl)
+			draw_circle(pos, dot_size + 1.0, OUTLINE_COLOR)
 			draw_circle(pos, dot_size, color)
 			# Selection highlight even at LOD 0
 			if entity.id == selected_entity_id:
@@ -138,15 +144,17 @@ func _draw() -> void:
 		# Age size scaling
 		var size: float = base_size * AGE_SIZE_MULT.get(entity.age_stage, 1.0)
 
-		# Draw job-based shape
+		# Draw outlined shape
 		match entity.job:
 			"lumberjack":
-				_draw_triangle(pos, size, color)
+				_draw_triangle_outlined(pos, size, color)
 			"builder":
-				_draw_square(pos, size, color)
+				_draw_square_outlined(pos, size, color)
 			"miner":
-				_draw_diamond(pos, size, color)
+				_draw_diamond_outlined(pos, size, color)
 			_:
+				# Circle with outline
+				draw_circle(pos, size + OUTLINE_WIDTH, OUTLINE_COLOR)
 				draw_circle(pos, size, color)
 
 		# Elder/ancient white dot (gray hair indicator)
@@ -178,9 +186,15 @@ func _draw() -> void:
 						var ppos := Vector2(partner.position) * GameConfig.TILE_SIZE + half_tile
 						_draw_heart(ppos + Vector2(0, -(size + 6.0)), 3.0, Color(1.0, 0.3, 0.4))
 						draw_dashed_line(pos, ppos, Color(1.0, 0.3, 0.4, 0.3), 1.0, 4.0)
-				if _current_lod == 2:
-					var entity_name: String = entity.entity_name
-					draw_string(ThemeDB.fallback_font, pos + Vector2(size + 3.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
+
+		# LOD 2: Show names for all entities
+		if _current_lod == 2:
+			var entity_name: String = entity.entity_name
+			# Background rect for readability
+			var name_font: Font = ThemeDB.fallback_font
+			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
+			draw_rect(Rect2(pos.x + size + 2, pos.y - size - 4 - name_size.y, name_size.x + 4, name_size.y + 2), Color(0, 0, 0, 0.6))
+			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 
 	# Resource text markers at high zoom (LOD 2)
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
@@ -233,6 +247,35 @@ func _draw_heart(center: Vector2, size: float, color: Color) -> void:
 		center + Vector2(size, -size * 0.2),
 	])
 	draw_colored_polygon(points, color)
+
+
+func _draw_triangle_outlined(center: Vector2, s: float, color: Color) -> void:
+	var outline_s: float = s + OUTLINE_WIDTH
+	var outline_points := PackedVector2Array([
+		center + Vector2(0, -outline_s),
+		center + Vector2(-outline_s * 0.87, outline_s * 0.5),
+		center + Vector2(outline_s * 0.87, outline_s * 0.5),
+	])
+	draw_colored_polygon(outline_points, OUTLINE_COLOR)
+	_draw_triangle(center, s, color)
+
+
+func _draw_square_outlined(center: Vector2, s: float, color: Color) -> void:
+	var outline_half: float = (s + OUTLINE_WIDTH * 2) * 0.5
+	draw_rect(Rect2(center.x - outline_half, center.y - outline_half, outline_half * 2, outline_half * 2), OUTLINE_COLOR)
+	_draw_square(center, s, color)
+
+
+func _draw_diamond_outlined(center: Vector2, s: float, color: Color) -> void:
+	var outline_s: float = s + OUTLINE_WIDTH
+	var outline_points := PackedVector2Array([
+		center + Vector2(0, -outline_s),
+		center + Vector2(outline_s, 0),
+		center + Vector2(0, outline_s),
+		center + Vector2(-outline_s, 0),
+	])
+	draw_colored_polygon(outline_points, OUTLINE_COLOR)
+	_draw_diamond(center, s, color)
 
 
 func _get_dominant_resource(entity: RefCounted) -> String:

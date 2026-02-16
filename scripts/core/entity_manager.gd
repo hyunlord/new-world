@@ -68,6 +68,9 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	# Age and age stage
 	entity.age = initial_age
 	entity.age_stage = GameConfig.get_age_stage(entity.age)
+	# Set birth_tick: negative for pre-existing entities (born before game start)
+	if initial_age > 0:
+		entity.birth_tick = -initial_age
 	# Frailty: N(1.0, 0.15), clamped [0.5, 2.0] (Vaupel frailty model)
 	entity.frailty = clampf(_rng.randfn(1.0, 0.15), 0.5, 2.0)
 	_entities[entity.id] = entity
@@ -95,9 +98,15 @@ func kill_entity(entity_id: int, cause: String, tick: int = -1) -> void:
 	if not _entities.has(entity_id):
 		return
 	var entity = _entities[entity_id]
+	# Register in DeceasedRegistry BEFORE removing
+	if Engine.has_singleton("DeceasedRegistry") or entity.get_meta("_skip_deceased", false) == false:
+		var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
+		if registry != null:
+			registry.register_death(entity, cause, tick)
 	# Settlement cleanup
 	if _settlement_manager != null and entity.settlement_id > 0:
 		_settlement_manager.remove_member(entity.settlement_id, entity.id)
+	var age_years: float = float(entity.age) / float(GameConfig.TICKS_PER_YEAR)
 	entity.is_alive = false
 	total_deaths += 1
 	_world_data.unregister_entity(entity.position, entity.id)
@@ -109,6 +118,8 @@ func kill_entity(entity_id: int, cause: String, tick: int = -1) -> void:
 		"position": entity.position,
 		"tick": tick,
 	})
+	# Lifecycle signal for ChronicleSystem
+	SimulationBus.entity_died.emit(entity.id, entity.entity_name, cause, age_years, tick)
 
 
 ## Get entity by ID

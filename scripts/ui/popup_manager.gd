@@ -8,6 +8,8 @@ var _dim_bg: ColorRect
 var _stats_panel: Control
 var _entity_panel: Control
 var _building_panel: Control
+var _chronicle_panel: Control
+var _list_panel: Control
 
 
 func init(sim_engine: RefCounted) -> void:
@@ -33,6 +35,7 @@ func _ready() -> void:
 func add_stats_panel(panel: Control) -> void:
 	_stats_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
 	panel.visible = false
 	_dim_bg.add_child(panel)
 
@@ -40,6 +43,7 @@ func add_stats_panel(panel: Control) -> void:
 func add_entity_panel(panel: Control) -> void:
 	_entity_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
 	panel.visible = false
 	_dim_bg.add_child(panel)
 
@@ -47,6 +51,23 @@ func add_entity_panel(panel: Control) -> void:
 func add_building_panel(panel: Control) -> void:
 	_building_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
+	panel.visible = false
+	_dim_bg.add_child(panel)
+
+
+func add_chronicle_panel(panel: Control) -> void:
+	_chronicle_panel = panel
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
+	panel.visible = false
+	_dim_bg.add_child(panel)
+
+
+func add_list_panel(panel: Control) -> void:
+	_list_panel = panel
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
 	panel.visible = false
 	_dim_bg.add_child(panel)
 
@@ -103,6 +124,36 @@ func open_building(building_id: int) -> void:
 	_center_panel(_building_panel, 0.45, 0.5)
 
 
+func open_chronicle() -> void:
+	if _chronicle_panel == null:
+		return
+	if _chronicle_panel.visible:
+		close_all()
+		return
+	if not _dim_bg.visible:
+		_pause_sim()
+	_hide_all_panels()
+	_chronicle_panel.visible = true
+	_dim_bg.visible = true
+	_panel_ratios[_chronicle_panel] = Vector2(0.6, 0.8)
+	_center_panel(_chronicle_panel, 0.6, 0.8)
+
+
+func open_list() -> void:
+	if _list_panel == null:
+		return
+	if _list_panel.visible:
+		close_all()
+		return
+	if not _dim_bg.visible:
+		_pause_sim()
+	_hide_all_panels()
+	_list_panel.visible = true
+	_dim_bg.visible = true
+	_panel_ratios[_list_panel] = Vector2(0.7, 0.8)
+	_center_panel(_list_panel, 0.7, 0.8)
+
+
 func close_all() -> void:
 	_hide_all_panels()
 	_dim_bg.visible = false
@@ -132,6 +183,10 @@ func _process(_delta: float) -> void:
 		any = true
 	if _building_panel != null and _building_panel.visible:
 		any = true
+	if _chronicle_panel != null and _chronicle_panel.visible:
+		any = true
+	if _list_panel != null and _list_panel.visible:
+		any = true
 	if not any:
 		close_all()
 
@@ -143,6 +198,10 @@ func _hide_all_panels() -> void:
 		_entity_panel.visible = false
 	if _building_panel != null:
 		_building_panel.visible = false
+	if _chronicle_panel != null:
+		_chronicle_panel.visible = false
+	if _list_panel != null:
+		_list_panel.visible = false
 
 
 func _pause_sim() -> void:
@@ -161,7 +220,7 @@ func _resume_sim() -> void:
 
 func _on_viewport_resized() -> void:
 	# Re-center any visible panel on viewport resize
-	for panel in [_stats_panel, _entity_panel, _building_panel]:
+	for panel in [_stats_panel, _entity_panel, _building_panel, _chronicle_panel, _list_panel]:
 		if panel != null and panel.visible and _panel_ratios.has(panel):
 			var ratios: Vector2 = _panel_ratios[panel]
 			_center_panel(panel, ratios.x, ratios.y)

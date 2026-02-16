@@ -56,6 +56,7 @@ func init(entity_manager: RefCounted, relationship_manager: RefCounted, building
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	_check_widowhood(alive, tick)
+	_check_coupling(alive, tick)
 	_process_births(alive, tick)
 	_check_pregnancies(alive, tick)
 	# Yearly demography log with pregnancy block analysis
@@ -117,6 +118,80 @@ func _check_widowhood(alive: Array, tick: int) -> void:
 				"entity_name": entity.entity_name,
 				"tick": tick,
 			})
+
+
+## ─── Direct coupling for single adults ──────────────────
+## Bypasses slow relationship progression. Monthly ~45% match probability.
+## Academic basis: simplified pair formation (Schoen 1981)
+
+func _check_coupling(alive: Array, tick: int) -> void:
+	# Collect single adults by settlement and gender
+	var settlement_singles: Dictionary = {}  # settlement_id -> {"males": [], "females": []}
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
+		if entity.partner_id != -1:
+			continue
+		if entity.age_stage != "adult" and entity.age_stage != "elder":
+			continue
+		var sid: int = entity.settlement_id
+		if sid <= 0:
+			continue
+		if sid not in settlement_singles:
+			settlement_singles[sid] = {"males": [], "females": []}
+		if entity.gender == "male":
+			settlement_singles[sid]["males"].append(entity)
+		else:
+			settlement_singles[sid]["females"].append(entity)
+
+	# Match within each settlement
+	var keys: Array = settlement_singles.keys()
+	for i in range(keys.size()):
+		var sid: int = keys[i]
+		var groups: Dictionary = settlement_singles[sid]
+		var males: Array = groups["males"]
+		var females: Array = groups["females"]
+		# Shuffle for fairness
+		_shuffle_array(males)
+		_shuffle_array(females)
+		var match_count: int = mini(males.size(), females.size())
+		for j in range(match_count):
+			# Monthly coupling probability ~45%
+			if _rng.randf() > 0.45:
+				continue
+			var male: RefCounted = males[j]
+			var female: RefCounted = females[j]
+			# Form partnership
+			male.partner_id = female.id
+			female.partner_id = male.id
+			# Create/update relationship
+			var rel: RefCounted = _relationship_manager.get_or_create(male.id, female.id)
+			rel.type = "partner"
+			rel.affinity = 70.0
+			rel.trust = 60.0
+			rel.romantic_interest = 80.0
+			rel.interaction_count = 20
+			# Love emotion
+			male.emotions["love"] = minf(male.emotions.get("love", 0.0) + 0.4, 1.0)
+			female.emotions["love"] = minf(female.emotions.get("love", 0.0) + 0.4, 1.0)
+			# Emit couple formed signal
+			SimulationBus.couple_formed.emit(male.id, male.entity_name, female.id, female.entity_name, tick)
+			emit_event("couple_formed", {
+				"entity_a_id": male.id,
+				"entity_a_name": male.entity_name,
+				"entity_b_id": female.id,
+				"entity_b_name": female.entity_name,
+				"tick": tick,
+			})
+			SimulationBus.emit_signal("ui_notification",
+				"%s & %s coupled!" % [male.entity_name, female.entity_name], "couple")
+
+
+func _shuffle_array(arr: Array) -> void:
+	for i in range(arr.size() - 1, 0, -1):
+		var j: int = _rng.randi() % (i + 1)
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
 
 
 ## ─── Process active pregnancies ───────────────────────────
@@ -248,6 +323,9 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	if _mortality_system != null and _mortality_system.has_method("register_birth"):
 		_mortality_system.register_birth()
 	_entity_manager.register_birth()
+
+	# Emit lifecycle signal for ChronicleSystem
+	SimulationBus.entity_born.emit(child.id, child.entity_name, child.parent_ids, tick)
 
 	var father_name: String = father.entity_name if father != null else "?"
 	var twin_label: String = " (twin)" if baby_idx > 0 else ""
