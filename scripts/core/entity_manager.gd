@@ -13,13 +13,6 @@ var chunk_index: RefCounted  # ChunkIndex for O(1) spatial lookups
 var total_deaths: int = 0
 var total_births: int = 0
 
-const FIRST_NAMES: PackedStringArray = [
-	"Alder", "Bryn", "Cedar", "Dawn", "Elm", "Fern", "Glen", "Heath",
-	"Ivy", "Jade", "Kael", "Luna", "Moss", "Nix", "Oak", "Pine",
-	"Quinn", "Reed", "Sage", "Thorn", "Uma", "Vale", "Wren", "Xara",
-	"Yew", "Zara", "Ash", "Brook", "Clay", "Dusk",
-]
-
 
 ## Initialize with world data and RNG reference
 func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
@@ -28,28 +21,24 @@ func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	chunk_index = ChunkIndex.new()
 
 
-func _generate_name() -> String:
-	return FIRST_NAMES[_rng.randi() % FIRST_NAMES.size()]
-
-
 ## Spawn a new entity at the given position
 ## initial_age: age in ticks (0 = newborn child, use AGE_TEEN_END+ for adults)
 func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int = 0) -> RefCounted:
 	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1
-	entity.entity_name = _generate_name()
 	entity.position = pos
 	entity.speed = 0.8 + _rng.randf() * 0.4
 	entity.strength = 0.8 + _rng.randf() * 0.4
 	entity.hunger = 0.7 + _rng.randf() * 0.3
 	entity.energy = 0.7 + _rng.randf() * 0.3
 	entity.social = 0.5 + _rng.randf() * 0.5
-	# Gender (50:50 or override)
+	# Gender (50:50 or override) — must be set before name generation
 	if gender_override != "":
 		entity.gender = gender_override
 	else:
 		entity.gender = "female" if _rng.randf() < 0.5 else "male"
+	entity.entity_name = NameGenerator.generate_name(entity.gender)
 	# Personality (immutable, randomized)
 	entity.personality = {
 		"openness": _rng.randf_range(0.1, 0.9),

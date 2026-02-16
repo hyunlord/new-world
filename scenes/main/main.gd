@@ -184,6 +184,9 @@ func _ready() -> void:
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
 
+	# Initialize name generator with sim RNG and entity manager
+	NameGenerator.init(sim_engine.rng, entity_manager)
+
 	# Spawn initial entities + create first settlement
 	_spawn_initial_entities()
 
@@ -195,6 +198,8 @@ func _ready() -> void:
 		var e: RefCounted = initial_alive[i]
 		e.settlement_id = founding.id
 		settlement_manager.add_member(founding.id, e.id)
+		# Register name in NameGenerator for duplicate prevention
+		NameGenerator.register_name(e.entity_name, founding.id)
 
 	# Bootstrap initial stockpile so gatherers can deliver and HUD shows resources
 	_bootstrap_stockpile(founding, center)
@@ -462,6 +467,7 @@ func _save_game() -> void:
 	sim_engine.is_paused = true
 	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
 	if success:
+		NameGenerator.save_registry(path + "/names.json")
 		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Save failed!")
@@ -478,6 +484,8 @@ func _load_game() -> void:
 		# Sync death/birth counters from loaded stats to entity manager
 		entity_manager.total_deaths = stats_recorder.total_deaths
 		entity_manager.total_births = stats_recorder.total_births
+		# Restore name registry
+		NameGenerator.load_registry(path + "/names.json")
 		print("[Main] Game loaded from %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Load failed!")

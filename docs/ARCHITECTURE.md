@@ -45,6 +45,7 @@
 │  GameConfig — 전역 상수/열거형/밸런스 파라미터                    │
 │  SimulationBus — 글로벌 시그널 허브 (simulation_event 등)       │
 │  EventLogger — SimulationBus 구독, 이벤트 저장/로깅             │
+│  NameGenerator — 데이터 드리븐 이름 생성 (문화별 JSON)           │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -67,6 +68,14 @@ SimulationEngine.update(delta)
 ---
 
 ## 파일 맵
+
+### data/
+
+| 디렉토리/파일 | 역할 |
+|--------------|------|
+| `naming_cultures/proto_nature.json` | 자연어 풀 기반 명명 문화 (64 남/65 여/16 중립) |
+| `naming_cultures/proto_syllabic.json` | 음절 조합 기반 명명 문화 (기본값) |
+| `naming_cultures/tribal_totemic.json` | 토템 부족 명명 문화 (patronymic 규칙 포함) |
 
 ### scenes/
 
@@ -91,10 +100,11 @@ SimulationEngine.update(delta)
 | `entity_manager.gd` | 에이전트 생성/삭제/조회, 위치 이동, 이벤트 발행 |
 | `building_data.gd` | 건물 상태 — 타입, 위치, 건설 진행률, 저장소, settlement_id |
 | `building_manager.gd` | 건물 배치/조회/타입별 검색, 직렬화 |
-| `settlement_data.gd` | 정착지 상태 — id, 중심좌표, 건국 틱, 멤버/건물 ID 목록 |
+| `settlement_data.gd` | 정착지 상태 — id, 중심좌표, 건국 틱, 멤버/건물 ID 목록, culture_id |
 | `settlement_manager.gd` | 정착지 생성/조회/멤버 관리/nearest 검색/직렬화 |
 | `pathfinder.gd` | A* 경로 탐색 — Chebyshev 휴리스틱, 8방향, 최대 200스텝 |
-| `save_manager.gd` | JSON 저장/로드 — 엔티티, 건물, 정착지, 자원맵 직렬화 |
+| `name_generator.gd` | 데이터 드리븐 이름 생성 — JSON 문화 로드, 음절 조합, 정착지 중복 방지, patronymic |
+| `save_manager.gd` | 바이너리 저장/로드 (v4) — 엔티티, 건물, 정착지(+culture_id), 자원맵 직렬화 |
 
 ### scripts/ai/
 

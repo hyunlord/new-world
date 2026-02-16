@@ -1,0 +1,43 @@
+{
+    "culture_id": "tribal_totemic",
+    "display_name": "Totemic Tribal",
+    "description": "Totem animal/nature + trait/deed combinations. Tribal era.",
+    "name_structure": "given+epithet",
+    "given_names": {
+        "male": ["Kor", "Bran", "Thane", "Rok", "Grim", "Tyr", "Arn", "Ulf", "Dag", "Sven"],
+        "female": ["Mira", "Sula", "Kira", "Lena", "Asha", "Nira", "Vera", "Tala", "Yara", "Runa"]
+    },
+    "epithets": {
+        "by_trait": {
+            "high_strength": ["Strong", "Bear-arm", "Iron-fist"],
+            "high_agility": ["Swift", "Wind-foot", "Deer-leg"],
+            "high_intelligence": ["Wise", "Star-eye", "Deep-thought"],
+            "high_openness": ["Seeker", "Far-walker", "Sky-gazer"]
+        },
+        "by_deed": ["First-fire", "Rain-caller", "Bone-setter", "Path-finder"],
+        "by_totem": ["of-Wolf", "of-Eagle", "of-Bear", "of-Elk", "of-Serpent"]
+    },
+    "epithet_unlock_age": 12,
+    "allow_markov_generation": true,
+    "markov_config": {
+        "order": 2,
+        "min_length": 3,
+        "max_length": 6
+    },
+    "syllable_pools": {
+        "onset_male": ["k", "b", "th", "r", "g", "d", "v", "br", "gr", "kr", "sk"],
+        "onset_female": ["m", "s", "l", "n", "r", "t", "v", "sh", "al"],
+        "nucleus": ["a", "e", "i", "o", "u", "ai", "ei", "ar", "or"],
+        "coda": ["n", "r", "k", "m", "th", "l", "s", "rn", "lk", "nd"],
+        "coda_final": ["n", "r", "a", "e", "o", "k", "th", "ir", "ar"]
+    },
+    "syllable_count": {"min": 1, "max": 3},
+    "patronymic_rule": "prefix",
+    "patronymic_config": {
+        "male_prefix": "",
+        "male_suffix": "'s son",
+        "female_prefix": "",
+        "female_suffix": "'s daughter"
+    },
+    "surname_rule": "none"
+}

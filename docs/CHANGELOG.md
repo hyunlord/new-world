@@ -4,6 +4,34 @@
 
 ---
 
+## 확장 가능한 이름 생성 시스템 — NameGenerator (T-2011)
+
+### NameGenerator 오토로드 추가
+- **NameGenerator** 싱글톤 (Node, `scripts/core/name_generator.gd`) — 데이터 드리븐 이름 생성
+- `res://data/naming_cultures/` 디렉토리의 JSON 파일을 자동 로드
+- `generate_name(gender, culture_id, settlement_id, parent_a_name, parent_b_name)` — 문화별 이름 생성
+- `generate_syllabic_name(culture, gender)` — onset+nucleus+coda 음절 조합 패턴
+- `apply_patronymic(given, parent_name, gender, culture)` — 부모 이름 기반 접미/접두 (문화별 설정)
+- 정착지별 중복 방지 (20회 시도), 실패 시 "II" 접미사 fallback
+- `SimulationBus.entity_died` 구독 → 사망 시 자동 이름 해제 (`unregister_name`)
+- `save_registry/load_registry` — JSON 기반 이름 레지스트리 영속화
+
+### 명명 문화 JSON 데이터 (3종)
+- `proto_nature.json` — 자연어 풀 기반 (64 남/65 여/16 중립), 음절 생성 비활성화
+- `proto_syllabic.json` — 음절 조합 전용 (onset_male/female + nucleus + coda/coda_final), 기본 문화
+- `tribal_totemic.json` — 토템 부족 (10 남/10 여 + epithets + patronymic "prefix" 규칙)
+
+### 기존 시스템 연동
+- `entity_manager.gd`: 하드코딩 `FIRST_NAMES` 제거 → `NameGenerator.generate_name(entity.gender)` 호출
+- `family_system.gd`: 출산 시 정착지 문화 조회 → 부모 이름 전달하여 고유 이름 생성
+- `settlement_data.gd`: `culture_id: String = "proto_syllabic"` 필드 추가 (이전 세이브: "proto_nature" 기본값)
+- `save_manager.gd`: SAVE_VERSION 3→4, MIN_LOAD_VERSION=3 (하위 호환), culture_id 직렬화
+- `main.gd`: NameGenerator.init() 호출, 초기 엔티티 이름 등록, 세이브/로드 시 레지스트리 영속화
+
+**10 files changed**: name_generator.gd(new), 3 JSON(new), entity_manager.gd, family_system.gd, settlement_data.gd, save_manager.gd, main.gd, project.godot
+
+---
+
 ## 엔티티 리스트 레이아웃 + 사망자 디테일 + 아동 아사 근본 해결 (T-2010)
 
 ### 엔티티 리스트 레이아웃 수정 (T-2010-01)

@@ -1,0 +1,36 @@
+{
+    "culture_id": "proto_nature",
+    "display_name": "Nature Names (Primitive)",
+    "description": "Names derived from nature. Early stone age.",
+    "name_structure": "given",
+    "given_names": {
+        "male": [
+            "Ash", "Birch", "Brook", "Cedar", "Clay", "Dusk", "Elm", "Fern",
+            "Flint", "Glen", "Heath", "Ivy", "Kael", "Lark", "Moss", "Nix",
+            "Oak", "Pike", "Quinn", "Reed", "Sage", "Stone", "Thorn", "Vale",
+            "Wolf", "Yew", "Blaze", "Cliff", "Crag", "Dale", "Dune", "Ember",
+            "Frost", "Gale", "Hawk", "Lake", "Marsh", "Peak", "Ridge", "Shade",
+            "Sky", "Storm", "Swift", "Tide", "Wren", "Briar", "Coral", "Delta",
+            "Echo", "Fox", "Grove", "Haven", "Jet", "Leaf", "Mist", "North",
+            "Onyx", "Pine", "Raven", "Rush", "Slate", "Spark", "Trail", "Vine"
+        ],
+        "female": [
+            "Alba", "Amber", "Aspen", "Autumn", "Berry", "Bloom", "Breeze",
+            "Clover", "Coral", "Dahlia", "Dawn", "Dew", "Dove", "Ember",
+            "Fawn", "Flora", "Gem", "Hazel", "Heron", "Holly", "Iris", "Jade",
+            "Jasmine", "Lily", "Luna", "Maple", "Marigold", "Meadow", "Myrtle",
+            "Opal", "Pearl", "Petal", "Poppy", "Rain", "River", "Rose", "Rowan",
+            "Ruby", "Sable", "Sage", "Sierra", "Snow", "Sparrow", "Spring",
+            "Star", "Summer", "Sunny", "Terra", "Violet", "Willow", "Wren",
+            "Zinnia", "Aurora", "Brook", "Crystal", "Fern", "Ginger", "Ivy",
+            "Juniper", "Lark", "Moss", "Olive", "Raven", "Shell", "Teal"
+        ],
+        "neutral": [
+            "Ash", "Brook", "Cedar", "Dawn", "Echo", "Fern", "Glen", "Haven",
+            "Ivy", "Lark", "Moss", "Quinn", "Reed", "Sage", "Sky", "Wren"
+        ]
+    },
+    "allow_markov_generation": false,
+    "patronymic_rule": "none",
+    "surname_rule": "none"
+}

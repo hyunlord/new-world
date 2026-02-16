@@ -75,7 +75,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
 | EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, birth_date, frailty | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
-| SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
+| SettlementData | 정착지 상태 (중심, 멤버, 건물, 문화) | id, center_x, center_y, member_ids, building_ids, culture_id | `scripts/core/settlement_data.gd` |
 
 ---
 
@@ -87,6 +87,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | SimulationBus | 글로벌 시그널 허브 (simulation_event, entity_selected 등) | `scripts/core/simulation_bus.gd` |
 | EventLogger | SimulationBus 구독, 이벤트 저장/조회/직렬화, 콘솔 로깅 | `scripts/core/event_logger.gd` |
 | DeceasedRegistry | 사망자 기록 보존 (birth_date, death_date, death_age_days, cause), 한글 사인 변환, save/load | `scripts/core/deceased_registry.gd` |
+| NameGenerator | 데이터 드리븐 이름 생성 — JSON 문화 파일 로드, 음절 조합, 정착지별 중복 방지, patronymic, 사망 시 unregister | `scripts/core/name_generator.gd` |
 
 ---
 
