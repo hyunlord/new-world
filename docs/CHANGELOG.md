@@ -4,6 +4,44 @@
 
 ---
 
+## 나이 상세 표시 + 사망 원인 표시 + 아동 생존 밸런스 (T-2008)
+
+### GameCalendar 함수 추가 (T-2008-01)
+- `to_julian_day`, `count_days_between`, `days_in_month` — 날짜 간 정확한 일수 계산
+- `calculate_detailed_age(birth_date, ref_date)` → `{years, months, days, total_days}`
+- `format_age_detailed(birth_date, ref_date)` → "26년 3개월 15일 (9,602일)"
+- `format_age_short(birth_date, ref_date)` → "26y 3m 15d"
+- `format_number(n)` → "9,602" (천 단위 콤마)
+
+### DeceasedRegistry 강화 (T-2008-02)
+- 사망 기록에 `birth_date`, `death_date`, `death_age_days` 필드 추가
+- `get_death_cause_korean(cause)` 정적 함수 추가 (6종 한글 변환)
+
+### 사망 원인 기록 및 표시 (T-2008-03, 05, 06)
+- MortalitySystem: Siler 원인 분류 → "infant_mortality", "background", "old_age"
+- NeedsSystem: 아사 → `register_death(is_infant, age_stage, age_years, "starvation")`
+- FamilySystem: 모성사망/사산 → `register_death(..., "maternal_death"/"stillborn")`
+- 연간 DEMOGRAPHY 로그에 원인별 카운트 추가
+
+### 아동 생존 밸런스 조정 (T-2008-00 config)
+- CHILDCARE_HUNGER_THRESHOLD: 0.5 → 0.7
+- CHILDCARE_INFANT_HUNGER_THRESHOLD: 0.8 (신규)
+- 급식량 증가: infant 0.15→0.25, toddler 0.25→0.35, child 0.35→0.40, teen 0.42→0.45
+- hunger decay 감소: infant 0.5→0.3, toddler 0.6→0.4, child 0.75→0.5, teen 0.9→0.85
+- Siler a1 돌봄 보호: 잘 먹는 영아(hunger>0.3) 사망률 40% 감소 (SILER_CARE_PROTECTION=0.6)
+
+### UI 나이 표시 통일 (T-2008-07, 08, 09)
+- **entity_detail_panel**: "26세" → "26년 3개월 15일 (9,602일)" (format_age_detailed)
+- **entity_detail_panel**: 사망자 패널에 생존 기간, 한글 사인, ☠ 마커
+- **list_panel**: 페이지네이션 제거 → 연속 스크롤, "26y 3m 15d" 단축 나이
+- **list_panel**: 사망자 상태 "사망-아사/노령/영아 사망" 한글, ☠ 마커, total_days 정렬
+- **hud**: 엔티티 선택 패널 "26y 3m 15d" 단축 나이
+- **hud**: 사망 토스트 — siler/아사/모성사망/사산 각각 한글 원인 + 이름 표시
+
+**11 files changed**: game_config.gd, game_calendar.gd, deceased_registry.gd, mortality_system.gd, childcare_system.gd, needs_system.gd, family_system.gd, entity_detail_panel.gd, list_panel.gd, hud.gd, + docs
+
+---
+
 ## 어린이 육아 시스템 + 나이 6단계 통합 (T-2007)
 
 ### ChildcareSystem (신규)

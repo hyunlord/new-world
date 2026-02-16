@@ -31,12 +31,39 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"buildings_built": entity.buildings_built,
 		"age_stage": entity.age_stage,
 		"frailty": entity.frailty,
+		"birth_date": entity.birth_date.duplicate() if not entity.birth_date.is_empty() else {},
+		"death_date": _current_date_from_tick(current_tick),
+		"death_age_days": (current_tick - entity.birth_tick) / 12 if entity.birth_tick >= 0 else 0,
 	}
 	_records[entity.id] = record
 
 	# Prune if too many records
 	if _records.size() > MAX_RECORDS:
 		_prune_old_records(current_tick)
+
+
+func _current_date_from_tick(tick: int) -> Dictionary:
+	var GameCalendar = load("res://scripts/core/game_calendar.gd")
+	var d: Dictionary = GameCalendar.tick_to_date(tick)
+	return {"year": d.year, "month": d.month, "day": d.day}
+
+
+static func get_death_cause_korean(cause: String) -> String:
+	match cause:
+		"starvation":
+			return "아사"
+		"old_age":
+			return "노령"
+		"infant_mortality":
+			return "영아 사망"
+		"background":
+			return "사고/질병"
+		"maternal_death":
+			return "출산 사망"
+		"stillborn":
+			return "사산"
+		_:
+			return cause
 
 
 ## Get a deceased record by entity ID

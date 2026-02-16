@@ -1,6 +1,8 @@
 class_name ListPanel
 extends Control
 
+const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
@@ -36,7 +38,7 @@ var _toggle_deceased_rect: Rect2 = Rect2()
 ## Column definitions for entities
 const ENTITY_COLUMNS: Array = [
 	{"key": "name", "label": "Name", "width": 90},
-	{"key": "age", "label": "Age", "width": 50},
+	{"key": "age", "label": "Age", "width": 80},
 	{"key": "job", "label": "Job", "width": 70},
 	{"key": "status", "label": "Status", "width": 70},
 	{"key": "settlement", "label": "Sett", "width": 35},
@@ -75,7 +77,6 @@ func _gui_input(event: InputEvent) -> void:
 			for tr in _tab_rects:
 				if tr.rect.has_point(event.position):
 					_current_tab = tr.index
-					_page = 0
 					_scroll_offset = 0.0
 					accept_event()
 					return
@@ -89,20 +90,10 @@ func _gui_input(event: InputEvent) -> void:
 						_sort_ascending = true
 					accept_event()
 					return
-			# Page navigation
-			for pr in _page_rects:
-				if pr.rect.has_point(event.position):
-					if pr.action == "prev" and _page > 0:
-						_page -= 1
-					elif pr.action == "next":
-						_page += 1
-					_scroll_offset = 0.0
-					accept_event()
-					return
 			# Toggle deceased
 			if _toggle_deceased_rect.has_point(event.position):
 				_show_deceased = not _show_deceased
-				_page = 0
+				_scroll_offset = 0.0
 				accept_event()
 				return
 			# Entity click
@@ -178,8 +169,14 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		var alive: Array = _entity_manager.get_alive_entities()
 		for i in range(alive.size()):
 			var e: RefCounted = alive[i]
+			var current_tick: int = e.birth_tick + e.age
+			var ref_d: Dictionary = GameCalendar.tick_to_date(current_tick)
+			var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
+			var age_short: String = GameCalendar.format_age_short(e.birth_date, ref_date)
+			var age_detail: Dictionary = GameCalendar.calculate_detailed_age(e.birth_date, ref_date)
 			rows.append({
-				"id": e.id, "name": e.entity_name, "age": GameConfig.get_age_years(e.age),
+				"id": e.id, "name": e.entity_name, "age": age_detail.total_days,
+				"age_display": age_short,
 				"job": e.job, "status": e.current_action, "settlement": e.settlement_id,
 				"hunger": e.hunger, "deceased": false,
 			})
@@ -189,12 +186,26 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 		if registry != null:
 			var deceased: Array = registry.get_all()
+			var cause_map: Dictionary = {"starvation": "아사", "old_age": "노령", "infant_mortality": "영아 사망", "background": "사고/질병", "maternal_death": "출산 사망", "stillborn": "사산"}
 			for i in range(deceased.size()):
 				var r: Dictionary = deceased[i]
+				var bd: Dictionary = r.get("birth_date", {})
+				var dd: Dictionary = r.get("death_date", {})
+				var d_age_short: String = "?"
+				var d_total_days: int = int(r.get("death_age_days", 0))
+				if not bd.is_empty() and not dd.is_empty():
+					d_age_short = GameCalendar.format_age_short(bd, dd)
+					var detail: Dictionary = GameCalendar.calculate_detailed_age(bd, dd)
+					d_total_days = detail.total_days
+				else:
+					d_age_short = "%dy" % int(r.get("death_age_years", 0.0))
+				var cause_raw: String = r.get("death_cause", "unknown")
+				var cause_kr: String = cause_map.get(cause_raw, cause_raw)
 				rows.append({
 					"id": r.get("id", -1), "name": r.get("name", "?"),
-					"age": r.get("death_age_years", 0.0), "job": r.get("job", ""),
-					"status": "deceased", "settlement": r.get("settlement_id", 0),
+					"age": d_total_days, "age_display": d_age_short,
+					"job": r.get("job", ""),
+					"status": "사망-%s" % cause_kr, "settlement": r.get("settlement_id", 0),
 					"hunger": 0.0, "deceased": true,
 				})
 
@@ -213,13 +224,6 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		return false
 	)
 
-	# Total and pagination
-	var total: int = rows.size()
-	var total_pages: int = maxi(1, ceili(float(total) / float(ITEMS_PER_PAGE)))
-	_page = clampi(_page, 0, total_pages - 1)
-	var start_idx: int = _page * ITEMS_PER_PAGE
-	var end_idx: int = mini(start_idx + ITEMS_PER_PAGE, total)
-
 	# Column headers (sortable)
 	var col_x: float = cx + 5
 	for col in ENTITY_COLUMNS:
@@ -234,77 +238,73 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
 
-	# Rows
-	for i in range(start_idx, end_idx):
+	# Scrollable rows
+	var row_area_top: float = cy
+	var row_area_height: float = panel_h - cy - 30.0
+	_content_height = float(rows.size()) * ROW_HEIGHT + 80.0
+
+	var row_y: float = 0.0
+	for i in range(rows.size()):
 		var row: Dictionary = rows[i]
+		if row_y + ROW_HEIGHT < _scroll_offset:
+			row_y += ROW_HEIGHT
+			continue
+		if row_y - _scroll_offset > row_area_height:
+			break
+
+		var draw_y: float = row_area_top + row_y - _scroll_offset
 		var is_deceased: bool = row.get("deceased", false)
 		var text_color: Color = Color(0.5, 0.5, 0.5) if is_deceased else Color(0.8, 0.8, 0.8)
-		var row_rect := Rect2(cx, cy, panel_w - 30, ROW_HEIGHT)
+		var row_rect := Rect2(cx, draw_y, panel_w - 30, ROW_HEIGHT)
 
 		# Hover highlight (alternating rows)
-		if (i - start_idx) % 2 == 1:
+		if (i % 2) == 1:
 			draw_rect(row_rect, Color(0.1, 0.1, 0.1, 0.3))
 
 		col_x = cx + 5
 		# Name (with deceased marker)
 		var display_name: String = row.name
 		if is_deceased:
-			display_name = "D " + display_name
-		draw_string(font, Vector2(col_x, cy + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, col_x + ENTITY_COLUMNS[0].width - 5, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
+			display_name = "☠ " + display_name
+		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, col_x + ENTITY_COLUMNS[0].width - 5, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
 		col_x += ENTITY_COLUMNS[0].width
 
-		# Age
-		var age_text: String = "%d" % int(row.age) if not is_deceased else "%dy" % int(row.age)
-		draw_string(font, Vector2(col_x, cy + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		# Age (short format)
+		var age_text: String = row.get("age_display", "%d" % int(row.age))
+		draw_string(font, Vector2(col_x, draw_y + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += ENTITY_COLUMNS[1].width
 
 		# Job
-		draw_string(font, Vector2(col_x, cy + 14), str(row.job).substr(0, 8), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job).substr(0, 8), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += ENTITY_COLUMNS[2].width
 
 		# Status
-		var status_text: String = str(row.status).substr(0, 8)
+		var status_text: String = str(row.status).substr(0, 10)
 		var status_color: Color = text_color
 		if is_deceased:
 			status_color = Color(0.6, 0.3, 0.3)
-		draw_string(font, Vector2(col_x, cy + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, status_color)
+		draw_string(font, Vector2(col_x, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, status_color)
 		col_x += ENTITY_COLUMNS[3].width
 
 		# Settlement
 		var sett_text: String = "S%d" % row.settlement if row.settlement > 0 else "-"
-		draw_string(font, Vector2(col_x, cy + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += ENTITY_COLUMNS[4].width
 
 		# Hunger
 		if not is_deceased:
 			var h: float = row.hunger
 			var h_color: Color = Color(0.9, 0.2, 0.2) if h < 0.3 else (Color(0.9, 0.8, 0.2) if h < 0.6 else Color(0.3, 0.8, 0.3))
-			draw_string(font, Vector2(col_x, cy + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, h_color)
+			draw_string(font, Vector2(col_x, draw_y + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, h_color)
 
 		# Register click region
 		_click_regions.append({"rect": row_rect, "entity_id": row.id, "deceased": is_deceased})
-		cy += ROW_HEIGHT
+		row_y += ROW_HEIGHT
 
-	cy += 8.0
-
-	# Pagination controls
-	var page_y: float = panel_h - 30
-	var page_text: String = "Page %d / %d  (%d total)" % [_page + 1, total_pages, total]
-	draw_string(font, Vector2(panel_w * 0.5 - 60, page_y + 12), page_text, HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
-
-	if _page > 0:
-		var prev_rect := Rect2(cx + 10, page_y, 40, 20)
-		draw_rect(prev_rect, Color(0.2, 0.2, 0.25, 0.8))
-		draw_string(font, Vector2(cx + 18, page_y + 14), "< Prev", HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color.WHITE)
-		_page_rects.append({"rect": prev_rect, "action": "prev"})
-
-	if _page < total_pages - 1:
-		var next_rect := Rect2(panel_w - 60, page_y, 45, 20)
-		draw_rect(next_rect, Color(0.2, 0.2, 0.25, 0.8))
-		draw_string(font, Vector2(panel_w - 52, page_y + 14), "Next >", HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color.WHITE)
-		_page_rects.append({"rect": next_rect, "action": "next"})
-
-	_content_height = cy + 40.0
+	# Footer: total count
+	var footer_y: float = panel_h - 24
+	var count_text: String = "%d entities" % rows.size()
+	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), count_text, HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
 
 
 func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, fs_body: int, fs_small: int) -> void:

@@ -159,3 +159,89 @@ static func format_birth_date(bd: Dictionary) -> String:
 	var month: int = bd.get("month", 1)
 	var day: int = bd.get("day", 1)
 	return "Y%d %s %d일생" % [year, MONTH_NAMES[clampi(month - 1, 0, 11)], day]
+
+
+static func to_julian_day(date: Dictionary) -> int:
+	var y: int = date.get("year", 1)
+	var m: int = date.get("month", 1)
+	var d: int = date.get("day", 1)
+	if m <= 2:
+		y -= 1
+		m += 12
+	var A: int = y / 100
+	var B: int = 2 - A + A / 4
+	return int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d + B - 1524
+
+
+static func count_days_between(from_date: Dictionary, to_date: Dictionary) -> int:
+	return absi(to_julian_day(to_date) - to_julian_day(from_date))
+
+
+static func days_in_month(month: int, year: int) -> int:
+	if month == 2:
+		return 29 if is_leap_year(year) else 28
+	return MONTH_DAYS[clampi(month - 1, 0, 11)]
+
+
+static func calculate_detailed_age(birth_date: Dictionary, ref_date: Dictionary = {}) -> Dictionary:
+	if birth_date.is_empty():
+		return {"years": 0, "months": 0, "days": 0, "total_days": 0}
+	if ref_date.is_empty():
+		ref_date = {"year": 1, "month": 1, "day": 1}
+
+	var years: int = ref_date.get("year", 1) - birth_date.get("year", 1)
+	var months: int = ref_date.get("month", 1) - birth_date.get("month", 1)
+	var d: int = ref_date.get("day", 1) - birth_date.get("day", 1)
+
+	if d < 0:
+		months -= 1
+		var prev_month: int = ref_date.get("month", 1) - 1
+		var prev_year: int = ref_date.get("year", 1)
+		if prev_month <= 0:
+			prev_month = 12
+			prev_year -= 1
+		d += days_in_month(prev_month, prev_year)
+
+	if months < 0:
+		years -= 1
+		months += 12
+
+	years = maxi(years, 0)
+	var total_days: int = count_days_between(birth_date, ref_date)
+
+	return {"years": years, "months": months, "days": d, "total_days": total_days}
+
+
+static func format_age_detailed(birth_date: Dictionary, ref_date: Dictionary = {}) -> String:
+	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
+	var parts: Array = []
+	if age.years > 0:
+		parts.append("%d년" % age.years)
+	if age.months > 0:
+		parts.append("%d개월" % age.months)
+	parts.append("%d일" % age.days)
+	var age_str: String = " ".join(parts)
+	var total_str: String = format_number(age.total_days)
+	return "%s (%s일)" % [age_str, total_str]
+
+
+static func format_age_short(birth_date: Dictionary, ref_date: Dictionary = {}) -> String:
+	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
+	if age.years > 0:
+		return "%dy %dm %dd" % [age.years, age.months, age.days]
+	elif age.months > 0:
+		return "%dm %dd" % [age.months, age.days]
+	else:
+		return "%dd" % age.days
+
+
+static func format_number(n: int) -> String:
+	var s: String = str(absi(n))
+	var result: String = ""
+	for i in range(s.length()):
+		if i > 0 and (s.length() - i) % 3 == 0:
+			result += ","
+		result += s[i]
+	if n < 0:
+		result = "-" + result
+	return result

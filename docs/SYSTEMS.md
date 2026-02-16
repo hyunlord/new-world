@@ -23,7 +23,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
 | 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
-| 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 연간 인구통계 로그, register_death() 외부 사망 카운터 | `scripts/systems/mortality_system.gd` |
+| 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 돌봄 보호(a1×0.6), 연간 인구통계 로그(원인별 카운트), register_death(is_infant, stage, age, cause) | `scripts/systems/mortality_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 비활성화 (FamilySystem으로 이관), 사망 로직 비활성화 (MortalitySystem으로 이관) | `scripts/systems/population_system.gd` |
 | 52 | FamilySystem | 50 | 시간 기반 | 임신 조건(partner+love≥0.15+food fallback), 가우시안 재태기간, 조산/신생아건강, 모성사망(+register_death), 쌍둥이, 사별, 임신확률 8% | `scripts/systems/family_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
@@ -35,6 +35,9 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 `GameCalendar.tick_to_date(tick)` → `{year, month, day, hour, day_of_year}` 정확한 그레고리력 변환 (윤년 포함).
 `GameCalendar.format_date(tick)` → `"Y3 7월 15일 14:00 (여름)"` HUD 표시용.
 나이는 `current_tick - birth_tick`으로 파생 계산 (증분 카운트 방식 제거).
+상세 나이: `GameCalendar.format_age_detailed(birth_date, ref_date)` → "26년 3개월 15일 (9,602일)".
+단축 나이: `GameCalendar.format_age_short(birth_date, ref_date)` → "26y 3m 15d".
+나이 정렬: `GameCalendar.calculate_detailed_age(birth_date, ref_date).total_days` (숫자 기준).
 
 **시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
 - ResourceRegenSystem: 120틱(10일), JobAssignmentSystem: 24틱(2일), PopulationSystem: 30틱(2.5일)
@@ -59,7 +62,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
 | SaveManager | 바이너리 저장/로드 (Cmd+S/Cmd+L), `user://saves/quicksave/` 디렉토리 구조 (meta.json + *.bin + stats.json) | `scripts/core/save_manager.gd` |
-| GameCalendar | 정확한 365일 그레고리력 (윤년 포함), tick↔날짜/계절/나이 변환 | `scripts/core/game_calendar.gd` |
+| GameCalendar | 정확한 365일 그레고리력 (윤년 포함), tick↔날짜/계절/나이 변환, 상세 나이 계산 (년/월/일/총일수), Julian Day 변환, 천 단위 포맷 | `scripts/core/game_calendar.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
 ---
@@ -83,6 +86,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | GameConfig | 전역 상수/열거형 (바이옴, 건물, 직업 비율, 시뮬 파라미터) | `scripts/core/game_config.gd` |
 | SimulationBus | 글로벌 시그널 허브 (simulation_event, entity_selected 등) | `scripts/core/simulation_bus.gd` |
 | EventLogger | SimulationBus 구독, 이벤트 저장/조회/직렬화, 콘솔 로깅 | `scripts/core/event_logger.gd` |
+| DeceasedRegistry | 사망자 기록 보존 (birth_date, death_date, death_age_days, cause), 한글 사인 변환, save/load | `scripts/core/deceased_registry.gd` |
 
 ---
 

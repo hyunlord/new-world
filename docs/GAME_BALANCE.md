@@ -16,7 +16,8 @@
 | 1x에서 하루 | ~1.2초 (12틱 / 10틱/초) | |
 | 10x 20분에 | ~30년 (120,000틱 / 4,380) | |
 | HUD 시간 표시 | Y3 7월 15일 14:00 (여름) | `GameCalendar.format_date()` |
-| 나이 표시 | 년 단위 (age_ticks / TICKS_PER_YEAR) | `GameConfig.get_age_years()` |
+| 나이 표시 (상세) | "26년 3개월 15일 (9,602일)" | `GameCalendar.format_age_detailed()` |
+| 나이 표시 (단축) | "26y 3m 15d" (리스트/HUD) | `GameCalendar.format_age_short()` |
 | 프레임당 최대 틱 | 5 | `GameConfig.MAX_TICKS_PER_FRAME` |
 | 속도 옵션 | 1x, 2x, 3x, 5x, 10x | `GameConfig.SPEED_OPTIONS` |
 
@@ -62,7 +63,7 @@
 
 | 욕구 | 감소율/needs틱 | 나이별 배율 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
 |------|----------|-----------|-----------------|-----------|------|----------|
-| hunger | 0.002 | infant×0.2, toddler×0.4, child×0.6, teen×0.8, adult/elder×1.0 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE`, `CHILD_HUNGER_DECAY_MULT` |
+| hunger | 0.002 | infant×0.3, toddler×0.4, child×0.5, teen×0.85, adult/elder×1.0 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE`, `CHILD_HUNGER_DECAY_MULT` |
 | energy | 0.003 | 동일 | +0.005 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
 | social | 0.001 | 동일 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
 
@@ -367,10 +368,15 @@ ChildcareSystem: priority=12, tick_interval=10
 
 | 나이 단계 | 급식 임계값 | 급식량 | 코드 위치 |
 |----------|-----------|--------|----------|
-| infant | hunger < 0.6 | 0.15 | `GameConfig.CHILDCARE_FEED_AMOUNTS` |
-| toddler | hunger < 0.5 | 0.25 | |
-| child | hunger < 0.4 | 0.35 | |
-| teen | hunger < 0.3 | 0.42 | |
+| infant | hunger < 0.8 | 0.25 | `GameConfig.CHILDCARE_FEED_AMOUNTS`, `CHILDCARE_INFANT_HUNGER_THRESHOLD` |
+| toddler | hunger < 0.7 | 0.35 | `GameConfig.CHILDCARE_HUNGER_THRESHOLD` |
+| child | hunger < 0.7 | 0.40 | |
+| teen | hunger < 0.7 | 0.45 | |
+
+### Siler 돌봄 보호 (T-2008)
+- 0~2세 영아 중 hunger > 0.3인 경우 Siler a1 사망률 40% 감소
+- `SILER_CARE_PROTECTION = 0.6`, `SILER_CARE_HUNGER_MIN = 0.3`
+- 학술 근거: 수렵채집 사회에서 양육받는 영아 사망률 15-20% vs 방치 50%+ (Hewlett 1991)
 
 ### 어린이 채집 효율
 
