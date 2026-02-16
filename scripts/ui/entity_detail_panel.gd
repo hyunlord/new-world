@@ -143,7 +143,9 @@ func _draw() -> void:
 	draw_string(font, Vector2(cx, cy), gender_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), gender_color)
 	cy += 6.0
 
-	var age_years: int = int(GameConfig.get_age_years(entity.age))
+	var current_date: Dictionary = GameCalendarScript.tick_to_date(entity.birth_tick + entity.age)
+	var ref_date: Dictionary = {"year": current_date.year, "month": current_date.month, "day": current_date.day}
+	var age_detail: String = GameCalendarScript.format_age_detailed(entity.birth_date, ref_date)
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
 	var preg_text: String = ""
 	if entity.pregnancy_tick >= 0:
@@ -154,7 +156,7 @@ func _draw() -> void:
 		birth_str = GameCalendarScript.format_birth_date(entity.birth_date)
 	else:
 		birth_str = "출생일 불명"
-	var life_stage_text: String = "%s | %d세 (%s)" % [entity.age_stage.capitalize(), age_years, birth_str]
+	var life_stage_text: String = "%s | %s (%s)" % [entity.age_stage.capitalize(), age_detail, birth_str]
 	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  %s  |  Pos: (%d, %d)%s" % [sid_text, life_stage_text, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	_draw_separator(cx, cy, panel_w)
@@ -212,18 +214,20 @@ func _draw() -> void:
 	# Partner
 	if entity.partner_id >= 0:
 		var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
-		var partner_name: String = "(deceased)"
+		var partner_name: String = "☠ (deceased)"
 		var partner_alive: bool = false
 		if partner != null and partner.is_alive:
 			partner_name = partner.entity_name
 			partner_alive = true
 		else:
+			if partner != null:
+				partner_name = "%s ☠" % partner.entity_name
 			# Check DeceasedRegistry
 			var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 			if registry != null:
 				var record: Dictionary = registry.get_record(entity.partner_id)
 				if record.size() > 0:
-					partner_name = record.get("name", "?") + "(d)"
+					partner_name = record.get("name", "?") + " ☠"
 		var love_pct: int = int(entity.emotions.get("love", 0.0) * 100)
 		var prefix: String = "Partner: "
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
@@ -251,13 +255,13 @@ func _draw() -> void:
 			if parent != null:
 				pname = parent.entity_name
 				if not parent.is_alive:
-					pname += "(d)"
+					pname += " ☠"
 			else:
 				var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 				if registry != null:
 					var record: Dictionary = registry.get_record(pid)
 					if record.size() > 0:
-						pname = record.get("name", "?") + "(d)"
+						pname = record.get("name", "?") + " ☠"
 			if i > 0:
 				draw_string(font, Vector2(name_x, cy + 12), ", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 				name_x += font.get_string_size(", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
@@ -275,21 +279,22 @@ func _draw() -> void:
 		var prefix: String = "Children: "
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
 		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+		var child_ref_date: Dictionary = {"year": current_date.year, "month": current_date.month, "day": current_date.day}
 		for i in range(entity.children_ids.size()):
 			var cid: int = entity.children_ids[i]
 			var cname: String = "?"
 			var child: RefCounted = _entity_manager.get_entity(cid)
 			if child != null:
-				var child_age: float = GameConfig.get_age_years(child.age)
-				cname = "%s(%.0fy)" % [child.entity_name, child_age]
+				var child_age_short: String = GameCalendarScript.format_age_short(child.birth_date, child_ref_date)
+				cname = "%s (%s)" % [child.entity_name, child_age_short]
 				if not child.is_alive:
-					cname = "%s(d)" % child.entity_name
+					cname = "%s ☠" % child.entity_name
 			else:
 				var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 				if registry != null:
 					var record: Dictionary = registry.get_record(cid)
 					if record.size() > 0:
-						cname = record.get("name", "?") + "(d)"
+						cname = record.get("name", "?") + " ☠"
 			if i > 0:
 				draw_string(font, Vector2(name_x, cy + 12), ", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
 				name_x += font.get_string_size(", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
@@ -433,12 +438,12 @@ func _lookup_name(entity_id: int) -> String:
 		if entity.is_alive:
 			return entity.entity_name
 		else:
-			return entity.entity_name + "(d)"
+			return entity.entity_name + " ☠"
 	var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 	if registry != null:
 		var record: Dictionary = registry.get_record(entity_id)
 		if record.size() > 0:
-			return record.get("name", "?") + "(d)"
+			return record.get("name", "?") + " ☠"
 	return "?"
 
 
@@ -463,24 +468,51 @@ func _draw_deceased() -> void:
 	cy += 6.0
 
 	# Life span
-	var GameCalendar = load("res://scripts/core/game_calendar.gd")
 	var birth_str: String = "?"
 	var death_str: String = "?"
 	var birth_tick: int = r.get("birth_tick", 0)
 	var death_tick: int = r.get("death_tick", 0)
+	var birth_date: Dictionary = r.get("birth_date", {})
+	var death_date: Dictionary = r.get("death_date", {})
 	if birth_tick >= 0:
-		var bd: Dictionary = GameCalendar.tick_to_date(birth_tick)
+		var bd: Dictionary = GameCalendarScript.tick_to_date(birth_tick)
 		birth_str = "Y%d %d월 %d일" % [bd.year, bd.month, bd.day]
 	else:
 		birth_str = "초기세대"
-	var dd: Dictionary = GameCalendar.tick_to_date(death_tick)
+	var dd: Dictionary = GameCalendarScript.tick_to_date(death_tick)
 	death_str = "Y%d %d월 %d일" % [dd.year, dd.month, dd.day]
-	var age_str: String = "%.0f세" % r.get("death_age_years", 0.0)
+	var age_str: String = "?"
+	if not birth_date.is_empty() and not death_date.is_empty():
+		age_str = GameCalendarScript.format_age_detailed(birth_date, death_date)
+	else:
+		age_str = "%.0f세" % r.get("death_age_years", 0.0)
 	draw_string(font, Vector2(cx, cy + 14), "%s ~ %s (향년 %s)" % [birth_str, death_str, age_str], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 	cy += 18.0
 
+	if not birth_date.is_empty() and not death_date.is_empty():
+		var survival: Dictionary = GameCalendarScript.calculate_detailed_age(birth_date, death_date)
+		var total_days_str: String = GameCalendarScript.format_number(survival.total_days)
+		var dur_parts: Array = []
+		if survival.years > 0:
+			dur_parts.append("%d년" % survival.years)
+		if survival.months > 0:
+			dur_parts.append("%d개월" % survival.months)
+		dur_parts.append("%d일" % survival.days)
+		draw_string(font, Vector2(cx, cy + 14), "생존 기간: %s (%s일)" % [" ".join(dur_parts), total_days_str], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+		cy += 18.0
+
 	# Cause of death
-	draw_string(font, Vector2(cx, cy + 14), "사인: %s" % r.get("death_cause", "unknown"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.5, 0.5))
+	var cause_raw: String = r.get("death_cause", "unknown")
+	var cause_map: Dictionary = {
+		"starvation": "아사",
+		"old_age": "노령",
+		"infant_mortality": "영아 사망",
+		"background": "사고/질병",
+		"maternal_death": "출산 사망",
+		"stillborn": "사산",
+	}
+	var cause_display: String = cause_map.get(cause_raw, cause_raw)
+	draw_string(font, Vector2(cx, cy + 14), "사인: %s" % cause_display, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.5, 0.5))
 	cy += 18.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0

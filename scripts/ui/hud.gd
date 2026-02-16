@@ -10,6 +10,14 @@ const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/chronicle_panel.gd")
 const ListPanelClass = preload("res://scripts/ui/list_panel.gd")
+const DEATH_CAUSE_KR: Dictionary = {
+	"starvation": "아사",
+	"old_age": "노령",
+	"infant_mortality": "영아 사망",
+	"background": "사고/질병",
+	"maternal_death": "출산 사망",
+	"stillborn": "사산",
+}
 
 # References
 var _sim_engine: RefCounted
@@ -576,13 +584,16 @@ func _update_entity_panel(delta: float) -> void:
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
-	var age_years: int = int(float(entity.age) / float(GameConfig.TICKS_PER_YEAR))
 	var birth_str: String = ""
 	if not entity.birth_date.is_empty():
 		birth_str = GameCalendar.format_birth_date(entity.birth_date)
 	else:
 		birth_str = "출생일 불명"
-	var age_text: String = "%d세 (%s)" % [age_years, birth_str]
+	var current_tick: int = entity.birth_tick + entity.age
+	var ref_d: Dictionary = GameCalendar.tick_to_date(current_tick)
+	var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
+	var age_short: String = GameCalendar.format_age_short(entity.birth_date, ref_date)
+	var age_text: String = "%s (%s)" % [age_short, birth_str]
 	_entity_job_label.text = "%s | %s%s | %s" % [entity.age_stage.capitalize(), entity.job.capitalize(), settlement_text, age_text]
 
 	# Position
@@ -739,7 +750,7 @@ func _add_notification(text: String, color: Color) -> void:
 		bg_color = Color(0.1, 0.4, 0.1, 0.9)
 	elif text.contains("built") or text.contains("Build") or text.contains("construction"):
 		bg_color = Color(0.4, 0.3, 0.1, 0.9)
-	elif text.contains("starved") or text.contains("shortage") or text.contains("famine"):
+	elif text.contains("사망") or text.contains("사산") or text.contains("starved") or text.contains("shortage") or text.contains("famine"):
 		bg_color = Color(0.5, 0.1, 0.1, 0.9)
 
 	var panel := PanelContainer.new()
@@ -820,7 +831,21 @@ func _on_simulation_event(event: Dictionary) -> void:
 			var btype: String = event.get("building_type", "building")
 			_add_notification("%s built" % btype.capitalize(), Color(1.0, 0.9, 0.3))
 		"entity_starved":
-			_add_notification("Entity starved!", Color(0.9, 0.2, 0.2))
+			var starved_name: String = event.get("entity_name", "?")
+			_add_notification("%s 사망 (아사)" % starved_name, Color(0.9, 0.2, 0.2))
+		"entity_died_siler":
+			var died_name: String = event.get("entity_name", "?")
+			var died_cause: String = event.get("cause", "unknown")
+			var died_age: float = event.get("age_years", 0.0)
+			var cause_kr: String = DEATH_CAUSE_KR.get(died_cause, died_cause)
+			var age_str: String = "%.0fy" % died_age
+			_add_notification("%s 사망 (%s, %s)" % [died_name, cause_kr, age_str], Color(0.7, 0.3, 0.3))
+		"maternal_death":
+			var m_name: String = event.get("entity_name", "?")
+			_add_notification("%s 사망 (출산 사망)" % m_name, Color(0.8, 0.3, 0.5))
+		"stillborn":
+			var s_name: String = event.get("entity_name", "?")
+			_add_notification("%s 사산" % s_name, Color(0.6, 0.3, 0.3))
 
 
 # --- Toggle functions ---
