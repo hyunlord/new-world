@@ -39,6 +39,13 @@ var _yearly_deaths_by_cause: Dictionary = {}
 var _year_start_pop: int = 0
 var _last_log_year: int = 0
 
+## Monthly demography tracking
+var _month_births: int = 0
+var _month_deaths_starve: int = 0
+var _month_deaths_siler: int = 0
+var _last_log_month: int = 0
+var _last_log_month_year: int = 0
+
 
 func _init() -> void:
 	system_name = "mortality"
@@ -54,6 +61,7 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 func execute_tick(tick: int) -> void:
 	_check_birthday_mortality(tick)
 	_check_infant_monthly(tick)
+	_check_monthly_pop_log(tick)
 	_check_annual_demography_log(tick)
 
 
@@ -180,6 +188,41 @@ func _determine_cause(h_infant: float, h_background: float, h_senescence: float)
 
 ## ─── Annual demography log ──────────────────────────────
 
+func _check_monthly_pop_log(tick: int) -> void:
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	var current_month: int = date.month
+	var current_year: int = date.year
+	if current_year == _last_log_month_year and current_month == _last_log_month:
+		return
+	# New month crossed — print previous month's summary (skip first tick)
+	if _last_log_month > 0:
+		_print_monthly_pop_log(tick)
+	_last_log_month = current_month
+	_last_log_month_year = current_year
+	# Reset monthly counters
+	_month_births = 0
+	_month_deaths_starve = 0
+	_month_deaths_siler = 0
+
+
+func _print_monthly_pop_log(tick: int) -> void:
+	var alive: Array = _entity_manager.get_alive_entities()
+	var total_pop: int = alive.size()
+	var adult_count: int = 0
+	var child_count: int = 0
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
+		if entity.age_stage == "adult" or entity.age_stage == "elder":
+			adult_count += 1
+		else:
+			child_count += 1
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	print("[POP] Y%d M%d | Pop:%d (Adult:%d Child:%d) | Births:%d | Deaths(starve:%d siler:%d)" % [
+		date.year, date.month, total_pop, adult_count, child_count,
+		_month_births, _month_deaths_starve, _month_deaths_siler,
+	])
+
+
 func _check_annual_demography_log(tick: int) -> void:
 	var date: Dictionary = GameCalendar.tick_to_date(tick)
 	var current_year: int = date.year
@@ -244,6 +287,7 @@ func _print_demography_log(year: int, tick: int) -> void:
 ## Register a birth (called externally by FamilySystem)
 func register_birth() -> void:
 	_year_births += 1
+	_month_births += 1
 
 
 ## Register a death (called externally by NeedsSystem, FamilySystem)
@@ -264,6 +308,10 @@ func register_death(is_infant: bool = false, age_stage: String = "", age_years: 
 	if age_years >= 0.0:
 		_year_death_age_sum += age_years
 		_year_death_age_samples += 1
+	if cause == "starvation":
+		_month_deaths_starve += 1
+	else:
+		_month_deaths_siler += 1
 
 
 ## ─── Theoretical life expectancy (numerical integration) ──

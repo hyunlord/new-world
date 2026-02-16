@@ -592,3 +592,48 @@ Config-first then fan-out:
 - Files changed: 10 (7 modified + 3 new JSON + 1 new GDScript)
 - Post-Codex fixes: 3 bugs found in review (syllable_count nested dict parsing, patronymic config lookup, name gen before gender assignment)
 - Key changes: NameGenerator autoload, 3 naming culture JSONs, settlement culture_id, save format v4
+
+---
+
+## T-2012: 아동 아사 근본 수정 + 월간 인구 로그 — 2026-02-17
+
+### Context
+아동 양육 시스템을 여러 차례 보강했으나 여전히 아이들만 아사하고 성인은 안 죽음. 인구가 줄어들기만 함.
+근본 원인 분석 결과:
+1. **실행 순서 버그**: NeedsSystem(prio 10, 매 2틱)이 hunger decay → starvation kill을 ChildcareSystem(prio 12, 매 10틱) **전에** 실행 → 급식 기회 없이 사망
+2. **빈도 불일치**: hunger decay 5회당 childcare 1회 → 아이 hunger가 급식 사이에 급락
+3. **절대 보호 없음**: 아동도 starvation death 경로를 그대로 탐 — 학술적으로 비현실적 (Gurven & Kaplan 2007)
+
+### Root Cause Analysis
+```
+[BEFORE FIX] 한 틱의 실행 순서:
+  ChildcareSystem (prio 12, every 10 ticks) ← 매 10틱에만 실행
+  NeedsSystem (prio 10, every 2 ticks):
+    hunger -= decay_rate * child_mult
+    auto-eat from inventory (children have nothing)
+    clamp hunger to 0.0
+    if hunger <= 0.0: starving_timer++
+    if starving_timer >= grace: KILL ← 여기서 아이 사망
+
+[AFTER FIX] 한 틱의 실행 순서:
+  ChildcareSystem (prio 8, every 2 ticks) ← 매 2틱, NeedsSystem 전에 실행
+    feed children from stockpile
+  NeedsSystem (prio 10, every 2 ticks):
+    hunger -= decay_rate * child_mult
+    clamp child hunger to min 0.05 ← 바닥 추가
+    if hunger <= 0.0: (children never reach 0.0)
+      if age < 15: hunger = 0.05, skip death ← 이중 안전장치
+```
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2012-01 | 아동 아사 면역 + 실행순서 수정 | 🟢 DISPATCH | ask_codex | 2파일 (needs_system + childcare_system) |
+| T-2012-02 | 월간 인구 로그 | 🟢 DISPATCH | ask_codex | 단일 파일 (mortality_system) |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Both tickets in parallel — no file overlap:
+- T-2012-01: needs_system.gd + childcare_system.gd
+- T-2012-02: mortality_system.gd

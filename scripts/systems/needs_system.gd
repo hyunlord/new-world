@@ -42,23 +42,32 @@ func execute_tick(tick: int) -> void:
 
 		# Clamp all needs
 		entity.hunger = clampf(entity.hunger, 0.0, 1.0)
+		if entity.age_stage == "infant" or entity.age_stage == "toddler" or entity.age_stage == "child" or entity.age_stage == "teen":
+			entity.hunger = maxf(entity.hunger, 0.05)
 		entity.energy = clampf(entity.energy, 0.0, 1.0)
 		entity.social = clampf(entity.social, 0.0, 1.0)
 
 		# Starvation check with grace period (children get longer grace)
 		if entity.hunger <= 0.0:
-			entity.starving_timer += 1
-			var grace: int = GameConfig.CHILD_STARVATION_GRACE_TICKS.get(entity.age_stage, GameConfig.STARVATION_GRACE_TICKS)
-			if entity.starving_timer >= grace:
-				emit_event("entity_starved", {
-					"entity_id": entity.id,
-					"entity_name": entity.entity_name,
-					"starving_ticks": entity.starving_timer,
-					"tick": tick,
-				})
-				_entity_manager.kill_entity(entity.id, "starvation", tick)
-				if _mortality_system != null and _mortality_system.has_method("register_death"):
-					var age_years: float = GameConfig.get_age_years(entity.age)
-					_mortality_system.register_death(age_years < 1.0, entity.age_stage, age_years, "starvation")
+			# Children under 15 are immune to starvation death.
+			# Child mortality is handled by the Siler model (infant_mortality).
+			var age_years: float = GameConfig.get_age_years(entity.age)
+			if age_years < 15.0:
+				entity.hunger = 0.05
+				entity.starving_timer = 0
+			else:
+				entity.starving_timer += 1
+				var grace: int = GameConfig.CHILD_STARVATION_GRACE_TICKS.get(entity.age_stage, GameConfig.STARVATION_GRACE_TICKS)
+				if entity.starving_timer >= grace:
+					emit_event("entity_starved", {
+						"entity_id": entity.id,
+						"entity_name": entity.entity_name,
+						"starving_ticks": entity.starving_timer,
+						"tick": tick,
+					})
+					_entity_manager.kill_entity(entity.id, "starvation", tick)
+					if _mortality_system != null and _mortality_system.has_method("register_death"):
+						var death_age_years: float = GameConfig.get_age_years(entity.age)
+						_mortality_system.register_death(death_age_years < 1.0, entity.age_stage, death_age_years, "starvation")
 		else:
 			entity.starving_timer = 0

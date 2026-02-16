@@ -9,8 +9,8 @@ const CHILDCARE_DEBUG: bool = false
 
 func _init() -> void:
 	system_name = "childcare"
-	priority = 12
-	tick_interval = GameConfig.CHILDCARE_TICK_INTERVAL
+	priority = 8  # Run before NeedsSystem (priority 10)
+	tick_interval = 2  # Deliberately override config to match NeedsSystem frequency
 
 
 func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted) -> void:
