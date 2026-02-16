@@ -1,6 +1,7 @@
 extends "res://scripts/core/simulation_system.gd"
 
 var _entity_manager: RefCounted
+var _building_manager: RefCounted
 var _mortality_system: RefCounted
 
 
@@ -10,9 +11,10 @@ func _init() -> void:
 	tick_interval = GameConfig.NEEDS_TICK_INTERVAL
 
 
-## Initialize with entity manager reference
-func init(entity_manager: RefCounted) -> void:
+## Initialize with entity/building manager references
+func init(entity_manager: RefCounted, building_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+	_building_manager = building_manager
 
 
 func execute_tick(tick: int) -> void:
@@ -43,19 +45,45 @@ func execute_tick(tick: int) -> void:
 		# Clamp all needs
 		entity.hunger = clampf(entity.hunger, 0.0, 1.0)
 		if entity.age_stage == "infant" or entity.age_stage == "toddler" or entity.age_stage == "child" or entity.age_stage == "teen":
-			entity.hunger = maxf(entity.hunger, 0.05)
+			if entity.settlement_id > 0 and _get_settlement_food(entity.settlement_id) > 0.0:
+				entity.hunger = maxf(entity.hunger, 0.05)
 		entity.energy = clampf(entity.energy, 0.0, 1.0)
 		entity.social = clampf(entity.social, 0.0, 1.0)
 
 		# Starvation check with grace period (children get longer grace)
 		if entity.hunger <= 0.0:
-			# Children under 15 are immune to starvation death.
-			# Child mortality is handled by the Siler model (infant_mortality).
 			var age_years: float = GameConfig.get_age_years(entity.age)
 			if age_years < 15.0:
-				entity.hunger = 0.05
-				entity.starving_timer = 0
+				# Child conditional protection: check settlement food
+				var sett_food: float = 0.0
+				if entity.settlement_id > 0:
+					sett_food = _get_settlement_food(entity.settlement_id)
+				if sett_food > 0.0:
+					# Food exists but child is starving -> emergency feed from stockpile
+					var feed_amount: float = minf(0.3, sett_food)
+					var withdrawn: float = _withdraw_food(entity.settlement_id, feed_amount)
+					if withdrawn > 0.0:
+						entity.hunger = withdrawn * GameConfig.FOOD_HUNGER_RESTORE
+					entity.starving_timer = 0
+				else:
+					# True famine (no settlement food) -> grace period, then starvation allowed
+					entity.starving_timer += 1
+					var grace: int = GameConfig.CHILD_STARVATION_GRACE_TICKS.get(entity.age_stage, GameConfig.STARVATION_GRACE_TICKS)
+					if entity.starving_timer >= grace:
+						emit_event("entity_starved", {
+							"entity_id": entity.id,
+							"entity_name": entity.entity_name,
+							"starving_ticks": entity.starving_timer,
+							"tick": tick,
+						})
+						_entity_manager.kill_entity(entity.id, "starvation", tick)
+						if _mortality_system != null and _mortality_system.has_method("register_death"):
+							var death_age_years: float = GameConfig.get_age_years(entity.age)
+							_mortality_system.register_death(death_age_years < 1.0, entity.age_stage, death_age_years, "starvation")
+					else:
+						entity.hunger = 0.01  # Keep barely alive during grace
 			else:
+				# Adult starvation: grace period then death
 				entity.starving_timer += 1
 				var grace: int = GameConfig.CHILD_STARVATION_GRACE_TICKS.get(entity.age_stage, GameConfig.STARVATION_GRACE_TICKS)
 				if entity.starving_timer >= grace:
@@ -71,3 +99,40 @@ func execute_tick(tick: int) -> void:
 						_mortality_system.register_death(death_age_years < 1.0, entity.age_stage, death_age_years, "starvation")
 		else:
 			entity.starving_timer = 0
+
+
+## Get total food in stockpiles belonging to a settlement
+func _get_settlement_food(settlement_id: int) -> float:
+	if _building_manager == null:
+		return 0.0
+	var total_food: float = 0.0
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	for i in range(stockpiles.size()):
+		var stockpile: RefCounted = stockpiles[i]
+		if stockpile.settlement_id != settlement_id or not stockpile.is_built:
+			continue
+		total_food += float(stockpile.storage.get("food", 0.0))
+	return total_food
+
+
+## Withdraw food from stockpiles belonging to a settlement
+func _withdraw_food(settlement_id: int, amount: float) -> float:
+	if _building_manager == null or amount <= 0.0:
+		return 0.0
+	var remaining: float = amount
+	var withdrawn: float = 0.0
+	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+	for i in range(stockpiles.size()):
+		if remaining <= 0.0:
+			break
+		var stockpile: RefCounted = stockpiles[i]
+		if stockpile.settlement_id != settlement_id or not stockpile.is_built:
+			continue
+		var available: float = float(stockpile.storage.get("food", 0.0))
+		if available <= 0.0:
+			continue
+		var take: float = minf(available, remaining)
+		stockpile.storage["food"] = available - take
+		remaining -= take
+		withdrawn += take
+	return withdrawn

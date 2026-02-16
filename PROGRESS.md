@@ -1,5 +1,22 @@
 # Progress Log
 
+## Phase 2-A1 Hotfix Follow-up: Conditional Child Starvation (T-2013)
+
+### Context
+T-2012 added absolute child starvation immunity (hunger floor 0.05, age<15 can never die of starvation).
+This is unrealistic: during true famine (settlement food = 0) children should also be at risk.
+Change from absolute immunity → conditional protection: protect when food exists, allow death during famine.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2013-01 | Conditional child starvation protection | 🟢 DISPATCH | ask_codex | needs_system.gd + main.gd wiring |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+Single ticket: needs_system.gd logic + main.gd wiring (2 files, straightforward)
+
 ## Phase 1 — Core Simulation (T-300 series)
 
 ### Tickets
