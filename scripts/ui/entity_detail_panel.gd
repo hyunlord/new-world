@@ -2,6 +2,7 @@ class_name EntityDetailPanel
 extends Control
 
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
+const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -10,11 +11,20 @@ var _entity_id: int = -1
 
 ## Personality bar colors
 const PERSONALITY_COLORS: Dictionary = {
-	"openness": Color(0.6, 0.4, 0.9),
-	"agreeableness": Color(0.3, 0.8, 0.5),
-	"extraversion": Color(0.9, 0.7, 0.2),
-	"diligence": Color(0.2, 0.6, 0.9),
-	"emotional_stability": Color(0.4, 0.8, 0.8),
+	"H": Color(0.9, 0.7, 0.2),
+	"E": Color(0.4, 0.6, 0.9),
+	"X": Color(0.9, 0.5, 0.2),
+	"A": Color(0.3, 0.8, 0.5),
+	"C": Color(0.2, 0.6, 0.9),
+	"O": Color(0.7, 0.4, 0.9),
+}
+const FACET_COLOR_DIM: float = 0.7
+
+## Trait sentiment colors
+const TRAIT_COLORS: Dictionary = {
+	"positive": Color(0.3, 0.8, 0.4),
+	"negative": Color(0.9, 0.3, 0.3),
+	"neutral": Color(0.9, 0.8, 0.3),
 }
 
 ## Emotion bar colors
@@ -49,6 +59,8 @@ var _content_height: float = 0.0
 
 ## Clickable name regions: [{rect: Rect2, entity_id: int}]
 var _click_regions: Array = []
+## Which axes are expanded (show facets)
+var _expanded_axes: Dictionary = {}
 ## Deceased detail mode
 var _showing_deceased: bool = false
 var _deceased_record: Dictionary = {}
@@ -82,6 +94,11 @@ func _gui_input(event: InputEvent) -> void:
 			# Check click regions for name navigation
 			for region in _click_regions:
 				if region.rect.has_point(event.position):
+					if region.has("axis_id"):
+						var aid: String = region.axis_id
+						_expanded_axes[aid] = not _expanded_axes.get(aid, false)
+						accept_event()
+						return
 					_navigate_to_entity(region.entity_id)
 					accept_event()
 					return
@@ -190,13 +207,58 @@ func _draw() -> void:
 	cy = _draw_bar(font, cx + 10, cy, bar_w, "Social", entity.social, Color(0.3, 0.5, 0.9))
 	cy += 6.0
 
-	# ── Personality ──
+	# ── Personality (HEXACO 6-axis + expandable facets) ──
 	cy = _draw_section_header(font, cx, cy, "Personality")
-	var p_keys: Array = ["openness", "agreeableness", "extraversion", "diligence", "emotional_stability"]
-	var p_labels: Array = ["Open", "Agree", "Extra", "Dilig", "Stab"]
-	for i in range(p_keys.size()):
-		var val: float = entity.personality.get(p_keys[i], 0.5)
-		cy = _draw_bar(font, cx + 10, cy, bar_w, p_labels[i], val, PERSONALITY_COLORS[p_keys[i]])
+
+	var axis_labels: Dictionary = {
+		"H": "H (정직)", "E": "E (감정)", "X": "X (외향)",
+		"A": "A (우호)", "C": "C (성실)", "O": "O (개방)",
+	}
+
+	var pd = entity.personality
+	for axis_id in pd.AXIS_IDS:
+		var axis_val: float = pd.axes.get(axis_id, 0.5)
+		var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
+		var is_expanded: bool = _expanded_axes.get(axis_id, false)
+		var arrow: String = "▼" if is_expanded else "▶"
+		var label: String = "%s %s" % [arrow, axis_labels.get(axis_id, axis_id)]
+
+		var axis_y: float = cy
+		cy = _draw_bar(font, cx + 10, cy, bar_w, label, axis_val, color)
+
+		_click_regions.append({
+			"rect": Rect2(cx + 10, axis_y, bar_w, 16.0),
+			"entity_id": -1,
+			"axis_id": axis_id,
+		})
+
+		if is_expanded:
+			var fkeys: Array = pd.FACET_KEYS[axis_id]
+			for fk in fkeys:
+				var fval: float = pd.facets.get(fk, 0.5)
+				var fname: String = fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
+				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
+	cy += 4.0
+
+	# ── Traits ──
+	if pd.active_traits.size() > 0:
+		cy = _draw_section_header(font, cx, cy, "Traits")
+		var trait_x: float = cx + 10
+		for trait_id in pd.active_traits:
+			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
+			var tname: String = tdef.get("name_kr", trait_id)
+			var sentiment: String = tdef.get("sentiment", "neutral")
+			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
+			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+			if trait_x + text_w + 16 > size.x - 20:
+				cy += 16.0
+				trait_x = cx + 10
+			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), Color(tcolor.r, tcolor.g, tcolor.b, 0.2))
+			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), tcolor, false, 1.0)
+			draw_string(font, Vector2(trait_x + 5, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			trait_x += text_w + 16
+		cy += 20.0
 	cy += 6.0
 
 	# ── Emotions ──
@@ -583,13 +645,63 @@ func _draw_deceased() -> void:
 
 	# Personality
 	cy = _draw_section_header(font, cx, cy, "Personality")
-	var personality: Dictionary = r.get("personality", {})
-	var p_keys: Array = ["openness", "agreeableness", "extraversion", "diligence", "emotional_stability"]
-	var p_labels: Array = ["Open", "Agree", "Extra", "Dilig", "Stab"]
+	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
+	var p_dict: Dictionary = r.get("personality", {})
+	var pd: RefCounted
+	if p_dict.has("facets"):
+		pd = PersonalityDataScript.from_dict(p_dict)
+	else:
+		pd = PersonalityDataScript.new()
+		pd.migrate_from_big_five(p_dict)
+	var axis_labels: Dictionary = {
+		"H": "H (정직)", "E": "E (감정)", "X": "X (외향)",
+		"A": "A (우호)", "C": "C (성실)", "O": "O (개방)",
+	}
 	var bar_w: float = panel_w - 80.0
-	for i in range(p_keys.size()):
-		var val: float = personality.get(p_keys[i], 0.5)
-		cy = _draw_bar(font, cx + 10, cy, bar_w, p_labels[i], val, PERSONALITY_COLORS.get(p_keys[i], Color.GRAY))
+
+	for axis_id in pd.AXIS_IDS:
+		var axis_val: float = pd.axes.get(axis_id, 0.5)
+		var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
+		var is_expanded: bool = _expanded_axes.get(axis_id, false)
+		var arrow: String = "▼" if is_expanded else "▶"
+		var label: String = "%s %s" % [arrow, axis_labels.get(axis_id, axis_id)]
+
+		var axis_y: float = cy
+		cy = _draw_bar(font, cx + 10, cy, bar_w, label, axis_val, color)
+
+		_click_regions.append({
+			"rect": Rect2(cx + 10, axis_y, bar_w, 16.0),
+			"entity_id": -1,
+			"axis_id": axis_id,
+		})
+
+		if is_expanded:
+			var fkeys: Array = pd.FACET_KEYS[axis_id]
+			for fk in fkeys:
+				var fval: float = pd.facets.get(fk, 0.5)
+				var fname: String = fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
+				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
+	cy += 4.0
+
+	# Traits
+	if pd.active_traits.size() > 0:
+		cy = _draw_section_header(font, cx, cy, "Traits")
+		var trait_x: float = cx + 10
+		for trait_id in pd.active_traits:
+			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
+			var tname: String = tdef.get("name_kr", trait_id)
+			var sentiment: String = tdef.get("sentiment", "neutral")
+			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
+			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+			if trait_x + text_w + 16 > size.x - 20:
+				cy += 16.0
+				trait_x = cx + 10
+			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), Color(tcolor.r, tcolor.g, tcolor.b, 0.2))
+			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), tcolor, false, 1.0)
+			draw_string(font, Vector2(trait_x + 5, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			trait_x += text_w + 16
+		cy += 20.0
 	cy += 6.0
 
 	# Chronicle events

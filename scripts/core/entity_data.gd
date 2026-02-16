@@ -31,14 +31,8 @@ var pregnancy_tick: int = -1
 var last_birth_tick: int = -1  # For postpartum amenorrhea tracking
 var birth_date: Dictionary = {}  # {"year": int, "month": int, "day": int}
 
-## Phase 2: Personality (immutable after creation, 0.0~1.0)
-var personality: Dictionary = {
-	"openness": 0.5,
-	"agreeableness": 0.5,
-	"extraversion": 0.5,
-	"diligence": 0.5,
-	"emotional_stability": 0.5,
-}
+## Phase 2: Personality (PersonalityData RefCounted, HEXACO 24-facet)
+var personality: RefCounted = null
 
 ## Phase 2: Emotions (dynamic, updated by EmotionSystem)
 var emotions: Dictionary = {
@@ -142,7 +136,7 @@ func to_dict() -> Dictionary:
 		"children_ids": children_ids.duplicate(),
 		"pregnancy_tick": pregnancy_tick,
 		"last_birth_tick": last_birth_tick,
-		"personality": personality.duplicate(),
+		"personality": personality.to_dict() if personality != null else {},
 		"emotions": emotions.duplicate(),
 		"birth_date": birth_date.duplicate(),
 	}
@@ -203,14 +197,16 @@ static func from_dict(data: Dictionary) -> RefCounted:
 			"month": int(bd_data.get("month", 1)),
 			"day": int(bd_data.get("day", 1)),
 		}
+	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
 	var p_data: Dictionary = data.get("personality", {})
-	e.personality = {
-		"openness": p_data.get("openness", 0.5),
-		"agreeableness": p_data.get("agreeableness", 0.5),
-		"extraversion": p_data.get("extraversion", 0.5),
-		"diligence": p_data.get("diligence", 0.5),
-		"emotional_stability": p_data.get("emotional_stability", 0.5),
-	}
+	if p_data.has("facets"):
+		# New HEXACO format
+		e.personality = PersonalityDataScript.from_dict(p_data)
+	else:
+		# Old Big Five format — migrate to HEXACO
+		var pd = PersonalityDataScript.new()
+		pd.migrate_from_big_five(p_data)
+		e.personality = pd
 	var em_data: Dictionary = data.get("emotions", {})
 	e.emotions = {
 		"happiness": em_data.get("happiness", 0.5),

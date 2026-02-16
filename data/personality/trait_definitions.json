@@ -1,0 +1,116 @@
+{
+    "traits": [
+        {
+            "id": "deceitful",
+            "name_kr": "사기꾼",
+            "name_en": "Deceitful",
+            "condition": { "axis": "H", "direction": "low", "threshold": 0.10 },
+            "effects": { "steal_weight": 1.5, "bribe_weight": 1.3, "trust_penalty": -0.2 },
+            "sentiment": "negative"
+        },
+        {
+            "id": "honest",
+            "name_kr": "청렴",
+            "name_en": "Honest",
+            "condition": { "axis": "H", "direction": "high", "threshold": 0.90 },
+            "effects": { "share_weight": 1.3, "reputation_bonus": 0.1, "steal_weight": 0.1 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "fearful",
+            "name_kr": "겁이 많음",
+            "name_en": "Fearful",
+            "condition": { "facet": "E_fearfulness", "direction": "high", "threshold": 0.90 },
+            "effects": { "flee_weight": 1.5, "explore_weight": 0.5, "combat_weight": 0.3 },
+            "sentiment": "negative"
+        },
+        {
+            "id": "bold",
+            "name_kr": "대담함",
+            "name_en": "Bold",
+            "condition": { "facet": "E_fearfulness", "direction": "low", "threshold": 0.10 },
+            "effects": { "explore_weight": 1.5, "combat_weight": 1.3, "flee_weight": 0.5 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "empathic",
+            "name_kr": "공감적",
+            "name_en": "Empathic",
+            "condition": { "facet": "E_sentimentality", "direction": "high", "threshold": 0.90 },
+            "effects": { "care_weight": 1.5, "relationship_bonus": 0.1 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "cold",
+            "name_kr": "냉담",
+            "name_en": "Cold",
+            "condition": { "facet": "E_sentimentality", "direction": "low", "threshold": 0.10 },
+            "effects": { "care_weight": 0.5, "relationship_penalty": -0.1 },
+            "sentiment": "negative"
+        },
+        {
+            "id": "charismatic",
+            "name_kr": "카리스마",
+            "name_en": "Charismatic",
+            "condition": { "axis": "X", "direction": "high", "threshold": 0.90 },
+            "effects": { "socialize_weight": 1.5, "lead_weight": 1.4, "relationship_speed": 1.3 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "loner",
+            "name_kr": "외톨이",
+            "name_en": "Loner",
+            "condition": { "axis": "X", "direction": "low", "threshold": 0.10 },
+            "effects": { "socialize_weight": 0.4, "solitude_bonus": 1.3 },
+            "sentiment": "neutral"
+        },
+        {
+            "id": "vengeful",
+            "name_kr": "복수심",
+            "name_en": "Vengeful",
+            "condition": { "axis": "A", "direction": "low", "threshold": 0.10 },
+            "effects": { "revenge_weight": 1.5, "forgive_weight": 0.2, "anger_buildup": 1.4 },
+            "sentiment": "negative"
+        },
+        {
+            "id": "forgiving",
+            "name_kr": "관대함",
+            "name_en": "Forgiving",
+            "condition": { "axis": "A", "direction": "high", "threshold": 0.90 },
+            "effects": { "forgive_weight": 1.5, "anger_decay": 1.3 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "industrious",
+            "name_kr": "근면",
+            "name_en": "Industrious",
+            "condition": { "axis": "C", "direction": "high", "threshold": 0.90 },
+            "effects": { "work_efficiency": 1.3, "task_persistence": 1.4, "build_quality": 1.2 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "impulsive",
+            "name_kr": "충동적",
+            "name_en": "Impulsive",
+            "condition": { "axis": "C", "direction": "low", "threshold": 0.10 },
+            "effects": { "task_abandon_chance": 1.5, "work_efficiency": 0.7, "impulse_action_chance": 1.3 },
+            "sentiment": "negative"
+        },
+        {
+            "id": "innovator",
+            "name_kr": "혁신가",
+            "name_en": "Innovator",
+            "condition": { "axis": "O", "direction": "high", "threshold": 0.90 },
+            "effects": { "research_weight": 1.5, "explore_weight": 1.3, "new_food_accept": 1.4, "migration_willingness": 1.3 },
+            "sentiment": "positive"
+        },
+        {
+            "id": "traditionalist",
+            "name_kr": "전통주의",
+            "name_en": "Traditionalist",
+            "condition": { "axis": "O", "direction": "low", "threshold": 0.10 },
+            "effects": { "research_weight": 0.5, "explore_weight": 0.5, "routine_bonus": 1.3 },
+            "sentiment": "neutral"
+        }
+    ]
+}

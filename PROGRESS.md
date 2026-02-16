@@ -1,5 +1,41 @@
 # Progress Log
 
+## Phase 2-A2: HEXACO 24 Facet Personality System (T-2014)
+
+### Context
+Current personality is Big Five (5 traits, decorative). Replacing with HEXACO 24-facet system with
+Cholesky-correlated generation, discrete trait emergence at extremes, parental inheritance, sex
+differences, maturation, and personality compatibility. Academic basis: Ashton & Lee (2007, 2009, 2016).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2014-01 | PersonalityData.gd + hexaco_definition.json | 🟢 DISPATCH | ask_codex | New files |
+| T-2014-02 | PersonalityGenerator.gd (Cholesky) | 🟢 DISPATCH | ask_codex | New file, after T-01 |
+| T-2014-03 | TraitSystem.gd + trait_definitions.json | 🟢 DISPATCH | ask_codex | New files |
+| T-2014-04 | PersonalityMaturation.gd | 🟢 DISPATCH | ask_codex | New file, after T-02 |
+| T-2014-05 | Personality compatibility function | 🟢 DISPATCH | ask_codex | New file |
+| T-2014-06 | UI entity_detail_panel.gd HEXACO update | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-07 | Save/Load binary format v5 | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-08 | emotion_system.gd HEXACO migration | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-09 | social_event_system.gd HEXACO migration | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-10 | Documentation (PERSONALITY_SYSTEM.md) | 🟢 DISPATCH | ask_codex | New file |
+| T-2014-11 | entity_data.gd schema change | 🔴 DIRECT | — | Shared schema |
+| T-2014-12 | entity_manager.gd + system wiring | 🔴 DIRECT | — | Shared API + integration |
+| T-2014-13 | Integration verification + gate | 🔴 DIRECT | — | Verification |
+
+### Dispatch ratio: 10/13 = 77% ✅
+
+### Dispatch strategy
+**Wave 1** (parallel, no deps): T-01, T-03, T-10
+**DIRECT-1**: T-11 (entity_data.gd schema change)
+**Wave 2** (parallel, after DIRECT-1): T-02, T-05, T-06, T-07, T-08, T-09
+**Wave 3** (after T-02): T-04
+**DIRECT-2**: T-12 (entity_manager.gd + final wiring)
+**DIRECT-3**: T-13 (gate verification)
+
+---
+
 ## Phase 2-A1 Hotfix Follow-up: Conditional Child Starvation (T-2013)
 
 ### Context
