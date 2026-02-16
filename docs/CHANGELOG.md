@@ -4,6 +4,33 @@
 
 ---
 
+## 긴급 수정 4건 (T-2003)
+
+### FIX 1 (크래시): parent_ids 타입 에러
+- **원인**: `entity_data.gd`의 `parent_ids: Array[int]`, `children_ids: Array[int]` 선언에 untyped `Array` 할당 → GDScript 4 런타임 에러
+- **수정 위치**: `family_system.gd:163`에서 `child.parent_ids = [mother.id]` 할당 시 크래시
+- `entity_data.gd`: `Array[int]` → `Array`로 변경 (parent_ids, children_ids)
+- from_dict()의 기존 append 루프는 정상 동작하므로 변경 불필요
+
+### FIX 2: Deaths/Births 카운터 누적 누락
+- **원인**: `stats_recorder.total_deaths`와 `total_births`가 선언만 되고 어디서도 증가시키지 않음
+- `entity_manager.gd`: `total_deaths`, `total_births` 카운터 추가, `kill_entity()`에서 `total_deaths += 1`, `register_birth()` 메서드 추가
+- `family_system.gd`: 생존 아기 출산 시 `_entity_manager.register_birth()` 호출
+- `stats_recorder.gd`: `execute_tick()`에서 `entity_manager.total_deaths/total_births` 동기화
+- `main.gd`: `_load_game()`에서 save→load 시 카운터 역동기화 (stats_recorder → entity_manager)
+
+### FIX 3: 자원 표시 0 (초기 스톡파일 부재)
+- **원인**: HUD는 stockpile 저장량만 표시, 게임 시작 시 stockpile이 없어서 영구 0 표시 (닭-달걀 문제: 건설에 자원 필요 → 저장에 stockpile 필요)
+- `main.gd`: `_bootstrap_stockpile()` 함수 추가 — 정착지 생성 시 중앙 근처에 완성된 stockpile 배치 (food=15, wood=5, stone=2)
+
+### FIX 4: macOS Retina 글씨 크기
+- **원인**: `project.godot`에 `[display]` 섹션 없음 → Retina(2x DPI) 환경에서 UI 스케일 미적용
+- `project.godot`: `[display]` 섹션 추가 — viewport 1280x720, stretch mode "canvas_items", aspect "expand"
+
+**6 files changed**: entity_data.gd, entity_manager.gd, family_system.gd, stats_recorder.gd, main.gd, project.godot
+
+---
+
 ## 통합 버그 수정 (T-2002)
 
 ### T-2002: 5대 버그 통합 진단 및 수정
