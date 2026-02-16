@@ -112,7 +112,7 @@ func _ready() -> void:
 	job_assignment_system.init(entity_manager, building_manager)
 
 	needs_system = NeedsSystem.new()
-	needs_system.init(entity_manager)
+	needs_system.init(entity_manager, building_manager)
 
 	childcare_system = ChildcareSystem.new()
 	childcare_system.init(entity_manager, building_manager, settlement_manager)
@@ -159,9 +159,9 @@ func _ready() -> void:
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
+	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
 	sim_engine.register_system(job_assignment_system)     # priority 8
 	sim_engine.register_system(needs_system)              # priority 10
-	sim_engine.register_system(childcare_system)          # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25
