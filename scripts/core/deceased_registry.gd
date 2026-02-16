@@ -25,7 +25,7 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"partner_id": entity.partner_id,
 		"children_ids": entity.children_ids.duplicate(),
 		"settlement_id": entity.settlement_id,
-		"personality": entity.personality.duplicate(),
+		"personality": entity.personality.to_dict() if entity.personality != null else {},
 		"job": entity.job,
 		"total_gathered": entity.total_gathered,
 		"buildings_built": entity.buildings_built,

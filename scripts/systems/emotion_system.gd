@@ -61,7 +61,7 @@ func _update_loneliness(entity: RefCounted) -> void:
 
 func _update_stress(entity: RefCounted) -> void:
 	var stress: float = entity.emotions.get("stress", 0.0)
-	var stability: float = entity.personality.get("emotional_stability", 0.5)
+	var stability: float = 1.0 - entity.personality.axes.get("E", 0.5)
 	if entity.hunger < 0.2:
 		stress += 0.03
 	else:
@@ -71,7 +71,7 @@ func _update_stress(entity: RefCounted) -> void:
 
 func _update_grief(entity: RefCounted) -> void:
 	var grief: float = entity.emotions.get("grief", 0.0)
-	var stability: float = entity.personality.get("emotional_stability", 0.5)
+	var stability: float = 1.0 - entity.personality.axes.get("E", 0.5)
 	grief -= 0.002 * stability
 	entity.emotions["grief"] = clampf(grief, 0.0, 1.0)
 

@@ -142,7 +142,7 @@ func _ready() -> void:
 	emotion_system.init(entity_manager)
 
 	age_system = AgeSystem.new()
-	age_system.init(entity_manager)
+	age_system.init(entity_manager, sim_engine.rng)
 
 	mortality_system = MortalitySystem.new()
 	mortality_system.init(entity_manager, sim_engine.rng)

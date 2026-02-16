@@ -5,7 +5,7 @@ extends RefCounted
 ##   meta.json, entities.bin, buildings.bin, relationships.bin,
 ##   settlements.bin, world.bin, stats.json
 
-const SAVE_VERSION: int = 4
+const SAVE_VERSION: int = 5
 
 ## Minimum loadable save version (v3 loads with defaults for new fields)
 const MIN_LOAD_VERSION: int = 3
@@ -142,12 +142,14 @@ func _save_entities(path: String, em: RefCounted) -> bool:
 		f.store_32(e.partner_id)
 		f.store_32(e.pregnancy_tick)
 		f.store_float(e.frailty)
-		# Personality (5 floats, fixed order)
-		f.store_float(e.personality.get("openness", 0.5))
-		f.store_float(e.personality.get("agreeableness", 0.5))
-		f.store_float(e.personality.get("extraversion", 0.5))
-		f.store_float(e.personality.get("diligence", 0.5))
-		f.store_float(e.personality.get("emotional_stability", 0.5))
+		# Personality (v5: 24 facet floats in fixed order + trait count + trait strings)
+		var pd: RefCounted = e.personality
+		for fi in range(pd.ALL_FACET_KEYS.size()):
+			f.store_float(pd.facets.get(pd.ALL_FACET_KEYS[fi], 0.5))
+		# Active traits
+		f.store_8(pd.active_traits.size())
+		for ti in range(pd.active_traits.size()):
+			f.store_pascal_string(str(pd.active_traits[ti]))
 		# Emotions (5 floats, fixed order)
 		f.store_float(e.emotions.get("happiness", 0.5))
 		f.store_float(e.emotions.get("loneliness", 0.0))
@@ -193,6 +195,7 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 	em._next_id = 1
 	em.chunk_index.clear()
 	var EntityDataScript = load("res://scripts/core/entity_data.gd")
+	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
 	var count: int = f.get_32()
 	for _i in range(count):
 		var e = EntityDataScript.new()
@@ -212,13 +215,26 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 		e.partner_id = _s32(f.get_32())
 		e.pregnancy_tick = _s32(f.get_32())
 		e.frailty = f.get_float()
-		e.personality = {
-			"openness": f.get_float(),
-			"agreeableness": f.get_float(),
-			"extraversion": f.get_float(),
-			"diligence": f.get_float(),
-			"emotional_stability": f.get_float(),
-		}
+		var pd = PersonalityDataScript.new()
+		if _load_version >= 5:
+			# v5+: read 24 facet floats + traits
+			for fi in range(pd.ALL_FACET_KEYS.size()):
+				pd.facets[pd.ALL_FACET_KEYS[fi]] = f.get_float()
+			pd.recalculate_axes()
+			var tc: int = f.get_8()
+			for ti in range(tc):
+				pd.active_traits.append(f.get_pascal_string())
+		else:
+			# v3/v4: read old 5 Big Five floats, migrate
+			var old_personality: Dictionary = {
+				"openness": f.get_float(),
+				"agreeableness": f.get_float(),
+				"extraversion": f.get_float(),
+				"diligence": f.get_float(),
+				"emotional_stability": f.get_float(),
+			}
+			pd.migrate_from_big_five(old_personality)
+		e.personality = pd
 		e.emotions = {
 			"happiness": f.get_float(),
 			"loneliness": f.get_float(),

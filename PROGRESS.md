@@ -1,5 +1,60 @@
 # Progress Log
 
+## Phase 2-A2: HEXACO 24 Facet Personality System (T-2014)
+
+### Context
+Current personality is Big Five (5 traits, decorative). Replacing with HEXACO 24-facet system with
+Cholesky-correlated generation, discrete trait emergence at extremes, parental inheritance, sex
+differences, maturation, and personality compatibility. Academic basis: Ashton & Lee (2007, 2009, 2016).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2014-01 | PersonalityData.gd + hexaco_definition.json | 🟢 DISPATCH | ask_codex | New files |
+| T-2014-02 | PersonalityGenerator.gd (Cholesky) | 🟢 DISPATCH | ask_codex | New file, after T-01 |
+| T-2014-03 | TraitSystem.gd + trait_definitions.json | 🟢 DISPATCH | ask_codex | New files |
+| T-2014-04 | PersonalityMaturation.gd | 🟢 DISPATCH | ask_codex | New file, after T-02 |
+| T-2014-05 | Personality compatibility function | 🟢 DISPATCH | ask_codex | New file |
+| T-2014-06 | UI entity_detail_panel.gd HEXACO update | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-07 | Save/Load binary format v5 | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-08 | emotion_system.gd HEXACO migration | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-09 | social_event_system.gd HEXACO migration | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2014-10 | Documentation (PERSONALITY_SYSTEM.md) | 🟢 DISPATCH | ask_codex | New file |
+| T-2014-11 | entity_data.gd schema change | 🔴 DIRECT | — | Shared schema |
+| T-2014-12 | entity_manager.gd + system wiring | 🔴 DIRECT | — | Shared API + integration |
+| T-2014-13 | Integration verification + gate | 🔴 DIRECT | — | Verification |
+
+### Dispatch ratio: 10/13 = 77% ✅
+
+### Dispatch strategy
+**Wave 1** (parallel, no deps): T-01, T-03, T-10
+**DIRECT-1**: T-11 (entity_data.gd schema change)
+**Wave 2** (parallel, after DIRECT-1): T-02, T-05, T-06, T-07, T-08, T-09
+**Wave 3** (after T-02): T-04
+**DIRECT-2**: T-12 (entity_manager.gd + final wiring)
+**DIRECT-3**: T-13 (gate verification)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 10/13 = 77%
+- Dispatch tool: ask_codex (all 10 dispatched tickets)
+- Files changed: 20 (1039 insertions, 77 deletions)
+- New files created: 8 (personality_data.gd, personality_system.gd, personality_generator.gd, personality_maturation.gd, trait_system.gd, hexaco_definition.json, trait_definitions.json, PERSONALITY_SYSTEM.md)
+- Modified files: 12 (entity_data.gd, entity_manager.gd, deceased_registry.gd, game_config.gd, save_manager.gd, age_system.gd, emotion_system.gd, family_system.gd, social_event_system.gd, entity_detail_panel.gd, main.gd, PROGRESS.md)
+- Key changes:
+  - PersonalityData: 24 facets (6 axes x 4), Big Five migration, serialization
+  - PersonalityGenerator: Cholesky-correlated generation, parental inheritance (heritability), sex differences (Cohen's d), culture shift stub
+  - PersonalityMaturation: OU process, H +1.0 SD age 18-60, E/X +0.3 SD
+  - PersonalitySystem: weighted compatibility [-1,+1], H:3, A:2, C:1.5
+  - TraitSystem: 14 discrete traits from extreme facet/axis values (top/bottom 10%)
+  - Save/Load v5: 24 facets + traits, backward compat with v3/v4
+  - UI: expandable HEXACO axes with facet sub-bars + trait badges (Korean labels)
+  - Emotion: emotional_stability → inverted E axis
+  - Social: extraversion → X, agreeableness → A, PersonalitySystem compatibility
+  - Family: newborns inherit personality from parents via Cholesky generator
+
+---
+
 ## Phase 2-A1 Hotfix Follow-up: Conditional Child Starvation (T-2013)
 
 ### Context

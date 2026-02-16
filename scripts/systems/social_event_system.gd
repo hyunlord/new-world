@@ -1,4 +1,5 @@
 extends "res://scripts/core/simulation_system.gd"
+const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
 
 ## Drives relationship interactions using chunk-based proximity.
 ## Only checks entities in same chunk (16x16 tiles).
@@ -74,7 +75,7 @@ func _trigger_event(a: RefCounted, b: RefCounted, tick: int) -> void:
 	events.append({"name": "casual_talk", "weight": 3.0})
 
 	# DEEP_TALK: both extraversion > 0.4
-	if a.personality.get("extraversion", 0.5) > 0.4 and b.personality.get("extraversion", 0.5) > 0.4:
+	if a.personality.axes.get("X", 0.5) > 0.4 and b.personality.axes.get("X", 0.5) > 0.4:
 		events.append({"name": "deep_talk", "weight": 2.0})
 
 	# WORK_TOGETHER: same job + same action (work actions)
@@ -83,7 +84,7 @@ func _trigger_event(a: RefCounted, b: RefCounted, tick: int) -> void:
 			events.append({"name": "work_together", "weight": 2.5})
 
 	# SHARE_FOOD: has food + high agreeableness
-	var a_agree: float = a.personality.get("agreeableness", 0.5)
+	var a_agree: float = a.personality.axes.get("A", 0.5)
 	if a.inventory.get("food", 0.0) >= 1.0 and a_agree > 0.5:
 		events.append({"name": "share_food", "weight": 1.5 * a_agree})
 
@@ -213,7 +214,7 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 
 func _handle_proposal(a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) -> void:
 	# Acceptance probability = (romantic_interest/100) * compatibility
-	var compat: float = GameConfig.personality_compatibility(a.personality, b.personality)
+	var compat: float = PersonalitySystem.personality_compatibility(a.personality, b.personality)
 	var accept_prob: float = (rel.romantic_interest / 100.0) * compat
 	if _rng.randf() < accept_prob:
 		# Accepted!

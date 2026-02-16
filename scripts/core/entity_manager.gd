@@ -3,12 +3,15 @@ extends RefCounted
 const EntityDataScript = preload("res://scripts/core/entity_data.gd")
 const ChunkIndex = preload("res://scripts/core/chunk_index.gd")
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
+const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
+const PersonalityGeneratorScript = preload("res://scripts/systems/personality_generator.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
 var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 var _settlement_manager: RefCounted
+var _personality_generator: RefCounted
 var chunk_index: RefCounted  # ChunkIndex for O(1) spatial lookups
 var total_deaths: int = 0
 var total_births: int = 0
@@ -19,11 +22,13 @@ func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	_world_data = world_data
 	_rng = rng
 	chunk_index = ChunkIndex.new()
+	_personality_generator = PersonalityGeneratorScript.new()
+	_personality_generator.init(rng)
 
 
 ## Spawn a new entity at the given position
 ## initial_age: age in ticks (0 = newborn child, use AGE_TEEN_END+ for adults)
-func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int = 0) -> RefCounted:
+func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int = 0, parent_a: RefCounted = null, parent_b: RefCounted = null) -> RefCounted:
 	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1
@@ -39,14 +44,10 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	else:
 		entity.gender = "female" if _rng.randf() < 0.5 else "male"
 	entity.entity_name = NameGenerator.generate_name(entity.gender)
-	# Personality (immutable, randomized)
-	entity.personality = {
-		"openness": _rng.randf_range(0.1, 0.9),
-		"agreeableness": _rng.randf_range(0.1, 0.9),
-		"extraversion": _rng.randf_range(0.1, 0.9),
-		"diligence": _rng.randf_range(0.1, 0.9),
-		"emotional_stability": _rng.randf_range(0.1, 0.9),
-	}
+	# Personality (HEXACO 24-facet, Cholesky-correlated with parental inheritance)
+	var pa_pd = parent_a.personality if parent_a != null else null
+	var pb_pd = parent_b.personality if parent_b != null else null
+	entity.personality = _personality_generator.generate_personality(entity.gender, "", pa_pd, pb_pd)
 	# Emotions (defaults)
 	entity.emotions = {
 		"happiness": 0.5,

@@ -292,7 +292,7 @@ func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 
 
 func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_weeks: int, mother_age_years: float, baby_idx: int) -> void:
-	var child: RefCounted = _entity_manager.spawn_entity(mother.position)
+	var child: RefCounted = _entity_manager.spawn_entity(mother.position, "", 0, mother, father)
 	child.age = 0
 	child.age_stage = "infant"
 	child.birth_tick = tick
