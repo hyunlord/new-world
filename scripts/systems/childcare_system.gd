@@ -46,12 +46,16 @@ func execute_tick(tick: int) -> void:
 			continue
 
 		var available_food: float = _get_settlement_food(settlement_id)
-		if available_food < feed_amount:
+		if available_food <= 0.0:
 			if CHILDCARE_DEBUG:
-				print("[CHILDCARE_DEBUG] Tick %d | %s SKIP: no food (need %.2f, have %.2f)" % [
-					tick, child.entity_name, feed_amount, available_food,
-				])
+				print("[CHILDCARE_DEBUG] Tick %d | %s SKIP: no food at all" % [tick, child.entity_name])
 			continue
+		if available_food < feed_amount:
+			feed_amount = available_food
+			if CHILDCARE_DEBUG:
+				print("[CHILDCARE_DEBUG] Tick %d | %s PARTIAL: need more but giving %.2f" % [
+					tick, child.entity_name, feed_amount,
+				])
 
 		var old_hunger: float = child.hunger
 		var withdrawn: float = _withdraw_food(settlement_id, feed_amount)

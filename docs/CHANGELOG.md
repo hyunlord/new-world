@@ -4,6 +4,35 @@
 
 ---
 
+## 엔티티 리스트 레이아웃 + 사망자 디테일 + 아동 아사 근본 해결 (T-2010)
+
+### 엔티티 리스트 레이아웃 수정 (T-2010-01)
+- 고정 폭 → **비례 폭** 컬럼 (min_width + weight 기반, 패널 너비에 맞게 자동 조절)
+- 모든 draw_string에 max_width 적용 → 텍스트가 컬럼 경계를 넘지 않음
+- 스크롤 시 행이 헤더/탭 영역 위로 올라가지 않도록 클리핑 가드 추가
+- Job/Status `.substr()` 수동 잘림 제거 (max_width가 대체)
+
+### 사망자 클릭 디테일 수정 (T-2010-00, 01)
+- 리스트에서 사망자(☠) 행 클릭 시 디테일 패널 열림 (기존 signal routing 버그 수정)
+- `"open_deceased_%d"` → `"open_entity_%d"` (hud.gd가 이미 처리하는 prefix)
+- entity_detail_panel.gd 관계 섹션 "(d)" → " ☠" 표시 수정
+
+### 아동 아사 근본 해결 (T-2010-00, 02, 03)
+- **양육 임계값 상향**: CHILDCARE_HUNGER_THRESHOLD 0.7→0.9, INFANT 0.8→0.95 (거의 항상 먹임)
+- **hunger decay 감소**: infant 0.3→0.2, toddler 0.4→0.3, child 0.5→0.4
+- **부분 급식**: 식량 부족 시 남은 만큼이라도 급식 (0일 때만 스킵)
+- **나이별 아사 유예**: infant 50틱, toddler 40, child 30, teen 20 (성인 25 유지)
+- 학술 근거: Gurven & Kaplan 2007 — 수렵채집 아동 아사 주요 원인 아님
+
+### Born/Died 컬럼 + 컬럼 간격 (T-2009)
+- 엔티티 리스트에 Born/Died 날짜 컬럼 추가 (julian day 정렬 가능)
+- `_format_date_compact` 헬퍼 ("Y-25.7.15" 형식)
+- COL_PAD = 6.0 컬럼 간 좌우 여백
+
+**6 files changed**: game_config.gd, list_panel.gd, childcare_system.gd, needs_system.gd, entity_detail_panel.gd, + docs
+
+---
+
 ## 나이 상세 표시 + 사망 원인 표시 + 아동 생존 밸런스 (T-2008)
 
 ### GameCalendar 함수 추가 (T-2008-01)

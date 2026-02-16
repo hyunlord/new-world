@@ -495,3 +495,60 @@ Config-first then fan-out:
 - Files changed: 10 code + 3 docs = 13 total
 - Commits: 4 (config, batch1, batch2, docs)
 - Key changes: detailed age everywhere, Korean death cause, ☠ markers, list scroll, child survival balance
+
+---
+
+## T-2009: Born/Died Columns in Entity List — 2026-02-16
+
+### Context
+Add Born and Died date columns to entity list between Age and Job.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2009 | Born/Died columns | 🟢 DISPATCH | ask_codex | single file (list_panel.gd) |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- PR: #30 merged
+- Files changed: 1 (list_panel.gd)
+- Key changes: Born/Died columns with julian day sorting, _format_date_compact helper, COL_PAD spacing
+
+---
+
+## T-2010: Entity List Layout + Deceased Detail + Child Starvation Fix — 2026-02-16
+
+### Context
+Three issues: (1) entity list columns overlap with long text, scroll bleeds into header area, (2) deceased click in entity list doesn't open detail panel (signal routing bug), (3) child starvation is still a major death cause despite academic evidence that hunter-gatherer children rarely died of starvation.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2010-00 | game_config.gd constants + entity_detail_panel "(d)" fix | 🔴 DIRECT | — | shared config + UI fix |
+| T-2010-01 | list_panel.gd layout overhaul + deceased signal fix | 🟢 DISPATCH | ask_codex | single file |
+| T-2010-02 | childcare_system.gd partial feeding | 🟢 DISPATCH | ask_codex | single file |
+| T-2010-03 | needs_system.gd child starvation grace | 🟢 DISPATCH | ask_codex | single file |
+| T-2010-04 | docs update | 🔴 DIRECT | — | multi-file docs sync |
+
+### Dispatch ratio: 3/5 = 60% ✅
+
+### Dispatch strategy
+Config-first then fan-out:
+1. DIRECT: game_config.gd (childcare thresholds, decay mult, child grace ticks) + entity_detail_panel.gd "(d)"→"☠"
+2. DISPATCH parallel: T-2010-01/02/03 (no file overlap)
+3. DIRECT: docs update
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 3/5 = 60% ✅
+- Dispatch tool: ask_codex (3 tickets, all background mode)
+- Files changed: 6 code + 2 docs = 8 total
+- Key changes:
+  - Proportional entity list columns (min_width + weight), text clipping, scroll guard
+  - Deceased click opens detail panel (signal routing fix)
+  - Childcare partial feeding (food > 0 but < needed → give available)
+  - Child-specific starvation grace (infant 50, toddler 40, child 30, teen 20)
+  - Hunger decay further reduced (infant 0.2×, toddler 0.3×, child 0.4×)
+  - Childcare thresholds raised to 0.9/0.95 (nearly always feeding)

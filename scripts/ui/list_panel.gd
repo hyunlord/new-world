@@ -23,6 +23,7 @@ var _show_deceased: bool = true
 var _page: int = 0
 const ITEMS_PER_PAGE: int = 30
 const ROW_HEIGHT: float = 18.0
+const COL_PAD: float = 6.0
 
 ## Scroll
 var _scroll_offset: float = 0.0
@@ -37,14 +38,14 @@ var _toggle_deceased_rect: Rect2 = Rect2()
 
 ## Column definitions for entities
 const ENTITY_COLUMNS: Array = [
-	{"key": "name", "label": "Name", "width": 80},
-	{"key": "age", "label": "Age", "width": 75},
-	{"key": "born", "label": "Born", "width": 72},
-	{"key": "died", "label": "Died", "width": 72},
-	{"key": "job", "label": "Job", "width": 55},
-	{"key": "status", "label": "Status", "width": 60},
-	{"key": "settlement", "label": "Sett", "width": 30},
-	{"key": "hunger", "label": "Hunger", "width": 45},
+	{"key": "name", "label": "Name", "min_width": 70, "weight": 15},
+	{"key": "age", "label": "Age", "min_width": 90, "weight": 18},
+	{"key": "born", "label": "Born", "min_width": 72, "weight": 10},
+	{"key": "died", "label": "Died", "min_width": 72, "weight": 10},
+	{"key": "job", "label": "Job", "min_width": 55, "weight": 10},
+	{"key": "status", "label": "Status", "min_width": 80, "weight": 17},
+	{"key": "settlement", "label": "Sett", "min_width": 28, "weight": 5},
+	{"key": "hunger", "label": "Hunger", "min_width": 42, "weight": 8},
 ]
 
 const BUILDING_COLUMNS: Array = [
@@ -65,6 +66,23 @@ static func _format_date_compact(date: Dictionary) -> String:
 	if date.is_empty():
 		return "?"
 	return "Y%d.%d.%d" % [date.get("year", 0), date.get("month", 1), date.get("day", 1)]
+
+
+func _compute_column_widths(columns: Array, available_width: float) -> Array:
+	var total_weight: float = 0.0
+	var total_min: float = 0.0
+	for col in columns:
+		total_weight += float(col.get("weight", 10))
+		total_min += float(col.get("min_width", 50))
+	var pad_total: float = float(columns.size() - 1) * COL_PAD
+	var usable: float = available_width - pad_total
+	var extra: float = maxf(0.0, usable - total_min)
+	var widths: Array = []
+	for col in columns:
+		var min_w: float = float(col.get("min_width", 50))
+		var w: float = float(col.get("weight", 10))
+		widths.append(min_w + extra * (w / total_weight))
+	return widths
 
 
 func _process(_delta: float) -> void:
@@ -170,6 +188,7 @@ func _draw() -> void:
 
 func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, fs_body: int, fs_small: int) -> void:
 	var cy: float = start_cy
+	var col_widths: Array = _compute_column_widths(ENTITY_COLUMNS, panel_w - 30.0)
 
 	# Gather data
 	var rows: Array = []
@@ -250,14 +269,16 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 
 	# Column headers (sortable)
 	var col_x: float = cx + 5
-	for col in ENTITY_COLUMNS:
+	for idx in range(ENTITY_COLUMNS.size()):
+		var col: Dictionary = ENTITY_COLUMNS[idx]
+		var cw: float = col_widths[idx]
 		var label: String = col.label
 		if _sort_key == col.key:
 			label += " %s" % ("v" if _sort_ascending else "^")
-		var header_rect := Rect2(col_x, cy, col.width, 16)
-		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
+		var header_rect := Rect2(col_x, cy, cw, 16)
+		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, int(cw) - 2, fs_small, Color(0.8, 0.8, 0.3))
 		_sort_rects.append({"rect": header_rect, "key": col.key})
-		col_x += col.width
+		col_x += cw + COL_PAD
 	cy += 18.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
@@ -277,6 +298,9 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 			break
 
 		var draw_y: float = row_area_top + row_y - _scroll_offset
+		if draw_y < row_area_top:
+			row_y += ROW_HEIGHT
+			continue
 		var is_deceased: bool = row.get("deceased", false)
 		var text_color: Color = Color(0.5, 0.5, 0.5) if is_deceased else Color(0.8, 0.8, 0.8)
 		var row_rect := Rect2(cx, draw_y, panel_w - 30, ROW_HEIGHT)
@@ -290,46 +314,46 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		var display_name: String = row.name
 		if is_deceased:
 			display_name = "☠ " + display_name
-		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, col_x + ENTITY_COLUMNS[0].width - 5, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
-		col_x += ENTITY_COLUMNS[0].width
+		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[0]) - 2, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
+		col_x += col_widths[0] + COL_PAD
 
 		# Age (short format)
 		var age_text: String = row.get("age_display", "%d" % int(row.age))
-		draw_string(font, Vector2(col_x, draw_y + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[1].width
+		draw_string(font, Vector2(col_x, draw_y + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[1]) - 2, fs_small, text_color)
+		col_x += col_widths[1] + COL_PAD
 
 		# Born
-		draw_string(font, Vector2(col_x, draw_y + 14), row.get("born_display", "?"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[2].width
+		draw_string(font, Vector2(col_x, draw_y + 14), row.get("born_display", "?"), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[2]) - 2, fs_small, text_color)
+		col_x += col_widths[2] + COL_PAD
 
 		# Died
 		var died_text: String = row.get("died_display", "-")
 		var died_color: Color = Color(0.6, 0.3, 0.3) if is_deceased else text_color
-		draw_string(font, Vector2(col_x, draw_y + 14), died_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, died_color)
-		col_x += ENTITY_COLUMNS[3].width
+		draw_string(font, Vector2(col_x, draw_y + 14), died_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[3]) - 2, fs_small, died_color)
+		col_x += col_widths[3] + COL_PAD
 
 		# Job
-		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job).substr(0, 8), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[4].width
+		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[4]) - 2, fs_small, text_color)
+		col_x += col_widths[4] + COL_PAD
 
 		# Status
-		var status_text: String = str(row.status).substr(0, 10)
+		var status_text: String = str(row.status)
 		var status_color: Color = text_color
 		if is_deceased:
 			status_color = Color(0.6, 0.3, 0.3)
-		draw_string(font, Vector2(col_x, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, status_color)
-		col_x += ENTITY_COLUMNS[5].width
+		draw_string(font, Vector2(col_x, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[5]) - 2, fs_small, status_color)
+		col_x += col_widths[5] + COL_PAD
 
 		# Settlement
 		var sett_text: String = "S%d" % row.settlement if row.settlement > 0 else "-"
-		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[6].width
+		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[6]) - 2, fs_small, text_color)
+		col_x += col_widths[6] + COL_PAD
 
 		# Hunger
 		if not is_deceased:
 			var h: float = row.hunger
 			var h_color: Color = Color(0.9, 0.2, 0.2) if h < 0.3 else (Color(0.9, 0.8, 0.2) if h < 0.6 else Color(0.3, 0.8, 0.3))
-			draw_string(font, Vector2(col_x, draw_y + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, h_color)
+			draw_string(font, Vector2(col_x, draw_y + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[7]) - 2, fs_small, h_color)
 
 		# Register click region
 		_click_regions.append({"rect": row_rect, "entity_id": row.id, "deceased": is_deceased})
@@ -356,7 +380,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	for col in BUILDING_COLUMNS:
 		var label: String = col.label
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
-		col_x += col.width
+		col_x += col.width + COL_PAD
 	cy += 18.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
@@ -369,14 +393,14 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 
 		col_x = cx + 5
 		draw_string(font, Vector2(col_x, cy + 14), b.building_type.capitalize(), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[0].width
+		col_x += BUILDING_COLUMNS[0].width + COL_PAD
 
 		var sett_text: String = "S%d" % b.settlement_id if b.settlement_id > 0 else "-"
 		draw_string(font, Vector2(col_x, cy + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[1].width
+		col_x += BUILDING_COLUMNS[1].width + COL_PAD
 
 		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[2].width
+		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
 		var status: String = "Built" if b.is_built else "%d%%" % int(b.build_progress * 100)
 		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
@@ -387,7 +411,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 
 func _on_entity_clicked(entity_id: int, is_deceased: bool) -> void:
 	if is_deceased:
-		SimulationBus.ui_notification.emit("open_deceased_%d" % entity_id, "command")
+		SimulationBus.ui_notification.emit("open_entity_%d" % entity_id, "command")
 	else:
 		SimulationBus.entity_selected.emit(entity_id)
 		SimulationBus.ui_notification.emit("open_entity_detail", "command")
