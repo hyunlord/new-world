@@ -20,7 +20,8 @@ func execute_tick(tick: int) -> void:
 	for i in range(alive.size()):
 		var entity = alive[i]
 		# Decay needs
-		entity.hunger -= GameConfig.HUNGER_DECAY_RATE
+		var hunger_mult: float = GameConfig.CHILD_HUNGER_DECAY_MULT.get(entity.age_stage, 1.0)
+		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult
 		entity.energy -= GameConfig.ENERGY_DECAY_RATE
 		entity.social -= GameConfig.SOCIAL_DECAY_RATE
 
@@ -28,8 +29,8 @@ func execute_tick(tick: int) -> void:
 		if entity.current_action != "idle" and entity.current_action != "rest":
 			entity.energy -= GameConfig.ENERGY_ACTION_COST
 
-		# Age (increment by tick_interval so age counts in simulation ticks)
-		entity.age += tick_interval
+		# Age: derive from birth_tick (not incremental — avoids drift)
+		entity.age = tick - entity.birth_tick
 
 		# Auto-eat from inventory when hungry
 		if entity.hunger < GameConfig.HUNGER_EAT_THRESHOLD:

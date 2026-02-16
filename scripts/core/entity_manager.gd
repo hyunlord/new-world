@@ -2,6 +2,7 @@ extends RefCounted
 
 const EntityDataScript = preload("res://scripts/core/entity_data.gd")
 const ChunkIndex = preload("res://scripts/core/chunk_index.gd")
+const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
@@ -71,6 +72,7 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	# Set birth_tick: negative for pre-existing entities (born before game start)
 	if initial_age > 0:
 		entity.birth_tick = -initial_age
+	entity.birth_date = GameCalendarScript.birth_date_from_tick(entity.birth_tick, _rng)
 	# Frailty: N(1.0, 0.15), clamped [0.5, 2.0] (Vaupel frailty model)
 	entity.frailty = clampf(_rng.randfn(1.0, 0.15), 0.5, 2.0)
 	_entities[entity.id] = entity

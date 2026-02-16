@@ -37,18 +37,16 @@ func execute_tick(tick: int) -> void:
 		if available < 0.5:
 			continue
 
-		# Age restriction: infants/toddlers/children can't gather
-		if entity.age_stage == "infant" or entity.age_stage == "toddler" or entity.age_stage == "child":
+		# Age restriction: infants and toddlers can't gather
+		if entity.age_stage == "infant" or entity.age_stage == "toddler":
 			continue
 
 		var remaining_cap: float = GameConfig.MAX_CARRY - entity.get_total_carry()
 		if remaining_cap <= 0.0:
 			continue
 
-		# Age efficiency: teen, elder, ancient gather at 50%
-		var age_efficiency: float = 1.0
-		if entity.age_stage == "teen" or entity.age_stage == "elder" or entity.age_stage == "ancient":
-			age_efficiency = 0.5
+		# Age efficiency defaults to 1.0 and can be overridden per stage in config
+		var age_efficiency: float = GameConfig.CHILD_GATHER_EFFICIENCY.get(entity.age_stage, 1.0)
 		var amount: float = minf(GameConfig.GATHER_AMOUNT * entity.speed * age_efficiency, minf(available, remaining_cap))
 		var harvested: float = _resource_map.harvest(x, y, res_type, amount)
 		if harvested > 0.0:

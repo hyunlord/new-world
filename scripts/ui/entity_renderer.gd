@@ -40,8 +40,7 @@ const AGE_SIZE_MULT: Dictionary = {
 	"child": 0.65,
 	"teen": 0.85,
 	"adult": 1.0,
-	"elder": 0.95,
-	"ancient": 0.9,
+	"elder": 0.9,
 }
 
 ## Job visual definitions: shape, size, color
@@ -157,8 +156,8 @@ func _draw() -> void:
 				draw_circle(pos, size + OUTLINE_WIDTH, OUTLINE_COLOR)
 				draw_circle(pos, size, color)
 
-		# Elder/ancient white dot (gray hair indicator)
-		if entity.age_stage == "elder" or entity.age_stage == "ancient":
+		# Elder white dot (gray hair indicator)
+		if entity.age_stage == "elder":
 			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
 		if _current_lod >= 1:

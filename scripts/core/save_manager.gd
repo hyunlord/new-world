@@ -9,7 +9,7 @@ const SAVE_VERSION: int = 3
 
 ## Reverse-lookup arrays for binary enum deserialization
 var _genders: Array = ["male", "female"]
-var _age_stages: Array = ["infant", "toddler", "child", "teen", "adult", "elder", "ancient"]
+var _age_stages: Array = ["infant", "toddler", "child", "teen", "adult", "elder"]
 var _jobs: Array = ["none", "gatherer", "lumberjack", "builder", "miner"]
 var _rel_types: Array = ["stranger", "acquaintance", "friend", "close_friend", "romantic", "partner", "rival"]
 

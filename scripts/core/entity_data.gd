@@ -29,6 +29,7 @@ var parent_ids: Array = []
 var children_ids: Array = []
 var pregnancy_tick: int = -1
 var last_birth_tick: int = -1  # For postpartum amenorrhea tracking
+var birth_date: Dictionary = {}  # {"year": int, "month": int, "day": int}
 
 ## Phase 2: Personality (immutable after creation, 0.0~1.0)
 var personality: Dictionary = {
@@ -143,6 +144,7 @@ func to_dict() -> Dictionary:
 		"last_birth_tick": last_birth_tick,
 		"personality": personality.duplicate(),
 		"emotions": emotions.duplicate(),
+		"birth_date": birth_date.duplicate(),
 	}
 
 
@@ -190,6 +192,17 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		e.children_ids.append(int(cids[i]))
 	e.pregnancy_tick = data.get("pregnancy_tick", -1)
 	e.last_birth_tick = data.get("last_birth_tick", -1)
+	# birth_date: load from save or migrate from birth_tick
+	var bd_data = data.get("birth_date", {})
+	if bd_data.is_empty() and e.birth_tick != 0:
+		var GameCalendar = load("res://scripts/core/game_calendar.gd")
+		e.birth_date = GameCalendar.birth_date_from_tick(e.birth_tick)
+	elif not bd_data.is_empty():
+		e.birth_date = {
+			"year": int(bd_data.get("year", 0)),
+			"month": int(bd_data.get("month", 1)),
+			"day": int(bd_data.get("day", 1)),
+		}
 	var p_data: Dictionary = data.get("personality", {})
 	e.personality = {
 		"openness": p_data.get("openness", 0.5),

@@ -26,6 +26,7 @@ const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
 const AgeSystem = preload("res://scripts/systems/age_system.gd")
 const FamilySystem = preload("res://scripts/systems/family_system.gd")
 const MortalitySystem = preload("res://scripts/systems/mortality_system.gd")
+const ChildcareSystem = preload("res://scripts/systems/childcare_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -54,6 +55,7 @@ var emotion_system: RefCounted
 var age_system: RefCounted
 var family_system: RefCounted
 var mortality_system: RefCounted
+var childcare_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -112,6 +114,9 @@ func _ready() -> void:
 	needs_system = NeedsSystem.new()
 	needs_system.init(entity_manager)
 
+	childcare_system = ChildcareSystem.new()
+	childcare_system.init(entity_manager, building_manager, settlement_manager)
+
 	building_effect_system = BuildingEffectSystem.new()
 	building_effect_system.init(entity_manager, building_manager, sim_engine)
 
@@ -156,6 +161,7 @@ func _ready() -> void:
 	sim_engine.register_system(resource_regen_system)     # priority 5
 	sim_engine.register_system(job_assignment_system)     # priority 8
 	sim_engine.register_system(needs_system)              # priority 10
+	sim_engine.register_system(childcare_system)          # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25

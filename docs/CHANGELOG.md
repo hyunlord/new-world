@@ -4,6 +4,40 @@
 
 ---
 
+## 어린이 육아 시스템 + 나이 6단계 통합 (T-2007)
+
+### ChildcareSystem (신규)
+- **목표**: 어린이 자동 급식으로 부모 부담 없이 생존
+- **시스템**: priority=12, tick_interval=10
+- **작동 방식**: infant/toddler/child/teen 감지 → 정착지 비축소에서 자동 인출 → 배고픔 회복
+- **나이별 급식량**: infant 0.15, toddler 0.25, child 0.35, teen 0.42
+- **새 이벤트**: child_fed (entity_id, entity_name, amount, settlement_id, hunger_after, tick)
+
+### 나이 시스템 6단계로 통합
+- **7단계 → 6단계**: ancient 제거 (elder가 56세+ 커버)
+- infant(0~2), toddler(3~5), child(6~11), teen(12~14), adult(15~55), elder(56+)
+
+### birth_date 기반 나이 파생
+- **entity_data.gd**: birth_date Dictionary 추가, age는 tick - birth_tick으로 파생
+- **NeedsSystem**: entity.age += tick_interval 로직 제거
+
+### 어린이 행동 제한 완화
+- **채집**: child는 food 가능(0.5x), teen은 food+wood(0.7x)
+- **이동**: 나이별 skip_mod (infant/toddler 50%, child 67%, teen 90%)
+- **hunger decay**: 나이별 배율 (infant 0.2x, toddler 0.4x, child 0.6x, teen 0.8x)
+
+### UI 표시
+- **entity_detail_panel.gd**: "23세 (Y3 7월 15일생)" 형식
+- **hud.gd**: "Adult | 26세 (Y-25 7월 15일생)"
+
+### 인구통계 로깅 강화
+- **family_system.gd**: [DEMOGRAPHY] 나이대별 인구 분포
+- **mortality_system.gd**: [MORTALITY] 단계별 사망 수 + 평균 사망 나이
+
+**17 files changed**: childcare_system.gd (NEW), game_config.gd, entity_data.gd, needs_system.gd, behavior_system.gd, gathering_system.gd, movement_system.gd, family_system.gd, mortality_system.gd, main.gd, hud.gd, entity_detail_panel.gd, + 5 docs
+
+---
+
 ## 인구 밸런스 재조정 + 생년월일 한글화 (T-2005)
 
 ### FIX 1: 인구 밸런스 전면 재조정 (★ 핵심)
