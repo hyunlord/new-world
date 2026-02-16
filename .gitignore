@@ -9,6 +9,7 @@ error.log
 # OMC
 .omc/
 .omc*
+.omx/
 
 # Windows
 Thumbs.db
