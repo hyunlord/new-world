@@ -217,6 +217,13 @@ func register_birth() -> void:
 	_year_births += 1
 
 
+## Register a death (called externally by NeedsSystem, FamilySystem)
+func register_death(is_infant: bool = false) -> void:
+	_year_deaths += 1
+	if is_infant:
+		_year_infant_deaths += 1
+
+
 ## ─── Theoretical life expectancy (numerical integration) ──
 
 func _calc_theoretical_e0() -> float:

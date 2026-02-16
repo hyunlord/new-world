@@ -4,6 +4,37 @@
 
 ---
 
+## 통합 버그 수정 (T-2002)
+
+### T-2002: 5대 버그 통합 진단 및 수정
+
+**8 code files changed**
+
+### Bug A+C: 사망 추적 + 정착지 인구 동기화
+- **원인 (A)**: `mortality_system._year_deaths`가 Siler 사망만 카운트; 아사(needs_system)·모성사망·사산(family_system) 경로가 카운터 누락
+- **원인 (C)**: `entity_manager.kill_entity()`가 `settlement_manager.remove_member()` 미호출 → 죽은 에이전트가 정착지 인구에 잔존
+- `entity_manager.gd`: `_settlement_manager` 참조 추가, `kill_entity()` 내 settlement cleanup (`remove_member`) 삽입
+- `mortality_system.gd`: `register_death(is_infant)` 메서드 추가 (외부 사망 경로용)
+- `needs_system.gd`: `_mortality_system` 참조 추가, 아사 사망 시 `register_death()` 호출
+- `family_system.gd`: 모성사망·사산 시 `register_death()` 호출
+- `main.gd`: `entity_manager._settlement_manager = settlement_manager` 와이어링, `needs_system._mortality_system = mortality_system` 와이어링
+
+### Bug D: 출산 시스템 병목 해소
+- **원인**: 복합적 — (1) 초기 커플 부재 (close_friend 시작→partner까지 수백 틱), (2) 파트너 근접 유지 행동 없음, (3) food 체크가 stockpile 전용 (개인 인벤토리 무시), (4) love 임계값 0.3이 너무 높음, (5) 임신 확률 5%가 너무 낮음
+- `main.gd`: 초기 관계 부트스트랩 변경 — friend/close_friend 쌍 대신 2~3쌍 직접 partner 설정 (affinity=85, trust=75, romantic_interest=90, interactions=25, love=0.5)
+- `behavior_system.gd`: `visit_partner` 행동 추가 — 파트너가 3타일 이상 떨어져 있으면 접근 (기본 0.4, love>0.3이면 0.6), action_timer=15
+- `family_system.gd`: love 임계값 0.3→0.15, food 체크에 개인 hunger>0.4 fallback 추가, 임신 확률 5%→8%
+
+### Bug E: 에이전트 렌더링 스케일 조정
+- **원인**: 기본 에이전트 크기 3~5px + LOD 0 임계값 zoom<1.3 + 카메라 기본 zoom=1.0 → 전체화면(1080p+)에서 에이전트 미표시
+- `entity_renderer.gd`: JOB_VISUALS 크기 ~50% 증가 (none:3→4.5, gatherer:4→5.5, lumberjack:5→6.5, builder:5→6.5, miner:4→5.5), AGE_SIZE_MULT 상향 (infant:0.35→0.45, toddler:0.5→0.55, child:0.6→0.65, teen:0.8→0.85), LOD 0→1 전환 zoom>1.7→zoom>0.9, LOD 1→0 전환 zoom<1.3→zoom<0.6
+- `camera_controller.gd`: 기본 줌 1.0→1.5
+
+### Bug B: 자원 0 + 에이전트 idle
+- **판정**: 독립 버그 아님 — 자원 재생/채집 시스템 정상 동작. 다른 버그(출산 0, 사망 추적 누락) 해결로 간접 해소
+
+---
+
 ## Phase 2-A1: 시간체계 + Siler 사망률 + 임신 기초 (T-2000)
 
 ### T-2000: GameCalendar + Siler Mortality + Pregnancy Overhaul

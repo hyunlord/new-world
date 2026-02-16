@@ -30,10 +30,10 @@ const GENDER_TINT_WEIGHT: float = 0.2
 
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
-	"infant": 0.35,
-	"toddler": 0.5,
-	"child": 0.6,
-	"teen": 0.8,
+	"infant": 0.45,
+	"toddler": 0.55,
+	"child": 0.65,
+	"teen": 0.85,
 	"adult": 1.0,
 	"elder": 0.95,
 	"ancient": 0.9,
@@ -41,11 +41,11 @@ const AGE_SIZE_MULT: Dictionary = {
 
 ## Job visual definitions: shape, size, color
 const JOB_VISUALS: Dictionary = {
-	"none": {"size": 3.0, "color": Color(0.6, 0.6, 0.6)},
-	"gatherer": {"size": 4.0, "color": Color(0.3, 0.8, 0.2)},
-	"lumberjack": {"size": 5.0, "color": Color(0.6, 0.35, 0.1)},
-	"builder": {"size": 5.0, "color": Color(0.9, 0.6, 0.1)},
-	"miner": {"size": 4.0, "color": Color(0.5, 0.6, 0.75)},
+	"none": {"size": 4.5, "color": Color(0.6, 0.6, 0.6)},
+	"gatherer": {"size": 5.5, "color": Color(0.3, 0.8, 0.2)},
+	"lumberjack": {"size": 6.5, "color": Color(0.6, 0.35, 0.1)},
+	"builder": {"size": 6.5, "color": Color(0.9, 0.6, 0.1)},
+	"miner": {"size": 5.5, "color": Color(0.5, 0.6, 0.75)},
 }
 
 ## Resource indicator colors
@@ -74,9 +74,9 @@ func _draw() -> void:
 	var zl: float = cam.zoom.x if cam else 1.0
 
 	# LOD transitions with hysteresis
-	if _current_lod == 0 and zl > 1.7:
+	if _current_lod == 0 and zl > 0.9:
 		_current_lod = 1
-	elif _current_lod == 1 and zl < 1.3:
+	elif _current_lod == 1 and zl < 0.6:
 		_current_lod = 0
 	elif _current_lod == 1 and zl > 4.2:
 		_current_lod = 2

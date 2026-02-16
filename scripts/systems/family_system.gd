@@ -143,6 +143,8 @@ func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 	# Handle maternal death
 	if not complications.mother_survived:
 		_entity_manager.kill_entity(mother.id, "maternal_death", tick)
+		if _mortality_system != null and _mortality_system.has_method("register_death"):
+			_mortality_system.register_death(false)
 		emit_event("maternal_death", {
 			"entity_id": mother.id,
 			"entity_name": mother.entity_name,
@@ -170,6 +172,8 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	# Very unhealthy newborns die immediately
 	if health < 0.1:
 		_entity_manager.kill_entity(child.id, "stillborn", tick)
+		if _mortality_system != null and _mortality_system.has_method("register_death"):
+			_mortality_system.register_death(true)
 		emit_event("stillborn", {
 			"entity_id": child.id,
 			"entity_name": child.entity_name,
@@ -315,16 +319,17 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		if dx > 3 or dy > 3:
 			continue
 
-		# Love >= 0.3
-		if entity.emotions.get("love", 0.0) < 0.3:
+		# Love >= 0.15 (lowered from 0.3 for faster first births)
+		if entity.emotions.get("love", 0.0) < 0.15:
 			continue
 
-		# Settlement food check: food >= population * 0.5
+		# Food check: stockpile food OR personal hunger > 0.4
 		if not _settlement_has_enough_food(entity.settlement_id):
-			continue
+			if entity.hunger < 0.4:
+				continue
 
-		# 5% chance per check
-		if _rng.randf() >= 0.05:
+		# 8% chance per check (increased from 5% for viable population growth)
+		if _rng.randf() >= 0.08:
 			continue
 
 		# Start pregnancy with Gaussian gestation duration
