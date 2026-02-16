@@ -330,7 +330,7 @@ func _draw() -> void:
 					if registry != null:
 						var record: Dictionary = registry.get_record(other_id)
 						if record.size() > 0:
-							other_name = record.get("name", "?") + "(d)"
+							other_name = record.get("name", "?") + " ☠"
 				var type_color: Color = REL_TYPE_COLORS.get(rel.type, Color.GRAY)
 				# Draw clickable name
 				var npos := Vector2(cx + 10, cy + 12)

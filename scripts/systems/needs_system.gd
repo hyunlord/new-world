@@ -45,10 +45,11 @@ func execute_tick(tick: int) -> void:
 		entity.energy = clampf(entity.energy, 0.0, 1.0)
 		entity.social = clampf(entity.social, 0.0, 1.0)
 
-		# Starvation check with grace period
+		# Starvation check with grace period (children get longer grace)
 		if entity.hunger <= 0.0:
 			entity.starving_timer += 1
-			if entity.starving_timer >= GameConfig.STARVATION_GRACE_TICKS:
+			var grace: int = GameConfig.CHILD_STARVATION_GRACE_TICKS.get(entity.age_stage, GameConfig.STARVATION_GRACE_TICKS)
+			if entity.starving_timer >= grace:
 				emit_event("entity_starved", {
 					"entity_id": entity.id,
 					"entity_name": entity.entity_name,

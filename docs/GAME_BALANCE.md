@@ -63,14 +63,16 @@
 
 | 욕구 | 감소율/needs틱 | 나이별 배율 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
 |------|----------|-----------|-----------------|-----------|------|----------|
-| hunger | 0.002 | infant×0.3, toddler×0.4, child×0.5, teen×0.85, adult/elder×1.0 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE`, `CHILD_HUNGER_DECAY_MULT` |
+| hunger | 0.002 | infant×0.2, toddler×0.3, child×0.4, teen×0.85, adult/elder×1.0 | - | 0.0 → starving | 나이별 유예 후 아사 (아래 참조) | `GameConfig.HUNGER_DECAY_RATE`, `CHILD_HUNGER_DECAY_MULT` |
 | energy | 0.003 | 동일 | +0.005 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
 | social | 0.001 | 동일 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
 
 ### 아사 메커니즘
 - hunger = 0이면 `starving_timer` 매 needs 틱마다 +1
-- `starving_timer >= 25` (STARVATION_GRACE_TICKS)이면 사망 (~4일 유예)
+- 나이별 유예: infant 50틱(~4.2일), toddler 40틱(~3.3일), child 30틱(~2.5일), teen 20틱(~1.7일), adult/elder 25틱(~2.1일)
+- `starving_timer >= grace` 이면 사망 (grace = `CHILD_STARVATION_GRACE_TICKS[age_stage]` fallback `STARVATION_GRACE_TICKS`)
 - hunger > 0이면 starving_timer 초기화
+- 학술 근거: 수렵채집 사회 아동 사망 ~70% 감염병, ~20% 사고, 아사 주요 원인 아님 (Gurven & Kaplan 2007)
 
 ### 자동 식사
 - **NeedsSystem**: hunger < 0.5 일 때 인벤토리 food에서 최대 2.0 섭취 → hunger += amount × 0.3
@@ -368,10 +370,15 @@ ChildcareSystem: priority=12, tick_interval=10
 
 | 나이 단계 | 급식 임계값 | 급식량 | 코드 위치 |
 |----------|-----------|--------|----------|
-| infant | hunger < 0.8 | 0.25 | `GameConfig.CHILDCARE_FEED_AMOUNTS`, `CHILDCARE_INFANT_HUNGER_THRESHOLD` |
-| toddler | hunger < 0.7 | 0.35 | `GameConfig.CHILDCARE_HUNGER_THRESHOLD` |
-| child | hunger < 0.7 | 0.40 | |
-| teen | hunger < 0.7 | 0.45 | |
+| infant | hunger < 0.95 | 0.25 | `GameConfig.CHILDCARE_FEED_AMOUNTS`, `CHILDCARE_INFANT_HUNGER_THRESHOLD` |
+| toddler | hunger < 0.9 | 0.35 | `GameConfig.CHILDCARE_HUNGER_THRESHOLD` |
+| child | hunger < 0.9 | 0.40 | |
+| teen | hunger < 0.9 | 0.45 | |
+
+### 부분 급식 (T-2010)
+- 정착지 식량이 필요량보다 적지만 0보다 크면 **남은 만큼이라도 급식** (partial feeding)
+- 식량이 완전히 0일 때만 급식 스킵
+- 결과: 식량이 1이라도 있으면 아이가 굶지 않음
 
 ### Siler 돌봄 보호 (T-2008)
 - 0~2세 영아 중 hunger > 0.3인 경우 Siler a1 사망률 40% 감소

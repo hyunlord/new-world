@@ -262,8 +262,8 @@ const SETTLEMENT_CLEANUP_INTERVAL: int = 250
 ## Childcare & Child Development
 ## ══════════════════════════════════════
 const CHILDCARE_TICK_INTERVAL: int = 10
-const CHILDCARE_HUNGER_THRESHOLD: float = 0.7
-const CHILDCARE_INFANT_HUNGER_THRESHOLD: float = 0.8
+const CHILDCARE_HUNGER_THRESHOLD: float = 0.9
+const CHILDCARE_INFANT_HUNGER_THRESHOLD: float = 0.95
 
 ## Feed amounts per childcare tick (food units from stockpile)
 const CHILDCARE_FEED_AMOUNTS: Dictionary = {
@@ -275,10 +275,19 @@ const CHILDCARE_FEED_AMOUNTS: Dictionary = {
 
 ## Hunger decay multiplier by age stage (applied in NeedsSystem)
 const CHILD_HUNGER_DECAY_MULT: Dictionary = {
-	"infant": 0.3,
-	"toddler": 0.4,
-	"child": 0.5,
+	"infant": 0.2,
+	"toddler": 0.3,
+	"child": 0.4,
 	"teen": 0.85,
+}
+
+## Child-specific starvation grace ticks (longer than adult STARVATION_GRACE_TICKS=25)
+## Academic basis: Gurven & Kaplan 2007, Pontzer 2018 — child starvation rare in forager societies
+const CHILD_STARVATION_GRACE_TICKS: Dictionary = {
+	"infant": 50,
+	"toddler": 40,
+	"child": 30,
+	"teen": 20,
 }
 
 ## Siler a1 care protection: well-fed infants (hunger > 0.3) get mortality * this factor
