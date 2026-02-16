@@ -22,6 +22,7 @@ SimulationBus="*res://scripts/core/simulation_bus.gd"
 EventLogger="*res://scripts/core/event_logger.gd"
 DeceasedRegistry="*res://scripts/core/deceased_registry.gd"
 ChronicleSystem="*res://scripts/systems/chronicle_system.gd"
+NameGenerator="*res://scripts/core/name_generator.gd"
 
 [physics]
 

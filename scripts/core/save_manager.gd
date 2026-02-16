@@ -5,7 +5,13 @@ extends RefCounted
 ##   meta.json, entities.bin, buildings.bin, relationships.bin,
 ##   settlements.bin, world.bin, stats.json
 
-const SAVE_VERSION: int = 3
+const SAVE_VERSION: int = 4
+
+## Minimum loadable save version (v3 loads with defaults for new fields)
+const MIN_LOAD_VERSION: int = 3
+
+## Track loaded version for conditional field reading
+var _load_version: int = SAVE_VERSION
 
 ## Reverse-lookup arrays for binary enum deserialization
 var _genders: Array = ["male", "female"]
@@ -79,8 +85,9 @@ func load_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 		return false
 	mf = null
 	var meta: Dictionary = json.data
-	if meta.get("version", 0) != SAVE_VERSION:
-		push_warning("[SaveManager] Incompatible save version: %d" % meta.get("version", 0))
+	_load_version = int(meta.get("version", 0))
+	if _load_version < MIN_LOAD_VERSION or _load_version > SAVE_VERSION:
+		push_warning("[SaveManager] Incompatible save version: %d (need %d-%d)" % [_load_version, MIN_LOAD_VERSION, SAVE_VERSION])
 		return false
 
 	sim_engine.current_tick = int(meta.get("current_tick", 0))
@@ -376,6 +383,8 @@ func _save_settlements(path: String, sm: RefCounted) -> bool:
 		f.store_32(s.building_ids.size())
 		for j in range(s.building_ids.size()):
 			f.store_32(s.building_ids[j])
+		# v4+: culture_id
+		f.store_pascal_string(s.culture_id)
 	return true
 
 
@@ -404,6 +413,9 @@ func _load_settlements(path: String, sm: RefCounted) -> bool:
 		s.building_ids = []
 		for _j in range(bc):
 			s.building_ids.append(f.get_32())
+		# v4+: culture_id (defaults to "proto_nature" for v3 saves)
+		if _load_version >= 4:
+			s.culture_id = f.get_pascal_string()
 		sm._settlements[s.id] = s
 		if s.id >= sm._next_id:
 			sm._next_id = s.id + 1

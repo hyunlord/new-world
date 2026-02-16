@@ -552,3 +552,43 @@ Config-first then fan-out:
   - Child-specific starvation grace (infant 50, toddler 40, child 30, teen 20)
   - Hunger decay further reduced (infant 0.2×, toddler 0.3×, child 0.4×)
   - Childcare thresholds raised to 0.9/0.95 (nearly always feeding)
+
+---
+
+## T-2011: NameGenerator — Data-Driven Name Generation System — 2026-02-16
+
+### Context
+이름이 30개 하드코딩 풀에서 랜덤 선택되어 중복이 심하고 단조로움. 문화/부족/부모/성별을 반영하는 확장 가능한 이름 시스템 필요.
+- JSON 기반 명명 문화 (proto_nature, proto_syllabic, tribal_totemic)
+- 음절 조합 생성 (onset + nucleus + coda 패턴)
+- 정착지별 중복 방지 (20회 시도)
+- 부모명 파생 (patronymic) 규칙
+- 사망 시 자동 해제 (SimulationBus.entity_died 연결)
+- 세이브/로드 지원
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2011-00 | settlement_data culture_id + project.godot autoload + save_manager v4 + main.gd wiring | 🔴 DIRECT | — | 4 shared files, binary format change, integration wiring |
+| T-2011-01 | 3 JSON naming culture data files | 🟢 DISPATCH | ask_codex | 3 pure new files, no deps |
+| T-2011-02 | name_generator.gd autoload singleton | 🟢 DISPATCH | ask_codex | standalone new file |
+| T-2011-03 | entity_manager.gd name integration | 🟢 DISPATCH | ask_codex | single file, replace FIRST_NAMES |
+| T-2011-04 | family_system.gd birth name integration | 🟢 DISPATCH | ask_codex | single file, pass parent names |
+| T-2011-05 | docs update | 🔴 DIRECT | — | multi-file docs sync |
+
+### Dispatch ratio: 4/6 = 67% ✅
+
+### Dispatch strategy
+Config-first then fan-out:
+1. DIRECT: settlement_data.gd (culture_id), project.godot (autoload), save_manager.gd (v4 + names.json), main.gd (init + save/load wiring)
+2. DISPATCH parallel: T-2011-01 (JSON files) + T-2011-02 (name_generator.gd)
+3. DISPATCH parallel: T-2011-03 (entity_manager) + T-2011-04 (family_system) — after T-2011-02 applied
+4. DIRECT: T-2011-05 (docs)
+
+### Results
+- Gate: PENDING (will run after commit+push)
+- Dispatch ratio: 4/6 = 67% ✅
+- Dispatch tool used: ask_codex (4 tickets: T-2011-01, T-2011-02, T-2011-03, T-2011-04)
+- Files changed: 10 (7 modified + 3 new JSON + 1 new GDScript)
+- Post-Codex fixes: 3 bugs found in review (syllable_count nested dict parsing, patronymic config lookup, name gen before gender assignment)
+- Key changes: NameGenerator autoload, 3 naming culture JSONs, settlement culture_id, save format v4

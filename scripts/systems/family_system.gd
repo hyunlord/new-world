@@ -298,6 +298,21 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	child.birth_tick = tick
 	child.birth_date = GameCalendar.birth_date_from_tick(tick)
 	child.settlement_id = mother.settlement_id
+	# Generate name with settlement context and parent names
+	var culture: String = "proto_syllabic"
+	if mother.settlement_id > 0 and _settlement_manager != null and _settlement_manager.has_method("get_settlement"):
+		var settlement: RefCounted = _settlement_manager.get_settlement(mother.settlement_id)
+		if settlement != null:
+			culture = settlement.culture_id
+	var father_name_for_gen: String = father.entity_name if father != null else ""
+	child.entity_name = NameGenerator.generate_name(
+		child.gender,
+		culture,
+		mother.settlement_id,
+		mother.entity_name,
+		father_name_for_gen
+	)
+	NameGenerator.register_name(child.entity_name, mother.settlement_id)
 	child.parent_ids = [mother.id]
 	if father != null:
 		child.parent_ids.append(father.id)

@@ -4,6 +4,7 @@ var id: int = 0
 var center_x: int = 0
 var center_y: int = 0
 var founding_tick: int = 0
+var culture_id: String = "proto_syllabic"
 var member_ids: Array[int] = []
 var building_ids: Array[int] = []
 
@@ -14,6 +15,7 @@ func to_dict() -> Dictionary:
 		"center_x": center_x,
 		"center_y": center_y,
 		"founding_tick": founding_tick,
+		"culture_id": culture_id,
 		"member_ids": Array(member_ids),
 		"building_ids": Array(building_ids),
 	}
@@ -26,6 +28,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	settlement.center_x = data.get("center_x", 0)
 	settlement.center_y = data.get("center_y", 0)
 	settlement.founding_tick = data.get("founding_tick", 0)
+	settlement.culture_id = data.get("culture_id", "proto_nature")
 
 	settlement.member_ids.clear()
 	var raw_member_ids = data.get("member_ids", [])
