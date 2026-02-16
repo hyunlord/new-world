@@ -28,6 +28,7 @@ var partner_id: int = -1
 var parent_ids: Array = []
 var children_ids: Array = []
 var pregnancy_tick: int = -1
+var last_birth_tick: int = -1  # For postpartum amenorrhea tracking
 
 ## Phase 2: Personality (immutable after creation, 0.0~1.0)
 var personality: Dictionary = {
@@ -139,6 +140,7 @@ func to_dict() -> Dictionary:
 		"parent_ids": parent_ids.duplicate(),
 		"children_ids": children_ids.duplicate(),
 		"pregnancy_tick": pregnancy_tick,
+		"last_birth_tick": last_birth_tick,
 		"personality": personality.duplicate(),
 		"emotions": emotions.duplicate(),
 	}
@@ -187,6 +189,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	for i in range(cids.size()):
 		e.children_ids.append(int(cids[i]))
 	e.pregnancy_tick = data.get("pregnancy_tick", -1)
+	e.last_birth_tick = data.get("last_birth_tick", -1)
 	var p_data: Dictionary = data.get("personality", {})
 	e.personality = {
 		"openness": p_data.get("openness", 0.5),

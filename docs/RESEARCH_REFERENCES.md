@@ -140,6 +140,56 @@ z는 출생 시 결정, 생애 불변. 높은 z = 더 허약 = 사망률 곡선 
 
 ---
 
+## 출산력과 인구 밸런스
+
+### 월간 임신 확률 (Fecundability)
+
+자연출산력(contraception 없는) 집단의 월간 임신 확률:
+- 일반 자연출산력: ~15~25%/월 (Wood 1994)
+- 수렵채집(영양 스트레스 있음): ~10~15%/월
+- 게임 설정: 12%/월 → 쿨다운 끝나면 평균 8개월 내 임신
+
+### 수유 무월경 (Postpartum Amenorrhea)
+
+- 전통 사회에서 집중 수유(2~3년) 동안 배란 억제
+- !Kung San: 평균 수유 기간 ~3.5년, 무월경 ~2.5년 (Konner & Worthman 1980)
+- Hadza: 수유 무월경 ~2년 (Hewlett 1991)
+- 게임 설정: 730일(2년) = 8,760틱
+
+### 출산 간격 (Inter-Birth Interval)
+
+수렵채집 사회의 평균 출산 간격:
+- !Kung San: ~4년 (Howell 1979)
+- Hadza: ~3.5년 (Hewlett 1991)
+- Ache: ~3년 (Hill & Hurtado 1996)
+- 게임에서: 24개월 무월경 + 9개월 임신 + ~10개월 수태 시도 ≈ 3.6년
+
+### 합계출산율 (TFR)
+
+수렵채집 사회 평균 TFR ≈ 5~6 (Gurven & Kaplan 2007):
+- !Kung San: TFR ≈ 4.7
+- Hadza: TFR ≈ 6.2
+- Ache: TFR ≈ 8.0
+
+영아사망률 40% 환경에서 TFR 6이면:
+  6명 출산 × 0.60 생존 = 3.6명 1세+ 생존 → 미세 성장
+
+### 영양-출산력 연결 (Frisch Hypothesis)
+
+Frisch(1984)의 체지방-출산력 가설:
+- 체지방 일정 수준 이하 → 무월경
+- 극심한 기아에서 배란 정지 → 자연스러운 인구 조절 메커니즘
+- 게임 구현:
+  - hunger < 0.2: 임신 불가 (무월경)
+  - hunger 0.2~0.35: 출산력 0.2배
+  - hunger 0.35~0.5: 출산력 0.5배
+  - hunger 0.5~0.7: 출산력 0.8배
+  - hunger > 0.7: 정상 (1.0배)
+
+이 메커니즘이 carrying capacity를 형성: 인구↑ → 식량 경쟁 → hunger↓ → 출산력↓ → 인구 안정화
+
+---
+
 ## 출처 목록
 
 1. **Siler, W. (1979)**. "A competing-risk model for animal mortality."
@@ -174,3 +224,23 @@ z는 출생 시 결정, 생애 불변. 높은 z = 더 허약 = 사망률 곡선 
 
 9. **Jukka Corander et al.** Tsimane 영아사망 연구.
    → 영아사망의 55%가 감염성 원인
+
+10. **Wood, J.W. (1994)**. *Dynamics of Human Reproduction: Biology, Biometry, Demography*.
+    Aldine de Gruyter.
+    → 자연출산력(fecundability) ≈ 15~25%/월, 가임력 생물학
+
+11. **Konner, M. & Worthman, C. (1980)**. "Nursing frequency, gonadal function, and birth spacing among !Kung hunter-gatherers."
+    *Science*, 207(4432), 788-791.
+    → 수유 무월경 메커니즘, !Kung San 평균 수유 3.5년/무월경 2.5년
+
+12. **Frisch, R.E. (1984)**. "Body fat, puberty, and fertility."
+    *Biological Reviews*, 59(2), 161-188.
+    → 체지방-출산력 가설, 영양 부족 시 무월경 메커니즘
+
+13. **Hewlett, B.S. (1991)**. *Intimate Fathers: The Nature and Context of Aka Pygmy Paternal Infant Care*.
+    University of Michigan Press.
+    → 수렵채집 출산 간격 3~4년, Hadza/Aka 데이터
+
+14. **Hill, K. & Hurtado, A.M. (1996)**. *Ache Life History: The Ecology and Demography of a Foraging People*.
+    Aldine de Gruyter.
+    → Ache TFR ≈ 8.0, 출산 간격 ~3년, 수렵채집 인구통계

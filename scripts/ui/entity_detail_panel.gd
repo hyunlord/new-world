@@ -118,13 +118,13 @@ func _draw() -> void:
 	var preg_text: String = ""
 	if entity.pregnancy_tick >= 0:
 		preg_text = "  |  Pregnant"
-	# Birth date from birth_tick
+	# Birth date from birth_tick: "23세 (Y3 7월 15일생)"
 	var birth_str: String = ""
 	if entity.birth_tick > 0:
 		var GameCalendar = load("res://scripts/core/game_calendar.gd")
 		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
-		birth_str = " (Y%d %d/%d)" % [bd.year, bd.month, bd.day]
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %.1fy%s  |  Pos: (%d, %d)%s" % [sid_text, age_years, birth_str, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+		birth_str = " (Y%d %d월 %d일생)" % [bd.year, bd.month, bd.day]
+	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  %d세%s  |  Pos: (%d, %d)%s" % [sid_text, int(age_years), birth_str, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0
