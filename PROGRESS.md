@@ -20,6 +20,16 @@ HEXACO 24-facet system is implemented but the detail panel has 3 UI issues:
 ### Dispatch strategy
 **Sequential**: T-01 first (changes _draw_bar globally), then T-02 + T-03 in parallel after applying T-01.
 All tickets modify entity_detail_panel.gd — sequential dispatch avoids merge conflicts.
+T-03 Codex job timed out after 10min — implemented directly as fallback.
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 2/3 = 67% (T-01 + T-02 via ask_codex, T-03 direct due to Codex timeout)
+- Files changed: 1 (entity_detail_panel.gd) + PROGRESS.md
+- Key changes:
+  - _draw_bar() rewritten: 130px label / expand-fill bar / 45px percent (no overlap)
+  - Trait badges improved: "Traits" label, larger badges, sentiment color coding
+  - Partner line shows "Love: X%, Compat: Y%" when both have personality data
 
 ---
 
