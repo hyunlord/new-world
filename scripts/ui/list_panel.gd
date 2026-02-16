@@ -23,6 +23,7 @@ var _show_deceased: bool = true
 var _page: int = 0
 const ITEMS_PER_PAGE: int = 30
 const ROW_HEIGHT: float = 18.0
+const COL_PAD: float = 6.0
 
 ## Scroll
 var _scroll_offset: float = 0.0
@@ -257,7 +258,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		var header_rect := Rect2(col_x, cy, col.width, 16)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
 		_sort_rects.append({"rect": header_rect, "key": col.key})
-		col_x += col.width
+		col_x += col.width + COL_PAD
 	cy += 18.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
@@ -291,26 +292,26 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		if is_deceased:
 			display_name = "☠ " + display_name
 		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, col_x + ENTITY_COLUMNS[0].width - 5, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
-		col_x += ENTITY_COLUMNS[0].width
+		col_x += ENTITY_COLUMNS[0].width + COL_PAD
 
 		# Age (short format)
 		var age_text: String = row.get("age_display", "%d" % int(row.age))
 		draw_string(font, Vector2(col_x, draw_y + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[1].width
+		col_x += ENTITY_COLUMNS[1].width + COL_PAD
 
 		# Born
 		draw_string(font, Vector2(col_x, draw_y + 14), row.get("born_display", "?"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[2].width
+		col_x += ENTITY_COLUMNS[2].width + COL_PAD
 
 		# Died
 		var died_text: String = row.get("died_display", "-")
 		var died_color: Color = Color(0.6, 0.3, 0.3) if is_deceased else text_color
 		draw_string(font, Vector2(col_x, draw_y + 14), died_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, died_color)
-		col_x += ENTITY_COLUMNS[3].width
+		col_x += ENTITY_COLUMNS[3].width + COL_PAD
 
 		# Job
 		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job).substr(0, 8), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[4].width
+		col_x += ENTITY_COLUMNS[4].width + COL_PAD
 
 		# Status
 		var status_text: String = str(row.status).substr(0, 10)
@@ -318,12 +319,12 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		if is_deceased:
 			status_color = Color(0.6, 0.3, 0.3)
 		draw_string(font, Vector2(col_x, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, status_color)
-		col_x += ENTITY_COLUMNS[5].width
+		col_x += ENTITY_COLUMNS[5].width + COL_PAD
 
 		# Settlement
 		var sett_text: String = "S%d" % row.settlement if row.settlement > 0 else "-"
 		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[6].width
+		col_x += ENTITY_COLUMNS[6].width + COL_PAD
 
 		# Hunger
 		if not is_deceased:
@@ -356,7 +357,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	for col in BUILDING_COLUMNS:
 		var label: String = col.label
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
-		col_x += col.width
+		col_x += col.width + COL_PAD
 	cy += 18.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
@@ -369,14 +370,14 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 
 		col_x = cx + 5
 		draw_string(font, Vector2(col_x, cy + 14), b.building_type.capitalize(), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[0].width
+		col_x += BUILDING_COLUMNS[0].width + COL_PAD
 
 		var sett_text: String = "S%d" % b.settlement_id if b.settlement_id > 0 else "-"
 		draw_string(font, Vector2(col_x, cy + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[1].width
+		col_x += BUILDING_COLUMNS[1].width + COL_PAD
 
 		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += BUILDING_COLUMNS[2].width
+		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
 		var status: String = "Built" if b.is_built else "%d%%" % int(b.build_progress * 100)
 		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
