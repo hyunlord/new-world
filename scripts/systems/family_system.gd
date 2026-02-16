@@ -192,9 +192,10 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	if _settlement_manager != null and child.settlement_id > 0:
 		_settlement_manager.add_member(child.settlement_id, child.id)
 
-	# Register birth in demography log
+	# Register birth in demography log and global counter
 	if _mortality_system != null and _mortality_system.has_method("register_birth"):
 		_mortality_system.register_birth()
+	_entity_manager.register_birth()
 
 	var father_name: String = father.entity_name if father != null else "?"
 	var twin_label: String = " (twin)" if baby_idx > 0 else ""

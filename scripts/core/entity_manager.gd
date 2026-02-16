@@ -9,6 +9,8 @@ var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 var _settlement_manager: RefCounted
 var chunk_index: RefCounted  # ChunkIndex for O(1) spatial lookups
+var total_deaths: int = 0
+var total_births: int = 0
 
 const FIRST_NAMES: PackedStringArray = [
 	"Alder", "Bryn", "Cedar", "Dawn", "Elm", "Fern", "Glen", "Heath",
@@ -97,6 +99,7 @@ func kill_entity(entity_id: int, cause: String, tick: int = -1) -> void:
 	if _settlement_manager != null and entity.settlement_id > 0:
 		_settlement_manager.remove_member(entity.settlement_id, entity.id)
 	entity.is_alive = false
+	total_deaths += 1
 	_world_data.unregister_entity(entity.position, entity.id)
 	chunk_index.remove_entity(entity.id, entity.position)
 	SimulationBus.emit_event("entity_died", {
@@ -159,10 +162,17 @@ func to_save_data() -> Array:
 	return result
 
 
+## Register a birth (called by FamilySystem)
+func register_birth() -> void:
+	total_births += 1
+
+
 ## Load entities from saved data
 func load_save_data(data: Array, world_data: RefCounted) -> void:
 	_entities.clear()
 	_next_id = 1
+	total_deaths = 0
+	total_births = 0
 	chunk_index.clear()
 	for i in range(data.size()):
 		var item = data[i]

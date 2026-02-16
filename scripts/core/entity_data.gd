@@ -25,8 +25,8 @@ var frailty: float = 1.0  # Individual frailty multiplier (N(1.0, 0.15), clamped
 
 ## Phase 2: Family
 var partner_id: int = -1
-var parent_ids: Array[int] = []
-var children_ids: Array[int] = []
+var parent_ids: Array = []
+var children_ids: Array = []
 var pregnancy_tick: int = -1
 
 ## Phase 2: Personality (immutable after creation, 0.0~1.0)

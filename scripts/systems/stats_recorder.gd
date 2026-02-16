@@ -60,6 +60,10 @@ func execute_tick(_tick: int) -> void:
 	if snap.pop > peak_pop:
 		peak_pop = snap.pop
 
+	# Sync death/birth counters from entity manager
+	total_deaths = _entity_manager.total_deaths
+	total_births = _entity_manager.total_births
+
 	history.append(snap)
 	if history.size() > MAX_HISTORY:
 		history.pop_front()

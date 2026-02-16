@@ -190,6 +190,9 @@ func _ready() -> void:
 		e.settlement_id = founding.id
 		settlement_manager.add_member(founding.id, e.id)
 
+	# Bootstrap initial stockpile so gatherers can deliver and HUD shows resources
+	_bootstrap_stockpile(founding, center)
+
 	# Bootstrap initial relationships for faster couple formation
 	_bootstrap_relationships(initial_alive)
 
@@ -301,6 +304,28 @@ func _bootstrap_relationships(alive: Array) -> void:
 		f.emotions["love"] = 0.5
 
 	print("[Main] Bootstrapped %d friend + %d partner relationships." % [friend_count, partner_count])
+
+
+## Bootstrap a pre-built stockpile with starter resources
+func _bootstrap_stockpile(settlement: RefCounted, center: Vector2i) -> void:
+	# Find a walkable tile near center for the stockpile
+	for dy in range(-3, 4):
+		for dx in range(-3, 4):
+			var sx: int = center.x + dx
+			var sy: int = center.y + dy
+			if world_data.is_walkable(sx, sy):
+				var sp: RefCounted = building_manager.place_building("stockpile", sx, sy)
+				if sp != null:
+					sp.is_built = true
+					sp.build_progress = 1.0
+					sp.settlement_id = settlement.id
+					sp.storage["food"] = 15.0
+					sp.storage["wood"] = 5.0
+					sp.storage["stone"] = 2.0
+					settlement.building_ids.append(sp.id)
+					print("[Main] Bootstrapped stockpile at (%d,%d) with starter resources." % [sx, sy])
+					return
+	push_warning("[Main] Could not place bootstrap stockpile near center!")
 
 
 var _last_overlay_tick: int = 0
@@ -429,6 +454,9 @@ func _load_game() -> void:
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
+		# Sync death/birth counters from loaded stats to entity manager
+		entity_manager.total_deaths = stats_recorder.total_deaths
+		entity_manager.total_births = stats_recorder.total_births
 		print("[Main] Game loaded from %s (tick %d)" % [path, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Load failed!")
