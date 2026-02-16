@@ -37,12 +37,14 @@ var _toggle_deceased_rect: Rect2 = Rect2()
 
 ## Column definitions for entities
 const ENTITY_COLUMNS: Array = [
-	{"key": "name", "label": "Name", "width": 90},
-	{"key": "age", "label": "Age", "width": 80},
-	{"key": "job", "label": "Job", "width": 70},
-	{"key": "status", "label": "Status", "width": 70},
-	{"key": "settlement", "label": "Sett", "width": 35},
-	{"key": "hunger", "label": "Hunger", "width": 50},
+	{"key": "name", "label": "Name", "width": 80},
+	{"key": "age", "label": "Age", "width": 75},
+	{"key": "born", "label": "Born", "width": 72},
+	{"key": "died", "label": "Died", "width": 72},
+	{"key": "job", "label": "Job", "width": 55},
+	{"key": "status", "label": "Status", "width": 60},
+	{"key": "settlement", "label": "Sett", "width": 30},
+	{"key": "hunger", "label": "Hunger", "width": 45},
 ]
 
 const BUILDING_COLUMNS: Array = [
@@ -57,6 +59,12 @@ func init(entity_manager: RefCounted, building_manager: RefCounted = null, settl
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+
+
+static func _format_date_compact(date: Dictionary) -> String:
+	if date.is_empty():
+		return "?"
+	return "Y%d.%d.%d" % [date.get("year", 0), date.get("month", 1), date.get("day", 1)]
 
 
 func _process(_delta: float) -> void:
@@ -174,9 +182,15 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 			var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
 			var age_short: String = GameCalendar.format_age_short(e.birth_date, ref_date)
 			var age_detail: Dictionary = GameCalendar.calculate_detailed_age(e.birth_date, ref_date)
+			var born_display: String = _format_date_compact(e.birth_date)
+			var born_days: int = 0
+			if not e.birth_date.is_empty():
+				born_days = GameCalendar.to_julian_day(e.birth_date)
 			rows.append({
 				"id": e.id, "name": e.entity_name, "age": age_detail.total_days,
 				"age_display": age_short,
+				"born": born_days, "born_display": born_display,
+				"died": 9999999, "died_display": "-",
 				"job": e.job, "status": e.current_action, "settlement": e.settlement_id,
 				"hunger": e.hunger, "deceased": false,
 			})
@@ -201,9 +215,19 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 					d_age_short = "%dy" % int(r.get("death_age_years", 0.0))
 				var cause_raw: String = r.get("death_cause", "unknown")
 				var cause_kr: String = cause_map.get(cause_raw, cause_raw)
+				var d_born_display: String = _format_date_compact(bd)
+				var d_born_days: int = 0
+				if not bd.is_empty():
+					d_born_days = GameCalendar.to_julian_day(bd)
+				var d_died_display: String = _format_date_compact(dd)
+				var d_died_days: int = 0
+				if not dd.is_empty():
+					d_died_days = GameCalendar.to_julian_day(dd)
 				rows.append({
 					"id": r.get("id", -1), "name": r.get("name", "?"),
 					"age": d_total_days, "age_display": d_age_short,
+					"born": d_born_days, "born_display": d_born_display,
+					"died": d_died_days, "died_display": d_died_display,
 					"job": r.get("job", ""),
 					"status": "사망-%s" % cause_kr, "settlement": r.get("settlement_id", 0),
 					"hunger": 0.0, "deceased": true,
@@ -274,9 +298,19 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		draw_string(font, Vector2(col_x, draw_y + 14), age_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += ENTITY_COLUMNS[1].width
 
+		# Born
+		draw_string(font, Vector2(col_x, draw_y + 14), row.get("born_display", "?"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		col_x += ENTITY_COLUMNS[2].width
+
+		# Died
+		var died_text: String = row.get("died_display", "-")
+		var died_color: Color = Color(0.6, 0.3, 0.3) if is_deceased else text_color
+		draw_string(font, Vector2(col_x, draw_y + 14), died_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, died_color)
+		col_x += ENTITY_COLUMNS[3].width
+
 		# Job
 		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job).substr(0, 8), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[2].width
+		col_x += ENTITY_COLUMNS[4].width
 
 		# Status
 		var status_text: String = str(row.status).substr(0, 10)
@@ -284,12 +318,12 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		if is_deceased:
 			status_color = Color(0.6, 0.3, 0.3)
 		draw_string(font, Vector2(col_x, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, status_color)
-		col_x += ENTITY_COLUMNS[3].width
+		col_x += ENTITY_COLUMNS[5].width
 
 		# Settlement
 		var sett_text: String = "S%d" % row.settlement if row.settlement > 0 else "-"
 		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-		col_x += ENTITY_COLUMNS[4].width
+		col_x += ENTITY_COLUMNS[6].width
 
 		# Hunger
 		if not is_deceased:

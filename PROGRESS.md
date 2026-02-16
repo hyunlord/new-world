@@ -486,3 +486,12 @@ Config-first then fan-out:
 - Step 2: DISPATCH Batch 1 (T-2008-01..06) parallel — no cross-file deps
 - Step 3: DISPATCH Batch 2 (T-2008-07..09) parallel — depends on game_calendar.gd functions from Batch 1
 - Step 4: DIRECT docs update + integration
+
+### Results
+- Gate: PASS ✅
+- PR: #29 merged
+- Dispatch ratio: 9/11 = 82% ✅
+- Dispatch tool: ask_codex (9 tickets, all via MCP)
+- Files changed: 10 code + 3 docs = 13 total
+- Commits: 4 (config, batch1, batch2, docs)
+- Key changes: detailed age everywhere, Korean death cause, ☠ markers, list scroll, child survival balance
