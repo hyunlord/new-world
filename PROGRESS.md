@@ -402,3 +402,40 @@ T-910/T-920/T-930+T-940 을 3개 병렬 executor 에이전트로 디스패치. T
 - 1x에서 하루 ~10초, 밤 확실히 어둡지만 눈 안 아픔
 - 미니맵 200→300→숨김 순환, 미니맵(우상단)/통계(우하단) 분리
 - 6개 docs/ 문서 전부 동기화
+
+---
+
+## Phase 2-A1: 생년월일 + 아동 양육 시스템 (T-2007 series)
+
+### Context
+두 가지 심각한 문제:
+1. **생년월일 미표시**: 디테일 패널에 "26세 (초기세대)"만 표시, 정확한 생년월일 없음
+2. **아동 전멸 → 인구 감소**: 어린이(job=none, action=idle)가 식량 획득 수단 없어 전부 굶어죽음
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2007-A | game_config + game_calendar 공유 설정 | 🔴 DIRECT | — | 공유 상수/함수, 6단계 나이, childcare 상수 |
+| T-2007-B | entity_data 스키마 + save_manager | 🔴 DIRECT | — | 공유 데이터 스키마 (birth_date 필드 추가) |
+| T-2007-01 | entity_manager birth_date 스폰 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-02 | needs_system 나이 계산 + 배고픔 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-03 | age_system ancient 제거 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-04 | family_system birth_date + 인구통계 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-05 | mortality_system 인구통계 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-06 | childcare_system 신규 | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-2007-07 | behavior_system 아동 행동 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-08 | gathering_system 아동 효율 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-09 | movement_system 아동 속도 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-10 | job_assignment 아동 채집 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-11 | hud.gd UI 업데이트 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-12 | entity_detail_panel UI | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2007-13 | entity_renderer + stats_detail_panel ancient 제거 | 🟢 DISPATCH | ask_codex | 2파일, 간단한 문자열 치환 |
+| T-2007-Z | main.gd ChildcareSystem 등록 | 🔴 DIRECT | — | 통합 배선 <20줄 |
+
+### Dispatch ratio: 13/16 = 81% ✅ (target: ≥60%)
+
+### Dispatch strategy
+Config-first then fan-out:
+1. DIRECT: game_config + game_calendar + entity_data + save_manager (공유 설정/스키마) → commit
+2. DISPATCH parallel (13 tickets): 모든 시스템/UI 파일 (파일 중첩 없음)
+3. DIRECT: main.gd ChildcareSystem 등록 (dispatch 완료 후)

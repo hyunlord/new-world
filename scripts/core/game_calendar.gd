@@ -101,25 +101,23 @@ static func tick_to_age_years(birth_tick: int, current_tick: int) -> float:
 	return float(current_tick - birth_tick) / float(TICKS_PER_YEAR)
 
 
-## Get age stage from age in years (7 stages)
+## Get age stage from age in years (6 stages)
 static func get_age_stage_from_years(age_years: float) -> String:
-	if age_years < 1.0:
+	if age_years < 3.0:
 		return "infant"
-	elif age_years < 5.0:
+	elif age_years < 6.0:
 		return "toddler"
 	elif age_years < 12.0:
 		return "child"
-	elif age_years < 18.0:
+	elif age_years < 15.0:
 		return "teen"
-	elif age_years < 55.0:
+	elif age_years < 56.0:
 		return "adult"
-	elif age_years < 70.0:
-		return "elder"
 	else:
-		return "ancient"
+		return "elder"
 
 
-## Get age stage from age in ticks (7 stages)
+## Get age stage from age in ticks (6 stages)
 static func get_age_stage(age_ticks: int) -> String:
 	var age_years: float = float(age_ticks) / float(TICKS_PER_YEAR)
 	return get_age_stage_from_years(age_years)
@@ -133,3 +131,31 @@ static func ticks_to_days(ticks: int) -> int:
 ## Convert days to ticks
 static func days_to_ticks(days: int) -> int:
 	return days * TICKS_PER_DAY
+
+
+## Generate birth_date Dictionary from a birth_tick value.
+## For negative birth_ticks (pre-game entities), calculates date before Y1.
+static func birth_date_from_tick(birth_tick: int, rng: RandomNumberGenerator = null) -> Dictionary:
+	if birth_tick >= 0:
+		var d: Dictionary = tick_to_date(birth_tick)
+		return {"year": d.year, "month": d.month, "day": d.day}
+	# Pre-game entity: born before Y1
+	var age_ticks: int = -birth_tick
+	var age_years: int = age_ticks / TICKS_PER_YEAR
+	var birth_year: int = 1 - age_years
+	var month: int = 1
+	var day: int = 1
+	if rng != null:
+		month = rng.randi_range(1, 12)
+		day = rng.randi_range(1, 28)
+	return {"year": birth_year, "month": month, "day": day}
+
+
+## Format birth_date for UI display: "Y-25 7월 15일생"
+static func format_birth_date(bd: Dictionary) -> String:
+	if bd.is_empty():
+		return ""
+	var year: int = bd.get("year", 0)
+	var month: int = bd.get("month", 1)
+	var day: int = bd.get("day", 1)
+	return "Y%d %s %d일생" % [year, MONTH_NAMES[clampi(month - 1, 0, 11)], day]

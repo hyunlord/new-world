@@ -18,13 +18,13 @@ const DAYS_PER_YEAR: int = 365
 const TICKS_PER_MONTH: int = 365    # ~30.4 days * 12 ticks/day
 const TICKS_PER_YEAR: int = 4380    # 365 * 12
 
-## Age stage thresholds (in simulation ticks) — 7 stages
-const AGE_INFANT_END: int = 4380     # 1 year
-const AGE_TODDLER_END: int = 21900   # 5 years
-const AGE_CHILD_END: int = 52560     # 12 years
-const AGE_TEEN_END: int = 78840      # 18 years
-const AGE_ADULT_END: int = 240900    # 55 years
-const AGE_ELDER_END: int = 306600    # 70 years
+## Age stage thresholds (in simulation ticks) — 6 stages
+## infant ≤2y, toddler 3-5y, child 6-11y, teen 12-14y, adult 15-55y, elder 56+
+const AGE_INFANT_END: int = 13140    # 3 years  (< 3y → infant)
+const AGE_TODDLER_END: int = 26280   # 6 years  (< 6y → toddler)
+const AGE_CHILD_END: int = 52560     # 12 years (< 12y → child)
+const AGE_TEEN_END: int = 65700      # 15 years (< 15y → teen)
+const AGE_ADULT_END: int = 245280    # 56 years (< 56y → adult, else elder)
 const AGE_MAX: int = 525600          # 120 years (theoretical max)
 const PREGNANCY_DURATION: int = 3360  # 280 days × 12 ticks/day (mean gestation)
 const PREGNANCY_DURATION_STDEV: int = 120  # ~10 days × 12 ticks/day
@@ -92,7 +92,7 @@ static func get_age_years(age_ticks: int) -> float:
 	return float(age_ticks) / float(TICKS_PER_YEAR)
 
 
-## Get age stage string from age in ticks (7 stages)
+## Get age stage string from age in ticks (6 stages)
 static func get_age_stage(age_ticks: int) -> String:
 	if age_ticks < AGE_INFANT_END:
 		return "infant"
@@ -104,10 +104,8 @@ static func get_age_stage(age_ticks: int) -> String:
 		return "teen"
 	elif age_ticks < AGE_ADULT_END:
 		return "adult"
-	elif age_ticks < AGE_ELDER_END:
-		return "elder"
 	else:
-		return "ancient"
+		return "elder"
 
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]
@@ -259,6 +257,46 @@ const MIGRATION_STARTUP_FOOD: float = 30.0
 const MIGRATION_STARTUP_WOOD: float = 10.0
 const MIGRATION_STARTUP_STONE: float = 3.0
 const SETTLEMENT_CLEANUP_INTERVAL: int = 250
+
+## ══════════════════════════════════════
+## Childcare & Child Development
+## ══════════════════════════════════════
+const CHILDCARE_TICK_INTERVAL: int = 10
+const CHILDCARE_HUNGER_THRESHOLD: float = 0.5
+
+## Feed amounts per childcare tick (food units from stockpile)
+const CHILDCARE_FEED_AMOUNTS: Dictionary = {
+	"infant": 0.15,
+	"toddler": 0.25,
+	"child": 0.35,
+	"teen": 0.42,
+}
+
+## Hunger decay multiplier by age stage (applied in NeedsSystem)
+const CHILD_HUNGER_DECAY_MULT: Dictionary = {
+	"infant": 0.5,
+	"toddler": 0.6,
+	"child": 0.75,
+	"teen": 0.9,
+}
+
+## Gathering efficiency by age stage (1.0 = full adult rate)
+const CHILD_GATHER_EFFICIENCY: Dictionary = {
+	"child": 0.4,
+	"teen": 0.8,
+	"elder": 0.5,
+}
+
+## Movement skip modulo by age stage (skip 1 in N ticks; higher N = faster)
+## infant/toddler: skip every other tick → 50%, child: skip 1/3 → 70%
+## teen: skip 1/10 → 90%, elder: skip 1/3 → 67%
+const CHILD_MOVE_SKIP_MOD: Dictionary = {
+	"infant": 2,
+	"toddler": 2,
+	"child": 3,
+	"teen": 10,
+	"elder": 3,
+}
 
 
 ## ══════════════════════════════════════
