@@ -455,3 +455,34 @@ Config-first then fan-out:
   - Config-driven movement speed (CHILD_MOVE_SKIP_MOD)
   - UI: "Adult | 26세 (Y-25 7월 15일생)" format
   - Enhanced demography + mortality logs with age-group breakdown
+
+---
+
+## T-2008: Entity List Scroll + Deceased Enhancement + Detailed Age + Death Cause + Child Balance — 2026-02-16
+
+### Context
+Three user-facing issues: (1) entity list needs real scroll (pagination exists but scroll_offset unused), (2) deceased records need enhanced date/age fields + ☠ markers + Korean death cause display, (3) age display needs Y/M/D + total days format everywhere. Plus child survival balance tuning (decay/feed/Siler protection).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2008-00 | game_config.gd balance constants | 🔴 DIRECT | — | shared config (threshold, feed, decay, Siler protection) |
+| T-2008-01 | game_calendar.gd detailed age functions | 🟢 DISPATCH | ask_codex | single file, 6 new static functions |
+| T-2008-02 | deceased_registry.gd calendar date fields | 🟢 DISPATCH | ask_codex | single file, add birth_date/death_date/age_days |
+| T-2008-03 | mortality_system.gd cause rename + care protection + demography | 🟢 DISPATCH | ask_codex | single file, rename causes + Siler a1 protection |
+| T-2008-04 | childcare_system.gd infant threshold + debug log | 🟢 DISPATCH | ask_codex | single file, use new config constants |
+| T-2008-05 | needs_system.gd register_death with stage/age | 🟢 DISPATCH | ask_codex | single file, pass age_stage + age_years |
+| T-2008-06 | family_system.gd register_death with stage/age | 🟢 DISPATCH | ask_codex | single file, maternal/stillborn paths |
+| T-2008-07 | entity_detail_panel.gd detailed age + Korean cause + ☠ | 🟢 DISPATCH | ask_codex | single file, UI update |
+| T-2008-08 | list_panel.gd scroll + short age + cause + ☠ | 🟢 DISPATCH | ask_codex | single file, remove pagination → scroll |
+| T-2008-09 | hud.gd short age + death toast with cause | 🟢 DISPATCH | ask_codex | single file, toast + age display |
+| T-2008-10 | docs/ update | 🔴 DIRECT | — | multi-file docs sync |
+
+### Dispatch ratio: 9/11 = 82% ✅
+
+### Dispatch strategy
+Config-first then fan-out:
+- Step 1: DIRECT game_config.gd balance constants, commit
+- Step 2: DISPATCH Batch 1 (T-2008-01..06) parallel — no cross-file deps
+- Step 3: DISPATCH Batch 2 (T-2008-07..09) parallel — depends on game_calendar.gd functions from Batch 1
+- Step 4: DIRECT docs update + integration

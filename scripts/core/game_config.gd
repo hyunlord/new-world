@@ -262,23 +262,28 @@ const SETTLEMENT_CLEANUP_INTERVAL: int = 250
 ## Childcare & Child Development
 ## ══════════════════════════════════════
 const CHILDCARE_TICK_INTERVAL: int = 10
-const CHILDCARE_HUNGER_THRESHOLD: float = 0.5
+const CHILDCARE_HUNGER_THRESHOLD: float = 0.7
+const CHILDCARE_INFANT_HUNGER_THRESHOLD: float = 0.8
 
 ## Feed amounts per childcare tick (food units from stockpile)
 const CHILDCARE_FEED_AMOUNTS: Dictionary = {
-	"infant": 0.15,
-	"toddler": 0.25,
-	"child": 0.35,
-	"teen": 0.42,
+	"infant": 0.25,
+	"toddler": 0.35,
+	"child": 0.40,
+	"teen": 0.45,
 }
 
 ## Hunger decay multiplier by age stage (applied in NeedsSystem)
 const CHILD_HUNGER_DECAY_MULT: Dictionary = {
-	"infant": 0.5,
-	"toddler": 0.6,
-	"child": 0.75,
-	"teen": 0.9,
+	"infant": 0.3,
+	"toddler": 0.4,
+	"child": 0.5,
+	"teen": 0.85,
 }
+
+## Siler a1 care protection: well-fed infants (hunger > 0.3) get mortality * this factor
+const SILER_CARE_PROTECTION: float = 0.6
+const SILER_CARE_HUNGER_MIN: float = 0.3
 
 ## Gathering efficiency by age stage (1.0 = full adult rate)
 const CHILD_GATHER_EFFICIENCY: Dictionary = {
