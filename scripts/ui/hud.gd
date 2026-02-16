@@ -8,6 +8,8 @@ const StatsDetailPanelClass = preload("res://scripts/ui/stats_detail_panel.gd")
 const EntityDetailPanelClass = preload("res://scripts/ui/entity_detail_panel.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
+const ChroniclePanelClass = preload("res://scripts/ui/chronicle_panel.gd")
+const ListPanelClass = preload("res://scripts/ui/list_panel.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -84,6 +86,12 @@ var _popup_manager: Node
 var _stats_detail_panel: Control
 var _entity_detail_panel: Control
 var _building_detail_panel: Control
+var _chronicle_panel: Control
+var _list_panel: Control
+
+# Follow indicator
+var _follow_label: Label
+var _following_entity_id: int = -1
 
 # Key hints
 var _hint_label: Label
@@ -155,6 +163,28 @@ func _build_minimap_and_stats() -> void:
 		_building_detail_panel.init(_building_manager, _settlement_manager)
 		_popup_manager.add_building_panel(_building_detail_panel)
 
+	# Chronicle panel
+	_chronicle_panel = ChroniclePanelClass.new()
+	_chronicle_panel.init(_entity_manager)
+	_popup_manager.add_chronicle_panel(_chronicle_panel)
+
+	# List panel
+	_list_panel = ListPanelClass.new()
+	_list_panel.init(_entity_manager, _building_manager, _settlement_manager)
+	_popup_manager.add_list_panel(_list_panel)
+
+	# Follow indicator label (top-center)
+	_follow_label = Label.new()
+	_follow_label.text = ""
+	_follow_label.visible = false
+	_follow_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
+	_follow_label.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
+	_follow_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_follow_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_follow_label.offset_top = 36
+	_follow_label.offset_bottom = 56
+	add_child(_follow_label)
+
 
 func _connect_signals() -> void:
 	SimulationBus.entity_selected.connect(_on_entity_selected)
@@ -165,6 +195,8 @@ func _connect_signals() -> void:
 	SimulationBus.pause_changed.connect(_on_pause_changed)
 	SimulationBus.simulation_event.connect(_on_simulation_event)
 	SimulationBus.ui_notification.connect(_on_ui_notification)
+	SimulationBus.follow_entity_requested.connect(_on_follow_entity)
+	SimulationBus.follow_entity_stopped.connect(_on_follow_stopped)
 
 
 func _build_top_bar() -> void:
@@ -391,6 +423,8 @@ func _build_help_overlay() -> void:
 	left_col.add_child(_make_label("M             Minimap", "help_body"))
 	left_col.add_child(_make_label("G             Statistics", "help_body"))
 	left_col.add_child(_make_label("E             Details", "help_body"))
+	left_col.add_child(_make_label("C             Chronicle", "help_body"))
+	left_col.add_child(_make_label("P             Entity List", "help_body"))
 	left_col.add_child(_make_label("H             This help", "help_body"))
 
 	# Right column
@@ -452,7 +486,7 @@ func _build_resource_legend() -> void:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  E:Details  N:Day/Night  H:Help  \u2318+/-:Scale  Space:Pause"
+	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  E:Details  C:Chronicle  P:List  N:Day/Night  H:Help  Space:Pause"
 	_hint_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hint"))
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_tracked_labels.append({"node": _hint_label, "key": "hint"})
@@ -544,9 +578,11 @@ func _update_entity_panel(delta: float) -> void:
 		settlement_text = " | S%d" % entity.settlement_id
 	var age_years: float = GameConfig.get_age_years(entity.age)
 	var birth_info: String = ""
-	if entity.birth_tick > 0:
+	if entity.birth_tick >= 0:
 		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
 		birth_info = " (Y%d %d월생)" % [bd.year, bd.month]
+	elif entity.birth_tick < 0:
+		birth_info = " (초기세대)"
 	_entity_job_label.text = "%s%s | %d세%s" % [entity.job.capitalize(), settlement_text, int(age_years), birth_info]
 
 	# Position
@@ -844,6 +880,16 @@ func open_building_detail() -> void:
 		_popup_manager.open_building(_selected_building_id)
 
 
+func toggle_chronicle() -> void:
+	if _popup_manager != null:
+		_popup_manager.open_chronicle()
+
+
+func toggle_list() -> void:
+	if _popup_manager != null:
+		_popup_manager.open_list()
+
+
 func show_startup_toast(pop_count: int) -> void:
 	_add_notification("WorldSim started! Pop: %d" % pop_count, Color.WHITE)
 
@@ -855,6 +901,35 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		open_entity_detail()
 	elif msg == "open_building_detail":
 		open_building_detail()
+	elif msg == "open_chronicle":
+		toggle_chronicle()
+	elif msg == "open_list":
+		toggle_list()
+	elif msg.begins_with("open_entity_"):
+		var id_str: String = msg.replace("open_entity_", "")
+		if id_str.is_valid_int():
+			var eid: int = int(id_str)
+			if _entity_detail_panel != null and _entity_detail_panel.has_method("show_entity_or_deceased"):
+				_entity_detail_panel.show_entity_or_deceased(eid)
+				if _popup_manager != null:
+					_popup_manager.open_entity(eid)
+
+
+func _on_follow_entity(entity_id: int) -> void:
+	_following_entity_id = entity_id
+	if _entity_manager != null:
+		var entity: RefCounted = _entity_manager.get_entity(entity_id)
+		if entity != null:
+			_follow_label.text = "Following: %s" % entity.entity_name
+			_follow_label.visible = true
+			return
+	_follow_label.text = "Following: #%d" % entity_id
+	_follow_label.visible = true
+
+
+func _on_follow_stopped() -> void:
+	_following_entity_id = -1
+	_follow_label.visible = false
 
 
 func set_resource_legend_visible(vis: bool) -> void:

@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 GameConfig="*res://scripts/core/game_config.gd"
 SimulationBus="*res://scripts/core/simulation_bus.gd"
 EventLogger="*res://scripts/core/event_logger.gd"
+DeceasedRegistry="*res://scripts/core/deceased_registry.gd"
+ChronicleSystem="*res://scripts/systems/chronicle_system.gd"
 
 [physics]
 

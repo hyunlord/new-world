@@ -11,6 +11,10 @@ var _left_drag_start: Vector2 = Vector2.ZERO
 var _left_was_dragged: bool = false
 const DRAG_THRESHOLD: float = 5.0
 
+## Entity following
+var _following_entity_id: int = -1
+var _entity_manager: RefCounted
+
 
 func _ready() -> void:
 	# Start at world center
@@ -19,6 +23,29 @@ func _ready() -> void:
 	zoom = Vector2(1.5, 1.5)
 	_target_zoom = 1.5
 	make_current()
+
+
+func set_entity_manager(em: RefCounted) -> void:
+	_entity_manager = em
+
+
+func follow_entity(entity_id: int) -> void:
+	_following_entity_id = entity_id
+	SimulationBus.follow_entity_requested.emit(entity_id)
+
+
+func stop_following() -> void:
+	if _following_entity_id >= 0:
+		_following_entity_id = -1
+		SimulationBus.follow_entity_stopped.emit()
+
+
+func is_following() -> bool:
+	return _following_entity_id >= 0
+
+
+func get_following_id() -> int:
+	return _following_entity_id
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -56,6 +83,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _is_dragging:
 			position += (_drag_start - event.position) / zoom.x
 			_drag_start = event.position
+			if _following_entity_id >= 0:
+				stop_following()
 			get_viewport().set_input_as_handled()
 		elif _left_dragging:
 			var moved: float = event.position.distance_to(_left_drag_start)
@@ -63,6 +92,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				_left_was_dragged = true
 			if _left_was_dragged:
 				position += -event.relative / zoom.x
+				if _following_entity_id >= 0:
+					stop_following()
 				get_viewport().set_input_as_handled()
 
 	# macOS trackpad: pinch zoom
@@ -78,6 +109,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	# Entity following
+	if _following_entity_id >= 0 and _entity_manager != null:
+		var entity: RefCounted = _entity_manager.get_entity(_following_entity_id)
+		if entity != null and entity.is_alive:
+			var target := Vector2(entity.position) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+			position = position.lerp(target, 5.0 * delta)
+		else:
+			stop_following()
+
 	# Smooth zoom
 	var new_zoom: float = lerpf(zoom.x, _target_zoom, GameConfig.CAMERA_ZOOM_SPEED)
 	zoom = Vector2(new_zoom, new_zoom)
@@ -94,6 +134,8 @@ func _process(delta: float) -> void:
 		pan_dir.x += 1
 	if pan_dir != Vector2.ZERO:
 		position += pan_dir.normalized() * GameConfig.CAMERA_PAN_SPEED * delta / zoom.x
+		if _following_entity_id >= 0:
+			stop_following()
 
 	# Clamp to world bounds
 	var world_px := Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE

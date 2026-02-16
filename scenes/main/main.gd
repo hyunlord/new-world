@@ -196,6 +196,17 @@ func _ready() -> void:
 	# Bootstrap initial relationships for faster couple formation
 	_bootstrap_relationships(initial_alive)
 
+	# Initialize chronicle system with entity manager for name lookups
+	ChronicleSystem.init(entity_manager)
+
+	# Enable camera entity following
+	camera.set_entity_manager(entity_manager)
+
+	# Connect lifecycle signals for chronicle event logging
+	SimulationBus.entity_born.connect(_on_entity_born_chronicle)
+	SimulationBus.entity_died.connect(_on_entity_died_chronicle)
+	SimulationBus.couple_formed.connect(_on_couple_formed_chronicle)
+
 	_print_startup_banner(seed_value)
 	hud.show_startup_toast(entity_manager.get_alive_count())
 
@@ -427,6 +438,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					if not _day_night_enabled:
 						_current_day_color = Color(1.0, 1.0, 1.0)
 						world_renderer.modulate = Color(1.0, 1.0, 1.0)
+				KEY_C:
+					hud.toggle_chronicle()
+				KEY_P:
+					hud.toggle_list()
 				KEY_E:
 					if hud.is_detail_visible():
 						hud.close_detail()
@@ -486,6 +501,8 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    M              = Toggle minimap")
 	print("    G              = Statistics detail")
 	print("    E              = Entity/Building detail")
+	print("    C              = Chronicle")
+	print("    P              = Entity/Building list")
 	print("    H              = Help overlay (pauses)")
 	print("    N              = Toggle day/night")
 	print("    Cmd+S          = Quick Save")
@@ -519,3 +536,61 @@ func _log_balance(tick: int) -> void:
 				food_in_stockpiles += stockpiles[i].storage.get("food", 0.0)
 	print("[Balance] tick=%d pop=%d avg_hunger=%.2f food_inv=%.1f food_stockpile=%.1f gatherers=%d" % [
 		tick, pop, avg_hunger, total_food_inv, food_in_stockpiles, gatherers])
+
+
+## Chronicle event handlers — bridge lifecycle signals to ChronicleSystem
+func _on_entity_born_chronicle(entity_id: int, entity_name: String, parent_ids: Array, tick: int) -> void:
+	var parent_names: String = ""
+	for i in range(parent_ids.size()):
+		var pid: int = parent_ids[i]
+		var pe: RefCounted = entity_manager.get_entity(pid)
+		if pe != null:
+			parent_names += pe.entity_name
+		else:
+			parent_names += "?"
+		if i < parent_ids.size() - 1:
+			parent_names += ", "
+	var desc: String = "%s born" % entity_name
+	if parent_names != "":
+		desc += " (parents: %s)" % parent_names
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_BIRTH, entity_id, desc, 4, parent_ids, tick)
+
+
+func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: String, age_years: float, tick: int) -> void:
+	var desc: String = "%s died (%s, age %d)" % [entity_name, cause, int(age_years)]
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_DEATH, entity_id, desc, 4, [], tick)
+	# Orphan events for children
+	var entity: RefCounted = entity_manager.get_entity(entity_id)
+	if entity != null:
+		for child_id in entity.children_ids:
+			var child: RefCounted = entity_manager.get_entity(child_id)
+			if child != null and child.is_alive:
+				ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
+					"Parent %s died" % entity_name, 3, [entity_id], tick)
+		if entity.partner_id > 0:
+			var partner: RefCounted = entity_manager.get_entity(entity.partner_id)
+			if partner != null and partner.is_alive:
+				ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, entity.partner_id,
+					"Partner %s died" % entity_name, 4, [entity_id], tick)
+	else:
+		# Entity already removed — check DeceasedRegistry
+		var registry: Node = get_node_or_null("/root/DeceasedRegistry")
+		if registry != null:
+			var record: Dictionary = registry.get_record(entity_id)
+			if record.size() > 0:
+				for child_id in record.get("children_ids", []):
+					var child: RefCounted = entity_manager.get_entity(child_id)
+					if child != null and child.is_alive:
+						ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
+							"Parent %s died" % entity_name, 3, [entity_id], tick)
+				var pid: int = record.get("partner_id", -1)
+				if pid > 0:
+					var partner: RefCounted = entity_manager.get_entity(pid)
+					if partner != null and partner.is_alive:
+						ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, pid,
+							"Partner %s died" % entity_name, 4, [entity_id], tick)
+
+
+func _on_couple_formed_chronicle(entity_a_id: int, entity_a_name: String, entity_b_id: int, entity_b_name: String, tick: int) -> void:
+	var desc: String = "%s and %s coupled" % [entity_a_name, entity_b_name]
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_MARRIAGE, entity_a_id, desc, 3, [entity_b_id], tick)

@@ -231,6 +231,8 @@ func _handle_proposal(a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) 
 			"tick": tick,
 		})
 		SimulationBus.emit_signal("ui_notification", "%s & %s!" % [a.entity_name, b.entity_name], "couple")
+		# Emit lifecycle signal for ChronicleSystem
+		SimulationBus.couple_formed.emit(a.id, a.entity_name, b.id, b.entity_name, tick)
 	else:
 		# Rejected
 		rel.romantic_interest = maxf(rel.romantic_interest - 15.0, 0.0)
