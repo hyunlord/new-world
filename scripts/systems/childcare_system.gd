@@ -4,6 +4,8 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 
+const CHILDCARE_DEBUG: bool = false
+
 
 func _init() -> void:
 	system_name = "childcare"
@@ -24,7 +26,10 @@ func execute_tick(tick: int) -> void:
 		var entity: RefCounted = alive[i]
 		if entity.age_stage != "infant" and entity.age_stage != "toddler" and entity.age_stage != "child" and entity.age_stage != "teen":
 			continue
-		if entity.hunger >= GameConfig.CHILDCARE_HUNGER_THRESHOLD:
+		var threshold: float = GameConfig.CHILDCARE_HUNGER_THRESHOLD
+		if entity.age_stage == "infant":
+			threshold = GameConfig.CHILDCARE_INFANT_HUNGER_THRESHOLD
+		if entity.hunger >= threshold:
 			continue
 		hungry_children.append(entity)
 
@@ -42,13 +47,24 @@ func execute_tick(tick: int) -> void:
 
 		var available_food: float = _get_settlement_food(settlement_id)
 		if available_food < feed_amount:
+			if CHILDCARE_DEBUG:
+				print("[CHILDCARE_DEBUG] Tick %d | %s SKIP: no food (need %.2f, have %.2f)" % [
+					tick, child.entity_name, feed_amount, available_food,
+				])
 			continue
 
+		var old_hunger: float = child.hunger
 		var withdrawn: float = _withdraw_food(settlement_id, feed_amount)
 		if withdrawn <= 0.0:
 			continue
 
 		child.hunger = minf(child.hunger + withdrawn * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
+		if CHILDCARE_DEBUG:
+			var age_str: String = "%dy %dm" % [int(float(child.age) / 4380.0), int(fmod(float(child.age) / 365.0, 12.0))]
+			var sett_food: float = _get_settlement_food(settlement_id)
+			print("[CHILDCARE_DEBUG] Tick %d | %s (age %s) hunger=%.2f | sett_food=%.1f | fed=%.2f -> hunger=%.2f" % [
+				tick, child.entity_name, age_str, old_hunger, sett_food, withdrawn, child.hunger,
+			])
 		emit_event("child_fed", {
 			"entity_id": child.id,
 			"entity_name": child.entity_name,

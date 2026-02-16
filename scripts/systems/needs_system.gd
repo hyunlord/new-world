@@ -58,6 +58,6 @@ func execute_tick(tick: int) -> void:
 				_entity_manager.kill_entity(entity.id, "starvation", tick)
 				if _mortality_system != null and _mortality_system.has_method("register_death"):
 					var age_years: float = GameConfig.get_age_years(entity.age)
-					_mortality_system.register_death(age_years < 1.0)
+					_mortality_system.register_death(age_years < 1.0, entity.age_stage, age_years, "starvation")
 		else:
 			entity.starving_timer = 0

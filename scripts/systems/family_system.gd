@@ -280,7 +280,8 @@ func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 	if not complications.mother_survived:
 		_entity_manager.kill_entity(mother.id, "maternal_death", tick)
 		if _mortality_system != null and _mortality_system.has_method("register_death"):
-			_mortality_system.register_death(false)
+			var mother_age: float = GameConfig.get_age_years(mother.age)
+			_mortality_system.register_death(false, mother.age_stage, mother_age, "maternal_death")
 		emit_event("maternal_death", {
 			"entity_id": mother.id,
 			"entity_name": mother.entity_name,
@@ -310,7 +311,7 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	if health < 0.1:
 		_entity_manager.kill_entity(child.id, "stillborn", tick)
 		if _mortality_system != null and _mortality_system.has_method("register_death"):
-			_mortality_system.register_death(true)
+			_mortality_system.register_death(true, "infant", 0.0, "stillborn")
 		emit_event("stillborn", {
 			"entity_id": child.id,
 			"entity_name": child.entity_name,
