@@ -41,6 +41,9 @@ func execute_tick(tick: int) -> void:
 		# child=50%, teen=80%, elder=~67%
 		var skip_move: bool = false
 		match entity.age_stage:
+			"infant", "toddler":
+				if (tick + entity.id) % 2 == 0:
+					skip_move = true
 			"child":
 				if (tick + entity.id) % 2 == 0:
 					skip_move = true
@@ -49,6 +52,9 @@ func execute_tick(tick: int) -> void:
 					skip_move = true
 			"elder":
 				if (tick + entity.id) % 3 == 0:
+					skip_move = true
+			"ancient":
+				if (tick + entity.id) % 2 == 0:
 					skip_move = true
 		if skip_move:
 			continue

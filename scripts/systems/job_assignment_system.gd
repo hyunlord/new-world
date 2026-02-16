@@ -23,8 +23,8 @@ func execute_tick(tick: int) -> void:
 	var unassigned: Array = []
 	for i in range(entities.size()):
 		var entity = entities[i]
-		# Children get no job
-		if entity.age_stage == "child":
+		# Infants/toddlers/children get no job
+		if entity.age_stage == "infant" or entity.age_stage == "toddler" or entity.age_stage == "child":
 			if entity.job != "none":
 				entity.job = "none"
 			continue
@@ -51,8 +51,8 @@ func execute_tick(tick: int) -> void:
 			})
 			continue
 		var best_job: String = _find_most_needed_job(ratios, job_counts, alive_count)
-		# Elder: no builder
-		if entity.age_stage == "elder" and best_job == "builder":
+		# Elder/ancient: no builder
+		if (entity.age_stage == "elder" or entity.age_stage == "ancient") and best_job == "builder":
 			best_job = "gatherer"
 		entity.job = best_job
 		job_counts[best_job] = job_counts.get(best_job, 0) + 1

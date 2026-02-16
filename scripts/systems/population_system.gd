@@ -23,7 +23,8 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 
 func execute_tick(tick: int) -> void:
 	# Births disabled: all reproduction handled by FamilySystem (T-1090)
-	_check_natural_deaths(tick)
+	# Natural deaths disabled: handled by MortalitySystem (T-2000, Siler model)
+	pass
 
 
 func _check_births(tick: int) -> void:
@@ -102,27 +103,7 @@ func _check_births(tick: int) -> void:
 	})
 
 
-func _check_natural_deaths(tick: int) -> void:
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		var age_years: float = GameConfig.get_age_years(entity.age)
-		if age_years < 60.0:
-			continue
-		# 5% annual death probability per year over 60, increasing each year
-		var years_over_60: int = int(age_years) - 60
-		var annual_death_prob: float = 0.05 * float(years_over_60 + 1)
-		annual_death_prob = minf(annual_death_prob, 1.0)
-		# Scale to per-check probability
-		var check_prob: float = annual_death_prob * float(GameConfig.POPULATION_TICK_INTERVAL) / float(GameConfig.TICKS_PER_YEAR)
-		if _rng.randf() < check_prob:
-			_entity_manager.kill_entity(entity.id, "old_age", tick)
-			emit_event("entity_died_natural", {
-				"entity_id": entity.id,
-				"entity_name": entity.entity_name,
-				"age": entity.age,
-				"tick": tick,
-			})
+## Old natural death logic removed — replaced by MortalitySystem (Siler model, T-2000)
 
 
 func _log_population_status(tick: int, alive_count: int) -> void:

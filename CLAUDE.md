@@ -719,15 +719,24 @@ Hysteresis: 0↔1 boundary 1.3/1.7, 1↔2 boundary 3.8/4.2
 
 ---
 
+## Current Phase
+
+**Phase 2-A1: 시간/사망/임신 시스템 완료**
+- GameCalendar: 정확한 365일 그레고리력 (윤년 포함)
+- MortalitySystem: Siler(1979) 3항 사망률 모델
+- FamilySystem: 가우시안 재태기간, 조산, 신생아 건강, 모성사망
+- 7 나이 단계: infant/toddler/child/teen/adult/elder/ancient
+- 학술 근거: docs/RESEARCH_REFERENCES.md
+
+**다음: Phase 2-A2: HEXACO 성격 데이터**
+
 ## Known Limitations (Phase 1)
 
-- O(n) entity queries (no spatial indexing)
+- O(n) entity queries (no spatial indexing → Phase 2에서 ChunkIndex로 해결)
 - No multiplayer
 - Entity cap ~500 before performance concerns
 - Save/load RNG state may lose precision for very large state values
 - Building placement AI is basic (expanding ring search)
-- No day/night visual cycle
-- No inter-entity relationships (families, social networks)
 
 ---
 

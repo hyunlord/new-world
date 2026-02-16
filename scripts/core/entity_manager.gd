@@ -65,6 +65,8 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	# Age and age stage
 	entity.age = initial_age
 	entity.age_stage = GameConfig.get_age_stage(entity.age)
+	# Frailty: N(1.0, 0.15), clamped [0.5, 2.0] (Vaupel frailty model)
+	entity.frailty = clampf(_rng.randfn(1.0, 0.15), 0.5, 2.0)
 	_entities[entity.id] = entity
 	_world_data.register_entity(pos, entity.id)
 	chunk_index.add_entity(entity.id, pos)

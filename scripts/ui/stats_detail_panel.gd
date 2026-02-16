@@ -152,13 +152,13 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	for i in range(alive.size()):
 		var e: RefCounted = alive[i]
 		match e.age_stage:
-			"child":
+			"infant", "toddler", "child":
 				child_count += 1
 			"teen":
 				teen_count += 1
 			"adult":
 				adult_count += 1
-			"elder":
+			"elder", "ancient":
 				elder_count += 1
 
 		if e.gender == "male":
@@ -171,7 +171,7 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 		# Count couples (only count each pair once — count from one side)
 		if e.partner_id >= 0 and e.id < e.partner_id:
 			couple_count += 1
-		if e.partner_id < 0 and (e.age_stage == "adult" or e.age_stage == "elder"):
+		if e.partner_id < 0 and (e.age_stage == "adult" or e.age_stage == "elder" or e.age_stage == "ancient"):
 			single_adult_count += 1
 
 	var total: int = alive.size()

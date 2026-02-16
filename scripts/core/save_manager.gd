@@ -5,11 +5,11 @@ extends RefCounted
 ##   meta.json, entities.bin, buildings.bin, relationships.bin,
 ##   settlements.bin, world.bin, stats.json
 
-const SAVE_VERSION: int = 2
+const SAVE_VERSION: int = 3
 
 ## Reverse-lookup arrays for binary enum deserialization
 var _genders: Array = ["male", "female"]
-var _age_stages: Array = ["child", "teen", "adult", "elder"]
+var _age_stages: Array = ["infant", "toddler", "child", "teen", "adult", "elder", "ancient"]
 var _jobs: Array = ["none", "gatherer", "lumberjack", "builder", "miner"]
 var _rel_types: Array = ["stranger", "acquaintance", "friend", "close_friend", "romantic", "partner", "rival"]
 
@@ -134,6 +134,7 @@ func _save_entities(path: String, em: RefCounted) -> bool:
 		f.store_32(e.birth_tick)
 		f.store_32(e.partner_id)
 		f.store_32(e.pregnancy_tick)
+		f.store_float(e.frailty)
 		# Personality (5 floats, fixed order)
 		f.store_float(e.personality.get("openness", 0.5))
 		f.store_float(e.personality.get("agreeableness", 0.5))
@@ -203,6 +204,7 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 		e.birth_tick = f.get_32()
 		e.partner_id = _s32(f.get_32())
 		e.pregnancy_tick = _s32(f.get_32())
+		e.frailty = f.get_float()
 		e.personality = {
 			"openness": f.get_float(),
 			"agreeableness": f.get_float(),

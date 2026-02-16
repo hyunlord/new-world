@@ -4,6 +4,74 @@
 
 ---
 
+## Phase 2-A1: 시간체계 + Siler 사망률 + 임신 기초 (T-2000)
+
+### T-2000: GameCalendar + Siler Mortality + Pregnancy Overhaul
+
+**gate PASS** | 15+ code files changed + 6 docs updated
+
+### GameCalendar (신규)
+- `game_calendar.gd` (NEW) — 정확한 365일 그레고리력 (윤년 포함)
+  - MONTH_DAYS, MONTH_NAMES, 윤년 판정
+  - `tick_to_date(tick)` → {year, month, day, hour, day_of_year}
+  - `get_season(day_of_year)` → 북반구 4계절
+  - `format_date(tick)` → "Y3 7월 15일 14:00 (여름)"
+  - `get_age_stage(age_ticks)` → 7단계 (infant/toddler/child/teen/adult/elder/ancient)
+
+### MortalitySystem (신규)
+- `mortality_system.gd` (NEW) — Siler(1979) 3항 욕조 곡선 사망률 모델
+  - μ(x) = a₁·e^{-b₁·x} + a₂ + a₃·e^{b₃·x}
+  - tech=0: q0≈0.40, e0≈33 (수렵채집 베이스라인)
+  - 기술/영양/계절/유전(frailty) 수정자
+  - 생일 기반 분산 체크 (O(1)/tick, 부하 분산)
+  - 영아(0-1세) 월별 체크 (높은 해상도)
+  - 사인 결정: infant_disease / accident_or_infection / old_age
+  - 연간 인구통계 로그: `[Demography] Y3: pop=247 births=18 deaths=12 ...`
+  - 이론적 기대수명 수치 적분 (e0, e15)
+  - priority=49, tick_interval=1
+
+### FamilySystem (대폭 확장)
+- 가우시안 재태기간: μ=280일, σ=10일, clamp [154, 308]
+- 모체 요인 반영: 영양실조→조산, 나이→조산
+- 신생아 건강: 로지스틱 생존곡선 (w50: tech=0→35주, tech=10→24주)
+- 건강→frailty 연결: `frailty = lerp(2.0, 0.8, health)`
+- 사산 처리 (health < 0.1)
+- 모성사망: tech=0→1.5%, tech=10→0.02%
+- 난산: 5% (모체/아기 건강 페널티)
+- 쌍둥이: 0.9% 확률
+- mortality_system.register_birth() 연동
+
+### EntityData 확장
+- `frailty` 필드 추가 (N(1.0, 0.15), clamp [0.5, 2.0])
+- entity_manager: 스폰 시 frailty 자동 생성
+
+### GameConfig 확장
+- 7단계 나이: AGE_INFANT_END, AGE_TODDLER_END, AGE_ELDER_END 추가
+- AGE_MAX: 350,400(80세) → 525,600(120세)
+- PREGNANCY_DURATION=3,360, PREGNANCY_DURATION_STDEV=120
+
+### SaveManager
+- SAVE_VERSION: 2 → 3 (frailty 필드, 7 나이 단계)
+
+### UI 변경
+- HUD: GameCalendar.format_date() 사용 (정확한 날짜+계절)
+- EntityRenderer: ancient 흰 점(백발) 표시 추가
+- 초기 에이전트: 고정 18~40세 → 가중 랜덤 나이 분포
+
+### PopulationSystem
+- 사망 로직 비활성화 (MortalitySystem으로 이관)
+
+### 문서
+- `docs/RESEARCH_REFERENCES.md` (NEW): Siler, Gompertz, Vaupel 등 9개 학술 출처
+- `docs/GAME_BALANCE.md`: Siler 파라미터, 기술 수정자, 7 나이 단계, 임신 세부사항
+- `docs/SYSTEMS.md`: GameCalendar, MortalitySystem, 이벤트 추가
+- `docs/CHANGELOG.md`: 이 항목
+
+### 검증
+- hunger_decay: HUNGER_DECAY_RATE=0.002, NEEDS_TICK_INTERVAL=2 → 유효 0.001/tick → 1000틱(83일) — T-1200 핫픽스 이후 변경 없음
+
+---
+
 ## Hotfix: Mass Starvation Bug (T-1200)
 
 ### T-1200: Fix mass starvation — initial entities spawned as children

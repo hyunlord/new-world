@@ -49,8 +49,8 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	var social_deficit: float = 1.0 - entity.social
 	var stage: String = entity.age_stage
 
-	# Child: wander, rest, socialize only
-	if stage == "child":
+	# Infant/toddler/child: wander, rest, socialize only
+	if stage == "infant" or stage == "toddler" or stage == "child":
 		return {
 			"wander": 0.3 + _rng.randf() * 0.1,
 			"rest": _urgency_curve(energy_deficit) * 1.2,
@@ -83,7 +83,7 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.STONE, 15):
 			scores["gather_stone"] = 0.2 + _rng.randf() * 0.1
 
-	# Building-related actions (requires building_manager) — adults only
+	# Building-related actions (requires building_manager) — adults only (ancient treated as elder)
 	if _building_manager != null and stage == "adult":
 		var sid: int = entity.settlement_id
 		# Deliver to stockpile — gradual threshold

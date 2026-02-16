@@ -19,7 +19,7 @@ func execute_tick(tick: int) -> void:
 		if entity.current_action != "build":
 			continue
 		# Only adults can build
-		if entity.age_stage != "adult":
+		if entity.age_stage != "adult":  # Only adults can build
 			continue
 
 		var tx: int = entity.action_target.x

@@ -1,6 +1,7 @@
 class_name HUD
 extends CanvasLayer
 
+const GameCalendar = preload("res://scripts/core/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/stats_detail_panel.gd")
@@ -468,8 +469,8 @@ func _process(delta: float) -> void:
 	_fps_label.text = "%d" % Engine.get_frames_per_second()
 
 	if _sim_engine:
-		var gt: Dictionary = _sim_engine.get_game_time()
-		_time_label.text = "Y%d M%d D%d %02d:00" % [gt.year, gt.month, gt.day, gt.hour]
+		var tick: int = _sim_engine.current_tick
+		_time_label.text = GameCalendar.format_date(tick)
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()

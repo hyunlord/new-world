@@ -18,12 +18,16 @@ const DAYS_PER_YEAR: int = 365
 const TICKS_PER_MONTH: int = 365    # ~30.4 days * 12 ticks/day
 const TICKS_PER_YEAR: int = 4380    # 365 * 12
 
-## Age stage thresholds (in simulation ticks)
-const AGE_CHILD_END: int = 52560    # 12 years
-const AGE_TEEN_END: int = 78840     # 18 years
-const AGE_ADULT_END: int = 240900   # 55 years
-const AGE_MAX: int = 350400         # 80 years
-const PREGNANCY_DURATION: int = 3285  # ~9 months
+## Age stage thresholds (in simulation ticks) — 7 stages
+const AGE_INFANT_END: int = 4380     # 1 year
+const AGE_TODDLER_END: int = 21900   # 5 years
+const AGE_CHILD_END: int = 52560     # 12 years
+const AGE_TEEN_END: int = 78840      # 18 years
+const AGE_ADULT_END: int = 240900    # 55 years
+const AGE_ELDER_END: int = 306600    # 70 years
+const AGE_MAX: int = 525600          # 120 years (theoretical max)
+const PREGNANCY_DURATION: int = 3360  # 280 days × 12 ticks/day (mean gestation)
+const PREGNANCY_DURATION_STDEV: int = 120  # ~10 days × 12 ticks/day
 
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0
@@ -77,15 +81,10 @@ func get_ui_size(key: String) -> int:
 	return maxi(20, int(UI_SIZES.get(key, 100) * ui_scale))
 
 
-## Convert simulation tick to calendar date
+## Convert simulation tick to calendar date (delegates to GameCalendar)
 static func tick_to_date(tick: int) -> Dictionary:
-	var total_days: int = tick / TICKS_PER_DAY
-	var year: int = total_days / DAYS_PER_YEAR + 1
-	var day_of_year: int = total_days % DAYS_PER_YEAR
-	var month: int = day_of_year / 30 + 1
-	var day: int = day_of_year % 30 + 1
-	var hour: int = (tick % TICKS_PER_DAY) * TICK_HOURS
-	return {"year": year, "month": month, "day": day, "hour": hour, "tick": tick}
+	var GameCalendar = load("res://scripts/core/game_calendar.gd")
+	return GameCalendar.tick_to_date(tick)
 
 
 ## Convert age in ticks to years (float)
@@ -93,16 +92,22 @@ static func get_age_years(age_ticks: int) -> float:
 	return float(age_ticks) / float(TICKS_PER_YEAR)
 
 
-## Get age stage string from age in ticks
+## Get age stage string from age in ticks (7 stages)
 static func get_age_stage(age_ticks: int) -> String:
-	if age_ticks < AGE_CHILD_END:
+	if age_ticks < AGE_INFANT_END:
+		return "infant"
+	elif age_ticks < AGE_TODDLER_END:
+		return "toddler"
+	elif age_ticks < AGE_CHILD_END:
 		return "child"
 	elif age_ticks < AGE_TEEN_END:
 		return "teen"
 	elif age_ticks < AGE_ADULT_END:
 		return "adult"
-	else:
+	elif age_ticks < AGE_ELDER_END:
 		return "elder"
+	else:
+		return "ancient"
 
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]

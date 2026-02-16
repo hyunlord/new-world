@@ -21,16 +21,18 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
-| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
-| 50 | PopulationSystem | 30 | 시간 기반 | 자연사 (60세+ 확률 증가), 출생 비활성화 (FamilySystem으로 이관) | `scripts/systems/population_system.gd` |
-| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건 체크(partner+love+food), 출산, 사별 처리 | `scripts/systems/family_system.gd` |
+| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder→ancient), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
+| 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 연간 인구통계 로그 | `scripts/systems/mortality_system.gd` |
+| 50 | PopulationSystem | 30 | 시간 기반 | 출생 비활성화 (FamilySystem으로 이관), 사망 로직 비활성화 (MortalitySystem으로 이관) | `scripts/systems/population_system.gd` |
+| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건(partner+love+food), 가우시안 재태기간, 조산/신생아건강, 모성사망, 쌍둥이, 사별 | `scripts/systems/family_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
 ### 시간 체계 (Phase 2)
 
 1틱 = 2시간, 1일 = 12틱, 1년 = 365일 = 4,380틱.
-`GameConfig.tick_to_date(tick)` → `{year, month, day, hour}` 달력 변환.
+`GameCalendar.tick_to_date(tick)` → `{year, month, day, hour, day_of_year}` 정확한 그레고리력 변환 (윤년 포함).
+`GameCalendar.format_date(tick)` → `"Y3 7월 15일 14:00 (여름)"` HUD 표시용.
 나이는 sim 틱 단위로 카운트 (`entity.age += tick_interval` in NeedsSystem).
 
 **시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
@@ -56,6 +58,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | BuildingManager | 건물 배치/조회/타입별 검색 | `scripts/core/building_manager.gd` |
 | SettlementManager | 정착지 생성/조회/멤버 관리/직렬화/활성 조회/빈 정착지 정리 | `scripts/core/settlement_manager.gd` |
 | SaveManager | 바이너리 저장/로드 (Cmd+S/Cmd+L), `user://saves/quicksave/` 디렉토리 구조 (meta.json + *.bin + stats.json) | `scripts/core/save_manager.gd` |
+| GameCalendar | 정확한 365일 그레고리력 (윤년 포함), tick↔날짜/계절/나이 변환 | `scripts/core/game_calendar.gd` |
 | Pathfinder | A* 경로 탐색 (Chebyshev, 8방향, 200스텝) | `scripts/core/pathfinder.gd` |
 
 ---
@@ -66,7 +69,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, frailty | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
 
@@ -164,9 +167,18 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 
 | 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
 |--------|-----------|----------|----------|
-| pregnancy_started | FamilySystem | entity_id, entity_name, partner_id, tick | ❌ QUIET |
-| child_born | FamilySystem | entity_id, entity_name, mother_id, mother_name, father_id, father_name, tick | ✅ (HUD 토스트) |
+| pregnancy_started | FamilySystem | entity_id, entity_name, partner_id, gestation_days, tick | ❌ QUIET |
+| child_born | FamilySystem | entity_id, entity_name, mother_id, mother_name, father_id, father_name, gestation_weeks, health, tick | ✅ (HUD 토스트) |
+| stillborn | FamilySystem | mother_id, mother_name, gestation_weeks, health, tick | ✅ |
+| maternal_death | FamilySystem | entity_id, entity_name, tick | ✅ |
+| twins_born | FamilySystem | mother_id, mother_name, child1_id, child2_id, tick | ✅ (HUD 토스트) |
 | partner_died | FamilySystem | entity_id, entity_name, tick | ✅ |
+
+### 사망률 이벤트
+
+| 이벤트 | 발행 시스템 | 추가 필드 | 콘솔 출력 |
+|--------|-----------|----------|----------|
+| entity_died_siler | MortalitySystem | entity_id, entity_name, age_years, cause, mu_total, q_annual, tick | ✅ |
 
 ### 정착지 이벤트
 
