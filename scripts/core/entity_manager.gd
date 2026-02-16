@@ -7,6 +7,7 @@ var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
 var _world_data: RefCounted
 var _rng: RandomNumberGenerator
+var _settlement_manager: RefCounted
 var chunk_index: RefCounted  # ChunkIndex for O(1) spatial lookups
 
 const FIRST_NAMES: PackedStringArray = [
@@ -92,6 +93,9 @@ func kill_entity(entity_id: int, cause: String, tick: int = -1) -> void:
 	if not _entities.has(entity_id):
 		return
 	var entity = _entities[entity_id]
+	# Settlement cleanup
+	if _settlement_manager != null and entity.settlement_id > 0:
+		_settlement_manager.remove_member(entity.settlement_id, entity.id)
 	entity.is_alive = false
 	_world_data.unregister_entity(entity.position, entity.id)
 	chunk_index.remove_entity(entity.id, entity.position)

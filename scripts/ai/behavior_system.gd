@@ -64,6 +64,18 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		"socialize": _urgency_curve(social_deficit) * 0.8,
 	}
 
+	# Visit partner: seek proximity with partner for love/pregnancy
+	if entity.partner_id != -1 and (stage == "adult" or stage == "elder"):
+		var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
+		if partner != null and partner.is_alive:
+			var pdx: int = absi(entity.position.x - partner.position.x)
+			var pdy: int = absi(entity.position.y - partner.position.y)
+			if pdx > 3 or pdy > 3:
+				# Partner is far, want to visit
+				scores["visit_partner"] = 0.4 + _rng.randf() * 0.1
+				if entity.emotions.get("love", 0.0) > 0.3:
+					scores["visit_partner"] = 0.6  # Higher when in love
+
 	# Teen: gather_food only (no wood/stone/build)
 	if stage == "teen":
 		scores.erase("gather_wood")
@@ -222,6 +234,13 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 		"socialize":
 			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 8
+		"visit_partner":
+			var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
+			if partner != null:
+				entity.action_target = partner.position
+			else:
+				entity.action_target = entity.position
+			entity.action_timer = 15
 
 	emit_event("action_chosen", {
 		"entity_id": entity.id,

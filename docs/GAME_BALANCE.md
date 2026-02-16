@@ -299,10 +299,10 @@ FamilySystem: priority=52, tick_interval=50
 2. 여성, 18~45세
 3. 임신 중 아님
 4. 자녀 < 4
-5. 정착지 식량 ≥ 인구×0.5
+5. 정착지 식량 ≥ 인구×0.5 **또는** 개인 hunger > 0.4 (fallback)
 6. 파트너 3타일 이내
-7. love 감정 ≥ 0.3
-8. 확률: 5%/체크
+7. love 감정 ≥ 0.15
+8. 확률: 8%/체크
 
 ### 임신/출산
 - 임신 기간: 가우시안 분포 μ=280일(3,360틱), σ=10일(120틱), clamp [154, 308]일
@@ -331,17 +331,17 @@ FamilySystem: priority=52, tick_interval=50
 
 | 단계 | 직업 | 채집효율 | 건설 | 이동배율 | 크기 |
 |------|------|---------|------|---------|------|
-| infant(0~1) | 없음 | 불가 | 불가 | - | 35% |
-| toddler(1~5) | 없음 | 불가 | 불가 | 0.5x | 50% |
-| child(5~12) | 없음 | 불가 | 불가 | 0.5x | 60% |
-| teen(12~18) | gatherer만 | 50% | 불가 | 0.8x | 80% |
+| infant(0~1) | 없음 | 불가 | 불가 | - | 45% |
+| toddler(1~5) | 없음 | 불가 | 불가 | 0.5x | 55% |
+| child(5~12) | 없음 | 불가 | 불가 | 0.5x | 65% |
+| teen(12~18) | gatherer만 | 50% | 불가 | 0.8x | 85% |
 | adult(18~55) | 전체 | 100% | 가능 | 1.0x | 100% |
 | elder(55~70) | 전체 | 50% | 불가 | 0.7x | 95% |
 | ancient(70+) | 전체 | 50% | 불가 | 0.7x | 90% |
 
 ### 초기 관계 부트스트랩
-- 시작 20명 중 3~4쌍 friend (affinity=40, trust=55)
-- 1~2쌍 close_friend (affinity=65, trust=60, 이성)
+- 시작 20명 중 성인 남녀를 매칭하여 2~3쌍 직접 partner 설정
+- partner 초기값: affinity=85, trust=75, romantic_interest=90, interaction_count=25, love=0.5
 
 ---
 
@@ -384,6 +384,7 @@ FamilySystem: priority=52, tick_interval=50
 | deliver_to_stockpile | carry > 6: 0.9, carry > 3: 0.6 | stockpile 필요 |
 | build | 0.4 + rand×0.1 | 미완성 건물 또는 배치 필요 |
 | take_from_stockpile | urgency(hunger_deficit) × 1.3 | stockpile food > 0.5 |
+| visit_partner | 0.4 + rand×0.1 (love>0.3이면 0.6) | partner 존재 + 3타일 이상 떨어짐 + adult/elder |
 
 urgency(deficit) = deficit^2 (지수 곡선)
 
@@ -575,6 +576,7 @@ func get_ui_size(key: String) -> int:
 |------|-----|----------|
 | 최소 줌 | 0.25 | `GameConfig.CAMERA_ZOOM_MIN` |
 | 최대 줌 | 4.0 | `GameConfig.CAMERA_ZOOM_MAX` |
+| 기본 줌 | 1.5 | `camera_controller.gd` |
 | 줌 스텝 (마우스 휠) | 0.1 | `GameConfig.CAMERA_ZOOM_STEP` |
 | 이동 속도 | 500.0 px/s | `GameConfig.CAMERA_PAN_SPEED` |
 | 줌 보간 속도 | 0.15 | `GameConfig.CAMERA_ZOOM_SPEED` |

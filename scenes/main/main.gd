@@ -97,6 +97,7 @@ func _ready() -> void:
 
 	# Initialize settlement manager + first settlement
 	settlement_manager = SettlementManager.new()
+	entity_manager._settlement_manager = settlement_manager
 
 	# Initialize relationship manager
 	relationship_manager = RelationshipManagerScript.new()
@@ -140,6 +141,7 @@ func _ready() -> void:
 
 	mortality_system = MortalitySystem.new()
 	mortality_system.init(entity_manager, sim_engine.rng)
+	needs_system._mortality_system = mortality_system
 
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
@@ -273,18 +275,32 @@ func _bootstrap_relationships(alive: Array) -> void:
 		rel.interaction_count = 12
 		rel.type = "friend"
 
-	# 1-2 close_friend pairs (opposite gender for romance path)
-	var close_count: int = mini(2, mini(males.size(), females.size()))
-	for i in range(close_count):
-		if i >= males.size() or i >= females.size():
-			break
-		var rel: RefCounted = relationship_manager.get_or_create(males[i].id, females[i].id)
-		rel.affinity = 65.0
-		rel.trust = 60.0
-		rel.interaction_count = 18
-		rel.type = "close_friend"
+	# 2-3 partner pairs (opposite gender, adults only)
+	var partner_count: int = mini(3, mini(males.size(), females.size()))
+	var adult_males: Array = []
+	var adult_females: Array = []
+	for i in range(males.size()):
+		if males[i].age_stage == "adult":
+			adult_males.append(males[i])
+	for i in range(females.size()):
+		if females[i].age_stage == "adult":
+			adult_females.append(females[i])
+	partner_count = mini(partner_count, mini(adult_males.size(), adult_females.size()))
+	for i in range(partner_count):
+		var m: RefCounted = adult_males[i]
+		var f: RefCounted = adult_females[i]
+		var rel: RefCounted = relationship_manager.get_or_create(m.id, f.id)
+		rel.affinity = 85.0
+		rel.trust = 75.0
+		rel.romantic_interest = 90.0
+		rel.interaction_count = 25
+		rel.type = "partner"
+		m.partner_id = f.id
+		f.partner_id = m.id
+		m.emotions["love"] = 0.5
+		f.emotions["love"] = 0.5
 
-	print("[Main] Bootstrapped %d friend + %d close_friend relationships." % [friend_count, close_count])
+	print("[Main] Bootstrapped %d friend + %d partner relationships." % [friend_count, partner_count])
 
 
 var _last_overlay_tick: int = 0

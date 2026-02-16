@@ -13,18 +13,18 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |---------|--------|---------|----------|------|------|
 | 5 | ResourceRegenSystem | 120 | 시간 기반 | 바이옴별 food/wood 재생 (stone 재생 안 함), 10일 간격 | `scripts/systems/resource_regen_system.gd` |
 | 8 | JobAssignmentSystem | 24 | 시간 기반 | 미배정 에이전트 직업 배정 + 동적 재배치, 2일 간격 | `scripts/systems/job_assignment_system.gd` |
-| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 나이 증가, 자동 식사, 아사 판정 | `scripts/systems/needs_system.gd` |
+| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 나이 증가, 자동 식사, 아사 판정, 아사 시 mortality 카운터 갱신 | `scripts/systems/needs_system.gd` |
 | 15 | BuildingEffectSystem | 10 | 행동 기반 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
-| 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 | `scripts/ai/behavior_system.gd` |
+| 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 + visit_partner 행동 | `scripts/ai/behavior_system.gd` |
 | 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
 | 28 | ConstructionSystem | 5 | 행동 기반 | 건설 진행률 증가, 완성 판정 | `scripts/systems/construction_system.gd` |
 | 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
 | 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder→ancient), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
-| 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 연간 인구통계 로그 | `scripts/systems/mortality_system.gd` |
+| 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 연간 인구통계 로그, register_death() 외부 사망 카운터 | `scripts/systems/mortality_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 비활성화 (FamilySystem으로 이관), 사망 로직 비활성화 (MortalitySystem으로 이관) | `scripts/systems/population_system.gd` |
-| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건(partner+love+food), 가우시안 재태기간, 조산/신생아건강, 모성사망, 쌍둥이, 사별 | `scripts/systems/family_system.gd` |
+| 52 | FamilySystem | 50 | 시간 기반 | 임신 조건(partner+love≥0.15+food fallback), 가우시안 재태기간, 조산/신생아건강, 모성사망(+register_death), 쌍둥이, 사별, 임신확률 8% | `scripts/systems/family_system.gd` |
 | 60 | MigrationSystem | 100 | 시간 기반 | 정착지 분할, 이주 패키지 (자원 지참), 쿨다운/캡, 빈 정착지 정리 | `scripts/systems/migration_system.gd` |
 | 90 | StatsRecorder | 200 | 시간 기반 | 인구/자원/직업 스냅샷 + 피크/출생/사망/정착지 통계 (MAX_HISTORY=200) | `scripts/systems/stats_recorder.gd` |
 
@@ -51,7 +51,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 매니저 | 역할 | 파일 |
 |--------|------|------|
 | SimulationEngine | 틱 루프, 시스템 등록/실행, 일시정지/속도, RNG | `scripts/core/simulation_engine.gd` |
-| EntityManager | 에이전트 생성/삭제/조회, 위치 이동, ChunkIndex 통합 | `scripts/core/entity_manager.gd` |
+| EntityManager | 에이전트 생성/삭제/조회, 위치 이동, ChunkIndex 통합, 사망 시 settlement cleanup | `scripts/core/entity_manager.gd` |
 | ChunkIndex | 16x16 타일 청크 공간 인덱스, O(1) 청크 조회 | `scripts/core/chunk_index.gd` |
 | RelationshipManager | 관계 저장 (sparse pairs), 단계 전환, 자연 감소, 직렬화 | `scripts/core/relationship_manager.gd` |
 | RelationshipData | 관계 데이터 (affinity, trust, romantic_interest, type) | `scripts/core/relationship_data.gd` |
@@ -207,9 +207,9 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 렌더러 | 역할 | 파일 |
 |--------|------|------|
 | WorldRenderer | 바이옴 이미지 + 자원 오버레이 (RGBA Sprite2D) | `scripts/ui/world_renderer.gd` |
-| EntityRenderer | 에이전트 도형, 선택 표시, LOD (3단계) | `scripts/ui/entity_renderer.gd` |
+| EntityRenderer | 에이전트 도형 (크기 ~50% 증가), 선택 표시, LOD (3단계, LOD0 zoom<0.6) | `scripts/ui/entity_renderer.gd` |
 | BuildingRenderer | 건물 도형, 건설 바, LOD (3단계) | `scripts/ui/building_renderer.gd` |
-| CameraController | WASD/마우스/트랙패드 카메라, 줌 보간 | `scripts/ui/camera_controller.gd` |
+| CameraController | WASD/마우스/트랙패드 카메라, 줌 보간, 기본 줌 1.5 | `scripts/ui/camera_controller.gd` |
 | HUD | 상단 바, 엔티티/건물 패널, 토스트, 도움말, 범례, 키힌트, 상세패널 관리, UI_SCALE apply_ui_scale() | `scripts/ui/hud.gd` |
 | MinimapPanel | 미니맵 (250×250 기본, M키 250/350/숨김 순환, Image 기반, 클릭 이동, 카메라 시야, 정착지 라벨, UI_SCALE 적용) | `scripts/ui/minimap_panel.gd` |
 | StatsPanel | 미니 통계 패널 (250×220, 인구/자원 그래프, 직업 분포 바, 클릭→상세, UI_SCALE 적용) | `scripts/ui/stats_panel.gd` |

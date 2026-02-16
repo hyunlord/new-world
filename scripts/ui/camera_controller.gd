@@ -16,8 +16,8 @@ func _ready() -> void:
 	# Start at world center
 	var center_px := Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE * 0.5
 	position = center_px
-	zoom = Vector2(1, 1)
-	_target_zoom = 1.0
+	zoom = Vector2(1.5, 1.5)
+	_target_zoom = 1.5
 	make_current()
 
 
