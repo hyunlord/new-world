@@ -1,5 +1,38 @@
 # Progress Log
 
+## Phase 2-A2 Hotfix: Detail Panel Personality UI (T-2015)
+
+### Context
+HEXACO 24-facet system is implemented but the detail panel has 3 UI issues:
+1. Bar labels overflow into bar area (Korean/long English text)
+2. Trait badges exist but need improvement (color coding, prominence)
+3. No couple personality compatibility display in Family section
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2015-01 | Bar layout unification (label/bar/percent) | 🟢 DISPATCH | ask_codex | Single file mod |
+| T-2015-02 | Trait badge display improvement | 🟢 DISPATCH | ask_codex | Single file mod (after T-01) |
+| T-2015-03 | Couple personality compatibility display | 🟢 DISPATCH | ask_codex | Single file mod (after T-01) |
+
+### Dispatch ratio: 3/3 = 100% ✅
+
+### Dispatch strategy
+**Sequential**: T-01 first (changes _draw_bar globally), then T-02 + T-03 in parallel after applying T-01.
+All tickets modify entity_detail_panel.gd — sequential dispatch avoids merge conflicts.
+T-03 Codex job timed out after 10min — implemented directly as fallback.
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 2/3 = 67% (T-01 + T-02 via ask_codex, T-03 direct due to Codex timeout)
+- Files changed: 1 (entity_detail_panel.gd) + PROGRESS.md
+- Key changes:
+  - _draw_bar() rewritten: 130px label / expand-fill bar / 45px percent (no overlap)
+  - Trait badges improved: "Traits" label, larger badges, sentiment color coding
+  - Partner line shows "Love: X%, Compat: Y%" when both have personality data
+
+---
+
 ## Phase 2-A2: HEXACO 24 Facet Personality System (T-2014)
 
 ### Context
