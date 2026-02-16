@@ -34,6 +34,11 @@ func _gui_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_scroll_offset = maxf(_scroll_offset - 30.0, 0.0)
 			accept_event()
+	# macOS trackpad two-finger scroll
+	elif event is InputEventPanGesture:
+		_scroll_offset += event.delta.y * 15.0
+		_scroll_offset = clampf(_scroll_offset, 0.0, maxf(0.0, _content_height - size.y + 40.0))
+		accept_event()
 
 
 func _draw() -> void:

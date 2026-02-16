@@ -538,12 +538,16 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_name_label.text = entity.entity_name
 	_entity_name_label.add_theme_color_override("font_color", jc)
 
-	# Job + settlement + age
+	# Job + settlement + age + birth date
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
 	var age_years: float = GameConfig.get_age_years(entity.age)
-	_entity_job_label.text = "%s%s | Age: %.1fy" % [entity.job.capitalize(), settlement_text, age_years]
+	var birth_info: String = ""
+	if entity.birth_tick > 0:
+		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
+		birth_info = " (Y%d)" % bd.year
+	_entity_job_label.text = "%s%s | Age: %.1fy%s" % [entity.job.capitalize(), settlement_text, age_years, birth_info]
 
 	# Position
 	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]

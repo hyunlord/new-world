@@ -14,6 +14,10 @@ func init(sim_engine: RefCounted) -> void:
 	_sim_engine = sim_engine
 
 
+## Track panel ratios for re-centering on viewport resize
+var _panel_ratios: Dictionary = {}
+
+
 func _ready() -> void:
 	layer = 100
 	_dim_bg = ColorRect.new()
@@ -23,6 +27,7 @@ func _ready() -> void:
 	_dim_bg.visible = false
 	add_child(_dim_bg)
 	_dim_bg.gui_input.connect(_on_bg_input)
+	get_viewport().size_changed.connect(_on_viewport_resized)
 
 
 func add_stats_panel(panel: Control) -> void:
@@ -62,6 +67,7 @@ func open_stats() -> void:
 	_hide_all_panels()
 	_stats_panel.visible = true
 	_dim_bg.visible = true
+	_panel_ratios[_stats_panel] = Vector2(0.75, 0.8)
 	_center_panel(_stats_panel, 0.75, 0.8)
 
 
@@ -77,6 +83,7 @@ func open_entity(entity_id: int) -> void:
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
 	_dim_bg.visible = true
+	_panel_ratios[_entity_panel] = Vector2(0.55, 0.85)
 	_center_panel(_entity_panel, 0.55, 0.85)
 
 
@@ -92,6 +99,7 @@ func open_building(building_id: int) -> void:
 	_building_panel.set_building_id(building_id)
 	_building_panel.visible = true
 	_dim_bg.visible = true
+	_panel_ratios[_building_panel] = Vector2(0.45, 0.5)
 	_center_panel(_building_panel, 0.45, 0.5)
 
 
@@ -151,9 +159,20 @@ func _resume_sim() -> void:
 		SimulationBus.pause_changed.emit(false)
 
 
+func _on_viewport_resized() -> void:
+	# Re-center any visible panel on viewport resize
+	for panel in [_stats_panel, _entity_panel, _building_panel]:
+		if panel != null and panel.visible and _panel_ratios.has(panel):
+			var ratios: Vector2 = _panel_ratios[panel]
+			_center_panel(panel, ratios.x, ratios.y)
+
+
 func _center_panel(panel: Control, w_ratio: float, h_ratio: float) -> void:
 	var vp := get_viewport().get_visible_rect().size
-	var pw: float = vp.x * w_ratio
-	var ph: float = vp.y * h_ratio
-	panel.position = Vector2((vp.x - pw) * 0.5, (vp.y - ph) * 0.5)
+	# Clamp panel size to 90% of viewport if ratio would exceed it
+	var pw: float = minf(vp.x * w_ratio, vp.x * 0.95)
+	var ph: float = minf(vp.y * h_ratio, vp.y * 0.95)
+	var px: float = clampf((vp.x - pw) * 0.5, 0.0, vp.x - pw)
+	var py: float = clampf((vp.y - ph) * 0.5, 0.0, vp.y - ph)
+	panel.position = Vector2(px, py)
 	panel.size = Vector2(pw, ph)
