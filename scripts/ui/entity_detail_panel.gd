@@ -3,6 +3,7 @@ extends Control
 
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -142,7 +143,7 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 	var cx: float = 20.0
 	var cy: float = 28.0 - _scroll_offset
-	var bar_w: float = panel_w - 80.0
+	var bar_w: float = panel_w - 40.0
 
 	var job_colors: Dictionary = {
 		"none": Color(0.6, 0.6, 0.6), "gatherer": Color(0.3, 0.8, 0.2),
@@ -236,29 +237,36 @@ func _draw() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var fname: String = "    " + fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
 	# ── Traits ──
 	if pd.active_traits.size() > 0:
-		cy = _draw_section_header(font, cx, cy, "Traits")
-		var trait_x: float = cx + 10
+		var trait_label: String = "Traits"
+		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+		cy += 16.0
+		var trait_x: float = cx + 15
 		for trait_id in pd.active_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
 			var sentiment: String = tdef.get("sentiment", "neutral")
 			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+			# Wrap to next line if too wide
 			if trait_x + text_w + 16 > size.x - 20:
-				cy += 16.0
-				trait_x = cx + 10
-			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), Color(tcolor.r, tcolor.g, tcolor.b, 0.2))
-			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), tcolor, false, 1.0)
-			draw_string(font, Vector2(trait_x + 5, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
-			trait_x += text_w + 16
-		cy += 20.0
+				cy += 18.0
+				trait_x = cx + 15
+			# Badge background (rounded feel with semi-transparent fill)
+			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
+			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
+			# Badge border
+			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
+			# Badge text
+			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			trait_x += text_w + 18
+		cy += 22.0
 	cy += 6.0
 
 	# ── Emotions ──
@@ -297,8 +305,14 @@ func _draw() -> void:
 		var name_pos := Vector2(cx + 10 + prefix_w, cy + 12)
 		draw_string(font, name_pos, partner_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.9, 0.9))
 		_register_click_region(name_pos, partner_name, entity.partner_id, font, GameConfig.get_font_size("popup_body"))
-		var suffix: String = " (Love: %d%%)" % love_pct
 		var name_w: float = font.get_string_size(partner_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+		# Love + Compatibility suffix
+		var suffix: String = " (Love: %d%%" % love_pct
+		if entity.personality != null and partner_alive and partner != null and partner.personality != null:
+			var compat: float = PersonalitySystem.personality_compatibility(entity.personality, partner.personality)
+			var compat_pct: int = int((compat + 1.0) / 2.0 * 100)
+			suffix += ", Compat: %d%%" % compat_pct
+		suffix += ")"
 		draw_string(font, Vector2(cx + 10 + prefix_w + name_w, cy + 12), suffix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 		cy += 16.0
 	else:
@@ -442,13 +456,20 @@ func _draw_separator(x: float, y: float, panel_w: float) -> void:
 
 
 func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:
-	draw_string(font, Vector2(x, y + 11), label + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
-	var bar_x: float = x + 55.0
-	var bar_w: float = w - 100.0
+	var label_w: float = 130.0
+	var pct_w: float = 45.0
+	var bar_gap: float = 4.0
 	var bar_h: float = 10.0
+
+	draw_string(font, Vector2(x, y + 11), label, HORIZONTAL_ALIGNMENT_LEFT, int(label_w), GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+
+	var bar_x: float = x + label_w + bar_gap
+	var bar_w: float = maxf(w - label_w - pct_w - bar_gap * 2, 20.0)
 	draw_rect(Rect2(bar_x, y + 2, bar_w, bar_h), Color(0.2, 0.2, 0.2, 0.8))
 	draw_rect(Rect2(bar_x, y + 2, bar_w * clampf(value, 0.0, 1.0), bar_h), color)
-	draw_string(font, Vector2(bar_x + bar_w + 5, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+
+	var pct_x: float = bar_x + bar_w + bar_gap
+	draw_string(font, Vector2(pct_x, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
 
 
@@ -657,7 +678,7 @@ func _draw_deceased() -> void:
 		"H": "H (정직)", "E": "E (감정)", "X": "X (외향)",
 		"A": "A (우호)", "C": "C (성실)", "O": "O (개방)",
 	}
-	var bar_w: float = panel_w - 80.0
+	var bar_w: float = panel_w - 40.0
 
 	for axis_id in pd.AXIS_IDS:
 		var axis_val: float = pd.axes.get(axis_id, 0.5)
@@ -679,29 +700,36 @@ func _draw_deceased() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var fname: String = "    " + fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
-	# Traits
+	# ── Traits ──
 	if pd.active_traits.size() > 0:
-		cy = _draw_section_header(font, cx, cy, "Traits")
-		var trait_x: float = cx + 10
+		var trait_label: String = "Traits"
+		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+		cy += 16.0
+		var trait_x: float = cx + 15
 		for trait_id in pd.active_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
 			var sentiment: String = tdef.get("sentiment", "neutral")
 			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+			# Wrap to next line if too wide
 			if trait_x + text_w + 16 > size.x - 20:
-				cy += 16.0
-				trait_x = cx + 10
-			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), Color(tcolor.r, tcolor.g, tcolor.b, 0.2))
-			draw_rect(Rect2(trait_x, cy + 1, text_w + 10, 14), tcolor, false, 1.0)
-			draw_string(font, Vector2(trait_x + 5, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
-			trait_x += text_w + 16
-		cy += 20.0
+				cy += 18.0
+				trait_x = cx + 15
+			# Badge background (rounded feel with semi-transparent fill)
+			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
+			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
+			# Badge border
+			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
+			# Badge text
+			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			trait_x += text_w + 18
+		cy += 22.0
 	cy += 6.0
 
 	# Chronicle events
