@@ -70,6 +70,11 @@ func _gui_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_scroll_offset = maxf(_scroll_offset - 30.0, 0.0)
 			accept_event()
+	# macOS trackpad two-finger scroll
+	elif event is InputEventPanGesture:
+		_scroll_offset += event.delta.y * 15.0
+		_scroll_offset = clampf(_scroll_offset, 0.0, maxf(0.0, _content_height - size.y + 40.0))
+		accept_event()
 
 
 func _draw() -> void:
@@ -113,7 +118,13 @@ func _draw() -> void:
 	var preg_text: String = ""
 	if entity.pregnancy_tick >= 0:
 		preg_text = "  |  Pregnant"
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %.1fy  |  Pos: (%d, %d)%s" % [sid_text, age_years, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	# Birth date from birth_tick
+	var birth_str: String = ""
+	if entity.birth_tick > 0:
+		var GameCalendar = load("res://scripts/core/game_calendar.gd")
+		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
+		birth_str = " (Y%d %d/%d)" % [bd.year, bd.month, bd.day]
+	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  Age: %.1fy%s  |  Pos: (%d, %d)%s" % [sid_text, age_years, birth_str, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0
@@ -191,6 +202,9 @@ func _draw() -> void:
 		if parent_names.length() > 0:
 			draw_string(font, Vector2(cx + 10, cy + 12), "Parents: %s" % parent_names, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 			cy += 16.0
+	else:
+		draw_string(font, Vector2(cx + 10, cy + 12), "Parents: 1st generation", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		cy += 16.0
 
 	# Children
 	if entity.children_ids.size() > 0:

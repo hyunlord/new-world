@@ -83,10 +83,6 @@ func _draw() -> void:
 	elif _current_lod == 2 and zl < 3.8:
 		_current_lod = 1
 
-	# LOD 0: skip drawing entities entirely (strategic view)
-	if _current_lod == 0:
-		return
-
 	# Viewport culling: compute visible tile range
 	var viewport_size := get_viewport_rect().size
 	var cam_pos := cam.global_position if cam else Vector2.ZERO
@@ -98,6 +94,27 @@ func _draw() -> void:
 
 	var alive: Array = _entity_manager.get_alive_entities()
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+
+	# LOD 0: draw minimal dots so entities are visible even at max zoom out
+	if _current_lod == 0:
+		for i in range(alive.size()):
+			var entity: RefCounted = alive[i]
+			if entity.position.x < min_tile_x or entity.position.x > max_tile_x:
+				continue
+			if entity.position.y < min_tile_y or entity.position.y > max_tile_y:
+				continue
+			var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
+			var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
+			var color: Color = vis["color"]
+			var tint: Color = MALE_TINT if entity.gender == "male" else FEMALE_TINT
+			color = color.lerp(tint, GENDER_TINT_WEIGHT)
+			# Minimum 3px dot ensures visibility at any zoom level
+			var dot_size: float = maxf(3.0, 2.0 / zl)
+			draw_circle(pos, dot_size, color)
+			# Selection highlight even at LOD 0
+			if entity.id == selected_entity_id:
+				draw_arc(pos, dot_size + 3.0, 0, TAU, 16, Color.WHITE, 1.5)
+		return
 
 	for i in range(alive.size()):
 		var entity: RefCounted = alive[i]

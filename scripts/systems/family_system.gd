@@ -27,6 +27,9 @@ const OBSTRUCTED_LABOR_CHANCE: float = 0.05
 ## Per-entity gestation duration (entity_id -> ticks), cleared on birth
 var _gestation_map: Dictionary = {}
 
+## Yearly demography logging
+var _last_log_year: int = 0
+
 
 func _init() -> void:
 	system_name = "family"
@@ -48,6 +51,30 @@ func execute_tick(tick: int) -> void:
 	_check_widowhood(alive, tick)
 	_process_births(alive, tick)
 	_check_pregnancies(alive, tick)
+	# Yearly demography log
+	var current_year: int = tick / GameConfig.TICKS_PER_YEAR
+	if current_year > _last_log_year:
+		_last_log_year = current_year
+		var pop: int = alive.size()
+		var couples: int = 0
+		var pregnant: int = 0
+		var fertile_women: int = 0
+		var avg_hunger: float = 0.0
+		for i in range(alive.size()):
+			var e: RefCounted = alive[i]
+			avg_hunger += e.hunger
+			if e.partner_id >= 0 and e.id < e.partner_id:
+				couples += 1
+			if e.gender == "female":
+				if e.pregnancy_tick >= 0:
+					pregnant += 1
+				if e.age_stage == "adult" and e.age < _fertility_end:
+					fertile_women += 1
+		avg_hunger = avg_hunger / float(pop) if pop > 0 else 0.0
+		print("[YEARLY] Y=%d pop=%d births=%d deaths=%d couples=%d pregnant=%d fertile_f=%d avg_hunger=%.2f" % [
+			current_year, pop, _entity_manager.total_births, _entity_manager.total_deaths,
+			couples, pregnant, fertile_women, avg_hunger,
+		])
 
 
 ## ─── Widowhood: detect dead partners ──────────────────────
@@ -306,8 +333,8 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		# Not already pregnant
 		if entity.pregnancy_tick >= 0:
 			continue
-		# Max 4 children
-		if entity.children_ids.size() >= 4:
+		# Max 6 children (realistic hunter-gatherer TFR ~5-6)
+		if entity.children_ids.size() >= 6:
 			continue
 
 		var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
@@ -324,10 +351,9 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		if entity.emotions.get("love", 0.0) < 0.15:
 			continue
 
-		# Food check: stockpile food OR personal hunger > 0.4
-		if not _settlement_has_enough_food(entity.settlement_id):
-			if entity.hunger < 0.4:
-				continue
+		# Food check: only block in extreme starvation (hunger < 0.2)
+		if entity.hunger < 0.2:
+			continue
 
 		# 8% chance per check (increased from 5% for viable population growth)
 		if _rng.randf() >= 0.08:

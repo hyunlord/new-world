@@ -4,6 +4,44 @@
 
 ---
 
+## UX + 밸런스 수정 6건 (T-2004)
+
+### FIX 1: 맵 축소 시 캐릭터 안 보임
+- **원인**: `entity_renderer.gd:87`에서 `if _current_lod == 0: return` → 줌 < 0.6에서 모든 엔티티 완전 숨김
+- **수정**: LOD 0에서 `return` 대신 최소 3px 도트로 엔티티 렌더링, 선택 하이라이트도 LOD 0에서 표시
+- 줌과 무관하게 `maxf(3.0, 2.0 / zoom_level)` 크기 보장
+
+### FIX 2: UI 패널 화면 밖 넘어감
+- **원인**: `popup_manager.gd`에 뷰포트 리사이즈 대응 없음, 패널 크기 클램핑 없음
+- **수정**: `_center_panel()` 패널 크기를 뷰포트 95%로 상한 클램핑, 위치를 뷰포트 내로 클램핑
+- `get_viewport().size_changed` 시그널 연결 → 리사이즈 시 자동 재배치
+
+### FIX 3: macOS 트랙패드 스크롤
+- **원인**: `entity_detail_panel.gd`, `stats_detail_panel.gd`의 `_gui_input()`이 `MOUSE_BUTTON_WHEEL`만 처리, `InputEventPanGesture` 미처리
+- **수정**: 두 패널 모두 `InputEventPanGesture` 핸들러 추가 (`event.delta.y * 15.0`)
+- 카메라 줌(MagnifyGesture)과 패닝(PanGesture)은 이미 구현됨 (camera_controller.gd:69,75)
+
+### FIX 4: 인구가 늘지 않음 (밸런스)
+- **원인**: 임신 조건이 너무 엄격 — stockpile 식량 >= 인구*0.5 OR 개인 hunger > 0.4, 최대 자녀 4명
+- **수정**:
+  - 식량 조건 완화: stockpile 체크 제거, `hunger < 0.2`(극심한 기아)에서만 임신 억제
+  - 최대 자녀 4→6 (수렵채집 TFR ~5-6 반영)
+  - 연간 인구통계 로그 추가: `[YEARLY] Y=N pop=P births=B deaths=D couples=C pregnant=P fertile_f=F avg_hunger=H`
+
+### FIX 5: 관계 패널에 부모 정보 표시
+- **원인**: `entity_detail_panel.gd`에 부모 표시 코드는 있었으나, 초기 생성 에이전트(parent_ids 비어있음)에 대한 폴백 메시지 없음
+- **수정**: `parent_ids`가 비어있을 때 "Parents: 1st generation" 표시
+
+### FIX 6: 생년월일 표시
+- **원인**: 인물 정보에 나이만 표시, 생년월일 미표시
+- **수정**:
+  - `entity_detail_panel.gd`: Age 옆에 `(Y1 3/15)` 형식으로 생년월일 표시 (`GameCalendar.tick_to_date(birth_tick)`)
+  - `hud.gd`: HUD 하단 엔티티 패널에도 출생 연도 `(Y1)` 표시
+
+**6 files changed**: entity_renderer.gd, popup_manager.gd, entity_detail_panel.gd, stats_detail_panel.gd, family_system.gd, hud.gd
+
+---
+
 ## 긴급 수정 4건 (T-2003)
 
 ### FIX 1 (크래시): parent_ids 타입 에러
