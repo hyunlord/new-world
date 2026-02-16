@@ -637,3 +637,14 @@ Config-first then fan-out:
 Both tickets in parallel — no file overlap:
 - T-2012-01: needs_system.gd + childcare_system.gd
 - T-2012-02: mortality_system.gd
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100% ✅
+- Dispatch tool used: ask_codex (2 tickets, both background mode)
+- Files changed: 5 (3 Codex + 1 main.gd comment + 1 PROGRESS.md)
+- Key changes:
+  - ChildcareSystem priority 12→8 (runs BEFORE NeedsSystem), tick_interval 10→2
+  - Child hunger floor 0.05 in NeedsSystem (infants/toddlers/children/teens)
+  - Absolute starvation immunity for age < 15 (hunger clamped, timer reset)
+  - Monthly population log: `[POP] Y M | Pop (Adult/Child) | Births | Deaths(starve/siler)`
