@@ -586,7 +586,7 @@ Config-first then fan-out:
 4. DIRECT: T-2011-05 (docs)
 
 ### Results
-- Gate: PENDING (will run after commit+push)
+- Gate: PASS ✅
 - Dispatch ratio: 4/6 = 67% ✅
 - Dispatch tool used: ask_codex (4 tickets: T-2011-01, T-2011-02, T-2011-03, T-2011-04)
 - Files changed: 10 (7 modified + 3 new JSON + 1 new GDScript)

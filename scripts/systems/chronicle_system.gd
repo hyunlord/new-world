@@ -62,6 +62,11 @@ func log_event(type: String, entity_id: int, description: String,
 			_personal_events[entity_id] = []
 		_personal_events[entity_id].append(entry)
 	for rid in related_ids:
+		# Don't add death-notification events to dead/missing related entities.
+		if type in [EVENT_DEATH, EVENT_PARTNER_DIED, EVENT_ORPHANED] and _entity_manager != null:
+			var rel_entity = _entity_manager.get_entity(rid)
+			if rel_entity == null or not rel_entity.is_alive:
+				continue
 		if rid not in _personal_events:
 			_personal_events[rid] = []
 		_personal_events[rid].append(entry)
