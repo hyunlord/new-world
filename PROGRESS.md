@@ -17,6 +17,18 @@ Change from absolute immunity → conditional protection: protect when food exis
 ### Dispatch strategy
 Single ticket: needs_system.gd logic + main.gd wiring (2 files, straightforward)
 
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100%
+- Dispatch tool: ask_codex
+- Files changed: 2 (needs_system.gd, main.gd)
+- Key changes:
+  - Child hunger floor now conditional on settlement food availability
+  - Absolute starvation immunity replaced with conditional protection
+  - Emergency stockpile feeding for starving children when food exists
+  - True famine: children use grace period (CHILD_STARVATION_GRACE_TICKS), can die
+  - Added _get_settlement_food() and _withdraw_food() helpers to NeedsSystem
+
 ## Phase 1 — Core Simulation (T-300 series)
 
 ### Tickets
