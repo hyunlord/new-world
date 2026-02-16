@@ -4,6 +4,31 @@
 
 ---
 
+## 인구 밸런스 재조정 + 생년월일 한글화 (T-2005)
+
+### FIX 1: 인구 밸런스 전면 재조정 (★ 핵심)
+- **목표**: tech=0에서 20명 시작 → 10년 후 22~28명 (연 0~2% 미세 성장)
+- **학술 근거**: Siler 사망률 유지, 출산력 파라미터를 학술 문헌에 맞춤
+- **수정 (family_system.gd)**:
+  - tick_interval: 50 → 365 (월간 체크)
+  - 가임 연령: 18~45세 → 15~45세
+  - 임신 확률: 8%/체크 → 12%/월 fecundability (Wood 1994)
+  - 수유 무월경: 8,760틱(2년) 쿨다운 추가 (Konner & Worthman 1980)
+  - 영양-출산력 연결: Frisch hypothesis 구현 (hunger→fertility factor)
+  - **제거**: stockpile 식량 체크, 파트너 근접 3타일, love≥0.15, 최대 자녀 4명
+  - **유지**: 파트너 필수, 임신 중 아님, hunger≥0.2
+  - 연간 인구통계 로그 강화: preg_blocks 카운터 추가 (no_partner/cooldown/hunger/age)
+- **entity_data.gd**: last_birth_tick 필드 추가 (수유 무월경 추적용)
+- **기대 결과**: TFR≈5.5, IBI≈3.5년, carrying capacity 자연 형성
+
+### FIX 2: 생년월일 표시 한글화
+- **entity_detail_panel.gd**: `"Age: %.1fy (Y1 3/15)"` → `"23세 (Y3 7월 15일생)"`
+- **hud.gd**: `"Age: %.1fy (Y1)"` → `"23세 (Y3 7월생)"`
+
+**4 files changed**: family_system.gd, entity_data.gd, entity_detail_panel.gd, hud.gd
+
+---
+
 ## UX + 밸런스 수정 6건 (T-2004)
 
 ### FIX 1: 맵 축소 시 캐릭터 안 보임

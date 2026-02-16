@@ -12,7 +12,8 @@ var _settlement_manager: RefCounted
 var _mortality_system: RefCounted  # For registering births in demography log
 var _rng: RandomNumberGenerator
 
-## 45 years in ticks (fertility cutoff for females)
+## Fertile age range in ticks (15-45 years)
+var _fertility_start: int = 15 * GameConfig.TICKS_PER_YEAR
 var _fertility_end: int = 45 * GameConfig.TICKS_PER_YEAR
 
 ## Twins probability (~0.9% natural rate)
@@ -24,6 +25,12 @@ const MATERNAL_DEATH_BASE: float = 0.015
 ## Obstructed labor chance
 const OBSTRUCTED_LABOR_CHANCE: float = 0.05
 
+## Postpartum amenorrhea: 2 years = 730 days (Konner & Worthman 1980, !Kung San)
+const POSTPARTUM_AMENORRHEA_TICKS: int = 8760  # 730 days × 12 ticks/day
+
+## Monthly fecundability: 12% per month (Wood 1994, natural fertility populations)
+const BASE_MONTHLY_FECUNDABILITY: float = 0.12
+
 ## Per-entity gestation duration (entity_id -> ticks), cleared on birth
 var _gestation_map: Dictionary = {}
 
@@ -34,7 +41,7 @@ var _last_log_year: int = 0
 func _init() -> void:
 	system_name = "family"
 	priority = 52
-	tick_interval = 50
+	tick_interval = 365  # Monthly check (~30 days × 12 ticks/day)
 
 
 func init(entity_manager: RefCounted, relationship_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted, rng: RandomNumberGenerator, mortality_system: RefCounted = null) -> void:
@@ -51,7 +58,7 @@ func execute_tick(tick: int) -> void:
 	_check_widowhood(alive, tick)
 	_process_births(alive, tick)
 	_check_pregnancies(alive, tick)
-	# Yearly demography log
+	# Yearly demography log with pregnancy block analysis
 	var current_year: int = tick / GameConfig.TICKS_PER_YEAR
 	if current_year > _last_log_year:
 		_last_log_year = current_year
@@ -60,20 +67,37 @@ func execute_tick(tick: int) -> void:
 		var pregnant: int = 0
 		var fertile_women: int = 0
 		var avg_hunger: float = 0.0
+		# Pregnancy block counters
+		var b_no_partner: int = 0
+		var b_cooldown: int = 0
+		var b_hunger: int = 0
+		var b_age: int = 0
 		for i in range(alive.size()):
 			var e: RefCounted = alive[i]
 			avg_hunger += e.hunger
 			if e.partner_id >= 0 and e.id < e.partner_id:
 				couples += 1
 			if e.gender == "female":
-				if e.pregnancy_tick >= 0:
-					pregnant += 1
-				if e.age_stage == "adult" and e.age < _fertility_end:
+				# Count fertile women (15-45)
+				if e.age >= _fertility_start and e.age < _fertility_end:
 					fertile_women += 1
+					if e.pregnancy_tick >= 0:
+						pregnant += 1
+					elif e.partner_id == -1:
+						b_no_partner += 1
+					elif e.last_birth_tick >= 0 and (tick - e.last_birth_tick) < POSTPARTUM_AMENORRHEA_TICKS:
+						b_cooldown += 1
+					elif e.hunger < 0.2:
+						b_hunger += 1
+				elif e.age_stage == "teen" or (e.age_stage == "adult" and e.age >= _fertility_end):
+					b_age += 1
 		avg_hunger = avg_hunger / float(pop) if pop > 0 else 0.0
 		print("[YEARLY] Y=%d pop=%d births=%d deaths=%d couples=%d pregnant=%d fertile_f=%d avg_hunger=%.2f" % [
 			current_year, pop, _entity_manager.total_births, _entity_manager.total_deaths,
 			couples, pregnant, fertile_women, avg_hunger,
+		])
+		print("  preg_blocks: no_partner=%d cooldown=%d hunger=%d age=%d" % [
+			b_no_partner, b_cooldown, b_hunger, b_age,
 		])
 
 
@@ -131,6 +155,7 @@ func _generate_gestation_days(mother_nutrition: float, mother_age_years: float) 
 
 func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 	mother.pregnancy_tick = -1
+	mother.last_birth_tick = tick  # For postpartum amenorrhea tracking
 
 	# Find father
 	var father: RefCounted = null
@@ -313,7 +338,27 @@ func _check_birth_complications(mother: RefCounted, gestation_weeks: int) -> Dic
 	return result
 
 
+## ─── Nutrition-fertility factor (Frisch 1984) ────────────
+
+func _get_nutrition_fertility_factor(hunger: float) -> float:
+	if hunger < 0.2:
+		return 0.0   # Amenorrhea - no conception possible
+	elif hunger < 0.35:
+		return 0.2   # Severe malnutrition - very low fertility
+	elif hunger < 0.5:
+		return 0.5   # Malnutrition - halved fertility
+	elif hunger < 0.7:
+		return 0.8   # Moderate - slightly reduced
+	else:
+		return 1.0   # Sufficient nutrition - normal fertility
+
+
 ## ─── Check pregnancy conditions ───────────────────────────
+## Academic basis:
+##   - Monthly fecundability ~12% (Wood 1994)
+##   - Postpartum amenorrhea ~2 years (Konner & Worthman 1980)
+##   - Nutrition-fertility link (Frisch 1984)
+##   - Target TFR ~5-6 for hunter-gatherer (Gurven & Kaplan 2007)
 
 func _check_pregnancies(alive: Array, tick: int) -> void:
 	for i in range(alive.size()):
@@ -321,11 +366,8 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		# Only females
 		if entity.gender != "female":
 			continue
-		# Must be adult, not elder
-		if entity.age_stage != "adult":
-			continue
-		# Fertility age limit (18~45)
-		if entity.age >= _fertility_end:
+		# Fertile age: 15-45 years
+		if entity.age < _fertility_start or entity.age >= _fertility_end:
 			continue
 		# Must have partner
 		if entity.partner_id == -1:
@@ -333,30 +375,22 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		# Not already pregnant
 		if entity.pregnancy_tick >= 0:
 			continue
-		# Max 6 children (realistic hunter-gatherer TFR ~5-6)
-		if entity.children_ids.size() >= 6:
+		# Postpartum amenorrhea: 2 years after last birth
+		if entity.last_birth_tick >= 0 and (tick - entity.last_birth_tick) < POSTPARTUM_AMENORRHEA_TICKS:
 			continue
 
 		var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
 		if partner == null or not partner.is_alive:
 			continue
 
-		# Partner within 3 tiles
-		var dx: int = absi(entity.position.x - partner.position.x)
-		var dy: int = absi(entity.position.y - partner.position.y)
-		if dx > 3 or dy > 3:
+		# Nutrition-based fertility (Frisch hypothesis)
+		var fertility_factor: float = _get_nutrition_fertility_factor(entity.hunger)
+		if fertility_factor <= 0.0:
 			continue
 
-		# Love >= 0.15 (lowered from 0.3 for faster first births)
-		if entity.emotions.get("love", 0.0) < 0.15:
-			continue
-
-		# Food check: only block in extreme starvation (hunger < 0.2)
-		if entity.hunger < 0.2:
-			continue
-
-		# 8% chance per check (increased from 5% for viable population growth)
-		if _rng.randf() >= 0.08:
+		# Monthly conception probability
+		var monthly_prob: float = BASE_MONTHLY_FECUNDABILITY * fertility_factor
+		if _rng.randf() >= monthly_prob:
 			continue
 
 		# Start pregnancy with Gaussian gestation duration
@@ -365,7 +399,6 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 		var mother_age_years: float = GameConfig.get_age_years(entity.age)
 		var gestation_days: int = _generate_gestation_days(mother_nutrition, mother_age_years)
 		var gestation_ticks: int = gestation_days * GameCalendar.TICKS_PER_DAY
-		# Store gestation duration in system map
 		_gestation_map[entity.id] = gestation_ticks
 
 		emit_event("pregnancy_started", {
@@ -375,21 +408,3 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 			"gestation_days": gestation_days,
 			"tick": tick,
 		})
-
-
-func _settlement_has_enough_food(settlement_id: int) -> bool:
-	if _building_manager == null:
-		return false
-	var pop: int = 0
-	if _settlement_manager != null and settlement_id > 0:
-		pop = _settlement_manager.get_settlement_population(settlement_id)
-	else:
-		pop = _entity_manager.get_alive_count()
-	var total_food: float = 0.0
-	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-	for i in range(stockpiles.size()):
-		var sp: RefCounted = stockpiles[i]
-		if sp.is_built:
-			if settlement_id <= 0 or sp.settlement_id == settlement_id:
-				total_food += sp.storage.get("food", 0.0)
-	return total_food >= float(pop) * 0.5
