@@ -32,6 +32,9 @@ var tech_level: float = 0.0
 var _year_births: int = 0
 var _year_deaths: int = 0
 var _year_infant_deaths: int = 0
+var _year_death_age_sum: float = 0.0
+var _year_death_age_samples: int = 0
+var _yearly_deaths_by_stage: Dictionary = {}
 var _year_start_pop: int = 0
 var _last_log_year: int = 0
 
@@ -144,9 +147,7 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 	if _rng.randf() < q_check:
 		var cause: String = _determine_cause(h_infant, h_background, h_senescence)
 		_entity_manager.kill_entity(entity.id, cause, tick)
-		_year_deaths += 1
-		if age_years < 1.0:
-			_year_infant_deaths += 1
+		register_death(age_years < 1.0, entity.age_stage, age_years)
 		emit_event("entity_died_siler", {
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,
@@ -188,6 +189,9 @@ func _check_annual_demography_log(tick: int) -> void:
 	_year_births = 0
 	_year_deaths = 0
 	_year_infant_deaths = 0
+	_year_death_age_sum = 0.0
+	_year_death_age_samples = 0
+	_yearly_deaths_by_stage = {}
 
 
 func _print_demography_log(year: int, tick: int) -> void:
@@ -195,6 +199,15 @@ func _print_demography_log(year: int, tick: int) -> void:
 	var q0: float = 0.0
 	if _year_births > 0:
 		q0 = float(_year_infant_deaths) / float(_year_births)
+	var death_infant: int = int(_yearly_deaths_by_stage.get("infant", 0))
+	var death_child: int = int(_yearly_deaths_by_stage.get("child", 0))
+	var death_teen: int = int(_yearly_deaths_by_stage.get("teen", 0))
+	var death_adult: int = int(_yearly_deaths_by_stage.get("adult", 0))
+	var death_elder: int = int(_yearly_deaths_by_stage.get("elder", 0))
+	var avg_death_age: float = 0.0
+	if _year_death_age_samples > 0:
+		avg_death_age = _year_death_age_sum / float(_year_death_age_samples)
+	var infant_mortality_pct: float = q0 * 100.0
 
 	# Theoretical e0 from current Siler parameters
 	var e0: float = _calc_theoretical_e0()
@@ -207,8 +220,14 @@ func _print_demography_log(year: int, tick: int) -> void:
 		total_age += GameConfig.get_age_years(alive[i].age)
 	var avg_age: float = total_age / maxf(float(alive.size()), 1.0)
 
-	print("[Demography] Y%d: pop=%d births=%d deaths=%d infant_deaths=%d q0=%.2f e0=%.1f e15=%.1f avg_age=%.1f" % [
-		year, pop, _year_births, _year_deaths, _year_infant_deaths, q0, e0, e15, avg_age,
+	print("[MORTALITY] Y%d --- Annual Summary ---" % year)
+	print("  Deaths: %d (infant: %d, child: %d, teen: %d, adult: %d, elder: %d)" % [
+		_year_deaths, death_infant, death_child, death_teen, death_adult, death_elder,
+	])
+	print("  Avg death age: %.1fy" % avg_death_age)
+	print("  Infant mortality: %d/%d (%.1f%%)" % [_year_infant_deaths, _year_births, infant_mortality_pct])
+	print("  Population: %d, e0=%.1f, e15=%.1f, avg_age=%.1f" % [
+		pop, e0, e15, avg_age,
 	])
 
 
@@ -218,10 +237,21 @@ func register_birth() -> void:
 
 
 ## Register a death (called externally by NeedsSystem, FamilySystem)
-func register_death(is_infant: bool = false) -> void:
+func register_death(is_infant: bool = false, age_stage: String = "", age_years: float = -1.0) -> void:
 	_year_deaths += 1
 	if is_infant:
 		_year_infant_deaths += 1
+	var stage_key: String = age_stage
+	if is_infant:
+		stage_key = "infant"
+	if stage_key == "toddler" or stage_key == "child":
+		stage_key = "child"
+	elif stage_key != "infant" and stage_key != "teen" and stage_key != "adult" and stage_key != "elder":
+		stage_key = "adult"
+	_yearly_deaths_by_stage[stage_key] = int(_yearly_deaths_by_stage.get(stage_key, 0)) + 1
+	if age_years >= 0.0:
+		_year_death_age_sum += age_years
+		_year_death_age_samples += 1
 
 
 ## ─── Theoretical life expectancy (numerical integration) ──

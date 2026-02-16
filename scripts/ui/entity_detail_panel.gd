@@ -1,6 +1,8 @@
 class_name EntityDetailPanel
 extends Control
 
+const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
+
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _relationship_manager: RefCounted
@@ -141,20 +143,19 @@ func _draw() -> void:
 	draw_string(font, Vector2(cx, cy), gender_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), gender_color)
 	cy += 6.0
 
-	var age_years: float = GameConfig.get_age_years(entity.age)
+	var age_years: int = int(GameConfig.get_age_years(entity.age))
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
 	var preg_text: String = ""
 	if entity.pregnancy_tick >= 0:
 		preg_text = "  |  Pregnant"
-	# Birth date from birth_tick: "23세 (Y3 7월 15일생)" or "23세 (초기세대)"
+	# Birth date from birth_date dictionary.
 	var birth_str: String = ""
-	if entity.birth_tick >= 0:
-		var GameCalendar = load("res://scripts/core/game_calendar.gd")
-		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
-		birth_str = " (Y%d %d월 %d일생)" % [bd.year, bd.month, bd.day]
+	if not entity.birth_date.is_empty():
+		birth_str = GameCalendarScript.format_birth_date(entity.birth_date)
 	else:
-		birth_str = " (초기세대)"
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  %d세%s  |  Pos: (%d, %d)%s" % [sid_text, int(age_years), birth_str, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+		birth_str = "출생일 불명"
+	var life_stage_text: String = "%s | %d세 (%s)" % [entity.age_stage.capitalize(), age_years, birth_str]
+	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  %s  |  Pos: (%d, %d)%s" % [sid_text, life_stage_text, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0

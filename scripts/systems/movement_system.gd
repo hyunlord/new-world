@@ -37,26 +37,9 @@ func execute_tick(tick: int) -> void:
 			entity.path_index = 0
 			continue
 
-		# Age-based movement speed reduction (skip some movement ticks)
-		# child=50%, teen=80%, elder=~67%
-		var skip_move: bool = false
-		match entity.age_stage:
-			"infant", "toddler":
-				if (tick + entity.id) % 2 == 0:
-					skip_move = true
-			"child":
-				if (tick + entity.id) % 2 == 0:
-					skip_move = true
-			"teen":
-				if (tick + entity.id) % 5 == 0:
-					skip_move = true
-			"elder":
-				if (tick + entity.id) % 3 == 0:
-					skip_move = true
-			"ancient":
-				if (tick + entity.id) % 2 == 0:
-					skip_move = true
-		if skip_move:
+		# Age-based movement speed: skip ticks based on config
+		var skip_mod: int = GameConfig.CHILD_MOVE_SKIP_MOD.get(entity.age_stage, 0)
+		if skip_mod > 0 and (tick + entity.id) % skip_mod == 0:
 			continue
 
 		# Skip movement for rest/idle or if already at target

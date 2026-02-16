@@ -576,14 +576,14 @@ func _update_entity_panel(delta: float) -> void:
 	var settlement_text: String = ""
 	if _settlement_manager != null and entity.settlement_id >= 0:
 		settlement_text = " | S%d" % entity.settlement_id
-	var age_years: float = GameConfig.get_age_years(entity.age)
-	var birth_info: String = ""
-	if entity.birth_tick >= 0:
-		var bd: Dictionary = GameCalendar.tick_to_date(entity.birth_tick)
-		birth_info = " (Y%d %d월생)" % [bd.year, bd.month]
-	elif entity.birth_tick < 0:
-		birth_info = " (초기세대)"
-	_entity_job_label.text = "%s%s | %d세%s" % [entity.job.capitalize(), settlement_text, int(age_years), birth_info]
+	var age_years: int = int(float(entity.age) / float(GameConfig.TICKS_PER_YEAR))
+	var birth_str: String = ""
+	if not entity.birth_date.is_empty():
+		birth_str = GameCalendar.format_birth_date(entity.birth_date)
+	else:
+		birth_str = "출생일 불명"
+	var age_text: String = "%d세 (%s)" % [age_years, birth_str]
+	_entity_job_label.text = "%s | %s%s | %s" % [entity.age_stage.capitalize(), entity.job.capitalize(), settlement_text, age_text]
 
 	# Position
 	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]

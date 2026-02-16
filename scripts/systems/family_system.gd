@@ -59,46 +59,55 @@ func execute_tick(tick: int) -> void:
 	_check_coupling(alive, tick)
 	_process_births(alive, tick)
 	_check_pregnancies(alive, tick)
-	# Yearly demography log with pregnancy block analysis
+	# Yearly demography log
 	var current_year: int = tick / GameConfig.TICKS_PER_YEAR
 	if current_year > _last_log_year:
 		_last_log_year = current_year
 		var pop: int = alive.size()
 		var couples: int = 0
 		var pregnant: int = 0
-		var fertile_women: int = 0
-		var avg_hunger: float = 0.0
-		# Pregnancy block counters
-		var b_no_partner: int = 0
-		var b_cooldown: int = 0
-		var b_hunger: int = 0
-		var b_age: int = 0
+		var adults: int = 0
+		var teens: int = 0
+		var children: int = 0
+		var infants: int = 0
 		for i in range(alive.size()):
 			var e: RefCounted = alive[i]
-			avg_hunger += e.hunger
 			if e.partner_id >= 0 and e.id < e.partner_id:
 				couples += 1
+			if e.age_stage == "adult" or e.age_stage == "elder":
+				adults += 1
+			elif e.age_stage == "teen":
+				teens += 1
+			elif e.age_stage == "child" or e.age_stage == "toddler":
+				children += 1
+			elif e.age_stage == "infant":
+				infants += 1
 			if e.gender == "female":
-				# Count fertile women (15-45)
-				if e.age >= _fertility_start and e.age < _fertility_end:
-					fertile_women += 1
-					if e.pregnancy_tick >= 0:
-						pregnant += 1
-					elif e.partner_id == -1:
-						b_no_partner += 1
-					elif e.last_birth_tick >= 0 and (tick - e.last_birth_tick) < POSTPARTUM_AMENORRHEA_TICKS:
-						b_cooldown += 1
-					elif e.hunger < 0.2:
-						b_hunger += 1
-				elif e.age_stage == "teen" or (e.age_stage == "adult" and e.age >= _fertility_end):
-					b_age += 1
-		avg_hunger = avg_hunger / float(pop) if pop > 0 else 0.0
-		print("[YEARLY] Y=%d pop=%d births=%d deaths=%d couples=%d pregnant=%d fertile_f=%d avg_hunger=%.2f" % [
-			current_year, pop, _entity_manager.total_births, _entity_manager.total_deaths,
-			couples, pregnant, fertile_women, avg_hunger,
+				if e.pregnancy_tick >= 0:
+					pregnant += 1
+		var settlement_food: float = 0.0
+		if _building_manager != null:
+			var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
+			for i in range(stockpiles.size()):
+				var sp: RefCounted = stockpiles[i]
+				if sp.is_built:
+					settlement_food += sp.storage.get("food", 0.0)
+		var date: Dictionary = GameCalendar.tick_to_date(tick)
+		var month_label: String = GameCalendar.MONTH_NAMES[date.month - 1]
+		print("[DEMOGRAPHY] Y%d %s --- Yearly Report ---" % [
+			date.year, month_label,
 		])
-		print("  preg_blocks: no_partner=%d cooldown=%d hunger=%d age=%d" % [
-			b_no_partner, b_cooldown, b_hunger, b_age,
+		print("  Pop: %d (Adults: %d, Teens: %d, Children: %d, Infants: %d)" % [
+			pop, adults, teens, children, infants,
+		])
+		print("  Births: %d, Deaths: %d" % [
+			_entity_manager.total_births, _entity_manager.total_deaths,
+		])
+		print("  Couples: %d, Pregnant: %d" % [
+			couples, pregnant,
+		])
+		print("  Settlement food: %.1f" % [
+			settlement_food,
 		])
 
 
@@ -286,6 +295,7 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 	child.age = 0
 	child.age_stage = "infant"
 	child.birth_tick = tick
+	child.birth_date = GameCalendar.birth_date_from_tick(tick)
 	child.settlement_id = mother.settlement_id
 	child.parent_ids = [mother.id]
 	if father != null:

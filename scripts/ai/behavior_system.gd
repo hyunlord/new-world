@@ -49,13 +49,25 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	var social_deficit: float = 1.0 - entity.social
 	var stage: String = entity.age_stage
 
-	# Infant/toddler/child: wander, rest, socialize only
-	if stage == "infant" or stage == "toddler" or stage == "child":
+	# Infant/toddler: wander, rest, socialize only
+	if stage == "infant" or stage == "toddler":
 		return {
 			"wander": 0.3 + _rng.randf() * 0.1,
 			"rest": _urgency_curve(energy_deficit) * 1.2,
 			"socialize": _urgency_curve(social_deficit) * 0.8,
 		}
+
+	# Child: basic actions + reduced food/wood gathering
+	if stage == "child":
+		var child_scores: Dictionary = {
+			"wander": 0.3 + _rng.randf() * 0.1,
+			"rest": _urgency_curve(energy_deficit) * 1.2,
+			"socialize": _urgency_curve(social_deficit) * 0.8,
+			"gather_food": _urgency_curve(hunger_deficit) * 1.5 * 0.4,
+		}
+		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
+			child_scores["gather_wood"] = (0.3 + _rng.randf() * 0.1) * 0.3
+		return child_scores
 
 	var scores: Dictionary = {
 		"wander": 0.2 + _rng.randf() * 0.1,
@@ -76,11 +88,6 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 				if entity.emotions.get("love", 0.0) > 0.3:
 					scores["visit_partner"] = 0.6  # Higher when in love
 
-	# Teen: gather_food only (no wood/stone/build)
-	if stage == "teen":
-		scores.erase("gather_wood")
-		scores.erase("gather_stone")
-
 	# ── Hunger override: ALL jobs prioritize food when starving ──
 	if entity.hunger < 0.3:
 		scores["gather_food"] = 1.0
@@ -88,14 +95,19 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if entity.inventory.get("food", 0.0) > 0.5:
 			scores["gather_food"] = 0.5  # lower because auto-eat handles it
 
-	# Resource gathering (requires resource_map) — teens cannot gather wood/stone
-	if _resource_map != null and stage != "teen":
+	# Resource gathering (requires resource_map)
+	if _resource_map != null:
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
 			scores["gather_wood"] = 0.3 + _rng.randf() * 0.1
 		if _has_nearby_resource(entity.position, GameConfig.ResourceType.STONE, 15):
 			scores["gather_stone"] = 0.2 + _rng.randf() * 0.1
 
-	# Building-related actions (requires building_manager) — adults only (ancient treated as elder)
+	if stage == "teen":
+		if scores.has("gather_wood"):
+			scores["gather_wood"] *= 0.7
+		scores.erase("gather_stone")
+
+	# Building-related actions (requires building_manager) — adults only
 	if _building_manager != null and stage == "adult":
 		var sid: int = entity.settlement_id
 		# Deliver to stockpile — gradual threshold
