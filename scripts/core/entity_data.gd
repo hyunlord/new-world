@@ -20,6 +20,9 @@ var gender: String = "male"
 var age_stage: String = "adult"
 var birth_tick: int = 0
 
+## Phase 2-A1: Mortality
+var frailty: float = 1.0  # Individual frailty multiplier (N(1.0, 0.15), clamped [0.5, 2.0])
+
 ## Phase 2: Family
 var partner_id: int = -1
 var parent_ids: Array[int] = []
@@ -128,6 +131,7 @@ func to_dict() -> Dictionary:
 		"settlement_id": settlement_id,
 		"total_gathered": total_gathered,
 		"buildings_built": buildings_built,
+		"frailty": frailty,
 		"gender": gender,
 		"age_stage": age_stage,
 		"birth_tick": birth_tick,
@@ -169,6 +173,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.settlement_id = data.get("settlement_id", 0)
 	e.total_gathered = data.get("total_gathered", 0.0)
 	e.buildings_built = data.get("buildings_built", 0)
+	e.frailty = data.get("frailty", 1.0)
 	e.gender = data.get("gender", "male")
 	e.age_stage = data.get("age_stage", "adult")
 	e.birth_tick = data.get("birth_tick", 0)

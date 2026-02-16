@@ -126,7 +126,7 @@ func _can_flirt(a: RefCounted, b: RefCounted, rel: RefCounted) -> bool:
 	# Both unmarried adults
 	if a.partner_id != -1 or b.partner_id != -1:
 		return false
-	if a.age_stage != "adult" or b.age_stage != "adult":
+	if (a.age_stage != "adult" and a.age_stage != "elder") or (b.age_stage != "adult" and b.age_stage != "elder"):
 		return false
 	return true
 

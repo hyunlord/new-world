@@ -30,10 +30,13 @@ const GENDER_TINT_WEIGHT: float = 0.2
 
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
+	"infant": 0.35,
+	"toddler": 0.5,
 	"child": 0.6,
 	"teen": 0.8,
 	"adult": 1.0,
 	"elder": 0.95,
+	"ancient": 0.9,
 }
 
 ## Job visual definitions: shape, size, color
@@ -129,8 +132,8 @@ func _draw() -> void:
 			_:
 				draw_circle(pos, size, color)
 
-		# Elder white dot (gray hair indicator)
-		if entity.age_stage == "elder":
+		# Elder/ancient white dot (gray hair indicator)
+		if entity.age_stage == "elder" or entity.age_stage == "ancient":
 			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
 		if _current_lod >= 1:

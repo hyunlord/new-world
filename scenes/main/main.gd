@@ -25,6 +25,7 @@ const SocialEventSystem = preload("res://scripts/systems/social_event_system.gd"
 const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
 const AgeSystem = preload("res://scripts/systems/age_system.gd")
 const FamilySystem = preload("res://scripts/systems/family_system.gd")
+const MortalitySystem = preload("res://scripts/systems/mortality_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -52,6 +53,7 @@ var social_event_system: RefCounted
 var emotion_system: RefCounted
 var age_system: RefCounted
 var family_system: RefCounted
+var mortality_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -136,11 +138,14 @@ func _ready() -> void:
 	age_system = AgeSystem.new()
 	age_system.init(entity_manager)
 
+	mortality_system = MortalitySystem.new()
+	mortality_system.init(entity_manager, sim_engine.rng)
+
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
 
 	family_system = FamilySystem.new()
-	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng)
+	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng, mortality_system)
 
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)
@@ -157,6 +162,7 @@ func _ready() -> void:
 	sim_engine.register_system(emotion_system)            # priority 32
 	sim_engine.register_system(social_event_system)       # priority 37
 	sim_engine.register_system(age_system)                # priority 48
+	sim_engine.register_system(mortality_system)          # priority 49
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(migration_system)          # priority 60
@@ -214,12 +220,30 @@ func _spawn_initial_entities() -> void:
 		walkable_tiles[j] = tmp
 
 	for i in range(count):
-		# Initial entities are adults (18-40 years old)
-		var age_years: int = 18 + (sim_engine.rng.randi() % 23)
+		# Weighted age distribution for realistic population pyramid
+		var age_years: int = _weighted_random_age(sim_engine.rng)
 		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR
 		entity_manager.spawn_entity(walkable_tiles[i], "", initial_age)
 
 	print("[Main] Spawned %d entities near world center." % count)
+
+
+## Weighted random age for initial population pyramid
+## 0-5: 10%, 5-14: 15%, 15-30: 40%, 30-50: 25%, 50-70: 8%, 70+: 2%
+func _weighted_random_age(rng: RandomNumberGenerator) -> int:
+	var roll: float = rng.randf()
+	if roll < 0.10:
+		return rng.randi_range(0, 4)
+	elif roll < 0.25:
+		return rng.randi_range(5, 14)
+	elif roll < 0.65:
+		return rng.randi_range(15, 30)
+	elif roll < 0.90:
+		return rng.randi_range(30, 50)
+	elif roll < 0.98:
+		return rng.randi_range(50, 69)
+	else:
+		return rng.randi_range(70, 80)
 
 
 ## Bootstrap initial relationships so couples can form quickly
@@ -398,7 +422,7 @@ func _load_game() -> void:
 func _print_startup_banner(seed_value: int) -> void:
 	print("")
 	print("======================================")
-	print("  WorldSim Phase 1.5")
+	print("  WorldSim Phase 2-A1")
 	print("  Seed: %d" % seed_value)
 	print("  World: %dx%d  |  Entities: %d" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
 	print("  Systems: %d registered" % sim_engine._systems.size())
