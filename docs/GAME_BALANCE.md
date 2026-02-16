@@ -20,17 +20,16 @@
 | 프레임당 최대 틱 | 5 | `GameConfig.MAX_TICKS_PER_FRAME` |
 | 속도 옵션 | 1x, 2x, 3x, 5x, 10x | `GameConfig.SPEED_OPTIONS` |
 
-### 나이 단계
+### 나이 단계 (6단계)
 
 | 단계 | 나이 범위 | 임계값 (틱) | 코드 위치 |
 |------|----------|-----------|----------|
-| infant | 0~1세 | 4,380 | `GameConfig.AGE_INFANT_END` |
-| toddler | 1~5세 | 21,900 | `GameConfig.AGE_TODDLER_END` |
-| child | 5~12세 | 52,560 | `GameConfig.AGE_CHILD_END` |
-| teen | 12~18세 | 78,840 | `GameConfig.AGE_TEEN_END` |
-| adult | 18~55세 | 240,900 | `GameConfig.AGE_ADULT_END` |
-| elder | 55~70세 | 306,600 | `GameConfig.AGE_ELDER_END` |
-| ancient | 70~120세 | 525,600 | `GameConfig.AGE_MAX` |
+| infant | 0~2세 | 8,760 | `GameConfig.AGE_INFANT_END` |
+| toddler | 3~5세 | 21,900 | `GameConfig.AGE_TODDLER_END` |
+| child | 6~11세 | 52,560 | `GameConfig.AGE_CHILD_END` |
+| teen | 12~14세 | 65,700 | `GameConfig.AGE_TEEN_END` |
+| adult | 15~55세 | 240,900 | `GameConfig.AGE_ADULT_END` |
+| elder | 56~120세 | 525,600 | `GameConfig.AGE_MAX` |
 
 ### 임신 기간
 - 가우시안 분포: μ=280일, σ=10일 (clamp [154, 308])
@@ -61,11 +60,11 @@
 
 ## 욕구 감소
 
-| 욕구 | 감소율/needs틱 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
-|------|----------|-----------------|-----------|------|----------|
-| hunger | 0.002 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE` |
-| energy | 0.003 | +0.005 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
-| social | 0.001 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
+| 욕구 | 감소율/needs틱 | 나이별 배율 | 행동 중 추가 감소 | 위험 임계값 | 결과 | 코드 위치 |
+|------|----------|-----------|-----------------|-----------|------|----------|
+| hunger | 0.002 | infant×0.2, toddler×0.4, child×0.6, teen×0.8, adult/elder×1.0 | - | 0.0 → starving | 25 needs틱 유예 후 아사 (~4일) | `GameConfig.HUNGER_DECAY_RATE`, `CHILD_HUNGER_DECAY_MULT` |
+| energy | 0.003 | 동일 | +0.005 (idle/rest 제외) | 낮으면 rest 행동 | - | `GameConfig.ENERGY_DECAY_RATE`, `ENERGY_ACTION_COST` |
+| social | 0.001 | 동일 | - | 낮으면 socialize 행동 | - | `GameConfig.SOCIAL_DECAY_RATE` |
 
 ### 아사 메커니즘
 - hunger = 0이면 `starving_timer` 매 needs 틱마다 +1
@@ -344,17 +343,56 @@ FamilySystem: priority=52, tick_interval=365 (월간 체크)
 
 | 단계 | 직업 | 채집효율 | 건설 | 이동배율 | 크기 |
 |------|------|---------|------|---------|------|
-| infant(0~1) | 없음 | 불가 | 불가 | - | 45% |
-| toddler(1~5) | 없음 | 불가 | 불가 | 0.5x | 55% |
-| child(5~12) | 없음 | 불가 | 불가 | 0.5x | 65% |
-| teen(12~18) | gatherer만 | 50% | 불가 | 0.8x | 85% |
-| adult(18~55) | 전체 | 100% | 가능 | 1.0x | 100% |
-| elder(55~70) | 전체 | 50% | 불가 | 0.7x | 95% |
-| ancient(70+) | 전체 | 50% | 불가 | 0.7x | 90% |
+| infant(0~2) | 없음 | 불가 | 불가 | skip_mod=0.5 (50% 스킵) | 45% |
+| toddler(3~5) | 없음 | 불가 | 불가 | skip_mod=0.5 (50% 스킵) | 55% |
+| child(6~11) | 없음 | food만 50% | 불가 | skip_mod=0.67 (~67% 스킵) | 65% |
+| teen(12~14) | gatherer만 | food/wood 70% | 불가 | skip_mod=0.9 (90% 스킵) | 85% |
+| adult(15~55) | 전체 | 100% | 가능 | 1.0x (스킵 없음) | 100% |
+| elder(56+) | 전체 | 50% | 불가 | skip_mod=0.67 (~67% 스킵) | 95% |
 
 ### 초기 관계 부트스트랩
 - 시작 20명 중 성인 남녀를 매칭하여 2~3쌍 직접 partner 설정
 - partner 초기값: affinity=85, trust=75, romantic_interest=90, interaction_count=25, love=0.5
+
+---
+
+## 어린이 육아 시스템 (Phase 2-A1)
+
+ChildcareSystem: priority=12, tick_interval=10
+
+### 자동 급식 메커니즘
+- **대상**: infant/toddler/child/teen (adult 이전 모든 단계)
+- **작동**: 정착지 비축소에서 자동 인출 → 어린이 인벤토리 추가 → 자동 섭취
+- **급식 조건**: `hunger < CHILDCARE_HUNGER_THRESHOLD[age_stage]`
+
+| 나이 단계 | 급식 임계값 | 급식량 | 코드 위치 |
+|----------|-----------|--------|----------|
+| infant | hunger < 0.6 | 0.15 | `GameConfig.CHILDCARE_FEED_AMOUNTS` |
+| toddler | hunger < 0.5 | 0.25 | |
+| child | hunger < 0.4 | 0.35 | |
+| teen | hunger < 0.3 | 0.42 | |
+
+### 어린이 채집 효율
+
+| 나이 단계 | food | wood | stone | 코드 위치 |
+|----------|------|------|-------|----------|
+| infant | 불가 | 불가 | 불가 | `GameConfig.CHILD_GATHER_EFFICIENCY` |
+| toddler | 불가 | 불가 | 불가 | |
+| child | 0.5x | 불가 | 불가 | |
+| teen | 0.7x | 0.7x | 불가 | |
+
+### 어린이 이동 배율
+
+이동 시스템에서 `skip_mod` 값만큼 이동 틱을 스킵 (확률 기반).
+
+| 나이 단계 | skip_mod | 실제 이동 비율 | 코드 위치 |
+|----------|---------|-------------|----------|
+| infant | 0.5 | 50% 틱만 이동 | `GameConfig.CHILD_MOVE_SKIP_MOD` |
+| toddler | 0.5 | 50% 틱만 이동 | |
+| child | 0.67 | ~67% 틱만 이동 | |
+| teen | 0.9 | 90% 틱만 이동 | |
+| adult | 1.0 | 100% (스킵 없음) | |
+| elder | 0.67 | ~67% 틱만 이동 | |
 
 ---
 

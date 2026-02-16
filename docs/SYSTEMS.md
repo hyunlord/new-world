@@ -13,7 +13,8 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |---------|--------|---------|----------|------|------|
 | 5 | ResourceRegenSystem | 120 | 시간 기반 | 바이옴별 food/wood 재생 (stone 재생 안 함), 10일 간격 | `scripts/systems/resource_regen_system.gd` |
 | 8 | JobAssignmentSystem | 24 | 시간 기반 | 미배정 에이전트 직업 배정 + 동적 재배치, 2일 간격 | `scripts/systems/job_assignment_system.gd` |
-| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소, 나이 증가, 자동 식사, 아사 판정, 아사 시 mortality 카운터 갱신 | `scripts/systems/needs_system.gd` |
+| 10 | NeedsSystem | 2 | 행동 기반 | hunger/energy/social 감소 (나이별 배율), 자동 식사, 아사 판정, 아사 시 mortality 카운터 갱신 | `scripts/systems/needs_system.gd` |
+| 12 | ChildcareSystem | 10 | 행동 기반 | 어린이(infant/toddler/child/teen) 자동 급식 — 정착지 비축소 → 인벤토리 → 섭취 | `scripts/systems/childcare_system.gd` |
 | 15 | BuildingEffectSystem | 10 | 행동 기반 | 건물 효과 적용 (campfire social, shelter energy) | `scripts/systems/building_effect_system.gd` |
 | 20 | BehaviorSystem | 10 | 행동 기반 | Utility AI 행동 결정 + settlement_id 필터 건물 탐색 + 배고픔 오버라이드 + visit_partner 행동 | `scripts/ai/behavior_system.gd` |
 | 25 | GatheringSystem | 3 | 행동 기반 | 자원 채집 (타일 → 인벤토리) | `scripts/systems/gathering_system.gd` |
@@ -21,7 +22,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
-| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder→ancient), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
+| 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
 | 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 연간 인구통계 로그, register_death() 외부 사망 카운터 | `scripts/systems/mortality_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 비활성화 (FamilySystem으로 이관), 사망 로직 비활성화 (MortalitySystem으로 이관) | `scripts/systems/population_system.gd` |
 | 52 | FamilySystem | 50 | 시간 기반 | 임신 조건(partner+love≥0.15+food fallback), 가우시안 재태기간, 조산/신생아건강, 모성사망(+register_death), 쌍둥이, 사별, 임신확률 8% | `scripts/systems/family_system.gd` |
@@ -33,7 +34,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 1틱 = 2시간, 1일 = 12틱, 1년 = 365일 = 4,380틱.
 `GameCalendar.tick_to_date(tick)` → `{year, month, day, hour, day_of_year}` 정확한 그레고리력 변환 (윤년 포함).
 `GameCalendar.format_date(tick)` → `"Y3 7월 15일 14:00 (여름)"` HUD 표시용.
-나이는 sim 틱 단위로 카운트 (`entity.age += tick_interval` in NeedsSystem).
+나이는 `current_tick - birth_tick`으로 파생 계산 (증분 카운트 방식 제거).
 
 **시간 기반 시스템**: 게임 시간 경과에 비례. 일/월 단위 환산.
 - ResourceRegenSystem: 120틱(10일), JobAssignmentSystem: 24틱(2일), PopulationSystem: 30틱(2.5일)
@@ -69,7 +70,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, frailty | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, birth_date, frailty | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물) | id, center_x, center_y, member_ids, building_ids | `scripts/core/settlement_data.gd` |
 
@@ -118,6 +119,7 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | entity_rested | MovementSystem | entity_id, entity_name, energy_after | ✅ `* Name rested (energy: N%)` |
 | entity_socialized | MovementSystem | entity_id, entity_name, social_after | ✅ `* Name socialized (social: N%)` |
 | auto_eat | MovementSystem | entity_id, entity_name, amount, hunger_after | ❌ QUIET |
+| child_fed | ChildcareSystem | entity_id, entity_name, amount, settlement_id, hunger_after | ✅ `* Child Name fed (hunger: N%)` |
 
 ### 행동 이벤트
 

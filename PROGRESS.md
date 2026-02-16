@@ -436,6 +436,22 @@ T-910/T-920/T-930+T-940 을 3개 병렬 executor 에이전트로 디스패치. T
 
 ### Dispatch strategy
 Config-first then fan-out:
-1. DIRECT: game_config + game_calendar + entity_data + save_manager (공유 설정/스키마) → commit
-2. DISPATCH parallel (13 tickets): 모든 시스템/UI 파일 (파일 중첩 없음)
-3. DIRECT: main.gd ChildcareSystem 등록 (dispatch 완료 후)
+1. DIRECT: game_config + game_calendar + entity_data + save_manager (공유 설정/스키마) → commit (924985c)
+2. DISPATCH parallel (13 tickets via ask_codex): 모든 시스템/UI 파일 (파일 중첩 없음)
+3. DIRECT: main.gd ChildcareSystem 등록 + 중복 preload 정리 (dispatch 완료 후)
+
+### Results
+- Gate: **PASS** ✅ (17 systems registered, headless smoke OK)
+- Commits: 924985c (DIRECT config/schema), f11aa7a (Codex results + wiring)
+- Dispatch ratio: 13/16 = 81% ✅
+- Dispatch tool: ask_codex (13 tickets, all background mode)
+- Files changed: 18 (4 DIRECT config + 13 Codex + 1 DIRECT wiring)
+- New file: scripts/systems/childcare_system.gd
+- Key changes:
+  - birth_date on all entities, age = tick - birth_tick (drift-free)
+  - ChildcareSystem feeds children from settlement stockpile (prio 12)
+  - 6-stage age system (removed "ancient" from 10+ files)
+  - Child/teen gathering at config-driven efficiency
+  - Config-driven movement speed (CHILD_MOVE_SKIP_MOD)
+  - UI: "Adult | 26세 (Y-25 7월 15일생)" format
+  - Enhanced demography + mortality logs with age-group breakdown

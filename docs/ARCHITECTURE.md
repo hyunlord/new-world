@@ -55,7 +55,7 @@ SimulationEngine.update(delta)
   │
   ├─ 매 프레임: accumulated_time += delta × speed
   ├─ accumulated_time >= tick_duration 일 때:
-  │   └─ systems를 priority 순으로 실행
+  │   └─ systems를 priority 순으로 실행 (17개 시스템)
   │       └─ current_tick % tick_interval == 0 인 시스템만 실행
   │
   └─ 시스템 간 통신:
@@ -110,6 +110,7 @@ SimulationEngine.update(delta)
 | `stats_recorder.gd` | 인구/자원/직업 스냅샷 기록 (prio 90, 200틱 간격, 최대 200) |
 | `job_assignment_system.gd` | 미배정 에이전트 직업 배정 + 동적 재배치 (소규모/식량위기 비율) |
 | `needs_system.gd` | hunger/energy/social 감소, 자동 식사, 아사 유예 판정 |
+| `childcare_system.gd` | 어린이 자동 급식 — 정착지 비축소 → 인벤토리 → 섭취 (나이별 차등) |
 | `building_effect_system.gd` | 건물 효과 적용 — campfire social (+0.01/+0.02), shelter energy (+0.01) |
 | `gathering_system.gd` | 자원 채집 — 타일에서 인벤토리로 (2.0 × speed) |
 | `construction_system.gd` | 건설 진행률 증가, 완성 판정, build_ticks config 기반 |
