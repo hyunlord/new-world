@@ -1570,3 +1570,25 @@ Phase 2: B (entity_detail_panel — A 완료 후 순서 무관하나 안전하�
 - Dispatch tool: ask_codex (3/3, 100%)
 
 ---
+
+---
+
+## T-2037: Trait Effect Summary i18n + 5-Cap Removal — 2026-02-18
+
+### Context
+T-2036-A removed external max_display param but missed internal 5-cap in _sort_and_cap_display(). Also, behavior/emotion modifier keys in effect summary displayed as raw English because TRAIT_KEY_* entries were missing from JSON.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2037-A | Add TRAIT_KEY_* to en/ko ui.json | 🟢 DISPATCH | ask_codex | standalone JSON edits, 2 files |
+| T-2037-B | Remove 5-cap from _sort_and_cap_display | 🟢 DISPATCH | ask_codex | single file, 3-line change |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- PR: #65
+- Files changed: 3 (localization/en/ui.json, localization/ko/ui.json, scripts/systems/trait_system.gd)
+- EN/KO: 86 TRAIT_KEY_* entries added (46 behavior + 40 emotion keys)
+- trait_system.gd: `if display.size() >= 5: break` removed from _sort_and_cap_display()
