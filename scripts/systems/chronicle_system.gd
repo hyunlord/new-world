@@ -37,7 +37,8 @@ func init(entity_manager: RefCounted) -> void:
 
 ## Log an event
 func log_event(type: String, entity_id: int, description: String,
-		importance: int = 3, related_ids: Array = [], tick: int = -1) -> void:
+		importance: int = 3, related_ids: Array = [], tick: int = -1,
+		l10n: Dictionary = {}) -> void:
 	if tick < 0:
 		return
 	var date: Dictionary = GameCalendar.tick_to_date(tick)
@@ -53,6 +54,9 @@ func log_event(type: String, entity_id: int, description: String,
 		"related_ids": related_ids,
 		"importance": importance,
 	}
+	if l10n.size() > 0:
+		entry["l10n_key"] = l10n.get("key", "")
+		entry["l10n_params"] = l10n.get("params", {})
 
 	_world_events.append(entry)
 
