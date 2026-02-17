@@ -13,6 +13,13 @@
 
 ### Dispatch ratio: 1/1 = 100% ✅
 
+### Results
+- Gate: PASS ✅
+- PR: #39 (merged to main)
+- Files changed: 1 (scripts/ui/entity_detail_panel.gd)
+- Fix: 2 lines added to `set_entity_id()` — clears `_showing_deceased` and `_deceased_record`
+- Dispatch tool: ask_codex (gpt-5.3-codex)
+
 ### Dispatch strategy
 **Single ticket**: Fix `set_entity_id()` in entity_detail_panel.gd to clear deceased mode.
 
