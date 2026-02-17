@@ -1,0 +1,15 @@
+{
+    "culture_id": "tribal_totemic",
+    "culture_name": "부족 토템",
+    "personality_shift": {
+        "comment": "z-score shift per axis",
+        "H": 0.2, "E": 0.0, "X": 0.0, "A": 0.2, "C": 0.2, "O": -0.2
+    },
+    "emotion_modifiers": {
+        "comment": "Emotion sensitivity multiplier",
+        "trust": 1.3,
+        "fear": 0.8,
+        "disgust": 1.1
+    },
+    "naming_culture": "tribal_totemic"
+}

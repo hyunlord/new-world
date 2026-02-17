@@ -1,0 +1,38 @@
+{
+    "sd": 0.25,
+    "comment_sd": "Academic SD=0.15, widened for gameplay. Ashton & Lee 2009",
+    "correlation_matrix": {
+        "comment": "HEXACO-60 student sample, Ashton & Lee 2009 Table 3",
+        "axes_order": ["H", "E", "X", "A", "C", "O"],
+        "matrix": [
+            [1.00, 0.12, -0.11, 0.26, 0.18, 0.21],
+            [0.12, 1.00, -0.13, -0.08, 0.15, -0.10],
+            [-0.11, -0.13, 1.00, 0.05, 0.10, 0.08],
+            [0.26, -0.08, 0.05, 1.00, 0.01, 0.03],
+            [0.18, 0.15, 0.10, 0.01, 1.00, 0.03],
+            [0.21, -0.10, 0.08, 0.03, 0.03, 1.00]
+        ]
+    },
+    "heritability": {
+        "comment": "Vernon et al. 2008, extended twin-family model",
+        "H": 0.45, "E": 0.58, "X": 0.57, "A": 0.47, "C": 0.52, "O": 0.63
+    },
+    "sex_difference_d": {
+        "comment": "Ashton & Lee 2009, HEXACO-60 community sample, Cohen's d (positive = female higher)",
+        "H": 0.41, "E": 0.96, "X": 0.10, "A": 0.28, "C": 0.00, "O": -0.04
+    },
+    "maturation": {
+        "comment": "Ashton & Lee 2016, age trends. target_shift in SD, linear from age_range[0] to age_range[1]",
+        "H": {"target_shift": 1.0, "age_range": [18, 60]},
+        "E": {"target_shift": 0.3, "age_range": [18, 60]},
+        "X": {"target_shift": 0.3, "age_range": [18, 60]},
+        "A": {"target_shift": 0.0, "age_range": [18, 60]},
+        "C": {"target_shift": 0.0, "age_range": [18, 60]},
+        "O": {"target_shift": 0.0, "age_range": [18, 60]}
+    },
+    "ou_parameters": {
+        "comment": "Ornstein-Uhlenbeck maturation process (annual)",
+        "theta": 0.03,
+        "sigma": 0.03
+    }
+}

@@ -8,17 +8,23 @@ extends RefCounted
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 
-## OU process parameters (annual):
-## THETA from annual convergence assumption (~3%), SIGMA as annual random drift SD.
-## Target shifts based on Ashton & Lee (2016) age trends.
-const THETA: float = 0.03
-const SIGMA: float = 0.03
-
+var _theta: float = 0.03
+var _sigma: float = 0.03
+var _maturation_targets: Dictionary = {}
 var _rng: RandomNumberGenerator
 
 
 func init(rng: RandomNumberGenerator) -> void:
 	_rng = rng
+	_load_maturation_parameters()
+
+
+func _load_maturation_parameters() -> void:
+	var dist = SpeciesManager.personality_distribution
+	var ou = dist.get("ou_parameters", {})
+	_theta = float(ou.get("theta", 0.03))
+	_sigma = float(ou.get("sigma", 0.03))
+	_maturation_targets = dist.get("maturation", {})
 
 
 ## Box-Muller normal random
@@ -44,7 +50,7 @@ func apply_maturation(pd: RefCounted, age: int) -> void:
 			var fkey: String = fkeys[j]
 			var current_z: float = pd.to_zscore(pd.facets.get(fkey, 0.5))
 			# OU drift toward target + random noise.
-			var dz: float = THETA * (target - current_z) + _randfn(0.0, SIGMA)
+			var dz: float = _theta * (target - current_z) + _randfn(0.0, _sigma)
 			pd.facets[fkey] = pd.from_zscore(current_z + dz)
 
 	pd.recalculate_axes()
@@ -52,22 +58,26 @@ func apply_maturation(pd: RefCounted, age: int) -> void:
 
 
 ## Get maturation target z-shift for axis at given age.
-## H: +1.0 SD from 18→60 (linear), E/X: +0.3 SD, A/C/O: stable.
-## Ashton & Lee (2016).
+## Data-driven from SpeciesManager.personality_distribution.maturation.
 func _get_maturation_target(axis_id: String, age: int) -> float:
-	match axis_id:
-		"H":
-			return _linear_target(age, 1.0)
-		"E":
-			return _linear_target(age, 0.3)
-		"X":
-			return _linear_target(age, 0.3)
-	return 0.0
-
-
-## Linear maturation target: 0 at age 18, max_shift at age 60, clamped.
-func _linear_target(age: int, max_shift: float) -> float:
-	if age < 18:
+	var cfg = _maturation_targets.get(axis_id, {})
+	if cfg.is_empty():
 		return 0.0
-	var t: float = clampf(float(age - 18) / 42.0, 0.0, 1.0)
+	var target_shift = float(cfg.get("target_shift", 0.0))
+	if target_shift == 0.0:
+		return 0.0
+	var age_range = cfg.get("age_range", [18, 60])
+	var start_age = int(age_range[0]) if age_range.size() > 0 else 18
+	var end_age = int(age_range[1]) if age_range.size() > 1 else 60
+	return _linear_target(age, target_shift, start_age, end_age)
+
+
+## Linear maturation target: 0 at start_age, max_shift at end_age, clamped.
+func _linear_target(age: int, max_shift: float, start_age: int = 18, end_age: int = 60) -> float:
+	if age < start_age:
+		return 0.0
+	var span: float = float(end_age - start_age)
+	if span <= 0.0:
+		return max_shift
+	var t: float = clampf(float(age - start_age) / span, 0.0, 1.0)
 	return max_shift * t

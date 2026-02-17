@@ -12,6 +12,26 @@ const EmotionDataScript = preload("res://scripts/core/emotion_data.gd")
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
 var _pending_events: Dictionary = {}  # entity_id -> Array of event dicts
+var _fast_half_life: Dictionary = {}
+var _slow_half_life: Dictionary = {}
+var _opposite_pairs: Dictionary = {}
+var _inhibition_gamma: float = 0.3
+var _memory_trace_threshold: float = 20.0
+var _memory_trace_ratio: float = 0.3
+var _memory_trace_default_hl_hours: float = 720.0  # 30 days
+var _memory_trace_trauma_hl_hours: float = 8760.0  # 365 days
+var _habituation_eta: float = 0.2
+var _stress_tau: float = 48.0
+var _stress_weights: Dictionary = {}
+var _contagion_kappa: Dictionary = {}
+var _contagion_distance_scale: float = 5.0
+var _contagion_min_source: float = 10.0
+var _break_beta: float = 60.0
+var _break_tick_prob: float = 0.01
+var _break_behaviors: Dictionary = {}
+var _personality_sensitivity: Dictionary = {}
+var _baselines: Dictionary = {}
+var _half_life_adjustments: Dictionary = {}
 
 
 func _init() -> void:
@@ -23,6 +43,7 @@ func _init() -> void:
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_event_presets()
+	_load_decay_parameters()
 
 
 func _load_event_presets() -> void:
@@ -38,6 +59,35 @@ func _load_event_presets() -> void:
 		var data = json.data
 		if data is Dictionary and data.has("events"):
 			_event_presets = data["events"]
+
+
+func _load_decay_parameters() -> void:
+	var dp = SpeciesManager.decay_parameters
+	_fast_half_life = dp.get("fast_half_life_hours", {"joy": 0.75, "trust": 2.0, "fear": 0.3, "surprise": 0.05, "sadness": 0.5, "disgust": 0.1, "anger": 0.4, "anticipation": 3.0})
+	_slow_half_life = dp.get("slow_half_life_hours", {"joy": 48.0, "trust": 72.0, "fear": 24.0, "surprise": 6.0, "sadness": 120.0, "disgust": 12.0, "anger": 12.0, "anticipation": 36.0})
+	_opposite_pairs = dp.get("opposite_pairs", {"joy": "sadness", "sadness": "joy", "trust": "disgust", "disgust": "trust", "fear": "anger", "anger": "fear", "surprise": "anticipation", "anticipation": "surprise"})
+	_inhibition_gamma = float(dp.get("inhibition_gamma", 0.3))
+	_memory_trace_threshold = float(dp.get("memory_trace_threshold", 20.0))
+	_memory_trace_ratio = float(dp.get("memory_trace_ratio", 0.3))
+	var mt_default_days = float(dp.get("memory_trace_default_half_life_days", 30))
+	_memory_trace_default_hl_hours = mt_default_days * 24.0
+	var mt_trauma_days = float(dp.get("memory_trace_trauma_half_life_days", 365))
+	_memory_trace_trauma_hl_hours = mt_trauma_days * 24.0
+	_habituation_eta = float(dp.get("habituation_eta", 0.2))
+	var stress_data = dp.get("stress", {})
+	_stress_tau = float(stress_data.get("tau_hours", 48.0))
+	_stress_weights = stress_data.get("weights", {"fear": 1.0, "anger": 0.9, "sadness": 1.1, "disgust": 0.6})
+	var contagion_data = dp.get("contagion", {})
+	_contagion_kappa = contagion_data.get("kappa", {"anger": 0.12, "fear": 0.10, "joy": 0.08, "disgust": 0.06, "trust": 0.06, "sadness": 0.04, "surprise": 0.03, "anticipation": 0.03})
+	_contagion_distance_scale = float(contagion_data.get("distance_scale", 5.0))
+	_contagion_min_source = float(contagion_data.get("min_source", 10.0))
+	var break_data = dp.get("mental_break", {})
+	_break_beta = float(break_data.get("beta", 60.0))
+	_break_tick_prob = float(break_data.get("tick_prob", 0.01))
+	_break_behaviors = break_data.get("behaviors", {})
+	_personality_sensitivity = dp.get("personality_sensitivity", {})
+	_baselines = dp.get("baselines", {})
+	_half_life_adjustments = dp.get("half_life_adjustments", {})
 
 
 ## Queue an emotional event for an entity (called by other systems via SimulationBus)
@@ -85,7 +135,7 @@ func execute_tick(tick: int) -> void:
 		# Step 3: Slow layer update (Ornstein-Uhlenbeck mean-reverting process)
 		for emo in ed.slow:
 			var baseline: float = _get_baseline(emo, pd)
-			var hl_slow: float = SLOW_HALF_LIFE.get(emo, 48.0)
+			var hl_slow: float = _slow_half_life.get(emo, 48.0)
 			var k_slow: float = 0.693147 / hl_slow
 			var sigma: float = 0.5  # mood fluctuation
 			ed.slow[emo] = baseline + (ed.slow[emo] - baseline) * exp(-k_slow * dt_hours)
@@ -101,11 +151,11 @@ func execute_tick(tick: int) -> void:
 					traces.remove_at(j)
 
 		# Step 5: Opposite emotion inhibition
-		for emo in OPPOSITE_PAIRS:
-			var opp: String = OPPOSITE_PAIRS[emo]
+		for emo in _opposite_pairs:
+			var opp: String = _opposite_pairs[emo]
 			var opp_total: float = ed.get_emotion(opp)
 			if opp_total > 0.0:
-				ed.fast[emo] = maxf(0.0, ed.fast[emo] - INHIBITION_GAMMA * opp_total)
+				ed.fast[emo] = maxf(0.0, ed.fast[emo] - _inhibition_gamma * opp_total)
 
 		# Step 6: Valence-Arousal recalculation
 		ed.recalculate_va()
@@ -139,102 +189,6 @@ func execute_tick(tick: int) -> void:
 
 	# Clear pending events
 	_pending_events.clear()
-
-
-# ═══════════════════════════════════════════════════
-# Constants
-# ═══════════════════════════════════════════════════
-
-## Fast layer half-lives (hours) — Verduyn & Brans (2012)
-const FAST_HALF_LIFE: Dictionary = {
-	"joy": 0.75,         # 45 min
-	"trust": 2.0,        # 2 hours
-	"fear": 0.3,         # 18 min
-	"surprise": 0.05,    # 3 min
-	"sadness": 0.5,      # 30 min
-	"disgust": 0.1,      # 6 min
-	"anger": 0.4,        # 24 min
-	"anticipation": 3.0  # 3 hours
-}
-
-## Slow layer half-lives (hours)
-const SLOW_HALF_LIFE: Dictionary = {
-	"joy": 48.0, "trust": 72.0, "fear": 24.0, "surprise": 6.0,
-	"sadness": 120.0, "disgust": 12.0, "anger": 12.0, "anticipation": 36.0
-}
-
-## Opposite emotion pairs (mutual inhibition)
-const OPPOSITE_PAIRS: Dictionary = {
-	"joy": "sadness", "sadness": "joy",
-	"trust": "disgust", "disgust": "trust",
-	"fear": "anger", "anger": "fear",
-	"surprise": "anticipation", "anticipation": "surprise"
-}
-
-## Inhibition coefficient
-const INHIBITION_GAMMA: float = 0.3
-
-## Minimum impulse for memory trace creation
-const MEMORY_TRACE_THRESHOLD: float = 20.0
-
-## Memory trace retention ratio (fraction of impulse stored long-term)
-const MEMORY_TRACE_RATIO: float = 0.3
-
-# ═══════════════════════════════════════════════════
-# Emotional Contagion (Hatfield et al. 1993, Fan et al. 2016)
-# ═══════════════════════════════════════════════════
-
-## Contagion coefficients per emotion (anger > fear > joy)
-## Fan et al. (2016): anger is more influential than joy in social transmission
-const CONTAGION_KAPPA: Dictionary = {
-	"anger": 0.12, "fear": 0.10, "joy": 0.08, "disgust": 0.06,
-	"trust": 0.06, "sadness": 0.04, "surprise": 0.03, "anticipation": 0.03
-}
-
-## Distance decay scale (tiles)
-const CONTAGION_DISTANCE_SCALE: float = 5.0
-
-## Minimum emotion value for contagion source (weak emotions don't spread)
-const CONTAGION_MIN_SOURCE: float = 10.0
-
-# ═══════════════════════════════════════════════════
-# Mental Break System
-# ═══════════════════════════════════════════════════
-
-## Break behavior definitions
-const BREAK_BEHAVIORS: Dictionary = {
-	"panic": {
-		"description": "Panic — flee randomly",
-		"duration_hours": 2.0,
-		"energy_drain": 3.0,
-	},
-	"rage": {
-		"description": "Rage — attack/destroy nearby",
-		"duration_hours": 1.0,
-		"energy_drain": 5.0,
-	},
-	"shutdown": {
-		"description": "Shutdown — collapse, idle",
-		"duration_hours": 6.0,
-		"energy_drain": 0.5,
-	},
-	"purge": {
-		"description": "Purge — expel contaminated",
-		"duration_hours": 2.0,
-		"energy_drain": 2.0,
-	},
-	"outrage_violence": {
-		"description": "Outrage — immediate violence",
-		"duration_hours": 0.5,
-		"energy_drain": 4.0,
-	},
-}
-
-## Sigmoid steepness for break probability
-const BREAK_BETA: float = 60.0
-
-## Per-tick break probability multiplier (keeps probability low per check)
-const BREAK_TICK_PROB: float = 0.01
 
 
 # ═══════════════════════════════════════════════════
@@ -281,7 +235,7 @@ func _calculate_event_impulse(events: Array, pd: RefCounted, ed: RefCounted) -> 
 			total[emo] += impulse[emo]
 
 		# Create memory traces for strong impulses
-		if base_intensity >= MEMORY_TRACE_THRESHOLD:
+		if base_intensity >= _memory_trace_threshold:
 			_create_memory_trace(ed, impulse, event)
 
 	return total
@@ -292,57 +246,50 @@ func _calculate_event_impulse(events: Array, pd: RefCounted, ed: RefCounted) -> 
 # ═══════════════════════════════════════════════════
 
 func _get_personality_sensitivity(pd: RefCounted) -> Dictionary:
-	var z_E: float = pd.to_zscore(pd.axes.get("E", 0.5))
-	var z_X: float = pd.to_zscore(pd.axes.get("X", 0.5))
-	var z_A: float = pd.to_zscore(pd.axes.get("A", 0.5))
-	var z_H: float = pd.to_zscore(pd.axes.get("H", 0.5))
-	var z_C: float = pd.to_zscore(pd.axes.get("C", 0.5))
-	var z_O: float = pd.to_zscore(pd.axes.get("O", 0.5))
-	return {
-		"fear": exp(0.4 * z_E),
-		"sadness": exp(0.4 * z_E),
-		"joy": exp(0.3 * z_X),
-		"anger": exp(-0.35 * z_A),
-		"disgust": exp(0.25 * z_H),
-		"surprise": exp(0.2 * z_O),
-		"anticipation": exp(0.2 * z_O + 0.15 * z_C),
-		"trust": exp(0.2 * z_X + 0.15 * z_A),
-	}
+	var result: Dictionary = {}
+	for emo in _personality_sensitivity:
+		var config = _personality_sensitivity[emo]
+		if config is Array:
+			var total: float = 0.0
+			for i in range(config.size()):
+				var entry = config[i]
+				var axis_id = str(entry.get("axis", "X"))
+				var coeff = float(entry.get("coeff", 0.0))
+				var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+				total += coeff * z
+			result[emo] = exp(total)
+		elif config is Dictionary:
+			var axis_id = str(config.get("axis", "X"))
+			var coeff = float(config.get("coeff", 0.0))
+			var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+			result[emo] = exp(coeff * z)
+		else:
+			result[emo] = 1.0
+	return result
 
 
 func _get_adjusted_half_life(emo: String, pd: RefCounted, layer: String) -> float:
-	var base: float = FAST_HALF_LIFE.get(emo, 1.0) if layer == "fast" else SLOW_HALF_LIFE.get(emo, 48.0)
-	var z_E: float = pd.to_zscore(pd.axes.get("E", 0.5))
-	var z_X: float = pd.to_zscore(pd.axes.get("X", 0.5))
-	var z_A: float = pd.to_zscore(pd.axes.get("A", 0.5))
-	if emo == "fear" or emo == "sadness":
-		return base * exp(0.3 * z_E)
-	if emo == "joy":
-		return base * exp(0.2 * z_X)
-	if emo == "anger":
-		return base * exp(-0.25 * z_A)
-	return base
+	var base: float = _fast_half_life.get(emo, 1.0) if layer == "fast" else _slow_half_life.get(emo, 48.0)
+	var adj = _half_life_adjustments.get(emo, {})
+	if adj.is_empty():
+		return base
+	var axis_id = str(adj.get("axis", "X"))
+	var coeff = float(adj.get("coeff", 0.0))
+	var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+	return base * exp(coeff * z)
 
 
 func _get_baseline(emo: String, pd: RefCounted) -> float:
-	var z_X: float = pd.to_zscore(pd.axes.get("X", 0.5))
-	var z_E: float = pd.to_zscore(pd.axes.get("E", 0.5))
-	var z_A: float = pd.to_zscore(pd.axes.get("A", 0.5))
-	match emo:
-		"joy":
-			return clampf(5.0 + 3.0 * z_X, 0.0, 15.0)
-		"fear":
-			return clampf(2.0 + 2.0 * z_E, 0.0, 10.0)
-		"sadness":
-			return clampf(2.0 + 1.5 * z_E, 0.0, 10.0)
-		"anger":
-			return clampf(2.0 - 2.0 * z_A, 0.0, 10.0)
-		"trust":
-			return clampf(5.0 + 1.5 * z_X, 0.0, 12.0)
-		"anticipation":
-			return clampf(5.0 + 1.0 * z_X, 0.0, 10.0)
-		_:
-			return 0.0
+	var cfg = _baselines.get(emo, {})
+	var base_val = float(cfg.get("base", 0.0))
+	if not cfg.has("axis"):
+		return base_val
+	var axis_id = str(cfg.get("axis", "X"))
+	var scale_val = float(cfg.get("scale", 0.0))
+	var min_val = float(cfg.get("min", 0.0))
+	var max_val = float(cfg.get("max", 100.0))
+	var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+	return clampf(base_val + scale_val * z, min_val, max_val)
 
 
 # ═══════════════════════════════════════════════════
@@ -350,14 +297,10 @@ func _get_baseline(emo: String, pd: RefCounted) -> float:
 # ═══════════════════════════════════════════════════
 
 func _update_stress(ed: RefCounted, dt_hours: float) -> void:
-	var tau_S: float = 48.0  # Stress half-life (hours)
-	var decay: float = exp(-dt_hours / tau_S)
-	var neg_input: float = (
-		1.0 * ed.get_emotion("fear") +
-		0.9 * ed.get_emotion("anger") +
-		1.1 * ed.get_emotion("sadness") +
-		0.6 * ed.get_emotion("disgust")
-	)
+	var decay: float = exp(-dt_hours / _stress_tau)
+	var neg_input: float = 0.0
+	for emo in _stress_weights:
+		neg_input += float(_stress_weights[emo]) * ed.get_emotion(emo)
 	ed.stress = ed.stress * decay + neg_input * dt_hours
 
 
@@ -370,7 +313,7 @@ func _get_habituation(ed: RefCounted, category: String) -> float:
 		return 1.0
 	var data = ed.habituation[category]
 	var n_count: int = int(data.get("count", 0))
-	var eta: float = 0.2
+	var eta: float = _habituation_eta
 	return exp(-eta * float(n_count))
 
 
@@ -399,7 +342,7 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 			snapshots.append(null)
 			continue
 		var snap: Dictionary = {}
-		for emo in CONTAGION_KAPPA:
+		for emo in _contagion_kappa:
 			snap[emo] = entity.emotion_data.get_emotion(emo)
 		snapshots.append(snap)
 
@@ -415,7 +358,7 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 		var susceptibility: float = exp(0.2 * z_E + 0.1 * z_A)
 
 		var delta: Dictionary = {}
-		for emo in CONTAGION_KAPPA:
+		for emo in _contagion_kappa:
 			delta[emo] = 0.0
 
 		for j in range(members.size()):
@@ -429,7 +372,7 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 			var dx: float = float(target.position.x - source.position.x)
 			var dy: float = float(target.position.y - source.position.y)
 			var distance: float = sqrt(dx * dx + dy * dy)
-			var distance_factor: float = exp(-distance / CONTAGION_DISTANCE_SCALE)
+			var distance_factor: float = exp(-distance / _contagion_distance_scale)
 
 			# Skip if too far (optimization)
 			if distance_factor < 0.01:
@@ -438,15 +381,15 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 			# Relationship strength (default 0.5 if no relationship system)
 			var relationship: float = 0.5
 
-			for emo in CONTAGION_KAPPA:
+			for emo in _contagion_kappa:
 				var source_val: float = snapshots[j][emo]
-				if source_val > CONTAGION_MIN_SOURCE:
-					delta[emo] += CONTAGION_KAPPA[emo] * source_val * distance_factor * relationship * susceptibility * dt_hours
+				if source_val > _contagion_min_source:
+					delta[emo] += _contagion_kappa[emo] * source_val * distance_factor * relationship * susceptibility * dt_hours
 
 		# Apply contagion deltas to fast layer
-			for emo in delta:
-				if delta[emo] > 0.0:
-					ed.fast[emo] = ed.fast[emo] + delta[emo]
+		for emo in delta:
+			if delta[emo] > 0.0:
+				ed.fast[emo] = ed.fast[emo] + delta[emo]
 
 
 # ═══════════════════════════════════════════════════
@@ -466,7 +409,7 @@ func _check_mental_break(entity: RefCounted, dt_hours: float) -> void:
 	if ed.mental_break_type != "":
 		ed.mental_break_remaining -= dt_hours
 		# Apply energy drain during break
-		var behavior = BREAK_BEHAVIORS.get(ed.mental_break_type, {})
+		var behavior = _break_behaviors.get(ed.mental_break_type, {})
 		var drain: float = float(behavior.get("energy_drain", 1.0))
 		entity.energy = maxf(0.0, entity.energy - drain * dt_hours / 24.0)
 		if ed.mental_break_remaining <= 0.0:
@@ -491,13 +434,13 @@ func _check_mental_break(entity: RefCounted, dt_hours: float) -> void:
 		return
 
 	# Sigmoid probability
-	var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / BREAK_BETA))
+	var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
 
-	if randf() < p * BREAK_TICK_PROB:
+	if randf() < p * _break_tick_prob:
 		var break_type: String = _determine_break_type(ed)
 		if break_type != "":
 			ed.mental_break_type = break_type
-			var start_behavior = BREAK_BEHAVIORS.get(break_type, {})
+			var start_behavior = _break_behaviors.get(break_type, {})
 			ed.mental_break_remaining = float(start_behavior.get("duration_hours", 1.0))
 			# Override entity action
 			entity.current_action = "mental_break"
@@ -543,11 +486,10 @@ func _determine_break_type(ed: RefCounted) -> String:
 func _create_memory_trace(ed: RefCounted, impulse: Dictionary, event: Dictionary) -> void:
 	var source: String = str(event.get("description", "unknown"))
 	var is_trauma: bool = event.get("is_trauma", false)
-	# Trauma: half-life 365 days (8760 hours), Normal: 30 days (720 hours)
-	var base_decay: float = 0.693147 / (8760.0) if is_trauma else 0.693147 / (720.0)
+	var base_decay: float = 0.693147 / (_memory_trace_trauma_hl_hours if is_trauma else _memory_trace_default_hl_hours)
 
 	for emo in impulse:
-		if impulse[emo] > MEMORY_TRACE_THRESHOLD:
+		if impulse[emo] > _memory_trace_threshold:
 			var traces: Array = ed.memory_traces.get(emo, [])
 			# Cap at 20 traces per emotion to prevent unbounded growth
 			if traces.size() >= 20:
@@ -561,7 +503,7 @@ func _create_memory_trace(ed: RefCounted, impulse: Dictionary, event: Dictionary
 				traces.remove_at(min_idx)
 			traces.append({
 				"source": source,
-				"intensity": impulse[emo] * MEMORY_TRACE_RATIO,
+				"intensity": impulse[emo] * _memory_trace_ratio,
 				"decay_rate": base_decay,
 			})
 			ed.memory_traces[emo] = traces

@@ -48,6 +48,34 @@ Wave 4 (DIRECT): T-2018-09 — gate 검증 + 버그픽스
 
 ---
 
+## Phase 2 아키텍처: Species Definition 시스템 (T-2019)
+
+### Context
+하드코딩된 성격/감정/사망률 상수를 JSON 데이터 파일로 분리하고 SpeciesManager 오토로드를 통해 로드.
+향후 종족/문화 추가 시 코드 변경 없이 데이터만 교체 가능한 구조.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2019-01 | JSON 데이터 파일 생성 (9개) | 🔴 DIRECT | — | 데이터 추출, 코드 아님 |
+| T-2019-02 | SpeciesManager.gd 싱글톤 | 🔴 DIRECT | — | 공유 인터페이스 (오토로드 API 정의) |
+| T-2019-03 | 오토로드 등록 (project.godot) | 🔴 DIRECT | — | 1줄 통합 와이어링 |
+| T-2019-04 | personality_generator.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-05 | personality_maturation.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-06 | emotion_system.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-07 | emotion_data.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-08 | mortality_system.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-09 | culture_shift 와이어링 + gate | 🔴 DIRECT | — | 통합 와이어링 + 검증 |
+
+### Dispatch ratio: 5/9 = 56% (DIRECT 4건은 데이터 추출/공유 인터페이스/1줄 와이어링/gate)
+
+### Dispatch strategy
+Wave 1 (DIRECT): T-2019-01~03 (JSON 생성 + SpeciesManager + autoload 등록)
+Wave 2 (parallel DISPATCH): T-2019-04~08 (5개 파일 동시 리팩토링, 파일 겹침 없음)
+Wave 3 (DIRECT): T-2019-09 (culture_shift 와이어링 + gate 검증)
+
+---
+
 ## Phase 2 버그픽스: 디테일 패널 사망자 정보 고정 (T-2017)
 
 ### Context

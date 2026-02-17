@@ -10,20 +10,19 @@ const GameCalendar = preload("res://scripts/core/game_calendar.gd")
 var _entity_manager: RefCounted
 var _rng: RandomNumberGenerator
 
-## Siler baseline parameters (tech=0, hunter-gatherer)
-## Target: q0 ≈ 0.40, e0 ≈ 33 years
-const SILER: Dictionary = {
-	"a1": 0.60,    # infant hazard scale
-	"b1": 1.30,    # infant hazard decay speed
-	"a2": 0.010,   # background hazard (annual ~1%)
-	"a3": 0.00006, # senescence scale
-	"b3": 0.090,   # senescence slope (doubling ~7.7yr)
-}
+var _siler: Dictionary = {}
+var _tech_k1: float = 0.30
+var _tech_k2: float = 0.20
+var _tech_k3: float = 0.05
+var _care_hunger_min: float = 0.3
+var _care_protection_factor: float = 0.6
+var _season_modifiers: Dictionary = {}
 
-## Tech modifier decay rates: m_i(tech) = exp(-k_i * tech)
-const TECH_K1: float = 0.30  # infant: tech=10 → m1≈0.05
-const TECH_K2: float = 0.20  # background: tech=10 → m2≈0.14
-const TECH_K3: float = 0.05  # senescence: tech=10 → m3≈0.61
+var _a1: float = 0.60
+var _b1: float = 1.30
+var _a2: float = 0.010
+var _a3: float = 0.00006
+var _b3: float = 0.090
 
 ## Current tech level (0-10, will be driven by research system later)
 var tech_level: float = 0.0
@@ -56,6 +55,25 @@ func _init() -> void:
 func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 	_entity_manager = entity_manager
 	_rng = rng
+	_load_siler_parameters()
+
+
+func _load_siler_parameters() -> void:
+	var sp = SpeciesManager.siler_parameters
+	_siler = sp.get("baseline", {"a1": 0.60, "b1": 1.30, "a2": 0.010, "a3": 0.00006, "b3": 0.090})
+	_a1 = float(_siler.get("a1", 0.60))
+	_b1 = float(_siler.get("b1", 1.30))
+	_a2 = float(_siler.get("a2", 0.010))
+	_a3 = float(_siler.get("a3", 0.00006))
+	_b3 = float(_siler.get("b3", 0.090))
+	var tech = sp.get("tech_modifiers", {})
+	_tech_k1 = float(tech.get("k1", 0.30))
+	_tech_k2 = float(tech.get("k2", 0.20))
+	_tech_k3 = float(tech.get("k3", 0.05))
+	var care = sp.get("care_protection", {})
+	_care_hunger_min = float(care.get("hunger_min", 0.3))
+	_care_protection_factor = float(care.get("protection_factor", 0.6))
+	_season_modifiers = sp.get("season_modifiers", {})
 
 
 func execute_tick(tick: int) -> void:
@@ -110,31 +128,30 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 	var age_years: float = GameConfig.get_age_years(entity.age)
 
 	# Siler hazard components
-	var mu_infant: float = SILER.a1 * exp(-SILER.b1 * age_years)
-	var mu_background: float = SILER.a2
-	var mu_senescence: float = SILER.a3 * exp(SILER.b3 * age_years)
+	var mu_infant: float = _a1 * exp(-_b1 * age_years)
+	var mu_background: float = _a2
+	var mu_senescence: float = _a3 * exp(_b3 * age_years)
 
 	# Tech modifiers
-	var m1: float = exp(-TECH_K1 * tech_level)
-	var m2: float = exp(-TECH_K2 * tech_level)
-	var m3: float = exp(-TECH_K3 * tech_level)
+	var m1: float = exp(-_tech_k1 * tech_level)
+	var m2: float = exp(-_tech_k2 * tech_level)
+	var m3: float = exp(-_tech_k3 * tech_level)
 
 	# Nutrition modifier (based on hunger)
 	var nutrition: float = clampf(entity.hunger, 0.0, 1.0)
 	m1 *= lerpf(2.0, 0.8, nutrition)
 	m2 *= lerpf(1.5, 0.9, nutrition)
 	# Care protection: well-fed infants/toddlers get reduced infant mortality
-	if age_years <= 2.0 and nutrition > GameConfig.SILER_CARE_HUNGER_MIN:
-		m1 *= GameConfig.SILER_CARE_PROTECTION  # 0.6 = 40% reduction
+	if age_years <= 2.0 and nutrition > _care_hunger_min:
+		m1 *= _care_protection_factor  # 0.6 = 40% reduction
 
 	# Season modifier
 	var date: Dictionary = GameCalendar.tick_to_date(tick)
 	var season: String = GameCalendar.get_season(date.day_of_year)
-	if season == "winter":
-		m1 *= 1.3
-		m2 *= 1.2
-	elif season == "summer":
-		m1 *= 0.9
+	var season_mod = _season_modifiers.get(season, {})
+	if not season_mod.is_empty():
+		m1 *= float(season_mod.get("infant", 1.0))
+		m2 *= float(season_mod.get("background", 1.0))
 
 	# Total hazard rate (annual)
 	var h_infant: float = m1 * mu_infant
@@ -323,9 +340,9 @@ func _calc_theoretical_e0() -> float:
 func _calc_theoretical_ex(start_age: float) -> float:
 	# Numerical integration of survival function S(x) from start_age
 	# e(start) = integral from start to 120 of S(x)/S(start) dx
-	var m1: float = exp(-TECH_K1 * tech_level)
-	var m2: float = exp(-TECH_K2 * tech_level)
-	var m3: float = exp(-TECH_K3 * tech_level)
+	var m1: float = exp(-_tech_k1 * tech_level)
+	var m2: float = exp(-_tech_k2 * tech_level)
+	var m3: float = exp(-_tech_k3 * tech_level)
 	var dx: float = 0.5  # half-year steps
 	var cum_hazard_start: float = 0.0
 	var cum_hazard: float = 0.0
@@ -334,7 +351,7 @@ func _calc_theoretical_ex(start_age: float) -> float:
 	# Compute cumulative hazard up to start_age
 	var x: float = 0.0
 	while x < start_age:
-		var mu: float = m1 * SILER.a1 * exp(-SILER.b1 * x) + m2 * SILER.a2 + m3 * SILER.a3 * exp(SILER.b3 * x)
+		var mu: float = m1 * _a1 * exp(-_b1 * x) + m2 * _a2 + m3 * _a3 * exp(_b3 * x)
 		cum_hazard_start += mu * dx
 		x += dx
 
@@ -342,7 +359,7 @@ func _calc_theoretical_ex(start_age: float) -> float:
 	x = start_age
 	cum_hazard = 0.0
 	while x < 120.0:
-		var mu: float = m1 * SILER.a1 * exp(-SILER.b1 * x) + m2 * SILER.a2 + m3 * SILER.a3 * exp(SILER.b3 * x)
+		var mu: float = m1 * _a1 * exp(-_b1 * x) + m2 * _a2 + m3 * _a3 * exp(_b3 * x)
 		var s_rel: float = exp(-cum_hazard)  # S(x)/S(start)
 		integral += s_rel * dx
 		cum_hazard += mu * dx
