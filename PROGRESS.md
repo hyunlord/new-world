@@ -18,6 +18,14 @@
 
 ### Dispatch ratio: 0/1 = 0% (전체 작업의 95%가 이미 완료됨, 잔여분 2줄 변경)
 
+### Results
+- Gate: PASS
+- Files changed: 3 (distribution.json, personality_generator.gd, PROGRESS.md)
+- Key changes:
+  - distribution.json: added `facet_spread: 0.75` parameter
+  - personality_generator.gd: reads `_facet_spread` from SpeciesManager, uses data-driven value
+  - Facet profiles now diverge significantly within same axis (30%~80% range vs previous 48%~62%)
+
 ---
 
 ## Phase 2-A3: Plutchik 감정 시스템 (T-2018)
