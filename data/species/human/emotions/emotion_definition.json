@@ -1,0 +1,49 @@
+{
+    "model": "plutchik",
+    "emotions": {
+        "joy":          {"name_kr": "기쁨",   "color": "#FFE135", "opposite": "sadness"},
+        "trust":        {"name_kr": "신뢰",   "color": "#7BC67E", "opposite": "disgust"},
+        "fear":         {"name_kr": "공포",   "color": "#6BAF7B", "opposite": "anger"},
+        "surprise":     {"name_kr": "놀람",   "color": "#5B9BD5", "opposite": "anticipation"},
+        "sadness":      {"name_kr": "슬픔",   "color": "#3F51B5", "opposite": "joy"},
+        "disgust":      {"name_kr": "혐오",   "color": "#9C27B0", "opposite": "trust"},
+        "anger":        {"name_kr": "분노",   "color": "#F44336", "opposite": "fear"},
+        "anticipation": {"name_kr": "기대",   "color": "#FF9800", "opposite": "surprise"}
+    },
+    "emotion_order": ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"],
+    "intensity_labels": {
+        "joy":          ["Serenity", "Joy", "Ecstasy"],
+        "trust":        ["Acceptance", "Trust", "Admiration"],
+        "fear":         ["Apprehension", "Fear", "Terror"],
+        "surprise":     ["Distraction", "Surprise", "Amazement"],
+        "sadness":      ["Pensiveness", "Sadness", "Grief"],
+        "disgust":      ["Boredom", "Disgust", "Loathing"],
+        "anger":        ["Annoyance", "Anger", "Rage"],
+        "anticipation": ["Interest", "Anticipation", "Vigilance"]
+    },
+    "intensity_labels_kr": {
+        "joy":          ["평온", "기쁨", "황홀"],
+        "trust":        ["수용", "신뢰", "경외"],
+        "fear":         ["우려", "공포", "경악"],
+        "surprise":     ["산만", "놀람", "경이"],
+        "sadness":      ["수심", "슬픔", "비통"],
+        "disgust":      ["지루함", "혐오", "증오"],
+        "anger":        ["짜증", "분노", "격노"],
+        "anticipation": ["흥미", "기대", "경계"]
+    },
+    "labels_en": {
+        "joy": "Joy", "trust": "Trust", "fear": "Fear", "surprise": "Surprise",
+        "sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation"
+    },
+    "labels_kr": {
+        "joy": "기쁨", "trust": "신뢰", "fear": "공포", "surprise": "놀람",
+        "sadness": "슬픔", "disgust": "혐오", "anger": "분노", "anticipation": "기대"
+    },
+    "valence_weights": {
+        "positive": {"joy": 1.0, "trust": 1.0, "anticipation": 0.5},
+        "negative": {"sadness": 1.0, "disgust": 1.0, "fear": 0.5}
+    },
+    "arousal_weights": {
+        "fear": 1.0, "surprise": 1.0, "anger": 1.0, "anticipation": 1.0, "joy": 0.3
+    }
+}

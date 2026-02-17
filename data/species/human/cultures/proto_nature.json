@@ -1,0 +1,15 @@
+{
+    "culture_id": "proto_nature",
+    "culture_name": "자연 원시",
+    "personality_shift": {
+        "comment": "z-score shift per axis, +/- 0.1~0.3 recommended",
+        "H": 0.0, "E": 0.1, "X": -0.1, "A": 0.1, "C": -0.1, "O": 0.2
+    },
+    "emotion_modifiers": {
+        "comment": "Emotion sensitivity multiplier",
+        "fear": 1.2,
+        "anticipation": 1.1,
+        "trust": 0.9
+    },
+    "naming_culture": "proto_nature"
+}

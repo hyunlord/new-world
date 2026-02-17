@@ -290,10 +290,6 @@ const CHILD_STARVATION_GRACE_TICKS: Dictionary = {
 	"teen": 20,
 }
 
-## Siler a1 care protection: well-fed infants (hunger > 0.3) get mortality * this factor
-const SILER_CARE_PROTECTION: float = 0.6
-const SILER_CARE_HUNGER_MIN: float = 0.3
-
 ## Gathering efficiency by age stage (1.0 = full adult rate)
 const CHILD_GATHER_EFFICIENCY: Dictionary = {
 	"child": 0.4,

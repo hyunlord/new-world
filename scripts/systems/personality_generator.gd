@@ -7,36 +7,36 @@ extends RefCounted
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 
-## Axis inter-correlation matrix (HEXACO-60, student sample, Ashton & Lee 2009 Table 3)
-const CORRELATION_MATRIX: Array = [
-	[1.00, 0.12, -0.11, 0.26, 0.18, 0.21],   # H
-	[0.12, 1.00, -0.13, -0.08, 0.15, -0.10], # E
-	[-0.11, -0.13, 1.00, 0.05, 0.10, 0.08],  # X
-	[0.26, -0.08, 0.05, 1.00, 0.01, 0.03],   # A
-	[0.18, 0.15, 0.10, 0.01, 1.00, 0.03],    # C
-	[0.21, -0.10, 0.08, 0.03, 0.03, 1.00],   # O
-]
-
-## Heritability per axis (Vernon et al. 2008, extended twin-family model)
-const HERITABILITY: Dictionary = {
-	"H": 0.45, "E": 0.58, "X": 0.57,
-	"A": 0.47, "C": 0.52, "O": 0.63,
-}
-
-## Sex differences Cohen's d (Ashton & Lee 2009, HEXACO-60 community sample)
-## Positive = females score higher
-const SEX_DIFF_D: Dictionary = {
-	"H": 0.41, "E": 0.96, "X": 0.10,
-	"A": 0.28, "C": 0.00, "O": -0.04,
-}
-
+var _correlation_matrix: Array = []
+var _heritability: Dictionary = {}
+var _sex_diff_d: Dictionary = {}
+var _facet_spread: float = 0.75  # Intra-axis facet variance (z-score units)
 var _cholesky_L: Array = []  # 6x6 lower triangular matrix (cached)
 var _rng: RandomNumberGenerator
 
 
 func init(rng: RandomNumberGenerator) -> void:
 	_rng = rng
-	_cholesky_L = _cholesky_decompose(CORRELATION_MATRIX)
+	var dist = SpeciesManager.personality_distribution
+	var cm = dist.get("correlation_matrix", {})
+	_correlation_matrix = cm.get("matrix", [
+		[1.00, 0.12, -0.11, 0.26, 0.18, 0.21],
+		[0.12, 1.00, -0.13, -0.08, 0.15, -0.10],
+		[-0.11, -0.13, 1.00, 0.05, 0.10, 0.08],
+		[0.26, -0.08, 0.05, 1.00, 0.01, 0.03],
+		[0.18, 0.15, 0.10, 0.01, 1.00, 0.03],
+		[0.21, -0.10, 0.08, 0.03, 0.03, 1.00],
+	])
+	_heritability = dist.get("heritability", {
+		"H": 0.45, "E": 0.58, "X": 0.57,
+		"A": 0.47, "C": 0.52, "O": 0.63,
+	})
+	_sex_diff_d = dist.get("sex_difference_d", {
+		"H": 0.41, "E": 0.96, "X": 0.10,
+		"A": 0.28, "C": 0.00, "O": -0.04,
+	})
+	_facet_spread = float(dist.get("facet_spread", 0.75))
+	_cholesky_L = _cholesky_decompose(_correlation_matrix)
 
 
 ## Box-Muller transform for normal distribution (Godot 4 has no randfn)
@@ -100,7 +100,7 @@ func generate_personality(sex: String, culture_id: String,
 	var z_axes: Dictionary = {}
 	for i in range(6):
 		var aid: String = axis_ids[i]
-		var h2: float = HERITABILITY[aid]
+		var h2: float = _heritability.get(aid, 0.5)
 
 		# Mid-parent z-score
 		var z_mid: float = 0.0
@@ -114,13 +114,13 @@ func generate_personality(sex: String, culture_id: String,
 		var z_child: float = h2 * z_mid + env_factor * z_random[i]
 
 		# Sex difference shift
-		var d: float = SEX_DIFF_D[aid]
+		var d: float = _sex_diff_d.get(aid, 0.0)
 		if sex == "female":
 			z_child += d / 2.0
 		else:
 			z_child -= d / 2.0
 
-		# Culture shift (stub - returns 0 for now)
+		# Culture shift
 		z_child += _get_culture_shift(culture_id, aid)
 
 		z_axes[aid] = z_child
@@ -131,8 +131,8 @@ func generate_personality(sex: String, culture_id: String,
 		var z_axis: float = z_axes[aid]
 		var fkeys: Array = PersonalityDataScript.FACET_KEYS[aid]
 		for j in range(fkeys.size()):
-			# Intra-axis facet variance (0.35 balances differentiation vs axis coherence at SD=0.25)
-			var facet_z: float = z_axis + _randfn(0.0, 0.35)
+			# Intra-axis facet variance from SpeciesManager (0.75 enables contradictory facet combos)
+			var facet_z: float = z_axis + _randfn(0.0, _facet_spread)
 			pd.facets[fkeys[j]] = pd.from_zscore(facet_z)
 
 	# Step 4: Recalculate axes from facet averages
@@ -144,6 +144,6 @@ func generate_personality(sex: String, culture_id: String,
 	return pd
 
 
-## Culture z-shift stub (returns 0 for all; load from JSON in future)
-func _get_culture_shift(_culture_id: String, _axis_id: String) -> float:
-	return 0.0
+## Culture z-shift via SpeciesManager
+func _get_culture_shift(culture_id: String, axis_id: String) -> float:
+	return SpeciesManager.get_culture_shift(culture_id, axis_id)

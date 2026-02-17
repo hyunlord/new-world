@@ -1,0 +1,15 @@
+{
+    "culture_id": "proto_syllabic",
+    "culture_name": "음절 원시",
+    "personality_shift": {
+        "comment": "z-score shift per axis",
+        "H": 0.1, "E": -0.1, "X": 0.2, "A": 0.0, "C": 0.1, "O": -0.1
+    },
+    "emotion_modifiers": {
+        "comment": "Emotion sensitivity multiplier",
+        "joy": 1.1,
+        "anger": 0.9,
+        "trust": 1.1
+    },
+    "naming_culture": "proto_syllabic"
+}

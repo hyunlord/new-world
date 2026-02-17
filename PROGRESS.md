@@ -1,5 +1,131 @@
 # Progress Log
 
+## Phase 2-A2 확장: SD 변경 + 성격 Trait 전체 목록 (T-2020)
+
+### Context
+성격 분포 확대(SD 0.15→0.25) + Trait 확장(14→68개) + facet 내 분산 확대(0.35→0.75).
+대부분 이전 티켓(T-2014, T-2016)에서 완료됨. 잔여 작업: facet spread 0.35→0.75.
+
+### Pre-existing work (already implemented)
+- SD=0.25: personality_data.gd (PERSONALITY_SD=0.25), distribution.json (sd=0.25) — T-2016에서 완료
+- 68 traits (48 facet + 20 composite): trait_definitions.json — T-2016에서 완료
+- TraitSystem composite support: trait_system.gd — T-2016에서 완료
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2020-01 | facet spread 0.35→0.75 (distribution.json + personality_generator.gd) | 🔴 DIRECT | — | 2줄 변경, 통합 와이어링 수준 |
+
+### Dispatch ratio: 0/1 = 0% (전체 작업의 95%가 이미 완료됨, 잔여분 2줄 변경)
+
+### Results
+- Gate: PASS
+- Files changed: 3 (distribution.json, personality_generator.gd, PROGRESS.md)
+- Key changes:
+  - distribution.json: added `facet_spread: 0.75` parameter
+  - personality_generator.gd: reads `_facet_spread` from SpeciesManager, uses data-driven value
+  - Facet profiles now diverge significantly within same axis (30%~80% range vs previous 48%~62%)
+
+---
+
+## Phase 2-A3: Plutchik 감정 시스템 (T-2018)
+
+### Context
+기존 5감정(happiness/loneliness/stress/grief/love)을 Plutchik 8기본감정 + 3층 시간역학 + 24 Dyad + HEXACO 연동 + Mental Break로 교체.
+entity.emotion_data(RefCounted) 추가, 레거시 emotions Dictionary는 유지하여 기존 코드 호환.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2018-01 | EmotionData 데이터 구조 | 🟢 DISPATCH | ask_codex | New file (emotion_data.gd) |
+| T-2018-02 | EmotionSystem 엔진 교체 | 🟢 DISPATCH | ask_codex | File replacement (emotion_system.gd) |
+| T-2018-03 | 이벤트 프리셋 JSON | 🟢 DISPATCH | ask_codex | New file (event_presets.json) |
+| T-2018-04 | 감정 전파 (Contagion) | 🟢 DISPATCH | ask_codex | Add to emotion_system.gd |
+| T-2018-05 | Mental Break 시스템 | 🟢 DISPATCH | ask_codex | Add to emotion_system.gd |
+| T-2018-06 | UI 감정 패널 교체 | 🟢 DISPATCH | ask_codex | Modify entity_detail_panel.gd |
+| T-2018-07 | Save/Load + EntityData 확장 | 🟢 DISPATCH | ask_codex | Modify 3 files |
+| T-2018-08 | 학술 레퍼런스 + 설계 문서 | 🟢 DISPATCH | ask_codex | New file (docs/EMOTION_SYSTEM.md) |
+| T-2018-09 | 통합 검증 + main.gd 와이어링 | 🔴 DIRECT | — | Integration wiring + gate |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): T-2018-01, T-2018-03, T-2018-08 — 독립 새 파일
+Wave 2 (T1 완료 후 parallel): T-2018-02, T-2018-06, T-2018-07 — EmotionData 참조
+Wave 3 (T2 완료 후 sequential): T-2018-04, T-2018-05 — 같은 파일 수정 (T-2018-02가 이미 포함)
+Wave 4 (DIRECT): T-2018-09 — gate 검증 + 버그픽스
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 8/9 = 89% ✅
+- Dispatch tool: ask_codex (8 tickets, all background mode via MCP)
+- Files changed: 8 (3 new + 5 modified)
+- New files: emotion_data.gd, event_presets.json, docs/EMOTION_SYSTEM.md
+- Modified files: emotion_system.gd (full rewrite), entity_data.gd, save_manager.gd (v5→v6), entity_detail_panel.gd, PROGRESS.md
+- Post-Codex fix: duplicate `var pd` declaration in entity_detail_panel.gd (1 line deleted)
+- Note: T-2018-04 (contagion) and T-2018-05 (mental break) were already included in T-2018-02's full rewrite — Codex correctly reported "no changes needed"
+- Note: main.gd wiring already existed from prior phases — no wiring changes needed for T-2018-09
+- Key changes:
+  - EmotionData: 8 emotions × 3 layers (fast/slow/memory_traces) + VA + 24 Dyads + stress + habituation
+  - EmotionSystem: 11-step execute_tick (appraisal impulse, decay, OU, memory, inhibition, VA, stress, habituation, legacy writeback, contagion, mental break)
+  - Event presets: 23 game events with appraisal vectors (Lazarus/Scherer model)
+  - UI: Plutchik color bars, Korean intensity labels, Dyad badges, VA mood line, stress bar, mental break indicator
+  - Save/Load: binary v6 with EmotionData JSON + legacy migration
+  - Academic docs: 15-section reference (Plutchik, Russell, Lazarus, Scherer, Verduyn, Hatfield, Fan, HEXACO)
+  - Legacy compat: entity.emotions Dictionary preserved, written back each tick via to_legacy_dict()
+
+---
+
+## Phase 2 아키텍처: Species Definition 시스템 (T-2019)
+
+### Context
+하드코딩된 성격/감정/사망률 상수를 JSON 데이터 파일로 분리하고 SpeciesManager 오토로드를 통해 로드.
+향후 종족/문화 추가 시 코드 변경 없이 데이터만 교체 가능한 구조.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2019-01 | JSON 데이터 파일 생성 (9개) | 🔴 DIRECT | — | 데이터 추출, 코드 아님 |
+| T-2019-02 | SpeciesManager.gd 싱글톤 | 🔴 DIRECT | — | 공유 인터페이스 (오토로드 API 정의) |
+| T-2019-03 | 오토로드 등록 (project.godot) | 🔴 DIRECT | — | 1줄 통합 와이어링 |
+| T-2019-04 | personality_generator.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-05 | personality_maturation.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-06 | emotion_system.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-07 | emotion_data.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-08 | mortality_system.gd 리팩토링 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수→데이터 교체 |
+| T-2019-09 | culture_shift 와이어링 + gate | 🔴 DIRECT | — | 통합 와이어링 + 검증 |
+
+### Dispatch ratio: 5/9 = 56% (DIRECT 4건은 데이터 추출/공유 인터페이스/1줄 와이어링/gate)
+
+### Dispatch strategy
+Wave 1 (DIRECT): T-2019-01~03 (JSON 생성 + SpeciesManager + autoload 등록)
+Wave 2 (parallel DISPATCH): T-2019-04~08 (5개 파일 동시 리팩토링, 파일 겹침 없음)
+Wave 3 (DIRECT): T-2019-09 (culture_shift 와이어링 + gate 검증)
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 4/9 via ask_codex (T-2019-05 Codex job stuck >20min, killed and implemented directly)
+- Effective dispatch: 4 ask_codex + 1 direct fallback = 5 refactoring tickets completed
+- Files changed: 18 (9 new JSON data files, 1 new SpeciesManager.gd, 5 refactored engine files, project.godot, game_config.gd, PROGRESS.md)
+- Key changes:
+  - 9 JSON data files under `data/species/human/` (species_definition, distribution, emotion_definition, dyad_definition, decay_parameters, siler_parameters, 3 cultures)
+  - SpeciesManager autoload singleton loads all species data at startup with fallback defaults
+  - personality_generator.gd: correlation_matrix, heritability, sex_difference_d from SpeciesManager
+  - personality_maturation.gd: theta, sigma, maturation targets from SpeciesManager
+  - emotion_system.gd: 12+ decay/stress/contagion/mental_break constants from SpeciesManager
+  - emotion_data.gd: intensity_labels, dyads, valence/arousal weights from SpeciesManager
+  - mortality_system.gd: Siler parameters, tech modifiers, care protection from SpeciesManager
+  - Removed SILER_CARE_PROTECTION/SILER_CARE_HUNGER_MIN from game_config.gd
+
+### Dispatch prompts
+- T-2019-04: `.omc/prompts/t-2019-04-personality-generator.md`
+- T-2019-05: `.omc/prompts/t-2019-05-personality-maturation.md` (Codex stuck, implemented directly)
+- T-2019-06: `.omc/prompts/t-2019-06-emotion-system.md`
+- T-2019-07: `.omc/prompts/t-2019-07-emotion-data.md`
+- T-2019-08: `.omc/prompts/t-2019-08-mortality-system.md`
+
+---
+
 ## Phase 2 버그픽스: 디테일 패널 사망자 정보 고정 (T-2017)
 
 ### Context
@@ -12,6 +138,13 @@
 | T-2017-01 | Detail panel deceased sticking fix | 🟢 DISPATCH | ask_codex | Single file fix |
 
 ### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- PR: #39 (merged to main)
+- Files changed: 1 (scripts/ui/entity_detail_panel.gd)
+- Fix: 2 lines added to `set_entity_id()` — clears `_showing_deceased` and `_deceased_record`
+- Dispatch tool: ask_codex (gpt-5.3-codex)
 
 ### Dispatch strategy
 **Single ticket**: Fix `set_entity_id()` in entity_detail_panel.gd to clear deceased mode.

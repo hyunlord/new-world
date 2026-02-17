@@ -1,0 +1,20 @@
+{
+    "species_id": "human",
+    "species_name": "Human",
+    "species_name_kr": "인간",
+    "personality_model": "hexaco",
+    "personality_path": "res://data/species/human/personality/",
+    "emotion_model": "plutchik",
+    "emotion_path": "res://data/species/human/emotions/",
+    "mortality_model": "siler",
+    "mortality_path": "res://data/species/human/mortality/",
+    "needs_model": "maslow_erg",
+    "needs_path": "res://data/species/human/needs/",
+    "base_stats": {
+        "max_age": 120,
+        "maturity_age": 15,
+        "fertility_range": [15, 45],
+        "gestation_days": 270
+    },
+    "available_cultures": ["proto_nature", "proto_syllabic", "tribal_totemic"]
+}

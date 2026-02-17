@@ -1,0 +1,76 @@
+{
+    "fast_half_life_hours": {
+        "comment": "Verduyn & Brans 2012",
+        "joy": 0.75, "trust": 2.0, "fear": 0.3, "surprise": 0.05,
+        "sadness": 0.5, "disgust": 0.1, "anger": 0.4, "anticipation": 3.0
+    },
+    "slow_half_life_hours": {
+        "joy": 48.0, "trust": 72.0, "fear": 24.0, "surprise": 6.0,
+        "sadness": 120.0, "disgust": 12.0, "anger": 12.0, "anticipation": 36.0
+    },
+    "opposite_pairs": {
+        "joy": "sadness", "sadness": "joy",
+        "trust": "disgust", "disgust": "trust",
+        "fear": "anger", "anger": "fear",
+        "surprise": "anticipation", "anticipation": "surprise"
+    },
+    "inhibition_gamma": 0.3,
+    "memory_trace_threshold": 20.0,
+    "memory_trace_ratio": 0.3,
+    "memory_trace_default_half_life_days": 30,
+    "memory_trace_trauma_half_life_days": 365,
+    "habituation_eta": 0.2,
+    "stress": {
+        "tau_hours": 48.0,
+        "weights": {"fear": 1.0, "anger": 0.9, "sadness": 1.1, "disgust": 0.6}
+    },
+    "contagion": {
+        "kappa": {
+            "comment": "Fan et al. 2016: anger > fear > joy",
+            "anger": 0.12, "fear": 0.10, "joy": 0.08, "disgust": 0.06,
+            "trust": 0.06, "sadness": 0.04, "surprise": 0.03, "anticipation": 0.03
+        },
+        "distance_scale": 5.0,
+        "min_source": 10.0
+    },
+    "mental_break": {
+        "beta": 60.0,
+        "tick_prob": 0.01,
+        "behaviors": {
+            "panic":             {"description": "Panic — flee randomly",        "duration_hours": 2.0, "energy_drain": 3.0},
+            "rage":              {"description": "Rage — attack/destroy nearby", "duration_hours": 1.0, "energy_drain": 5.0},
+            "shutdown":          {"description": "Shutdown — collapse, idle",    "duration_hours": 6.0, "energy_drain": 0.5},
+            "purge":             {"description": "Purge — expel contaminated",   "duration_hours": 2.0, "energy_drain": 2.0},
+            "outrage_violence":  {"description": "Outrage — immediate violence", "duration_hours": 0.5, "energy_drain": 4.0}
+        }
+    },
+    "personality_sensitivity": {
+        "comment": "HEXACO->emotion coupling: sensitivity = exp(coeff * z_axis)",
+        "fear":         {"axis": "E", "coeff": 0.4},
+        "sadness":      {"axis": "E", "coeff": 0.4},
+        "joy":          {"axis": "X", "coeff": 0.3},
+        "anger":        {"axis": "A", "coeff": -0.35},
+        "disgust":      {"axis": "H", "coeff": 0.25},
+        "surprise":     {"axis": "O", "coeff": 0.2},
+        "anticipation": [{"axis": "O", "coeff": 0.2}, {"axis": "C", "coeff": 0.15}],
+        "trust":        [{"axis": "X", "coeff": 0.2}, {"axis": "A", "coeff": 0.15}]
+    },
+    "baselines": {
+        "comment": "Slow layer baselines: clampf(base + scale * z_axis, min, max)",
+        "joy":          {"base": 5.0, "scale": 3.0,  "axis": "X", "min": 0.0, "max": 15.0},
+        "fear":         {"base": 2.0, "scale": 2.0,  "axis": "E", "min": 0.0, "max": 10.0},
+        "sadness":      {"base": 2.0, "scale": 1.5,  "axis": "E", "min": 0.0, "max": 10.0},
+        "anger":        {"base": 2.0, "scale": -2.0, "axis": "A", "min": 0.0, "max": 10.0},
+        "trust":        {"base": 5.0, "scale": 1.5,  "axis": "X", "min": 0.0, "max": 12.0},
+        "anticipation": {"base": 5.0, "scale": 1.0,  "axis": "X", "min": 0.0, "max": 10.0},
+        "disgust":      {"base": 0.0},
+        "surprise":     {"base": 0.0}
+    },
+    "half_life_adjustments": {
+        "comment": "Personality-adjusted half-life: base * exp(coeff * z_axis)",
+        "fear":    {"axis": "E", "coeff": 0.3},
+        "sadness": {"axis": "E", "coeff": 0.3},
+        "joy":     {"axis": "X", "coeff": 0.2},
+        "anger":   {"axis": "A", "coeff": -0.25}
+    }
+}
