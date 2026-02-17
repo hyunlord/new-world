@@ -76,6 +76,8 @@ func init(entity_manager: RefCounted, building_manager: RefCounted = null, relat
 func set_entity_id(id: int) -> void:
 	_entity_id = id
 	_scroll_offset = 0.0
+	_showing_deceased = false
+	_deceased_record = {}
 
 
 func _process(_delta: float) -> void:
