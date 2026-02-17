@@ -81,8 +81,12 @@ var _click_regions: Array = []
 var _trait_badge_regions: Array = []
 ## Reference to trait tooltip overlay
 var _trait_tooltip: Control = null
-## Currently hovered trait id (for change detection)
-var _hovered_trait_id: String = ""
+## Currently active (clicked) trait id
+var _active_trait_id: String = ""
+## Trait effect summary panel expanded state
+var _summary_expanded: bool = false
+## Trait summary toggle click rect
+var _summary_toggle_rect: Rect2 = Rect2()
 ## Which axes are expanded (show facets)
 var _expanded_axes: Dictionary = {}
 ## Deceased detail mode
@@ -102,7 +106,9 @@ func set_entity_id(id: int) -> void:
 	_showing_deceased = false
 	_deceased_record = {}
 	_trait_badge_regions.clear()
-	_hovered_trait_id = ""
+	_active_trait_id = ""
+	_summary_expanded = false
+	_summary_toggle_rect = Rect2()
 	if _trait_tooltip != null:
 		_trait_tooltip.request_hide()
 
@@ -146,26 +152,6 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 		return
 
-	# Trait badge hover (mouse motion)
-	if event is InputEventMouseMotion and _trait_tooltip != null:
-		var hit_def: Dictionary = {}
-		for region in _trait_badge_regions:
-			if region.rect.has_point(event.position):
-				hit_def = region.trait_def
-				break
-		var new_id: String = hit_def.get("id", "")
-		if new_id != _hovered_trait_id:
-			_hovered_trait_id = new_id
-			if hit_def.size() > 0:
-				# find the matching region's rect (first match)
-				for region in _trait_badge_regions:
-					if region.trait_def.get("id", "") == new_id:
-						_trait_tooltip.request_show(region.trait_def, region.rect)
-						break
-			else:
-				_trait_tooltip.request_hide()
-		# do NOT consume event — let scroll still work
-
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_scroll_offset = minf(_scroll_offset + 30.0, maxf(0.0, _content_height - size.y + 40.0))
@@ -174,13 +160,31 @@ func _gui_input(event: InputEvent) -> void:
 			_scroll_offset = maxf(_scroll_offset - 30.0, 0.0)
 			accept_event()
 		elif event.button_index == MOUSE_BUTTON_LEFT:
-			# Trait badge click → show tooltip immediately
+			# Summary toggle click
+			if _summary_toggle_rect.size.x > 0 and _summary_toggle_rect.has_point(event.position):
+				_summary_expanded = not _summary_expanded
+				accept_event()
+				return
+
+			# Trait badge click -> toggle tooltip
 			if _trait_tooltip != null:
 				for region in _trait_badge_regions:
 					if region.rect.has_point(event.position):
-						_trait_tooltip.show_immediate(region.trait_def, region.rect)
+						var clicked_id: String = region.trait_def.get("id", "")
+						if clicked_id == _active_trait_id:
+							_trait_tooltip.request_hide()
+							_active_trait_id = ""
+						else:
+							_trait_tooltip.show_immediate(region.trait_def, region.rect)
+							_active_trait_id = clicked_id
 						accept_event()
 						return
+
+			# Empty area click closes active tooltip
+			if _active_trait_id != "" and _trait_tooltip != null:
+				_trait_tooltip.request_hide()
+				_active_trait_id = ""
+
 			# Check click regions for name navigation
 			for region in _click_regions:
 				if region.rect.has_point(event.position):
@@ -215,6 +219,219 @@ func _get_trait_color(tdef: Dictionary) -> Color:
 		return DARK_TRAIT_COLOR
 	var valence: String = tdef.get("valence", "neutral")
 	return TRAIT_COLORS.get(valence, Color.GRAY)
+
+
+## Draw trait badges and optional trait effect summary for personality data.
+func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted) -> float:
+	_trait_badge_regions.clear()
+	_summary_toggle_rect = Rect2()
+
+	var display_trait_ids: Array = TraitSystem.filter_display_traits(pd.active_traits)
+	if display_trait_ids.is_empty():
+		if _active_trait_id != "" and _trait_tooltip != null:
+			_trait_tooltip.request_hide()
+			_active_trait_id = ""
+		return cy + 6.0
+
+	var trait_defs: Array = []
+	for tid in display_trait_ids:
+		var tdef: Dictionary = TraitSystem.get_trait_definition(str(tid))
+		if not tdef.is_empty():
+			trait_defs.append(tdef)
+
+	if trait_defs.is_empty():
+		if _active_trait_id != "" and _trait_tooltip != null:
+			_trait_tooltip.request_hide()
+			_active_trait_id = ""
+		return cy + 6.0
+
+	trait_defs.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var na: String = Locale.tr_data(a, "name")
+		var nb: String = Locale.tr_data(b, "name")
+		if na == "" or na == "???":
+			na = a.get("name_en", a.get("id", ""))
+		if nb == "" or nb == "???":
+			nb = b.get("name_en", b.get("id", ""))
+		return na.naturalcasecmp_to(nb) < 0
+	)
+
+	var has_active_trait: bool = false
+	for tdef in trait_defs:
+		if tdef.get("id", "") == _active_trait_id:
+			has_active_trait = true
+			break
+	if not has_active_trait and _active_trait_id != "":
+		if _trait_tooltip != null:
+			_trait_tooltip.request_hide()
+		_active_trait_id = ""
+
+	var trait_label: String = Locale.ltr("UI_TRAITS")
+	draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+	cy += 16.0
+
+	var trait_x: float = cx + 15
+	for tdef in trait_defs:
+		var tname: String = Locale.tr_data(tdef, "name")
+		if tname == "" or tname == "???":
+			tname = tdef.get("name_en", tdef.get("name_" + "kr", tdef.get("id", "?")))
+		var tcolor: Color = _get_trait_color(tdef)
+		var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+		if trait_x + text_w + 16 > size.x - 20:
+			cy += 18.0
+			trait_x = cx + 15
+
+		var badge_rect: Rect2 = Rect2(trait_x, cy, text_w + 12, 22)
+		var trait_id: String = tdef.get("id", "")
+		var is_active: bool = trait_id == _active_trait_id
+		var fill_alpha: float = 0.4 if is_active else 0.25
+		var border_alpha: float = 1.0 if is_active else 0.6
+		var border_width: float = 2.0 if is_active else 1.0
+		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, fill_alpha))
+		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, border_alpha), false, border_width)
+		draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+		_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
+		trait_x += text_w + 18
+	cy += 28.0
+
+	var summary_title: String = Locale.ltr("UI_TRAIT_EFFECT_SUMMARY")
+	var toggle_text: String = "%s %s" % ["▼" if _summary_expanded else "▶", summary_title]
+	var toggle_w: float = font.get_string_size(toggle_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+	_summary_toggle_rect = Rect2(cx + 10, cy, toggle_w + 8, 18)
+	draw_string(font, Vector2(cx + 14, cy + 13), toggle_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 1.0))
+	cy += 22.0
+
+	if _summary_expanded:
+		cy = _draw_trait_summary(font, cx, cy, trait_defs)
+
+	return cy + 6.0
+
+
+## Draw aggregate trait effect summary for currently visible traits.
+func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) -> float:
+	var fs: int = GameConfig.get_font_size("popup_body")
+	var indent: float = cx + 20.0
+	var sub_indent: float = cx + 30.0
+	var text_color: Color = Color(0.75, 0.75, 0.75)
+
+	var behavior_totals: Dictionary = {}
+	var emotion_totals: Dictionary = {}
+	var active_ids: Dictionary = {}
+	for tdef in trait_defs:
+		var trait_id: String = tdef.get("id", "")
+		active_ids[trait_id] = true
+
+		var effects: Dictionary = tdef.get("effects", {})
+		var behavior_weights: Dictionary = tdef.get("behavior_weights", effects.get("behavior_weights", {}))
+		for key in behavior_weights:
+			behavior_totals[key] = float(behavior_totals.get(key, 0.0)) + float(behavior_weights[key])
+
+		var emotion_modifiers: Dictionary = tdef.get("emotion_modifiers", effects.get("emotion_modifiers", {}))
+		for key in emotion_modifiers:
+			emotion_totals[key] = float(emotion_totals.get(key, 0.0)) + float(emotion_modifiers[key])
+
+	var synergies: Array = []
+	var conflicts: Array = []
+	var seen_synergy_pairs: Dictionary = {}
+	var seen_conflict_pairs: Dictionary = {}
+	for tdef in trait_defs:
+		var trait_id: String = tdef.get("id", "")
+
+		var trait_synergies: Array = tdef.get("synergies", [])
+		for sid in trait_synergies:
+			var synergy_id: String = str(sid)
+			if not active_ids.has(synergy_id):
+				continue
+			var synergy_pair: Array = [trait_id, synergy_id]
+			synergy_pair.sort()
+			var synergy_key: String = "%s_%s" % [synergy_pair[0], synergy_pair[1]]
+			if seen_synergy_pairs.has(synergy_key):
+				continue
+			seen_synergy_pairs[synergy_key] = true
+			synergies.append({"a": trait_id, "b": synergy_id})
+
+		var trait_conflicts: Array = tdef.get("anti_synergies", [])
+		for aid in trait_conflicts:
+			var conflict_id: String = str(aid)
+			if not active_ids.has(conflict_id):
+				continue
+			var conflict_pair: Array = [trait_id, conflict_id]
+			conflict_pair.sort()
+			var conflict_key: String = "%s_%s" % [conflict_pair[0], conflict_pair[1]]
+			if seen_conflict_pairs.has(conflict_key):
+				continue
+			seen_conflict_pairs[conflict_key] = true
+			conflicts.append({"a": trait_id, "b": conflict_id})
+
+	var has_any: bool = false
+
+	if behavior_totals.size() > 0:
+		has_any = true
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_BEHAVIOR_WEIGHTS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
+		cy += 16.0
+		var behavior_keys: Array = behavior_totals.keys()
+		behavior_keys.sort_custom(func(a, b): return str(a).naturalcasecmp_to(str(b)) < 0)
+		for key in behavior_keys:
+			var key_str: String = str(key)
+			var value: float = float(behavior_totals[key_str])
+			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
+			if display_key == "TRAIT_KEY_" + key_str.to_upper():
+				display_key = key_str.replace("_", " ").capitalize()
+			var sign: String = "+" if value >= 0.0 else ""
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.2f" % [display_key, sign, value], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			cy += 15.0
+
+	if emotion_totals.size() > 0:
+		has_any = true
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_EMOTION_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
+		cy += 16.0
+		var emotion_keys: Array = emotion_totals.keys()
+		emotion_keys.sort_custom(func(a, b): return str(a).naturalcasecmp_to(str(b)) < 0)
+		for key in emotion_keys:
+			var key_str: String = str(key)
+			var value: float = float(emotion_totals[key_str])
+			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
+			if display_key == "TRAIT_KEY_" + key_str.to_upper():
+				display_key = key_str.replace("_", " ").capitalize()
+			var sign: String = "+" if value >= 0.0 else ""
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.2f" % [display_key, sign, value], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			cy += 15.0
+
+	if synergies.size() > 0:
+		has_any = true
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_SYNERGIES") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.5, 1.0, 0.6))
+		cy += 16.0
+		for pair in synergies:
+			var name_a: String = _get_trait_display_name(pair.get("a", ""), trait_defs)
+			var name_b: String = _get_trait_display_name(pair.get("b", ""), trait_defs)
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s + %s" % [name_a, name_b], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.4, 0.9, 0.5))
+			cy += 15.0
+
+	if conflicts.size() > 0:
+		has_any = true
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_ANTI_SYNERGIES") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1.0, 0.5, 0.5))
+		cy += 16.0
+		for pair in conflicts:
+			var name_a: String = _get_trait_display_name(pair.get("a", ""), trait_defs)
+			var name_b: String = _get_trait_display_name(pair.get("b", ""), trait_defs)
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s <-> %s" % [name_a, name_b], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.9, 0.4, 0.4))
+			cy += 15.0
+
+	if not has_any:
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_NONE"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.55, 0.55, 0.55))
+		cy += 15.0
+
+	return cy + 4.0
+
+
+func _get_trait_display_name(trait_id: String, trait_defs: Array) -> String:
+	for tdef in trait_defs:
+		if tdef.get("id", "") != trait_id:
+			continue
+		var trait_name: String = Locale.tr_data(tdef, "name")
+		if trait_name != "" and trait_name != "???":
+			return trait_name
+		return tdef.get("name_en", trait_id)
+	return trait_id
 
 
 func _draw() -> void:
@@ -353,34 +570,8 @@ func _draw() -> void:
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
-	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
-	_trait_badge_regions.clear()
-	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
-	if display_traits.size() > 0:
-		var trait_label: String = Locale.ltr("UI_TRAITS")
-		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
-		cy += 16.0
-		var trait_x: float = cx + 15
-		for trait_id in display_traits:
-			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
-			var tname: String = Locale.tr_data(tdef, "name")
-			if tname == "" or tname == "???":
-				tname = tdef.get("name_en", tdef.get("name_" + "kr", trait_id))
-			var tcolor: Color = _get_trait_color(tdef)
-			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-			# Wrap to next line if too wide
-			if trait_x + text_w + 16 > size.x - 20:
-				cy += 18.0
-				trait_x = cx + 15
-			var badge_rect := Rect2(trait_x, cy, text_w + 12, 22)
-			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
-			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
-			# Register for tooltip hover/click
-			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
-			trait_x += text_w + 18
-		cy += 28.0
-	cy += 6.0
+	# ── Traits ──
+	cy = _draw_trait_section(font, cx, cy, pd)
 
 	# ── Emotions (Plutchik 8) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"))
@@ -928,34 +1119,8 @@ func _draw_deceased() -> void:
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
-	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
-	_trait_badge_regions.clear()
-	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
-	if display_traits.size() > 0:
-		var trait_label: String = Locale.ltr("UI_TRAITS")
-		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
-		cy += 16.0
-		var trait_x: float = cx + 15
-		for trait_id in display_traits:
-			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
-			var tname: String = Locale.tr_data(tdef, "name")
-			if tname == "" or tname == "???":
-				tname = tdef.get("name_en", tdef.get("name_" + "kr", trait_id))
-			var tcolor: Color = _get_trait_color(tdef)
-			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-			# Wrap to next line if too wide
-			if trait_x + text_w + 16 > size.x - 20:
-				cy += 18.0
-				trait_x = cx + 15
-			var badge_rect := Rect2(trait_x, cy, text_w + 12, 22)
-			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
-			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
-			# Register for tooltip hover/click
-			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
-			trait_x += text_w + 18
-		cy += 28.0
-	cy += 6.0
+	# ── Traits ──
+	cy = _draw_trait_section(font, cx, cy, pd)
 
 	# Chronicle events
 	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")

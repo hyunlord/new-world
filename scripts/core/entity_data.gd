@@ -44,7 +44,7 @@ var emotions: Dictionary = {
 }
 ## Trait cache (runtime only, NOT serialized)
 var active_traits: Array = []  # Full trait definition Dictionaries (for effects queries)
-var display_traits: Array = []  # Max 5, priority-sorted (for UI)
+var display_traits: Array = []  # All active traits, priority-sorted (for UI)
 var traits_dirty: bool = true  # Re-evaluate when personality changes
 
 ## Phase 2-A3: Plutchik emotion data (EmotionData RefCounted)

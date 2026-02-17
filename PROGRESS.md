@@ -1534,3 +1534,30 @@ A + B 병렬 디스패치 (파일 겹침 없음: hud.gd vs entity_detail_panel.g
 ### Dispatch strategy
 Phase 1 병렬: A + B (파일 겹침 없음)
 Phase 2 병렬 (B 완료 후): C + D (C=entity_detail_panel, D=chronicle+hud)
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/63 (merged)
+- Files changed: 7 (stats_panel.gd, game_calendar.gd, entity_detail_panel.gd, chronicle_panel.gd, hud.gd, en/ui.json, ko/ui.json)
+- Key changes: UI_JOBS/UI_STAT_POPULATION locale; format_full_datetime/format_short_datetime/format_short_datetime_with_year added; action history datetime; Love/Compat localized; chronicle tick→datetime; HUD format_date→format_full_datetime
+- Dispatch tool: ask_codex (4/4 tickets, 100% dispatch ratio)
+
+---
+
+## T-2036: 특성 표시 개선 (개수 제한 해제, 정렬, 클릭 토글, 능력치 요약) — 2026-02-18
+
+### Context
+3개 개선: (1) max 5 제한 해제 + 언어별 정렬, (2) hover→클릭 토글, (3) 특성 효과 요약 섹션
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2036-A | trait_system.gd max제거 + entity_data.gd comment | 🟢 DISPATCH | ask_codex | 단일 기능 수정 |
+| T-2036-B | entity_detail_panel.gd 정렬+클릭토글+요약 | 🟢 DISPATCH | ask_codex | 단일 파일 (B 완료 후) |
+| T-2036-C | en/ko ui.json JSON키 추가 | 🟢 DISPATCH | ask_codex | A+B와 파일 겹침 없음 |
+
+### Dispatch ratio: 3/3 = 100% ✅ (ask_codex)
+
+### Dispatch strategy
+Phase 1 병렬: A + C (파일 겹침 없음)
+Phase 2: B (entity_detail_panel — A 완료 후 순서 무관하나 안전하게 순서 후)
