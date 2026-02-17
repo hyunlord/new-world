@@ -10,17 +10,6 @@ const TICKS_PER_YEAR: int = 4380  # 365 × 12
 const TICKS_PER_MONTH_AVG: int = 365  # ~30.4 days × 12 ticks
 
 const MONTH_DAYS: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-const MONTH_NAMES: Array[String] = [
-	"1월", "2월", "3월", "4월", "5월", "6월",
-	"7월", "8월", "9월", "10월", "11월", "12월",
-]
-
-const SEASON_NAMES: Dictionary = {
-	"winter": "겨울",
-	"spring": "봄",
-	"summer": "여름",
-	"autumn": "가을",
-}
 
 
 static func is_leap_year(year: int) -> bool:
@@ -86,14 +75,17 @@ static func get_season(day_of_year: int) -> String:
 		return "winter"      # Dec
 
 
-## Format date for HUD display: "Y3 7월 15일 14:00 (여름)"
+## Format date for HUD display
 static func format_date(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
 	var season: String = get_season(d.day_of_year)
-	var season_kr: String = SEASON_NAMES.get(season, season)
-	return "Y%d %s %d일 %02d:00 (%s)" % [
-		d.year, MONTH_NAMES[d.month - 1], d.day, d.hour, season_kr,
-	]
+	return Locale.trf("DATE_FORMAT", {
+		"year": d.year,
+		"month": Locale.get_month_name(d.month),
+		"day": d.day,
+		"hour": "%02d" % d.hour,
+		"season": Locale.tr_id("SEASON", season),
+	})
 
 
 ## Convert age in ticks to years (float)
@@ -151,14 +143,18 @@ static func birth_date_from_tick(birth_tick: int, rng: RandomNumberGenerator = n
 	return {"year": birth_year, "month": month, "day": day}
 
 
-## Format birth_date for UI display: "Y-25 7월 15일생"
+## Format birth_date for UI display
 static func format_birth_date(bd: Dictionary) -> String:
 	if bd.is_empty():
 		return ""
 	var year: int = bd.get("year", 0)
 	var month: int = bd.get("month", 1)
 	var day: int = bd.get("day", 1)
-	return "Y%d %s %d일생" % [year, MONTH_NAMES[clampi(month - 1, 0, 11)], day]
+	return Locale.trf("BIRTH_DATE_FORMAT", {
+		"year": year,
+		"month": Locale.get_month_name(clampi(month, 1, 12)),
+		"day": day,
+	})
 
 
 static func to_julian_day(date: Dictionary) -> int:
@@ -220,13 +216,13 @@ static func format_age_detailed(birth_date: Dictionary, ref_date: Dictionary = {
 	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
 	var parts: Array = []
 	if age.years > 0:
-		parts.append("%d년" % age.years)
+		parts.append("%d%s" % [age.years, Locale.tr("UI_AGE_YEARS")])
 	if age.months > 0:
-		parts.append("%d개월" % age.months)
-	parts.append("%d일" % age.days)
+		parts.append("%d%s" % [age.months, Locale.tr("UI_AGE_MONTHS")])
+	parts.append("%d%s" % [age.days, Locale.tr("UI_AGE_DAYS")])
 	var age_str: String = " ".join(parts)
 	var total_str: String = format_number(age.total_days)
-	return "%s (%s일)" % [age_str, total_str]
+	return "%s %s" % [age_str, Locale.trf("UI_AGE_TOTAL_DAYS_FMT", {"n": total_str})]
 
 
 static func format_age_short(birth_date: Dictionary, ref_date: Dictionary = {}) -> String:

@@ -97,6 +97,16 @@ func set_entity_id(id: int) -> void:
 	_deceased_record = {}
 
 
+func _ready() -> void:
+	var locale_changed_cb: Callable = Callable(self, "_on_locale_changed")
+	if not Locale.locale_changed.is_connected(locale_changed_cb):
+		Locale.locale_changed.connect(locale_changed_cb)
+
+
+func _on_locale_changed(_locale: String = "") -> void:
+	queue_redraw()
+
+
 func _process(_delta: float) -> void:
 	if visible:
 		queue_redraw()
@@ -211,7 +221,9 @@ func _draw() -> void:
 	# ── Header ──
 	var gender_icon: String = "M" if entity.gender == "male" else "F"
 	var gender_color: Color = GENDER_COLORS.get(entity.gender, Color.WHITE)
-	var header_text: String = "%s %s - %s (%s)" % [gender_icon, entity.entity_name, entity.job.capitalize(), entity.age_stage.capitalize()]
+	var job_label: String = Locale.tr_id("JOB", entity.job)
+	var stage_label: String = Locale.tr_id("STAGE", entity.age_stage)
+	var header_text: String = "%s %s - %s (%s)" % [gender_icon, entity.entity_name, job_label, stage_label]
 	draw_string(font, Vector2(cx, cy), header_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
 	# Gender icon colored separately
 	draw_string(font, Vector2(cx, cy), gender_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), gender_color)
@@ -220,26 +232,30 @@ func _draw() -> void:
 	var current_date: Dictionary = GameCalendarScript.tick_to_date(entity.birth_tick + entity.age)
 	var ref_date: Dictionary = {"year": current_date.year, "month": current_date.month, "day": current_date.day}
 	var age_detail: String = GameCalendarScript.format_age_detailed(entity.birth_date, ref_date)
-	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else "None"
+	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else Locale.tr("UI_NONE")
 	var preg_text: String = ""
 	if entity.pregnancy_tick >= 0:
-		preg_text = "  |  Pregnant"
+		preg_text = "  |  %s" % Locale.tr("UI_PREGNANT")
 	# Birth date from birth_date dictionary.
 	var birth_str: String = ""
 	if not entity.birth_date.is_empty():
 		birth_str = GameCalendarScript.format_birth_date(entity.birth_date)
 	else:
-		birth_str = "출생일 불명"
-	var life_stage_text: String = "%s | %s (%s)" % [entity.age_stage.capitalize(), age_detail, birth_str]
-	draw_string(font, Vector2(cx, cy + 14), "Settlement: %s  |  %s  |  Pos: (%d, %d)%s" % [sid_text, life_stage_text, entity.position.x, entity.position.y, preg_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+		birth_str = Locale.tr("UI_BIRTH_DATE_UNKNOWN")
+	var life_stage_text: String = "%s | %s (%s)" % [stage_label, age_detail, birth_str]
+	draw_string(font, Vector2(cx, cy + 14), "%s: %s  |  %s  |  %s: (%d, %d)%s" % [
+		Locale.tr("UI_SETTLEMENT"), sid_text,
+		life_stage_text, Locale.tr("UI_POS"),
+		entity.position.x, entity.position.y, preg_text,
+	], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0
 
 	# ── Status ──
-	cy = _draw_section_header(font, cx, cy, "Status")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_STATUS"))
 
-	var action_text: String = entity.current_action
+	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
 	if entity.action_target != Vector2i(-1, -1):
 		action_text += " -> (%d, %d)" % [entity.action_target.x, entity.action_target.y]
 	draw_string(font, Vector2(cx + 10, cy + 12), "Action: %s" % action_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
@@ -258,18 +274,22 @@ func _draw() -> void:
 	cy += 22.0
 
 	# ── Needs ──
-	cy = _draw_section_header(font, cx, cy, "Needs")
-	cy = _draw_bar(font, cx + 10, cy, bar_w, "Hunger", entity.hunger, Color(0.9, 0.2, 0.2))
-	cy = _draw_bar(font, cx + 10, cy, bar_w, "Energy", entity.energy, Color(0.9, 0.8, 0.2))
-	cy = _draw_bar(font, cx + 10, cy, bar_w, "Social", entity.social, Color(0.3, 0.5, 0.9))
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_NEEDS"))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.tr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.tr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.tr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
 	cy += 6.0
 
 	# ── Personality (HEXACO 6-axis + expandable facets) ──
-	cy = _draw_section_header(font, cx, cy, "Personality")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_PERSONALITY"))
 
 	var axis_labels: Dictionary = {
-		"H": "H (정직)", "E": "E (감정)", "X": "X (외향)",
-		"A": "A (우호)", "C": "C (성실)", "O": "O (개방)",
+		"H": Locale.tr("UI_HEXACO_H"),
+		"E": Locale.tr("UI_HEXACO_E"),
+		"X": Locale.tr("UI_HEXACO_X"),
+		"A": Locale.tr("UI_HEXACO_A"),
+		"C": Locale.tr("UI_HEXACO_C"),
+		"O": Locale.tr("UI_HEXACO_O"),
 	}
 
 	var pd = entity.personality
@@ -301,7 +321,7 @@ func _draw() -> void:
 	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
 	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
 	if display_traits.size() > 0:
-		var trait_label: String = "Traits"
+		var trait_label: String = Locale.tr("UI_TRAITS")
 		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 16.0
 		var trait_x: float = cx + 15
@@ -326,7 +346,7 @@ func _draw() -> void:
 	cy += 6.0
 
 	# ── Emotions (Plutchik 8) ──
-	cy = _draw_section_header(font, cx, cy, "Emotions")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_EMOTIONS"))
 	if entity.emotion_data != null:
 		var ed: RefCounted = entity.emotion_data
 		# Draw 8 emotion bars with intensity labels
@@ -342,7 +362,7 @@ func _draw() -> void:
 
 		# Valence-Arousal mood line
 		cy += 4.0
-		var va_text: String = "Mood: Valence %+.0f | Arousal %.0f" % [ed.valence, ed.arousal]
+		var va_text: String = "Mood: %s %+.0f | %s %.0f" % [Locale.tr("UI_VALENCE"), ed.valence, Locale.tr("UI_AROUSAL"), ed.arousal]
 		draw_string(font, Vector2(cx + 10, cy + 12), va_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 		cy += 16.0
 
@@ -375,12 +395,12 @@ func _draw() -> void:
 			z_C = pd.to_zscore(pd.axes.get("C", 0.5))
 		var break_threshold: float = 300.0 + 50.0 * z_C
 		var stress_ratio: float = clampf(stress_val / break_threshold, 0.0, 1.0)
-		var stress_label: String = "Stress: %.0f / %.0f" % [stress_val, break_threshold]
+		var stress_label: String = "%s: %.0f / %.0f" % [Locale.tr("UI_STRESS"), stress_val, break_threshold]
 		cy = _draw_bar(font, cx + 10, cy, bar_w, stress_label, stress_ratio, STRESS_COLOR)
 
 		# Mental break indicator
 		if ed.mental_break_type != "":
-			var break_text: String = "MENTAL BREAK: %s (%.1fh)" % [ed.mental_break_type.to_upper(), ed.mental_break_remaining]
+			var break_text: String = "%s: %s (%.1fh)" % [Locale.tr("UI_MENTAL_BREAK"), ed.mental_break_type.to_upper(), ed.mental_break_remaining]
 			draw_string(font, Vector2(cx + 10, cy + 12), break_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(1.0, 0.2, 0.2))
 			cy += 16.0
 	else:
@@ -397,12 +417,12 @@ func _draw() -> void:
 	cy += 6.0
 
 	# ── Family ──
-	cy = _draw_section_header(font, cx, cy, "Family")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_FAMILY"))
 
 	# Partner
 	if entity.partner_id >= 0:
 		var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
-		var partner_name: String = "☠ (deceased)"
+		var partner_name: String = "☠ (%s)" % Locale.tr("UI_DEAD")
 		var partner_alive: bool = false
 		if partner != null and partner.is_alive:
 			partner_name = partner.entity_name
@@ -421,7 +441,7 @@ func _draw() -> void:
 			love_pct = int(entity.emotion_data.get_dyad("love"))
 		else:
 			love_pct = int(entity.emotions.get("love", 0.0) * 100)
-		var prefix: String = "Partner: "
+		var prefix: String = "%s: " % Locale.tr("UI_PARTNER")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 		var prefix_w: float = font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		var name_pos := Vector2(cx + 10 + prefix_w, cy + 12)
@@ -438,12 +458,12 @@ func _draw() -> void:
 		draw_string(font, Vector2(cx + 10 + prefix_w + name_w, cy + 12), suffix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 		cy += 16.0
 	else:
-		draw_string(font, Vector2(cx + 10, cy + 12), "Partner: None", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.tr("UI_PARTNER"), Locale.tr("UI_NONE")], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		cy += 16.0
 
 	# Parents
 	if entity.parent_ids.size() > 0:
-		var prefix: String = "Parents: "
+		var prefix: String = "%s: " % Locale.tr("UI_PARENTS")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		for i in range(entity.parent_ids.size()):
@@ -469,12 +489,12 @@ func _draw() -> void:
 			name_x += font.get_string_size(pname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		cy += 16.0
 	else:
-		draw_string(font, Vector2(cx + 10, cy + 12), "Parents: 1st generation", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.tr("UI_PARENTS"), Locale.tr("UI_FIRST_GENERATION")], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		cy += 16.0
 
 	# Children
 	if entity.children_ids.size() > 0:
-		var prefix: String = "Children: "
+		var prefix: String = "%s: " % Locale.tr("UI_CHILDREN")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
 		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		var child_ref_date: Dictionary = {"year": current_date.year, "month": current_date.month, "day": current_date.day}
@@ -509,10 +529,10 @@ func _draw() -> void:
 
 	# ── Key Relationships ──
 	if _relationship_manager != null:
-		cy = _draw_section_header(font, cx, cy, "Key Relationships")
+		cy = _draw_section_header(font, cx, cy, Locale.tr("UI_KEY_RELATIONSHIPS"))
 		var rels: Array = _relationship_manager.get_relationships_for(entity.id)
 		if rels.size() == 0:
-			draw_string(font, Vector2(cx + 10, cy + 12), "No relationships yet", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_NO_RELATIONSHIPS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 			cy += 16.0
 		else:
 			var show_count: int = mini(5, rels.size())
@@ -543,14 +563,14 @@ func _draw() -> void:
 		cy += 6.0
 
 	# ── Stats ──
-	cy = _draw_section_header(font, cx, cy, "Stats")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_STATS_SECTION"))
 	draw_string(font, Vector2(cx + 10, cy + 12), "Speed: %.1f  |  Strength: %.1f" % [entity.speed, entity.strength], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 16.0
 	draw_string(font, Vector2(cx + 10, cy + 12), "Total gathered: %.0f  |  Buildings built: %d" % [entity.total_gathered, entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 22.0
 
 	# ── Action History ──
-	cy = _draw_section_header(font, cx, cy, "Recent Actions")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_RECENT_ACTIONS"))
 	var hist: Array = entity.action_history
 	var idx: int = hist.size() - 1
 	var hist_count: int = 0
@@ -565,7 +585,7 @@ func _draw() -> void:
 	_content_height = cy + _scroll_offset + 20.0
 
 	# Footer
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), "Scroll for more | Click background to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.tr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
 
 
@@ -680,8 +700,8 @@ func _lookup_name(entity_id: int) -> String:
 	if registry != null:
 		var record: Dictionary = registry.get_record(entity_id)
 		if record.size() > 0:
-			return record.get("name", "?") + " ☠"
-	return "?"
+			return record.get("name", Locale.tr("UI_UNKNOWN")) + " ☠"
+	return Locale.tr("UI_UNKNOWN")
 
 
 func _draw_deceased() -> void:
@@ -700,7 +720,7 @@ func _draw_deceased() -> void:
 
 	# Header
 	var gender_icon: String = "M" if r.get("gender", "") == "male" else "F"
-	var header: String = "%s %s (Deceased)" % [gender_icon, r.get("name", "?")]
+	var header: String = "%s %s %s" % [gender_icon, r.get("name", Locale.tr("UI_UNKNOWN")), Locale.tr("UI_DECEASED_HEADER")]
 	draw_string(font, Vector2(cx, cy), header, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color(0.7, 0.5, 0.5))
 	cy += 6.0
 
@@ -713,17 +733,18 @@ func _draw_deceased() -> void:
 	var death_date: Dictionary = r.get("death_date", {})
 	if birth_tick >= 0:
 		var bd: Dictionary = GameCalendarScript.tick_to_date(birth_tick)
-		birth_str = "Y%d %d월 %d일" % [bd.year, bd.month, bd.day]
+		birth_str = "Y%d M%d D%d" % [bd.year, bd.month, bd.day]
 	else:
-		birth_str = "초기세대"
+		birth_str = Locale.tr("UI_FIRST_GENERATION")
 	var dd: Dictionary = GameCalendarScript.tick_to_date(death_tick)
-	death_str = "Y%d %d월 %d일" % [dd.year, dd.month, dd.day]
+	death_str = "Y%d M%d D%d" % [dd.year, dd.month, dd.day]
 	var age_str: String = "?"
 	if not birth_date.is_empty() and not death_date.is_empty():
 		age_str = GameCalendarScript.format_age_detailed(birth_date, death_date)
 	else:
-		age_str = "%.0f세" % r.get("death_age_years", 0.0)
-	draw_string(font, Vector2(cx, cy + 14), "%s ~ %s (향년 %s)" % [birth_str, death_str, age_str], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+		age_str = "%.0f%s" % [r.get("death_age_years", 0.0), Locale.tr("UI_AGE_YEARS_UNIT")]
+	var age_at_death_text: String = Locale.trf("UI_AGE_AT_DEATH_FMT", {"age": age_str})
+	draw_string(font, Vector2(cx, cy + 14), "%s ~ %s (%s)" % [birth_str, death_str, age_at_death_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 	cy += 18.0
 
 	if not birth_date.is_empty() and not death_date.is_empty():
@@ -731,45 +752,39 @@ func _draw_deceased() -> void:
 		var total_days_str: String = GameCalendarScript.format_number(survival.total_days)
 		var dur_parts: Array = []
 		if survival.years > 0:
-			dur_parts.append("%d년" % survival.years)
+			dur_parts.append("%d %s" % [survival.years, Locale.tr("UI_AGE_YEARS_UNIT")])
 		if survival.months > 0:
-			dur_parts.append("%d개월" % survival.months)
-		dur_parts.append("%d일" % survival.days)
-		draw_string(font, Vector2(cx, cy + 14), "생존 기간: %s (%s일)" % [" ".join(dur_parts), total_days_str], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+			dur_parts.append("%d%s" % [survival.months, Locale.tr("UI_AGE_MONTHS")])
+		dur_parts.append("%d%s" % [survival.days, Locale.tr("UI_AGE_DAYS")])
+		draw_string(font, Vector2(cx, cy + 14), "%s: %s (%s%s)" % [Locale.tr("UI_SURVIVAL_DURATION"), " ".join(dur_parts), total_days_str, Locale.tr("UI_AGE_DAYS")], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 		cy += 18.0
 
 	# Cause of death
 	var cause_raw: String = r.get("death_cause", "unknown")
-	var cause_map: Dictionary = {
-		"starvation": "아사",
-		"old_age": "노령",
-		"infant_mortality": "영아 사망",
-		"background": "사고/질병",
-		"maternal_death": "출산 사망",
-		"stillborn": "사산",
-	}
-	var cause_display: String = cause_map.get(cause_raw, cause_raw)
-	draw_string(font, Vector2(cx, cy + 14), "사인: %s" % cause_display, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.5, 0.5))
+	var cause_display: String = Locale.tr_id("DEATH", cause_raw)
+	draw_string(font, Vector2(cx, cy + 14), "%s: %s" % [Locale.tr("UI_CAUSE_OF_DEATH"), cause_display], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.5, 0.5))
 	cy += 18.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0
 
 	# Job and settlement
-	cy = _draw_section_header(font, cx, cy, "Info")
-	var job_text: String = r.get("job", "none").capitalize()
-	var stage_text: String = r.get("age_stage", "?").capitalize()
-	draw_string(font, Vector2(cx + 10, cy + 12), "Job: %s | Stage: %s" % [job_text, stage_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_INFO"))
+	var job_id: String = str(r.get("job", "none"))
+	var job_text: String = Locale.tr_id("JOB", job_id)
+	var stage_id: String = str(r.get("age_stage", ""))
+	var stage_text: String = Locale.tr_id("STAGE", stage_id) if stage_id != "" else Locale.tr("UI_UNKNOWN")
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s | Stage: %s" % [Locale.tr("UI_JOB"), job_text, stage_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 16.0
 	draw_string(font, Vector2(cx + 10, cy + 12), "Gathered: %.0f | Built: %d" % [r.get("total_gathered", 0.0), r.get("buildings_built", 0)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 
 	# Family (clickable)
-	cy = _draw_section_header(font, cx, cy, "Family")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_FAMILY"))
 
 	# Partner
 	var partner_id: int = r.get("partner_id", -1)
 	if partner_id > 0:
-		var prefix: String = "Partner: "
+		var prefix: String = "%s: " % Locale.tr("UI_PARTNER")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 		var prefix_w: float = font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		var pname: String = _lookup_name(partner_id)
@@ -781,7 +796,7 @@ func _draw_deceased() -> void:
 	# Parents
 	var parent_ids: Array = r.get("parent_ids", [])
 	if parent_ids.size() > 0:
-		var prefix: String = "Parents: "
+		var prefix: String = "%s: " % Locale.tr("UI_PARENTS")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		for i in range(parent_ids.size()):
@@ -799,7 +814,7 @@ func _draw_deceased() -> void:
 	# Children
 	var children_ids: Array = r.get("children_ids", [])
 	if children_ids.size() > 0:
-		var prefix: String = "Children: "
+		var prefix: String = "%s: " % Locale.tr("UI_CHILDREN")
 		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
 		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		for i in range(children_ids.size()):
@@ -819,7 +834,7 @@ func _draw_deceased() -> void:
 	cy += 6.0
 
 	# Personality
-	cy = _draw_section_header(font, cx, cy, "Personality")
+	cy = _draw_section_header(font, cx, cy, Locale.tr("UI_PERSONALITY"))
 	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
 	var p_dict: Dictionary = r.get("personality", {})
 	var pd: RefCounted
@@ -829,8 +844,12 @@ func _draw_deceased() -> void:
 		pd = PersonalityDataScript.new()
 		pd.migrate_from_big_five(p_dict)
 	var axis_labels: Dictionary = {
-		"H": "H (정직)", "E": "E (감정)", "X": "X (외향)",
-		"A": "A (우호)", "C": "C (성실)", "O": "O (개방)",
+		"H": Locale.tr("UI_HEXACO_H"),
+		"E": Locale.tr("UI_HEXACO_E"),
+		"X": Locale.tr("UI_HEXACO_X"),
+		"A": Locale.tr("UI_HEXACO_A"),
+		"C": Locale.tr("UI_HEXACO_C"),
+		"O": Locale.tr("UI_HEXACO_O"),
 	}
 	var bar_w: float = panel_w - 40.0
 
@@ -862,7 +881,7 @@ func _draw_deceased() -> void:
 	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
 	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
 	if display_traits.size() > 0:
-		var trait_label: String = "Traits"
+		var trait_label: String = Locale.tr("UI_TRAITS")
 		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 16.0
 		var trait_x: float = cx + 15
@@ -889,11 +908,11 @@ func _draw_deceased() -> void:
 	# Chronicle events
 	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle != null:
-		cy = _draw_section_header(font, cx, cy, "Life Events")
+		cy = _draw_section_header(font, cx, cy, Locale.tr("UI_LIFE_EVENTS"))
 		var events: Array = chronicle.get_personal_events(r.get("id", -1))
 		var show_count: int = mini(8, events.size())
 		if show_count == 0:
-			draw_string(font, Vector2(cx + 10, cy + 12), "No recorded events", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_NO_RECORDED_EVENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 			cy += 16.0
 		else:
 			var idx: int = events.size() - 1
@@ -909,5 +928,5 @@ func _draw_deceased() -> void:
 				count += 1
 
 	_content_height = cy + _scroll_offset + 20.0
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), "Scroll for more | Click background to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.tr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()

@@ -11,6 +11,10 @@ func init(building_manager: RefCounted, settlement_manager: RefCounted = null) -
 	_settlement_manager = settlement_manager
 
 
+func _ready() -> void:
+	Locale.locale_changed.connect(func(_l): queue_redraw())
+
+
 func set_building_id(id: int) -> void:
 	_building_id = id
 
@@ -54,20 +58,21 @@ func _draw() -> void:
 		"campfire":
 			icon = "\u25CF"
 			type_color = Color(1.0, 0.4, 0.1)
-	draw_string(font, Vector2(cx, cy), "%s %s" % [icon, building.building_type.capitalize()], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), type_color)
+	draw_string(font, Vector2(cx, cy), "%s %s" % [icon, Locale.tr_id("BUILDING", building.building_type)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), type_color)
 	cy += 8.0
 
-	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else "None"
-	draw_string(font, Vector2(cx, cy + 14), "Location: (%d, %d)  |  Settlement: %s" % [building.tile_x, building.tile_y, sid_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else Locale.tr("UI_NONE")
+	draw_string(font, Vector2(cx, cy + 14), "%s: (%d, %d)  |  %s: %s" % [Locale.tr("UI_LOCATION"), building.tile_x, building.tile_y, Locale.tr("UI_SETTLEMENT"), sid_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0
 
 	# Status
 	if building.is_built:
-		draw_string(font, Vector2(cx, cy + 12), "Status: Active", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
+		draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_STATUS_ACTIVE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
 	else:
-		draw_string(font, Vector2(cx, cy + 12), "Status: Under Construction (%d%%)" % int(building.build_progress * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.8, 0.2))
+		var pct: int = int(building.build_progress * 100)
+		draw_string(font, Vector2(cx, cy + 12), Locale.trf("UI_STATUS_UNDER_CONSTRUCTION_FMT", {"pct": pct}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.8, 0.2))
 		cy += 18.0
 		var bar_w: float = panel_w - 60
 		draw_rect(Rect2(cx + 10, cy, bar_w, 12), Color(0.2, 0.2, 0.2, 0.8))
@@ -75,7 +80,7 @@ func _draw() -> void:
 	cy += 22.0
 
 	# Type-specific info
-	draw_string(font, Vector2(cx, cy + 12), "Details", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_DETAILS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
 
 	match building.building_type:
@@ -84,34 +89,43 @@ func _draw() -> void:
 				var food: float = building.storage.get("food", 0.0)
 				var wood: float = building.storage.get("wood", 0.0)
 				var stone: float = building.storage.get("stone", 0.0)
-				draw_string(font, Vector2(cx + 10, cy + 12), "Food: %.1f" % food, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.8, 0.2))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_FOOD"), food], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.8, 0.2))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "Wood: %.1f" % wood, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.4, 0.2))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_WOOD"), wood], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.4, 0.2))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "Stone: %.1f" % stone, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_STONE"), stone], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "Total: %.1f" % (food + wood + stone), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s+%s+%s: %.1f" % [Locale.tr("UI_FOOD"), Locale.tr("UI_WOOD"), Locale.tr("UI_STONE"), (food + wood + stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			else:
-				draw_string(font, Vector2(cx + 10, cy + 12), "Storage available after construction", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+				draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_STORAGE_PENDING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 		"shelter":
-			draw_string(font, Vector2(cx + 10, cy + 12), "Housing: Provides energy regeneration bonus", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_HOUSING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
-			draw_string(font, Vector2(cx + 10, cy + 12), "Capacity: 6 entities per shelter", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_CAPACITY_FMT", {"n": 6}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		"campfire":
-			draw_string(font, Vector2(cx + 10, cy + 12), "Warmth: Provides social bonus to nearby entities", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_CAMPFIRE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
 			var radius: int = GameConfig.BUILDING_TYPES.get("campfire", {}).get("radius", 5)
-			draw_string(font, Vector2(cx + 10, cy + 12), "Effect radius: %d tiles" % radius, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_EFFECT_RADIUS_FMT", {"n": radius}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 
 	# Build cost reference
 	cy += 28.0
-	draw_string(font, Vector2(cx, cy + 12), "Build Cost", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_BUILD_COST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
 	var cost: Dictionary = GameConfig.BUILDING_TYPES.get(building.building_type, {}).get("cost", {})
 	var cost_parts: Array = []
 	var cost_keys: Array = cost.keys()
 	for i in range(cost_keys.size()):
-		cost_parts.append("%s: %.0f" % [cost_keys[i].capitalize(), cost[cost_keys[i]]])
+		var cost_key: String = str(cost_keys[i])
+		var cost_label: String = cost_key.capitalize()
+		match cost_key:
+			"food":
+				cost_label = Locale.tr("UI_FOOD")
+			"wood":
+				cost_label = Locale.tr("UI_WOOD")
+			"stone":
+				cost_label = Locale.tr("UI_STONE")
+		cost_parts.append("%s: %.0f" % [cost_label, cost[cost_keys[i]]])
 	draw_string(font, Vector2(cx + 10, cy + 12), " | ".join(cost_parts), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 
-	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), "Click background or E to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), Locale.tr("UI_DETAIL_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))

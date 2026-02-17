@@ -18,9 +18,20 @@ var _save_manager: RefCounted
 var _main_container: VBoxContainer
 var _slot_container: VBoxContainer
 var _confirm_container: VBoxContainer
+var _menu_title: Label
 var _slot_title: Label
 var _slot_buttons: Array[Button] = []
 var _slot_infos: Array = []
+var _btn_continue: Button
+var _btn_save: Button
+var _btn_load: Button
+var _btn_quit: Button
+var _btn_back: Button
+var _btn_confirm_yes: Button
+var _btn_confirm_no: Button
+var _hint_label: Label
+var _lang_title: Label
+var _lang_buttons: Array = []
 var _confirm_label: Label
 var _pending_slot: int = -1
 
@@ -30,6 +41,10 @@ func _ready() -> void:
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
+	var on_locale_changed := Callable(self, "_on_locale_changed")
+	if not Locale.locale_changed.is_connected(on_locale_changed):
+		Locale.locale_changed.connect(on_locale_changed)
+	_refresh_texts()
 	_show_main()
 
 
@@ -73,49 +88,51 @@ func _build_ui() -> void:
 
 	_main_container = VBoxContainer.new()
 	_main_container.add_theme_constant_override("separation", 8)
-	var title := Label.new()
-	title.text = "GAME MENU"
-	title.add_theme_font_size_override("font_size", 22)
-	title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_main_container.add_child(title)
+	_menu_title = Label.new()
+	_menu_title.add_theme_font_size_override("font_size", 22)
+	_menu_title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	_menu_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_main_container.add_child(_menu_title)
 
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 10)
 	_main_container.add_child(spacer)
 
-	_main_container.add_child(_create_button("Continue", Callable(self, "_on_continue"), 16))
-	_main_container.add_child(_create_button("Save Game", Callable(self, "_on_save"), 16))
-	_main_container.add_child(_create_button("Load Game", Callable(self, "_on_load"), 16))
-	_main_container.add_child(_create_button("Quit", Callable(self, "_on_quit"), 16))
+	_btn_continue = _create_button("", Callable(self, "_on_continue"), 16)
+	_btn_save = _create_button("", Callable(self, "_on_save"), 16)
+	_btn_load = _create_button("", Callable(self, "_on_load"), 16)
+	_btn_quit = _create_button("", Callable(self, "_on_quit"), 16)
+	_main_container.add_child(_btn_continue)
+	_main_container.add_child(_btn_save)
+	_main_container.add_child(_btn_load)
+	_main_container.add_child(_btn_quit)
+	_main_container.add_child(_build_language_section())
 
-	var hint := Label.new()
-	hint.text = "ESC to close"
-	hint.add_theme_font_size_override("font_size", 12)
-	hint.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_main_container.add_child(hint)
+	_hint_label = Label.new()
+	_hint_label.add_theme_font_size_override("font_size", 12)
+	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_main_container.add_child(_hint_label)
 
 	_slot_container = VBoxContainer.new()
 	_slot_container.add_theme_constant_override("separation", 8)
 	_slot_title = Label.new()
-	_slot_title.text = "Save Game"
 	_slot_title.add_theme_font_size_override("font_size", 22)
 	_slot_title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	_slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_slot_container.add_child(_slot_title)
 
 	for slot in range(1, SLOT_COUNT + 1):
-		var btn := _create_button("Slot %d  Empty" % slot, Callable(self, "_on_slot_pressed").bind(slot), 14)
+		var btn := _create_button("", Callable(self, "_on_slot_pressed").bind(slot), 14)
 		_slot_buttons.append(btn)
 		_slot_container.add_child(btn)
 
-	_slot_container.add_child(_create_button("<- Back", Callable(self, "_on_back"), 16))
+	_btn_back = _create_button("", Callable(self, "_on_back"), 16)
+	_slot_container.add_child(_btn_back)
 
 	_confirm_container = VBoxContainer.new()
 	_confirm_container.add_theme_constant_override("separation", 10)
 	_confirm_label = Label.new()
-	_confirm_label.text = "Overwrite existing save?"
 	_confirm_label.add_theme_font_size_override("font_size", 16)
 	_confirm_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	_confirm_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -124,8 +141,10 @@ func _build_ui() -> void:
 	var confirm_row := HBoxContainer.new()
 	confirm_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	confirm_row.add_theme_constant_override("separation", 12)
-	confirm_row.add_child(_create_button("Yes", Callable(self, "_on_confirm_yes"), 16))
-	confirm_row.add_child(_create_button("No", Callable(self, "_on_confirm_no"), 16))
+	_btn_confirm_yes = _create_button("", Callable(self, "_on_confirm_yes"), 16)
+	_btn_confirm_no = _create_button("", Callable(self, "_on_confirm_no"), 16)
+	confirm_row.add_child(_btn_confirm_yes)
+	confirm_row.add_child(_btn_confirm_no)
 	_confirm_container.add_child(confirm_row)
 
 	root.add_child(_main_container)
@@ -134,6 +153,7 @@ func _build_ui() -> void:
 
 	_panel.add_child(root)
 	add_child(_panel)
+	_update_lang_highlight()
 
 
 func _create_button(text: String, callback: Callable, font_size: int) -> Button:
@@ -178,6 +198,50 @@ func _create_button(text: String, callback: Callable, font_size: int) -> Button:
 	return btn
 
 
+func _build_language_section() -> Control:
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+
+	_lang_title = Label.new()
+	_lang_title.add_theme_font_size_override("font_size", 13)
+	_lang_title.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+	_lang_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_lang_title)
+
+	var hbox := HBoxContainer.new()
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	hbox.add_theme_constant_override("separation", 8)
+
+	var lang_defs: Array = [
+		{"locale": "ko", "label": String.chr(0xD55C) + String.chr(0xAD6D) + String.chr(0xC5B4)},
+		{"locale": "en", "label": "English"}
+	]
+	for ld in lang_defs:
+		var btn := Button.new()
+		btn.text = str(ld.get("label", ""))
+		btn.custom_minimum_size = Vector2(100, 32)
+		btn.flat = false
+		var locale_val: String = str(ld.get("locale", ""))
+		btn.pressed.connect(func() -> void: Locale.set_locale(locale_val))
+		hbox.add_child(btn)
+		_lang_buttons.append({"btn": btn, "locale": locale_val})
+
+	vbox.add_child(hbox)
+	return vbox
+
+
+func _update_lang_highlight() -> void:
+	for item in _lang_buttons:
+		var entry: Dictionary = item
+		var btn: Button = entry.get("btn") as Button
+		if btn == null:
+			continue
+		if str(entry.get("locale", "")) == Locale.current_locale:
+			btn.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))
+		else:
+			btn.remove_theme_color_override("font_color")
+
+
 func toggle_menu() -> void:
 	if _visible:
 		hide_menu()
@@ -215,7 +279,7 @@ func _show_main() -> void:
 func _show_slots(is_save: bool) -> void:
 	_state = STATE_SAVE if is_save else STATE_LOAD
 	_is_save_mode = is_save
-	_slot_title.text = "Save Game" if is_save else "Load Game"
+	_slot_title.text = Locale.tr("UI_SAVE_GAME") if is_save else Locale.tr("UI_LOAD_GAME")
 	_main_container.visible = false
 	_slot_container.visible = true
 	_confirm_container.visible = false
@@ -224,7 +288,7 @@ func _show_slots(is_save: bool) -> void:
 
 func _show_overwrite_confirm(slot: int) -> void:
 	_pending_slot = slot
-	_confirm_label.text = "Overwrite save in Slot %d?" % slot
+	_confirm_label.text = Locale.trf("UI_OVERWRITE_CONFIRM", {"slot": slot})
 	_main_container.visible = false
 	_slot_container.visible = false
 	_confirm_container.visible = true
@@ -244,13 +308,53 @@ func _refresh_slot_buttons(is_save: bool) -> void:
 			var month: int = int(info.get("game_month", 0))
 			var pop: int = int(info.get("population", 0))
 			var time_ago: String = _format_time_ago(str(info.get("save_time", "")))
-			btn.text = "Slot %d  Y%d %d월 - Pop: %d - %s" % [slot, year, month, pop, time_ago]
+			btn.text = Locale.trf("UI_SLOT_FORMAT", {
+				"slot": slot,
+				"year": year,
+				"month": month,
+				"pop": pop,
+				"time_ago": time_ago
+			})
 			btn.disabled = false
 			btn.modulate = Color(1, 1, 1, 1)
 		else:
-			btn.text = "Slot %d  Empty" % slot
+			btn.text = "Slot %d  %s" % [slot, Locale.tr("UI_SLOT_EMPTY")]
 			btn.disabled = not is_save
 			btn.modulate = Color(0.65, 0.65, 0.65, 1) if btn.disabled else Color(1, 1, 1, 1)
+
+
+func _on_locale_changed(_new_locale: String) -> void:
+	_refresh_texts()
+
+
+func _refresh_texts() -> void:
+	if _menu_title != null:
+		_menu_title.text = Locale.tr("UI_GAME_MENU")
+	if _btn_continue != null:
+		_btn_continue.text = Locale.tr("UI_CONTINUE")
+	if _btn_save != null:
+		_btn_save.text = Locale.tr("UI_SAVE")
+	if _btn_load != null:
+		_btn_load.text = Locale.tr("UI_LOAD")
+	if _btn_quit != null:
+		_btn_quit.text = Locale.tr("UI_QUIT")
+	if _hint_label != null:
+		_hint_label.text = Locale.tr("UI_ESC_HINT")
+	if _slot_title != null:
+		_slot_title.text = Locale.tr("UI_LOAD_GAME") if _state == STATE_LOAD else Locale.tr("UI_SAVE_GAME")
+	if _btn_back != null:
+		_btn_back.text = Locale.tr("UI_BACK")
+	if _btn_confirm_yes != null:
+		_btn_confirm_yes.text = Locale.tr("UI_YES")
+	if _btn_confirm_no != null:
+		_btn_confirm_no.text = Locale.tr("UI_NO")
+	if _lang_title != null:
+		_lang_title.text = Locale.tr("UI_LANGUAGE")
+	if _confirm_label != null:
+		var confirm_slot: int = _pending_slot if _pending_slot >= 1 else 1
+		_confirm_label.text = Locale.trf("UI_OVERWRITE_CONFIRM", {"slot": confirm_slot})
+	_update_lang_highlight()
+	_refresh_slot_buttons(_state == STATE_SAVE)
 
 
 func _on_continue() -> void:
@@ -310,16 +414,18 @@ func _format_time_ago(save_time_str: String) -> String:
 		return "-"
 	var now_unix: int = int(Time.get_unix_time_from_system())
 	var diff: int = maxi(now_unix - saved_unix, 0)
+	if diff < 60:
+		return Locale.tr("UI_TIME_AGO_JUST_NOW")
 	if diff < 3600:
 		var minutes: int = maxi(diff / 60, 1)
-		return "%d분 전" % minutes
+		return Locale.trf("UI_TIME_AGO_MINUTES", {"n": minutes})
 	if diff < 86400:
 		var hours: int = maxi(diff / 3600, 1)
-		return "%d시간 전" % hours
+		return Locale.trf("UI_TIME_AGO_HOURS", {"n": hours})
 	if diff < 172800:
-		return "어제"
+		return Locale.tr("UI_TIME_AGO_YESTERDAY")
 	var days: int = diff / 86400
-	return "%d일 전" % days
+	return Locale.trf("UI_TIME_AGO_DAYS", {"n": days})
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -72,14 +72,14 @@ func _load_emotion_definitions() -> void:
 		"anticipation": ["Interest", "Anticipation", "Vigilance"]
 	})
 	_intensity_labels_kr = ed.get("intensity_labels_kr", {
-		"joy": ["평온", "기쁨", "황홀"],
-		"trust": ["수용", "신뢰", "경외"],
-		"fear": ["우려", "공포", "경악"],
-		"surprise": ["산만", "놀람", "경이"],
-		"sadness": ["수심", "슬픔", "비통"],
-		"disgust": ["지루함", "혐오", "증오"],
-		"anger": ["짜증", "분노", "격노"],
-		"anticipation": ["흥미", "기대", "경계"]
+		"joy": ["Serenity", "Joy", "Ecstasy"],
+		"trust": ["Acceptance", "Trust", "Admiration"],
+		"fear": ["Apprehension", "Fear", "Terror"],
+		"surprise": ["Distraction", "Surprise", "Amazement"],
+		"sadness": ["Pensiveness", "Sadness", "Grief"],
+		"disgust": ["Boredom", "Disgust", "Loathing"],
+		"anger": ["Annoyance", "Anger", "Rage"],
+		"anticipation": ["Interest", "Anticipation", "Vigilance"]
 	})
 	_emotion_order = ed.get("emotion_order", ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"])
 	_emotion_labels_en = ed.get("labels_en", {
@@ -87,8 +87,8 @@ func _load_emotion_definitions() -> void:
 		"sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation"
 	})
 	_emotion_labels_kr = ed.get("labels_kr", {
-		"joy": "기쁨", "trust": "신뢰", "fear": "공포", "surprise": "놀람",
-		"sadness": "슬픔", "disgust": "혐오", "anger": "분노", "anticipation": "기대"
+		"joy": "Joy", "trust": "Trust", "fear": "Fear", "surprise": "Surprise",
+		"sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation"
 	})
 	var vw = ed.get("valence_weights", {})
 	_valence_positive = vw.get("positive", {"joy": 1.0, "trust": 1.0, "anticipation": 0.5})

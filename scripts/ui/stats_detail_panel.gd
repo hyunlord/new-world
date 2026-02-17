@@ -25,6 +25,10 @@ func init(stats_recorder: RefCounted, settlement_manager: RefCounted = null, ent
 	_relationship_manager = relationship_manager
 
 
+func _ready() -> void:
+	Locale.locale_changed.connect(func(_l): queue_redraw())
+
+
 func _process(_delta: float) -> void:
 	if visible:
 		queue_redraw()
@@ -89,7 +93,7 @@ func _draw() -> void:
 	var cy: float = 30.0 - _scroll_offset
 
 	# Title
-	draw_string(font, Vector2(cx, cy), "World Statistics", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy), Locale.tr("UI_WORLD_STATISTICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
 	cy += 15.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.4), 1.0)
 	cy += 10.0
@@ -128,7 +132,7 @@ func _draw() -> void:
 	_content_height = cy + _scroll_offset + 40.0
 
 	# Footer hint
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), "Scroll for more | Click background or G to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.tr("UI_STAT_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
 
 
@@ -164,12 +168,12 @@ func _draw_scrollbar() -> void:
 
 
 func _draw_population_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.2, 1.0, 0.4))
+	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.2, 1.0, 0.4))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
 	if history.size() < 2:
-		draw_string(font, Vector2(x, y + 12), "Waiting for data...", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_WAITING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return y + 20.0
 
 	var latest: Dictionary = history[history.size() - 1]
@@ -191,21 +195,23 @@ func _draw_population_section(font: Font, x: float, y: float, w: float) -> float
 
 	y += GRAPH_HEIGHT + 5.0
 
-	var pop_line: String = "Current: %d  |  Peak: %d  |  Deaths: %d  |  Births: %d" % [
-		latest.pop, _stats_recorder.peak_pop,
-		_stats_recorder.total_deaths, _stats_recorder.total_births,
-	]
+	var pop_line: String = Locale.trf("UI_STAT_CURRENT_FMT", {
+		"current": latest.pop,
+		"peak": _stats_recorder.peak_pop,
+		"deaths": _stats_recorder.total_deaths,
+		"births": _stats_recorder.total_births,
+	})
 	draw_string(font, Vector2(x, y + 12), pop_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
 
 func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), "Demographics", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.8, 0.5, 0.9))
+	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_DEMOGRAPHICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.8, 0.5, 0.9))
 	y += 20.0
 
 	var alive: Array = _entity_manager.get_alive_entities()
 	if alive.is_empty():
-		draw_string(font, Vector2(x, y + 12), "No population", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_NO_POP"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return y + 20.0
 
 	# Count age stages, couples, happiness
@@ -248,15 +254,15 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	var avg_happiness: float = total_happiness / float(total) if total > 0 else 0.0
 
 	# Gender line
-	draw_string(font, Vector2(x, y + 12), "Gender: M:%d  F:%d" % [male_count, female_count], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
+	draw_string(font, Vector2(x, y + 12), Locale.trf("UI_STAT_GENDER_FMT", {"m": male_count, "f": female_count}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 	y += 16.0
 
 	# Couples line
-	draw_string(font, Vector2(x, y + 12), "Couples: %d  |  Single Adults: %d" % [couple_count, single_adult_count], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
+	draw_string(font, Vector2(x, y + 12), Locale.trf("UI_STAT_COUPLES_FMT", {"couples": couple_count, "single": single_adult_count}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 	y += 16.0
 
 	# Average happiness bar
-	draw_string(font, Vector2(x, y + 11), "Avg Happiness:", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(x, y + 11), Locale.tr("UI_STAT_AVG_HAPPINESS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	var bar_x: float = x + 120.0
 	var bar_w: float = w - 180.0
 	var bar_h: float = 10.0
@@ -267,17 +273,17 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	y += 18.0
 
 	# Age distribution bar
-	draw_string(font, Vector2(x, y + 12), "Age Distribution:", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_AGE_DIST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	y += 16.0
 
 	var age_bar_x: float = x
 	var age_bar_w: float = w
 	var age_bar_h: float = 16.0
 	var age_data: Array = [
-		{"label": "Child", "count": child_count, "color": Color(0.5, 0.8, 1.0)},
-		{"label": "Teen", "count": teen_count, "color": Color(0.3, 0.7, 0.4)},
-		{"label": "Adult", "count": adult_count, "color": Color(0.2, 0.5, 0.9)},
-		{"label": "Elder", "count": elder_count, "color": Color(0.7, 0.5, 0.3)},
+		{"label": Locale.tr_id("STAGE", "child"), "count": child_count, "color": Color(0.5, 0.8, 1.0)},
+		{"label": Locale.tr_id("STAGE", "teen"), "count": teen_count, "color": Color(0.3, 0.7, 0.4)},
+		{"label": Locale.tr_id("STAGE", "adult"), "count": adult_count, "color": Color(0.2, 0.5, 0.9)},
+		{"label": Locale.tr_id("STAGE", "elder"), "count": elder_count, "color": Color(0.7, 0.5, 0.3)},
 	]
 
 	var bx: float = age_bar_x
@@ -301,7 +307,7 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 
 
 func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.8, 0.1))
+	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_RESOURCES_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.8, 0.1))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -335,15 +341,17 @@ func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
 	y += GRAPH_HEIGHT + 5.0
 
 	var deltas: Dictionary = _stats_recorder.get_resource_deltas()
-	var res_line: String = "Food: %d (%+.0f/100t)  |  Wood: %d (%+.0f/100t)  |  Stone: %d (%+.0f/100t)" % [
-		int(latest.food), deltas.food, int(latest.wood), deltas.wood, int(latest.stone), deltas.stone,
+	var res_line: String = "%s: %d (%+.0f/100t)  |  %s: %d (%+.0f/100t)  |  %s: %d (%+.0f/100t)" % [
+		Locale.tr("UI_FOOD"), int(latest.food), deltas.food,
+		Locale.tr("UI_WOOD"), int(latest.wood), deltas.wood,
+		Locale.tr("UI_STONE"), int(latest.stone), deltas.stone,
 	]
 	draw_string(font, Vector2(x, y + 12), res_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
 
 func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.5, 0.7, 1.0))
+	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_JOBS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.5, 0.7, 1.0))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -358,11 +366,11 @@ func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
 	var bar_h: float = 16.0
 	var bx: float = x
 	var job_data: Array = [
-		{"name": "Gatherer", "count": snap.gatherers, "color": Color(0.3, 0.8, 0.2)},
-		{"name": "Lumberjack", "count": snap.lumberjacks, "color": Color(0.6, 0.35, 0.1)},
-		{"name": "Builder", "count": snap.builders, "color": Color(0.9, 0.6, 0.1)},
-		{"name": "Miner", "count": snap.miners, "color": Color(0.5, 0.6, 0.75)},
-		{"name": "None", "count": snap.none_job, "color": Color(0.4, 0.4, 0.4)},
+		{"name": Locale.tr_id("JOB", "gatherer"), "count": snap.gatherers, "color": Color(0.3, 0.8, 0.2)},
+		{"name": Locale.tr_id("JOB", "lumberjack"), "count": snap.lumberjacks, "color": Color(0.6, 0.35, 0.1)},
+		{"name": Locale.tr_id("JOB", "builder"), "count": snap.builders, "color": Color(0.9, 0.6, 0.1)},
+		{"name": Locale.tr_id("JOB", "miner"), "count": snap.miners, "color": Color(0.5, 0.6, 0.75)},
+		{"name": Locale.tr_id("JOB", "none"), "count": snap.none_job, "color": Color(0.4, 0.4, 0.4)},
 	]
 
 	for idx in range(job_data.size()):
@@ -382,17 +390,19 @@ func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
 
 
 func _draw_settlements_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), "Settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.6, 0.2))
+	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_SETTLEMENTS_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.6, 0.2))
 	y += 20.0
 
 	var settlements: Array = _stats_recorder.get_settlement_stats()
 	if settlements.is_empty():
-		draw_string(font, Vector2(x, y + 12), "No settlements", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_NO_SETTLEMENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return
 
 	for i in range(settlements.size()):
 		var s: Dictionary = settlements[i]
-		draw_string(font, Vector2(x + 4, y + 11), "S%d: Pop %d, Bld %d" % [s.id, s.pop, s.buildings], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+		var pop_text: String = Locale.trf("UI_STAT_POP_FMT", {"n": s.pop})
+		var buildings_text: String = "%s: %d" % [Locale.tr("UI_BUILDINGS_COUNT"), s.buildings]
+		draw_string(font, Vector2(x + 4, y + 11), "S%d: %s, %s" % [s.id, pop_text, buildings_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		y += 14.0
-		draw_string(font, Vector2(x + 4, y + 11), "  F:%d W:%d S:%d" % [int(s.food), int(s.wood), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+		draw_string(font, Vector2(x + 4, y + 11), "  %s:%d %s:%d %s:%d" % [Locale.tr("UI_FOOD"), int(s.food), Locale.tr("UI_WOOD"), int(s.wood), Locale.tr("UI_STONE"), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		y += 14.0

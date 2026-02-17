@@ -48,24 +48,6 @@ func _current_date_from_tick(tick: int) -> Dictionary:
 	return {"year": d.year, "month": d.month, "day": d.day}
 
 
-static func get_death_cause_korean(cause: String) -> String:
-	match cause:
-		"starvation":
-			return "아사"
-		"old_age":
-			return "노령"
-		"infant_mortality":
-			return "영아 사망"
-		"background":
-			return "사고/질병"
-		"maternal_death":
-			return "출산 사망"
-		"stillborn":
-			return "사산"
-		_:
-			return cause
-
-
 ## Get a deceased record by entity ID
 func get_record(id: int) -> Dictionary:
 	return _records.get(id, {})
