@@ -302,12 +302,6 @@ func _draw() -> void:
 	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_ACTION"), action_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 16.0
 
-	if entity.cached_path.size() > 0:
-		var remaining: int = entity.cached_path.size() - entity.path_index
-		if remaining > 0:
-			draw_string(font, Vector2(cx + 10, cy + 12), "Path: %d steps remaining" % remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
-			cy += 16.0
-
 	draw_string(font, Vector2(cx + 10, cy + 12), "%s: F:%.1f  W:%.1f  S:%.1f / %.0f" % [
 		Locale.ltr("UI_INVENTORY"), entity.inventory.get("food", 0.0), entity.inventory.get("wood", 0.0),
 		entity.inventory.get("stone", 0.0), GameConfig.MAX_CARRY,
@@ -354,7 +348,7 @@ func _draw() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = "    " + Locale.tr("FACET_" + fk.to_upper())
+				var fname: String = "    " + Locale.ltr("FACET_" + fk.to_upper())
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
@@ -924,7 +918,7 @@ func _draw_deceased() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = "    " + Locale.tr("FACET_" + fk.to_upper())
+				var fname: String = "    " + Locale.ltr("FACET_" + fk.to_upper())
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
@@ -972,7 +966,13 @@ func _draw_deceased() -> void:
 			var count: int = 0
 			while idx >= 0 and count < show_count:
 				var evt: Dictionary = events[idx]
-				var desc: String = evt.get("description", "?")
+				var desc: String
+				if evt.has("l10n_key") and not evt.get("l10n_key", "").is_empty():
+					var l10n_key: String = evt.get("l10n_key", "")
+					var l10n_params: Dictionary = evt.get("l10n_params", {})
+					desc = Locale.trf(l10n_key, l10n_params)
+				else:
+					desc = evt.get("description", "?")
 				if desc.length() > 50:
 					desc = desc.substr(0, 47) + "..."
 				draw_string(font, Vector2(cx + 10, cy + 11), "Y%d M%d: %s" % [evt.get("year", 0), evt.get("month", 0), desc], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))

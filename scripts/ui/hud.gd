@@ -41,10 +41,13 @@ var _entity_action_label: Label
 var _entity_inventory_label: Label
 var _hunger_bar: ProgressBar
 var _hunger_pct_label: Label
+var _hunger_name_label: Label
 var _energy_bar: ProgressBar
 var _energy_pct_label: Label
+var _energy_name_label: Label
 var _social_bar: ProgressBar
 var _social_pct_label: Label
+var _social_name_label: Label
 var _entity_stats_label: Label
 
 # Building panel
@@ -287,18 +290,21 @@ func _build_entity_panel() -> void:
 	var hunger_row := _make_bar_row(Locale.ltr("UI_HUNGER"), Color(0.9, 0.2, 0.2))
 	_hunger_bar = hunger_row[0]
 	_hunger_pct_label = hunger_row[1]
+	_hunger_name_label = hunger_row[3]
 	vbox.add_child(hunger_row[2])
 
 	# Energy bar with percentage
 	var energy_row := _make_bar_row(Locale.ltr("UI_ENERGY"), Color(0.9, 0.8, 0.2))
 	_energy_bar = energy_row[0]
 	_energy_pct_label = energy_row[1]
+	_energy_name_label = energy_row[3]
 	vbox.add_child(energy_row[2])
 
 	# Social bar with percentage
 	var social_row := _make_bar_row(Locale.ltr("UI_SOCIAL"), Color(0.3, 0.5, 0.9))
 	_social_bar = social_row[0]
 	_social_pct_label = social_row[1]
+	_social_name_label = social_row[3]
 	vbox.add_child(social_row[2])
 
 	vbox.add_child(_make_separator())
@@ -873,6 +879,12 @@ func _refresh_hud_texts() -> void:
 		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
+	if _hunger_name_label != null:
+		_hunger_name_label.text = Locale.ltr("UI_HUNGER") + ":"
+	if _energy_name_label != null:
+		_energy_name_label.text = Locale.ltr("UI_ENERGY") + ":"
+	if _social_name_label != null:
+		_social_name_label.text = Locale.ltr("UI_SOCIAL") + ":"
 
 
 # --- Toggle functions ---
@@ -1074,7 +1086,7 @@ func _make_bar_row(label_text: String, color: Color) -> Array:
 	row.add_child(bar)
 	row.add_child(pct_label)
 
-	return [bar, pct_label, row]
+	return [bar, pct_label, row, name_label]
 
 
 func _make_separator() -> HSeparator:
