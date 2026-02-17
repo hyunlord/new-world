@@ -24,6 +24,30 @@
 
 ---
 
+## Phase 2 Trait 기술 키 + 누락 JSON 키 대량 추가 — 2026-02-18
+
+### Context
+trait_tooltip.gd는 이미 Locale.tr_id()를 올바르게 사용하고 있었으나, JSON에 해당 키가 없어 raw key string으로 표시됨.
+ACTION_*(109), EMOTION_MOD_*(35), REL_MOD_*(49) → game.json, TRAIT_*(187) → ui.json 추가.
+FACET_O_AESTHETIC 키 별칭 추가 (personality_data.gd의 "O_aesthetic" → FACET_O_AESTHETIC).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-A | TRAIT_*(187) → en+ko ui.json | 🟢 DISPATCH | ask_codex | standalone JSON append |
+| TICKET-B | ACTION_*/EMOTION_MOD_*/REL_MOD_*(193) → en+ko game.json | 🟢 DISPATCH | ask_codex | standalone JSON append |
+
+### Dispatch ratio: 2/2 = 100% ✅ (ask_codex)
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/58
+- Files changed: 4 (en/ui.json, ko/ui.json, en/game.json, ko/game.json)
+- New keys: TRAIT_*(187), ACTION_*(109+14 existing), EMOTION_MOD_*(35+6 existing), REL_MOD_*(49+4 existing)
+- ui.json: 438 keys total, game.json: 300 keys total — en/ko parity confirmed
+
+---
+
 ## Phase 2 Round 2 i18n 전수검사 + Chronicle i18n — T-2032 — 2026-02-18
 
 ### Context
