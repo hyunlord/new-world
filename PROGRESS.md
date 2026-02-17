@@ -14,7 +14,20 @@ settlement 바이너리 로드 시 typed Array[int] 할당 에러 수정 + ESC �
 ### Dispatch ratio: 2/2 = 100% ✅
 
 ### Dispatch strategy
-Parallel dispatch — no file overlap between tickets
+Parallel dispatch — no file overlap between tickets.
+T-2021-01 completed by Codex. T-2021-02 completed by Codex (files written before timeout kill).
+Lead fixed headless class_name issue (preload pattern for PauseMenu in main.gd).
+
+### Results
+- Gate: PASS
+- PR: #42 merged
+- Files changed: 5 (save_manager.gd, pause_menu.gd [new], main.gd, hud.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Key changes:
+  - save_manager.gd: `s.member_ids = []` → `s.member_ids.clear()` (typed Array fix)
+  - New pause_menu.gd: ESC game menu with Continue/Save/Load/Quit + game pause
+  - hud.gd: close_all_popups() returns bool, simplified key hints to "Space:Pause Tab:Resources M:Map G:Stats H:Help ESC:Menu"
+  - main.gd: ESC chains popups → pause menu, PauseMenu via preload
 
 ---
 
