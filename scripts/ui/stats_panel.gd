@@ -50,7 +50,7 @@ func _draw_population_graph(font: Font) -> void:
 
 	var history: Array = _stats_recorder.history
 	var latest: Dictionary = history[history.size() - 1]
-	draw_string(font, Vector2(4, 12), "Pop: %d" % latest.pop, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
+	draw_string(font, Vector2(4, 12), Locale.ltr("UI_STAT_POPULATION") + ": %d" % latest.pop, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
 
 	var max_pop: int = 1
 	for i in range(history.size()):
@@ -110,7 +110,7 @@ func _draw_resource_graph(font: Font) -> void:
 
 func _draw_job_distribution(font: Font) -> void:
 	var y_off: float = graph_h * 2 + 8
-	draw_string(font, Vector2(4, y_off + 12), "Jobs", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
+	draw_string(font, Vector2(4, y_off + 12), Locale.ltr("UI_JOBS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
 
 	var history: Array = _stats_recorder.history
 	if history.is_empty():

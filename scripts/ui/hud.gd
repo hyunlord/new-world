@@ -521,7 +521,7 @@ func _process(delta: float) -> void:
 
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
-		_time_label.text = GameCalendar.format_date(tick)
+		_time_label.text = GameCalendar.format_full_datetime(tick)
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()

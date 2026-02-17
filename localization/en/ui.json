@@ -33,6 +33,7 @@
   "UI_BORN": "Born",
   "UI_DIED": "Died",
   "UI_JOB": "Job",
+  "UI_JOBS": "Jobs",
   "UI_STATUS": "Status",
   "UI_SETTLEMENT": "Sett",
   "UI_PERSONALITY": "Personality",
@@ -104,7 +105,7 @@
   "UI_MENTAL_BREAK": "Mental Break",
   "UI_SAVE_GAME": "Save Game",
   "UI_LOAD_GAME": "Load Game",
-  "UI_STAT_POPULATION": "Population",
+  "UI_STAT_POPULATION": "Pop",
   "UI_STAT_BIRTHS": "Births",
   "UI_STAT_DEATHS": "Deaths",
   "UI_STAT_AVG_AGE": "Avg Age",
@@ -241,6 +242,8 @@
   "FACET_O_INQUISITIVENESS": "Inquisitiveness",
   "FACET_O_CREATIVITY": "Creativity",
   "FACET_O_UNCONVENTIONALITY": "Unconventionality",
+  "UI_LOVE": "Love",
+  "UI_COMPAT": "Compat",
   "UI_AFFINITY": "A",
   "UI_TRUST": "T",
   "UI_RELATIONSHIP_SCORE": "R",
@@ -438,5 +441,8 @@
   "TRAIT_C_HERETIC": "Heretic",
   "TRAIT_C_MEDIATOR_KING": "Mediator King",
   "UI_SHORT_DATE": "M{month} D{day}",
-  "UI_SHORT_DATE_WITH_YEAR": "Y{year} M{month} D{day}"
+  "UI_SHORT_DATE_WITH_YEAR": "Y{year} M{month} D{day}",
+  "UI_FULL_DATETIME": "Y{year} M{month} D{day} {hour}:{minute}",
+  "UI_SHORT_DATETIME": "M{month} D{day} {hour}:{minute}",
+  "UI_SHORT_DATETIME_WITH_YEAR": "Y{year} M{month} D{day} {hour}:{minute}"
 }

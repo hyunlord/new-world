@@ -33,6 +33,7 @@
   "UI_BORN": "출생",
   "UI_DIED": "사망",
   "UI_JOB": "직업",
+  "UI_JOBS": "직업",
   "UI_STATUS": "상태",
   "UI_SETTLEMENT": "정착지",
   "UI_PERSONALITY": "성격",
@@ -241,6 +242,8 @@
   "FACET_O_INQUISITIVENESS": "탐구심",
   "FACET_O_CREATIVITY": "창의성",
   "FACET_O_UNCONVENTIONALITY": "비관습성",
+  "UI_LOVE": "애정",
+  "UI_COMPAT": "궁합",
   "UI_AFFINITY": "호감",
   "UI_TRUST": "신뢰",
   "UI_RELATIONSHIP_SCORE": "관계",
@@ -438,5 +441,8 @@
   "TRAIT_C_HERETIC": "이단자",
   "TRAIT_C_MEDIATOR_KING": "중재왕",
   "UI_SHORT_DATE": "{month}월 {day}일",
-  "UI_SHORT_DATE_WITH_YEAR": "Y{year} {month}월 {day}일"
+  "UI_SHORT_DATE_WITH_YEAR": "Y{year} {month}월 {day}일",
+  "UI_FULL_DATETIME": "Y{year} {month}월 {day}일 {hour}:{minute}",
+  "UI_SHORT_DATETIME": "{month}월 {day}일 {hour}:{minute}",
+  "UI_SHORT_DATETIME_WITH_YEAR": "Y{year} {month}월 {day}일 {hour}:{minute}"
 }
