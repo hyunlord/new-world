@@ -128,6 +128,9 @@ func _ready() -> void:
 	_build_help_overlay()
 	_build_resource_legend()
 	_build_key_hints()
+	var on_locale_changed := Callable(self, "_on_locale_changed")
+	if not Locale.locale_changed.is_connected(on_locale_changed):
+		Locale.locale_changed.connect(on_locale_changed)
 	_connect_signals()
 	call_deferred("_build_minimap_and_stats")
 
@@ -265,7 +268,7 @@ func _build_entity_panel() -> void:
 	_entity_name_label = _make_label(Locale.ltr("UI_NAME"), "panel_title")
 	_entity_job_label = _make_label(Locale.ltr("UI_JOB"), "panel_body")
 	_entity_info_label = _make_label("", "panel_body", Color(0.7, 0.7, 0.7))
-	_entity_action_label = _make_label("Action: idle", "panel_body")
+	_entity_action_label = _make_label(Locale.ltr("UI_ACTION") + ": idle", "panel_body")
 	_entity_inventory_label = _make_label("Inv: empty", "panel_body")
 
 	vbox.add_child(_entity_name_label)
@@ -299,7 +302,7 @@ func _build_entity_panel() -> void:
 	vbox.add_child(_entity_stats_label)
 
 	_entity_detail_btn = Button.new()
-	_entity_detail_btn.text = "\u25B6 Details (E)"
+	_entity_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
 	_entity_detail_btn.flat = true
 	_entity_detail_btn.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_hint"))
 	_entity_detail_btn.add_theme_color_override("font_color", Color(0.5, 0.7, 0.5))
@@ -348,7 +351,7 @@ func _build_building_panel() -> void:
 	vbox.add_child(_building_status_label)
 
 	_building_detail_btn = Button.new()
-	_building_detail_btn.text = "\u25B6 Details (E)"
+	_building_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
 	_building_detail_btn.flat = true
 	_building_detail_btn.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_hint"))
 	_building_detail_btn.add_theme_color_override("font_color", Color(0.5, 0.7, 0.5))
@@ -592,7 +595,7 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]
 
 	# Action + path
-	var action_text: String = entity.current_action
+	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
 	if entity.action_target != Vector2i(-1, -1):
 		action_text += " -> (%d,%d)" % [entity.action_target.x, entity.action_target.y]
 		if entity.current_action == "build" and _building_manager != null:
@@ -838,6 +841,17 @@ func _on_simulation_event(event: Dictionary) -> void:
 		"stillborn":
 			var s_name: String = event.get("entity_name", "?")
 			_add_notification(Locale.trf("UI_NOTIF_STILLBORN_FMT", {"name": s_name}), Color(0.6, 0.3, 0.3))
+
+
+func _on_locale_changed(_new_locale: String) -> void:
+	_refresh_hud_texts()
+
+
+func _refresh_hud_texts() -> void:
+	if _entity_detail_btn != null:
+		_entity_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
+	if _building_detail_btn != null:
+		_building_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
 
 
 # --- Toggle functions ---

@@ -7,6 +7,7 @@ signal load_requested(slot: int)
 const STATE_MAIN: int = 0
 const STATE_SAVE: int = 1
 const STATE_LOAD: int = 2
+const STATE_SETTINGS: int = 3
 const SLOT_COUNT: int = 5
 
 var _panel: PanelContainer
@@ -26,7 +27,10 @@ var _btn_continue: Button
 var _btn_save: Button
 var _btn_load: Button
 var _btn_quit: Button
+var _btn_settings: Button
 var _btn_back: Button
+var _settings_container: VBoxContainer
+var _settings_title: Label
 var _btn_confirm_yes: Button
 var _btn_confirm_no: Button
 var _hint_label: Label
@@ -101,12 +105,13 @@ func _build_ui() -> void:
 	_btn_continue = _create_button("", Callable(self, "_on_continue"), 16)
 	_btn_save = _create_button("", Callable(self, "_on_save"), 16)
 	_btn_load = _create_button("", Callable(self, "_on_load"), 16)
+	_btn_settings = _create_button("", Callable(self, "_on_settings_pressed"), 16)
 	_btn_quit = _create_button("", Callable(self, "_on_quit"), 16)
 	_main_container.add_child(_btn_continue)
 	_main_container.add_child(_btn_save)
 	_main_container.add_child(_btn_load)
+	_main_container.add_child(_btn_settings)
 	_main_container.add_child(_btn_quit)
-	_main_container.add_child(_build_language_section())
 
 	_hint_label = Label.new()
 	_hint_label.add_theme_font_size_override("font_size", 12)
@@ -147,9 +152,24 @@ func _build_ui() -> void:
 	confirm_row.add_child(_btn_confirm_no)
 	_confirm_container.add_child(confirm_row)
 
+	# Settings container
+	_settings_container = VBoxContainer.new()
+	_settings_container.add_theme_constant_override("separation", 10)
+	_settings_title = Label.new()
+	_settings_title.add_theme_font_size_override("font_size", 22)
+	_settings_title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	_settings_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_settings_container.add_child(_settings_title)
+	var settings_sep := HSeparator.new()
+	_settings_container.add_child(settings_sep)
+	_settings_container.add_child(_build_language_section())
+	var btn_settings_back := _create_button("", Callable(self, "_on_settings_back"), 16)
+	_settings_container.add_child(btn_settings_back)
+
 	root.add_child(_main_container)
 	root.add_child(_slot_container)
 	root.add_child(_confirm_container)
+	root.add_child(_settings_container)
 
 	_panel.add_child(root)
 	add_child(_panel)
@@ -274,6 +294,16 @@ func _show_main() -> void:
 	_main_container.visible = true
 	_slot_container.visible = false
 	_confirm_container.visible = false
+	if _settings_container != null:
+		_settings_container.visible = false
+
+
+func _show_settings() -> void:
+	_state = STATE_SETTINGS
+	_main_container.visible = false
+	_slot_container.visible = false
+	_confirm_container.visible = false
+	_settings_container.visible = true
 
 
 func _show_slots(is_save: bool) -> void:
@@ -338,6 +368,10 @@ func _refresh_texts() -> void:
 		_btn_load.text = Locale.ltr("UI_LOAD")
 	if _btn_quit != null:
 		_btn_quit.text = Locale.ltr("UI_QUIT")
+	if _btn_settings != null:
+		_btn_settings.text = Locale.ltr("UI_SETTINGS")
+	if _settings_title != null:
+		_settings_title.text = Locale.ltr("UI_SETTINGS")
 	if _hint_label != null:
 		_hint_label.text = Locale.ltr("UI_ESC_HINT")
 	if _slot_title != null:
@@ -375,6 +409,14 @@ func _on_back() -> void:
 
 func _on_quit() -> void:
 	get_tree().quit()
+
+
+func _on_settings_pressed() -> void:
+	_show_settings()
+
+
+func _on_settings_back() -> void:
+	_show_main()
 
 
 func _on_slot_pressed(slot: int) -> void:

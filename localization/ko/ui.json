@@ -189,5 +189,8 @@
   "TOOLTIP_STRESS_MINIMAL": "(미미)",
   "TOOLTIP_STRESS_MODERATE": "(보통)",
   "TOOLTIP_STRESS_STRONG": "(강함)",
-  "TOOLTIP_STRESS_SEVERE": "(매우 강함)"
+  "TOOLTIP_STRESS_SEVERE": "(매우 강함)",
+  "UI_ACTION": "행동",
+  "UI_INVENTORY": "소지품",
+  "UI_MOOD": "기분"
 }

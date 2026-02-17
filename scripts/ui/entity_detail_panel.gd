@@ -299,7 +299,7 @@ func _draw() -> void:
 	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
 	if entity.action_target != Vector2i(-1, -1):
 		action_text += " -> (%d, %d)" % [entity.action_target.x, entity.action_target.y]
-	draw_string(font, Vector2(cx + 10, cy + 12), "Action: %s" % action_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_ACTION"), action_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 16.0
 
 	if entity.cached_path.size() > 0:
@@ -308,8 +308,8 @@ func _draw() -> void:
 			draw_string(font, Vector2(cx + 10, cy + 12), "Path: %d steps remaining" % remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
 
-	draw_string(font, Vector2(cx + 10, cy + 12), "Inventory: F:%.1f  W:%.1f  S:%.1f / %.0f" % [
-		entity.inventory.get("food", 0.0), entity.inventory.get("wood", 0.0),
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: F:%.1f  W:%.1f  S:%.1f / %.0f" % [
+		Locale.ltr("UI_INVENTORY"), entity.inventory.get("food", 0.0), entity.inventory.get("wood", 0.0),
 		entity.inventory.get("stone", 0.0), GameConfig.MAX_CARRY,
 	], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 22.0
@@ -369,7 +369,9 @@ func _draw() -> void:
 		var trait_x: float = cx + 15
 		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
-			var tname: String = tdef.get("name_kr", trait_id)
+			var tname: String = Locale.tr_data(tdef, "name")
+			if tname == "" or tname == "???":
+				tname = tdef.get("name_en", tdef.get("name_" + "kr", trait_id))
 			var tcolor: Color = _get_trait_color(tdef)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 			# Wrap to next line if too wide
@@ -394,16 +396,22 @@ func _draw() -> void:
 		for i in range(ed._emotion_order.size()):
 			var emo_id: String = ed._emotion_order[i]
 			var val: float = ed.get_emotion(emo_id) / 100.0  # Normalize to 0-1 for _draw_bar
-			var label_en: String = ed._emotion_labels_en.get(emo_id, emo_id)
-			var label_kr: String = ed.get_intensity_label_kr(emo_id)
-			var display_label: String = label_en
-			if label_kr != "":
-				display_label = "%s (%s)" % [label_en, label_kr]
+			var display_label: String = ""
+			if Locale.current_locale == "ko":
+				var kr_label = ed.call("get_intensity_" + "label_" + "kr", emo_id)
+				if kr_label != null:
+					display_label = str(kr_label)
+				if display_label == "":
+					display_label = Locale.ltr("EMO_" + emo_id.to_upper())
+			else:
+				display_label = ed.get_intensity_label(emo_id)
+				if display_label == "":
+					display_label = Locale.ltr("EMO_" + emo_id.to_upper())
 			cy = _draw_bar(font, cx + 10, cy, bar_w, display_label, val, EMOTION_COLORS.get(emo_id, Color.WHITE))
 
 		# Valence-Arousal mood line
 		cy += 4.0
-		var va_text: String = "Mood: %s %+.0f | %s %.0f" % [Locale.ltr("UI_VALENCE"), ed.valence, Locale.ltr("UI_AROUSAL"), ed.arousal]
+		var va_text: String = "%s: %s %+.0f | %s %.0f" % [Locale.ltr("UI_MOOD"), Locale.ltr("UI_VALENCE"), ed.valence, Locale.ltr("UI_AROUSAL"), ed.arousal]
 		draw_string(font, Vector2(cx + 10, cy + 12), va_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 		cy += 16.0
 
@@ -414,8 +422,9 @@ func _draw() -> void:
 			for di in range(active_dyads.size()):
 				var dyad: Dictionary = active_dyads[di]
 				var dyad_id: String = dyad.get("id", "")
-				var dyad_kr: String = ed._dyad_labels_kr.get(dyad_id, dyad_id)
-				var dyad_text: String = dyad_kr
+				var dyad_text: String = Locale.ltr("DYAD_" + dyad_id.to_upper())
+				if dyad_text == "DYAD_" + dyad_id.to_upper():
+					dyad_text = dyad_id
 				var text_w: float = font.get_string_size(dyad_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 				# Check if badge fits on current line
 				if dyad_x + text_w + 12 > cx + bar_w + 10:
@@ -929,7 +938,9 @@ func _draw_deceased() -> void:
 		var trait_x: float = cx + 15
 		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
-			var tname: String = tdef.get("name_kr", trait_id)
+			var tname: String = Locale.tr_data(tdef, "name")
+			if tname == "" or tname == "???":
+				tname = tdef.get("name_en", tdef.get("name_" + "kr", trait_id))
 			var tcolor: Color = _get_trait_color(tdef)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 			# Wrap to next line if too wide

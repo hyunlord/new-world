@@ -189,5 +189,8 @@
   "TOOLTIP_STRESS_MINIMAL": "(minimal)",
   "TOOLTIP_STRESS_MODERATE": "(moderate)",
   "TOOLTIP_STRESS_STRONG": "(strong)",
-  "TOOLTIP_STRESS_SEVERE": "(severe)"
+  "TOOLTIP_STRESS_SEVERE": "(severe)",
+  "UI_ACTION": "Action",
+  "UI_INVENTORY": "Inventory",
+  "UI_MOOD": "Mood"
 }
