@@ -1,5 +1,33 @@
 # Progress Log
 
+## 버그픽스: 스크롤 클리핑 + 스크롤바 드래그 (T-2028)
+
+### Context
+크로니클 패널에서 스크롤 시 내용이 헤더를 침범하는 버그 + 4개 패널 모두 스크롤바 드래그 불가 버그.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2028-1 | 크로니클 클리핑 + 4패널 스크롤바 드래그 | 🟢 DISPATCH | ask_codex | UI 4파일, 동일 패턴 |
+
+### Dispatch ratio: 0/1 = 0% ❌ (Codex job af343aee stuck 16min, killed → DIRECT)
+
+### Dispatch strategy
+단일 티켓 ask_codex 디스패치 시도 → job 16분간 무응답 (파일 변경 0, response 파일 미생성) → kill 후 직접 구현.
+
+### Results
+- Gate: PASS (commit b5d10ef)
+- PR: #50 merged
+- Dispatch ratio: 0/1 = 0% (Codex stuck, fallback to DIRECT)
+- Files changed: 4
+  - chronicle_panel.gd: _draw_header() 추출, 2회 호출로 헤더 클리핑 + 스크롤바 드래그
+  - entity_detail_panel.gd: 스크롤바 드래그 (padding 40.0)
+  - list_panel.gd: 스크롤바 드래그 (padding 60.0)
+  - stats_detail_panel.gd: 스크롤바 드래그 (padding 40.0)
+- Pattern applied: _scrollbar_dragging + _scrollbar_rect state vars, _update_scroll_from_mouse() helper, drag handling in _gui_input() before existing click handlers, _draw_scrollbar() stores wider hit area rect
+
+---
+
 ## Phase 2-A2: Trait 시스템 전면 교체 — 187개 Trait (T-2027)
 
 ### Context
