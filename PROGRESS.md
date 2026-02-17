@@ -1,5 +1,35 @@
 # Progress Log
 
+## Hunger 비선형 감소 + 영유아 밸런스 조정 (T-2024)
+
+### Context
+Hunger가 선형으로 감소하여 에이전트가 쉽게 아사 + 영유아 hunger가 0%까지 떨어지는 문제.
+대사 곡선(Keys et al. 1950) 적용 + childcare 밸런스 강화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2024-00 | game_config.gd 상수 변경 | 🔴 DIRECT | — | shared config (metabolic + childcare constants) |
+| t-2024-01 | needs_system.gd 대사 곡선 | 🟢 DISPATCH | ask_codex | single file: needs_system.gd |
+| t-2024-02 | childcare_system.gd 임계치 Dictionary | 🟢 DISPATCH | ask_codex | single file: childcare_system.gd |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+Config-first then fan-out: game_config.gd DIRECT → needs_system.gd + childcare_system.gd parallel DISPATCH.
+
+### Results
+- Gate: PASS
+- Commit: 952dd1e
+- Files changed: 3 (game_config.gd, needs_system.gd, childcare_system.gd)
+- Dispatch tool used: ask_codex (2 tickets)
+- Key changes:
+  - game_config.gd: +HUNGER_METABOLIC_MIN/RANGE, CHILDCARE_HUNGER_THRESHOLDS dict, feed amounts up, child decay mult down
+  - needs_system.gd: metabolic_factor = 0.3 + 0.7 * hunger applied to decay
+  - childcare_system.gd: per-stage threshold Dictionary lookup (replaced 2-constant system)
+
+---
+
 ## 세이브/로드 birth_date 손실 버그 수정 (T-2023)
 
 ### Context

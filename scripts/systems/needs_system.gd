@@ -23,7 +23,8 @@ func execute_tick(tick: int) -> void:
 		var entity = alive[i]
 		# Decay needs
 		var hunger_mult: float = GameConfig.CHILD_HUNGER_DECAY_MULT.get(entity.age_stage, 1.0)
-		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult
+		var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
+		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
 		entity.energy -= GameConfig.ENERGY_DECAY_RATE
 		entity.social -= GameConfig.SOCIAL_DECAY_RATE
 
