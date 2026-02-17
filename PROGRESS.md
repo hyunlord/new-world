@@ -1,5 +1,25 @@
 # Progress Log
 
+## Phase 2-A2 확장: SD 변경 + 성격 Trait 전체 목록 (T-2020)
+
+### Context
+성격 분포 확대(SD 0.15→0.25) + Trait 확장(14→68개) + facet 내 분산 확대(0.35→0.75).
+대부분 이전 티켓(T-2014, T-2016)에서 완료됨. 잔여 작업: facet spread 0.35→0.75.
+
+### Pre-existing work (already implemented)
+- SD=0.25: personality_data.gd (PERSONALITY_SD=0.25), distribution.json (sd=0.25) — T-2016에서 완료
+- 68 traits (48 facet + 20 composite): trait_definitions.json — T-2016에서 완료
+- TraitSystem composite support: trait_system.gd — T-2016에서 완료
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2020-01 | facet spread 0.35→0.75 (distribution.json + personality_generator.gd) | 🔴 DIRECT | — | 2줄 변경, 통합 와이어링 수준 |
+
+### Dispatch ratio: 0/1 = 0% (전체 작업의 95%가 이미 완료됨, 잔여분 2줄 변경)
+
+---
+
 ## Phase 2-A3: Plutchik 감정 시스템 (T-2018)
 
 ### Context

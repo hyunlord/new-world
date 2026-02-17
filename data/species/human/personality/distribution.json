@@ -30,6 +30,9 @@
         "C": {"target_shift": 0.0, "age_range": [18, 60]},
         "O": {"target_shift": 0.0, "age_range": [18, 60]}
     },
+    "facet_spread": 0.75,
+    "comment_facet_spread": "Intra-axis facet variance (z-score). 0.75 allows diverse facet profiles within same axis, enabling contradictory trait combos (e.g. fearful+low empathy). Previous: 0.35",
+
     "ou_parameters": {
         "comment": "Ornstein-Uhlenbeck maturation process (annual)",
         "theta": 0.03,

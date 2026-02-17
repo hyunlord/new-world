@@ -10,6 +10,7 @@ const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 var _correlation_matrix: Array = []
 var _heritability: Dictionary = {}
 var _sex_diff_d: Dictionary = {}
+var _facet_spread: float = 0.75  # Intra-axis facet variance (z-score units)
 var _cholesky_L: Array = []  # 6x6 lower triangular matrix (cached)
 var _rng: RandomNumberGenerator
 
@@ -34,6 +35,7 @@ func init(rng: RandomNumberGenerator) -> void:
 		"H": 0.41, "E": 0.96, "X": 0.10,
 		"A": 0.28, "C": 0.00, "O": -0.04,
 	})
+	_facet_spread = float(dist.get("facet_spread", 0.75))
 	_cholesky_L = _cholesky_decompose(_correlation_matrix)
 
 
@@ -129,8 +131,8 @@ func generate_personality(sex: String, culture_id: String,
 		var z_axis: float = z_axes[aid]
 		var fkeys: Array = PersonalityDataScript.FACET_KEYS[aid]
 		for j in range(fkeys.size()):
-			# Intra-axis facet variance (0.35 balances differentiation vs axis coherence at SD=0.25)
-			var facet_z: float = z_axis + _randfn(0.0, 0.35)
+			# Intra-axis facet variance from SpeciesManager (0.75 enables contradictory facet combos)
+			var facet_z: float = z_axis + _randfn(0.0, _facet_spread)
 			pd.facets[fkeys[j]] = pd.from_zscore(facet_z)
 
 	# Step 4: Recalculate axes from facet averages
