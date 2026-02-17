@@ -18,6 +18,18 @@
 ### Dispatch strategy
 **Parallel**: Both tickets are independent (different files). T-2016-01 touches personality_data.gd + personality_generator.gd, T-2016-02 touches trait_definitions.json + trait_system.gd. No overlap.
 
+### Results
+- Gate: PASS
+- Dispatch ratio: 2/2 = 100% (both via ask_codex, parallel)
+- Files changed: 6 (personality_data.gd, personality_generator.gd, trait_system.gd, trait_definitions.json, entity_detail_panel.gd, PROGRESS.md)
+- Integration (DIRECT): entity_detail_panel.gd — added filter_display_traits() calls in both living/deceased trait sections (~4 lines)
+- Key changes:
+  - PERSONALITY_SD=0.25 constant replaces hardcoded 0.15 in to_zscore/from_zscore
+  - Facet variance 0.25→0.35 for wider intra-axis differentiation
+  - 14 traits → 66 traits (48 facet at 0.85/0.15 thresholds + 18 composite with AND conditions)
+  - TraitSystem: composite evaluation, display filtering (composite suppresses overlapping singles, max 5), indexed O(1) lookup
+  - Trait count note: user spec estimated ~20 composites, actual provided list has 18 = 66 total
+
 ---
 
 ## Phase 2-A2 Hotfix: Detail Panel Personality UI (T-2015)
