@@ -74,6 +74,28 @@ Wave 1 (DIRECT): T-2019-01~03 (JSON 생성 + SpeciesManager + autoload 등록)
 Wave 2 (parallel DISPATCH): T-2019-04~08 (5개 파일 동시 리팩토링, 파일 겹침 없음)
 Wave 3 (DIRECT): T-2019-09 (culture_shift 와이어링 + gate 검증)
 
+### Results
+- Gate: PASS
+- Dispatch ratio: 4/9 via ask_codex (T-2019-05 Codex job stuck >20min, killed and implemented directly)
+- Effective dispatch: 4 ask_codex + 1 direct fallback = 5 refactoring tickets completed
+- Files changed: 18 (9 new JSON data files, 1 new SpeciesManager.gd, 5 refactored engine files, project.godot, game_config.gd, PROGRESS.md)
+- Key changes:
+  - 9 JSON data files under `data/species/human/` (species_definition, distribution, emotion_definition, dyad_definition, decay_parameters, siler_parameters, 3 cultures)
+  - SpeciesManager autoload singleton loads all species data at startup with fallback defaults
+  - personality_generator.gd: correlation_matrix, heritability, sex_difference_d from SpeciesManager
+  - personality_maturation.gd: theta, sigma, maturation targets from SpeciesManager
+  - emotion_system.gd: 12+ decay/stress/contagion/mental_break constants from SpeciesManager
+  - emotion_data.gd: intensity_labels, dyads, valence/arousal weights from SpeciesManager
+  - mortality_system.gd: Siler parameters, tech modifiers, care protection from SpeciesManager
+  - Removed SILER_CARE_PROTECTION/SILER_CARE_HUNGER_MIN from game_config.gd
+
+### Dispatch prompts
+- T-2019-04: `.omc/prompts/t-2019-04-personality-generator.md`
+- T-2019-05: `.omc/prompts/t-2019-05-personality-maturation.md` (Codex stuck, implemented directly)
+- T-2019-06: `.omc/prompts/t-2019-06-emotion-system.md`
+- T-2019-07: `.omc/prompts/t-2019-07-emotion-data.md`
+- T-2019-08: `.omc/prompts/t-2019-08-mortality-system.md`
+
 ---
 
 ## Phase 2 버그픽스: 디테일 패널 사망자 정보 고정 (T-2017)
