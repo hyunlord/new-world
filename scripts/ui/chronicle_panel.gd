@@ -1,6 +1,8 @@
 class_name ChroniclePanel
 extends Control
 
+const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+
 var _entity_manager: RefCounted
 
 ## Filter state
@@ -225,11 +227,19 @@ func _draw() -> void:
 		var icon_color: Color = style.color
 
 		# Date
-		var date_str: String = "M%d D%d" % [evt.get("month", 0), evt.get("day", 0)]
+		var date_str: String
+		var event_tick: int = int(evt.get("tick", -1))
+		if evt.has("tick") and event_tick >= 0:
+			date_str = GameCalendar.format_short_datetime_with_year(event_tick)
+		elif evt.has("hour"):
+			date_str = "M%d D%d %02d:00" % [int(evt.get("month", 0)), int(evt.get("day", 0)), int(evt.get("hour", 0))]
+		else:
+			date_str = Locale.trf("UI_SHORT_DATE", {"month": str(evt.get("month", 0)), "day": str(evt.get("day", 0))})
 		draw_string(font, Vector2(cx + 5, cy + 12), date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 		# Icon
-		var icon_x: float = cx + 75
+		var date_width: float = font.get_string_size(date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
+		var icon_x: float = cx + 10 + date_width + 8.0
 		draw_string(font, Vector2(icon_x, cy + 12), style.icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), icon_color)
 
 		# Description (localized if l10n_key present, fallback to stored description)

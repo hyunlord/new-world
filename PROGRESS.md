@@ -1488,3 +1488,49 @@ TICKET-A + TICKET-B 병렬 디스패치 (파일 겹침 없음)
 - Key changes: format_short_date + format_short_date_with_year helpers; action history now shows "M8 D15" not "Tick 5950"
 - Dispatch tool: ask_codex (both tickets)
 
+
+---
+
+## T-2034: UI 버그 수정 4건 (스크린샷 기반) — 2026-02-18
+
+### Context
+스크린샷에서 확인된 UI 버그 4건: (1) 좌하단 허기/에너지/사회 라벨이 locale_changed 시 갱신 안 됨, (2) 성격 facet 소분류 키가 Locale.tr() (Godot 빌트인) 호출로 번역 안 됨, (3) "Path: N steps remaining" 영어 하드코딩, (4) 사망자 생애 사건이 영어로 표시
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2034-A | hud.gd: bar 라벨 locale_changed 갱신 | 🟢 DISPATCH | ask_codex | hud.gd 단독 수정 |
+| T-2034-B | entity_detail_panel.gd: Locale.tr→ltr, Path 제거, 생애사건 l10n | 🟢 DISPATCH | ask_codex | entity_detail_panel.gd 3가지 수정 병합 |
+
+### Dispatch ratio: 2/2 = 100% ✅ (ask_codex)
+
+### Dispatch strategy
+A + B 병렬 디스패치 (파일 겹침 없음: hud.gd vs entity_detail_panel.gd)
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/62 (merged)
+- Files changed: 2 (hud.gd, entity_detail_panel.gd)
+- Key changes: bar label locale refresh; FACET_ Locale.tr→ltr; Path line removed; life events l10n_key support
+- Dispatch tool: ask_codex (both tickets, parallel)
+
+---
+
+## T-2035: UI 버그 수정 3건 (미니 통계, 날짜+시:분, Love/Compat) — 2026-02-18
+
+### Context
+스크린샷 기반 3건: (1) stats_panel "Pop:/Jobs" 영어 하드코딩, (2) 시간 표시에 시:분 추가, (3) 가족 파트너 "Love:/Compat:" 영어 하드코딩
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2035-A | stats_panel.gd + JSON (TICKET-1 + 전체 JSON키) | 🟢 DISPATCH | ask_codex | 단일 파일 + JSON 병합 |
+| T-2035-B | game_calendar.gd (minute 추가 + format 함수) | 🟢 DISPATCH | ask_codex | 단일 파일, 의존성 없음 |
+| T-2035-C | entity_detail_panel.gd (datetime + Love/Compat) | 🟢 DISPATCH | ask_codex | B 완료 후 |
+| T-2035-D | chronicle_panel.gd + hud.gd (datetime 적용) | 🟢 DISPATCH | ask_codex | B 완료 후, C와 파일 겹침 없음 |
+
+### Dispatch ratio: 4/4 = 100% ✅ (ask_codex)
+
+### Dispatch strategy
+Phase 1 병렬: A + B (파일 겹침 없음)
+Phase 2 병렬 (B 완료 후): C + D (C=entity_detail_panel, D=chronicle+hud)

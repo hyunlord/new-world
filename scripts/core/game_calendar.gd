@@ -24,6 +24,7 @@ static func days_in_year(year: int) -> int:
 static func tick_to_date(tick: int) -> Dictionary:
 	var total_days: int = tick / TICKS_PER_DAY
 	var hour: int = (tick % TICKS_PER_DAY) * TICK_HOURS
+	var minute: int = 0  # 1 tick = 2 hours, so minute stays 0 unless tick granularity changes.
 
 	# Year calculation (leap-year aware)
 	var year: int = 1
@@ -56,6 +57,7 @@ static func tick_to_date(tick: int) -> Dictionary:
 		"month": month,
 		"day": day,
 		"hour": hour,
+		"minute": minute,
 		"day_of_year": day_of_year,
 		"tick": tick,
 	}
@@ -99,6 +101,41 @@ static func format_short_date_with_year(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
 	return Locale.trf("UI_SHORT_DATE_WITH_YEAR", {
 		"year": str(d.year), "month": str(d.month), "day": str(d.day)
+	})
+
+
+## Format full date + time for HUD (year/month/day + hour:minute)
+static func format_full_datetime(tick: int) -> String:
+	var d: Dictionary = tick_to_date(tick)
+	return Locale.trf("UI_FULL_DATETIME", {
+		"year": str(d.year),
+		"month": str(d.month),
+		"day": str(d.day),
+		"hour": "%02d" % d.hour,
+		"minute": "%02d" % d.get("minute", 0),
+	})
+
+
+## Format short date + time without year (month/day + hour:minute)
+static func format_short_datetime(tick: int) -> String:
+	var d: Dictionary = tick_to_date(tick)
+	return Locale.trf("UI_SHORT_DATETIME", {
+		"month": str(d.month),
+		"day": str(d.day),
+		"hour": "%02d" % d.hour,
+		"minute": "%02d" % d.get("minute", 0),
+	})
+
+
+## Format short date + time with year (year/month/day + hour:minute)
+static func format_short_datetime_with_year(tick: int) -> String:
+	var d: Dictionary = tick_to_date(tick)
+	return Locale.trf("UI_SHORT_DATETIME_WITH_YEAR", {
+		"year": str(d.year),
+		"month": str(d.month),
+		"day": str(d.day),
+		"hour": "%02d" % d.hour,
+		"minute": "%02d" % d.get("minute", 0),
 	})
 
 

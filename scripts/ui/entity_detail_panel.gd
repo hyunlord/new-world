@@ -493,11 +493,11 @@ func _draw() -> void:
 		_register_click_region(name_pos, partner_name, entity.partner_id, font, GameConfig.get_font_size("popup_body"))
 		var name_w: float = font.get_string_size(partner_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		# Love + Compatibility suffix
-		var suffix: String = " (Love: %d%%" % love_pct
+		var suffix: String = " (%s: %d%%" % [Locale.ltr("UI_LOVE"), love_pct]
 		if entity.personality != null and partner_alive and partner != null and partner.personality != null:
 			var compat: float = PersonalitySystem.personality_compatibility(entity.personality, partner.personality)
 			var compat_pct: int = int((compat + 1.0) / 2.0 * 100)
-			suffix += ", Compat: %d%%" % compat_pct
+			suffix += ", %s: %d%%" % [Locale.ltr("UI_COMPAT"), compat_pct]
 		suffix += ")"
 		draw_string(font, Vector2(cx + 10 + prefix_w + name_w, cy + 12), suffix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 		cy += 16.0
@@ -620,8 +620,13 @@ func _draw() -> void:
 	var hist_count: int = 0
 	while idx >= 0 and hist_count < 5:
 		var entry: Dictionary = hist[idx]
-		var _date_str: String = GameCalendarScript.format_short_date(entry.tick)
-		draw_string(font, Vector2(cx + 10, cy + 11), "%s: %s" % [_date_str, Locale.tr_id("STATUS", entry.action)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+		var act_d: Dictionary = GameCalendarScript.tick_to_date(entry.tick)
+		var date_str: String = ""
+		if act_d.year == current_date.year:
+			date_str = GameCalendarScript.format_short_datetime(entry.tick)
+		else:
+			date_str = GameCalendarScript.format_short_datetime_with_year(entry.tick)
+		draw_string(font, Vector2(cx + 10, cy + 11), "%s: %s" % [date_str, Locale.tr_id("STATUS", entry.action)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		cy += 13.0
 		idx -= 1
 		hist_count += 1
