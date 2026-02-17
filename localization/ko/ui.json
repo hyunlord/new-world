@@ -436,5 +436,7 @@
   "TRAIT_C_INVENTOR": "발명가",
   "TRAIT_C_ENCYCLOPEDIA": "백과사전",
   "TRAIT_C_HERETIC": "이단자",
-  "TRAIT_C_MEDIATOR_KING": "중재왕"
+  "TRAIT_C_MEDIATOR_KING": "중재왕",
+  "UI_SHORT_DATE": "{month}월 {day}일",
+  "UI_SHORT_DATE_WITH_YEAR": "Y{year} {month}월 {day}일"
 }

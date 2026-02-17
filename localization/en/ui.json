@@ -436,5 +436,7 @@
   "TRAIT_C_INVENTOR": "Inventor",
   "TRAIT_C_ENCYCLOPEDIA": "Encyclopedia",
   "TRAIT_C_HERETIC": "Heretic",
-  "TRAIT_C_MEDIATOR_KING": "Mediator King"
+  "TRAIT_C_MEDIATOR_KING": "Mediator King",
+  "UI_SHORT_DATE": "M{month} D{day}",
+  "UI_SHORT_DATE_WITH_YEAR": "Y{year} M{month} D{day}"
 }

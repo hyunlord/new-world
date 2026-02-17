@@ -626,7 +626,8 @@ func _draw() -> void:
 	var hist_count: int = 0
 	while idx >= 0 and hist_count < 5:
 		var entry: Dictionary = hist[idx]
-		draw_string(font, Vector2(cx + 10, cy + 11), Locale.trf("UI_TICK_FORMAT", {"tick": str(entry.tick), "action": Locale.tr_id("STATUS", entry.action)}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+		var _date_str: String = GameCalendarScript.format_short_date(entry.tick)
+		draw_string(font, Vector2(cx + 10, cy + 11), "%s: %s" % [_date_str, Locale.tr_id("STATUS", entry.action)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		cy += 13.0
 		idx -= 1
 		hist_count += 1

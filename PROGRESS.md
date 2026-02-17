@@ -24,6 +24,32 @@
 
 ---
 
+## Phase 2 UI 폴리싱 — Trait 뱃지 패딩 + 연대기 이름 클릭 + 파생 이벤트 제거 — 2026-02-18
+
+### Context
+한글 trait 뱃지 상단 글리프 클리핑 수정, 연대기 관련 인물(부모/파트너) 이름 클릭 활성화, 사망 파생 이벤트(partner_died, orphaned) 연대기 중복 표시 제거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-1 | Trait 뱃지 패딩 (entity_detail_panel.gd) | 🟢 DISPATCH | ask_codex | single-file: badge height+offset |
+| TICKET-2 | 연대기 관련 이름 클릭 (chronicle_panel.gd) | 🟢 DISPATCH | ask_codex | single-file: related_ids click regions |
+| TICKET-3 | 사망 파생 이벤트 제거 (main.gd) | 🟢 DISPATCH | ask_codex | single-file: remove orphaned/partner_died log_event calls |
+
+### Dispatch ratio: 3/3 = 100% ✅ (ask_codex)
+
+### Dispatch strategy
+JOB-A (TICKET-1) + JOB-B (TICKET-3) parallel → JOB-C (TICKET-2) after B complete (chronicle_panel.gd had EVENT_STYLES dependency on death event types).
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/60 (merged)
+- Files changed: 3 (entity_detail_panel.gd, chronicle_panel.gd, scenes/main/main.gd)
+- Key changes: badge 16→22px, text cy+12→cy+16, row 22→28; related_ids click regions; 34 lines of orphaned/partner_died chronicle calls removed
+- Dispatch tool: ask_codex (all 3 tickets)
+
+---
+
 ## Phase 2 Trait 기술 키 + 누락 JSON 키 대량 추가 — 2026-02-18
 
 ### Context
