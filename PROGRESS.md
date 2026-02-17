@@ -1,5 +1,31 @@
 # Progress Log
 
+## Phase 2 Round 2 i18n 전수검사 + Chronicle i18n — T-2032 — 2026-02-18
+
+### Context
+Phase 2 Round 2: 전수검사 실행 결과 A1/A2/A3/A4 전부 0 (이미 클린). 유일한 잔류 문제: Chronicle 이벤트가 English 하드코딩 description 문자열로 저장됨. T-2032로 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2032 | Chronicle events i18n — l10n_key+params 구조화 | 🟢 DISPATCH | ask_codex | chronicle_system + main + panel + 2 JSON |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅ (main 5e4c6cd)
+- PR: #56 merged
+- Files changed: 5 (chronicle_system.gd, main.gd, chronicle_panel.gd, en/ui.json, ko/ui.json)
+- chronicle events now render via Locale.trf() in current locale ✅
+- cause_id translated at render time via Locale.tr_id("DEATH", ...) ✅
+- legacy saves (no l10n_key) fallback to description field ✅
+- A1 Korean hardcoding: 0 ✅
+- A2 English .text hardcoding: 0 ✅
+- A3 locale_changed coverage: 0 missing ✅
+- A4 JSON parity: 0 diff (ui, game, emotions) ✅
+
+---
+
 ## Phase 2 i18n 전수검사 — T2-1, T2-4, T2-5 — 2026-02-18
 
 ### Context
