@@ -1461,3 +1461,30 @@ T-2031 이후 남은 하드코딩: chronicle_panel(이미 완료), pause_menu(se
 ### Dispatch strategy
 병렬 dispatch: T2-1(hud.gd)과 T2-4(pause_menu.gd)는 파일 범위 비겹침 → 동시 실행 가능.
 
+---
+
+## Phase 2 Tick → 연월일 변환 — T-2033 — 2026-02-18
+
+### Context
+UI에 tick 숫자를 그대로 표시하는 곳을 찾아 연월일 형식으로 교체.
+전수검사 결과: entity_detail_panel.gd:629 (최근 행동 UI_TICK_FORMAT)이 유일한 raw tick 표시.
+hud.gd, list_panel.gd, chronicle_panel.gd는 이미 변환된 날짜를 사용 중.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2033-A | format_short_date (game_calendar.gd + en+ko ui.json) | 🟢 DISPATCH | ask_codex | new static function + 2 JSON keys |
+| T-2033-B | 최근 행동 날짜 표시 (entity_detail_panel.gd) | 🟢 DISPATCH | ask_codex | single line swap |
+
+### Dispatch ratio: 2/2 = 100% ✅ (ask_codex)
+
+### Dispatch strategy
+TICKET-A + TICKET-B 병렬 디스패치 (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/61 (merged)
+- Files changed: 4 (game_calendar.gd, entity_detail_panel.gd, en/ui.json, ko/ui.json)
+- Key changes: format_short_date + format_short_date_with_year helpers; action history now shows "M8 D15" not "Tick 5950"
+- Dispatch tool: ask_codex (both tickets)
+
