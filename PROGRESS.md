@@ -1592,3 +1592,21 @@ T-2036-A removed external max_display param but missed internal 5-cap in _sort_a
 - Files changed: 3 (localization/en/ui.json, localization/ko/ui.json, scripts/systems/trait_system.gd)
 - EN/KO: 86 TRAIT_KEY_* entries added (46 behavior + 40 emotion keys)
 - trait_system.gd: `if display.size() >= 5: break` removed from _sort_and_cap_display()
+
+---
+
+## T-2038: Entity Detail Panel Restructure — 2026-02-18
+
+### Context
+특성 섹션을 성격 하위에서 독립 메인 섹션으로 승격하고, 모든 섹션에 접기/펼치기 추가. 배지 줄바꿈 높이 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2038-A | Section collapsing + traits independence | 🟢 DISPATCH | ask_codex | single file structural change |
+| T-2038-B | Badge row height fix | 🟢 DISPATCH | ask_codex | tiny one-liner follow-up, sequential after A |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Sequential: T-2038-A 완료 후 T-2038-B (같은 파일)
