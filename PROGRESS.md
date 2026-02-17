@@ -1,5 +1,26 @@
 # Progress Log
 
+## T-2030: Trait 호버/클릭 서브 패널 — 2026-02-17
+
+### Context
+에이전트 Trait 뱃지에 마우스 호버/클릭 시 상세 툴팁 팝업 표시.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2030 | Trait tooltip sub-panel | 🟢 DISPATCH | ask_codex | new file + 5 file changes, self-contained |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- PR: #52 (merged)
+- Commit: 04cab6d
+- Files changed: 6 (trait_tooltip.gd new, entity_detail_panel.gd, en+ko ui.json + game.json)
+- Dispatch tool: ask_codex (job ba9f11d8)
+
+---
+
 ## Phase 2-A3: i18n 코드 마이그레이션 — 전체 UI 텍스트 Locale 키로 교체 (T-2029 Phase 2)
 
 ### Context
