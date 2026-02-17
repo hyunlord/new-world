@@ -1,5 +1,23 @@
 # Progress Log
 
+## 버그픽스 + UI 개선: settlement 로드 에러 + 메뉴 시스템 (T-2021)
+
+### Context
+settlement 바이너리 로드 시 typed Array[int] 할당 에러 수정 + ESC 게임 메뉴 시스템 신규 구현
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2021-01 | save_manager.gd typed array load fix | 🟢 DISPATCH | ask_codex | single file fix |
+| T-2021-02 | ESC pause menu + HUD cleanup | 🟢 DISPATCH | ask_codex | new file + 2 file mods |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Parallel dispatch — no file overlap between tickets
+
+---
+
 ## Phase 2-A2 확장: SD 변경 + 성격 Trait 전체 목록 (T-2020)
 
 ### Context

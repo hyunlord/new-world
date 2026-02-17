@@ -443,11 +443,11 @@ func _load_settlements(path: String, sm: RefCounted) -> bool:
 		s.center_y = f.get_32()
 		s.founding_tick = f.get_32()
 		var mc: int = f.get_32()
-		s.member_ids = []
+		s.member_ids.clear()
 		for _j in range(mc):
 			s.member_ids.append(f.get_32())
 		var bc: int = f.get_32()
-		s.building_ids = []
+		s.building_ids.clear()
 		for _j in range(bc):
 			s.building_ids.append(f.get_32())
 		# v4+: culture_id (defaults to "proto_nature" for v3 saves)
