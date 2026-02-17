@@ -21,6 +21,22 @@
 ### Dispatch strategy
 Parallel dispatch — no file overlap between tickets.
 
+### Results
+- Gate: PASS
+- Commit: 16682e5
+- Files changed: 6 (mortality_system.gd, main.gd, deceased_registry.gd, entity_data.gd, game_calendar.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Key changes:
+  - mortality_system.gd: `entity.birth_tick %` → `posmod(entity.birth_tick,` for correct negative modulo
+  - main.gd: added random day offset (0-364 days × 12 ticks) to distribute initial entity birthdays
+  - deceased_registry.gd: unconditional `death_age_days` computation (removed `if birth_tick >= 0` guard)
+  - entity_data.gd: removed `e.birth_tick != 0` condition from birth_date migration
+  - game_calendar.gd: added safety clamps in `calculate_detailed_age` for negative day/month edge cases
+
+### Dispatch prompts
+- `.codex-prompts/t2022-01-birthday-fix.md`
+- `.codex-prompts/t2022-02-age-display-fix.md`
+
 ---
 
 ## 버그픽스 + UI 개선: settlement 로드 에러 + 메뉴 시스템 (T-2021)
