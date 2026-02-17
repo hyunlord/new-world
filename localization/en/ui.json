@@ -180,5 +180,14 @@
   "UI_NOTIF_DIED_STARVED_FMT": "{name} died (starvation)",
   "UI_NOTIF_DIED_CAUSE_AGE_FMT": "{name} died ({cause}, {age})",
   "UI_NOTIF_MATERNAL_FMT": "{name} died (maternal)",
-  "UI_NOTIF_STILLBORN_FMT": "{name} stillborn"
+  "UI_NOTIF_STILLBORN_FMT": "{name} stillborn",
+  "TOOLTIP_CONDITION": "Condition",
+  "TOOLTIP_EFFECTS": "Effects",
+  "TOOLTIP_VIOLATION": "Violation → Stress",
+  "TOOLTIP_SYNERGY": "Synergy",
+  "TOOLTIP_CONFLICT": "Conflict",
+  "TOOLTIP_STRESS_MINIMAL": "(minimal)",
+  "TOOLTIP_STRESS_MODERATE": "(moderate)",
+  "TOOLTIP_STRESS_STRONG": "(strong)",
+  "TOOLTIP_STRESS_SEVERE": "(severe)"
 }

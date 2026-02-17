@@ -180,5 +180,14 @@
   "UI_NOTIF_DIED_STARVED_FMT": "{name} 사망 (아사)",
   "UI_NOTIF_DIED_CAUSE_AGE_FMT": "{name} 사망 ({cause}, {age})",
   "UI_NOTIF_MATERNAL_FMT": "{name} 사망 (출산 사망)",
-  "UI_NOTIF_STILLBORN_FMT": "{name} 사산"
+  "UI_NOTIF_STILLBORN_FMT": "{name} 사산",
+  "TOOLTIP_CONDITION": "발현 조건",
+  "TOOLTIP_EFFECTS": "효과",
+  "TOOLTIP_VIOLATION": "반대 행동 → 스트레스",
+  "TOOLTIP_SYNERGY": "시너지",
+  "TOOLTIP_CONFLICT": "상충",
+  "TOOLTIP_STRESS_MINIMAL": "(미미)",
+  "TOOLTIP_STRESS_MODERATE": "(보통)",
+  "TOOLTIP_STRESS_STRONG": "(강함)",
+  "TOOLTIP_STRESS_SEVERE": "(매우 강함)"
 }

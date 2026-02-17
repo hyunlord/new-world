@@ -77,6 +77,12 @@ var _scrollbar_rect: Rect2 = Rect2()
 
 ## Clickable name regions: [{rect: Rect2, entity_id: int}]
 var _click_regions: Array = []
+## Trait badge rects for tooltip: [{rect: Rect2, trait_def: Dictionary}]
+var _trait_badge_regions: Array = []
+## Reference to trait tooltip overlay
+var _trait_tooltip: Control = null
+## Currently hovered trait id (for change detection)
+var _hovered_trait_id: String = ""
 ## Which axes are expanded (show facets)
 var _expanded_axes: Dictionary = {}
 ## Deceased detail mode
@@ -95,12 +101,20 @@ func set_entity_id(id: int) -> void:
 	_scroll_offset = 0.0
 	_showing_deceased = false
 	_deceased_record = {}
+	_trait_badge_regions.clear()
+	_hovered_trait_id = ""
+	if _trait_tooltip != null:
+		_trait_tooltip.request_hide()
 
 
 func _ready() -> void:
 	var locale_changed_cb: Callable = Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(locale_changed_cb):
 		Locale.locale_changed.connect(locale_changed_cb)
+	# Create trait tooltip as child overlay
+	var TraitTooltipScript = preload("res://scripts/ui/trait_tooltip.gd")
+	_trait_tooltip = TraitTooltipScript.new()
+	add_child(_trait_tooltip)
 
 
 func _on_locale_changed(_locale: String = "") -> void:
@@ -132,6 +146,26 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 		return
 
+	# Trait badge hover (mouse motion)
+	if event is InputEventMouseMotion and _trait_tooltip != null:
+		var hit_def: Dictionary = {}
+		for region in _trait_badge_regions:
+			if region.rect.has_point(event.position):
+				hit_def = region.trait_def
+				break
+		var new_id: String = hit_def.get("id", "")
+		if new_id != _hovered_trait_id:
+			_hovered_trait_id = new_id
+			if hit_def.size() > 0:
+				# find the matching region's rect (first match)
+				for region in _trait_badge_regions:
+					if region.trait_def.get("id", "") == new_id:
+						_trait_tooltip.request_show(region.trait_def, region.rect)
+						break
+			else:
+				_trait_tooltip.request_hide()
+		# do NOT consume event — let scroll still work
+
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_scroll_offset = minf(_scroll_offset + 30.0, maxf(0.0, _content_height - size.y + 40.0))
@@ -140,6 +174,13 @@ func _gui_input(event: InputEvent) -> void:
 			_scroll_offset = maxf(_scroll_offset - 30.0, 0.0)
 			accept_event()
 		elif event.button_index == MOUSE_BUTTON_LEFT:
+			# Trait badge click → show tooltip immediately
+			if _trait_tooltip != null:
+				for region in _trait_badge_regions:
+					if region.rect.has_point(event.position):
+						_trait_tooltip.show_immediate(region.trait_def, region.rect)
+						accept_event()
+						return
 			# Check click regions for name navigation
 			for region in _click_regions:
 				if region.rect.has_point(event.position):
@@ -319,6 +360,7 @@ func _draw() -> void:
 	cy += 4.0
 
 	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
+	_trait_badge_regions.clear()
 	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
 	if display_traits.size() > 0:
 		var trait_label: String = Locale.ltr("UI_TRAITS")
@@ -334,13 +376,12 @@ func _draw() -> void:
 			if trait_x + text_w + 16 > size.x - 20:
 				cy += 18.0
 				trait_x = cx + 15
-			# Badge background (rounded feel with semi-transparent fill)
 			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
-			# Badge border
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			# Badge text
 			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			# Register for tooltip hover/click
+			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
 			trait_x += text_w + 18
 		cy += 22.0
 	cy += 6.0
@@ -879,6 +920,7 @@ func _draw_deceased() -> void:
 	cy += 4.0
 
 	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
+	_trait_badge_regions.clear()
 	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
 	if display_traits.size() > 0:
 		var trait_label: String = Locale.ltr("UI_TRAITS")
@@ -894,13 +936,12 @@ func _draw_deceased() -> void:
 			if trait_x + text_w + 16 > size.x - 20:
 				cy += 18.0
 				trait_x = cx + 15
-			# Badge background (rounded feel with semi-transparent fill)
 			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
-			# Badge border
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			# Badge text
 			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			# Register for tooltip hover/click
+			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
 			trait_x += text_w + 18
 		cy += 22.0
 	cy += 6.0
