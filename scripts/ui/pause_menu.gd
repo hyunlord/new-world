@@ -1,13 +1,28 @@
 extends CanvasLayer
 ## ESC pause menu — no class_name for headless compatibility.
 
-signal resume_requested
-signal save_requested
-signal load_requested
-signal quit_requested
+signal save_requested(slot: int)
+signal load_requested(slot: int)
+
+const STATE_MAIN: int = 0
+const STATE_SAVE: int = 1
+const STATE_LOAD: int = 2
+const SLOT_COUNT: int = 5
 
 var _panel: PanelContainer
 var _visible: bool = false
+var _state: int = STATE_MAIN
+var _is_save_mode: bool = false
+var _save_manager: RefCounted
+
+var _main_container: VBoxContainer
+var _slot_container: VBoxContainer
+var _confirm_container: VBoxContainer
+var _slot_title: Label
+var _slot_buttons: Array[Button] = []
+var _slot_infos: Array = []
+var _confirm_label: Label
+var _pending_slot: int = -1
 
 
 func _ready() -> void:
@@ -15,6 +30,11 @@ func _ready() -> void:
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
+	_show_main()
+
+
+func set_save_manager(sm: RefCounted) -> void:
+	_save_manager = sm
 
 
 func _build_ui() -> void:
@@ -26,10 +46,10 @@ func _build_ui() -> void:
 
 	_panel = PanelContainer.new()
 	_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_panel.offset_left = -160
-	_panel.offset_right = 160
-	_panel.offset_top = -180
-	_panel.offset_bottom = 180
+	_panel.offset_left = -220
+	_panel.offset_right = 220
+	_panel.offset_top = -220
+	_panel.offset_bottom = 220
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0.08, 0.08, 0.12, 0.95)
@@ -48,48 +68,79 @@ func _build_ui() -> void:
 	bg.content_margin_bottom = 20
 	_panel.add_theme_stylebox_override("panel", bg)
 
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 8)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 10)
 
+	_main_container = VBoxContainer.new()
+	_main_container.add_theme_constant_override("separation", 8)
 	var title := Label.new()
 	title.text = "GAME MENU"
 	title.add_theme_font_size_override("font_size", 22)
 	title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(title)
+	_main_container.add_child(title)
 
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 10)
-	vbox.add_child(spacer)
+	_main_container.add_child(spacer)
 
-	_add_button(vbox, "Continue", "", _on_continue)
-	_add_button(vbox, "Save Game", "Ctrl+S", _on_save)
-	_add_button(vbox, "Load Game", "Ctrl+L", _on_load)
-	_add_button(vbox, "Quit", "", _on_quit)
-
-	var spacer2 := Control.new()
-	spacer2.custom_minimum_size = Vector2(0, 10)
-	vbox.add_child(spacer2)
+	_main_container.add_child(_create_button("Continue", Callable(self, "_on_continue"), 16))
+	_main_container.add_child(_create_button("Save Game", Callable(self, "_on_save"), 16))
+	_main_container.add_child(_create_button("Load Game", Callable(self, "_on_load"), 16))
+	_main_container.add_child(_create_button("Quit", Callable(self, "_on_quit"), 16))
 
 	var hint := Label.new()
 	hint.text = "ESC to close"
 	hint.add_theme_font_size_override("font_size", 12)
 	hint.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(hint)
+	_main_container.add_child(hint)
 
-	_panel.add_child(vbox)
+	_slot_container = VBoxContainer.new()
+	_slot_container.add_theme_constant_override("separation", 8)
+	_slot_title = Label.new()
+	_slot_title.text = "Save Game"
+	_slot_title.add_theme_font_size_override("font_size", 22)
+	_slot_title.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	_slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_slot_container.add_child(_slot_title)
+
+	for slot in range(1, SLOT_COUNT + 1):
+		var btn := _create_button("Slot %d  Empty" % slot, Callable(self, "_on_slot_pressed").bind(slot), 14)
+		_slot_buttons.append(btn)
+		_slot_container.add_child(btn)
+
+	_slot_container.add_child(_create_button("<- Back", Callable(self, "_on_back"), 16))
+
+	_confirm_container = VBoxContainer.new()
+	_confirm_container.add_theme_constant_override("separation", 10)
+	_confirm_label = Label.new()
+	_confirm_label.text = "Overwrite existing save?"
+	_confirm_label.add_theme_font_size_override("font_size", 16)
+	_confirm_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	_confirm_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_confirm_container.add_child(_confirm_label)
+
+	var confirm_row := HBoxContainer.new()
+	confirm_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	confirm_row.add_theme_constant_override("separation", 12)
+	confirm_row.add_child(_create_button("Yes", Callable(self, "_on_confirm_yes"), 16))
+	confirm_row.add_child(_create_button("No", Callable(self, "_on_confirm_no"), 16))
+	_confirm_container.add_child(confirm_row)
+
+	root.add_child(_main_container)
+	root.add_child(_slot_container)
+	root.add_child(_confirm_container)
+
+	_panel.add_child(root)
 	add_child(_panel)
 
 
-func _add_button(parent: VBoxContainer, text: String, shortcut_hint: String, callback: Callable) -> void:
+func _create_button(text: String, callback: Callable, font_size: int) -> Button:
 	var btn := Button.new()
-	if shortcut_hint != "":
-		btn.text = "%s  (%s)" % [text, shortcut_hint]
-	else:
-		btn.text = text
-	btn.custom_minimum_size = Vector2(260, 40)
-	btn.add_theme_font_size_override("font_size", 16)
+	btn.text = text
+	btn.custom_minimum_size = Vector2(360, 40)
+	btn.add_theme_font_size_override("font_size", font_size)
 
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.15, 0.18, 0.22, 0.9)
@@ -115,54 +166,170 @@ func _add_button(parent: VBoxContainer, text: String, shortcut_hint: String, cal
 	pressed.corner_radius_bottom_right = 4
 	btn.add_theme_stylebox_override("pressed", pressed)
 
+	var disabled := StyleBoxFlat.new()
+	disabled.bg_color = Color(0.11, 0.12, 0.14, 0.85)
+	disabled.corner_radius_top_left = 4
+	disabled.corner_radius_top_right = 4
+	disabled.corner_radius_bottom_left = 4
+	disabled.corner_radius_bottom_right = 4
+	btn.add_theme_stylebox_override("disabled", disabled)
+
 	btn.pressed.connect(callback)
-	parent.add_child(btn)
+	return btn
 
 
 func toggle_menu() -> void:
-	_visible = not _visible
-	visible = _visible
-	get_tree().paused = _visible
+	if _visible:
+		hide_menu()
+	else:
+		show_menu()
 
 
 func show_menu() -> void:
 	_visible = true
 	visible = true
 	get_tree().paused = true
+	_show_main()
 
 
 func hide_menu() -> void:
 	_visible = false
 	visible = false
 	get_tree().paused = false
+	_pending_slot = -1
+	_show_main()
 
 
 func is_menu_visible() -> bool:
 	return _visible
 
 
+func _show_main() -> void:
+	_state = STATE_MAIN
+	_is_save_mode = false
+	_main_container.visible = true
+	_slot_container.visible = false
+	_confirm_container.visible = false
+
+
+func _show_slots(is_save: bool) -> void:
+	_state = STATE_SAVE if is_save else STATE_LOAD
+	_is_save_mode = is_save
+	_slot_title.text = "Save Game" if is_save else "Load Game"
+	_main_container.visible = false
+	_slot_container.visible = true
+	_confirm_container.visible = false
+	_refresh_slot_buttons(is_save)
+
+
+func _show_overwrite_confirm(slot: int) -> void:
+	_pending_slot = slot
+	_confirm_label.text = "Overwrite save in Slot %d?" % slot
+	_main_container.visible = false
+	_slot_container.visible = false
+	_confirm_container.visible = true
+
+
+func _refresh_slot_buttons(is_save: bool) -> void:
+	_slot_infos.clear()
+	for slot in range(1, SLOT_COUNT + 1):
+		var info: Dictionary = {"exists": false, "slot": slot}
+		if _save_manager != null and _save_manager.has_method("get_slot_info"):
+			info = _save_manager.get_slot_info(slot)
+		_slot_infos.append(info)
+
+		var btn: Button = _slot_buttons[slot - 1]
+		if bool(info.get("exists", false)):
+			var year: int = int(info.get("game_year", 0))
+			var month: int = int(info.get("game_month", 0))
+			var pop: int = int(info.get("population", 0))
+			var time_ago: String = _format_time_ago(str(info.get("save_time", "")))
+			btn.text = "Slot %d  Y%d %d월 - Pop: %d - %s" % [slot, year, month, pop, time_ago]
+			btn.disabled = false
+			btn.modulate = Color(1, 1, 1, 1)
+		else:
+			btn.text = "Slot %d  Empty" % slot
+			btn.disabled = not is_save
+			btn.modulate = Color(0.65, 0.65, 0.65, 1) if btn.disabled else Color(1, 1, 1, 1)
+
+
 func _on_continue() -> void:
 	hide_menu()
-	resume_requested.emit()
 
 
 func _on_save() -> void:
-	hide_menu()
-	save_requested.emit()
+	_show_slots(true)
 
 
 func _on_load() -> void:
-	hide_menu()
-	load_requested.emit()
+	_show_slots(false)
+
+
+func _on_back() -> void:
+	_show_main()
 
 
 func _on_quit() -> void:
 	get_tree().quit()
 
 
+func _on_slot_pressed(slot: int) -> void:
+	var info: Dictionary = _slot_infos[slot - 1] if slot - 1 < _slot_infos.size() else {"exists": false}
+	if _state == STATE_SAVE:
+		if bool(info.get("exists", false)):
+			_show_overwrite_confirm(slot)
+		else:
+			hide_menu()
+			save_requested.emit(slot)
+	elif _state == STATE_LOAD:
+		if not bool(info.get("exists", false)):
+			return
+		hide_menu()
+		load_requested.emit(slot)
+
+
+func _on_confirm_yes() -> void:
+	if _pending_slot < 1:
+		_show_slots(true)
+		return
+	var slot: int = _pending_slot
+	hide_menu()
+	save_requested.emit(slot)
+
+
+func _on_confirm_no() -> void:
+	_pending_slot = -1
+	_show_slots(true)
+
+
+func _format_time_ago(save_time_str: String) -> String:
+	if save_time_str == "":
+		return "-"
+	var saved_unix: int = int(Time.get_unix_time_from_datetime_string(save_time_str))
+	if saved_unix <= 0:
+		return "-"
+	var now_unix: int = int(Time.get_unix_time_from_system())
+	var diff: int = maxi(now_unix - saved_unix, 0)
+	if diff < 3600:
+		var minutes: int = maxi(diff / 60, 1)
+		return "%d분 전" % minutes
+	if diff < 86400:
+		var hours: int = maxi(diff / 3600, 1)
+		return "%d시간 전" % hours
+	if diff < 172800:
+		return "어제"
+	var days: int = diff / 86400
+	return "%d일 전" % days
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not _visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
-		hide_menu()
+		if _confirm_container.visible:
+			_show_slots(_is_save_mode)
+		elif _state == STATE_MAIN:
+			hide_menu()
+		else:
+			_show_main()
 		get_viewport().set_input_as_handled()

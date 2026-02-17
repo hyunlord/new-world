@@ -1,5 +1,21 @@
 # Progress Log
 
+## 버그픽스 + UI 개선: settlement 로드 에러 + 메뉴 시스템 (T-2025)
+
+### Context
+settlement_data.gd의 Array[int] 타입 배열이 로드 시 에러 + ESC 메뉴에 5슬롯 세이브/로드 시스템 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2025-1 | settlement_data.gd typed array fix | 🟢 DISPATCH | ask_codex | single file fix |
+| t-2025-2 | game menu + save slot system | 🟢 DISPATCH | ask_codex | 4 files, detailed spec |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Parallel dispatch: both tickets are independent (no file overlap).
+
 ## Hunger 비선형 감소 + 영유아 밸런스 조정 (T-2024)
 
 ### Context

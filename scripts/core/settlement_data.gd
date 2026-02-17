@@ -5,8 +5,8 @@ var center_x: int = 0
 var center_y: int = 0
 var founding_tick: int = 0
 var culture_id: String = "proto_syllabic"
-var member_ids: Array[int] = []
-var building_ids: Array[int] = []
+var member_ids: Array = []
+var building_ids: Array = []
 
 
 func to_dict() -> Dictionary:
@@ -16,8 +16,8 @@ func to_dict() -> Dictionary:
 		"center_y": center_y,
 		"founding_tick": founding_tick,
 		"culture_id": culture_id,
-		"member_ids": Array(member_ids),
-		"building_ids": Array(building_ids),
+		"member_ids": member_ids.duplicate(),
+		"building_ids": building_ids.duplicate(),
 	}
 
 

@@ -41,6 +41,7 @@ var settlement_manager: RefCounted
 var stats_recorder: RefCounted
 var relationship_manager: RefCounted
 var pause_menu: CanvasLayer
+var _last_used_slot: int = 1
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -98,6 +99,7 @@ func _ready() -> void:
 
 	# Initialize save manager
 	save_manager = SaveManager.new()
+	save_manager.migrate_legacy_save()
 
 	# Initialize settlement manager + first settlement
 	settlement_manager = SettlementManager.new()
@@ -186,8 +188,9 @@ func _ready() -> void:
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
 	pause_menu = PauseMenuClass.new()
-	pause_menu.save_requested.connect(_save_game)
-	pause_menu.load_requested.connect(_load_game)
+	pause_menu.set_save_manager(save_manager)
+	pause_menu.save_requested.connect(_save_game_slot)
+	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)
 
 	# Initialize name generator with sim RNG and entity manager
@@ -472,20 +475,30 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _save_game() -> void:
-	var path: String = "user://saves/quicksave"
+	_save_game_slot(_last_used_slot)
+
+
+func _load_game() -> void:
+	_load_game_slot(_last_used_slot)
+
+
+func _save_game_slot(slot: int) -> void:
+	_last_used_slot = slot
+	var path: String = save_manager.get_slot_dir(slot)
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
 	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		NameGenerator.save_registry(path + "/names.json")
-		print("[Main] Game saved to %s (tick %d)" % [path, sim_engine.current_tick])
+		print("[Main] Game saved to slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Save failed!")
 	sim_engine.is_paused = was_paused
 
 
-func _load_game() -> void:
-	var path: String = "user://saves/quicksave"
+func _load_game_slot(slot: int) -> void:
+	_last_used_slot = slot
+	var path: String = save_manager.get_slot_dir(slot)
 	sim_engine.is_paused = true
 	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager, relationship_manager, stats_recorder)
 	if success:
@@ -496,7 +509,7 @@ func _load_game() -> void:
 		entity_manager.total_births = stats_recorder.total_births
 		# Restore name registry
 		NameGenerator.load_registry(path + "/names.json")
-		print("[Main] Game loaded from %s (tick %d)" % [path, sim_engine.current_tick])
+		print("[Main] Game loaded from slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Load failed!")
 	sim_engine.is_paused = false

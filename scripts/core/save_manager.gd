@@ -12,6 +12,8 @@ const MIN_LOAD_VERSION: int = 3
 
 ## Track loaded version for conditional field reading
 var _load_version: int = SAVE_VERSION
+const MAX_SLOTS: int = 5
+const SAVE_DIR: String = "user://saves/"
 
 ## Reverse-lookup arrays for binary enum deserialization
 var _genders: Array = ["male", "female"]
@@ -43,6 +45,9 @@ func save_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 		"ui_scale": GameConfig.ui_scale,
 		"population": entity_manager.get_alive_count(),
 		"game_date": "Y%d M%d D%d" % [date.year, date.month, date.day],
+		"game_year": date.year,
+		"game_month": date.month,
+		"save_time": Time.get_datetime_string_from_system(),
 	}
 	var mf: FileAccess = FileAccess.open(dir_path + "/meta.json", FileAccess.WRITE)
 	if mf == null:
@@ -543,3 +548,44 @@ func _load_stats(path: String, sr: RefCounted) -> void:
 	var raw_history: Array = data.get("history", [])
 	for i in range(raw_history.size()):
 		sr.history.append(raw_history[i])
+
+
+## Get directory path for a save slot (1-based)
+func get_slot_dir(slot: int) -> String:
+	return SAVE_DIR + "slot_%d" % slot
+
+
+## Get metadata for a save slot (reads meta.json, returns dict with "exists" key)
+func get_slot_info(slot: int) -> Dictionary:
+	var dir_path: String = get_slot_dir(slot)
+	var meta_path: String = dir_path + "/meta.json"
+	if not FileAccess.file_exists(meta_path):
+		return {"exists": false, "slot": slot}
+	var f: FileAccess = FileAccess.open(meta_path, FileAccess.READ)
+	if f == null:
+		return {"exists": false, "slot": slot}
+	var json: JSON = JSON.new()
+	if json.parse(f.get_as_text()) != OK:
+		return {"exists": false, "slot": slot}
+	var data: Dictionary = json.data
+	data["exists"] = true
+	data["slot"] = slot
+	return data
+
+
+## Get info for all save slots (array of 5 dictionaries)
+func get_all_slots() -> Array:
+	var slots: Array = []
+	for i in range(1, MAX_SLOTS + 1):
+		slots.append(get_slot_info(i))
+	return slots
+
+
+## Migrate legacy quicksave to slot 1 (called once on startup)
+func migrate_legacy_save() -> void:
+	var legacy_path: String = SAVE_DIR + "quicksave"
+	var slot1_path: String = get_slot_dir(1)
+	if DirAccess.dir_exists_absolute(legacy_path) and not DirAccess.dir_exists_absolute(slot1_path):
+		var err: int = DirAccess.rename_absolute(legacy_path, slot1_path)
+		if err == OK:
+			print("[SaveManager] Migrated legacy quicksave to slot 1")
