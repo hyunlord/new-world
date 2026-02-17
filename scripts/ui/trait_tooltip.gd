@@ -17,6 +17,10 @@ func _ready() -> void:
 	_timer.timeout.connect(_show_tooltip)
 	add_child(_timer)
 
+	Locale.locale_changed.connect(func(_l: String) -> void:
+		if visible:
+			_build_content(_current_trait))
+
 	_content_vbox = VBoxContainer.new()
 	_content_vbox.add_theme_constant_override("separation", 2)
 	add_child(_content_vbox)
@@ -109,12 +113,6 @@ func _add_effect_row(text: String, color: Color) -> void:
 	_content_vbox.add_child(lbl)
 
 
-func _get_other_lang_name(t: Dictionary) -> String:
-	if Locale.current_locale == "ko":
-		return t.get("name_en", t.get("name", ""))
-	return t.get("name_kr", t.get("name_ko", ""))
-
-
 func _build_content(t: Dictionary) -> void:
 	_clear_content()
 	_apply_panel_style(_get_border_color())
@@ -135,12 +133,7 @@ func _build_content(t: Dictionary) -> void:
 	var primary_name: String = Locale.tr_data(t, "name")
 	if primary_name == "" or primary_name == "???":
 		primary_name = t.get("name_kr", t.get("name_en", id))
-	var other_name: String = _get_other_lang_name(t)
-	var header_text: String
-	if other_name != "" and other_name != primary_name:
-		header_text = "%s %s (%s)" % [icon, primary_name, other_name]
-	else:
-		header_text = "%s %s" % [icon, primary_name]
+	var header_text: String = "%s %s" % [icon, primary_name]
 
 	var header_color: Color
 	if is_dark:

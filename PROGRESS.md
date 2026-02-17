@@ -1,5 +1,55 @@
 # Progress Log
 
+## Phase 2 i18n 전수검사 — T2-1, T2-4, T2-5 — 2026-02-18
+
+### Context
+모든 UI 스크립트 하드코딩 텍스트 완전 제거. hud.gd 27개 항목, pause_menu 설정 뒤로 버튼, trait_tooltip 이중언어 표시 수정. docs/I18N_RULES.md 작성.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T2-1 | hud.gd 하드코딩 13항목 + JSON 키 추가 | 🟢 DISPATCH | ask_codex | hud.gd + 2 JSON files |
+| T2-4 | pause_menu 설정 뒤로 버튼 텍스트 | 🟢 DISPATCH | ask_codex | pause_menu.gd 단일 파일 |
+| T2-5 | 통합 검증 + trait_tooltip 수정 + docs | 🔴 DIRECT | — | verification + targeted fix + documentation |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Results
+- Gate: PASS ✅
+- Files changed: 6 (hud.gd, pause_menu.gd, trait_tooltip.gd, en/ui.json, ko/ui.json, docs/I18N_RULES.md)
+- Korean hardcoding: 0 ✅
+- English .text hardcoding: 0 ✅
+- JSON key parity ko/en: perfect ✅
+- locale_changed coverage: all UI scripts ✅
+- trait_tooltip dual-language display: removed ✅
+- docs/I18N_RULES.md: written ✅
+
+---
+
+## T-2031: Phase 2 i18n 버그 수정 + 설정 메뉴 — 2026-02-17
+
+### Context
+영어 모드 한글 잔존(traits/emotions/dyads/Action:/Mood:), 한글 모드 영어 잔존(Details/action_text). 설정 메뉴 서브화면 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2031-1 | entity_detail_panel.gd 하드코딩 수정 + JSON 키 | 🟢 DISPATCH | ask_codex | entity_detail_panel.gd + 2 JSON files |
+| T-2031-2 | hud.gd 로케일 수정 | 🟢 DISPATCH | ask_codex | hud.gd 단일 파일 |
+| T-2031-3 | pause_menu.gd 설정 화면 | 🔴 DIRECT | — | Codex misunderstood scope, implemented directly |
+| T-2031-4 | 통합 검증 | 🔴 DIRECT | — | grep checks, JSON parity, gate |
+
+### Dispatch ratio: 2/4 = 50% (T-1 partial Codex+direct, T-3 direct)
+
+### Results
+- Gate: PASS ✅ (c789677)
+- PR: #54 merged to main
+- Files changed: 5 (entity_detail_panel.gd, hud.gd, pause_menu.gd, en/ui.json, ko/ui.json)
+- JSON key parity: ui.json ✅, emotions.json ✅
+- No hardcoded Korean/English UI text in scripts ✅
+
+---
+
 ## T-2030: Trait 호버/클릭 서브 패널 — 2026-02-17
 
 ### Context
@@ -1290,4 +1340,24 @@ T-2029 Phase 1에서 Locale 싱글톤과 JSON 파일들 완성. Phase 2는 기�
 ### Dispatch strategy
 모든 DISPATCH 티켓이 서로 다른 파일 → 전부 병렬 디스패치 가능.
 DIRECT(T-2029-G): 누락 JSON 키 추가 및 검증
+
+
+---
+
+## Phase 2: i18n 전수검사 — 하드코딩 텍스트 완전 제거 — 2026-02-18
+
+### Context
+T-2031 이후 남은 하드코딩: chronicle_panel(이미 완료), pause_menu(settings back 버튼 누락), hud.gd(27개 하드코딩). Korean 하드코딩=0(이미 완료). TICKET-3(크로니클)은 이미 완료 상태.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T2-1 | hud.gd 하드코딩 제거 + JSON 키 추가 | 🟢 DISPATCH | ask_codex | single file + JSON, self-contained |
+| T2-4 | pause_menu.gd settings back 버튼 수정 | 🟢 DISPATCH | ask_codex | single file fix |
+| T2-5 | 통합 검증 + docs/I18N_RULES.md | 🔴 DIRECT | — | verification + doc writing |
+
+### Dispatch ratio: 2/3 = 67% ✅ (T2-3 chronicle already done)
+
+### Dispatch strategy
+병렬 dispatch: T2-1(hud.gd)과 T2-4(pause_menu.gd)는 파일 범위 비겹침 → 동시 실행 가능.
 
