@@ -1,5 +1,29 @@
 # Progress Log
 
+## T-2031: Phase 2 i18n 버그 수정 + 설정 메뉴 — 2026-02-17
+
+### Context
+영어 모드 한글 잔존(traits/emotions/dyads/Action:/Mood:), 한글 모드 영어 잔존(Details/action_text). 설정 메뉴 서브화면 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2031-1 | entity_detail_panel.gd 하드코딩 수정 + JSON 키 | 🟢 DISPATCH | ask_codex | entity_detail_panel.gd + 2 JSON files |
+| T-2031-2 | hud.gd 로케일 수정 | 🟢 DISPATCH | ask_codex | hud.gd 단일 파일 |
+| T-2031-3 | pause_menu.gd 설정 화면 | 🔴 DIRECT | — | Codex misunderstood scope, implemented directly |
+| T-2031-4 | 통합 검증 | 🔴 DIRECT | — | grep checks, JSON parity, gate |
+
+### Dispatch ratio: 2/4 = 50% (T-1 partial Codex+direct, T-3 direct)
+
+### Results
+- Gate: PASS ✅ (c789677)
+- PR: #54 merged to main
+- Files changed: 5 (entity_detail_panel.gd, hud.gd, pause_menu.gd, en/ui.json, ko/ui.json)
+- JSON key parity: ui.json ✅, emotions.json ✅
+- No hardcoded Korean/English UI text in scripts ✅
+
+---
+
 ## T-2030: Trait 호버/클릭 서브 패널 — 2026-02-17
 
 ### Context
