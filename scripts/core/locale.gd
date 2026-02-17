@@ -57,7 +57,7 @@ func load_locale(locale: String) -> void:
 
 
 ## Lookup translation string by key (searches all categories)
-func tr(key: String) -> String:
+func ltr(key: String) -> String:
 	for cat in _strings:
 		if key in _strings[cat]:
 			return str(_strings[cat][key])
@@ -67,7 +67,7 @@ func tr(key: String) -> String:
 ## Format string with placeholder substitution
 ## Example: Locale.trf("EVT_CHILD_BORN", {"name": "Aria", "mother": "Bea", "father": "Cal"})
 func trf(key: String, params: Dictionary = {}) -> String:
-	var text = tr(key)
+	var text = ltr(key)
 	for p in params:
 		text = text.replace("{%s}" % p, str(params[p]))
 	return text
@@ -77,7 +77,7 @@ func trf(key: String, params: Dictionary = {}) -> String:
 ## Example: Locale.tr_id("STATUS", "gather_wood") -> "Gather Wood" or "목재 채집"
 func tr_id(prefix: String, id: String) -> String:
 	var key = prefix + "_" + id.to_upper()
-	var result = tr(key)
+	var result = ltr(key)
 	if result == key:
 		return id
 	return result
@@ -102,7 +102,7 @@ func tr_data(data: Dictionary, field: String = "name") -> String:
 ## Get month name from 1-based month number
 func get_month_name(month: int) -> String:
 	var key = "MONTH_%d" % clampi(month, 1, 12)
-	return tr(key)
+	return ltr(key)
 
 
 func _load_settings() -> void:

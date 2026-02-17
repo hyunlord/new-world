@@ -279,7 +279,7 @@ func _show_main() -> void:
 func _show_slots(is_save: bool) -> void:
 	_state = STATE_SAVE if is_save else STATE_LOAD
 	_is_save_mode = is_save
-	_slot_title.text = Locale.tr("UI_SAVE_GAME") if is_save else Locale.tr("UI_LOAD_GAME")
+	_slot_title.text = Locale.ltr("UI_SAVE_GAME") if is_save else Locale.ltr("UI_LOAD_GAME")
 	_main_container.visible = false
 	_slot_container.visible = true
 	_confirm_container.visible = false
@@ -318,7 +318,7 @@ func _refresh_slot_buttons(is_save: bool) -> void:
 			btn.disabled = false
 			btn.modulate = Color(1, 1, 1, 1)
 		else:
-			btn.text = "Slot %d  %s" % [slot, Locale.tr("UI_SLOT_EMPTY")]
+			btn.text = "Slot %d  %s" % [slot, Locale.ltr("UI_SLOT_EMPTY")]
 			btn.disabled = not is_save
 			btn.modulate = Color(0.65, 0.65, 0.65, 1) if btn.disabled else Color(1, 1, 1, 1)
 
@@ -329,27 +329,27 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 func _refresh_texts() -> void:
 	if _menu_title != null:
-		_menu_title.text = Locale.tr("UI_GAME_MENU")
+		_menu_title.text = Locale.ltr("UI_GAME_MENU")
 	if _btn_continue != null:
-		_btn_continue.text = Locale.tr("UI_CONTINUE")
+		_btn_continue.text = Locale.ltr("UI_CONTINUE")
 	if _btn_save != null:
-		_btn_save.text = Locale.tr("UI_SAVE")
+		_btn_save.text = Locale.ltr("UI_SAVE")
 	if _btn_load != null:
-		_btn_load.text = Locale.tr("UI_LOAD")
+		_btn_load.text = Locale.ltr("UI_LOAD")
 	if _btn_quit != null:
-		_btn_quit.text = Locale.tr("UI_QUIT")
+		_btn_quit.text = Locale.ltr("UI_QUIT")
 	if _hint_label != null:
-		_hint_label.text = Locale.tr("UI_ESC_HINT")
+		_hint_label.text = Locale.ltr("UI_ESC_HINT")
 	if _slot_title != null:
-		_slot_title.text = Locale.tr("UI_LOAD_GAME") if _state == STATE_LOAD else Locale.tr("UI_SAVE_GAME")
+		_slot_title.text = Locale.ltr("UI_LOAD_GAME") if _state == STATE_LOAD else Locale.ltr("UI_SAVE_GAME")
 	if _btn_back != null:
-		_btn_back.text = Locale.tr("UI_BACK")
+		_btn_back.text = Locale.ltr("UI_BACK")
 	if _btn_confirm_yes != null:
-		_btn_confirm_yes.text = Locale.tr("UI_YES")
+		_btn_confirm_yes.text = Locale.ltr("UI_YES")
 	if _btn_confirm_no != null:
-		_btn_confirm_no.text = Locale.tr("UI_NO")
+		_btn_confirm_no.text = Locale.ltr("UI_NO")
 	if _lang_title != null:
-		_lang_title.text = Locale.tr("UI_LANGUAGE")
+		_lang_title.text = Locale.ltr("UI_LANGUAGE")
 	if _confirm_label != null:
 		var confirm_slot: int = _pending_slot if _pending_slot >= 1 else 1
 		_confirm_label.text = Locale.trf("UI_OVERWRITE_CONFIRM", {"slot": confirm_slot})
@@ -415,7 +415,7 @@ func _format_time_ago(save_time_str: String) -> String:
 	var now_unix: int = int(Time.get_unix_time_from_system())
 	var diff: int = maxi(now_unix - saved_unix, 0)
 	if diff < 60:
-		return Locale.tr("UI_TIME_AGO_JUST_NOW")
+		return Locale.ltr("UI_TIME_AGO_JUST_NOW")
 	if diff < 3600:
 		var minutes: int = maxi(diff / 60, 1)
 		return Locale.trf("UI_TIME_AGO_MINUTES", {"n": minutes})
@@ -423,7 +423,7 @@ func _format_time_ago(save_time_str: String) -> String:
 		var hours: int = maxi(diff / 3600, 1)
 		return Locale.trf("UI_TIME_AGO_HOURS", {"n": hours})
 	if diff < 172800:
-		return Locale.tr("UI_TIME_AGO_YESTERDAY")
+		return Locale.ltr("UI_TIME_AGO_YESTERDAY")
 	var days: int = diff / 86400
 	return Locale.trf("UI_TIME_AGO_DAYS", {"n": days})
 

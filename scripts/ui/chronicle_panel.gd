@@ -126,7 +126,7 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	draw_rect(Rect2(0, 0, panel_w, 76.0), Color(0.05, 0.05, 0.08, 0.95))
 
 	# Title
-	draw_string(font, Vector2(cx, cy), Locale.tr("UI_CHRONICLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy), Locale.ltr("UI_CHRONICLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
 	cy += 10.0
 
 	# Filter buttons
@@ -134,7 +134,7 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	var btn_x: float = cx
 	var btn_y: float = cy + 4.0
 	for i in range(FILTER_LABEL_KEYS.size()):
-		var label: String = Locale.tr(FILTER_LABEL_KEYS[i])
+		var label: String = Locale.ltr(FILTER_LABEL_KEYS[i])
 		var label_size: Vector2 = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"))
 		var btn_w: float = label_size.x + 12
 		var btn_h: float = 20.0
@@ -185,12 +185,12 @@ func _draw() -> void:
 	var cx: float = 20.0
 
 	if chronicle == null:
-		draw_string(font, Vector2(cx, cy + 14), Locale.tr("UI_CHRONICLE_UNAVAILABLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_CHRONICLE_UNAVAILABLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
 	if events.size() == 0:
-		draw_string(font, Vector2(cx, cy + 14), Locale.tr("UI_NO_EVENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_NO_EVENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
@@ -262,7 +262,7 @@ func _draw() -> void:
 	_draw_header(font, panel_w, events.size())
 
 	# Footer
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.tr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.ltr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
 
 

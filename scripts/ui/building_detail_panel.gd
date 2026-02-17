@@ -61,15 +61,15 @@ func _draw() -> void:
 	draw_string(font, Vector2(cx, cy), "%s %s" % [icon, Locale.tr_id("BUILDING", building.building_type)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), type_color)
 	cy += 8.0
 
-	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else Locale.tr("UI_NONE")
-	draw_string(font, Vector2(cx, cy + 14), "%s: (%d, %d)  |  %s: %s" % [Locale.tr("UI_LOCATION"), building.tile_x, building.tile_y, Locale.tr("UI_SETTLEMENT"), sid_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	var sid_text: String = "S%d" % building.settlement_id if building.settlement_id > 0 else Locale.ltr("UI_NONE")
+	draw_string(font, Vector2(cx, cy + 14), "%s: (%d, %d)  |  %s: %s" % [Locale.ltr("UI_LOCATION"), building.tile_x, building.tile_y, Locale.ltr("UI_SETTLEMENT"), sid_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 10.0
 
 	# Status
 	if building.is_built:
-		draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_STATUS_ACTIVE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
+		draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_STATUS_ACTIVE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
 	else:
 		var pct: int = int(building.build_progress * 100)
 		draw_string(font, Vector2(cx, cy + 12), Locale.trf("UI_STATUS_UNDER_CONSTRUCTION_FMT", {"pct": pct}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.8, 0.2))
@@ -80,7 +80,7 @@ func _draw() -> void:
 	cy += 22.0
 
 	# Type-specific info
-	draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_DETAILS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_DETAILS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
 
 	match building.building_type:
@@ -89,28 +89,28 @@ func _draw() -> void:
 				var food: float = building.storage.get("food", 0.0)
 				var wood: float = building.storage.get("wood", 0.0)
 				var stone: float = building.storage.get("stone", 0.0)
-				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_FOOD"), food], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.8, 0.2))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.ltr("UI_FOOD"), food], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.8, 0.2))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_WOOD"), wood], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.4, 0.2))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.ltr("UI_WOOD"), wood], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.4, 0.2))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.tr("UI_STONE"), stone], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f" % [Locale.ltr("UI_STONE"), stone], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 				cy += 16.0
-				draw_string(font, Vector2(cx + 10, cy + 12), "%s+%s+%s: %.1f" % [Locale.tr("UI_FOOD"), Locale.tr("UI_WOOD"), Locale.tr("UI_STONE"), (food + wood + stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+				draw_string(font, Vector2(cx + 10, cy + 12), "%s+%s+%s: %.1f" % [Locale.ltr("UI_FOOD"), Locale.ltr("UI_WOOD"), Locale.ltr("UI_STONE"), (food + wood + stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			else:
-				draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_STORAGE_PENDING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+				draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DETAIL_STORAGE_PENDING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 		"shelter":
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_HOUSING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DETAIL_HOUSING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_CAPACITY_FMT", {"n": 6}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		"campfire":
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.tr("UI_DETAIL_CAMPFIRE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DETAIL_CAMPFIRE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
 			var radius: int = GameConfig.BUILDING_TYPES.get("campfire", {}).get("radius", 5)
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_EFFECT_RADIUS_FMT", {"n": radius}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 
 	# Build cost reference
 	cy += 28.0
-	draw_string(font, Vector2(cx, cy + 12), Locale.tr("UI_BUILD_COST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILD_COST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
 	var cost: Dictionary = GameConfig.BUILDING_TYPES.get(building.building_type, {}).get("cost", {})
 	var cost_parts: Array = []
@@ -120,12 +120,12 @@ func _draw() -> void:
 		var cost_label: String = cost_key.capitalize()
 		match cost_key:
 			"food":
-				cost_label = Locale.tr("UI_FOOD")
+				cost_label = Locale.ltr("UI_FOOD")
 			"wood":
-				cost_label = Locale.tr("UI_WOOD")
+				cost_label = Locale.ltr("UI_WOOD")
 			"stone":
-				cost_label = Locale.tr("UI_STONE")
+				cost_label = Locale.ltr("UI_STONE")
 		cost_parts.append("%s: %.0f" % [cost_label, cost[cost_keys[i]]])
 	draw_string(font, Vector2(cx + 10, cy + 12), " | ".join(cost_parts), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 
-	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), Locale.tr("UI_DETAIL_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 50, panel_h - 12), Locale.ltr("UI_DETAIL_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))

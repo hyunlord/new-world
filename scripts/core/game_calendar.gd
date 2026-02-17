@@ -216,10 +216,10 @@ static func format_age_detailed(birth_date: Dictionary, ref_date: Dictionary = {
 	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
 	var parts: Array = []
 	if age.years > 0:
-		parts.append("%d%s" % [age.years, Locale.tr("UI_AGE_YEARS")])
+		parts.append("%d%s" % [age.years, Locale.ltr("UI_AGE_YEARS")])
 	if age.months > 0:
-		parts.append("%d%s" % [age.months, Locale.tr("UI_AGE_MONTHS")])
-	parts.append("%d%s" % [age.days, Locale.tr("UI_AGE_DAYS")])
+		parts.append("%d%s" % [age.months, Locale.ltr("UI_AGE_MONTHS")])
+	parts.append("%d%s" % [age.days, Locale.ltr("UI_AGE_DAYS")])
 	var age_str: String = " ".join(parts)
 	var total_str: String = format_number(age.total_days)
 	return "%s %s" % [age_str, Locale.trf("UI_AGE_TOTAL_DAYS_FMT", {"n": total_str})]

@@ -93,7 +93,7 @@ func _draw() -> void:
 	var cy: float = 30.0 - _scroll_offset
 
 	# Title
-	draw_string(font, Vector2(cx, cy), Locale.tr("UI_WORLD_STATISTICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy), Locale.ltr("UI_WORLD_STATISTICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
 	cy += 15.0
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.4), 1.0)
 	cy += 10.0
@@ -132,7 +132,7 @@ func _draw() -> void:
 	_content_height = cy + _scroll_offset + 40.0
 
 	# Footer hint
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.tr("UI_STAT_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.ltr("UI_STAT_CLOSE_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
 
 
@@ -168,12 +168,12 @@ func _draw_scrollbar() -> void:
 
 
 func _draw_population_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.2, 1.0, 0.4))
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.2, 1.0, 0.4))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
 	if history.size() < 2:
-		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_WAITING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.ltr("UI_STAT_WAITING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return y + 20.0
 
 	var latest: Dictionary = history[history.size() - 1]
@@ -206,12 +206,12 @@ func _draw_population_section(font: Font, x: float, y: float, w: float) -> float
 
 
 func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_DEMOGRAPHICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.8, 0.5, 0.9))
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_DEMOGRAPHICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.8, 0.5, 0.9))
 	y += 20.0
 
 	var alive: Array = _entity_manager.get_alive_entities()
 	if alive.is_empty():
-		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_NO_POP"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.ltr("UI_STAT_NO_POP"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return y + 20.0
 
 	# Count age stages, couples, happiness
@@ -262,7 +262,7 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	y += 16.0
 
 	# Average happiness bar
-	draw_string(font, Vector2(x, y + 11), Locale.tr("UI_STAT_AVG_HAPPINESS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(x, y + 11), Locale.ltr("UI_STAT_AVG_HAPPINESS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	var bar_x: float = x + 120.0
 	var bar_w: float = w - 180.0
 	var bar_h: float = 10.0
@@ -273,7 +273,7 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	y += 18.0
 
 	# Age distribution bar
-	draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_AGE_DIST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(x, y + 12), Locale.ltr("UI_STAT_AGE_DIST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	y += 16.0
 
 	var age_bar_x: float = x
@@ -307,7 +307,7 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 
 
 func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
-	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_RESOURCES_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.8, 0.1))
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_RESOURCES_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.8, 0.1))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -342,16 +342,16 @@ func _draw_resource_section(font: Font, x: float, y: float, w: float) -> float:
 
 	var deltas: Dictionary = _stats_recorder.get_resource_deltas()
 	var res_line: String = "%s: %d (%+.0f/100t)  |  %s: %d (%+.0f/100t)  |  %s: %d (%+.0f/100t)" % [
-		Locale.tr("UI_FOOD"), int(latest.food), deltas.food,
-		Locale.tr("UI_WOOD"), int(latest.wood), deltas.wood,
-		Locale.tr("UI_STONE"), int(latest.stone), deltas.stone,
+		Locale.ltr("UI_FOOD"), int(latest.food), deltas.food,
+		Locale.ltr("UI_WOOD"), int(latest.wood), deltas.wood,
+		Locale.ltr("UI_STONE"), int(latest.stone), deltas.stone,
 	]
 	draw_string(font, Vector2(x, y + 12), res_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
 
 func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_JOBS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.5, 0.7, 1.0))
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_JOBS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.5, 0.7, 1.0))
 	y += 20.0
 
 	var history: Array = _stats_recorder.history
@@ -390,19 +390,19 @@ func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
 
 
 func _draw_settlements_section(font: Font, x: float, y: float, w: float) -> void:
-	draw_string(font, Vector2(x, y + 14), Locale.tr("UI_STAT_SETTLEMENTS_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.6, 0.2))
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_SETTLEMENTS_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.6, 0.2))
 	y += 20.0
 
 	var settlements: Array = _stats_recorder.get_settlement_stats()
 	if settlements.is_empty():
-		draw_string(font, Vector2(x, y + 12), Locale.tr("UI_STAT_NO_SETTLEMENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(x, y + 12), Locale.ltr("UI_STAT_NO_SETTLEMENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		return
 
 	for i in range(settlements.size()):
 		var s: Dictionary = settlements[i]
 		var pop_text: String = Locale.trf("UI_STAT_POP_FMT", {"n": s.pop})
-		var buildings_text: String = "%s: %d" % [Locale.tr("UI_BUILDINGS_COUNT"), s.buildings]
+		var buildings_text: String = "%s: %d" % [Locale.ltr("UI_BUILDINGS_COUNT"), s.buildings]
 		draw_string(font, Vector2(x + 4, y + 11), "S%d: %s, %s" % [s.id, pop_text, buildings_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		y += 14.0
-		draw_string(font, Vector2(x + 4, y + 11), "  %s:%d %s:%d %s:%d" % [Locale.tr("UI_FOOD"), int(s.food), Locale.tr("UI_WOOD"), int(s.wood), Locale.tr("UI_STONE"), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+		draw_string(font, Vector2(x + 4, y + 11), "  %s:%d %s:%d %s:%d" % [Locale.ltr("UI_FOOD"), int(s.food), Locale.ltr("UI_WOOD"), int(s.wood), Locale.ltr("UI_STONE"), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		y += 14.0

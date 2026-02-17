@@ -76,8 +76,8 @@ func _on_locale_changed(_locale: String) -> void:
 
 func _get_tab_label(index: int) -> String:
 	if index == 0:
-		return Locale.tr("UI_ENTITIES")
-	return Locale.tr("UI_BUILDINGS")
+		return Locale.ltr("UI_ENTITIES")
+	return Locale.ltr("UI_BUILDINGS")
 
 
 static func _format_date_compact(date: Dictionary) -> String:
@@ -220,7 +220,7 @@ func _draw() -> void:
 
 	# Deceased toggle (entities tab only)
 	if _current_tab == 0:
-		var toggle_label: String = "[%s] %s" % [("x" if _show_deceased else " "), Locale.tr("UI_DECEASED")]
+		var toggle_label: String = "[%s] %s" % [("x" if _show_deceased else " "), Locale.ltr("UI_DECEASED")]
 		var toggle_w: float = font.get_string_size(toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small).x + 8
 		_toggle_deceased_rect = Rect2(panel_w - toggle_w - 15, cy + 2, toggle_w, 20)
 		draw_string(font, Vector2(panel_w - toggle_w - 11, cy + 17), toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.6, 0.6, 0.6))
@@ -350,9 +350,9 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	for idx in range(ENTITY_COLUMNS.size()):
 		var col: Dictionary = ENTITY_COLUMNS[idx]
 		var cw: float = col_widths[idx]
-		var label: String = Locale.tr(col.label)
+		var label: String = Locale.ltr(col.label)
 		if _sort_key == col.key:
-			label += " %s" % (Locale.tr("UI_SORT_ASC") if _sort_ascending else Locale.tr("UI_SORT_DESC"))
+			label += " %s" % (Locale.ltr("UI_SORT_ASC") if _sort_ascending else Locale.ltr("UI_SORT_DESC"))
 		var header_rect := Rect2(col_x, cy, cw, 16)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, int(cw) - 2, fs_small, Color(0.8, 0.8, 0.3))
 		_sort_rects.append({"rect": header_rect, "key": col.key})
@@ -447,7 +447,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	var cy: float = start_cy
 
 	if _building_manager == null:
-		var missing_manager_text: String = "%s: %s" % [Locale.tr("UI_BUILDINGS"), Locale.tr("UI_UNKNOWN")]
+		var missing_manager_text: String = "%s: %s" % [Locale.ltr("UI_BUILDINGS"), Locale.ltr("UI_UNKNOWN")]
 		draw_string(font, Vector2(cx, cy + 14), missing_manager_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body, Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
@@ -457,7 +457,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	# Column headers
 	var col_x: float = cx + 5
 	for col in BUILDING_COLUMNS:
-		var label: String = Locale.tr(col.label)
+		var label: String = Locale.ltr(col.label)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
 		col_x += col.width + COL_PAD
 	cy += 18.0
@@ -481,7 +481,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
-		var status: String = Locale.tr("UI_BUILT_LABEL") if b.is_built else "%d%%" % int(b.build_progress * 100)
+		var status: String = Locale.ltr("UI_BUILT_LABEL") if b.is_built else "%d%%" % int(b.build_progress * 100)
 		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
 		cy += ROW_HEIGHT
 
