@@ -184,6 +184,34 @@ func _draw() -> void:
 		_draw_entity_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
 	else:
 		_draw_building_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
+	_draw_scrollbar()
+
+
+func _draw_scrollbar() -> void:
+	# Only show when content overflows
+	if _content_height <= size.y:
+		return
+
+	var panel_h: float = size.y
+	var scrollbar_width: float = 6.0
+	var scrollbar_margin: float = 3.0
+	var scrollbar_x: float = size.x - scrollbar_width - scrollbar_margin
+	var track_top: float = 4.0
+	var track_bottom: float = panel_h - 4.0
+	var track_height: float = track_bottom - track_top
+
+	# Draw track background
+	draw_rect(Rect2(scrollbar_x, track_top, scrollbar_width, track_height), Color(0.15, 0.15, 0.15, 0.3))
+
+	# Calculate grabber size and position
+	var visible_ratio: float = clampf(panel_h / _content_height, 0.05, 1.0)
+	var grabber_height: float = maxf(track_height * visible_ratio, 20.0)
+	var scroll_max: float = maxf(0.0, _content_height - panel_h)
+	var scroll_ratio: float = clampf(_scroll_offset / scroll_max, 0.0, 1.0) if scroll_max > 0.0 else 0.0
+	var grabber_y: float = track_top + (track_height - grabber_height) * scroll_ratio
+
+	# Draw grabber
+	draw_rect(Rect2(scrollbar_x, grabber_y, scrollbar_width, grabber_height), Color(0.6, 0.6, 0.6, 0.5))
 
 
 func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, fs_body: int, fs_small: int) -> void:

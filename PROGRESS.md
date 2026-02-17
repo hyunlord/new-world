@@ -1,5 +1,33 @@
 # Progress Log
 
+## UI 개선: 스크롤 가능한 패널에 스크롤바 추가 (T-2026)
+
+### Context
+커스텀 _draw() 패널들에서 스크롤이 가능하지만 스크롤바가 보이지 않아 사용자가 스크롤 가능 여부와 현재 위치를 알 수 없음. 4개 패널에 시각적 스크롤바 인디케이터 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2026-1 | 4개 패널 스크롤바 추가 | 🟢 DISPATCH | ask_codex | UI-only, 동일 패턴 반복 적용 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 티켓으로 4개 파일 동시 변경 (동일한 _draw_scrollbar() 패턴 반복).
+
+### Results
+- Gate: PASS
+- Commit: 7ec00af
+- Dispatch ratio: 1/1 = 100%
+- Dispatch tool used: ask_codex (1 ticket)
+- Files changed: 4 (entity_detail_panel.gd, list_panel.gd, stats_detail_panel.gd, chronicle_panel.gd)
+- Key changes:
+  - 4개 패널에 동일한 `_draw_scrollbar()` 메서드 추가
+  - 내용이 패널 높이를 초과할 때만 오른쪽에 6px 반투명 스크롤바 표시
+  - entity_detail_panel: `_draw()`와 `_draw_deceased()` 양쪽에서 호출
+
+---
+
 ## 버그픽스 + UI 개선: settlement 로드 에러 + 메뉴 시스템 (T-2025)
 
 ### Context
@@ -15,6 +43,26 @@ settlement_data.gd의 Array[int] 타입 배열이 로드 시 에러 + ESC 메뉴
 
 ### Dispatch strategy
 Parallel dispatch: both tickets are independent (no file overlap).
+
+### Results
+- Gate: PASS
+- Commit: 82b2856
+- PR: #47 (merged)
+- Dispatch ratio: 2/2 = 100%
+- Dispatch tool used: ask_codex (2 tickets)
+- Files changed: 6 (settlement_data.gd, save_manager.gd, pause_menu.gd, main.gd, hud.gd, PROGRESS.md)
+- Key changes:
+  - settlement_data.gd: Array[int] → Array, .duplicate() in to_dict()
+  - save_manager.gd: MAX_SLOTS/SAVE_DIR constants, game_year/game_month/save_time in meta, get_slot_dir/get_slot_info/get_all_slots/migrate_legacy_save
+  - pause_menu.gd: complete rewrite — STATE_MAIN/SAVE/LOAD, 5 slot buttons with metadata, overwrite confirmation, _format_time_ago (Korean)
+  - main.gd: _last_used_slot, migrate_legacy_save(), slot-based save/load wiring
+  - hud.gd: updated hint text
+
+### Codex dispatch prompts
+- t-2025-1: `.codex-prompts/t-2025-1-typed-array.md`
+- t-2025-2: `.codex-prompts/t-2025-2-menu-system.md`
+
+---
 
 ## Hunger 비선형 감소 + 영유아 밸런스 조정 (T-2024)
 
