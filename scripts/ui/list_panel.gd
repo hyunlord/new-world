@@ -289,7 +289,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 				"age_display": age_short,
 				"born": born_days, "born_display": born_display,
 				"died": 9999999, "died_display": "-",
-				"job": e.job, "status": e.current_action, "settlement": e.settlement_id,
+				"job": e.job, "status": Locale.tr_id("STATUS", e.current_action), "settlement": e.settlement_id,
 				"hunger": e.hunger, "deceased": false,
 			})
 
@@ -411,7 +411,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		col_x += col_widths[3] + COL_PAD
 
 		# Job
-		draw_string(font, Vector2(col_x, draw_y + 14), str(row.job), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[4]) - 2, fs_small, text_color)
+		draw_string(font, Vector2(col_x, draw_y + 14), Locale.tr_id("JOB", str(row.job)), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[4]) - 2, fs_small, text_color)
 		col_x += col_widths[4] + COL_PAD
 
 		# Status
@@ -471,7 +471,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 			draw_rect(Rect2(cx, cy, panel_w - 30, ROW_HEIGHT), Color(0.1, 0.1, 0.1, 0.3))
 
 		col_x = cx + 5
-		draw_string(font, Vector2(col_x, cy + 14), b.building_type.capitalize(), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		draw_string(font, Vector2(col_x, cy + 14), Locale.ltr("BUILDING_TYPE_" + b.building_type.to_upper()), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[0].width + COL_PAD
 
 		var sett_text: String = "S%d" % b.settlement_id if b.settlement_id > 0 else "-"

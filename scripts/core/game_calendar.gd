@@ -228,11 +228,11 @@ static func format_age_detailed(birth_date: Dictionary, ref_date: Dictionary = {
 static func format_age_short(birth_date: Dictionary, ref_date: Dictionary = {}) -> String:
 	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
 	if age.years > 0:
-		return "%dy %dm %dd" % [age.years, age.months, age.days]
+		return Locale.trf("UI_AGE_SHORT_FORMAT", {"y": str(age.years), "m": str(age.months), "d": str(age.days)})
 	elif age.months > 0:
-		return "%dm %dd" % [age.months, age.days]
+		return "%s%s %s%s" % [str(age.months), Locale.ltr("UI_AGE_MONTHS"), str(age.days), Locale.ltr("UI_AGE_DAYS")]
 	else:
-		return "%dd" % age.days
+		return "%s%s" % [str(age.days), Locale.ltr("UI_AGE_DAYS")]
 
 
 static func format_number(n: int) -> String:

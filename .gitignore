@@ -13,6 +13,10 @@ error.log
 
 # Codex dispatch prompts
 .codex-prompts/
+.codex-prompt*
+
+# ticket
+.ticket*
 
 # Windows
 Thumbs.db

@@ -354,7 +354,7 @@ func _draw() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = "    " + fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var fname: String = "    " + Locale.tr("FACET_" + fk.to_upper())
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
@@ -605,18 +605,18 @@ func _draw() -> void:
 				draw_string(font, npos, other_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.9, 0.9))
 				_register_click_region(npos, other_name, other_id, font, GameConfig.get_font_size("popup_body"))
 				var name_w: float = font.get_string_size(other_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-				var rel_label: String = " - %s (A:%d T:%d)" % [rel.type.replace("_", " ").capitalize(), int(rel.affinity), int(rel.trust)]
+				var rel_label: String = " - %s (%s:%d %s:%d)" % [Locale.tr_id("RELATION", rel.type), Locale.ltr("UI_AFFINITY"), int(rel.affinity), Locale.ltr("UI_TRUST"), int(rel.trust)]
 				if rel.romantic_interest > 0.0:
-					rel_label += " R:%d" % int(rel.romantic_interest)
+					rel_label += " %s:%d" % [Locale.ltr("UI_RELATIONSHIP_SCORE"), int(rel.romantic_interest)]
 				draw_string(font, Vector2(cx + 10 + name_w, cy + 12), rel_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), type_color)
 				cy += 15.0
 		cy += 6.0
 
 	# ── Stats ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATS_SECTION"))
-	draw_string(font, Vector2(cx + 10, cy + 12), "Speed: %.1f  |  Strength: %.1f" % [entity.speed, entity.strength], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.1f  |  %s: %.1f" % [Locale.ltr("UI_SPEED"), entity.speed, Locale.ltr("UI_STRENGTH"), entity.strength], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 16.0
-	draw_string(font, Vector2(cx + 10, cy + 12), "Total gathered: %.0f  |  Buildings built: %d" % [entity.total_gathered, entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f  |  %s: %d" % [Locale.ltr("UI_TOTAL_GATHERED"), entity.total_gathered, Locale.ltr("UI_BUILDINGS_BUILT"), entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	cy += 22.0
 
 	# ── Action History ──
@@ -626,7 +626,7 @@ func _draw() -> void:
 	var hist_count: int = 0
 	while idx >= 0 and hist_count < 5:
 		var entry: Dictionary = hist[idx]
-		draw_string(font, Vector2(cx + 10, cy + 11), "Tick %d: %s" % [entry.tick, entry.action], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+		draw_string(font, Vector2(cx + 10, cy + 11), Locale.trf("UI_TICK_FORMAT", {"tick": str(entry.tick), "action": Locale.tr_id("STATUS", entry.action)}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		cy += 13.0
 		idx -= 1
 		hist_count += 1
@@ -823,9 +823,9 @@ func _draw_deceased() -> void:
 	var job_text: String = Locale.tr_id("JOB", job_id)
 	var stage_id: String = str(r.get("age_stage", ""))
 	var stage_text: String = Locale.tr_id("STAGE", stage_id) if stage_id != "" else Locale.ltr("UI_UNKNOWN")
-	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s | Stage: %s" % [Locale.ltr("UI_JOB"), job_text, stage_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s | %s: %s" % [Locale.ltr("UI_JOB"), job_text, Locale.ltr("UI_STAGE"), stage_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 16.0
-	draw_string(font, Vector2(cx + 10, cy + 12), "Gathered: %.0f | Built: %d" % [r.get("total_gathered", 0.0), r.get("buildings_built", 0)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f | %s: %d" % [Locale.ltr("UI_GATHERED_LABEL"), r.get("total_gathered", 0.0), Locale.ltr("UI_BUILT_LABEL"), r.get("buildings_built", 0)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
 
 	# Family (clickable)
@@ -923,7 +923,7 @@ func _draw_deceased() -> void:
 			var fkeys: Array = pd.FACET_KEYS[axis_id]
 			for fk in fkeys:
 				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = "    " + fk.substr(fk.find("_") + 1).replace("_", " ").capitalize()
+				var fname: String = "    " + Locale.tr("FACET_" + fk.to_upper())
 				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0

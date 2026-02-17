@@ -100,5 +100,14 @@
   "FACET_O_AESTHETIC_APPRECIATION": "Aesthetic Appreciation",
   "FACET_O_INQUISITIVENESS": "Inquisitiveness",
   "FACET_O_CREATIVITY": "Creativity",
-  "FACET_O_UNCONVENTIONALITY": "Unconventionality"
+  "FACET_O_UNCONVENTIONALITY": "Unconventionality",
+  "JOB_MINER": "Miner",
+  "STATUS_SOCIALIZE": "Socialize",
+  "RELATION_STRANGER": "Stranger",
+  "RELATION_ACQUAINTANCE": "Acquaintance",
+  "RELATION_FRIEND": "Friend",
+  "RELATION_CLOSE_FRIEND": "Close Friend",
+  "RELATION_ROMANTIC": "Romantic",
+  "RELATION_PARTNER": "Partner",
+  "RELATION_RIVAL": "Rival"
 }

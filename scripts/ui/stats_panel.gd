@@ -21,6 +21,7 @@ func _ready() -> void:
 	offset_top = -(30 + panel_h)
 	custom_minimum_size = Vector2(panel_w, panel_h)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	Locale.locale_changed.connect(func(_l): queue_redraw())
 
 
 func _process(_delta: float) -> void:
@@ -34,8 +35,8 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 
 	if _stats_recorder == null or _stats_recorder.history.size() < 2:
-		draw_string(font, Vector2(4, 14), "Population", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
-		draw_string(font, Vector2(4, graph_h + 18), "Resources", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
+		draw_string(font, Vector2(4, 14), Locale.ltr("UI_STAT_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
+		draw_string(font, Vector2(4, graph_h + 18), Locale.ltr("UI_RESOURCES"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_title"), Color.WHITE)
 		return
 
 	_draw_population_graph(font)
@@ -152,7 +153,7 @@ func _draw_job_distribution(font: Font) -> void:
 	draw_string(font, Vector2(4, label_y), "G:%d L:%d B:%d M:%d" % [snap.gatherers, snap.lumberjacks, snap.builders, snap.miners], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_body"), Color(0.7, 0.7, 0.7))
 
 	# Click hint
-	draw_string(font, Vector2(panel_w * 0.5 - 20, panel_h - 4), "G: Details", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("stats_body"), Color(0.5, 0.5, 0.5))
+	draw_string(font, Vector2(panel_w * 0.5 - 20, panel_h - 4), Locale.ltr("UI_STAT_DETAILS_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("stats_body"), Color(0.5, 0.5, 0.5))
 
 
 func apply_ui_scale() -> void:
