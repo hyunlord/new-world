@@ -24,8 +24,27 @@ entity.emotion_data(RefCounted) 추가, 레거시 emotions Dictionary는 유지�
 ### Dispatch strategy
 Wave 1 (parallel): T-2018-01, T-2018-03, T-2018-08 — 독립 새 파일
 Wave 2 (T1 완료 후 parallel): T-2018-02, T-2018-06, T-2018-07 — EmotionData 참조
-Wave 3 (T2 완료 후 sequential): T-2018-04, T-2018-05 — 같은 파일 수정
-Wave 4 (DIRECT): T-2018-09 — main.gd 와이어링 + gate 검증
+Wave 3 (T2 완료 후 sequential): T-2018-04, T-2018-05 — 같은 파일 수정 (T-2018-02가 이미 포함)
+Wave 4 (DIRECT): T-2018-09 — gate 검증 + 버그픽스
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 8/9 = 89% ✅
+- Dispatch tool: ask_codex (8 tickets, all background mode via MCP)
+- Files changed: 8 (3 new + 5 modified)
+- New files: emotion_data.gd, event_presets.json, docs/EMOTION_SYSTEM.md
+- Modified files: emotion_system.gd (full rewrite), entity_data.gd, save_manager.gd (v5→v6), entity_detail_panel.gd, PROGRESS.md
+- Post-Codex fix: duplicate `var pd` declaration in entity_detail_panel.gd (1 line deleted)
+- Note: T-2018-04 (contagion) and T-2018-05 (mental break) were already included in T-2018-02's full rewrite — Codex correctly reported "no changes needed"
+- Note: main.gd wiring already existed from prior phases — no wiring changes needed for T-2018-09
+- Key changes:
+  - EmotionData: 8 emotions × 3 layers (fast/slow/memory_traces) + VA + 24 Dyads + stress + habituation
+  - EmotionSystem: 11-step execute_tick (appraisal impulse, decay, OU, memory, inhibition, VA, stress, habituation, legacy writeback, contagion, mental break)
+  - Event presets: 23 game events with appraisal vectors (Lazarus/Scherer model)
+  - UI: Plutchik color bars, Korean intensity labels, Dyad badges, VA mood line, stress bar, mental break indicator
+  - Save/Load: binary v6 with EmotionData JSON + legacy migration
+  - Academic docs: 15-section reference (Plutchik, Russell, Lazarus, Scherer, Verduyn, Hatfield, Fan, HEXACO)
+  - Legacy compat: entity.emotions Dictionary preserved, written back each tick via to_legacy_dict()
 
 ---
 
