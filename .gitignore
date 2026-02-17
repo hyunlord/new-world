@@ -11,6 +11,9 @@ error.log
 .omc*
 .omx/
 
+# Codex dispatch prompts
+.codex-prompts/
+
 # Windows
 Thumbs.db
 desktop.ini
