@@ -1,5 +1,77 @@
 # Progress Log
 
+## Phase 2-A3: i18n 코드 마이그레이션 — 전체 UI 텍스트 Locale 키로 교체 (T-2029 Phase 2)
+
+### Context
+Phase 1에서 구축한 Locale 싱글톤 + JSON 파일을 기반으로, GDScript 코드에 남아있는 모든
+한국어 하드코딩 문자열을 Locale.tr/trf/tr_id 호출로 교체. 7개 UI 파일 + 4개 코어 파일.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2029-A | hud.gd i18n 마이그레이션 | 🟢 DISPATCH | ask_codex | UI 단일 파일 |
+| T-2029-B | list_panel.gd i18n 확인 | 🟢 DISPATCH | ask_codex | UI 단일 파일 (이미 완료 확인) |
+| T-2029-C | entity_detail_panel.gd i18n | 🟢 DISPATCH | ask_codex | UI 단일 파일 |
+| T-2029-D | chronicle/building/stats 3파일 | 🟢 DISPATCH | ask_codex | UI 3파일 동일 패턴 |
+| T-2029-E | pause_menu.gd 확인 | 🟢 DISPATCH | ask_codex | UI 단일 파일 (이미 완료 확인) |
+| T-2029-F | docs/LOCALIZATION.md 생성 | 🟢 DISPATCH | ask_codex | 새 문서 파일 |
+| T-2029-G | en/ko ui.json 알림 키 4개 추가 | 🔴 DIRECT | — | JSON 2줄 추가, 단순 직접 편집 |
+| T-2029-H | deceased_registry.gd Korean 메서드 삭제 | 🟢 DISPATCH | ask_codex | 코어 단일 파일 |
+| T-2029-I | game_calendar.gd + family_system.gd | 🟢 DISPATCH | ask_codex | 코어 2파일, MONTH_NAMES/SEASON_NAMES 제거 |
+| T-2029-J | emotion_data.gd Korean fallback 교체 | 🟢 DISPATCH | ask_codex | 코어 단일 파일 |
+| T-2029-K | 통합 검증 (Korean 스캔, gate) | 🔴 DIRECT | — | 검증 작업 |
+
+### Dispatch ratio: 9/11 = 82% ✅
+
+### Dispatch strategy
+병렬: A+B+C+D+E+F (UI 파일, 겹침 없음) → G DIRECT (JSON) → 병렬: H+I+J (코어 파일) → K DIRECT 검증
+
+### Results
+- Korean 스캔: 0 matches (locale.gd doc comment 제외, 실행 코드 없음)
+- Gate: PASS ✅ (commit ba84bf9 — Locale loads cleanly, 0 script errors)
+- Dispatch ratio: 9/11 = 82%
+- Dispatch tool used: ask_codex (9 tickets)
+- Files changed: 14
+  - hud.gd: DEATH_CAUSE_KR 제거, 알림/바 레이블 Locale 마이그레이션
+  - entity_detail_panel.gd: job/stage/status/death Locale.tr_id 적용
+  - chronicle_panel.gd, building_detail_panel.gd, stats_detail_panel.gd: 섹션 레이블 마이그레이션
+  - game_calendar.gd: MONTH_NAMES/SEASON_NAMES 상수 제거, format_date/format_birth_date/format_age_detailed Locale 적용
+  - family_system.gd: MONTH_NAMES 참조 → Locale.get_month_name()
+  - deceased_registry.gd: get_death_cause_korean() 삭제 (미사용)
+  - emotion_data.gd: Korean fallback dict → English fallback
+  - en/ko ui.json: 알림 format 키 4개 추가
+  - docs/LOCALIZATION.md: 신규 문서
+
+---
+
+## 버그픽스: 스크롤 클리핑 + 스크롤바 드래그 (T-2028)
+
+### Context
+크로니클 패널에서 스크롤 시 내용이 헤더를 침범하는 버그 + 4개 패널 모두 스크롤바 드래그 불가 버그.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2028-1 | 크로니클 클리핑 + 4패널 스크롤바 드래그 | 🟢 DISPATCH | ask_codex | UI 4파일, 동일 패턴 |
+
+### Dispatch ratio: 0/1 = 0% ❌ (Codex job af343aee stuck 16min, killed → DIRECT)
+
+### Dispatch strategy
+단일 티켓 ask_codex 디스패치 시도 → job 16분간 무응답 (파일 변경 0, response 파일 미생성) → kill 후 직접 구현.
+
+### Results
+- Gate: PASS (commit b5d10ef)
+- PR: #50 merged
+- Dispatch ratio: 0/1 = 0% (Codex stuck, fallback to DIRECT)
+- Files changed: 4
+  - chronicle_panel.gd: _draw_header() 추출, 2회 호출로 헤더 클리핑 + 스크롤바 드래그
+  - entity_detail_panel.gd: 스크롤바 드래그 (padding 40.0)
+  - list_panel.gd: 스크롤바 드래그 (padding 60.0)
+  - stats_detail_panel.gd: 스크롤바 드래그 (padding 40.0)
+- Pattern applied: _scrollbar_dragging + _scrollbar_rect state vars, _update_scroll_from_mouse() helper, drag handling in _gui_input() before existing click handlers, _draw_scrollbar() stores wider hit area rect
+
+---
+
 ## Phase 2-A2: Trait 시스템 전면 교체 — 187개 Trait (T-2027)
 
 ### Context
@@ -1174,3 +1246,27 @@ Both tickets in parallel — no file overlap:
   - Child hunger floor 0.05 in NeedsSystem (infants/toddlers/children/teens)
   - Absolute starvation immunity for age < 15 (hunger clamped, timer reset)
   - Monthly population log: `[POP] Y M | Pop (Adult/Child) | Births | Deaths(starve/siler)`
+---
+
+## T-2029 Phase 2: i18n 코드 마이그레이션 — 2026-02-17
+
+### Context
+T-2029 Phase 1에서 Locale 싱글톤과 JSON 파일들 완성. Phase 2는 기존 UI 코드에 하드코딩된 한국어/영어 문자열을 Locale.tr() 계열로 전수 교체한다. 코드에 사람이 읽는 텍스트가 단 하나도 없어야 한다.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2029-A | hud.gd 마이그레이션 (DEATH_CAUSE_KR 제거, 알림 문자열, 바 라벨) | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2029-B | list_panel.gd 마이그레이션 (TAB_LABELS, 컬럼 헤더, cause_map) | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2029-C | entity_detail_panel.gd 마이그레이션 (섹션 헤더, HEXACO 라벨) | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2029-D | chronicle/building/stats 3파일 마이그레이션 | 🟢 DISPATCH | ask_codex | 3파일 무중복 |
+| T-2029-E | pause_menu.gd 마이그레이션 + 언어 전환 UI | 🟢 DISPATCH | ask_codex | 단일 파일, TICKET-3+4 통합 |
+| T-2029-F | docs/LOCALIZATION.md 생성 | 🟢 DISPATCH | ask_codex | 순수 신규 파일 |
+| T-2029-G | 알림 포맷 키 JSON 추가 + 통합 검증 | 🔴 DIRECT | — | JSON 편집 + 검증 |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+모든 DISPATCH 티켓이 서로 다른 파일 → 전부 병렬 디스패치 가능.
+DIRECT(T-2029-G): 누락 JSON 키 추가 및 검증
+

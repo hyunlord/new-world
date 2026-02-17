@@ -24,6 +24,7 @@ EventLogger="*res://scripts/core/event_logger.gd"
 DeceasedRegistry="*res://scripts/core/deceased_registry.gd"
 ChronicleSystem="*res://scripts/systems/chronicle_system.gd"
 NameGenerator="*res://scripts/core/name_generator.gd"
+Locale="*res://scripts/core/locale.gd"
 
 [physics]
 

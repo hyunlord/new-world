@@ -1,0 +1,8 @@
+{
+  "DEATH_STARVATION": "Starvation",
+  "DEATH_OLD_AGE": "Old Age",
+  "DEATH_INFANT_MORTALITY": "Infant Mortality",
+  "DEATH_BACKGROUND": "Accident/Disease",
+  "DEATH_MATERNAL_DEATH": "Maternal Death",
+  "DEATH_STILLBORN": "Stillborn"
+}

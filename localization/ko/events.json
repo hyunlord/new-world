@@ -1,0 +1,16 @@
+{
+  "EVT_BORN": "{name} 출생 (부모: {parents})",
+  "EVT_CHILD_BORN": "{name}이(가) {mother}와 {father} 사이에서 태어남!",
+  "EVT_TWIN_BORN": "쌍둥이! {name}이(가) {mother}와 {father} 사이에서 태어남!",
+  "EVT_DIED": "{name} 사망 ({cause}, 향년 {age}세)",
+  "EVT_COUPLED": "{name1}와(과) {name2} 결합",
+  "EVT_SETTLEMENT_FOUNDED": "{name} 정착지 설립",
+  "EVT_BUILDING_BUILT": "{building} 건설 완료",
+  "EVT_MENTAL_BREAK": "{name} 정신 붕괴 ({type})",
+  "EVT_ORPHANED": "{name} 고아가 됨",
+  "EVT_PARTNER_DIED": "{name}의 파트너 사망",
+  "EVT_POPULATION_MILESTONE": "인구 {count}명 달성!",
+  "EVT_FAMINE": "{settlement} 기근 발생!",
+  "EVT_BECAME_ADULT": "{name} 성인이 됨",
+  "EVT_STILLBORN": "{name} 사산 ({mother})"
+}

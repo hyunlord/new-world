@@ -6,7 +6,14 @@ var _entity_manager: RefCounted
 ## Filter state
 var _filter_type: String = ""  # "" = all
 const FILTER_OPTIONS: Array = ["", "birth", "death", "marriage", "settlement_founded", "population_milestone"]
-const FILTER_LABELS: Array = ["All", "Birth", "Death", "Marriage", "Settlement", "Milestone"]
+const FILTER_LABEL_KEYS: Array = [
+	"UI_FILTER_ALL",
+	"UI_FILTER_BIRTH",
+	"UI_FILTER_DEATH",
+	"UI_FILTER_MARRIAGE",
+	"UI_FILTER_SETTLEMENT",
+	"UI_FILTER_MILESTONE",
+]
 var _filter_index: int = 0
 
 ## Scroll state
@@ -39,6 +46,10 @@ var _filter_rects: Array = []  # [{rect: Rect2, index: int}]
 
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+
+
+func _ready() -> void:
+	Locale.locale_changed.connect(func(_l): queue_redraw())
 
 
 func _process(_delta: float) -> void:
@@ -115,15 +126,15 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	draw_rect(Rect2(0, 0, panel_w, 76.0), Color(0.05, 0.05, 0.08, 0.95))
 
 	# Title
-	draw_string(font, Vector2(cx, cy), "Chronicle", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
+	draw_string(font, Vector2(cx, cy), Locale.ltr("UI_CHRONICLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
 	cy += 10.0
 
 	# Filter buttons
 	_filter_rects.clear()
 	var btn_x: float = cx
 	var btn_y: float = cy + 4.0
-	for i in range(FILTER_LABELS.size()):
-		var label: String = FILTER_LABELS[i]
+	for i in range(FILTER_LABEL_KEYS.size()):
+		var label: String = Locale.ltr(FILTER_LABEL_KEYS[i])
 		var label_size: Vector2 = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"))
 		var btn_w: float = label_size.x + 12
 		var btn_h: float = 20.0
@@ -144,7 +155,7 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 
 	# Event count
 	if events_count > 0:
-		draw_string(font, Vector2(panel_w - 120, 28), "%d events" % events_count, HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(panel_w - 120, 28), Locale.trf("UI_EVENTS_COUNT", {"n": events_count}), HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 	return cy
 
@@ -174,12 +185,12 @@ func _draw() -> void:
 	var cx: float = 20.0
 
 	if chronicle == null:
-		draw_string(font, Vector2(cx, cy + 14), "ChronicleSystem not available", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_CHRONICLE_UNAVAILABLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
 	if events.size() == 0:
-		draw_string(font, Vector2(cx, cy + 14), "No events recorded yet", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_NO_EVENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
@@ -216,7 +227,7 @@ func _draw() -> void:
 		var icon_color: Color = style.color
 
 		# Date
-		var date_str: String = "%d월 %d일" % [evt.get("month", 0), evt.get("day", 0)]
+		var date_str: String = "M%d D%d" % [evt.get("month", 0), evt.get("day", 0)]
 		draw_string(font, Vector2(cx + 5, cy + 12), date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 		# Icon
@@ -251,7 +262,7 @@ func _draw() -> void:
 	_draw_header(font, panel_w, events.size())
 
 	# Footer
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), "Scroll for more | Click background to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
+	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.ltr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
 
 

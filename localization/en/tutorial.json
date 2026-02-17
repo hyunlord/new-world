@@ -1,0 +1,9 @@
+{
+  "TUT_WELCOME": "Welcome to WorldSim!",
+  "TUT_CAMERA_MOVE": "Use WASD or arrow keys to move the camera",
+  "TUT_CAMERA_ZOOM": "Use mouse wheel to zoom in/out",
+  "TUT_SELECT_ENTITY": "Click on an entity to select it",
+  "TUT_DETAIL_VIEW": "Double-click a selected entity for detailed info",
+  "TUT_SPEED_CONTROL": "Use 1-5 keys to control simulation speed",
+  "TUT_PAUSE": "Press Space to pause/resume"
+}

@@ -1,0 +1,8 @@
+{
+  "DEATH_STARVATION": "아사",
+  "DEATH_OLD_AGE": "노령",
+  "DEATH_INFANT_MORTALITY": "영아 사망",
+  "DEATH_BACKGROUND": "사고/질병",
+  "DEATH_MATERNAL_DEATH": "출산 사망",
+  "DEATH_STILLBORN": "사산"
+}

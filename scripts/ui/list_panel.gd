@@ -9,7 +9,6 @@ var _settlement_manager: RefCounted
 
 ## Tab state
 var _current_tab: int = 0  # 0=entities, 1=buildings
-const TAB_LABELS: Array = ["Entities", "Buildings"]
 
 ## Sort state
 var _sort_key: String = "name"
@@ -42,28 +41,43 @@ var _toggle_deceased_rect: Rect2 = Rect2()
 
 ## Column definitions for entities
 const ENTITY_COLUMNS: Array = [
-	{"key": "name", "label": "Name", "min_width": 70, "weight": 15},
-	{"key": "age", "label": "Age", "min_width": 90, "weight": 18},
-	{"key": "born", "label": "Born", "min_width": 72, "weight": 10},
-	{"key": "died", "label": "Died", "min_width": 72, "weight": 10},
-	{"key": "job", "label": "Job", "min_width": 55, "weight": 10},
-	{"key": "status", "label": "Status", "min_width": 80, "weight": 17},
-	{"key": "settlement", "label": "Sett", "min_width": 28, "weight": 5},
-	{"key": "hunger", "label": "Hunger", "min_width": 42, "weight": 8},
+	{"key": "name", "label": "UI_NAME", "min_width": 70, "weight": 15},
+	{"key": "age", "label": "UI_AGE", "min_width": 90, "weight": 18},
+	{"key": "born", "label": "UI_BORN", "min_width": 72, "weight": 10},
+	{"key": "died", "label": "UI_DIED", "min_width": 72, "weight": 10},
+	{"key": "job", "label": "UI_JOB", "min_width": 55, "weight": 10},
+	{"key": "status", "label": "UI_STATUS", "min_width": 80, "weight": 17},
+	{"key": "settlement", "label": "UI_SETTLEMENT", "min_width": 28, "weight": 5},
+	{"key": "hunger", "label": "UI_HUNGER", "min_width": 42, "weight": 8},
 ]
 
 const BUILDING_COLUMNS: Array = [
-	{"key": "name", "label": "Type", "width": 100},
-	{"key": "settlement", "label": "Sett", "width": 40},
-	{"key": "position", "label": "Position", "width": 80},
-	{"key": "status", "label": "Status", "width": 80},
+	{"key": "name", "label": "UI_BUILDINGS", "width": 100},
+	{"key": "settlement", "label": "UI_SETTLEMENT", "width": 40},
+	{"key": "position", "label": "UI_POS", "width": 80},
+	{"key": "status", "label": "UI_STATUS", "width": 80},
 ]
+
+
+func _ready() -> void:
+	if not Locale.locale_changed.is_connected(_on_locale_changed):
+		Locale.locale_changed.connect(_on_locale_changed)
 
 
 func init(entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+
+
+func _on_locale_changed(_locale: String) -> void:
+	queue_redraw()
+
+
+func _get_tab_label(index: int) -> String:
+	if index == 0:
+		return Locale.ltr("UI_ENTITIES")
+	return Locale.ltr("UI_BUILDINGS")
 
 
 static func _format_date_compact(date: Dictionary) -> String:
@@ -191,8 +205,8 @@ func _draw() -> void:
 
 	# Tabs
 	var tab_x: float = cx
-	for i in range(TAB_LABELS.size()):
-		var label: String = TAB_LABELS[i]
+	for i in range(2):
+		var label: String = _get_tab_label(i)
 		var tw: float = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body).x + 16
 		var tab_rect := Rect2(tab_x, cy, tw, 24)
 		if i == _current_tab:
@@ -206,7 +220,7 @@ func _draw() -> void:
 
 	# Deceased toggle (entities tab only)
 	if _current_tab == 0:
-		var toggle_label: String = "[%s] Deceased" % ("x" if _show_deceased else " ")
+		var toggle_label: String = "[%s] %s" % [("x" if _show_deceased else " "), Locale.ltr("UI_DECEASED")]
 		var toggle_w: float = font.get_string_size(toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small).x + 8
 		_toggle_deceased_rect = Rect2(panel_w - toggle_w - 15, cy + 2, toggle_w, 20)
 		draw_string(font, Vector2(panel_w - toggle_w - 11, cy + 17), toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.6, 0.6, 0.6))
@@ -284,7 +298,6 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
 		if registry != null:
 			var deceased: Array = registry.get_all()
-			var cause_map: Dictionary = {"starvation": "아사", "old_age": "노령", "infant_mortality": "영아 사망", "background": "사고/질병", "maternal_death": "출산 사망", "stillborn": "사산"}
 			for i in range(deceased.size()):
 				var r: Dictionary = deceased[i]
 				var bd: Dictionary = r.get("birth_date", {})
@@ -298,7 +311,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 				else:
 					d_age_short = "%dy" % int(r.get("death_age_years", 0.0))
 				var cause_raw: String = r.get("death_cause", "unknown")
-				var cause_kr: String = cause_map.get(cause_raw, cause_raw)
+				var cause_loc: String = Locale.tr_id("DEATH", cause_raw)
 				var d_born_display: String = _format_date_compact(bd)
 				var d_born_days: int = 0
 				if not bd.is_empty():
@@ -313,7 +326,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 					"born": d_born_days, "born_display": d_born_display,
 					"died": d_died_days, "died_display": d_died_display,
 					"job": r.get("job", ""),
-					"status": "사망-%s" % cause_kr, "settlement": r.get("settlement_id", 0),
+					"status": Locale.trf("UI_DECEASED_STATUS_FMT", {"cause": cause_loc}), "settlement": r.get("settlement_id", 0),
 					"hunger": 0.0, "deceased": true,
 				})
 
@@ -337,9 +350,9 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	for idx in range(ENTITY_COLUMNS.size()):
 		var col: Dictionary = ENTITY_COLUMNS[idx]
 		var cw: float = col_widths[idx]
-		var label: String = col.label
+		var label: String = Locale.ltr(col.label)
 		if _sort_key == col.key:
-			label += " %s" % ("v" if _sort_ascending else "^")
+			label += " %s" % (Locale.ltr("UI_SORT_ASC") if _sort_ascending else Locale.ltr("UI_SORT_DESC"))
 		var header_rect := Rect2(col_x, cy, cw, 16)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, int(cw) - 2, fs_small, Color(0.8, 0.8, 0.3))
 		_sort_rects.append({"rect": header_rect, "key": col.key})
@@ -426,7 +439,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 
 	# Footer: total count
 	var footer_y: float = panel_h - 24
-	var count_text: String = "%d entities" % rows.size()
+	var count_text: String = Locale.trf("UI_ENTITIES_COUNT_FMT", {"n": rows.size()})
 	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), count_text, HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
 
 
@@ -434,7 +447,8 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	var cy: float = start_cy
 
 	if _building_manager == null:
-		draw_string(font, Vector2(cx, cy + 14), "No building manager", HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body, Color(0.5, 0.5, 0.5))
+		var missing_manager_text: String = "%s: %s" % [Locale.ltr("UI_BUILDINGS"), Locale.ltr("UI_UNKNOWN")]
+		draw_string(font, Vector2(cx, cy + 14), missing_manager_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body, Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
@@ -443,7 +457,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	# Column headers
 	var col_x: float = cx + 5
 	for col in BUILDING_COLUMNS:
-		var label: String = col.label
+		var label: String = Locale.ltr(col.label)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
 		col_x += col.width + COL_PAD
 	cy += 18.0
@@ -467,7 +481,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
-		var status: String = "Built" if b.is_built else "%d%%" % int(b.build_progress * 100)
+		var status: String = Locale.ltr("UI_BUILT_LABEL") if b.is_built else "%d%%" % int(b.build_progress * 100)
 		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
 		cy += ROW_HEIGHT
 

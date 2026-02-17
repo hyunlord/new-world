@@ -93,7 +93,7 @@ func execute_tick(tick: int) -> void:
 				if sp.is_built:
 					settlement_food += sp.storage.get("food", 0.0)
 		var date: Dictionary = GameCalendar.tick_to_date(tick)
-		var month_label: String = GameCalendar.MONTH_NAMES[date.month - 1]
+		var month_label: String = Locale.get_month_name(date.month)
 		print("[DEMOGRAPHY] Y%d %s --- Yearly Report ---" % [
 			date.year, month_label,
 		])

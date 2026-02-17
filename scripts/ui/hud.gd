@@ -10,14 +10,6 @@ const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/chronicle_panel.gd")
 const ListPanelClass = preload("res://scripts/ui/list_panel.gd")
-const DEATH_CAUSE_KR: Dictionary = {
-	"starvation": "아사",
-	"old_age": "노령",
-	"infant_mortality": "영아 사망",
-	"background": "사고/질병",
-	"maternal_death": "출산 사망",
-	"stillborn": "사산",
-}
 
 # References
 var _sim_engine: RefCounted
@@ -270,8 +262,8 @@ func _build_entity_panel() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 3)
 
-	_entity_name_label = _make_label("Name", "panel_title")
-	_entity_job_label = _make_label("Job", "panel_body")
+	_entity_name_label = _make_label(Locale.ltr("UI_NAME"), "panel_title")
+	_entity_job_label = _make_label(Locale.ltr("UI_JOB"), "panel_body")
 	_entity_info_label = _make_label("", "panel_body", Color(0.7, 0.7, 0.7))
 	_entity_action_label = _make_label("Action: idle", "panel_body")
 	_entity_inventory_label = _make_label("Inv: empty", "panel_body")
@@ -285,19 +277,19 @@ func _build_entity_panel() -> void:
 	vbox.add_child(_make_separator())
 
 	# Hunger bar with percentage
-	var hunger_row := _make_bar_row("Hunger", Color(0.9, 0.2, 0.2))
+	var hunger_row := _make_bar_row(Locale.ltr("UI_HUNGER"), Color(0.9, 0.2, 0.2))
 	_hunger_bar = hunger_row[0]
 	_hunger_pct_label = hunger_row[1]
 	vbox.add_child(hunger_row[2])
 
 	# Energy bar with percentage
-	var energy_row := _make_bar_row("Energy", Color(0.9, 0.8, 0.2))
+	var energy_row := _make_bar_row(Locale.ltr("UI_ENERGY"), Color(0.9, 0.8, 0.2))
 	_energy_bar = energy_row[0]
 	_energy_pct_label = energy_row[1]
 	vbox.add_child(energy_row[2])
 
 	# Social bar with percentage
-	var social_row := _make_bar_row("Social", Color(0.3, 0.5, 0.9))
+	var social_row := _make_bar_row(Locale.ltr("UI_SOCIAL"), Color(0.3, 0.5, 0.9))
 	_social_bar = social_row[0]
 	_social_pct_label = social_row[1]
 	vbox.add_child(social_row[2])
@@ -588,7 +580,7 @@ func _update_entity_panel(delta: float) -> void:
 	if not entity.birth_date.is_empty():
 		birth_str = GameCalendar.format_birth_date(entity.birth_date)
 	else:
-		birth_str = "출생일 불명"
+		birth_str = Locale.ltr("UI_BIRTH_DATE_UNKNOWN")
 	var current_tick: int = entity.birth_tick + entity.age
 	var ref_d: Dictionary = GameCalendar.tick_to_date(current_tick)
 	var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
@@ -750,7 +742,7 @@ func _add_notification(text: String, color: Color) -> void:
 		bg_color = Color(0.1, 0.4, 0.1, 0.9)
 	elif text.contains("built") or text.contains("Build") or text.contains("construction"):
 		bg_color = Color(0.4, 0.3, 0.1, 0.9)
-	elif text.contains("사망") or text.contains("사산") or text.contains("starved") or text.contains("shortage") or text.contains("famine"):
+	elif text.contains(Locale.ltr("UI_NOTIFICATION_DIED")) or text.contains(Locale.ltr("UI_NOTIFICATION_STILLBORN")) or text.contains("starved") or text.contains("shortage") or text.contains("famine"):
 		bg_color = Color(0.5, 0.1, 0.1, 0.9)
 
 	var panel := PanelContainer.new()
@@ -822,30 +814,30 @@ func _on_simulation_event(event: Dictionary) -> void:
 	var event_type: String = event.get("type", "")
 	match event_type:
 		"game_saved":
-			_add_notification("Game Saved", Color.WHITE)
+			_add_notification(Locale.ltr("UI_NOTIF_GAME_SAVED"), Color.WHITE)
 		"game_loaded":
-			_add_notification("Game Loaded", Color.WHITE)
+			_add_notification(Locale.ltr("UI_NOTIF_GAME_LOADED"), Color.WHITE)
 		"settlement_founded":
-			_add_notification("New settlement founded!", Color(0.9, 0.6, 0.1))
+			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1))
 		"building_completed":
 			var btype: String = event.get("building_type", "building")
-			_add_notification("%s built" % btype.capitalize(), Color(1.0, 0.9, 0.3))
+			_add_notification(Locale.trf("UI_NOTIF_BUILDING_BUILT_FMT", {"type": btype.capitalize()}), Color(1.0, 0.9, 0.3))
 		"entity_starved":
 			var starved_name: String = event.get("entity_name", "?")
-			_add_notification("%s 사망 (아사)" % starved_name, Color(0.9, 0.2, 0.2))
+			_add_notification(Locale.trf("UI_NOTIF_DIED_STARVED_FMT", {"name": starved_name}), Color(0.9, 0.2, 0.2))
 		"entity_died_siler":
 			var died_name: String = event.get("entity_name", "?")
 			var died_cause: String = event.get("cause", "unknown")
 			var died_age: float = event.get("age_years", 0.0)
-			var cause_kr: String = DEATH_CAUSE_KR.get(died_cause, died_cause)
+			var cause_loc: String = Locale.tr_id("DEATH", died_cause)
 			var age_str: String = "%.0fy" % died_age
-			_add_notification("%s 사망 (%s, %s)" % [died_name, cause_kr, age_str], Color(0.7, 0.3, 0.3))
+			_add_notification(Locale.trf("UI_NOTIF_DIED_CAUSE_AGE_FMT", {"name": died_name, "cause": cause_loc, "age": age_str}), Color(0.7, 0.3, 0.3))
 		"maternal_death":
 			var m_name: String = event.get("entity_name", "?")
-			_add_notification("%s 사망 (출산 사망)" % m_name, Color(0.8, 0.3, 0.5))
+			_add_notification(Locale.trf("UI_NOTIF_MATERNAL_FMT", {"name": m_name}), Color(0.8, 0.3, 0.5))
 		"stillborn":
 			var s_name: String = event.get("entity_name", "?")
-			_add_notification("%s 사산" % s_name, Color(0.6, 0.3, 0.3))
+			_add_notification(Locale.trf("UI_NOTIF_STILLBORN_FMT", {"name": s_name}), Color(0.6, 0.3, 0.3))
 
 
 # --- Toggle functions ---
