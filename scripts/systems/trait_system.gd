@@ -203,7 +203,7 @@ static func _sort_and_cap_display(traits: Array) -> Array:
 
 ## Backward-compatible display filtering for ID arrays.
 ## Returns sorted/capped trait IDs.
-static func filter_display_traits(all_trait_ids: Array, max_display: int = 5) -> Array:
+static func filter_display_traits(all_trait_ids: Array) -> Array:
 	_ensure_loaded()
 	var defs: Array = []
 	for i in range(all_trait_ids.size()):
@@ -213,8 +213,6 @@ static func filter_display_traits(all_trait_ids: Array, max_display: int = 5) ->
 			defs.append(tdef)
 
 	var sorted_defs: Array = _sort_and_cap_display(defs)
-	if sorted_defs.size() > max_display:
-		sorted_defs.resize(max_display)
 
 	var ids: Array = []
 	for i in range(sorted_defs.size()):
