@@ -1610,3 +1610,10 @@ T-2036-A removed external max_display param but missed internal 5-cap in _sort_a
 
 ### Dispatch strategy
 Sequential: T-2038-A 완료 후 T-2038-B (같은 파일)
+
+### Results (T-2038)
+- Gate: PASS ✅
+- PR: #66 (MERGED)
+- Files changed: 1 (entity_detail_panel.gd: +329/-273)
+- T-2038-A: Codex (section collapsing + traits independence)
+- T-2038-B: Direct (one-liner: cy += 18 → cy += 26, trivial)

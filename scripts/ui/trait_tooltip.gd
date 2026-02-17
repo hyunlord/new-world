@@ -168,7 +168,11 @@ func _build_content(t: Dictionary) -> void:
 		if not has_effects:
 			_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
 			has_effects = true
-		for action in bw:
+		var bw_keys: Array = bw.keys()
+		bw_keys.sort_custom(func(a, b):
+			return Locale.tr_id("ACTION", str(a)).naturalcasecmp_to(Locale.tr_id("ACTION", str(b))) < 0
+		)
+		for action in bw_keys:
 			var val = float(bw[action])
 			var pct = int((val - 1.0) * 100)
 			if pct == 0:
@@ -179,18 +183,23 @@ func _build_content(t: Dictionary) -> void:
 			_add_effect_row("%s %s%d%%" % [aname, sign, pct], ec)
 
 	var em = effects.get("emotion_modifiers", {})
-	for mk in em:
-		if not has_effects:
-			_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
-			has_effects = true
-		var val = float(em[mk])
-		var pct = int((val - 1.0) * 100)
-		if pct == 0:
-			continue
-		var mname: String = Locale.tr_id("EMOTION_MOD", mk)
-		var sign: String = "+" if pct > 0 else ""
-		var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
-		_add_effect_row("%s %s%d%%" % [mname, sign, pct], ec)
+	if em.size() > 0:
+		var em_keys: Array = em.keys()
+		em_keys.sort_custom(func(a, b):
+			return Locale.tr_id("EMOTION_MOD", str(a)).naturalcasecmp_to(Locale.tr_id("EMOTION_MOD", str(b))) < 0
+		)
+		for mk in em_keys:
+			if not has_effects:
+				_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
+				has_effects = true
+			var val = float(em[mk])
+			var pct = int((val - 1.0) * 100)
+			if pct == 0:
+				continue
+			var mname: String = Locale.tr_id("EMOTION_MOD", mk)
+			var sign: String = "+" if pct > 0 else ""
+			var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
+			_add_effect_row("%s %s%d%%" % [mname, sign, pct], ec)
 
 	var rm = effects.get("relationship_modifiers", {})
 	for mk in rm:

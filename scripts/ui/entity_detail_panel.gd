@@ -391,7 +391,17 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_BEHAVIOR_WEIGHTS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
 		cy += 16.0
 		var behavior_keys: Array = behavior_totals.keys()
-		behavior_keys.sort_custom(func(a, b): return str(a).naturalcasecmp_to(str(b)) < 0)
+		behavior_keys.sort_custom(func(a, b):
+			var ka: String = str(a).to_upper()
+			var kb: String = str(b).to_upper()
+			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
+			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
+			if da == "TRAIT_KEY_" + ka:
+				da = str(a).replace("_", " ").capitalize()
+			if db == "TRAIT_KEY_" + kb:
+				db = str(b).replace("_", " ").capitalize()
+			return da.naturalcasecmp_to(db) < 0
+		)
 		for key in behavior_keys:
 			var key_str: String = str(key)
 			var value: float = float(behavior_totals[key_str])
@@ -407,7 +417,17 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_EMOTION_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
 		cy += 16.0
 		var emotion_keys: Array = emotion_totals.keys()
-		emotion_keys.sort_custom(func(a, b): return str(a).naturalcasecmp_to(str(b)) < 0)
+		emotion_keys.sort_custom(func(a, b):
+			var ka: String = str(a).to_upper()
+			var kb: String = str(b).to_upper()
+			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
+			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
+			if da == "TRAIT_KEY_" + ka:
+				da = str(a).replace("_", " ").capitalize()
+			if db == "TRAIT_KEY_" + kb:
+				db = str(b).replace("_", " ").capitalize()
+			return da.naturalcasecmp_to(db) < 0
+		)
 		for key in emotion_keys:
 			var key_str: String = str(key)
 			var value: float = float(emotion_totals[key_str])
