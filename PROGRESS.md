@@ -1,5 +1,34 @@
 # Progress Log
 
+## Phase 2-A3: Plutchik 감정 시스템 (T-2018)
+
+### Context
+기존 5감정(happiness/loneliness/stress/grief/love)을 Plutchik 8기본감정 + 3층 시간역학 + 24 Dyad + HEXACO 연동 + Mental Break로 교체.
+entity.emotion_data(RefCounted) 추가, 레거시 emotions Dictionary는 유지하여 기존 코드 호환.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2018-01 | EmotionData 데이터 구조 | 🟢 DISPATCH | ask_codex | New file (emotion_data.gd) |
+| T-2018-02 | EmotionSystem 엔진 교체 | 🟢 DISPATCH | ask_codex | File replacement (emotion_system.gd) |
+| T-2018-03 | 이벤트 프리셋 JSON | 🟢 DISPATCH | ask_codex | New file (event_presets.json) |
+| T-2018-04 | 감정 전파 (Contagion) | 🟢 DISPATCH | ask_codex | Add to emotion_system.gd |
+| T-2018-05 | Mental Break 시스템 | 🟢 DISPATCH | ask_codex | Add to emotion_system.gd |
+| T-2018-06 | UI 감정 패널 교체 | 🟢 DISPATCH | ask_codex | Modify entity_detail_panel.gd |
+| T-2018-07 | Save/Load + EntityData 확장 | 🟢 DISPATCH | ask_codex | Modify 3 files |
+| T-2018-08 | 학술 레퍼런스 + 설계 문서 | 🟢 DISPATCH | ask_codex | New file (docs/EMOTION_SYSTEM.md) |
+| T-2018-09 | 통합 검증 + main.gd 와이어링 | 🔴 DIRECT | — | Integration wiring + gate |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): T-2018-01, T-2018-03, T-2018-08 — 독립 새 파일
+Wave 2 (T1 완료 후 parallel): T-2018-02, T-2018-06, T-2018-07 — EmotionData 참조
+Wave 3 (T2 완료 후 sequential): T-2018-04, T-2018-05 — 같은 파일 수정
+Wave 4 (DIRECT): T-2018-09 — main.gd 와이어링 + gate 검증
+
+---
+
 ## Phase 2 버그픽스: 디테일 패널 사망자 정보 고정 (T-2017)
 
 ### Context

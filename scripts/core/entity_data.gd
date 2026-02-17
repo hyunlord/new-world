@@ -42,6 +42,8 @@ var emotions: Dictionary = {
 	"grief": 0.0,
 	"love": 0.0,
 }
+## Phase 2-A3: Plutchik emotion data (EmotionData RefCounted)
+var emotion_data: RefCounted = null
 
 ## AI State
 var current_action: String = "idle"
@@ -138,6 +140,7 @@ func to_dict() -> Dictionary:
 		"last_birth_tick": last_birth_tick,
 		"personality": personality.to_dict() if personality != null else {},
 		"emotions": emotions.duplicate(),
+		"emotion_data": emotion_data.to_dict() if emotion_data != null else {},
 		"birth_date": birth_date.duplicate(),
 	}
 
@@ -215,4 +218,12 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"grief": em_data.get("grief", 0.0),
 		"love": em_data.get("love", 0.0),
 	}
+	# Plutchik emotion data (Phase 2-A3)
+	var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
+	var ed_data = data.get("emotion_data", {})
+	if not ed_data.is_empty() and ed_data.has("fast"):
+		e.emotion_data = EmotionDataScript.from_dict(ed_data)
+	else:
+		# Legacy migration: create EmotionData from old 5-emotion values
+		e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
 	return e

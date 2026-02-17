@@ -5,7 +5,7 @@ extends RefCounted
 ##   meta.json, entities.bin, buildings.bin, relationships.bin,
 ##   settlements.bin, world.bin, stats.json
 
-const SAVE_VERSION: int = 5
+const SAVE_VERSION: int = 6
 
 ## Minimum loadable save version (v3 loads with defaults for new fields)
 const MIN_LOAD_VERSION: int = 3
@@ -156,6 +156,12 @@ func _save_entities(path: String, em: RefCounted) -> bool:
 		f.store_float(e.emotions.get("stress", 0.0))
 		f.store_float(e.emotions.get("grief", 0.0))
 		f.store_float(e.emotions.get("love", 0.0))
+		# EmotionData (v6+): JSON string for flexible serialization
+		if e.emotion_data != null:
+			var ed_json: String = JSON.stringify(e.emotion_data.to_dict())
+			f.store_pascal_string(ed_json)
+		else:
+			f.store_pascal_string("")
 		# Job + settlement
 		f.store_8(maxi(_jobs.find(e.job), 0))
 		f.store_32(e.settlement_id)
@@ -196,6 +202,7 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 	em.chunk_index.clear()
 	var EntityDataScript = load("res://scripts/core/entity_data.gd")
 	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
+	var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
 	var count: int = f.get_32()
 	for _i in range(count):
 		var e = EntityDataScript.new()
@@ -242,6 +249,20 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 			"grief": f.get_float(),
 			"love": f.get_float(),
 		}
+		# EmotionData (v6+)
+		if _load_version >= 6:
+			var ed_json_str: String = f.get_pascal_string()
+			if ed_json_str != "":
+				var ed_json: JSON = JSON.new()
+				if ed_json.parse(ed_json_str) == OK and ed_json.data is Dictionary:
+					e.emotion_data = EmotionDataScript.from_dict(ed_json.data)
+				else:
+					e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
+			else:
+				e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
+		else:
+			# Pre-v6 saves: migrate from legacy 5-emotion values
+			e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
 		e.job = _jobs[mini(f.get_8(), _jobs.size() - 1)]
 		e.settlement_id = f.get_32()
 		e.current_action = f.get_pascal_string()
