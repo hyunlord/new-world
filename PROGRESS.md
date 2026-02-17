@@ -1,5 +1,28 @@
 # Progress Log
 
+## T-2039: 특성 UI 항목 번역 이름 기준 정렬 — 2026-02-18
+
+### Context
+특성 효과 요약(entity_detail_panel)과 툴팁(trait_tooltip)에서 항목이 raw key 기준으로 정렬되어 한글 모드에서 가나다순이 되지 않는 문제 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2039 | 특성 UI 항목 번역 이름 기준 정렬 | 🟢 DISPATCH | ask_codex | 2개 파일, 독립 변경 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- PR: #67 merged
+- Files changed: 2 (entity_detail_panel.gd, trait_tooltip.gd)
+- Key changes:
+  - entity_detail_panel: behavior/emotion 효과 요약 → `Locale.ltr("TRAIT_KEY_*")` 기준 정렬
+  - trait_tooltip: behavior_weights → `Locale.tr_id("ACTION",*)`, emotion_modifiers → `Locale.tr_id("EMOTION_MOD",*)` 기준 정렬
+  - 뱃지 정렬은 이미 올바름 (변경 없음)
+
+---
+
 ## Phase 2 스크린샷 기반 잔존 i18n 수정 — 2026-02-18
 
 ### Context
