@@ -29,6 +29,7 @@ var _btn_load: Button
 var _btn_quit: Button
 var _btn_settings: Button
 var _btn_back: Button
+var _btn_settings_back: Button
 var _settings_container: VBoxContainer
 var _settings_title: Label
 var _btn_confirm_yes: Button
@@ -163,8 +164,8 @@ func _build_ui() -> void:
 	var settings_sep := HSeparator.new()
 	_settings_container.add_child(settings_sep)
 	_settings_container.add_child(_build_language_section())
-	var btn_settings_back := _create_button("", Callable(self, "_on_settings_back"), 16)
-	_settings_container.add_child(btn_settings_back)
+	_btn_settings_back = _create_button("", Callable(self, "_on_settings_back"), 16)
+	_settings_container.add_child(_btn_settings_back)
 
 	root.add_child(_main_container)
 	root.add_child(_slot_container)
@@ -378,6 +379,8 @@ func _refresh_texts() -> void:
 		_slot_title.text = Locale.ltr("UI_LOAD_GAME") if _state == STATE_LOAD else Locale.ltr("UI_SAVE_GAME")
 	if _btn_back != null:
 		_btn_back.text = Locale.ltr("UI_BACK")
+	if _btn_settings_back != null:
+		_btn_settings_back.text = Locale.ltr("UI_BACK")
 	if _btn_confirm_yes != null:
 		_btn_confirm_yes.text = Locale.ltr("UI_YES")
 	if _btn_confirm_no != null:

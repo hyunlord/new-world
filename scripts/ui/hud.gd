@@ -67,6 +67,10 @@ var _was_running_before_help: bool = false
 
 # Resource legend
 var _resource_legend: PanelContainer
+var _legend_title_label: Label
+var _legend_food_label: Label
+var _legend_wood_label: Label
+var _legend_stone_label: Label
 
 # Minimap & Stats
 var _minimap_panel: Control
@@ -478,10 +482,14 @@ func _build_resource_legend() -> void:
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 2)
-	vbox.add_child(_make_label("Resources", "legend_title"))
-	vbox.add_child(_make_label("  Food (F)", "legend_body", Color(1.0, 0.85, 0.0)))
-	vbox.add_child(_make_label("  Wood (W)", "legend_body", Color(0.0, 0.8, 0.2)))
-	vbox.add_child(_make_label("  Stone (S)", "legend_body", Color(0.4, 0.6, 1.0)))
+	_legend_title_label = _make_label(Locale.ltr("UI_RESOURCES"), "legend_title")
+	_legend_food_label = _make_label(Locale.ltr("UI_FOOD_LEGEND"), "legend_body", Color(1.0, 0.85, 0.0))
+	_legend_wood_label = _make_label(Locale.ltr("UI_WOOD_LEGEND"), "legend_body", Color(0.0, 0.8, 0.2))
+	_legend_stone_label = _make_label(Locale.ltr("UI_STONE_LEGEND"), "legend_body", Color(0.4, 0.6, 1.0))
+	vbox.add_child(_legend_title_label)
+	vbox.add_child(_legend_food_label)
+	vbox.add_child(_legend_wood_label)
+	vbox.add_child(_legend_stone_label)
 
 	_resource_legend.add_child(vbox)
 	add_child(_resource_legend)
@@ -489,7 +497,7 @@ func _build_resource_legend() -> void:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "Space:Pause  ./:Speed  Tab:Resources  M:Map  H:Help  ESC:Menu"
+	_hint_label.text = Locale.ltr("UI_KEY_HINTS")
 	_hint_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hint"))
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_tracked_labels.append({"node": _hint_label, "key": "hint"})
@@ -503,7 +511,7 @@ func _build_key_hints() -> void:
 
 
 func _process(delta: float) -> void:
-	_fps_label.text = "%d" % Engine.get_frames_per_second()
+	_fps_label.text = str(Engine.get_frames_per_second())
 
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
@@ -511,7 +519,7 @@ func _process(delta: float) -> void:
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
-		_pop_label.text = "Pop: %d" % pop
+		_pop_label.text = Locale.trf("UI_POP_FMT", {"n": pop})
 
 		# Population milestones
 		if not _pop_milestone_init:
@@ -534,16 +542,16 @@ func _process(delta: float) -> void:
 			else:
 				wip_count += 1
 		if wip_count > 0:
-			_building_label.text = "Bld:%d +%d" % [built_count, wip_count]
+			_building_label.text = Locale.trf("UI_BLD_WIP_FMT", {"n": built_count, "wip": wip_count})
 		else:
-			_building_label.text = "Bld:%d" % built_count
+			_building_label.text = Locale.trf("UI_BLD_FMT", {"n": built_count})
 
 	# Resource totals (color-coded)
 	if _building_manager != null:
 		var totals: Dictionary = _get_stockpile_totals()
-		_food_label.text = "F:%d" % int(totals.get("food", 0.0))
-		_wood_label.text = "W:%d" % int(totals.get("wood", 0.0))
-		_stone_label.text = "S:%d" % int(totals.get("stone", 0.0))
+		_food_label.text = Locale.trf("UI_RES_FOOD_FMT", {"n": int(totals.get("food", 0.0))})
+		_wood_label.text = Locale.trf("UI_RES_WOOD_FMT", {"n": int(totals.get("wood", 0.0))})
+		_stone_label.text = Locale.trf("UI_RES_STONE_FMT", {"n": int(totals.get("stone", 0.0))})
 
 	# Update selected entity
 	if _selected_entity_id >= 0 and _entity_manager:
@@ -589,10 +597,12 @@ func _update_entity_panel(delta: float) -> void:
 	var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
 	var age_short: String = GameCalendar.format_age_short(entity.birth_date, ref_date)
 	var age_text: String = "%s (%s)" % [age_short, birth_str]
-	_entity_job_label.text = "%s | %s%s | %s" % [entity.age_stage.capitalize(), entity.job.capitalize(), settlement_text, age_text]
+	var stage_tr: String = Locale.tr_id("STAGE", entity.age_stage)
+	var job_tr: String = Locale.tr_id("JOB", entity.job)
+	_entity_job_label.text = stage_tr + " | " + job_tr + settlement_text + " | " + age_text
 
 	# Position
-	_entity_info_label.text = "Pos: (%d, %d)" % [entity.position.x, entity.position.y]
+	_entity_info_label.text = Locale.trf("UI_POS_FMT", {"x": int(entity.position.x), "y": int(entity.position.y)})
 
 	# Action + path
 	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
@@ -610,25 +620,23 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_action_label.text = action_text
 
 	# Inventory
-	_entity_inventory_label.text = "F:%.1f W:%.1f S:%.1f / %.0f" % [
-		entity.inventory.get("food", 0.0),
-		entity.inventory.get("wood", 0.0),
-		entity.inventory.get("stone", 0.0),
-		GameConfig.MAX_CARRY,
-	]
+	var inv_food_text: String = Locale.trf("UI_RES_FOOD_FMT", {"n": "%.1f" % entity.inventory.get("food", 0.0)})
+	var inv_wood_text: String = Locale.trf("UI_RES_WOOD_FMT", {"n": "%.1f" % entity.inventory.get("wood", 0.0)})
+	var inv_stone_text: String = Locale.trf("UI_RES_STONE_FMT", {"n": "%.1f" % entity.inventory.get("stone", 0.0)})
+	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Need bars + percentage
 	var hunger_pct: float = entity.hunger * 100.0
 	_hunger_bar.value = hunger_pct
-	_hunger_pct_label.text = "%d%%" % int(hunger_pct)
+	_hunger_pct_label.text = str(int(hunger_pct)) + "%"
 
 	var energy_pct: float = entity.energy * 100.0
 	_energy_bar.value = energy_pct
-	_energy_pct_label.text = "%d%%" % int(energy_pct)
+	_energy_pct_label.text = str(int(energy_pct)) + "%"
 
 	var social_pct: float = entity.social * 100.0
 	_social_bar.value = social_pct
-	_social_pct_label.text = "%d%%" % int(social_pct)
+	_social_pct_label.text = str(int(social_pct)) + "%"
 
 	# Low hunger blink
 	if entity.hunger < 0.2:
@@ -639,7 +647,7 @@ func _update_entity_panel(delta: float) -> void:
 		_hunger_bar.modulate = Color.WHITE
 		_hunger_blink_timer = 0.0
 
-	_entity_stats_label.text = "SPD: %.1f | STR: %.1f" % [entity.speed, entity.strength]
+	_entity_stats_label.text = Locale.trf("UI_ENTITY_STATS_FMT", {"spd": "%.1f" % entity.speed, "str_val": "%.1f" % entity.strength})
 
 
 func _update_building_panel() -> void:
@@ -648,44 +656,47 @@ func _update_building_panel() -> void:
 		_on_building_deselected()
 		return
 
-	var type_name: String = building.building_type.capitalize()
+	var type_name: String = Locale.tr_id("BUILDING_TYPE", building.building_type)
 	var icon: String = "■"
 	match building.building_type:
 		"shelter":
 			icon = "▲"
 		"campfire":
 			icon = "●"
-	_building_name_label.text = "%s %s" % [icon, type_name]
+	_building_name_label.text = icon + " " + type_name
 
 	var settlement_text: String = ""
 	if building.settlement_id > 0:
 		settlement_text = "S%d | " % building.settlement_id
-	_building_info_label.text = "%s(%d, %d)" % [settlement_text, building.tile_x, building.tile_y]
+	_building_info_label.text = settlement_text + "(" + str(building.tile_x) + ", " + str(building.tile_y) + ")"
 
 	match building.building_type:
 		"stockpile":
 			if building.is_built:
-				_building_storage_label.text = "Storage:\n  F:%.0f  W:%.0f  S:%.0f" % [
-					building.storage.get("food", 0.0),
-					building.storage.get("wood", 0.0),
-					building.storage.get("stone", 0.0),
-				]
+				_building_storage_label.text = Locale.trf("UI_BUILDING_STORAGE_FMT", {
+					"food": "%.0f" % building.storage.get("food", 0.0),
+					"wood": "%.0f" % building.storage.get("wood", 0.0),
+					"stone": "%.0f" % building.storage.get("stone", 0.0),
+				})
 			else:
-				_building_storage_label.text = "Under construction: %d%%" % int(building.build_progress * 100)
+				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
 		"shelter":
 			if building.is_built:
-				_building_storage_label.text = "Shelter\nEnergy rest bonus: 2x"
+				_building_storage_label.text = Locale.ltr("UI_BUILDING_SHELTER_DESC")
 			else:
-				_building_storage_label.text = "Under construction: %d%%" % int(building.build_progress * 100)
+				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
 		"campfire":
 			if building.is_built:
-				_building_storage_label.text = "Campfire\nSocial bonus active"
+				_building_storage_label.text = Locale.ltr("UI_BUILDING_CAMPFIRE_DESC")
 			else:
-				_building_storage_label.text = "Under construction: %d%%" % int(building.build_progress * 100)
+				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
 		_:
 			_building_storage_label.text = ""
 
-	_building_status_label.text = "Active" if building.is_built else "Building... %d%%" % int(building.build_progress * 100)
+	if building.is_built:
+		_building_status_label.text = Locale.ltr("UI_BUILDING_ACTIVE")
+	else:
+		_building_status_label.text = Locale.trf("UI_BUILDING_WIP_FMT", {"pct": int(building.build_progress * 100)})
 
 
 func _update_notifications(delta: float) -> void:
@@ -806,11 +817,11 @@ func _on_building_deselected() -> void:
 
 
 func _on_speed_changed(speed_index: int) -> void:
-	_speed_label.text = "%dx" % GameConfig.SPEED_OPTIONS[speed_index]
+	_speed_label.text = Locale.trf("UI_SPEED_MULT_FMT", {"n": GameConfig.SPEED_OPTIONS[speed_index]})
 
 
 func _on_pause_changed(paused: bool) -> void:
-	_status_label.text = "\u23F8" if paused else "\u25B6"
+	_status_label.text = "⏸" if paused else "▶"
 
 
 func _on_simulation_event(event: Dictionary) -> void:
@@ -852,6 +863,16 @@ func _refresh_hud_texts() -> void:
 		_entity_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
 	if _building_detail_btn != null:
 		_building_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
+	if _hint_label != null:
+		_hint_label.text = Locale.ltr("UI_KEY_HINTS")
+	if _legend_title_label != null:
+		_legend_title_label.text = Locale.ltr("UI_RESOURCES")
+	if _legend_food_label != null:
+		_legend_food_label.text = Locale.ltr("UI_FOOD_LEGEND")
+	if _legend_wood_label != null:
+		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
+	if _legend_stone_label != null:
+		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
 
 
 # --- Toggle functions ---
@@ -923,7 +944,7 @@ func toggle_list() -> void:
 
 
 func show_startup_toast(pop_count: int) -> void:
-	_add_notification("WorldSim started! Pop: %d" % pop_count, Color.WHITE)
+	_add_notification(Locale.trf("UI_NOTIF_WORLDSIM_STARTED_FMT", {"n": pop_count}), Color.WHITE)
 
 
 func _on_ui_notification(msg: String, _category: String) -> void:
@@ -952,10 +973,10 @@ func _on_follow_entity(entity_id: int) -> void:
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
-			_follow_label.text = "Following: %s" % entity.entity_name
+			_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": entity.entity_name})
 			_follow_label.visible = true
 			return
-	_follow_label.text = "Following: #%d" % entity_id
+	_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": "#%d" % entity_id})
 	_follow_label.visible = true
 
 
