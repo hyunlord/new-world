@@ -329,7 +329,6 @@ func _draw() -> void:
 		# Stress bar
 		cy += 2.0
 		var stress_val: float = ed.stress
-		var pd: RefCounted = entity.personality
 		var z_C: float = 0.0
 		if pd != null:
 			z_C = pd.to_zscore(pd.axes.get("C", 0.5))
