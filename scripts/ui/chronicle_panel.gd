@@ -32,8 +32,6 @@ const EVENT_STYLES: Dictionary = {
 	"birth": {"icon": "B", "color": Color(0.3, 0.9, 0.3)},
 	"death": {"icon": "D", "color": Color(0.9, 0.3, 0.3)},
 	"marriage": {"icon": "C", "color": Color(0.9, 0.4, 0.6)},
-	"orphaned": {"icon": "O", "color": Color(0.6, 0.5, 0.7)},
-	"partner_died": {"icon": "W", "color": Color(0.6, 0.4, 0.5)},
 	"settlement_founded": {"icon": "S", "color": Color(0.9, 0.7, 0.2)},
 	"population_milestone": {"icon": "P", "color": Color(0.3, 0.8, 0.9)},
 	"famine": {"icon": "!", "color": Color(0.9, 0.2, 0.1)},
@@ -262,6 +260,30 @@ func _draw() -> void:
 					var name_w: float = font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
 					var name_pos := Vector2(icon_x + 18 + pre_w, cy + 12)
 					_click_regions.append({"rect": Rect2(name_pos.x, name_pos.y - GameConfig.get_font_size("popup_small"), name_w, GameConfig.get_font_size("popup_small") + 4), "entity_id": entity_id})
+
+		# Make related entity names clickable
+		var related_ids: Array = evt.get("related_ids", [])
+		for rid in related_ids:
+			if rid == entity_id:
+				continue
+			var rname: String = ""
+			var rentity: RefCounted = _entity_manager.get_entity(rid) if _entity_manager != null else null
+			if rentity != null:
+				rname = rentity.entity_name
+			else:
+				var registry: Node = get_node_or_null("/root/DeceasedRegistry")
+				if registry != null:
+					rname = registry.get_record(rid).get("name", "")
+			if rname.length() == 0:
+				continue
+			var rstart: int = desc.find(rname)
+			if rstart < 0:
+				continue
+			var rpre_text: String = desc.substr(0, rstart)
+			var rpre_w: float = font.get_string_size(rpre_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
+			var rname_w: float = font.get_string_size(rname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
+			var rname_pos := Vector2(icon_x + 18 + rpre_w, cy + 12)
+			_click_regions.append({"rect": Rect2(rname_pos.x, rname_pos.y - GameConfig.get_font_size("popup_small"), rname_w, GameConfig.get_font_size("popup_small") + 4), "entity_id": rid})
 
 		cy += 16.0
 

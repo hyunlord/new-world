@@ -600,40 +600,6 @@ func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: Strin
 	var desc: String = "%s died (%s, age %d)" % [entity_name, cause, int(age_years)]
 	ChronicleSystem.log_event(ChronicleSystem.EVENT_DEATH, entity_id, desc, 4, [], tick,
 		{"key": "EVT_DIED", "params": {"name": entity_name, "cause_id": cause, "age": str(int(age_years))}})
-	# Orphan events for children
-	var entity: RefCounted = entity_manager.get_entity(entity_id)
-	if entity != null:
-		for child_id in entity.children_ids:
-			var child: RefCounted = entity_manager.get_entity(child_id)
-			if child != null and child.is_alive:
-				ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
-					"Parent %s died" % entity_name, 3, [entity_id], tick,
-					{"key": "EVT_ORPHANED", "params": {"parent": entity_name}})
-		if entity.partner_id > 0:
-			var partner: RefCounted = entity_manager.get_entity(entity.partner_id)
-			if partner != null and partner.is_alive:
-				ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, entity.partner_id,
-					"Partner %s died" % entity_name, 4, [entity_id], tick,
-					{"key": "EVT_PARTNER_DIED", "params": {"partner": entity_name}})
-	else:
-		# Entity already removed — check DeceasedRegistry
-		var registry: Node = get_node_or_null("/root/DeceasedRegistry")
-		if registry != null:
-			var record: Dictionary = registry.get_record(entity_id)
-			if record.size() > 0:
-				for child_id in record.get("children_ids", []):
-					var child: RefCounted = entity_manager.get_entity(child_id)
-					if child != null and child.is_alive:
-						ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
-							"Parent %s died" % entity_name, 3, [entity_id], tick,
-							{"key": "EVT_ORPHANED", "params": {"parent": entity_name}})
-				var pid: int = record.get("partner_id", -1)
-				if pid > 0:
-					var partner: RefCounted = entity_manager.get_entity(pid)
-					if partner != null and partner.is_alive:
-						ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, pid,
-							"Partner %s died" % entity_name, 4, [entity_id], tick,
-							{"key": "EVT_PARTNER_DIED", "params": {"partner": entity_name}})
 
 
 func _on_couple_formed_chronicle(entity_a_id: int, entity_a_name: String, entity_b_id: int, entity_b_name: String, tick: int) -> void:
