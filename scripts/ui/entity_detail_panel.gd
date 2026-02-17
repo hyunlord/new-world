@@ -285,14 +285,13 @@ func _draw() -> void:
 
 	# ── Emotions (Plutchik 8) ──
 	cy = _draw_section_header(font, cx, cy, "Emotions")
-	var _EmotionDataRef = preload("res://scripts/core/emotion_data.gd")
 	if entity.emotion_data != null:
 		var ed: RefCounted = entity.emotion_data
 		# Draw 8 emotion bars with intensity labels
-		for i in range(_EmotionDataRef.EMOTION_ORDER.size()):
-			var emo_id: String = _EmotionDataRef.EMOTION_ORDER[i]
+		for i in range(ed._emotion_order.size()):
+			var emo_id: String = ed._emotion_order[i]
 			var val: float = ed.get_emotion(emo_id) / 100.0  # Normalize to 0-1 for _draw_bar
-			var label_en: String = _EmotionDataRef.EMOTION_LABELS_EN.get(emo_id, emo_id)
+			var label_en: String = ed._emotion_labels_en.get(emo_id, emo_id)
 			var label_kr: String = ed.get_intensity_label_kr(emo_id)
 			var display_label: String = label_en
 			if label_kr != "":
@@ -312,7 +311,7 @@ func _draw() -> void:
 			for di in range(active_dyads.size()):
 				var dyad: Dictionary = active_dyads[di]
 				var dyad_id: String = dyad.get("id", "")
-				var dyad_kr: String = _EmotionDataRef.DYAD_LABELS_KR.get(dyad_id, dyad_id)
+				var dyad_kr: String = ed._dyad_labels_kr.get(dyad_id, dyad_id)
 				var dyad_text: String = dyad_kr
 				var text_w: float = font.get_string_size(dyad_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 				# Check if badge fits on current line
