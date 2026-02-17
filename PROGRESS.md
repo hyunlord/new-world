@@ -1561,3 +1561,12 @@ Phase 2 병렬 (B 완료 후): C + D (C=entity_detail_panel, D=chronicle+hud)
 ### Dispatch strategy
 Phase 1 병렬: A + C (파일 겹침 없음)
 Phase 2: B (entity_detail_panel — A 완료 후 순서 무관하나 안전하게 순서 후)
+
+### Results
+- Gate: PASS ✅
+- PR: https://github.com/hyunlord/new-world/pull/64 (merged)
+- Files changed: 6 (trait_system.gd, entity_data.gd, entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
+- Key changes: filter_display_traits max제거; 뱃지 locale정렬+클릭토글+강조; 효과요약 섹션; JSON 5키 추가
+- Dispatch tool: ask_codex (3/3, 100%)
+
+---
