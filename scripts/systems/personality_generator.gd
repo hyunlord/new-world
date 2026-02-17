@@ -131,7 +131,8 @@ func generate_personality(sex: String, culture_id: String,
 		var z_axis: float = z_axes[aid]
 		var fkeys: Array = PersonalityDataScript.FACET_KEYS[aid]
 		for j in range(fkeys.size()):
-			var facet_z: float = z_axis + _randfn(0.0, 0.25)
+			# Intra-axis facet variance (0.35 balances differentiation vs axis coherence at SD=0.25)
+			var facet_z: float = z_axis + _randfn(0.0, 0.35)
 			pd.facets[fkeys[j]] = pd.from_zscore(facet_z)
 
 	# Step 4: Recalculate axes from facet averages
