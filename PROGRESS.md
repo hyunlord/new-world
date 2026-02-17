@@ -1,5 +1,23 @@
 # Progress Log
 
+## Phase 2 버그픽스: 디테일 패널 사망자 정보 고정 (T-2017)
+
+### Context
+사망자 디테일 패널을 열면 이후 살아있는 에이전트 선택 시에도 사망자 정보가 고정됨.
+원인: `set_entity_id()`가 `_showing_deceased` 플래그를 클리어하지 않아서 `_draw()`가 사망자 모드로 short-circuit.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2017-01 | Detail panel deceased sticking fix | 🟢 DISPATCH | ask_codex | Single file fix |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+**Single ticket**: Fix `set_entity_id()` in entity_detail_panel.gd to clear deceased mode.
+
+---
+
 ## Phase 2-A2 확장: SD 변경 + 성격 Trait 전체 목록 (T-2016)
 
 ### Context
