@@ -27,6 +27,7 @@ const AgeSystem = preload("res://scripts/systems/age_system.gd")
 const FamilySystem = preload("res://scripts/systems/family_system.gd")
 const MortalitySystem = preload("res://scripts/systems/mortality_system.gd")
 const ChildcareSystem = preload("res://scripts/systems/childcare_system.gd")
+const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -39,6 +40,7 @@ var save_manager: RefCounted
 var settlement_manager: RefCounted
 var stats_recorder: RefCounted
 var relationship_manager: RefCounted
+var pause_menu: CanvasLayer
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
@@ -183,6 +185,10 @@ func _ready() -> void:
 	entity_renderer.init(entity_manager, building_manager, resource_map)
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
+	pause_menu = PauseMenuClass.new()
+	pause_menu.save_requested.connect(_save_game)
+	pause_menu.load_requested.connect(_load_game)
+	add_child(pause_menu)
 
 	# Initialize name generator with sim RNG and entity manager
 	NameGenerator.init(sim_engine.rng, entity_manager)
@@ -426,7 +432,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			match event.keycode:
 				KEY_ESCAPE:
-					hud.close_all_popups()
+					if pause_menu.is_menu_visible():
+						pause_menu.hide_menu()
+					elif not hud.close_all_popups():
+						pause_menu.show_menu()
 				KEY_SPACE:
 					sim_engine.toggle_pause()
 				KEY_PERIOD:

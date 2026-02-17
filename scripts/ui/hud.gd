@@ -494,7 +494,7 @@ func _build_resource_legend() -> void:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "\u2318S:Save  \u2318L:Load  Tab:Resources  M:Map  G:Stats  E:Details  C:Chronicle  P:List  N:Day/Night  H:Help  Space:Pause"
+	_hint_label.text = "Space:Pause  Tab:Resources  M:Map  G:Stats  H:Help  ESC:Menu"
 	_hint_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hint"))
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_tracked_labels.append({"node": _hint_label, "key": "hint"})
@@ -886,13 +886,14 @@ func toggle_help() -> void:
 			SimulationBus.pause_changed.emit(false)
 
 
-func close_all_popups() -> void:
+func close_all_popups() -> bool:
 	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
-		return
+		return true
 	if _help_visible:
 		toggle_help()
-		return
+		return true
+	return false
 
 
 func open_entity_detail() -> void:
