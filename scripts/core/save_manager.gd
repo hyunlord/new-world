@@ -204,6 +204,7 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
 	var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
 	var GameCalendarScript = load("res://scripts/core/game_calendar.gd")
+	var load_rng = RandomNumberGenerator.new()
 	var count: int = f.get_32()
 	for _i in range(count):
 		var e = EntityDataScript.new()
@@ -220,7 +221,8 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 		e.gender = _genders[mini(f.get_8(), _genders.size() - 1)]
 		e.age_stage = _age_stages[mini(f.get_8(), _age_stages.size() - 1)]
 		e.birth_tick = _s32(f.get_32())
-		e.birth_date = GameCalendarScript.birth_date_from_tick(e.birth_tick)
+		load_rng.seed = hash(e.id * 7919 + e.birth_tick)
+		e.birth_date = GameCalendarScript.birth_date_from_tick(e.birth_tick, load_rng)
 		e.partner_id = _s32(f.get_32())
 		e.pregnancy_tick = _s32(f.get_32())
 		e.frailty = f.get_float()

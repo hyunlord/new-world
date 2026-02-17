@@ -193,7 +193,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var bd_data = data.get("birth_date", {})
 	if bd_data.is_empty():
 		var GameCalendar = load("res://scripts/core/game_calendar.gd")
-		e.birth_date = GameCalendar.birth_date_from_tick(e.birth_tick)
+		var bd_rng = RandomNumberGenerator.new()
+		bd_rng.seed = hash(e.id * 7919 + e.birth_tick)
+		e.birth_date = GameCalendar.birth_date_from_tick(e.birth_tick, bd_rng)
 	elif not bd_data.is_empty():
 		e.birth_date = {
 			"year": int(bd_data.get("year", 0)),
