@@ -96,7 +96,7 @@ func _check_birthday_mortality(tick: int) -> void:
 		if age_ticks < GameCalendar.TICKS_PER_YEAR:
 			continue
 		# Birthday check: birth_tick mod TICKS_PER_YEAR == current tick mod TICKS_PER_YEAR
-		if entity.birth_tick % GameCalendar.TICKS_PER_YEAR != tick_mod:
+		if posmod(entity.birth_tick, GameCalendar.TICKS_PER_YEAR) != tick_mod:
 			continue
 		_do_mortality_check(entity, tick, false)
 

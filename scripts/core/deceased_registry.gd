@@ -33,7 +33,7 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"frailty": entity.frailty,
 		"birth_date": entity.birth_date.duplicate() if not entity.birth_date.is_empty() else {},
 		"death_date": _current_date_from_tick(current_tick),
-		"death_age_days": (current_tick - entity.birth_tick) / 12 if entity.birth_tick >= 0 else 0,
+		"death_age_days": (current_tick - entity.birth_tick) / 12,
 	}
 	_records[entity.id] = record
 

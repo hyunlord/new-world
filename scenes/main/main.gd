@@ -255,7 +255,8 @@ func _spawn_initial_entities() -> void:
 	for i in range(count):
 		# Weighted age distribution for realistic population pyramid
 		var age_years: int = _weighted_random_age(sim_engine.rng)
-		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR
+		var day_offset: int = sim_engine.rng.randi_range(0, 364)
+		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
 		entity_manager.spawn_entity(walkable_tiles[i], "", initial_age)
 
 	print("[Main] Spawned %d entities near world center." % count)
