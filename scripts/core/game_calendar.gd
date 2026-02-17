@@ -88,6 +88,20 @@ static func format_date(tick: int) -> String:
 	})
 
 
+## Format short date (month + day only) for action history display
+static func format_short_date(tick: int) -> String:
+	var d: Dictionary = tick_to_date(tick)
+	return Locale.trf("UI_SHORT_DATE", {"month": str(d.month), "day": str(d.day)})
+
+
+## Format short date with year for cross-year display
+static func format_short_date_with_year(tick: int) -> String:
+	var d: Dictionary = tick_to_date(tick)
+	return Locale.trf("UI_SHORT_DATE_WITH_YEAR", {
+		"year": str(d.year), "month": str(d.month), "day": str(d.day)
+	})
+
+
 ## Convert age in ticks to years (float)
 static func tick_to_age_years(birth_tick: int, current_tick: int) -> float:
 	return float(current_tick - birth_tick) / float(TICKS_PER_YEAR)
