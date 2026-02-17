@@ -1,0 +1,337 @@
+# T-2018-03: Emotion Event Presets JSON
+
+## Objective
+Create the appraisal-vector event presets JSON file that maps game events to emotional impulse parameters based on Lazarus (1991) Appraisal Theory and Scherer (2009) Component Process Model.
+
+## File to Create
+
+### `data/emotions/event_presets.json` (NEW)
+
+Create the directory `data/emotions/` if it doesn't exist.
+
+## Full Content
+
+```json
+{
+	"_comment": "Emotion event presets — appraisal vectors for EmotionSystem impulse calculation. Based on Lazarus (1991) Appraisal Theory + Scherer (2009) CPM. Fields: goal_congruence (-1~+1), novelty (0~1), controllability (0~1), agency (-1~+1), norm_violation (0~1), pathogen (0~1), social_bond (-1~+1), future_relevance (0~1), intensity (0~100), is_trauma (bool).",
+	"events": {
+		"food_acquired": {
+			"description": "Food acquired",
+			"category": "resource",
+			"intensity": 25,
+			"goal_congruence": 0.7,
+			"novelty": 0.1,
+			"controllability": 0.8,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.3
+		},
+		"wood_acquired": {
+			"description": "Wood acquired",
+			"category": "resource",
+			"intensity": 20,
+			"goal_congruence": 0.5,
+			"novelty": 0.05,
+			"controllability": 0.8,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.2
+		},
+		"stone_acquired": {
+			"description": "Stone acquired",
+			"category": "resource",
+			"intensity": 20,
+			"goal_congruence": 0.5,
+			"novelty": 0.05,
+			"controllability": 0.8,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.2
+		},
+		"severe_hunger": {
+			"description": "Severe hunger",
+			"category": "survival",
+			"intensity": 50,
+			"goal_congruence": -0.8,
+			"novelty": 0.1,
+			"controllability": 0.3,
+			"agency": 0.0,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.7
+		},
+		"starvation_warning": {
+			"description": "Starvation imminent",
+			"category": "survival",
+			"intensity": 75,
+			"goal_congruence": -1.0,
+			"novelty": 0.2,
+			"controllability": 0.1,
+			"agency": 0.0,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.9
+		},
+		"ate_food": {
+			"description": "Ate food successfully",
+			"category": "survival",
+			"intensity": 20,
+			"goal_congruence": 0.6,
+			"novelty": 0.0,
+			"controllability": 0.9,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.1
+		},
+		"partner_found": {
+			"description": "Found a partner",
+			"category": "social",
+			"intensity": 40,
+			"goal_congruence": 0.9,
+			"novelty": 0.6,
+			"controllability": 0.5,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.8,
+			"future_relevance": 0.7
+		},
+		"partner_death": {
+			"description": "Partner died",
+			"category": "loss",
+			"intensity": 90,
+			"is_trauma": true,
+			"goal_congruence": -1.0,
+			"novelty": 0.8,
+			"controllability": 0.0,
+			"agency": -0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 1.0,
+			"future_relevance": 0.9
+		},
+		"child_death": {
+			"description": "Child died",
+			"category": "loss",
+			"intensity": 95,
+			"is_trauma": true,
+			"goal_congruence": -1.0,
+			"novelty": 0.7,
+			"controllability": 0.0,
+			"agency": -0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 1.0,
+			"future_relevance": 0.8
+		},
+		"parent_death": {
+			"description": "Parent died",
+			"category": "loss",
+			"intensity": 70,
+			"is_trauma": true,
+			"goal_congruence": -0.8,
+			"novelty": 0.5,
+			"controllability": 0.0,
+			"agency": -0.3,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.7,
+			"future_relevance": 0.5
+		},
+		"friend_death": {
+			"description": "Friend died",
+			"category": "loss",
+			"intensity": 50,
+			"goal_congruence": -0.6,
+			"novelty": 0.5,
+			"controllability": 0.0,
+			"agency": -0.2,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.5,
+			"future_relevance": 0.3
+		},
+		"child_born": {
+			"description": "Child born",
+			"category": "family",
+			"intensity": 60,
+			"goal_congruence": 0.9,
+			"novelty": 0.7,
+			"controllability": 0.3,
+			"agency": 0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.9,
+			"future_relevance": 0.9
+		},
+		"building_completed": {
+			"description": "Building completed",
+			"category": "achievement",
+			"intensity": 30,
+			"goal_congruence": 0.8,
+			"novelty": 0.3,
+			"controllability": 0.8,
+			"agency": 0.7,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.2,
+			"future_relevance": 0.5
+		},
+		"social_interaction": {
+			"description": "Positive social interaction",
+			"category": "social",
+			"intensity": 15,
+			"goal_congruence": 0.4,
+			"novelty": 0.1,
+			"controllability": 0.6,
+			"agency": 0.3,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.5,
+			"future_relevance": 0.1
+		},
+		"new_territory": {
+			"description": "New territory discovered",
+			"category": "exploration",
+			"intensity": 35,
+			"goal_congruence": 0.5,
+			"novelty": 0.9,
+			"controllability": 0.6,
+			"agency": 0.7,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.8
+		},
+		"migration_started": {
+			"description": "Migration to new settlement",
+			"category": "exploration",
+			"intensity": 40,
+			"goal_congruence": 0.3,
+			"novelty": 0.8,
+			"controllability": 0.4,
+			"agency": 0.3,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": -0.3,
+			"future_relevance": 0.9
+		},
+		"settlement_founded": {
+			"description": "New settlement founded",
+			"category": "achievement",
+			"intensity": 45,
+			"goal_congruence": 0.8,
+			"novelty": 0.7,
+			"controllability": 0.5,
+			"agency": 0.6,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.6,
+			"future_relevance": 0.8
+		},
+		"theft_victim": {
+			"description": "Victim of theft",
+			"category": "conflict",
+			"intensity": 55,
+			"goal_congruence": -0.7,
+			"novelty": 0.5,
+			"controllability": 0.4,
+			"agency": -0.8,
+			"norm_violation": 0.8,
+			"pathogen": 0.0,
+			"social_bond": -0.5,
+			"future_relevance": 0.3
+		},
+		"betrayal": {
+			"description": "Betrayed by trusted person",
+			"category": "conflict",
+			"intensity": 80,
+			"is_trauma": true,
+			"goal_congruence": -0.9,
+			"novelty": 0.7,
+			"controllability": 0.2,
+			"agency": -1.0,
+			"norm_violation": 0.9,
+			"pathogen": 0.0,
+			"social_bond": -1.0,
+			"future_relevance": 0.5
+		},
+		"combat_threat": {
+			"description": "Combat threat",
+			"category": "danger",
+			"intensity": 70,
+			"goal_congruence": -0.8,
+			"novelty": 0.4,
+			"controllability": 0.3,
+			"agency": -0.5,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": -0.7,
+			"future_relevance": 0.6
+		},
+		"community_festival": {
+			"description": "Community festival",
+			"category": "social",
+			"intensity": 40,
+			"goal_congruence": 0.6,
+			"novelty": 0.3,
+			"controllability": 0.7,
+			"agency": 0.3,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.8,
+			"future_relevance": 0.2
+		},
+		"job_assigned": {
+			"description": "New job assigned",
+			"category": "work",
+			"intensity": 15,
+			"goal_congruence": 0.3,
+			"novelty": 0.3,
+			"controllability": 0.2,
+			"agency": -0.2,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.4
+		},
+		"rested_well": {
+			"description": "Well rested (energy recovered)",
+			"category": "survival",
+			"intensity": 15,
+			"goal_congruence": 0.5,
+			"novelty": 0.0,
+			"controllability": 0.7,
+			"agency": 0.3,
+			"norm_violation": 0.0,
+			"pathogen": 0.0,
+			"social_bond": 0.0,
+			"future_relevance": 0.1
+		}
+	}
+}
+```
+
+## Non-goals
+- Do NOT create or modify any GDScript files
+- Do NOT load this JSON from any system — that's handled by EmotionSystem (T-2018-02)
+- Do NOT add events that don't exist in the current game
+
+## Acceptance Criteria
+- [ ] `data/emotions/event_presets.json` exists and is valid JSON
+- [ ] All events have the 8 appraisal dimensions + intensity + category + description
+- [ ] Trauma events have `is_trauma: true`
+- [ ] Intensity ranges: 15-95 (reasonable spread)
+- [ ] goal_congruence: -1 to +1 range
+- [ ] All numeric values are within documented ranges
+- [ ] No trailing commas or JSON syntax errors
