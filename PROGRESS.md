@@ -16,6 +16,16 @@
 ### Dispatch strategy
 Single ticket, single file fix.
 
+### Results
+- Gate: PASS
+- Commit: 074de79
+- Files changed: 1 (save_manager.gd)
+- Dispatch tool used: ask_codex (1 ticket)
+- Key changes:
+  - save_manager.gd: `e.birth_tick = f.get_32()` → `e.birth_tick = _s32(f.get_32())` (signed conversion)
+  - save_manager.gd: added `e.birth_date = GameCalendarScript.birth_date_from_tick(e.birth_tick)` after birth_tick load
+  - save_manager.gd: added `GameCalendarScript` load before entity loop
+
 ---
 
 ## 치명적 나이/사망 버그 수정 (T-2022)
