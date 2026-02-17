@@ -1,0 +1,9 @@
+{
+  "TUT_WELCOME": "WorldSim에 오신 것을 환영합니다!",
+  "TUT_CAMERA_MOVE": "WASD 또는 화살표 키로 카메라를 이동합니다",
+  "TUT_CAMERA_ZOOM": "마우스 휠로 확대/축소합니다",
+  "TUT_SELECT_ENTITY": "엔티티를 클릭하여 선택합니다",
+  "TUT_DETAIL_VIEW": "선택한 엔티티를 더블클릭하여 상세 정보를 봅니다",
+  "TUT_SPEED_CONTROL": "1-5 키로 시뮬레이션 속도를 조절합니다",
+  "TUT_PAUSE": "Space 키로 일시정지/재개합니다"
+}

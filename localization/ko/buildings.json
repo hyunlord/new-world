@@ -1,0 +1,8 @@
+{
+  "BUILDING_STOCKPILE": "비축소",
+  "BUILDING_SHELTER": "거처",
+  "BUILDING_CAMPFIRE": "모닥불",
+  "BUILDING_STOCKPILE_DESC": "자원을 저장하는 비축 시설",
+  "BUILDING_SHELTER_DESC": "에너지를 회복하는 거처",
+  "BUILDING_CAMPFIRE_DESC": "사회성을 높이는 모닥불"
+}

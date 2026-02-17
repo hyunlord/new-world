@@ -1,0 +1,16 @@
+{
+  "EVT_BORN": "{name} born (parents: {parents})",
+  "EVT_CHILD_BORN": "{name} born to {mother} & {father}!",
+  "EVT_TWIN_BORN": "Twins! {name} born to {mother} & {father}!",
+  "EVT_DIED": "{name} died ({cause}, age {age})",
+  "EVT_COUPLED": "{name1} and {name2} coupled",
+  "EVT_SETTLEMENT_FOUNDED": "{name} settlement founded",
+  "EVT_BUILDING_BUILT": "{building} built",
+  "EVT_MENTAL_BREAK": "{name} mental break ({type})",
+  "EVT_ORPHANED": "{name} orphaned",
+  "EVT_PARTNER_DIED": "{name}'s partner died",
+  "EVT_POPULATION_MILESTONE": "Population reached {count}!",
+  "EVT_FAMINE": "Famine in {settlement}!",
+  "EVT_BECAME_ADULT": "{name} became adult",
+  "EVT_STILLBORN": "{name} stillborn ({mother})"
+}

@@ -1,0 +1,8 @@
+{
+  "BUILDING_STOCKPILE": "Stockpile",
+  "BUILDING_SHELTER": "Shelter",
+  "BUILDING_CAMPFIRE": "Campfire",
+  "BUILDING_STOCKPILE_DESC": "Storage facility for resources",
+  "BUILDING_SHELTER_DESC": "Shelter for energy recovery",
+  "BUILDING_CAMPFIRE_DESC": "Campfire for social bonding"
+}
