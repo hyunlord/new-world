@@ -378,14 +378,14 @@ func _draw() -> void:
 			if trait_x + text_w + 16 > size.x - 20:
 				cy += 18.0
 				trait_x = cx + 15
-			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
+			var badge_rect := Rect2(trait_x, cy, text_w + 12, 22)
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
 			# Register for tooltip hover/click
 			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
 			trait_x += text_w + 18
-		cy += 22.0
+		cy += 28.0
 	cy += 6.0
 
 	# ── Emotions (Plutchik 8) ──
@@ -947,14 +947,14 @@ func _draw_deceased() -> void:
 			if trait_x + text_w + 16 > size.x - 20:
 				cy += 18.0
 				trait_x = cx + 15
-			var badge_rect := Rect2(trait_x, cy, text_w + 12, 16)
+			var badge_rect := Rect2(trait_x, cy, text_w + 12, 22)
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.25))
 			draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, 0.6), false, 1.0)
-			draw_string(font, Vector2(trait_x + 6, cy + 12), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+			draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
 			# Register for tooltip hover/click
 			_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
 			trait_x += text_w + 18
-		cy += 22.0
+		cy += 28.0
 	cy += 6.0
 
 	# Chronicle events
