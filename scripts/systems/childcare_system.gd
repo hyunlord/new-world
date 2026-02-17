@@ -26,9 +26,7 @@ func execute_tick(tick: int) -> void:
 		var entity: RefCounted = alive[i]
 		if entity.age_stage != "infant" and entity.age_stage != "toddler" and entity.age_stage != "child" and entity.age_stage != "teen":
 			continue
-		var threshold: float = GameConfig.CHILDCARE_HUNGER_THRESHOLD
-		if entity.age_stage == "infant":
-			threshold = GameConfig.CHILDCARE_INFANT_HUNGER_THRESHOLD
+		var threshold: float = float(GameConfig.CHILDCARE_HUNGER_THRESHOLDS.get(entity.age_stage, 0.7))
 		if entity.hunger >= threshold:
 			continue
 		hungry_children.append(entity)

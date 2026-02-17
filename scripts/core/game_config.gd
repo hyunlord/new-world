@@ -163,6 +163,9 @@ const MOVEMENT_TICK_INTERVAL: int = 3
 
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002
+## Metabolic curve: hunger decays slower when already hungry (Keys et al. 1950)
+const HUNGER_METABOLIC_MIN: float = 0.3   # Minimum metabolic rate at hunger=0
+const HUNGER_METABOLIC_RANGE: float = 0.7  # 1.0 - HUNGER_METABOLIC_MIN
 const ENERGY_DECAY_RATE: float = 0.003
 const ENERGY_ACTION_COST: float = 0.005
 const SOCIAL_DECAY_RATE: float = 0.001
@@ -262,23 +265,30 @@ const SETTLEMENT_CLEANUP_INTERVAL: int = 250
 ## Childcare & Child Development
 ## ══════════════════════════════════════
 const CHILDCARE_TICK_INTERVAL: int = 10
-const CHILDCARE_HUNGER_THRESHOLD: float = 0.9
-const CHILDCARE_INFANT_HUNGER_THRESHOLD: float = 0.95
+
+## Per-stage hunger threshold for childcare feeding (higher = feed sooner)
+const CHILDCARE_HUNGER_THRESHOLDS: Dictionary = {
+	"infant": 0.85,
+	"toddler": 0.80,
+	"child": 0.75,
+	"teen": 0.70,
+}
 
 ## Feed amounts per childcare tick (food units from stockpile)
 const CHILDCARE_FEED_AMOUNTS: Dictionary = {
-	"infant": 0.25,
-	"toddler": 0.35,
-	"child": 0.40,
-	"teen": 0.45,
+	"infant": 0.40,
+	"toddler": 0.50,
+	"child": 0.50,
+	"teen": 0.60,
 }
 
 ## Hunger decay multiplier by age stage (applied in NeedsSystem)
+## WHO: infant caloric need is 30-50% of adult
 const CHILD_HUNGER_DECAY_MULT: Dictionary = {
-	"infant": 0.2,
-	"toddler": 0.3,
-	"child": 0.4,
-	"teen": 0.85,
+	"infant": 0.15,
+	"toddler": 0.25,
+	"child": 0.35,
+	"teen": 0.70,
 }
 
 ## Child-specific starvation grace ticks (longer than adult STARVATION_GRACE_TICKS=25)
