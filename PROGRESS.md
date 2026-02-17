@@ -28,7 +28,7 @@ Phase 1에서 구축한 Locale 싱글톤 + JSON 파일을 기반으로, GDScript
 
 ### Results
 - Korean 스캔: 0 matches (locale.gd doc comment 제외, 실행 코드 없음)
-- Gate: 실행 대기 중 (commit 후 gate worktree에서 실행)
+- Gate: PASS ✅ (commit ba84bf9 — Locale loads cleanly, 0 script errors)
 - Dispatch ratio: 9/11 = 82%
 - Dispatch tool used: ask_codex (9 tickets)
 - Files changed: 14
