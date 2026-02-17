@@ -13,6 +13,10 @@ const SECTION_GAP: float = 10.0
 var _scroll_offset: float = 0.0
 var _content_height: float = 0.0
 
+## Scrollbar drag state
+var _scrollbar_dragging: bool = false
+var _scrollbar_rect: Rect2 = Rect2()
+
 
 func init(stats_recorder: RefCounted, settlement_manager: RefCounted = null, entity_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
 	_stats_recorder = stats_recorder
@@ -27,6 +31,25 @@ func _process(_delta: float) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	# Scrollbar drag handling
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			if _scrollbar_rect.size.x > 0 and _scrollbar_rect.has_point(event.position):
+				_scrollbar_dragging = true
+				_update_scroll_from_mouse(event.position.y)
+				accept_event()
+				return
+		else:
+			if _scrollbar_dragging:
+				_scrollbar_dragging = false
+				accept_event()
+				return
+
+	if event is InputEventMouseMotion and _scrollbar_dragging:
+		_update_scroll_from_mouse(event.position.y)
+		accept_event()
+		return
+
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_scroll_offset = minf(_scroll_offset + 30.0, maxf(0.0, _content_height - size.y + 40.0))
@@ -39,6 +62,16 @@ func _gui_input(event: InputEvent) -> void:
 		_scroll_offset += event.delta.y * 15.0
 		_scroll_offset = clampf(_scroll_offset, 0.0, maxf(0.0, _content_height - size.y + 40.0))
 		accept_event()
+
+
+func _update_scroll_from_mouse(mouse_y: float) -> void:
+	var track_top: float = _scrollbar_rect.position.y
+	var track_height: float = _scrollbar_rect.size.y
+	if track_height <= 0.0:
+		return
+	var ratio: float = clampf((mouse_y - track_top) / track_height, 0.0, 1.0)
+	var scroll_max: float = maxf(0.0, _content_height - size.y + 40.0)
+	_scroll_offset = ratio * scroll_max
 
 
 func _draw() -> void:
@@ -102,6 +135,7 @@ func _draw() -> void:
 func _draw_scrollbar() -> void:
 	# Only show when content overflows
 	if _content_height <= size.y:
+		_scrollbar_rect = Rect2()
 		return
 
 	var panel_h: float = size.y
@@ -111,6 +145,9 @@ func _draw_scrollbar() -> void:
 	var track_top: float = 4.0
 	var track_bottom: float = panel_h - 4.0
 	var track_height: float = track_bottom - track_top
+
+	# Store track rect for drag input (wider hit area)
+	_scrollbar_rect = Rect2(scrollbar_x - 4.0, track_top, scrollbar_width + 8.0, track_height)
 
 	# Draw track background
 	draw_rect(Rect2(scrollbar_x, track_top, scrollbar_width, track_height), Color(0.15, 0.15, 0.15, 0.3))

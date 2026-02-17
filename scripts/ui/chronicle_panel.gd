@@ -13,6 +13,10 @@ var _filter_index: int = 0
 var _scroll_offset: float = 0.0
 var _content_height: float = 0.0
 
+## Scrollbar drag state
+var _scrollbar_dragging: bool = false
+var _scrollbar_rect: Rect2 = Rect2()
+
 ## Clickable regions
 var _click_regions: Array = []  # [{rect: Rect2, entity_id: int}]
 
@@ -43,6 +47,26 @@ func _process(_delta: float) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	# Scrollbar drag handling
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			if _scrollbar_rect.size.x > 0 and _scrollbar_rect.has_point(event.position):
+				_scrollbar_dragging = true
+				_update_scroll_from_mouse(event.position.y)
+				accept_event()
+				return
+		else:
+			if _scrollbar_dragging:
+				_scrollbar_dragging = false
+				accept_event()
+				return
+
+	if event is InputEventMouseMotion and _scrollbar_dragging:
+		_update_scroll_from_mouse(event.position.y)
+		accept_event()
+		return
+
+	# Existing input handling
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_scroll_offset = minf(_scroll_offset + 30.0, maxf(0.0, _content_height - size.y + 60.0))
@@ -71,28 +95,31 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 
 
-func _draw() -> void:
-	if not visible:
+func _update_scroll_from_mouse(mouse_y: float) -> void:
+	var track_top: float = _scrollbar_rect.position.y
+	var track_height: float = _scrollbar_rect.size.y
+	if track_height <= 0.0:
 		return
-	_click_regions.clear()
-	_filter_rects.clear()
+	var ratio: float = clampf((mouse_y - track_top) / track_height, 0.0, 1.0)
+	var scroll_max: float = maxf(0.0, _content_height - size.y + 60.0)
+	_scroll_offset = ratio * scroll_max
 
-	var panel_w: float = size.x
-	var panel_h: float = size.y
 
-	# Background
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.05, 0.05, 0.08, 0.95))
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.3, 0.3, 0.4), false, 1.0)
-
-	var font: Font = ThemeDB.fallback_font
+## Draw the fixed header (title, filters, separator, event count).
+## Returns the Y where scrollable content begins.
+func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	var cx: float = 20.0
 	var cy: float = 28.0
+
+	# Opaque header background
+	draw_rect(Rect2(0, 0, panel_w, 76.0), Color(0.05, 0.05, 0.08, 0.95))
 
 	# Title
 	draw_string(font, Vector2(cx, cy), "Chronicle", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color.WHITE)
 	cy += 10.0
 
 	# Filter buttons
+	_filter_rects.clear()
 	var btn_x: float = cx
 	var btn_y: float = cy + 4.0
 	for i in range(FILTER_LABELS.size()):
@@ -101,7 +128,6 @@ func _draw() -> void:
 		var btn_w: float = label_size.x + 12
 		var btn_h: float = 20.0
 		var btn_rect := Rect2(btn_x, btn_y, btn_w, btn_h)
-		# Highlight active filter
 		if i == _filter_index:
 			draw_rect(btn_rect, Color(0.3, 0.5, 0.3, 0.8))
 		else:
@@ -116,21 +142,49 @@ func _draw() -> void:
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 8.0
 
+	# Event count
+	if events_count > 0:
+		draw_string(font, Vector2(panel_w - 120, 28), "%d events" % events_count, HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
+
+	return cy
+
+
+func _draw() -> void:
+	if not visible:
+		return
+	_click_regions.clear()
+
+	var panel_w: float = size.x
+	var panel_h: float = size.y
+
+	# Background
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.05, 0.05, 0.08, 0.95))
+	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.3, 0.3, 0.4), false, 1.0)
+
+	var font: Font = ThemeDB.fallback_font
+
 	# Get events from ChronicleSystem
 	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+	var events: Array = []
+	if chronicle != null:
+		events = chronicle.get_world_events(_filter_type, 200)
+
+	# Draw header first pass (establishes cy)
+	var cy: float = _draw_header(font, panel_w, events.size())
+	var cx: float = 20.0
+
 	if chronicle == null:
 		draw_string(font, Vector2(cx, cy + 14), "ChronicleSystem not available", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
-	var events: Array = chronicle.get_world_events(_filter_type, 200)
 	if events.size() == 0:
 		draw_string(font, Vector2(cx, cy + 14), "No events recorded yet", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
 
-	# Event count
-	draw_string(font, Vector2(panel_w - 120, 28), "%d events" % events.size(), HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
+	# Header bottom boundary for clipping
+	var header_bottom: float = cy
 
 	# Apply scroll offset
 	cy -= _scroll_offset
@@ -144,12 +198,12 @@ func _draw() -> void:
 		# Year header
 		if year != current_year:
 			current_year = year
-			if cy > -20 and cy < panel_h + 20:
+			if cy + 14 > header_bottom and cy < panel_h + 20:
 				draw_string(font, Vector2(cx, cy + 14), "── Y%d ──" % year, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.7, 0.7, 0.8))
 			cy += 22.0
 
-		# Skip if off screen
-		if cy < -20:
+		# Skip if off screen (use header_bottom instead of -20)
+		if cy + 16 < header_bottom:
 			cy += 16.0
 			continue
 		if cy > panel_h + 20:
@@ -193,6 +247,9 @@ func _draw() -> void:
 
 	_content_height = cy + _scroll_offset + 40.0
 
+	# Redraw header on top to clip any content that bled into header zone
+	_draw_header(font, panel_w, events.size())
+
 	# Footer
 	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), "Scroll for more | Click background to close", HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
 	_draw_scrollbar()
@@ -201,6 +258,7 @@ func _draw() -> void:
 func _draw_scrollbar() -> void:
 	# Only show when content overflows
 	if _content_height <= size.y:
+		_scrollbar_rect = Rect2()
 		return
 
 	var panel_h: float = size.y
@@ -210,6 +268,9 @@ func _draw_scrollbar() -> void:
 	var track_top: float = 4.0
 	var track_bottom: float = panel_h - 4.0
 	var track_height: float = track_bottom - track_top
+
+	# Store track rect for drag input (wider hit area)
+	_scrollbar_rect = Rect2(scrollbar_x - 4.0, track_top, scrollbar_width + 8.0, track_height)
 
 	# Draw track background
 	draw_rect(Rect2(scrollbar_x, track_top, scrollbar_width, track_height), Color(0.15, 0.15, 0.15, 0.3))
