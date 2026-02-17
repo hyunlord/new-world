@@ -16,6 +16,26 @@ settlement_data.gd의 Array[int] 타입 배열이 로드 시 에러 + ESC 메뉴
 ### Dispatch strategy
 Parallel dispatch: both tickets are independent (no file overlap).
 
+### Results
+- Gate: PASS
+- Commit: 82b2856
+- PR: #47 (merged)
+- Dispatch ratio: 2/2 = 100%
+- Dispatch tool used: ask_codex (2 tickets)
+- Files changed: 6 (settlement_data.gd, save_manager.gd, pause_menu.gd, main.gd, hud.gd, PROGRESS.md)
+- Key changes:
+  - settlement_data.gd: Array[int] → Array, .duplicate() in to_dict()
+  - save_manager.gd: MAX_SLOTS/SAVE_DIR constants, game_year/game_month/save_time in meta, get_slot_dir/get_slot_info/get_all_slots/migrate_legacy_save
+  - pause_menu.gd: complete rewrite — STATE_MAIN/SAVE/LOAD, 5 slot buttons with metadata, overwrite confirmation, _format_time_ago (Korean)
+  - main.gd: _last_used_slot, migrate_legacy_save(), slot-based save/load wiring
+  - hud.gd: updated hint text
+
+### Codex dispatch prompts
+- t-2025-1: `.codex-prompts/t-2025-1-typed-array.md`
+- t-2025-2: `.codex-prompts/t-2025-2-menu-system.md`
+
+---
+
 ## Hunger 비선형 감소 + 영유아 밸런스 조정 (T-2024)
 
 ### Context
