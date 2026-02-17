@@ -1,5 +1,39 @@
 # Progress Log
 
+## Phase 2-A2: Trait 시스템 전면 교체 — 187개 Trait (T-2027)
+
+### Context
+기존 14개(이후 68개) Trait를 187개 HEXACO 기반 Trait으로 완전 교체.
+Facet 48 + Composite 124 + Dark 15, 학술 기반 차등 threshold, 6가지 effects 카테고리.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2027-1 | JSON 파일 배치 (trait_definitions_fixed.json → species path) | 🔴 DIRECT | — | 파일 복사, 코딩 아님 |
+| T-2027-2+3 | TraitSystem 리팩토링 + Effects 시스템 | 🟢 DISPATCH | ask_codex | trait_system.gd 전면 재작성 + entity_data 필드 추가 |
+| T-2027-4 | UI Trait 뱃지 교체 (valence 색상 + Dark 보라) | 🟢 DISPATCH | ask_codex | entity_detail_panel.gd UI 변경 |
+| T-2027-5 | 통합 검증 + gate | 🔴 DIRECT | — | 검증 + 버그픽스 |
+
+### Dispatch ratio: 2/4 = 50% (T-2+T-3 합본 1건 + T-4 1건 = Codex 2건, T-1 파일복사 + T-5 검증 = DIRECT 2건)
+
+### Dispatch strategy
+1. DIRECT: T-1 JSON 파일 복사 (즉시)
+2. DISPATCH parallel: T-2+T-3 (trait_system.gd + entity_data.gd) + T-4 (entity_detail_panel.gd) — 파일 겹침 없음
+3. DIRECT: T-5 통합 검증 + gate
+
+### Results
+- Gate: PASS (commit 1a52536)
+- Dispatch ratio: 2/4 = 50% (Codex 2건, DIRECT 2건 — T-1 파일복사 + T-5 검증)
+- Dispatch tool used: ask_codex (2 tickets — T-2+3, T-4)
+- Files changed: 6 (trait_system.gd, entity_data.gd, entity_detail_panel.gd, trait_definitions.json x2, PROGRESS.md)
+- Key changes:
+  - trait_system.gd: 완전 재작성 (319줄) — flat JSON 로드, axis cap, display priority, effects API 5종
+  - entity_data.gd: runtime trait cache 3필드 추가 (active_traits, display_traits, traits_dirty)
+  - entity_detail_panel.gd: valence 기반 색상 + Dark 보라 + _get_trait_color() helper
+  - trait_definitions.json: 187개 trait 정의 (Facet 48 + Composite 124 + Dark 15)
+
+---
+
 ## UI 개선: 스크롤 가능한 패널에 스크롤바 추가 (T-2026)
 
 ### Context
