@@ -21,12 +21,14 @@ const PERSONALITY_COLORS: Dictionary = {
 }
 const FACET_COLOR_DIM: float = 0.7
 
-## Trait sentiment colors
+## Trait valence colors
 const TRAIT_COLORS: Dictionary = {
-	"positive": Color(0.3, 0.8, 0.4),
-	"negative": Color(0.9, 0.3, 0.3),
-	"neutral": Color(0.9, 0.8, 0.3),
+	"positive": Color(0.2, 0.8, 0.3),
+	"negative": Color(0.9, 0.2, 0.2),
+	"neutral": Color(0.5, 0.6, 0.8),
 }
+## Special color for Dark traits (psychopath, narcissist, etc.)
+const DARK_TRAIT_COLOR: Color = Color(0.6, 0.0, 0.6)
 
 ## Plutchik emotion wheel colors
 const EMOTION_COLORS: Dictionary = {
@@ -121,6 +123,14 @@ func _gui_input(event: InputEvent) -> void:
 		_scroll_offset += event.delta.y * 15.0
 		_scroll_offset = clampf(_scroll_offset, 0.0, maxf(0.0, _content_height - size.y + 40.0))
 		accept_event()
+
+
+## Get color for a trait, using valence with Dark trait override
+func _get_trait_color(tdef: Dictionary) -> Color:
+	if tdef.get("id", "").begins_with("d_"):
+		return DARK_TRAIT_COLOR
+	var valence: String = tdef.get("valence", "neutral")
+	return TRAIT_COLORS.get(valence, Color.GRAY)
 
 
 func _draw() -> void:
@@ -265,8 +275,7 @@ func _draw() -> void:
 		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
-			var sentiment: String = tdef.get("sentiment", "neutral")
-			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
+			var tcolor: Color = _get_trait_color(tdef)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 			# Wrap to next line if too wide
 			if trait_x + text_w + 16 > size.x - 20:
@@ -823,8 +832,7 @@ func _draw_deceased() -> void:
 		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
-			var sentiment: String = tdef.get("sentiment", "neutral")
-			var tcolor: Color = TRAIT_COLORS.get(sentiment, Color.GRAY)
+			var tcolor: Color = _get_trait_color(tdef)
 			var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 			# Wrap to next line if too wide
 			if trait_x + text_w + 16 > size.x - 20:
