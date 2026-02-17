@@ -16,8 +16,15 @@
 단일 티켓으로 4개 파일 동시 변경 (동일한 _draw_scrollbar() 패턴 반복).
 
 ### Results
-- Gate: (pending)
-- Files: entity_detail_panel.gd, list_panel.gd, stats_detail_panel.gd, chronicle_panel.gd
+- Gate: PASS
+- Commit: 7ec00af
+- Dispatch ratio: 1/1 = 100%
+- Dispatch tool used: ask_codex (1 ticket)
+- Files changed: 4 (entity_detail_panel.gd, list_panel.gd, stats_detail_panel.gd, chronicle_panel.gd)
+- Key changes:
+  - 4개 패널에 동일한 `_draw_scrollbar()` 메서드 추가
+  - 내용이 패널 높이를 초과할 때만 오른쪽에 6px 반투명 스크롤바 표시
+  - entity_detail_panel: `_draw()`와 `_draw_deceased()` 양쪽에서 호출
 
 ---
 
