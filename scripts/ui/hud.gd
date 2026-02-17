@@ -494,7 +494,7 @@ func _build_resource_legend() -> void:
 
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
-	_hint_label.text = "Space:Pause  Tab:Resources  M:Map  G:Stats  H:Help  ESC:Menu"
+	_hint_label.text = "Space:Pause  ./:Speed  Tab:Resources  M:Map  H:Help  ESC:Menu"
 	_hint_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hint"))
 	_hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 0.6))
 	_tracked_labels.append({"node": _hint_label, "key": "hint"})
