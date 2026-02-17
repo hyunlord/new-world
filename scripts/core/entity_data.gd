@@ -191,7 +191,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.last_birth_tick = data.get("last_birth_tick", -1)
 	# birth_date: load from save or migrate from birth_tick
 	var bd_data = data.get("birth_date", {})
-	if bd_data.is_empty() and e.birth_tick != 0:
+	if bd_data.is_empty():
 		var GameCalendar = load("res://scripts/core/game_calendar.gd")
 		e.birth_date = GameCalendar.birth_date_from_tick(e.birth_tick)
 	elif not bd_data.is_empty():

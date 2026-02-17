@@ -201,10 +201,14 @@ static func calculate_detailed_age(birth_date: Dictionary, ref_date: Dictionary 
 			prev_month = 12
 			prev_year -= 1
 		d += days_in_month(prev_month, prev_year)
+	if d < 0:
+		d = 0
 
 	if months < 0:
 		years -= 1
 		months += 12
+	if months < 0:
+		months = 0
 
 	years = maxi(years, 0)
 	var total_days: int = count_days_between(birth_date, ref_date)

@@ -1,5 +1,44 @@
 # Progress Log
 
+## 치명적 나이/사망 버그 수정 (T-2022)
+
+### Context
+게임 시작 직후 대량 사망, 사망자 나이 표시 오류, Born "?" 표시 등 4개 치명적 버그 수정.
+전수 코드 조사 결과: (1) 초기 엔티티 birth_tick이 전부 TICKS_PER_YEAR의 정수배 → 생일 사망체크 동시 발동,
+(2) GDScript % 연산자가 음수 birth_tick에 음수 나머지 반환 → posmod 필요,
+(3) deceased_registry death_age_days가 pre-game 엔티티에 0 반환,
+(4) entity_data birth_date 마이그레이션이 birth_tick=0 엔티티 스킵,
+(5) calculate_detailed_age 날짜 보정 루프 부재.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2022-01 | birthday mortality posmod + 분산 | 🟢 DISPATCH | ask_codex | 2 files: mortality_system.gd + main.gd |
+| t-2022-02 | death_age_days + birth_date migration + calendar fix | 🟢 DISPATCH | ask_codex | 3 files: deceased_registry.gd + entity_data.gd + game_calendar.gd |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Parallel dispatch — no file overlap between tickets.
+
+### Results
+- Gate: PASS
+- Commit: 16682e5
+- Files changed: 6 (mortality_system.gd, main.gd, deceased_registry.gd, entity_data.gd, game_calendar.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Key changes:
+  - mortality_system.gd: `entity.birth_tick %` → `posmod(entity.birth_tick,` for correct negative modulo
+  - main.gd: added random day offset (0-364 days × 12 ticks) to distribute initial entity birthdays
+  - deceased_registry.gd: unconditional `death_age_days` computation (removed `if birth_tick >= 0` guard)
+  - entity_data.gd: removed `e.birth_tick != 0` condition from birth_date migration
+  - game_calendar.gd: added safety clamps in `calculate_detailed_age` for negative day/month edge cases
+
+### Dispatch prompts
+- `.codex-prompts/t2022-01-birthday-fix.md`
+- `.codex-prompts/t2022-02-age-display-fix.md`
+
+---
+
 ## 버그픽스 + UI 개선: settlement 로드 에러 + 메뉴 시스템 (T-2021)
 
 ### Context
@@ -14,7 +53,20 @@ settlement 바이너리 로드 시 typed Array[int] 할당 에러 수정 + ESC �
 ### Dispatch ratio: 2/2 = 100% ✅
 
 ### Dispatch strategy
-Parallel dispatch — no file overlap between tickets
+Parallel dispatch — no file overlap between tickets.
+T-2021-01 completed by Codex. T-2021-02 completed by Codex (files written before timeout kill).
+Lead fixed headless class_name issue (preload pattern for PauseMenu in main.gd).
+
+### Results
+- Gate: PASS
+- PR: #42 merged
+- Files changed: 5 (save_manager.gd, pause_menu.gd [new], main.gd, hud.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Key changes:
+  - save_manager.gd: `s.member_ids = []` → `s.member_ids.clear()` (typed Array fix)
+  - New pause_menu.gd: ESC game menu with Continue/Save/Load/Quit + game pause
+  - hud.gd: close_all_popups() returns bool, simplified key hints to "Space:Pause Tab:Resources M:Map G:Stats H:Help ESC:Menu"
+  - main.gd: ESC chains popups → pause menu, PauseMenu via preload
 
 ---
 
