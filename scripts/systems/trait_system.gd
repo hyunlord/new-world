@@ -159,7 +159,7 @@ static func _apply_axis_cap(traits: Array, pd: RefCounted) -> Array:
 	return result
 
 
-## Sort traits for display priority and cap to 5.
+## Sort traits for display priority (no cap — show all).
 ## Priority: Dark > Composite > Facet.
 static func _sort_and_cap_display(traits: Array) -> Array:
 	var scored: Array = []
@@ -195,8 +195,6 @@ static func _sort_and_cap_display(traits: Array) -> Array:
 			var facet_key: String = cond.get("facet", "")
 			if not composite_facets.has(facet_key):
 				display.append(t)
-		if display.size() >= 5:
-			break
 
 	return display
 

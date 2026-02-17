@@ -14,9 +14,11 @@ error.log
 # Codex dispatch prompts
 .codex-prompts/
 .codex-prompt*
+.codex/
 
 # ticket
 .ticket*
+tickets/
 
 # Windows
 Thumbs.db
