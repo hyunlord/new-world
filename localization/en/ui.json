@@ -209,5 +209,11 @@
   "TOOLTIP_STRESS_SEVERE": "(severe)",
   "UI_ACTION": "Action",
   "UI_INVENTORY": "Inventory",
-  "UI_MOOD": "Mood"
+  "UI_MOOD": "Mood",
+  "EVT_BORN": "{name} born",
+  "EVT_BORN_PARENTS": "{name} born (parents: {parents})",
+  "EVT_DIED": "{name} died ({cause}, age {age})",
+  "EVT_ORPHANED": "Parent {parent} died",
+  "EVT_PARTNER_DIED": "Partner {partner} died",
+  "EVT_MARRIED": "{name} and {partner} coupled"
 }

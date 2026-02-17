@@ -234,8 +234,17 @@ func _draw() -> void:
 		var icon_x: float = cx + 75
 		draw_string(font, Vector2(icon_x, cy + 12), style.icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), icon_color)
 
-		# Description (truncated)
-		var desc: String = evt.get("description", "?")
+		# Description (localized if l10n_key present, fallback to stored description)
+		var desc: String
+		if evt.has("l10n_key"):
+			var l10n_key: String = evt.get("l10n_key", "")
+			var l10n_params = evt.get("l10n_params", {}).duplicate()
+			# Translate cause_id at render time
+			if l10n_params.has("cause_id"):
+				l10n_params["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
+			desc = Locale.trf(l10n_key, l10n_params)
+		else:
+			desc = evt.get("description", "?")
 		if desc.length() > 55:
 			desc = desc.substr(0, 52) + "..."
 		draw_string(font, Vector2(icon_x + 18, cy + 12), desc, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.8, 0.8, 0.8))

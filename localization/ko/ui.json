@@ -209,5 +209,11 @@
   "TOOLTIP_STRESS_SEVERE": "(매우 강함)",
   "UI_ACTION": "행동",
   "UI_INVENTORY": "소지품",
-  "UI_MOOD": "기분"
+  "UI_MOOD": "기분",
+  "EVT_BORN": "{name} 태어남",
+  "EVT_BORN_PARENTS": "{name} 태어남 (부모: {parents})",
+  "EVT_DIED": "{name} 사망 ({cause}, {age}세)",
+  "EVT_ORPHANED": "부모 {parent} 사망",
+  "EVT_PARTNER_DIED": "파트너 {partner} 사망",
+  "EVT_MARRIED": "{name}와(과) {partner} 결합"
 }

@@ -588,14 +588,18 @@ func _on_entity_born_chronicle(entity_id: int, entity_name: String, parent_ids: 
 		if i < parent_ids.size() - 1:
 			parent_names += ", "
 	var desc: String = "%s born" % entity_name
+	var l10n_key: String = "EVT_BORN"
 	if parent_names != "":
 		desc += " (parents: %s)" % parent_names
-	ChronicleSystem.log_event(ChronicleSystem.EVENT_BIRTH, entity_id, desc, 4, parent_ids, tick)
+		l10n_key = "EVT_BORN_PARENTS"
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_BIRTH, entity_id, desc, 4, parent_ids, tick,
+		{"key": l10n_key, "params": {"name": entity_name, "parents": parent_names}})
 
 
 func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: String, age_years: float, tick: int) -> void:
 	var desc: String = "%s died (%s, age %d)" % [entity_name, cause, int(age_years)]
-	ChronicleSystem.log_event(ChronicleSystem.EVENT_DEATH, entity_id, desc, 4, [], tick)
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_DEATH, entity_id, desc, 4, [], tick,
+		{"key": "EVT_DIED", "params": {"name": entity_name, "cause_id": cause, "age": str(int(age_years))}})
 	# Orphan events for children
 	var entity: RefCounted = entity_manager.get_entity(entity_id)
 	if entity != null:
@@ -603,12 +607,14 @@ func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: Strin
 			var child: RefCounted = entity_manager.get_entity(child_id)
 			if child != null and child.is_alive:
 				ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
-					"Parent %s died" % entity_name, 3, [entity_id], tick)
+					"Parent %s died" % entity_name, 3, [entity_id], tick,
+					{"key": "EVT_ORPHANED", "params": {"parent": entity_name}})
 		if entity.partner_id > 0:
 			var partner: RefCounted = entity_manager.get_entity(entity.partner_id)
 			if partner != null and partner.is_alive:
 				ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, entity.partner_id,
-					"Partner %s died" % entity_name, 4, [entity_id], tick)
+					"Partner %s died" % entity_name, 4, [entity_id], tick,
+					{"key": "EVT_PARTNER_DIED", "params": {"partner": entity_name}})
 	else:
 		# Entity already removed — check DeceasedRegistry
 		var registry: Node = get_node_or_null("/root/DeceasedRegistry")
@@ -619,15 +625,18 @@ func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: Strin
 					var child: RefCounted = entity_manager.get_entity(child_id)
 					if child != null and child.is_alive:
 						ChronicleSystem.log_event(ChronicleSystem.EVENT_ORPHANED, child_id,
-							"Parent %s died" % entity_name, 3, [entity_id], tick)
+							"Parent %s died" % entity_name, 3, [entity_id], tick,
+							{"key": "EVT_ORPHANED", "params": {"parent": entity_name}})
 				var pid: int = record.get("partner_id", -1)
 				if pid > 0:
 					var partner: RefCounted = entity_manager.get_entity(pid)
 					if partner != null and partner.is_alive:
 						ChronicleSystem.log_event(ChronicleSystem.EVENT_PARTNER_DIED, pid,
-							"Partner %s died" % entity_name, 4, [entity_id], tick)
+							"Partner %s died" % entity_name, 4, [entity_id], tick,
+							{"key": "EVT_PARTNER_DIED", "params": {"partner": entity_name}})
 
 
 func _on_couple_formed_chronicle(entity_a_id: int, entity_a_name: String, entity_b_id: int, entity_b_name: String, tick: int) -> void:
 	var desc: String = "%s and %s coupled" % [entity_a_name, entity_b_name]
-	ChronicleSystem.log_event(ChronicleSystem.EVENT_MARRIAGE, entity_a_id, desc, 3, [entity_b_id], tick)
+	ChronicleSystem.log_event(ChronicleSystem.EVENT_MARRIAGE, entity_a_id, desc, 3, [entity_b_id], tick,
+		{"key": "EVT_MARRIED", "params": {"name": entity_a_name, "partner": entity_b_name}})
