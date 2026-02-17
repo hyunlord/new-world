@@ -1,5 +1,33 @@
 # Progress Log
 
+## 세이브/로드 birth_date 손실 버그 수정 (T-2023)
+
+### Context
+세이브 후 로드하면 모든 에이전트의 나이/출생일이 깨지는 버그 수정.
+원인: (1) birth_tick을 unsigned로 로드 (pre-game 엔티티는 음수 birth_tick), (2) birth_date를 저장하지 않고 로드 시 복원하지 않음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2023-01 | birth_tick _s32 + birth_date reconstruction | 🟢 DISPATCH | ask_codex | single file: save_manager.gd |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+Single ticket, single file fix.
+
+### Results
+- Gate: PASS
+- Commit: 074de79
+- Files changed: 1 (save_manager.gd)
+- Dispatch tool used: ask_codex (1 ticket)
+- Key changes:
+  - save_manager.gd: `e.birth_tick = f.get_32()` → `e.birth_tick = _s32(f.get_32())` (signed conversion)
+  - save_manager.gd: added `e.birth_date = GameCalendarScript.birth_date_from_tick(e.birth_tick)` after birth_tick load
+  - save_manager.gd: added `GameCalendarScript` load before entity loop
+
+---
+
 ## 치명적 나이/사망 버그 수정 (T-2022)
 
 ### Context
