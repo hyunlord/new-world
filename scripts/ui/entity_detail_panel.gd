@@ -242,13 +242,14 @@ func _draw() -> void:
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
-	# ── Traits ──
-	if pd.active_traits.size() > 0:
+	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
+	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
+	if display_traits.size() > 0:
 		var trait_label: String = "Traits"
 		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 16.0
 		var trait_x: float = cx + 15
-		for trait_id in pd.active_traits:
+		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
 			var sentiment: String = tdef.get("sentiment", "neutral")
@@ -705,13 +706,14 @@ func _draw_deceased() -> void:
 				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 	cy += 4.0
 
-	# ── Traits ──
-	if pd.active_traits.size() > 0:
+	# ── Traits (filtered: composites suppress overlapping singles, max 5) ──
+	var display_traits: Array = TraitSystem.filter_display_traits(pd.active_traits)
+	if display_traits.size() > 0:
 		var trait_label: String = "Traits"
 		draw_string(font, Vector2(cx + 10, cy + 12), trait_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 16.0
 		var trait_x: float = cx + 15
-		for trait_id in pd.active_traits:
+		for trait_id in display_traits:
 			var tdef: Dictionary = TraitSystem.get_trait_definition(trait_id)
 			var tname: String = tdef.get("name_kr", trait_id)
 			var sentiment: String = tdef.get("sentiment", "neutral")

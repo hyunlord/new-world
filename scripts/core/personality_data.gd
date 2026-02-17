@@ -35,6 +35,12 @@ const ALL_FACET_KEYS: Array = [
 	"O_aesthetic", "O_inquisitiveness", "O_creativity", "O_unconventionality",
 ]
 
+## Personality standard deviation (gameplay-widened)
+## Academic: HEXACO-60 SD ≈ 15% of range (Ashton & Lee 2009)
+## Gameplay: SD=0.25 for agent differentiation & trait emergence (~15%)
+## Distribution structure (normal, correlations, sex diffs) unchanged
+const PERSONALITY_SD: float = 0.25
+
 
 ## Get axis value (average of 4 facets)
 func get_axis(axis_id: String) -> float:
@@ -53,14 +59,14 @@ func recalculate_axes() -> void:
 		axes[AXIS_IDS[i]] = get_axis(AXIS_IDS[i])
 
 
-## Convert 0.0~1.0 trait value to z-score (mean=0.5, sd=0.15)
+## Convert 0.0~1.0 trait value to z-score (mean=0.5, sd=PERSONALITY_SD)
 func to_zscore(trait01: float) -> float:
-	return (trait01 - 0.5) / 0.15
+	return (trait01 - 0.5) / PERSONALITY_SD
 
 
 ## Convert z-score back to 0.0~1.0 (clamped to [0.05, 0.95])
 func from_zscore(z: float) -> float:
-	return clampf(0.5 + 0.15 * z, 0.05, 0.95)
+	return clampf(0.5 + PERSONALITY_SD * z, 0.05, 0.95)
 
 
 ## Get facet keys for a given axis
