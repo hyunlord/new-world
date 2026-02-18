@@ -75,3 +75,10 @@ func decrease_speed() -> void:
 ## Convert current tick to game time
 func get_game_time() -> Dictionary:
 	return GameConfig.tick_to_date(current_tick)
+
+
+## Debug: N 틱 즉시 일괄 처리 (debug build 전용)
+## 시뮬레이션을 N tick 빠르게 진행. 화면 갱신 없음.
+func advance_ticks(n: int) -> void:
+	for i in range(n):
+		_process_tick()

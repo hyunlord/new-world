@@ -342,3 +342,30 @@ Cognitive Dissonance Theory(Festinger 1957) 기반. CK3 stress system 원형.
 
 ---
 
+
+## Debug/Cheat Console + Panel — T-DC — 2026-02-18
+
+### Context
+인게임 F12 텍스트 콘솔 + F11 GUI 패널. Phase 3A/3B 시스템 검증용.
+OS.is_debug_build() 체크로 릴리즈에서 완전 비활성화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-DC-A | scenes/debug/debug_console.gd (UI+commands) | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-DC-B | scenes/debug/debug_panel.gd (5 tabs) | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-DC-C | localization/ko+en/debug.json | 🟢 DISPATCH | ask_codex | 신규 locale 파일 |
+| T-DC-D | mental_break_system.gd+simulation_engine.gd+locale.gd 소규모 추가 | 🟢 DISPATCH | ask_codex | 독립 파일, 소규모 |
+| T-DC-E | scenes/main/main.gd debug 배선 | 🔴 DIRECT | — | 통합 배선, ~20줄 |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+- Jobs A, B, C, D → 병렬 background 동시 dispatch (no file overlap)
+- DIRECT job E (main.gd) → 즉시 구현 (Codex 작업 중)
+
+### Job IDs
+- A (debug_console.gd): 4f915440
+- B (debug_panel.gd): b451b5c5
+- C (locale json): 66933ba1
+- D (systems): 10f80269

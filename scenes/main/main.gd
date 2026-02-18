@@ -67,6 +67,8 @@ var stress_system: RefCounted
 var mental_break_system: RefCounted
 var trauma_scar_system: RefCounted
 var trait_violation_system: RefCounted
+var debug_console = null
+var debug_panel = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -224,6 +226,30 @@ func _ready() -> void:
 	pause_menu.save_requested.connect(_save_game_slot)
 	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)
+
+	# Debug Console + Panel (debug build only — self-destructs in release)
+	if OS.is_debug_build():
+		var _dc_script = load("res://scenes/debug/debug_console.gd")
+		if _dc_script != null:
+			debug_console = _dc_script.new()
+			debug_console._entity_manager = entity_manager
+			debug_console._stress_system = stress_system
+			debug_console._mental_break_system = mental_break_system
+			debug_console._trauma_scar_system = trauma_scar_system
+			debug_console._trait_violation_system = trait_violation_system
+			debug_console._sim_engine = sim_engine
+			add_child(debug_console)
+		var _dp_script = load("res://scenes/debug/debug_panel.gd")
+		if _dp_script != null:
+			debug_panel = _dp_script.new()
+			debug_panel._entity_manager = entity_manager
+			debug_panel._stress_system = stress_system
+			debug_panel._mental_break_system = mental_break_system
+			debug_panel._trauma_scar_system = trauma_scar_system
+			debug_panel._trait_violation_system = trait_violation_system
+			debug_panel._sim_engine = sim_engine
+			debug_panel._console = debug_console
+			add_child(debug_panel)
 
 	# Initialize name generator with sim RNG and entity manager
 	NameGenerator.init(sim_engine.rng, entity_manager)

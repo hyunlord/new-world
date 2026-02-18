@@ -181,6 +181,19 @@ func _trigger_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 		entity.entity_name, break_type, duration, ed.stress
 	])
 
+## Debug: 강제 멘탈 브레이크 발동 (debug build 전용)
+## _trigger_break()의 public wrapper
+func force_break(entity: RefCounted, tick: int) -> void:
+	if entity == null:
+		return
+	var ed = entity.emotion_data
+	if ed == null:
+		return
+	if ed.mental_break_type != "":
+		print("[MentalBreakSystem] force_break: %s already in break (%s)" % [entity.entity_name, ed.mental_break_type])
+		return
+	_trigger_break(entity, ed, tick)
+
 
 ## 진행 중인 브레이크 틱 처리
 func _tick_active_break(entity: RefCounted, ed: RefCounted) -> void:
