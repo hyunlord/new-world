@@ -337,6 +337,7 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 
 	var behavior_totals: Dictionary = {}
 	var emotion_totals: Dictionary = {}
+	var relationship_totals: Dictionary = {}
 	var active_ids: Dictionary = {}
 	for tdef in trait_defs:
 		var trait_id: String = tdef.get("id", "")
@@ -345,12 +346,16 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 		var effects: Dictionary = tdef.get("effects", {})
 		var behavior_weights: Dictionary = tdef.get("behavior_weights", effects.get("behavior_weights", {}))
 		for key in behavior_weights:
-			behavior_totals[key] = float(behavior_totals.get(key, 0.0)) + float(behavior_weights[key])
+			behavior_totals[key] = float(behavior_totals.get(key, 0.0)) + float(behavior_weights[key]) - 1.0
 
 		var emotion_modifiers: Dictionary = tdef.get("emotion_modifiers", effects.get("emotion_modifiers", {}))
 		for key in emotion_modifiers:
 			# Convert multiplier to delta: 0.06 -> -0.94, 1.2 -> +0.20
 			emotion_totals[key] = float(emotion_totals.get(key, 0.0)) + float(emotion_modifiers[key]) - 1.0
+
+		var relationship_modifiers: Dictionary = tdef.get("relationship_modifiers", effects.get("relationship_modifiers", {}))
+		for key in relationship_modifiers:
+			relationship_totals[key] = float(relationship_totals.get(key, 0.0)) + float(relationship_modifiers[key]) - 1.0
 
 	var synergies: Array = []
 	var conflicts: Array = []
@@ -409,8 +414,9 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
 			if display_key == "TRAIT_KEY_" + key_str.to_upper():
 				display_key = key_str.replace("_", " ").capitalize()
-			var sign: String = "+" if value >= 0.0 else ""
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.2f" % [display_key, sign, value], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			var pct: float = value * 100.0
+			var sign: String = "+" if pct >= 0.0 else ""
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
 			cy += 15.0
 
 	if emotion_totals.size() > 0:
@@ -436,6 +442,33 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 			if display_key == "TRAIT_KEY_" + key_str.to_upper():
 				display_key = key_str.replace("_", " ").capitalize()
 			# value is already a delta; convert to percent
+			var pct: float = value * 100.0
+			var sign: String = "+" if pct >= 0.0 else ""
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			cy += 15.0
+
+	if relationship_totals.size() > 0:
+		has_any = true
+		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_RELATIONSHIP_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
+		cy += 16.0
+		var rel_keys: Array = relationship_totals.keys()
+		rel_keys.sort_custom(func(a, b):
+			var ka: String = str(a).to_upper()
+			var kb: String = str(b).to_upper()
+			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
+			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
+			if da == "TRAIT_KEY_" + ka:
+				da = str(a).replace("_", " ").capitalize()
+			if db == "TRAIT_KEY_" + kb:
+				db = str(b).replace("_", " ").capitalize()
+			return da.naturalcasecmp_to(db) < 0
+		)
+		for key in rel_keys:
+			var key_str: String = str(key)
+			var value: float = float(relationship_totals[key_str])
+			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
+			if display_key == "TRAIT_KEY_" + key_str.to_upper():
+				display_key = key_str.replace("_", " ").capitalize()
 			var pct: float = value * 100.0
 			var sign: String = "+" if pct >= 0.0 else ""
 			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
