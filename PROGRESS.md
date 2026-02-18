@@ -23,7 +23,19 @@
 T1 시작 → T5, T6a, T6b 병렬 → T1 완료 후 T2 → T2 완료 후 T3+T4 병렬
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅
+- PR: #74 merged
+- Files changed: 9
+- Dispatch ratio: 7/7 = 100% ✅ (ask_codex for all 7 tickets)
+- DIRECT: scenes/main/main.gd integration wiring only (~6 lines)
+- Key changes:
+  - data/mental_breaks.json — NEW: 10 break types with HEXACO weights + catharsis factors
+  - scripts/systems/mental_break_system.gd — NEW: probabilistic triggering + type selection + Shaken (priority=35)
+  - scripts/ai/behavior_system.gd — mental break override at top of execute_tick
+  - scripts/systems/stress_system.gd — Shaken countdown + get_work_efficiency() penalty
+  - scenes/main/main.gd — MentalBreakSystem preload, init, register (priority 35)
+  - localization/ko+en/ui.json — 20 mental break i18n keys each
+  - docs/STRESS_SYSTEM.md — Phase 2 section
 
 ---
 
