@@ -1,28 +1,172 @@
 {
-    "dyads": {
-        "love":           {"components": ["joy", "trust"],           "type": "primary",   "name_kr": "사랑"},
-        "submission":     {"components": ["trust", "fear"],          "type": "primary",   "name_kr": "복종"},
-        "awe":            {"components": ["fear", "surprise"],       "type": "primary",   "name_kr": "경외"},
-        "disappointment": {"components": ["surprise", "sadness"],    "type": "primary",   "name_kr": "실망"},
-        "remorse":        {"components": ["sadness", "disgust"],     "type": "primary",   "name_kr": "후회"},
-        "contempt":       {"components": ["disgust", "anger"],       "type": "primary",   "name_kr": "경멸"},
-        "aggressiveness": {"components": ["anger", "anticipation"],  "type": "primary",   "name_kr": "공격성"},
-        "optimism":       {"components": ["anticipation", "joy"],    "type": "primary",   "name_kr": "낙관"},
-        "hope":           {"components": ["anticipation", "trust"],  "type": "secondary", "name_kr": "희망"},
-        "guilt":          {"components": ["joy", "fear"],            "type": "secondary", "name_kr": "죄책감"},
-        "curiosity":      {"components": ["trust", "surprise"],      "type": "secondary", "name_kr": "호기심"},
-        "despair":        {"components": ["fear", "sadness"],        "type": "secondary", "name_kr": "절망"},
-        "unbelief":       {"components": ["surprise", "disgust"],    "type": "secondary", "name_kr": "불신"},
-        "envy":           {"components": ["sadness", "anger"],       "type": "secondary", "name_kr": "시기"},
-        "cynicism":       {"components": ["disgust", "anticipation"],"type": "secondary", "name_kr": "냉소"},
-        "pride":          {"components": ["anger", "joy"],           "type": "secondary", "name_kr": "자부심"},
-        "delight":        {"components": ["joy", "surprise"],        "type": "tertiary",  "name_kr": "환희"},
-        "sentimentality": {"components": ["trust", "sadness"],       "type": "tertiary",  "name_kr": "감상"},
-        "shame":          {"components": ["fear", "disgust"],        "type": "tertiary",  "name_kr": "수치"},
-        "outrage":        {"components": ["surprise", "anger"],      "type": "tertiary",  "name_kr": "격분"},
-        "pessimism":      {"components": ["sadness", "anticipation"],"type": "tertiary",  "name_kr": "비관"},
-        "morbidness":     {"components": ["disgust", "joy"],         "type": "tertiary",  "name_kr": "잔혹"},
-        "dominance":      {"components": ["anger", "trust"],         "type": "tertiary",  "name_kr": "지배"},
-        "anxiety":        {"components": ["anticipation", "fear"],   "type": "tertiary",  "name_kr": "불안"}
+  "dyads": {
+    "love": {
+      "components": [
+        "joy",
+        "trust"
+      ],
+      "type": "primary"
+    },
+    "submission": {
+      "components": [
+        "trust",
+        "fear"
+      ],
+      "type": "primary"
+    },
+    "awe": {
+      "components": [
+        "fear",
+        "surprise"
+      ],
+      "type": "primary"
+    },
+    "disappointment": {
+      "components": [
+        "surprise",
+        "sadness"
+      ],
+      "type": "primary"
+    },
+    "remorse": {
+      "components": [
+        "sadness",
+        "disgust"
+      ],
+      "type": "primary"
+    },
+    "contempt": {
+      "components": [
+        "disgust",
+        "anger"
+      ],
+      "type": "primary"
+    },
+    "aggressiveness": {
+      "components": [
+        "anger",
+        "anticipation"
+      ],
+      "type": "primary"
+    },
+    "optimism": {
+      "components": [
+        "anticipation",
+        "joy"
+      ],
+      "type": "primary"
+    },
+    "hope": {
+      "components": [
+        "anticipation",
+        "trust"
+      ],
+      "type": "secondary"
+    },
+    "guilt": {
+      "components": [
+        "joy",
+        "fear"
+      ],
+      "type": "secondary"
+    },
+    "curiosity": {
+      "components": [
+        "trust",
+        "surprise"
+      ],
+      "type": "secondary"
+    },
+    "despair": {
+      "components": [
+        "fear",
+        "sadness"
+      ],
+      "type": "secondary"
+    },
+    "unbelief": {
+      "components": [
+        "surprise",
+        "disgust"
+      ],
+      "type": "secondary"
+    },
+    "envy": {
+      "components": [
+        "sadness",
+        "anger"
+      ],
+      "type": "secondary"
+    },
+    "cynicism": {
+      "components": [
+        "disgust",
+        "anticipation"
+      ],
+      "type": "secondary"
+    },
+    "pride": {
+      "components": [
+        "anger",
+        "joy"
+      ],
+      "type": "secondary"
+    },
+    "delight": {
+      "components": [
+        "joy",
+        "surprise"
+      ],
+      "type": "tertiary"
+    },
+    "sentimentality": {
+      "components": [
+        "trust",
+        "sadness"
+      ],
+      "type": "tertiary"
+    },
+    "shame": {
+      "components": [
+        "fear",
+        "disgust"
+      ],
+      "type": "tertiary"
+    },
+    "outrage": {
+      "components": [
+        "surprise",
+        "anger"
+      ],
+      "type": "tertiary"
+    },
+    "pessimism": {
+      "components": [
+        "sadness",
+        "anticipation"
+      ],
+      "type": "tertiary"
+    },
+    "morbidness": {
+      "components": [
+        "disgust",
+        "joy"
+      ],
+      "type": "tertiary"
+    },
+    "dominance": {
+      "components": [
+        "anger",
+        "trust"
+      ],
+      "type": "tertiary"
+    },
+    "anxiety": {
+      "components": [
+        "anticipation",
+        "fear"
+      ],
+      "type": "tertiary"
     }
+  }
 }

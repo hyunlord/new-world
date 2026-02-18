@@ -1,98 +1,112 @@
 {
   "hypervigilance": {
     "id": "hypervigilance",
-    "name_kr": "과각성",
-    "name_en": "Hypervigilance",
     "description_key": "SCAR_hypervigilance",
     "emotion_baseline_shifts": {
-      "stress": 0.10,
+      "stress": 0.1,
       "happiness": -0.05
     },
     "stress_sensitivity_mult": 1.15,
     "break_threshold_reduction": 10.0,
-    "reactivation_triggers": ["sudden_danger", "loud_noise", "conflict"],
+    "reactivation_triggers": [
+      "sudden_danger",
+      "loud_noise",
+      "conflict"
+    ],
     "resilience_mod": -0.02,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_hypervigilance"
   },
   "anger_dysregulation": {
     "id": "anger_dysregulation",
-    "name_kr": "분노 조절 장애",
-    "name_en": "Anger Dysregulation",
     "description_key": "SCAR_anger_dysregulation",
     "emotion_baseline_shifts": {
       "happiness": -0.05
     },
-    "stress_sensitivity_mult": 1.20,
+    "stress_sensitivity_mult": 1.2,
     "break_threshold_reduction": 15.0,
-    "reactivation_triggers": ["conflict", "insult", "injustice"],
+    "reactivation_triggers": [
+      "conflict",
+      "insult",
+      "injustice"
+    ],
     "resilience_mod": -0.03,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_anger_dysregulation"
   },
   "violence_imprint": {
     "id": "violence_imprint",
-    "name_kr": "폭력 각인",
-    "name_en": "Violence Imprint",
     "description_key": "SCAR_violence_imprint",
     "emotion_baseline_shifts": {
-      "happiness": -0.10,
+      "happiness": -0.1,
       "stress": 0.08
     },
     "stress_sensitivity_mult": 1.25,
     "break_threshold_reduction": 20.0,
-    "reactivation_triggers": ["witness_violence", "threat", "conflict"],
+    "reactivation_triggers": [
+      "witness_violence",
+      "threat",
+      "conflict"
+    ],
     "resilience_mod": -0.05,
-    "max_stacks": 2
+    "max_stacks": 2,
+    "name_key": "SCAR_violence_imprint"
   },
   "emotional_numbness": {
     "id": "emotional_numbness",
-    "name_kr": "감정 마비",
-    "name_en": "Emotional Numbness",
     "description_key": "SCAR_emotional_numbness",
     "emotion_baseline_shifts": {
       "happiness": -0.15,
-      "love": -0.10,
-      "loneliness": 0.10
+      "love": -0.1,
+      "loneliness": 0.1
     },
-    "stress_sensitivity_mult": 0.90,
+    "stress_sensitivity_mult": 0.9,
     "break_threshold_reduction": 5.0,
-    "reactivation_triggers": ["loss", "death_witness"],
+    "reactivation_triggers": [
+      "loss",
+      "death_witness"
+    ],
     "resilience_mod": -0.04,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_emotional_numbness"
   },
   "compulsive_consumption": {
     "id": "compulsive_consumption",
-    "name_kr": "강박적 소비",
-    "name_en": "Compulsive Consumption",
     "description_key": "SCAR_compulsive_consumption",
     "emotion_baseline_shifts": {
       "happiness": -0.05
     },
-    "stress_sensitivity_mult": 1.10,
+    "stress_sensitivity_mult": 1.1,
     "break_threshold_reduction": 8.0,
-    "reactivation_triggers": ["food_scarcity", "resource_loss"],
+    "reactivation_triggers": [
+      "food_scarcity",
+      "resource_loss"
+    ],
     "resilience_mod": -0.01,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_compulsive_consumption"
   },
   "complicated_grief": {
     "id": "complicated_grief",
-    "name_kr": "복잡성 애도",
-    "name_en": "Complicated Grief",
     "description_key": "SCAR_complicated_grief",
     "emotion_baseline_shifts": {
       "happiness": -0.15,
       "grief": 0.15,
-      "loneliness": 0.10
+      "loneliness": 0.1
     },
     "stress_sensitivity_mult": 1.15,
     "break_threshold_reduction": 12.0,
-    "reactivation_triggers": ["death", "loss", "anniversary"],
+    "reactivation_triggers": [
+      "death",
+      "loss",
+      "anniversary"
+    ],
     "resilience_mod": -0.04,
-    "max_stacks": 4
+    "max_stacks": 4,
+    "name_key": "SCAR_complicated_grief"
   },
   "dissociative_tendency": {
     "id": "dissociative_tendency",
-    "name_kr": "해리 경향",
-    "name_en": "Dissociative Tendency",
     "description_key": "SCAR_dissociative_tendency",
     "emotion_baseline_shifts": {
       "happiness": -0.08,
@@ -100,39 +114,49 @@
     },
     "stress_sensitivity_mult": 1.12,
     "break_threshold_reduction": 10.0,
-    "reactivation_triggers": ["extreme_stress", "sleep_deprivation"],
+    "reactivation_triggers": [
+      "extreme_stress",
+      "sleep_deprivation"
+    ],
     "resilience_mod": -0.03,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_dissociative_tendency"
   },
   "chronic_paranoia": {
     "id": "chronic_paranoia",
-    "name_kr": "만성 편집증",
-    "name_en": "Chronic Paranoia",
     "description_key": "SCAR_chronic_paranoia",
     "emotion_baseline_shifts": {
       "stress": 0.12,
       "loneliness": 0.15,
-      "happiness": -0.10
+      "happiness": -0.1
     },
-    "stress_sensitivity_mult": 1.20,
+    "stress_sensitivity_mult": 1.2,
     "break_threshold_reduction": 15.0,
-    "reactivation_triggers": ["social_rejection", "betrayal", "conflict"],
+    "reactivation_triggers": [
+      "social_rejection",
+      "betrayal",
+      "conflict"
+    ],
     "resilience_mod": -0.05,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_chronic_paranoia"
   },
   "anxious_attachment": {
     "id": "anxious_attachment",
-    "name_kr": "불안 애착",
-    "name_en": "Anxious Attachment",
     "description_key": "SCAR_anxious_attachment",
     "emotion_baseline_shifts": {
       "loneliness": 0.12,
       "happiness": -0.05
     },
-    "stress_sensitivity_mult": 1.10,
+    "stress_sensitivity_mult": 1.1,
     "break_threshold_reduction": 8.0,
-    "reactivation_triggers": ["separation", "rejection", "loss"],
+    "reactivation_triggers": [
+      "separation",
+      "rejection",
+      "loss"
+    ],
     "resilience_mod": -0.02,
-    "max_stacks": 3
+    "max_stacks": 3,
+    "name_key": "SCAR_anxious_attachment"
   }
 }

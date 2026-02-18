@@ -1,8 +1,6 @@
 [
   {
     "id": "f_sincere",
-    "name_kr": "진실한",
-    "name_en": "Sincere",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -63,13 +61,11 @@
       "f_corrupt",
       "d_con_artist"
     ],
-    "description_kr": "사실을 왜곡하기보다 있는 그대로 말하려 하며, 속임수나 뒷거래에 강한 거부감을 느낀다.",
-    "description_en": "Prefers telling the truth as-is and feels strong aversion to deception or backroom deals."
+    "name_key": "TRAIT_f_sincere_NAME",
+    "desc_key": "TRAIT_f_sincere_DESC"
   },
   {
     "id": "f_deceptive",
-    "name_kr": "기만적인",
-    "name_en": "Deceptive",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -129,13 +125,11 @@
       "f_sincere",
       "f_fair_minded"
     ],
-    "description_kr": "말을 상황에 맞춰 바꾸고, 필요하면 거짓말이나 속임수도 도구로 사용한다.",
-    "description_en": "Adapts the truth to the situation and may use lying or manipulation as a tool when needed."
+    "name_key": "TRAIT_f_deceptive_NAME",
+    "desc_key": "TRAIT_f_deceptive_DESC"
   },
   {
     "id": "f_fair_minded",
-    "name_kr": "원칙적인",
-    "name_en": "Fair‑Minded",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -191,13 +185,11 @@
       "f_corrupt",
       "d_machiavellian"
     ],
-    "description_kr": "규칙과 약속을 지키려 하며, 부정행위나 특권을 강하게 싫어한다.",
-    "description_en": "Tries to keep rules and promises, strongly disliking cheating or unfair privilege."
+    "name_key": "TRAIT_f_fair_minded_NAME",
+    "desc_key": "TRAIT_f_fair_minded_DESC"
   },
   {
     "id": "f_corrupt",
-    "name_kr": "부패한",
-    "name_en": "Corrupt",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -255,13 +247,11 @@
       "f_fair_minded",
       "f_sincere"
     ],
-    "description_kr": "남을 이용해도 들키지 않으면 괜찮다고 생각하며, 뇌물·착복·편법에 거리낌이 적다.",
-    "description_en": "Feels little hesitation about bribes, embezzlement, or exploiting others if it is unlikely to be punished."
+    "name_key": "TRAIT_f_corrupt_NAME",
+    "desc_key": "TRAIT_f_corrupt_DESC"
   },
   {
     "id": "f_frugal",
-    "name_kr": "검소한",
-    "name_en": "Frugal",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -314,13 +304,11 @@
       "f_greedy",
       "c_spendthrift"
     ],
-    "description_kr": "지위나 사치보다 실용을 중시하며, 자원을 아끼고 과시 소비를 꺼린다.",
-    "description_en": "Values practicality over luxury, conserving resources and avoiding showy spending."
+    "name_key": "TRAIT_f_frugal_NAME",
+    "desc_key": "TRAIT_f_frugal_DESC"
   },
   {
     "id": "f_greedy",
-    "name_kr": "탐욕스러운",
-    "name_en": "Greedy",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -375,13 +363,11 @@
       "f_frugal",
       "c_philanthropist"
     ],
-    "description_kr": "더 많은 보상과 자원을 원하며, 손해나 분배 상황에서 쉽게 불만과 질투를 느낀다.",
-    "description_en": "Craves more reward and resources, easily feeling resentment or envy in loss or sharing situations."
+    "name_key": "TRAIT_f_greedy_NAME",
+    "desc_key": "TRAIT_f_greedy_DESC"
   },
   {
     "id": "f_modest",
-    "name_kr": "겸손한",
-    "name_en": "Modest",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -434,13 +420,11 @@
       "f_self_important",
       "d_narcissist_grandiose"
     ],
-    "description_kr": "자신을 과시하기보다 공을 나누며, 타인의 인정이 없어도 자신의 역할을 수행한다.",
-    "description_en": "Shares credit rather than boasting, and works without needing constant recognition."
+    "name_key": "TRAIT_f_modest_NAME",
+    "desc_key": "TRAIT_f_modest_DESC"
   },
   {
     "id": "f_self_important",
-    "name_kr": "거만한",
-    "name_en": "Self‑Important",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -494,13 +478,11 @@
     "anti_synergies": [
       "f_modest"
     ],
-    "description_kr": "자신의 우월함을 확신하며 존중을 요구한다. 무시당하면 쉽게 분노하거나 복수하려 한다.",
-    "description_en": "Expects special respect and reacts strongly to being ignored or disrespected."
+    "name_key": "TRAIT_f_self_important_NAME",
+    "desc_key": "TRAIT_f_self_important_DESC"
   },
   {
     "id": "f_fearful",
-    "name_kr": "겁 많은",
-    "name_en": "Fearful",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -554,13 +536,11 @@
       "f_fearless",
       "c_berserker"
     ],
-    "description_kr": "위험을 빠르게 감지하고 피하려 한다. 불리하다고 판단하면 도주를 선택하기 쉽다.",
-    "description_en": "Quickly detects danger and tends to avoid it, often choosing retreat when odds look bad."
+    "name_key": "TRAIT_f_fearful_NAME",
+    "desc_key": "TRAIT_f_fearful_DESC"
   },
   {
     "id": "f_fearless",
-    "name_kr": "겁 없는",
-    "name_en": "Fearless",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -611,13 +591,11 @@
     "anti_synergies": [
       "f_fearful"
     ],
-    "description_kr": "위협에 둔감하고 대담하게 행동한다. 위험한 탐험이나 돌격을 주저하지 않는다.",
-    "description_en": "Less sensitive to threat and acts boldly, rarely hesitating to explore danger or charge in."
+    "name_key": "TRAIT_f_fearless_NAME",
+    "desc_key": "TRAIT_f_fearless_DESC"
   },
   {
     "id": "f_anxious",
-    "name_kr": "불안한",
-    "name_en": "Anxious",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -671,13 +649,11 @@
     "anti_synergies": [
       "f_calm"
     ],
-    "description_kr": "가능한 위험을 미리 상상하며 걱정이 많다. 준비와 확인을 늘리지만 스트레스에 취약하다.",
-    "description_en": "Frequently anticipates what could go wrong; doubles down on checking and preparation but is vulnerable to stress."
+    "name_key": "TRAIT_f_anxious_NAME",
+    "desc_key": "TRAIT_f_anxious_DESC"
   },
   {
     "id": "f_calm",
-    "name_kr": "침착한",
-    "name_en": "Calm",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -727,13 +703,11 @@
     "anti_synergies": [
       "f_anxious"
     ],
-    "description_kr": "예상치 못한 상황에서도 비교적 평정심을 유지한다. 압박 속에서 판단이 흔들리지 않는다.",
-    "description_en": "Keeps composure in unexpected situations and makes steadier decisions under pressure."
+    "name_key": "TRAIT_f_calm_NAME",
+    "desc_key": "TRAIT_f_calm_DESC"
   },
   {
     "id": "f_dependent",
-    "name_kr": "의존적인",
-    "name_en": "Dependent",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -787,13 +761,11 @@
     "anti_synergies": [
       "f_self_reliant"
     ],
-    "description_kr": "혼자 결정하기보다 가까운 사람의 도움과 지지를 원한다. 관계에 강하게 매달릴 수 있다.",
-    "description_en": "Prefers support and reassurance over acting alone, sometimes clinging strongly to close bonds."
+    "name_key": "TRAIT_f_dependent_NAME",
+    "desc_key": "TRAIT_f_dependent_DESC"
   },
   {
     "id": "f_self_reliant",
-    "name_kr": "독립적인",
-    "name_en": "Self‑Reliant",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -845,13 +817,11 @@
     "anti_synergies": [
       "f_dependent"
     ],
-    "description_kr": "스스로 해결하려는 성향이 강하다. 위기 상황에서도 타인에게 크게 의존하지 않는다.",
-    "description_en": "Strongly prefers solving problems alone and relies less on others even during crises."
+    "name_key": "TRAIT_f_self_reliant_NAME",
+    "desc_key": "TRAIT_f_self_reliant_DESC"
   },
   {
     "id": "f_sentimental",
-    "name_kr": "다정한",
-    "name_en": "Sentimental",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -907,13 +877,11 @@
       "f_tough_minded",
       "d_psychopath_primary"
     ],
-    "description_kr": "정이 많고 공감이 높다. 타인의 고통에 크게 반응하며 돌봄 행동을 자주 선택한다.",
-    "description_en": "Warm and empathetic; reacts strongly to others' suffering and often chooses caring actions."
+    "name_key": "TRAIT_f_sentimental_NAME",
+    "desc_key": "TRAIT_f_sentimental_DESC"
   },
   {
     "id": "f_tough_minded",
-    "name_kr": "무정한",
-    "name_en": "Tough‑Minded",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -965,13 +933,11 @@
     "anti_synergies": [
       "f_sentimental"
     ],
-    "description_kr": "감정적으로 덜 흔들리고 냉정하게 판단한다. 돌봄이나 위로 행동은 비교적 적다.",
-    "description_en": "Less emotionally shaken and more cool-headed; tends to do less comforting or caretaking."
+    "name_key": "TRAIT_f_tough_minded_NAME",
+    "desc_key": "TRAIT_f_tough_minded_DESC"
   },
   {
     "id": "f_confident",
-    "name_kr": "자신감 있는",
-    "name_en": "Confident",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1019,13 +985,11 @@
     "anti_synergies": [
       "f_insecure"
     ],
-    "description_kr": "자기 효능감이 높아 앞에 나서는 일을 두려워하지 않는다. 리더십과 설득에서 강점이 있다.",
-    "description_en": "High self-efficacy and willingness to step forward; strong in leadership and persuasion."
+    "name_key": "TRAIT_f_confident_NAME",
+    "desc_key": "TRAIT_f_confident_DESC"
   },
   {
     "id": "f_insecure",
-    "name_kr": "위축된",
-    "name_en": "Insecure",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -1076,13 +1040,11 @@
     "anti_synergies": [
       "f_confident"
     ],
-    "description_kr": "실수나 평가를 두려워해 앞에 나서기 어렵다. 거절·비난에 민감해 스트레스가 증가한다.",
-    "description_en": "Avoids the spotlight and is sensitive to rejection or criticism, increasing stress."
+    "name_key": "TRAIT_f_insecure_NAME",
+    "desc_key": "TRAIT_f_insecure_DESC"
   },
   {
     "id": "f_bold",
-    "name_kr": "대담한",
-    "name_en": "Bold",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1132,13 +1094,11 @@
     "anti_synergies": [
       "f_shy"
     ],
-    "description_kr": "낯선 사람과 상황에도 적극적으로 접근한다. 협상·설득·모험 행동이 증가한다.",
-    "description_en": "Approaches strangers and new situations proactively; increases negotiation, persuasion, and adventurous actions."
+    "name_key": "TRAIT_f_bold_NAME",
+    "desc_key": "TRAIT_f_bold_DESC"
   },
   {
     "id": "f_shy",
-    "name_kr": "수줍은",
-    "name_en": "Shy",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -1190,13 +1150,11 @@
     "anti_synergies": [
       "f_bold"
     ],
-    "description_kr": "사람들 앞에서 말하거나 주목받는 상황을 꺼린다. 혼자 할 수 있는 일로 몰리는 경향이 있다.",
-    "description_en": "Dislikes speaking up or being the center of attention; tends to gravitate toward solo tasks."
+    "name_key": "TRAIT_f_shy_NAME",
+    "desc_key": "TRAIT_f_shy_DESC"
   },
   {
     "id": "f_gregarious",
-    "name_kr": "사교적인",
-    "name_en": "Gregarious",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1246,13 +1204,11 @@
     "anti_synergies": [
       "f_solitary"
     ],
-    "description_kr": "사람들과 어울리며 에너지를 얻는다. 관계 확장 속도가 빠르고 집단 응집력을 높인다.",
-    "description_en": "Gains energy from social interaction; builds relationships quickly and boosts group cohesion."
+    "name_key": "TRAIT_f_gregarious_NAME",
+    "desc_key": "TRAIT_f_gregarious_DESC"
   },
   {
     "id": "f_solitary",
-    "name_kr": "고독한",
-    "name_en": "Solitary",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -1302,13 +1258,11 @@
     "anti_synergies": [
       "f_gregarious"
     ],
-    "description_kr": "혼자 있는 것을 편안해하며 군중 속에서 피로해진다. 연구·제작 같은 솔로 작업에 강하다.",
-    "description_en": "Feels comfortable alone and tires in crowds; strong at solo work like research or crafting."
+    "name_key": "TRAIT_f_solitary_NAME",
+    "desc_key": "TRAIT_f_solitary_DESC"
   },
   {
     "id": "f_energetic",
-    "name_kr": "활기찬",
-    "name_en": "Energetic",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1358,13 +1312,11 @@
     "anti_synergies": [
       "f_reserved"
     ],
-    "description_kr": "에너지가 높고 행동 개시가 빠르다. 속도는 빨라지지만 과속으로 실수가 늘 수 있다.",
-    "description_en": "High energy and quick to act; increases speed but may raise mistakes due to rushing."
+    "name_key": "TRAIT_f_energetic_NAME",
+    "desc_key": "TRAIT_f_energetic_DESC"
   },
   {
     "id": "f_reserved",
-    "name_kr": "차분한",
-    "name_en": "Reserved",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -1412,13 +1364,11 @@
     "anti_synergies": [
       "f_energetic"
     ],
-    "description_kr": "감정 표현이 과하지 않고 조용히 움직인다. 속도는 느리지만 실수와 과열이 적다.",
-    "description_en": "Moves quietly with muted expression; slower pace but fewer mistakes and less overheating."
+    "name_key": "TRAIT_f_reserved_NAME",
+    "desc_key": "TRAIT_f_reserved_DESC"
   },
   {
     "id": "f_forgiving",
-    "name_kr": "관대한",
-    "name_en": "Forgiving",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1469,13 +1419,11 @@
     "anti_synergies": [
       "f_vengeful"
     ],
-    "description_kr": "원한을 오래 붙잡지 않고 관계 회복을 시도한다. 갈등이 줄고 집단 안정성이 오른다.",
-    "description_en": "Doesn't hold grudges long and tries to repair relationships, reducing conflict and stabilizing groups."
+    "name_key": "TRAIT_f_forgiving_NAME",
+    "desc_key": "TRAIT_f_forgiving_DESC"
   },
   {
     "id": "f_vengeful",
-    "name_kr": "앙심 품은",
-    "name_en": "Vengeful",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -1528,13 +1476,11 @@
       "f_forgiving",
       "c_reconciler"
     ],
-    "description_kr": "상처받은 일을 기억하고 되갚으려 한다. 갈등이 늘지만 억제력을 통해 두려움을 줄 수도 있다.",
-    "description_en": "Remembers slights and seeks payback; increases conflict, sometimes using intimidation to reduce fear."
+    "name_key": "TRAIT_f_vengeful_NAME",
+    "desc_key": "TRAIT_f_vengeful_DESC"
   },
   {
     "id": "f_gentle",
-    "name_kr": "온화한",
-    "name_en": "Gentle",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1587,13 +1533,11 @@
       "f_harsh",
       "d_sadist"
     ],
-    "description_kr": "상대를 강하게 몰아붙이기보다 부드럽게 대한다. 폭력·협박 행동이 감소한다.",
-    "description_en": "Treats others gently rather than forcefully; reduces violent and intimidating behaviors."
+    "name_key": "TRAIT_f_gentle_NAME",
+    "desc_key": "TRAIT_f_gentle_DESC"
   },
   {
     "id": "f_harsh",
-    "name_kr": "거친",
-    "name_en": "Harsh",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -1648,13 +1592,11 @@
       "f_gentle",
       "c_pacifist"
     ],
-    "description_kr": "타인을 거칠게 다루며 지배와 위협을 사용한다. 단기적으로 복종을 얻지만 신뢰를 잃기 쉽다.",
-    "description_en": "Uses intimidation and dominance; may gain short-term compliance but often loses trust."
+    "name_key": "TRAIT_f_harsh_NAME",
+    "desc_key": "TRAIT_f_harsh_DESC"
   },
   {
     "id": "f_flexible",
-    "name_kr": "유연한",
-    "name_en": "Flexible",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1701,13 +1643,11 @@
     "anti_synergies": [
       "f_stubborn"
     ],
-    "description_kr": "타협과 조정을 통해 갈등을 줄인다. 협상·외교 행동이 늘고 집단 내 마찰이 감소한다.",
-    "description_en": "Reduces conflict through compromise; increases negotiation and diplomacy, lowering group friction."
+    "name_key": "TRAIT_f_flexible_NAME",
+    "desc_key": "TRAIT_f_flexible_DESC"
   },
   {
     "id": "f_stubborn",
-    "name_kr": "완고한",
-    "name_en": "Stubborn",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -1756,13 +1696,11 @@
     "anti_synergies": [
       "f_flexible"
     ],
-    "description_kr": "한 번 정한 방침을 쉽게 바꾸지 않는다. 위기에서 버티는 힘은 있지만 타협이 어려워 갈등이 늘 수 있다.",
-    "description_en": "Hard to sway once decided; can stand firm under pressure but may increase conflict by refusing compromise."
+    "name_key": "TRAIT_f_stubborn_NAME",
+    "desc_key": "TRAIT_f_stubborn_DESC"
   },
   {
     "id": "f_patient",
-    "name_kr": "인내심 있는",
-    "name_en": "Patient",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1815,13 +1753,11 @@
     "anti_synergies": [
       "f_hot_tempered"
     ],
-    "description_kr": "좌절을 잘 견디고 감정 폭발이 적다. 장기 프로젝트나 협상에서 강점을 보인다.",
-    "description_en": "Tolerates frustration well and rarely explodes; strong in long projects and negotiations."
+    "name_key": "TRAIT_f_patient_NAME",
+    "desc_key": "TRAIT_f_patient_DESC"
   },
   {
     "id": "f_hot_tempered",
-    "name_kr": "다혈질",
-    "name_en": "Hot‑Tempered",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -1876,13 +1812,11 @@
       "f_patient",
       "c_reconciler"
     ],
-    "description_kr": "분노가 빠르게 치솟아 언행이 거칠어질 수 있다. 전투 돌격은 늘지만 팀워크·품질은 흔들린다.",
-    "description_en": "Anger spikes quickly and can turn behavior harsh; increases charging in combat but hurts teamwork and quality."
+    "name_key": "TRAIT_f_hot_tempered_NAME",
+    "desc_key": "TRAIT_f_hot_tempered_DESC"
   },
   {
     "id": "f_organized",
-    "name_kr": "정리정돈",
-    "name_en": "Organized",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -1932,13 +1866,11 @@
     "anti_synergies": [
       "f_disorganized"
     ],
-    "description_kr": "체계적으로 정리하고 계획을 세운다. 생산성과 실수가 동시에 개선되며, 혼란 상황에서 스트레스가 적다.",
-    "description_en": "Plans and organizes systematically, boosting productivity while reducing errors and chaos stress."
+    "name_key": "TRAIT_f_organized_NAME",
+    "desc_key": "TRAIT_f_organized_DESC"
   },
   {
     "id": "f_disorganized",
-    "name_kr": "산만한",
-    "name_en": "Disorganized",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -1986,13 +1918,11 @@
       "f_organized",
       "c_co_hh_methodical_inventor"
     ],
-    "description_kr": "우선순위와 정리가 약해 일을 놓치기 쉽다. 급할 땐 즉흥적으로 움직이지만 실수가 늘어난다.",
-    "description_en": "Weak at prioritizing and organization; improvises under pressure but makes more mistakes."
+    "name_key": "TRAIT_f_disorganized_NAME",
+    "desc_key": "TRAIT_f_disorganized_DESC"
   },
   {
     "id": "f_industrious",
-    "name_kr": "근면한",
-    "name_en": "Industrious",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -2043,13 +1973,11 @@
     "anti_synergies": [
       "f_lazy"
     ],
-    "description_kr": "일을 미루지 않고 꾸준히 수행한다. 생산량이 늘지만 과로로 스트레스 회복이 느릴 수 있다.",
-    "description_en": "Works steadily without procrastinating; increases output but may recover stress more slowly due to overwork."
+    "name_key": "TRAIT_f_industrious_NAME",
+    "desc_key": "TRAIT_f_industrious_DESC"
   },
   {
     "id": "f_lazy",
-    "name_kr": "게으른",
-    "name_en": "Lazy",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -2099,13 +2027,11 @@
       "f_industrious",
       "c_labor_hero"
     ],
-    "description_kr": "노력 비용을 크게 느끼며 일을 미루기 쉽다. 단기적으로 스트레스는 적지만 생산성과 신뢰가 떨어진다.",
-    "description_en": "Feels effort as costly and tends to procrastinate; may have less short-term stress but lower productivity and reliability."
+    "name_key": "TRAIT_f_lazy_NAME",
+    "desc_key": "TRAIT_f_lazy_DESC"
   },
   {
     "id": "f_perfectionist",
-    "name_kr": "완벽주의",
-    "name_en": "Perfectionist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2156,13 +2082,11 @@
     "anti_synergies": [
       "f_careless"
     ],
-    "description_kr": "기준이 높아 품질이 크게 올라가지만 속도가 느려지고 좌절·스트레스가 늘 수 있다.",
-    "description_en": "Raises standards and quality significantly, but slows work and can increase frustration and stress."
+    "name_key": "TRAIT_f_perfectionist_NAME",
+    "desc_key": "TRAIT_f_perfectionist_DESC"
   },
   {
     "id": "f_careless",
-    "name_kr": "대충하는",
-    "name_en": "Careless",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -2210,13 +2134,11 @@
       "f_perfectionist",
       "c_master_craftsman"
     ],
-    "description_kr": "세부를 놓치기 쉽고 품질 관리가 약하다. 속도는 빠를 수 있으나 오류와 사고가 잦다.",
-    "description_en": "Often misses details and quality control; may be faster but makes more errors and accidents."
+    "name_key": "TRAIT_f_careless_NAME",
+    "desc_key": "TRAIT_f_careless_DESC"
   },
   {
     "id": "f_prudent",
-    "name_kr": "신중한",
-    "name_en": "Prudent",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -2270,13 +2192,11 @@
     "anti_synergies": [
       "f_reckless"
     ],
-    "description_kr": "충동보다 계획을 우선한다. 위험을 관리해 사고를 줄이지만, 즉흥성이 필요한 상황엔 둔할 수 있다.",
-    "description_en": "Prioritizes planning over impulse; manages risk and reduces accidents, but may be slow when improvisation is needed."
+    "name_key": "TRAIT_f_prudent_NAME",
+    "desc_key": "TRAIT_f_prudent_DESC"
   },
   {
     "id": "f_reckless",
-    "name_kr": "충동적인",
-    "name_en": "Reckless",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -2331,13 +2251,11 @@
       "f_prudent",
       "c_defender"
     ],
-    "description_kr": "즉흥적으로 결정하고 위험을 과소평가한다. 모험과 돌격은 늘지만 사고·실수·대형 손실이 증가한다.",
-    "description_en": "Acts impulsively and underestimates risk; increases adventure and charges but raises accidents and large losses."
+    "name_key": "TRAIT_f_reckless_NAME",
+    "desc_key": "TRAIT_f_reckless_DESC"
   },
   {
     "id": "f_aesthetic",
-    "name_kr": "심미적인",
-    "name_en": "Aesthetic",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2385,13 +2303,11 @@
     "anti_synergies": [
       "f_utilitarian"
     ],
-    "description_kr": "미적 완성도를 중시해 건설·제작에서 아름다움과 장식에 투자한다.",
-    "description_en": "Values aesthetic quality, investing in beauty and decoration in building and crafting."
+    "name_key": "TRAIT_f_aesthetic_NAME",
+    "desc_key": "TRAIT_f_aesthetic_DESC"
   },
   {
     "id": "f_utilitarian",
-    "name_kr": "실용적인",
-    "name_en": "Utilitarian",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2436,13 +2352,11 @@
     "anti_synergies": [
       "f_aesthetic"
     ],
-    "description_kr": "장식보다 효율을 중시한다. 빠르고 합리적인 선택을 하지만 창의적 사치엔 흥미가 적다.",
-    "description_en": "Prefers efficiency over decoration; makes fast, rational choices but has little interest in creative luxury."
+    "name_key": "TRAIT_f_utilitarian_NAME",
+    "desc_key": "TRAIT_f_utilitarian_DESC"
   },
   {
     "id": "f_curious",
-    "name_kr": "호기심 많은",
-    "name_en": "Curious",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -2491,13 +2405,11 @@
     "anti_synergies": [
       "f_apathetic"
     ],
-    "description_kr": "새로운 정보를 탐색하고 실험하려 한다. 탐험·연구가 늘고 지식 기반 사회 발전에 기여한다.",
-    "description_en": "Seeks new information and experimentation; boosts exploration and research and supports knowledge-driven progress."
+    "name_key": "TRAIT_f_curious_NAME",
+    "desc_key": "TRAIT_f_curious_DESC"
   },
   {
     "id": "f_apathetic",
-    "name_kr": "무관심한",
-    "name_en": "Apathetic",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -2547,13 +2459,11 @@
       "c_inventor",
       "c_visionary"
     ],
-    "description_kr": "새로움보다 익숙함을 선호하며 학습 동기가 낮다. 급격한 변화가 오면 적응이 느리다.",
-    "description_en": "Prefers the familiar and has low learning drive; adapts slowly to rapid change."
+    "name_key": "TRAIT_f_apathetic_NAME",
+    "desc_key": "TRAIT_f_apathetic_DESC"
   },
   {
     "id": "f_creative",
-    "name_kr": "창의적인",
-    "name_en": "Creative",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -2604,13 +2514,11 @@
     "anti_synergies": [
       "f_conventional"
     ],
-    "description_kr": "새로운 해결책을 떠올리며 즉흥적 전술·발명을 잘한다. 제약이 강하면 스트레스가 늘 수 있다.",
-    "description_en": "Generates novel solutions and improvises well in tactics and invention; heavy constraints can increase stress."
+    "name_key": "TRAIT_f_creative_NAME",
+    "desc_key": "TRAIT_f_creative_DESC"
   },
   {
     "id": "f_conventional",
-    "name_kr": "평범한",
-    "name_en": "Conventional",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2658,13 +2566,11 @@
       "f_creative",
       "c_co_lh_free_spirit"
     ],
-    "description_kr": "검증된 방식과 관습을 선호한다. 루틴 작업에 강하지만 급진적 혁신은 잘 시도하지 않는다.",
-    "description_en": "Prefers proven methods and convention; strong in routine work but less likely to attempt radical innovation."
+    "name_key": "TRAIT_f_conventional_NAME",
+    "desc_key": "TRAIT_f_conventional_DESC"
   },
   {
     "id": "f_nonconformist",
-    "name_kr": "비순응적",
-    "name_en": "Nonconformist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2711,13 +2617,11 @@
     "anti_synergies": [
       "f_traditionalist"
     ],
-    "description_kr": "규범에 얽매이기보다 새로운 방식을 시도한다. 혁신의 씨앗이 되지만 제도권과 충돌할 수 있다.",
-    "description_en": "Prefers experimenting over sticking to norms; can spark innovation but may clash with institutions."
+    "name_key": "TRAIT_f_nonconformist_NAME",
+    "desc_key": "TRAIT_f_nonconformist_DESC"
   },
   {
     "id": "f_traditionalist",
-    "name_kr": "보수적인",
-    "name_en": "Traditionalist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2766,13 +2670,11 @@
     "anti_synergies": [
       "f_nonconformist"
     ],
-    "description_kr": "전통과 규범을 중시한다. 공동체의 안정에는 기여하지만 급변하는 시대에 적응이 느릴 수 있다.",
-    "description_en": "Values tradition and norms; supports stability but may adapt slowly to rapid change."
+    "name_key": "TRAIT_f_traditionalist_NAME",
+    "desc_key": "TRAIT_f_traditionalist_DESC"
   },
   {
     "id": "c_he_hh_tender_conscience",
-    "name_kr": "자애로운 양심가",
-    "name_en": "Tender Conscience",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -2838,13 +2740,11 @@
       "f_dependent"
     ],
     "anti_synergies": [],
-    "description_kr": "자애로운 양심가 성향의 인물. (H,E 축 조합 기반)",
-    "description_en": "Tender Conscience archetype based on H-E axis combination."
+    "name_key": "TRAIT_c_he_hh_tender_conscience_NAME",
+    "desc_key": "TRAIT_c_he_hh_tender_conscience_DESC"
   },
   {
     "id": "c_he_hl_stoic_honest",
-    "name_kr": "냉정한 청렴가",
-    "name_en": "Stoic Honest",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -2910,13 +2810,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "냉정한 청렴가 성향의 인물. (H,E 축 조합 기반)",
-    "description_en": "Stoic Honest archetype based on H-E axis combination."
+    "name_key": "TRAIT_c_he_hl_stoic_honest_NAME",
+    "desc_key": "TRAIT_c_he_hl_stoic_honest_DESC"
   },
   {
     "id": "c_he_lh_anxious_swindler",
-    "name_kr": "불안한 사기꾼",
-    "name_en": "Anxious Swindler",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -2982,13 +2880,11 @@
       "c_eo_hh_sensitive_artist"
     ],
     "anti_synergies": [],
-    "description_kr": "불안한 사기꾼 성향의 인물. (H,E 축 조합 기반)",
-    "description_en": "Anxious Swindler archetype based on H-E axis combination."
+    "name_key": "TRAIT_c_he_lh_anxious_swindler_NAME",
+    "desc_key": "TRAIT_c_he_lh_anxious_swindler_DESC"
   },
   {
     "id": "c_he_ll_cold_exploiter",
-    "name_kr": "냉혈한 착취자",
-    "name_en": "Cold Exploiter",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3054,13 +2950,11 @@
       "c_he_hl_stoic_honest"
     ],
     "anti_synergies": [],
-    "description_kr": "냉혈한 착취자 성향의 인물. (H,E 축 조합 기반)",
-    "description_en": "Cold Exploiter archetype based on H-E axis combination."
+    "name_key": "TRAIT_c_he_ll_cold_exploiter_NAME",
+    "desc_key": "TRAIT_c_he_ll_cold_exploiter_DESC"
   },
   {
     "id": "c_hx_hh_honest_leader",
-    "name_kr": "청렴한 리더",
-    "name_en": "Honest Leader",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -3123,13 +3017,11 @@
       "c_strategist_general"
     ],
     "anti_synergies": [],
-    "description_kr": "청렴한 리더 성향의 인물. (H,X 축 조합 기반)",
-    "description_en": "Honest Leader archetype based on H-X axis combination."
+    "name_key": "TRAIT_c_hx_hh_honest_leader_NAME",
+    "desc_key": "TRAIT_c_hx_hh_honest_leader_DESC"
   },
   {
     "id": "c_hx_hl_honest_recluse",
-    "name_kr": "청렴한 은둔자",
-    "name_en": "Honest Recluse",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -3192,13 +3084,11 @@
       "f_insecure"
     ],
     "anti_synergies": [],
-    "description_kr": "청렴한 은둔자 성향의 인물. (H,X 축 조합 기반)",
-    "description_en": "Honest Recluse archetype based on H-X axis combination."
+    "name_key": "TRAIT_c_hx_hl_honest_recluse_NAME",
+    "desc_key": "TRAIT_c_hx_hl_honest_recluse_DESC"
   },
   {
     "id": "c_hx_lh_charismatic_con_artist",
-    "name_kr": "카리스마 사기꾼",
-    "name_en": "Charismatic Con Artist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3261,13 +3151,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "카리스마 사기꾼 성향의 인물. (H,X 축 조합 기반)",
-    "description_en": "Charismatic Con Artist archetype based on H-X axis combination."
+    "name_key": "TRAIT_c_hx_lh_charismatic_con_artist_NAME",
+    "desc_key": "TRAIT_c_hx_lh_charismatic_con_artist_DESC"
   },
   {
     "id": "c_hx_ll_sly_loner",
-    "name_kr": "음흉한 은둔자",
-    "name_en": "Sly Loner",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3330,13 +3218,11 @@
       "c_he_lh_anxious_swindler"
     ],
     "anti_synergies": [],
-    "description_kr": "음흉한 은둔자 성향의 인물. (H,X 축 조합 기반)",
-    "description_en": "Sly Loner archetype based on H-X axis combination."
+    "name_key": "TRAIT_c_hx_ll_sly_loner_NAME",
+    "desc_key": "TRAIT_c_hx_ll_sly_loner_DESC"
   },
   {
     "id": "c_ha_hh_kind-hearted_honest",
-    "name_kr": "인자한 청렴인",
-    "name_en": "Kind‑Hearted Honest",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -3401,13 +3287,11 @@
       "c_hx_hh_honest_leader"
     ],
     "anti_synergies": [],
-    "description_kr": "인자한 청렴인 성향의 인물. (H,A 축 조합 기반)",
-    "description_en": "Kind‑Hearted Honest archetype based on H-A axis combination."
+    "name_key": "TRAIT_c_ha_hh_kind-hearted_honest_NAME",
+    "desc_key": "TRAIT_c_ha_hh_kind-hearted_honest_DESC"
   },
   {
     "id": "c_ha_hl_stern_judge",
-    "name_kr": "엄정한 재판관",
-    "name_en": "Stern Judge",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -3471,13 +3355,11 @@
       "c_he_hl_stoic_honest"
     ],
     "anti_synergies": [],
-    "description_kr": "엄정한 재판관 성향의 인물. (H,A 축 조합 기반)",
-    "description_en": "Stern Judge archetype based on H-A axis combination."
+    "name_key": "TRAIT_c_ha_hl_stern_judge_NAME",
+    "desc_key": "TRAIT_c_ha_hl_stern_judge_DESC"
   },
   {
     "id": "c_ha_lh_smiling_exploiter",
-    "name_kr": "미소 짓는 착취자",
-    "name_en": "Smiling Exploiter",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3543,13 +3425,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "미소 짓는 착취자 성향의 인물. (H,A 축 조합 기반)",
-    "description_en": "Smiling Exploiter archetype based on H-A axis combination."
+    "name_key": "TRAIT_c_ha_lh_smiling_exploiter_NAME",
+    "desc_key": "TRAIT_c_ha_lh_smiling_exploiter_DESC"
   },
   {
     "id": "c_ha_ll_cruel_raider",
-    "name_kr": "잔혹한 약탈자",
-    "name_en": "Cruel Raider",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3613,13 +3493,11 @@
       "c_ho_ll_corrupt_traditionalist"
     ],
     "anti_synergies": [],
-    "description_kr": "잔혹한 약탈자 성향의 인물. (H,A 축 조합 기반)",
-    "description_en": "Cruel Raider archetype based on H-A axis combination."
+    "name_key": "TRAIT_c_ha_ll_cruel_raider_NAME",
+    "desc_key": "TRAIT_c_ha_ll_cruel_raider_DESC"
   },
   {
     "id": "c_hc_hh_honest_administrator",
-    "name_kr": "청렴한 관리자",
-    "name_en": "Honest Administrator",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -3685,13 +3563,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "청렴한 관리자 성향의 인물. (H,C 축 조합 기반)",
-    "description_en": "Honest Administrator archetype based on H-C axis combination."
+    "name_key": "TRAIT_c_hc_hh_honest_administrator_NAME",
+    "desc_key": "TRAIT_c_hc_hh_honest_administrator_DESC"
   },
   {
     "id": "c_hc_hl_well-meaning_slacker",
-    "name_kr": "선의의 무능",
-    "name_en": "Well‑Meaning Slacker",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -3755,13 +3631,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "선의의 무능 성향의 인물. (H,C 축 조합 기반)",
-    "description_en": "Well‑Meaning Slacker archetype based on H-C axis combination."
+    "name_key": "TRAIT_c_hc_hl_well-meaning_slacker_NAME",
+    "desc_key": "TRAIT_c_hc_hl_well-meaning_slacker_DESC"
   },
   {
     "id": "c_hc_lh_calculating_schemer",
-    "name_kr": "냉정한 책략가",
-    "name_en": "Calculating Schemer",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3826,13 +3700,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "냉정한 책략가 성향의 인물. (H,C 축 조합 기반)",
-    "description_en": "Calculating Schemer archetype based on H-C axis combination."
+    "name_key": "TRAIT_c_hc_lh_calculating_schemer_NAME",
+    "desc_key": "TRAIT_c_hc_lh_calculating_schemer_DESC"
   },
   {
     "id": "c_hc_ll_irresponsible_cheat",
-    "name_kr": "무책임한 사기꾼",
-    "name_en": "Irresponsible Cheat",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -3896,13 +3768,11 @@
       "f_reckless"
     ],
     "anti_synergies": [],
-    "description_kr": "무책임한 사기꾼 성향의 인물. (H,C 축 조합 기반)",
-    "description_en": "Irresponsible Cheat archetype based on H-C axis combination."
+    "name_key": "TRAIT_c_hc_ll_irresponsible_cheat_NAME",
+    "desc_key": "TRAIT_c_hc_ll_irresponsible_cheat_DESC"
   },
   {
     "id": "c_ho_hh_idealistic_innovator",
-    "name_kr": "이상주의 혁신가",
-    "name_en": "Idealistic Innovator",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -3966,13 +3836,11 @@
       "c_strategist_general"
     ],
     "anti_synergies": [],
-    "description_kr": "이상주의 혁신가 성향의 인물. (H,O 축 조합 기반)",
-    "description_en": "Idealistic Innovator archetype based on H-O axis combination."
+    "name_key": "TRAIT_c_ho_hh_idealistic_innovator_NAME",
+    "desc_key": "TRAIT_c_ho_hh_idealistic_innovator_DESC"
   },
   {
     "id": "c_ho_hl_traditional_moralist",
-    "name_kr": "전통적 도덕가",
-    "name_en": "Traditional Moralist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -4036,13 +3904,11 @@
       "c_he_hl_stoic_honest"
     ],
     "anti_synergies": [],
-    "description_kr": "전통적 도덕가 성향의 인물. (H,O 축 조합 기반)",
-    "description_en": "Traditional Moralist archetype based on H-O axis combination."
+    "name_key": "TRAIT_c_ho_hl_traditional_moralist_NAME",
+    "desc_key": "TRAIT_c_ho_hl_traditional_moralist_DESC"
   },
   {
     "id": "c_ho_lh_cunning_inventor",
-    "name_kr": "교활한 발명가",
-    "name_en": "Cunning Inventor",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -4106,13 +3972,11 @@
       "c_ho_ll_corrupt_traditionalist"
     ],
     "anti_synergies": [],
-    "description_kr": "교활한 발명가 성향의 인물. (H,O 축 조합 기반)",
-    "description_en": "Cunning Inventor archetype based on H-O axis combination."
+    "name_key": "TRAIT_c_ho_lh_cunning_inventor_NAME",
+    "desc_key": "TRAIT_c_ho_lh_cunning_inventor_DESC"
   },
   {
     "id": "c_ho_ll_corrupt_traditionalist",
-    "name_kr": "부패한 보수",
-    "name_en": "Corrupt Traditionalist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -4176,13 +4040,11 @@
       "c_settler"
     ],
     "anti_synergies": [],
-    "description_kr": "부패한 보수 성향의 인물. (H,O 축 조합 기반)",
-    "description_en": "Corrupt Traditionalist archetype based on H-O axis combination."
+    "name_key": "TRAIT_c_ho_ll_corrupt_traditionalist_NAME",
+    "desc_key": "TRAIT_c_ho_ll_corrupt_traditionalist_DESC"
   },
   {
     "id": "c_ex_hh_emotional_socialite",
-    "name_kr": "감정형 사교가",
-    "name_en": "Emotional Socialite",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -4245,13 +4107,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "감정형 사교가 성향의 인물. (E,X 축 조합 기반)",
-    "description_en": "Emotional Socialite archetype based on E-X axis combination."
+    "name_key": "TRAIT_c_ex_hh_emotional_socialite_NAME",
+    "desc_key": "TRAIT_c_ex_hh_emotional_socialite_DESC"
   },
   {
     "id": "c_ex_hl_timid_recluse",
-    "name_kr": "소심한 은둔자",
-    "name_en": "Timid Recluse",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -4314,13 +4174,11 @@
       "f_dependent"
     ],
     "anti_synergies": [],
-    "description_kr": "소심한 은둔자 성향의 인물. (E,X 축 조합 기반)",
-    "description_en": "Timid Recluse archetype based on E-X axis combination."
+    "name_key": "TRAIT_c_ex_hl_timid_recluse_NAME",
+    "desc_key": "TRAIT_c_ex_hl_timid_recluse_DESC"
   },
   {
     "id": "c_ex_lh_daredevil",
-    "name_kr": "대담한 모험가",
-    "name_en": "Daredevil",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -4382,13 +4240,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "대담한 모험가 성향의 인물. (E,X 축 조합 기반)",
-    "description_en": "Daredevil archetype based on E-X axis combination."
+    "name_key": "TRAIT_c_ex_lh_daredevil_NAME",
+    "desc_key": "TRAIT_c_ex_lh_daredevil_DESC"
   },
   {
     "id": "c_ex_ll_stoic_loner",
-    "name_kr": "냉정한 독립가",
-    "name_en": "Stoic Loner",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -4451,13 +4307,11 @@
       "f_insecure"
     ],
     "anti_synergies": [],
-    "description_kr": "냉정한 독립가 성향의 인물. (E,X 축 조합 기반)",
-    "description_en": "Stoic Loner archetype based on E-X axis combination."
+    "name_key": "TRAIT_c_ex_ll_stoic_loner_NAME",
+    "desc_key": "TRAIT_c_ex_ll_stoic_loner_DESC"
   },
   {
     "id": "c_ea_hh_compassionate_reconciler",
-    "name_kr": "다정한 화해자",
-    "name_en": "Compassionate Reconciler",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -4523,13 +4377,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "다정한 화해자 성향의 인물. (E,A 축 조합 기반)",
-    "description_en": "Compassionate Reconciler archetype based on E-A axis combination."
+    "name_key": "TRAIT_c_ea_hh_compassionate_reconciler_NAME",
+    "desc_key": "TRAIT_c_ea_hh_compassionate_reconciler_DESC"
   },
   {
     "id": "c_ea_hl_timid_helper",
-    "name_kr": "소심한 조력자",
-    "name_en": "Timid Helper",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -4592,13 +4444,11 @@
       "f_anxious"
     ],
     "anti_synergies": [],
-    "description_kr": "소심한 조력자 성향의 인물. (E,A 축 조합 기반)",
-    "description_en": "Timid Helper archetype based on E-A axis combination."
+    "name_key": "TRAIT_c_ea_hl_timid_helper_NAME",
+    "desc_key": "TRAIT_c_ea_hl_timid_helper_DESC"
   },
   {
     "id": "c_ea_lh_volatile_bully",
-    "name_kr": "변덕스러운 폭군",
-    "name_en": "Volatile Bully",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -4663,13 +4513,11 @@
       "c_chef"
     ],
     "anti_synergies": [],
-    "description_kr": "변덕스러운 폭군 성향의 인물. (E,A 축 조합 기반)",
-    "description_en": "Volatile Bully archetype based on E-A axis combination."
+    "name_key": "TRAIT_c_ea_lh_volatile_bully_NAME",
+    "desc_key": "TRAIT_c_ea_lh_volatile_bully_DESC"
   },
   {
     "id": "c_ea_ll_callous_abuser",
-    "name_kr": "냉혈한 학대자",
-    "name_en": "Callous Abuser",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -4733,13 +4581,11 @@
       "c_ec_lh_cool_strategist"
     ],
     "anti_synergies": [],
-    "description_kr": "냉혈한 학대자 성향의 인물. (E,A 축 조합 기반)",
-    "description_en": "Callous Abuser archetype based on E-A axis combination."
+    "name_key": "TRAIT_c_ea_ll_callous_abuser_NAME",
+    "desc_key": "TRAIT_c_ea_ll_callous_abuser_DESC"
   },
   {
     "id": "c_ec_hh_anxious_planner",
-    "name_kr": "걱정 많은 계획가",
-    "name_en": "Anxious Planner",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -4804,13 +4650,11 @@
       "f_prudent"
     ],
     "anti_synergies": [],
-    "description_kr": "걱정 많은 계획가 성향의 인물. (E,C 축 조합 기반)",
-    "description_en": "Anxious Planner archetype based on E-C axis combination."
+    "name_key": "TRAIT_c_ec_hh_anxious_planner_NAME",
+    "desc_key": "TRAIT_c_ec_hh_anxious_planner_DESC"
   },
   {
     "id": "c_ec_hl_anxious_drifter",
-    "name_kr": "불안한 방랑자",
-    "name_en": "Anxious Drifter",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -4875,13 +4719,11 @@
       "c_he_lh_anxious_swindler"
     ],
     "anti_synergies": [],
-    "description_kr": "불안한 방랑자 성향의 인물. (E,C 축 조합 기반)",
-    "description_en": "Anxious Drifter archetype based on E-C axis combination."
+    "name_key": "TRAIT_c_ec_hl_anxious_drifter_NAME",
+    "desc_key": "TRAIT_c_ec_hl_anxious_drifter_DESC"
   },
   {
     "id": "c_ec_lh_cool_strategist",
-    "name_kr": "침착한 전략가",
-    "name_en": "Cool Strategist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -4946,13 +4788,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "침착한 전략가 성향의 인물. (E,C 축 조합 기반)",
-    "description_en": "Cool Strategist archetype based on E-C axis combination."
+    "name_key": "TRAIT_c_ec_lh_cool_strategist_NAME",
+    "desc_key": "TRAIT_c_ec_lh_cool_strategist_DESC"
   },
   {
     "id": "c_ec_ll_reckless_drifter",
-    "name_kr": "무모한 방랑자",
-    "name_en": "Reckless Drifter",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -5015,13 +4855,11 @@
       "c_he_hl_stoic_honest"
     ],
     "anti_synergies": [],
-    "description_kr": "무모한 방랑자 성향의 인물. (E,C 축 조합 기반)",
-    "description_en": "Reckless Drifter archetype based on E-C axis combination."
+    "name_key": "TRAIT_c_ec_ll_reckless_drifter_NAME",
+    "desc_key": "TRAIT_c_ec_ll_reckless_drifter_DESC"
   },
   {
     "id": "c_eo_hh_sensitive_artist",
-    "name_kr": "감성 예술가",
-    "name_en": "Sensitive Artist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5084,13 +4922,11 @@
       "c_he_lh_anxious_swindler"
     ],
     "anti_synergies": [],
-    "description_kr": "감성 예술가 성향의 인물. (E,O 축 조합 기반)",
-    "description_en": "Sensitive Artist archetype based on E-O axis combination."
+    "name_key": "TRAIT_c_eo_hh_sensitive_artist_NAME",
+    "desc_key": "TRAIT_c_eo_hh_sensitive_artist_DESC"
   },
   {
     "id": "c_eo_hl_anxious_traditionalist",
-    "name_kr": "불안한 전통주의자",
-    "name_en": "Anxious Traditionalist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -5154,13 +4990,11 @@
       "f_anxious"
     ],
     "anti_synergies": [],
-    "description_kr": "불안한 전통주의자 성향의 인물. (E,O 축 조합 기반)",
-    "description_en": "Anxious Traditionalist archetype based on E-O axis combination."
+    "name_key": "TRAIT_c_eo_hl_anxious_traditionalist_NAME",
+    "desc_key": "TRAIT_c_eo_hl_anxious_traditionalist_DESC"
   },
   {
     "id": "c_eo_lh_cold_experimenter",
-    "name_kr": "실험적 냉혈가",
-    "name_en": "Cold Experimenter",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -5223,13 +5057,11 @@
       "c_chef"
     ],
     "anti_synergies": [],
-    "description_kr": "실험적 냉혈가 성향의 인물. (E,O 축 조합 기반)",
-    "description_en": "Cold Experimenter archetype based on E-O axis combination."
+    "name_key": "TRAIT_c_eo_lh_cold_experimenter_NAME",
+    "desc_key": "TRAIT_c_eo_lh_cold_experimenter_DESC"
   },
   {
     "id": "c_eo_ll_unfeeling_realist",
-    "name_kr": "무감각한 현실주의자",
-    "name_en": "Unfeeling Realist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -5293,13 +5125,11 @@
       "d_cult_leader"
     ],
     "anti_synergies": [],
-    "description_kr": "무감각한 현실주의자 성향의 인물. (E,O 축 조합 기반)",
-    "description_en": "Unfeeling Realist archetype based on E-O axis combination."
+    "name_key": "TRAIT_c_eo_ll_unfeeling_realist_NAME",
+    "desc_key": "TRAIT_c_eo_ll_unfeeling_realist_DESC"
   },
   {
     "id": "c_xa_hh_social_peacemaker",
-    "name_kr": "사교적 평화주의자",
-    "name_en": "Social Peacemaker",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5361,13 +5191,11 @@
       "c_strategist_general"
     ],
     "anti_synergies": [],
-    "description_kr": "사교적 평화주의자 성향의 인물. (X,A 축 조합 기반)",
-    "description_en": "Social Peacemaker archetype based on X-A axis combination."
+    "name_key": "TRAIT_c_xa_hh_social_peacemaker_NAME",
+    "desc_key": "TRAIT_c_xa_hh_social_peacemaker_DESC"
   },
   {
     "id": "c_xa_hl_dominating_agitator",
-    "name_kr": "대중 선동가",
-    "name_en": "Dominating Agitator",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -5427,13 +5255,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "대중 선동가 성향의 인물. (X,A 축 조합 기반)",
-    "description_en": "Dominating Agitator archetype based on X-A axis combination."
+    "name_key": "TRAIT_c_xa_hl_dominating_agitator_NAME",
+    "desc_key": "TRAIT_c_xa_hl_dominating_agitator_DESC"
   },
   {
     "id": "c_xa_lh_quiet_helper",
-    "name_kr": "조용한 조력자",
-    "name_en": "Quiet Helper",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5496,13 +5322,11 @@
       "f_reserved"
     ],
     "anti_synergies": [],
-    "description_kr": "조용한 조력자 성향의 인물. (X,A 축 조합 기반)",
-    "description_en": "Quiet Helper archetype based on X-A axis combination."
+    "name_key": "TRAIT_c_xa_lh_quiet_helper_NAME",
+    "desc_key": "TRAIT_c_xa_lh_quiet_helper_DESC"
   },
   {
     "id": "c_xa_ll_isolated_brawler",
-    "name_kr": "고립된 싸움꾼",
-    "name_en": "Isolated Brawler",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -5563,13 +5387,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "고립된 싸움꾼 성향의 인물. (X,A 축 조합 기반)",
-    "description_en": "Isolated Brawler archetype based on X-A axis combination."
+    "name_key": "TRAIT_c_xa_ll_isolated_brawler_NAME",
+    "desc_key": "TRAIT_c_xa_ll_isolated_brawler_DESC"
   },
   {
     "id": "c_xc_hh_competent_leader",
-    "name_kr": "유능한 지도자",
-    "name_en": "Competent Leader",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5633,13 +5455,11 @@
       "f_prudent"
     ],
     "anti_synergies": [],
-    "description_kr": "유능한 지도자 성향의 인물. (X,C 축 조합 기반)",
-    "description_en": "Competent Leader archetype based on X-C axis combination."
+    "name_key": "TRAIT_c_xc_hh_competent_leader_NAME",
+    "desc_key": "TRAIT_c_xc_hh_competent_leader_DESC"
   },
   {
     "id": "c_xc_hl_charming_improviser",
-    "name_kr": "매력적인 즉흥가",
-    "name_en": "Charming Improviser",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -5701,13 +5521,11 @@
       "c_strategist_general"
     ],
     "anti_synergies": [],
-    "description_kr": "매력적인 즉흥가 성향의 인물. (X,C 축 조합 기반)",
-    "description_en": "Charming Improviser archetype based on X-C axis combination."
+    "name_key": "TRAIT_c_xc_hl_charming_improviser_NAME",
+    "desc_key": "TRAIT_c_xc_hl_charming_improviser_DESC"
   },
   {
     "id": "c_xc_lh_silent_craftsman",
-    "name_kr": "묵묵한 장인",
-    "name_en": "Silent Craftsman",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5769,13 +5587,11 @@
       "f_insecure"
     ],
     "anti_synergies": [],
-    "description_kr": "묵묵한 장인 성향의 인물. (X,C 축 조합 기반)",
-    "description_en": "Silent Craftsman archetype based on X-C axis combination."
+    "name_key": "TRAIT_c_xc_lh_silent_craftsman_NAME",
+    "desc_key": "TRAIT_c_xc_lh_silent_craftsman_DESC"
   },
   {
     "id": "c_xc_ll_apathetic_recluse",
-    "name_kr": "무기력한 은둔자",
-    "name_en": "Apathetic Recluse",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -5836,13 +5652,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "무기력한 은둔자 성향의 인물. (X,C 축 조합 기반)",
-    "description_en": "Apathetic Recluse archetype based on X-C axis combination."
+    "name_key": "TRAIT_c_xc_ll_apathetic_recluse_NAME",
+    "desc_key": "TRAIT_c_xc_ll_apathetic_recluse_DESC"
   },
   {
     "id": "c_xo_hh_charismatic_visionary",
-    "name_kr": "카리스마 비전가",
-    "name_en": "Charismatic Visionary",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -5904,13 +5718,11 @@
       "c_eo_hh_sensitive_artist"
     ],
     "anti_synergies": [],
-    "description_kr": "카리스마 비전가 성향의 인물. (X,O 축 조합 기반)",
-    "description_en": "Charismatic Visionary archetype based on X-O axis combination."
+    "name_key": "TRAIT_c_xo_hh_charismatic_visionary_NAME",
+    "desc_key": "TRAIT_c_xo_hh_charismatic_visionary_DESC"
   },
   {
     "id": "c_xo_hl_populist",
-    "name_kr": "대중 정치꾼",
-    "name_en": "Populist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -5970,13 +5782,11 @@
       "c_xc_hl_charming_improviser"
     ],
     "anti_synergies": [],
-    "description_kr": "대중 정치꾼 성향의 인물. (X,O 축 조합 기반)",
-    "description_en": "Populist archetype based on X-O axis combination."
+    "name_key": "TRAIT_c_xo_hl_populist_NAME",
+    "desc_key": "TRAIT_c_xo_hl_populist_DESC"
   },
   {
     "id": "c_xo_lh_solitary_scholar",
-    "name_kr": "고독한 학자",
-    "name_en": "Solitary Scholar",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6034,13 +5844,11 @@
       "c_strategist_general"
     ],
     "anti_synergies": [],
-    "description_kr": "고독한 학자 성향의 인물. (X,O 축 조합 기반)",
-    "description_en": "Solitary Scholar archetype based on X-O axis combination."
+    "name_key": "TRAIT_c_xo_lh_solitary_scholar_NAME",
+    "desc_key": "TRAIT_c_xo_lh_solitary_scholar_DESC"
   },
   {
     "id": "c_xo_ll_wallflower",
-    "name_kr": "벽꽃",
-    "name_en": "Wallflower",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -6099,13 +5907,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "벽꽃 성향의 인물. (X,O 축 조합 기반)",
-    "description_en": "Wallflower archetype based on X-O axis combination."
+    "name_key": "TRAIT_c_xo_ll_wallflower_NAME",
+    "desc_key": "TRAIT_c_xo_ll_wallflower_DESC"
   },
   {
     "id": "c_ac_hh_reliable_teamworker",
-    "name_kr": "성실한 협력가",
-    "name_en": "Reliable Teamworker",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6171,13 +5977,11 @@
       "f_prudent"
     ],
     "anti_synergies": [],
-    "description_kr": "성실한 협력가 성향의 인물. (A,C 축 조합 기반)",
-    "description_en": "Reliable Teamworker archetype based on A-C axis combination."
+    "name_key": "TRAIT_c_ac_hh_reliable_teamworker_NAME",
+    "desc_key": "TRAIT_c_ac_hh_reliable_teamworker_DESC"
   },
   {
     "id": "c_ac_hl_kind_dreamer",
-    "name_kr": "친절한 낭만가",
-    "name_en": "Kind Dreamer",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -6242,13 +6046,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "친절한 낭만가 성향의 인물. (A,C 축 조합 기반)",
-    "description_en": "Kind Dreamer archetype based on A-C axis combination."
+    "name_key": "TRAIT_c_ac_hl_kind_dreamer_NAME",
+    "desc_key": "TRAIT_c_ac_hl_kind_dreamer_DESC"
   },
   {
     "id": "c_ac_lh_strict_commander",
-    "name_kr": "엄격한 지휘관",
-    "name_en": "Strict Commander",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -6312,13 +6114,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "엄격한 지휘관 성향의 인물. (A,C 축 조합 기반)",
-    "description_en": "Strict Commander archetype based on A-C axis combination."
+    "name_key": "TRAIT_c_ac_lh_strict_commander_NAME",
+    "desc_key": "TRAIT_c_ac_lh_strict_commander_DESC"
   },
   {
     "id": "c_ac_ll_unruly_brute",
-    "name_kr": "무절제 난폭자",
-    "name_en": "Unruly Brute",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -6381,13 +6181,11 @@
       "c_hc_ll_irresponsible_cheat"
     ],
     "anti_synergies": [],
-    "description_kr": "무절제 난폭자 성향의 인물. (A,C 축 조합 기반)",
-    "description_en": "Unruly Brute archetype based on A-C axis combination."
+    "name_key": "TRAIT_c_ac_ll_unruly_brute_NAME",
+    "desc_key": "TRAIT_c_ac_ll_unruly_brute_DESC"
   },
   {
     "id": "c_ao_hh_open-minded_humanitarian",
-    "name_kr": "관대한 탐구자",
-    "name_en": "Open‑Minded Humanitarian",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6451,13 +6249,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "관대한 탐구자 성향의 인물. (A,O 축 조합 기반)",
-    "description_en": "Open‑Minded Humanitarian archetype based on A-O axis combination."
+    "name_key": "TRAIT_c_ao_hh_open-minded_humanitarian_NAME",
+    "desc_key": "TRAIT_c_ao_hh_open-minded_humanitarian_DESC"
   },
   {
     "id": "c_ao_hl_benevolent_traditionalist",
-    "name_kr": "자애로운 전통가",
-    "name_en": "Benevolent Traditionalist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6521,13 +6317,11 @@
       "c_reconciler"
     ],
     "anti_synergies": [],
-    "description_kr": "자애로운 전통가 성향의 인물. (A,O 축 조합 기반)",
-    "description_en": "Benevolent Traditionalist archetype based on A-O axis combination."
+    "name_key": "TRAIT_c_ao_hl_benevolent_traditionalist_NAME",
+    "desc_key": "TRAIT_c_ao_hl_benevolent_traditionalist_DESC"
   },
   {
     "id": "c_ao_lh_cynical_heretic",
-    "name_kr": "냉소적 이단자",
-    "name_en": "Cynical Heretic",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -6589,13 +6383,11 @@
       "c_xo_lh_solitary_scholar"
     ],
     "anti_synergies": [],
-    "description_kr": "냉소적 이단자 성향의 인물. (A,O 축 조합 기반)",
-    "description_en": "Cynical Heretic archetype based on A-O axis combination."
+    "name_key": "TRAIT_c_ao_lh_cynical_heretic_NAME",
+    "desc_key": "TRAIT_c_ao_lh_cynical_heretic_DESC"
   },
   {
     "id": "c_ao_ll_rigid_oppressor",
-    "name_kr": "완고한 억압자",
-    "name_en": "Rigid Oppressor",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -6657,13 +6449,11 @@
       "c_ho_ll_corrupt_traditionalist"
     ],
     "anti_synergies": [],
-    "description_kr": "완고한 억압자 성향의 인물. (A,O 축 조합 기반)",
-    "description_en": "Rigid Oppressor archetype based on A-O axis combination."
+    "name_key": "TRAIT_c_ao_ll_rigid_oppressor_NAME",
+    "desc_key": "TRAIT_c_ao_ll_rigid_oppressor_DESC"
   },
   {
     "id": "c_co_hh_methodical_inventor",
-    "name_kr": "체계적 발명가",
-    "name_en": "Methodical Inventor",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6728,13 +6518,11 @@
       "c_xc_lh_silent_craftsman"
     ],
     "anti_synergies": [],
-    "description_kr": "체계적 발명가 성향의 인물. (C,O 축 조합 기반)",
-    "description_en": "Methodical Inventor archetype based on C-O axis combination."
+    "name_key": "TRAIT_c_co_hh_methodical_inventor_NAME",
+    "desc_key": "TRAIT_c_co_hh_methodical_inventor_DESC"
   },
   {
     "id": "c_co_hl_conservative_manager",
-    "name_kr": "보수적 관리자",
-    "name_en": "Conservative Manager",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -6797,13 +6585,11 @@
       "f_prudent"
     ],
     "anti_synergies": [],
-    "description_kr": "보수적 관리자 성향의 인물. (C,O 축 조합 기반)",
-    "description_en": "Conservative Manager archetype based on C-O axis combination."
+    "name_key": "TRAIT_c_co_hl_conservative_manager_NAME",
+    "desc_key": "TRAIT_c_co_hl_conservative_manager_DESC"
   },
   {
     "id": "c_co_lh_free_spirit",
-    "name_kr": "자유영혼",
-    "name_en": "Free Spirit",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -6865,13 +6651,11 @@
       "c_chef"
     ],
     "anti_synergies": [],
-    "description_kr": "자유영혼 성향의 인물. (C,O 축 조합 기반)",
-    "description_en": "Free Spirit archetype based on C-O axis combination."
+    "name_key": "TRAIT_c_co_lh_free_spirit_NAME",
+    "desc_key": "TRAIT_c_co_lh_free_spirit_DESC"
   },
   {
     "id": "c_co_ll_careless_waster",
-    "name_kr": "방탕한 낭비가",
-    "name_en": "Careless Waster",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -6932,13 +6716,11 @@
       "d_cult_leader"
     ],
     "anti_synergies": [],
-    "description_kr": "방탕한 낭비가 성향의 인물. (C,O 축 조합 기반)",
-    "description_en": "Careless Waster archetype based on C-O axis combination."
+    "name_key": "TRAIT_c_co_ll_careless_waster_NAME",
+    "desc_key": "TRAIT_c_co_ll_careless_waster_DESC"
   },
   {
     "id": "d_psychopath_primary",
-    "name_kr": "사이코패스(1차)",
-    "name_en": "Primary Psychopath",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7029,13 +6811,11 @@
       "c_ea_hh_compassionate_reconciler",
       "f_sentimental"
     ],
-    "description_kr": "공감과 죄책감이 낮고 두려움이 적다. 규범 위반에 스트레스를 거의 느끼지 않으며, 착취·폭력 행동이 증가한다.",
-    "description_en": "Low empathy and guilt, low fear. Feels little stress from rule-breaking, increasing exploitation and violence."
+    "name_key": "TRAIT_d_psychopath_primary_NAME",
+    "desc_key": "TRAIT_d_psychopath_primary_DESC"
   },
   {
     "id": "d_psychopath_secondary",
-    "name_kr": "사이코패스(2차)",
-    "name_en": "Secondary Psychopath",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7130,13 +6910,11 @@
       "f_prudent",
       "f_patient"
     ],
-    "description_kr": "충동성과 적대성이 강하며 감정 기복이 크다. 폭력·배신이 늘고 장기 계획이 약하다.",
-    "description_en": "Impulsive, antagonistic, and emotionally volatile; more violence and betrayal with weak long-term planning."
+    "name_key": "TRAIT_d_psychopath_secondary_NAME",
+    "desc_key": "TRAIT_d_psychopath_secondary_DESC"
   },
   {
     "id": "d_machiavellian",
-    "name_kr": "마키아벨리스트",
-    "name_en": "Machiavellian",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7211,13 +6989,11 @@
       "f_sincere",
       "c_hc_hh_honest_administrator"
     ],
-    "description_kr": "장기 계획과 조작을 통해 이득을 극대화한다. 겉으론 질서정연하지만 신뢰를 자원처럼 다룬다.",
-    "description_en": "Maximizes gains via long-term planning and manipulation; orderly on the surface but treats trust as a resource."
+    "name_key": "TRAIT_d_machiavellian_NAME",
+    "desc_key": "TRAIT_d_machiavellian_DESC"
   },
   {
     "id": "d_narcissist_grandiose",
-    "name_kr": "나르시시스트(과대)",
-    "name_en": "Grandiose Narcissist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7298,13 +7074,11 @@
       "f_modest",
       "c_ac_hh_reliable_teamworker"
     ],
-    "description_kr": "주목과 칭찬을 강하게 원하며 특권 의식이 있다. 무시당하면 분노·보복 행동이 증가한다.",
-    "description_en": "Craves attention and praise with a sense of entitlement; reacts with anger and retaliation when ignored."
+    "name_key": "TRAIT_d_narcissist_grandiose_NAME",
+    "desc_key": "TRAIT_d_narcissist_grandiose_DESC"
   },
   {
     "id": "d_narcissist_vulnerable",
-    "name_kr": "나르시시스트(취약)",
-    "name_en": "Vulnerable Narcissist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7395,13 +7169,11 @@
       "f_confident",
       "f_calm"
     ],
-    "description_kr": "겉으론 위축되어 보이지만 인정 욕구와 특권 의식이 강하다. 수치심과 불안이 높아 관계가 불안정해질 수 있다.",
-    "description_en": "Appears withdrawn yet craves validation and entitlement; high shame and anxiety can destabilize relationships."
+    "name_key": "TRAIT_d_narcissist_vulnerable_NAME",
+    "desc_key": "TRAIT_d_narcissist_vulnerable_DESC"
   },
   {
     "id": "d_sadist",
-    "name_kr": "사디스트",
-    "name_en": "Sadist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7488,13 +7260,11 @@
       "c_xa_hh_social_peacemaker",
       "f_gentle"
     ],
-    "description_kr": "타인의 고통에서 쾌감을 느끼거나 이를 도구로 사용한다. 잔혹 행동이 늘고 억제 장치가 약하다.",
-    "description_en": "May derive enjoyment from others' pain or use it instrumentally; increases cruelty with weak inhibitions."
+    "name_key": "TRAIT_d_sadist_NAME",
+    "desc_key": "TRAIT_d_sadist_DESC"
   },
   {
     "id": "d_con_artist",
-    "name_kr": "모사꾼",
-    "name_en": "Con Artist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7583,13 +7353,11 @@
       "f_sincere",
       "f_fair_minded"
     ],
-    "description_kr": "매력과 계획성을 이용해 타인을 속이고 이득을 챙긴다. 설득 성공률은 높지만 신뢰 유지가 어렵다.",
-    "description_en": "Uses charm and planning to deceive for gain; high persuasion success but poor long-term trust."
+    "name_key": "TRAIT_d_con_artist_NAME",
+    "desc_key": "TRAIT_d_con_artist_DESC"
   },
   {
     "id": "d_cult_leader",
-    "name_kr": "사이비 교주",
-    "name_en": "Cult Leader",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7686,13 +7454,11 @@
       "c_democratic_leader",
       "c_ao_hh_open-minded_humanitarian"
     ],
-    "description_kr": "카리스마와 규율로 집단을 결속시키되, 비판을 억압하고 개인 숭배를 강화한다.",
-    "description_en": "Binds a group through charisma and discipline while suppressing dissent and reinforcing personality cult dynamics."
+    "name_key": "TRAIT_d_cult_leader_NAME",
+    "desc_key": "TRAIT_d_cult_leader_DESC"
   },
   {
     "id": "d_opportunist",
-    "name_kr": "기회주의자",
-    "name_en": "Opportunist",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7773,13 +7539,11 @@
     "anti_synergies": [
       "c_ac_hh_reliable_teamworker"
     ],
-    "description_kr": "규칙보다 당장의 이득을 우선한다. 상황이 열리면 빠르게 이탈·배신하거나 위험한 기회를 잡는다.",
-    "description_en": "Puts immediate gain over rules; quickly pivots, betrays, or takes risky opportunities when they appear."
+    "name_key": "TRAIT_d_opportunist_NAME",
+    "desc_key": "TRAIT_d_opportunist_DESC"
   },
   {
     "id": "d_bully",
-    "name_kr": "폭력적 가해자",
-    "name_en": "Bully",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7866,13 +7630,11 @@
       "c_ea_hh_compassionate_reconciler",
       "f_gentle"
     ],
-    "description_kr": "위협과 힘으로 상대를 굴복시킨다. 집단 내 공포는 늘지만 장기적 충성·협력은 무너질 수 있다.",
-    "description_en": "Forces compliance through threat and power; increases fear but can erode long-term loyalty and cooperation."
+    "name_key": "TRAIT_d_bully_NAME",
+    "desc_key": "TRAIT_d_bully_DESC"
   },
   {
     "id": "d_callous",
-    "name_kr": "냉담한",
-    "name_en": "Callous",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -7950,13 +7712,11 @@
       "c_caregiver",
       "f_sentimental"
     ],
-    "description_kr": "공감과 정서적 연결이 약해 돌봄 행동이 줄고, 목표 달성을 위해 타인을 냉정하게 사용할 수 있다.",
-    "description_en": "Low empathy and emotional bonding; does less caretaking and may use others coldly to reach goals."
+    "name_key": "TRAIT_d_callous_NAME",
+    "desc_key": "TRAIT_d_callous_DESC"
   },
   {
     "id": "d_backstabber",
-    "name_kr": "뒤통수 장인",
-    "name_en": "Backstabber",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8041,13 +7801,11 @@
       "c_ac_hh_reliable_teamworker",
       "f_fair_minded"
     ],
-    "description_kr": "겉으로는 사교적이지만 필요하면 동료도 배신한다. 단기 이득은 얻지만 집단 붕괴를 촉진한다.",
-    "description_en": "Social on the surface but readily betrays allies; gains short-term advantage while accelerating group collapse."
+    "name_key": "TRAIT_d_backstabber_NAME",
+    "desc_key": "TRAIT_d_backstabber_DESC"
   },
   {
     "id": "d_corrupt_official",
-    "name_kr": "부패한 관리",
-    "name_en": "Corrupt Official",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8130,13 +7888,11 @@
     "anti_synergies": [
       "c_hc_hh_honest_administrator"
     ],
-    "description_kr": "조직과 권한을 이용해 이권을 챙긴다. 단기적으로 질서는 유지하지만 부패가 제도화된다.",
-    "description_en": "Uses organization and authority for rent-seeking; keeps short-term order while institutionalizing corruption."
+    "name_key": "TRAIT_d_corrupt_official_NAME",
+    "desc_key": "TRAIT_d_corrupt_official_DESC"
   },
   {
     "id": "d_predatory_raider",
-    "name_kr": "포식자 약탈자",
-    "name_en": "Predatory Raider",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8229,13 +7985,11 @@
       "c_pacifist",
       "c_ao_hl_benevolent_traditionalist"
     ],
-    "description_kr": "전투와 약탈로 생계를 해결한다. 위험을 두려워하지 않고 공격을 주도하지만 잔혹성이 높다.",
-    "description_en": "Lives through combat and raiding; leads attacks without much fear, but with high cruelty."
+    "name_key": "TRAIT_d_predatory_raider_NAME",
+    "desc_key": "TRAIT_d_predatory_raider_DESC"
   },
   {
     "id": "d_histrionic",
-    "name_kr": "히스트리오닉",
-    "name_en": "Histrionic",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8318,13 +8072,11 @@
       "f_modest",
       "c_xo_lh_solitary_scholar"
     ],
-    "description_kr": "감정 표현이 극적이고 관심을 강하게 추구한다. 군중을 끌 수 있으나 안정적 운영엔 방해가 된다.",
-    "description_en": "Dramatic emotional expression and strong attention-seeking; can attract crowds but may disrupt stable governance."
+    "name_key": "TRAIT_d_histrionic_NAME",
+    "desc_key": "TRAIT_d_histrionic_DESC"
   },
   {
     "id": "c_saint",
-    "name_kr": "성인군자",
-    "name_en": "Saintly",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -8409,13 +8161,11 @@
       "d_machiavellian",
       "d_psychopath_primary"
     ],
-    "description_kr": "청렴함·협력성·성실함이 모두 높은 이상형. 공동체 안정과 신뢰를 크게 높인다.",
-    "description_en": "High honesty, agreeableness, and conscientiousness. Greatly increases trust and stability in a community."
+    "name_key": "TRAIT_c_saint_NAME",
+    "desc_key": "TRAIT_c_saint_DESC"
   },
   {
     "id": "c_saintess",
-    "name_kr": "성녀",
-    "name_en": "Saintly Caregiver",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -8499,13 +8249,11 @@
       "d_sadist",
       "d_callous"
     ],
-    "description_kr": "공감과 도덕성이 높아 돌봄·치유·자선 행동이 크게 증가한다.",
-    "description_en": "High empathy and moral concern; strongly increases caretaking, healing, and charitable behavior."
+    "name_key": "TRAIT_c_saintess_NAME",
+    "desc_key": "TRAIT_c_saintess_DESC"
   },
   {
     "id": "c_tyrant",
-    "name_kr": "폭군",
-    "name_en": "Tyrant",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8585,13 +8333,11 @@
       "c_democratic_leader",
       "c_saint"
     ],
-    "description_kr": "권력·카리스마는 높지만 공감과 공정성이 낮다. 공포와 강압으로 통치하며 반란 위험을 키운다.",
-    "description_en": "High power and charisma but low empathy and fairness; rules through fear and coercion, increasing revolt risk."
+    "name_key": "TRAIT_c_tyrant_NAME",
+    "desc_key": "TRAIT_c_tyrant_DESC"
   },
   {
     "id": "c_cold_dictator",
-    "name_kr": "냉혈한 독재자",
-    "name_en": "Cold‑Blooded Dictator",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -8663,13 +8409,11 @@
     "anti_synergies": [
       "c_reconciler"
     ],
-    "description_kr": "압박 상황에서도 냉정하고 공격적이다. 전시 체제에서 강하나 평시에는 갈등을 악화시킨다.",
-    "description_en": "Cold and aggressive even under pressure; strong in wartime leadership but worsens peacetime conflict."
+    "name_key": "TRAIT_c_cold_dictator_NAME",
+    "desc_key": "TRAIT_c_cold_dictator_DESC"
   },
   {
     "id": "c_strategist",
-    "name_kr": "책사",
-    "name_en": "Strategist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -8746,13 +8490,11 @@
     "anti_synergies": [
       "c_saint"
     ],
-    "description_kr": "창의적 사고와 계획성이 높고, 도덕적 억제가 약할 수 있다. 장기 전략·첩보·정치에 강하다.",
-    "description_en": "High creativity and planning with potentially weak moral restraint; excels at long-term strategy, espionage, and politics."
+    "name_key": "TRAIT_c_strategist_NAME",
+    "desc_key": "TRAIT_c_strategist_DESC"
   },
   {
     "id": "c_master_craftsman",
-    "name_kr": "장인",
-    "name_en": "Master Craftsman",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -8827,13 +8569,11 @@
     "anti_synergies": [
       "f_careless"
     ],
-    "description_kr": "고품질 제작에 특화된 은둔형 전문가. 생산 품질이 크게 오르며, 사회 활동은 줄어든다.",
-    "description_en": "A reclusive expert focused on high-quality crafting; greatly increases quality while reducing social activity."
+    "name_key": "TRAIT_c_master_craftsman_NAME",
+    "desc_key": "TRAIT_c_master_craftsman_DESC"
   },
   {
     "id": "c_visionary",
-    "name_kr": "선각자",
-    "name_en": "Visionary",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -8908,13 +8648,11 @@
     "anti_synergies": [
       "f_apathetic"
     ],
-    "description_kr": "미래 지향적이며 사람을 설득해 새 길을 연다. 기술·문화 발전 이벤트를 촉진한다.",
-    "description_en": "Future-oriented and persuasive; catalyzes new paths and accelerates tech/culture development events."
+    "name_key": "TRAIT_c_visionary_NAME",
+    "desc_key": "TRAIT_c_visionary_DESC"
   },
   {
     "id": "c_hermit_sage",
-    "name_kr": "은둔현자",
-    "name_en": "Hermit Sage",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -8987,13 +8725,11 @@
     "anti_synergies": [
       "d_histrionic"
     ],
-    "description_kr": "사람을 피하면서도 학문과 기술을 깊게 파고든다. 연구 트리 진행을 가속한다.",
-    "description_en": "Avoids crowds but dives deep into scholarship and technology, accelerating research progression."
+    "name_key": "TRAIT_c_hermit_sage_NAME",
+    "desc_key": "TRAIT_c_hermit_sage_DESC"
   },
   {
     "id": "c_reconciler",
-    "name_kr": "화해자",
-    "name_en": "Reconciler",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9070,13 +8806,11 @@
       "f_vengeful",
       "c_tyrant"
     ],
-    "description_kr": "갈등을 빠르게 중재하고 관계를 회복한다. 집단 내 분쟁 빈도를 크게 낮춘다.",
-    "description_en": "Mediates conflicts and repairs relationships quickly, greatly reducing intra-group disputes."
+    "name_key": "TRAIT_c_reconciler_NAME",
+    "desc_key": "TRAIT_c_reconciler_DESC"
   },
   {
     "id": "c_berserker",
-    "name_kr": "광전사",
-    "name_en": "Berserker",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -9156,13 +8890,11 @@
       "f_prudent",
       "c_defender"
     ],
-    "description_kr": "두려움이 낮고 공격성이 매우 높다. 돌격과 추격이 늘지만 통제가 어렵고 손실이 커질 수 있다.",
-    "description_en": "Very low fear with extremely high aggression; charges and pursues often but is hard to control and may suffer heavy losses."
+    "name_key": "TRAIT_c_berserker_NAME",
+    "desc_key": "TRAIT_c_berserker_DESC"
   },
   {
     "id": "c_caregiver",
-    "name_kr": "양육자",
-    "name_en": "Caregiver",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9245,13 +8977,11 @@
       "d_callous",
       "d_sadist"
     ],
-    "description_kr": "돌봄·치유·양육에 자연스럽게 끌린다. 인구 유지와 가족 중심 사회에 큰 이점.",
-    "description_en": "Naturally drawn to nurturing and healing; strong benefits for population stability and family-centered societies."
+    "name_key": "TRAIT_c_caregiver_NAME",
+    "desc_key": "TRAIT_c_caregiver_DESC"
   },
   {
     "id": "c_adventurer",
-    "name_kr": "모험가",
-    "name_en": "Adventurer",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9326,13 +9056,11 @@
     "anti_synergies": [
       "f_fearful"
     ],
-    "description_kr": "새로운 땅과 지식을 향해 스스로 나선다. 탐험·개척 이벤트를 유발한다.",
-    "description_en": "Seeks new lands and knowledge proactively; triggers exploration and settlement events."
+    "name_key": "TRAIT_c_adventurer_NAME",
+    "desc_key": "TRAIT_c_adventurer_DESC"
   },
   {
     "id": "c_ascetic",
-    "name_kr": "금욕주의자",
-    "name_en": "Ascetic",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9410,13 +9138,11 @@
       "f_greedy",
       "c_co_ll_careless_waster"
     ],
-    "description_kr": "절제와 규율을 중시하며 사치를 멀리한다. 자원 관리와 위기 생존에 강하다.",
-    "description_en": "Values discipline and restraint, avoiding indulgence; strong in resource management and survival through crises."
+    "name_key": "TRAIT_c_ascetic_NAME",
+    "desc_key": "TRAIT_c_ascetic_DESC"
   },
   {
     "id": "c_free_spirit_extro",
-    "name_kr": "자유영혼(사교형)",
-    "name_en": "Free Spirit",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9490,13 +9216,11 @@
     "anti_synergies": [
       "f_organized"
     ],
-    "description_kr": "규칙보다 경험을 중시하고 즉흥적으로 움직인다. 창의적 이벤트는 늘지만 운영 실수도 증가.",
-    "description_en": "Values experience over rules and moves impulsively; increases creative events but also operational mistakes."
+    "name_key": "TRAIT_c_free_spirit_extro_NAME",
+    "desc_key": "TRAIT_c_free_spirit_extro_DESC"
   },
   {
     "id": "c_zealot",
-    "name_kr": "광신자",
-    "name_en": "Zealot",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -9572,13 +9296,11 @@
       "c_ao_hh_open-minded_humanitarian",
       "f_nonconformist"
     ],
-    "description_kr": "강한 규율과 신념으로 집단을 결속시키지만, 이견을 억압해 분열이나 박해를 일으킬 수 있다.",
-    "description_en": "Binds a group through strict discipline and belief, but may suppress dissent and trigger schism or persecution."
+    "name_key": "TRAIT_c_zealot_NAME",
+    "desc_key": "TRAIT_c_zealot_DESC"
   },
   {
     "id": "c_polymath",
-    "name_kr": "다재다능",
-    "name_en": "Polymath",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9651,13 +9373,11 @@
     "anti_synergies": [
       "f_apathetic"
     ],
-    "description_kr": "학습 속도와 적응력이 높아 다양한 분야에서 활약한다. 연구·제작·리더십을 두루 강화한다.",
-    "description_en": "High learning speed and adaptability; boosts research, crafting, and leadership across domains."
+    "name_key": "TRAIT_c_polymath_NAME",
+    "desc_key": "TRAIT_c_polymath_DESC"
   },
   {
     "id": "c_wallflower",
-    "name_kr": "벽꽃",
-    "name_en": "Wallflower",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -9734,13 +9454,11 @@
     "anti_synergies": [
       "d_histrionic"
     ],
-    "description_kr": "친절하고 공감적이지만 앞에 나서지 않는다. 내적 스트레스는 높을 수 있고, 조용히 돌봄에 기여한다.",
-    "description_en": "Kind and empathetic but avoids the spotlight; may carry internal stress while contributing quietly through care."
+    "name_key": "TRAIT_c_wallflower_NAME",
+    "desc_key": "TRAIT_c_wallflower_DESC"
   },
   {
     "id": "c_born_leader",
-    "name_kr": "타고난 지도자",
-    "name_en": "Born Leader",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9817,13 +9535,11 @@
       "f_insecure",
       "f_anxious"
     ],
-    "description_kr": "사람을 모으고 조직하며 압박에도 흔들리지 않는다. 리더 역할 선호도가 크게 상승한다.",
-    "description_en": "Gathers and organizes people while staying calm under pressure; strongly prefers leadership roles."
+    "name_key": "TRAIT_c_born_leader_NAME",
+    "desc_key": "TRAIT_c_born_leader_DESC"
   },
   {
     "id": "c_trickster",
-    "name_kr": "트릭스터",
-    "name_en": "Trickster",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -9902,13 +9618,11 @@
     "anti_synergies": [
       "f_sincere"
     ],
-    "description_kr": "규칙의 빈틈을 찾아 장난처럼 넘긴다. 위기에서 기발한 해결을 만들지만 신뢰가 흔들릴 수 있다.",
-    "description_en": "Finds loopholes and bends rules playfully; can improvise clever solutions but may undermine trust."
+    "name_key": "TRAIT_c_trickster_NAME",
+    "desc_key": "TRAIT_c_trickster_DESC"
   },
   {
     "id": "c_scientist",
-    "name_kr": "과학자",
-    "name_en": "Scientist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -9980,13 +9694,11 @@
     "anti_synergies": [
       "f_apathetic"
     ],
-    "description_kr": "연구 중심으로 행동하며 세부와 검증을 중시한다. 기술 발전 속도를 가속한다.",
-    "description_en": "Research-driven and detail-oriented; accelerates technological advancement."
+    "name_key": "TRAIT_c_scientist_NAME",
+    "desc_key": "TRAIT_c_scientist_DESC"
   },
   {
     "id": "c_revolutionary",
-    "name_kr": "혁명가",
-    "name_en": "Revolutionary",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -10063,13 +9775,11 @@
       "c_co_hl_conservative_manager",
       "f_traditionalist"
     ],
-    "description_kr": "변화를 설파하고 구체제를 흔든다. 혁신과 갈등을 동시에 끌어올릴 수 있다.",
-    "description_en": "Preaches change and disrupts the status quo; can boost innovation while raising conflict."
+    "name_key": "TRAIT_c_revolutionary_NAME",
+    "desc_key": "TRAIT_c_revolutionary_DESC"
   },
   {
     "id": "c_democratic_leader",
-    "name_kr": "민주적 지도자",
-    "name_en": "Democratic Leader",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10144,13 +9854,11 @@
       "c_tyrant",
       "d_corrupt_official"
     ],
-    "description_kr": "신뢰를 기반으로 합의를 이끈다. 협력 이벤트 확률을 올리고 반란 위험을 낮춘다.",
-    "description_en": "Leads through trust and consensus; increases cooperation events and reduces revolt risk."
+    "name_key": "TRAIT_c_democratic_leader_NAME",
+    "desc_key": "TRAIT_c_democratic_leader_DESC"
   },
   {
     "id": "c_artist",
-    "name_kr": "예술가",
-    "name_en": "Artist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10226,13 +9934,11 @@
     "anti_synergies": [
       "f_utilitarian"
     ],
-    "description_kr": "감성과 표현 욕구가 강해 문화·사교 이벤트를 촉진한다. 위기 때는 흔들릴 수 있다.",
-    "description_en": "Strong emotion and expression drive; boosts cultural and social events but may be fragile in crises."
+    "name_key": "TRAIT_c_artist_NAME",
+    "desc_key": "TRAIT_c_artist_DESC"
   },
   {
     "id": "c_survivalist",
-    "name_kr": "생존 전문가",
-    "name_en": "Survivalist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10306,13 +10012,11 @@
     "anti_synergies": [
       "c_adventurer"
     ],
-    "description_kr": "위험 대비와 자원 관리에 능하다. 재난·전염병·기근 같은 위기에서 집단 생존률을 높인다.",
-    "description_en": "Strong at risk preparation and resource management; increases survival in disasters, plagues, and famine."
+    "name_key": "TRAIT_c_survivalist_NAME",
+    "desc_key": "TRAIT_c_survivalist_DESC"
   },
   {
     "id": "c_philanthropist",
-    "name_kr": "자선가",
-    "name_en": "Philanthropist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10385,13 +10089,11 @@
       "f_greedy",
       "d_corrupt_official"
     ],
-    "description_kr": "자원을 이익보다 공동선을 위해 사용하려 한다. 위기 때 기부·구호 행동이 크게 증가한다.",
-    "description_en": "Uses resources for the common good; strongly increases charity and relief actions during crises."
+    "name_key": "TRAIT_c_philanthropist_NAME",
+    "desc_key": "TRAIT_c_philanthropist_DESC"
   },
   {
     "id": "c_miser",
-    "name_kr": "구두쇠",
-    "name_en": "Miser",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -10452,13 +10154,11 @@
     "anti_synergies": [
       "c_spendthrift"
     ],
-    "description_kr": "자원을 지나치게 아껴 공동체 투자나 지원을 꺼린다. 장기적으론 성장 기회를 놓칠 수 있다.",
-    "description_en": "Overly conserves resources and avoids communal investment; may miss long-term growth opportunities."
+    "name_key": "TRAIT_c_miser_NAME",
+    "desc_key": "TRAIT_c_miser_DESC"
   },
   {
     "id": "c_spendthrift",
-    "name_kr": "낭비가",
-    "name_en": "Spendthrift",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -10517,13 +10217,11 @@
       "c_miser",
       "f_frugal"
     ],
-    "description_kr": "당장의 즐거움과 과시 소비가 늘어난다. 풍요할 땐 분위기를 띄우지만, 기근에 취약하다.",
-    "description_en": "Increases immediate gratification and flashy spending; uplifting in abundance but vulnerable in famine."
+    "name_key": "TRAIT_c_spendthrift_NAME",
+    "desc_key": "TRAIT_c_spendthrift_DESC"
   },
   {
     "id": "c_speculator",
-    "name_kr": "투기꾼",
-    "name_en": "Speculator",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -10598,13 +10296,11 @@
     "anti_synergies": [
       "c_philanthropist"
     ],
-    "description_kr": "큰 수익을 위해 계산된 위험을 감수한다. 경제 변동성이 커질수록 영향력이 커진다.",
-    "description_en": "Takes calculated risks for big profit; gains influence as economic volatility rises."
+    "name_key": "TRAIT_c_speculator_NAME",
+    "desc_key": "TRAIT_c_speculator_DESC"
   },
   {
     "id": "c_born_merchant",
-    "name_kr": "타고난 상인",
-    "name_en": "Born Merchant",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10676,13 +10372,11 @@
     "anti_synergies": [
       "f_corrupt"
     ],
-    "description_kr": "협상과 관계 형성으로 교역을 확장한다. 공정 거래 성향이면 장기 신뢰 네트워크를 만든다.",
-    "description_en": "Expands trade through negotiation and relationship-building; can create long-term trust networks if fair."
+    "name_key": "TRAIT_c_born_merchant_NAME",
+    "desc_key": "TRAIT_c_born_merchant_DESC"
   },
   {
     "id": "c_collector",
-    "name_kr": "수집가",
-    "name_en": "Collector",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -10748,13 +10442,11 @@
     "anti_synergies": [
       "c_co_ll_careless_waster"
     ],
-    "description_kr": "가치 있는 물건을 모으고 정리한다. 문화·박물관·연구 자원 축적에 기여할 수 있다.",
-    "description_en": "Collects and organizes valuable items; can support culture, museums, and research stockpiles."
+    "name_key": "TRAIT_c_collector_NAME",
+    "desc_key": "TRAIT_c_collector_DESC"
   },
   {
     "id": "c_architect_master",
-    "name_kr": "건축 장인",
-    "name_en": "Master Architect",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10823,13 +10515,11 @@
     "anti_synergies": [
       "f_careless"
     ],
-    "description_kr": "구조와 미감을 모두 고려해 건축한다. 방어·생산 효율과 함께 미관 만족도도 올릴 수 있다.",
-    "description_en": "Builds with both structure and aesthetics; can improve defense, productivity, and beauty satisfaction."
+    "name_key": "TRAIT_c_architect_master_NAME",
+    "desc_key": "TRAIT_c_architect_master_DESC"
   },
   {
     "id": "c_engineer",
-    "name_kr": "기술자",
-    "name_en": "Engineer",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10897,13 +10587,11 @@
     "anti_synergies": [
       "f_apathetic"
     ],
-    "description_kr": "문제 해결과 설계를 즐긴다. 시설 유지보수·발명·개량의 핵심 인력이 된다.",
-    "description_en": "Enjoys design and problem-solving; becomes core staff for maintenance, invention, and improvement."
+    "name_key": "TRAIT_c_engineer_NAME",
+    "desc_key": "TRAIT_c_engineer_DESC"
   },
   {
     "id": "c_labor_hero",
-    "name_kr": "노동영웅",
-    "name_en": "Labor Hero",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -10972,13 +10660,11 @@
     "anti_synergies": [
       "f_lazy"
     ],
-    "description_kr": "생산 현장을 끌어올리는 추진력. 단, 과로로 번아웃 위험이 있어 휴식 이벤트가 필요하다.",
-    "description_en": "Drives production upward; however, burnout risk is high and rest events become important."
+    "name_key": "TRAIT_c_labor_hero_NAME",
+    "desc_key": "TRAIT_c_labor_hero_DESC"
   },
   {
     "id": "c_chef",
-    "name_kr": "요리사 기질",
-    "name_en": "Chef",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11049,13 +10735,11 @@
     "anti_synergies": [
       "f_careless"
     ],
-    "description_kr": "음식의 품질과 만족도를 높인다. 사기 회복, 관계 형성, 축제 이벤트에서 강력하다.",
-    "description_en": "Improves food quality and satisfaction; strong in morale recovery, bonding, and festival events."
+    "name_key": "TRAIT_c_chef_NAME",
+    "desc_key": "TRAIT_c_chef_DESC"
   },
   {
     "id": "c_builder_foreman",
-    "name_kr": "현장 반장",
-    "name_en": "Builder Foreman",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11122,13 +10806,11 @@
       "f_disorganized",
       "f_hot_tempered"
     ],
-    "description_kr": "사람을 배치하고 공정을 관리한다. 대규모 건설 프로젝트의 완료 시간을 단축한다.",
-    "description_en": "Assigns people and manages workflow; shortens completion time for large construction projects."
+    "name_key": "TRAIT_c_builder_foreman_NAME",
+    "desc_key": "TRAIT_c_builder_foreman_DESC"
   },
   {
     "id": "c_diplomat",
-    "name_kr": "외교관",
-    "name_en": "Diplomat",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11207,13 +10889,11 @@
       "c_tyrant",
       "f_harsh"
     ],
-    "description_kr": "분쟁을 협상으로 풀고 동맹을 맺는다. 전쟁 억제, 무역 확장, 연맹 형성에 기여한다.",
-    "description_en": "Resolves disputes through negotiation and forms alliances; supports war avoidance, trade expansion, and federation building."
+    "name_key": "TRAIT_c_diplomat_NAME",
+    "desc_key": "TRAIT_c_diplomat_DESC"
   },
   {
     "id": "c_spymaster",
-    "name_kr": "첩보장",
-    "name_en": "Spymaster",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -11285,13 +10965,11 @@
       "c_saint",
       "f_sincere"
     ],
-    "description_kr": "정보 수집과 은밀한 공작에 능하다. 외교/전쟁 모두에서 비대칭 우위를 만든다.",
-    "description_en": "Excels at intelligence gathering and covert operations; creates asymmetric advantage in diplomacy and war."
+    "name_key": "TRAIT_c_spymaster_NAME",
+    "desc_key": "TRAIT_c_spymaster_DESC"
   },
   {
     "id": "c_assassin_instinct",
-    "name_kr": "암살자 기질",
-    "name_en": "Assassin Instinct",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -11370,13 +11048,11 @@
     "anti_synergies": [
       "c_pacifist"
     ],
-    "description_kr": "정면보다 은밀한 제거를 선호한다. 정치 암살, 사보타주 이벤트를 촉진한다.",
-    "description_en": "Prefers covert elimination over open confrontation; promotes political assassination and sabotage events."
+    "name_key": "TRAIT_c_assassin_instinct_NAME",
+    "desc_key": "TRAIT_c_assassin_instinct_DESC"
   },
   {
     "id": "c_pacifist",
-    "name_kr": "평화주의자",
-    "name_en": "Pacifist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11449,13 +11125,11 @@
       "c_berserker",
       "d_predatory_raider"
     ],
-    "description_kr": "폭력을 극도로 꺼리며 협상과 지원을 선호한다. 전쟁 상황에서는 큰 스트레스를 받는다.",
-    "description_en": "Strongly avoids violence, favoring negotiation and support; suffers high stress during warfare."
+    "name_key": "TRAIT_c_pacifist_NAME",
+    "desc_key": "TRAIT_c_pacifist_DESC"
   },
   {
     "id": "c_mercenary",
-    "name_kr": "용병 기질",
-    "name_en": "Mercenary",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -11536,13 +11210,11 @@
       "c_saint",
       "c_pacifist"
     ],
-    "description_kr": "보상과 명예를 위해 싸운다. 계약·급여·전리품 시스템이 있을 때 서사가 강해진다.",
-    "description_en": "Fights for pay and status; becomes a strong narrative driver in systems with contracts, wages, and loot."
+    "name_key": "TRAIT_c_mercenary_NAME",
+    "desc_key": "TRAIT_c_mercenary_DESC"
   },
   {
     "id": "c_defender",
-    "name_kr": "방어의 달인",
-    "name_en": "Defensive Specialist",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11618,13 +11290,11 @@
       "c_berserker",
       "f_reckless"
     ],
-    "description_kr": "무리한 돌격보다 방어·엄호·후퇴 타이밍에 강하다. 손실을 줄이고 장기전을 유리하게 만든다.",
-    "description_en": "Strong at defense, cover, and retreat timing rather than reckless charges; reduces losses and improves long fights."
+    "name_key": "TRAIT_c_defender_NAME",
+    "desc_key": "TRAIT_c_defender_DESC"
   },
   {
     "id": "c_assault_captain",
-    "name_kr": "돌격대장",
-    "name_en": "Assault Captain",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -11699,13 +11369,11 @@
     "anti_synergies": [
       "c_pacifist"
     ],
-    "description_kr": "선두 돌격을 즐기며 부대를 밀어붙인다. 승리 시 사기 상승이 크지만 패배 시 손실도 크다.",
-    "description_en": "Enjoys leading charges and pushing the unit forward; big morale gain on victory, big losses on defeat."
+    "name_key": "TRAIT_c_assault_captain_NAME",
+    "desc_key": "TRAIT_c_assault_captain_DESC"
   },
   {
     "id": "c_strategist_general",
-    "name_kr": "전장지휘관",
-    "name_en": "Battle Commander",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11779,13 +11447,11 @@
     "anti_synergies": [
       "c_ec_ll_reckless_drifter"
     ],
-    "description_kr": "계획과 즉흥을 함께 쓰는 지휘관. 전투 AI의 '전략 선택' 품질을 크게 올린다.",
-    "description_en": "A commander combining planning and improvisation; greatly increases combat AI strategic decision quality."
+    "name_key": "TRAIT_c_strategist_general_NAME",
+    "desc_key": "TRAIT_c_strategist_general_DESC"
   },
   {
     "id": "c_gossip",
-    "name_kr": "가십러",
-    "name_en": "Gossip",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -11847,13 +11513,11 @@
     "anti_synergies": [
       "f_sincere"
     ],
-    "description_kr": "정보를 빠르게 퍼뜨린다. 사회 네트워크를 활성화하지만, 신뢰 붕괴와 분열도 촉진할 수 있다.",
-    "description_en": "Spreads information quickly; energizes social networks but can also accelerate distrust and factionalism."
+    "name_key": "TRAIT_c_gossip_NAME",
+    "desc_key": "TRAIT_c_gossip_DESC"
   },
   {
     "id": "c_counselor",
-    "name_kr": "카운슬러",
-    "name_en": "Counselor",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -11933,13 +11597,11 @@
       "d_bully",
       "d_callous"
     ],
-    "description_kr": "타인의 감정을 읽고 상담한다. 정신적 붕괴를 줄이고, 관계 회복 속도를 빠르게 한다.",
-    "description_en": "Reads emotions and counsels others; reduces mental breaks and speeds up relationship repair."
+    "name_key": "TRAIT_c_counselor_NAME",
+    "desc_key": "TRAIT_c_counselor_DESC"
   },
   {
     "id": "c_storyteller",
-    "name_kr": "이야기꾼",
-    "name_en": "Storyteller",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12016,13 +11678,11 @@
     "anti_synergies": [
       "c_wallflower"
     ],
-    "description_kr": "이야기와 공연으로 집단 사기를 끌어올린다. 축제·전설·종교 전파 이벤트와 잘 맞는다.",
-    "description_en": "Boosts group morale via stories and performance; synergizes with festivals, legends, and religious spread events."
+    "name_key": "TRAIT_c_storyteller_NAME",
+    "desc_key": "TRAIT_c_storyteller_DESC"
   },
   {
     "id": "c_mystic",
-    "name_kr": "신비주의자",
-    "name_en": "Mystic",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -12099,13 +11759,11 @@
       "c_scientist",
       "c_skeptic"
     ],
-    "description_kr": "이성보다 상징과 의례를 중시한다. 종교·주술 시스템이 있을 때 강력한 사회적 영향력을 가진다.",
-    "description_en": "Values symbols and ritual over rational proof; strong influence in systems with religion or magic/ritual."
+    "name_key": "TRAIT_c_mystic_NAME",
+    "desc_key": "TRAIT_c_mystic_DESC"
   },
   {
     "id": "c_skeptic",
-    "name_kr": "회의론자",
-    "name_en": "Skeptic",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12186,13 +11844,11 @@
       "c_zealot",
       "c_mystic"
     ],
-    "description_kr": "검증과 논리를 중시한다. 미신·선동에 저항하며 지식 기반 기술 발전에 기여한다.",
-    "description_en": "Prioritizes verification and logic; resists superstition and propaganda, supporting knowledge-driven progress."
+    "name_key": "TRAIT_c_skeptic_NAME",
+    "desc_key": "TRAIT_c_skeptic_DESC"
   },
   {
     "id": "c_pragmatist",
-    "name_kr": "실용주의자",
-    "name_en": "Pragmatist",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -12268,13 +11924,11 @@
       "c_free_spirit_extro",
       "c_artist"
     ],
-    "description_kr": "이념보다 결과를 중시한다. 위기에서 신속한 의사결정을 하지만 혁신 속도는 낮을 수 있다.",
-    "description_en": "Values results over ideology; makes quick decisions in crises but may slow radical innovation."
+    "name_key": "TRAIT_c_pragmatist_NAME",
+    "desc_key": "TRAIT_c_pragmatist_DESC"
   },
   {
     "id": "c_settler",
-    "name_kr": "정착민",
-    "name_en": "Settler",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12352,13 +12006,11 @@
       "c_nomad",
       "c_free_spirit_extro"
     ],
-    "description_kr": "정착과 기반 시설을 선호한다. 농업·도시화 단계에서 인구 안정과 생산이 크게 상승한다.",
-    "description_en": "Prefers settlement and infrastructure; greatly increases stability and production in agriculture/urbanization stages."
+    "name_key": "TRAIT_c_settler_NAME",
+    "desc_key": "TRAIT_c_settler_DESC"
   },
   {
     "id": "c_nomad",
-    "name_kr": "떠돌이",
-    "name_en": "Nomad",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -12434,13 +12086,11 @@
     "anti_synergies": [
       "c_settler"
     ],
-    "description_kr": "정착보다 이동을 선호한다. 초반 탐험과 무역로 개척에 유리하지만 안정적 생산 기반은 약하다.",
-    "description_en": "Prefers movement over settling; strong for early exploration and route discovery but weak at stable production."
+    "name_key": "TRAIT_c_nomad_NAME",
+    "desc_key": "TRAIT_c_nomad_DESC"
   },
   {
     "id": "c_healer",
-    "name_kr": "치유자",
-    "name_en": "Healer",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12510,13 +12160,11 @@
     "anti_synergies": [
       "d_callous"
     ],
-    "description_kr": "부상과 질병을 돌보는 행동이 증가한다. 전염병·전쟁 후 회복 속도를 크게 올린다.",
-    "description_en": "Increases healing and care actions; strongly improves recovery after plagues and wars."
+    "name_key": "TRAIT_c_healer_NAME",
+    "desc_key": "TRAIT_c_healer_DESC"
   },
   {
     "id": "c_animal_tamer",
-    "name_kr": "동물 조련사",
-    "name_en": "Animal Tamer",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12594,13 +12242,11 @@
     "anti_synergies": [
       "f_harsh"
     ],
-    "description_kr": "동물과의 상호작용에 강하다. 교통·전투·생산에서 동물 자원을 활용하는 문명에 유리하다.",
-    "description_en": "Strong with animals; benefits civilizations that leverage animals for transport, combat, or production."
+    "name_key": "TRAIT_c_animal_tamer_NAME",
+    "desc_key": "TRAIT_c_animal_tamer_DESC"
   },
   {
     "id": "c_scout",
-    "name_kr": "정찰꾼",
-    "name_en": "Scout",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12675,13 +12321,11 @@
     "anti_synergies": [
       "f_fearful"
     ],
-    "description_kr": "위험을 감지하면서도 탐험을 계속한다. 지도 제작, 자원 발견, 외교 접촉 이벤트에 강하다.",
-    "description_en": "Continues exploring while managing danger; strong in map-making, resource discovery, and first-contact events."
+    "name_key": "TRAIT_c_scout_NAME",
+    "desc_key": "TRAIT_c_scout_DESC"
   },
   {
     "id": "c_strict_commander",
-    "name_kr": "엄격한 지휘관",
-    "name_en": "Strict Commander",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -12759,13 +12403,11 @@
       "c_democratic_leader",
       "c_reconciler"
     ],
-    "description_kr": "규율과 처벌로 조직을 유지한다. 단기 전투력은 오르지만 불만과 반란 씨앗을 남긴다.",
-    "description_en": "Maintains organization through discipline and punishment; boosts short-term combat power but seeds resentment."
+    "name_key": "TRAIT_c_strict_commander_NAME",
+    "desc_key": "TRAIT_c_strict_commander_DESC"
   },
   {
     "id": "c_backroom_broker",
-    "name_kr": "암거래 중개인",
-    "name_en": "Backroom Broker",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -12841,13 +12483,11 @@
     "anti_synergies": [
       "c_hc_hh_honest_administrator"
     ],
-    "description_kr": "불법 거래와 중개로 이득을 본다. 금지 품목·제재·치안 시스템이 있을 때 드라마가 커진다.",
-    "description_en": "Profits from illicit trade and brokering; becomes dramatic in systems with contraband, sanctions, or policing."
+    "name_key": "TRAIT_c_backroom_broker_NAME",
+    "desc_key": "TRAIT_c_backroom_broker_DESC"
   },
   {
     "id": "c_scholar_scribe",
-    "name_kr": "서기관",
-    "name_en": "Scribe",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -12920,13 +12560,11 @@
     "anti_synergies": [
       "c_gossip"
     ],
-    "description_kr": "지식과 기록을 축적한다. 문자·행정·과학 발달 단계에서 핵심 인력이 된다.",
-    "description_en": "Accumulates knowledge and records; becomes key staff in writing, administration, and science stages."
+    "name_key": "TRAIT_c_scholar_scribe_NAME",
+    "desc_key": "TRAIT_c_scholar_scribe_DESC"
   },
   {
     "id": "c_thief",
-    "name_kr": "도둑 기질",
-    "name_en": "Thief",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -13006,13 +12644,11 @@
       "c_saint",
       "f_fair_minded"
     ],
-    "description_kr": "절도와 침입에 능하다. 치안 시스템·잠금·감시가 있을 때 긴장감을 만든다.",
-    "description_en": "Skilled at theft and infiltration; creates tension in systems with policing, locks, and surveillance."
+    "name_key": "TRAIT_c_thief_NAME",
+    "desc_key": "TRAIT_c_thief_DESC"
   },
   {
     "id": "c_peacekeeper",
-    "name_kr": "치안 유지자",
-    "name_en": "Peacekeeper",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -13090,13 +12726,11 @@
     "anti_synergies": [
       "d_corrupt_official"
     ],
-    "description_kr": "규칙을 공정하게 집행하려 한다. 범죄 억제와 분쟁 중재에 강하다.",
-    "description_en": "Tries to enforce rules fairly; strong at crime suppression and dispute mediation."
+    "name_key": "TRAIT_c_peacekeeper_NAME",
+    "desc_key": "TRAIT_c_peacekeeper_DESC"
   },
   {
     "id": "c_agitator",
-    "name_kr": "선동가",
-    "name_en": "Agitator",
     "type": "personality",
     "valence": "negative",
     "condition": {
@@ -13172,13 +12806,11 @@
       "c_peacekeeper",
       "c_reconciler"
     ],
-    "description_kr": "대중을 움직여 갈등을 증폭시키거나 변화를 촉진한다. 혁명·폭동 이벤트를 트리거할 수 있다.",
-    "description_en": "Moves crowds to amplify conflict or accelerate change; may trigger revolution or riot events."
+    "name_key": "TRAIT_c_agitator_NAME",
+    "desc_key": "TRAIT_c_agitator_DESC"
   },
   {
     "id": "c_inventor",
-    "name_kr": "발명가",
-    "name_en": "Inventor",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -13250,13 +12882,11 @@
       "f_apathetic",
       "f_conventional"
     ],
-    "description_kr": "새로운 도구와 방법을 만들어낸다. 기술 시대 전환 이벤트의 촉매가 된다.",
-    "description_en": "Creates new tools and methods; acts as a catalyst for technological era transitions."
+    "name_key": "TRAIT_c_inventor_NAME",
+    "desc_key": "TRAIT_c_inventor_DESC"
   },
   {
     "id": "c_encyclopedia",
-    "name_kr": "백과사전",
-    "name_en": "Encyclopedia",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -13330,13 +12960,11 @@
     "anti_synergies": [
       "c_gossip"
     ],
-    "description_kr": "지식을 폭넓게 축적하고 전수한다. 교육·기술 확산 속도를 높인다.",
-    "description_en": "Accumulates and transfers broad knowledge, increasing education and technology diffusion speed."
+    "name_key": "TRAIT_c_encyclopedia_NAME",
+    "desc_key": "TRAIT_c_encyclopedia_DESC"
   },
   {
     "id": "c_heretic",
-    "name_kr": "이단자",
-    "name_en": "Heretic",
     "type": "personality",
     "valence": "neutral",
     "condition": {
@@ -13408,13 +13036,11 @@
       "c_zealot",
       "d_cult_leader"
     ],
-    "description_kr": "기존 교리나 제도에 의문을 제기한다. 혁신을 촉진하지만 박해와 갈등을 유발할 수 있다.",
-    "description_en": "Challenges established doctrine and institutions; accelerates innovation but may trigger persecution and conflict."
+    "name_key": "TRAIT_c_heretic_NAME",
+    "desc_key": "TRAIT_c_heretic_DESC"
   },
   {
     "id": "c_mediator_king",
-    "name_kr": "중재왕",
-    "name_en": "Mediator King",
     "type": "personality",
     "valence": "positive",
     "condition": {
@@ -13506,7 +13132,7 @@
       "c_tyrant",
       "d_corrupt_official"
     ],
-    "description_kr": "권위를 사용해 갈등을 중재하고 규칙을 공정하게 운영한다. 내정 안정과 동맹 유지에 강력하다.",
-    "description_en": "Uses authority to mediate conflict and govern fairly; very strong for domestic stability and alliance maintenance."
+    "name_key": "TRAIT_c_mediator_king_NAME",
+    "desc_key": "TRAIT_c_mediator_king_DESC"
   }
 ]

@@ -722,5 +722,21 @@
   "TRAIT_KEY_OUTGROUP_HOSTILITY_MULT": "Outgroup Hostility",
   "TRAIT_KEY_PERSUASION_SUCCESS_MULT": "Persuasion Success",
   "TRAIT_KEY_RUMOR_SPREAD_MULT": "Rumor Spread",
-  "TRAIT_KEY_SUSPICION_GAIN_MULT": "Suspicion Gain"
+  "TRAIT_KEY_SUSPICION_GAIN_MULT": "Suspicion Gain",
+  "CHRONICLE_TRAIT_DISPLAYED": "{name}'s dominant trait: {trait}",
+  "CHRONICLE_TRAIT_STRENGTHENED": "{name}'s '{trait}' tendency has grown stronger.",
+  "CHRONICLE_TRAIT_WEAKENED": "{name}'s '{trait}' tendency has faded.",
+  "CHRONICLE_TRAIT_ARCHETYPE": "{name} can truly be called a {trait}.",
+  "UI_TRAIT_SALIENCE_BAR": "{name}  {bar} ({pct}%)",
+  "UI_TRAIT_NO_DOMINANT": "No dominant traits",
+  "MENTAL_BREAK_TYPE_PANIC_DESC": "A short-lived terror episode in which the individual flees toward the nearest safe spot. Resolves quickly but may leave a hypervigilance scar.",
+  "MENTAL_BREAK_TYPE_RAGE_DESC": "An explosive burst of uncontrolled anger causing the individual to attack objects or others nearby. Highly energy-draining and may scar with anger dysregulation.",
+  "MENTAL_BREAK_TYPE_OUTRAGE_VIOLENCE_DESC": "An extreme violent episode in which the individual seeks out negatively-regarded targets with lethal intent, potentially using weapons. The most dangerous mental break type.",
+  "MENTAL_BREAK_TYPE_SHUTDOWN_DESC": "A dissociative freeze state in which the individual becomes emotionally numb and immobile. Long-lasting but provides significant stress catharsis.",
+  "MENTAL_BREAK_TYPE_PURGE_DESC": "A compulsive binge-eating or resource-wasting episode directed at the nearest food storage. Low conscientiousness amplifies the likelihood.",
+  "MENTAL_BREAK_TYPE_GRIEF_WITHDRAWAL_DESC": "A prolonged grief episode in which the individual retreats home and rejects all social contact. High emotionality prolongs the episode; may scar with complicated grief.",
+  "MENTAL_BREAK_TYPE_FUGUE_DESC": "A dissociative wandering episode in which the individual leaves the settlement and drifts in a random direction. Longest potential duration; high openness increases susceptibility.",
+  "MENTAL_BREAK_TYPE_PARANOIA_DESC": "A chronic paranoid state of intense distrust toward all others, leading to social isolation. Jobs are not abandoned but relationship trust collapses; high chronic paranoia scar risk.",
+  "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL_DESC": "A brief compulsive episode in which the individual repetitively performs an action at their current location. High conscientiousness paradoxically amplifies risk; ritual provides stress relief.",
+  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING_DESC": "An anxious clinging episode in which the individual latches onto their closest positive relationship and refuses to separate. High sociability and dependence traits amplify risk."
 }

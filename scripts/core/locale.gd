@@ -83,9 +83,14 @@ func tr_id(prefix: String, id: String) -> String:
 	return result
 
 
-## Get localized field from JSON data Dictionary
-## Example: Locale.tr_data(trait_def, "name") -> name_kr or name_en
+## @deprecated: tr_data()는 폐기됨. ltr(data["name_key"]) 또는 ltr(data["desc_key"])를 사용하라.
+## name_key / desc_key가 있으면 ltr()로 위임. 없으면 하위 호환 fallback.
 func tr_data(data: Dictionary, field: String = "name") -> String:
+	push_warning("[Locale] tr_data() is deprecated. Use ltr(data['name_key']) instead.")
+	if field == "name" and "name_key" in data:
+		return ltr(str(data["name_key"]))
+	if field == "description" and "desc_key" in data:
+		return ltr(str(data["desc_key"]))
 	var key_direct = field + "_" + current_locale
 	if key_direct in data:
 		return str(data[key_direct])
