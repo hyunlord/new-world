@@ -238,6 +238,26 @@ func on_action_performed(entity: RefCounted, action_id: String, context: Diction
 	print("[TraitViolationSystem] %s violated trait via '%s': stress=%.1f (%s)" % [
 		entity.entity_name, action_id, total_stress, severity
 	])
+	if SimulationBus.has_signal("simulation_event"):
+		SimulationBus.emit_event("trait_violation", {
+			"entity_id": entity.id,
+			"entity_name": entity.entity_name,
+			"action_id": action_id,
+			"stress": total_stress,
+			"severity": severity,
+			"tick": tick,
+		})
+	var _chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+	if _chronicle != null:
+		var desc: String = "%s forced '%s' (stress: %.0f, %s)" % [
+			entity.entity_name, action_id, total_stress, severity
+		]
+		var importance: int = 2
+		if severity == "moderate":
+			importance = 3
+		elif severity == "severe":
+			importance = 4
+		_chronicle.log_event("trait_violation", entity.id, desc, importance, [], tick)
 
 	# severe 반응: Phase 3A scar 확률 +10%
 	if severity == "severe" and _trauma_scar_system != null:
@@ -284,7 +304,7 @@ func _process_intrusive_thoughts(entity: RefCounted, current_tick: int) -> void:
 		var chance: float = INTRUSIVE_BASE_CHANCE * (ptsd_mult - 1.0) * decay_factor
 
 		# Phase 3A trauma_scar 있으면 확률 2배
-		if entity.has("trauma_scars") and not entity.trauma_scars.is_empty():
+		if "trauma_scars" in entity and not entity.trauma_scars.is_empty():
 			chance *= 2.0
 
 		if _rng.randf() < chance:
@@ -431,7 +451,7 @@ func _calc_context_modifier(context: Dictionary) -> float:
 ## entity가 주어진 trait를 활성화하고 있는지 확인
 ## entity.active_traits: 활성화된 trait 정의 Dictionary 배열
 func _entity_has_trait(entity: RefCounted, trait_id: String) -> bool:
-	if not entity.has("active_traits"):
+	if not "active_traits" in entity:
 		return false
 	var traits: Array = entity.active_traits
 	for t in traits:
@@ -449,12 +469,12 @@ func _calc_facet_scale(entity: RefCounted, trait_id: String) -> float:
 	var axis: String = tdef.get("axis", "")
 	if axis.is_empty():
 		return 1.0
-	if not entity.has("personality") or entity.personality == null:
+	if not "personality" in entity or entity.personality == null:
 		return 1.0
 	var facet_val: float = 0.5
 	if entity.personality.has_method("get_facet_value"):
 		facet_val = entity.personality.get_facet_value(axis)
-	elif entity.personality.has("facets"):
+	elif "facets" in entity.personality:
 		var facets: Dictionary = entity.personality.facets
 		facet_val = float(facets.get(axis, 0.5))
 	var threshold: float = 0.6
@@ -465,7 +485,7 @@ func _calc_facet_scale(entity: RefCounted, trait_id: String) -> float:
 
 ## violation_history에서 탈감작/PTSD 배수 반환 [desensitize_mult, ptsd_mult]
 func _get_history_mults(entity: RefCounted, action_id: String) -> Array:
-	if not entity.has("violation_history"):
+	if not "violation_history" in entity:
 		return [1.0, 1.0]
 	var record = entity.violation_history.get(action_id, {})
 	var dm: float = float(record.get("desensitize_mult", 1.0))
@@ -477,7 +497,7 @@ func _get_history_mults(entity: RefCounted, action_id: String) -> Array:
 ## Bandura (1999): 반복 노출이 도덕적 자기검열을 약화
 ## McEwen (1998): allostatic_load 기반 분기
 func _update_violation_history(entity: RefCounted, action_id: String, tick: int, is_habit: bool) -> void:
-	if not entity.has("violation_history"):
+	if not "violation_history" in entity:
 		return
 
 	if not entity.violation_history.has(action_id):
@@ -516,14 +536,14 @@ func _update_violation_history(entity: RefCounted, action_id: String, tick: int,
 func _get_allostatic_load(entity: RefCounted) -> float:
 	if _stress_system != null and _stress_system.has_method("get_allostatic_load"):
 		return _stress_system.get_allostatic_load(entity)
-	if entity.has("emotions"):
+	if "emotions" in entity:
 		return clampf(float(entity.emotions.get("stress", 0.0)), 0.0, 1.0)
 	return 0.0
 
 
 ## DF 황폐화: 탈감작 시 joy/trust 기준선 소폭 하락
 func _apply_desensitization_side_effect(entity: RefCounted) -> void:
-	if not entity.has("emotions"):
+	if not "emotions" in entity:
 		return
 	var joy: float = float(entity.emotions.get("happiness", 0.5))
 	entity.emotions["happiness"] = maxf(joy - DESENSITIZE_EMOTION_PENALTY, 0.0)
@@ -533,15 +553,13 @@ func _apply_desensitization_side_effect(entity: RefCounted) -> void:
 func _inject_violation_stress(entity: RefCounted, action_id: String, stress: float, tick: int) -> void:
 	if _stress_system == null:
 		# stress_system 없으면 직접 emotions.stress 수정
-		if entity.has("emotions"):
+		if "emotions" in entity:
 			var s: float = float(entity.emotions.get("stress", 0.0))
 			entity.emotions["stress"] = minf(s + stress * 0.01, 1.0)
 		return
-	if _stress_system.has_method("inject_event"):
-		_stress_system.inject_event(entity, "violation_" + action_id, {
-			"base_intensity": stress,
-			"tick": tick,
-			"source": "trait_violation",
-		})
+	if _stress_system.has_method("inject_stress_event"):
+		var ed = entity.get("emotion_data")
+		if ed != null:
+			_stress_system.inject_stress_event(ed, "violation_" + action_id, stress)
 	elif _stress_system.has_method("inject_stress"):
 		_stress_system.inject_stress(entity, stress, tick)

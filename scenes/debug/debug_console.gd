@@ -2,6 +2,7 @@ extends CanvasLayer
 
 # NO class_name — headless compatibility
 
+const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 const MAX_HISTORY: int = 50
 const MAX_OUTPUT_LINES: int = 200
 const TICKS_PER_YEAR: int = 4380  # 365 * 12
@@ -431,6 +432,7 @@ func _cmd_trait(args: Dictionary) -> void:
 		if entity.personality == null:
 			print_output("No personality data", Color.RED)
 			return
+		TraitSystem.evaluate_traits(entity)
 		if entity.active_traits.is_empty():
 			print_output("No active traits for %s" % entity.entity_name)
 			return
