@@ -159,7 +159,7 @@ func get_scar_def(scar_id: String) -> Dictionary:
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return
-	var entities = _entity_manager.get_all_entities()
+	var entities = _entity_manager.get_alive_entities()
 	for entity in entities:
 		if not entity.is_alive:
 			continue
