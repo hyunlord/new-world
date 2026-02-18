@@ -177,21 +177,29 @@ static func days_to_ticks(days: int) -> int:
 
 
 ## Generate birth_date Dictionary from a birth_tick value.
-## For negative birth_ticks (pre-game entities), calculates date before Y1.
+## For negative birth_ticks (pre-game entities), calculates date before Y1.1.1 (game start).
+## Correctly handles sub-year ages by computing remaining months, so birth dates
+## are never in the future relative to game start.
 static func birth_date_from_tick(birth_tick: int, rng: RandomNumberGenerator = null) -> Dictionary:
 	if birth_tick >= 0:
 		var d: Dictionary = tick_to_date(birth_tick)
 		return {"year": d.year, "month": d.month, "day": d.day}
-	# Pre-game entity: born before Y1
+	# Pre-game entity: go backwards from game start (Y1.1.1)
 	var age_ticks: int = -birth_tick
 	var age_years: int = age_ticks / TICKS_PER_YEAR
+	var remaining_ticks: int = age_ticks % TICKS_PER_YEAR
+	var remaining_months: int = remaining_ticks / TICKS_PER_MONTH_AVG
+	# Subtract full years and remaining months from game start (Y1, month 1)
 	var birth_year: int = 1 - age_years
-	var month: int = 1
+	var birth_month: int = 1 - remaining_months
+	# Normalize month underflow (e.g. month 0 → Dec of previous year)
+	while birth_month <= 0:
+		birth_year -= 1
+		birth_month += 12
 	var day: int = 1
 	if rng != null:
-		month = rng.randi_range(1, 12)
 		day = rng.randi_range(1, 28)
-	return {"year": birth_year, "month": month, "day": day}
+	return {"year": birth_year, "month": birth_month, "day": day}
 
 
 ## Format birth_date for UI display
