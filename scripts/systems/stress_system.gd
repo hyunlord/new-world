@@ -56,14 +56,14 @@ func execute_tick(tick: int) -> void:
 		var entity = alive[i]
 		if entity.emotion_data == null:
 			continue
-		var is_sleeping: bool = entity.get("current_action", "") == "sleep"
-		var is_safe: bool = entity.get("is_in_settlement", false)
+		var is_sleeping: bool = entity.current_action == "sleep"
+		var is_safe: bool = entity.settlement_id >= 0
 		_update_entity_stress(entity, is_sleeping, is_safe)
 
 
 func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool) -> void:
 	var ed = entity.emotion_data
-	var pd = entity.get("personality", null)
+	var pd = entity.personality
 
 	var breakdown: Dictionary = {}
 
@@ -112,11 +112,11 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 # ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
 func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
-	var hunger: float = entity.get("hunger", 0.5)
-	var energy: float = entity.get("energy", 0.5)
-	var social: float = entity.get("social", 0.5)
-	var threat: float = entity.get("threat_level", 0.0)
-	var conflict: float = entity.get("conflict_level", 0.0)
+	var hunger: float = entity.hunger
+	var energy: float = entity.energy
+	var social: float = entity.social
+	var threat: float = 0.0
+	var conflict: float = 0.0
 
 	var D_dep: float = 0.45 * (1.0 - hunger) + 0.35 * (1.0 - energy) + 0.20 * (1.0 - social)
 	var D: float = clampf(0.30 * D_dep + 0.40 * threat + 0.20 * conflict, 0.0, 1.0)
@@ -144,9 +144,9 @@ func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
 # ── 2) 지속 스트레서 ──────────────────────────────────────────────────
 func _calc_continuous_stressors(entity: RefCounted, appraisal_scale: float, breakdown: Dictionary) -> float:
 	var total: float = 0.0
-	var hunger: float = entity.get("hunger", 0.5)
-	var energy: float = entity.get("energy", 0.5)
-	var social: float = entity.get("social", 0.5)
+	var hunger: float = entity.hunger
+	var energy: float = entity.energy
+	var social: float = entity.social
 
 	var h_def: float = clampf((0.35 - hunger) / 0.35, 0.0, 1.0)
 	var s_hunger: float = (3.0 * h_def + 9.0 * h_def * h_def) * appraisal_scale
@@ -312,8 +312,8 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 		+ 0.25 * support
 		- 0.30 * (ed.allostatic / 100.0))
 
-	var hunger: float = entity.get("hunger", 0.5)
-	var energy: float = entity.get("energy", 0.5)
+	var hunger: float = entity.hunger
+	var energy: float = entity.energy
 	var fatigue_penalty: float = clampf((0.3 - energy) / 0.3, 0.0, 0.3) + clampf((0.3 - hunger) / 0.3, 0.0, 0.2)
 	r -= 0.20 * fatigue_penalty
 
@@ -341,7 +341,7 @@ func _apply_stress_to_emotions(ed) -> void:
 
 # ── Support score ─────────────────────────────────────────────────────
 func _calc_support_score(entity: RefCounted) -> float:
-	var relationships = entity.get("top_relationships", [])
+	var relationships = []
 	if relationships.is_empty():
 		return 0.3
 
@@ -396,7 +396,7 @@ func _debug_log(entity: RefCounted, ed, delta: float) -> void:
 	if absf(delta) < 1.0 and ed.stress < 50.0:
 		return
 
-	var ename = entity.get("entity_name", "?")
+	var ename = entity.entity_name
 	var parts: Array = []
 	for key in ed.stress_breakdown:
 		parts.append("%s:%.1f" % [key, ed.stress_breakdown[key]])
