@@ -722,5 +722,21 @@
   "TRAIT_KEY_OUTGROUP_HOSTILITY_MULT": "외집단 적대",
   "TRAIT_KEY_PERSUASION_SUCCESS_MULT": "설득 성공률",
   "TRAIT_KEY_RUMOR_SPREAD_MULT": "소문 전파",
-  "TRAIT_KEY_SUSPICION_GAIN_MULT": "의심 증가"
+  "TRAIT_KEY_SUSPICION_GAIN_MULT": "의심 증가",
+  "CHRONICLE_TRAIT_DISPLAYED": "{name}의 두드러진 성격: {trait}",
+  "CHRONICLE_TRAIT_STRENGTHENED": "{name}의 '{trait}' 성향이 더욱 강해졌다.",
+  "CHRONICLE_TRAIT_WEAKENED": "{name}의 '{trait}' 성향이 옅어졌다.",
+  "CHRONICLE_TRAIT_ARCHETYPE": "{name}은(는) 진정한 {trait}(으)로 불릴 만하다.",
+  "UI_TRAIT_SALIENCE_BAR": "{name}  {bar} ({pct}%)",
+  "UI_TRAIT_NO_DOMINANT": "두드러진 성격 없음",
+  "MENTAL_BREAK_TYPE_PANIC_DESC": "극도의 공포로 인해 가장 가까운 안전 장소로 도망치는 단기 공황 상태. 빠르게 해소되지만 과잉경계 흉터(scar)를 남길 수 있다.",
+  "MENTAL_BREAK_TYPE_RAGE_DESC": "통제 불능의 분노 폭발로 주변 사물이나 타인을 공격하는 상태. 에너지 소모가 크고 분노 조절 장애 흉터를 남길 수 있다.",
+  "MENTAL_BREAK_TYPE_OUTRAGE_VIOLENCE_DESC": "살상 도구까지 동원할 수 있는 극단적 폭력 상태. 부정적 관계의 대상을 찾아 공격하며, 가장 심각한 mental break 유형이다.",
+  "MENTAL_BREAK_TYPE_SHUTDOWN_DESC": "감각과 감정이 차단되어 그 자리에 멈춰 서는 해리 상태. 지속 시간이 길지만 스트레스 정화 효과도 높다.",
+  "MENTAL_BREAK_TYPE_PURGE_DESC": "가장 가까운 식량 저장소를 찾아 폭식하거나 자원을 낭비하는 충동 상태. 절제력(C축)이 낮을수록 발생하기 쉽다.",
+  "MENTAL_BREAK_TYPE_GRIEF_WITHDRAWAL_DESC": "집이나 구석에 칩거하며 사회적 접촉을 거부하는 장기 애도 상태. 감정이입(E축)이 높을수록 지속 시간이 길어지는 경향이 있다.",
+  "MENTAL_BREAK_TYPE_FUGUE_DESC": "정체성과 기억이 흐려지며 정착지를 벗어나 방황하는 해리 상태. 가장 긴 지속 시간을 가지며 개방성(O축)이 높을수록 발동하기 쉽다.",
+  "MENTAL_BREAK_TYPE_PARANOIA_DESC": "모든 타인에 대한 불신과 고립으로 이어지는 만성 편집 상태. 직업은 유지하지만 관계 신뢰도가 급락하며 만성 편집증 흉터 위험이 높다.",
+  "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL_DESC": "현재 위치에서 특정 행동을 반복하는 단기 강박 상태. 절제력(C축)이 높을수록 발동하기 쉬우며, 반복 행동으로 스트레스를 정화한다.",
+  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING_DESC": "가장 친한 관계의 인물에게 달라붙어 떨어지지 않으려 하는 불안 집착 상태. 사회성(X축)이 높거나 의존적 성향이 강할수록 발생하기 쉽다."
 }

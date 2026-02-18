@@ -1,10 +1,6 @@
 {
   "panic": {
     "id": "panic",
-    "name_kr": "공황",
-    "name_en": "Panic",
-    "description_kr": "극도의 공포로 인해 가장 가까운 안전 장소로 도망치는 단기 공황 상태. 빠르게 해소되지만 과잉경계 흉터(scar)를 남길 수 있다.",
-    "description_en": "A short-lived terror episode in which the individual flees toward the nearest safe spot. Resolves quickly but may leave a hypervigilance scar.",
     "severity": "minor",
     "behavior_override": {
       "mode": "flee_hide",
@@ -14,24 +10,27 @@
     },
     "duration_base_ticks": 2,
     "duration_variance_ticks": 2,
-    "stress_catharsis_factor": 0.80,
+    "stress_catharsis_factor": 0.8,
     "energy_cost": 0.15,
     "personality_weights": {
-      "H": 0.0, "E": 1.7, "X": -0.3, "A": 0.1, "C": -0.1, "O": -0.1
+      "H": 0.0,
+      "E": 1.7,
+      "X": -0.3,
+      "A": 0.1,
+      "C": -0.1,
+      "O": -0.1
     },
     "trait_modifiers": {
       "cowardly": 1.6,
       "brave": 0.6
     },
     "scar_chance_base": 0.15,
-    "scar_id": "hypervigilance"
+    "scar_id": "hypervigilance",
+    "name_key": "MENTAL_BREAK_TYPE_PANIC",
+    "desc_key": "MENTAL_BREAK_TYPE_PANIC_DESC"
   },
   "rage": {
     "id": "rage",
-    "name_kr": "분노 폭발",
-    "name_en": "Rage",
-    "description_kr": "통제 불능의 분노 폭발로 주변 사물이나 타인을 공격하는 상태. 에너지 소모가 크고 분노 조절 장애 흉터를 남길 수 있다.",
-    "description_en": "An explosive burst of uncontrolled anger causing the individual to attack objects or others nearby. Highly energy-draining and may scar with anger dysregulation.",
     "severity": "major",
     "behavior_override": {
       "mode": "attack_smash",
@@ -42,23 +41,26 @@
     "duration_base_ticks": 3,
     "duration_variance_ticks": 3,
     "stress_catharsis_factor": 0.65,
-    "energy_cost": 0.20,
+    "energy_cost": 0.2,
     "personality_weights": {
-      "H": -0.5, "E": 0.0, "X": 0.5, "A": -2.0, "C": -0.5, "O": 0.0
+      "H": -0.5,
+      "E": 0.0,
+      "X": 0.5,
+      "A": -2.0,
+      "C": -0.5,
+      "O": 0.0
     },
     "trait_modifiers": {
       "hotheaded": 1.5,
       "peaceful": 0.5
     },
     "scar_chance_base": 0.12,
-    "scar_id": "anger_dysregulation"
+    "scar_id": "anger_dysregulation",
+    "name_key": "MENTAL_BREAK_TYPE_RAGE",
+    "desc_key": "MENTAL_BREAK_TYPE_RAGE_DESC"
   },
   "outrage_violence": {
     "id": "outrage_violence",
-    "name_kr": "폭력 난동",
-    "name_en": "Outrage Violence",
-    "description_kr": "살상 도구까지 동원할 수 있는 극단적 폭력 상태. 부정적 관계의 대상을 찾아 공격하며, 가장 심각한 mental break 유형이다.",
-    "description_en": "An extreme violent episode in which the individual seeks out negatively-regarded targets with lethal intent, potentially using weapons. The most dangerous mental break type.",
     "severity": "extreme",
     "behavior_override": {
       "mode": "seek_and_destroy",
@@ -70,10 +72,15 @@
     },
     "duration_base_ticks": 5,
     "duration_variance_ticks": 7,
-    "stress_catharsis_factor": 0.60,
-    "energy_cost": 0.30,
+    "stress_catharsis_factor": 0.6,
+    "energy_cost": 0.3,
     "personality_weights": {
-      "H": -1.5, "E": 0.0, "X": 0.5, "A": -3.0, "C": -1.0, "O": 0.0
+      "H": -1.5,
+      "E": 0.0,
+      "X": 0.5,
+      "A": -3.0,
+      "C": -1.0,
+      "O": 0.0
     },
     "trait_modifiers": {
       "berserker": 1.6,
@@ -81,14 +88,12 @@
       "peaceful": 0.3
     },
     "scar_chance_base": 0.25,
-    "scar_id": "violence_imprint"
+    "scar_id": "violence_imprint",
+    "name_key": "MENTAL_BREAK_TYPE_OUTRAGE_VIOLENCE",
+    "desc_key": "MENTAL_BREAK_TYPE_OUTRAGE_VIOLENCE_DESC"
   },
   "shutdown": {
     "id": "shutdown",
-    "name_kr": "셧다운",
-    "name_en": "Shutdown",
-    "description_kr": "감각과 감정이 차단되어 그 자리에 멈춰 서는 해리 상태. 지속 시간이 길지만 스트레스 정화 효과도 높다.",
-    "description_en": "A dissociative freeze state in which the individual becomes emotionally numb and immobile. Long-lasting but provides significant stress catharsis.",
     "severity": "major",
     "behavior_override": {
       "mode": "freeze_in_place",
@@ -98,24 +103,27 @@
     },
     "duration_base_ticks": 12,
     "duration_variance_ticks": 24,
-    "stress_catharsis_factor": 0.90,
+    "stress_catharsis_factor": 0.9,
     "energy_cost": 0.05,
     "personality_weights": {
-      "H": 0.0, "E": 1.4, "X": -1.0, "A": 0.0, "C": -0.5, "O": -0.3
+      "H": 0.0,
+      "E": 1.4,
+      "X": -1.0,
+      "A": 0.0,
+      "C": -0.5,
+      "O": -0.3
     },
     "trait_modifiers": {
       "loner": 1.2,
       "depressive": 1.4
     },
     "scar_chance_base": 0.18,
-    "scar_id": "emotional_numbness"
+    "scar_id": "emotional_numbness",
+    "name_key": "MENTAL_BREAK_TYPE_SHUTDOWN",
+    "desc_key": "MENTAL_BREAK_TYPE_SHUTDOWN_DESC"
   },
   "purge": {
     "id": "purge",
-    "name_kr": "폭식/낭비",
-    "name_en": "Purge",
-    "description_kr": "가장 가까운 식량 저장소를 찾아 폭식하거나 자원을 낭비하는 충동 상태. 절제력(C축)이 낮을수록 발생하기 쉽다.",
-    "description_en": "A compulsive binge-eating or resource-wasting episode directed at the nearest food storage. Low conscientiousness amplifies the likelihood.",
     "severity": "minor",
     "behavior_override": {
       "mode": "binge_consume",
@@ -128,21 +136,24 @@
     "stress_catharsis_factor": 0.75,
     "energy_cost": 0.05,
     "personality_weights": {
-      "H": -0.3, "E": 0.0, "X": 0.5, "A": 0.0, "C": -2.0, "O": 0.0
+      "H": -0.3,
+      "E": 0.0,
+      "X": 0.5,
+      "A": 0.0,
+      "C": -2.0,
+      "O": 0.0
     },
     "trait_modifiers": {
       "greedy": 1.3,
       "ascetic": 0.5
     },
-    "scar_chance_base": 0.10,
-    "scar_id": "compulsive_consumption"
+    "scar_chance_base": 0.1,
+    "scar_id": "compulsive_consumption",
+    "name_key": "MENTAL_BREAK_TYPE_PURGE",
+    "desc_key": "MENTAL_BREAK_TYPE_PURGE_DESC"
   },
   "grief_withdrawal": {
     "id": "grief_withdrawal",
-    "name_kr": "애도 칩거",
-    "name_en": "Grief Withdrawal",
-    "description_kr": "집이나 구석에 칩거하며 사회적 접촉을 거부하는 장기 애도 상태. 감정이입(E축)이 높을수록 지속 시간이 길어지는 경향이 있다.",
-    "description_en": "A prolonged grief episode in which the individual retreats home and rejects all social contact. High emotionality prolongs the episode; may scar with complicated grief.",
     "severity": "major",
     "behavior_override": {
       "mode": "withdraw_to_home",
@@ -156,21 +167,24 @@
     "stress_catharsis_factor": 0.85,
     "energy_cost": 0.08,
     "personality_weights": {
-      "H": 0.5, "E": 1.3, "X": -0.5, "A": 0.5, "C": 0.0, "O": -0.3
+      "H": 0.5,
+      "E": 1.3,
+      "X": -0.5,
+      "A": 0.5,
+      "C": 0.0,
+      "O": -0.3
     },
     "trait_modifiers": {
       "empathic": 1.3,
       "cold_blooded": 0.6
     },
     "scar_chance_base": 0.22,
-    "scar_id": "complicated_grief"
+    "scar_id": "complicated_grief",
+    "name_key": "MENTAL_BREAK_TYPE_GRIEF_WITHDRAWAL",
+    "desc_key": "MENTAL_BREAK_TYPE_GRIEF_WITHDRAWAL_DESC"
   },
   "fugue": {
     "id": "fugue",
-    "name_kr": "해리성 둔주",
-    "name_en": "Dissociative Fugue",
-    "description_kr": "정체성과 기억이 흐려지며 정착지를 벗어나 방황하는 해리 상태. 가장 긴 지속 시간을 가지며 개방성(O축)이 높을수록 발동하기 쉽다.",
-    "description_en": "A dissociative wandering episode in which the individual leaves the settlement and drifts in a random direction. Longest potential duration; high openness increases susceptibility.",
     "severity": "major",
     "behavior_override": {
       "mode": "wander_away",
@@ -181,24 +195,27 @@
     },
     "duration_base_ticks": 24,
     "duration_variance_ticks": 60,
-    "stress_catharsis_factor": 0.80,
+    "stress_catharsis_factor": 0.8,
     "energy_cost": 0.15,
     "personality_weights": {
-      "H": 0.0, "E": 0.5, "X": -0.5, "A": 0.0, "C": -0.3, "O": 1.5
+      "H": 0.0,
+      "E": 0.5,
+      "X": -0.5,
+      "A": 0.0,
+      "C": -0.3,
+      "O": 1.5
     },
     "trait_modifiers": {
       "loner": 1.2,
       "rebellious": 1.1
     },
     "scar_chance_base": 0.15,
-    "scar_id": "dissociative_tendency"
+    "scar_id": "dissociative_tendency",
+    "name_key": "MENTAL_BREAK_TYPE_FUGUE",
+    "desc_key": "MENTAL_BREAK_TYPE_FUGUE_DESC"
   },
   "paranoia": {
     "id": "paranoia",
-    "name_kr": "편집증",
-    "name_en": "Paranoia",
-    "description_kr": "모든 타인에 대한 불신과 고립으로 이어지는 만성 편집 상태. 직업은 유지하지만 관계 신뢰도가 급락하며 만성 편집증 흉터 위험이 높다.",
-    "description_en": "A chronic paranoid state of intense distrust toward all others, leading to social isolation. Jobs are not abandoned but relationship trust collapses; high chronic paranoia scar risk.",
     "severity": "major",
     "behavior_override": {
       "mode": "distrust_isolate",
@@ -212,21 +229,24 @@
     "stress_catharsis_factor": 0.95,
     "energy_cost": 0.03,
     "personality_weights": {
-      "H": -0.5, "E": 1.2, "X": -1.0, "A": -0.5, "C": 0.0, "O": -0.5
+      "H": -0.5,
+      "E": 1.2,
+      "X": -1.0,
+      "A": -0.5,
+      "C": 0.0,
+      "O": -0.5
     },
     "trait_modifiers": {
       "suspicious": 1.4,
       "trusting": 0.5
     },
     "scar_chance_base": 0.28,
-    "scar_id": "chronic_paranoia"
+    "scar_id": "chronic_paranoia",
+    "name_key": "MENTAL_BREAK_TYPE_PARANOIA",
+    "desc_key": "MENTAL_BREAK_TYPE_PARANOIA_DESC"
   },
   "compulsive_ritual": {
     "id": "compulsive_ritual",
-    "name_kr": "강박 의식",
-    "name_en": "Compulsive Ritual",
-    "description_kr": "현재 위치에서 특정 행동을 반복하는 단기 강박 상태. 절제력(C축)이 높을수록 발동하기 쉬우며, 반복 행동으로 스트레스를 정화한다.",
-    "description_en": "A brief compulsive episode in which the individual repetitively performs an action at their current location. High conscientiousness paradoxically amplifies risk; ritual provides stress relief.",
     "severity": "minor",
     "behavior_override": {
       "mode": "repeat_action",
@@ -239,21 +259,24 @@
     "stress_catharsis_factor": 0.85,
     "energy_cost": 0.05,
     "personality_weights": {
-      "H": 0.0, "E": 0.5, "X": 0.0, "A": 0.0, "C": 1.5, "O": 0.5
+      "H": 0.0,
+      "E": 0.5,
+      "X": 0.0,
+      "A": 0.0,
+      "C": 1.5,
+      "O": 0.5
     },
     "trait_modifiers": {
       "ritualist": 1.4,
       "impulsive": 0.6
     },
-    "scar_chance_base": 0.10,
-    "scar_id": "hypervigilance"
+    "scar_chance_base": 0.1,
+    "scar_id": "hypervigilance",
+    "name_key": "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL",
+    "desc_key": "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL_DESC"
   },
   "hysterical_bonding": {
     "id": "hysterical_bonding",
-    "name_kr": "불안 집착",
-    "name_en": "Hysterical Bonding",
-    "description_kr": "가장 친한 관계의 인물에게 달라붙어 떨어지지 않으려 하는 불안 집착 상태. 사회성(X축)이 높거나 의존적 성향이 강할수록 발생하기 쉽다.",
-    "description_en": "An anxious clinging episode in which the individual latches onto their closest positive relationship and refuses to separate. High sociability and dependence traits amplify risk.",
     "severity": "minor",
     "behavior_override": {
       "mode": "cling_to_target",
@@ -263,16 +286,23 @@
     },
     "duration_base_ticks": 3,
     "duration_variance_ticks": 9,
-    "stress_catharsis_factor": 0.80,
+    "stress_catharsis_factor": 0.8,
     "energy_cost": 0.05,
     "personality_weights": {
-      "H": 0.0, "E": 1.0, "X": 1.0, "A": 0.5, "C": 0.0, "O": 0.0
+      "H": 0.0,
+      "E": 1.0,
+      "X": 1.0,
+      "A": 0.5,
+      "C": 0.0,
+      "O": 0.0
     },
     "trait_modifiers": {
       "social_clinger": 1.4,
       "loner": 0.4
     },
-    "scar_chance_base": 0.10,
-    "scar_id": "anxious_attachment"
+    "scar_chance_base": 0.1,
+    "scar_id": "anxious_attachment",
+    "name_key": "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING",
+    "desc_key": "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING_DESC"
   }
 }

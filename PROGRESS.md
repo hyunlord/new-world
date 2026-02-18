@@ -500,3 +500,34 @@ T-2008 2-레벨 하이브리드 시스템 마이그레이션 이후 발생한 2�
   - trait_system.gd — _calc_behavior_weight() + _calc_emotion_sensitivity() geometric mean 집계
   - trait_tooltip.gd — Locale.ltr(name_key/desc_key) 방식으로 교체
   - entity_detail_panel.gd — salience < 0.995 조건 추가 (1.00 숫자 표시 제거)
+
+---
+
+## i18n 구조 전면 정비 — T-i18n-ABC — 2026-02-19
+
+### Context
+텍스트 단일 출처 원칙 확립: 모든 표시용 텍스트를 localization/{locale}/*.json에서만 가져오도록 정비.
+3개 티켓 (A/B/C) 직접 구현 + TICKET-D 탐지 스크립트 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-A | data/locales/ → localization/ 이전 (Python 스크립트) | 🔴 DIRECT | — | 파일 이동 + 병합, 검증 포함 |
+| TICKET-B | data JSON 텍스트 필드 제거 (Python 스크립트) | 🔴 DIRECT | — | mental_breaks/trauma_scars/trait_defs_fixed 처리 |
+| TICKET-C | tr_data() deprecation 처리 (locale.gd) | 🔴 DIRECT | — | 단일 줄 수정 + 경고 추가 |
+| TICKET-D | tools/find_unused_files.py 생성 | 🔴 DIRECT | — | 탐지 스크립트, 실제 삭제 없음 |
+
+### Dispatch ratio: 0/4 = 0%
+### 이유: 파일 이동/삭제/JSON 정리는 Python 스크립트로 자동화 (ask_codex 불필요)
+
+### Results
+- Gate: PASS ✅
+- Files changed: 11 (7 data JSON, 2 localization/*/ui.json, locale.gd, 2 tools/)
+- Key changes:
+  - TICKET-A: traits_events 6키 → ko/en ui.json 병합, data/locales/ 완전 삭제
+  - TICKET-B: trauma_scars(9), mental_breaks(10), trait_definitions_fixed(187), inactive personality 파일 텍스트 필드 제거
+    → MENTAL_BREAK_TYPE_{ID}_DESC 10개 키를 ko/en ui.json에 신규 추가
+    → 모든 data JSON에 name_key/desc_key 추가
+  - TICKET-C: tr_data() — push_warning + name_key/desc_key 자동 위임
+  - TICKET-D: tools/find_unused_files.py (탐지 전용, 삭제 없음)
+- 검증: migrate_i18n.py 자체 검증 전통과 ✅
