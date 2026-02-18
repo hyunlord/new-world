@@ -320,7 +320,9 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, fill_alpha))
 		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, border_alpha), false, border_width)
 		draw_string(font, Vector2(trait_x + 6, cy + 16), badge_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
-		_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
+		var tdef_sal: Dictionary = tdef.duplicate()
+		tdef_sal["_salience"] = salience
+		_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef_sal})
 		trait_x += text_w + 18
 	cy += 28.0
 

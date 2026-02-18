@@ -531,3 +531,36 @@ T-2008 2-레벨 하이브리드 시스템 마이그레이션 이후 발생한 2�
   - TICKET-C: tr_data() — push_warning + name_key/desc_key 자동 위임
   - TICKET-D: tools/find_unused_files.py (탐지 전용, 삭제 없음)
 - 검증: migrate_i18n.py 자체 검증 전통과 ✅
+
+---
+
+## Trait 툴팁 전체 정보 표시 복원 + 미사용 JSON 삭제 — 2026-02-19
+
+### Context
+trait 배지 클릭 시 툴팁에 발현 조건 / 행동 가중치 / 감정 수정 / 위반 스트레스 / 시너지 섹션 복원.
+trait_defs_v2.json 마이그레이션 후 효과 데이터가 사라진 문제 해결 (매핑 파일 역인덱스로 런타임 구축).
+미사용 JSON 3개 삭제 (이전 조사 계획 결과 실행).
+
+### Tickets
+| 작업 | 분류 | 이유 |
+|------|------|------|
+| data/ 미사용 JSON 3개 삭제 | 🔴 DIRECT | 삭제 작업 |
+| locale ko+en: TOOLTIP_ 키 추가 | 🔴 DIRECT | 공유 인터페이스 (locale 파일) |
+| trait_system.gd: get_trait_display_effects() 추가 | 🔴 DIRECT | 신규 public API |
+| entity_detail_panel.gd: _salience 주입 | 🔴 DIRECT | 기존 badge 시스템 수정 |
+| trait_tooltip.gd: 전체 재작성 | 🔴 DIRECT | UI 통합 (cross-system) |
+
+### Dispatch ratio: 0/5 = 0% (UI 통합 + locale + 공유 API — 모두 직접 구현 적합)
+
+### Technical Approach
+- **역인덱스 패턴**: behavior/emotion/violation 매핑 파일을 런타임에 trait_id 기준으로 역산. _effects_cache로 캐싱.
+- **salience 전달**: entity_detail_panel이 tdef.duplicate() + _salience 주입 → badge_regions에 저장.
+- **감정 수정 구분**: _baseline 키 → offset (×100 → %), 나머지 → multiplier delta (−1.0 → %).
+- **로케일 키 수정**: TRAIT_KEY 프리픽스 사용 (구 코드의 ACTION 프리픽스 버그 수정).
+
+### Results
+- Gate: PASS ✅
+- 삭제: data/personality/trait_definitions.json, trait_definitions_derived.json, hexaco_definition.json
+- 수정: localization/ko/ui.json, localization/en/ui.json, scripts/systems/trait_system.gd, scripts/ui/entity_detail_panel.gd, scripts/ui/trait_tooltip.gd
+- 파일 변경: 5개 수정 + 3개 삭제
+

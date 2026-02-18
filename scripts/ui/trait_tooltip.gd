@@ -1,5 +1,7 @@
 extends PanelContainer
 
+const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+
 var _timer: Timer
 var _current_trait: Dictionary = {}
 var _anchor_rect: Rect2 = Rect2()
@@ -120,6 +122,8 @@ func _build_content(t: Dictionary) -> void:
 	var id: String = t.get("id", "")
 	var is_dark: bool = id.begins_with("d_")
 	var valence: String = t.get("valence", "neutral")
+	var category: String = t.get("category", "")
+
 	var icon: String
 	if is_dark:
 		icon = "🟣"
@@ -133,7 +137,14 @@ func _build_content(t: Dictionary) -> void:
 	var primary_name: String = Locale.ltr(t.get("name_key", "TRAIT_" + id + "_NAME"))
 	if primary_name == "" or primary_name == "???":
 		primary_name = t.get("name_kr", t.get("name_en", id))
-	var header_text: String = "%s %s" % [icon, primary_name]
+
+	# Salience bar: shown when salience is between 0 and ~99%
+	var salience: float = float(t.get("_salience", 0.0))
+	var salience_str: String = ""
+	if salience > 0.0 and salience < 0.995:
+		var filled: int = int(salience * 10)
+		var bar: String = "█".repeat(filled) + "░".repeat(10 - filled)
+		salience_str = "  %s %d%%" % [bar, int(salience * 100)]
 
 	var header_color: Color
 	if is_dark:
@@ -144,7 +155,7 @@ func _build_content(t: Dictionary) -> void:
 		header_color = Color(0.95, 0.4, 0.4)
 	else:
 		header_color = Color(0.6, 0.7, 0.9)
-	_add_label(header_text, header_color, 12)
+	_add_label("%s %s%s" % [icon, primary_name, salience_str], header_color, 12)
 	_add_separator_line()
 
 	var desc: String = Locale.ltr(t.get("desc_key", "TRAIT_" + id + "_DESC"))
@@ -154,119 +165,135 @@ func _build_content(t: Dictionary) -> void:
 		_add_label(desc, Color(0.75, 0.75, 0.75), 10)
 		_add_separator_line()
 
-	var condition = t.get("condition", {})
-	if condition.size() > 0:
-		_add_label("📊 " + Locale.ltr("TOOLTIP_CONDITION"), Color(0.85, 0.85, 0.5), 10)
-		_add_condition_text(condition)
-		_add_separator_line()
+	# ── 발현 조건
+	_add_condition_section(t, category)
 
-	var effects = t.get("effects", {})
-	var has_effects: bool = false
+	# ── 효과: mapping 파일에서 역인덱스로 빌드
+	if id != "":
+		var efx: Dictionary = TraitSystem.get_trait_display_effects(id)
+		_add_behavior_weights_section(efx.get("behavior_weights", {}))
+		_add_emotion_modifiers_section(efx.get("emotion_modifiers", {}))
+		_add_violation_stress_section(efx.get("violation_stress", {}))
 
-	var bw = effects.get("behavior_weights", {})
-	if bw.size() > 0:
-		if not has_effects:
-			_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
-			has_effects = true
-		var bw_keys: Array = bw.keys()
-		bw_keys.sort_custom(func(a, b):
-			return Locale.tr_id("ACTION", str(a)).naturalcasecmp_to(Locale.tr_id("ACTION", str(b))) < 0
-		)
-		for action in bw_keys:
-			var val = float(bw[action])
-			var pct = int((val - 1.0) * 100)
-			if pct == 0:
-				continue
-			var aname: String = Locale.tr_id("ACTION", action)
-			var sign: String = "+" if pct > 0 else ""
-			var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
-			_add_effect_row("%s %s%d%%" % [aname, sign, pct], ec)
-
-	var em = effects.get("emotion_modifiers", {})
-	if em.size() > 0:
-		var em_keys: Array = em.keys()
-		em_keys.sort_custom(func(a, b):
-			return Locale.tr_id("EMOTION_MOD", str(a)).naturalcasecmp_to(Locale.tr_id("EMOTION_MOD", str(b))) < 0
-		)
-		for mk in em_keys:
-			if not has_effects:
-				_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
-				has_effects = true
-			var val = float(em[mk])
-			var pct = int((val - 1.0) * 100)
-			if pct == 0:
-				continue
-			var mname: String = Locale.tr_id("EMOTION_MOD", mk)
-			var sign: String = "+" if pct > 0 else ""
-			var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
-			_add_effect_row("%s %s%d%%" % [mname, sign, pct], ec)
-
-	var rm = effects.get("relationship_modifiers", {})
-	for mk in rm:
-		if not has_effects:
-			_add_label("⚡ " + Locale.ltr("TOOLTIP_EFFECTS"), Color(0.85, 0.85, 0.5), 10)
-			has_effects = true
-		var val = float(rm[mk])
-		var pct = int((val - 1.0) * 100)
-		if pct == 0:
-			continue
-		var mname: String = Locale.tr_id("REL_MOD", mk)
-		var sign: String = "+" if pct > 0 else ""
-		var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
-		_add_effect_row("%s %s%d%%" % [mname, sign, pct], ec)
-
-	if has_effects:
-		_add_separator_line()
-
-	var sm = effects.get("stress_modifiers", {})
-	var vs = sm.get("violation_stress", {})
-	if vs.size() > 0:
-		_add_label("⚠ " + Locale.ltr("TOOLTIP_VIOLATION"), Color(1.0, 0.75, 0.25), 10)
-		for action in vs:
-			var sv = int(vs[action])
-			var aname: String = Locale.tr_id("ACTION", action)
-			var severity: String
-			if sv <= 5:
-				severity = Locale.ltr("TOOLTIP_STRESS_MINIMAL")
-			elif sv <= 12:
-				severity = Locale.ltr("TOOLTIP_STRESS_MODERATE")
-			elif sv <= 18:
-				severity = Locale.ltr("TOOLTIP_STRESS_STRONG")
-			else:
-				severity = Locale.ltr("TOOLTIP_STRESS_SEVERE")
-			_add_effect_row("%s → +%d %s" % [aname, sv, severity], Color(1.0, 0.65, 0.2))
-		_add_separator_line()
-
+	# ── 시너지 / 상충 (JSON에 데이터 있을 때만 표시)
 	var syn: Array = t.get("synergies", [])
 	var anti: Array = t.get("anti_synergies", [])
 	if syn.size() > 0:
-		var syn_parts: Array = []
+		var parts: Array = []
 		for sid in syn:
-			syn_parts.append(Locale.ltr("TRAIT_" + sid.to_upper()))
-		_add_effect_row("🔗 %s: %s" % [Locale.ltr("TOOLTIP_SYNERGY"), ", ".join(syn_parts)], Color(0.5, 0.8, 1.0))
+			parts.append(Locale.ltr("TRAIT_" + str(sid).to_upper()))
+		_add_effect_row("🔗 %s: %s" % [Locale.ltr("TOOLTIP_SYNERGY"), ", ".join(parts)], Color(0.5, 0.8, 1.0))
 	if anti.size() > 0:
-		var anti_parts: Array = []
+		var parts: Array = []
 		for aid in anti:
-			anti_parts.append(Locale.ltr("TRAIT_" + aid.to_upper()))
-		_add_effect_row("⚔ %s: %s" % [Locale.ltr("TOOLTIP_CONFLICT"), ", ".join(anti_parts)], Color(1.0, 0.5, 0.5))
+			parts.append(Locale.ltr("TRAIT_" + str(aid).to_upper()))
+		_add_effect_row("⚔ %s: %s" % [Locale.ltr("TOOLTIP_ANTI_SYNERGY"), ", ".join(parts)], Color(1.0, 0.5, 0.5))
 
 
-func _add_condition_text(condition: Dictionary) -> void:
-	if condition.has("all"):
-		for sub in condition["all"]:
-			_add_single_condition(sub)
-	elif condition.has("facet"):
-		_add_single_condition(condition)
+func _add_condition_section(t: Dictionary, category: String) -> void:
+	if category == "facet":
+		var facet: String = t.get("facet", "")
+		if facet == "":
+			return
+		var direction: String = t.get("direction", "high")
+		var threshold: float = float(t.get("threshold", 0.5))
+		_add_label("📊 " + Locale.ltr("TOOLTIP_CONDITION"), Color(0.85, 0.85, 0.5), 10)
+		var fname: String = Locale.tr_id("FACET", facet)
+		var op: String = "≥" if direction == "high" else "≤"
+		_add_effect_row("%s %s %.2f" % [fname, op, threshold], Color(0.65, 0.65, 0.65))
+		_add_separator_line()
+	elif category == "composite" or category == "dark":
+		var conditions: Array = t.get("conditions", [])
+		if conditions.is_empty():
+			return
+		_add_label("📊 " + Locale.ltr("TOOLTIP_CONDITION"), Color(0.85, 0.85, 0.5), 10)
+		for i in range(conditions.size()):
+			var cond: Dictionary = conditions[i]
+			var facet: String = str(cond.get("facet", ""))
+			var direction: String = str(cond.get("direction", "high"))
+			var center: float = float(cond.get("cond_center", 0.5))
+			var fname: String = Locale.tr_id("FACET", facet)
+			var op: String = "≥" if direction == "high" else "≤"
+			_add_effect_row("%s %s %.2f" % [fname, op, center], Color(0.65, 0.65, 0.65))
+		_add_separator_line()
 
 
-func _add_single_condition(cond: Dictionary) -> void:
-	var facet: String = cond.get("facet", "")
-	var direction: String = cond.get("direction", "")
-	var threshold = float(cond.get("threshold", 0.5))
-	var pct: int = int(threshold * 100)
-	var fname: String = Locale.tr_id("FACET", facet)
-	var op: String = "≥" if direction == "high" else "≤"
-	_add_effect_row("%s %s %d%%" % [fname, op, pct], Color(0.65, 0.65, 0.65))
+func _add_behavior_weights_section(bw: Dictionary) -> void:
+	if bw.is_empty():
+		return
+	_add_label("⚡ " + Locale.ltr("TOOLTIP_BEHAVIOR_WEIGHTS"), Color(0.85, 0.85, 0.5), 10)
+	var keys: Array = bw.keys()
+	keys.sort_custom(func(a, b): return str(a) < str(b))
+	var any_shown: bool = false
+	for i in range(keys.size()):
+		var action: String = str(keys[i])
+		var val: float = float(bw[action])
+		var pct: int = int((val - 1.0) * 100)
+		if pct == 0:
+			continue
+		var aname: String = Locale.tr_id("TRAIT_KEY", action)
+		var sign: String = "+" if pct > 0 else ""
+		var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
+		_add_effect_row("%s %s%d%%" % [aname, sign, pct], ec)
+		any_shown = true
+	if any_shown:
+		_add_separator_line()
+
+
+func _add_emotion_modifiers_section(em: Dictionary) -> void:
+	if em.is_empty():
+		return
+	_add_label("💫 " + Locale.ltr("TOOLTIP_EMOTION_MODIFIERS"), Color(0.85, 0.85, 0.5), 10)
+	var keys: Array = em.keys()
+	keys.sort_custom(func(a, b): return str(a) < str(b))
+	var any_shown: bool = false
+	for i in range(keys.size()):
+		var mk: String = str(keys[i])
+		var val = em[mk]
+		var label: String = Locale.ltr("TRAIT_KEY_" + mk.to_upper())
+		var formatted: String
+		var ec: Color
+		if mk.ends_with("_baseline"):
+			# Offset value: scale to percentage for display
+			var offset: float = float(val) * 100.0
+			if absf(offset) < 0.5:
+				continue
+			formatted = "%+.0f%%" % offset
+			ec = Color(0.3, 0.9, 0.3) if offset > 0.0 else Color(0.9, 0.3, 0.3)
+		else:
+			# Multiplier: format as percent delta from 1.0
+			var pct: int = int((float(val) - 1.0) * 100)
+			if pct == 0:
+				continue
+			formatted = "%s%d%%" % ["+" if pct > 0 else "", pct]
+			ec = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
+		_add_effect_row("%s %s" % [label, formatted], ec)
+		any_shown = true
+	if any_shown:
+		_add_separator_line()
+
+
+func _add_violation_stress_section(vs: Dictionary) -> void:
+	if vs.is_empty():
+		return
+	_add_label("⚠ " + Locale.ltr("TOOLTIP_VIOLATION"), Color(1.0, 0.75, 0.25), 10)
+	for action in vs:
+		var sv: float = float(vs[action])
+		var aname: String = Locale.tr_id("TRAIT_KEY", str(action))
+		if sv <= 0.0:
+			_add_effect_row("%s: 0" % aname, Color(0.5, 0.5, 0.5))
+			continue
+		var severity: String
+		if sv <= 5.0:
+			severity = Locale.ltr("TOOLTIP_STRESS_MINIMAL")
+		elif sv <= 12.0:
+			severity = Locale.ltr("TOOLTIP_STRESS_MODERATE")
+		elif sv <= 18.0:
+			severity = Locale.ltr("TOOLTIP_STRESS_STRONG")
+		else:
+			severity = Locale.ltr("TOOLTIP_STRESS_SEVERE")
+		_add_effect_row("%s → +%d %s" % [aname, int(sv), severity], Color(1.0, 0.65, 0.2))
+	_add_separator_line()
 
 
 func _position_near_anchor(anchor: Rect2) -> void:
