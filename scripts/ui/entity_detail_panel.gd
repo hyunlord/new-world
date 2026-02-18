@@ -92,6 +92,7 @@ var _expanded_axes: Dictionary = {}
 ## Deceased detail mode
 var _showing_deceased: bool = false
 var _deceased_record: Dictionary = {}
+var _deceased_proxy: RefCounted = null
 ## Section collapsed states (true = collapsed/hidden)
 var _section_collapsed: Dictionary = {
 	"status": false,
@@ -105,9 +106,97 @@ var _section_collapsed: Dictionary = {
 	"relationships": false,
 	"stats": true,
 	"recent_actions": false,
+	"life_events": false,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
+
+
+class DeceasedEntityProxy extends RefCounted:
+	# Living entity interface fields
+	var id: int
+	var entity_name: String
+	var gender: String
+	var age_stage: String
+	var job: String
+	var birth_tick: int
+	var birth_date: Dictionary
+	var settlement_id: int
+	var age: int
+	var is_alive: bool = false
+	var partner_id: int = -1
+	var parent_ids: Array = []
+	var children_ids: Array = []
+	var hunger: float
+	var energy: float
+	var social: float
+	var current_action: String
+	var inventory: Dictionary = {}
+	var action_target: Vector2i = Vector2i(-1, -1)
+	var action_history: Array = []
+	var pregnancy_tick: int = -1
+	var position: Vector2 = Vector2.ZERO
+	var display_traits: Array = []
+	var trauma_scars: Array = []
+	var violation_history: Dictionary = {}
+	var speed: float = 1.0
+	var strength: float = 1.0
+	var total_gathered: float = 0.0
+	var buildings_built: int = 0
+	var personality: RefCounted
+	var emotion_data: RefCounted
+
+	# Deceased-only fields
+	var death_cause: String
+	var death_date: Dictionary
+	var death_age_years: float
+	var death_tick: int
+
+	func _init(record: Dictionary) -> void:
+		id = record.get("id", -1)
+		entity_name = record.get("name", "")
+		gender = record.get("gender", "")
+		age_stage = record.get("age_stage", "adult")
+		job = record.get("job", "none")
+		birth_tick = record.get("birth_tick", 0)
+		birth_date = record.get("birth_date", {}).duplicate()
+		settlement_id = record.get("settlement_id", -1)
+		death_cause = record.get("death_cause", "")
+		death_date = record.get("death_date", {}).duplicate()
+		death_age_years = record.get("death_age_years", 0.0)
+		death_tick = record.get("death_tick", 0)
+		age = death_tick - birth_tick
+		hunger = record.get("hunger", 0.0)
+		energy = record.get("energy", 0.0)
+		social = record.get("social", 0.0)
+		current_action = str(record.get("current_action", "idle"))
+		inventory = record.get("inventory", {}).duplicate()
+		display_traits = record.get("display_traits", []).duplicate()
+		trauma_scars = record.get("trauma_scars", []).duplicate()
+		violation_history = record.get("violation_history", {}).duplicate()
+		speed = record.get("speed", 1.0)
+		strength = record.get("strength", 1.0)
+		total_gathered = record.get("total_gathered", 0.0)
+		buildings_built = record.get("buildings_built", 0)
+		partner_id = record.get("partner_id", -1)
+		parent_ids = record.get("parent_ids", []).duplicate()
+		children_ids = record.get("children_ids", []).duplicate()
+
+		# Reconstruct PersonalityData
+		var p_dict: Dictionary = record.get("personality", {})
+		if not p_dict.is_empty():
+			var PScript = load("res://scripts/core/personality_data.gd")
+			if p_dict.has("facets"):
+				personality = PScript.from_dict(p_dict)
+			else:
+				personality = PScript.new()
+				personality.migrate_from_big_five(p_dict)
+
+		# Reconstruct EmotionData
+		var e_dict: Dictionary = record.get("emotion_data", {})
+		if not e_dict.is_empty():
+			var EScript = load("res://scripts/core/emotion_data.gd")
+			emotion_data = EScript.from_dict(e_dict)
 
 
 func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
@@ -121,6 +210,7 @@ func set_entity_id(id: int) -> void:
 	_scroll_offset = 0.0
 	_showing_deceased = false
 	_deceased_record = {}
+	_deceased_proxy = null
 	_trait_badge_regions.clear()
 	_active_trait_id = ""
 	_summary_expanded = false
@@ -525,29 +615,32 @@ func _draw() -> void:
 	_click_regions.clear()
 	_section_header_rects.clear()
 
-	# Deceased mode
-	if _showing_deceased and _deceased_record.size() > 0:
-		_draw_deceased()
-		return
-
-	var entity: RefCounted = _entity_manager.get_entity(_entity_id)
-	if entity == null or not entity.is_alive:
-		# Try deceased registry
-		var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
-		if registry != null:
-			var record: Dictionary = registry.get_record(_entity_id)
-			if record.size() > 0:
-				_show_deceased(record)
-				return
-		visible = false
-		return
+	var entity: RefCounted
+	if _showing_deceased and _deceased_proxy != null:
+		entity = _deceased_proxy
+	else:
+		entity = _entity_manager.get_entity(_entity_id)
+		if entity == null or not entity.is_alive:
+			var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")
+			if registry != null:
+				var record: Dictionary = registry.get_record(_entity_id)
+				if record.size() > 0:
+					_show_deceased(record)
+					return
+			visible = false
+			return
 
 	var panel_w: float = size.x
 	var panel_h: float = size.y
 
 	# Background
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.06, 0.1, 0.06, 0.95))
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.3, 0.4, 0.3), false, 1.0)
+	var bg_color: Color = Color(0.06, 0.1, 0.06, 0.95)
+	var border_color: Color = Color(0.3, 0.4, 0.3)
+	if not entity.is_alive:
+		bg_color = Color(0.08, 0.07, 0.07, 0.95)
+		border_color = Color(0.35, 0.3, 0.28)
+	draw_rect(Rect2(0, 0, panel_w, panel_h), bg_color)
+	draw_rect(Rect2(0, 0, panel_w, panel_h), border_color, false, 1.0)
 
 	var font: Font = ThemeDB.fallback_font
 	var cx: float = 20.0
@@ -560,13 +653,16 @@ func _draw() -> void:
 		"miner": Color(0.5, 0.6, 0.75),
 	}
 	var jc: Color = job_colors.get(entity.job, Color.WHITE)
+	if not entity.is_alive:
+		jc = Color(0.55, 0.52, 0.50)
 
 	# ── Header ──
 	var gender_icon: String = "M" if entity.gender == "male" else "F"
 	var gender_color: Color = GENDER_COLORS.get(entity.gender, Color.WHITE)
 	var job_label: String = Locale.tr_id("JOB", entity.job)
 	var stage_label: String = Locale.tr_id("STAGE", entity.age_stage)
-	var header_text: String = "%s %s - %s (%s)" % [gender_icon, entity.entity_name, job_label, stage_label]
+	var name_prefix: String = "✝ " if not entity.is_alive else ""
+	var header_text: String = "%s %s%s - %s (%s)" % [gender_icon, name_prefix, entity.entity_name, job_label, stage_label]
 	draw_string(font, Vector2(cx, cy), header_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
 	# Gender icon colored separately
 	draw_string(font, Vector2(cx, cy), gender_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), gender_color)
@@ -576,22 +672,41 @@ func _draw() -> void:
 	var ref_date: Dictionary = {"year": current_date.year, "month": current_date.month, "day": current_date.day}
 	var age_detail: String = GameCalendarScript.format_age_detailed(entity.birth_date, ref_date)
 	var sid_text: String = "S%d" % entity.settlement_id if entity.settlement_id > 0 else Locale.ltr("UI_NONE")
-	var preg_text: String = ""
-	if entity.pregnancy_tick >= 0:
-		preg_text = "  |  %s" % Locale.ltr("UI_PREGNANT")
-	# Birth date from birth_date dictionary.
 	var birth_str: String = ""
 	if not entity.birth_date.is_empty():
 		birth_str = GameCalendarScript.format_birth_date(entity.birth_date)
 	else:
 		birth_str = Locale.ltr("UI_BIRTH_DATE_UNKNOWN")
 	var life_stage_text: String = "%s | %s (%s)" % [stage_label, age_detail, birth_str]
-	draw_string(font, Vector2(cx, cy + 14), "%s: %s  |  %s  |  %s: (%d, %d)%s" % [
-		Locale.ltr("UI_SETTLEMENT"), sid_text,
-		life_stage_text, Locale.ltr("UI_POS"),
-		entity.position.x, entity.position.y, preg_text,
-	], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-	cy += 22.0
+	if entity.is_alive:
+		var preg_text: String = ""
+		if entity.pregnancy_tick >= 0:
+			preg_text = "  |  %s" % Locale.ltr("UI_PREGNANT")
+		draw_string(font, Vector2(cx, cy + 14), "%s: %s  |  %s  |  %s: (%d, %d)%s" % [
+			Locale.ltr("UI_SETTLEMENT"), sid_text,
+			life_stage_text, Locale.ltr("UI_POS"),
+			entity.position.x, entity.position.y, preg_text,
+		], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+		cy += 22.0
+	else:
+		draw_string(font, Vector2(cx, cy + 14), "%s: %s  |  %s" % [
+			Locale.ltr("UI_SETTLEMENT"), sid_text, life_stage_text,
+		], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+		cy += 16.0
+		# Death date + cause
+		var dd: Dictionary = entity.death_date
+		draw_string(font, Vector2(cx, cy + 12),
+			"✝ %d/%02d/%02d  (%.1f yr)" % [dd.get("year", 0), dd.get("month", 1), dd.get("day", 1), entity.death_age_years],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.65, 0.55, 0.45))
+		cy += 14.0
+		var cause_raw: String = entity.death_cause
+		var cause_display: String = Locale.tr_id("DEATH", cause_raw)
+		if cause_display == cause_raw:
+			cause_display = cause_raw.capitalize().replace("_", " ")
+		draw_string(font, Vector2(cx, cy + 12),
+			"%s: %s" % [Locale.ltr("UI_CAUSE_OF_DEATH"), cause_display],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.5, 0.4))
+		cy += 22.0
 	_draw_separator(cx, cy, panel_w)
 	cy += 10.0
 
@@ -817,7 +932,7 @@ func _draw() -> void:
 			var love_pct: int = 0
 			if entity.emotion_data != null:
 				love_pct = int(entity.emotion_data.get_dyad("love"))
-			else:
+			elif entity.is_alive and "emotions" in entity:
 				love_pct = int(entity.emotions.get("love", 0.0) * 100)
 			var prefix: String = "%s: " % Locale.ltr("UI_PARTNER")
 			draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
@@ -949,24 +1064,58 @@ func _draw() -> void:
 		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f  |  %s: %d" % [Locale.ltr("UI_TOTAL_GATHERED"), entity.total_gathered, Locale.ltr("UI_BUILDINGS_BUILT"), entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 22.0
 
-	# ── Action History ──
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_RECENT_ACTIONS"), "recent_actions")
-	if not _section_collapsed.get("recent_actions", false):
-		var hist: Array = entity.action_history
-		var idx: int = hist.size() - 1
-		var hist_count: int = 0
-		while idx >= 0 and hist_count < 5:
-			var entry: Dictionary = hist[idx]
-			var act_d: Dictionary = GameCalendarScript.tick_to_date(entry.tick)
-			var date_str: String = ""
-			if act_d.year == current_date.year:
-				date_str = GameCalendarScript.format_short_datetime(entry.tick)
-			else:
-				date_str = GameCalendarScript.format_short_datetime_with_year(entry.tick)
-			draw_string(font, Vector2(cx + 10, cy + 11), "%s: %s" % [date_str, Locale.tr_id("STATUS", entry.action)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
-			cy += 13.0
-			idx -= 1
-			hist_count += 1
+	# ── Action History (alive only) ──
+	if entity.is_alive:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_RECENT_ACTIONS"), "recent_actions")
+		if not _section_collapsed.get("recent_actions", false):
+			var hist: Array = entity.action_history
+			var idx: int = hist.size() - 1
+			var hist_count: int = 0
+			while idx >= 0 and hist_count < 5:
+				var entry: Dictionary = hist[idx]
+				var act_d: Dictionary = GameCalendarScript.tick_to_date(entry.tick)
+				var date_str: String = ""
+				if act_d.year == current_date.year:
+					date_str = GameCalendarScript.format_short_datetime(entry.tick)
+				else:
+					date_str = GameCalendarScript.format_short_datetime_with_year(entry.tick)
+				draw_string(font, Vector2(cx + 10, cy + 11), "%s: %s" % [date_str, Locale.tr_id("STATUS", entry.action)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+				cy += 13.0
+				idx -= 1
+				hist_count += 1
+
+	# ── Life Events (deceased only) ──
+	if not entity.is_alive:
+		var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+		if chronicle != null:
+			cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_LIFE_EVENTS"), "life_events")
+			if not _section_collapsed.get("life_events", false):
+				var events: Array = chronicle.get_personal_events(entity.id)
+				var show_count: int = mini(8, events.size())
+				if show_count == 0:
+					draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_RECORDED_EVENTS"),
+						HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+					cy += 16.0
+				else:
+					var ev_idx: int = events.size() - 1
+					var count: int = 0
+					while ev_idx >= 0 and count < show_count:
+						var evt: Dictionary = events[ev_idx]
+						var desc: String
+						if evt.has("l10n_key") and not evt.get("l10n_key", "").is_empty():
+							var l10n_key: String = evt.get("l10n_key", "")
+							var l10n_params_final: Dictionary = evt.get("l10n_params", {}).duplicate()
+							desc = Locale.trf(l10n_key, l10n_params_final)
+						else:
+							desc = evt.get("description", "?")
+						if desc.length() > 50:
+							desc = desc.substr(0, 47) + "..."
+						draw_string(font, Vector2(cx + 10, cy + 11),
+							"Y%d M%d: %s" % [evt.get("year", 0), evt.get("month", 0), desc],
+							HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+						cy += 13.0
+						ev_idx -= 1
+						count += 1
 
 	# Track content height for scrolling
 	_content_height = cy + _scroll_offset + 20.0
@@ -1067,6 +1216,8 @@ func _show_deceased(record: Dictionary) -> void:
 	_deceased_record = record
 	_entity_id = record.get("id", -1)
 	_scroll_offset = 0.0
+	_deceased_proxy = DeceasedEntityProxy.new(record)
+	queue_redraw()
 
 
 func show_entity_or_deceased(entity_id: int) -> void:
@@ -1096,262 +1247,3 @@ func _lookup_name(entity_id: int) -> String:
 			return record.get("name", Locale.ltr("UI_UNKNOWN")) + " ☠"
 	return Locale.ltr("UI_UNKNOWN")
 
-
-func _draw_deceased() -> void:
-	_click_regions.clear()
-	var r: Dictionary = _deceased_record
-	var panel_w: float = size.x
-	var panel_h: float = size.y
-
-	# Background (darker, death theme)
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.08, 0.06, 0.08, 0.95))
-	draw_rect(Rect2(0, 0, panel_w, panel_h), Color(0.4, 0.3, 0.4), false, 1.0)
-
-	var font: Font = ThemeDB.fallback_font
-	var cx: float = 20.0
-	var cy: float = 28.0 - _scroll_offset
-
-	# Header
-	var gender_icon: String = "M" if r.get("gender", "") == "male" else "F"
-	var header: String = "%s %s %s" % [gender_icon, r.get("name", Locale.ltr("UI_UNKNOWN")), Locale.ltr("UI_DECEASED_HEADER")]
-	draw_string(font, Vector2(cx, cy), header, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color(0.7, 0.5, 0.5))
-	cy += 6.0
-
-	# Life span
-	var birth_str: String = "?"
-	var death_str: String = "?"
-	var birth_tick: int = r.get("birth_tick", 0)
-	var death_tick: int = r.get("death_tick", 0)
-	var birth_date: Dictionary = r.get("birth_date", {})
-	var death_date: Dictionary = r.get("death_date", {})
-	if birth_tick >= 0:
-		var bd: Dictionary = GameCalendarScript.tick_to_date(birth_tick)
-		birth_str = "Y%d M%d D%d" % [bd.year, bd.month, bd.day]
-	else:
-		birth_str = Locale.ltr("UI_FIRST_GENERATION")
-	var dd: Dictionary = GameCalendarScript.tick_to_date(death_tick)
-	death_str = "Y%d M%d D%d" % [dd.year, dd.month, dd.day]
-	var age_str: String = "?"
-	if not birth_date.is_empty() and not death_date.is_empty():
-		age_str = GameCalendarScript.format_age_detailed(birth_date, death_date)
-	else:
-		age_str = "%.0f%s" % [r.get("death_age_years", 0.0), Locale.ltr("UI_AGE_YEARS_UNIT")]
-	var age_at_death_text: String = Locale.trf("UI_AGE_AT_DEATH_FMT", {"age": age_str})
-	draw_string(font, Vector2(cx, cy + 14), "%s ~ %s (%s)" % [birth_str, death_str, age_at_death_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
-	cy += 18.0
-
-	if not birth_date.is_empty() and not death_date.is_empty():
-		var survival: Dictionary = GameCalendarScript.calculate_detailed_age(birth_date, death_date)
-		var total_days_str: String = GameCalendarScript.format_number(survival.total_days)
-		var dur_parts: Array = []
-		if survival.years > 0:
-			dur_parts.append("%d %s" % [survival.years, Locale.ltr("UI_AGE_YEARS_UNIT")])
-		if survival.months > 0:
-			dur_parts.append("%d%s" % [survival.months, Locale.ltr("UI_AGE_MONTHS")])
-		dur_parts.append("%d%s" % [survival.days, Locale.ltr("UI_AGE_DAYS")])
-		draw_string(font, Vector2(cx, cy + 14), "%s: %s (%s%s)" % [Locale.ltr("UI_SURVIVAL_DURATION"), " ".join(dur_parts), total_days_str, Locale.ltr("UI_AGE_DAYS")], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
-		cy += 18.0
-
-	# Cause of death
-	var cause_raw: String = r.get("death_cause", "unknown")
-	var cause_display: String = Locale.tr_id("DEATH", cause_raw)
-	draw_string(font, Vector2(cx, cy + 14), "%s: %s" % [Locale.ltr("UI_CAUSE_OF_DEATH"), cause_display], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.5, 0.5))
-	cy += 18.0
-	_draw_separator(cx, cy, panel_w)
-	cy += 10.0
-
-	# Job and settlement
-	var bar_w: float = panel_w - 40.0
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INFO"))
-	var job_id: String = str(r.get("job", "none"))
-	var job_text: String = Locale.tr_id("JOB", job_id)
-	var stage_id: String = str(r.get("age_stage", ""))
-	var stage_text: String = Locale.tr_id("STAGE", stage_id) if stage_id != "" else Locale.ltr("UI_UNKNOWN")
-	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s | %s: %s" % [Locale.ltr("UI_JOB"), job_text, Locale.ltr("UI_STAGE"), stage_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-	cy += 16.0
-	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f | %s: %d" % [Locale.ltr("UI_GATHERED_LABEL"), r.get("total_gathered", 0.0), Locale.ltr("UI_BUILT_LABEL"), r.get("buildings_built", 0)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-	cy += 22.0
-
-	# ── Status at death ──
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATUS"))
-	var action_id: String = str(r.get("current_action", "idle"))
-	var action_text: String = Locale.tr_id("STATUS", action_id)
-	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_ACTION"), action_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-	cy += 16.0
-	var inv: Dictionary = r.get("inventory", {})
-	draw_string(font, Vector2(cx + 10, cy + 12), "%s: F:%.1f  W:%.1f  S:%.1f" % [
-		Locale.ltr("UI_INVENTORY"), inv.get("food", 0.0), inv.get("wood", 0.0), inv.get("stone", 0.0),
-	], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-	cy += 22.0
-
-	# ── Needs at death ──
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"))
-	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), r.get("hunger", 0.0), Color(0.9, 0.2, 0.2))
-	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), r.get("energy", 0.0), Color(0.9, 0.8, 0.2))
-	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), r.get("social", 0.0), Color(0.3, 0.5, 0.9))
-	cy += 6.0
-
-	# ── Emotions at death ──
-	var emo_dict: Dictionary = r.get("emotion_data", {})
-	if not emo_dict.is_empty():
-		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"))
-		var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
-		var ed: RefCounted = EmotionDataScript.from_dict(emo_dict)
-		for i in range(ed._emotion_order.size()):
-			var emo_id: String = ed._emotion_order[i]
-			var val: float = ed.get_emotion(emo_id) / 100.0
-			var display_label: String = ""
-			if Locale.current_locale == "ko":
-				var kr_label = ed.call("get_intensity_label_kr", emo_id)
-				if kr_label != null and kr_label != "":
-					display_label = str(kr_label)
-			if display_label == "":
-				display_label = ed.get_intensity_label(emo_id)
-			if display_label == "":
-				display_label = Locale.ltr("EMO_" + emo_id.to_upper())
-			cy = _draw_bar(font, cx + 10, cy, bar_w, display_label, val, EMOTION_COLORS.get(emo_id, Color.WHITE))
-		cy += 4.0
-		var va_text: String = "%s: %s %+.0f | %s %.0f" % [Locale.ltr("UI_MOOD"), Locale.ltr("UI_VALENCE"), ed.valence, Locale.ltr("UI_AROUSAL"), ed.arousal]
-		draw_string(font, Vector2(cx + 10, cy + 12), va_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
-		cy += 16.0
-		# Stress bar
-		cy += 2.0
-		var stress_val: float = ed.stress
-		var stress_ratio: float = clampf(stress_val / 1000.0, 0.0, 1.0)
-		var stress_label: String = "%s: %.0f" % [Locale.ltr("UI_STRESS"), stress_val]
-		cy = _draw_bar(font, cx + 10, cy, bar_w, stress_label, stress_ratio, STRESS_COLOR)
-		cy += 6.0
-
-	# Family (clickable)
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_FAMILY"))
-
-	# Partner
-	var partner_id: int = r.get("partner_id", -1)
-	if partner_id > 0:
-		var prefix: String = "%s: " % Locale.ltr("UI_PARTNER")
-		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
-		var prefix_w: float = font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-		var pname: String = _lookup_name(partner_id)
-		var npos := Vector2(cx + 10 + prefix_w, cy + 12)
-		draw_string(font, npos, pname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.9, 0.9))
-		_register_click_region(npos, pname, partner_id, font, GameConfig.get_font_size("popup_body"))
-		cy += 16.0
-
-	# Parents
-	var parent_ids: Array = r.get("parent_ids", [])
-	if parent_ids.size() > 0:
-		var prefix: String = "%s: " % Locale.ltr("UI_PARENTS")
-		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
-		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-		for i in range(parent_ids.size()):
-			var pid: int = parent_ids[i]
-			var pname: String = _lookup_name(pid)
-			if i > 0:
-				draw_string(font, Vector2(name_x, cy + 12), ", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
-				name_x += font.get_string_size(", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-			var npos := Vector2(name_x, cy + 12)
-			draw_string(font, npos, pname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.9, 0.9))
-			_register_click_region(npos, pname, pid, font, GameConfig.get_font_size("popup_body"))
-			name_x += font.get_string_size(pname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-		cy += 16.0
-
-	# Children
-	var children_ids: Array = r.get("children_ids", [])
-	if children_ids.size() > 0:
-		var prefix: String = "%s: " % Locale.ltr("UI_CHILDREN")
-		draw_string(font, Vector2(cx + 10, cy + 12), prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
-		var name_x: float = cx + 10 + font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-		for i in range(children_ids.size()):
-			var cid: int = children_ids[i]
-			var cname: String = _lookup_name(cid)
-			if i > 0:
-				draw_string(font, Vector2(name_x, cy + 12), ", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 0.7))
-				name_x += font.get_string_size(", ", HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-			if name_x > size.x - 40:
-				cy += 14.0
-				name_x = cx + 20
-			var npos := Vector2(name_x, cy + 12)
-			draw_string(font, npos, cname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.4, 0.9, 0.9))
-			_register_click_region(npos, cname, cid, font, GameConfig.get_font_size("popup_body"))
-			name_x += font.get_string_size(cname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-		cy += 16.0
-	cy += 6.0
-
-	# Personality
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_PERSONALITY"))
-	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
-	var p_dict: Dictionary = r.get("personality", {})
-	var pd: RefCounted
-	if p_dict.has("facets"):
-		pd = PersonalityDataScript.from_dict(p_dict)
-	else:
-		pd = PersonalityDataScript.new()
-		pd.migrate_from_big_five(p_dict)
-	var axis_labels: Dictionary = {
-		"H": Locale.ltr("UI_HEXACO_H"),
-		"E": Locale.ltr("UI_HEXACO_E"),
-		"X": Locale.ltr("UI_HEXACO_X"),
-		"A": Locale.ltr("UI_HEXACO_A"),
-		"C": Locale.ltr("UI_HEXACO_C"),
-		"O": Locale.ltr("UI_HEXACO_O"),
-	}
-
-	for axis_id in pd.AXIS_IDS:
-		var axis_val: float = pd.axes.get(axis_id, 0.5)
-		var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
-		var is_expanded: bool = _expanded_axes.get(axis_id, false)
-		var arrow: String = "▼" if is_expanded else "▶"
-		var label: String = "%s %s" % [arrow, axis_labels.get(axis_id, axis_id)]
-
-		var axis_y: float = cy
-		cy = _draw_bar(font, cx + 10, cy, bar_w, label, axis_val, color)
-
-		_click_regions.append({
-			"rect": Rect2(cx + 10, axis_y, bar_w, 16.0),
-			"entity_id": -1,
-			"axis_id": axis_id,
-		})
-
-		if is_expanded:
-			var fkeys: Array = pd.FACET_KEYS[axis_id]
-			for fk in fkeys:
-				var fval: float = pd.facets.get(fk, 0.5)
-				var fname: String = "    " + Locale.ltr("FACET_" + fk.to_upper())
-				var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
-				cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
-	cy += 4.0
-
-	# ── Traits ──
-	cy = _draw_trait_section(font, cx, cy, pd)
-
-	# Chronicle events
-	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-	if chronicle != null:
-		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_LIFE_EVENTS"))
-		var events: Array = chronicle.get_personal_events(r.get("id", -1))
-		var show_count: int = mini(8, events.size())
-		if show_count == 0:
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_RECORDED_EVENTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
-			cy += 16.0
-		else:
-			var idx: int = events.size() - 1
-			var count: int = 0
-			while idx >= 0 and count < show_count:
-				var evt: Dictionary = events[idx]
-				var desc: String
-				if evt.has("l10n_key") and not evt.get("l10n_key", "").is_empty():
-					var l10n_key: String = evt.get("l10n_key", "")
-					var l10n_params: Dictionary = evt.get("l10n_params", {})
-					desc = Locale.trf(l10n_key, l10n_params)
-				else:
-					desc = evt.get("description", "?")
-				if desc.length() > 50:
-					desc = desc.substr(0, 47) + "..."
-				draw_string(font, Vector2(cx + 10, cy + 11), "Y%d M%d: %s" % [evt.get("year", 0), evt.get("month", 0), desc], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
-				cy += 13.0
-				idx -= 1
-				count += 1
-
-	_content_height = cy + _scroll_offset + 20.0
-	draw_string(font, Vector2(panel_w * 0.5 - 60, panel_h - 12), Locale.ltr("UI_SCROLL_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
-	_draw_scrollbar()

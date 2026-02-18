@@ -1,5 +1,34 @@
 # Progress Log
 
+## DeceasedEntityProxy 통합 렌더 경로 — T-2013 — 2026-02-19
+
+### Context
+사망 패널이 생존 패널과 별개 코드 경로(_draw_deceased)로 운영되어 기능 동기화 부담.
+DeceasedEntityProxy 패턴으로 단일 _draw() 경로 통합.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2013-01 | deceased_registry.gd 스냅샷 필드 추가 | 🟢 DISPATCH | ask_codex | 독립 파일, 명확한 스펙 |
+| T-2013-02 | entity_detail_panel.gd DeceasedEntityProxy + 통합 렌더 | 🟢 DISPATCH | ask_codex | 단일 파일, 스펙 완전 제공 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+두 파일 독립적 → 병렬 dispatch
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100%
+- Files changed: 2
+- Dispatch tool: ask_codex (2 tickets)
+- Key changes:
+  - deceased_registry.gd: speed/strength/trauma_scars/violation_history/display_traits 스냅샷 + _snapshot_display_traits() 헬퍼
+  - entity_detail_panel.gd: DeceasedEntityProxy inner class + 통합 _draw() 경로 + _draw_deceased() 삭제 (~257 lines)
+
+---
+
+
 ## Trait 2-레벨 하이브리드 시스템 — T-2008 — 2026-02-19
 
 ### Context
