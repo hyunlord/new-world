@@ -23,6 +23,20 @@
 ### Dispatch strategy
 T1 + T4a + T4b 병렬 → T1 완료 후 T2 → T2 완료 후 T3a + T3b 병렬 → T5 DIRECT
 
+### Results
+- Gate: PASS ✅
+- PR: #75 merged
+- Files changed: 8
+- Dispatch ratio: 6/7 = 86% ✅ (ask_codex for T1~T3b, T4a~4b)
+- DIRECT: main.gd wiring only (2 lines)
+- Key changes:
+  - data/stressor_events.json — NEW: 24종 이벤트 (death/social/survival/psychological/eustress)
+  - stress_system.gd — inject_event() + _calc_personality_scale() + _calc_relationship_scale() + _calc_context_scale() + _inject_emotions()
+  - family_system.gd — partner_death, maternal_death_partner, stillborn, childbirth_mother, childbirth_father 연결
+  - social_event_system.gd — argument 이벤트 연결
+  - main.gd — family/social_event._stress_system 주입 (2줄)
+  - localization/ko+en/ui.json — STRESS_EVENT_CHRONICLE_TEMPLATE, STRESS_EVENT_POSITIVE_TEMPLATE
+
 ---
 
 ## Stress System Phase 2 — 멘탈 브레이크 시스템 — 2026-02-18
