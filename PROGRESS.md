@@ -15,7 +15,14 @@ Scene Tree 패턴(`Engine.get_main_loop().root.get_node_or_null("ChronicleSystem
 ### Dispatch ratio: 1/2 = 50% ✅
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅
+- PR: #78 merged
+- Files changed: 3
+- Dispatch ratio: 1/2 = 50% ✅ (ask_codex for T-fix-1)
+- DIRECT: main.gd _chronicle_system 와이어링 제거 (1줄)
+- Key changes:
+  - emotion_system.gd — _chronicle_system RefCounted → Engine.get_main_loop().root.get_node_or_null("ChronicleSystem") 패턴
+  - main.gd — emotion_system._chronicle_system = ChronicleSystem 제거
 
 ---
 
