@@ -590,5 +590,7 @@
   "MENTAL_BREAK_TYPE_FUGUE": "Dissociative Fugue",
   "MENTAL_BREAK_TYPE_PARANOIA": "Paranoia",
   "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL": "Compulsive Ritual",
-  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "Hysterical Bonding"
+  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "Hysterical Bonding",
+  "STRESS_EVENT_CHRONICLE_TEMPLATE": "{name} suffered great stress due to {event}.",
+  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name} found relief through {event}."
 }

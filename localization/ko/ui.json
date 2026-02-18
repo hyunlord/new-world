@@ -590,5 +590,7 @@
   "MENTAL_BREAK_TYPE_FUGUE": "해리성 둔주",
   "MENTAL_BREAK_TYPE_PARANOIA": "편집증",
   "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL": "강박 의식",
-  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "불안 집착"
+  "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "불안 집착",
+  "STRESS_EVENT_CHRONICLE_TEMPLATE": "{name}은(는) {event}(으)로 인해 큰 스트레스를 받았습니다.",
+  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name}은(는) {event}(으)로 스트레스가 완화되었습니다."
 }

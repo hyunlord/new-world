@@ -8,6 +8,7 @@ extends "res://scripts/core/simulation_system.gd"
 ## Yerkes & Dodson (1908) Eustress efficiency
 
 var _entity_manager: RefCounted
+var _stressor_defs: Dictionary = {}
 
 # ── Constants ─────────────────────────────────────────────────────────
 const STRESS_CLAMP_MAX: float = 2000.0
@@ -48,6 +49,7 @@ func _init() -> void:
 
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+	_load_stressor_defs()
 
 
 func execute_tick(tick: int) -> void:
@@ -398,6 +400,184 @@ func inject_stress_event(ed, source_id: String, instant: float,
 			"per_tick": per_tick * loss_mult * appraisal_scale,
 			"decay_rate": decay_rate,
 		})
+
+
+# ── 스트레서 이벤트 데이터 로드 ────────────────────────────────────────
+func _load_stressor_defs() -> void:
+	var path: String = "res://data/stressor_events.json"
+	if not FileAccess.file_exists(path):
+		push_warning("[StressSystem] stressor_events.json not found")
+		return
+	var f = FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		push_warning("[StressSystem] Cannot open stressor_events.json")
+		return
+	var text: String = f.get_as_text()
+	f.close()
+	var json = JSON.new()
+	var err: int = json.parse(text)
+	if err != OK:
+		push_error("[StressSystem] stressor_events.json parse error: " + json.get_error_message())
+		return
+	var raw = json.get_data()
+	# _comment 키 제거
+	for key in raw.keys():
+		if not key.begins_with("_comment"):
+			_stressor_defs[key] = raw[key]
+
+
+# ── Personality-aware 이벤트 스트레스 주입 ───────────────────────────
+## 학술: Lazarus (1984) 개인별 appraisal
+## HEXACO: 같은 사건도 성격에 따라 stress 강도가 다름
+## COR (Hobfoll 1989): is_loss=true → 2.5배
+func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
+	if entity == null:
+		return
+	var ed = entity.emotion_data
+	if ed == null:
+		return
+	if not _stressor_defs.has(event_id):
+		push_warning("[StressSystem] Unknown stressor event: %s" % event_id)
+		return
+
+	var sdef = _stressor_defs[event_id]
+
+	# 1) Base 값
+	var instant = float(sdef.get("base_instant", 0.0))
+	var per_tick = float(sdef.get("base_per_tick", 0.0))
+	var decay_rate = float(sdef.get("base_decay_rate", 0.05))
+	var is_loss = sdef.get("is_loss", false)
+
+	# 2) 성격 스케일
+	var p_mods = sdef.get("personality_modifiers", {})
+	var personality_scale = _calc_personality_scale(entity, p_mods)
+
+	# 3) 관계 스케일
+	var r_def = sdef.get("relationship_scaling", {})
+	var relationship_scale = _calc_relationship_scale(context, r_def)
+
+	# 4) 상황 스케일
+	var c_mods = sdef.get("context_modifiers", {})
+	var context_scale = _calc_context_scale(context, c_mods)
+
+	# 5) COR 손실 혐오
+	var loss_mult: float = 2.5 if is_loss else 1.0
+
+	# 6) 최종 계산
+	var total_scale = personality_scale * relationship_scale * context_scale
+	var final_instant = instant * total_scale * loss_mult
+	var final_per_tick = per_tick * total_scale * loss_mult
+
+	# 7) Stress 주입
+	ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+
+	if absf(final_per_tick) > 0.01:
+		ed.stress_traces.append({
+			"source_id": event_id,
+			"per_tick": final_per_tick,
+			"decay_rate": decay_rate,
+		})
+
+	# 8) 감정 직접 주입
+	var emo_inject = sdef.get("emotion_inject", {})
+	_inject_emotions(ed, emo_inject, total_scale)
+
+	# 9) 디버그 로그
+	if OS.is_debug_build():
+		var ename = entity.entity_name if "entity_name" in entity else "?"
+		print("[STRESS_EVENT] %s | %s | inst=%.0f ptk=%.1f | p=%.2f r=%.2f c=%.2f | loss=%s" % [
+			ename, event_id, final_instant, final_per_tick,
+			personality_scale, relationship_scale, context_scale,
+			str(is_loss)
+		])
+
+
+func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
+	if p_mods.is_empty():
+		return 1.0
+
+	var pd = entity.personality
+	var scale: float = 1.0
+
+	for key in p_mods:
+		if key == "traits":
+			continue
+		var mod = p_mods[key]
+		if typeof(mod) != TYPE_DICTIONARY:
+			continue
+		var weight = float(mod.get("weight", 0.0))
+		var direction = mod.get("direction", "high_amplifies")
+
+		# 축 또는 facet 값 가져오기
+		var value: float = 0.5
+		if pd != null:
+			if key.ends_with("_axis"):
+				var axis_id: String = key.substr(0, key.length() - 5)
+				value = float(pd.axes.get(axis_id, 0.5))
+			else:
+				value = float(pd.facets.get(key, 0.5))
+
+		# 방향에 따른 배수
+		var deviation: float
+		if direction == "high_amplifies":
+			deviation = (value - 0.5) * 2.0
+		else:
+			deviation = (0.5 - value) * 2.0
+
+		scale *= (1.0 + weight * deviation)
+
+	# Trait 배수
+	var trait_mods = p_mods.get("traits", {})
+	if typeof(trait_mods) == TYPE_DICTIONARY:
+		for trait_id in trait_mods:
+			if _entity_has_trait(entity, trait_id):
+				scale *= float(trait_mods[trait_id])
+
+	return clampf(scale, 0.05, 4.0)
+
+
+func _calc_relationship_scale(context: Dictionary, r_def: Dictionary) -> float:
+	var method = r_def.get("method", "none")
+	if method == "none" or method == "":
+		return 1.0
+	if method == "bond_strength":
+		var bond = float(context.get("bond_strength", 0.5))
+		var min_m = float(r_def.get("min_mult", 0.3))
+		var max_m = float(r_def.get("max_mult", 1.5))
+		return clampf(min_m + (max_m - min_m) * bond, min_m, max_m)
+	return 1.0
+
+
+func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
+	var scale: float = 1.0
+	for key in c_mods:
+		if context.get(key, false):
+			scale *= float(c_mods[key])
+	return clampf(scale, 0.1, 5.0)
+
+
+func _entity_has_trait(entity, trait_id: String) -> bool:
+	for t in entity.active_traits:
+		if t.get("id", "") == trait_id:
+			return true
+	return false
+
+
+func _inject_emotions(ed, emo_inject: Dictionary, scale: float) -> void:
+	for key in emo_inject:
+		var raw_val = float(emo_inject[key]) * scale
+		# key 형식: "sadness_fast", "trust_slow"
+		var last_underscore: int = key.rfind("_")
+		if last_underscore < 0:
+			continue
+		var emo_name: String = key.substr(0, last_underscore)
+		var layer: String = key.substr(last_underscore + 1)
+		if layer == "fast":
+			if ed.fast.has(emo_name):
+				ed.fast[emo_name] = clampf(ed.fast.get(emo_name, 0.0) + raw_val, 0.0, 100.0)
+		elif layer == "slow":
+			if ed.slow.has(emo_name):
+				ed.slow[emo_name] = clampf(ed.slow.get(emo_name, 0.0) + raw_val, -50.0, 100.0)
 
 
 # ── Debug log ─────────────────────────────────────────────────────────

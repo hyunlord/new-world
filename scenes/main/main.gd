@@ -165,9 +165,11 @@ func _ready() -> void:
 
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
+	social_event_system._stress_system = stress_system
 
 	family_system = FamilySystem.new()
 	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng, mortality_system)
+	family_system._stress_system = stress_system
 
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)

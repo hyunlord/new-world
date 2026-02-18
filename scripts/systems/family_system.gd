@@ -10,6 +10,7 @@ var _relationship_manager: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 var _mortality_system: RefCounted  # For registering births in demography log
+var _stress_system: RefCounted = null
 var _rng: RandomNumberGenerator
 
 ## Fertile age range in ticks (15-45 years)
@@ -127,6 +128,11 @@ func _check_widowhood(alive: Array, tick: int) -> void:
 				"entity_name": entity.entity_name,
 				"tick": tick,
 			})
+			# 스트레서 이벤트: 파트너 사망 — 생존자에게 stress 주입
+			if _stress_system != null and entity.emotion_data != null:
+				_stress_system.inject_event(entity, "partner_death", {
+					"bond_strength": 0.8,
+				})
 
 
 ## ─── Direct coupling for single adults ──────────────────
@@ -287,6 +293,13 @@ func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 			"entity_name": mother.entity_name,
 			"tick": tick,
 		})
+		# 스트레서 이벤트: 출산 중 파트너 사망 — 아버지에게 stress 주입
+		if _stress_system != null and mother.partner_id > 0:
+			var father_entity: RefCounted = _entity_manager.get_entity(mother.partner_id)
+			if father_entity != null and father_entity.is_alive and father_entity.emotion_data != null:
+				_stress_system.inject_event(father_entity, "maternal_death_partner", {
+					"bond_strength": 0.8,
+				})
 		SimulationBus.emit_signal("ui_notification",
 			"%s died in childbirth" % mother.entity_name, "death")
 
@@ -334,6 +347,17 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 			"gestation_weeks": gestation_weeks,
 			"tick": tick,
 		})
+		# 스트레서 이벤트: 사산 — 산모와 아버지에게 stress 주입
+		if _stress_system != null:
+			var is_first: bool = mother.children_ids.size() == 0
+			if mother.emotion_data != null:
+				_stress_system.inject_event(mother, "stillborn", {
+					"first_pregnancy": is_first,
+				})
+			if father != null and father.emotion_data != null:
+				_stress_system.inject_event(father, "stillborn", {
+					"first_pregnancy": is_first,
+				})
 		return
 
 	# Register child with parents
@@ -352,6 +376,16 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 
 	# Emit lifecycle signal for ChronicleSystem
 	SimulationBus.entity_born.emit(child.id, child.entity_name, child.parent_ids, tick)
+	# 스트레서 이벤트: 출산 성공 — 산모(eustress), 아버지(eustress)
+	if _stress_system != null:
+		if mother.emotion_data != null:
+			_stress_system.inject_event(mother, "childbirth_mother", {
+				"first_child": mother.children_ids.size() == 1,
+			})
+		if father != null and father.emotion_data != null:
+			_stress_system.inject_event(father, "childbirth_father", {
+				"first_child": father.children_ids.size() == 1,
+			})
 
 	var father_name: String = father.entity_name if father != null else "?"
 	var twin_label: String = " (twin)" if baby_idx > 0 else ""
