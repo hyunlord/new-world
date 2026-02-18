@@ -1,14 +1,14 @@
 {
     "model": "plutchik",
     "emotions": {
-        "joy":          {"name_kr": "기쁨",   "color": "#FFE135", "opposite": "sadness"},
-        "trust":        {"name_kr": "신뢰",   "color": "#7BC67E", "opposite": "disgust"},
-        "fear":         {"name_kr": "공포",   "color": "#6BAF7B", "opposite": "anger"},
-        "surprise":     {"name_kr": "놀람",   "color": "#5B9BD5", "opposite": "anticipation"},
-        "sadness":      {"name_kr": "슬픔",   "color": "#3F51B5", "opposite": "joy"},
-        "disgust":      {"name_kr": "혐오",   "color": "#9C27B0", "opposite": "trust"},
-        "anger":        {"name_kr": "분노",   "color": "#F44336", "opposite": "fear"},
-        "anticipation": {"name_kr": "기대",   "color": "#FF9800", "opposite": "surprise"}
+        "joy":          {"name_kr": "기쁨",   "name_en": "Joy",          "color": "#FFE135", "opposite": "sadness"},
+        "trust":        {"name_kr": "신뢰",   "name_en": "Trust",        "color": "#7BC67E", "opposite": "disgust"},
+        "fear":         {"name_kr": "공포",   "name_en": "Fear",         "color": "#6BAF7B", "opposite": "anger"},
+        "surprise":     {"name_kr": "놀람",   "name_en": "Surprise",     "color": "#5B9BD5", "opposite": "anticipation"},
+        "sadness":      {"name_kr": "슬픔",   "name_en": "Sadness",      "color": "#3F51B5", "opposite": "joy"},
+        "disgust":      {"name_kr": "혐오",   "name_en": "Disgust",      "color": "#9C27B0", "opposite": "trust"},
+        "anger":        {"name_kr": "분노",   "name_en": "Anger",        "color": "#F44336", "opposite": "fear"},
+        "anticipation": {"name_kr": "기대",   "name_en": "Anticipation", "color": "#FF9800", "opposite": "surprise"}
     },
     "emotion_order": ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"],
     "intensity_labels": {

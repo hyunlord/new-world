@@ -75,6 +75,16 @@ var action_history: Array = []
 ## Each entry: {"scar_id": String, "stacks": int, "acquired_tick": int}
 var trauma_scars: Array = []
 
+## Phase 3B: Trait Violation History (persistent, serialized)
+## violation_history: per-action 위반 이력
+## 구조: { action_id: { count, desensitize_mult, ptsd_mult, last_tick } }
+## - count: 누적 위반 횟수 (시간 감쇠로 서서히 감소)
+## - desensitize_mult: 탈감작 배수 (1.0 = 정상, 0.3 = 최대 탈감작)
+## - ptsd_mult: PTSD 누적 배수 (1.0 = 정상, 2.0 = 최대 민감화)
+## - last_tick: 마지막 위반 tick (시간 감쇠 계산용)
+## 학술: Moral Disengagement Theory (Bandura, 1999), Kindling Theory (Post, 1992)
+var violation_history: Dictionary = {}
+
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
 var path_index: int = 0
@@ -152,6 +162,7 @@ func to_dict() -> Dictionary:
 		"emotion_data": emotion_data.to_dict() if emotion_data != null else {},
 		"birth_date": birth_date.duplicate(),
 		"trauma_scars": trauma_scars.duplicate(),
+		"violation_history": violation_history.duplicate(),
 	}
 
 
@@ -239,4 +250,5 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		# Legacy migration: create EmotionData from old 5-emotion values
 		e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
 	e.trauma_scars = data.get("trauma_scars", [])
+	e.violation_history = data.get("violation_history", {})
 	return e

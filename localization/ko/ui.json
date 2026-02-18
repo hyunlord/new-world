@@ -703,5 +703,17 @@
   "SCAR_complicated_grief": "복잡성 애도",
   "SCAR_dissociative_tendency": "해리 경향",
   "SCAR_chronic_paranoia": "만성 편집증",
-  "SCAR_anxious_attachment": "불안 애착"
+  "SCAR_anxious_attachment": "불안 애착",
+  "VIOLATION_GUILT_MINOR": "{name}은(는) 방금 한 행동에 작은 불편함을 느꼈다.",
+  "VIOLATION_GUILT_MODERATE": "{name}은(는) 자신의 행동에 죄책감을 느끼고 있다.",
+  "VIOLATION_GUILT_SEVERE": "{name}은(는) 자신의 행동에 극심한 죄책감을 느꼈다.",
+  "VIOLATION_INTRUSIVE_THOUGHT": "{name}의 머릿속에 과거의 기억이 갑작스럽게 떠올랐다.",
+  "VIOLATION_DESENSITIZED": "{name}은(는) 이런 일에 점점 무감각해지고 있다.",
+  "VIOLATION_PTG_CREATIVE": "{name}은(는) 고통을 창작으로 승화하기 시작했다.",
+  "VIOLATION_PTG_CURIOUS": "{name}은(는) 고통을 통해 더 깊은 질문을 품게 되었다.",
+  "VIOLATION_PTG_FORGIVING": "{name}은(는) 힘든 경험을 통해 자신을 용서하는 법을 배웠다.",
+  "VIOLATION_WITNESS_SHAME": "{name}은(는) {witness}이(가) 지켜보는 앞에서 한 행동에 수치심을 느꼈다.",
+  "UI_VIOLATION_HISTORY": "위반 이력",
+  "UI_VIOLATION_DESENSITIZED_LABEL": "둔감화됨",
+  "UI_VIOLATION_PTSD_LABEL": "과민화됨"
 }

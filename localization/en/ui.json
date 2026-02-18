@@ -703,5 +703,17 @@
   "SCAR_complicated_grief": "Complicated Grief",
   "SCAR_dissociative_tendency": "Dissociative Tendency",
   "SCAR_chronic_paranoia": "Chronic Paranoia",
-  "SCAR_anxious_attachment": "Anxious Attachment"
+  "SCAR_anxious_attachment": "Anxious Attachment",
+  "VIOLATION_GUILT_MINOR": "{name} felt slightly uncomfortable about what they just did.",
+  "VIOLATION_GUILT_MODERATE": "{name} is feeling guilty about their actions.",
+  "VIOLATION_GUILT_SEVERE": "{name} is overwhelmed with guilt over what they did.",
+  "VIOLATION_INTRUSIVE_THOUGHT": "A sudden memory from the past forced itself into {name}'s mind.",
+  "VIOLATION_DESENSITIZED": "{name} is becoming numb to these kinds of actions.",
+  "VIOLATION_PTG_CREATIVE": "{name} has begun channeling their pain into creative work.",
+  "VIOLATION_PTG_CURIOUS": "{name}'s suffering has led them to ask deeper questions.",
+  "VIOLATION_PTG_FORGIVING": "{name} has learned to forgive themselves through hardship.",
+  "VIOLATION_WITNESS_SHAME": "{name} felt shame for acting that way in front of {witness}.",
+  "UI_VIOLATION_HISTORY": "Violation History",
+  "UI_VIOLATION_DESENSITIZED_LABEL": "Desensitized",
+  "UI_VIOLATION_PTSD_LABEL": "Sensitized"
 }

@@ -313,3 +313,32 @@ Parallel with anything: T5, T6a, T6b
 
 ---
 
+## Phase 3B: CK3식 Trait 반대행동 시스템 (Trait Violation System) — T-3B-0 ~ T-3B-6 — 2026-02-18
+
+### Context
+에이전트가 자신의 Trait에 반하는 행동을 수행할 때 스트레스가 발생하는 시스템.
+Cognitive Dissonance Theory(Festinger 1957) 기반. CK3 stress system 원형.
+탈감작/PTSD 분기, intrusive thought, PTG, settlement norm 씨앗 포함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-3B-0 | tools/derive_composite_violation_stress.py — 104개 자동 파생 | 🟢 DISPATCH | ask_codex | 신규 Python 스크립트, 독립 |
+| T-3B-1 | entity_data.gd — violation_history 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+| T-3B-2 | scripts/systems/trait_violation_system.gd — 신규 시스템 | 🟢 DISPATCH | ask_codex | 신규 파일, T-3B-1 의존 |
+| T-3B-3 | scripts/ai/behavior_system.gd — violation check 연결 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3B-2 의존 |
+| T-3B-4 | localization/ko+en/ui.json — violation i18n 키 | 🟢 DISPATCH | ask_codex | i18n 파일, T-3B-2와 병렬 |
+| T-3B-5 | scripts/ui/entity_detail_panel.gd — violation UI | 🟢 DISPATCH | ask_codex | 단일 파일, T-3B-1 의존 |
+| T-3B-6 | scenes/main/main.gd — TraitViolationSystem 와이어링 | 🔴 DIRECT | — | 통합 배선, <50줄 |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+- Wave 1 (병렬): T-3B-0 (Python), T-3B-1 (entity_data) — 의존성 없음
+- Wave 2: T-3B-2 (trait_violation_system 신규 시스템) — T-3B-1 완료 후
+- Wave 3 (병렬): T-3B-3 (behavior_system), T-3B-4 (i18n) — T-3B-2 완료 후
+- Wave 4: T-3B-5 (entity_detail_panel UI) — T-3B-1 완료 후 병렬 가능
+- Wave 5 (DIRECT): T-3B-6 main.gd 와이어링
+
+---
+
