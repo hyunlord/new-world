@@ -26,6 +26,10 @@ signal couple_formed(entity_a_id: int, entity_a_name: String, entity_b_id: int, 
 signal follow_entity_requested(entity_id: int)
 signal follow_entity_stopped()
 
+## Trauma Scar events (Phase 3A)
+signal scar_acquired(data: Dictionary)
+signal scar_reactivated(data: Dictionary)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

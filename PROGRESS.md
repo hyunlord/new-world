@@ -31,6 +31,37 @@ partner_death에서 entity ID 0 엣지케이스, child_death bond_strength 미�
 
 ---
 
+## Phase 3A: 트라우마 흉터 (Trauma Scar) 시스템 — T-3A-0 ~ T-3A-8 — 2026-02-18
+
+### Context
+정신붕괴(MentalBreak) 회복 후 확률적으로 영구적인 트라우마 흉터가 생성되는 시스템.
+PTSD/DSM-5, Kindling Theory, Fear Conditioning, Allostatic Load 이론 기반.
+흉터는 감정 기준선 변화, 스트레스 민감도 증가, 정신붕괴 역치 감소, 재활성화 트리거를 가짐.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-3A-0 | mental_breaks.json — scar_chance_base + scar_id 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 JSON 파일, 독립 변경 |
+| T-3A-1 | data/trauma_scars.json — 9개 흉터 정의 생성 | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-3A-i18n | ko/en ui.json — SCAR_* + UI_TRAUMA_SCARS + CHRONICLE_SCAR_* 키 추가 | 🟢 DISPATCH | ask_codex | 신규 i18n 키, 독립 변경 |
+| T-3A-2 | entity_data.gd — trauma_scars 필드 + save/load | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-1 의존 |
+| T-3A-3 | scripts/systems/trauma_scar_system.gd — 신규 시스템 생성 | 🟢 DISPATCH | ask_codex | 신규 파일, T-3A-1+2 의존 |
+| T-3A-4+6 | mental_break_system.gd — 흉터 획득 + 역치 감소 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2+3 의존 |
+| T-3A-5 | stress_system.gd — 민감도 곱셈 + 재활성화 + 회복력 mod | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2+3 의존 |
+| T-3A-7 | entity_detail_panel.gd — 트라우마 흉터 UI 섹션 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2 의존 |
+| T-3A-8 | main.gd — TraumaScarSystem 와이어링 | 🔴 DIRECT | — | 통합 배선, <50줄, 공유 인터페이스 |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+- Wave 1 (병렬): T-3A-0, T-3A-1, T-3A-i18n (의존성 없음)
+- Wave 2 (sequential, Wave1 완료 후): T-3A-2 (trauma_scars.json 스키마 필요)
+- Wave 3 (병렬, Wave2 완료 후): T-3A-3 (신규 시스템), T-3A-7 (UI, trauma_scars 배열만 필요)
+- Wave 4 (병렬, Wave3 완료 후): T-3A-4+6 (mental_break_system), T-3A-5 (stress_system)
+- Wave 5 (DIRECT): T-3A-8 main.gd 배선
+
+---
+
 ## Phase 2 chronicle_system 접근 방식 수정 — 2026-02-18
 
 ### Context

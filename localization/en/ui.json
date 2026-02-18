@@ -691,5 +691,17 @@
   "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL": "Compulsive Ritual",
   "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "Hysterical Bonding",
   "STRESS_EVENT_CHRONICLE_TEMPLATE": "{name} suffered great stress due to {event}.",
-  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name} found relief through {event}."
+  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name} found relief through {event}.",
+  "UI_TRAUMA_SCARS": "Trauma Scars",
+  "CHRONICLE_SCAR_ACQUIRED": "{name} developed a '{scar}' scar",
+  "CHRONICLE_SCAR_REACTIVATED": "{name}'s '{scar}' scar was reactivated",
+  "SCAR_hypervigilance": "Hypervigilance",
+  "SCAR_anger_dysregulation": "Anger Dysregulation",
+  "SCAR_violence_imprint": "Violence Imprint",
+  "SCAR_emotional_numbness": "Emotional Numbness",
+  "SCAR_compulsive_consumption": "Compulsive Consumption",
+  "SCAR_complicated_grief": "Complicated Grief",
+  "SCAR_dissociative_tendency": "Dissociative Tendency",
+  "SCAR_chronic_paranoia": "Chronic Paranoia",
+  "SCAR_anxious_attachment": "Anxious Attachment"
 }

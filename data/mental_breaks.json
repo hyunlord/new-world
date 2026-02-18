@@ -20,7 +20,9 @@
     "trait_modifiers": {
       "cowardly": 1.6,
       "brave": 0.6
-    }
+    },
+    "scar_chance_base": 0.15,
+    "scar_id": "hypervigilance"
   },
   "rage": {
     "id": "rage",
@@ -43,7 +45,9 @@
     "trait_modifiers": {
       "hotheaded": 1.5,
       "peaceful": 0.5
-    }
+    },
+    "scar_chance_base": 0.12,
+    "scar_id": "anger_dysregulation"
   },
   "outrage_violence": {
     "id": "outrage_violence",
@@ -69,7 +73,9 @@
       "berserker": 1.6,
       "ruthless": 1.4,
       "peaceful": 0.3
-    }
+    },
+    "scar_chance_base": 0.25,
+    "scar_id": "violence_imprint"
   },
   "shutdown": {
     "id": "shutdown",
@@ -92,7 +98,9 @@
     "trait_modifiers": {
       "loner": 1.2,
       "depressive": 1.4
-    }
+    },
+    "scar_chance_base": 0.18,
+    "scar_id": "emotional_numbness"
   },
   "purge": {
     "id": "purge",
@@ -115,7 +123,9 @@
     "trait_modifiers": {
       "greedy": 1.3,
       "ascetic": 0.5
-    }
+    },
+    "scar_chance_base": 0.10,
+    "scar_id": "compulsive_consumption"
   },
   "grief_withdrawal": {
     "id": "grief_withdrawal",
@@ -139,7 +149,9 @@
     "trait_modifiers": {
       "empathic": 1.3,
       "cold_blooded": 0.6
-    }
+    },
+    "scar_chance_base": 0.22,
+    "scar_id": "complicated_grief"
   },
   "fugue": {
     "id": "fugue",
@@ -163,7 +175,9 @@
     "trait_modifiers": {
       "loner": 1.2,
       "rebellious": 1.1
-    }
+    },
+    "scar_chance_base": 0.15,
+    "scar_id": "dissociative_tendency"
   },
   "paranoia": {
     "id": "paranoia",
@@ -187,7 +201,9 @@
     "trait_modifiers": {
       "suspicious": 1.4,
       "trusting": 0.5
-    }
+    },
+    "scar_chance_base": 0.28,
+    "scar_id": "chronic_paranoia"
   },
   "compulsive_ritual": {
     "id": "compulsive_ritual",
@@ -210,7 +226,9 @@
     "trait_modifiers": {
       "ritualist": 1.4,
       "impulsive": 0.6
-    }
+    },
+    "scar_chance_base": 0.10,
+    "scar_id": "hypervigilance"
   },
   "hysterical_bonding": {
     "id": "hysterical_bonding",
@@ -233,6 +251,8 @@
     "trait_modifiers": {
       "social_clinger": 1.4,
       "loner": 0.4
-    }
+    },
+    "scar_chance_base": 0.10,
+    "scar_id": "anxious_attachment"
   }
 }

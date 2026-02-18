@@ -71,6 +71,10 @@ var total_gathered: float = 0.0
 var buildings_built: int = 0
 var action_history: Array = []
 
+## Phase 3A: Trauma Scars (persistent, serialized)
+## Each entry: {"scar_id": String, "stacks": int, "acquired_tick": int}
+var trauma_scars: Array = []
+
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
 var path_index: int = 0
@@ -147,6 +151,7 @@ func to_dict() -> Dictionary:
 		"emotions": emotions.duplicate(),
 		"emotion_data": emotion_data.to_dict() if emotion_data != null else {},
 		"birth_date": birth_date.duplicate(),
+		"trauma_scars": trauma_scars.duplicate(),
 	}
 
 
@@ -233,4 +238,5 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	else:
 		# Legacy migration: create EmotionData from old 5-emotion values
 		e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
+	e.trauma_scars = data.get("trauma_scars", [])
 	return e

@@ -99,6 +99,7 @@ var _section_collapsed: Dictionary = {
 	"personality": true,
 	"traits": false,
 	"emotions": true,
+	"trauma_scars": true,
 	"family": false,
 	"relationships": false,
 	"stats": true,
@@ -741,6 +742,25 @@ func _draw() -> void:
 				var val: float = entity.emotions.get(e_keys[i], 0.0)
 				cy = _draw_bar(font, cx + 10, cy, bar_w, e_labels[i], val, legacy_colors.get(e_keys[i], Color.WHITE))
 		cy += 6.0
+
+	# ── Trauma Scars ──
+	var has_scars: bool = not entity.trauma_scars.is_empty()
+	if has_scars:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAUMA_SCARS"), "trauma_scars")
+		if not _section_collapsed.get("trauma_scars", true):
+			for scar_entry in entity.trauma_scars:
+				var scar_id: String = scar_entry.get("scar_id", "")
+				var stacks: int = scar_entry.get("stacks", 1)
+				var scar_name_key: String = "SCAR_" + scar_id
+				var scar_name: String = Locale.ltr(scar_name_key)
+				var scar_text: String = scar_name
+				if stacks > 1:
+					scar_text += " x%d" % stacks
+				draw_string(font, Vector2(cx + 10, cy + 12), scar_text,
+					HORIZONTAL_ALIGNMENT_LEFT, -1,
+					GameConfig.get_font_size("popup_body"), Color(0.9, 0.4, 0.8))
+				cy += 16.0
+			cy += 4.0
 
 	# ── Family ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_FAMILY"), "family")

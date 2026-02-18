@@ -691,5 +691,17 @@
   "MENTAL_BREAK_TYPE_COMPULSIVE_RITUAL": "강박 의식",
   "MENTAL_BREAK_TYPE_HYSTERICAL_BONDING": "불안 집착",
   "STRESS_EVENT_CHRONICLE_TEMPLATE": "{name}은(는) {event}(으)로 인해 큰 스트레스를 받았습니다.",
-  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name}은(는) {event}(으)로 스트레스가 완화되었습니다."
+  "STRESS_EVENT_POSITIVE_TEMPLATE": "{name}은(는) {event}(으)로 스트레스가 완화되었습니다.",
+  "UI_TRAUMA_SCARS": "트라우마 흉터",
+  "CHRONICLE_SCAR_ACQUIRED": "{name}에게 '{scar}' 흉터가 생겼습니다",
+  "CHRONICLE_SCAR_REACTIVATED": "{name}의 '{scar}' 흉터가 재활성화되었습니다",
+  "SCAR_hypervigilance": "과각성",
+  "SCAR_anger_dysregulation": "분노 조절 장애",
+  "SCAR_violence_imprint": "폭력 각인",
+  "SCAR_emotional_numbness": "감정 마비",
+  "SCAR_compulsive_consumption": "강박적 소비",
+  "SCAR_complicated_grief": "복잡성 애도",
+  "SCAR_dissociative_tendency": "해리 경향",
+  "SCAR_chronic_paranoia": "만성 편집증",
+  "SCAR_anxious_attachment": "불안 애착"
 }
