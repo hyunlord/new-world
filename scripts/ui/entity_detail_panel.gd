@@ -99,6 +99,8 @@ var _section_collapsed: Dictionary = {
 	"personality": true,
 	"traits": false,
 	"emotions": true,
+	"trauma_scars": true,
+	"violation_history": false,
 	"family": false,
 	"relationships": false,
 	"stats": true,
@@ -741,6 +743,52 @@ func _draw() -> void:
 				var val: float = entity.emotions.get(e_keys[i], 0.0)
 				cy = _draw_bar(font, cx + 10, cy, bar_w, e_labels[i], val, legacy_colors.get(e_keys[i], Color.WHITE))
 		cy += 6.0
+
+	# ── Trauma Scars ──
+	var has_scars: bool = not entity.trauma_scars.is_empty()
+	if has_scars:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAUMA_SCARS"), "trauma_scars")
+		if not _section_collapsed.get("trauma_scars", true):
+			for scar_entry in entity.trauma_scars:
+				var scar_id: String = scar_entry.get("scar_id", "")
+				var stacks: int = scar_entry.get("stacks", 1)
+				var scar_name_key: String = "SCAR_" + scar_id
+				var scar_name: String = Locale.ltr(scar_name_key)
+				var scar_text: String = scar_name
+				if stacks > 1:
+					scar_text += " x%d" % stacks
+				draw_string(font, Vector2(cx + 10, cy + 12), scar_text,
+					HORIZONTAL_ALIGNMENT_LEFT, -1,
+					GameConfig.get_font_size("popup_body"), Color(0.9, 0.4, 0.8))
+				cy += 16.0
+			cy += 4.0
+
+	# ── Violation History (notable desensitization/PTSD only) ──
+	if "violation_history" in entity and not entity.violation_history.is_empty():
+		var notable: Array = []
+		var action_ids: Array = entity.violation_history.keys()
+		action_ids.sort()
+		for action_id in action_ids:
+			var record: Dictionary = entity.violation_history.get(action_id, {})
+			var dm: float = float(record.get("desensitize_mult", 1.0))
+			var pm: float = float(record.get("ptsd_mult", 1.0))
+			if dm < 0.7:
+				notable.append({"action": str(action_id), "type": "desensitized"})
+			elif pm > 1.4:
+				notable.append({"action": str(action_id), "type": "ptsd"})
+		if not notable.is_empty():
+			cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VIOLATION_HISTORY"), "violation_history")
+			if not _section_collapsed.get("violation_history", false):
+				for item in notable:
+					var action_text: String = str(item.get("action", ""))
+					var item_type: String = str(item.get("type", ""))
+					var action_label: String = Locale.tr_id("STATUS", action_text)
+					var label_key: String = "UI_VIOLATION_DESENSITIZED_LABEL" if item_type == "desensitized" else "UI_VIOLATION_PTSD_LABEL"
+					var line_color: Color = Color(0.6, 0.6, 0.6) if item_type == "desensitized" else Color(0.9, 0.5, 0.2)
+					var line_text: String = "%s - %s" % [action_label, Locale.ltr(label_key)]
+					draw_string(font, Vector2(cx + 10, cy + 12), line_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), line_color)
+					cy += 16.0
+				cy += 4.0
 
 	# ── Family ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_FAMILY"), "family")

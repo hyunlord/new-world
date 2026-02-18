@@ -17,6 +17,7 @@ const SHAKEN_DURATION_EXTREME: int = 120
 var _entity_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _break_defs: Dictionary = {}
+var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
 
 
 func _init() -> void:
@@ -30,6 +31,10 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 	_entity_manager = entity_manager
 	_rng = rng
 	_load_break_definitions()
+
+
+func set_trauma_scar_system(tss) -> void:
+	_trauma_scar_system = tss
 
 
 ## Load break definitions from JSON
@@ -105,6 +110,10 @@ func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 	if ed.reserve < 15.0:
 		threshold -= 80.0
 
+	# 트라우마 흉터 역치 감소
+	if _trauma_scar_system != null:
+		threshold -= _trauma_scar_system.get_scar_threshold_reduction(entity)
+
 	return maxf(threshold, THRESHOLD_MIN)
 
 
@@ -172,6 +181,19 @@ func _trigger_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 		entity.entity_name, break_type, duration, ed.stress
 	])
 
+## Debug: 강제 멘탈 브레이크 발동 (debug build 전용)
+## _trigger_break()의 public wrapper
+func force_break(entity: RefCounted, tick: int) -> void:
+	if entity == null:
+		return
+	var ed = entity.emotion_data
+	if ed == null:
+		return
+	if ed.mental_break_type != "":
+		print("[MentalBreakSystem] force_break: %s already in break (%s)" % [entity.entity_name, ed.mental_break_type])
+		return
+	_trigger_break(entity, ed, tick)
+
 
 ## 진행 중인 브레이크 틱 처리
 func _tick_active_break(entity: RefCounted, ed: RefCounted) -> void:
@@ -211,6 +233,13 @@ func _end_break(entity: RefCounted, ed: RefCounted) -> void:
 	print("[MENTAL_BREAK_END] %s: %s ended, catharsis %.0f%%, shaken %d ticks" % [
 		entity.entity_name, break_type, catharsis * 100.0, shaken_ticks
 	])
+
+	# 3.5) 트라우마 흉터 획득 시도 (TraumaScarSystem에 위임)
+	if _trauma_scar_system != null:
+		var scar_id: String = bdef.get("scar_id", "")
+		var scar_chance: float = bdef.get("scar_chance_base", 0.0)
+		if scar_id != "" and scar_chance > 0.0:
+			_trauma_scar_system.try_acquire_scar(entity, scar_id, scar_chance, ed.get_meta("current_tick", 0))
 
 	# 4) 상태 클리어
 	ed.mental_break_type = ""

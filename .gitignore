@@ -25,3 +25,5 @@ tickets/
 Thumbs.db
 desktop.ini
 
+# pycache
+*__pycache__*

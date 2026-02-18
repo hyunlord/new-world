@@ -100,6 +100,11 @@ func _debug_log_event(event_type: String, data: Dictionary) -> void:
 			print("[Tick %d] * %s socialized (social: %.0f%%)" % [tick, ename, data.get("social_after", 0.0) * 100])
 		"action_chosen":
 			pass  # Suppress — action_changed covers this
+		"trait_violation":
+			var action: String = data.get("action_id", "?")
+			var sev: String = data.get("severity", "?")
+			var sv: float = data.get("stress", 0.0)
+			print("[Tick %d] ! %s violated trait via '%s': stress=%.1f (%s)" % [tick, ename, action, sv, sev])
 		_:
 			print("[Tick %d] %s" % [tick, event_type])
 

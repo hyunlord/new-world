@@ -29,6 +29,8 @@ const MortalitySystem = preload("res://scripts/systems/mortality_system.gd")
 const ChildcareSystem = preload("res://scripts/systems/childcare_system.gd")
 const StressSystem = preload("res://scripts/systems/stress_system.gd")
 const MentalBreakSystem = preload("res://scripts/systems/mental_break_system.gd")
+const TraumaScarSystem = preload("res://scripts/systems/trauma_scar_system.gd")
+const TraitViolationSystem = preload("res://scripts/systems/trait_violation_system.gd")
 const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
 
 var sim_engine: RefCounted
@@ -63,6 +65,10 @@ var mortality_system: RefCounted
 var childcare_system: RefCounted
 var stress_system: RefCounted
 var mental_break_system: RefCounted
+var trauma_scar_system: RefCounted
+var trait_violation_system: RefCounted
+var debug_console = null
+var debug_panel = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -163,6 +169,17 @@ func _ready() -> void:
 	mental_break_system = MentalBreakSystem.new()
 	mental_break_system.init(entity_manager, sim_engine.rng)
 
+	trauma_scar_system = TraumaScarSystem.new()
+	trauma_scar_system.init({"entity_manager": entity_manager})
+	mental_break_system.set_trauma_scar_system(trauma_scar_system)
+	stress_system.set_trauma_scar_system(trauma_scar_system)
+
+	trait_violation_system = TraitViolationSystem.new()
+	trait_violation_system.init({"entity_manager": entity_manager})
+	trait_violation_system._stress_system = stress_system
+	trait_violation_system._trauma_scar_system = trauma_scar_system
+	behavior_system.set_trait_violation_system(trait_violation_system)
+
 	social_event_system = SocialEventSystem.new()
 	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
 	social_event_system._stress_system = stress_system
@@ -187,6 +204,8 @@ func _ready() -> void:
 	sim_engine.register_system(emotion_system)            # priority 32
 	sim_engine.register_system(stress_system)             # priority 34
 	sim_engine.register_system(mental_break_system)       # priority 35
+	sim_engine.register_system(trauma_scar_system)        # priority 36
+	sim_engine.register_system(trait_violation_system)   # priority 37
 	sim_engine.register_system(social_event_system)       # priority 37
 	sim_engine.register_system(age_system)                # priority 48
 	sim_engine.register_system(mortality_system)          # priority 49
@@ -207,6 +226,30 @@ func _ready() -> void:
 	pause_menu.save_requested.connect(_save_game_slot)
 	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)
+
+	# Debug Console + Panel (debug build only — self-destructs in release)
+	if OS.is_debug_build():
+		var _dc_script = load("res://scenes/debug/debug_console.gd")
+		if _dc_script != null:
+			debug_console = _dc_script.new()
+			debug_console._entity_manager = entity_manager
+			debug_console._stress_system = stress_system
+			debug_console._mental_break_system = mental_break_system
+			debug_console._trauma_scar_system = trauma_scar_system
+			debug_console._trait_violation_system = trait_violation_system
+			debug_console._sim_engine = sim_engine
+			add_child(debug_console)
+		var _dp_script = load("res://scenes/debug/debug_panel.gd")
+		if _dp_script != null:
+			debug_panel = _dp_script.new()
+			debug_panel._entity_manager = entity_manager
+			debug_panel._stress_system = stress_system
+			debug_panel._mental_break_system = mental_break_system
+			debug_panel._trauma_scar_system = trauma_scar_system
+			debug_panel._trait_violation_system = trait_violation_system
+			debug_panel._sim_engine = sim_engine
+			debug_panel._console = debug_console
+			add_child(debug_panel)
 
 	# Initialize name generator with sim RNG and entity manager
 	NameGenerator.init(sim_engine.rng, entity_manager)

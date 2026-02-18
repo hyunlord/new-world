@@ -38,6 +38,7 @@ const EVENT_STYLES: Dictionary = {
 	"population_milestone": {"icon": "P", "color": Color(0.3, 0.8, 0.9)},
 	"famine": {"icon": "!", "color": Color(0.9, 0.2, 0.1)},
 	"became_adult": {"icon": "A", "color": Color(0.5, 0.7, 0.9)},
+	"trait_violation": {"icon": "V", "color": Color(0.9, 0.5, 0.1)},
 }
 
 ## Filter button rects for click detection

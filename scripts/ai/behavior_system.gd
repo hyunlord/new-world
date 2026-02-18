@@ -6,6 +6,8 @@ var _rng: RandomNumberGenerator
 var _resource_map: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
+## TraitViolationSystem 참조 (Phase 3B), main.gd에서 주입
+var _trait_violation_system = null
 
 
 func _init() -> void:
@@ -22,6 +24,10 @@ func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberG
 	_resource_map = resource_map
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+
+
+func set_trait_violation_system(tvs) -> void:
+	_trait_violation_system = tvs
 
 
 func execute_tick(tick: int) -> void:
@@ -211,6 +217,20 @@ func _assign_break_action(entity: RefCounted, break_type: String, tick: int) -> 
 func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 	var old_action: String = entity.current_action
 	entity.current_action = action
+	# ── Trait 위반 체크 (Phase 3B) ─────────────────────────────
+	# 에이전트의 Trait에 반하는 행동 실행 시 스트레스 발생
+	# 학술: Cognitive Dissonance Theory (Festinger, 1957)
+	# 게임 레퍼런스: CK3 stress on trait-violating actions
+	if _trait_violation_system != null:
+		var vctx: Dictionary = {
+			"forced_by_authority": false,
+			"survival_necessity": entity.hunger < 0.3,
+			"witness_relationship": "none",
+			"victim_relationship": "stranger",
+			"is_habit": false,
+			"tick": tick,
+		}
+		_trait_violation_system.on_action_performed(entity, action, vctx)
 	# Clear cached path when action changes
 	if action != old_action:
 		entity.cached_path = []

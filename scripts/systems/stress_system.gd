@@ -9,6 +9,7 @@ extends "res://scripts/core/simulation_system.gd"
 
 var _entity_manager: RefCounted
 var _stressor_defs: Dictionary = {}
+var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
 
 # ── Constants ─────────────────────────────────────────────────────────
 const STRESS_CLAMP_MAX: float = 2000.0
@@ -50,6 +51,10 @@ func _init() -> void:
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_stressor_defs()
+
+
+func set_trauma_scar_system(tss) -> void:
+	_trauma_scar_system = tss
 
 
 func execute_tick(tick: int) -> void:
@@ -327,6 +332,9 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 	var fatigue_penalty: float = clampf((0.3 - energy) / 0.3, 0.0, 0.3) + clampf((0.3 - hunger) / 0.3, 0.0, 0.2)
 	r -= 0.20 * fatigue_penalty
 
+	# 트라우마 흉터 회복력 모디파이어 (음수 = 회복 더 느림)
+	if _trauma_scar_system != null:
+		r += _trauma_scar_system.get_scar_resilience_mod(entity)
 	ed.resilience = clampf(r, 0.05, 1.0)
 
 
@@ -465,6 +473,11 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 
 	# 6) 최종 계산
 	var total_scale = personality_scale * relationship_scale * context_scale
+	# 6.5) 트라우마 흉터 민감도 배수 + 재활성화 체크
+	if _trauma_scar_system != null:
+		total_scale *= _trauma_scar_system.get_scar_stress_sensitivity(entity)
+		# event_id를 context_type으로 사용해 흉터 재활성화 체크
+		_trauma_scar_system.check_reactivation(entity, event_id, 0)
 	var final_instant = instant * total_scale * loss_mult
 	var final_per_tick = per_tick * total_scale * loss_mult
 

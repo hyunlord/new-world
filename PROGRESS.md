@@ -31,6 +31,37 @@ partner_death에서 entity ID 0 엣지케이스, child_death bond_strength 미�
 
 ---
 
+## Phase 3A: 트라우마 흉터 (Trauma Scar) 시스템 — T-3A-0 ~ T-3A-8 — 2026-02-18
+
+### Context
+정신붕괴(MentalBreak) 회복 후 확률적으로 영구적인 트라우마 흉터가 생성되는 시스템.
+PTSD/DSM-5, Kindling Theory, Fear Conditioning, Allostatic Load 이론 기반.
+흉터는 감정 기준선 변화, 스트레스 민감도 증가, 정신붕괴 역치 감소, 재활성화 트리거를 가짐.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-3A-0 | mental_breaks.json — scar_chance_base + scar_id 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 JSON 파일, 독립 변경 |
+| T-3A-1 | data/trauma_scars.json — 9개 흉터 정의 생성 | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-3A-i18n | ko/en ui.json — SCAR_* + UI_TRAUMA_SCARS + CHRONICLE_SCAR_* 키 추가 | 🟢 DISPATCH | ask_codex | 신규 i18n 키, 독립 변경 |
+| T-3A-2 | entity_data.gd — trauma_scars 필드 + save/load | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-1 의존 |
+| T-3A-3 | scripts/systems/trauma_scar_system.gd — 신규 시스템 생성 | 🟢 DISPATCH | ask_codex | 신규 파일, T-3A-1+2 의존 |
+| T-3A-4+6 | mental_break_system.gd — 흉터 획득 + 역치 감소 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2+3 의존 |
+| T-3A-5 | stress_system.gd — 민감도 곱셈 + 재활성화 + 회복력 mod | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2+3 의존 |
+| T-3A-7 | entity_detail_panel.gd — 트라우마 흉터 UI 섹션 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3A-2 의존 |
+| T-3A-8 | main.gd — TraumaScarSystem 와이어링 | 🔴 DIRECT | — | 통합 배선, <50줄, 공유 인터페이스 |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+- Wave 1 (병렬): T-3A-0, T-3A-1, T-3A-i18n (의존성 없음)
+- Wave 2 (sequential, Wave1 완료 후): T-3A-2 (trauma_scars.json 스키마 필요)
+- Wave 3 (병렬, Wave2 완료 후): T-3A-3 (신규 시스템), T-3A-7 (UI, trauma_scars 배열만 필요)
+- Wave 4 (병렬, Wave3 완료 후): T-3A-4+6 (mental_break_system), T-3A-5 (stress_system)
+- Wave 5 (DIRECT): T-3A-8 main.gd 배선
+
+---
+
 ## Phase 2 chronicle_system 접근 방식 수정 — 2026-02-18
 
 ### Context
@@ -282,3 +313,59 @@ Parallel with anything: T5, T6a, T6b
 
 ---
 
+## Phase 3B: CK3식 Trait 반대행동 시스템 (Trait Violation System) — T-3B-0 ~ T-3B-6 — 2026-02-18
+
+### Context
+에이전트가 자신의 Trait에 반하는 행동을 수행할 때 스트레스가 발생하는 시스템.
+Cognitive Dissonance Theory(Festinger 1957) 기반. CK3 stress system 원형.
+탈감작/PTSD 분기, intrusive thought, PTG, settlement norm 씨앗 포함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-3B-0 | tools/derive_composite_violation_stress.py — 104개 자동 파생 | 🟢 DISPATCH | ask_codex | 신규 Python 스크립트, 독립 |
+| T-3B-1 | entity_data.gd — violation_history 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+| T-3B-2 | scripts/systems/trait_violation_system.gd — 신규 시스템 | 🟢 DISPATCH | ask_codex | 신규 파일, T-3B-1 의존 |
+| T-3B-3 | scripts/ai/behavior_system.gd — violation check 연결 | 🟢 DISPATCH | ask_codex | 단일 파일, T-3B-2 의존 |
+| T-3B-4 | localization/ko+en/ui.json — violation i18n 키 | 🟢 DISPATCH | ask_codex | i18n 파일, T-3B-2와 병렬 |
+| T-3B-5 | scripts/ui/entity_detail_panel.gd — violation UI | 🟢 DISPATCH | ask_codex | 단일 파일, T-3B-1 의존 |
+| T-3B-6 | scenes/main/main.gd — TraitViolationSystem 와이어링 | 🔴 DIRECT | — | 통합 배선, <50줄 |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+- Wave 1 (병렬): T-3B-0 (Python), T-3B-1 (entity_data) — 의존성 없음
+- Wave 2: T-3B-2 (trait_violation_system 신규 시스템) — T-3B-1 완료 후
+- Wave 3 (병렬): T-3B-3 (behavior_system), T-3B-4 (i18n) — T-3B-2 완료 후
+- Wave 4: T-3B-5 (entity_detail_panel UI) — T-3B-1 완료 후 병렬 가능
+- Wave 5 (DIRECT): T-3B-6 main.gd 와이어링
+
+---
+
+
+## Debug/Cheat Console + Panel — T-DC — 2026-02-18
+
+### Context
+인게임 F12 텍스트 콘솔 + F11 GUI 패널. Phase 3A/3B 시스템 검증용.
+OS.is_debug_build() 체크로 릴리즈에서 완전 비활성화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-DC-A | scenes/debug/debug_console.gd (UI+commands) | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-DC-B | scenes/debug/debug_panel.gd (5 tabs) | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| T-DC-C | localization/ko+en/debug.json | 🟢 DISPATCH | ask_codex | 신규 locale 파일 |
+| T-DC-D | mental_break_system.gd+simulation_engine.gd+locale.gd 소규모 추가 | 🟢 DISPATCH | ask_codex | 독립 파일, 소규모 |
+| T-DC-E | scenes/main/main.gd debug 배선 | 🔴 DIRECT | — | 통합 배선, ~20줄 |
+
+### Dispatch ratio: 8/9 = 89% ✅
+
+### Dispatch strategy
+- Jobs A, B, C, D → 병렬 background 동시 dispatch (no file overlap)
+- DIRECT job E (main.gd) → 즉시 구현 (Codex 작업 중)
+
+### Job IDs
+- A (debug_console.gd): 4f915440
+- B (debug_panel.gd): b451b5c5
+- C (locale json): 66933ba1
+- D (systems): 10f80269
