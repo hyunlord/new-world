@@ -21,8 +21,6 @@ var _memory_trace_ratio: float = 0.3
 var _memory_trace_default_hl_hours: float = 720.0  # 30 days
 var _memory_trace_trauma_hl_hours: float = 8760.0  # 365 days
 var _habituation_eta: float = 0.2
-var _stress_tau: float = 48.0
-var _stress_weights: Dictionary = {}
 var _contagion_kappa: Dictionary = {}
 var _contagion_distance_scale: float = 5.0
 var _contagion_min_source: float = 10.0
@@ -74,9 +72,6 @@ func _load_decay_parameters() -> void:
 	var mt_trauma_days = float(dp.get("memory_trace_trauma_half_life_days", 365))
 	_memory_trace_trauma_hl_hours = mt_trauma_days * 24.0
 	_habituation_eta = float(dp.get("habituation_eta", 0.2))
-	var stress_data = dp.get("stress", {})
-	_stress_tau = float(stress_data.get("tau_hours", 48.0))
-	_stress_weights = stress_data.get("weights", {"fear": 1.0, "anger": 0.9, "sadness": 1.1, "disgust": 0.6})
 	var contagion_data = dp.get("contagion", {})
 	_contagion_kappa = contagion_data.get("kappa", {"anger": 0.12, "fear": 0.10, "joy": 0.08, "disgust": 0.06, "trust": 0.06, "sadness": 0.04, "surprise": 0.03, "anticipation": 0.03})
 	_contagion_distance_scale = float(contagion_data.get("distance_scale", 5.0))
@@ -183,8 +178,7 @@ func execute_tick(tick: int) -> void:
 		# Step 6: Valence-Arousal recalculation
 		ed.recalculate_va()
 
-		# Step 7: Stress accumulation
-		_update_stress(ed, dt_hours)
+		# Step 7: Stress accumulation handled by StressSystem (stress_system.gd, priority=34)
 
 		# Step 8: Record habituation for processed events
 		for j in range(events.size()):
@@ -313,18 +307,6 @@ func _get_baseline(emo: String, pd: RefCounted) -> float:
 	var max_val = float(cfg.get("max", 100.0))
 	var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
 	return clampf(base_val + scale_val * z, min_val, max_val)
-
-
-# ═══════════════════════════════════════════════════
-# Stress Accumulation
-# ═══════════════════════════════════════════════════
-
-func _update_stress(ed: RefCounted, dt_hours: float) -> void:
-	var decay: float = exp(-dt_hours / _stress_tau)
-	var neg_input: float = 0.0
-	for emo in _stress_weights:
-		neg_input += float(_stress_weights[emo]) * ed.get_emotion(emo)
-	ed.stress = ed.stress * decay + neg_input * dt_hours
 
 
 # ═══════════════════════════════════════════════════

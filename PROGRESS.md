@@ -1,5 +1,29 @@
 # Progress Log
 
+## Stress System Phase 2 — emotion_system 구식 로직 제거 + UI 수정 — 2026-02-18
+
+### Context
+stress_system.gd가 이미 등록되어 있으나 emotion_system.gd의 구식 _update_stress()가
+여전히 병렬 실행 중. 제거 + 스트레스 바 최대치 1000으로 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-s2-3 | emotion_system.gd 구식 스트레스 로직 제거 | 🟢 DISPATCH | ask_codex | single file |
+| T-s2-6 | entity_detail_panel.gd 스트레스 바 max=1000 | 🟢 DISPATCH | ask_codex | single file |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Parallel (different files, no overlap)
+
+### Results
+- Gate: PENDING
+
+---
+
+
+
 ## Stress/Mental Break System Phase 1 — 2026-02-18
 
 ### Context

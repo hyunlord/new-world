@@ -674,15 +674,19 @@ func _draw() -> void:
 					dyad_x += text_w + 18
 				cy += 20.0
 
-			# Stress bar
+			# Stress bar (display max: 1000, internal max: 2000)
 			cy += 2.0
 			var stress_val: float = ed.stress
-			var z_C: float = 0.0
-			if pd != null:
-				z_C = pd.to_zscore(pd.axes.get("C", 0.5))
-			var break_threshold: float = 300.0 + 50.0 * z_C
-			var stress_ratio: float = clampf(stress_val / break_threshold, 0.0, 1.0)
-			var stress_label: String = "%s: %.0f / %.0f" % [Locale.ltr("UI_STRESS"), stress_val, break_threshold]
+			const STRESS_DISPLAY_MAX: float = 1000.0
+			var stress_ratio: float = clampf(stress_val / STRESS_DISPLAY_MAX, 0.0, 1.0)
+			var stress_label: String = "%s: %.0f" % [Locale.ltr("UI_STRESS"), stress_val]
+			# Append state label if available
+			if ed.stress_state == 1:
+				stress_label += " [" + Locale.ltr("STRESS_STATE_TENSE") + "]"
+			elif ed.stress_state == 2:
+				stress_label += " [" + Locale.ltr("STRESS_STATE_CRISIS") + "]"
+			elif ed.stress_state >= 3:
+				stress_label += " [" + Locale.ltr("STRESS_STATE_BREAK_RISK") + "]"
 			cy = _draw_bar(font, cx + 10, cy, bar_w, stress_label, stress_ratio, STRESS_COLOR)
 
 			# Mental break indicator
