@@ -45,6 +45,9 @@ var _month_deaths_siler: int = 0
 var _last_log_month: int = 0
 var _last_log_month_year: int = 0
 
+## Stress system reference (injected by main.gd after init)
+var _stress_system: RefCounted = null
+
 
 func _init() -> void:
 	system_name = "mortality"
@@ -186,6 +189,8 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 			"q_annual": q_annual,
 			"tick": tick,
 		})
+		# ★ Bereavement stress for survivors (Phase 1 Stress System)
+		_inject_bereavement_stress(entity)
 
 
 ## ─── Cause of death determination ───────────────────────
@@ -366,3 +371,45 @@ func _calc_theoretical_ex(start_age: float) -> float:
 		x += dx
 
 	return integral
+
+
+## Inject bereavement stress into survivors of a deceased entity.
+## COR (Hobfoll 1989): loss events use is_loss=true -> x2.5 multiplier.
+func _inject_bereavement_stress(deceased: RefCounted) -> void:
+	if _stress_system == null:
+		return
+
+	# Partner loss
+	var pid: int = deceased.partner_id
+	if pid > 0:
+		var partner = _entity_manager.get_entity(pid)
+		if partner != null and partner.is_alive and partner.emotion_data != null:
+			_stress_system.inject_stress_event(
+				partner.emotion_data,
+				"partner_death",
+				450.0,
+				10.0,
+				0.01,
+				true
+			)
+
+	# Child loses parent -- only inject for young children
+	var child_stages: Array = ["infant", "toddler", "child", "teen"]
+	for child_id in deceased.children_ids:
+		var child = _entity_manager.get_entity(child_id)
+		if child == null:
+			continue
+		if not child.is_alive:
+			continue
+		if child.emotion_data == null:
+			continue
+		if child.age_stage not in child_stages:
+			continue
+		_stress_system.inject_stress_event(
+			child.emotion_data,
+			"parent_death",
+			650.0,
+			15.0,
+			0.008,
+			true
+		)

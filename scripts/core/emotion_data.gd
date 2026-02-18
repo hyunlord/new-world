@@ -34,6 +34,35 @@ var valence: float = 0.0      # -100 ~ +100 (positive/negative)
 var arousal: float = 0.0      # 0 ~ 100 (activation)
 var stress: float = 0.0       # 0 ~ 1000+ (Mental Break accumulator)
 
+# === Stress System Phase 1 (Lazarus + GAS + Allostatic) ===
+## Lazarus & Folkman (1984): Transactional Model of Stress
+## Selye (1956): General Adaptation Syndrome
+## McEwen (1998): Allostatic Load
+
+## 저항 자원 (0~100). GAS Resistance. reserve<30이면 Exhaustion.
+var reserve: float = 100.0
+
+## 만성 마모 (0~100). 장기 고스트레스 누적 손상. Allostatic Load.
+var allostatic: float = 0.0
+
+## 스트레스 상태: 0=calm, 1=tense(200+), 2=crisis(350+), 3=break_risk(500+)
+var stress_state: int = 0
+
+## 회복탄력성 (0~1). Connor & Davidson (2003) CD-RISC 기반.
+var resilience: float = 0.5
+
+## 활성 스트레스 후유증. 각 요소: {source_id: String, per_tick: float, decay_rate: float}
+var stress_traces: Array = []
+
+## GAS 단계: 0=normal, 1=alarm, 2=resistance, 3=exhaustion
+var gas_stage: int = 0
+
+## 이전 틱 스트레스 변화량 (디버그/UI용)
+var stress_delta_last: float = 0.0
+
+## 이전 틱 스트레스 기여 분해. 예: {"hunger": 6.2, "recovery": -4.5}
+var stress_breakdown: Dictionary = {}
+
 # === Habituation counters ===
 # key: event_category, value: {count: int, last_tick: int}
 var habituation: Dictionary = {}
@@ -264,6 +293,13 @@ func to_dict() -> Dictionary:
 		"habituation": habituation.duplicate(true),
 		"mental_break_type": mental_break_type,
 		"mental_break_remaining": mental_break_remaining,
+		"reserve": reserve,
+		"allostatic": allostatic,
+		"stress_state": stress_state,
+		"resilience": resilience,
+		"stress_traces": stress_traces.duplicate(true),
+		"gas_stage": gas_stage,
+		"stress_delta_last": stress_delta_last,
 	}
 
 
@@ -288,6 +324,15 @@ static func from_dict(data: Dictionary) -> RefCounted:
 				"decay_rate": float(t.get("decay_rate", 0.0)),
 			})
 	ed.stress = float(data.get("stress", 0.0))
+	ed.reserve = float(data.get("reserve", 100.0))
+	ed.allostatic = float(data.get("allostatic", 0.0))
+	ed.stress_state = int(data.get("stress_state", 0))
+	ed.resilience = float(data.get("resilience", 0.5))
+	ed.gas_stage = int(data.get("gas_stage", 0))
+	ed.stress_delta_last = float(data.get("stress_delta_last", 0.0))
+	var raw_traces = data.get("stress_traces", [])
+	if raw_traces is Array:
+		ed.stress_traces = raw_traces.duplicate(true)
 	var hab = data.get("habituation", {})
 	ed.habituation = {}
 	for cat in hab:
