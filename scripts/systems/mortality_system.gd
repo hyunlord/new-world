@@ -190,7 +190,7 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 			"tick": tick,
 		})
 		# ★ Bereavement stress for survivors (Phase 1 Stress System)
-		_inject_bereavement_stress(entity)
+		inject_bereavement_stress(entity)
 
 
 ## ─── Cause of death determination ───────────────────────
@@ -375,26 +375,18 @@ func _calc_theoretical_ex(start_age: float) -> float:
 
 ## Inject bereavement stress into survivors of a deceased entity.
 ## COR (Hobfoll 1989): loss events use is_loss=true -> x2.5 multiplier.
-func _inject_bereavement_stress(deceased: RefCounted) -> void:
+func inject_bereavement_stress(deceased: RefCounted) -> void:
 	if _stress_system == null:
 		return
 
 	# Partner loss
 	var pid: int = deceased.partner_id
-	if pid > 0:
+	if pid >= 0:
 		var partner = _entity_manager.get_entity(pid)
 		if partner != null and partner.is_alive and partner.emotion_data != null:
-			_stress_system.inject_stress_event(
-				partner.emotion_data,
-				"partner_death",
-				450.0,
-				10.0,
-				0.01,
-				true
-			)
+			_stress_system.inject_event(partner, "partner_death", {})
 
-	# Child loses parent -- only inject for young children
-	var child_stages: Array = ["infant", "toddler", "child", "teen"]
+	# Child loses parent -- all ages receive grief, elders at reduced intensity
 	for child_id in deceased.children_ids:
 		var child = _entity_manager.get_entity(child_id)
 		if child == null:
@@ -403,16 +395,10 @@ func _inject_bereavement_stress(deceased: RefCounted) -> void:
 			continue
 		if child.emotion_data == null:
 			continue
-		if child.age_stage not in child_stages:
-			continue
-		_stress_system.inject_stress_event(
-			child.emotion_data,
-			"parent_death",
-			650.0,
-			15.0,
-			0.008,
-			true
-		)
+		var age_mod: float = 0.75 if child.age_stage == "elder" else 1.0
+		_stress_system.inject_event(child, "parent_death", {
+			"context_modifier": age_mod,
+		})
 
 	# Parent loses child -- inject child_death stress to each living parent
 	for par_id in deceased.parent_ids:
@@ -425,4 +411,5 @@ func _inject_bereavement_stress(deceased: RefCounted) -> void:
 			continue
 		_stress_system.inject_event(par, "child_death", {
 			"child_age_stage": deceased.age_stage,
+			"bond_strength": 1.0,
 		})

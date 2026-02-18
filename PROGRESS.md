@@ -1,5 +1,36 @@
 # Progress Log
 
+## 베리브먼트 스트레스 버그 수정 — T-berv-1/2/3 — 2026-02-18
+
+### Context
+3가지 사망 경로(starvation, child_death, parent_death)에서 bereavement 스트레스가 누락되거나 잘못 계산되는 버그 수정.
+partner_death에서 entity ID 0 엣지케이스, child_death bond_strength 미전달, parent_death 성인 자녀 제외, inject_stress_event() 구식 API 전면 제거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-berv-1 | mortality_system.gd — Fix B+C+D+E | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 변경 |
+| T-berv-2 | needs_system.gd — Fix A (starvation bereavement) | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 변경 |
+| T-berv-3 | stress_system.gd — Fix F (context_modifier) | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 변경 |
+
+### Dispatch ratio: 3/3 = 100% ✅
+### Dispatch strategy: 3개 병렬 (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 3/3 = 100% ✅
+- Dispatch tool: ask_codex (all 3)
+- Files changed: 3 (mortality_system.gd, needs_system.gd, stress_system.gd)
+- Key changes:
+  - Fix A: starvation death → inject_bereavement_stress() 호출 (양쪽 블록)
+  - Fix B: child_death context에 bond_strength: 1.0 추가
+  - Fix C: parent_death 전 연령 포함, elder=0.75 age_mod
+  - Fix D: pid >= 0 (ID 0 엣지케이스)
+  - Fix E: inject_stress_event() 완전 제거 → inject_event() 교체
+  - Fix F: _calc_context_scale에 context_modifier 직접 키 지원
+
+---
+
 ## Phase 2 chronicle_system 접근 방식 수정 — 2026-02-18
 
 ### Context
