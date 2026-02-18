@@ -580,6 +580,8 @@
   "MENTAL_BREAK_REMAINING": "Time Remaining",
   "MENTAL_BREAK_START": "{name} is having a mental break ({break_type}).",
   "MENTAL_BREAK_END": "{name}'s mental break ({break_type}) has ended.",
+  "CHRONICLE_MENTAL_BREAK_START": "{name} fell into {break_type}.",
+  "CHRONICLE_MENTAL_BREAK_END": "{name} recovered from {break_type}.",
   "SHAKEN_STATUS": "Shaken ({ticks} ticks remaining)",
   "MENTAL_BREAK_TYPE_PANIC": "Panic",
   "MENTAL_BREAK_TYPE_RAGE": "Rage",

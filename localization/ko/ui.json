@@ -580,6 +580,8 @@
   "MENTAL_BREAK_REMAINING": "남은 시간",
   "MENTAL_BREAK_START": "{name}에게 멘탈 브레이크({break_type})가 발동됐습니다.",
   "MENTAL_BREAK_END": "{name}의 멘탈 브레이크({break_type})가 종료됐습니다.",
+  "CHRONICLE_MENTAL_BREAK_START": "{name}(이)가 {break_type}에 빠졌습니다.",
+  "CHRONICLE_MENTAL_BREAK_END": "{name}(이)가 {break_type}에서 회복되었습니다.",
   "SHAKEN_STATUS": "동요 상태 ({ticks}틱 남음)",
   "MENTAL_BREAK_TYPE_PANIC": "공황",
   "MENTAL_BREAK_TYPE_RAGE": "분노 폭발",
