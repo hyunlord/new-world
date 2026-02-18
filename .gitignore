@@ -14,6 +14,7 @@ error.log
 # Codex dispatch prompts
 .codex-prompts/
 .codex-prompt*
+.codex_prompts/
 .codex/
 
 # ticket

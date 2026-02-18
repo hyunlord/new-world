@@ -126,19 +126,42 @@ func execute_tick(tick: int) -> void:
 		var impulse: Dictionary = _calculate_event_impulse(events, pd, ed)
 
 		# Step 2: Fast layer update (exponential decay + impulse)
+		# ★ stress gain multipliers (set by stress_system each tick)
+		var stress_neg_gain: float = ed.get_meta("stress_neg_gain_mult", 1.0)
+		var stress_pos_gain: float = ed.get_meta("stress_pos_gain_mult", 1.0)
+		var stress_blunt: float = ed.get_meta("stress_blunt_mult", 1.0)
+		var _negative_emos: Array = ["fear", "anger", "sadness", "disgust", "surprise"]
+		var _positive_emos: Array = ["joy", "trust", "anticipation"]
+
 		for emo in ed.fast:
 			var hl: float = _get_adjusted_half_life(emo, pd, "fast")
-			var k: float = 0.693147 / hl  # ln(2) / half_life
-			ed.fast[emo] = ed.fast[emo] * exp(-k * dt_hours) + impulse.get(emo, 0.0)
+			var k: float = 0.693147 / hl
+			var emo_impulse: float = impulse.get(emo, 0.0)
+			# Apply stress sensitivity to impulse
+			if emo in _negative_emos:
+				emo_impulse *= stress_neg_gain * stress_blunt
+			elif emo in _positive_emos:
+				emo_impulse *= stress_pos_gain * stress_blunt
+			ed.fast[emo] = ed.fast[emo] * exp(-k * dt_hours) + emo_impulse
 			ed.fast[emo] = maxf(ed.fast[emo], 0.0)
 
 		# Step 3: Slow layer update (Ornstein-Uhlenbeck mean-reverting process)
+		# ★ stress shifts OU target baselines
+		var _stress_mu_map: Dictionary = {
+			"sadness": ed.get_meta("stress_mu_sadness", 0.0),
+			"anger":   ed.get_meta("stress_mu_anger",   0.0),
+			"fear":    ed.get_meta("stress_mu_fear",    0.0),
+			"joy":     ed.get_meta("stress_mu_joy",     0.0),
+			"trust":   ed.get_meta("stress_mu_trust",   0.0),
+		}
 		for emo in ed.slow:
 			var baseline: float = _get_baseline(emo, pd)
+			var mu_shift: float = _stress_mu_map.get(emo, 0.0)
+			var effective_baseline: float = clampf(baseline + mu_shift, 0.0, 30.0)
 			var hl_slow: float = _slow_half_life.get(emo, 48.0)
 			var k_slow: float = 0.693147 / hl_slow
 			var sigma: float = 0.5  # mood fluctuation
-			ed.slow[emo] = baseline + (ed.slow[emo] - baseline) * exp(-k_slow * dt_hours)
+			ed.slow[emo] = effective_baseline + (ed.slow[emo] - effective_baseline) * exp(-k_slow * dt_hours)
 			ed.slow[emo] += sigma * sqrt(dt_hours) * _randfn()
 			ed.slow[emo] = clampf(ed.slow[emo], 0.0, 30.0)
 
