@@ -130,7 +130,7 @@ func _build_content(t: Dictionary) -> void:
 	else:
 		icon = "🔵"
 
-	var primary_name: String = Locale.tr_data(t, "name")
+	var primary_name: String = Locale.ltr(t.get("name_key", "TRAIT_" + id + "_NAME"))
 	if primary_name == "" or primary_name == "???":
 		primary_name = t.get("name_kr", t.get("name_en", id))
 	var header_text: String = "%s %s" % [icon, primary_name]
@@ -147,7 +147,7 @@ func _build_content(t: Dictionary) -> void:
 	_add_label(header_text, header_color, 12)
 	_add_separator_line()
 
-	var desc: String = Locale.tr_data(t, "description")
+	var desc: String = Locale.ltr(t.get("desc_key", "TRAIT_" + id + "_DESC"))
 	if desc == "" or desc == "???":
 		desc = t.get("description_kr", t.get("description_en", ""))
 	if desc != "":

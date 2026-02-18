@@ -464,4 +464,39 @@ T-2008 2-레벨 하이브리드 시스템 마이그레이션 이후 발생한 2�
 단일 ask_codex 티켓. trait_system.gd에 getter 2개 추가 후 entity_detail_panel.gd 수정.
 
 ### Results
-- Gate: PENDING (Codex job a813565b 완료 후)
+- Gate: PASS ✅ (commit fad48e8)
+- Dispatch ratio: 1/1 = 100% ✅
+- Dispatch tool: ask_codex
+- Files changed: 2 (trait_system.gd, entity_detail_panel.gd)
+- Key changes:
+  - trait_system.gd — get_known_behavior_actions(), get_known_emotion_baselines() 추가
+  - entity_detail_panel.gd — 이름 표시 4곳 → name_key + Locale.ltr() 방식으로 교체
+  - entity_detail_panel.gd — _draw_trait_summary() → TraitSystem.get_effect_value() 방식으로 교체
+
+---
+
+## 행동 가중치 폭발 + 툴팁 raw ID + Salience 표시 — T-2010 — 2026-02-19
+
+### Context
+3가지 UI/시뮬레이션 버그 수정:
+1. 행동 가중치 폭발 (multiplicative 집계 → geometric mean으로 교체)
+2. 트레이트 툴팁 raw ID 표시 (name_key/desc_key 기반 Locale.ltr() 사용)
+3. salience 1.00 배지 숫자 불필요 표시 제거
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2010 | trait_system.gd + trait_tooltip.gd + entity_detail_panel.gd | 🟢 DISPATCH | ask_codex | 3파일 독립, 겹침 없음 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+### Dispatch strategy: 단일 ask_codex (3파일 병렬, 의존성 없음)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅
+- Dispatch tool: ask_codex
+- Files changed: 3
+- Key changes:
+  - trait_system.gd — _calc_behavior_weight() + _calc_emotion_sensitivity() geometric mean 집계
+  - trait_tooltip.gd — Locale.ltr(name_key/desc_key) 방식으로 교체
+  - entity_detail_panel.gd — salience < 0.995 조건 추가 (1.00 숫자 표시 제거)

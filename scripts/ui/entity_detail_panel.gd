@@ -304,7 +304,7 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 					salience = float(dt.get("salience", 0.0))
 					break
 		var badge_label: String = tname
-		if salience > 0.0:
+		if salience > 0.0 and salience < 0.995:
 			badge_label = "%s %.2f" % [tname, salience]
 		var tcolor: Color = _get_trait_color(tdef)
 		var text_w: float = font.get_string_size(badge_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
