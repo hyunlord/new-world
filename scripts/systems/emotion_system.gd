@@ -10,7 +10,6 @@ extends "res://scripts/core/simulation_system.gd"
 const EmotionDataScript = preload("res://scripts/core/emotion_data.gd")
 
 var _entity_manager: RefCounted
-var _chronicle_system: RefCounted = null
 var _event_presets: Dictionary = {}
 var _pending_events: Dictionary = {}  # entity_id -> Array of event dicts
 var _fast_half_life: Dictionary = {}
@@ -429,13 +428,14 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, tick: int) -> void
 				"entity_name": entity.entity_name,
 				"break_type": old_type,
 			})
-			if _chronicle_system != null:
-				var end_type_name: String = Locale.ltr("MENTAL_BREAK_TYPE_" + old_type.to_upper())
-				var end_desc: String = Locale.ltr("CHRONICLE_MENTAL_BREAK_END").format({
+			var chronicle_node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+			if chronicle_node != null:
+				var end_type_name = Locale.ltr("MENTAL_BREAK_TYPE_" + old_type.to_upper())
+				var end_desc = Locale.ltr("CHRONICLE_MENTAL_BREAK_END").format({
 					"name": entity.entity_name,
 					"break_type": end_type_name,
 				})
-				_chronicle_system.log_event("mental_break", entity.id, end_desc, 3, [], tick)
+				chronicle_node.log_event("mental_break", entity.id, end_desc, 3)
 		return
 
 	# C(Conscientiousness) ↑ → higher threshold (more self-control)
@@ -466,13 +466,14 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, tick: int) -> void
 				"stress": ed.stress,
 				"threshold": threshold,
 			})
-			if _chronicle_system != null:
-				var start_type_name: String = Locale.ltr("MENTAL_BREAK_TYPE_" + break_type.to_upper())
-				var start_desc: String = Locale.ltr("CHRONICLE_MENTAL_BREAK_START").format({
+			var chronicle_node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+			if chronicle_node != null:
+				var start_type_name = Locale.ltr("MENTAL_BREAK_TYPE_" + break_type.to_upper())
+				var start_desc = Locale.ltr("CHRONICLE_MENTAL_BREAK_START").format({
 					"name": entity.entity_name,
 					"break_type": start_type_name,
 				})
-				_chronicle_system.log_event("mental_break", entity.id, start_desc, 4, [], tick)
+				chronicle_node.log_event("mental_break", entity.id, start_desc, 4)
 
 
 ## Determine break type based on dominant negative emotion

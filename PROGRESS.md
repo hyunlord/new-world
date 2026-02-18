@@ -1,5 +1,24 @@
 # Progress Log
 
+## Phase 2 chronicle_system 접근 방식 수정 — 2026-02-18
+
+### Context
+emotion_system.gd가 RefCounted 계열이므로 Node 타입인 ChronicleSystem을 `_chronicle_system: RefCounted`로 저장 불가.
+Scene Tree 패턴(`Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")`)으로 교체.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-fix-1 | emotion_system.gd chronicle 접근 SceneTree 패턴으로 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-fix-2 | main.gd _chronicle_system 와이어링 제거 | 🔴 DIRECT | — | 1줄 제거 |
+
+### Dispatch ratio: 1/2 = 50% ✅
+
+### Results
+- Gate: PENDING
+
+---
+
 ## Phase 2 전수검사 — 멘탈 브레이크 i18n + 자녀 사망 스트레스 + 연대기 기록 — 2026-02-18
 
 ### Context

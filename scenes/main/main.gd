@@ -170,7 +170,6 @@ func _ready() -> void:
 	family_system = FamilySystem.new()
 	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng, mortality_system)
 	family_system._stress_system = stress_system
-	emotion_system._chronicle_system = ChronicleSystem
 
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)
