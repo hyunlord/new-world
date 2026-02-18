@@ -4,6 +4,43 @@
 
 ---
 
+## Trait 2-레벨 하이브리드 시스템 (T-2008)
+
+### 개요
+187개 trait를 이진 on/off → 연속값 기반 2-레벨 하이브리드로 전환.
+학술 근거: Smithson & Verkuilen (2006) Fuzzy membership.
+
+### 메카닉 레이어 (Mechanic Layer)
+- `TraitSystem.update_trait_strengths(entity)`: HEXACO 24-facet → sigmoid salience → `entity.trait_strengths` Dict
+- 각 trait: `t_on`, `t_off` 임계값 + facet_weights, center, width로 sigmoid 연산
+- `entity.trait_strengths`: `{trait_id: float 0~1}` 살리언스 점수
+
+### 표시 레이어 (Display Layer)
+- `TraitSystem.get_display_traits(entity, k)`: Top-K + 히스테리시스(margin=0.06) + mutex(동일 facet 고/저 쌍) + diversity(MAX_PER_AXIS=2, MAX_DARK=2)
+- `entity.display_traits`: `[{id, name_key, salience, valence, category}]` Top-K 목록
+- `entity._trait_display_active`: `{trait_id: bool}` 히스테리시스 상태
+
+### 통합 효과 계산
+- `TraitSystem.get_effect_value(entity, effect_type, key)`: behavior_weight / emotion_baseline / emotion_sensitivity / violation_stress 통합 조회
+- 기존 `evaluate_traits()`, `get_behavior_weight()`, `get_violation_stress()`, `get_emotion_modifier()` 하위 호환 유지
+
+### 데이터 파일 (신규)
+- `data/personality/trait_defs_v2.json` — 187 trait 정의 (sigmoid 파라미터 포함)
+- `data/personality/behavior_mappings.json` — 직업/행동별 가중치
+- `data/personality/emotion_mappings.json` — 감정 기준값/민감도
+- `data/personality/violation_mappings.json` — violation_stress 계산용
+
+### 변경 파일
+- `scripts/systems/trait_system.gd` — 전면 재작성 (~700줄)
+- `scripts/core/entity_data.gd` — trait_strengths/display_traits/_trait_display_active/traits_dirty 필드 추가, get_active_trait_ids() 추가, to_dict/from_dict trait_strengths 직렬화
+- `scripts/core/entity_manager.gd` — spawn_entity() 후 update_trait_strengths() 호출
+- `scripts/ui/entity_detail_panel.gd` — display_traits 기반 Top-K UI
+- `scenes/debug/debug_console.gd` — _cmd_violation() trait_strengths populate 버그 수정
+- `localization/ko/traits.json`, `localization/en/traits.json` — 374 신규 키 추가 (TRAIT_{id}_NAME / _DESC)
+- `tools/trait_migration.py` — 마이그레이션 스크립트
+
+---
+
 ## 확장 가능한 이름 생성 시스템 — NameGenerator (T-2011)
 
 ### NameGenerator 오토로드 추가

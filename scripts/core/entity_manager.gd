@@ -5,6 +5,7 @@ const ChunkIndex = preload("res://scripts/core/chunk_index.gd")
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
 const PersonalityGeneratorScript = preload("res://scripts/systems/personality_generator.gd")
+const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
@@ -48,6 +49,8 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	var pa_pd = parent_a.personality if parent_a != null else null
 	var pb_pd = parent_b.personality if parent_b != null else null
 	entity.personality = _personality_generator.generate_personality(entity.gender, "", pa_pd, pb_pd)
+	# Initialize trait salience from personality facets
+	TraitSystem.update_trait_strengths(entity)
 	# Emotions (defaults)
 	entity.emotions = {
 		"happiness": 0.5,

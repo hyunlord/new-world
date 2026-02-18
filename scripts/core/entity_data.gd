@@ -42,10 +42,12 @@ var emotions: Dictionary = {
 	"grief": 0.0,
 	"love": 0.0,
 }
-## Trait cache (runtime only, NOT serialized)
-var active_traits: Array = []  # Full trait definition Dictionaries (for effects queries)
-var display_traits: Array = []  # All active traits, priority-sorted (for UI)
-var traits_dirty: bool = true  # Re-evaluate when personality changes
+## Trait 2-레벨 하이브리드 (TraitSystem이 업데이트)
+## 학술: Smithson & Verkuilen (2006) Fuzzy membership
+var trait_strengths: Dictionary = {}    # {trait_id: float 0~1} — salience scores
+var display_traits: Array = []          # [{id, name_key, salience, valence, category}] Top-K
+var _trait_display_active: Dictionary = {}  # {trait_id: bool} — hysteresis 상태 (표시 레이어)
+var traits_dirty: bool = true           # facet 변경 시 true → TraitSystem.update_trait_strengths() 트리거
 
 ## Phase 2-A3: Plutchik emotion data (EmotionData RefCounted)
 var emotion_data: RefCounted = null
@@ -123,6 +125,15 @@ func has_item(type: String, min_amount: float) -> bool:
 	return inventory.get(type, 0.0) >= min_amount
 
 
+## 하위 호환: display_traits의 id 배열 반환
+func get_active_trait_ids() -> Array:
+	var ids: Array = []
+	for i in range(display_traits.size()):
+		var dt: Dictionary = display_traits[i]
+		ids.append(dt.get("id", ""))
+	return ids
+
+
 ## Serialize to dictionary for save/load
 func to_dict() -> Dictionary:
 	return {
@@ -163,6 +174,7 @@ func to_dict() -> Dictionary:
 		"birth_date": birth_date.duplicate(),
 		"trauma_scars": trauma_scars.duplicate(),
 		"violation_history": violation_history.duplicate(),
+		"trait_strengths": trait_strengths.duplicate(),
 	}
 
 
@@ -251,4 +263,8 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		e.emotion_data = EmotionDataScript.from_legacy(e.emotions)
 	e.trauma_scars = data.get("trauma_scars", [])
 	e.violation_history = data.get("violation_history", {})
+	# Trait strengths (2-level hybrid) — salience scores, display_traits recomputed at runtime
+	var ts_data = data.get("trait_strengths", {})
+	if not ts_data.is_empty():
+		e.trait_strengths = ts_data.duplicate()
 	return e

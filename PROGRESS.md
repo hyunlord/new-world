@@ -369,3 +369,41 @@ OS.is_debug_build() 체크로 릴리즈에서 완전 비활성화.
 - B (debug_panel.gd): b451b5c5
 - C (locale json): 66933ba1
 - D (systems): 10f80269
+
+---
+
+## T-2008: Trait 시스템 전면 마이그레이션 (이진 → 2-레벨 하이브리드) — 2026-02-19
+
+### Context
+187개 trait의 이진 on/off → 24-facet HEXACO 연속값 기반 salience 시스템으로 전면 교체.
+표시 레이어(Top-5 + hysteresis)와 메카닉 레이어(연속 효과값) 분리.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-2008-00 | Python 마이그레이션 스크립트 | 🟢 DISPATCH | ask_codex | 독립 스크립트, 새 파일 |
+| t-2008-01 | trait_system.gd 재작성 | 🟢 DISPATCH | ask_codex | 핵심 시스템 단일 파일 |
+| t-2008-02 | entity_data.gd 필드 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 데이터 구조 |
+| t-2008-03 | has_trait() 전수 교체 | 🟢 DISPATCH | ask_codex | 멀티파일 단순 교체 |
+| t-2008-04 | UI Top-K 표시 교체 | 🟢 DISPATCH | ask_codex | 단일 UI 파일 |
+| t-2008-05A | entity_manager.gd wiring | 🟢 DISPATCH | ask_codex | 단일 파일 2줄 추가 |
+| t-2008-05B | i18n locale 병합 | 🔴 DIRECT | — | JSON 병합 <5줄 Python |
+| t-2008-06 | PROGRESS.md 로그 | 🔴 DIRECT | — | 문서 통합 작업 |
+
+### Dispatch ratio: 6/8 = 75% ✅
+
+### Dispatch strategy
+- t-2008-00 완료 후 t-2008-01, t-2008-02 병렬 dispatch
+- t-2008-02 완료 후 t-2008-03, t-2008-04 병렬 dispatch  
+- t-2008-05A는 t-2008-02 완료 후 dispatch (spawn path wiring)
+- t-2008-05B (i18n): DIRECT, JSON merge Python one-liner
+
+### Results (진행 중)
+- t-2008-00: DONE ✅ — trait_defs_v2.json, behavior_mappings.json, violation_mappings.json, locale files 생성
+- t-2008-01: 🔄 실행 중 (Codex job 50b91ca8)
+- t-2008-02: DONE ✅ — entity_data.gd active_traits→trait_strengths 교체, 0 LSP errors
+- t-2008-03: 🔄 실행 중 (Codex job afd4599b)
+- t-2008-04: DONE ✅ — entity_detail_panel.gd display_traits 사용, filter_display_traits 제거
+- t-2008-05A: DONE ✅ — entity_manager.gd TraitSystem.update_trait_strengths 추가
+- t-2008-05B: DONE ✅ — localization/ko+en/traits.json에 374 새 키 병합 (총 748키)
+- Gate: PENDING (t-2008-01 완료 후 실행 예정)
