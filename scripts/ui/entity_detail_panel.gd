@@ -274,12 +274,8 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 		return cy + 6.0
 
 	trait_defs.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		var na: String = Locale.tr_data(a, "name")
-		var nb: String = Locale.tr_data(b, "name")
-		if na == "" or na == "???":
-			na = a.get("name_en", a.get("id", ""))
-		if nb == "" or nb == "???":
-			nb = b.get("name_en", b.get("id", ""))
+		var na: String = Locale.ltr(a.get("name_key", "TRAIT_" + a.get("id", "") + "_NAME"))
+		var nb: String = Locale.ltr(b.get("name_key", "TRAIT_" + b.get("id", "") + "_NAME"))
 		return na.naturalcasecmp_to(nb) < 0
 	)
 
@@ -300,9 +296,7 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 	var trait_x: float = cx + 15
 	for tdef in trait_defs:
 		var trait_id: String = tdef.get("id", "")
-		var tname: String = Locale.tr_data(tdef, "name")
-		if tname == "" or tname == "???":
-			tname = tdef.get("name_en", tdef.get("name_" + "kr", tdef.get("id", "?")))
+		var tname: String = Locale.ltr(tdef.get("name_key", "TRAIT_" + tdef.get("id", "") + "_NAME"))
 		var salience: float = 0.0
 		if entity != null and "display_traits" in entity:
 			for dt in entity.display_traits:
@@ -338,13 +332,13 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 	cy += 22.0
 
 	if _summary_expanded:
-		cy = _draw_trait_summary(font, cx, cy, trait_defs)
+		cy = _draw_trait_summary(font, cx, cy, trait_defs, entity)
 
 	return cy + 6.0
 
 
 ## Draw aggregate trait effect summary for currently visible traits.
-func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) -> float:
+func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array, entity: RefCounted = null) -> float:
 	var fs: int = GameConfig.get_font_size("popup_body")
 	var indent: float = cx + 20.0
 	var sub_indent: float = cx + 30.0
@@ -358,19 +352,16 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 		var trait_id: String = tdef.get("id", "")
 		active_ids[trait_id] = true
 
-		var effects: Dictionary = tdef.get("effects", {})
-		var behavior_weights: Dictionary = tdef.get("behavior_weights", effects.get("behavior_weights", {}))
-		for key in behavior_weights:
-			behavior_totals[key] = float(behavior_totals.get(key, 0.0)) + float(behavior_weights[key]) - 1.0
+	if entity != null:
+		for action in TraitSystem.get_known_behavior_actions():
+			var weight: float = TraitSystem.get_effect_value(entity, "behavior_weight", str(action))
+			if abs(weight - 1.0) > 0.01:
+				behavior_totals[action] = weight - 1.0
 
-		var emotion_modifiers: Dictionary = tdef.get("emotion_modifiers", effects.get("emotion_modifiers", {}))
-		for key in emotion_modifiers:
-			# Convert multiplier to delta: 0.06 -> -0.94, 1.2 -> +0.20
-			emotion_totals[key] = float(emotion_totals.get(key, 0.0)) + float(emotion_modifiers[key]) - 1.0
-
-		var relationship_modifiers: Dictionary = tdef.get("relationship_modifiers", effects.get("relationship_modifiers", {}))
-		for key in relationship_modifiers:
-			relationship_totals[key] = float(relationship_totals.get(key, 0.0)) + float(relationship_modifiers[key]) - 1.0
+		for emotion in TraitSystem.get_known_emotion_baselines():
+			var baseline: float = TraitSystem.get_effect_value(entity, "emotion_baseline", str(emotion))
+			if abs(baseline) > 0.005:
+				emotion_totals[emotion] = baseline
 
 	var synergies: Array = []
 	var conflicts: Array = []
@@ -520,10 +511,8 @@ func _get_trait_display_name(trait_id: String, trait_defs: Array) -> String:
 	for tdef in trait_defs:
 		if tdef.get("id", "") != trait_id:
 			continue
-		var trait_name: String = Locale.tr_data(tdef, "name")
-		if trait_name != "" and trait_name != "???":
-			return trait_name
-		return tdef.get("name_en", trait_id)
+		var name_key: String = tdef.get("name_key", "TRAIT_" + trait_id + "_NAME")
+		return Locale.ltr(name_key)
 	return trait_id
 
 

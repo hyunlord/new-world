@@ -526,6 +526,21 @@ static func get_trait_definition(trait_id: String) -> Dictionary:
 	return _trait_index.get(trait_id, {})
 
 
+## Return all known behavior action keys from behavior_mappings.json.
+static func get_known_behavior_actions() -> Array:
+	_ensure_loaded()
+	return _behavior_map.keys()
+
+
+## Return all known emotion baseline keys from emotion_mappings.json.
+static func get_known_emotion_baselines() -> Array:
+	_ensure_loaded()
+	var baseline_map = _emotion_map.get("baseline", {})
+	if baseline_map is Dictionary:
+		return baseline_map.keys()
+	return []
+
+
 ## Get valence for a trait (positive/negative/neutral).
 static func get_trait_sentiment(trait_id: String) -> String:
 	return get_trait_definition(trait_id).get("valence", "neutral")

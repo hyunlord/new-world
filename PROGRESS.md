@@ -442,4 +442,26 @@ OS.is_debug_build() 체크로 릴리즈에서 완전 비활성화.
 - t-2008-04: DONE ✅ — entity_detail_panel.gd display_traits 사용, filter_display_traits 제거
 - t-2008-05A: DONE ✅ — entity_manager.gd TraitSystem.update_trait_strengths 추가
 - t-2008-05B: DONE ✅ — localization/ko+en/traits.json에 374 새 키 병합 (총 748키)
-- Gate: PENDING (t-2008-01 완료 후 실행 예정)
+- Gate: PASS ✅ (commit 74f3eb4)
+
+---
+
+## T-2009: entity_detail_panel 트레이트 표시 버그 픽스 — 2026-02-19
+
+### Context
+T-2008 2-레벨 하이브리드 시스템 마이그레이션 이후 발생한 2가지 UI 회귀:
+1. 트레이트 이름이 raw ID로 표시됨 (name_key 방식 미대응)
+2. 특성 효과 요약이 "없음" 표시 (v2에서 effects가 tdef에 없고 별도 맵에 있음)
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2009 | trait 이름 표시 + 효과 요약 버그 수정 | 🟢 DISPATCH | ask_codex | 2파일 독립 변경 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 ask_codex 티켓. trait_system.gd에 getter 2개 추가 후 entity_detail_panel.gd 수정.
+
+### Results
+- Gate: PENDING (Codex job a813565b 완료 후)
