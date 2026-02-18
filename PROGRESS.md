@@ -1,5 +1,32 @@
 # Progress Log
 
+## Stress System Phase 2 — 멘탈 브레이크 시스템 — 2026-02-18
+
+### Context
+스트레스가 쌓여도 아무 일도 일어나지 않는 Phase 1 한계 해소.
+멘탈 브레이크 발동(확률 판정) + 유형 선택(HEXACO) + 행동 오버라이드 + Shaken 후유증 + i18n.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-mb-1 | data/mental_breaks.json 10종 정의 | 🟢 DISPATCH | ask_codex | new JSON file |
+| T-mb-2 | mental_break_system.gd 신규 생성 | 🟢 DISPATCH | ask_codex | new GDScript file (after T1) |
+| T-mb-3 | behavior_system.gd 오버라이드 연결 | 🟢 DISPATCH | ask_codex | single file (after T2) |
+| T-mb-4 | stress_system.gd Shaken 상태 | 🟢 DISPATCH | ask_codex | single file (after T2) |
+| T-mb-5 | docs/STRESS_SYSTEM.md Phase 2 추가 | 🟢 DISPATCH | ask_codex | docs-only |
+| T-mb-6a | localization/ko/ui.json mental break 키 | 🟢 DISPATCH | ask_codex | single file |
+| T-mb-6b | localization/en/ui.json mental break 키 | 🟢 DISPATCH | ask_codex | single file |
+
+### Dispatch ratio: 7/7 = 100% ✅
+
+### Dispatch strategy
+T1 시작 → T5, T6a, T6b 병렬 → T1 완료 후 T2 → T2 완료 후 T3+T4 병렬
+
+### Results
+- Gate: PENDING
+
+---
+
 ## Stress System Phase 2 — emotion_system 구식 로직 제거 + UI 수정 — 2026-02-18
 
 ### Context

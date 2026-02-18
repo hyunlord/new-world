@@ -30,6 +30,11 @@ func execute_tick(tick: int) -> void:
 		var entity = alive[i]
 		if entity.current_action == "migrate":
 			continue
+		# Mental break override: 브레이크 중이면 utility AI 스킵
+		if entity.emotion_data != null and entity.emotion_data.mental_break_type != "":
+			if entity.action_timer <= 0:
+				_assign_break_action(entity, entity.emotion_data.mental_break_type, tick)
+			continue
 		if entity.action_timer > 0:
 			continue
 		var scores: Dictionary = _evaluate_actions(entity)
@@ -165,6 +170,42 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 ## Exponential urgency: higher deficit = much higher urgency
 func _urgency_curve(deficit: float) -> float:
 	return pow(deficit, 2.0)
+
+
+## 멘탈 브레이크 행동 오버라이드
+func _assign_break_action(entity: RefCounted, break_type: String, tick: int) -> void:
+	var action: String = "rest"
+	match break_type:
+		"panic":
+			# 도주/은신: 빠른 wander
+			action = "wander"
+		"rage", "outrage_violence":
+			# 공격/파괴: wander (실제 전투는 미래 구현)
+			action = "wander"
+		"shutdown":
+			# 멈춤: 제자리 rest
+			action = "rest"
+		"purge":
+			# 폭식: 비축품 접근
+			action = "take_from_stockpile"
+		"grief_withdrawal":
+			# 은둔: rest
+			action = "rest"
+		"fugue":
+			# 방황: wander
+			action = "wander"
+		"paranoia":
+			# 의심/고립: wander
+			action = "wander"
+		"compulsive_ritual":
+			# 반복 행동: rest (제자리)
+			action = "rest"
+		"hysterical_bonding":
+			# 집착: socialize
+			action = "socialize"
+		_:
+			action = "rest"
+	_assign_action(entity, action, tick)
 
 
 func _assign_action(entity: RefCounted, action: String, tick: int) -> void:

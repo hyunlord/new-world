@@ -117,3 +117,76 @@ clamp(perf, 0.35, 1.10)
 3. Bereaved agent: instant `1125` -> multi-day `300-500`.
 4. Reserve depletion: sustained `stress 400+` -> `reserve < 30` slows recovery.
 5. Allostatic accumulation: sustained `stress 300+` for one month -> `allostatic 10-15`.
+
+---
+
+## Phase 2: 멘탈 브레이크 시스템
+
+### 개요
+
+스트레스가 임계점을 넘으면 에이전트에게 **멘탈 브레이크**가 확률적으로 발동된다.
+발동 시 행동이 강제 오버라이드되고, 종료 후 카타르시스(스트레스 감소)와 Shaken 후유증이 적용된다.
+
+### 멘탈 브레이크 10종
+
+| ID | 한국어 | 영어 | 심각도 | 행동 모드 | 카타르시스 |
+|----|--------|------|--------|-----------|-----------|
+| panic | 공황 | Panic | minor | flee_hide | 80% |
+| rage | 분노 폭발 | Rage | major | attack_smash | 65% |
+| outrage_violence | 폭력 난동 | Outrage Violence | extreme | seek_and_destroy | 60% |
+| shutdown | 셧다운 | Shutdown | major | freeze_in_place | 90% |
+| purge | 폭식/낭비 | Purge | minor | binge_consume | 75% |
+| grief_withdrawal | 애도 칩거 | Grief Withdrawal | major | withdraw_to_home | 85% |
+| fugue | 해리성 둔주 | Dissociative Fugue | major | wander_away | 80% |
+| paranoia | 편집증 | Paranoia | major | distrust_isolate | 95% |
+| compulsive_ritual | 강박 의식 | Compulsive Ritual | minor | repeat_action | 85% |
+| hysterical_bonding | 불안 집착 | Hysterical Bonding | minor | cling_to_target | 80% |
+
+### 발동 역치 계산
+
+```
+base_threshold = 520.0
+threshold_min  = 420.0
+threshold_max  = 900.0
+
+threshold *= (1 + 0.40 * resilience_z)   # Connor-Davidson resilience
+threshold *= (1 + 0.25 * C_z)            # 성실성 (Conscientiousness)
+threshold *= (1 - 0.35 * E_z)            # 신경증 (Emotionality)
+threshold *= (1 + 0.15 * support_z)      # 사회적 지지
+threshold *= (1 - 0.25 * allostatic/100) # 알로스태틱 부하
+# GAS Exhaustion 보정: reserve < 30 → -40, reserve < 15 → -80
+```
+
+### 발동 확률 (per tick)
+
+```
+if stress <= threshold: p = 0
+else: p = clamp((stress - threshold) / 6000.0, 0, 0.25)
+# reserve < 30: p *= 1.3
+# allostatic > 60: p *= 1.2
+```
+
+### 유형 선택 (HEXACO 가중치)
+
+각 브레이크 유형의 `personality_weights`(H/E/X/A/C/O 축)를 이용해 가중치를 계산하고
+softmax 방식으로 유형을 선택한다. E↑ → Panic/Shutdown, A↓ → Rage/Outrage.
+
+### Shaken 후유증
+
+브레이크 종료 후 Shaken 상태가 시작된다:
+- `shaken_work_penalty`: 작업 효율 감소 (심각도별 -5%~-20%)
+- `shaken_remaining`: 남은 틱 수 (24~120틱)
+- 매 틱 1씩 감소, 0이 되면 해제
+
+### 학술 근거
+
+| 모델 | 적용 |
+|------|------|
+| Lazarus & Folkman (1984) | 대처 실패 → 붕괴 |
+| Selye GAS (1956) | Exhaustion 단계 취약성 |
+| DSM-5 Panic Disorder | Panic 유형 |
+| IED (Intermittent Explosive Disorder) | Rage/Outrage 유형 |
+| Learned Helplessness (Seligman 1967) | Shutdown 유형 |
+| Dissociative Fugue (DSM-5) | Fugue 유형 |
+| Connor-Davidson Resilience Scale (2003) | 역치 개인화 |
+| RimWorld Mental Break | Minor/Major/Extreme 단계, 확률 모델 |

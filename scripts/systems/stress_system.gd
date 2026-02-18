@@ -91,6 +91,14 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	ed.stress_delta_last = delta
 	ed.stress_breakdown = breakdown
 
+	# Shaken 상태 카운트다운
+	var shaken_remaining: int = ed.get_meta("shaken_remaining", 0)
+	if shaken_remaining > 0:
+		shaken_remaining -= 1
+		ed.set_meta("shaken_remaining", shaken_remaining)
+		if shaken_remaining <= 0:
+			ed.set_meta("shaken_work_penalty", 0.0)
+
 	# 7) Reserve (GAS)
 	_update_reserve(ed, pd, is_sleeping)
 
@@ -369,6 +377,9 @@ func get_work_efficiency(ed) -> float:
 		perf = 1.09 - 0.0004 * (s - 150.0)
 	else:
 		perf = 1.01 - 0.0012 * (s - 350.0)
+	# Shaken 후유증 패널티
+	var shaken_penalty: float = ed.get_meta("shaken_work_penalty", 0.0)
+	perf += shaken_penalty
 	return clampf(perf, 0.35, 1.10)
 
 
