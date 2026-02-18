@@ -20,7 +20,17 @@
 T-check-1 + T-check-2 + T-check-3a 병렬 → T-check-3b DIRECT
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅
+- PR: #77 merged
+- Files changed: 7
+- Dispatch ratio: 3/4 = 75% ✅ (ask_codex for T-check-1, T-check-2, T-check-3a)
+- DIRECT: main.gd chronicle wiring only (1 line)
+- Key changes:
+  - entity_detail_panel.gd — MENTAL_BREAK_TYPE_* i18n (break_type_key + Locale.ltr)
+  - mortality_system.gd — child_death inject_event() for parent_ids
+  - emotion_system.gd — _chronicle_system ref + log_event() on break start/end
+  - main.gd — emotion_system._chronicle_system = ChronicleSystem
+  - localization/ko+en/ui.json — 10 MENTAL_BREAK_TYPE_* + 2 CHRONICLE_MENTAL_BREAK keys
 
 ---
 
