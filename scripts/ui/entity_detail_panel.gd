@@ -349,7 +349,8 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 
 		var emotion_modifiers: Dictionary = tdef.get("emotion_modifiers", effects.get("emotion_modifiers", {}))
 		for key in emotion_modifiers:
-			emotion_totals[key] = float(emotion_totals.get(key, 0.0)) + float(emotion_modifiers[key])
+			# Convert multiplier to delta: 0.06 -> -0.94, 1.2 -> +0.20
+			emotion_totals[key] = float(emotion_totals.get(key, 0.0)) + float(emotion_modifiers[key]) - 1.0
 
 	var synergies: Array = []
 	var conflicts: Array = []
@@ -434,8 +435,10 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array) ->
 			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
 			if display_key == "TRAIT_KEY_" + key_str.to_upper():
 				display_key = key_str.replace("_", " ").capitalize()
-			var sign: String = "+" if value >= 0.0 else ""
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.2f" % [display_key, sign, value], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			# value is already a delta; convert to percent
+			var pct: float = value * 100.0
+			var sign: String = "+" if pct >= 0.0 else ""
+			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
 			cy += 15.0
 
 	if synergies.size() > 0:
