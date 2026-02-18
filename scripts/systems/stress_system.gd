@@ -209,8 +209,8 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 			total += contrib
 			breakdown["emo_%s" % emotion_name] = contrib
 
-	var valence: float = ed.get("valence", 0.0)
-	var arousal: float = ed.get("arousal", 0.0)
+	var valence: float = ed.valence
+	var arousal: float = ed.arousal
 	var neg: float = clampf(-valence / 100.0, 0.0, 1.0)
 	var ar: float = clampf(arousal / 100.0, 0.0, 1.0)
 	var va_contrib: float = VA_GAMMA * ar * neg
