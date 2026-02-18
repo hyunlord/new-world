@@ -26,16 +26,16 @@ ChronicleSystem="*res://scripts/systems/chronicle_system.gd"
 NameGenerator="*res://scripts/core/name_generator.gd"
 Locale="*res://scripts/core/locale.gd"
 
-[physics]
-
-3d/physics_engine="Jolt Physics"
-
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
 
 [rendering]
 
