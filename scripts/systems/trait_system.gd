@@ -399,7 +399,8 @@ static func _calc_behavior_weight(entity: RefCounted, action: String) -> float:
 	if pd == null:
 		return 1.0
 
-	var final_weight: float = 1.0
+	var log_sum: float = 0.0
+	var active_count: int = 0
 	for i in range(mappings.size()):
 		var m: Dictionary = mappings[i]
 		var tid: String = str(m.get("trait_id", ""))
@@ -415,8 +416,12 @@ static func _calc_behavior_weight(entity: RefCounted, action: String) -> float:
 		else:
 			var sal: float = _get_trait_strength(entity, tid)
 			influence = lerp(1.0, extreme_val, sal)
-		final_weight *= influence
-	return clamp(final_weight, 0.1, 3.0)
+		if abs(influence - 1.0) > 0.01:
+			log_sum += log(maxf(influence, 0.001))
+			active_count += 1
+	if active_count == 0:
+		return 1.0
+	return clamp(exp(log_sum / float(active_count)), 0.1, 3.0)
 
 
 static func _calc_violation_stress(entity: RefCounted, action: String) -> float:
@@ -472,15 +477,20 @@ static func _calc_emotion_sensitivity(entity: RefCounted, emotion: String) -> fl
 	var mappings: Array = sens_map.get(emotion, [])
 	if mappings.is_empty():
 		return 1.0
-	var total: float = 1.0
+	var log_sum: float = 0.0
+	var active_count: int = 0
 	for i in range(mappings.size()):
 		var m: Dictionary = mappings[i]
 		var tid: String = str(m.get("trait_id", ""))
 		var extreme_mult: float = float(m.get("extreme_mult", 1.0))
 		var sal: float = _get_trait_strength(entity, tid)
 		var mult: float = lerp(1.0, extreme_mult, sal)
-		total *= mult
-	return clamp(total, 0.2, 3.0)
+		if abs(mult - 1.0) > 0.01:
+			log_sum += log(maxf(mult, 0.001))
+			active_count += 1
+	if active_count == 0:
+		return 1.0
+	return clamp(exp(log_sum / float(active_count)), 0.2, 3.0)
 
 
 static func _calc_generic_mult(entity: RefCounted, modifier_key: String, _key: String) -> float:
@@ -524,6 +534,21 @@ static func get_emotion_modifier(entity: RefCounted, modifier_key: String) -> fl
 static func get_trait_definition(trait_id: String) -> Dictionary:
 	_ensure_loaded()
 	return _trait_index.get(trait_id, {})
+
+
+## Return all known behavior action keys from behavior_mappings.json.
+static func get_known_behavior_actions() -> Array:
+	_ensure_loaded()
+	return _behavior_map.keys()
+
+
+## Return all known emotion baseline keys from emotion_mappings.json.
+static func get_known_emotion_baselines() -> Array:
+	_ensure_loaded()
+	var baseline_map = _emotion_map.get("baseline", {})
+	if baseline_map is Dictionary:
+		return baseline_map.keys()
+	return []
 
 
 ## Get valence for a trait (positive/negative/neutral).
