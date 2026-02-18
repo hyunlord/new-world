@@ -691,7 +691,9 @@ func _draw() -> void:
 
 			# Mental break indicator
 			if ed.mental_break_type != "":
-				var break_text: String = "%s: %s (%.1fh)" % [Locale.ltr("UI_MENTAL_BREAK"), ed.mental_break_type.to_upper(), ed.mental_break_remaining]
+				var break_type_key: String = "MENTAL_BREAK_TYPE_" + ed.mental_break_type.to_upper()
+				var break_type_name: String = Locale.ltr(break_type_key)
+				var break_text: String = "%s: %s (%.1fh)" % [Locale.ltr("UI_MENTAL_BREAK"), break_type_name, ed.mental_break_remaining]
 				draw_string(font, Vector2(cx + 10, cy + 12), break_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(1.0, 0.2, 0.2))
 				cy += 16.0
 		else:

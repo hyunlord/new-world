@@ -413,3 +413,16 @@ func _inject_bereavement_stress(deceased: RefCounted) -> void:
 			0.008,
 			true
 		)
+
+	# Parent loses child -- inject child_death stress to each living parent
+	for par_id in deceased.parent_ids:
+		var par = _entity_manager.get_entity(par_id)
+		if par == null:
+			continue
+		if not par.is_alive:
+			continue
+		if par.emotion_data == null:
+			continue
+		_stress_system.inject_event(par, "child_death", {
+			"child_age_stage": deceased.age_stage,
+		})

@@ -1,5 +1,29 @@
 # Progress Log
 
+## Phase 2 전수검사 — 멘탈 브레이크 i18n + 자녀 사망 스트레스 + 연대기 기록 — 2026-02-18
+
+### Context
+멘탈 브레이크 유형명 하드코딩("PANIC") 수정, 자녀 사망 시 부모 스트레스 미주입 추가,
+멘탈 브레이크 연대기 미기록 수정. emotion_system에 chronicle_system 연결.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-check-1 | entity_detail_panel.gd 멘탈 브레이크 유형명 i18n + ko/en ui.json | 🟢 DISPATCH | ask_codex | 3파일 독립 변경 |
+| T-check-2 | mortality_system.gd 자녀 사망 → 부모 스트레스 주입 | 🟢 DISPATCH | ask_codex | 단일 파일 독립 변경 |
+| T-check-3a | emotion_system.gd 연대기 기록 + ko/en ui.json | 🟢 DISPATCH | ask_codex | 3파일 독립 변경 |
+| T-check-3b | main.gd emotion_system._chronicle_system 연결 | 🔴 DIRECT | — | 1줄 통합 wiring |
+
+### Dispatch ratio: 3/4 = 75% ✅
+
+### Dispatch strategy
+T-check-1 + T-check-2 + T-check-3a 병렬 → T-check-3b DIRECT
+
+### Results
+- Gate: PENDING
+
+---
+
 ## Stress System Phase 2 — 포괄적 스트레서 이벤트 테이블 + 성격 기반 변인 — 2026-02-18
 
 ### Context
