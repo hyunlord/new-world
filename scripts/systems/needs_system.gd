@@ -77,10 +77,14 @@ func execute_tick(tick: int) -> void:
 							"starving_ticks": entity.starving_timer,
 							"tick": tick,
 						})
+						var deceased_entity = entity
 						_entity_manager.kill_entity(entity.id, "starvation", tick)
-						if _mortality_system != null and _mortality_system.has_method("register_death"):
-							var death_age_years: float = GameConfig.get_age_years(entity.age)
-							_mortality_system.register_death(death_age_years < 1.0, entity.age_stage, death_age_years, "starvation")
+						if _mortality_system != null:
+							if _mortality_system.has_method("register_death"):
+								var death_age_years: float = GameConfig.get_age_years(deceased_entity.age)
+								_mortality_system.register_death(death_age_years < 1.0, deceased_entity.age_stage, death_age_years, "starvation")
+							if _mortality_system.has_method("inject_bereavement_stress"):
+								_mortality_system.inject_bereavement_stress(deceased_entity)
 					else:
 						entity.hunger = 0.01  # Keep barely alive during grace
 			else:
@@ -94,10 +98,14 @@ func execute_tick(tick: int) -> void:
 						"starving_ticks": entity.starving_timer,
 						"tick": tick,
 					})
+					var deceased_entity = entity
 					_entity_manager.kill_entity(entity.id, "starvation", tick)
-					if _mortality_system != null and _mortality_system.has_method("register_death"):
-						var death_age_years: float = GameConfig.get_age_years(entity.age)
-						_mortality_system.register_death(death_age_years < 1.0, entity.age_stage, death_age_years, "starvation")
+					if _mortality_system != null:
+						if _mortality_system.has_method("register_death"):
+							var death_age_years: float = GameConfig.get_age_years(deceased_entity.age)
+							_mortality_system.register_death(death_age_years < 1.0, deceased_entity.age_stage, death_age_years, "starvation")
+						if _mortality_system.has_method("inject_bereavement_stress"):
+							_mortality_system.inject_bereavement_stress(deceased_entity)
 		else:
 			entity.starving_timer = 0
 

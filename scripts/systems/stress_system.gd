@@ -553,6 +553,9 @@ func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
 	for key in c_mods:
 		if context.get(key, false):
 			scale *= float(c_mods[key])
+	# Direct context_modifier override (e.g. age-stage scaling from mortality_system)
+	if context.has("context_modifier"):
+		scale *= float(context.get("context_modifier", 1.0))
 	return clampf(scale, 0.1, 5.0)
 
 
