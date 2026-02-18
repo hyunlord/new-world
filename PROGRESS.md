@@ -1,5 +1,41 @@
 # Progress Log
 
+## Trait 2-레벨 하이브리드 시스템 — T-2008 — 2026-02-19
+
+### Context
+187개 trait를 이진 on/off → 연속값 기반 2-레벨 하이브리드로 전환.
+메카닉 레이어 (HEXACO sigmoid salience → trait_strengths) + 표시 레이어 (Top-K 히스테리시스 → display_traits).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2008-00 | trait_migration.py + trait_defs_v2.json + mappings | 🟢 DISPATCH | ask_codex | 신규 파일, 데이터 생성 |
+| T-2008-01 | trait_system.gd 전면 재작성 | 🟢 DISPATCH | ask_codex | 신규 구현, 독립 파일 |
+| T-2008-02 | entity_data.gd — trait_strengths 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2008-03 | has_trait() 교체 (trait_violation_system, stress_system) | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2008-04 | entity_detail_panel.gd — display_traits Top-K UI | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2008-05 | entity_manager.gd — spawn_entity() 후 update_trait_strengths 호출 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-2008-05B | localization ko/en — TRAIT_{id}_NAME/_DESC 374개 키 | 🔴 DIRECT | — | JSON 병합, 통합 배선 |
+| T-2008-fix | debug_console.gd — _cmd_violation() trait_strengths populate 버그 | 🔴 DIRECT | — | 단일 줄 수정, entity_data 복구와 연계 |
+
+### Dispatch ratio: 6/8 = 75% ✅
+
+### Dispatch strategy
+- Wave 1 (병렬): T-2008-00 (데이터 파일 생성)
+- Wave 2 (sequential): T-2008-01 (trait_system.gd — T-2008-00 의존)
+- Wave 3 (병렬): T-2008-02, T-2008-03, T-2008-04, T-2008-05 (entity/UI — T-2008-00 의존)
+- DIRECT: T-2008-05B (locale 병합), T-2008-fix (violation 커맨드 버그)
+
+### Results
+- Gate: PASS ✅ (commit 74f3eb4)
+- Dispatch ratio: 6/8 = 75% ✅
+- Dispatch tool: ask_codex (6 tickets)
+- Files changed: 17 (12 modified + 5 new)
+- Key runtime confirmation: `[TraitSystem] Loaded defs=187 behavior=46 emotion=3 violation=86`
+- `[TraitViolationSystem] Loaded 187 traits, 86 action mappings`
+
+---
+
 ## 베리브먼트 스트레스 버그 수정 — T-berv-1/2/3 — 2026-02-18
 
 ### Context
