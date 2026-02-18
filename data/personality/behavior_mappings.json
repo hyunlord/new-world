@@ -1,0 +1,7215 @@
+{
+  "assassinate": [
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.5,
+      "source": "composite"
+    }
+  ],
+  "betray": [
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.75,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.5,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.375,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.688,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_deceptive",
+      "extreme_val": 1.4,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_sincere",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "high",
+      "threshold": 0.92
+    }
+  ],
+  "build": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.375,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hl_conservative_manager",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_lh_free_spirit",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_ll_careless_waster",
+      "extreme_val": 0.945,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 0.81,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.375,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 0.765,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.271,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.386,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.213,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hl_populist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_ll_wallflower",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_aesthetic",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_apathetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_conventional",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_creative",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_disorganized",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_energetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearful",
+      "extreme_val": 1.0,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_industrious",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_lazy",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_organized",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_patient",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_perfectionist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_perfectionism",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_traditionalist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_utilitarian",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "collect": [
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "combat": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.63,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.328,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 0.855,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 0.998,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 1.208,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_lh_cold_experimenter",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_lh_daredevil",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 0.855,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.26,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 0.665,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 0.998,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 0.808,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.103,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.38,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.751,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.509,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.38,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.63,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_calm",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_energetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearful",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearless",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_forgiving",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_gentle",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_harsh",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_hot_tempered",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_patient",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reckless",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_sentimental",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_tough_minded",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_vengeful",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "cook": [
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "cooperate": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 0.765,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_flexible",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_forgiving",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_hot_tempered",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_self_important",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_stubborn",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_vengeful",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "craft": [
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_lh_free_spirit",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.103,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hh_sensitive_artist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_lh_cold_experimenter",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.213,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.208,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.433,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.103,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.103,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hh_charismatic_visionary",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_lh_solitary_scholar",
+      "extreme_val": 1.103,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_ll_wallflower",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_aesthetic",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_careless",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "C_perfectionism",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_perfectionist",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "C_perfectionism",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_solitary",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_utilitarian",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "debate": [
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.25,
+      "source": "composite"
+    }
+  ],
+  "dominate": [
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.4,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.35,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_self_important",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "dramatize": [
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "entertain": [
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "explore": [
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.634,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.202,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_lh_free_spirit",
+      "extreme_val": 1.271,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_ll_careless_waster",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 0.998,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 1.271,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hh_sensitive_artist",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_lh_cold_experimenter",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hh_emotional_socialite",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_lh_daredevil",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 1.444,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 1.715,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.634,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 0.855,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hh_charismatic_visionary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_lh_solitary_scholar",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 1.386,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.998,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_aesthetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_anxious",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_apathetic",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_bold",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_calm",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_careless",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_perfectionism",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_confident",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_conventional",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_creative",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_curious",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_dependent",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_disorganized",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_energetic",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearful",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearless",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_gregarious",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_hot_tempered",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_nonconformist",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_prudent",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reckless",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_reserved",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_self_reliant",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_solitary",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "flee": [
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 0.72,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 0.63,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hh_sensitive_artist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_lh_cold_experimenter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hh_emotional_socialite",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_lh_daredevil",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_fearful",
+      "extreme_val": 1.3,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearless",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "gather": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hl_conservative_manager",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_apathetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_curious",
+      "extreme_val": 1.0,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_fearful",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_fearfulness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_industrious",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_lazy",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_organized",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "high",
+      "threshold": 0.92
+    }
+  ],
+  "heal": [
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 1.5,
+      "source": "composite"
+    }
+  ],
+  "help": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.375,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 1.392,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 1.513,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.513,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 1.513,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.21,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_gentle",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_modest",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_sentimental",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_tough_minded",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "hoard": [
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.35,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_frugal",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_greedy",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "incite": [
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.4,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    }
+  ],
+  "indoctrinate": [
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "intimidate": [
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_gentle",
+      "extreme_val": 0.7,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_harsh",
+      "extreme_val": 1.3,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "invest": [
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "leadership": [
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.495,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.323,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hl_conservative_manager",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_ll_careless_waster",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hh_emotional_socialite",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_lh_daredevil",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.323,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.553,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hh_charismatic_visionary",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hl_populist",
+      "extreme_val": 1.208,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_ll_wallflower",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.389,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.438,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.63,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.495,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_bold",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_confident",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_corrupt",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_deceptive",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_dependent",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_flexible",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_gregarious",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_insecure",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_modest",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_prudent",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_self_important",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_self_reliant",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_shy",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_sincere",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_stubborn",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_traditionalist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "loyalty": [
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 0.85,
+      "source": "composite"
+    }
+  ],
+  "negotiate": [
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.45,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.35,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.35,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_bold",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_flexible",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_stubborn",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "A_flexibility",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "nurture": [
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.418,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hh_sensitive_artist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hh_emotional_socialite",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 1.418,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 0.6,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 0.6,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_dependent",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_gentle",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_gregarious",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_harsh",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_sentimental",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_tough_minded",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "patrol": [
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.35,
+      "source": "composite"
+    }
+  ],
+  "plan": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 0.595,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hl_conservative_manager",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_lh_free_spirit",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_ll_careless_waster",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.38,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.85,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_anxious",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_disorganized",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_organized",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_prudent",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reckless",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "record": [
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "repair": [
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.25,
+      "source": "composite"
+    }
+  ],
+  "research": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.208,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_architect_master",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hh_methodical_inventor",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_hl_conservative_manager",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_lh_free_spirit",
+      "extreme_val": 1.035,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_co_ll_careless_waster",
+      "extreme_val": 0.855,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_collector",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hh_anxious_planner",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_lh_cool_strategist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_ll_reckless_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.66,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_engineer",
+      "extreme_val": 1.581,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hh_sensitive_artist",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_hl_anxious_traditionalist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_lh_cold_experimenter",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_eo_ll_unfeeling_realist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 1.035,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 1.727,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_inventor",
+      "extreme_val": 1.708,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 1.328,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.093,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_nomad",
+      "extreme_val": 1.035,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.392,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pragmatist",
+      "extreme_val": 0.993,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 1.594,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 1.793,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scout",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.38,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.328,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.455,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_survivalist",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.581,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 0.945,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hh_charismatic_visionary",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hl_populist",
+      "extreme_val": 0.95,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_lh_solitary_scholar",
+      "extreme_val": 1.208,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_ll_wallflower",
+      "extreme_val": 0.998,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.045,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_aesthetic",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_anxious",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_apathetic",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_conventional",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_creative",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_curious",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_industrious",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_insecure",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_lazy",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_nonconformist",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_organized",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_organization",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_patient",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_perfectionist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_perfectionism",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reserved",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_shy",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_solitary",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_traditionalist",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_utilitarian",
+      "extreme_val": 0.98,
+      "source": "facet",
+      "facet": "O_aesthetic_appreciation",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "rest": [
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_industrious",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_lazy",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "revenge": [
+    {
+      "trait_id": "c_ac_hh_reliable_teamworker",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_hl_kind_dreamer",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_lh_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ac_ll_unruly_brute",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hh_open-minded_humanitarian",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_hl_benevolent_traditionalist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_lh_cynical_heretic",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ao_ll_rigid_oppressor",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_berserker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_caregiver",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_chef",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_defender",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hh_compassionate_reconciler",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_hl_timid_helper",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_lh_volatile_bully",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_healer",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 0.42,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_settler",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_forgiving",
+      "extreme_val": 0.6,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_vengeful",
+      "extreme_val": 1.6,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "low",
+      "threshold": 0.16
+    }
+  ],
+  "ritual": [
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "sabotage": [
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.15,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.2,
+      "source": "composite"
+    }
+  ],
+  "share": [
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 1.155,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.265,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 0.75,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 1.485,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 0.72,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 0.765,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_frugal",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_greedy",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "smuggle": [
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "social": [
+    {
+      "trait_id": "c_adventurer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_agitator",
+      "extreme_val": 1.5,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_artist",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 0.68,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assault_captain",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.38,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_builder_foreman",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_cold_dictator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_counselor",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_diplomat",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ec_hl_anxious_drifter",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hh_emotional_socialite",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_hl_timid_recluse",
+      "extreme_val": 0.72,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_lh_daredevil",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ex_ll_stoic_loner",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_free_spirit_extro",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.56,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hermit_sage",
+      "extreme_val": 0.56,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_labor_hero",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "extreme_val": 0.68,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mystic",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_polymath",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 1.5,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_revolutionary",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scholar_scribe",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_scientist",
+      "extreme_val": 0.64,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_storyteller",
+      "extreme_val": 1.5,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist_general",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strict_commander",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_visionary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_wallflower",
+      "extreme_val": 0.68,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hh_social_peacemaker",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_hl_dominating_agitator",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_lh_quiet_helper",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xa_ll_isolated_brawler",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hh_competent_leader",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_hl_charming_improviser",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_lh_silent_craftsman",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xc_ll_apathetic_recluse",
+      "extreme_val": 0.72,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hh_charismatic_visionary",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_hl_populist",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_lh_solitary_scholar",
+      "extreme_val": 0.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_xo_ll_wallflower",
+      "extreme_val": 0.72,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_zealot",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.32,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.44,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.62,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.56,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 0.76,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_anxious",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_bold",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_calm",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_anxiety",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_confident",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_creative",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_creativity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_curious",
+      "extreme_val": 1.0,
+      "source": "facet",
+      "facet": "O_inquisitiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_deceptive",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_dependent",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "high",
+      "threshold": 0.9
+    },
+    {
+      "trait_id": "f_energetic",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_forgiving",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "A_forgiveness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_gregarious",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_hot_tempered",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_insecure",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "X_social_self_esteem",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_modest",
+      "extreme_val": 1.0,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_nonconformist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_patient",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "A_patience",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reserved",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "X_liveliness",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_self_important",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "H_modesty",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_self_reliant",
+      "extreme_val": 0.9,
+      "source": "facet",
+      "facet": "E_dependence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_sentimental",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_shy",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "X_social_boldness",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_sincere",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_solitary",
+      "extreme_val": 0.75,
+      "source": "facet",
+      "facet": "X_sociability",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_traditionalist",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "O_unconventionality",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "spy": [
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spymaster",
+      "extreme_val": 1.45,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.15,
+      "source": "composite"
+    }
+  ],
+  "steal": [
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.495,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_democratic_leader",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ea_ll_callous_abuser",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hh_kind-hearted_honest",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_hl_stern_judge",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hh_honest_administrator",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_hl_well-meaning_slacker",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hh_tender_conscience",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_hl_stoic_honest",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_heretic",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hh_idealistic_innovator",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_hl_traditional_moralist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hh_honest_leader",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_hl_honest_recluse",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mediator_king",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_pacifist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_peacekeeper",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_philanthropist",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_reconciler",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saint",
+      "extreme_val": 0.455,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_saintess",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_skeptic",
+      "extreme_val": 0.7,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.43,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.69,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.625,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.625,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_corrupt",
+      "extreme_val": 1.6,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_deceptive",
+      "extreme_val": 1.25,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "extreme_val": 0.55,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_frugal",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_gentle",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_greedy",
+      "extreme_val": 1.35,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "low",
+      "threshold": 0.14
+    },
+    {
+      "trait_id": "f_harsh",
+      "extreme_val": 1.1,
+      "source": "facet",
+      "facet": "A_gentleness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_lazy",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "C_diligence",
+      "direction": "low",
+      "threshold": 0.16
+    },
+    {
+      "trait_id": "f_prudent",
+      "extreme_val": 0.8,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_reckless",
+      "extreme_val": 1.2,
+      "source": "facet",
+      "facet": "C_prudence",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_sentimental",
+      "extreme_val": 0.85,
+      "source": "facet",
+      "facet": "E_sentimentality",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_sincere",
+      "extreme_val": 0.7,
+      "source": "facet",
+      "facet": "H_sincerity",
+      "direction": "high",
+      "threshold": 0.92
+    }
+  ],
+  "take_bribe": [
+    {
+      "trait_id": "c_assassin_instinct",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_gossip",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_lh_smiling_exploiter",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ha_ll_cruel_raider",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_lh_calculating_schemer",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hc_ll_irresponsible_cheat",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_lh_anxious_swindler",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_he_ll_cold_exploiter",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_lh_cunning_inventor",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_ho_ll_corrupt_traditionalist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_lh_charismatic_con_artist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_hx_ll_sly_loner",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_strategist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_trickster",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_tyrant",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_backstabber",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_bully",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_callous",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_con_artist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.8,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_histrionic",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_opportunist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.3,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_corrupt",
+      "extreme_val": 1.6,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "low",
+      "threshold": 0.12
+    }
+  ],
+  "tame_animal": [
+    {
+      "trait_id": "c_animal_tamer",
+      "extreme_val": 1.5,
+      "source": "composite"
+    }
+  ],
+  "teach": [
+    {
+      "trait_id": "c_encyclopedia",
+      "extreme_val": 1.2,
+      "source": "composite"
+    }
+  ],
+  "torture": [
+    {
+      "trait_id": "d_sadist",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ],
+  "trade": [
+    {
+      "trait_id": "c_ascetic",
+      "extreme_val": 0.9,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_backroom_broker",
+      "extreme_val": 1.25,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_born_merchant",
+      "extreme_val": 1.45,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_mercenary",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_miser",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_speculator",
+      "extreme_val": 1.4,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 1.1,
+      "source": "composite"
+    },
+    {
+      "trait_id": "c_thief",
+      "extreme_val": 1.05,
+      "source": "composite"
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "extreme_val": 1.2,
+      "source": "composite"
+    },
+    {
+      "trait_id": "f_corrupt",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "low",
+      "threshold": 0.12
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "extreme_val": 1.05,
+      "source": "facet",
+      "facet": "H_fairness",
+      "direction": "high",
+      "threshold": 0.94
+    },
+    {
+      "trait_id": "f_frugal",
+      "extreme_val": 0.95,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "high",
+      "threshold": 0.92
+    },
+    {
+      "trait_id": "f_greedy",
+      "extreme_val": 1.15,
+      "source": "facet",
+      "facet": "H_greed_avoidance",
+      "direction": "low",
+      "threshold": 0.14
+    }
+  ],
+  "waste_resources": [
+    {
+      "trait_id": "c_spendthrift",
+      "extreme_val": 1.4,
+      "source": "composite"
+    }
+  ]
+}

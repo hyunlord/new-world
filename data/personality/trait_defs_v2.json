@@ -1,0 +1,4757 @@
+[
+  {
+    "id": "f_sincere",
+    "name_key": "TRAIT_f_sincere_NAME",
+    "desc_key": "TRAIT_f_sincere_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "H_sincerity",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "H_sincerity",
+    "axis": "H"
+  },
+  {
+    "id": "f_deceptive",
+    "name_key": "TRAIT_f_deceptive_NAME",
+    "desc_key": "TRAIT_f_deceptive_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "H_sincerity",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "H_sincerity",
+    "axis": "H"
+  },
+  {
+    "id": "f_fair_minded",
+    "name_key": "TRAIT_f_fair_minded_NAME",
+    "desc_key": "TRAIT_f_fair_minded_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "H_fairness",
+    "direction": "high",
+    "threshold": 0.94,
+    "t_on": 0.92,
+    "t_off": 0.86,
+    "sigmoid_s": 0.027,
+    "salience_center": 0.89,
+    "salience_width": 0.12,
+    "mutex_group": "H_fairness",
+    "axis": "H"
+  },
+  {
+    "id": "f_corrupt",
+    "name_key": "TRAIT_f_corrupt_NAME",
+    "desc_key": "TRAIT_f_corrupt_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "H_fairness",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "H_fairness",
+    "axis": "H"
+  },
+  {
+    "id": "f_frugal",
+    "name_key": "TRAIT_f_frugal_NAME",
+    "desc_key": "TRAIT_f_frugal_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "H_greed_avoidance",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "H_greed_avoidance",
+    "axis": "H"
+  },
+  {
+    "id": "f_greedy",
+    "name_key": "TRAIT_f_greedy_NAME",
+    "desc_key": "TRAIT_f_greedy_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "H_greed_avoidance",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "H_greed_avoidance",
+    "axis": "H"
+  },
+  {
+    "id": "f_modest",
+    "name_key": "TRAIT_f_modest_NAME",
+    "desc_key": "TRAIT_f_modest_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "H_modesty",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "H_modesty",
+    "axis": "H"
+  },
+  {
+    "id": "f_self_important",
+    "name_key": "TRAIT_f_self_important_NAME",
+    "desc_key": "TRAIT_f_self_important_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "H_modesty",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "H_modesty",
+    "axis": "H"
+  },
+  {
+    "id": "f_fearful",
+    "name_key": "TRAIT_f_fearful_NAME",
+    "desc_key": "TRAIT_f_fearful_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "E_fearfulness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "E_fearfulness",
+    "axis": "E"
+  },
+  {
+    "id": "f_fearless",
+    "name_key": "TRAIT_f_fearless_NAME",
+    "desc_key": "TRAIT_f_fearless_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "E_fearfulness",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "E_fearfulness",
+    "axis": "E"
+  },
+  {
+    "id": "f_anxious",
+    "name_key": "TRAIT_f_anxious_NAME",
+    "desc_key": "TRAIT_f_anxious_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "E_anxiety",
+    "direction": "high",
+    "threshold": 0.9,
+    "t_on": 0.88,
+    "t_off": 0.82,
+    "sigmoid_s": 0.037,
+    "salience_center": 0.85,
+    "salience_width": 0.12,
+    "mutex_group": "E_anxiety",
+    "axis": "E"
+  },
+  {
+    "id": "f_calm",
+    "name_key": "TRAIT_f_calm_NAME",
+    "desc_key": "TRAIT_f_calm_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "E_anxiety",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "E_anxiety",
+    "axis": "E"
+  },
+  {
+    "id": "f_dependent",
+    "name_key": "TRAIT_f_dependent_NAME",
+    "desc_key": "TRAIT_f_dependent_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "E_dependence",
+    "direction": "high",
+    "threshold": 0.9,
+    "t_on": 0.88,
+    "t_off": 0.82,
+    "sigmoid_s": 0.037,
+    "salience_center": 0.85,
+    "salience_width": 0.12,
+    "mutex_group": "E_dependence",
+    "axis": "E"
+  },
+  {
+    "id": "f_self_reliant",
+    "name_key": "TRAIT_f_self_reliant_NAME",
+    "desc_key": "TRAIT_f_self_reliant_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "E_dependence",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "E_dependence",
+    "axis": "E"
+  },
+  {
+    "id": "f_sentimental",
+    "name_key": "TRAIT_f_sentimental_NAME",
+    "desc_key": "TRAIT_f_sentimental_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "E_sentimentality",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "E_sentimentality",
+    "axis": "E"
+  },
+  {
+    "id": "f_tough_minded",
+    "name_key": "TRAIT_f_tough_minded_NAME",
+    "desc_key": "TRAIT_f_tough_minded_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "E_sentimentality",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "E_sentimentality",
+    "axis": "E"
+  },
+  {
+    "id": "f_confident",
+    "name_key": "TRAIT_f_confident_NAME",
+    "desc_key": "TRAIT_f_confident_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "X_social_self_esteem",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "X_social_self_esteem",
+    "axis": "X"
+  },
+  {
+    "id": "f_insecure",
+    "name_key": "TRAIT_f_insecure_NAME",
+    "desc_key": "TRAIT_f_insecure_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "X_social_self_esteem",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "X_social_self_esteem",
+    "axis": "X"
+  },
+  {
+    "id": "f_bold",
+    "name_key": "TRAIT_f_bold_NAME",
+    "desc_key": "TRAIT_f_bold_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "X_social_boldness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "X_social_boldness",
+    "axis": "X"
+  },
+  {
+    "id": "f_shy",
+    "name_key": "TRAIT_f_shy_NAME",
+    "desc_key": "TRAIT_f_shy_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "X_social_boldness",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "X_social_boldness",
+    "axis": "X"
+  },
+  {
+    "id": "f_gregarious",
+    "name_key": "TRAIT_f_gregarious_NAME",
+    "desc_key": "TRAIT_f_gregarious_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "X_sociability",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "X_sociability",
+    "axis": "X"
+  },
+  {
+    "id": "f_solitary",
+    "name_key": "TRAIT_f_solitary_NAME",
+    "desc_key": "TRAIT_f_solitary_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "X_sociability",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "X_sociability",
+    "axis": "X"
+  },
+  {
+    "id": "f_energetic",
+    "name_key": "TRAIT_f_energetic_NAME",
+    "desc_key": "TRAIT_f_energetic_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "X_liveliness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "X_liveliness",
+    "axis": "X"
+  },
+  {
+    "id": "f_reserved",
+    "name_key": "TRAIT_f_reserved_NAME",
+    "desc_key": "TRAIT_f_reserved_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "X_liveliness",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "X_liveliness",
+    "axis": "X"
+  },
+  {
+    "id": "f_forgiving",
+    "name_key": "TRAIT_f_forgiving_NAME",
+    "desc_key": "TRAIT_f_forgiving_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "A_forgiveness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "A_forgiveness",
+    "axis": "A"
+  },
+  {
+    "id": "f_vengeful",
+    "name_key": "TRAIT_f_vengeful_NAME",
+    "desc_key": "TRAIT_f_vengeful_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "A_forgiveness",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "A_forgiveness",
+    "axis": "A"
+  },
+  {
+    "id": "f_gentle",
+    "name_key": "TRAIT_f_gentle_NAME",
+    "desc_key": "TRAIT_f_gentle_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "A_gentleness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "A_gentleness",
+    "axis": "A"
+  },
+  {
+    "id": "f_harsh",
+    "name_key": "TRAIT_f_harsh_NAME",
+    "desc_key": "TRAIT_f_harsh_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "A_gentleness",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "A_gentleness",
+    "axis": "A"
+  },
+  {
+    "id": "f_flexible",
+    "name_key": "TRAIT_f_flexible_NAME",
+    "desc_key": "TRAIT_f_flexible_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "A_flexibility",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "A_flexibility",
+    "axis": "A"
+  },
+  {
+    "id": "f_stubborn",
+    "name_key": "TRAIT_f_stubborn_NAME",
+    "desc_key": "TRAIT_f_stubborn_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "A_flexibility",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "A_flexibility",
+    "axis": "A"
+  },
+  {
+    "id": "f_patient",
+    "name_key": "TRAIT_f_patient_NAME",
+    "desc_key": "TRAIT_f_patient_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "A_patience",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "A_patience",
+    "axis": "A"
+  },
+  {
+    "id": "f_hot_tempered",
+    "name_key": "TRAIT_f_hot_tempered_NAME",
+    "desc_key": "TRAIT_f_hot_tempered_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "A_patience",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "A_patience",
+    "axis": "A"
+  },
+  {
+    "id": "f_organized",
+    "name_key": "TRAIT_f_organized_NAME",
+    "desc_key": "TRAIT_f_organized_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "C_organization",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "C_organization",
+    "axis": "C"
+  },
+  {
+    "id": "f_disorganized",
+    "name_key": "TRAIT_f_disorganized_NAME",
+    "desc_key": "TRAIT_f_disorganized_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "C_organization",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "C_organization",
+    "axis": "C"
+  },
+  {
+    "id": "f_industrious",
+    "name_key": "TRAIT_f_industrious_NAME",
+    "desc_key": "TRAIT_f_industrious_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "C_diligence",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "C_diligence",
+    "axis": "C"
+  },
+  {
+    "id": "f_lazy",
+    "name_key": "TRAIT_f_lazy_NAME",
+    "desc_key": "TRAIT_f_lazy_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "C_diligence",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "C_diligence",
+    "axis": "C"
+  },
+  {
+    "id": "f_perfectionist",
+    "name_key": "TRAIT_f_perfectionist_NAME",
+    "desc_key": "TRAIT_f_perfectionist_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "C_perfectionism",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "C_perfectionism",
+    "axis": "C"
+  },
+  {
+    "id": "f_careless",
+    "name_key": "TRAIT_f_careless_NAME",
+    "desc_key": "TRAIT_f_careless_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "C_perfectionism",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "C_perfectionism",
+    "axis": "C"
+  },
+  {
+    "id": "f_prudent",
+    "name_key": "TRAIT_f_prudent_NAME",
+    "desc_key": "TRAIT_f_prudent_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "C_prudence",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "C_prudence",
+    "axis": "C"
+  },
+  {
+    "id": "f_reckless",
+    "name_key": "TRAIT_f_reckless_NAME",
+    "desc_key": "TRAIT_f_reckless_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "C_prudence",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "C_prudence",
+    "axis": "C"
+  },
+  {
+    "id": "f_aesthetic",
+    "name_key": "TRAIT_f_aesthetic_NAME",
+    "desc_key": "TRAIT_f_aesthetic_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "O_aesthetic_appreciation",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "O_aesthetic",
+    "axis": "O"
+  },
+  {
+    "id": "f_utilitarian",
+    "name_key": "TRAIT_f_utilitarian_NAME",
+    "desc_key": "TRAIT_f_utilitarian_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "O_aesthetic_appreciation",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "O_aesthetic",
+    "axis": "O"
+  },
+  {
+    "id": "f_curious",
+    "name_key": "TRAIT_f_curious_NAME",
+    "desc_key": "TRAIT_f_curious_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "O_inquisitiveness",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "O_inquisitiveness",
+    "axis": "O"
+  },
+  {
+    "id": "f_apathetic",
+    "name_key": "TRAIT_f_apathetic_NAME",
+    "desc_key": "TRAIT_f_apathetic_DESC",
+    "valence": "negative",
+    "category": "facet",
+    "facet": "O_inquisitiveness",
+    "direction": "low",
+    "threshold": 0.16,
+    "t_on": 0.18,
+    "t_off": 0.24,
+    "sigmoid_s": 0.05,
+    "salience_center": 0.21,
+    "salience_width": 0.12,
+    "mutex_group": "O_inquisitiveness",
+    "axis": "O"
+  },
+  {
+    "id": "f_creative",
+    "name_key": "TRAIT_f_creative_NAME",
+    "desc_key": "TRAIT_f_creative_DESC",
+    "valence": "positive",
+    "category": "facet",
+    "facet": "O_creativity",
+    "direction": "high",
+    "threshold": 0.92,
+    "t_on": 0.9,
+    "t_off": 0.84,
+    "sigmoid_s": 0.032,
+    "salience_center": 0.87,
+    "salience_width": 0.12,
+    "mutex_group": "O_creativity",
+    "axis": "O"
+  },
+  {
+    "id": "f_conventional",
+    "name_key": "TRAIT_f_conventional_NAME",
+    "desc_key": "TRAIT_f_conventional_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "O_creativity",
+    "direction": "low",
+    "threshold": 0.14,
+    "t_on": 0.16,
+    "t_off": 0.22,
+    "sigmoid_s": 0.047,
+    "salience_center": 0.19,
+    "salience_width": 0.12,
+    "mutex_group": "O_creativity",
+    "axis": "O"
+  },
+  {
+    "id": "f_nonconformist",
+    "name_key": "TRAIT_f_nonconformist_NAME",
+    "desc_key": "TRAIT_f_nonconformist_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "O_unconventionality",
+    "direction": "high",
+    "threshold": 0.94,
+    "t_on": 0.92,
+    "t_off": 0.86,
+    "sigmoid_s": 0.027,
+    "salience_center": 0.89,
+    "salience_width": 0.12,
+    "mutex_group": "O_unconventionality",
+    "axis": "O"
+  },
+  {
+    "id": "f_traditionalist",
+    "name_key": "TRAIT_f_traditionalist_NAME",
+    "desc_key": "TRAIT_f_traditionalist_DESC",
+    "valence": "neutral",
+    "category": "facet",
+    "facet": "O_unconventionality",
+    "direction": "low",
+    "threshold": 0.12,
+    "t_on": 0.14,
+    "t_off": 0.2,
+    "sigmoid_s": 0.042,
+    "salience_center": 0.17,
+    "salience_width": 0.12,
+    "mutex_group": "O_unconventionality",
+    "axis": "O"
+  },
+  {
+    "id": "c_he_hh_tender_conscience",
+    "name_key": "TRAIT_c_he_hh_tender_conscience_NAME",
+    "desc_key": "TRAIT_c_he_hh_tender_conscience_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_he_hl_stoic_honest",
+    "name_key": "TRAIT_c_he_hl_stoic_honest_NAME",
+    "desc_key": "TRAIT_c_he_hl_stoic_honest_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_he_lh_anxious_swindler",
+    "name_key": "TRAIT_c_he_lh_anxious_swindler_NAME",
+    "desc_key": "TRAIT_c_he_lh_anxious_swindler_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_he_ll_cold_exploiter",
+    "name_key": "TRAIT_c_he_ll_cold_exploiter_NAME",
+    "desc_key": "TRAIT_c_he_ll_cold_exploiter_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hx_hh_honest_leader",
+    "name_key": "TRAIT_c_hx_hh_honest_leader_NAME",
+    "desc_key": "TRAIT_c_hx_hh_honest_leader_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hx_hl_honest_recluse",
+    "name_key": "TRAIT_c_hx_hl_honest_recluse_NAME",
+    "desc_key": "TRAIT_c_hx_hl_honest_recluse_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hx_lh_charismatic_con_artist",
+    "name_key": "TRAIT_c_hx_lh_charismatic_con_artist_NAME",
+    "desc_key": "TRAIT_c_hx_lh_charismatic_con_artist_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hx_ll_sly_loner",
+    "name_key": "TRAIT_c_hx_ll_sly_loner_NAME",
+    "desc_key": "TRAIT_c_hx_ll_sly_loner_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ha_hh_kind-hearted_honest",
+    "name_key": "TRAIT_c_ha_hh_kind-hearted_honest_NAME",
+    "desc_key": "TRAIT_c_ha_hh_kind-hearted_honest_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ha_hl_stern_judge",
+    "name_key": "TRAIT_c_ha_hl_stern_judge_NAME",
+    "desc_key": "TRAIT_c_ha_hl_stern_judge_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ha_lh_smiling_exploiter",
+    "name_key": "TRAIT_c_ha_lh_smiling_exploiter_NAME",
+    "desc_key": "TRAIT_c_ha_lh_smiling_exploiter_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ha_ll_cruel_raider",
+    "name_key": "TRAIT_c_ha_ll_cruel_raider_NAME",
+    "desc_key": "TRAIT_c_ha_ll_cruel_raider_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hc_hh_honest_administrator",
+    "name_key": "TRAIT_c_hc_hh_honest_administrator_NAME",
+    "desc_key": "TRAIT_c_hc_hh_honest_administrator_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hc_hl_well-meaning_slacker",
+    "name_key": "TRAIT_c_hc_hl_well-meaning_slacker_NAME",
+    "desc_key": "TRAIT_c_hc_hl_well-meaning_slacker_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hc_lh_calculating_schemer",
+    "name_key": "TRAIT_c_hc_lh_calculating_schemer_NAME",
+    "desc_key": "TRAIT_c_hc_lh_calculating_schemer_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_hc_ll_irresponsible_cheat",
+    "name_key": "TRAIT_c_hc_ll_irresponsible_cheat_NAME",
+    "desc_key": "TRAIT_c_hc_ll_irresponsible_cheat_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ho_hh_idealistic_innovator",
+    "name_key": "TRAIT_c_ho_hh_idealistic_innovator_NAME",
+    "desc_key": "TRAIT_c_ho_hh_idealistic_innovator_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ho_hl_traditional_moralist",
+    "name_key": "TRAIT_c_ho_hl_traditional_moralist_NAME",
+    "desc_key": "TRAIT_c_ho_hl_traditional_moralist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ho_lh_cunning_inventor",
+    "name_key": "TRAIT_c_ho_lh_cunning_inventor_NAME",
+    "desc_key": "TRAIT_c_ho_lh_cunning_inventor_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ho_ll_corrupt_traditionalist",
+    "name_key": "TRAIT_c_ho_ll_corrupt_traditionalist_NAME",
+    "desc_key": "TRAIT_c_ho_ll_corrupt_traditionalist_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ex_hh_emotional_socialite",
+    "name_key": "TRAIT_c_ex_hh_emotional_socialite_NAME",
+    "desc_key": "TRAIT_c_ex_hh_emotional_socialite_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ex_hl_timid_recluse",
+    "name_key": "TRAIT_c_ex_hl_timid_recluse_NAME",
+    "desc_key": "TRAIT_c_ex_hl_timid_recluse_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ex_lh_daredevil",
+    "name_key": "TRAIT_c_ex_lh_daredevil_NAME",
+    "desc_key": "TRAIT_c_ex_lh_daredevil_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ex_ll_stoic_loner",
+    "name_key": "TRAIT_c_ex_ll_stoic_loner_NAME",
+    "desc_key": "TRAIT_c_ex_ll_stoic_loner_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ea_hh_compassionate_reconciler",
+    "name_key": "TRAIT_c_ea_hh_compassionate_reconciler_NAME",
+    "desc_key": "TRAIT_c_ea_hh_compassionate_reconciler_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ea_hl_timid_helper",
+    "name_key": "TRAIT_c_ea_hl_timid_helper_NAME",
+    "desc_key": "TRAIT_c_ea_hl_timid_helper_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ea_lh_volatile_bully",
+    "name_key": "TRAIT_c_ea_lh_volatile_bully_NAME",
+    "desc_key": "TRAIT_c_ea_lh_volatile_bully_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ea_ll_callous_abuser",
+    "name_key": "TRAIT_c_ea_ll_callous_abuser_NAME",
+    "desc_key": "TRAIT_c_ea_ll_callous_abuser_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ec_hh_anxious_planner",
+    "name_key": "TRAIT_c_ec_hh_anxious_planner_NAME",
+    "desc_key": "TRAIT_c_ec_hh_anxious_planner_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ec_hl_anxious_drifter",
+    "name_key": "TRAIT_c_ec_hl_anxious_drifter_NAME",
+    "desc_key": "TRAIT_c_ec_hl_anxious_drifter_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ec_lh_cool_strategist",
+    "name_key": "TRAIT_c_ec_lh_cool_strategist_NAME",
+    "desc_key": "TRAIT_c_ec_lh_cool_strategist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ec_ll_reckless_drifter",
+    "name_key": "TRAIT_c_ec_ll_reckless_drifter_NAME",
+    "desc_key": "TRAIT_c_ec_ll_reckless_drifter_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_eo_hh_sensitive_artist",
+    "name_key": "TRAIT_c_eo_hh_sensitive_artist_NAME",
+    "desc_key": "TRAIT_c_eo_hh_sensitive_artist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_eo_hl_anxious_traditionalist",
+    "name_key": "TRAIT_c_eo_hl_anxious_traditionalist_NAME",
+    "desc_key": "TRAIT_c_eo_hl_anxious_traditionalist_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_eo_lh_cold_experimenter",
+    "name_key": "TRAIT_c_eo_lh_cold_experimenter_NAME",
+    "desc_key": "TRAIT_c_eo_lh_cold_experimenter_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_eo_ll_unfeeling_realist",
+    "name_key": "TRAIT_c_eo_ll_unfeeling_realist_NAME",
+    "desc_key": "TRAIT_c_eo_ll_unfeeling_realist_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xa_hh_social_peacemaker",
+    "name_key": "TRAIT_c_xa_hh_social_peacemaker_NAME",
+    "desc_key": "TRAIT_c_xa_hh_social_peacemaker_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xa_hl_dominating_agitator",
+    "name_key": "TRAIT_c_xa_hl_dominating_agitator_NAME",
+    "desc_key": "TRAIT_c_xa_hl_dominating_agitator_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xa_lh_quiet_helper",
+    "name_key": "TRAIT_c_xa_lh_quiet_helper_NAME",
+    "desc_key": "TRAIT_c_xa_lh_quiet_helper_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xa_ll_isolated_brawler",
+    "name_key": "TRAIT_c_xa_ll_isolated_brawler_NAME",
+    "desc_key": "TRAIT_c_xa_ll_isolated_brawler_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xc_hh_competent_leader",
+    "name_key": "TRAIT_c_xc_hh_competent_leader_NAME",
+    "desc_key": "TRAIT_c_xc_hh_competent_leader_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xc_hl_charming_improviser",
+    "name_key": "TRAIT_c_xc_hl_charming_improviser_NAME",
+    "desc_key": "TRAIT_c_xc_hl_charming_improviser_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xc_lh_silent_craftsman",
+    "name_key": "TRAIT_c_xc_lh_silent_craftsman_NAME",
+    "desc_key": "TRAIT_c_xc_lh_silent_craftsman_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xc_ll_apathetic_recluse",
+    "name_key": "TRAIT_c_xc_ll_apathetic_recluse_NAME",
+    "desc_key": "TRAIT_c_xc_ll_apathetic_recluse_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xo_hh_charismatic_visionary",
+    "name_key": "TRAIT_c_xo_hh_charismatic_visionary_NAME",
+    "desc_key": "TRAIT_c_xo_hh_charismatic_visionary_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xo_hl_populist",
+    "name_key": "TRAIT_c_xo_hl_populist_NAME",
+    "desc_key": "TRAIT_c_xo_hl_populist_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xo_lh_solitary_scholar",
+    "name_key": "TRAIT_c_xo_lh_solitary_scholar_NAME",
+    "desc_key": "TRAIT_c_xo_lh_solitary_scholar_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_xo_ll_wallflower",
+    "name_key": "TRAIT_c_xo_ll_wallflower_NAME",
+    "desc_key": "TRAIT_c_xo_ll_wallflower_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ac_hh_reliable_teamworker",
+    "name_key": "TRAIT_c_ac_hh_reliable_teamworker_NAME",
+    "desc_key": "TRAIT_c_ac_hh_reliable_teamworker_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ac_hl_kind_dreamer",
+    "name_key": "TRAIT_c_ac_hl_kind_dreamer_NAME",
+    "desc_key": "TRAIT_c_ac_hl_kind_dreamer_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ac_lh_strict_commander",
+    "name_key": "TRAIT_c_ac_lh_strict_commander_NAME",
+    "desc_key": "TRAIT_c_ac_lh_strict_commander_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ac_ll_unruly_brute",
+    "name_key": "TRAIT_c_ac_ll_unruly_brute_NAME",
+    "desc_key": "TRAIT_c_ac_ll_unruly_brute_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ao_hh_open-minded_humanitarian",
+    "name_key": "TRAIT_c_ao_hh_open-minded_humanitarian_NAME",
+    "desc_key": "TRAIT_c_ao_hh_open-minded_humanitarian_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ao_hl_benevolent_traditionalist",
+    "name_key": "TRAIT_c_ao_hl_benevolent_traditionalist_NAME",
+    "desc_key": "TRAIT_c_ao_hl_benevolent_traditionalist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ao_lh_cynical_heretic",
+    "name_key": "TRAIT_c_ao_lh_cynical_heretic_NAME",
+    "desc_key": "TRAIT_c_ao_lh_cynical_heretic_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_ao_ll_rigid_oppressor",
+    "name_key": "TRAIT_c_ao_ll_rigid_oppressor_NAME",
+    "desc_key": "TRAIT_c_ao_ll_rigid_oppressor_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_co_hh_methodical_inventor",
+    "name_key": "TRAIT_c_co_hh_methodical_inventor_NAME",
+    "desc_key": "TRAIT_c_co_hh_methodical_inventor_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_co_hl_conservative_manager",
+    "name_key": "TRAIT_c_co_hl_conservative_manager_NAME",
+    "desc_key": "TRAIT_c_co_hl_conservative_manager_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_co_lh_free_spirit",
+    "name_key": "TRAIT_c_co_lh_free_spirit_NAME",
+    "desc_key": "TRAIT_c_co_lh_free_spirit_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_co_ll_careless_waster",
+    "name_key": "TRAIT_c_co_ll_careless_waster_NAME",
+    "desc_key": "TRAIT_c_co_ll_careless_waster_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "d_psychopath_primary",
+    "name_key": "TRAIT_d_psychopath_primary_NAME",
+    "desc_key": "TRAIT_d_psychopath_primary_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "low",
+        "threshold": 0.14,
+        "cond_center": 0.24,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_psychopath_secondary",
+    "name_key": "TRAIT_d_psychopath_secondary_NAME",
+    "desc_key": "TRAIT_d_psychopath_secondary_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_machiavellian",
+    "name_key": "TRAIT_d_machiavellian_NAME",
+    "desc_key": "TRAIT_d_machiavellian_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "low",
+        "threshold": 0.14,
+        "cond_center": 0.24,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_narcissist_grandiose",
+    "name_key": "TRAIT_d_narcissist_grandiose_NAME",
+    "desc_key": "TRAIT_d_narcissist_grandiose_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_modesty",
+        "direction": "low",
+        "threshold": 0.16,
+        "cond_center": 0.26,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_narcissist_vulnerable",
+    "name_key": "TRAIT_d_narcissist_vulnerable_NAME",
+    "desc_key": "TRAIT_d_narcissist_vulnerable_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_modesty",
+        "direction": "low",
+        "threshold": 0.16,
+        "cond_center": 0.26,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_sadist",
+    "name_key": "TRAIT_d_sadist_NAME",
+    "desc_key": "TRAIT_d_sadist_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.2,
+        "cond_center": 0.3,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.2,
+        "cond_center": 0.3,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_con_artist",
+    "name_key": "TRAIT_d_con_artist_NAME",
+    "desc_key": "TRAIT_d_con_artist_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "low",
+        "threshold": 0.14,
+        "cond_center": 0.24,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_cult_leader",
+    "name_key": "TRAIT_d_cult_leader_NAME",
+    "desc_key": "TRAIT_d_cult_leader_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_opportunist",
+    "name_key": "TRAIT_d_opportunist_NAME",
+    "desc_key": "TRAIT_d_opportunist_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_bully",
+    "name_key": "TRAIT_d_bully_NAME",
+    "desc_key": "TRAIT_d_bully_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_gentleness",
+        "direction": "low",
+        "threshold": 0.12,
+        "cond_center": 0.22,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_callous",
+    "name_key": "TRAIT_d_callous_NAME",
+    "desc_key": "TRAIT_d_callous_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "low",
+        "threshold": 0.14,
+        "cond_center": 0.24,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.35,
+        "cond_center": 0.45,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_backstabber",
+    "name_key": "TRAIT_d_backstabber_NAME",
+    "desc_key": "TRAIT_d_backstabber_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "low",
+        "threshold": 0.14,
+        "cond_center": 0.24,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_corrupt_official",
+    "name_key": "TRAIT_d_corrupt_official_NAME",
+    "desc_key": "TRAIT_d_corrupt_official_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H_fairness",
+        "direction": "low",
+        "threshold": 0.12,
+        "cond_center": 0.22,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "d_predatory_raider",
+    "name_key": "TRAIT_d_predatory_raider_NAME",
+    "desc_key": "TRAIT_d_predatory_raider_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2,
+    "violation_override": true
+  },
+  {
+    "id": "d_histrionic",
+    "name_key": "TRAIT_d_histrionic_NAME",
+    "desc_key": "TRAIT_d_histrionic_DESC",
+    "valence": "negative",
+    "category": "dark",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1,
+    "violation_override": true
+  },
+  {
+    "id": "c_saint",
+    "name_key": "TRAIT_c_saint_NAME",
+    "desc_key": "TRAIT_c_saint_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_saintess",
+    "name_key": "TRAIT_c_saintess_NAME",
+    "desc_key": "TRAIT_c_saintess_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_tyrant",
+    "name_key": "TRAIT_c_tyrant_NAME",
+    "desc_key": "TRAIT_c_tyrant_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_cold_dictator",
+    "name_key": "TRAIT_c_cold_dictator_NAME",
+    "desc_key": "TRAIT_c_cold_dictator_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_strategist",
+    "name_key": "TRAIT_c_strategist_NAME",
+    "desc_key": "TRAIT_c_strategist_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_master_craftsman",
+    "name_key": "TRAIT_c_master_craftsman_NAME",
+    "desc_key": "TRAIT_c_master_craftsman_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_visionary",
+    "name_key": "TRAIT_c_visionary_NAME",
+    "desc_key": "TRAIT_c_visionary_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_hermit_sage",
+    "name_key": "TRAIT_c_hermit_sage_NAME",
+    "desc_key": "TRAIT_c_hermit_sage_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_reconciler",
+    "name_key": "TRAIT_c_reconciler_NAME",
+    "desc_key": "TRAIT_c_reconciler_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_berserker",
+    "name_key": "TRAIT_c_berserker_NAME",
+    "desc_key": "TRAIT_c_berserker_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_caregiver",
+    "name_key": "TRAIT_c_caregiver_NAME",
+    "desc_key": "TRAIT_c_caregiver_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_adventurer",
+    "name_key": "TRAIT_c_adventurer_NAME",
+    "desc_key": "TRAIT_c_adventurer_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_ascetic",
+    "name_key": "TRAIT_c_ascetic_NAME",
+    "desc_key": "TRAIT_c_ascetic_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_free_spirit_extro",
+    "name_key": "TRAIT_c_free_spirit_extro_NAME",
+    "desc_key": "TRAIT_c_free_spirit_extro_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_zealot",
+    "name_key": "TRAIT_c_zealot_NAME",
+    "desc_key": "TRAIT_c_zealot_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_polymath",
+    "name_key": "TRAIT_c_polymath_NAME",
+    "desc_key": "TRAIT_c_polymath_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_wallflower",
+    "name_key": "TRAIT_c_wallflower_NAME",
+    "desc_key": "TRAIT_c_wallflower_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_born_leader",
+    "name_key": "TRAIT_c_born_leader_NAME",
+    "desc_key": "TRAIT_c_born_leader_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_trickster",
+    "name_key": "TRAIT_c_trickster_NAME",
+    "desc_key": "TRAIT_c_trickster_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_scientist",
+    "name_key": "TRAIT_c_scientist_NAME",
+    "desc_key": "TRAIT_c_scientist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_revolutionary",
+    "name_key": "TRAIT_c_revolutionary_NAME",
+    "desc_key": "TRAIT_c_revolutionary_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_democratic_leader",
+    "name_key": "TRAIT_c_democratic_leader_NAME",
+    "desc_key": "TRAIT_c_democratic_leader_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_artist",
+    "name_key": "TRAIT_c_artist_NAME",
+    "desc_key": "TRAIT_c_artist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_survivalist",
+    "name_key": "TRAIT_c_survivalist_NAME",
+    "desc_key": "TRAIT_c_survivalist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_philanthropist",
+    "name_key": "TRAIT_c_philanthropist_NAME",
+    "desc_key": "TRAIT_c_philanthropist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_greed_avoidance",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_miser",
+    "name_key": "TRAIT_c_miser_NAME",
+    "desc_key": "TRAIT_c_miser_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H_greed_avoidance",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_spendthrift",
+    "name_key": "TRAIT_c_spendthrift_NAME",
+    "desc_key": "TRAIT_c_spendthrift_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H_greed_avoidance",
+        "direction": "low",
+        "threshold": 0.15,
+        "cond_center": 0.25,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "low",
+        "threshold": 0.15,
+        "cond_center": 0.25,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_speculator",
+    "name_key": "TRAIT_c_speculator_NAME",
+    "desc_key": "TRAIT_c_speculator_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_greed_avoidance",
+        "direction": "low",
+        "threshold": 0.15,
+        "cond_center": 0.25,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_born_merchant",
+    "name_key": "TRAIT_c_born_merchant_NAME",
+    "desc_key": "TRAIT_c_born_merchant_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_flexibility",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_collector",
+    "name_key": "TRAIT_c_collector_NAME",
+    "desc_key": "TRAIT_c_collector_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_aesthetic_appreciation",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_architect_master",
+    "name_key": "TRAIT_c_architect_master_NAME",
+    "desc_key": "TRAIT_c_architect_master_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_perfectionism",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_aesthetic_appreciation",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_engineer",
+    "name_key": "TRAIT_c_engineer_NAME",
+    "desc_key": "TRAIT_c_engineer_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_flexibility",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_labor_hero",
+    "name_key": "TRAIT_c_labor_hero_NAME",
+    "desc_key": "TRAIT_c_labor_hero_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C_diligence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X_liveliness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_chef",
+    "name_key": "TRAIT_c_chef_NAME",
+    "desc_key": "TRAIT_c_chef_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_aesthetic_appreciation",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_gentleness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_perfectionism",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_builder_foreman",
+    "name_key": "TRAIT_c_builder_foreman_NAME",
+    "desc_key": "TRAIT_c_builder_foreman_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_patience",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_diplomat",
+    "name_key": "TRAIT_c_diplomat_NAME",
+    "desc_key": "TRAIT_c_diplomat_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_spymaster",
+    "name_key": "TRAIT_c_spymaster_NAME",
+    "desc_key": "TRAIT_c_spymaster_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_assassin_instinct",
+    "name_key": "TRAIT_c_assassin_instinct_NAME",
+    "desc_key": "TRAIT_c_assassin_instinct_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "low",
+        "threshold": 0.15,
+        "cond_center": 0.25,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_pacifist",
+    "name_key": "TRAIT_c_pacifist_NAME",
+    "desc_key": "TRAIT_c_pacifist_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_gentleness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_mercenary",
+    "name_key": "TRAIT_c_mercenary_NAME",
+    "desc_key": "TRAIT_c_mercenary_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_defender",
+    "name_key": "TRAIT_c_defender_NAME",
+    "desc_key": "TRAIT_c_defender_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_patience",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_assault_captain",
+    "name_key": "TRAIT_c_assault_captain_NAME",
+    "desc_key": "TRAIT_c_assault_captain_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X_social_boldness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_strategist_general",
+    "name_key": "TRAIT_c_strategist_general_NAME",
+    "desc_key": "TRAIT_c_strategist_general_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X_social_boldness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_creativity",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_gossip",
+    "name_key": "TRAIT_c_gossip_NAME",
+    "desc_key": "TRAIT_c_gossip_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X_sociability",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "low",
+        "threshold": 0.15,
+        "cond_center": 0.25,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.0
+  },
+  {
+    "id": "c_counselor",
+    "name_key": "TRAIT_c_counselor_NAME",
+    "desc_key": "TRAIT_c_counselor_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_storyteller",
+    "name_key": "TRAIT_c_storyteller_NAME",
+    "desc_key": "TRAIT_c_storyteller_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_creativity",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_mystic",
+    "name_key": "TRAIT_c_mystic_NAME",
+    "desc_key": "TRAIT_c_mystic_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_unconventionality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_skeptic",
+    "name_key": "TRAIT_c_skeptic_NAME",
+    "desc_key": "TRAIT_c_skeptic_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_flexibility",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H_sincerity",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_pragmatist",
+    "name_key": "TRAIT_c_pragmatist_NAME",
+    "desc_key": "TRAIT_c_pragmatist_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_settler",
+    "name_key": "TRAIT_c_settler_NAME",
+    "desc_key": "TRAIT_c_settler_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_nomad",
+    "name_key": "TRAIT_c_nomad_NAME",
+    "desc_key": "TRAIT_c_nomad_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_healer",
+    "name_key": "TRAIT_c_healer_NAME",
+    "desc_key": "TRAIT_c_healer_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "E_sentimentality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_animal_tamer",
+    "name_key": "TRAIT_c_animal_tamer_NAME",
+    "desc_key": "TRAIT_c_animal_tamer_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A_gentleness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X_sociability",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_scout",
+    "name_key": "TRAIT_c_scout_NAME",
+    "desc_key": "TRAIT_c_scout_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "E",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_strict_commander",
+    "name_key": "TRAIT_c_strict_commander_NAME",
+    "desc_key": "TRAIT_c_strict_commander_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_backroom_broker",
+    "name_key": "TRAIT_c_backroom_broker_NAME",
+    "desc_key": "TRAIT_c_backroom_broker_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_scholar_scribe",
+    "name_key": "TRAIT_c_scholar_scribe_NAME",
+    "desc_key": "TRAIT_c_scholar_scribe_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.75,
+        "cond_center": 0.85,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_thief",
+    "name_key": "TRAIT_c_thief_NAME",
+    "desc_key": "TRAIT_c_thief_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_prudence",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X_social_boldness",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_peacekeeper",
+    "name_key": "TRAIT_c_peacekeeper_NAME",
+    "desc_key": "TRAIT_c_peacekeeper_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A_flexibility",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_agitator",
+    "name_key": "TRAIT_c_agitator_NAME",
+    "desc_key": "TRAIT_c_agitator_DESC",
+    "valence": "negative",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "A",
+        "direction": "low",
+        "threshold": 0.25,
+        "cond_center": 0.35,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_unconventionality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_inventor",
+    "name_key": "TRAIT_c_inventor_NAME",
+    "desc_key": "TRAIT_c_inventor_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_creativity",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.75,
+        "cond_center": 0.65,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_encyclopedia",
+    "name_key": "TRAIT_c_encyclopedia_NAME",
+    "desc_key": "TRAIT_c_encyclopedia_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_inquisitiveness",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C_organization",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "low",
+        "threshold": 0.3,
+        "cond_center": 0.4,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_heretic",
+    "name_key": "TRAIT_c_heretic_NAME",
+    "desc_key": "TRAIT_c_heretic_DESC",
+    "valence": "neutral",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "O_unconventionality",
+        "direction": "high",
+        "threshold": 0.85,
+        "cond_center": 0.75,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "O",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.1
+  },
+  {
+    "id": "c_mediator_king",
+    "name_key": "TRAIT_c_mediator_king_NAME",
+    "desc_key": "TRAIT_c_mediator_king_DESC",
+    "valence": "positive",
+    "category": "composite",
+    "conditions": [
+      {
+        "facet": "A",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "X",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "C",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      },
+      {
+        "facet": "H",
+        "direction": "high",
+        "threshold": 0.7,
+        "cond_center": 0.6,
+        "cond_width": 0.2
+      }
+    ],
+    "rarity_bonus": 1.2
+  }
+]

@@ -73,9 +73,19 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 |--------|------|----------|------|
 | WorldData | 256×256 타일 그리드 (바이옴, 고도, 습도, 온도) | PackedInt32Array, PackedFloat32Array | `scripts/core/world_data.gd` |
 | ResourceMap | 타일별 food/wood/stone 수치 | PackedFloat32Array ×3 | `scripts/core/resource_map.gd` |
-| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality(5), emotions(5), partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, birth_date, frailty | `scripts/core/entity_data.gd` |
+| EntityData | 에이전트 상태 (욕구, 직업, 인벤토리, AI, 성격, 감정, 가족, frailty, trait 2-레벨 하이브리드) | hunger, energy, social, job, inventory, settlement_id, gender, age_stage, personality, emotions, partner_id, parent_ids, children_ids, pregnancy_tick, birth_tick, birth_date, frailty, **trait_strengths** {id:float}, **display_traits** [{id,name_key,salience,valence,category}], **_trait_display_active** {id:bool}, traits_dirty | `scripts/core/entity_data.gd` |
 | BuildingData | 건물 상태 (타입, 위치, 건설 진행, 저장소) | building_type, is_built, build_progress, storage, settlement_id | `scripts/core/building_data.gd` |
 | SettlementData | 정착지 상태 (중심, 멤버, 건물, 문화) | id, center_x, center_y, member_ids, building_ids, culture_id | `scripts/core/settlement_data.gd` |
+
+---
+
+## 정적 유틸리티 시스템
+
+SimulationSystem에 등록되지 않고 정적(static) 함수로 호출되는 유틸리티.
+
+| 이름 | 역할 | 주요 API | 파일 |
+|------|------|---------|------|
+| TraitSystem | 2-레벨 하이브리드 trait 계산 (메카닉 + 표시 레이어). lazy init (`_ensure_loaded()`), trait_defs_v2.json 로드 | `update_trait_strengths(entity)` — HEXACO facet → sigmoid salience → entity.trait_strengths / display_traits; `get_display_traits(entity, k)` — Top-K + 히스테리시스 + mutex + diversity; `get_effect_value(entity, type, key)` — behavior/emotion/violation 효과; 하위 호환: `evaluate_traits()`, `get_behavior_weight()`, `get_violation_stress()`, `get_emotion_modifier()` | `scripts/systems/trait_system.gd` |
 
 ---
 

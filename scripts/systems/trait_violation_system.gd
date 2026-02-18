@@ -449,15 +449,11 @@ func _calc_context_modifier(context: Dictionary) -> float:
 
 
 ## entity가 주어진 trait를 활성화하고 있는지 확인
-## entity.active_traits: 활성화된 trait 정의 Dictionary 배열
+## entity.trait_strengths: {trait_id: strength} 런타임 캐시
 func _entity_has_trait(entity: RefCounted, trait_id: String) -> bool:
-	if not "active_traits" in entity:
+	if entity == null or not "trait_strengths" in entity:
 		return false
-	var traits: Array = entity.active_traits
-	for t in traits:
-		if t.get("id", "") == trait_id:
-			return true
-	return false
+	return float(entity.trait_strengths.get(trait_id, 0.0)) >= 0.10
 
 
 ## facet 강도 비례 스케일 계산

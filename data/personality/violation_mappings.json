@@ -1,0 +1,834 @@
+{
+  "abuse_power": [
+    {
+      "trait_id": "c_saint",
+      "base_stress": 22.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_modest",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "accept_dogma": [
+    {
+      "trait_id": "c_skeptic",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "accept_mediocre": [
+    {
+      "trait_id": "f_perfectionist",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "act_chaotic": [
+    {
+      "trait_id": "f_organized",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "act_impulsively": [
+    {
+      "trait_id": "f_prudent",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "act_submissive": [
+    {
+      "trait_id": "f_confident",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "apologize": [
+    {
+      "trait_id": "d_bully",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_harsh",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_self_important",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "approach_stranger": [
+    {
+      "trait_id": "f_shy",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "attend_party": [
+    {
+      "trait_id": "f_solitary",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "avoid_learning": [
+    {
+      "trait_id": "f_curious",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "avoid_risk": [
+    {
+      "trait_id": "f_fearless",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "avoid_spotlight": [
+    {
+      "trait_id": "f_bold",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "back_down": [
+    {
+      "trait_id": "f_stubborn",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "be_ignored": [
+    {
+      "trait_id": "d_histrionic",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "betray": [
+    {
+      "trait_id": "d_backstabber",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    }
+  ],
+  "boast": [
+    {
+      "trait_id": "f_modest",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "break_tradition": [
+    {
+      "trait_id": "f_traditionalist",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "bully": [
+    {
+      "trait_id": "f_gentle",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "charge": [
+    {
+      "trait_id": "c_defender",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_fearful",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "cheat": [
+    {
+      "trait_id": "c_born_merchant",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "cling": [
+    {
+      "trait_id": "f_self_reliant",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "combat": [
+    {
+      "trait_id": "c_pacifist",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "comfort": [
+    {
+      "trait_id": "d_callous",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_tough_minded",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "confess": [
+    {
+      "trait_id": "f_deceptive",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "deceive": [
+    {
+      "trait_id": "f_sincere",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "destroy_art": [
+    {
+      "trait_id": "f_aesthetic",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "destroy_valuable": [
+    {
+      "trait_id": "c_collector",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "donate": [
+    {
+      "trait_id": "c_miser",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_greedy",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "double_check": [
+    {
+      "trait_id": "f_careless",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "enter_unknown": [
+    {
+      "trait_id": "f_anxious",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "extort": [
+    {
+      "trait_id": "c_philanthropist",
+      "base_stress": 20.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_frugal",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    }
+  ],
+  "fight_for_free": [
+    {
+      "trait_id": "c_mercenary",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "follow_schedule": [
+    {
+      "trait_id": "f_disorganized",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "follow_strict_rules": [
+    {
+      "trait_id": "f_creative",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "force_extroversion": [
+    {
+      "trait_id": "f_reserved",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "forgive": [
+    {
+      "trait_id": "f_vengeful",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "frame_other": [
+    {
+      "trait_id": "f_fair_minded",
+      "base_stress": 20.0,
+      "alpha": 1.2
+    }
+  ],
+  "gamble": [
+    {
+      "trait_id": "f_prudent",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "go_solo": [
+    {
+      "trait_id": "f_dependent",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "hard_work": [
+    {
+      "trait_id": "f_lazy",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "harm_innocent": [
+    {
+      "trait_id": "c_saintess",
+      "base_stress": 26.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_sadist",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_sentimental",
+      "base_stress": 20.0,
+      "alpha": 1.2
+    }
+  ],
+  "hold_back": [
+    {
+      "trait_id": "c_berserker",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "hold_grudge": [
+    {
+      "trait_id": "f_forgiving",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "hurt_friend": [
+    {
+      "trait_id": "d_psychopath_secondary",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    }
+  ],
+  "idle": [
+    {
+      "trait_id": "f_industrious",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "improvise": [
+    {
+      "trait_id": "f_anxious",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "isolate_self": [
+    {
+      "trait_id": "f_gregarious",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "kill": [
+    {
+      "trait_id": "c_pacifist",
+      "base_stress": 22.0,
+      "alpha": 1.2
+    }
+  ],
+  "kill_innocent": [
+    {
+      "trait_id": "c_assassin_instinct",
+      "base_stress": 4.0,
+      "alpha": 1.2
+    }
+  ],
+  "lie": [
+    {
+      "trait_id": "c_saint",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "c_trickster",
+      "base_stress": 6.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_backstabber",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_con_artist",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_corrupt_official",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_cult_leader",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_opportunist",
+      "base_stress": 4.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "base_stress": 4.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_sincere",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "lose_temper": [
+    {
+      "trait_id": "f_patient",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "neglect_child": [
+    {
+      "trait_id": "c_saintess",
+      "base_stress": 22.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_callous",
+      "base_stress": 6.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_sentimental",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "obey_blindly": [
+    {
+      "trait_id": "c_inventor",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_nonconformist",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "panic": [
+    {
+      "trait_id": "f_calm",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "public_failure": [
+    {
+      "trait_id": "d_narcissist_vulnerable",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    }
+  ],
+  "public_speech": [
+    {
+      "trait_id": "f_insecure",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_shy",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "raid": [
+    {
+      "trait_id": "d_predatory_raider",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    }
+  ],
+  "refuse_bribe": [
+    {
+      "trait_id": "f_corrupt",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "refuse_compromise": [
+    {
+      "trait_id": "f_flexible",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "refuse_help": [
+    {
+      "trait_id": "c_philanthropist",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_dependent",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "report_self": [
+    {
+      "trait_id": "f_corrupt",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    }
+  ],
+  "retreat": [
+    {
+      "trait_id": "c_assault_captain",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "c_berserker",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_fearless",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "return_stolen": [
+    {
+      "trait_id": "f_deceptive",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    }
+  ],
+  "rush_job": [
+    {
+      "trait_id": "c_architect_master",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "c_master_craftsman",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "seek_reassurance": [
+    {
+      "trait_id": "f_self_reliant",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "seek_revenge": [
+    {
+      "trait_id": "f_forgiving",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "share": [
+    {
+      "trait_id": "f_corrupt",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_greedy",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "share_credit": [
+    {
+      "trait_id": "d_narcissist_grandiose",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_self_important",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "share_power": [
+    {
+      "trait_id": "c_tyrant",
+      "base_stress": 14.0,
+      "alpha": 1.2
+    }
+  ],
+  "share_profit": [
+    {
+      "trait_id": "c_speculator",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "show_kindness": [
+    {
+      "trait_id": "f_harsh",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "show_mercy": [
+    {
+      "trait_id": "c_tyrant",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_bully",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_vengeful",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "show_vulnerability": [
+    {
+      "trait_id": "f_tough_minded",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "stay_calm": [
+    {
+      "trait_id": "f_hot_tempered",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "stay_idle": [
+    {
+      "trait_id": "f_energetic",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "stay_in_danger": [
+    {
+      "trait_id": "f_fearful",
+      "base_stress": 16.0,
+      "alpha": 1.2
+    }
+  ],
+  "steal": [
+    {
+      "trait_id": "c_saint",
+      "base_stress": 24.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "c_thief",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_con_artist",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_opportunist",
+      "base_stress": 4.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_predatory_raider",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_psychopath_primary",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_psychopath_secondary",
+      "base_stress": 4.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_fair_minded",
+      "base_stress": 22.0,
+      "alpha": 1.2
+    }
+  ],
+  "study": [
+    {
+      "trait_id": "f_apathetic",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "take_bribe": [
+    {
+      "trait_id": "d_corrupt_official",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "d_machiavellian",
+      "base_stress": 2.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_sincere",
+      "base_stress": 18.0,
+      "alpha": 1.2
+    }
+  ],
+  "take_lead": [
+    {
+      "trait_id": "f_insecure",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "tell_truth": [
+    {
+      "trait_id": "f_deceptive",
+      "base_stress": 8.0,
+      "alpha": 1.2
+    }
+  ],
+  "torture": [
+    {
+      "trait_id": "d_sadist",
+      "base_stress": 0.0,
+      "alpha": 1.2
+    },
+    {
+      "trait_id": "f_gentle",
+      "base_stress": 22.0,
+      "alpha": 1.2
+    }
+  ],
+  "try_new_method": [
+    {
+      "trait_id": "f_conventional",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "wait_and_plan": [
+    {
+      "trait_id": "f_reckless",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ],
+  "waste_resources": [
+    {
+      "trait_id": "f_frugal",
+      "base_stress": 12.0,
+      "alpha": 1.2
+    }
+  ],
+  "waste_time_on_beauty": [
+    {
+      "trait_id": "f_utilitarian",
+      "base_stress": 10.0,
+      "alpha": 1.2
+    }
+  ]
+}

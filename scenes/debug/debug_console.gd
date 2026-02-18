@@ -315,6 +315,8 @@ func _cmd_violation(args: Dictionary) -> void:
 	if entity == null:
 		return
 
+	TraitSystem.update_trait_strengths(entity)  # populate trait_strengths before violation check
+
 	var action_id: String = str(args.get("action", ""))
 	if action_id.is_empty():
 		print_output("Usage: violation entity:<id> action:<id> [witness:<rel>] [victim:<rel>] [count:<n>]", Color.RED)

@@ -1,0 +1,2564 @@
+{
+  "sensitivity": {
+    "anger": [
+      {
+        "trait_id": "c_ac_hh_reliable_teamworker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ac_hl_kind_dreamer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ac_lh_strict_commander",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ac_ll_unruly_brute",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_agitator",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_animal_tamer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ao_hh_open-minded_humanitarian",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ao_hl_benevolent_traditionalist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ao_lh_cynical_heretic",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ao_ll_rigid_oppressor",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_assault_captain",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_berserker",
+        "extreme_mult": 1.56
+      },
+      {
+        "trait_id": "c_born_merchant",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_caregiver",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_chef",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_cold_dictator",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_counselor",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_defender",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_democratic_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_diplomat",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ea_hh_compassionate_reconciler",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ea_hl_timid_helper",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ea_lh_volatile_bully",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ea_ll_callous_abuser",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ha_hh_kind-hearted_honest",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ha_hl_stern_judge",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ha_lh_smiling_exploiter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ha_ll_cruel_raider",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_healer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_pacifist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_peacekeeper",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_philanthropist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_reconciler",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_revolutionary",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_saint",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_saintess",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_settler",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_skeptic",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_strict_commander",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_tyrant",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_wallflower",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xa_hh_social_peacemaker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xa_hl_dominating_agitator",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_xa_lh_quiet_helper",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xa_ll_isolated_brawler",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_backstabber",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_bully",
+        "extreme_mult": 1.5
+      },
+      {
+        "trait_id": "d_callous",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_psychopath_primary",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_psychopath_secondary",
+        "extreme_mult": 1.56
+      },
+      {
+        "trait_id": "d_sadist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "f_deceptive",
+        "extreme_mult": 1.05,
+        "facet": "H_sincerity",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_flexible",
+        "extreme_mult": 0.9,
+        "facet": "A_flexibility",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_forgiving",
+        "extreme_mult": 0.85,
+        "facet": "A_forgiveness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_gentle",
+        "extreme_mult": 0.85,
+        "facet": "A_gentleness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_harsh",
+        "extreme_mult": 1.25,
+        "facet": "A_gentleness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_hot_tempered",
+        "extreme_mult": 1.45,
+        "facet": "A_patience",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_patient",
+        "extreme_mult": 0.75,
+        "facet": "A_patience",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_reckless",
+        "extreme_mult": 1.1,
+        "facet": "C_prudence",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_sincere",
+        "extreme_mult": 0.95,
+        "facet": "H_sincerity",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_stubborn",
+        "extreme_mult": 1.1,
+        "facet": "A_flexibility",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_vengeful",
+        "extreme_mult": 1.3,
+        "facet": "A_forgiveness",
+        "direction": "low"
+      }
+    ],
+    "anger_challenge": [
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 1.2
+      }
+    ],
+    "anger_disrespect": [
+      {
+        "trait_id": "d_narcissist_grandiose",
+        "extreme_mult": 1.35
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "f_self_important",
+        "extreme_mult": 1.25,
+        "facet": "H_modesty",
+        "direction": "low"
+      }
+    ],
+    "anger_injustice": [
+      {
+        "trait_id": "f_fair_minded",
+        "extreme_mult": 1.25,
+        "facet": "H_fairness",
+        "direction": "high"
+      }
+    ],
+    "awe": [
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "f_aesthetic",
+        "extreme_mult": 1.15,
+        "facet": "O_aesthetic_appreciation",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_utilitarian",
+        "extreme_mult": 0.9,
+        "facet": "O_aesthetic_appreciation",
+        "direction": "low"
+      }
+    ],
+    "boredom": [
+      {
+        "trait_id": "f_apathetic",
+        "extreme_mult": 1.2,
+        "facet": "O_inquisitiveness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_curious",
+        "extreme_mult": 1.2,
+        "facet": "O_inquisitiveness",
+        "direction": "high"
+      }
+    ],
+    "compassion": [
+      {
+        "trait_id": "f_gentle",
+        "extreme_mult": 1.2,
+        "facet": "A_gentleness",
+        "direction": "high"
+      }
+    ],
+    "constraint_anger": [
+      {
+        "trait_id": "f_nonconformist",
+        "extreme_mult": 1.15,
+        "facet": "O_unconventionality",
+        "direction": "high"
+      }
+    ],
+    "constraint_frustration": [
+      {
+        "trait_id": "f_creative",
+        "extreme_mult": 1.2,
+        "facet": "O_creativity",
+        "direction": "high"
+      }
+    ],
+    "embarrassment": [
+      {
+        "trait_id": "f_shy",
+        "extreme_mult": 1.3,
+        "facet": "X_social_boldness",
+        "direction": "low"
+      }
+    ],
+    "envy": [
+      {
+        "trait_id": "c_ascetic",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_speculator",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "f_corrupt",
+        "extreme_mult": 1.1,
+        "facet": "H_fairness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_frugal",
+        "extreme_mult": 0.7,
+        "facet": "H_greed_avoidance",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_greedy",
+        "extreme_mult": 1.3,
+        "facet": "H_greed_avoidance",
+        "direction": "low"
+      }
+    ],
+    "excitability": [
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 1.25
+      },
+      {
+        "trait_id": "f_energetic",
+        "extreme_mult": 1.1,
+        "facet": "X_liveliness",
+        "direction": "high"
+      }
+    ],
+    "excitement": [
+      {
+        "trait_id": "f_bold",
+        "extreme_mult": 1.1,
+        "facet": "X_social_boldness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_reckless",
+        "extreme_mult": 1.2,
+        "facet": "C_prudence",
+        "direction": "low"
+      }
+    ],
+    "fear": [
+      {
+        "trait_id": "c_adventurer",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_assault_captain",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_berserker",
+        "extreme_mult": 0.595
+      },
+      {
+        "trait_id": "c_born_leader",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_caregiver",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_cold_dictator",
+        "extreme_mult": 0.68
+      },
+      {
+        "trait_id": "c_counselor",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ea_hh_compassionate_reconciler",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ea_hl_timid_helper",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ea_lh_volatile_bully",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_ea_ll_callous_abuser",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_ec_hh_anxious_planner",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ec_hl_anxious_drifter",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ec_lh_cool_strategist",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_ec_ll_reckless_drifter",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_eo_hh_sensitive_artist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_eo_hl_anxious_traditionalist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_eo_lh_cold_experimenter",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_eo_ll_unfeeling_realist",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_ex_hh_emotional_socialite",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ex_hl_timid_recluse",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_ex_lh_daredevil",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_ex_ll_stoic_loner",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_he_hh_tender_conscience",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_he_hl_stoic_honest",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_he_lh_anxious_swindler",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_he_ll_cold_exploiter",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_healer",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_mercenary",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_mystic",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_nomad",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_pragmatist",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_saintess",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_scout",
+        "extreme_mult": 0.85
+      },
+      {
+        "trait_id": "c_speculator",
+        "extreme_mult": 0.723
+      },
+      {
+        "trait_id": "c_storyteller",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_survivalist",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "c_wallflower",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 1.2
+      },
+      {
+        "trait_id": "d_opportunist",
+        "extreme_mult": 0.723
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 0.68
+      },
+      {
+        "trait_id": "d_psychopath_primary",
+        "extreme_mult": 0.595
+      },
+      {
+        "trait_id": "d_psychopath_secondary",
+        "extreme_mult": 1.02
+      },
+      {
+        "trait_id": "d_sadist",
+        "extreme_mult": 0.68
+      },
+      {
+        "trait_id": "f_anxious",
+        "extreme_mult": 1.25,
+        "facet": "E_anxiety",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_bold",
+        "extreme_mult": 0.85,
+        "facet": "X_social_boldness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_calm",
+        "extreme_mult": 0.8,
+        "facet": "E_anxiety",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_dependent",
+        "extreme_mult": 1.1,
+        "facet": "E_dependence",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_fearful",
+        "extreme_mult": 1.4,
+        "facet": "E_fearfulness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_fearless",
+        "extreme_mult": 0.75,
+        "facet": "E_fearfulness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_insecure",
+        "extreme_mult": 1.1,
+        "facet": "X_social_self_esteem",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_prudent",
+        "extreme_mult": 1.05,
+        "facet": "C_prudence",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_shy",
+        "extreme_mult": 1.2,
+        "facet": "X_social_boldness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_tough_minded",
+        "extreme_mult": 0.9,
+        "facet": "E_sentimentality",
+        "direction": "low"
+      }
+    ],
+    "frustration": [
+      {
+        "trait_id": "f_careless",
+        "extreme_mult": 0.85,
+        "facet": "C_perfectionism",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_disorganized",
+        "extreme_mult": 1.1,
+        "facet": "C_organization",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_flexible",
+        "extreme_mult": 0.9,
+        "facet": "A_flexibility",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_perfectionist",
+        "extreme_mult": 1.25,
+        "facet": "C_perfectionism",
+        "direction": "high"
+      }
+    ],
+    "guilt": [
+      {
+        "trait_id": "c_ascetic",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_assassin_instinct",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_backroom_broker",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_democratic_leader",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_gossip",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_ha_hh_kind-hearted_honest",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_ha_hl_stern_judge",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_ha_lh_smiling_exploiter",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_ha_ll_cruel_raider",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_hc_hh_honest_administrator",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_hc_hl_well-meaning_slacker",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_hc_lh_calculating_schemer",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_hc_ll_irresponsible_cheat",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_he_hh_tender_conscience",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_he_hl_stoic_honest",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_he_lh_anxious_swindler",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_he_ll_cold_exploiter",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_heretic",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_ho_hh_idealistic_innovator",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_ho_hl_traditional_moralist",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_ho_lh_cunning_inventor",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_ho_ll_corrupt_traditionalist",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_hx_hh_honest_leader",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_hx_hl_honest_recluse",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_hx_lh_charismatic_con_artist",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_hx_ll_sly_loner",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_mercenary",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_pacifist",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_peacekeeper",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_philanthropist",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_reconciler",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_saint",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_saintess",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_skeptic",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "c_strategist",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_thief",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_trickster",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "c_tyrant",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "d_backstabber",
+        "extreme_mult": 0.6
+      },
+      {
+        "trait_id": "d_bully",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "d_callous",
+        "extreme_mult": 0.64
+      },
+      {
+        "trait_id": "d_con_artist",
+        "extreme_mult": 0.56
+      },
+      {
+        "trait_id": "d_corrupt_official",
+        "extreme_mult": 0.56
+      },
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 0.64
+      },
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "d_machiavellian",
+        "extreme_mult": 0.6
+      },
+      {
+        "trait_id": "d_narcissist_grandiose",
+        "extreme_mult": 0.68
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 0.8
+      },
+      {
+        "trait_id": "d_opportunist",
+        "extreme_mult": 0.64
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 0.6
+      },
+      {
+        "trait_id": "d_psychopath_primary",
+        "extreme_mult": 0.48
+      },
+      {
+        "trait_id": "d_psychopath_secondary",
+        "extreme_mult": 0.56
+      },
+      {
+        "trait_id": "d_sadist",
+        "extreme_mult": 0.56
+      },
+      {
+        "trait_id": "f_corrupt",
+        "extreme_mult": 0.65,
+        "facet": "H_fairness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_deceptive",
+        "extreme_mult": 0.7,
+        "facet": "H_sincerity",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_fair_minded",
+        "extreme_mult": 1.15,
+        "facet": "H_fairness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_lazy",
+        "extreme_mult": 0.85,
+        "facet": "C_diligence",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_sincere",
+        "extreme_mult": 1.2,
+        "facet": "H_sincerity",
+        "direction": "high"
+      }
+    ],
+    "guilt_idle": [
+      {
+        "trait_id": "f_industrious",
+        "extreme_mult": 1.1,
+        "facet": "C_diligence",
+        "direction": "high"
+      }
+    ],
+    "interest": [
+      {
+        "trait_id": "c_adventurer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_agitator",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ao_hh_open-minded_humanitarian",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ao_lh_cynical_heretic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_architect_master",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_chef",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_co_hh_methodical_inventor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_co_lh_free_spirit",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_collector",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_counselor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_encyclopedia",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_engineer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_eo_hh_sensitive_artist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_eo_lh_cold_experimenter",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_free_spirit_extro",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_heretic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_hermit_sage",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ho_hh_idealistic_innovator",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ho_lh_cunning_inventor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_inventor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_master_craftsman",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_mystic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_nomad",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_polymath",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_revolutionary",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scholar_scribe",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scientist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scout",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_skeptic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_spymaster",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_storyteller",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_strategist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_strategist_general",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_trickster",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_visionary",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xo_hh_charismatic_visionary",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xo_lh_solitary_scholar",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "f_apathetic",
+        "extreme_mult": 0.75,
+        "facet": "O_inquisitiveness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_curious",
+        "extreme_mult": 1.25,
+        "facet": "O_inquisitiveness",
+        "direction": "high"
+      }
+    ],
+    "irritability_crowd": [
+      {
+        "trait_id": "f_solitary",
+        "extreme_mult": 1.1,
+        "facet": "X_sociability",
+        "direction": "low"
+      }
+    ],
+    "joy_bonding": [
+      {
+        "trait_id": "f_sentimental",
+        "extreme_mult": 1.2,
+        "facet": "E_sentimentality",
+        "direction": "high"
+      }
+    ],
+    "joy_creation": [
+      {
+        "trait_id": "f_creative",
+        "extreme_mult": 1.15,
+        "facet": "O_creativity",
+        "direction": "high"
+      }
+    ],
+    "joy_gain": [
+      {
+        "trait_id": "c_spendthrift",
+        "extreme_mult": 1.15
+      },
+      {
+        "trait_id": "f_frugal",
+        "extreme_mult": 0.9,
+        "facet": "H_greed_avoidance",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_greedy",
+        "extreme_mult": 1.2,
+        "facet": "H_greed_avoidance",
+        "direction": "low"
+      }
+    ],
+    "loneliness": [
+      {
+        "trait_id": "f_gregarious",
+        "extreme_mult": 1.2,
+        "facet": "X_sociability",
+        "direction": "high"
+      }
+    ],
+    "loss": [
+      {
+        "trait_id": "c_miser",
+        "extreme_mult": 1.25
+      },
+      {
+        "trait_id": "c_spendthrift",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "f_greedy",
+        "extreme_mult": 1.2,
+        "facet": "H_greed_avoidance",
+        "direction": "low"
+      }
+    ],
+    "novelty_anxiety": [
+      {
+        "trait_id": "f_conventional",
+        "extreme_mult": 1.1,
+        "facet": "O_creativity",
+        "direction": "low"
+      }
+    ],
+    "novelty_fear": [
+      {
+        "trait_id": "c_ao_hl_benevolent_traditionalist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_ao_ll_rigid_oppressor",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_ascetic",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_co_hl_conservative_manager",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_co_ll_careless_waster",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_eo_hl_anxious_traditionalist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_eo_ll_unfeeling_realist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_ho_hl_traditional_moralist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_ho_ll_corrupt_traditionalist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_pragmatist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_settler",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_survivalist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_xo_hl_populist",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_xo_ll_wallflower",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "c_zealot",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 1.05
+      },
+      {
+        "trait_id": "f_traditionalist",
+        "extreme_mult": 1.15,
+        "facet": "O_unconventionality",
+        "direction": "low"
+      }
+    ],
+    "sadism_reward": [
+      {
+        "trait_id": "d_sadist",
+        "extreme_mult": 1.35
+      }
+    ],
+    "sadness": [
+      {
+        "trait_id": "c_adventurer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 1.21
+      },
+      {
+        "trait_id": "c_assault_captain",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_berserker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_born_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_caregiver",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_cold_dictator",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_counselor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ea_hh_compassionate_reconciler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ea_hl_timid_helper",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ea_lh_volatile_bully",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ea_ll_callous_abuser",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ec_hh_anxious_planner",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ec_hl_anxious_drifter",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ec_lh_cool_strategist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ec_ll_reckless_drifter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_eo_hh_sensitive_artist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_eo_hl_anxious_traditionalist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_eo_lh_cold_experimenter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_eo_ll_unfeeling_realist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ex_hh_emotional_socialite",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ex_hl_timid_recluse",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ex_lh_daredevil",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ex_ll_stoic_loner",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_he_hh_tender_conscience",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_he_hl_stoic_honest",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_he_lh_anxious_swindler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_he_ll_cold_exploiter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_healer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_mercenary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_mystic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_nomad",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_pragmatist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_saintess",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scout",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_speculator",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_storyteller",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_survivalist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_wallflower",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_callous",
+        "extreme_mult": 0.7
+      },
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_opportunist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_psychopath_primary",
+        "extreme_mult": 0.63
+      },
+      {
+        "trait_id": "d_psychopath_secondary",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_sadist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "f_anxious",
+        "extreme_mult": 1.1,
+        "facet": "E_anxiety",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_sentimental",
+        "extreme_mult": 1.25,
+        "facet": "E_sentimentality",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_tough_minded",
+        "extreme_mult": 0.8,
+        "facet": "E_sentimentality",
+        "direction": "low"
+      }
+    ],
+    "satisfaction_quality": [
+      {
+        "trait_id": "f_perfectionist",
+        "extreme_mult": 1.1,
+        "facet": "C_perfectionism",
+        "direction": "high"
+      }
+    ],
+    "shame": [
+      {
+        "trait_id": "c_adventurer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_agitator",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_animal_tamer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_assault_captain",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_backroom_broker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_born_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_born_merchant",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_builder_foreman",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_cold_dictator",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_democratic_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_diplomat",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ex_hh_emotional_socialite",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ex_lh_daredevil",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_free_spirit_extro",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_gossip",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_hx_hh_honest_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_hx_lh_charismatic_con_artist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_labor_hero",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_mercenary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_mystic",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_polymath",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_reconciler",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_revolutionary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_storyteller",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_strategist_general",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_strict_commander",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_thief",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_trickster",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_tyrant",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_visionary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xa_hh_social_peacemaker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xa_hl_dominating_agitator",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xc_hh_competent_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xc_hl_charming_improviser",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xo_hh_charismatic_visionary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xo_hl_populist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_zealot",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_backstabber",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_bully",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_con_artist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_corrupt_official",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 0.99
+      },
+      {
+        "trait_id": "d_narcissist_grandiose",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 1.4
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "f_confident",
+        "extreme_mult": 0.85,
+        "facet": "X_social_self_esteem",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_corrupt",
+        "extreme_mult": 0.7,
+        "facet": "H_fairness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_deceptive",
+        "extreme_mult": 0.8,
+        "facet": "H_sincerity",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_insecure",
+        "extreme_mult": 1.3,
+        "facet": "X_social_self_esteem",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_modest",
+        "extreme_mult": 1.15,
+        "facet": "H_modesty",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_sincere",
+        "extreme_mult": 1.1,
+        "facet": "H_sincerity",
+        "direction": "high"
+      }
+    ]
+  },
+  "baseline": {
+    "anger": [
+      {
+        "trait_id": "f_harsh",
+        "extreme_mult": 0.03,
+        "facet": "A_gentleness",
+        "direction": "low"
+      }
+    ],
+    "anxiety": [
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": 0.06
+      },
+      {
+        "trait_id": "f_anxious",
+        "extreme_mult": 0.05,
+        "facet": "E_anxiety",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_calm",
+        "extreme_mult": -0.03,
+        "facet": "E_anxiety",
+        "direction": "low"
+      }
+    ],
+    "fear": [
+      {
+        "trait_id": "f_self_reliant",
+        "extreme_mult": -0.02,
+        "facet": "E_dependence",
+        "direction": "low"
+      }
+    ],
+    "joy": [
+      {
+        "trait_id": "c_adventurer",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_agitator",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_animal_tamer",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_artist",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_assassin_instinct",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_assault_captain",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_backroom_broker",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_born_leader",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_born_merchant",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_builder_foreman",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_cold_dictator",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_democratic_leader",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_diplomat",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_encyclopedia",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_ex_hh_emotional_socialite",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_ex_hl_timid_recluse",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_ex_lh_daredevil",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_ex_ll_stoic_loner",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_free_spirit_extro",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_gossip",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_hermit_sage",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_hx_hh_honest_leader",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_hx_hl_honest_recluse",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_hx_lh_charismatic_con_artist",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_hx_ll_sly_loner",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_labor_hero",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_master_craftsman",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_mercenary",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_mystic",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_polymath",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_reconciler",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_revolutionary",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_scholar_scribe",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_scientist",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_storyteller",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_strategist_general",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_strict_commander",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_thief",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_trickster",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_tyrant",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_visionary",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_wallflower",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xa_hh_social_peacemaker",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xa_hl_dominating_agitator",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xa_lh_quiet_helper",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xa_ll_isolated_brawler",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xc_hh_competent_leader",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xc_hl_charming_improviser",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xc_lh_silent_craftsman",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xc_ll_apathetic_recluse",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xo_hh_charismatic_visionary",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xo_hl_populist",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "c_xo_lh_solitary_scholar",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_xo_ll_wallflower",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "c_zealot",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_backstabber",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_bully",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_con_artist",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_corrupt_official",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_histrionic",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_narcissist_grandiose",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "d_narcissist_vulnerable",
+        "extreme_mult": -0.01
+      },
+      {
+        "trait_id": "d_predatory_raider",
+        "extreme_mult": 0.02
+      },
+      {
+        "trait_id": "f_aesthetic",
+        "extreme_mult": 0.02,
+        "facet": "O_aesthetic_appreciation",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_apathetic",
+        "extreme_mult": -0.01,
+        "facet": "O_inquisitiveness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_confident",
+        "extreme_mult": 0.03,
+        "facet": "X_social_self_esteem",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_energetic",
+        "extreme_mult": 0.04,
+        "facet": "X_liveliness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_gregarious",
+        "extreme_mult": 0.02,
+        "facet": "X_sociability",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_reserved",
+        "extreme_mult": -0.02,
+        "facet": "X_liveliness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_solitary",
+        "extreme_mult": -0.01,
+        "facet": "X_sociability",
+        "direction": "low"
+      }
+    ],
+    "pride": [
+      {
+        "trait_id": "d_narcissist_grandiose",
+        "extreme_mult": 0.06
+      },
+      {
+        "trait_id": "f_industrious",
+        "extreme_mult": 0.02,
+        "facet": "C_diligence",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_modest",
+        "extreme_mult": -0.05,
+        "facet": "H_modesty",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_self_important",
+        "extreme_mult": 0.06,
+        "facet": "H_modesty",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_stubborn",
+        "extreme_mult": 0.02,
+        "facet": "A_flexibility",
+        "direction": "low"
+      }
+    ],
+    "sadness": [
+      {
+        "trait_id": "f_dependent",
+        "extreme_mult": 0.03,
+        "facet": "E_dependence",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_reserved",
+        "extreme_mult": 0.02,
+        "facet": "X_liveliness",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_self_reliant",
+        "extreme_mult": -0.01,
+        "facet": "E_dependence",
+        "direction": "low"
+      }
+    ]
+  },
+  "mult": {
+    "anger_decay": [
+      {
+        "trait_id": "c_ac_hh_reliable_teamworker",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ac_hl_kind_dreamer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_animal_tamer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ao_hh_open-minded_humanitarian",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ao_hl_benevolent_traditionalist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_born_merchant",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_caregiver",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_chef",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_counselor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_defender",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_democratic_leader",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_diplomat",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ea_hh_compassionate_reconciler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ea_lh_volatile_bully",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ha_hh_kind-hearted_honest",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ha_lh_smiling_exploiter",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_healer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_pacifist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_peacekeeper",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_philanthropist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_reconciler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_saint",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_saintess",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_settler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_skeptic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_wallflower",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xa_hh_social_peacemaker",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xa_lh_quiet_helper",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "f_forgiving",
+        "extreme_mult": 1.2,
+        "facet": "A_forgiveness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_hot_tempered",
+        "extreme_mult": 0.8,
+        "facet": "A_patience",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_patient",
+        "extreme_mult": 1.25,
+        "facet": "A_patience",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_vengeful",
+        "extreme_mult": 0.85,
+        "facet": "A_forgiveness",
+        "direction": "low"
+      }
+    ],
+    "fear_decay": [
+      {
+        "trait_id": "f_calm",
+        "extreme_mult": 1.1,
+        "facet": "E_anxiety",
+        "direction": "low"
+      },
+      {
+        "trait_id": "f_fearful",
+        "extreme_mult": 0.85,
+        "facet": "E_fearfulness",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_fearless",
+        "extreme_mult": 1.1,
+        "facet": "E_fearfulness",
+        "direction": "low"
+      }
+    ],
+    "impulse_control": [
+      {
+        "trait_id": "c_ac_hh_reliable_teamworker",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ac_hl_kind_dreamer",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ac_lh_strict_commander",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ac_ll_unruly_brute",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_animal_tamer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_architect_master",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ascetic",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_assassin_instinct",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_backroom_broker",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_berserker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_born_leader",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_builder_foreman",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_caregiver",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_co_hh_methodical_inventor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_co_hl_conservative_manager",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_co_lh_free_spirit",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_co_ll_careless_waster",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_collector",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_defender",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_diplomat",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ec_hh_anxious_planner",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ec_hl_anxious_drifter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_ec_lh_cool_strategist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_ec_ll_reckless_drifter",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_encyclopedia",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_engineer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_free_spirit_extro",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_hc_hh_honest_administrator",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_hc_hl_well-meaning_slacker",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_hc_lh_calculating_schemer",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_hc_ll_irresponsible_cheat",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_hermit_sage",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_inventor",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_labor_hero",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_master_craftsman",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_mediator_king",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_miser",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_nomad",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_peacekeeper",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_polymath",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_pragmatist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_saint",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scholar_scribe",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scientist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_scout",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_settler",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_speculator",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_spendthrift",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_spymaster",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_strategist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_strategist_general",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_strict_commander",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_survivalist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_thief",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_visionary",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xc_hh_competent_leader",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xc_hl_charming_improviser",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_xc_lh_silent_craftsman",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "c_xc_ll_apathetic_recluse",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "c_zealot",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_con_artist",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_corrupt_official",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_cult_leader",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_machiavellian",
+        "extreme_mult": 1.1
+      },
+      {
+        "trait_id": "d_opportunist",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "d_psychopath_secondary",
+        "extreme_mult": 0.9
+      },
+      {
+        "trait_id": "f_prudent",
+        "extreme_mult": 1.2,
+        "facet": "C_prudence",
+        "direction": "high"
+      },
+      {
+        "trait_id": "f_reckless",
+        "extreme_mult": 0.8,
+        "facet": "C_prudence",
+        "direction": "low"
+      }
+    ],
+    "orderliness_satisfaction": [
+      {
+        "trait_id": "f_organized",
+        "extreme_mult": 1.1,
+        "facet": "C_organization",
+        "direction": "high"
+      }
+    ]
+  }
+}

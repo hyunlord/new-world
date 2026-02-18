@@ -246,11 +246,15 @@ func _get_trait_color(tdef: Dictionary) -> Color:
 
 
 ## Draw trait badges and optional trait effect summary for personality data.
-func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted) -> float:
+func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entity: RefCounted = null) -> float:
 	_trait_badge_regions.clear()
 	_summary_toggle_rect = Rect2()
 
-	var display_trait_ids: Array = TraitSystem.filter_display_traits(pd.active_traits)
+	var display_trait_ids: Array = []
+	if entity != null and "display_traits" in entity:
+		for i in range(entity.display_traits.size()):
+			var dt: Dictionary = entity.display_traits[i]
+			display_trait_ids.append(dt.get("id", ""))
 	if display_trait_ids.is_empty():
 		if _active_trait_id != "" and _trait_tooltip != null:
 			_trait_tooltip.request_hide()
@@ -295,24 +299,33 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted) -> fl
 
 	var trait_x: float = cx + 15
 	for tdef in trait_defs:
+		var trait_id: String = tdef.get("id", "")
 		var tname: String = Locale.tr_data(tdef, "name")
 		if tname == "" or tname == "???":
 			tname = tdef.get("name_en", tdef.get("name_" + "kr", tdef.get("id", "?")))
+		var salience: float = 0.0
+		if entity != null and "display_traits" in entity:
+			for dt in entity.display_traits:
+				if dt.get("id", "") == trait_id:
+					salience = float(dt.get("salience", 0.0))
+					break
+		var badge_label: String = tname
+		if salience > 0.0:
+			badge_label = "%s %.2f" % [tname, salience]
 		var tcolor: Color = _get_trait_color(tdef)
-		var text_w: float = font.get_string_size(tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
+		var text_w: float = font.get_string_size(badge_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
 		if trait_x + text_w + 16 > size.x - 20:
 			cy += 26.0
 			trait_x = cx + 15
 
 		var badge_rect: Rect2 = Rect2(trait_x, cy, text_w + 12, 22)
-		var trait_id: String = tdef.get("id", "")
 		var is_active: bool = trait_id == _active_trait_id
 		var fill_alpha: float = 0.4 if is_active else 0.25
 		var border_alpha: float = 1.0 if is_active else 0.6
 		var border_width: float = 2.0 if is_active else 1.0
 		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, fill_alpha))
 		draw_rect(badge_rect, Color(tcolor.r, tcolor.g, tcolor.b, border_alpha), false, border_width)
-		draw_string(font, Vector2(trait_x + 6, cy + 16), tname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
+		draw_string(font, Vector2(trait_x + 6, cy + 16), badge_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tcolor)
 		_trait_badge_regions.append({"rect": badge_rect, "trait_def": tdef})
 		trait_x += text_w + 18
 	cy += 28.0
@@ -657,7 +670,7 @@ func _draw() -> void:
 	if entity.personality != null:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAITS"), "traits")
 		if not _section_collapsed.get("traits", false):
-			cy = _draw_trait_section(font, cx, cy, entity.personality)
+			cy = _draw_trait_section(font, cx, cy, entity.personality, entity)
 
 	# ── Emotions (Plutchik 8) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"), "emotions")
