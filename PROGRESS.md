@@ -1,5 +1,30 @@
 # Progress Log
 
+## Stress System Phase 2 — 포괄적 스트레서 이벤트 테이블 + 성격 기반 변인 — 2026-02-18
+
+### Context
+스트레스 주입이 "파트너 사망"에만 연결되어 있던 한계 해소.
+27종 스트레서 이벤트(5 카테고리: death/social/survival/psychological/eustress) 정의,
+성격(HEXACO)/관계/상황 기반 스케일링, 각 시스템(family/social_event) 연결.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-se-1 | data/stressor_events.json 27종 정의 | 🟢 DISPATCH | ask_codex | new JSON file |
+| T-se-2 | stress_system.gd inject_event() 구현 | 🟢 DISPATCH | ask_codex | single file (after T1) |
+| T-se-3a | family_system.gd 이벤트 연결 | 🟢 DISPATCH | ask_codex | single file (after T2) |
+| T-se-3b | social_event_system.gd 이벤트 연결 | 🟢 DISPATCH | ask_codex | single file (after T2) |
+| T-se-4a | localization/ko/ui.json 템플릿 키 | 🟢 DISPATCH | ask_codex | single file |
+| T-se-4b | localization/en/ui.json 템플릿 키 | 🟢 DISPATCH | ask_codex | single file |
+| T-se-5 | main.gd _stress_system wiring | 🔴 DIRECT | — | integration, <10 lines |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+T1 + T4a + T4b 병렬 → T1 완료 후 T2 → T2 완료 후 T3a + T3b 병렬 → T5 DIRECT
+
+---
+
 ## Stress System Phase 2 — 멘탈 브레이크 시스템 — 2026-02-18
 
 ### Context

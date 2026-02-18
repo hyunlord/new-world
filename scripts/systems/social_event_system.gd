@@ -7,6 +7,7 @@ const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
 var _entity_manager: RefCounted
 var _relationship_manager: RefCounted
 var _rng: RandomNumberGenerator
+var _stress_system: RefCounted = null
 
 
 func _init() -> void:
@@ -197,6 +198,19 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 			rel.trust = maxf(rel.trust - 8.0, 0.0)
 			a.emotions["stress"] = minf(a.emotions.get("stress", 0.0) + 0.1, 1.0)
 			b.emotions["stress"] = minf(b.emotions.get("stress", 0.0) + 0.1, 1.0)
+			# 스트레서 이벤트: 다툼 — 새 스트레스 시스템에 주입
+			if _stress_system != null:
+				var bond: float = clampf(rel.affinity / 100.0, 0.0, 1.0)
+				if a.emotion_data != null:
+					_stress_system.inject_event(a, "argument", {
+						"bond_strength": bond,
+						"with_partner": a.partner_id == b.id,
+					})
+				if b.emotion_data != null:
+					_stress_system.inject_event(b, "argument", {
+						"bond_strength": bond,
+						"with_partner": b.partner_id == a.id,
+					})
 
 	# Emit event for logging
 	if event_name != "casual_talk":  # Don't spam casual talk
