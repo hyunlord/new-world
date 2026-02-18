@@ -1161,6 +1161,7 @@ func _draw_deceased() -> void:
 	cy += 10.0
 
 	# Job and settlement
+	var bar_w: float = panel_w - 40.0
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INFO"))
 	var job_id: String = str(r.get("job", "none"))
 	var job_text: String = Locale.tr_id("JOB", job_id)
@@ -1170,6 +1171,56 @@ func _draw_deceased() -> void:
 	cy += 16.0
 	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f | %s: %d" % [Locale.ltr("UI_GATHERED_LABEL"), r.get("total_gathered", 0.0), Locale.ltr("UI_BUILT_LABEL"), r.get("buildings_built", 0)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
 	cy += 22.0
+
+	# ── Status at death ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATUS"))
+	var action_id: String = str(r.get("current_action", "idle"))
+	var action_text: String = Locale.tr_id("STATUS", action_id)
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_ACTION"), action_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	cy += 16.0
+	var inv: Dictionary = r.get("inventory", {})
+	draw_string(font, Vector2(cx + 10, cy + 12), "%s: F:%.1f  W:%.1f  S:%.1f" % [
+		Locale.ltr("UI_INVENTORY"), inv.get("food", 0.0), inv.get("wood", 0.0), inv.get("stone", 0.0),
+	], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+	cy += 22.0
+
+	# ── Needs at death ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), r.get("hunger", 0.0), Color(0.9, 0.2, 0.2))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), r.get("energy", 0.0), Color(0.9, 0.8, 0.2))
+	cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), r.get("social", 0.0), Color(0.3, 0.5, 0.9))
+	cy += 6.0
+
+	# ── Emotions at death ──
+	var emo_dict: Dictionary = r.get("emotion_data", {})
+	if not emo_dict.is_empty():
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"))
+		var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
+		var ed: RefCounted = EmotionDataScript.from_dict(emo_dict)
+		for i in range(ed._emotion_order.size()):
+			var emo_id: String = ed._emotion_order[i]
+			var val: float = ed.get_emotion(emo_id) / 100.0
+			var display_label: String = ""
+			if Locale.current_locale == "ko":
+				var kr_label = ed.call("get_intensity_label_kr", emo_id)
+				if kr_label != null and kr_label != "":
+					display_label = str(kr_label)
+			if display_label == "":
+				display_label = ed.get_intensity_label(emo_id)
+			if display_label == "":
+				display_label = Locale.ltr("EMO_" + emo_id.to_upper())
+			cy = _draw_bar(font, cx + 10, cy, bar_w, display_label, val, EMOTION_COLORS.get(emo_id, Color.WHITE))
+		cy += 4.0
+		var va_text: String = "%s: %s %+.0f | %s %.0f" % [Locale.ltr("UI_MOOD"), Locale.ltr("UI_VALENCE"), ed.valence, Locale.ltr("UI_AROUSAL"), ed.arousal]
+		draw_string(font, Vector2(cx + 10, cy + 12), va_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
+		cy += 16.0
+		# Stress bar
+		cy += 2.0
+		var stress_val: float = ed.stress
+		var stress_ratio: float = clampf(stress_val / 1000.0, 0.0, 1.0)
+		var stress_label: String = "%s: %.0f" % [Locale.ltr("UI_STRESS"), stress_val]
+		cy = _draw_bar(font, cx + 10, cy, bar_w, stress_label, stress_ratio, STRESS_COLOR)
+		cy += 6.0
 
 	# Family (clickable)
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_FAMILY"))
@@ -1244,7 +1295,6 @@ func _draw_deceased() -> void:
 		"C": Locale.ltr("UI_HEXACO_C"),
 		"O": Locale.ltr("UI_HEXACO_O"),
 	}
-	var bar_w: float = panel_w - 40.0
 
 	for axis_id in pd.AXIS_IDS:
 		var axis_val: float = pd.axes.get(axis_id, 0.5)
