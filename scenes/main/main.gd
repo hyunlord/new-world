@@ -31,6 +31,10 @@ const StressSystem = preload("res://scripts/systems/stress_system.gd")
 const MentalBreakSystem = preload("res://scripts/systems/mental_break_system.gd")
 const TraumaScarSystem = preload("res://scripts/systems/trauma_scar_system.gd")
 const TraitViolationSystem = preload("res://scripts/systems/trait_violation_system.gd")
+const CopingSystem = preload("res://scripts/systems/phase4/coping_system.gd")
+const MoraleSystem = preload("res://scripts/systems/phase4/morale_system.gd")
+const ContagionSystem = preload("res://scripts/systems/phase4/contagion_system.gd")
+const Phase4CoordinatorScript = preload("res://scripts/systems/phase4/phase4_coordinator.gd")
 const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
 
 var sim_engine: RefCounted
@@ -67,6 +71,10 @@ var stress_system: RefCounted
 var mental_break_system: RefCounted
 var trauma_scar_system: RefCounted
 var trait_violation_system: RefCounted
+var coping_system: RefCounted
+var morale_system: RefCounted
+var contagion_system: RefCounted
+var phase4_coordinator: Node
 var debug_console = null
 var debug_panel = null
 
@@ -191,6 +199,20 @@ func _ready() -> void:
 	stats_recorder = StatsRecorder.new()
 	stats_recorder.init(entity_manager, building_manager, settlement_manager)
 
+	# ── Phase 4: Coping / Morale / Contagion ───────────────
+	coping_system = CopingSystem.new()
+	coping_system.init(entity_manager, sim_engine.rng)
+
+	morale_system = MoraleSystem.new()
+	morale_system.init(entity_manager)
+
+	contagion_system = ContagionSystem.new()
+	contagion_system.init(entity_manager)
+
+	phase4_coordinator = Phase4CoordinatorScript.new()
+	add_child(phase4_coordinator)
+	phase4_coordinator.init_phase4(coping_system, morale_system, contagion_system, stress_system, entity_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
 	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
@@ -213,6 +235,9 @@ func _ready() -> void:
 	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90
+	sim_engine.register_system(contagion_system)          # priority 38
+	sim_engine.register_system(morale_system)             # priority 40
+	sim_engine.register_system(coping_system)             # priority 42
 
 	# Render world (with resource tinting)
 	world_renderer.render_world(world_data, resource_map)

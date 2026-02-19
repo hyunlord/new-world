@@ -1,0 +1,368 @@
+{
+  "C01_strategic_planning": {
+    "name_key": "COPING_C01_NAME",
+    "desc_key": "COPING_C01_DESC",
+    "effect_key": "COPING_C01_EFFECT",
+    "type": "adaptive",
+    "focus": "problem",
+    "base_rate": 0.05,
+    "hexaco_weights": {
+      "C_prudence": 0.35,
+      "C_diligence": 0.20,
+      "O_inquisitiveness": 0.10
+    },
+    "break_weights": {
+      "paranoia": 0.15,
+      "shutdown": 0.10
+    },
+    "control_appraisal_min": 0.5,
+    "conflicts": ["C05_denial"],
+    "synergies": ["C04_positive_reframing", "C15_problem_solving"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C02_instrumental_support": {
+    "name_key": "COPING_C02_NAME",
+    "desc_key": "COPING_C02_DESC",
+    "effect_key": "COPING_C02_EFFECT",
+    "type": "adaptive",
+    "focus": "problem",
+    "base_rate": 0.06,
+    "hexaco_weights": {
+      "X_social_boldness": 0.30,
+      "A_flexibility": 0.20,
+      "E_sentimentality": 0.15
+    },
+    "break_weights": {
+      "shutdown": 0.20,
+      "paranoia": -0.10
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C11_behavioral_disengagement"],
+    "synergies": ["C03_emotional_support"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C03_emotional_support": {
+    "name_key": "COPING_C03_NAME",
+    "desc_key": "COPING_C03_DESC",
+    "effect_key": "COPING_C03_EFFECT",
+    "type": "adaptive",
+    "focus": "emotion",
+    "base_rate": 0.07,
+    "hexaco_weights": {
+      "E_sentimentality": 0.40,
+      "A_forgiveness": 0.20,
+      "H_sincerity": 0.10
+    },
+    "break_weights": {
+      "panic": 0.20,
+      "dissociation": 0.15,
+      "grief_collapse": 0.25
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C12_self_blame"],
+    "synergies": ["C02_instrumental_support", "C07_humor"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C04_positive_reframing": {
+    "name_key": "COPING_C04_NAME",
+    "desc_key": "COPING_C04_DESC",
+    "effect_key": "COPING_C04_EFFECT",
+    "type": "adaptive",
+    "focus": "emotion",
+    "base_rate": 0.06,
+    "hexaco_weights": {
+      "O_aesthetic": 0.15,
+      "O_inquisitiveness": 0.20,
+      "X_liveliness": 0.25,
+      "H_fairness": 0.10
+    },
+    "break_weights": {
+      "shutdown": 0.15,
+      "grief_collapse": 0.20
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C05_denial"],
+    "synergies": ["C01_strategic_planning", "C06_acceptance"],
+    "cooldown_ticks": 48,
+    "prerequisite": ""
+  },
+  "C05_denial": {
+    "name_key": "COPING_C05_NAME",
+    "desc_key": "COPING_C05_DESC",
+    "effect_key": "COPING_C05_EFFECT",
+    "type": "maladaptive",
+    "focus": "avoidant",
+    "base_rate": 0.08,
+    "hexaco_weights": {
+      "H_sincerity": -0.30,
+      "E_anxiety": 0.25,
+      "H_greed_avoidance": -0.20
+    },
+    "break_weights": {
+      "paranoia": 0.25,
+      "panic": 0.20,
+      "rage": 0.10
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C01_strategic_planning", "C04_positive_reframing"],
+    "synergies": ["C13_substance_use"],
+    "cooldown_ticks": 0,
+    "prerequisite": "",
+    "is_maladaptive": true,
+    "hidden_debt_rate": 0.8,
+    "debt_explosion_mult": 1.5,
+    "debt_timer_ticks": 72,
+    "allostatic_per_use": 0.02
+  },
+  "C06_acceptance": {
+    "name_key": "COPING_C06_NAME",
+    "desc_key": "COPING_C06_DESC",
+    "effect_key": "COPING_C06_EFFECT",
+    "type": "adaptive",
+    "focus": "emotion",
+    "base_rate": 0.05,
+    "hexaco_weights": {
+      "A_patience": 0.35,
+      "O_unconventionality": 0.20,
+      "H_sincerity": 0.15,
+      "E_fearfulness": -0.10
+    },
+    "break_weights": {
+      "shutdown": 0.20,
+      "fugue": 0.25,
+      "grief_collapse": 0.30
+    },
+    "control_appraisal_max": 0.4,
+    "conflicts": ["C11_behavioral_disengagement"],
+    "synergies": ["C04_positive_reframing", "C08_religious_coping"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C07_humor": {
+    "name_key": "COPING_C07_NAME",
+    "desc_key": "COPING_C07_DESC",
+    "effect_key": "COPING_C07_EFFECT",
+    "type": "adaptive",
+    "focus": "emotion",
+    "base_rate": 0.07,
+    "hexaco_weights": {
+      "X_liveliness": 0.35,
+      "X_social_boldness": 0.20,
+      "O_inquisitiveness": 0.15
+    },
+    "break_weights": {
+      "panic": 0.10,
+      "shutdown": 0.05
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C12_self_blame"],
+    "synergies": ["C03_emotional_support"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C08_religious_coping": {
+    "name_key": "COPING_C08_NAME",
+    "desc_key": "COPING_C08_DESC",
+    "effect_key": "COPING_C08_EFFECT",
+    "type": "adaptive",
+    "focus": "meaning",
+    "base_rate": 0.04,
+    "hexaco_weights": {
+      "H_sincerity": 0.25,
+      "H_fairness": 0.20,
+      "E_sentimentality": 0.15,
+      "A_patience": 0.10
+    },
+    "break_weights": {
+      "grief_collapse": 0.35,
+      "fugue": 0.20,
+      "shutdown": 0.15
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C05_denial"],
+    "synergies": ["C06_acceptance"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C09_venting": {
+    "name_key": "COPING_C09_NAME",
+    "desc_key": "COPING_C09_DESC",
+    "effect_key": "COPING_C09_EFFECT",
+    "type": "mixed",
+    "focus": "emotion",
+    "base_rate": 0.09,
+    "hexaco_weights": {
+      "E_anxiety": 0.30,
+      "E_dependence": 0.20,
+      "X_liveliness": 0.15,
+      "H_sincerity": 0.10
+    },
+    "break_weights": {
+      "rage": 0.30,
+      "panic": 0.20,
+      "grief_collapse": 0.20
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C14_rumination"],
+    "synergies": ["C03_emotional_support"],
+    "cooldown_ticks": 24,
+    "prerequisite": ""
+  },
+  "C10_active_distraction": {
+    "name_key": "COPING_C10_NAME",
+    "desc_key": "COPING_C10_DESC",
+    "effect_key": "COPING_C10_EFFECT",
+    "type": "adaptive",
+    "focus": "avoidant",
+    "base_rate": 0.08,
+    "hexaco_weights": {
+      "X_liveliness": 0.30,
+      "C_diligence": 0.20,
+      "O_aesthetic": 0.15,
+      "O_creativity": 0.20
+    },
+    "break_weights": {
+      "shutdown": 0.25,
+      "paranoia": 0.10
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C14_rumination"],
+    "synergies": ["C01_strategic_planning"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  },
+  "C11_behavioral_disengagement": {
+    "name_key": "COPING_C11_NAME",
+    "desc_key": "COPING_C11_DESC",
+    "effect_key": "COPING_C11_EFFECT",
+    "type": "maladaptive",
+    "focus": "avoidant",
+    "base_rate": 0.06,
+    "hexaco_weights": {
+      "C_diligence": -0.35,
+      "X_liveliness": -0.20,
+      "E_anxiety": 0.15,
+      "E_dependence": 0.20
+    },
+    "break_weights": {
+      "shutdown": 0.35,
+      "fugue": 0.30,
+      "dissociation": 0.20
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C01_strategic_planning", "C02_instrumental_support", "C15_problem_solving"],
+    "synergies": ["C13_substance_use"],
+    "cooldown_ticks": 0,
+    "prerequisite": "",
+    "is_maladaptive": true,
+    "allostatic_per_use": 0.03,
+    "helplessness_per_use": 0.10,
+    "helplessness_cap_control_appraisal": 0.3
+  },
+  "C12_self_blame": {
+    "name_key": "COPING_C12_NAME",
+    "desc_key": "COPING_C12_DESC",
+    "effect_key": "COPING_C12_EFFECT",
+    "type": "mixed",
+    "focus": "emotion",
+    "base_rate": 0.07,
+    "hexaco_weights": {
+      "E_anxiety": 0.30,
+      "E_fearfulness": 0.25,
+      "H_sincerity": 0.15,
+      "C_prudence": -0.10
+    },
+    "break_weights": {
+      "grief_collapse": 0.30,
+      "shutdown": 0.20,
+      "paranoia": 0.15
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C03_emotional_support"],
+    "synergies": [],
+    "cooldown_ticks": 0,
+    "prerequisite": "",
+    "proficiency_switch_threshold": 0.5
+  },
+  "C13_substance_use": {
+    "name_key": "COPING_C13_NAME",
+    "desc_key": "COPING_C13_DESC",
+    "effect_key": "COPING_C13_EFFECT",
+    "type": "maladaptive",
+    "focus": "avoidant",
+    "base_rate": 0.05,
+    "hexaco_weights": {
+      "H_greed_avoidance": -0.25,
+      "H_sincerity": -0.20,
+      "C_prudence": -0.20,
+      "E_anxiety": 0.20
+    },
+    "break_weights": {
+      "rage": 0.25,
+      "panic": 0.20,
+      "shutdown": 0.20,
+      "dissociation": 0.15
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C01_strategic_planning"],
+    "synergies": ["C05_denial"],
+    "cooldown_ticks": 0,
+    "prerequisite": "settlement.has_substance_resource",
+    "is_maladaptive": true,
+    "rebound_ticks": 12,
+    "dependency_per_use": 0.05,
+    "dependency_threshold": 0.6,
+    "withdrawal_stress": 0.30
+  },
+  "C14_rumination": {
+    "name_key": "COPING_C14_NAME",
+    "desc_key": "COPING_C14_DESC",
+    "effect_key": "COPING_C14_EFFECT",
+    "type": "mixed",
+    "focus": "cognition",
+    "base_rate": 0.08,
+    "hexaco_weights": {
+      "E_anxiety": 0.35,
+      "O_inquisitiveness": 0.20,
+      "C_prudence": 0.15,
+      "X_liveliness": -0.20
+    },
+    "break_weights": {
+      "shutdown": 0.30,
+      "paranoia": 0.25,
+      "dissociation": 0.20
+    },
+    "control_appraisal_min": 0.0,
+    "conflicts": ["C10_active_distraction"],
+    "synergies": ["C01_strategic_planning"],
+    "cooldown_ticks": 0,
+    "prerequisite": "",
+    "proficiency_switch_threshold": 0.5
+  },
+  "C15_problem_solving": {
+    "name_key": "COPING_C15_NAME",
+    "desc_key": "COPING_C15_DESC",
+    "effect_key": "COPING_C15_EFFECT",
+    "type": "adaptive",
+    "focus": "problem",
+    "base_rate": 0.08,
+    "hexaco_weights": {
+      "C_prudence": 0.25,
+      "C_diligence": 0.25,
+      "O_inquisitiveness": 0.20,
+      "X_social_boldness": 0.10
+    },
+    "break_weights": {
+      "panic": 0.10,
+      "rage": 0.05
+    },
+    "control_appraisal_min": 0.4,
+    "conflicts": ["C11_behavioral_disengagement"],
+    "synergies": ["C01_strategic_planning"],
+    "cooldown_ticks": 0,
+    "prerequisite": ""
+  }
+}

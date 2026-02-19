@@ -1,0 +1,73 @@
+{
+  "personal_morale": {
+    "affect_positive_weight": 0.40,
+    "affect_negative_weight": 0.30,
+    "life_satisfaction_weight": 0.30,
+    "maslow": {
+      "food_sleep_critical": 0.3,
+      "food_sleep_low": 0.6,
+      "safety_critical": 0.3,
+      "safety_low": 0.6,
+      "belonging_low": 0.3,
+      "multiplier_food_sleep_critical": 0.0,
+      "multiplier_food_sleep_low": 0.4,
+      "multiplier_safety_critical": 0.2,
+      "multiplier_safety_low": 0.6,
+      "multiplier_belonging_low": 0.7
+    },
+    "herzberg_threshold": 0.5,
+    "herzberg_penalty_rate": 0.8,
+    "hedonic_treadmill_rate": 0.002,
+    "hedonic_treadmill_threshold": 0.5,
+    "hedonic_treadmill_cap": 0.8
+  },
+  "warr_vitamin": {
+    "AD": {
+      "autonomy":       {"a": 1.5, "h": 0.6, "k": 0.15},
+      "social_contact": {"a": 2.0, "h": 0.5, "k": 0.12},
+      "info_load":      {"a": 1.8, "h": 0.45, "k": 0.10}
+    },
+    "CE_threshold": 0.7,
+    "CE_max_contribution": 0.10
+  },
+  "behavior_weight_multiplier": {
+    "flourishing_threshold": 0.6,
+    "flourishing_min": 1.2,
+    "flourishing_max": 1.55,
+    "normal_min": 0.85,
+    "normal_max": 1.2,
+    "dissatisfied_min": 0.55,
+    "dissatisfied_max": 0.85,
+    "languishing_min": 0.30,
+    "languishing_max": 0.55
+  },
+  "settlement_morale": {
+    "leader_weight": 2.0,
+    "std_dev_penalty_rate": 0.15,
+    "production_min": 0.5,
+    "production_range": 1.0
+  },
+  "migration": {
+    "k": 10.0,
+    "threshold_morale": 0.35,
+    "patience_resistance": 0.3,
+    "max_probability": 0.95,
+    "check_interval_ticks": 24
+  },
+  "rebellion": {
+    "grievance_rise_tau": 48,
+    "grievance_decay_tau": 192,
+    "k": 12.0,
+    "threshold_grievance": 0.35,
+    "gini_weight": 0.5,
+    "low_morale_threshold": 0.20,
+    "low_morale_multiplier": 1.5,
+    "weekly_max_probability": 0.12,
+    "check_interval_ticks": 168
+  },
+  "birth_rate": {
+    "morale_threshold": 0.4,
+    "maslow_level_min": 3,
+    "max_modifier": 0.8
+  }
+}
