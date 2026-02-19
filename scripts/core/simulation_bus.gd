@@ -30,6 +30,10 @@ signal follow_entity_stopped()
 signal scar_acquired(data: Dictionary)
 signal scar_reactivated(data: Dictionary)
 
+## Mental Break events (Phase 4)
+signal mental_break_started(entity_id: int, break_type: String, tick: int)
+signal mental_break_recovered(entity_id: int, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

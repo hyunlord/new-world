@@ -30,6 +30,7 @@ static var _behavior_map: Dictionary = {}
 static var _emotion_map: Dictionary = {}
 static var _violation_map: Dictionary = {}
 static var _loaded: bool = false
+static var _effects_cache: Dictionary = {}
 
 
 static func _ensure_loaded() -> void:
@@ -42,6 +43,7 @@ static func _ensure_loaded() -> void:
 	_behavior_map = {}
 	_emotion_map = {}
 	_violation_map = {}
+	_effects_cache = {}
 
 	var trait_defs_data = _load_json(TRAIT_DEFS_PATH)
 	if trait_defs_data is Array:
@@ -554,6 +556,84 @@ static func get_known_emotion_baselines() -> Array:
 ## Get valence for a trait (positive/negative/neutral).
 static func get_trait_sentiment(trait_id: String) -> String:
 	return get_trait_definition(trait_id).get("valence", "neutral")
+
+
+## Build per-trait display effects by inverting mapping files.
+## Returns: { "behavior_weights": {action→mult}, "emotion_modifiers": {key→val}, "violation_stress": {action→stress} }
+static func get_trait_display_effects(trait_id: String) -> Dictionary:
+	_ensure_loaded()
+	if _effects_cache.has(trait_id):
+		return _effects_cache[trait_id]
+
+	var effects: Dictionary = {
+		"behavior_weights": {},
+		"emotion_modifiers": {},
+		"violation_stress": {}
+	}
+
+	# behavior_weights: invert behavior_map (action → [{trait_id, extreme_val}])
+	var bw_keys: Array = _behavior_map.keys()
+	for i in range(bw_keys.size()):
+		var action: String = str(bw_keys[i])
+		var mappings: Array = _behavior_map[action]
+		for j in range(mappings.size()):
+			var m: Dictionary = mappings[j]
+			if str(m.get("trait_id", "")) == trait_id:
+				effects["behavior_weights"][action] = float(m.get("extreme_val", 1.0))
+				break
+
+	# emotion_modifiers — sensitivity section: emotion → extreme_mult
+	var sens_map = _emotion_map.get("sensitivity", {})
+	if sens_map is Dictionary:
+		var sens_keys: Array = sens_map.keys()
+		for i in range(sens_keys.size()):
+			var emotion: String = str(sens_keys[i])
+			var mappings: Array = sens_map[emotion]
+			for j in range(mappings.size()):
+				var m: Dictionary = mappings[j]
+				if str(m.get("trait_id", "")) == trait_id:
+					effects["emotion_modifiers"][emotion + "_sensitivity"] = float(m.get("extreme_mult", 1.0))
+					break
+
+	# emotion_modifiers — baseline section: emotion → max_offset (stored as extreme_mult)
+	var base_map = _emotion_map.get("baseline", {})
+	if base_map is Dictionary:
+		var base_keys: Array = base_map.keys()
+		for i in range(base_keys.size()):
+			var emotion: String = str(base_keys[i])
+			var mappings: Array = base_map[emotion]
+			for j in range(mappings.size()):
+				var m: Dictionary = mappings[j]
+				if str(m.get("trait_id", "")) == trait_id:
+					effects["emotion_modifiers"][emotion + "_baseline"] = float(m.get("extreme_mult", 0.0))
+					break
+
+	# emotion_modifiers — mult section: key → extreme_mult (add _mult suffix for locale consistency)
+	var mult_map = _emotion_map.get("mult", {})
+	if mult_map is Dictionary:
+		var mult_keys: Array = mult_map.keys()
+		for i in range(mult_keys.size()):
+			var mk: String = str(mult_keys[i])
+			var mappings: Array = mult_map[mk]
+			for j in range(mappings.size()):
+				var m: Dictionary = mappings[j]
+				if str(m.get("trait_id", "")) == trait_id:
+					effects["emotion_modifiers"][mk + "_mult"] = float(m.get("extreme_mult", 1.0))
+					break
+
+	# violation_stress: invert violation_map (action → [{trait_id, base_stress}])
+	var vio_keys: Array = _violation_map.keys()
+	for i in range(vio_keys.size()):
+		var action: String = str(vio_keys[i])
+		var mappings: Array = _violation_map[action]
+		for j in range(mappings.size()):
+			var m: Dictionary = mappings[j]
+			if str(m.get("trait_id", "")) == trait_id:
+				effects["violation_stress"][action] = float(m.get("base_stress", 0.0))
+				break
+
+	_effects_cache[trait_id] = effects
+	return effects
 
 
 ## Backward-compatible display filtering for ID arrays.

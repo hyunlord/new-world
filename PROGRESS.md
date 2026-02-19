@@ -1,5 +1,62 @@
 # Progress Log
 
+## Phase 4: Coping / Morale / Contagion 시스템 — 2026-02-19
+
+### Context
+WorldSim Phase 4 핵심 3대 시스템 구현: Coping Trait(15종 학술 기반), Personal/Settlement Morale, 감정 전염.
+TICKET-0(데이터파일) → TICKET-1/2/3(각 시스템, 병렬) → TICKET-4(통합) → TICKET-5(검증) 순서.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-0 | data JSON 3개 + localization 5개 파일 | 🟢 DISPATCH | ask_codex | 순수 데이터 파일 생성 |
+| TICKET-1 | coping_system.gd | 🟢 DISPATCH | ask_codex | 독립 신규 파일 |
+| TICKET-2 | morale_system.gd | 🟢 DISPATCH | ask_codex | 독립 신규 파일 |
+| TICKET-3 | contagion_system.gd | 🟢 DISPATCH | ask_codex | 독립 신규 파일 |
+| TICKET-4a | phase4_coordinator.gd | 🟢 DISPATCH | ask_codex | 독립 신규 파일 |
+| TICKET-4b | stress_system.gd 확장 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+| TICKET-4c | main.gd Phase4 초기화 wiring | 🔴 DIRECT | — | 통합 배선 (<50줄) |
+| TICKET-5 | i18n 최종 검증 | 🔴 DIRECT | — | 검증 명령어 실행 |
+
+### Dispatch ratio: 6/8 = 75% ✅ (목표 ≥60%)
+
+### Dispatch strategy
+- TICKET-0 완료 후 → TICKET-1, 2, 3 병렬 dispatch
+- TICKET-1/2/3 완료 후 → TICKET-4a, 4b 병렬 dispatch
+- TICKET-4a/b 완료 후 → TICKET-4c (main.gd wiring, Direct)
+- TICKET-5: grep/python 검증 명령어 직접 실행
+
+
+
+## DeceasedEntityProxy 통합 렌더 경로 — T-2013 — 2026-02-19
+
+### Context
+사망 패널이 생존 패널과 별개 코드 경로(_draw_deceased)로 운영되어 기능 동기화 부담.
+DeceasedEntityProxy 패턴으로 단일 _draw() 경로 통합.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-2013-01 | deceased_registry.gd 스냅샷 필드 추가 | 🟢 DISPATCH | ask_codex | 독립 파일, 명확한 스펙 |
+| T-2013-02 | entity_detail_panel.gd DeceasedEntityProxy + 통합 렌더 | 🟢 DISPATCH | ask_codex | 단일 파일, 스펙 완전 제공 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+두 파일 독립적 → 병렬 dispatch
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100%
+- Files changed: 2
+- Dispatch tool: ask_codex (2 tickets)
+- Key changes:
+  - deceased_registry.gd: speed/strength/trauma_scars/violation_history/display_traits 스냅샷 + _snapshot_display_traits() 헬퍼
+  - entity_detail_panel.gd: DeceasedEntityProxy inner class + 통합 _draw() 경로 + _draw_deceased() 삭제 (~257 lines)
+
+---
+
+
 ## Trait 2-레벨 하이브리드 시스템 — T-2008 — 2026-02-19
 
 ### Context
@@ -531,3 +588,68 @@ T-2008 2-레벨 하이브리드 시스템 마이그레이션 이후 발생한 2�
   - TICKET-C: tr_data() — push_warning + name_key/desc_key 자동 위임
   - TICKET-D: tools/find_unused_files.py (탐지 전용, 삭제 없음)
 - 검증: migrate_i18n.py 자체 검증 전통과 ✅
+
+---
+
+## Trait 툴팁 전체 정보 표시 복원 + 미사용 JSON 삭제 — 2026-02-19
+
+### Context
+trait 배지 클릭 시 툴팁에 발현 조건 / 행동 가중치 / 감정 수정 / 위반 스트레스 / 시너지 섹션 복원.
+trait_defs_v2.json 마이그레이션 후 효과 데이터가 사라진 문제 해결 (매핑 파일 역인덱스로 런타임 구축).
+미사용 JSON 3개 삭제 (이전 조사 계획 결과 실행).
+
+### Tickets
+| 작업 | 분류 | 이유 |
+|------|------|------|
+| data/ 미사용 JSON 3개 삭제 | 🔴 DIRECT | 삭제 작업 |
+| locale ko+en: TOOLTIP_ 키 추가 | 🔴 DIRECT | 공유 인터페이스 (locale 파일) |
+| trait_system.gd: get_trait_display_effects() 추가 | 🔴 DIRECT | 신규 public API |
+| entity_detail_panel.gd: _salience 주입 | 🔴 DIRECT | 기존 badge 시스템 수정 |
+| trait_tooltip.gd: 전체 재작성 | 🔴 DIRECT | UI 통합 (cross-system) |
+
+### Dispatch ratio: 0/5 = 0% (UI 통합 + locale + 공유 API — 모두 직접 구현 적합)
+
+### Technical Approach
+- **역인덱스 패턴**: behavior/emotion/violation 매핑 파일을 런타임에 trait_id 기준으로 역산. _effects_cache로 캐싱.
+- **salience 전달**: entity_detail_panel이 tdef.duplicate() + _salience 주입 → badge_regions에 저장.
+- **감정 수정 구분**: _baseline 키 → offset (×100 → %), 나머지 → multiplier delta (−1.0 → %).
+- **로케일 키 수정**: TRAIT_KEY 프리픽스 사용 (구 코드의 ACTION 프리픽스 버그 수정).
+
+### Results
+- Gate: PASS ✅
+- 삭제: data/personality/trait_definitions.json, trait_definitions_derived.json, hexaco_definition.json
+- 수정: localization/ko/ui.json, localization/en/ui.json, scripts/systems/trait_system.gd, scripts/ui/entity_detail_panel.gd, scripts/ui/trait_tooltip.gd
+- 파일 변경: 5개 수정 + 3개 삭제
+
+
+---
+
+## Phase 4: Coping / Morale / Contagion 시스템 — 2026-02-19
+
+### Context
+WorldSim Phase 4 — Lazarus & Folkman 기반 Coping Trait System (15전략 2단계 Softmax), Warr/Diener 기반 Morale System (SWB + 정착지 집계), Hatfield/Christakis 기반 Contagion System (AoE 전염 + 소셜 네트워크 전파) 구현.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-0 | data JSON 3개 + localization 5개 | 🟢 DISPATCH | ask_codex | 순수 데이터 파일 생성 |
+| TICKET-1 | coping_system.gd | 🟢 DISPATCH | ask_codex | 단독 신규 파일 |
+| TICKET-2 | morale_system.gd | 🟢 DISPATCH | ask_codex | 단독 신규 파일 |
+| TICKET-3 | contagion_system.gd | 🟢 DISPATCH | ask_codex | 단독 신규 파일 |
+| TICKET-4a | phase4_coordinator.gd | 🔴 DIRECT | — | Codex job timeout(30분+), 직접 구현(<50줄) |
+| TICKET-4b | stress_system.gd Phase 4 확장 | 🟢 DISPATCH | ask_codex | 단독 파일 수정 |
+| TICKET-4c | main.gd wiring | 🔴 DIRECT | — | 통합 배선 (<30줄) |
+| TICKET-5 | SimulationBus signals + i18n 검증 | 🔴 DIRECT | — | 공유 인터페이스 (signal 정의) |
+
+### Dispatch ratio: 5/8 = 62.5% ✅ (target ≥60%)
+
+### Priority Fixes Applied Post-Codex
+- contagion: 36→38 (trauma_scar=36 충돌 회피)
+- morale: 37→40 (trait_violation=37 충돌 회피)
+- coping: tick_interval 1→30, priority 36→42
+
+### Results
+- Gate: PASS ✅ (24 systems registered)
+- New files: data/coping_definitions.json, data/morale_config.json, data/contagion_config.json, localization/ko/coping.json, localization/en/coping.json, scripts/systems/phase4/coping_system.gd, scripts/systems/phase4/morale_system.gd, scripts/systems/phase4/contagion_system.gd, scripts/systems/phase4/phase4_coordinator.gd
+- Modified: simulation_bus.gd (+mental_break_started/recovered signals), mental_break_system.gd (emit signals), stress_system.gd (Denial redirect + rebound queue), main.gd (Phase 4 wiring), localization/*/ui.json (+CONTAGION_SPIRAL_WARNING), localization/*/coping.json (+COPING_ACQUIRED/UPGRADED)
+- ask_codex dispatch tool used: 5 tickets

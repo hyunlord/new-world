@@ -1,0 +1,74 @@
+{
+  "network_weights": {
+    "1": 0.15,
+    "2": 0.10,
+    "3": 0.06
+  },
+  "max_hops": 3,
+  "simultaneous_break_threshold": 3,
+  "refractory_ticks": {
+    "high_negative": 24,
+    "low_negative": 48,
+    "high_positive": 12,
+    "low_positive": 24,
+    "mental_break": 72
+  },
+  "crowd_dilution_base": 6,
+  "emotion_classes": {
+    "high_negative": {
+      "propagation_type": "AoE_immediate",
+      "base_intensity": 0.20,
+      "arousal_multiplier": 1.5,
+      "decay_rate": 0.8,
+      "stress_spike_mult": 1.5,
+      "allostatic_mult": 0.3
+    },
+    "low_negative": {
+      "propagation_type": "network_gradual",
+      "base_intensity": 0.08,
+      "arousal_multiplier": 0.8,
+      "decay_rate": 0.95,
+      "network_delay_per_hop": 8,
+      "allostatic_mult": 0.5,
+      "morale_mult": 0.4
+    },
+    "high_positive": {
+      "propagation_type": "AoE_moderate",
+      "base_intensity": 0.10,
+      "arousal_multiplier": 0.9,
+      "decay_rate": 0.85,
+      "morale_mult": 0.8,
+      "gas_restore_mult": 0.3
+    },
+    "low_positive": {
+      "propagation_type": "network_gradual",
+      "base_intensity": 0.06,
+      "arousal_multiplier": 0.5,
+      "decay_rate": 0.97,
+      "network_delay_per_hop": 12,
+      "morale_mult": 0.5
+    }
+  },
+  "susceptibility": {
+    "base": 0.5,
+    "E_sentimentality_weight": 0.25,
+    "X_liveliness_weight": 0.15,
+    "C_prudence_weight": -0.10,
+    "H_sincerity_weight": -0.05,
+    "grief_bonus": 0.15,
+    "calm_penalty": -0.10
+  },
+  "resistance": {
+    "emotional_numbness_scar": 0.30,
+    "C11_behavioral_disengagement": 0.40,
+    "shutdown_fugue_state": 0.20,
+    "allostatic_overload_threshold": 0.85,
+    "allostatic_overload_bonus": 0.90,
+    "allostatic_isolate_ticks": 48
+  },
+  "spiral_dampener": {
+    "gas_drain_multiplier_max": 2.0,
+    "network_isolate_ticks": 32,
+    "morale_floor": 0.10
+  }
+}

@@ -4,6 +4,43 @@
 
 ---
 
+## Phase 4: Coping / Morale / Contagion 시스템 (2026-02-19)
+
+### 신규 시스템
+- **CopingSystem** (`scripts/systems/phase4/coping_system.gd`): priority=42, tick=30
+  - Lazarus & Folkman (1984) 기반 15가지 대처 전략 (C01~C15)
+  - 2단계 Softmax 획득: K(n)=1-exp(-0.35n) 포화 함수
+  - C05 Denial: 숨겨진 위협 축적 → StressSystem 리바운드 큐 연동
+  - C11 Learned Helplessness, C13 Substance Use 특수 효과
+- **MoraleSystem** (`scripts/systems/phase4/morale_system.gd`): priority=40, tick=5
+  - Diener et al. (1985) SWB 3성분: PA/NA/LS
+  - Warr Vitamin Model (CE-type 선형 cap + AD-type 포물선)
+  - Maslow 차단 승수, Herzberg 위생 요인, 헤도닉 적응(0.002/tick)
+  - Gurr (1970) 불만 축적: tau_rise=48, tau_decay=192
+- **ContagionSystem** (`scripts/systems/phase4/contagion_system.gd`): priority=38, tick=3
+  - Hatfield et al. (1993) AoE 감정 전염 (반경 3타일, 군중 희석 1/√(N/6))
+  - Christakis & Fowler (2007) 소셜 네트워크 전파 (2-hop, 30% 서브샘플)
+  - 나선형 감쇠: idempotent max() 패턴 (spiral_applied 플래그)
+  - 불응기 타이머: 10 ticks, 감수성 ×0.25
+
+### 통합 변경
+- **Phase4Coordinator** (`scripts/systems/phase4/phase4_coordinator.gd`): Node 기반 글루
+  - mental_break_started / mental_break_recovered 시그널 라우팅
+- **SimulationBus**: `mental_break_started(entity_id, break_type, tick)`, `mental_break_recovered(entity_id, tick)` 시그널 추가
+- **MentalBreakSystem**: 시그널 emit 추가 (_trigger_break, _end_break)
+- **StressSystem**: C05 Denial 리다이렉트(60%) + schedule_rebound() + _process_rebound_queue()
+- **main.gd**: Phase 4 시스템 초기화 + SimulationEngine 등록 (24 systems total)
+
+### 데이터 / i18n
+- `data/coping_definitions.json`: 15가지 대처 전략 정의
+- `data/morale_config.json`, `data/contagion_config.json`
+- `localization/ko/coping.json`, `localization/en/coping.json`: 62개 키
+- `localization/*/ui.json`: MORALE_STATE_*, MASLOW_BLOCKED_*, CONTAGION_SPIRAL_WARNING 추가
+
+### Gate: PASS ✅ | Commit: a1d559b
+
+---
+
 ## Trait 2-레벨 하이브리드 시스템 (T-2008)
 
 ### 개요

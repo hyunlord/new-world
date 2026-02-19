@@ -18,6 +18,7 @@ var _entity_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _break_defs: Dictionary = {}
 var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
+var _current_tick: int = 0      # Phase 4: stored for _end_break signal emission
 
 
 func _init() -> void:
@@ -58,6 +59,7 @@ func _load_break_definitions() -> void:
 
 
 func execute_tick(tick: int) -> void:
+	_current_tick = tick
 	if _entity_manager == null:
 		return
 	var alive: Array = _entity_manager.get_alive_entities()
@@ -177,6 +179,8 @@ func _trigger_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 	ed.mental_break_type = break_type
 	ed.mental_break_remaining = duration
 
+	SimulationBus.mental_break_started.emit(entity.entity_id, break_type, tick)
+
 	print("[MENTAL_BREAK] %s → %s (%.0f ticks, stress=%.0f)" % [
 		entity.entity_name, break_type, duration, ed.stress
 	])
@@ -244,3 +248,4 @@ func _end_break(entity: RefCounted, ed: RefCounted) -> void:
 	# 4) 상태 클리어
 	ed.mental_break_type = ""
 	ed.mental_break_remaining = 0.0
+	SimulationBus.mental_break_recovered.emit(entity.entity_id, _current_tick)

@@ -22,6 +22,9 @@ SimulationEngine이 매 틱마다 priority 오름차순으로 실행.
 | 30 | MovementSystem | 3 | 행동 기반 | A* 이동, 도착 효과, 자동 식사, 나이별 이동속도 감소 | `scripts/systems/movement_system.gd` |
 | 32 | EmotionSystem | 12 | 시간 기반 | 감정 5종 매일 갱신 (happiness, loneliness, stress, grief, love), 성격/근접 기반 | `scripts/systems/emotion_system.gd` |
 | 37 | SocialEventSystem | 30 | 시간 기반 | 청크 기반 근접 상호작용, 9종 이벤트(대화/선물/위로/프로포즈 등), 관계 감소 | `scripts/systems/social_event_system.gd` |
+| 38 | ContagionSystem | 3 | 행동 기반 | Hatfield(1993) AoE 감정 전염(반경3타일) + Christakis(2007) 소셜 네트워크(2-hop), 군중희석 1/√(N/6), 나선형 감쇠 idempotent, 불응기 10tick | `scripts/systems/phase4/contagion_system.gd` |
+| 40 | MoraleSystem | 5 | 시간 기반 | Diener SWB 3성분(PA/NA/LS), Warr Vitamin Model, Maslow 차단, Herzberg 위생, 헤도닉 적응(0.002/tick), Gurr 불만 축적(τ_rise=48, τ_decay=192), 정착지 모럴 집계 | `scripts/systems/phase4/morale_system.gd` |
+| 42 | CopingSystem | 30 | 행동 기반 | Lazarus & Folkman(1984) 15가지 대처 전략, 2단계 Softmax 획득(K(n)=1-exp(-0.35n)), C05 Denial 숨겨진 부채→StressSystem 리바운드, C11 학습된 무력감, C13 물질 사용 | `scripts/systems/phase4/coping_system.gd` |
 | 48 | AgeSystem | 50 | 시간 기반 | 나이 단계 전환 (infant→toddler→child→teen→adult→elder), 성장 토스트, elder→builder 해제 | `scripts/systems/age_system.gd` |
 | 49 | MortalitySystem | 1 | 시간 기반 | Siler(1979) 3항 사망률 모델, 생일 기반 분산 체크, 영아 월별 체크, 돌봄 보호(a1×0.6), 연간 인구통계 로그(원인별 카운트), register_death(is_infant, stage, age, cause) | `scripts/systems/mortality_system.gd` |
 | 50 | PopulationSystem | 30 | 시간 기반 | 출생 비활성화 (FamilySystem으로 이관), 사망 로직 비활성화 (MortalitySystem으로 이관) | `scripts/systems/population_system.gd` |

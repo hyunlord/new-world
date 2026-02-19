@@ -41,6 +41,13 @@ const EMOTION_WEIGHTS: Dictionary = {
 const VA_GAMMA: float = 3.0
 const EUSTRESS_OPTIMAL: float = 150.0
 
+# ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
+## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
+## Folkman & Lazarus (1988) — denial as maladaptive avoidant coping
+const DENIAL_REDIRECT_FRACTION: float = 0.60   # fraction of stress redirected to hidden accumulator
+const DENIAL_MAX_ACCUMULATOR: float = 800.0    # cap on hidden threat accumulator
+const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full delayed payment)
+
 
 func _init() -> void:
 	system_name = "stress"
@@ -57,6 +64,19 @@ func set_trauma_scar_system(tss) -> void:
 	_trauma_scar_system = tss
 
 
+## Schedule a delayed stress rebound — called by CopingSystem when C05 Denial expires.
+## Gross (1998): suppressed stress is stored, not eliminated; it rebounds when defenses drop.
+## rebound_queue meta: Array of {amount: float, delay: int}
+func schedule_rebound(entity_id: int, amount: float, delay_ticks: int) -> void:
+	var entity = _entity_manager.get_entity(entity_id)
+	if entity == null or entity.emotion_data == null:
+		return
+	var ed = entity.emotion_data
+	var queue = ed.get_meta("rebound_queue", [])
+	queue.append({"amount": amount, "delay": delay_ticks})
+	ed.set_meta("rebound_queue", queue)
+
+
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
@@ -65,6 +85,8 @@ func execute_tick(tick: int) -> void:
 			continue
 		var is_sleeping: bool = entity.current_action == "sleep"
 		var is_safe: bool = entity.settlement_id >= 0
+		# Phase 4: process any scheduled stress rebounds (C05 Denial expiry)
+		_process_rebound_queue(entity.emotion_data)
 		_update_entity_stress(entity, is_sleeping, is_safe)
 
 
@@ -93,6 +115,16 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var delta: float = continuous_input + trace_input + emotion_input - recovery
 	if absf(delta) < STRESS_EPSILON:
 		delta = 0.0
+
+	# Phase 4: C05 Denial — redirect fraction of incoming stress to hidden accumulator
+	## Folkman & Lazarus (1988): denial suppresses immediate distress at cost of later rebound
+	var denial_active: bool = ed.get_meta("denial_active", false)
+	if denial_active and delta > 0.0:
+		var redirected: float = delta * DENIAL_REDIRECT_FRACTION
+		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
+		hidden = minf(hidden + redirected, DENIAL_MAX_ACCUMULATOR)
+		ed.set_meta("hidden_threat_accumulator", hidden)
+		delta -= redirected  # only partial stress hits immediately
 
 	ed.stress = clampf(ed.stress + delta, 0.0, STRESS_CLAMP_MAX)
 	ed.stress_delta_last = delta
@@ -593,6 +625,33 @@ func _inject_emotions(ed, emo_inject: Dictionary, scale: float) -> void:
 		elif layer == "slow":
 			if ed.slow.has(emo_name):
 				ed.slow[emo_name] = clampf(ed.slow.get(emo_name, 0.0) + raw_val, -50.0, 100.0)
+
+
+# ── Phase 4: Rebound Queue Processing ────────────────────────────────
+func _process_rebound_queue(ed: RefCounted) -> void:
+	## Gross (1998): suppressed stress surfaces when denial coping terminates
+	## Queue format: Array of {amount: float, delay: int}
+	var queue = ed.get_meta("rebound_queue", [])
+	if queue.is_empty():
+		return
+
+	var remaining: Array = []
+	var total_rebound: float = 0.0
+
+	for entry in queue:
+		entry["delay"] -= 1
+		if entry["delay"] <= 0:
+			total_rebound += entry.get("amount", 0.0)
+		else:
+			remaining.append(entry)
+
+	ed.set_meta("rebound_queue", remaining)
+
+	if total_rebound > 0.0:
+		ed.stress = clampf(ed.stress + total_rebound, 0.0, STRESS_CLAMP_MAX)
+		# Clears hidden accumulator proportionally (rebounded stress is no longer hidden)
+		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
+		ed.set_meta("hidden_threat_accumulator", maxf(0.0, hidden - total_rebound))
 
 
 # ── Debug log ─────────────────────────────────────────────────────────

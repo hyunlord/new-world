@@ -31,6 +31,17 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"buildings_built": entity.buildings_built,
 		"age_stage": entity.age_stage,
 		"frailty": entity.frailty,
+		"speed": entity.speed,
+		"strength": entity.strength,
+		"trauma_scars": entity.trauma_scars.duplicate(true) if "trauma_scars" in entity and entity.trauma_scars != null else [],
+		"violation_history": entity.violation_history.duplicate() if "violation_history" in entity and entity.violation_history != null else {},
+		"display_traits": _snapshot_display_traits(entity),
+		"hunger": entity.hunger,
+		"energy": entity.energy,
+		"social": entity.social,
+		"current_action": entity.current_action,
+		"inventory": entity.inventory.duplicate() if entity.inventory != null else {},
+		"emotion_data": entity.emotion_data.to_dict() if entity.emotion_data != null else {},
 		"birth_date": entity.birth_date.duplicate() if not entity.birth_date.is_empty() else {},
 		"death_date": _current_date_from_tick(current_tick),
 		"death_age_days": (current_tick - entity.birth_tick) / 12,
@@ -100,3 +111,11 @@ func load_save_data(data: Array) -> void:
 	for i in range(data.size()):
 		var d: Dictionary = data[i]
 		_records[d.get("id", -1)] = d
+
+
+func _snapshot_display_traits(entity: RefCounted) -> Array:
+	var result: Array = []
+	if "display_traits" in entity:
+		for dt in entity.display_traits:
+			result.append({"id": dt.get("id", ""), "salience": dt.get("salience", 0.0)})
+	return result
