@@ -16,6 +16,7 @@ error.log
 .codex-prompt*
 .codex_prompts/
 .codex/
+tools/codex_prompts/
 
 # ticket
 .ticket*
@@ -27,3 +28,7 @@ desktop.ini
 
 # pycache
 *__pycache__*
+
+# DS Store
+.DS_Store
+
