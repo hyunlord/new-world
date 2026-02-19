@@ -35,6 +35,9 @@ const CopingSystem = preload("res://scripts/systems/phase4/coping_system.gd")
 const MoraleSystem = preload("res://scripts/systems/phase4/morale_system.gd")
 const ContagionSystem = preload("res://scripts/systems/phase4/contagion_system.gd")
 const Phase4CoordinatorScript = preload("res://scripts/systems/phase4/phase4_coordinator.gd")
+const ChildStressProcessor = preload("res://scripts/systems/phase5/child_stress_processor.gd")
+const IntergenerationalSystem = preload("res://scripts/systems/phase5/intergenerational_system.gd")
+const ParentingSystem = preload("res://scripts/systems/phase5/parenting_system.gd")
 const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
 
 var sim_engine: RefCounted
@@ -75,6 +78,9 @@ var coping_system: RefCounted
 var morale_system: RefCounted
 var contagion_system: RefCounted
 var phase4_coordinator: Node
+var child_stress_processor: RefCounted
+var intergenerational_system: RefCounted
+var parenting_system: RefCounted
 var debug_console = null
 var debug_panel = null
 
@@ -213,6 +219,14 @@ func _ready() -> void:
 	add_child(phase4_coordinator)
 	phase4_coordinator.init_phase4(coping_system, morale_system, contagion_system, stress_system, entity_manager)
 
+	# ── Phase 5: Childhood / ACE / Parenting ──────────────
+	child_stress_processor = ChildStressProcessor.new()
+	child_stress_processor.init(entity_manager)
+	intergenerational_system = IntergenerationalSystem.new()
+	intergenerational_system.init(entity_manager, settlement_manager)
+	parenting_system = ParentingSystem.new()
+	parenting_system.init(entity_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
 	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
@@ -224,6 +238,7 @@ func _ready() -> void:
 	sim_engine.register_system(construction_system)       # priority 28
 	sim_engine.register_system(movement_system)           # priority 30
 	sim_engine.register_system(emotion_system)            # priority 32
+	sim_engine.register_system(child_stress_processor)   # priority 32 (Phase 5)
 	sim_engine.register_system(stress_system)             # priority 34
 	sim_engine.register_system(mental_break_system)       # priority 35
 	sim_engine.register_system(trauma_scar_system)        # priority 36
@@ -238,6 +253,8 @@ func _ready() -> void:
 	sim_engine.register_system(contagion_system)          # priority 38
 	sim_engine.register_system(morale_system)             # priority 40
 	sim_engine.register_system(coping_system)             # priority 42
+	sim_engine.register_system(intergenerational_system) # priority 45 (Phase 5)
+	sim_engine.register_system(parenting_system)         # priority 46 (Phase 5)
 
 	# Render world (with resource tinting)
 	world_renderer.render_world(world_data, resource_map)
