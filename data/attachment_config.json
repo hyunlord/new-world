@@ -1,0 +1,40 @@
+{
+  "determination_window_days": 180,
+  "sensitivity_threshold_secure": 0.65,
+  "consistency_threshold_secure": 0.60,
+  "sensitivity_threshold_anxious": 0.40,
+  "consistency_threshold_disorganized": 0.35,
+  "abuser_is_caregiver_ace_min": 4,
+  "adult_effects": {
+    "secure": {
+      "tolerable_range_bonus": 0.15,
+      "social_support_efficiency": 1.0,
+      "transfer_coefficient": 0.15,
+      "coping_modeling_rate_mult": 1.5
+    },
+    "anxious": {
+      "background_stress_without_caregiver": 0.02,
+      "transfer_coefficient": 0.35,
+      "coping_modeling_rate_mult": 1.2
+    },
+    "avoidant": {
+      "allostatic_accumulation_mult": 2.0,
+      "stress_expression_suppression": true,
+      "transfer_coefficient": 0.20,
+      "coping_modeling_rate_mult": 0.6
+    },
+    "disorganized": {
+      "coping_random_fire_chance": 0.15,
+      "trauma_reactivation_mult": 1.4,
+      "transfer_coefficient": 0.45,
+      "coping_modeling_rate_mult": 0.3
+    }
+  },
+  "protective_factor": {
+    "secure_weight": 0.30,
+    "eh_weight": 0.15,
+    "max_pf": 0.45,
+    "allo_base_pf_fraction": 0.50,
+    "notes": "영구성 지표(allo_base)는 절반만 완화. GPT 밸런싱 분석."
+  }
+}

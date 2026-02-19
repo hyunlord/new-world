@@ -1,0 +1,64 @@
+{
+  "STAGE_INFANT": "영아기",
+  "STAGE_TODDLER": "유아기",
+  "STAGE_CHILD": "아동기",
+  "STAGE_TEEN": "청소년기",
+
+  "BREAK_REGRESSION_CRY": "퇴행 울음",
+  "BREAK_TANTRUM_SPIRAL": "감정 폭발 연쇄",
+  "BREAK_SELECTIVE_MUTISM": "선택적 함구",
+  "BREAK_DISSOCIATIVE_WITHDRAWAL": "해리적 철수",
+  "BREAK_FAILURE_TO_THRIVE": "발달 실패",
+  "BREAK_PSYCHOSOMATIC": "심인성 증상",
+  "BREAK_LEARNED_HELPLESSNESS_CHILD": "학습된 무기력",
+  "BREAK_SELF_HARM_IDEATION": "자해 사고",
+  "BREAK_SUBSTANCE_SEEKING": "물질 탐색",
+  "BREAK_SOCIAL_WITHDRAWAL_TEEN": "사회적 고립",
+
+  "ACE_PHYSICAL_ABUSE": "신체적 학대",
+  "ACE_EMOTIONAL_ABUSE": "정서적 학대",
+  "ACE_SEXUAL_ABUSE": "성적 학대",
+  "ACE_PHYSICAL_NEGLECT": "신체적 방임",
+  "ACE_EMOTIONAL_NEGLECT": "정서적 방임",
+  "ACE_DOMESTIC_VIOLENCE": "가정폭력 목격",
+  "ACE_SUBSTANCE_HOUSEHOLD": "가정 내 물질 남용",
+  "ACE_MENTAL_ILLNESS_HOUSEHOLD": "가정 내 정신 질환",
+  "ACE_PARENTAL_SEPARATION": "부모 분리",
+  "ACE_INCARCERATION": "보호자 투옥",
+
+  "ATTACHMENT_SECURE": "안정 애착",
+  "ATTACHMENT_ANXIOUS": "불안 애착",
+  "ATTACHMENT_AVOIDANT": "회피 애착",
+  "ATTACHMENT_DISORGANIZED": "혼란 애착",
+
+  "STRESS_TYPE_POSITIVE": "긍정적 스트레스",
+  "STRESS_TYPE_TOLERABLE": "감내 가능 스트레스",
+  "STRESS_TYPE_TOXIC": "독성 스트레스",
+
+  "ACE_SCORE_LABEL": "아동기 역경 점수",
+  "ACE_SCORE_LOW": "낮음 (0~3)",
+  "ACE_SCORE_MID": "중간 (4~6)",
+  "ACE_SCORE_HIGH": "높음 (7~10)",
+
+  "EPI_LOAD_LABEL": "후성유전 부하",
+  "EPI_LOAD_LOW": "낮음",
+  "EPI_LOAD_MID": "중간",
+  "EPI_LOAD_HIGH": "높음",
+
+  "PARENTING_QUALITY_LABEL": "양육 품질",
+  "PARENTING_CONSISTENCY_LABEL": "양육 일관성",
+
+  "ATTACHMENT_FORMED": "{name}의 애착 유형이 결정됐다: {type}",
+  "ACE_EVENT_RECORDED": "{name}이(가) 역경을 경험했다: {ace_type}",
+  "ADULTHOOD_TRANSITION": "{name}이(가) 성인이 됐다. 아동기 경험이 영구적으로 각인됐다.",
+  "HEXACO_CAP_MODIFIED": "아동기 역경으로 인해 {facet}의 잠재력이 영구적으로 변형됐다.",
+  "PROTECTIVE_FACTOR_ACTIVE": "보호 요인이 역경의 영향을 부분적으로 완화하고 있다.",
+  "SHRP_OVERRIDE": "{name}이(가) 극단적 위협으로 영아기 방어막을 돌파당했다.",
+  "TOXIC_STRESS_ONSET": "보호자 없이 강한 스트레스에 노출됐다. 독성 스트레스 경로 진입.",
+  "GENERATIONAL_CONVERGENCE": "정착지의 세대 간 트라우마가 안정 상태에 수렴하고 있다.",
+  "GENERATIONAL_COLLAPSE_RISK": "세대 간 트라우마 전달이 붕괴 임계에 근접하고 있다.",
+
+  "ERR_CHILDHOOD_DATA_MISSING": "[오류] 아동기 데이터 없음: {agent_id}",
+  "ERR_ACE_ITEM_INVALID": "[오류] 유효하지 않은 ACE 항목: {item_id}",
+  "ERR_STAGE_INVALID": "[오류] 유효하지 않은 발달 단계: {stage}"
+}

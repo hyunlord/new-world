@@ -781,5 +781,17 @@
   "MIGRATION_TRIGGERED": "{name}이(가) 정착지를 떠났다",
   "ERR_COPING_ACQUIRE_FAILED": "[오류] Coping 획득 실패",
   "ERR_COPING_DEF_MISSING": "[오류] Coping 정의 없음: {id}",
-  "CONTAGION_SPIRAL_WARNING": "나선형 감정 악화: 스트레스 {stress}, 감정가 {valence}"
+  "CONTAGION_SPIRAL_WARNING": "나선형 감정 악화: 스트레스 {stress}, 감정가 {valence}",
+
+  "UI_PANEL_CHILDHOOD": "아동기",
+  "UI_PANEL_ACE": "역경 점수",
+  "UI_PANEL_ATTACHMENT": "애착",
+  "UI_PANEL_EPIGENETIC": "후성유전",
+  "UI_ACE_THREAT_LABEL": "위협형",
+  "UI_ACE_DEPRIVATION_LABEL": "결핍형",
+  "UI_ACE_BACKFILL_ESTIMATED": "추정값",
+  "UI_PARENTAL_ORIGIN": "부모 계보",
+  "UI_HEXACO_CAP_MODIFIED": "한계 변형됨",
+  "UI_GENERATION_LABEL": "{n}세대",
+  "UI_AL_MAX_LABEL": "부하 상한선"
 }

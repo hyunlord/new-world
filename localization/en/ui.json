@@ -781,5 +781,17 @@
   "MIGRATION_TRIGGERED": "{name} has left the settlement",
   "ERR_COPING_ACQUIRE_FAILED": "[Error] Failed to acquire coping trait",
   "ERR_COPING_DEF_MISSING": "[Error] Coping definition missing: {id}",
-  "CONTAGION_SPIRAL_WARNING": "Emotional spiral: stress {stress}, valence {valence}"
+  "CONTAGION_SPIRAL_WARNING": "Emotional spiral: stress {stress}, valence {valence}",
+
+  "UI_PANEL_CHILDHOOD": "Childhood",
+  "UI_PANEL_ACE": "ACE Score",
+  "UI_PANEL_ATTACHMENT": "Attachment",
+  "UI_PANEL_EPIGENETIC": "Epigenetic",
+  "UI_ACE_THREAT_LABEL": "Threat",
+  "UI_ACE_DEPRIVATION_LABEL": "Deprivation",
+  "UI_ACE_BACKFILL_ESTIMATED": "Estimated",
+  "UI_PARENTAL_ORIGIN": "Parental Origin",
+  "UI_HEXACO_CAP_MODIFIED": "Cap Modified",
+  "UI_GENERATION_LABEL": "Gen {n}",
+  "UI_AL_MAX_LABEL": "Load Ceiling"
 }
