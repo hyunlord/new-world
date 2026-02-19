@@ -195,7 +195,6 @@ func _classify_stress_type(intensity: float, attachment_present: bool, quality: 
 		var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 		if chronicle != null:
 			var desc: String = Locale.ltr("TOXIC_STRESS_ONSET")
-			desc = desc.format({"name": entity.entity_name})
 			chronicle.log_event("child_stress", entity.id, desc, 3, [], tick, {
 				"key": "TOXIC_STRESS_ONSET",
 				"params": {"name": entity.entity_name},

@@ -1246,4 +1246,3 @@ func _lookup_name(entity_id: int) -> String:
 		if record.size() > 0:
 			return record.get("name", Locale.ltr("UI_UNKNOWN")) + " ☠"
 	return Locale.ltr("UI_UNKNOWN")
-

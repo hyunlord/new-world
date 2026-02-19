@@ -111,8 +111,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	# 5) 회복
 	var recovery: float = _calc_recovery(entity, ed, pd, is_sleeping, is_safe, breakdown)
 
-	# 6) 최종 업데이트
-	var delta: float = continuous_input + trace_input + emotion_input - recovery
+	# 6) 최종 업데이트 (Phase 5: ACE stress gain multiplier — Felitti 1998 dose-response)
+	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
+	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult - recovery
 	if absf(delta) < STRESS_EPSILON:
 		delta = 0.0
 
