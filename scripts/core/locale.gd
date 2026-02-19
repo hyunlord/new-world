@@ -17,7 +17,7 @@ var current_locale: String = DEFAULT_LOCALE
 var _strings: Dictionary = {}
 
 ## All category file names (no extension)
-var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug"]
+var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping"]
 
 
 func _ready() -> void:
