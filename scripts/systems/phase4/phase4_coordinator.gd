@@ -14,6 +14,7 @@ var _stress_system: RefCounted
 var _entity_manager: RefCounted
 
 var _initialized: bool = false
+var _active_break_types: Dictionary = {}  # entity_id → break_type, cached for recovery
 
 
 ## Called by main.gd after all Phase 4 systems are instantiated.
@@ -52,16 +53,21 @@ func on_simulation_tick(tick: int) -> void:
 
 ## mental_break_started — notify coping system and apply morale penalty
 func _on_mental_break_started(entity_id: int, break_type: String, tick: int) -> void:
+	_active_break_types[entity_id] = break_type
+	var entity = _entity_manager.get_entity(entity_id) if _entity_manager != null else null
 	if _coping_system != null and _coping_system.has_method("on_mental_break_started"):
-		_coping_system.on_mental_break_started(entity_id, break_type, tick)
+		_coping_system.on_mental_break_started(entity, break_type)
 	if _morale_system != null and _morale_system.has_method("on_mental_break_penalty"):
 		_morale_system.on_mental_break_penalty(entity_id, break_type, tick)
 
 
 ## mental_break_recovered — notify coping and morale systems
 func _on_mental_break_recovered(entity_id: int, tick: int) -> void:
+	var cached_break_type: String = _active_break_types.get(entity_id, "")
+	_active_break_types.erase(entity_id)
+	var entity = _entity_manager.get_entity(entity_id) if _entity_manager != null else null
 	if _coping_system != null and _coping_system.has_method("on_mental_break_recovered"):
-		_coping_system.on_mental_break_recovered(entity_id, tick)
+		_coping_system.on_mental_break_recovered(entity, cached_break_type, tick)
 	if _morale_system != null and _morale_system.has_method("on_mental_break_recovered"):
 		_morale_system.on_mental_break_recovered(entity_id, tick)
 

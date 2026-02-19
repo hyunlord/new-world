@@ -184,6 +184,8 @@ func _run_network_contagion(alive: Array, tick: int) -> void:
 		for member in settlement_members:
 			if member.id == recipient.id:
 				continue
+			if member.emotion_data == null:
+				continue
 			var dist = abs(member.position.x - recipient.position.x) + abs(member.position.y - recipient.position.y)
 			if dist <= NETWORK_HOP_RADIUS:
 				hop1_donors.append(member)

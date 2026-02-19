@@ -263,7 +263,12 @@ func _ready() -> void:
 			debug_console._trauma_scar_system = trauma_scar_system
 			debug_console._trait_violation_system = trait_violation_system
 			debug_console._sim_engine = sim_engine
+			debug_console._coping_system = coping_system
+			debug_console._morale_system = morale_system
+			debug_console._contagion_system = contagion_system
+			debug_console._settlement_manager = settlement_manager
 			add_child(debug_console)
+			debug_console.init_phase4_commands()
 		var _dp_script = load("res://scenes/debug/debug_panel.gd")
 		if _dp_script != null:
 			debug_panel = _dp_script.new()

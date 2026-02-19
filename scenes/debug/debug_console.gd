@@ -20,6 +20,15 @@ var _trauma_scar_system = null
 var _trait_violation_system = null
 var _sim_engine = null
 
+# Phase 4 systems (injected by main.gd BEFORE _ready)
+var _coping_system = null
+var _morale_system = null
+var _contagion_system = null
+var _settlement_manager = null
+
+# Phase 4 command handler
+var _debug_commands = null
+
 # UI nodes (built programmatically)
 var _output: RichTextLabel = null
 var _input_field: LineEdit = null
@@ -34,6 +43,25 @@ func _ready() -> void:
 	visible = false
 	_build_ui()
 	_register_all_commands()
+
+
+func init_phase4_commands() -> void:
+	if not OS.is_debug_build():
+		return
+	var script = load("res://scenes/debug/debug_commands.gd")
+	if script == null:
+		push_warning("[DebugConsole] debug_commands.gd not found")
+		return
+	_debug_commands = script.new()
+	_debug_commands.init(
+		_entity_manager,
+		_coping_system,
+		_morale_system,
+		_contagion_system,
+		_sim_engine,
+		self,
+		_settlement_manager
+	)
 
 
 func _build_ui() -> void:
@@ -205,6 +233,13 @@ func _register_all_commands() -> void:
 		"time": Callable(self, "_cmd_time"),
 		"log": Callable(self, "_cmd_log"),
 		"help": Callable(self, "_cmd_help"),
+		"debug_coping": Callable(self, "_cmd_debug_coping"),
+		"debug_morale": Callable(self, "_cmd_debug_morale"),
+		"debug_contagion": Callable(self, "_cmd_debug_contagion"),
+		"test_coping_acquire": Callable(self, "_cmd_test_coping_acquire"),
+		"test_rage_spread": Callable(self, "_cmd_test_rage_spread"),
+		"test_migration": Callable(self, "_cmd_test_migration"),
+		"test_rebellion": Callable(self, "_cmd_test_rebellion"),
 	}
 
 
@@ -624,6 +659,14 @@ func _cmd_help(args: Dictionary) -> void:
 		print_output("  entity list|info:<id>|kill:<id>")
 		print_output("  time fast:<years>|tick:<n>|pause|resume")
 		print_output("  log stress|violation|break|scar|all on|off")
+		print_output("  ── Phase 4 Debug ──")
+		print_output("  debug_coping <agent_id>")
+		print_output("  debug_morale <agent_id>")
+		print_output("  debug_contagion <settlement_id>")
+		print_output("  test_coping_acquire <agent_id> <break_type>")
+		print_output("  test_rage_spread <agent_id>")
+		print_output("  test_migration <settlement_id>")
+		print_output("  test_rebellion <settlement_id>")
 		print_output("  help [cmd]")
 		return
 
@@ -648,5 +691,68 @@ func _cmd_help(args: Dictionary) -> void:
 			print_output("log stress|violation|break|scar|all on|off")
 		"help":
 			print_output("help [cmd]")
+		"debug_coping":
+			print_output("debug_coping <agent_id>  — show coping strategies, proficiency, cooldown")
+		"debug_morale":
+			print_output("debug_morale <agent_id>  — show morale, bwm, Maslow state, grievance, expectation_base")
+		"debug_contagion":
+			print_output("debug_contagion <settlement_id>  — show contagion state, refractory counts")
+		"test_coping_acquire":
+			print_output("test_coping_acquire <agent_id> <break_type>  — run 10x acquisition, show distribution")
+		"test_rage_spread":
+			print_output("test_rage_spread <agent_id>  — force anger=100, show AoE + network spread preview")
+		"test_migration":
+			print_output("test_migration <settlement_id>  — show migration probs + simulate morale 0.2/0.5/0.8")
+		"test_rebellion":
+			print_output("test_rebellion <settlement_id>  — show grievance + rebellion probability")
 		_:
 			print_output("No detailed help for: " + topic, Color.RED)
+
+
+func _cmd_debug_coping(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_coping(args)
+
+
+func _cmd_debug_morale(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_morale(args)
+
+
+func _cmd_debug_contagion(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_contagion(args)
+
+
+func _cmd_test_coping_acquire(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_coping_acquire(args)
+
+
+func _cmd_test_rage_spread(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_rage_spread(args)
+
+
+func _cmd_test_migration(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_migration(args)
+
+
+func _cmd_test_rebellion(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_rebellion(args)

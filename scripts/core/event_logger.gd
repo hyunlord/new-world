@@ -10,7 +10,11 @@ var _gather_totals: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 var _last_summary_tick: int = 0
 
 ## High-frequency events suppressed from console output
-const QUIET_EVENTS: PackedStringArray = ["entity_moved", "resource_gathered", "needs_updated", "auto_eat", "action_chosen"]
+const QUIET_EVENTS: PackedStringArray = [
+	"entity_moved", "resource_gathered", "needs_updated", "auto_eat", "action_chosen",
+	"entity_ate", "entity_rested", "entity_socialized",
+	"action_changed", "food_taken", "resources_delivered", "entity_starving",
+]
 
 
 func _ready() -> void:
@@ -82,31 +86,13 @@ func _debug_log_event(event_type: String, data: Dictionary) -> void:
 			var from_job: String = data.get("from_job", "?")
 			var to_job: String = data.get("to_job", "?")
 			print("[Tick %d] > %s: %s -> %s" % [tick, ename, from_job, to_job])
-		"resources_delivered":
-			var amount: float = data.get("amount", 0.0)
-			print("[Tick %d] > %s delivered %.1f resources" % [tick, ename, amount])
-		"food_taken":
-			var amount: float = data.get("amount", 0.0)
-			print("[Tick %d] * %s took %.1f food" % [tick, ename, amount])
-		"action_changed":
-			var from_action: String = data.get("from", "?")
-			var to_action: String = data.get("to", "?")
-			print("[Tick %d] ~ %s: %s -> %s" % [tick, ename, from_action, to_action])
-		"entity_ate":
-			print("[Tick %d] * %s ate (hunger: %.0f%%)" % [tick, ename, data.get("hunger_after", 0.0) * 100])
-		"entity_rested":
-			print("[Tick %d] * %s rested (energy: %.0f%%)" % [tick, ename, data.get("energy_after", 0.0) * 100])
-		"entity_socialized":
-			print("[Tick %d] * %s socialized (social: %.0f%%)" % [tick, ename, data.get("social_after", 0.0) * 100])
-		"action_chosen":
-			pass  # Suppress — action_changed covers this
 		"trait_violation":
 			var action: String = data.get("action_id", "?")
 			var sev: String = data.get("severity", "?")
 			var sv: float = data.get("stress", 0.0)
 			print("[Tick %d] ! %s violated trait via '%s': stress=%.1f (%s)" % [tick, ename, action, sv, sev])
 		_:
-			print("[Tick %d] %s" % [tick, event_type])
+			pass  # Unknown/future events — suppress to avoid output overflow
 
 
 ## Query: history for a specific entity

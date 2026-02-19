@@ -179,7 +179,7 @@ func _trigger_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 	ed.mental_break_type = break_type
 	ed.mental_break_remaining = duration
 
-	SimulationBus.mental_break_started.emit(entity.entity_id, break_type, tick)
+	SimulationBus.mental_break_started.emit(entity.id, break_type, tick)
 
 	print("[MENTAL_BREAK] %s → %s (%.0f ticks, stress=%.0f)" % [
 		entity.entity_name, break_type, duration, ed.stress
@@ -248,4 +248,4 @@ func _end_break(entity: RefCounted, ed: RefCounted) -> void:
 	# 4) 상태 클리어
 	ed.mental_break_type = ""
 	ed.mental_break_remaining = 0.0
-	SimulationBus.mental_break_recovered.emit(entity.entity_id, _current_tick)
+	SimulationBus.mental_break_recovered.emit(entity.id, _current_tick)
