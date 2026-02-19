@@ -129,7 +129,7 @@ func _run_aoe_contagion(alive: Array, tick: int) -> void:
 				MAX_EMOTION_CONTAGION_DELTA
 			)
 			if absf(delta) > 0.01:
-				r_ed.set_emotion(emotion_key, recipient_val + delta)
+				r_ed.fast[emotion_key] = clampf(r_ed.fast.get(emotion_key, 0.0) + delta, 0.0, 100.0)
 
 		# Stress contagion - secondary signal
 		var avg_stress: float = 0.0
