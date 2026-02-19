@@ -102,6 +102,7 @@ var _section_collapsed: Dictionary = {
 	"emotions": true,
 	"trauma_scars": true,
 	"violation_history": false,
+	"childhood": true,
 	"family": false,
 	"relationships": false,
 	"stats": true,
@@ -908,6 +909,125 @@ func _draw() -> void:
 					draw_string(font, Vector2(cx + 10, cy + 12), line_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), line_color)
 					cy += 16.0
 				cy += 4.0
+
+	# ── Childhood (Phase 5: ACE / Attachment / Epigenetic) ──
+	var has_childhood_data: bool = (
+		entity.has_meta("adulthood_applied")
+		or entity.has_meta("childhood_data")
+		or entity.has_meta("ace_score_total")
+	)
+	if has_childhood_data:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_PANEL_CHILDHOOD"), "childhood")
+		if not _section_collapsed.get("childhood", true):
+			# ── Developmental stage (children only) ──
+			var childhood_data = entity.get_meta("childhood_data", null)
+			if childhood_data is Dictionary:
+				var stage = childhood_data.get("current_stage", "")
+				if stage != "" and stage != "adult":
+					var stage_key: String = "STAGE_" + stage.to_upper()
+					var stage_label: String = Locale.ltr(stage_key)
+					draw_string(font, Vector2(cx + 10, cy + 12), stage_label,
+						HORIZONTAL_ALIGNMENT_LEFT, -1,
+						GameConfig.get_font_size("popup_body"), Color(0.7, 0.9, 0.7))
+					cy += 16.0
+
+			# ── ACE score bar (3-segment color: 0~3 green, 4~6 yellow, 7~10 red) ──
+			var ace_tracker = entity.get_meta("ace_tracker", null)
+			var ace_score: float = 0.0
+			var ace_threat: float = 0.0
+			var ace_deprivation: float = 0.0
+			var is_backfilled: bool = false
+			if ace_tracker != null:
+				if ace_tracker.has_method("get_score_total"):
+					ace_score = float(ace_tracker.get_score_total())
+				elif "ace_score_total" in ace_tracker:
+					ace_score = float(ace_tracker.ace_score_total)
+				if ace_tracker.has_method("get_threat_deprivation_scores"):
+					var td = ace_tracker.get_threat_deprivation_scores()
+					ace_threat = float(td.get("threat", 0.0))
+					ace_deprivation = float(td.get("deprivation", 0.0))
+				if "is_backfilled" in ace_tracker:
+					is_backfilled = bool(ace_tracker.is_backfilled)
+			else:
+				ace_score = float(entity.get_meta("ace_score_total", 0.0))
+
+			var ace_ratio: float = clampf(ace_score / 10.0, 0.0, 1.0)
+			var ace_color: Color
+			if ace_score <= 3.0:
+				ace_color = Color(0.2, 0.8, 0.3)
+			elif ace_score <= 6.0:
+				ace_color = Color(0.9, 0.8, 0.1)
+			else:
+				ace_color = Color(0.9, 0.2, 0.2)
+
+			var ace_range_key: String = "ACE_SCORE_LOW"
+			if ace_score > 6.0:
+				ace_range_key = "ACE_SCORE_HIGH"
+			elif ace_score > 3.0:
+				ace_range_key = "ACE_SCORE_MID"
+
+			var ace_label: String = "%s: %.1f/10 (%s)" % [
+				Locale.ltr("UI_PANEL_ACE"),
+				ace_score,
+				Locale.ltr(ace_range_key)
+			]
+			if is_backfilled:
+				ace_label += " [%s]" % Locale.ltr("UI_ACE_BACKFILL_ESTIMATED")
+			cy = _draw_bar(font, cx + 10, cy, bar_w, ace_label, ace_ratio, ace_color)
+
+			# threat/deprivation sub-bars (indented)
+			if ace_threat > 0.0 or ace_deprivation > 0.0:
+				var threat_ratio: float = clampf(ace_threat / 10.0, 0.0, 1.0)
+				var dep_ratio: float = clampf(ace_deprivation / 10.0, 0.0, 1.0)
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10,
+					Locale.ltr("UI_ACE_THREAT_LABEL"), threat_ratio, Color(0.9, 0.4, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10,
+					Locale.ltr("UI_ACE_DEPRIVATION_LABEL"), dep_ratio, Color(0.4, 0.5, 0.9))
+
+			# ── Attachment type ──
+			var attachment_type = entity.get_meta("attachment_type", "")
+			if str(attachment_type) != "":
+				var attach_key: String = "ATTACHMENT_" + str(attachment_type).to_upper()
+				var attach_label: String = "%s: %s" % [
+					Locale.ltr("UI_PANEL_ATTACHMENT"),
+					Locale.ltr(attach_key)
+				]
+				var attach_color: Color = Color(0.5, 0.8, 0.9)
+				if str(attachment_type) == "anxious":
+					attach_color = Color(0.9, 0.7, 0.2)
+				elif str(attachment_type) == "avoidant":
+					attach_color = Color(0.6, 0.6, 0.6)
+				elif str(attachment_type) == "disorganized":
+					attach_color = Color(0.9, 0.3, 0.5)
+				draw_string(font, Vector2(cx + 10, cy + 12), attach_label,
+					HORIZONTAL_ALIGNMENT_LEFT, -1,
+					GameConfig.get_font_size("popup_body"), attach_color)
+				cy += 16.0
+
+			# ── Epigenetic load bar ──
+			var epi_load = entity.get_meta("epigenetic_load_effective", -1.0)
+			if float(epi_load) >= 0.0:
+				var epi_ratio: float = clampf(float(epi_load), 0.0, 1.0)
+				cy = _draw_bar(font, cx + 10, cy, bar_w,
+					Locale.ltr("UI_PANEL_EPIGENETIC"), epi_ratio, Color(0.6, 0.3, 0.8))
+
+			# ── HPA/Break multipliers (adults only) ──
+			var adulthood_applied = entity.get_meta("adulthood_applied", false)
+			if bool(adulthood_applied):
+				var stress_mult = entity.get_meta("ace_stress_gain_mult", 1.0)
+				var break_mult = entity.get_meta("ace_break_threshold_mult", 1.0)
+				var hpa_text: String = "HPA x%.2f  |  Break x%.2f" % [float(stress_mult), float(break_mult)]
+				var hpa_color: Color = Color(0.7, 0.7, 0.7)
+				if float(stress_mult) > 1.6:
+					hpa_color = Color(0.9, 0.2, 0.2)
+				elif float(stress_mult) > 1.3:
+					hpa_color = Color(0.9, 0.5, 0.2)
+				draw_string(font, Vector2(cx + 10, cy + 12), hpa_text,
+					HORIZONTAL_ALIGNMENT_LEFT, -1,
+					GameConfig.get_font_size("popup_body"), hpa_color)
+				cy += 16.0
+
+			cy += 4.0
 
 	# ── Family ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_FAMILY"), "family")
