@@ -73,7 +73,7 @@ func _get_entity_id(entity) -> int:
 	if entity == null:
 		return -1
 	if "entity_id" in entity:
-		return int(entity.entity_id)
+		return int(entity.id)
 	if "id" in entity:
 		return int(entity.id)
 	return -1

@@ -50,7 +50,7 @@ func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
-		var eid: int = entity.entity_id
+		var eid: int = entity.id
 		var morale: float = calculate_personal_morale(entity)
 		_personal_morale[eid] = morale
 		tick_hedonic_treadmill(entity, morale)
@@ -106,7 +106,7 @@ func calculate_personal_morale(entity) -> float:
 	base += _calculate_warr_contributions(entity)
 
 	# Hedonic Treadmill 기대값 차감
-	var eid: int = entity.entity_id
+	var eid: int = entity.id
 	var expectation: float = _expectation_base.get(eid, 0.5)
 	base -= (expectation - 0.5) * 0.2
 
@@ -259,7 +259,7 @@ func get_behavior_weight_multiplier(entity_id: int) -> float:
 ## rate=0.002/tick: 현재 모랄의 0.2%씩 기대값 수렴.
 ## Reference: Brickman, P. & Campbell, D.T. (1971). In M.H. Appley (Ed.), Adaptation-level theory. Academic Press.
 func tick_hedonic_treadmill(entity, current_morale: float) -> void:
-	var eid: int = entity.entity_id
+	var eid: int = entity.id
 	var mcfg = _cfg.get("personal_morale", {})
 	var rate: float = float(mcfg.get("hedonic_treadmill_rate", 0.002))
 	var threshold: float = float(mcfg.get("hedonic_treadmill_threshold", 0.5))
@@ -353,7 +353,7 @@ func _aggregate_settlement_morales() -> void:
 			continue
 		if not by_settlement.has(sid):
 			by_settlement[sid] = {"morales": [], "leader_morale": -999.0}
-		var m: float = _personal_morale.get(entity.entity_id, 0.5)
+		var m: float = _personal_morale.get(entity.id, 0.5)
 		by_settlement[sid]["morales"].append(m)
 
 	var smcfg = _cfg.get("settlement_morale", {})

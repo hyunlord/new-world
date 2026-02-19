@@ -182,7 +182,7 @@ func _run_network_contagion(alive: Array, tick: int) -> void:
 		# 1-hop: direct settlement proximity
 		var hop1_donors: Array = []
 		for member in settlement_members:
-			if member.entity_id == recipient.entity_id:
+			if member.id == recipient.id:
 				continue
 			var dist = abs(member.position_x - recipient.position_x) + abs(member.position_y - recipient.position_y)
 			if dist <= NETWORK_HOP_RADIUS:
@@ -257,4 +257,4 @@ func _run_spiral_dampener(alive: Array, tick: int) -> void:
 					"stress": "%.0f" % ed.stress,
 					"valence": "%.1f" % ed.valence
 				})
-				chronicle.log_event("contagion_spiral", entity.entity_id, desc, 4, [], tick)
+				chronicle.log_event("contagion_spiral", entity.id, desc, 4, [], tick)
