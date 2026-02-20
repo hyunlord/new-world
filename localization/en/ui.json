@@ -792,6 +792,8 @@
   "UI_ACE_BACKFILL_ESTIMATED": "Estimated",
   "UI_PARENTAL_ORIGIN": "Parental Origin",
   "UI_HEXACO_CAP_MODIFIED": "Cap Modified",
+  "UI_MIN": "min",
+  "UI_MAX": "max",
   "UI_GENERATION_LABEL": "Gen {n}",
   "UI_AL_MAX_LABEL": "Load Ceiling"
 }

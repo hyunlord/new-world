@@ -792,6 +792,8 @@
   "UI_ACE_BACKFILL_ESTIMATED": "추정값",
   "UI_PARENTAL_ORIGIN": "부모 계보",
   "UI_HEXACO_CAP_MODIFIED": "한계 변형됨",
+  "UI_MIN": "최소",
+  "UI_MAX": "최대",
   "UI_GENERATION_LABEL": "{n}세대",
   "UI_AL_MAX_LABEL": "부하 상한선"
 }

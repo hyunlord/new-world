@@ -1011,6 +1011,21 @@ func _draw() -> void:
 				cy = _draw_bar(font, cx + 10, cy, bar_w,
 					Locale.ltr("UI_PANEL_EPIGENETIC"), epi_ratio, Color(0.6, 0.3, 0.8))
 
+			# ── Parental epigenetic lineage (Yehuda 2016 — attenuated transmission) ──
+			var father_epi: float = float(entity.get_meta("parent_epi_father", -1.0))
+			var mother_epi: float = float(entity.get_meta("parent_epi_mother", -1.0))
+			if father_epi >= 0.0 or mother_epi >= 0.0:
+				var lineage_parts: Array = []
+				if father_epi >= 0.0:
+					lineage_parts.append("♂ %.0f%%" % (father_epi * 100.0))
+				if mother_epi >= 0.0:
+					lineage_parts.append("♀ %.0f%%" % (mother_epi * 100.0))
+				var lineage_text: String = "%s: %s" % [Locale.ltr("UI_PARENTAL_ORIGIN"), ", ".join(lineage_parts)]
+				draw_string(font, Vector2(cx + 20, cy + 12), lineage_text,
+					HORIZONTAL_ALIGNMENT_LEFT, -1,
+					GameConfig.get_font_size("popup_body"), Color(0.55, 0.35, 0.75))
+				cy += 16.0
+
 			# ── HPA/Break multipliers (adults only) ──
 			var adulthood_applied = entity.get_meta("adulthood_applied", false)
 			if bool(adulthood_applied):
@@ -1026,6 +1041,38 @@ func _draw() -> void:
 					HORIZONTAL_ALIGNMENT_LEFT, -1,
 					GameConfig.get_font_size("popup_body"), hpa_color)
 				cy += 16.0
+
+				# ── HEXACO cap modifications (Teicher & Samson 2016 — permanent brain changes) ──
+				# Iterate entity meta for hexaco_cap_* keys and display each modification
+				if bool(adulthood_applied):
+					var cap_metas: Array = entity.get_meta_list()
+					var cap_lines: Array = []
+					for meta_key in cap_metas:
+						var key_str: String = str(meta_key)
+						if not key_str.begins_with("hexaco_cap_"):
+							continue
+						var facet_id: String = key_str.substr("hexaco_cap_".length())
+						var cap_data = entity.get_meta(meta_key, {})
+						if typeof(cap_data) != TYPE_DICTIONARY:
+							continue
+						var line_parts: Array = []
+						if cap_data.has("min"):
+							line_parts.append("%s +%.0f ▲" % [Locale.ltr("UI_MIN"), (float(cap_data.get("min", 0.0)) * 100.0)])
+						if cap_data.has("max"):
+							line_parts.append("%s -%.0f ▼" % [Locale.ltr("UI_MAX"), ((1.0 - float(cap_data.get("max", 1.0))) * 100.0)])
+						if not line_parts.is_empty():
+							cap_lines.append("  %s: %s" % [facet_id, ", ".join(line_parts)])
+					if not cap_lines.is_empty():
+						var cap_header: String = Locale.ltr("UI_HEXACO_CAP_MODIFIED")
+						draw_string(font, Vector2(cx + 10, cy + 12), cap_header,
+							HORIZONTAL_ALIGNMENT_LEFT, -1,
+							GameConfig.get_font_size("popup_body"), Color(0.9, 0.7, 0.3))
+						cy += 16.0
+						for cap_line in cap_lines:
+							draw_string(font, Vector2(cx + 10, cy + 12), cap_line,
+								HORIZONTAL_ALIGNMENT_LEFT, -1,
+								GameConfig.get_font_size("popup_body"), Color(0.7, 0.6, 0.4))
+							cy += 14.0
 
 			cy += 4.0
 
