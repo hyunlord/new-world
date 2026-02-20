@@ -163,3 +163,15 @@ func _apply_bandura_modeling(entity, childhood_data: Dictionary, _tick: int) -> 
 
 	childhood_data["coping_familiarity"] = familiarity
 	entity.set_meta("childhood_data", childhood_data)
+
+
+## [Felitti 1998 + Teicher & Samson 2016 - Adulthood transition public callback]
+## Called by external systems (stress_system, population_system) when entity age_stage
+## transitions to adult. Applies ACE modifiers, HEXACO caps, and attachment effects permanently.
+## Idempotent: no-ops if adulthood_applied meta is already set.
+func on_agent_reaches_adulthood(entity, tick: int) -> void:
+	if entity == null:
+		return
+	if bool(entity.get_meta("adulthood_applied", false)):
+		return
+	_apply_adulthood_transition(entity, tick)

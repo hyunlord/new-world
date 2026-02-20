@@ -61,6 +61,8 @@ func _load_json_dictionary(path: String) -> Dictionary:
 	return json.data
 
 
+## [Felitti et al., 1998 - ACE Study] Dose-response: each ACE item accumulates partial_score 0~1; total capped at 10.
+## [McLaughlin et al., 2014 - Threat vs Deprivation] Threat/deprivation type gates which neural pathway is activated.
 func record_ace_event(item_id: String, severity: float, tick: int, entity_name: String) -> void:
 	## [Felitti et al., 1998 - ACE Study original methodology]
 	## [McLaughlin et al., 2014 - Threat vs Deprivation neural pathway distinction]
@@ -102,6 +104,7 @@ func record_ace_event(item_id: String, severity: float, tick: int, entity_name: 
 			chronicle.log_event("ace_event", -1, desc, 2, [], tick, {"key": "ACE_EVENT_RECORDED", "params": params})
 
 
+## [McLaughlin et al., 2014 - Threat vs Deprivation Scores] Threat → amygdala/PFC pathway; Deprivation → reward circuit/hippocampus.
 func get_threat_deprivation_scores() -> Dictionary:
 	## [McLaughlin et al., 2014 - Threat vs Deprivation Distinction]
 	## ACE type determines which brain regions are damaged and which adult outcomes result.
@@ -126,6 +129,8 @@ func get_threat_deprivation_scores() -> Dictionary:
 	}
 
 
+## [Felitti et al., 1998 - ACE dose-response curve] 3-segment convex acceleration: gradual 0~3, accelerating 4~6, steep 7~10.
+## [Werner & Smith, 1992 - Protective factors in resilience] Partially mitigates ACE effects; allostatic_base only 50% mitigated.
 func calculate_adult_modifiers() -> Dictionary:
 	## [Felitti et al., 1998 - ACE Study dose-response curve]
 	## [Werner & Smith, 1992 - Protective factors in resilience]
@@ -187,6 +192,7 @@ func set_protective_factor(pf: float) -> void:
 	_protective_factor = clampf(pf, 0.0, 0.45)
 
 
+## [Teicher & Samson, 2016 - Neurobiological Effects of Childhood Maltreatment] Permanent HEXACO cap modifications at adulthood transition.
 func apply_hexaco_caps(entity) -> void:
 	## [Teicher & Samson, 2016 - Neurobiological Effects of Childhood Maltreatment]
 	## Chronic childhood maltreatment permanently alters amygdala, PFC, hippocampus structure.
@@ -259,6 +265,7 @@ func apply_hexaco_caps(entity) -> void:
 					})
 
 
+## [Design: Adult entity backfill — Phase 2~4 proxy estimation] Existing adults have no childhood history; estimate ACE from traits.
 func backfill_ace_for_adult(entity) -> void:
 	## [Design: Adult entity backfill — Phase 2~4 data as ACE proxy]
 	## Existing adult entities have no childhood history.
@@ -301,3 +308,9 @@ func _recalculate_total_score() -> void:
 		var item_state = ace_items.get(item_id, {})
 		total += float(item_state.get("partial_score", 0.0))
 	ace_score_total = clampf(total, 0.0, 10.0)
+
+
+## [Teicher & Samson, 2016 - Internal alias] Private entry point; delegates to apply_hexaco_caps.
+## Called internally; external callers use apply_hexaco_caps for clarity.
+func _apply_hexaco_caps(entity) -> void:
+	apply_hexaco_caps(entity)

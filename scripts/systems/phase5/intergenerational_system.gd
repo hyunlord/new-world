@@ -56,6 +56,8 @@ func execute_tick(tick: int) -> void:
 		check_generational_convergence(settlement.id, tick)
 
 
+## [Yehuda et al., 2016 - FKBP5 methylation] Transgenerational epigenetic inheritance; T=0.30 (dampened, not copied).
+## [Meaney, M.J., 2001 - Maternal care and offspring stress reactivity] Nurture > genetics as player lever (65% vs 35%).
 func calculate_child_epigenetic_load(mother, father, adversity_index: float) -> float:
 	## [Yehuda et al., 2016 - FKBP5 methylation / Transgenerational epigenetic inheritance]
 	## [Meaney, M.J., 2001 - Maternal care and offspring stress reactivity via epigenetic mechanisms]
@@ -127,6 +129,7 @@ func _scar_index(entity) -> float:
 	return clampf(float(trauma_scars.size()) / 5.0, 0.0, 1.0)
 
 
+## [Yehuda et al., 2016 - HPA axis sensitivity formula] Higher epigenetic load → heightened cortisol reactivity per stressor.
 func get_hpa_sensitivity(epigenetic_load: float) -> float:
 	## [Yehuda 2016 + epigenetic_config hpa_sensitivity_formula]
 	## Higher epigenetic load → heightened HPA axis reactivity → more stress gain per stressor.
@@ -134,6 +137,7 @@ func get_hpa_sensitivity(epigenetic_load: float) -> float:
 	return 1.0 + epigenetic_load * 0.6
 
 
+## [Meaney, M.J., 2001 - Licking/grooming model] High-quality nurturing can partially reverse epigenetic stress programming.
 func apply_meaney_repair(entity, parenting_quality: float, tick: int) -> void:
 	## [Meaney, M.J., 2001 - Maternal licking/grooming model]
 	## High-quality nurturing care can partially reverse epigenetic stress programming.
@@ -152,6 +156,7 @@ func apply_meaney_repair(entity, parenting_quality: float, tick: int) -> void:
 	entity.set_meta("epigenetic_load_effective", new_load)
 
 
+## [GPT Generational Stability - Fixed-point convergence] E* = (baseline + prenatal) / (1 - T); T=0.30 → stable at E*≈0.21.
 func check_generational_convergence(settlement_id: int, tick: int) -> void:
 	## [GPT Generational Stability Analysis — Fixed-point convergence theory]
 	## Simplified recursion: E_{n+1} = baseline + T*E_n + prenatal_env
