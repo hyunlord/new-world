@@ -301,5 +301,11 @@
   "REL_MOD_TRUST_REPAIR_MULT": "Trust Repair",
   "STATUS_HIDE": "Hiding",
   "STATUS_GRIEVE": "Grieving",
-  "STATUS_CONFRONT": "Confronting"
+  "STATUS_CONFRONT": "Confronting",
+  "STATUS_DRINK_WATER": "Drinking",
+  "STATUS_SIT_BY_FIRE": "Warming Up",
+  "STATUS_SEEK_SHELTER": "Seeking Shelter",
+  "STATUS_GATHER_STONE": "Gather Stone",
+  "STATUS_TAKE_FROM_STOCKPILE": "Taking",
+  "STATUS_MENTAL_BREAK": "Mental Break"
 }
