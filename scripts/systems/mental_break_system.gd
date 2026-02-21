@@ -104,6 +104,8 @@ func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 	threshold *= (1.0 - 0.25 * (ed.allostatic / 100.0))
 	threshold *= (0.85 + 0.15 * entity.energy)
 	threshold *= (0.85 + 0.15 * entity.hunger)
+	# Phase 5: ACE history permanently lowers break threshold (Teicher & Samson 2016)
+	threshold *= float(entity.get_meta("ace_break_threshold_mult", 1.0))
 	threshold = clampf(threshold, THRESHOLD_MIN, THRESHOLD_MAX)
 
 	# GAS Exhaustion 보정

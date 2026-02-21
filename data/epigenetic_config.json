@@ -1,0 +1,32 @@
+{
+  "transmission_rate_base": 0.30,
+  "transmission_rate_adversity_bonus": 0.10,
+  "transmission_rate_max": 0.40,
+  "maternal_weight": 0.65,
+  "paternal_weight": 0.35,
+  "mother_state_weights": {
+    "epigenetic_load_effective": 0.50,
+    "allostatic_load_normalized": 0.30,
+    "scar_index": 0.20
+  },
+  "father_state_weights": {
+    "epigenetic_load_effective": 0.60,
+    "allostatic_load_normalized": 0.25,
+    "scar_index": 0.15
+  },
+  "prenatal_weights": {
+    "pregnancy_avg_stress": 0.25,
+    "malnutrition_index": 0.10
+  },
+  "prenatal_max": 0.35,
+  "baseline": 0.05,
+  "hpa_sensitivity_formula": "1.0 + epigenetic_load * 0.6",
+  "meaney_repair_rate": 0.002,
+  "meaney_repair_threshold": 0.70,
+  "collapse_conditions": {
+    "adversity_threshold": 0.85,
+    "adversity_duration_years": 2,
+    "parenting_quality_threshold": 0.30,
+    "transmission_rate_boost": 0.05
+  }
+}

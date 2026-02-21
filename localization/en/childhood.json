@@ -1,0 +1,64 @@
+{
+  "STAGE_INFANT": "Infant",
+  "STAGE_TODDLER": "Toddler",
+  "STAGE_CHILD": "Child",
+  "STAGE_TEEN": "Teenager",
+
+  "BREAK_REGRESSION_CRY": "Developmental Regression",
+  "BREAK_TANTRUM_SPIRAL": "Tantrum Spiral",
+  "BREAK_SELECTIVE_MUTISM": "Selective Mutism",
+  "BREAK_DISSOCIATIVE_WITHDRAWAL": "Dissociative Withdrawal",
+  "BREAK_FAILURE_TO_THRIVE": "Failure to Thrive",
+  "BREAK_PSYCHOSOMATIC": "Psychosomatic Response",
+  "BREAK_LEARNED_HELPLESSNESS_CHILD": "Learned Helplessness",
+  "BREAK_SELF_HARM_IDEATION": "Self-Harm Ideation",
+  "BREAK_SUBSTANCE_SEEKING": "Substance Seeking",
+  "BREAK_SOCIAL_WITHDRAWAL_TEEN": "Social Withdrawal",
+
+  "ACE_PHYSICAL_ABUSE": "Physical Abuse",
+  "ACE_EMOTIONAL_ABUSE": "Emotional Abuse",
+  "ACE_SEXUAL_ABUSE": "Sexual Abuse",
+  "ACE_PHYSICAL_NEGLECT": "Physical Neglect",
+  "ACE_EMOTIONAL_NEGLECT": "Emotional Neglect",
+  "ACE_DOMESTIC_VIOLENCE": "Witnessed Domestic Violence",
+  "ACE_SUBSTANCE_HOUSEHOLD": "Household Substance Abuse",
+  "ACE_MENTAL_ILLNESS_HOUSEHOLD": "Household Mental Illness",
+  "ACE_PARENTAL_SEPARATION": "Parental Separation",
+  "ACE_INCARCERATION": "Caregiver Incarceration",
+
+  "ATTACHMENT_SECURE": "Secure Attachment",
+  "ATTACHMENT_ANXIOUS": "Anxious Attachment",
+  "ATTACHMENT_AVOIDANT": "Avoidant Attachment",
+  "ATTACHMENT_DISORGANIZED": "Disorganized Attachment",
+
+  "STRESS_TYPE_POSITIVE": "Positive Stress",
+  "STRESS_TYPE_TOLERABLE": "Tolerable Stress",
+  "STRESS_TYPE_TOXIC": "Toxic Stress",
+
+  "ACE_SCORE_LABEL": "Adverse Childhood Experiences",
+  "ACE_SCORE_LOW": "Low (0~3)",
+  "ACE_SCORE_MID": "Moderate (4~6)",
+  "ACE_SCORE_HIGH": "High (7~10)",
+
+  "EPI_LOAD_LABEL": "Epigenetic Load",
+  "EPI_LOAD_LOW": "Low",
+  "EPI_LOAD_MID": "Moderate",
+  "EPI_LOAD_HIGH": "High",
+
+  "PARENTING_QUALITY_LABEL": "Parenting Quality",
+  "PARENTING_CONSISTENCY_LABEL": "Parenting Consistency",
+
+  "ATTACHMENT_FORMED": "{name}'s attachment type has been determined: {type}",
+  "ACE_EVENT_RECORDED": "{name} experienced adversity: {ace_type}",
+  "ADULTHOOD_TRANSITION": "{name} has reached adulthood. Childhood experiences are permanently embedded.",
+  "HEXACO_CAP_MODIFIED": "Childhood adversity has permanently altered the potential of {facet}.",
+  "PROTECTIVE_FACTOR_ACTIVE": "Protective factors are partially mitigating the impact of adversity.",
+  "SHRP_OVERRIDE": "{name}'s infant stress buffer was breached by extreme threat.",
+  "TOXIC_STRESS_ONSET": "Exposed to severe stress without a caregiver present. Entering toxic stress pathway.",
+  "GENERATIONAL_CONVERGENCE": "Intergenerational trauma is converging toward a stable state.",
+  "GENERATIONAL_COLLAPSE_RISK": "Intergenerational trauma transmission is approaching collapse threshold.",
+
+  "ERR_CHILDHOOD_DATA_MISSING": "[Error] Childhood data missing: {agent_id}",
+  "ERR_ACE_ITEM_INVALID": "[Error] Invalid ACE item: {item_id}",
+  "ERR_STAGE_INVALID": "[Error] Invalid developmental stage: {stage}"
+}

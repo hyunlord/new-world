@@ -111,8 +111,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	# 5) 회복
 	var recovery: float = _calc_recovery(entity, ed, pd, is_sleeping, is_safe, breakdown)
 
-	# 6) 최종 업데이트
-	var delta: float = continuous_input + trace_input + emotion_input - recovery
+	# 6) 최종 업데이트 (Phase 5: ACE stress gain multiplier — Felitti 1998 dose-response)
+	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
+	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult - recovery
 	if absf(delta) < STRESS_EPSILON:
 		delta = 0.0
 
@@ -505,11 +506,6 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 
 	# 6) 최종 계산
 	var total_scale = personality_scale * relationship_scale * context_scale
-	# 6.5) 트라우마 흉터 민감도 배수 + 재활성화 체크
-	if _trauma_scar_system != null:
-		total_scale *= _trauma_scar_system.get_scar_stress_sensitivity(entity)
-		# event_id를 context_type으로 사용해 흉터 재활성화 체크
-		_trauma_scar_system.check_reactivation(entity, event_id, 0)
 	var final_instant = instant * total_scale * loss_mult
 	var final_per_tick = per_tick * total_scale * loss_mult
 
@@ -598,16 +594,14 @@ func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
 	for key in c_mods:
 		if context.get(key, false):
 			scale *= float(c_mods[key])
-	# Direct context_modifier override (e.g. age-stage scaling from mortality_system)
-	if context.has("context_modifier"):
-		scale *= float(context.get("context_modifier", 1.0))
 	return clampf(scale, 0.1, 5.0)
 
 
 func _entity_has_trait(entity, trait_id: String) -> bool:
-	if entity == null or not "trait_strengths" in entity:
-		return false
-	return float(entity.trait_strengths.get(trait_id, 0.0)) >= 0.10
+	for t in entity.display_traits:
+		if t.get("id", "") == trait_id:
+			return true
+	return false
 
 
 func _inject_emotions(ed, emo_inject: Dictionary, scale: float) -> void:

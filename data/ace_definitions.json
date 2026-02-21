@@ -1,0 +1,138 @@
+{
+  "physical_abuse": {
+    "id": "physical_abuse",
+    "name_key": "ACE_PHYSICAL_ABUSE",
+    "type": "threat",
+    "worldsim_triggers": ["assault_by_parent", "domestic_violence_victim", "physical_punishment_severe"],
+    "hexaco_cap_mods": {
+      "E_fearfulness": {"min_increase": 25},
+      "E_anxiety": {"min_increase": 20}
+    },
+    "break_probability_mods": {"panic": 1.4, "rage": 1.3},
+    "ace_weight": 1.0,
+    "cooldown_ticks": 168
+  },
+  "emotional_abuse": {
+    "id": "emotional_abuse",
+    "name_key": "ACE_EMOTIONAL_ABUSE",
+    "type": "threat",
+    "worldsim_triggers": ["humiliation_by_caregiver", "verbal_aggression_chronic", "rejection_by_caregiver"],
+    "hexaco_cap_mods": {
+      "C_prudence": {"max_decrease": 25},
+      "C_organization": {"max_decrease": 15},
+      "H_sincerity": {"max_decrease": 10}
+    },
+    "break_probability_mods": {"shutdown": 1.3, "paranoia": 1.4},
+    "ace_weight": 1.0,
+    "cooldown_ticks": 48
+  },
+  "sexual_abuse": {
+    "id": "sexual_abuse",
+    "name_key": "ACE_SEXUAL_ABUSE",
+    "type": "threat",
+    "worldsim_triggers": ["sexual_assault_child"],
+    "hexaco_cap_mods": {
+      "E_fearfulness": {"min_increase": 30},
+      "X_sociability": {"max_decrease": 30}
+    },
+    "break_probability_mods": {"dissociation": 2.0, "panic": 1.5, "shutdown": 1.5},
+    "ace_weight": 1.0,
+    "special": "always_toxic_stress",
+    "cooldown_ticks": 0
+  },
+  "physical_neglect": {
+    "id": "physical_neglect",
+    "name_key": "ACE_PHYSICAL_NEGLECT",
+    "type": "deprivation",
+    "worldsim_triggers": ["food_deprivation_chronic", "shelter_absence", "medical_neglect"],
+    "hexaco_cap_mods": {
+      "O_inquisitiveness": {"max_decrease": 15},
+      "X_sociability": {"max_decrease": 20}
+    },
+    "developmental_damage_rate": 0.025,
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0,
+    "shrp_bypass": true
+  },
+  "emotional_neglect": {
+    "id": "emotional_neglect",
+    "name_key": "ACE_EMOTIONAL_NEGLECT",
+    "type": "deprivation",
+    "worldsim_triggers": ["parenting_quality_below_threshold", "caregiver_absent_chronic", "caregiver_emotionally_unavailable"],
+    "hexaco_cap_mods": {
+      "X_sociability": {"max_decrease": 30},
+      "X_social_boldness": {"max_decrease": 20},
+      "E_sentimentality": {"max_decrease": 15}
+    },
+    "social_support_efficiency_penalty": 0.30,
+    "developmental_damage_rate": 0.020,
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0,
+    "shrp_bypass": true
+  },
+  "domestic_violence": {
+    "id": "domestic_violence",
+    "name_key": "ACE_DOMESTIC_VIOLENCE",
+    "type": "threat",
+    "worldsim_triggers": ["parent_assault_witnessed", "domestic_conflict_violent_witnessed"],
+    "hexaco_cap_mods": {
+      "C_prudence": {"max_decrease": 20},
+      "E_fearfulness": {"min_increase": 15}
+    },
+    "break_probability_mods": {"rage": 1.3, "panic": 1.4},
+    "ace_weight": 1.0,
+    "cooldown_ticks": 72
+  },
+  "substance_household": {
+    "id": "substance_household",
+    "name_key": "ACE_SUBSTANCE_HOUSEHOLD",
+    "type": "deprivation",
+    "worldsim_triggers": ["parent_has_substance_coping_dependency", "household_substance_resource_chronic"],
+    "hexaco_cap_mods": {
+      "C_prudence": {"max_decrease": 15},
+      "H_sincerity": {"max_decrease": 10}
+    },
+    "coping_modeling_bias": {"substance_use": 1.5, "behavioral_disengagement": 1.3},
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0
+  },
+  "mental_illness_household": {
+    "id": "mental_illness_household",
+    "name_key": "ACE_MENTAL_ILLNESS_HOUSEHOLD",
+    "type": "deprivation",
+    "worldsim_triggers": ["parent_in_chronic_mental_break", "parent_break_witnessed_repeatedly"],
+    "hexaco_cap_mods": {
+      "O_inquisitiveness": {"max_decrease": 10},
+      "E_anxiety": {"min_increase": 15}
+    },
+    "parent_transfer_multiplier": 1.3,
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0
+  },
+  "parental_separation": {
+    "id": "parental_separation",
+    "name_key": "ACE_PARENTAL_SEPARATION",
+    "type": "deprivation",
+    "worldsim_triggers": ["parent_death", "parent_permanent_departure", "family_dissolution"],
+    "stage_weight_mult": {"infant": 1.5, "toddler": 1.3, "child": 1.0, "teen": 0.75},
+    "replacement_window_days": {"infant": 14, "toddler": 30, "child": 60, "teen": 90},
+    "replacement_threshold_quality": 0.65,
+    "hexaco_cap_mods": {
+      "O_inquisitiveness": {"max_decrease": 20}
+    },
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0
+  },
+  "incarceration": {
+    "id": "incarceration",
+    "name_key": "ACE_INCARCERATION",
+    "type": "deprivation",
+    "worldsim_triggers": ["caregiver_imprisoned", "caregiver_exiled"],
+    "hexaco_cap_mods": {
+      "H_sincerity": {"max_decrease": 10},
+      "X_sociability": {"max_decrease": 15}
+    },
+    "ace_weight": 1.0,
+    "cooldown_ticks": 0
+  }
+}
