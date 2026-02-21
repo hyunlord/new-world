@@ -1549,3 +1549,30 @@ Q&A: T-2040 Codex 디스패치 티켓의 역사적 맥락에서 나온 Q&A. 핵�
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - Notion pages updated: 엔티티 디테일 패널 시스템
+
+## T-QA8 — 스트레스 시스템 i18n 연동 원칙 문서화
+
+### Context
+스트레스 Phase 1/2 구현 프롬프트에 i18n TICKET-6 추가 확인. 구현 완료된 Locale 키 패턴을 Notion 감정 & 스트레스 시스템 문서에 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA8 | StressSystem/MentalBreakSystem i18n 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | block[37] 다음: STRESS_STATE_*/GAS_STAGE_*/STRESSOR_*/STRESS_EMO_* Locale 패턴 bullet |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem | 추가 | block[50] 다음: MENTAL_BREAK_TYPE_*/SEVERITY_*/CHRONICLE_*/SHAKEN Locale 패턴 + tr_data() 패턴 bullet |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none (이미 ui.json에 전부 등록 완료)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
