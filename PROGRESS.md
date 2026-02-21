@@ -1410,5 +1410,7 @@ opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
 ### Results
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
-- 핵심 발견: trait_definitions.json 실제 187개, 초기 설계 68개 기술 outdated
-- Notion pages updated: 🧬 트레이트 시스템
+- 핵심 발견: trait_definitions.json 실제 187개 (f=48, c=124, d=15) — 3개 파일 모두 동일
+- Notion 상태: 🧠 성격 시스템 (HEXACO) 페이지 이미 187개로 정확히 기술됨 — **업데이트 불필요**
+  - Block callout: "facet 48 + composite 124 + dark 15 = 187개" 이미 존재
+  - Q&A 답변이 불확실했을 뿐, 코드·문서 모두 이미 정확함
