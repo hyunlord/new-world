@@ -1,7 +1,7 @@
 ## [Schwartz 1992, Axelrod 1997, Kohlberg 1969, Festinger 1957, Erikson 1950]
 ## 가치관 시스템 — 33개 가치관의 형성, 변화, 충돌 해소
 ## 참조: const ValueSystem = preload("res://scripts/systems/value_system.gd")
-extends RefCounted
+extends "res://scripts/core/simulation_system.gd"
 
 const ValueDefs = preload("res://scripts/core/value_defs.gd")
 
@@ -48,22 +48,15 @@ static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
 
 ## SimulationEngine 등록용 — 시스템 초기화
 func init(entity_manager) -> void:
+	system_name = "value_system"
+	priority = 55
+	tick_interval = 200
 	_entity_manager = entity_manager
 	_rng.randomize()
 
 
-## SimulationEngine 등록용 — 실행 우선순위 (family_system=52 다음)
-func get_priority() -> int:
-	return 55
-
-
-## SimulationEngine 등록용 — tick 200마다 실행
-func get_tick_interval() -> int:
-	return 200
-
-
 ## tick마다 호출: Kohlberg 진급 + peer influence 1회
-func update(_delta: float) -> void:
+func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
 	var entities: Array = _entity_manager.get_all_alive()
