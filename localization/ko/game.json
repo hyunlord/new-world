@@ -301,5 +301,11 @@
   "REL_MOD_TRUST_REPAIR_MULT": "신뢰 회복",
   "STATUS_HIDE": "은신",
   "STATUS_GRIEVE": "애도",
-  "STATUS_CONFRONT": "대치"
+  "STATUS_CONFRONT": "대치",
+  "STATUS_DRINK_WATER": "물 마시는 중",
+  "STATUS_SIT_BY_FIRE": "불 옆에서 쉬는 중",
+  "STATUS_SEEK_SHELTER": "쉼터 찾는 중",
+  "STATUS_GATHER_STONE": "석재 채집",
+  "STATUS_TAKE_FROM_STOCKPILE": "재고에서 가져오는 중",
+  "STATUS_MENTAL_BREAK": "정신 붕괴"
 }

@@ -284,8 +284,8 @@ func _build_entity_panel() -> void:
 	_entity_name_label = _make_label(Locale.ltr("UI_NAME"), "panel_title")
 	_entity_job_label = _make_label(Locale.ltr("UI_JOB"), "panel_body")
 	_entity_info_label = _make_label("", "panel_body", Color(0.7, 0.7, 0.7))
-	_entity_action_label = _make_label(Locale.ltr("UI_ACTION") + ": idle", "panel_body")
-	_entity_inventory_label = _make_label("Inv: empty", "panel_body")
+	_entity_action_label = _make_label(Locale.ltr("UI_ACTION") + ": " + Locale.tr_id("STATUS", "idle"), "panel_body")
+	_entity_inventory_label = _make_label(Locale.ltr("UI_INVENTORY") + ": " + Locale.ltr("UI_NONE"), "panel_body")
 
 	vbox.add_child(_entity_name_label)
 	vbox.add_child(_entity_job_label)
