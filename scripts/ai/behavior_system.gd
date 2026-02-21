@@ -102,6 +102,8 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		}
 		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
 			child_scores["gather_wood"] = (0.3 + _rng.randf() * 0.1) * 0.3
+		child_scores["seek_shelter"] = _urgency_curve(1.0 - entity.warmth) * 0.9 \
+			+ _urgency_curve(1.0 - entity.safety) * 0.6
 		return child_scores
 
 	var scores: Dictionary = {
@@ -205,6 +207,34 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	## [Boredom] Apply repetition penalty before hysteresis.
 	for action in scores.keys():
 		scores[action] *= _calc_boredom_penalty(entity, action)
+
+	# [Emotion-driven actions — Plutchik (1980) Basic Emotion Model]
+	# fear → hide (withdraw from threat), sadness → grieve (isolation),
+	# anger → confront (approach threat). Threshold 40/100 on Plutchik scale.
+	# Adults and elders only: complex emotional coping behaviors.
+	if entity.emotion_data != null and (stage == "adult" or stage == "elder"):
+		var fear_val: float = entity.emotion_data.get_emotion("fear")
+		if fear_val > 40.0:
+			scores["hide"] = (fear_val / 100.0) * 2.5
+		var sadness_val: float = entity.emotion_data.get_emotion("sadness")
+		if sadness_val > 40.0:
+			scores["grieve"] = (sadness_val / 100.0) * 2.0
+		var anger_val: float = entity.emotion_data.get_emotion("anger")
+		if anger_val > 40.0:
+			scores["confront"] = (anger_val / 100.0) * 2.0
+
+	## [Maslow (1943) L1 — 갈증 urgency]
+	var thirst_deficit: float = 1.0 - entity.thirst
+	scores["drink_water"] = _urgency_curve(thirst_deficit) * 1.4
+
+	## [Cannon (1932) 항상성 — 체온 urgency]
+	var warmth_deficit: float = 1.0 - entity.warmth
+	scores["sit_by_fire"] = _urgency_curve(warmth_deficit) * 1.3
+
+	## [Maslow (1943) L2 — 안전 urgency + 체온 urgency 합산]
+	var safety_deficit: float = 1.0 - entity.safety
+	scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 1.1 \
+		+ _urgency_curve(safety_deficit) * 0.8
 
 	return scores
 
@@ -379,6 +409,47 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			else:
 				entity.action_target = entity.position
 			entity.action_timer = 15
+		"hide":
+			## [Plutchik fear response] Stay in current position; avoid movement.
+			entity.action_target = entity.position
+			entity.action_timer = 15
+		"grieve":
+			## [Plutchik sadness response] Remain isolated in current position.
+			entity.action_target = entity.position
+			entity.action_timer = 12
+		"confront":
+			## [Plutchik anger response] Move toward nearest entity.
+			entity.action_target = _find_nearest_entity(entity)
+			entity.action_timer = 8
+		## [Maslow (1943) L1 — 갈증 해소]
+		## 인근 water 타일로 이동, 없으면 현위치 유지.
+		## 실제 thirst 회복은 movement_system._apply_arrival_effect()에서 처리.
+		"drink_water":
+			var water_pos: Vector2i = _find_nearest_water_tile(entity.position, 15)
+			entity.action_target = water_pos if water_pos != Vector2i(-1, -1) \
+				else entity.position
+			entity.action_timer = 10
+		## [Cannon (1932) 항상성 — 체온 회복]
+		## 인근 campfire로 이동. 없으면 인근 shelter, 없으면 현위치.
+		## 체류 중 회복은 building_effect_system에서 처리.
+		"sit_by_fire":
+			var fire_pos: Vector2i = _find_nearest_campfire(entity)
+			if fire_pos != Vector2i(-1, -1):
+				entity.action_target = fire_pos
+			else:
+				var shelter_pos: Vector2i = _find_nearest_shelter_building(entity)
+				entity.action_target = shelter_pos if shelter_pos != Vector2i(-1, -1) \
+					else entity.position
+			entity.action_timer = 20
+		## [Maslow (1943) L2 — 안전 확보]
+		## 인근 shelter로 이동. 없으면 현위치.
+		## 진입 즉시 safety 소폭 회복 (안도감).
+		"seek_shelter":
+			var nearest_shelter_pos: Vector2i = _find_nearest_shelter_building(entity)
+			entity.action_target = nearest_shelter_pos if nearest_shelter_pos != Vector2i(-1, -1) \
+				else entity.position
+			entity.action_timer = 15
+			entity.safety = minf(1.0, entity.safety + 0.05)
 
 	emit_event("action_chosen", {
 		"entity_id": entity.id,
@@ -436,6 +507,68 @@ func _find_nearest_entity(entity: RefCounted) -> Vector2i:
 	if best_dist == 999999:
 		return _find_random_walkable_nearby(entity.position, 5)
 	return best_pos
+
+
+## [Maslow (1943) L1] 가장 가까운 water 타일 탐색 (deep/shallow water biome)
+func _find_nearest_water_tile(pos: Vector2i, radius: int) -> Vector2i:
+	if _world_data == null:
+		return Vector2i(-1, -1)
+	var best: Vector2i = Vector2i(-1, -1)
+	var best_dist: int = radius * radius + 1
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			var nx: int = pos.x + dx
+			var ny: int = pos.y + dy
+			if not _world_data.is_valid(nx, ny):
+				continue
+			var biome: int = _world_data.get_biome(nx, ny)
+			if biome == GameConfig.Biome.DEEP_WATER or biome == GameConfig.Biome.SHALLOW_WATER:
+				var dist: int = dx * dx + dy * dy
+				if dist < best_dist:
+					best_dist = dist
+					best = Vector2i(nx, ny)
+	return best
+
+
+## [Cannon (1932)] 가장 가까운 campfire 건물 위치 탐색
+func _find_nearest_campfire(entity: RefCounted) -> Vector2i:
+	if _building_manager == null:
+		return Vector2i(-1, -1)
+	var campfires: Array = []
+	if _building_manager.has_method("get_buildings_by_type"):
+		campfires = _building_manager.get_buildings_by_type("campfire")
+	else:
+		var all_buildings: Array = _building_manager.get_all_buildings()
+		for i in range(all_buildings.size()):
+			var building: RefCounted = all_buildings[i]
+			if building.building_type == "campfire":
+				campfires.append(building)
+	var best: Vector2i = Vector2i(-1, -1)
+	var best_dist: int = 999999
+	for i in range(campfires.size()):
+		var b: RefCounted = campfires[i]
+		if not b.is_built:
+			continue
+		var dx: int = b.tile_x - entity.position.x
+		var dy: int = b.tile_y - entity.position.y
+		var dist: int = dx * dx + dy * dy
+		if dist < best_dist:
+			best_dist = dist
+			best = Vector2i(b.tile_x, b.tile_y)
+	return best
+
+
+## [Maslow (1943) L2] 가장 가까운 shelter 건물 위치 탐색
+func _find_nearest_shelter_building(entity: RefCounted) -> Vector2i:
+	if _building_manager == null:
+		return Vector2i(-1, -1)
+	var sid: int = entity.settlement_id
+	var shelter: RefCounted = _find_nearest_building_in_settlement(
+		entity.position, "shelter", sid, true
+	)
+	if shelter != null:
+		return Vector2i(shelter.tile_x, shelter.tile_y)
+	return Vector2i(-1, -1)
 
 
 ## ─── Resource Finders ────────────────────────────────────

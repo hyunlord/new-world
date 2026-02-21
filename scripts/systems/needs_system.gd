@@ -3,6 +3,8 @@ extends "res://scripts/core/simulation_system.gd"
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _mortality_system: RefCounted
+var _world_data: RefCounted = null
+var _stress_system = null
 
 
 func _init() -> void:
@@ -12,9 +14,10 @@ func _init() -> void:
 
 
 ## Initialize with entity/building manager references
-func init(entity_manager: RefCounted, building_manager: RefCounted) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
+	_world_data = world_data
 
 
 func execute_tick(tick: int) -> void:
@@ -27,6 +30,37 @@ func execute_tick(tick: int) -> void:
 		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
 		entity.energy -= GameConfig.ENERGY_DECAY_RATE
 		entity.social -= GameConfig.SOCIAL_DECAY_RATE
+		var tile_temp: float = GameConfig.WARMTH_TEMP_NEUTRAL
+		var has_tile_temp: bool = false
+		if _world_data != null:
+			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
+			has_tile_temp = true
+
+		## [Maslow (1943) L1 — 갈증 소모]
+		## 기본 소모 + 더운 타일에서 가속 (최대 2배)
+		var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
+		if has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
+			thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
+		entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
+
+		## [Cannon (1932) 항상성 — 체온 소모]
+		## 중립 온도(0.5) 이상이면 소모 없음, 추울수록 가속
+		var warmth_decay: float = 0.0
+		if has_tile_temp:
+			if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
+				if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
+					warmth_decay = GameConfig.WARMTH_DECAY_RATE * 5.0
+				elif tile_temp < GameConfig.WARMTH_TEMP_COLD:
+					warmth_decay = GameConfig.WARMTH_DECAY_RATE * 3.0
+				else:
+					var cold_ratio: float = (GameConfig.WARMTH_TEMP_NEUTRAL - tile_temp) / (GameConfig.WARMTH_TEMP_NEUTRAL - GameConfig.WARMTH_TEMP_COLD)
+					warmth_decay = GameConfig.WARMTH_DECAY_RATE * (1.0 + cold_ratio * 2.0)
+		else:
+			warmth_decay = GameConfig.WARMTH_DECAY_RATE
+		entity.warmth = maxf(0.0, entity.warmth - warmth_decay)
+
+		## [Maslow (1943) L2 — 안전감 소모]
+		entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
 		# Extra energy cost when performing actions
 		if entity.current_action != "idle" and entity.current_action != "rest":
@@ -50,6 +84,30 @@ func execute_tick(tick: int) -> void:
 				entity.hunger = maxf(entity.hunger, 0.05)
 		entity.energy = clampf(entity.energy, 0.0, 1.0)
 		entity.social = clampf(entity.social, 0.0, 1.0)
+		entity.thirst = clampf(entity.thirst, 0.0, 1.0)
+		entity.warmth = clampf(entity.warmth, 0.0, 1.0)
+		entity.safety = clampf(entity.safety, 0.0, 1.0)
+
+		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
+		if entity.emotion_data != null:
+			if entity.thirst < GameConfig.THIRST_CRITICAL:
+				var sev_thirst: float = 1.0 - (entity.thirst / GameConfig.THIRST_CRITICAL)
+				if _stress_system != null:
+					_stress_system.inject_stress_event(entity.emotion_data, "dehydration", 3.0 * sev_thirst)
+				else:
+					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 3.0 * sev_thirst, 0.0, 100.0)
+			if entity.warmth < GameConfig.WARMTH_CRITICAL:
+				var sev_warmth: float = 1.0 - (entity.warmth / GameConfig.WARMTH_CRITICAL)
+				if _stress_system != null:
+					_stress_system.inject_stress_event(entity.emotion_data, "hypothermia", 4.0 * sev_warmth)
+				else:
+					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 4.0 * sev_warmth, 0.0, 100.0)
+			if entity.safety < GameConfig.SAFETY_CRITICAL:
+				var sev_safety: float = 1.0 - (entity.safety / GameConfig.SAFETY_CRITICAL)
+				if _stress_system != null:
+					_stress_system.inject_stress_event(entity.emotion_data, "constant_threat", 2.0 * sev_safety)
+				else:
+					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 2.0 * sev_safety, 0.0, 100.0)
 
 		# Starvation check with grace period (children get longer grace)
 		if entity.hunger <= 0.0:

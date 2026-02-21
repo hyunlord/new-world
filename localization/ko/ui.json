@@ -795,5 +795,14 @@
   "UI_MIN": "최소",
   "UI_MAX": "최대",
   "UI_GENERATION_LABEL": "{n}세대",
-  "UI_AL_MAX_LABEL": "부하 상한선"
+  "UI_AL_MAX_LABEL": "부하 상한선",
+  "STATUS_HIDE": "은신",
+  "STATUS_GRIEVE": "애도",
+  "STATUS_CONFRONT": "대치",
+  "NEED_THIRST": "갈증",
+  "NEED_WARMTH": "체온",
+  "NEED_SAFETY": "안전",
+  "ACTION_DRINK_WATER": "물 마시기",
+  "ACTION_SIT_BY_FIRE": "불 쬐기",
+  "ACTION_SEEK_SHELTER": "피신"
 }

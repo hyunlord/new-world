@@ -140,7 +140,7 @@ func _ready() -> void:
 	job_assignment_system.init(entity_manager, building_manager)
 
 	needs_system = NeedsSystem.new()
-	needs_system.init(entity_manager, building_manager)
+	needs_system.init(entity_manager, building_manager, world_data)
 
 	childcare_system = ChildcareSystem.new()
 	childcare_system.init(entity_manager, building_manager, settlement_manager)

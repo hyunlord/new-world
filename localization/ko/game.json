@@ -298,5 +298,8 @@
   "REL_MOD_SOCIAL_ENERGY_COST_MULT": "사회적 에너지 비용",
   "REL_MOD_STATUS_SEEKING_MULT": "지위 추구",
   "REL_MOD_SUSPICION_GAIN_MULT": "의심 획득",
-  "REL_MOD_TRUST_REPAIR_MULT": "신뢰 회복"
+  "REL_MOD_TRUST_REPAIR_MULT": "신뢰 회복",
+  "STATUS_HIDE": "은신",
+  "STATUS_GRIEVE": "애도",
+  "STATUS_CONFRONT": "대치"
 }

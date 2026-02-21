@@ -9,6 +9,12 @@ var is_alive: bool = true
 var hunger: float = 1.0
 var energy: float = 1.0
 var social: float = 1.0
+## [Maslow (1943) L1] 갈증 — 수분 부족 상태 (1.0=충족, 0.0=탈수)
+var thirst: float = 0.85
+## [Cannon (1932) 항상성] 체온 — 정상 체온 유지 상태 (1.0=정상, 0.0=저체온)
+var warmth: float = 0.90
+## [Maslow (1943) L2] 안전감 — 위협으로부터의 안전 인식 (1.0=안전, 0.0=위험)
+var safety: float = 0.60
 
 ## Attributes
 var age: int = 0
@@ -145,6 +151,9 @@ func to_dict() -> Dictionary:
 		"hunger": hunger,
 		"energy": energy,
 		"social": social,
+		"thirst": thirst,
+		"warmth": warmth,
+		"safety": safety,
 		"age": age,
 		"speed": speed,
 		"strength": strength,
@@ -189,6 +198,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.hunger = data.get("hunger", 1.0)
 	e.energy = data.get("energy", 1.0)
 	e.social = data.get("social", 1.0)
+	e.thirst = data.get("thirst", 0.85)
+	e.warmth = data.get("warmth", 0.90)
+	e.safety = data.get("safety", 0.60)
 	e.age = data.get("age", 0)
 	e.speed = data.get("speed", 1.0)
 	e.strength = data.get("strength", 1.0)

@@ -184,6 +184,17 @@ func _apply_arrival_effect(entity: RefCounted, tick: int) -> void:
 			_deliver_to_stockpile(entity, tick)
 		"take_from_stockpile":
 			_take_from_stockpile(entity, tick)
+		"drink_water":
+			entity.thirst = minf(entity.thirst + GameConfig.THIRST_DRINK_RESTORE, 1.0)
+			entity.action_timer = 0
+			emit_event("entity_drank", {
+				"entity_id": entity.id,
+				"entity_name": entity.entity_name,
+				"thirst_after": entity.thirst,
+				"tick": tick,
+			})
+		"sit_by_fire", "seek_shelter":
+			pass
 		"gather_wood", "gather_stone", "build", "wander":
 			pass
 

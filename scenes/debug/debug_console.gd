@@ -278,6 +278,10 @@ func _register_all_commands() -> void:
 		"test_hysteresis": Callable(self, "_cmd_test_hysteresis"),
 		"test_social": Callable(self, "_cmd_test_social"),
 		"test_boredom": Callable(self, "_cmd_test_boredom"),
+		"test_fear": Callable(self, "_cmd_test_fear"),
+		"test_sadness": Callable(self, "_cmd_test_sadness"),
+		"test_anger": Callable(self, "_cmd_test_anger"),
+		"debug_emotions": Callable(self, "_cmd_debug_emotions"),
 	}
 
 
@@ -714,6 +718,11 @@ func _cmd_help(args: Dictionary) -> void:
 		print_output("  test_epigenetic <mother_id> <father_id>")
 		print_output("  test_attachment <agent_id>")
 		print_output("  test_simultaneous_ace <agent_id>")
+		print_output("  ── Behavior Emotion Debug ──")
+		print_output("  test_fear <agent_id>")
+		print_output("  test_sadness <agent_id>")
+		print_output("  test_anger <agent_id>")
+		print_output("  debug_emotions <agent_id>")
 		print_output("  help [cmd]")
 		return
 
@@ -768,6 +777,14 @@ func _cmd_help(args: Dictionary) -> void:
 			print_output("test_attachment <agent_id>  — preview attachment type from current caregiver data")
 		"test_simultaneous_ace":
 			print_output("test_simultaneous_ace <agent_id>  — inject 2 ACE events, show kindling + saturation")
+		"test_fear":
+			print_output("test_fear <agent_id>  — force fear=80, verify hide action selected")
+		"test_sadness":
+			print_output("test_sadness <agent_id>  — force sadness=80, verify grieve action selected")
+		"test_anger":
+			print_output("test_anger <agent_id>  — force anger=80, verify confront action + target")
+		"debug_emotions":
+			print_output("debug_emotions <agent_id>  — show all 8 Plutchik emotions, threshold, P4 trigger summary")
 		_:
 			print_output("No detailed help for: " + topic, Color.RED)
 
@@ -899,3 +916,27 @@ func _cmd_test_boredom(args: Dictionary) -> void:
 	if _debug_commands == null:
 		return
 	_debug_commands.cmd_test_boredom(args)
+
+
+func _cmd_test_fear(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_fear(args)
+
+
+func _cmd_test_sadness(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_sadness(args)
+
+
+func _cmd_test_anger(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_anger(args)
+
+
+func _cmd_debug_emotions(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_debug_emotions(args)

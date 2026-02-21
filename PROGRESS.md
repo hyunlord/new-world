@@ -1,5 +1,34 @@
 # Progress Log
 
+## Behavior System P4: 감정 기반 행동 (hide/grieve/confront) — 2026-02-21
+
+### Context
+behavior_system.gd에 P4 감정 행동이 이미 구현됨 (git diff 상태). localization 키만 누락.
+STATUS_HIDE/GRIEVE/CONFRONT: Locale.tr_id("STATUS", action) 패턴 → STATUS_{ACTION_UPPER} 형식.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-B | behavior_system.gd 감정 스코어 + 행동 분기 | 🔴 DIRECT | — | 이미 구현됨 (working tree) |
+| TICKET-L1 | localization/ko+en/ui.json STATUS_HIDE/GRIEVE/CONFRONT 추가 | 🟢 DISPATCH | ask_codex | 2파일 localization 변경 |
+
+### Dispatch ratio: 1/2 = 50% (TICKET-B는 이미 구현 상태)
+**참고**: TICKET-B는 이미 구현되어 있으므로 실질 디스패치 가능 작업 1/1 = 100%
+
+### Dispatch strategy
+TICKET-B (already done) → TICKET-L1 dispatch via ask_codex
+
+### Results
+- Gate: PASS ✅
+- Dispatch tool: ask_codex (TICKET-L1)
+- Files changed: localization/ko/ui.json + localization/en/ui.json
+- Key deliverables:
+  - STATUS_HIDE (은신/Hiding), STATUS_GRIEVE (애도/Grieving), STATUS_CONFRONT (대치/Confronting)
+  - behavior_system.gd P4 감정 행동 (hide/grieve/confront) — 이미 구현됨
+- Verification: hide/grieve/confront 스코어 ✅ | _assign_action() 분기 ✅ | null 체크 ✅ | adult/elder 조건 ✅ | 한글 하드코딩 0건 ✅
+
+---
+
 ## Phase 5: 아동 스트레스 파이프라인 / ACE / 세대 간 전달 / 애착 — 2026-02-20
 
 ### Context
@@ -699,5 +728,151 @@ WorldSim Phase 4 — Lazarus & Folkman 기반 Coping Trait System (15전략 2단
 - Most tickets were pre-implemented from previous sessions — Codex verified and confirmed
 - t-fix-1 implemented directly: emotion_system.gd Scene Tree pattern + indentation fix
 - Dispatch ratio: 15/15 = 100% ✅ (12 Codex dispatches + 3 already-done verifications)
+
+---
+
+## P4 Debug Commands (test_fear/sadness/anger, debug_emotions) — 2026-02-21
+
+### Context
+P4 감정 행동(hide/grieve/confront) 검증을 위한 인게임 디버그 명령어 4개 추가.
+debug_commands.gd에 이미 구현되어 있음을 확인 (45bc997 커밋 포함).
+game.json localization 키 누락분 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-D1 | debug_commands.gd 4개 명령어 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 구현 |
+| P4-D2 | en/game.json + ko/game.json STATUS_ 키 | 🔴 DIRECT | — | 이미 working tree에 존재 |
+
+### Dispatch ratio: 1/2 = 50% (P4-D2는 이미 구현, 실질 가능 1/1 = 100%)
+
+### Results
+- Gate: PASS ✅ (gate worktree)
+- Commit: 32457e3
+- Dispatch tool: ask_codex (job bdc573f4)
+- Files changed: 4 (debug_commands.gd, en/game.json, ko/game.json, CLAUDE.md)
+- Commands added: test_fear, test_sadness, test_anger, debug_emotions
+- Output: 인게임 콘솔 + log file 동시 기록 (_print 패턴)
+
+---
+
+## P4 hide 행동 미작동 수정 — 2026-02-21
+
+### Context
+hide/grieve/confront 스코어가 gather_food(max 1.5)보다 낮아 굶주린 엔티티가 절대 hide 불가.
+- 원인: fear=80 → hide=0.96 < gather_food=1.0(기아 override) < 1.5(gatherer 직업)
+- 수정: 멀티플라이어 ×1.2/0.9/0.8 → ×2.5/2.0/2.0
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-FIX | behavior_system.gd 3줄 멀티플라이어 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 0aa1267
+- Dispatch tool: ask_codex (job 03554c0e)
+- Files changed: 1 (behavior_system.gd lines 216, 219, 222)
+- fear=80 → hide=2.0, sadness=80 → grieve=1.6, anger=80 → confront=1.6
+
+---
+
+## emotion fast half-life 수정 — 2026-02-21
+
+### Context
+fast_half_life_hours 값이 game-day 단위였는데 너무 작아 90% 감쇠/day 발생.
+fear=80 주입 후 EmotionSystem 1 tick 만에 → 7.9 (P4 임계값 40 미달).
+단위 불일치: dt_hours = 1.0 (실제로는 1 game-day), hl=0.3 game-days → 90% decay.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-HL | decay_parameters.json fast_half_life 값 수정 | 🟢 DISPATCH | ask_codex | 단일 JSON 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 67b37f9
+- Dispatch tool: ask_codex (job 128ab334)
+- Files changed: 1 (data/species/human/emotions/decay_parameters.json)
+- fear: 0.3→2.0, anger: 0.4→1.5, sadness: 0.5→4.0
+- 수정 후: fear=80 → 1 game-day 후 56.5 (> 40 유지) ✅
+
+---
+
+---
+
+## 욕구 확장 Phase 1 — thirst / warmth / safety — T-P1-1~9
+
+### Context
+욕구 3종(hunger/energy/social) → 6종으로 확장. Maslow L1(수분/체온) + L2(안전).
+에이전트가 물 찾고, 추위에 불/shelter로 이동하는 행동 패턴 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-P1-1 | game_config.gd 상수 추가 | 🟢 DISPATCH | ask_codex | standalone constants |
+| T-P1-2 | entity_data.gd 필드 추가 | 🟢 DISPATCH | ask_codex | standalone field additions |
+| T-P1-3 | localization ko/en 키 추가 | 🟢 DISPATCH | ask_codex | standalone i18n |
+| T-P1-4 | needs_system.gd decay+stress | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-5 | behavior_system.gd 점수+분기 | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-6 | building_effect_system.gd 회복 | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-7 | movement_system.gd drink_water | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-8 | stressor_events.json 추가 | 🟢 DISPATCH | ask_codex | standalone data |
+| T-P1-9 | main.gd world_data 연결 | 🔴 DIRECT | — | integration wiring <10 lines |
+
+### Dispatch ratio: 8/9 = 89% ✅ (target: ≥60%)
+
+### Dispatch strategy
+Phase A (병렬): T-P1-1, T-P1-2, T-P1-3 — 독립, 의존성 없음
+Phase B (병렬, A 완료 후): T-P1-4, T-P1-5, T-P1-6, T-P1-7, T-P1-8 — GameConfig 상수 필요
+Phase C (DIRECT): T-P1-9 main.gd needs_system.init()에 world_data 추가
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 8/9 = 89% ✅
+- Dispatch tool: ask_codex (8 tickets)
+- Files changed: game_config.gd, entity_data.gd, localization/ko+en/ui.json, needs_system.gd, behavior_system.gd, building_effect_system.gd, movement_system.gd, data/stressor_events.json, scenes/main/main.gd
+- Key deliverables:
+  - GameConfig: THIRST_*/WARMTH_*/SAFETY_* 상수 16개 추가
+  - EntityData: thirst/warmth/safety 필드 (초기값 0.85/0.90/0.60) + to_dict/from_dict 직렬화
+  - NeedsSystem: 욕구 3종 decay (온도 기반 modifier 포함) + stressor inject
+  - BehaviorSystem: drink_water/sit_by_fire/seek_shelter urgency 점수 + _assign_action() 분기
+  - BuildingEffectSystem: campfire warmth 회복, shelter warmth+safety 회복
+  - MovementSystem: drink_water 도착 시 thirst 회복 + entity_drank 이벤트
+  - stressor_events.json: dehydration/hypothermia/constant_threat 3종 추가
+  - main.gd: needs_system.init()에 world_data 파라미터 추가
+
+---
+
+## 욕구 UI 확장 — thirst/warmth/safety 바 추가 — T-UI-1, T-UI-2
+
+### Context
+Phase 1에서 thirst/warmth/safety 욕구를 추가했으나 UI에 미반영.
+entity_detail_panel (커스텀 드로우) + hud (사이드 패널 ProgressBar) 두 곳 업데이트.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-UI-1 | entity_detail_panel.gd — EntitySnapshot + _draw_section | 🟢 DISPATCH | ask_codex | standalone single-file UI |
+| T-UI-2 | hud.gd — 변수 선언 + 바 생성 + 업데이트 로직 | 🟢 DISPATCH | ask_codex | standalone single-file UI |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬: T-UI-1, T-UI-2 — 파일 겹침 없음
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100% ✅
+- Dispatch tool: ask_codex (2 tickets)
+- Files changed: scripts/ui/entity_detail_panel.gd, scripts/ui/hud.gd
+- Key deliverables:
+  - entity_detail_panel: EntitySnapshot thirst/warmth/safety 필드 + _draw_section 6개 바 (hunger→thirst→energy→warmth→safety→social)
+  - hud.gd: _thirst/_warmth/_safety 변수 선언 + ProgressBar 생성 + 업데이트 로직
+  - 색상: thirst 하늘색 #64B5F6 / warmth 주황색 #FF8A65 / safety 보라색 #9575CD
 
 ---

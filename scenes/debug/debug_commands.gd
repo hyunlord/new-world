@@ -1266,3 +1266,219 @@ func cmd_test_boredom(args: Dictionary) -> void:
 			"  " + str(action) + " : " + "%.3f" % penalty + marker,
 			Color(1.0, 0.6, 0.2) if penalty < 1.0 else Color.WHITE
 		)
+
+
+## test_fear [agent_id]
+## Forces fear to 80.0, re-evaluates scores, checks if hide is best action.
+func cmd_test_fear(args: Dictionary) -> void:
+	var id_str: String = _pos_arg(args, 0)
+	if id_str.is_empty():
+		_print("Usage: test_fear <agent_id>", Color(1.0, 0.4, 0.4))
+		return
+	var entity: Variant = _get_entity(id_str)
+	if entity == null:
+		return
+	if _behavior_system == null:
+		_print("behavior_system not connected", Color(1.0, 0.4, 0.4))
+		return
+	if entity.emotion_data == null:
+		_print("emotion_data not available", Color(1.0, 0.4, 0.4))
+		return
+
+	_header("test_fear entity=" + id_str)
+	_print("age_stage     : " + str(entity.age_stage))
+	_print("action_timer  : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
+	var fear_before: float = float(entity.emotion_data.get_emotion("fear"))
+	entity.emotion_data.fast["fear"] = 80.0
+	var fear_after: float = float(entity.emotion_data.get_emotion("fear"))
+	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
+
+	var best_action: String = ""
+	var best_score: float = -1.0
+	for action in scores:
+		var score: float = float(scores[action])
+		if score > best_score:
+			best_score = score
+			best_action = str(action)
+
+	_print("fear BEFORE   : " + "%.1f" % fear_before)
+	_print("fear AFTER    : " + "%.1f" % fear_after + " (fast=80 + slow + memory)")
+	_print("── scores ──", Color(0.6, 0.9, 1.0))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
+	_print("best_action   : " + best_action + " (" + "%.4f" % best_score + ")")
+	if best_action == "hide":
+		_behavior_system._assign_action(entity, "hide", 0)
+		_print("hide FORCED ✓ (current_action=" + entity.current_action + ")", Color(0.4, 1.0, 0.4))
+	else:
+		_print("hide NOT selected (got: " + best_action + ")", Color(1.0, 0.4, 0.4))
+
+
+## test_sadness [agent_id]
+## Forces sadness to 80.0, re-evaluates scores, checks if grieve is best action.
+func cmd_test_sadness(args: Dictionary) -> void:
+	var id_str: String = _pos_arg(args, 0)
+	if id_str.is_empty():
+		_print("Usage: test_sadness <agent_id>", Color(1.0, 0.4, 0.4))
+		return
+	var entity: Variant = _get_entity(id_str)
+	if entity == null:
+		return
+	if _behavior_system == null:
+		_print("behavior_system not connected", Color(1.0, 0.4, 0.4))
+		return
+	if entity.emotion_data == null:
+		_print("emotion_data not available", Color(1.0, 0.4, 0.4))
+		return
+
+	_header("test_sadness entity=" + id_str)
+	_print("age_stage      : " + str(entity.age_stage))
+	_print("action_timer   : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
+	var sadness_before: float = float(entity.emotion_data.get_emotion("sadness"))
+	entity.emotion_data.fast["sadness"] = 80.0
+	var sadness_after: float = float(entity.emotion_data.get_emotion("sadness"))
+	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
+
+	var best_action: String = ""
+	var best_score: float = -1.0
+	for action in scores:
+		var score: float = float(scores[action])
+		if score > best_score:
+			best_score = score
+			best_action = str(action)
+
+	_print("sadness BEFORE : " + "%.1f" % sadness_before)
+	_print("sadness AFTER  : " + "%.1f" % sadness_after + " (fast=80 + slow + memory)")
+	_print("── scores ──", Color(0.6, 0.9, 1.0))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
+	_print("best_action    : " + best_action + " (" + "%.4f" % best_score + ")")
+	if best_action == "grieve":
+		_behavior_system._assign_action(entity, "grieve", 0)
+		_print("grieve FORCED ✓ (current_action=" + entity.current_action + ")", Color(0.4, 1.0, 0.4))
+	else:
+		_print("grieve NOT selected (got: " + best_action + ")", Color(1.0, 0.4, 0.4))
+
+
+## test_anger [agent_id]
+## Forces anger to 80.0, re-evaluates scores, checks if confront is best action.
+## Also shows the confront target entity name.
+func cmd_test_anger(args: Dictionary) -> void:
+	var id_str: String = _pos_arg(args, 0)
+	if id_str.is_empty():
+		_print("Usage: test_anger <agent_id>", Color(1.0, 0.4, 0.4))
+		return
+	var entity: Variant = _get_entity(id_str)
+	if entity == null:
+		return
+	if _behavior_system == null:
+		_print("behavior_system not connected", Color(1.0, 0.4, 0.4))
+		return
+	if entity.emotion_data == null:
+		_print("emotion_data not available", Color(1.0, 0.4, 0.4))
+		return
+
+	_header("test_anger entity=" + id_str)
+	_print("age_stage      : " + str(entity.age_stage))
+	_print("action_timer   : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
+	var anger_before: float = float(entity.emotion_data.get_emotion("anger"))
+	entity.emotion_data.fast["anger"] = 80.0
+	var anger_after: float = float(entity.emotion_data.get_emotion("anger"))
+	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
+
+	var best_action: String = ""
+	var best_score: float = -1.0
+	for action in scores:
+		var score: float = float(scores[action])
+		if score > best_score:
+			best_score = score
+			best_action = str(action)
+
+	_print("anger BEFORE   : " + "%.1f" % anger_before)
+	_print("anger AFTER    : " + "%.1f" % anger_after + " (fast=80 + slow + memory)")
+	_print("── scores ──", Color(0.6, 0.9, 1.0))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
+	_print("best_action    : " + best_action + " (" + "%.4f" % best_score + ")")
+	if best_action == "confront":
+		_print("confront SELECTED ✓", Color(0.4, 1.0, 0.4))
+	else:
+		_print("confront NOT selected (got: " + best_action + ")", Color(1.0, 0.4, 0.4))
+
+	_behavior_system._assign_action(entity, "confront", 0)
+	var target_text: String = str(entity.action_target)
+	var action_target: Variant = entity.action_target
+	if action_target is Vector2:
+		var target_pos: Vector2 = action_target
+		target_text = "(%.1f, %.1f)" % [target_pos.x, target_pos.y]
+	elif action_target is Object and action_target.has_method("get"):
+		var target_name: Variant = action_target.get("entity_name")
+		if target_name != null and not str(target_name).is_empty():
+			target_text = str(target_name)
+	_print("action_target  : " + target_text)
+
+
+## debug_emotions [agent_id]
+## Shows all 8 Plutchik emotions with current values and threshold status.
+func cmd_debug_emotions(args: Dictionary) -> void:
+	var id_str: String = _pos_arg(args, 0)
+	if id_str.is_empty():
+		_print("Usage: debug_emotions <agent_id>", Color(1.0, 0.4, 0.4))
+		return
+	var entity: Variant = _get_entity(id_str)
+	if entity == null:
+		return
+	if entity.emotion_data == null:
+		_print("emotion_data not available", Color(1.0, 0.4, 0.4))
+		return
+
+	_header("debug_emotions entity=" + id_str)
+
+	var emotion_names: Array = [
+		"joy",
+		"trust",
+		"fear",
+		"surprise",
+		"sadness",
+		"disgust",
+		"anger",
+		"anticipation",
+	]
+	for emotion_name in emotion_names:
+		var value: float = float(entity.emotion_data.get_emotion(str(emotion_name)))
+		var marker: String = " [> 40 THRESHOLD]" if value > 40.0 else ""
+		var line_color: Color = Color(1.0, 0.6, 0.2) if value > 40.0 else Color.WHITE
+		_print("  %-14s: %.1f%s" % [str(emotion_name), value, marker], line_color)
+
+	_print("")
+	_print("P4 behavior triggers:", Color(0.6, 0.9, 1.0))
+
+	var fear_value: float = float(entity.emotion_data.get_emotion("fear"))
+	if fear_value > 40.0:
+		_print("  fear -> hide  ACTIVE (%.1f)" % fear_value, Color(0.4, 1.0, 0.4))
+	else:
+		_print("  fear -> hide  dormant (%.1f)" % fear_value)
+
+	var sadness_value: float = float(entity.emotion_data.get_emotion("sadness"))
+	if sadness_value > 40.0:
+		_print("  sadness -> grieve  ACTIVE (%.1f)" % sadness_value, Color(0.4, 1.0, 0.4))
+	else:
+		_print("  sadness -> grieve  dormant (%.1f)" % sadness_value)
+
+	var anger_value: float = float(entity.emotion_data.get_emotion("anger"))
+	if anger_value > 40.0:
+		_print("  anger -> confront  ACTIVE (%.1f)" % anger_value, Color(0.4, 1.0, 0.4))
+	else:
+		_print("  anger -> confront  dormant (%.1f)" % anger_value)
