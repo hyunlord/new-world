@@ -463,7 +463,7 @@ func _refresh_traits() -> void:
 		_traits_label.text = "(no personality)"
 		return
 	var text = ""
-	for t in _selected_entity.active_traits:
+	for t in _selected_entity.display_traits:
 		text += "✓ %s\n" % str(t)
 	text += "\n[b]HEXACO:[/b]\n"
 	for ax in ["H", "E", "X", "A", "C", "O"]:

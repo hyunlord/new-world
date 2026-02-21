@@ -598,7 +598,7 @@ func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
 
 
 func _entity_has_trait(entity, trait_id: String) -> bool:
-	for t in entity.active_traits:
+	for t in entity.display_traits:
 		if t.get("id", "") == trait_id:
 			return true
 	return false

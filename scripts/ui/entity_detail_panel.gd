@@ -925,8 +925,8 @@ func _draw() -> void:
 				var stage = childhood_data.get("current_stage", "")
 				if stage != "" and stage != "adult":
 					var stage_key: String = "STAGE_" + stage.to_upper()
-					var stage_label: String = Locale.ltr(stage_key)
-					draw_string(font, Vector2(cx + 10, cy + 12), stage_label,
+					var childhood_stage_label: String = Locale.ltr(stage_key)
+					draw_string(font, Vector2(cx + 10, cy + 12), childhood_stage_label,
 						HORIZONTAL_ALIGNMENT_LEFT, -1,
 						GameConfig.get_font_size("popup_body"), Color(0.7, 0.9, 0.7))
 					cy += 16.0

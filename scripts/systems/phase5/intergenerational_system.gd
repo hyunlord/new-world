@@ -138,13 +138,12 @@ func get_hpa_sensitivity(epigenetic_load: float) -> float:
 
 
 ## [Meaney, M.J., 2001 - Licking/grooming model] High-quality nurturing can partially reverse epigenetic stress programming.
-func apply_meaney_repair(entity, parenting_quality: float, tick: int) -> void:
+func apply_meaney_repair(entity, parenting_quality: float, _tick: int) -> void:
 	## [Meaney, M.J., 2001 - Maternal licking/grooming model]
 	## High-quality nurturing care can partially reverse epigenetic stress programming.
 	## Repair is slow (rate=0.002/tick) and only activates above quality threshold.
 	## This is the player's primary lever for breaking intergenerational trauma cycles.
 	## Reference: Meaney, M.J. (2001). Annual Review of Neuroscience, 24(1).
-	_ = tick
 	if entity == null:
 		return
 	var threshold = _epi_config.get("meaney_repair_threshold", 0.70)
