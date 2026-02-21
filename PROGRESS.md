@@ -1,5 +1,34 @@
 # Progress Log
 
+## Behavior System P4: 감정 기반 행동 (hide/grieve/confront) — 2026-02-21
+
+### Context
+behavior_system.gd에 P4 감정 행동이 이미 구현됨 (git diff 상태). localization 키만 누락.
+STATUS_HIDE/GRIEVE/CONFRONT: Locale.tr_id("STATUS", action) 패턴 → STATUS_{ACTION_UPPER} 형식.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| TICKET-B | behavior_system.gd 감정 스코어 + 행동 분기 | 🔴 DIRECT | — | 이미 구현됨 (working tree) |
+| TICKET-L1 | localization/ko+en/ui.json STATUS_HIDE/GRIEVE/CONFRONT 추가 | 🟢 DISPATCH | ask_codex | 2파일 localization 변경 |
+
+### Dispatch ratio: 1/2 = 50% (TICKET-B는 이미 구현 상태)
+**참고**: TICKET-B는 이미 구현되어 있으므로 실질 디스패치 가능 작업 1/1 = 100%
+
+### Dispatch strategy
+TICKET-B (already done) → TICKET-L1 dispatch via ask_codex
+
+### Results
+- Gate: PASS ✅
+- Dispatch tool: ask_codex (TICKET-L1)
+- Files changed: localization/ko/ui.json + localization/en/ui.json
+- Key deliverables:
+  - STATUS_HIDE (은신/Hiding), STATUS_GRIEVE (애도/Grieving), STATUS_CONFRONT (대치/Confronting)
+  - behavior_system.gd P4 감정 행동 (hide/grieve/confront) — 이미 구현됨
+- Verification: hide/grieve/confront 스코어 ✅ | _assign_action() 분기 ✅ | null 체크 ✅ | adult/elder 조건 ✅ | 한글 하드코딩 0건 ✅
+
+---
+
 ## Phase 5: 아동 스트레스 파이프라인 / ACE / 세대 간 전달 / 애착 — 2026-02-20
 
 ### Context

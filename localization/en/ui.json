@@ -795,5 +795,8 @@
   "UI_MIN": "min",
   "UI_MAX": "max",
   "UI_GENERATION_LABEL": "Gen {n}",
-  "UI_AL_MAX_LABEL": "Load Ceiling"
+  "UI_AL_MAX_LABEL": "Load Ceiling",
+  "STATUS_HIDE": "Hiding",
+  "STATUS_GRIEVE": "Grieving",
+  "STATUS_CONFRONT": "Confronting"
 }

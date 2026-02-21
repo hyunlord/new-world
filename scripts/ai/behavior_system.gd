@@ -206,6 +206,21 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	for action in scores.keys():
 		scores[action] *= _calc_boredom_penalty(entity, action)
 
+	# [Emotion-driven actions — Plutchik (1980) Basic Emotion Model]
+	# fear → hide (withdraw from threat), sadness → grieve (isolation),
+	# anger → confront (approach threat). Threshold 40/100 on Plutchik scale.
+	# Adults and elders only: complex emotional coping behaviors.
+	if entity.emotion_data != null and (stage == "adult" or stage == "elder"):
+		var fear_val: float = entity.emotion_data.get_emotion("fear")
+		if fear_val > 40.0:
+			scores["hide"] = (fear_val / 100.0) * 1.2
+		var sadness_val: float = entity.emotion_data.get_emotion("sadness")
+		if sadness_val > 40.0:
+			scores["grieve"] = (sadness_val / 100.0) * 0.9
+		var anger_val: float = entity.emotion_data.get_emotion("anger")
+		if anger_val > 40.0:
+			scores["confront"] = (anger_val / 100.0) * 0.8
+
 	return scores
 
 
@@ -379,6 +394,18 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			else:
 				entity.action_target = entity.position
 			entity.action_timer = 15
+		"hide":
+			## [Plutchik fear response] Stay in current position; avoid movement.
+			entity.action_target = entity.position
+			entity.action_timer = 15
+		"grieve":
+			## [Plutchik sadness response] Remain isolated in current position.
+			entity.action_target = entity.position
+			entity.action_timer = 12
+		"confront":
+			## [Plutchik anger response] Move toward nearest entity.
+			entity.action_target = _find_nearest_entity(entity)
+			entity.action_timer = 8
 
 	emit_event("action_chosen", {
 		"entity_id": entity.id,
