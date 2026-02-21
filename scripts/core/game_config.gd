@@ -181,8 +181,8 @@ const THIRST_LOW: float = 0.35
 ## [Cannon (1932) 항상성 — 체온 유지]
 ## 온난한 환경에서는 소모 거의 없고 추위/혹한에서 급증
 const WARMTH_DECAY_RATE: float = 0.0016
-const WARMTH_FIRE_RESTORE: float = 0.008
-const WARMTH_SHELTER_RESTORE: float = 0.004
+const WARMTH_FIRE_RESTORE: float = 0.035
+const WARMTH_SHELTER_RESTORE: float = 0.018
 const WARMTH_CRITICAL: float = 0.10
 const WARMTH_LOW: float = 0.30
 const WARMTH_TEMP_NEUTRAL: float = 0.5
