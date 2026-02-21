@@ -1366,3 +1366,49 @@ T-SCult3은 두 DISPATCH 완료 후 직접 통합.
 - Files changed: 4 (settlement_data.gd, value_system.gd, main.gd, PROGRESS.md)
 - Dispatch tool used: ask_codex (T-SCult1, T-SCult2)
 - Notion pages updated: 💎 가치관 시스템
+
+---
+
+## Trait 수 Q&A 분석 → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "trait이 68종이 아니라 200종에 가까운 것 아닌가?" → trait_definitions.json 직접 확인 결과
+실제 187개 (f=48, c=124, d=15). 초기 설계 "68개" 기술이 outdated. Notion 문서 수정 필요.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA4 | Trait 수 정정 → Notion 트레이트 시스템 문서 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### 코드 검증 결과
+파일: `data/species/human/personality/trait_definitions.json`
+
+| 카테고리 | 접두사 | 수 | 설명 |
+|----------|--------|-----|------|
+| Facet Trait | `f_` | 48 | 24 HEXACO facets × high/low |
+| Composite Trait | `c_` | 124 | multi-facet 조합 (ex: `c_he_hh_tender_conscience`) |
+| Dark Triad / Disorder | `d_` | 15 | Psychopath, Narcissist, Machiavellian 등 |
+| **합계** | — | **187** | 초기 설계 "68개" → 현재 실제 187개 |
+
+opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🧬 트레이트 시스템 | 개요 | 수정 | "68개 Trait" → "187개 Trait (f=48, c=124, d=15)" |
+| 🧬 트레이트 시스템 | 데이터 구성 | 수정 | Trait 분류표: f_/c_/d_ 3종 카테고리, 수량, 설명 |
+| 🧬 트레이트 시스템 | 개발 히스토리 | 추가 | 초기 설계 68 → GPT/Gemini 조사 후 composite 확장 → 현재 187 |
+| 🧬 트레이트 시스템 | 제약 & 향후 계획 | 수정 | "200종" 혼동 해소: 187 Trait vs. 562 opposite_actions 항목 명기 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- 핵심 발견: trait_definitions.json 실제 187개, 초기 설계 68개 기술 outdated
+- Notion pages updated: 🧬 트레이트 시스템
