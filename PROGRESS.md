@@ -1094,3 +1094,96 @@ sequential: t-vs-001 dispatch → t-vs-002 DIRECT wiring
 - Files changed: 7 (value_system.gd, main.gd, hud.gd, trait_tooltip.gd, ko/ui.json, en/ui.json, PROGRESS.md)
 - Dispatch tool used: ask_codex (1 ticket — t-vs-001)
 - Codex interface mismatch fixed: get_priority/get_tick_interval/update → var priority/tick_interval + execute_tick (simulation_system.gd base class)
+
+---
+
+## Q&A 문서 업데이트 — 엔티티 디테일 패널 UI 개선 피드백 (2026-02-22)
+
+### Context
+2026-02-18 Q&A: 특성 독립 섹션 승격, 모든 섹션 접기/펼치기, 뱃지 겹침 방지, 효과 키 정렬 피드백.
+코드 확인 결과 전부 이미 구현되어 있음 — Notion 문서에 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 업데이트 (6 changes) | 🔴 DIRECT | — | 코드 변경 없음, Notion API 호출만 |
+
+### Dispatch ratio: N/A (코드 변경 없음, Notion 문서 갱신만)
+
+### Dispatch strategy
+Notion 6개 블록 변경: PATCH 3 + INSERT 3 batch
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 핵심 상태 변수 (Block 5) | 수정 | _section_collapsed dict (15개 섹션), _section_header_rects, _expanded_axes, _summary_expanded 추가 |
+| 엔티티 디테일 패널 시스템 | 핵심 로직 _draw() 하단 (Block 12 after) | 추가 | 섹션 접기/펼치기 아키텍처 heading_3 + callout + code (_draw_section_header 설명, draw 순서) |
+| 엔티티 디테일 패널 시스템 | 특성 표시 서브시스템 callout (Block 18) | 수정 | Phase 3 레이아웃 개선 반영, 독립 메인 섹션 명시 |
+| 엔티티 디테일 패널 시스템 | 언어별 정렬 하단 (Block 29 after) | 추가 | 뱃지 수동 flow 줄바꿈 로직 (trait_x, size.x 기준) |
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 하단 (Block 32 after) | 추가 | 효과 키 naturalcasecmp_to 정렬 + fallback 포맷 문서화 |
+| 엔티티 디테일 패널 시스템 | 개발 히스토리 테이블 | 추가 | 2026-02-18 Q&A 피드백 반영 행 추가 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+
+---
+
+## 가치관 시스템 버그 후속 (T-VBug4~5) — 2026-02-22
+
+### Context
+T-VBug1~3 적용 완료 확인 (entity_manager.gd 라인 9, 55-64 존재). 추가 2종:
+(1) spawn_entity에서 moral_stage=1 명시적 설정 (entity_data.gd 기본값이지만 명시 요청)
+(2) peer influence를 settlement_map 방식 → get_entities_near(pos, 5) 공간 반경 방식으로 교체
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug4 | entity_manager.gd moral_stage=1 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, 1줄 추가 |
+| T-VBug5 | value_system.gd peer influence get_entities_near 교체 | 🟢 DISPATCH | ask_codex | 단일 파일, execute_tick 내 settlement_map 제거 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/core/entity_manager.gd + scripts/systems/value_system.gd
+- Commit: b2e5bca
+- Dispatch tool: ask_codex (job 872e6ae2, af3f28fa)
+- Key changes:
+  - entity_manager.gd:65 — `entity.moral_stage = 1` after initialize_values()
+  - value_system.gd:76 — settlement_map removed, `get_entities_near(entity.position, 5)` added
+
+---
+
+---
+
+## Q&A 문서 업데이트 — 특성 정렬 별도 프롬프트 (2026-02-22)
+
+### Context
+2026-02-18 Q&A: 특성 정렬을 별도 프롬프트로 분리. 3곳 정렬 + 공통 헬퍼 패턴 제안.
+코드 확인: badges/summary는 이미 구현, trait_tooltip.gd는 ASCII 정렬 갭 확인.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 업데이트 (4 changes) | 🔴 DIRECT | — | 코드 변경 없음 |
+
+### Dispatch ratio: N/A
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 언어별 정렬 섹션 | 추가 | trait_tooltip.gd ASCII 정렬 갭 (str(a)<str(b)) + _get_trait_key_display() 헬퍼 제안 문서화 |
+| 엔티티 디테일 패널 시스템 | 제약 & 향후 계획 | 추가 | tooltip 정렬 개선 + DRY 헬퍼 도입 향후 계획 |
+| 엔티티 디테일 패널 시스템 | 개발 히스토리 | 추가 | 2026-02-18 정렬 프롬프트 분리 행 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion changes: 4 (INSERT ×4)
