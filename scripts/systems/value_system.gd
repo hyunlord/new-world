@@ -59,21 +59,30 @@ func init(entity_manager) -> void:
 func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
-	var entities: Array = _entity_manager.get_all_alive()
+
+	var entities: Array = _entity_manager.get_alive_entities()
+
+	# ── Settlement → members 맵 구성 (peer influence용, O(n)) ──────────
+	var settlement_map: Dictionary = {}
+	for e in entities:
+		if e.settlement_id > 0:
+			if not settlement_map.has(e.settlement_id):
+				settlement_map[e.settlement_id] = []
+			settlement_map[e.settlement_id].append(e)
+
 	for entity in entities:
 		if entity.values.is_empty():
 			continue
-		var age_years: float = entity.age_days / 365.0
+
+		var age_years: float = GameConfig.get_age_years(entity.age)
 		var hexaco_dict: Dictionary = _get_hexaco_dict(entity.personality)
 
 		# [Kohlberg 1969] 도덕 발달 단계 진급 체크
 		check_moral_stage_progression(entity, hexaco_dict, age_years)
 
 		# [Axelrod 1997] peer influence — 같은 정착지 무작위 1명과 가치관 수렴
-		if "settlement_id" in entity and entity.settlement_id >= 0:
-			var neighbors: Array = _entity_manager.get_entities_in_settlement(
-				entity.settlement_id
-			)
+		if entity.settlement_id > 0 and settlement_map.has(entity.settlement_id):
+			var neighbors: Array = settlement_map[entity.settlement_id]
 			if neighbors.size() > 1:
 				var other = neighbors[_rng.randi() % neighbors.size()]
 				if other.id != entity.id and not other.values.is_empty():
@@ -297,10 +306,10 @@ static func check_moral_stage_progression(
 	var req = ValueDefs.KOHLBERG_THRESHOLDS[next]
 
 	var openness: float = (
-		hexaco.get("aesthetic_appreciation", 0.5)
-		+ hexaco.get("inquisitiveness", 0.5)
-		+ hexaco.get("creativity", 0.5)
-		+ hexaco.get("unconventionality", 0.5)
+		hexaco.get("O_aesthetic", 0.5)
+		+ hexaco.get("O_inquisitiveness", 0.5)
+		+ hexaco.get("O_creativity", 0.5)
+		+ hexaco.get("O_unconventionality", 0.5)
 	) / 4.0
 	if openness < req.get("min_openness", 0.0):
 		return false

@@ -6,6 +6,7 @@ const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
 const PersonalityGeneratorScript = preload("res://scripts/systems/personality_generator.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const ValueSystem = preload("res://scripts/systems/value_system.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
@@ -51,6 +52,16 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	entity.personality = _personality_generator.generate_personality(entity.gender, "", pa_pd, pb_pd)
 	# Initialize trait salience from personality facets
 	TraitSystem.update_trait_strengths(entity)
+	# ── 가치관 초기화 [Schwartz 1992, ValueSystem] ──────────────────
+	var pa_values = parent_a.values if (parent_a != null and not parent_a.values.is_empty()) else null
+	var pb_values = parent_b.values if (parent_b != null and not parent_b.values.is_empty()) else null
+	entity.values = ValueSystem.initialize_values(
+		entity.personality.facets,
+		pa_values,
+		pb_values,
+		null,
+		_rng,
+	)
 	# Emotions (defaults)
 	entity.emotions = {
 		"happiness": 0.5,

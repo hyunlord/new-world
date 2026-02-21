@@ -47,6 +47,30 @@ Schwartz (1992) + Axelrod (1997) + Kohlberg (1969) + Festinger (1957) + Erikson 
 | T-V8 | Gate 검증 | 🔴 DIRECT | — | 통합 배선 |
 | T-V9 | Notion 기록 | 🔴 DIRECT | — | 외부 서비스 |
 
+---
+
+## 가치관 시스템 tick 연동 버그 3종 수정 — T-VBug1~3 — 2026-02-22
+
+### Context
+가치관 시스템 구현 후 3가지 연동 누락/버그로 실제로 동작하지 않았다:
+1. entity_manager.spawn_entity()에 initialize_values() 미호출 → 모든 에이전트 values={}
+2. value_system.update()가 존재하지 않는 entity_manager API 호출 (get_all_alive, age_days, get_entities_in_settlement)
+3. check_moral_stage_progression()의 HEXACO 키가 PersonalityData.facets 형식과 불일치 (aesthetic_appreciation vs O_aesthetic)
+main.gd의 ValueSystem preload + init + register_system은 이미 완료 상태.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug1 | entity_manager.gd — spawn_entity()에 ValueSystem.initialize_values() 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug2 | value_system.gd — API 버그 3종 + HEXACO 키 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug3 | main.gd 연동 확인 | 🔴 DIRECT | — | 이미 완료 (preload+init+register_system 모두 존재) |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-VBug1과 T-VBug2는 파일 겹침 없음 → 병렬 dispatch
+T-VBug3은 확인만 (이미 완료)
+
 ### Dispatch ratio: 7/9 = 78% ✅
 
 ### Dispatch strategy
@@ -1045,3 +1069,10 @@ sequential: t-vs-001 dispatch → t-vs-002 DIRECT wiring
 | 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22 value_system tick 연동 (update/init/get_priority/get_tick_interval 추가, priority 55 등록) |
 | 엔티티 디테일 패널 시스템 | 특성 표시 서브시스템 | 수정 | TOP_K=5 의도된 설계 확인, i18n Locale.ltr 적용 완료 문서화 |
 | 엔티티 디테일 패널 시스템 | i18n 버그 이력 | 추가 | Q&A 22: 특성 효과 요약 키 영어 표시 버그 + Locale.ltr 수정 기록 |
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/2 = 50% (value_system.gd → Codex; main.gd wiring → DIRECT)
+- Files changed: 7 (value_system.gd, main.gd, hud.gd, trait_tooltip.gd, ko/ui.json, en/ui.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (1 ticket — t-vs-001)
+- Codex interface mismatch fixed: get_priority/get_tick_interval/update → var priority/tick_interval + execute_tick (simulation_system.gd base class)
