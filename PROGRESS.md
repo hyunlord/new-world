@@ -730,3 +730,28 @@ WorldSim Phase 4 — Lazarus & Folkman 기반 Coping Trait System (15전략 2단
 - Dispatch ratio: 15/15 = 100% ✅ (12 Codex dispatches + 3 already-done verifications)
 
 ---
+
+## P4 Debug Commands (test_fear/sadness/anger, debug_emotions) — 2026-02-21
+
+### Context
+P4 감정 행동(hide/grieve/confront) 검증을 위한 인게임 디버그 명령어 4개 추가.
+debug_commands.gd에 이미 구현되어 있음을 확인 (45bc997 커밋 포함).
+game.json localization 키 누락분 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-D1 | debug_commands.gd 4개 명령어 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 구현 |
+| P4-D2 | en/game.json + ko/game.json STATUS_ 키 | 🔴 DIRECT | — | 이미 working tree에 존재 |
+
+### Dispatch ratio: 1/2 = 50% (P4-D2는 이미 구현, 실질 가능 1/1 = 100%)
+
+### Results
+- Gate: PASS ✅ (gate worktree)
+- Commit: 32457e3
+- Dispatch tool: ask_codex (job bdc573f4)
+- Files changed: 4 (debug_commands.gd, en/game.json, ko/game.json, CLAUDE.md)
+- Commands added: test_fear, test_sadness, test_anger, debug_emotions
+- Output: 인게임 콘솔 + log file 동시 기록 (_print 패턴)
+
+---
