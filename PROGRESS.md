@@ -1,5 +1,89 @@
 # Progress Log
 
+## 욕구 확장 임시 비활성화 (T-DISABLE-1~3) — 2026-02-21
+
+### Context
+thirst/warmth/safety 욕구를 NEEDS_EXPANSION_ENABLED 플래그로 조건부 비활성화.
+자원/기술 시스템 완성 후 true로 전환하면 즉시 활성화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-DISABLE-1 | game_config.gd NEEDS_EXPANSION_ENABLED 상수 추가 | 🔴 DIRECT | — | 공유 상수, 나머지 2개 파일이 참조 |
+| T-DISABLE-2 | needs_system.gd decay+stress 블록 wrap | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-DISABLE-3 | behavior_system.gd score 블록 wrap | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-DISABLE-1 DIRECT 먼저 → T-DISABLE-2/3 병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/3 = 67%
+- Files changed: game_config.gd + needs_system.gd + behavior_system.gd
+- Commit: 07ef4e8
+- Dispatch tool used: ask_codex (job be7a9f99, c154485b)
+
+---
+
+## 가치관 시스템 (Value System) — T-V0 ~ T-V9 — 2026-02-22
+
+### Context
+33개 가치관 시스템 구현. HEXACO→가치관 초기값 생성, 연령별 가소성, 문화 전파,
+경험 이벤트, Kohlberg 도덕 발달 단계, 행동 score 보정, 정착지 문화 공유.
+Schwartz (1992) + Axelrod (1997) + Kohlberg (1969) + Festinger (1957) + Erikson (1950) 학술 기반.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-V0 | value_defs.gd 생성 (33개 키, HEXACO 맵, 충돌 쌍, Kohlberg, 행동 alignment) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V1L | value_events.json 생성 + ko/en localization 추가 | 🟢 DISPATCH | ask_codex | 새 파일 + JSON 추가 |
+| T-V3 | entity_data.gd — values/moral_stage/value_violation_count 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 추가 |
+| T-V4 | value_system.gd 생성 (초기화, 가소성, 문화전파, 이벤트, 자기합리화, 충돌해소, 단계진급) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V5 | behavior_system.gd — _apply_value_modifiers / _check_value_violation 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-V6 | settlement_culture.gd 생성 (shared_values, 동조 압력) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V7 | entity_detail_panel.gd — values 섹션 + bipolar bar 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-V8 | Gate 검증 | 🔴 DIRECT | — | 통합 배선 |
+| T-V9 | Notion 기록 | 🔴 DIRECT | — | 외부 서비스 |
+
+### Dispatch ratio: 7/9 = 78% ✅
+
+### Dispatch strategy
+파일 겹침 없음 → 7개 전부 병렬 dispatch.
+의존성(value_defs→value_system→settlement_culture)은 스펙 기반으로 코드 작성하므로 순서 무관.
+모든 파일 gate pass 후 한 번에 통합.
+
+### Results
+- TBD
+
+---
+
+## 욕구 확장 밸런스 조정 (T-STARV-2, T-STARV-3) — 2026-02-21
+
+### Context
+T-STARV-1 threshold guard 이후에도 아사 지속. 원인: (1) comfort action 점수 과다 (seek_shelter/sit_by_fire가 gather_food 이김), (2) warmth 물리 모순 (campfire 옆에서도 warmth 계속 하락 — decay > FIRE_RESTORE).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-STARV-2 | behavior_system.gd 승수 조정 | 🟢 DISPATCH | ask_codex | single-file multiplier tweak |
+| T-STARV-3 | game_config.gd warmth 상수 증가 | 🟢 DISPATCH | ask_codex | single-file constant change |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음): ask_codex × 2 동시 실행
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/ai/behavior_system.gd + scripts/core/game_config.gd
+- Commit: 9edc85d
+- Dispatch tool used: ask_codex (job 19e3fde0, 5e23ebea)
+
+---
+
 ## Behavior System P4: 감정 기반 행동 (hide/grieve/confront) — 2026-02-21
 
 ### Context

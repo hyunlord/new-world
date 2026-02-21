@@ -93,6 +93,18 @@ var trauma_scars: Array = []
 ## 학술: Moral Disengagement Theory (Bandura, 1999), Kindling Theory (Post, 1992)
 var violation_history: Dictionary = {}
 
+## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
+## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
+var values: Dictionary = {}
+
+## [Kohlberg (1969)] 도덕 발달 단계 1~6
+## 1=벌과복종, 2=도구적, 3=대인조화, 4=법질서, 5=사회계약, 6=보편윤리
+var moral_stage: int = 1
+
+## [Festinger (1957)] 가치관 위반 누적 기록 (자기합리화 추적용)
+## { "TRUTH": 3, "LOYALTY": 1 }
+var value_violation_count: Dictionary = {}
+
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
 var path_index: int = 0

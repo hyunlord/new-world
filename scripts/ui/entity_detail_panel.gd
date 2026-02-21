@@ -108,6 +108,7 @@ var _section_collapsed: Dictionary = {
 	"stats": true,
 	"recent_actions": false,
 	"life_events": false,
+	"values": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -143,6 +144,9 @@ class DeceasedEntityProxy extends RefCounted:
 	var display_traits: Array = []
 	var trauma_scars: Array = []
 	var violation_history: Dictionary = {}
+	var values: Dictionary = {}
+	var moral_stage: int = 1
+	var value_violation_count: Dictionary = {}
 	var speed: float = 1.0
 	var strength: float = 1.0
 	var total_gathered: float = 0.0
@@ -1293,6 +1297,37 @@ func _draw() -> void:
 						ev_idx -= 1
 						count += 1
 
+	# ── Values ──
+	if "values" in entity and entity.values.size() > 0:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
+		if not _section_collapsed.get("values", true):
+			var values_dict: Dictionary = entity.values
+			var significant: Array = []
+			for vkey in values_dict:
+				var val: float = values_dict[vkey]
+				if absf(val) > 0.30:
+					significant.append({"key": vkey, "value": val})
+			significant.sort_custom(func(a, b): return absf(a["value"]) > absf(b["value"]))
+			if significant.is_empty():
+				draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_SIGNIFICANT_VALUES"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+				cy += 16.0
+			else:
+				for item in significant:
+					var display_name: String = Locale.ltr("VALUE_" + str(item["key"]))
+					var val: float = item["value"]
+					cy = _draw_value_bar(font, cx + 10, cy, bar_w, display_name, val,
+						Color(0.4, 0.6, 1.0), Color(1.0, 0.4, 0.4))
+			var stage: int = entity.get("moral_stage", 0) if entity.has_method("get") else 0
+			if stage <= 0 and "moral_stage" in entity:
+				stage = entity.moral_stage
+			if stage > 0:
+				draw_string(font, Vector2(cx + 10, cy + 12),
+					"%s: %d" % [Locale.ltr("VALUE_MORAL_STAGE"), stage],
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
+				cy += 20.0
+			cy += 6.0
+
 	# Track content height for scrolling
 	_content_height = cy + _scroll_offset + 20.0
 
@@ -1362,6 +1397,29 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 
 	var pct_x: float = bar_x + bar_w + bar_gap
 	draw_string(font, Vector2(pct_x, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+	return y + 16.0
+
+
+## Draw a bipolar bar for values in range [-1.0, +1.0]
+## Center = 0, right half = positive (pos_color), left half = negative (neg_color)
+func _draw_value_bar(font: Font, x: float, y: float, w: float, label: String, value: float, pos_color: Color, neg_color: Color) -> float:
+	var label_w: float = 140.0
+	var pct_w: float = 50.0
+	var bar_gap: float = 4.0
+	var bar_h: float = 10.0
+	draw_string(font, Vector2(x, y + 11), label, HORIZONTAL_ALIGNMENT_LEFT, int(label_w), GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+	var bar_x: float = x + label_w + bar_gap
+	var bar_w_actual: float = maxf(w - label_w - pct_w - bar_gap * 2, 20.0)
+	var center_x: float = bar_x + bar_w_actual * 0.5
+	draw_rect(Rect2(bar_x, y + 2, bar_w_actual, bar_h), Color(0.2, 0.2, 0.2, 0.8))
+	draw_line(Vector2(center_x, y + 2), Vector2(center_x, y + 2 + bar_h), Color(0.5, 0.5, 0.5, 0.5), 1.0)
+	if absf(value) > 0.001:
+		var fill_w: float = (bar_w_actual * 0.5) * absf(value)
+		var fill_color: Color = pos_color if value > 0.0 else neg_color
+		var fill_x: float = center_x if value > 0.0 else center_x - fill_w
+		draw_rect(Rect2(fill_x, y + 2, fill_w, bar_h), fill_color)
+	var pct_x: float = bar_x + bar_w_actual + bar_gap
+	draw_string(font, Vector2(pct_x, y + 11), "%+d%%" % int(value * 100.0), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
 
 

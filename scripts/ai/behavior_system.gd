@@ -9,13 +9,22 @@ var _settlement_manager: RefCounted
 ## TraitViolationSystem 참조 (Phase 3B), main.gd에서 주입
 var _trait_violation_system = null
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const _ValueDefs = preload("res://scripts/core/value_defs.gd")
+const _ValueSystem = preload("res://scripts/systems/value_system.gd")
 var _morale_system = null
+var _stress_system = null
 ## Debug-only: override hysteresis threshold for testing (-1 = use default HYSTERESIS_THRESHOLD)
 var _debug_hysteresis_threshold_override: float = -1.0
 
 ## [Hysteresis — Utility AI standard pattern]
 ## Action inertia threshold: prevents micro-score oscillation from flip-flopping.
 const HYSTERESIS_THRESHOLD: float = 0.85
+## [Schwartz 1992] 가치관 행동 보정 최대 범위 ±40%
+const VALUE_MOD_SCALE: float = 0.40
+## [Festinger 1957] 위반 임계값 — |value| > 이 값이면 violation 체크
+const VALUE_VIOLATION_THRESHOLD: float = 0.30
+const VALUE_STRESS_BASE: float = 15.0
+const VALUE_STRESS_SCALE: float = 30.0
 
 
 func _init() -> void:
@@ -241,7 +250,54 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 			scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 0.6 \
 				+ _urgency_curve(safety_deficit) * 0.4
 
+	## [Schwartz 1992] 가치관 기반 행동 score 보정 (entity.values 비어있으면 no-op)
+	for action_id in scores:
+		scores[action_id] = _apply_value_modifiers(scores[action_id], action_id, entity)
+
 	return scores
+
+
+## [Schwartz 1992] 가치관 alignment 기반 행동 score 보정
+## 가치관이 높은 행동은 선호, 반대 행동은 기피
+## 최대 ±40% 보정
+func _apply_value_modifiers(base_score: float, action_id: StringName, entity: RefCounted) -> float:
+	if entity.values.is_empty():
+		return base_score
+	var alignments = _ValueDefs.ACTION_VALUE_ALIGNMENTS.get(action_id, {})
+	if alignments.is_empty():
+		return base_score
+	var bonus: float = 0.0
+	var stage: int = entity.moral_stage
+	for vkey in alignments:
+		var alignment: float = alignments[vkey]
+		var my_val: float = entity.values.get(vkey, 0.0)
+		var kohlberg_mod: float = _ValueDefs.KOHLBERG_MODIFIERS.get(stage, {}).get(vkey, 1.0)
+		bonus += alignment * my_val * kohlberg_mod
+	return base_score * (1.0 + clampf(bonus * VALUE_MOD_SCALE, -VALUE_MOD_SCALE, VALUE_MOD_SCALE))
+
+
+## [Festinger 1957] 가치관 위반 행동 시 스트레스 주입 및 자기합리화 기록
+func _check_value_violation(entity: RefCounted, action_id: StringName) -> void:
+	if entity.values.is_empty() or entity.emotion_data == null:
+		return
+	var alignments = _ValueDefs.ACTION_VALUE_ALIGNMENTS.get(action_id, {})
+	for vkey in alignments:
+		var alignment: float = alignments[vkey]
+		var my_val: float = entity.values.get(vkey, 0.0)
+		var violation_strength: float = 0.0
+		if my_val > VALUE_VIOLATION_THRESHOLD and alignment < 0.0:
+			violation_strength = my_val * absf(alignment)
+		elif my_val < -VALUE_VIOLATION_THRESHOLD and alignment > 0.0:
+			violation_strength = absf(my_val) * alignment
+		if violation_strength > 0.10:
+			var stress_amt: float = VALUE_STRESS_BASE + VALUE_STRESS_SCALE * violation_strength
+			if _stress_system != null:
+				_stress_system.inject_stress_event(entity.emotion_data, "value_violation", stress_amt)
+			else:
+				entity.emotion_data.stress = clampf(
+					entity.emotion_data.stress + stress_amt, 0.0, 100.0
+				)
+			_ValueSystem.apply_rationalization(entity, vkey)
 
 
 ## Exponential urgency: higher deficit = much higher urgency
@@ -311,6 +367,7 @@ func _assign_break_action(entity: RefCounted, break_type: String, tick: int) -> 
 
 
 func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
+	_check_value_violation(entity, StringName(action))
 	var old_action: String = entity.current_action
 	entity.current_action = action
 	# ── Trait 위반 체크 (Phase 3B) ─────────────────────────────
