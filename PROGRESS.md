@@ -1019,3 +1019,29 @@ entity_detail_panel.gd에 Values 섹션 추가. personality 섹션 직후, trait
   - 하단 moral_stage 숫자 표시
   - 기존 하단 중복 Values 블록 제거 (section_id 충돌 방지)
   - Locale.ltr() 사용, 하드코딩 없음
+
+## ValueSystem tick 연동 — t-vs-001~002
+
+### Context
+value_system.gd의 모든 함수가 static으로 구현되어 있어 tick마다 실행되지 않음.
+check_moral_stage_progression()이 호출되지 않아 도덕 발달 단계가 영구 1 고정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-vs-001 | value_system.gd에 update/init/get_priority/get_tick_interval 추가 | 🟢 DISPATCH | ask_codex | standalone single-file method addition |
+| t-vs-002 | main.gd에 ValueSystem 등록 (preload+var+init+register_system) | 🔴 DIRECT | — | integration wiring <20 lines |
+
+### Dispatch ratio: 1/2 = 50% (최소 dispatch 유지; main.gd wiring은 본질적으로 direct)
+
+### Dispatch strategy
+sequential: t-vs-001 dispatch → t-vs-002 DIRECT wiring
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 수정 | apply_peer_influence/check_moral_stage_progression 미연결 제약 → 해결됨으로 업데이트 |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22 value_system tick 연동 (update/init/get_priority/get_tick_interval 추가, priority 55 등록) |
+| 엔티티 디테일 패널 시스템 | 특성 표시 서브시스템 | 수정 | TOP_K=5 의도된 설계 확인, i18n Locale.ltr 적용 완료 문서화 |
+| 엔티티 디테일 패널 시스템 | i18n 버그 이력 | 추가 | Q&A 22: 특성 효과 요약 키 영어 표시 버그 + Locale.ltr 수정 기록 |

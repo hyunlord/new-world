@@ -5,6 +5,9 @@ extends RefCounted
 
 const ValueDefs = preload("res://scripts/core/value_defs.gd")
 
+var _entity_manager = null
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
 ## ── 형성 비율 상수 ────────────────────────────────────────
 const GENETIC_WEIGHT: float = 0.15
 const CULTURE_WEIGHT: float = 0.40
@@ -41,6 +44,47 @@ static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
 			raw /= total_weight
 		seed[vkey] = clampf(raw, -1.0, 1.0)
 	return seed
+
+
+## SimulationEngine 등록용 — 시스템 초기화
+func init(entity_manager) -> void:
+	_entity_manager = entity_manager
+	_rng.randomize()
+
+
+## SimulationEngine 등록용 — 실행 우선순위 (family_system=52 다음)
+func get_priority() -> int:
+	return 55
+
+
+## SimulationEngine 등록용 — tick 200마다 실행
+func get_tick_interval() -> int:
+	return 200
+
+
+## tick마다 호출: Kohlberg 진급 + peer influence 1회
+func update(_delta: float) -> void:
+	if _entity_manager == null:
+		return
+	var entities: Array = _entity_manager.get_all_alive()
+	for entity in entities:
+		if entity.values.is_empty():
+			continue
+		var age_years: float = entity.age_days / 365.0
+		var hexaco_dict: Dictionary = _get_hexaco_dict(entity.personality)
+
+		# [Kohlberg 1969] 도덕 발달 단계 진급 체크
+		check_moral_stage_progression(entity, hexaco_dict, age_years)
+
+		# [Axelrod 1997] peer influence — 같은 정착지 무작위 1명과 가치관 수렴
+		if "settlement_id" in entity and entity.settlement_id >= 0:
+			var neighbors: Array = _entity_manager.get_entities_in_settlement(
+				entity.settlement_id
+			)
+			if neighbors.size() > 1:
+				var other = neighbors[_rng.randi() % neighbors.size()]
+				if other.id != entity.id and not other.values.is_empty():
+					apply_peer_influence(entity, other.values, 0.3, age_years)
 
 
 ## ── 3.2 초기화: 유전 + 문화 + HEXACO + 노이즈 합성 ──────
@@ -221,6 +265,22 @@ static func _emotion_modifier(vkey, emotions: Dictionary) -> float:
 		&"SACRIFICE":
 			return sadness * 0.15 + trust * 0.20
 	return 0.0
+
+
+## PersonalityData 또는 Dictionary에서 HEXACO facet dict 추출
+static func _get_hexaco_dict(personality) -> Dictionary:
+	if personality == null:
+		return {}
+	if personality is Dictionary:
+		return personality
+	if "facets" in personality:
+		return personality.facets
+	# fallback: 6축만
+	var d: Dictionary = {}
+	for axis in ["h", "e", "x", "a", "c", "o"]:
+		if axis in personality:
+			d[axis] = personality.get(axis)
+	return d
 
 
 ## ── 3.8 Kohlberg 도덕 발달 단계 진급 ────────────────────
