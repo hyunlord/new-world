@@ -3,7 +3,6 @@
 extends RefCounted
 
 const ValueDefs = preload("res://scripts/core/value_defs.gd")
-const ValueSystem = preload("res://scripts/systems/value_system.gd")
 
 ## 정착지 리더 가중치 (리더의 가치관이 문화에 주는 추가 영향)
 const LEADER_INFLUENCE: float = 0.20
@@ -52,7 +51,17 @@ static func apply_conformity_pressure(
 	enforcement_strength: float,
 	age_years: float,
 ) -> float:
-	var plasticity: float = ValueSystem.get_plasticity(age_years)
+	var plasticity: float
+	if age_years < 7.0:
+		plasticity = 1.0
+	elif age_years < 15.0:
+		plasticity = lerpf(1.0, 0.70, (age_years - 7.0) / 8.0)
+	elif age_years < 25.0:
+		plasticity = lerpf(0.70, 0.30, (age_years - 15.0) / 10.0)
+	elif age_years < 50.0:
+		plasticity = lerpf(0.30, 0.10, (age_years - 25.0) / 25.0)
+	else:
+		plasticity = 0.10
 	var total_deviation: float = 0.0
 
 	for vkey in ValueDefs.KEYS:
