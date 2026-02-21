@@ -161,6 +161,10 @@ const NEEDS_TICK_INTERVAL: int = 2
 const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
+## Feature flag: thirst/warmth/safety needs
+## Set true once resource/tech systems are ready to support them
+const NEEDS_EXPANSION_ENABLED: bool = false
+
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002
 ## Metabolic curve: hunger decays slower when already hungry (Keys et al. 1950)
