@@ -89,11 +89,11 @@ const KOHLBERG_AGE_REQ: Array = [0, 0, 5, 10, 16, 25, 35]
 
 ## Kohlberg 단계 진급 조건
 const KOHLBERG_THRESHOLDS: Dictionary = {
-	2: { "min_values": { &"CUNNING": -0.5 },                                           "min_openness": 0.30 },
-	3: { "min_values": { &"LOYALTY": 0.1,  &"HARMONY": 0.1 },                         "min_openness": 0.35 },
-	4: { "min_values": { &"LAW": 0.2,      &"FAIRNESS": 0.1 },                        "min_openness": 0.40 },
-	5: { "min_values": { &"FAIRNESS": 0.3, &"TRUTH": 0.2 },                           "min_openness": 0.50 },
-	6: { "min_values": { &"FAIRNESS": 0.5, &"TRUTH": 0.4, &"SACRIFICE": 0.3 },        "min_openness": 0.60 },
+	2: { "min_values": { &"CUNNING": -0.15 },                                          "min_openness": 0.30 },
+	3: { "min_values": { &"LOYALTY": 0.05,  &"HARMONY": 0.05 },                       "min_openness": 0.35 },
+	4: { "min_values": { &"LAW": 0.08,      &"FAIRNESS": 0.05 },                      "min_openness": 0.40 },
+	5: { "min_values": { &"FAIRNESS": 0.12, &"TRUTH": 0.08 },                         "min_openness": 0.50 },
+	6: { "min_values": { &"FAIRNESS": 0.20, &"TRUTH": 0.15, &"SACRIFICE": 0.12 },     "min_openness": 0.60 },
 }
 
 ## ── 행동 → 가치관 alignment 테이블 ──────────────────────

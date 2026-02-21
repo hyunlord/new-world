@@ -113,13 +113,17 @@ static func initialize_values(
 			culture = culture_values.get(vkey, 0.0)
 
 		var noise: float = rng.randf_range(-0.30, 0.30)
-		var final_val: float = (
-			genetic * GENETIC_WEIGHT
-			+ culture * CULTURE_WEIGHT
-			+ hexaco_seed.get(vkey, 0.0) * HEXACO_WEIGHT
-			+ noise * NOISE_WEIGHT
+		var c_w: float = CULTURE_WEIGHT if culture_values != null else 0.0
+		var remaining: float = 1.0 - c_w
+		var scale: float = remaining / (GENETIC_WEIGHT + HEXACO_WEIGHT + NOISE_WEIGHT)
+		var final_val: float = clampf(
+			genetic * (GENETIC_WEIGHT * scale)
+			+ culture * c_w
+			+ hexaco_seed.get(vkey, 0.0) * (HEXACO_WEIGHT * scale)
+			+ noise * (NOISE_WEIGHT * scale),
+			-1.0, 1.0
 		)
-		result[vkey] = clampf(final_val, -1.0, 1.0)
+		result[vkey] = final_val
 
 	return result
 
