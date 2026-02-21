@@ -1414,3 +1414,39 @@ opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
 - Notion 상태: 🧠 성격 시스템 (HEXACO) 페이지 이미 187개로 정확히 기술됨 — **업데이트 불필요**
   - Block callout: "facet 48 + composite 124 + dark 15 = 187개" 이미 존재
   - Q&A 답변이 불확실했을 뿐, 코드·문서 모두 이미 정확함
+
+---
+
+## T-QA5: Composite Trait 서브카테고리 확정 수 반영 — 2026-02-22
+
+### Q&A 분석
+- 관련 시스템: 🧠 성격 시스템 (HEXACO) — Trait 3계층 구조
+- 추출한 정보 유형: 데이터 구성 (확정 수), 개발 히스토리 (목표→확정 전환), 트레이드오프 (opposite_actions 효율 전략)
+- 참조한 코드: data/species/human/personality/trait_definitions.json (f_=48, c_=124, d_=15)
+
+### 핵심 발견
+- Composite 서브카테고리 확정 구조:
+  - 2축 조합: 60개 (6C2=15 축 쌍 × 4방향)
+  - 3축+ 복합: 64개 (c_saint, c_berserker 등 직업·역할 포함) — 이전 "3축 조합 20~30개" + "사회적 역할 30~40개" 통합
+  - Dark Personality: 15개 (d_ prefix)
+- opposite_actions 효율 전략: facet 48개만 수동 정의, composite·dark는 구성 facet opposite_actions 합집합으로 규칙 기반 자동 파생
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 표 헤더 "개수 (목표)" → "개수 (확정)" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 2축 조합 "60~70개" → "60개" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 3축 조합 → "3축+ 복합 (직업·역할 포함)", "20~30개" → "64개" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | Dark "10~15개" → "15개", 접두사 명기 (d_ prefix) |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 삭제 | "사회적 역할 30~40개" 행 제거 — 3축+ 복합 64개에 통합됨 |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | callout "총 목표: ... 150~200개" → "확정: ... 187개" + opposite_actions 효율 전략 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion 업데이트: 🧠 성격 시스템 (HEXACO) 페이지 — 목표 언어를 확정 언어로 전환, 사회적 역할 행 제거
