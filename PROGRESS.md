@@ -71,6 +71,24 @@ main.gd의 ValueSystem preload + init + register_system은 이미 완료 상태.
 T-VBug1과 T-VBug2는 파일 겹침 없음 → 병렬 dispatch
 T-VBug3은 확인만 (이미 완료)
 
+### Results
+- Gate: PASS ✅ (28 systems registered, 20 entities spawned with values initialized)
+- Dispatch ratio: 2/3 = 67% ✅
+- Files changed: entity_manager.gd, value_system.gd
+- Commit: 55de012
+- Dispatch tool used: ask_codex (jobs b28f6438, 520edb8c — parallel)
+- Codex discovered value_system extends simulation_system.gd → execute_tick() interface (not update())
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug1: spawn_entity()에 initialize_values() 미호출 → 수정 완료 (55de012) |
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug2: value_system API 3종 오류 (get_all_alive/age_days/get_entities_in_settlement) + HEXACO 키 불일치 → 수정 완료 |
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 수정 | 모든 에이전트 values={} 고정 → 해결됨. moral_stage 1 고정 → 해결됨 |
+
+---
+
 ### Dispatch ratio: 7/9 = 78% ✅
 
 ### Dispatch strategy
