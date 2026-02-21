@@ -876,3 +876,28 @@ entity_detail_panel (커스텀 드로우) + hud (사이드 패널 ProgressBar) �
   - 색상: thirst 하늘색 #64B5F6 / warmth 주황색 #FF8A65 / safety 보라색 #9575CD
 
 ---
+
+---
+
+## 아사 버그 수정 — T-STARV-1
+
+### Context
+욕구 확장(thirst/warmth/safety) 후 아사 대규모 발생. 어린이(child stage)만 생존.
+근본 원인: drink_water가 무조건 점수 등록 + boredom penalty로 gather_food 추월.
+어린이는 child_scores에 drink_water 없음 → gather_food 유지 → 생존.
+
+### Root Cause
+1. behavior_system.gd 228행: drink_water 무조건 등록 → boredom penalty로 gather_food 추월
+2. behavior_system.gd 232행: sit_by_fire 무조건 등록 → warmth 낮아지면 경쟁 가중
+3. behavior_system.gd 236행: seek_shelter 무조건 등록 → safety 낮아지면 경쟁 가중
+4. child_scores에 drink_water 없음 → child thirst → 0 → stress 폭탄
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-STARV-1 | behavior_system.gd urgency 조건부 등록 수정 | 🟢 DISPATCH | ask_codex | single system, pure bug fix |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일, 단일 dispatch
