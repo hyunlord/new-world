@@ -1523,3 +1523,29 @@ Gate는 --headless --quit만 실행하므로 런타임 오류를 잡지 못함.
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - 버그 상태: T-2040으로 이미 수정됨 (2026-02-18) — 문서만 업데이트
+
+## T-QA7 — behavior_weights vs emotion_modifiers 데이터 시맨틱 문서화
+
+### Context
+Q&A: T-2040 Codex 디스패치 티켓의 역사적 맥락에서 나온 Q&A. 핵심 신규 정보: behavior_weights(geometric mean multiplier, 가산 가중치 의미)와 emotion_baseline(additive delta, 선형 합산)의 데이터 시맨틱 구분.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA7 | behavior_weights vs emotion_modifiers 시맨틱 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 | 추가 | block[41] 이후: behavior_weight(geometric mean multiplier) vs emotion_baseline(additive delta) 데이터 시맨틱 구분 bullet 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 엔티티 디테일 패널 시스템
