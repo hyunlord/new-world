@@ -213,13 +213,13 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	if entity.emotion_data != null and (stage == "adult" or stage == "elder"):
 		var fear_val: float = entity.emotion_data.get_emotion("fear")
 		if fear_val > 40.0:
-			scores["hide"] = (fear_val / 100.0) * 1.2
+			scores["hide"] = (fear_val / 100.0) * 2.5
 		var sadness_val: float = entity.emotion_data.get_emotion("sadness")
 		if sadness_val > 40.0:
-			scores["grieve"] = (sadness_val / 100.0) * 0.9
+			scores["grieve"] = (sadness_val / 100.0) * 2.0
 		var anger_val: float = entity.emotion_data.get_emotion("anger")
 		if anger_val > 40.0:
-			scores["confront"] = (anger_val / 100.0) * 0.8
+			scores["confront"] = (anger_val / 100.0) * 2.0
 
 	return scores
 
