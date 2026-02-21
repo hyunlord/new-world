@@ -793,7 +793,7 @@ func _draw() -> void:
 			var significant: Array = []
 			for vkey in entity.values:
 				var val: float = entity.values[vkey]
-				if absf(val) > 0.30:
+				if absf(val) > 0.10:
 					significant.append({ "key": vkey, "value": val })
 			significant.sort_custom(func(a, b):
 				return absf(a["value"]) > absf(b["value"])
