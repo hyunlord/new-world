@@ -1188,6 +1188,19 @@ Kohlberg 진급 조건(CUNNING < -0.5 등)이 수학적으로 달성 불가.
   - value_system.gd — culture=null 시 weight scale 재정규화 (±0.18 → ±0.30)
   - value_defs.gd:91~97 — KOHLBERG_THRESHOLDS 완화 (CUNNING -0.5→-0.15, stage6 FAIRNESS 0.5→0.20)
 
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug6: initialize_values culture=null 시 weight 합계 0.60→1.0 재정규화 (±0.18→±0.30) — ffe541a |
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug7: KOHLBERG_THRESHOLDS 달성 불가 완화 (CUNNING -0.5→-0.15, stage6 FAIRNESS 0.5→0.20) — ffe541a |
+| 💎 가치관 시스템 | Architecture | 수정 | initialize_values() 재정규화 공식 + KOHLBERG_THRESHOLDS 완화값 반영 |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학 로직만, UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO
+
 ---
 
 ## 초기 성인 도덕발달단계 부트스트랩 (T-VBug8) — 2026-02-22
@@ -1215,9 +1228,17 @@ main.gd가 15~50세 성인 위주로 스폰하지만 moral_stage는 항상 1로 
 - Dispatch tool: ask_codex (job f4a3f052)
 - Key change: spawn_entity() initial_age>0 시 check_moral_stage_progression 루프(최대 6회)로 성인 부트스트랩
 
----
+### Notion Update
 
----
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug8: spawn_entity() initial_age>0 시 moral_stage 부트스트랩 누락 → check_moral_stage_progression 루프(최대 6회) — abf7e95 |
+| 💎 가치관 시스템 | Architecture | 수정 | spawn_entity() 플로우: moral_stage=1 → initial_age>0 시 부트스트랩 루프 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (로직만, UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO
 
 ---
 
