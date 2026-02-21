@@ -1190,6 +1190,33 @@ Kohlberg 진급 조건(CUNNING < -0.5 등)이 수학적으로 달성 불가.
 
 ---
 
+## 초기 성인 도덕발달단계 부트스트랩 (T-VBug8) — 2026-02-22
+
+### Context
+main.gd가 15~50세 성인 위주로 스폰하지만 moral_stage는 항상 1로 시작.
+부트스트랩 없어서 모든 엔티티가 "도덕발달단계:1"로 표시됨.
+수정: spawn_entity()에서 initial_age>0이면 check_moral_stage_progression 루프로 나이에 적합한 단계까지 부트스트랩.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug8 | entity_manager.gd 초기 성인 moral_stage 부트스트랩 | 🟢 DISPATCH | ask_codex | 단일 파일, spawn_entity에 루프 추가 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 dispatch
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 1/1 = 100%
+- Files changed: scripts/core/entity_manager.gd
+- Commit: abf7e95
+- Dispatch tool: ask_codex (job f4a3f052)
+- Key change: spawn_entity() initial_age>0 시 check_moral_stage_progression 루프(최대 6회)로 성인 부트스트랩
+
+---
+
 ---
 
 ---
