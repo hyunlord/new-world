@@ -992,3 +992,30 @@ entity_detail_panel (커스텀 드로우) + hud (사이드 패널 ProgressBar) �
 
 ### Dispatch strategy
 단일 파일, 단일 dispatch
+
+---
+
+## 가치관 UI 패널 섹션 — t-values-ui-panel
+
+### Context
+entity_detail_panel.gd에 Values 섹션 추가. personality 섹션 직후, traits 섹션 직전 삽입.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-values-ui-panel | entity_detail_panel.gd Values 섹션 | 🟢 DISPATCH | ask_codex | single-file UI |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅
+- Dispatch tool: ask_codex
+- Files changed: scripts/ui/entity_detail_panel.gd
+- Key deliverables:
+  - personality 직후, traits 직전에 Values 섹션 헤더 추가
+  - |val| > 0.30인 가치관만 표시 (절댓값 내림차순 정렬)
+  - 양수=파란색(0.4,0.7,1.0), 음수=붉은색(1.0,0.45,0.45)
+  - 하단 moral_stage 숫자 표시
+  - 기존 하단 중복 Values 블록 제거 (section_id 충돌 방지)
+  - Locale.ltr() 사용, 하드코딩 없음

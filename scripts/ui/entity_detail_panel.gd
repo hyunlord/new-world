@@ -786,6 +786,29 @@ func _draw() -> void:
 					cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 		cy += 4.0
 
+	# ── Values (가치관) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
+	if not _section_collapsed.get("values", true):
+		if not entity.values.is_empty():
+			var significant: Array = []
+			for vkey in entity.values:
+				var val: float = entity.values[vkey]
+				if absf(val) > 0.30:
+					significant.append({ "key": vkey, "value": val })
+			significant.sort_custom(func(a, b): return absf(a.value) > absf(b.value))
+			for item in significant:
+				var vkey: String = item.key
+				var val: float = item.value
+				var display_name: String = Locale.ltr("VALUE_" + vkey)
+				var bar_color: Color = Color(0.4, 0.7, 1.0) if val > 0 else Color(1.0, 0.45, 0.45)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, display_name, (val + 1.0) / 2.0, bar_color)
+		if "moral_stage" in entity:
+			var stage_label: String = Locale.ltr("VALUE_MORAL_STAGE") + ": %d" % entity.moral_stage
+			draw_string(font, Vector2(cx + 10, cy + 12), stage_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.7, 0.7, 0.7))
+			cy += 18
+	cy += 4.0
+
 	# ── Traits (independent section) ──
 	if entity.personality != null:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAITS"), "traits")
@@ -1296,35 +1319,6 @@ func _draw() -> void:
 						cy += 13.0
 						ev_idx -= 1
 						count += 1
-
-	# ── Values ──
-	if "values" in entity and entity.values.size() > 0:
-		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
-		if not _section_collapsed.get("values", true):
-			var values_dict: Dictionary = entity.values
-			var significant: Array = []
-			for vkey in values_dict:
-				var val: float = values_dict[vkey]
-				if absf(val) > 0.30:
-					significant.append({"key": vkey, "value": val})
-			significant.sort_custom(func(a, b): return absf(a["value"]) > absf(b["value"]))
-			if significant.is_empty():
-				draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_SIGNIFICANT_VALUES"),
-					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
-				cy += 16.0
-			else:
-				for item in significant:
-					var display_name: String = Locale.ltr("VALUE_" + str(item["key"]))
-					var val: float = item["value"]
-					cy = _draw_value_bar(font, cx + 10, cy, bar_w, display_name, val,
-						Color(0.4, 0.6, 1.0), Color(1.0, 0.4, 0.4))
-			var stage: int = entity.moral_stage if "moral_stage" in entity else 0
-			if stage > 0:
-				draw_string(font, Vector2(cx + 10, cy + 12),
-					"%s: %d" % [Locale.ltr("VALUE_MORAL_STAGE"), stage],
-					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.7))
-				cy += 20.0
-			cy += 6.0
 
 	# Track content height for scrolling
 	_content_height = cy + _scroll_offset + 20.0
