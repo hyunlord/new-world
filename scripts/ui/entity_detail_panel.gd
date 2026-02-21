@@ -795,10 +795,12 @@ func _draw() -> void:
 				var val: float = entity.values[vkey]
 				if absf(val) > 0.30:
 					significant.append({ "key": vkey, "value": val })
-			significant.sort_custom(func(a, b): return absf(a.value) > absf(b.value))
+			significant.sort_custom(func(a, b):
+				return absf(a["value"]) > absf(b["value"])
+			)
 			for item in significant:
-				var vkey: String = item.key
-				var val: float = item.value
+				var vkey: String = item["key"]
+				var val: float = item["value"]
 				var display_name: String = Locale.ltr("VALUE_" + vkey)
 				var bar_color: Color = Color(0.4, 0.7, 1.0) if val > 0 else Color(1.0, 0.45, 0.45)
 				cy = _draw_bar(font, cx + 10, cy, bar_w, display_name, (val + 1.0) / 2.0, bar_color)
