@@ -8,6 +8,14 @@ var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 ## TraitViolationSystem 참조 (Phase 3B), main.gd에서 주입
 var _trait_violation_system = null
+const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+var _morale_system = null
+## Debug-only: override hysteresis threshold for testing (-1 = use default HYSTERESIS_THRESHOLD)
+var _debug_hysteresis_threshold_override: float = -1.0
+
+## [Hysteresis — Utility AI standard pattern]
+## Action inertia threshold: prevents micro-score oscillation from flip-flopping.
+const HYSTERESIS_THRESHOLD: float = 0.85
 
 
 func _init() -> void:
@@ -28,6 +36,15 @@ func init(entity_manager: RefCounted, world_data: RefCounted, rng: RandomNumberG
 
 func set_trait_violation_system(tvs) -> void:
 	_trait_violation_system = tvs
+
+
+func set_morale_system(ms) -> void:
+	_morale_system = ms
+
+
+## Debug helper: temporarily override hysteresis threshold. Pass -1.0 to restore default.
+func debug_set_hysteresis_threshold(value: float) -> void:
+	_debug_hysteresis_threshold_override = value
 
 
 func execute_tick(tick: int) -> void:
@@ -51,6 +68,13 @@ func execute_tick(tick: int) -> void:
 			if score > best_score:
 				best_score = score
 				best_action = action
+		## [Hysteresis] If current action scores >= best * threshold, keep current action.
+		var _eff_threshold: float = _debug_hysteresis_threshold_override \
+			if _debug_hysteresis_threshold_override >= 0.0 else HYSTERESIS_THRESHOLD
+		if entity.current_action != "" \
+				and entity.current_action in scores \
+				and scores[entity.current_action] >= best_score * _eff_threshold:
+			best_action = entity.current_action
 		_assign_action(entity, best_action, tick)
 
 
@@ -170,12 +194,49 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 			if scores.has("gather_stone"):
 				scores["gather_stone"] *= 1.5
 
+	# Apply trait / morale / stress weights
+	for action in scores.keys():
+		scores[action] *= TraitSystem.get_behavior_weight(entity, action)
+		if _morale_system != null:
+			scores[action] *= _morale_system.get_behavior_weight_multiplier(entity.id)
+		if action == "rest" and entity.emotion_data != null and entity.emotion_data.stress > 0.6:
+			scores[action] *= 1.0 + entity.emotion_data.stress
+
+	## [Boredom] Apply repetition penalty before hysteresis.
+	for action in scores.keys():
+		scores[action] *= _calc_boredom_penalty(entity, action)
+
 	return scores
 
 
 ## Exponential urgency: higher deficit = much higher urgency
 func _urgency_curve(deficit: float) -> float:
 	return pow(deficit, 2.0)
+
+
+## [Boredom / Exploration-Exploitation — Cohen et al. (2007)]
+## [HEXACO O_inquisitiveness — Lee & Ashton (2004)]
+## Returns penalty multiplier based on consecutive repetitions of action in history.
+## High O_inquisitiveness → stronger penalty (seeks novelty).
+## Low O_inquisitiveness → weaker penalty (prefers routine).
+func _calc_boredom_penalty(entity: RefCounted, action: String) -> float:
+	var repeat_count: int = 0
+	var history: Array = entity.action_history
+	for i in range(history.size() - 1, -1, -1):
+		if history[i].get("action", "") == action:
+			repeat_count += 1
+		else:
+			break
+	if repeat_count < 3:
+		return 1.0
+	var inquisitiveness: float = 0.5
+	if entity.personality != null:
+		inquisitiveness = entity.personality.facets.get("O_inquisitiveness", 0.5)
+	var base_penalty: float = 0.85
+	if repeat_count >= 5:
+		base_penalty = 0.70
+	var inq_modifier: float = inquisitiveness * 0.30
+	return maxf(0.30, base_penalty - inq_modifier)
 
 
 ## 멘탈 브레이크 행동 오버라이드
@@ -305,8 +366,12 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 				entity.action_target = entity.position
 			entity.action_timer = 10
 		"socialize":
+			## [Maslow (1943) — Social belonging need must be satisfied after contact.]
+			## Partial recovery (+0.15) on action start: single contact partially fills social need.
+			## social_event_system handles relationship strength separately.
 			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 8
+			entity.social = minf(1.0, entity.social + 0.15)
 		"visit_partner":
 			var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
 			if partner != null:

@@ -211,6 +211,7 @@ func _ready() -> void:
 
 	morale_system = MoraleSystem.new()
 	morale_system.init(entity_manager)
+	behavior_system.set_morale_system(morale_system)
 
 	contagion_system = ContagionSystem.new()
 	contagion_system.init(entity_manager)
@@ -284,8 +285,14 @@ func _ready() -> void:
 			debug_console._morale_system = morale_system
 			debug_console._contagion_system = contagion_system
 			debug_console._settlement_manager = settlement_manager
+			debug_console._child_stress_processor = child_stress_processor
+			debug_console._intergenerational_system = intergenerational_system
+			debug_console._parenting_system = parenting_system
+			debug_console._behavior_system = behavior_system
 			add_child(debug_console)
 			debug_console.init_phase4_commands()
+			debug_console.init_phase5_commands()
+			debug_console.init_behavior_commands()
 		var _dp_script = load("res://scenes/debug/debug_panel.gd")
 		if _dp_script != null:
 			debug_panel = _dp_script.new()

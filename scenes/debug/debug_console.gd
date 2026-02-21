@@ -26,6 +26,12 @@ var _morale_system = null
 var _contagion_system = null
 var _settlement_manager = null
 
+# Phase 5 systems (injected by main.gd BEFORE _ready)
+var _child_stress_processor = null
+var _intergenerational_system = null
+var _parenting_system = null
+var _behavior_system: Variant = null
+
 # Phase 4 command handler
 var _debug_commands = null
 
@@ -62,6 +68,26 @@ func init_phase4_commands() -> void:
 		self,
 		_settlement_manager
 	)
+
+
+func init_phase5_commands() -> void:
+	if not OS.is_debug_build():
+		return
+	if _debug_commands == null:
+		push_warning("[DebugConsole] init_phase5_commands called before init_phase4_commands")
+		return
+	_debug_commands.init_phase5(
+		_child_stress_processor,
+		_intergenerational_system,
+		_parenting_system
+	)
+
+
+func init_behavior_commands() -> void:
+	if _debug_commands == null:
+		push_warning("[DebugConsole] init_behavior_commands called before init_phase4_commands")
+		return
+	_debug_commands.init_behavior(_behavior_system)
 
 
 func _build_ui() -> void:
@@ -240,6 +266,18 @@ func _register_all_commands() -> void:
 		"test_rage_spread": Callable(self, "_cmd_test_rage_spread"),
 		"test_migration": Callable(self, "_cmd_test_migration"),
 		"test_rebellion": Callable(self, "_cmd_test_rebellion"),
+		"debug_childhood": Callable(self, "_cmd_debug_childhood"),
+		"debug_ace": Callable(self, "_cmd_debug_ace"),
+		"debug_generation": Callable(self, "_cmd_debug_generation"),
+		"test_shrp": Callable(self, "_cmd_test_shrp"),
+		"test_ace_adulthood": Callable(self, "_cmd_test_ace_adulthood"),
+		"test_epigenetic": Callable(self, "_cmd_test_epigenetic"),
+		"test_attachment": Callable(self, "_cmd_test_attachment"),
+		"test_simultaneous_ace": Callable(self, "_cmd_test_simultaneous_ace"),
+		"debug_behavior": Callable(self, "_cmd_debug_behavior"),
+		"test_hysteresis": Callable(self, "_cmd_test_hysteresis"),
+		"test_social": Callable(self, "_cmd_test_social"),
+		"test_boredom": Callable(self, "_cmd_test_boredom"),
 	}
 
 
@@ -470,11 +508,11 @@ func _cmd_trait(args: Dictionary) -> void:
 			print_output("No personality data", Color.RED)
 			return
 		TraitSystem.evaluate_traits(entity)
-		if entity.active_traits.is_empty():
+		if entity.display_traits.is_empty():
 			print_output("No active traits for %s" % entity.entity_name)
 			return
-		for i in range(entity.active_traits.size()):
-			var t = entity.active_traits[i]
+		for i in range(entity.display_traits.size()):
+			var t = entity.display_traits[i]
 			var tid: String = str(t.get("id", "?"))
 			print_output("trait: %s" % tid)
 		return
@@ -667,6 +705,15 @@ func _cmd_help(args: Dictionary) -> void:
 		print_output("  test_rage_spread <agent_id>")
 		print_output("  test_migration <settlement_id>")
 		print_output("  test_rebellion <settlement_id>")
+		print_output("  ── Phase 5 Debug ──")
+		print_output("  debug_childhood <agent_id>")
+		print_output("  debug_ace <agent_id>")
+		print_output("  debug_generation <settlement_id>")
+		print_output("  test_shrp <agent_id>")
+		print_output("  test_ace_adulthood <agent_id>")
+		print_output("  test_epigenetic <mother_id> <father_id>")
+		print_output("  test_attachment <agent_id>")
+		print_output("  test_simultaneous_ace <agent_id>")
 		print_output("  help [cmd]")
 		return
 
@@ -705,6 +752,22 @@ func _cmd_help(args: Dictionary) -> void:
 			print_output("test_migration <settlement_id>  — show migration probs + simulate morale 0.2/0.5/0.8")
 		"test_rebellion":
 			print_output("test_rebellion <settlement_id>  — show grievance + rebellion probability")
+		"debug_childhood":
+			print_output("debug_childhood <agent_id>  — dev stage, ACE score, threat/deprivation, attachment, epigenetic load, HPA sensitivity")
+		"debug_ace":
+			print_output("debug_ace <agent_id>  — all 10 ACE items, backfill flag, adult modifier preview")
+		"debug_generation":
+			print_output("debug_generation <settlement_id>  — avg epigenetic load, T value, E* fixed point, collapse risk")
+		"test_shrp":
+			print_output("test_shrp <agent_id>  — inject threat 0.5 (suppressed), deprivation 0.5, threat 0.9 (breach)")
+		"test_ace_adulthood":
+			print_output("test_ace_adulthood <agent_id>  — force adulthood transition, show before/after ACE modifiers")
+		"test_epigenetic":
+			print_output("test_epigenetic <mother_id> <father_id>  — compute child epigenetic load from two parents")
+		"test_attachment":
+			print_output("test_attachment <agent_id>  — preview attachment type from current caregiver data")
+		"test_simultaneous_ace":
+			print_output("test_simultaneous_ace <agent_id>  — inject 2 ACE events, show kindling + saturation")
 		_:
 			print_output("No detailed help for: " + topic, Color.RED)
 
@@ -756,3 +819,83 @@ func _cmd_test_rebellion(args: Dictionary) -> void:
 		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
 		return
 	_debug_commands.cmd_test_rebellion(args)
+
+
+func _cmd_debug_childhood(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_childhood(args)
+
+
+func _cmd_debug_ace(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_ace(args)
+
+
+func _cmd_debug_generation(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_debug_generation(args)
+
+
+func _cmd_test_shrp(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_shrp(args)
+
+
+func _cmd_test_ace_adulthood(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_ace_adulthood(args)
+
+
+func _cmd_test_epigenetic(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_epigenetic(args)
+
+
+func _cmd_test_attachment(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_attachment(args)
+
+
+func _cmd_test_simultaneous_ace(args: Dictionary) -> void:
+	if _debug_commands == null:
+		print_output("Phase4 commands not initialized. Check main.gd injection.", Color.RED)
+		return
+	_debug_commands.cmd_test_simultaneous_ace(args)
+
+
+func _cmd_debug_behavior(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_debug_behavior(args)
+
+
+func _cmd_test_hysteresis(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_hysteresis(args)
+
+
+func _cmd_test_social(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_social(args)
+
+
+func _cmd_test_boredom(args: Dictionary) -> void:
+	if _debug_commands == null:
+		return
+	_debug_commands.cmd_test_boredom(args)
