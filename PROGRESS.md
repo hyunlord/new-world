@@ -755,3 +755,26 @@ game.json localization 키 누락분 추가.
 - Output: 인게임 콘솔 + log file 동시 기록 (_print 패턴)
 
 ---
+
+## P4 hide 행동 미작동 수정 — 2026-02-21
+
+### Context
+hide/grieve/confront 스코어가 gather_food(max 1.5)보다 낮아 굶주린 엔티티가 절대 hide 불가.
+- 원인: fear=80 → hide=0.96 < gather_food=1.0(기아 override) < 1.5(gatherer 직업)
+- 수정: 멀티플라이어 ×1.2/0.9/0.8 → ×2.5/2.0/2.0
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-FIX | behavior_system.gd 3줄 멀티플라이어 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 0aa1267
+- Dispatch tool: ask_codex (job 03554c0e)
+- Files changed: 1 (behavior_system.gd lines 216, 219, 222)
+- fear=80 → hide=2.0, sadness=80 → grieve=1.6, anger=80 → confront=1.6
+
+---
