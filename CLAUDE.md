@@ -5,7 +5,7 @@
 Read this skill before writing or modifying any GDScript file. No exceptions.
 This applies to new systems, bug fixes, refactors, config changes — everything.
 
-``` 
+```
 skills/worldsim-code/SKILL.md
 ```
 
@@ -270,7 +270,7 @@ New ticket created
   │       2. Sequential DISPATCH the rest
   │
   └─ Integration wiring? (<50 lines, connecting dispatched work)
-	  └─ DIRECT. This is your core job.
+      └─ DIRECT. This is your core job.
 ```
 
 ---
@@ -334,11 +334,29 @@ PROGRESS.md lives at the project root. Append-only — never delete past entries
 ### Dispatch strategy
 [parallel / sequential / config-first-fan-out — explain order and dependencies]
 
+### Notion Update
+⚠️ This section is REQUIRED. Gate will fail if missing.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| [SystemName] | Architecture | modified | Updated classDiagram with new class |
+| [SystemName] | Data Structure | added | New Enum table for XxxType |
+| Data Definitions DB | — | added | XxxEnum registered |
+| Change Log DB | — | added | [date] XxxSystem refactored — reason |
+
+If genuinely nothing doc-worthy: write "No doc-worthy changes. Reason: [explanation]"
+Silence is NOT acceptable — gate will fail.
+
+### Localization Verification
+- Hardcoded scan: PASS / FAIL
+- New keys added: [list or none]
+- ko/ updated: YES / NO
+
 ### Results
 - Gate: PASS / FAIL
 - Dispatch ratio: X/Y = ZZ%
 - Files changed: [count]
 - Dispatch tool used: ask_codex (N tickets)
+- Notion pages updated: [list]
 ```
 
 ### Rules
@@ -353,10 +371,10 @@ PROGRESS.md lives at the project root. Append-only — never delete past entries
 
 When the user gives a feature request:
 
-1. **Plan** — Split into 5–10 tickets. Each ticket targets 1–2 files max.
+1. **Plan** — Split into 5–10 tickets. Each ticket targets 1–2 files max. If 3+ files, split further.
    **Before writing a single line of code, count your tickets.
    If you have fewer than 3 tickets for any non-trivial feature, you have not split enough. Re-split.**
-   
+
 2. **Sequence** — Order by dependency. Identify parallel vs sequential.
 
 3. **Classify each ticket:**
@@ -371,14 +389,18 @@ When the user gives a feature request:
    Use `ask_codex` or `codex_dispatch.sh` — **NEVER Task tool for 🟢 tickets.**
 
 6. **Gate** — `bash scripts/gate.sh` after each integration.
+   ⚠️ Gate checks Notion update documentation. Gate WILL FAIL if PROGRESS.md has no Notion Update section.
 
-7. **Fix failures** — gate fails → analyze and fix. Codex caused it → re-dispatch with clearer ticket.
+7. **Notion FIRST, then Gate** — Notion update must be completed and documented in PROGRESS.md
+   BEFORE running gate.sh. Running gate without Notion update = incomplete ticket.
 
-8. **Do not ask** the user for additional commands. Make reasonable defaults.
+8. **Fix failures** — gate fails → analyze and fix. Codex caused it → re-dispatch with clearer ticket.
 
-9. **Update PROGRESS.md** with results.
+9. **Do not ask** the user for additional commands. Make reasonable defaults.
 
-10. **Summarize** — dispatch ratio, tool used, DIRECT reasons, files changed.
+10. **Update PROGRESS.md** with results including Notion Update section.
+
+11. **Summarize** — dispatch ratio, tool used, DIRECT reasons, files changed, Notion pages updated.
 
 ---
 
@@ -399,11 +421,12 @@ Files to create/modify:
 - path/to/test.gd — [what test to add]
 
 ## Acceptance Criteria
-- [ ] Gate passes: bash scripts/gate.sh
-- [ ] Smoke test: [command that completes in <30s]
+- [ ] skills/worldsim-code/SKILL.md Part 2 completed (Notion update) ← DO THIS BEFORE GATE
+- [ ] Notion Update section written in PROGRESS.md ← REQUIRED FOR GATE TO PASS
 - [ ] skills/worldsim-code/SKILL.md Part 1 verified (localization scan — even if no new text)
-- [ ] skills/worldsim-code/SKILL.md Part 2 completed (Notion update)
-- [ ] Dispatch ratio confirmed ≥60% in PROGRESS.md before this ticket was dispatched
+- [ ] Dispatch ratio confirmed ≥60% in PROGRESS.md
+- [ ] Smoke test: [command that completes in <30s]
+- [ ] Gate passes: bash scripts/gate.sh
 
 ## Risk Notes
 - Perf: [expected impact on tick time]
@@ -446,5 +469,6 @@ Architecture, integration, refactors, data model boundaries, shared interface ow
 18. **Skipping skills/worldsim-code/SKILL.md** — read it before every code task. Both parts. No exceptions.
 19. **Hardcoding UI text** — always use `Locale.*`. Full rules in SKILL.md Part 1.
 20. **Using tr() instead of Locale.ltr()** — Godot built-in tr() does not work in WorldSim.
-21. **Skipping Notion update** — every ticket updates Notion. Full procedure in SKILL.md Part 2.
+21. **Skipping Notion update** — every ticket updates Notion BEFORE running gate. Gate will fail without Notion Update section in PROGRESS.md.
 22. **Appending to Notion instead of merging** — read the existing page first, then integrate.
+23. **Running gate before Notion update** — Notion first, gate second. Always. No exceptions.

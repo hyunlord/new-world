@@ -7,6 +7,26 @@ git status --porcelain || true
 
 test -f project.godot || { echo "[gate] ERROR: project.godot not found"; exit 1; }
 
+# --- Notion update verification ---
+echo "[gate] checking Notion update documentation..."
+if [ ! -f PROGRESS.md ]; then
+  echo "[gate] ERROR: PROGRESS.md not found. Write it before running gate."
+  exit 1
+fi
+if ! grep -q "Notion Update" PROGRESS.md; then
+  echo "[gate] ERROR: No 'Notion Update' section found in PROGRESS.md."
+  echo "[gate] Complete Notion update (SKILL.md Part 2) and document it in PROGRESS.md first."
+  exit 1
+fi
+# Check that it's not just the template — must have actual page entries
+NOTION_LINES=$(grep -A 20 "Notion Update" PROGRESS.md | grep -c "^|" || true)
+if [ "$NOTION_LINES" -lt 1 ]; then
+  echo "[gate] ERROR: Notion Update section exists but has no page entries."
+  echo "[gate] Fill in the Notion Update table in PROGRESS.md before running gate."
+  exit 1
+fi
+echo "[gate] Notion update: OK"
+
 # --- Localization JSON validation ---
 echo "[gate] checking localization JSON..."
 for f in localization/en/*.json localization/ko/*.json; do

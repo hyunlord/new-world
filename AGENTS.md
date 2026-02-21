@@ -113,9 +113,9 @@ if OS.is_debug_build(): print("DEBUG: ...") # 디버그 전용
 3. **Check for existing code** — before creating a file, verify it doesn't exist. Before modifying a function, read the current implementation.
 4. **Plan** — map which files change, which signals are affected, which tests to run.
 5. **Implement** exactly what the ticket asks. No extras.
-6. **Verify** — run ticket's verification commands AND the gate script.
+6. **Verify** — run ticket's verification commands. Do NOT run gate.sh yourself — lead runs gate after Notion update.
 7. **Commit** to the assigned branch: `[t-XXX] <one-line summary>`
-8. **Report** with this structure:
+8. **Report** with this structure (Notion Info section is REQUIRED — lead uses it to update Notion):
 
 ```
 ## Summary
@@ -126,13 +126,20 @@ if OS.is_debug_build(): print("DEBUG: ...") # 디버그 전용
 
 ## Verification
 - [command]: PASS / FAIL
-- bash scripts/gate.sh: PASS / FAIL
 
 ## Localization 검증
 - 하드코딩 스캔: PASS / FAIL
 - 신규 키 (en): [목록 또는 없음]
 - 신규 키 (ko): [목록 또는 없음]
 - tr_data() 발견: 없음 / [파일:라인]
+
+## Notion Info (for lead to update Notion — required)
+- System affected: [system name]
+- New classes/signals added: [list or none]
+- New fields/enums/constants: [list or none]
+- Algorithm/formula changed: [yes/no — describe if yes]
+- Design intent: [why was this implemented this way]
+- Known limitations or tradeoffs: [list or none]
 
 ## Risks / Edge Cases
 ## Out-of-Scope Issues Found
@@ -146,7 +153,8 @@ if OS.is_debug_build(): print("DEBUG: ...") # 디버그 전용
 - Do NOT modify shared interfaces (SimulationBus, EntityManager API, GameConfig keys) without lead approval.
 - Do NOT touch files outside your ticket's Scope.
 - Do NOT add new Autoloads or register new systems in SimulationEngine — that is lead work.
-- Do NOT update Notion — that is lead work.
+- Do NOT update Notion — that is lead work. Fill in "Notion Info" section in your report instead.
+- Do NOT run gate.sh — lead runs gate after completing Notion update. Gate will fail without Notion docs.
 
 ---
 
@@ -194,4 +202,6 @@ powershell -File scripts/gate.ps1  # Windows
 16. **Hardcoding UI text in any language** — always use `Locale.*`
 17. **Using `tr()` instead of `Locale.ltr()`** — Godot built-in tr() does not work here
 18. **Adding text to only one language file** — en/ and ko/ must be updated together
-19. **Updating Notion** — that is lead work, not Codex work
+19. **Updating Notion** — that is lead work, not Codex work. Fill "Notion Info" in your report instead.
+20. **Running gate.sh yourself** — lead runs gate after Notion update. Gate checks Notion docs and will fail without them.
+21. **Leaving Notion Info section empty** — lead cannot update Notion without this info. Always fill it in.

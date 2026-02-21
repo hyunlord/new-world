@@ -388,7 +388,25 @@ A Notion update passes when ALL of the following are true:
 - [ ] All affected system docs updated (not just the primary one)
 - [ ] Data Definitions DB updated if new Enum/constant was added
 - [ ] Change Log DB updated if this was a major change
-- [ ] Notion Update table filled out in ticket completion report
+- [ ] Notion Update table filled out in PROGRESS.md
+
+## ⚠️ Gate Dependency Rule
+
+**Notion update MUST be completed before running gate.sh.**
+
+Gate checks PROGRESS.md for a "Notion Update" section with at least one page entry.
+If missing → gate FAILS immediately, before any other checks.
+
+Order of operations — no exceptions:
+```
+1. Complete code work
+2. Update Notion (this Part 2 procedure)
+3. Write Notion Update table in PROGRESS.md
+4. Run localization verification (Part 1)
+5. Run bash scripts/gate.sh  ← only now
+```
+
+Skipping Notion and running gate anyway = gate FAIL = ticket incomplete.
 
 ---
 
