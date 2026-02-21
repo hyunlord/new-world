@@ -270,7 +270,7 @@ New ticket created
   │       2. Sequential DISPATCH the rest
   │
   └─ Integration wiring? (<50 lines, connecting dispatched work)
-      └─ DIRECT. This is your core job.
+	  └─ DIRECT. This is your core job.
 ```
 
 ---
@@ -353,8 +353,10 @@ PROGRESS.md lives at the project root. Append-only — never delete past entries
 
 When the user gives a feature request:
 
-1. **Plan** — Split into 5–10 tickets. Each ticket targets 1–2 files max. If 3+ files, split further.
-
+1. **Plan** — Split into 5–10 tickets. Each ticket targets 1–2 files max.
+   **Before writing a single line of code, count your tickets.
+   If you have fewer than 3 tickets for any non-trivial feature, you have not split enough. Re-split.**
+   
 2. **Sequence** — Order by dependency. Identify parallel vs sequential.
 
 3. **Classify each ticket:**
@@ -401,6 +403,7 @@ Files to create/modify:
 - [ ] Smoke test: [command that completes in <30s]
 - [ ] skills/worldsim-code/SKILL.md Part 1 verified (localization scan — even if no new text)
 - [ ] skills/worldsim-code/SKILL.md Part 2 completed (Notion update)
+- [ ] Dispatch ratio confirmed ≥60% in PROGRESS.md before this ticket was dispatched
 
 ## Risk Notes
 - Perf: [expected impact on tick time]

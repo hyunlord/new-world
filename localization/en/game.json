@@ -298,5 +298,8 @@
   "REL_MOD_SOCIAL_ENERGY_COST_MULT": "Social Energy Cost",
   "REL_MOD_STATUS_SEEKING_MULT": "Status Seeking",
   "REL_MOD_SUSPICION_GAIN_MULT": "Suspicion Gain",
-  "REL_MOD_TRUST_REPAIR_MULT": "Trust Repair"
+  "REL_MOD_TRUST_REPAIR_MULT": "Trust Repair",
+  "STATUS_HIDE": "Hiding",
+  "STATUS_GRIEVE": "Grieving",
+  "STATUS_CONFRONT": "Confronting"
 }
