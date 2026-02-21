@@ -778,3 +778,27 @@ hide/grieve/confront 스코어가 gather_food(max 1.5)보다 낮아 굶주린 �
 - fear=80 → hide=2.0, sadness=80 → grieve=1.6, anger=80 → confront=1.6
 
 ---
+
+## emotion fast half-life 수정 — 2026-02-21
+
+### Context
+fast_half_life_hours 값이 game-day 단위였는데 너무 작아 90% 감쇠/day 발생.
+fear=80 주입 후 EmotionSystem 1 tick 만에 → 7.9 (P4 임계값 40 미달).
+단위 불일치: dt_hours = 1.0 (실제로는 1 game-day), hl=0.3 game-days → 90% decay.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| P4-HL | decay_parameters.json fast_half_life 값 수정 | 🟢 DISPATCH | ask_codex | 단일 JSON 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 67b37f9
+- Dispatch tool: ask_codex (job 128ab334)
+- Files changed: 1 (data/species/human/emotions/decay_parameters.json)
+- fear: 0.3→2.0, anger: 0.4→1.5, sadness: 0.5→4.0
+- 수정 후: fear=80 → 1 game-day 후 56.5 (> 40 유지) ✅
+
+---
