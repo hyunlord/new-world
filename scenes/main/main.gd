@@ -231,7 +231,7 @@ func _ready() -> void:
 	parenting_system.init(entity_manager)
 
 	value_system = ValueSystem.new()
-	value_system.init(entity_manager)
+	value_system.init(entity_manager, settlement_manager)
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5

@@ -4,8 +4,10 @@
 extends "res://scripts/core/simulation_system.gd"
 
 const ValueDefs = preload("res://scripts/core/value_defs.gd")
+const SettlementCulture = preload("res://scripts/systems/settlement_culture.gd")
 
 var _entity_manager = null
+var _settlement_manager = null
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 ## ── 형성 비율 상수 ────────────────────────────────────────
@@ -47,18 +49,33 @@ static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
 
 
 ## SimulationEngine 등록용 — 시스템 초기화
-func init(entity_manager) -> void:
+func init(entity_manager, settlement_manager = null) -> void:
 	system_name = "value_system"
 	priority = 55
 	tick_interval = 200
 	_entity_manager = entity_manager
+	_settlement_manager = settlement_manager
 	_rng.randomize()
 
 
-## tick마다 호출: Kohlberg 진급 + peer influence 1회
+## tick마다 호출: Kohlberg 진급 + peer influence + 정착지 문화 동조 압력
 func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
+
+	# ── Phase 1: 정착지 공유 가치관 재계산 [Axelrod 1997] ────────────
+	if _settlement_manager != null:
+		var all_settlements: Array = _settlement_manager.get_all_settlements()
+		for settlement in all_settlements:
+			if settlement.member_ids.is_empty():
+				continue
+			var members: Array = []
+			for mid in settlement.member_ids:
+				var m = _entity_manager.get_entity(mid)
+				if m != null and m.is_alive and not m.values.is_empty():
+					members.append(m)
+			if not members.is_empty():
+				settlement.shared_values = SettlementCulture.compute_shared_values(members, null)
 
 	var entities: Array = _entity_manager.get_alive_entities()
 
@@ -78,6 +95,17 @@ func execute_tick(_tick: int) -> void:
 			var other = neighbors[_rng.randi() % neighbors.size()]
 			if other.id != entity.id and not other.values.is_empty():
 				apply_peer_influence(entity, other.values, 0.3, age_years)
+
+		# ── Phase 2: 정착지 문화 동조 압력 [Haidt 2012] ─────────────
+		if _settlement_manager != null and entity.settlement_id > 0:
+			var settlement = _settlement_manager.get_settlement(entity.settlement_id)
+			if settlement != null and not settlement.shared_values.is_empty():
+				SettlementCulture.apply_conformity_pressure(
+					entity,
+					settlement.shared_values,
+					0.5,
+					age_years,
+				)
 
 
 ## ── 3.2 초기화: 유전 + 문화 + HEXACO + 노이즈 합성 ──────

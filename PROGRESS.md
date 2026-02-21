@@ -1327,3 +1327,35 @@ GPT/Gemini 연구 조사 결과(4-모델 하이브리드 스트레스 아키텍�
 - Files changed: 1 (PROGRESS.md)
 - Notion blocks updated: 10
 - Notion page: 😤 감정 & 스트레스 시스템 (30de2e3d-4a77-8116-8d74-d3cd0273ba95)
+
+---
+
+## 정착지 문화 통합 — T-SCult1~3 — 2026-02-22
+
+### Context
+settlement_culture.gd가 구현되어 있으나 호출자가 없음 (dead code). 3개 티켓으로 통합:
+settlement_data에 shared_values 필드 추가 → value_system.execute_tick()에 정착지 문화 계산+동조 압력 통합 → main.gd에서 settlement_manager를 value_system.init()에 전달.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-SCult1 | settlement_data.gd — shared_values 필드 추가 | 🟢 DISPATCH | ask_codex | standalone new field, 1 file |
+| T-SCult2 | value_system.gd — settlement_manager + 문화 tick 통합 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+| T-SCult3 | main.gd — value_system.init()에 settlement_manager 전달 | 🔴 DIRECT | — | integration wiring <5 lines |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-SCult1과 T-SCult2는 파일 겹침 없음 → 병렬 dispatch.
+T-SCult3은 두 DISPATCH 완료 후 직접 통합.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | Architecture | 수정 | value_system.execute_tick(): settlement culture 2-phase (compute shared_values → apply_conformity_pressure) 추가 |
+| 💎 가치관 시스템 | Data Structure | 수정 | settlement_data.shared_values: Dictionary (ephemeral, recomputed each 200-tick cycle) 추가 |
+| 💎 가치관 시스템 | 통합 현황 | 수정 | settlement_culture.gd 통합 완료 (T-SCult1~3) |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학/시뮬레이션 로직만, UI 텍스트 없음)
+- New keys added: none

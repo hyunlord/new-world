@@ -270,7 +270,7 @@ New ticket created
   │       2. Sequential DISPATCH the rest
   │
   └─ Integration wiring? (<50 lines, connecting dispatched work)
-      └─ DIRECT. This is your core job.
+	  └─ DIRECT. This is your core job.
 ```
 
 ---
