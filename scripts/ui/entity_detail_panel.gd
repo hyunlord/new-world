@@ -1318,9 +1318,7 @@ func _draw() -> void:
 					var val: float = item["value"]
 					cy = _draw_value_bar(font, cx + 10, cy, bar_w, display_name, val,
 						Color(0.4, 0.6, 1.0), Color(1.0, 0.4, 0.4))
-			var stage: int = entity.get("moral_stage", 0) if entity.has_method("get") else 0
-			if stage <= 0 and "moral_stage" in entity:
-				stage = entity.moral_stage
+			var stage: int = entity.moral_stage if "moral_stage" in entity else 0
 			if stage > 0:
 				draw_string(font, Vector2(cx + 10, cy + 12),
 					"%s: %d" % [Locale.ltr("VALUE_MORAL_STAGE"), stage],
