@@ -62,6 +62,7 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 		null,
 		_rng,
 	)
+	entity.moral_stage = 1
 	# Emotions (defaults)
 	entity.emotions = {
 		"happiness": 0.5,

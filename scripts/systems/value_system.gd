@@ -62,14 +62,6 @@ func execute_tick(_tick: int) -> void:
 
 	var entities: Array = _entity_manager.get_alive_entities()
 
-	# ── Settlement → members 맵 구성 (peer influence용, O(n)) ──────────
-	var settlement_map: Dictionary = {}
-	for e in entities:
-		if e.settlement_id > 0:
-			if not settlement_map.has(e.settlement_id):
-				settlement_map[e.settlement_id] = []
-			settlement_map[e.settlement_id].append(e)
-
 	for entity in entities:
 		if entity.values.is_empty():
 			continue
@@ -80,13 +72,12 @@ func execute_tick(_tick: int) -> void:
 		# [Kohlberg 1969] 도덕 발달 단계 진급 체크
 		check_moral_stage_progression(entity, hexaco_dict, age_years)
 
-		# [Axelrod 1997] peer influence — 같은 정착지 무작위 1명과 가치관 수렴
-		if entity.settlement_id > 0 and settlement_map.has(entity.settlement_id):
-			var neighbors: Array = settlement_map[entity.settlement_id]
-			if neighbors.size() > 1:
-				var other = neighbors[_rng.randi() % neighbors.size()]
-				if other.id != entity.id and not other.values.is_empty():
-					apply_peer_influence(entity, other.values, 0.3, age_years)
+		# [Axelrod 1997] peer influence — 근처 엔티티와 가치관 수렴
+		var neighbors: Array = _entity_manager.get_entities_near(entity.position, 5)
+		if neighbors.size() > 1:
+			var other = neighbors[_rng.randi() % neighbors.size()]
+			if other.id != entity.id and not other.values.is_empty():
+				apply_peer_influence(entity, other.values, 0.3, age_years)
 
 
 ## ── 3.2 초기화: 유전 + 문화 + HEXACO + 노이즈 합성 ──────
