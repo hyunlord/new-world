@@ -63,6 +63,13 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 		_rng,
 	)
 	entity.moral_stage = 1
+	# Bootstrap moral stage for pre-existing adults (initial_age > 0)
+	if initial_age > 0:
+		var _age_years: float = GameConfig.get_age_years(initial_age)
+		var _hexaco: Dictionary = ValueSystem._get_hexaco_dict(entity.personality)
+		for _s in range(6):
+			if not ValueSystem.check_moral_stage_progression(entity, _hexaco, _age_years):
+				break
 	# Emotions (defaults)
 	entity.emotions = {
 		"happiness": 0.5,
