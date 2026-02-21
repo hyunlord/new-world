@@ -48,6 +48,15 @@ var _energy_name_label: Label
 var _social_bar: ProgressBar
 var _social_pct_label: Label
 var _social_name_label: Label
+var _thirst_bar: ProgressBar
+var _thirst_pct_label: Label
+var _thirst_name_label: Label
+var _warmth_bar: ProgressBar
+var _warmth_pct_label: Label
+var _warmth_name_label: Label
+var _safety_bar: ProgressBar
+var _safety_pct_label: Label
+var _safety_name_label: Label
 var _entity_stats_label: Label
 
 # Building panel
@@ -293,12 +302,33 @@ func _build_entity_panel() -> void:
 	_hunger_name_label = hunger_row[3]
 	vbox.add_child(hunger_row[2])
 
+	# Thirst bar
+	var thirst_row := _make_bar_row(Locale.ltr("NEED_THIRST"), Color(0.392, 0.710, 0.965))
+	_thirst_bar = thirst_row[0]
+	_thirst_pct_label = thirst_row[1]
+	_thirst_name_label = thirst_row[3]
+	vbox.add_child(thirst_row[2])
+
 	# Energy bar with percentage
 	var energy_row := _make_bar_row(Locale.ltr("UI_ENERGY"), Color(0.9, 0.8, 0.2))
 	_energy_bar = energy_row[0]
 	_energy_pct_label = energy_row[1]
 	_energy_name_label = energy_row[3]
 	vbox.add_child(energy_row[2])
+
+	# Warmth bar
+	var warmth_row := _make_bar_row(Locale.ltr("NEED_WARMTH"), Color(1.0, 0.541, 0.396))
+	_warmth_bar = warmth_row[0]
+	_warmth_pct_label = warmth_row[1]
+	_warmth_name_label = warmth_row[3]
+	vbox.add_child(warmth_row[2])
+
+	# Safety bar
+	var safety_row := _make_bar_row(Locale.ltr("NEED_SAFETY"), Color(0.584, 0.459, 0.804))
+	_safety_bar = safety_row[0]
+	_safety_pct_label = safety_row[1]
+	_safety_name_label = safety_row[3]
+	vbox.add_child(safety_row[2])
 
 	# Social bar with percentage
 	var social_row := _make_bar_row(Locale.ltr("UI_SOCIAL"), Color(0.3, 0.5, 0.9))
@@ -644,6 +674,18 @@ func _update_entity_panel(delta: float) -> void:
 	_social_bar.value = social_pct
 	_social_pct_label.text = str(int(social_pct)) + "%"
 
+	var thirst_pct: float = entity.thirst * 100.0
+	_thirst_bar.value = thirst_pct
+	_thirst_pct_label.text = str(int(thirst_pct)) + "%"
+
+	var warmth_pct: float = entity.warmth * 100.0
+	_warmth_bar.value = warmth_pct
+	_warmth_pct_label.text = str(int(warmth_pct)) + "%"
+
+	var safety_pct: float = entity.safety * 100.0
+	_safety_bar.value = safety_pct
+	_safety_pct_label.text = str(int(safety_pct)) + "%"
+
 	# Low hunger blink
 	if entity.hunger < 0.2:
 		_hunger_blink_timer += delta * 4.0
@@ -881,8 +923,14 @@ func _refresh_hud_texts() -> void:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
 	if _hunger_name_label != null:
 		_hunger_name_label.text = Locale.ltr("UI_HUNGER") + ":"
+	if _thirst_name_label != null:
+		_thirst_name_label.text = Locale.ltr("NEED_THIRST") + ":"
 	if _energy_name_label != null:
 		_energy_name_label.text = Locale.ltr("UI_ENERGY") + ":"
+	if _warmth_name_label != null:
+		_warmth_name_label.text = Locale.ltr("NEED_WARMTH") + ":"
+	if _safety_name_label != null:
+		_safety_name_label.text = Locale.ltr("NEED_SAFETY") + ":"
 	if _social_name_label != null:
 		_social_name_label.text = Locale.ltr("UI_SOCIAL") + ":"
 

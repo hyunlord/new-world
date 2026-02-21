@@ -131,6 +131,9 @@ class DeceasedEntityProxy extends RefCounted:
 	var hunger: float
 	var energy: float
 	var social: float
+	var thirst: float
+	var warmth: float
+	var safety: float
 	var current_action: String
 	var inventory: Dictionary = {}
 	var action_target: Vector2i = Vector2i(-1, -1)
@@ -170,6 +173,9 @@ class DeceasedEntityProxy extends RefCounted:
 		hunger = record.get("hunger", 0.0)
 		energy = record.get("energy", 0.0)
 		social = record.get("social", 0.0)
+		thirst = record.get("thirst", 0.85)
+		warmth = record.get("warmth", 0.90)
+		safety = record.get("safety", 0.60)
 		current_action = str(record.get("current_action", "idle"))
 		inventory = record.get("inventory", {}).duplicate()
 		display_traits = record.get("display_traits", []).duplicate()
@@ -730,7 +736,10 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"), "needs")
 	if not _section_collapsed.get("needs", false):
 		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
+		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), entity.thirst, Color(0.392, 0.710, 0.965))
 		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
+		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), entity.warmth, Color(1.0, 0.541, 0.396))
+		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), entity.safety, Color(0.584, 0.459, 0.804))
 		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
 		cy += 6.0
 

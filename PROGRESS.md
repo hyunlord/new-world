@@ -802,3 +802,77 @@ fear=80 주입 후 EmotionSystem 1 tick 만에 → 7.9 (P4 임계값 40 미달).
 - 수정 후: fear=80 → 1 game-day 후 56.5 (> 40 유지) ✅
 
 ---
+
+---
+
+## 욕구 확장 Phase 1 — thirst / warmth / safety — T-P1-1~9
+
+### Context
+욕구 3종(hunger/energy/social) → 6종으로 확장. Maslow L1(수분/체온) + L2(안전).
+에이전트가 물 찾고, 추위에 불/shelter로 이동하는 행동 패턴 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-P1-1 | game_config.gd 상수 추가 | 🟢 DISPATCH | ask_codex | standalone constants |
+| T-P1-2 | entity_data.gd 필드 추가 | 🟢 DISPATCH | ask_codex | standalone field additions |
+| T-P1-3 | localization ko/en 키 추가 | 🟢 DISPATCH | ask_codex | standalone i18n |
+| T-P1-4 | needs_system.gd decay+stress | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-5 | behavior_system.gd 점수+분기 | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-6 | building_effect_system.gd 회복 | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-7 | movement_system.gd drink_water | 🟢 DISPATCH | ask_codex | single system |
+| T-P1-8 | stressor_events.json 추가 | 🟢 DISPATCH | ask_codex | standalone data |
+| T-P1-9 | main.gd world_data 연결 | 🔴 DIRECT | — | integration wiring <10 lines |
+
+### Dispatch ratio: 8/9 = 89% ✅ (target: ≥60%)
+
+### Dispatch strategy
+Phase A (병렬): T-P1-1, T-P1-2, T-P1-3 — 독립, 의존성 없음
+Phase B (병렬, A 완료 후): T-P1-4, T-P1-5, T-P1-6, T-P1-7, T-P1-8 — GameConfig 상수 필요
+Phase C (DIRECT): T-P1-9 main.gd needs_system.init()에 world_data 추가
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 8/9 = 89% ✅
+- Dispatch tool: ask_codex (8 tickets)
+- Files changed: game_config.gd, entity_data.gd, localization/ko+en/ui.json, needs_system.gd, behavior_system.gd, building_effect_system.gd, movement_system.gd, data/stressor_events.json, scenes/main/main.gd
+- Key deliverables:
+  - GameConfig: THIRST_*/WARMTH_*/SAFETY_* 상수 16개 추가
+  - EntityData: thirst/warmth/safety 필드 (초기값 0.85/0.90/0.60) + to_dict/from_dict 직렬화
+  - NeedsSystem: 욕구 3종 decay (온도 기반 modifier 포함) + stressor inject
+  - BehaviorSystem: drink_water/sit_by_fire/seek_shelter urgency 점수 + _assign_action() 분기
+  - BuildingEffectSystem: campfire warmth 회복, shelter warmth+safety 회복
+  - MovementSystem: drink_water 도착 시 thirst 회복 + entity_drank 이벤트
+  - stressor_events.json: dehydration/hypothermia/constant_threat 3종 추가
+  - main.gd: needs_system.init()에 world_data 파라미터 추가
+
+---
+
+## 욕구 UI 확장 — thirst/warmth/safety 바 추가 — T-UI-1, T-UI-2
+
+### Context
+Phase 1에서 thirst/warmth/safety 욕구를 추가했으나 UI에 미반영.
+entity_detail_panel (커스텀 드로우) + hud (사이드 패널 ProgressBar) 두 곳 업데이트.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-UI-1 | entity_detail_panel.gd — EntitySnapshot + _draw_section | 🟢 DISPATCH | ask_codex | standalone single-file UI |
+| T-UI-2 | hud.gd — 변수 선언 + 바 생성 + 업데이트 로직 | 🟢 DISPATCH | ask_codex | standalone single-file UI |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬: T-UI-1, T-UI-2 — 파일 겹침 없음
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100% ✅
+- Dispatch tool: ask_codex (2 tickets)
+- Files changed: scripts/ui/entity_detail_panel.gd, scripts/ui/hud.gd
+- Key deliverables:
+  - entity_detail_panel: EntitySnapshot thirst/warmth/safety 필드 + _draw_section 6개 바 (hunger→thirst→energy→warmth→safety→social)
+  - hud.gd: _thirst/_warmth/_safety 변수 선언 + ProgressBar 생성 + 업데이트 로직
+  - 색상: thirst 하늘색 #64B5F6 / warmth 주황색 #FF8A65 / safety 보라색 #9575CD
+
+---

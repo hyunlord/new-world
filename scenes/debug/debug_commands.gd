@@ -1286,8 +1286,12 @@ func cmd_test_fear(args: Dictionary) -> void:
 		return
 
 	_header("test_fear entity=" + id_str)
+	_print("age_stage     : " + str(entity.age_stage))
+	_print("action_timer  : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
 	var fear_before: float = float(entity.emotion_data.get_emotion("fear"))
 	entity.emotion_data.fast["fear"] = 80.0
+	var fear_after: float = float(entity.emotion_data.get_emotion("fear"))
 	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
 
 	var best_action: String = ""
@@ -1299,13 +1303,17 @@ func cmd_test_fear(args: Dictionary) -> void:
 			best_action = str(action)
 
 	_print("fear BEFORE   : " + "%.1f" % fear_before)
-	_print("fear AFTER    : 80.0 (forced)")
+	_print("fear AFTER    : " + "%.1f" % fear_after + " (fast=80 + slow + memory)")
 	_print("── scores ──", Color(0.6, 0.9, 1.0))
-	for action in scores:
-		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
 	_print("best_action   : " + best_action + " (" + "%.4f" % best_score + ")")
 	if best_action == "hide":
-		_print("hide SELECTED ✓", Color(0.4, 1.0, 0.4))
+		_behavior_system._assign_action(entity, "hide", 0)
+		_print("hide FORCED ✓ (current_action=" + entity.current_action + ")", Color(0.4, 1.0, 0.4))
 	else:
 		_print("hide NOT selected (got: " + best_action + ")", Color(1.0, 0.4, 0.4))
 
@@ -1328,8 +1336,12 @@ func cmd_test_sadness(args: Dictionary) -> void:
 		return
 
 	_header("test_sadness entity=" + id_str)
+	_print("age_stage      : " + str(entity.age_stage))
+	_print("action_timer   : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
 	var sadness_before: float = float(entity.emotion_data.get_emotion("sadness"))
 	entity.emotion_data.fast["sadness"] = 80.0
+	var sadness_after: float = float(entity.emotion_data.get_emotion("sadness"))
 	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
 
 	var best_action: String = ""
@@ -1341,13 +1353,17 @@ func cmd_test_sadness(args: Dictionary) -> void:
 			best_action = str(action)
 
 	_print("sadness BEFORE : " + "%.1f" % sadness_before)
-	_print("sadness AFTER  : 80.0 (forced)")
+	_print("sadness AFTER  : " + "%.1f" % sadness_after + " (fast=80 + slow + memory)")
 	_print("── scores ──", Color(0.6, 0.9, 1.0))
-	for action in scores:
-		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
 	_print("best_action    : " + best_action + " (" + "%.4f" % best_score + ")")
 	if best_action == "grieve":
-		_print("grieve SELECTED ✓", Color(0.4, 1.0, 0.4))
+		_behavior_system._assign_action(entity, "grieve", 0)
+		_print("grieve FORCED ✓ (current_action=" + entity.current_action + ")", Color(0.4, 1.0, 0.4))
 	else:
 		_print("grieve NOT selected (got: " + best_action + ")", Color(1.0, 0.4, 0.4))
 
@@ -1371,8 +1387,12 @@ func cmd_test_anger(args: Dictionary) -> void:
 		return
 
 	_header("test_anger entity=" + id_str)
+	_print("age_stage      : " + str(entity.age_stage))
+	_print("action_timer   : " + str(entity.action_timer) + " (reset to 0)")
+	entity.action_timer = 0
 	var anger_before: float = float(entity.emotion_data.get_emotion("anger"))
 	entity.emotion_data.fast["anger"] = 80.0
+	var anger_after: float = float(entity.emotion_data.get_emotion("anger"))
 	var scores: Dictionary = _behavior_system._evaluate_actions(entity)
 
 	var best_action: String = ""
@@ -1384,10 +1404,13 @@ func cmd_test_anger(args: Dictionary) -> void:
 			best_action = str(action)
 
 	_print("anger BEFORE   : " + "%.1f" % anger_before)
-	_print("anger AFTER    : 80.0 (forced)")
+	_print("anger AFTER    : " + "%.1f" % anger_after + " (fast=80 + slow + memory)")
 	_print("── scores ──", Color(0.6, 0.9, 1.0))
-	for action in scores:
-		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]))
+	var sorted_actions: Array = scores.keys()
+	sorted_actions.sort_custom(func(a, b): return float(scores[a]) > float(scores[b]))
+	for action in sorted_actions:
+		var marker: String = " ◀ BEST" if str(action) == best_action else ""
+		_print("  " + str(action) + " : " + "%.4f" % float(scores[action]) + marker)
 	_print("best_action    : " + best_action + " (" + "%.4f" % best_score + ")")
 	if best_action == "confront":
 		_print("confront SELECTED ✓", Color(0.4, 1.0, 0.4))

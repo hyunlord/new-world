@@ -798,5 +798,11 @@
   "UI_AL_MAX_LABEL": "Load Ceiling",
   "STATUS_HIDE": "Hiding",
   "STATUS_GRIEVE": "Grieving",
-  "STATUS_CONFRONT": "Confronting"
+  "STATUS_CONFRONT": "Confronting",
+  "NEED_THIRST": "Thirst",
+  "NEED_WARMTH": "Warmth",
+  "NEED_SAFETY": "Safety",
+  "ACTION_DRINK_WATER": "Drinking",
+  "ACTION_SIT_BY_FIRE": "Warming up",
+  "ACTION_SEEK_SHELTER": "Seeking shelter"
 }

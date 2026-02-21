@@ -170,6 +170,32 @@ const ENERGY_DECAY_RATE: float = 0.003
 const ENERGY_ACTION_COST: float = 0.005
 const SOCIAL_DECAY_RATE: float = 0.001
 
+## [Maslow (1943) — L1 생리적 욕구: 수분]
+## hunger 기준(0.002) × 1.2 = 0.0024 (탈수가 기아보다 빠름)
+## 생물학적 근거: 수분 없이는 3일, 음식 없이는 3주
+const THIRST_DECAY_RATE: float = 0.0024
+const THIRST_DRINK_RESTORE: float = 0.35
+const THIRST_CRITICAL: float = 0.15
+const THIRST_LOW: float = 0.35
+
+## [Cannon (1932) 항상성 — 체온 유지]
+## 온난한 환경에서는 소모 거의 없고 추위/혹한에서 급증
+const WARMTH_DECAY_RATE: float = 0.0016
+const WARMTH_FIRE_RESTORE: float = 0.008
+const WARMTH_SHELTER_RESTORE: float = 0.004
+const WARMTH_CRITICAL: float = 0.10
+const WARMTH_LOW: float = 0.30
+const WARMTH_TEMP_NEUTRAL: float = 0.5
+const WARMTH_TEMP_COLD: float = 0.3
+const WARMTH_TEMP_FREEZING: float = 0.15
+
+## [Maslow (1943) — L2 안전 욕구]
+## hunger 기준 × 0.3 (느린 소모, 이벤트/환경 기반)
+const SAFETY_DECAY_RATE: float = 0.0006
+const SAFETY_SHELTER_RESTORE: float = 0.002
+const SAFETY_CRITICAL: float = 0.15
+const SAFETY_LOW: float = 0.35
+
 ## Starvation grace period (in NeedsSystem ticks, ~4 days)
 const STARVATION_GRACE_TICKS: int = 25
 

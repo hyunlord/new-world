@@ -39,6 +39,8 @@ func _apply_campfire(building: RefCounted) -> void:
 	for j in range(nearby.size()):
 		var entity = nearby[j]
 		entity.social = minf(entity.social + social_boost, 1.0)
+		## [Cannon (1932) 항상성 — 불 근처 체온 회복]
+		entity.warmth = minf(entity.warmth + GameConfig.WARMTH_FIRE_RESTORE, 1.0)
 
 
 func _apply_shelter(building: RefCounted) -> void:
@@ -48,3 +50,7 @@ func _apply_shelter(building: RefCounted) -> void:
 	for j in range(nearby.size()):
 		var entity = nearby[j]
 		entity.energy = minf(entity.energy + 0.01, 1.0)
+		## [Cannon (1932) 항상성 — shelter 체류 중 체온 회복]
+		entity.warmth = minf(entity.warmth + GameConfig.WARMTH_SHELTER_RESTORE, 1.0)
+		## [Maslow (1943) L2 — shelter 내 안전감 지속 회복]
+		entity.safety = minf(entity.safety + GameConfig.SAFETY_SHELTER_RESTORE, 1.0)

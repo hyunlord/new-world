@@ -841,5 +841,63 @@
       "anticipation_fast": 15,
       "trust_fast": 8
     }
+  },
+
+  "dehydration": {
+    "name_kr": "탈수",
+    "name_en": "Dehydration",
+    "description_kr": "수분 부족으로 인한 생리적 스트레스. 갈증 임계값 이하 지속 시 스트레스가 누적된다.",
+    "description_en": "Physiological stress from dehydration. Accumulates when thirst drops below critical threshold.",
+    "category": "physical",
+    "is_loss": false,
+    "base_instant": 3.0,
+    "base_per_tick": 0.0,
+    "base_decay_rate": 0.05,
+    "personality_modifiers": {
+      "X_axis": {"weight": 0.3, "direction": "high_amplifies"},
+      "traits": {
+        "f_tough_minded": 0.7,
+        "f_self_reliant": 0.8
+      }
+    }
+  },
+
+  "hypothermia": {
+    "name_kr": "저체온",
+    "name_en": "Hypothermia",
+    "description_kr": "체온 하락으로 인한 생리적 위협 스트레스. 혹한 환경에서 warmth가 임계값 이하로 떨어질 때 발생.",
+    "description_en": "Physical threat stress from body temperature drop. Occurs when warmth falls below critical in cold environments.",
+    "category": "physical",
+    "is_loss": false,
+    "base_instant": 4.0,
+    "base_per_tick": 0.0,
+    "base_decay_rate": 0.05,
+    "personality_modifiers": {
+      "X_axis": {"weight": 0.35, "direction": "high_amplifies"},
+      "traits": {
+        "f_tough_minded": 0.65,
+        "c_stoic_loner": 0.75
+      }
+    }
+  },
+
+  "constant_threat": {
+    "name_kr": "지속적 위협",
+    "name_en": "Constant Threat",
+    "description_kr": "안전감 결핍으로 인한 만성 스트레스. 위험 환경에 장기 노출 시 누적.",
+    "description_en": "Chronic stress from lack of safety. Accumulates during prolonged exposure to unsafe environments.",
+    "category": "threat",
+    "is_loss": false,
+    "base_instant": 2.0,
+    "base_per_tick": 0.0,
+    "base_decay_rate": 0.03,
+    "personality_modifiers": {
+      "X_axis": {"weight": 0.4, "direction": "high_amplifies"},
+      "traits": {
+        "f_tough_minded": 0.6,
+        "d_psychopath_primary": 0.2,
+        "c_stoic_loner": 0.7
+      }
+    }
   }
 }
