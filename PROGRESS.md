@@ -1417,6 +1417,43 @@ opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
 
 ---
 
+## T-VBug10: settlement_culture ↔ value_system 순환 preload 제거 — 2026-02-22
+
+### Context
+런타임 오류: "Invalid call to function 'init' in base 'RefCounted (value_system.gd)'. Expected 1 argument(s)."
+원인: value_system.gd ↔ settlement_culture.gd 상호 preload → 게임 실행 시 크래시.
+Gate는 --headless --quit만 실행하므로 런타임 오류를 잡지 못함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug10 | settlement_culture.gd — ValueSystem preload 제거, get_plasticity 인라인 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일(settlement_culture.gd) 수정 → ask_codex 직접 dispatch.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | Architecture | 수정 | settlement_culture.gd: ValueSystem preload 제거 (순환 의존성 해소). apply_conformity_pressure()는 age_years를 받아 plasticity를 인라인 계산 |
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 추가 | get_plasticity 로직이 value_system.gd와 settlement_culture.gd 두 곳에 중복 — 향후 변경 시 동기화 필요 |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22: T-VBug10 순환 preload 제거 — 런타임 init() 오류 수정 |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학/시뮬레이션 로직만, UI 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS (b8fbabd)
+- Dispatch ratio: 1/1 = 100% ✅
+- Files changed: 1 (scripts/systems/settlement_culture.gd)
+- Dispatch tool used: ask_codex (T-VBug10)
+- Notion pages updated: 💎 가치관 시스템
+
+---
+
 ## T-QA5: Composite Trait 서브카테고리 확정 수 반영 — 2026-02-22
 
 ### Q&A 분석
@@ -1450,3 +1487,39 @@ opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - Notion 업데이트: 🧠 성격 시스템 (HEXACO) 페이지 — 목표 언어를 확정 언어로 전환, 사회적 역할 행 제거
+
+---
+
+## T-QA6: emotion_modifiers 합산 오표시 버그 문서화 — 2026-02-22
+
+### Q&A 분석
+- 관련 시스템: 엔티티 디테일 패널 시스템 + 🧠 성격 시스템 (HEXACO)
+- 추출한 정보 유형: 내부 로직 (버그 원인/수정), 데이터 구성 (multiplier 형식), 개발 히스토리 (T-2040 수정)
+- 참조한 코드:
+  - scripts/ui/entity_detail_panel.gd (emotion_totals 누적 로직)
+  - scripts/systems/trait_system.gd:444 (_calc_emotion_baseline, get_effect_value)
+  - data/species/human/personality/trait_definitions.json (emotion_modifiers 형식)
+
+### 핵심 발견
+- emotion_modifiers 데이터 형식: 승수(multiplier), 1.0 기준 (0.06 = -94%, 1.2 = +20%)
+- _calc_emotion_baseline()은 emotion_mappings.json 경로로 delta를 계산 (multiplier 직접 미사용)
+- 버그 T-2040: 구 코드가 emotion_modifiers[key] 원값(0.06)을 직접 누적 → "+0.06" 오표시
+- 수정(2026-02-18): TraitSystem.get_effect_value(entity, "emotion_baseline") → delta × 100 = %
+- 수정 확인: 커밋 3f4b446 (2026-02-18) "fix: emotion_modifiers effect summary — convert multiplier to %"
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 | 수정 | block[38]: 감정 표시가 _calc_emotion_baseline delta 경로임을 명시 (raw multiplier 직접합산 아님) |
+| 엔티티 디테일 패널 시스템 | 버그 이력 | 추가 | T-2040 emotion_modifiers 오표시 버그 — 원인/수정 callout 추가 |
+| 🧠 성격 시스템 (HEXACO) | 3계층 특성 시스템 | 추가 | emotion_modifiers 승수 형식 + _calc_emotion_baseline delta 경로 구분 + T-2040 수정 완료 명기 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- 버그 상태: T-2040으로 이미 수정됨 (2026-02-18) — 문서만 업데이트
