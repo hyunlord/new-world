@@ -55,7 +55,14 @@ Schwartz (1992) + Axelrod (1997) + Kohlberg (1969) + Festinger (1957) + Erikson 
 모든 파일 gate pass 후 한 번에 통합.
 
 ### Results
-- TBD
+- Gate: PASS ✅ (clean, 0 script errors after fix)
+- Dispatch ratio: 7/9 = 78% ✅
+- Files created: value_defs.gd, value_system.gd, settlement_culture.gd, data/values/value_events.json
+- Files modified: entity_data.gd, behavior_system.gd, entity_detail_panel.gd, localization/ko/ui.json, localization/en/ui.json
+- Bug fixed (DIRECT): entity_detail_panel.gd:1321 — `Object.get()` 2-arg parse error → `entity.moral_stage if "moral_stage" in entity else 0`
+- Commits: f780e61 (value system), 914c4aa (parse error fix)
+- Dispatch tool used: ask_codex (7 tickets, parallel)
+- T-STARV-2/3: already done in previous sessions (confirmed by grep — target multipliers & warmth constants present)
 
 ---
 
