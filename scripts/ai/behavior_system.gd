@@ -102,6 +102,8 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		}
 		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
 			child_scores["gather_wood"] = (0.3 + _rng.randf() * 0.1) * 0.3
+		if entity.thirst < GameConfig.THIRST_LOW:
+			child_scores["drink_water"] = _urgency_curve(1.0 - entity.thirst) * 1.0
 		child_scores["seek_shelter"] = _urgency_curve(1.0 - entity.warmth) * 0.9 \
 			+ _urgency_curve(1.0 - entity.safety) * 0.6
 		return child_scores
@@ -223,18 +225,21 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if anger_val > 40.0:
 			scores["confront"] = (anger_val / 100.0) * 2.0
 
-	## [Maslow (1943) L1 — 갈증 urgency]
+	## [Maslow (1943) L1 — 갈증 urgency] Only when below LOW threshold
 	var thirst_deficit: float = 1.0 - entity.thirst
-	scores["drink_water"] = _urgency_curve(thirst_deficit) * 1.4
+	if entity.thirst < GameConfig.THIRST_LOW:
+		scores["drink_water"] = _urgency_curve(thirst_deficit) * 1.4
 
-	## [Cannon (1932) 항상성 — 체온 urgency]
+	## [Cannon (1932) 항상성 — 체온 urgency] Only when below LOW threshold
 	var warmth_deficit: float = 1.0 - entity.warmth
-	scores["sit_by_fire"] = _urgency_curve(warmth_deficit) * 1.3
+	if entity.warmth < GameConfig.WARMTH_LOW:
+		scores["sit_by_fire"] = _urgency_curve(warmth_deficit) * 1.3
 
-	## [Maslow (1943) L2 — 안전 urgency + 체온 urgency 합산]
+	## [Maslow (1943) L2 — 안전 urgency + 체온 urgency 합산] Only when below LOW threshold
 	var safety_deficit: float = 1.0 - entity.safety
-	scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 1.1 \
-		+ _urgency_curve(safety_deficit) * 0.8
+	if entity.warmth < GameConfig.WARMTH_LOW or entity.safety < GameConfig.SAFETY_LOW:
+		scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 1.1 \
+			+ _urgency_curve(safety_deficit) * 0.8
 
 	return scores
 
