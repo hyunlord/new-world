@@ -1454,6 +1454,38 @@ Gate는 --headless --quit만 실행하므로 런타임 오류를 잡지 못함.
 
 ---
 
+## T-VBug11: value_system.gd — 가치관 값 범위 확대 — 2026-02-22
+
+### Context
+compute_hexaco_seed() 출력 std ~0.15로 최종 가치관 값이 ±0.46, std 0.12 수준.
+에이전트간 개성 차이 거의 없음 → noise 범위 확대 + hexaco_seed 증폭으로 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug11 | value_system.gd — initialize_values noise ±0.60, hexaco_seed ×2.5 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 핵심 로직 | 수정 | initialize_values(): noise ±0.30→±0.60, hexaco_seed ×2.5 증폭, scale=1/(G+H+N) |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22: T-VBug11 가치관 값 범위 확대 — std 0.12→~0.30 (commit be3b4ec) |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학 로직만, UI 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS (be3b4ec)
+- Dispatch ratio: 1/1 = 100% ✅
+- Files changed: 1 (scripts/systems/value_system.gd)
+- Dispatch tool used: ask_codex (T-VBug11)
+- Notion pages updated: 💎 가치관 시스템
+
+---
+
 ## T-QA5: Composite Trait 서브카테고리 확정 수 반영 — 2026-02-22
 
 ### Q&A 분석
@@ -1576,3 +1608,30 @@ Q&A: T-2040 Codex 디스패치 티켓의 역사적 맥락에서 나온 Q&A. 핵�
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - Notion pages updated: 😤 감정 & 스트레스 시스템
+
+## T-QA9 — RefCounted.get() 오류 패턴 문서화
+
+### Context
+Phase 1 스트레스 시스템 첫 실행 시 `Invalid call to function 'get' in base 'RefCounted (emotion_data.gd)'` 에러 발생 및 수정. Godot 4.6 RefCounted.get(prop, default) 불가 원칙과 올바른 데이터 접근 패턴 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA9 | RefCounted.get() 호환성 패턴 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | 데이터 접근 패턴 + RefCounted.get(prop,default) 불가 경고 bullet |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 2 (PROGRESS.md, MEMORY.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
+- MEMORY.md: Godot 4.6 호환성 섹션에 RefCounted.get() 제한 추가
