@@ -1635,3 +1635,29 @@ Phase 1 스트레스 시스템 첫 실행 시 `Invalid call to function 'get' in
 - Files changed: 2 (PROGRESS.md, MEMORY.md)
 - Notion pages updated: 😤 감정 & 스트레스 시스템
 - MEMORY.md: Godot 4.6 호환성 섹션에 RefCounted.get() 제한 추가
+
+## T-QA10 — Reserve/Allostatic Load 개념 상세 정의 문서화
+
+### Context
+stress(순간 압력) / reserve(단기 저항자원) / allostatic_load(장기 만성 마모) 3축 모델 개념 및 임계값별 효과를 Notion에 명시적으로 문서화. 기존 11단계 파이프라인에 단계명만 있고 상세 정의가 없었음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA10 | Reserve + Allostatic Load 정의 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | 파이프라인 code 다음: Reserve(0~100, reserve<30 Exhaustion) + Allostatic(0~100, 30/60/85 단계 영구 효과) 상세 정의 bullet 2개 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
