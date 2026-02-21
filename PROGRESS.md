@@ -1160,6 +1160,38 @@ T-VBug1~3 적용 완료 확인 (entity_manager.gd 라인 9, 55-64 존재). 추�
 
 ---
 
+## 가치관 가중치 재정규화 + Kohlberg 조건 완화 (T-VBug6~7) — 2026-02-22
+
+### Context
+culture_values=null 시 CULTURE_WEIGHT(0.40)이 0이 돼 실제 합계 0.60 → 가치관 최대값 ±0.18.
+Kohlberg 진급 조건(CUNNING < -0.5 등)이 수학적으로 달성 불가.
+수정: (1) culture 없을 때 나머지 가중치 1.0으로 재분배, (2) ±0.30 범위 기준으로 임계값 완화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug6 | value_system.gd initialize_values 가중치 재정규화 | 🟢 DISPATCH | ask_codex | 단일 파일, final_val 블록 교체 |
+| T-VBug7 | value_defs.gd KOHLBERG_THRESHOLDS 완화 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수 교체 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/systems/value_system.gd + scripts/core/value_defs.gd
+- Commit: ffe541a
+- Dispatch tool: ask_codex (job 8b3bc793, 9e52dbbe)
+- Key changes:
+  - value_system.gd — culture=null 시 weight scale 재정규화 (±0.18 → ±0.30)
+  - value_defs.gd:91~97 — KOHLBERG_THRESHOLDS 완화 (CUNNING -0.5→-0.15, stage6 FAIRNESS 0.5→0.20)
+
+---
+
+---
+
 ---
 
 ## Q&A 문서 업데이트 — 특성 정렬 별도 프롬프트 (2026-02-22)
@@ -1187,3 +1219,41 @@ T-VBug1~3 적용 완료 확인 (entity_manager.gd 라인 9, 55-64 존재). 추�
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - Notion changes: 4 (INSERT ×4)
+
+---
+
+## 스트레스/멘탈브레이크 시스템 Q&A 설계 확정 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+GPT/Gemini 연구 조사 결과(4-모델 하이브리드 스트레스 아키텍처, 10종 멘탈브레이크,
+감정↔스트레스 양방향 커플링 설계)를 Notion 「😤 감정 & 스트레스 시스템」 페이지에 통합.
+코드 변경 없음 (stress_system.gd, mental_break_system.gd 이미 구현 완료).
+설계 확정 → 문서와 코드 동기화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA3  | 스트레스/멘탈브레이크 Q&A → Notion 문서 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | 상단 callout | 수정 | MentalBreakSystem 5종→10종, Phase 4/5 항목 추가 |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem 헤딩 | 수정 | "EmotionSystem._check_mental_break" → "MentalBreakSystem (별도 시스템, priority=35)" |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem > 발동 조건 bullet | 수정 | BASE_BREAK_THRESHOLD=520, 범위 420~900, BREAK_SCALE=6000, BREAK_CAP=0.25/tick |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem > 브레이크 유형 bullet | 수정 | 5종→10종: panic/rage/outrage_violence/shutdown/purge/grief_withdrawal/dissociative_fugue/paranoia/compulsive_ritual/hysterical_bonding |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > CK3 가치위반 | 수정 | → ✅ 완료: trait_violation_system.gd + value_system.gd |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > TraumaScarSystem | 수정 | → ✅ 완료: trauma_scar_system.gd + resilience_mod 연동 |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > Resilience | 수정 | → ✅ 완료: _update_resilience() HEXACO 6축+support−allostatic 공식 |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > GPT/Gemini 조사 | 수정 | → ✅ 완료: 4-모델 설계 확정, 향후 5개 영역 문서화 |
+| 😤 감정 & 스트레스 시스템 | A3 구현 현황 > StressSystem bullet | 수정 | Phase 4(C05 Denial, DENIAL_REDIRECT=0.60) + Phase 5(ACE ace_stress_gain_mult) 추가 |
+| 😤 감정 & 스트레스 시스템 | A3 구현 현황 > 타임라인 | 수정 | Phase 4-5 마일스톤 + 연구조사 완료(2026-02-22) 추가 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion blocks updated: 10
+- Notion page: 😤 감정 & 스트레스 시스템 (30de2e3d-4a77-8116-8d74-d3cd0273ba95)
