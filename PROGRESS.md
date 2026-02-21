@@ -1242,6 +1242,28 @@ main.gd가 15~50세 성인 위주로 스폰하지만 moral_stage는 항상 1로 
 
 ---
 
+## 가치관 UI 표시 임계값 수정 (T-VBug9) — 2026-02-22
+
+### Context
+values 섹션에서 `absf(val) > 0.30` 필터가 값 범위 ±0.30과 같아서 아무것도 안 보임.
+의도한 게 아님 — 가치관 33개가 표시되어야 하지만 도덕발달단계만 보임.
+수정: 임계값 0.30 → 0.10 (≥10% 편차 값 표시)
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug9 | entity_detail_panel.gd 임계값 0.30→0.10 | 🟢 DISPATCH | ask_codex | 단일 파일, 1줄 수정 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 69a6855
+- Dispatch tool: ask_codex (job 59b53171)
+- Key change: entity_detail_panel.gd:796 `> 0.30` → `> 0.10`
+
+---
+
 ## Q&A 문서 업데이트 — 특성 정렬 별도 프롬프트 (2026-02-22)
 
 ### Context
