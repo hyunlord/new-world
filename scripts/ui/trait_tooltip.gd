@@ -107,9 +107,11 @@ func _add_separator_line() -> void:
 	_content_vbox.add_child(sep)
 
 
+const _EFFECT_INDENT: String = "  "
+
 func _add_effect_row(text: String, color: Color) -> void:
 	var lbl := Label.new()
-	lbl.text = "  " + text
+	lbl.text = _EFFECT_INDENT + text
 	lbl.add_theme_color_override("font_color", color)
 	lbl.add_theme_font_size_override("font_size", 10)
 	_content_vbox.add_child(lbl)

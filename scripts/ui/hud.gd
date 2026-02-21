@@ -194,7 +194,6 @@ func _build_minimap_and_stats() -> void:
 
 	# Follow indicator label (top-center)
 	_follow_label = Label.new()
-	_follow_label.text = ""
 	_follow_label.visible = false
 	_follow_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
 	_follow_label.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
@@ -739,7 +738,7 @@ func _update_building_panel() -> void:
 			else:
 				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
 		_:
-			_building_storage_label.text = ""
+			_building_storage_label.text = Locale.ltr("")
 
 	if building.is_built:
 		_building_status_label.text = Locale.ltr("UI_BUILDING_ACTIVE")
@@ -869,7 +868,7 @@ func _on_speed_changed(speed_index: int) -> void:
 
 
 func _on_pause_changed(paused: bool) -> void:
-	_status_label.text = "⏸" if paused else "▶"
+	_status_label.text = Locale.ltr("UI_ICON_PAUSE") if paused else Locale.ltr("UI_ICON_PLAY")
 
 
 func _on_simulation_event(event: Dictionary) -> void:

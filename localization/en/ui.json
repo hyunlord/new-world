@@ -782,7 +782,6 @@
   "ERR_COPING_ACQUIRE_FAILED": "[Error] Failed to acquire coping trait",
   "ERR_COPING_DEF_MISSING": "[Error] Coping definition missing: {id}",
   "CONTAGION_SPIRAL_WARNING": "Emotional spiral: stress {stress}, valence {valence}",
-
   "UI_PANEL_CHILDHOOD": "Childhood",
   "UI_PANEL_ACE": "ACE Score",
   "UI_PANEL_ATTACHMENT": "Attachment",
@@ -853,5 +852,7 @@
   "VALUE_EVENT_DISCOVERED_NATURE": "Discovered natural wonder",
   "VALUE_EVENT_SPIRITUAL_EXPERIENCE": "Had a spiritual experience",
   "VALUE_EVENT_CORRUPTION_EXPOSED": "Exposed corruption",
-  "VALUE_EVENT_RECEIVED_MENTORSHIP": "Received mentorship"
+  "VALUE_EVENT_RECEIVED_MENTORSHIP": "Received mentorship",
+  "UI_ICON_PAUSE": "⏸",
+  "UI_ICON_PLAY": "▶"
 }

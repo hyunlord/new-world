@@ -782,7 +782,6 @@
   "ERR_COPING_ACQUIRE_FAILED": "[오류] Coping 획득 실패",
   "ERR_COPING_DEF_MISSING": "[오류] Coping 정의 없음: {id}",
   "CONTAGION_SPIRAL_WARNING": "나선형 감정 악화: 스트레스 {stress}, 감정가 {valence}",
-
   "UI_PANEL_CHILDHOOD": "아동기",
   "UI_PANEL_ACE": "역경 점수",
   "UI_PANEL_ATTACHMENT": "애착",
@@ -853,5 +852,7 @@
   "VALUE_EVENT_DISCOVERED_NATURE": "자연의 경이를 발견함",
   "VALUE_EVENT_SPIRITUAL_EXPERIENCE": "영적 체험",
   "VALUE_EVENT_CORRUPTION_EXPOSED": "부패를 폭로함",
-  "VALUE_EVENT_RECEIVED_MENTORSHIP": "멘토링을 받음"
+  "VALUE_EVENT_RECEIVED_MENTORSHIP": "멘토링을 받음",
+  "UI_ICON_PAUSE": "⏸",
+  "UI_ICON_PLAY": "▶"
 }
