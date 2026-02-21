@@ -799,14 +799,14 @@ func _draw() -> void:
 				return absf(a["value"]) > absf(b["value"])
 			)
 			for item in significant:
-				var vkey: String = item["key"]
-				var val: float = item["value"]
-				var display_name: String = Locale.ltr("VALUE_" + vkey)
-				var bar_color: Color = Color(0.4, 0.7, 1.0) if val > 0 else Color(1.0, 0.45, 0.45)
-				cy = _draw_bar(font, cx + 10, cy, bar_w, display_name, (val + 1.0) / 2.0, bar_color)
+				var v_key: String = item["key"]
+				var v_val: float = item["value"]
+				var display_name: String = Locale.ltr("VALUE_" + v_key)
+				var bar_color: Color = Color(0.4, 0.7, 1.0) if v_val > 0 else Color(1.0, 0.45, 0.45)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, display_name, (v_val + 1.0) / 2.0, bar_color)
 		if "moral_stage" in entity:
-			var stage_label: String = Locale.ltr("VALUE_MORAL_STAGE") + ": %d" % entity.moral_stage
-			draw_string(font, Vector2(cx + 10, cy + 12), stage_label,
+			var moral_stage_label: String = Locale.ltr("VALUE_MORAL_STAGE") + ": %d" % entity.moral_stage
+			draw_string(font, Vector2(cx + 10, cy + 12), moral_stage_label,
 				HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.7, 0.7, 0.7))
 			cy += 18
 	cy += 4.0
