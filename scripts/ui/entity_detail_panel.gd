@@ -1278,12 +1278,12 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_BODY_SECTION"), "body")
 	if not _section_collapsed.get("body", false):
 		if entity.body != null and not entity.body.realized.is_empty():
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), float(entity.body.realized.get("str", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.90, 0.40, 0.35))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), float(entity.body.realized.get("agi", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.35, 0.80, 0.55))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), float(entity.body.realized.get("end", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.40, 0.65, 0.90))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), float(entity.body.realized.get("tou", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.80, 0.60, 0.30))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), float(entity.body.realized.get("rec", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.70, 0.45, 0.85))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  float(entity.body.realized.get("dr",  0)) / GameConfig.BODY_REALIZED_DR_MAX, Color(0.40, 0.80, 0.75))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), float(entity.body.realized.get("str", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.90, 0.40, 0.35), str(entity.body.realized.get("str", 0)))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), float(entity.body.realized.get("agi", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.35, 0.80, 0.55), str(entity.body.realized.get("agi", 0)))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), float(entity.body.realized.get("end", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.40, 0.65, 0.90), str(entity.body.realized.get("end", 0)))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), float(entity.body.realized.get("tou", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.80, 0.60, 0.30), str(entity.body.realized.get("tou", 0)))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), float(entity.body.realized.get("rec", 0)) / GameConfig.BODY_REALIZED_MAX, Color(0.70, 0.45, 0.85), str(entity.body.realized.get("rec", 0)))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  float(entity.body.realized.get("dr",  0)) / GameConfig.BODY_REALIZED_DR_MAX, Color(0.40, 0.80, 0.75), str(entity.body.realized.get("dr",  0)))
 		cy += 4.0
 
 	# ── Action History (alive only) ──
@@ -1393,7 +1393,7 @@ func _draw_separator(x: float, y: float, panel_w: float) -> void:
 	draw_line(Vector2(x, y), Vector2(panel_w - 20, y), Color(0.3, 0.3, 0.3), 1.0)
 
 
-func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color) -> float:
+func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color: Color, value_label: String = "") -> float:
 	var label_w: float = 130.0
 	var pct_w: float = 45.0
 	var bar_gap: float = 4.0
@@ -1407,7 +1407,8 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	draw_rect(Rect2(bar_x, y + 2, bar_w * clampf(value, 0.0, 1.0), bar_h), color)
 
 	var pct_x: float = bar_x + bar_w + bar_gap
-	draw_string(font, Vector2(pct_x, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
+	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
 
 
