@@ -38,15 +38,18 @@ func execute_tick(tick: int) -> void:
 			if entity.age > 0 and entity.age % GameConfig.TICKS_PER_YEAR < tick_interval:
 				var age_years: int = int(entity.age / GameConfig.TICKS_PER_YEAR)
 				_personality_maturation.apply_maturation(entity.personality, age_years)
-		# [Layer 1.5] 연간 body 재계산 [Gurven et al. 2008]
+		# [Layer 1.5] 연간 body realized 재계산 [Gurven et al. 2008]
+		# potential은 불변 — 재계산 안 함
 		if entity.age > 0 and entity.age % GameConfig.TICKS_PER_YEAR < tick_interval:
 			if entity.body != null:
 				var body_age_y: float = GameConfig.get_age_years(entity.age)
-				var new_body_vals: Dictionary = BodyAttributes.compute_all(body_age_y, entity.frailty)
-				for body_axis in new_body_vals:
-					var old_bval: float = entity.body.get(body_axis)
-					var new_bval: float = new_body_vals[body_axis]
-					entity.body.set(body_axis, new_bval)
+				var new_realized: Dictionary = BodyAttributes.compute_realized(
+					entity.body.potentials, body_age_y
+				)
+				for body_axis in new_realized:
+					var old_bval: float = entity.body.realized.get(body_axis, 0.0)
+					var new_bval: float = new_realized[body_axis]
+					entity.body.realized[body_axis] = new_bval
 					if absf(new_bval - old_bval) >= 0.02:
 						emit_event("body_attribute_changed", {
 							"entity_id": entity.id,
@@ -55,8 +58,8 @@ func execute_tick(tick: int) -> void:
 							"new_val": new_bval,
 							"age_years": body_age_y,
 						})
-				entity.speed = entity.body.agi * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
-				entity.strength = entity.body.str_val
+				entity.speed = entity.body.realized["agi"] * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
+				entity.strength = entity.body.realized["str"]
 
 
 func _on_stage_changed(entity: RefCounted, old_stage: String, new_stage: String, tick: int) -> void:

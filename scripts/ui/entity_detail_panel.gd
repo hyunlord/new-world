@@ -1276,13 +1276,13 @@ func _draw() -> void:
 	# ── Body Attributes ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_BODY_SECTION"), "body")
 	if not _section_collapsed.get("body", false):
-		if entity.body != null:
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), entity.body.str_val, Color(0.90, 0.40, 0.35))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), entity.body.agi,     Color(0.35, 0.80, 0.55))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), entity.body.end_val, Color(0.40, 0.65, 0.90))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), entity.body.tou,     Color(0.80, 0.60, 0.30))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), entity.body.rec,     Color(0.70, 0.45, 0.85))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  entity.body.dr,      Color(0.40, 0.80, 0.75))
+		if entity.body != null and not entity.body.realized.is_empty():
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), entity.body.realized.get("str", 0.0), Color(0.90, 0.40, 0.35))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), entity.body.realized.get("agi", 0.0), Color(0.35, 0.80, 0.55))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), entity.body.realized.get("end", 0.0), Color(0.40, 0.65, 0.90))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), entity.body.realized.get("tou", 0.0), Color(0.80, 0.60, 0.30))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), entity.body.realized.get("rec", 0.0), Color(0.70, 0.45, 0.85))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  entity.body.realized.get("dr",  0.0), Color(0.40, 0.80, 0.75))
 		cy += 4.0
 
 	# ── Action History (alive only) ──

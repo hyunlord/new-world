@@ -1910,3 +1910,45 @@ t-B07, t-B08 병렬 dispatch (파일 겹침 없음)
 - Files changed: entity_detail_panel.gd + localization/en+ko/ui.json
 - Commit: d7ed35b
 - Dispatch tool used: ask_codex (jobs 8187b640, 7506b05a)
+
+---
+
+## Body Attributes potential/realized 분리 재설계 (t-B09 ~ t-B12) — 2026-02-22
+
+### Context
+현재 22세 에이전트의 98.8%가 STR realized ≥ 0.8 → 높은 값이 너무 흔해 의미 없음.
+potential(유전적 상한, min(U,U) 분포) × realized(potential × 나이 커브)로 분리.
+성별 delta: 남성 STR/AGI/TOU 높음, 여성 DR/REC/END 높음.
+설계 후 검증: 전체 성인 realized 상위 5% = 0.811, 상위 1% = 0.950 (의도된 희귀 분포).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B09 | body_attributes.gd 전체 재작성 (potential/realized 구조) | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 |
+| t-B10 | entity_manager.gd body 초기화 블록 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+| t-B11 | age_system.gd realized 재계산 블록 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+| t-B12 | entity_detail_panel.gd realized 딕셔너리 접근으로 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+
+### Dispatch ratio: 4/4 = 100% ✅
+
+### Dispatch strategy
+t-B09 먼저 (새 API 정의) → t-B10/t-B11/t-B12 병렬 dispatch (파일 겹침 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System | Overview | modified | potential/realized 분리 개념 설명 추가 |
+| BodyAttributes System | Architecture | modified | 필드 구조 변경 (6개 float → 2개 Dictionary) |
+| BodyAttributes System | Data Structure | modified | potentials/realized 테이블, SEX_DELTA_MALE 테이블 |
+| BodyAttributes System | Core Logic | modified | generate_potentials 수식, compute_realized 수식 |
+| BodyAttributes System | Design Intent | added | 희귀 분포 설계 의도, 성별 차이 학술 근거 |
+| BodyAttributes System | History | added | potential/realized 분리 재설계 (2026-02-22) |
+| Change Log DB | — | added | Body Attributes potential/realized 분리 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: 없음 (기존 UI_BODY_* 키 재활용)
+- ko/ updated: N/A
+
+### Results
+- Gate: PENDING

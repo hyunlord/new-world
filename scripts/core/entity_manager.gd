@@ -86,14 +86,14 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	entity.birth_date = GameCalendarScript.birth_date_from_tick(entity.birth_tick, _rng)
 	# Frailty: N(1.0, 0.15), clamped [0.5, 2.0] (Vaupel frailty model)
 	entity.frailty = clampf(_rng.randfn(1.0, 0.15), 0.5, 2.0)
-	# [Layer 1.5] Body Attributes — age 설정 후 frailty 결정 후 초기화
+	# [Layer 1.5] Body Attributes — potential/realized 분리 구조
 	var _body_age_y: float = GameConfig.get_age_years(entity.age)
+	var _is_male: bool = entity.gender == "male"
 	entity.body = BodyAttributes.new()
-	var _body_vals: Dictionary = BodyAttributes.compute_all(_body_age_y, entity.frailty)
-	for _baxis in _body_vals:
-		entity.body.set(_baxis, _body_vals[_baxis])
-	entity.speed = entity.body.agi * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
-	entity.strength = entity.body.str_val
+	entity.body.potentials = BodyAttributes.generate_potentials(_rng, _is_male, entity.frailty)
+	entity.body.realized = BodyAttributes.compute_realized(entity.body.potentials, _body_age_y)
+	entity.speed = entity.body.realized["agi"] * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
+	entity.strength = entity.body.realized["str"]
 	_entities[entity.id] = entity
 	_world_data.register_entity(pos, entity.id)
 	chunk_index.add_entity(entity.id, pos)
