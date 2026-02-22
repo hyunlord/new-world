@@ -1905,4 +1905,8 @@ t-B07, t-B08 병렬 dispatch (파일 겹침 없음)
 - 기존 UI_BODY_STR~DR: t-B06에서 기추가, 중복 없음
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅ (commit d7ed35b)
+- Dispatch ratio: 2/2 = 100% ✅
+- Files changed: entity_detail_panel.gd + localization/en+ko/ui.json
+- Commit: d7ed35b
+- Dispatch tool used: ask_codex (jobs 8187b640, 7506b05a)
