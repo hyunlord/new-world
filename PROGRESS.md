@@ -2616,3 +2616,71 @@ trait_defs_v2.json name_kr/en → name_key/desc_key 분리, extract_locale_files
 - 섹션 10 (i18n) 내 10.4/10.5 소섹션 추가
 - autopilot state: cleared
 - Script: /tmp/notion_update_traitsystem_qa21.py
+
+---
+
+## T-QA22: i18n 경로 오류 수정 (data/locales/ → localization/) — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+"기존엔 localization/ 밑에 en/ko 폴더가 있었는데 이제 data/ 밑에 locales/ 폴더가 생기는 거잖아" Q&A 기반 수정.
+실제 프로젝트 구조 확인 결과: 로케일 폴더는 localization/ (data/locales/ 아님).
+localization/ko/traits.json — 기존 파일(748키) / traits_events.json — 신규 생성.
+T-QA20/T-QA21에서 작성된 잘못된 경로 전체 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA22 | Notion TraitSystem 경로 오류 PATCH | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 10.4 heading | patched | "data/locales/ 폴더 구조" → "localization/ 폴더 구조 (마이그레이션 전후)" |
+| TraitSystem | 섹션 10.4 description | patched | "data/locales/ 폴더로 이동" → "localization/ko|en/traits.json에 통합, traits.json은 기존 748키 파일" |
+| TraitSystem | 섹션 10.4 folder tree code | patched | data/locales/ → localization/, traits.json=기존(748키), traits_events.json=신규 |
+| TraitSystem | 섹션 10.5 bullet | patched | "data/locales/ko|en/*.json" → "localization/ko|en/*.json" |
+| TraitSystem | 섹션 10.5 para(before/after) | patched | "locales/*.json" → "localization/ko|en/*.json" |
+| TraitSystem | 섹션 9.4 migration script code | recovered | 잘못 덮어쓴 폴더트리 → MIGRATION_SCRIPT_UPDATED (경로 수정 반영) |
+| TraitSystem | 섹션 10-3 locale key code | recovered | 잘못 덮어쓴 폴더트리 → LOCALE_KEY_CODE (경로 수정 반영) |
+| TraitSystem | 섹션 10-5 extract_fn code | recovered | 잘못 덮어쓴 폴더트리 → extract_locale_files() (merge 방식으로 수정) |
+| TraitSystem | 섹션 11-3 exports_txt code | recovered | 잘못 덮어쓴 폴더트리 → EXPORTS_TXT_HEADER (경로 수정 반영) |
+
+### Results
+- 10개 블록 PATCH (T-QA22 1차) + 4개 블록 복구 (T-QA22 2차) = 총 14개 블록 수정
+- localization/ko|en/ 실제 구조 확인: traits.json(748키 기존), traits_events.json(신규), ui.json(864키) 등 11개 파일
+- traits.json 기존 파일이므로 extract_locale_files()는 merge 방식으로 수정
+- autopilot state: cleared
+- Scripts: /tmp/notion_update_traitsystem_qa22.py + /tmp/notion_recover_qa22.py
+
+---
+
+## T-QA23: behavior_weight 이진→연속 전환 Before/After 비교 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+현재 화면에서 절도: +200%, 배신: +160%, 탐험: +200% 극단값이 나오는 이유:
+이진 on/off 구조(strength=1.0 고정) + 안전 캡 없는 곱셈 누적.
+마이그레이션 후에는 sigmoid 연속값 기반 strength + lerp(1.0, extreme_val, strength) + clamp(0.1, 3.0) 캡으로 정상 범위 수렴.
+TraitSystem 섹션 6 "현재 문제" 마지막 bullet 뒤에 Before/After 비교 삽입.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA23 | Notion TraitSystem 섹션 6 Before/After 비교 블록 삽입 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 6 현재 문제 (T-QA23) | added | heading_3 "behavior_weight 이진→연속 전환 비교 (마이그레이션 전후)" + 요약 paragraph + BEFORE/AFTER code block |
+
+삽입 위치: after block `30fe2e3d-4a77-81b1-8cbf-f5d595aac7ca` (섹션 6 마지막 "현재 문제" bullet)
+
+### Results
+- 3개 블록 삽입: heading_3 + paragraph + code (plain text)
+- BEFORE: strength=1.0 고정, 곱셈 누적, 캡 없음 → 절도+200% 폭발
+- AFTER: strength=sigmoid(facet_val, t_on, t_off), lerp(1.0, extreme_val, strength), clamp(0.1, 3.0)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa23.py
