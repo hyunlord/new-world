@@ -790,11 +790,11 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
 	if not _section_collapsed.get("values", true):
 		if not entity.values.is_empty():
+			## 모든 가치관 표시 — 임계값 필터 제거
+			## 절대값 내림차순 정렬 (강한 가치관이 위로)
 			var significant: Array = []
 			for vkey in entity.values:
-				var val: float = entity.values[vkey]
-				if absf(val) > 0.10:
-					significant.append({ "key": vkey, "value": val })
+				significant.append({ "key": vkey, "value": entity.values[vkey] })
 			significant.sort_custom(func(a, b):
 				return absf(a["value"]) > absf(b["value"])
 			)

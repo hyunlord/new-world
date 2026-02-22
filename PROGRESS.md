@@ -1754,3 +1754,38 @@ PersonalityData.facets는 "H_fairness" 형식이므로 키 미스매치 → 전�
 ### Localization Verification
 - Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
 - New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100% ✅ (ask_codex jobs f8500468, 27051c2e)
+- Files changed: scripts/core/value_defs.gd + scripts/systems/value_system.gd + PROGRESS.md
+- Commit: ae7ba0e
+- Dispatch tool used: ask_codex (parallel, 2 jobs)
+- Notion pages updated: 🧠 가치관 시스템 (ValueSystem) [Notion API unavailable in session]
+
+---
+
+## T-VBug14: entity_detail_panel.gd 가치관 임계값 필터 제거 — 2026-02-22
+
+### Context
+가치관 표시 시 absf(val) > 0.10 필터로 약한 가치관이 UI에서 숨겨짐.
+T-VBug12/13으로 값 범위 확대 후 33개 전체를 볼 수 있도록 필터 제거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug14 | entity_detail_panel.gd 임계값 필터 제거 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일, 단일 블록 교체 — 직접 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | UI | modified | 가치관 패널 임계값 필터 제거 — 33개 전체 표시, 절대값 내림차순 정렬 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음 — 필터 조건만 제거)
+- New keys added: none
