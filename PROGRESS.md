@@ -1789,3 +1789,34 @@ T-VBug12/13으로 값 범위 확대 후 33개 전체를 볼 수 있도록 필터
 ### Localization Verification
 - Hardcoded scan: PASS (코드 변경 없음 — 필터 조건만 제거)
 - New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job c0f54851)
+- Files changed: scripts/ui/entity_detail_panel.gd + PROGRESS.md
+- Commit: 55b80d2
+- Dispatch tool used: ask_codex (job c0f54851)
+
+---
+
+## T-VBug15: entity_detail_panel.gd 가치관 고정 순서 정렬 — 2026-02-22
+
+### Context
+현재 절대값 내림차순 정렬 → 에이전트마다 가치관 순서가 달라 비교 불가.
+ValueDefs.KEYS 정의 순서(LAW→LOYALTY→...→PEACE) 고정 표시로 변경.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug15 | entity_detail_panel.gd 고정 순서 정렬 + ValueDefs 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | UI | modified | 패널 정렬 절대값→KEYS 고정 순서로 변경 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: none

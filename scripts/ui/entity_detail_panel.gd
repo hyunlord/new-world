@@ -4,6 +4,7 @@ extends Control
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
+const ValueDefs = preload("res://scripts/core/value_defs.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -790,13 +791,15 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
 	if not _section_collapsed.get("values", true):
 		if not entity.values.is_empty():
-			## 모든 가치관 표시 — 임계값 필터 제거
-			## 절대값 내림차순 정렬 (강한 가치관이 위로)
+			## ValueDefs.KEYS 정의 순서 그대로 표시 (33개 고정 순서)
+			## 사람마다 같은 위치에 같은 가치관 → 비교 가능
 			var significant: Array = []
 			for vkey in entity.values:
 				significant.append({ "key": vkey, "value": entity.values[vkey] })
 			significant.sort_custom(func(a, b):
-				return absf(a["value"]) > absf(b["value"])
+				var ia: int = ValueDefs.KEYS.find(a["key"])
+				var ib: int = ValueDefs.KEYS.find(b["key"])
+				return ia < ib
 			)
 			for item in significant:
 				var v_key: String = item["key"]
