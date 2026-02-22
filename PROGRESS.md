@@ -1820,3 +1820,51 @@ ValueDefs.KEYS 정의 순서(LAW→LOYALTY→...→PEACE) 고정 표시로 변�
 ### Localization Verification
 - Hardcoded scan: PASS
 - New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job b060cbc0)
+- Files changed: scripts/ui/entity_detail_panel.gd + PROGRESS.md
+- Commit: 7cbf0a2
+- Dispatch tool used: ask_codex (job b060cbc0)
+
+---
+
+## Body Attributes Layer 1.5 (t-B01 ~ t-B06) — 2026-02-22
+
+### Context
+에이전트에 신체 능력치 6축(Strength/Agility/Endurance/Toughness/Recuperation/DiseaseResistance) 도입.
+나이 커브 기반 자동 변화, entity.speed/strength는 body에서 파생. Gurven et al. (2008) 기반.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B02 | game_config.gd BODY_SPEED_* 상수 추가 | 🔴 DIRECT | — | 공유 상수, 나머지 파일이 참조 |
+| t-B01 | body_attributes.gd 신규 생성 | 🟢 DISPATCH | ask_codex | 새 파일, 독립적 |
+| t-B06 | localization en+ko UI_BODY_* 키 추가 | 🟢 DISPATCH | ask_codex | 독립, t-B01과 병렬 |
+| t-B03 | entity_data.gd body 필드 + 직렬화 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B01 후) |
+| t-B04 | entity_manager.gd body 초기화 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B03 후) |
+| t-B05 | age_system.gd 연간 body 재계산 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B03 후) |
+
+### Dispatch ratio: 5/6 = 83% ✅
+
+### Dispatch strategy
+Config-first fan-out: t-B02 DIRECT 먼저 커밋 → t-B01+t-B06 병렬 dispatch → t-B03 dispatch → t-B04+t-B05 병렬 dispatch
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System (신규) | Overview | created | Layer 1.5 신체 능력치 6축, 학술 근거 |
+| BodyAttributes System | Data Structure | created | 6축 필드 테이블 + CURVE_PARAMS 테이블 |
+| EntityData (기존) | Data Structure | modified | body 필드 추가, speed/strength 파생 관계 업데이트 |
+| AgeSystem (기존) | Core Logic | modified | 연간 body 재계산 로직 추가 |
+| Data Definitions DB | — | added | BodyAttributes 등록 |
+| Change Log DB | — | added | Body Attributes 초기 구현 (2026-02-22) |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_BODY_STR, UI_BODY_AGI, UI_BODY_END, UI_BODY_TOU, UI_BODY_REC, UI_BODY_DR
+- ko/ updated: YES (t-B06 dispatch)
+
+### Results
+- Gate: PENDING

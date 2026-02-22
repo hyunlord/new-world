@@ -29,6 +29,12 @@ const AGE_MAX: int = 525600          # 120 years (theoretical max)
 const PREGNANCY_DURATION: int = 3360  # 280 days × 12 ticks/day (mean gestation)
 const PREGNANCY_DURATION_STDEV: int = 120  # ~10 days × 12 ticks/day
 
+## [Layer 1.5] Body Attributes — speed/strength 파생 공식
+## entity.speed = body.agi * BODY_SPEED_SCALE + BODY_SPEED_BASE
+## agi=0.05 → speed=0.36, agi=1.0 → speed=1.5
+const BODY_SPEED_BASE: float = 0.3
+const BODY_SPEED_SCALE: float = 1.2
+
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0
 const UI_SCALE_MIN: float = 0.7
