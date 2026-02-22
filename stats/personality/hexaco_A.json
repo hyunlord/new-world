@@ -1,0 +1,60 @@
+{
+  "id": "HEXACO_A",
+  "display_key": "UI_STAT_HEXACO_A",
+  "category": "PERSONALITY",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [300, 700],
+      "phase_speeds": [1.5, 1.0, 0.3]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_PATIENT_FORGIVING",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_QUICK_TEMPERED",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "conflict_avoidance",
+      "evaluator": "CURVE",
+      "curve": "SIGMOID_EXTREME",
+      "params": {
+        "flat_zone": [200, 800],
+        "pole_multiplier": 3.0
+      },
+      "weight": 0.35,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "aggression_tendency",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": {
+        "exponent": 1.5
+      },
+      "weight": 0.30,
+      "direction": "negative",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}

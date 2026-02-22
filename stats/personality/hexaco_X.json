@@ -1,0 +1,60 @@
+{
+  "id": "HEXACO_X",
+  "display_key": "UI_STAT_HEXACO_X",
+  "category": "PERSONALITY",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [300, 700],
+      "phase_speeds": [1.5, 1.0, 0.3]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_HIGHLY_ANXIOUS",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_FEARLESS",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "anxiety_sensitivity",
+      "evaluator": "CURVE",
+      "curve": "SIGMOID_EXTREME",
+      "params": {
+        "flat_zone": [200, 800],
+        "pole_multiplier": 2.5
+      },
+      "weight": 0.40,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "fear_recovery_rate",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": {
+        "exponent": 1.3
+      },
+      "weight": 0.20,
+      "direction": "negative",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}

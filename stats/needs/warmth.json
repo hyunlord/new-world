@@ -1,0 +1,40 @@
+{
+  "id": "NEED_WARMTH",
+  "display_key": "UI_STAT_NEED_WARMTH",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 800,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 300,
+      "age_stage_multipliers": {
+        "infant": 2.5, "child": 1.8, "teen": 1.2,
+        "adult": 1.0, "elder": 1.5
+      }
+    }
+  },
+  "thresholds": [
+    { "value": 300, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_MILD", "hysteresis": 20 },
+    { "value": 150, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_SEVERE", "hysteresis": 20 },
+    { "value": 50, "direction": "below", "effect": "BEHAVIOR_SEEK_SHELTER_OVERRIDE", "hysteresis": 10 }
+  ],
+  "affects": [
+    {
+      "target": "stress_continuous_input",
+      "evaluator": "CURVE",
+      "curve": "THRESHOLD_POWER",
+      "params": { "threshold": 300, "exponent": 2.2, "max_output": 8.0 },
+      "weight": 0.9,
+      "direction": "negative",
+      "context": "stress"
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "needs",
+    "descriptor_table": "need_6_step"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "DERIVED_POPULARITY",
+  "display_key": "UI_STAT_DERIVED_POPULARITY",
+  "category": "DERIVED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 2,
+  "growth": {
+    "type": "COMPOSITE",
+    "params": {
+      "inputs": [
+        { "source": "DERIVED_CHARISMA", "weight": 0.50 },
+        { "source": "HEXACO_A", "weight": 0.30 },
+        { "source": "HEXACO_H", "weight": 0.20 }
+      ]
+    }
+  },
+  "thresholds": [
+    { "value": 750, "direction": "above", "effect": "TRAIT_POPULAR", "hysteresis": 40 },
+    { "value": 250, "direction": "below", "effect": "TRAIT_UNPOPULAR", "hysteresis": 40 }
+  ],
+  "affects": [
+    {
+      "target": "social_network_size",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.2 },
+      "weight": 0.45,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+}

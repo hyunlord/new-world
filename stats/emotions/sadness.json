@@ -1,6 +1,6 @@
 {
-  "id": "EMOTION_FEAR",
-  "display_key": "UI_STAT_EMOTION_FEAR",
+  "id": "EMOTION_SADNESS",
+  "display_key": "UI_STAT_EMOTION_SADNESS",
   "category": "EMOTION",
   "storage_type": "int",
   "range": [0, 100],
@@ -8,18 +8,18 @@
   "tier": 2,
   "growth": {
     "type": "DECAY_FAST",
-    "params": { "decay_per_year": 5000, "half_life_days": 3 }
+    "params": { "decay_per_year": 2000, "half_life_days": 7 }
   },
   "thresholds": [
-    { "value": 70, "direction": "above", "effect": "BEHAVIOR_FLEE_OVERRIDE", "hysteresis": 5 }
+    { "value": 70, "direction": "above", "effect": "MODIFIER_WORK_PENALTY_MILD", "hysteresis": 10 }
   ],
   "affects": [
     {
       "target": "stress_continuous_input",
       "evaluator": "CURVE",
       "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 40, "exponent": 2.0, "max_output": 8.0 },
-      "weight": 0.8,
+      "params": { "threshold": 50, "exponent": 1.8, "max_output": 5.0 },
+      "weight": 0.6,
       "direction": "positive",
       "context": "stress"
     }

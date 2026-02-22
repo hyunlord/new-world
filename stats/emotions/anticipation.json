@@ -1,0 +1,28 @@
+{
+  "id": "EMOTION_ANTICIPATION",
+  "display_key": "UI_STAT_EMOTION_ANTICIPATION",
+  "category": "EMOTION",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 2,
+  "growth": {
+    "type": "DECAY_FAST",
+    "params": { "decay_per_year": 4000, "half_life_days": 4 }
+  },
+  "thresholds": [
+    { "value": 70, "direction": "above", "effect": "MODIFIER_INITIATIVE_BONUS", "hysteresis": 8 }
+  ],
+  "affects": [
+    {
+      "target": "task_completion_rate",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.2 },
+      "weight": 0.4,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "emotion_6_step" }
+}

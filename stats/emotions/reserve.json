@@ -1,0 +1,29 @@
+{
+  "id": "EMOTION_RESERVE",
+  "display_key": "UI_STAT_EMOTION_RESERVE",
+  "category": "EMOTION",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 2,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": { "decay_per_year": 50 }
+  },
+  "thresholds": [
+    { "value": 200, "direction": "below", "effect": "MODIFIER_RESILIENCE_LOW", "hysteresis": 30 },
+    { "value": 700, "direction": "above", "effect": "MODIFIER_RESILIENCE_HIGH", "hysteresis": 30 }
+  ],
+  "affects": [
+    {
+      "target": "stress_decay_multiplier",
+      "evaluator": "CURVE",
+      "curve": "SIGMOID_EXTREME",
+      "params": { "flat_zone": [200, 700], "pole_multiplier": 2.0 },
+      "weight": 0.5,
+      "direction": "positive",
+      "context": "stress"
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "7_step" }
+}

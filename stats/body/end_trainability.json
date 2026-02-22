@@ -1,0 +1,13 @@
+{
+  "id": "BODY_END_TRAINABILITY",
+  "display_key": "UI_STAT_END_TRAINABILITY",
+  "category": "BODY",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 0,
+  "growth": { "type": "FIXED", "params": {} },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "body", "descriptor_table": "body_7_step" }
+}

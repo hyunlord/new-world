@@ -1,0 +1,26 @@
+{
+  "id": "BODY_INNATE_IMMUNITY",
+  "display_key": "UI_STAT_INNATE_IMMUNITY",
+  "category": "BODY",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 0,
+  "growth": { "type": "FIXED", "params": {} },
+  "thresholds": [
+    { "value": 200, "direction": "below", "effect": "MODIFIER_DISEASE_SUSCEPTIBLE", "hysteresis": 30 },
+    { "value": 800, "direction": "above", "effect": "MODIFIER_DISEASE_RESISTANT", "hysteresis": 30 }
+  ],
+  "affects": [
+    {
+      "target": "disease_resistance",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.2 },
+      "weight": 0.60,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "body", "descriptor_table": "body_7_step" }
+}
