@@ -1872,3 +1872,37 @@ Config-first fan-out: t-B02 DIRECT 먼저 커밋 → t-B01+t-B06 병렬 dispatch
 - Files changed: game_config.gd + body_attributes.gd (신규) + entity_data.gd + entity_manager.gd + age_system.gd + localization/en+ko/ui.json
 - Commits: 60cf4c3 (t-B02) → 4e97825 (t-B01+t-B06) → a98b677 (t-B03) → 87ed139 (t-B04+t-B05)
 - Dispatch tool used: ask_codex (jobs 419d76e6, f742270d, 7cc3e901, b2410226, d0239c2a)
+
+---
+
+## Body Attributes UI 표시 (t-B07 ~ t-B08) — 2026-02-22
+
+### Context
+entity_detail_panel에 Body 섹션 추가 — Stats 섹션 바로 아래, 6축 가로 바 표시.
+t-B01~B06에서 구현된 BodyAttributes 시스템을 UI에서 확인 가능하게 함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B07 | entity_detail_panel.gd Body 섹션 + _section_collapsed 추가 | 🟢 DISPATCH | ask_codex | 단일 UI 파일 |
+| t-B08 | localization en+ko UI_BODY_SECTION 키 추가 | 🟢 DISPATCH | ask_codex | 독립, 병렬 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+t-B07, t-B08 병렬 dispatch (파일 겹침 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System | UI | added | entity_detail_panel Body 섹션 설명, 색상 코드표 |
+| Change Log DB | — | added | Body Attributes UI 표시 구현 (2026-02-22) |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_BODY_SECTION
+- ko/ updated: YES (t-B08 dispatch)
+- 기존 UI_BODY_STR~DR: t-B06에서 기추가, 중복 없음
+
+### Results
+- Gate: PENDING

@@ -107,6 +107,7 @@ var _section_collapsed: Dictionary = {
 	"family": false,
 	"relationships": false,
 	"stats": true,
+	"body": false,
 	"recent_actions": false,
 	"life_events": false,
 	"values": true,
@@ -1271,6 +1272,18 @@ func _draw() -> void:
 		cy += 16.0
 		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f  |  %s: %d" % [Locale.ltr("UI_TOTAL_GATHERED"), entity.total_gathered, Locale.ltr("UI_BUILDINGS_BUILT"), entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 22.0
+
+	# ── Body Attributes ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_BODY_SECTION"), "body")
+	if not _section_collapsed.get("body", false):
+		if entity.body != null:
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), entity.body.str_val, Color(0.90, 0.40, 0.35))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), entity.body.agi,     Color(0.35, 0.80, 0.55))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), entity.body.end_val, Color(0.40, 0.65, 0.90))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), entity.body.tou,     Color(0.80, 0.60, 0.30))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), entity.body.rec,     Color(0.70, 0.45, 0.85))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  entity.body.dr,      Color(0.40, 0.80, 0.75))
+		cy += 4.0
 
 	# ── Action History (alive only) ──
 	if entity.is_alive:
