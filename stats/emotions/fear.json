@@ -1,0 +1,15 @@
+{
+  "id": "EMOTION_FEAR",
+  "display_key": "UI_STAT_EMOTION_FEAR",
+  "category": "EMOTION",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 0,
+  "tier": 2,
+  "growth": { "type": "DECAY_NATURAL", "params": { "decay_per_year": 300 } },
+  "thresholds": [
+    { "value": 700, "direction": "above", "effect": "BEHAVIOR_FLEE_OVERRIDE", "hysteresis": 50 }
+  ],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "emotion_6_step" }
+}

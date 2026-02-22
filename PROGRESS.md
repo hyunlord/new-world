@@ -2234,3 +2234,384 @@ display layer(hysteresis t_on=0.9)에만 이진성 잔존.
 - Gate: N/A (코드 변경 없음)
 - Notion pages updated: 🎭 트레이트 시스템 (신규 생성, 7섹션 59개 블록)
 - TraitSystem PAGE_ID: 30fe2e3d-4a77-81b0-b675-e195025443a5
+
+---
+
+## T-QA12: TraitSystem — Trait 구성 분류 + Option A/B 단점 보강 — 2026-02-22
+
+### Context
+T-QA11에서 생성한 TraitSystem 페이지에 추가 정보 반영.
+Q&A에서 AI 질의 초안을 작성하는 과정에서 시스템 스펙이 더 명확하게 서술됨.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA12 | TraitSystem 페이지 4개 섹션 보강 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | added | Trait 구성 분류: Facet trait 48개 + Composite trait 139개 (c_caregiver = A_high + E_high 예시 포함) |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | 동시 활성화 10~20개 수치 구체화 |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | Option A 단점: 숫자 24개로만 표현 → 인물창 UX 저하 |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | Option B 단점: 선별 기준 모호 + violation_map/behavior_mappings 대규모 충돌 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (+4 블록)
+
+---
+
+## T-QA13: TraitSystem — C안 확정 + 3-Layer 아키텍처 + 마이그레이션 4단계 — 2026-02-22
+
+### Context
+Claude·Gemini·GPT 세 AI에게 Trait 시스템 리디자인을 자문한 결과 모두 C안(하이브리드)으로 수렴.
+내부 facet 연속값(Mechanics Layer) + salience Top-K 표시(Label Layer) + 행동 로그 trait 텍스트(Narrative Layer).
+마이그레이션 4단계 확정, 신규 학술 레퍼런스(Lee & Ashton 2004, OCC, PAD) 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA13 | TraitSystem 페이지 전체 재구성 (3-Layer + C안 + Migration) | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | modified | 3-Layer 아키텍처 언급, 레이어 3 Narrative Layer 추가 |
+| 🎭 트레이트 시스템 | 2. 설계 의도 | modified | DF 7단계 구간/중간값 비표시 상세화, CK3 3개 철학+trait 간 배제, RimWorld 스펙트럼 묶음, Sims 4 추가 |
+| 🎭 트레이트 시스템 | 2. 설계 의도 | added | 학술 근거: Lee & Ashton (2004), OCC/PAD 모델, taxometric analysis |
+| 🎭 트레이트 시스템 | 4. 아키텍처 | modified | "2-레벨" → "3-레이어 하이브리드" 재구성. Layer 1(Mechanics), Layer 2(Label), Layer 3(Narrative) |
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | added | violation_stress 연속 함수 공식, Curve 리소스 비선형 매핑 패턴 |
+| 🎭 트레이트 시스템 | 6. C안 확정 | modified | Option A callout → C안 확정 callout으로 교체, salience 공식 상세, 핵심 결정 6개 bullet |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 마이그레이션 4단계 (Phase 1~4, 최종 목표 60~80개 trait) |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (63블록 → 92블록, 전체 재구성)
+
+---
+
+## T-QA14: TraitSystem — 수치 변경 경계 + 마이그레이션 방식 A/B 트레이드오프 — 2026-02-22
+
+### Context
+세부 수치 조정 범위 Q&A: threshold → t_on/t_off 분리, composite trait AND 조합 → salience 가중합,
+violation_stress base 수치(14, 22 등) 유지(비례 계수만 변경). 마이그레이션 방식 A(전면) vs B(점진적) 트레이드오프 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA14 | TraitSystem 페이지 수치 변경 경계 + 마이그레이션 방식 A/B 추가 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | added | Composite Trait Salience 가중합 (C안 변경): AND 조합 → weighted sum |
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | modified | violation_stress 코드에 base 수치(14, 22) 불변 주석 추가 |
+| 🎭 트레이트 시스템 | 6. C안 확정 | added | 수치 변경 경계 섹션: 바뀌는 것(threshold/composite/violation 경로) vs 안 바뀌는 것(facet/base 수치/HEXACO 구조) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 마이그레이션 방식 A(전면) vs B(점진적) 트레이드오프 callout |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | composite 가중합 전환 bullet 추가 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (92블록 → 105블록)
+
+---
+
+## T-QA15: TraitSystem — 방식 A(전면) 확정 + 영향 파일 8개 + t_on/t_off 정의 미결 — 2026-02-22
+
+### Context
+마이그레이션 방식 B(점진적) 포기 → 방식 A(전면) 확정. Phase 4 이전 전면 완료 후 진행 결정.
+영향 파일 8개 명확화. t_on/t_off 정의 방식(개별 vs 카테고리 기본값) 미결 결정 사항으로 기록.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA15 | TraitSystem 방식 A 확정 + 영향 파일 + t_on/t_off 미결 문서화 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 95 h3: "마이그레이션 방식 선택" → "방식 A(전면) 확정" |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 96 callout: 미결 → 방식 A 확정 (Phase 3A/3B 수정 포함) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | "전면 마이그레이션 영향 파일" h3 + 8개 파일 bullet |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | "미결 결정: t_on/t_off 정의 방식" h3 + callout + 선택지 A/B bullet |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (105블록 → 121블록, 2블록 수정 + 16블록 추가)
+
+---
+
+## T-QA16: TraitSystem — salience 차별화 + Python 스크립트 구조 미결 추가 — 2026-02-22
+
+### Context
+미결 결정 섹션 확장: ② salience 함수 facet vs composite 차별화 (정규화 전략 포함),
+③ Python 마이그레이션 스크립트 특이 케이스 처리 전략. h3 제목 일반화, callout 3개 미결 열거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA16 | TraitSystem 미결 결정 섹션 확장 (② salience 차별화, ③ Python 스크립트) | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 117 h3: "미결 결정: t_on/t_off" → "미결 결정 사항 (전면 마이그레이션 전)" |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 118 callout: 3개 미결 결정 열거 (①t_on/t_off ②salience 차별화 ③Python 구조) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 미결 결정 ② — salience 함수 facet vs composite 차별화 (정규화 전략 포함) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 미결 결정 ③ — Python 마이그레이션 스크립트 특이 케이스 처리 전략 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (121블록 → 123블록, 2블록 수정 + 2블록 추가)
+
+---
+
+## T-QA17: TraitSystem — Composite 3분류 + Effects 구조 + 특이 케이스 7선 — 2026-02-22
+
+### Context
+trait_definitions_fixed.json 전수 분석 결과 문서화. Composite trait 세부 분류(2축 매트릭스 60/Named archetype 64/Dark tetrad 15) + Effects 필드 구조 상세 + 마이그레이션 특이 케이스 7선 신규 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA17 | TraitSystem — Composite 분류 + Effects + 특이 케이스 7선 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | modified | Block 6: Composite 3분류 추가 (2축 매트릭스 60, Named archetype 64, Dark tetrad 15) |
+| 🎭 트레이트 시스템 | 3. 핵심 상수 | added | Effects 필드 구조 h3 + 4개 bullet (behavior_weights/emotion_modifiers/violation_stress/기타) |
+| 🎭 트레이트 시스템 | 7. 제약 & 향후 계획 | added | 마이그레이션 특이 케이스 7선 h3 + 7개 bullet (threshold 비대칭/mutex/composite 이중구조/dark tetrad/archetype/극단값/baseline 혼재) |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (123블록 → 138블록, 1블록 수정 + 15블록 삽입)
+
+---
+
+## T-QA18: TraitSystem — 핵심 설계 수식 최종 확정 (3 AI 비교) — 2026-02-22
+
+### Context
+Gemini / GPT / Claude 세 AI의 t_on/t_off, Salience, Effects 설계 제안을 비교 분석. 사용자 결론: "Claude 답변을 베이스로, GPT의 sigmoid steepness 비대칭 + winner-take-all mutex 추가 반영". 기존 미결 결정 사항 3가지 → 확정 결정 사항으로 전환 + 핵심 설계 수식 전체 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA18 | TraitSystem 핵심 설계 수식 확정 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### 확정 결정 사항 요약
+| 항목 | 확정 방식 | 출처 |
+|------|-----------|------|
+| t_on/t_off 공식 | HIGH: threshold±0.02/±0.08 (gap=0.06) | Claude |
+| sigmoid steepness | high: clamp(0.012+0.25*(1-t), 0.015, 0.05) | GPT |
+| Facet mutex | winner-take-all (raw_hi vs raw_lo) | GPT |
+| Composite salience | 기하평균 × rarity_bonus(1+0.1*(n-2)) | Claude |
+| Dark tetrad stress | base_stress=0 × salience^α = 0 (예외 처리 불필요) | Claude |
+| behavior_weight | facet lerp + composite salience + log-space 합산 | Claude+GPT |
+| emotion | baseline=additive, sensitivity=multiplicative+log-space | Claude+GPT |
+| 마이그레이션 우선순위 | 케이스4 > 2 > 6 > 7 > 5 > 1 > 3 | 종합 |
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | heading 교체 "확정 결정 사항 (T-QA18, 2026-02-22)" |
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | callout → "3가지 설계 결정 확정 완료" |
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | 블록 134-137: 선택지 A/B → 확정①②③ 내용으로 교체 |
+| 🎭 트레이트 시스템 | 8. 핵심 설계 수식 확정 | added | 신규 섹션: t_on/t_off 표 + sigmoid steepness + hysteresis GDScript + Facet mutex + Composite salience + behavior_weight + emotion + violation_stress + Python 4파일 구조 + 마이그레이션 우선순위 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (138블록 → 170블록+, 6블록 수정 + 32블록 추가)
+
+---
+
+## StatSystem Phase 0 Infrastructure — t-SA01~t-SA11 — 2026-02-22
+
+### Context
+241곳에서 스탯에 직접 접근하는 구조를 스탯 인프라로 대체하기 위한 Phase 0 기반 구축.
+Phase 0 = 행동 변화 없이 인프라만 구축. 기존 시스템은 Phase 1~3에서 단계적으로 교체됨.
+신규 파일만 추가. 기존 entity_data.gd에 stat_cache 필드 1개 추가뿐.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SA01 | scripts/core/stat_curve.gd — 성장/영향 커브 수학 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA02 | scripts/core/stat_modifier.gd — StatModifier 데이터 클래스 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA03 | scripts/core/stat_definition.gd — JSON 로드/파싱 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA04 | scripts/core/stat_graph.gd — 의존성 그래프, topo sort | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA03 의존 |
+| t-SA05 | scripts/core/stat_cache.gd — 엔티티별 캐시 관리 | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA02+SA04 의존 |
+| t-SA06 | scripts/core/stat_evaluator_registry.gd — 복잡 로직 등록소 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA07 | scripts/core/stat_query.gd — Autoload stub | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA03+04+05+06 의존 |
+| t-SA08 | stats/*.json 스켈레톤 7개 | 🟢 DISPATCH | ask_codex | 신규 데이터 파일, t-SA03 의존 |
+| t-SA09 | tests/test_stat_curve.gd + tests/test_stat_graph.gd | 🟢 DISPATCH | ask_codex | 신규 테스트 파일, t-SA01+04 의존 |
+| t-SA10 | entity_data.gd — stat_cache 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 수정, t-SA05 의존 |
+| t-SA11 | project.godot — StatQuery Autoload 등록 | 🔴 DIRECT | — | 공유 프로젝트 파일, merge conflict 위험 |
+
+### Dispatch ratio: 10/11 = 91% ✅ (목표 ≥60%)
+
+### Dispatch strategy
+- Stage 1 (병렬): t-SA01, t-SA02, t-SA03, t-SA06 — 완전 독립
+- Stage 2 (병렬, SA03 완료 후): t-SA04, t-SA08
+- Stage 3 (SA02+SA04 완료 후): t-SA05
+- Stage 4 (병렬, SA03+04+05+06 완료 후): t-SA07, t-SA09
+- Stage 5 (SA05 완료 후): t-SA10
+- Stage 6 DIRECT (SA07 완료 후): t-SA11
+
+### Notion Update
+⚠️ Required — to be completed before gate.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem (신규) | Overview | added | 5-Layer 아키텍처, Phase 0 목표, 학문적 근거 |
+| StatSystem (신규) | Architecture | added | classDiagram (StatCurve/StatModifier/StatDefinition/StatGraph/StatCache/StatQuery/StatEvaluatorRegistry) |
+| StatSystem (신규) | Core Logic | added | sigmoid_extreme, threshold_power, log_xp_required 공식 |
+| StatSystem (신규) | Data Structure | added | StatModifier 필드 테이블, stat_cache 구조 |
+| StatSystem (신규) | Constraints | added | Phase 0 stub 상태, Phase 2 활성화 예정 |
+| EntityData | Data Structure | modified | stat_cache: Dictionary 필드 추가 |
+| Data Definitions DB | — | added | StatModifier.ModType enum |
+| Change Log DB | — | added | 2026-02-22 \| StatSystem Phase 0 Infrastructure |
+
+### Localization Verification
+- Hardcoded scan: N/A (UI 텍스트 없음, Phase 0)
+- New keys added: none (JSON display_key는 Phase 3 UI 연결 시 추가 예정)
+- ko/ updated: N/A
+
+### Results
+- Gate: PENDING
+- Dispatch ratio: 10/11 = 91% ✅
+- Files changed: 11 (7 new scripts + 7 JSON + 2 tests + entity_data.gd + project.godot)
+- Dispatch tool: ask_codex (10 tickets)
+- Dispatch tool: DIRECT (1 ticket: t-SA11 project.godot)
+
+---
+
+## T-QA19: Trait 시스템 전면 마이그레이션 프롬프트 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+trait-migration-PROMPT.md (918줄) Q&A 기반 TraitSystem Notion 문서 업데이트.
+이진 on/off → 2-레벨 하이브리드 전환의 TICKET-0~6 구현 계획, get_effect_value() 통합 인터페이스, 기각 대안, 검증 시나리오, i18n 키 목록을 섹션 9로 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA19 | Notion TraitSystem 페이지 섹션 9 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 핵심 상수 코드블록 | confirmed | VIOLATION_ALPHA=1.2 등 이미 포함 확인 |
+| TraitSystem | 섹션 9. 마이그레이션 실행 계획 (T-QA19) | added | get_effect_value() 인터페이스, entity_data.gd 필드 변경 상세, TICKET-0~6 디스패치 순서, Python 스크립트 구조, 기각된 대안 3가지, 검증 시나리오 10+5+3, i18n 키 목록 |
+
+### Results
+- Notion 블록 47개 append (섹션 9)
+- 상수 코드블록: VIOLATION_ALPHA 이미 포함 — PATCH 불필요 (T-QA18에서 반영됨)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa19.py
+
+---
+
+## T-QA20: Trait i18n + worldsim-docs TICKET 보완 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+TICKET-5B(i18n: trait 텍스트 로케일 분리) + TICKET-5C(worldsim-docs 등록) Q&A 기반 TraitSystem Notion 문서 업데이트.
+trait_defs_v2.json name_kr/en → name_key/desc_key 분리, extract_locale_files() 함수, 수정된 디스패치 순서, worldsim-docs 파일 명세 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA20 | Notion TraitSystem 섹션 10/11 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 9.4 Python 스크립트 구조 코드블록 | patched | extract_locale_files() 함수 추가, 출력 파일 8개(JSON 4+로케일 4) |
+| TraitSystem | 섹션 10. TICKET-5B i18n (T-QA20) | added (22블록) | trait_defs_v2.json 필드 변경, GDScript 참조 패턴, traits.json 374키, traits_events.json 6키, extract_locale_files() Python 함수, i18n 검증 시나리오 7개 |
+| TraitSystem | 섹션 11. TICKET-5C worldsim-docs (T-QA20) | added (21블록) | 파일 구조, trait-system-v2.md 10개 섹션 명세, exports/txt 헤더, 확인 항목 11개 |
+
+### Results
+- Notion 블록 43개 추가 (섹션 10: 22, 섹션 11: 21)
+- 섹션 9.4 PATCH: extract_locale_files() + 출력 8파일 반영
+- 섹션 9.3 코드블록: 검색어 불일치로 미발견 (섹션 10에서 수정된 디스패치 순서 커버됨)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa20.py
+
+---
+
+## T-QA21: data/locales/ 폴더 구조 + 텍스트 집중화 원칙 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+"data/locales/ 폴더는 이번 마이그레이션으로 필요없어지는 건가?" Q&A 기반 TraitSystem Notion 문서 업데이트.
+정답: 없어지지 않고 더 커짐. 기존 파일(violation.json, debug.json 등) 유지 + 신규 파일(traits.json, traits_events.json) 추가.
+이번 마이그레이션의 핵심은 텍스트 집중화: trait_defs_v2.json 내 분산된 name_kr/en을 locales로 이전.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA21 | Notion TraitSystem 섹션 10.4/10.5 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 10.4 data/locales/ 폴더 구조 (T-QA21) | added | 마이그레이션 후 전체 폴더 트리: ko/{traits.json 신규, traits_events.json 신규, violation.json 기존, debug.json 기존, ...}, en/{traits.json, traits_events.json, ...} |
+| TraitSystem | 섹션 10.5 텍스트 집중화 원칙 (T-QA21) | added | trait_defs_v2.json 순수 메커닉 데이터만 보유, 모든 텍스트 locales/*.json 집중, Locale.ltr() 단일 경로 접근 |
+
+### Results
+- Notion 블록 12개 추가 (divider + h3×2 + para×4 + code×1 + bullet×4)
+- 섹션 10 (i18n) 내 10.4/10.5 소섹션 추가
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa21.py

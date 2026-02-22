@@ -96,6 +96,10 @@ var trauma_scars: Array = []
 ## 학술: Moral Disengagement Theory (Bandura, 1999), Kindling Theory (Post, 1992)
 var violation_history: Dictionary = {}
 
+## StatSystem Phase 0: 엔티티별 스탯 캐시
+## key: stat_id (StringName), value: {value, dirty, modifiers, last_computed_tick}
+var stat_cache: Dictionary = {}
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -200,6 +204,7 @@ func to_dict() -> Dictionary:
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
+		"stat_cache": _serialize_stat_cache(stat_cache),
 	}
 
 
@@ -300,4 +305,20 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	if not body_data.is_empty():
 		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
+	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	return e
+
+
+## stat_cache 직렬화 (StringName key → String)
+func _serialize_stat_cache(cache: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for k in cache:
+		result[str(k)] = cache[k]
+	return result
+
+## stat_cache 역직렬화 (String key → StringName)
+static func _deserialize_stat_cache(data: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for k in data:
+		result[StringName(k)] = data[k]
+	return result
