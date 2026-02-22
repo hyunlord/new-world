@@ -29,11 +29,53 @@ const AGE_MAX: int = 525600          # 120 years (theoretical max)
 const PREGNANCY_DURATION: int = 3360  # 280 days × 12 ticks/day (mean gestation)
 const PREGNANCY_DURATION_STDEV: int = 120  # ~10 days × 12 ticks/day
 
-## [Layer 1.5] Body Attributes — speed/strength 파생 공식
-## entity.speed = body.agi * BODY_SPEED_SCALE + BODY_SPEED_BASE
-## agi=0.05 → speed=0.36, agi=1.0 → speed=1.5
-const BODY_SPEED_BASE: float = 0.3
-const BODY_SPEED_SCALE: float = 1.2
+## [Layer 1.5] Body Attributes — potential/trainability/realized 3-레이어
+## ── Potential 스케일 (int 0~10,000) ─────────────────────
+const BODY_POTENTIAL_MEAN: int = 700    ## 기준 평균 (남녀 공통 기저값)
+const BODY_POTENTIAL_SD: int = 175      ## SD (기저값의 25%)
+const BODY_POTENTIAL_MIN: int = 50      ## 최솟값
+const BODY_POTENTIAL_MAX: int = 5000    ## 최댓값
+
+## 성별 보정 (potential에만 적용, trainability에는 적용 안 함)
+## 근거: Refalo 2025 메타분석 — trainability 성별차 0.69% (무시 가능)
+const BODY_SEX_DELTA_MALE: Dictionary = {
+	"str":  160,   ## 남성 +160 → 남 860, 여 540, 비율 63%
+	"agi":   30,
+	"end":  -15,   ## 여성 지구력 우위
+	"tou":  100,   ## 남성 골밀도/결합조직 우위
+	"rec":  -15,   ## 여성 회복 소폭 우위
+	"dr":   -80,   ## 여성 면역 우위 (Davis 2015)
+}
+
+## ── Trainability 스케일 (int 0~1,000) ───────────────────
+const TRAINABILITY_MEAN: int = 500
+const TRAINABILITY_SD: int = 150
+const TRAINABILITY_MIN: int = 50
+const TRAINABILITY_MAX: int = 1000
+
+## ── 선천 면역력 (int 0~1,000) ────────────────────────────
+const INNATE_IMMUNITY_MEAN: int = 500
+const INNATE_IMMUNITY_SD: int = 100
+const INNATE_IMMUNITY_SEX_DELTA_FEMALE: int = 80   ## 여성 +80
+
+## ── 훈련 XP 시스템 ────────────────────────────────────────
+## XP_FOR_FULL_PROGRESS: 이 XP에 도달하면 평균 trainability로 ceiling 100% 달성
+const XP_FOR_FULL_PROGRESS: float = 10000.0
+
+## 활동별 XP 획득량 (per gathering/construction 성공)
+const GATHER_XP_END: float = 0.50
+const GATHER_XP_STR: float = 0.30
+const GATHER_XP_AGI: float = 0.20
+const CONSTRUCT_XP_STR: float = 0.80
+const CONSTRUCT_XP_TOU: float = 0.30
+const CONSTRUCT_XP_AGI: float = 0.20
+
+## ── speed/strength 파생 공식 ──────────────────────────────
+## entity.speed = float(agi_realized) * BODY_SPEED_SCALE + BODY_SPEED_BASE
+## agi=700(평균 성인, 훈련없음): speed=1.14,  agi=1500(전사): speed=2.1
+const BODY_SPEED_BASE: float = 0.30
+const BODY_SPEED_SCALE: float = 0.0012   ## float(agi_realized) * 0.0012
+## entity.strength = float(str_realized) / 1000.0  → str=700: 0.70, str=1500: 1.50
 
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0

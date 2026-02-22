@@ -1982,3 +1982,186 @@ No doc-worthy changes. Reason: 단순 누락 필드 추가 버그픽스.
 ### Results
 - Gate: PASS ✅ (commit 5236538)
 - Files changed: scripts/ui/entity_detail_panel.gd (1줄 추가)
+
+---
+
+## Phase 3B TraitViolationSystem Q&A 분석 → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: Phase 3B Trait Violation System 설계/구현 전체 스펙 (9 tickets, TICKET-0~8) 분석.
+trait_violation_system.gd (562줄)가 이미 구현 완료. 전용 Notion 기술 문서 신규 생성 + 크로스 레퍼런스.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA5  | Phase 3B Trait Violation System → Notion 기술 문서 생성 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🔥 트레이트 위반 시스템 (TraitViolationSystem) | — | 신규 생성 | Phase 3B 전체 기술 문서: 개요/아키텍처/데이터구조/알고리즘/탈감작-PTSD분기/Breakdown계층/IntrusiveThought/PTG/violation_history감쇠/로케일키/게임레퍼런스/학술레퍼런스/설계기각/Phase연결 (110 블록) |
+| 😤 감정 & 스트레스 시스템 | 기존 CK3 가치위반 참조 | 확인 | 이미 TraitViolation 크로스 레퍼런스 존재 — 중복 추가 건너뜀 ✅ |
+
+새 페이지 URL: https://www.notion.so/30fe2e3d4a77814e8d09ee17f4ad69f2
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: violation.json 키 목록 문서화 (코드 구현 separate ticket)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/notion_create_trait_violation_docs.py 임시 스크립트)
+- Notion pages created: 1 (🔥 트레이트 위반 시스템)
+- Notion pages checked: 1 (😤 감정 & 스트레스 시스템 — 중복 없음 확인)
+
+---
+
+## Phase 3B TraitViolationSystem 검증 방법 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "인게임에서 violation을 어떻게 검증하나?" → 검증 채널 3종, behavior_system 연동 gap, debug_force_violation 함수 제안.
+기존 🔥 트레이트 위반 시스템 페이지에 "검증 방법" + "제약 & 향후 계획" 섹션 신규 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA6  | TraitViolationSystem 검증 방법 + 제약 섹션 추가 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | 추가 | entity_detail_panel/Chronicle/디버그출력 3채널, 실제 print 로그 형식 문서화 |
+| 🔥 트레이트 위반 시스템 | 17. 제약 & 향후 계획 | 추가 | BehaviorSystem 연동 gap, hardcoded 텍스트 이슈, settlement_norm stub, debug_force_violation 제안 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion blocks appended: 28 (섹션 16, 17)
+- Notion page: 🔥 트레이트 위반 시스템 (30fe2e3d-4a77-814e-8d09-ee17f4ad69f2)
+
+---
+
+## 치트/디버그 시스템 설계 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "인게임 테스트를 위한 치트 모드 어떻게 만들까?" → Phase 3B violation 검증 등 반복 테스트 효율화를 위한
+DebugCheatSystem 설계. 콘솔(F12/~) + 패널(슬라이더) 혼합 UI 아키텍처. 아직 미구현 상태이므로 설계 명세 문서로 생성.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA7  | DebugCheatSystem 설계 문서 신규 생성 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🛠️ 디버그 & 치트 시스템 (DebugCheatSystem) | 전체 | 신규 생성 | 개요/설계의도/아키텍처/기능분류(에이전트·시뮬레이션·정보표시·정착지)/콘솔명령예시/UI레이아웃/데이터구조/개발히스토리/제약&향후계획/크로스레퍼런스 (94 블록) |
+
+새 페이지 URL: https://www.notion.so/30fe2e3d4a7781ac9863dd3f084415ef
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/create_debug_system_docs.py 임시 스크립트)
+- Notion pages created: 1 (🛠️ 디버그 & 치트 시스템)
+- Notion pages checked: 없음 (신규 시스템, 기존 페이지 없음 확인)
+
+---
+
+## 치트/디버그 시스템 상세 스펙 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "혼합 방식으로 구현, stress/Phase 3B까지 완료" → 이전 설계 초안보다 훨씬 구체적인 구현 스펙 확정.
+파일 경로, 씬 구조, GDScript 코드 스켈레톤, 명령어 전체 syntax, 5탭 패널 레이아웃, i18n 14키, 검증 시나리오.
+기존 🛠️ 디버그 & 치트 시스템 페이지(94 블록)를 전면 교체.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA8  | DebugCheatSystem 상세 스펙 → Notion 페이지 전면 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🛠️ 디버그 & 치트 시스템 | 전체 | 전면 교체 | 기존 초안(94블록) → 상세 스펙(130블록): 파일경로/씬구조/GDScript스켈레톤/명령어syntax 11종/i18n 14키/검증시나리오/디스패치순서 |
+| 🛠️ 디버그 & 치트 시스템 | 7. 로케일 키 | 신규 추가 | debug.json ko/en 14키 전체 |
+| 🛠️ 디버그 & 치트 시스템 | 8. 검증 시나리오 | 신규 추가 | Phase 3A/3B 검증 시나리오 표 |
+| 🛠️ 디버그 & 치트 시스템 | 10. 제약 | 업데이트 | "미구현" → TICKET 범위로 격상, 향후 계획 3항 추가 |
+
+페이지 URL: https://www.notion.so/30fe2e3d4a7781ac9863dd3f084415ef
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: debug.json 14키 (문서화만, 코드 구현은 TICKET-3)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/update_debug_system_docs.py 임시 스크립트)
+- Notion blocks replaced: 94 → 130
+- Notion page: 🛠️ 디버그 & 치트 시스템 (30fe2e3d-4a77-81ac-9863-dd3f084415ef)
+
+---
+
+## Body Trainability 시스템 — t-TR01~t-TR07 — 2026-02-22
+
+### Context
+body_attributes.gd를 potential/trainability/training_xp 3-레이어로 재설계.
+운동유전학 연구 기반 (HERITAGE, Ahtiainen, ACTN3/ACE, Refalo, Weaver).
+스케일: 0.0~1.0 float → 0~10,000 int (potential), 0~1,000 int (trainability).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-TR01 | game_config.gd 상수 추가/교체 | 🔴 DIRECT | — | shared config, BODY_SPEED_SCALE 교체가 전체 의존 |
+| t-TR02 | body_attributes.gd 전면 재작성 | 🟢 DISPATCH | ask_codex | standalone new design |
+| t-TR03 | construction_system.gd XP stub | 🟢 DISPATCH | ask_codex | single-file addition |
+| t-TR04 | entity_manager.gd 초기화 블록 교체 | 🟢 DISPATCH | ask_codex | single-system change |
+| t-TR05 | age_system.gd 아동기 추적 + realized 재계산 | 🟢 DISPATCH | ask_codex | single-system change |
+| t-TR06 | gathering_system.gd XP stub | 🟢 DISPATCH | ask_codex | single-file addition |
+| t-TR07 | localization en+ko ui.json | 🟢 DISPATCH | ask_codex | standalone locale |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+Config-first fan-out: t-TR01 DIRECT 커밋 → t-TR02/TR03/TR06/TR07 병렬 dispatch →
+t-TR04/TR05 t-TR02 완료 후 병렬 dispatch.
+
+### Notion Update
+⚠️ This section is REQUIRED. Gate will fail if missing.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes 시스템 | 전체 | 재작성 | 3-레이어 구조 (potential/trainability/realized), 학문적 근거 |
+| BodyAttributes 시스템 | Data Structure | added | potential/trainability/training_xp/innate_immunity 필드 |
+| BodyAttributes 시스템 | Core Logic | added | calc_training_gain, TRAINING_CEILING, age trainability 커브 |
+| EntityManager | Data Structure | modified | body 초기화 로직 교체 — actn3 상관, innate_immunity 생성 |
+| AgeSystem | Core Logic | modified | 아동기 환경 추적, 연간 realized 재계산, childhood_finalized 이벤트 |
+| GameConfig | Data Structure | added | BODY_POTENTIAL_*, TRAINABILITY_*, INNATE_IMMUNITY_*, XP_FOR_FULL_PROGRESS |
+| Data Definitions DB | — | added | TRAINING_CEILING 상수, BODY_SEX_DELTA_MALE |
+| Change Log DB | — | added | 2026-02-22 Body 시스템 스케일 재설계 + Trainability 도입 |
+
+### Localization Verification
+- Hardcoded scan: PENDING
+- New keys added: UI_BODY_INNATE_IMMUNITY (en+ko)
+- ko/ updated: PENDING
+
+### Results
+- Gate: PENDING
