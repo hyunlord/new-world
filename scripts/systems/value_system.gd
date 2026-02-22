@@ -48,6 +48,14 @@ static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
 	return seed
 
 
+## Box-Muller 정규분포 생성 (static용)
+static func _randfn_static(rng: RandomNumberGenerator, mean: float, std: float) -> float:
+	var u1: float = maxf(rng.randf(), 0.0001)
+	var u2: float = rng.randf()
+	var z: float = sqrt(-2.0 * log(u1)) * cos(2.0 * PI * u2)
+	return mean + std * z
+
+
 ## SimulationEngine 등록용 — 시스템 초기화
 func init(entity_manager, settlement_manager = null) -> void:
 	system_name = "value_system"
@@ -140,19 +148,16 @@ static func initialize_values(
 		if culture_values != null:
 			culture = culture_values.get(vkey, 0.0)
 
-		## [Schwartz 1992] noise 범위 확대 + hexaco_seed 증폭
-		## HEXACO facet이 mean=0.5 std=0.15로 생성되어 seed가 너무 작음
-		## → genetic/hexaco 항에 3.0 증폭, noise를 ±0.70으로 확대해 std ~0.33 확보
-		var noise: float = rng.randf_range(-0.70, 0.70)
-		var c_w: float = CULTURE_WEIGHT if culture_values != null else 0.0
-		var remaining: float = 1.0 - c_w
-		var scale: float = remaining / (GENETIC_WEIGHT + HEXACO_WEIGHT + NOISE_WEIGHT)
+		## [Schwartz 1992] 3항 합산: 성향 40% + 문화 20% + 개인차 노이즈 40%
+		## hexaco_seed(hs)가 개인 성향 방향을 결정, noise가 개인 다양성을 만듦
 		var hs: float = hexaco_seed.get(vkey, 0.0)
+		var noise: float = _randfn_static(rng, 0.0, 0.50)
+		var culture_contrib: float = culture * 0.20 if culture_values != null else 0.0
 		var final_val: float = clampf(
-			genetic  * (GENETIC_WEIGHT * scale * 3.0)
-			+ culture  * c_w
-			+ hs       * (HEXACO_WEIGHT * scale * 3.0)
-			+ noise    * (NOISE_WEIGHT * scale),
+			hs      * 0.40
+			+ noise   * 0.40
+			+ culture_contrib
+			+ (genetic - hs) * 0.20,
 			-1.0, 1.0
 		)
 		result[vkey] = final_val

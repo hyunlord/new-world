@@ -1716,3 +1716,41 @@ genetic/hexaco 항에 3.0 증폭, noise ±0.70으로 확대, remaining 정확히
 ### Localization Verification
 - Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
 - New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job 2b5dfea7)
+- Files changed: scripts/systems/value_system.gd + docs/STRESS_SYSTEM.md + PROGRESS.md
+- Commit: 0408308
+- Dispatch tool used: ask_codex (job 2b5dfea7)
+- Notion pages updated: 🧠 가치관 시스템 (ValueSystem)
+
+---
+
+## T-VBug13: HEXACO_SEED_MAP 키 수정 + initialize_values 공식 단순화 — 2026-02-22
+
+### Context
+HEXACO_SEED_MAP의 모든 facet 키가 축 prefix 없이 작성됨("fairness" vs "H_fairness").
+PersonalityData.facets는 "H_fairness" 형식이므로 키 미스매치 → 전부 0.5 fallback → hs≈0.
+추가로 initialize_values 공식을 Box-Muller 정규분포 기반 단순 3항 합산으로 교체.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug13a | value_defs.gd HEXACO_SEED_MAP 키 prefix 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug13b | value_system.gd initialize_values 공식 단순화 + helper | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+두 파일 겹침 없음 → 병렬 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | Core Logic | modified | HEXACO_SEED_MAP 키 prefix 수정(root cause), initialize_values Box-Muller 공식 |
+| 🧠 가치관 시스템 (ValueSystem) | Development History | added | 2026-02-22 T-VBug13: HEXACO 키 미스매치 수정 — hs≈0 버그 해소 |
+
+### Localization Verification
+- Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
+- New keys added: none
