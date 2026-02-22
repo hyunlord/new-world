@@ -1867,4 +1867,8 @@ Config-first fan-out: t-B02 DIRECT 먼저 커밋 → t-B01+t-B06 병렬 dispatch
 - ko/ updated: YES (t-B06 dispatch)
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅ (commit 87ed139)
+- Dispatch ratio: 5/6 = 83% ✅
+- Files changed: game_config.gd + body_attributes.gd (신규) + entity_data.gd + entity_manager.gd + age_system.gd + localization/en+ko/ui.json
+- Commits: 60cf4c3 (t-B02) → 4e97825 (t-B01+t-B06) → a98b677 (t-B03) → 87ed139 (t-B04+t-B05)
+- Dispatch tool used: ask_codex (jobs 419d76e6, f742270d, 7cc3e901, b2410226, d0239c2a)
