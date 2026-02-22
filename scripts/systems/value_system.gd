@@ -140,15 +140,19 @@ static func initialize_values(
 		if culture_values != null:
 			culture = culture_values.get(vkey, 0.0)
 
-		var noise: float = rng.randf_range(-0.60, 0.60)
+		## [Schwartz 1992] noise 범위 확대 + hexaco_seed 증폭
+		## HEXACO facet이 mean=0.5 std=0.15로 생성되어 seed가 너무 작음
+		## → genetic/hexaco 항에 3.0 증폭, noise를 ±0.70으로 확대해 std ~0.33 확보
+		var noise: float = rng.randf_range(-0.70, 0.70)
 		var c_w: float = CULTURE_WEIGHT if culture_values != null else 0.0
-		var scale: float = 1.0 / (GENETIC_WEIGHT + HEXACO_WEIGHT + NOISE_WEIGHT)
+		var remaining: float = 1.0 - c_w
+		var scale: float = remaining / (GENETIC_WEIGHT + HEXACO_WEIGHT + NOISE_WEIGHT)
 		var hs: float = hexaco_seed.get(vkey, 0.0)
 		var final_val: float = clampf(
-			genetic * (GENETIC_WEIGHT * scale)
-			+ culture * c_w
-			+ hs * (HEXACO_WEIGHT * scale * 2.5)
-			+ noise * (NOISE_WEIGHT * scale),
+			genetic  * (GENETIC_WEIGHT * scale * 3.0)
+			+ culture  * c_w
+			+ hs       * (HEXACO_WEIGHT * scale * 3.0)
+			+ noise    * (NOISE_WEIGHT * scale),
 			-1.0, 1.0
 		)
 		result[vkey] = final_val

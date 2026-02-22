@@ -1687,3 +1687,32 @@ stress(순간 압력) / reserve(단기 저항자원) / allostatic_load(장기 �
 - Gate: N/A (코드 변경 없음)
 - Files changed: 1 (PROGRESS.md)
 - Notion pages updated: 😤 감정 & 스트레스 시스템
+
+---
+
+## T-VBug12: value_system.gd 가치관 값 범위 확대 — 2026-02-22
+
+### Context
+가치관 값이 ±0.24 이내에 몰려(std 0.12) 에이전트간 개성 차이가 거의 없었음.
+T-VBug11에서 noise ±0.60, hexaco ×2.5까지 확장했으나 목표(std ~0.33) 미달.
+genetic/hexaco 항에 3.0 증폭, noise ±0.70으로 확대, remaining 정확히 반영하여 std ~0.33 확보.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug12 | value_system.gd initialize_values() 수식 갱신 | 🟢 DISPATCH | ask_codex | 단일 파일 독립 변경 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일, 단일 함수 내 코드 블록 교체 — 직접 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | Core Logic | modified | initialize_values() 수식 변경: noise ±0.60→±0.70, genetic/hexaco scale ×2.5→×3.0, remaining 도입 |
+| 🧠 가치관 시스템 (ValueSystem) | Development History | added | 2026-02-22 T-VBug12: std 0.12→0.33 확대, 에이전트 개성 다양화 목적 |
+
+### Localization Verification
+- Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
+- New keys added: none
