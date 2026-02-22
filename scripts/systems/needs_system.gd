@@ -38,29 +38,32 @@ func execute_tick(tick: int) -> void:
 
 		## [Maslow (1943) L1 — 갈증 소모]
 		## 기본 소모 + 더운 타일에서 가속 (최대 2배)
-		var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
-		if has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
-			thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
-		entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
+		if GameConfig.NEEDS_EXPANSION_ENABLED:
+			var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
+			if has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
+				thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
+			entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
 
 		## [Cannon (1932) 항상성 — 체온 소모]
 		## 중립 온도(0.5) 이상이면 소모 없음, 추울수록 가속
-		var warmth_decay: float = 0.0
-		if has_tile_temp:
-			if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
-				if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
-					warmth_decay = GameConfig.WARMTH_DECAY_RATE * 5.0
-				elif tile_temp < GameConfig.WARMTH_TEMP_COLD:
-					warmth_decay = GameConfig.WARMTH_DECAY_RATE * 3.0
-				else:
-					var cold_ratio: float = (GameConfig.WARMTH_TEMP_NEUTRAL - tile_temp) / (GameConfig.WARMTH_TEMP_NEUTRAL - GameConfig.WARMTH_TEMP_COLD)
-					warmth_decay = GameConfig.WARMTH_DECAY_RATE * (1.0 + cold_ratio * 2.0)
-		else:
-			warmth_decay = GameConfig.WARMTH_DECAY_RATE
-		entity.warmth = maxf(0.0, entity.warmth - warmth_decay)
+		if GameConfig.NEEDS_EXPANSION_ENABLED:
+			var warmth_decay: float = 0.0
+			if has_tile_temp:
+				if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
+					if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
+						warmth_decay = GameConfig.WARMTH_DECAY_RATE * 5.0
+					elif tile_temp < GameConfig.WARMTH_TEMP_COLD:
+						warmth_decay = GameConfig.WARMTH_DECAY_RATE * 3.0
+					else:
+						var cold_ratio: float = (GameConfig.WARMTH_TEMP_NEUTRAL - tile_temp) / (GameConfig.WARMTH_TEMP_NEUTRAL - GameConfig.WARMTH_TEMP_COLD)
+						warmth_decay = GameConfig.WARMTH_DECAY_RATE * (1.0 + cold_ratio * 2.0)
+			else:
+				warmth_decay = GameConfig.WARMTH_DECAY_RATE
+			entity.warmth = maxf(0.0, entity.warmth - warmth_decay)
 
 		## [Maslow (1943) L2 — 안전감 소모]
-		entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
+		if GameConfig.NEEDS_EXPANSION_ENABLED:
+			entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
 		# Extra energy cost when performing actions
 		if entity.current_action != "idle" and entity.current_action != "rest":
@@ -89,7 +92,7 @@ func execute_tick(tick: int) -> void:
 		entity.safety = clampf(entity.safety, 0.0, 1.0)
 
 		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
-		if entity.emotion_data != null:
+		if GameConfig.NEEDS_EXPANSION_ENABLED and entity.emotion_data != null:
 			if entity.thirst < GameConfig.THIRST_CRITICAL:
 				var sev_thirst: float = 1.0 - (entity.thirst / GameConfig.THIRST_CRITICAL)
 				if _stress_system != null:

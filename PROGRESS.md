@@ -1,5 +1,138 @@
 # Progress Log
 
+## 욕구 확장 임시 비활성화 (T-DISABLE-1~3) — 2026-02-21
+
+### Context
+thirst/warmth/safety 욕구를 NEEDS_EXPANSION_ENABLED 플래그로 조건부 비활성화.
+자원/기술 시스템 완성 후 true로 전환하면 즉시 활성화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-DISABLE-1 | game_config.gd NEEDS_EXPANSION_ENABLED 상수 추가 | 🔴 DIRECT | — | 공유 상수, 나머지 2개 파일이 참조 |
+| T-DISABLE-2 | needs_system.gd decay+stress 블록 wrap | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-DISABLE-3 | behavior_system.gd score 블록 wrap | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-DISABLE-1 DIRECT 먼저 → T-DISABLE-2/3 병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/3 = 67%
+- Files changed: game_config.gd + needs_system.gd + behavior_system.gd
+- Commit: 07ef4e8
+- Dispatch tool used: ask_codex (job be7a9f99, c154485b)
+
+---
+
+## 가치관 시스템 (Value System) — T-V0 ~ T-V9 — 2026-02-22
+
+### Context
+33개 가치관 시스템 구현. HEXACO→가치관 초기값 생성, 연령별 가소성, 문화 전파,
+경험 이벤트, Kohlberg 도덕 발달 단계, 행동 score 보정, 정착지 문화 공유.
+Schwartz (1992) + Axelrod (1997) + Kohlberg (1969) + Festinger (1957) + Erikson (1950) 학술 기반.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-V0 | value_defs.gd 생성 (33개 키, HEXACO 맵, 충돌 쌍, Kohlberg, 행동 alignment) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V1L | value_events.json 생성 + ko/en localization 추가 | 🟢 DISPATCH | ask_codex | 새 파일 + JSON 추가 |
+| T-V3 | entity_data.gd — values/moral_stage/value_violation_count 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 추가 |
+| T-V4 | value_system.gd 생성 (초기화, 가소성, 문화전파, 이벤트, 자기합리화, 충돌해소, 단계진급) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V5 | behavior_system.gd — _apply_value_modifiers / _check_value_violation 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-V6 | settlement_culture.gd 생성 (shared_values, 동조 압력) | 🟢 DISPATCH | ask_codex | 새 파일 |
+| T-V7 | entity_detail_panel.gd — values 섹션 + bipolar bar 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-V8 | Gate 검증 | 🔴 DIRECT | — | 통합 배선 |
+| T-V9 | Notion 기록 | 🔴 DIRECT | — | 외부 서비스 |
+
+---
+
+## 가치관 시스템 tick 연동 버그 3종 수정 — T-VBug1~3 — 2026-02-22
+
+### Context
+가치관 시스템 구현 후 3가지 연동 누락/버그로 실제로 동작하지 않았다:
+1. entity_manager.spawn_entity()에 initialize_values() 미호출 → 모든 에이전트 values={}
+2. value_system.update()가 존재하지 않는 entity_manager API 호출 (get_all_alive, age_days, get_entities_in_settlement)
+3. check_moral_stage_progression()의 HEXACO 키가 PersonalityData.facets 형식과 불일치 (aesthetic_appreciation vs O_aesthetic)
+main.gd의 ValueSystem preload + init + register_system은 이미 완료 상태.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug1 | entity_manager.gd — spawn_entity()에 ValueSystem.initialize_values() 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug2 | value_system.gd — API 버그 3종 + HEXACO 키 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug3 | main.gd 연동 확인 | 🔴 DIRECT | — | 이미 완료 (preload+init+register_system 모두 존재) |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-VBug1과 T-VBug2는 파일 겹침 없음 → 병렬 dispatch
+T-VBug3은 확인만 (이미 완료)
+
+### Results
+- Gate: PASS ✅ (28 systems registered, 20 entities spawned with values initialized)
+- Dispatch ratio: 2/3 = 67% ✅
+- Files changed: entity_manager.gd, value_system.gd
+- Commit: 55de012
+- Dispatch tool used: ask_codex (jobs b28f6438, 520edb8c — parallel)
+- Codex discovered value_system extends simulation_system.gd → execute_tick() interface (not update())
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug1: spawn_entity()에 initialize_values() 미호출 → 수정 완료 (55de012) |
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug2: value_system API 3종 오류 (get_all_alive/age_days/get_entities_in_settlement) + HEXACO 키 불일치 → 수정 완료 |
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 수정 | 모든 에이전트 values={} 고정 → 해결됨. moral_stage 1 고정 → 해결됨 |
+
+---
+
+### Dispatch ratio: 7/9 = 78% ✅
+
+### Dispatch strategy
+파일 겹침 없음 → 7개 전부 병렬 dispatch.
+의존성(value_defs→value_system→settlement_culture)은 스펙 기반으로 코드 작성하므로 순서 무관.
+모든 파일 gate pass 후 한 번에 통합.
+
+### Results
+- Gate: PASS ✅ (clean, 0 script errors after fix)
+- Dispatch ratio: 7/9 = 78% ✅
+- Files created: value_defs.gd, value_system.gd, settlement_culture.gd, data/values/value_events.json
+- Files modified: entity_data.gd, behavior_system.gd, entity_detail_panel.gd, localization/ko/ui.json, localization/en/ui.json
+- Bug fixed (DIRECT): entity_detail_panel.gd:1321 — `Object.get()` 2-arg parse error → `entity.moral_stage if "moral_stage" in entity else 0`
+- Commits: f780e61 (value system), 914c4aa (parse error fix)
+- Dispatch tool used: ask_codex (7 tickets, parallel)
+- T-STARV-2/3: already done in previous sessions (confirmed by grep — target multipliers & warmth constants present)
+
+---
+
+## 욕구 확장 밸런스 조정 (T-STARV-2, T-STARV-3) — 2026-02-21
+
+### Context
+T-STARV-1 threshold guard 이후에도 아사 지속. 원인: (1) comfort action 점수 과다 (seek_shelter/sit_by_fire가 gather_food 이김), (2) warmth 물리 모순 (campfire 옆에서도 warmth 계속 하락 — decay > FIRE_RESTORE).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-STARV-2 | behavior_system.gd 승수 조정 | 🟢 DISPATCH | ask_codex | single-file multiplier tweak |
+| T-STARV-3 | game_config.gd warmth 상수 증가 | 🟢 DISPATCH | ask_codex | single-file constant change |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음): ask_codex × 2 동시 실행
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/ai/behavior_system.gd + scripts/core/game_config.gd
+- Commit: 9edc85d
+- Dispatch tool used: ask_codex (job 19e3fde0, 5e23ebea)
+
+---
+
 ## Behavior System P4: 감정 기반 행동 (hide/grieve/confront) — 2026-02-21
 
 ### Context
@@ -901,3 +1034,1653 @@ entity_detail_panel (커스텀 드로우) + hud (사이드 패널 ProgressBar) �
 
 ### Dispatch strategy
 단일 파일, 단일 dispatch
+
+---
+
+## 가치관 UI 패널 섹션 — t-values-ui-panel
+
+### Context
+entity_detail_panel.gd에 Values 섹션 추가. personality 섹션 직후, traits 섹션 직전 삽입.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-values-ui-panel | entity_detail_panel.gd Values 섹션 | 🟢 DISPATCH | ask_codex | single-file UI |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅
+- Dispatch tool: ask_codex
+- Files changed: scripts/ui/entity_detail_panel.gd
+- Key deliverables:
+  - personality 직후, traits 직전에 Values 섹션 헤더 추가
+  - |val| > 0.30인 가치관만 표시 (절댓값 내림차순 정렬)
+  - 양수=파란색(0.4,0.7,1.0), 음수=붉은색(1.0,0.45,0.45)
+  - 하단 moral_stage 숫자 표시
+  - 기존 하단 중복 Values 블록 제거 (section_id 충돌 방지)
+  - Locale.ltr() 사용, 하드코딩 없음
+
+## ValueSystem tick 연동 — t-vs-001~002
+
+### Context
+value_system.gd의 모든 함수가 static으로 구현되어 있어 tick마다 실행되지 않음.
+check_moral_stage_progression()이 호출되지 않아 도덕 발달 단계가 영구 1 고정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-vs-001 | value_system.gd에 update/init/get_priority/get_tick_interval 추가 | 🟢 DISPATCH | ask_codex | standalone single-file method addition |
+| t-vs-002 | main.gd에 ValueSystem 등록 (preload+var+init+register_system) | 🔴 DIRECT | — | integration wiring <20 lines |
+
+### Dispatch ratio: 1/2 = 50% (최소 dispatch 유지; main.gd wiring은 본질적으로 direct)
+
+### Dispatch strategy
+sequential: t-vs-001 dispatch → t-vs-002 DIRECT wiring
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 수정 | apply_peer_influence/check_moral_stage_progression 미연결 제약 → 해결됨으로 업데이트 |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22 value_system tick 연동 (update/init/get_priority/get_tick_interval 추가, priority 55 등록) |
+| 엔티티 디테일 패널 시스템 | 특성 표시 서브시스템 | 수정 | TOP_K=5 의도된 설계 확인, i18n Locale.ltr 적용 완료 문서화 |
+| 엔티티 디테일 패널 시스템 | i18n 버그 이력 | 추가 | Q&A 22: 특성 효과 요약 키 영어 표시 버그 + Locale.ltr 수정 기록 |
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/2 = 50% (value_system.gd → Codex; main.gd wiring → DIRECT)
+- Files changed: 7 (value_system.gd, main.gd, hud.gd, trait_tooltip.gd, ko/ui.json, en/ui.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (1 ticket — t-vs-001)
+- Codex interface mismatch fixed: get_priority/get_tick_interval/update → var priority/tick_interval + execute_tick (simulation_system.gd base class)
+
+---
+
+## Q&A 문서 업데이트 — 엔티티 디테일 패널 UI 개선 피드백 (2026-02-22)
+
+### Context
+2026-02-18 Q&A: 특성 독립 섹션 승격, 모든 섹션 접기/펼치기, 뱃지 겹침 방지, 효과 키 정렬 피드백.
+코드 확인 결과 전부 이미 구현되어 있음 — Notion 문서에 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 업데이트 (6 changes) | 🔴 DIRECT | — | 코드 변경 없음, Notion API 호출만 |
+
+### Dispatch ratio: N/A (코드 변경 없음, Notion 문서 갱신만)
+
+### Dispatch strategy
+Notion 6개 블록 변경: PATCH 3 + INSERT 3 batch
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 핵심 상태 변수 (Block 5) | 수정 | _section_collapsed dict (15개 섹션), _section_header_rects, _expanded_axes, _summary_expanded 추가 |
+| 엔티티 디테일 패널 시스템 | 핵심 로직 _draw() 하단 (Block 12 after) | 추가 | 섹션 접기/펼치기 아키텍처 heading_3 + callout + code (_draw_section_header 설명, draw 순서) |
+| 엔티티 디테일 패널 시스템 | 특성 표시 서브시스템 callout (Block 18) | 수정 | Phase 3 레이아웃 개선 반영, 독립 메인 섹션 명시 |
+| 엔티티 디테일 패널 시스템 | 언어별 정렬 하단 (Block 29 after) | 추가 | 뱃지 수동 flow 줄바꿈 로직 (trait_x, size.x 기준) |
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 하단 (Block 32 after) | 추가 | 효과 키 naturalcasecmp_to 정렬 + fallback 포맷 문서화 |
+| 엔티티 디테일 패널 시스템 | 개발 히스토리 테이블 | 추가 | 2026-02-18 Q&A 피드백 반영 행 추가 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+
+---
+
+## 가치관 시스템 버그 후속 (T-VBug4~5) — 2026-02-22
+
+### Context
+T-VBug1~3 적용 완료 확인 (entity_manager.gd 라인 9, 55-64 존재). 추가 2종:
+(1) spawn_entity에서 moral_stage=1 명시적 설정 (entity_data.gd 기본값이지만 명시 요청)
+(2) peer influence를 settlement_map 방식 → get_entities_near(pos, 5) 공간 반경 방식으로 교체
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug4 | entity_manager.gd moral_stage=1 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, 1줄 추가 |
+| T-VBug5 | value_system.gd peer influence get_entities_near 교체 | 🟢 DISPATCH | ask_codex | 단일 파일, execute_tick 내 settlement_map 제거 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/core/entity_manager.gd + scripts/systems/value_system.gd
+- Commit: b2e5bca
+- Dispatch tool: ask_codex (job 872e6ae2, af3f28fa)
+- Key changes:
+  - entity_manager.gd:65 — `entity.moral_stage = 1` after initialize_values()
+  - value_system.gd:76 — settlement_map removed, `get_entities_near(entity.position, 5)` added
+
+---
+
+## 가치관 가중치 재정규화 + Kohlberg 조건 완화 (T-VBug6~7) — 2026-02-22
+
+### Context
+culture_values=null 시 CULTURE_WEIGHT(0.40)이 0이 돼 실제 합계 0.60 → 가치관 최대값 ±0.18.
+Kohlberg 진급 조건(CUNNING < -0.5 등)이 수학적으로 달성 불가.
+수정: (1) culture 없을 때 나머지 가중치 1.0으로 재분배, (2) ±0.30 범위 기준으로 임계값 완화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug6 | value_system.gd initialize_values 가중치 재정규화 | 🟢 DISPATCH | ask_codex | 단일 파일, final_val 블록 교체 |
+| T-VBug7 | value_defs.gd KOHLBERG_THRESHOLDS 완화 | 🟢 DISPATCH | ask_codex | 단일 파일, 상수 교체 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch (파일 겹침 없음)
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 2/2 = 100%
+- Files changed: scripts/systems/value_system.gd + scripts/core/value_defs.gd
+- Commit: ffe541a
+- Dispatch tool: ask_codex (job 8b3bc793, 9e52dbbe)
+- Key changes:
+  - value_system.gd — culture=null 시 weight scale 재정규화 (±0.18 → ±0.30)
+  - value_defs.gd:91~97 — KOHLBERG_THRESHOLDS 완화 (CUNNING -0.5→-0.15, stage6 FAIRNESS 0.5→0.20)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug6: initialize_values culture=null 시 weight 합계 0.60→1.0 재정규화 (±0.18→±0.30) — ffe541a |
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug7: KOHLBERG_THRESHOLDS 달성 불가 완화 (CUNNING -0.5→-0.15, stage6 FAIRNESS 0.5→0.20) — ffe541a |
+| 💎 가치관 시스템 | Architecture | 수정 | initialize_values() 재정규화 공식 + KOHLBERG_THRESHOLDS 완화값 반영 |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학 로직만, UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO
+
+---
+
+## 초기 성인 도덕발달단계 부트스트랩 (T-VBug8) — 2026-02-22
+
+### Context
+main.gd가 15~50세 성인 위주로 스폰하지만 moral_stage는 항상 1로 시작.
+부트스트랩 없어서 모든 엔티티가 "도덕발달단계:1"로 표시됨.
+수정: spawn_entity()에서 initial_age>0이면 check_moral_stage_progression 루프로 나이에 적합한 단계까지 부트스트랩.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug8 | entity_manager.gd 초기 성인 moral_stage 부트스트랩 | 🟢 DISPATCH | ask_codex | 단일 파일, spawn_entity에 루프 추가 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 dispatch
+
+### Results
+- Gate: PASS ✅ (HOME=/tmp)
+- Dispatch ratio: 1/1 = 100%
+- Files changed: scripts/core/entity_manager.gd
+- Commit: abf7e95
+- Dispatch tool: ask_codex (job f4a3f052)
+- Key change: spawn_entity() initial_age>0 시 check_moral_stage_progression 루프(최대 6회)로 성인 부트스트랩
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 버그 이력 | 추가 | T-VBug8: spawn_entity() initial_age>0 시 moral_stage 부트스트랩 누락 → check_moral_stage_progression 루프(최대 6회) — abf7e95 |
+| 💎 가치관 시스템 | Architecture | 수정 | spawn_entity() 플로우: moral_stage=1 → initial_age>0 시 부트스트랩 루프 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (로직만, UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO
+
+---
+
+## 가치관 UI 표시 임계값 수정 (T-VBug9) — 2026-02-22
+
+### Context
+values 섹션에서 `absf(val) > 0.30` 필터가 값 범위 ±0.30과 같아서 아무것도 안 보임.
+의도한 게 아님 — 가치관 33개가 표시되어야 하지만 도덕발달단계만 보임.
+수정: 임계값 0.30 → 0.10 (≥10% 편차 값 표시)
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug9 | entity_detail_panel.gd 임계값 0.30→0.10 | 🟢 DISPATCH | ask_codex | 단일 파일, 1줄 수정 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Results
+- Gate: PASS ✅
+- Commit: 69a6855
+- Dispatch tool: ask_codex (job 59b53171)
+- Key change: entity_detail_panel.gd:796 `> 0.30` → `> 0.10`
+
+---
+
+## Q&A 문서 업데이트 — 특성 정렬 별도 프롬프트 (2026-02-22)
+
+### Context
+2026-02-18 Q&A: 특성 정렬을 별도 프롬프트로 분리. 3곳 정렬 + 공통 헬퍼 패턴 제안.
+코드 확인: badges/summary는 이미 구현, trait_tooltip.gd는 ASCII 정렬 갭 확인.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 업데이트 (4 changes) | 🔴 DIRECT | — | 코드 변경 없음 |
+
+### Dispatch ratio: N/A
+
+## Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 언어별 정렬 섹션 | 추가 | trait_tooltip.gd ASCII 정렬 갭 (str(a)<str(b)) + _get_trait_key_display() 헬퍼 제안 문서화 |
+| 엔티티 디테일 패널 시스템 | 제약 & 향후 계획 | 추가 | tooltip 정렬 개선 + DRY 헬퍼 도입 향후 계획 |
+| 엔티티 디테일 패널 시스템 | 개발 히스토리 | 추가 | 2026-02-18 정렬 프롬프트 분리 행 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion changes: 4 (INSERT ×4)
+
+---
+
+## 스트레스/멘탈브레이크 시스템 Q&A 설계 확정 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+GPT/Gemini 연구 조사 결과(4-모델 하이브리드 스트레스 아키텍처, 10종 멘탈브레이크,
+감정↔스트레스 양방향 커플링 설계)를 Notion 「😤 감정 & 스트레스 시스템」 페이지에 통합.
+코드 변경 없음 (stress_system.gd, mental_break_system.gd 이미 구현 완료).
+설계 확정 → 문서와 코드 동기화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA3  | 스트레스/멘탈브레이크 Q&A → Notion 문서 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | 상단 callout | 수정 | MentalBreakSystem 5종→10종, Phase 4/5 항목 추가 |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem 헤딩 | 수정 | "EmotionSystem._check_mental_break" → "MentalBreakSystem (별도 시스템, priority=35)" |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem > 발동 조건 bullet | 수정 | BASE_BREAK_THRESHOLD=520, 범위 420~900, BREAK_SCALE=6000, BREAK_CAP=0.25/tick |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem > 브레이크 유형 bullet | 수정 | 5종→10종: panic/rage/outrage_violence/shutdown/purge/grief_withdrawal/dissociative_fugue/paranoia/compulsive_ritual/hysterical_bonding |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > CK3 가치위반 | 수정 | → ✅ 완료: trait_violation_system.gd + value_system.gd |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > TraumaScarSystem | 수정 | → ✅ 완료: trauma_scar_system.gd + resilience_mod 연동 |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > Resilience | 수정 | → ✅ 완료: _update_resilience() HEXACO 6축+support−allostatic 공식 |
+| 😤 감정 & 스트레스 시스템 | 향후 계획 > GPT/Gemini 조사 | 수정 | → ✅ 완료: 4-모델 설계 확정, 향후 5개 영역 문서화 |
+| 😤 감정 & 스트레스 시스템 | A3 구현 현황 > StressSystem bullet | 수정 | Phase 4(C05 Denial, DENIAL_REDIRECT=0.60) + Phase 5(ACE ace_stress_gain_mult) 추가 |
+| 😤 감정 & 스트레스 시스템 | A3 구현 현황 > 타임라인 | 수정 | Phase 4-5 마일스톤 + 연구조사 완료(2026-02-22) 추가 |
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion blocks updated: 10
+- Notion page: 😤 감정 & 스트레스 시스템 (30de2e3d-4a77-8116-8d74-d3cd0273ba95)
+
+---
+
+## 정착지 문화 통합 — T-SCult1~3 — 2026-02-22
+
+### Context
+settlement_culture.gd가 구현되어 있으나 호출자가 없음 (dead code). 3개 티켓으로 통합:
+settlement_data에 shared_values 필드 추가 → value_system.execute_tick()에 정착지 문화 계산+동조 압력 통합 → main.gd에서 settlement_manager를 value_system.init()에 전달.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-SCult1 | settlement_data.gd — shared_values 필드 추가 | 🟢 DISPATCH | ask_codex | standalone new field, 1 file |
+| T-SCult2 | value_system.gd — settlement_manager + 문화 tick 통합 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+| T-SCult3 | main.gd — value_system.init()에 settlement_manager 전달 | 🔴 DIRECT | — | integration wiring <5 lines |
+
+### Dispatch ratio: 2/3 = 67% ✅
+
+### Dispatch strategy
+T-SCult1과 T-SCult2는 파일 겹침 없음 → 병렬 dispatch.
+T-SCult3은 두 DISPATCH 완료 후 직접 통합.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | Architecture | 수정 | value_system.execute_tick(): settlement culture 2-phase (compute shared_values → apply_conformity_pressure) 추가 |
+| 💎 가치관 시스템 | Data Structure | 수정 | settlement_data.shared_values: Dictionary (ephemeral, recomputed each 200-tick cycle) 추가 |
+| 💎 가치관 시스템 | 통합 현황 | 수정 | settlement_culture.gd 통합 완료 (T-SCult1~3) |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학/시뮬레이션 로직만, UI 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS (5c942a0)
+- Dispatch ratio: 2/3 = 67% ✅
+- Files changed: 4 (settlement_data.gd, value_system.gd, main.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (T-SCult1, T-SCult2)
+- Notion pages updated: 💎 가치관 시스템
+
+---
+
+## Trait 수 Q&A 분석 → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "trait이 68종이 아니라 200종에 가까운 것 아닌가?" → trait_definitions.json 직접 확인 결과
+실제 187개 (f=48, c=124, d=15). 초기 설계 "68개" 기술이 outdated. Notion 문서 수정 필요.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA4 | Trait 수 정정 → Notion 트레이트 시스템 문서 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### 코드 검증 결과
+파일: `data/species/human/personality/trait_definitions.json`
+
+| 카테고리 | 접두사 | 수 | 설명 |
+|----------|--------|-----|------|
+| Facet Trait | `f_` | 48 | 24 HEXACO facets × high/low |
+| Composite Trait | `c_` | 124 | multi-facet 조합 (ex: `c_he_hh_tender_conscience`) |
+| Dark Triad / Disorder | `d_` | 15 | Psychopath, Narcissist, Machiavellian 등 |
+| **합계** | — | **187** | 초기 설계 "68개" → 현재 실제 187개 |
+
+opposite_actions 총 항목 수: 562 (Trait 수와 별개 — 혼동 원인)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🧬 트레이트 시스템 | 개요 | 수정 | "68개 Trait" → "187개 Trait (f=48, c=124, d=15)" |
+| 🧬 트레이트 시스템 | 데이터 구성 | 수정 | Trait 분류표: f_/c_/d_ 3종 카테고리, 수량, 설명 |
+| 🧬 트레이트 시스템 | 개발 히스토리 | 추가 | 초기 설계 68 → GPT/Gemini 조사 후 composite 확장 → 현재 187 |
+| 🧬 트레이트 시스템 | 제약 & 향후 계획 | 수정 | "200종" 혼동 해소: 187 Trait vs. 562 opposite_actions 항목 명기 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- 핵심 발견: trait_definitions.json 실제 187개 (f=48, c=124, d=15) — 3개 파일 모두 동일
+- Notion 상태: 🧠 성격 시스템 (HEXACO) 페이지 이미 187개로 정확히 기술됨 — **업데이트 불필요**
+  - Block callout: "facet 48 + composite 124 + dark 15 = 187개" 이미 존재
+  - Q&A 답변이 불확실했을 뿐, 코드·문서 모두 이미 정확함
+
+---
+
+## T-VBug10: settlement_culture ↔ value_system 순환 preload 제거 — 2026-02-22
+
+### Context
+런타임 오류: "Invalid call to function 'init' in base 'RefCounted (value_system.gd)'. Expected 1 argument(s)."
+원인: value_system.gd ↔ settlement_culture.gd 상호 preload → 게임 실행 시 크래시.
+Gate는 --headless --quit만 실행하므로 런타임 오류를 잡지 못함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug10 | settlement_culture.gd — ValueSystem preload 제거, get_plasticity 인라인 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일(settlement_culture.gd) 수정 → ask_codex 직접 dispatch.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | Architecture | 수정 | settlement_culture.gd: ValueSystem preload 제거 (순환 의존성 해소). apply_conformity_pressure()는 age_years를 받아 plasticity를 인라인 계산 |
+| 💎 가치관 시스템 | 제약 & 향후 계획 | 추가 | get_plasticity 로직이 value_system.gd와 settlement_culture.gd 두 곳에 중복 — 향후 변경 시 동기화 필요 |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22: T-VBug10 순환 preload 제거 — 런타임 init() 오류 수정 |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학/시뮬레이션 로직만, UI 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS (b8fbabd)
+- Dispatch ratio: 1/1 = 100% ✅
+- Files changed: 1 (scripts/systems/settlement_culture.gd)
+- Dispatch tool used: ask_codex (T-VBug10)
+- Notion pages updated: 💎 가치관 시스템
+
+---
+
+## T-VBug11: value_system.gd — 가치관 값 범위 확대 — 2026-02-22
+
+### Context
+compute_hexaco_seed() 출력 std ~0.15로 최종 가치관 값이 ±0.46, std 0.12 수준.
+에이전트간 개성 차이 거의 없음 → noise 범위 확대 + hexaco_seed 증폭으로 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug11 | value_system.gd — initialize_values noise ±0.60, hexaco_seed ×2.5 | 🟢 DISPATCH | ask_codex | standalone 1-file change |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 💎 가치관 시스템 | 핵심 로직 | 수정 | initialize_values(): noise ±0.30→±0.60, hexaco_seed ×2.5 증폭, scale=1/(G+H+N) |
+| 💎 가치관 시스템 | 개발 히스토리 | 추가 | 2026-02-22: T-VBug11 가치관 값 범위 확대 — std 0.12→~0.30 (commit be3b4ec) |
+
+### Localization Verification
+- Hardcoded scan: PASS (수학 로직만, UI 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS (be3b4ec)
+- Dispatch ratio: 1/1 = 100% ✅
+- Files changed: 1 (scripts/systems/value_system.gd)
+- Dispatch tool used: ask_codex (T-VBug11)
+- Notion pages updated: 💎 가치관 시스템
+
+---
+
+## T-QA5: Composite Trait 서브카테고리 확정 수 반영 — 2026-02-22
+
+### Q&A 분석
+- 관련 시스템: 🧠 성격 시스템 (HEXACO) — Trait 3계층 구조
+- 추출한 정보 유형: 데이터 구성 (확정 수), 개발 히스토리 (목표→확정 전환), 트레이드오프 (opposite_actions 효율 전략)
+- 참조한 코드: data/species/human/personality/trait_definitions.json (f_=48, c_=124, d_=15)
+
+### 핵심 발견
+- Composite 서브카테고리 확정 구조:
+  - 2축 조합: 60개 (6C2=15 축 쌍 × 4방향)
+  - 3축+ 복합: 64개 (c_saint, c_berserker 등 직업·역할 포함) — 이전 "3축 조합 20~30개" + "사회적 역할 30~40개" 통합
+  - Dark Personality: 15개 (d_ prefix)
+- opposite_actions 효율 전략: facet 48개만 수동 정의, composite·dark는 구성 facet opposite_actions 합집합으로 규칙 기반 자동 파생
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 표 헤더 "개수 (목표)" → "개수 (확정)" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 2축 조합 "60~70개" → "60개" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | 3축 조합 → "3축+ 복합 (직업·역할 포함)", "20~30개" → "64개" |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | Dark "10~15개" → "15개", 접두사 명기 (d_ prefix) |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 삭제 | "사회적 역할 30~40개" 행 제거 — 3축+ 복합 64개에 통합됨 |
+| 🧠 성격 시스템 (HEXACO) | Composite Trait 서브카테고리 구조 | 수정 | callout "총 목표: ... 150~200개" → "확정: ... 187개" + opposite_actions 효율 전략 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion 업데이트: 🧠 성격 시스템 (HEXACO) 페이지 — 목표 언어를 확정 언어로 전환, 사회적 역할 행 제거
+
+---
+
+## T-QA6: emotion_modifiers 합산 오표시 버그 문서화 — 2026-02-22
+
+### Q&A 분석
+- 관련 시스템: 엔티티 디테일 패널 시스템 + 🧠 성격 시스템 (HEXACO)
+- 추출한 정보 유형: 내부 로직 (버그 원인/수정), 데이터 구성 (multiplier 형식), 개발 히스토리 (T-2040 수정)
+- 참조한 코드:
+  - scripts/ui/entity_detail_panel.gd (emotion_totals 누적 로직)
+  - scripts/systems/trait_system.gd:444 (_calc_emotion_baseline, get_effect_value)
+  - data/species/human/personality/trait_definitions.json (emotion_modifiers 형식)
+
+### 핵심 발견
+- emotion_modifiers 데이터 형식: 승수(multiplier), 1.0 기준 (0.06 = -94%, 1.2 = +20%)
+- _calc_emotion_baseline()은 emotion_mappings.json 경로로 delta를 계산 (multiplier 직접 미사용)
+- 버그 T-2040: 구 코드가 emotion_modifiers[key] 원값(0.06)을 직접 누적 → "+0.06" 오표시
+- 수정(2026-02-18): TraitSystem.get_effect_value(entity, "emotion_baseline") → delta × 100 = %
+- 수정 확인: 커밋 3f4b446 (2026-02-18) "fix: emotion_modifiers effect summary — convert multiplier to %"
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 | 수정 | block[38]: 감정 표시가 _calc_emotion_baseline delta 경로임을 명시 (raw multiplier 직접합산 아님) |
+| 엔티티 디테일 패널 시스템 | 버그 이력 | 추가 | T-2040 emotion_modifiers 오표시 버그 — 원인/수정 callout 추가 |
+| 🧠 성격 시스템 (HEXACO) | 3계층 특성 시스템 | 추가 | emotion_modifiers 승수 형식 + _calc_emotion_baseline delta 경로 구분 + T-2040 수정 완료 명기 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- 버그 상태: T-2040으로 이미 수정됨 (2026-02-18) — 문서만 업데이트
+
+## T-QA7 — behavior_weights vs emotion_modifiers 데이터 시맨틱 문서화
+
+### Context
+Q&A: T-2040 Codex 디스패치 티켓의 역사적 맥락에서 나온 Q&A. 핵심 신규 정보: behavior_weights(geometric mean multiplier, 가산 가중치 의미)와 emotion_baseline(additive delta, 선형 합산)의 데이터 시맨틱 구분.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA7 | behavior_weights vs emotion_modifiers 시맨틱 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 엔티티 디테일 패널 시스템 | 총 능력치 요약 | 추가 | block[41] 이후: behavior_weight(geometric mean multiplier) vs emotion_baseline(additive delta) 데이터 시맨틱 구분 bullet 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 엔티티 디테일 패널 시스템
+
+## T-QA8 — 스트레스 시스템 i18n 연동 원칙 문서화
+
+### Context
+스트레스 Phase 1/2 구현 프롬프트에 i18n TICKET-6 추가 확인. 구현 완료된 Locale 키 패턴을 Notion 감정 & 스트레스 시스템 문서에 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA8 | StressSystem/MentalBreakSystem i18n 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | block[37] 다음: STRESS_STATE_*/GAS_STAGE_*/STRESSOR_*/STRESS_EMO_* Locale 패턴 bullet |
+| 😤 감정 & 스트레스 시스템 | MentalBreakSystem | 추가 | block[50] 다음: MENTAL_BREAK_TYPE_*/SEVERITY_*/CHRONICLE_*/SHAKEN Locale 패턴 + tr_data() 패턴 bullet |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none (이미 ui.json에 전부 등록 완료)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
+
+## T-QA9 — RefCounted.get() 오류 패턴 문서화
+
+### Context
+Phase 1 스트레스 시스템 첫 실행 시 `Invalid call to function 'get' in base 'RefCounted (emotion_data.gd)'` 에러 발생 및 수정. Godot 4.6 RefCounted.get(prop, default) 불가 원칙과 올바른 데이터 접근 패턴 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA9 | RefCounted.get() 호환성 패턴 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | 데이터 접근 패턴 + RefCounted.get(prop,default) 불가 경고 bullet |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 2 (PROGRESS.md, MEMORY.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
+- MEMORY.md: Godot 4.6 호환성 섹션에 RefCounted.get() 제한 추가
+
+## T-QA10 — Reserve/Allostatic Load 개념 상세 정의 문서화
+
+### Context
+stress(순간 압력) / reserve(단기 저항자원) / allostatic_load(장기 만성 마모) 3축 모델 개념 및 임계값별 효과를 Notion에 명시적으로 문서화. 기존 11단계 파이프라인에 단계명만 있고 상세 정의가 없었음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA10 | Reserve + Allostatic Load 정의 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | StressSystem | 추가 | 파이프라인 code 다음: Reserve(0~100, reserve<30 Exhaustion) + Allostatic(0~100, 30/60/85 단계 영구 효과) 상세 정의 bullet 2개 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
+
+## T-QA11: Phase별 UI 공개 전략 문서화 — 2026-02-22
+
+### Context
+스트레스 시스템 Phase 1~4는 내부 계산 전용이고, UI는 Phase 5에서 일괄 구현하는 설계 의도를 Notion에 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA11 | Phase별 UI 공개 전략 + 내부계산-먼저 원칙 문서화 | 🔴 DIRECT | — | 문서 업데이트 only, 코드 변경 없음 |
+
+### Dispatch ratio: 0/1 = 0% (문서 전용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 😤 감정 & 스트레스 시스템 | 향후 계획 | 추가 | Phase 1~4 내부 계산 전용(디버그 로그)/Phase 5 UI 일괄 구현 전략 + 설계 이유(밸런스 조정 효율) bullet 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: none
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion pages updated: 😤 감정 & 스트레스 시스템
+
+---
+
+## T-VBug12: value_system.gd 가치관 값 범위 확대 — 2026-02-22
+
+### Context
+가치관 값이 ±0.24 이내에 몰려(std 0.12) 에이전트간 개성 차이가 거의 없었음.
+T-VBug11에서 noise ±0.60, hexaco ×2.5까지 확장했으나 목표(std ~0.33) 미달.
+genetic/hexaco 항에 3.0 증폭, noise ±0.70으로 확대, remaining 정확히 반영하여 std ~0.33 확보.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug12 | value_system.gd initialize_values() 수식 갱신 | 🟢 DISPATCH | ask_codex | 단일 파일 독립 변경 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일, 단일 함수 내 코드 블록 교체 — 직접 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | Core Logic | modified | initialize_values() 수식 변경: noise ±0.60→±0.70, genetic/hexaco scale ×2.5→×3.0, remaining 도입 |
+| 🧠 가치관 시스템 (ValueSystem) | Development History | added | 2026-02-22 T-VBug12: std 0.12→0.33 확대, 에이전트 개성 다양화 목적 |
+
+### Localization Verification
+- Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job 2b5dfea7)
+- Files changed: scripts/systems/value_system.gd + docs/STRESS_SYSTEM.md + PROGRESS.md
+- Commit: 0408308
+- Dispatch tool used: ask_codex (job 2b5dfea7)
+- Notion pages updated: 🧠 가치관 시스템 (ValueSystem)
+
+---
+
+## T-VBug13: HEXACO_SEED_MAP 키 수정 + initialize_values 공식 단순화 — 2026-02-22
+
+### Context
+HEXACO_SEED_MAP의 모든 facet 키가 축 prefix 없이 작성됨("fairness" vs "H_fairness").
+PersonalityData.facets는 "H_fairness" 형식이므로 키 미스매치 → 전부 0.5 fallback → hs≈0.
+추가로 initialize_values 공식을 Box-Muller 정규분포 기반 단순 3항 합산으로 교체.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug13a | value_defs.gd HEXACO_SEED_MAP 키 prefix 수정 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| T-VBug13b | value_system.gd initialize_values 공식 단순화 + helper | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+두 파일 겹침 없음 → 병렬 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | Core Logic | modified | HEXACO_SEED_MAP 키 prefix 수정(root cause), initialize_values Box-Muller 공식 |
+| 🧠 가치관 시스템 (ValueSystem) | Development History | added | 2026-02-22 T-VBug13: HEXACO 키 미스매치 수정 — hs≈0 버그 해소 |
+
+### Localization Verification
+- Hardcoded scan: PASS (플레이어 표시 텍스트 없음)
+- New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 2/2 = 100% ✅ (ask_codex jobs f8500468, 27051c2e)
+- Files changed: scripts/core/value_defs.gd + scripts/systems/value_system.gd + PROGRESS.md
+- Commit: ae7ba0e
+- Dispatch tool used: ask_codex (parallel, 2 jobs)
+- Notion pages updated: 🧠 가치관 시스템 (ValueSystem) [Notion API unavailable in session]
+
+---
+
+## T-VBug14: entity_detail_panel.gd 가치관 임계값 필터 제거 — 2026-02-22
+
+### Context
+가치관 표시 시 absf(val) > 0.10 필터로 약한 가치관이 UI에서 숨겨짐.
+T-VBug12/13으로 값 범위 확대 후 33개 전체를 볼 수 있도록 필터 제거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug14 | entity_detail_panel.gd 임계값 필터 제거 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일, 단일 블록 교체 — 직접 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | UI | modified | 가치관 패널 임계값 필터 제거 — 33개 전체 표시, 절대값 내림차순 정렬 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음 — 필터 조건만 제거)
+- New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job c0f54851)
+- Files changed: scripts/ui/entity_detail_panel.gd + PROGRESS.md
+- Commit: 55b80d2
+- Dispatch tool used: ask_codex (job c0f54851)
+
+---
+
+## T-VBug15: entity_detail_panel.gd 가치관 고정 순서 정렬 — 2026-02-22
+
+### Context
+현재 절대값 내림차순 정렬 → 에이전트마다 가치관 순서가 달라 비교 불가.
+ValueDefs.KEYS 정의 순서(LAW→LOYALTY→...→PEACE) 고정 표시로 변경.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-VBug15 | entity_detail_panel.gd 고정 순서 정렬 + ValueDefs 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 가치관 시스템 (ValueSystem) | UI | modified | 패널 정렬 절대값→KEYS 고정 순서로 변경 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: none
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100% ✅ (ask_codex job b060cbc0)
+- Files changed: scripts/ui/entity_detail_panel.gd + PROGRESS.md
+- Commit: 7cbf0a2
+- Dispatch tool used: ask_codex (job b060cbc0)
+
+---
+
+## Body Attributes Layer 1.5 (t-B01 ~ t-B06) — 2026-02-22
+
+### Context
+에이전트에 신체 능력치 6축(Strength/Agility/Endurance/Toughness/Recuperation/DiseaseResistance) 도입.
+나이 커브 기반 자동 변화, entity.speed/strength는 body에서 파생. Gurven et al. (2008) 기반.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B02 | game_config.gd BODY_SPEED_* 상수 추가 | 🔴 DIRECT | — | 공유 상수, 나머지 파일이 참조 |
+| t-B01 | body_attributes.gd 신규 생성 | 🟢 DISPATCH | ask_codex | 새 파일, 독립적 |
+| t-B06 | localization en+ko UI_BODY_* 키 추가 | 🟢 DISPATCH | ask_codex | 독립, t-B01과 병렬 |
+| t-B03 | entity_data.gd body 필드 + 직렬화 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B01 후) |
+| t-B04 | entity_manager.gd body 초기화 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B03 후) |
+| t-B05 | age_system.gd 연간 body 재계산 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B03 후) |
+
+### Dispatch ratio: 5/6 = 83% ✅
+
+### Dispatch strategy
+Config-first fan-out: t-B02 DIRECT 먼저 커밋 → t-B01+t-B06 병렬 dispatch → t-B03 dispatch → t-B04+t-B05 병렬 dispatch
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System (신규) | Overview | created | Layer 1.5 신체 능력치 6축, 학술 근거 |
+| BodyAttributes System | Data Structure | created | 6축 필드 테이블 + CURVE_PARAMS 테이블 |
+| EntityData (기존) | Data Structure | modified | body 필드 추가, speed/strength 파생 관계 업데이트 |
+| AgeSystem (기존) | Core Logic | modified | 연간 body 재계산 로직 추가 |
+| Data Definitions DB | — | added | BodyAttributes 등록 |
+| Change Log DB | — | added | Body Attributes 초기 구현 (2026-02-22) |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_BODY_STR, UI_BODY_AGI, UI_BODY_END, UI_BODY_TOU, UI_BODY_REC, UI_BODY_DR
+- ko/ updated: YES (t-B06 dispatch)
+
+### Results
+- Gate: PASS ✅ (commit 87ed139)
+- Dispatch ratio: 5/6 = 83% ✅
+- Files changed: game_config.gd + body_attributes.gd (신규) + entity_data.gd + entity_manager.gd + age_system.gd + localization/en+ko/ui.json
+- Commits: 60cf4c3 (t-B02) → 4e97825 (t-B01+t-B06) → a98b677 (t-B03) → 87ed139 (t-B04+t-B05)
+- Dispatch tool used: ask_codex (jobs 419d76e6, f742270d, 7cc3e901, b2410226, d0239c2a)
+
+---
+
+## Body Attributes UI 표시 (t-B07 ~ t-B08) — 2026-02-22
+
+### Context
+entity_detail_panel에 Body 섹션 추가 — Stats 섹션 바로 아래, 6축 가로 바 표시.
+t-B01~B06에서 구현된 BodyAttributes 시스템을 UI에서 확인 가능하게 함.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B07 | entity_detail_panel.gd Body 섹션 + _section_collapsed 추가 | 🟢 DISPATCH | ask_codex | 단일 UI 파일 |
+| t-B08 | localization en+ko UI_BODY_SECTION 키 추가 | 🟢 DISPATCH | ask_codex | 독립, 병렬 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+t-B07, t-B08 병렬 dispatch (파일 겹침 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System | UI | added | entity_detail_panel Body 섹션 설명, 색상 코드표 |
+| Change Log DB | — | added | Body Attributes UI 표시 구현 (2026-02-22) |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_BODY_SECTION
+- ko/ updated: YES (t-B08 dispatch)
+- 기존 UI_BODY_STR~DR: t-B06에서 기추가, 중복 없음
+
+### Results
+- Gate: PASS ✅ (commit d7ed35b)
+- Dispatch ratio: 2/2 = 100% ✅
+- Files changed: entity_detail_panel.gd + localization/en+ko/ui.json
+- Commit: d7ed35b
+- Dispatch tool used: ask_codex (jobs 8187b640, 7506b05a)
+
+---
+
+## Body Attributes potential/realized 분리 재설계 (t-B09 ~ t-B12) — 2026-02-22
+
+### Context
+현재 22세 에이전트의 98.8%가 STR realized ≥ 0.8 → 높은 값이 너무 흔해 의미 없음.
+potential(유전적 상한, min(U,U) 분포) × realized(potential × 나이 커브)로 분리.
+성별 delta: 남성 STR/AGI/TOU 높음, 여성 DR/REC/END 높음.
+설계 후 검증: 전체 성인 realized 상위 5% = 0.811, 상위 1% = 0.950 (의도된 희귀 분포).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B09 | body_attributes.gd 전체 재작성 (potential/realized 구조) | 🟢 DISPATCH | ask_codex | 단일 파일, 독립 |
+| t-B10 | entity_manager.gd body 초기화 블록 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+| t-B11 | age_system.gd realized 재계산 블록 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+| t-B12 | entity_detail_panel.gd realized 딕셔너리 접근으로 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 (t-B09 완료 후) |
+
+### Dispatch ratio: 4/4 = 100% ✅
+
+### Dispatch strategy
+t-B09 먼저 (새 API 정의) → t-B10/t-B11/t-B12 병렬 dispatch (파일 겹침 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes System | Overview | modified | potential/realized 분리 개념 설명 추가 |
+| BodyAttributes System | Architecture | modified | 필드 구조 변경 (6개 float → 2개 Dictionary) |
+| BodyAttributes System | Data Structure | modified | potentials/realized 테이블, SEX_DELTA_MALE 테이블 |
+| BodyAttributes System | Core Logic | modified | generate_potentials 수식, compute_realized 수식 |
+| BodyAttributes System | Design Intent | added | 희귀 분포 설계 의도, 성별 차이 학술 근거 |
+| BodyAttributes System | History | added | potential/realized 분리 재설계 (2026-02-22) |
+| Change Log DB | — | added | Body Attributes potential/realized 분리 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: 없음 (기존 UI_BODY_* 키 재활용)
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS ✅ (commit c892199)
+- Dispatch ratio: 4/4 = 100% ✅
+- Files changed: body_attributes.gd + entity_manager.gd + age_system.gd + entity_detail_panel.gd
+- Commit: c892199
+- Dispatch tool used: ask_codex (jobs 9a8a450f, 26b51439, 94374774, f214f2e7)
+
+---
+
+## t-B13: DeceasedEntityProxy body 필드 누락 버그픽스 — 2026-02-22
+
+### Context
+t-B09~B12에서 entity_detail_panel.gd Body 섹션을 entity.body.realized.get()으로 변경했으나,
+DeceasedEntityProxy에 body 프로퍼티가 없어 사망 에이전트 클릭 시 크래시 발생.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B13 | entity_detail_panel.gd DeceasedEntityProxy body 필드 추가 | 🔴 DIRECT | — | 1줄 버그픽스, Codex 전체 파일 출력 비효율 |
+
+### Dispatch ratio: 0/1 = 0% (1줄 핫픽스, Codex 출력 비효율로 DIRECT)
+
+### Notion Update
+No doc-worthy changes. Reason: 단순 누락 필드 추가 버그픽스.
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: 없음
+
+### Results
+- Gate: PASS ✅ (commit 5236538)
+- Files changed: scripts/ui/entity_detail_panel.gd (1줄 추가)
+
+---
+
+## Phase 3B TraitViolationSystem Q&A 분석 → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: Phase 3B Trait Violation System 설계/구현 전체 스펙 (9 tickets, TICKET-0~8) 분석.
+trait_violation_system.gd (562줄)가 이미 구현 완료. 전용 Notion 기술 문서 신규 생성 + 크로스 레퍼런스.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA5  | Phase 3B Trait Violation System → Notion 기술 문서 생성 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🔥 트레이트 위반 시스템 (TraitViolationSystem) | — | 신규 생성 | Phase 3B 전체 기술 문서: 개요/아키텍처/데이터구조/알고리즘/탈감작-PTSD분기/Breakdown계층/IntrusiveThought/PTG/violation_history감쇠/로케일키/게임레퍼런스/학술레퍼런스/설계기각/Phase연결 (110 블록) |
+| 😤 감정 & 스트레스 시스템 | 기존 CK3 가치위반 참조 | 확인 | 이미 TraitViolation 크로스 레퍼런스 존재 — 중복 추가 건너뜀 ✅ |
+
+새 페이지 URL: https://www.notion.so/30fe2e3d4a77814e8d09ee17f4ad69f2
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: violation.json 키 목록 문서화 (코드 구현 separate ticket)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/notion_create_trait_violation_docs.py 임시 스크립트)
+- Notion pages created: 1 (🔥 트레이트 위반 시스템)
+- Notion pages checked: 1 (😤 감정 & 스트레스 시스템 — 중복 없음 확인)
+
+---
+
+## Phase 3B TraitViolationSystem 검증 방법 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "인게임에서 violation을 어떻게 검증하나?" → 검증 채널 3종, behavior_system 연동 gap, debug_force_violation 함수 제안.
+기존 🔥 트레이트 위반 시스템 페이지에 "검증 방법" + "제약 & 향후 계획" 섹션 신규 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA6  | TraitViolationSystem 검증 방법 + 제약 섹션 추가 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | 추가 | entity_detail_panel/Chronicle/디버그출력 3채널, 실제 print 로그 형식 문서화 |
+| 🔥 트레이트 위반 시스템 | 17. 제약 & 향후 계획 | 추가 | BehaviorSystem 연동 gap, hardcoded 텍스트 이슈, settlement_norm stub, debug_force_violation 제안 |
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md)
+- Notion blocks appended: 28 (섹션 16, 17)
+- Notion page: 🔥 트레이트 위반 시스템 (30fe2e3d-4a77-814e-8d09-ee17f4ad69f2)
+
+---
+
+## 치트/디버그 시스템 설계 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "인게임 테스트를 위한 치트 모드 어떻게 만들까?" → Phase 3B violation 검증 등 반복 테스트 효율화를 위한
+DebugCheatSystem 설계. 콘솔(F12/~) + 패널(슬라이더) 혼합 UI 아키텍처. 아직 미구현 상태이므로 설계 명세 문서로 생성.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA7  | DebugCheatSystem 설계 문서 신규 생성 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🛠️ 디버그 & 치트 시스템 (DebugCheatSystem) | 전체 | 신규 생성 | 개요/설계의도/아키텍처/기능분류(에이전트·시뮬레이션·정보표시·정착지)/콘솔명령예시/UI레이아웃/데이터구조/개발히스토리/제약&향후계획/크로스레퍼런스 (94 블록) |
+
+새 페이지 URL: https://www.notion.so/30fe2e3d4a7781ac9863dd3f084415ef
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/create_debug_system_docs.py 임시 스크립트)
+- Notion pages created: 1 (🛠️ 디버그 & 치트 시스템)
+- Notion pages checked: 없음 (신규 시스템, 기존 페이지 없음 확인)
+
+---
+
+## 치트/디버그 시스템 상세 스펙 Q&A → Notion 문서 업데이트 — 2026-02-22
+
+### Context
+Q&A: "혼합 방식으로 구현, stress/Phase 3B까지 완료" → 이전 설계 초안보다 훨씬 구체적인 구현 스펙 확정.
+파일 경로, 씬 구조, GDScript 코드 스켈레톤, 명령어 전체 syntax, 5탭 패널 레이아웃, i18n 14키, 검증 시나리오.
+기존 🛠️ 디버그 & 치트 시스템 페이지(94 블록)를 전면 교체.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA8  | DebugCheatSystem 상세 스펙 → Notion 페이지 전면 업데이트 | 🔴 DIRECT | — | 외부 서비스(Notion API) |
+
+### Dispatch ratio: N/A (문서 전용)
+
+### Notion Update
+
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🛠️ 디버그 & 치트 시스템 | 전체 | 전면 교체 | 기존 초안(94블록) → 상세 스펙(130블록): 파일경로/씬구조/GDScript스켈레톤/명령어syntax 11종/i18n 14키/검증시나리오/디스패치순서 |
+| 🛠️ 디버그 & 치트 시스템 | 7. 로케일 키 | 신규 추가 | debug.json ko/en 14키 전체 |
+| 🛠️ 디버그 & 치트 시스템 | 8. 검증 시나리오 | 신규 추가 | Phase 3A/3B 검증 시나리오 표 |
+| 🛠️ 디버그 & 치트 시스템 | 10. 제약 | 업데이트 | "미구현" → TICKET 범위로 격상, 향후 계획 3항 추가 |
+
+페이지 URL: https://www.notion.so/30fe2e3d4a7781ac9863dd3f084415ef
+
+### Localization Verification
+- Hardcoded scan: PASS (코드 변경 없음)
+- New keys added: debug.json 14키 (문서화만, 코드 구현은 TICKET-3)
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Files changed: 1 (PROGRESS.md), 1 (tools/update_debug_system_docs.py 임시 스크립트)
+- Notion blocks replaced: 94 → 130
+- Notion page: 🛠️ 디버그 & 치트 시스템 (30fe2e3d-4a77-81ac-9863-dd3f084415ef)
+
+---
+
+## Body Trainability 시스템 — t-TR01~t-TR07 — 2026-02-22
+
+### Context
+body_attributes.gd를 potential/trainability/training_xp 3-레이어로 재설계.
+운동유전학 연구 기반 (HERITAGE, Ahtiainen, ACTN3/ACE, Refalo, Weaver).
+스케일: 0.0~1.0 float → 0~10,000 int (potential), 0~1,000 int (trainability).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-TR01 | game_config.gd 상수 추가/교체 | 🔴 DIRECT | — | shared config, BODY_SPEED_SCALE 교체가 전체 의존 |
+| t-TR02 | body_attributes.gd 전면 재작성 | 🟢 DISPATCH | ask_codex | standalone new design |
+| t-TR03 | construction_system.gd XP stub | 🟢 DISPATCH | ask_codex | single-file addition |
+| t-TR04 | entity_manager.gd 초기화 블록 교체 | 🟢 DISPATCH | ask_codex | single-system change |
+| t-TR05 | age_system.gd 아동기 추적 + realized 재계산 | 🟢 DISPATCH | ask_codex | single-system change |
+| t-TR06 | gathering_system.gd XP stub | 🟢 DISPATCH | ask_codex | single-file addition |
+| t-TR07 | localization en+ko ui.json | 🟢 DISPATCH | ask_codex | standalone locale |
+
+### Dispatch ratio: 6/7 = 86% ✅
+
+### Dispatch strategy
+Config-first fan-out: t-TR01 DIRECT 커밋 → t-TR02/TR03/TR06/TR07 병렬 dispatch →
+t-TR04/TR05 t-TR02 완료 후 병렬 dispatch.
+
+### Notion Update
+⚠️ This section is REQUIRED. Gate will fail if missing.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes 시스템 | 전체 | 재작성 | 3-레이어 구조 (potential/trainability/realized), 학문적 근거 |
+| BodyAttributes 시스템 | Data Structure | added | potential/trainability/training_xp/innate_immunity 필드 |
+| BodyAttributes 시스템 | Core Logic | added | calc_training_gain, TRAINING_CEILING, age trainability 커브 |
+| EntityManager | Data Structure | modified | body 초기화 로직 교체 — actn3 상관, innate_immunity 생성 |
+| AgeSystem | Core Logic | modified | 아동기 환경 추적, 연간 realized 재계산, childhood_finalized 이벤트 |
+| GameConfig | Data Structure | added | BODY_POTENTIAL_*, TRAINABILITY_*, INNATE_IMMUNITY_*, XP_FOR_FULL_PROGRESS |
+| Data Definitions DB | — | added | TRAINING_CEILING 상수, BODY_SEX_DELTA_MALE |
+| Change Log DB | — | added | 2026-02-22 Body 시스템 스케일 재설계 + Trainability 도입 |
+
+### Localization Verification
+- Hardcoded scan: PASS ✅ (no hardcoded body/immunity text)
+- New keys added: UI_BODY_INNATE_IMMUNITY (en+ko)
+- ko/ updated: YES ✅
+
+### Results
+- Gate: PASS ✅ (20 entities spawned, 28 systems registered, 0 script errors)
+- Dispatch ratio: 6/7 = 86% ✅
+- Commits: 6c0ccd8 (t-TR01), b096ef7 (t-TR02~07)
+- Files changed: 8 (game_config.gd, body_attributes.gd, entity_manager.gd, age_system.gd, construction_system.gd, gathering_system.gd, localization/en/ui.json, localization/ko/ui.json)
+- Dispatch tool used: ask_codex (jobs: 3cba0d5f, b146ab0b, 1a4a19ed, a9fbb072, c74999a9, b3f1b85c)
+- Notion Update: table documented in PROGRESS.md (Notion MCP unavailable this session — update manually)
+
+---
+
+## T-QA10: violation 발동 전제조건 + Chronicle 기록 정책 gap — 2026-02-22
+
+### Context
+`violation entity:1 action:torture` 명령어가 스트레스 미상승/연대기 미기록 이슈 Q&A 기반으로
+TraitViolationSystem Notion 문서를 업데이트.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA10 | TraitViolationSystem 문서 업데이트 (2건) | 🔴 DIRECT | — | Notion API 직접 호출 (구현 아닌 문서) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업 — 코드 dispatch 해당 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | added | "발동 전제조건" 섹션 — entity가 해당 trait 보유해야 violation 발동; `trait entity:N list` 확인 필수 |
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | added | "디버그 워크플로우" 섹션 — trait list → log violation on → violation 명령 순서 코드블록 |
+| 🔥 트레이트 위반 시스템 | 17. 제약 & 향후 계획 | added | "Chronicle 기록 정책 gap" — 현재 코드는 minor/moderate/severe 전부 기록; 설계 의도는 severe/intrusive/PTG/desensitize_max만 기록 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🔥 트레이트 위반 시스템 (Section 16: +5 블록, Section 17: +1 블록)
+
+---
+
+## T-QA11: Trait 이진 threshold 구조 한계 + 향후 방향 문서화 — 2026-02-22
+
+### Context
+trait 전체가 형용사 형태의 on/off 이진 구조라는 문제 제기 Q&A 기반으로
+TraitSystem 전용 Notion 페이지를 신규 생성. 기존 코드(trait_system.gd) 분석 결과:
+violation_stress·behavior_weight는 이미 salience 연속값 사용 중,
+display layer(hysteresis t_on=0.9)에만 이진성 잔존.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA11 | TraitSystem Notion 페이지 신규 생성 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 (TraitSystem) | 전체 | 신규 생성 | 7개 섹션 (개요/설계의도/핵심상수/2-레벨아키텍처/핵심알고리즘/이진성문제/제약&향후계획) |
+| 🎭 트레이트 시스템 | 6. 이진 threshold 문제 | added | Cliff Effect, 187개 과다, threshold 0.92 편중, Option A/B 해결 방향 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (신규 생성, 7섹션 59개 블록)
+- TraitSystem PAGE_ID: 30fe2e3d-4a77-81b0-b675-e195025443a5
+
+---
+
+## T-QA12: TraitSystem — Trait 구성 분류 + Option A/B 단점 보강 — 2026-02-22
+
+### Context
+T-QA11에서 생성한 TraitSystem 페이지에 추가 정보 반영.
+Q&A에서 AI 질의 초안을 작성하는 과정에서 시스템 스펙이 더 명확하게 서술됨.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA12 | TraitSystem 페이지 4개 섹션 보강 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | added | Trait 구성 분류: Facet trait 48개 + Composite trait 139개 (c_caregiver = A_high + E_high 예시 포함) |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | 동시 활성화 10~20개 수치 구체화 |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | Option A 단점: 숫자 24개로만 표현 → 인물창 UX 저하 |
+| 🎭 트레이트 시스템 | 6. 이진성 문제 | added | Option B 단점: 선별 기준 모호 + violation_map/behavior_mappings 대규모 충돌 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (+4 블록)
+
+---
+
+## T-QA13: TraitSystem — C안 확정 + 3-Layer 아키텍처 + 마이그레이션 4단계 — 2026-02-22
+
+### Context
+Claude·Gemini·GPT 세 AI에게 Trait 시스템 리디자인을 자문한 결과 모두 C안(하이브리드)으로 수렴.
+내부 facet 연속값(Mechanics Layer) + salience Top-K 표시(Label Layer) + 행동 로그 trait 텍스트(Narrative Layer).
+마이그레이션 4단계 확정, 신규 학술 레퍼런스(Lee & Ashton 2004, OCC, PAD) 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA13 | TraitSystem 페이지 전체 재구성 (3-Layer + C안 + Migration) | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | modified | 3-Layer 아키텍처 언급, 레이어 3 Narrative Layer 추가 |
+| 🎭 트레이트 시스템 | 2. 설계 의도 | modified | DF 7단계 구간/중간값 비표시 상세화, CK3 3개 철학+trait 간 배제, RimWorld 스펙트럼 묶음, Sims 4 추가 |
+| 🎭 트레이트 시스템 | 2. 설계 의도 | added | 학술 근거: Lee & Ashton (2004), OCC/PAD 모델, taxometric analysis |
+| 🎭 트레이트 시스템 | 4. 아키텍처 | modified | "2-레벨" → "3-레이어 하이브리드" 재구성. Layer 1(Mechanics), Layer 2(Label), Layer 3(Narrative) |
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | added | violation_stress 연속 함수 공식, Curve 리소스 비선형 매핑 패턴 |
+| 🎭 트레이트 시스템 | 6. C안 확정 | modified | Option A callout → C안 확정 callout으로 교체, salience 공식 상세, 핵심 결정 6개 bullet |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 마이그레이션 4단계 (Phase 1~4, 최종 목표 60~80개 trait) |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (63블록 → 92블록, 전체 재구성)
+
+---
+
+## T-QA14: TraitSystem — 수치 변경 경계 + 마이그레이션 방식 A/B 트레이드오프 — 2026-02-22
+
+### Context
+세부 수치 조정 범위 Q&A: threshold → t_on/t_off 분리, composite trait AND 조합 → salience 가중합,
+violation_stress base 수치(14, 22 등) 유지(비례 계수만 변경). 마이그레이션 방식 A(전면) vs B(점진적) 트레이드오프 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA14 | TraitSystem 페이지 수치 변경 경계 + 마이그레이션 방식 A/B 추가 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | added | Composite Trait Salience 가중합 (C안 변경): AND 조합 → weighted sum |
+| 🎭 트레이트 시스템 | 5. 핵심 알고리즘 | modified | violation_stress 코드에 base 수치(14, 22) 불변 주석 추가 |
+| 🎭 트레이트 시스템 | 6. C안 확정 | added | 수치 변경 경계 섹션: 바뀌는 것(threshold/composite/violation 경로) vs 안 바뀌는 것(facet/base 수치/HEXACO 구조) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 마이그레이션 방식 A(전면) vs B(점진적) 트레이드오프 callout |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | composite 가중합 전환 bullet 추가 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (92블록 → 105블록)
+
+---
+
+## T-QA15: TraitSystem — 방식 A(전면) 확정 + 영향 파일 8개 + t_on/t_off 정의 미결 — 2026-02-22
+
+### Context
+마이그레이션 방식 B(점진적) 포기 → 방식 A(전면) 확정. Phase 4 이전 전면 완료 후 진행 결정.
+영향 파일 8개 명확화. t_on/t_off 정의 방식(개별 vs 카테고리 기본값) 미결 결정 사항으로 기록.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA15 | TraitSystem 방식 A 확정 + 영향 파일 + t_on/t_off 미결 문서화 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 95 h3: "마이그레이션 방식 선택" → "방식 A(전면) 확정" |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 96 callout: 미결 → 방식 A 확정 (Phase 3A/3B 수정 포함) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | "전면 마이그레이션 영향 파일" h3 + 8개 파일 bullet |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | "미결 결정: t_on/t_off 정의 방식" h3 + callout + 선택지 A/B bullet |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (105블록 → 121블록, 2블록 수정 + 16블록 추가)
+
+---
+
+## T-QA16: TraitSystem — salience 차별화 + Python 스크립트 구조 미결 추가 — 2026-02-22
+
+### Context
+미결 결정 섹션 확장: ② salience 함수 facet vs composite 차별화 (정규화 전략 포함),
+③ Python 마이그레이션 스크립트 특이 케이스 처리 전략. h3 제목 일반화, callout 3개 미결 열거.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA16 | TraitSystem 미결 결정 섹션 확장 (② salience 차별화, ③ Python 스크립트) | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 117 h3: "미결 결정: t_on/t_off" → "미결 결정 사항 (전면 마이그레이션 전)" |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | modified | Block 118 callout: 3개 미결 결정 열거 (①t_on/t_off ②salience 차별화 ③Python 구조) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 미결 결정 ② — salience 함수 facet vs composite 차별화 (정규화 전략 포함) |
+| 🎭 트레이트 시스템 | 7. 향후 계획 | added | 미결 결정 ③ — Python 마이그레이션 스크립트 특이 케이스 처리 전략 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (121블록 → 123블록, 2블록 수정 + 2블록 추가)
+
+---
+
+## T-QA17: TraitSystem — Composite 3분류 + Effects 구조 + 특이 케이스 7선 — 2026-02-22
+
+### Context
+trait_definitions_fixed.json 전수 분석 결과 문서화. Composite trait 세부 분류(2축 매트릭스 60/Named archetype 64/Dark tetrad 15) + Effects 필드 구조 상세 + 마이그레이션 특이 케이스 7선 신규 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA17 | TraitSystem — Composite 분류 + Effects + 특이 케이스 7선 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 1. 개요 | modified | Block 6: Composite 3분류 추가 (2축 매트릭스 60, Named archetype 64, Dark tetrad 15) |
+| 🎭 트레이트 시스템 | 3. 핵심 상수 | added | Effects 필드 구조 h3 + 4개 bullet (behavior_weights/emotion_modifiers/violation_stress/기타) |
+| 🎭 트레이트 시스템 | 7. 제약 & 향후 계획 | added | 마이그레이션 특이 케이스 7선 h3 + 7개 bullet (threshold 비대칭/mutex/composite 이중구조/dark tetrad/archetype/극단값/baseline 혼재) |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (123블록 → 138블록, 1블록 수정 + 15블록 삽입)
+
+---
+
+## T-QA18: TraitSystem — 핵심 설계 수식 최종 확정 (3 AI 비교) — 2026-02-22
+
+### Context
+Gemini / GPT / Claude 세 AI의 t_on/t_off, Salience, Effects 설계 제안을 비교 분석. 사용자 결론: "Claude 답변을 베이스로, GPT의 sigmoid steepness 비대칭 + winner-take-all mutex 추가 반영". 기존 미결 결정 사항 3가지 → 확정 결정 사항으로 전환 + 핵심 설계 수식 전체 문서화.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA18 | TraitSystem 핵심 설계 수식 확정 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### 확정 결정 사항 요약
+| 항목 | 확정 방식 | 출처 |
+|------|-----------|------|
+| t_on/t_off 공식 | HIGH: threshold±0.02/±0.08 (gap=0.06) | Claude |
+| sigmoid steepness | high: clamp(0.012+0.25*(1-t), 0.015, 0.05) | GPT |
+| Facet mutex | winner-take-all (raw_hi vs raw_lo) | GPT |
+| Composite salience | 기하평균 × rarity_bonus(1+0.1*(n-2)) | Claude |
+| Dark tetrad stress | base_stress=0 × salience^α = 0 (예외 처리 불필요) | Claude |
+| behavior_weight | facet lerp + composite salience + log-space 합산 | Claude+GPT |
+| emotion | baseline=additive, sensitivity=multiplicative+log-space | Claude+GPT |
+| 마이그레이션 우선순위 | 케이스4 > 2 > 6 > 7 > 5 > 1 > 3 | 종합 |
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | heading 교체 "확정 결정 사항 (T-QA18, 2026-02-22)" |
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | callout → "3가지 설계 결정 확정 완료" |
+| 🎭 트레이트 시스템 | 7. 미결 결정 사항 | modified | 블록 134-137: 선택지 A/B → 확정①②③ 내용으로 교체 |
+| 🎭 트레이트 시스템 | 8. 핵심 설계 수식 확정 | added | 신규 섹션: t_on/t_off 표 + sigmoid steepness + hysteresis GDScript + Facet mutex + Composite salience + behavior_weight + emotion + violation_stress + Python 4파일 구조 + 마이그레이션 우선순위 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (138블록 → 170블록+, 6블록 수정 + 32블록 추가)
+
+---
+
+## StatSystem Phase 0 Infrastructure — t-SA01~t-SA11 — 2026-02-22
+
+### Context
+241곳에서 스탯에 직접 접근하는 구조를 스탯 인프라로 대체하기 위한 Phase 0 기반 구축.
+Phase 0 = 행동 변화 없이 인프라만 구축. 기존 시스템은 Phase 1~3에서 단계적으로 교체됨.
+신규 파일만 추가. 기존 entity_data.gd에 stat_cache 필드 1개 추가뿐.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SA01 | scripts/core/stat_curve.gd — 성장/영향 커브 수학 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA02 | scripts/core/stat_modifier.gd — StatModifier 데이터 클래스 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA03 | scripts/core/stat_definition.gd — JSON 로드/파싱 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA04 | scripts/core/stat_graph.gd — 의존성 그래프, topo sort | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA03 의존 |
+| t-SA05 | scripts/core/stat_cache.gd — 엔티티별 캐시 관리 | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA02+SA04 의존 |
+| t-SA06 | scripts/core/stat_evaluator_registry.gd — 복잡 로직 등록소 | 🟢 DISPATCH | ask_codex | 순수 신규 파일, 완전한 스펙 |
+| t-SA07 | scripts/core/stat_query.gd — Autoload stub | 🟢 DISPATCH | ask_codex | 신규 파일, t-SA03+04+05+06 의존 |
+| t-SA08 | stats/*.json 스켈레톤 7개 | 🟢 DISPATCH | ask_codex | 신규 데이터 파일, t-SA03 의존 |
+| t-SA09 | tests/test_stat_curve.gd + tests/test_stat_graph.gd | 🟢 DISPATCH | ask_codex | 신규 테스트 파일, t-SA01+04 의존 |
+| t-SA10 | entity_data.gd — stat_cache 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일 수정, t-SA05 의존 |
+| t-SA11 | project.godot — StatQuery Autoload 등록 | 🔴 DIRECT | — | 공유 프로젝트 파일, merge conflict 위험 |
+
+### Dispatch ratio: 10/11 = 91% ✅ (목표 ≥60%)
+
+### Dispatch strategy
+- Stage 1 (병렬): t-SA01, t-SA02, t-SA03, t-SA06 — 완전 독립
+- Stage 2 (병렬, SA03 완료 후): t-SA04, t-SA08
+- Stage 3 (SA02+SA04 완료 후): t-SA05
+- Stage 4 (병렬, SA03+04+05+06 완료 후): t-SA07, t-SA09
+- Stage 5 (SA05 완료 후): t-SA10
+- Stage 6 DIRECT (SA07 완료 후): t-SA11
+
+### Notion Update
+⚠️ Required — to be completed before gate.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem (신규) | Overview | added | 5-Layer 아키텍처, Phase 0 목표, 학문적 근거 |
+| StatSystem (신규) | Architecture | added | classDiagram (StatCurve/StatModifier/StatDefinition/StatGraph/StatCache/StatQuery/StatEvaluatorRegistry) |
+| StatSystem (신규) | Core Logic | added | sigmoid_extreme, threshold_power, log_xp_required 공식 |
+| StatSystem (신규) | Data Structure | added | StatModifier 필드 테이블, stat_cache 구조 |
+| StatSystem (신규) | Constraints | added | Phase 0 stub 상태, Phase 2 활성화 예정 |
+| EntityData | Data Structure | modified | stat_cache: Dictionary 필드 추가 |
+| Data Definitions DB | — | added | StatModifier.ModType enum |
+| Change Log DB | — | added | 2026-02-22 \| StatSystem Phase 0 Infrastructure |
+
+### Localization Verification
+- Hardcoded scan: N/A (UI 텍스트 없음, Phase 0)
+- New keys added: none (JSON display_key는 Phase 3 UI 연결 시 추가 예정)
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 10/11 = 91% ✅
+- Files changed: 19 (7 new scripts + 7 JSON + 2 tests + entity_data.gd + project.godot + PROGRESS.md)
+- Dispatch tool: ask_codex (10 tickets)
+- DIRECT: 1 ticket (t-SA11 project.godot)
+- Notion Update: documented in PROGRESS.md (notionApi MCP unavailable in session — manual update required)
+
+---
+
+## T-QA19: Trait 시스템 전면 마이그레이션 프롬프트 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+trait-migration-PROMPT.md (918줄) Q&A 기반 TraitSystem Notion 문서 업데이트.
+이진 on/off → 2-레벨 하이브리드 전환의 TICKET-0~6 구현 계획, get_effect_value() 통합 인터페이스, 기각 대안, 검증 시나리오, i18n 키 목록을 섹션 9로 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA19 | Notion TraitSystem 페이지 섹션 9 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 핵심 상수 코드블록 | confirmed | VIOLATION_ALPHA=1.2 등 이미 포함 확인 |
+| TraitSystem | 섹션 9. 마이그레이션 실행 계획 (T-QA19) | added | get_effect_value() 인터페이스, entity_data.gd 필드 변경 상세, TICKET-0~6 디스패치 순서, Python 스크립트 구조, 기각된 대안 3가지, 검증 시나리오 10+5+3, i18n 키 목록 |
+
+### Results
+- Notion 블록 47개 append (섹션 9)
+- 상수 코드블록: VIOLATION_ALPHA 이미 포함 — PATCH 불필요 (T-QA18에서 반영됨)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa19.py
+
+---
+
+## T-QA20: Trait i18n + worldsim-docs TICKET 보완 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+TICKET-5B(i18n: trait 텍스트 로케일 분리) + TICKET-5C(worldsim-docs 등록) Q&A 기반 TraitSystem Notion 문서 업데이트.
+trait_defs_v2.json name_kr/en → name_key/desc_key 분리, extract_locale_files() 함수, 수정된 디스패치 순서, worldsim-docs 파일 명세 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA20 | Notion TraitSystem 섹션 10/11 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 9.4 Python 스크립트 구조 코드블록 | patched | extract_locale_files() 함수 추가, 출력 파일 8개(JSON 4+로케일 4) |
+| TraitSystem | 섹션 10. TICKET-5B i18n (T-QA20) | added (22블록) | trait_defs_v2.json 필드 변경, GDScript 참조 패턴, traits.json 374키, traits_events.json 6키, extract_locale_files() Python 함수, i18n 검증 시나리오 7개 |
+| TraitSystem | 섹션 11. TICKET-5C worldsim-docs (T-QA20) | added (21블록) | 파일 구조, trait-system-v2.md 10개 섹션 명세, exports/txt 헤더, 확인 항목 11개 |
+
+### Results
+- Notion 블록 43개 추가 (섹션 10: 22, 섹션 11: 21)
+- 섹션 9.4 PATCH: extract_locale_files() + 출력 8파일 반영
+- 섹션 9.3 코드블록: 검색어 불일치로 미발견 (섹션 10에서 수정된 디스패치 순서 커버됨)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa20.py
+
+---
+
+## T-QA21: data/locales/ 폴더 구조 + 텍스트 집중화 원칙 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+"data/locales/ 폴더는 이번 마이그레이션으로 필요없어지는 건가?" Q&A 기반 TraitSystem Notion 문서 업데이트.
+정답: 없어지지 않고 더 커짐. 기존 파일(violation.json, debug.json 등) 유지 + 신규 파일(traits.json, traits_events.json) 추가.
+이번 마이그레이션의 핵심은 텍스트 집중화: trait_defs_v2.json 내 분산된 name_kr/en을 locales로 이전.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA21 | Notion TraitSystem 섹션 10.4/10.5 추가 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 10.4 data/locales/ 폴더 구조 (T-QA21) | added | 마이그레이션 후 전체 폴더 트리: ko/{traits.json 신규, traits_events.json 신규, violation.json 기존, debug.json 기존, ...}, en/{traits.json, traits_events.json, ...} |
+| TraitSystem | 섹션 10.5 텍스트 집중화 원칙 (T-QA21) | added | trait_defs_v2.json 순수 메커닉 데이터만 보유, 모든 텍스트 locales/*.json 집중, Locale.ltr() 단일 경로 접근 |
+
+### Results
+- Notion 블록 12개 추가 (divider + h3×2 + para×4 + code×1 + bullet×4)
+- 섹션 10 (i18n) 내 10.4/10.5 소섹션 추가
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa21.py
+
+---
+
+## T-QA22: i18n 경로 오류 수정 (data/locales/ → localization/) — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+"기존엔 localization/ 밑에 en/ko 폴더가 있었는데 이제 data/ 밑에 locales/ 폴더가 생기는 거잖아" Q&A 기반 수정.
+실제 프로젝트 구조 확인 결과: 로케일 폴더는 localization/ (data/locales/ 아님).
+localization/ko/traits.json — 기존 파일(748키) / traits_events.json — 신규 생성.
+T-QA20/T-QA21에서 작성된 잘못된 경로 전체 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA22 | Notion TraitSystem 경로 오류 PATCH | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 10.4 heading | patched | "data/locales/ 폴더 구조" → "localization/ 폴더 구조 (마이그레이션 전후)" |
+| TraitSystem | 섹션 10.4 description | patched | "data/locales/ 폴더로 이동" → "localization/ko|en/traits.json에 통합, traits.json은 기존 748키 파일" |
+| TraitSystem | 섹션 10.4 folder tree code | patched | data/locales/ → localization/, traits.json=기존(748키), traits_events.json=신규 |
+| TraitSystem | 섹션 10.5 bullet | patched | "data/locales/ko|en/*.json" → "localization/ko|en/*.json" |
+| TraitSystem | 섹션 10.5 para(before/after) | patched | "locales/*.json" → "localization/ko|en/*.json" |
+| TraitSystem | 섹션 9.4 migration script code | recovered | 잘못 덮어쓴 폴더트리 → MIGRATION_SCRIPT_UPDATED (경로 수정 반영) |
+| TraitSystem | 섹션 10-3 locale key code | recovered | 잘못 덮어쓴 폴더트리 → LOCALE_KEY_CODE (경로 수정 반영) |
+| TraitSystem | 섹션 10-5 extract_fn code | recovered | 잘못 덮어쓴 폴더트리 → extract_locale_files() (merge 방식으로 수정) |
+| TraitSystem | 섹션 11-3 exports_txt code | recovered | 잘못 덮어쓴 폴더트리 → EXPORTS_TXT_HEADER (경로 수정 반영) |
+
+### Results
+- 10개 블록 PATCH (T-QA22 1차) + 4개 블록 복구 (T-QA22 2차) = 총 14개 블록 수정
+- localization/ko|en/ 실제 구조 확인: traits.json(748키 기존), traits_events.json(신규), ui.json(864키) 등 11개 파일
+- traits.json 기존 파일이므로 extract_locale_files()는 merge 방식으로 수정
+- autopilot state: cleared
+- Scripts: /tmp/notion_update_traitsystem_qa22.py + /tmp/notion_recover_qa22.py
+
+---
+
+## T-QA23: behavior_weight 이진→연속 전환 Before/After 비교 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+현재 화면에서 절도: +200%, 배신: +160%, 탐험: +200% 극단값이 나오는 이유:
+이진 on/off 구조(strength=1.0 고정) + 안전 캡 없는 곱셈 누적.
+마이그레이션 후에는 sigmoid 연속값 기반 strength + lerp(1.0, extreme_val, strength) + clamp(0.1, 3.0) 캡으로 정상 범위 수렴.
+TraitSystem 섹션 6 "현재 문제" 마지막 bullet 뒤에 Before/After 비교 삽입.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA23 | Notion TraitSystem 섹션 6 Before/After 비교 블록 삽입 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 6 현재 문제 (T-QA23) | added | heading_3 "behavior_weight 이진→연속 전환 비교 (마이그레이션 전후)" + 요약 paragraph + BEFORE/AFTER code block |
+
+삽입 위치: after block `30fe2e3d-4a77-81b1-8cbf-f5d595aac7ca` (섹션 6 마지막 "현재 문제" bullet)
+
+### Results
+- 3개 블록 삽입: heading_3 + paragraph + code (plain text)
+- BEFORE: strength=1.0 고정, 곱셈 누적, 캡 없음 → 절도+200% 폭발
+- AFTER: strength=sigmoid(facet_val, t_on, t_off), lerp(1.0, extreme_val, strength), clamp(0.1, 3.0)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa23.py

@@ -61,3 +61,8 @@ func execute_tick(tick: int) -> void:
 				"tile_y": y,
 				"tick": tick,
 			})
+			# [훈련 XP 누적] 채집 활동 → 지구력/근력/민첩 훈련
+			if entity.body != null:
+				entity.body.training_xp["end"] += GameConfig.GATHER_XP_END
+				entity.body.training_xp["str"] += GameConfig.GATHER_XP_STR
+				entity.body.training_xp["agi"] += GameConfig.GATHER_XP_AGI

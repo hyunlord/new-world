@@ -29,6 +29,9 @@ var birth_tick: int = 0
 ## Phase 2-A1: Mortality
 var frailty: float = 1.0  # Individual frailty multiplier (N(1.0, 0.15), clamped [0.5, 2.0])
 
+## [Layer 1.5] Body Attributes (BodyAttributes RefCounted)
+var body: RefCounted = null
+
 ## Phase 2: Family
 var partner_id: int = -1
 var parent_ids: Array = []
@@ -92,6 +95,22 @@ var trauma_scars: Array = []
 ## - last_tick: 마지막 위반 tick (시간 감쇠 계산용)
 ## 학술: Moral Disengagement Theory (Bandura, 1999), Kindling Theory (Post, 1992)
 var violation_history: Dictionary = {}
+
+## StatSystem Phase 0: 엔티티별 스탯 캐시
+## key: stat_id (StringName), value: {value, dirty, modifiers, last_computed_tick}
+var stat_cache: Dictionary = {}
+
+## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
+## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
+var values: Dictionary = {}
+
+## [Kohlberg (1969)] 도덕 발달 단계 1~6
+## 1=벌과복종, 2=도구적, 3=대인조화, 4=법질서, 5=사회계약, 6=보편윤리
+var moral_stage: int = 1
+
+## [Festinger (1957)] 가치관 위반 누적 기록 (자기합리화 추적용)
+## { "TRUTH": 3, "LOYALTY": 1 }
+var value_violation_count: Dictionary = {}
 
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
@@ -184,6 +203,8 @@ func to_dict() -> Dictionary:
 		"trauma_scars": trauma_scars.duplicate(),
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
+		"body": body.to_dict() if body != null else {},
+		"stat_cache": _serialize_stat_cache(stat_cache),
 	}
 
 
@@ -279,4 +300,25 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var ts_data = data.get("trait_strengths", {})
 	if not ts_data.is_empty():
 		e.trait_strengths = ts_data.duplicate()
+	# [Layer 1.5] Body Attributes
+	var body_data = data.get("body", {})
+	if not body_data.is_empty():
+		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
+		e.body = BodyAttributesScript.from_dict(body_data)
+	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	return e
+
+
+## stat_cache 직렬화 (StringName key → String)
+func _serialize_stat_cache(cache: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for k in cache:
+		result[str(k)] = cache[k]
+	return result
+
+## stat_cache 역직렬화 (String key → StringName)
+static func _deserialize_stat_cache(data: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for k in data:
+		result[StringName(k)] = data[k]
+	return result

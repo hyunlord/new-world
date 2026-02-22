@@ -1,0 +1,62 @@
+{
+  "witnessed_betrayal": {
+    "affected_values": { "LOYALTY": 0.15, "CUNNING": 0.05, "FRIENDSHIP": -0.10, "TRUTH": 0.08 },
+    "intensity": 0.7,
+    "description_key": "VALUE_EVENT_WITNESSED_BETRAYAL"
+  },
+  "survived_battle": {
+    "affected_values": { "MARTIAL_PROWESS": 0.10, "PERSEVERANCE": 0.08, "PEACE": -0.05, "STOICISM": 0.06 },
+    "intensity": 0.6,
+    "description_key": "VALUE_EVENT_SURVIVED_BATTLE"
+  },
+  "lost_comrade": {
+    "affected_values": { "LOYALTY": 0.12, "SACRIFICE": 0.15, "PEACE": 0.10, "FRIENDSHIP": 0.10 },
+    "intensity": 0.8,
+    "description_key": "VALUE_EVENT_LOST_COMRADE"
+  },
+  "experienced_injustice": {
+    "affected_values": { "FAIRNESS": 0.20, "LAW": -0.10, "POWER": 0.08, "TRUTH": 0.12 },
+    "intensity": 0.7,
+    "description_key": "VALUE_EVENT_EXPERIENCED_INJUSTICE"
+  },
+  "family_tragedy": {
+    "affected_values": { "FAMILY": 0.20, "TRANQUILITY": -0.10, "SACRIFICE": 0.10, "LOYALTY": 0.08 },
+    "intensity": 0.9,
+    "description_key": "VALUE_EVENT_FAMILY_TRAGEDY"
+  },
+  "completed_masterwork": {
+    "affected_values": { "CRAFTSMANSHIP": 0.15, "SKILL": 0.10, "HARD_WORK": 0.08, "PERSEVERANCE": 0.06 },
+    "intensity": 0.6,
+    "description_key": "VALUE_EVENT_COMPLETED_MASTERWORK"
+  },
+  "romantic_heartbreak": {
+    "affected_values": { "ROMANCE": -0.10, "STOICISM": 0.08, "INDEPENDENCE": 0.10, "INTROSPECTION": 0.12 },
+    "intensity": 0.7,
+    "description_key": "VALUE_EVENT_ROMANTIC_HEARTBREAK"
+  },
+  "community_celebration": {
+    "affected_values": { "MERRIMENT": 0.08, "COOPERATION": 0.05, "TRADITION": 0.06, "HARMONY": 0.05 },
+    "intensity": 0.4,
+    "description_key": "VALUE_EVENT_COMMUNITY_CELEBRATION"
+  },
+  "discovered_nature": {
+    "affected_values": { "NATURE": 0.15, "ARTWORK": 0.08, "TRANQUILITY": 0.10, "KNOWLEDGE": 0.05 },
+    "intensity": 0.5,
+    "description_key": "VALUE_EVENT_DISCOVERED_NATURE"
+  },
+  "spiritual_experience": {
+    "affected_values": { "INTROSPECTION": 0.15, "TRANQUILITY": 0.12, "NATURE": 0.08, "PEACE": 0.10 },
+    "intensity": 0.7,
+    "description_key": "VALUE_EVENT_SPIRITUAL_EXPERIENCE"
+  },
+  "corruption_exposed": {
+    "affected_values": { "LAW": 0.15, "TRUTH": 0.12, "POWER": -0.08, "FAIRNESS": 0.10 },
+    "intensity": 0.7,
+    "description_key": "VALUE_EVENT_CORRUPTION_EXPOSED"
+  },
+  "received_mentorship": {
+    "affected_values": { "KNOWLEDGE": 0.10, "SKILL": 0.08, "COOPERATION": 0.05, "HARD_WORK": 0.06 },
+    "intensity": 0.5,
+    "description_key": "VALUE_EVENT_RECEIVED_MENTORSHIP"
+  }
+}

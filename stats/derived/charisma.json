@@ -1,0 +1,13 @@
+{
+  "id": "DERIVED_CHARISMA",
+  "display_key": "UI_STAT_DERIVED_CHARISMA",
+  "category": "DERIVED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 2,
+  "growth": { "type": "FIXED", "params": {} },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+}

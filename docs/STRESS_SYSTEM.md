@@ -53,6 +53,35 @@ Game references:
 | `VA_GAMMA` | `3.0` | V/A composite max contribution |
 | `EUSTRESS_OPTIMAL` | `150.0` | Yerkes-Dodson optimal stress |
 
+## 4.1 Stress Zone Semantics
+
+The effective gameplay range is 0–1,000. Values above 1,000 are the **overflow zone**, reached only during extreme cascade events.
+
+| Zone | Range | `stress_state` | Gameplay Effect |
+|------|-------|---------------|-----------------|
+| Normal | 0–200 | 0 | No penalty; eustress boosts work efficiency up to +9% |
+| Tense | 200–350 | 1 | Work efficiency begins declining (Yerkes-Dodson descent) |
+| Crisis | 350–500 | 2 | Work efficiency notably reduced |
+| Break Risk | 500–900 | 3 | Mental break probability check active each tick |
+| Overflow | 1,000+ | 3 | Cascade surge zone; UI gauge maxed with red overlay |
+
+### STRESS_CLAMP_MAX = 2,000: Design Rationale
+
+The hard cap is 2,000 rather than 1,000 to accommodate worst-case cascade stacking without clipping:
+
+- `partner_death` (base `instant=450`) × COR loss aversion `2.5` = **1,125** effective stress
+- Pre-existing stress at `300` → single-tick peak = **1,425**
+- 2,000 provides overflow buffer for multi-event chains within the same tick
+
+The 0–1,000 range covers all meaningful simulation states. The 1,000–2,000 range is a safety margin that prevents hard truncation during extreme cascades.
+
+### UI Display Strategy (Phase 5)
+
+The UI renders stress on a **0–1,000 visual scale**:
+- `stress ≤ 1,000`: gauge position = `stress / 1,000`
+- `stress > 1,000`: gauge remains full; a red overlay pattern is applied
+- Internal simulation accumulates beyond 1,000 until natural decay returns it to the visible range
+
 ## 5. Stressor Values
 
 Need deficiency curves:

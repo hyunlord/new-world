@@ -4,6 +4,7 @@ extends Control
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
+const ValueDefs = preload("res://scripts/core/value_defs.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -106,8 +107,10 @@ var _section_collapsed: Dictionary = {
 	"family": false,
 	"relationships": false,
 	"stats": true,
+	"body": false,
 	"recent_actions": false,
 	"life_events": false,
+	"values": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -143,8 +146,12 @@ class DeceasedEntityProxy extends RefCounted:
 	var display_traits: Array = []
 	var trauma_scars: Array = []
 	var violation_history: Dictionary = {}
+	var values: Dictionary = {}
+	var moral_stage: int = 1
+	var value_violation_count: Dictionary = {}
 	var speed: float = 1.0
 	var strength: float = 1.0
+	var body: RefCounted = null   # Body section skipped for deceased
 	var total_gathered: float = 0.0
 	var buildings_built: int = 0
 	var personality: RefCounted
@@ -782,6 +789,33 @@ func _draw() -> void:
 					cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 		cy += 4.0
 
+	# ── Values (가치관) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
+	if not _section_collapsed.get("values", true):
+		if not entity.values.is_empty():
+			## ValueDefs.KEYS 정의 순서 그대로 표시 (33개 고정 순서)
+			## 사람마다 같은 위치에 같은 가치관 → 비교 가능
+			var significant: Array = []
+			for vkey in entity.values:
+				significant.append({ "key": vkey, "value": entity.values[vkey] })
+			significant.sort_custom(func(a, b):
+				var ia: int = ValueDefs.KEYS.find(a["key"])
+				var ib: int = ValueDefs.KEYS.find(b["key"])
+				return ia < ib
+			)
+			for item in significant:
+				var v_key: String = item["key"]
+				var v_val: float = item["value"]
+				var display_name: String = Locale.ltr("VALUE_" + v_key)
+				var bar_color: Color = Color(0.4, 0.7, 1.0) if v_val > 0 else Color(1.0, 0.45, 0.45)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, display_name, (v_val + 1.0) / 2.0, bar_color)
+		if "moral_stage" in entity:
+			var moral_stage_label: String = Locale.ltr("VALUE_MORAL_STAGE") + ": %d" % entity.moral_stage
+			draw_string(font, Vector2(cx + 10, cy + 12), moral_stage_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.7, 0.7, 0.7))
+			cy += 18
+	cy += 4.0
+
 	# ── Traits (independent section) ──
 	if entity.personality != null:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAITS"), "traits")
@@ -1240,6 +1274,18 @@ func _draw() -> void:
 		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f  |  %s: %d" % [Locale.ltr("UI_TOTAL_GATHERED"), entity.total_gathered, Locale.ltr("UI_BUILDINGS_BUILT"), entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 22.0
 
+	# ── Body Attributes ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_BODY_SECTION"), "body")
+	if not _section_collapsed.get("body", false):
+		if entity.body != null and not entity.body.realized.is_empty():
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_STR"), entity.body.realized.get("str", 0.0), Color(0.90, 0.40, 0.35))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_AGI"), entity.body.realized.get("agi", 0.0), Color(0.35, 0.80, 0.55))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_END"), entity.body.realized.get("end", 0.0), Color(0.40, 0.65, 0.90))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_TOU"), entity.body.realized.get("tou", 0.0), Color(0.80, 0.60, 0.30))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_REC"), entity.body.realized.get("rec", 0.0), Color(0.70, 0.45, 0.85))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_BODY_DR"),  entity.body.realized.get("dr",  0.0), Color(0.40, 0.80, 0.75))
+		cy += 4.0
+
 	# ── Action History (alive only) ──
 	if entity.is_alive:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_RECENT_ACTIONS"), "recent_actions")
@@ -1362,6 +1408,29 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 
 	var pct_x: float = bar_x + bar_w + bar_gap
 	draw_string(font, Vector2(pct_x, y + 11), "%d%%" % int(value * 100), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+	return y + 16.0
+
+
+## Draw a bipolar bar for values in range [-1.0, +1.0]
+## Center = 0, right half = positive (pos_color), left half = negative (neg_color)
+func _draw_value_bar(font: Font, x: float, y: float, w: float, label: String, value: float, pos_color: Color, neg_color: Color) -> float:
+	var label_w: float = 140.0
+	var pct_w: float = 50.0
+	var bar_gap: float = 4.0
+	var bar_h: float = 10.0
+	draw_string(font, Vector2(x, y + 11), label, HORIZONTAL_ALIGNMENT_LEFT, int(label_w), GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+	var bar_x: float = x + label_w + bar_gap
+	var bar_w_actual: float = maxf(w - label_w - pct_w - bar_gap * 2, 20.0)
+	var center_x: float = bar_x + bar_w_actual * 0.5
+	draw_rect(Rect2(bar_x, y + 2, bar_w_actual, bar_h), Color(0.2, 0.2, 0.2, 0.8))
+	draw_line(Vector2(center_x, y + 2), Vector2(center_x, y + 2 + bar_h), Color(0.5, 0.5, 0.5, 0.5), 1.0)
+	if absf(value) > 0.001:
+		var fill_w: float = (bar_w_actual * 0.5) * absf(value)
+		var fill_color: Color = pos_color if value > 0.0 else neg_color
+		var fill_x: float = center_x if value > 0.0 else center_x - fill_w
+		draw_rect(Rect2(fill_x, y + 2, fill_w, bar_h), fill_color)
+	var pct_x: float = bar_x + bar_w_actual + bar_gap
+	draw_string(font, Vector2(pct_x, y + 11), "%+d%%" % int(value * 100.0), HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
 
 

@@ -44,6 +44,11 @@ func execute_tick(tick: int) -> void:
 		var progress_per_tick: float = 1.0 / float(ticks_per_cycle)
 
 		building.build_progress += progress_per_tick
+		# [훈련 XP 누적] 건설 활동 → 근력/강인함/민첩 훈련
+		if entity.body != null:
+			entity.body.training_xp["str"] += GameConfig.CONSTRUCT_XP_STR
+			entity.body.training_xp["tou"] += GameConfig.CONSTRUCT_XP_TOU
+			entity.body.training_xp["agi"] += GameConfig.CONSTRUCT_XP_AGI
 		if building.build_progress >= 1.0:
 			building.build_progress = 1.0
 			building.is_built = true

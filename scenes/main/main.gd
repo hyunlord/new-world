@@ -39,6 +39,7 @@ const ChildStressProcessor = preload("res://scripts/systems/phase5/child_stress_
 const IntergenerationalSystem = preload("res://scripts/systems/phase5/intergenerational_system.gd")
 const ParentingSystem = preload("res://scripts/systems/phase5/parenting_system.gd")
 const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
+const ValueSystem = preload("res://scripts/systems/value_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -81,6 +82,7 @@ var phase4_coordinator: Node
 var child_stress_processor: RefCounted
 var intergenerational_system: RefCounted
 var parenting_system: RefCounted
+var value_system: RefCounted
 var debug_console = null
 var debug_panel = null
 
@@ -228,6 +230,9 @@ func _ready() -> void:
 	parenting_system = ParentingSystem.new()
 	parenting_system.init(entity_manager)
 
+	value_system = ValueSystem.new()
+	value_system.init(entity_manager, settlement_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(resource_regen_system)     # priority 5
 	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
@@ -249,6 +254,7 @@ func _ready() -> void:
 	sim_engine.register_system(mortality_system)          # priority 49
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(family_system)             # priority 52
+	sim_engine.register_system(value_system)              # priority 55
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90
 	sim_engine.register_system(contagion_system)          # priority 38

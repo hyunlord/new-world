@@ -7,6 +7,8 @@ var founding_tick: int = 0
 var culture_id: String = "proto_syllabic"
 var member_ids: Array = []
 var building_ids: Array = []
+## 정착지 공유 가치관 캐시 [Axelrod 1997] - value_system이 200 tick마다 재계산
+var shared_values: Dictionary = {}
 
 
 func to_dict() -> Dictionary:

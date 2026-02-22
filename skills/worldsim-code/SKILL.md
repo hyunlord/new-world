@@ -388,4 +388,216 @@ A Notion update passes when ALL of the following are true:
 - [ ] All affected system docs updated (not just the primary one)
 - [ ] Data Definitions DB updated if new Enum/constant was added
 - [ ] Change Log DB updated if this was a major change
-- [ ] Notion Update table filled out in ticket completion report
+- [ ] Notion Update table filled out in PROGRESS.md
+
+## ⚠️ Gate Dependency Rule
+
+**Notion update MUST be completed before running gate.sh.**
+
+Gate checks PROGRESS.md for a "Notion Update" section with at least one page entry.
+If missing → gate FAILS immediately, before any other checks.
+
+Order of operations — no exceptions:
+```
+1. Complete code work
+2. Update Notion (this Part 2 procedure)
+3. Write Notion Update table in PROGRESS.md
+4. Run localization verification (Part 1)
+5. Run bash scripts/gate.sh  ← only now
+```
+
+Skipping Notion and running gate anyway = gate FAIL = ticket incomplete.
+
+---
+
+# PART 3 — Prompt Generation Standard
+
+## When This Applies
+
+Any time a prompt is written for Claude Code — whether by the lead (Claude Code itself)
+or by the user via Claude.ai. Every prompt sent to Claude Code must meet this standard.
+
+---
+
+## Required Structure
+
+Every Claude Code prompt MUST contain all 6 sections below. No exceptions.
+
+---
+
+### Section 1: Implementation Intent
+**What problem does this solve? Why now?**
+
+- What user-visible or system-level problem is being solved
+- Why this approach was chosen over alternatives
+- What academic reference, theory, or prior art informs the design (if applicable)
+- What constraints or tradeoffs were accepted
+
+Example:
+```
+## Implementation Intent
+WorldSim agents currently have no memory of emotional states between ticks.
+This causes unrealistic behavior where trauma has no lasting effect.
+Based on van der Kolk's somatic stress theory and Lazarus's appraisal model,
+we implement a persistent TraumaRecord attached to EntityData.
+Tradeoff: memory overhead per entity is ~200 bytes — acceptable at Phase 0 scale (~500 entities).
+```
+
+---
+
+### Section 2: What to Build
+**Exactly what is being implemented.**
+
+- System name, file paths, class names
+- Data structures, fields, types, default values
+- Signals to emit or listen to
+- GameConfig constants to add
+- Localization keys to add (en/ and ko/)
+- Precise scope — what is IN and what is explicitly OUT
+
+Example:
+```
+## What to Build
+Create `scripts/systems/trauma_system.gd` (class_name TraumaSystem).
+Add `trauma_records: Array[TraumaRecord]` to EntityData.
+Add signal `trauma_recorded(entity_id, trauma_type, severity)` to SimulationBus.
+Add constants to GameConfig: TRAUMA_DECAY_RATE = 0.001, TRAUMA_THRESHOLD = 0.3
+Add localization keys:
+  - EVENT_TRAUMA_TRIGGERED → en: "{name} experienced trauma", ko: "{name}이(가) 트라우마를 경험했습니다"
+NOT in scope: trauma UI panel, therapy mechanics, intergenerational transmission.
+```
+
+---
+
+### Section 3: How to Implement
+**Step-by-step implementation with exact logic.**
+
+- Execution flow (tick order, priority, interval)
+- Algorithms, formulas, state transitions
+- Condition branches with exact values
+- Code snippets for non-obvious logic
+- Integration points (which system calls what, through which signal)
+
+Example:
+```
+## How to Implement
+TraumaSystem runs at priority=45, every 30 ticks.
+On each tick:
+  for each entity:
+    if entity.stress > TRAUMA_THRESHOLD:
+      severity = (entity.stress - TRAUMA_THRESHOLD) / (1.0 - TRAUMA_THRESHOLD)
+      record = TraumaRecord.new(type, severity, current_tick)
+      entity.trauma_records.append(record)
+      SimulationBus.emit_signal("trauma_recorded", entity.id, type, severity)
+    for record in entity.trauma_records:
+      record.severity -= TRAUMA_DECAY_RATE  # decay over time
+      if record.severity <= 0:
+        entity.trauma_records.erase(record)
+```
+
+---
+
+### Section 4: Dispatch Plan
+**How to split and dispatch this work.**
+
+- Ticket breakdown (one ticket = one file or one concern)
+- Classification: 🟢 DISPATCH or 🔴 DIRECT for each ticket
+- Dependency order (which must complete before which)
+- Dispatch method: `ask_codex` or `codex_dispatch.sh`
+- Target dispatch ratio (must be ≥60%)
+
+Example:
+```
+## Dispatch Plan
+| Ticket | File | Action | Depends on |
+|--------|------|--------|------------|
+| t-701 | TraumaRecord data class | 🟢 DISPATCH | — |
+| t-702 | EntityData: add trauma_records field | 🟢 DISPATCH | t-701 |
+| t-703 | TraumaSystem logic | 🟢 DISPATCH | t-702 |
+| t-704 | GameConfig: TRAUMA_* constants | 🔴 DIRECT | — |
+| t-705 | SimulationBus: trauma_recorded signal | 🔴 DIRECT | — |
+| t-706 | Wire TraumaSystem into SimulationEngine | 🔴 DIRECT | t-703,705 |
+| t-707 | Tests | 🟢 DISPATCH | t-703 |
+
+Dispatch ratio: 4/7 = 57% → re-split t-706 if possible to hit ≥60%
+Order: t-704,705 (DIRECT, parallel) → t-701 → t-702 → t-703,707 (parallel) → t-706
+```
+
+---
+
+### Section 5: Localization Checklist
+**Every key that must be added.**
+
+- List every new localization key
+- Specify which JSON file each belongs to
+- Provide both en/ and ko/ values
+- Confirm no existing key is duplicated
+
+Example:
+```
+## Localization Checklist
+| Key | File | en | ko |
+|-----|------|----|----|
+| EVENT_TRAUMA_TRIGGERED | events.json | "{name} experienced trauma" | "{name}이(가) 트라우마를 경험했습니다" |
+| STATUS_TRAUMATIZED | game.json | "Traumatized" | "트라우마 상태" |
+| DEBUG_TRAUMA_DECAY | debug.json | "Trauma decay: {value}" | "트라우마 감쇠: {value}" |
+```
+
+If no new keys: write "No new localization keys."
+
+---
+
+### Section 6: Verification & Notion
+**How to confirm it works, and what to document.**
+
+**Verification:**
+- Gate command to run
+- Smoke test (specific in-game action or debug command, completes in <30s)
+- What to observe in output/logs to confirm correct behavior
+- Edge cases to manually test
+
+**Notion update target:**
+- Which system doc page to update
+- Which sections change (Overview / Architecture / Data Structure / Core Logic / History)
+- Whether Data Definitions DB needs new entries
+- Whether Change Log DB needs a new entry
+
+Example:
+```
+## Verification & Notion
+
+### Verification
+- Gate: bash scripts/gate.sh → PASS
+- Smoke test: spawn 5 entities, set stress > 0.3, run 100 ticks
+  → trauma_records should be non-empty for affected entities
+  → SimulationBus should have emitted trauma_recorded N times
+- Edge case: entity with stress exactly at TRAUMA_THRESHOLD → no record created
+- Edge case: trauma record decays to 0 → removed from array, no crash
+
+### Notion Update
+- Page: TraumaSystem (create new if not exists)
+  - Overview: system role and design intent
+  - Architecture: classDiagram with TraumaRecord + TraumaSystem
+  - Data Structure: TraumaRecord fields table
+  - Core Logic: decay formula + state transition diagram
+  - History: new row (date | initial implementation | van der Kolk model)
+- Data Definitions DB: TraumaType enum
+- Change Log DB: new entry
+- Also update: EntityData page (new trauma_records field)
+```
+
+---
+
+## Quality Bar for Prompts
+
+A prompt is ready to send to Claude Code when:
+
+- [ ] Implementation Intent explains WHY, not just WHAT
+- [ ] What to Build lists exact file paths, class names, field types
+- [ ] How to Implement has actual formulas/logic, not vague descriptions
+- [ ] Dispatch Plan has ≥60% DISPATCH ratio with dependency order
+- [ ] Localization Checklist has both en/ and ko/ for every new key
+- [ ] Verification has a concrete smoke test command (not "check if it works")
+- [ ] Notion section names the exact page and sections to update
+
+If Claude Code would need to ask a follow-up question after reading this prompt → rewrite it.
