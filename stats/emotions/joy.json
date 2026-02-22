@@ -1,6 +1,6 @@
 {
-  "id": "EMOTION_FEAR",
-  "display_key": "UI_STAT_EMOTION_FEAR",
+  "id": "EMOTION_JOY",
+  "display_key": "UI_STAT_EMOTION_JOY",
   "category": "EMOTION",
   "storage_type": "int",
   "range": [0, 100],
@@ -8,19 +8,19 @@
   "tier": 2,
   "growth": {
     "type": "DECAY_FAST",
-    "params": { "decay_per_year": 5000, "half_life_days": 3 }
+    "params": { "decay_per_year": 4000, "half_life_days": 4 }
   },
   "thresholds": [
-    { "value": 70, "direction": "above", "effect": "BEHAVIOR_FLEE_OVERRIDE", "hysteresis": 5 }
+    { "value": 80, "direction": "above", "effect": "MODIFIER_PRODUCTIVITY_BONUS", "hysteresis": 8 }
   ],
   "affects": [
     {
       "target": "stress_continuous_input",
       "evaluator": "CURVE",
       "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 40, "exponent": 2.0, "max_output": 8.0 },
-      "weight": 0.8,
-      "direction": "positive",
+      "params": { "threshold": 60, "exponent": 1.5, "max_output": -6.0 },
+      "weight": 0.7,
+      "direction": "negative",
       "context": "stress"
     }
   ],

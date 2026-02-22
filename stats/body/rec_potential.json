@@ -1,0 +1,13 @@
+{
+  "id": "BODY_REC_POTENTIAL",
+  "display_key": "UI_STAT_REC_POTENTIAL",
+  "category": "BODY",
+  "storage_type": "int",
+  "range": [0, 10000],
+  "default": 700,
+  "tier": 0,
+  "growth": { "type": "FIXED", "params": {} },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "body", "descriptor_table": "body_7_step" }
+}

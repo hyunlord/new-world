@@ -1,0 +1,34 @@
+{
+  "id": "DERIVED_INTIMIDATION",
+  "display_key": "UI_STAT_DERIVED_INTIMIDATION",
+  "category": "DERIVED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 300,
+  "tier": 2,
+  "growth": {
+    "type": "COMPOSITE",
+    "params": {
+      "inputs": [
+        { "source": "BODY_STR_POTENTIAL", "weight": 0.50 },
+        { "source": "BODY_TOU_POTENTIAL", "weight": 0.30 },
+        { "source": "EMOTION_ANGER", "weight": 0.20 }
+      ]
+    }
+  },
+  "thresholds": [
+    { "value": 750, "direction": "above", "effect": "TRAIT_INTIMIDATING", "hysteresis": 40 }
+  ],
+  "affects": [
+    {
+      "target": "social_dominance_tendency",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.3 },
+      "weight": 0.40,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+}

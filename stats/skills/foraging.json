@@ -1,0 +1,42 @@
+{
+  "id": "SKILL_FORAGING",
+  "display_key": "SKILL_FORAGING",
+  "category": "SKILL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 1,
+  "growth": {
+    "type": "LOG_DIMINISHING",
+    "params": {
+      "base_xp": 80,
+      "exponent": 1.7,
+      "level_breakpoints": [25, 50, 75],
+      "breakpoint_multipliers": [1.0, 1.4, 1.8, 2.5]
+    },
+    "talent_key": "BODY_END_TRAINABILITY",
+    "talent_ceiling_map": {
+      "0": 40,
+      "200": 60,
+      "400": 80,
+      "600": 90,
+      "800": 100
+    }
+  },
+  "thresholds": [
+    { "value": 40, "direction": "above", "effect": "UNLOCK_ACTION_FORAGE_ADVANCED" },
+    { "value": 70, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_FORAGING" }
+  ],
+  "affects": [
+    {
+      "target": "gather_yield_plant",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.3 },
+      "weight": 0.70,
+      "direction": "positive",
+      "context": "gathering"
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step" }
+}

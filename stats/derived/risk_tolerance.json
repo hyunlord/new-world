@@ -1,0 +1,35 @@
+{
+  "id": "DERIVED_RISK_TOLERANCE",
+  "display_key": "UI_STAT_DERIVED_RISK_TOLERANCE",
+  "category": "DERIVED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 2,
+  "growth": {
+    "type": "COMPOSITE",
+    "params": {
+      "inputs": [
+        { "source": "HEXACO_E", "weight": -0.50 },
+        { "source": "HEXACO_X", "weight": -0.30 },
+        { "source": "HEXACO_O", "weight": 0.20 }
+      ]
+    }
+  },
+  "thresholds": [
+    { "value": 750, "direction": "above", "effect": "TRAIT_RISK_SEEKING", "hysteresis": 40 },
+    { "value": 250, "direction": "below", "effect": "TRAIT_RISK_AVERSE", "hysteresis": 40 }
+  ],
+  "affects": [
+    {
+      "target": "risk_acceptance_tendency",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.3 },
+      "weight": 0.50,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+}

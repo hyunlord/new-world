@@ -1,0 +1,40 @@
+{
+  "id": "NEED_ENERGY",
+  "display_key": "UI_STAT_NEED_ENERGY",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 800,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 400,
+      "age_stage_multipliers": {
+        "infant": 1.5, "child": 1.2, "teen": 1.1,
+        "adult": 1.0, "elder": 1.2
+      }
+    }
+  },
+  "thresholds": [
+    { "value": 400, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_MILD", "hysteresis": 30 },
+    { "value": 200, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_SEVERE", "hysteresis": 20 },
+    { "value": 80, "direction": "below", "effect": "BEHAVIOR_SLEEP_OVERRIDE", "hysteresis": 15 }
+  ],
+  "affects": [
+    {
+      "target": "stress_continuous_input",
+      "evaluator": "CURVE",
+      "curve": "THRESHOLD_POWER",
+      "params": { "threshold": 400, "exponent": 1.8, "max_output": 10.0 },
+      "weight": 0.8,
+      "direction": "negative",
+      "context": "stress"
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "needs",
+    "descriptor_table": "need_6_step"
+  }
+}

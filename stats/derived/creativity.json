@@ -1,6 +1,6 @@
 {
-  "id": "DERIVED_CHARISMA",
-  "display_key": "UI_STAT_DERIVED_CHARISMA",
+  "id": "DERIVED_CREATIVITY",
+  "display_key": "UI_STAT_DERIVED_CREATIVITY",
   "category": "DERIVED",
   "storage_type": "int",
   "range": [0, 1000],
@@ -10,23 +10,22 @@
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "HEXACO_E", "weight": 0.40 },
-        { "source": "HEXACO_A", "weight": 0.35 },
-        { "source": "HEXACO_O", "weight": 0.25 }
+        { "source": "HEXACO_O", "weight": 0.60 },
+        { "source": "HEXACO_X", "weight": 0.20 },
+        { "source": "HEXACO_E", "weight": 0.20 }
       ]
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_CHARISMATIC", "hysteresis": 40 },
-    { "value": 250, "direction": "below", "effect": "TRAIT_AWKWARD", "hysteresis": 40 }
+    { "value": 750, "direction": "above", "effect": "TRAIT_CREATIVE", "hysteresis": 40 }
   ],
   "affects": [
     {
-      "target": "social_influence_radius",
+      "target": "craft_quality_bonus",
       "evaluator": "CURVE",
       "curve": "POWER",
       "params": { "exponent": 1.4 },
-      "weight": 0.50,
+      "weight": 0.40,
       "direction": "positive",
       "context": ""
     }

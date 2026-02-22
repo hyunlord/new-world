@@ -1,0 +1,29 @@
+{
+  "id": "EMOTION_ALLOSTATIC",
+  "display_key": "UI_STAT_EMOTION_ALLOSTATIC",
+  "category": "EMOTION",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 0,
+  "tier": 2,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": { "decay_per_year": 80 }
+  },
+  "thresholds": [
+    { "value": 600, "direction": "above", "effect": "MODIFIER_CHRONIC_STRESS", "hysteresis": 50 },
+    { "value": 850, "direction": "above", "effect": "MODIFIER_BURNOUT_RISK", "hysteresis": 50 }
+  ],
+  "affects": [
+    {
+      "target": "lifespan_modifier",
+      "evaluator": "CURVE",
+      "curve": "THRESHOLD_POWER",
+      "params": { "threshold": 600, "exponent": 2.0, "max_output": -0.3 },
+      "weight": 1.0,
+      "direction": "negative",
+      "context": "mortality"
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "7_step" }
+}

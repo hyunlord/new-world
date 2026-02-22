@@ -1,0 +1,58 @@
+{
+  "id": "VALUE_CARE",
+  "display_key": "UI_STAT_VALUE_CARE",
+  "category": "VALUE",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        200,
+        700
+      ],
+      "phase_speeds": [
+        1.0,
+        0.6,
+        0.2
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 800,
+      "direction": "above",
+      "effect": "TRAIT_VALUE_CARE_STRONG",
+      "hysteresis": 40
+    },
+    {
+      "value": 200,
+      "direction": "below",
+      "effect": "TRAIT_VALUE_CARE_WEAK",
+      "hysteresis": 40
+    }
+  ],
+  "affects": [
+    {
+      "target": "behavior_weight_help_others",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": {
+        "exponent": 1.3
+      },
+      "weight": 0.4,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": false,
+    "show_in_panel": "values",
+    "descriptor_table": "7_step"
+  }
+}

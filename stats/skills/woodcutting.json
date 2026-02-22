@@ -1,0 +1,42 @@
+{
+  "id": "SKILL_WOODCUTTING",
+  "display_key": "SKILL_WOODCUTTING",
+  "category": "SKILL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 1,
+  "growth": {
+    "type": "LOG_DIMINISHING",
+    "params": {
+      "base_xp": 120,
+      "exponent": 1.9,
+      "level_breakpoints": [25, 50, 75],
+      "breakpoint_multipliers": [1.0, 1.5, 2.0, 3.0]
+    },
+    "talent_key": "BODY_STR_TRAINABILITY",
+    "talent_ceiling_map": {
+      "0": 40,
+      "200": 60,
+      "400": 80,
+      "600": 90,
+      "800": 100
+    }
+  },
+  "thresholds": [
+    { "value": 30, "direction": "above", "effect": "UNLOCK_ACTION_CHOP_HARDWOOD" },
+    { "value": 60, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_WOODCUTTING" }
+  ],
+  "affects": [
+    {
+      "target": "gather_yield_wood",
+      "evaluator": "CURVE",
+      "curve": "POWER",
+      "params": { "exponent": 1.4 },
+      "weight": 0.70,
+      "direction": "positive",
+      "context": "gathering"
+    }
+  ],
+  "display": { "visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step" }
+}

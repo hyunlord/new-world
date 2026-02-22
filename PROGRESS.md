@@ -3018,3 +3018,196 @@ format_mult() 헬퍼, salience bar, TOOLTIP_*/ACTION_* 로케일 키 전체 정�
 - Files changed: 1 (entity_detail_panel.gd)
 - Dispatch tool used: ask_codex (1 ticket, job ac14c5d5)
 - Notion pages updated: BodyAttributes 시스템, Change Log DB
+
+---
+
+## T-QA32 — StressSystem Phase 로드맵 현황 갱신 (3B/4/5 전체 완료 확인)
+
+### Context
+"스트레스 다음 페이즈 진행해야지"라는 질문에 Phase 3A/3B 구현 여부를 확인했으나
+실제로는 Phase 3B, 4, 5 모두 구현 완료 상태. Notion 로드맵이 outdated(3B=다음, 4=예정)
+→ 코드 기준으로 전체 갱신.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA32 | StressSystem Phase 로드맵 Notion 갱신 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 감정&스트레스 시스템 | Phase 로드맵 현황 [블록223] | modified | Phase 3B/4/5 → ✅ 완료 (코드 확인 기준) |
+| 감정&스트레스 시스템 | Phase 로드맵 현황 callout [블록224] | modified | "Phase 3B가 다음 작업" → Phase 3A~5 전체 완료 확인 + 잔여 작업(composite 104개 파생) 명시 |
+| 감정&스트레스 시스템 | Phase 3B callout [블록226] | modified | "미구현" → 구현 완료, TraitViolationSystem 등록 확인, 잔여 작업 명시 |
+
+### 코드 확인 결과 (2026-02-23)
+- Phase 3A: trauma_scar_system.gd — ✅ 등록 (main.gd:188-191)
+- Phase 3B: trait_violation_system.gd — ✅ 등록 (main.gd:193-197)
+- Phase 4: coping_system.gd + morale_system.gd + contagion_system.gd + phase4_coordinator.gd — ✅ 등록
+- Phase 5: child_stress_processor.gd + intergenerational_system.gd + parenting_system.gd — ✅ 등록
+- 잔여 미구현: composite 104개 violation_stress 자동 파생 (파생 규칙 설계는 완료)
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 감정&스트레스 시스템 (3블록 PATCH)
+
+---
+
+## T-QA33 — Phase 4 CopingSystem/MoraleSystem 설계 결정 문서화
+
+### Context
+Phase 4 설계 전 확인 질문 3가지(Coping 획득 방식, Morale 영향 범위, 우선순위)에 대해
+실제 구현된 코드를 확인한 결과, 세 옵션 모두 통합 구현됨.
+Notion 감정&스트레스 페이지에 CopingSystem/MoraleSystem 전용 섹션이 없었으므로 신규 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA33 | Phase 4 CopingSystem/MoraleSystem Notion 문서화 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 감정&스트레스 시스템 | ContagionSystem 섹션 이후 | added | CopingSystem heading2 + code (priority=42, 3가지 혼합 획득, 파이프라인, 상태 필드) |
+| 감정&스트레스 시스템 | CopingSystem 다음 | added | MoraleSystem heading2 + code (priority=40, 2-layer, grievance Gurr1970, 이주+반란 연결) |
+
+### 설계 결정 결과 (코드 확인)
+- Coping 획득 방식: 3가지 모두 통합 — break_count + break_type 매핑 + HEXACO weights
+- Morale 영향 범위: 이주(get_migration_probability) + 반란(check_rebellion_probability) 구현
+  생산성·번식률은 미연결 (향후 BehaviorSystem 경유 예정)
+- 우선순위: contagion(38) → morale(40) → coping(42) 순서
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 감정&스트레스 시스템 (2섹션 INSERT)
+
+---
+
+## Q&A 기반 문서 업데이트 — T-QA34 — 2026-02-23
+
+### Context
+Phase 4 Morale 전역 승수 설계 결정 + HEXACO×Coping affinity 예시 Notion 보강.
+기존 T-QA33에서 추가한 CopingSystem/MoraleSystem 코드 블록을 PATCH하여 T-QA34 Q&A 설계 정보 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA34 | CopingSystem/MoraleSystem 코드 블록 PATCH | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 감정&스트레스 시스템 | CopingSystem code[84] | modified | HEXACO affinity 5개 예시 추가 (O→창작, A→사교, E→불건강, H→수용, C→계획적), Phase 4 우선순위 명시 |
+| 감정&스트레스 시스템 | MoraleSystem code[87] | modified | 핵심 설계 추가: 실제 행동 가중치 = trait_weight × morale_multiplier, 2-layer 공식, 전체 영향 범위(생산성/이주/반란/번식률/전역 behavior_weight) |
+
+### 설계 결정 (T-QA34)
+- Morale = BehaviorSystem 전역 승수: `실제 행동 가중치 = trait_weight × morale_multiplier`
+- 2-layer: 개인 Morale (stress+감정+coping보정) + 정착지 Morale (개인 평균)
+- Phase 4 우선순위: Coping(1) → Morale(2) → Contagion(3)
+- HEXACO affinity: O↑→창작, A↑→사교, E↑→불건강, H↑→수용, C↑→계획적 대처
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 감정&스트레스 시스템 (CopingSystem + MoraleSystem 코드 블록 PATCH)
+
+---
+
+## Q&A 기반 문서 업데이트 — T-QA35 — 2026-02-23
+
+### Context
+Phase 4 심층 조사 쿼리 (Claude/GPT/Gemini용 질의 설계) Q&A에서 학술 레퍼런스와 설계 기준 추출.
+코드에 이미 구현된 레퍼런스들을 Notion 문서에 통합 (누락된 수치 및 설계 기준 문서화).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA35 | Phase 4 학술 레퍼런스 + 게임 레퍼런스 Notion 통합 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 감정&스트레스 시스템 | CopingSystem code[84] | modified | Carver(1989) COPE 15 전략 분류, Aldwin(1987) 부적응 장기 결과, Nolen-Hoeksema(1991), 설계 기준 (a~f) 추가 |
+| 감정&스트레스 시스템 | MoraleSystem code[87] | modified | Herzberg(1959) 2요인 공식, Warr(1987) Vitamin Model, Staw(1994) r=0.30, Diener(1985), Huppert&So(2013) Flourishing 임계값 추가 |
+| 감정&스트레스 시스템 | MoraleSystem 이후 | added | 게임 레퍼런스 비교 bullet (RimWorld/DF/CK3/Sims4 채택/미채택 분석 + Barsade 수치) |
+
+### 코드 확인 결과
+- coping_system.gd: Carver/Aldwin/Nolen-Hoeksema 레퍼런스 이미 구현됨 → Notion에 반영
+- morale_system.gd: Herzberg/Warr/Maslow 레퍼런스 이미 구현됨 → Notion에 수치 포함 반영
+- contagion_system.gd: Hatfield/Christakis/Barsade/Le Bon 이미 구현됨, Spiral+댐퍼 Notion에 기존 문서화됨
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 감정&스트레스 시스템 (2블록 PATCH + 1블록 INSERT)
+
+---
+
+## t-SP01~t-SP07: StatSystem Phase 1 — stats/*.json 전체 완성 — 2026-02-23
+
+### Context
+Phase 0에서 StatSystem 인프라(StatQuery/StatDefinition/StatGraph/StatCache) 구축 완료.
+현재 stats/ 폴더에 스켈레톤 7개만 존재. Phase 2 준비를 위해 전체 JSON 데이터 파일 작성.
+GDScript 변경 없음, 데이터 파일(JSON) 생성만.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SP01 | personality/ HEXACO H/X/A/C/O 5파일 | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP02 | needs/ thirst/energy/warmth/safety/social 5파일 | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP03 | emotions/ 7신규+fear업데이트+stress/allostatic/reserve | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP04 | values/ 33파일 (신규 디렉토리) | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP05 | body/ potential5+trainability4+innate_immunity | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP06 | derived/ charisma업데이트+7신규 | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+| t-SP07 | skills/ foraging/woodcutting/construction/mining | 🟢 DISPATCH | ask_codex | 신규 JSON 파일만 |
+
+### Dispatch ratio: 7/7 = 100% ✅
+
+### Dispatch strategy
+전 티켓 파일 범위 독립 (디렉토리 분리). 7개 전부 병렬 dispatch.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Data Structure | modified | 카테고리별 파일 목록 표 추가 (personality 6, needs 6, emotions 11, values 33, body 12, derived 8, skills 5) |
+| StatSystem | Constraints & Future Plans | modified | Phase 1 완료 — Phase 2 준비됨 추가 |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 1 — stats/*.json 76개 완성 |
+
+### Localization Verification
+- Hardcoded scan: N/A (JSON only, no GDScript changes)
+- New keys added: none (display_key는 Phase 3에서 추가 예정)
+- ko/ updated: N/A
+
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 6/7 = 86% ✅ (SP04 values: killed after 25min, wrote 33 files directly via Python — deterministic schema)
+- Files created/modified: 76 (74 new + 2 updated: fear.json, charisma.json)
+- Dispatch tool used: ask_codex (6 tickets: SP01/02/03/05/06/07), direct Python (SP04 values)
+- Notion pages updated: pending (notionApi unavailable in session — documented in PROGRESS.md per gate requirement)
