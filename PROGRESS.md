@@ -1980,4 +1980,5 @@ No doc-worthy changes. Reason: 단순 누락 필드 추가 버그픽스.
 - New keys added: 없음
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅ (commit 5236538)
+- Files changed: scripts/ui/entity_detail_panel.gd (1줄 추가)
