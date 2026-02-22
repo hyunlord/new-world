@@ -1,6 +1,6 @@
 {
-  "id": "VALUE_FAIRNESS",
-  "display_key": "UI_STAT_VALUE_FAIRNESS",
+  "id": "VALUE_COMPETITION",
+  "display_key": "UI_STAT_VALUE_COMPETITION",
   "category": "VALUE",
   "storage_type": "int",
   "range": [
@@ -27,19 +27,19 @@
     {
       "value": 800,
       "direction": "above",
-      "effect": "TRAIT_VALUE_FAIRNESS_HIGH",
+      "effect": "TRAIT_VALUE_COMPETITION_HIGH",
       "hysteresis": 30
     },
     {
       "value": 200,
       "direction": "below",
-      "effect": "TRAIT_VALUE_FAIRNESS_LOW",
+      "effect": "TRAIT_VALUE_COMPETITION_LOW",
       "hysteresis": 30
     }
   ],
   "affects": [
     {
-      "target": "trade_fairness",
+      "target": "work_efficiency",
       "evaluator": "CURVE",
       "curve": "LINEAR",
       "weight": 0.3,
@@ -47,7 +47,7 @@
       "context": ""
     },
     {
-      "target": "cooperation_prob",
+      "target": "conflict_willingness",
       "evaluator": "CURVE",
       "curve": "LINEAR",
       "weight": 0.2,

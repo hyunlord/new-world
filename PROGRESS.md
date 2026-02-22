@@ -3211,3 +3211,48 @@ GDScript 변경 없음, 데이터 파일(JSON) 생성만.
 - Files created/modified: 76 (74 new + 2 updated: fear.json, charisma.json)
 - Dispatch tool used: ask_codex (6 tickets: SP01/02/03/05/06/07), direct Python (SP04 values)
 - Notion pages updated: pending (notionApi unavailable in session — documented in PROGRESS.md per gate requirement)
+
+---
+
+## StatSystem Phase 1 v2 — Authoritative Spec Rewrite
+
+### Context
+PR #96에서 생성된 stats/*.json 파일들이 임시 설계 기반이었음.
+새 autopilot spec에서 권위 있는 데이터 제공: values 33개 정확 ID (LAW/LOYALTY/FAMILY…),
+감정 growth.params 메타데이터, body potential default=1050, derived stat_id composite format,
+skills unlock thresholds. 모든 파일을 정확한 스펙으로 교체. GDScript 변경 없음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SP1v2 | personality/ H/X/A/C/O affects+thresholds 교정 | 🟢 DISPATCH | ask_codex | 5파일 standalone |
+| t-SP2v2 | needs/ 5파일 default+decay+stress params 교정 | 🟢 DISPATCH | ask_codex | 5파일 standalone |
+| t-SP3v2 | emotions/ 11파일 growth.params+affects 전체 재작성 | 🔴 DIRECT | — | 복잡 중첩 params; Codex 11파일×상세 스펙 timeout 위험 |
+| t-SP4v2 | values/ 33파일 교체 (Schwartz→LAW/LOYALTY/FAMILY 등) | 🔴 DIRECT | — | 33파일 Codex timeout 확인됨 (SP04 선례), deterministic schema |
+| t-SP5v2 | body/ potential default 1050 교정 + trainability affects 추가 | 🟢 DISPATCH | ask_codex | 10파일 standalone |
+| t-SP6v2 | derived/ stat_id composite format 재작성 + inputs 교정 | 🟢 DISPATCH | ask_codex | 8파일 standalone |
+| t-SP7v2 | skills/ talent_key+thresholds+growth params 교정 | 🟢 DISPATCH | ask_codex | 4파일 standalone |
+
+### Dispatch ratio: 5/7 = 71% ✅
+
+### Dispatch strategy
+t-SP3v2/SP4v2: DIRECT (emotions 복잡 params + values 33파일 timeout 선례)
+t-SP1v2/SP2v2/SP5v2/SP6v2/SP7v2: 병렬 ask_codex dispatch
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Data Structure | modified | values 33개 ID 교정 (LAW/LOYALTY/FAMILY…), emotions growth.params 메타데이터, body potential default=1050, derived composite stat_id format |
+| StatSystem | Constraints & Future Plans | modified | Phase 1 v2 완료 — 권위 스펙 적용, Phase 2 준비 |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 1 v2 — 81개 파일 권위 스펙 재작성 |
+
+### Localization Verification
+- Hardcoded scan: N/A (JSON only, no GDScript)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: [PENDING]
+- Dispatch ratio: 5/7 = 71% ✅
+- Files changed: 81 (33 values replaced, 11 emotions, 5 personality, 5 needs, 10 body, 8 derived, 4 skills; 33 old values deleted)
+- Dispatch tool used: ask_codex (SP1v2/SP2v2/SP5v2/SP6v2/SP7v2)

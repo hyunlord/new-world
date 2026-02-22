@@ -8,53 +8,15 @@
   "tier": 0,
   "growth": {
     "type": "SCURVE",
-    "params": {
-      "phase_breakpoints": [300, 700],
-      "phase_speeds": [1.5, 1.0, 0.3]
-    }
+    "params": {"phase_breakpoints": [300, 700], "phase_speeds": [1.5, 1.0, 0.3]}
   },
   "thresholds": [
-    {
-      "value": 850,
-      "direction": "above",
-      "effect": "TRAIT_HIGHLY_CURIOUS",
-      "hysteresis": 30
-    },
-    {
-      "value": 150,
-      "direction": "below",
-      "effect": "TRAIT_RIGID_MINDED",
-      "hysteresis": 30
-    }
+    {"value": 850, "direction": "above", "effect": "TRAIT_OPEN_MINDED",   "hysteresis": 30},
+    {"value": 150, "direction": "below", "effect": "TRAIT_CLOSED_MINDED", "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "learning_rate",
-      "evaluator": "CURVE",
-      "curve": "SIGMOID_EXTREME",
-      "params": {
-        "flat_zone": [200, 800],
-        "pole_multiplier": 2.5
-      },
-      "weight": 0.40,
-      "direction": "positive",
-      "context": ""
-    },
-    {
-      "target": "creativity_tendency",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": {
-        "exponent": 1.3
-      },
-      "weight": 0.25,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "tech_learn_speed",     "evaluator": "CURVE", "curve": "POWER",  "params": {"exponent": 1.3}, "weight": 0.35, "direction": "positive", "context": ""},
+    {"target": "migration_willingness","evaluator": "CURVE", "curve": "LINEAR",                               "weight": 0.20, "direction": "positive", "context": ""}
   ],
-  "display": {
-    "visible": true,
-    "show_in_panel": "personality",
-    "descriptor_table": "7_step"
-  }
+  "display": {"visible": true, "show_in_panel": "personality", "descriptor_table": "7_step"}
 }

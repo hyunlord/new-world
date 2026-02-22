@@ -3,26 +3,60 @@
   "display_key": "UI_STAT_EMOTION_SADNESS",
   "category": "EMOTION",
   "storage_type": "int",
-  "range": [0, 100],
+  "range": [
+    0,
+    100
+  ],
   "default": 0,
   "tier": 2,
   "growth": {
     "type": "DECAY_FAST",
-    "params": { "decay_per_year": 2000, "half_life_days": 7 }
+    "params": {
+      "fast_half_life_hours": 4.0,
+      "slow_half_life_hours": 120.0,
+      "personality_sensitivity": {
+        "axis": "E",
+        "coeff": 0.4
+      },
+      "baseline": {
+        "base": 2.0,
+        "scale": 1.5,
+        "axis": "E",
+        "min": 0.0,
+        "max": 10.0
+      },
+      "half_life_adjustment": {
+        "axis": "E",
+        "coeff": 0.3
+      },
+      "opposite": "joy"
+    }
   },
   "thresholds": [
-    { "value": 70, "direction": "above", "effect": "MODIFIER_WORK_PENALTY_MILD", "hysteresis": 10 }
+    {
+      "value": 70,
+      "direction": "above",
+      "effect": "STATE_SADNESS_DEEP",
+      "hysteresis": 5
+    }
   ],
   "affects": [
     {
-      "target": "stress_continuous_input",
+      "target": "stress_emotion_input",
       "evaluator": "CURVE",
-      "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 50, "exponent": 1.8, "max_output": 5.0 },
-      "weight": 0.6,
+      "curve": "STEP_LINEAR",
+      "params": {
+        "threshold": 20,
+        "max_output": 5.0
+      },
+      "weight": 0.05,
       "direction": "positive",
       "context": "stress"
     }
   ],
-  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "emotion_6_step" }
+  "display": {
+    "visible": true,
+    "show_in_panel": "emotions",
+    "descriptor_table": "emotion_6_step"
+  }
 }

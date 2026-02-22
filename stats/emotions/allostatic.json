@@ -3,27 +3,66 @@
   "display_key": "UI_STAT_EMOTION_ALLOSTATIC",
   "category": "EMOTION",
   "storage_type": "int",
-  "range": [0, 1000],
+  "range": [
+    0,
+    100
+  ],
   "default": 0,
   "tier": 2,
   "growth": {
-    "type": "DECAY_NATURAL",
-    "params": { "decay_per_year": 80 }
+    "type": "ACCUMULATOR",
+    "params": {
+      "decay_per_year": 5.0
+    }
   },
   "thresholds": [
-    { "value": 600, "direction": "above", "effect": "MODIFIER_CHRONIC_STRESS", "hysteresis": 50 },
-    { "value": 850, "direction": "above", "effect": "MODIFIER_BURNOUT_RISK", "hysteresis": 50 }
+    {
+      "value": 60,
+      "direction": "above",
+      "effect": "ALLOSTATIC_OVERLOAD_MILD",
+      "hysteresis": 5
+    },
+    {
+      "value": 85,
+      "direction": "above",
+      "effect": "ALLOSTATIC_OVERLOAD_SEVERE",
+      "hysteresis": 5
+    }
   ],
   "affects": [
     {
-      "target": "lifespan_modifier",
+      "target": "disease_risk",
       "evaluator": "CURVE",
-      "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 600, "exponent": 2.0, "max_output": -0.3 },
-      "weight": 1.0,
+      "curve": "POWER",
+      "params": {
+        "exponent": 1.5
+      },
+      "weight": 0.4,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "stress_sensitivity",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "params": {},
+      "weight": 0.3,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "reserve_regen_rate",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "params": {},
+      "weight": 0.3,
       "direction": "negative",
-      "context": "mortality"
+      "context": ""
     }
   ],
-  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "7_step" }
+  "display": {
+    "visible": true,
+    "show_in_panel": "emotions",
+    "descriptor_table": "7_step"
+  }
 }
