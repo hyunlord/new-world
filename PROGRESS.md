@@ -2526,11 +2526,12 @@ Phase 0 = 행동 변화 없이 인프라만 구축. 기존 시스템은 Phase 1~
 - ko/ updated: N/A
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅
 - Dispatch ratio: 10/11 = 91% ✅
-- Files changed: 11 (7 new scripts + 7 JSON + 2 tests + entity_data.gd + project.godot)
+- Files changed: 19 (7 new scripts + 7 JSON + 2 tests + entity_data.gd + project.godot + PROGRESS.md)
 - Dispatch tool: ask_codex (10 tickets)
-- Dispatch tool: DIRECT (1 ticket: t-SA11 project.godot)
+- DIRECT: 1 ticket (t-SA11 project.godot)
+- Notion Update: documented in PROGRESS.md (notionApi MCP unavailable in session — manual update required)
 
 ---
 
