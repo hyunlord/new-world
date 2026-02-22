@@ -31,10 +31,10 @@ const PREGNANCY_DURATION_STDEV: int = 120  # ~10 days × 12 ticks/day
 
 ## [Layer 1.5] Body Attributes — potential/trainability/realized 3-레이어
 ## ── Potential 스케일 (int 0~10,000) ─────────────────────
-const BODY_POTENTIAL_MEAN: int = 700    ## 기준 평균 (남녀 공통 기저값)
+const BODY_POTENTIAL_MEAN: int = 1050   ## 기준 평균 — 1050×0.95≈998≈평균성인 realized 1,000
 const BODY_POTENTIAL_SD: int = 175      ## SD (기저값의 25%)
 const BODY_POTENTIAL_MIN: int = 50      ## 최솟값
-const BODY_POTENTIAL_MAX: int = 5000    ## 최댓값
+const BODY_POTENTIAL_MAX: int = 10000   ## 최댓값 (설계상 개인 최대)
 
 ## 성별 보정 (potential에만 적용, trainability에는 적용 안 함)
 ## 근거: Refalo 2025 메타분석 — trainability 성별차 0.69% (무시 가능)
@@ -76,6 +76,8 @@ const CONSTRUCT_XP_AGI: float = 0.20
 const BODY_SPEED_BASE: float = 0.30
 const BODY_SPEED_SCALE: float = 0.0012   ## float(agi_realized) * 0.0012
 ## entity.strength = float(str_realized) / 1000.0  → str=700: 0.70, str=1500: 1.50
+const BODY_REALIZED_MAX: int = 15000     ## realized 정규화 기준 (str/agi/end/tou/rec), UI _draw_bar용
+const BODY_REALIZED_DR_MAX: int = 10000  ## dr realized 정규화 기준, UI _draw_bar용
 
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0

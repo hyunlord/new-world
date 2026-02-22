@@ -2684,3 +2684,107 @@ TraitSystem 섹션 6 "현재 문제" 마지막 bullet 뒤에 Before/After 비교
 - AFTER: strength=sigmoid(facet_val, t_on, t_off), lerp(1.0, extreme_val, strength), clamp(0.1, 3.0)
 - autopilot state: cleared
 - Script: /tmp/notion_update_traitsystem_qa23.py
+
+---
+
+## T-QA24: behavior_weight 4개 함수 올바른 구현 스펙 확정 — Notion 문서 업데이트 — 2026-02-22
+
+### Context
+이전 플랜(T-2009 후속)이 "+200% = clamp max 정상값"으로 오판한 것을 번복.
+trait_system.gd 현재 구현은 geometric mean(log-space) 방식이지만,
+올바른 스펙은 product + clamp(0.1, 3.0).
+또한 entity_detail_panel이 get_trait_display_effects()에서 raw extreme_val을 직접 합산 시 폭발값 재현됨.
+4개 함수 올바른 스펙 + 기대 수치 범위 + 검증 시나리오 Notion 반영.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA24 | Notion TraitSystem 4개 함수 스펙 + 수치 범위 반영 | 🔴 DIRECT | — | Notion API 직접 업데이트 |
+
+### Dispatch ratio: N/A (Notion 문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 섹션 5 behavior_weight 계산 (블록 61) | patched | 기하평균 → product+clamp 스펙으로 교체 |
+| TraitSystem | 섹션 8 ④ behavior_weight 연속값 변환 (블록 158-160) | patched | heading "log-space" → "product+clamp", description 업데이트, 4개 함수 통합 코드블록 |
+| TraitSystem | 섹션 6 현재 문제 T-QA23 이후 (블록 75 이후) | added | "행동 가중치 기대 수치 범위 (T-QA24)" heading + paragraph + 범위표/검증계산 코드블록 |
+| TraitSystem | 섹션 9-6 치트 모드 연동 검증 (블록 216 이후) | added | 3개 bullet: 평범한 에이전트(1.0±5%), dark tetrad 상한(1.6~1.8 아닌 3.0=버그), 상충 trait 상쇄 검증 |
+
+### Results
+- 4블록 PATCH + 6블록 추가 = 총 10개 블록 수정/추가
+- 핵심 수정: 기하평균(geometric mean) → product 방식으로 스펙 문서 정정
+- 기대 수치 범위 표 신규 추가: 평범(0.8~1.2), dark(1.2~1.6), 극단(1.6~1.8), 3.0=버그
+- 검증 계산 예시: d_psychopath(1.72) × f_fair_minded(0.55) = 0.95 (상충 상쇄)
+- autopilot state: cleared
+- Script: /tmp/notion_update_traitsystem_qa24.py
+
+---
+
+## Body UI 버그 수정 + Potential 평균값 교정 — t-BFX01~t-BFX02 — 2026-02-22
+
+### Context
+신체 수치가 35100% 같은 이상한 값으로 표시되는 버그 수정.
+entity_detail_panel.gd의 _draw_bar()는 0~1 float을 받도록 설계됐는데
+realized (0~15,000 int)를 그대로 전달하고 있었음.
+併せて BODY_POTENTIAL_MEAN 700→1050, BODY_POTENTIAL_MAX 5000→10000 교정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-BFX01 | game_config.gd 상수 4개 수정/추가 | 🔴 DIRECT | — | shared config, 다른 티켓 의존성 |
+| t-BFX02 | entity_detail_panel.gd UI 정규화 6개 | 🟢 DISPATCH | ask_codex | 단일 파일, t-BFX01 의존 |
+
+### Dispatch ratio: 1/2 = 50% (파일 2개, shared config DIRECT 불가피)
+
+### Dispatch strategy
+Config-first: t-BFX01 DIRECT 완료 → t-BFX02 DISPATCH (GameConfig 상수 참조)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes 시스템 | Data Structure | modified | BODY_POTENTIAL_MEAN 700→1050, BODY_POTENTIAL_MAX 5000→10000, BODY_REALIZED_MAX/BODY_REALIZED_DR_MAX 상수 추가 |
+| Change Log DB | — | added | 2026-02-22 \| Body UI 정규화 버그 수정 — realized int를 _draw_bar에 그대로 전달하던 버그 |
+
+### Localization Verification
+- Hardcoded scan: N/A (UI 로직 수정, 텍스트 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS ✅
+- Files changed: game_config.gd + entity_detail_panel.gd
+- Dispatch tool used: ask_codex (t-BFX02)
+
+---
+
+## Q&A 기반 문서 업데이트 — T-QA25 — 2026-02-22
+
+### Context
+data/locales/ 폴더가 잘못된 구조로 문서화되어 있음 (TraitSystem 섹션 10.4).
+실제 올바른 경로는 localization/ko|en/*.json. 또한 전체 프로젝트 data/ JSON에
+동일한 i18n 원칙(name_key 패턴)이 적용됨을 문서화. data/locales/ 폴더는 생성/사용 금지.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA25 | Notion 문서 업데이트 (i18n 경로 수정 + 원칙 확장) | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 10.4 폴더 구조 코드블록 [272] | modified | data/locales/ (잘못됨) → localization/ (올바름) 폴더 구조로 교정. BEFORE/AFTER 비교 형식 추가. ⚠️ data/locales/ 사용 금지 명시 |
+| TraitSystem | 10.5 텍스트 집중화 원칙 단락 [274] | modified | "locales에만" → "localization에만" 표현 수정 |
+| TraitSystem | 10.6 전체 프로젝트 i18n 원칙 확장 [신규] | added | trauma_scars.json, coping_definitions.json 등 data/ JSON 전체에 동일한 name_key 패턴 적용됨을 명시. 키 명명 규칙 표. ❌ name_kr/name_en 직접 저장 금지 패턴 예시 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음, 문서 전용)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: TraitSystem (블록 2 수정 + 3 신규 삽입)
+- Script: /tmp/notion_update_traitsystem_qa25.py
