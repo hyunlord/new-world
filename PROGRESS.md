@@ -3011,3 +3011,10 @@ format_mult() 헬퍼, salience bar, TOOLTIP_*/ACTION_* 로케일 키 전체 정�
 ### Results
 - Gate: N/A (코드 변경 없음)
 - Notion pages updated: TraitSystem (블록129 PATCH), i18n (4블록 INSERT)
+
+### Results
+- Gate: PASS ✅
+- Dispatch ratio: 1/1 = 100%
+- Files changed: 1 (entity_detail_panel.gd)
+- Dispatch tool used: ask_codex (1 ticket, job ac14c5d5)
+- Notion pages updated: BodyAttributes 시스템, Change Log DB
