@@ -151,6 +151,7 @@ class DeceasedEntityProxy extends RefCounted:
 	var value_violation_count: Dictionary = {}
 	var speed: float = 1.0
 	var strength: float = 1.0
+	var body: RefCounted = null   # Body section skipped for deceased
 	var total_gathered: float = 0.0
 	var buildings_built: int = 0
 	var personality: RefCounted

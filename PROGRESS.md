@@ -1956,3 +1956,28 @@ t-B09 먼저 (새 API 정의) → t-B10/t-B11/t-B12 병렬 dispatch (파일 겹�
 - Files changed: body_attributes.gd + entity_manager.gd + age_system.gd + entity_detail_panel.gd
 - Commit: c892199
 - Dispatch tool used: ask_codex (jobs 9a8a450f, 26b51439, 94374774, f214f2e7)
+
+---
+
+## t-B13: DeceasedEntityProxy body 필드 누락 버그픽스 — 2026-02-22
+
+### Context
+t-B09~B12에서 entity_detail_panel.gd Body 섹션을 entity.body.realized.get()으로 변경했으나,
+DeceasedEntityProxy에 body 프로퍼티가 없어 사망 에이전트 클릭 시 크래시 발생.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-B13 | entity_detail_panel.gd DeceasedEntityProxy body 필드 추가 | 🔴 DIRECT | — | 1줄 버그픽스, Codex 전체 파일 출력 비효율 |
+
+### Dispatch ratio: 0/1 = 0% (1줄 핫픽스, Codex 출력 비효율로 DIRECT)
+
+### Notion Update
+No doc-worthy changes. Reason: 단순 누락 필드 추가 버그픽스.
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: 없음
+
+### Results
+- Gate: PENDING
