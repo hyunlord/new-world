@@ -7,6 +7,7 @@ const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
 const PersonalityGeneratorScript = preload("res://scripts/systems/personality_generator.gd")
 const TraitSystem = preload("res://scripts/systems/trait_system.gd")
 const ValueSystem = preload("res://scripts/systems/value_system.gd")
+const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
@@ -35,8 +36,6 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	entity.id = _next_id
 	_next_id += 1
 	entity.position = pos
-	entity.speed = 0.8 + _rng.randf() * 0.4
-	entity.strength = 0.8 + _rng.randf() * 0.4
 	entity.hunger = 0.7 + _rng.randf() * 0.3
 	entity.energy = 0.7 + _rng.randf() * 0.3
 	entity.social = 0.5 + _rng.randf() * 0.5
@@ -87,6 +86,14 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	entity.birth_date = GameCalendarScript.birth_date_from_tick(entity.birth_tick, _rng)
 	# Frailty: N(1.0, 0.15), clamped [0.5, 2.0] (Vaupel frailty model)
 	entity.frailty = clampf(_rng.randfn(1.0, 0.15), 0.5, 2.0)
+	# [Layer 1.5] Body Attributes — age 설정 후 frailty 결정 후 초기화
+	var _body_age_y: float = GameConfig.get_age_years(entity.age)
+	entity.body = BodyAttributes.new()
+	var _body_vals: Dictionary = BodyAttributes.compute_all(_body_age_y, entity.frailty)
+	for _baxis in _body_vals:
+		entity.body.set(_baxis, _body_vals[_baxis])
+	entity.speed = entity.body.agi * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
+	entity.strength = entity.body.str_val
 	_entities[entity.id] = entity
 	_world_data.register_entity(pos, entity.id)
 	chunk_index.add_entity(entity.id, pos)

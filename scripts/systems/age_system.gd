@@ -5,6 +5,7 @@ extends "res://scripts/core/simulation_system.gd"
 ## Runs every 50 ticks (~4 days).
 
 const PersonalityMaturation = preload("res://scripts/systems/personality_maturation.gd")
+const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
 
 var _entity_manager: RefCounted
 var _personality_maturation: RefCounted
@@ -37,6 +38,25 @@ func execute_tick(tick: int) -> void:
 			if entity.age > 0 and entity.age % GameConfig.TICKS_PER_YEAR < tick_interval:
 				var age_years: int = int(entity.age / GameConfig.TICKS_PER_YEAR)
 				_personality_maturation.apply_maturation(entity.personality, age_years)
+		# [Layer 1.5] 연간 body 재계산 [Gurven et al. 2008]
+		if entity.age > 0 and entity.age % GameConfig.TICKS_PER_YEAR < tick_interval:
+			if entity.body != null:
+				var body_age_y: float = GameConfig.get_age_years(entity.age)
+				var new_body_vals: Dictionary = BodyAttributes.compute_all(body_age_y, entity.frailty)
+				for body_axis in new_body_vals:
+					var old_bval: float = entity.body.get(body_axis)
+					var new_bval: float = new_body_vals[body_axis]
+					entity.body.set(body_axis, new_bval)
+					if absf(new_bval - old_bval) >= 0.02:
+						emit_event("body_attribute_changed", {
+							"entity_id": entity.id,
+							"axis": body_axis,
+							"old_val": old_bval,
+							"new_val": new_bval,
+							"age_years": body_age_y,
+						})
+				entity.speed = entity.body.agi * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
+				entity.strength = entity.body.str_val
 
 
 func _on_stage_changed(entity: RefCounted, old_stage: String, new_stage: String, tick: int) -> void:
