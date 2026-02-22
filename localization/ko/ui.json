@@ -854,5 +854,11 @@
   "VALUE_EVENT_CORRUPTION_EXPOSED": "부패를 폭로함",
   "VALUE_EVENT_RECEIVED_MENTORSHIP": "멘토링을 받음",
   "UI_ICON_PAUSE": "⏸",
-  "UI_ICON_PLAY": "▶"
+  "UI_ICON_PLAY": "▶",
+  "UI_BODY_STR": "근력",
+  "UI_BODY_AGI": "민첩",
+  "UI_BODY_END": "지구력",
+  "UI_BODY_TOU": "강인함",
+  "UI_BODY_REC": "회복력",
+  "UI_BODY_DR": "면역력"
 }

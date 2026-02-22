@@ -854,5 +854,11 @@
   "VALUE_EVENT_CORRUPTION_EXPOSED": "Exposed corruption",
   "VALUE_EVENT_RECEIVED_MENTORSHIP": "Received mentorship",
   "UI_ICON_PAUSE": "⏸",
-  "UI_ICON_PLAY": "▶"
+  "UI_ICON_PLAY": "▶",
+  "UI_BODY_STR": "Strength",
+  "UI_BODY_AGI": "Agility",
+  "UI_BODY_END": "Endurance",
+  "UI_BODY_TOU": "Toughness",
+  "UI_BODY_REC": "Recuperation",
+  "UI_BODY_DR": "Disease Resistance"
 }
