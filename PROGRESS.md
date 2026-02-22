@@ -2165,3 +2165,34 @@ t-TR04/TR05 t-TR02 완료 후 병렬 dispatch.
 
 ### Results
 - Gate: PENDING
+
+---
+
+## T-QA10: violation 발동 전제조건 + Chronicle 기록 정책 gap — 2026-02-22
+
+### Context
+`violation entity:1 action:torture` 명령어가 스트레스 미상승/연대기 미기록 이슈 Q&A 기반으로
+TraitViolationSystem Notion 문서를 업데이트.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA10 | TraitViolationSystem 문서 업데이트 (2건) | 🔴 DIRECT | — | Notion API 직접 호출 (구현 아닌 문서) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업 — 코드 dispatch 해당 없음)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | added | "발동 전제조건" 섹션 — entity가 해당 trait 보유해야 violation 발동; `trait entity:N list` 확인 필수 |
+| 🔥 트레이트 위반 시스템 | 16. 검증 방법 | added | "디버그 워크플로우" 섹션 — trait list → log violation on → violation 명령 순서 코드블록 |
+| 🔥 트레이트 위반 시스템 | 17. 제약 & 향후 계획 | added | "Chronicle 기록 정책 gap" — 현재 코드는 minor/moderate/severe 전부 기록; 설계 의도는 severe/intrusive/PTG/desensitize_max만 기록 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🔥 트레이트 위반 시스템 (Section 16: +5 블록, Section 17: +1 블록)

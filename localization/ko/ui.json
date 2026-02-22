@@ -861,5 +861,6 @@
   "UI_BODY_TOU": "강인함",
   "UI_BODY_REC": "회복력",
   "UI_BODY_DR": "면역력",
+  "UI_BODY_INNATE_IMMUNITY": "선천 면역력",
   "UI_BODY_SECTION": "신체"
 }

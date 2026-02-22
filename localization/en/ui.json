@@ -861,5 +861,6 @@
   "UI_BODY_TOU": "Toughness",
   "UI_BODY_REC": "Recuperation",
   "UI_BODY_DR": "Disease Resistance",
+  "UI_BODY_INNATE_IMMUNITY": "Innate Immunity",
   "UI_BODY_SECTION": "Body"
 }
