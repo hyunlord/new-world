@@ -29,6 +29,9 @@ var birth_tick: int = 0
 ## Phase 2-A1: Mortality
 var frailty: float = 1.0  # Individual frailty multiplier (N(1.0, 0.15), clamped [0.5, 2.0])
 
+## [Layer 1.5] Body Attributes (BodyAttributes RefCounted)
+var body: RefCounted = null
+
 ## Phase 2: Family
 var partner_id: int = -1
 var parent_ids: Array = []
@@ -196,6 +199,7 @@ func to_dict() -> Dictionary:
 		"trauma_scars": trauma_scars.duplicate(),
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
+		"body": body.to_dict() if body != null else {},
 	}
 
 
@@ -291,4 +295,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var ts_data = data.get("trait_strengths", {})
 	if not ts_data.is_empty():
 		e.trait_strengths = ts_data.duplicate()
+	# [Layer 1.5] Body Attributes
+	var body_data = data.get("body", {})
+	if not body_data.is_empty():
+		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
+		e.body = BodyAttributesScript.from_dict(body_data)
 	return e
