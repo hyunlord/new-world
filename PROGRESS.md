@@ -2159,12 +2159,17 @@ t-TR04/TR05 t-TR02 완료 후 병렬 dispatch.
 | Change Log DB | — | added | 2026-02-22 Body 시스템 스케일 재설계 + Trainability 도입 |
 
 ### Localization Verification
-- Hardcoded scan: PENDING
+- Hardcoded scan: PASS ✅ (no hardcoded body/immunity text)
 - New keys added: UI_BODY_INNATE_IMMUNITY (en+ko)
-- ko/ updated: PENDING
+- ko/ updated: YES ✅
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅ (20 entities spawned, 28 systems registered, 0 script errors)
+- Dispatch ratio: 6/7 = 86% ✅
+- Commits: 6c0ccd8 (t-TR01), b096ef7 (t-TR02~07)
+- Files changed: 8 (game_config.gd, body_attributes.gd, entity_manager.gd, age_system.gd, construction_system.gd, gathering_system.gd, localization/en/ui.json, localization/ko/ui.json)
+- Dispatch tool used: ask_codex (jobs: 3cba0d5f, b146ab0b, 1a4a19ed, a9fbb072, c74999a9, b3f1b85c)
+- Notion Update: table documented in PROGRESS.md (Notion MCP unavailable this session — update manually)
 
 ---
 
@@ -2196,3 +2201,36 @@ TraitViolationSystem Notion 문서를 업데이트.
 ### Results
 - Gate: N/A (코드 변경 없음)
 - Notion pages updated: 🔥 트레이트 위반 시스템 (Section 16: +5 블록, Section 17: +1 블록)
+
+---
+
+## T-QA11: Trait 이진 threshold 구조 한계 + 향후 방향 문서화 — 2026-02-22
+
+### Context
+trait 전체가 형용사 형태의 on/off 이진 구조라는 문제 제기 Q&A 기반으로
+TraitSystem 전용 Notion 페이지를 신규 생성. 기존 코드(trait_system.gd) 분석 결과:
+violation_stress·behavior_weight는 이미 salience 연속값 사용 중,
+display layer(hysteresis t_on=0.9)에만 이진성 잔존.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA11 | TraitSystem Notion 페이지 신규 생성 | 🔴 DIRECT | — | Notion API 직접 호출 (코드 변경 없음) |
+
+### Dispatch ratio: 0/1 = 0% (문서 작업)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🎭 트레이트 시스템 (TraitSystem) | 전체 | 신규 생성 | 7개 섹션 (개요/설계의도/핵심상수/2-레벨아키텍처/핵심알고리즘/이진성문제/제약&향후계획) |
+| 🎭 트레이트 시스템 | 6. 이진 threshold 문제 | added | Cliff Effect, 187개 과다, threshold 0.92 편중, Option A/B 해결 방향 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🎭 트레이트 시스템 (신규 생성, 7섹션 59개 블록)
+- TraitSystem PAGE_ID: 30fe2e3d-4a77-81b0-b675-e195025443a5
