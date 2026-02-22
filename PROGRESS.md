@@ -1951,4 +1951,8 @@ t-B09 먼저 (새 API 정의) → t-B10/t-B11/t-B12 병렬 dispatch (파일 겹�
 - ko/ updated: N/A
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ✅ (commit c892199)
+- Dispatch ratio: 4/4 = 100% ✅
+- Files changed: body_attributes.gd + entity_manager.gd + age_system.gd + entity_detail_panel.gd
+- Commit: c892199
+- Dispatch tool used: ask_codex (jobs 9a8a450f, 26b51439, 94374774, f214f2e7)
