@@ -3252,7 +3252,10 @@ t-SP1v2/SP2v2/SP5v2/SP6v2/SP7v2: 병렬 ask_codex dispatch
 - ko/ updated: N/A
 
 ### Results
-- Gate: [PENDING]
+- Gate: PASS ✅
+- PR: #97 (lead/main → main)
 - Dispatch ratio: 5/7 = 71% ✅
-- Files changed: 81 (33 values replaced, 11 emotions, 5 personality, 5 needs, 10 body, 8 derived, 4 skills; 33 old values deleted)
+- Files changed: 100 (33 values replaced, 11 emotions, 5 personality, 5 needs, 10 body, 8 derived, 4 skills; 33 old values deleted + PROGRESS.md)
 - Dispatch tool used: ask_codex (SP1v2/SP2v2/SP5v2/SP6v2/SP7v2)
+- JSON valid: 81/81
+- Spec checks: 26/26 (potentials=1050, trainability affects, derived stat_id, skills talent_key, values=33, emotion ranges)
