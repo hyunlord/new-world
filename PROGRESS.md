@@ -2788,3 +2788,226 @@ data/locales/ 폴더가 잘못된 구조로 문서화되어 있음 (TraitSystem 
 - Gate: N/A (코드 변경 없음)
 - Notion pages updated: TraitSystem (블록 2 수정 + 3 신규 삽입)
 - Script: /tmp/notion_update_traitsystem_qa25.py
+
+---
+
+## Q&A 기반 문서 업데이트 — T-QA26 — 2026-02-22
+
+### Context
+locale.gd 실제 코드 확인 결과:
+- tr_data()는 이미 @deprecated + push_warning() + name_key/desc_key ltr() 위임 구현됨 (라인 86~104)
+- _categories = 11개 (coping, childhood 포함), LOCALES_DIR = "res://localization/"
+- data/locales/ 폴더는 실제로 존재하지 않음 (dead code 우려 해소)
+i18n 구조 정비 계획 TICKET A-D 수립 및 문서화. Trait 패널 코드 패턴 ltr() 기준으로 갱신.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA26 | Notion i18n 페이지 업데이트 (tr_data 상태 + 정비 계획) | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🌐 i18n & 로컬라이제이션 | 개발 히스토리 [블록 35] | modified | T-QA26 행 추가: tr_data() 실제 구현 확인, data/locales/ 미존재, TICKET A-D 수립 |
+| 🌐 i18n & 로컬라이제이션 | Trait 패널 로케일 아키텍처 [블록 44] | modified | tr_data() → ltr(name_key/desc_key) 패턴으로 교정. Locale.tr() → Locale.ltr() 수정. 금지 패턴 명시 |
+| 🌐 i18n & 로컬라이제이션 | tr_data() 완전 제거 조건 [신규] | added | TICKET A-D 정비 계획: 완전 제거 3가지 조건 + grep 검증 명령어. 키 명명 규칙 표 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음, 문서 전용)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: 🌐 i18n & 로컬라이제이션 (블록 2 수정 + 2 신규 삽입)
+- Script: /tmp/fix_i18n_qa26.py
+
+---
+
+## Q&A 기반 문서 업데이트 — T-QA27 — 2026-02-23
+
+### Context
+trait 뱃지 숫자 표시 조건 (salience < 0.995) 확인 및 behavior_weight 수치 약함 현상 분석.
+실제 관측: 건설 -4%, 복수 +15%, 뇌물 +21%, 협상 -15%, 휴식 +17%.
+원인: sigmoid 특성으로 facet 0.7~0.8이 strength 0.1~0.3에 몰림.
+개선 방법 A (power curve) / B (extreme_val 상향) 정리.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA27 | Notion TraitSystem 업데이트 (salience 표시 + behavior_weight 개선 방향) | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 7. 제약 & 향후 계획 > 현재 제약 [블록101 이후] | added | behavior_weight 효과 범위 약함: facet 0.7~0.8 → strength 0.1~0.3 → 수정폭 좁음. 관측: ±4~21%. 방법 A/B 언급 |
+| TraitSystem | 7. 제약 & 향후 계획 > 향후 계획 [블록125 이후] | added | behavior_weight 강화: pow(strength,0.5) power curve (방법 A) + extreme_val 상향 (방법 B). 목표 수치: facet 0.90+ → ±30~50%, dark tetrad → ±80% |
+| TraitSystem | 9. 구현 검증 시나리오 > UI 검증 [블록211] | modified | salience < 0.995 숫자 표시 조건 명시. 0.995 이상이면 생략. entity_detail_panel.gd:411, trait_tooltip.gd:146 동일 임계값 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: TraitSystem (2 INSERT + 1 PATCH)
+- Script: /tmp/update_traitsystem_qa27.py
+
+---
+
+## T-QA28 — TraitSystem salience 의미 명확화 + behavior_weight 미구현 상태
+
+### Context
+behavior_weight 인터페이스 future-proof 설계 확인 및 salience 0.98의 의미 오해 방지.
+salience는 행동 배율 직접값(×0.98)이 아닌 lerp의 t값(최대 효과의 98% 발현).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA28 | TraitSystem Notion salience 명확화 + 미구현 상태 명시 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | ④ behavior_weight lerp 설명 [블록164] | modified | salience 의미 명확화: 0.98 = lerp t값(최대 효과 98% 발현). 예: extreme_val=1.3 → 1.294(+29.4%). 행동 배율 직접값 아님. 기하평균+clamp 설명 보강 |
+| TraitSystem | behavior_weight 계산 현재 구현 heading [블록60] 이후 | added | callout: 현재 미구현 상태(2026-02-23). get_effect_value() 인터페이스 완성. behavior_system 구현 시 float 소비만 하면 됨 — trait 계산 로직 변경 불필요 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: TraitSystem (1 PATCH + 1 INSERT callout)
+- Script: /tmp/update_traitsystem_qa28.py
+
+---
+
+## T-QA29 — i18n cleanup TICKET-D 추가 (미사용 파일 탐지·제거)
+
+### Context
+i18n-cleanup-PROMPT.md에 TICKET-D 추가: A+B+C 완료 후 미사용 파일 탐지·제거.
+4단계 검증 구조. 디스패치 순서 A→B+C→D(별도 PR) 확정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA29 | i18n Notion TICKET-D 추가 + 히스토리 갱신 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| i18n & 로컬라이제이션 | 개발 히스토리 [블록35] | modified | T-QA29 행 추가: TICKET-D 추가, 4단계 검증, 디스패치 순서 확정 |
+| i18n & 로컬라이제이션 | tr_data() 정비 계획 heading [블록67] 이후 | added | 5블록: 디스패치 순서 bullet + TICKET-D heading_3 + 개요/4단계검증/false positive 주의 bullet |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: i18n & 로컬라이제이션 (1 PATCH + 5 INSERT)
+
+---
+
+## t-BFX03: Body 섹션 realized 수치 직접 표시 — 2026-02-23
+
+### Context
+`_draw_bar()`는 `%d%%` 고정 표시. 신체 섹션의 realized 수치(0~15,000 int)를
+백분율이 아닌 실제 숫자(`750`, `1,050` 등)로 표시하도록 선택적 `value_label` 파라미터 추가.
+다른 섹션(필요/감정)은 기존 `%` 표시 유지.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-BFX03 | entity_detail_panel.gd value_label 파라미터 | 🟢 DISPATCH | ask_codex | 단일 파일 수정 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 파일 단일 티켓. 병렬 불필요.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| BodyAttributes 시스템 | Core Logic / UI 표시 | modified | _draw_bar에 value_label 파라미터 추가, 신체 섹션 realized 수치 직접 표시로 변경 |
+| Change Log DB | — | added | 2026-02-23 \| t-BFX03: Body UI realized 수치 직접 표시 |
+
+### Localization Verification
+- Hardcoded scan: PASS (신규 텍스트 없음, str(int) 변환값은 player-facing label 아님)
+- New keys added: none
+- ko/ updated: N/A
+
+---
+
+## T-QA30 — TraitSystem tooltip 풍부화 방향
+
+### Context
+현재 trait tooltip은 description_kr 텍스트만 표시. behavior_weight를 trait별로 분해하여
+발현 조건·주요 효과·위반 행동→스트레스를 툴팁에 표시하는 방향 설계.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA30 | TraitSystem 향후 계획 tooltip 풍부화 추가 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 향후 계획 [블록128 이후] | added | trait tooltip 풍부화 bullet: 발현조건+주요효과+위반→스트레스 분해 표시. trait_tooltip.gd get_effect_value() 순회. 미구현, 향후 계획 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: TraitSystem (1 INSERT)
+
+---
+
+## T-QA31 — trait tooltip 전체 정보 복원 (show_trait 아키텍처)
+
+### Context
+"예전에는 trait의 모든 정보를 다 보여줬는데 복원하고 싶다." T-QA30의 tooltip 방향에서
+구체적 구현 스펙으로 확장. show_trait() 함수 아키텍처, 11개 섹션 렌더링 순서,
+format_mult() 헬퍼, salience bar, TOOLTIP_*/ACTION_* 로케일 키 전체 정의.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-QA31 | TraitSystem+i18n Notion 문서화 | 🔴 DIRECT | — | Notion API 직접 호출, 코드 변경 없음 |
+
+### Dispatch ratio: N/A (문서 업데이트 전용)
+
+### Dispatch strategy
+단순 Notion API 호출. 코드 변경 없음.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| TraitSystem | 향후 계획 [블록129 PATCH] | modified | T-QA30 bullet → T-QA30/T-QA31 show_trait() 전체 스펙: 11개 섹션, format_mult, salience bar, get_trait_def 필요, TOOLTIP_*/ACTION_* 키 목록 |
+| i18n | TOOLTIP_* 키 [블록72 이후 INSERT] | added | TOOLTIP_*(12개) ko/en 쌍, ACTION_*(27개) ko 키 목록 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 변경 없음)
+- New keys added: TOOLTIP_*(12개), ACTION_*(27개) — 문서화만, 실제 json 미수정
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion pages updated: TraitSystem (블록129 PATCH), i18n (4블록 INSERT)
