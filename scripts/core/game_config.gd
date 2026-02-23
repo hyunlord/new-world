@@ -70,6 +70,13 @@ const CONSTRUCT_XP_STR: float = 0.80
 const CONSTRUCT_XP_TOU: float = 0.30
 const CONSTRUCT_XP_AGI: float = 0.20
 
+## [Skill XP per action — these feed StatQuery.add_xp(), separate from body training_xp]
+const SKILL_XP_FORAGING: float     = 2.0   ## per gather_food completion
+const SKILL_XP_WOODCUTTING: float  = 2.0   ## per gather_wood completion
+const SKILL_XP_MINING: float       = 2.0   ## per gather_stone completion
+const SKILL_XP_CONSTRUCTION: float = 3.0   ## per build tick (higher because build is slower)
+const SKILL_XP_HUNTING: float      = 2.0   ## reserved for future hunting action
+
 ## ── speed/strength 파생 공식 ──────────────────────────────
 ## entity.speed = float(agi_realized) * BODY_SPEED_SCALE + BODY_SPEED_BASE
 ## agi=700(평균 성인, 훈련없음): speed=1.14,  agi=1500(전사): speed=2.1

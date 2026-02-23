@@ -307,5 +307,18 @@
   "STATUS_SEEK_SHELTER": "Seeking Shelter",
   "STATUS_GATHER_STONE": "Gather Stone",
   "STATUS_TAKE_FROM_STOCKPILE": "Taking",
-  "STATUS_MENTAL_BREAK": "Mental Break"
+  "STATUS_MENTAL_BREAK": "Mental Break",
+  "UI_SKILLS": "Skills",
+  "UI_SKILL_FORAGING": "Foraging",
+  "UI_SKILL_WOODCUTTING": "Woodcutting",
+  "UI_SKILL_MINING": "Mining",
+  "UI_SKILL_CONSTRUCTION": "Construction",
+  "UI_SKILL_HUNTING": "Hunting",
+  "UI_SKILLS_NONE": "No skills developed yet",
+  "SKILL_DESC_UNSKILLED": "Unskilled",
+  "SKILL_DESC_NOVICE": "Novice",
+  "SKILL_DESC_APPRENTICE": "Apprentice",
+  "SKILL_DESC_COMPETENT": "Competent",
+  "SKILL_DESC_EXPERT": "Expert",
+  "SKILL_DESC_GRANDMASTER": "Grandmaster"
 }

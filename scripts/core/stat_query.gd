@@ -120,17 +120,118 @@ func remove_modifier(entity: RefCounted, stat_id: StringName,
 
 ## 스킬/훈련 XP 추가
 ## 반환: {"leveled_up": bool, "old_level": int, "new_level": int}
+## References: Newell & Rosenbloom (1981) Power Law of Practice
+##             Ericsson (1993) deliberate practice — talent ceiling
 func add_xp(entity: RefCounted, stat_id: StringName,
 		xp: float) -> Dictionary:
 	var result: Dictionary = {
 		"leveled_up": false, "old_level": 0, "new_level": 0}
-	if entity == null:
+	if entity == null or xp <= 0.0:
 		return result
+
 	var def: Dictionary = StatDefinitionScript.get_def(stat_id)
 	if def.is_empty():
 		return result
-	# Phase 0: stub, 실제 XP 계산은 Phase 2
+
+	var growth: Dictionary = def.get("growth", {})
+	if growth.get("type", "") != "LOG_DIMINISHING":
+		return result  ## Only handle LOG_DIMINISHING for now
+
+	## Accumulate XP
+	var current_xp: float = float(entity.skill_xp.get(stat_id, 0.0))
+	var old_level: int = int(entity.skill_levels.get(stat_id, 0))
+	current_xp += xp
+	entity.skill_xp[stat_id] = current_xp
+
+	## Compute talent ceiling from body trainability
+	var max_level: int = _compute_talent_ceiling(entity, def)
+
+	## Compute new level from total XP
+	var new_level: int = _compute_level_from_xp(current_xp, growth, max_level)
+
+	result["old_level"] = old_level
+	result["new_level"] = new_level
+
+	if new_level != old_level:
+		entity.skill_levels[stat_id] = new_level
+		result["leveled_up"] = (new_level > old_level)
+		## Sync to stat_cache immediately so other systems see the new level
+		set_value(entity, stat_id, new_level, 0)
+
 	return result
+
+
+## Compute level from cumulative XP using LOG_DIMINISHING curve.
+## XP required to reach level L from level L-1:
+##   xp_per_level(L) = base_xp * L^exponent * breakpoint_multiplier(L)
+## Total XP to reach level L = sum_{i=1}^{L} xp_per_level(i)
+func _compute_level_from_xp(total_xp: float, growth: Dictionary, max_level: int) -> int:
+	var params: Dictionary = growth.get("params", {})
+	var base_xp: float = float(params.get("base_xp", 100))
+	var exponent: float = float(params.get("exponent", 1.8))
+	var breakpoints: Array = params.get("level_breakpoints", [])
+	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
+
+	var cumulative_xp: float = 0.0
+	var level: int = 0
+
+	for l in range(1, max_level + 1):
+		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
+		var xp_this_level: float = base_xp * pow(float(l), exponent) * mult
+		if cumulative_xp + xp_this_level > total_xp:
+			break
+		cumulative_xp += xp_this_level
+		level = l
+
+	return clampi(level, 0, max_level)
+
+
+## Get breakpoint multiplier for a given level.
+## breakpoints: [25, 50, 75], multipliers: [1.0, 1.5, 2.0, 3.0]
+## Level < 25 → 1.0, Level 25-49 → 1.5, Level 50-74 → 2.0, Level 75+ → 3.0
+func _get_breakpoint_multiplier(level: int, breakpoints: Array, multipliers: Array) -> float:
+	var mult_idx: int = 0
+	for bp in breakpoints:
+		if level >= int(bp):
+			mult_idx += 1
+		else:
+			break
+	if multipliers.is_empty():
+		return 1.0
+	return float(multipliers[clampi(mult_idx, 0, multipliers.size() - 1)])
+
+
+## Compute the talent ceiling (max achievable level) for this entity+skill.
+## talent_ceiling_map: {"0": 40, "200": 60, "400": 80, "600": 90, "800": 100}
+## Finds the highest threshold where entity's trainability >= threshold → returns that ceiling.
+func _compute_talent_ceiling(entity: RefCounted, def: Dictionary) -> int:
+	var growth: Dictionary = def.get("growth", {})
+	var talent_key: String = growth.get("talent_key", "")
+	var ceiling_map: Dictionary = growth.get("talent_ceiling_map", {})
+	var range_arr: Array = def.get("range", [0, 100])
+	var hard_max: int = range_arr[1] if range_arr.size() > 1 else 100
+
+	if talent_key == "" or ceiling_map.is_empty():
+		return hard_max
+
+	## Read trainability from stat_cache (e.g. BODY_AGI_TRAINABILITY → 0–1000)
+	var trainability: int = get_stat(entity, StringName(talent_key), 500)
+
+	## Find the highest threshold ≤ trainability
+	var best_ceiling: int = 40  ## minimum ceiling even at 0 trainability
+	var sorted_thresholds: Array = []
+	for k in ceiling_map:
+		sorted_thresholds.append(int(k))
+	sorted_thresholds.sort()
+
+	for thresh in sorted_thresholds:
+		if trainability >= thresh:
+			best_ceiling = int(ceiling_map[str(thresh)])
+		else:
+			break
+
+	return clampi(best_ceiling, 0, hard_max)
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # DEBUG API

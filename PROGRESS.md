@@ -1,5 +1,64 @@
 # Progress Log
 
+## Skill XP System — t-SK-01 through t-SK-09 — 2026-02-23
+
+### Context
+에이전트가 채집/건설 행동을 수행해도 스킬이 성장하지 않음. `StatQuery.add_xp()`는 Phase 0 stub.
+Power Law of Practice (Newell & Rosenbloom 1981) 기반 LOG_DIMINISHING 커브로 5개 스킬 XP 파이프라인 전체 구현.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SK-01 | game_config.gd — 5 skill XP constants | 🔴 DIRECT | — | shared config, all downstream depends |
+| t-SK-02 | simulation_bus.gd — skill_leveled_up signal | 🔴 DIRECT | — | shared interface, signal schema |
+| t-SK-03 | entity_data.gd — skill_xp + skill_levels fields | 🟢 DISPATCH | ask_codex | standalone entity data change |
+| t-SK-04 | stat_query.gd — add_xp() full implementation | 🟢 DISPATCH | ask_codex | single-file system implementation |
+| t-SK-05 | stat_sync_system.gd — SKILL level sync | 🟢 DISPATCH | ask_codex | single-file system change |
+| t-SK-06 | gathering_system.gd — add_xp calls | 🟢 DISPATCH | ask_codex | single-file integration |
+| t-SK-07 | construction_system.gd — add_xp calls | 🟢 DISPATCH | ask_codex | single-file integration |
+| t-SK-08 | entity_detail_panel.gd — Skills section UI | 🟢 DISPATCH | ask_codex | single-file UI addition |
+| t-SK-09 | localization/en+ko/game.json — SKILL keys | 🟢 DISPATCH | ask_codex | 2 JSON files, no code dependency |
+
+### Dispatch ratio: 7/9 = 78% ✅
+
+### Dispatch strategy
+Config-first fan-out:
+1. DIRECT: t-SK-01, t-SK-02 (shared config + signal — sequential, commit before dispatch)
+2. Parallel DISPATCH: t-SK-03, t-SK-09 (no deps on each other)
+3. Parallel DISPATCH: t-SK-04, t-SK-05 (depend on t-SK-03)
+4. Parallel DISPATCH: t-SK-06, t-SK-07, t-SK-08 (depend on t-SK-04)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| SkillSystem (new) | Overview | create | XP pipeline: action → add_xp() → skill_xp field → level recompute → skill_levels → StatSync → stat_cache |
+| SkillSystem (new) | Design Intent | create | LOG_DIMINISHING (Newell & Rosenbloom 1981), talent ceiling (Ericsson 1993), 6-step descriptor table |
+| SkillSystem (new) | Architecture | create | Data flow diagram, 5 active skills |
+| SkillSystem (new) | Data Structure | create | skill_xp/skill_levels fields, JSON growth schema, talent_ceiling_map |
+| SkillSystem (new) | Core Logic | create | _compute_level_from_xp() formula, _compute_talent_ceiling() trainability lookup |
+| SkillSystem (new) | Development History | create | 2026-02-23 — initial implementation |
+| EntityData | Data Structure | update | Add skill_xp (Dictionary) and skill_levels (Dictionary) rows |
+| GatheringSystem | Core Logic | update | Skill XP emitted per gather completion + SimulationBus.skill_leveled_up |
+| ConstructionSystem | Core Logic | update | SKILL_CONSTRUCTION XP per build tick |
+| EntityDetailPanel | Core Logic | update | Skills section after derived stats, _get_skill_descriptor_key() 6-step logic |
+| StatQuery | Core Logic | update | add_xp() — no longer stub, full LOG_DIMINISHING implementation |
+| StatSyncSystem | Core Logic | update | SKILL level sync added |
+| SimulationBus | Architecture | update | skill_leveled_up signal added to signal registry |
+| Data Definitions DB | — | add | SKILL_DESC_* enum (6 values), skill_id constants (5 values) |
+| Change Log DB | — | add | 2026-02-23 — Skill XP system implemented — LOG_DIMINISHING curve, 5 skills, talent ceiling, UI panel |
+
+### Localization Verification
+- Hardcoded scan: PASS (no new hardcoded text in .gd files)
+- New keys added: UI_SKILLS, UI_SKILL_FORAGING, UI_SKILL_WOODCUTTING, UI_SKILL_MINING, UI_SKILL_CONSTRUCTION, UI_SKILL_HUNTING, UI_SKILLS_NONE, SKILL_DESC_UNSKILLED, SKILL_DESC_NOVICE, SKILL_DESC_APPRENTICE, SKILL_DESC_COMPETENT, SKILL_DESC_EXPERT, SKILL_DESC_GRANDMASTER (13 total)
+- ko/ updated: YES
+
+### Results
+- Gate: PENDING
+- Dispatch ratio: 7/9 = 78%
+- Files changed: 10 (8 .gd files + 2 .json files)
+- Dispatch tool used: ask_codex (7 tickets)
+- Notion pages updated: PENDING
+
 ## 욕구 섹션 생리적/심리적 서브섹션 분리 (t-NS-01 + t-NS-02) — 2026-02-23
 
 ### Context

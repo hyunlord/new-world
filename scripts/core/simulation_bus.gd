@@ -38,6 +38,12 @@ signal mental_break_recovered(entity_id: int, tick: int)
 ## direction: "entered" (조건 진입) or "exited" (조건 해제)
 signal stat_threshold_crossed(entity_id: int, stat_id: String, effect: String, direction: String)
 
+## Emitted when an entity's skill level increases
+## skill_id: StringName e.g. &"SKILL_FORAGING"
+## old_level: int previous level (0–100)
+## new_level: int new level (0–100)
+signal skill_leveled_up(entity_id: int, entity_name: String, skill_id: StringName, old_level: int, new_level: int, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

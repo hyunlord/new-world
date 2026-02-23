@@ -122,6 +122,15 @@ var stat_cache: Dictionary = {}
 ## 생성 시 PersonalityGenerator가 채움. 기본값 빈 Dict (미초기화).
 var intelligences: Dictionary = {}
 
+## Accumulated skill XP — keyed by skill_id StringName (e.g. &"SKILL_FORAGING")
+## Written by StatQuery.add_xp(). Persisted in save file.
+var skill_xp: Dictionary = {}
+
+## Current skill levels 0–100 — keyed by skill_id StringName
+## Updated by StatQuery.add_xp() when a level-up occurs. Cached in stat_cache via StatSync.
+## Rule: skill_levels[id] is always the computed level from skill_xp[id], never set directly.
+var skill_levels: Dictionary = {}
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -234,6 +243,8 @@ func to_dict() -> Dictionary:
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
 		"intelligences": intelligences.duplicate(),
+		"skill_xp": skill_xp.duplicate(),
+		"skill_levels": skill_levels.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 	}
 
@@ -343,6 +354,13 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
 	e.intelligences = data.get("intelligences", {}).duplicate()
+	## skill_xp: keys are StringName-compatible strings in JSON, convert back to StringName
+	var raw_xp: Dictionary = data.get("skill_xp", {})
+	for k in raw_xp:
+		e.skill_xp[StringName(k)] = float(raw_xp[k])
+	var raw_levels: Dictionary = data.get("skill_levels", {})
+	for k in raw_levels:
+		e.skill_levels[StringName(k)] = int(raw_levels[k])
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	return e
 

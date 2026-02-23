@@ -307,5 +307,18 @@
   "STATUS_SEEK_SHELTER": "쉼터 찾는 중",
   "STATUS_GATHER_STONE": "석재 채집",
   "STATUS_TAKE_FROM_STOCKPILE": "재고에서 가져오는 중",
-  "STATUS_MENTAL_BREAK": "정신 붕괴"
+  "STATUS_MENTAL_BREAK": "정신 붕괴",
+  "UI_SKILLS": "기술",
+  "UI_SKILL_FORAGING": "채집",
+  "UI_SKILL_WOODCUTTING": "벌목",
+  "UI_SKILL_MINING": "채석",
+  "UI_SKILL_CONSTRUCTION": "건설",
+  "UI_SKILL_HUNTING": "사냥",
+  "UI_SKILLS_NONE": "아직 습득한 기술이 없습니다",
+  "SKILL_DESC_UNSKILLED": "무지",
+  "SKILL_DESC_NOVICE": "견습",
+  "SKILL_DESC_APPRENTICE": "초급",
+  "SKILL_DESC_COMPETENT": "숙련",
+  "SKILL_DESC_EXPERT": "전문",
+  "SKILL_DESC_GRANDMASTER": "대가"
 }

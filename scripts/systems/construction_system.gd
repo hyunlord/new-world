@@ -49,6 +49,25 @@ func execute_tick(tick: int) -> void:
 			entity.body.training_xp["str"] += GameConfig.CONSTRUCT_XP_STR
 			entity.body.training_xp["tou"] += GameConfig.CONSTRUCT_XP_TOU
 			entity.body.training_xp["agi"] += GameConfig.CONSTRUCT_XP_AGI
+		## [Skill XP — 건설 활동]
+		var _xp_result: Dictionary = StatQuery.add_xp(entity, &"SKILL_CONSTRUCTION", GameConfig.SKILL_XP_CONSTRUCTION)
+		if _xp_result.get("leveled_up", false):
+			emit_event("skill_leveled_up", {
+				"entity_id":   entity.id,
+				"entity_name": entity.entity_name,
+				"skill_id":    "SKILL_CONSTRUCTION",
+				"old_level":   _xp_result["old_level"],
+				"new_level":   _xp_result["new_level"],
+				"tick":        tick,
+			})
+			SimulationBus.skill_leveled_up.emit(
+				entity.id,
+				entity.entity_name,
+				&"SKILL_CONSTRUCTION",
+				_xp_result["old_level"],
+				_xp_result["new_level"],
+				tick
+			)
 		if building.build_progress >= 1.0:
 			building.build_progress = 1.0
 			building.is_built = true

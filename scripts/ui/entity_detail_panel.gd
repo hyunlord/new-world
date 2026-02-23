@@ -113,6 +113,7 @@ var _section_collapsed: Dictionary = {
 	"body": false,
 	"recent_actions": false,
 	"life_events": false,
+	"skills": false,
 	"values": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
@@ -159,6 +160,8 @@ class DeceasedEntityProxy extends RefCounted:
 	var buildings_built: int = 0
 	var personality: RefCounted
 	var emotion_data: RefCounted
+	var skill_xp: Dictionary = {}
+	var skill_levels: Dictionary = {}
 
 	# Deceased-only fields
 	var death_cause: String
@@ -844,6 +847,35 @@ func _draw() -> void:
 			cy += 16.0
 		cy += 6.0
 
+	# ── Skills (기술) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")
+	if not _section_collapsed.get("skills", false):
+		var _skill_entries: Array = [
+			{ "id": &"SKILL_FORAGING",    "label_key": "UI_SKILL_FORAGING",    "color": Color(0.4, 0.8, 0.4) },
+			{ "id": &"SKILL_WOODCUTTING", "label_key": "UI_SKILL_WOODCUTTING", "color": Color(0.8, 0.6, 0.3) },
+			{ "id": &"SKILL_MINING",      "label_key": "UI_SKILL_MINING",      "color": Color(0.6, 0.6, 0.7) },
+			{ "id": &"SKILL_CONSTRUCTION","label_key": "UI_SKILL_CONSTRUCTION","color": Color(0.9, 0.75, 0.3) },
+			{ "id": &"SKILL_HUNTING",     "label_key": "UI_SKILL_HUNTING",     "color": Color(0.8, 0.3, 0.3) },
+		]
+		var _any_skill_shown: bool = false
+		for _se in _skill_entries:
+			var _sid: StringName = _se["id"]
+			var _level: int = int(entity.skill_levels.get(_sid, 0))
+			if _level <= 0 and not entity.skill_xp.has(_sid):
+				continue
+			_any_skill_shown = true
+			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
+			cy = _draw_bar(font, cx + 10, cy, bar_w,
+				Locale.ltr(_se["label_key"]),
+				float(_level) / 100.0,
+				_se["color"],
+				_desc)
+		if not _any_skill_shown:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_SKILLS_NONE"),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			cy += 16.0
+		cy += 4.0
+
 	# ── Values (가치관) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
 	if not _section_collapsed.get("values", true):
@@ -1474,6 +1506,15 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+## Return localization key for skill level descriptor label.
+func _get_skill_descriptor_key(level: int) -> String:
+	if level >= 80: return "SKILL_DESC_GRANDMASTER"
+	if level >= 60: return "SKILL_DESC_EXPERT"
+	if level >= 40: return "SKILL_DESC_COMPETENT"
+	if level >= 20: return "SKILL_DESC_APPRENTICE"
+	if level >= 1:  return "SKILL_DESC_NOVICE"
+	return "SKILL_DESC_UNSKILLED"
 
 
 ## Draw a bipolar bar for values in range [-1.0, +1.0]
