@@ -1,5 +1,44 @@
 # Progress Log
 
+## LeaderSystem — t-LS-01 through t-LS-08 — 2026-02-23
+
+### Context
+Weber(1922) 카리스마적 권위 모델 기반 정착지 리더 선출 시스템. 최고 DERIVED_CHARISMA 성인이
+리더로 선출되어 SettlementCulture.compute_shared_values()에 20% 가중치를 미침.
+지혜 높은 에이전트는 문화 동조 압력에 최대 30% 저항.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-LS-01 | simulation_bus.gd — leader_elected + leader_lost signals | 🟢 DISPATCH | ask_codex | signal additions only, standalone |
+| t-LS-02 | game_config.gd — 5 LEADER_* constants | 🔴 DIRECT | — | shared config schema, all downstream depends |
+| t-LS-03 | settlement_data.gd — leader_id field + serialization | 🟢 DISPATCH | ask_codex | single-file data class change |
+| t-LS-04 | leader_system.gd — new file, full implementation | 🟢 DISPATCH | ask_codex | new standalone file |
+| t-LS-05 | value_system.gd — 2 targeted edits (leader pass + wisdom resistance) | 🟢 DISPATCH | ask_codex | single-file modification (applied DIRECT after Codex output empty) |
+| t-LS-06 | save_manager.gd — SAVE_VERSION 6→7 + leader_id storage | 🟢 DISPATCH | ask_codex | single-file version bump + serialization |
+| t-LS-07 | localization en+ko — 4 new keys | 🟢 DISPATCH | ask_codex | 2 JSON files, no code dependency |
+| t-LS-08 | main.gd — register LeaderSystem (~5 lines wiring) | 🔴 DIRECT | — | integration wiring <50 lines |
+
+### Dispatch ratio: 6/8 = 75% ✅
+
+### Dispatch strategy
+Wave 1 (parallel, no deps): t-LS-01, t-LS-03, t-LS-07
+Wave 2 (after t-LS-02 + Wave 1): t-LS-04 (depends on 01+02+03)
+Wave 3 (parallel): t-LS-05 (depends on 02+04), t-LS-06 (depends on 03)
+Direct: t-LS-02 (first), t-LS-08 (last, after t-LS-04)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👑 리더 시스템 (LeaderSystem) | All | create | New page under 🧠 에이전트 시스템 — Weber 카리스마적 권위, 선출 로직, ValueSystem 연동, SaveManager v7, 로컬라이제이션 키 |
+| 💎 가치관 시스템 (ValueSystem) | 개발 히스토리 | update | t-LS 연동 — leader_entity 전달 + wisdom resistance enforcement 추가 |
+| ⚙️ 코어 아키텍처 | SimulationBus | update | leader_elected + leader_lost 시그널 추가 (Phase 4 — LeaderSystem) |
+
+### Localization Verification
+- Hardcoded scan: PASS (leader_system.gd에 Locale 호출 없음, 하드코딩 문자열 없음)
+- New keys added: EVENT_LEADER_ELECTED, EVENT_LEADER_LOST, UI_LEADER, UI_NO_LEADER
+- ko/ updated: YES
+
 ## Skill XP System — t-SK-01 through t-SK-09 — 2026-02-23
 
 ### Context

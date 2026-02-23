@@ -83,7 +83,12 @@ func execute_tick(_tick: int) -> void:
 				if m != null and m.is_alive and not m.values.is_empty():
 					members.append(m)
 			if not members.is_empty():
-				settlement.shared_values = SettlementCulture.compute_shared_values(members, null)
+				var leader_entity = null
+				if settlement.leader_id > -1:
+					var candidate = _entity_manager.get_entity(settlement.leader_id)
+					if candidate != null and candidate.is_alive:
+						leader_entity = candidate
+				settlement.shared_values = SettlementCulture.compute_shared_values(members, leader_entity)
 
 	var entities: Array = _entity_manager.get_alive_entities()
 
@@ -108,10 +113,14 @@ func execute_tick(_tick: int) -> void:
 		if _settlement_manager != null and entity.settlement_id > 0:
 			var settlement = _settlement_manager.get_settlement(entity.settlement_id)
 			if settlement != null and not settlement.shared_values.is_empty():
+				## [French & Raven 1959] Wise agents resist cultural homogenization.
+				## wisdom_norm: 0.0~1.0. Effective enforcement reduced by up to 30%.
+				var wisdom_norm: float = StatQuery.get_normalized(entity, &"DERIVED_WISDOM")
+				var effective_enforcement: float = 0.5 * (1.0 - GameConfig.LEADER_WISDOM_RESISTANCE_COEFF * wisdom_norm)
 				SettlementCulture.apply_conformity_pressure(
 					entity,
 					settlement.shared_values,
-					0.5,
+					effective_enforcement,
 					age_years,
 				)
 

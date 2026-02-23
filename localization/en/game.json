@@ -322,5 +322,9 @@
   "SKILL_DESC_APPRENTICE": "Apprentice",
   "SKILL_DESC_COMPETENT": "Competent",
   "SKILL_DESC_EXPERT": "Expert",
-  "SKILL_DESC_GRANDMASTER": "Grandmaster"
+  "SKILL_DESC_GRANDMASTER": "Grandmaster",
+  "EVENT_LEADER_ELECTED": "{name} became the leader of settlement {id}.",
+  "EVENT_LEADER_LOST": "Settlement {id} lost its leader.",
+  "UI_LEADER": "Leader",
+  "UI_NO_LEADER": "No leader"
 }
