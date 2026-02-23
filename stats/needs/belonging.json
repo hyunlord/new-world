@@ -1,0 +1,27 @@
+{
+  "id": "NEED_BELONGING",
+  "display_key": "UI_STAT_NEED_BELONGING",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 700,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 250,
+      "age_stage_multipliers": {"infant": 1.0, "child": 1.2, "teen": 1.5, "adult": 1.0, "elder": 0.8}
+    }
+  },
+  "thresholds": [
+    {"value": 300, "direction": "below", "effect": "MODIFIER_MOOD_PENALTY_MILD", "hysteresis": 20},
+    {"value": 100, "direction": "below", "effect": "BEHAVIOR_SOCIAL_OVERRIDE", "hysteresis": 10}
+  ],
+  "affects": [{
+    "target": "stress_continuous_input",
+    "evaluator": "CURVE", "curve": "THRESHOLD_POWER",
+    "params": {"threshold": 300, "exponent": 1.8, "max_output": 8.0},
+    "weight": 1.0, "direction": "negative", "context": "stress"
+  }],
+  "display": {"visible": true, "show_in_panel": "needs", "descriptor_table": "need_6_step"}
+}

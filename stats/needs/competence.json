@@ -1,0 +1,25 @@
+{
+  "id": "NEED_COMPETENCE",
+  "display_key": "UI_STAT_NEED_COMPETENCE",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 600,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 130,
+      "age_stage_multipliers": {"infant": 0.5, "child": 1.2, "teen": 1.3, "adult": 1.0, "elder": 0.8}
+    }
+  },
+  "thresholds": [
+    {"value": 250, "direction": "below", "effect": "MODIFIER_SKILL_APATHY", "hysteresis": 20}
+  ],
+  "affects": [{
+    "target": "xp_gain_mult",
+    "evaluator": "CURVE", "curve": "LINEAR",
+    "weight": 0.20, "direction": "positive", "context": "skill"
+  }],
+  "display": {"visible": true, "show_in_panel": "needs", "descriptor_table": "need_6_step"}
+}

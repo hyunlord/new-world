@@ -1,0 +1,63 @@
+{
+  "id": "FACET_X_SOCIABILITY",
+  "display_key": "FACET_X_SOCIABILITY",
+  "category": "PERSONALITY_FACET",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        300,
+        700
+      ],
+      "phase_speeds": [
+        1.5,
+        1.0,
+        0.3
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_FACET_X_SOCIABILITY_HIGH",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_FACET_X_SOCIABILITY_LOW",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "social_interaction_freq",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.5,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "NEED_SOCIAL_decay_mult",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.2,
+      "direction": "negative",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}

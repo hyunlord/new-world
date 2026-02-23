@@ -1,0 +1,63 @@
+{
+  "id": "FACET_C_ORGANIZATION",
+  "display_key": "FACET_C_ORGANIZATION",
+  "category": "PERSONALITY_FACET",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        300,
+        700
+      ],
+      "phase_speeds": [
+        1.5,
+        1.0,
+        0.3
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_FACET_C_ORGANIZATION_HIGH",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_FACET_C_ORGANIZATION_LOW",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "task_efficiency",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.35,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "resource_waste_mult",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.25,
+      "direction": "negative",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "NEED_RECOGNITION",
+  "display_key": "UI_STAT_NEED_RECOGNITION",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 600,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 150,
+      "age_stage_multipliers": {"infant": 0.3, "child": 0.8, "teen": 1.4, "adult": 1.0, "elder": 0.9}
+    }
+  },
+  "thresholds": [
+    {"value": 250, "direction": "below", "effect": "MODIFIER_MOTIVATION_PENALTY", "hysteresis": 20}
+  ],
+  "affects": [{
+    "target": "motivation_mult",
+    "evaluator": "CURVE", "curve": "THRESHOLD_POWER",
+    "params": {"threshold": 250, "exponent": 1.5, "max_output": 0.3},
+    "weight": 1.0, "direction": "negative", "context": "work"
+  }],
+  "display": {"visible": true, "show_in_panel": "needs", "descriptor_table": "need_6_step"}
+}

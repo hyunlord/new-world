@@ -99,6 +99,12 @@ var violation_history: Dictionary = {}
 ## StatSystem Phase 0: 엔티티별 스탯 캐시
 ## key: stat_id (StringName), value: {value, dirty, modifiers, last_computed_tick}
 var stat_cache: Dictionary = {}
+## Gardner 다중지능 (Gardner 1983)
+## key: 지능 ID 소문자 ("linguistic", "logical", "spatial", "musical",
+##      "kinesthetic", "interpersonal", "intrapersonal", "naturalistic")
+## value: float 0.0~1.0
+## 생성 시 PersonalityGenerator가 채움. 기본값 빈 Dict (미초기화).
+var intelligences: Dictionary = {}
 
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
@@ -204,6 +210,7 @@ func to_dict() -> Dictionary:
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
+		"intelligences": intelligences.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 	}
 
@@ -305,6 +312,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	if not body_data.is_empty():
 		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
+	e.intelligences = data.get("intelligences", {}).duplicate()
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	return e
 

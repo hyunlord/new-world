@@ -1,0 +1,23 @@
+{
+  "id": "INTEL_LINGUISTIC",
+  "display_key": "UI_INTEL_LINGUISTIC",
+  "category": "INTELLIGENCE",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 1,
+  "growth": {
+    "type": "SCURVE",
+    "params": {"phase_breakpoints": [200, 700], "phase_speeds": [2.0, 1.0, 0.2]}
+  },
+  "thresholds": [
+    {"value": 800, "direction": "above", "effect": "TRAIT_INTEL_LINGUISTIC_HIGH", "hysteresis": 40},
+    {"value": 200, "direction": "below", "effect": "TRAIT_INTEL_LINGUISTIC_LOW",  "hysteresis": 40}
+  ],
+  "affects": [
+    {"target": "diplomacy_success_rate", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.35, "direction": "positive", "context": "social"},
+    {"target": "persuasion_power", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.30, "direction": "positive", "context": "social"},
+    {"target": "teach_efficiency", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": "skill"}
+  ],
+  "display": {"visible": true, "show_in_panel": "stats", "descriptor_table": "7_step"}
+}

@@ -47,11 +47,15 @@ func _sync_entity(entity: RefCounted) -> void:
 	var ed = entity.emotion_data
 	if ed == null:
 		_compute_derived(entity)
+		_sync_facets(entity)
+		_sync_intelligences(entity)
 		return
 	StatQuery.set_value(entity, &"EMOTION_STRESS",     int(ed.stress * 20.0), 0)
 	StatQuery.set_value(entity, &"EMOTION_ALLOSTATIC",  int(ed.allostatic), 0)
 	StatQuery.set_value(entity, &"EMOTION_RESERVE",     int(ed.reserve), 0)
 	_compute_derived(entity)
+	_sync_facets(entity)
+	_sync_intelligences(entity)
 
 
 ## COMPOSITE 파생 스탯 계산 및 stat_cache에 저장.
@@ -93,3 +97,62 @@ func _compute_derived(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"DERIVED_WISDOM", int(wisdom * 1000), 0)
 	StatQuery.set_value(entity, &"DERIVED_POPULARITY", int(popularity * 1000), 0)
 	StatQuery.set_value(entity, &"DERIVED_RISK_TOLERANCE", int(risk_tolerance * 1000), 0)
+
+
+func _sync_facets(entity: RefCounted) -> void:
+	var pd = entity.personality
+	if pd == null:
+		return
+	var facets: Dictionary = pd.facets
+	if facets.is_empty():
+		return
+	var facet_map: Dictionary = {
+		"H_sincerity":          &"FACET_H_SINCERITY",
+		"H_fairness":           &"FACET_H_FAIRNESS",
+		"H_greed_avoidance":    &"FACET_H_GREED_AVOIDANCE",
+		"H_modesty":            &"FACET_H_MODESTY",
+		"E_fearfulness":        &"FACET_E_FEARFULNESS",
+		"E_anxiety":            &"FACET_E_ANXIETY",
+		"E_dependence":         &"FACET_E_DEPENDENCE",
+		"E_sentimentality":     &"FACET_E_SENTIMENTALITY",
+		"X_social_self_esteem": &"FACET_X_SOCIAL_SELF_ESTEEM",
+		"X_social_boldness":    &"FACET_X_SOCIAL_BOLDNESS",
+		"X_sociability":        &"FACET_X_SOCIABILITY",
+		"X_liveliness":         &"FACET_X_LIVELINESS",
+		"A_forgiveness":        &"FACET_A_FORGIVENESS",
+		"A_gentleness":         &"FACET_A_GENTLENESS",
+		"A_flexibility":        &"FACET_A_FLEXIBILITY",
+		"A_patience":           &"FACET_A_PATIENCE",
+		"C_organization":       &"FACET_C_ORGANIZATION",
+		"C_diligence":          &"FACET_C_DILIGENCE",
+		"C_perfectionism":      &"FACET_C_PERFECTIONISM",
+		"C_prudence":           &"FACET_C_PRUDENCE",
+		"O_aesthetic":          &"FACET_O_AESTHETIC",
+		"O_inquisitiveness":    &"FACET_O_INQUISITIVENESS",
+		"O_creativity":         &"FACET_O_CREATIVITY",
+		"O_unconventionality":  &"FACET_O_UNCONVENTIONALITY",
+	}
+	for fkey in facet_map:
+		var stat_id: StringName = facet_map[fkey]
+		var fval: float = float(facets.get(fkey, 0.5))
+		StatQuery.set_value(entity, stat_id, int(fval * 1000), 0)
+
+
+func _sync_intelligences(entity: RefCounted) -> void:
+	var intel: Dictionary = entity.intelligences
+	if intel == null or intel.is_empty():
+		return
+	var intel_map: Dictionary = {
+		"linguistic":     &"INTEL_LINGUISTIC",
+		"logical":        &"INTEL_LOGICAL",
+		"spatial":        &"INTEL_SPATIAL",
+		"musical":        &"INTEL_MUSICAL",
+		"kinesthetic":    &"INTEL_KINESTHETIC",
+		"interpersonal":  &"INTEL_INTERPERSONAL",
+		"intrapersonal":  &"INTEL_INTRAPERSONAL",
+		"naturalistic":   &"INTEL_NATURALISTIC",
+	}
+	for ikey in intel_map:
+		var stat_id: StringName = intel_map[ikey]
+		var ival: float = float(intel.get(ikey, 0.5))
+		StatQuery.set_value(entity, stat_id, int(ival * 1000), 0)

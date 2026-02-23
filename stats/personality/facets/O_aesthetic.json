@@ -1,0 +1,63 @@
+{
+  "id": "FACET_O_AESTHETIC",
+  "display_key": "FACET_O_AESTHETIC",
+  "category": "PERSONALITY_FACET",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        300,
+        700
+      ],
+      "phase_speeds": [
+        1.5,
+        1.0,
+        0.3
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_FACET_O_AESTHETIC_HIGH",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_FACET_O_AESTHETIC_LOW",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "art_appreciation",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.45,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "build_quality_care",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.25,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}
