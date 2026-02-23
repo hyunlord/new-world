@@ -37,7 +37,7 @@ JSON, localization, UI 코드는 이미 완성 — 데이터 파이프라인 앞
 - Files changed: 3 (entity_data.gd, stat_sync_system.gd, PROGRESS.md)
 - Dispatch tool used: ask_codex (2 tickets)
 - Commit: 14d1d19
-- Notion pages updated: ⚠️ notionApi MCP unavailable — manual update required
+- Notion pages updated: ✅ 엔티티&욕구시스템(EntityData 필드 + stat_sync 6→13), Change Log DB
 
 ## EntityDetailPanel UI 버그 수정 3종 (t-UI-main + t-UI-04) — 2026-02-23
 
@@ -77,7 +77,7 @@ t-UI-main과 t-UI-04 병렬 dispatch 가능 (파일 겹침 없음: entity_detail
 - Files changed: 4 (entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
 - Dispatch tool used: ask_codex (2 tickets, gpt-5.3-codex)
 - Commit: 63de58a
-- Notion pages updated: ⚠️ notionApi MCP unavailable — manual update required
+- Notion pages updated: ✅ EntityDetailPanel(Architecture/Code/Dev History), Change Log DB
 
 ## 욕구 확장 임시 비활성화 (T-DISABLE-1~3) — 2026-02-21
 
@@ -3596,3 +3596,154 @@ decay rate 비율 확정, urgency 가중치, 온도 3단계 tier, stressor injec
 ### 영향받은 시스템
 - NeedsSystem (소모 로직), BehaviorSystem (urgency + 분기), BuildingEffectSystem/MovementSystem (회복)
 
+
+---
+
+## Q&A 기반 문서 업데이트 #4 — T-STARV 아사 버그 분석 & urgency 리밸런스
+
+### Context
+seek_shelter urgency 합산 버그(최대 1.9) + movement_system:196 pass 버그로 인한 아사 무한루프
+근본 원인 분석 및 T-STARV-2/3 수정 스펙 확정 → Notion 문서화.
+
+### 정보 추출
+- 버그 내부 로직: hunger=50%/warmth=25% 시나리오에서 seek_shelter(0.819) > gather_food(0.375)
+- 데이터 변경: urgency 승수 전면 수정 (1.4→0.9, 1.3→0.7, 1.1→0.55, 0.8→0.35)
+- 개발 히스토리: T-STARV-1(부분 완화) → T-STARV-2(승수 리밸런스) → T-STARV-3(실제 이동 구현)
+- 트레이드오프: drink_water는 THIRST_DRINK_RESTORE=0.35로 구조적 문제 없음, 승수만 낮춤
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | urgency 점수 설계 | 교체 | 구버전 표 삭제 → T-STARV-2 callout + 수정된 승수 표 삽입 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 | 추가 | T-STARV-1/2/3 버그 추적 표 |
+| 🤖 행동 AI (Utility AI) | urgency 점수 경쟁 구조 & 아사 버그 이력 | 추가 | 버그 재현 시나리오 표 + T-STARV 버그 목록 표 |
+| 📝 변경 로그 DB | — | 추가 | T-STARV-2/3 아사 버그 문서화 엔트리 |
+
+### 영향받은 시스템
+- BehaviorSystem (urgency 승수), MovementSystem (action_target 설정 버그)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #5 — 욕구 확장 전체 밸런스 분석
+
+### Context
+warmth 지속 0 현상 발생. 욕구 3종 동시 추가 + 밸런스 조정 없음이 근본 원인.
+원인 분석 및 향후 밸런스 검증 절차 문서화.
+
+### 정보 추출
+- 트레이드오프: 다중 욕구 동시 추가 시 행동 경쟁 복잡도 증가 + 상호 간섭
+- 내부 로직: decay/recovery 균형 계산 (hunger=150틱/1회, thirst=146틱/1회, warmth=환경 의존)
+- warmth 0 원인: A(T-STARV-3 이동 버그) + B(urgency 경쟁 진동) + C(이동 중 소모)
+- 향후 계획: 욕구 추가 시 10명×10분 시뮬 + 행동 분포 검증 의무화
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | decay/recovery 균형 분석 | 추가 | 6종 욕구×환경 조합 균형 표 |
+| 🌊 욕구 시스템 Phase 1 확장 | warmth 지속 0 현상 — 원인 분석 | 추가 | 원인 A/B/C 목록 |
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 밸런스 조정 계획 | 추가 | 검증 절차 + 미결 사항 + 다중 욕구 상호 간섭 한계 |
+| 📝 변경 로그 DB | — | 추가 | 밸런스 분석 문서화 엔트리 |
+
+
+
+---
+
+## Q&A 기반 문서 업데이트 #6 — T-STARV-2/3 긴급도 승수 확정 + warmth 물리 모순 해결
+
+### Context
+T-STARV-1 이후에도 아사가 지속. 두 가지 근본 원인 확인:
+1. comfort action 점수 과다: seek_shelter/sit_by_fire가 hunger=50%일 때도 gather_food(0.540)를 이김.
+2. warmth 회복 물리 모순: cold 타일 decay(0.024/10틱) > 구 WARMTH_FIRE_RESTORE(0.008) → campfire 옆에서도 warmth 계속 하락.
+긴급도 승수를 재조정하고 warmth 회복량을 증가시키는 T-STARV-2/3 확정.
+
+### 정보 추출
+- 데이터 구성: 기준점 gather_food @ hunger=0.40 = 0.60²×1.5 = 0.540 (non-gatherer baseline)
+- 내부 로직: 설계 원칙 — LOW 임계값에서 < 0.540, CRITICAL 임계값에서 > 0.540
+- 내부 로직: Adult 승수 확정: drink_water×1.0, sit_by_fire×0.9, seek_shelter warmth×0.6+safety×0.4
+- 내부 로직: Child 승수 확정: seek_shelter warmth×0.5+safety×0.3
+- 데이터 구성: WARMTH_FIRE_RESTORE 0.008→0.035, WARMTH_SHELTER_RESTORE 0.004→0.018
+- 트레이드오프: NeedsSystem 2틱 vs BuildingEffectSystem 10틱 주기 차이 → per-10틱 net 계산 필요
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 긴급도 가중치 — callout | 수정 | 구 draft값(0.9/0.7/0.55+0.35) 삭제 → 확정값(1.0/0.9/0.6+0.4) 반영 |
+| 🌊 욕구 시스템 Phase 1 확장 | 긴급도 승수 확정값 (T-STARV-2) | 추가 | Action×승수 표 (Adult/Child 모두 포함) |
+| 🌊 욕구 시스템 Phase 1 확장 | 검증표 — gather_food 기준(0.540) 대비 | 추가 | LOW < 0.540 / CRITICAL > 0.540 6행 검증 표 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 — T-STARV-2 행 | 수정 | 수정 내용을 확정값으로 업데이트 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 — T-STARV-3 행 | 추가 | warmth 물리 모순 수정 (WARMTH_FIRE_RESTORE 0.008→0.035) |
+| 📝 변경 로그 DB | — | 추가 | T-STARV-2/3 긴급도 승수 확정 + warmth 회복량 증가 엔트리 |
+
+### 영향받은 시스템
+- BehaviorSystem (urgency 승수 확정값), GameConfig (WARMTH_FIRE_RESTORE/WARMTH_SHELTER_RESTORE)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #7 — 원시시대 베이스 밸런스 원칙 + 의도적 미구현 목록
+
+### Context
+체온 유지가 다른 욕구에 비해 어렵다는 관찰. 원시시대 베이스에서 인구 유지·증가 필요.
+콘텐츠 추가(옷/계절) 전 수치 밸런스 먼저 맞추기로 결정.
+
+### 정보 추출
+- 구현 의도: 원시시대 베이스 조건 — campfire+shelter만으로 생존 가능해야 함 (공식 설계 원칙)
+- 트레이드오프: 의도적 미구현 — 옷 시스템, 계절 변화 (Phase 0 범위 외)
+- 개발 히스토리: 수치 밸런스 먼저 → 콘텐츠 나중 원칙 결정 (T-STARV-2/3 검증 후 다음 단계)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 구현 의도 | 추가 | 원시시대 베이스 조건 bullet (campfire/shelter/없음 3단계) |
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 계획 | 추가 | 의도적 미구현 목록(옷/계절) + 개발 우선순위 원칙 + 미결 과제 |
+| 📝 변경 로그 DB | — | 추가 | 원시시대 밸런스 원칙 문서화 엔트리 |
+
+### 영향받은 시스템
+- NeedsSystem (warmth 밸런스 원칙), GameConfig (수치 우선 조정 원칙)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #8 — 밸런스 데이터 구조화 계획 (Phase 2+)
+
+### Context
+밸런스 로직/수치를 쉽게 변경할 수 있는 구조 필요. 현재 game_config.gd 상수 방식의 한계 명시.
+욕구 13종 완성 후 JSON 구조화 예정으로 의사결정 문서화.
+
+### 정보 추출
+- 트레이드오프: game_config.gd 상수 방식 → 욕구 13종+계절/기술 추가 시 상수 수백 개, 유지보수 불가
+- 향후 개선점: data/balance/needs_balance.json 분리 (decay_rate/restore_amount/urgency_multiplier per need)
+- 향후 개선점: /debug_balance 디버그 도구 (decay vs recovery 비율 출력, 생존 틱 계산)
+- 트레이드오프: 구조화 타이밍 결정 — 13종 완성 전 설계 시 재설계 리스크. 13종 완성 후 한 번에 설계.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 계획 | 추가 | "밸런스 데이터 구조화 계획 (욕구 13종 완성 후)" H3 + 3 bullet |
+
+### 영향받은 시스템
+- GameConfig (향후 JSON 전환 예정), NeedsSystem (debug_balance 도구 계획)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #9 — 욕구별 충족 수단 미구현 목록 + 개발 3단계 순서 확정
+
+### Context
+인간정의서 마무리 전 T-STARV-2/3 수치 안정화 선행 필요. 욕구 충족 수단 미구현 현황 문서화.
+개발 3단계 순서 결정: T-STARV → 인간정의서 → JSON 구조화 + 전체 밸런스.
+
+### 정보 추출
+- 트레이드오프: 욕구별 충족 수단 미구현 — water source(thirst), 위협 시스템(safety) 미완성
+- 개발 히스토리: 3단계 개발 순서 확정 (T-STARV-2/3 → 인간정의서 → JSON)
+- 트레이드오프: 테스트 가능성 원칙 — 에이전트 생존 없이 사회/감정/관계 시스템 검증 불가
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 의도적 미구현 | 추가 | water source 시스템, 위협(threat) 시스템 bullet |
+| 🌊 욕구 시스템 Phase 1 확장 | 개발 우선순위 원칙 | 추가 | 확정된 개발 3단계 + 테스트 가능성 원칙 bullet |
+
+### 영향받은 시스템
+- NeedsSystem (충족 수단 미구현 현황), 전체 개발 로드맵
