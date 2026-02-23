@@ -32,11 +32,11 @@ Alderfer ERG 이론 기반으로 생리적 욕구 / 심리적 욕구 2개 서브
 - ko/ updated: YES
 
 ### Results
-- Gate: TBD
+- Gate: PASS (2a59993)
 - Dispatch ratio: 2/2 = 100%
-- Files changed: TBD
+- Files changed: 4 (entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
 - Dispatch tool used: ask_codex (2 tickets)
-- Notion pages updated: TBD
+- Notion pages updated: EntityDetailPanel (Architecture + _section_collapsed dict + Values section + Dev History), Change Log DB
 
 ## 욕구 섹션 상위 욕구 서브 레이블 (t-UL-01) — 2026-02-23
 
