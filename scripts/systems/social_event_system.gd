@@ -76,7 +76,7 @@ func _trigger_event(a: RefCounted, b: RefCounted, tick: int) -> void:
 	events.append({"name": "casual_talk", "weight": 3.0})
 
 	# DEEP_TALK: both extraversion > 0.4
-	if a.personality.axes.get("X", 0.5) > 0.4 and b.personality.axes.get("X", 0.5) > 0.4:
+	if StatQuery.get_normalized(a, &"HEXACO_X") > 0.4 and StatQuery.get_normalized(b, &"HEXACO_X") > 0.4:
 		events.append({"name": "deep_talk", "weight": 2.0})
 
 	# WORK_TOGETHER: same job + same action (work actions)
@@ -85,7 +85,7 @@ func _trigger_event(a: RefCounted, b: RefCounted, tick: int) -> void:
 			events.append({"name": "work_together", "weight": 2.5})
 
 	# SHARE_FOOD: has food + high agreeableness
-	var a_agree: float = a.personality.axes.get("A", 0.5)
+	var a_agree: float = StatQuery.get_normalized(a, &"HEXACO_A")
 	if a.inventory.get("food", 0.0) >= 1.0 and a_agree > 0.5:
 		events.append({"name": "share_food", "weight": 1.5 * a_agree})
 

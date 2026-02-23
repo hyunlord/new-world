@@ -3948,3 +3948,44 @@ UI는 인간정의서 완성 전 구현 금지 원칙 명문화. thirst/warmth/s
 - Notion 페이지 생성: 310e2e3d-4a77-8100-9f4e-f6d5a7c66fe9
 - Notion 블록 추가: 19개 (표 + 코드 블록 + 섹션)
 - Change Log 항목: 추가 완료
+
+## StatSystem Phase 2 — Direct Reference Replacement [t-P2-01~06]
+
+### Context
+StatSystem Phase 0 wired infrastructure; Phase 1 created 120 stat JSON definitions. Phase 2 enforces the read/write separation: all non-owning systems must read via StatQuery.get_normalized() instead of direct entity field access. 28 direct reads replaced across 6 files.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-P2-01 | behavior_system.gd — 13 read replacements | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-02 | hud.gd — 7 read replacements | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-03 | attachment_system.gd — 2 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-04 | contagion_system.gd — 3 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-05 | social_event_system.gd — 2 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-06 | entity_renderer.gd — 1 read | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+
+### Dispatch ratio: 6/6 = 100% ✅
+
+### Dispatch strategy
+All 6 files are independent single-file modifications — parallel dispatch, no dependencies.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Architecture | update | Phase 2 read migration complete. Data flow: NeedsSystem→entity.field→StatSync→stat_cache→StatQuery (all readers) |
+| StatSystem | Development History | add row | 2026-02-23 \| Phase 2 read migration — 28 direct field reads replaced with StatQuery across 6 files |
+| BehaviorSystem | Core Logic | update | Hunger/energy/social/thirst/warmth/safety deficits now read via StatQuery — modifier chain applies to behavior scoring |
+| HUD | Architecture | update | Need bar values now flow through StatQuery — future modifiers reflect automatically |
+| Change Log DB | — | add | 2026-02-23 \| StatSystem Phase 2 — direct read references eliminated, StatQuery enforced for all non-owning systems |
+
+### Localization Verification
+- Hardcoded scan: N/A (no UI text changes)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: TBD
+- Dispatch ratio: 6/6 = 100%
+- Files changed: TBD
+- Dispatch tool used: ask_codex (6 tickets)
+- Notion pages updated: TBD

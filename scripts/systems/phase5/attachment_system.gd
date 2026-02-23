@@ -125,8 +125,8 @@ func _compute_raw_quality(entity) -> float:
 
 	var base: float = 0.50
 	if entity.personality != null:
-		var a_axis = float(entity.personality.axes.get("A", 0.5))
-		var e_axis = float(entity.personality.axes.get("E", 0.5))
+		var a_axis: float = StatQuery.get_normalized(entity, &"HEXACO_A")
+		var e_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
 		base += 0.15 * a_axis
 		base += 0.10 * e_axis
 

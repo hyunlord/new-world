@@ -88,9 +88,9 @@ func execute_tick(tick: int) -> void:
 
 
 func _evaluate_actions(entity: RefCounted) -> Dictionary:
-	var hunger_deficit: float = 1.0 - entity.hunger
-	var energy_deficit: float = 1.0 - entity.energy
-	var social_deficit: float = 1.0 - entity.social
+	var hunger_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	var social_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 	var stage: String = entity.age_stage
 
 	# Infant/toddler: wander, rest, socialize only
@@ -112,10 +112,10 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.WOOD, 15):
 			child_scores["gather_wood"] = (0.3 + _rng.randf() * 0.1) * 0.3
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
-			if entity.thirst < GameConfig.THIRST_LOW:
-				child_scores["drink_water"] = _urgency_curve(1.0 - entity.thirst) * 1.0
-			child_scores["seek_shelter"] = _urgency_curve(1.0 - entity.warmth) * 0.5 \
-				+ _urgency_curve(1.0 - entity.safety) * 0.3
+			if StatQuery.get_normalized(entity, &"NEED_THIRST") < GameConfig.THIRST_LOW:
+				child_scores["drink_water"] = _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_THIRST")) * 1.0
+			child_scores["seek_shelter"] = _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_WARMTH")) * 0.5 \
+				+ _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_SAFETY")) * 0.3
 		return child_scores
 
 	var scores: Dictionary = {
@@ -138,7 +138,7 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 					scores["visit_partner"] = 0.6  # Higher when in love
 
 	# ── Hunger override: ALL jobs prioritize food when starving ──
-	if entity.hunger < 0.3:
+	if StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.3:
 		scores["gather_food"] = 1.0
 		# If entity has food in inventory, just eat (will auto-eat in needs_system)
 		if entity.inventory.get("food", 0.0) > 0.5:
@@ -237,16 +237,16 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 
 	## [Maslow (1943) L1-L2 — 갈증/체온/안전 urgency] Only when NEEDS_EXPANSION_ENABLED
 	if GameConfig.NEEDS_EXPANSION_ENABLED:
-		var thirst_deficit: float = 1.0 - entity.thirst
-		if entity.thirst < GameConfig.THIRST_LOW:
+		var thirst_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_THIRST")
+		if StatQuery.get_normalized(entity, &"NEED_THIRST") < GameConfig.THIRST_LOW:
 			scores["drink_water"] = _urgency_curve(thirst_deficit) * 1.0
 
-		var warmth_deficit: float = 1.0 - entity.warmth
-		if entity.warmth < GameConfig.WARMTH_LOW:
+		var warmth_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_WARMTH")
+		if StatQuery.get_normalized(entity, &"NEED_WARMTH") < GameConfig.WARMTH_LOW:
 			scores["sit_by_fire"] = _urgency_curve(warmth_deficit) * 0.9
 
-		var safety_deficit: float = 1.0 - entity.safety
-		if entity.warmth < GameConfig.WARMTH_LOW or entity.safety < GameConfig.SAFETY_LOW:
+		var safety_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_SAFETY")
+		if StatQuery.get_normalized(entity, &"NEED_WARMTH") < GameConfig.WARMTH_LOW or StatQuery.get_normalized(entity, &"NEED_SAFETY") < GameConfig.SAFETY_LOW:
 			scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 0.6 \
 				+ _urgency_curve(safety_deficit) * 0.4
 
@@ -377,7 +377,7 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 	if _trait_violation_system != null:
 		var vctx: Dictionary = {
 			"forced_by_authority": false,
-			"survival_necessity": entity.hunger < 0.3,
+			"survival_necessity": StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.3,
 			"witness_relationship": "none",
 			"victim_relationship": "stranger",
 			"is_habit": false,
