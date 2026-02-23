@@ -4209,3 +4209,42 @@ Config-first, then fan-out:
 - Files changed: 4 (game_config.gd, upper_needs_system.gd, test_upper_needs.gd, main.gd)
 - Dispatch tool used: ask_codex (t-UN-02 job f8bbcfc1, t-UN-03 job c133efd8)
 - Notion pages updated: NeedsSystem (3 updates), UpperNeedsSystem (new page), Change Log DB (1 entry)
+
+---
+
+## Systems Folder Restructure — t-RS-01 through t-RS-02 — 2026-02-23
+
+### Context
+scripts/systems/ 의 phase4/, phase5/ 폴더는 개발 타임라인 레이블이지, 아키텍처 개념이 아님.
+28개(+upper_needs_system 추가로 29개) 시스템을 feature-domain 하위 폴더로 이동.
+Zero logic changes — pure file moves + preload/load path updates.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-RS-01 | create dirs + git mv 29 files | 🔴 DIRECT | — | git mv requires native git context; ask_codex output_file pattern cannot update git index |
+| t-RS-02 | path updates in 14 files + class_name rename | 🟢 DISPATCH | ask_codex | multi-file string replacements, Codex excels |
+
+### Dispatch ratio: 1/2 = 50% ⚠️
+> Justification: t-RS-01은 git index 업데이트가 필요한 bash 시퀀스 (git mv 29개).
+> ask_codex MCP의 output_file 패턴은 단일 파일 쓰기 전용 — git index 접근 불가.
+> 실질적인 코드 수정(path string updates, class_name rename)은 전량 DISPATCH(t-RS-02).
+
+### Dispatch strategy
+Sequential — files must be moved before paths can be updated:
+1. DIRECT: t-RS-01 (mkdir + git mv 29 files, rm phase4/ phase5/)
+2. DISPATCH: t-RS-02 (update all preload/load paths + class_name rename in 14 files)
+
+### Notion Update
+pending
+
+### Localization Verification
+- New keys: none (pure refactor, no UI text)
+- No Locale API calls in moved files are changed
+- Hardcoded scan: N/A (no UI text changes)
+
+### Results
+- Gate: pending
+- Dispatch ratio: 1/2 = 50%
+- Files changed: pending
+- Notion pages updated: pending
