@@ -3984,8 +3984,8 @@ All 6 files are independent single-file modifications — parallel dispatch, no 
 - ko/ updated: N/A
 
 ### Results
-- Gate: TBD
+- Gate: PASS (de86a45)
 - Dispatch ratio: 6/6 = 100%
-- Files changed: TBD
+- Files changed: 6 (behavior_system.gd, hud.gd, attachment_system.gd, contagion_system.gd, social_event_system.gd, entity_renderer.gd)
 - Dispatch tool used: ask_codex (6 tickets)
-- Notion pages updated: TBD
+- Notion pages updated: StatSystem, BehaviorSystem, Change Log DB
