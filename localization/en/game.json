@@ -315,6 +315,8 @@
   "UI_SKILL_CONSTRUCTION": "Construction",
   "UI_SKILL_HUNTING": "Hunting",
   "UI_SKILLS_NONE": "No skills developed yet",
+  "UI_SKILL_MAX": "max",
+  "UI_SKILL_MAX_SHORT": "max",
   "SKILL_DESC_UNSKILLED": "Unskilled",
   "SKILL_DESC_NOVICE": "Novice",
   "SKILL_DESC_APPRENTICE": "Apprentice",

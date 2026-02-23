@@ -315,6 +315,8 @@
   "UI_SKILL_CONSTRUCTION": "건설",
   "UI_SKILL_HUNTING": "사냥",
   "UI_SKILLS_NONE": "아직 습득한 기술이 없습니다",
+  "UI_SKILL_MAX": "최대",
+  "UI_SKILL_MAX_SHORT": "최대",
   "SKILL_DESC_UNSKILLED": "무지",
   "SKILL_DESC_NOVICE": "견습",
   "SKILL_DESC_APPRENTICE": "초급",

@@ -136,6 +136,57 @@ func get_skill_multiplier(entity: RefCounted, skill_id: StringName,
 
 	return maxf(total, 0.01)  ## Never multiply to zero or negative
 
+## Returns XP progress info for a skill with LOG_DIMINISHING growth.
+##
+## Used by EntityDetailPanel to display:
+##   - Current level and talent ceiling
+##   - XP progress within current level (e.g. "28 / 722 XP")
+##
+## Returns empty Dictionary if the skill has no LOG_DIMINISHING definition.
+func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
+	if entity == null:
+		return {}
+	var def: Dictionary = StatDefinitionScript.get_def(skill_id)
+	if def.is_empty():
+		return {}
+	var growth: Dictionary = def.get("growth", {})
+	if growth.get("type", "") != "LOG_DIMINISHING":
+		return {}
+
+	var current_xp: float = float(entity.skill_xp.get(skill_id, 0.0))
+	var level: int = int(entity.skill_levels.get(skill_id, 0))
+	var max_level: int = _compute_talent_ceiling(entity, def)
+
+	## Compute cumulative XP at the start of current level
+	## (sum of XP required for all levels up to but not including current)
+	var params: Dictionary = growth.get("params", {})
+	var base_xp: float = float(params.get("base_xp", 100.0))
+	var exponent: float = float(params.get("exponent", 1.8))
+	var breakpoints: Array = params.get("level_breakpoints", [])
+	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
+
+	var xp_at_level: float = 0.0
+	for l in range(1, level + 1):
+		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
+		xp_at_level += base_xp * pow(float(l), exponent) * mult
+
+	## XP needed to complete current level (reach level + 1)
+	var xp_to_next: float = 0.0
+	if level < max_level:
+		var next_level: int = level + 1
+		var next_mult: float = _get_breakpoint_multiplier(next_level, breakpoints, multipliers)
+		xp_to_next = base_xp * pow(float(next_level), exponent) * next_mult
+	## If at max level, xp_to_next = 0 (no further progress possible)
+
+	return {
+		"level": level,
+		"max_level": max_level,
+		"current_xp": current_xp,
+		"xp_at_level": xp_at_level,
+		"xp_to_next": xp_to_next,
+		"progress_in_level": current_xp - xp_at_level,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # WRITE API
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

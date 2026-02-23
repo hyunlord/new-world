@@ -851,35 +851,34 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")
 	if not _section_collapsed.get("skills", false):
 		var _skill_entries: Array = [
-			{ "id": &"SKILL_FORAGING",    "label_key": "UI_SKILL_FORAGING",    "color": Color(0.4, 0.8, 0.4) },
-			{ "id": &"SKILL_WOODCUTTING", "label_key": "UI_SKILL_WOODCUTTING", "color": Color(0.8, 0.6, 0.3) },
-			{ "id": &"SKILL_MINING",      "label_key": "UI_SKILL_MINING",      "color": Color(0.6, 0.6, 0.7) },
-			{ "id": &"SKILL_CONSTRUCTION","label_key": "UI_SKILL_CONSTRUCTION","color": Color(0.9, 0.75, 0.3) },
-			{ "id": &"SKILL_HUNTING",     "label_key": "UI_SKILL_HUNTING",     "color": Color(0.8, 0.3, 0.3) },
+			{ "id": &"SKILL_FORAGING",     "label_key": "UI_SKILL_FORAGING",     "color": Color(0.4, 0.8, 0.4) },
+			{ "id": &"SKILL_WOODCUTTING",  "label_key": "UI_SKILL_WOODCUTTING",  "color": Color(0.8, 0.6, 0.3) },
+			{ "id": &"SKILL_MINING",       "label_key": "UI_SKILL_MINING",       "color": Color(0.6, 0.6, 0.7) },
+			{ "id": &"SKILL_CONSTRUCTION", "label_key": "UI_SKILL_CONSTRUCTION", "color": Color(0.9, 0.75, 0.3) },
+			{ "id": &"SKILL_HUNTING",      "label_key": "UI_SKILL_HUNTING",      "color": Color(0.8, 0.3, 0.3) },
 		]
-		var _any_skill_shown: bool = false
 		for _se in _skill_entries:
 			var _sid: StringName = _se["id"]
-			var _level: int = int(entity.skill_levels.get(_sid, 0))
-			if _level <= 0 and not entity.skill_xp.has(_sid):
-				continue
-			_any_skill_shown = true
+			var _info: Dictionary = StatQuery.get_skill_xp_info(entity, _sid)
+			## Always show all 5 skills — even untrained ones.
+			if _info.is_empty():
+				_info = {
+					"level": 0, "max_level": 100,
+					"current_xp": 0.0, "xp_at_level": 0.0,
+					"xp_to_next": 100.0, "progress_in_level": 0.0,
+				}
+			var _level: int = int(_info.get("level", 0))
 			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
-			## Show skill multiplier if above baseline (level > 0)
 			var _mult_suffix: String = ""
 			if _level > 0:
 				var _mult: float = StatQuery.get_skill_multiplier(entity, _sid, &"gathering")
-				## Format as "×1.28" — unicode multiply sign, no locale key needed (pure number format)
 				_mult_suffix = " \u00d7%.2f" % _mult
-			cy = _draw_bar(font, cx + 10, cy, bar_w,
+			cy = _draw_skill_bar(font, cx + 10, cy, bar_w,
 				Locale.ltr(_se["label_key"]),
-				float(_level) / 100.0,
+				_info,
 				_se["color"],
-				_desc + _mult_suffix)
-		if not _any_skill_shown:
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_SKILLS_NONE"),
-				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
-			cy += 16.0
+				_desc,
+				_mult_suffix)
 		cy += 4.0
 
 	# ── Values (가치관) ──
@@ -1521,6 +1520,68 @@ func _get_skill_descriptor_key(level: int) -> String:
 	if level >= 20: return "SKILL_DESC_APPRENTICE"
 	if level >= 1:  return "SKILL_DESC_NOVICE"
 	return "SKILL_DESC_UNSKILLED"
+
+## Draw a two-line skill entry with level, XP progress bar, descriptor, and multiplier.
+##
+## Line 1 (height 16px): [label] [progress bar] [descriptor ×mult]  [Lv.X / 최대 Y]
+## Line 2 (height 14px): [indent]                                    [prog_xp / xp_to_next XP]
+##
+## Total height: 32px. Returns next y.
+func _draw_skill_bar(font: Font, x: float, y: float, w: float,
+		label: String, info: Dictionary, bar_color: Color,
+		desc: String, mult_suffix: String) -> float:
+	## ── Layout constants ──
+	var label_w: float  = 110.0
+	var desc_w: float   = 105.0
+	var level_w: float  = 85.0
+	var bar_gap: float  = 4.0
+	var bar_h: float    = 10.0
+	var bar_w_avail: float = maxf(w - label_w - desc_w - level_w - bar_gap * 3, 20.0)
+
+	## ── Line 1: label, bar, descriptor+mult, level ──
+	draw_string(font, Vector2(x, y + 11), label,
+		HORIZONTAL_ALIGNMENT_LEFT, int(label_w),
+		GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+
+	var level: int     = int(info.get("level", 0))
+	var max_level: int = int(info.get("max_level", 100))
+	var bar_fill: float = float(level) / float(max_level) if max_level > 0 else 0.0
+	var bar_x: float = x + label_w + bar_gap
+	draw_rect(Rect2(bar_x, y + 2, bar_w_avail, bar_h), Color(0.15, 0.15, 0.15, 0.9))
+	if bar_fill > 0.0:
+		draw_rect(Rect2(bar_x, y + 2, bar_w_avail * clampf(bar_fill, 0.0, 1.0), bar_h), bar_color)
+
+	var desc_x: float = bar_x + bar_w_avail + bar_gap
+	draw_string(font, Vector2(desc_x, y + 11), desc + mult_suffix,
+		HORIZONTAL_ALIGNMENT_LEFT, int(desc_w),
+		GameConfig.get_font_size("bar_label"), Color(0.75, 0.75, 0.75))
+
+	var level_x: float = desc_x + desc_w
+	var level_str: String
+	if level >= max_level:
+		level_str = "Lv.%d (%s)" % [level, Locale.ltr("UI_SKILL_MAX")]
+	else:
+		level_str = "Lv.%d / %s %d" % [level, Locale.ltr("UI_SKILL_MAX_SHORT"), max_level]
+	draw_string(font, Vector2(level_x, y + 11), level_str,
+		HORIZONTAL_ALIGNMENT_RIGHT, int(level_w),
+		GameConfig.get_font_size("bar_label"), Color(0.65, 0.65, 0.65))
+
+	## ── Line 2: XP progress ──
+	var xp_y: float = y + 16.0
+	var progress_in_level: float = float(info.get("progress_in_level", 0.0))
+	var xp_to_next: float = float(info.get("xp_to_next", 0.0))
+	var xp_str: String
+	if level >= max_level:
+		xp_str = "%d XP" % int(info.get("current_xp", 0.0))
+	elif xp_to_next > 0.0:
+		xp_str = "%d / %d XP" % [int(progress_in_level), int(xp_to_next)]
+	else:
+		xp_str = "0 XP"
+	draw_string(font, Vector2(x + label_w + bar_gap, xp_y + 10), xp_str,
+		HORIZONTAL_ALIGNMENT_LEFT, int(w - label_w - bar_gap),
+		GameConfig.get_font_size("popup_small"), Color(0.45, 0.45, 0.45))
+
+	return y + 32.0
 
 
 ## Draw a bipolar bar for values in range [-1.0, +1.0]

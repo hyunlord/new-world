@@ -4114,3 +4114,45 @@ t-SY-01 완료 후 t-SY-02/03/04 병렬 dispatch (파일 겹침 없음).
   - 🖼️ 엔티티 디테일 패널: 개발 히스토리 (new row t-SY-04)
   - 변경 로그 DB: new entry 2026-02-23 (id: 310e2e3d-4a77-8113-96ed-ce394d2ef903)
   - Note: StatQuery 전용 페이지 없음 — 스킬 시스템 페이지에 통합 문서화됨
+
+---
+
+## Skill UI Fix — Level + XP Progress + Full Display (t-SU-01..02)
+
+### Context
+Skill section in EntityDetailPanel has 3 bugs: (1) skills with zero XP are hidden entirely,
+(2) descriptor text truncated at 45px pct_w ("견습 ×1." cut off), (3) no level number or XP
+progress shown. This batch fixes all 3 by introducing a new _draw_skill_bar() helper and
+get_skill_xp_info() in StatQuery.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SU-01 | stat_query.gd — add get_skill_xp_info() | 🟢 DISPATCH | ask_codex | standalone new function |
+| t-SU-02 | entity_detail_panel.gd — _draw_skill_bar() + loop + localization | 🟢 DISPATCH | ask_codex | single-file UI redesign |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Sequential: t-SU-01 first (provides get_skill_xp_info API), then t-SU-02 (uses it).
+Localization keys included in t-SU-02 prompt (game.json additions — simple JSON edits).
+
+### Notion Update
+✅ COMPLETED (2026-02-23)
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| SkillSystem | Callout (top) | updated | Added StatQuery.get_skill_xp_info() to API list |
+| SkillSystem | Core Logic | added section | get_skill_xp_info() — return struct (6 keys), cumulative XP loop formula, usage (EntityDetailPanel only) |
+| SkillSystem | Localization Keys | added rows | UI_SKILL_MAX (max/최대), UI_SKILL_MAX_SHORT (max/최대) |
+| SkillSystem | Development History | added row | 2026-02-23 — Skill UI 재디자인 (t-SU-01~02) |
+| EntityDetailPanel | Development History | added row | 2026-02-23 — 스킬 섹션 UI 재디자인 (t-SU-01/02) |
+| Change Log DB | — | added | 2026-02-23 — Skill UI level+XP progress display, all 5 skills always visible (t-SU-01/02) |
+
+### Localization Verification
+- New keys: UI_SKILL_MAX (en: "max", ko: "최대"), UI_SKILL_MAX_SHORT (en: "max", ko: "최대")
+- JSON file: localization/en/game.json + localization/ko/game.json (existing UI_SKILL_* keys are in game.json)
+- Hardcoded scan: PASS (all draw_string calls use Locale.ltr() or locale-exempt numeric formats)
+- ko/ updated: YES (in t-SU-02 dispatch)
+
+### Results
+- Gate: PENDING
