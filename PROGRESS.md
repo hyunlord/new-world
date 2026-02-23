@@ -1,5 +1,39 @@
 # Progress Log
 
+## 욕구 섹션 상위 욕구 서브 레이블 (t-UL-01) — 2026-02-23
+
+### Context
+욕구 패널 구분선 아래 소속감~의미 7개 바에 카테고리 레이블 없음 → 플레이어가 맥락 파악 불가.
+구분선 다음 draw_string 한 줄로 "▸ 상위 욕구" 레이블 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UL-01 | entity_detail_panel.gd 서브 레이블 + localization | 🟢 DISPATCH | ask_codex | 단일 관심사, 3 파일 모두 독립적 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 티켓 dispatch. 파일 겹침 없음.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityDetailPanel | Core Logic | modified | 욕구 섹션 구조: 생리 6개 → 구분선 → ▸ 상위 욕구 레이블 → 상위 7개 |
+| EntityDetailPanel | Development History | added | 2026-02-23 상위 욕구 서브 레이블 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (draw_string uses Locale.ltr)
+- New keys added: UI_UPPER_NEEDS_LABEL (en + ko)
+- ko/ updated: YES
+
+### Results
+- Gate: PASS (ce24c6b)
+- Dispatch ratio: 1/1 = 100%
+- Files changed: 3 (entity_detail_panel.gd, en/ui.json, ko/ui.json)
+- Dispatch tool used: ask_codex (1 ticket)
+- Notion pages updated: EntityDetailPanel (Core Logic + Development History)
+
 ## 상위 욕구 7개 데이터 파이프라인 수정 (t-UN-01 + t-UN-02) — 2026-02-23
 
 ### Context
@@ -3747,3 +3781,74 @@ T-STARV-1 이후에도 아사가 지속. 두 가지 근본 원인 확인:
 
 ### 영향받은 시스템
 - NeedsSystem (충족 수단 미구현 현황), 전체 개발 로드맵
+
+
+---
+
+## Q&A 기반 문서 업데이트 #10 — thirst/warmth/safety 임시 비활성화 (NEEDS_EXPANSION_ENABLED)
+
+### Context
+T-STARV-2/3 수치 조정 적용 후에도 에이전트 생존 실패. 원인 분석 결과: 수치 문제가 아닌 콘텐츠 문제(충족 수단 맵에 없음).
+결정: thirst/warmth/safety 욕구를 NEEDS_EXPANSION_ENABLED = false 플래그로 임시 비활성화. 코드 보존, 자원/기술 시스템 완성 후 재활성화.
+
+### 정보 추출
+- 트레이드오프: T-STARV-2/3 수치 조정 한계 — 충족 수단(water source, threat 이벤트) 없으면 수치 조정만으론 해결 불가
+- 구현 방식: Feature flag 패턴 — `const NEEDS_EXPANSION_ENABLED: bool = false` (needs_system.gd, behavior_system.gd)
+- 개발 히스토리: 2026-02-23 thirst/warmth/safety 임시 비활성화 결정
+- 트레이드오프: 코드 보존 + 비활성화 → 나중에 true로 전환 시 즉시 재활성화
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 개요 callout | 수정 | 임시 비활성화 상태 추가 (NEEDS_EXPANSION_ENABLED = false, 2026-02-23, red bold) |
+| 🌊 욕구 시스템 Phase 1 확장 | 미결 과제 | 수정 | T-STARV-2/3 검증 결론 업데이트 (비활성화 결정으로 종결) |
+| 🌊 욕구 시스템 Phase 1 확장 | 개발 히스토리 | 추가 | 신규 H2 섹션 + 표 (2026-02-23 비활성화 이벤트 행) |
+| Change Log DB | — | 추가 | thirst/warmth/safety 임시 비활성화 (NEEDS_EXPANSION_ENABLED) |
+
+### 영향받은 시스템
+- NeedsSystem (NEEDS_EXPANSION_ENABLED 플래그), BehaviorSystem (drink_water/sit_by_fire/seek_shelter 비활성화)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #11 — 개발 현황 스냅샷 + 게임 체감 기준 우선순위 원칙
+
+### Context
+2026-02-23 기준 개발 완료/미완료 항목 정리. 인간정의서 로드맵 레이어 순서(Layer 4 가치관 33개)보다
+게임을 켰을 때 체감 아쉬운 것 기준으로 다음 개발 우선순위를 결정하는 원칙 도입.
+
+### 정보 추출
+- 개발 히스토리: BehaviorSystem P1~P4 완료 (히스테리시스, 사회 루프, 반복 패널티, 감정 행동)
+- 트레이드오프: 미완료 항목 — P5 GOAP lite, 욕구 L3~L5, 인간정의서 나머지 레이어
+- 구현 의도 (우선순위 원칙): 인간정의서 순서 대신 게임 플레이 체감 결핍 기준으로 다음 개발 결정
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📄 로드맵 & Phase 정의 | 신규 | 추가 | "🔲 미완료 항목 & 다음 개발 후보" H2 섹션 (BehaviorSystem/NeedsSystem/인간정의서 미완료 목록 + 게임 체감 기준 우선순위 callout) |
+
+### 영향받은 시스템
+- BehaviorSystem (P5 GOAP lite 미완료 명시), NeedsSystem (L3~L5 미구현 명시), 전체 개발 로드맵
+
+
+---
+
+## Q&A 기반 문서 업데이트 #12 — 매크로 3단계 개발 순서 확정
+
+### Context
+인간정의서 완성 → UI/비주얼 → 콘텐츠 레이어 순서로 개발 매크로 로드맵 확정.
+UI는 인간정의서 완성 전 구현 금지 원칙 명문화. thirst/warmth/safety 활성화 시점 = 3단계 콘텐츠.
+
+### 정보 추출
+- 개발 히스토리: 매크로 3단계 순서 확정 (2026-02-23)
+- 트레이드오프: UI 조기 구현 금지 — 인간정의서 완성 전 UI 만들면 재작업 필요
+- 트레이드오프: NEEDS_EXPANSION_ENABLED 활성화 시점 = 3단계 콘텐츠 레이어
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📄 로드맵 & Phase 정의 | 🔲 미완료 항목 callout | 수정 | "게임 체감 기준" → 확정된 3단계 매크로 순서 (인간정의서→UI→콘텐츠+thirst활성화) |
+| 📄 로드맵 & Phase 정의 | Layer 4 가치관 bullet | 수정 | "재검토 중" 제거 → 1단계 인간정의서 시작점으로 확정 |
+
+### 영향받은 시스템
+- NeedsSystem (thirst/warmth/safety 활성화 시점 = 3단계로 명시), 전체 개발 로드맵
