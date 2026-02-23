@@ -47,7 +47,22 @@ func execute_tick(tick: int) -> void:
 
 		# Age efficiency defaults to 1.0 and can be overridden per stage in config
 		var age_efficiency: float = GameConfig.CHILD_GATHER_EFFICIENCY.get(entity.age_stage, 1.0)
-		var amount: float = minf(GameConfig.GATHER_AMOUNT * entity.speed * age_efficiency, minf(available, remaining_cap))
+		## [Skill yield bonus — Newell & Rosenbloom 1981 Power Law of Practice]
+		## Reads POWER curve params from skill JSON affects[] via StatQuery.get_skill_multiplier()
+		## level 0 → ×1.0, level 50 → ×1.28, level 100 → ×1.70
+		var _skill_mult: float = 1.0
+		var _yield_skill_map: Dictionary = {
+			"food":  &"SKILL_FORAGING",
+			"wood":  &"SKILL_WOODCUTTING",
+			"stone": &"SKILL_MINING",
+		}
+		var _yield_sid: StringName = _yield_skill_map.get(res_name, &"")
+		if _yield_sid != &"":
+			_skill_mult = StatQuery.get_skill_multiplier(entity, _yield_sid, &"gathering")
+		var amount: float = minf(
+			GameConfig.GATHER_AMOUNT * entity.speed * age_efficiency * _skill_mult,
+			minf(available, remaining_cap)
+		)
 		var harvested: float = _resource_map.harvest(x, y, res_type, amount)
 		if harvested > 0.0:
 			entity.add_item(res_name, harvested)

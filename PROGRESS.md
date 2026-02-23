@@ -4059,3 +4059,49 @@ All 6 files are independent single-file modifications — parallel dispatch, no 
 - Files changed: 6 (behavior_system.gd, hud.gd, attachment_system.gd, contagion_system.gd, social_event_system.gd, entity_renderer.gd)
 - Dispatch tool used: ask_codex (6 tickets)
 - Notion pages updated: StatSystem, BehaviorSystem, Change Log DB
+
+---
+
+## Skill Affects Pipeline — t-SY-01..04
+
+### Context
+스킬 레벨이 게임플레이에 영향을 주지 않는 문제 수정.
+`get_skill_multiplier()` 신규 함수 추가(stat_query.gd), 채집/건설 시스템에 배수 적용, UI에 ×배수 표시.
+`get_influence()` range 불일치 버그(÷1000 vs 스킬 range [0,100]) 및 direction 필드 무시 버그 우회.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SY-01 | stat_query.gd — add get_skill_multiplier() | 🟢 DISPATCH | ask_codex | single-file standalone |
+| t-SY-02 | gathering_system.gd — apply multiplier to yield | 🟢 DISPATCH | ask_codex | single-file standalone |
+| t-SY-03 | construction_system.gd — apply multiplier to build speed | 🟢 DISPATCH | ask_codex | single-file standalone |
+| t-SY-04 | entity_detail_panel.gd — show ×mult on skill bars | 🟢 DISPATCH | ask_codex | single-file standalone |
+
+### Dispatch ratio: 4/4 = 100% ✅
+
+### Dispatch strategy
+t-SY-01 먼저 (나머지 3개가 새 함수에 의존).
+t-SY-01 완료 후 t-SY-02/03/04 병렬 dispatch (파일 겹침 없음).
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| SkillSystem | Overview | update | skill levels now affect gameplay output via get_skill_multiplier() POWER curve |
+| SkillSystem | Design Intent | update | Add Mincer (1958) reference — returns to human capital. Note bug in get_influence() for skill range |
+| SkillSystem | Architecture | update | Add data flow: skill_levels → get_skill_multiplier() → yield/speed multiplier |
+| SkillSystem | Core Logic | update | Document get_skill_multiplier() formula: 1.0 + (norm^exponent) × weight |
+| SkillSystem | Constraints & Future Plans | update | Remove "skill level does not affect gameplay" constraint |
+| SkillSystem | Development History | add row | 2026-02-23 \| Skill affects pipeline implemented |
+| StatQuery | Core Logic | update | Document get_skill_multiplier() — new function, range normalization, direction field |
+| GatheringSystem | Core Logic | update | amount now multiplied by get_skill_multiplier() |
+| ConstructionSystem | Core Logic | update | progress_per_tick now multiplied by get_skill_multiplier() |
+| EntityDetailPanel | Core Logic | update | Skills section shows ×{mult} suffix when level > 0 |
+| Change Log DB | — | add | 2026-02-23 \| Skill affects pipeline — skill level now changes gather yield and build speed |
+
+### Localization Verification
+- Hardcoded scan: PASS (×1.28 suffix uses Unicode symbol \u00d7 — locale-exempt numeric format)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- (pending)

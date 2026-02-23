@@ -865,11 +865,17 @@ func _draw() -> void:
 				continue
 			_any_skill_shown = true
 			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
+			## Show skill multiplier if above baseline (level > 0)
+			var _mult_suffix: String = ""
+			if _level > 0:
+				var _mult: float = StatQuery.get_skill_multiplier(entity, _sid, &"gathering")
+				## Format as "×1.28" — unicode multiply sign, no locale key needed (pure number format)
+				_mult_suffix = " \u00d7%.2f" % _mult
 			cy = _draw_bar(font, cx + 10, cy, bar_w,
 				Locale.ltr(_se["label_key"]),
 				float(_level) / 100.0,
 				_se["color"],
-				_desc)
+				_desc + _mult_suffix)
 		if not _any_skill_shown:
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_SKILLS_NONE"),
 				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))

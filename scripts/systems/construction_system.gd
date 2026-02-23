@@ -41,7 +41,10 @@ func execute_tick(tick: int) -> void:
 		var ticks_per_cycle: int = build_ticks / GameConfig.CONSTRUCTION_TICK_INTERVAL
 		if ticks_per_cycle < 1:
 			ticks_per_cycle = 1
-		var progress_per_tick: float = 1.0 / float(ticks_per_cycle)
+		## [Skill build speed bonus — Newell & Rosenbloom 1981]
+		## SKILL_CONSTRUCTION affects build_speed: level 0 → ×1.0, level 100 → ×1.70
+		var _build_skill_mult: float = StatQuery.get_skill_multiplier(entity, &"SKILL_CONSTRUCTION", &"gathering")
+		var progress_per_tick: float = (1.0 / float(ticks_per_cycle)) * _build_skill_mult
 
 		building.build_progress += progress_per_tick
 		# [훈련 XP 누적] 건설 활동 → 근력/강인함/민첩 훈련
