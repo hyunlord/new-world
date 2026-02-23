@@ -4155,4 +4155,8 @@ Localization keys included in t-SU-02 prompt (game.json additions — simple JSO
 - ko/ updated: YES (in t-SU-02 dispatch)
 
 ### Results
-- Gate: PENDING
+- Gate: PASS (commit: 0197f9a)
+- Dispatch ratio: 2/2 = 100% ✅
+- Files changed: 5 (stat_query.gd, entity_detail_panel.gd, en/game.json, ko/game.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Notion pages updated: SkillSystem, EntityDetailPanel, Change Log DB
