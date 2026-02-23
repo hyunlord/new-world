@@ -758,6 +758,10 @@ func _draw() -> void:
 				Color(0.3, 0.3, 0.3, 0.8), 1.0
 			)
 			cy += 6.0
+			## 상위 욕구 서브 레이블
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_UPPER_NEEDS_LABEL"),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.7))
+			cy += 18.0
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_BELONGING"),          StatQuery.get_normalized(entity, &"NEED_BELONGING"),          Color(0.4, 0.65, 0.9))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_INTIMACY"),           StatQuery.get_normalized(entity, &"NEED_INTIMACY"),           Color(0.9, 0.45, 0.65))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_RECOGNITION"),        StatQuery.get_normalized(entity, &"NEED_RECOGNITION"),        Color(0.85, 0.75, 0.3))
