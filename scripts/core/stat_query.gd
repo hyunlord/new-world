@@ -81,6 +81,61 @@ func get_influence(entity: RefCounted, stat_id: StringName,
 
 	return total
 
+## Compute skill → gameplay multiplier from JSON affects[] for the given context.
+##
+## Correctly handles:
+##   - Range-agnostic evaluation via get_normalized() (0.0–1.0)
+##   - direction:"positive" → multiplier > 1.0 (bonus above baseline)
+##   - direction:"negative" → multiplier < 1.0 (penalty below baseline)
+##   - Multiple affects in same skill — multiplicative chaining
+##
+## Why NOT use get_influence():
+##   get_influence() uses raw stat value / 1000 (StatCurveScript.apply), wrong for skill range [0,100].
+##   At level 100: (100/1000)^1.3 = 0.063 → produces a 66% penalty instead of bonus.
+##   This function uses get_normalized() which correctly maps [0,100] to [0.0,1.0].
+##
+## References: Newell & Rosenbloom (1981) Power Law of Practice,
+##             Mincer (1958) returns to human capital
+##
+## Example result for SKILL_FORAGING (exponent=1.3, weight=0.7, direction=positive):
+##   level  0 → 1.000× |  level 25 → 1.116× |  level 50 → 1.284×
+##   level 75 → 1.482× |  level 100 → 1.700×
+func get_skill_multiplier(entity: RefCounted, skill_id: StringName,
+		context: StringName = &"") -> float:
+	if entity == null:
+		return 1.0
+	var affects: Array = StatDefinitionScript.get_affects(skill_id, context)
+	if affects.is_empty():
+		return 1.0
+
+	## get_normalized handles range [0,100] → 0.0~1.0 correctly
+	var norm: float = get_normalized(entity, skill_id)
+	var total: float = 1.0
+
+	for aff in affects:
+		var evaluator: String = aff.get("evaluator", "CURVE")
+		if evaluator != "CURVE":
+			continue  ## Only CURVE evaluator supported here
+		var curve: String = aff.get("curve", "POWER")
+		if curve != "POWER":
+			continue  ## Only POWER curve supported here; extend later if needed
+		var exponent: float = float(aff.get("params", {}).get("exponent", 1.3))
+		var weight: float = float(aff.get("weight", 1.0))
+		var direction: String = aff.get("direction", "positive")
+
+		## POWER influence on normalized value: norm^exponent
+		## norm=0.0 → 0.0, norm=1.0 → 1.0
+		var curve_val: float = pow(norm, exponent)
+
+		if direction == "positive":
+			## Add bonus proportional to skill level
+			total += curve_val * weight
+		elif direction == "negative":
+			## Apply penalty proportional to skill level
+			total -= curve_val * weight
+
+	return maxf(total, 0.01)  ## Never multiply to zero or negative
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # WRITE API
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
