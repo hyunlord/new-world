@@ -4295,3 +4295,30 @@ scripts/ui/panels/       — entity_detail_panel, building_detail_panel, chronic
 scripts/ui/renderers/    — entity_renderer, building_renderer, world_renderer
 scripts/ui/ (flat)       — hud, camera_controller, popup_manager
 
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| Change Log DB | — | add | 2026-02-23 — core/ & ui/ 폴더 도메인별 재구조화 (t-RC) — 48개 파일 → 8개 서브디렉토리 |
+
+코어 아키텍처 / UI 시스템 Notion 페이지: 하드코딩된 파일 경로 없음 → 수정 불필요.
+
+### Localization Verification
+- New keys: none (pure refactor, no UI text)
+- No Locale API calls changed
+- Hardcoded scan: N/A
+
+### Post-gate Fix
+- `.godot/global_script_class_cache.cfg` + `uid_cache.bin` were stale in gate worktree
+  → caused "Class X hides a global script class" for all 9 panels + 2 renderers
+  → fix: `rm .godot/global_script_class_cache.cfg .godot/uid_cache.bin` before re-run
+  → gate re-ran clean (0 script errors)
+- Note: gate worktree should run `git clean` on `.godot/` between runs to avoid stale caches
+
+### Results
+- Gate: PASS (commit 7ccf53b, after cache clear)
+- Dispatch ratio: 1/2 = 50% (t-RC-01 git mv must be DIRECT; t-RC-02 string replacements → ask_codex)
+- t-RC-02 dispatched via ask_codex (job dc91d3bc) — Codex wrote + executed apply_rc02.py, RC-02 DONE confirmed
+- Files changed: 66 files patched by Codex + project.godot (8 autoloads) + main.tscn (3 renderer paths)
+- Dispatch tool used: ask_codex (1 ticket)
+- Notion pages updated: Change Log DB (1 entry added)
+
