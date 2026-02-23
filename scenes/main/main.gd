@@ -43,6 +43,7 @@ const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 const StatSyncSystem = preload("res://scripts/systems/record/stat_sync_system.gd")
 const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold_system.gd")
 const UpperNeedsSystem = preload("res://scripts/systems/psychology/upper_needs_system.gd")
+const LeaderSystem = preload("res://scripts/systems/social/leader_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -86,6 +87,7 @@ var child_stress_processor: RefCounted
 var intergenerational_system: RefCounted
 var parenting_system: RefCounted
 var value_system: RefCounted
+var leader_system: RefCounted
 var debug_console = null
 var debug_panel = null
 var stat_sync_system: RefCounted
@@ -248,6 +250,9 @@ func _ready() -> void:
 	value_system = ValueSystem.new()
 	value_system.init(entity_manager, settlement_manager)
 
+	leader_system = LeaderSystem.new()
+	leader_system.init(entity_manager, settlement_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -272,6 +277,7 @@ func _ready() -> void:
 	sim_engine.register_system(mortality_system)          # priority 49
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(family_system)             # priority 52
+	sim_engine.register_system(leader_system)             # priority 52
 	sim_engine.register_system(value_system)              # priority 55
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stats_recorder)            # priority 90

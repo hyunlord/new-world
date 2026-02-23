@@ -436,4 +436,22 @@ const UPPER_NEEDS_SELF_ACTUATION_SKILL_COEFF:    float = 0.000100  ## × (best_s
 const UPPER_NEEDS_SKILLUP_COMPETENCE_BONUS: float = 0.08
 const UPPER_NEEDS_SKILLUP_SELF_ACT_BONUS:   float = 0.05
 
+## ━━ LEADER SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Weber 1922 Charismatic Authority, French & Raven 1959 Social Power]
+
+## How often LeaderSystem runs (ticks). Election check every 3 game-years.
+const LEADER_TICK_INTERVAL: int = 13140      ## 3 years × 4380 ticks/year
+
+## Minimum adult members required to elect a leader.
+const LEADER_MIN_POPULATION: int = 3
+
+## Charisma score tie-breaking: if top candidates are within this margin, use POPULARITY.
+const LEADER_CHARISMA_TIE_MARGIN: float = 0.05
+
+## [Milgram 1974] Conformity pressure reduction for wise agents.
+## Effective enforcement = base_enforcement × (1.0 - LEADER_WISDOM_RESISTANCE_COEFF × wisdom_norm)
+## wisdom_norm = DERIVED_WISDOM / 1000.0 (0.0~1.0)
+## A fully wise agent (wisdom=1.0) resists 30% of conformity pressure.
+const LEADER_WISDOM_RESISTANCE_COEFF: float = 0.30
+
 

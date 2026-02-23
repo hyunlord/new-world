@@ -44,6 +44,12 @@ signal stat_threshold_crossed(entity_id: int, stat_id: String, effect: String, d
 ## new_level: int new level (0–100)
 signal skill_leveled_up(entity_id: int, entity_name: String, skill_id: StringName, old_level: int, new_level: int, tick: int)
 
+## [Weber 1922] Emitted when a settlement elects a new leader.
+signal leader_elected(settlement_id: int, leader_id: int, leader_name: String, charisma: float, tick: int)
+
+## Emitted when a settlement's leader dies or leaves with no replacement yet.
+signal leader_lost(settlement_id: int, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

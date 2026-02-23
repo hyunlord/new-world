@@ -9,6 +9,8 @@ var member_ids: Array = []
 var building_ids: Array = []
 ## 정착지 공유 가치관 캐시 [Axelrod 1997] - value_system이 200 tick마다 재계산
 var shared_values: Dictionary = {}
+## [Weber 1922] Charismatic leader entity ID. -1 means no leader elected yet.
+var leader_id: int = -1
 
 
 func to_dict() -> Dictionary:
@@ -20,6 +22,7 @@ func to_dict() -> Dictionary:
 		"culture_id": culture_id,
 		"member_ids": member_ids.duplicate(),
 		"building_ids": building_ids.duplicate(),
+		"leader_id": leader_id,
 	}
 
 
@@ -43,5 +46,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	if raw_building_ids is Array:
 		for i in range(raw_building_ids.size()):
 			settlement.building_ids.append(int(raw_building_ids[i]))
+
+	settlement.leader_id = data.get("leader_id", -1)
 
 	return settlement

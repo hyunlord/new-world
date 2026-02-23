@@ -5,7 +5,7 @@ extends RefCounted
 ##   meta.json, entities.bin, buildings.bin, relationships.bin,
 ##   settlements.bin, world.bin, stats.json
 
-const SAVE_VERSION: int = 6
+const SAVE_VERSION: int = 7
 
 ## Minimum loadable save version (v3 loads with defaults for new fields)
 const MIN_LOAD_VERSION: int = 3
@@ -431,6 +431,8 @@ func _save_settlements(path: String, sm: RefCounted) -> bool:
 			f.store_32(s.building_ids[j])
 		# v4+: culture_id
 		f.store_pascal_string(s.culture_id)
+		## v7+: leader (-1 stored as 0, valid IDs as id+1 to avoid uint32 -1 issues)
+		f.store_32(s.leader_id + 1)
 	return true
 
 
@@ -462,6 +464,9 @@ func _load_settlements(path: String, sm: RefCounted) -> bool:
 		# v4+: culture_id (defaults to "proto_nature" for v3 saves)
 		if _load_version >= 4:
 			s.culture_id = f.get_pascal_string()
+		## v7+: leader
+		if _load_version >= 7:
+			s.leader_id = int(f.get_32()) - 1  ## reverse offset: 0 → -1, id+1 → id
 		sm._settlements[s.id] = s
 		if s.id >= sm._next_id:
 			sm._next_id = s.id + 1

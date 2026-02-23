@@ -322,5 +322,9 @@
   "SKILL_DESC_APPRENTICE": "초급",
   "SKILL_DESC_COMPETENT": "숙련",
   "SKILL_DESC_EXPERT": "전문",
-  "SKILL_DESC_GRANDMASTER": "대가"
+  "SKILL_DESC_GRANDMASTER": "대가",
+  "EVENT_LEADER_ELECTED": "{name}이(가) 정착지 {id}의 지도자가 되었습니다.",
+  "EVENT_LEADER_LOST": "정착지 {id}의 지도자를 잃었습니다.",
+  "UI_LEADER": "지도자",
+  "UI_NO_LEADER": "지도자 없음"
 }
