@@ -1,5 +1,43 @@
 # Progress Log
 
+## 욕구 섹션 생리적/심리적 서브섹션 분리 (t-NS-01 + t-NS-02) — 2026-02-23
+
+### Context
+욕구 패널이 단일 목록으로 표시되어 생리/심리 구분 불가, draw_string 서브레이블은 토글 불가.
+Alderfer ERG 이론 기반으로 생리적 욕구 / 심리적 욕구 2개 서브섹션으로 분리, 각각 독립 토글.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-NS-01 | entity_detail_panel.gd 2단 서브섹션 구조 전환 | 🟢 DISPATCH | ask_codex | 단일 파일 UI 수정 |
+| t-NS-02 | localization en+ko UI_NEEDS_BASIC/HIGHER 추가 + UI_UPPER_NEEDS_LABEL 삭제 | 🟢 DISPATCH | ask_codex | 단일 관심사, JSON 2파일 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch. 파일 겹침 없음 (t-NS-01: .gd, t-NS-02: .json×2).
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityDetailPanel | Architecture | modified | 욕구 섹션 구조: 단일 목록 → needs_basic + needs_higher 2단 서브섹션 |
+| EntityDetailPanel | Core Logic | modified | 서브섹션 헤더 cx+10, 바 cx+20 인덴트. 심리적 욕구 사망 엔티티 생략 근거 |
+| EntityDetailPanel | Development History | added | 2026-02-23 욕구 섹션 생리적/심리적 서브섹션 분리 + 토글 추가 |
+| Change Log DB | — | added | 2026-02-23 욕구 섹션 2단 구조 — Alderfer ERG 생리/심리 분리, 각각 토글 가능 |
+
+### Localization Verification
+- Hardcoded scan: PASS (모든 텍스트 Locale.ltr 경유)
+- New keys added: UI_NEEDS_BASIC (en + ko), UI_NEEDS_HIGHER (en + ko)
+- Deleted keys: UI_UPPER_NEEDS_LABEL (en + ko)
+- ko/ updated: YES
+
+### Results
+- Gate: TBD
+- Dispatch ratio: 2/2 = 100%
+- Files changed: TBD
+- Dispatch tool used: ask_codex (2 tickets)
+- Notion pages updated: TBD
+
 ## 욕구 섹션 상위 욕구 서브 레이블 (t-UL-01) — 2026-02-23
 
 ### Context
@@ -3852,3 +3890,61 @@ UI는 인간정의서 완성 전 구현 금지 원칙 명문화. thirst/warmth/s
 
 ### 영향받은 시스템
 - NeedsSystem (thirst/warmth/safety 활성화 시점 = 3단계로 명시), 전체 개발 로드맵
+
+## Q&A #13 — 욕구 현황 인벤토리 + 즉시 구현 가능 분류
+
+### Context
+욕구 미구현 7종 확인 및 L3~L5 의존성 매핑. 가치관 33개가 충족 수단 없이 즉시 구현 가능함을 식별 — 인간정의서 1단계 시작점 확정.
+
+### 추출 정보
+- 욕구 현황: 완료 3종(hunger/energy/social) + 비활성 3종(thirst/warmth/safety) + 미구현 7종(L3~L5)
+- L3~L5 의존성 맵:
+  - belonging/intimacy → 관계 시스템 필요
+  - recognition → 사회 시스템 필요
+  - autonomy/competence → 직업/기술 시스템 필요
+  - self_actualization/meaning → 사회 시스템 이후
+- 즉시 구현 가능 항목: 가치관 33개 (BehaviorSystem _apply_value_modifiers 기존재), Gardner 다중지능 (학습 속도 차등, 기술 시스템 없이도 일부 적용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 로드맵 & Phase 정의 | Phase 1 인간정의서 | 수정 | Layer 4 가치관 33개 bullet에 "즉시 구현 가능" + BehaviorSystem 연결 추가 |
+| 가치관 시스템 | 설계 의도 | 추가 | "즉시 구현 가능(욕구 충족 수단 불필요)" bullet 삽입 (Erikson 다음) |
+
+### 변경 내역
+- 로드맵 Layer 4 가치관 33개 bullet (310e2e3d-4a77-814b): 즉시 구현 가능 + BehaviorSystem 연결 명시
+- 가치관 시스템 설계 의도: 새 bullet 추가 — ±40% 영향, L3~L5 대비 즉시 구현 가능 이유 명시
+
+### Localization Verification
+- 코드 변경 없음 — 해당 없음
+
+### Results
+- Notion 업데이트: PASS (2개 블록)
+- 코드 변경: 없음
+
+## Q&A #14 — 인간 정의서 v3 통합본 → Notion 마스터 인덱스 생성
+
+### Context
+인간 정의서 v3 통합본(v1/v2/Part3 통합, canonical source) 확정. 노션에 전용 마스터 인덱스 페이지 없었으므로 생성.
+
+### 추출 정보
+- 설계 원칙 6개 (관찰가능/행동영향/계층구조/데이터드리븐/모드친화/LLM-Ready)
+- 레이어 구조: Layer 1~7 + 파생 스탯 + 집단 레이어 전체
+- 미구현 레이어 설계: Layer 4.5(사회적 정체성), Layer 4.7(경제 행동), Layer 7(플레이버), 파생 스탯 8개 공식, 유전 시스템 공식
+- 집단 레이어: 사회 네트워크/권력/문화+테크트리/전투/외교/종족/LLM
+- Phase 2~5 구현 로드맵
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📖 인간 정의서 v3 마스터 인덱스 | 신규 생성 | 생성 | 설계 원칙 6개, 레이어 구조 표, 집단 레이어 표, 구현 로드맵, 미구현 스키마 (Layer 4.5/4.7/7, 파생 스탯, 유전) |
+| 변경 로그 DB | — | 추가 | "인간 정의서 v3 통합본 확정 — 마스터 인덱스 페이지 생성" |
+
+### Localization Verification
+- 코드 변경 없음 — 해당 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion 페이지 생성: 310e2e3d-4a77-8100-9f4e-f6d5a7c66fe9
+- Notion 블록 추가: 19개 (표 + 코드 블록 + 섹션)
+- Change Log 항목: 추가 완료

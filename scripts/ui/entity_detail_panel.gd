@@ -98,6 +98,8 @@ var _deceased_proxy: RefCounted = null
 var _section_collapsed: Dictionary = {
 	"status": false,
 	"needs": false,
+	"needs_basic": false,    ## 생리적 욕구 서브섹션, 기본 펼침
+	"needs_higher": false,   ## 심리적 욕구 서브섹션, 기본 펼침
 	"personality": true,
 	"derived": false,
 	"traits": false,
@@ -744,39 +746,41 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"), "needs")
 	if not _section_collapsed.get("needs", false):
 		var use_stat_query: bool = entity.is_alive and not _showing_deceased
-		if use_stat_query:
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), StatQuery.get_normalized(entity, &"NEED_HUNGER"), Color(0.9, 0.2, 0.2))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), StatQuery.get_normalized(entity, &"NEED_THIRST"), Color(0.392, 0.710, 0.965))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), StatQuery.get_normalized(entity, &"NEED_ENERGY"), Color(0.9, 0.8, 0.2))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), StatQuery.get_normalized(entity, &"NEED_WARMTH"), Color(1.0, 0.541, 0.396))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), StatQuery.get_normalized(entity, &"NEED_SAFETY"), Color(0.584, 0.459, 0.804))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), StatQuery.get_normalized(entity, &"NEED_SOCIAL"), Color(0.3, 0.5, 0.9))
-			## ── 상위 욕구 (Maslow Relatedness + Growth) ──
-			cy += 8.0
-			draw_line(
-				Vector2(cx + 10, cy), Vector2(cx + 10 + bar_w, cy),
-				Color(0.3, 0.3, 0.3, 0.8), 1.0
-			)
-			cy += 6.0
-			## 상위 욕구 서브 레이블
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_UPPER_NEEDS_LABEL"),
-				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.7))
-			cy += 18.0
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_BELONGING"),          StatQuery.get_normalized(entity, &"NEED_BELONGING"),          Color(0.4, 0.65, 0.9))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_INTIMACY"),           StatQuery.get_normalized(entity, &"NEED_INTIMACY"),           Color(0.9, 0.45, 0.65))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_RECOGNITION"),        StatQuery.get_normalized(entity, &"NEED_RECOGNITION"),        Color(0.85, 0.75, 0.3))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_AUTONOMY"),           StatQuery.get_normalized(entity, &"NEED_AUTONOMY"),           Color(0.55, 0.85, 0.65))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
-		else:
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), entity.thirst, Color(0.392, 0.710, 0.965))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), entity.warmth, Color(1.0, 0.541, 0.396))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), entity.safety, Color(0.584, 0.459, 0.804))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
-		cy += 6.0
+
+		## ── 생리적 욕구 서브섹션 ──
+		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_BASIC"), "needs_basic")
+		if not _section_collapsed.get("needs_basic", false):
+			if use_stat_query:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    StatQuery.get_normalized(entity, &"NEED_HUNGER"), Color(0.9, 0.2, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   StatQuery.get_normalized(entity, &"NEED_THIRST"), Color(0.392, 0.710, 0.965))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"),     StatQuery.get_normalized(entity, &"NEED_ENERGY"), Color(0.9, 0.8, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"),   StatQuery.get_normalized(entity, &"NEED_WARMTH"), Color(1.0, 0.541, 0.396))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"),   StatQuery.get_normalized(entity, &"NEED_SAFETY"), Color(0.584, 0.459, 0.804))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"),     StatQuery.get_normalized(entity, &"NEED_SOCIAL"), Color(0.3, 0.5, 0.9))
+			else:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    entity.hunger, Color(0.9, 0.2, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   entity.thirst, Color(0.392, 0.710, 0.965))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"),     entity.energy, Color(0.9, 0.8, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"),   entity.warmth, Color(1.0, 0.541, 0.396))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"),   entity.safety, Color(0.584, 0.459, 0.804))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"),     entity.social, Color(0.3, 0.5, 0.9))
+			cy += 4.0
+
+		## ── 심리적 욕구 서브섹션 ──
+		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_HIGHER"), "needs_higher")
+		if not _section_collapsed.get("needs_higher", false):
+			if use_stat_query:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_BELONGING"),          StatQuery.get_normalized(entity, &"NEED_BELONGING"),          Color(0.4, 0.65, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_INTIMACY"),           StatQuery.get_normalized(entity, &"NEED_INTIMACY"),           Color(0.9, 0.45, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_RECOGNITION"),        StatQuery.get_normalized(entity, &"NEED_RECOGNITION"),        Color(0.85, 0.75, 0.3))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_AUTONOMY"),           StatQuery.get_normalized(entity, &"NEED_AUTONOMY"),           Color(0.55, 0.85, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
+			## 사망/레거시 엔티티는 심리적 욕구 stat_cache 없음 → 표시 생략
+			cy += 4.0
+
+		cy += 4.0
 
 	# ── Personality (HEXACO 6-axis + expandable facets) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_PERSONALITY"), "personality")
