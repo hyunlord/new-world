@@ -28,16 +28,17 @@ t-UI-main과 t-UI-04 병렬 dispatch 가능 (파일 겹침 없음: entity_detail
 | Change Log DB | — | added | 2026-02-23 EntityDetailPanel — 감정 영어 하드코딩 제거, 파생 스탯 섹션 분리, 상위 욕구 UI 추가 |
 
 ### Localization Verification
-- Hardcoded scan: TBD (post-dispatch)
+- Hardcoded scan: PASS (0 matches for "Happy","Lonely","Stress","Grief","Love" in panel)
 - New keys added: UI_DERIVED_UNAVAILABLE
 - ko/ updated: YES (t-UI-04에서 동시 업데이트)
 
 ### Results
-- Gate: TBD
+- Gate: PASS
 - Dispatch ratio: 2/2 = 100%
-- Files changed: TBD
-- Dispatch tool used: ask_codex (2 tickets)
-- Notion pages updated: TBD
+- Files changed: 4 (entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets, gpt-5.3-codex)
+- Commit: 63de58a
+- Notion pages updated: ⚠️ notionApi MCP unavailable — manual update required
 
 ## 욕구 확장 임시 비활성화 (T-DISABLE-1~3) — 2026-02-21
 
