@@ -4,7 +4,7 @@ extends "res://scripts/core/simulation_system.gd"
 ## and applies yearly personality maturation.
 ## Runs every 50 ticks (~4 days).
 
-const PersonalityMaturation = preload("res://scripts/systems/personality_maturation.gd")
+const PersonalityMaturation = preload("res://scripts/systems/psychology/personality_maturation.gd")
 const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
 
 var _entity_manager: RefCounted
