@@ -32,6 +32,15 @@ func _sync_entity(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"NEED_SAFETY", int(entity.safety * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_SOCIAL", int(entity.social * 1000), 0)
 
+	# 상위 욕구 (Maslow Relatedness + Growth / Alderfer ERG / Deci & Ryan SDT)
+	StatQuery.set_value(entity, &"NEED_BELONGING",          int(entity.belonging * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_INTIMACY",           int(entity.intimacy * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_RECOGNITION",        int(entity.recognition * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_AUTONOMY",           int(entity.autonomy * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_COMPETENCE",         int(entity.competence * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_SELF_ACTUALIZATION", int(entity.self_actualization * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_MEANING",            int(entity.meaning * 1000), 0)
+
 	# HEXACO axes: float 0~1 → int 0~1000
 	var pd = entity.personality
 	if pd == null:

@@ -1,5 +1,43 @@
 # Progress Log
 
+## 상위 욕구 7개 데이터 파이프라인 수정 (t-UN-01 + t-UN-02) — 2026-02-23
+
+### Context
+상위 욕구 7개 (belonging~meaning)가 인게임 욕구 패널에서 모두 0%로 표시.
+원인: entity_data.gd 필드 누락 + stat_sync_system.gd sync 코드 누락.
+JSON, localization, UI 코드는 이미 완성 — 데이터 파이프라인 앞 두 단계만 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UN-01 | entity_data.gd 상위 욕구 7개 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, standalone |
+| t-UN-02 | stat_sync_system.gd NEED_* sync 7개 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, t-UN-01 완료 후 순차 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+순차 dispatch: t-UN-01 완료 → t-UN-02 (entity.belonging 필드가 먼저 존재해야 함)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityData | Data Structure | modified | 상위 욕구 7개 float 필드 추가, to_dict/from_dict 하위호환 |
+| StatSyncSystem | Core Logic | modified | _sync_entity() sync 대상 6→13개로 확장 |
+| StatSystem | Development History | added | 2026-02-23 상위 욕구 7개 데이터 파이프라인 완성 |
+| Change Log DB | — | added | 2026-02-23 상위 욕구 7개 0% 버그 수정 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 파일만 수정, UI 텍스트 없음)
+- New keys added: 없음 (이미 존재)
+- ko/ updated: 불필요
+
+### Results
+- Gate: TBD
+- Dispatch ratio: 2/2 = 100%
+- Files changed: TBD
+- Dispatch tool used: ask_codex (2 tickets)
+- Notion pages updated: ⚠️ notionApi MCP unavailable — manual update required
+
 ## EntityDetailPanel UI 버그 수정 3종 (t-UI-main + t-UI-04) — 2026-02-23
 
 ### Context
@@ -3492,3 +3530,68 @@ Gemini·GPT·Claude Q&A 분석 결과를 Notion 기술 문서에 반영. 구현 
 - Files changed: 0 (Notion 문서 5건 업데이트)
 - Dispatch tool used: Notion REST API (curl)
 - Notion pages updated: 욕구 13종 NeedsSystem 확장, NeedsSystem 욕구 확장 설계 확정, 👤 엔티티 & 욕구 시스템, 📝 변경 로그 DB
+
+---
+
+## NeedsSystem 상수 오류 수정 + 회복 아키텍처 문서화 — Q&A 기반
+
+### Context
+코드 조사 결과, Notion 핵심 밸런스 값 섹션의 상수 3개가 실제 game_config.gd와 불일치. 회복 로직 분산 아키텍처(3개 시스템)와 신규 욕구 추가 체크리스트(6곳)가 문서에 없었음. Q&A 분석으로 발견하여 즉시 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 수정 | 🔴 DIRECT | — | 코드 없음, Notion API 작업 |
+
+### Dispatch ratio: N/A
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👤 엔티티 & 욕구 시스템 | 핵심 밸런스 값 (code block) | modified | 오류 수정 3종: ENERGY_DECAY_RATE 0.002→0.003, WARMTH_FIRE_RESTORE 0.008→0.035, WARMTH_SHELTER_RESTORE 0.004→0.018. 신규 추가: ENERGY_ACTION_COST=0.005. 성인 hunger 소진 시간 주석 추가(500틱/1000 sim-tick) |
+| 👤 엔티티 & 욕구 시스템 | NeedsSystem — 회복 로직 아키텍처 | added | 회복 분산 구조 표(4개 시스템), 즉시/도착후/지속 3패턴 설명 |
+| 👤 엔티티 & 욕구 시스템 | NeedsSystem — 신규 욕구 추가 시 수정 지점 | added | 6곳 체크리스트 + warmth 구현 예시 |
+| 📝 변경 로그 DB | — | added | 2026-02-23 \| NeedsSystem 상수 오류 3종 수정 + 회복 아키텍처 문서화 |
+
+### 수정된 오류 내역
+| 상수 | Notion(구) | game_config.gd(정) |
+|------|-----------|-------------------|
+| ENERGY_DECAY_RATE | 0.002 | 0.003 |
+| WARMTH_FIRE_RESTORE | 0.008 | 0.035 |
+| WARMTH_SHELTER_RESTORE | 0.004 | 0.018 |
+| ENERGY_ACTION_COST | (미기재) | 0.005 |
+
+### Localization Verification
+- Hardcoded scan: PASS (GDScript 미변경)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A
+- Files changed: 0
+- Notion pages updated: 👤 엔티티 & 욕구 시스템, 📝 변경 로그 DB
+
+---
+
+## Q&A 기반 문서 업데이트 #3 — NeedsSystem Phase 1 확장 구현 스펙
+
+### Context
+Phase 1 욕구 확장(thirst/warmth/safety) 10-ticket 구현 프롬프트 분석 → Notion 문서화.
+decay rate 비율 확정, urgency 가중치, 온도 3단계 tier, stressor inject 패턴 기록.
+
+### 정보 추출
+- 구현 의도: L1/L2 욕구 먼저, L3~L5는 social/religion 완성 후
+- 학술 근거: Maslow (1943) L1/L2, Cannon (1932) 항상성, Lazarus & Folkman (1984) 스트레스
+- 데이터: decay rate 3종 (thirst=0.0024, warmth=0.0016, safety=0.0006)
+- 내부 로직: urgency 가중치(×1.4/1.3/1.1/0.8), 온도 3티어, stressor intensity 비례식
+- 아키텍처: 회복 3-system 분배 (behavior/movement/building_effect)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 전체 | 신규 작성 | 구현 의도, 학술 근거, 상수 비율표, 온도 3티어 decay, urgency 가중치 표, 회복 3-system 표, stressor inject 표, Gate 조건 9종 |
+| 📝 변경 로그 DB | — | 추가 | Phase 1 확장 설계 문서화 엔트리 |
+
+### 영향받은 시스템
+- NeedsSystem (소모 로직), BehaviorSystem (urgency + 분기), BuildingEffectSystem/MovementSystem (회복)
+

@@ -16,6 +16,22 @@ var warmth: float = 0.90
 ## [Maslow (1943) L2] 안전감 — 위협으로부터의 안전 인식 (1.0=안전, 0.0=위험)
 var safety: float = 0.60
 
+## 상위 욕구 (Maslow Relatedness + Growth / Alderfer ERG / Deci & Ryan SDT)
+## float 0.0~1.0. stat_sync_system이 * 1000 하여 NEED_* stat_cache에 기록.
+
+## [Alderfer 1969] Relatedness
+var belonging: float = 0.70        ## 집단 소속감. 초기값 = belonging.json default 700
+var intimacy: float = 0.70         ## 깊은 관계. 초기값 = intimacy.json default 700
+var recognition: float = 0.60      ## 타인 존경/인정. 초기값 = recognition.json default 600
+
+## [Deci & Ryan 1985 SDT] Growth
+var autonomy: float = 0.60         ## 자기결정. 초기값 = autonomy.json default 600
+var competence: float = 0.60       ## 숙련감. 초기값 = competence.json default 600
+
+## [Maslow 1943] Growth
+var self_actualization: float = 0.50  ## 잠재력 발현. 초기값 = self_actualization.json default 500
+var meaning: float = 0.50             ## 삶의 목적. 초기값 = meaning.json default 500
+
 ## Attributes
 var age: int = 0
 var speed: float = 1.0
@@ -179,6 +195,13 @@ func to_dict() -> Dictionary:
 		"thirst": thirst,
 		"warmth": warmth,
 		"safety": safety,
+		"belonging": belonging,
+		"intimacy": intimacy,
+		"recognition": recognition,
+		"autonomy": autonomy,
+		"competence": competence,
+		"self_actualization": self_actualization,
+		"meaning": meaning,
 		"age": age,
 		"speed": speed,
 		"strength": strength,
@@ -229,6 +252,13 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.thirst = data.get("thirst", 0.85)
 	e.warmth = data.get("warmth", 0.90)
 	e.safety = data.get("safety", 0.60)
+	e.belonging          = data.get("belonging",          0.70)
+	e.intimacy           = data.get("intimacy",           0.70)
+	e.recognition        = data.get("recognition",        0.60)
+	e.autonomy           = data.get("autonomy",           0.60)
+	e.competence         = data.get("competence",         0.60)
+	e.self_actualization = data.get("self_actualization", 0.50)
+	e.meaning            = data.get("meaning",            0.50)
 	e.age = data.get("age", 0)
 	e.speed = data.get("speed", 1.0)
 	e.strength = data.get("strength", 1.0)
