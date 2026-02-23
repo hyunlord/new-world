@@ -53,11 +53,22 @@ Config-first fan-out:
 - ko/ updated: YES
 
 ### Results
-- Gate: PENDING
-- Dispatch ratio: 7/9 = 78%
-- Files changed: 10 (8 .gd files + 2 .json files)
-- Dispatch tool used: ask_codex (7 tickets)
-- Notion pages updated: PENDING
+- Gate: PASS (commit df4d3b3, 11 files, 322 insertions)
+- Dispatch ratio: 7/9 = 78% ✅
+- Files changed: 11 (9 .gd files + 2 .json files)
+- Dispatch tool used: ask_codex (7 tickets via codex_dispatch.sh)
+- Notion pages updated:
+  - ✅ SkillSystem 신규 페이지 생성 (310e2e3d-4a77-81cf-b4f4-f5b00c1b5c28)
+  - ✅ 👤 EntityData: skill_xp/skill_levels 코드블록 추가
+  - ✅ 👤 EntityData: 개발 히스토리 행 추가 (skill XP 필드)
+  - ✅ 🏗 GatheringSystem: 스킬 XP 누적 코드 설명 추가
+  - ✅ 🏗 ConstructionSystem: SKILL_CONSTRUCTION XP 설명 추가
+  - ✅ 🖼 EntityDetailPanel: _section_collapsed skills:false 반영
+  - ✅ 🖼 EntityDetailPanel: 섹션 순서 코드블록 skills 라인 삽입
+  - ✅ 🖼 EntityDetailPanel: 개발 히스토리 행 추가 (t-SK-08)
+  - ✅ ⚙ 코어 아키텍처: skill_leveled_up 시그널 등록
+  - ✅ 📝 변경 로그 DB: Skill XP Phase 3 항목 생성 (310e2e3d-4a77-816b)
+  - ✅ 📋 데이터 정의서 DB: 13개 항목 생성 (SKILL_XP_×5, skill_xp/skill_levels×2, SKILL_DESC_×6)
 
 ## 욕구 섹션 생리적/심리적 서브섹션 분리 (t-NS-01 + t-NS-02) — 2026-02-23
 
