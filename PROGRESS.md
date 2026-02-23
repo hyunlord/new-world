@@ -4204,7 +4204,7 @@ Config-first, then fan-out:
 - Hardcoded scan: N/A (no UI text output)
 
 ### Results
-- Gate: pending (push 후 실행 예정)
+- Gate: PASS (commit: 35b3afc) — Systems: 31 registered, UpperNeedsSystem priority 12 confirmed
 - Dispatch ratio: 2/4 = 50%
 - Files changed: 4 (game_config.gd, upper_needs_system.gd, test_upper_needs.gd, main.gd)
 - Dispatch tool used: ask_codex (t-UN-02 job f8bbcfc1, t-UN-03 job c133efd8)
