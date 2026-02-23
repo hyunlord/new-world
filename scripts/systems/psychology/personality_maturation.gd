@@ -6,7 +6,7 @@ extends RefCounted
 ## No class_name - use preload("res://scripts/systems/personality_maturation.gd").
 
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 
 var _theta: float = 0.03
 var _sigma: float = 0.03

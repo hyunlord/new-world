@@ -14,7 +14,7 @@ func _init() -> void:
 
 func init(entity_manager) -> void:
 	_entity_manager = entity_manager
-	var AttachmentSystem = load("res://scripts/systems/phase5/attachment_system.gd")
+	var AttachmentSystem = load("res://scripts/systems/development/attachment_system.gd")
 	_attachment_system = AttachmentSystem.new()
 
 

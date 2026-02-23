@@ -1,6 +1,6 @@
 extends PanelContainer
 
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 
 var _timer: Timer
 var _current_trait: Dictionary = {}

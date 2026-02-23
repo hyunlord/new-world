@@ -2,7 +2,7 @@ extends CanvasLayer
 
 # NO class_name — headless compatibility
 
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 const MAX_HISTORY: int = 50
 const MAX_OUTPUT_LINES: int = 200
 const TICKS_PER_YEAR: int = 4380  # 365 * 12

@@ -4236,7 +4236,12 @@ Sequential — files must be moved before paths can be updated:
 2. DISPATCH: t-RS-02 (update all preload/load paths + class_name rename in 14 files)
 
 ### Notion Update
-pending
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| Change Log DB | — | add | 2026-02-23 — systems/ 폴더 도메인별 재구조화 (t-RS) — phase4/phase5 제거, PsychologyCoordinator 리네임 |
+
+Phase 4 설계 문서(30fe2e3d)는 히스토리 설계 문서 — 수정 불필요.
+코어 아키텍처 페이지에 디렉토리 경로 하드코딩 없음 — 수정 불필요.
 
 ### Localization Verification
 - New keys: none (pure refactor, no UI text)
@@ -4246,5 +4251,6 @@ pending
 ### Results
 - Gate: pending
 - Dispatch ratio: 1/2 = 50%
-- Files changed: pending
-- Notion pages updated: pending
+- t-RS-02 dispatched via ask_codex (job 7045b66f) — Codex wrote + executed apply_rs02.py, RS-02 DONE confirmed
+- Files changed: 13 files patched (preload/load paths), 1 class_name rename
+- Notion pages updated: Change Log DB (1 entry added)

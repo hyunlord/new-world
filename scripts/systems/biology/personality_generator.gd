@@ -2,10 +2,10 @@ extends RefCounted
 
 ## Cholesky-based HEXACO personality generator with parental inheritance,
 ## sex differences, and culture shifts.
-## No class_name - use preload("res://scripts/systems/personality_generator.gd").
+## No class_name - use preload("res://scripts/systems/biology/personality_generator.gd").
 
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 
 var _correlation_matrix: Array = []
 var _heritability: Dictionary = {}

@@ -4,9 +4,9 @@ const EntityDataScript = preload("res://scripts/core/entity_data.gd")
 const ChunkIndex = preload("res://scripts/core/chunk_index.gd")
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
 const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
-const PersonalityGeneratorScript = preload("res://scripts/systems/personality_generator.gd")
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
-const ValueSystem = preload("res://scripts/systems/value_system.gd")
+const PersonalityGeneratorScript = preload("res://scripts/systems/biology/personality_generator.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
+const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
 
 var _entities: Dictionary = {}  # id -> entity

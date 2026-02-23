@@ -2,7 +2,7 @@ class_name EntityDetailPanel
 extends Control
 
 const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
 const ValueDefs = preload("res://scripts/core/value_defs.gd")
 
@@ -872,7 +872,7 @@ func _draw() -> void:
 			var _mult_suffix: String = ""
 			if _level > 0:
 				var _mult: float = StatQuery.get_skill_multiplier(entity, _sid, &"gathering")
-				_mult_suffix = " \u00d7%.2f" % _mult
+				_mult_suffix = " \u00d7%.3f" % _mult
 			cy = _draw_skill_bar(font, cx + 10, cy, bar_w,
 				Locale.ltr(_se["label_key"]),
 				_info,

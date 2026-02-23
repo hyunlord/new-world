@@ -4,7 +4,7 @@ extends Node
 ## Glue Node that connects Phase 4 systems and routes cross-system events
 ## that individual systems cannot self-coordinate (mental break hooks).
 
-class_name Phase4Coordinator
+class_name PsychologyCoordinator
 
 # ── System References ──────────────────────────────────────────────────
 var _coping_system: RefCounted
