@@ -231,7 +231,7 @@ func _build_top_bar() -> void:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 14)
 
-	_status_label = _make_label("\u25B6", "hud")
+	_status_label = _make_label("▶", "hud")
 	_speed_label = _make_label("1x", "hud")
 	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
 	_pop_label = _make_label("Pop: 0", "hud")
@@ -477,13 +477,13 @@ func _build_help_overlay() -> void:
 	right_col.add_child(_make_label("Space         Pause", "help_body"))
 	right_col.add_child(_make_label(". (period)    Speed up", "help_body"))
 	right_col.add_child(_make_label(", (comma)     Speed down", "help_body"))
-	right_col.add_child(_make_label("\u2318S            Save", "help_body"))
-	right_col.add_child(_make_label("\u2318L            Load", "help_body"))
+	right_col.add_child(_make_label("⌘S            Save", "help_body"))
+	right_col.add_child(_make_label("⌘L            Load", "help_body"))
 	right_col.add_child(_make_label("", 8))
 	right_col.add_child(_make_label("Display", "help_section", Color(0.7, 0.9, 1.0)))
 	right_col.add_child(_make_label("Tab           Resources", "help_body"))
 	right_col.add_child(_make_label("N             Day/Night", "help_body"))
-	right_col.add_child(_make_label("\u2318+/-/0        UI Scale", "help_body"))
+	right_col.add_child(_make_label("⌘+/-/0        UI Scale", "help_body"))
 
 	columns.add_child(left_col)
 	columns.add_child(right_col)
@@ -661,32 +661,32 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Need bars + percentage
-	var hunger_pct: float = entity.hunger * 100.0
+	var hunger_pct: float = StatQuery.get_normalized(entity, &"NEED_HUNGER") * 100.0
 	_hunger_bar.value = hunger_pct
 	_hunger_pct_label.text = str(int(hunger_pct)) + "%"
 
-	var energy_pct: float = entity.energy * 100.0
+	var energy_pct: float = StatQuery.get_normalized(entity, &"NEED_ENERGY") * 100.0
 	_energy_bar.value = energy_pct
 	_energy_pct_label.text = str(int(energy_pct)) + "%"
 
-	var social_pct: float = entity.social * 100.0
+	var social_pct: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL") * 100.0
 	_social_bar.value = social_pct
 	_social_pct_label.text = str(int(social_pct)) + "%"
 
-	var thirst_pct: float = entity.thirst * 100.0
+	var thirst_pct: float = StatQuery.get_normalized(entity, &"NEED_THIRST") * 100.0
 	_thirst_bar.value = thirst_pct
 	_thirst_pct_label.text = str(int(thirst_pct)) + "%"
 
-	var warmth_pct: float = entity.warmth * 100.0
+	var warmth_pct: float = StatQuery.get_normalized(entity, &"NEED_WARMTH") * 100.0
 	_warmth_bar.value = warmth_pct
 	_warmth_pct_label.text = str(int(warmth_pct)) + "%"
 
-	var safety_pct: float = entity.safety * 100.0
+	var safety_pct: float = StatQuery.get_normalized(entity, &"NEED_SAFETY") * 100.0
 	_safety_bar.value = safety_pct
 	_safety_pct_label.text = str(int(safety_pct)) + "%"
 
 	# Low hunger blink
-	if entity.hunger < 0.2:
+	if StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.2:
 		_hunger_blink_timer += delta * 4.0
 		var blink_alpha: float = 0.5 + 0.5 * sin(_hunger_blink_timer)
 		_hunger_bar.modulate = Color(1, 1, 1, blink_alpha)

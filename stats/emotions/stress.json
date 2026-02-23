@@ -3,28 +3,65 @@
   "display_key": "UI_STAT_EMOTION_STRESS",
   "category": "EMOTION",
   "storage_type": "int",
-  "range": [0, 1000],
+  "range": [
+    0,
+    2000
+  ],
   "default": 0,
   "tier": 2,
   "growth": {
-    "type": "DECAY_NATURAL",
-    "params": { "decay_per_year": 200 }
+    "type": "ACCUMULATOR",
+    "params": {
+      "decay_tau_hours": 48.0
+    }
   },
   "thresholds": [
-    { "value": 500, "direction": "above", "effect": "MODIFIER_STRESS_PENALTY_MILD", "hysteresis": 30 },
-    { "value": 750, "direction": "above", "effect": "MODIFIER_STRESS_PENALTY_SEVERE", "hysteresis": 30 },
-    { "value": 900, "direction": "above", "effect": "BEHAVIOR_BREAKDOWN_OVERRIDE", "hysteresis": 20 }
+    {
+      "value": 600,
+      "direction": "above",
+      "effect": "STRESS_STATE_ELEVATED",
+      "hysteresis": 50
+    },
+    {
+      "value": 1000,
+      "direction": "above",
+      "effect": "STRESS_STATE_HIGH",
+      "hysteresis": 50
+    },
+    {
+      "value": 1500,
+      "direction": "above",
+      "effect": "STRESS_STATE_CRITICAL",
+      "hysteresis": 50
+    }
   ],
   "affects": [
     {
-      "target": "allostatic_input",
+      "target": "work_efficiency",
       "evaluator": "CURVE",
       "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 500, "exponent": 1.5, "max_output": 10.0 },
+      "params": {
+        "threshold": 600,
+        "exponent": 1.5,
+        "max_output": 0.5
+      },
       "weight": 1.0,
+      "direction": "negative",
+      "context": ""
+    },
+    {
+      "target": "immune_suppression",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "params": {},
+      "weight": 0.3,
       "direction": "positive",
-      "context": "allostatic"
+      "context": ""
     }
   ],
-  "display": { "visible": true, "show_in_panel": "emotions", "descriptor_table": "7_step" }
+  "display": {
+    "visible": true,
+    "show_in_panel": "emotions",
+    "descriptor_table": "7_step"
+  }
 }

@@ -4,31 +4,27 @@
   "category": "DERIVED",
   "storage_type": "int",
   "range": [0, 1000],
-  "default": 300,
+  "default": 500,
   "tier": 2,
   "growth": {
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "HEXACO_C", "weight": 0.40 },
-        { "source": "HEXACO_O", "weight": 0.40 },
-        { "source": "HEXACO_A", "weight": 0.20 }
-      ]
+        {"stat_id": "HEXACO_C",      "weight": 0.30},
+        {"stat_id": "HEXACO_O",      "weight": 0.25},
+        {"stat_id": "HEXACO_A",      "weight": 0.20},
+        {"stat_id": "VALUE_KNOWLEDGE","weight": 0.25}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_WISE", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_WISDOM_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_WISDOM_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "decision_quality_bonus",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.3 },
-      "weight": 0.50,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "leader_aptitude",  "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.30, "direction": "positive", "context": ""},
+    {"target": "conflict_resolve", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

@@ -16,6 +16,22 @@ var warmth: float = 0.90
 ## [Maslow (1943) L2] 안전감 — 위협으로부터의 안전 인식 (1.0=안전, 0.0=위험)
 var safety: float = 0.60
 
+## 상위 욕구 (Maslow Relatedness + Growth / Alderfer ERG / Deci & Ryan SDT)
+## float 0.0~1.0. stat_sync_system이 * 1000 하여 NEED_* stat_cache에 기록.
+
+## [Alderfer 1969] Relatedness
+var belonging: float = 0.70        ## 집단 소속감. 초기값 = belonging.json default 700
+var intimacy: float = 0.70         ## 깊은 관계. 초기값 = intimacy.json default 700
+var recognition: float = 0.60      ## 타인 존경/인정. 초기값 = recognition.json default 600
+
+## [Deci & Ryan 1985 SDT] Growth
+var autonomy: float = 0.60         ## 자기결정. 초기값 = autonomy.json default 600
+var competence: float = 0.60       ## 숙련감. 초기값 = competence.json default 600
+
+## [Maslow 1943] Growth
+var self_actualization: float = 0.50  ## 잠재력 발현. 초기값 = self_actualization.json default 500
+var meaning: float = 0.50             ## 삶의 목적. 초기값 = meaning.json default 500
+
 ## Attributes
 var age: int = 0
 var speed: float = 1.0
@@ -99,6 +115,21 @@ var violation_history: Dictionary = {}
 ## StatSystem Phase 0: 엔티티별 스탯 캐시
 ## key: stat_id (StringName), value: {value, dirty, modifiers, last_computed_tick}
 var stat_cache: Dictionary = {}
+## Gardner 다중지능 (Gardner 1983)
+## key: 지능 ID 소문자 ("linguistic", "logical", "spatial", "musical",
+##      "kinesthetic", "interpersonal", "intrapersonal", "naturalistic")
+## value: float 0.0~1.0
+## 생성 시 PersonalityGenerator가 채움. 기본값 빈 Dict (미초기화).
+var intelligences: Dictionary = {}
+
+## Accumulated skill XP — keyed by skill_id StringName (e.g. &"SKILL_FORAGING")
+## Written by StatQuery.add_xp(). Persisted in save file.
+var skill_xp: Dictionary = {}
+
+## Current skill levels 0–100 — keyed by skill_id StringName
+## Updated by StatQuery.add_xp() when a level-up occurs. Cached in stat_cache via StatSync.
+## Rule: skill_levels[id] is always the computed level from skill_xp[id], never set directly.
+var skill_levels: Dictionary = {}
 
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
@@ -173,6 +204,13 @@ func to_dict() -> Dictionary:
 		"thirst": thirst,
 		"warmth": warmth,
 		"safety": safety,
+		"belonging": belonging,
+		"intimacy": intimacy,
+		"recognition": recognition,
+		"autonomy": autonomy,
+		"competence": competence,
+		"self_actualization": self_actualization,
+		"meaning": meaning,
 		"age": age,
 		"speed": speed,
 		"strength": strength,
@@ -204,6 +242,9 @@ func to_dict() -> Dictionary:
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
+		"intelligences": intelligences.duplicate(),
+		"skill_xp": skill_xp.duplicate(),
+		"skill_levels": skill_levels.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 	}
 
@@ -222,6 +263,13 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.thirst = data.get("thirst", 0.85)
 	e.warmth = data.get("warmth", 0.90)
 	e.safety = data.get("safety", 0.60)
+	e.belonging          = data.get("belonging",          0.70)
+	e.intimacy           = data.get("intimacy",           0.70)
+	e.recognition        = data.get("recognition",        0.60)
+	e.autonomy           = data.get("autonomy",           0.60)
+	e.competence         = data.get("competence",         0.60)
+	e.self_actualization = data.get("self_actualization", 0.50)
+	e.meaning            = data.get("meaning",            0.50)
 	e.age = data.get("age", 0)
 	e.speed = data.get("speed", 1.0)
 	e.strength = data.get("strength", 1.0)
@@ -305,6 +353,14 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	if not body_data.is_empty():
 		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
+	e.intelligences = data.get("intelligences", {}).duplicate()
+	## skill_xp: keys are StringName-compatible strings in JSON, convert back to StringName
+	var raw_xp: Dictionary = data.get("skill_xp", {})
+	for k in raw_xp:
+		e.skill_xp[StringName(k)] = float(raw_xp[k])
+	var raw_levels: Dictionary = data.get("skill_levels", {})
+	for k in raw_levels:
+		e.skill_levels[StringName(k)] = int(raw_levels[k])
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	return e
 

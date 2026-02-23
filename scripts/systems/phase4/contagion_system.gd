@@ -109,8 +109,8 @@ func _run_aoe_contagion(alive: Array, tick: int) -> void:
 		var susceptibility: float = REFRACTORY_SUSCEPTIBILITY if refractory > 0 else 1.0
 
 		# Personality susceptibility
-		var X_axis: float = recipient.personality.axes.get("X", 0.5)
-		var E_axis: float = recipient.personality.axes.get("E", 0.5)
+		var X_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_X")
+		var E_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_E")
 		var personality_susceptibility: float = 0.7 + 0.3 * X_axis + 0.2 * (E_axis - 0.5)
 		var total_susceptibility: float = susceptibility * personality_susceptibility * crowd_factor
 
@@ -199,7 +199,7 @@ func _run_network_contagion(alive: Array, tick: int) -> void:
 		base_weight *= NETWORK_DECAY
 
 		# A axis (agreeableness) raises social susceptibility
-		var A_axis: float = recipient.personality.axes.get("A", 0.5)
+		var A_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_A")
 		base_weight *= (0.8 + 0.4 * A_axis)
 
 		# Crowd dilution

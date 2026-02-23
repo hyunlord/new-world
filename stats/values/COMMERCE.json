@@ -1,0 +1,63 @@
+{
+  "id": "VALUE_COMMERCE",
+  "display_key": "UI_STAT_VALUE_COMMERCE",
+  "category": "VALUE",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 1,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        200,
+        800
+      ],
+      "phase_speeds": [
+        0.8,
+        1.0,
+        0.8
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 800,
+      "direction": "above",
+      "effect": "TRAIT_VALUE_COMMERCE_HIGH",
+      "hysteresis": 30
+    },
+    {
+      "value": 200,
+      "direction": "below",
+      "effect": "TRAIT_VALUE_COMMERCE_LOW",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "trade_willingness",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.3,
+      "direction": "positive",
+      "context": ""
+    },
+    {
+      "target": "wealth_accumulation",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.2,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": false,
+    "show_in_panel": "values",
+    "descriptor_table": "value_7_step"
+  }
+}

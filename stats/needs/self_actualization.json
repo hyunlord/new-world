@@ -1,0 +1,25 @@
+{
+  "id": "NEED_SELF_ACTUALIZATION",
+  "display_key": "UI_STAT_NEED_SELF_ACTUALIZATION",
+  "category": "NEED",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 3,
+  "growth": {
+    "type": "DECAY_NATURAL",
+    "params": {
+      "decay_per_year": 80,
+      "age_stage_multipliers": {"infant": 0.1, "child": 0.3, "teen": 0.8, "adult": 1.0, "elder": 1.2}
+    }
+  },
+  "thresholds": [
+    {"value": 150, "direction": "below", "effect": "MODIFIER_EXISTENTIAL_DRIFT", "hysteresis": 15}
+  ],
+  "affects": [{
+    "target": "self_growth_speed",
+    "evaluator": "CURVE", "curve": "LINEAR",
+    "weight": 0.25, "direction": "positive", "context": ""
+  }],
+  "display": {"visible": true, "show_in_panel": "needs", "descriptor_table": "need_6_step"}
+}

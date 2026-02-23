@@ -4,7 +4,7 @@
   "category": "BODY",
   "storage_type": "int",
   "range": [0, 10000],
-  "default": 700,
+  "default": 1050,
   "tier": 0,
   "growth": { "type": "FIXED", "params": {} },
   "thresholds": [],

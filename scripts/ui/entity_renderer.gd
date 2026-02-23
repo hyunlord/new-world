@@ -168,7 +168,7 @@ func _draw() -> void:
 				draw_circle(pos + Vector2(0, -(size + 3.0)), 1.5, dot_color)
 
 			# Hunger warning
-			if entity.hunger < HUNGER_WARNING_THRESHOLD:
+			if StatQuery.get_normalized(entity, &"NEED_HUNGER") < HUNGER_WARNING_THRESHOLD:
 				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 
 			# Selection highlight

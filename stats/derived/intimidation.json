@@ -4,31 +4,27 @@
   "category": "DERIVED",
   "storage_type": "int",
   "range": [0, 1000],
-  "default": 300,
+  "default": 500,
   "tier": 2,
   "growth": {
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "BODY_STR_POTENTIAL", "weight": 0.50 },
-        { "source": "BODY_TOU_POTENTIAL", "weight": 0.30 },
-        { "source": "EMOTION_ANGER", "weight": 0.20 }
-      ]
+        {"stat_id": "BODY_STR_POTENTIAL", "weight":  0.40},
+        {"stat_id": "EMOTION_ANGER",      "weight":  0.30},
+        {"stat_id": "HEXACO_E",           "weight": -0.15},
+        {"stat_id": "HEXACO_X",           "weight":  0.15}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_INTIMIDATING", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_INTIMIDATION_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_INTIMIDATION_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "social_dominance_tendency",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.3 },
-      "weight": 0.40,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "combat_morale_bonus","evaluator": "CURVE", "curve": "LINEAR", "weight": 0.35, "direction": "positive", "context": ""},
+    {"target": "flee_prob_target",   "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

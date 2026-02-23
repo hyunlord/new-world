@@ -10,26 +10,20 @@
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "DERIVED_CHARISMA", "weight": 0.50 },
-        { "source": "HEXACO_A", "weight": 0.30 },
-        { "source": "HEXACO_H", "weight": 0.20 }
-      ]
+        {"stat_id": "DERIVED_CHARISMA",  "weight": 0.50},
+        {"stat_id": "VALUE_MERRIMENT",   "weight": 0.25},
+        {"stat_id": "VALUE_FRIENDSHIP",  "weight": 0.25}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_POPULAR", "hysteresis": 40 },
-    { "value": 250, "direction": "below", "effect": "TRAIT_UNPOPULAR", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_POPULARITY_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_POPULARITY_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "social_network_size",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.2 },
-      "weight": 0.45,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "social_capital_bonus",      "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.35, "direction": "positive", "context": ""},
+    {"target": "leader_selection_weight",   "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

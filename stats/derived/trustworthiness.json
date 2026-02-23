@@ -10,25 +10,20 @@
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "HEXACO_H", "weight": 0.55 },
-        { "source": "HEXACO_A", "weight": 0.45 }
-      ]
+        {"stat_id": "HEXACO_H",    "weight": 0.40},
+        {"stat_id": "HEXACO_A",    "weight": 0.30},
+        {"stat_id": "VALUE_TRUTH", "weight": 0.30}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 800, "direction": "above", "effect": "TRAIT_TRUSTWORTHY", "hysteresis": 40 },
-    { "value": 200, "direction": "below", "effect": "TRAIT_UNTRUSTWORTHY", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_TRUSTWORTHINESS_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_TRUSTWORTHINESS_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "cooperation_tendency",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.3 },
-      "weight": 0.50,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "trade_success_bonus","evaluator": "CURVE", "curve": "LINEAR", "weight": 0.30, "direction": "positive", "context": ""},
+    {"target": "cooperation_prob",   "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

@@ -8,53 +8,15 @@
   "tier": 0,
   "growth": {
     "type": "SCURVE",
-    "params": {
-      "phase_breakpoints": [300, 700],
-      "phase_speeds": [1.5, 1.0, 0.3]
-    }
+    "params": {"phase_breakpoints": [300, 700], "phase_speeds": [1.5, 1.0, 0.3]}
   },
   "thresholds": [
-    {
-      "value": 850,
-      "direction": "above",
-      "effect": "TRAIT_HIGHLY_ORGANIZED",
-      "hysteresis": 30
-    },
-    {
-      "value": 150,
-      "direction": "below",
-      "effect": "TRAIT_CARELESS",
-      "hysteresis": 30
-    }
+    {"value": 850, "direction": "above", "effect": "TRAIT_CONSCIENTIOUS", "hysteresis": 30},
+    {"value": 150, "direction": "below", "effect": "TRAIT_IMPULSIVE",     "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "task_completion_rate",
-      "evaluator": "CURVE",
-      "curve": "SIGMOID_EXTREME",
-      "params": {
-        "flat_zone": [200, 800],
-        "pole_multiplier": 2.0
-      },
-      "weight": 0.45,
-      "direction": "positive",
-      "context": ""
-    },
-    {
-      "target": "impulse_control",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": {
-        "exponent": 1.4
-      },
-      "weight": 0.30,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "work_efficiency", "evaluator": "CURVE", "curve": "SIGMOID_EXTREME", "params": {"flat_zone": [200, 800], "pole_multiplier": 2.5}, "weight": 0.40, "direction": "positive", "context": ""},
+    {"target": "rule_compliance", "evaluator": "CURVE", "curve": "LINEAR",                                                                        "weight": 0.25, "direction": "positive", "context": ""}
   ],
-  "display": {
-    "visible": true,
-    "show_in_panel": "personality",
-    "descriptor_table": "7_step"
-  }
+  "display": {"visible": true, "show_in_panel": "personality", "descriptor_table": "7_step"}
 }

@@ -1,5 +1,226 @@
 # Progress Log
 
+## Skill XP System — t-SK-01 through t-SK-09 — 2026-02-23
+
+### Context
+에이전트가 채집/건설 행동을 수행해도 스킬이 성장하지 않음. `StatQuery.add_xp()`는 Phase 0 stub.
+Power Law of Practice (Newell & Rosenbloom 1981) 기반 LOG_DIMINISHING 커브로 5개 스킬 XP 파이프라인 전체 구현.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SK-01 | game_config.gd — 5 skill XP constants | 🔴 DIRECT | — | shared config, all downstream depends |
+| t-SK-02 | simulation_bus.gd — skill_leveled_up signal | 🔴 DIRECT | — | shared interface, signal schema |
+| t-SK-03 | entity_data.gd — skill_xp + skill_levels fields | 🟢 DISPATCH | ask_codex | standalone entity data change |
+| t-SK-04 | stat_query.gd — add_xp() full implementation | 🟢 DISPATCH | ask_codex | single-file system implementation |
+| t-SK-05 | stat_sync_system.gd — SKILL level sync | 🟢 DISPATCH | ask_codex | single-file system change |
+| t-SK-06 | gathering_system.gd — add_xp calls | 🟢 DISPATCH | ask_codex | single-file integration |
+| t-SK-07 | construction_system.gd — add_xp calls | 🟢 DISPATCH | ask_codex | single-file integration |
+| t-SK-08 | entity_detail_panel.gd — Skills section UI | 🟢 DISPATCH | ask_codex | single-file UI addition |
+| t-SK-09 | localization/en+ko/game.json — SKILL keys | 🟢 DISPATCH | ask_codex | 2 JSON files, no code dependency |
+
+### Dispatch ratio: 7/9 = 78% ✅
+
+### Dispatch strategy
+Config-first fan-out:
+1. DIRECT: t-SK-01, t-SK-02 (shared config + signal — sequential, commit before dispatch)
+2. Parallel DISPATCH: t-SK-03, t-SK-09 (no deps on each other)
+3. Parallel DISPATCH: t-SK-04, t-SK-05 (depend on t-SK-03)
+4. Parallel DISPATCH: t-SK-06, t-SK-07, t-SK-08 (depend on t-SK-04)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| SkillSystem (new) | Overview | create | XP pipeline: action → add_xp() → skill_xp field → level recompute → skill_levels → StatSync → stat_cache |
+| SkillSystem (new) | Design Intent | create | LOG_DIMINISHING (Newell & Rosenbloom 1981), talent ceiling (Ericsson 1993), 6-step descriptor table |
+| SkillSystem (new) | Architecture | create | Data flow diagram, 5 active skills |
+| SkillSystem (new) | Data Structure | create | skill_xp/skill_levels fields, JSON growth schema, talent_ceiling_map |
+| SkillSystem (new) | Core Logic | create | _compute_level_from_xp() formula, _compute_talent_ceiling() trainability lookup |
+| SkillSystem (new) | Development History | create | 2026-02-23 — initial implementation |
+| EntityData | Data Structure | update | Add skill_xp (Dictionary) and skill_levels (Dictionary) rows |
+| GatheringSystem | Core Logic | update | Skill XP emitted per gather completion + SimulationBus.skill_leveled_up |
+| ConstructionSystem | Core Logic | update | SKILL_CONSTRUCTION XP per build tick |
+| EntityDetailPanel | Core Logic | update | Skills section after derived stats, _get_skill_descriptor_key() 6-step logic |
+| StatQuery | Core Logic | update | add_xp() — no longer stub, full LOG_DIMINISHING implementation |
+| StatSyncSystem | Core Logic | update | SKILL level sync added |
+| SimulationBus | Architecture | update | skill_leveled_up signal added to signal registry |
+| Data Definitions DB | — | add | SKILL_DESC_* enum (6 values), skill_id constants (5 values) |
+| Change Log DB | — | add | 2026-02-23 — Skill XP system implemented — LOG_DIMINISHING curve, 5 skills, talent ceiling, UI panel |
+
+### Localization Verification
+- Hardcoded scan: PASS (no new hardcoded text in .gd files)
+- New keys added: UI_SKILLS, UI_SKILL_FORAGING, UI_SKILL_WOODCUTTING, UI_SKILL_MINING, UI_SKILL_CONSTRUCTION, UI_SKILL_HUNTING, UI_SKILLS_NONE, SKILL_DESC_UNSKILLED, SKILL_DESC_NOVICE, SKILL_DESC_APPRENTICE, SKILL_DESC_COMPETENT, SKILL_DESC_EXPERT, SKILL_DESC_GRANDMASTER (13 total)
+- ko/ updated: YES
+
+### Results
+- Gate: PASS (commit df4d3b3, 11 files, 322 insertions)
+- Dispatch ratio: 7/9 = 78% ✅
+- Files changed: 11 (9 .gd files + 2 .json files)
+- Dispatch tool used: ask_codex (7 tickets via codex_dispatch.sh)
+- Notion pages updated:
+  - ✅ SkillSystem 신규 페이지 생성 (310e2e3d-4a77-81cf-b4f4-f5b00c1b5c28)
+  - ✅ 👤 EntityData: skill_xp/skill_levels 코드블록 추가
+  - ✅ 👤 EntityData: 개발 히스토리 행 추가 (skill XP 필드)
+  - ✅ 🏗 GatheringSystem: 스킬 XP 누적 코드 설명 추가
+  - ✅ 🏗 ConstructionSystem: SKILL_CONSTRUCTION XP 설명 추가
+  - ✅ 🖼 EntityDetailPanel: _section_collapsed skills:false 반영
+  - ✅ 🖼 EntityDetailPanel: 섹션 순서 코드블록 skills 라인 삽입
+  - ✅ 🖼 EntityDetailPanel: 개발 히스토리 행 추가 (t-SK-08)
+  - ✅ ⚙ 코어 아키텍처: skill_leveled_up 시그널 등록
+  - ✅ 📝 변경 로그 DB: Skill XP Phase 3 항목 생성 (310e2e3d-4a77-816b)
+  - ✅ 📋 데이터 정의서 DB: 13개 항목 생성 (SKILL_XP_×5, skill_xp/skill_levels×2, SKILL_DESC_×6)
+
+## 욕구 섹션 생리적/심리적 서브섹션 분리 (t-NS-01 + t-NS-02) — 2026-02-23
+
+### Context
+욕구 패널이 단일 목록으로 표시되어 생리/심리 구분 불가, draw_string 서브레이블은 토글 불가.
+Alderfer ERG 이론 기반으로 생리적 욕구 / 심리적 욕구 2개 서브섹션으로 분리, 각각 독립 토글.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-NS-01 | entity_detail_panel.gd 2단 서브섹션 구조 전환 | 🟢 DISPATCH | ask_codex | 단일 파일 UI 수정 |
+| t-NS-02 | localization en+ko UI_NEEDS_BASIC/HIGHER 추가 + UI_UPPER_NEEDS_LABEL 삭제 | 🟢 DISPATCH | ask_codex | 단일 관심사, JSON 2파일 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+병렬 dispatch. 파일 겹침 없음 (t-NS-01: .gd, t-NS-02: .json×2).
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityDetailPanel | Architecture | modified | 욕구 섹션 구조: 단일 목록 → needs_basic + needs_higher 2단 서브섹션 |
+| EntityDetailPanel | Core Logic | modified | 서브섹션 헤더 cx+10, 바 cx+20 인덴트. 심리적 욕구 사망 엔티티 생략 근거 |
+| EntityDetailPanel | Development History | added | 2026-02-23 욕구 섹션 생리적/심리적 서브섹션 분리 + 토글 추가 |
+| Change Log DB | — | added | 2026-02-23 욕구 섹션 2단 구조 — Alderfer ERG 생리/심리 분리, 각각 토글 가능 |
+
+### Localization Verification
+- Hardcoded scan: PASS (모든 텍스트 Locale.ltr 경유)
+- New keys added: UI_NEEDS_BASIC (en + ko), UI_NEEDS_HIGHER (en + ko)
+- Deleted keys: UI_UPPER_NEEDS_LABEL (en + ko)
+- ko/ updated: YES
+
+### Results
+- Gate: PASS (2a59993)
+- Dispatch ratio: 2/2 = 100%
+- Files changed: 4 (entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Notion pages updated: EntityDetailPanel (Architecture + _section_collapsed dict + Values section + Dev History), Change Log DB
+
+## 욕구 섹션 상위 욕구 서브 레이블 (t-UL-01) — 2026-02-23
+
+### Context
+욕구 패널 구분선 아래 소속감~의미 7개 바에 카테고리 레이블 없음 → 플레이어가 맥락 파악 불가.
+구분선 다음 draw_string 한 줄로 "▸ 상위 욕구" 레이블 추가.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UL-01 | entity_detail_panel.gd 서브 레이블 + localization | 🟢 DISPATCH | ask_codex | 단일 관심사, 3 파일 모두 독립적 |
+
+### Dispatch ratio: 1/1 = 100% ✅
+
+### Dispatch strategy
+단일 티켓 dispatch. 파일 겹침 없음.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityDetailPanel | Core Logic | modified | 욕구 섹션 구조: 생리 6개 → 구분선 → ▸ 상위 욕구 레이블 → 상위 7개 |
+| EntityDetailPanel | Development History | added | 2026-02-23 상위 욕구 서브 레이블 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (draw_string uses Locale.ltr)
+- New keys added: UI_UPPER_NEEDS_LABEL (en + ko)
+- ko/ updated: YES
+
+### Results
+- Gate: PASS (ce24c6b)
+- Dispatch ratio: 1/1 = 100%
+- Files changed: 3 (entity_detail_panel.gd, en/ui.json, ko/ui.json)
+- Dispatch tool used: ask_codex (1 ticket)
+- Notion pages updated: EntityDetailPanel (Core Logic + Development History)
+
+## 상위 욕구 7개 데이터 파이프라인 수정 (t-UN-01 + t-UN-02) — 2026-02-23
+
+### Context
+상위 욕구 7개 (belonging~meaning)가 인게임 욕구 패널에서 모두 0%로 표시.
+원인: entity_data.gd 필드 누락 + stat_sync_system.gd sync 코드 누락.
+JSON, localization, UI 코드는 이미 완성 — 데이터 파이프라인 앞 두 단계만 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UN-01 | entity_data.gd 상위 욕구 7개 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, standalone |
+| t-UN-02 | stat_sync_system.gd NEED_* sync 7개 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, t-UN-01 완료 후 순차 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+순차 dispatch: t-UN-01 완료 → t-UN-02 (entity.belonging 필드가 먼저 존재해야 함)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityData | Data Structure | modified | 상위 욕구 7개 float 필드 추가, to_dict/from_dict 하위호환 |
+| StatSyncSystem | Core Logic | modified | _sync_entity() sync 대상 6→13개로 확장 |
+| StatSystem | Development History | added | 2026-02-23 상위 욕구 7개 데이터 파이프라인 완성 |
+| Change Log DB | — | added | 2026-02-23 상위 욕구 7개 0% 버그 수정 |
+
+### Localization Verification
+- Hardcoded scan: N/A (코드 파일만 수정, UI 텍스트 없음)
+- New keys added: 없음 (이미 존재)
+- ko/ updated: 불필요
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 2/2 = 100%
+- Files changed: 3 (entity_data.gd, stat_sync_system.gd, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Commit: 14d1d19
+- Notion pages updated: ✅ 엔티티&욕구시스템(EntityData 필드 + stat_sync 6→13), Change Log DB
+
+## EntityDetailPanel UI 버그 수정 3종 (t-UI-main + t-UI-04) — 2026-02-23
+
+### Context
+인게임 EntityDetailPanel에서 3가지 UI 버그 수정:
+1. 감정 fallback 영어 하드코딩 → Locale.ltr() 교체
+2. 파생 스탯 Stats 서브섹션에서 독립 "derived" 섹션으로 분리 (기본 펼침)
+3. Needs 섹션에 상위 욕구 7개 바 추가 (belonging~meaning)
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UI-main | entity_detail_panel.gd 수정 A+B+C 합산 | 🟢 DISPATCH | ask_codex | 단일 파일, 3개 독립 수정 |
+| t-UI-04 | localization UI_DERIVED_UNAVAILABLE 추가 | 🟢 DISPATCH | ask_codex | JSON 전용, 파일 겹침 없음 |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+t-UI-main과 t-UI-04 병렬 dispatch 가능 (파일 겹침 없음: entity_detail_panel.gd vs localization JSON)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EntityDetailPanel | Architecture | modified | 섹션 순서 업데이트: Needs→Personality→Derived Stats(신규)→Values→Traits→Emotions |
+| EntityDetailPanel | Core Logic | added | 파생 스탯 독립 섹션, fallback Locale 교체, 상위 욕구 7개 표시 설명 |
+| EntityDetailPanel | Development History | added | 2026-02-23 UI 버그 3종 수정 |
+| Change Log DB | — | added | 2026-02-23 EntityDetailPanel — 감정 영어 하드코딩 제거, 파생 스탯 섹션 분리, 상위 욕구 UI 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS (0 matches for "Happy","Lonely","Stress","Grief","Love" in panel)
+- New keys added: UI_DERIVED_UNAVAILABLE
+- ko/ updated: YES (t-UI-04에서 동시 업데이트)
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 2/2 = 100%
+- Files changed: 4 (entity_detail_panel.gd, en/ui.json, ko/ui.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets, gpt-5.3-codex)
+- Commit: 63de58a
+- Notion pages updated: ✅ EntityDetailPanel(Architecture/Code/Dev History), Change Log DB
+
 ## 욕구 확장 임시 비활성화 (T-DISABLE-1~3) — 2026-02-21
 
 ### Context
@@ -511,7 +732,7 @@ stress_system.gd가 이미 등록되어 있으나 emotion_system.gd의 구식 _u
 Parallel (different files, no overlap)
 
 ### Results
-- Gate: PENDING
+- Gate: PASS
 
 ---
 
@@ -3211,3 +3432,630 @@ GDScript 변경 없음, 데이터 파일(JSON) 생성만.
 - Files created/modified: 76 (74 new + 2 updated: fear.json, charisma.json)
 - Dispatch tool used: ask_codex (6 tickets: SP01/02/03/05/06/07), direct Python (SP04 values)
 - Notion pages updated: pending (notionApi unavailable in session — documented in PROGRESS.md per gate requirement)
+
+---
+
+## StatSystem Phase 1 v2 — Authoritative Spec Rewrite
+
+### Context
+PR #96에서 생성된 stats/*.json 파일들이 임시 설계 기반이었음.
+새 autopilot spec에서 권위 있는 데이터 제공: values 33개 정확 ID (LAW/LOYALTY/FAMILY…),
+감정 growth.params 메타데이터, body potential default=1050, derived stat_id composite format,
+skills unlock thresholds. 모든 파일을 정확한 스펙으로 교체. GDScript 변경 없음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SP1v2 | personality/ H/X/A/C/O affects+thresholds 교정 | 🟢 DISPATCH | ask_codex | 5파일 standalone |
+| t-SP2v2 | needs/ 5파일 default+decay+stress params 교정 | 🟢 DISPATCH | ask_codex | 5파일 standalone |
+| t-SP3v2 | emotions/ 11파일 growth.params+affects 전체 재작성 | 🔴 DIRECT | — | 복잡 중첩 params; Codex 11파일×상세 스펙 timeout 위험 |
+| t-SP4v2 | values/ 33파일 교체 (Schwartz→LAW/LOYALTY/FAMILY 등) | 🔴 DIRECT | — | 33파일 Codex timeout 확인됨 (SP04 선례), deterministic schema |
+| t-SP5v2 | body/ potential default 1050 교정 + trainability affects 추가 | 🟢 DISPATCH | ask_codex | 10파일 standalone |
+| t-SP6v2 | derived/ stat_id composite format 재작성 + inputs 교정 | 🟢 DISPATCH | ask_codex | 8파일 standalone |
+| t-SP7v2 | skills/ talent_key+thresholds+growth params 교정 | 🟢 DISPATCH | ask_codex | 4파일 standalone |
+
+### Dispatch ratio: 5/7 = 71% ✅
+
+### Dispatch strategy
+t-SP3v2/SP4v2: DIRECT (emotions 복잡 params + values 33파일 timeout 선례)
+t-SP1v2/SP2v2/SP5v2/SP6v2/SP7v2: 병렬 ask_codex dispatch
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Data Structure | modified | values 33개 ID 교정 (LAW/LOYALTY/FAMILY…), emotions growth.params 메타데이터, body potential default=1050, derived composite stat_id format |
+| StatSystem | Constraints & Future Plans | modified | Phase 1 v2 완료 — 권위 스펙 적용, Phase 2 준비 |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 1 v2 — 81개 파일 권위 스펙 재작성 |
+
+### Localization Verification
+- Hardcoded scan: N/A (JSON only, no GDScript)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS ✅
+- PR: #97 (lead/main → main)
+- Dispatch ratio: 5/7 = 71% ✅
+- Files changed: 100 (33 values replaced, 11 emotions, 5 personality, 5 needs, 10 body, 8 derived, 4 skills; 33 old values deleted + PROGRESS.md)
+- Dispatch tool used: ask_codex (SP1v2/SP2v2/SP5v2/SP6v2/SP7v2)
+- JSON valid: 81/81
+- Spec checks: 26/26 (potentials=1050, trainability affects, derived stat_id, skills talent_key, values=33, emotion ranges)
+
+---
+
+## StatSystem Phase 2 — 직접 참조 교체 (t-PH2-01~11) — 2026-02-23
+
+### Context
+Phase 1 v2 완성된 stats/*.json 81개를 기반으로, Phase 2에서 기존 직접 참조를 StatQuery API로 교체.
+StatSyncSystem(priority=1)을 도입해 entity 필드 → stat_cache 브릿지. 읽기만 교체, 쓰기는 유지.
+movement_system.gd와 building_effect_system.gd는 조사 결과 모든 참조가 WRITE이므로 교체 대상 없음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-PH2-01 | stat_sync_system.gd 신규 작성 | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| t-PH2-02 | stress_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-03 | emotion_system.gd 읽기 교체 + _axis_z | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-04 | mental_break_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-05 | trait_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-06 | phase4/coping_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-07 | phase4/morale_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-08 | movement_system.gd | N/A — SKIP | — | 조사 결과 모든 참조가 WRITE, 교체 대상 없음 |
+| t-PH2-09 | building_effect_system.gd | N/A — SKIP | — | 조사 결과 모든 참조가 WRITE, 교체 대상 없음 |
+| t-PH2-10 | family/mortality/childcare/age 읽기 교체 | 🟢 DISPATCH | ask_codex | 4개 독립 파일 묶음 |
+| t-PH2-11 | main.gd StatSyncSystem 등록 + stat_query.gd PHASE=2 | 🔴 DIRECT | — | 통합 와이어링 <50 lines |
+
+### Dispatch ratio: 8/9 = 89% ✅ (2 N/A 제외)
+
+### Dispatch strategy
+t-PH2-01~07, t-PH2-10 병렬 ask_codex dispatch (파일 겹침 없음) → 완료 후 출력 적용 → gate
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Architecture | modified | StatSyncSystem 추가 — bridge role, priority=1, tick_interval=1, entity fields→stat_cache sync |
+| StatSystem | Core Logic | modified | Phase 2 활성화 완료 — 직접참조 교체, stat_query.gd PHASE=0→2 |
+| StatSystem | Development History | added | 2026-02-23 Phase 2 완료 — 직접참조 교체 + StatSyncSystem 도입 |
+| stress_system | Architecture | modified | 스탯 읽기: pd.axes.get() / entity.hunger → StatQuery.get_normalized() |
+| emotion_system | Architecture | modified | 스탯 읽기: pd.to_zscore(pd.axes.get()) → _axis_z(entity, stat_id) |
+| mental_break_system | Architecture | modified | 스탯 읽기: entity.field / pd.axes.get() → StatQuery.get_normalized() |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 2 — StatQuery 직접참조 교체 완료 |
+
+### Localization Verification
+- Hardcoded scan: PASS (GDScript 내부 로직 교체만, 새 UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO (변경 없음)
+
+### Results
+- Gate: PASS ✅
+- Systems registered: 29 (was 28 — StatSyncSystem priority=1 added)
+- Dispatch ratio: 8/9 = 89% ✅ (ask_codex: PH2-01/02/03/04/05/06/07/10; 2 N/A skipped)
+- Files changed: 14 (stat_sync_system.gd new + 11 system edits + main.gd + stat_query.gd + PROGRESS.md)
+- Codex timeout note: jobs 7d17c277 (emotion) and e761a325 (trait) showed timeout after 60min but had already written files correctly before process end
+- Dispatch tool used: ask_codex (8 tickets)
+
+---
+
+## StatSystem Phase 3 — Threshold 이벤트 시스템 + UI 연동
+
+### Context
+JSON에 선언된 thresholds 배열을 실제로 평가·반영하는 StatThresholdSystem을 완성하고,
+EntityDetailPanel을 StatQuery 기반으로 교체하며 파생 스탯 8개 서브섹션을 추가한다.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-PH3-00 | simulation_bus.gd — stat_threshold_crossed 시그널 | 🔴 DIRECT | — | 공유 인터페이스 (시그널 스키마) |
+| t-PH3-01 | stat_threshold_system.gd (신규) | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-PH3-02 | stat_sync_system.gd — _compute_derived() 추가 | 🟢 DISPATCH | ask_codex | single file |
+| t-PH3-03 | entity_detail_panel.gd — Needs + Personality 교체 | 🟢 DISPATCH | ask_codex | single file |
+| t-PH3-04 | entity_detail_panel.gd — 파생 스탯 서브섹션 추가 | 🟢 DISPATCH | ask_codex | single file (after t-PH3-02) |
+| t-PH3-05 | main.gd — StatThresholdSystem 등록 + localization | 🔴 DIRECT | — | integration wiring <50 lines |
+
+### Dispatch ratio: 4/6 = 67% ✅
+
+### Dispatch strategy
+1. DIRECT t-PH3-00 (simulation_bus signal) + localization keys
+2. 병렬 DISPATCH t-PH3-01 / t-PH3-02 / t-PH3-03
+3. t-PH3-02 완료 후 DISPATCH t-PH3-04
+4. t-PH3-01 완료 후 DIRECT t-PH3-05 (main.gd)
+5. Gate
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Architecture | modified | StatThresholdSystem 추가 (priority=12, threshold JSON 평가 담당) |
+| StatSystem | Core Logic | added | Threshold 평가 공식 + hysteresis + _apply_effect 분기 |
+| StatSystem | Data Structure | added | _active_effects Dictionary 구조 설명 |
+| StatSystem | Development History | added | 2026-02-23 \| Phase 3 완료 — Threshold 이벤트 + UI 연동 |
+| StatSyncSystem | Core Logic | added | _compute_derived() 파생 스탯 8개 계산 공식 |
+| EntityDetailPanel | Architecture | modified | Needs+Personality → StatQuery, 파생 스탯 서브섹션 추가 |
+| SimulationBus | Data Structure | added | stat_threshold_crossed 시그널 |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 3 — Threshold 이벤트 + EntityDetailPanel UI 연동 |
+
+Notion MCP 플러그인이 이 세션에서 사용 불가능 — 다음 세션에서 업데이트 필요.
+게이트 패스를 위해 위 섹션이 PROGRESS.md에 기록됨.
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_DERIVED_STATS, UI_DERIVED_CHARISMA, UI_DERIVED_INTIMIDATION, UI_DERIVED_ALLURE, UI_DERIVED_TRUSTWORTHINESS, UI_DERIVED_CREATIVITY, UI_DERIVED_WISDOM, UI_DERIVED_POPULARITY, UI_DERIVED_RISK_TOLERANCE
+- ko/ updated: YES (9개 키 동시 추가)
+
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 4/6 = 67% ✅
+- Files changed: 7 (simulation_bus.gd, stat_threshold_system.gd, stat_sync_system.gd, entity_detail_panel.gd, main.gd, en/ui.json, ko/ui.json)
+- Dispatch tool used: ask_codex (4 tickets: t-PH3-01, t-PH3-02, t-PH3-03, t-PH3-04)
+- Notion pages updated: Notion MCP 불가 — 다음 세션에서 처리
+
+---
+
+## StatSystem Phase 1 마무리 — HEXACO Facets 24개 + Gardner 지능 8개 + 상위 욕구 7개
+
+### Context
+Phase 1의 목표는 "모든 스탯 정의 JSON 작성"이었다. 81개 중 39개가 누락 (HEXACO facets 24개, Gardner 지능 8개, 상위 욕구 7개). 이 배치에서 누락된 39개를 추가하고, entity_data.gd에 intelligences 필드, stat_sync_system.gd에 facet/intelligence sync 함수를 추가한다.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-P1F-01 | stats/personality/facets/ — 24개 HEXACO facet JSON | 🟢 DISPATCH | ask_codex | 신규 디렉토리 + 24 신규 파일 |
+| t-P1F-02 | stats/intelligence/ — 8개 Gardner JSON | 🟢 DISPATCH | ask_codex | 신규 디렉토리 + 8 신규 파일 |
+| t-P1F-03 | stats/needs/ — 상위 욕구 7개 JSON | 🟢 DISPATCH | ask_codex | 7 신규 파일 (기존 디렉토리) |
+| t-P1F-04 | entity_data.gd intelligences 필드 추가 | 🟢 DISPATCH | ask_codex | 단일 파일, to_dict/from_dict 포함 |
+| t-P1F-05 | stat_sync_system.gd facets+intelligences sync | 🟢 DISPATCH | ask_codex | 단일 파일, t-P1F-01+t-P1F-04 완료 후 |
+| t-P1F-06 | localization en/ko — Gardner 8개 + 상위욕구 7개 | 🟢 DISPATCH | ask_codex | 2 파일, 15 키 추가 |
+
+### Dispatch ratio: 6/6 = 100% ✅
+
+### Dispatch strategy
+병렬: t-P1F-01 + t-P1F-02 + t-P1F-03 + t-P1F-04 + t-P1F-06 동시 dispatch
+순차: t-P1F-05는 t-P1F-01(facet JSON) + t-P1F-04(entity_data 필드) 완료 후 dispatch
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Data Structure | modified | FACET_* 24개 / INTEL_* 8개 / NEED_* 상위 7개 추가. 전체 스탯 수 81→120 |
+| StatSystem | Architecture | modified | stats/personality/facets/, stats/intelligence/ 디렉토리 추가 |
+| StatSystem | Development History | added | 2026-02-23 \| Phase 1 마무리 — Gardner 8개 + Facets 24개 + 상위 욕구 7개 추가 |
+| EntityData | Data Structure | modified | intelligences: Dictionary 필드 추가 (Gardner 지능 저장) |
+| StatSyncSystem | Core Logic | modified | _sync_facets() + _sync_intelligences() 함수 추가 |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 1 마무리 — 39개 JSON 신규, entity_data 확장, stat_sync 확장 |
+
+### Localization Verification
+- Hardcoded scan: PASS (신규 JSON은 display_key 참조만, 실제 텍스트 없음)
+- New keys added: UI_INTEL_LINGUISTIC, UI_INTEL_LOGICAL, UI_INTEL_SPATIAL, UI_INTEL_MUSICAL, UI_INTEL_KINESTHETIC, UI_INTEL_INTERPERSONAL, UI_INTEL_INTRAPERSONAL, UI_INTEL_NATURALISTIC, UI_STAT_NEED_BELONGING, UI_STAT_NEED_INTIMACY, UI_STAT_NEED_RECOGNITION, UI_STAT_NEED_AUTONOMY, UI_STAT_NEED_COMPETENCE, UI_STAT_NEED_SELF_ACTUALIZATION, UI_STAT_NEED_MEANING
+- ko/ updated: YES (en/ko 동시 추가)
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 6/6 = 100% ✅
+- Files changed: TBD
+- Dispatch tool used: ask_codex (6 tickets)
+- Notion pages updated: TBD
+
+---
+
+## NeedsSystem 13종 확장 설계 확정 — Q&A 기반 문서 업데이트
+
+### Context
+Gemini·GPT·Claude Q&A 분석 결과를 Notion 기술 문서에 반영. 구현 기준 수치 명세 확정, 설계 오류 3종 수정, 상위 욕구 식별자 T-P1F-03 기준으로 정정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Q&A 문서 업데이트 | 🔴 DIRECT | — | Notion API 작업, 구현 코드 없음 |
+
+### Dispatch ratio: N/A (코드 변경 없음, 문서 전용)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 욕구 13종 NeedsSystem 확장 (Maslow+ERG) | 13종 욕구 설계 (code block) | modified | 식별자 정정 — self_esteem/achievement/comfort 폐기, intimacy/recognition/self_actualization 채택. T-P1F-03 stat JSON 기준 반영. 스토리지 분리(EntityData float vs StatSystem int) 명시 |
+| 욕구 13종 NeedsSystem 확장 (Maslow+ERG) | 수치 밸런스 명세 | added | 13종 전체 스펙 테이블(decay rate/threshold/stressor/phase), urgency 공식, Maslow gain multiplier 억제 공식, L5 freeze on/off 폐기 수정, EnvironmentContext 오류 수정, HEXACO 4종 facet 연동 공식, 스토리지 아키텍처 확정 |
+| NeedsSystem 욕구 확장 설계 확정 (3종→13종) | 전체 | added | 확정 설계 결정사항(식별자/스토리지/억제공식/오류수정), 구현 단계별 계획(Phase 2~5), 행동 폭발 완화 전략(Max-Neef 시너지), 참조 문서 링크 |
+| 👤 엔티티 & 욕구 시스템 | 욕구 Layer 2 확장 계획 (미구현) | added | 수치 명세 요약 섹션 + 설계 확정 4개 항목 (T-P1F-03 완료/EnvironmentContext 없음/L5 multiplier/행동폭발 완화) |
+| 📝 변경 로그 DB | — | added | 2026-02-23 \| NeedsSystem 13종 확장 설계 확정 — Q&A 분석 기반 수치 명세 + 설계 오류 3종 수정 |
+
+### 설계 오류 수정 내역
+1. **L5 freeze 조건** — on/off 이진 방식 폐기 → maslow_gate(x)=clamp01((x-0.15)/0.30) gain multiplier 방식
+2. **EnvironmentContext 클래스** — 존재하지 않음 확인 → WorldData.get_temperature(x,y) 직접 사용
+3. **욕구 식별자** — self_esteem/achievement/comfort 폐기 → T-P1F-03 기준 intimacy/recognition/self_actualization
+
+### Localization Verification
+- Hardcoded scan: PASS (Notion 문서 작업만, GDScript 미변경)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Dispatch ratio: N/A
+- Files changed: 0 (Notion 문서 5건 업데이트)
+- Dispatch tool used: Notion REST API (curl)
+- Notion pages updated: 욕구 13종 NeedsSystem 확장, NeedsSystem 욕구 확장 설계 확정, 👤 엔티티 & 욕구 시스템, 📝 변경 로그 DB
+
+---
+
+## NeedsSystem 상수 오류 수정 + 회복 아키텍처 문서화 — Q&A 기반
+
+### Context
+코드 조사 결과, Notion 핵심 밸런스 값 섹션의 상수 3개가 실제 game_config.gd와 불일치. 회복 로직 분산 아키텍처(3개 시스템)와 신규 욕구 추가 체크리스트(6곳)가 문서에 없었음. Q&A 분석으로 발견하여 즉시 수정.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| — | Notion 문서 수정 | 🔴 DIRECT | — | 코드 없음, Notion API 작업 |
+
+### Dispatch ratio: N/A
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👤 엔티티 & 욕구 시스템 | 핵심 밸런스 값 (code block) | modified | 오류 수정 3종: ENERGY_DECAY_RATE 0.002→0.003, WARMTH_FIRE_RESTORE 0.008→0.035, WARMTH_SHELTER_RESTORE 0.004→0.018. 신규 추가: ENERGY_ACTION_COST=0.005. 성인 hunger 소진 시간 주석 추가(500틱/1000 sim-tick) |
+| 👤 엔티티 & 욕구 시스템 | NeedsSystem — 회복 로직 아키텍처 | added | 회복 분산 구조 표(4개 시스템), 즉시/도착후/지속 3패턴 설명 |
+| 👤 엔티티 & 욕구 시스템 | NeedsSystem — 신규 욕구 추가 시 수정 지점 | added | 6곳 체크리스트 + warmth 구현 예시 |
+| 📝 변경 로그 DB | — | added | 2026-02-23 \| NeedsSystem 상수 오류 3종 수정 + 회복 아키텍처 문서화 |
+
+### 수정된 오류 내역
+| 상수 | Notion(구) | game_config.gd(정) |
+|------|-----------|-------------------|
+| ENERGY_DECAY_RATE | 0.002 | 0.003 |
+| WARMTH_FIRE_RESTORE | 0.008 | 0.035 |
+| WARMTH_SHELTER_RESTORE | 0.004 | 0.018 |
+| ENERGY_ACTION_COST | (미기재) | 0.005 |
+
+### Localization Verification
+- Hardcoded scan: PASS (GDScript 미변경)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: N/A
+- Files changed: 0
+- Notion pages updated: 👤 엔티티 & 욕구 시스템, 📝 변경 로그 DB
+
+---
+
+## Q&A 기반 문서 업데이트 #3 — NeedsSystem Phase 1 확장 구현 스펙
+
+### Context
+Phase 1 욕구 확장(thirst/warmth/safety) 10-ticket 구현 프롬프트 분석 → Notion 문서화.
+decay rate 비율 확정, urgency 가중치, 온도 3단계 tier, stressor inject 패턴 기록.
+
+### 정보 추출
+- 구현 의도: L1/L2 욕구 먼저, L3~L5는 social/religion 완성 후
+- 학술 근거: Maslow (1943) L1/L2, Cannon (1932) 항상성, Lazarus & Folkman (1984) 스트레스
+- 데이터: decay rate 3종 (thirst=0.0024, warmth=0.0016, safety=0.0006)
+- 내부 로직: urgency 가중치(×1.4/1.3/1.1/0.8), 온도 3티어, stressor intensity 비례식
+- 아키텍처: 회복 3-system 분배 (behavior/movement/building_effect)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 전체 | 신규 작성 | 구현 의도, 학술 근거, 상수 비율표, 온도 3티어 decay, urgency 가중치 표, 회복 3-system 표, stressor inject 표, Gate 조건 9종 |
+| 📝 변경 로그 DB | — | 추가 | Phase 1 확장 설계 문서화 엔트리 |
+
+### 영향받은 시스템
+- NeedsSystem (소모 로직), BehaviorSystem (urgency + 분기), BuildingEffectSystem/MovementSystem (회복)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #4 — T-STARV 아사 버그 분석 & urgency 리밸런스
+
+### Context
+seek_shelter urgency 합산 버그(최대 1.9) + movement_system:196 pass 버그로 인한 아사 무한루프
+근본 원인 분석 및 T-STARV-2/3 수정 스펙 확정 → Notion 문서화.
+
+### 정보 추출
+- 버그 내부 로직: hunger=50%/warmth=25% 시나리오에서 seek_shelter(0.819) > gather_food(0.375)
+- 데이터 변경: urgency 승수 전면 수정 (1.4→0.9, 1.3→0.7, 1.1→0.55, 0.8→0.35)
+- 개발 히스토리: T-STARV-1(부분 완화) → T-STARV-2(승수 리밸런스) → T-STARV-3(실제 이동 구현)
+- 트레이드오프: drink_water는 THIRST_DRINK_RESTORE=0.35로 구조적 문제 없음, 승수만 낮춤
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | urgency 점수 설계 | 교체 | 구버전 표 삭제 → T-STARV-2 callout + 수정된 승수 표 삽입 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 | 추가 | T-STARV-1/2/3 버그 추적 표 |
+| 🤖 행동 AI (Utility AI) | urgency 점수 경쟁 구조 & 아사 버그 이력 | 추가 | 버그 재현 시나리오 표 + T-STARV 버그 목록 표 |
+| 📝 변경 로그 DB | — | 추가 | T-STARV-2/3 아사 버그 문서화 엔트리 |
+
+### 영향받은 시스템
+- BehaviorSystem (urgency 승수), MovementSystem (action_target 설정 버그)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #5 — 욕구 확장 전체 밸런스 분석
+
+### Context
+warmth 지속 0 현상 발생. 욕구 3종 동시 추가 + 밸런스 조정 없음이 근본 원인.
+원인 분석 및 향후 밸런스 검증 절차 문서화.
+
+### 정보 추출
+- 트레이드오프: 다중 욕구 동시 추가 시 행동 경쟁 복잡도 증가 + 상호 간섭
+- 내부 로직: decay/recovery 균형 계산 (hunger=150틱/1회, thirst=146틱/1회, warmth=환경 의존)
+- warmth 0 원인: A(T-STARV-3 이동 버그) + B(urgency 경쟁 진동) + C(이동 중 소모)
+- 향후 계획: 욕구 추가 시 10명×10분 시뮬 + 행동 분포 검증 의무화
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | decay/recovery 균형 분석 | 추가 | 6종 욕구×환경 조합 균형 표 |
+| 🌊 욕구 시스템 Phase 1 확장 | warmth 지속 0 현상 — 원인 분석 | 추가 | 원인 A/B/C 목록 |
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 밸런스 조정 계획 | 추가 | 검증 절차 + 미결 사항 + 다중 욕구 상호 간섭 한계 |
+| 📝 변경 로그 DB | — | 추가 | 밸런스 분석 문서화 엔트리 |
+
+
+
+---
+
+## Q&A 기반 문서 업데이트 #6 — T-STARV-2/3 긴급도 승수 확정 + warmth 물리 모순 해결
+
+### Context
+T-STARV-1 이후에도 아사가 지속. 두 가지 근본 원인 확인:
+1. comfort action 점수 과다: seek_shelter/sit_by_fire가 hunger=50%일 때도 gather_food(0.540)를 이김.
+2. warmth 회복 물리 모순: cold 타일 decay(0.024/10틱) > 구 WARMTH_FIRE_RESTORE(0.008) → campfire 옆에서도 warmth 계속 하락.
+긴급도 승수를 재조정하고 warmth 회복량을 증가시키는 T-STARV-2/3 확정.
+
+### 정보 추출
+- 데이터 구성: 기준점 gather_food @ hunger=0.40 = 0.60²×1.5 = 0.540 (non-gatherer baseline)
+- 내부 로직: 설계 원칙 — LOW 임계값에서 < 0.540, CRITICAL 임계값에서 > 0.540
+- 내부 로직: Adult 승수 확정: drink_water×1.0, sit_by_fire×0.9, seek_shelter warmth×0.6+safety×0.4
+- 내부 로직: Child 승수 확정: seek_shelter warmth×0.5+safety×0.3
+- 데이터 구성: WARMTH_FIRE_RESTORE 0.008→0.035, WARMTH_SHELTER_RESTORE 0.004→0.018
+- 트레이드오프: NeedsSystem 2틱 vs BuildingEffectSystem 10틱 주기 차이 → per-10틱 net 계산 필요
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 긴급도 가중치 — callout | 수정 | 구 draft값(0.9/0.7/0.55+0.35) 삭제 → 확정값(1.0/0.9/0.6+0.4) 반영 |
+| 🌊 욕구 시스템 Phase 1 확장 | 긴급도 승수 확정값 (T-STARV-2) | 추가 | Action×승수 표 (Adult/Child 모두 포함) |
+| 🌊 욕구 시스템 Phase 1 확장 | 검증표 — gather_food 기준(0.540) 대비 | 추가 | LOW < 0.540 / CRITICAL > 0.540 6행 검증 표 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 — T-STARV-2 행 | 수정 | 수정 내용을 확정값으로 업데이트 |
+| 🌊 욕구 시스템 Phase 1 확장 | 알려진 버그 & 수정 이력 — T-STARV-3 행 | 추가 | warmth 물리 모순 수정 (WARMTH_FIRE_RESTORE 0.008→0.035) |
+| 📝 변경 로그 DB | — | 추가 | T-STARV-2/3 긴급도 승수 확정 + warmth 회복량 증가 엔트리 |
+
+### 영향받은 시스템
+- BehaviorSystem (urgency 승수 확정값), GameConfig (WARMTH_FIRE_RESTORE/WARMTH_SHELTER_RESTORE)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #7 — 원시시대 베이스 밸런스 원칙 + 의도적 미구현 목록
+
+### Context
+체온 유지가 다른 욕구에 비해 어렵다는 관찰. 원시시대 베이스에서 인구 유지·증가 필요.
+콘텐츠 추가(옷/계절) 전 수치 밸런스 먼저 맞추기로 결정.
+
+### 정보 추출
+- 구현 의도: 원시시대 베이스 조건 — campfire+shelter만으로 생존 가능해야 함 (공식 설계 원칙)
+- 트레이드오프: 의도적 미구현 — 옷 시스템, 계절 변화 (Phase 0 범위 외)
+- 개발 히스토리: 수치 밸런스 먼저 → 콘텐츠 나중 원칙 결정 (T-STARV-2/3 검증 후 다음 단계)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 구현 의도 | 추가 | 원시시대 베이스 조건 bullet (campfire/shelter/없음 3단계) |
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 계획 | 추가 | 의도적 미구현 목록(옷/계절) + 개발 우선순위 원칙 + 미결 과제 |
+| 📝 변경 로그 DB | — | 추가 | 원시시대 밸런스 원칙 문서화 엔트리 |
+
+### 영향받은 시스템
+- NeedsSystem (warmth 밸런스 원칙), GameConfig (수치 우선 조정 원칙)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #8 — 밸런스 데이터 구조화 계획 (Phase 2+)
+
+### Context
+밸런스 로직/수치를 쉽게 변경할 수 있는 구조 필요. 현재 game_config.gd 상수 방식의 한계 명시.
+욕구 13종 완성 후 JSON 구조화 예정으로 의사결정 문서화.
+
+### 정보 추출
+- 트레이드오프: game_config.gd 상수 방식 → 욕구 13종+계절/기술 추가 시 상수 수백 개, 유지보수 불가
+- 향후 개선점: data/balance/needs_balance.json 분리 (decay_rate/restore_amount/urgency_multiplier per need)
+- 향후 개선점: /debug_balance 디버그 도구 (decay vs recovery 비율 출력, 생존 틱 계산)
+- 트레이드오프: 구조화 타이밍 결정 — 13종 완성 전 설계 시 재설계 리스크. 13종 완성 후 한 번에 설계.
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 제약 & 향후 계획 | 추가 | "밸런스 데이터 구조화 계획 (욕구 13종 완성 후)" H3 + 3 bullet |
+
+### 영향받은 시스템
+- GameConfig (향후 JSON 전환 예정), NeedsSystem (debug_balance 도구 계획)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #9 — 욕구별 충족 수단 미구현 목록 + 개발 3단계 순서 확정
+
+### Context
+인간정의서 마무리 전 T-STARV-2/3 수치 안정화 선행 필요. 욕구 충족 수단 미구현 현황 문서화.
+개발 3단계 순서 결정: T-STARV → 인간정의서 → JSON 구조화 + 전체 밸런스.
+
+### 정보 추출
+- 트레이드오프: 욕구별 충족 수단 미구현 — water source(thirst), 위협 시스템(safety) 미완성
+- 개발 히스토리: 3단계 개발 순서 확정 (T-STARV-2/3 → 인간정의서 → JSON)
+- 트레이드오프: 테스트 가능성 원칙 — 에이전트 생존 없이 사회/감정/관계 시스템 검증 불가
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 의도적 미구현 | 추가 | water source 시스템, 위협(threat) 시스템 bullet |
+| 🌊 욕구 시스템 Phase 1 확장 | 개발 우선순위 원칙 | 추가 | 확정된 개발 3단계 + 테스트 가능성 원칙 bullet |
+
+### 영향받은 시스템
+- NeedsSystem (충족 수단 미구현 현황), 전체 개발 로드맵
+
+
+---
+
+## Q&A 기반 문서 업데이트 #10 — thirst/warmth/safety 임시 비활성화 (NEEDS_EXPANSION_ENABLED)
+
+### Context
+T-STARV-2/3 수치 조정 적용 후에도 에이전트 생존 실패. 원인 분석 결과: 수치 문제가 아닌 콘텐츠 문제(충족 수단 맵에 없음).
+결정: thirst/warmth/safety 욕구를 NEEDS_EXPANSION_ENABLED = false 플래그로 임시 비활성화. 코드 보존, 자원/기술 시스템 완성 후 재활성화.
+
+### 정보 추출
+- 트레이드오프: T-STARV-2/3 수치 조정 한계 — 충족 수단(water source, threat 이벤트) 없으면 수치 조정만으론 해결 불가
+- 구현 방식: Feature flag 패턴 — `const NEEDS_EXPANSION_ENABLED: bool = false` (needs_system.gd, behavior_system.gd)
+- 개발 히스토리: 2026-02-23 thirst/warmth/safety 임시 비활성화 결정
+- 트레이드오프: 코드 보존 + 비활성화 → 나중에 true로 전환 시 즉시 재활성화
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 🌊 욕구 시스템 Phase 1 확장 | 개요 callout | 수정 | 임시 비활성화 상태 추가 (NEEDS_EXPANSION_ENABLED = false, 2026-02-23, red bold) |
+| 🌊 욕구 시스템 Phase 1 확장 | 미결 과제 | 수정 | T-STARV-2/3 검증 결론 업데이트 (비활성화 결정으로 종결) |
+| 🌊 욕구 시스템 Phase 1 확장 | 개발 히스토리 | 추가 | 신규 H2 섹션 + 표 (2026-02-23 비활성화 이벤트 행) |
+| Change Log DB | — | 추가 | thirst/warmth/safety 임시 비활성화 (NEEDS_EXPANSION_ENABLED) |
+
+### 영향받은 시스템
+- NeedsSystem (NEEDS_EXPANSION_ENABLED 플래그), BehaviorSystem (drink_water/sit_by_fire/seek_shelter 비활성화)
+
+
+---
+
+## Q&A 기반 문서 업데이트 #11 — 개발 현황 스냅샷 + 게임 체감 기준 우선순위 원칙
+
+### Context
+2026-02-23 기준 개발 완료/미완료 항목 정리. 인간정의서 로드맵 레이어 순서(Layer 4 가치관 33개)보다
+게임을 켰을 때 체감 아쉬운 것 기준으로 다음 개발 우선순위를 결정하는 원칙 도입.
+
+### 정보 추출
+- 개발 히스토리: BehaviorSystem P1~P4 완료 (히스테리시스, 사회 루프, 반복 패널티, 감정 행동)
+- 트레이드오프: 미완료 항목 — P5 GOAP lite, 욕구 L3~L5, 인간정의서 나머지 레이어
+- 구현 의도 (우선순위 원칙): 인간정의서 순서 대신 게임 플레이 체감 결핍 기준으로 다음 개발 결정
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📄 로드맵 & Phase 정의 | 신규 | 추가 | "🔲 미완료 항목 & 다음 개발 후보" H2 섹션 (BehaviorSystem/NeedsSystem/인간정의서 미완료 목록 + 게임 체감 기준 우선순위 callout) |
+
+### 영향받은 시스템
+- BehaviorSystem (P5 GOAP lite 미완료 명시), NeedsSystem (L3~L5 미구현 명시), 전체 개발 로드맵
+
+
+---
+
+## Q&A 기반 문서 업데이트 #12 — 매크로 3단계 개발 순서 확정
+
+### Context
+인간정의서 완성 → UI/비주얼 → 콘텐츠 레이어 순서로 개발 매크로 로드맵 확정.
+UI는 인간정의서 완성 전 구현 금지 원칙 명문화. thirst/warmth/safety 활성화 시점 = 3단계 콘텐츠.
+
+### 정보 추출
+- 개발 히스토리: 매크로 3단계 순서 확정 (2026-02-23)
+- 트레이드오프: UI 조기 구현 금지 — 인간정의서 완성 전 UI 만들면 재작업 필요
+- 트레이드오프: NEEDS_EXPANSION_ENABLED 활성화 시점 = 3단계 콘텐츠 레이어
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📄 로드맵 & Phase 정의 | 🔲 미완료 항목 callout | 수정 | "게임 체감 기준" → 확정된 3단계 매크로 순서 (인간정의서→UI→콘텐츠+thirst활성화) |
+| 📄 로드맵 & Phase 정의 | Layer 4 가치관 bullet | 수정 | "재검토 중" 제거 → 1단계 인간정의서 시작점으로 확정 |
+
+### 영향받은 시스템
+- NeedsSystem (thirst/warmth/safety 활성화 시점 = 3단계로 명시), 전체 개발 로드맵
+
+## Q&A #13 — 욕구 현황 인벤토리 + 즉시 구현 가능 분류
+
+### Context
+욕구 미구현 7종 확인 및 L3~L5 의존성 매핑. 가치관 33개가 충족 수단 없이 즉시 구현 가능함을 식별 — 인간정의서 1단계 시작점 확정.
+
+### 추출 정보
+- 욕구 현황: 완료 3종(hunger/energy/social) + 비활성 3종(thirst/warmth/safety) + 미구현 7종(L3~L5)
+- L3~L5 의존성 맵:
+  - belonging/intimacy → 관계 시스템 필요
+  - recognition → 사회 시스템 필요
+  - autonomy/competence → 직업/기술 시스템 필요
+  - self_actualization/meaning → 사회 시스템 이후
+- 즉시 구현 가능 항목: 가치관 33개 (BehaviorSystem _apply_value_modifiers 기존재), Gardner 다중지능 (학습 속도 차등, 기술 시스템 없이도 일부 적용)
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 로드맵 & Phase 정의 | Phase 1 인간정의서 | 수정 | Layer 4 가치관 33개 bullet에 "즉시 구현 가능" + BehaviorSystem 연결 추가 |
+| 가치관 시스템 | 설계 의도 | 추가 | "즉시 구현 가능(욕구 충족 수단 불필요)" bullet 삽입 (Erikson 다음) |
+
+### 변경 내역
+- 로드맵 Layer 4 가치관 33개 bullet (310e2e3d-4a77-814b): 즉시 구현 가능 + BehaviorSystem 연결 명시
+- 가치관 시스템 설계 의도: 새 bullet 추가 — ±40% 영향, L3~L5 대비 즉시 구현 가능 이유 명시
+
+### Localization Verification
+- 코드 변경 없음 — 해당 없음
+
+### Results
+- Notion 업데이트: PASS (2개 블록)
+- 코드 변경: 없음
+
+## Q&A #14 — 인간 정의서 v3 통합본 → Notion 마스터 인덱스 생성
+
+### Context
+인간 정의서 v3 통합본(v1/v2/Part3 통합, canonical source) 확정. 노션에 전용 마스터 인덱스 페이지 없었으므로 생성.
+
+### 추출 정보
+- 설계 원칙 6개 (관찰가능/행동영향/계층구조/데이터드리븐/모드친화/LLM-Ready)
+- 레이어 구조: Layer 1~7 + 파생 스탯 + 집단 레이어 전체
+- 미구현 레이어 설계: Layer 4.5(사회적 정체성), Layer 4.7(경제 행동), Layer 7(플레이버), 파생 스탯 8개 공식, 유전 시스템 공식
+- 집단 레이어: 사회 네트워크/권력/문화+테크트리/전투/외교/종족/LLM
+- Phase 2~5 구현 로드맵
+
+### Notion Update
+| 페이지 | 섹션 | 작업 | 내용 |
+|--------|------|------|------|
+| 📖 인간 정의서 v3 마스터 인덱스 | 신규 생성 | 생성 | 설계 원칙 6개, 레이어 구조 표, 집단 레이어 표, 구현 로드맵, 미구현 스키마 (Layer 4.5/4.7/7, 파생 스탯, 유전) |
+| 변경 로그 DB | — | 추가 | "인간 정의서 v3 통합본 확정 — 마스터 인덱스 페이지 생성" |
+
+### Localization Verification
+- 코드 변경 없음 — 해당 없음
+
+### Results
+- Gate: N/A (코드 변경 없음)
+- Notion 페이지 생성: 310e2e3d-4a77-8100-9f4e-f6d5a7c66fe9
+- Notion 블록 추가: 19개 (표 + 코드 블록 + 섹션)
+- Change Log 항목: 추가 완료
+
+## StatSystem Phase 2 — Direct Reference Replacement [t-P2-01~06]
+
+### Context
+StatSystem Phase 0 wired infrastructure; Phase 1 created 120 stat JSON definitions. Phase 2 enforces the read/write separation: all non-owning systems must read via StatQuery.get_normalized() instead of direct entity field access. 28 direct reads replaced across 6 files.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-P2-01 | behavior_system.gd — 13 read replacements | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-02 | hud.gd — 7 read replacements | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-03 | attachment_system.gd — 2 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-04 | contagion_system.gd — 3 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-05 | social_event_system.gd — 2 HEXACO reads | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+| t-P2-06 | entity_renderer.gd — 1 read | 🟢 DISPATCH | ask_codex | single-file, standalone change |
+
+### Dispatch ratio: 6/6 = 100% ✅
+
+### Dispatch strategy
+All 6 files are independent single-file modifications — parallel dispatch, no dependencies.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Architecture | update | Phase 2 read migration complete. Data flow: NeedsSystem→entity.field→StatSync→stat_cache→StatQuery (all readers) |
+| StatSystem | Development History | add row | 2026-02-23 \| Phase 2 read migration — 28 direct field reads replaced with StatQuery across 6 files |
+| BehaviorSystem | Core Logic | update | Hunger/energy/social/thirst/warmth/safety deficits now read via StatQuery — modifier chain applies to behavior scoring |
+| HUD | Architecture | update | Need bar values now flow through StatQuery — future modifiers reflect automatically |
+| Change Log DB | — | add | 2026-02-23 \| StatSystem Phase 2 — direct read references eliminated, StatQuery enforced for all non-owning systems |
+
+### Localization Verification
+- Hardcoded scan: N/A (no UI text changes)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS (de86a45)
+- Dispatch ratio: 6/6 = 100%
+- Files changed: 6 (behavior_system.gd, hud.gd, attachment_system.gd, contagion_system.gd, social_event_system.gd, entity_renderer.gd)
+- Dispatch tool used: ask_codex (6 tickets)
+- Notion pages updated: StatSystem, BehaviorSystem, Change Log DB

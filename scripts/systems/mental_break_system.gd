@@ -90,20 +90,16 @@ func _check_mental_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 
 ## 역치 계산 (Connor-Davidson resilience + HEXACO)
 func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
-	var pd = entity.personality
-	var E: float = 0.5
-	var C: float = 0.5
-	if pd != null:
-		E = pd.axes.get("E", 0.5)
-		C = pd.axes.get("C", 0.5)
+	var E: float = StatQuery.get_normalized(entity, &"HEXACO_E")
+	var C: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 
 	var threshold: float = BASE_BREAK_THRESHOLD
 	threshold *= (1.0 + 0.40 * (ed.resilience - 0.5) * 2.0)
 	threshold *= (1.0 + 0.25 * (C - 0.5) * 2.0)
 	threshold *= (1.0 - 0.35 * (E - 0.5) * 2.0)
 	threshold *= (1.0 - 0.25 * (ed.allostatic / 100.0))
-	threshold *= (0.85 + 0.15 * entity.energy)
-	threshold *= (0.85 + 0.15 * entity.hunger)
+	threshold *= (0.85 + 0.15 * StatQuery.get_normalized(entity, &"NEED_ENERGY"))
+	threshold *= (0.85 + 0.15 * StatQuery.get_normalized(entity, &"NEED_HUNGER"))
 	# Phase 5: ACE history permanently lowers break threshold (Teicher & Samson 2016)
 	threshold *= float(entity.get_meta("ace_break_threshold_mult", 1.0))
 	threshold = clampf(threshold, THRESHOLD_MIN, THRESHOLD_MAX)
@@ -138,16 +134,13 @@ func _calc_break_chance(stress: float, threshold: float,
 func _select_break_type(entity: RefCounted) -> String:
 	if _break_defs.is_empty():
 		return "shutdown"
-	var pd = entity.personality
 	var weights: Dictionary = {}
 	for break_id in _break_defs:
 		var bdef = _break_defs[break_id]
 		var w: float = 1.0
 		var pw = bdef.get("personality_weights", {})
 		for axis in ["H", "E", "X", "A", "C", "O"]:
-			var axis_val: float = 0.5
-			if pd != null:
-				axis_val = pd.axes.get(axis, 0.5)
+			var axis_val: float = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis))
 			var axis_weight: float = pw.get(axis, 0.0)
 			if axis_weight > 0:
 				w *= lerpf(1.0, 1.0 + axis_weight, axis_val)

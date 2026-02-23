@@ -141,7 +141,7 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 	var m3: float = exp(-_tech_k3 * tech_level)
 
 	# Nutrition modifier (based on hunger)
-	var nutrition: float = clampf(entity.hunger, 0.0, 1.0)
+	var nutrition: float = clampf(StatQuery.get_normalized(entity, &"NEED_HUNGER"), 0.0, 1.0)
 	m1 *= lerpf(2.0, 0.8, nutrition)
 	m2 *= lerpf(1.5, 0.9, nutrition)
 	# Care protection: well-fed infants/toddlers get reduced infant mortality

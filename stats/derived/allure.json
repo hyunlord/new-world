@@ -10,25 +10,20 @@
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "DERIVED_CHARISMA", "weight": 0.50 },
-        { "source": "HEXACO_O", "weight": 0.30 },
-        { "source": "HEXACO_E", "weight": 0.20 }
-      ]
+        {"stat_id": "DERIVED_CHARISMA", "weight": 0.50},
+        {"stat_id": "VALUE_ROMANCE",    "weight": 0.25},
+        {"stat_id": "HEXACO_X",         "weight": 0.25}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_ALLURING", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_ALLURE_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_ALLURE_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "social_attraction_radius",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.3 },
-      "weight": 0.45,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "relationship_speed",  "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.30, "direction": "positive", "context": ""},
+    {"target": "romance_event_bonus", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.35, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

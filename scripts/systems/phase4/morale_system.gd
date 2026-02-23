@@ -89,7 +89,11 @@ func calculate_personal_morale(entity) -> float:
 	var neg_valence: float = clampf((-ed.valence + 100.0) / 200.0, 0.0, 1.0)
 	var NA: float = neg_arousal * neg_valence
 	# LS: 욕구 충족 기반 삶의 만족도 proxy
-	var LS: float = (entity.hunger + entity.energy + entity.social) / 3.0
+	var LS: float = (
+		StatQuery.get_normalized(entity, &"NEED_HUNGER")
+		+ StatQuery.get_normalized(entity, &"NEED_ENERGY")
+		+ StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+	) / 3.0
 
 	var weights = _cfg.get("personal_morale", {})
 	var pa_w: float = float(weights.get("affect_positive_weight", 0.40))
@@ -120,8 +124,8 @@ func calculate_personal_morale(entity) -> float:
 ## Reference: Maslow, A.H. (1943). A theory of human motivation. Psychological Review, 50(4), 370-396.
 func _get_maslow_multiplier(entity) -> float:
 	var mcfg = _cfg.get("personal_morale", {}).get("maslow", {})
-	var hunger: float = entity.hunger
-	var energy: float = entity.energy
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 
 	# 생리: 기아/수면 부족
 	var food_sleep_critical: float = float(mcfg.get("food_sleep_critical", 0.3))
@@ -141,7 +145,7 @@ func _get_maslow_multiplier(entity) -> float:
 		return float(mcfg.get("multiplier_safety_low", 0.6))
 
 	# 소속: social < 0.3
-	var social: float = entity.social
+	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 	var belonging_low: float = float(mcfg.get("belonging_low", 0.3))
 	if social < belonging_low:
 		return float(mcfg.get("multiplier_belonging_low", 0.7))
@@ -166,14 +170,17 @@ func _apply_hygiene_factors(entity) -> float:
 		delta -= (threshold - safety) * penalty_rate * 0.3
 
 	# 소속(social)
-	if entity.social < threshold:
-		delta -= (threshold - entity.social) * penalty_rate * 0.2
+	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+	if social < threshold:
+		delta -= (threshold - social) * penalty_rate * 0.2
 
 	# 기본 욕구 (hunger, energy)
-	if entity.hunger < threshold:
-		delta -= (threshold - entity.hunger) * penalty_rate * 0.25
-	if entity.energy < threshold:
-		delta -= (threshold - entity.energy) * penalty_rate * 0.25
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	if hunger < threshold:
+		delta -= (threshold - hunger) * penalty_rate * 0.25
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	if energy < threshold:
+		delta -= (threshold - energy) * penalty_rate * 0.25
 
 	# 위생 요인은 절대 양수가 될 수 없음 (충족해도 보너스 없음)
 	return minf(delta, 0.0)
@@ -193,13 +200,12 @@ func _calculate_warr_contributions(entity) -> float:
 	var total: float = 0.0
 
 	# AD형: 자율성 proxy (C axis — 계획/성실성이 높을수록 자율 추구)
-	var pd = entity.personality
-	if pd != null and AD_defs.size() > 0:
+	if AD_defs.size() > 0:
 		var autonomy_cfg = AD_defs.get("autonomy", {})
 		var a: float = float(autonomy_cfg.get("a", 1.5))
 		var h: float = float(autonomy_cfg.get("h", 0.6))
 		var k: float = float(autonomy_cfg.get("k", 0.15))
-		var autonomy_val: float = float(pd.axes.get("C", 0.5))
+		var autonomy_val: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 		total += -a * (autonomy_val - h) * (autonomy_val - h) + k
 
 		# AD형: 사회 접촉
@@ -207,14 +213,13 @@ func _calculate_warr_contributions(entity) -> float:
 		a = float(soc_cfg.get("a", 2.0))
 		h = float(soc_cfg.get("h", 0.5))
 		k = float(soc_cfg.get("k", 0.12))
-		var soc_val: float = entity.social
+		var soc_val: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 		total += -a * (soc_val - h) * (soc_val - h) + k
 
 	# CE형: 정보 부하 (X axis — 외향성이 높을수록 자극 추구)
-	if pd != null:
-		var x_val: float = float(pd.axes.get("X", 0.5))
-		var ce: float = minf(x_val / CE_threshold, 1.0) * CE_max
-		total += ce
+	var x_val: float = StatQuery.get_normalized(entity, &"HEXACO_X")
+	var ce: float = minf(x_val / CE_threshold, 1.0) * CE_max
+	total += ce
 
 	return clampf(total, -0.3, 0.3)
 
@@ -418,9 +423,9 @@ func check_rebellion_probability(sid: int, tick: int) -> float:
 
 func _set_maslow_blocked_message(entity) -> void:
 	var reason: String
-	if entity.hunger < 0.3:
+	if StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.3:
 		reason = Locale.ltr("MASLOW_BLOCKED_FOOD")
-	elif entity.energy < 0.3:
+	elif StatQuery.get_normalized(entity, &"NEED_ENERGY") < 0.3:
 		reason = Locale.ltr("MASLOW_BLOCKED_SLEEP")
 	elif entity.settlement_id < 0:
 		reason = Locale.ltr("MASLOW_BLOCKED_SAFETY")

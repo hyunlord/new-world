@@ -66,3 +66,35 @@ func execute_tick(tick: int) -> void:
 				entity.body.training_xp["end"] += GameConfig.GATHER_XP_END
 				entity.body.training_xp["str"] += GameConfig.GATHER_XP_STR
 				entity.body.training_xp["agi"] += GameConfig.GATHER_XP_AGI
+			## [Skill XP — Newell & Rosenbloom 1981 Power Law of Practice]
+			var _skill_map: Dictionary = {
+				"food":  &"SKILL_FORAGING",
+				"wood":  &"SKILL_WOODCUTTING",
+				"stone": &"SKILL_MINING",
+			}
+			var _skill_id: StringName = _skill_map.get(res_name, &"")
+			if _skill_id != &"":
+				var _xp_map: Dictionary = {
+					&"SKILL_FORAGING":    GameConfig.SKILL_XP_FORAGING,
+					&"SKILL_WOODCUTTING": GameConfig.SKILL_XP_WOODCUTTING,
+					&"SKILL_MINING":      GameConfig.SKILL_XP_MINING,
+				}
+				var _xp_amt: float = _xp_map.get(_skill_id, 2.0)
+				var _xp_result: Dictionary = StatQuery.add_xp(entity, _skill_id, _xp_amt)
+				if _xp_result.get("leveled_up", false):
+					emit_event("skill_leveled_up", {
+						"entity_id":   entity.id,
+						"entity_name": entity.entity_name,
+						"skill_id":    str(_skill_id),
+						"old_level":   _xp_result["old_level"],
+						"new_level":   _xp_result["new_level"],
+						"tick":        tick,
+					})
+					SimulationBus.skill_leveled_up.emit(
+						entity.id,
+						entity.entity_name,
+						_skill_id,
+						_xp_result["old_level"],
+						_xp_result["new_level"],
+						tick
+					)

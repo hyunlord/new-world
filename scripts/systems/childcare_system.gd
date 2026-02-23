@@ -27,7 +27,7 @@ func execute_tick(tick: int) -> void:
 		if entity.age_stage != "infant" and entity.age_stage != "toddler" and entity.age_stage != "child" and entity.age_stage != "teen":
 			continue
 		var threshold: float = float(GameConfig.CHILDCARE_HUNGER_THRESHOLDS.get(entity.age_stage, 0.7))
-		if entity.hunger >= threshold:
+		if StatQuery.get_normalized(entity, &"NEED_HUNGER") >= threshold:
 			continue
 		hungry_children.append(entity)
 
@@ -55,7 +55,7 @@ func execute_tick(tick: int) -> void:
 					tick, child.entity_name, feed_amount,
 				])
 
-		var old_hunger: float = child.hunger
+		var old_hunger: float = StatQuery.get_normalized(child, &"NEED_HUNGER")
 		var withdrawn: float = _withdraw_food(settlement_id, feed_amount)
 		if withdrawn <= 0.0:
 			continue
@@ -65,14 +65,14 @@ func execute_tick(tick: int) -> void:
 			var age_str: String = "%dy %dm" % [int(float(child.age) / 4380.0), int(fmod(float(child.age) / 365.0, 12.0))]
 			var sett_food: float = _get_settlement_food(settlement_id)
 			print("[CHILDCARE_DEBUG] Tick %d | %s (age %s) hunger=%.2f | sett_food=%.1f | fed=%.2f -> hunger=%.2f" % [
-				tick, child.entity_name, age_str, old_hunger, sett_food, withdrawn, child.hunger,
+				tick, child.entity_name, age_str, old_hunger, sett_food, withdrawn, StatQuery.get_normalized(child, &"NEED_HUNGER"),
 			])
 		emit_event("child_fed", {
 			"entity_id": child.id,
 			"entity_name": child.entity_name,
 			"amount": withdrawn,
 			"settlement_id": settlement_id,
-			"hunger_after": child.hunger,
+			"hunger_after": StatQuery.get_normalized(child, &"NEED_HUNGER"),
 			"tick": tick,
 		})
 
@@ -112,4 +112,4 @@ func _withdraw_food(settlement_id: int, amount: float) -> float:
 
 
 func _sort_hunger_ascending(a: RefCounted, b: RefCounted) -> bool:
-	return a.hunger < b.hunger
+	return StatQuery.get_normalized(a, &"NEED_HUNGER") < StatQuery.get_normalized(b, &"NEED_HUNGER")

@@ -98,7 +98,10 @@ var _deceased_proxy: RefCounted = null
 var _section_collapsed: Dictionary = {
 	"status": false,
 	"needs": false,
+	"needs_basic": false,    ## 생리적 욕구 서브섹션, 기본 펼침
+	"needs_higher": false,   ## 심리적 욕구 서브섹션, 기본 펼침
 	"personality": true,
+	"derived": false,
 	"traits": false,
 	"emotions": true,
 	"trauma_scars": true,
@@ -110,6 +113,7 @@ var _section_collapsed: Dictionary = {
 	"body": false,
 	"recent_actions": false,
 	"life_events": false,
+	"skills": false,
 	"values": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
@@ -156,6 +160,8 @@ class DeceasedEntityProxy extends RefCounted:
 	var buildings_built: int = 0
 	var personality: RefCounted
 	var emotion_data: RefCounted
+	var skill_xp: Dictionary = {}
+	var skill_levels: Dictionary = {}
 
 	# Deceased-only fields
 	var death_cause: String
@@ -742,13 +748,42 @@ func _draw() -> void:
 	# ── Needs ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"), "needs")
 	if not _section_collapsed.get("needs", false):
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), entity.thirst, Color(0.392, 0.710, 0.965))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), entity.warmth, Color(1.0, 0.541, 0.396))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), entity.safety, Color(0.584, 0.459, 0.804))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
-		cy += 6.0
+		var use_stat_query: bool = entity.is_alive and not _showing_deceased
+
+		## ── 생리적 욕구 서브섹션 ──
+		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_BASIC"), "needs_basic")
+		if not _section_collapsed.get("needs_basic", false):
+			if use_stat_query:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    StatQuery.get_normalized(entity, &"NEED_HUNGER"), Color(0.9, 0.2, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   StatQuery.get_normalized(entity, &"NEED_THIRST"), Color(0.392, 0.710, 0.965))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"),     StatQuery.get_normalized(entity, &"NEED_ENERGY"), Color(0.9, 0.8, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"),   StatQuery.get_normalized(entity, &"NEED_WARMTH"), Color(1.0, 0.541, 0.396))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"),   StatQuery.get_normalized(entity, &"NEED_SAFETY"), Color(0.584, 0.459, 0.804))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"),     StatQuery.get_normalized(entity, &"NEED_SOCIAL"), Color(0.3, 0.5, 0.9))
+			else:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    entity.hunger, Color(0.9, 0.2, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   entity.thirst, Color(0.392, 0.710, 0.965))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"),     entity.energy, Color(0.9, 0.8, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"),   entity.warmth, Color(1.0, 0.541, 0.396))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"),   entity.safety, Color(0.584, 0.459, 0.804))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"),     entity.social, Color(0.3, 0.5, 0.9))
+			cy += 4.0
+
+		## ── 심리적 욕구 서브섹션 ──
+		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_HIGHER"), "needs_higher")
+		if not _section_collapsed.get("needs_higher", false):
+			if use_stat_query:
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_BELONGING"),          StatQuery.get_normalized(entity, &"NEED_BELONGING"),          Color(0.4, 0.65, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_INTIMACY"),           StatQuery.get_normalized(entity, &"NEED_INTIMACY"),           Color(0.9, 0.45, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_RECOGNITION"),        StatQuery.get_normalized(entity, &"NEED_RECOGNITION"),        Color(0.85, 0.75, 0.3))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_AUTONOMY"),           StatQuery.get_normalized(entity, &"NEED_AUTONOMY"),           Color(0.55, 0.85, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
+			## 사망/레거시 엔티티는 심리적 욕구 stat_cache 없음 → 표시 생략
+			cy += 4.0
+
+		cy += 4.0
 
 	# ── Personality (HEXACO 6-axis + expandable facets) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_PERSONALITY"), "personality")
@@ -765,7 +800,11 @@ func _draw() -> void:
 	var pd = entity.personality
 	if not _section_collapsed.get("personality", false) and pd != null:
 		for axis_id in pd.AXIS_IDS:
-			var axis_val: float = pd.axes.get(axis_id, 0.5)
+			var axis_val: float
+			if entity.is_alive and not _showing_deceased:
+				axis_val = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis_id))
+			else:
+				axis_val = pd.axes.get(axis_id, 0.5)
 			var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
 			var is_expanded: bool = _expanded_axes.get(axis_id, false)
 			var arrow: String = "▼" if is_expanded else "▶"
@@ -787,6 +826,54 @@ func _draw() -> void:
 					var fname: String = "    " + Locale.ltr("FACET_" + fk.to_upper())
 					var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 					cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
+		cy += 4.0
+
+	# ── Derived Stats (파생 스탯) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_DERIVED_STATS"), "derived")
+	if not _section_collapsed.get("derived", false):
+		if entity.is_alive and not _showing_deceased:
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CHARISMA"),        StatQuery.get_normalized(entity, &"DERIVED_CHARISMA"),        Color(0.9, 0.7, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_INTIMIDATION"),    StatQuery.get_normalized(entity, &"DERIVED_INTIMIDATION"),    Color(0.8, 0.3, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_ALLURE"),          StatQuery.get_normalized(entity, &"DERIVED_ALLURE"),          Color(0.9, 0.5, 0.7))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_TRUSTWORTHINESS"), StatQuery.get_normalized(entity, &"DERIVED_TRUSTWORTHINESS"), Color(0.4, 0.8, 0.6))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"),      StatQuery.get_normalized(entity, &"DERIVED_CREATIVITY"),      Color(0.6, 0.4, 0.9))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),          StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),          Color(0.7, 0.85, 0.5))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),      StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),      Color(0.9, 0.6, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"),  StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"),  Color(0.5, 0.7, 0.9))
+		else:
+			## 사망 엔티티: stat_cache 없음 → 표시 불가
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DERIVED_UNAVAILABLE"),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			cy += 16.0
+		cy += 6.0
+
+	# ── Skills (기술) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")
+	if not _section_collapsed.get("skills", false):
+		var _skill_entries: Array = [
+			{ "id": &"SKILL_FORAGING",    "label_key": "UI_SKILL_FORAGING",    "color": Color(0.4, 0.8, 0.4) },
+			{ "id": &"SKILL_WOODCUTTING", "label_key": "UI_SKILL_WOODCUTTING", "color": Color(0.8, 0.6, 0.3) },
+			{ "id": &"SKILL_MINING",      "label_key": "UI_SKILL_MINING",      "color": Color(0.6, 0.6, 0.7) },
+			{ "id": &"SKILL_CONSTRUCTION","label_key": "UI_SKILL_CONSTRUCTION","color": Color(0.9, 0.75, 0.3) },
+			{ "id": &"SKILL_HUNTING",     "label_key": "UI_SKILL_HUNTING",     "color": Color(0.8, 0.3, 0.3) },
+		]
+		var _any_skill_shown: bool = false
+		for _se in _skill_entries:
+			var _sid: StringName = _se["id"]
+			var _level: int = int(entity.skill_levels.get(_sid, 0))
+			if _level <= 0 and not entity.skill_xp.has(_sid):
+				continue
+			_any_skill_shown = true
+			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
+			cy = _draw_bar(font, cx + 10, cy, bar_w,
+				Locale.ltr(_se["label_key"]),
+				float(_level) / 100.0,
+				_se["color"],
+				_desc)
+		if not _any_skill_shown:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_SKILLS_NONE"),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			cy += 16.0
 		cy += 4.0
 
 	# ── Values (가치관) ──
@@ -895,16 +982,25 @@ func _draw() -> void:
 				draw_string(font, Vector2(cx + 10, cy + 12), break_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(1.0, 0.2, 0.2))
 				cy += 16.0
 		else:
-			# Fallback: legacy 5-emotion display
+			## Fallback: entity.emotion_data가 null인 경우 (구형 저장 파일 또는 초기화 전 에이전트)
+			## EmotionSystem이 아직 이 에이전트에 emotion_data를 생성하지 않은 상태.
+			## 레거시 entity.emotions Dictionary에서 읽어서 표시.
 			var e_keys: Array = ["happiness", "loneliness", "stress", "grief", "love"]
-			var e_labels: Array = ["Happy", "Lonely", "Stress", "Grief", "Love"]
+			var e_locale_keys: Array = [
+				"EMO_JOY",             ## happiness → 기쁨/Joy
+				"EMO_SADNESS",         ## loneliness → 슬픔/Sadness (가장 근접)
+				"UI_STRESS",           ## stress → 스트레스/Stress
+				"EMO_SADNESS_INTENSE", ## grief → 비통/Grief
+				"DYAD_LOVE",           ## love → 사랑/Love
+			]
 			var legacy_colors: Dictionary = {
 				"happiness": Color(0.9, 0.8, 0.2), "loneliness": Color(0.4, 0.4, 0.7),
 				"stress": Color(0.9, 0.5, 0.2), "grief": Color(0.5, 0.3, 0.5), "love": Color(0.9, 0.3, 0.4),
 			}
 			for i in range(e_keys.size()):
 				var val: float = entity.emotions.get(e_keys[i], 0.0)
-				cy = _draw_bar(font, cx + 10, cy, bar_w, e_labels[i], val, legacy_colors.get(e_keys[i], Color.WHITE))
+				var label: String = Locale.ltr(e_locale_keys[i])
+				cy = _draw_bar(font, cx + 10, cy, bar_w, label, val, legacy_colors.get(e_keys[i], Color.WHITE))
 		cy += 6.0
 
 	# ── Trauma Scars ──
@@ -1410,6 +1506,15 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+## Return localization key for skill level descriptor label.
+func _get_skill_descriptor_key(level: int) -> String:
+	if level >= 80: return "SKILL_DESC_GRANDMASTER"
+	if level >= 60: return "SKILL_DESC_EXPERT"
+	if level >= 40: return "SKILL_DESC_COMPETENT"
+	if level >= 20: return "SKILL_DESC_APPRENTICE"
+	if level >= 1:  return "SKILL_DESC_NOVICE"
+	return "SKILL_DESC_UNSKILLED"
 
 
 ## Draw a bipolar bar for values in range [-1.0, +1.0]

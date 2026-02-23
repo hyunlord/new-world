@@ -10,25 +10,21 @@
     "type": "COMPOSITE",
     "params": {
       "inputs": [
-        { "source": "HEXACO_O", "weight": 0.60 },
-        { "source": "HEXACO_X", "weight": 0.20 },
-        { "source": "HEXACO_E", "weight": 0.20 }
-      ]
+        {"stat_id": "HEXACO_O",           "weight": 0.45},
+        {"stat_id": "EMOTION_ANTICIPATION","weight": 0.20},
+        {"stat_id": "VALUE_ARTWORK",       "weight": 0.20},
+        {"stat_id": "HEXACO_X",           "weight": 0.15}
+      ],
+      "formula": "WEIGHTED_AVERAGE"
     }
   },
   "thresholds": [
-    { "value": 750, "direction": "above", "effect": "TRAIT_CREATIVE", "hysteresis": 40 }
+    {"value": 800, "direction": "above", "effect": "TRAIT_CREATIVITY_HIGH", "hysteresis": 30},
+    {"value": 200, "direction": "below", "effect": "TRAIT_CREATIVITY_LOW",  "hysteresis": 30}
   ],
   "affects": [
-    {
-      "target": "craft_quality_bonus",
-      "evaluator": "CURVE",
-      "curve": "POWER",
-      "params": { "exponent": 1.4 },
-      "weight": 0.40,
-      "direction": "positive",
-      "context": ""
-    }
+    {"target": "tech_learn_speed","evaluator": "CURVE", "curve": "LINEAR", "weight": 0.25, "direction": "positive", "context": ""},
+    {"target": "cultural_output", "evaluator": "CURVE", "curve": "LINEAR", "weight": 0.30, "direction": "positive", "context": ""}
   ],
-  "display": { "visible": true, "show_in_panel": "derived", "descriptor_table": "7_step" }
+  "display": {"visible": true, "show_in_panel": "derived", "descriptor_table": "7_step"}
 }

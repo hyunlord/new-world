@@ -9,32 +9,19 @@
   "growth": {
     "type": "DECAY_NATURAL",
     "params": {
-      "decay_per_year": 150,
-      "age_stage_multipliers": {
-        "infant": 1.0, "child": 1.5, "teen": 2.0,
-        "adult": 1.0, "elder": 1.3
-      }
+      "decay_per_year": 250,
+      "age_stage_multipliers": {"infant": 2.0, "child": 1.5, "teen": 1.3, "adult": 1.0, "elder": 0.9}
     }
   },
   "thresholds": [
-    { "value": 400, "direction": "below", "effect": "MODIFIER_MOOD_PENALTY_MILD", "hysteresis": 30 },
-    { "value": 200, "direction": "below", "effect": "MODIFIER_MOOD_PENALTY_SEVERE", "hysteresis": 20 },
-    { "value": 80, "direction": "below", "effect": "BEHAVIOR_SEEK_COMPANY_OVERRIDE", "hysteresis": 15 }
+    {"value": 350, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_MILD",   "hysteresis": 20},
+    {"value": 150, "direction": "below", "effect": "MODIFIER_WORK_PENALTY_SEVERE", "hysteresis": 20}
   ],
-  "affects": [
-    {
-      "target": "stress_continuous_input",
-      "evaluator": "CURVE",
-      "curve": "THRESHOLD_POWER",
-      "params": { "threshold": 400, "exponent": 1.6, "max_output": 7.0 },
-      "weight": 0.6,
-      "direction": "negative",
-      "context": "stress"
-    }
-  ],
-  "display": {
-    "visible": true,
-    "show_in_panel": "needs",
-    "descriptor_table": "need_6_step"
-  }
+  "affects": [{
+    "target": "stress_continuous_input",
+    "evaluator": "CURVE", "curve": "THRESHOLD_POWER",
+    "params": {"threshold": 250, "exponent": 2.0, "max_output": 5.0},
+    "weight": 1.0, "direction": "negative", "context": "stress"
+  }],
+  "display": {"visible": true, "show_in_panel": "needs", "descriptor_table": "need_6_step"}
 }

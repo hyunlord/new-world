@@ -1,0 +1,63 @@
+{
+  "id": "FACET_E_DEPENDENCE",
+  "display_key": "FACET_E_DEPENDENCE",
+  "category": "PERSONALITY_FACET",
+  "storage_type": "int",
+  "range": [
+    0,
+    1000
+  ],
+  "default": 500,
+  "tier": 0,
+  "growth": {
+    "type": "SCURVE",
+    "params": {
+      "phase_breakpoints": [
+        300,
+        700
+      ],
+      "phase_speeds": [
+        1.5,
+        1.0,
+        0.3
+      ]
+    }
+  },
+  "thresholds": [
+    {
+      "value": 850,
+      "direction": "above",
+      "effect": "TRAIT_FACET_E_DEPENDENCE_HIGH",
+      "hysteresis": 30
+    },
+    {
+      "value": 150,
+      "direction": "below",
+      "effect": "TRAIT_FACET_E_DEPENDENCE_LOW",
+      "hysteresis": 30
+    }
+  ],
+  "affects": [
+    {
+      "target": "lone_action_prob",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.35,
+      "direction": "negative",
+      "context": ""
+    },
+    {
+      "target": "help_seek_freq",
+      "evaluator": "CURVE",
+      "curve": "LINEAR",
+      "weight": 0.3,
+      "direction": "positive",
+      "context": ""
+    }
+  ],
+  "display": {
+    "visible": true,
+    "show_in_panel": "personality",
+    "descriptor_table": "7_step"
+  }
+}
