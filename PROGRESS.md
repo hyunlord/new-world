@@ -32,10 +32,11 @@ JSON, localization, UI 코드는 이미 완성 — 데이터 파이프라인 앞
 - ko/ updated: 불필요
 
 ### Results
-- Gate: TBD
+- Gate: PASS
 - Dispatch ratio: 2/2 = 100%
-- Files changed: TBD
+- Files changed: 3 (entity_data.gd, stat_sync_system.gd, PROGRESS.md)
 - Dispatch tool used: ask_codex (2 tickets)
+- Commit: 14d1d19
 - Notion pages updated: ⚠️ notionApi MCP unavailable — manual update required
 
 ## EntityDetailPanel UI 버그 수정 3종 (t-UI-main + t-UI-04) — 2026-02-23
