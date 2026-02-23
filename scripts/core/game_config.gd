@@ -405,4 +405,35 @@ const CHILD_MOVE_SKIP_MOD: Dictionary = {
 	"elder": 3,
 }
 
+## ━━ UPPER NEEDS SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Deci & Ryan 1985 SDT, Maslow 1943, Alderfer 1969 ERG, Bandura 1977 Self-Efficacy]
+## 시스템이 5틱마다 실행됨 (UPPER_NEEDS_TICK_INTERVAL).
+## 감쇠값 유도: decay_per_year / 1000 / 4380 * 5
+const UPPER_NEEDS_TICK_INTERVAL: int = 5
+
+## ── 감쇠 (5틱당) ──────────────────────────────────────────────────
+const UPPER_NEEDS_COMPETENCE_DECAY:       float = 0.000149   ## 130/yr — 유능감
+const UPPER_NEEDS_AUTONOMY_DECAY:         float = 0.000137   ## 120/yr — 자율성
+const UPPER_NEEDS_SELF_ACTUATION_DECAY:   float = 0.0000913  ## 80/yr  — 자아실현
+const UPPER_NEEDS_MEANING_DECAY:          float = 0.0000799  ## 70/yr  — 의미
+const UPPER_NEEDS_RECOGNITION_DECAY:      float = 0.000171   ## 150/yr — 사회적 인정
+const UPPER_NEEDS_BELONGING_DECAY:        float = 0.000285   ## 250/yr — 소속감
+const UPPER_NEEDS_INTIMACY_DECAY:         float = 0.000205   ## 180/yr — 친밀감
+
+## ── 충족 (5틱당) ──────────────────────────────────────────────────
+## 목표 균형점: 활동 중인 에이전트 0.65–0.80 유지
+const UPPER_NEEDS_COMPETENCE_JOB_GAIN:           float = 0.000200  ## 비율 1.34× — 직업 보유 시
+const UPPER_NEEDS_AUTONOMY_JOB_GAIN:             float = 0.000150  ## 비율 1.09× — 직업 보유 시
+const UPPER_NEEDS_BELONGING_SETTLEMENT_GAIN:     float = 0.000325  ## 비율 1.14× — 정착지 소속 시
+const UPPER_NEEDS_INTIMACY_PARTNER_GAIN:         float = 0.000250  ## 비율 1.22× — 파트너 있을 시
+const UPPER_NEEDS_RECOGNITION_SKILL_COEFF:       float = 0.000200  ## × (best_skill/100) — lv100=1.17×
+const UPPER_NEEDS_MEANING_BASE_GAIN:             float = 0.0000250 ## 항상 소량 회복
+const UPPER_NEEDS_MEANING_ALIGNED_GAIN:          float = 0.0000900 ## × alignment(0–1) — 정합 시 1.44×
+const UPPER_NEEDS_SELF_ACTUATION_SKILL_COEFF:    float = 0.000100  ## × (best_skill/100) — lv100=1.09×
+
+## ── 레벨업 일회성 보너스 ─────────────────────────────────────────
+## [Bandura 1977] 숙련 달성 이벤트 → 즉각 자기효능감 스파이크
+const UPPER_NEEDS_SKILLUP_COMPETENCE_BONUS: float = 0.08
+const UPPER_NEEDS_SKILLUP_SELF_ACT_BONUS:   float = 0.05
+
 

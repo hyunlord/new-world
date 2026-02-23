@@ -4160,3 +4160,45 @@ Localization keys included in t-SU-02 prompt (game.json additions — simple JSO
 - Files changed: 5 (stat_query.gd, entity_detail_panel.gd, en/game.json, ko/game.json, PROGRESS.md)
 - Dispatch tool used: ask_codex (2 tickets)
 - Notion pages updated: SkillSystem, EntityDetailPanel, Change Log DB
+
+---
+
+## UpperNeedsSystem — t-UN-01 through t-UN-04 — 2026-02-23
+
+### Context
+WorldSim 에이전트의 7개 상위 욕구(유능감·자율성·자아실현·의미·사회적 인정·소속감·친밀감)가
+초기값(0.50~0.70)에서 절대 변하지 않음. UI_NEEDS_HIGHER 섹션이 장식에 불과.
+[Deci & Ryan 1985 SDT, Maslow 1943, Bandura 1977] 기반 감쇠/충족/레벨업 보너스 파이프라인 구현.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UN-01 | game_config.gd — UPPER_NEEDS_* 상수 17개 | 🔴 DIRECT | — | 공유 config — 모든 하류 depends |
+| t-UN-02 | upper_needs_system.gd — 신규 시스템 파일 | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-UN-03 | test_upper_needs.gd — 단위 테스트 | 🟢 DISPATCH | ask_codex | standalone test file |
+| t-UN-04 | main.gd — UpperNeedsSystem 등록 | 🔴 DIRECT | — | integration wiring <15 lines |
+
+### Dispatch ratio: 2/4 = 50% ⚠️
+> 50%는 최소 목표(60%) 미달. 사유: t-UN-01은 GameConfig 공유 인터페이스(DIRECT 불가피).
+> t-UN-04는 15줄 미만 wiring(DIRECT 불가피). 실질 구현(t-UN-02, t-UN-03)은 전량 DISPATCH.
+
+### Dispatch strategy
+Config-first, then fan-out:
+1. DIRECT: t-UN-01 (game_config.gd 상수), commit
+2. Parallel DISPATCH: t-UN-02 + t-UN-03 (t-UN-01 완료 후, 서로 독립)
+3. DIRECT: t-UN-04 (main.gd 등록 wiring, t-UN-02 완료 후)
+
+### Notion Update
+pending — Codex jobs 완료 후 업데이트 예정
+
+### Localization Verification
+- New keys: none (UI_STAT_NEED_* 7개 이미 en/ko ui.json에 존재)
+- upper_needs_system.gd는 Locale API 미사용 — 시뮬레이션 로직만
+- Hardcoded scan: N/A (no UI text output)
+
+### Results
+- Gate: pending
+- Dispatch ratio: 2/4 = 50%
+- Files changed: pending
+- Dispatch tool used: ask_codex (t-UN-02, t-UN-03)
+- Notion pages updated: pending
