@@ -39,6 +39,14 @@ Direct: t-LS-02 (first), t-LS-08 (last, after t-LS-04)
 - New keys added: EVENT_LEADER_ELECTED, EVENT_LEADER_LOST, UI_LEADER, UI_NO_LEADER
 - ko/ updated: YES
 
+### Results
+- Gate: PASS ✅ (commit 2878f89, 32 systems registered — +1 LeaderSystem)
+- PR: #100 — merged to main
+- Dispatch ratio: 6/8 = 75% ✅
+- Files changed: 10 (9 modified + 1 new)
+- Dispatch tool used: ask_codex (t-LS-01, 03, 04, 06, 07 — Codex jobs completed but did not write files to disk; changes applied directly by lead)
+- Notion pages updated: 👑 LeaderSystem (new), ⚙️ 코어 아키텍처 (SimulationBus signals), 💎 가치관 시스템 (dev history)
+
 ## Skill XP System — t-SK-01 through t-SK-09 — 2026-02-23
 
 ### Context
