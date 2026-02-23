@@ -742,12 +742,21 @@ func _draw() -> void:
 	# ── Needs ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_NEEDS"), "needs")
 	if not _section_collapsed.get("needs", false):
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), entity.thirst, Color(0.392, 0.710, 0.965))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), entity.warmth, Color(1.0, 0.541, 0.396))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), entity.safety, Color(0.584, 0.459, 0.804))
-		cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
+		var use_stat_query: bool = entity.is_alive and not _showing_deceased
+		if use_stat_query:
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), StatQuery.get_normalized(entity, &"NEED_HUNGER"), Color(0.9, 0.2, 0.2))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), StatQuery.get_normalized(entity, &"NEED_THIRST"), Color(0.392, 0.710, 0.965))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), StatQuery.get_normalized(entity, &"NEED_ENERGY"), Color(0.9, 0.8, 0.2))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), StatQuery.get_normalized(entity, &"NEED_WARMTH"), Color(1.0, 0.541, 0.396))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), StatQuery.get_normalized(entity, &"NEED_SAFETY"), Color(0.584, 0.459, 0.804))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), StatQuery.get_normalized(entity, &"NEED_SOCIAL"), Color(0.3, 0.5, 0.9))
+		else:
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_HUNGER"), entity.hunger, Color(0.9, 0.2, 0.2))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_THIRST"), entity.thirst, Color(0.392, 0.710, 0.965))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_ENERGY"), entity.energy, Color(0.9, 0.8, 0.2))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_WARMTH"), entity.warmth, Color(1.0, 0.541, 0.396))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("NEED_SAFETY"), entity.safety, Color(0.584, 0.459, 0.804))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL"), entity.social, Color(0.3, 0.5, 0.9))
 		cy += 6.0
 
 	# ── Personality (HEXACO 6-axis + expandable facets) ──
@@ -765,7 +774,11 @@ func _draw() -> void:
 	var pd = entity.personality
 	if not _section_collapsed.get("personality", false) and pd != null:
 		for axis_id in pd.AXIS_IDS:
-			var axis_val: float = pd.axes.get(axis_id, 0.5)
+			var axis_val: float
+			if entity.is_alive and not _showing_deceased:
+				axis_val = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis_id))
+			else:
+				axis_val = pd.axes.get(axis_id, 0.5)
 			var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
 			var is_expanded: bool = _expanded_axes.get(axis_id, false)
 			var arrow: String = "▼" if is_expanded else "▶"
@@ -1273,6 +1286,20 @@ func _draw() -> void:
 		cy += 16.0
 		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %.0f  |  %s: %d" % [Locale.ltr("UI_TOTAL_GATHERED"), entity.total_gathered, Locale.ltr("UI_BUILDINGS_BUILT"), entity.buildings_built], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		cy += 22.0
+
+		## ── 파생 스탯 서브섹션 ──
+		if entity.is_alive and not _showing_deceased:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DERIVED_STATS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.75, 0.75, 0.75))
+			cy += 18.0
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CHARISMA"),       StatQuery.get_normalized(entity, &"DERIVED_CHARISMA"),       Color(0.9, 0.7, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_INTIMIDATION"),   StatQuery.get_normalized(entity, &"DERIVED_INTIMIDATION"),   Color(0.8, 0.3, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_ALLURE"),         StatQuery.get_normalized(entity, &"DERIVED_ALLURE"),         Color(0.9, 0.5, 0.7))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_TRUSTWORTHINESS"),StatQuery.get_normalized(entity, &"DERIVED_TRUSTWORTHINESS"),Color(0.4, 0.8, 0.6))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"),     StatQuery.get_normalized(entity, &"DERIVED_CREATIVITY"),     Color(0.6, 0.4, 0.9))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),         StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),         Color(0.7, 0.85, 0.5))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),     StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),     Color(0.9, 0.6, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"), StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"), Color(0.5, 0.7, 0.9))
+			cy += 4.0
 
 	# ── Body Attributes ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_BODY_SECTION"), "body")

@@ -41,6 +41,7 @@ const ParentingSystem = preload("res://scripts/systems/phase5/parenting_system.g
 const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
 const ValueSystem = preload("res://scripts/systems/value_system.gd")
 const StatSyncSystem = preload("res://scripts/systems/stat_sync_system.gd")
+const StatThresholdSystem = preload("res://scripts/systems/stat_threshold_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -87,6 +88,7 @@ var value_system: RefCounted
 var debug_console = null
 var debug_panel = null
 var stat_sync_system: RefCounted
+var stat_threshold_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -139,6 +141,9 @@ func _ready() -> void:
 	# ── Create simulation systems ──────────────────────────
 	stat_sync_system = StatSyncSystem.new()
 	stat_sync_system.init(entity_manager)
+
+	stat_threshold_system = StatThresholdSystem.new()
+	stat_threshold_system.init(entity_manager)
 
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -244,6 +249,7 @@ func _ready() -> void:
 	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
 	sim_engine.register_system(job_assignment_system)     # priority 8
 	sim_engine.register_system(needs_system)              # priority 10
+	sim_engine.register_system(stat_threshold_system)    # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25

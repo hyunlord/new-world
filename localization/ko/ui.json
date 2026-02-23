@@ -862,5 +862,14 @@
   "UI_BODY_REC": "회복력",
   "UI_BODY_DR": "면역력",
   "UI_BODY_INNATE_IMMUNITY": "선천 면역력",
-  "UI_BODY_SECTION": "신체"
+  "UI_BODY_SECTION": "신체",
+  "UI_DERIVED_STATS": "파생 스탯",
+  "UI_DERIVED_CHARISMA": "카리스마",
+  "UI_DERIVED_INTIMIDATION": "위압감",
+  "UI_DERIVED_ALLURE": "매력",
+  "UI_DERIVED_TRUSTWORTHINESS": "신뢰감",
+  "UI_DERIVED_CREATIVITY": "창의력",
+  "UI_DERIVED_WISDOM": "지혜",
+  "UI_DERIVED_POPULARITY": "인기도",
+  "UI_DERIVED_RISK_TOLERANCE": "위험 감수"
 }

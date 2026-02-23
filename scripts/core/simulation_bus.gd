@@ -34,6 +34,10 @@ signal scar_reactivated(data: Dictionary)
 signal mental_break_started(entity_id: int, break_type: String, tick: int)
 signal mental_break_recovered(entity_id: int, tick: int)
 
+## Stat threshold crossing (Phase 3 — StatThresholdSystem)
+## direction: "entered" (조건 진입) or "exited" (조건 해제)
+signal stat_threshold_crossed(entity_id: int, stat_id: String, effect: String, direction: String)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

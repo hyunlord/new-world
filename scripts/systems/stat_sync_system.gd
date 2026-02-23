@@ -46,7 +46,50 @@ func _sync_entity(entity: RefCounted) -> void:
 	# Emotion meta stats
 	var ed = entity.emotion_data
 	if ed == null:
+		_compute_derived(entity)
 		return
 	StatQuery.set_value(entity, &"EMOTION_STRESS",     int(ed.stress * 20.0), 0)
 	StatQuery.set_value(entity, &"EMOTION_ALLOSTATIC",  int(ed.allostatic), 0)
 	StatQuery.set_value(entity, &"EMOTION_RESERVE",     int(ed.reserve), 0)
+	_compute_derived(entity)
+
+
+## COMPOSITE 파생 스탯 계산 및 stat_cache에 저장.
+## HEXACO, Emotion, Body, Value 스탯을 조합하여 8개 파생 스탯을 만든다.
+## StatSyncSystem priority=1이므로 다른 시스템보다 먼저 실행됨.
+func _compute_derived(entity: RefCounted) -> void:
+	var X: float = StatQuery.get_normalized(entity, &"HEXACO_X")
+	var A: float = StatQuery.get_normalized(entity, &"HEXACO_A")
+	var H: float = StatQuery.get_normalized(entity, &"HEXACO_H")
+	var E: float = StatQuery.get_normalized(entity, &"HEXACO_E")
+	var O: float = StatQuery.get_normalized(entity, &"HEXACO_O")
+	var C: float = StatQuery.get_normalized(entity, &"HEXACO_C")
+	var joy: float = StatQuery.get_normalized(entity, &"EMOTION_JOY")
+	var anticipation: float = StatQuery.get_normalized(entity, &"EMOTION_ANTICIPATION")
+	var anger: float = StatQuery.get_normalized(entity, &"EMOTION_ANGER")
+	var str_pot: float = StatQuery.get_normalized(entity, &"BODY_STR_POTENTIAL")
+	var romance: float = StatQuery.get_normalized(entity, &"VALUE_ROMANCE")
+	var truth: float = StatQuery.get_normalized(entity, &"VALUE_TRUTH")
+	var artwork: float = StatQuery.get_normalized(entity, &"VALUE_ARTWORK")
+	var knowledge: float = StatQuery.get_normalized(entity, &"VALUE_KNOWLEDGE")
+	var merriment: float = StatQuery.get_normalized(entity, &"VALUE_MERRIMENT")
+	var friendship: float = StatQuery.get_normalized(entity, &"VALUE_FRIENDSHIP")
+	var competition: float = StatQuery.get_normalized(entity, &"VALUE_COMPETITION")
+
+	var charisma: float = clampf(X * 0.35 + A * 0.20 + H * 0.15 + joy * 0.15 + (1.0 - E) * 0.15, 0.0, 1.0)
+	var intimidation: float = clampf(str_pot * 0.40 + anger * 0.30 + (1.0 - E) * 0.15 + X * 0.15, 0.0, 1.0)
+	var allure: float = clampf(charisma * 0.50 + romance * 0.25 + X * 0.25, 0.0, 1.0)
+	var trustworthiness: float = clampf(H * 0.40 + A * 0.30 + truth * 0.30, 0.0, 1.0)
+	var creativity: float = clampf(O * 0.45 + anticipation * 0.20 + artwork * 0.20 + X * 0.15, 0.0, 1.0)
+	var wisdom: float = clampf(C * 0.30 + O * 0.25 + A * 0.20 + knowledge * 0.25, 0.0, 1.0)
+	var popularity: float = clampf(charisma * 0.50 + merriment * 0.25 + friendship * 0.25, 0.0, 1.0)
+	var risk_tolerance: float = clampf((1.0 - E) * 0.40 + O * 0.30 + competition * 0.15 + (1.0 - C) * 0.15, 0.0, 1.0)
+
+	StatQuery.set_value(entity, &"DERIVED_CHARISMA", int(charisma * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_INTIMIDATION", int(intimidation * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_ALLURE", int(allure * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_TRUSTWORTHINESS", int(trustworthiness * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_CREATIVITY", int(creativity * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_WISDOM", int(wisdom * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_POPULARITY", int(popularity * 1000), 0)
+	StatQuery.set_value(entity, &"DERIVED_RISK_TOLERANCE", int(risk_tolerance * 1000), 0)

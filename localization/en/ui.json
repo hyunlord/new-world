@@ -862,5 +862,14 @@
   "UI_BODY_REC": "Recuperation",
   "UI_BODY_DR": "Disease Resistance",
   "UI_BODY_INNATE_IMMUNITY": "Innate Immunity",
-  "UI_BODY_SECTION": "Body"
+  "UI_BODY_SECTION": "Body",
+  "UI_DERIVED_STATS": "Derived Stats",
+  "UI_DERIVED_CHARISMA": "Charisma",
+  "UI_DERIVED_INTIMIDATION": "Intimidation",
+  "UI_DERIVED_ALLURE": "Allure",
+  "UI_DERIVED_TRUSTWORTHINESS": "Trustworthiness",
+  "UI_DERIVED_CREATIVITY": "Creativity",
+  "UI_DERIVED_WISDOM": "Wisdom",
+  "UI_DERIVED_POPULARITY": "Popularity",
+  "UI_DERIVED_RISK_TOLERANCE": "Risk Tolerance"
 }
