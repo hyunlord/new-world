@@ -886,5 +886,6 @@
   "UI_STAT_NEED_AUTONOMY": "Autonomy",
   "UI_STAT_NEED_COMPETENCE": "Competence",
   "UI_STAT_NEED_SELF_ACTUALIZATION": "Self-Actualization",
-  "UI_STAT_NEED_MEANING": "Meaning"
+  "UI_STAT_NEED_MEANING": "Meaning",
+  "UI_DERIVED_UNAVAILABLE": "Derived stats unavailable for deceased"
 }
