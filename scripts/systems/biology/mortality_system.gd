@@ -1,0 +1,415 @@
+extends "res://scripts/core/simulation/simulation_system.gd"
+
+## Siler(1979) bathtub-curve mortality model.
+## μ(x) = a₁·e^{-b₁·x} + a₂ + a₃·e^{b₃·x}
+## Birthday-based distributed checks (not every-tick iteration).
+## Infants (0-1yr) checked monthly for higher resolution.
+
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+
+var _entity_manager: RefCounted
+var _rng: RandomNumberGenerator
+
+var _siler: Dictionary = {}
+var _tech_k1: float = 0.30
+var _tech_k2: float = 0.20
+var _tech_k3: float = 0.05
+var _care_hunger_min: float = 0.3
+var _care_protection_factor: float = 0.6
+var _season_modifiers: Dictionary = {}
+
+var _a1: float = 0.60
+var _b1: float = 1.30
+var _a2: float = 0.010
+var _a3: float = 0.00006
+var _b3: float = 0.090
+
+## Current tech level (0-10, will be driven by research system later)
+var tech_level: float = 0.0
+
+## Demography tracking (per-year)
+var _year_births: int = 0
+var _year_deaths: int = 0
+var _year_infant_deaths: int = 0
+var _year_death_age_sum: float = 0.0
+var _year_death_age_samples: int = 0
+var _yearly_deaths_by_stage: Dictionary = {}
+var _yearly_deaths_by_cause: Dictionary = {}
+var _year_start_pop: int = 0
+var _last_log_year: int = 0
+
+## Monthly demography tracking
+var _month_births: int = 0
+var _month_deaths_starve: int = 0
+var _month_deaths_siler: int = 0
+var _last_log_month: int = 0
+var _last_log_month_year: int = 0
+
+## Stress system reference (injected by main.gd after init)
+var _stress_system: RefCounted = null
+
+
+func _init() -> void:
+	system_name = "mortality"
+	priority = 49  # After age(48), before population(50)
+	tick_interval = 1  # Check every tick (but only process birthday entities)
+
+
+func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
+	_entity_manager = entity_manager
+	_rng = rng
+	_load_siler_parameters()
+
+
+func _load_siler_parameters() -> void:
+	var sp = SpeciesManager.siler_parameters
+	_siler = sp.get("baseline", {"a1": 0.60, "b1": 1.30, "a2": 0.010, "a3": 0.00006, "b3": 0.090})
+	_a1 = float(_siler.get("a1", 0.60))
+	_b1 = float(_siler.get("b1", 1.30))
+	_a2 = float(_siler.get("a2", 0.010))
+	_a3 = float(_siler.get("a3", 0.00006))
+	_b3 = float(_siler.get("b3", 0.090))
+	var tech = sp.get("tech_modifiers", {})
+	_tech_k1 = float(tech.get("k1", 0.30))
+	_tech_k2 = float(tech.get("k2", 0.20))
+	_tech_k3 = float(tech.get("k3", 0.05))
+	var care = sp.get("care_protection", {})
+	_care_hunger_min = float(care.get("hunger_min", 0.3))
+	_care_protection_factor = float(care.get("protection_factor", 0.6))
+	_season_modifiers = sp.get("season_modifiers", {})
+
+
+func execute_tick(tick: int) -> void:
+	_check_birthday_mortality(tick)
+	_check_infant_monthly(tick)
+	_check_monthly_pop_log(tick)
+	_check_annual_demography_log(tick)
+
+
+## ─── Birthday-based annual mortality check ──────────────
+## Only entities whose birth_tick aligns with current tick (mod TICKS_PER_YEAR)
+
+func _check_birthday_mortality(tick: int) -> void:
+	var tick_mod: int = tick % GameCalendar.TICKS_PER_YEAR
+	var alive: Array = _entity_manager.get_alive_entities()
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
+		# Skip infants (handled by monthly check)
+		var age_ticks: int = entity.age
+		if age_ticks < GameCalendar.TICKS_PER_YEAR:
+			continue
+		# Birthday check: birth_tick mod TICKS_PER_YEAR == current tick mod TICKS_PER_YEAR
+		if posmod(entity.birth_tick, GameCalendar.TICKS_PER_YEAR) != tick_mod:
+			continue
+		_do_mortality_check(entity, tick, false)
+
+
+## ─── Infant monthly mortality check ──────────────────────
+## 0-1 year entities checked every ~30 days for higher resolution
+
+func _check_infant_monthly(tick: int) -> void:
+	var alive: Array = _entity_manager.get_alive_entities()
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
+		var age_ticks: int = entity.age
+		if age_ticks >= GameCalendar.TICKS_PER_YEAR:
+			continue
+		# Monthly check: every TICKS_PER_MONTH_AVG ticks after birth
+		var age_mod: int = age_ticks % GameCalendar.TICKS_PER_MONTH_AVG
+		# Check on the tick when age crosses a month boundary
+		if age_mod != 0:
+			continue
+		# Skip tick 0 (just born)
+		if age_ticks == 0:
+			continue
+		_do_mortality_check(entity, tick, true)
+
+
+## ─── Core mortality calculation ──────────────────────────
+
+func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> void:
+	var age_years: float = GameConfig.get_age_years(entity.age)
+
+	# Siler hazard components
+	var mu_infant: float = _a1 * exp(-_b1 * age_years)
+	var mu_background: float = _a2
+	var mu_senescence: float = _a3 * exp(_b3 * age_years)
+
+	# Tech modifiers
+	var m1: float = exp(-_tech_k1 * tech_level)
+	var m2: float = exp(-_tech_k2 * tech_level)
+	var m3: float = exp(-_tech_k3 * tech_level)
+
+	# Nutrition modifier (based on hunger)
+	var nutrition: float = clampf(StatQuery.get_normalized(entity, &"NEED_HUNGER"), 0.0, 1.0)
+	m1 *= lerpf(2.0, 0.8, nutrition)
+	m2 *= lerpf(1.5, 0.9, nutrition)
+	# Care protection: well-fed infants/toddlers get reduced infant mortality
+	if age_years <= 2.0 and nutrition > _care_hunger_min:
+		m1 *= _care_protection_factor  # 0.6 = 40% reduction
+
+	# Season modifier
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	var season: String = GameCalendar.get_season(date.day_of_year)
+	var season_mod = _season_modifiers.get(season, {})
+	if not season_mod.is_empty():
+		m1 *= float(season_mod.get("infant", 1.0))
+		m2 *= float(season_mod.get("background", 1.0))
+
+	# Total hazard rate (annual)
+	var h_infant: float = m1 * mu_infant
+	var h_background: float = m2 * mu_background
+	var h_senescence: float = m3 * mu_senescence
+	var mu_total: float = h_infant + h_background + h_senescence
+
+	# Individual frailty
+	mu_total *= entity.frailty
+
+	# Annual death probability: q = 1 - exp(-μ)
+	var q_annual: float = 1.0 - exp(-mu_total)
+	q_annual = clampf(q_annual, 0.0, 0.999)
+
+	# Convert to check period probability
+	var q_check: float = q_annual
+	if is_monthly:
+		# Monthly: q_month = 1 - (1 - q_annual)^(1/12)
+		q_check = 1.0 - pow(1.0 - q_annual, 1.0 / 12.0)
+
+	# Roll
+	if _rng.randf() < q_check:
+		var cause: String = _determine_cause(h_infant, h_background, h_senescence)
+		_entity_manager.kill_entity(entity.id, cause, tick)
+		register_death(age_years < 1.0, entity.age_stage, age_years, cause)
+		emit_event("entity_died_siler", {
+			"entity_id": entity.id,
+			"entity_name": entity.entity_name,
+			"age_years": age_years,
+			"cause": cause,
+			"mu_total": mu_total,
+			"q_annual": q_annual,
+			"tick": tick,
+		})
+		# ★ Bereavement stress for survivors (Phase 1 Stress System)
+		inject_bereavement_stress(entity)
+
+
+## ─── Cause of death determination ───────────────────────
+
+func _determine_cause(h_infant: float, h_background: float, h_senescence: float) -> String:
+	var total: float = h_infant + h_background + h_senescence
+	if total <= 0.0:
+		return "unknown"
+	var roll: float = _rng.randf() * total
+	if roll < h_infant:
+		return "infant_mortality"
+	elif roll < h_infant + h_background:
+		return "background"
+	else:
+		return "old_age"
+
+
+## ─── Annual demography log ──────────────────────────────
+
+func _check_monthly_pop_log(tick: int) -> void:
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	var current_month: int = date.month
+	var current_year: int = date.year
+	if current_year == _last_log_month_year and current_month == _last_log_month:
+		return
+	# New month crossed — print previous month's summary (skip first tick)
+	if _last_log_month > 0:
+		_print_monthly_pop_log(tick)
+	_last_log_month = current_month
+	_last_log_month_year = current_year
+	# Reset monthly counters
+	_month_births = 0
+	_month_deaths_starve = 0
+	_month_deaths_siler = 0
+
+
+func _print_monthly_pop_log(tick: int) -> void:
+	var alive: Array = _entity_manager.get_alive_entities()
+	var total_pop: int = alive.size()
+	var adult_count: int = 0
+	var child_count: int = 0
+	for i in range(alive.size()):
+		var entity: RefCounted = alive[i]
+		if entity.age_stage == "adult" or entity.age_stage == "elder":
+			adult_count += 1
+		else:
+			child_count += 1
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	print("[POP] Y%d M%d | Pop:%d (Adult:%d Child:%d) | Births:%d | Deaths(starve:%d siler:%d)" % [
+		date.year, date.month, total_pop, adult_count, child_count,
+		_month_births, _month_deaths_starve, _month_deaths_siler,
+	])
+
+
+func _check_annual_demography_log(tick: int) -> void:
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	var current_year: int = date.year
+	if current_year <= _last_log_year:
+		return
+	# New year crossed
+	if _last_log_year > 0:
+		_print_demography_log(current_year - 1, tick)
+	_last_log_year = current_year
+	_year_start_pop = _entity_manager.get_alive_count()
+	_year_births = 0
+	_year_deaths = 0
+	_year_infant_deaths = 0
+	_year_death_age_sum = 0.0
+	_year_death_age_samples = 0
+	_yearly_deaths_by_stage = {}
+	_yearly_deaths_by_cause = {}
+
+
+func _print_demography_log(year: int, tick: int) -> void:
+	var pop: int = _entity_manager.get_alive_count()
+	var q0: float = 0.0
+	if _year_births > 0:
+		q0 = float(_year_infant_deaths) / float(_year_births)
+	var death_infant: int = int(_yearly_deaths_by_stage.get("infant", 0))
+	var death_child: int = int(_yearly_deaths_by_stage.get("child", 0))
+	var death_teen: int = int(_yearly_deaths_by_stage.get("teen", 0))
+	var death_adult: int = int(_yearly_deaths_by_stage.get("adult", 0))
+	var death_elder: int = int(_yearly_deaths_by_stage.get("elder", 0))
+	var avg_death_age: float = 0.0
+	if _year_death_age_samples > 0:
+		avg_death_age = _year_death_age_sum / float(_year_death_age_samples)
+	var infant_mortality_pct: float = q0 * 100.0
+
+	# Theoretical e0 from current Siler parameters
+	var e0: float = _calc_theoretical_e0()
+	var e15: float = _calc_theoretical_ex(15.0)
+
+	# Average age
+	var alive: Array = _entity_manager.get_alive_entities()
+	var total_age: float = 0.0
+	for i in range(alive.size()):
+		total_age += GameConfig.get_age_years(alive[i].age)
+	var avg_age: float = total_age / maxf(float(alive.size()), 1.0)
+
+	print("[MORTALITY] Y%d --- Annual Summary ---" % year)
+	print("  Deaths: %d (infant: %d, child: %d, teen: %d, adult: %d, elder: %d)" % [
+		_year_deaths, death_infant, death_child, death_teen, death_adult, death_elder,
+	])
+	print("  Avg death age: %.1fy" % avg_death_age)
+	if _yearly_deaths_by_cause.size() > 0:
+		var cause_parts: Array = []
+		for c in _yearly_deaths_by_cause:
+			cause_parts.append("%s:%d" % [c, _yearly_deaths_by_cause[c]])
+		print("  Death causes: %s" % ", ".join(cause_parts))
+	print("  Infant mortality: %d/%d (%.1f%%)" % [_year_infant_deaths, _year_births, infant_mortality_pct])
+	print("  Population: %d, e0=%.1f, e15=%.1f, avg_age=%.1f" % [
+		pop, e0, e15, avg_age,
+	])
+
+
+## Register a birth (called externally by FamilySystem)
+func register_birth() -> void:
+	_year_births += 1
+	_month_births += 1
+
+
+## Register a death (called externally by NeedsSystem, FamilySystem)
+func register_death(is_infant: bool = false, age_stage: String = "", age_years: float = -1.0, cause: String = "") -> void:
+	_year_deaths += 1
+	if is_infant:
+		_year_infant_deaths += 1
+	var stage_key: String = age_stage
+	if is_infant:
+		stage_key = "infant"
+	if stage_key == "toddler" or stage_key == "child":
+		stage_key = "child"
+	elif stage_key != "infant" and stage_key != "teen" and stage_key != "adult" and stage_key != "elder":
+		stage_key = "adult"
+	_yearly_deaths_by_stage[stage_key] = int(_yearly_deaths_by_stage.get(stage_key, 0)) + 1
+	if cause != "":
+		_yearly_deaths_by_cause[cause] = int(_yearly_deaths_by_cause.get(cause, 0)) + 1
+	if age_years >= 0.0:
+		_year_death_age_sum += age_years
+		_year_death_age_samples += 1
+	if cause == "starvation":
+		_month_deaths_starve += 1
+	else:
+		_month_deaths_siler += 1
+
+
+## ─── Theoretical life expectancy (numerical integration) ──
+
+func _calc_theoretical_e0() -> float:
+	return _calc_theoretical_ex(0.0)
+
+
+func _calc_theoretical_ex(start_age: float) -> float:
+	# Numerical integration of survival function S(x) from start_age
+	# e(start) = integral from start to 120 of S(x)/S(start) dx
+	var m1: float = exp(-_tech_k1 * tech_level)
+	var m2: float = exp(-_tech_k2 * tech_level)
+	var m3: float = exp(-_tech_k3 * tech_level)
+	var dx: float = 0.5  # half-year steps
+	var cum_hazard_start: float = 0.0
+	var cum_hazard: float = 0.0
+	var integral: float = 0.0
+
+	# Compute cumulative hazard up to start_age
+	var x: float = 0.0
+	while x < start_age:
+		var mu: float = m1 * _a1 * exp(-_b1 * x) + m2 * _a2 + m3 * _a3 * exp(_b3 * x)
+		cum_hazard_start += mu * dx
+		x += dx
+
+	# Integrate S(x)/S(start) from start_age to 120
+	x = start_age
+	cum_hazard = 0.0
+	while x < 120.0:
+		var mu: float = m1 * _a1 * exp(-_b1 * x) + m2 * _a2 + m3 * _a3 * exp(_b3 * x)
+		var s_rel: float = exp(-cum_hazard)  # S(x)/S(start)
+		integral += s_rel * dx
+		cum_hazard += mu * dx
+		x += dx
+
+	return integral
+
+
+## Inject bereavement stress into survivors of a deceased entity.
+## COR (Hobfoll 1989): loss events use is_loss=true -> x2.5 multiplier.
+func inject_bereavement_stress(deceased: RefCounted) -> void:
+	if _stress_system == null:
+		return
+
+	# Partner loss
+	var pid: int = deceased.partner_id
+	if pid >= 0:
+		var partner = _entity_manager.get_entity(pid)
+		if partner != null and partner.is_alive and partner.emotion_data != null:
+			_stress_system.inject_event(partner, "partner_death", {})
+
+	# Child loses parent -- all ages receive grief, elders at reduced intensity
+	for child_id in deceased.children_ids:
+		var child = _entity_manager.get_entity(child_id)
+		if child == null:
+			continue
+		if not child.is_alive:
+			continue
+		if child.emotion_data == null:
+			continue
+		var age_mod: float = 0.75 if child.age_stage == "elder" else 1.0
+		_stress_system.inject_event(child, "parent_death", {
+			"context_modifier": age_mod,
+		})
+
+	# Parent loses child -- inject child_death stress to each living parent
+	for par_id in deceased.parent_ids:
+		var par = _entity_manager.get_entity(par_id)
+		if par == null:
+			continue
+		if not par.is_alive:
+			continue
+		if par.emotion_data == null:
+			continue
+		_stress_system.inject_event(par, "child_death", {
+			"child_age_stage": deceased.age_stage,
+			"bond_strength": 1.0,
+		})

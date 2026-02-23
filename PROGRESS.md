@@ -4114,3 +4114,211 @@ t-SY-01 완료 후 t-SY-02/03/04 병렬 dispatch (파일 겹침 없음).
   - 🖼️ 엔티티 디테일 패널: 개발 히스토리 (new row t-SY-04)
   - 변경 로그 DB: new entry 2026-02-23 (id: 310e2e3d-4a77-8113-96ed-ce394d2ef903)
   - Note: StatQuery 전용 페이지 없음 — 스킬 시스템 페이지에 통합 문서화됨
+
+---
+
+## Skill UI Fix — Level + XP Progress + Full Display (t-SU-01..02)
+
+### Context
+Skill section in EntityDetailPanel has 3 bugs: (1) skills with zero XP are hidden entirely,
+(2) descriptor text truncated at 45px pct_w ("견습 ×1." cut off), (3) no level number or XP
+progress shown. This batch fixes all 3 by introducing a new _draw_skill_bar() helper and
+get_skill_xp_info() in StatQuery.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SU-01 | stat_query.gd — add get_skill_xp_info() | 🟢 DISPATCH | ask_codex | standalone new function |
+| t-SU-02 | entity_detail_panel.gd — _draw_skill_bar() + loop + localization | 🟢 DISPATCH | ask_codex | single-file UI redesign |
+
+### Dispatch ratio: 2/2 = 100% ✅
+
+### Dispatch strategy
+Sequential: t-SU-01 first (provides get_skill_xp_info API), then t-SU-02 (uses it).
+Localization keys included in t-SU-02 prompt (game.json additions — simple JSON edits).
+
+### Notion Update
+✅ COMPLETED (2026-02-23)
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| SkillSystem | Callout (top) | updated | Added StatQuery.get_skill_xp_info() to API list |
+| SkillSystem | Core Logic | added section | get_skill_xp_info() — return struct (6 keys), cumulative XP loop formula, usage (EntityDetailPanel only) |
+| SkillSystem | Localization Keys | added rows | UI_SKILL_MAX (max/최대), UI_SKILL_MAX_SHORT (max/최대) |
+| SkillSystem | Development History | added row | 2026-02-23 — Skill UI 재디자인 (t-SU-01~02) |
+| EntityDetailPanel | Development History | added row | 2026-02-23 — 스킬 섹션 UI 재디자인 (t-SU-01/02) |
+| Change Log DB | — | added | 2026-02-23 — Skill UI level+XP progress display, all 5 skills always visible (t-SU-01/02) |
+
+### Localization Verification
+- New keys: UI_SKILL_MAX (en: "max", ko: "최대"), UI_SKILL_MAX_SHORT (en: "max", ko: "최대")
+- JSON file: localization/en/game.json + localization/ko/game.json (existing UI_SKILL_* keys are in game.json)
+- Hardcoded scan: PASS (all draw_string calls use Locale.ltr() or locale-exempt numeric formats)
+- ko/ updated: YES (in t-SU-02 dispatch)
+
+### Results
+- Gate: PASS (commit: 0197f9a)
+- Dispatch ratio: 2/2 = 100% ✅
+- Files changed: 5 (stat_query.gd, entity_detail_panel.gd, en/game.json, ko/game.json, PROGRESS.md)
+- Dispatch tool used: ask_codex (2 tickets)
+- Notion pages updated: SkillSystem, EntityDetailPanel, Change Log DB
+
+---
+
+## UpperNeedsSystem — t-UN-01 through t-UN-04 — 2026-02-23
+
+### Context
+WorldSim 에이전트의 7개 상위 욕구(유능감·자율성·자아실현·의미·사회적 인정·소속감·친밀감)가
+초기값(0.50~0.70)에서 절대 변하지 않음. UI_NEEDS_HIGHER 섹션이 장식에 불과.
+[Deci & Ryan 1985 SDT, Maslow 1943, Bandura 1977] 기반 감쇠/충족/레벨업 보너스 파이프라인 구현.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UN-01 | game_config.gd — UPPER_NEEDS_* 상수 17개 | 🔴 DIRECT | — | 공유 config — 모든 하류 depends |
+| t-UN-02 | upper_needs_system.gd — 신규 시스템 파일 | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-UN-03 | test_upper_needs.gd — 단위 테스트 | 🟢 DISPATCH | ask_codex | standalone test file |
+| t-UN-04 | main.gd — UpperNeedsSystem 등록 | 🔴 DIRECT | — | integration wiring <15 lines |
+
+### Dispatch ratio: 2/4 = 50% ⚠️
+> 50%는 최소 목표(60%) 미달. 사유: t-UN-01은 GameConfig 공유 인터페이스(DIRECT 불가피).
+> t-UN-04는 15줄 미만 wiring(DIRECT 불가피). 실질 구현(t-UN-02, t-UN-03)은 전량 DISPATCH.
+
+### Dispatch strategy
+Config-first, then fan-out:
+1. DIRECT: t-UN-01 (game_config.gd 상수), commit
+2. Parallel DISPATCH: t-UN-02 + t-UN-03 (t-UN-01 완료 후, 서로 독립)
+3. DIRECT: t-UN-04 (main.gd 등록 wiring, t-UN-02 완료 후)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | 설계 | updated | Layer 3-5 욕구 파이프라인 섹션 → UpperNeedsSystem 역할 명시 |
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | 제약 & 향후 계획 | updated | UpperNeedsSystem 분리 사실 반영 |
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | Development History | added | 2026-02-23 UpperNeedsSystem 분리 row |
+| 🧠 UpperNeedsSystem | — | created | 신규 페이지 (ID: 310e2e3d-4a77-816f-96f4-c5d4656c671a) — 설계의도/아키텍처/상수표/핵심로직/히스토리 |
+| Change Log DB | — | added | 2026-02-23 UpperNeedsSystem — 상위 욕구 충족 파이프라인 초기 구현 (commit 7ec3942) |
+| StatSyncSystem | — | skipped | 전용 페이지 없음. UpperNeedsSystem 페이지에 하류 관계 이미 명시 |
+
+### Localization Verification
+- New keys: none (UI_STAT_NEED_* 7개 이미 en/ko ui.json에 존재)
+- upper_needs_system.gd는 Locale API 미사용 — 시뮬레이션 로직만
+- Hardcoded scan: N/A (no UI text output)
+
+### Results
+- Gate: PASS (commit: 35b3afc) — Systems: 31 registered, UpperNeedsSystem priority 12 confirmed
+- Dispatch ratio: 2/4 = 50%
+- Files changed: 4 (game_config.gd, upper_needs_system.gd, test_upper_needs.gd, main.gd)
+- Dispatch tool used: ask_codex (t-UN-02 job f8bbcfc1, t-UN-03 job c133efd8)
+- Notion pages updated: NeedsSystem (3 updates), UpperNeedsSystem (new page), Change Log DB (1 entry)
+
+---
+
+## Systems Folder Restructure — t-RS-01 through t-RS-02 — 2026-02-23
+
+### Context
+scripts/systems/ 의 phase4/, phase5/ 폴더는 개발 타임라인 레이블이지, 아키텍처 개념이 아님.
+28개(+upper_needs_system 추가로 29개) 시스템을 feature-domain 하위 폴더로 이동.
+Zero logic changes — pure file moves + preload/load path updates.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-RS-01 | create dirs + git mv 29 files | 🔴 DIRECT | — | git mv requires native git context; ask_codex output_file pattern cannot update git index |
+| t-RS-02 | path updates in 14 files + class_name rename | 🟢 DISPATCH | ask_codex | multi-file string replacements, Codex excels |
+
+### Dispatch ratio: 1/2 = 50% ⚠️
+> Justification: t-RS-01은 git index 업데이트가 필요한 bash 시퀀스 (git mv 29개).
+> ask_codex MCP의 output_file 패턴은 단일 파일 쓰기 전용 — git index 접근 불가.
+> 실질적인 코드 수정(path string updates, class_name rename)은 전량 DISPATCH(t-RS-02).
+
+### Dispatch strategy
+Sequential — files must be moved before paths can be updated:
+1. DIRECT: t-RS-01 (mkdir + git mv 29 files, rm phase4/ phase5/)
+2. DISPATCH: t-RS-02 (update all preload/load paths + class_name rename in 14 files)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| Change Log DB | — | add | 2026-02-23 — systems/ 폴더 도메인별 재구조화 (t-RS) — phase4/phase5 제거, PsychologyCoordinator 리네임 |
+
+Phase 4 설계 문서(30fe2e3d)는 히스토리 설계 문서 — 수정 불필요.
+코어 아키텍처 페이지에 디렉토리 경로 하드코딩 없음 — 수정 불필요.
+
+### Localization Verification
+- New keys: none (pure refactor, no UI text)
+- No Locale API calls in moved files are changed
+- Hardcoded scan: N/A (no UI text changes)
+
+### Post-gate Fixes (not in original tickets — missed paths)
+- `project.godot` line 25: ChronicleSystem autoload → `record/chronicle_system.gd` (was not in t-RS-02 manifest)
+- `scripts/systems/biology/age_system.gd` line 7: preload `personality_maturation.gd` → `psychology/personality_maturation.gd` (Codex patch missed this file)
+
+### Results
+- Gate: PASS (commit e55c7b0)
+- Dispatch ratio: 1/2 = 50%
+- t-RS-02 dispatched via ask_codex (job 7045b66f) — Codex wrote + executed apply_rs02.py, RS-02 DONE confirmed
+- Files changed: 13 files patched by Codex + 2 post-gate hotfixes (project.godot, age_system.gd)
+- Notion pages updated: Change Log DB (1 entry added)
+
+---
+
+## Core & UI Folder Restructure — t-RC-01 through t-RC-02 — 2026-02-23
+
+### Context
+scripts/core/ 의 36개 파일이 한 폴더에 flat하게 있음. 기능 도메인별 6개 서브디렉토리로 분리.
+scripts/ui/ 의 12개 패널·렌더러 파일도 2개 서브디렉토리로 분리 (3개 flat 유지).
+Zero logic changes — pure file moves + preload/load/extends path updates.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-RC-01 | create dirs + git mv 48 files (36 core + 12 ui) | 🔴 DIRECT | — | git mv requires native git context; ask_codex cannot update git index |
+| t-RC-02 | batch path updates across all scripts/, scenes/, project.godot | 🟢 DISPATCH | ask_codex | 48 string replacements across ~60 files; Codex Python patch script pattern |
+
+### Dispatch ratio: 1/2 = 50% ⚠️
+> Justification: t-RC-01은 git index 업데이트가 필요한 bash 시퀀스 (git mv 96개: 48 .gd + 48 .uid).
+> ask_codex MCP의 output_file 패턴은 단일 파일 쓰기 전용 — git index 접근 불가.
+> 실질적인 코드 수정(path string updates)은 전량 DISPATCH(t-RC-02).
+
+### Dispatch strategy
+Sequential — files must be moved before paths can be updated:
+1. DIRECT: t-RC-01 (mkdir 8개 + git mv 96개, scripts/core/ 6 subdirs + scripts/ui/ 2 subdirs)
+2. DISPATCH: t-RC-02 (update all preload/load/extends paths + project.godot autoloads via Python patch script)
+
+### Target structure
+scripts/core/entity/     — entity_data, entity_manager, personality_data, personality_system, body_attributes, emotion_data, deceased_registry
+scripts/core/stats/      — stat_query, stat_cache, stat_curve, stat_definition, stat_evaluator_registry, stat_graph, stat_modifier
+scripts/core/world/      — world_data, world_generator, resource_map, chunk_index, pathfinder
+scripts/core/settlement/ — settlement_data, settlement_manager, building_data, building_manager
+scripts/core/social/     — relationship_data, relationship_manager, value_defs, name_generator, species_manager
+scripts/core/simulation/ — simulation_engine, simulation_system, simulation_bus, game_config, game_calendar, event_logger, save_manager, locale
+scripts/ui/panels/       — entity_detail_panel, building_detail_panel, chronicle_panel, list_panel, minimap_panel, stats_panel, stats_detail_panel, pause_menu, trait_tooltip
+scripts/ui/renderers/    — entity_renderer, building_renderer, world_renderer
+scripts/ui/ (flat)       — hud, camera_controller, popup_manager
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| Change Log DB | — | add | 2026-02-23 — core/ & ui/ 폴더 도메인별 재구조화 (t-RC) — 48개 파일 → 8개 서브디렉토리 |
+
+코어 아키텍처 / UI 시스템 Notion 페이지: 하드코딩된 파일 경로 없음 → 수정 불필요.
+
+### Localization Verification
+- New keys: none (pure refactor, no UI text)
+- No Locale API calls changed
+- Hardcoded scan: N/A
+
+### Post-gate Fix
+- `.godot/global_script_class_cache.cfg` + `uid_cache.bin` were stale in gate worktree
+  → caused "Class X hides a global script class" for all 9 panels + 2 renderers
+  → fix: `rm .godot/global_script_class_cache.cfg .godot/uid_cache.bin` before re-run
+  → gate re-ran clean (0 script errors)
+- Note: gate worktree should run `git clean` on `.godot/` between runs to avoid stale caches
+
+### Results
+- Gate: PASS (commit 7ccf53b, after cache clear)
+- Dispatch ratio: 1/2 = 50% (t-RC-01 git mv must be DIRECT; t-RC-02 string replacements → ask_codex)
+- t-RC-02 dispatched via ask_codex (job dc91d3bc) — Codex wrote + executed apply_rc02.py, RC-02 DONE confirmed
+- Files changed: 66 files patched by Codex + project.godot (8 autoloads) + main.tscn (3 renderer paths)
+- Dispatch tool used: ask_codex (1 ticket)
+- Notion pages updated: Change Log DB (1 entry added)
+

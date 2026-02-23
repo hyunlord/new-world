@@ -3,7 +3,7 @@ name: worldsim-code
 description: |
   Required for ALL WorldSim GDScript work.
   Part 1: Localization rules — enforced on every code change.
-  Part 2: Notion documentation update — required after every ticket completion.
+  Part 2: Prompt generation standard — 6-section structure for Claude Code prompts.
   Read both parts. No exceptions.
 ---
 
@@ -188,229 +188,7 @@ If found → **do NOT fix. Report in Out-of-Scope Issues.**
 
 ---
 
-# PART 2 — Notion Documentation Update
-
-## Core Principle
-
-**You are not storing Q&A or work history. You are evolving technical documentation.**
-
-Every ticket changes the system. Notion must reflect the current state of the codebase.
-
----
-
-## When to Run This
-
-After every ticket completion — no exceptions:
-- New system implementation
-- Bug fix
-- Refactor
-- Config/data structure change
-- Any code change whatsoever
-
----
-
-## Forbidden Actions
-
-- ❌ Do NOT create Q&A log pages, Q&A databases, or Q&A archives
-- ❌ Do NOT write "Question:", "Q:", "A:", "Answer:" anywhere in a doc
-- ❌ Do NOT use conversational tone in technical documentation
-- ❌ Do NOT append to the bottom of a page without integrating into sections
-- ❌ Do NOT add information that already exists on the page
-
----
-
-## Step 1: Extract Information
-
-From this ticket's work, extract what applies. Skip categories with nothing relevant.
-
-| Category | What to extract |
-|----------|----------------|
-| **Implementation intent** | Why was it built this way? What problem does it solve? |
-| **Implementation method** | What architecture, pattern, or algorithm was used? |
-| **References** | Papers, theories, external models referenced |
-| **Data structure** | Schemas, Enums, constants, field definitions |
-| **Internal logic** | Execution flow, condition branches, state transitions, formulas |
-| **Development history** | What changed vs before? Migrations? |
-| **Tradeoffs** | Known limits, intentional omissions, future improvement areas |
-
----
-
-## Step 2: Target Analysis
-
-1. Determine which system/domain the extracted information belongs to
-2. **Read the current Notion page for that system in full** — do not skip this
-3. Check the related GitHub code and recent commits directly
-
-Do not skip step 2. Writing without reading the existing page causes duplicates and conflicts.
-
----
-
-## Step 3: Merge Into Documentation
-
-Integrate new information into the appropriate sections. Never just append.
-
-### Decision rules
-
-| Situation | Action |
-|-----------|--------|
-| System doc page does not exist | Create new page with skeleton structure (see below) |
-| Section exists but is incomplete | Expand and strengthen |
-| Existing content is wrong or outdated | Rewrite — code is the source of truth |
-| New info duplicates existing | Do NOT add. Keep existing if better; replace if new is more accurate |
-| New Enum / constant / data structure | Update page AND register in Data Definitions DB |
-| Major change | Update page AND record in Change Log DB |
-
-### Section-level merge criteria
-
-```
-Overview section
-├── System role description became more accurate → replace existing sentence
-├── New system dependency discovered → add to relationship description
-└── Mermaid system map needs updating → update diagram
-
-Design Intent section
-├── New design philosophy or principle revealed → add
-├── New reference (paper, theory) mentioned → add
-└── Contradicts existing design intent → correct based on current code
-
-Architecture section
-├── New class/node added → update classDiagram
-├── Signal/event flow changed → rewrite flow diagram
-└── Interface with another system changed → update that system's doc too
-
-Data Structure section
-├── New field/property → add row to table
-├── Existing field type/default changed → update table row
-├── New Enum/constant → add table + register in Data Definitions DB
-└── Deleted field/Enum → remove from table + remove from DB
-
-Core Logic section
-├── Algorithm/formula changed → replace code block + update explanation
-├── New state transition → update stateDiagram
-├── Condition branch changed → rewrite branch description
-└── Existing code block is deprecated → remove and replace with current
-
-Development History section
-└── Add new row: (date | change | reason) + record in Change Log DB
-
-Constraints & Future Plans section
-├── Resolved constraint → remove, move to history
-├── New limitation discovered → add
-└── Next steps changed → update
-```
-
-### Cross-reference rules
-
-- Change affects another system → update that system's doc too
-- Project overview system map changed → update it
-- New page created → add links from related pages
-
----
-
-## Step 4: Required Report
-
-Include this in every ticket completion report:
-
-```
-## Notion Update
-| Page | Section | Action | Content |
-|------|---------|--------|---------|
-| [SystemName] | Architecture | modified | Updated classDiagram with new class |
-| [SystemName] | Data Structure | added | New Enum table for XxxType |
-| Data Definitions DB | — | added | XxxEnum registered |
-| Change Log DB | — | added | [date] XxxSystem refactored — reason |
-
-## Other System Docs Affected
-- [SystemName]: which part changed and why
-```
-
-If genuinely nothing was doc-worthy, state it explicitly:
-```
-## Notion Update
-- No doc-worthy changes. Reason: [explanation]
-```
-
-Silence is not acceptable. The field must always be present.
-
----
-
-## New Page Skeleton
-
-When creating a new system page, use this structure:
-
-```markdown
-# [SystemName]
-
-## Overview
-[One paragraph: what this system does and why it exists]
-
-### System Dependencies
-[What this system reads from / writes to / signals it emits or listens to]
-
-### Mermaid System Map
-[diagram]
-
-## Design Intent
-[Why it was designed this way. Academic references if applicable.]
-
-## Architecture
-[classDiagram or component breakdown]
-
-### Signal / Event Flow
-[flowchart or sequence diagram]
-
-## Data Structure
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-
-## Core Logic
-[Key algorithms, formulas, state machines with code examples]
-
-## Development History
-| Date | Change | Reason |
-|------|--------|--------|
-
-## Constraints & Future Plans
-- Current known limitations
-- Intentional omissions
-- Next steps
-```
-
----
-
-## Notion Quality Bar
-
-A Notion update passes when ALL of the following are true:
-
-- [ ] Page reflects current code state — not a past or hypothetical state
-- [ ] No Q&A format, no conversational tone anywhere
-- [ ] No duplicate information added
-- [ ] All affected system docs updated (not just the primary one)
-- [ ] Data Definitions DB updated if new Enum/constant was added
-- [ ] Change Log DB updated if this was a major change
-- [ ] Notion Update table filled out in PROGRESS.md
-
-## ⚠️ Gate Dependency Rule
-
-**Notion update MUST be completed before running gate.sh.**
-
-Gate checks PROGRESS.md for a "Notion Update" section with at least one page entry.
-If missing → gate FAILS immediately, before any other checks.
-
-Order of operations — no exceptions:
-```
-1. Complete code work
-2. Update Notion (this Part 2 procedure)
-3. Write Notion Update table in PROGRESS.md
-4. Run localization verification (Part 1)
-5. Run bash scripts/gate.sh  ← only now
-```
-
-Skipping Notion and running gate anyway = gate FAIL = ticket incomplete.
-
----
-
-# PART 3 — Prompt Generation Standard
+# PART 2 — Prompt Generation Standard
 
 ## When This Applies
 
@@ -547,43 +325,23 @@ If no new keys: write "No new localization keys."
 
 ---
 
-### Section 6: Verification & Notion
-**How to confirm it works, and what to document.**
+### Section 6: Verification
+**How to confirm it works.**
 
-**Verification:**
 - Gate command to run
 - Smoke test (specific in-game action or debug command, completes in <30s)
 - What to observe in output/logs to confirm correct behavior
 - Edge cases to manually test
 
-**Notion update target:**
-- Which system doc page to update
-- Which sections change (Overview / Architecture / Data Structure / Core Logic / History)
-- Whether Data Definitions DB needs new entries
-- Whether Change Log DB needs a new entry
-
 Example:
 ```
-## Verification & Notion
-
-### Verification
+## Verification
 - Gate: bash scripts/gate.sh → PASS
 - Smoke test: spawn 5 entities, set stress > 0.3, run 100 ticks
   → trauma_records should be non-empty for affected entities
   → SimulationBus should have emitted trauma_recorded N times
 - Edge case: entity with stress exactly at TRAUMA_THRESHOLD → no record created
 - Edge case: trauma record decays to 0 → removed from array, no crash
-
-### Notion Update
-- Page: TraumaSystem (create new if not exists)
-  - Overview: system role and design intent
-  - Architecture: classDiagram with TraumaRecord + TraumaSystem
-  - Data Structure: TraumaRecord fields table
-  - Core Logic: decay formula + state transition diagram
-  - History: new row (date | initial implementation | van der Kolk model)
-- Data Definitions DB: TraumaType enum
-- Change Log DB: new entry
-- Also update: EntityData page (new trauma_records field)
 ```
 
 ---
@@ -598,6 +356,5 @@ A prompt is ready to send to Claude Code when:
 - [ ] Dispatch Plan has ≥60% DISPATCH ratio with dependency order
 - [ ] Localization Checklist has both en/ and ko/ for every new key
 - [ ] Verification has a concrete smoke test command (not "check if it works")
-- [ ] Notion section names the exact page and sections to update
 
 If Claude Code would need to ask a follow-up question after reading this prompt → rewrite it.

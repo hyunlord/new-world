@@ -1,47 +1,48 @@
 extends Node2D
 
-const SimulationEngine = preload("res://scripts/core/simulation_engine.gd")
-const WorldData = preload("res://scripts/core/world_data.gd")
-const WorldGenerator = preload("res://scripts/core/world_generator.gd")
-const EntityManager = preload("res://scripts/core/entity_manager.gd")
-const ResourceMap = preload("res://scripts/core/resource_map.gd")
-const Pathfinder = preload("res://scripts/core/pathfinder.gd")
-const BuildingManager = preload("res://scripts/core/building_manager.gd")
-const SaveManager = preload("res://scripts/core/save_manager.gd")
-const NeedsSystem = preload("res://scripts/systems/needs_system.gd")
+const SimulationEngine = preload("res://scripts/core/simulation/simulation_engine.gd")
+const WorldData = preload("res://scripts/core/world/world_data.gd")
+const WorldGenerator = preload("res://scripts/core/world/world_generator.gd")
+const EntityManager = preload("res://scripts/core/entity/entity_manager.gd")
+const ResourceMap = preload("res://scripts/core/world/resource_map.gd")
+const Pathfinder = preload("res://scripts/core/world/pathfinder.gd")
+const BuildingManager = preload("res://scripts/core/settlement/building_manager.gd")
+const SaveManager = preload("res://scripts/core/simulation/save_manager.gd")
+const NeedsSystem = preload("res://scripts/systems/psychology/needs_system.gd")
 const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
-const MovementSystem = preload("res://scripts/systems/movement_system.gd")
-const ResourceRegenSystem = preload("res://scripts/systems/resource_regen_system.gd")
-const GatheringSystem = preload("res://scripts/systems/gathering_system.gd")
-const ConstructionSystem = preload("res://scripts/systems/construction_system.gd")
-const BuildingEffectSystem = preload("res://scripts/systems/building_effect_system.gd")
-const JobAssignmentSystem = preload("res://scripts/systems/job_assignment_system.gd")
-const PopulationSystem = preload("res://scripts/systems/population_system.gd")
-const SettlementManager = preload("res://scripts/core/settlement_manager.gd")
-const MigrationSystem = preload("res://scripts/systems/migration_system.gd")
-const StatsRecorder = preload("res://scripts/systems/stats_recorder.gd")
-const RelationshipManagerScript = preload("res://scripts/core/relationship_manager.gd")
-const SocialEventSystem = preload("res://scripts/systems/social_event_system.gd")
-const EmotionSystem = preload("res://scripts/systems/emotion_system.gd")
-const AgeSystem = preload("res://scripts/systems/age_system.gd")
-const FamilySystem = preload("res://scripts/systems/family_system.gd")
-const MortalitySystem = preload("res://scripts/systems/mortality_system.gd")
-const ChildcareSystem = preload("res://scripts/systems/childcare_system.gd")
-const StressSystem = preload("res://scripts/systems/stress_system.gd")
-const MentalBreakSystem = preload("res://scripts/systems/mental_break_system.gd")
-const TraumaScarSystem = preload("res://scripts/systems/trauma_scar_system.gd")
-const TraitViolationSystem = preload("res://scripts/systems/trait_violation_system.gd")
-const CopingSystem = preload("res://scripts/systems/phase4/coping_system.gd")
-const MoraleSystem = preload("res://scripts/systems/phase4/morale_system.gd")
-const ContagionSystem = preload("res://scripts/systems/phase4/contagion_system.gd")
-const Phase4CoordinatorScript = preload("res://scripts/systems/phase4/phase4_coordinator.gd")
-const ChildStressProcessor = preload("res://scripts/systems/phase5/child_stress_processor.gd")
-const IntergenerationalSystem = preload("res://scripts/systems/phase5/intergenerational_system.gd")
-const ParentingSystem = preload("res://scripts/systems/phase5/parenting_system.gd")
-const PauseMenuClass = preload("res://scripts/ui/pause_menu.gd")
-const ValueSystem = preload("res://scripts/systems/value_system.gd")
-const StatSyncSystem = preload("res://scripts/systems/stat_sync_system.gd")
-const StatThresholdSystem = preload("res://scripts/systems/stat_threshold_system.gd")
+const MovementSystem = preload("res://scripts/systems/world/movement_system.gd")
+const ResourceRegenSystem = preload("res://scripts/systems/world/resource_regen_system.gd")
+const GatheringSystem = preload("res://scripts/systems/work/gathering_system.gd")
+const ConstructionSystem = preload("res://scripts/systems/work/construction_system.gd")
+const BuildingEffectSystem = preload("res://scripts/systems/work/building_effect_system.gd")
+const JobAssignmentSystem = preload("res://scripts/systems/work/job_assignment_system.gd")
+const PopulationSystem = preload("res://scripts/systems/biology/population_system.gd")
+const SettlementManager = preload("res://scripts/core/settlement/settlement_manager.gd")
+const MigrationSystem = preload("res://scripts/systems/world/migration_system.gd")
+const StatsRecorder = preload("res://scripts/systems/record/stats_recorder.gd")
+const RelationshipManagerScript = preload("res://scripts/core/social/relationship_manager.gd")
+const SocialEventSystem = preload("res://scripts/systems/social/social_event_system.gd")
+const EmotionSystem = preload("res://scripts/systems/psychology/emotion_system.gd")
+const AgeSystem = preload("res://scripts/systems/biology/age_system.gd")
+const FamilySystem = preload("res://scripts/systems/social/family_system.gd")
+const MortalitySystem = preload("res://scripts/systems/biology/mortality_system.gd")
+const ChildcareSystem = preload("res://scripts/systems/development/childcare_system.gd")
+const StressSystem = preload("res://scripts/systems/psychology/stress_system.gd")
+const MentalBreakSystem = preload("res://scripts/systems/psychology/mental_break_system.gd")
+const TraumaScarSystem = preload("res://scripts/systems/psychology/trauma_scar_system.gd")
+const TraitViolationSystem = preload("res://scripts/systems/psychology/trait_violation_system.gd")
+const CopingSystem = preload("res://scripts/systems/psychology/coping_system.gd")
+const MoraleSystem = preload("res://scripts/systems/psychology/morale_system.gd")
+const ContagionSystem = preload("res://scripts/systems/psychology/contagion_system.gd")
+const PsychologyCoordinatorScript = preload("res://scripts/systems/psychology/psychology_coordinator.gd")
+const ChildStressProcessor = preload("res://scripts/systems/development/child_stress_processor.gd")
+const IntergenerationalSystem = preload("res://scripts/systems/development/intergenerational_system.gd")
+const ParentingSystem = preload("res://scripts/systems/development/parenting_system.gd")
+const PauseMenuClass = preload("res://scripts/ui/panels/pause_menu.gd")
+const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
+const StatSyncSystem = preload("res://scripts/systems/record/stat_sync_system.gd")
+const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold_system.gd")
+const UpperNeedsSystem = preload("res://scripts/systems/psychology/upper_needs_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -80,7 +81,7 @@ var trait_violation_system: RefCounted
 var coping_system: RefCounted
 var morale_system: RefCounted
 var contagion_system: RefCounted
-var phase4_coordinator: Node
+var psychology_coordinator: Node
 var child_stress_processor: RefCounted
 var intergenerational_system: RefCounted
 var parenting_system: RefCounted
@@ -89,6 +90,7 @@ var debug_console = null
 var debug_panel = null
 var stat_sync_system: RefCounted
 var stat_threshold_system: RefCounted
+var upper_needs_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -153,6 +155,9 @@ func _ready() -> void:
 
 	needs_system = NeedsSystem.new()
 	needs_system.init(entity_manager, building_manager, world_data)
+
+	upper_needs_system = UpperNeedsSystem.new()
+	upper_needs_system.init(entity_manager)
 
 	childcare_system = ChildcareSystem.new()
 	childcare_system.init(entity_manager, building_manager, settlement_manager)
@@ -228,9 +233,9 @@ func _ready() -> void:
 	contagion_system = ContagionSystem.new()
 	contagion_system.init(entity_manager)
 
-	phase4_coordinator = Phase4CoordinatorScript.new()
-	add_child(phase4_coordinator)
-	phase4_coordinator.init_phase4(coping_system, morale_system, contagion_system, stress_system, entity_manager)
+	psychology_coordinator = PsychologyCoordinatorScript.new()
+	add_child(psychology_coordinator)
+	psychology_coordinator.init_phase4(coping_system, morale_system, contagion_system, stress_system, entity_manager)
 
 	# ── Phase 5: Childhood / ACE / Parenting ──────────────
 	child_stress_processor = ChildStressProcessor.new()
@@ -250,6 +255,7 @@ func _ready() -> void:
 	sim_engine.register_system(job_assignment_system)     # priority 8
 	sim_engine.register_system(needs_system)              # priority 10
 	sim_engine.register_system(stat_threshold_system)    # priority 12
+	sim_engine.register_system(upper_needs_system)       # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25

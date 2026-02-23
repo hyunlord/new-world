@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager: RefCounted
 var _world_data: RefCounted
@@ -8,9 +8,9 @@ var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 ## TraitViolationSystem 참조 (Phase 3B), main.gd에서 주입
 var _trait_violation_system = null
-const TraitSystem = preload("res://scripts/systems/trait_system.gd")
-const _ValueDefs = preload("res://scripts/core/value_defs.gd")
-const _ValueSystem = preload("res://scripts/systems/value_system.gd")
+const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
+const _ValueDefs = preload("res://scripts/core/social/value_defs.gd")
+const _ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 var _morale_system = null
 var _stress_system = null
 ## Debug-only: override hysteresis threshold for testing (-1 = use default HYSTERESIS_THRESHOLD)

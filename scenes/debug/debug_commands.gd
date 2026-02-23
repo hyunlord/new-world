@@ -996,7 +996,7 @@ func cmd_test_attachment(args: Dictionary) -> void:
 
 	_header("test_attachment: %s (id:%d)" % [entity.entity_name, entity.id])
 
-	var attachment_script: Variant = load("res://scripts/systems/phase5/attachment_system.gd")
+	var attachment_script: Variant = load("res://scripts/systems/development/attachment_system.gd")
 	if attachment_script == null:
 		_print("attachment_system.gd not found", Color(1.0, 0.4, 0.4))
 		return
@@ -1062,7 +1062,7 @@ func cmd_test_simultaneous_ace(args: Dictionary) -> void:
 
 	var ace_tracker: Variant = entity.get_meta("ace_tracker", null)
 	if ace_tracker == null:
-		var ace_tracker_script: Variant = load("res://scripts/systems/phase5/ace_tracker.gd")
+		var ace_tracker_script: Variant = load("res://scripts/systems/development/ace_tracker.gd")
 		if ace_tracker_script == null:
 			_print("ace_tracker.gd not found", Color(1.0, 0.4, 0.4))
 			return

@@ -3,7 +3,7 @@ extends RefCounted
 ## StatCurve 단위 테스트
 ## 실행: 게임 디버그 콘솔 또는 헤드리스
 
-const StatCurveScript = preload("res://scripts/core/stat_curve.gd")
+const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 
 static func run_all() -> bool:
 	var ok: bool = true

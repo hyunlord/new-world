@@ -17,15 +17,15 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameConfig="*res://scripts/core/game_config.gd"
-SpeciesManager="*res://scripts/core/species_manager.gd"
-SimulationBus="*res://scripts/core/simulation_bus.gd"
-EventLogger="*res://scripts/core/event_logger.gd"
-DeceasedRegistry="*res://scripts/core/deceased_registry.gd"
-ChronicleSystem="*res://scripts/systems/chronicle_system.gd"
-NameGenerator="*res://scripts/core/name_generator.gd"
-Locale="*res://scripts/core/locale.gd"
-StatQuery="*res://scripts/core/stat_query.gd"
+GameConfig="*res://scripts/core/simulation/game_config.gd"
+SpeciesManager="*res://scripts/core/social/species_manager.gd"
+SimulationBus="*res://scripts/core/simulation/simulation_bus.gd"
+EventLogger="*res://scripts/core/simulation/event_logger.gd"
+DeceasedRegistry="*res://scripts/core/entity/deceased_registry.gd"
+ChronicleSystem="*res://scripts/systems/record/chronicle_system.gd"
+NameGenerator="*res://scripts/core/social/name_generator.gd"
+Locale="*res://scripts/core/simulation/locale.gd"
+StatQuery="*res://scripts/core/stats/stat_query.gd"
 
 [display]
 
