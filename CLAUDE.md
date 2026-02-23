@@ -11,7 +11,7 @@ skills/worldsim-code/SKILL.md
 
 Contains:
 - **Part 1**: Localization rules (Locale API, hardcoding prohibition, verification)
-- **Part 2**: Notion documentation update procedure (post-ticket, mandatory)
+- **Part 2**: Prompt generation standard (6-section structure for Claude Code prompts)
 
 If you skip reading this skill, your ticket is not complete.
 
@@ -334,18 +334,6 @@ PROGRESS.md lives at the project root. Append-only — never delete past entries
 ### Dispatch strategy
 [parallel / sequential / config-first-fan-out — explain order and dependencies]
 
-### Notion Update
-⚠️ This section is REQUIRED. Gate will fail if missing.
-| Page | Section | Action | Content |
-|------|---------|--------|---------|
-| [SystemName] | Architecture | modified | Updated classDiagram with new class |
-| [SystemName] | Data Structure | added | New Enum table for XxxType |
-| Data Definitions DB | — | added | XxxEnum registered |
-| Change Log DB | — | added | [date] XxxSystem refactored — reason |
-
-If genuinely nothing doc-worthy: write "No doc-worthy changes. Reason: [explanation]"
-Silence is NOT acceptable — gate will fail.
-
 ### Localization Verification
 - Hardcoded scan: PASS / FAIL
 - New keys added: [list or none]
@@ -356,7 +344,6 @@ Silence is NOT acceptable — gate will fail.
 - Dispatch ratio: X/Y = ZZ%
 - Files changed: [count]
 - Dispatch tool used: ask_codex (N tickets)
-- Notion pages updated: [list]
 ```
 
 ### Rules
@@ -389,18 +376,14 @@ When the user gives a feature request:
    Use `ask_codex` or `codex_dispatch.sh` — **NEVER Task tool for 🟢 tickets.**
 
 6. **Gate** — `bash scripts/gate.sh` after each integration.
-   ⚠️ Gate checks Notion update documentation. Gate WILL FAIL if PROGRESS.md has no Notion Update section.
 
-7. **Notion FIRST, then Gate** — Notion update must be completed and documented in PROGRESS.md
-   BEFORE running gate.sh. Running gate without Notion update = incomplete ticket.
+7. **Fix failures** — gate fails → analyze and fix. Codex caused it → re-dispatch with clearer ticket.
 
-8. **Fix failures** — gate fails → analyze and fix. Codex caused it → re-dispatch with clearer ticket.
+8. **Do not ask** the user for additional commands. Make reasonable defaults.
 
-9. **Do not ask** the user for additional commands. Make reasonable defaults.
+9. **Update PROGRESS.md** with results.
 
-10. **Update PROGRESS.md** with results including Notion Update section.
-
-11. **Summarize** — dispatch ratio, tool used, DIRECT reasons, files changed, Notion pages updated.
+10. **Summarize** — dispatch ratio, tool used, DIRECT reasons, files changed.
 
 ---
 
@@ -421,8 +404,6 @@ Files to create/modify:
 - path/to/test.gd — [what test to add]
 
 ## Acceptance Criteria
-- [ ] skills/worldsim-code/SKILL.md Part 2 completed (Notion update) ← DO THIS BEFORE GATE
-- [ ] Notion Update section written in PROGRESS.md ← REQUIRED FOR GATE TO PASS
 - [ ] skills/worldsim-code/SKILL.md Part 1 verified (localization scan — even if no new text)
 - [ ] Dispatch ratio confirmed ≥60% in PROGRESS.md
 - [ ] Smoke test: [command that completes in <30s]
@@ -466,9 +447,6 @@ Architecture, integration, refactors, data model boundaries, shared interface ow
 15. **Claiming "cross-system" to skip dispatch** — almost always splittable. Split first, then decide.
 16. **Claiming "files overlap" to skip dispatch** — use Config-first fan-out. "Can't parallelize" ≠ "can't dispatch".
 17. **Dispatch ratio below 60%** — if >40% are DIRECT, re-split before proceeding.
-18. **Skipping skills/worldsim-code/SKILL.md** — read it before every code task. Both parts. No exceptions.
+18. **Skipping skills/worldsim-code/SKILL.md** — read it before every code task. No exceptions.
 19. **Hardcoding UI text** — always use `Locale.*`. Full rules in SKILL.md Part 1.
 20. **Using tr() instead of Locale.ltr()** — Godot built-in tr() does not work in WorldSim.
-21. **Skipping Notion update** — every ticket updates Notion BEFORE running gate. Gate will fail without Notion Update section in PROGRESS.md.
-22. **Appending to Notion instead of merging** — read the existing page first, then integrate.
-23. **Running gate before Notion update** — Notion first, gate second. Always. No exceptions.
