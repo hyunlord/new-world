@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 # NO class_name (Godot 4.6 headless compatibility)
 
 var _epi_config: Dictionary = {}

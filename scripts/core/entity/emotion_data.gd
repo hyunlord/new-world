@@ -304,7 +304,7 @@ func to_dict() -> Dictionary:
 
 
 static func from_dict(data: Dictionary) -> RefCounted:
-	var script = load("res://scripts/core/emotion_data.gd")
+	var script = load("res://scripts/core/entity/emotion_data.gd")
 	var ed = script.new()
 	var f_data = data.get("fast", {})
 	for emo in ed.fast:
@@ -348,7 +348,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 
 ## Migrate from legacy 5-emotion Dictionary (0.0-1.0 range)
 static func from_legacy(old_emotions: Dictionary) -> RefCounted:
-	var script = load("res://scripts/core/emotion_data.gd")
+	var script = load("res://scripts/core/entity/emotion_data.gd")
 	var ed = script.new()
 	# Map legacy values (0-1 range) to Plutchik (0-100 range)
 	ed.fast["joy"] = float(old_emotions.get("happiness", 0.5)) * 50.0

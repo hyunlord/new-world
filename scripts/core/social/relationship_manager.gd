@@ -3,7 +3,7 @@ extends RefCounted
 ## Sparse relationship storage. Key = "min_id:max_id", value = RelationshipData.
 ## Only stores pairs that have interacted. No matrix.
 
-const RelationshipData = preload("res://scripts/core/relationship_data.gd")
+const RelationshipData = preload("res://scripts/core/social/relationship_data.gd")
 
 var _relationships: Dictionary = {}  # "min_id:max_id" -> RelationshipData
 

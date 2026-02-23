@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 ## StatSyncSystem: entity 필드 → stat_cache 동기화 브릿지.
 ## priority=1 — 매 tick 모든 시스템보다 먼저 실행.
 

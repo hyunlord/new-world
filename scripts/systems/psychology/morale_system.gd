@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 # NO class_name — headless compatibility
 # Phase 4: Morale System

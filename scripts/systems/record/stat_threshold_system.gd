@@ -1,10 +1,10 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 ## StatThresholdSystem: stat JSON thresholds 배열을 평가하고 게임플레이에 반영.
 ## priority=12 — NeedsSystem(10) 이후, BehaviorSystem(20) 이전 실행.
 ## tick_interval=5 — 매 5tick 평가 (성능/정확도 트레이드오프).
 
-const StatDefinitionScript = preload("res://scripts/core/stat_definition.gd")
-const StatModifierScript = preload("res://scripts/core/stat_modifier.gd")
+const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
+const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 
 var _entity_manager: RefCounted
 ## entity_id → { "STAT_ID": ["EFFECT_1", "EFFECT_2"] }

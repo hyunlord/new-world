@@ -1,8 +1,8 @@
 class_name EntityRenderer
 extends Node2D
 
-const EntityDataClass = preload("res://scripts/core/entity_data.gd")
-const EntityManagerClass = preload("res://scripts/core/entity_manager.gd")
+const EntityDataClass = preload("res://scripts/core/entity/entity_data.gd")
+const EntityManagerClass = preload("res://scripts/core/entity/entity_manager.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted

@@ -2,7 +2,7 @@
 ## 참조: const SettlementCulture = preload("res://scripts/systems/settlement_culture.gd")
 extends RefCounted
 
-const ValueDefs = preload("res://scripts/core/value_defs.gd")
+const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 
 ## 정착지 리더 가중치 (리더의 가치관이 문화에 주는 추가 영향)
 const LEADER_INFLUENCE: float = 0.20

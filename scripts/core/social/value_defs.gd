@@ -1,5 +1,5 @@
 ## [Schwartz (1992)] 33개 가치관 정의 — 상수 및 매핑 테이블
-## 참조: const ValueDefs = preload("res://scripts/core/value_defs.gd")
+## 참조: const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 extends RefCounted
 
 ## ── 가치관 키 목록 ─────────────────────────────────────

@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager: RefCounted
 var _resource_map: RefCounted

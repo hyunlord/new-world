@@ -1,7 +1,7 @@
 ## [Layer 1.5] 신체 능력치 — potential/trainability/realized 3-레이어
 ## [HERITAGE 1999] trainability h²=0.47, [Ahtiainen 2016] 개인차 8.5배
 ## [ACTN3/ACE] STR↔END 역상관, [Weaver 2016] TOU 아동기 민감기
-## 참조: const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
+## 참조: const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 extends RefCounted
 
 ## ── 유전 기반 (태생 결정, 불변) ───────────────────────────
@@ -166,7 +166,7 @@ func to_dict() -> Dictionary:
 	}
 
 static func from_dict(data: Dictionary):
-	var b = load("res://scripts/core/body_attributes.gd").new()
+	var b = load("res://scripts/core/entity/body_attributes.gd").new()
 	# Support old "potentials" key for save migration
 	b.potential = data.get("potential", data.get("potentials", {}))
 	b.trainability = data.get("trainability", {})

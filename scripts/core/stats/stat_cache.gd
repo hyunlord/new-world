@@ -12,8 +12,8 @@ extends RefCounted
 ##   "last_computed_tick": int
 ## }
 
-const StatModifierScript = preload("res://scripts/core/stat_modifier.gd")
-const StatGraphScript = preload("res://scripts/core/stat_graph.gd")
+const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
+const StatGraphScript = preload("res://scripts/core/stats/stat_graph.gd")
 
 ## 엔트리 초기화 (존재하지 않으면 생성)
 static func ensure(stat_cache: Dictionary, stat_id: StringName,

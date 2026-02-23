@@ -6,12 +6,12 @@ extends Node
 ##          기존 시스템들은 변경 없이 동작.
 ## Phase 2: 캐시/커브/modifier 완전 활성화.
 
-const StatDefinitionScript = preload("res://scripts/core/stat_definition.gd")
-const StatGraphScript = preload("res://scripts/core/stat_graph.gd")
-const StatCacheScript = preload("res://scripts/core/stat_cache.gd")
-const StatCurveScript = preload("res://scripts/core/stat_curve.gd")
-const StatEvaluatorRegistryScript = preload("res://scripts/core/stat_evaluator_registry.gd")
-const StatModifierScript = preload("res://scripts/core/stat_modifier.gd")
+const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
+const StatGraphScript = preload("res://scripts/core/stats/stat_graph.gd")
+const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
+const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
+const StatEvaluatorRegistryScript = preload("res://scripts/core/stats/stat_evaluator_registry.gd")
+const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 
 const PHASE: int = 2  ## 현재 구현 Phase.
 

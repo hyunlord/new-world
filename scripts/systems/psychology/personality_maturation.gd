@@ -5,7 +5,7 @@ extends RefCounted
 ## Ashton & Lee (2016): H increases ~+1 SD from 18→60, E/X mild increase.
 ## No class_name - use preload("res://scripts/systems/personality_maturation.gd").
 
-const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
+const PersonalityDataScript = preload("res://scripts/core/entity/personality_data.gd")
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 
 var _theta: float = 0.03

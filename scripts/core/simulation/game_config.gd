@@ -140,7 +140,7 @@ func get_ui_size(key: String) -> int:
 
 ## Convert simulation tick to calendar date (delegates to GameCalendar)
 static func tick_to_date(tick: int) -> Dictionary:
-	var GameCalendar = load("res://scripts/core/game_calendar.gd")
+	var GameCalendar = load("res://scripts/core/simulation/game_calendar.gd")
 	return GameCalendar.tick_to_date(tick)
 
 

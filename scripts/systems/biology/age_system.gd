@@ -1,11 +1,11 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Checks age stage transitions, emits growth notifications,
 ## and applies yearly personality maturation.
 ## Runs every 50 ticks (~4 days).
 
 const PersonalityMaturation = preload("res://scripts/systems/psychology/personality_maturation.gd")
-const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
+const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 
 var _entity_manager: RefCounted
 var _personality_maturation: RefCounted

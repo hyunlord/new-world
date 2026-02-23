@@ -1,13 +1,13 @@
 extends RefCounted
 
-const EntityDataScript = preload("res://scripts/core/entity_data.gd")
-const ChunkIndex = preload("res://scripts/core/chunk_index.gd")
-const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
-const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
+const EntityDataScript = preload("res://scripts/core/entity/entity_data.gd")
+const ChunkIndex = preload("res://scripts/core/world/chunk_index.gd")
+const GameCalendarScript = preload("res://scripts/core/simulation/game_calendar.gd")
+const PersonalityDataScript = preload("res://scripts/core/entity/personality_data.gd")
 const PersonalityGeneratorScript = preload("res://scripts/systems/biology/personality_generator.gd")
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
-const BodyAttributes = preload("res://scripts/core/body_attributes.gd")
+const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1

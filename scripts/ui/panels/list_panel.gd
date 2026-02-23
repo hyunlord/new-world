@@ -1,7 +1,7 @@
 class_name ListPanel
 extends Control
 
-const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted

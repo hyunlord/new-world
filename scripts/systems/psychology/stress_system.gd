@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Stress System — Phase 1 Pipeline
 ## Lazarus & Folkman (1984) Transactional Model

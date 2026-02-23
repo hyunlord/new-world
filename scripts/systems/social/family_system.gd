@@ -1,9 +1,9 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Handles pregnancy, birth, widowhood, and maternal complications.
 ## Gaussian gestation duration with preterm birth mechanics (T-2000).
 
-const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
 var _entity_manager: RefCounted
 var _relationship_manager: RefCounted

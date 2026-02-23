@@ -25,7 +25,7 @@ var priority: int = 0            ## OVERRIDE 충돌 해소
 ## 편의 생성자
 static func make_add(id_: StringName, target_: StringName,
 		val: float, src: String, duration_: int = -1) -> RefCounted:
-	var m = load("res://scripts/core/stat_modifier.gd").new()
+	var m = load("res://scripts/core/stats/stat_modifier.gd").new()
 	m.id = id_; m.target = target_
 	m.mod_type = ModType.ADD; m.value = val
 	m.source = src; m.duration = duration_
@@ -33,7 +33,7 @@ static func make_add(id_: StringName, target_: StringName,
 
 static func make_multiply(id_: StringName, target_: StringName,
 		val: float, src: String, duration_: int = -1) -> RefCounted:
-	var m = load("res://scripts/core/stat_modifier.gd").new()
+	var m = load("res://scripts/core/stats/stat_modifier.gd").new()
 	m.id = id_; m.target = target_
 	m.mod_type = ModType.MULTIPLY; m.value = val
 	m.source = src; m.duration = duration_
@@ -51,7 +51,7 @@ func to_dict() -> Dictionary:
 	}
 
 static func from_dict(d: Dictionary) -> RefCounted:
-	var m = load("res://scripts/core/stat_modifier.gd").new()
+	var m = load("res://scripts/core/stats/stat_modifier.gd").new()
 	m.id = StringName(d.get("id", ""))
 	m.target = StringName(d.get("target", ""))
 	m.mod_type = int(d.get("mod_type", 0)) as ModType

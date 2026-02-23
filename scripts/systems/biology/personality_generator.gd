@@ -4,7 +4,7 @@ extends RefCounted
 ## sex differences, and culture shifts.
 ## No class_name - use preload("res://scripts/systems/biology/personality_generator.gd").
 
-const PersonalityDataScript = preload("res://scripts/core/personality_data.gd")
+const PersonalityDataScript = preload("res://scripts/core/entity/personality_data.gd")
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 
 var _correlation_matrix: Array = []

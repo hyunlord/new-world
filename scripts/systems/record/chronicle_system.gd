@@ -3,7 +3,7 @@ extends Node
 ## Chronicles significant events in the simulation for historical viewing.
 ## Events are categorized by type and importance for memory management.
 
-const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
 ## Event type constants
 const EVENT_BIRTH: String = "birth"

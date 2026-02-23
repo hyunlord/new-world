@@ -24,7 +24,7 @@ func to_dict() -> Dictionary:
 
 
 static func from_dict(data: Dictionary) -> RefCounted:
-	var script = load("res://scripts/core/settlement_data.gd")
+	var script = load("res://scripts/core/settlement/settlement_data.gd")
 	var settlement = script.new()
 	settlement.id = data.get("id", 0)
 	settlement.center_x = data.get("center_x", 0)

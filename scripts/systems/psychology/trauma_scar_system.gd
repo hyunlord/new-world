@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 const TRAUMA_SCARS_PATH: String = "res://data/trauma_scars.json"
 ## Kindling effect: each existing stack increases next acquisition chance by this factor

@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Contagion System - Emotional & Stress AoE Transmission
 ## Hatfield, Cacioppo & Rapson (1993) Emotional Contagion - primitive mimicry mechanism

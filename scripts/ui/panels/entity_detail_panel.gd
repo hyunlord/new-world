@@ -1,10 +1,10 @@
 class_name EntityDetailPanel
 extends Control
 
-const GameCalendarScript = preload("res://scripts/core/game_calendar.gd")
+const GameCalendarScript = preload("res://scripts/core/simulation/game_calendar.gd")
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
-const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
-const ValueDefs = preload("res://scripts/core/value_defs.gd")
+const PersonalitySystem = preload("res://scripts/core/entity/personality_system.gd")
+const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -205,7 +205,7 @@ class DeceasedEntityProxy extends RefCounted:
 		# Reconstruct PersonalityData
 		var p_dict: Dictionary = record.get("personality", {})
 		if not p_dict.is_empty():
-			var PScript = load("res://scripts/core/personality_data.gd")
+			var PScript = load("res://scripts/core/entity/personality_data.gd")
 			if p_dict.has("facets"):
 				personality = PScript.from_dict(p_dict)
 			else:
@@ -215,7 +215,7 @@ class DeceasedEntityProxy extends RefCounted:
 		# Reconstruct EmotionData
 		var e_dict: Dictionary = record.get("emotion_data", {})
 		if not e_dict.is_empty():
-			var EScript = load("res://scripts/core/emotion_data.gd")
+			var EScript = load("res://scripts/core/entity/emotion_data.gd")
 			emotion_data = EScript.from_dict(e_dict)
 
 
@@ -245,7 +245,7 @@ func _ready() -> void:
 	if not Locale.locale_changed.is_connected(locale_changed_cb):
 		Locale.locale_changed.connect(locale_changed_cb)
 	# Create trait tooltip as child overlay
-	var TraitTooltipScript = preload("res://scripts/ui/trait_tooltip.gd")
+	var TraitTooltipScript = preload("res://scripts/ui/panels/trait_tooltip.gd")
 	_trait_tooltip = TraitTooltipScript.new()
 	add_child(_trait_tooltip)
 

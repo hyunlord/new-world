@@ -251,7 +251,7 @@ func to_dict() -> Dictionary:
 
 ## Deserialize from dictionary
 static func from_dict(data: Dictionary) -> RefCounted:
-	var script = load("res://scripts/core/entity_data.gd")
+	var script = load("res://scripts/core/entity/entity_data.gd")
 	var e = script.new()
 	e.id = data.get("id", -1)
 	e.entity_name = data.get("entity_name", "")
@@ -306,7 +306,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	# birth_date: load from save or migrate from birth_tick
 	var bd_data = data.get("birth_date", {})
 	if bd_data.is_empty():
-		var GameCalendar = load("res://scripts/core/game_calendar.gd")
+		var GameCalendar = load("res://scripts/core/simulation/game_calendar.gd")
 		var bd_rng = RandomNumberGenerator.new()
 		bd_rng.seed = hash(e.id * 7919 + e.birth_tick)
 		e.birth_date = GameCalendar.birth_date_from_tick(e.birth_tick, bd_rng)
@@ -316,7 +316,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 			"month": int(bd_data.get("month", 1)),
 			"day": int(bd_data.get("day", 1)),
 		}
-	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
+	var PersonalityDataScript = load("res://scripts/core/entity/personality_data.gd")
 	var p_data: Dictionary = data.get("personality", {})
 	if p_data.has("facets"):
 		# New HEXACO format
@@ -335,7 +335,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"love": em_data.get("love", 0.0),
 	}
 	# Plutchik emotion data (Phase 2-A3)
-	var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
+	var EmotionDataScript = load("res://scripts/core/entity/emotion_data.gd")
 	var ed_data = data.get("emotion_data", {})
 	if not ed_data.is_empty() and ed_data.has("fast"):
 		e.emotion_data = EmotionDataScript.from_dict(ed_data)
@@ -351,7 +351,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	# [Layer 1.5] Body Attributes
 	var body_data = data.get("body", {})
 	if not body_data.is_empty():
-		var BodyAttributesScript = load("res://scripts/core/body_attributes.gd")
+		var BodyAttributesScript = load("res://scripts/core/entity/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
 	e.intelligences = data.get("intelligences", {}).duplicate()
 	## skill_xp: keys are StringName-compatible strings in JSON, convert back to StringName

@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Plutchik 8-emotion update engine with 3-layer temporal dynamics.
 ## Fast (episodic decay) + Slow (mood/baseline, OU process) + Memory trace (long-term scars).
@@ -7,7 +7,7 @@ extends "res://scripts/core/simulation_system.gd"
 ##   Plutchik (1980, 2001), Russell (1980), Lazarus (1991), Scherer (2009)
 ##   Verduyn & Brans (2012), Hatfield et al. (1993)
 
-const EmotionDataScript = preload("res://scripts/core/emotion_data.gd")
+const EmotionDataScript = preload("res://scripts/core/entity/emotion_data.gd")
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}

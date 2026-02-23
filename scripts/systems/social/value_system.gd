@@ -1,9 +1,9 @@
 ## [Schwartz 1992, Axelrod 1997, Kohlberg 1969, Festinger 1957, Erikson 1950]
 ## 가치관 시스템 — 33개 가치관의 형성, 변화, 충돌 해소
 ## 참조: const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
-const ValueDefs = preload("res://scripts/core/value_defs.gd")
+const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 const SettlementCulture = preload("res://scripts/systems/social/settlement_culture.gd")
 
 var _entity_manager = null

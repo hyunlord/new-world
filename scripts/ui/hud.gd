@@ -1,15 +1,15 @@
 class_name HUD
 extends CanvasLayer
 
-const GameCalendar = preload("res://scripts/core/game_calendar.gd")
-const MinimapPanelClass = preload("res://scripts/ui/minimap_panel.gd")
-const StatsPanelClass = preload("res://scripts/ui/stats_panel.gd")
-const StatsDetailPanelClass = preload("res://scripts/ui/stats_detail_panel.gd")
-const EntityDetailPanelClass = preload("res://scripts/ui/entity_detail_panel.gd")
-const BuildingDetailPanelClass = preload("res://scripts/ui/building_detail_panel.gd")
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
+const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
+const StatsDetailPanelClass = preload("res://scripts/ui/panels/stats_detail_panel.gd")
+const EntityDetailPanelClass = preload("res://scripts/ui/panels/entity_detail_panel.gd")
+const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
-const ChroniclePanelClass = preload("res://scripts/ui/chronicle_panel.gd")
-const ListPanelClass = preload("res://scripts/ui/list_panel.gd")
+const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
+const ListPanelClass = preload("res://scripts/ui/panels/list_panel.gd")
 
 # References
 var _sim_engine: RefCounted

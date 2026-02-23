@@ -3,8 +3,8 @@ extends RefCounted
 ## StatGraph 빌드 및 순환 감지 테스트
 ## StatQuery._ready()가 먼저 실행된 상태에서 호출해야 함
 
-const StatGraphScript = preload("res://scripts/core/stat_graph.gd")
-const StatDefinitionScript = preload("res://scripts/core/stat_definition.gd")
+const StatGraphScript = preload("res://scripts/core/stats/stat_graph.gd")
+const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
 
 static func run_all() -> bool:
 	var ok: bool = true

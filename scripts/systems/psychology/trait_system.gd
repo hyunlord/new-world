@@ -1,11 +1,11 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## TraitSystem — 2-level hybrid personality trait system.
 ## Design: Costa & McCrae (1992), Asendorpf (2003), Smithson & Verkuilen (2006).
 ## Games: DF (continuous + filter), CK3 (Top-K), RimWorld (few traits).
 
-const PersonalityData = preload("res://scripts/core/personality_data.gd")
-const EntityData = preload("res://scripts/core/entity_data.gd")
+const PersonalityData = preload("res://scripts/core/entity/personality_data.gd")
+const EntityData = preload("res://scripts/core/entity/entity_data.gd")
 
 const TOP_K: int = 5
 const MIN_DISPLAY_SALIENCE: float = 0.10

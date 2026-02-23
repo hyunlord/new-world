@@ -54,7 +54,7 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 
 
 func _current_date_from_tick(tick: int) -> Dictionary:
-	var GameCalendar = load("res://scripts/core/game_calendar.gd")
+	var GameCalendar = load("res://scripts/core/simulation/game_calendar.gd")
 	var d: Dictionary = GameCalendar.tick_to_date(tick)
 	return {"year": d.year, "month": d.month, "day": d.day}
 

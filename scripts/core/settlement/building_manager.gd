@@ -1,6 +1,6 @@
 extends RefCounted
 
-const BuildingDataScript = preload("res://scripts/core/building_data.gd")
+const BuildingDataScript = preload("res://scripts/core/settlement/building_data.gd")
 
 var _buildings: Dictionary = {}  # id -> BuildingData
 var _tile_map: Dictionary = {}   # "x,y" -> building_id

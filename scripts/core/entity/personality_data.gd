@@ -1,7 +1,7 @@
 extends RefCounted
 
 ## HEXACO 24-facet personality data container.
-## Use preload("res://scripts/core/personality_data.gd") to reference.
+## Use preload("res://scripts/core/entity/personality_data.gd") to reference.
 
 ## 24 facet values (0.0~1.0)
 var facets: Dictionary = {}  # "H_sincerity": 0.5, "H_fairness": 0.6, ...
@@ -120,7 +120,7 @@ func to_dict() -> Dictionary:
 
 ## Deserialize from Dictionary
 static func from_dict(data: Dictionary) -> RefCounted:
-	var script = load("res://scripts/core/personality_data.gd")
+	var script = load("res://scripts/core/entity/personality_data.gd")
 	var pd = script.new()
 	var f_data = data.get("facets", {})
 	if f_data.is_empty():

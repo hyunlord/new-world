@@ -205,10 +205,10 @@ func _load_entities(path: String, em: RefCounted, world_data: RefCounted) -> boo
 	em._entities.clear()
 	em._next_id = 1
 	em.chunk_index.clear()
-	var EntityDataScript = load("res://scripts/core/entity_data.gd")
-	var PersonalityDataScript = load("res://scripts/core/personality_data.gd")
-	var EmotionDataScript = load("res://scripts/core/emotion_data.gd")
-	var GameCalendarScript = load("res://scripts/core/game_calendar.gd")
+	var EntityDataScript = load("res://scripts/core/entity/entity_data.gd")
+	var PersonalityDataScript = load("res://scripts/core/entity/personality_data.gd")
+	var EmotionDataScript = load("res://scripts/core/entity/emotion_data.gd")
+	var GameCalendarScript = load("res://scripts/core/simulation/game_calendar.gd")
 	var load_rng = RandomNumberGenerator.new()
 	var count: int = f.get_32()
 	for _i in range(count):
@@ -337,7 +337,7 @@ func _load_buildings(path: String, bm: RefCounted) -> bool:
 	bm._buildings.clear()
 	bm._tile_map.clear()
 	bm._next_id = 1
-	var BuildingDataScript = load("res://scripts/core/building_data.gd")
+	var BuildingDataScript = load("res://scripts/core/settlement/building_data.gd")
 	var count: int = f.get_32()
 	for _i in range(count):
 		var b = BuildingDataScript.new()
@@ -392,7 +392,7 @@ func _load_relationships(path: String, rm: RefCounted) -> bool:
 		return false
 	f.big_endian = false
 	rm._relationships.clear()
-	var RelationshipData = load("res://scripts/core/relationship_data.gd")
+	var RelationshipData = load("res://scripts/core/social/relationship_data.gd")
 	var count: int = f.get_32()
 	for _i in range(count):
 		var id_a: int = f.get_32()
@@ -443,7 +443,7 @@ func _load_settlements(path: String, sm: RefCounted) -> bool:
 	f.big_endian = false
 	sm._settlements.clear()
 	sm._next_id = 1
-	var SettlementDataScript = load("res://scripts/core/settlement_data.gd")
+	var SettlementDataScript = load("res://scripts/core/settlement/settlement_data.gd")
 	var count: int = f.get_32()
 	for _i in range(count):
 		var s = SettlementDataScript.new()

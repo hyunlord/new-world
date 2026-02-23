@@ -1,6 +1,6 @@
 extends RefCounted
 
-const SettlementDataScript = preload("res://scripts/core/settlement_data.gd")
+const SettlementDataScript = preload("res://scripts/core/settlement/settlement_data.gd")
 
 var _settlements: Dictionary = {}  # id -> settlement
 var _next_id: int = 1

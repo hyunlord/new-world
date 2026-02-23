@@ -1,7 +1,7 @@
 class_name WorldRenderer
 extends Sprite2D
 
-const WorldDataClass = preload("res://scripts/core/world_data.gd")
+const WorldDataClass = preload("res://scripts/core/world/world_data.gd")
 
 ## Resource overlay sprite (child node, rendered on top)
 var _resource_overlay: Sprite2D

@@ -18,7 +18,7 @@
 ##   - 단순 lookup 테이블 → 기각 (facet 강도, 맥락, 이력 반영 불가)
 ##   - stress_system에 통합 → 기각 (내부갈등과 외부스트레스는 다른 경로)
 
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 # ── 상수 ──────────────────────────────────────────────────────────────────────
 

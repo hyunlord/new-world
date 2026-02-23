@@ -1,11 +1,11 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## Siler(1979) bathtub-curve mortality model.
 ## μ(x) = a₁·e^{-b₁·x} + a₂ + a₃·e^{b₃·x}
 ## Birthday-based distributed checks (not every-tick iteration).
 ## Infants (0-1yr) checked monthly for higher resolution.
 
-const GameCalendar = preload("res://scripts/core/game_calendar.gd")
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
 var _entity_manager: RefCounted
 var _rng: RandomNumberGenerator

@@ -6,7 +6,7 @@ extends RefCounted
 ## - Topological sort → eval_order 생성
 ## StatQuery 초기화 시 build() 호출.
 
-const StatDefinitionScript = preload("res://scripts/core/stat_definition.gd")
+const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
 
 ## 의존성 그래프. key=stat_id, value=Array[stat_id]
 static var _dependents: Dictionary = {}  # A → [B, C]: A 변하면 B, C dirty

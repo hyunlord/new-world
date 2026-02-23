@@ -1,7 +1,7 @@
 extends RefCounted
 
 ## Personality utility functions: compatibility and affinity scaling.
-## No class_name - use preload("res://scripts/core/personality_system.gd").
+## No class_name - use preload("res://scripts/core/entity/personality_system.gd").
 
 ## Compatibility weights: trust/fairness (H) and conflict handling (A) matter most.
 ## H: 3.0, A: 2.0, C: 1.5, E: 1.0, X: 1.0, O: 0.8

@@ -1,4 +1,4 @@
-extends "res://scripts/core/simulation_system.gd"
+extends "res://scripts/core/simulation/simulation_system.gd"
 
 ## [Deci & Ryan 1985, Maslow 1943, Bandura 1977]
 ## 상위 7개 욕구(자율성·유능감·자아실현·의미·인정·소속·친밀)의 감쇠와 충족을 처리.

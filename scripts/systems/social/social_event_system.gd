@@ -1,5 +1,5 @@
-extends "res://scripts/core/simulation_system.gd"
-const PersonalitySystem = preload("res://scripts/core/personality_system.gd")
+extends "res://scripts/core/simulation/simulation_system.gd"
+const PersonalitySystem = preload("res://scripts/core/entity/personality_system.gd")
 
 ## Drives relationship interactions using chunk-based proximity.
 ## Only checks entities in same chunk (16x16 tiles).
