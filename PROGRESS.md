@@ -4189,7 +4189,14 @@ Config-first, then fan-out:
 3. DIRECT: t-UN-04 (main.gd 등록 wiring, t-UN-02 완료 후)
 
 ### Notion Update
-pending — Codex jobs 완료 후 업데이트 예정
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | 설계 | updated | Layer 3-5 욕구 파이프라인 섹션 → UpperNeedsSystem 역할 명시 |
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | 제약 & 향후 계획 | updated | UpperNeedsSystem 분리 사실 반영 |
+| 👤 엔티티 & 욕구 시스템 (NeedsSystem) | Development History | added | 2026-02-23 UpperNeedsSystem 분리 row |
+| 🧠 UpperNeedsSystem | — | created | 신규 페이지 (ID: 310e2e3d-4a77-816f-96f4-c5d4656c671a) — 설계의도/아키텍처/상수표/핵심로직/히스토리 |
+| Change Log DB | — | added | 2026-02-23 UpperNeedsSystem — 상위 욕구 충족 파이프라인 초기 구현 (commit 7ec3942) |
+| StatSyncSystem | — | skipped | 전용 페이지 없음. UpperNeedsSystem 페이지에 하류 관계 이미 명시 |
 
 ### Localization Verification
 - New keys: none (UI_STAT_NEED_* 7개 이미 en/ko ui.json에 존재)
@@ -4197,8 +4204,8 @@ pending — Codex jobs 완료 후 업데이트 예정
 - Hardcoded scan: N/A (no UI text output)
 
 ### Results
-- Gate: pending
+- Gate: pending (push 후 실행 예정)
 - Dispatch ratio: 2/4 = 50%
-- Files changed: pending
-- Dispatch tool used: ask_codex (t-UN-02, t-UN-03)
-- Notion pages updated: pending
+- Files changed: 4 (game_config.gd, upper_needs_system.gd, test_upper_needs.gd, main.gd)
+- Dispatch tool used: ask_codex (t-UN-02 job f8bbcfc1, t-UN-03 job c133efd8)
+- Notion pages updated: NeedsSystem (3 updates), UpperNeedsSystem (new page), Change Log DB (1 entry)
