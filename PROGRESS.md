@@ -4104,4 +4104,13 @@ t-SY-01 완료 후 t-SY-02/03/04 병렬 dispatch (파일 겹침 없음).
 - ko/ updated: N/A
 
 ### Results
-- (pending)
+- Gate: PASS ✅ (0c9f1e6)
+- Dispatch ratio: 4/4 = 100% ✅
+- Files changed: 4 (stat_query.gd, gathering_system.gd, construction_system.gd, entity_detail_panel.gd)
+- Dispatch tool used: ask_codex (4 tickets: t-SY-01/02/03/04)
+- Notion pages updated:
+  - 🎯 스킬 시스템: callout, 설계의도, 아키텍처 (get_skill_multiplier flow), 핵심 로직 (formula + table), 개발 히스토리 (new row)
+  - 🏗 자원 & 건설 시스템: GatheringSystem (skill multiplier note), ConstructionSystem (skill multiplier note)
+  - 🖼️ 엔티티 디테일 패널: 개발 히스토리 (new row t-SY-04)
+  - 변경 로그 DB: new entry 2026-02-23 (id: 310e2e3d-4a77-8113-96ed-ce394d2ef903)
+  - Note: StatQuery 전용 페이지 없음 — 스킬 시스템 페이지에 통합 문서화됨
