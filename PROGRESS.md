@@ -3259,3 +3259,56 @@ t-SP1v2/SP2v2/SP5v2/SP6v2/SP7v2: 병렬 ask_codex dispatch
 - Dispatch tool used: ask_codex (SP1v2/SP2v2/SP5v2/SP6v2/SP7v2)
 - JSON valid: 81/81
 - Spec checks: 26/26 (potentials=1050, trainability affects, derived stat_id, skills talent_key, values=33, emotion ranges)
+
+---
+
+## StatSystem Phase 2 — 직접 참조 교체 (t-PH2-01~11) — 2026-02-23
+
+### Context
+Phase 1 v2 완성된 stats/*.json 81개를 기반으로, Phase 2에서 기존 직접 참조를 StatQuery API로 교체.
+StatSyncSystem(priority=1)을 도입해 entity 필드 → stat_cache 브릿지. 읽기만 교체, 쓰기는 유지.
+movement_system.gd와 building_effect_system.gd는 조사 결과 모든 참조가 WRITE이므로 교체 대상 없음.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-PH2-01 | stat_sync_system.gd 신규 작성 | 🟢 DISPATCH | ask_codex | 신규 파일 |
+| t-PH2-02 | stress_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-03 | emotion_system.gd 읽기 교체 + _axis_z | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-04 | mental_break_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-05 | trait_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-06 | phase4/coping_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-07 | phase4/morale_system.gd 읽기 교체 | 🟢 DISPATCH | ask_codex | 단일 파일 |
+| t-PH2-08 | movement_system.gd | N/A — SKIP | — | 조사 결과 모든 참조가 WRITE, 교체 대상 없음 |
+| t-PH2-09 | building_effect_system.gd | N/A — SKIP | — | 조사 결과 모든 참조가 WRITE, 교체 대상 없음 |
+| t-PH2-10 | family/mortality/childcare/age 읽기 교체 | 🟢 DISPATCH | ask_codex | 4개 독립 파일 묶음 |
+| t-PH2-11 | main.gd StatSyncSystem 등록 + stat_query.gd PHASE=2 | 🔴 DIRECT | — | 통합 와이어링 <50 lines |
+
+### Dispatch ratio: 8/9 = 89% ✅ (2 N/A 제외)
+
+### Dispatch strategy
+t-PH2-01~07, t-PH2-10 병렬 ask_codex dispatch (파일 겹침 없음) → 완료 후 출력 적용 → gate
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| StatSystem | Architecture | modified | StatSyncSystem 추가 — bridge role, priority=1, tick_interval=1, entity fields→stat_cache sync |
+| StatSystem | Core Logic | modified | Phase 2 활성화 완료 — 직접참조 교체, stat_query.gd PHASE=0→2 |
+| StatSystem | Development History | added | 2026-02-23 Phase 2 완료 — 직접참조 교체 + StatSyncSystem 도입 |
+| stress_system | Architecture | modified | 스탯 읽기: pd.axes.get() / entity.hunger → StatQuery.get_normalized() |
+| emotion_system | Architecture | modified | 스탯 읽기: pd.to_zscore(pd.axes.get()) → _axis_z(entity, stat_id) |
+| mental_break_system | Architecture | modified | 스탯 읽기: entity.field / pd.axes.get() → StatQuery.get_normalized() |
+| Change Log DB | — | added | 2026-02-23 \| StatSystem Phase 2 — StatQuery 직접참조 교체 완료 |
+
+### Localization Verification
+- Hardcoded scan: PASS (GDScript 내부 로직 교체만, 새 UI 텍스트 없음)
+- New keys added: none
+- ko/ updated: NO (변경 없음)
+
+### Results
+- Gate: PASS ✅
+- Systems registered: 29 (was 28 — StatSyncSystem priority=1 added)
+- Dispatch ratio: 8/9 = 89% ✅ (ask_codex: PH2-01/02/03/04/05/06/07/10; 2 N/A skipped)
+- Files changed: 14 (stat_sync_system.gd new + 11 system edits + main.gd + stat_query.gd + PROGRESS.md)
+- Codex timeout note: jobs 7d17c277 (emotion) and e761a325 (trait) showed timeout after 60min but had already written files correctly before process end
+- Dispatch tool used: ask_codex (8 tickets)

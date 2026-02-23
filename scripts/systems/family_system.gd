@@ -331,7 +331,7 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 		child.parent_ids.append(father.id)
 
 	# Calculate newborn health → frailty
-	var mother_nutrition: float = clampf(mother.hunger, 0.0, 1.0)
+	var mother_nutrition: float = clampf(StatQuery.get_normalized(mother, &"NEED_HUNGER"), 0.0, 1.0)
 	var health: float = _calc_newborn_health(gestation_weeks, mother_nutrition, mother_age_years, child.frailty)
 	child.frailty = lerpf(2.0, 0.8, health)
 
@@ -462,7 +462,7 @@ func _check_birth_complications(mother: RefCounted, gestation_weeks: int) -> Dic
 		base_risk *= 1.5
 	if mother_age < 16.0:
 		base_risk *= 1.8
-	if mother.hunger < 0.3:
+	if StatQuery.get_normalized(mother, &"NEED_HUNGER") < 0.3:
 		base_risk *= 2.0
 
 	if _rng.randf() < base_risk:
@@ -522,7 +522,7 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 			continue
 
 		# Nutrition-based fertility (Frisch hypothesis)
-		var fertility_factor: float = _get_nutrition_fertility_factor(entity.hunger)
+		var fertility_factor: float = _get_nutrition_fertility_factor(StatQuery.get_normalized(entity, &"NEED_HUNGER"))
 		if fertility_factor <= 0.0:
 			continue
 
@@ -533,7 +533,7 @@ func _check_pregnancies(alive: Array, tick: int) -> void:
 
 		# Start pregnancy with Gaussian gestation duration
 		entity.pregnancy_tick = tick
-		var mother_nutrition: float = clampf(entity.hunger, 0.0, 1.0)
+		var mother_nutrition: float = clampf(StatQuery.get_normalized(entity, &"NEED_HUNGER"), 0.0, 1.0)
 		var mother_age_years: float = GameConfig.get_age_years(entity.age)
 		var gestation_days: int = _generate_gestation_days(mother_nutrition, mother_age_years)
 		var gestation_ticks: int = gestation_days * GameCalendar.TICKS_PER_DAY

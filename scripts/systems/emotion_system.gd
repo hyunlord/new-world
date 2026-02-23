@@ -118,7 +118,7 @@ func execute_tick(tick: int) -> void:
 		var events: Array = _pending_events.get(entity.id, [])
 
 		# Step 1: Event -> emotion impulse (appraisal-based)
-		var impulse: Dictionary = _calculate_event_impulse(events, pd, ed)
+		var impulse: Dictionary = _calculate_event_impulse(events, entity, pd, ed)
 
 		# Step 2: Fast layer update (exponential decay + impulse)
 		# ★ stress gain multipliers (set by stress_system each tick)
@@ -129,7 +129,7 @@ func execute_tick(tick: int) -> void:
 		var _positive_emos: Array = ["joy", "trust", "anticipation"]
 
 		for emo in ed.fast:
-			var hl: float = _get_adjusted_half_life(emo, pd, "fast")
+			var hl: float = _get_adjusted_half_life(emo, entity, pd, "fast")
 			var k: float = 0.693147 / hl
 			var emo_impulse: float = impulse.get(emo, 0.0)
 			# Apply stress sensitivity to impulse
@@ -150,7 +150,7 @@ func execute_tick(tick: int) -> void:
 			"trust":   ed.get_meta("stress_mu_trust",   0.0),
 		}
 		for emo in ed.slow:
-			var baseline: float = _get_baseline(emo, pd)
+			var baseline: float = _get_baseline(emo, entity, pd)
 			var mu_shift: float = _stress_mu_map.get(emo, 0.0)
 			var effective_baseline: float = clampf(baseline + mu_shift, 0.0, 30.0)
 			var hl_slow: float = _slow_half_life.get(emo, 48.0)
@@ -212,7 +212,7 @@ func execute_tick(tick: int) -> void:
 # Appraisal-Based Impulse (Lazarus 1991, Scherer 2009)
 # ═══════════════════════════════════════════════════
 
-func _calculate_event_impulse(events: Array, pd: RefCounted, ed: RefCounted) -> Dictionary:
+func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted, ed: RefCounted) -> Dictionary:
 	var total: Dictionary = {}
 	for emo in ed.fast:
 		total[emo] = 0.0
@@ -233,7 +233,7 @@ func _calculate_event_impulse(events: Array, pd: RefCounted, ed: RefCounted) -> 
 		var hab: float = _get_habituation(ed, event.get("category", "generic"))
 
 		# Personality sensitivity
-		var sens: Dictionary = _get_personality_sensitivity(pd)
+		var sens: Dictionary = _get_personality_sensitivity(entity, pd)
 
 		# Appraisal -> 8 emotion impulses
 		var impulse: Dictionary = {}
@@ -262,7 +262,7 @@ func _calculate_event_impulse(events: Array, pd: RefCounted, ed: RefCounted) -> 
 # HEXACO -> Emotion Coupling
 # ═══════════════════════════════════════════════════
 
-func _get_personality_sensitivity(pd: RefCounted) -> Dictionary:
+func _get_personality_sensitivity(entity: RefCounted, pd: RefCounted) -> Dictionary:
 	var result: Dictionary = {}
 	for emo in _personality_sensitivity:
 		var config = _personality_sensitivity[emo]
@@ -272,31 +272,31 @@ func _get_personality_sensitivity(pd: RefCounted) -> Dictionary:
 				var entry = config[i]
 				var axis_id = str(entry.get("axis", "X"))
 				var coeff = float(entry.get("coeff", 0.0))
-				var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+				var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
 				total += coeff * z
 			result[emo] = exp(total)
 		elif config is Dictionary:
 			var axis_id = str(config.get("axis", "X"))
 			var coeff = float(config.get("coeff", 0.0))
-			var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+			var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
 			result[emo] = exp(coeff * z)
 		else:
 			result[emo] = 1.0
 	return result
 
 
-func _get_adjusted_half_life(emo: String, pd: RefCounted, layer: String) -> float:
+func _get_adjusted_half_life(emo: String, entity: RefCounted, pd: RefCounted, layer: String) -> float:
 	var base: float = _fast_half_life.get(emo, 1.0) if layer == "fast" else _slow_half_life.get(emo, 48.0)
 	var adj = _half_life_adjustments.get(emo, {})
 	if adj.is_empty():
 		return base
 	var axis_id = str(adj.get("axis", "X"))
 	var coeff = float(adj.get("coeff", 0.0))
-	var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
 	return base * exp(coeff * z)
 
 
-func _get_baseline(emo: String, pd: RefCounted) -> float:
+func _get_baseline(emo: String, entity: RefCounted, pd: RefCounted) -> float:
 	var cfg = _baselines.get(emo, {})
 	var base_val = float(cfg.get("base", 0.0))
 	if not cfg.has("axis"):
@@ -305,7 +305,7 @@ func _get_baseline(emo: String, pd: RefCounted) -> float:
 	var scale_val = float(cfg.get("scale", 0.0))
 	var min_val = float(cfg.get("min", 0.0))
 	var max_val = float(cfg.get("max", 100.0))
-	var z = pd.to_zscore(pd.axes.get(axis_id, 0.5))
+	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
 	return clampf(base_val + scale_val * z, min_val, max_val)
 
 
@@ -358,8 +358,8 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 		var ed: RefCounted = target.emotion_data
 
 		# Susceptibility: E↑ and A↑ → more susceptible to emotional contagion
-		var z_E: float = target.personality.to_zscore(target.personality.axes.get("E", 0.5))
-		var z_A: float = target.personality.to_zscore(target.personality.axes.get("A", 0.5))
+		var z_E: float = _axis_z(target, &"HEXACO_E")
+		var z_A: float = _axis_z(target, &"HEXACO_A")
 		var susceptibility: float = exp(0.2 * z_E + 0.1 * z_A)
 
 		var delta: Dictionary = {}
@@ -416,7 +416,7 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, tick: int) -> void
 		# Apply energy drain during break
 		var behavior = _break_behaviors.get(ed.mental_break_type, {})
 		var drain: float = float(behavior.get("energy_drain", 1.0))
-		entity.energy = maxf(0.0, entity.energy - drain * dt_hours / 24.0)
+		entity.energy = maxf(0.0, StatQuery.get_normalized(entity, &"NEED_ENERGY") - drain * dt_hours / 24.0)
 		if ed.mental_break_remaining <= 0.0:
 			# Break ends — reduce stress to 50% (not 0, prevents immediate re-break)
 			ed.stress *= 0.5
@@ -439,7 +439,7 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, tick: int) -> void
 			return
 
 	# C(Conscientiousness) ↑ → higher threshold (more self-control)
-	var z_C: float = pd.to_zscore(pd.axes.get("C", 0.5))
+	var z_C: float = _axis_z(entity, &"HEXACO_C")
 	var threshold: float = 300.0 + 50.0 * z_C
 
 	# Skip check if stress is well below threshold
@@ -536,6 +536,12 @@ func _create_memory_trace(ed: RefCounted, impulse: Dictionary, event: Dictionary
 
 var _spare_normal: float = 0.0
 var _has_spare: bool = false
+
+
+## HEXACO 축 z-score 헬퍼 (pd.to_zscore 대체)
+func _axis_z(entity: RefCounted, stat_id: StringName) -> float:
+	const SD: float = 0.25
+	return (StatQuery.get_normalized(entity, stat_id) - 0.5) / SD
 
 
 func _randfn() -> float:

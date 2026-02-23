@@ -45,7 +45,7 @@ func execute_tick(tick: int) -> void:
 				# ── [A] 아동기 환경 추적 (0~12세) ──
 				if not entity.body.childhood_finalized:
 					if body_age_y < 12.0:
-						entity.body.child_nutrition_sum += entity.hunger
+						entity.body.child_nutrition_sum += StatQuery.get_normalized(entity, &"NEED_HUNGER")
 						entity.body.child_nutrition_count += 1
 						var is_active: float = 0.0 if entity.current_action in ["idle", "sleep"] else 1.0
 						entity.body.child_activity_sum += is_active

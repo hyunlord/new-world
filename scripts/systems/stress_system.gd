@@ -160,9 +160,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 # ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
 func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
-	var hunger: float = entity.hunger
-	var energy: float = entity.energy
-	var social: float = entity.social
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 	var threat: float = 0.0
 	var conflict: float = 0.0
 
@@ -174,14 +174,14 @@ func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
 	var R_support: float = _calc_support_score(entity)
 	var R: float = clampf(0.30 * R_physical + 0.30 * R_safety + 0.25 * R_support + 0.15 * 0.5, 0.0, 1.0)
 
-	var E_axis: float = pd.axes.get("E", 0.5) if pd != null else 0.5
+	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
 	var fear_val: float = ed.get_emotion("fear") if ed != null else 0.0
 	var trust_val: float = ed.get_emotion("trust") if ed != null else 0.0
 
 	var threat_appraisal: float = D * (1.0 + 0.55 * (E_axis - 0.5) * 2.0 + 0.25 * (fear_val / 100.0) - 0.15 * (trust_val / 100.0))
 
-	var C_axis: float = pd.axes.get("C", 0.5) if pd != null else 0.5
-	var O_axis: float = pd.axes.get("O", 0.5) if pd != null else 0.5
+	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
+	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
 	var reserve_ratio: float = ed.reserve / 100.0 if ed != null else 0.5
 	var coping_appraisal: float = R * (1.0 + 0.35 * (C_axis - 0.5) * 2.0 + 0.20 * (O_axis - 0.5) * 2.0 + 0.20 * reserve_ratio)
 
@@ -192,9 +192,9 @@ func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
 # ── 2) 지속 스트레서 ──────────────────────────────────────────────────
 func _calc_continuous_stressors(entity: RefCounted, appraisal_scale: float, breakdown: Dictionary) -> float:
 	var total: float = 0.0
-	var hunger: float = entity.hunger
-	var energy: float = entity.energy
-	var social: float = entity.social
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 
 	var h_def: float = clampf((0.35 - hunger) / 0.35, 0.0, 1.0)
 	var s_hunger: float = (3.0 * h_def + 9.0 * h_def * h_def) * appraisal_scale
@@ -342,12 +342,12 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 		ed.resilience = 0.5
 		return
 
-	var E: float = pd.axes.get("E", 0.5)
-	var C: float = pd.axes.get("C", 0.5)
-	var X: float = pd.axes.get("X", 0.5)
-	var O: float = pd.axes.get("O", 0.5)
-	var A: float = pd.axes.get("A", 0.5)
-	var H: float = pd.axes.get("H", 0.5)
+	var E: float = StatQuery.get_normalized(entity, &"HEXACO_E")
+	var C: float = StatQuery.get_normalized(entity, &"HEXACO_C")
+	var X: float = StatQuery.get_normalized(entity, &"HEXACO_X")
+	var O: float = StatQuery.get_normalized(entity, &"HEXACO_O")
+	var A: float = StatQuery.get_normalized(entity, &"HEXACO_A")
+	var H: float = StatQuery.get_normalized(entity, &"HEXACO_H")
 
 	var support: float = _calc_support_score(entity)
 
@@ -360,8 +360,8 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 		+ 0.25 * support
 		- 0.30 * (ed.allostatic / 100.0))
 
-	var hunger: float = entity.hunger
-	var energy: float = entity.energy
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var fatigue_penalty: float = clampf((0.3 - energy) / 0.3, 0.0, 0.3) + clampf((0.3 - hunger) / 0.3, 0.0, 0.2)
 	r -= 0.20 * fatigue_penalty
 
@@ -554,7 +554,7 @@ func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
 		if pd != null:
 			if key.ends_with("_axis"):
 				var axis_id: String = key.substr(0, key.length() - 5)
-				value = float(pd.axes.get(axis_id, 0.5))
+				value = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis_id))
 			else:
 				value = float(pd.facets.get(key, 0.5))
 

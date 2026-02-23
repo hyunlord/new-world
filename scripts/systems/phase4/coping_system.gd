@@ -610,11 +610,8 @@ func _execute_substance_use(entity, cs: Dictionary, prof: float) -> void:
 
 func _get_control_appraisal(entity, cs: Dictionary) -> float:
 	var ed = entity.emotion_data
-	var pd = entity.personality
 	# 기본값: reserve / 100 * C_axis
-	var C_axis: float = 0.5
-	if pd != null:
-		C_axis = float(pd.axes.get("C", 0.5))
+	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 	var base: float = (ed.reserve / 100.0) * 0.6 + C_axis * 0.4
 	# helplessness cap 적용
 	var cap: float = float(cs.get("control_appraisal_cap", 1.0))

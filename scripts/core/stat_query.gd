@@ -13,7 +13,7 @@ const StatCurveScript = preload("res://scripts/core/stat_curve.gd")
 const StatEvaluatorRegistryScript = preload("res://scripts/core/stat_evaluator_registry.gd")
 const StatModifierScript = preload("res://scripts/core/stat_modifier.gd")
 
-const PHASE: int = 0  ## 현재 구현 Phase. Phase 2에서 2로 변경.
+const PHASE: int = 2  ## 현재 구현 Phase.
 
 func _ready() -> void:
 	StatDefinitionScript.load_all("res://stats/")

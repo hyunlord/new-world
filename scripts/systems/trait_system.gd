@@ -136,7 +136,7 @@ static func _has_property(target: Object, property_name: String) -> bool:
 	return false
 
 
-static func _get_facet_value(pd: RefCounted, facet_key: String) -> float:
+static func _get_facet_value(pd: RefCounted, facet_key: String, entity: RefCounted = null) -> float:
 	if pd == null:
 		return 0.5
 	if "_" in facet_key:
@@ -146,7 +146,11 @@ static func _get_facet_value(pd: RefCounted, facet_key: String) -> float:
 		if alias_key != "" and pd.facets.has(alias_key):
 			return float(pd.facets.get(alias_key, 0.5))
 		return 0.5
-	return float(pd.axes.get(facet_key, 0.5))
+	if entity != null:
+		return StatQuery.get_normalized(entity, StringName("HEXACO_" + facet_key))
+	if pd.axes.has(facet_key):
+		return float(pd.axes[facet_key])
+	return 0.5
 
 
 static func _sigmoid(x: float, center: float, width: float) -> float:
@@ -161,14 +165,14 @@ static func _calc_facet_salience(facet_val: float, direction: String, center: fl
 	return _sigmoid(-facet_val, -center, width)
 
 
-static func _calc_composite_salience(pd: RefCounted, def: Dictionary) -> float:
+static func _calc_composite_salience(pd: RefCounted, def: Dictionary, entity: RefCounted = null) -> float:
 	var conditions: Array = def.get("conditions", [])
 	if conditions.is_empty():
 		return 0.0
 	var product: float = 1.0
 	for i in range(conditions.size()):
 		var cond: Dictionary = conditions[i]
-		var fval: float = _get_facet_value(pd, str(cond.get("facet", "")))
+		var fval: float = _get_facet_value(pd, str(cond.get("facet", "")), entity)
 		var center: float = float(cond.get("cond_center", 0.5))
 		var width: float = float(cond.get("cond_width", 0.2))
 		var direction: String = str(cond.get("direction", "high"))
@@ -247,7 +251,7 @@ static func update_trait_strengths(entity: RefCounted) -> void:
 		var facet: String = str(def.get("facet", ""))
 		if tid == "" or facet == "":
 			continue
-		var fval: float = _get_facet_value(pd, facet)
+		var fval: float = _get_facet_value(pd, facet, entity)
 		var direction: String = str(def.get("direction", "high"))
 		var center: float = float(def.get("salience_center", def.get("threshold", 0.5)))
 		var width: float = float(def.get("salience_width", 0.12))
@@ -281,7 +285,7 @@ static func update_trait_strengths(entity: RefCounted) -> void:
 		var tid: String = str(def.get("id", ""))
 		if tid == "":
 			continue
-		strengths[tid] = _calc_composite_salience(pd, def)
+		strengths[tid] = _calc_composite_salience(pd, def, entity)
 
 	if _has_property(entity, "trait_strengths"):
 		entity.set("trait_strengths", strengths)
@@ -320,7 +324,7 @@ static func get_display_traits(entity: RefCounted, k: int = TOP_K) -> Array:
 		if category == "facet" and pd != null:
 			var facet_key: String = str(def.get("facet", ""))
 			if facet_key != "":
-				var fval: float = _get_facet_value(pd, facet_key)
+				var fval: float = _get_facet_value(pd, facet_key, entity)
 				if not _update_hysteresis(entity, tid, fval, def):
 					continue
 		candidates.append({"id": tid, "salience": sal})
@@ -412,7 +416,7 @@ static func _calc_behavior_weight(entity: RefCounted, action: String) -> float:
 		if source == "facet":
 			var facet: String = str(m.get("facet", ""))
 			var threshold: float = float(m.get("threshold", 0.5))
-			var fval: float = _get_facet_value(pd, facet)
+			var fval: float = _get_facet_value(pd, facet, entity)
 			var t: float = clamp(_inverse_lerp(0.5, threshold, fval), 0.0, 1.0)
 			influence = lerp(1.0, extreme_val, t)
 		else:
@@ -462,7 +466,7 @@ static func _calc_emotion_baseline(entity: RefCounted, emotion: String) -> float
 		if facet != "":
 			var direction: String = str(m.get("direction", "high"))
 			var extreme_dir: float = 1.0 if direction == "high" else 0.0
-			var fval: float = _get_facet_value(pd, facet)
+			var fval: float = _get_facet_value(pd, facet, entity)
 			var extremeness: float = clamp(_inverse_lerp(0.5, extreme_dir, fval), 0.0, 1.0)
 			total += max_offset * extremeness
 		else:
