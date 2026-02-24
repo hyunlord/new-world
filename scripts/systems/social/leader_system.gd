@@ -17,6 +17,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _relationship_manager: RefCounted
+var _reputation_manager: RefCounted
 
 
 func init(entity_manager: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted = null) -> void:
@@ -138,7 +139,7 @@ func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
 	var social_cap: float = _compute_social_capital_norm(entity, settlement)
 	var age_respect: float = _compute_age_respect(entity)
 
-	return (
+	var base_score: float = (
 		charisma * GameConfig.LEADER_W_CHARISMA +
 		wisdom * GameConfig.LEADER_W_WISDOM +
 		trustworthiness * GameConfig.LEADER_W_TRUSTWORTHINESS +
@@ -146,6 +147,13 @@ func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
 		social_cap * GameConfig.LEADER_W_SOCIAL_CAPITAL +
 		age_respect * GameConfig.LEADER_W_AGE_RESPECT
 	)
+
+	# [Henrich & Gil-White 2001] Reputation bonus: settlement-wide opinion
+	var rep_bonus: float = 0.0
+	if _reputation_manager != null:
+		var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
+		rep_bonus = avg_rep.get("overall", 0.0) * 0.20
+	return base_score * (1.0 + rep_bonus)
 
 
 ## Social capital proxy: count of meaningful relationships (affinity > 30)

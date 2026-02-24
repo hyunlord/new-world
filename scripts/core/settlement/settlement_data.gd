@@ -15,6 +15,16 @@ var leader_id: int = -1
 ## Used for per-settlement re-election cycle. [Boehm 1999]
 var last_election_tick: int = -1
 
+## === Stratification Monitor [Kohler 2017, Boehm 1999] ===
+## Gini coefficient of wealth distribution [0.0, 1.0]
+var gini_coefficient: float = 0.0
+## Effectiveness of egalitarian leveling mechanisms [0.0, 1.0]
+var leveling_effectiveness: float = 1.0
+## Phase: "egalitarian", "transitional", "stratified"
+var stratification_phase: String = "egalitarian"
+## 90th percentile wealth score (for normalization)
+var wealth_p90: float = 1.0
+
 
 func to_dict() -> Dictionary:
 	return {
@@ -27,6 +37,10 @@ func to_dict() -> Dictionary:
 		"building_ids": building_ids.duplicate(),
 		"leader_id": leader_id,
 		"last_election_tick": last_election_tick,
+		"gini_coefficient": gini_coefficient,
+		"leveling_effectiveness": leveling_effectiveness,
+		"stratification_phase": stratification_phase,
+		"wealth_p90": wealth_p90,
 	}
 
 
@@ -53,5 +67,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 
 	settlement.leader_id = data.get("leader_id", -1)
 	settlement.last_election_tick = data.get("last_election_tick", -1)
+	settlement.gini_coefficient = data.get("gini_coefficient", 0.0)
+	settlement.leveling_effectiveness = data.get("leveling_effectiveness", 1.0)
+	settlement.stratification_phase = data.get("stratification_phase", "egalitarian")
+	settlement.wealth_p90 = data.get("wealth_p90", 1.0)
 
 	return settlement

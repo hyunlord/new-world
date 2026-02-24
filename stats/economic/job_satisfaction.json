@@ -1,0 +1,13 @@
+{
+  "id": "JOB_SATISFACTION",
+  "display_key": "UI_STAT_JOB_SATISFACTION",
+  "category": "ECONOMIC",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 500,
+  "tier": 2,
+  "growth": { "type": "EXTERNAL" },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "economic", "descriptor_table": "7_step" }
+}

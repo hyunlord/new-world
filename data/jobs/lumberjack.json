@@ -1,0 +1,24 @@
+{
+  "job_id": "lumberjack",
+  "riasec": "R",
+  "hexaco_ideal": {
+    "H": 0.0,
+    "E": -0.20,
+    "X": 0.0,
+    "A": 0.0,
+    "C": 0.25,
+    "O": 0.0
+  },
+  "value_weights": {
+    "HARD_WORK": 0.35,
+    "PERSEVERANCE": 0.25,
+    "COMPETITION": 0.15,
+    "STOICISM": 0.15,
+    "CRAFTSMANSHIP": 0.10
+  },
+  "primary_skill": "SKILL_WOODCUTTING",
+  "prestige": 0.30,
+  "autonomy_level": 0.60,
+  "danger_level": 0.35,
+  "creativity_level": 0.10
+}

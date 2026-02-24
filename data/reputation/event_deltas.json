@@ -1,0 +1,71 @@
+{
+	"helped_work": {
+		"morality": {"valence": 1.0, "magnitude": 0.15},
+		"sociability": {"valence": 1.0, "magnitude": 0.10},
+		"competence": {"valence": 1.0, "magnitude": 0.10},
+		"generosity": {"valence": 1.0, "magnitude": 0.20}
+	},
+	"shared_food": {
+		"morality": {"valence": 1.0, "magnitude": 0.10},
+		"generosity": {"valence": 1.0, "magnitude": 0.30}
+	},
+	"refused_help": {
+		"sociability": {"valence": -1.0, "magnitude": 0.15},
+		"generosity": {"valence": -1.0, "magnitude": 0.10}
+	},
+	"stole_food": {
+		"morality": {"valence": -1.0, "magnitude": 0.40},
+		"generosity": {"valence": -1.0, "magnitude": 0.20}
+	},
+	"casual_talk": {
+		"sociability": {"valence": 1.0, "magnitude": 0.05}
+	},
+	"deep_talk": {
+		"sociability": {"valence": 1.0, "magnitude": 0.10},
+		"competence": {"valence": 1.0, "magnitude": 0.05}
+	},
+	"comforted": {
+		"sociability": {"valence": 1.0, "magnitude": 0.15},
+		"morality": {"valence": 1.0, "magnitude": 0.05}
+	},
+	"argued": {
+		"sociability": {"valence": -1.0, "magnitude": 0.10},
+		"dominance": {"valence": 1.0, "magnitude": 0.05}
+	},
+	"fought": {
+		"sociability": {"valence": -1.0, "magnitude": 0.20},
+		"dominance": {"valence": 1.0, "magnitude": 0.15}
+	},
+	"work_completed": {
+		"competence": {"valence": 1.0, "magnitude": 0.10}
+	},
+	"work_failed": {
+		"competence": {"valence": -1.0, "magnitude": 0.15}
+	},
+	"led_group": {
+		"competence": {"valence": 1.0, "magnitude": 0.10},
+		"dominance": {"valence": 1.0, "magnitude": 0.10}
+	},
+	"broke_promise": {
+		"morality": {"valence": -1.0, "magnitude": 0.35}
+	},
+	"defended_settlement": {
+		"morality": {"valence": 1.0, "magnitude": 0.15},
+		"competence": {"valence": 1.0, "magnitude": 0.10},
+		"dominance": {"valence": 1.0, "magnitude": 0.20}
+	},
+	"hoarded_resources": {
+		"generosity": {"valence": -1.0, "magnitude": 0.25},
+		"morality": {"valence": -1.0, "magnitude": 0.10}
+	},
+	"mentored": {
+		"competence": {"valence": 1.0, "magnitude": 0.10},
+		"sociability": {"valence": 1.0, "magnitude": 0.10},
+		"generosity": {"valence": 1.0, "magnitude": 0.10}
+	},
+	"bullied": {
+		"morality": {"valence": -1.0, "magnitude": 0.30},
+		"sociability": {"valence": -1.0, "magnitude": 0.20},
+		"dominance": {"valence": 1.0, "magnitude": 0.10}
+	}
+}

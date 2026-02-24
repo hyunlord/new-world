@@ -1,0 +1,19 @@
+{
+  "REP_MORALITY": "Morality",
+  "REP_SOCIABILITY": "Sociability",
+  "REP_COMPETENCE": "Competence",
+  "REP_DOMINANCE": "Dominance",
+  "REP_GENEROSITY": "Generosity",
+  "REP_OVERALL": "Overall Reputation",
+  "REP_TIER_ELITE": "Elite",
+  "REP_TIER_RESPECTED": "Respected",
+  "REP_TIER_COMMON": "Common",
+  "REP_TIER_MARGINAL": "Marginal",
+  "REP_TIER_OUTCAST": "Outcast",
+  "REP_SOURCE_DIRECT": "Witnessed",
+  "REP_SOURCE_GOSSIP": "Heard from others",
+  "REP_SOURCE_NONE": "Unknown",
+  "REP_CONFIDENCE_LOW": "Uncertain",
+  "REP_CONFIDENCE_MED": "Moderate confidence",
+  "REP_CONFIDENCE_HIGH": "Highly confident"
+}

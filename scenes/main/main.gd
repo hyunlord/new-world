@@ -45,6 +45,11 @@ const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold
 const UpperNeedsSystem = preload("res://scripts/systems/psychology/upper_needs_system.gd")
 const LeaderSystem = preload("res://scripts/systems/social/leader_system.gd")
 const IntelligenceSystem = preload("res://scripts/systems/cognition/intelligence_system.gd")
+const ReputationManagerScript = preload("res://scripts/core/social/reputation_manager.gd")
+const ReputationSystem = preload("res://scripts/systems/social/reputation_system.gd")
+const EconomicTendencySystem = preload("res://scripts/systems/social/economic_tendency_system.gd")
+const JobSatisfactionSystem = preload("res://scripts/systems/social/job_satisfaction_system.gd")
+const StratificationMonitor = preload("res://scripts/systems/social/stratification_monitor.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -95,6 +100,11 @@ var stat_sync_system: RefCounted
 var stat_threshold_system: RefCounted
 var upper_needs_system: RefCounted
 var intelligence_system: RefCounted
+var reputation_manager: RefCounted
+var reputation_system: RefCounted
+var economic_tendency_system: RefCounted
+var job_satisfaction_system: RefCounted
+var stratification_monitor: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -258,6 +268,24 @@ func _ready() -> void:
 	leader_system = LeaderSystem.new()
 	leader_system.init(entity_manager, settlement_manager, relationship_manager)
 
+	# ── Phase 6: Social Identity & Economic Behavior ──────
+	reputation_manager = ReputationManagerScript.new()
+
+	reputation_system = ReputationSystem.new()
+	reputation_system.init(entity_manager, settlement_manager, reputation_manager, relationship_manager, sim_engine.rng)
+
+	economic_tendency_system = EconomicTendencySystem.new()
+	economic_tendency_system.init(entity_manager, settlement_manager)
+
+	job_satisfaction_system = JobSatisfactionSystem.new()
+	job_satisfaction_system.init(entity_manager, settlement_manager, sim_engine.rng)
+
+	stratification_monitor = StratificationMonitor.new()
+	stratification_monitor.init(entity_manager, settlement_manager, reputation_manager)
+
+	# Wire reputation_manager into leader_system for reputation-weighted scoring
+	leader_system._reputation_manager = reputation_manager
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -286,9 +314,13 @@ func _ready() -> void:
 	sim_engine.register_system(leader_system)             # priority 52
 	sim_engine.register_system(value_system)              # priority 55
 	sim_engine.register_system(migration_system)          # priority 60
+	sim_engine.register_system(stratification_monitor)    # priority 90
 	sim_engine.register_system(stats_recorder)            # priority 90
 	sim_engine.register_system(contagion_system)          # priority 38
+	sim_engine.register_system(reputation_system)         # priority 38
+	sim_engine.register_system(economic_tendency_system)  # priority 39
 	sim_engine.register_system(morale_system)             # priority 40
+	sim_engine.register_system(job_satisfaction_system)   # priority 40
 	sim_engine.register_system(coping_system)             # priority 42
 	sim_engine.register_system(intergenerational_system) # priority 45 (Phase 5)
 	sim_engine.register_system(parenting_system)         # priority 46 (Phase 5)

@@ -12,5 +12,12 @@
   "EVT_POPULATION_MILESTONE": "인구 {count}명 달성!",
   "EVT_FAMINE": "{settlement} 기근 발생!",
   "EVT_BECAME_ADULT": "{name} 성인이 됨",
-  "EVT_STILLBORN": "{name} 사산 ({mother})"
+  "EVT_STILLBORN": "{name} 사산 ({mother})",
+  "EVT_REP_MORALITY_PLUNGE": "{name}의 정직성에 의문",
+  "EVT_REP_OUTCAST": "{name}이(가) 추방자가 됨",
+  "EVT_REP_RESPECTED": "{name}이(가) 존경을 받음",
+  "EVT_JOB_DRIFT": "{name}이(가) {old}에서 {new}(으)로 전직",
+  "EVT_GINI_UNREST": "{settlement}에서 불평등 심화",
+  "EVT_STRAT_PHASE": "{settlement}이(가) {phase} 단계 진입",
+  "EVT_GOSSIP": "{target}에 대한 소문이 퍼짐"
 }

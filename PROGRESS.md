@@ -4601,3 +4601,56 @@ Note: `notion-update-page` MCP tool has schema mismatch (expects flat params but
 - Dispatch ratio: 0/10 (Codex MCP unavailable — ToolSearch returned no results)
 - Dispatch tool used: DIRECT (all — ask_codex MCP not discoverable, codex_dispatch.sh async PRs incompatible)
 - Notion pages updated: 📝 변경 로그 DB (신규 항목 ✅), 🧬 신체·인지·종족 설계 + DERIVED_STAT (⚠️ notion-update-page MCP broken)
+
+---
+
+## Layer 4.5+4.7: Social Identity & Economic Behavior — t-SOC batch
+
+### Context
+Agents lack social consequence — no reputation, no gossip, no economic differentiation, no job satisfaction, no wealth inequality tracking. Implements Layer 4.5 (reputation 5-dim, job satisfaction, social status) and Layer 4.7 (economic tendencies, wealth tracking, stratification monitor).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-INFRA | entity_data + settlement_data + simulation_bus + game_config + locale.gd | 🔴 DIRECT | — | shared interfaces, signals, constants (~5 files) |
+| T-SOC-01 | reputation_data.gd | 🟢 DISPATCH | ask_codex | standalone new file |
+| T-SOC-02 | reputation_manager.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-01) |
+| T-SOC-03 | data/reputation/event_deltas.json | 🟢 DISPATCH | ask_codex | standalone data file |
+| T-SOC-04 | reputation_system.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-01,02,03) |
+| T-SOC-05 | data/jobs/*.json (4 files) | 🟢 DISPATCH | ask_codex | standalone data files |
+| T-SOC-06 | economic_tendency_system.gd | 🟢 DISPATCH | ask_codex | standalone new file |
+| T-SOC-07 | job_satisfaction_system.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-05) |
+| T-SOC-08 | stratification_monitor.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-02) |
+| T-SOC-09 | localization JSONs (reputation.json + economy.json en/ko + events.json additions) | 🟢 DISPATCH | ask_codex | standalone locale files |
+| T-WIRE | stat_sync + social_event + leader_system + main.gd wiring | 🔴 DIRECT | — | integration wiring, connects dispatched work |
+
+### Dispatch ratio: 8/10 = 80% ✅ (target: ≥60%)
+
+### Dispatch strategy
+Config-first fan-out:
+1. T-INFRA (DIRECT) — shared fields/signals/constants first, commit
+2. T-SOC-01 + T-SOC-03 + T-SOC-05 + T-SOC-06 + T-SOC-09 (parallel dispatch — no file overlap)
+3. T-SOC-02 (sequential — depends on T-SOC-01)
+4. T-SOC-04 (sequential — depends on T-SOC-01, 02, 03)
+5. T-SOC-07 (sequential — depends on T-SOC-05)
+6. T-SOC-08 (sequential — depends on T-SOC-02)
+7. T-WIRE (DIRECT) — final wiring after all dispatches complete
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | — | created | 신규 시스템 문서 (👥 사회 시스템 하위) — 아키텍처, 데이터 구조, 핵심 로직, 파일 목록, 신호, 상수, 개발 히스토리 |
+| 📝 변경 로그 | — | added | 2026-02-24 Layer 4.5+4.7 평판 & 경제 시스템 구현 (관계 & 사회) |
+| 📋 데이터 정의서 | — | added | ReputationDomain(Enum), StatusTier(Enum), StratificationPhase(Enum), GossipMotive(Enum), EconomicTendency(딕셔너리) |
+
+### Localization Verification
+- Hardcoded scan: PASS (all 6 new .gd files + 6 modified .gd files — no hardcoded .text strings)
+- New keys added: REP_* (17 keys), ECON_*/WEALTH_*/JOB_SAT_*/STATUS_*/STRAT_*/GINI_*/LEVELING_* (20 keys), EVT_* (7 keys)
+- ko/ updated: YES (reputation.json, economy.json, events.json — all en/ and ko/ pairs)
+
+### Results
+- Gate: PENDING
+- Dispatch ratio: 8/10 = 80% ✅
+- Files changed: 24 (12 modified + 12 new)
+- Dispatch tool used: ask_codex (8 tickets), DIRECT (2 tickets: T-INFRA, T-WIRE)
+- Notion pages updated: 🏛️ 평판 & 경제 시스템 (신규), 📝 변경 로그 (신규 항목), 📋 데이터 정의서 (5개 신규 항목)

@@ -67,6 +67,7 @@ func _sync_entity(entity: RefCounted) -> void:
 		_compute_derived(entity)
 		_sync_facets(entity)
 		_sync_intelligences(entity)
+		_sync_economic(entity)
 		return
 	StatQuery.set_value(entity, &"EMOTION_STRESS",     int(ed.stress * 20.0), 0)
 	StatQuery.set_value(entity, &"EMOTION_ALLOSTATIC",  int(ed.allostatic), 0)
@@ -74,6 +75,7 @@ func _sync_entity(entity: RefCounted) -> void:
 	_compute_derived(entity)
 	_sync_facets(entity)
 	_sync_intelligences(entity)
+	_sync_economic(entity)
 
 
 ## COMPOSITE 파생 스탯 계산 및 stat_cache에 저장.
@@ -189,3 +191,15 @@ func _sync_intelligences(entity: RefCounted) -> void:
 		var stat_id: StringName = intel_map[ikey]
 		var ival: float = float(intel.get(ikey, 0.5))
 		StatQuery.set_value(entity, stat_id, int(ival * 1000), 0)
+
+
+func _sync_economic(entity: RefCounted) -> void:
+	## Economic tendencies: float 0~1 → int 0~1000
+	StatQuery.set_value(entity, &"ECON_SAVING", int(entity.economic_tendencies.get("saving", 0.5) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_RISK", int(entity.economic_tendencies.get("risk", 0.5) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_GENEROSITY", int(entity.economic_tendencies.get("generosity", 0.5) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_MATERIALISM", int(entity.economic_tendencies.get("materialism", 0.5) * 1000), 0)
+	## Job satisfaction & wealth & status
+	StatQuery.set_value(entity, &"JOB_SATISFACTION", int(entity.job_satisfaction * 1000), 0)
+	StatQuery.set_value(entity, &"WEALTH_NORM", int(entity.wealth_norm * 1000), 0)
+	StatQuery.set_value(entity, &"STATUS_SCORE", int((entity.status_score + 1.0) / 2.0 * 1000), 0)

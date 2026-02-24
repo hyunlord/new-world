@@ -1,0 +1,24 @@
+{
+  "job_id": "miner",
+  "riasec": "R",
+  "hexaco_ideal": {
+    "H": 0.0,
+    "E": -0.30,
+    "X": 0.0,
+    "A": 0.0,
+    "C": 0.20,
+    "O": 0.0
+  },
+  "value_weights": {
+    "HARD_WORK": 0.30,
+    "COMPETITION": 0.20,
+    "PERSEVERANCE": 0.25,
+    "STOICISM": 0.15,
+    "MARTIAL_PROWESS": 0.10
+  },
+  "primary_skill": "SKILL_MINING",
+  "prestige": 0.35,
+  "autonomy_level": 0.50,
+  "danger_level": 0.50,
+  "creativity_level": 0.05
+}

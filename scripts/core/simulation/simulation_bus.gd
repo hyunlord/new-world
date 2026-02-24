@@ -50,6 +50,18 @@ signal leader_elected(settlement_id: int, leader_id: int, leader_name: String, c
 ## Emitted when a settlement's leader dies or leaves with no replacement yet.
 signal leader_lost(settlement_id: int, tick: int)
 
+## [Fiske 2007] Reputation event (direct observation or interaction outcome)
+signal reputation_event(data: Dictionary)
+
+## [Dunbar 1997] Gossip propagation between agents
+signal gossip_spread(data: Dictionary)
+
+## [Boehm 1999] Status tier transition
+signal status_tier_changed(entity_id: int, old_tier: String, new_tier: String, tick: int)
+
+## [Kohler 2017] Settlement stratification phase transition
+signal stratification_phase_changed(settlement_id: int, old_phase: String, new_phase: String, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

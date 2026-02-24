@@ -1,0 +1,22 @@
+{
+  "ECON_SAVING": "저축 성향",
+  "ECON_RISK": "위험 선호",
+  "ECON_GENEROSITY": "관대함",
+  "ECON_MATERIALISM": "물질주의",
+  "WEALTH_DESTITUTE": "빈곤",
+  "WEALTH_STRUGGLING": "궁핍",
+  "WEALTH_COMFORTABLE": "보통",
+  "WEALTH_WELL_OFF": "풍족",
+  "WEALTH_WEALTHY": "부유",
+  "JOB_SATISFACTION": "직업 만족도",
+  "JOB_SAT_HIGH": "충만",
+  "JOB_SAT_MED": "보통",
+  "JOB_SAT_LOW": "불만족",
+  "JOB_SAT_CRITICAL": "고통",
+  "STATUS_LABEL": "사회적 지위",
+  "STRAT_EGALITARIAN": "평등 사회",
+  "STRAT_TRANSITIONAL": "전환기",
+  "STRAT_STRATIFIED": "계층 사회",
+  "GINI_LABEL": "부의 불평등 (지니)",
+  "LEVELING_LABEL": "평준화 효과"
+}

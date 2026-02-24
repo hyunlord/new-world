@@ -1,0 +1,22 @@
+{
+  "ECON_SAVING": "Saving Tendency",
+  "ECON_RISK": "Risk Appetite",
+  "ECON_GENEROSITY": "Generosity",
+  "ECON_MATERIALISM": "Materialism",
+  "WEALTH_DESTITUTE": "Destitute",
+  "WEALTH_STRUGGLING": "Struggling",
+  "WEALTH_COMFORTABLE": "Comfortable",
+  "WEALTH_WELL_OFF": "Well-off",
+  "WEALTH_WEALTHY": "Wealthy",
+  "JOB_SATISFACTION": "Job Satisfaction",
+  "JOB_SAT_HIGH": "Fulfilled",
+  "JOB_SAT_MED": "Content",
+  "JOB_SAT_LOW": "Dissatisfied",
+  "JOB_SAT_CRITICAL": "Miserable",
+  "STATUS_LABEL": "Social Status",
+  "STRAT_EGALITARIAN": "Egalitarian",
+  "STRAT_TRANSITIONAL": "Transitional",
+  "STRAT_STRATIFIED": "Stratified",
+  "GINI_LABEL": "Wealth Inequality (Gini)",
+  "LEVELING_LABEL": "Leveling Effectiveness"
+}

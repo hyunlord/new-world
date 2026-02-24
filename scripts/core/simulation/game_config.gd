@@ -563,4 +563,132 @@ const INTEL_RESIDUAL_CORR: Array = [
 	[0.07, 0.04, 0.03, 0.10, 0.03, 0.05, 0.37, 1.00],
 ]
 
+## ━━ REPUTATION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Fiske 2007, Nowak & Sigmund 2005, Baumeister 2001]
+
+const REPUTATION_TICK_INTERVAL: int = 30
+
+## [Fiske 2007] Overall reputation weights
+const REP_W_MORALITY: float = 0.30
+const REP_W_SOCIABILITY: float = 0.20
+const REP_W_COMPETENCE: float = 0.25
+const REP_W_DOMINANCE: float = 0.05
+const REP_W_GENEROSITY: float = 0.20
+
+## [Baumeister 2001, Rothbart & Park 1986] Negativity bias multipliers per domain
+const REP_NEG_BIAS_MORALITY: float = 2.5
+const REP_NEG_BIAS_SOCIABILITY: float = 1.2
+const REP_NEG_BIAS_COMPETENCE: float = 1.5
+const REP_NEG_BIAS_DOMINANCE: float = 1.0
+const REP_NEG_BIAS_GENEROSITY: float = 2.0
+
+## Decay rates (per game year, applied fractionally each reputation tick)
+## [Klein 1992] Positive impression half-life ~3 years
+const REP_POSITIVE_YEARLY_RETENTION: float = 0.794
+## [Walker 2003] Negative impression half-life ~5 years
+const REP_NEGATIVE_YEARLY_RETENTION: float = 0.870
+
+## [Dunbar 1997] Probability that a social interaction includes gossip
+const REP_GOSSIP_PROBABILITY: float = 0.65
+## [Ohtsuki & Iwasa 2004] Hop-by-hop credibility decay
+const REP_GOSSIP_HOP_DECAY: float = 0.80
+const REP_GOSSIP_MAX_HOPS: int = 3
+## Direct observation base credibility
+const REP_DIRECT_OBSERVATION_CREDIBILITY: float = 0.90
+
+## Gossip distortion rates by motive [Beersma & Van Kleef 2012, Giardini 2022]
+const REP_DISTORTION_PROSOCIAL: float = 0.07
+const REP_DISTORTION_ENJOYMENT: float = 0.15
+const REP_DISTORTION_MANIPULATION: float = 0.25
+const REP_DISTORTION_VENTING: float = 0.20
+
+## Gossip transmission probability by domain (morality spreads fastest)
+const REP_GOSSIP_TRANSMIT_MORALITY: float = 0.45
+const REP_GOSSIP_TRANSMIT_SOCIABILITY: float = 0.20
+const REP_GOSSIP_TRANSMIT_COMPETENCE: float = 0.25
+const REP_GOSSIP_TRANSMIT_DOMINANCE: float = 0.30
+const REP_GOSSIP_TRANSMIT_GENEROSITY: float = 0.35
+
+## [Gottman 1994] Reputation recovery: positive acts needed per negative act
+const REP_RECOVERY_RATIO: float = 5.0
+
+## Status tier thresholds (overall reputation score)
+const REP_TIER_RESPECTED: float = 0.60
+const REP_TIER_GOOD: float = 0.20
+const REP_TIER_SUSPECT: float = -0.20
+const REP_TIER_OUTCAST: float = -0.60
+
+## ━━ ECONOMIC TENDENCY SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Kahneman & Tversky 1979, Modigliani 1966, Engel 2011, Piff 2010]
+
+const ECON_TICK_INTERVAL: int = 120
+
+## Wealth score formula weights
+const WEALTH_W_FOOD: float = 0.55
+const WEALTH_W_WOOD: float = 0.25
+const WEALTH_W_STONE: float = 0.20
+
+## [Piff 2010] Wealth→generosity feedback: high wealth reduces generosity
+const ECON_WEALTH_GENEROSITY_PENALTY: float = 0.90
+
+## [Dittmar 2014] Materialism→Joy penalty
+const ECON_MATERIALISM_JOY_THRESHOLD: float = 0.70
+const ECON_MATERIALISM_JOY_PENALTY: float = 3.0
+
+## Theft temptation constants
+const THEFT_SCARCITY_FOOD_DAYS: float = 3.0
+
+## ━━ JOB SATISFACTION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Holland 1959, Hackman & Oldham 1976, Deci & Ryan 1985, Judge 2001]
+
+const JOB_SAT_TICK_INTERVAL: int = 120
+
+## Satisfaction composite weights
+const JOB_SAT_W_SKILL_FIT: float = 0.35
+const JOB_SAT_W_VALUE_FIT: float = 0.25
+const JOB_SAT_W_PERSONALITY_FIT: float = 0.25
+const JOB_SAT_W_NEED_FIT: float = 0.15
+
+## Satisfaction → work speed multipliers [Judge 2001, r≈0.30]
+const JOB_SAT_HIGH_THRESHOLD: float = 0.70
+const JOB_SAT_HIGH_SPEED_MULT: float = 1.15
+const JOB_SAT_LOW_THRESHOLD: float = 0.40
+const JOB_SAT_LOW_SPEED_MULT: float = 0.90
+const JOB_SAT_CRITICAL_THRESHOLD: float = 0.25
+const JOB_SAT_CRITICAL_SPEED_MULT: float = 0.80
+
+## [Judge 2001, r≈-0.40] Drift probability per season when dissatisfied
+const JOB_SAT_DRIFT_BASE: float = 0.15
+
+## ━━ STRATIFICATION MONITOR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Boehm 1999, Kohler 2017, Scheidel 2017]
+
+const STRAT_TICK_INTERVAL: int = 500
+
+## Status score weights
+const STATUS_W_REPUTATION: float = 0.35
+const STATUS_W_WEALTH: float = 0.25
+const STATUS_W_LEADER: float = 0.20
+const STATUS_W_AGE: float = 0.10
+const STATUS_W_COMPETENCE: float = 0.10
+
+## Leader bonus values
+const STATUS_LEADER_CURRENT: float = 0.30
+const STATUS_LEADER_FORMER: float = 0.15
+
+## Status tier thresholds
+const STATUS_TIER_ELITE: float = 0.65
+const STATUS_TIER_RESPECTED: float = 0.35
+const STATUS_TIER_MARGINAL: float = -0.35
+const STATUS_TIER_OUTCAST: float = -0.60
+
+## [Boehm 1999, Dunbar 1998] Leveling effectiveness parameters
+const LEVELING_DUNBAR_N: float = 150.0
+const LEVELING_SEDENTISM_DEFAULT: float = 0.80
+
+## [Kohler 2017, Scheidel 2017] Gini instability thresholds
+const GINI_UNREST_THRESHOLD: float = 0.40
+const GINI_ENTRENCHED_THRESHOLD: float = 0.50
+const GINI_CRISIS_THRESHOLD: float = 0.60
+
 
