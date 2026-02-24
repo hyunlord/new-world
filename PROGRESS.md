@@ -1,3 +1,52 @@
+## Reputation Tuning Fix — t-REP-TUNE — 2026-02-24
+
+### Context
+Reputation values displayed as ~50% in entity detail panel for all entities even after 30+ years. Root cause: hardcoded `0.10` multiplier in reputation_system.gd scaled event deltas to 1/10th magnitude, combined with aggressive yearly decay (0.794 retention), kept values near zero on -1/+1 scale. Normalized: (0.023+1)/2=51.15% — visually indistinguishable from 50%.
+Economic tendencies confirmed WORKING correctly (NOT at 50%) — they compute varied values from HEXACO axes + entity values on first tick.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-REP-TUNE | Diagnose + fix reputation tuning | 🔴 DIRECT | — | diagnostic work requiring full codebase view |
+
+### Dispatch ratio: 0/1 = 0% — diagnostic/tuning work, cannot be split
+
+[DIRECT] t-REP-TUNE: Debugging required reading 10+ files across systems/core/ui to trace event flow. Tuning change touches shared GameConfig constants. Not dispatchable.
+
+### Dispatch strategy
+Single DIRECT ticket — diagnostic work.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | Tuning | modified | REP_EVENT_DELTA_SCALE=0.50 (was hardcoded 0.10), REP_GOSSIP_DELTA_SCALE=0.35 (was hardcoded 0.20) |
+| 📝 변경 로그 | — | added | 2026-02-24 Reputation tuning fix — event delta scale 0.10→0.50, gossip delta 0.20→0.35, magic numbers → GameConfig constants |
+
+### Localization Verification
+- Hardcoded scan: PASS (no new UI text)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS (db9b2fc)
+- Dispatch ratio: 0/1 = 0% (diagnostic work)
+- Files changed: 2 (game_config.gd, reputation_system.gd)
+- Dispatch tool used: — (DIRECT only)
+- Notion pages updated: 평판 & 경제 시스템 (tuning updated), 변경 로그 (entry added)
+
+### Diagnosis Summary
+| Cause | Status | Notes |
+|-------|--------|-------|
+| 1. System not registered | ELIMINATED | All 4 systems registered in main.gd |
+| 2. entity_data fields missing | ELIMINATED | All fields exist |
+| 3. Input key mismatch | ELIMINATED | HEXACO axes H,E,X,A,C,O match |
+| 4. Runtime errors | ELIMINATED | No critical errors found |
+| 5. UI binding errors | ELIMINATED | UI reads correct fields |
+| 6. tick_interval issues | ELIMINATED | Intervals reasonable |
+| **7. Tuning: delta too small** | **ROOT CAUSE** | 0.10 multiplier + decay → values ≈0.02 |
+
+---
+
 ## Layer 4.5+4.7 UI Integration — t-UI47 — 2026-02-24
 
 ### Context
