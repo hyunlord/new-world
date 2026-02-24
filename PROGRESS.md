@@ -4478,3 +4478,10 @@ Note: ask_codex MCP unavailable this session — all 3 tickets implemented direc
 - No new Locale keys
 - Hardcoded scan: PASS (symbol not a translatable word)
 
+### Results
+- Gate: PASS (commit 2771c67)
+- PR #103 merged
+- Dispatch ratio: 2/3 = 67% (ask_codex MCP unavailable — all implemented directly, plan classified correctly)
+- Files changed: entity_renderer.gd, list_panel.gd, main.gd, PROGRESS.md (4 files, 64 insertions)
+- Notion pages updated: 변경 로그 DB (1 entry added)
+
