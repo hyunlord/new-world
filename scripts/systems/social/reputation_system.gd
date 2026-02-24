@@ -91,7 +91,7 @@ func _apply_reputation_event(data: Dictionary) -> void:
 			"generosity":
 				neg_bias = GameConfig.REP_NEG_BIAS_GENEROSITY
 
-	var delta = valence * magnitude * 0.10 * neg_bias
+	var delta = valence * magnitude * GameConfig.REP_EVENT_DELTA_SCALE * neg_bias
 	_apply_domain_delta(rep, domain, delta)
 
 	# Update metadata
@@ -202,7 +202,7 @@ func _attempt_gossip_exchange(gossiper: RefCounted, listener: RefCounted, tick: 
 		credibility *= 0.5
 
 	var listener_rep = _reputation_manager.get_or_create(listener.id, target_id)
-	var delta: float = (transmitted_val - _get_domain_val(listener_rep, domain)) * credibility * 0.20
+	var delta: float = (transmitted_val - _get_domain_val(listener_rep, domain)) * credibility * GameConfig.REP_GOSSIP_DELTA_SCALE
 	_apply_domain_delta(listener_rep, domain, delta)
 	listener_rep.confidence = clampf(listener_rep.confidence + credibility * 0.10, 0.0, 1.0)
 	listener_rep.last_updated_tick = tick

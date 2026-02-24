@@ -609,6 +609,11 @@ const REP_GOSSIP_TRANSMIT_COMPETENCE: float = 0.25
 const REP_GOSSIP_TRANSMIT_DOMINANCE: float = 0.30
 const REP_GOSSIP_TRANSMIT_GENEROSITY: float = 0.35
 
+## Event delta scaling — multiplied with valence*magnitude per reputation event
+const REP_EVENT_DELTA_SCALE: float = 0.50
+## Gossip delta scaling — multiplied with credibility when transferring reputation via gossip
+const REP_GOSSIP_DELTA_SCALE: float = 0.35
+
 ## [Gottman 1994] Reputation recovery: positive acts needed per negative act
 const REP_RECOVERY_RATIO: float = 5.0
 
