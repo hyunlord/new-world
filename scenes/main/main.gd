@@ -251,7 +251,7 @@ func _ready() -> void:
 	value_system.init(entity_manager, settlement_manager)
 
 	leader_system = LeaderSystem.new()
-	leader_system.init(entity_manager, settlement_manager)
+	leader_system.init(entity_manager, settlement_manager, relationship_manager)
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1

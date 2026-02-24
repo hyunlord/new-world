@@ -439,14 +439,27 @@ const UPPER_NEEDS_SKILLUP_SELF_ACT_BONUS:   float = 0.05
 ## ━━ LEADER SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## [Weber 1922 Charismatic Authority, French & Raven 1959 Social Power]
 
-## How often LeaderSystem runs (ticks). Election check every 3 game-years.
-const LEADER_TICK_INTERVAL: int = 13140      ## 3 years × 4380 ticks/year
+## [Boehm 1999] Re-election interval per settlement (3 years).
+## First election is IMMEDIATE when leader_id == -1.
+const LEADER_REELECTION_INTERVAL: int = 13140  ## 3 years × 4380 ticks/year
+
+## How often LeaderSystem checks for vacant leader / re-election due (ticks).
+const LEADER_CHECK_INTERVAL: int = 12          ## ~1 day — lightweight check
 
 ## Minimum adult members required to elect a leader.
 const LEADER_MIN_POPULATION: int = 3
 
 ## Charisma score tie-breaking: if top candidates are within this margin, use POPULARITY.
 const LEADER_CHARISMA_TIE_MARGIN: float = 0.05
+
+## [French & Raven 1959, Boehm 1999, Henrich & Gil-White 2001]
+## Composite leader score weights — primitive/tribal era balanced across authority bases.
+const LEADER_W_CHARISMA: float = 0.25          ## Referent power — ability to inspire
+const LEADER_W_WISDOM: float = 0.15            ## Expert power — sound judgment
+const LEADER_W_TRUSTWORTHINESS: float = 0.15   ## Social trust — reliability
+const LEADER_W_INTIMIDATION: float = 0.15      ## Coercive power — physical authority
+const LEADER_W_SOCIAL_CAPITAL: float = 0.15    ## Network — relationships in settlement
+const LEADER_W_AGE_RESPECT: float = 0.15       ## Traditional — elder deference
 
 ## [Milgram 1974] Conformity pressure reduction for wise agents.
 ## Effective enforcement = base_enforcement × (1.0 - LEADER_WISDOM_RESISTANCE_COEFF × wisdom_norm)

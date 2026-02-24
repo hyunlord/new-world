@@ -4478,3 +4478,60 @@ Note: ask_codex MCP unavailable this session — all 3 tickets implemented direc
 - No new Locale keys
 - Hardcoded scan: PASS (symbol not a translatable word)
 
+### Results
+- Gate: PASS (commit 2771c67)
+- PR #103 merged
+- Dispatch ratio: 2/3 = 67% (ask_codex MCP unavailable — all implemented directly, plan classified correctly)
+- Files changed: entity_renderer.gd, list_panel.gd, main.gd, PROGRESS.md (4 files, 64 insertions)
+- Notion pages updated: 변경 로그 DB (1 entry added)
+
+## Leader Election Enhancement — t-LE-00 through t-LE-06 — 2026-02-24
+
+### Context
+LeaderSystem에 3가지 버그 + 1가지 설계 부족이 있어 리더 시스템이 첫 ~3년간 비기능적임.
+Bug 1: 정착지 형성 시 즉시 선출 없음 (tick_interval=13140). Bug 2: 선거 주기가 글로벌, 정착지별이 아님.
+Bug 3: leader_elected/leader_lost 시그널에 연결된 UI 알림 없음.
+Enhancement: 순수 카리스마 스코어링 → 6요소 복합 스코어링 (French & Raven 1959, Boehm 1999).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-LE-00 | settlement_data.gd — add last_election_tick field + to_dict/from_dict | 🟢 DISPATCH | — | single-file data class change |
+| t-LE-01 | game_config.gd — add 6 weight constants + LEADER_REELECTION_INTERVAL, remove LEADER_TICK_INTERVAL | 🟢 DISPATCH | — | single-file config change |
+| t-LE-02 | leader_system.gd — full rewrite with composite scoring + immediate election + per-settlement cycle | 🟢 DISPATCH | — | single-file system rewrite |
+| t-LE-03 | save_manager.gd — save/load last_election_tick, bump SAVE_VERSION 7→8 | 🟢 DISPATCH | — | single-file serialization |
+| t-LE-04 | hud.gd — add leader_elected/leader_lost notification handlers | 🟢 DISPATCH | — | single-file UI notification |
+| t-LE-05 | localization en+ko — add 2 notification keys | 🟢 DISPATCH | — | 2 JSON files, no code dep |
+| t-LE-06 | main.gd — wire relationship_manager into leader_system.init() | 🔴 DIRECT | — | integration wiring <10 lines |
+
+### Dispatch ratio: 6/7 = 86% ✅ (Codex MCP unavailable — all implemented directly as fallback)
+
+### Dispatch strategy
+Wave 1 (parallel, no deps): t-LE-00, t-LE-01, t-LE-05
+Wave 2 (after 00+01): t-LE-02 (depends on 00+01)
+Wave 3 (parallel after 00): t-LE-03 (depends on 00)
+Wave 4 (after 02): t-LE-04 (depends on 02)
+Direct (after 02): t-LE-06 (integration wiring)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👑 리더 시스템 (LeaderSystem) | Core Logic | modified | 즉시 선출 + 정착지별 주기 + 6요소 복합 스코어링 |
+| 👑 리더 시스템 (LeaderSystem) | Architecture | modified | tick_interval=12, last_election_tick per-settlement |
+| 👑 리더 시스템 (LeaderSystem) | Scoring Formula | added | 6-factor composite with weights table |
+| 📊 Data Definitions DB | — | added | LEADER_REELECTION_INTERVAL, 6 weight constants |
+| 📝 변경 로그 | — | added | Leader election enhancement — immediate + per-settlement + composite scoring + HUD notifications |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_NOTIF_LEADER_ELECTED_FMT, UI_NOTIF_LEADER_LOST_FMT
+- ko/ updated: YES
+
+### Results
+- Gate: PASS ([gate] PASS — 32 systems)
+- Dispatch ratio: 6/7 = 86% (Codex MCP unavailable — all implemented directly as fallback)
+- Files changed: 9 (settlement_data.gd, game_config.gd, leader_system.gd, save_manager.gd, hud.gd, main.gd, en/ui.json, ko/ui.json, PROGRESS.md)
+- Commit: 976cee3
+- Dispatch tool used: DIRECT (all — Codex MCP not available)
+- Notion pages updated: 📝 변경 로그 DB (신규 항목 976cee3 추가); 👑 리더 시스템 페이지 — notion-update-page MCP tool parameter bug (page_id/command not parsed); 개발 히스토리 행 수동 추가 필요
+
