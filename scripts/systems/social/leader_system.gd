@@ -33,24 +33,22 @@ func execute_tick(tick: int) -> void:
 		_update_settlement_leader(settlement, tick)
 
 
-## Check if current leader is still valid; re-elect if needed.
+## [Weber 1922] Reassess leadership every LEADER_TICK_INTERVAL ticks.
+## Incumbent participates as a candidate — a higher-charisma challenger can unseat them.
+## leader_elected signal fires only when the winner changes.
 func _update_settlement_leader(settlement: RefCounted, tick: int) -> void:
-	## Validate existing leader
-	var current_leader_valid: bool = false
+	## Step 1: validate existing leader — emit loss if dead or departed
 	if settlement.leader_id > -1:
 		var current: RefCounted = _entity_manager.get_entity(settlement.leader_id)
-		if current != null and current.is_alive \
-				and current.settlement_id == settlement.id:
-			current_leader_valid = true
-		else:
-			## Leader died or left — emit loss signal
+		var still_valid: bool = current != null and current.is_alive \
+				and current.settlement_id == settlement.id
+		if not still_valid:
 			SimulationBus.leader_lost.emit(settlement.id, tick)
 			settlement.leader_id = -1
+	## Do NOT return here — always run full election scoring.
+	## Incumbent participates as a candidate; challenger wins only if score is higher.
 
-	if current_leader_valid:
-		return  ## Re-election only happens when leader is lost OR on first tick
-
-	## Gather adult/elder candidates in this settlement
+	## Step 2: gather candidates (adult + elder in this settlement)
 	var candidates: Array = []
 	for mid in settlement.member_ids:
 		var entity: RefCounted = _entity_manager.get_entity(mid)
@@ -60,9 +58,9 @@ func _update_settlement_leader(settlement: RefCounted, tick: int) -> void:
 			candidates.append(entity)
 
 	if candidates.size() < GameConfig.LEADER_MIN_POPULATION:
-		return  ## Not enough adults for leadership structure
+		return
 
-	## Score candidates by DERIVED_CHARISMA
+	## Step 3: score by DERIVED_CHARISMA, tiebreak by DERIVED_POPULARITY
 	var best_entity: RefCounted = null
 	var best_score: float = -1.0
 
@@ -88,12 +86,13 @@ func _update_settlement_leader(settlement: RefCounted, tick: int) -> void:
 	if best_entity == null:
 		return
 
-	settlement.leader_id = best_entity.id
-
-	SimulationBus.leader_elected.emit(
-		settlement.id,
-		best_entity.id,
-		best_entity.entity_name,
-		best_score,
-		tick,
-	)
+	## Step 4: emit only on leadership change (silent re-affirmation if unchanged)
+	if best_entity.id != settlement.leader_id:
+		settlement.leader_id = best_entity.id
+		SimulationBus.leader_elected.emit(
+			settlement.id,
+			best_entity.id,
+			best_entity.entity_name,
+			best_score,
+			tick,
+		)

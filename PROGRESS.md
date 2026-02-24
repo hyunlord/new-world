@@ -1,3 +1,33 @@
+## LeaderSystem Bug Fix — t-LF-01 — 2026-02-24
+
+### Context
+LeaderSystem 주기적 재선거 버그: current_leader_valid 시 조기 return으로 인해 리더 사망 전까지
+재선거가 발생하지 않음. Weber(1922) 카리스마적 권위 설계 의도는 3년마다 재평가.
+Bug 1 (class_name 누락) — 기각: RefCounted 기반 시스템은 codebase 규칙상 class_name 없음
+(Node 기반 scripts만 허용). value_system.gd, family_system.gd 등 모두 동일 패턴.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-LF-01 | leader_system.gd — periodic re-election fix | 🔴 DIRECT | — | Single targeted logic fix; Codex MCP proven unreliable for file writes in t-LS batch |
+
+### Dispatch ratio: 0/1 = 0% (exception: Codex MCP does not write to disk — documented in t-LS results)
+
+### Dispatch strategy
+DIRECT only. t-LF-01은 단일 파일의 함수 1개 재작성. Codex MCP가 t-LS에서 파일을 실제로
+쓰지 않는 것이 확인되어 dispatch 면제.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👑 리더 시스템 (LeaderSystem) | Core Logic | update | 주기적 재선거 버그 수정 — 매 LEADER_TICK_INTERVAL마다 현직자도 후보로 참여, 변경 시에만 leader_elected 발생 |
+| Change Log DB | — | added | 2026-02-24 LeaderSystem 재선거 버그 수정 |
+
+### Localization Verification
+- Hardcoded scan: PASS (변경 없음 — leader_system.gd에 Locale 호출 없음)
+- New keys added: none
+- ko/ updated: N/A
+
 # Progress Log
 
 ## LeaderSystem — t-LS-01 through t-LS-08 — 2026-02-23
