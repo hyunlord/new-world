@@ -9,6 +9,7 @@ const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _relationship_manager: RefCounted
+var _settlement_manager: RefCounted = null
 var _entity_id: int = -1
 
 ## Personality bar colors
@@ -219,10 +220,11 @@ class DeceasedEntityProxy extends RefCounted:
 			emotion_data = EScript.from_dict(e_dict)
 
 
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_relationship_manager = relationship_manager
+	_settlement_manager = settlement_manager
 
 
 func set_entity_id(id: int) -> void:
@@ -682,8 +684,25 @@ func _draw() -> void:
 	var job_label: String = Locale.tr_id("JOB", entity.job)
 	var stage_label: String = Locale.tr_id("STAGE", entity.age_stage)
 	var name_prefix: String = "✝ " if not entity.is_alive else ""
-	var header_text: String = "%s %s%s - %s (%s)" % [gender_icon, name_prefix, entity.entity_name, job_label, stage_label]
+	## Check if this entity is the current settlement leader
+	var is_leader: bool = false
+	if _settlement_manager != null and entity.is_alive and entity.settlement_id > 0:
+		var settlement: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
+		if settlement != null and settlement.leader_id == entity.id:
+			is_leader = true
+
+	## Build header text — leader badge appended after name
+	var leader_tag: String = ""
+	if is_leader:
+		leader_tag = " [%s]" % Locale.ltr("UI_LEADER")
+	var header_text: String = "%s %s%s%s - %s (%s)" % [gender_icon, name_prefix, entity.entity_name, leader_tag, job_label, stage_label]
 	draw_string(font, Vector2(cx, cy), header_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
+
+	## Draw leader badge in gold over the same line
+	if is_leader:
+		var pre_badge: String = "%s %s%s" % [gender_icon, name_prefix, entity.entity_name]
+		var pre_w: float = font.get_string_size(pre_badge, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title")).x
+		draw_string(font, Vector2(cx + pre_w, cy), leader_tag, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), Color(1.0, 0.82, 0.1))
 	# Gender icon colored separately
 	draw_string(font, Vector2(cx, cy), gender_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), gender_color)
 	cy += 6.0

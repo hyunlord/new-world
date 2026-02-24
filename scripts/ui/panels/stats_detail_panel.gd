@@ -124,7 +124,7 @@ func _draw() -> void:
 		var settlement_rows: int = 0
 		if _settlement_manager != null:
 			var active: Array = _settlement_manager.get_active_settlements()
-			settlement_rows = active.size() * 2 + 1
+			settlement_rows = active.size() * 3 + 1
 		var max_rows: int = maxi(job_rows + 2, settlement_rows + 1)
 		cy = jobs_y + 20.0 + float(max_rows) * 14.0
 
@@ -406,3 +406,25 @@ func _draw_settlements_section(font: Font, x: float, y: float, w: float) -> void
 		y += 14.0
 		draw_string(font, Vector2(x + 4, y + 11), "  %s:%d %s:%d %s:%d" % [Locale.ltr("UI_FOOD"), int(s.food), Locale.ltr("UI_WOOD"), int(s.wood), Locale.ltr("UI_STONE"), int(s.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
 		y += 14.0
+
+		## [Weber 1922] Leader line — look up live settlement for leader_id
+		var leader_line: String
+		var leader_color: Color
+		if _settlement_manager != null:
+			var live_s: RefCounted = _settlement_manager.get_settlement(s.id)
+			if live_s != null and live_s.leader_id > -1 and _entity_manager != null:
+				var leader_entity: RefCounted = _entity_manager.get_entity(live_s.leader_id)
+				if leader_entity != null and leader_entity.is_alive:
+					leader_line = "  %s: %s" % [Locale.ltr("UI_LEADER"), leader_entity.entity_name]
+					leader_color = Color(1.0, 0.82, 0.1)
+				else:
+					leader_line = "  %s" % Locale.ltr("UI_NO_LEADER")
+					leader_color = Color(0.5, 0.5, 0.5)
+			else:
+				leader_line = "  %s" % Locale.ltr("UI_NO_LEADER")
+				leader_color = Color(0.5, 0.5, 0.5)
+		else:
+			leader_line = "  %s" % Locale.ltr("UI_NO_LEADER")
+			leader_color = Color(0.5, 0.5, 0.5)
+		draw_string(font, Vector2(x + 4, y + 11), leader_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), leader_color)
+		y += 16.0
