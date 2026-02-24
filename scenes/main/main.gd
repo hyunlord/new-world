@@ -291,7 +291,7 @@ func _ready() -> void:
 	world_renderer.render_world(world_data, resource_map)
 
 	# Init renderers with updated references
-	entity_renderer.init(entity_manager, building_manager, resource_map)
+	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
 	pause_menu = PauseMenuClass.new()
