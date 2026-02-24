@@ -854,30 +854,31 @@ func _draw() -> void:
 		cy += 4.0
 
 	# ── Intelligence (인지/지능) ──
-	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INTELLIGENCE"), "intelligence")
-	if not _section_collapsed.get("intelligence", false):
-		var intel: Dictionary = entity.intelligences
-		if not intel.is_empty():
-			var _intel_order: Array = [
-				["linguistic",     "UI_INTEL_LINGUISTIC"],
-				["logical",        "UI_INTEL_LOGICAL"],
-				["spatial",        "UI_INTEL_SPATIAL"],
-				["musical",        "UI_INTEL_MUSICAL"],
-				["kinesthetic",    "UI_INTEL_KINESTHETIC"],
-				["interpersonal",  "UI_INTEL_INTERPERSONAL"],
-				["intrapersonal",  "UI_INTEL_INTRAPERSONAL"],
-				["naturalistic",   "UI_INTEL_NATURALISTIC"],
-			]
-			for _ip in _intel_order:
-				var _ik: String = _ip[0]
-				var _il: String = _ip[1]
-				var _iv: float = intel.get(_ik, 0.5)
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr(_il), _iv, Color(0.3, 0.6, 0.9))
-			cy += 4.0
-		else:
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_INTEL_NONE"),
-				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
-			cy += 16.0
+	if entity.is_alive:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INTELLIGENCE"), "intelligence")
+		if not _section_collapsed.get("intelligence", false):
+			var intel: Dictionary = entity.intelligences
+			if not intel.is_empty():
+				var _intel_order: Array = [
+					["linguistic",     "UI_INTEL_LINGUISTIC"],
+					["logical",        "UI_INTEL_LOGICAL"],
+					["spatial",        "UI_INTEL_SPATIAL"],
+					["musical",        "UI_INTEL_MUSICAL"],
+					["kinesthetic",    "UI_INTEL_KINESTHETIC"],
+					["interpersonal",  "UI_INTEL_INTERPERSONAL"],
+					["intrapersonal",  "UI_INTEL_INTRAPERSONAL"],
+					["naturalistic",   "UI_INTEL_NATURALISTIC"],
+				]
+				for _ip in _intel_order:
+					var _ik: String = _ip[0]
+					var _il: String = _ip[1]
+					var _iv: float = intel.get(_ik, 0.5)
+					cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr(_il), _iv, Color(0.3, 0.6, 0.9))
+				cy += 4.0
+			else:
+				draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_INTEL_NONE"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+				cy += 16.0
 
 	# ── Derived Stats (파생 스탯) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_DERIVED_STATS"), "derived")
@@ -1041,22 +1042,24 @@ func _draw() -> void:
 			## Fallback: entity.emotion_data가 null인 경우 (구형 저장 파일 또는 초기화 전 에이전트)
 			## EmotionSystem이 아직 이 에이전트에 emotion_data를 생성하지 않은 상태.
 			## 레거시 entity.emotions Dictionary에서 읽어서 표시.
-			var e_keys: Array = ["happiness", "loneliness", "stress", "grief", "love"]
-			var e_locale_keys: Array = [
-				"EMO_JOY",             ## happiness → 기쁨/Joy
-				"EMO_SADNESS",         ## loneliness → 슬픔/Sadness (가장 근접)
-				"UI_STRESS",           ## stress → 스트레스/Stress
-				"EMO_SADNESS_INTENSE", ## grief → 비통/Grief
-				"DYAD_LOVE",           ## love → 사랑/Love
-			]
-			var legacy_colors: Dictionary = {
-				"happiness": Color(0.9, 0.8, 0.2), "loneliness": Color(0.4, 0.4, 0.7),
-				"stress": Color(0.9, 0.5, 0.2), "grief": Color(0.5, 0.3, 0.5), "love": Color(0.9, 0.3, 0.4),
-			}
-			for i in range(e_keys.size()):
-				var val: float = entity.emotions.get(e_keys[i], 0.0)
-				var label: String = Locale.ltr(e_locale_keys[i])
-				cy = _draw_bar(font, cx + 10, cy, bar_w, label, val, legacy_colors.get(e_keys[i], Color.WHITE))
+			## DeceasedEntityProxy에는 emotions가 없으므로 is_alive 체크
+			if entity.is_alive and "emotions" in entity:
+				var e_keys: Array = ["happiness", "loneliness", "stress", "grief", "love"]
+				var e_locale_keys: Array = [
+					"EMO_JOY",             ## happiness → 기쁨/Joy
+					"EMO_SADNESS",         ## loneliness → 슬픔/Sadness (가장 근접)
+					"UI_STRESS",           ## stress → 스트레스/Stress
+					"EMO_SADNESS_INTENSE", ## grief → 비통/Grief
+					"DYAD_LOVE",           ## love → 사랑/Love
+				]
+				var legacy_colors: Dictionary = {
+					"happiness": Color(0.9, 0.8, 0.2), "loneliness": Color(0.4, 0.4, 0.7),
+					"stress": Color(0.9, 0.5, 0.2), "grief": Color(0.5, 0.3, 0.5), "love": Color(0.9, 0.3, 0.4),
+				}
+				for i in range(e_keys.size()):
+					var val: float = entity.emotions.get(e_keys[i], 0.0)
+					var label: String = Locale.ltr(e_locale_keys[i])
+					cy = _draw_bar(font, cx + 10, cy, bar_w, label, val, legacy_colors.get(e_keys[i], Color.WHITE))
 		cy += 6.0
 
 	# ── Trauma Scars ──
