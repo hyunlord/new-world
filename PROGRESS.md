@@ -4578,3 +4578,25 @@ All DIRECT. Codex MCP unavailable (ToolSearch returned no results). codex_dispat
 - Hardcoded scan: PENDING
 - New keys added: UI_INTELLIGENCE, UI_INTEL_NONE, UI_INTEL_GENERAL, UI_INTEL_POTENTIAL
 - ko/ updated: YES
+
+### Notion Update (Actual)
+| Page | Action | Status |
+|------|--------|--------|
+| 🧬 신체·인지·종족 설계 | Layer 1.7 section update | ⚠️ notion-update-page MCP broken (schema mismatch) — needs manual merge |
+| 📝 변경 로그 DB | New entry: Intelligence System 실장 | ✅ Created (311e2e3d) |
+| DERIVED_STAT (데이터 정의서) | Description update | ⚠️ notion-update-page MCP broken — needs manual update |
+
+Note: `notion-update-page` MCP tool has schema mismatch (expects flat params but schema wraps in `data`). `notion-create-pages` works. Change Log entry successfully created. Page content updates need manual merge.
+
+### Localization Verification (Final)
+- Hardcoded scan: PASS (grep found no violations in cognition/*.gd or entity_detail_panel.gd)
+- New keys added: UI_INTELLIGENCE, UI_INTEL_NONE, UI_INTEL_GENERAL, UI_INTEL_POTENTIAL
+- ko/ updated: YES
+- Deprecated tr_data() scan: not found in scope
+
+### Results
+- Gate: PENDING
+- Commit: fab6c08
+- Files changed: 14 (10 modified + 4 new)
+- Dispatch ratio: 0/10 (Codex MCP unavailable)
+- Notion: Change Log ✅, Page updates ⚠️ (MCP broken)
