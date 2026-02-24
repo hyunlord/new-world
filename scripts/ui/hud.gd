@@ -899,6 +899,19 @@ func _on_simulation_event(event: Dictionary) -> void:
 		"stillborn":
 			var s_name: String = event.get("entity_name", "?")
 			_add_notification(Locale.trf("UI_NOTIF_STILLBORN_FMT", {"name": s_name}), Color(0.6, 0.3, 0.3))
+		"leader_elected":
+			var lname: String = event.get("leader_name", "?")
+			var sid: int = event.get("settlement_id", 0)
+			_add_notification(
+				Locale.trf("UI_NOTIF_LEADER_ELECTED_FMT", {"name": lname, "sid": sid}),
+				Color(1.0, 0.82, 0.1)
+			)
+		"leader_lost":
+			var sid2: int = event.get("settlement_id", 0)
+			_add_notification(
+				Locale.trf("UI_NOTIF_LEADER_LOST_FMT", {"sid": sid2}),
+				Color(0.5, 0.5, 0.5)
+			)
 
 
 func _on_locale_changed(_new_locale: String) -> void:

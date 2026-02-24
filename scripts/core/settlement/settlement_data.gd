@@ -11,6 +11,9 @@ var building_ids: Array = []
 var shared_values: Dictionary = {}
 ## [Weber 1922] Charismatic leader entity ID. -1 means no leader elected yet.
 var leader_id: int = -1
+## Tick of the last completed election. -1 = never elected.
+## Used for per-settlement re-election cycle. [Boehm 1999]
+var last_election_tick: int = -1
 
 
 func to_dict() -> Dictionary:
@@ -23,6 +26,7 @@ func to_dict() -> Dictionary:
 		"member_ids": member_ids.duplicate(),
 		"building_ids": building_ids.duplicate(),
 		"leader_id": leader_id,
+		"last_election_tick": last_election_tick,
 	}
 
 
@@ -48,5 +52,6 @@ static func from_dict(data: Dictionary) -> RefCounted:
 			settlement.building_ids.append(int(raw_building_ids[i]))
 
 	settlement.leader_id = data.get("leader_id", -1)
+	settlement.last_election_tick = data.get("last_election_tick", -1)
 
 	return settlement
