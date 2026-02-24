@@ -19,7 +19,10 @@ BP-01 timed out due to model fallbacks; changes applied directly from spec.
 BP-02 and BP-03 completed by Codex but lost in git stash conflict; re-applied manually from Codex output.
 
 ### Notion Update
-⚠️ PENDING — will update after gate pass.
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EconomicTendency (데이터 정의서) | 값 범위, 설명 | modified | [0,1] → [-1,+1], 설명에 bipolar 명시 |
+| 📝 변경 로그 | — | added | 2026-02-24 경제 성향+평판 양극성 스케일 변환 |
 
 ### Localization Verification
 - Hardcoded scan: PASS (no new UI text; all labels use Locale.ltr())
@@ -27,11 +30,11 @@ BP-02 and BP-03 completed by Codex but lost in git stash conflict; re-applied ma
 - ko/ updated: N/A
 
 ### Results
-- Gate: PENDING
+- Gate: PASS
 - Dispatch ratio: 3/4 = 75%
 - Files changed: 4 (entity_data.gd, stat_sync_system.gd, economic_tendency_system.gd, entity_detail_panel.gd)
 - Dispatch tool used: ask_codex (3 tickets)
-- Notion pages updated: PENDING
+- Notion pages updated: EconomicTendency (데이터 정의서), 📝 변경 로그
 
 ---
 
