@@ -895,5 +895,9 @@
   "UI_INTELLIGENCE": "Intelligence",
   "UI_INTEL_NONE": "No intelligence data",
   "UI_INTEL_GENERAL": "General Intelligence",
-  "UI_INTEL_POTENTIAL": "Potential"
+  "UI_INTEL_POTENTIAL": "Potential",
+  "UI_REPUTATION": "Reputation",
+  "UI_REPUTATION_SETTLEMENT_AVG": "Settlement View",
+  "UI_ECONOMIC_TENDENCIES": "Economic Tendencies",
+  "UI_SOCIAL_STATUS": "Social Status"
 }

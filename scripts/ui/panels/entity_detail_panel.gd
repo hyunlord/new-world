@@ -10,6 +10,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _relationship_manager: RefCounted
 var _settlement_manager: RefCounted = null
+var _reputation_manager: RefCounted = null
 var _entity_id: int = -1
 
 ## Personality bar colors
@@ -117,6 +118,9 @@ var _section_collapsed: Dictionary = {
 	"intelligence": false,
 	"skills": false,
 	"values": true,
+	"reputation": true,
+	"economic_tendencies": true,
+	"social_status": false,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -221,11 +225,12 @@ class DeceasedEntityProxy extends RefCounted:
 			emotion_data = EScript.from_dict(e_dict)
 
 
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null, reputation_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_relationship_manager = relationship_manager
 	_settlement_manager = settlement_manager
+	_reputation_manager = reputation_manager
 
 
 func set_entity_id(id: int) -> void:
@@ -1412,6 +1417,113 @@ func _draw() -> void:
 					draw_string(font, Vector2(cx + 10 + name_w, cy + 12), rel_label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), type_color)
 					cy += 15.0
 			cy += 6.0
+
+	# ── Reputation ──
+	if entity.is_alive and _reputation_manager != null and _settlement_manager != null:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_REPUTATION"), "reputation")
+		if not _section_collapsed.get("reputation", true):
+			var settlement: RefCounted = null
+			if entity.settlement_id > 0:
+				settlement = _settlement_manager.get_settlement(entity.settlement_id)
+			if settlement != null and settlement.member_ids.size() > 1:
+				draw_string(font, Vector2(cx + 10, cy + 11),
+					Locale.ltr("UI_REPUTATION_SETTLEMENT_AVG"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"),
+					Color(0.6, 0.6, 0.6))
+				cy += 15.0
+				var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_MORALITY"),
+					(avg_rep.get("morality", 0.0) + 1.0) / 2.0, Color(0.4, 0.8, 0.6))
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_SOCIABILITY"),
+					(avg_rep.get("sociability", 0.0) + 1.0) / 2.0, Color(0.5, 0.7, 0.9))
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_COMPETENCE"),
+					(avg_rep.get("competence", 0.0) + 1.0) / 2.0, Color(0.9, 0.75, 0.3))
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_DOMINANCE"),
+					(avg_rep.get("dominance", 0.0) + 1.0) / 2.0, Color(0.8, 0.4, 0.4))
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_GENEROSITY"),
+					(avg_rep.get("generosity", 0.0) + 1.0) / 2.0, Color(0.3, 0.9, 0.7))
+				var overall: float = avg_rep.get("overall", 0.0)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_OVERALL"),
+					(overall + 1.0) / 2.0, Color(1.0, 1.0, 1.0),
+					"%+.2f" % overall)
+			else:
+				draw_string(font, Vector2(cx + 10, cy + 12),
+					Locale.ltr("REP_SOURCE_NONE"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"),
+					Color(0.5, 0.5, 0.5))
+				cy += 16.0
+			cy += 4.0
+
+	# ── Economic Tendencies ──
+	if entity.is_alive and not entity.economic_tendencies.is_empty():
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_ECONOMIC_TENDENCIES"), "economic_tendencies")
+		if not _section_collapsed.get("economic_tendencies", true):
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_SAVING"),
+				entity.economic_tendencies.get("saving", 0.5), Color(0.3, 0.7, 0.5))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_RISK"),
+				entity.economic_tendencies.get("risk", 0.5), Color(0.9, 0.5, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_GENEROSITY"),
+				entity.economic_tendencies.get("generosity", 0.5), Color(0.4, 0.85, 0.7))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_MATERIALISM"),
+				entity.economic_tendencies.get("materialism", 0.5), Color(0.85, 0.65, 0.2))
+			cy += 4.0
+
+	# ── Social Status ──
+	if entity.is_alive:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SOCIAL_STATUS"), "social_status")
+		if not _section_collapsed.get("social_status", false):
+			var tier_key: String = "REP_TIER_" + entity.status_tier.to_upper()
+			var tier_label: String = Locale.ltr("STATUS_LABEL") + ": " + Locale.ltr(tier_key)
+			var tier_color: Color = Color(0.7, 0.7, 0.7)
+			match entity.status_tier:
+				"elite": tier_color = Color(1.0, 0.85, 0.2)
+				"respected": tier_color = Color(0.5, 0.9, 0.5)
+				"common": tier_color = Color(0.7, 0.7, 0.7)
+				"marginal": tier_color = Color(0.9, 0.6, 0.3)
+				"outcast": tier_color = Color(0.9, 0.3, 0.3)
+			draw_string(font, Vector2(cx + 10, cy + 12), tier_label,
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tier_color)
+			cy += 18.0
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_STATUS_TIER_LABEL"),
+				(entity.status_score + 1.0) / 2.0, tier_color,
+				"%+.2f" % entity.status_score)
+			var wealth_key: String = ""
+			if entity.wealth_norm < 0.15:
+				wealth_key = "WEALTH_DESTITUTE"
+			elif entity.wealth_norm < 0.35:
+				wealth_key = "WEALTH_STRUGGLING"
+			elif entity.wealth_norm < 0.55:
+				wealth_key = "WEALTH_COMFORTABLE"
+			elif entity.wealth_norm < 0.80:
+				wealth_key = "WEALTH_WELL_OFF"
+			else:
+				wealth_key = "WEALTH_WEALTHY"
+			var wealth_color: Color = Color(0.7, 0.7, 0.7)
+			if entity.wealth_norm < 0.15:
+				wealth_color = Color(0.9, 0.3, 0.3)
+			elif entity.wealth_norm > 0.55:
+				wealth_color = Color(1.0, 0.85, 0.2)
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_WEALTH_LABEL"),
+				entity.wealth_norm, wealth_color,
+				Locale.ltr(wealth_key))
+			if entity.job != "none":
+				var sat: float = entity.job_satisfaction
+				var sat_color: Color = Color(0.5, 0.8, 0.5)
+				if sat < 0.25:
+					sat_color = Color(0.9, 0.3, 0.3)
+				elif sat < 0.40:
+					sat_color = Color(0.9, 0.6, 0.3)
+				elif sat > 0.70:
+					sat_color = Color(0.3, 0.9, 0.5)
+				var sat_key: String = ""
+				if sat > 0.70: sat_key = "JOB_SAT_HIGH"
+				elif sat > 0.40: sat_key = "JOB_SAT_MED"
+				elif sat > 0.25: sat_key = "JOB_SAT_LOW"
+				else: sat_key = "JOB_SAT_CRITICAL"
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_JOB_SAT_LABEL"),
+					sat, sat_color,
+					Locale.ltr(sat_key))
+			cy += 4.0
 
 	# ── Stats ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATS_SECTION"), "stats")

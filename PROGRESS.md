@@ -1,3 +1,42 @@
+## Layer 4.5+4.7 UI Integration — t-UI47 — 2026-02-24
+
+### Context
+Layer 4.5+4.7 backend (reputation, economic tendencies, job satisfaction, stratification) is running but invisible in entity_detail_panel. Add 3 collapsible sections: Reputation (settlement avg), Economic Tendencies (4 bars), Social Status (tier + wealth + job satisfaction). Wire reputation_manager through init chain.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UI47-01 | main.gd wiring | 🔴 DIRECT | — | integration wiring <10 LOC |
+| t-UI47-02 | hud.gd wiring | 🔴 DIRECT | — | integration wiring <10 LOC |
+| t-UI47-03 | entity_detail_panel.gd sections | 🟢 DISPATCH | ask_codex | bulk drawing code ~120 LOC |
+| t-UI47-04 | Localization keys (en+ko) | 🟢 DISPATCH | ask_codex | 4 JSON file edits |
+
+### Dispatch ratio: 2/4 = 50% — T1+T2 are trivial wiring (<10 LOC each)
+
+### Dispatch strategy
+Sequential: T1+T2 DIRECT first (wiring), then T3+T4 DISPATCH parallel (no file overlap).
+Dispatch tool: codex_dispatch.sh (both T3 and T4)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | UI Integration | added | Sub-page: 📊 UI Integration (Entity Detail Panel) — 3 sections, reputation_manager wiring, 9 locale keys |
+| 📝 변경 로그 | — | added | 2026-02-24 Layer 4.5+4.7 UI Integration — entity_detail_panel에 평판/경제성향/사회적지위 3개 섹션 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_REPUTATION, UI_REPUTATION_SETTLEMENT_AVG, UI_ECONOMIC_TENDENCIES, UI_SOCIAL_STATUS, ECON_WEALTH_LABEL, ECON_STATUS_TIER_LABEL, ECON_JOB_SAT_LABEL (7 keys in en+ko)
+- ko/ updated: YES
+
+### Results
+- Gate: PENDING (pre-push)
+- Dispatch ratio: 2/4 = 50% (T1+T2 trivial wiring)
+- Files changed: 8 (main.gd, hud.gd, entity_detail_panel.gd, en/ui.json, ko/ui.json, en/economy.json, ko/economy.json, PROGRESS.md)
+- Dispatch tool used: codex_dispatch.sh (2 tickets)
+- Notion pages updated: 평판 & 경제 시스템 (sub-page added), 변경 로그 (entry added)
+
+---
+
 ## Leader UI — t-LUI-01/02/03 — 2026-02-24
 
 ### Context

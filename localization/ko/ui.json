@@ -895,5 +895,9 @@
   "UI_INTELLIGENCE": "인지/지능",
   "UI_INTEL_NONE": "지능 데이터 없음",
   "UI_INTEL_GENERAL": "일반 지능",
-  "UI_INTEL_POTENTIAL": "잠재력"
+  "UI_INTEL_POTENTIAL": "잠재력",
+  "UI_REPUTATION": "평판",
+  "UI_REPUTATION_SETTLEMENT_AVG": "정착지 평균",
+  "UI_ECONOMIC_TENDENCIES": "경제 성향",
+  "UI_SOCIAL_STATUS": "사회적 지위"
 }

@@ -18,5 +18,8 @@
   "STRAT_TRANSITIONAL": "Transitional",
   "STRAT_STRATIFIED": "Stratified",
   "GINI_LABEL": "Wealth Inequality (Gini)",
-  "LEVELING_LABEL": "Leveling Effectiveness"
+  "LEVELING_LABEL": "Leveling Effectiveness",
+  "ECON_WEALTH_LABEL": "Wealth",
+  "ECON_STATUS_TIER_LABEL": "Social Standing",
+  "ECON_JOB_SAT_LABEL": "Job Satisfaction"
 }

@@ -18,5 +18,8 @@
   "STRAT_TRANSITIONAL": "전환기",
   "STRAT_STRATIFIED": "계층 사회",
   "GINI_LABEL": "부의 불평등 (지니)",
-  "LEVELING_LABEL": "평준화 효과"
+  "LEVELING_LABEL": "평준화 효과",
+  "ECON_WEALTH_LABEL": "부",
+  "ECON_STATUS_TIER_LABEL": "사회적 위치",
+  "ECON_JOB_SAT_LABEL": "직업 만족도"
 }

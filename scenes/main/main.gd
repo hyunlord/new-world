@@ -331,7 +331,7 @@ func _ready() -> void:
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)
 	building_renderer.init(building_manager, settlement_manager)
-	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
 	pause_menu = PauseMenuClass.new()
 	pause_menu.set_save_manager(save_manager)
 	pause_menu.save_requested.connect(_save_game_slot)
