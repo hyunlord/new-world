@@ -1,3 +1,33 @@
+## Leader UI — t-LUI-01/02/03 — 2026-02-24
+
+### Context
+LeaderSystem이 settlement.leader_id에 리더를 저장하지만 인게임에서 확인할 방법이 없음.
+에이전트 패널에 리더 배지 [지도자] (금색) 추가, 통계 상세 패널 정착지 섹션에 리더 이름 라인 추가.
+UI_LEADER / UI_NO_LEADER 키는 이미 en/ko 모두 존재.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-LUI-01 | entity_detail_panel.gd — _settlement_manager field + init + leader badge | 🔴 DIRECT | — | Codex MCP 파일 미작성 패턴으로 DIRECT |
+| t-LUI-02 | hud.gd — pass _settlement_manager (1 line) | 🔴 DIRECT | — | integration wiring <50 lines |
+| t-LUI-03 | stats_detail_panel.gd — leader line in settlements loop | 🔴 DIRECT | — | Codex MCP 파일 미작성 패턴으로 DIRECT |
+
+### Dispatch ratio: 0/3 = 0% (exception: Codex MCP proven not to write to disk — all t-LS/t-LF batches confirmed)
+
+### Dispatch strategy
+All DIRECT. Codex MCP dispatches have produced 0 file writes across all prior batches in this session.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 👑 리더 시스템 (LeaderSystem) | 향후 계획 | modified | "리더십 UI 구현됨"으로 업데이트 |
+| 📝 변경 로그 | — | added | 2026-02-24 Leader UI t-LUI batch |
+
+### Localization Verification
+- Hardcoded scan: PASS (Locale.ltr("UI_LEADER") / Locale.ltr("UI_NO_LEADER") 사용)
+- New keys added: none (UI_LEADER, UI_NO_LEADER 이미 존재)
+- ko/ updated: N/A
+
 ## LeaderSystem Bug Fix — t-LF-01 — 2026-02-24
 
 ### Context
@@ -27,6 +57,13 @@ DIRECT only. t-LF-01은 단일 파일의 함수 1개 재작성. Codex MCP가 t-L
 - Hardcoded scan: PASS (변경 없음 — leader_system.gd에 Locale 호출 없음)
 - New keys added: none
 - ko/ updated: N/A
+
+### Results
+- Gate: PASS ([gate] PASS — 32 systems)
+- Dispatch ratio: 0/1 = 0% (exception: Codex MCP 파일 미작성 패턴으로 면제, DIRECT 사용)
+- Files changed: 2 (leader_system.gd, PROGRESS.md)
+- Commit: 2e96b13 — PR #101 merged
+- Notion pages updated: 👑 리더 시스템 (선출 로직 수정 + 개발 히스토리 신규 행), 📝 변경 로그 (신규 항목)
 
 # Progress Log
 

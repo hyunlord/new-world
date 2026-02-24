@@ -174,7 +174,7 @@ func _build_minimap_and_stats() -> void:
 
 	if _entity_manager != null:
 		_entity_detail_panel = EntityDetailPanelClass.new()
-		_entity_detail_panel.init(_entity_manager, _building_manager, _relationship_manager)
+		_entity_detail_panel.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
 
 	if _building_manager != null:
