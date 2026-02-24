@@ -194,11 +194,11 @@ func _sync_intelligences(entity: RefCounted) -> void:
 
 
 func _sync_economic(entity: RefCounted) -> void:
-	## Economic tendencies: float 0~1 → int 0~1000
-	StatQuery.set_value(entity, &"ECON_SAVING", int(entity.economic_tendencies.get("saving", 0.5) * 1000), 0)
-	StatQuery.set_value(entity, &"ECON_RISK", int(entity.economic_tendencies.get("risk", 0.5) * 1000), 0)
-	StatQuery.set_value(entity, &"ECON_GENEROSITY", int(entity.economic_tendencies.get("generosity", 0.5) * 1000), 0)
-	StatQuery.set_value(entity, &"ECON_MATERIALISM", int(entity.economic_tendencies.get("materialism", 0.5) * 1000), 0)
+	## Economic tendencies: float -1~+1 → int -1000~+1000
+	StatQuery.set_value(entity, &"ECON_SAVING", int(entity.economic_tendencies.get("saving", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_RISK", int(entity.economic_tendencies.get("risk", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_GENEROSITY", int(entity.economic_tendencies.get("generosity", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_MATERIALISM", int(entity.economic_tendencies.get("materialism", 0.0) * 1000), 0)
 	## Job satisfaction & wealth & status
 	StatQuery.set_value(entity, &"JOB_SATISFACTION", int(entity.job_satisfaction * 1000), 0)
 	StatQuery.set_value(entity, &"WEALTH_NORM", int(entity.wealth_norm * 1000), 0)

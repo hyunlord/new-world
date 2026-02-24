@@ -172,12 +172,12 @@ var wealth_score: float = 0.0
 ## Wealth norm [0.0, 1.0] relative to settlement P90
 var wealth_norm: float = 0.0
 
-## [Ashton & Lee 2007] Economic tendencies [0.0, 1.0]
+## [Ashton & Lee 2007] Economic tendencies [-1.0, +1.0]
 var economic_tendencies: Dictionary = {
-	"saving": 0.5,
-	"risk": 0.5,
-	"generosity": 0.5,
-	"materialism": 0.5,
+	"saving": 0.0,
+	"risk": 0.0,
+	"generosity": 0.0,
+	"materialism": 0.0,
 }
 
 ## Pathfinding cache (runtime only, not serialized)
@@ -422,10 +422,10 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.wealth_norm = data.get("wealth_norm", 0.0)
 	var et_data = data.get("economic_tendencies", {})
 	e.economic_tendencies = {
-		"saving": et_data.get("saving", 0.5),
-		"risk": et_data.get("risk", 0.5),
-		"generosity": et_data.get("generosity", 0.5),
-		"materialism": et_data.get("materialism", 0.5),
+		"saving": et_data.get("saving", 0.0),
+		"risk": et_data.get("risk", 0.0),
+		"generosity": et_data.get("generosity", 0.0),
+		"materialism": et_data.get("materialism", 0.0),
 	}
 	return e
 

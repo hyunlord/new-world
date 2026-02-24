@@ -1,3 +1,40 @@
+## Bipolar Scale Fix — t-BP batch — 2026-02-24
+
+### Context
+Reputation 5 dimensions and economic tendency 4 types were displayed as 0~100% unipolar bars. They should be -1.0~+1.0 bipolar center-origin bars per psychometric standards (Osgood et al., 1957).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-BP-01 | entity_data + stat_sync defaults 0.5→0.0 | 🟢 DISPATCH | ask_codex | standalone defaults change |
+| t-BP-02 | economic_tendency_system bipolar normalization | 🟢 DISPATCH | ask_codex | single system formula change |
+| t-BP-03 | entity_detail_panel bipolar bar + replacements | 🟢 DISPATCH | ask_codex | single UI file change |
+| t-BP-04 | Verification + gate + Notion | 🔴 DIRECT | — | integration verification |
+
+### Dispatch ratio: 3/4 = 75% ✓
+
+### Dispatch strategy
+Parallel — all 3 Codex tickets dispatched simultaneously (no file overlap).
+BP-01 timed out due to model fallbacks; changes applied directly from spec.
+BP-02 and BP-03 completed by Codex but lost in git stash conflict; re-applied manually from Codex output.
+
+### Notion Update
+⚠️ PENDING — will update after gate pass.
+
+### Localization Verification
+- Hardcoded scan: PASS (no new UI text; all labels use Locale.ltr())
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PENDING
+- Dispatch ratio: 3/4 = 75%
+- Files changed: 4 (entity_data.gd, stat_sync_system.gd, economic_tendency_system.gd, entity_detail_panel.gd)
+- Dispatch tool used: ask_codex (3 tickets)
+- Notion pages updated: PENDING
+
+---
+
 ## Deceased Entity Click Crash — t-DEAD-UI — 2026-02-24
 
 ### Context

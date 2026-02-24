@@ -1435,20 +1435,18 @@ func _draw() -> void:
 					Color(0.6, 0.6, 0.6))
 				cy += 15.0
 				var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_MORALITY"),
-					(avg_rep.get("morality", 0.0) + 1.0) / 2.0, Color(0.4, 0.8, 0.6))
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_SOCIABILITY"),
-					(avg_rep.get("sociability", 0.0) + 1.0) / 2.0, Color(0.5, 0.7, 0.9))
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_COMPETENCE"),
-					(avg_rep.get("competence", 0.0) + 1.0) / 2.0, Color(0.9, 0.75, 0.3))
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_DOMINANCE"),
-					(avg_rep.get("dominance", 0.0) + 1.0) / 2.0, Color(0.8, 0.4, 0.4))
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_GENEROSITY"),
-					(avg_rep.get("generosity", 0.0) + 1.0) / 2.0, Color(0.3, 0.9, 0.7))
-				var overall: float = avg_rep.get("overall", 0.0)
-				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_OVERALL"),
-					(overall + 1.0) / 2.0, Color(1.0, 1.0, 1.0),
-					"%+.2f" % overall)
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_MORALITY"),
+					avg_rep.get("morality", 0.0), Color(0.4, 0.8, 0.6))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_SOCIABILITY"),
+					avg_rep.get("sociability", 0.0), Color(0.5, 0.7, 0.9))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_COMPETENCE"),
+					avg_rep.get("competence", 0.0), Color(0.9, 0.75, 0.3))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_DOMINANCE"),
+					avg_rep.get("dominance", 0.0), Color(0.8, 0.4, 0.4))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_GENEROSITY"),
+					avg_rep.get("generosity", 0.0), Color(0.3, 0.9, 0.7))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_OVERALL"),
+					avg_rep.get("overall", 0.0), Color(1.0, 1.0, 1.0))
 			else:
 				draw_string(font, Vector2(cx + 10, cy + 12),
 					Locale.ltr("REP_SOURCE_NONE"),
@@ -1461,14 +1459,14 @@ func _draw() -> void:
 	if entity.is_alive and not entity.economic_tendencies.is_empty():
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_ECONOMIC_TENDENCIES"), "economic_tendencies")
 		if not _section_collapsed.get("economic_tendencies", true):
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_SAVING"),
-				entity.economic_tendencies.get("saving", 0.5), Color(0.3, 0.7, 0.5))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_RISK"),
-				entity.economic_tendencies.get("risk", 0.5), Color(0.9, 0.5, 0.3))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_GENEROSITY"),
-				entity.economic_tendencies.get("generosity", 0.5), Color(0.4, 0.85, 0.7))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_MATERIALISM"),
-				entity.economic_tendencies.get("materialism", 0.5), Color(0.85, 0.65, 0.2))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_SAVING"),
+				entity.economic_tendencies.get("saving", 0.0), Color(0.3, 0.7, 0.5))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_RISK"),
+				entity.economic_tendencies.get("risk", 0.0), Color(0.9, 0.5, 0.3))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_GENEROSITY"),
+				entity.economic_tendencies.get("generosity", 0.0), Color(0.4, 0.85, 0.7))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_MATERIALISM"),
+				entity.economic_tendencies.get("materialism", 0.0), Color(0.85, 0.65, 0.2))
 			cy += 4.0
 
 	# ── Social Status ──
@@ -1672,6 +1670,40 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+
+## Draw a center-origin bipolar bar for values in [-1.0, +1.0].
+## Positive extends right (color_pos), negative extends left (color_neg).
+## Osgood et al. (1957) Semantic Differential — bipolar scales standard for attitudes/tendencies.
+func _draw_bipolar_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color_pos: Color, color_neg: Color = Color(0.8, 0.3, 0.3)) -> float:
+	var label_w: float = 130.0
+	var val_w: float = 55.0
+	var bar_gap: float = 4.0
+	var bar_h: float = 10.0
+	draw_string(font, Vector2(x, y + 11), label, HORIZONTAL_ALIGNMENT_LEFT, int(label_w), GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+	var bar_x: float = x + label_w + bar_gap
+	var bar_w: float = maxf(w - label_w - val_w - bar_gap * 2, 20.0)
+	var center_x: float = bar_x + bar_w * 0.5
+	# Background
+	draw_rect(Rect2(bar_x, y + 2, bar_w, bar_h), Color(0.15, 0.15, 0.15, 0.8))
+	# Center line (zero reference)
+	draw_rect(Rect2(center_x - 0.5, y + 1, 1.0, bar_h + 2), Color(0.4, 0.4, 0.4, 0.7))
+	var clamped: float = clampf(value, -1.0, 1.0)
+	if absf(clamped) > 0.01:
+		var half_w: float = absf(clamped) * 0.5 * bar_w
+		if clamped > 0.0:
+			var intensity: float = clampf(clamped, 0.0, 1.0)
+			var bar_color: Color = Color(color_pos.r * (0.6 + intensity * 0.4), color_pos.g * (0.6 + intensity * 0.4), color_pos.b * (0.6 + intensity * 0.4), 0.85)
+			draw_rect(Rect2(center_x, y + 2, half_w, bar_h), bar_color)
+		else:
+			var intensity: float = clampf(absf(clamped), 0.0, 1.0)
+			var bar_color: Color = Color(color_neg.r * (0.6 + intensity * 0.4), color_neg.g * (0.6 + intensity * 0.4), color_neg.b * (0.6 + intensity * 0.4), 0.85)
+			draw_rect(Rect2(center_x - half_w, y + 2, half_w, bar_h), bar_color)
+	var val_x: float = bar_x + bar_w + bar_gap
+	var display_text: String = "%+.2f" % clamped
+	draw_string(font, Vector2(val_x, y + 11), display_text, HORIZONTAL_ALIGNMENT_RIGHT, int(val_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+	return y + 16.0
+
 
 ## Return localization key for skill level descriptor label.
 func _get_skill_descriptor_key(level: int) -> String:

@@ -24,7 +24,7 @@ func execute_tick(_tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
-		# Skip children — keep default 0.5
+		# Skip children — keep default 0.0
 		if entity.age_stage == "child" or entity.age_stage == "infant":
 			continue
 		_compute_tendencies(entity)
@@ -44,74 +44,74 @@ func _compute_tendencies(entity: RefCounted) -> void:
 	# [Modigliani 1966] age_factor: sigmoid (0 at youth, 1 at mature)
 	var age_factor: float = 1.0 / (1.0 + exp(-(age_years - 22.0) / 10.0))
 
-	# Value helper: convert -1..+1 to 0..1
+	# Values are already bipolar [-1, +1]
 	var values: Dictionary = entity.values
 
 	# --- SAVING [Frederick 2002, Ashton & Lee 2007] ---
 	entity.economic_tendencies["saving"] = clampf(
-		C * 0.40
-		+ _v01(values, "SELF_CONTROL") * 0.20
-		+ E_val * 0.15
-		+ age_factor * 0.10
-		+ _v01(values, "LAW") * 0.10
-		+ (1.0 - _v01(values, "COMMERCE")) * 0.05,
-		0.0, 1.0)
+		_bipolar(C) * 0.40
+		+ float(values.get("SELF_CONTROL", 0.0)) * 0.20
+		+ _bipolar(E_val) * 0.15
+		+ _bipolar(age_factor) * 0.10
+		+ float(values.get("LAW", 0.0)) * 0.10
+		+ (-float(values.get("COMMERCE", 0.0))) * 0.05,
+		-1.0, 1.0)
 
 	# --- RISK [Kahneman & Tversky 1979, Dohmen 2011] ---
 	var risk_val: float = clampf(
-		(1.0 - E_val) * 0.25
-		+ X * 0.20
-		+ (1.0 - C) * 0.20
-		+ O * 0.15
-		+ _v01(values, "COMPETITION") * 0.10
-		+ _v01(values, "MARTIAL_PROWESS") * 0.05
-		+ (1.0 - age_factor) * 0.05,
-		0.0, 1.0)
-	# Sex difference: male +0.03 [Byrnes 1999]
+		-_bipolar(E_val) * 0.25
+		+ _bipolar(X) * 0.20
+		+ -_bipolar(C) * 0.20
+		+ _bipolar(O) * 0.15
+		+ float(values.get("COMPETITION", 0.0)) * 0.10
+		+ float(values.get("MARTIAL_PROWESS", 0.0)) * 0.05
+		+ -_bipolar(age_factor) * 0.05,
+		-1.0, 1.0)
+	# Sex difference: male +0.06 [Byrnes 1999]
 	if entity.gender == "male":
-		risk_val = clampf(risk_val + 0.03, 0.0, 1.0)
+		risk_val = clampf(risk_val + 0.06, -1.0, 1.0)
 	entity.economic_tendencies["risk"] = risk_val
 
 	# --- GENEROSITY [Engel 2011, Piff 2010] ---
-	var belonging_sat: float = entity.belonging
-	var culture_gen: float = 0.5
+	var culture_gen: float = 0.0
 	var settlement = _get_settlement(entity)
 	if settlement != null and settlement.shared_values.has("SACRIFICE"):
-		culture_gen = (float(settlement.shared_values["SACRIFICE"]) + 1.0) / 2.0
+		culture_gen = float(settlement.shared_values["SACRIFICE"])
 
 	var gen_val: float = clampf(
-		H * 0.25
-		+ A * 0.20
-		+ _v01(values, "SACRIFICE") * 0.20
-		+ _v01(values, "COOPERATION") * 0.15
-		+ belonging_sat * 0.10
-		+ _v01(values, "FAMILY") * 0.05
+		_bipolar(H) * 0.25
+		+ _bipolar(A) * 0.20
+		+ float(values.get("SACRIFICE", 0.0)) * 0.20
+		+ float(values.get("COOPERATION", 0.0)) * 0.15
+		+ _bipolar(entity.belonging) * 0.10
+		+ float(values.get("FAMILY", 0.0)) * 0.05
 		+ culture_gen * 0.05,
-		0.0, 1.0)
+		-1.0, 1.0)
 	# [Piff 2010] Wealth→generosity feedback
 	if entity.wealth_norm > 0.80:
 		gen_val *= GameConfig.ECON_WEALTH_GENEROSITY_PENALTY
 	entity.economic_tendencies["generosity"] = gen_val
 
 	# --- MATERIALISM [Kasser & Ryan 1993, Dittmar 2014] ---
-	var culture_mat: float = 0.5
+	var culture_mat: float = 0.0
 	if settlement != null and settlement.shared_values.has("COMMERCE"):
-		culture_mat = (float(settlement.shared_values["COMMERCE"]) + 1.0) / 2.0
+		culture_mat = float(settlement.shared_values["COMMERCE"])
 
 	entity.economic_tendencies["materialism"] = clampf(
-		(1.0 - H) * 0.30
-		+ _v01(values, "COMMERCE") * 0.20
-		+ _v01(values, "POWER") * 0.15
-		+ (1.0 - _v01(values, "FAIRNESS")) * 0.10
-		+ entity.wealth_norm * 0.10
-		+ _v01(values, "COMPETITION") * 0.10
+		-_bipolar(H) * 0.30
+		+ float(values.get("COMMERCE", 0.0)) * 0.20
+		+ float(values.get("POWER", 0.0)) * 0.15
+		+ -float(values.get("FAIRNESS", 0.0)) * 0.10
+		+ _bipolar(entity.wealth_norm) * 0.10
+		+ float(values.get("COMPETITION", 0.0)) * 0.10
 		+ culture_mat * 0.05,
-		0.0, 1.0)
+		-1.0, 1.0)
 
 
-## Convert value from [-1, +1] to [0, 1]
-func _v01(values: Dictionary, key: String) -> float:
-	return (float(values.get(key, 0.0)) + 1.0) / 2.0
+## Convert unipolar [0.0, 1.0] to bipolar [-1.0, +1.0]
+## Osgood et al. (1957) Semantic Differential — bipolar scales are standard for attitudes/tendencies
+func _bipolar(val: float) -> float:
+	return (val - 0.5) * 2.0
 
 
 ## Get settlement for entity
