@@ -28,6 +28,15 @@ All DIRECT. Codex MCP dispatches have produced 0 file writes across all prior ba
 - New keys added: none (UI_LEADER, UI_NO_LEADER 이미 존재)
 - ko/ updated: N/A
 
+### Results
+- Gate: PASS ([gate] PASS — 32 systems)
+- PR: #102 — merged to main
+- Dispatch ratio: 0/3 = 0% (exception: Codex MCP proven not to write to disk)
+- Files changed: 4 (entity_detail_panel.gd, hud.gd, stats_detail_panel.gd, PROGRESS.md)
+- Commit: fc19a22 — PR #102 merged
+- Dispatch tool used: DIRECT (all — Codex MCP not writing files this session)
+- Notion pages updated: 📝 변경 로그 DB (신규 항목 fc19a22 추가); 👑 리더 시스템 향후 계획 — notion-update-page MCP tool not functional (data-wrapper schema bug); 향후 수동 업데이트 필요
+
 ## LeaderSystem Bug Fix — t-LF-01 — 2026-02-24
 
 ### Context
