@@ -4649,7 +4649,7 @@ Config-first fan-out:
 - ko/ updated: YES (reputation.json, economy.json, events.json — all en/ and ko/ pairs)
 
 ### Results
-- Gate: PENDING
+- Gate: PASS ([gate] PASS — 37 systems, 13 locale categories)
 - Dispatch ratio: 8/10 = 80% ✅
 - Files changed: 24 (12 modified + 12 new)
 - Dispatch tool used: ask_codex (8 tickets), DIRECT (2 tickets: T-INFRA, T-WIRE)
