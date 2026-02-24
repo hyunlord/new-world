@@ -171,7 +171,7 @@ func _compute_social_capital_norm(entity: RefCounted, settlement: RefCounted) ->
 ## Age respect grows linearly from adulthood (18) to peak at ~58,
 ## then stays at max. Reflects traditional societies' elder deference.
 func _compute_age_respect(entity: RefCounted) -> float:
-	var age_years: float = entity.age_days / 365.0
+	var age_years: float = GameConfig.get_age_years(entity.age)
 	return clampf((age_years - 18.0) / 40.0, 0.0, 1.0)
 
 
