@@ -44,6 +44,7 @@ const StatSyncSystem = preload("res://scripts/systems/record/stat_sync_system.gd
 const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold_system.gd")
 const UpperNeedsSystem = preload("res://scripts/systems/psychology/upper_needs_system.gd")
 const LeaderSystem = preload("res://scripts/systems/social/leader_system.gd")
+const IntelligenceSystem = preload("res://scripts/systems/cognition/intelligence_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -93,6 +94,7 @@ var debug_panel = null
 var stat_sync_system: RefCounted
 var stat_threshold_system: RefCounted
 var upper_needs_system: RefCounted
+var intelligence_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -148,6 +150,9 @@ func _ready() -> void:
 
 	stat_threshold_system = StatThresholdSystem.new()
 	stat_threshold_system.init(entity_manager)
+
+	intelligence_system = IntelligenceSystem.new()
+	intelligence_system.init(entity_manager)
 
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -262,6 +267,7 @@ func _ready() -> void:
 	sim_engine.register_system(stat_threshold_system)    # priority 12
 	sim_engine.register_system(upper_needs_system)       # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
+	sim_engine.register_system(intelligence_system)       # priority 18
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28

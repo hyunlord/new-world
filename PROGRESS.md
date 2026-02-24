@@ -4535,3 +4535,46 @@ Direct (after 02): t-LE-06 (integration wiring)
 - Dispatch tool used: DIRECT (all — Codex MCP not available)
 - Notion pages updated: 📝 변경 로그 DB (신규 항목 976cee3 추가); 👑 리더 시스템 페이지 — notion-update-page MCP tool parameter bug (page_id/command not parsed); 개발 히스토리 행 수동 추가 필요
 
+
+---
+
+## Intelligence System — t-INTEL-0~9 — 2026-02-24
+
+### Context
+Gardner 8-MI with CHC g-factor hybrid. Entities get intelligence potentials at birth via
+Cholesky-correlated generation; effective values change over lifespan via Fluid/Crystallized/Physical
+age curves + environment modifiers (nutrition, ACE). Intelligence affects skill learning speed and
+derived stats (Charisma, Wisdom, Creativity, Intimidation).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-INTEL-0 | EntityData fields + GameConfig constants | 🔴 DIRECT | — | shared config, foundation for all others |
+| t-INTEL-1 | IntelligenceGenerator (Cholesky hybrid) | 🔴 DIRECT | — | ask_codex MCP unavailable, codex_dispatch.sh async PRs incompatible with autopilot |
+| t-INTEL-2 | IntelligenceCurves (age modifiers) | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-3 | IntelligenceSystem (tick updater) | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-4 | Skill learning integration | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-5 | Derived stat formula revision | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-6 | Entity creation integration | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-7 | System registration wiring | 🔴 DIRECT | — | integration wiring <50 lines |
+| t-INTEL-8 | UI panel intelligence section | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-9 | Localization keys | 🔴 DIRECT | — | ask_codex MCP unavailable, 4 keys only |
+
+### Dispatch ratio: 0/10 = 0% (exception: ask_codex MCP returned "No matching deferred tools found"; codex_dispatch.sh creates async branch PRs incompatible with autopilot single-branch workflow)
+
+### Dispatch strategy
+All DIRECT. Codex MCP unavailable (ToolSearch returned no results). codex_dispatch.sh uses `codex cloud exec` which creates async PRs on separate branches — incompatible with autopilot workflow on lead/main. Implementing config-first fan-out: TICKET-0 first, then all dependents.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 Intelligence System | — | created | New page: overview, academic foundation, architecture, data structures, constants |
+| 📊 Derived Stats | Formulas | modified | Updated formulas with intelligence inputs |
+| 👤 Entity Data Fields | — | added | 4 new fields: general_intelligence, intelligence_potentials, intel_nutrition_penalty, intel_ace_penalty |
+| Data Definitions DB | — | added | INTEL_* constants registered |
+| Change Log DB | — | added | Intelligence System: Gardner 8-MI with CHC g-factor |
+
+### Localization Verification
+- Hardcoded scan: PENDING
+- New keys added: UI_INTELLIGENCE, UI_INTEL_NONE, UI_INTEL_GENERAL, UI_INTEL_POTENTIAL
+- ko/ updated: YES

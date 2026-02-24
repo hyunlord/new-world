@@ -8,6 +8,7 @@ const PersonalityGeneratorScript = preload("res://scripts/systems/biology/person
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
+const IntelligenceGeneratorScript = preload("res://scripts/systems/cognition/intelligence_generator.gd")
 
 var _entities: Dictionary = {}  # id -> entity
 var _next_id: int = 1
@@ -15,6 +16,7 @@ var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 var _settlement_manager: RefCounted
 var _personality_generator: RefCounted
+var _intelligence_generator: RefCounted
 var chunk_index: RefCounted  # ChunkIndex for O(1) spatial lookups
 var total_deaths: int = 0
 var total_births: int = 0
@@ -27,6 +29,8 @@ func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	chunk_index = ChunkIndex.new()
 	_personality_generator = PersonalityGeneratorScript.new()
 	_personality_generator.init(rng)
+	_intelligence_generator = IntelligenceGeneratorScript.new()
+	_intelligence_generator.init(rng)
 
 
 ## Spawn a new entity at the given position
@@ -51,6 +55,16 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	entity.personality = _personality_generator.generate_personality(entity.gender, "", pa_pd, pb_pd)
 	# Initialize trait salience from personality facets
 	TraitSystem.update_trait_strengths(entity)
+	# ── 지능 초기화 [Gardner 1983 + CHC hybrid] ──────────────────────
+	var intel_result: Dictionary = _intelligence_generator.generate(
+		entity.gender,
+		entity.personality.facets,
+		parent_a,
+		parent_b,
+	)
+	entity.general_intelligence = intel_result["g"]
+	entity.intelligence_potentials = intel_result["potentials"]
+	entity.intelligences = intel_result["effective"]
 	# ── 가치관 초기화 [Schwartz 1992, ValueSystem] ──────────────────
 	var pa_values = parent_a.values if (parent_a != null and not parent_a.values.is_empty()) else null
 	var pb_values = parent_b.values if (parent_b != null and not parent_b.values.is_empty()) else null

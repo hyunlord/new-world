@@ -114,6 +114,7 @@ var _section_collapsed: Dictionary = {
 	"body": false,
 	"recent_actions": false,
 	"life_events": false,
+	"intelligence": false,
 	"skills": false,
 	"values": true,
 }
@@ -846,6 +847,32 @@ func _draw() -> void:
 					var dim_color: Color = Color(color.r * FACET_COLOR_DIM, color.g * FACET_COLOR_DIM, color.b * FACET_COLOR_DIM)
 					cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 		cy += 4.0
+
+	# ── Intelligence (인지/지능) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INTELLIGENCE"), "intelligence")
+	if not _section_collapsed.get("intelligence", false):
+		var intel: Dictionary = entity.intelligences
+		if not intel.is_empty():
+			var _intel_order: Array = [
+				["linguistic",     "UI_INTEL_LINGUISTIC"],
+				["logical",        "UI_INTEL_LOGICAL"],
+				["spatial",        "UI_INTEL_SPATIAL"],
+				["musical",        "UI_INTEL_MUSICAL"],
+				["kinesthetic",    "UI_INTEL_KINESTHETIC"],
+				["interpersonal",  "UI_INTEL_INTERPERSONAL"],
+				["intrapersonal",  "UI_INTEL_INTRAPERSONAL"],
+				["naturalistic",   "UI_INTEL_NATURALISTIC"],
+			]
+			for _ip in _intel_order:
+				var _ik: String = _ip[0]
+				var _il: String = _ip[1]
+				var _iv: float = intel.get(_ik, 0.5)
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr(_il), _iv, Color(0.3, 0.6, 0.9))
+			cy += 4.0
+		else:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_INTEL_NONE"),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+			cy += 16.0
 
 	# ── Derived Stats (파생 스탯) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_DERIVED_STATS"), "derived")

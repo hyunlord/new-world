@@ -122,6 +122,18 @@ var stat_cache: Dictionary = {}
 ## 생성 시 PersonalityGenerator가 채움. 기본값 빈 Dict (미초기화).
 var intelligences: Dictionary = {}
 
+## [CHC / Visser 2006] General intelligence factor (hidden from UI)
+var general_intelligence: float = 0.5
+
+## [Gardner 1983] Genetic potential ceiling per intelligence (set at birth, never changes)
+var intelligence_potentials: Dictionary = {}
+
+## [Georgieff 2007] Accumulated permanent nutrition penalty (0.0 ~ 0.15)
+var intel_nutrition_penalty: float = 0.0
+
+## [Lupien 2009] Permanent ACE cognitive penalty (0.0 ~ 0.15)
+var intel_ace_penalty: float = 0.0
+
 ## Accumulated skill XP — keyed by skill_id StringName (e.g. &"SKILL_FORAGING")
 ## Written by StatQuery.add_xp(). Persisted in save file.
 var skill_xp: Dictionary = {}
@@ -243,6 +255,10 @@ func to_dict() -> Dictionary:
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
 		"intelligences": intelligences.duplicate(),
+		"general_intelligence": general_intelligence,
+		"intelligence_potentials": intelligence_potentials.duplicate(),
+		"intel_nutrition_penalty": intel_nutrition_penalty,
+		"intel_ace_penalty": intel_ace_penalty,
 		"skill_xp": skill_xp.duplicate(),
 		"skill_levels": skill_levels.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
@@ -354,6 +370,12 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		var BodyAttributesScript = load("res://scripts/core/entity/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
 	e.intelligences = data.get("intelligences", {}).duplicate()
+	e.general_intelligence = float(data.get("general_intelligence", 0.5))
+	var raw_potentials: Dictionary = data.get("intelligence_potentials", {})
+	for k in raw_potentials:
+		e.intelligence_potentials[k] = float(raw_potentials[k])
+	e.intel_nutrition_penalty = float(data.get("intel_nutrition_penalty", 0.0))
+	e.intel_ace_penalty = float(data.get("intel_ace_penalty", 0.0))
 	## skill_xp: keys are StringName-compatible strings in JSON, convert back to StringName
 	var raw_xp: Dictionary = data.get("skill_xp", {})
 	for k in raw_xp:

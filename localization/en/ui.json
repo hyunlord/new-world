@@ -891,5 +891,9 @@
   "UI_STAT_NEED_MEANING": "Meaning",
   "UI_DERIVED_UNAVAILABLE": "Derived stats unavailable for deceased",
   "UI_NOTIF_LEADER_ELECTED_FMT": "{name} elected leader of S{sid}",
-  "UI_NOTIF_LEADER_LOST_FMT": "S{sid} lost its leader"
+  "UI_NOTIF_LEADER_LOST_FMT": "S{sid} lost its leader",
+  "UI_INTELLIGENCE": "Intelligence",
+  "UI_INTEL_NONE": "No intelligence data",
+  "UI_INTEL_GENERAL": "General Intelligence",
+  "UI_INTEL_POTENTIAL": "Potential"
 }

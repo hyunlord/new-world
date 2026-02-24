@@ -1,0 +1,46 @@
+{
+	"gathering": {
+		"linguistic": 0.03, "logical": 0.10, "spatial": 0.15, "musical": 0.02,
+		"kinesthetic": 0.20, "interpersonal": 0.05, "intrapersonal": 0.10, "naturalistic": 0.35
+	},
+	"farming": {
+		"linguistic": 0.05, "logical": 0.15, "spatial": 0.10, "musical": 0.02,
+		"kinesthetic": 0.15, "interpersonal": 0.05, "intrapersonal": 0.08, "naturalistic": 0.40
+	},
+	"crafting": {
+		"linguistic": 0.07, "logical": 0.20, "spatial": 0.25, "musical": 0.03,
+		"kinesthetic": 0.25, "interpersonal": 0.02, "intrapersonal": 0.08, "naturalistic": 0.10
+	},
+	"construction": {
+		"linguistic": 0.05, "logical": 0.25, "spatial": 0.30, "musical": 0.02,
+		"kinesthetic": 0.20, "interpersonal": 0.03, "intrapersonal": 0.05, "naturalistic": 0.10
+	},
+	"combat": {
+		"linguistic": 0.03, "logical": 0.15, "spatial": 0.20, "musical": 0.02,
+		"kinesthetic": 0.30, "interpersonal": 0.10, "intrapersonal": 0.15, "naturalistic": 0.05
+	},
+	"social": {
+		"linguistic": 0.25, "logical": 0.10, "spatial": 0.05, "musical": 0.05,
+		"kinesthetic": 0.02, "interpersonal": 0.35, "intrapersonal": 0.15, "naturalistic": 0.03
+	},
+	"knowledge": {
+		"linguistic": 0.25, "logical": 0.30, "spatial": 0.10, "musical": 0.03,
+		"kinesthetic": 0.00, "interpersonal": 0.02, "intrapersonal": 0.20, "naturalistic": 0.10
+	},
+	"art": {
+		"linguistic": 0.15, "logical": 0.05, "spatial": 0.25, "musical": 0.20,
+		"kinesthetic": 0.10, "interpersonal": 0.10, "intrapersonal": 0.10, "naturalistic": 0.05
+	},
+	"leadership": {
+		"linguistic": 0.20, "logical": 0.15, "spatial": 0.10, "musical": 0.10,
+		"kinesthetic": 0.02, "interpersonal": 0.25, "intrapersonal": 0.15, "naturalistic": 0.03
+	},
+	"survival": {
+		"linguistic": 0.03, "logical": 0.10, "spatial": 0.20, "musical": 0.02,
+		"kinesthetic": 0.15, "interpersonal": 0.05, "intrapersonal": 0.15, "naturalistic": 0.30
+	},
+	"animal": {
+		"linguistic": 0.05, "logical": 0.05, "spatial": 0.10, "musical": 0.05,
+		"kinesthetic": 0.20, "interpersonal": 0.15, "intrapersonal": 0.10, "naturalistic": 0.30
+	}
+}

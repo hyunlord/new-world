@@ -97,13 +97,28 @@ func _compute_derived(entity: RefCounted) -> void:
 	var merriment: float = StatQuery.get_normalized(entity, &"VALUE_MERRIMENT")
 	var friendship: float = StatQuery.get_normalized(entity, &"VALUE_FRIENDSHIP")
 	var competition: float = StatQuery.get_normalized(entity, &"VALUE_COMPETITION")
+	var recognition: float = StatQuery.get_normalized(entity, &"NEED_RECOGNITION")
+	## Intelligence inputs [Visser 2006, CHC]
+	var i_ling: float = StatQuery.get_normalized(entity, &"INTEL_LINGUISTIC")
+	var i_log: float = StatQuery.get_normalized(entity, &"INTEL_LOGICAL")
+	var i_spa: float = StatQuery.get_normalized(entity, &"INTEL_SPATIAL")
+	var i_mus: float = StatQuery.get_normalized(entity, &"INTEL_MUSICAL")
+	var i_kin: float = StatQuery.get_normalized(entity, &"INTEL_KINESTHETIC")
+	var i_inter: float = StatQuery.get_normalized(entity, &"INTEL_INTERPERSONAL")
+	var i_intra: float = StatQuery.get_normalized(entity, &"INTEL_INTRAPERSONAL")
+	var i_nat: float = StatQuery.get_normalized(entity, &"INTEL_NATURALISTIC")
 
-	var charisma: float = clampf(X * 0.35 + A * 0.20 + H * 0.15 + joy * 0.15 + (1.0 - E) * 0.15, 0.0, 1.0)
-	var intimidation: float = clampf(str_pot * 0.40 + anger * 0.30 + (1.0 - E) * 0.15 + X * 0.15, 0.0, 1.0)
+	## Charisma [Interpersonal + Linguistic + personality]
+	var charisma: float = clampf(i_inter * 0.16 + i_ling * 0.10 + X * 0.22 + A * 0.16 + H * 0.08 + joy * 0.08 + (1.0 - E) * 0.06 + recognition * 0.04 + merriment * 0.05 + friendship * 0.05, 0.0, 1.0)
+	## Intimidation [Kinesthetic + physical + personality]
+	var intimidation: float = clampf(str_pot * 0.35 + anger * 0.25 + (1.0 - E) * 0.12 + X * 0.12 + i_kin * 0.08 + competition * 0.08, 0.0, 1.0)
 	var allure: float = clampf(charisma * 0.50 + romance * 0.25 + X * 0.25, 0.0, 1.0)
 	var trustworthiness: float = clampf(H * 0.40 + A * 0.30 + truth * 0.30, 0.0, 1.0)
-	var creativity: float = clampf(O * 0.45 + anticipation * 0.20 + artwork * 0.20 + X * 0.15, 0.0, 1.0)
-	var wisdom: float = clampf(C * 0.30 + O * 0.25 + A * 0.20 + knowledge * 0.25, 0.0, 1.0)
+	## Creativity [Spatial + Musical + Openness]
+	var creativity: float = clampf(i_spa * 0.15 + i_mus * 0.10 + i_ling * 0.05 + O * 0.25 + anticipation * 0.15 + artwork * 0.15 + i_intra * 0.05 + X * 0.10, 0.0, 1.0)
+	## Wisdom [Intrapersonal + Logical + age]
+	var age_factor: float = clampf((GameConfig.get_age_years(entity.age) - 25.0) / 35.0, 0.0, 1.0)
+	var wisdom: float = clampf(i_intra * 0.16 + i_log * 0.12 + C * 0.14 + O * 0.10 + A * 0.10 + knowledge * 0.14 + age_factor * 0.12 + i_ling * 0.06 + i_nat * 0.06, 0.0, 1.0)
 	var popularity: float = clampf(charisma * 0.50 + merriment * 0.25 + friendship * 0.25, 0.0, 1.0)
 	var risk_tolerance: float = clampf((1.0 - E) * 0.40 + O * 0.30 + competition * 0.15 + (1.0 - C) * 0.15, 0.0, 1.0)
 
