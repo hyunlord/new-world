@@ -7,6 +7,7 @@ const EntityManagerClass = preload("res://scripts/core/entity/entity_manager.gd"
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _resource_map: RefCounted
+var _settlement_manager: RefCounted = null
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
@@ -61,10 +62,18 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_resource_map = resource_map
+	_settlement_manager = settlement_manager
+
+
+func _is_leader(entity: RefCounted) -> bool:
+	if _settlement_manager == null or entity.settlement_id <= 0:
+		return false
+	var s: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
+	return s != null and s.leader_id == entity.id
 
 
 func _process(_delta: float) -> void:
@@ -170,6 +179,11 @@ func _draw() -> void:
 			# Hunger warning
 			if StatQuery.get_normalized(entity, &"NEED_HUNGER") < HUNGER_WARNING_THRESHOLD:
 				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
+
+			## Leader crown [♛ = Unicode U+265B, locale-exempt symbol]
+			if _is_leader(entity):
+				var crown_font: Font = ThemeDB.fallback_font
+				draw_string(crown_font, pos + Vector2(-3.0, -(size + 10.0)), "\u265B", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.82, 0.1))
 
 			# Selection highlight
 			if entity.id == selected_entity_id:

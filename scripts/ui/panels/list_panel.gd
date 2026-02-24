@@ -284,13 +284,18 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 			var born_days: int = 0
 			if not e.birth_date.is_empty():
 				born_days = GameCalendar.to_julian_day(e.birth_date)
+			var entity_is_leader: bool = false
+			if _settlement_manager != null and e.settlement_id > 0:
+				var s: RefCounted = _settlement_manager.get_settlement(e.settlement_id)
+				if s != null and s.leader_id == e.id:
+					entity_is_leader = true
 			rows.append({
 				"id": e.id, "name": e.entity_name, "age": age_detail.total_days,
 				"age_display": age_short,
 				"born": born_days, "born_display": born_display,
 				"died": 9999999, "died_display": "-",
 				"job": e.job, "status": Locale.tr_id("STATUS", e.current_action), "settlement": e.settlement_id,
-				"hunger": e.hunger, "deceased": false,
+				"hunger": e.hunger, "deceased": false, "is_leader": entity_is_leader,
 			})
 
 	# Add deceased
@@ -327,7 +332,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 					"died": d_died_days, "died_display": d_died_display,
 					"job": r.get("job", ""),
 					"status": Locale.trf("UI_DECEASED_STATUS_FMT", {"cause": cause_loc}), "settlement": r.get("settlement_id", 0),
-					"hunger": 0.0, "deceased": true,
+					"hunger": 0.0, "deceased": true, "is_leader": false,
 				})
 
 	# Sort
@@ -388,11 +393,16 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 			draw_rect(row_rect, Color(0.1, 0.1, 0.1, 0.3))
 
 		col_x = cx + 5
-		# Name (with deceased marker)
+		# Name (with leader crown and/or deceased marker)
 		var display_name: String = row.name
-		if is_deceased:
+		var name_color: Color = text_color if not is_deceased else Color(0.6, 0.4, 0.4)
+		if row.get("is_leader", false):
+			display_name = "\u265B " + display_name
+			if not is_deceased:
+				name_color = Color(1.0, 0.82, 0.1)
+		elif is_deceased:
 			display_name = "☠ " + display_name
-		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[0]) - 2, fs_small, text_color if not is_deceased else Color(0.6, 0.4, 0.4))
+		draw_string(font, Vector2(col_x, draw_y + 14), display_name, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[0]) - 2, fs_small, name_color)
 		col_x += col_widths[0] + COL_PAD
 
 		# Age (short format)
