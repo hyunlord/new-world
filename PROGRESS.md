@@ -29,7 +29,7 @@ Dispatch tool: codex_dispatch.sh (both T3 and T4)
 - ko/ updated: YES
 
 ### Results
-- Gate: PENDING (pre-push)
+- Gate: PASS (66820ce)
 - Dispatch ratio: 2/4 = 50% (T1+T2 trivial wiring)
 - Files changed: 8 (main.gd, hud.gd, entity_detail_panel.gd, en/ui.json, ko/ui.json, en/economy.json, ko/economy.json, PROGRESS.md)
 - Dispatch tool used: codex_dispatch.sh (2 tickets)
