@@ -4595,8 +4595,9 @@ Note: `notion-update-page` MCP tool has schema mismatch (expects flat params but
 - Deprecated tr_data() scan: not found in scope
 
 ### Results
-- Gate: PENDING
-- Commit: fab6c08
+- Gate: PASS ([gate] PASS — 33 systems, 20 entities spawned, no runtime errors)
+- Commit: fab6c08 (code) + 5c87e1d (PROGRESS.md)
 - Files changed: 14 (10 modified + 4 new)
-- Dispatch ratio: 0/10 (Codex MCP unavailable)
-- Notion: Change Log ✅, Page updates ⚠️ (MCP broken)
+- Dispatch ratio: 0/10 (Codex MCP unavailable — ToolSearch returned no results)
+- Dispatch tool used: DIRECT (all — ask_codex MCP not discoverable, codex_dispatch.sh async PRs incompatible)
+- Notion pages updated: 📝 변경 로그 DB (신규 항목 ✅), 🧬 신체·인지·종족 설계 + DERIVED_STAT (⚠️ notion-update-page MCP broken)
