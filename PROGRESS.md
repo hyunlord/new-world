@@ -1,3 +1,34 @@
+## Deceased Entity Click Crash — t-DEAD-UI — 2026-02-24
+
+### Context
+Clicking a dead entity crashes: "Invalid access to property or key 'intelligences' on DeceasedEntityProxy". DeceasedEntityProxy lacks `intelligences` and `emotions` properties. Added `entity.is_alive` guard to intelligence section and `is_alive + "emotions" in entity` guard to emotions legacy fallback.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-DEAD-UI | Guard intelligence+emotions for deceased | 🔴 DIRECT | — | single-file guard fix |
+
+### Dispatch ratio: 0/1 = 0% — trivial single-file fix
+
+### Dispatch strategy
+Single DIRECT ticket.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 📝 변경 로그 | — | added | 2026-02-24 Deceased entity click crash — is_alive guard on intelligence + emotions fallback |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS (0a2ada9)
+- Files changed: 1 (entity_detail_panel.gd)
+
+---
+
 ## Reputation Tuning Fix — t-REP-TUNE — 2026-02-24
 
 ### Context
