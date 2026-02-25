@@ -33,6 +33,49 @@ When working on this project:
 
 ---
 
+## Kanban Board Integration
+
+### 규칙: 모든 작업은 칸반에 등록한다
+
+칸반 서버: `http://localhost:8800` (Docker: `docker compose -f tools/kanban/docker-compose.yml up -d`)
+
+1. **프롬프트 시작 시** — 배치(Batch)를 생성한다:
+   ```bash
+   source tools/kanban/scripts/kanban_helpers.sh
+   BATCH_ID=$(kanban_create_batch "프롬프트 제목" "prompt-filename.md")
+   ```
+
+2. **DISPATCH 티켓 생성 시** — 칸반에 등록한다:
+   ```bash
+   TICKET_ID=$(kanban_create_ticket "티켓 제목" "$BATCH_ID" "codex" 1 "시스템명" "high")
+   ```
+   → Codex 프롬프트에 환경변수로 전달: `BATCH_ID=... TICKET_NUMBER=... bash tools/codex_dispatch.sh tickets/t-XXX.md`
+
+3. **DIRECT 작업 시작 시** — 티켓 생성 + 즉시 in_progress:
+   ```bash
+   TICKET_ID=$(kanban_direct_start "DIRECT: 통합 와이어링" "$BATCH_ID" 8 "시스템명")
+   ```
+
+4. **DIRECT 작업 완료 시** — 상태 업데이트:
+   ```bash
+   kanban_direct_done "$TICKET_ID"
+   # 실패 시: kanban_direct_fail "$TICKET_ID" "에러 메시지"
+   ```
+
+5. **Codex에 전달하는 프롬프트에 반드시 포함:**
+   ```
+   작업 시작 시: source tools/kanban/scripts/kanban_helpers.sh && kanban_start "{TICKET_ID}" "{AGENT_NAME}"
+   로그 전송:   kanban_log "{TICKET_ID}" "info" "작업 내용"
+   완료 시:     kanban_done "{TICKET_ID}"
+   실패 시:     kanban_fail "{TICKET_ID}" "에러 메시지"
+   ```
+
+### 칸반 서버가 꺼져 있어도 작업은 중단하지 않는다
+- curl에 `-sf` 플래그를 사용하므로, 칸반 서버가 없어도 에러 무시하고 작업 계속 진행
+- 칸반은 모니터링 도구이지 작업 의존성이 아님
+
+---
+
 ## Behavioral Guidelines
 
 Derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876). **Bias toward caution over speed.**
@@ -457,46 +500,3 @@ Architecture, integration, refactors, data model boundaries, shared interface ow
 codex_dispatch.sh는 GDScript/Godot 전용이다.
 GDScript 이외의 언어(Python, JavaScript, Rust 등)로 된 프로젝트는
 codex_dispatch.sh를 사용하지 말고 ask_codex로 직접 dispatch한다.
-
----
-
-## Kanban Board Integration
-
-### 규칙: 모든 작업은 칸반에 등록한다
-
-칸반 서버: `http://localhost:8800` (Docker: `docker compose -f tools/kanban/docker-compose.yml up -d`)
-
-1. **프롬프트 시작 시** — 배치(Batch)를 생성한다:
-   ```bash
-   source tools/kanban/scripts/kanban_helpers.sh
-   BATCH_ID=$(kanban_create_batch "프롬프트 제목" "prompt-filename.md")
-   ```
-
-2. **DISPATCH 티켓 생성 시** — 칸반에 등록한다:
-   ```bash
-   TICKET_ID=$(kanban_create_ticket "티켓 제목" "$BATCH_ID" "codex" 1 "시스템명" "high")
-   ```
-   → Codex 프롬프트에 환경변수로 전달: `BATCH_ID=... TICKET_NUMBER=... bash tools/codex_dispatch.sh tickets/t-XXX.md`
-
-3. **DIRECT 작업 시작 시** — 티켓 생성 + 즉시 in_progress:
-   ```bash
-   TICKET_ID=$(kanban_direct_start "DIRECT: 통합 와이어링" "$BATCH_ID" 8 "시스템명")
-   ```
-
-4. **DIRECT 작업 완료 시** — 상태 업데이트:
-   ```bash
-   kanban_direct_done "$TICKET_ID"
-   # 실패 시: kanban_direct_fail "$TICKET_ID" "에러 메시지"
-   ```
-
-5. **Codex에 전달하는 프롬프트에 반드시 포함:**
-   ```
-   작업 시작 시: source tools/kanban/scripts/kanban_helpers.sh && kanban_start "{TICKET_ID}" "{AGENT_NAME}"
-   로그 전송:   kanban_log "{TICKET_ID}" "info" "작업 내용"
-   완료 시:     kanban_done "{TICKET_ID}"
-   실패 시:     kanban_fail "{TICKET_ID}" "에러 메시지"
-   ```
-
-### 칸반 서버가 꺼져 있어도 작업은 중단하지 않는다
-- curl에 `-sf` 플래그를 사용하므로, 칸반 서버가 없어도 에러 무시하고 작업 계속 진행
-- 칸반은 모니터링 도구이지 작업 의존성이 아님
