@@ -1,3 +1,37 @@
+## Trait Effects Part 1 — t-EFX batch — 2026-02-25
+
+### Context
+Encode mechanical effect definitions for 35 traits (30 archetype + 5 shadow) from the canonical Effect Definition Master spec into gen_trait_v3.py. Effects follow schema: {system, target, op, value, [condition], [tags]}.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-EFX-01 | EFFECTS dict infrastructure + merge logic | 🔴 DIRECT | — | shared data structure + main() merge wiring |
+| t-EFX-02 | Archetype single-axis effects (12 traits) | 🟢 DISPATCH | ask_codex | standalone data encoding |
+| t-EFX-03 | Archetype dual-axis effects (18 traits) | 🟢 DISPATCH | ask_codex | standalone data encoding |
+| t-EFX-04 | Shadow effects (5 traits) | 🟢 DISPATCH | ask_codex | standalone data encoding |
+| t-EFX-05 | Merge outputs + regenerate + verify | 🔴 DIRECT | — | integration wiring <50 lines |
+
+### Dispatch ratio: 3/5 = 60% ✅
+
+### Dispatch strategy
+Parallel — all 3 Codex jobs dispatched simultaneously (no file overlap, all write to separate output files). Infrastructure (t-EFX-01) done first as DIRECT, then 3 parallel Codex dispatches, then merge (t-EFX-05) as DIRECT.
+
+### Localization Verification
+- Hardcoded scan: PASS (no UI text in effects data)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 3/5 = 60%
+- Files changed: 2 (tools/gen_trait_v3.py, data/personality/trait_defs_v3.json)
+- Dispatch tool used: ask_codex (3 tickets)
+- Effects merged: 35/242 traits
+- Remaining: Parts 2-5 (~207 traits)
+
+---
+
 ## Bipolar Scale Fix — t-BP batch — 2026-02-24
 
 ### Context
