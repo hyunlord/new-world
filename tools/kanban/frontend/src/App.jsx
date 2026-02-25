@@ -39,7 +39,10 @@ function App() {
 
   const handleWsMessage = useCallback((msg) => {
     if (msg.type === 'ticket_created') {
-      setTickets(prev => [msg.data, ...prev])
+      setTickets(prev => {
+        if (prev.some(t => t.id === msg.data.id)) return prev
+        return [msg.data, ...prev]
+      })
       loadStats()
     } else if (msg.type === 'ticket_updated') {
       setTickets(prev => prev.map(t => t.id === msg.ticket_id ? { ...t, ...msg.data } : t))
