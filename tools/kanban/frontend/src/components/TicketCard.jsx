@@ -23,16 +23,24 @@ function timeAgo(dateStr) {
   return `${days}d ago`
 }
 
-export default function TicketCard({ ticket, onClick, failed }) {
+export default function TicketCard({ ticket, onClick, onDelete, failed }) {
   const pc = PRIORITY_COLORS[ticket.priority] || PRIORITY_COLORS.medium
 
   return (
     <div
       onClick={onClick}
-      className={`bg-[#1a1a2e] rounded-lg p-3 cursor-pointer hover:bg-[#1f1f3a] transition-colors ${
+      className={`group relative bg-[#1a1a2e] rounded-lg p-3 cursor-pointer hover:bg-[#1f1f3a] transition-colors ${
         failed ? 'border border-red-600/50' : 'border border-transparent'
       }`}
     >
+      {onDelete && (
+        <button
+          onClick={e => { e.stopPropagation(); onDelete(ticket.id) }}
+          className="absolute top-1.5 right-1.5 w-5 h-5 rounded flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-400/10 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          &times;
+        </button>
+      )}
       <div className="flex items-center gap-2 mb-1">
         <span
           className={`w-2 h-2 rounded-full flex-shrink-0 ${ACTOR_DOT[ticket.created_by] || ACTOR_DOT.manual}`}

@@ -36,6 +36,10 @@ export async function deleteTicket(id) {
   return request(`/tickets/${id}`, { method: 'DELETE' })
 }
 
+export async function clearAllTickets() {
+  return request('/tickets/clear', { method: 'POST' })
+}
+
 export async function fetchTicketLogs(id) {
   return request(`/tickets/${id}/logs`)
 }

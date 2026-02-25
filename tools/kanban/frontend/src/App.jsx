@@ -7,7 +7,7 @@ import StatsView from './components/StatsView'
 import { BatchList, BatchDetail } from './components/BatchView'
 import TicketDetail from './components/TicketDetail'
 import { useWebSocket } from './hooks/useWebSocket'
-import { fetchTickets, fetchStats } from './utils/api'
+import { fetchTickets, fetchStats, deleteTicket, clearAllTickets } from './utils/api'
 
 function App() {
   const [tickets, setTickets] = useState([])
@@ -55,16 +55,36 @@ function App() {
     }
   }, [selectedTicket, loadStats])
 
+  const handleDeleteTicket = useCallback(async (id) => {
+    try {
+      await deleteTicket(id)
+      setTickets(prev => prev.filter(t => t.id !== id))
+      loadStats()
+    } catch (err) {
+      console.error('Failed to delete ticket:', err)
+    }
+  }, [loadStats])
+
+  const handleClearAll = useCallback(async () => {
+    try {
+      await clearAllTickets()
+      setTickets([])
+      loadStats()
+    } catch (err) {
+      console.error('Failed to clear tickets:', err)
+    }
+  }, [loadStats])
+
   useWebSocket(handleWsMessage)
 
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-kanban-bg">
-        <TopBar stats={stats} />
+        <TopBar stats={stats} onClearAll={handleClearAll} />
         <div className="relative">
           <Routes>
             <Route path="/board" element={
-              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} />
+              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} onDeleteTicket={handleDeleteTicket} />
             } />
             <Route path="/history" element={
               <HistoryTable onSelectTicket={setSelectedTicket} />

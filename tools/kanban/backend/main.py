@@ -456,6 +456,20 @@ async def update_ticket(
     return d
 
 
+@app.post("/api/tickets/clear")
+def clear_all_tickets(db: Session = Depends(get_db)):
+    db.query(TicketLog).delete()
+    db.query(TicketEvent).delete()
+    db.query(Ticket).delete()
+    db.query(Batch).update({
+        Batch.total_tickets: 0,
+        Batch.completed_tickets: 0,
+        Batch.status: "active",
+    })
+    db.commit()
+    return {"ok": True, "message": "All tickets cleared"}
+
+
 @app.delete("/api/tickets/{ticket_id}")
 def delete_ticket(ticket_id: str, db: Session = Depends(get_db)):
     ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
