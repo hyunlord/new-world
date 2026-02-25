@@ -1,8 +1,17 @@
+---
+name: kanban-workflow
+description: |
+  Kanban board integration, Codex dispatch rules, autopilot/ultrapilot workflow,
+  ticket management, and batch lifecycle. Use when dispatching tickets via
+  codex_dispatch.sh, creating batches, running autopilot workflow, or managing
+  PROGRESS.md and ticket templates.
+---
+
 # Kanban & Dispatch Workflow — SKILL.md
 
 > This skill covers kanban board integration, Codex dispatch rules, autopilot workflow, and common workflow mistakes.
 > For code conventions and project architecture → see CLAUDE.md
-> For localization and prompt engineering → see skills/worldsim-code/SKILL.md
+> For localization and prompt engineering → see .claude/skills/worldsim-code/SKILL.md
 
 ---
 
@@ -401,7 +410,7 @@ Files to create/modify:
 - path/to/test.gd — [what test to add]
 
 ## Acceptance Criteria
-- [ ] skills/worldsim-code/SKILL.md Part 1 verified (localization scan — even if no new text)
+- [ ] worldsim-code SKILL.md Part 1 verified (localization scan — even if no new text)
 - [ ] Dispatch ratio confirmed ≥60% in PROGRESS.md
 - [ ] Smoke test: [command that completes in <30s]
 - [ ] Gate passes: bash scripts/gate.sh

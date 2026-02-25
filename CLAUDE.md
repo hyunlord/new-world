@@ -6,9 +6,9 @@ Pick the skill that matches your current task. Do NOT read both every time.
 
 | Task type | Read this skill |
 |-----------|----------------|
-| GDScript / Godot code (new system, bug fix, refactor) | `skills/worldsim-code/SKILL.md` |
-| Dispatch / batch / ticket workflow | `skills/kanban-workflow/SKILL.md` |
-| Writing a Claude Code prompt | `skills/worldsim-code/SKILL.md` (Part 2+3 only) |
+| GDScript / Godot code (new system, bug fix, refactor) | `.claude/skills/worldsim-code/SKILL.md` |
+| Dispatch / batch / ticket workflow | `.claude/skills/kanban-workflow/SKILL.md` |
+| Writing a Claude Code prompt | `.claude/skills/worldsim-code/SKILL.md` (Part 2+3 only) |
 
 If your task involves BOTH code AND dispatch (e.g. autopilot feature request), read both.
 
@@ -87,7 +87,7 @@ tickets/            — Ticket files
 tools/              — codex_dispatch.sh, codex_status.sh, codex_apply.sh
 scripts/gate.sh     — Build verification gate
 localization/       — en/ ko/ JSON files (custom Locale autoload)
-skills/             — SKILL.md files
+.claude/skills/     — SKILL.md files (auto-discovered by frontmatter)
 ```
 
 ## Autoloads
@@ -95,7 +95,7 @@ skills/             — SKILL.md files
 - `GameConfig` — constants, biome definitions, simulation parameters
 - `SimulationBus` — global signal hub for decoupled communication
 - `EventLogger` — subscribes to SimulationBus, stores events in memory
-- `Locale` — scripts/core/locale.gd, custom i18n system (see skills/worldsim-code/SKILL.md)
+- `Locale` — scripts/core/locale.gd, custom i18n system (see worldsim-code skill)
 
 ## Coding Conventions
 
@@ -159,4 +159,4 @@ Architecture, integration, refactors, data model boundaries, shared interface ow
 9. **Hardcoding UI text** — always use `Locale.*`. Full rules in SKILL.md Part 1.
 10. **Using tr() instead of Locale.ltr()** — Godot built-in tr() does not work in WorldSim.
 
-For dispatch/kanban/workflow mistakes → see `skills/kanban-workflow/SKILL.md`.
+For dispatch/kanban/workflow mistakes → see kanban-workflow skill.

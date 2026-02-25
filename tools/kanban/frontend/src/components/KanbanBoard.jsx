@@ -35,6 +35,8 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket, o
     ? tickets.filter(t => t.batch_id === batchFilter)
     : tickets
 
+  const failed = filteredTickets.filter(t => t.status === 'failed')
+
   const handleDismissAllFailed = async () => {
     if (!onDismissTicket) return
     const failedIds = failed.map(t => t.id)
@@ -42,8 +44,6 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket, o
       await onDismissTicket(id)
     }
   }
-
-  const failed = filteredTickets.filter(t => t.status === 'failed')
 
   return (
     <div>

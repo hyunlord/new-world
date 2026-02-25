@@ -1,6 +1,6 @@
 from fastapi import WebSocket
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 
@@ -21,7 +21,7 @@ class ConnectionManager:
             "type": message_type,
             "ticket_id": ticket_id,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat() + "Z"
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z"
         }, default=str)
         dead = []
         for conn in self.active_connections:

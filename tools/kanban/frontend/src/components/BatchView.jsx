@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { fetchBatches, fetchBatch } from '../utils/api'
+import { fetchBatches, fetchBatch, deleteBatch, bulkDeleteBatches } from '../utils/api'
 
 const STATUS_STYLE = {
   completed: { dot: 'bg-green-500', text: 'text-green-400', label: 'Completed' },
@@ -49,37 +49,116 @@ function ScoreBadge({ score }) {
   return <span className={`font-bold ${color}`}>{score}{star}</span>
 }
 
+function ConfirmDialog({ open, title, message, onConfirm, onCancel }) {
+  if (!open) return null
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div className="bg-[#1a2744] rounded-lg p-6 max-w-sm w-full mx-4">
+        <h3 className="text-white font-semibold mb-2">{title}</h3>
+        <p className="text-gray-400 text-sm mb-4">{message}</p>
+        <div className="flex gap-3 justify-end">
+          <button onClick={onCancel} className="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors">
+            Cancel
+          </button>
+          <button onClick={onConfirm} className="px-3 py-1.5 text-sm rounded bg-red-600 text-white hover:bg-red-700 transition-colors">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function BatchList() {
   const [batches, setBatches] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selected, setSelected] = useState(new Set())
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => {
+  const loadBatches = () => {
     fetchBatches({ sort: 'created_at', order: 'desc', limit: 50 })
       .then(data => setBatches(data.batches))
       .catch(console.error)
       .finally(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(() => { loadBatches() }, [])
+
+  const toggleSelect = (e, id) => {
+    e.stopPropagation()
+    setSelected(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  const handleBulkDelete = async () => {
+    try {
+      await bulkDeleteBatches([...selected])
+      setSelected(new Set())
+      setShowDeleteConfirm(false)
+      loadBatches()
+    } catch (err) {
+      console.error('Failed to delete batches:', err)
+    }
+  }
+
+  const handleSingleDelete = async (e, id) => {
+    e.stopPropagation()
+    if (!confirm('Delete this batch and all its tickets?')) return
+    try {
+      await deleteBatch(id)
+      loadBatches()
+    } catch (err) {
+      console.error('Failed to delete batch:', err)
+    }
+  }
 
   if (loading) return <div className="p-6 text-gray-500">Loading batches...</div>
 
   return (
     <div className="p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Batches</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-white">Batches</h2>
+        {selected.size > 0 && (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-3 py-1.5 text-sm rounded bg-red-600/20 text-red-400 hover:bg-red-600/40 transition-colors"
+          >
+            Delete Selected ({selected.size})
+          </button>
+        )}
+      </div>
+
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete Batches"
+        message={`Delete ${selected.size} batch(es) and all their tickets? This cannot be undone.`}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
+
       {batches.length === 0 ? (
         <p className="text-gray-500">No batches yet</p>
       ) : (
         <div className="space-y-2">
           {batches.map(b => {
             const st = STATUS_STYLE[b.status] || STATUS_STYLE.active
-            const failedCount = b.total_tickets - b.completed_tickets > 0 ? 0 :
-              (b.status === 'partial' ? b.completed_tickets - (b.total_tickets - b.completed_tickets) : 0)
             return (
               <div
                 key={b.id}
                 onClick={() => navigate(`/batches/${b.id}`)}
-                className="bg-[#16213e] rounded-lg p-4 cursor-pointer hover:bg-[#1a2744] transition-colors flex items-center gap-4"
+                className="bg-[#16213e] rounded-lg p-4 cursor-pointer hover:bg-[#1a2744] transition-colors flex items-center gap-4 group"
               >
+                <input
+                  type="checkbox"
+                  checked={selected.has(b.id)}
+                  onChange={(e) => toggleSelect(e, b.id)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-500 focus:ring-0 flex-shrink-0"
+                />
                 <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${st.dot}`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white truncate">{b.title}</p>
@@ -95,16 +174,19 @@ export function BatchList() {
                     {b.completed_tickets}/{b.total_tickets}
                   </span>
                   <div className="w-24">
-                    <ProgressBar
-                      total={b.total_tickets}
-                      completed={b.completed_tickets}
-                      failed={0}
-                    />
+                    <ProgressBar total={b.total_tickets} completed={b.completed_tickets} failed={0} />
                   </div>
                   <span className="text-xs text-gray-500 w-20 text-right">
                     {b.created_at ? new Date(b.created_at).toLocaleDateString() : ''}
                   </span>
                 </div>
+                <button
+                  onClick={(e) => handleSingleDelete(e, b.id)}
+                  className="text-gray-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                  title="Delete batch"
+                >
+                  &#x1F5D1;
+                </button>
               </div>
             )
           })}
@@ -116,8 +198,10 @@ export function BatchList() {
 
 export function BatchDetail() {
   const { batchId } = useParams()
+  const navigate = useNavigate()
   const [batch, setBatch] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     fetchBatch(batchId)
@@ -125,6 +209,15 @@ export function BatchDetail() {
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [batchId])
+
+  const handleDelete = async () => {
+    try {
+      await deleteBatch(batchId)
+      navigate('/batches')
+    } catch (err) {
+      console.error('Failed to delete batch:', err)
+    }
+  }
 
   if (loading) return <div className="p-6 text-gray-500">Loading batch...</div>
   if (!batch) return <div className="p-6 text-red-400">Batch not found</div>
@@ -150,12 +243,27 @@ export function BatchDetail() {
         &larr; Back to Batches
       </Link>
 
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete Batch"
+        message={`Delete batch "${batch.title}" and all ${tickets.length} tickets? This cannot be undone.`}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
+
       {/* Header */}
       <div className="bg-[#16213e] rounded-lg p-5 mb-4">
         <div className="flex items-center gap-3 mb-3">
           <div className={`w-3 h-3 rounded-full ${st.dot}`} />
           <h2 className="text-lg font-semibold text-white">{batch.title}</h2>
           <span className={`text-xs ${st.text}`}>{st.label}</span>
+          <div className="flex-1" />
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-3 py-1 text-xs rounded bg-red-600/20 text-red-400 hover:bg-red-600/40 transition-colors"
+          >
+            Delete Batch
+          </button>
         </div>
         {batch.description && (
           <p className="text-sm text-gray-400 mb-2">{batch.description}</p>

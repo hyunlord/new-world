@@ -3,6 +3,7 @@ import { useEffect, useRef, useCallback } from 'react'
 export function useWebSocket(onMessage) {
   const wsRef = useRef(null)
   const reconnectTimer = useRef(null)
+  const backoffRef = useRef(1000)
   const onMessageRef = useRef(onMessage)
   onMessageRef.current = onMessage
 
@@ -15,6 +16,7 @@ export function useWebSocket(onMessage) {
 
     ws.onopen = () => {
       console.log('[WS] Connected')
+      backoffRef.current = 1000
     }
 
     ws.onmessage = (event) => {
@@ -27,8 +29,10 @@ export function useWebSocket(onMessage) {
     }
 
     ws.onclose = () => {
-      console.log('[WS] Disconnected, reconnecting in 3s...')
-      reconnectTimer.current = setTimeout(connect, 3000)
+      const delay = backoffRef.current
+      console.log(`[WS] Disconnected, reconnecting in ${delay}ms...`)
+      reconnectTimer.current = setTimeout(connect, delay)
+      backoffRef.current = Math.min(delay * 2, 30000)
     }
 
     ws.onerror = (err) => {

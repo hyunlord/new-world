@@ -15,6 +15,15 @@ class BatchUpdate(BaseModel):
     source_prompt: Optional[str] = None
 
 
+class BatchDeleteRequest(BaseModel):
+    batch_ids: list[str]
+
+
+class BatchDeleteResponse(BaseModel):
+    deleted_batches: int
+    deleted_tickets: int
+
+
 class BatchResponse(BaseModel):
     model_config = {"from_attributes": True}
 

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Text, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 
 from database import Base
 
@@ -15,8 +15,8 @@ class Batch(Base):
     total_tickets = Column(Integer, default=0)
     completed_tickets = Column(Integer, default=0)
     status = Column(String, default="active")  # "active" | "completed" | "partial"
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     tickets = relationship("Ticket", back_populates="batch")
 
@@ -49,8 +49,8 @@ class Ticket(Base):
     error_message = Column(Text, nullable=True)
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     logs = relationship("TicketLog", back_populates="ticket", cascade="all, delete-orphan")
     events = relationship("TicketEvent", back_populates="ticket", cascade="all, delete-orphan")
@@ -62,7 +62,7 @@ class TicketLog(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     ticket_id = Column(String, ForeignKey("tickets.id"), nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     level = Column(String, nullable=False)
     message = Column(Text, nullable=False)
     source = Column(String, nullable=True)
@@ -75,7 +75,7 @@ class TicketEvent(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     ticket_id = Column(String, ForeignKey("tickets.id"), nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     event_type = Column(String, nullable=False)
     old_value = Column(String, nullable=False)
     new_value = Column(String, nullable=False)
