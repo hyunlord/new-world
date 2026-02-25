@@ -168,6 +168,16 @@ class DeceasedEntityProxy extends RefCounted:
 	var emotion_data: RefCounted
 	var skill_xp: Dictionary = {}
 	var skill_levels: Dictionary = {}
+	var economic_tendencies: Dictionary = {}
+	var trait_strengths: Dictionary = {}
+	var status_tier: String = "common"
+	var status_score: float = 0.0
+	var wealth_norm: float = 0.35
+	var wealth_score: float = 0.0
+	var job_satisfaction: float = 0.5
+	var intelligences: Dictionary = {}
+	var general_intelligence: float = 0.5
+	var frailty: float = 0.0
 
 	# Deceased-only fields
 	var death_cause: String
@@ -207,6 +217,20 @@ class DeceasedEntityProxy extends RefCounted:
 		partner_id = record.get("partner_id", -1)
 		parent_ids = record.get("parent_ids", []).duplicate()
 		children_ids = record.get("children_ids", []).duplicate()
+		values = record.get("values", {}).duplicate()
+		moral_stage = record.get("moral_stage", 1)
+		skill_xp = record.get("skill_xp", {}).duplicate()
+		skill_levels = record.get("skill_levels", {}).duplicate()
+		economic_tendencies = record.get("economic_tendencies", {}).duplicate()
+		trait_strengths = record.get("trait_strengths", {}).duplicate()
+		status_tier = record.get("status_tier", "common")
+		status_score = record.get("status_score", 0.0)
+		wealth_norm = record.get("wealth_norm", 0.35)
+		wealth_score = record.get("wealth_score", 0.0)
+		job_satisfaction = record.get("job_satisfaction", 0.5)
+		intelligences = record.get("intelligences", {}).duplicate()
+		general_intelligence = record.get("general_intelligence", 0.5)
+		frailty = record.get("frailty", 0.0)
 
 		# Reconstruct PersonalityData
 		var p_dict: Dictionary = record.get("personality", {})
@@ -854,7 +878,7 @@ func _draw() -> void:
 		cy += 4.0
 
 	# ── Intelligence (인지/지능) ──
-	if entity.is_alive:
+	if entity.is_alive or not entity.intelligences.is_empty():
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INTELLIGENCE"), "intelligence")
 		if not _section_collapsed.get("intelligence", false):
 			var intel: Dictionary = entity.intelligences
@@ -922,7 +946,7 @@ func _draw() -> void:
 			var _level: int = int(_info.get("level", 0))
 			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
 			var _mult_suffix: String = ""
-			if _level > 0:
+			if _level > 0 and entity.is_alive:
 				var _mult: float = StatQuery.get_skill_multiplier(entity, _sid, &"gathering")
 				_mult_suffix = " \u00d7%.3f" % _mult
 			cy = _draw_skill_bar(font, cx + 10, cy, bar_w,
@@ -1456,7 +1480,7 @@ func _draw() -> void:
 			cy += 4.0
 
 	# ── Economic Tendencies ──
-	if entity.is_alive and not entity.economic_tendencies.is_empty():
+	if not entity.economic_tendencies.is_empty():
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_ECONOMIC_TENDENCIES"), "economic_tendencies")
 		if not _section_collapsed.get("economic_tendencies", true):
 			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_SAVING"),
@@ -1470,7 +1494,7 @@ func _draw() -> void:
 			cy += 4.0
 
 	# ── Social Status ──
-	if entity.is_alive:
+	if entity.is_alive or entity.status_tier != "common" or entity.status_score != 0.0:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SOCIAL_STATUS"), "social_status")
 		if not _section_collapsed.get("social_status", false):
 			var tier_key: String = "REP_TIER_" + entity.status_tier.to_upper()

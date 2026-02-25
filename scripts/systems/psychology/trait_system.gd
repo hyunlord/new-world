@@ -146,10 +146,10 @@ static func _get_facet_value(pd: RefCounted, facet_key: String, entity: RefCount
 		if alias_key != "" and pd.facets.has(alias_key):
 			return float(pd.facets.get(alias_key, 0.5))
 		return 0.5
-	if entity != null:
-		return StatQuery.get_normalized(entity, StringName("HEXACO_" + facet_key))
 	if pd.axes.has(facet_key):
 		return float(pd.axes[facet_key])
+	if entity != null:
+		return StatQuery.get_normalized(entity, StringName("HEXACO_" + facet_key))
 	return 0.5
 
 
