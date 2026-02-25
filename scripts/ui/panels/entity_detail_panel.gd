@@ -32,6 +32,20 @@ const TRAIT_COLORS: Dictionary = {
 }
 ## Special color for Dark traits (psychopath, narcissist, etc.)
 const DARK_TRAIT_COLOR: Color = Color(0.6, 0.0, 0.6)
+## v3 category-based trait badge colors
+const V3_CATEGORY_COLORS: Dictionary = {
+	"archetype": Color(0.75, 0.75, 0.75),   # silver
+	"shadow": Color(0.8, 0.1, 0.15),         # crimson
+	"radiance": Color(0.9, 0.75, 0.2),       # gold
+	"corpus": Color(0.8, 0.5, 0.2),          # bronze
+	"nous": Color(0.0, 0.5, 1.0),            # azure
+	"awakened": Color(0.5, 0.0, 0.5),        # purple
+	"bloodline": Color(0.5, 0.0, 0.0),       # maroon
+	"mastery": Color(0.31, 0.78, 0.47),      # emerald
+	"bond": Color(1.0, 0.0, 0.5),            # rose
+	"fate": Color(0.8, 0.6, 1.0),            # iridescent/lavender
+	"synergy": Color(1.0, 0.0, 1.0),         # magenta/iridescent
+}
 
 ## Plutchik emotion wheel colors
 const EMOTION_COLORS: Dictionary = {
@@ -379,8 +393,11 @@ func _update_scroll_from_mouse(mouse_y: float) -> void:
 	_scroll_offset = ratio * scroll_max
 
 
-## Get color for a trait, using valence with Dark trait override
+## Get color for a trait. v3 uses category; v2 uses valence with dark override.
 func _get_trait_color(tdef: Dictionary) -> Color:
+	var category: String = str(tdef.get("category", ""))
+	if V3_CATEGORY_COLORS.has(category):
+		return V3_CATEGORY_COLORS[category]
 	if tdef.get("id", "").begins_with("d_"):
 		return DARK_TRAIT_COLOR
 	var valence: String = tdef.get("valence", "neutral")

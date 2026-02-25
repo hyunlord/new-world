@@ -72,6 +72,7 @@ var emotions: Dictionary = {
 var trait_strengths: Dictionary = {}    # {trait_id: float 0~1} — salience scores
 var display_traits: Array = []          # [{id, name_key, salience, valence, category}] Top-K
 var _trait_display_active: Dictionary = {}  # {trait_id: bool} — hysteresis 상태 (표시 레이어)
+var granted_traits: Dictionary = {}     # {trait_id: true} — event-granted traits (awakened, bond, mastery, fate)
 var traits_dirty: bool = true           # facet 변경 시 true → TraitSystem.update_trait_strengths() 트리거
 
 ## Phase 2-A3: Plutchik emotion data (EmotionData RefCounted)
@@ -278,6 +279,7 @@ func to_dict() -> Dictionary:
 		"trauma_scars": trauma_scars.duplicate(),
 		"violation_history": violation_history.duplicate(),
 		"trait_strengths": trait_strengths.duplicate(),
+		"granted_traits": granted_traits.duplicate(),
 		"body": body.to_dict() if body != null else {},
 		"intelligences": intelligences.duplicate(),
 		"general_intelligence": general_intelligence,
@@ -395,6 +397,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var ts_data = data.get("trait_strengths", {})
 	if not ts_data.is_empty():
 		e.trait_strengths = ts_data.duplicate()
+	var gt_data = data.get("granted_traits", {})
+	if not gt_data.is_empty():
+		e.granted_traits = gt_data.duplicate()
 	# [Layer 1.5] Body Attributes
 	var body_data = data.get("body", {})
 	if not body_data.is_empty():
