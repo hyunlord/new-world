@@ -1,0 +1,19 @@
+{
+  "REP_MORALITY": "도덕성",
+  "REP_SOCIABILITY": "사교성",
+  "REP_COMPETENCE": "역량",
+  "REP_DOMINANCE": "지배력",
+  "REP_GENEROSITY": "관대함",
+  "REP_OVERALL": "전체 평판",
+  "REP_TIER_ELITE": "엘리트",
+  "REP_TIER_RESPECTED": "존경받음",
+  "REP_TIER_COMMON": "평범",
+  "REP_TIER_MARGINAL": "주변인",
+  "REP_TIER_OUTCAST": "추방자",
+  "REP_SOURCE_DIRECT": "직접 목격",
+  "REP_SOURCE_GOSSIP": "소문으로 들음",
+  "REP_SOURCE_NONE": "모름",
+  "REP_CONFIDENCE_LOW": "불확실",
+  "REP_CONFIDENCE_MED": "어느 정도 확신",
+  "REP_CONFIDENCE_HIGH": "매우 확신"
+}

@@ -891,5 +891,13 @@
   "UI_STAT_NEED_MEANING": "의미",
   "UI_DERIVED_UNAVAILABLE": "사망한 에이전트는 파생 스탯을 표시할 수 없습니다",
   "UI_NOTIF_LEADER_ELECTED_FMT": "{name}이(가) S{sid}의 지도자로 선출됨",
-  "UI_NOTIF_LEADER_LOST_FMT": "S{sid}의 지도자를 잃음"
+  "UI_NOTIF_LEADER_LOST_FMT": "S{sid}의 지도자를 잃음",
+  "UI_INTELLIGENCE": "인지/지능",
+  "UI_INTEL_NONE": "지능 데이터 없음",
+  "UI_INTEL_GENERAL": "일반 지능",
+  "UI_INTEL_POTENTIAL": "잠재력",
+  "UI_REPUTATION": "평판",
+  "UI_REPUTATION_SETTLEMENT_AVG": "정착지 평균",
+  "UI_ECONOMIC_TENDENCIES": "경제 성향",
+  "UI_SOCIAL_STATUS": "사회적 지위"
 }

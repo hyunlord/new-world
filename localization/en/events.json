@@ -12,5 +12,12 @@
   "EVT_POPULATION_MILESTONE": "Population reached {count}!",
   "EVT_FAMINE": "Famine in {settlement}!",
   "EVT_BECAME_ADULT": "{name} became adult",
-  "EVT_STILLBORN": "{name} stillborn ({mother})"
+  "EVT_STILLBORN": "{name} stillborn ({mother})",
+  "EVT_REP_MORALITY_PLUNGE": "{name}'s honesty questioned",
+  "EVT_REP_OUTCAST": "{name} became an outcast",
+  "EVT_REP_RESPECTED": "{name} gained respect",
+  "EVT_JOB_DRIFT": "{name} switched from {old} to {new}",
+  "EVT_GINI_UNREST": "Growing inequality in {settlement}",
+  "EVT_STRAT_PHASE": "{settlement} entered {phase} phase",
+  "EVT_GOSSIP": "Gossip about {target} spread"
 }

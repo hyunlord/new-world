@@ -467,4 +467,233 @@ const LEADER_W_AGE_RESPECT: float = 0.15       ## Traditional — elder deferenc
 ## A fully wise agent (wisdom=1.0) resists 30% of conformity pressure.
 const LEADER_WISDOM_RESISTANCE_COEFF: float = 0.30
 
+## ━━ INTELLIGENCE SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Gardner 1983 labels + CHC/Visser 2006 g-factor hybrid]
+
+## ── Intelligence Generation ────────────────────────────
+const INTEL_G_MEAN: float = 0.50
+const INTEL_G_SD: float = 0.15
+const INTEL_RESIDUAL_SD: float = 0.12
+
+## g-loading weights per intelligence [Visser 2006]
+const INTEL_G_LOADING: Dictionary = {
+	"linguistic": 0.70, "logical": 0.75, "spatial": 0.65,
+	"musical": 0.30, "kinesthetic": 0.15,
+	"naturalistic": 0.60, "interpersonal": 0.45, "intrapersonal": 0.40,
+}
+
+## Sex difference shifts (applied to potentials) [Voyer 1995, Hyde 1988]
+const INTEL_SEX_DIFF_MALE: Dictionary = {
+	"spatial": 0.11,
+}
+const INTEL_SEX_DIFF_FEMALE: Dictionary = {
+	"linguistic": 0.017,
+}
+
+## Heritability per group
+const INTEL_HERITABILITY_G: float = 0.60
+const INTEL_HERITABILITY_FLUID: float = 0.55
+const INTEL_HERITABILITY_CRYSTALLIZED: float = 0.50
+const INTEL_HERITABILITY_PHYSICAL: float = 0.60
+
+## HEXACO → g influence (Openness r≈0.20 → weight 0.10)
+const INTEL_OPENNESS_G_WEIGHT: float = 0.10
+
+## ── Development Curves [Salthouse 2009, 2012] ──────────
+const INTEL_GROUP_FLUID: Array = ["logical", "spatial"]
+const INTEL_GROUP_CRYSTALLIZED: Array = ["linguistic", "musical", "interpersonal", "intrapersonal", "naturalistic"]
+const INTEL_GROUP_PHYSICAL: Array = ["kinesthetic"]
+
+## Piecewise curve breakpoints: [age, modifier]. 1.0 = young adult baseline.
+const INTEL_CURVE_FLUID: Array = [
+	[0, 0.20], [5, 0.50], [15, 0.85], [22, 1.00],
+	[35, 1.00], [55, 0.85], [75, 0.60], [100, 0.50],
+]
+const INTEL_CURVE_CRYSTALLIZED: Array = [
+	[0, 0.15], [5, 0.30], [15, 0.55], [25, 0.75],
+	[50, 0.95], [65, 1.00], [80, 0.85], [100, 0.75],
+]
+const INTEL_CURVE_PHYSICAL: Array = [
+	[0, 0.10], [5, 0.35], [12, 0.65], [20, 0.90],
+	[28, 1.00], [40, 0.85], [60, 0.60], [80, 0.45], [100, 0.35],
+]
+
+## ── Environment Modifiers ───────────────────────────────
+## [Georgieff 2007] Early childhood nutrition damage
+const INTEL_NUTRITION_CRIT_AGE_TICKS: int = 730
+const INTEL_NUTRITION_HUNGER_THRESHOLD: float = 0.3
+const INTEL_NUTRITION_MAX_PENALTY: float = 0.15
+const INTEL_NUTRITION_PENALTY_PER_TICK: float = 0.0003
+
+## [Lupien 2009] ACE-based cognitive damage
+const INTEL_ACE_SCARS_THRESHOLD_MINOR: int = 1
+const INTEL_ACE_SCARS_THRESHOLD_MAJOR: int = 3
+const INTEL_ACE_PENALTY_MINOR: float = 0.07
+const INTEL_ACE_PENALTY_MAJOR: float = 0.15
+const INTEL_ACE_CRIT_AGE_YEARS: float = 12.0
+const INTEL_ACE_FLUID_DECLINE_MULT: float = 1.5
+
+## [Lupien 2009] Acute stress → learning penalty
+const INTEL_STRESS_LEARNING_THRESHOLD_LOW: float = 0.6
+const INTEL_STRESS_LEARNING_PENALTY_LOW: float = 0.85
+const INTEL_STRESS_LEARNING_THRESHOLD_HIGH: float = 0.8
+const INTEL_STRESS_LEARNING_PENALTY_HIGH: float = 0.70
+
+## [Hertzog 2009] Cognitive activity buffer
+const INTEL_ACTIVITY_SKILL_THRESHOLD: int = 10
+const INTEL_ACTIVITY_BUFFER: float = 0.70
+const INTEL_INACTIVITY_ACCEL: float = 1.20
+
+## ── Skill Learning ──────────────────────────────────────
+const INTEL_LEARN_MULT_M: float = 0.35
+const INTEL_LEARN_MULT_K: float = 2.0
+const INTEL_CONSCIENTIOUSNESS_WEIGHT: float = 0.15
+
+## ── Cholesky Residual Correlation Matrix ─────────────────
+## 8×8 residual correlation (after removing g contribution)
+## Order: LIN, LOG, SPA, MUS, KIN, NAT, INTER, INTRA
+const INTEL_RESIDUAL_CORR: Array = [
+	[1.00, 0.08, 0.05, 0.06, 0.03, 0.05, 0.08, 0.07],
+	[0.08, 1.00, 0.09, 0.04, 0.02, 0.06, 0.03, 0.04],
+	[0.05, 0.09, 1.00, 0.06, 0.08, 0.07, 0.03, 0.03],
+	[0.06, 0.04, 0.06, 1.00, 0.15, 0.04, 0.06, 0.10],
+	[0.03, 0.02, 0.08, 0.15, 1.00, 0.06, 0.03, 0.03],
+	[0.05, 0.06, 0.07, 0.04, 0.06, 1.00, 0.05, 0.05],
+	[0.08, 0.03, 0.03, 0.06, 0.03, 0.05, 1.00, 0.37],
+	[0.07, 0.04, 0.03, 0.10, 0.03, 0.05, 0.37, 1.00],
+]
+
+## ━━ REPUTATION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Fiske 2007, Nowak & Sigmund 2005, Baumeister 2001]
+
+const REPUTATION_TICK_INTERVAL: int = 30
+
+## [Fiske 2007] Overall reputation weights
+const REP_W_MORALITY: float = 0.30
+const REP_W_SOCIABILITY: float = 0.20
+const REP_W_COMPETENCE: float = 0.25
+const REP_W_DOMINANCE: float = 0.05
+const REP_W_GENEROSITY: float = 0.20
+
+## [Baumeister 2001, Rothbart & Park 1986] Negativity bias multipliers per domain
+const REP_NEG_BIAS_MORALITY: float = 2.5
+const REP_NEG_BIAS_SOCIABILITY: float = 1.2
+const REP_NEG_BIAS_COMPETENCE: float = 1.5
+const REP_NEG_BIAS_DOMINANCE: float = 1.0
+const REP_NEG_BIAS_GENEROSITY: float = 2.0
+
+## Decay rates (per game year, applied fractionally each reputation tick)
+## [Klein 1992] Positive impression half-life ~3 years
+const REP_POSITIVE_YEARLY_RETENTION: float = 0.794
+## [Walker 2003] Negative impression half-life ~5 years
+const REP_NEGATIVE_YEARLY_RETENTION: float = 0.870
+
+## [Dunbar 1997] Probability that a social interaction includes gossip
+const REP_GOSSIP_PROBABILITY: float = 0.65
+## [Ohtsuki & Iwasa 2004] Hop-by-hop credibility decay
+const REP_GOSSIP_HOP_DECAY: float = 0.80
+const REP_GOSSIP_MAX_HOPS: int = 3
+## Direct observation base credibility
+const REP_DIRECT_OBSERVATION_CREDIBILITY: float = 0.90
+
+## Gossip distortion rates by motive [Beersma & Van Kleef 2012, Giardini 2022]
+const REP_DISTORTION_PROSOCIAL: float = 0.07
+const REP_DISTORTION_ENJOYMENT: float = 0.15
+const REP_DISTORTION_MANIPULATION: float = 0.25
+const REP_DISTORTION_VENTING: float = 0.20
+
+## Gossip transmission probability by domain (morality spreads fastest)
+const REP_GOSSIP_TRANSMIT_MORALITY: float = 0.45
+const REP_GOSSIP_TRANSMIT_SOCIABILITY: float = 0.20
+const REP_GOSSIP_TRANSMIT_COMPETENCE: float = 0.25
+const REP_GOSSIP_TRANSMIT_DOMINANCE: float = 0.30
+const REP_GOSSIP_TRANSMIT_GENEROSITY: float = 0.35
+
+## Event delta scaling — multiplied with valence*magnitude per reputation event
+const REP_EVENT_DELTA_SCALE: float = 0.50
+## Gossip delta scaling — multiplied with credibility when transferring reputation via gossip
+const REP_GOSSIP_DELTA_SCALE: float = 0.35
+
+## [Gottman 1994] Reputation recovery: positive acts needed per negative act
+const REP_RECOVERY_RATIO: float = 5.0
+
+## Status tier thresholds (overall reputation score)
+const REP_TIER_RESPECTED: float = 0.60
+const REP_TIER_GOOD: float = 0.20
+const REP_TIER_SUSPECT: float = -0.20
+const REP_TIER_OUTCAST: float = -0.60
+
+## ━━ ECONOMIC TENDENCY SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Kahneman & Tversky 1979, Modigliani 1966, Engel 2011, Piff 2010]
+
+const ECON_TICK_INTERVAL: int = 120
+
+## Wealth score formula weights
+const WEALTH_W_FOOD: float = 0.55
+const WEALTH_W_WOOD: float = 0.25
+const WEALTH_W_STONE: float = 0.20
+
+## [Piff 2010] Wealth→generosity feedback: high wealth reduces generosity
+const ECON_WEALTH_GENEROSITY_PENALTY: float = 0.90
+
+## [Dittmar 2014] Materialism→Joy penalty
+const ECON_MATERIALISM_JOY_THRESHOLD: float = 0.70
+const ECON_MATERIALISM_JOY_PENALTY: float = 3.0
+
+## Theft temptation constants
+const THEFT_SCARCITY_FOOD_DAYS: float = 3.0
+
+## ━━ JOB SATISFACTION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Holland 1959, Hackman & Oldham 1976, Deci & Ryan 1985, Judge 2001]
+
+const JOB_SAT_TICK_INTERVAL: int = 120
+
+## Satisfaction composite weights
+const JOB_SAT_W_SKILL_FIT: float = 0.35
+const JOB_SAT_W_VALUE_FIT: float = 0.25
+const JOB_SAT_W_PERSONALITY_FIT: float = 0.25
+const JOB_SAT_W_NEED_FIT: float = 0.15
+
+## Satisfaction → work speed multipliers [Judge 2001, r≈0.30]
+const JOB_SAT_HIGH_THRESHOLD: float = 0.70
+const JOB_SAT_HIGH_SPEED_MULT: float = 1.15
+const JOB_SAT_LOW_THRESHOLD: float = 0.40
+const JOB_SAT_LOW_SPEED_MULT: float = 0.90
+const JOB_SAT_CRITICAL_THRESHOLD: float = 0.25
+const JOB_SAT_CRITICAL_SPEED_MULT: float = 0.80
+
+## [Judge 2001, r≈-0.40] Drift probability per season when dissatisfied
+const JOB_SAT_DRIFT_BASE: float = 0.15
+
+## ━━ STRATIFICATION MONITOR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Boehm 1999, Kohler 2017, Scheidel 2017]
+
+const STRAT_TICK_INTERVAL: int = 500
+
+## Status score weights
+const STATUS_W_REPUTATION: float = 0.35
+const STATUS_W_WEALTH: float = 0.25
+const STATUS_W_LEADER: float = 0.20
+const STATUS_W_AGE: float = 0.10
+const STATUS_W_COMPETENCE: float = 0.10
+
+## Leader bonus values
+const STATUS_LEADER_CURRENT: float = 0.30
+const STATUS_LEADER_FORMER: float = 0.15
+
+## Status tier thresholds
+const STATUS_TIER_ELITE: float = 0.65
+const STATUS_TIER_RESPECTED: float = 0.35
+const STATUS_TIER_MARGINAL: float = -0.35
+const STATUS_TIER_OUTCAST: float = -0.60
+
+## [Boehm 1999, Dunbar 1998] Leveling effectiveness parameters
+const LEVELING_DUNBAR_N: float = 150.0
+const LEVELING_SEDENTISM_DEFAULT: float = 0.80
+
+## [Kohler 2017, Scheidel 2017] Gini instability thresholds
+const GINI_UNREST_THRESHOLD: float = 0.40
+const GINI_ENTRENCHED_THRESHOLD: float = 0.50
+const GINI_CRISIS_THRESHOLD: float = 0.60
+
 

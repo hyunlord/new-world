@@ -10,6 +10,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _relationship_manager: RefCounted
 var _settlement_manager: RefCounted = null
+var _reputation_manager: RefCounted = null
 var _entity_id: int = -1
 
 ## Personality bar colors
@@ -114,8 +115,12 @@ var _section_collapsed: Dictionary = {
 	"body": false,
 	"recent_actions": false,
 	"life_events": false,
+	"intelligence": false,
 	"skills": false,
 	"values": true,
+	"reputation": true,
+	"economic_tendencies": true,
+	"social_status": false,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -163,6 +168,16 @@ class DeceasedEntityProxy extends RefCounted:
 	var emotion_data: RefCounted
 	var skill_xp: Dictionary = {}
 	var skill_levels: Dictionary = {}
+	var economic_tendencies: Dictionary = {}
+	var trait_strengths: Dictionary = {}
+	var status_tier: String = "common"
+	var status_score: float = 0.0
+	var wealth_norm: float = 0.35
+	var wealth_score: float = 0.0
+	var job_satisfaction: float = 0.5
+	var intelligences: Dictionary = {}
+	var general_intelligence: float = 0.5
+	var frailty: float = 0.0
 
 	# Deceased-only fields
 	var death_cause: String
@@ -202,6 +217,20 @@ class DeceasedEntityProxy extends RefCounted:
 		partner_id = record.get("partner_id", -1)
 		parent_ids = record.get("parent_ids", []).duplicate()
 		children_ids = record.get("children_ids", []).duplicate()
+		values = record.get("values", {}).duplicate()
+		moral_stage = record.get("moral_stage", 1)
+		skill_xp = record.get("skill_xp", {}).duplicate()
+		skill_levels = record.get("skill_levels", {}).duplicate()
+		economic_tendencies = record.get("economic_tendencies", {}).duplicate()
+		trait_strengths = record.get("trait_strengths", {}).duplicate()
+		status_tier = record.get("status_tier", "common")
+		status_score = record.get("status_score", 0.0)
+		wealth_norm = record.get("wealth_norm", 0.35)
+		wealth_score = record.get("wealth_score", 0.0)
+		job_satisfaction = record.get("job_satisfaction", 0.5)
+		intelligences = record.get("intelligences", {}).duplicate()
+		general_intelligence = record.get("general_intelligence", 0.5)
+		frailty = record.get("frailty", 0.0)
 
 		# Reconstruct PersonalityData
 		var p_dict: Dictionary = record.get("personality", {})
@@ -220,11 +249,12 @@ class DeceasedEntityProxy extends RefCounted:
 			emotion_data = EScript.from_dict(e_dict)
 
 
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null, reputation_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_relationship_manager = relationship_manager
 	_settlement_manager = settlement_manager
+	_reputation_manager = reputation_manager
 
 
 func set_entity_id(id: int) -> void:
@@ -847,6 +877,33 @@ func _draw() -> void:
 					cy = _draw_bar(font, cx + 25, cy, bar_w - 15, fname, fval, dim_color)
 		cy += 4.0
 
+	# ── Intelligence (인지/지능) ──
+	if entity.is_alive or not entity.intelligences.is_empty():
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_INTELLIGENCE"), "intelligence")
+		if not _section_collapsed.get("intelligence", false):
+			var intel: Dictionary = entity.intelligences
+			if not intel.is_empty():
+				var _intel_order: Array = [
+					["linguistic",     "UI_INTEL_LINGUISTIC"],
+					["logical",        "UI_INTEL_LOGICAL"],
+					["spatial",        "UI_INTEL_SPATIAL"],
+					["musical",        "UI_INTEL_MUSICAL"],
+					["kinesthetic",    "UI_INTEL_KINESTHETIC"],
+					["interpersonal",  "UI_INTEL_INTERPERSONAL"],
+					["intrapersonal",  "UI_INTEL_INTRAPERSONAL"],
+					["naturalistic",   "UI_INTEL_NATURALISTIC"],
+				]
+				for _ip in _intel_order:
+					var _ik: String = _ip[0]
+					var _il: String = _ip[1]
+					var _iv: float = intel.get(_ik, 0.5)
+					cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr(_il), _iv, Color(0.3, 0.6, 0.9))
+				cy += 4.0
+			else:
+				draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_INTEL_NONE"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+				cy += 16.0
+
 	# ── Derived Stats (파생 스탯) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_DERIVED_STATS"), "derived")
 	if not _section_collapsed.get("derived", false):
@@ -889,7 +946,7 @@ func _draw() -> void:
 			var _level: int = int(_info.get("level", 0))
 			var _desc: String = Locale.ltr(_get_skill_descriptor_key(_level))
 			var _mult_suffix: String = ""
-			if _level > 0:
+			if _level > 0 and entity.is_alive:
 				var _mult: float = StatQuery.get_skill_multiplier(entity, _sid, &"gathering")
 				_mult_suffix = " \u00d7%.3f" % _mult
 			cy = _draw_skill_bar(font, cx + 10, cy, bar_w,
@@ -1009,22 +1066,24 @@ func _draw() -> void:
 			## Fallback: entity.emotion_data가 null인 경우 (구형 저장 파일 또는 초기화 전 에이전트)
 			## EmotionSystem이 아직 이 에이전트에 emotion_data를 생성하지 않은 상태.
 			## 레거시 entity.emotions Dictionary에서 읽어서 표시.
-			var e_keys: Array = ["happiness", "loneliness", "stress", "grief", "love"]
-			var e_locale_keys: Array = [
-				"EMO_JOY",             ## happiness → 기쁨/Joy
-				"EMO_SADNESS",         ## loneliness → 슬픔/Sadness (가장 근접)
-				"UI_STRESS",           ## stress → 스트레스/Stress
-				"EMO_SADNESS_INTENSE", ## grief → 비통/Grief
-				"DYAD_LOVE",           ## love → 사랑/Love
-			]
-			var legacy_colors: Dictionary = {
-				"happiness": Color(0.9, 0.8, 0.2), "loneliness": Color(0.4, 0.4, 0.7),
-				"stress": Color(0.9, 0.5, 0.2), "grief": Color(0.5, 0.3, 0.5), "love": Color(0.9, 0.3, 0.4),
-			}
-			for i in range(e_keys.size()):
-				var val: float = entity.emotions.get(e_keys[i], 0.0)
-				var label: String = Locale.ltr(e_locale_keys[i])
-				cy = _draw_bar(font, cx + 10, cy, bar_w, label, val, legacy_colors.get(e_keys[i], Color.WHITE))
+			## DeceasedEntityProxy에는 emotions가 없으므로 is_alive 체크
+			if entity.is_alive and "emotions" in entity:
+				var e_keys: Array = ["happiness", "loneliness", "stress", "grief", "love"]
+				var e_locale_keys: Array = [
+					"EMO_JOY",             ## happiness → 기쁨/Joy
+					"EMO_SADNESS",         ## loneliness → 슬픔/Sadness (가장 근접)
+					"UI_STRESS",           ## stress → 스트레스/Stress
+					"EMO_SADNESS_INTENSE", ## grief → 비통/Grief
+					"DYAD_LOVE",           ## love → 사랑/Love
+				]
+				var legacy_colors: Dictionary = {
+					"happiness": Color(0.9, 0.8, 0.2), "loneliness": Color(0.4, 0.4, 0.7),
+					"stress": Color(0.9, 0.5, 0.2), "grief": Color(0.5, 0.3, 0.5), "love": Color(0.9, 0.3, 0.4),
+				}
+				for i in range(e_keys.size()):
+					var val: float = entity.emotions.get(e_keys[i], 0.0)
+					var label: String = Locale.ltr(e_locale_keys[i])
+					cy = _draw_bar(font, cx + 10, cy, bar_w, label, val, legacy_colors.get(e_keys[i], Color.WHITE))
 		cy += 6.0
 
 	# ── Trauma Scars ──
@@ -1386,6 +1445,111 @@ func _draw() -> void:
 					cy += 15.0
 			cy += 6.0
 
+	# ── Reputation ──
+	if entity.is_alive and _reputation_manager != null and _settlement_manager != null:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_REPUTATION"), "reputation")
+		if not _section_collapsed.get("reputation", true):
+			var settlement: RefCounted = null
+			if entity.settlement_id > 0:
+				settlement = _settlement_manager.get_settlement(entity.settlement_id)
+			if settlement != null and settlement.member_ids.size() > 1:
+				draw_string(font, Vector2(cx + 10, cy + 11),
+					Locale.ltr("UI_REPUTATION_SETTLEMENT_AVG"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"),
+					Color(0.6, 0.6, 0.6))
+				cy += 15.0
+				var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_MORALITY"),
+					avg_rep.get("morality", 0.0), Color(0.4, 0.8, 0.6))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_SOCIABILITY"),
+					avg_rep.get("sociability", 0.0), Color(0.5, 0.7, 0.9))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_COMPETENCE"),
+					avg_rep.get("competence", 0.0), Color(0.9, 0.75, 0.3))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_DOMINANCE"),
+					avg_rep.get("dominance", 0.0), Color(0.8, 0.4, 0.4))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_GENEROSITY"),
+					avg_rep.get("generosity", 0.0), Color(0.3, 0.9, 0.7))
+				cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("REP_OVERALL"),
+					avg_rep.get("overall", 0.0), Color(1.0, 1.0, 1.0))
+			else:
+				draw_string(font, Vector2(cx + 10, cy + 12),
+					Locale.ltr("REP_SOURCE_NONE"),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"),
+					Color(0.5, 0.5, 0.5))
+				cy += 16.0
+			cy += 4.0
+
+	# ── Economic Tendencies ──
+	if not entity.economic_tendencies.is_empty():
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_ECONOMIC_TENDENCIES"), "economic_tendencies")
+		if not _section_collapsed.get("economic_tendencies", true):
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_SAVING"),
+				entity.economic_tendencies.get("saving", 0.0), Color(0.3, 0.7, 0.5))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_RISK"),
+				entity.economic_tendencies.get("risk", 0.0), Color(0.9, 0.5, 0.3))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_GENEROSITY"),
+				entity.economic_tendencies.get("generosity", 0.0), Color(0.4, 0.85, 0.7))
+			cy = _draw_bipolar_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_MATERIALISM"),
+				entity.economic_tendencies.get("materialism", 0.0), Color(0.85, 0.65, 0.2))
+			cy += 4.0
+
+	# ── Social Status ──
+	if entity.is_alive or entity.status_tier != "common" or entity.status_score != 0.0:
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SOCIAL_STATUS"), "social_status")
+		if not _section_collapsed.get("social_status", false):
+			var tier_key: String = "REP_TIER_" + entity.status_tier.to_upper()
+			var tier_label: String = Locale.ltr("STATUS_LABEL") + ": " + Locale.ltr(tier_key)
+			var tier_color: Color = Color(0.7, 0.7, 0.7)
+			match entity.status_tier:
+				"elite": tier_color = Color(1.0, 0.85, 0.2)
+				"respected": tier_color = Color(0.5, 0.9, 0.5)
+				"common": tier_color = Color(0.7, 0.7, 0.7)
+				"marginal": tier_color = Color(0.9, 0.6, 0.3)
+				"outcast": tier_color = Color(0.9, 0.3, 0.3)
+			draw_string(font, Vector2(cx + 10, cy + 12), tier_label,
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), tier_color)
+			cy += 18.0
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_STATUS_TIER_LABEL"),
+				(entity.status_score + 1.0) / 2.0, tier_color,
+				"%+.2f" % entity.status_score)
+			var wealth_key: String = ""
+			if entity.wealth_norm < 0.15:
+				wealth_key = "WEALTH_DESTITUTE"
+			elif entity.wealth_norm < 0.35:
+				wealth_key = "WEALTH_STRUGGLING"
+			elif entity.wealth_norm < 0.55:
+				wealth_key = "WEALTH_COMFORTABLE"
+			elif entity.wealth_norm < 0.80:
+				wealth_key = "WEALTH_WELL_OFF"
+			else:
+				wealth_key = "WEALTH_WEALTHY"
+			var wealth_color: Color = Color(0.7, 0.7, 0.7)
+			if entity.wealth_norm < 0.15:
+				wealth_color = Color(0.9, 0.3, 0.3)
+			elif entity.wealth_norm > 0.55:
+				wealth_color = Color(1.0, 0.85, 0.2)
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_WEALTH_LABEL"),
+				entity.wealth_norm, wealth_color,
+				Locale.ltr(wealth_key))
+			if entity.job != "none":
+				var sat: float = entity.job_satisfaction
+				var sat_color: Color = Color(0.5, 0.8, 0.5)
+				if sat < 0.25:
+					sat_color = Color(0.9, 0.3, 0.3)
+				elif sat < 0.40:
+					sat_color = Color(0.9, 0.6, 0.3)
+				elif sat > 0.70:
+					sat_color = Color(0.3, 0.9, 0.5)
+				var sat_key: String = ""
+				if sat > 0.70: sat_key = "JOB_SAT_HIGH"
+				elif sat > 0.40: sat_key = "JOB_SAT_MED"
+				elif sat > 0.25: sat_key = "JOB_SAT_LOW"
+				else: sat_key = "JOB_SAT_CRITICAL"
+				cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("ECON_JOB_SAT_LABEL"),
+					sat, sat_color,
+					Locale.ltr(sat_key))
+			cy += 4.0
+
 	# ── Stats ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATS_SECTION"), "stats")
 	if not _section_collapsed.get("stats", false):
@@ -1530,6 +1694,40 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+
+## Draw a center-origin bipolar bar for values in [-1.0, +1.0].
+## Positive extends right (color_pos), negative extends left (color_neg).
+## Osgood et al. (1957) Semantic Differential — bipolar scales standard for attitudes/tendencies.
+func _draw_bipolar_bar(font: Font, x: float, y: float, w: float, label: String, value: float, color_pos: Color, color_neg: Color = Color(0.8, 0.3, 0.3)) -> float:
+	var label_w: float = 130.0
+	var val_w: float = 55.0
+	var bar_gap: float = 4.0
+	var bar_h: float = 10.0
+	draw_string(font, Vector2(x, y + 11), label, HORIZONTAL_ALIGNMENT_LEFT, int(label_w), GameConfig.get_font_size("bar_label"), Color(0.7, 0.7, 0.7))
+	var bar_x: float = x + label_w + bar_gap
+	var bar_w: float = maxf(w - label_w - val_w - bar_gap * 2, 20.0)
+	var center_x: float = bar_x + bar_w * 0.5
+	# Background
+	draw_rect(Rect2(bar_x, y + 2, bar_w, bar_h), Color(0.15, 0.15, 0.15, 0.8))
+	# Center line (zero reference)
+	draw_rect(Rect2(center_x - 0.5, y + 1, 1.0, bar_h + 2), Color(0.4, 0.4, 0.4, 0.7))
+	var clamped: float = clampf(value, -1.0, 1.0)
+	if absf(clamped) > 0.01:
+		var half_w: float = absf(clamped) * 0.5 * bar_w
+		if clamped > 0.0:
+			var intensity: float = clampf(clamped, 0.0, 1.0)
+			var bar_color: Color = Color(color_pos.r * (0.6 + intensity * 0.4), color_pos.g * (0.6 + intensity * 0.4), color_pos.b * (0.6 + intensity * 0.4), 0.85)
+			draw_rect(Rect2(center_x, y + 2, half_w, bar_h), bar_color)
+		else:
+			var intensity: float = clampf(absf(clamped), 0.0, 1.0)
+			var bar_color: Color = Color(color_neg.r * (0.6 + intensity * 0.4), color_neg.g * (0.6 + intensity * 0.4), color_neg.b * (0.6 + intensity * 0.4), 0.85)
+			draw_rect(Rect2(center_x - half_w, y + 2, half_w, bar_h), bar_color)
+	var val_x: float = bar_x + bar_w + bar_gap
+	var display_text: String = "%+.2f" % clamped
+	draw_string(font, Vector2(val_x, y + 11), display_text, HORIZONTAL_ALIGNMENT_RIGHT, int(val_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
+	return y + 16.0
+
 
 ## Return localization key for skill level descriptor label.
 func _get_skill_descriptor_key(level: int) -> String:

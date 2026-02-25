@@ -8,6 +8,19 @@ var _entity_manager: RefCounted
 var _relationship_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _stress_system: RefCounted = null
+var _event_deltas: Dictionary = {}
+
+## Map social event names → event_deltas.json keys
+var _rep_event_map: Dictionary = {
+	"casual_talk": "casual_talk",
+	"deep_talk": "deep_talk",
+	"share_food": "shared_food",
+	"work_together": "helped_work",
+	"give_gift": "shared_food",
+	"console": "comforted",
+	"console_reverse": "comforted",
+	"argument": "argued",
+}
 
 
 func _init() -> void:
@@ -20,6 +33,17 @@ func init(entity_manager: RefCounted, relationship_manager: RefCounted, rng: Ran
 	_entity_manager = entity_manager
 	_relationship_manager = relationship_manager
 	_rng = rng
+	_load_event_deltas()
+
+
+func _load_event_deltas() -> void:
+	var file = FileAccess.open("res://data/reputation/event_deltas.json", FileAccess.READ)
+	if file == null:
+		return
+	var json = JSON.new()
+	if json.parse(file.get_as_text()) == OK:
+		_event_deltas = json.data
+	file.close()
 
 
 func execute_tick(tick: int) -> void:
@@ -225,6 +249,9 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 			"tick": tick,
 		})
 
+	# Emit reputation events for both observers
+	_emit_reputation_events(event_name, a, b, tick)
+
 
 func _handle_proposal(a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) -> void:
 	# Acceptance probability = (romantic_interest/100) * compatibility
@@ -258,3 +285,30 @@ func _handle_proposal(a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) 
 			"entity_b_name": b.entity_name,
 			"tick": tick,
 		})
+
+
+## Emit reputation_event signals based on social interaction type
+func _emit_reputation_events(event_name: String, a: RefCounted, b: RefCounted, tick: int) -> void:
+	var delta_key: String = _rep_event_map.get(event_name, "")
+	if delta_key == "":
+		return
+	var deltas: Dictionary = _event_deltas.get(delta_key, {})
+	if deltas.is_empty():
+		return
+	for domain in deltas:
+		var d: Dictionary = deltas[domain]
+		var valence = float(d.get("valence", 0.0))
+		var magnitude = float(d.get("magnitude", 0.0))
+		# b observes a's action
+		SimulationBus.reputation_event.emit({
+			"observer_id": b.id, "target_id": a.id,
+			"domain": domain, "valence": valence,
+			"magnitude": magnitude, "source": "direct", "tick": tick,
+		})
+		# a observes b's participation (symmetric events)
+		if event_name in ["casual_talk", "deep_talk", "work_together", "argument"]:
+			SimulationBus.reputation_event.emit({
+				"observer_id": a.id, "target_id": b.id,
+				"domain": domain, "valence": valence,
+				"magnitude": magnitude, "source": "direct", "tick": tick,
+			})

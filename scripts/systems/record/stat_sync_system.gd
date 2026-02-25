@@ -67,6 +67,7 @@ func _sync_entity(entity: RefCounted) -> void:
 		_compute_derived(entity)
 		_sync_facets(entity)
 		_sync_intelligences(entity)
+		_sync_economic(entity)
 		return
 	StatQuery.set_value(entity, &"EMOTION_STRESS",     int(ed.stress * 20.0), 0)
 	StatQuery.set_value(entity, &"EMOTION_ALLOSTATIC",  int(ed.allostatic), 0)
@@ -74,6 +75,7 @@ func _sync_entity(entity: RefCounted) -> void:
 	_compute_derived(entity)
 	_sync_facets(entity)
 	_sync_intelligences(entity)
+	_sync_economic(entity)
 
 
 ## COMPOSITE 파생 스탯 계산 및 stat_cache에 저장.
@@ -97,13 +99,28 @@ func _compute_derived(entity: RefCounted) -> void:
 	var merriment: float = StatQuery.get_normalized(entity, &"VALUE_MERRIMENT")
 	var friendship: float = StatQuery.get_normalized(entity, &"VALUE_FRIENDSHIP")
 	var competition: float = StatQuery.get_normalized(entity, &"VALUE_COMPETITION")
+	var recognition: float = StatQuery.get_normalized(entity, &"NEED_RECOGNITION")
+	## Intelligence inputs [Visser 2006, CHC]
+	var i_ling: float = StatQuery.get_normalized(entity, &"INTEL_LINGUISTIC")
+	var i_log: float = StatQuery.get_normalized(entity, &"INTEL_LOGICAL")
+	var i_spa: float = StatQuery.get_normalized(entity, &"INTEL_SPATIAL")
+	var i_mus: float = StatQuery.get_normalized(entity, &"INTEL_MUSICAL")
+	var i_kin: float = StatQuery.get_normalized(entity, &"INTEL_KINESTHETIC")
+	var i_inter: float = StatQuery.get_normalized(entity, &"INTEL_INTERPERSONAL")
+	var i_intra: float = StatQuery.get_normalized(entity, &"INTEL_INTRAPERSONAL")
+	var i_nat: float = StatQuery.get_normalized(entity, &"INTEL_NATURALISTIC")
 
-	var charisma: float = clampf(X * 0.35 + A * 0.20 + H * 0.15 + joy * 0.15 + (1.0 - E) * 0.15, 0.0, 1.0)
-	var intimidation: float = clampf(str_pot * 0.40 + anger * 0.30 + (1.0 - E) * 0.15 + X * 0.15, 0.0, 1.0)
+	## Charisma [Interpersonal + Linguistic + personality]
+	var charisma: float = clampf(i_inter * 0.16 + i_ling * 0.10 + X * 0.22 + A * 0.16 + H * 0.08 + joy * 0.08 + (1.0 - E) * 0.06 + recognition * 0.04 + merriment * 0.05 + friendship * 0.05, 0.0, 1.0)
+	## Intimidation [Kinesthetic + physical + personality]
+	var intimidation: float = clampf(str_pot * 0.35 + anger * 0.25 + (1.0 - E) * 0.12 + X * 0.12 + i_kin * 0.08 + competition * 0.08, 0.0, 1.0)
 	var allure: float = clampf(charisma * 0.50 + romance * 0.25 + X * 0.25, 0.0, 1.0)
 	var trustworthiness: float = clampf(H * 0.40 + A * 0.30 + truth * 0.30, 0.0, 1.0)
-	var creativity: float = clampf(O * 0.45 + anticipation * 0.20 + artwork * 0.20 + X * 0.15, 0.0, 1.0)
-	var wisdom: float = clampf(C * 0.30 + O * 0.25 + A * 0.20 + knowledge * 0.25, 0.0, 1.0)
+	## Creativity [Spatial + Musical + Openness]
+	var creativity: float = clampf(i_spa * 0.15 + i_mus * 0.10 + i_ling * 0.05 + O * 0.25 + anticipation * 0.15 + artwork * 0.15 + i_intra * 0.05 + X * 0.10, 0.0, 1.0)
+	## Wisdom [Intrapersonal + Logical + age]
+	var age_factor: float = clampf((GameConfig.get_age_years(entity.age) - 25.0) / 35.0, 0.0, 1.0)
+	var wisdom: float = clampf(i_intra * 0.16 + i_log * 0.12 + C * 0.14 + O * 0.10 + A * 0.10 + knowledge * 0.14 + age_factor * 0.12 + i_ling * 0.06 + i_nat * 0.06, 0.0, 1.0)
 	var popularity: float = clampf(charisma * 0.50 + merriment * 0.25 + friendship * 0.25, 0.0, 1.0)
 	var risk_tolerance: float = clampf((1.0 - E) * 0.40 + O * 0.30 + competition * 0.15 + (1.0 - C) * 0.15, 0.0, 1.0)
 
@@ -174,3 +191,15 @@ func _sync_intelligences(entity: RefCounted) -> void:
 		var stat_id: StringName = intel_map[ikey]
 		var ival: float = float(intel.get(ikey, 0.5))
 		StatQuery.set_value(entity, stat_id, int(ival * 1000), 0)
+
+
+func _sync_economic(entity: RefCounted) -> void:
+	## Economic tendencies: float -1~+1 → int -1000~+1000
+	StatQuery.set_value(entity, &"ECON_SAVING", int(entity.economic_tendencies.get("saving", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_RISK", int(entity.economic_tendencies.get("risk", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_GENEROSITY", int(entity.economic_tendencies.get("generosity", 0.0) * 1000), 0)
+	StatQuery.set_value(entity, &"ECON_MATERIALISM", int(entity.economic_tendencies.get("materialism", 0.0) * 1000), 0)
+	## Job satisfaction & wealth & status
+	StatQuery.set_value(entity, &"JOB_SATISFACTION", int(entity.job_satisfaction * 1000), 0)
+	StatQuery.set_value(entity, &"WEALTH_NORM", int(entity.wealth_norm * 1000), 0)
+	StatQuery.set_value(entity, &"STATUS_SCORE", int((entity.status_score + 1.0) / 2.0 * 1000), 0)

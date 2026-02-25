@@ -45,6 +45,20 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"birth_date": entity.birth_date.duplicate() if not entity.birth_date.is_empty() else {},
 		"death_date": _current_date_from_tick(current_tick),
 		"death_age_days": (current_tick - entity.birth_tick) / 12,
+		# ── Extended snapshot fields ──
+		"values": entity.values.duplicate() if not entity.values.is_empty() else {},
+		"skill_xp": entity.skill_xp.duplicate() if not entity.skill_xp.is_empty() else {},
+		"skill_levels": entity.skill_levels.duplicate() if not entity.skill_levels.is_empty() else {},
+		"economic_tendencies": entity.economic_tendencies.duplicate(),
+		"trait_strengths": entity.trait_strengths.duplicate() if not entity.trait_strengths.is_empty() else {},
+		"status_tier": entity.status_tier,
+		"status_score": entity.status_score,
+		"wealth_norm": entity.wealth_norm,
+		"wealth_score": entity.wealth_score,
+		"job_satisfaction": entity.job_satisfaction,
+		"intelligences": entity.intelligences.duplicate() if not entity.intelligences.is_empty() else {},
+		"general_intelligence": entity.general_intelligence,
+		"moral_stage": entity.moral_stage,
 	}
 	_records[entity.id] = record
 

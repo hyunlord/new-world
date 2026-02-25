@@ -15,6 +15,8 @@ const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 
 const PHASE: int = 2  ## 현재 구현 Phase.
 
+var _affinity_cache: Dictionary = {}
+
 func _ready() -> void:
 	StatDefinitionScript.load_all("res://stats/")
 	var ok: bool = StatGraphScript.build()
@@ -246,7 +248,8 @@ func add_xp(entity: RefCounted, stat_id: StringName,
 	## Accumulate XP
 	var current_xp: float = float(entity.skill_xp.get(stat_id, 0.0))
 	var old_level: int = int(entity.skill_levels.get(stat_id, 0))
-	current_xp += xp
+	var _intel_mult: float = _compute_intel_xp_mult(entity, def)
+	current_xp += xp * _intel_mult
 	entity.skill_xp[stat_id] = current_xp
 
 	## Compute talent ceiling from body trainability
@@ -389,3 +392,52 @@ func _check_condition(entity: RefCounted, condition: Dictionary,
 		if get_stat(entity, StringName(sid)) < int(gte[sid]):
 			return false
 	return true
+
+
+## ── Intelligence-based XP multiplier [Gardner, CHC, Lupien] ────────
+func _compute_intel_xp_mult(entity: RefCounted, def: Dictionary) -> float:
+	if entity.intelligences.is_empty():
+		return 1.0
+	var category: String = def.get("category", "")
+	var intel_mult: float = 1.0
+	if category != "":
+		var affinity: Dictionary = _get_affinity_for_category(category)
+		if not affinity.is_empty():
+			var score: float = 0.0
+			for key in affinity:
+				score += entity.intelligences.get(key, 0.5) * affinity[key]
+			var centered: float = score - 0.5
+			intel_mult = 1.0 + GameConfig.INTEL_LEARN_MULT_M * tanh(GameConfig.INTEL_LEARN_MULT_K * centered)
+	## Conscientiousness effort [Chamorro-Premuzic 2004]
+	var c_mult: float = 1.0
+	if entity.personality != null and not entity.personality.facets.is_empty():
+		var facets: Dictionary = entity.personality.facets
+		var c_mean: float = (
+			float(facets.get("C_organization", 0.5))
+			+ float(facets.get("C_diligence", 0.5))
+			+ float(facets.get("C_perfectionism", 0.5))
+			+ float(facets.get("C_prudence", 0.5))
+		) / 4.0
+		c_mult = 1.0 + GameConfig.INTEL_CONSCIENTIOUSNESS_WEIGHT * (c_mean - 0.5)
+	## Stress penalty [Lupien 2009]
+	var stress_mult: float = 1.0
+	var allostatic: float = get_normalized(entity, &"EMOTION_ALLOSTATIC")
+	if allostatic > GameConfig.INTEL_STRESS_LEARNING_THRESHOLD_HIGH:
+		stress_mult = GameConfig.INTEL_STRESS_LEARNING_PENALTY_HIGH
+	elif allostatic > GameConfig.INTEL_STRESS_LEARNING_THRESHOLD_LOW:
+		stress_mult = GameConfig.INTEL_STRESS_LEARNING_PENALTY_LOW
+	return intel_mult * c_mult * stress_mult
+
+
+func _get_affinity_for_category(category: String) -> Dictionary:
+	if _affinity_cache.has(category):
+		return _affinity_cache[category]
+	var file = FileAccess.open("res://data/intelligence/affinity_defaults.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var json = JSON.new()
+	if json.parse(file.get_as_text()) != OK:
+		return {}
+	var all_data: Dictionary = json.get_data()
+	_affinity_cache = all_data
+	return _affinity_cache.get(category, {})

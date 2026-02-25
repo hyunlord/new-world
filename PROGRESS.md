@@ -1,3 +1,162 @@
+## Bipolar Scale Fix — t-BP batch — 2026-02-24
+
+### Context
+Reputation 5 dimensions and economic tendency 4 types were displayed as 0~100% unipolar bars. They should be -1.0~+1.0 bipolar center-origin bars per psychometric standards (Osgood et al., 1957).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-BP-01 | entity_data + stat_sync defaults 0.5→0.0 | 🟢 DISPATCH | ask_codex | standalone defaults change |
+| t-BP-02 | economic_tendency_system bipolar normalization | 🟢 DISPATCH | ask_codex | single system formula change |
+| t-BP-03 | entity_detail_panel bipolar bar + replacements | 🟢 DISPATCH | ask_codex | single UI file change |
+| t-BP-04 | Verification + gate + Notion | 🔴 DIRECT | — | integration verification |
+
+### Dispatch ratio: 3/4 = 75% ✓
+
+### Dispatch strategy
+Parallel — all 3 Codex tickets dispatched simultaneously (no file overlap).
+BP-01 timed out due to model fallbacks; changes applied directly from spec.
+BP-02 and BP-03 completed by Codex but lost in git stash conflict; re-applied manually from Codex output.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| EconomicTendency (데이터 정의서) | 값 범위, 설명 | modified | [0,1] → [-1,+1], 설명에 bipolar 명시 |
+| 📝 변경 로그 | — | added | 2026-02-24 경제 성향+평판 양극성 스케일 변환 |
+
+### Localization Verification
+- Hardcoded scan: PASS (no new UI text; all labels use Locale.ltr())
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS
+- Dispatch ratio: 3/4 = 75%
+- Files changed: 4 (entity_data.gd, stat_sync_system.gd, economic_tendency_system.gd, entity_detail_panel.gd)
+- Dispatch tool used: ask_codex (3 tickets)
+- Notion pages updated: EconomicTendency (데이터 정의서), 📝 변경 로그
+
+---
+
+## Deceased Entity Click Crash — t-DEAD-UI — 2026-02-24
+
+### Context
+Clicking a dead entity crashes: "Invalid access to property or key 'intelligences' on DeceasedEntityProxy". DeceasedEntityProxy lacks `intelligences` and `emotions` properties. Added `entity.is_alive` guard to intelligence section and `is_alive + "emotions" in entity` guard to emotions legacy fallback.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-DEAD-UI | Guard intelligence+emotions for deceased | 🔴 DIRECT | — | single-file guard fix |
+
+### Dispatch ratio: 0/1 = 0% — trivial single-file fix
+
+### Dispatch strategy
+Single DIRECT ticket.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 📝 변경 로그 | — | added | 2026-02-24 Deceased entity click crash — is_alive guard on intelligence + emotions fallback |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS (0a2ada9)
+- Files changed: 1 (entity_detail_panel.gd)
+
+---
+
+## Reputation Tuning Fix — t-REP-TUNE — 2026-02-24
+
+### Context
+Reputation values displayed as ~50% in entity detail panel for all entities even after 30+ years. Root cause: hardcoded `0.10` multiplier in reputation_system.gd scaled event deltas to 1/10th magnitude, combined with aggressive yearly decay (0.794 retention), kept values near zero on -1/+1 scale. Normalized: (0.023+1)/2=51.15% — visually indistinguishable from 50%.
+Economic tendencies confirmed WORKING correctly (NOT at 50%) — they compute varied values from HEXACO axes + entity values on first tick.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-REP-TUNE | Diagnose + fix reputation tuning | 🔴 DIRECT | — | diagnostic work requiring full codebase view |
+
+### Dispatch ratio: 0/1 = 0% — diagnostic/tuning work, cannot be split
+
+[DIRECT] t-REP-TUNE: Debugging required reading 10+ files across systems/core/ui to trace event flow. Tuning change touches shared GameConfig constants. Not dispatchable.
+
+### Dispatch strategy
+Single DIRECT ticket — diagnostic work.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | Tuning | modified | REP_EVENT_DELTA_SCALE=0.50 (was hardcoded 0.10), REP_GOSSIP_DELTA_SCALE=0.35 (was hardcoded 0.20) |
+| 📝 변경 로그 | — | added | 2026-02-24 Reputation tuning fix — event delta scale 0.10→0.50, gossip delta 0.20→0.35, magic numbers → GameConfig constants |
+
+### Localization Verification
+- Hardcoded scan: PASS (no new UI text)
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS (db9b2fc)
+- Dispatch ratio: 0/1 = 0% (diagnostic work)
+- Files changed: 2 (game_config.gd, reputation_system.gd)
+- Dispatch tool used: — (DIRECT only)
+- Notion pages updated: 평판 & 경제 시스템 (tuning updated), 변경 로그 (entry added)
+
+### Diagnosis Summary
+| Cause | Status | Notes |
+|-------|--------|-------|
+| 1. System not registered | ELIMINATED | All 4 systems registered in main.gd |
+| 2. entity_data fields missing | ELIMINATED | All fields exist |
+| 3. Input key mismatch | ELIMINATED | HEXACO axes H,E,X,A,C,O match |
+| 4. Runtime errors | ELIMINATED | No critical errors found |
+| 5. UI binding errors | ELIMINATED | UI reads correct fields |
+| 6. tick_interval issues | ELIMINATED | Intervals reasonable |
+| **7. Tuning: delta too small** | **ROOT CAUSE** | 0.10 multiplier + decay → values ≈0.02 |
+
+---
+
+## Layer 4.5+4.7 UI Integration — t-UI47 — 2026-02-24
+
+### Context
+Layer 4.5+4.7 backend (reputation, economic tendencies, job satisfaction, stratification) is running but invisible in entity_detail_panel. Add 3 collapsible sections: Reputation (settlement avg), Economic Tendencies (4 bars), Social Status (tier + wealth + job satisfaction). Wire reputation_manager through init chain.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-UI47-01 | main.gd wiring | 🔴 DIRECT | — | integration wiring <10 LOC |
+| t-UI47-02 | hud.gd wiring | 🔴 DIRECT | — | integration wiring <10 LOC |
+| t-UI47-03 | entity_detail_panel.gd sections | 🟢 DISPATCH | ask_codex | bulk drawing code ~120 LOC |
+| t-UI47-04 | Localization keys (en+ko) | 🟢 DISPATCH | ask_codex | 4 JSON file edits |
+
+### Dispatch ratio: 2/4 = 50% — T1+T2 are trivial wiring (<10 LOC each)
+
+### Dispatch strategy
+Sequential: T1+T2 DIRECT first (wiring), then T3+T4 DISPATCH parallel (no file overlap).
+Dispatch tool: codex_dispatch.sh (both T3 and T4)
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | UI Integration | added | Sub-page: 📊 UI Integration (Entity Detail Panel) — 3 sections, reputation_manager wiring, 9 locale keys |
+| 📝 변경 로그 | — | added | 2026-02-24 Layer 4.5+4.7 UI Integration — entity_detail_panel에 평판/경제성향/사회적지위 3개 섹션 추가 |
+
+### Localization Verification
+- Hardcoded scan: PASS
+- New keys added: UI_REPUTATION, UI_REPUTATION_SETTLEMENT_AVG, UI_ECONOMIC_TENDENCIES, UI_SOCIAL_STATUS, ECON_WEALTH_LABEL, ECON_STATUS_TIER_LABEL, ECON_JOB_SAT_LABEL (7 keys in en+ko)
+- ko/ updated: YES
+
+### Results
+- Gate: PASS (66820ce)
+- Dispatch ratio: 2/4 = 50% (T1+T2 trivial wiring)
+- Files changed: 8 (main.gd, hud.gd, entity_detail_panel.gd, en/ui.json, ko/ui.json, en/economy.json, ko/economy.json, PROGRESS.md)
+- Dispatch tool used: codex_dispatch.sh (2 tickets)
+- Notion pages updated: 평판 & 경제 시스템 (sub-page added), 변경 로그 (entry added)
+
+---
+
 ## Leader UI — t-LUI-01/02/03 — 2026-02-24
 
 ### Context
@@ -4535,3 +4694,319 @@ Direct (after 02): t-LE-06 (integration wiring)
 - Dispatch tool used: DIRECT (all — Codex MCP not available)
 - Notion pages updated: 📝 변경 로그 DB (신규 항목 976cee3 추가); 👑 리더 시스템 페이지 — notion-update-page MCP tool parameter bug (page_id/command not parsed); 개발 히스토리 행 수동 추가 필요
 
+
+---
+
+## Intelligence System — t-INTEL-0~9 — 2026-02-24
+
+### Context
+Gardner 8-MI with CHC g-factor hybrid. Entities get intelligence potentials at birth via
+Cholesky-correlated generation; effective values change over lifespan via Fluid/Crystallized/Physical
+age curves + environment modifiers (nutrition, ACE). Intelligence affects skill learning speed and
+derived stats (Charisma, Wisdom, Creativity, Intimidation).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-INTEL-0 | EntityData fields + GameConfig constants | 🔴 DIRECT | — | shared config, foundation for all others |
+| t-INTEL-1 | IntelligenceGenerator (Cholesky hybrid) | 🔴 DIRECT | — | ask_codex MCP unavailable, codex_dispatch.sh async PRs incompatible with autopilot |
+| t-INTEL-2 | IntelligenceCurves (age modifiers) | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-3 | IntelligenceSystem (tick updater) | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-4 | Skill learning integration | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-5 | Derived stat formula revision | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-6 | Entity creation integration | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-7 | System registration wiring | 🔴 DIRECT | — | integration wiring <50 lines |
+| t-INTEL-8 | UI panel intelligence section | 🔴 DIRECT | — | ask_codex MCP unavailable |
+| t-INTEL-9 | Localization keys | 🔴 DIRECT | — | ask_codex MCP unavailable, 4 keys only |
+
+### Dispatch ratio: 0/10 = 0% (exception: ask_codex MCP returned "No matching deferred tools found"; codex_dispatch.sh creates async branch PRs incompatible with autopilot single-branch workflow)
+
+### Dispatch strategy
+All DIRECT. Codex MCP unavailable (ToolSearch returned no results). codex_dispatch.sh uses `codex cloud exec` which creates async PRs on separate branches — incompatible with autopilot workflow on lead/main. Implementing config-first fan-out: TICKET-0 first, then all dependents.
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🧠 Intelligence System | — | created | New page: overview, academic foundation, architecture, data structures, constants |
+| 📊 Derived Stats | Formulas | modified | Updated formulas with intelligence inputs |
+| 👤 Entity Data Fields | — | added | 4 new fields: general_intelligence, intelligence_potentials, intel_nutrition_penalty, intel_ace_penalty |
+| Data Definitions DB | — | added | INTEL_* constants registered |
+| Change Log DB | — | added | Intelligence System: Gardner 8-MI with CHC g-factor |
+
+### Localization Verification
+- Hardcoded scan: PENDING
+- New keys added: UI_INTELLIGENCE, UI_INTEL_NONE, UI_INTEL_GENERAL, UI_INTEL_POTENTIAL
+- ko/ updated: YES
+
+### Notion Update (Actual)
+| Page | Action | Status |
+|------|--------|--------|
+| 🧬 신체·인지·종족 설계 | Layer 1.7 section update | ⚠️ notion-update-page MCP broken (schema mismatch) — needs manual merge |
+| 📝 변경 로그 DB | New entry: Intelligence System 실장 | ✅ Created (311e2e3d) |
+| DERIVED_STAT (데이터 정의서) | Description update | ⚠️ notion-update-page MCP broken — needs manual update |
+
+Note: `notion-update-page` MCP tool has schema mismatch (expects flat params but schema wraps in `data`). `notion-create-pages` works. Change Log entry successfully created. Page content updates need manual merge.
+
+### Localization Verification (Final)
+- Hardcoded scan: PASS (grep found no violations in cognition/*.gd or entity_detail_panel.gd)
+- New keys added: UI_INTELLIGENCE, UI_INTEL_NONE, UI_INTEL_GENERAL, UI_INTEL_POTENTIAL
+- ko/ updated: YES
+- Deprecated tr_data() scan: not found in scope
+
+### Results
+- Gate: PASS ([gate] PASS — 33 systems, 20 entities spawned, no runtime errors)
+- Commit: fab6c08 (code) + 5c87e1d (PROGRESS.md)
+- Files changed: 14 (10 modified + 4 new)
+- Dispatch ratio: 0/10 (Codex MCP unavailable — ToolSearch returned no results)
+- Dispatch tool used: DIRECT (all — ask_codex MCP not discoverable, codex_dispatch.sh async PRs incompatible)
+- Notion pages updated: 📝 변경 로그 DB (신규 항목 ✅), 🧬 신체·인지·종족 설계 + DERIVED_STAT (⚠️ notion-update-page MCP broken)
+
+---
+
+## Layer 4.5+4.7: Social Identity & Economic Behavior — t-SOC batch
+
+### Context
+Agents lack social consequence — no reputation, no gossip, no economic differentiation, no job satisfaction, no wealth inequality tracking. Implements Layer 4.5 (reputation 5-dim, job satisfaction, social status) and Layer 4.7 (economic tendencies, wealth tracking, stratification monitor).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T-INFRA | entity_data + settlement_data + simulation_bus + game_config + locale.gd | 🔴 DIRECT | — | shared interfaces, signals, constants (~5 files) |
+| T-SOC-01 | reputation_data.gd | 🟢 DISPATCH | ask_codex | standalone new file |
+| T-SOC-02 | reputation_manager.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-01) |
+| T-SOC-03 | data/reputation/event_deltas.json | 🟢 DISPATCH | ask_codex | standalone data file |
+| T-SOC-04 | reputation_system.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-01,02,03) |
+| T-SOC-05 | data/jobs/*.json (4 files) | 🟢 DISPATCH | ask_codex | standalone data files |
+| T-SOC-06 | economic_tendency_system.gd | 🟢 DISPATCH | ask_codex | standalone new file |
+| T-SOC-07 | job_satisfaction_system.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-05) |
+| T-SOC-08 | stratification_monitor.gd | 🟢 DISPATCH | ask_codex | standalone new file (depends T-SOC-02) |
+| T-SOC-09 | localization JSONs (reputation.json + economy.json en/ko + events.json additions) | 🟢 DISPATCH | ask_codex | standalone locale files |
+| T-WIRE | stat_sync + social_event + leader_system + main.gd wiring | 🔴 DIRECT | — | integration wiring, connects dispatched work |
+
+### Dispatch ratio: 8/10 = 80% ✅ (target: ≥60%)
+
+### Dispatch strategy
+Config-first fan-out:
+1. T-INFRA (DIRECT) — shared fields/signals/constants first, commit
+2. T-SOC-01 + T-SOC-03 + T-SOC-05 + T-SOC-06 + T-SOC-09 (parallel dispatch — no file overlap)
+3. T-SOC-02 (sequential — depends on T-SOC-01)
+4. T-SOC-04 (sequential — depends on T-SOC-01, 02, 03)
+5. T-SOC-07 (sequential — depends on T-SOC-05)
+6. T-SOC-08 (sequential — depends on T-SOC-02)
+7. T-WIRE (DIRECT) — final wiring after all dispatches complete
+
+### Notion Update
+| Page | Section | Action | Content |
+|------|---------|--------|---------|
+| 🏛️ 평판 & 경제 시스템 (Layer 4.5+4.7) | — | created | 신규 시스템 문서 (👥 사회 시스템 하위) — 아키텍처, 데이터 구조, 핵심 로직, 파일 목록, 신호, 상수, 개발 히스토리 |
+| 📝 변경 로그 | — | added | 2026-02-24 Layer 4.5+4.7 평판 & 경제 시스템 구현 (관계 & 사회) |
+| 📋 데이터 정의서 | — | added | ReputationDomain(Enum), StatusTier(Enum), StratificationPhase(Enum), GossipMotive(Enum), EconomicTendency(딕셔너리) |
+
+### Localization Verification
+- Hardcoded scan: PASS (all 6 new .gd files + 6 modified .gd files — no hardcoded .text strings)
+- New keys added: REP_* (17 keys), ECON_*/WEALTH_*/JOB_SAT_*/STATUS_*/STRAT_*/GINI_*/LEVELING_* (20 keys), EVT_* (7 keys)
+- ko/ updated: YES (reputation.json, economy.json, events.json — all en/ and ko/ pairs)
+
+### Results
+- Gate: PASS ([gate] PASS — 37 systems, 13 locale categories)
+- Dispatch ratio: 8/10 = 80% ✅
+- Files changed: 24 (12 modified + 12 new)
+- Dispatch tool used: ask_codex (8 tickets), DIRECT (2 tickets: T-INFRA, T-WIRE)
+- Notion pages updated: 🏛️ 평판 & 경제 시스템 (신규), 📝 변경 로그 (신규 항목), 📋 데이터 정의서 (5개 신규 항목)
+
+## Dev Kanban Board — tools/kanban — 2026-02-25
+
+### Context
+Build a local web dashboard (FastAPI + React) to monitor Codex dispatch work in real-time.
+Kanban board with 5 columns, history view, stats view, WebSocket live updates.
+This is a dev tool, NOT WorldSim game code. No locale system needed.
+
+### Tickets
+| Ticket | Title | Action | Tool | Reason |
+|--------|-------|--------|------|--------|
+| KB-01 | Backend DB & Models | 🟢 DISPATCH | Claude executor | Codex MCP unavailable |
+| KB-02 | Backend REST API | 🟢 DISPATCH | Claude executor | depends on KB-01 |
+| KB-03 | Backend WebSocket | 🟢 DISPATCH | Claude executor | depends on KB-02 |
+| KB-04 | Backend Stats API | 🟢 DISPATCH | Claude executor | depends on KB-02 |
+| KB-05 | Frontend project init | 🟢 DISPATCH | Claude executor | standalone |
+| KB-06 | Frontend KanbanBoard + TicketCard | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-07 | Frontend TicketDetail panel | 🟢 DISPATCH | Claude executor | depends on KB-06 |
+| KB-08 | Frontend HistoryTable + FilterBar | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-09 | Frontend StatsView | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-10 | Frontend hooks + API client | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-11 | Docker config | 🟢 DISPATCH | Claude executor | standalone |
+| KB-12 | Codex helper script | 🟢 DISPATCH | Claude executor | standalone |
+| KB-13 | Integration wiring | 🔴 DIRECT | — | CORS, proxy, final verification |
+
+### Dispatch ratio: 12/13 = 92% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): KB-01, KB-05, KB-11, KB-12
+Wave 2 (after KB-01): KB-02 → KB-03, KB-04
+Wave 3 (after KB-05): KB-06, KB-08, KB-09, KB-10 → KB-07
+Wave 4: KB-13 (integration)
+
+Note: ask_codex MCP unavailable. codex_dispatch.sh is GDScript-specific.
+Falling back to Claude executor agents per OMC fallback rules.
+
+### Localization Verification
+- N/A — dev tool, not WorldSim game code
+
+---
+
+## Deceased Detail Expansion + Trait Bug Fix — t-DEAD-EXPAND + t-TRAIT-FIX — 2026-02-25
+
+### Context
+Two urgent fixes: (A) Deceased entity detail panel only showed personality/family — need full stat snapshot (values, skills, traits, economic, intelligence, social status). (B) All agents had "berserker" and "opportunist" traits due to code ordering bug in `_get_facet_value()`.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| A1 | deceased_registry.gd — add 14 snapshot fields | 🔴 DIRECT | — | already have full context loaded, MCP codex unavailable |
+| A2 | entity_detail_panel.gd — extend proxy + remove guards | 🔴 DIRECT | — | tightly coupled to A1, proxy class + 6 guard edits |
+| B1 | trait_system.gd — swap pd.axes/StatQuery priority | 🔴 DIRECT | — | 2-line fix, debugging requires full context |
+
+### Dispatch ratio: 0/3 = 0% ❌
+
+[DIRECT] A1: ask_codex MCP unavailable (ToolSearch returned no results). Full context already loaded. Single file edit with 14 field additions.
+[DIRECT] A2: Tightly coupled proxy class extension + 6 guard edits across 1 file. Requires understanding of DeceasedEntityProxy ↔ deceased_registry field mapping.
+[DIRECT] B1: 2-line swap. Root cause analysis already complete. Debugging fix.
+
+### Dispatch strategy
+All DIRECT — MCP Codex tools unavailable this session. All changes are surgical edits to 3 files.
+
+### Localization Verification
+- Hardcoded scan: PASS — no new UI text, all labels reuse existing Locale keys
+- New keys added: none
+- ko/ updated: N/A
+
+### Changes Summary
+**B1 — trait_system.gd (line 149-152):** Swapped `pd.axes.has(facet_key)` check before `StatQuery.get_normalized()` fallback. Root cause: "HEXACO_A" not registered in StatQuery → returned 0.0 → all axis-based traits evaluated to 1.0 salience.
+
+**A1 — deceased_registry.gd:** Added 14 snapshot fields to `register_death()`: values, skill_xp, skill_levels, economic_tendencies, trait_strengths, status_tier, status_score, wealth_norm, wealth_score, job_satisfaction, intelligences, general_intelligence, moral_stage.
+
+**A2 — entity_detail_panel.gd:**
+- Added 11 fields to DeceasedEntityProxy (economic_tendencies, trait_strengths, status_tier, status_score, wealth_norm, wealth_score, job_satisfaction, intelligences, general_intelligence, frailty)
+- Populated 16 fields from record in _init() (values, moral_stage, skill_xp, skill_levels + 11 new)
+- Removed `entity.is_alive` guard from: intelligence section, economic tendencies, social status
+- Guarded `StatQuery.get_skill_multiplier()` for deceased (needs live stat_cache)
+
+### Results
+- Gate: PASS
+- Files changed: 3 (trait_system.gd, deceased_registry.gd, entity_detail_panel.gd)
+- Headless smoke: 20 entities spawned, 37 systems registered, no errors
+
+### Results
+- Backend smoke tests: ALL 8 PASSED (create, update, log, complete, stats, 404, detail, list)
+- Frontend build: PASSED (935 modules, 1.17s)
+- Gate: N/A (dev tool, not GDScript)
+- Dispatch ratio: 12/13 = 92% (Codex MCP unavailable → Claude executor agents used)
+- Files changed: 25
+
+### File Inventory
+Backend (5 files, ~700 lines):
+- database.py (27 lines) — SQLAlchemy engine, WAL mode, session
+- models.py (59 lines) — Ticket, TicketLog, TicketEvent
+- schemas.py (110 lines) — Pydantic request/response models
+- websocket_manager.py (35 lines) — WS connection manager
+- main.py (451 lines) — FastAPI app, 11 REST endpoints + WS
+
+Frontend (15 files, ~1900 lines):
+- App.jsx, main.jsx — routing, WS integration
+- 9 components: TopBar, KanbanBoard, TicketCard, TicketDetail, HistoryTable, StatsView, FilterBar, LogViewer, DiffViewer
+- 2 hooks: useWebSocket, useTickets
+- 1 util: api.js
+- Config: package.json, vite.config.js, tailwind.config.js, postcss.config.js, index.html, index.css
+
+Infrastructure (5 files):
+- docker-compose.yml, Dockerfile.backend, Dockerfile.frontend
+- scripts/kanban_helpers.sh
+- .gitignore
+
+## Dev Kanban Board Phase 2 — Batch System + Claude Code Integration — 2026-02-25
+
+### Context
+Add batch/session tracking to group tickets by prompt. Add created_by/dispatch_method tracking.
+Extend frontend with BatchView, batch filters, actor dots, enhanced stats.
+Insert kanban integration rules into CLAUDE.md and codex_dispatch.sh.
+
+### Tickets
+| Ticket | Title | Action | Tool | Reason |
+|--------|-------|--------|------|--------|
+| KB2-01 | Backend Batch model + Ticket fields | 🟢 DISPATCH | Claude executor | model changes |
+| KB2-02 | Backend Batch API + Ticket API changes | 🟢 DISPATCH | Claude executor | depends KB2-01 |
+| KB2-03 | Backend Stats API extension | 🟢 DISPATCH | Claude executor | depends KB2-01 |
+| KB2-04 | Frontend BatchView | 🟢 DISPATCH | Claude executor | depends KB2-02 |
+| KB2-05 | Frontend batch filter + actor dots | 🟢 DISPATCH | Claude executor | depends KB2-02 |
+| KB2-06 | Frontend Stats extension | 🟢 DISPATCH | Claude executor | depends KB2-03 |
+| KB2-07 | Frontend nav + App.jsx routing | 🟢 DISPATCH | Claude executor | depends KB2-04 |
+| KB2-08 | kanban_helpers.sh extension | 🟢 DISPATCH | Claude executor | standalone |
+| KB2-09 | Schemas extension | 🟢 DISPATCH | Claude executor | with KB2-01 |
+| KB2-10 | CLAUDE.md kanban rules | 🔴 DIRECT | — | shared interface |
+| KB2-11 | codex_dispatch.sh modification | 🔴 DIRECT | — | shared interface |
+
+### Dispatch ratio: 9/11 = 82% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): KB2-01+KB2-09 (model+schemas), KB2-08 (helpers)
+Wave 2 (after KB2-01): KB2-02, KB2-03 (parallel)
+Wave 3 (after KB2-02): KB2-04, KB2-05 (parallel), KB2-06 (after KB2-03)
+Wave 4: KB2-07 (after KB2-04)
+Wave 5 (DIRECT): KB2-10, KB2-11
+
+### Results
+- All smoke tests: PASS (10/10)
+- Frontend build: PASS (936 modules)
+- Backend syntax: PASS
+- Shell scripts syntax: PASS (codex_dispatch.sh, kanban_helpers.sh)
+- Dispatch ratio: 9/11 = 82% ✅
+- Dispatch tool: Claude executor (Codex MCP unavailable)
+- Files changed: 10 (6 modified, 1 created)
+  - Modified: models.py, schemas.py, main.py, kanban_helpers.sh, App.jsx, TopBar.jsx, KanbanBoard.jsx, TicketCard.jsx, StatsView.jsx, api.js, codex_dispatch.sh, CLAUDE.md
+  - Created: BatchView.jsx
+
+### Verified Features
+- Batch CRUD: create, list, detail (with dispatch ratio), update
+- Batch auto-status: active → completed/partial on ticket state changes
+- Ticket batch linking: batch_id, created_by, ticket_number fields
+- Ticket filters: batch_id, created_by query params
+- Extended stats: by_created_by, by_dispatch_method, dispatch_ratio, batch counts
+- Frontend BatchView: list + detail with progress bars and ticket table
+- Frontend batch filter: dropdown on kanban board
+- Frontend actor dots: blue/green/gray on ticket cards
+- Frontend stats: dispatch method bar chart, creator pie chart, details table
+- kanban_helpers.sh: 5 new Claude Code functions
+- codex_dispatch.sh: auto-kanban ticket creation when BATCH_ID is set
+- CLAUDE.md: kanban integration rules section added
+
+---
+
+## Trait Sigmoid Center Calibration — t-SIGMOID — 2026-02-25
+
+### Context
+After Bug 1 fix (_get_facet_value code ordering), composite/dark traits still over-fire (berserker 9.7%, saint 13.1%, scholar_scribe 100%). Root causes: (A) c_scholar_scribe has inverted center 0.85 in LOW condition, (B) cond_center values too close to mean (0.4/0.6 vs needed 0.25-0.35/0.65-0.75).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T1 | Python script + JSON cond_center calibration | 🔴 DIRECT | — | ask_codex MCP unavailable, user-provided script |
+| T2 | Gate verification | 🔴 DIRECT | — | gate run |
+
+### Dispatch ratio: 0/2 = 0% ❌
+
+[DIRECT] T1: ask_codex MCP unavailable (ToolSearch returned no results). Task is write user-provided Python script + run it. Single JSON file output.
+[DIRECT] T2: Gate verification.
+
+### Dispatch strategy
+All DIRECT — Codex MCP unavailable. Single Python script execution + JSON data change.
+
+### Localization Verification
+- Hardcoded scan: N/A — JSON data values only, no UI text
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS
+- Files changed: 1 (data/personality/trait_defs_v2.json)
+- Conditions changed: 107 (LOW: 39, HIGH: 68)
+- Temp script: tools/fix_trait_centers.py (keep for audit trail)

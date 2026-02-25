@@ -122,6 +122,18 @@ var stat_cache: Dictionary = {}
 ## 생성 시 PersonalityGenerator가 채움. 기본값 빈 Dict (미초기화).
 var intelligences: Dictionary = {}
 
+## [CHC / Visser 2006] General intelligence factor (hidden from UI)
+var general_intelligence: float = 0.5
+
+## [Gardner 1983] Genetic potential ceiling per intelligence (set at birth, never changes)
+var intelligence_potentials: Dictionary = {}
+
+## [Georgieff 2007] Accumulated permanent nutrition penalty (0.0 ~ 0.15)
+var intel_nutrition_penalty: float = 0.0
+
+## [Lupien 2009] Permanent ACE cognitive penalty (0.0 ~ 0.15)
+var intel_ace_penalty: float = 0.0
+
 ## Accumulated skill XP — keyed by skill_id StringName (e.g. &"SKILL_FORAGING")
 ## Written by StatQuery.add_xp(). Persisted in save file.
 var skill_xp: Dictionary = {}
@@ -142,6 +154,31 @@ var moral_stage: int = 1
 ## [Festinger (1957)] 가치관 위반 누적 기록 (자기합리화 추적용)
 ## { "TRUTH": 3, "LOYALTY": 1 }
 var value_violation_count: Dictionary = {}
+
+## === Layer 4.5: Social Identity ===
+
+## [Hackman & Oldham 1976] Job satisfaction [0.0, 1.0]
+var job_satisfaction: float = 0.50
+
+## [Fiske 2007] Status score [-1.0, +1.0] — computed by StratificationMonitor
+var status_score: float = 0.0
+## Status tier label — set by StratificationMonitor from status_score
+var status_tier: String = "common"
+
+## === Layer 4.7: Economic Behavior ===
+
+## Wealth score (absolute, log-scaled) — computed by StratificationMonitor
+var wealth_score: float = 0.0
+## Wealth norm [0.0, 1.0] relative to settlement P90
+var wealth_norm: float = 0.0
+
+## [Ashton & Lee 2007] Economic tendencies [-1.0, +1.0]
+var economic_tendencies: Dictionary = {
+	"saving": 0.0,
+	"risk": 0.0,
+	"generosity": 0.0,
+	"materialism": 0.0,
+}
 
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
@@ -243,9 +280,19 @@ func to_dict() -> Dictionary:
 		"trait_strengths": trait_strengths.duplicate(),
 		"body": body.to_dict() if body != null else {},
 		"intelligences": intelligences.duplicate(),
+		"general_intelligence": general_intelligence,
+		"intelligence_potentials": intelligence_potentials.duplicate(),
+		"intel_nutrition_penalty": intel_nutrition_penalty,
+		"intel_ace_penalty": intel_ace_penalty,
 		"skill_xp": skill_xp.duplicate(),
 		"skill_levels": skill_levels.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
+		"job_satisfaction": job_satisfaction,
+		"status_score": status_score,
+		"status_tier": status_tier,
+		"wealth_score": wealth_score,
+		"wealth_norm": wealth_norm,
+		"economic_tendencies": economic_tendencies.duplicate(),
 	}
 
 
@@ -354,6 +401,12 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		var BodyAttributesScript = load("res://scripts/core/entity/body_attributes.gd")
 		e.body = BodyAttributesScript.from_dict(body_data)
 	e.intelligences = data.get("intelligences", {}).duplicate()
+	e.general_intelligence = float(data.get("general_intelligence", 0.5))
+	var raw_potentials: Dictionary = data.get("intelligence_potentials", {})
+	for k in raw_potentials:
+		e.intelligence_potentials[k] = float(raw_potentials[k])
+	e.intel_nutrition_penalty = float(data.get("intel_nutrition_penalty", 0.0))
+	e.intel_ace_penalty = float(data.get("intel_ace_penalty", 0.0))
 	## skill_xp: keys are StringName-compatible strings in JSON, convert back to StringName
 	var raw_xp: Dictionary = data.get("skill_xp", {})
 	for k in raw_xp:
@@ -362,6 +415,18 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	for k in raw_levels:
 		e.skill_levels[StringName(k)] = int(raw_levels[k])
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
+	e.job_satisfaction = data.get("job_satisfaction", 0.50)
+	e.status_score = data.get("status_score", 0.0)
+	e.status_tier = data.get("status_tier", "common")
+	e.wealth_score = data.get("wealth_score", 0.0)
+	e.wealth_norm = data.get("wealth_norm", 0.0)
+	var et_data = data.get("economic_tendencies", {})
+	e.economic_tendencies = {
+		"saving": et_data.get("saving", 0.0),
+		"risk": et_data.get("risk", 0.0),
+		"generosity": et_data.get("generosity", 0.0),
+		"materialism": et_data.get("materialism", 0.0),
+	}
 	return e
 
 

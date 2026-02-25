@@ -2280,7 +2280,7 @@
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
@@ -2312,7 +2312,7 @@
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
@@ -2461,7 +2461,7 @@
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       }
     ],
@@ -2493,7 +2493,7 @@
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.75,
         "cond_width": 0.2
       },
       {
@@ -2557,21 +2557,21 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       }
     ],
@@ -2596,14 +2596,14 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.75,
         "cond_width": 0.2
       },
       {
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
@@ -2628,7 +2628,7 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
@@ -2642,7 +2642,7 @@
         "facet": "A",
         "direction": "low",
         "threshold": 0.35,
-        "cond_center": 0.45,
+        "cond_center": 0.25,
         "cond_width": 0.2
       }
     ],
@@ -2660,21 +2660,21 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.75,
         "cond_width": 0.2
       },
       {
@@ -2713,7 +2713,7 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.75,
         "cond_width": 0.2
       }
     ],
@@ -2731,28 +2731,28 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.25,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.75,
         "cond_width": 0.2
       }
     ],
@@ -2802,21 +2802,21 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -2833,21 +2833,21 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -2864,21 +2864,21 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -2895,21 +2895,21 @@
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -2926,21 +2926,21 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -2957,21 +2957,21 @@
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -2988,21 +2988,21 @@
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3019,21 +3019,21 @@
         "facet": "X",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3050,21 +3050,21 @@
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3081,21 +3081,21 @@
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3112,21 +3112,21 @@
         "facet": "E",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3143,21 +3143,21 @@
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3174,21 +3174,21 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3205,21 +3205,21 @@
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3236,21 +3236,21 @@
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3267,21 +3267,21 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3298,21 +3298,21 @@
         "facet": "X",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3329,21 +3329,21 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3360,21 +3360,21 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3391,21 +3391,21 @@
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3422,21 +3422,21 @@
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3453,21 +3453,21 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3484,21 +3484,21 @@
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "E",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -3515,21 +3515,21 @@
         "facet": "E",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -3897,7 +3897,7 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
@@ -3990,7 +3990,7 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
@@ -4214,7 +4214,7 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -4462,7 +4462,7 @@
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -4479,14 +4479,14 @@
         "facet": "H",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
@@ -4524,7 +4524,7 @@
         "facet": "X",
         "direction": "low",
         "threshold": 0.75,
-        "cond_center": 0.85,
+        "cond_center": 0.35,
         "cond_width": 0.2
       }
     ],
@@ -4572,14 +4572,14 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
@@ -4679,7 +4679,7 @@
         "facet": "X",
         "direction": "low",
         "threshold": 0.3,
-        "cond_center": 0.4,
+        "cond_center": 0.3,
         "cond_width": 0.2
       }
     ],
@@ -4703,14 +4703,14 @@
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "O",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
@@ -4727,28 +4727,28 @@
         "facet": "A",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "X",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "C",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       },
       {
         "facet": "H",
         "direction": "high",
         "threshold": 0.7,
-        "cond_center": 0.6,
+        "cond_center": 0.7,
         "cond_width": 0.2
       }
     ],
