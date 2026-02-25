@@ -33,6 +33,7 @@ export default function HistoryTable({ onSelectTicket }) {
       if (filters.search) params.search = filters.search
       if (filters.dateFrom) params.date_from = filters.dateFrom
       if (filters.dateTo) params.date_to = filters.dateTo
+      params.include_dismissed = 'true'
       const data = await fetchTickets(params)
       setTickets(data.tickets)
       setTotal(data.total)

@@ -45,6 +45,7 @@ class Ticket(Base):
     retry_count = Column(Integer, default=0)
     commit_hash = Column(String, nullable=True)
     commit_url = Column(String, nullable=True)
+    dismissed = Column(Integer, default=0)  # 0=visible, 1=dismissed
     error_message = Column(Text, nullable=True)
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)

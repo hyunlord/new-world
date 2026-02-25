@@ -70,6 +70,7 @@ class TicketUpdate(BaseModel):
     batch_id: Optional[str] = None
     created_by: Optional[str] = None
     ticket_number: Optional[int] = None
+    dismissed: Optional[bool] = None
 
 
 class LogCreate(BaseModel):

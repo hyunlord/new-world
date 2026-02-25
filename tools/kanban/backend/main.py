@@ -45,6 +45,7 @@ def migrate_db():
         "retry_count": "ALTER TABLE tickets ADD COLUMN retry_count INTEGER DEFAULT 0",
         "commit_hash": "ALTER TABLE tickets ADD COLUMN commit_hash TEXT",
         "commit_url": "ALTER TABLE tickets ADD COLUMN commit_url TEXT",
+        "dismissed": "ALTER TABLE tickets ADD COLUMN dismissed INTEGER DEFAULT 0",
     }
 
     for col_name, sql in migrations.items():
@@ -106,6 +107,7 @@ def ticket_to_dict(ticket: Ticket) -> dict:
         "retry_count": ticket.retry_count or 0,
         "commit_hash": ticket.commit_hash,
         "commit_url": ticket.commit_url,
+        "dismissed": bool(ticket.dismissed) if ticket.dismissed else False,
         "error_message": ticket.error_message,
         "started_at": ticket.started_at.isoformat() + "Z" if ticket.started_at else None,
         "completed_at": ticket.completed_at.isoformat() + "Z" if ticket.completed_at else None,
@@ -396,9 +398,12 @@ def list_tickets(
     order: str = Query("desc"),
     limit: int = Query(50),
     offset: int = Query(0),
+    include_dismissed: bool = Query(False),
     db: Session = Depends(get_db),
 ):
     q = db.query(Ticket)
+    if not include_dismissed:
+        q = q.filter((Ticket.dismissed == 0) | (Ticket.dismissed == None))
 
     if status:
         statuses = [s.strip() for s in status.split(",") if s.strip()]
@@ -506,6 +511,8 @@ async def update_ticket(
 
     if "commit_hash" in data and data["commit_hash"]:
         ticket.commit_url = f"{GITHUB_REPO}/commit/{data['commit_hash']}"
+    if "dismissed" in data and data["dismissed"] is not None:
+        ticket.dismissed = 1 if data["dismissed"] else 0
 
     ticket.updated_at = now
 
@@ -962,7 +969,7 @@ async def retry_ticket(ticket_id: str, db: Session = Depends(get_db)):
         dispatch_method=original.dispatch_method,
         batch_id=original.batch_id,
         created_by="manual",
-        ticket_number=None,
+        ticket_number=original.ticket_number,
         branch=original.branch,
         retry_of=ticket_id,
         retry_count=0,

@@ -72,6 +72,13 @@ export async function retryTicket(id) {
   return request(`/tickets/${id}/retry`, { method: 'POST' })
 }
 
+export async function dismissTicket(id) {
+  return request(`/tickets/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ dismissed: true })
+  })
+}
+
 export async function fetchBatches(params = {}) {
   const qs = new URLSearchParams()
   Object.entries(params).forEach(([k, v]) => {

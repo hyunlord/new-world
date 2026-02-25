@@ -9,7 +9,7 @@ import BatchCompare from './components/BatchCompare'
 import AgentView from './components/AgentView'
 import TicketDetail from './components/TicketDetail'
 import { useWebSocket } from './hooks/useWebSocket'
-import { fetchTickets, fetchStats, deleteTicket, clearAllTickets } from './utils/api'
+import { fetchTickets, fetchStats, deleteTicket, clearAllTickets, dismissTicket } from './utils/api'
 
 function App() {
   const [tickets, setTickets] = useState([])
@@ -75,6 +75,16 @@ function App() {
     }
   }, [loadStats])
 
+  const handleDismissTicket = useCallback(async (id) => {
+    try {
+      await dismissTicket(id)
+      setTickets(prev => prev.filter(t => t.id !== id))
+      loadStats()
+    } catch (err) {
+      console.error('Failed to dismiss ticket:', err)
+    }
+  }, [loadStats])
+
   const handleClearAll = useCallback(async () => {
     try {
       await clearAllTickets()
@@ -94,7 +104,7 @@ function App() {
         <div className="relative">
           <Routes>
             <Route path="/board" element={
-              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} onDeleteTicket={handleDeleteTicket} />
+              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} onDeleteTicket={handleDeleteTicket} onDismissTicket={handleDismissTicket} />
             } />
             <Route path="/history" element={
               <HistoryTable onSelectTicket={setSelectedTicket} />
