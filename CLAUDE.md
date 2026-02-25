@@ -12,6 +12,7 @@ skills/worldsim-code/SKILL.md
 Contains:
 - **Part 1**: Localization rules (Locale API, hardcoding prohibition, verification)
 - **Part 2**: Prompt generation standard (6-section structure for Claude Code prompts)
+- **Part 3**: Prompt engineering lessons (failure patterns and solutions — read when writing prompts)
 
 If you skip reading this skill, your ticket is not complete.
 
@@ -49,7 +50,6 @@ When working on this project:
    ```bash
    TICKET_ID=$(kanban_create_ticket "티켓 제목" "$BATCH_ID" "codex" 1 "시스템명" "high")
    ```
-   → Codex 프롬프트에 환경변수로 전달: `BATCH_ID=... TICKET_NUMBER=... bash tools/codex_dispatch.sh tickets/t-XXX.md`
 
 3. **DIRECT 작업 시작 시** — 티켓 생성 + 즉시 in_progress:
    ```bash
@@ -62,13 +62,59 @@ When working on this project:
    # 실패 시: kanban_direct_fail "$TICKET_ID" "에러 메시지"
    ```
 
-5. **Codex에 전달하는 프롬프트에 반드시 포함:**
-   ```
-   작업 시작 시: source tools/kanban/scripts/kanban_helpers.sh && kanban_start "{TICKET_ID}" "{AGENT_NAME}"
-   로그 전송:   kanban_log "{TICKET_ID}" "info" "작업 내용"
-   완료 시:     kanban_done "{TICKET_ID}"
-   실패 시:     kanban_fail "{TICKET_ID}" "에러 메시지"
-   ```
+### Dispatch 경로별 칸반 처리 ⚠️ 반드시 구분할 것
+
+칸반 티켓 등록은 **dispatch 경로에 따라 처리 방법이 다르다.**
+
+#### 경로 A: `codex_dispatch.sh` 사용 시 → 칸반 자동 처리됨
+`codex_dispatch.sh`는 내부적으로 칸반 API를 호출한다. BATCH_ID 환경변수만 설정하면 자동으로:
+- 칸반 티켓 생성
+- Codex 프롬프트에 KANBAN_INSTRUCTIONS 주입 (start/log/done/fail)
+
+```bash
+BATCH_ID=$BATCH_ID TICKET_NUMBER=1 SYSTEM_NAME="stress" PRIORITY="high" \
+  bash tools/codex_dispatch.sh tickets/t-XXX.md
+```
+
+#### 경로 B: `ask_codex` MCP 사용 시 → 칸반 수동 처리 필수 ⚠️
+
+`ask_codex` MCP 도구는 칸반 연동이 없다. 따라서 다음을 **직접** 해야 한다:
+
+**Step 1: 칸반 티켓 생성 (dispatch 전)**
+```bash
+TICKET_ID=$(kanban_create_ticket "티켓 제목" "$BATCH_ID" "codex" 1 "시스템명" "high")
+```
+
+**Step 2: 프롬프트 파일에 KANBAN_INSTRUCTIONS 수동 삽입**
+프롬프트 .md 파일 끝에 다음을 추가:
+```
+--- KANBAN INTEGRATION ---
+Run these at the appropriate times (fail silently if server unavailable):
+  Start:    source tools/kanban/scripts/kanban_helpers.sh && kanban_start "{TICKET_ID}" "codex-agent"
+  Progress: kanban_log "{TICKET_ID}" "info" "description of progress"
+  Done:     kanban_done "{TICKET_ID}"
+  Failed:   kanban_fail "{TICKET_ID}" "error description"
+--- END KANBAN ---
+```
+{TICKET_ID}는 Step 1에서 받은 실제 ID로 치환한다.
+
+**Step 3: MCP 도구로 dispatch**
+```
+ask_codex(
+  agent_role: "developer",
+  prompt_file: ".omc/prompts/ticket-name.md",
+  output_file: ".omc/prompts/ticket-name-response.md"
+)
+```
+- prompt_file은 **워킹 디렉토리 기준 상대경로**여야 한다 (strict path policy)
+- `/tmp/` 등 워킹 디렉토리 밖은 에러 발생
+
+**Step 4: 결과 확인 후 칸반 업데이트**
+- Codex가 칸반 업데이트를 못 했다면, 직접 done/failed 처리:
+```bash
+kanban_direct_done "$TICKET_ID"   # 또는
+kanban_direct_fail "$TICKET_ID" "에러 내용"
+```
 
 ### 칸반 서버가 꺼져 있어도 작업은 중단하지 않는다
 - curl에 `-sf` 플래그를 사용하므로, 칸반 서버가 없어도 에러 무시하고 작업 계속 진행
@@ -195,8 +241,8 @@ Claude Code delegates implementation tickets to Codex via Codex CLI.
 You have multiple tools available. Only specific tools count as "dispatching to Codex":
 
 **✅ VALID Codex dispatch methods:**
-- `bash tools/codex_dispatch.sh tickets/<file>.md` — shell script dispatch
-- `mcp__plugin_oh-my-claudecode_x__ask_codex` — MCP Codex dispatch
+- `bash tools/codex_dispatch.sh tickets/<file>.md` — shell script dispatch (GDScript/Godot 전용)
+- `ask_codex` MCP tool — MCP Codex dispatch (모든 언어/프로젝트)
 
 **❌ INVALID — these are NOT Codex dispatch:**
 - `Task` tool (Claude sub-agent) — sends work to another Claude instance, NOT Codex. Counts as DIRECT.
@@ -320,6 +366,8 @@ New ticket created
 
 ### Dispatch Commands
 
+#### 방법 1: `codex_dispatch.sh` (GDScript/Godot 전용)
+
 ```bash
 # Single ticket
 bash tools/codex_dispatch.sh tickets/t-010-fix-input.md
@@ -342,6 +390,52 @@ bash tools/codex_status.sh
 
 # Apply + gate verify
 bash tools/codex_apply.sh
+```
+
+#### 방법 2: `ask_codex` MCP (모든 언어/프로젝트)
+
+`ask_codex`는 shell 명령이 아니라 oh-my-claudecode MCP 플러그인의 도구다.
+
+```bash
+# Step 1: 프롬프트 파일을 워킹 디렉토리 내에 생성
+mkdir -p .omc/prompts
+cat > .omc/prompts/ticket-name.md << 'PROMPT_EOF'
+(프롬프트 내용 — 티켓 상세, 구현 지침)
+
+--- KANBAN INTEGRATION ---
+Run these at the appropriate times (fail silently if server unavailable):
+  Start:    source tools/kanban/scripts/kanban_helpers.sh && kanban_start "TICKET_ID_HERE" "codex-agent"
+  Progress: kanban_log "TICKET_ID_HERE" "info" "description of progress"
+  Done:     kanban_done "TICKET_ID_HERE"
+  Failed:   kanban_fail "TICKET_ID_HERE" "error description"
+--- END KANBAN ---
+PROMPT_EOF
+
+# Step 2: MCP 도구 호출
+# ask_codex(
+#   agent_role: "developer",
+#   prompt_file: ".omc/prompts/ticket-name.md",
+#   output_file: ".omc/prompts/ticket-name-response.md"
+# )
+
+# Step 3: 응답 확인
+# cat .omc/prompts/ticket-name-response.md
+```
+
+**⚠️ 중요:**
+- `prompt_file`은 반드시 **워킹 디렉토리 기준 상대경로** (strict path policy)
+- `/tmp/` 등 워킹 디렉토리 밖 경로는 에러 발생
+- `codex_dispatch.sh`와 달리 칸반 자동 처리 없음 → 위 Kanban Integration 섹션의 "경로 B" 참조
+
+---
+
+### Dispatch 경로 선택 기준
+
+```
+GDScript/Godot 파일?
+  ├─ YES → codex_dispatch.sh 사용 (칸반 자동, AGENTS.md 자동 참조)
+  └─ NO  → ask_codex MCP 사용 (Python, JS, Rust 등)
+            ⚠️ 칸반 티켓 수동 생성 + KANBAN_INSTRUCTIONS 수동 삽입 필수
 ```
 
 ---
@@ -493,10 +587,5 @@ Architecture, integration, refactors, data model boundaries, shared interface ow
 18. **Skipping skills/worldsim-code/SKILL.md** — read it before every code task. No exceptions.
 19. **Hardcoding UI text** — always use `Locale.*`. Full rules in SKILL.md Part 1.
 20. **Using tr() instead of Locale.ltr()** — Godot built-in tr() does not work in WorldSim.
-
----
-
-## Dispatch Rules by Language
-codex_dispatch.sh는 GDScript/Godot 전용이다.
-GDScript 이외의 언어(Python, JavaScript, Rust 등)로 된 프로젝트는
-codex_dispatch.sh를 사용하지 말고 ask_codex로 직접 dispatch한다.
+21. **Using ask_codex without kanban registration** — ask_codex has NO built-in kanban. Must manually create ticket + insert KANBAN_INSTRUCTIONS into prompt file.
+22. **Putting ask_codex prompt files outside workdir** — strict path policy. Use `.omc/prompts/` relative path only.
