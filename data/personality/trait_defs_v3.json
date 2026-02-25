@@ -26,7 +26,7 @@
           "fraud",
           "embezzle"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true,
         "tags": [
           "integrity"
@@ -57,7 +57,7 @@
           "bluff",
           "deceive"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -110,7 +110,7 @@
           "bribe",
           "forge_document"
         ],
-        "op": "unlock",
+        "op": "enable",
         "value": true
       },
       {
@@ -131,7 +131,7 @@
       {
         "system": "stress",
         "target": "betrayal_guilt",
-        "op": "immunity",
+        "op": "immune",
         "value": true
       },
       {
@@ -307,7 +307,7 @@
       {
         "system": "emotion",
         "target": "fear",
-        "op": "ceil",
+        "op": "max",
         "value": 0.1
       },
       {
@@ -318,7 +318,7 @@
           "trust",
           "surprise"
         ],
-        "op": "ceil",
+        "op": "max",
         "value": 0.5
       },
       {
@@ -330,7 +330,7 @@
       {
         "system": "relationship",
         "target": "intimacy",
-        "op": "ceil",
+        "op": "max",
         "value": 70
       },
       {
@@ -341,7 +341,7 @@
           "cry",
           "express_grief"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -586,7 +586,7 @@
           "reject_proposal",
           "deny_entry"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -734,7 +734,7 @@
           "skip_task",
           "shirk_duty"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -964,7 +964,7 @@
           "experiment",
           "research"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -1024,14 +1024,14 @@
       {
         "system": "relationship",
         "target": "trust",
-        "op": "ceil",
+        "op": "max",
         "value": 50,
         "condition": "relationship_duration > 365"
       },
       {
         "system": "behavior",
         "target": "maintain_cover",
-        "op": "unlock",
+        "op": "enable",
         "value": true,
         "tags": [
           "espionage"
@@ -1040,7 +1040,7 @@
       {
         "system": "behavior",
         "target": "fake_emotion",
-        "op": "unlock",
+        "op": "enable",
         "value": true
       },
       {
@@ -1060,7 +1060,7 @@
           "confess",
           "genuine_apology"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       }
     ],
@@ -1110,7 +1110,7 @@
           "bluff",
           "fake_emotion"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -1356,7 +1356,7 @@
       {
         "system": "emotion",
         "target": "anger",
-        "op": "floor",
+        "op": "min",
         "value": 0.2
       },
       {
@@ -1416,7 +1416,7 @@
       {
         "system": "emotion",
         "target": "anger",
-        "op": "ceil",
+        "op": "max",
         "value": 0.15,
         "condition": "trigger_type == 'insult' OR trigger_type == 'provocation'"
       },
@@ -1519,7 +1519,7 @@
       {
         "system": "behavior",
         "target": "pre_battle_speech",
-        "op": "unlock",
+        "op": "enable",
         "value": {
           "morale_boost": 0.3,
           "duration": "combat"
@@ -1672,7 +1672,7 @@
           "empathize",
           "grant_leave"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true,
         "condition": "target.role == 'subordinate'"
       },
@@ -1826,7 +1826,7 @@
       {
         "system": "event",
         "target": "cross_discipline_discovery",
-        "op": "unlock",
+        "op": "enable",
         "value": true
       },
       {
@@ -1979,7 +1979,7 @@
           "renegotiate",
           "abandon_task"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -2015,7 +2015,7 @@
       {
         "system": "values",
         "target": "LAW",
-        "op": "floor",
+        "op": "min",
         "value": 0.7
       }
     ],
@@ -2084,13 +2084,13 @@
       {
         "system": "stress",
         "target": "betrayal_guilt",
-        "op": "immunity",
+        "op": "immune",
         "value": true
       },
       {
         "system": "relationship",
         "target": "trust",
-        "op": "ceil",
+        "op": "max",
         "value": 40
       },
       {
@@ -2164,7 +2164,7 @@
       {
         "system": "event",
         "target": "dream_inspiration",
-        "op": "unlock",
+        "op": "enable",
         "value": {
           "chance_per_night": 0.05
         }
@@ -2239,7 +2239,7 @@
           "accept_change",
           "experiment"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -2318,7 +2318,7 @@
           "concede",
           "tolerance"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -2406,7 +2406,7 @@
       {
         "system": "behavior",
         "target": "maintain_cover",
-        "op": "unlock",
+        "op": "enable",
         "value": true
       },
       {
@@ -2421,7 +2421,7 @@
           "express_true_feelings",
           "genuine_apology"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -3329,13 +3329,13 @@
           "trust",
           "sadness"
         ],
-        "op": "ceil",
+        "op": "max",
         "value": 0.15
       },
       {
         "system": "emotion",
         "target": "contempt",
-        "op": "floor",
+        "op": "min",
         "value": 0.2
       },
       {
@@ -3393,7 +3393,7 @@
           "charm_offensive",
           "cold_calculation"
         ],
-        "op": "unlock",
+        "op": "enable",
         "value": true
       },
       {
@@ -3404,7 +3404,7 @@
           "self_sacrifice",
           "console"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {
@@ -3474,7 +3474,7 @@
       {
         "system": "behavior",
         "target": "recruit_minion",
-        "op": "unlock",
+        "op": "enable",
         "value": {
           "loyalty_bonus": 0.4,
           "method": "calculated_charm"
@@ -3489,7 +3489,7 @@
       {
         "system": "behavior",
         "target": "plausible_deniability",
-        "op": "unlock",
+        "op": "enable",
         "value": {
           "detection_reduction": 0.8
         }
@@ -3566,7 +3566,7 @@
       {
         "system": "emotion",
         "target": "anger",
-        "op": "trigger",
+        "op": "on_event",
         "value": {
           "on": "receives_criticism",
           "intensity": 0.8
@@ -3653,7 +3653,7 @@
       {
         "system": "behavior",
         "target": "sympathy_manipulation",
-        "op": "unlock",
+        "op": "enable",
         "value": {
           "effectiveness": 0.6
         }
@@ -3789,7 +3789,7 @@
           "spare_life",
           "forgive"
         ],
-        "op": "remove",
+        "op": "block",
         "value": true
       },
       {

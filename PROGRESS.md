@@ -26,9 +26,14 @@ Parallel — all 7 Codex jobs dispatched simultaneously (no file overlap). T-SCH
 - ko/ updated: deferred to T-SCH-10
 
 ### Results
-- Gate: PENDING
+- Gate: PASS
 - Dispatch ratio: 7/8 = 87.5%
-- Files changed: PENDING
+- Files changed: 6 (gen_trait_v3.py, trait_defs_v3.json, en/traits.json, ko/traits.json, trait-schema-v3.md, trait-effects-master-part1.md)
+- Dispatch tool used: ask_codex (7 tickets)
+- Naming changes applied: 56 total (11 archetype KO, 6 shadow+radiance, 7 corpus+nous, 15 awakened+bloodline, 17 mastery+bond+fate+synergy)
+- Op replacements: 6 (remove→block, unlock→enable, ceil→max, floor→min, immunity→immune, trigger→on_event)
+- New docs created: trait-schema-v3.md (canonical schema), trait-effects-master-part1.md (35 traits YAML)
+- Spot checks: 10/10 naming verified, 0 deprecated ops in JSON
 
 ---
 
