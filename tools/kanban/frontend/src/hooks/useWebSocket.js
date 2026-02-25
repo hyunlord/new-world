@@ -7,8 +7,11 @@ export function useWebSocket(onMessage) {
   onMessageRef.current = onMessage
 
   const connect = useCallback(() => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.close()
+    }
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const ws = new WebSocket(`${protocol}//${window.location.hostname}:8800/ws`)
+    const ws = new WebSocket(`${protocol}//${window.location.host}/ws`)
 
     ws.onopen = () => {
       console.log('[WS] Connected')

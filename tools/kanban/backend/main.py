@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 from datetime import datetime, timedelta
 from typing import Optional
@@ -8,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from database import engine, Base, get_db
+import sqlite3
+from database import engine, Base, get_db, DB_PATH
 from models import Ticket, TicketLog, TicketEvent, Batch
 from schemas import TicketCreate, TicketUpdate, LogCreate, DiffCreate, BatchCreate, BatchUpdate
 from websocket_manager import ConnectionManager
@@ -29,7 +31,35 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
+
+def migrate_db():
+    """Add missing columns to existing tables."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(tickets)")
+    columns = [col[1] for col in cursor.fetchall()]
+
+    migrations = {
+        "body": "ALTER TABLE tickets ADD COLUMN body TEXT",
+        "retry_of": "ALTER TABLE tickets ADD COLUMN retry_of TEXT",
+        "retry_count": "ALTER TABLE tickets ADD COLUMN retry_count INTEGER DEFAULT 0",
+        "commit_hash": "ALTER TABLE tickets ADD COLUMN commit_hash TEXT",
+        "commit_url": "ALTER TABLE tickets ADD COLUMN commit_url TEXT",
+    }
+
+    for col_name, sql in migrations.items():
+        if col_name not in columns:
+            cursor.execute(sql)
+
+    conn.commit()
+    conn.close()
+
+
+migrate_db()
+
 manager = ConnectionManager()
+
+GITHUB_REPO = os.environ.get("GITHUB_REPO_URL", "https://github.com/hyunlord/new-world")
 
 # ---------------------------------------------------------------------------
 # Helper converters
@@ -71,6 +101,11 @@ def ticket_to_dict(ticket: Ticket) -> dict:
         "branch": ticket.branch,
         "diff_summary": ticket.diff_summary,
         "diff_full": ticket.diff_full,
+        "body": ticket.body,
+        "retry_of": ticket.retry_of,
+        "retry_count": ticket.retry_count or 0,
+        "commit_hash": ticket.commit_hash,
+        "commit_url": ticket.commit_url,
         "error_message": ticket.error_message,
         "started_at": ticket.started_at.isoformat() + "Z" if ticket.started_at else None,
         "completed_at": ticket.completed_at.isoformat() + "Z" if ticket.completed_at else None,
@@ -133,6 +168,54 @@ def recalculate_batch_status(db: Session, batch_id: str):
     else:
         batch.status = "completed"
     batch.updated_at = datetime.utcnow()
+
+
+def calculate_quality_score(tickets: list) -> Optional[int]:
+    """Calculate batch prompt quality score (0-100)."""
+    if not tickets:
+        return None
+
+    done_tickets = [t for t in tickets if t.status == "done"]
+    failed_tickets = [t for t in tickets if t.status == "failed"]
+    completed_count = len(done_tickets) + len(failed_tickets)
+
+    if completed_count == 0:
+        return None
+
+    # 1) Success Rate (40 max)
+    success_rate = len(done_tickets) / completed_count
+    success_points = success_rate * 40.0
+
+    # 2) Speed (30 max)
+    durations_min = [
+        (t.completed_at - t.started_at).total_seconds() / 60.0
+        for t in done_tickets
+        if t.started_at and t.completed_at and t.completed_at >= t.started_at
+    ]
+
+    if not durations_min:
+        speed_points = 15.0
+    else:
+        avg_min = sum(durations_min) / len(durations_min)
+        if avg_min <= 5:
+            speed_points = 30.0
+        elif avg_min >= 20:
+            speed_points = 0.0
+        else:
+            speed_points = 30.0 * (1.0 - (avg_min - 5.0) / 15.0)
+
+    # 3) No Retries Bonus (20 max)
+    retry_count = len([t for t in tickets if (t.title or "").startswith("[Retry]")])
+    retry_ratio = retry_count / len(tickets)
+    no_retries_points = 20.0 * (1.0 - retry_ratio)
+
+    # 4) Dispatch Ratio (10 max)
+    codex_count = len([t for t in tickets if t.dispatch_method == "codex"])
+    dispatch_ratio = codex_count / len(tickets)
+    dispatch_points = 10.0 * min(dispatch_ratio / 0.6, 1.0)
+
+    total_score = success_points + speed_points + no_retries_points + dispatch_points
+    return int(round(max(0.0, min(100.0, total_score))))
 
 
 # ---------------------------------------------------------------------------
@@ -202,9 +285,17 @@ def list_batches(
     else:
         q = q.order_by(sort_col.desc())
     batches = q.offset(offset).limit(limit).all()
+
+    result_batches = []
+    for b in batches:
+        d = batch_to_dict(b)
+        tickets = db.query(Ticket).filter(Ticket.batch_id == b.id).all()
+        d["quality_score"] = calculate_quality_score(tickets) if tickets else None
+        result_batches.append(d)
+
     return {
         "total": total,
-        "batches": [batch_to_dict(b) for b in batches],
+        "batches": result_batches,
         "limit": limit,
         "offset": offset,
     }
@@ -230,6 +321,7 @@ def get_batch(batch_id: str, db: Session = Depends(get_db)):
         "direct": direct_count,
         "percentage": round(codex_count / len(tickets) * 100) if tickets else 0,
     }
+    result["quality_score"] = calculate_quality_score(tickets)
     return result
 
 
@@ -260,6 +352,7 @@ async def create_ticket(body: TicketCreate, db: Session = Depends(get_db)):
         id=ticket_id,
         title=body.title,
         description=body.description,
+        body=body.body,
         status="todo",
         priority=body.priority or "medium",
         system=body.system,
@@ -411,6 +504,9 @@ async def update_ticket(
         else:
             setattr(ticket, field, value)
 
+    if "commit_hash" in data and data["commit_hash"]:
+        ticket.commit_url = f"{GITHUB_REPO}/commit/{data['commit_hash']}"
+
     ticket.updated_at = now
 
     # Status change events and timestamp updates
@@ -454,6 +550,20 @@ async def update_ticket(
     d = ticket_to_dict(ticket)
     await manager.broadcast("ticket_updated", ticket.id, d)
     return d
+
+
+@app.post("/api/tickets/clear")
+def clear_all_tickets(db: Session = Depends(get_db)):
+    db.query(TicketLog).delete()
+    db.query(TicketEvent).delete()
+    db.query(Ticket).delete()
+    db.query(Batch).update({
+        Batch.total_tickets: 0,
+        Batch.completed_tickets: 0,
+        Batch.status: "active",
+    })
+    db.commit()
+    return {"ok": True, "message": "All tickets cleared"}
 
 
 @app.delete("/api/tickets/{ticket_id}")
@@ -618,6 +728,66 @@ def get_stats(db: Session = Depends(get_db)):
     }
 
 
+@app.get("/api/stats/errors")
+def get_error_stats(days: int = Query(30), db: Session = Depends(get_db)):
+    cutoff = datetime.utcnow() - timedelta(days=days)
+
+    failed_tickets = (
+        db.query(Ticket)
+        .filter(
+            Ticket.status == "failed",
+            Ticket.error_message.isnot(None),
+            Ticket.created_at >= cutoff,
+        )
+        .all()
+    )
+
+    error_logs = (
+        db.query(TicketLog)
+        .filter(TicketLog.level == "error", TicketLog.timestamp >= cutoff)
+        .all()
+    )
+
+    keyword_counts = {}
+    all_errors = []
+
+    for t in failed_tickets:
+        all_errors.append({
+            "ticket_id": t.id,
+            "ticket_title": t.title,
+            "error": t.error_message,
+            "date": t.completed_at.isoformat() + "Z" if t.completed_at else None,
+            "system": t.system,
+        })
+        for word in t.error_message.lower().split():
+            if len(word) >= 5:
+                keyword_counts[word] = keyword_counts.get(word, 0) + 1
+
+    for log in error_logs:
+        for word in log.message.lower().split():
+            if len(word) >= 5:
+                keyword_counts[word] = keyword_counts.get(word, 0) + 1
+
+    patterns = [
+        {"keyword": k, "count": v}
+        for k, v in sorted(keyword_counts.items(), key=lambda x: -x[1])
+        if v >= 2
+    ][:20]
+
+    system_failures = {}
+    for t in failed_tickets:
+        sys_name = t.system or "unknown"
+        system_failures[sys_name] = system_failures.get(sys_name, 0) + 1
+
+    return {
+        "total_failures": len(failed_tickets),
+        "total_error_logs": len(error_logs),
+        "patterns": patterns,
+        "system_failures": system_failures,
+        "recent_errors": all_errors[:20],
+    }
+
+
 @app.get("/api/stats/daily")
 def get_daily_stats(days: int = Query(30), db: Session = Depends(get_db)):
     cutoff = datetime.utcnow() - timedelta(days=days)
@@ -656,6 +826,173 @@ def get_daily_stats(days: int = Query(30), db: Session = Depends(get_db)):
         daily[day]["failed"] += 1
 
     return {"days": days, "daily": daily}
+
+
+# ---------------------------------------------------------------------------
+# Batch Compare & Agent Stats & Retry
+# ---------------------------------------------------------------------------
+
+
+@app.get("/api/stats/batch-compare")
+def batch_compare(ids: str = Query(...), db: Session = Depends(get_db)):
+    batch_ids = [batch_id.strip() for batch_id in ids.split(",") if batch_id.strip()]
+    if len(batch_ids) < 2 or len(batch_ids) > 5:
+        raise HTTPException(status_code=400, detail="2-5 batch IDs required")
+
+    result = []
+
+    for batch_id in batch_ids:
+        batch = db.query(Batch).filter(Batch.id == batch_id).first()
+        if not batch:
+            continue
+
+        tickets = db.query(Ticket).filter(Ticket.batch_id == batch_id).all()
+        total_tickets = len(tickets)
+        done_tickets = [t for t in tickets if t.status == "done"]
+        failed_tickets = [t for t in tickets if t.status == "failed"]
+
+        done_count = len(done_tickets)
+        failed_count = len(failed_tickets)
+        completed_count = done_count + failed_count
+        success_rate = round(done_count / completed_count * 100) if completed_count > 0 else 0
+
+        durations = [
+            (t.completed_at - t.started_at).total_seconds()
+            for t in done_tickets
+            if t.started_at and t.completed_at and t.completed_at >= t.started_at
+        ]
+        avg_duration_seconds = (sum(durations) / len(durations)) if durations else None
+        max_duration_seconds = max(durations) if durations else None
+        min_duration_seconds = min(durations) if durations else None
+
+        codex_count = len([t for t in tickets if t.dispatch_method == "codex"])
+        dispatch_ratio = round(codex_count / total_tickets * 100) if total_tickets > 0 else 0
+
+        result.append({
+            "batch_id": batch.id,
+            "title": batch.title,
+            "total_tickets": total_tickets,
+            "done": done_count,
+            "failed": failed_count,
+            "success_rate": success_rate,
+            "avg_duration_seconds": avg_duration_seconds,
+            "max_duration_seconds": max_duration_seconds,
+            "min_duration_seconds": min_duration_seconds,
+            "dispatch_ratio": dispatch_ratio,
+            "created_at": batch.created_at.isoformat() + "Z" if batch.created_at else None,
+        })
+
+    return {"batches": result}
+
+
+@app.get("/api/stats/agents")
+def get_agent_stats(db: Session = Depends(get_db)):
+    tickets = db.query(Ticket).filter(Ticket.assignee.isnot(None)).all()
+
+    by_agent = {}
+    for t in tickets:
+        agent = t.assignee
+        if agent not in by_agent:
+            by_agent[agent] = {
+                "agent": agent,
+                "total": 0,
+                "done": 0,
+                "failed": 0,
+                "in_progress": 0,
+                "_durations": [],
+            }
+
+        row = by_agent[agent]
+        row["total"] += 1
+
+        if t.status == "done":
+            row["done"] += 1
+            if (
+                t.started_at is not None
+                and t.completed_at is not None
+                and t.completed_at >= t.started_at
+            ):
+                row["_durations"].append((t.completed_at - t.started_at).total_seconds())
+        elif t.status == "failed":
+            row["failed"] += 1
+        elif t.status in ("claimed", "in_progress"):
+            row["in_progress"] += 1
+
+    agents = []
+    for row in by_agent.values():
+        completed = row["done"] + row["failed"]
+        durations = row.pop("_durations")
+        row["success_rate"] = round(row["done"] / completed * 100) if completed > 0 else 0
+        row["avg_duration_seconds"] = (
+            sum(durations) / len(durations) if durations else None
+        )
+        agents.append(row)
+
+    agents.sort(key=lambda x: x["total"], reverse=True)
+    return {"agents": agents}
+
+
+@app.post("/api/tickets/{ticket_id}/retry")
+async def retry_ticket(ticket_id: str, db: Session = Depends(get_db)):
+    original = db.query(Ticket).filter(Ticket.id == ticket_id).first()
+    if not original:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    if original.status != "failed":
+        raise HTTPException(status_code=400, detail="Only failed tickets can be retried")
+
+    now = datetime.utcnow()
+    retry_body = None
+    if original.body or original.error_message:
+        retry_body = (
+            f"[RETRY] Previous attempt failed with: "
+            f"{original.error_message or 'Unknown error'}\n\n"
+            f"{original.body or ''}"
+        )
+
+    new_ticket = Ticket(
+        id=str(uuid.uuid4()),
+        title=f"[Retry] {original.title}",
+        description=original.description,
+        body=retry_body,
+        status="todo",
+        priority=original.priority,
+        system=original.system,
+        files=original.files,
+        dependencies=original.dependencies,
+        dispatch_method=original.dispatch_method,
+        batch_id=original.batch_id,
+        created_by="manual",
+        ticket_number=None,
+        branch=original.branch,
+        retry_of=ticket_id,
+        retry_count=0,
+        created_at=now,
+        updated_at=now,
+    )
+
+    db.add(new_ticket)
+    db.add(
+        TicketEvent(
+            ticket_id=ticket_id,
+            timestamp=now,
+            event_type="retried",
+            old_value=ticket_id,
+            new_value=new_ticket.id,
+            actor="manual",
+        )
+    )
+    original.retry_count = (original.retry_count or 0) + 1
+
+    db.commit()
+    db.refresh(new_ticket)
+
+    if new_ticket.batch_id:
+        recalculate_batch_status(db, new_ticket.batch_id)
+        db.commit()
+
+    d = ticket_to_dict(new_ticket)
+    await manager.broadcast("ticket_created", new_ticket.id, d)
+    return d
 
 
 # ---------------------------------------------------------------------------

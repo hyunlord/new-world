@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { fetchTicket, fetchTicketLogs } from '../utils/api'
+import ReactMarkdown from 'react-markdown'
+import { fetchTicket, fetchTicketLogs, retryTicket } from '../utils/api'
 import LogViewer from './LogViewer'
 import DiffViewer from './DiffViewer'
 
@@ -30,14 +31,9 @@ function parseJsonSafe(str) {
   try { return JSON.parse(str) } catch { return [] }
 }
 
-const TABS = [
-  { id: 'logs', label: 'Logs' },
-  { id: 'diff', label: 'Diff' },
-  { id: 'events', label: 'Events' },
-]
-
 export default function TicketDetail({ ticket, onClose }) {
-  const [activeTab, setActiveTab] = useState('logs')
+  const hasBody = Boolean(ticket.body)
+  const [activeTab, setActiveTab] = useState(hasBody ? 'body' : 'logs')
   const [logs, setLogs] = useState([])
   const [events, setEvents] = useState([])
   const [detail, setDetail] = useState(null)
@@ -55,10 +51,26 @@ export default function TicketDetail({ ticket, onClose }) {
       .catch(() => {})
   }, [ticket.id, ticket._logRefresh])
 
+  const handleRetry = async () => {
+    try {
+      const newTicket = await retryTicket(ticket.id)
+      alert(`Retry ticket created: ${newTicket.title}`)
+    } catch (err) {
+      alert(`Retry failed: ${err.message}`)
+    }
+  }
+
   const t = detail || ticket
   const files = parseJsonSafe(t.files)
   const deps = parseJsonSafe(t.dependencies)
   const statusColor = STATUS_COLORS[t.status] || '#6b7280'
+
+  const tabs = [
+    { id: 'body', label: 'Body', disabled: !t.body },
+    { id: 'logs', label: 'Logs' },
+    { id: 'diff', label: 'Diff', disabled: !t.diff_summary && !t.diff_full },
+    { id: 'events', label: 'Events' },
+  ]
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end" onClick={onClose}>
@@ -81,6 +93,14 @@ export default function TicketDetail({ ticket, onClose }) {
               >
                 {t.status}
               </span>
+              {ticket.status === 'failed' && (
+                <button
+                  onClick={handleRetry}
+                  className="px-3 py-1 bg-yellow-600 hover:bg-yellow-500 rounded text-sm text-white"
+                >
+                  Retry
+                </button>
+              )}
               {t.id && (
                 <span className="text-xs text-gray-500 font-mono">{t.id.slice(0, 8)}</span>
               )}
@@ -152,14 +172,17 @@ export default function TicketDetail({ ticket, onClose }) {
 
         {/* Tabs */}
         <div className="flex border-b border-gray-700/50 shrink-0">
-          {TABS.map(tab => (
+          {tabs.map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => !tab.disabled && setActiveTab(tab.id)}
+              disabled={tab.disabled}
               className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-gray-500 hover:text-gray-300'
+                tab.disabled
+                  ? 'text-gray-600 cursor-not-allowed'
+                  : activeTab === tab.id
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               {tab.label}
@@ -169,9 +192,28 @@ export default function TicketDetail({ ticket, onClose }) {
 
         {/* Tab content */}
         <div className="p-4 flex-1 overflow-y-auto">
+          {activeTab === 'body' && t.body && (
+            <div className="prose prose-invert prose-sm max-w-none">
+              <ReactMarkdown>{t.body}</ReactMarkdown>
+            </div>
+          )}
           {activeTab === 'logs' && <LogViewer logs={logs} />}
           {activeTab === 'diff' && (
-            <DiffViewer diffSummary={t.diff_summary} diffFull={t.diff_full} />
+            <div>
+              {t.commit_url && (
+                <a
+                  href={t.commit_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 mb-2"
+                >
+                  <span>Commit</span>
+                  <span className="font-mono">{t.commit_hash?.substring(0, 7)}</span>
+                  <span>↗</span>
+                </a>
+              )}
+              <DiffViewer diffSummary={t.diff_summary} diffFull={t.diff_full} />
+            </div>
           )}
           {activeTab === 'events' && (
             <div className="space-y-2">

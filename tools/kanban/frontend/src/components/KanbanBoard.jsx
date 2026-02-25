@@ -21,7 +21,7 @@ function sortTickets(tickets) {
   })
 }
 
-export default function KanbanBoard({ tickets, onSelectTicket }) {
+export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket }) {
   const [batches, setBatches] = useState([])
   const [batchFilter, setBatchFilter] = useState('')
 
@@ -77,7 +77,9 @@ export default function KanbanBoard({ tickets, onSelectTicket }) {
                   <TicketCard
                     key={ticket.id}
                     ticket={ticket}
+                    allTickets={filteredTickets}
                     onClick={() => onSelectTicket(ticket)}
+                    onDelete={onDeleteTicket}
                   />
                 ))}
               </div>
@@ -94,7 +96,9 @@ export default function KanbanBoard({ tickets, onSelectTicket }) {
                       <TicketCard
                         key={ticket.id}
                         ticket={ticket}
+                        allTickets={filteredTickets}
                         onClick={() => onSelectTicket(ticket)}
+                        onDelete={onDeleteTicket}
                         failed
                       />
                     ))}

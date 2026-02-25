@@ -36,6 +36,10 @@ export async function deleteTicket(id) {
   return request(`/tickets/${id}`, { method: 'DELETE' })
 }
 
+export async function clearAllTickets() {
+  return request('/tickets/clear', { method: 'POST' })
+}
+
 export async function fetchTicketLogs(id) {
   return request(`/tickets/${id}/logs`)
 }
@@ -50,6 +54,22 @@ export async function fetchStats() {
 
 export async function fetchDailyStats(days = 30) {
   return request(`/stats/daily?days=${days}`)
+}
+
+export async function fetchErrorStats(days = 30) {
+  return request(`/stats/errors?days=${days}`)
+}
+
+export async function fetchBatchCompare(ids) {
+  return request(`/stats/batch-compare?ids=${ids}`)
+}
+
+export async function fetchAgentStats() {
+  return request('/stats/agents')
+}
+
+export async function retryTicket(id) {
+  return request(`/tickets/${id}/retry`, { method: 'POST' })
 }
 
 export async function fetchBatches(params = {}) {

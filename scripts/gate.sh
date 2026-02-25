@@ -45,6 +45,14 @@ if [ -z "$GODOT_BIN" ] || [ ! -x "$GODOT_BIN" ]; then
   exit 1
 fi
 
+if curl -sf http://localhost:8800/api/stats > /dev/null 2>&1; then
+  BATCH_COUNT=$(curl -sf http://localhost:8800/api/batches?status=active | jq '.total')
+  if [ "$BATCH_COUNT" = "0" ]; then
+    echo "⚠️  WARN: Kanban server is running but no active batch found."
+    echo "    Did you forget to register this work on the kanban board?"
+  fi
+fi
+
 # --- Godot headless import ---
 echo "[gate] GODOT: $GODOT_BIN"
 echo "[gate] headless smoke (import + quit)..."

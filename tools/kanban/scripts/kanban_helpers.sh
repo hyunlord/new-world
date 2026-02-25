@@ -21,14 +21,15 @@ kanban_log() {
 }
 
 kanban_done() {
-  # Mark ticket done with diff. Args: $1=ticket_id
+  # Mark ticket done with diff + commit hash. Args: $1=ticket_id
   local DIFF_STAT=$(git diff HEAD~1 --stat 2>/dev/null || echo "no diff available")
   local DIFF_FULL=$(git diff HEAD~1 2>/dev/null || echo "no diff available")
   local STAT_JSON=$(echo "$DIFF_STAT" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
   local FULL_JSON=$(echo "$DIFF_FULL" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
+  local COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null || echo "")
   curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
-    -d "{\"status\": \"done\", \"diff_summary\": $STAT_JSON, \"diff_full\": $FULL_JSON}"
+    -d "{\"status\": \"done\", \"diff_summary\": $STAT_JSON, \"diff_full\": $FULL_JSON, \"commit_hash\": \"$COMMIT_HASH\"}"
 }
 
 kanban_fail() {

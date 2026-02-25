@@ -5,9 +5,11 @@ import KanbanBoard from './components/KanbanBoard'
 import HistoryTable from './components/HistoryTable'
 import StatsView from './components/StatsView'
 import { BatchList, BatchDetail } from './components/BatchView'
+import BatchCompare from './components/BatchCompare'
+import AgentView from './components/AgentView'
 import TicketDetail from './components/TicketDetail'
 import { useWebSocket } from './hooks/useWebSocket'
-import { fetchTickets, fetchStats } from './utils/api'
+import { fetchTickets, fetchStats, deleteTicket, clearAllTickets } from './utils/api'
 
 function App() {
   const [tickets, setTickets] = useState([])
@@ -39,35 +41,68 @@ function App() {
 
   const handleWsMessage = useCallback((msg) => {
     if (msg.type === 'ticket_created') {
-      setTickets(prev => [msg.data, ...prev])
+      setTickets(prev => {
+        if (prev.some(t => t.id === msg.data.id)) return prev
+        return [msg.data, ...prev]
+      })
       loadStats()
     } else if (msg.type === 'ticket_updated') {
       setTickets(prev => prev.map(t => t.id === msg.ticket_id ? { ...t, ...msg.data } : t))
       loadStats()
+      // Browser notifications for done/failed
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        const status = msg.data?.status
+        if (status === 'done') {
+          new Notification('Ticket Done', { body: msg.data.title })
+        } else if (status === 'failed') {
+          new Notification('Ticket Failed', { body: `${msg.data.title}: ${msg.data.error_message || 'Unknown error'}` })
+        }
+      }
     } else if (msg.type === 'log_added') {
-      // Refresh selected ticket if it matches
       if (selectedTicket && selectedTicket.id === msg.ticket_id) {
         setSelectedTicket(prev => prev ? { ...prev, _logRefresh: Date.now() } : null)
       }
     }
   }, [selectedTicket, loadStats])
 
+  const handleDeleteTicket = useCallback(async (id) => {
+    try {
+      await deleteTicket(id)
+      setTickets(prev => prev.filter(t => t.id !== id))
+      loadStats()
+    } catch (err) {
+      console.error('Failed to delete ticket:', err)
+    }
+  }, [loadStats])
+
+  const handleClearAll = useCallback(async () => {
+    try {
+      await clearAllTickets()
+      setTickets([])
+      loadStats()
+    } catch (err) {
+      console.error('Failed to clear tickets:', err)
+    }
+  }, [loadStats])
+
   useWebSocket(handleWsMessage)
 
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-kanban-bg">
-        <TopBar stats={stats} />
+        <TopBar stats={stats} onClearAll={handleClearAll} />
         <div className="relative">
           <Routes>
             <Route path="/board" element={
-              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} />
+              <KanbanBoard tickets={tickets} onSelectTicket={setSelectedTicket} onDeleteTicket={handleDeleteTicket} />
             } />
             <Route path="/history" element={
               <HistoryTable onSelectTicket={setSelectedTicket} />
             } />
             <Route path="/batches" element={<BatchList />} />
+            <Route path="/batches/compare" element={<BatchCompare />} />
             <Route path="/batches/:batchId" element={<BatchDetail />} />
+            <Route path="/agents" element={<AgentView />} />
             <Route path="/stats" element={<StatsView />} />
             <Route path="*" element={<Navigate to="/board" replace />} />
           </Routes>

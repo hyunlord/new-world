@@ -62,6 +62,7 @@ export default function HistoryTable({ onSelectTicket }) {
               <th className="text-left px-4 py-3">Created</th>
               <th className="text-left px-4 py-3">Completed</th>
               <th className="text-left px-4 py-3">Duration</th>
+              <th className="text-left px-4 py-3">Commit</th>
             </tr>
           </thead>
           <tbody>
@@ -85,10 +86,20 @@ export default function HistoryTable({ onSelectTicket }) {
                 <td className="px-4 py-3 text-gray-500 text-xs">{new Date(t.created_at).toLocaleString()}</td>
                 <td className="px-4 py-3 text-gray-500 text-xs">{t.completed_at ? new Date(t.completed_at).toLocaleString() : '—'}</td>
                 <td className="px-4 py-3 text-gray-400 text-xs">{formatDuration(t.started_at, t.completed_at)}</td>
+                <td className="px-4 py-3">
+                  {t.commit_url ? (
+                    <a href={t.commit_url} target="_blank" rel="noopener noreferrer"
+                       className="text-blue-400 hover:text-blue-300 font-mono text-xs">
+                      {t.commit_hash?.substring(0, 7)}
+                    </a>
+                  ) : (
+                    <span className="text-gray-600">-</span>
+                  )}
+                </td>
               </tr>
             ))}
             {tickets.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">No tickets found</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-500">No tickets found</td></tr>
             )}
           </tbody>
         </table>
