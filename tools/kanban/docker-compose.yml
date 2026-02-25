@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile.frontend
     ports:
       - "3100:3100"
+    environment:
+      - BACKEND_URL=http://backend:8800
     depends_on:
       - backend
 
