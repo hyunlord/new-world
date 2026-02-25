@@ -899,5 +899,10 @@
   "UI_REPUTATION": "Reputation",
   "UI_REPUTATION_SETTLEMENT_AVG": "Settlement View",
   "UI_ECONOMIC_TENDENCIES": "Economic Tendencies",
-  "UI_SOCIAL_STATUS": "Social Status"
+  "UI_SOCIAL_STATUS": "Social Status",
+  "TOOLTIP_BLOCKED_BEHAVIORS": "Blocked Behaviors",
+  "TOOLTIP_STRESS_IMMUNE": "Stress Immunity",
+  "TOOLTIP_DERIVED_STATS": "Derived Stats",
+  "TOOLTIP_AURA_EFFECT": "Aura Effect",
+  "TOOLTIP_ON_EVENT": "Event Triggers"
 }

@@ -170,8 +170,11 @@ func _build_content(t: Dictionary) -> void:
 	# ── 발현 조건
 	_add_condition_section(t, category)
 
-	# ── 효과: mapping 파일에서 역인덱스로 빌드
-	if id != "":
+	# ── 효과: v3 effects array → legacy fallback
+	var effects: Array = t.get("effects", [])
+	if not effects.is_empty():
+		_add_v3_effects_section(effects)
+	elif id != "":
 		var efx: Dictionary = TraitSystem.get_trait_display_effects(id)
 		_add_behavior_weights_section(efx.get("behavior_weights", {}))
 		_add_emotion_modifiers_section(efx.get("emotion_modifiers", {}))
@@ -204,6 +207,7 @@ func _add_condition_section(t: Dictionary, category: String) -> void:
 		var op: String = "≥" if direction == "high" else "≤"
 		_add_effect_row("%s %s %.2f" % [fname, op, threshold], Color(0.65, 0.65, 0.65))
 		_add_separator_line()
+		return
 	elif category == "composite" or category == "dark":
 		var conditions: Array = t.get("conditions", [])
 		if conditions.is_empty():
@@ -218,6 +222,36 @@ func _add_condition_section(t: Dictionary, category: String) -> void:
 			var op: String = "≥" if direction == "high" else "≤"
 			_add_effect_row("%s %s %.2f" % [fname, op, center], Color(0.65, 0.65, 0.65))
 		_add_separator_line()
+		return
+
+	# v3 categories: read acquisition field
+	var acquisition = t.get("acquisition", null)
+	if acquisition == null or str(acquisition) == "":
+		return
+
+	_add_label("📊 " + Locale.ltr("TOOLTIP_CONDITION"), Color(0.85, 0.85, 0.5), 10)
+
+	if acquisition is String:
+		var loc_key: String = "ACQUISITION_" + str(acquisition).to_upper()
+		var loc_text: String = Locale.ltr(loc_key)
+		var display: String = loc_text if loc_text != loc_key else str(acquisition)
+		_add_effect_row(display, Color(0.65, 0.65, 0.65))
+	elif acquisition is Dictionary:
+		for k in acquisition.keys():
+			var v = acquisition[k]
+			_add_effect_row("%s: %s" % [str(k), str(v)], Color(0.65, 0.65, 0.65))
+
+	var rarity: String = str(t.get("rarity", ""))
+	if rarity != "":
+		var rarity_colors: Dictionary = {
+			"rare": Color(0.4, 0.7, 1.0),
+			"epic": Color(0.7, 0.4, 1.0),
+			"legendary": Color(1.0, 0.8, 0.2)
+		}
+		var rc: Color = rarity_colors.get(rarity, Color(0.65, 0.65, 0.65))
+		_add_effect_row("★ " + rarity.capitalize(), rc)
+
+	_add_separator_line()
 
 
 func _add_behavior_weights_section(bw: Dictionary) -> void:
@@ -296,6 +330,130 @@ func _add_violation_stress_section(vs: Dictionary) -> void:
 			severity = Locale.ltr("TOOLTIP_STRESS_SEVERE")
 		_add_effect_row("%s → +%d %s" % [aname, int(sv), severity], Color(1.0, 0.65, 0.2))
 	_add_separator_line()
+
+
+func _add_v3_effects_section(effects: Array) -> void:
+	if effects.is_empty():
+		return
+
+	var skill_lines: Array = []
+	var blocked_lines: Array = []
+	var immune_lines: Array = []
+	var derived_lines: Array = []
+	var emotion_lines: Array = []
+	var aura_lines: Array = []
+	var event_lines: Array = []
+
+	for e in effects:
+		if e.has("on_event"):
+			event_lines.append(str(e.get("on_event", "")) + " → " + str(e.get("effect", "")))
+			continue
+		var system: String = str(e.get("system", ""))
+		var op: String = str(e.get("op", ""))
+		var target = e.get("target", "")
+		var value = e.get("value", null)
+
+		match system:
+			"skill":
+				if op == "mult" and value != null:
+					var pct: int = int((float(value) - 1.0) * 100)
+					if pct == 0:
+						continue
+					var targets: Array = target if target is Array else [target]
+					for t2 in targets:
+						var tname: String = Locale.tr_id("TRAIT_KEY", str(t2))
+						var sign: String = "+" if pct > 0 else ""
+						skill_lines.append("%s %s%d%%" % [tname, sign, pct])
+			"behavior":
+				match op:
+					"block":
+						var targets: Array = target if target is Array else [target]
+						for t2 in targets:
+							var tname: String = Locale.tr_id("TRAIT_KEY", str(t2))
+							blocked_lines.append("✖ " + tname)
+					"inject":
+						var targets: Array = target if target is Array else [target]
+						for t2 in targets:
+							var tname: String = Locale.tr_id("TRAIT_KEY", str(t2))
+							skill_lines.append("+ " + tname)
+			"stress":
+				match op:
+					"immune":
+						var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
+						immune_lines.append("✓ " + tname)
+					"set":
+						if value != null:
+							var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
+							var pct: int = int(float(value) * 100)
+							immune_lines.append("%s +%d%%" % [tname, pct])
+			"derived":
+				if op == "mult" and value != null:
+					var pct: int = int((float(value) - 1.0) * 100)
+					if pct == 0:
+						continue
+					var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
+					var sign: String = "+" if pct > 0 else ""
+					derived_lines.append("%s %s%d%%" % [tname, sign, pct])
+			"emotion":
+				if value != null:
+					var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
+					match op:
+						"max":
+							emotion_lines.append("%s ≤ %d%%" % [tname, int(float(value) * 100)])
+						"min":
+							emotion_lines.append("%s ≥ %d%%" % [tname, int(float(value) * 100)])
+						"add":
+							var pct: int = int(float(value) * 100)
+							var sign: String = "+" if pct > 0 else ""
+							emotion_lines.append("%s %s%d%%" % [tname, sign, pct])
+			"aura":
+				var radius = e.get("radius", 0)
+				if int(radius) > 0:
+					aura_lines.append("r=%d" % int(radius))
+
+	if not skill_lines.is_empty():
+		_add_label("⚡ " + Locale.ltr("TOOLTIP_BEHAVIOR_WEIGHTS"), Color(0.85, 0.85, 0.5), 10)
+		for line in skill_lines:
+			var ec: Color = Color(0.3, 0.9, 0.3) if "+" in line else Color(0.9, 0.3, 0.3)
+			_add_effect_row(line, ec)
+		_add_separator_line()
+
+	if not blocked_lines.is_empty():
+		_add_label("🚫 " + Locale.ltr("TOOLTIP_BLOCKED_BEHAVIORS"), Color(1.0, 0.6, 0.4), 10)
+		for line in blocked_lines:
+			_add_effect_row(line, Color(1.0, 0.5, 0.3))
+		_add_separator_line()
+
+	if not immune_lines.is_empty():
+		_add_label("🛡 " + Locale.ltr("TOOLTIP_STRESS_IMMUNE"), Color(0.6, 0.9, 0.6), 10)
+		for line in immune_lines:
+			_add_effect_row(line, Color(0.5, 0.9, 0.5))
+		_add_separator_line()
+
+	if not derived_lines.is_empty():
+		_add_label("📈 " + Locale.ltr("TOOLTIP_DERIVED_STATS"), Color(0.8, 0.85, 1.0), 10)
+		for line in derived_lines:
+			var ec: Color = Color(0.3, 0.9, 0.3) if "+" in line else Color(0.9, 0.3, 0.3)
+			_add_effect_row(line, ec)
+		_add_separator_line()
+
+	if not emotion_lines.is_empty():
+		_add_label("💫 " + Locale.ltr("TOOLTIP_EMOTION_MODIFIERS"), Color(0.85, 0.85, 0.5), 10)
+		for line in emotion_lines:
+			_add_effect_row(line, Color(0.8, 0.75, 0.9))
+		_add_separator_line()
+
+	if not aura_lines.is_empty():
+		_add_label("🌐 " + Locale.ltr("TOOLTIP_AURA_EFFECT"), Color(0.7, 0.9, 1.0), 10)
+		for line in aura_lines:
+			_add_effect_row(line, Color(0.6, 0.85, 1.0))
+		_add_separator_line()
+
+	if not event_lines.is_empty():
+		_add_label("⚙ " + Locale.ltr("TOOLTIP_ON_EVENT"), Color(0.9, 0.8, 0.5), 10)
+		for line in event_lines:
+			_add_effect_row(line, Color(0.85, 0.75, 0.45))
+		_add_separator_line()
 
 
 func _position_near_anchor(anchor: Rect2) -> void:
