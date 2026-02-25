@@ -10,6 +10,15 @@ const navItems = [
 
 export default function TopBar({ stats, onClearAll }) {
   const [showConfirm, setShowConfirm] = useState(false)
+  const [notifPerm, setNotifPerm] = useState(
+    typeof Notification !== 'undefined' ? Notification.permission : 'denied'
+  )
+
+  const requestNotif = async () => {
+    if (typeof Notification === 'undefined') return
+    const perm = await Notification.requestPermission()
+    setNotifPerm(perm)
+  }
 
   return (
     <>
@@ -50,6 +59,13 @@ export default function TopBar({ stats, onClearAll }) {
               </span>
             </div>
           )}
+          <button
+            onClick={requestNotif}
+            className="text-sm px-2 py-1 rounded hover:bg-gray-700/50 transition-colors"
+            title={`Notifications: ${notifPerm}`}
+          >
+            {notifPerm === 'granted' ? '🔔' : '🔕'}
+          </button>
           {onClearAll && (
             <button
               onClick={() => setShowConfirm(true)}

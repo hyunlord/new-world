@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { fetchTicket, fetchTicketLogs } from '../utils/api'
 import LogViewer from './LogViewer'
 import DiffViewer from './DiffViewer'
@@ -30,14 +31,9 @@ function parseJsonSafe(str) {
   try { return JSON.parse(str) } catch { return [] }
 }
 
-const TABS = [
-  { id: 'logs', label: 'Logs' },
-  { id: 'diff', label: 'Diff' },
-  { id: 'events', label: 'Events' },
-]
-
 export default function TicketDetail({ ticket, onClose }) {
-  const [activeTab, setActiveTab] = useState('logs')
+  const hasBody = Boolean(ticket.body)
+  const [activeTab, setActiveTab] = useState(hasBody ? 'body' : 'logs')
   const [logs, setLogs] = useState([])
   const [events, setEvents] = useState([])
   const [detail, setDetail] = useState(null)
@@ -59,6 +55,13 @@ export default function TicketDetail({ ticket, onClose }) {
   const files = parseJsonSafe(t.files)
   const deps = parseJsonSafe(t.dependencies)
   const statusColor = STATUS_COLORS[t.status] || '#6b7280'
+
+  const tabs = [
+    { id: 'body', label: 'Body', disabled: !t.body },
+    { id: 'logs', label: 'Logs' },
+    { id: 'diff', label: 'Diff', disabled: !t.diff_summary && !t.diff_full },
+    { id: 'events', label: 'Events' },
+  ]
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end" onClick={onClose}>
@@ -152,14 +155,17 @@ export default function TicketDetail({ ticket, onClose }) {
 
         {/* Tabs */}
         <div className="flex border-b border-gray-700/50 shrink-0">
-          {TABS.map(tab => (
+          {tabs.map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => !tab.disabled && setActiveTab(tab.id)}
+              disabled={tab.disabled}
               className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-gray-500 hover:text-gray-300'
+                tab.disabled
+                  ? 'text-gray-600 cursor-not-allowed'
+                  : activeTab === tab.id
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               {tab.label}
@@ -169,6 +175,11 @@ export default function TicketDetail({ ticket, onClose }) {
 
         {/* Tab content */}
         <div className="p-4 flex-1 overflow-y-auto">
+          {activeTab === 'body' && t.body && (
+            <div className="prose prose-invert prose-sm max-w-none">
+              <ReactMarkdown>{t.body}</ReactMarkdown>
+            </div>
+          )}
           {activeTab === 'logs' && <LogViewer logs={logs} />}
           {activeTab === 'diff' && (
             <DiffViewer diffSummary={t.diff_summary} diffFull={t.diff_full} />

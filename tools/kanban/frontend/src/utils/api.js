@@ -56,6 +56,10 @@ export async function fetchDailyStats(days = 30) {
   return request(`/stats/daily?days=${days}`)
 }
 
+export async function fetchErrorStats(days = 30) {
+  return request(`/stats/errors?days=${days}`)
+}
+
 export async function fetchBatches(params = {}) {
   const qs = new URLSearchParams()
   Object.entries(params).forEach(([k, v]) => {

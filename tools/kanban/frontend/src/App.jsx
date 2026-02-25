@@ -47,8 +47,16 @@ function App() {
     } else if (msg.type === 'ticket_updated') {
       setTickets(prev => prev.map(t => t.id === msg.ticket_id ? { ...t, ...msg.data } : t))
       loadStats()
+      // Browser notifications for done/failed
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        const status = msg.data?.status
+        if (status === 'done') {
+          new Notification('Ticket Done', { body: msg.data.title })
+        } else if (status === 'failed') {
+          new Notification('Ticket Failed', { body: `${msg.data.title}: ${msg.data.error_message || 'Unknown error'}` })
+        }
+      }
     } else if (msg.type === 'log_added') {
-      // Refresh selected ticket if it matches
       if (selectedTicket && selectedTicket.id === msg.ticket_id) {
         setSelectedTicket(prev => prev ? { ...prev, _logRefresh: Date.now() } : null)
       }

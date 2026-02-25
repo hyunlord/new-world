@@ -77,6 +77,7 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket })
                   <TicketCard
                     key={ticket.id}
                     ticket={ticket}
+                    allTickets={filteredTickets}
                     onClick={() => onSelectTicket(ticket)}
                     onDelete={onDeleteTicket}
                   />
@@ -95,6 +96,7 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket })
                       <TicketCard
                         key={ticket.id}
                         ticket={ticket}
+                        allTickets={filteredTickets}
                         onClick={() => onSelectTicket(ticket)}
                         onDelete={onDeleteTicket}
                         failed

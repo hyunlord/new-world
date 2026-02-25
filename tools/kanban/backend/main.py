@@ -8,7 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from database import engine, Base, get_db
+import sqlite3
+from database import engine, Base, get_db, DB_PATH
 from models import Ticket, TicketLog, TicketEvent, Batch
 from schemas import TicketCreate, TicketUpdate, LogCreate, DiffCreate, BatchCreate, BatchUpdate
 from websocket_manager import ConnectionManager
@@ -28,6 +29,21 @@ app.add_middleware(
 )
 
 Base.metadata.create_all(bind=engine)
+
+
+def migrate_db():
+    """Add missing columns to existing tables."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(tickets)")
+    columns = [col[1] for col in cursor.fetchall()]
+    if "body" not in columns:
+        cursor.execute("ALTER TABLE tickets ADD COLUMN body TEXT")
+        conn.commit()
+    conn.close()
+
+
+migrate_db()
 
 manager = ConnectionManager()
 
@@ -71,6 +87,7 @@ def ticket_to_dict(ticket: Ticket) -> dict:
         "branch": ticket.branch,
         "diff_summary": ticket.diff_summary,
         "diff_full": ticket.diff_full,
+        "body": ticket.body,
         "error_message": ticket.error_message,
         "started_at": ticket.started_at.isoformat() + "Z" if ticket.started_at else None,
         "completed_at": ticket.completed_at.isoformat() + "Z" if ticket.completed_at else None,
@@ -260,6 +277,7 @@ async def create_ticket(body: TicketCreate, db: Session = Depends(get_db)):
         id=ticket_id,
         title=body.title,
         description=body.description,
+        body=body.body,
         status="todo",
         priority=body.priority or "medium",
         system=body.system,
@@ -629,6 +647,66 @@ def get_stats(db: Session = Depends(get_db)):
         "dispatch_ratio": dispatch_ratio,
         "active_batches": active_batches,
         "total_batches": total_batches,
+    }
+
+
+@app.get("/api/stats/errors")
+def get_error_stats(days: int = Query(30), db: Session = Depends(get_db)):
+    cutoff = datetime.utcnow() - timedelta(days=days)
+
+    failed_tickets = (
+        db.query(Ticket)
+        .filter(
+            Ticket.status == "failed",
+            Ticket.error_message.isnot(None),
+            Ticket.created_at >= cutoff,
+        )
+        .all()
+    )
+
+    error_logs = (
+        db.query(TicketLog)
+        .filter(TicketLog.level == "error", TicketLog.timestamp >= cutoff)
+        .all()
+    )
+
+    keyword_counts = {}
+    all_errors = []
+
+    for t in failed_tickets:
+        all_errors.append({
+            "ticket_id": t.id,
+            "ticket_title": t.title,
+            "error": t.error_message,
+            "date": t.completed_at.isoformat() + "Z" if t.completed_at else None,
+            "system": t.system,
+        })
+        for word in t.error_message.lower().split():
+            if len(word) >= 5:
+                keyword_counts[word] = keyword_counts.get(word, 0) + 1
+
+    for log in error_logs:
+        for word in log.message.lower().split():
+            if len(word) >= 5:
+                keyword_counts[word] = keyword_counts.get(word, 0) + 1
+
+    patterns = [
+        {"keyword": k, "count": v}
+        for k, v in sorted(keyword_counts.items(), key=lambda x: -x[1])
+        if v >= 2
+    ][:20]
+
+    system_failures = {}
+    for t in failed_tickets:
+        sys_name = t.system or "unknown"
+        system_failures[sys_name] = system_failures.get(sys_name, 0) + 1
+
+    return {
+        "total_failures": len(failed_tickets),
+        "total_error_logs": len(error_logs),
+        "patterns": patterns,
+        "system_failures": system_failures,
+        "recent_errors": all_errors[:20],
     }
 
 

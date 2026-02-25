@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchStats, fetchDailyStats } from '../utils/api'
+import { fetchStats, fetchDailyStats, fetchErrorStats } from '../utils/api'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 
 const PIE_COLORS = ['#3b82f6', '#22c55e', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#ec4899']
@@ -7,10 +7,12 @@ const PIE_COLORS = ['#3b82f6', '#22c55e', '#ef4444', '#f59e0b', '#8b5cf6', '#06b
 export default function StatsView() {
   const [stats, setStats] = useState(null)
   const [daily, setDaily] = useState(null)
+  const [errorStats, setErrorStats] = useState(null)
 
   useEffect(() => {
     fetchStats().then(setStats).catch(console.error)
     fetchDailyStats(30).then(setDaily).catch(console.error)
+    fetchErrorStats(30).then(setErrorStats).catch(console.error)
   }, [])
 
   if (!stats) return <div className="p-6 text-gray-500">Loading stats...</div>
@@ -176,6 +178,82 @@ export default function StatsView() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Error Analysis */}
+      {errorStats && errorStats.total_failures > 0 && (
+        <>
+          <h2 className="text-lg font-semibold text-gray-200">Error Analysis</h2>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* Recurring error keywords */}
+            {errorStats.patterns.length > 0 && (
+              <div className="bg-[#16213e] rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-gray-300 mb-4">Recurring Error Keywords</h3>
+                <ResponsiveContainer width="100%" height={220}>
+                  <BarChart data={errorStats.patterns.slice(0, 10)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis type="number" stroke="#6b7280" fontSize={10} />
+                    <YAxis type="category" dataKey="keyword" stroke="#6b7280" fontSize={11} width={100} />
+                    <Tooltip contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #374151', borderRadius: '8px' }} />
+                    <Bar dataKey="count" fill="#ef4444" radius={[0, 2, 2, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+
+            {/* Failures by system */}
+            {Object.keys(errorStats.system_failures).length > 0 && (
+              <div className="bg-[#16213e] rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-gray-300 mb-4">Failures by System</h3>
+                <ResponsiveContainer width="100%" height={220}>
+                  <PieChart>
+                    <Pie
+                      data={Object.entries(errorStats.system_failures).map(([name, value]) => ({ name, value }))}
+                      cx="50%" cy="50%" outerRadius={75} dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {Object.entries(errorStats.system_failures).map((_, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #374151', borderRadius: '8px' }} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+
+          {/* Recent errors table */}
+          <div className="bg-[#16213e] rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-gray-300 mb-4">
+              Recent Errors ({errorStats.total_failures})
+            </h3>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-700">
+                  <th className="text-left text-gray-500 text-xs font-medium py-2 pr-4">Title</th>
+                  <th className="text-left text-gray-500 text-xs font-medium py-2 pr-4">Error</th>
+                  <th className="text-left text-gray-500 text-xs font-medium py-2 pr-4">System</th>
+                  <th className="text-left text-gray-500 text-xs font-medium py-2">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {errorStats.recent_errors.map(err => (
+                  <tr key={err.ticket_id} className="border-b border-gray-800/50 hover:bg-[#1f1f3a] transition-colors">
+                    <td className="py-2 pr-4 text-gray-300 max-w-[160px] truncate">{err.ticket_title}</td>
+                    <td className="py-2 pr-4 text-red-400 max-w-[200px] truncate">{err.error}</td>
+                    <td className="py-2 pr-4 text-gray-400">{err.system || '\u2014'}</td>
+                    <td className="py-2 text-gray-500 whitespace-nowrap">
+                      {err.date ? new Date(err.date).toLocaleDateString() : '\u2014'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </div>
   )

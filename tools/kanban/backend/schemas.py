@@ -40,6 +40,7 @@ class TicketCreate(BaseModel):
     id: Optional[str] = None
     title: str
     description: Optional[str] = None
+    body: Optional[str] = None
     priority: Optional[str] = "medium"
     system: Optional[str] = None
     files: Optional[List[str]] = None
@@ -64,6 +65,7 @@ class TicketUpdate(BaseModel):
     diff_full: Optional[str] = None
     error_message: Optional[str] = None
     description: Optional[str] = None
+    body: Optional[str] = None
     batch_id: Optional[str] = None
     created_by: Optional[str] = None
     ticket_number: Optional[int] = None

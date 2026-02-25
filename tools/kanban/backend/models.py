@@ -40,6 +40,7 @@ class Ticket(Base):
     branch = Column(String, nullable=True)
     diff_summary = Column(Text, nullable=True)
     diff_full = Column(Text, nullable=True)
+    body = Column(Text, nullable=True)
     error_message = Column(Text, nullable=True)
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)
