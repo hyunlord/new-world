@@ -62,6 +62,11 @@ function App() {
       if (selectedTicket && selectedTicket.id === msg.ticket_id) {
         setSelectedTicket(prev => prev ? { ...prev, _logRefresh: Date.now() } : null)
       }
+    } else if (msg.type === 'tickets_cleared') {
+      setTickets([])
+      loadStats()
+    } else if (msg.type === 'batch_deleted' || msg.type === 'batch_bulk_deleted') {
+      loadStats()
     }
   }, [selectedTicket, loadStats])
 

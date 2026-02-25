@@ -98,3 +98,14 @@ export async function createBatch(data) {
 export async function updateBatch(id, data) {
   return request(`/batches/${id}`, { method: 'PATCH', body: JSON.stringify(data) })
 }
+
+export async function deleteBatch(id) {
+  return request(`/batches/${id}`, { method: 'DELETE' })
+}
+
+export async function bulkDeleteBatches(ids) {
+  return request('/batches/bulk-delete', {
+    method: 'POST',
+    body: JSON.stringify({ batch_ids: ids })
+  })
+}

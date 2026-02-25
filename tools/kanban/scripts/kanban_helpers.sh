@@ -7,7 +7,7 @@ KANBAN_URL="${KANBAN_URL:-http://localhost:8800}"
 
 kanban_start() {
   # Mark ticket as in_progress. Args: $1=ticket_id, $2=agent_name
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d "{\"status\": \"in_progress\", \"assignee\": \"$2\"}"
 }
@@ -15,19 +15,19 @@ kanban_start() {
 kanban_log() {
   # Send progress log. Args: $1=ticket_id, $2=level(info|warn|error), $3=message
   local MSG=$(echo "$3" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip()))")
-  curl -sf -X POST "${KANBAN_URL}/api/tickets/$1/logs" \
+  curl -sf --max-time 10 -X POST "${KANBAN_URL}/api/tickets/$1/logs" \
     -H "Content-Type: application/json" \
     -d "{\"level\": \"$2\", \"message\": $MSG, \"source\": \"codex\"}"
 }
 
 kanban_done() {
   # Mark ticket done with diff + commit hash. Args: $1=ticket_id
-  local DIFF_STAT=$(git diff HEAD~1 --stat 2>/dev/null || echo "no diff available")
-  local DIFF_FULL=$(git diff HEAD~1 2>/dev/null || echo "no diff available")
+  local DIFF_STAT=$(git diff HEAD~1 --stat 2>/dev/null | head -c 10000 || echo "no diff available")
+  local DIFF_FULL=$(git diff HEAD~1 2>/dev/null | head -c 100000 || echo "no diff available")
   local STAT_JSON=$(echo "$DIFF_STAT" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
   local FULL_JSON=$(echo "$DIFF_FULL" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
   local COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null || echo "")
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d "{\"status\": \"done\", \"diff_summary\": $STAT_JSON, \"diff_full\": $FULL_JSON, \"commit_hash\": \"$COMMIT_HASH\"}"
 }
@@ -35,21 +35,21 @@ kanban_done() {
 kanban_fail() {
   # Mark ticket failed. Args: $1=ticket_id, $2=error_message
   local ERR=$(echo "$2" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip()))")
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d "{\"status\": \"failed\", \"error_message\": $ERR}"
 }
 
 kanban_review() {
   # Mark ticket for review. Args: $1=ticket_id
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d '{"status": "review"}'
 }
 
 kanban_claim() {
   # Claim a ticket. Args: $1=ticket_id, $2=agent_name
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d "{\"status\": \"claimed\", \"assignee\": \"$2\"}"
 }
@@ -65,9 +65,15 @@ kanban_create_batch() {
     BODY="$BODY, \"source_prompt\": $SRC_JSON"
   fi
   BODY="$BODY}"
-  curl -sf -X POST "${KANBAN_URL}/api/batches" \
+  local RESULT
+  RESULT=$(curl -sf --max-time 10 -X POST "${KANBAN_URL}/api/batches" \
     -H "Content-Type: application/json" \
-    -d "$BODY" 2>/dev/null | python3 -c "import sys,json; print(json.loads(sys.stdin.read()).get('id',''))" 2>/dev/null
+    -d "$BODY" 2>/dev/null)
+  if [ -z "$RESULT" ]; then
+    echo "ERROR: kanban_create_batch failed - no response from server" >&2
+    return 1
+  fi
+  echo "$RESULT" | python3 -c "import sys,json; print(json.loads(sys.stdin.read()).get('id',''))" 2>/dev/null
 }
 
 kanban_create_ticket() {
@@ -81,9 +87,15 @@ kanban_create_ticket() {
     BODY="$BODY, \"system\": \"$5\""
   fi
   BODY="$BODY, \"priority\": \"$PRIORITY\"}"
-  curl -sf -X POST "${KANBAN_URL}/api/tickets" \
+  local RESULT
+  RESULT=$(curl -sf --max-time 10 -X POST "${KANBAN_URL}/api/tickets" \
     -H "Content-Type: application/json" \
-    -d "$BODY" 2>/dev/null | python3 -c "import sys,json; print(json.loads(sys.stdin.read()).get('id',''))" 2>/dev/null
+    -d "$BODY" 2>/dev/null)
+  if [ -z "$RESULT" ]; then
+    echo "ERROR: kanban_create_ticket failed - no response from server" >&2
+    return 1
+  fi
+  echo "$RESULT" | python3 -c "import sys,json; print(json.loads(sys.stdin.read()).get('id',''))" 2>/dev/null
 }
 
 kanban_direct_start() {
@@ -91,7 +103,7 @@ kanban_direct_start() {
   # Args: $1=title, $2=batch_id, $3=ticket_number, $4=system (optional)
   local TID=$(kanban_create_ticket "$1" "$2" "direct" "$3" "$4")
   if [ -n "$TID" ]; then
-    curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$TID" \
+    curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$TID" \
       -H "Content-Type: application/json" \
       -d '{"status": "in_progress", "assignee": "claude_code"}' >/dev/null 2>&1
   fi
@@ -100,7 +112,7 @@ kanban_direct_start() {
 
 kanban_direct_done() {
   # Mark a DIRECT ticket as done. Args: $1=ticket_id
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d '{"status": "done"}' >/dev/null 2>&1
 }
@@ -108,7 +120,7 @@ kanban_direct_done() {
 kanban_direct_fail() {
   # Mark a DIRECT ticket as failed. Args: $1=ticket_id, $2=error_message
   local ERR=$(echo "$2" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip()))")
-  curl -sf -X PATCH "${KANBAN_URL}/api/tickets/$1" \
+  curl -sf --max-time 10 -X PATCH "${KANBAN_URL}/api/tickets/$1" \
     -H "Content-Type: application/json" \
     -d "{\"status\": \"failed\", \"error_message\": $ERR}" >/dev/null 2>&1
 }
