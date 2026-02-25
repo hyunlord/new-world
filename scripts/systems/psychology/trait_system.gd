@@ -495,6 +495,12 @@ static func update_trait_strengths(entity: RefCounted) -> void:
 	if _has_property(entity, "traits_dirty"):
 		entity.set("traits_dirty", false)
 
+	# v3 effect cache: rebuild whenever trait_strengths changes
+	# Use load() to avoid circular preload (trait_effect_cache preloads trait_system)
+	var _cache_script = load("res://scripts/systems/psychology/trait_effect_cache.gd")
+	if _cache_script:
+		_cache_script.rebuild(entity)
+
 
 ## Select display traits. v3: returns all qualified traits (variable count).
 static func get_display_traits(entity: RefCounted, _k: int = TOP_K) -> Array:
@@ -662,6 +668,56 @@ static func _calc_generic_mult(entity: RefCounted, modifier_key: String, _key: S
 # ══════════════════════════════════════════════════════
 # Public API & Backward Compat
 # ══════════════════════════════════════════════════════
+
+## Summarize v3 effects array from a trait definition into display-ready buckets.
+static func get_v3_trait_effects_summary(trait_def: Dictionary) -> Dictionary:
+	var result: Dictionary = {
+		"skill_mults": {},
+		"blocked": [],
+		"immune": [],
+		"derived_mults": {},
+		"emotion_caps": {},
+		"has_aura": false,
+		"has_on_event": false,
+		"raw_count": 0
+	}
+	var effects: Array = trait_def.get("effects", [])
+	result["raw_count"] = effects.size()
+	for i in range(effects.size()):
+		var e: Dictionary = effects[i]
+		if e.has("on_event"):
+			result["has_on_event"] = true
+			continue
+		var system: String = str(e.get("system", ""))
+		var op: String = str(e.get("op", ""))
+		var target = e.get("target", "")
+		var value = e.get("value", 1.0)
+		match system:
+			"skill":
+				if op == "mult":
+					var targets: Array = target if target is Array else [target]
+					for t in targets:
+						result["skill_mults"][str(t)] = float(value)
+			"behavior":
+				if op == "block":
+					var targets: Array = target if target is Array else [target]
+					for t in targets:
+						result["blocked"].append(str(t))
+				elif op == "inject":
+					result["blocked"].append("+" + str(target))
+			"stress":
+				if op == "immune":
+					result["immune"].append(str(target))
+			"derived":
+				if op == "mult":
+					result["derived_mults"][str(target)] = float(value)
+			"emotion":
+				if op in ["max", "min", "set"]:
+					result["emotion_caps"][str(target)] = float(value)
+			"aura":
+				result["has_aura"] = true
+	return result
+
 
 ## Backward-compatible evaluate_traits wrapper.
 static func evaluate_traits(entity: RefCounted) -> void:

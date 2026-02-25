@@ -12,6 +12,7 @@ var _stressor_defs: Dictionary = {}
 var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
 
 # ── Constants ─────────────────────────────────────────────────────────
+const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
@@ -113,7 +114,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 	# 6) 최종 업데이트 (Phase 5: ACE stress gain multiplier — Felitti 1998 dose-response)
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
-	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult - recovery
+	# v3 trait effect: stress/mult target=accumulation_rate
+	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
+	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult * trait_accum_mult - recovery
 	if absf(delta) < STRESS_EPSILON:
 		delta = 0.0
 

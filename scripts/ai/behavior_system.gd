@@ -9,6 +9,7 @@ var _settlement_manager: RefCounted
 ## TraitViolationSystem 참조 (Phase 3B), main.gd에서 주입
 var _trait_violation_system = null
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
+const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
 const _ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 const _ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 var _morale_system = null
@@ -253,6 +254,11 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	## [Schwartz 1992] 가치관 기반 행동 score 보정 (entity.values 비어있으면 no-op)
 	for action_id in scores:
 		scores[action_id] = _apply_value_modifiers(scores[action_id], action_id, entity)
+
+	# v3 trait effect: behavior/block — zero out blocked actions
+	for action_id in scores:
+		if _TraitEffectCache.is_behavior_blocked(entity, str(action_id)):
+			scores[action_id] = 0.0
 
 	return scores
 

@@ -513,16 +513,22 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array, en
 		var trait_id: String = tdef.get("id", "")
 		active_ids[trait_id] = true
 
-	if entity != null:
-		for action in TraitSystem.get_known_behavior_actions():
-			var weight: float = TraitSystem.get_effect_value(entity, "behavior_weight", str(action))
-			if abs(weight - 1.0) > 0.01:
-				behavior_totals[action] = weight - 1.0
-
-		for emotion in TraitSystem.get_known_emotion_baselines():
-			var baseline: float = TraitSystem.get_effect_value(entity, "emotion_baseline", str(emotion))
-			if abs(baseline) > 0.005:
-				emotion_totals[emotion] = baseline
+	# Build behavior/emotion totals from active display traits' v3 effects only
+	for tdef in trait_defs:
+		var full_def: Dictionary = TraitSystem.get_trait_definition(tdef.get("id", ""))
+		if full_def.is_empty():
+			continue
+		var efx: Dictionary = TraitSystem.get_v3_trait_effects_summary(full_def)
+		for action in efx.get("skill_mults", {}).keys():
+			var mult: float = float(efx["skill_mults"][action])
+			if abs(mult - 1.0) > 0.01:
+				var prev: float = behavior_totals.get(action, 1.0)
+				behavior_totals[action] = prev * mult - 1.0
+		for action in efx.get("blocked", []):
+			behavior_totals["BLOCK:" + str(action)] = -1.0
+		for emotion in efx.get("emotion_caps", {}).keys():
+			var cap: float = float(efx["emotion_caps"][emotion])
+			emotion_totals[emotion] = cap
 
 	var synergies: Array = []
 	var conflicts: Array = []
@@ -578,6 +584,12 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array, en
 		for key in behavior_keys:
 			var key_str: String = str(key)
 			var value: float = float(behavior_totals[key_str])
+			if key_str.begins_with("BLOCK:"):
+				var action_name: String = key_str.substr(6)
+				var aname: String = Locale.tr_id("TRAIT_KEY", action_name)
+				draw_string(font, Vector2(sub_indent, cy + 12), "✖ %s" % aname, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.9, 0.4, 0.4))
+				cy += 15.0
+				continue
 			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
 			if display_key == "TRAIT_KEY_" + key_str.to_upper():
 				display_key = key_str.replace("_", " ").capitalize()
