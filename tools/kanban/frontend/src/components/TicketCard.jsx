@@ -25,7 +25,7 @@ function timeAgo(dateStr) {
   return `${days}d ago`
 }
 
-export default function TicketCard({ ticket, allTickets = [], onClick, onDelete, failed }) {
+export default function TicketCard({ ticket, allTickets = [], onClick, onDelete, onDismiss, failed }) {
   const pc = PRIORITY_COLORS[ticket.priority] || PRIORITY_COLORS.medium
 
   const dependencies = Array.isArray(ticket.dependencies) ? ticket.dependencies : []
@@ -50,6 +50,15 @@ export default function TicketCard({ ticket, allTickets = [], onClick, onDelete,
           className="absolute top-1.5 right-1.5 w-5 h-5 rounded flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-400/10 opacity-0 group-hover:opacity-100 transition-opacity"
         >
           &times;
+        </button>
+      )}
+      {failed && onDismiss && (
+        <button
+          onClick={e => { e.stopPropagation(); onDismiss(ticket.id) }}
+          className="absolute top-1.5 right-7 w-5 h-5 rounded flex items-center justify-center text-gray-600 hover:text-gray-300 hover:bg-gray-700/50 opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+          title="Dismiss from board"
+        >
+          ✕
         </button>
       )}
       <div className="flex items-center gap-2 mb-1">

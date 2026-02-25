@@ -1,3 +1,37 @@
+## Trait Schema & Naming Overhaul — t-SCH batch — 2026-02-25
+
+### Context
+Op language inconsistency in trait effects (floor/ceil/lock/unlock/remove/trigger/immunity → min/max/disable/enable/block/on_event/immune). Condition format change from inline strings to structured objects. Naming quality pass on all 242 traits.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| t-SCH-01 | Create trait-schema-v3.md | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-SCH-02 | Create trait-effects-master-part1.md (new ops + structured conditions) | 🟢 DISPATCH | ask_codex | standalone new file |
+| t-SCH-05 | Naming pass: Archetype (55 traits) | 🟢 DISPATCH | ask_codex | standalone doc edit |
+| t-SCH-06 | Naming pass: Shadow + Radiance (27 traits) | 🟢 DISPATCH | ask_codex | standalone doc edit |
+| t-SCH-07 | Naming pass: Corpus + Nous (22 traits) | 🟢 DISPATCH | ask_codex | standalone doc edit |
+| t-SCH-08 | Naming pass: Awakened + Bloodline (43 traits) | 🟢 DISPATCH | ask_codex | standalone doc edit |
+| t-SCH-09 | Naming pass: Mastery + Bond + Fate + Synergy (95 traits) | 🟢 DISPATCH | ask_codex | standalone doc edit |
+| t-SCH-10 | Integration: merge naming results + verify | 🔴 DIRECT | — | integration wiring |
+
+### Dispatch ratio: 7/8 = 87.5% ✅
+
+### Dispatch strategy
+Parallel — all 7 Codex jobs dispatched simultaneously (no file overlap). T-SCH-10 is DIRECT merge after all complete.
+
+### Localization Verification
+- Hardcoded scan: N/A (document-only changes)
+- New keys added: none (naming changes propagated to gen_trait_v3.py L dict in T-SCH-10)
+- ko/ updated: deferred to T-SCH-10
+
+### Results
+- Gate: PENDING
+- Dispatch ratio: 7/8 = 87.5%
+- Files changed: PENDING
+
+---
+
 ## Trait Effects Part 1 — t-EFX batch — 2026-02-25
 
 ### Context

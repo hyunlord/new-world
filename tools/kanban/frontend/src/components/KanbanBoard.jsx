@@ -21,7 +21,7 @@ function sortTickets(tickets) {
   })
 }
 
-export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket }) {
+export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket, onDismissTicket }) {
   const [batches, setBatches] = useState([])
   const [batchFilter, setBatchFilter] = useState('')
 
@@ -34,6 +34,14 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket })
   const filteredTickets = batchFilter
     ? tickets.filter(t => t.batch_id === batchFilter)
     : tickets
+
+  const handleDismissAllFailed = async () => {
+    if (!onDismissTicket) return
+    const failedIds = failed.map(t => t.id)
+    for (const id of failedIds) {
+      await onDismissTicket(id)
+    }
+  }
 
   const failed = filteredTickets.filter(t => t.status === 'failed')
 
@@ -86,10 +94,20 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket })
               {col.id === 'in_progress' && failed.length > 0 && (
                 <div className="mt-4">
                   <div className="rounded-t-lg px-3 py-2 border-t-2 border-red-600 bg-[#16213e] flex items-center justify-between">
-                    <h2 className="text-sm font-semibold text-red-400">Failed</h2>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-600/20 text-red-400">
-                      {failed.length}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-sm font-semibold text-red-400">Failed</h2>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-600/20 text-red-400">
+                        {failed.length}
+                      </span>
+                    </div>
+                    {onDismissTicket && (
+                      <button
+                        onClick={handleDismissAllFailed}
+                        className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        Dismiss All
+                      </button>
+                    )}
                   </div>
                   <div className="space-y-2 mt-2 max-h-60 overflow-y-auto">
                     {sortTickets(failed).map(ticket => (
@@ -99,6 +117,7 @@ export default function KanbanBoard({ tickets, onSelectTicket, onDeleteTicket })
                         allTickets={filteredTickets}
                         onClick={() => onSelectTicket(ticket)}
                         onDelete={onDeleteTicket}
+                        onDismiss={onDismissTicket}
                         failed
                       />
                     ))}

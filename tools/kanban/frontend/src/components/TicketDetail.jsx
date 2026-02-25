@@ -76,11 +76,11 @@ export default function TicketDetail({ ticket, onClose }) {
     <div className="fixed inset-0 z-40 flex justify-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative w-[480px] h-full bg-[#16213e] border-l border-gray-700 overflow-y-auto shadow-2xl flex flex-col"
+        className="relative w-[480px] h-full bg-[#16213e] border-l border-gray-700 flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-[#16213e] border-b border-gray-700 px-5 py-4 flex items-start justify-between z-10">
+        <div className="shrink-0 bg-[#16213e] border-b border-gray-700 px-5 py-4 flex items-start justify-between z-10">
           <div className="flex-1 mr-3">
             <h2 className="text-lg font-semibold text-white leading-snug">{t.title}</h2>
             <div className="flex items-center gap-2 mt-1">
@@ -116,7 +116,7 @@ export default function TicketDetail({ ticket, onClose }) {
         </div>
 
         {/* Info section */}
-        <div className="px-5 py-4 space-y-2 text-sm border-b border-gray-700/50">
+        <div className="shrink-0 px-5 py-4 space-y-2 text-sm border-b border-gray-700/50">
           {t.system && (
             <div>
               <span className="text-gray-500 w-24 inline-block">System:</span>
@@ -191,7 +191,7 @@ export default function TicketDetail({ ticket, onClose }) {
         </div>
 
         {/* Tab content */}
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-4 flex-1 overflow-y-auto min-h-0">
           {activeTab === 'body' && t.body && (
             <div className="prose prose-invert prose-sm max-w-none">
               <ReactMarkdown>{t.body}</ReactMarkdown>
