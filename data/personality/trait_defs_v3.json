@@ -17,7 +17,63 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": [
+          "accept_bribe",
+          "steal",
+          "fraud",
+          "embezzle"
+        ],
+        "op": "remove",
+        "value": true,
+        "tags": [
+          "integrity"
+        ]
+      },
+      {
+        "system": "behavior",
+        "target": "trade_pricing",
+        "op": "override",
+        "value": "fair_price_only"
+      },
+      {
+        "system": "derived",
+        "target": "trustworthiness",
+        "op": "add",
+        "value": 0.25
+      },
+      {
+        "system": "reputation",
+        "target": "tags",
+        "op": "tag",
+        "value": "untarnished"
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "compromise",
+          "bluff",
+          "deceive"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": "diplomacy_filter",
+        "op": "set",
+        "value": "reject_if_unfair"
+      },
+      {
+        "system": "stress",
+        "target": "corruption_exposure",
+        "op": "set",
+        "value": 0.1,
+        "condition": "leader.has_tag('corrupt')"
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -45,7 +101,60 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": [
+          "fraud",
+          "smuggle",
+          "bribe",
+          "forge_document"
+        ],
+        "op": "unlock",
+        "value": true
+      },
+      {
+        "system": "skill",
+        "target": [
+          "deception",
+          "persuasion"
+        ],
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "relationship",
+        "target": "betrayal_cooldown",
+        "op": "mult",
+        "value": 0.0
+      },
+      {
+        "system": "stress",
+        "target": "betrayal_guilt",
+        "op": "immunity",
+        "value": true
+      },
+      {
+        "system": "reputation",
+        "target": "negative_event_impact",
+        "op": "mult",
+        "value": 2.0,
+        "condition": "caught_in_act"
+      },
+      {
+        "system": "relationship",
+        "target": "trust_repair_rate",
+        "op": "set",
+        "value": 0.0,
+        "condition": "target.knows_betrayal"
+      },
+      {
+        "system": "derived",
+        "target": "deception_resistance",
+        "op": "add",
+        "value": 0.3
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -73,7 +182,88 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "emotion",
+        "target": "intensity_mult",
+        "op": "set",
+        "value": 2.0
+      },
+      {
+        "system": "emotion",
+        "target": "decay_rate",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "stress",
+        "target": "accumulation_rate",
+        "op": "mult",
+        "value": 1.8
+      },
+      {
+        "system": "stress",
+        "target": "mental_break_threshold",
+        "op": "add",
+        "value": -0.15
+      },
+      {
+        "system": "stress",
+        "target": "break_types",
+        "op": "replace",
+        "value": {
+          "crying_fit": 0.4,
+          "creative_frenzy": 0.3,
+          "catatonic": 0.2,
+          "berserk": 0.1
+        }
+      },
+      {
+        "system": "skill",
+        "target": [
+          "music",
+          "poetry",
+          "painting",
+          "dance",
+          "theater"
+        ],
+        "op": "mult",
+        "value": 1.3,
+        "tags": [
+          "art_bonus"
+        ]
+      },
+      {
+        "system": "memory",
+        "target": "trauma_intensity",
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "memory",
+        "target": "positive_intensity",
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "combat",
+        "target": "morale",
+        "op": "add",
+        "value": -0.3
+      },
+      {
+        "system": "combat",
+        "target": "flee_threshold",
+        "op": "add",
+        "value": 0.15
+      },
+      {
+        "system": "relationship",
+        "target": "bond_event_impact",
+        "op": "mult",
+        "value": 2.0
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -101,7 +291,66 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "stress",
+        "target": "accumulation_rate",
+        "op": "mult",
+        "value": 0.2
+      },
+      {
+        "system": "stress",
+        "target": "mental_break_threshold",
+        "op": "add",
+        "value": 0.3
+      },
+      {
+        "system": "emotion",
+        "target": "fear",
+        "op": "ceil",
+        "value": 0.1
+      },
+      {
+        "system": "emotion",
+        "target": [
+          "joy",
+          "sadness",
+          "trust",
+          "surprise"
+        ],
+        "op": "ceil",
+        "value": 0.5
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy_gain_rate",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy",
+        "op": "ceil",
+        "value": 70
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "console",
+          "empathize",
+          "cry",
+          "express_grief"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "combat",
+        "target": "morale_floor",
+        "op": "set",
+        "value": 0.4
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -129,7 +378,79 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "relationship",
+        "target": "intimacy_gain_rate",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "relationship",
+        "target": "first_impression",
+        "op": "add",
+        "value": 25
+      },
+      {
+        "system": "aura",
+        "target": "joy",
+        "op": "set",
+        "value": {
+          "radius": 3,
+          "intensity": 0.15,
+          "target_filter": "all"
+        }
+      },
+      {
+        "system": "need",
+        "target": "belonging",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 3.0
+        }
+      },
+      {
+        "system": "need",
+        "target": "intimacy",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 2.5
+        }
+      },
+      {
+        "system": "stress",
+        "target": "isolation_stress",
+        "op": "mult",
+        "value": 4.0
+      },
+      {
+        "system": "stress",
+        "target": "break_types",
+        "op": "replace",
+        "value": {
+          "sobbing_fit": 0.5,
+          "desperate_socializing": 0.3,
+          "wander": 0.2
+        },
+        "condition": "isolation_days > 3"
+      },
+      {
+        "system": "skill",
+        "target": [
+          "persuasion",
+          "negotiation",
+          "teaching"
+        ],
+        "op": "mult",
+        "value": 1.2
+      },
+      {
+        "system": "event",
+        "target": "festival_effect",
+        "op": "mult",
+        "value": 1.5
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -157,7 +478,64 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": "all_work",
+        "op": "mult",
+        "value": 1.3,
+        "condition": "is_alone"
+      },
+      {
+        "system": "derived",
+        "target": "wisdom",
+        "op": "add",
+        "value": 0.15,
+        "tags": [
+          "introspection"
+        ]
+      },
+      {
+        "system": "stress",
+        "target": "introspection_recovery",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy_gain_rate",
+        "op": "mult",
+        "value": 0.0,
+        "condition": "in_social_event"
+      },
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": -0.3
+      },
+      {
+        "system": "stress",
+        "target": "crowd_stress",
+        "op": "set",
+        "value": 0.08,
+        "condition": "nearby_agents > 5"
+      },
+      {
+        "system": "stress",
+        "target": "isolation_stress",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "need",
+        "target": "belonging",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 0.3
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -185,7 +563,53 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "negotiation",
+          "mediation"
+        ],
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "relationship",
+        "target": "alliance_decay",
+        "op": "mult",
+        "value": 0.7
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "refuse_request",
+          "reject_proposal",
+          "deny_entry"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": "exploitation_detection",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "need",
+        "target": "autonomy",
+        "op": "set",
+        "value": {
+          "satisfaction_mult": 0.5
+        }
+      },
+      {
+        "system": "stress",
+        "target": "manipulation_resistance",
+        "op": "mult",
+        "value": 0.5
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -213,7 +637,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "stress",
+        "target": "manipulation_resistance",
+        "op": "set",
+        "value": 1.0
+      },
+      {
+        "system": "behavior",
+        "target": "intimidation_resistance",
+        "op": "add",
+        "value": 0.5
+      },
+      {
+        "system": "skill",
+        "target": "debate",
+        "op": "mult",
+        "value": 1.3
+      },
+      {
+        "system": "behavior",
+        "target": "cooperation_accept",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy_decay_rate",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "compromise",
+          "concede",
+          "apologize"
+        ],
+        "op": "set",
+        "value": {
+          "weight_mult": 0.2
+        }
+      },
+      {
+        "system": "derived",
+        "target": "intimidation",
+        "op": "add",
+        "value": 0.2
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -241,7 +714,55 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": "all_work",
+        "op": "mult",
+        "value": 1.25
+      },
+      {
+        "system": "crafting",
+        "target": "quality_bonus",
+        "op": "add",
+        "value": 1
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "break_rule",
+          "skip_task",
+          "shirk_duty"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": "improvisation",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "stress",
+        "target": "unexpected_event_stress",
+        "op": "mult",
+        "value": 2.5
+      },
+      {
+        "system": "behavior",
+        "target": "accept_change",
+        "op": "mult",
+        "value": 0.3,
+        "condition": "change_type == 'schedule' OR change_type == 'method'"
+      },
+      {
+        "system": "stress",
+        "target": "routine_disruption",
+        "op": "set",
+        "value": 0.15
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -269,7 +790,55 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": "improvisation",
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "behavior",
+        "target": "crisis_response_speed",
+        "op": "mult",
+        "value": 1.3
+      },
+      {
+        "system": "skill",
+        "target": "long_task_completion",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "behavior",
+        "target": "promise_fulfillment",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "behavior",
+        "target": "rule_compliance",
+        "op": "mult",
+        "value": 0.3
+      },
+      {
+        "system": "stress",
+        "target": "repetition_stress",
+        "op": "set",
+        "value": 0.1,
+        "condition": "same_task_days > 3"
+      },
+      {
+        "system": "emotion",
+        "target": "joy",
+        "op": "add",
+        "value": 0.3,
+        "condition": "new_task_started",
+        "tags": [
+          "novelty_burst"
+        ]
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -297,7 +866,51 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": "new_skill_learning",
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "event",
+        "target": "discovery_chance",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": "migration_resistance",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "need",
+        "target": "competence",
+        "op": "set",
+        "value": {
+          "satisfaction_mult": 0.5
+        },
+        "condition": "same_job_years > 1"
+      },
+      {
+        "system": "stress",
+        "target": "tradition_enforcement",
+        "op": "set",
+        "value": 0.1,
+        "condition": "settlement.values.TRADITION > 0.7"
+      },
+      {
+        "system": "behavior",
+        "target": "explore_unknown",
+        "op": "inject",
+        "value": {
+          "priority": 0.7
+        },
+        "condition": "unknown_entity_nearby OR new_technology_available"
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -325,7 +938,49 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": "traditional_work",
+        "op": "mult",
+        "value": 1.2
+      },
+      {
+        "system": "values",
+        "target": "drift_rate",
+        "op": "mult",
+        "value": 0.2
+      },
+      {
+        "system": "skill",
+        "target": "new_skill_learning",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "adopt_innovation",
+          "experiment",
+          "research"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": "migration_resistance",
+        "op": "set",
+        "value": 1.0
+      },
+      {
+        "system": "stress",
+        "target": "displacement_stress",
+        "op": "set",
+        "value": 0.2,
+        "condition": "not_in_birth_settlement"
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -359,7 +1014,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "relationship",
+        "target": "first_impression",
+        "op": "add",
+        "value": 40
+      },
+      {
+        "system": "relationship",
+        "target": "trust",
+        "op": "ceil",
+        "value": 50,
+        "condition": "relationship_duration > 365"
+      },
+      {
+        "system": "behavior",
+        "target": "maintain_cover",
+        "op": "unlock",
+        "value": true,
+        "tags": [
+          "espionage"
+        ]
+      },
+      {
+        "system": "behavior",
+        "target": "fake_emotion",
+        "op": "unlock",
+        "value": true
+      },
+      {
+        "system": "skill",
+        "target": [
+          "espionage",
+          "diplomacy",
+          "deception"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "express_true_feelings",
+          "confess",
+          "genuine_apology"
+        ],
+        "op": "remove",
+        "value": true
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -391,7 +1095,52 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": 0.3
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "lie",
+          "deceive",
+          "bluff",
+          "fake_emotion"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "skill",
+        "target": [
+          "espionage",
+          "deception"
+        ],
+        "op": "mult",
+        "value": 0.0
+      },
+      {
+        "system": "relationship",
+        "target": "trust_gain_rate",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "derived",
+        "target": "trustworthiness",
+        "op": "add",
+        "value": 0.3
+      },
+      {
+        "system": "behavior",
+        "target": "suspicion",
+        "op": "mult",
+        "value": 0.3
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -423,7 +1172,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "reputation",
+        "target": "spread_speed",
+        "op": "mult",
+        "value": 0.1
+      },
+      {
+        "system": "skill",
+        "target": [
+          "assassination",
+          "theft",
+          "infiltration"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "relationship",
+        "target": "memory_decay_rate",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": -0.5
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy_gain_rate",
+        "op": "mult",
+        "value": 0.2
+      },
+      {
+        "system": "stress",
+        "target": "isolation_stress",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "need",
+        "target": "recognition",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 0.1
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -455,7 +1253,49 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "relationship",
+        "target": "secret_disclosure_chance",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": "console_effectiveness",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "aura",
+        "target": "stress_relief",
+        "op": "set",
+        "value": {
+          "radius": 1,
+          "intensity": 0.1,
+          "target_filter": "interacting_with"
+        }
+      },
+      {
+        "system": "relationship",
+        "target": "max_active_relationships",
+        "op": "set",
+        "value": 5
+      },
+      {
+        "system": "stress",
+        "target": "crowd_stress",
+        "op": "set",
+        "value": 0.1,
+        "condition": "nearby_agents > 3"
+      },
+      {
+        "system": "derived",
+        "target": "trustworthiness",
+        "op": "add",
+        "value": 0.35
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -487,7 +1327,54 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "derived",
+        "target": "intimidation",
+        "op": "add",
+        "value": 0.4
+      },
+      {
+        "system": "crafting",
+        "target": "quality_bonus",
+        "op": "add",
+        "value": 1,
+        "condition": "emotion.anger > 0.5 OR emotion.sadness > 0.5"
+      },
+      {
+        "system": "behavior",
+        "target": "argument_style",
+        "op": "set",
+        "value": "explosive"
+      },
+      {
+        "system": "relationship",
+        "target": "conflict_damage",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "emotion",
+        "target": "anger",
+        "op": "floor",
+        "value": 0.2
+      },
+      {
+        "system": "behavior",
+        "target": "rational_decision",
+        "op": "mult",
+        "value": 0.3,
+        "condition": "emotion.anger > 0.6"
+      },
+      {
+        "system": "behavior",
+        "target": "apologize",
+        "op": "set",
+        "value": {
+          "weight_mult": 0.1
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -519,7 +1406,49 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": "mediation",
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "emotion",
+        "target": "anger",
+        "op": "ceil",
+        "value": 0.15,
+        "condition": "trigger_type == 'insult' OR trigger_type == 'provocation'"
+      },
+      {
+        "system": "aura",
+        "target": "anger",
+        "op": "set",
+        "value": {
+          "radius": 2,
+          "intensity": -0.15,
+          "target_filter": "all"
+        }
+      },
+      {
+        "system": "behavior",
+        "target": "crisis_response_speed",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "emotion",
+        "target": "intensity_mult",
+        "op": "set",
+        "value": 0.5
+      },
+      {
+        "system": "combat",
+        "target": "initial_panic_check",
+        "op": "override",
+        "value": "skip"
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -551,7 +1480,59 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "agitation",
+          "propaganda"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "aura",
+        "target": "combat_morale",
+        "op": "set",
+        "value": {
+          "radius": 5,
+          "intensity": 0.2,
+          "target_filter": "allies"
+        },
+        "condition": "in_combat"
+      },
+      {
+        "system": "skill",
+        "target": [
+          "peace_negotiation",
+          "diplomacy"
+        ],
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "relationship",
+        "target": "hostility_escalation",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": "pre_battle_speech",
+        "op": "unlock",
+        "value": {
+          "morale_boost": 0.3,
+          "duration": "combat"
+        }
+      },
+      {
+        "system": "stress",
+        "target": "peace_boredom",
+        "op": "set",
+        "value": 0.05,
+        "condition": "no_conflict_days > 30"
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -583,7 +1564,59 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "aura",
+        "target": "joy",
+        "op": "set",
+        "value": {
+          "radius": 5,
+          "intensity": 0.1,
+          "target_filter": "same_settlement"
+        }
+      },
+      {
+        "system": "aura",
+        "target": "conflict_suppression",
+        "op": "set",
+        "value": {
+          "radius": 3,
+          "intensity": 0.3
+        }
+      },
+      {
+        "system": "derived",
+        "target": "intimidation",
+        "op": "add",
+        "value": -0.3
+      },
+      {
+        "system": "behavior",
+        "target": "harsh_decision",
+        "op": "set",
+        "value": {
+          "weight_mult": 0.2
+        }
+      },
+      {
+        "system": "relationship",
+        "target": "intimacy_decay_rate",
+        "op": "mult",
+        "value": 0.5
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "punish",
+          "enforce_rule",
+          "exile"
+        ],
+        "op": "set",
+        "value": {
+          "weight_mult": 0.1
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -615,7 +1648,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "tactics",
+          "strategy",
+          "logistics"
+        ],
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "combat",
+        "target": "crit_chance",
+        "op": "add",
+        "value": 0.15
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "console",
+          "empathize",
+          "grant_leave"
+        ],
+        "op": "remove",
+        "value": true,
+        "condition": "target.role == 'subordinate'"
+      },
+      {
+        "system": "relationship",
+        "target": "subordinate_loyalty_decay",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": "punish_failure",
+        "op": "inject",
+        "value": {
+          "priority": 0.9
+        },
+        "condition": "subordinate_failed_task"
+      },
+      {
+        "system": "emotion",
+        "target": "expression_mult",
+        "op": "set",
+        "value": 0.1
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -647,7 +1729,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "stress",
+        "target": "mental_break_threshold",
+        "op": "add",
+        "value": -0.3
+      },
+      {
+        "system": "stress",
+        "target": "break_types",
+        "op": "replace",
+        "value": {
+          "creative_frenzy": 0.3,
+          "emotional_outburst": 0.3,
+          "berserk": 0.2,
+          "sobbing": 0.2
+        }
+      },
+      {
+        "system": "crafting",
+        "target": "quality_bonus",
+        "op": "add",
+        "value": 3,
+        "condition": "mental_state == 'creative_frenzy'"
+      },
+      {
+        "system": "emotion",
+        "target": "volatility",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "behavior",
+        "target": "action_delay",
+        "op": "set",
+        "value": 0
+      },
+      {
+        "system": "behavior",
+        "target": "consequence_evaluation",
+        "op": "mult",
+        "value": 0.2
+      },
+      {
+        "system": "behavior",
+        "target": "promise_fulfillment",
+        "op": "mult",
+        "value": 0.4
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -679,7 +1810,55 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "research",
+          "mathematics",
+          "astronomy",
+          "law",
+          "medicine"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "event",
+        "target": "cross_discipline_discovery",
+        "op": "unlock",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": "decision_speed",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "memory",
+        "target": "knowledge_retention",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "behavior",
+        "target": "plan_vs_act",
+        "op": "set",
+        "value": {
+          "plan_weight": 0.8,
+          "act_weight": 0.2
+        }
+      },
+      {
+        "system": "need",
+        "target": "competence",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 2.0
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -711,7 +1890,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "painting",
+          "poetry",
+          "music",
+          "exploration"
+        ],
+        "op": "mult",
+        "value": 1.3
+      },
+      {
+        "system": "stress",
+        "target": "settlement_boredom",
+        "op": "set",
+        "value": 0.15,
+        "condition": "same_settlement_years > 3"
+      },
+      {
+        "system": "behavior",
+        "target": "wander",
+        "op": "inject",
+        "value": {
+          "priority": 0.6
+        },
+        "condition": "same_settlement_years > 2"
+      },
+      {
+        "system": "need",
+        "target": "materialism",
+        "op": "set",
+        "value": {
+          "satisfaction_mult": 0.2
+        }
+      },
+      {
+        "system": "emotion",
+        "target": "joy",
+        "op": "add",
+        "value": 0.4,
+        "condition": "arrived_new_settlement"
+      },
+      {
+        "system": "relationship",
+        "target": "long_distance_decay",
+        "op": "mult",
+        "value": 3.0
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -743,7 +1971,54 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": [
+          "break_promise",
+          "renegotiate",
+          "abandon_task"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "stress",
+        "target": "promise_failure",
+        "op": "set",
+        "value": 0.6,
+        "condition": "promise_broken_by_external"
+      },
+      {
+        "system": "stress",
+        "target": "break_types",
+        "op": "replace",
+        "value": {
+          "self_punishment": 0.4,
+          "rage": 0.3,
+          "catatonic": 0.3
+        },
+        "condition": "trigger == 'promise_failure'"
+      },
+      {
+        "system": "relationship",
+        "target": "subordinate_loyalty",
+        "op": "add",
+        "value": 0.3
+      },
+      {
+        "system": "relationship",
+        "target": "oathbreaker_response",
+        "op": "set",
+        "value": "permanent_hostility"
+      },
+      {
+        "system": "values",
+        "target": "LAW",
+        "op": "floor",
+        "value": 0.7
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -775,7 +2050,56 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": [
+          "promise_fulfillment",
+          "rule_compliance",
+          "duty_compliance"
+        ],
+        "op": "mult",
+        "value": 0.0
+      },
+      {
+        "system": "behavior",
+        "target": "faction_loyalty",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "behavior",
+        "target": "switch_faction",
+        "op": "set",
+        "value": {
+          "weight_mult": 5.0
+        }
+      },
+      {
+        "system": "behavior",
+        "target": "faction_entry_resistance",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "stress",
+        "target": "betrayal_guilt",
+        "op": "immunity",
+        "value": true
+      },
+      {
+        "system": "relationship",
+        "target": "trust",
+        "op": "ceil",
+        "value": 40
+      },
+      {
+        "system": "behavior",
+        "target": "danger_detection",
+        "op": "mult",
+        "value": 1.5
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -807,7 +2131,59 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "poetry",
+          "painting",
+          "music",
+          "theology",
+          "mythology"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "skill",
+        "target": [
+          "farming",
+          "construction",
+          "mining",
+          "logging"
+        ],
+        "op": "mult",
+        "value": 0.7
+      },
+      {
+        "system": "behavior",
+        "target": "danger_detection",
+        "op": "mult",
+        "value": 0.6
+      },
+      {
+        "system": "event",
+        "target": "dream_inspiration",
+        "op": "unlock",
+        "value": {
+          "chance_per_night": 0.05
+        }
+      },
+      {
+        "system": "memory",
+        "target": "distortion_rate",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "need",
+        "target": "transcendence",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 2.0
+        }
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -839,7 +2215,52 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "stress",
+        "target": [
+          "propaganda_resistance",
+          "brainwash_resistance"
+        ],
+        "op": "set",
+        "value": 1.0
+      },
+      {
+        "system": "values",
+        "target": "drift_rate",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "adopt_innovation",
+          "learn_new_skill",
+          "accept_change",
+          "experiment"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "skill",
+        "target": "existing_skills",
+        "op": "mult",
+        "value": 1.2
+      },
+      {
+        "system": "relationship",
+        "target": "stranger_trust",
+        "op": "set",
+        "value": -20
+      },
+      {
+        "system": "emotion",
+        "target": "volatility",
+        "op": "mult",
+        "value": 0.2
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -871,7 +2292,63 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "proselytize",
+          "persuasion"
+        ],
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "behavior",
+        "target": "persecute_heretic",
+        "op": "inject",
+        "value": {
+          "priority": 0.8
+        },
+        "condition": "target.values_diff > 0.5"
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "compromise",
+          "concede",
+          "tolerance"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "stress",
+        "target": "source_immunity",
+        "op": "set",
+        "value": [
+          "doubt",
+          "heresy_exposure"
+        ]
+      },
+      {
+        "system": "relationship",
+        "target": "value_conflict_damage",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "relationship",
+        "target": "value_alignment_bonus",
+        "op": "mult",
+        "value": 2.0
+      },
+      {
+        "system": "event",
+        "target": "religious_conflict_chance",
+        "op": "mult",
+        "value": 2.0
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -903,7 +2380,57 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "relationship",
+        "target": "first_impression",
+        "op": "add",
+        "value": 30
+      },
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": 0.2
+      },
+      {
+        "system": "skill",
+        "target": [
+          "espionage",
+          "conspiracy",
+          "manipulation"
+        ],
+        "op": "mult",
+        "value": 1.4
+      },
+      {
+        "system": "behavior",
+        "target": "maintain_cover",
+        "op": "unlock",
+        "value": true
+      },
+      {
+        "system": "relationship",
+        "target": "betrayal_damage",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "express_true_feelings",
+          "genuine_apology"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "derived",
+        "target": "wisdom",
+        "op": "add",
+        "value": -0.2
+      }
+    ],
     "display": {
       "icon_color": "#C0C0C0",
       "border_style": "silver"
@@ -1789,7 +3316,113 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "emotion",
+        "target": "guilt",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "emotion",
+        "target": [
+          "trust",
+          "sadness"
+        ],
+        "op": "ceil",
+        "value": 0.15
+      },
+      {
+        "system": "emotion",
+        "target": "contempt",
+        "op": "floor",
+        "value": 0.2
+      },
+      {
+        "system": "stress",
+        "target": "accumulation_rate",
+        "op": "mult",
+        "value": 0.3
+      },
+      {
+        "system": "stress",
+        "target": "source_immunity",
+        "op": "set",
+        "value": [
+          "guilt",
+          "grief",
+          "social_rejection",
+          "loneliness"
+        ]
+      },
+      {
+        "system": "relationship",
+        "target": "mode",
+        "op": "set",
+        "value": "instrumental"
+      },
+      {
+        "system": "relationship",
+        "target": "betrayal_cooldown",
+        "op": "set",
+        "value": 0
+      },
+      {
+        "system": "relationship",
+        "target": "betrayal_stress",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "memory",
+        "target": "kill_trauma",
+        "op": "set",
+        "value": false
+      },
+      {
+        "system": "combat",
+        "target": "kill_stress",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "manipulate",
+          "exploit",
+          "charm_offensive",
+          "cold_calculation"
+        ],
+        "op": "unlock",
+        "value": true
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "genuine_empathy",
+          "altruistic_help",
+          "self_sacrifice",
+          "console"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": 0.2
+      },
+      {
+        "system": "derived",
+        "target": "trustworthiness",
+        "op": "add",
+        "value": -0.3,
+        "tags": [
+          "long_term_decay"
+        ]
+      }
+    ],
     "display": {
       "icon_color": "#DC143C",
       "border_style": "crimson"
@@ -1827,7 +3460,61 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "conspiracy",
+          "manipulation",
+          "espionage"
+        ],
+        "op": "mult",
+        "value": 1.6
+      },
+      {
+        "system": "behavior",
+        "target": "recruit_minion",
+        "op": "unlock",
+        "value": {
+          "loyalty_bonus": 0.4,
+          "method": "calculated_charm"
+        }
+      },
+      {
+        "system": "relationship",
+        "target": "mode",
+        "op": "set",
+        "value": "strategic"
+      },
+      {
+        "system": "behavior",
+        "target": "plausible_deniability",
+        "op": "unlock",
+        "value": {
+          "detection_reduction": 0.8
+        }
+      },
+      {
+        "system": "behavior",
+        "target": "delegate_dirty_work",
+        "op": "inject",
+        "value": {
+          "priority": 0.9
+        }
+      },
+      {
+        "system": "behavior",
+        "target": "planning_horizon",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "behavior",
+        "target": "improvisation",
+        "op": "mult",
+        "value": 0.5
+      }
+    ],
     "display": {
       "icon_color": "#DC143C",
       "border_style": "crimson"
@@ -1865,7 +3552,66 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "skill",
+        "target": [
+          "propaganda",
+          "agitation",
+          "leadership"
+        ],
+        "op": "mult",
+        "value": 1.5
+      },
+      {
+        "system": "emotion",
+        "target": "anger",
+        "op": "trigger",
+        "value": {
+          "on": "receives_criticism",
+          "intensity": 0.8
+        }
+      },
+      {
+        "system": "relationship",
+        "target": "critic_response",
+        "op": "set",
+        "value": "permanent_hostility"
+      },
+      {
+        "system": "need",
+        "target": "recognition",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 5.0
+        }
+      },
+      {
+        "system": "stress",
+        "target": "break_types",
+        "op": "replace",
+        "value": {
+          "narcissistic_rage": 0.5,
+          "grandiose_speech": 0.3,
+          "self_destruction": 0.2
+        },
+        "condition": "need.recognition < 0.2"
+      },
+      {
+        "system": "derived",
+        "target": "charisma",
+        "op": "add",
+        "value": 0.3,
+        "condition": "is_leader"
+      },
+      {
+        "system": "stress",
+        "target": "role_loss",
+        "op": "set",
+        "value": 0.8,
+        "condition": "lost_leadership"
+      }
+    ],
     "display": {
       "icon_color": "#DC143C",
       "border_style": "crimson"
@@ -1903,7 +3649,60 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "behavior",
+        "target": "sympathy_manipulation",
+        "op": "unlock",
+        "value": {
+          "effectiveness": 0.6
+        }
+      },
+      {
+        "system": "need",
+        "target": "recognition",
+        "op": "set",
+        "value": {
+          "decay_rate_mult": 4.0
+        }
+      },
+      {
+        "system": "emotion",
+        "target": "volatility",
+        "op": "mult",
+        "value": 3.0
+      },
+      {
+        "system": "behavior",
+        "target": "revenge",
+        "op": "inject",
+        "value": {
+          "priority": 1.0
+        },
+        "condition": "betrayed_by.intimacy_was > 50"
+      },
+      {
+        "system": "behavior",
+        "target": "revenge_proportionality",
+        "op": "set",
+        "value": 0.0
+      },
+      {
+        "system": "stress",
+        "target": "coping",
+        "op": "set",
+        "value": {
+          "primary": "self_pity",
+          "secondary": "blame_others"
+        }
+      },
+      {
+        "system": "stress",
+        "target": "isolation_stress",
+        "op": "mult",
+        "value": 5.0
+      }
+    ],
     "display": {
       "icon_color": "#DC143C",
       "border_style": "crimson"
@@ -1941,7 +3740,66 @@
       ],
       "require_all": true
     },
-    "effects": {},
+    "effects": [
+      {
+        "system": "emotion",
+        "target": "joy",
+        "op": "add",
+        "value": 0.3,
+        "condition": "witnessed_suffering"
+      },
+      {
+        "system": "skill",
+        "target": [
+          "interrogation",
+          "torture"
+        ],
+        "op": "mult",
+        "value": 1.6
+      },
+      {
+        "system": "combat",
+        "target": "kill_morale_boost",
+        "op": "set",
+        "value": 0.2
+      },
+      {
+        "system": "aura",
+        "target": "fear",
+        "op": "set",
+        "value": {
+          "radius": 3,
+          "intensity": 0.25,
+          "target_filter": "all"
+        }
+      },
+      {
+        "system": "skill",
+        "target": [
+          "animal_training",
+          "veterinary"
+        ],
+        "op": "mult",
+        "value": 0.0
+      },
+      {
+        "system": "behavior",
+        "target": [
+          "mercy",
+          "spare_life",
+          "forgive"
+        ],
+        "op": "remove",
+        "value": true
+      },
+      {
+        "system": "stress",
+        "target": "violence_withdrawal",
+        "op": "set",
+        "value": 0.1,
+        "condition": "no_violence_days > 7"
+      }
+    ],
     "display": {
       "icon_color": "#DC143C",
       "border_style": "crimson"
