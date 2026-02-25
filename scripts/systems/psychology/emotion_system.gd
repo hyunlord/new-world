@@ -8,6 +8,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ##   Verduyn & Brans (2012), Hatfield et al. (1993)
 
 const EmotionDataScript = preload("res://scripts/core/entity/emotion_data.gd")
+const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -138,7 +139,10 @@ func execute_tick(tick: int) -> void:
 			elif emo in _positive_emos:
 				emo_impulse *= stress_pos_gain * stress_blunt
 			ed.fast[emo] = ed.fast[emo] * exp(-k * dt_hours) + emo_impulse
-			ed.fast[emo] = maxf(ed.fast[emo], 0.0)
+			# v3 trait effect: emotion/max and emotion/min caps
+			var _emo_max: float = _TraitEffectCache.get_emotion_max(entity, emo)
+			var _emo_min: float = _TraitEffectCache.get_emotion_min(entity, emo)
+			ed.fast[emo] = clampf(ed.fast[emo], _emo_min, _emo_max)
 
 		# Step 3: Slow layer update (Ornstein-Uhlenbeck mean-reverting process)
 		# ★ stress shifts OU target baselines

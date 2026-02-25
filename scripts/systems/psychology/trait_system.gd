@@ -495,6 +495,12 @@ static func update_trait_strengths(entity: RefCounted) -> void:
 	if _has_property(entity, "traits_dirty"):
 		entity.set("traits_dirty", false)
 
+	# v3 effect cache: rebuild whenever trait_strengths changes
+	# Use load() to avoid circular preload (trait_effect_cache preloads trait_system)
+	var _cache_script = load("res://scripts/systems/psychology/trait_effect_cache.gd")
+	if _cache_script:
+		_cache_script.rebuild(entity)
+
 
 ## Select display traits. v3: returns all qualified traits (variable count).
 static func get_display_traits(entity: RefCounted, _k: int = TOP_K) -> Array:

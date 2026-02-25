@@ -2,6 +2,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 # NO class_name — headless compatibility
 
+const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
 const BASE_BREAK_THRESHOLD: float = 520.0
 const THRESHOLD_MIN: float = 420.0
 const THRESHOLD_MAX: float = 900.0
@@ -102,6 +103,8 @@ func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 	threshold *= (0.85 + 0.15 * StatQuery.get_normalized(entity, &"NEED_HUNGER"))
 	# Phase 5: ACE history permanently lowers break threshold (Teicher & Samson 2016)
 	threshold *= float(entity.get_meta("ace_break_threshold_mult", 1.0))
+	# v3 trait effect: stress/add target=mental_break_threshold
+	threshold += _TraitEffectCache.get_stress_break_threshold_add(entity)
 	threshold = clampf(threshold, THRESHOLD_MIN, THRESHOLD_MAX)
 
 	# GAS Exhaustion 보정
@@ -134,6 +137,21 @@ func _calc_break_chance(stress: float, threshold: float,
 func _select_break_type(entity: RefCounted) -> String:
 	if _break_defs.is_empty():
 		return "shutdown"
+
+	# v3 trait effect: stress/replace target=break_types — override distribution
+	var override_types: Dictionary = _TraitEffectCache.get_stress_break_types(entity)
+	if not override_types.is_empty():
+		var total_ov: float = 0.0
+		for k in override_types:
+			total_ov += float(override_types[k])
+		if total_ov > 0.0:
+			var roll_ov: float = _rng.randf() * total_ov
+			var cum_ov: float = 0.0
+			for k in override_types:
+				cum_ov += float(override_types[k])
+				if roll_ov <= cum_ov:
+					return str(k)
+
 	var weights: Dictionary = {}
 	for break_id in _break_defs:
 		var bdef = _break_defs[break_id]

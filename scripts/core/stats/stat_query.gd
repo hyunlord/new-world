@@ -7,6 +7,7 @@ extends Node
 ## Phase 2: 캐시/커브/modifier 완전 활성화.
 
 const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
+const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
 const StatGraphScript = preload("res://scripts/core/stats/stat_graph.gd")
 const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
 const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
@@ -135,6 +136,10 @@ func get_skill_multiplier(entity: RefCounted, skill_id: StringName,
 		elif direction == "negative":
 			## Apply penalty proportional to skill level
 			total -= curve_val * weight
+
+	# v3 trait effect: skill/mult (all_work × all_learning × specific skill)
+	var skill_name: String = str(skill_id).replace("SKILL_", "").to_lower()
+	total *= _TraitEffectCache.get_skill_mult(entity, skill_name)
 
 	return maxf(total, 0.01)  ## Never multiply to zero or negative
 
