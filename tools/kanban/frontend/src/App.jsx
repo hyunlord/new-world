@@ -5,6 +5,8 @@ import KanbanBoard from './components/KanbanBoard'
 import HistoryTable from './components/HistoryTable'
 import StatsView from './components/StatsView'
 import { BatchList, BatchDetail } from './components/BatchView'
+import BatchCompare from './components/BatchCompare'
+import AgentView from './components/AgentView'
 import TicketDetail from './components/TicketDetail'
 import { useWebSocket } from './hooks/useWebSocket'
 import { fetchTickets, fetchStats, deleteTicket, clearAllTickets } from './utils/api'
@@ -98,7 +100,9 @@ function App() {
               <HistoryTable onSelectTicket={setSelectedTicket} />
             } />
             <Route path="/batches" element={<BatchList />} />
+            <Route path="/batches/compare" element={<BatchCompare />} />
             <Route path="/batches/:batchId" element={<BatchDetail />} />
+            <Route path="/agents" element={<AgentView />} />
             <Route path="/stats" element={<StatsView />} />
             <Route path="*" element={<Navigate to="/board" replace />} />
           </Routes>

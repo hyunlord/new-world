@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { fetchTicket, fetchTicketLogs } from '../utils/api'
+import { fetchTicket, fetchTicketLogs, retryTicket } from '../utils/api'
 import LogViewer from './LogViewer'
 import DiffViewer from './DiffViewer'
 
@@ -51,6 +51,15 @@ export default function TicketDetail({ ticket, onClose }) {
       .catch(() => {})
   }, [ticket.id, ticket._logRefresh])
 
+  const handleRetry = async () => {
+    try {
+      const newTicket = await retryTicket(ticket.id)
+      alert(`Retry ticket created: ${newTicket.title}`)
+    } catch (err) {
+      alert(`Retry failed: ${err.message}`)
+    }
+  }
+
   const t = detail || ticket
   const files = parseJsonSafe(t.files)
   const deps = parseJsonSafe(t.dependencies)
@@ -84,6 +93,14 @@ export default function TicketDetail({ ticket, onClose }) {
               >
                 {t.status}
               </span>
+              {ticket.status === 'failed' && (
+                <button
+                  onClick={handleRetry}
+                  className="px-3 py-1 bg-yellow-600 hover:bg-yellow-500 rounded text-sm text-white"
+                >
+                  Retry
+                </button>
+              )}
               {t.id && (
                 <span className="text-xs text-gray-500 font-mono">{t.id.slice(0, 8)}</span>
               )}
@@ -182,7 +199,21 @@ export default function TicketDetail({ ticket, onClose }) {
           )}
           {activeTab === 'logs' && <LogViewer logs={logs} />}
           {activeTab === 'diff' && (
-            <DiffViewer diffSummary={t.diff_summary} diffFull={t.diff_full} />
+            <div>
+              {t.commit_url && (
+                <a
+                  href={t.commit_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 mb-2"
+                >
+                  <span>Commit</span>
+                  <span className="font-mono">{t.commit_hash?.substring(0, 7)}</span>
+                  <span>↗</span>
+                </a>
+              )}
+              <DiffViewer diffSummary={t.diff_summary} diffFull={t.diff_full} />
+            </div>
           )}
           {activeTab === 'events' && (
             <div className="space-y-2">

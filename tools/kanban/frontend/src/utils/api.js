@@ -60,6 +60,18 @@ export async function fetchErrorStats(days = 30) {
   return request(`/stats/errors?days=${days}`)
 }
 
+export async function fetchBatchCompare(ids) {
+  return request(`/stats/batch-compare?ids=${ids}`)
+}
+
+export async function fetchAgentStats() {
+  return request('/stats/agents')
+}
+
+export async function retryTicket(id) {
+  return request(`/tickets/${id}/retry`, { method: 'POST' })
+}
+
 export async function fetchBatches(params = {}) {
   const qs = new URLSearchParams()
   Object.entries(params).forEach(([k, v]) => {

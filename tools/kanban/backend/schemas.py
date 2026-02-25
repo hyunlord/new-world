@@ -66,6 +66,7 @@ class TicketUpdate(BaseModel):
     error_message: Optional[str] = None
     description: Optional[str] = None
     body: Optional[str] = None
+    commit_hash: Optional[str] = None
     batch_id: Optional[str] = None
     created_by: Optional[str] = None
     ticket_number: Optional[int] = None
@@ -99,6 +100,10 @@ class TicketResponse(BaseModel):
     created_by: Optional[str]
     ticket_number: Optional[int]
     branch: Optional[str]
+    retry_of: Optional[str]
+    retry_count: int
+    commit_hash: Optional[str]
+    commit_url: Optional[str]
     diff_summary: Optional[str]
     diff_full: Optional[str]
     error_message: Optional[str]

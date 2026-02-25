@@ -39,6 +39,16 @@ function ProgressBar({ total, completed, failed }) {
   )
 }
 
+function ScoreBadge({ score }) {
+  if (score == null) return <span className="text-gray-500">-</span>
+  let color = 'text-red-400'
+  let star = ''
+  if (score >= 90) { color = 'text-yellow-300'; star = ' ★' }
+  else if (score >= 70) color = 'text-green-400'
+  else if (score >= 50) color = 'text-yellow-400'
+  return <span className={`font-bold ${color}`}>{score}{star}</span>
+}
+
 export function BatchList() {
   const [batches, setBatches] = useState([])
   const [loading, setLoading] = useState(true)
@@ -76,6 +86,9 @@ export function BatchList() {
                   {b.source_prompt && (
                     <p className="text-xs text-gray-500 truncate mt-0.5">{b.source_prompt}</p>
                   )}
+                </div>
+                <div className="w-16 text-right flex-shrink-0">
+                  <ScoreBadge score={b.quality_score} />
                 </div>
                 <div className="flex items-center gap-4 flex-shrink-0">
                   <span className="text-xs text-gray-400 w-16 text-right">
@@ -120,6 +133,17 @@ export function BatchDetail() {
   const tickets = batch.tickets || []
   const ratio = batch.dispatch_ratio || { codex: 0, direct: 0, percentage: 0 }
 
+  const doneCount = tickets.filter(t => t.status === 'done').length
+  const failedCount = tickets.filter(t => t.status === 'failed').length
+  const resolvedCount = doneCount + failedCount
+  const qualityScore = typeof batch.quality_score === 'number' ? batch.quality_score : null
+  const successPoints = resolvedCount > 0 ? Math.round((doneCount / resolvedCount) * 40) : 0
+  const noRetryPoints = resolvedCount > 0 ? Math.round((doneCount / resolvedCount) * 20) : 0
+  const dispatchPoints = Math.max(0, Math.min(10, Math.round(((ratio.percentage || 0) / 100) * 10)))
+  const speedPoints = qualityScore == null
+    ? null
+    : Math.max(0, Math.min(30, qualityScore - successPoints - noRetryPoints - dispatchPoints))
+
   return (
     <div className="p-6">
       <Link to="/batches" className="text-sm text-blue-400 hover:text-blue-300 mb-4 inline-block">
@@ -156,6 +180,21 @@ export function BatchDetail() {
           <ProgressBar total={batch.total_tickets} completed={batch.completed_tickets} failed={0} />
         </div>
       </div>
+
+      {/* Quality Score */}
+      {qualityScore != null && (
+        <div className="bg-[#16213e] rounded-lg p-4 mb-4">
+          <p className="text-sm text-gray-300">
+            Quality Score: <ScoreBadge score={qualityScore} />
+          </p>
+          <div className="mt-2 text-xs text-gray-400 space-y-1">
+            <p>├ Success Rate: {successPoints}/40 ({doneCount}/{resolvedCount || 0})</p>
+            <p>├ Speed: {speedPoints == null ? '-' : speedPoints}/30</p>
+            <p>├ No Retries: {noRetryPoints}/20</p>
+            <p>└ Dispatch: {dispatchPoints}/10</p>
+          </div>
+        </div>
+      )}
 
       {/* Ticket Table */}
       <div className="bg-[#16213e] rounded-lg overflow-hidden">
