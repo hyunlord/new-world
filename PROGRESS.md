@@ -4813,3 +4813,200 @@ Config-first fan-out:
 - Files changed: 24 (12 modified + 12 new)
 - Dispatch tool used: ask_codex (8 tickets), DIRECT (2 tickets: T-INFRA, T-WIRE)
 - Notion pages updated: 🏛️ 평판 & 경제 시스템 (신규), 📝 변경 로그 (신규 항목), 📋 데이터 정의서 (5개 신규 항목)
+
+## Dev Kanban Board — tools/kanban — 2026-02-25
+
+### Context
+Build a local web dashboard (FastAPI + React) to monitor Codex dispatch work in real-time.
+Kanban board with 5 columns, history view, stats view, WebSocket live updates.
+This is a dev tool, NOT WorldSim game code. No locale system needed.
+
+### Tickets
+| Ticket | Title | Action | Tool | Reason |
+|--------|-------|--------|------|--------|
+| KB-01 | Backend DB & Models | 🟢 DISPATCH | Claude executor | Codex MCP unavailable |
+| KB-02 | Backend REST API | 🟢 DISPATCH | Claude executor | depends on KB-01 |
+| KB-03 | Backend WebSocket | 🟢 DISPATCH | Claude executor | depends on KB-02 |
+| KB-04 | Backend Stats API | 🟢 DISPATCH | Claude executor | depends on KB-02 |
+| KB-05 | Frontend project init | 🟢 DISPATCH | Claude executor | standalone |
+| KB-06 | Frontend KanbanBoard + TicketCard | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-07 | Frontend TicketDetail panel | 🟢 DISPATCH | Claude executor | depends on KB-06 |
+| KB-08 | Frontend HistoryTable + FilterBar | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-09 | Frontend StatsView | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-10 | Frontend hooks + API client | 🟢 DISPATCH | Claude executor | depends on KB-05 |
+| KB-11 | Docker config | 🟢 DISPATCH | Claude executor | standalone |
+| KB-12 | Codex helper script | 🟢 DISPATCH | Claude executor | standalone |
+| KB-13 | Integration wiring | 🔴 DIRECT | — | CORS, proxy, final verification |
+
+### Dispatch ratio: 12/13 = 92% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): KB-01, KB-05, KB-11, KB-12
+Wave 2 (after KB-01): KB-02 → KB-03, KB-04
+Wave 3 (after KB-05): KB-06, KB-08, KB-09, KB-10 → KB-07
+Wave 4: KB-13 (integration)
+
+Note: ask_codex MCP unavailable. codex_dispatch.sh is GDScript-specific.
+Falling back to Claude executor agents per OMC fallback rules.
+
+### Localization Verification
+- N/A — dev tool, not WorldSim game code
+
+---
+
+## Deceased Detail Expansion + Trait Bug Fix — t-DEAD-EXPAND + t-TRAIT-FIX — 2026-02-25
+
+### Context
+Two urgent fixes: (A) Deceased entity detail panel only showed personality/family — need full stat snapshot (values, skills, traits, economic, intelligence, social status). (B) All agents had "berserker" and "opportunist" traits due to code ordering bug in `_get_facet_value()`.
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| A1 | deceased_registry.gd — add 14 snapshot fields | 🔴 DIRECT | — | already have full context loaded, MCP codex unavailable |
+| A2 | entity_detail_panel.gd — extend proxy + remove guards | 🔴 DIRECT | — | tightly coupled to A1, proxy class + 6 guard edits |
+| B1 | trait_system.gd — swap pd.axes/StatQuery priority | 🔴 DIRECT | — | 2-line fix, debugging requires full context |
+
+### Dispatch ratio: 0/3 = 0% ❌
+
+[DIRECT] A1: ask_codex MCP unavailable (ToolSearch returned no results). Full context already loaded. Single file edit with 14 field additions.
+[DIRECT] A2: Tightly coupled proxy class extension + 6 guard edits across 1 file. Requires understanding of DeceasedEntityProxy ↔ deceased_registry field mapping.
+[DIRECT] B1: 2-line swap. Root cause analysis already complete. Debugging fix.
+
+### Dispatch strategy
+All DIRECT — MCP Codex tools unavailable this session. All changes are surgical edits to 3 files.
+
+### Localization Verification
+- Hardcoded scan: PASS — no new UI text, all labels reuse existing Locale keys
+- New keys added: none
+- ko/ updated: N/A
+
+### Changes Summary
+**B1 — trait_system.gd (line 149-152):** Swapped `pd.axes.has(facet_key)` check before `StatQuery.get_normalized()` fallback. Root cause: "HEXACO_A" not registered in StatQuery → returned 0.0 → all axis-based traits evaluated to 1.0 salience.
+
+**A1 — deceased_registry.gd:** Added 14 snapshot fields to `register_death()`: values, skill_xp, skill_levels, economic_tendencies, trait_strengths, status_tier, status_score, wealth_norm, wealth_score, job_satisfaction, intelligences, general_intelligence, moral_stage.
+
+**A2 — entity_detail_panel.gd:**
+- Added 11 fields to DeceasedEntityProxy (economic_tendencies, trait_strengths, status_tier, status_score, wealth_norm, wealth_score, job_satisfaction, intelligences, general_intelligence, frailty)
+- Populated 16 fields from record in _init() (values, moral_stage, skill_xp, skill_levels + 11 new)
+- Removed `entity.is_alive` guard from: intelligence section, economic tendencies, social status
+- Guarded `StatQuery.get_skill_multiplier()` for deceased (needs live stat_cache)
+
+### Results
+- Gate: PASS
+- Files changed: 3 (trait_system.gd, deceased_registry.gd, entity_detail_panel.gd)
+- Headless smoke: 20 entities spawned, 37 systems registered, no errors
+
+### Results
+- Backend smoke tests: ALL 8 PASSED (create, update, log, complete, stats, 404, detail, list)
+- Frontend build: PASSED (935 modules, 1.17s)
+- Gate: N/A (dev tool, not GDScript)
+- Dispatch ratio: 12/13 = 92% (Codex MCP unavailable → Claude executor agents used)
+- Files changed: 25
+
+### File Inventory
+Backend (5 files, ~700 lines):
+- database.py (27 lines) — SQLAlchemy engine, WAL mode, session
+- models.py (59 lines) — Ticket, TicketLog, TicketEvent
+- schemas.py (110 lines) — Pydantic request/response models
+- websocket_manager.py (35 lines) — WS connection manager
+- main.py (451 lines) — FastAPI app, 11 REST endpoints + WS
+
+Frontend (15 files, ~1900 lines):
+- App.jsx, main.jsx — routing, WS integration
+- 9 components: TopBar, KanbanBoard, TicketCard, TicketDetail, HistoryTable, StatsView, FilterBar, LogViewer, DiffViewer
+- 2 hooks: useWebSocket, useTickets
+- 1 util: api.js
+- Config: package.json, vite.config.js, tailwind.config.js, postcss.config.js, index.html, index.css
+
+Infrastructure (5 files):
+- docker-compose.yml, Dockerfile.backend, Dockerfile.frontend
+- scripts/kanban_helpers.sh
+- .gitignore
+
+## Dev Kanban Board Phase 2 — Batch System + Claude Code Integration — 2026-02-25
+
+### Context
+Add batch/session tracking to group tickets by prompt. Add created_by/dispatch_method tracking.
+Extend frontend with BatchView, batch filters, actor dots, enhanced stats.
+Insert kanban integration rules into CLAUDE.md and codex_dispatch.sh.
+
+### Tickets
+| Ticket | Title | Action | Tool | Reason |
+|--------|-------|--------|------|--------|
+| KB2-01 | Backend Batch model + Ticket fields | 🟢 DISPATCH | Claude executor | model changes |
+| KB2-02 | Backend Batch API + Ticket API changes | 🟢 DISPATCH | Claude executor | depends KB2-01 |
+| KB2-03 | Backend Stats API extension | 🟢 DISPATCH | Claude executor | depends KB2-01 |
+| KB2-04 | Frontend BatchView | 🟢 DISPATCH | Claude executor | depends KB2-02 |
+| KB2-05 | Frontend batch filter + actor dots | 🟢 DISPATCH | Claude executor | depends KB2-02 |
+| KB2-06 | Frontend Stats extension | 🟢 DISPATCH | Claude executor | depends KB2-03 |
+| KB2-07 | Frontend nav + App.jsx routing | 🟢 DISPATCH | Claude executor | depends KB2-04 |
+| KB2-08 | kanban_helpers.sh extension | 🟢 DISPATCH | Claude executor | standalone |
+| KB2-09 | Schemas extension | 🟢 DISPATCH | Claude executor | with KB2-01 |
+| KB2-10 | CLAUDE.md kanban rules | 🔴 DIRECT | — | shared interface |
+| KB2-11 | codex_dispatch.sh modification | 🔴 DIRECT | — | shared interface |
+
+### Dispatch ratio: 9/11 = 82% ✅
+
+### Dispatch strategy
+Wave 1 (parallel): KB2-01+KB2-09 (model+schemas), KB2-08 (helpers)
+Wave 2 (after KB2-01): KB2-02, KB2-03 (parallel)
+Wave 3 (after KB2-02): KB2-04, KB2-05 (parallel), KB2-06 (after KB2-03)
+Wave 4: KB2-07 (after KB2-04)
+Wave 5 (DIRECT): KB2-10, KB2-11
+
+### Results
+- All smoke tests: PASS (10/10)
+- Frontend build: PASS (936 modules)
+- Backend syntax: PASS
+- Shell scripts syntax: PASS (codex_dispatch.sh, kanban_helpers.sh)
+- Dispatch ratio: 9/11 = 82% ✅
+- Dispatch tool: Claude executor (Codex MCP unavailable)
+- Files changed: 10 (6 modified, 1 created)
+  - Modified: models.py, schemas.py, main.py, kanban_helpers.sh, App.jsx, TopBar.jsx, KanbanBoard.jsx, TicketCard.jsx, StatsView.jsx, api.js, codex_dispatch.sh, CLAUDE.md
+  - Created: BatchView.jsx
+
+### Verified Features
+- Batch CRUD: create, list, detail (with dispatch ratio), update
+- Batch auto-status: active → completed/partial on ticket state changes
+- Ticket batch linking: batch_id, created_by, ticket_number fields
+- Ticket filters: batch_id, created_by query params
+- Extended stats: by_created_by, by_dispatch_method, dispatch_ratio, batch counts
+- Frontend BatchView: list + detail with progress bars and ticket table
+- Frontend batch filter: dropdown on kanban board
+- Frontend actor dots: blue/green/gray on ticket cards
+- Frontend stats: dispatch method bar chart, creator pie chart, details table
+- kanban_helpers.sh: 5 new Claude Code functions
+- codex_dispatch.sh: auto-kanban ticket creation when BATCH_ID is set
+- CLAUDE.md: kanban integration rules section added
+
+---
+
+## Trait Sigmoid Center Calibration — t-SIGMOID — 2026-02-25
+
+### Context
+After Bug 1 fix (_get_facet_value code ordering), composite/dark traits still over-fire (berserker 9.7%, saint 13.1%, scholar_scribe 100%). Root causes: (A) c_scholar_scribe has inverted center 0.85 in LOW condition, (B) cond_center values too close to mean (0.4/0.6 vs needed 0.25-0.35/0.65-0.75).
+
+### Tickets
+| Ticket | Title | Action | Dispatch Tool | Reason |
+|--------|-------|--------|---------------|--------|
+| T1 | Python script + JSON cond_center calibration | 🔴 DIRECT | — | ask_codex MCP unavailable, user-provided script |
+| T2 | Gate verification | 🔴 DIRECT | — | gate run |
+
+### Dispatch ratio: 0/2 = 0% ❌
+
+[DIRECT] T1: ask_codex MCP unavailable (ToolSearch returned no results). Task is write user-provided Python script + run it. Single JSON file output.
+[DIRECT] T2: Gate verification.
+
+### Dispatch strategy
+All DIRECT — Codex MCP unavailable. Single Python script execution + JSON data change.
+
+### Localization Verification
+- Hardcoded scan: N/A — JSON data values only, no UI text
+- New keys added: none
+- ko/ updated: N/A
+
+### Results
+- Gate: PASS
+- Files changed: 1 (data/personality/trait_defs_v2.json)
+- Conditions changed: 107 (LOW: 39, HIGH: 68)
+- Temp script: tools/fix_trait_centers.py (keep for audit trail)
