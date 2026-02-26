@@ -117,6 +117,9 @@ var _hint_label: Label
 var _selected_entity_id: int = -1
 var _selected_building_id: int = -1
 
+# Debug cheat panel (F12 toggle, lazy init)
+var _debug_panel: CanvasLayer = null
+
 # Hunger blink
 var _hunger_blink_timer: float = 0.0
 
@@ -1015,6 +1018,15 @@ func toggle_chronicle() -> void:
 func toggle_list() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_list()
+
+
+func toggle_debug_panel() -> void:
+	if _debug_panel == null:
+		var PanelClass = load("res://scripts/ui/debug_cheat_panel.gd")
+		_debug_panel = PanelClass.new()
+		_debug_panel.init(_entity_manager, _settlement_manager)
+		add_child(_debug_panel)
+	_debug_panel.toggle()
 
 
 func show_startup_toast(pop_count: int) -> void:

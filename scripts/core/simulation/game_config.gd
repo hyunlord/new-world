@@ -397,6 +397,10 @@ const MOVEMENT_TICK_INTERVAL: int = 3
 ## Set true once resource/tech systems are ready to support them
 const NEEDS_EXPANSION_ENABLED: bool = false
 
+## ── Debug Panel ─────────────────────────────────────────────────────────────
+## Set false before shipping. When false, F12 does nothing.
+const DEBUG_PANEL_ENABLED: bool = true
+
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002
 ## Metabolic curve: hunger decays slower when already hungry (Keys et al. 1950)
