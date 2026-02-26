@@ -181,7 +181,7 @@ func _build_tab_buttons(parent: HBoxContainer) -> void:
 		btn.toggle_mode = true
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.add_theme_font_size_override("font_size", 11)
-		var tab_id := tab_name.to_lower()
+		var tab_id: String = tab_name.to_lower()
 		btn.pressed.connect(_on_tab_pressed.bind(tab_id))
 		tab_vbox.add_child(btn)
 		_tab_buttons[tab_id] = btn
