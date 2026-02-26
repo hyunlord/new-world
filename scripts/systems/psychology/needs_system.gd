@@ -1,5 +1,7 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
+const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
+
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _mortality_system: RefCounted
@@ -65,9 +67,22 @@ func execute_tick(tick: int) -> void:
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
-		# Extra energy cost when performing actions
+		# Extra energy cost when performing actions / recovery when resting
 		if entity.current_action != "idle" and entity.current_action != "rest":
-			entity.energy -= GameConfig.ENERGY_ACTION_COST
+			var _end_norm: float = 0.5
+			if entity.body != null and entity.body.realized.has("end"):
+				_end_norm = clampf(float(entity.body.realized["end"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
+			var _action_cost: float = GameConfig.ENERGY_ACTION_COST * (1.0 - GameConfig.BODY_END_COST_REDUCTION * _end_norm)
+			entity.energy -= _action_cost
+		elif entity.current_action == "rest":
+			var _rec_norm: float = 0.5
+			if entity.body != null and entity.body.realized.has("rec"):
+				_rec_norm = clampf(float(entity.body.realized["rec"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
+			entity.energy += GameConfig.BODY_REST_ENERGY_RECOVERY * (1.0 + GameConfig.BODY_REC_RECOVERY_BONUS * _rec_norm)
+			# [훈련 XP 누적] 휴식 → 회복력 훈련 (Buchheit & Laursen 2013)
+			if entity.body != null:
+				var _age_mod = BodyAttributes.get_age_trainability_modifier("rec", float(entity.age))
+				entity.body.training_xp["rec"] = entity.body.training_xp.get("rec", 0.0) + GameConfig.BODY_XP_REST * _age_mod * 0.01
 
 		# Age: derive from birth_tick (not incremental — avoids drift)
 		entity.age = tick - entity.birth_tick

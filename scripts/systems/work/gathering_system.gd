@@ -1,5 +1,7 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
+const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
+
 var _entity_manager: RefCounted
 var _resource_map: RefCounted
 
@@ -76,11 +78,25 @@ func execute_tick(tick: int) -> void:
 				"tile_y": y,
 				"tick": tick,
 			})
-			# [훈련 XP 누적] 채집 활동 → 지구력/근력/민첩 훈련
+			# [훈련 XP 누적] 채집 종류별 신체능력 XP (Heritage 1999, Ahtiainen 2016)
 			if entity.body != null:
-				entity.body.training_xp["end"] += GameConfig.GATHER_XP_END
-				entity.body.training_xp["str"] += GameConfig.GATHER_XP_STR
-				entity.body.training_xp["agi"] += GameConfig.GATHER_XP_AGI
+				var _xp_age: float = float(entity.age)
+				match res_name:
+					"food":
+						var _m_end = BodyAttributes.get_age_trainability_modifier("end", _xp_age)
+						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
+						entity.body.training_xp["end"] = entity.body.training_xp.get("end", 0.0) + GameConfig.BODY_XP_GATHER_FOOD * _m_end
+						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_FOOD * 0.5 * _m_str
+					"wood":
+						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
+						var _m_end = BodyAttributes.get_age_trainability_modifier("end", _xp_age)
+						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_WOOD * _m_str
+						entity.body.training_xp["end"] = entity.body.training_xp.get("end", 0.0) + GameConfig.BODY_XP_GATHER_WOOD * 0.5 * _m_end
+					"stone":
+						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
+						var _m_tou = BodyAttributes.get_age_trainability_modifier("tou", _xp_age)
+						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_STONE * _m_str
+						entity.body.training_xp["tou"] = entity.body.training_xp.get("tou", 0.0) + GameConfig.BODY_XP_GATHER_STONE * 0.5 * _m_tou
 			## [Skill XP — Newell & Rosenbloom 1981 Power Law of Practice]
 			var _skill_map: Dictionary = {
 				"food":  &"SKILL_FORAGING",

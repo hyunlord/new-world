@@ -86,6 +86,29 @@ const BODY_SPEED_SCALE: float = 0.0012   ## float(agi_realized) * 0.0012
 const BODY_REALIZED_MAX: int = 15000     ## realized 정규화 기준 (str/agi/end/tou/rec), UI _draw_bar용
 const BODY_REALIZED_DR_MAX: int = 10000  ## dr realized 정규화 기준, UI _draw_bar용
 
+## ── Body Attribute Gameplay Loop ─────────────────────────────────────────────
+## 훈련 XP: 행동 완료 시 entity.body.training_xp[axis] 에 누적 (age_system이 yearly 재계산)
+## Heritage 1999 (trainability h²=0.47), Ahtiainen 2016 (개인차 8.5배)
+const BODY_XP_GATHER_FOOD: float  = 0.8   ## end+str (채집: 지구력+근력)
+const BODY_XP_GATHER_WOOD: float  = 1.2   ## str+end (벌목: 근력 위주)
+const BODY_XP_GATHER_STONE: float = 1.5   ## str+tou (채석: 근력+강인함)
+const BODY_XP_BUILD: float        = 1.0   ## str+agi (건설: 근력+민첩)
+const BODY_XP_REST: float         = 0.3   ## rec (휴식: 회복력 단련)
+
+## Endurance → energy action cost reduction (Borg 1982 RPE scale)
+## energy_cost = ENERGY_ACTION_COST * (1 - BODY_END_COST_REDUCTION * end_norm)
+## end_norm = realized["end"] / BODY_REALIZED_MAX  (0.0~1.0)
+const BODY_END_COST_REDUCTION: float = 0.40  ## 최대 40% 절감 (END=1.0일 때)
+
+## Recuperation → rest energy recovery (Buchheit & Laursen 2013)
+## energy_recovery = BODY_REST_ENERGY_RECOVERY * (1 + BODY_REC_RECOVERY_BONUS * rec_norm)
+const BODY_REST_ENERGY_RECOVERY: float = 0.006  ## base rest recovery/tick (> ENERGY_DECAY_RATE=0.003)
+const BODY_REC_RECOVERY_BONUS: float   = 0.60   ## 최대 60% 회복 가속
+
+## Disease resistance → mortality modifier
+## dr_modifier = 1.0 - BODY_DR_MORTALITY_REDUCTION * dr_norm
+const BODY_DR_MORTALITY_REDUCTION: float = 0.35  ## 최대 35% 사망률 감소
+
 ## UI Scale (adjustable at runtime, saved with game)
 var ui_scale: float = 1.0
 const UI_SCALE_MIN: float = 0.7
