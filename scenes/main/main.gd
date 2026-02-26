@@ -51,6 +51,7 @@ const EconomicTendencySystem = preload("res://scripts/systems/social/economic_te
 const JobSatisfactionSystem = preload("res://scripts/systems/social/job_satisfaction_system.gd")
 const StratificationMonitor = preload("res://scripts/systems/social/stratification_monitor.gd")
 const MemorySystemScript = preload("res://scripts/systems/record/memory_system.gd")
+const NetworkSystemScript = preload("res://scripts/systems/social/network_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -107,6 +108,7 @@ var economic_tendency_system: RefCounted
 var job_satisfaction_system: RefCounted
 var stratification_monitor: RefCounted
 var memory_system: RefCounted
+var network_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -292,6 +294,10 @@ func _ready() -> void:
 	# Wire reputation_manager into leader_system for reputation-weighted scoring
 	leader_system._reputation_manager = reputation_manager
 
+	## [Granovetter 1973, Weber 1922, Tilly 1978] Social network + authority + revolution
+	network_system = NetworkSystemScript.new()
+	network_system.init(entity_manager, settlement_manager, relationship_manager, reputation_manager)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -320,6 +326,7 @@ func _ready() -> void:
 	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(leader_system)             # priority 52
 	sim_engine.register_system(value_system)              # priority 55
+	sim_engine.register_system(network_system)            # priority 58 (annual: social capital + authority + revolution)
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(stratification_monitor)    # priority 90
 	sim_engine.register_system(stats_recorder)            # priority 90

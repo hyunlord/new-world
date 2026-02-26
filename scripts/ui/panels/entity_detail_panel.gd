@@ -133,6 +133,7 @@ var _section_collapsed: Dictionary = {
 	"reputation": true,
 	"economic_tendencies": true,
 	"social_status": false,
+	"politics": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -746,6 +747,10 @@ func _draw() -> void:
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"),      StatQuery.get_normalized(entity, &"DERIVED_CREATIVITY"),      Color(0.6, 0.4, 0.9))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),          StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),          Color(0.7, 0.85, 0.5))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),      StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),      Color(0.9, 0.6, 0.3))
+			## [Burt 2004] Social capital (NetworkSystem writes annually)
+			var _sc_raw: int = entity.stat_cache.get(&"DERIVED_SOCIAL_CAPITAL", 0)
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL_CAPITAL"),
+				float(_sc_raw) / 1000.0, Color(0.5, 0.85, 0.65))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"),  StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"),  Color(0.5, 0.7, 0.9))
 		else:
 			## 사망 엔티티: stat_cache 없음 → 표시 불가
@@ -1500,6 +1505,25 @@ func _draw() -> void:
 					sat, sat_color,
 					Locale.ltr(sat_key))
 			cy += 4.0
+
+	# ── Settlement Politics [Weber 1922, Tilly 1978] ──
+	if _settlement_manager != null and entity.settlement_id > 0:
+		var _pol_s: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
+		if _pol_s != null:
+			cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SETTLEMENT_POLITICS"), "politics")
+			if not _section_collapsed.get("politics", true):
+				## Authority type
+				var _auth_key: String = "AUTHORITY_TYPE_" + _pol_s.authority_type.to_upper()
+				var _auth_label: String = Locale.ltr("UI_AUTHORITY_TYPE") + ": " + Locale.ltr(_auth_key)
+				draw_string(font, Vector2(cx + 10, cy + 12), _auth_label,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.8, 0.75, 0.5))
+				cy += 16.0
+				## Gini coefficient
+				var _gini_label: String = Locale.ltr("UI_GINI") + ": %.2f" % _pol_s.gini_coefficient
+				draw_string(font, Vector2(cx + 10, cy + 12), _gini_label,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.75, 0.6, 0.6))
+				cy += 16.0
+				cy += 4.0
 
 	# ── Stats ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATS_SECTION"), "stats")

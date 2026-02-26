@@ -127,25 +127,32 @@ func _run_election(settlement: RefCounted, tick: int) -> void:
 		_emit_leader_elected_notification(settlement, best_entity, tick)
 
 
-## [French & Raven 1959, Boehm 1999, Henrich & Gil-White 2001]
-## Composite leadership score blending multiple authority bases.
-## Primitive era: no single factor dominates — balanced across charisma,
-## wisdom, physical authority, trust, social connections, and age.
+## [French & Raven 1959, Boehm 1999, Henrich & Gil-White 2001, Weber 1922]
+## Composite leadership score with authority-type weight modulation.
 func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
-	var charisma: float = StatQuery.get_normalized(entity, &"DERIVED_CHARISMA")
-	var wisdom: float = StatQuery.get_normalized(entity, &"DERIVED_WISDOM")
+	var charisma: float        = StatQuery.get_normalized(entity, &"DERIVED_CHARISMA")
+	var wisdom: float          = StatQuery.get_normalized(entity, &"DERIVED_WISDOM")
 	var trustworthiness: float = StatQuery.get_normalized(entity, &"DERIVED_TRUSTWORTHINESS")
-	var intimidation: float = StatQuery.get_normalized(entity, &"DERIVED_INTIMIDATION")
-	var social_cap: float = _compute_social_capital_norm(entity, settlement)
-	var age_respect: float = _compute_age_respect(entity)
+	var intimidation: float    = StatQuery.get_normalized(entity, &"DERIVED_INTIMIDATION")
+	var social_cap: float      = _compute_social_capital_norm(entity, settlement)
+	var age_respect: float     = _compute_age_respect(entity)
+
+	## [Weber 1922] Authority type modifies effective weights
+	var w_age_resp: float = GameConfig.LEADER_W_AGE_RESPECT
+	var w_trust: float    = GameConfig.LEADER_W_TRUSTWORTHINESS
+	match settlement.authority_type:
+		"traditional":
+			w_age_resp = GameConfig.LEADER_W_AGE_RESPECT + GameConfig.AUTHORITY_TRADITIONAL_AGE_BOOST
+		"rational_legal":
+			w_trust = GameConfig.LEADER_W_TRUSTWORTHINESS + GameConfig.AUTHORITY_RATIONAL_TRUST_BOOST
 
 	var base_score: float = (
-		charisma * GameConfig.LEADER_W_CHARISMA +
-		wisdom * GameConfig.LEADER_W_WISDOM +
-		trustworthiness * GameConfig.LEADER_W_TRUSTWORTHINESS +
-		intimidation * GameConfig.LEADER_W_INTIMIDATION +
-		social_cap * GameConfig.LEADER_W_SOCIAL_CAPITAL +
-		age_respect * GameConfig.LEADER_W_AGE_RESPECT
+		charisma        * GameConfig.LEADER_W_CHARISMA +
+		wisdom          * GameConfig.LEADER_W_WISDOM +
+		trustworthiness * w_trust +
+		intimidation    * GameConfig.LEADER_W_INTIMIDATION +
+		social_cap      * GameConfig.LEADER_W_SOCIAL_CAPITAL +
+		age_respect     * w_age_resp
 	)
 
 	# [Henrich & Gil-White 2001] Reputation bonus: settlement-wide opinion
@@ -156,10 +163,13 @@ func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
 	return base_score * (1.0 + rep_bonus)
 
 
-## Social capital proxy: count of meaningful relationships (affinity > 30)
-## with other members of the SAME settlement, normalized.
-## Full social_capital formula (strong×3 + weak×1 + bridge×5) deferred to Phase 3+.
+## [Burt 2004] Read pre-computed social capital from stat_cache (NetworkSystem writes annually).
+## Fallback to legacy count when NetworkSystem hasn't run yet (early ticks).
 func _compute_social_capital_norm(entity: RefCounted, settlement: RefCounted) -> float:
+	var cached: int = entity.stat_cache.get(&"DERIVED_SOCIAL_CAPITAL", -1)
+	if cached >= 0:
+		return float(cached) / 1000.0
+	## Legacy fallback
 	if _relationship_manager == null:
 		return 0.0
 	var count: int = 0
@@ -170,7 +180,6 @@ func _compute_social_capital_norm(entity: RefCounted, settlement: RefCounted) ->
 		var rel: RefCounted = _relationship_manager.get_relationship(entity.id, mid)
 		if rel != null and rel.affinity > 30.0:
 			count += 1
-	## Normalize: having relationships with ~50% of settlement = 1.0
 	var denom: float = maxf(float(total_members - 1) * 0.5, 1.0)
 	return clampf(float(count) / denom, 0.0, 1.0)
 

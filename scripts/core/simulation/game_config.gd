@@ -196,6 +196,48 @@ const MEMORY_PERMANENT_TYPES: Array = [
 const MEMORY_COMPRESS_MIN_GROUP: int = 3
 const MEMORY_COMPRESS_INTERVAL_TICKS: int = 4380  ## 1 year (= TICKS_PER_YEAR)
 
+## ── Social Network Tie Classification [Granovetter 1973] ────────────────────
+const NETWORK_TIE_WEAK_MIN:     float = 5.0
+const NETWORK_TIE_MODERATE_MIN: float = 30.0
+const NETWORK_TIE_STRONG_MIN:   float = 60.0
+const NETWORK_TIE_INTIMATE_MIN: float = 85.0
+
+## Social capital formula [Burt 2004]: strong×3 + weak×1 + bridge×5 + rep×10
+const NETWORK_SOCIAL_CAP_STRONG_W: float = 3.0
+const NETWORK_SOCIAL_CAP_WEAK_W:   float = 1.0
+const NETWORK_SOCIAL_CAP_BRIDGE_W: float = 5.0
+const NETWORK_SOCIAL_CAP_REP_W:    float = 10.0
+## Normalization divisor — social capital ÷ this = 0~1 for ~100-person settlement
+const NETWORK_SOCIAL_CAP_NORM_DIV: float = 200.0
+
+## Information propagation probabilities [Granovetter 1973]
+const NETWORK_PROPAGATION_STRONG: float = 0.80
+const NETWORK_PROPAGATION_WEAK:   float = 0.20
+const NETWORK_PROPAGATION_BRIDGE: float = 0.50
+
+## ── Weber Authority Type [Weber 1922] ────────────────────────────────────────
+const AUTHORITY_TRADITIONAL_TRADITION_MIN: float = 0.30
+const AUTHORITY_TRADITIONAL_LAW_MAX:       float = 0.10
+const AUTHORITY_RATIONAL_LAW_MIN:          float = 0.30
+const AUTHORITY_TRADITIONAL_AGE_BOOST:     float = 0.15
+const AUTHORITY_RATIONAL_TRUST_BOOST:      float = 0.15
+
+## ── Obedience Formula [Milgram 1963] ─────────────────────────────────────────
+const OBEDIENCE_W_AUTHORITY:         float = 0.25
+const OBEDIENCE_W_AGREEABLENESS:     float = 0.20
+const OBEDIENCE_W_CONSCIENTIOUSNESS: float = 0.15
+const OBEDIENCE_W_LAW_VALUE:         float = 0.15
+const OBEDIENCE_W_PROXIMITY:         float = 0.10
+const OBEDIENCE_W_SOCIAL_PRESSURE:   float = 0.15
+const OBEDIENCE_RESIST_THRESHOLD:    float = 0.30
+const OBEDIENCE_CONFLICT_THRESHOLD:  float = 0.50
+
+## ── Revolution Risk [Tilly 1978, Human Definition v3 §17] ───────────────────
+const REVOLUTION_RISK_THRESHOLD:       float = 0.70
+const REVOLUTION_COOLDOWN_TICKS:       int   = 8760   ## 2 years
+const REVOLUTION_CHARISMA_MULTIPLIER:  float = 2.0
+const REVOLUTION_TICK_INTERVAL:        int   = 4380   ## check annually
+
 ## ── Body Attribute Gameplay Loop ─────────────────────────────────────────────
 ## 훈련 XP: 행동 완료 시 entity.body.training_xp[axis] 에 누적 (age_system이 yearly 재계산)
 ## Heritage 1999 (trainability h²=0.47), Ahtiainen 2016 (개인차 8.5배)

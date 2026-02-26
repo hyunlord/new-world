@@ -46,7 +46,22 @@ func record_interaction(id_a: int, id_b: int, tick: int) -> RefCounted:
 		rel.type = "acquaintance"
 	# Check stage transitions
 	_check_stage_transition(rel)
+	_update_tie_type(rel)
 	return rel
+
+
+## [Granovetter 1973] Update tie_type from current affinity value.
+func _update_tie_type(rel: RefCounted) -> void:
+	if rel.affinity < GameConfig.NETWORK_TIE_WEAK_MIN:
+		rel.tie_type = "absent"
+	elif rel.affinity < GameConfig.NETWORK_TIE_MODERATE_MIN:
+		rel.tie_type = "weak"
+	elif rel.affinity < GameConfig.NETWORK_TIE_STRONG_MIN:
+		rel.tie_type = "moderate"
+	elif rel.affinity < GameConfig.NETWORK_TIE_INTIMATE_MIN:
+		rel.tie_type = "strong"
+	else:
+		rel.tie_type = "intimate"
 
 
 ## Check and apply relationship stage transitions
@@ -90,6 +105,7 @@ func decay_relationships(current_tick: int) -> void:
 		# Only decay if no recent interaction (100+ ticks ago)
 		if current_tick - rel.last_interaction_tick >= 100:
 			rel.affinity = maxf(rel.affinity - 0.1, 0.0)
+			_update_tie_type(rel)
 			# Cleanup: remove acquaintance with very low affinity
 			if rel.affinity <= 5.0 and rel.type == "acquaintance":
 				keys_to_remove.append(key)
@@ -156,6 +172,7 @@ func to_save_data() -> Array:
 			"interaction_count": rel.interaction_count,
 			"last_interaction_tick": rel.last_interaction_tick,
 			"type": rel.type,
+			"tie_type": rel.tie_type,
 		})
 	return result
 
@@ -172,4 +189,8 @@ func load_save_data(data: Array) -> void:
 		rel.interaction_count = d.get("interaction_count", 0)
 		rel.last_interaction_tick = d.get("last_interaction_tick", 0)
 		rel.type = d.get("type", "stranger")
+		## Retroactive fix for old saves: recompute tie_type from affinity if missing
+		rel.tie_type = d.get("tie_type", "")
+		if rel.tie_type == "":
+			_update_tie_type(rel)
 		_relationships[d.get("key", "")] = rel
