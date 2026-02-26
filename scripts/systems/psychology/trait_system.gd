@@ -713,7 +713,12 @@ static func get_v3_trait_effects_summary(trait_def: Dictionary) -> Dictionary:
 					result["derived_mults"][str(target)] = float(value)
 			"emotion":
 				if op in ["max", "min", "set"]:
-					result["emotion_caps"][str(target)] = float(value)
+					# target may be String or Array — store each individually
+					# key format: "op:emotion_name" (e.g. "max:fear", "min:anger")
+					var emo_targets: Array = target if target is Array else [target]
+					for emo_t in emo_targets:
+						var emo_key: String = str(op) + ":" + str(emo_t)
+						result["emotion_caps"][emo_key] = float(value)
 			"aura":
 				result["has_aura"] = true
 	return result
