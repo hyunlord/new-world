@@ -92,6 +92,12 @@ const SKILL_XP_MINING: float       = 2.0   ## per gather_stone completion
 const SKILL_XP_CONSTRUCTION: float = 3.0   ## per build tick (higher because build is slower)
 const SKILL_XP_HUNTING: float      = 2.0   ## reserved for future hunting action
 
+## [Anderson 1982 ACT*] Skill-unlocked action XP values
+const SKILL_XP_HERB_GATHER: float   = 1.0   ## per herb_gather completion (lower than normal foraging)
+const SKILL_XP_FINE_WOODWORK: float = 1.5   ## per fine_woodwork completion
+const SKILL_XP_ORE_VEIN: float      = 1.5   ## per ore_vein completion
+const SKILL_XP_TRAP_HUNT: float     = 3.0   ## per trap check (higher because slower action)
+
 ## ── speed/strength 파생 공식 ──────────────────────────────
 ## entity.speed = float(agi_realized) * BODY_SPEED_SCALE + BODY_SPEED_BASE
 ## agi=700(평균 성인, 훈련없음): speed=1.14,  agi=1500(전사): speed=2.1

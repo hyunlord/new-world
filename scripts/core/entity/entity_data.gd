@@ -146,6 +146,13 @@ var skill_xp: Dictionary = {}
 ## Rule: skill_levels[id] is always the computed level from skill_xp[id], never set directly.
 var skill_levels: Dictionary = {}
 
+## [Anderson 1982 ACT*] Actions unlocked by skill threshold crossing.
+## key: action_id StringName (e.g. &"UNLOCK_ACTION_HERB_GATHER")
+## value: true (permanent; once unlocked, never reverts)
+## Populated by StatThresholdSystem when UNLOCK_ACTION_* threshold is crossed.
+## Read by BehaviorSystem._evaluate_actions() to gate score computation.
+var unlocked_actions: Dictionary = {}
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -291,6 +298,7 @@ func to_dict() -> Dictionary:
 		"intel_ace_penalty": intel_ace_penalty,
 		"skill_xp": skill_xp.duplicate(),
 		"skill_levels": skill_levels.duplicate(),
+		"unlocked_actions": _serialize_stringname_dict(unlocked_actions),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 		"job_satisfaction": job_satisfaction,
 		"status_score": status_score,
@@ -423,6 +431,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var raw_levels: Dictionary = data.get("skill_levels", {})
 	for k in raw_levels:
 		e.skill_levels[StringName(k)] = int(raw_levels[k])
+	var ul_raw: Dictionary = data.get("unlocked_actions", {})
+	for k in ul_raw:
+		e.unlocked_actions[StringName(k)] = true
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	e.job_satisfaction = data.get("job_satisfaction", 0.50)
 	e.status_score = data.get("status_score", 0.0)
@@ -437,6 +448,14 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"materialism": et_data.get("materialism", 0.0),
 	}
 	return e
+
+
+## [Anderson 1982] Serialize StringName-keyed dict for JSON roundtrip
+func _serialize_stringname_dict(d: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for k in d:
+		out[str(k)] = d[k]
+	return out
 
 
 ## stat_cache 직렬화 (StringName key → String)

@@ -784,6 +784,19 @@ func _draw() -> void:
 				_se["color"],
 				_desc,
 				_mult_suffix)
+		## ── Unlocked Actions [Anderson 1982 ACT*] ──────────────────────────────
+		if not entity.unlocked_actions.is_empty():
+			cy += 2
+			draw_string(font, Vector2(cx + 20, cy + 12),
+				Locale.ltr("UI_SKILL_UNLOCKED_ACTIONS"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w - 10, 11, Color(0.7, 0.7, 0.7))
+			cy += 16
+			for _action_id in entity.unlocked_actions:
+				var _action_key: String = "SKILL_ACTION_%s" % str(_action_id).replace("UNLOCK_ACTION_", "")
+				draw_string(font, Vector2(cx + 30, cy + 12),
+					"• " + Locale.ltr(_action_key),
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, 11, Color(0.5, 0.85, 0.6))
+				cy += 14
 		cy += 4.0
 
 	# ── Values (가치관) ──
