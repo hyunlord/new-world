@@ -60,7 +60,7 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F11:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_QUOTELEFT:
 		visible = not visible
 		get_viewport().set_input_as_handled()
 
@@ -77,14 +77,14 @@ func _process(delta: float) -> void:
 func _build_ui() -> void:
 	var panel = PanelContainer.new()
 	add_child(panel)
-	panel.anchor_left = 0.7
-	panel.anchor_top = 0.0
-	panel.anchor_right = 1.0
+	panel.anchor_left = 0.0
+	panel.anchor_top = 1.0
+	panel.anchor_right = 0.0
 	panel.anchor_bottom = 1.0
-	panel.offset_left = 0.0
-	panel.offset_top = 0.0
-	panel.offset_right = 0.0
-	panel.offset_bottom = 0.0
+	panel.offset_left = 8.0
+	panel.offset_top = -528.0
+	panel.offset_right = 428.0
+	panel.offset_bottom = -8.0
 
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.08, 0.08, 0.12, 0.92)
@@ -102,7 +102,7 @@ func _build_ui() -> void:
 
 	var title = Label.new()
 	title.text = "🔧 Debug Panel"
-	title.add_theme_font_size_override("font_size", 20)
+	title.add_theme_font_size_override("font_size", 14)
 	root_vbox.add_child(title)
 
 	var entity_row = HBoxContainer.new()
@@ -114,6 +114,12 @@ func _build_ui() -> void:
 	_entity_option.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	entity_row.add_child(_entity_option)
 	_entity_option.item_selected.connect(_on_entity_selected)
+
+	var refresh_btn := Button.new()
+	refresh_btn.text = "↺"
+	refresh_btn.tooltip_text = "Refresh entity list"
+	refresh_btn.pressed.connect(_populate_entity_list)
+	entity_row.add_child(refresh_btn)
 
 	_tab_container = TabContainer.new()
 	_tab_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -282,7 +288,7 @@ func _build_tab_traits() -> void:
 	_traits_label = RichTextLabel.new()
 	_traits_label.bbcode_enabled = true
 	_traits_label.fit_content = true
-	_traits_label.custom_minimum_size = Vector2(0, 200)
+	_traits_label.custom_minimum_size = Vector2(0, 120)
 	tab.add_child(_traits_label)
 
 	var divider = Label.new()
@@ -317,7 +323,7 @@ func _build_tab_violations() -> void:
 
 	_violations_label = RichTextLabel.new()
 	_violations_label.bbcode_enabled = true
-	_violations_label.custom_minimum_size = Vector2(0, 150)
+	_violations_label.custom_minimum_size = Vector2(0, 100)
 	tab.add_child(_violations_label)
 
 	tab.add_child(HSeparator.new())
@@ -385,7 +391,7 @@ func _build_tab_scars() -> void:
 
 	_scars_label = RichTextLabel.new()
 	_scars_label.bbcode_enabled = true
-	_scars_label.custom_minimum_size = Vector2(0, 150)
+	_scars_label.custom_minimum_size = Vector2(0, 100)
 	tab.add_child(_scars_label)
 
 	var add_row = HBoxContainer.new()
