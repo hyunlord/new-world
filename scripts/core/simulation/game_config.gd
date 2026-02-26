@@ -719,4 +719,30 @@ const GINI_UNREST_THRESHOLD: float = 0.40
 const GINI_ENTRENCHED_THRESHOLD: float = 0.50
 const GINI_CRISIS_THRESHOLD: float = 0.60
 
+## [Ainsworth 1978 + Mikulincer & Shaver 2007]
+## Multipliers applied to socialize action score by attachment type.
+## Anxious: hyperactivated system → drives more frequent social seeking.
+## Avoidant: deactivated system → suppresses social approach despite internal need.
+const ATTACHMENT_SOCIALIZE_MULT: Dictionary = {
+	"secure":       1.00,
+	"anxious":      1.45,
+	"avoidant":     0.55,
+	"disorganized": 1.00,
+}
 
+## Social need recovery efficiency per attachment type.
+## Anxious: contact never fully satisfies → partial recovery only.
+## Avoidant: contact provides less comfort → reduced recovery.
+const ATTACHMENT_SOCIAL_RECOVERY_MULT: Dictionary = {
+	"secure":       1.00,
+	"anxious":      0.65,
+	"avoidant":     0.70,
+	"disorganized": 0.80,
+}
+
+## Avoidant allostatic accumulation multiplier (Mikulincer 1998).
+const ATTACHMENT_AVOIDANT_ALLO_MULT: float = 2.0
+
+## Background stress rate for anxious attachment when social need is low (Cassidy & Berlin 1994).
+const ATTACHMENT_ANXIOUS_STRESS_RATE: float = 0.02
+const ATTACHMENT_ANXIOUS_STRESS_THRESHOLD: float = 0.40
