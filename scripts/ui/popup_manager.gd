@@ -108,6 +108,22 @@ func open_entity(entity_id: int) -> void:
 	_center_panel(_entity_panel, 0.55, 0.85)
 
 
+## Debug용: dim_bg 없이 entity panel 열기.
+## Debug Panel과 동시 사용 가능. 시뮬레이션 일시정지 없음.
+## 배경 클릭으로 닫히지 않음 — 패널 자체의 닫기 버튼으로 닫음.
+func open_entity_no_dim(entity_id: int) -> void:
+	if _entity_panel == null:
+		return
+	_entity_panel.set_entity_id(entity_id)
+	_entity_panel.visible = true
+	_dim_bg.visible = false
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	var panel_w: float = vp.x * 0.50
+	var panel_h: float = vp.y * 0.85
+	_entity_panel.size = Vector2(panel_w, panel_h)
+	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
+
+
 func open_building(building_id: int) -> void:
 	if _building_panel == null:
 		return

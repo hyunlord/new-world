@@ -1078,7 +1078,7 @@ func _compute_skill_xp_for_level(target_level: int) -> float:
 	for l in range(1, target_level + 1):
 		var idx: int = 0
 		for bp in breakpoints:
-			if l > bp:
+			if l >= bp:
 				idx += 1
 		cumulative += base_xp * pow(float(l), exponent) * multipliers[idx]
 	return cumulative

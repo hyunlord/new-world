@@ -1002,7 +1002,10 @@ func close_all_popups() -> bool:
 
 func open_entity_detail() -> void:
 	if _popup_manager != null and _selected_entity_id >= 0:
-		_popup_manager.open_entity(_selected_entity_id)
+		if OS.is_debug_build():
+			_popup_manager.open_entity_no_dim(_selected_entity_id)
+		else:
+			_popup_manager.open_entity(_selected_entity_id)
 
 
 func open_building_detail() -> void:
@@ -1051,7 +1054,10 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 			if _entity_detail_panel != null and _entity_detail_panel.has_method("show_entity_or_deceased"):
 				_entity_detail_panel.show_entity_or_deceased(eid)
 				if _popup_manager != null:
-					_popup_manager.open_entity(eid)
+					if OS.is_debug_build():
+						_popup_manager.open_entity_no_dim(eid)
+					else:
+						_popup_manager.open_entity(eid)
 
 
 func _on_follow_entity(entity_id: int) -> void:
