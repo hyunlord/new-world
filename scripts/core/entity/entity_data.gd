@@ -153,6 +153,32 @@ var skill_levels: Dictionary = {}
 ## Read by BehaviorSystem._evaluate_actions() to gate score computation.
 var unlocked_actions: Dictionary = {}
 
+## ── Layer 1.5: Appearance (Eagly 1991, Stulp 2015) ──────────────────────────
+## float 0.0~1.0, mean=0.5. Heritability: attractiveness h²=0.80, height h²=0.85.
+var attractiveness: float = 0.5
+var height: float = 0.5
+## Visual descriptors — display only (no performance effect)
+## hair_color: "black"/"brown"/"blonde"/"red"/"grey"/"white"
+var hair_color: String = "black"
+## eye_color: "brown"/"blue"/"green"/"grey"/"hazel"
+var eye_color: String = "brown"
+## Array of localization key IDs (e.g. ["MARK_SCAR_FACE"])
+var distinguishing_marks: Array = []
+
+## ── Layer 7: Speech Style (Human Definition v3 §13) ──────────────────────────
+## Derived from personality at spawn. tone: aggressive/gentle/formal/casual/sarcastic
+var speech_tone: String = "casual"
+## verbosity: taciturn/normal/talkative
+var speech_verbosity: String = "normal"
+## humor: dry/none/witty/slapstick
+var speech_humor: String = "none"
+
+## ── Layer 7: Preferences (Linden et al. 2010) ────────────────────────────────
+var favorite_food: String = "food"
+var favorite_color: String = "blue"
+var favorite_season: String = "spring"
+var disliked_things: Array = []
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -299,6 +325,18 @@ func to_dict() -> Dictionary:
 		"skill_xp": skill_xp.duplicate(),
 		"skill_levels": skill_levels.duplicate(),
 		"unlocked_actions": _serialize_stringname_dict(unlocked_actions),
+		"attractiveness": attractiveness,
+		"height": height,
+		"hair_color": hair_color,
+		"eye_color": eye_color,
+		"distinguishing_marks": distinguishing_marks.duplicate(),
+		"speech_tone": speech_tone,
+		"speech_verbosity": speech_verbosity,
+		"speech_humor": speech_humor,
+		"favorite_food": favorite_food,
+		"favorite_color": favorite_color,
+		"favorite_season": favorite_season,
+		"disliked_things": disliked_things.duplicate(),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 		"job_satisfaction": job_satisfaction,
 		"status_score": status_score,
@@ -434,6 +472,18 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var ul_raw: Dictionary = data.get("unlocked_actions", {})
 	for k in ul_raw:
 		e.unlocked_actions[StringName(k)] = true
+	e.attractiveness       = data.get("attractiveness",       0.5)
+	e.height               = data.get("height",               0.5)
+	e.hair_color           = data.get("hair_color",           "black")
+	e.eye_color            = data.get("eye_color",            "brown")
+	e.distinguishing_marks = data.get("distinguishing_marks", []).duplicate()
+	e.speech_tone          = data.get("speech_tone",          "casual")
+	e.speech_verbosity     = data.get("speech_verbosity",     "normal")
+	e.speech_humor         = data.get("speech_humor",         "none")
+	e.favorite_food        = data.get("favorite_food",        "food")
+	e.favorite_color       = data.get("favorite_color",       "blue")
+	e.favorite_season      = data.get("favorite_season",      "spring")
+	e.disliked_things      = data.get("disliked_things",      []).duplicate()
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	e.job_satisfaction = data.get("job_satisfaction", 0.50)
 	e.status_score = data.get("status_score", 0.0)

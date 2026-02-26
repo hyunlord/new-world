@@ -107,6 +107,48 @@ const BODY_SPEED_SCALE: float = 0.0012   ## float(agi_realized) * 0.0012
 const BODY_REALIZED_MAX: int = 15000     ## realized 정규화 기준 (str/agi/end/tou/rec), UI _draw_bar용
 const BODY_REALIZED_DR_MAX: int = 10000  ## dr realized 정규화 기준, UI _draw_bar용
 
+## ── Layer 1.5: Appearance Generation (Eagly 1991, Stulp 2015) ────────────────
+const APPEARANCE_ATTRACT_MEAN: float = 0.50
+const APPEARANCE_ATTRACT_SD:   float = 0.12
+const APPEARANCE_HEIGHT_MEAN:  float = 0.50
+const APPEARANCE_HEIGHT_SD:    float = 0.12
+const APPEARANCE_HEIGHT_SD_CLAMP_LOW:  float = 0.05
+const APPEARANCE_HEIGHT_SD_CLAMP_HIGH: float = 0.95
+## Sex delta: males slightly taller on average (normalized scale)
+const APPEARANCE_HEIGHT_SEX_DELTA_MALE: float = 0.04
+const APPEARANCE_ATTRACT_HERITABILITY: float = 0.80
+const APPEARANCE_HEIGHT_HERITABILITY:  float = 0.85
+## Hair color weights [Brown=35%, Black=25%, Blonde=25%, Red=10%, Grey=3%, White=2%]
+const HAIR_COLOR_WEIGHTS: Dictionary = {
+	"black": 25, "brown": 35, "blonde": 25, "red": 10, "grey": 3, "white": 2
+}
+## Eye color weights [Brown=55%, Blue=20%, Green=15%, Grey=7%, Hazel=3%]
+const EYE_COLOR_WEIGHTS: Dictionary = {
+	"brown": 55, "blue": 20, "green": 15, "grey": 7, "hazel": 3
+}
+const DISTINGUISHING_MARK_CHANCE: float = 0.05
+const DISTINGUISHING_MARK_IDS: Array = [
+	"MARK_SCAR_FACE", "MARK_SCAR_HAND", "MARK_BIRTHMARK_NECK",
+	"MARK_BIRTHMARK_CHEEK", "MARK_FRECKLES", "MARK_DIMPLES",
+	"MARK_PROMINENT_NOSE", "MARK_SHARP_EYES"
+]
+
+## ── Layer 7: Speech Style (Human Definition v3 §13) ──────────────────────────
+const SPEECH_TONE_VALUES:      Array = ["aggressive", "gentle", "formal", "casual", "sarcastic"]
+const SPEECH_VERBOSITY_VALUES: Array = ["taciturn", "normal", "talkative"]
+const SPEECH_HUMOR_VALUES:     Array = ["dry", "none", "witty", "slapstick"]
+
+## ── Layer 7: Preferences (Linden et al. 2010) ────────────────────────────────
+const PREFERENCE_FOOD_OPTIONS:   Array = ["food", "herbs", "meat"]
+const PREFERENCE_COLOR_OPTIONS:  Array = ["red", "orange", "yellow", "green", "blue", "purple", "brown", "white", "black"]
+const PREFERENCE_SEASON_OPTIONS: Array = ["spring", "summer", "autumn", "winter"]
+const PREFERENCE_DISLIKE_IDS:    Array = [
+	"DISLIKE_COLD", "DISLIKE_RAIN", "DISLIKE_CROWDS", "DISLIKE_SILENCE",
+	"DISLIKE_HEIGHTS", "DISLIKE_CONFINED", "DISLIKE_CONFLICT", "DISLIKE_IDLENESS"
+]
+## Social event: affinity gain for matching preference
+const SOCIAL_SHARED_PREFERENCE_AFFINITY_GAIN: float = 3.0
+
 ## ── Body Attribute Gameplay Loop ─────────────────────────────────────────────
 ## 훈련 XP: 행동 완료 시 entity.body.training_xp[axis] 에 누적 (age_system이 yearly 재계산)
 ## Heritage 1999 (trainability h²=0.47), Ahtiainen 2016 (개인차 8.5배)

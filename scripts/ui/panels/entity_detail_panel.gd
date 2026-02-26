@@ -128,6 +128,7 @@ var _section_collapsed: Dictionary = {
 	"intelligence": false,
 	"skills": false,
 	"values": true,
+	"appearance": true,
 	"reputation": true,
 	"economic_tendencies": true,
 	"social_status": false,
@@ -751,6 +752,71 @@ func _draw() -> void:
 				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 			cy += 16.0
 		cy += 6.0
+
+	# ── Appearance & Speech (외모 & 말투) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SECTION_APPEARANCE"), "appearance")
+	if not _section_collapsed.get("appearance", true):
+		## Attractiveness bar
+		cy = _draw_bar(font, cx + 10, cy, bar_w,
+			Locale.ltr("UI_APPEARANCE_ATTRACTIVENESS"),
+			entity.attractiveness, Color(0.95, 0.7, 0.8))
+		## Height bar
+		cy = _draw_bar(font, cx + 10, cy, bar_w,
+			Locale.ltr("UI_APPEARANCE_HEIGHT"),
+			entity.height, Color(0.7, 0.85, 0.95))
+
+		## Hair + Eye color row
+		var _hair_key: String = "HAIR_COLOR_" + entity.hair_color.to_upper()
+		var _eye_key: String  = "EYE_COLOR_"  + entity.eye_color.to_upper()
+		var _appear_text: String = "%s: %s  %s: %s" % [
+			Locale.ltr("UI_HAIR_COLOR"), Locale.ltr(_hair_key),
+			Locale.ltr("UI_EYE_COLOR"),  Locale.ltr(_eye_key),
+		]
+		draw_string(font, Vector2(cx + 10, cy + 12), _appear_text,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+		cy += 16.0
+
+		## Distinguishing marks (only if present)
+		if entity.distinguishing_marks.size() > 0:
+			var _mark_names: Array = []
+			for _mk in entity.distinguishing_marks:
+				_mark_names.append(Locale.ltr(_mk))
+			var _marks_label: String = Locale.ltr("UI_DISTINGUISHING_MARKS") + ": " + ", ".join(_mark_names)
+			draw_string(font, Vector2(cx + 10, cy + 12), _marks_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.7, 0.7, 0.7))
+			cy += 16.0
+
+		## Speech style row (tone / verbosity / humor)
+		var _tone_key:  String = "SPEECH_TONE_"      + entity.speech_tone.to_upper()
+		var _verb_key:  String = "SPEECH_VERBOSITY_"  + entity.speech_verbosity.to_upper()
+		var _humor_key: String = "SPEECH_HUMOR_"      + entity.speech_humor.to_upper()
+		var _speech_label: String = Locale.ltr("UI_SPEECH_STYLE") + ": " + \
+			Locale.ltr(_tone_key) + " / " + Locale.ltr(_verb_key) + " / " + Locale.ltr(_humor_key)
+		draw_string(font, Vector2(cx + 10, cy + 12), _speech_label,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.75, 0.85, 0.75))
+		cy += 16.0
+
+		## Preferences row (food / color / season)
+		var _food_key:   String = "PREF_FOOD_"   + entity.favorite_food.to_upper()
+		var _color_key:  String = "PREF_COLOR_"  + entity.favorite_color.to_upper()
+		var _season_key: String = "PREF_SEASON_" + entity.favorite_season.to_upper()
+		var _pref_label: String = Locale.ltr("UI_PREFERENCES") + ": " + \
+			Locale.ltr(_food_key) + " / " + Locale.ltr(_color_key) + " / " + Locale.ltr(_season_key)
+		draw_string(font, Vector2(cx + 10, cy + 12), _pref_label,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.85, 0.8, 0.65))
+		cy += 16.0
+
+		## Dislikes (only if present)
+		if entity.disliked_things.size() > 0:
+			var _dislikes: Array = []
+			for _dk in entity.disliked_things:
+				_dislikes.append(Locale.ltr(_dk))
+			var _dis_label: String = Locale.ltr("UI_DISLIKES") + ": " + ", ".join(_dislikes)
+			draw_string(font, Vector2(cx + 10, cy + 12), _dis_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.75, 0.55, 0.55))
+			cy += 16.0
+
+		cy += 4.0
 
 	# ── Skills (기술) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")

@@ -137,6 +137,13 @@ func _trigger_event(a: RefCounted, b: RefCounted, tick: int) -> void:
 		if argue_weight > 0.3:
 			events.append({"name": "argument", "weight": argue_weight})
 
+	## ── Speech tone modifiers [Human Definition v3 §13] ─────────────────────────
+	_apply_tone_weights(events, a.speech_tone, b.speech_tone)
+
+	## ── Shared Preferences event ──────────────────────────────────────────────
+	if _has_shared_preference(a, b):
+		events.append({"name": "shared_preferences", "weight": 1.5})
+
 	# Weighted random selection
 	var chosen: String = _weighted_random(events)
 	_apply_event(chosen, a, b, rel, tick)
@@ -242,6 +249,17 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 						"with_partner": b.partner_id == a.id,
 					})
 
+		"shared_preferences":
+			## [Human Definition v3 §13] Shared preference → affinity bonus
+			rel.affinity = minf(rel.affinity + GameConfig.SOCIAL_SHARED_PREFERENCE_AFFINITY_GAIN, 100.0)
+			emit_event("shared_preference_discovered", {
+				"entity_a_id":   a.id,
+				"entity_a_name": a.entity_name,
+				"entity_b_id":   b.id,
+				"entity_b_name": b.entity_name,
+				"tick": tick,
+			})
+
 	# [Fraley & Shaver 1997 — Avoidant adults maintain emotional distance cap]
 	if _a_attach == "avoidant" or _b_attach == "avoidant":
 		rel.affinity = minf(rel.affinity, 70.0)
@@ -322,3 +340,45 @@ func _emit_reputation_events(event_name: String, a: RefCounted, b: RefCounted, t
 				"domain": domain, "valence": valence,
 				"magnitude": magnitude, "source": "direct", "tick": tick,
 			})
+
+
+## Apply speech tone multipliers to event weight list.
+func _apply_tone_weights(events: Array, tone_a: String, tone_b: String) -> void:
+	var dominance: Array = ["aggressive", "sarcastic", "gentle", "formal", "casual"]
+	var tone: String = tone_a
+	if dominance.find(tone_b) < dominance.find(tone_a):
+		tone = tone_b
+	for i in range(events.size()):
+		var ev: Dictionary = events[i]
+		match tone:
+			"aggressive":
+				if ev["name"] == "argument":       ev["weight"] *= 1.5
+				elif ev["name"] == "casual_talk":  ev["weight"] *= 0.7
+				elif ev["name"] == "deep_talk":    ev["weight"] *= 0.6
+			"gentle":
+				if ev["name"] == "casual_talk":    ev["weight"] *= 1.4
+				elif ev["name"] == "argument":     ev["weight"] *= 0.5
+				elif ev["name"] == "console":      ev["weight"] *= 1.3
+			"formal":
+				if ev["name"] == "deep_talk":      ev["weight"] *= 1.3
+				elif ev["name"] == "flirt":        ev["weight"] *= 0.7
+			"sarcastic":
+				if ev["name"] == "argument":       ev["weight"] *= 1.3
+				elif ev["name"] == "casual_talk":  ev["weight"] *= 0.85
+	## Humor bonus on flirt
+	if tone_a in ["witty", "slapstick"] or tone_b in ["witty", "slapstick"]:
+		for i in range(events.size()):
+			if events[i]["name"] == "flirt":
+				events[i]["weight"] *= 1.2
+				break
+
+
+## Returns true if a and b share at least one preference.
+func _has_shared_preference(a: RefCounted, b: RefCounted) -> bool:
+	if a.favorite_food == b.favorite_food:
+		return true
+	if a.favorite_color == b.favorite_color:
+		return true
+	if a.favorite_season == b.favorite_season:
+		return true
+	return false
