@@ -672,11 +672,9 @@ func _make_float_row(display: String, min_v: float, max_v: float, step: float) -
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = "%.0f" % v if max_v > 1.0 else "%.2f" % v
 	)
-	slider.drag_started.connect(func() -> void:
-		_any_slider_dragging = true
-	)
-	slider.drag_ended.connect(func(_changed: bool) -> void:
-		_any_slider_dragging = false
+	slider.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			_any_slider_dragging = event.pressed
 	)
 
 	var set_btn := Button.new()
@@ -712,11 +710,9 @@ func _make_int_row(display: String, min_v: int, max_v: int) -> Dictionary:
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = str(int(v))
 	)
-	slider.drag_started.connect(func() -> void:
-		_any_slider_dragging = true
-	)
-	slider.drag_ended.connect(func(_changed: bool) -> void:
-		_any_slider_dragging = false
+	slider.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			_any_slider_dragging = event.pressed
 	)
 
 	var xp_lbl := Label.new()
