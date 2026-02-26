@@ -340,6 +340,34 @@ When the user gives a feature request:
 
 10. **Summarize** — dispatch ratio, tool used, DIRECT reasons, files changed.
 
+### ask_codex MCP Tool Usage
+Claude Code 내부에서 이렇게 사용:
+ask_codex(
+prompt_file=".omc/prompts/ticket-name.md",
+output_file=".omc/outputs/ticket-name-result.md",
+working_directory="/path/to/new-world"
+)
+
+### Ticket Naming Convention
+`<phase>-<system>-<concern>` 형식:
+- `p3-stress-coping-strategy-data` (Phase 3, stress system, coping data file)
+- `p3-morale-settlement-tick` (Phase 3, morale system, settlement tick logic)
+
+### Parallel Dispatch Pattern
+같은 phase의 독립적인 ticket들은 병렬 dispatch 가능:
+Claude Code가 순서대로 ask_codex를 호출하면 tmux pane에서 병렬 실행됨
+ask_codex(prompt_file="ticket-a.md", ...)  # pane 1
+ask_codex(prompt_file="ticket-b.md", ...)  # pane 2 (동시)
+단, ticket B가 ticket A의 output을 depend하면 순차 실행.
+
+### Directory Structure for Dispatch
+new-world/
+├── .omc/
+│   ├── prompts/        # Claude Code가 여기에 ticket prompt를 씀
+│   │   └── *.md
+│   └── outputs/        # Codex가 여기에 결과를 씀
+│       └── *-result.md
+
 ---
 
 ## Part 4: PROGRESS.md — Mandatory Logging

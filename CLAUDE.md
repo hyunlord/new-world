@@ -14,6 +14,36 @@ If your task involves BOTH code AND dispatch (e.g. autopilot feature request), r
 
 ---
 
+## Multi-Agent Workflow (omc-teams + Codex)
+
+### Role Definition
+- **Claude Code (this session)**: Orchestrator. Reads prompts, creates tickets, dispatches to Codex, verifies results.
+- **Codex CLI**: Implementer. Receives ticket via ask_codex MCP, implements in its own worktree, returns output.
+
+### Dispatch Protocol
+When a ticket is marked 🟢 DISPATCH:
+1. Write the prompt content to `.omc/prompts/<ticket-name>.md`
+2. Call `ask_codex` MCP tool with:
+   - `prompt_file`: `.omc/prompts/<ticket-name>.md`
+   - `output_file`: `.omc/outputs/<ticket-name>-result.md`
+   - `working_directory`: project root
+3. Wait for output, read `.omc/outputs/<ticket-name>-result.md`
+4. Verify output meets acceptance criteria from Section 6 of the prompt
+
+### Verification Gate (HARD GATE — never skip)
+Before merging any Codex output to lead/main:
+- [ ] All new UI strings use `Locale.tr("KEY")` — grep for hardcoded strings
+- [ ] No `print()` left in production paths (use `push_warning` or logger)
+- [ ] GDScript static typing on all new functions
+- [ ] In-game smoke test passes (defined in Section 6 of each prompt)
+
+### Worktree Rules
+- lead/main: Claude Code's session (orchestrator + verification)
+- Codex worktrees: auto-created under `.claude/worktrees/`
+- NEVER commit directly to lead/main from Codex output — always verify first
+
+---
+
 ## Agent Identity
 
 You are a **senior Godot 4 engine developer and game systems architect** specializing in simulation games.
