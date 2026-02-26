@@ -179,6 +179,15 @@ var favorite_color: String = "blue"
 var favorite_season: String = "spring"
 var disliked_things: Array = []
 
+## ── Layer 6: Personal Memory [Baddeley & Hitch 1974, Tulving 1972] ───────────
+## Working memory: recent episodic events with intensity-based decay.
+## Max capacity: GameConfig.MEMORY_WORKING_MAX (100 entries).
+## Each entry schema: {type, tick, intensity, target_id, target_name, summary_key, params}
+var working_memory: Array = []
+## Permanent history: high-intensity events that never decay.
+## Only canonical event types (see GameConfig.MEMORY_PERMANENT_TYPES).
+var permanent_history: Array = []
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -337,6 +346,8 @@ func to_dict() -> Dictionary:
 		"favorite_color": favorite_color,
 		"favorite_season": favorite_season,
 		"disliked_things": disliked_things.duplicate(),
+		"working_memory": working_memory.duplicate(true),
+		"permanent_history": permanent_history.duplicate(true),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 		"job_satisfaction": job_satisfaction,
 		"status_score": status_score,
@@ -484,6 +495,8 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.favorite_color       = data.get("favorite_color",       "blue")
 	e.favorite_season      = data.get("favorite_season",      "spring")
 	e.disliked_things      = data.get("disliked_things",      []).duplicate()
+	e.working_memory       = data.get("working_memory",       []).duplicate()
+	e.permanent_history    = data.get("permanent_history",    []).duplicate()
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	e.job_satisfaction = data.get("job_satisfaction", 0.50)
 	e.status_score = data.get("status_score", 0.0)

@@ -50,6 +50,7 @@ const ReputationSystem = preload("res://scripts/systems/social/reputation_system
 const EconomicTendencySystem = preload("res://scripts/systems/social/economic_tendency_system.gd")
 const JobSatisfactionSystem = preload("res://scripts/systems/social/job_satisfaction_system.gd")
 const StratificationMonitor = preload("res://scripts/systems/social/stratification_monitor.gd")
+const MemorySystemScript = preload("res://scripts/systems/record/memory_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -105,6 +106,7 @@ var reputation_system: RefCounted
 var economic_tendency_system: RefCounted
 var job_satisfaction_system: RefCounted
 var stratification_monitor: RefCounted
+var memory_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -163,6 +165,10 @@ func _ready() -> void:
 
 	intelligence_system = IntelligenceSystem.new()
 	intelligence_system.init(entity_manager)
+
+	## [Baddeley & Hitch 1974] Layer 6 working memory decay + compression (annual)
+	memory_system = MemorySystemScript.new()
+	memory_system.init(entity_manager)
 
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -296,6 +302,7 @@ func _ready() -> void:
 	sim_engine.register_system(upper_needs_system)       # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(intelligence_system)       # priority 18
+	sim_engine.register_system(memory_system)             # priority 18 (annual decay+compress)
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28

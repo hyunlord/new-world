@@ -115,6 +115,7 @@ var _section_collapsed: Dictionary = {
 	"personality": true,
 	"derived": false,
 	"traits": false,
+	"memory": true,
 	"emotions": true,
 	"trauma_scars": true,
 	"violation_history": false,
@@ -898,6 +899,48 @@ func _draw() -> void:
 		if not _section_collapsed.get("traits", false):
 			cy = _draw_trait_section(font, cx, cy, entity.personality, entity)
 
+	# ── Memory Timeline (기억 연표) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_MEMORY_TIMELINE"), "memory")
+	if not _section_collapsed.get("memory", true):
+		## Permanent history (landmark memories) — newest first, max 10
+		if entity.permanent_history.size() > 0:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_MEMORY_PERMANENT"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.9, 0.8, 0.5))
+			cy += 16.0
+			var ph_entries: Array = entity.permanent_history.duplicate()
+			ph_entries.reverse()
+			for i in range(mini(10, ph_entries.size())):
+				var pe: Dictionary = ph_entries[i]
+				var year_label: String = "Y%d" % (int(pe.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
+				var raw_text: String = Locale.ltr(pe.get("summary_key", "MEMORY_EVT_UNKNOWN"))
+				var ph_params: Dictionary = pe.get("params", {})
+				var evt_text: String = year_label + " " + raw_text.format(ph_params)
+				draw_string(font, Vector2(cx + 20, cy + 12), evt_text,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, GameConfig.get_font_size("popup_body") - 2, Color(0.85, 0.85, 0.6))
+				cy += 14.0
+			cy += 4.0
+
+		## Recent working memory — non-trivial (intensity > 0.15), newest first, max 8
+		var wm_entries: Array = entity.working_memory.filter(
+			func(e): return float(e.get("intensity", 0)) > 0.15
+		)
+		wm_entries.sort_custom(func(a, b): return int(a["tick"]) > int(b["tick"]))
+		if wm_entries.size() > 0:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_MEMORY_RECENT"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.7, 0.85, 0.7))
+			cy += 16.0
+			for i in range(mini(8, wm_entries.size())):
+				var we: Dictionary = wm_entries[i]
+				var year_label: String = "Y%d" % (int(we.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
+				var int_bar: String = "[%s]" % _intensity_to_bars(float(we.get("intensity", 0)))
+				var raw_text: String = Locale.ltr(we.get("summary_key", "MEMORY_EVT_UNKNOWN"))
+				var wm_params: Dictionary = we.get("params", {})
+				var evt_text: String = year_label + " " + int_bar + " " + raw_text.format(wm_params)
+				draw_string(font, Vector2(cx + 20, cy + 12), evt_text,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, GameConfig.get_font_size("popup_body") - 2, Color(0.75, 0.8, 0.75))
+				cy += 14.0
+		cy += 4.0
+
 	# ── Emotions (Plutchik 8) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"), "emotions")
 	if not _section_collapsed.get("emotions", false):
@@ -1602,6 +1645,12 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+
+## Convert intensity 0.0~1.0 to a 5-char bar string e.g. "████░"
+func _intensity_to_bars(intensity: float) -> String:
+	var filled: int = int(clampf(intensity * 5.0, 0.0, 5.0))
+	return "█".repeat(filled) + "░".repeat(5 - filled)
 
 
 ## Draw a center-origin bipolar bar for values in [-1.0, +1.0].

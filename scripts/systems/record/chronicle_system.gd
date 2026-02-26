@@ -4,6 +4,7 @@ extends Node
 ## Events are categorized by type and importance for memory management.
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+const MemorySystem = preload("res://scripts/systems/record/memory_system.gd")
 
 ## Event type constants
 const EVENT_BIRTH: String = "birth"
@@ -158,6 +159,27 @@ func _get_entity_name(entity_id: int) -> String:
 		if record.size() > 0:
 			return record.get("name", "?")
 	return "?"
+
+
+## Dual-write helper: log to chronicle AND to entity's personal working_memory.
+## event_type in MEMORY_PERMANENT_TYPES will also reach permanent_history.
+func log_and_remember(entity: RefCounted, type: String, description: String,
+		importance: int, related_ids: Array, tick: int, l10n: Dictionary = {},
+		intensity_override: float = -1.0) -> void:
+	## Chronicle side
+	var entity_id: int = entity.id if entity != null else -1
+	log_event(type, entity_id, description, importance, related_ids, tick, l10n)
+	## Personal memory side
+	if entity != null:
+		var tid: int = -1
+		var tname: String = ""
+		if related_ids.size() > 0:
+			tid = int(related_ids[0])
+			tname = _get_entity_name(tid)
+		MemorySystem.add_memory(entity, type, tick, tid, tname,
+			l10n.get("key", "MEMORY_EVT_" + type.to_upper()),
+			l10n.get("params", {}),
+			intensity_override)
 
 
 ## Serialize for save/load

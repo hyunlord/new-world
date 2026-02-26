@@ -1,5 +1,6 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 const PersonalitySystem = preload("res://scripts/core/entity/personality_system.gd")
+const MemorySystem = preload("res://scripts/systems/record/memory_system.gd")
 
 ## Drives relationship interactions using chunk-based proximity.
 ## Only checks entities in same chunk (16x16 tiles).
@@ -194,6 +195,10 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 		"deep_talk":
 			rel.affinity = minf(rel.affinity + 5.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 3.0, 100.0)
+			MemorySystem.add_memory(a, "deep_talk", tick, b.id, b.entity_name,
+				"MEMORY_EVT_DEEP_TALK", {"name": b.entity_name})
+			MemorySystem.add_memory(b, "deep_talk", tick, a.id, a.entity_name,
+				"MEMORY_EVT_DEEP_TALK", {"name": a.entity_name})
 
 		"share_food":
 			rel.affinity = minf(rel.affinity + 8.0 * _attach_affinity_mult, 100.0)
@@ -223,6 +228,10 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 
 		"proposal":
 			_handle_proposal(a, b, rel, tick)
+			MemorySystem.add_memory(a, "proposal", tick, b.id, b.entity_name,
+				"MEMORY_EVT_PROPOSAL", {"name": b.entity_name})
+			MemorySystem.add_memory(b, "proposal", tick, a.id, a.entity_name,
+				"MEMORY_EVT_PROPOSAL", {"name": a.entity_name})
 
 		"console", "console_reverse":
 			var target: RefCounted = b if event_name == "console" else a

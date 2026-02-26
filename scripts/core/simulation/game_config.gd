@@ -149,6 +149,53 @@ const PREFERENCE_DISLIKE_IDS:    Array = [
 ## Social event: affinity gain for matching preference
 const SOCIAL_SHARED_PREFERENCE_AFFINITY_GAIN: float = 3.0
 
+## ── Layer 6: Memory System [Baddeley & Hitch 1974, Ebbinghaus 1885] ───────────
+## Max working memory entries before oldest (lowest intensity) are evicted
+const MEMORY_WORKING_MAX: int = 100
+## Intensity threshold for promotion to permanent_history
+const MEMORY_PERMANENT_THRESHOLD: float = 0.5
+## Ebbinghaus curve: intensity *= exp(-DECAY_RATE * dt_years)
+const MEMORY_DECAY_TRIVIAL: float  = 1.386  ## half-life 0.5 years (ln2/0.5)
+const MEMORY_DECAY_MODERATE: float = 0.347  ## half-life 2 years
+const MEMORY_DECAY_STRONG: float   = 0.139  ## half-life 5 years
+const MEMORY_DECAY_TRAUMA: float   = 0.014  ## half-life 50 years (near-permanent)
+## [Conway & Pleydell-Pearce 2000] intensity at encoding by event type
+const MEMORY_INTENSITY_MAP: Dictionary = {
+	"casual_talk":   0.05,
+	"share_food":    0.10,
+	"deep_talk":     0.25,
+	"argument":      0.30,
+	"helped_work":   0.15,
+	"comforted":     0.35,
+	"flirt":         0.40,
+	"proposal":      0.70,
+	"marriage":      0.90,
+	"child_born":    0.85,
+	"partner_died":  0.95,
+	"betrayal":      0.80,
+	"trauma":        0.90,
+	"promotion":     0.65,
+	"achievement":   0.60,
+	"migration":     0.55,
+	"skill_unlock":  0.30,
+	"first_meeting": 0.20,
+}
+## Decay rate lookup [threshold, rate] — first match wins (descending threshold)
+const MEMORY_DECAY_BY_INTENSITY: Array = [
+	[0.80, 0.014],  ## trauma-class: 50-year half-life
+	[0.50, 0.139],  ## strong: 5-year half-life
+	[0.20, 0.347],  ## moderate: 2-year half-life
+	[0.00, 1.386],  ## trivial: 0.5-year half-life
+]
+## Event types allowed in permanent_history
+const MEMORY_PERMANENT_TYPES: Array = [
+	"birth", "marriage", "child_born", "partner_died", "war",
+	"migration", "promotion", "betrayal", "trauma", "achievement", "proposal",
+]
+## Compression: annual, group same-type same-target entries > 1 year old
+const MEMORY_COMPRESS_MIN_GROUP: int = 3
+const MEMORY_COMPRESS_INTERVAL_TICKS: int = 4380  ## 1 year (= TICKS_PER_YEAR)
+
 ## ── Body Attribute Gameplay Loop ─────────────────────────────────────────────
 ## 훈련 XP: 행동 완료 시 entity.body.training_xp[axis] 에 누적 (age_system이 yearly 재계산)
 ## Heritage 1999 (trainability h²=0.47), Ahtiainen 2016 (개인차 8.5배)
