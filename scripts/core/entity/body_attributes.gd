@@ -31,6 +31,15 @@ var childhood_finalized: bool = false
 var realized: Dictionary = {}
 ## {"str":int, "agi":int, "end":int, "tou":int, "rec":int, "dr":int}
 
+## ── 전투 부위 손상 [Phase 3A, Keeley 1996] ────────────────
+## head/torso/limb_left/limb_right → 0.0(무손상) ~ 1.0(완전파괴)
+var part_damage: Dictionary = {
+	"head": 0.0,
+	"torso": 0.0,
+	"limb_left": 0.0,
+	"limb_right": 0.0,
+}
+
 const CURVE_PARAMS: Dictionary = {
 	"str": { "a50": 16.0, "k": 0.35, "t0": 35.0, "r1": 0.007, "t1": 70.0, "r2": 0.030 },
 	"agi": { "a50": 14.0, "k": 0.45, "t0": 25.0, "r1": 0.009, "t1": 65.0, "r2": 0.035 },
@@ -163,6 +172,7 @@ func to_dict() -> Dictionary:
 		"child_activity_count": child_activity_count,
 		"childhood_finalized": childhood_finalized,
 		"realized": realized.duplicate(),
+		"part_damage": part_damage.duplicate(),
 	}
 
 static func from_dict(data: Dictionary):
@@ -178,4 +188,11 @@ static func from_dict(data: Dictionary):
 	b.child_activity_count = data.get("child_activity_count", 0)
 	b.childhood_finalized = data.get("childhood_finalized", false)
 	b.realized = data.get("realized", {})
+	var pd = data.get("part_damage", {})
+	b.part_damage = {
+		"head":       float(pd.get("head",       0.0)),
+		"torso":      float(pd.get("torso",      0.0)),
+		"limb_left":  float(pd.get("limb_left",  0.0)),
+		"limb_right": float(pd.get("limb_right", 0.0)),
+	}
 	return b

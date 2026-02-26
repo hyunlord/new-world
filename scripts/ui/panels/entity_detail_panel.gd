@@ -128,6 +128,7 @@ var _section_collapsed: Dictionary = {
 	"life_events": false,
 	"intelligence": false,
 	"skills": false,
+	"combat": true,
 	"values": true,
 	"appearance": true,
 	"reputation": true,
@@ -870,6 +871,37 @@ func _draw() -> void:
 					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, 11, Color(0.5, 0.85, 0.6))
 				cy += 14
 		cy += 4.0
+
+	# ── Combat ──
+	if entity.age_stage == "adult" or entity.age_stage == "elder":
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_COMBAT_STATS"), "combat")
+		if not _section_collapsed.get("combat", true):
+			## Combat skill (SKILL_HUNTING proxy for Stone Age)
+			var _hunt_level: int = int(entity.skill_levels.get(&"SKILL_HUNTING", 0))
+			draw_string(font, Vector2(cx + 10, cy + 12),
+				Locale.ltr("UI_COMBAT_SKILL") + ": " + str(_hunt_level),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.85, 0.4, 0.35))
+			cy += 16
+			## Body part damage
+			if entity.body != null:
+				var _pd: Dictionary = entity.body.part_damage
+				for _bpart in ["head", "torso", "limb_left", "limb_right"]:
+					var _dmg: float = float(_pd.get(_bpart, 0.0))
+					if _dmg > 0.05:
+						var _part_key: String = "BODY_PART_" + _bpart.to_upper()
+						draw_string(font, Vector2(cx + 10, cy + 12),
+							Locale.ltr(_part_key) + ": %.0f%% " % (_dmg * 100) + Locale.ltr("UI_DAMAGED"),
+							HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.9, 0.6, 0.3))
+						cy += 14
+			## War veteran scar
+			for _scar in entity.trauma_scars:
+				if _scar.get("scar_id") == "war_veteran":
+					draw_string(font, Vector2(cx + 10, cy + 12),
+						Locale.ltr("UI_WAR_VETERAN"),
+						HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.8, 0.65, 0.3))
+					cy += 14
+					break
+			cy += 4.0
 
 	# ── Values (가치관) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")

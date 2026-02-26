@@ -560,6 +560,31 @@ func _load_stats(path: String, sr: RefCounted) -> void:
 		sr.history.append(raw_history[i])
 
 
+## ── Tension (JSON) ─────────────────────────────────
+
+func save_tension(path: String, ts: RefCounted) -> void:
+	if ts == null:
+		return
+	var data: Dictionary = ts.to_save_data()
+	var f: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	if f != null:
+		f.store_string(JSON.stringify(data))
+
+
+func load_tension(path: String, ts: RefCounted) -> void:
+	if ts == null:
+		return
+	if not FileAccess.file_exists(path):
+		return
+	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return
+	var json: JSON = JSON.new()
+	if json.parse(f.get_as_text()) != OK:
+		return
+	ts.load_save_data(json.data)
+
+
 ## Get directory path for a save slot (1-based)
 func get_slot_dir(slot: int) -> String:
 	return SAVE_DIR + "slot_%d" % slot

@@ -905,3 +905,46 @@ const ATTACHMENT_AVOIDANT_ALLO_MULT: float = 2.0
 ## Background stress rate for anxious attachment when social need is low (Cassidy & Berlin 1994).
 const ATTACHMENT_ANXIOUS_STRESS_RATE: float = 0.02
 const ATTACHMENT_ANXIOUS_STRESS_THRESHOLD: float = 0.40
+
+## ── Tech Tree [Henrich 2004, Boyd & Richerson 1985] ──────────────────────────
+## Scan interval: tech discovery checked annually
+const TECH_DISCOVERY_INTERVAL_TICKS: int = 4380  ## 1 year
+## Discovery probability scaling
+const TECH_DISCOVERY_POP_SCALE:   float = 0.005  ## +0.5% per person over pop_minimum
+const TECH_DISCOVERY_MAX_BONUS:   float = 0.40   ## max bonus from all modifiers combined
+## Era progression: era changes to "tribal" when these techs are all discovered
+const TECH_ERA_TRIBAL_REQUIRES: Array = ["TECH_FIRE_MAKING", "TECH_BASIC_TOOLS", "TECH_SHELTER_BUILDING"]
+
+## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
+## Body part integrity thresholds for death
+const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death
+const COMBAT_TORSO_DEATH_THRESHOLD: float = 0.80  ## torso integrity < 0.20 → death
+## Limb damage penalties
+const COMBAT_LIMB_SPEED_PENALTY:    float = 0.30  ## −30% speed per damaged limb
+const COMBAT_LIMB_STR_PENALTY:      float = 0.25  ## −25% effective strength per damaged limb
+## Base weapon damage (no equipment era — improvised clubs/spears)
+const COMBAT_BASE_WEAPON_DAMAGE:    float = 0.15
+const COMBAT_BASE_ARMOR:            float = 0.0   ## no armor in stone age
+## Morale thresholds [Human Definition v3 §19]
+const COMBAT_MORALE_ROUT_THRESHOLD:   float = 0.20  ## morale < 0.2 → full rout (flee)
+const COMBAT_MORALE_SHAKEN_THRESHOLD: float = 0.40  ## morale < 0.4 → shaken (−50% combat)
+## Morale contributions
+const COMBAT_MORALE_W_HAPPINESS:    float = 0.30
+const COMBAT_MORALE_W_CHARISMA:     float = 0.30
+const COMBAT_MORALE_W_CAUSE_BELIEF: float = 0.40
+## Random roll range for duel resolution
+const COMBAT_ROLL_RANDOM_RANGE:     float = 0.30
+
+## ── Inter-settlement Tension [Tilly 1978, Keeley 1996] ──────────────────────
+## Tension per pair: 0.0 (neutral) → 1.0 (raid imminent)
+const TENSION_CHECK_INTERVAL_TICKS: int   = 2190     ## twice yearly
+const TENSION_RESOURCE_DEFICIT_TRIGGER: float = 0.30 ## if settlement food/need ratio < this, tension rises
+const TENSION_PROXIMITY_RADIUS:     int   = 20       ## tiles — only settlements within this range develop tension
+const TENSION_PER_SHARED_RESOURCE:  float = 0.05     ## per tick where both settlements harvest same tile
+const TENSION_DECAY_PER_YEAR:       float = 0.15     ## natural decay if no resource conflict
+const TENSION_SKIRMISH_THRESHOLD:   float = 0.60     ## tension > 0.60 → skirmish event possible
+const TENSION_SKIRMISH_CHANCE:      float = 0.35     ## probability of skirmish when above threshold
+const TENSION_SKIRMISH_COOLDOWN:    int   = 4380     ## 1 year minimum between skirmishes per pair
+## Post-skirmish tension change
+const TENSION_WINNER_REDUCTION:     float = 0.30     ## attacker win → tension drops (grievance resolved)
+const TENSION_LOSER_INCREASE:       float = 0.20     ## loser retaliates → tension rises
