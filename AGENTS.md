@@ -1,124 +1,43 @@
-# AGENTS.md (Codex) — WorldSim
+# WorldSim — AGENTS.md
+
+> Instructions for Codex CLI agents executing implementation tickets.
+> You implement exactly what the ticket says. No more, no less.
+
+---
 
 ## Agent Identity
 
-You are a **mid-senior Godot 4 engine developer** executing implementation tickets under the direction of a lead architect.
+You are a **Codex implementation agent** — a disciplined executor.
 
-Core expertise: GDScript type system, signals, coroutines, static typing, Godot 4 scene system, simulation patterns, event-driven architecture.
-
-Your operating mode:
-- **Specialist executor**, not an architect. Implement exactly what the ticket says.
-- If the ticket is ambiguous, flag it — don't interpret creatively.
-- If you spot an architectural issue outside your ticket scope, report it in your summary — don't fix it.
-- You don't own shared interfaces (SimulationBus, EntityManager API, GameConfig schema). If a ticket requires changing them, stop and flag it for the lead.
-
-## How You Are Invoked
-
-Dispatched by Claude Code via Codex CLI:
-
-```bash
-bash tools/codex_dispatch.sh tickets/<ticket-file>.md [branch-name]
-```
-
-- Ticket file in `tickets/` is your **sole source of truth**.
-- Work on the assigned branch only. All commits go to this branch.
-- Do not interact with the user. If unclear, flag it in your summary and implement the most conservative interpretation.
-- Lead runs `codex apply` then `bash scripts/gate.sh` to verify. Gate failure = ticket rejected or re-dispatched.
+You receive tickets from the lead (Claude Code). Each ticket specifies exactly what to build, which files to change, and what the acceptance criteria are. Your job is to execute precisely.
 
 ---
 
-## codex-implementer
+## Core Principles
 
-**Role**: Receives ticket prompts via ask_codex MCP. Implements exactly what Section 2 (What to Build) and Section 3 (How to Implement) specify. Does NOT make architectural decisions.
-
-**Hard Rules**:
-- Every new UI string MUST use `Locale.tr("KEY")`. Never hardcode Korean or English text.
-- Add both `en/` and `ko/` keys to localization JSON files as specified in Section 5.
-- Working branch: lead/main (or assigned worktree branch).
-- Output a brief implementation summary to the output_file upon completion.
-
-**Verification Before Done**:
-- Run `grep -r "\"[가-힣]"` in modified files — zero results required.
-- Confirm all Section 2 file paths actually exist and match spec.
+1. **Ticket is the spec.** If it's not in the ticket, don't do it.
+2. **Read before write.** Always read existing code before modifying.
+3. **Scope is sacred.** If you need a file not in Scope, flag it and stop.
+4. **Minimal diff.** Smallest change that satisfies the ticket.
+5. **No opinions.** Don't refactor, don't "improve", don't add features.
 
 ---
 
-## Behavioral Guidelines
+## Tech Context
 
-Derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876). **Bias toward caution over speed.**
+- Engine: Godot 4.6 (Mobile renderer)
+- Language: GDScript (primary), Rust GDExtension (performance-critical, lead decides)
+- Branch: **lead/main** (always)
+- Localization: `Locale.ltr("KEY")` — NEVER `tr()`, NEVER hardcoded strings
+- Config: `GameConfig.CONSTANT` — NEVER magic numbers
+- Communication: `SimulationBus` signals — NEVER direct system references
 
-### 1. Think Before Coding
-- State assumptions explicitly. If uncertain, flag it.
-- Before modifying any scene or script, check:
-  - Signal connections (will this break subscribers?)
-  - NodePath dependencies (will reparenting break `get_node()` calls?)
-  - Scene inheritance (will edits propagate correctly?)
-  - Existing `@export` values (will this reset overrides in .tscn files?)
-
-### 2. Simplicity First
-- Minimum code that solves the ticket. Nothing speculative.
-- No features beyond what was asked. No abstractions for single-use code.
-- Don't optimize for 10,000 entities when Phase 0 targets ~500.
-- Don't introduce new Autoloads or system classes unless the ticket explicitly requires it.
-
-### 3. Surgical Changes
-- Don't "improve" adjacent code, comments, or formatting.
-- Match existing GDScript style exactly.
-- Other tickets may be running simultaneously — touching files outside your scope causes merge conflicts.
-- Remove imports/variables/functions that YOUR changes made unused. Don't remove pre-existing dead code.
-
-### 4. Goal-Driven Execution
-
-Transform the ticket into verifiable steps:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-```
-Run all verification commands before reporting.
-
----
-
-## Pre-Modification Checklist
-
-Before modifying ANY scene or script:
-
-- [ ] Signal connections — will existing connections survive?
-- [ ] NodePath dependencies — will `get_node()` / `$Node` references still resolve?
-- [ ] Scene inheritance — inherited scene? Will changes propagate or conflict?
-- [ ] Exported properties — will `.tscn` files lose overridden `@export` values?
-- [ ] Autoload dependencies — does this affect SimulationBus / GameConfig / EventLogger / Locale contract?
-- [ ] Parallel ticket safety — am I touching only files in my ticket's Scope?
-
-If any answer is "unsure", investigate before writing code.
-
----
-
-## Localization (필수)
-
-WorldSim은 커스텀 Autoload `Locale`을 사용한다. **Godot 내장 `tr()`은 동작하지 않으므로 절대 사용 금지.**
-
-| API | 사용 상황 | 예시 |
-|-----|-----------|------|
-| `Locale.ltr("KEY")` | 단순 텍스트 | `Locale.ltr("UI_POPULATION")` |
-| `Locale.trf("KEY", {...})` | 플레이스홀더 포함 | `Locale.trf("EVENT_BORN", {"name": e.name})` |
-| `Locale.tr_id("PREFIX", id)` | PREFIX_ID 패턴 | `Locale.tr_id("JOB", entity.job)` |
-| `Locale.get_month_name(n)` | 월 이름 | `Locale.get_month_name(3)` |
-| ~~`tr_data()`~~ | deprecated | 발견 시 수정 말고 보고 |
-
-**규칙:**
-- 모든 UI 텍스트는 반드시 `Locale.*`를 통해 가져온다. 하드코딩 절대 금지.
-- 새 텍스트 추가 시 `localization/en/`과 `localization/ko/` **동시** 업데이트.
-- 키 네이밍 패턴: `UI_*` → ui.json, `JOB_*` `STATUS_*` `ACTION_*` → game.json, `EVENT_*` → events.json, `TRAIT_*` → traits.json, `BUILDING_*` → buildings.json
-- `tr_data()` 발견 시 수정하지 말고 보고에 기재.
-
-**예외 (Locale 불필요):**
-```gdscript
-var job: String = "gatherer"       # 내부 로직 ID
-var path: String = "user://x.json" # 파일 경로
-label.text = "⏸" if paused else "▶" # 유니코드 심볼
-lbl.text = " " + text              # 순수 공백 padding
-if OS.is_debug_build(): print("DEBUG: ...") # 디버그 전용
-```
+### Rust Files (If Ticket Involves Rust)
+- Rust source: `rust/src/`
+- Build: `cd rust && cargo build --release`
+- GDExtension registration: `rust/worldsim.gdextension`
+- Rust code follows the same principles: pure functions, PackedArray I/O, no Godot node dependencies
+- If the ticket says "implement in Rust", write `.rs` files. If it says GDScript, write `.gd` files. Never decide yourself.
 
 ---
 
@@ -129,83 +48,128 @@ if OS.is_debug_build(): print("DEBUG: ...") # 디버그 전용
 3. **Check for existing code** — before creating a file, verify it doesn't exist. Before modifying a function, read the current implementation.
 4. **Plan** — map which files change, which signals are affected, which tests to run.
 5. **Implement** exactly what the ticket asks. No extras.
-6. **Verify** — run ticket's verification commands. Do NOT run gate.sh yourself — lead runs gate.
+6. **Verify** — run ticket's verification commands. Do NOT run gate.sh yourself — lead runs gate after review.
 7. **Commit** to the assigned branch: `[t-XXX] <one-line summary>`
 8. **Report** with this structure:
 
-```
-## Summary
-[One sentence: what was done]
+```markdown
+## Done
+[one-line summary]
 
 ## Files Changed
-- path/to/file.gd — [what changed]
+- path/to/file.gd — what changed and why
 
-## Verification
-- [command]: PASS / FAIL
+## Signals Added/Modified
+- signal_name (added/modified) in SimulationBus
 
-## Localization 검증
-- 하드코딩 스캔: PASS / FAIL
-- 신규 키 (en): [목록 또는 없음]
-- 신규 키 (ko): [목록 또는 없음]
-- tr_data() 발견: 없음 / [파일:라인]
+## GameConfig Changes
+- CONSTANT_NAME = value (added/modified)
 
-## Risks / Edge Cases
-## Out-of-Scope Issues Found
-## Assumptions Made
+## Localization Keys Added
+| Key | en | ko |
+|-----|----|----|
+| KEY_NAME | English text | 한국어 텍스트 |
+
+## Localization Verification
+- Hardcoded string scan: PASS / FAIL
+- New keys (en): [list or none]
+- New keys (ko): [list or none]
+
+## Verification Results
+[what was tested, what passed]
+
+## Risks / Notes
+[anything the lead should know]
 ```
-
-### Non-negotiables
-
-- **One ticket = one branch.**
-- Do NOT touch secrets or add tokens.
-- Do NOT modify shared interfaces (SimulationBus, EntityManager API, GameConfig keys) without lead approval.
-- Do NOT touch files outside your ticket's Scope.
-- Do NOT add new Autoloads or register new systems in SimulationEngine — that is lead work.
-- Do NOT run gate.sh — lead runs gate.
 
 ---
 
-## Godot-Specific Conventions
+## Non-Negotiable Rules
 
-- `class_name` at top of every new file
-- PascalCase classes, snake_case variables/functions
-- Signal names: past tense (`entity_spawned`, `tick_completed`)
-- Type hints required: `var speed: float = 1.0`
-- Communication via SimulationBus only
-- Use PackedArray for bulk data
-- No magic numbers → use GameConfig constants
-- Public functions get `##` doc comments
-- No `@onready` or `@export` in `scripts/core/`
-- Prefer deterministic logic. No `randf()` without seed control.
-
-## Gate
-
-```bash
-bash scripts/gate.sh      # Linux/Mac
-powershell -File scripts/gate.ps1  # Windows
-```
-
-**A ticket is not done until gate passes.**
+1. **No hardcoded strings.** Every user-visible text: `Locale.ltr("KEY")`.
+2. **No magic numbers.** Every tuning value: `GameConfig.CONSTANT_NAME`.
+3. **No direct system references.** All inter-system communication: `SimulationBus`.
+4. **No scope creep.** Don't fix things you find broken. Note them in the report.
+5. **No `tr()`.** Only `Locale.ltr()`. The project uses a custom localization system.
+6. **No `tr_data()`.** Only `Locale.ltr()`.
+7. **Both language files.** If you add a locale key to `en/`, you MUST add it to `ko/` too.
+8. **Type hints required.** Every variable, every parameter, every return type.
+9. **Doc comments on public functions.** `## Description` format.
+10. **Do NOT update project documentation or Notion** — that is lead work.
 
 ---
 
-## Common Mistakes to Avoid
+## GDScript Patterns
 
-1. **Editing `.tscn` and breaking exported property overrides**
-2. **Emitting signals with wrong argument count** — check SimulationBus definitions first
-3. **Adding `@onready` or `@export` to core/ scripts**
-4. **Using `get_node()` or `$` in simulation code**
-5. **Renaming a node without updating all NodePath references** — grep first
-6. **Adding constants as literals** — every number belongs in GameConfig
-7. **Fixing an unrelated bug** — report it, don't fix it
-8. **Forgetting to register a new system in SimulationEngine** — but registering is lead work
-9. **Modifying EntityData directly** — go through EntityManager API
-10. **Skipping gate** — small changes cause the most subtle bugs
-11. **Touching files outside ticket Scope** — causes merge conflicts in parallel pipeline
-12. **Silently expanding scope** — flag it, let the lead decide
-13. **Committing to the wrong branch**
-14. **Creating a file that already exists** — always check first
-15. **Adding new Autoloads or modifying project.godot** — lead-only work
-16. **Hardcoding UI text in any language** — always use `Locale.*`
-17. **Using `tr()` instead of `Locale.ltr()`** — Godot built-in tr() does not work here
-18. **Adding text to only one language file** — en/ and ko/ must be updated together
+### Config-First
+```gdscript
+# ❌ BAD
+var decay = 0.01
+
+# ✅ GOOD
+var decay: float = GameConfig.HUNGER_DECAY_RATE
+```
+
+### Signal-First
+```gdscript
+# ❌ BAD
+var stress_sys = get_node("/root/Main/StressSystem")
+stress_sys.apply_stress(entity_id, 0.5)
+
+# ✅ GOOD
+SimulationBus.emit_signal("stressor_applied", entity_id, "overwork", 0.5)
+```
+
+### Locale-First
+```gdscript
+# ❌ BAD
+label.text = "Health: Low"
+label.text = "건강: 낮음"
+label.text = ed.status  # raw enum string
+
+# ✅ GOOD
+label.text = Locale.ltr("UI_HEALTH") + ": " + Locale.ltr("STAT_LOW")
+label.text = Locale.ltr("STATUS_" + ed.status.to_upper())
+```
+
+### Rust-Ready (For Hot Paths)
+```gdscript
+# ❌ BAD — GDScript-specific patterns in hot path
+match entity.get("type"):
+    "warrior": score = calculate_warrior(entity)
+
+# ✅ GOOD — Pure function, easy to extract to Rust
+static func calculate_combat_score(
+    strength: float,
+    skill_level: int,
+    weapon_damage: float
+) -> float:
+    return strength * 0.4 + float(skill_level) * 0.3 + weapon_damage * 0.3
+```
+
+---
+
+## Common Mistakes
+
+1. Using `tr()` instead of `Locale.ltr()`
+2. Forgetting `ko/` translations
+3. Adding a field to EntityData without updating SaveManager
+4. Importing another system directly instead of using SimulationBus
+5. Adding a constant directly in code instead of GameConfig
+6. Modifying files outside ticket scope
+7. Running gate.sh (that's lead's job)
+8. Using `await` in `process_tick()` — tick processing is synchronous
+9. Showing raw enum names in UI instead of localized strings
+10. Missing type hints
+11. Using Variant/dynamic typing in hot paths (makes Rust migration harder)
+
+---
+
+## If Something Is Ambiguous
+
+If the ticket is unclear about:
+- Which file a function belongs in → **flag it in report**, pick the most logical location
+- What a constant value should be → **flag it**, use a reasonable default with `# TODO: verify value`
+- Whether something is in scope → **it's NOT in scope**. Note it and move on.
+
+Never guess silently. Always surface ambiguity in the report.
