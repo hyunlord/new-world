@@ -942,6 +942,7 @@ func _find_building_site(pos: Vector2i) -> Vector2i:
 				var y: int = pos.y + dy
 				if _world_data.is_walkable(x, y) and _building_manager.get_building_at(x, y) == null:
 					return Vector2i(x, y)
+	return Vector2i(-1, -1)
 
 
 ## [Vygotsky 1978 ZPD] Returns true if there is at least one alive entity in the same
@@ -974,4 +975,3 @@ func _has_teachable_neighbor(entity: RefCounted, teach_action: StringName) -> bo
 			return true
 		checked += 1
 	return false
-	return Vector2i(-1, -1)

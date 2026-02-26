@@ -103,14 +103,14 @@ Player observes/intervenes as god; AI agents autonomously develop civilization.
 
 ```
 scripts/core/       — SimulationEngine, WorldData, EntityManager, EventLogger,
-                      SimulationBus, GameConfig, ResourceMap, Pathfinder,
-                      BuildingData, BuildingManager, SaveManager, EntityData,
-                      SettlementData, SettlementManager, locale.gd (Autoload: Locale)
+					  SimulationBus, GameConfig, ResourceMap, Pathfinder,
+					  BuildingData, BuildingManager, SaveManager, EntityData,
+					  SettlementData, SettlementManager, locale.gd (Autoload: Locale)
 scripts/ai/         — BehaviorSystem (Utility AI)
 scripts/systems/    — NeedsSystem, MovementSystem, GatheringSystem, ConstructionSystem,
-                      BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem,
-                      PopulationSystem, MigrationSystem, MortalitySystem, FamilySystem,
-                      GameCalendar, EmotionSystem, StressSystem, PersonalitySystem ...
+					  BuildingEffectSystem, ResourceRegenSystem, JobAssignmentSystem,
+					  PopulationSystem, MigrationSystem, MortalitySystem, FamilySystem,
+					  GameCalendar, EmotionSystem, StressSystem, PersonalitySystem ...
 scripts/ui/         — WorldRenderer, EntityRenderer, BuildingRenderer, CameraController, HUD
 scenes/main/        — main.tscn + main.gd
 tickets/            — Ticket files
