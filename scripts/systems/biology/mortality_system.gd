@@ -165,6 +165,12 @@ func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> voi
 	# Individual frailty
 	mu_total *= entity.frailty
 
+	# Disease resistance modifier (DR realized → mortality reduction, max 35%)
+	var _dr_norm: float = 0.5
+	if entity.body != null and entity.body.realized.has("dr"):
+		_dr_norm = clampf(float(entity.body.realized["dr"]) / float(GameConfig.BODY_REALIZED_DR_MAX), 0.0, 1.0)
+	mu_total *= (1.0 - GameConfig.BODY_DR_MORTALITY_REDUCTION * _dr_norm)
+
 	# Annual death probability: q = 1 - exp(-μ)
 	var q_annual: float = 1.0 - exp(-mu_total)
 	q_annual = clampf(q_annual, 0.0, 0.999)
