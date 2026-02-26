@@ -100,10 +100,6 @@ var _trait_badge_regions: Array = []
 var _trait_tooltip: Control = null
 ## Currently active (clicked) trait id
 var _active_trait_id: String = ""
-## Trait effect summary panel expanded state
-var _summary_expanded: bool = false
-## Trait summary toggle click rect
-var _summary_toggle_rect: Rect2 = Rect2()
 ## Which axes are expanded (show facets)
 var _expanded_axes: Dictionary = {}
 ## Deceased detail mode
@@ -279,9 +275,7 @@ func set_entity_id(id: int) -> void:
 	_deceased_proxy = null
 	_trait_badge_regions.clear()
 	_active_trait_id = ""
-	_summary_expanded = false
 	_section_header_rects.clear()
-	_summary_toggle_rect = Rect2()
 	if _trait_tooltip != null:
 		_trait_tooltip.request_hide()
 
@@ -333,11 +327,6 @@ func _gui_input(event: InputEvent) -> void:
 			_scroll_offset = maxf(_scroll_offset - 30.0, 0.0)
 			accept_event()
 		elif event.button_index == MOUSE_BUTTON_LEFT:
-			# Summary toggle click
-			if _summary_toggle_rect.size.x > 0 and _summary_toggle_rect.has_point(event.position):
-				_summary_expanded = not _summary_expanded
-				accept_event()
-				return
 
 			# Trait badge click -> toggle tooltip
 			if _trait_tooltip != null:
@@ -407,7 +396,6 @@ func _get_trait_color(tdef: Dictionary) -> Color:
 ## Draw trait badges and optional trait effect summary for personality data.
 func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entity: RefCounted = null) -> float:
 	_trait_badge_regions.clear()
-	_summary_toggle_rect = Rect2()
 
 	var display_trait_ids: Array = []
 	if entity != null and "display_traits" in entity:
@@ -485,213 +473,10 @@ func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entit
 		trait_x += text_w + 18
 	cy += 28.0
 
-	var summary_title: String = Locale.ltr("UI_TRAIT_EFFECT_SUMMARY")
-	var toggle_text: String = "%s %s" % ["▼" if _summary_expanded else "▶", summary_title]
-	var toggle_w: float = font.get_string_size(toggle_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body")).x
-	_summary_toggle_rect = Rect2(cx + 10, cy, toggle_w + 8, 18)
-	draw_string(font, Vector2(cx + 14, cy + 13), toggle_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.8, 1.0))
-	cy += 22.0
-
-	if _summary_expanded:
-		cy = _draw_trait_summary(font, cx, cy, trait_defs, entity)
 
 	return cy + 6.0
 
 
-## Draw aggregate trait effect summary for currently visible traits.
-func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array, entity: RefCounted = null) -> float:
-	var fs: int = GameConfig.get_font_size("popup_body")
-	var indent: float = cx + 20.0
-	var sub_indent: float = cx + 30.0
-	var text_color: Color = Color(0.75, 0.75, 0.75)
-
-	var behavior_totals: Dictionary = {}
-	var emotion_totals: Dictionary = {}
-	var relationship_totals: Dictionary = {}
-	var active_ids: Dictionary = {}
-	for tdef in trait_defs:
-		var trait_id: String = tdef.get("id", "")
-		active_ids[trait_id] = true
-
-	# Build behavior/emotion totals from active display traits' v3 effects only
-	for tdef in trait_defs:
-		var full_def: Dictionary = TraitSystem.get_trait_definition(tdef.get("id", ""))
-		if full_def.is_empty():
-			continue
-		var efx: Dictionary = TraitSystem.get_v3_trait_effects_summary(full_def)
-		for action in efx.get("skill_mults", {}).keys():
-			var mult: float = float(efx["skill_mults"][action])
-			if abs(mult - 1.0) > 0.01:
-				var prev: float = behavior_totals.get(action, 1.0)
-				behavior_totals[action] = prev * mult - 1.0
-		for action in efx.get("blocked", []):
-			behavior_totals["BLOCK:" + str(action)] = -1.0
-		for emotion in efx.get("emotion_caps", {}).keys():
-			var cap: float = float(efx["emotion_caps"][emotion])
-			emotion_totals[emotion] = cap
-
-	var synergies: Array = []
-	var conflicts: Array = []
-	var seen_synergy_pairs: Dictionary = {}
-	var seen_conflict_pairs: Dictionary = {}
-	for tdef in trait_defs:
-		var trait_id: String = tdef.get("id", "")
-
-		var trait_synergies: Array = tdef.get("synergies", [])
-		for sid in trait_synergies:
-			var synergy_id: String = str(sid)
-			if not active_ids.has(synergy_id):
-				continue
-			var synergy_pair: Array = [trait_id, synergy_id]
-			synergy_pair.sort()
-			var synergy_key: String = "%s_%s" % [synergy_pair[0], synergy_pair[1]]
-			if seen_synergy_pairs.has(synergy_key):
-				continue
-			seen_synergy_pairs[synergy_key] = true
-			synergies.append({"a": trait_id, "b": synergy_id})
-
-		var trait_conflicts: Array = tdef.get("anti_synergies", [])
-		for aid in trait_conflicts:
-			var conflict_id: String = str(aid)
-			if not active_ids.has(conflict_id):
-				continue
-			var conflict_pair: Array = [trait_id, conflict_id]
-			conflict_pair.sort()
-			var conflict_key: String = "%s_%s" % [conflict_pair[0], conflict_pair[1]]
-			if seen_conflict_pairs.has(conflict_key):
-				continue
-			seen_conflict_pairs[conflict_key] = true
-			conflicts.append({"a": trait_id, "b": conflict_id})
-
-	var has_any: bool = false
-
-	if behavior_totals.size() > 0:
-		has_any = true
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_BEHAVIOR_WEIGHTS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
-		cy += 16.0
-		var behavior_keys: Array = behavior_totals.keys()
-		behavior_keys.sort_custom(func(a, b):
-			var ka: String = str(a).to_upper()
-			var kb: String = str(b).to_upper()
-			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
-			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
-			if da == "TRAIT_KEY_" + ka:
-				da = str(a).replace("_", " ").capitalize()
-			if db == "TRAIT_KEY_" + kb:
-				db = str(b).replace("_", " ").capitalize()
-			return da.naturalcasecmp_to(db) < 0
-		)
-		for key in behavior_keys:
-			var key_str: String = str(key)
-			var value: float = float(behavior_totals[key_str])
-			if key_str.begins_with("BLOCK:"):
-				var action_name: String = key_str.substr(6)
-				var aname: String = Locale.tr_id("TRAIT_KEY", action_name)
-				draw_string(font, Vector2(sub_indent, cy + 12), "✖ %s" % aname, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.9, 0.4, 0.4))
-				cy += 15.0
-				continue
-			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
-			if display_key == "TRAIT_KEY_" + key_str.to_upper():
-				display_key = key_str.replace("_", " ").capitalize()
-			var pct: float = value * 100.0
-			var sign: String = "+" if pct >= 0.0 else ""
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
-			cy += 15.0
-
-	if emotion_totals.size() > 0:
-		has_any = true
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_EMOTION_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
-		cy += 16.0
-		var emotion_keys: Array = emotion_totals.keys()
-		emotion_keys.sort()
-		for key in emotion_keys:
-			var key_str: String = str(key)
-			var value: float = float(emotion_totals[key_str])
-
-			# Parse "op:emotion_name" format (e.g. "max:fear", "min:anger")
-			var op_part: String = ""
-			var emo_part: String = key_str
-			if ":" in key_str:
-				var split_idx: int = key_str.find(":")
-				op_part = key_str.substr(0, split_idx)
-				emo_part = key_str.substr(split_idx + 1)
-
-			# Translate emotion name
-			var emo_locale_key: String = "TRAIT_KEY_" + emo_part.to_upper()
-			var emo_translated: String = Locale.ltr(emo_locale_key)
-			if emo_translated == emo_locale_key or emo_translated == "???":
-				emo_translated = emo_part.replace("_", " ").capitalize()
-
-			var pct: float = value * 100.0
-			var line: String
-			var row_color: Color
-
-			if op_part == "max":
-				line = "%s ≤ %.0f%%" % [emo_translated, pct]
-				row_color = Color(0.9, 0.5, 0.3)
-			elif op_part == "min":
-				line = "%s ≥ %.0f%%" % [emo_translated, pct]
-				row_color = Color(0.5, 0.9, 0.5)
-			else:
-				var sign: String = "+" if pct >= 0.0 else ""
-				line = "%s: %s%.0f%%" % [emo_translated, sign, pct]
-				row_color = text_color
-
-			draw_string(font, Vector2(sub_indent, cy + 12), line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, row_color)
-			cy += 15.0
-
-	if relationship_totals.size() > 0:
-		has_any = true
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_RELATIONSHIP_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
-		cy += 16.0
-		var rel_keys: Array = relationship_totals.keys()
-		rel_keys.sort_custom(func(a, b):
-			var ka: String = str(a).to_upper()
-			var kb: String = str(b).to_upper()
-			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
-			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
-			if da == "TRAIT_KEY_" + ka:
-				da = str(a).replace("_", " ").capitalize()
-			if db == "TRAIT_KEY_" + kb:
-				db = str(b).replace("_", " ").capitalize()
-			return da.naturalcasecmp_to(db) < 0
-		)
-		for key in rel_keys:
-			var key_str: String = str(key)
-			var value: float = float(relationship_totals[key_str])
-			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
-			if display_key == "TRAIT_KEY_" + key_str.to_upper():
-				display_key = key_str.replace("_", " ").capitalize()
-			var pct: float = value * 100.0
-			var sign: String = "+" if pct >= 0.0 else ""
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
-			cy += 15.0
-
-	if synergies.size() > 0:
-		has_any = true
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_SYNERGIES") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.5, 1.0, 0.6))
-		cy += 16.0
-		for pair in synergies:
-			var name_a: String = _get_trait_display_name(pair.get("a", ""), trait_defs)
-			var name_b: String = _get_trait_display_name(pair.get("b", ""), trait_defs)
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s + %s" % [name_a, name_b], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.4, 0.9, 0.5))
-			cy += 15.0
-
-	if conflicts.size() > 0:
-		has_any = true
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_ANTI_SYNERGIES") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1.0, 0.5, 0.5))
-		cy += 16.0
-		for pair in conflicts:
-			var name_a: String = _get_trait_display_name(pair.get("a", ""), trait_defs)
-			var name_b: String = _get_trait_display_name(pair.get("b", ""), trait_defs)
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s <-> %s" % [name_a, name_b], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.9, 0.4, 0.4))
-			cy += 15.0
-
-	if not has_any:
-		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_NONE"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.55, 0.55, 0.55))
-		cy += 15.0
-
-	return cy + 4.0
 
 
 func _get_trait_display_name(trait_id: String, trait_defs: Array) -> String:
