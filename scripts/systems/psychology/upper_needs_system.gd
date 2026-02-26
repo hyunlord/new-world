@@ -38,6 +38,7 @@ func _apply_decay(entity: RefCounted) -> void:
 	entity.autonomy           -= GameConfig.UPPER_NEEDS_AUTONOMY_DECAY
 	entity.self_actualization -= GameConfig.UPPER_NEEDS_SELF_ACTUATION_DECAY
 	entity.meaning            -= GameConfig.UPPER_NEEDS_MEANING_DECAY
+	entity.transcendence      -= GameConfig.UPPER_NEEDS_TRANSCENDENCE_DECAY
 	entity.recognition        -= GameConfig.UPPER_NEEDS_RECOGNITION_DECAY
 	entity.belonging          -= GameConfig.UPPER_NEEDS_BELONGING_DECAY
 	entity.intimacy           -= GameConfig.UPPER_NEEDS_INTIMACY_DECAY
@@ -68,6 +69,12 @@ func _apply_fulfillment(entity: RefCounted) -> void:
 	if entity.job != "none":
 		var alignment: float = _get_job_value_alignment(entity)
 		entity.meaning += GameConfig.UPPER_NEEDS_MEANING_ALIGNED_GAIN * alignment
+
+	## [Koltko-Rivera 2006] Transcendence — community + sacrifice-value alignment
+	if entity.settlement_id > 0:
+		entity.transcendence += GameConfig.UPPER_NEEDS_TRANSCENDENCE_SETTLEMENT_GAIN
+	var sacrifice_norm: float = clampf((entity.values.get(&"SACRIFICE", 0.0) + 1.0) / 2.0, 0.0, 1.0)
+	entity.transcendence += GameConfig.UPPER_NEEDS_TRANSCENDENCE_SACRIFICE_COEFF * sacrifice_norm
 
 
 ## Return the highest skill level among 5 core skills, normalized to 0.0–1.0.
@@ -104,6 +111,7 @@ func _clamp_upper_needs(entity: RefCounted) -> void:
 	entity.autonomy           = clampf(entity.autonomy,           0.0, 1.0)
 	entity.self_actualization = clampf(entity.self_actualization, 0.0, 1.0)
 	entity.meaning            = clampf(entity.meaning,            0.0, 1.0)
+	entity.transcendence      = clampf(entity.transcendence,      0.0, 1.0)
 	entity.recognition        = clampf(entity.recognition,        0.0, 1.0)
 	entity.belonging          = clampf(entity.belonging,          0.0, 1.0)
 	entity.intimacy           = clampf(entity.intimacy,           0.0, 1.0)

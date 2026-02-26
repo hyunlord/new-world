@@ -889,6 +889,7 @@
   "UI_STAT_NEED_COMPETENCE": "Competence",
   "UI_STAT_NEED_SELF_ACTUALIZATION": "Self-Actualization",
   "UI_STAT_NEED_MEANING": "Meaning",
+  "UI_STAT_NEED_TRANSCENDENCE": "Transcendence",
   "UI_DERIVED_UNAVAILABLE": "Derived stats unavailable for deceased",
   "UI_NOTIF_LEADER_ELECTED_FMT": "{name} elected leader of S{sid}",
   "UI_NOTIF_LEADER_LOST_FMT": "S{sid} lost its leader",

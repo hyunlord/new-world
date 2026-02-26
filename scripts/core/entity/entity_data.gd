@@ -31,6 +31,8 @@ var competence: float = 0.60       ## 숙련감. 초기값 = competence.json def
 ## [Maslow 1943] Growth
 var self_actualization: float = 0.50  ## 잠재력 발현. 초기값 = self_actualization.json default 500
 var meaning: float = 0.50             ## 삶의 목적. 초기값 = meaning.json default 500
+## [Maslow 1969, Koltko-Rivera 2006] Growth — Self-Transcendence
+var transcendence: float = 0.40
 
 ## Attributes
 var age: int = 0
@@ -249,6 +251,7 @@ func to_dict() -> Dictionary:
 		"competence": competence,
 		"self_actualization": self_actualization,
 		"meaning": meaning,
+		"transcendence": transcendence,
 		"age": age,
 		"speed": speed,
 		"strength": strength,
@@ -319,6 +322,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.competence         = data.get("competence",         0.60)
 	e.self_actualization = data.get("self_actualization", 0.50)
 	e.meaning            = data.get("meaning",            0.50)
+	e.transcendence      = data.get("transcendence",      0.40)
 	e.age = data.get("age", 0)
 	e.speed = data.get("speed", 1.0)
 	e.strength = data.get("strength", 1.0)

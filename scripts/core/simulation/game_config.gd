@@ -467,6 +467,13 @@ const UPPER_NEEDS_INTIMACY_PARTNER_GAIN:         float = 0.000250  ## 비율 1.2
 const UPPER_NEEDS_RECOGNITION_SKILL_COEFF:       float = 0.000200  ## × (best_skill/100) — lv100=1.17×
 const UPPER_NEEDS_MEANING_BASE_GAIN:             float = 0.0000250 ## 항상 소량 회복
 const UPPER_NEEDS_MEANING_ALIGNED_GAIN:          float = 0.0000900 ## × alignment(0–1) — 정합 시 1.44×
+
+## ── Transcendence Need (Maslow 1969, Koltko-Rivera 2006) ─────────────────────
+## Decay: ~40/year — slowest upper need (most stable once achieved, Maslow 1969)
+const UPPER_NEEDS_TRANSCENDENCE_DECAY: float = 0.0000456
+## Fulfillment: community membership + sacrifice-value alignment (Putnam 2000, Koltko-Rivera 2006)
+const UPPER_NEEDS_TRANSCENDENCE_SETTLEMENT_GAIN: float = 0.0000200
+const UPPER_NEEDS_TRANSCENDENCE_SACRIFICE_COEFF: float = 0.0000600
 const UPPER_NEEDS_SELF_ACTUATION_SKILL_COEFF:    float = 0.000100  ## × (best_skill/100) — lv100=1.09×
 
 ## ── 레벨업 일회성 보너스 ─────────────────────────────────────────

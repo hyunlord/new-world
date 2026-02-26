@@ -40,6 +40,7 @@ func _sync_entity(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"NEED_COMPETENCE",         int(entity.competence * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_SELF_ACTUALIZATION", int(entity.self_actualization * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_MEANING",            int(entity.meaning * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_TRANSCENDENCE",    int(entity.transcendence * 1000), 0)
 
 	## SKILL levels: int 0–100 (already int, no scaling needed)
 	var _skill_ids: Array = [

@@ -657,6 +657,7 @@ func _draw() -> void:
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_TRANSCENDENCE"), StatQuery.get_normalized(entity, &"NEED_TRANSCENDENCE"), Color(0.75, 0.60, 0.90))
 			## 사망/레거시 엔티티는 심리적 욕구 stat_cache 없음 → 표시 생략
 			cy += 4.0
 

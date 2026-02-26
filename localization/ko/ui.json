@@ -889,6 +889,7 @@
   "UI_STAT_NEED_COMPETENCE": "유능감",
   "UI_STAT_NEED_SELF_ACTUALIZATION": "자아실현",
   "UI_STAT_NEED_MEANING": "의미",
+  "UI_STAT_NEED_TRANSCENDENCE": "초월",
   "UI_DERIVED_UNAVAILABLE": "사망한 에이전트는 파생 스탯을 표시할 수 없습니다",
   "UI_NOTIF_LEADER_ELECTED_FMT": "{name}이(가) S{sid}의 지도자로 선출됨",
   "UI_NOTIF_LEADER_LOST_FMT": "S{sid}의 지도자를 잃음",
