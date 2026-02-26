@@ -135,13 +135,13 @@ func _build_header(parent: VBoxContainer) -> void:
 	parent.add_child(row)
 
 	var title := Label.new()
-	title.text = "🔧 Debug Panel"
+	title.text = "🔧 " + Locale.ltr("DEBUG_PANEL_TITLE")
 	title.add_theme_font_size_override("font_size", 13)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(title)
 
 	var entity_label := Label.new()
-	entity_label.text = "Entity:"
+	entity_label.text = Locale.ltr("DEBUG_ENTITY_LABEL")
 	row.add_child(entity_label)
 
 	_entity_option = OptionButton.new()
@@ -159,7 +159,7 @@ func _build_header(parent: VBoxContainer) -> void:
 
 func _build_info_bar(parent: VBoxContainer) -> void:
 	_info_name = Label.new()
-	_info_name.text = "(no entity selected)"
+	_info_name.text = Locale.ltr("DEBUG_NO_ENTITY_SELECTED")
 	_info_name.add_theme_font_size_override("font_size", 11)
 	parent.add_child(_info_name)
 
@@ -175,14 +175,25 @@ func _build_tab_buttons(parent: HBoxContainer) -> void:
 	tab_vbox.custom_minimum_size.x = TAB_WIDTH
 	parent.add_child(tab_vbox)
 
-	var tabs := ["Needs", "Skills", "HEXACO", "Intel", "Stress", "Emotion", "Traits", "Viola", "Scars"]
-	for tab_name in tabs:
+	var tabs_data := [
+		["needs",   Locale.ltr("DEBUG_TAB_NEEDS")],
+		["skills",  Locale.ltr("DEBUG_TAB_SKILLS")],
+		["hexaco",  Locale.ltr("DEBUG_TAB_HEXACO")],
+		["intel",   Locale.ltr("DEBUG_TAB_INTEL")],
+		["stress",  Locale.ltr("DEBUG_TAB_STRESS")],
+		["emotion", Locale.ltr("DEBUG_TAB_EMOTION")],
+		["traits",  Locale.ltr("DEBUG_TAB_TRAITS")],
+		["viola",   Locale.ltr("DEBUG_TAB_VIOLATIONS")],
+		["scars",   Locale.ltr("DEBUG_TAB_SCARS")],
+	]
+	for pair in tabs_data:
+		var tab_id: String = pair[0]
+		var tab_label: String = pair[1]
 		var btn := Button.new()
-		btn.text = tab_name
+		btn.text = tab_label
 		btn.toggle_mode = true
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.add_theme_font_size_override("font_size", 11)
-		var tab_id: String = tab_name.to_lower()
 		btn.pressed.connect(_on_tab_pressed.bind(tab_id))
 		tab_vbox.add_child(btn)
 		_tab_buttons[tab_id] = btn
@@ -219,27 +230,27 @@ func _build_action_buttons(parent: VBoxContainer) -> void:
 	parent.add_child(quick_row)
 
 	var kill_btn := Button.new()
-	kill_btn.text = "Kill Entity"
+	kill_btn.text = Locale.ltr("DEBUG_QUICK_KILL")
 	kill_btn.pressed.connect(_on_kill_entity)
 	quick_row.add_child(kill_btn)
 
 	var force_btn := Button.new()
-	force_btn.text = "Force Break"
+	force_btn.text = Locale.ltr("DEBUG_QUICK_BREAK")
 	force_btn.pressed.connect(_on_force_break)
 	quick_row.add_child(force_btn)
 
 	var year_btn := Button.new()
-	year_btn.text = "+1yr"
+	year_btn.text = Locale.ltr("DEBUG_QUICK_1YR")
 	year_btn.pressed.connect(func() -> void: _on_time_advance(1))
 	quick_row.add_child(year_btn)
 
 	var year10_btn := Button.new()
-	year10_btn.text = "+10yr"
+	year10_btn.text = Locale.ltr("DEBUG_QUICK_10YR")
 	year10_btn.pressed.connect(func() -> void: _on_time_advance(10))
 	quick_row.add_child(year10_btn)
 
 	var snap_btn := Button.new()
-	snap_btn.text = "Snapshot"
+	snap_btn.text = Locale.ltr("DEBUG_QUICK_SNAPSHOT")
 	snap_btn.pressed.connect(_on_snapshot)
 	quick_row.add_child(snap_btn)
 
@@ -273,20 +284,20 @@ func _build_needs_content() -> void:
 	_content_area.add_child(c)
 
 	var needs := [
-		["hunger",             "허기"],
-		["thirst",             "갈증"],
-		["energy",             "에너지"],
-		["warmth",             "체온"],
-		["safety",             "안전"],
-		["social",             "사회"],
-		["belonging",          "소속감"],
-		["intimacy",           "친밀감"],
-		["recognition",        "인정"],
-		["autonomy",           "자율성"],
-		["competence",         "유능감"],
-		["self_actualization", "자아실현"],
-		["meaning",            "의미"],
-		["transcendence",      "초월"],
+		["hunger",             Locale.ltr("NEED_HUNGER")],
+		["thirst",             Locale.ltr("NEED_THIRST")],
+		["energy",             Locale.ltr("NEED_ENERGY")],
+		["warmth",             Locale.ltr("NEED_WARMTH")],
+		["safety",             Locale.ltr("NEED_SAFETY")],
+		["social",             Locale.ltr("NEED_SOCIAL")],
+		["belonging",          Locale.ltr("UI_STAT_NEED_BELONGING")],
+		["intimacy",           Locale.ltr("UI_STAT_NEED_INTIMACY")],
+		["recognition",        Locale.ltr("UI_STAT_NEED_RECOGNITION")],
+		["autonomy",           Locale.ltr("UI_STAT_NEED_AUTONOMY")],
+		["competence",         Locale.ltr("UI_STAT_NEED_COMPETENCE")],
+		["self_actualization", Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION")],
+		["meaning",            Locale.ltr("UI_STAT_NEED_MEANING")],
+		["transcendence",      Locale.ltr("UI_STAT_NEED_TRANSCENDENCE")],
 	]
 
 	for pair in needs:
@@ -301,7 +312,7 @@ func _build_needs_content() -> void:
 	c.add_child(set_all_row)
 
 	var set_all_btn := Button.new()
-	set_all_btn.text = "All → 1.0"
+	set_all_btn.text = Locale.ltr("DEBUG_ALL_MAX")
 	set_all_btn.add_theme_font_size_override("font_size", 10)
 	set_all_btn.pressed.connect(func() -> void:
 		if _selected_entity == null:
@@ -313,7 +324,7 @@ func _build_needs_content() -> void:
 	set_all_row.add_child(set_all_btn)
 
 	var zero_all_btn := Button.new()
-	zero_all_btn.text = "All → 0.0"
+	zero_all_btn.text = Locale.ltr("DEBUG_ALL_ZERO")
 	zero_all_btn.add_theme_font_size_override("font_size", 10)
 	zero_all_btn.pressed.connect(func() -> void:
 		if _selected_entity == null:
@@ -331,11 +342,11 @@ func _build_skills_content() -> void:
 	_content_area.add_child(c)
 
 	var known_skills := [
-		[&"SKILL_FORAGING",     "채집"],
-		[&"SKILL_WOODCUTTING",  "벌목"],
-		[&"SKILL_MINING",       "채광"],
-		[&"SKILL_CONSTRUCTION", "건설"],
-		[&"SKILL_HUNTING",      "사냥"],
+		[&"SKILL_FORAGING",     Locale.ltr("UI_SKILL_FORAGING")],
+		[&"SKILL_WOODCUTTING",  Locale.ltr("UI_SKILL_WOODCUTTING")],
+		[&"SKILL_MINING",       Locale.ltr("UI_SKILL_MINING")],
+		[&"SKILL_CONSTRUCTION", Locale.ltr("UI_SKILL_CONSTRUCTION")],
+		[&"SKILL_HUNTING",      Locale.ltr("UI_SKILL_HUNTING")],
 	]
 
 	for pair in known_skills:
@@ -353,12 +364,12 @@ func _build_hexaco_content() -> void:
 	_content_area.add_child(c)
 
 	var axes := [
-		["H", "H 정직-겸손"],
-		["E", "E 감정성"],
-		["X", "X 외향성"],
-		["A", "A 우호성"],
-		["C", "C 성실성"],
-		["O", "O 개방성"],
+		["H", "H " + Locale.ltr("HEXACO_H_NAME")],
+		["E", "E " + Locale.ltr("HEXACO_E_NAME")],
+		["X", "X " + Locale.ltr("HEXACO_X_NAME")],
+		["A", "A " + Locale.ltr("HEXACO_A_NAME")],
+		["C", "C " + Locale.ltr("HEXACO_C_NAME")],
+		["O", "O " + Locale.ltr("HEXACO_O_NAME")],
 	]
 	for pair in axes:
 		var axis: String = pair[0]
@@ -369,7 +380,7 @@ func _build_hexaco_content() -> void:
 		_hexaco_rows[axis] = row
 
 	var note := Label.new()
-	note.text = "* axes auto-recalc from facets each tick"
+	note.text = Locale.ltr("DEBUG_AXES_NOTE")
 	note.add_theme_font_size_override("font_size", 9)
 	note.modulate = Color(0.6, 0.6, 0.6)
 	c.add_child(note)
@@ -381,14 +392,14 @@ func _build_intel_content() -> void:
 	_content_area.add_child(c)
 
 	var intels := [
-		["linguistic",    "언어"],
-		["logical",       "논리"],
-		["spatial",       "공간"],
-		["musical",       "음악"],
-		["kinesthetic",   "신체"],
-		["interpersonal", "대인"],
-		["intrapersonal", "자기이해"],
-		["naturalistic",  "자연"],
+		["linguistic",    Locale.ltr("UI_INTEL_LINGUISTIC")],
+		["logical",       Locale.ltr("UI_INTEL_LOGICAL")],
+		["spatial",       Locale.ltr("UI_INTEL_SPATIAL")],
+		["musical",       Locale.ltr("UI_INTEL_MUSICAL")],
+		["kinesthetic",   Locale.ltr("UI_INTEL_KINESTHETIC")],
+		["interpersonal", Locale.ltr("UI_INTEL_INTERPERSONAL")],
+		["intrapersonal", Locale.ltr("UI_INTEL_INTRAPERSONAL")],
+		["naturalistic",  Locale.ltr("UI_INTEL_NATURALISTIC")],
 	]
 	for pair in intels:
 		var key: String = pair[0]
@@ -405,7 +416,7 @@ func _build_stress_content() -> void:
 	_content_area.add_child(c)
 
 	_stress_label = Label.new()
-	_stress_label.text = "Stress: --"
+	_stress_label.text = Locale.ltr("DEBUG_STRESS_LABEL") + ": --"
 	c.add_child(_stress_label)
 
 	_allostatic_label = Label.new()
@@ -451,7 +462,7 @@ func _build_stress_content() -> void:
 	stress_btns.add_child(reset_btn)
 
 	var force_btn := Button.new()
-	force_btn.text = "Force Break"
+	force_btn.text = Locale.ltr("DEBUG_QUICK_BREAK")
 	force_btn.pressed.connect(_on_force_break)
 	stress_btns.add_child(force_btn)
 
@@ -484,7 +495,7 @@ func _build_emotion_content() -> void:
 	_content_area.add_child(c)
 
 	var note := Label.new()
-	note.text = "fast layer  (0 – 100)"
+	note.text = Locale.ltr("DEBUG_FAST_LAYER_NOTE")
 	note.add_theme_font_size_override("font_size", 9)
 	note.modulate = Color(0.6, 0.6, 0.6)
 	c.add_child(note)
@@ -497,7 +508,7 @@ func _build_emotion_content() -> void:
 		_emotion_rows[em] = row
 
 	var reset_btn := Button.new()
-	reset_btn.text = "Reset All"
+	reset_btn.text = Locale.ltr("DEBUG_RESET_ALL")
 	reset_btn.pressed.connect(_on_emotions_reset)
 	c.add_child(reset_btn)
 
@@ -514,19 +525,19 @@ func _build_traits_content() -> void:
 	c.add_child(_traits_label)
 
 	var divider := Label.new()
-	divider.text = "— HEXACO Facet Override —"
+	divider.text = Locale.ltr("DEBUG_HEXACO_FACET_OVERRIDE")
 	c.add_child(divider)
 
 	var row := HBoxContainer.new()
 	c.add_child(row)
 	var facet_label := Label.new()
-	facet_label.text = "Facet:"
+	facet_label.text = Locale.ltr("DEBUG_FACET_LABEL")
 	row.add_child(facet_label)
 	_facet_edit = LineEdit.new()
 	_facet_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(_facet_edit)
 	var val_label := Label.new()
-	val_label.text = "Val:"
+	val_label.text = Locale.ltr("DEBUG_VAL_LABEL")
 	row.add_child(val_label)
 	_facet_slider = HSlider.new()
 	_facet_slider.min_value = 0.0
@@ -535,7 +546,7 @@ func _build_traits_content() -> void:
 	_facet_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(_facet_slider)
 	var apply_btn := Button.new()
-	apply_btn.text = "Apply"
+	apply_btn.text = Locale.ltr("DEBUG_APPLY")
 	apply_btn.pressed.connect(_on_facet_apply)
 	row.add_child(apply_btn)
 
@@ -552,7 +563,7 @@ func _build_violations_content() -> void:
 
 	c.add_child(HSeparator.new())
 	var force_label := Label.new()
-	force_label.text = "— Force Violation —"
+	force_label.text = Locale.ltr("DEBUG_FORCE_VIOLATION")
 	c.add_child(force_label)
 
 	var grid := GridContainer.new()
@@ -560,25 +571,25 @@ func _build_violations_content() -> void:
 	c.add_child(grid)
 
 	var action_label := Label.new()
-	action_label.text = "Action:"
+	action_label.text = Locale.ltr("DEBUG_ACTION_LABEL")
 	grid.add_child(action_label)
 	_viol_action_option = OptionButton.new()
 	grid.add_child(_viol_action_option)
 
 	var witness_label := Label.new()
-	witness_label.text = "Witness:"
+	witness_label.text = Locale.ltr("DEBUG_WITNESS_LABEL")
 	grid.add_child(witness_label)
 	_viol_witness_option = OptionButton.new()
 	grid.add_child(_viol_witness_option)
 
 	var victim_label := Label.new()
-	victim_label.text = "Victim:"
+	victim_label.text = Locale.ltr("DEBUG_VICTIM_LABEL")
 	grid.add_child(victim_label)
 	_viol_victim_option = OptionButton.new()
 	grid.add_child(_viol_victim_option)
 
 	var count_label := Label.new()
-	count_label.text = "Count:"
+	count_label.text = Locale.ltr("DEBUG_COUNT_LABEL")
 	grid.add_child(count_label)
 	_viol_count_spin = SpinBox.new()
 	_viol_count_spin.min_value = 1
@@ -601,11 +612,11 @@ func _build_violations_content() -> void:
 	var btn_row := HBoxContainer.new()
 	c.add_child(btn_row)
 	var exec_btn := Button.new()
-	exec_btn.text = "Execute"
+	exec_btn.text = Locale.ltr("DEBUG_EXECUTE")
 	exec_btn.pressed.connect(_on_viol_execute)
 	btn_row.add_child(exec_btn)
 	var clear_btn := Button.new()
-	clear_btn.text = "Clear History"
+	clear_btn.text = Locale.ltr("DEBUG_CLEAR_HISTORY")
 	clear_btn.pressed.connect(_on_viol_clear)
 	btn_row.add_child(clear_btn)
 
@@ -623,12 +634,12 @@ func _build_scars_content() -> void:
 	var add_row := HBoxContainer.new()
 	c.add_child(add_row)
 	var add_label := Label.new()
-	add_label.text = "Add:"
+	add_label.text = Locale.ltr("DEBUG_ADD_LABEL")
 	add_row.add_child(add_label)
 	_scar_add_option = OptionButton.new()
 	add_row.add_child(_scar_add_option)
 	var add_btn := Button.new()
-	add_btn.text = "Add"
+	add_btn.text = Locale.ltr("DEBUG_ADD_BTN")
 	add_btn.pressed.connect(_on_scar_add)
 	add_row.add_child(add_btn)
 
@@ -642,7 +653,7 @@ func _build_scars_content() -> void:
 	var clear_row := HBoxContainer.new()
 	c.add_child(clear_row)
 	var clear_btn := Button.new()
-	clear_btn.text = "Clear All"
+	clear_btn.text = Locale.ltr("DEBUG_CLEAR_ALL")
 	clear_btn.pressed.connect(_on_scar_clear)
 	clear_row.add_child(clear_btn)
 
@@ -676,7 +687,7 @@ func _make_float_row(display: String, min_v: float, max_v: float, step: float) -
 	)
 
 	var set_btn := Button.new()
-	set_btn.text = "Set"
+	set_btn.text = Locale.ltr("DEBUG_SET")
 	set_btn.add_theme_font_size_override("font_size", 10)
 	row.add_child(set_btn)
 
@@ -716,7 +727,7 @@ func _make_int_row(display: String, min_v: int, max_v: int) -> Dictionary:
 	row.add_child(xp_lbl)
 
 	var set_btn := Button.new()
-	set_btn.text = "Set"
+	set_btn.text = Locale.ltr("DEBUG_SET")
 	set_btn.add_theme_font_size_override("font_size", 10)
 	row.add_child(set_btn)
 
@@ -740,7 +751,7 @@ func _refresh_active_tab() -> void:
 
 func _refresh_info_bar() -> void:
 	if _selected_entity == null:
-		_info_name.text = "(none)"
+		_info_name.text = Locale.ltr("DEBUG_NO_ENTITY_SELECTED")
 		_info_action.text = ""
 		return
 	var e = _selected_entity
@@ -823,7 +834,7 @@ func _refresh_traits() -> void:
 		return
 	var pd = _selected_entity.personality
 	if pd == null:
-		_traits_label.text = "(no personality)"
+		_traits_label.text = Locale.ltr("DEBUG_NO_PERSONALITY")
 		return
 	var text = ""
 	for t in _selected_entity.display_traits:
