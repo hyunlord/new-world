@@ -12,6 +12,7 @@ var _selected_entity = null
 var _update_timer: float = 0.0
 var _entity_ids: Array = []
 var _active_tab: String = "needs"
+var _dragging_sliders: Dictionary = {}  # HSlider instance → true (drag lock)
 
 # System refs (injected by main.gd)
 var _entity_manager = null
@@ -670,6 +671,12 @@ func _make_float_row(display: String, min_v: float, max_v: float, step: float) -
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = "%.0f" % v if max_v > 1.0 else "%.2f" % v
 	)
+	slider.drag_started.connect(func() -> void:
+		_dragging_sliders[slider] = true
+	)
+	slider.drag_ended.connect(func(_changed: bool) -> void:
+		_dragging_sliders.erase(slider)
+	)
 
 	var set_btn := Button.new()
 	set_btn.text = "Set"
@@ -703,6 +710,12 @@ func _make_int_row(display: String, min_v: int, max_v: int) -> Dictionary:
 
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = str(int(v))
+	)
+	slider.drag_started.connect(func() -> void:
+		_dragging_sliders[slider] = true
+	)
+	slider.drag_ended.connect(func(_changed: bool) -> void:
+		_dragging_sliders.erase(slider)
 	)
 
 	var xp_lbl := Label.new()
@@ -750,10 +763,11 @@ func _refresh_needs() -> void:
 	var e = _selected_entity
 	for field in _need_rows:
 		var val: float = float(e.get(field))
-		var _s = _need_rows[field]["slider"]
-		if not _s.has_focus():
-			_s.value = val
-		_need_rows[field]["label"].text = "%.2f" % val
+		var row: Dictionary = _need_rows[field]
+		var s: HSlider = row["slider"]
+		if not _dragging_sliders.has(s):
+			s.value = val
+			row["label"].text = "%.2f" % val
 
 
 func _refresh_skills() -> void:
@@ -764,11 +778,12 @@ func _refresh_skills() -> void:
 		var sid := StringName(skill_id_str)
 		var level: int = e.skill_levels.get(sid, 0)
 		var xp: float = e.skill_xp.get(sid, 0.0)
-		var _s = _skill_rows[skill_id_str]["slider"]
-		if not _s.has_focus():
-			_s.value = float(level)
-		_skill_rows[skill_id_str]["label"].text = str(level)
-		_skill_rows[skill_id_str]["xp_label"].text = "%.0fxp" % xp
+		var row: Dictionary = _skill_rows[skill_id_str]
+		var s: HSlider = row["slider"]
+		if not _dragging_sliders.has(s):
+			s.value = float(level)
+			row["label"].text = str(level)
+		row["xp_label"].text = "%.0fxp" % xp
 
 
 func _refresh_hexaco() -> void:
@@ -776,10 +791,11 @@ func _refresh_hexaco() -> void:
 		return
 	for axis in _hexaco_rows:
 		var val: float = _selected_entity.personality.axes.get(axis, 0.5)
-		var _s = _hexaco_rows[axis]["slider"]
-		if not _s.has_focus():
-			_s.value = val
-		_hexaco_rows[axis]["label"].text = "%.2f" % val
+		var row: Dictionary = _hexaco_rows[axis]
+		var s: HSlider = row["slider"]
+		if not _dragging_sliders.has(s):
+			s.value = val
+			row["label"].text = "%.2f" % val
 
 
 func _refresh_intel() -> void:
@@ -787,10 +803,11 @@ func _refresh_intel() -> void:
 		return
 	for key in _intel_rows:
 		var val: float = _selected_entity.intelligences.get(key, 0.5)
-		var _s = _intel_rows[key]["slider"]
-		if not _s.has_focus():
-			_s.value = val
-		_intel_rows[key]["label"].text = "%.2f" % val
+		var row: Dictionary = _intel_rows[key]
+		var s: HSlider = row["slider"]
+		if not _dragging_sliders.has(s):
+			s.value = val
+			row["label"].text = "%.2f" % val
 
 
 func _refresh_stress() -> void:
@@ -813,10 +830,11 @@ func _refresh_emotion() -> void:
 		return
 	for em in _emotion_rows:
 		var val: float = ed.fast.get(em, 0.0)
-		var _s = _emotion_rows[em]["slider"]
-		if not _s.has_focus():
-			_s.value = val
-		_emotion_rows[em]["label"].text = "%.0f" % val
+		var row: Dictionary = _emotion_rows[em]
+		var s: HSlider = row["slider"]
+		if not _dragging_sliders.has(s):
+			s.value = val
+			row["label"].text = "%.0f" % val
 
 
 func _refresh_traits() -> void:
