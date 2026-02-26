@@ -173,24 +173,30 @@ func _weighted_random(events: Array) -> String:
 
 
 func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) -> void:
+	# [Mikulincer & Shaver 2007 — Attachment security predicts relationship formation speed]
+	var _a_attach: String = str(a.get_meta("attachment_type", "secure"))
+	var _b_attach: String = str(b.get_meta("attachment_type", "secure"))
+	var _a_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_a_attach, 1.0)
+	var _b_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_b_attach, 1.0)
+	var _attach_affinity_mult: float = clampf(minf(_a_mult, _b_mult), 0.40, 1.60)
 	match event_name:
 		"casual_talk":
-			rel.affinity = minf(rel.affinity + 2.0, 100.0)
+			rel.affinity = minf(rel.affinity + 2.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 1.0, 100.0)
 
 		"deep_talk":
-			rel.affinity = minf(rel.affinity + 5.0, 100.0)
+			rel.affinity = minf(rel.affinity + 5.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 3.0, 100.0)
 
 		"share_food":
-			rel.affinity = minf(rel.affinity + 8.0, 100.0)
+			rel.affinity = minf(rel.affinity + 8.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 5.0, 100.0)
 			# Actually transfer food
 			var transferred: float = a.remove_item("food", 1.0)
 			b.add_item("food", transferred)
 
 		"work_together":
-			rel.affinity = minf(rel.affinity + 3.0, 100.0)
+			rel.affinity = minf(rel.affinity + 3.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 2.0, 100.0)
 
 		"flirt":
@@ -200,7 +206,7 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 				_relationship_manager.promote_to_romantic(a.id, b.id)
 
 		"give_gift":
-			rel.affinity = minf(rel.affinity + 10.0, 100.0)
+			rel.affinity = minf(rel.affinity + 10.0 * _attach_affinity_mult, 100.0)
 			rel.romantic_interest = minf(rel.romantic_interest + 5.0, 100.0)
 			# Consume resource (prefer food, then wood)
 			if a.inventory.get("food", 0.0) >= 1.0:
@@ -214,7 +220,7 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 		"console", "console_reverse":
 			var target: RefCounted = b if event_name == "console" else a
 			target.emotions["grief"] = maxf(target.emotions.get("grief", 0.0) - 0.05, 0.0)
-			rel.affinity = minf(rel.affinity + 6.0, 100.0)
+			rel.affinity = minf(rel.affinity + 6.0 * _attach_affinity_mult, 100.0)
 			rel.trust = minf(rel.trust + 3.0, 100.0)
 
 		"argument":
@@ -235,6 +241,10 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 						"bond_strength": bond,
 						"with_partner": b.partner_id == a.id,
 					})
+
+	# [Fraley & Shaver 1997 — Avoidant adults maintain emotional distance cap]
+	if _a_attach == "avoidant" or _b_attach == "avoidant":
+		rel.affinity = minf(rel.affinity, 70.0)
 
 	# Emit event for logging
 	if event_name != "casual_talk":  # Don't spam casual talk

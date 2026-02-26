@@ -146,7 +146,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	_update_reserve(ed, pd, is_sleeping)
 
 	# 8) Allostatic Load
-	_update_allostatic(ed)
+	_update_allostatic(ed, entity)
 
 	# 9) 스트레스 상태
 	_update_stress_state(ed)
@@ -317,11 +317,13 @@ func _update_reserve(ed, pd, is_sleeping: bool) -> void:
 
 
 # ── 8) Allostatic Load ────────────────────────────────────────────────
-func _update_allostatic(ed) -> void:
+func _update_allostatic(ed, entity) -> void:
 	if ed.stress > ALLO_STRESS_THRESHOLD:
 		var allo_inc: float = ALLO_RATE * maxf(0.0, ed.stress - ALLO_STRESS_THRESHOLD) / ALLO_STRESS_THRESHOLD
 		allo_inc = minf(allo_inc, 0.05)
-		ed.allostatic = clampf(ed.allostatic + allo_inc, 0.0, 100.0)
+		# [Mikulincer 1998 — Avoidant deactivation: stress suppressed but allostatic load builds faster]
+		var _allo_mult: float = GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT if str(entity.get_meta("attachment_type", "secure")) == "avoidant" else 1.0
+		ed.allostatic = clampf(ed.allostatic + allo_inc * _allo_mult, 0.0, 100.0)
 
 	if ed.stress < ALLO_RECOVERY_THRESHOLD:
 		ed.allostatic = clampf(ed.allostatic - ALLO_RECOVERY_RATE, 0.0, 100.0)

@@ -126,6 +126,13 @@ func execute_tick(tick: int) -> void:
 					_stress_system.inject_stress_event(entity.emotion_data, "constant_threat", 2.0 * sev_safety)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 2.0 * sev_safety, 0.0, 100.0)
+			# [Cassidy & Berlin 1994 — Anxious attachment: chronic low-level stress when social need unmet]
+			if str(entity.get_meta("attachment_type", "secure")) == "anxious":
+				if entity.social < GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD:
+					entity.emotion_data.stress = minf(
+						entity.emotion_data.stress + GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE,
+						100.0
+					)
 
 		# Starvation check with grace period (children get longer grace)
 		if entity.hunger <= 0.0:

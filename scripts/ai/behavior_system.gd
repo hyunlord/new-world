@@ -117,6 +117,12 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 				child_scores["drink_water"] = _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_THIRST")) * 1.0
 			child_scores["seek_shelter"] = _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_WARMTH")) * 0.5 \
 				+ _urgency_curve(1.0 - StatQuery.get_normalized(entity, &"NEED_SAFETY")) * 0.3
+		# [Ainsworth 1978 — Attachment type modifies child social approach motivation]
+		var _attach_c: String = str(entity.get_meta("attachment_type", "secure"))
+		var _attach_c_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_attach_c, 1.0)
+		if _attach_c == "disorganized":
+			_attach_c_mult = 0.70 + _rng.randf() * 0.60
+		child_scores["socialize"] *= _attach_c_mult
 		return child_scores
 
 	var scores: Dictionary = {
@@ -125,6 +131,12 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		"rest": _urgency_curve(energy_deficit) * 1.2,
 		"socialize": _urgency_curve(social_deficit) * 0.8,
 	}
+	# [Ainsworth 1978 — Attachment type modifies social approach motivation]
+	var _attach_type: String = str(entity.get_meta("attachment_type", "secure"))
+	var _attach_socialize_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_attach_type, 1.0)
+	if _attach_type == "disorganized":
+		_attach_socialize_mult = 0.70 + _rng.randf() * 0.60
+	scores["socialize"] *= _attach_socialize_mult
 
 	# Visit partner: seek proximity with partner for love/pregnancy
 	if entity.partner_id != -1 and (stage == "adult" or stage == "elder"):
@@ -469,7 +481,10 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			## social_event_system handles relationship strength separately.
 			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 8
-			entity.social = minf(1.0, entity.social + 0.15)
+			# [Brennan et al. 1998 — Anxious/avoidant attachment reduces contact satisfaction]
+			var _attach_soc: String = str(entity.get_meta("attachment_type", "secure"))
+			var _soc_rec_mult: float = GameConfig.ATTACHMENT_SOCIAL_RECOVERY_MULT.get(_attach_soc, 1.0)
+			entity.social = minf(1.0, entity.social + 0.15 * _soc_rec_mult)
 		"visit_partner":
 			var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
 			if partner != null:
