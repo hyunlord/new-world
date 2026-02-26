@@ -900,7 +900,7 @@ func _on_set_skill(skill_id: StringName, slider: HSlider) -> void:
 	var new_level: int = int(slider.value)
 	_selected_entity.skill_levels[skill_id] = new_level
 	# XP formula: level = floor(sqrt(xp/10)), so xp = level² × 10
-	_selected_entity.skill_xp[skill_id] = float(new_level * new_level * 10)
+	_selected_entity.skill_xp[skill_id] = _compute_skill_xp_for_level(new_level)
 	_print("Skill %s → level %d" % [skill_id, new_level])
 
 
@@ -1053,3 +1053,17 @@ func _print(text: String) -> void:
 		_console.print_output(text, Color(0.8, 1.0, 0.8))
 	else:
 		print("[DebugPanel] " + text)
+
+func _compute_skill_xp_for_level(target_level: int) -> float:
+	var base_xp: float = 100.0
+	var exponent: float = 1.8
+	var breakpoints: Array = [25, 50, 75]
+	var multipliers: Array = [1.0, 1.5, 2.0, 3.0]
+	var cumulative: float = 0.0
+	for l in range(1, target_level + 1):
+		var idx: int = 0
+		for bp in breakpoints:
+			if l > bp:
+				idx += 1
+		cumulative += base_xp * pow(float(l), exponent) * multipliers[idx]
+	return cumulative
