@@ -603,27 +603,41 @@ func _draw_trait_summary(font: Font, cx: float, cy: float, trait_defs: Array, en
 		draw_string(font, Vector2(indent, cy + 12), Locale.ltr("UI_TRAIT_EMOTION_MODIFIERS") + ":", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.8, 0.85, 1.0))
 		cy += 16.0
 		var emotion_keys: Array = emotion_totals.keys()
-		emotion_keys.sort_custom(func(a, b):
-			var ka: String = str(a).to_upper()
-			var kb: String = str(b).to_upper()
-			var da: String = Locale.ltr("TRAIT_KEY_" + ka)
-			var db: String = Locale.ltr("TRAIT_KEY_" + kb)
-			if da == "TRAIT_KEY_" + ka:
-				da = str(a).replace("_", " ").capitalize()
-			if db == "TRAIT_KEY_" + kb:
-				db = str(b).replace("_", " ").capitalize()
-			return da.naturalcasecmp_to(db) < 0
-		)
+		emotion_keys.sort()
 		for key in emotion_keys:
 			var key_str: String = str(key)
 			var value: float = float(emotion_totals[key_str])
-			var display_key: String = Locale.ltr("TRAIT_KEY_" + key_str.to_upper())
-			if display_key == "TRAIT_KEY_" + key_str.to_upper():
-				display_key = key_str.replace("_", " ").capitalize()
-			# value is already a delta; convert to percent
+
+			# Parse "op:emotion_name" format (e.g. "max:fear", "min:anger")
+			var op_part: String = ""
+			var emo_part: String = key_str
+			if ":" in key_str:
+				var split_idx: int = key_str.find(":")
+				op_part = key_str.substr(0, split_idx)
+				emo_part = key_str.substr(split_idx + 1)
+
+			# Translate emotion name
+			var emo_locale_key: String = "TRAIT_KEY_" + emo_part.to_upper()
+			var emo_translated: String = Locale.ltr(emo_locale_key)
+			if emo_translated == emo_locale_key or emo_translated == "???":
+				emo_translated = emo_part.replace("_", " ").capitalize()
+
 			var pct: float = value * 100.0
-			var sign: String = "+" if pct >= 0.0 else ""
-			draw_string(font, Vector2(sub_indent, cy + 12), "%s: %s%.0f%%" % [display_key, sign, pct], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, text_color)
+			var line: String
+			var row_color: Color
+
+			if op_part == "max":
+				line = "%s ≤ %.0f%%" % [emo_translated, pct]
+				row_color = Color(0.9, 0.5, 0.3)
+			elif op_part == "min":
+				line = "%s ≥ %.0f%%" % [emo_translated, pct]
+				row_color = Color(0.5, 0.9, 0.5)
+			else:
+				var sign: String = "+" if pct >= 0.0 else ""
+				line = "%s: %s%.0f%%" % [emo_translated, sign, pct]
+				row_color = text_color
+
+			draw_string(font, Vector2(sub_indent, cy + 12), line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, row_color)
 			cy += 15.0
 
 	if relationship_totals.size() > 0:
