@@ -12,7 +12,6 @@ var _selected_entity = null
 var _update_timer: float = 0.0
 var _entity_ids: Array = []
 var _active_tab: String = "needs"
-var _any_slider_dragging: bool = false  # true = any slider being dragged → pause refresh
 
 # System refs (injected by main.gd)
 var _entity_manager = null
@@ -83,12 +82,12 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if not visible or _selected_entity == null:
 		return
+	## info bar(행동 텍스트)만 주기적으로 업데이트
+	## 슬라이더는 엔티티 선택/탭 전환 시에만 refresh (auto-refresh 제거)
 	_update_timer += delta
 	if _update_timer >= UPDATE_INTERVAL:
 		_update_timer = 0.0
-		if not _any_slider_dragging:
-			_refresh_info_bar()
-			_refresh_active_tab()
+		_refresh_info_bar()
 
 
 ## ── UI Build ─────────────────────────────────────────────────────────────────
@@ -261,6 +260,9 @@ func _switch_tab(tab_id: String) -> void:
 		target.visible = true
 	for tid in _tab_buttons:
 		_tab_buttons[tid].button_pressed = (tid == tab_id)
+	## 탭 전환 시 현재 엔티티 값으로 슬라이더 갱신
+	if _selected_entity != null:
+		_refresh_active_tab()
 
 
 ## ── Tab Content Builders ─────────────────────────────────────────────────────
@@ -672,10 +674,6 @@ func _make_float_row(display: String, min_v: float, max_v: float, step: float) -
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = "%.0f" % v if max_v > 1.0 else "%.2f" % v
 	)
-	slider.gui_input.connect(func(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-			_any_slider_dragging = event.pressed
-	)
 
 	var set_btn := Button.new()
 	set_btn.text = "Set"
@@ -709,10 +707,6 @@ func _make_int_row(display: String, min_v: int, max_v: int) -> Dictionary:
 
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = str(int(v))
-	)
-	slider.gui_input.connect(func(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-			_any_slider_dragging = event.pressed
 	)
 
 	var xp_lbl := Label.new()
