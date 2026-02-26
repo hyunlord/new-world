@@ -750,7 +750,9 @@ func _refresh_needs() -> void:
 	var e = _selected_entity
 	for field in _need_rows:
 		var val: float = float(e.get(field))
-		_need_rows[field]["slider"].value = val
+		var _s = _need_rows[field]["slider"]
+		if not _s.has_focus():
+			_s.value = val
 		_need_rows[field]["label"].text = "%.2f" % val
 
 
@@ -762,7 +764,9 @@ func _refresh_skills() -> void:
 		var sid := StringName(skill_id_str)
 		var level: int = e.skill_levels.get(sid, 0)
 		var xp: float = e.skill_xp.get(sid, 0.0)
-		_skill_rows[skill_id_str]["slider"].value = float(level)
+		var _s = _skill_rows[skill_id_str]["slider"]
+		if not _s.has_focus():
+			_s.value = float(level)
 		_skill_rows[skill_id_str]["label"].text = str(level)
 		_skill_rows[skill_id_str]["xp_label"].text = "%.0fxp" % xp
 
@@ -772,7 +776,9 @@ func _refresh_hexaco() -> void:
 		return
 	for axis in _hexaco_rows:
 		var val: float = _selected_entity.personality.axes.get(axis, 0.5)
-		_hexaco_rows[axis]["slider"].value = val
+		var _s = _hexaco_rows[axis]["slider"]
+		if not _s.has_focus():
+			_s.value = val
 		_hexaco_rows[axis]["label"].text = "%.2f" % val
 
 
@@ -781,7 +787,9 @@ func _refresh_intel() -> void:
 		return
 	for key in _intel_rows:
 		var val: float = _selected_entity.intelligences.get(key, 0.5)
-		_intel_rows[key]["slider"].value = val
+		var _s = _intel_rows[key]["slider"]
+		if not _s.has_focus():
+			_s.value = val
 		_intel_rows[key]["label"].text = "%.2f" % val
 
 
@@ -805,7 +813,9 @@ func _refresh_emotion() -> void:
 		return
 	for em in _emotion_rows:
 		var val: float = ed.fast.get(em, 0.0)
-		_emotion_rows[em]["slider"].value = val
+		var _s = _emotion_rows[em]["slider"]
+		if not _s.has_focus():
+			_s.value = val
 		_emotion_rows[em]["label"].text = "%.0f" % val
 
 
