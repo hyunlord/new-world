@@ -27,6 +27,22 @@ bash tools/codex_dispatch.sh tickets/<ticket-file>.md [branch-name]
 
 ---
 
+## codex-implementer
+
+**Role**: Receives ticket prompts via ask_codex MCP. Implements exactly what Section 2 (What to Build) and Section 3 (How to Implement) specify. Does NOT make architectural decisions.
+
+**Hard Rules**:
+- Every new UI string MUST use `Locale.tr("KEY")`. Never hardcode Korean or English text.
+- Add both `en/` and `ko/` keys to localization JSON files as specified in Section 5.
+- Working branch: lead/main (or assigned worktree branch).
+- Output a brief implementation summary to the output_file upon completion.
+
+**Verification Before Done**:
+- Run `grep -r "\"[가-힣]"` in modified files — zero results required.
+- Confirm all Section 2 file paths actually exist and match spec.
+
+---
+
 ## Behavioral Guidelines
 
 Derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876). **Bias toward caution over speed.**

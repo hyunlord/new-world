@@ -109,3 +109,7 @@ export async function bulkDeleteBatches(ids) {
     body: JSON.stringify({ batch_ids: ids })
   })
 }
+
+export async function fetchActiveBatch() {
+  return request('/batches/active')
+}

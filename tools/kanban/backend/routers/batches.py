@@ -88,6 +88,19 @@ def list_batches(
     }
 
 
+@router.get("/batches/active")
+def get_active_batch(db: Session = Depends(get_db)):
+    batch = (
+        db.query(Batch)
+        .filter(Batch.status == "active")
+        .order_by(Batch.created_at.desc())
+        .first()
+    )
+    if not batch:
+        raise HTTPException(status_code=404, detail="No active batch")
+    return batch_to_dict(batch)
+
+
 @router.get("/batches/{batch_id}")
 def get_batch(batch_id: str, db: Session = Depends(get_db)):
     batch = db.query(Batch).filter(Batch.id == batch_id).first()
