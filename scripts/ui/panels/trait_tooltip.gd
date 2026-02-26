@@ -117,6 +117,19 @@ func _add_effect_row(text: String, color: Color) -> void:
 	_content_vbox.add_child(lbl)
 
 
+## Returns a localized, comma-joined string for a target that may be String or Array.
+func _format_target_list(target) -> String:
+	var names: Array = []
+	var targets: Array = target if target is Array else [target]
+	for t_name in targets:
+		var key: String = "TRAIT_KEY_" + str(t_name).to_upper()
+		var translated: String = Locale.ltr(key)
+		if translated == key or translated == "???":
+			translated = str(t_name).replace("_", " ").capitalize()
+		names.append(translated)
+	return ", ".join(names)
+
+
 func _build_content(t: Dictionary) -> void:
 	_clear_content()
 	_apply_panel_style(_get_border_color())
@@ -237,19 +250,51 @@ func _add_condition_section(t: Dictionary, category: String) -> void:
 		var display: String = loc_text if loc_text != loc_key else str(acquisition)
 		_add_effect_row(display, Color(0.65, 0.65, 0.65))
 	elif acquisition is Dictionary:
-		for k in acquisition.keys():
-			var v = acquisition[k]
-			_add_effect_row("%s: %s" % [str(k), str(v)], Color(0.65, 0.65, 0.65))
+		var conditions: Array = acquisition.get("conditions", [])
+		if not conditions.is_empty():
+			var hexaco_names: Dictionary = {
+				"H": Locale.ltr("HEXACO_H_NAME"),
+				"E": Locale.ltr("HEXACO_E_NAME"),
+				"X": Locale.ltr("HEXACO_X_NAME"),
+				"A": Locale.ltr("HEXACO_A_NAME"),
+				"C": Locale.ltr("HEXACO_C_NAME"),
+				"O": Locale.ltr("HEXACO_O_NAME"),
+			}
+			for cond in conditions:
+				var source: String = str(cond.get("source", ""))
+				var axis: String = str(cond.get("axis", ""))
+				var direction: String = str(cond.get("direction", "high"))
+				var threshold: float = float(cond.get("threshold", 0.5))
+				var op: String = "≥" if direction == "high" else "≤"
+				var axis_name: String
+				if source == "hexaco":
+					axis_name = "HEXACO " + hexaco_names.get(axis, axis)
+				elif source == "facet":
+					axis_name = Locale.tr_id("FACET", axis)
+				else:
+					axis_name = axis
+				_add_effect_row("%s %s %.2f" % [axis_name, op, threshold], Color(0.65, 0.65, 0.65))
+		else:
+			for k in acquisition.keys():
+				if k in ["type", "require_all"]:
+					continue
+				var v = acquisition[k]
+				_add_effect_row("%s: %s" % [str(k), str(v)], Color(0.65, 0.65, 0.65))
 
 	var rarity: String = str(t.get("rarity", ""))
 	if rarity != "":
 		var rarity_colors: Dictionary = {
+			"common": Color(0.6, 0.6, 0.6),
+			"uncommon": Color(0.4, 0.8, 0.4),
 			"rare": Color(0.4, 0.7, 1.0),
 			"epic": Color(0.7, 0.4, 1.0),
 			"legendary": Color(1.0, 0.8, 0.2)
 		}
 		var rc: Color = rarity_colors.get(rarity, Color(0.65, 0.65, 0.65))
-		_add_effect_row("★ " + rarity.capitalize(), rc)
+		var rarity_label: String = Locale.ltr("RARITY_" + rarity.to_upper())
+		if rarity_label == "RARITY_" + rarity.to_upper() or rarity_label == "???":
+			rarity_label = rarity.capitalize()
+		_add_effect_row("★ " + rarity_label, rc)
 
 	_add_separator_line()
 
@@ -340,7 +385,9 @@ func _add_v3_effects_section(effects: Array) -> void:
 	var blocked_lines: Array = []
 	var immune_lines: Array = []
 	var derived_lines: Array = []
-	var emotion_lines: Array = []
+	var emotion_max_lines: Array = []
+	var emotion_min_lines: Array = []
+	var emotion_add_lines: Array = []
 	var body_lines: Array = []
 	var need_lines: Array = []
 	var relationship_lines: Array = []
@@ -421,16 +468,16 @@ func _add_v3_effects_section(effects: Array) -> void:
 								derived_lines.append("%s %s%d%%" % [tname, sign, pct])
 			"emotion":
 				if value != null:
-					var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
+					var tname: String = _format_target_list(target)
+					var pct: int = int(float(value) * 100)
 					match op:
 						"max":
-							emotion_lines.append("%s ≤ %d%%" % [tname, int(float(value) * 100)])
+							emotion_max_lines.append("%s: %s %d%%" % [tname, Locale.ltr("TOOLTIP_UPPER_LIMIT"), pct])
 						"min":
-							emotion_lines.append("%s ≥ %d%%" % [tname, int(float(value) * 100)])
+							emotion_min_lines.append("%s: %s %d%%" % [tname, Locale.ltr("TOOLTIP_LOWER_LIMIT"), pct])
 						"add":
-							var pct: int = int(float(value) * 100)
 							var sign: String = "+" if pct > 0 else ""
-							emotion_lines.append("%s %s%d%%" % [tname, sign, pct])
+							emotion_add_lines.append("%s %s%d%%" % [tname, sign, pct])
 			"body":
 				if op == "mult" and value != null:
 					var pct: int = int((float(value) - 1.0) * 100)
@@ -512,10 +559,15 @@ func _add_v3_effects_section(effects: Array) -> void:
 			_add_effect_row(line, ec)
 		_add_separator_line()
 
-	if not emotion_lines.is_empty():
+	if not emotion_max_lines.is_empty() or not emotion_min_lines.is_empty() or not emotion_add_lines.is_empty():
 		_add_label("💫 " + Locale.ltr("TOOLTIP_EMOTION_MODIFIERS"), Color(0.85, 0.85, 0.5), 10)
-		for line in emotion_lines:
-			_add_effect_row(line, Color(0.8, 0.75, 0.9))
+		for line in emotion_max_lines:
+			_add_effect_row(line, Color(0.9, 0.4, 0.4))
+		for line in emotion_min_lines:
+			_add_effect_row(line, Color(0.4, 0.9, 0.5))
+		for line in emotion_add_lines:
+			var ec: Color = Color(0.3, 0.9, 0.3) if "+" in line else Color(0.9, 0.3, 0.3)
+			_add_effect_row(line, ec)
 		_add_separator_line()
 
 	if not body_lines.is_empty():
