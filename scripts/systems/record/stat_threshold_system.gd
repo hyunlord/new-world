@@ -32,6 +32,9 @@ func execute_tick(tick: int) -> void:
 
 func _evaluate_entity(entity: RefCounted, tick: int) -> void:
 	var eid: int = entity.id
+	if entity.is_alive == false:
+		_active_effects.erase(eid)
+		return
 	if not _active_effects.has(eid):
 		_active_effects[eid] = {}
 
@@ -104,6 +107,8 @@ func _apply_effect(
 	elif effect.begins_with("RESERVE_"):
 		## 미래 확장용. 시그널만 emit.
 		pass
+	elif effect.begins_with("UNLOCK_ACTION_"):
+		_handle_unlock_action_effect(entity, stat_id, effect, entering, tick)
 	## TRAIT_VALUE_* 등 미분류 효과는 시그널만 emit
 
 
@@ -139,3 +144,40 @@ func _handle_modifier_effect(
 		modifier_id, target_stat, modifier_value, "threshold", -1
 	)
 	StatQuery.apply_modifier(entity, mod)
+
+
+## [Anderson 1982 ACT*] Grant action unlock based on threshold state.
+## entering=true  → add action to entity.unlocked_actions (permanent grant)
+## entering=false → threshold dropped below; do NOT revoke (knowledge persists)
+func _handle_unlock_action_effect(
+		entity: RefCounted, stat_id: String, effect: String,
+		entering: bool, tick: int) -> void:
+	if not entering:
+		## Deliberately ignored — actions are not revoked on level drop.
+		## Rationale: Anderson (1982) ACT* — procedural knowledge is not erased
+		## by temporary stat decline (injury, aging).
+		return
+
+	var action_id: StringName = StringName(effect)
+	## Idempotent: if already unlocked, skip signal and return
+	if entity.unlocked_actions.get(action_id, false):
+		return
+
+	entity.unlocked_actions[action_id] = true
+
+	## Emit bus signal so UI / chronicle / future teaching system can react
+	SimulationBus.skill_action_unlocked.emit(
+		entity.id,
+		entity.entity_name,
+		action_id,
+		StringName(stat_id),
+		StatQuery.get_stat(entity, StringName(stat_id), 0),
+		tick
+	)
+
+	## Fire toast notification
+	var toast_key: String = "SKILL_UNLOCK_%s" % effect
+	SimulationBus.ui_notification.emit(
+		Locale.ltr(toast_key).format({"name": entity.entity_name}),
+		"skill_unlock"
+	)

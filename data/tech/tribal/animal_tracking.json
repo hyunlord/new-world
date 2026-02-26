@@ -1,0 +1,18 @@
+{
+	"id": "TECH_ANIMAL_TRACKING",
+	"display_key": "TECH_ANIMAL_TRACKING",
+	"era": "tribal",
+	"prerequisites": ["TECH_BASIC_TOOLS"],
+	"discovery_conditions": {
+		"population_minimum": 5,
+		"required_skills": {"SKILL_HUNTING": 20},
+		"base_discovery_chance_per_year": 0.20,
+		"knowledge_value_bonus": 0.10,
+		"openness_bonus": 0.15,
+		"logical_intel_bonus": 0.05
+	},
+	"unlocks_skills": ["SKILL_HUNTING"],
+	"unlocks_buildings": [],
+	"unlocks_jobs": ["hunter"],
+	"description_key": "TECH_ANIMAL_TRACKING_DESC"
+}

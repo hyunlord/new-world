@@ -44,6 +44,12 @@ signal stat_threshold_crossed(entity_id: int, stat_id: String, effect: String, d
 ## new_level: int new level (0–100)
 signal skill_leveled_up(entity_id: int, entity_name: String, skill_id: StringName, old_level: int, new_level: int, tick: int)
 
+## [Anderson 1982 ACT*] Emitted when a skill threshold grants a new action to an entity.
+## action_id: StringName e.g. &"UNLOCK_ACTION_HERB_GATHER"
+## skill_id:  StringName e.g. &"SKILL_FORAGING"
+## at_level:  int — the skill level that triggered the unlock
+signal skill_action_unlocked(entity_id: int, entity_name: String, action_id: StringName, skill_id: StringName, at_level: int, tick: int)
+
 ## [Weber 1922] Emitted when a settlement elects a new leader.
 signal leader_elected(settlement_id: int, leader_id: int, leader_name: String, charisma: float, tick: int)
 

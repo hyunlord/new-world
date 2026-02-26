@@ -1,0 +1,18 @@
+{
+	"id": "TECH_FIRE_MAKING",
+	"display_key": "TECH_FIRE_MAKING",
+	"era": "stone_age",
+	"prerequisites": [],
+	"discovery_conditions": {
+		"population_minimum": 2,
+		"required_skills": {},
+		"base_discovery_chance_per_year": 0.40,
+		"knowledge_value_bonus": 0.10,
+		"openness_bonus": 0.10,
+		"logical_intel_bonus": 0.10
+	},
+	"unlocks_skills": ["SKILL_FIRE_MAKING"],
+	"unlocks_buildings": ["campfire"],
+	"unlocks_jobs": [],
+	"description_key": "TECH_FIRE_MAKING_DESC"
+}

@@ -108,6 +108,29 @@ func _draw() -> void:
 			var radius: int = GameConfig.BUILDING_TYPES.get("campfire", {}).get("radius", 5)
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_EFFECT_RADIUS_FMT", {"n": radius}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 
+	# Settlement tech era + discoveries
+	if _settlement_manager != null and building.settlement_id > 0:
+		var _s: RefCounted = _settlement_manager.get_settlement(building.settlement_id)
+		if _s != null:
+			cy += 24.0
+			draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
+			cy += 10.0
+			var _era_key: String = "ERA_" + (_s.tech_era as String).to_upper()
+			draw_string(font, Vector2(cx, cy + 12),
+				Locale.ltr("UI_TECH_ERA") + ": " + Locale.ltr(_era_key),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.85, 0.5))
+			cy += 16.0
+			if (_s.discovered_techs as Array).size() > 0:
+				draw_string(font, Vector2(cx, cy + 12),
+					Locale.ltr("UI_DISCOVERED_TECHS") + ":",
+					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
+				cy += 14.0
+				for _tid in _s.discovered_techs:
+					draw_string(font, Vector2(cx + 10, cy + 12),
+						"\u2022 " + Locale.ltr(str(_tid)),
+						HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40, GameConfig.get_font_size("popup_body") - 1, Color(0.5, 0.75, 0.55))
+					cy += 12.0
+
 	# Build cost reference
 	cy += 28.0
 	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILD_COST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)

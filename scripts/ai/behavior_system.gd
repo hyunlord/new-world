@@ -221,6 +221,49 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 			if scores.has("gather_stone"):
 				scores["gather_stone"] *= 1.5
 
+	## ── Skill-Unlocked Actions [Anderson 1982 ACT*] ──────────────────────────────
+	## Each action is gated behind entity.unlocked_actions.
+	## Unlocked at runtime by StatThresholdSystem when skill threshold is crossed.
+
+	## HERB_GATHER (SKILL_FORAGING lv50): gather medicinal herbs
+	if entity.unlocked_actions.get(&"UNLOCK_ACTION_HERB_GATHER", false):
+		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.FOOD, 12):
+			scores["herb_gather"] = 0.35 + _rng.randf() * 0.05
+			if entity.job == "gatherer":
+				scores["herb_gather"] *= 1.3
+
+	## FINE_WOODWORK (SKILL_WOODCUTTING lv50): convert wood → fine_wood
+	if entity.unlocked_actions.get(&"UNLOCK_ACTION_FINE_WOODWORK", false):
+		if entity.inventory.get("wood", 0.0) >= 2.0:
+			scores["fine_woodwork"] = 0.30 + _rng.randf() * 0.05
+			if entity.job == "lumberjack":
+				scores["fine_woodwork"] *= 1.3
+
+	## ORE_VEIN (SKILL_MINING lv50): mine ore veins
+	if entity.unlocked_actions.get(&"UNLOCK_ACTION_ORE_VEIN", false):
+		if _resource_map != null and _has_nearby_resource(entity.position, GameConfig.ResourceType.STONE, 12):
+			scores["ore_vein"] = 0.30 + _rng.randf() * 0.05
+			if entity.job == "miner":
+				scores["ore_vein"] *= 1.3
+
+	## TRAP_HUNT (SKILL_HUNTING lv50): set animal trap
+	if entity.unlocked_actions.get(&"UNLOCK_ACTION_TRAP_HUNT", false):
+		if _resource_map != null:
+			scores["trap_hunt"] = 0.25 + _rng.randf() * 0.05
+
+	## TEACH_* (lv75): teach skill to a lower-level neighbor
+	for _teach_sn: StringName in [
+		&"UNLOCK_ACTION_TEACH_FORAGING",
+		&"UNLOCK_ACTION_TEACH_WOODCUTTING",
+		&"UNLOCK_ACTION_TEACH_MINING",
+		&"UNLOCK_ACTION_TEACH_CONSTRUCTION",
+		&"UNLOCK_ACTION_TEACH_HUNTING",
+	]:
+		if entity.unlocked_actions.get(_teach_sn, false):
+			if _has_teachable_neighbor(entity, _teach_sn):
+				scores[str(_teach_sn)] = 0.15 + _rng.randf() * 0.05
+	## ─────────────────────────────────────────────────────────────────────────────
+
 	# Apply trait / morale / stress weights
 	for action in scores.keys():
 		scores[action] *= TraitSystem.get_behavior_weight(entity, action)
@@ -533,6 +576,37 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 				else entity.position
 			entity.action_timer = 15
 			entity.safety = minf(1.0, entity.safety + 0.05)
+
+		## ── Skill-Unlocked Action Stubs [Anderson 1982 ACT*] ──────────────────────
+		"herb_gather":
+			## Medicinal herb gathering — uses nearby food tiles as source
+			if _resource_map != null:
+				entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.FOOD, 12)
+			else:
+				entity.action_target = entity.position
+			entity.action_timer = 20
+		"fine_woodwork":
+			## Convert 2 wood → 1 fine_wood in place
+			entity.action_target = entity.position
+			entity.action_timer = 20
+		"ore_vein":
+			## Mine ore vein — uses nearby stone tiles as source
+			if _resource_map != null:
+				entity.action_target = _find_resource_tile(entity.position, GameConfig.ResourceType.STONE, 12)
+			else:
+				entity.action_target = entity.position
+			entity.action_timer = 20
+		"trap_hunt":
+			## Set animal trap — slower cycle, probabilistic food production
+			entity.action_target = entity.position
+			entity.action_timer = 60
+		"UNLOCK_ACTION_TEACH_FORAGING", "UNLOCK_ACTION_TEACH_WOODCUTTING", \
+		"UNLOCK_ACTION_TEACH_MINING", "UNLOCK_ACTION_TEACH_CONSTRUCTION", \
+		"UNLOCK_ACTION_TEACH_HUNTING":
+			## [Vygotsky 1978 ZPD] Teaching stub — emit event, award small XP
+			entity.action_target = _find_nearest_entity(entity)
+			entity.action_timer = 40
+		## ─────────────────────────────────────────────────────────────────────────
 
 	emit_event("action_chosen", {
 		"entity_id": entity.id,
@@ -869,3 +943,35 @@ func _find_building_site(pos: Vector2i) -> Vector2i:
 				if _world_data.is_walkable(x, y) and _building_manager.get_building_at(x, y) == null:
 					return Vector2i(x, y)
 	return Vector2i(-1, -1)
+
+
+## [Vygotsky 1978 ZPD] Returns true if there is at least one alive entity in the same
+## settlement with a lower level in the relevant skill for the given teach_action.
+## Scans up to 20 neighbors for performance (not full population scan).
+func _has_teachable_neighbor(entity: RefCounted, teach_action: StringName) -> bool:
+	var skill_map: Dictionary = {
+		&"UNLOCK_ACTION_TEACH_FORAGING":     &"SKILL_FORAGING",
+		&"UNLOCK_ACTION_TEACH_WOODCUTTING":  &"SKILL_WOODCUTTING",
+		&"UNLOCK_ACTION_TEACH_MINING":       &"SKILL_MINING",
+		&"UNLOCK_ACTION_TEACH_CONSTRUCTION": &"SKILL_CONSTRUCTION",
+		&"UNLOCK_ACTION_TEACH_HUNTING":      &"SKILL_HUNTING",
+	}
+	var skill_id: StringName = skill_map.get(teach_action, &"")
+	if skill_id == &"":
+		return false
+	var my_level: int = int(entity.skill_levels.get(skill_id, 0))
+	if my_level < 75:
+		return false
+	var sid: int = entity.settlement_id
+	var checked: int = 0
+	var alive: Array = _entity_manager.get_alive_entities()
+	for other in alive:
+		if checked >= 20:
+			break
+		if other.id == entity.id or other.settlement_id != sid:
+			continue
+		var other_level: int = int(other.skill_levels.get(skill_id, 0))
+		if other_level < my_level - 10:
+			return true
+		checked += 1
+	return false

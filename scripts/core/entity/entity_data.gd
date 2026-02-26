@@ -31,6 +31,8 @@ var competence: float = 0.60       ## 숙련감. 초기값 = competence.json def
 ## [Maslow 1943] Growth
 var self_actualization: float = 0.50  ## 잠재력 발현. 초기값 = self_actualization.json default 500
 var meaning: float = 0.50             ## 삶의 목적. 초기값 = meaning.json default 500
+## [Maslow 1969, Koltko-Rivera 2006] Growth — Self-Transcendence
+var transcendence: float = 0.40
 
 ## Attributes
 var age: int = 0
@@ -144,6 +146,48 @@ var skill_xp: Dictionary = {}
 ## Rule: skill_levels[id] is always the computed level from skill_xp[id], never set directly.
 var skill_levels: Dictionary = {}
 
+## [Anderson 1982 ACT*] Actions unlocked by skill threshold crossing.
+## key: action_id StringName (e.g. &"UNLOCK_ACTION_HERB_GATHER")
+## value: true (permanent; once unlocked, never reverts)
+## Populated by StatThresholdSystem when UNLOCK_ACTION_* threshold is crossed.
+## Read by BehaviorSystem._evaluate_actions() to gate score computation.
+var unlocked_actions: Dictionary = {}
+
+## ── Layer 1.5: Appearance (Eagly 1991, Stulp 2015) ──────────────────────────
+## float 0.0~1.0, mean=0.5. Heritability: attractiveness h²=0.80, height h²=0.85.
+var attractiveness: float = 0.5
+var height: float = 0.5
+## Visual descriptors — display only (no performance effect)
+## hair_color: "black"/"brown"/"blonde"/"red"/"grey"/"white"
+var hair_color: String = "black"
+## eye_color: "brown"/"blue"/"green"/"grey"/"hazel"
+var eye_color: String = "brown"
+## Array of localization key IDs (e.g. ["MARK_SCAR_FACE"])
+var distinguishing_marks: Array = []
+
+## ── Layer 7: Speech Style (Human Definition v3 §13) ──────────────────────────
+## Derived from personality at spawn. tone: aggressive/gentle/formal/casual/sarcastic
+var speech_tone: String = "casual"
+## verbosity: taciturn/normal/talkative
+var speech_verbosity: String = "normal"
+## humor: dry/none/witty/slapstick
+var speech_humor: String = "none"
+
+## ── Layer 7: Preferences (Linden et al. 2010) ────────────────────────────────
+var favorite_food: String = "food"
+var favorite_color: String = "blue"
+var favorite_season: String = "spring"
+var disliked_things: Array = []
+
+## ── Layer 6: Personal Memory [Baddeley & Hitch 1974, Tulving 1972] ───────────
+## Working memory: recent episodic events with intensity-based decay.
+## Max capacity: GameConfig.MEMORY_WORKING_MAX (100 entries).
+## Each entry schema: {type, tick, intensity, target_id, target_name, summary_key, params}
+var working_memory: Array = []
+## Permanent history: high-intensity events that never decay.
+## Only canonical event types (see GameConfig.MEMORY_PERMANENT_TYPES).
+var permanent_history: Array = []
+
 ## [Schwartz (1992)] 33개 가치관 — -1.0(완전 거부) ~ +1.0(완전 수용)
 ## 초기화는 ValueSystem.initialize_values()로 수행. 빈 dict = 미초기화.
 var values: Dictionary = {}
@@ -249,6 +293,7 @@ func to_dict() -> Dictionary:
 		"competence": competence,
 		"self_actualization": self_actualization,
 		"meaning": meaning,
+		"transcendence": transcendence,
 		"age": age,
 		"speed": speed,
 		"strength": strength,
@@ -288,6 +333,21 @@ func to_dict() -> Dictionary:
 		"intel_ace_penalty": intel_ace_penalty,
 		"skill_xp": skill_xp.duplicate(),
 		"skill_levels": skill_levels.duplicate(),
+		"unlocked_actions": _serialize_stringname_dict(unlocked_actions),
+		"attractiveness": attractiveness,
+		"height": height,
+		"hair_color": hair_color,
+		"eye_color": eye_color,
+		"distinguishing_marks": distinguishing_marks.duplicate(),
+		"speech_tone": speech_tone,
+		"speech_verbosity": speech_verbosity,
+		"speech_humor": speech_humor,
+		"favorite_food": favorite_food,
+		"favorite_color": favorite_color,
+		"favorite_season": favorite_season,
+		"disliked_things": disliked_things.duplicate(),
+		"working_memory": working_memory.duplicate(true),
+		"permanent_history": permanent_history.duplicate(true),
 		"stat_cache": _serialize_stat_cache(stat_cache),
 		"job_satisfaction": job_satisfaction,
 		"status_score": status_score,
@@ -319,6 +379,7 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.competence         = data.get("competence",         0.60)
 	e.self_actualization = data.get("self_actualization", 0.50)
 	e.meaning            = data.get("meaning",            0.50)
+	e.transcendence      = data.get("transcendence",      0.40)
 	e.age = data.get("age", 0)
 	e.speed = data.get("speed", 1.0)
 	e.strength = data.get("strength", 1.0)
@@ -419,6 +480,23 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	var raw_levels: Dictionary = data.get("skill_levels", {})
 	for k in raw_levels:
 		e.skill_levels[StringName(k)] = int(raw_levels[k])
+	var ul_raw: Dictionary = data.get("unlocked_actions", {})
+	for k in ul_raw:
+		e.unlocked_actions[StringName(k)] = true
+	e.attractiveness       = data.get("attractiveness",       0.5)
+	e.height               = data.get("height",               0.5)
+	e.hair_color           = data.get("hair_color",           "black")
+	e.eye_color            = data.get("eye_color",            "brown")
+	e.distinguishing_marks = data.get("distinguishing_marks", []).duplicate()
+	e.speech_tone          = data.get("speech_tone",          "casual")
+	e.speech_verbosity     = data.get("speech_verbosity",     "normal")
+	e.speech_humor         = data.get("speech_humor",         "none")
+	e.favorite_food        = data.get("favorite_food",        "food")
+	e.favorite_color       = data.get("favorite_color",       "blue")
+	e.favorite_season      = data.get("favorite_season",      "spring")
+	e.disliked_things      = data.get("disliked_things",      []).duplicate()
+	e.working_memory       = data.get("working_memory",       []).duplicate()
+	e.permanent_history    = data.get("permanent_history",    []).duplicate()
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
 	e.job_satisfaction = data.get("job_satisfaction", 0.50)
 	e.status_score = data.get("status_score", 0.0)
@@ -433,6 +511,14 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"materialism": et_data.get("materialism", 0.0),
 	}
 	return e
+
+
+## [Anderson 1982] Serialize StringName-keyed dict for JSON roundtrip
+func _serialize_stringname_dict(d: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for k in d:
+		out[str(k)] = d[k]
+	return out
 
 
 ## stat_cache 직렬화 (StringName key → String)

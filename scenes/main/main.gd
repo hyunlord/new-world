@@ -50,6 +50,11 @@ const ReputationSystem = preload("res://scripts/systems/social/reputation_system
 const EconomicTendencySystem = preload("res://scripts/systems/social/economic_tendency_system.gd")
 const JobSatisfactionSystem = preload("res://scripts/systems/social/job_satisfaction_system.gd")
 const StratificationMonitor = preload("res://scripts/systems/social/stratification_monitor.gd")
+const MemorySystemScript = preload("res://scripts/systems/record/memory_system.gd")
+const NetworkSystemScript = preload("res://scripts/systems/social/network_system.gd")
+const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
+const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
+const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -105,6 +110,11 @@ var reputation_system: RefCounted
 var economic_tendency_system: RefCounted
 var job_satisfaction_system: RefCounted
 var stratification_monitor: RefCounted
+var memory_system: RefCounted
+var network_system: RefCounted
+var tech_tree_manager: RefCounted
+var tech_discovery_system: RefCounted
+var tension_system: RefCounted
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -163,6 +173,10 @@ func _ready() -> void:
 
 	intelligence_system = IntelligenceSystem.new()
 	intelligence_system.init(entity_manager)
+
+	## [Baddeley & Hitch 1974] Layer 6 working memory decay + compression (annual)
+	memory_system = MemorySystemScript.new()
+	memory_system.init(entity_manager)
 
 	resource_regen_system = ResourceRegenSystem.new()
 	resource_regen_system.init(resource_map, world_data)
@@ -286,6 +300,20 @@ func _ready() -> void:
 	# Wire reputation_manager into leader_system for reputation-weighted scoring
 	leader_system._reputation_manager = reputation_manager
 
+	## [Granovetter 1973, Weber 1922, Tilly 1978] Social network + authority + revolution
+	network_system = NetworkSystemScript.new()
+	network_system.init(entity_manager, settlement_manager, relationship_manager, reputation_manager)
+
+	## ── Phase 3A: Tech Tree + Combat + Tension ────────────────────────────────
+	tech_tree_manager = TechTreeManagerScript.new()
+	tech_tree_manager.load_all()
+
+	tech_discovery_system = TechDiscoverySystemScript.new()
+	tech_discovery_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
+
+	tension_system = TensionSystemScript.new()
+	tension_system.init(entity_manager, settlement_manager, world_data, ChronicleSystem, sim_engine.rng)
+
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1
 	sim_engine.register_system(resource_regen_system)     # priority 5
@@ -296,6 +324,7 @@ func _ready() -> void:
 	sim_engine.register_system(upper_needs_system)       # priority 12
 	sim_engine.register_system(building_effect_system)    # priority 15
 	sim_engine.register_system(intelligence_system)       # priority 18
+	sim_engine.register_system(memory_system)             # priority 18 (annual decay+compress)
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28
@@ -313,7 +342,10 @@ func _ready() -> void:
 	sim_engine.register_system(family_system)             # priority 52
 	sim_engine.register_system(leader_system)             # priority 52
 	sim_engine.register_system(value_system)              # priority 55
+	sim_engine.register_system(network_system)            # priority 58 (annual: social capital + authority + revolution)
 	sim_engine.register_system(migration_system)          # priority 60
+	sim_engine.register_system(tech_discovery_system)     # priority 62 (annual tech discovery)
+	sim_engine.register_system(tension_system)            # priority 64 (bi-annual tension + skirmish)
 	sim_engine.register_system(stratification_monitor)    # priority 90
 	sim_engine.register_system(stats_recorder)            # priority 90
 	sim_engine.register_system(contagion_system)          # priority 38
@@ -652,6 +684,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					else:
 						hud.open_entity_detail()
 						hud.open_building_detail()
+				KEY_F12:
+					if GameConfig.DEBUG_PANEL_ENABLED:
+						hud.toggle_debug_panel()
+						get_viewport().set_input_as_handled()
 
 
 func _save_game() -> void:
@@ -670,6 +706,7 @@ func _save_game_slot(slot: int) -> void:
 	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
 	if success:
 		NameGenerator.save_registry(path + "/names.json")
+		save_manager.save_tension(path + "/tension.json", tension_system)
 		print("[Main] Game saved to slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Save failed!")
@@ -689,6 +726,7 @@ func _load_game_slot(slot: int) -> void:
 		entity_manager.total_births = stats_recorder.total_births
 		# Restore name registry
 		NameGenerator.load_registry(path + "/names.json")
+		save_manager.load_tension(path + "/tension.json", tension_system)
 		print("[Main] Game loaded from slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Load failed!")

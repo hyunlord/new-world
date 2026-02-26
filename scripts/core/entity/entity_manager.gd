@@ -104,16 +104,78 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	var _body_age_y: float = GameConfig.get_age_years(entity.age)
 	var _is_male: bool = entity.gender == "male"
 	entity.body = BodyAttributes.new()
-	# ── potential 생성 (6축, 성별 delta 적용) ──
+	# ── potential 생성 (6축, 성별 delta 적용, 부모 상속) ──
 	for _b_axis in ["str", "agi", "end", "tou", "rec", "dr"]:
-		var _b_base: int = GameConfig.BODY_POTENTIAL_MEAN
 		var _b_sex_d: int = GameConfig.BODY_SEX_DELTA_MALE.get(_b_axis, 0) * (1 if _is_male else -1)
-		var _b_raw: int = int(_rng.randfn(float(_b_base + _b_sex_d), float(GameConfig.BODY_POTENTIAL_SD)))
+		var _b_raw: int
+		if parent_a != null and parent_b != null \
+				and parent_a.body != null and parent_b.body != null \
+				and not parent_a.body.potential.is_empty() \
+				and not parent_b.body.potential.is_empty():
+			## ── Parental inheritance path (Bouchard & McGue 2003) ────────────────
+			var _h2: float = GameConfig.BODY_HERITABILITY.get(_b_axis, 0.72)
+			var _pa_pot: int = parent_a.body.potential.get(_b_axis, GameConfig.BODY_POTENTIAL_MEAN)
+			var _pb_pot: int = parent_b.body.potential.get(_b_axis, GameConfig.BODY_POTENTIAL_MEAN)
+			var _mid_parent: float = (_pa_pot + _pb_pot) / 2.0
+			var _env_raw: float = _rng.randfn(float(GameConfig.BODY_POTENTIAL_MEAN), float(GameConfig.BODY_POTENTIAL_SD))
+			var _base: float = _mid_parent * _h2 + _env_raw * (1.0 - _h2)
+			_base += _rng.randfn(0.0, float(GameConfig.BODY_POTENTIAL_SD) * 0.10)
+			if _rng.randf() < GameConfig.BODY_MUTATION_RATE:
+				_base += _rng.randfn(0.0, float(GameConfig.BODY_POTENTIAL_MEAN) * GameConfig.BODY_MUTATION_SD)
+			_b_raw = int(_base) + _b_sex_d
+		else:
+			## ── First generation: population-level random (unchanged) ────────────
+			_b_raw = int(_rng.randfn(float(GameConfig.BODY_POTENTIAL_MEAN + _b_sex_d), float(GameConfig.BODY_POTENTIAL_SD)))
 		entity.body.potential[_b_axis] = clampi(_b_raw, GameConfig.BODY_POTENTIAL_MIN, GameConfig.BODY_POTENTIAL_MAX)
-	# ── trainability 생성 (5축, ACTN3/COL 상관 포함) ──
-	var _str_t_base: int = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
-	var _end_t_base: int = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
-	var _agi_t: int = clampi(int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD))), GameConfig.TRAINABILITY_MIN, GameConfig.TRAINABILITY_MAX)
+	# ── trainability 생성 (5축, ACTN3/COL 상관 포함, 부모 상속) ──
+	var _t_h2: float = GameConfig.BODY_TRAINABILITY_HERITABILITY
+	var _has_parents_t: bool = parent_a != null and parent_b != null \
+			and parent_a.body != null and parent_b.body != null \
+			and not parent_a.body.trainability.is_empty() \
+			and not parent_b.body.trainability.is_empty()
+	# str base — inherited or random
+	var _str_t_base: int
+	if _has_parents_t:
+		var _pa_st: int = parent_a.body.trainability.get("str", GameConfig.TRAINABILITY_MEAN)
+		var _pb_st: int = parent_b.body.trainability.get("str", GameConfig.TRAINABILITY_MEAN)
+		var _mid_st: float = (_pa_st + _pb_st) / 2.0
+		var _env_st: float = _rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD))
+		var _base_st: float = _mid_st * _t_h2 + _env_st * (1.0 - _t_h2)
+		_base_st += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_SD) * 0.10)
+		if _rng.randf() < GameConfig.BODY_MUTATION_RATE:
+			_base_st += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_MEAN) * GameConfig.BODY_MUTATION_SD)
+		_str_t_base = int(_base_st)
+	else:
+		_str_t_base = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
+	# end base — inherited or random
+	var _end_t_base: int
+	if _has_parents_t:
+		var _pa_et: int = parent_a.body.trainability.get("end", GameConfig.TRAINABILITY_MEAN)
+		var _pb_et: int = parent_b.body.trainability.get("end", GameConfig.TRAINABILITY_MEAN)
+		var _mid_et: float = (_pa_et + _pb_et) / 2.0
+		var _env_et: float = _rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD))
+		var _base_et: float = _mid_et * _t_h2 + _env_et * (1.0 - _t_h2)
+		_base_et += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_SD) * 0.10)
+		if _rng.randf() < GameConfig.BODY_MUTATION_RATE:
+			_base_et += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_MEAN) * GameConfig.BODY_MUTATION_SD)
+		_end_t_base = int(_base_et)
+	else:
+		_end_t_base = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
+	# agi — inherited or random
+	var _agi_t_raw: int
+	if _has_parents_t:
+		var _pa_at: int = parent_a.body.trainability.get("agi", GameConfig.TRAINABILITY_MEAN)
+		var _pb_at: int = parent_b.body.trainability.get("agi", GameConfig.TRAINABILITY_MEAN)
+		var _mid_at: float = (_pa_at + _pb_at) / 2.0
+		var _env_at: float = _rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD))
+		var _base_at: float = _mid_at * _t_h2 + _env_at * (1.0 - _t_h2)
+		_base_at += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_SD) * 0.10)
+		if _rng.randf() < GameConfig.BODY_MUTATION_RATE:
+			_base_at += _rng.randfn(0.0, float(GameConfig.TRAINABILITY_MEAN) * GameConfig.BODY_MUTATION_SD)
+		_agi_t_raw = int(_base_at)
+	else:
+		_agi_t_raw = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
+	var _agi_t: int = clampi(_agi_t_raw, GameConfig.TRAINABILITY_MIN, GameConfig.TRAINABILITY_MAX)
 	# ACTN3 효과: STR↔END 역상관 (-1=XX지구력형, +1=RR파워형)
 	var _actn3: float = _rng.randf_range(-1.0, 1.0)
 	var _str_t: int = clampi(_str_t_base + int(_actn3 * 75.0), GameConfig.TRAINABILITY_MIN, GameConfig.TRAINABILITY_MAX)
@@ -125,11 +187,25 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	var _rec_t_ind: int = int(_rng.randfn(float(GameConfig.TRAINABILITY_MEAN), float(GameConfig.TRAINABILITY_SD)))
 	var _rec_t: int = clampi(int(0.6 * float(_rec_t_ind) + 0.4 * float(_end_t)) + int(_actn3 * 20.0), GameConfig.TRAINABILITY_MIN, GameConfig.TRAINABILITY_MAX)
 	entity.body.trainability = {"str": _str_t, "agi": _agi_t, "end": _end_t, "tou": _tou_t, "rec": _rec_t}
-	# ── innate_immunity ──
-	var _imm_base: int = GameConfig.INNATE_IMMUNITY_MEAN
+	# ── innate_immunity (부모 상속, Brodin 2015 h²=0.65) ──
+	var _imm_base_inherit: int
+	if parent_a != null and parent_b != null \
+			and parent_a.body != null and parent_b.body != null:
+		var _h2_dr: float = GameConfig.BODY_HERITABILITY.get("dr", 0.65)
+		var _pa_imm: int = parent_a.body.innate_immunity
+		var _pb_imm: int = parent_b.body.innate_immunity
+		var _mid_imm: float = (_pa_imm + _pb_imm) / 2.0
+		var _env_imm: float = _rng.randfn(float(GameConfig.INNATE_IMMUNITY_MEAN), float(GameConfig.INNATE_IMMUNITY_SD))
+		var _base_imm: float = _mid_imm * _h2_dr + _env_imm * (1.0 - _h2_dr)
+		_base_imm += _rng.randfn(0.0, float(GameConfig.INNATE_IMMUNITY_SD) * 0.10)
+		if _rng.randf() < GameConfig.BODY_MUTATION_RATE:
+			_base_imm += _rng.randfn(0.0, float(GameConfig.INNATE_IMMUNITY_MEAN) * GameConfig.BODY_MUTATION_SD)
+		_imm_base_inherit = int(_base_imm)
+	else:
+		_imm_base_inherit = GameConfig.INNATE_IMMUNITY_MEAN
 	if not _is_male:
-		_imm_base += GameConfig.INNATE_IMMUNITY_SEX_DELTA_FEMALE
-	entity.body.innate_immunity = clampi(int(_rng.randfn(float(_imm_base), float(GameConfig.INNATE_IMMUNITY_SD))), 0, 1000)
+		_imm_base_inherit += GameConfig.INNATE_IMMUNITY_SEX_DELTA_FEMALE
+	entity.body.innate_immunity = clampi(int(_rng.randfn(float(_imm_base_inherit), float(GameConfig.INNATE_IMMUNITY_SD) * 0.5)), 0, 1000)
 	# ── training_xp 초기화 ──
 	entity.body.training_xp = {"str": 0.0, "agi": 0.0, "end": 0.0, "tou": 0.0, "rec": 0.0}
 	# ── realized 초기화 (훈련 XP 0, potential × age_curve) ──
@@ -137,6 +213,113 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 		var _r_curve: float = BodyAttributes.compute_age_curve(_r_axis, _body_age_y)
 		entity.body.realized[_r_axis] = clampi(int(float(entity.body.potential[_r_axis]) * _r_curve), 0, 15000)
 	entity.body.realized["dr"] = clampi(int(float(entity.body.potential["dr"]) * BodyAttributes.compute_age_curve("dr", _body_age_y)), 0, 10000)
+
+	## ── Layer 1.5: Appearance Generation [Eagly 1991, Stulp 2015] ───────────────
+	if parent_a != null and parent_b != null:
+		var _attr_mid: float = (parent_a.attractiveness + parent_b.attractiveness) / 2.0
+		var _attr_env: float = _rng.randfn(GameConfig.APPEARANCE_ATTRACT_MEAN, GameConfig.APPEARANCE_ATTRACT_SD)
+		entity.attractiveness = clampf(
+			_attr_mid * GameConfig.APPEARANCE_ATTRACT_HERITABILITY
+			+ _attr_env * (1.0 - GameConfig.APPEARANCE_ATTRACT_HERITABILITY)
+			+ _rng.randfn(0.0, 0.05),
+			0.05, 0.95
+		)
+	else:
+		entity.attractiveness = clampf(_rng.randfn(GameConfig.APPEARANCE_ATTRACT_MEAN, GameConfig.APPEARANCE_ATTRACT_SD), 0.05, 0.95)
+
+	var _height_sex_delta: float = GameConfig.APPEARANCE_HEIGHT_SEX_DELTA_MALE * (1.0 if entity.gender == "male" else -1.0)
+	if parent_a != null and parent_b != null:
+		var _ht_mid: float = (parent_a.height + parent_b.height) / 2.0
+		var _ht_env: float = _rng.randfn(GameConfig.APPEARANCE_HEIGHT_MEAN + _height_sex_delta, GameConfig.APPEARANCE_HEIGHT_SD)
+		entity.height = clampf(
+			_ht_mid * GameConfig.APPEARANCE_HEIGHT_HERITABILITY
+			+ _ht_env * (1.0 - GameConfig.APPEARANCE_HEIGHT_HERITABILITY)
+			+ _rng.randfn(0.0, 0.04),
+			GameConfig.APPEARANCE_HEIGHT_SD_CLAMP_LOW,
+			GameConfig.APPEARANCE_HEIGHT_SD_CLAMP_HIGH
+		)
+	else:
+		entity.height = clampf(_rng.randfn(GameConfig.APPEARANCE_HEIGHT_MEAN + _height_sex_delta, GameConfig.APPEARANCE_HEIGHT_SD), 0.05, 0.95)
+
+	entity.hair_color = _weighted_random_string(GameConfig.HAIR_COLOR_WEIGHTS)
+	entity.eye_color = _weighted_random_string(GameConfig.EYE_COLOR_WEIGHTS)
+
+	entity.distinguishing_marks = []
+	var _mark_pool: Array = GameConfig.DISTINGUISHING_MARK_IDS.duplicate()
+	_mark_pool.shuffle()
+	for _mark_id in _mark_pool:
+		if entity.distinguishing_marks.size() >= 2:
+			break
+		if _rng.randf() < GameConfig.DISTINGUISHING_MARK_CHANCE:
+			entity.distinguishing_marks.append(_mark_id)
+
+	## ── Layer 7: Speech Style [Human Definition v3 §13] ─────────────────────────
+	var _facets: Dictionary = entity.personality.facets
+	var _a_forgive: float = _facets.get("A_forgiveness", 0.5)
+	var _a_gentle_f: float = _facets.get("A_gentleness",  0.5)
+	var _h_sincere: float  = _facets.get("H_sincerity",   0.5)
+	var _c_organ: float    = _facets.get("C_organization",0.5)
+	var _o_inq: float      = _facets.get("O_inquisitiveness", 0.5)
+	var _e_senti: float    = _facets.get("E_sentimentality",  0.5)
+	var _x_bold: float     = _facets.get("X_social_boldness",  0.5)
+	var _x_socio: float    = _facets.get("X_sociability",      0.5)
+
+	var _tone_scores: Dictionary = {
+		"aggressive": (1.0 - _a_forgive) * 0.5 + (1.0 - _h_sincere) * 0.5,
+		"gentle":     _a_gentle_f * 0.6 + _e_senti * 0.4,
+		"formal":     _c_organ * 0.5 + (1.0 - _x_bold) * 0.5,
+		"sarcastic":  _o_inq * 0.5 + (1.0 - _h_sincere) * 0.5,
+		"casual":     _x_socio * 0.4 + 0.3,
+	}
+	var _best_tone: String = "casual"
+	var _best_score: float = -1.0
+	for _t in _tone_scores:
+		if _tone_scores[_t] > _best_score:
+			_best_score = _tone_scores[_t]
+			_best_tone = _t
+	entity.speech_tone = _best_tone
+
+	var _x_avg: float = (_x_bold + _x_socio + _facets.get("X_liveliness", 0.5) + _facets.get("X_social_self_esteem", 0.5)) / 4.0
+	if _x_avg < 0.35:
+		entity.speech_verbosity = "taciturn"
+	elif _x_avg > 0.65:
+		entity.speech_verbosity = "talkative"
+	else:
+		entity.speech_verbosity = "normal"
+
+	var _merriment: float = entity.values.get(&"MERRIMENT", 0.0)
+	var _ling_intel: float = entity.intelligences.get("linguistic", 0.5)
+	var _humor_score: float = (_merriment + 1.0) / 2.0
+	if _humor_score > 0.55:
+		entity.speech_humor = "witty" if _ling_intel > 0.55 else "slapstick"
+	elif _humor_score < 0.35 and _ling_intel > 0.55:
+		entity.speech_humor = "dry"
+	else:
+		entity.speech_humor = "none"
+
+	## ── Layer 7: Preferences [Linden et al. 2010] ────────────────────────────────
+	var _o_axis: float = (_facets.get("O_inquisitiveness", 0.5) + _facets.get("O_aesthetic", 0.5)) / 2.0
+	if _o_axis > 0.65 and _rng.randf() < 0.4:
+		entity.favorite_food = GameConfig.PREFERENCE_FOOD_OPTIONS[_rng.randi() % 2 + 1]
+	else:
+		entity.favorite_food = "food"
+
+	entity.favorite_color = GameConfig.PREFERENCE_COLOR_OPTIONS[_rng.randi() % GameConfig.PREFERENCE_COLOR_OPTIONS.size()]
+
+	var _c_axis: float = (_facets.get("C_diligence", 0.5) + _facets.get("C_organization", 0.5)) / 2.0
+	var _season_weights: Array = [25, 25, 25, 25]
+	if _x_avg > 0.6:  _season_weights[1] += 10
+	if _c_axis > 0.6: _season_weights[3] += 10
+	if _o_axis > 0.6: _season_weights[2] += 10
+	entity.favorite_season = GameConfig.PREFERENCE_SEASON_OPTIONS[_weighted_index(_season_weights)]
+
+	entity.disliked_things = []
+	var _dislike_pool: Array = GameConfig.PREFERENCE_DISLIKE_IDS.duplicate()
+	_dislike_pool.shuffle()
+	for _di in range(mini(2, _dislike_pool.size())):
+		if _rng.randf() < 0.35:
+			entity.disliked_things.append(_dislike_pool[_di])
+
 	# ── entity 속도/근력 ──
 	entity.speed = float(entity.body.realized.get("agi", 700)) * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
 	entity.strength = float(entity.body.realized.get("str", 700)) / 1000.0
@@ -228,6 +411,34 @@ func get_entities_near(pos: Vector2i, radius: int) -> Array:
 			if dx <= radius and dy <= radius:
 				result.append(entity)
 	return result
+
+
+## Weighted random string selection from Dictionary{key: weight_int}
+func _weighted_random_string(weights: Dictionary) -> String:
+	var total: int = 0
+	for k in weights:
+		total += int(weights[k])
+	var roll: int = _rng.randi() % total
+	var cumulative: int = 0
+	for k in weights:
+		cumulative += int(weights[k])
+		if roll < cumulative:
+			return k
+	return weights.keys()[0]
+
+
+## Weighted random index from Array[int] weights
+func _weighted_index(weights: Array) -> int:
+	var total: int = 0
+	for w in weights:
+		total += int(w)
+	var roll: int = _rng.randi() % total
+	var cumulative: int = 0
+	for i in range(weights.size()):
+		cumulative += int(weights[i])
+		if roll < cumulative:
+			return i
+	return 0
 
 
 ## Serialize all entities

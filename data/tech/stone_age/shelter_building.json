@@ -1,0 +1,18 @@
+{
+	"id": "TECH_SHELTER_BUILDING",
+	"display_key": "TECH_SHELTER_BUILDING",
+	"era": "stone_age",
+	"prerequisites": ["TECH_BASIC_TOOLS"],
+	"discovery_conditions": {
+		"population_minimum": 4,
+		"required_skills": {"SKILL_WOODCUTTING": 15},
+		"base_discovery_chance_per_year": 0.25,
+		"knowledge_value_bonus": 0.10,
+		"openness_bonus": 0.05,
+		"logical_intel_bonus": 0.10
+	},
+	"unlocks_skills": ["SKILL_CONSTRUCTION"],
+	"unlocks_buildings": ["shelter", "storage_hut"],
+	"unlocks_jobs": [],
+	"description_key": "TECH_SHELTER_BUILDING_DESC"
+}

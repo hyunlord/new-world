@@ -25,6 +25,19 @@ var stratification_phase: String = "egalitarian"
 ## 90th percentile wealth score (for normalization)
 var wealth_p90: float = 1.0
 
+## [Weber 1922] Authority type: "charismatic" | "traditional" | "rational_legal"
+## Computed by NetworkSystem from shared_values. Default: charismatic (primitive era).
+var authority_type: String = "charismatic"
+
+## [Tilly 1978] Tick of last revolution event (cooldown guard). -1 = never.
+var revolution_cooldown_tick: int = -1
+
+## ── Tech Tree State [Boyd & Richerson 1985, Henrich 2004] ──────────────────
+## IDs of discovered TechNodes. Populated by TechDiscoverySystem.
+var discovered_techs: Array = []
+## Current era label (highest era achieved). "stone_age" → "tribal" → "bronze_age" ...
+var tech_era: String = "stone_age"
+
 
 func to_dict() -> Dictionary:
 	return {
@@ -41,6 +54,10 @@ func to_dict() -> Dictionary:
 		"leveling_effectiveness": leveling_effectiveness,
 		"stratification_phase": stratification_phase,
 		"wealth_p90": wealth_p90,
+		"authority_type": authority_type,
+		"revolution_cooldown_tick": revolution_cooldown_tick,
+		"discovered_techs": discovered_techs.duplicate(),
+		"tech_era": tech_era,
 	}
 
 
@@ -71,5 +88,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	settlement.leveling_effectiveness = data.get("leveling_effectiveness", 1.0)
 	settlement.stratification_phase = data.get("stratification_phase", "egalitarian")
 	settlement.wealth_p90 = data.get("wealth_p90", 1.0)
+	settlement.authority_type = data.get("authority_type", "charismatic")
+	settlement.revolution_cooldown_tick = data.get("revolution_cooldown_tick", -1)
+	settlement.discovered_techs = data.get("discovered_techs", []).duplicate()
+	settlement.tech_era = data.get("tech_era", "stone_age")
 
 	return settlement

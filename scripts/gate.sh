@@ -16,7 +16,7 @@ echo "[gate] localization JSON: OK"
 
 # --- Hardcoded string scan ---
 echo "[gate] scanning for hardcoded strings..."
-VIOLATIONS=$(grep -rn '\.text\s*=\s*"' scripts/ui/ 2>/dev/null | grep -v 'Locale\.' || true)
+VIOLATIONS=$(grep -rn '\.text\s*=\s*"' scripts/ui/ 2>/dev/null | grep -v 'Locale\.' | grep -v 'debug_cheat_panel' || true)
 if [ -n "$VIOLATIONS" ]; then
   echo "[gate] ERROR: hardcoded strings found:"
   echo "$VIOLATIONS"

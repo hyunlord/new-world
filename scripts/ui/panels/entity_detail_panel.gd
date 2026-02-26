@@ -115,6 +115,7 @@ var _section_collapsed: Dictionary = {
 	"personality": true,
 	"derived": false,
 	"traits": false,
+	"memory": true,
 	"emotions": true,
 	"trauma_scars": true,
 	"violation_history": false,
@@ -127,10 +128,13 @@ var _section_collapsed: Dictionary = {
 	"life_events": false,
 	"intelligence": false,
 	"skills": false,
+	"combat": true,
 	"values": true,
+	"appearance": true,
 	"reputation": true,
 	"economic_tendencies": true,
 	"social_status": false,
+	"politics": true,
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
@@ -657,6 +661,7 @@ func _draw() -> void:
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_TRANSCENDENCE"), StatQuery.get_normalized(entity, &"NEED_TRANSCENDENCE"), Color(0.75, 0.60, 0.90))
 			## 사망/레거시 엔티티는 심리적 욕구 stat_cache 없음 → 표시 생략
 			cy += 4.0
 
@@ -743,6 +748,10 @@ func _draw() -> void:
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"),      StatQuery.get_normalized(entity, &"DERIVED_CREATIVITY"),      Color(0.6, 0.4, 0.9))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),          StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),          Color(0.7, 0.85, 0.5))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),      StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),      Color(0.9, 0.6, 0.3))
+			## [Burt 2004] Social capital (NetworkSystem writes annually)
+			var _sc_raw: int = entity.stat_cache.get(&"DERIVED_SOCIAL_CAPITAL", 0)
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL_CAPITAL"),
+				float(_sc_raw) / 1000.0, Color(0.5, 0.85, 0.65))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"),  StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"),  Color(0.5, 0.7, 0.9))
 		else:
 			## 사망 엔티티: stat_cache 없음 → 표시 불가
@@ -750,6 +759,71 @@ func _draw() -> void:
 				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 			cy += 16.0
 		cy += 6.0
+
+	# ── Appearance & Speech (외모 & 말투) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SECTION_APPEARANCE"), "appearance")
+	if not _section_collapsed.get("appearance", true):
+		## Attractiveness bar
+		cy = _draw_bar(font, cx + 10, cy, bar_w,
+			Locale.ltr("UI_APPEARANCE_ATTRACTIVENESS"),
+			entity.attractiveness, Color(0.95, 0.7, 0.8))
+		## Height bar
+		cy = _draw_bar(font, cx + 10, cy, bar_w,
+			Locale.ltr("UI_APPEARANCE_HEIGHT"),
+			entity.height, Color(0.7, 0.85, 0.95))
+
+		## Hair + Eye color row
+		var _hair_key: String = "HAIR_COLOR_" + entity.hair_color.to_upper()
+		var _eye_key: String  = "EYE_COLOR_"  + entity.eye_color.to_upper()
+		var _appear_text: String = "%s: %s  %s: %s" % [
+			Locale.ltr("UI_HAIR_COLOR"), Locale.ltr(_hair_key),
+			Locale.ltr("UI_EYE_COLOR"),  Locale.ltr(_eye_key),
+		]
+		draw_string(font, Vector2(cx + 10, cy + 12), _appear_text,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+		cy += 16.0
+
+		## Distinguishing marks (only if present)
+		if entity.distinguishing_marks.size() > 0:
+			var _mark_names: Array = []
+			for _mk in entity.distinguishing_marks:
+				_mark_names.append(Locale.ltr(_mk))
+			var _marks_label: String = Locale.ltr("UI_DISTINGUISHING_MARKS") + ": " + ", ".join(_mark_names)
+			draw_string(font, Vector2(cx + 10, cy + 12), _marks_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.7, 0.7, 0.7))
+			cy += 16.0
+
+		## Speech style row (tone / verbosity / humor)
+		var _tone_key:  String = "SPEECH_TONE_"      + entity.speech_tone.to_upper()
+		var _verb_key:  String = "SPEECH_VERBOSITY_"  + entity.speech_verbosity.to_upper()
+		var _humor_key: String = "SPEECH_HUMOR_"      + entity.speech_humor.to_upper()
+		var _speech_label: String = Locale.ltr("UI_SPEECH_STYLE") + ": " + \
+			Locale.ltr(_tone_key) + " / " + Locale.ltr(_verb_key) + " / " + Locale.ltr(_humor_key)
+		draw_string(font, Vector2(cx + 10, cy + 12), _speech_label,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.75, 0.85, 0.75))
+		cy += 16.0
+
+		## Preferences row (food / color / season)
+		var _food_key:   String = "PREF_FOOD_"   + entity.favorite_food.to_upper()
+		var _color_key:  String = "PREF_COLOR_"  + entity.favorite_color.to_upper()
+		var _season_key: String = "PREF_SEASON_" + entity.favorite_season.to_upper()
+		var _pref_label: String = Locale.ltr("UI_PREFERENCES") + ": " + \
+			Locale.ltr(_food_key) + " / " + Locale.ltr(_color_key) + " / " + Locale.ltr(_season_key)
+		draw_string(font, Vector2(cx + 10, cy + 12), _pref_label,
+			HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.85, 0.8, 0.65))
+		cy += 16.0
+
+		## Dislikes (only if present)
+		if entity.disliked_things.size() > 0:
+			var _dislikes: Array = []
+			for _dk in entity.disliked_things:
+				_dislikes.append(Locale.ltr(_dk))
+			var _dis_label: String = Locale.ltr("UI_DISLIKES") + ": " + ", ".join(_dislikes)
+			draw_string(font, Vector2(cx + 10, cy + 12), _dis_label,
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.75, 0.55, 0.55))
+			cy += 16.0
+
+		cy += 4.0
 
 	# ── Skills (기술) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")
@@ -783,7 +857,51 @@ func _draw() -> void:
 				_se["color"],
 				_desc,
 				_mult_suffix)
+		## ── Unlocked Actions [Anderson 1982 ACT*] ──────────────────────────────
+		if not entity.unlocked_actions.is_empty():
+			cy += 2
+			draw_string(font, Vector2(cx + 20, cy + 12),
+				Locale.ltr("UI_SKILL_UNLOCKED_ACTIONS"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w - 10, 11, Color(0.7, 0.7, 0.7))
+			cy += 16
+			for _action_id in entity.unlocked_actions:
+				var _action_key: String = "SKILL_ACTION_%s" % str(_action_id).replace("UNLOCK_ACTION_", "")
+				draw_string(font, Vector2(cx + 30, cy + 12),
+					"• " + Locale.ltr(_action_key),
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, 11, Color(0.5, 0.85, 0.6))
+				cy += 14
 		cy += 4.0
+
+	# ── Combat ──
+	if entity.age_stage == "adult" or entity.age_stage == "elder":
+		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_COMBAT_STATS"), "combat")
+		if not _section_collapsed.get("combat", true):
+			## Combat skill (SKILL_HUNTING proxy for Stone Age)
+			var _hunt_level: int = int(entity.skill_levels.get(&"SKILL_HUNTING", 0))
+			draw_string(font, Vector2(cx + 10, cy + 12),
+				Locale.ltr("UI_COMBAT_SKILL") + ": " + str(_hunt_level),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.85, 0.4, 0.35))
+			cy += 16
+			## Body part damage
+			if entity.body != null:
+				var _pd: Dictionary = entity.body.part_damage
+				for _bpart in ["head", "torso", "limb_left", "limb_right"]:
+					var _dmg: float = float(_pd.get(_bpart, 0.0))
+					if _dmg > 0.05:
+						var _part_key: String = "BODY_PART_" + _bpart.to_upper()
+						draw_string(font, Vector2(cx + 10, cy + 12),
+							Locale.ltr(_part_key) + ": %.0f%% " % (_dmg * 100) + Locale.ltr("UI_DAMAGED"),
+							HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.9, 0.6, 0.3))
+						cy += 14
+			## War veteran scar
+			for _scar in entity.trauma_scars:
+				if _scar.get("scar_id") == "war_veteran":
+					draw_string(font, Vector2(cx + 10, cy + 12),
+						Locale.ltr("UI_WAR_VETERAN"),
+						HORIZONTAL_ALIGNMENT_LEFT, bar_w, 11, Color(0.8, 0.65, 0.3))
+					cy += 14
+					break
+			cy += 4.0
 
 	# ── Values (가치관) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_VALUES"), "values")
@@ -817,6 +935,48 @@ func _draw() -> void:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_TRAITS"), "traits")
 		if not _section_collapsed.get("traits", false):
 			cy = _draw_trait_section(font, cx, cy, entity.personality, entity)
+
+	# ── Memory Timeline (기억 연표) ──
+	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_MEMORY_TIMELINE"), "memory")
+	if not _section_collapsed.get("memory", true):
+		## Permanent history (landmark memories) — newest first, max 10
+		if entity.permanent_history.size() > 0:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_MEMORY_PERMANENT"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.9, 0.8, 0.5))
+			cy += 16.0
+			var ph_entries: Array = entity.permanent_history.duplicate()
+			ph_entries.reverse()
+			for i in range(mini(10, ph_entries.size())):
+				var pe: Dictionary = ph_entries[i]
+				var year_label: String = "Y%d" % (int(pe.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
+				var raw_text: String = Locale.ltr(pe.get("summary_key", "MEMORY_EVT_UNKNOWN"))
+				var ph_params: Dictionary = pe.get("params", {})
+				var evt_text: String = year_label + " " + raw_text.format(ph_params)
+				draw_string(font, Vector2(cx + 20, cy + 12), evt_text,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, GameConfig.get_font_size("popup_body") - 2, Color(0.85, 0.85, 0.6))
+				cy += 14.0
+			cy += 4.0
+
+		## Recent working memory — non-trivial (intensity > 0.15), newest first, max 8
+		var wm_entries: Array = entity.working_memory.filter(
+			func(e): return float(e.get("intensity", 0)) > 0.15
+		)
+		wm_entries.sort_custom(func(a, b): return int(a["tick"]) > int(b["tick"]))
+		if wm_entries.size() > 0:
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_MEMORY_RECENT"),
+				HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body") - 1, Color(0.7, 0.85, 0.7))
+			cy += 16.0
+			for i in range(mini(8, wm_entries.size())):
+				var we: Dictionary = wm_entries[i]
+				var year_label: String = "Y%d" % (int(we.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
+				var int_bar: String = "[%s]" % _intensity_to_bars(float(we.get("intensity", 0)))
+				var raw_text: String = Locale.ltr(we.get("summary_key", "MEMORY_EVT_UNKNOWN"))
+				var wm_params: Dictionary = we.get("params", {})
+				var evt_text: String = year_label + " " + int_bar + " " + raw_text.format(wm_params)
+				draw_string(font, Vector2(cx + 20, cy + 12), evt_text,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, GameConfig.get_font_size("popup_body") - 2, Color(0.75, 0.8, 0.75))
+				cy += 14.0
+		cy += 4.0
 
 	# ── Emotions (Plutchik 8) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_EMOTIONS"), "emotions")
@@ -1378,6 +1538,25 @@ func _draw() -> void:
 					Locale.ltr(sat_key))
 			cy += 4.0
 
+	# ── Settlement Politics [Weber 1922, Tilly 1978] ──
+	if _settlement_manager != null and entity.settlement_id > 0:
+		var _pol_s: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
+		if _pol_s != null:
+			cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SETTLEMENT_POLITICS"), "politics")
+			if not _section_collapsed.get("politics", true):
+				## Authority type
+				var _auth_key: String = "AUTHORITY_TYPE_" + _pol_s.authority_type.to_upper()
+				var _auth_label: String = Locale.ltr("UI_AUTHORITY_TYPE") + ": " + Locale.ltr(_auth_key)
+				draw_string(font, Vector2(cx + 10, cy + 12), _auth_label,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.8, 0.75, 0.5))
+				cy += 16.0
+				## Gini coefficient
+				var _gini_label: String = Locale.ltr("UI_GINI") + ": %.2f" % _pol_s.gini_coefficient
+				draw_string(font, Vector2(cx + 10, cy + 12), _gini_label,
+					HORIZONTAL_ALIGNMENT_LEFT, bar_w, GameConfig.get_font_size("popup_body"), Color(0.75, 0.6, 0.6))
+				cy += 16.0
+				cy += 4.0
+
 	# ── Stats ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_STATS_SECTION"), "stats")
 	if not _section_collapsed.get("stats", false):
@@ -1522,6 +1701,12 @@ func _draw_bar(font: Font, x: float, y: float, w: float, label: String, value: f
 	var _display: String = value_label if value_label != "" else "%d%%" % int(value * 100)
 	draw_string(font, Vector2(pct_x, y + 11), _display, HORIZONTAL_ALIGNMENT_RIGHT, int(pct_w), GameConfig.get_font_size("bar_label"), Color(0.8, 0.8, 0.8))
 	return y + 16.0
+
+
+## Convert intensity 0.0~1.0 to a 5-char bar string e.g. "████░"
+func _intensity_to_bars(intensity: float) -> String:
+	var filled: int = int(clampf(intensity * 5.0, 0.0, 5.0))
+	return "█".repeat(filled) + "░".repeat(5 - filled)
 
 
 ## Draw a center-origin bipolar bar for values in [-1.0, +1.0].

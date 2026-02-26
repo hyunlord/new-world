@@ -1,0 +1,18 @@
+{
+	"id": "TECH_TRIBAL_ORGANIZATION",
+	"display_key": "TECH_TRIBAL_ORGANIZATION",
+	"era": "tribal",
+	"prerequisites": ["TECH_FIRE_MAKING", "TECH_SHELTER_BUILDING"],
+	"discovery_conditions": {
+		"population_minimum": 8,
+		"required_skills": {},
+		"base_discovery_chance_per_year": 0.15,
+		"knowledge_value_bonus": 0.15,
+		"openness_bonus": 0.05,
+		"logical_intel_bonus": 0.10
+	},
+	"unlocks_skills": ["SKILL_LEADERSHIP", "SKILL_TEACHING"],
+	"unlocks_buildings": ["communal_hall"],
+	"unlocks_jobs": [],
+	"description_key": "TECH_TRIBAL_ORGANIZATION_DESC"
+}

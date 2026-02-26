@@ -1,0 +1,18 @@
+{
+	"id": "TECH_BASIC_TOOLS",
+	"display_key": "TECH_BASIC_TOOLS",
+	"era": "stone_age",
+	"prerequisites": [],
+	"discovery_conditions": {
+		"population_minimum": 3,
+		"required_skills": {"SKILL_FORAGING": 10},
+		"base_discovery_chance_per_year": 0.30,
+		"knowledge_value_bonus": 0.10,
+		"openness_bonus": 0.10,
+		"logical_intel_bonus": 0.15
+	},
+	"unlocks_skills": ["SKILL_WOODCUTTING", "SKILL_MINING"],
+	"unlocks_buildings": [],
+	"unlocks_jobs": [],
+	"description_key": "TECH_BASIC_TOOLS_DESC"
+}

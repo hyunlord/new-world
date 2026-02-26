@@ -47,6 +47,21 @@ const BODY_SEX_DELTA_MALE: Dictionary = {
 	"dr":   -80,   ## 여성 면역 우위 (Davis 2015)
 }
 
+## ── Body Potential Heritability (Bouchard & McGue 2003, Visscher 2008) ──────
+## h² per axis: fraction of child potential explained by mid-parent value
+## Remainder comes from population-level random draw (environmental + independent assortment)
+const BODY_HERITABILITY: Dictionary = {
+	"str": 0.75,   ## Strength: strong additive genetic component (Zempo 2017)
+	"agi": 0.70,   ## Agility: high h² but sensitive to early motor environment
+	"end": 0.72,   ## Endurance: VO2max h²=0.50–0.80 (Bouchard 1999 HERITAGE)
+	"tou": 0.73,   ## Toughness: bone density h²=0.60–0.80 (Ralston 2000)
+	"rec": 0.68,   ## Recuperation: HRV heritability ~0.64 (Singh 2017)
+	"dr":  0.65,   ## Disease resistance: innate immunity h²=0.60–0.70 (Brodin 2015)
+}
+const BODY_TRAINABILITY_HERITABILITY: float = 0.50  ## ACTN3/ACE talent h²≈0.47 (Heritage 1999)
+const BODY_MUTATION_RATE: float = 0.01              ## 1% chance of large mutation per axis
+const BODY_MUTATION_SD: float = 0.30                ## mutation magnitude as fraction of mean
+
 ## ── Trainability 스케일 (int 0~1,000) ───────────────────
 const TRAINABILITY_MEAN: int = 500
 const TRAINABILITY_SD: int = 150
@@ -77,6 +92,12 @@ const SKILL_XP_MINING: float       = 2.0   ## per gather_stone completion
 const SKILL_XP_CONSTRUCTION: float = 3.0   ## per build tick (higher because build is slower)
 const SKILL_XP_HUNTING: float      = 2.0   ## reserved for future hunting action
 
+## [Anderson 1982 ACT*] Skill-unlocked action XP values
+const SKILL_XP_HERB_GATHER: float   = 1.0   ## per herb_gather completion (lower than normal foraging)
+const SKILL_XP_FINE_WOODWORK: float = 1.5   ## per fine_woodwork completion
+const SKILL_XP_ORE_VEIN: float      = 1.5   ## per ore_vein completion
+const SKILL_XP_TRAP_HUNT: float     = 3.0   ## per trap check (higher because slower action)
+
 ## ── speed/strength 파생 공식 ──────────────────────────────
 ## entity.speed = float(agi_realized) * BODY_SPEED_SCALE + BODY_SPEED_BASE
 ## agi=700(평균 성인, 훈련없음): speed=1.14,  agi=1500(전사): speed=2.1
@@ -85,6 +106,137 @@ const BODY_SPEED_SCALE: float = 0.0012   ## float(agi_realized) * 0.0012
 ## entity.strength = float(str_realized) / 1000.0  → str=700: 0.70, str=1500: 1.50
 const BODY_REALIZED_MAX: int = 15000     ## realized 정규화 기준 (str/agi/end/tou/rec), UI _draw_bar용
 const BODY_REALIZED_DR_MAX: int = 10000  ## dr realized 정규화 기준, UI _draw_bar용
+
+## ── Layer 1.5: Appearance Generation (Eagly 1991, Stulp 2015) ────────────────
+const APPEARANCE_ATTRACT_MEAN: float = 0.50
+const APPEARANCE_ATTRACT_SD:   float = 0.12
+const APPEARANCE_HEIGHT_MEAN:  float = 0.50
+const APPEARANCE_HEIGHT_SD:    float = 0.12
+const APPEARANCE_HEIGHT_SD_CLAMP_LOW:  float = 0.05
+const APPEARANCE_HEIGHT_SD_CLAMP_HIGH: float = 0.95
+## Sex delta: males slightly taller on average (normalized scale)
+const APPEARANCE_HEIGHT_SEX_DELTA_MALE: float = 0.04
+const APPEARANCE_ATTRACT_HERITABILITY: float = 0.80
+const APPEARANCE_HEIGHT_HERITABILITY:  float = 0.85
+## Hair color weights [Brown=35%, Black=25%, Blonde=25%, Red=10%, Grey=3%, White=2%]
+const HAIR_COLOR_WEIGHTS: Dictionary = {
+	"black": 25, "brown": 35, "blonde": 25, "red": 10, "grey": 3, "white": 2
+}
+## Eye color weights [Brown=55%, Blue=20%, Green=15%, Grey=7%, Hazel=3%]
+const EYE_COLOR_WEIGHTS: Dictionary = {
+	"brown": 55, "blue": 20, "green": 15, "grey": 7, "hazel": 3
+}
+const DISTINGUISHING_MARK_CHANCE: float = 0.05
+const DISTINGUISHING_MARK_IDS: Array = [
+	"MARK_SCAR_FACE", "MARK_SCAR_HAND", "MARK_BIRTHMARK_NECK",
+	"MARK_BIRTHMARK_CHEEK", "MARK_FRECKLES", "MARK_DIMPLES",
+	"MARK_PROMINENT_NOSE", "MARK_SHARP_EYES"
+]
+
+## ── Layer 7: Speech Style (Human Definition v3 §13) ──────────────────────────
+const SPEECH_TONE_VALUES:      Array = ["aggressive", "gentle", "formal", "casual", "sarcastic"]
+const SPEECH_VERBOSITY_VALUES: Array = ["taciturn", "normal", "talkative"]
+const SPEECH_HUMOR_VALUES:     Array = ["dry", "none", "witty", "slapstick"]
+
+## ── Layer 7: Preferences (Linden et al. 2010) ────────────────────────────────
+const PREFERENCE_FOOD_OPTIONS:   Array = ["food", "herbs", "meat"]
+const PREFERENCE_COLOR_OPTIONS:  Array = ["red", "orange", "yellow", "green", "blue", "purple", "brown", "white", "black"]
+const PREFERENCE_SEASON_OPTIONS: Array = ["spring", "summer", "autumn", "winter"]
+const PREFERENCE_DISLIKE_IDS:    Array = [
+	"DISLIKE_COLD", "DISLIKE_RAIN", "DISLIKE_CROWDS", "DISLIKE_SILENCE",
+	"DISLIKE_HEIGHTS", "DISLIKE_CONFINED", "DISLIKE_CONFLICT", "DISLIKE_IDLENESS"
+]
+## Social event: affinity gain for matching preference
+const SOCIAL_SHARED_PREFERENCE_AFFINITY_GAIN: float = 3.0
+
+## ── Layer 6: Memory System [Baddeley & Hitch 1974, Ebbinghaus 1885] ───────────
+## Max working memory entries before oldest (lowest intensity) are evicted
+const MEMORY_WORKING_MAX: int = 100
+## Intensity threshold for promotion to permanent_history
+const MEMORY_PERMANENT_THRESHOLD: float = 0.5
+## Ebbinghaus curve: intensity *= exp(-DECAY_RATE * dt_years)
+const MEMORY_DECAY_TRIVIAL: float  = 1.386  ## half-life 0.5 years (ln2/0.5)
+const MEMORY_DECAY_MODERATE: float = 0.347  ## half-life 2 years
+const MEMORY_DECAY_STRONG: float   = 0.139  ## half-life 5 years
+const MEMORY_DECAY_TRAUMA: float   = 0.014  ## half-life 50 years (near-permanent)
+## [Conway & Pleydell-Pearce 2000] intensity at encoding by event type
+const MEMORY_INTENSITY_MAP: Dictionary = {
+	"casual_talk":   0.05,
+	"share_food":    0.10,
+	"deep_talk":     0.25,
+	"argument":      0.30,
+	"helped_work":   0.15,
+	"comforted":     0.35,
+	"flirt":         0.40,
+	"proposal":      0.70,
+	"marriage":      0.90,
+	"child_born":    0.85,
+	"partner_died":  0.95,
+	"betrayal":      0.80,
+	"trauma":        0.90,
+	"promotion":     0.65,
+	"achievement":   0.60,
+	"migration":     0.55,
+	"skill_unlock":  0.30,
+	"first_meeting": 0.20,
+}
+## Decay rate lookup [threshold, rate] — first match wins (descending threshold)
+const MEMORY_DECAY_BY_INTENSITY: Array = [
+	[0.80, 0.014],  ## trauma-class: 50-year half-life
+	[0.50, 0.139],  ## strong: 5-year half-life
+	[0.20, 0.347],  ## moderate: 2-year half-life
+	[0.00, 1.386],  ## trivial: 0.5-year half-life
+]
+## Event types allowed in permanent_history
+const MEMORY_PERMANENT_TYPES: Array = [
+	"birth", "marriage", "child_born", "partner_died", "war",
+	"migration", "promotion", "betrayal", "trauma", "achievement", "proposal",
+]
+## Compression: annual, group same-type same-target entries > 1 year old
+const MEMORY_COMPRESS_MIN_GROUP: int = 3
+const MEMORY_COMPRESS_INTERVAL_TICKS: int = 4380  ## 1 year (= TICKS_PER_YEAR)
+
+## ── Social Network Tie Classification [Granovetter 1973] ────────────────────
+const NETWORK_TIE_WEAK_MIN:     float = 5.0
+const NETWORK_TIE_MODERATE_MIN: float = 30.0
+const NETWORK_TIE_STRONG_MIN:   float = 60.0
+const NETWORK_TIE_INTIMATE_MIN: float = 85.0
+
+## Social capital formula [Burt 2004]: strong×3 + weak×1 + bridge×5 + rep×10
+const NETWORK_SOCIAL_CAP_STRONG_W: float = 3.0
+const NETWORK_SOCIAL_CAP_WEAK_W:   float = 1.0
+const NETWORK_SOCIAL_CAP_BRIDGE_W: float = 5.0
+const NETWORK_SOCIAL_CAP_REP_W:    float = 10.0
+## Normalization divisor — social capital ÷ this = 0~1 for ~100-person settlement
+const NETWORK_SOCIAL_CAP_NORM_DIV: float = 200.0
+
+## Information propagation probabilities [Granovetter 1973]
+const NETWORK_PROPAGATION_STRONG: float = 0.80
+const NETWORK_PROPAGATION_WEAK:   float = 0.20
+const NETWORK_PROPAGATION_BRIDGE: float = 0.50
+
+## ── Weber Authority Type [Weber 1922] ────────────────────────────────────────
+const AUTHORITY_TRADITIONAL_TRADITION_MIN: float = 0.30
+const AUTHORITY_TRADITIONAL_LAW_MAX:       float = 0.10
+const AUTHORITY_RATIONAL_LAW_MIN:          float = 0.30
+const AUTHORITY_TRADITIONAL_AGE_BOOST:     float = 0.15
+const AUTHORITY_RATIONAL_TRUST_BOOST:      float = 0.15
+
+## ── Obedience Formula [Milgram 1963] ─────────────────────────────────────────
+const OBEDIENCE_W_AUTHORITY:         float = 0.25
+const OBEDIENCE_W_AGREEABLENESS:     float = 0.20
+const OBEDIENCE_W_CONSCIENTIOUSNESS: float = 0.15
+const OBEDIENCE_W_LAW_VALUE:         float = 0.15
+const OBEDIENCE_W_PROXIMITY:         float = 0.10
+const OBEDIENCE_W_SOCIAL_PRESSURE:   float = 0.15
+const OBEDIENCE_RESIST_THRESHOLD:    float = 0.30
+const OBEDIENCE_CONFLICT_THRESHOLD:  float = 0.50
+
+## ── Revolution Risk [Tilly 1978, Human Definition v3 §17] ───────────────────
+const REVOLUTION_RISK_THRESHOLD:       float = 0.70
+const REVOLUTION_COOLDOWN_TICKS:       int   = 8760   ## 2 years
+const REVOLUTION_CHARISMA_MULTIPLIER:  float = 2.0
+const REVOLUTION_TICK_INTERVAL:        int   = 4380   ## check annually
 
 ## ── Body Attribute Gameplay Loop ─────────────────────────────────────────────
 ## 훈련 XP: 행동 완료 시 entity.body.training_xp[axis] 에 누적 (age_system이 yearly 재계산)
@@ -244,6 +396,10 @@ const MOVEMENT_TICK_INTERVAL: int = 3
 ## Feature flag: thirst/warmth/safety needs
 ## Set true once resource/tech systems are ready to support them
 const NEEDS_EXPANSION_ENABLED: bool = false
+
+## ── Debug Panel ─────────────────────────────────────────────────────────────
+## Set false before shipping. When false, F12 does nothing.
+const DEBUG_PANEL_ENABLED: bool = true
 
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002
@@ -452,6 +608,13 @@ const UPPER_NEEDS_INTIMACY_PARTNER_GAIN:         float = 0.000250  ## 비율 1.2
 const UPPER_NEEDS_RECOGNITION_SKILL_COEFF:       float = 0.000200  ## × (best_skill/100) — lv100=1.17×
 const UPPER_NEEDS_MEANING_BASE_GAIN:             float = 0.0000250 ## 항상 소량 회복
 const UPPER_NEEDS_MEANING_ALIGNED_GAIN:          float = 0.0000900 ## × alignment(0–1) — 정합 시 1.44×
+
+## ── Transcendence Need (Maslow 1969, Koltko-Rivera 2006) ─────────────────────
+## Decay: ~40/year — slowest upper need (most stable once achieved, Maslow 1969)
+const UPPER_NEEDS_TRANSCENDENCE_DECAY: float = 0.0000456
+## Fulfillment: community membership + sacrifice-value alignment (Putnam 2000, Koltko-Rivera 2006)
+const UPPER_NEEDS_TRANSCENDENCE_SETTLEMENT_GAIN: float = 0.0000200
+const UPPER_NEEDS_TRANSCENDENCE_SACRIFICE_COEFF: float = 0.0000600
 const UPPER_NEEDS_SELF_ACTUATION_SKILL_COEFF:    float = 0.000100  ## × (best_skill/100) — lv100=1.09×
 
 ## ── 레벨업 일회성 보너스 ─────────────────────────────────────────
@@ -746,3 +909,46 @@ const ATTACHMENT_AVOIDANT_ALLO_MULT: float = 2.0
 ## Background stress rate for anxious attachment when social need is low (Cassidy & Berlin 1994).
 const ATTACHMENT_ANXIOUS_STRESS_RATE: float = 0.02
 const ATTACHMENT_ANXIOUS_STRESS_THRESHOLD: float = 0.40
+
+## ── Tech Tree [Henrich 2004, Boyd & Richerson 1985] ──────────────────────────
+## Scan interval: tech discovery checked annually
+const TECH_DISCOVERY_INTERVAL_TICKS: int = 4380  ## 1 year
+## Discovery probability scaling
+const TECH_DISCOVERY_POP_SCALE:   float = 0.005  ## +0.5% per person over pop_minimum
+const TECH_DISCOVERY_MAX_BONUS:   float = 0.40   ## max bonus from all modifiers combined
+## Era progression: era changes to "tribal" when these techs are all discovered
+const TECH_ERA_TRIBAL_REQUIRES: Array = ["TECH_FIRE_MAKING", "TECH_BASIC_TOOLS", "TECH_SHELTER_BUILDING"]
+
+## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
+## Body part integrity thresholds for death
+const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death
+const COMBAT_TORSO_DEATH_THRESHOLD: float = 0.80  ## torso integrity < 0.20 → death
+## Limb damage penalties
+const COMBAT_LIMB_SPEED_PENALTY:    float = 0.30  ## −30% speed per damaged limb
+const COMBAT_LIMB_STR_PENALTY:      float = 0.25  ## −25% effective strength per damaged limb
+## Base weapon damage (no equipment era — improvised clubs/spears)
+const COMBAT_BASE_WEAPON_DAMAGE:    float = 0.15
+const COMBAT_BASE_ARMOR:            float = 0.0   ## no armor in stone age
+## Morale thresholds [Human Definition v3 §19]
+const COMBAT_MORALE_ROUT_THRESHOLD:   float = 0.20  ## morale < 0.2 → full rout (flee)
+const COMBAT_MORALE_SHAKEN_THRESHOLD: float = 0.40  ## morale < 0.4 → shaken (−50% combat)
+## Morale contributions
+const COMBAT_MORALE_W_HAPPINESS:    float = 0.30
+const COMBAT_MORALE_W_CHARISMA:     float = 0.30
+const COMBAT_MORALE_W_CAUSE_BELIEF: float = 0.40
+## Random roll range for duel resolution
+const COMBAT_ROLL_RANDOM_RANGE:     float = 0.30
+
+## ── Inter-settlement Tension [Tilly 1978, Keeley 1996] ──────────────────────
+## Tension per pair: 0.0 (neutral) → 1.0 (raid imminent)
+const TENSION_CHECK_INTERVAL_TICKS: int   = 2190     ## twice yearly
+const TENSION_RESOURCE_DEFICIT_TRIGGER: float = 0.30 ## if settlement food/need ratio < this, tension rises
+const TENSION_PROXIMITY_RADIUS:     int   = 20       ## tiles — only settlements within this range develop tension
+const TENSION_PER_SHARED_RESOURCE:  float = 0.05     ## per tick where both settlements harvest same tile
+const TENSION_DECAY_PER_YEAR:       float = 0.15     ## natural decay if no resource conflict
+const TENSION_SKIRMISH_THRESHOLD:   float = 0.60     ## tension > 0.60 → skirmish event possible
+const TENSION_SKIRMISH_CHANCE:      float = 0.35     ## probability of skirmish when above threshold
+const TENSION_SKIRMISH_COOLDOWN:    int   = 4380     ## 1 year minimum between skirmishes per pair
+## Post-skirmish tension change
+const TENSION_WINNER_REDUCTION:     float = 0.30     ## attacker win → tension drops (grievance resolved)
+const TENSION_LOSER_INCREASE:       float = 0.20     ## loser retaliates → tension rises

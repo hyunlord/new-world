@@ -40,6 +40,7 @@ func _sync_entity(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"NEED_COMPETENCE",         int(entity.competence * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_SELF_ACTUALIZATION", int(entity.self_actualization * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_MEANING",            int(entity.meaning * 1000), 0)
+	StatQuery.set_value(entity, &"NEED_TRANSCENDENCE",    int(entity.transcendence * 1000), 0)
 
 	## SKILL levels: int 0–100 (already int, no scaling needed)
 	var _skill_ids: Array = [
@@ -109,12 +110,16 @@ func _compute_derived(entity: RefCounted) -> void:
 	var i_inter: float = StatQuery.get_normalized(entity, &"INTEL_INTERPERSONAL")
 	var i_intra: float = StatQuery.get_normalized(entity, &"INTEL_INTRAPERSONAL")
 	var i_nat: float = StatQuery.get_normalized(entity, &"INTEL_NATURALISTIC")
+	## Appearance inputs [Eagly et al. 1991, Stulp et al. 2015]
+	var attract: float = entity.attractiveness
+	var ent_height: float = entity.height
 
 	## Charisma [Interpersonal + Linguistic + personality]
 	var charisma: float = clampf(i_inter * 0.16 + i_ling * 0.10 + X * 0.22 + A * 0.16 + H * 0.08 + joy * 0.08 + (1.0 - E) * 0.06 + recognition * 0.04 + merriment * 0.05 + friendship * 0.05, 0.0, 1.0)
-	## Intimidation [Kinesthetic + physical + personality]
-	var intimidation: float = clampf(str_pot * 0.35 + anger * 0.25 + (1.0 - E) * 0.12 + X * 0.12 + i_kin * 0.08 + competition * 0.08, 0.0, 1.0)
-	var allure: float = clampf(charisma * 0.50 + romance * 0.25 + X * 0.25, 0.0, 1.0)
+	## Intimidation [Human Definition v3 §14: Strength + Height + Anger + voice + experience]
+	var intimidation: float = clampf(str_pot * 0.28 + ent_height * 0.17 + anger * 0.22 + (1.0 - E) * 0.12 + X * 0.10 + competition * 0.06 + i_kin * 0.05, 0.0, 1.0)
+	## Allure [Human Definition v3 §14: Attractiveness + Charisma + fashion + ROMANCE]
+	var allure: float = clampf(attract * 0.35 + charisma * 0.35 + romance * 0.20 + X * 0.10, 0.0, 1.0)
 	var trustworthiness: float = clampf(H * 0.40 + A * 0.30 + truth * 0.30, 0.0, 1.0)
 	## Creativity [Spatial + Musical + Openness]
 	var creativity: float = clampf(i_spa * 0.15 + i_mus * 0.10 + i_ling * 0.05 + O * 0.25 + anticipation * 0.15 + artwork * 0.15 + i_intra * 0.05 + X * 0.10, 0.0, 1.0)
