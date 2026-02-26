@@ -47,6 +47,21 @@ const BODY_SEX_DELTA_MALE: Dictionary = {
 	"dr":   -80,   ## 여성 면역 우위 (Davis 2015)
 }
 
+## ── Body Potential Heritability (Bouchard & McGue 2003, Visscher 2008) ──────
+## h² per axis: fraction of child potential explained by mid-parent value
+## Remainder comes from population-level random draw (environmental + independent assortment)
+const BODY_HERITABILITY: Dictionary = {
+	"str": 0.75,   ## Strength: strong additive genetic component (Zempo 2017)
+	"agi": 0.70,   ## Agility: high h² but sensitive to early motor environment
+	"end": 0.72,   ## Endurance: VO2max h²=0.50–0.80 (Bouchard 1999 HERITAGE)
+	"tou": 0.73,   ## Toughness: bone density h²=0.60–0.80 (Ralston 2000)
+	"rec": 0.68,   ## Recuperation: HRV heritability ~0.64 (Singh 2017)
+	"dr":  0.65,   ## Disease resistance: innate immunity h²=0.60–0.70 (Brodin 2015)
+}
+const BODY_TRAINABILITY_HERITABILITY: float = 0.50  ## ACTN3/ACE talent h²≈0.47 (Heritage 1999)
+const BODY_MUTATION_RATE: float = 0.01              ## 1% chance of large mutation per axis
+const BODY_MUTATION_SD: float = 0.30                ## mutation magnitude as fraction of mean
+
 ## ── Trainability 스케일 (int 0~1,000) ───────────────────
 const TRAINABILITY_MEAN: int = 500
 const TRAINABILITY_SD: int = 150
