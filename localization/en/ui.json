@@ -1048,5 +1048,18 @@
   "TOOLTIP_STRESS_MULTS": "Stress Modifiers",
   "TOOLTIP_BODY_EFFECTS": "Body Effects",
   "TOOLTIP_NEED_EFFECTS": "Need Effects",
-  "TOOLTIP_RELATIONSHIP_EFFECTS": "Relationship Effects"
+  "TOOLTIP_RELATIONSHIP_EFFECTS": "Relationship Effects",
+  "TOOLTIP_UPPER_LIMIT": "Upper Limit",
+  "TOOLTIP_LOWER_LIMIT": "Lower Limit",
+  "RARITY_COMMON": "Common",
+  "RARITY_UNCOMMON": "Uncommon",
+  "RARITY_RARE": "Rare",
+  "RARITY_EPIC": "Epic",
+  "RARITY_LEGENDARY": "Legendary",
+  "HEXACO_H_NAME": "Honesty-Humility",
+  "HEXACO_E_NAME": "Emotionality",
+  "HEXACO_X_NAME": "Extraversion",
+  "HEXACO_A_NAME": "Agreeableness",
+  "HEXACO_C_NAME": "Conscientiousness",
+  "HEXACO_O_NAME": "Openness"
 }

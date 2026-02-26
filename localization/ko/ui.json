@@ -1048,5 +1048,18 @@
   "TOOLTIP_STRESS_MULTS": "스트레스 배율",
   "TOOLTIP_BODY_EFFECTS": "신체 효과",
   "TOOLTIP_NEED_EFFECTS": "욕구 효과",
-  "TOOLTIP_RELATIONSHIP_EFFECTS": "관계 효과"
+  "TOOLTIP_RELATIONSHIP_EFFECTS": "관계 효과",
+  "TOOLTIP_UPPER_LIMIT": "상한",
+  "TOOLTIP_LOWER_LIMIT": "하한",
+  "RARITY_COMMON": "일반",
+  "RARITY_UNCOMMON": "희귀",
+  "RARITY_RARE": "레어",
+  "RARITY_EPIC": "에픽",
+  "RARITY_LEGENDARY": "전설",
+  "HEXACO_H_NAME": "정직-겸손",
+  "HEXACO_E_NAME": "감정성",
+  "HEXACO_X_NAME": "외향성",
+  "HEXACO_A_NAME": "우호성",
+  "HEXACO_C_NAME": "성실성",
+  "HEXACO_O_NAME": "개방성"
 }
