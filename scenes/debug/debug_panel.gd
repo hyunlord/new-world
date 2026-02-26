@@ -884,12 +884,18 @@ func _refresh_scars() -> void:
 func _populate_entity_list() -> void:
 	_entity_ids.clear()
 	_entity_option.clear()
+	_selected_entity = null
 	if _entity_manager == null:
 		return
 	var entities = _entity_manager.get_alive_entities()
 	for entity in entities:
 		_entity_option.add_item("%d: %s" % [entity.id, entity.entity_name])
 		_entity_ids.append(entity.id)
+	## 항목이 있으면 첫 번째 자동 선택
+	## item_selected 시그널은 수동 클릭 시에만 발화하므로 직접 호출
+	if _entity_ids.size() > 0:
+		_entity_option.select(0)
+		_on_entity_selected(0)
 
 
 func _on_entity_selected(index: int) -> void:
