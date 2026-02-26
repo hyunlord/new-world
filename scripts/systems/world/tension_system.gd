@@ -14,7 +14,7 @@ const CombatResolverScript = preload("res://scripts/core/combat/combat_resolver.
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _world_data: RefCounted
-var _chronicle: RefCounted
+var _chronicle
 var _combat_rng: RandomNumberGenerator
 
 ## Settlement pair tension: "min_id:max_id" -> float
@@ -30,7 +30,7 @@ func _init() -> void:
 
 
 func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
-		p_world_data: RefCounted, p_chronicle: RefCounted,
+		p_world_data: RefCounted, p_chronicle,
 		p_rng: RandomNumberGenerator) -> void:
 	_entity_manager = p_entity_manager
 	_settlement_manager = p_settlement_manager

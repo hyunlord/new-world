@@ -9,7 +9,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
-var _chronicle: RefCounted
+var _chronicle
 
 
 func _init() -> void:
@@ -19,7 +19,7 @@ func _init() -> void:
 
 
 func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
-		p_tech_tree_manager: RefCounted, p_chronicle: RefCounted) -> void:
+		p_tech_tree_manager: RefCounted, p_chronicle) -> void:
 	_entity_manager = p_entity_manager
 	_settlement_manager = p_settlement_manager
 	_tech_tree_manager = p_tech_tree_manager
