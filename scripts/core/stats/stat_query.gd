@@ -18,6 +18,16 @@ const PHASE: int = 2  ## 현재 구현 Phase.
 
 var _affinity_cache: Dictionary = {}
 
+## [Human Definition v3 §11] Tech era ordering for required_tech gate
+const ERA_ORDER = ["stone_age", "tribal", "bronze_age", "iron_age"]
+
+## Settlement manager reference — set via init_settlement_manager() after scene is ready
+var _settlement_manager = null
+
+## Called by main.gd (or SimulationEngine) after all autoloads are ready
+func init_settlement_manager(mgr) -> void:
+	_settlement_manager = mgr
+
 func _ready() -> void:
 	StatDefinitionScript.load_all("res://stats/")
 	var ok: bool = StatGraphScript.build()
@@ -249,6 +259,24 @@ func add_xp(entity: RefCounted, stat_id: StringName,
 	var growth: Dictionary = def.get("growth", {})
 	if growth.get("type", "") != "LOG_DIMINISHING":
 		return result  ## Only handle LOG_DIMINISHING for now
+
+	## [Human Definition v3 §11] Tech era gate — XP blocked if settlement era < required_tech
+	var req_tech: String = def.get("required_tech", "")
+	if req_tech != "" and _settlement_manager != null:
+		var settlement = _settlement_manager.get_settlement(entity.settlement_id)
+		if settlement != null:
+			var req_idx: int = ERA_ORDER.find(req_tech)
+			var cur_idx: int = ERA_ORDER.find(settlement.tech_era)
+			if req_idx >= 0 and cur_idx >= 0 and cur_idx < req_idx:
+				return result
+
+	## [Human Definition v3 §11] Prerequisites gate — XP blocked if prerequisite skill level too low
+	var prereqs: Array = def.get("prerequisites", [])
+	for prereq in prereqs:
+		var prereq_id: StringName = StringName(prereq.get("skill_id", ""))
+		var min_level: int = int(prereq.get("min_level", 0))
+		if prereq_id != &"" and entity.skill_levels.get(prereq_id, 0) < min_level:
+			return result
 
 	## Accumulate XP
 	var current_xp: float = float(entity.skill_xp.get(stat_id, 0.0))

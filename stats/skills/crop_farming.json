@@ -1,36 +1,36 @@
 {
-  "id": "SKILL_FORAGING",
-  "display_key": "SKILL_FORAGING",
+  "id": "SKILL_CROP_FARMING",
+  "display_key": "UI_SKILL_CROP_FARMING",
   "category": "SKILL",
   "storage_type": "int",
   "range": [0, 100],
   "default": 0,
-  "tier": 1,
-  "required_tech": "stone_age",
-  "prerequisites": [],
+  "tier": 2,
+  "required_tech": "tribal",
+  "prerequisites": [{"skill_id": "SKILL_FORAGING", "min_level": 3}],
   "growth": {
     "type": "LOG_DIMINISHING",
     "params": {
-      "base_xp": 100,
+      "base_xp": 110,
       "exponent": 1.8,
       "level_breakpoints": [25, 50, 75],
       "breakpoint_multipliers": [1.0, 1.5, 2.0, 3.0]
     },
-    "talent_key": "BODY_AGI_TRAINABILITY",
+    "talent_key": "INTEL_NATURALISTIC",
     "talent_ceiling_map": {"0": 40, "200": 60, "400": 80, "600": 90, "800": 100}
   },
   "thresholds": [
-    {"value": 50, "direction": "above", "effect": "UNLOCK_ACTION_HERB_GATHER"},
-    {"value": 75, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_FORAGING"}
+    {"value": 50, "direction": "above", "effect": "UNLOCK_ACTION_IRRIGATE"},
+    {"value": 75, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_CROP_FARMING"}
   ],
   "affects": [{
-    "target": "gather_yield_plant",
+    "target": "crop_yield",
     "evaluator": "CURVE",
     "curve": "POWER",
     "params": {"exponent": 1.3},
     "weight": 0.70,
     "direction": "positive",
-    "context": "gathering"
+    "context": "farming"
   }],
   "display": {"visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step"}
 }

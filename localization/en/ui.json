@@ -1225,5 +1225,19 @@
 	"STATUS_RAGE": "Rage",
 	"STATUS_SHUTDOWN": "Shutdown",
 	"STATUS_FORCED_BY_AUTHORITY": "Forced by Authority",
-	"STATUS_IDLE": "Idle"
+	"STATUS_IDLE": "Idle",
+	"UI_SKILL_COOKING": "Cooking",
+	"UI_SKILL_FISHING": "Fishing",
+	"UI_SKILL_PERSUASION": "Persuasion",
+	"UI_SKILL_TEACHING": "Teaching",
+	"UI_SKILL_ARCHERY": "Archery",
+	"UI_SKILL_ANIMAL_HUSBANDRY": "Animal Husbandry",
+	"UI_SKILL_CROP_FARMING": "Crop Farming",
+	"UI_SKILL_POTTERY": "Pottery",
+	"UI_SKILL_WEAVING": "Weaving",
+	"UI_SKILL_MEDICINE": "Medicine",
+	"UI_SKILL_BLACKSMITHING": "Blacksmithing",
+	"UI_SKILL_READING_WRITING": "Reading & Writing",
+	"UI_SKILL_MATHEMATICS": "Mathematics",
+	"UI_SKILL_SWORDSMANSHIP": "Swordsmanship"
 }
