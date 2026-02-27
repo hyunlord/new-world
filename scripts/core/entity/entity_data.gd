@@ -73,8 +73,8 @@ var emotions: Dictionary = {
 ## 학술: Smithson & Verkuilen (2006) Fuzzy membership
 var trait_strengths: Dictionary = {}    # {trait_id: float 0~1} — salience scores
 var display_traits: Array = []          # [{id, name_key, salience, valence, category}] Top-K
-@warning_ignore("unused_private_class_variable")
-var _trait_display_active: Dictionary = {}  # {trait_id: bool} — hysteresis 상태 (표시 레이어)
+## Reserved: hysteresis display state for trait panel (not yet implemented)
+## var _trait_display_active: Dictionary = {}  # {trait_id: bool}
 var granted_traits: Dictionary = {}     # {trait_id: true} — event-granted traits (awakened, bond, mastery, fate)
 var traits_dirty: bool = true           # facet 변경 시 true → TraitSystem.update_trait_strengths() 트리거
 

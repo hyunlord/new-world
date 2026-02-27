@@ -47,9 +47,8 @@ func execute_tick(tick: int) -> void:
 					if body_age_y < 12.0:
 						entity.body.child_nutrition_sum += StatQuery.get_normalized(entity, &"NEED_HUNGER")
 						entity.body.child_nutrition_count += 1
-						@warning_ignore("shadowed_variable_base_class")
-						var is_active: float = 0.0 if entity.current_action in ["idle", "sleep"] else 1.0
-						entity.body.child_activity_sum += is_active
+						var activity_level: float = 0.0 if entity.current_action in ["idle", "sleep"] else 1.0
+						entity.body.child_activity_sum += activity_level
 						entity.body.child_activity_count += 1
 					else:
 						entity.body.finalize_childhood_environment()

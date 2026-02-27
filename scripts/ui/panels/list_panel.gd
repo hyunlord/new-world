@@ -14,13 +14,9 @@ var _sort_key: String = "name"
 var _sort_ascending: bool = true
 
 ## Filter
-@warning_ignore("unused_private_class_variable")
-var _search_text: String = ""
 var _show_deceased: bool = true
 
 ## Pagination
-@warning_ignore("unused_private_class_variable")
-var _page: int = 0
 const ITEMS_PER_PAGE: int = 30
 const ROW_HEIGHT: float = 18.0
 const COL_PAD: float = 6.0
