@@ -462,13 +462,16 @@ func _format_time_ago(save_time_str: String) -> String:
 	if diff < 60:
 		return Locale.ltr("UI_TIME_AGO_JUST_NOW")
 	if diff < 3600:
+		@warning_ignore("integer_division")
 		var minutes: int = maxi(diff / 60, 1)
 		return Locale.trf("UI_TIME_AGO_MINUTES", {"n": minutes})
 	if diff < 86400:
+		@warning_ignore("integer_division")
 		var hours: int = maxi(diff / 3600, 1)
 		return Locale.trf("UI_TIME_AGO_HOURS", {"n": hours})
 	if diff < 172800:
 		return Locale.ltr("UI_TIME_AGO_YESTERDAY")
+	@warning_ignore("integer_division")
 	var days: int = diff / 86400
 	return Locale.trf("UI_TIME_AGO_DAYS", {"n": days})
 

@@ -72,6 +72,7 @@ func _debug_log_event(event_type: String, data: Dictionary) -> void:
 			print("[Tick %d] x %s died (%s)" % [tick, ename, cause])
 		"entity_died_natural":
 			var age: int = data.get("age", 0)
+			@warning_ignore("integer_division")
 			var age_days: int = age / 24
 			print("[Tick %d] x DIED: %s age %dd (old age)" % [tick, ename, age_days])
 		"building_completed":

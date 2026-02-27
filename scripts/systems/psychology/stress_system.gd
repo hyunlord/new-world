@@ -78,7 +78,7 @@ func schedule_rebound(entity_id: int, amount: float, delay_ticks: int) -> void:
 	ed.set_meta("rebound_queue", queue)
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]

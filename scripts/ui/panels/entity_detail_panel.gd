@@ -954,6 +954,7 @@ func _draw() -> void:
 			ph_entries.reverse()
 			for i in range(mini(10, ph_entries.size())):
 				var pe: Dictionary = ph_entries[i]
+				@warning_ignore("integer_division")
 				var year_label: String = "Y%d" % (int(pe.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
 				var raw_text: String = Locale.ltr(pe.get("summary_key", "MEMORY_EVT_UNKNOWN"))
 				var ph_params: Dictionary = pe.get("params", {})
@@ -974,6 +975,7 @@ func _draw() -> void:
 			cy += 16.0
 			for i in range(mini(8, wm_entries.size())):
 				var we: Dictionary = wm_entries[i]
+				@warning_ignore("integer_division")
 				var year_label: String = "Y%d" % (int(we.get("tick", 0)) / GameConfig.TICKS_PER_YEAR)
 				var int_bar: String = "[%s]" % _intensity_to_bars(float(we.get("intensity", 0)))
 				var raw_text: String = Locale.ltr(we.get("summary_key", "MEMORY_EVT_UNKNOWN"))

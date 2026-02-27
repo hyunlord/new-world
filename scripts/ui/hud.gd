@@ -88,7 +88,7 @@ var _legend_stone_label: Label
 var _minimap_panel: Control
 var _stats_panel: Control
 var _minimap_visible: bool = true
-@warning_ignore("unused_variable")
+@warning_ignore("unused_private_class_variable")
 var _stats_visible: bool = true
 
 var _minimap_size_index: int = 0

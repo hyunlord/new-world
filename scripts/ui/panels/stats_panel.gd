@@ -88,7 +88,7 @@ func _draw_resource_graph(font: Font) -> void:
 	var wood_pts := PackedVector2Array()
 	var stone_pts := PackedVector2Array()
 	var count: int = history.size()
-	@warning_ignore("shadowed_variable")
+	@warning_ignore("confusable_local_usage")
 	var graph_h: float = rect.size.y - 15.0
 
 	for i in range(count):

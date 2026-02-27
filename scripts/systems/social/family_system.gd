@@ -61,6 +61,7 @@ func execute_tick(tick: int) -> void:
 	_process_births(alive, tick)
 	_check_pregnancies(alive, tick)
 	# Yearly demography log
+	@warning_ignore("integer_division")
 	var current_year: int = tick / GameConfig.TICKS_PER_YEAR
 	if current_year > _last_log_year:
 		_last_log_year = current_year

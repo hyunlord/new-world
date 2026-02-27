@@ -21,7 +21,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 	_settlement_manager = settlement_manager
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	# Births disabled: all reproduction handled by FamilySystem (T-1090)
 	# Natural deaths disabled: handled by MortalitySystem (T-2000, Siler model)
 	pass

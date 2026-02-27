@@ -22,6 +22,7 @@ static func days_in_year(year: int) -> int:
 
 ## Convert simulation tick to calendar date
 static func tick_to_date(tick: int) -> Dictionary:
+	@warning_ignore("integer_division")
 	var total_days: int = tick / TICKS_PER_DAY
 	var hour: int = (tick % TICKS_PER_DAY) * TICK_HOURS
 	var minute: int = 0  # 1 tick = 2 hours, so minute stays 0 unless tick granularity changes.
@@ -168,6 +169,7 @@ static func get_age_stage(age_ticks: int) -> String:
 
 ## Days between tick_a and tick_b
 static func ticks_to_days(ticks: int) -> int:
+	@warning_ignore("integer_division")
 	return ticks / TICKS_PER_DAY
 
 
@@ -186,8 +188,10 @@ static func birth_date_from_tick(birth_tick: int, rng: RandomNumberGenerator = n
 		return {"year": d.year, "month": d.month, "day": d.day}
 	# Pre-game entity: go backwards from game start (Y1.1.1)
 	var age_ticks: int = -birth_tick
+	@warning_ignore("integer_division")
 	var age_years: int = age_ticks / TICKS_PER_YEAR
 	var remaining_ticks: int = age_ticks % TICKS_PER_YEAR
+	@warning_ignore("integer_division")
 	var remaining_months: int = remaining_ticks / TICKS_PER_MONTH_AVG
 	# Subtract full years and remaining months from game start (Y1, month 1)
 	var birth_year: int = 1 - age_years
