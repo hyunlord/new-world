@@ -36,12 +36,13 @@ func _on_simulation_event(event: Dictionary) -> void:
 			_gather_totals[res_type] += amount
 		var tick: int = event.get("tick", 0)
 		if tick - _last_summary_tick >= 50 and _gather_count > 0:
-			print("[Tick %d] Gathered %dx: Food+%.0f Wood+%.0f Stone+%.0f" % [
-				tick, _gather_count,
-				_gather_totals.get("food", 0.0),
-				_gather_totals.get("wood", 0.0),
-				_gather_totals.get("stone", 0.0),
-			])
+			if GameConfig.DEBUG_EVENT_LOG:
+				print("[Tick %d] Gathered %dx: Food+%.0f Wood+%.0f Stone+%.0f" % [
+					tick, _gather_count,
+					_gather_totals.get("food", 0.0),
+					_gather_totals.get("wood", 0.0),
+					_gather_totals.get("stone", 0.0),
+				])
 			_gather_count = 0
 			_gather_totals = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 			_last_summary_tick = tick
@@ -50,6 +51,8 @@ func _on_simulation_event(event: Dictionary) -> void:
 
 
 func _debug_log_event(event_type: String, data: Dictionary) -> void:
+	if not GameConfig.DEBUG_EVENT_LOG:
+		return
 	if event_type in QUIET_EVENTS:
 		return
 	var tick: int = data.get("tick", -1)

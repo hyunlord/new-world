@@ -117,6 +117,10 @@ var tech_tree_manager: RefCounted
 var tech_discovery_system: RefCounted
 var tension_system: RefCounted
 var _world_setup: Node = null
+var _loading_overlay: CanvasLayer = null
+var _loading_bar: ProgressBar = null
+var _loading_label: Label = null
+var _loading_count_label: Label = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -405,6 +409,7 @@ func _ready() -> void:
 
 	## 시뮬레이션 일시정지 후 맵 에디터/프리셋 선택 화면 표시
 	sim_engine.is_paused = true
+	_build_loading_overlay()
 	_enter_setup_mode()
 
 
@@ -416,13 +421,52 @@ func _enter_setup_mode() -> void:
 	_world_setup.setup_confirmed.connect(_on_setup_confirmed)
 
 
+## 스폰 진행률 표시용 로딩 오버레이 동적 생성 (숨김 상태로 시작)
+func _build_loading_overlay() -> void:
+	_loading_overlay = CanvasLayer.new()
+	_loading_overlay.layer = 10
+	_loading_overlay.visible = false
+	add_child(_loading_overlay)
+
+	var bg := ColorRect.new()
+	bg.color = Color(0.05, 0.05, 0.08, 0.92)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_loading_overlay.add_child(bg)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_CENTER)
+	vbox.custom_minimum_size = Vector2(320, 100)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	bg.add_child(vbox)
+
+	_loading_label = Label.new()
+	_loading_label.text = Locale.ltr("UI_LOADING_SPAWNING")
+	_loading_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_loading_label)
+
+	_loading_bar = ProgressBar.new()
+	_loading_bar.min_value = 0.0
+	_loading_bar.max_value = 1.0
+	_loading_bar.step = 0.001
+	_loading_bar.value = 0.0
+	_loading_bar.custom_minimum_size = Vector2(300, 20)
+	vbox.add_child(_loading_bar)
+
+	_loading_count_label = Label.new()
+	_loading_count_label.text = "0 / 0"
+	_loading_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_loading_count_label)
+
+
 ## WorldSetup 완료 시 호출 — 맵 렌더링, 스폰, 시뮬레이션 시작
 func _on_setup_confirmed(spawn_data: Array) -> void:
 	_world_setup.queue_free()
 	_world_setup = null
 
 	world_renderer.render_world(world_data, resource_map)
-	_spawn_at_points(spawn_data)
+	_loading_overlay.visible = true
+	await _spawn_at_points_async(spawn_data)
+	_loading_overlay.visible = false
 
 	var center: Vector2i = GameConfig.WORLD_SIZE / 2
 	if not spawn_data.is_empty():
@@ -450,24 +494,76 @@ func _on_setup_confirmed(spawn_data: Array) -> void:
 	sim_engine.is_paused = false
 
 
-## 스폰 포인트 목록에서 에이전트 스폰 — 빈 경우 기존 _spawn_initial_entities()로 폴백
-func _spawn_at_points(spawn_data: Array) -> void:
+## 스폰 포인트 목록에서 에이전트를 SPAWN_BATCH_SIZE씩 나눠 스폰.
+## 각 배치 후 await process_frame으로 화면 업데이트 허용.
+func _spawn_at_points_async(spawn_data: Array) -> void:
+	# 총 스폰 수 미리 계산 (프로그레스 바용)
+	var total: int = 0
 	if spawn_data.is_empty():
-		_spawn_initial_entities()
-		return
-	for sp in spawn_data:
-		var pos: Vector2i = sp.position
-		var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
-		var nearby: Array = _get_walkable_near(pos, 30)
-		if nearby.is_empty():
-			continue
+		total = mini(GameConfig.INITIAL_SPAWN_COUNT,
+			_count_walkable_near(GameConfig.WORLD_SIZE / 2, 30))
+	else:
+		for sp in spawn_data:
+			total += sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
+	total = maxi(total, 1)
+
+	_loading_bar.value = 0.0
+	_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT", {"current": 0, "total": total})
+
+	var spawned: int = 0
+
+	if spawn_data.is_empty():
+		# 폴백: 월드 중심 근처에서 스폰
+		var center := GameConfig.WORLD_SIZE / 2
+		var walkable: Array = _get_walkable_near(center, 30)
+		if walkable.is_empty():
+			push_warning("[Main] No walkable tiles near center!")
+			return
+		var count: int = mini(GameConfig.INITIAL_SPAWN_COUNT, walkable.size())
+		# Fisher-Yates shuffle (기존 로직 유지)
+		for i in range(walkable.size() - 1, 0, -1):
+			var j: int = sim_engine.rng.randi() % (i + 1)
+			var tmp := walkable[i]
+			walkable[i] = walkable[j]
+			walkable[j] = tmp
 		for i in range(count):
-			var tile: Vector2i = nearby[sim_engine.rng.randi() % nearby.size()]
 			var age_years: int = _weighted_random_age(sim_engine.rng)
 			var day_offset: int = sim_engine.rng.randi_range(0, 364)
 			var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
-			entity_manager.spawn_entity(tile, "", initial_age)
-	print("[Main] Spawned entities at %d spawn point(s)." % spawn_data.size())
+			entity_manager.spawn_entity(walkable[i], "", initial_age)
+			spawned += 1
+			if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
+				_loading_bar.value = float(spawned) / float(total)
+				_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
+					{"current": spawned, "total": total})
+				await get_tree().process_frame
+		print("[Main] Spawned %d entities near world center." % spawned)
+	else:
+		for sp in spawn_data:
+			var pos: Vector2i = sp.position
+			var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
+			var nearby: Array = _get_walkable_near(pos, 30)
+			if nearby.is_empty():
+				continue
+			for i in range(count):
+				var tile: Vector2i = nearby[sim_engine.rng.randi() % nearby.size()]
+				var age_years: int = _weighted_random_age(sim_engine.rng)
+				var day_offset: int = sim_engine.rng.randi_range(0, 364)
+				var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
+				entity_manager.spawn_entity(tile, "", initial_age)
+				spawned += 1
+				if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
+					_loading_bar.value = float(spawned) / float(total)
+					_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
+						{"current": spawned, "total": total})
+					await get_tree().process_frame
+		print("[Main] Spawned entities at %d spawn point(s)." % spawn_data.size())
+
+	# 마지막 배치가 BATCH_SIZE 미만인 경우 최종 업데이트
+	_loading_bar.value = 1.0
+	_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
+		{"current": spawned, "total": total})
+	await get_tree().process_frame
 
 
 ## 중심 타일 근처의 walkable 타일 목록 반환
@@ -482,38 +578,14 @@ func _get_walkable_near(center: Vector2i, radius: int) -> Array:
 	return result
 
 
-func _spawn_initial_entities() -> void:
-	var center := GameConfig.WORLD_SIZE / 2
-	var spawn_radius: int = 30
-	var walkable_tiles: Array[Vector2i] = []
-
-	for dy in range(-spawn_radius, spawn_radius + 1):
-		for dx in range(-spawn_radius, spawn_radius + 1):
-			var x: int = center.x + dx
-			var y: int = center.y + dy
-			if world_data.is_walkable(x, y):
-				walkable_tiles.append(Vector2i(x, y))
-
-	if walkable_tiles.is_empty():
-		push_warning("[Main] No walkable tiles near center!")
-		return
-
-	var count: int = mini(GameConfig.INITIAL_SPAWN_COUNT, walkable_tiles.size())
-	# Shuffle using engine RNG for determinism
-	for i in range(walkable_tiles.size() - 1, 0, -1):
-		var j: int = sim_engine.rng.randi() % (i + 1)
-		var tmp := walkable_tiles[i]
-		walkable_tiles[i] = walkable_tiles[j]
-		walkable_tiles[j] = tmp
-
-	for i in range(count):
-		# Weighted age distribution for realistic population pyramid
-		var age_years: int = _weighted_random_age(sim_engine.rng)
-		var day_offset: int = sim_engine.rng.randi_range(0, 364)
-		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
-		entity_manager.spawn_entity(walkable_tiles[i], "", initial_age)
-
-	print("[Main] Spawned %d entities near world center." % count)
+## 총 스폰 수 사전 계산용 — 타일 목록 대신 카운트만 반환
+func _count_walkable_near(center: Vector2i, radius: int) -> int:
+	var count: int = 0
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			if world_data.is_walkable(center.x + dx, center.y + dy):
+				count += 1
+	return count
 
 
 ## Weighted random age for initial population pyramid
@@ -586,7 +658,6 @@ func _bootstrap_relationships(alive: Array) -> void:
 		m.emotions["love"] = 0.5
 		f.emotions["love"] = 0.5
 
-	print("[Main] Bootstrapped %d friend + %d partner relationships." % [friend_count, partner_count])
 
 
 ## Bootstrap a pre-built stockpile with starter resources
@@ -606,8 +677,7 @@ func _bootstrap_stockpile(settlement: RefCounted, center: Vector2i) -> void:
 					sp.storage["wood"] = 5.0
 					sp.storage["stone"] = 2.0
 					settlement.building_ids.append(sp.id)
-					print("[Main] Bootstrapped stockpile at (%d,%d) with starter resources." % [sx, sy])
-					return
+						return
 	push_warning("[Main] Could not place bootstrap stockpile near center!")
 
 
@@ -748,7 +818,6 @@ func _save_game_slot(slot: int) -> void:
 	if success:
 		NameGenerator.save_registry(path + "/names.json")
 		save_manager.save_tension(path + "/tension.json", tension_system)
-		print("[Main] Game saved to slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Save failed!")
 	sim_engine.is_paused = was_paused
@@ -768,7 +837,6 @@ func _load_game_slot(slot: int) -> void:
 		# Restore name registry
 		NameGenerator.load_registry(path + "/names.json")
 		save_manager.load_tension(path + "/tension.json", tension_system)
-		print("[Main] Game loaded from slot %d (tick %d)" % [slot, sim_engine.current_tick])
 	else:
 		push_warning("[Main] Load failed!")
 	sim_engine.is_paused = false

@@ -1,4 +1,5 @@
 extends Node
+class_name GameConfig
 
 ## World constants
 const WORLD_SIZE := Vector2i(256, 256)
@@ -9,6 +10,7 @@ const CHUNK_SIZE: int = 32
 const TICKS_PER_SECOND: int = 10
 const MAX_ENTITIES: int = 500
 const INITIAL_SPAWN_COUNT: int = 20
+const SPAWN_BATCH_SIZE: int = 5  ## 스폰 분산 — 한 프레임에 스폰할 최대 엔티티 수
 const MAX_TICKS_PER_FRAME: int = 5
 
 ## Time conversion (1 tick = 2 game hours)
@@ -410,6 +412,7 @@ const DEBUG_TRAUMA_LOG:          bool = false  ## 트라우마 스카 획득/재
 const DEBUG_TRAIT_VIOLATION_LOG: bool = false  ## 특성 위반 스트레스 이벤트
 const DEBUG_DEMOGRAPHY_LOG:      bool = false  ## 인구/출생/사망 주기 리포트
 const DEBUG_BALANCE_LOG:         bool = false  ## 500틱마다 밸런스 스냅샷
+const DEBUG_EVENT_LOG:           bool = false  ## event_logger Gathered/spawned/born/died 콘솔 출력
 
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002

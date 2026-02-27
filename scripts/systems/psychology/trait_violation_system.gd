@@ -153,9 +153,6 @@ func _load_trait_defs() -> void:
 				"base_stress": float(viol[action_id]),
 			})
 
-	print("[TraitViolationSystem] Loaded %d traits, %d action mappings" % [
-		_trait_defs_indexed.size(), _action_violation_map.size()
-	])
 
 
 # ── 메인 공개 함수 ─────────────────────────────────────────────────────────────

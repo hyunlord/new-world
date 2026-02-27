@@ -36,7 +36,6 @@ func _load_scar_defs() -> void:
 		push_error("[TraumaScarSystem] JSON parse error in %s" % TRAUMA_SCARS_PATH)
 		return
 	_scar_defs = json.get_data()
-	print("[TraumaScarSystem] Loaded %d scar definitions" % _scar_defs.size())
 
 
 ## 정신붕괴 종료 시 MentalBreakSystem이 호출 — 확률적으로 흉터 획득

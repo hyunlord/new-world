@@ -1,15 +1,18 @@
-# Phase: Simulation Performance Fix (10x Speed Bottleneck)
+# Phase: Debug Log Flag Control
 
 ## Classification Table
 
 | Ticket | Description | 🟢/🔴 | Tool | Status |
 |--------|-------------|--------|------|--------|
-| T1 | game_config 상수 변경 (NEEDS→4, STRESS 신설=4) | 🟢 DISPATCH | executor | ✅ Done |
-| T2 | stat_sync tick_interval 1→10 | 🟢 DISPATCH | executor | ✅ Done |
-| T3 | stress_system 하드코딩→GameConfig 참조 | 🔴 DIRECT | — | ✅ Done |
-| T4 | entity_renderer _process→tick_completed 신호 기반 | 🟢 DISPATCH | executor | ✅ Done |
+| T1 | GameConfig DEBUG_* 플래그 6개 추가 | 🔴 DIRECT | — | ✅ Done |
+| T2 | stress_system — DEBUG_STRESS_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
+| T3 | mental_break_system — DEBUG_MENTAL_BREAK_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
+| T4 | trauma_scar_system — DEBUG_TRAUMA_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
+| T5 | trait_violation_system — DEBUG_TRAIT_VIOLATION_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
+| T6 | mortality_system + family_system — DEBUG_DEMOGRAPHY_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
+| T7 | main.gd _log_balance() — DEBUG_BALANCE_LOG 플래그 적용 | 🟢 DISPATCH | executor | ✅ Done |
 
-**Dispatch ratio: 4/4 = 100% ✅**
+**Dispatch ratio: 6/7 = 86% ✅**
 
-## Dependency Order
-T1 + T2 + T4 (병렬) → T3 (T1 완료 후)
+## Commit
+`c96920f` — perf(debug): gate all per-tick print() calls behind DEBUG_* flags
