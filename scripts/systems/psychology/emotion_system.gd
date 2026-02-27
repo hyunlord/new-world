@@ -266,7 +266,7 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 # HEXACO -> Emotion Coupling
 # ═══════════════════════════════════════════════════
 
-func _get_personality_sensitivity(entity: RefCounted, pd: RefCounted) -> Dictionary:
+func _get_personality_sensitivity(entity: RefCounted, _pd: RefCounted) -> Dictionary:
 	var result: Dictionary = {}
 	for emo in _personality_sensitivity:
 		var config = _personality_sensitivity[emo]
@@ -289,7 +289,7 @@ func _get_personality_sensitivity(entity: RefCounted, pd: RefCounted) -> Diction
 	return result
 
 
-func _get_adjusted_half_life(emo: String, entity: RefCounted, pd: RefCounted, layer: String) -> float:
+func _get_adjusted_half_life(emo: String, entity: RefCounted, _pd: RefCounted, layer: String) -> float:
 	var base: float = _fast_half_life.get(emo, 1.0) if layer == "fast" else _slow_half_life.get(emo, 48.0)
 	var adj = _half_life_adjustments.get(emo, {})
 	if adj.is_empty():
@@ -300,7 +300,7 @@ func _get_adjusted_half_life(emo: String, entity: RefCounted, pd: RefCounted, la
 	return base * exp(coeff * z)
 
 
-func _get_baseline(emo: String, entity: RefCounted, pd: RefCounted) -> float:
+func _get_baseline(emo: String, entity: RefCounted, _pd: RefCounted) -> float:
 	var cfg = _baselines.get(emo, {})
 	var base_val = float(cfg.get("base", 0.0))
 	if not cfg.has("axis"):
@@ -406,7 +406,7 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 # ═══════════════════════════════════════════════════
 
 ## Check if entity should enter a mental break state
-func _check_mental_break(entity: RefCounted, dt_hours: float, tick: int) -> void:
+func _check_mental_break(entity: RefCounted, dt_hours: float, _tick: int) -> void:
 	var ed: RefCounted = entity.emotion_data
 	if ed == null:
 		return

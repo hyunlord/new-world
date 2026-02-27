@@ -45,7 +45,7 @@ func _connect_signals() -> void:
 
 
 ## Called by main.gd on every simulation tick (optional cross-system work).
-func on_simulation_tick(tick: int) -> void:
+func on_simulation_tick(_tick: int) -> void:
 	pass  # Phase 4 systems run via SimulationEngine; coordinator handles signal events only
 
 

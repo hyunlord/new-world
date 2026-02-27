@@ -396,7 +396,7 @@ func _apply_stress_to_emotions(ed) -> void:
 
 
 # ── Support score ─────────────────────────────────────────────────────
-func _calc_support_score(entity: RefCounted) -> float:
+func _calc_support_score(_entity: RefCounted) -> float:
 	var relationships = []
 	if relationships.is_empty():
 		return 0.3

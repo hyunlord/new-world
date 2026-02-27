@@ -271,7 +271,7 @@ func _check_annual_demography_log(tick: int) -> void:
 	_yearly_deaths_by_cause = {}
 
 
-func _print_demography_log(year: int, tick: int) -> void:
+func _print_demography_log(year: int, _tick: int) -> void:
 	if not GameConfig.DEBUG_DEMOGRAPHY_LOG:
 		return
 	var pop: int = _entity_manager.get_alive_count()
@@ -358,7 +358,7 @@ func _calc_theoretical_ex(start_age: float) -> float:
 	var m2: float = exp(-_tech_k2 * tech_level)
 	var m3: float = exp(-_tech_k3 * tech_level)
 	var dx: float = 0.5  # half-year steps
-	var cum_hazard_start: float = 0.0
+	var _cum_hazard_start: float = 0.0
 	var cum_hazard: float = 0.0
 	var integral: float = 0.0
 
@@ -366,7 +366,7 @@ func _calc_theoretical_ex(start_age: float) -> float:
 	var x: float = 0.0
 	while x < start_age:
 		var mu: float = m1 * _a1 * exp(-_b1 * x) + m2 * _a2 + m3 * _a3 * exp(_b3 * x)
-		cum_hazard_start += mu * dx
+		_cum_hazard_start += mu * dx
 		x += dx
 
 	# Integrate S(x)/S(start) from start_age to 120

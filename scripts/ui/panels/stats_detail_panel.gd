@@ -118,7 +118,7 @@ func _draw() -> void:
 	# Estimate the end of the two-column section
 	var history: Array = _stats_recorder.history
 	if not history.is_empty():
-		var snap: Dictionary = history[history.size() - 1]
+		var _snap: Dictionary = history[history.size() - 1]
 		var job_rows: int = 5
 		var settlement_rows: int = 0
 		if _settlement_manager != null:
@@ -388,7 +388,7 @@ func _draw_jobs_section(font: Font, x: float, y: float, w: float) -> void:
 		y += 14.0
 
 
-func _draw_settlements_section(font: Font, x: float, y: float, w: float) -> void:
+func _draw_settlements_section(font: Font, x: float, y: float, _w: float) -> void:
 	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_STAT_SETTLEMENTS_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.9, 0.6, 0.2))
 	y += 20.0
 

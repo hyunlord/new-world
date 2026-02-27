@@ -14,10 +14,12 @@ var _sort_key: String = "name"
 var _sort_ascending: bool = true
 
 ## Filter
+@warning_ignore("unused_variable")
 var _search_text: String = ""
 var _show_deceased: bool = true
 
 ## Pagination
+@warning_ignore("unused_variable")
 var _page: int = 0
 const ITEMS_PER_PAGE: int = 30
 const ROW_HEIGHT: float = 18.0
@@ -136,9 +138,9 @@ func _gui_input(event: InputEvent) -> void:
 			accept_event()
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			# Tab clicks
-			for tr in _tab_rects:
-				if tr.rect.has_point(event.position):
-					_current_tab = tr.index
+			for tr_item in _tab_rects:
+				if tr_item.rect.has_point(event.position):
+					_current_tab = tr_item.index
 					_scroll_offset = 0.0
 					accept_event()
 					return
@@ -198,7 +200,7 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 	var cx: float = 15.0
 	var cy: float = 10.0
-	var fs_title: int = GameConfig.get_font_size("popup_title")
+	var _fs_title: int = GameConfig.get_font_size("popup_title")
 	var fs_body: int = GameConfig.get_font_size("popup_body")
 	var fs_small: int = GameConfig.get_font_size("popup_small")
 
@@ -264,7 +266,7 @@ func _draw_scrollbar() -> void:
 	draw_rect(Rect2(scrollbar_x, grabber_y, scrollbar_width, grabber_height), Color(0.6, 0.6, 0.6, 0.5))
 
 
-func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, fs_body: int, fs_small: int) -> void:
+func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, _fs_body: int, fs_small: int) -> void:
 	var cy: float = start_cy
 	var col_widths: Array = _compute_column_widths(ENTITY_COLUMNS, panel_w - 30.0)
 
@@ -452,7 +454,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), count_text, HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
 
 
-func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, fs_body: int, fs_small: int) -> void:
+func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float, _panel_h: float, fs_body: int, fs_small: int) -> void:
 	var cy: float = start_cy
 
 	if _building_manager == null:

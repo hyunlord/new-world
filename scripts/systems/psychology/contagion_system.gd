@@ -76,7 +76,7 @@ func execute_tick(tick: int) -> void:
 	_run_spiral_dampener(alive, tick)
 
 
-func _run_aoe_contagion(alive: Array, tick: int) -> void:
+func _run_aoe_contagion(alive: Array, _tick: int) -> void:
 	## Hatfield, Cacioppo & Rapson (1993): Emotional Contagion
 	## Mechanism: mimicry drives automatic primitive emotional transfer
 	## AOE_RADIUS = 3 tiles Manhattan distance
@@ -151,7 +151,7 @@ func _run_aoe_contagion(alive: Array, tick: int) -> void:
 			r_ed.set_meta("contagion_refractory", REFRACTORY_TICKS)
 
 
-func _run_network_contagion(alive: Array, tick: int) -> void:
+func _run_network_contagion(alive: Array, _tick: int) -> void:
 	## Christakis & Fowler (2007) Connected - social spread in settlement proximity
 	## Processes 30% random subsample per tick for performance
 	if alive.is_empty():

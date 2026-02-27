@@ -74,10 +74,12 @@ static func sigmoid_extreme(value: int, params: Dictionary) -> float:
 		var t: float = (norm - flat_lo) / (flat_hi - flat_lo)
 		return lerpf(0.7, 1.3, t)
 	elif norm < flat_lo:
+		@warning_ignore("shadowed_variable")
 		var t: float = 1.0 - (norm / flat_lo)
 		var bottom: float = 1.0 / pole
 		return maxf(bottom, lerpf(0.7, bottom, pow(t, 1.5)))
 	else:
+		@warning_ignore("shadowed_variable")
 		var t: float = (norm - flat_hi) / (1.0 - flat_hi)
 		return minf(pole, lerpf(1.3, pole, pow(t, 1.5)))
 

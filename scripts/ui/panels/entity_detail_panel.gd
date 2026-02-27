@@ -398,7 +398,7 @@ func _get_trait_color(tdef: Dictionary) -> Color:
 
 
 ## Draw trait badges and optional trait effect summary for personality data.
-func _draw_trait_section(font: Font, cx: float, cy: float, pd: RefCounted, entity: RefCounted = null) -> float:
+func _draw_trait_section(font: Font, cx: float, cy: float, _pd: RefCounted, entity: RefCounted = null) -> float:
 	_trait_badge_regions.clear()
 
 	var display_trait_ids: Array = []

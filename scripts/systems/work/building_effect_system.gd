@@ -14,7 +14,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, sim_engine: 
 	_sim_engine = sim_engine
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	var buildings: Array = _building_manager.get_all_buildings()
 	for i in range(buildings.size()):
 		var building = buildings[i]

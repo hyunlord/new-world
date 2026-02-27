@@ -20,7 +20,7 @@ func init(entity_manager: RefCounted) -> void:
 	SimulationBus.skill_leveled_up.connect(_on_skill_leveled_up)
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]

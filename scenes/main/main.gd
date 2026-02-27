@@ -468,6 +468,7 @@ func _on_setup_confirmed(spawn_data: Array) -> void:
 	await _spawn_at_points_async(spawn_data)
 	_loading_overlay.visible = false
 
+	@warning_ignore("integer_division")
 	var center: Vector2i = GameConfig.WORLD_SIZE / 2
 	if not spawn_data.is_empty():
 		center = spawn_data[0].position
@@ -500,6 +501,7 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 	# 총 스폰 수 미리 계산 (프로그레스 바용)
 	var total: int = 0
 	if spawn_data.is_empty():
+		@warning_ignore("integer_division")
 		total = mini(GameConfig.INITIAL_SPAWN_COUNT,
 			_count_walkable_near(GameConfig.WORLD_SIZE / 2, 30))
 	else:
@@ -514,6 +516,7 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 
 	if spawn_data.is_empty():
 		# 폴백: 월드 중심 근처에서 스폰
+		@warning_ignore("integer_division")
 		var center := GameConfig.WORLD_SIZE / 2
 		var walkable: Array = _get_walkable_near(center, 30)
 		if walkable.is_empty():
@@ -621,6 +624,7 @@ func _bootstrap_relationships(alive: Array) -> void:
 			females.append(e)
 
 	# 3-4 friend pairs (same or mixed gender)
+	@warning_ignore("integer_division")
 	var friend_count: int = mini(4, alive.size() / 4)
 	for i in range(friend_count):
 		var idx_a: int = (i * 2) % alive.size()
