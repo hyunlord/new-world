@@ -19,6 +19,8 @@ const PHASE: int = 2  ## 현재 구현 Phase.
 var _affinity_cache: Dictionary = {}
 
 ## [Human Definition v3 §11] Tech era ordering for required_tech gate
+## Must be kept in sync with SettlementData.tech_era progression.
+## If eras are added to the tech tree, append them here in order.
 const ERA_ORDER = ["stone_age", "tribal", "bronze_age", "iron_age"]
 
 ## Settlement manager reference — set via init_settlement_manager() after scene is ready
@@ -261,14 +263,19 @@ func add_xp(entity: RefCounted, stat_id: StringName,
 		return result  ## Only handle LOG_DIMINISHING for now
 
 	## [Human Definition v3 §11] Tech era gate — XP blocked if settlement era < required_tech
+	## Unresolvable settlement (nomads, settlement_id=0) blocks conservatively —
+	## an unsettled entity is never more privileged than a settled one.
 	var req_tech: String = def.get("required_tech", "")
-	if req_tech != "" and _settlement_manager != null:
+	if req_tech != "":
+		if _settlement_manager == null:
+			return result  ## manager not ready — block conservatively
 		var settlement = _settlement_manager.get_settlement(entity.settlement_id)
-		if settlement != null:
-			var req_idx: int = ERA_ORDER.find(req_tech)
-			var cur_idx: int = ERA_ORDER.find(settlement.tech_era)
-			if req_idx >= 0 and cur_idx >= 0 and cur_idx < req_idx:
-				return result
+		if settlement == null:
+			return result  ## no settlement resolved — block conservatively
+		var req_idx: int = ERA_ORDER.find(req_tech)
+		var cur_idx: int = ERA_ORDER.find(settlement.tech_era)
+		if req_idx >= 0 and cur_idx >= 0 and cur_idx < req_idx:
+			return result
 
 	## [Human Definition v3 §11] Prerequisites gate — XP blocked if prerequisite skill level too low
 	var prereqs: Array = def.get("prerequisites", [])
