@@ -254,7 +254,9 @@ func _refresh_spawn_visual() -> void:
 func _find_center_walkable() -> Vector2i:
 	if _world_data == null:
 		return Vector2i(-1, -1)
+	@warning_ignore("integer_division")
 	var cx: int = GameConfig.WORLD_SIZE.x / 2
+	@warning_ignore("integer_division")
 	var cy: int = GameConfig.WORLD_SIZE.y / 2
 	for r in range(0, 50):
 		for dy in range(-r, r + 1):

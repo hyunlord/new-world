@@ -243,12 +243,14 @@ func get_behavior_weight_multiplier(entity_id: int) -> float:
 	var normal_max: float = float(bwm.get("normal_max", 1.2))
 	var normal_min: float = float(bwm.get("normal_min", 0.85))
 	if morale >= 0.3:
+		@warning_ignore("shadowed_variable")
 		var t: float = (morale - 0.3) / (flourishing_threshold - 0.3)
 		return lerpf(normal_min, normal_max, t)
 
 	var dis_max: float = float(bwm.get("dissatisfied_max", 0.85))
 	var dis_min: float = float(bwm.get("dissatisfied_min", 0.55))
 	if morale >= 0.0:
+		@warning_ignore("shadowed_variable")
 		var t: float = morale / 0.3
 		return lerpf(dis_min, dis_max, t)
 
