@@ -401,5 +401,8 @@
 	"TITLE_MASTER": "Master",
 	"TITLE_EXPERT": "Expert",
 	"TITLE_PREFIX_MASTER": "Master {occupation}",
-	"TITLE_PREFIX_EXPERT": "Expert {occupation}"
+	"TITLE_PREFIX_EXPERT": "Expert {occupation}",
+
+	"ACTION_CELEBRATE": "Celebrate",
+	"ACTION_CELEBRATE_DESC": "Joyfully celebrating with nearby companions"
 }

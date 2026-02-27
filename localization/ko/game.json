@@ -401,5 +401,8 @@
 	"TITLE_MASTER": "장인",
 	"TITLE_EXPERT": "숙련자",
 	"TITLE_PREFIX_MASTER": "{occupation} 장인",
-	"TITLE_PREFIX_EXPERT": "{occupation} 숙련자"
+	"TITLE_PREFIX_EXPERT": "{occupation} 숙련자",
+
+	"ACTION_CELEBRATE": "축하하기",
+	"ACTION_CELEBRATE_DESC": "근처 동료들과 기쁨을 나누며 축하하는 중"
 }

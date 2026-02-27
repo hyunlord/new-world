@@ -395,6 +395,16 @@ const STRESS_SYSTEM_TICK_INTERVAL: int = 4
 const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
+## ── Phase B-3: Stress → Work Efficiency [Yerkes-Dodson 1908, McEwen 2004] ──
+## Stress efficiency curve: maps stress level to action_timer multiplier.
+## Higher multiplier = slower actions (longer timer).
+## Inverted-U: slight boost at low stress, penalty at high stress.
+const STRESS_EFFICIENCY_EUSTRESS_PEAK: float = 150.0    ## Optimal stress for peak performance
+const STRESS_EFFICIENCY_EUSTRESS_BONUS: float = 0.90     ## Timer multiplier at eustress (0.9 = 10% faster)
+const STRESS_EFFICIENCY_DISTRESS_START: float = 400.0    ## Stress level where penalties begin
+const STRESS_EFFICIENCY_SEVERE_START: float = 700.0      ## Stress level where severe penalties begin
+const STRESS_EFFICIENCY_MAX_PENALTY: float = 1.60        ## Maximum timer multiplier (60% slower)
+
 ## Feature flag: thirst/warmth/safety needs
 ## Set true once resource/tech systems are ready to support them
 const NEEDS_EXPANSION_ENABLED: bool = true  ## was false — enabled Prompt 01
