@@ -54,8 +54,8 @@ func _build_scene() -> void:
 	_camera = Camera2D.new()
 	_camera.enabled = true
 	_camera.position = Vector2(
-		GameConfig.WORLD_WIDTH * GameConfig.TILE_SIZE / 2.0,
-		GameConfig.WORLD_HEIGHT * GameConfig.TILE_SIZE / 2.0
+		GameConfig.WORLD_SIZE.x * GameConfig.TILE_SIZE / 2.0,
+		GameConfig.WORLD_SIZE.y * GameConfig.TILE_SIZE / 2.0
 	)
 	add_child(_camera)
 
@@ -171,8 +171,8 @@ func _on_start_pressed() -> void:
 func _find_center_walkable() -> Vector2i:
 	if _world_data == null:
 		return Vector2i(-1, -1)
-	var cx: int = GameConfig.WORLD_WIDTH / 2
-	var cy: int = GameConfig.WORLD_HEIGHT / 2
+	var cx: int = GameConfig.WORLD_SIZE.x / 2
+	var cy: int = GameConfig.WORLD_SIZE.y / 2
 	for r in range(0, 50):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
