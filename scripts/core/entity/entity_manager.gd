@@ -352,7 +352,7 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 				entity.speech_humor = "dry"
 
 	## ── Layer 7: Preferences [Linden et al. 2010] ────────────────────────────────
-	var _o_axis: float = (_facets.get("O_inquisitiveness", 0.5) + _facets.get("O_aesthetic", 0.5)) / 2.0
+	var _o_axis: float = _O  ## Openness axis (구 O_inquisitiveness + O_aesthetic 대체)
 	if _o_axis > 0.65 and _rng.randf() < 0.4:
 		entity.favorite_food = GameConfig.PREFERENCE_FOOD_OPTIONS[_rng.randi() % 2 + 1]
 	else:
@@ -360,9 +360,9 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 
 	entity.favorite_color = GameConfig.PREFERENCE_COLOR_OPTIONS[_rng.randi() % GameConfig.PREFERENCE_COLOR_OPTIONS.size()]
 
-	var _c_axis: float = (_facets.get("C_diligence", 0.5) + _facets.get("C_organization", 0.5)) / 2.0
+	var _c_axis: float = _C  ## Conscientiousness axis (구 C_diligence + C_organization 대체)
 	var _season_weights: Array = [25, 25, 25, 25]
-	if _x_avg > 0.6:  _season_weights[1] += 10
+	if _X > 0.6:  _season_weights[1] += 10
 	if _c_axis > 0.6: _season_weights[3] += 10
 	if _o_axis > 0.6: _season_weights[2] += 10
 	entity.favorite_season = GameConfig.PREFERENCE_SEASON_OPTIONS[_weighted_index(_season_weights)]
