@@ -313,9 +313,9 @@ func _add_behavior_weights_section(bw: Dictionary) -> void:
 		if pct == 0:
 			continue
 		var aname: String = Locale.tr_id("TRAIT_KEY", action)
-		var sign: String = "+" if pct > 0 else ""
+		var pct_sign: String = "+" if pct > 0 else ""
 		var ec: Color = Color(0.3, 0.9, 0.3) if pct > 0 else Color(0.9, 0.3, 0.3)
-		_add_effect_row("%s %s%d%%" % [aname, sign, pct], ec)
+		_add_effect_row("%s %s%d%%" % [aname, pct_sign, pct], ec)
 		any_shown = true
 	if any_shown:
 		_add_separator_line()
@@ -413,8 +413,8 @@ func _add_v3_effects_section(effects: Array) -> void:
 					var targets: Array = target if target is Array else [target]
 					for t2 in targets:
 						var tname: String = Locale.tr_id("TRAIT_KEY", str(t2))
-						var sign: String = "+" if pct > 0 else ""
-						skill_lines.append("%s %s%d%%" % [tname, sign, pct])
+						var pct_sign: String = "+" if pct > 0 else ""
+						skill_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 			"behavior":
 				match op:
 					"block":
@@ -442,15 +442,15 @@ func _add_v3_effects_section(effects: Array) -> void:
 							var pct: int = int((float(value) - 1.0) * 100)
 							if pct != 0:
 								var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
-								var sign: String = "+" if pct > 0 else ""
-								stress_mult_lines.append("%s %s%d%%" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								stress_mult_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 					"add":
 						if value != null:
 							var pct: int = int(float(value))
 							if pct != 0:
 								var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
-								var sign: String = "+" if pct > 0 else ""
-								stress_mult_lines.append("%s %s%d" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								stress_mult_lines.append("%s %s%d" % [tname, pct_sign, pct])
 			"derived":
 				if value != null:
 					match op:
@@ -458,14 +458,14 @@ func _add_v3_effects_section(effects: Array) -> void:
 							var pct: int = int((float(value) - 1.0) * 100)
 							if pct != 0:
 								var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
-								var sign: String = "+" if pct > 0 else ""
-								derived_lines.append("%s %s%d%%" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								derived_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 						"add":
 							var pct: int = int(float(value) * 100)
 							if pct != 0:
 								var tname: String = Locale.tr_id("TRAIT_KEY", str(target))
-								var sign: String = "+" if pct > 0 else ""
-								derived_lines.append("%s %s%d%%" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								derived_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 			"emotion":
 				if value != null:
 					var tname: String = _format_target_list(target)
@@ -476,8 +476,8 @@ func _add_v3_effects_section(effects: Array) -> void:
 						"min":
 							emotion_min_lines.append("%s: %s %d%%" % [tname, Locale.ltr("TOOLTIP_LOWER_LIMIT"), pct])
 						"add":
-							var sign: String = "+" if pct > 0 else ""
-							emotion_add_lines.append("%s %s%d%%" % [tname, sign, pct])
+							var pct_sign: String = "+" if pct > 0 else ""
+							emotion_add_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 			"body":
 				if op == "mult" and value != null:
 					var pct: int = int((float(value) - 1.0) * 100)
@@ -485,8 +485,8 @@ func _add_v3_effects_section(effects: Array) -> void:
 						var targets: Array = target if target is Array else [target]
 						for t2 in targets:
 							var tname: String = Locale.tr_id("TRAIT_KEY", str(t2))
-							var sign: String = "+" if pct > 0 else ""
-							body_lines.append("%s %s%d%%" % [tname, sign, pct])
+							var pct_sign: String = "+" if pct > 0 else ""
+							body_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 			"need":
 				if value != null:
 					var targets: Array = target if target is Array else [target]
@@ -496,13 +496,13 @@ func _add_v3_effects_section(effects: Array) -> void:
 							var mult: float = float(value.get("decay_rate_mult", 1.0))
 							var pct: int = int((mult - 1.0) * 100)
 							if pct != 0:
-								var sign: String = "+" if pct > 0 else ""
-								need_lines.append("%s %s%d%%" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								need_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 						elif op == "mult":
 							var pct: int = int((float(value) - 1.0) * 100)
 							if pct != 0:
-								var sign: String = "+" if pct > 0 else ""
-								need_lines.append("%s %s%d%%" % [tname, sign, pct])
+								var pct_sign: String = "+" if pct > 0 else ""
+								need_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 			"relationship":
 				if value != null:
 					var targets: Array = target if target is Array else [target]
@@ -512,13 +512,13 @@ func _add_v3_effects_section(effects: Array) -> void:
 							"mult":
 								var pct: int = int((float(value) - 1.0) * 100)
 								if pct != 0:
-									var sign: String = "+" if pct > 0 else ""
-									relationship_lines.append("%s %s%d%%" % [tname, sign, pct])
+									var pct_sign: String = "+" if pct > 0 else ""
+									relationship_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 							"add":
 								var pct: int = int(float(value) * 100)
 								if pct != 0:
-									var sign: String = "+" if pct > 0 else ""
-									relationship_lines.append("%s %s%d%%" % [tname, sign, pct])
+									var pct_sign: String = "+" if pct > 0 else ""
+									relationship_lines.append("%s %s%d%%" % [tname, pct_sign, pct])
 							"set":
 								relationship_lines.append("%s = %d%%" % [tname, int(float(value) * 100)])
 			"aura":

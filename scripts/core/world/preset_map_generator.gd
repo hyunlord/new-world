@@ -291,7 +291,9 @@ func get_spawn_suggestions(world_data: RefCounted,
 		resource_map: RefCounted) -> Array:
 	var w: int = world_data.width
 	var h: int = world_data.height
+	@warning_ignore("integer_division")
 	var cx: int = w / 2
+	@warning_ignore("integer_division")
 	var cy: int = h / 2
 	var candidates: Array = []
 

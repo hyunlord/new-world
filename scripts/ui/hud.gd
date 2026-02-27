@@ -563,8 +563,10 @@ func _process(delta: float) -> void:
 		# Population milestones
 		if not _pop_milestone_init:
 			_pop_milestone_init = true
+			@warning_ignore("integer_division")
 			_last_pop_milestone = (pop / 10) * 10
 		else:
+			@warning_ignore("integer_division")
 			var m: int = (pop / 10) * 10
 			if m > _last_pop_milestone and m >= 10:
 				_last_pop_milestone = m

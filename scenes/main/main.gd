@@ -523,7 +523,7 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 		# Fisher-Yates shuffle (기존 로직 유지)
 		for i in range(walkable.size() - 1, 0, -1):
 			var j: int = sim_engine.rng.randi() % (i + 1)
-			var tmp := walkable[i]
+			var tmp = walkable[i]
 			walkable[i] = walkable[j]
 			walkable[j] = tmp
 		for i in range(count):
@@ -677,7 +677,7 @@ func _bootstrap_stockpile(settlement: RefCounted, center: Vector2i) -> void:
 					sp.storage["wood"] = 5.0
 					sp.storage["stone"] = 2.0
 					settlement.building_ids.append(sp.id)
-						return
+					return
 	push_warning("[Main] Could not place bootstrap stockpile near center!")
 
 

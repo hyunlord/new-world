@@ -254,7 +254,9 @@ func _give_birth(mother: RefCounted, tick: int, gestation_ticks: int) -> void:
 		father = _entity_manager.get_entity(mother.partner_id)
 
 	# Gestation in weeks for health calculation
+	@warning_ignore("integer_division")
 	var gestation_days: int = gestation_ticks / GameCalendar.TICKS_PER_DAY
+	@warning_ignore("integer_division")
 	var gestation_weeks: int = gestation_days / 7
 
 	# Check maternal complications

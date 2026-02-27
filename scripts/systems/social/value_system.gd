@@ -31,7 +31,7 @@ const RATIONALIZATION_DELTA: float = 0.05
 ## facet(0~1) → 가치관 시드(-1~+1)
 ## z(f) = 2*(f-0.5) — facet을 대칭 범위로 변환
 static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
-	var seed: Dictionary = {}
+	var hexaco_seed: Dictionary = {}
 	for vkey in ValueDefs.KEYS:
 		var mapping = ValueDefs.HEXACO_SEED_MAP.get(vkey, {})
 		var raw: float = 0.0
@@ -44,8 +44,8 @@ static func compute_hexaco_seed(hexaco: Dictionary) -> Dictionary:
 			total_weight += absf(w)
 		if total_weight > 0.0:
 			raw /= total_weight
-		seed[vkey] = clampf(raw, -1.0, 1.0)
-	return seed
+		hexaco_seed[vkey] = clampf(raw, -1.0, 1.0)
+	return hexaco_seed
 
 
 ## Box-Muller 정규분포 생성 (static용)

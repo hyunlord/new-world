@@ -315,18 +315,18 @@ func get_ui_size(key: String) -> int:
 
 
 ## Convert simulation tick to calendar date (delegates to GameCalendar)
-static func tick_to_date(tick: int) -> Dictionary:
+func tick_to_date(tick: int) -> Dictionary:
 	var GameCalendar = load("res://scripts/core/simulation/game_calendar.gd")
 	return GameCalendar.tick_to_date(tick)
 
 
 ## Convert age in ticks to years (float)
-static func get_age_years(age_ticks: int) -> float:
+func get_age_years(age_ticks: int) -> float:
 	return float(age_ticks) / float(TICKS_PER_YEAR)
 
 
 ## Get age stage string from age in ticks (6 stages)
-static func get_age_stage(age_ticks: int) -> String:
+func get_age_stage(age_ticks: int) -> String:
 	if age_ticks < AGE_INFANT_END:
 		return "infant"
 	elif age_ticks < AGE_TODDLER_END:

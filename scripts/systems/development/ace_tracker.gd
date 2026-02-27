@@ -153,8 +153,8 @@ func calculate_adult_modifiers() -> Dictionary:
 			"allostatic_base": 0.0,
 		}
 
-	var floor = _config.get("break_threshold_floor", 0.50)
-	base["break_threshold_mult"] = maxf(float(base.get("break_threshold_mult", 1.0)), float(floor))
+	var break_floor: float = _config.get("break_threshold_floor", 0.50)
+	base["break_threshold_mult"] = maxf(float(base.get("break_threshold_mult", 1.0)), float(break_floor))
 
 	var pf: float = _calculate_protective_factor()
 	base["stress_gain_mult"] = 1.0 + (float(base.get("stress_gain_mult", 1.0)) - 1.0) * (1.0 - pf)
