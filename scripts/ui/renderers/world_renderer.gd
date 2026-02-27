@@ -7,6 +7,7 @@ const WorldDataClass = preload("res://scripts/core/world/world_data.gd")
 var _resource_overlay: Sprite2D
 var _world_data_ref: RefCounted
 var _resource_map_ref: RefCounted
+var _img: Image
 
 
 ## Render the entire world as a single image texture
@@ -31,6 +32,7 @@ func render_world(world_data: RefCounted, resource_map: RefCounted = null) -> vo
 			)
 			img.set_pixel(x, y, final_color)
 
+	_img = img
 	var tex := ImageTexture.create_from_image(img)
 	texture = tex
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -99,3 +101,28 @@ func update_resource_overlay() -> void:
 	else:
 		tex = _resource_overlay.texture as ImageTexture
 		tex.update(img)
+
+
+## 단일 타일 픽셀 업데이트 (전체 재렌더링 없이)
+## 에디터 브러시 페인팅 시 사용. flush_pixel_updates() 호출로 GPU 반영.
+func update_tile_pixel(x: int, y: int) -> void:
+	if _img == null or _world_data_ref == null:
+		return
+	var biome: int = _world_data_ref.get_biome(x, y)
+	var elev: float = _world_data_ref.get_elevation(x, y)
+	var base_color: Color = GameConfig.BIOME_COLORS.get(biome, Color.MAGENTA)
+	var brightness: float = lerpf(0.7, 1.3, elev)
+	var final_color := Color(
+		clampf(base_color.r * brightness, 0.0, 1.0),
+		clampf(base_color.g * brightness, 0.0, 1.0),
+		clampf(base_color.b * brightness, 0.0, 1.0),
+	)
+	_img.set_pixel(x, y, final_color)
+
+
+## 배치 업데이트 flush — 브러시 스트로크 끝에 한 번 호출하여 GPU에 반영
+func flush_pixel_updates() -> void:
+	if _img == null:
+		return
+	if texture is ImageTexture:
+		(texture as ImageTexture).update(_img)

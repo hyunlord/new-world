@@ -1074,3 +1074,49 @@ const TENSION_SKIRMISH_COOLDOWN:    int   = 4380     ## 1 year minimum between s
 ## Post-skirmish tension change
 const TENSION_WINNER_REDUCTION:     float = 0.30     ## attacker win → tension drops (grievance resolved)
 const TENSION_LOSER_INCREASE:       float = 0.20     ## loser retaliates → tension rises
+
+## --- 맵 에디터 ---
+const MAP_EDITOR_BRUSH_MIN: int = 1
+const MAP_EDITOR_BRUSH_MAX: int = 10
+const MAP_EDITOR_BRUSH_DEFAULT: int = 3
+const MAP_EDITOR_STRENGTH_MIN: float = 0.5
+const MAP_EDITOR_STRENGTH_MAX: float = 2.0
+const MAP_EDITOR_SPAWN_MIN: int = 5
+const MAP_EDITOR_SPAWN_MAX: int = 100
+const MAP_EDITOR_SPAWN_DEFAULT: int = 20
+
+## 프리셋별 고정 시드 (재현 가능한 기본 맵)
+const PRESET_SEED_ISLAND: int = 42001
+const PRESET_SEED_CONTINENT: int = 42002
+const PRESET_SEED_ARCHIPELAGO: int = 42003
+
+## 프리셋 생성 파라미터
+const PRESET_ISLAND_LAND_RATIO: float = 0.45
+const PRESET_CONTINENT_LAND_RATIO: float = 0.70
+const PRESET_ARCHIPELAGO_ISLAND_COUNT: int = 5
+
+## 바이옴별 기본 elevation (브러시 TERRAIN 모드에서 사용)
+const BIOME_DEFAULT_ELEVATION: Dictionary = {
+	0: 0.15,  ## DEEP_WATER
+	1: 0.35,  ## SHALLOW_WATER
+	2: 0.43,  ## BEACH
+	3: 0.55,  ## GRASSLAND
+	4: 0.58,  ## FOREST
+	5: 0.60,  ## DENSE_FOREST
+	6: 0.72,  ## HILL
+	7: 0.85,  ## MOUNTAIN
+	8: 0.93,  ## SNOW
+}
+
+## 바이옴별 기본 moisture (브러시 TERRAIN 모드에서 사용)
+const BIOME_DEFAULT_MOISTURE: Dictionary = {
+	0: 0.9,   ## DEEP_WATER
+	1: 0.8,   ## SHALLOW_WATER
+	2: 0.3,   ## BEACH
+	3: 0.4,   ## GRASSLAND
+	4: 0.55,  ## FOREST
+	5: 0.75,  ## DENSE_FOREST
+	6: 0.35,  ## HILL
+	7: 0.3,   ## MOUNTAIN
+	8: 0.2,   ## SNOW
+}

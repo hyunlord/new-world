@@ -55,6 +55,7 @@ const NetworkSystemScript = preload("res://scripts/systems/social/network_system
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
 const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
+const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -115,6 +116,7 @@ var network_system: RefCounted
 var tech_tree_manager: RefCounted
 var tech_discovery_system: RefCounted
 var tension_system: RefCounted
+var _world_setup: Node = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -134,14 +136,10 @@ func _ready() -> void:
 	world_data = WorldData.new()
 	world_data.init_world(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
 	world_generator = WorldGenerator.new()
-	world_generator.generate(world_data, seed_value)
 
 	# Initialize resource map
 	resource_map = ResourceMap.new()
 	resource_map.init_resources(GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y)
-	var res_rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	res_rng.seed = seed_value + 100
-	resource_map.populate_from_biomes(world_data, res_rng)
 
 	# Initialize entity manager
 	entity_manager = EntityManager.new()
@@ -357,9 +355,6 @@ func _ready() -> void:
 	sim_engine.register_system(intergenerational_system) # priority 45 (Phase 5)
 	sim_engine.register_system(parenting_system)         # priority 46 (Phase 5)
 
-	# Render world (with resource tinting)
-	world_renderer.render_world(world_data, resource_map)
-
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)
 	building_renderer.init(building_manager, settlement_manager)
@@ -408,39 +403,83 @@ func _ready() -> void:
 	# Initialize name generator with sim RNG and entity manager
 	NameGenerator.init(sim_engine.rng, entity_manager)
 
-	# Spawn initial entities + create first settlement
-	_spawn_initial_entities()
+	## 시뮬레이션 일시정지 후 맵 에디터/프리셋 선택 화면 표시
+	sim_engine.is_paused = true
+	_enter_setup_mode()
 
-	# Create founding settlement at world center and assign all entities
-	var center := GameConfig.WORLD_SIZE / 2
+
+## WorldSetup 씬 생성 및 world_data/resource_map 주입
+func _enter_setup_mode() -> void:
+	_world_setup = WorldSetupScript.new()
+	_world_setup.setup(world_data, resource_map)
+	add_child(_world_setup)
+	_world_setup.setup_confirmed.connect(_on_setup_confirmed)
+
+
+## WorldSetup 완료 시 호출 — 맵 렌더링, 스폰, 시뮬레이션 시작
+func _on_setup_confirmed(spawn_data: Array) -> void:
+	_world_setup.queue_free()
+	_world_setup = null
+
+	world_renderer.render_world(world_data, resource_map)
+	_spawn_at_points(spawn_data)
+
+	var center: Vector2i = GameConfig.WORLD_SIZE / 2
+	if not spawn_data.is_empty():
+		center = spawn_data[0].position
 	var founding: RefCounted = settlement_manager.create_settlement(center.x, center.y, 0)
 	var initial_alive: Array = entity_manager.get_alive_entities()
 	for i in range(initial_alive.size()):
 		var e: RefCounted = initial_alive[i]
 		e.settlement_id = founding.id
 		settlement_manager.add_member(founding.id, e.id)
-		# Register name in NameGenerator for duplicate prevention
 		NameGenerator.register_name(e.entity_name, founding.id)
 
-	# Bootstrap initial stockpile so gatherers can deliver and HUD shows resources
 	_bootstrap_stockpile(founding, center)
-
-	# Bootstrap initial relationships for faster couple formation
 	_bootstrap_relationships(initial_alive)
 
-	# Initialize chronicle system with entity manager for name lookups
 	ChronicleSystem.init(entity_manager)
-
-	# Enable camera entity following
 	camera.set_entity_manager(entity_manager)
 
-	# Connect lifecycle signals for chronicle event logging
 	SimulationBus.entity_born.connect(_on_entity_born_chronicle)
 	SimulationBus.entity_died.connect(_on_entity_died_chronicle)
 	SimulationBus.couple_formed.connect(_on_couple_formed_chronicle)
 
-	_print_startup_banner(seed_value)
+	_print_startup_banner(GameConfig.WORLD_SEED)
 	hud.show_startup_toast(entity_manager.get_alive_count())
+	sim_engine.is_paused = false
+
+
+## 스폰 포인트 목록에서 에이전트 스폰 — 빈 경우 기존 _spawn_initial_entities()로 폴백
+func _spawn_at_points(spawn_data: Array) -> void:
+	if spawn_data.is_empty():
+		_spawn_initial_entities()
+		return
+	for sp in spawn_data:
+		var pos: Vector2i = sp.position
+		var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
+		var nearby: Array = _get_walkable_near(pos, 30)
+		if nearby.is_empty():
+			continue
+		for i in range(count):
+			var tile: Vector2i = nearby[sim_engine.rng.randi() % nearby.size()]
+			var age_years: int = _weighted_random_age(sim_engine.rng)
+			var day_offset: int = sim_engine.rng.randi_range(0, 364)
+			var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
+			entity_manager.spawn_entity(tile, "", initial_age)
+	print("[Main] Spawned entities at %d spawn point(s)." % spawn_data.size())
+
+
+## 중심 타일 근처의 walkable 타일 목록 반환
+func _get_walkable_near(center: Vector2i, radius: int) -> Array:
+	var result: Array = []
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			var x: int = center.x + dx
+			var y: int = center.y + dy
+			if world_data.is_walkable(x, y):
+				result.append(Vector2i(x, y))
+	return result
 
 
 func _spawn_initial_entities() -> void:
@@ -579,6 +618,8 @@ var _current_day_color: Color = Color(1.0, 1.0, 1.0)
 var _day_night_enabled: bool = true
 
 func _process(delta: float) -> void:
+	if _world_setup != null:
+		return
 	sim_engine.update(delta)
 	var current_tick: int = sim_engine.current_tick
 

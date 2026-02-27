@@ -1,5 +1,7 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
+const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
+
 ## [Granovetter 1973, Burt 2004, Weber 1922, Milgram 1963, Tilly 1978]
 ## Three responsibilities:
 ##   1. Social capital computation: strong×3 + weak×1 + bridge×5 + rep×10
@@ -182,7 +184,7 @@ func _compute_revolution_risk(settlement: RefCounted) -> float:
 	if settlement.leader_id > -1:
 		var leader: RefCounted = _entity_manager.get_entity(settlement.leader_id)
 		if leader != null and leader.is_alive:
-			var pop: float = float(leader.stat_cache.get(&"DERIVED_POPULARITY", 500)) / 1000.0
+			var pop: float = float(StatCacheScript.get_value(leader.stat_cache, &"DERIVED_POPULARITY", 500)) / 1000.0
 			leader_unpopularity = 1.0 - pop
 
 	## Component 5: Independence-seekers ratio
