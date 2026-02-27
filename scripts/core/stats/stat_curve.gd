@@ -71,17 +71,15 @@ static func sigmoid_extreme(value: int, params: Dictionary) -> float:
 	var norm: float = float(value) / 1000.0
 
 	if norm >= flat_lo and norm <= flat_hi:
-		var t: float = (norm - flat_lo) / (flat_hi - flat_lo)
-		return lerpf(0.7, 1.3, t)
+		var t_mid: float = (norm - flat_lo) / (flat_hi - flat_lo)
+		return lerpf(0.7, 1.3, t_mid)
 	elif norm < flat_lo:
-		@warning_ignore("shadowed_variable")
-		var t: float = 1.0 - (norm / flat_lo)
+		var t_lo: float = 1.0 - (norm / flat_lo)
 		var bottom: float = 1.0 / pole
-		return maxf(bottom, lerpf(0.7, bottom, pow(t, 1.5)))
+		return maxf(bottom, lerpf(0.7, bottom, pow(t_lo, 1.5)))
 	else:
-		@warning_ignore("shadowed_variable")
-		var t: float = (norm - flat_hi) / (1.0 - flat_hi)
-		return minf(pole, lerpf(1.3, pole, pow(t, 1.5)))
+		var t_hi: float = (norm - flat_hi) / (1.0 - flat_hi)
+		return minf(pole, lerpf(1.3, pole, pow(t_hi, 1.5)))
 
 ## POWER: 신체 → 전투/작업
 ## effect = (value / 1000)^exponent
