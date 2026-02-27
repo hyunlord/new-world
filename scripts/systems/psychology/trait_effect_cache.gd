@@ -83,6 +83,8 @@ static func rebuild(entity: RefCounted) -> void:
 static func _apply_effect(cache: Dictionary, system: String, op: String, targets: Array, value) -> void:
 	match system:
 		"skill":
+			if value is Dictionary:
+				return  ## complex skill effects (e.g. S_broken_compass role_satisfaction) not supported in scalar mult cache
 			var skill_mult: Dictionary = cache.get("skill_mult", {})
 			for t in targets:
 				var key: String = str(t)
@@ -161,6 +163,8 @@ static func _apply_effect(cache: Dictionary, system: String, op: String, targets
 			cache["need_mult"] = need_mult
 
 		"relationship":
+			if value is Dictionary:
+				return  ## complex relationship effects (e.g. R_golden_heart shadow_bonus) not supported in scalar mult cache
 			var rel_mult: Dictionary = cache.get("relationship_mult", {})
 			for t in targets:
 				var key: String = str(t)
