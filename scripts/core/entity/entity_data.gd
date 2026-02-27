@@ -230,6 +230,12 @@ var economic_tendencies: Dictionary = {
 	"materialism": 0.0,
 }
 
+## [Alderfer 1969 ERG] Frustration counters — ticks of continuous deficit
+var erg_growth_frustration_ticks: int = 0       ## increments when growth needs all < ERG_GROWTH_FRUSTRATION_THRESHOLD
+var erg_relatedness_frustration_ticks: int = 0  ## increments when belonging & intimacy both < ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+var erg_regressing_to_existence: bool = false   ## true when growth frustration triggered regression
+var erg_regressing_to_relatedness: bool = false ## true when relatedness frustration triggered regression
+
 ## Pathfinding cache (runtime only, not serialized)
 var cached_path: Array = []
 var path_index: int = 0
@@ -360,6 +366,10 @@ func to_dict() -> Dictionary:
 		"wealth_score": wealth_score,
 		"wealth_norm": wealth_norm,
 		"economic_tendencies": economic_tendencies.duplicate(),
+		"erg_growth_frustration_ticks": erg_growth_frustration_ticks,
+		"erg_relatedness_frustration_ticks": erg_relatedness_frustration_ticks,
+		"erg_regressing_to_existence": erg_regressing_to_existence,
+		"erg_regressing_to_relatedness": erg_regressing_to_relatedness,
 		"blood_type":     blood_type,
 		"blood_genotype": blood_genotype,
 		"zodiac_sign":    zodiac_sign,
@@ -518,6 +528,10 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"generosity": et_data.get("generosity", 0.0),
 		"materialism": et_data.get("materialism", 0.0),
 	}
+	e.erg_growth_frustration_ticks      = data.get("erg_growth_frustration_ticks",    0)
+	e.erg_relatedness_frustration_ticks = data.get("erg_relatedness_frustration_ticks", 0)
+	e.erg_regressing_to_existence       = data.get("erg_regressing_to_existence",     false)
+	e.erg_regressing_to_relatedness     = data.get("erg_regressing_to_relatedness",   false)
 	e.blood_type     = data.get("blood_type",     "O")
 	e.blood_genotype = data.get("blood_genotype", "OO")
 	e.zodiac_sign    = data.get("zodiac_sign",    "")

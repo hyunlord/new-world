@@ -395,7 +395,7 @@ const MOVEMENT_TICK_INTERVAL: int = 3
 
 ## Feature flag: thirst/warmth/safety needs
 ## Set true once resource/tech systems are ready to support them
-const NEEDS_EXPANSION_ENABLED: bool = false
+const NEEDS_EXPANSION_ENABLED: bool = true  ## was false — enabled Prompt 01
 
 ## ── Debug Panel ─────────────────────────────────────────────────────────────
 ## Set false before shipping. When false, F12 does nothing.
@@ -435,6 +435,16 @@ const SAFETY_DECAY_RATE: float = 0.0006
 const SAFETY_SHELTER_RESTORE: float = 0.002
 const SAFETY_CRITICAL: float = 0.15
 const SAFETY_LOW: float = 0.35
+
+## [Alderfer 1969 ERG] Frustration-regression thresholds and multipliers
+## If a growth/relatedness need stays below THRESHOLD for ERG_FRUSTRATION_WINDOW ticks,
+## the agent over-invests in the corresponding lower need.
+const ERG_FRUSTRATION_WINDOW: int = 300          ## ticks of sustained deficit = ~1 in-game month
+const ERG_GROWTH_FRUSTRATION_THRESHOLD: float = 0.25   ## competence/autonomy/self_actualization < this
+const ERG_RELATEDNESS_FRUSTRATION_THRESHOLD: float = 0.25  ## belonging/intimacy < this
+const ERG_EXISTENCE_SCORE_BOOST: float = 0.30    ## multiplier boost to gather_food/gather_wood when regressing
+const ERG_RELATEDNESS_SCORE_BOOST: float = 0.25  ## multiplier boost to socialize/visit_partner when regressing
+const ERG_STRESS_INJECT_RATE: float = 1.5        ## stress/tick injected during active regression
 
 ## Starvation grace period (in NeedsSystem ticks, ~4 days)
 const STARVATION_GRACE_TICKS: int = 25
@@ -851,6 +861,23 @@ const ECON_BEHAVIOR_WEIGHTS: Dictionary = {
 	"fine_woodwork":        { "saving": 0.05, "materialism": 0.05 },
 	"ore_vein":             { "saving": 0.05, "materialism": 0.08 },
 }
+
+## ━━ ECONOMIC BEHAVIOR THRESHOLDS [Layer 4.7] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Modigliani 1966] Saving tendency → deliver score adjustment
+const ECON_DELIVER_BASE_SCORE: float = 0.60          ## Base delivery score (carry > threshold)
+const ECON_DELIVER_SAVING_SCALE: float = 0.35        ## saving × this added to deliver score
+const ECON_DELIVER_MATERIALISM_SUPPRESS: float = 0.25 ## materialism × this subtracted from deliver score
+## [Kasser & Ryan 1993] Materialism hoarding: carry threshold before delivering
+## Default carry > 3.0. Materialistic agents only deliver at much higher carry.
+const ECON_HOARD_MATERIALISM_THRESHOLD: float = 0.40  ## materialism above this → hoarding mode
+const ECON_HOARD_CARRY_MULTIPLIER: float = 2.0        ## carry threshold multiplied by this when hoarding
+## [Trivers 1971 / Engel 2011] Generosity sharing trigger
+const ECON_SHARE_GENEROSITY_THRESHOLD: float = 0.30   ## generosity must exceed this to trigger sharing
+const ECON_SHARE_NEIGHBOR_HUNGER_THRESHOLD: float = 0.35  ## target must be this hungry to be worth sharing
+const ECON_SHARE_MIN_SURPLUS: float = 2.0             ## agent must have at least this much food to share
+const ECON_SHARE_FOOD_AMOUNT: float = 1.0             ## food units transferred per share action
+const ECON_SHARE_SCORE_BASE: float = 0.50             ## base action score for share_food
+const ECON_SHARE_SCORE_GENEROSITY_SCALE: float = 0.40 ## generosity × this added to share_food score
 
 ## ━━ BLOOD TYPE SYSTEM [Layer 7 — ABO Genetics] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## 초기 집단 스폰 시 혈액형 표현형 가중치 [세계 인구 기준 근사치]

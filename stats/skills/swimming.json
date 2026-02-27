@@ -1,0 +1,22 @@
+{
+  "id": "SKILL_SWIMMING",
+  "display_key": "SKILL_SWIMMING",
+  "category": "SKILL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 1,
+  "required_tech": "stone_age",
+  "prerequisites": [],
+  "growth": {
+    "type": "LOG_DIMINISHING",
+    "params": {"base_xp": 80, "exponent": 1.7, "level_breakpoints": [25, 50, 75], "breakpoint_multipliers": [1.0, 1.4, 1.8, 2.5]},
+    "talent_key": "BODY_AGI_TRAINABILITY",
+    "talent_ceiling_map": {"0": 50, "200": 68, "400": 85, "600": 93, "800": 100}
+  },
+  "thresholds": [
+    {"value": 30, "direction": "above", "effect": "UNLOCK_ACTION_CROSS_RIVER"}
+  ],
+  "affects": [{"target": "migration_success", "evaluator": "CURVE", "curve": "LINEAR", "params": {}, "weight": 0.25, "direction": "positive", "context": "travel"}],
+  "display": {"visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step"}
+}

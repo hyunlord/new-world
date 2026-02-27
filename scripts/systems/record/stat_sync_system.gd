@@ -42,12 +42,8 @@ func _sync_entity(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"NEED_MEANING",            int(entity.meaning * 1000), 0)
 	StatQuery.set_value(entity, &"NEED_TRANSCENDENCE",    int(entity.transcendence * 1000), 0)
 
-	## SKILL levels: int 0–100 (already int, no scaling needed)
-	var _skill_ids: Array = [
-		&"SKILL_FORAGING", &"SKILL_WOODCUTTING", &"SKILL_MINING",
-		&"SKILL_CONSTRUCTION", &"SKILL_HUNTING"
-	]
-	for _sid in _skill_ids:
+	## SKILL levels: int 0–100 — data-driven, syncs all skills the entity has trained
+	for _sid in entity.skill_levels.keys():
 		var _level: int = int(entity.skill_levels.get(_sid, 0))
 		StatQuery.set_value(entity, _sid, _level, 0)
 

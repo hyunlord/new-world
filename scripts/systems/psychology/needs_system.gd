@@ -7,6 +7,7 @@ var _building_manager: RefCounted
 var _mortality_system: RefCounted
 var _world_data: RefCounted = null
 var _stress_system = null
+var _last_tick: int = 0
 
 
 func _init() -> void:
@@ -23,6 +24,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 
 
 func execute_tick(tick: int) -> void:
+	_last_tick = tick
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -191,6 +193,7 @@ func execute_tick(tick: int) -> void:
 							_mortality_system.inject_bereavement_stress(deceased_entity)
 		else:
 			entity.starving_timer = 0
+		_update_erg_frustration(entity)
 
 
 ## Get total food in stockpiles belonging to a settlement
@@ -228,3 +231,64 @@ func _withdraw_food(settlement_id: int, amount: float) -> float:
 		remaining -= take
 		withdrawn += take
 	return withdrawn
+
+
+## Setter for external injection of StressSystem reference
+func set_stress_system(ss) -> void:
+	_stress_system = ss
+
+
+## [Alderfer 1969 ERG Theory] Track sustained need frustration.
+## If growth needs are chronically unmet → regression to existence-level obsession.
+## If relatedness needs are chronically unmet → regression to existence-level obsession.
+func _update_erg_frustration(entity: RefCounted) -> void:
+	if not entity.is_alive:
+		return
+	# --- Growth frustration check ---
+	var growth_frustrated: bool = (
+		entity.competence < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+		entity.autonomy < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+		entity.self_actualization < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
+	)
+	if growth_frustrated:
+		entity.erg_growth_frustration_ticks += 1
+	else:
+		entity.erg_growth_frustration_ticks = maxi(0, entity.erg_growth_frustration_ticks - 10)
+
+	var was_regressing_growth: bool = entity.erg_regressing_to_existence
+	entity.erg_regressing_to_existence = (
+		entity.erg_growth_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+	)
+	if entity.erg_regressing_to_existence and not was_regressing_growth:
+		if entity.emotion_data != null and _stress_system != null:
+			_stress_system.inject_stress_event(entity.emotion_data, "erg_growth_regression", 5.0)
+		emit_event("erg_regression_started", {
+			"entity_id": entity.id,
+			"entity_name": entity.entity_name,
+			"regression_type": "growth_to_existence",
+			"tick": _last_tick,
+		})
+
+	# --- Relatedness frustration check ---
+	var relatedness_frustrated: bool = (
+		entity.belonging < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD and
+		entity.intimacy < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+	)
+	if relatedness_frustrated:
+		entity.erg_relatedness_frustration_ticks += 1
+	else:
+		entity.erg_relatedness_frustration_ticks = maxi(0, entity.erg_relatedness_frustration_ticks - 10)
+
+	var was_regressing_rel: bool = entity.erg_regressing_to_relatedness
+	entity.erg_regressing_to_relatedness = (
+		entity.erg_relatedness_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+	)
+	if entity.erg_regressing_to_relatedness and not was_regressing_rel:
+		if entity.emotion_data != null and _stress_system != null:
+			_stress_system.inject_stress_event(entity.emotion_data, "erg_relatedness_regression", 4.0)
+		emit_event("erg_regression_started", {
+			"entity_id": entity.id,
+			"entity_name": entity.entity_name,
+			"regression_type": "relatedness_to_existence",
+			"tick": _last_tick,
+		})

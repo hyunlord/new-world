@@ -193,8 +193,40 @@ func _apply_arrival_effect(entity: RefCounted, tick: int) -> void:
 				"thirst_after": entity.thirst,
 				"tick": tick,
 			})
-		"sit_by_fire", "seek_shelter":
-			pass
+		"sit_by_fire":
+			## [Cannon 1932] Fire restores warmth at WARMTH_FIRE_RESTORE per arrival
+			if _building_manager != null:
+				var fire_building = _building_manager.get_nearest_building(
+					entity.position.x, entity.position.y, "campfire", true)
+				if fire_building != null:
+					var dist: int = absi(entity.position.x - fire_building.tile_x) + absi(entity.position.y - fire_building.tile_y)
+					if dist <= 1:
+						entity.warmth = minf(entity.warmth + GameConfig.WARMTH_FIRE_RESTORE, 1.0)
+						entity.action_timer = 0
+						emit_event("entity_warmed", {
+							"entity_id": entity.id,
+							"entity_name": entity.entity_name,
+							"warmth_after": entity.warmth,
+							"tick": tick,
+						})
+		"seek_shelter":
+			## [Maslow 1943 L2] Shelter restores warmth (minor) + safety (minor) per tick inside
+			if _building_manager != null:
+				var shelter_building = _building_manager.get_nearest_building(
+					entity.position.x, entity.position.y, "shelter", true)
+				if shelter_building != null:
+					var dist: int = absi(entity.position.x - shelter_building.tile_x) + absi(entity.position.y - shelter_building.tile_y)
+					if dist <= 1:
+						entity.warmth = minf(entity.warmth + GameConfig.WARMTH_SHELTER_RESTORE, 1.0)
+						entity.safety = minf(entity.safety + GameConfig.SAFETY_SHELTER_RESTORE, 1.0)
+						entity.action_timer = 0
+						emit_event("entity_sheltered", {
+							"entity_id": entity.id,
+							"entity_name": entity.entity_name,
+							"warmth_after": entity.warmth,
+							"safety_after": entity.safety,
+							"tick": tick,
+						})
 		"gather_wood", "gather_stone", "build", "wander":
 			pass
 

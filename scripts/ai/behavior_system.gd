@@ -16,6 +16,8 @@ var _morale_system = null
 var _stress_system = null
 ## Debug-only: override hysteresis threshold for testing (-1 = use default HYSTERESIS_THRESHOLD)
 var _debug_hysteresis_threshold_override: float = -1.0
+## [Layer 4.7] Current simulation tick — stored for share_food event emission
+var _current_tick: int = 0
 
 ## [Hysteresis — Utility AI standard pattern]
 ## Action inertia threshold: prevents micro-score oscillation from flip-flopping.
@@ -58,6 +60,7 @@ func debug_set_hysteresis_threshold(value: float) -> void:
 
 
 func execute_tick(tick: int) -> void:
+	_current_tick = tick
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -172,17 +175,40 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 	# Building-related actions (requires building_manager) — adults only
 	if _building_manager != null and stage == "adult":
 		var sid: int = entity.settlement_id
-		# Deliver to stockpile — gradual threshold
+		## [Modigliani 1966] Saving tendency modulates deliver threshold and score.
+		## [Kasser & Ryan 1993] Materialistic agents hoard — raise carry threshold before delivering.
+		var _mat: float = entity.economic_tendencies.get("materialism", 0.0)
+		var _sav: float = entity.economic_tendencies.get("saving", 0.0)
+		var _carry_threshold: float = 3.0
+		if _mat > GameConfig.ECON_HOARD_MATERIALISM_THRESHOLD:
+			_carry_threshold = 3.0 * GameConfig.ECON_HOARD_CARRY_MULTIPLIER  ## materialist: deliver only at carry>6.0
 		var carry: float = entity.get_total_carry()
-		if carry > 3.0:
+		if carry > _carry_threshold:
 			var stockpile: RefCounted = _find_nearest_building_in_settlement(
 				entity.position, "stockpile", sid, true
 			)
 			if stockpile != null:
-				if carry > 6.0:
-					scores["deliver_to_stockpile"] = 0.9
-				else:
-					scores["deliver_to_stockpile"] = 0.6
+				## Base score + saving boost - materialism suppression
+				var _deliver_score: float = GameConfig.ECON_DELIVER_BASE_SCORE
+				_deliver_score += _sav * GameConfig.ECON_DELIVER_SAVING_SCALE
+				_deliver_score -= _mat * GameConfig.ECON_DELIVER_MATERIALISM_SUPPRESS
+				_deliver_score = clampf(_deliver_score, 0.05, 1.0)
+				if carry > _carry_threshold * 2.0:  ## very high carry always delivers regardless of tendency
+					_deliver_score = maxf(_deliver_score, 0.80)
+				scores["deliver_to_stockpile"] = _deliver_score
+
+		## [Trivers 1971 Reciprocal Altruism / Engel 2011]
+		## Generous agents with food surplus seek out hungry neighbors and share.
+		var _gen: float = entity.economic_tendencies.get("generosity", 0.0)
+		if _gen > GameConfig.ECON_SHARE_GENEROSITY_THRESHOLD:
+			var _my_food: float = entity.inventory.get("food", 0.0)
+			if _my_food >= GameConfig.ECON_SHARE_MIN_SURPLUS and entity.settlement_id > 0:
+				var _hungry_neighbor = _find_hungry_neighbor(entity)
+				if _hungry_neighbor != null:
+					entity.set_meta("share_food_target_id", _hungry_neighbor.id)
+					var _share_score: float = GameConfig.ECON_SHARE_SCORE_BASE + \
+						_gen * GameConfig.ECON_SHARE_SCORE_GENEROSITY_SCALE
+					scores["share_food"] = clampf(_share_score, 0.0, 1.0)
 
 		# Build when there are unbuilt buildings or we can place new ones
 		var unbuilt: RefCounted = _find_unbuilt_building(entity)
@@ -305,6 +331,16 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if StatQuery.get_normalized(entity, &"NEED_WARMTH") < GameConfig.WARMTH_LOW or StatQuery.get_normalized(entity, &"NEED_SAFETY") < GameConfig.SAFETY_LOW:
 			scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 0.6 \
 				+ _urgency_curve(safety_deficit) * 0.4
+
+	## [Alderfer 1969 ERG] Regression boosts existence/relatedness actions
+	if entity.erg_regressing_to_existence:
+		for _exist_action in ["gather_food", "gather_wood", "gather_stone", "trap_hunt"]:
+			if scores.has(_exist_action):
+				scores[_exist_action] *= (1.0 + GameConfig.ERG_EXISTENCE_SCORE_BOOST)
+	if entity.erg_regressing_to_relatedness:
+		for _rel_action in ["socialize", "visit_partner"]:
+			if scores.has(_rel_action):
+				scores[_rel_action] *= (1.0 + GameConfig.ERG_RELATEDNESS_SCORE_BOOST)
 
 	## [Frederick et al. 2002 / Zuckerman 1979 / Trivers 1971 / Richins & Dawson 1992]
 	## Layer 4.7 경제 행동 성향 기반 utility 보정 (가산)
@@ -598,7 +634,31 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			entity.action_timer = 15
 			entity.safety = minf(1.0, entity.safety + 0.05)
 
-		## ── Skill-Unlocked Action Stubs [Anderson 1982 ACT*] ──────────────────────
+		## [Trivers 1971] Transfer food to a hungry neighbor identified during scoring.
+		"share_food":
+			var _target_id: int = int(entity.get_meta("share_food_target_id", -1))
+			if _target_id > 0:
+				var _target = _entity_manager.get_entity(_target_id)
+				if _target != null and _target.is_alive:
+					var _amount: float = minf(GameConfig.ECON_SHARE_FOOD_AMOUNT,
+						entity.inventory.get("food", 0.0))
+					if _amount > 0.0:
+						entity.remove_item("food", _amount)
+						_target.add_item("food", _amount)
+						entity.action_timer = 0
+						emit_event("entity_shared_food", {
+							"entity_id": entity.id,
+							"entity_name": entity.entity_name,
+							"target_id": _target_id,
+							"target_name": _target.entity_name,
+							"amount": _amount,
+							"tick": _current_tick,
+						})
+			entity.remove_meta("share_food_target_id")
+			entity.action_target = entity.position
+			entity.action_timer = 5
+
+	## ── Skill-Unlocked Action Stubs [Anderson 1982 ACT*] ──────────────────────
 		"herb_gather":
 			## Medicinal herb gathering — uses nearby food tiles as source
 			if _resource_map != null:
@@ -685,6 +745,29 @@ func _find_nearest_entity(entity: RefCounted) -> Vector2i:
 	if best_dist == 999999:
 		return _find_random_walkable_nearby(entity.position, 5)
 	return best_pos
+
+
+## [Trivers 1971] Find the hungriest alive neighbor in the same settlement within radius 8.
+## Returns null if no neighbor is below ECON_SHARE_NEIGHBOR_HUNGER_THRESHOLD.
+func _find_hungry_neighbor(entity: RefCounted) -> RefCounted:
+	if _entity_manager == null:
+		return null
+	var best: RefCounted = null
+	var best_hunger: float = GameConfig.ECON_SHARE_NEIGHBOR_HUNGER_THRESHOLD
+	var alive: Array = _entity_manager.get_alive_entities()
+	for i in range(alive.size()):
+		var other = alive[i]
+		if other.id == entity.id:
+			continue
+		if other.settlement_id != entity.settlement_id:
+			continue
+		if other.hunger < best_hunger:
+			var dist: int = absi(entity.position.x - other.position.x) + \
+				absi(entity.position.y - other.position.y)
+			if dist <= 8:
+				best_hunger = other.hunger
+				best = other
+	return best
 
 
 ## [Maslow (1943) L1] 가장 가까운 water 타일 탐색 (deep/shallow water biome)
