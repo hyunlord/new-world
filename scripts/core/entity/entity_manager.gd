@@ -253,6 +253,28 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 		if _rng.randf() < GameConfig.DISTINGUISHING_MARK_CHANCE:
 			entity.distinguishing_marks.append(_mark_id)
 
+	## ── Layer 7: Blood Type [ABO Genetics — Human Definition v3 §13] ──────────
+	if parent_a != null and parent_b != null:
+		var _g1: String = parent_a.blood_genotype
+		var _g2: String = parent_b.blood_genotype
+		## 알파벳순 정렬로 교배키 생성
+		var _cross_key: String = (_g1 + "_" + _g2) if _g1 <= _g2 else (_g2 + "_" + _g1)
+		var _cross: Dictionary = GameConfig.BLOOD_CROSS_TABLE.get(_cross_key, {"OO": 100})
+		entity.blood_genotype = _weighted_random_string(_cross)
+	else:
+		## 초기 스폰: 표현형 먼저 결정 → 유전자형 결정
+		var _phenotype: String = _weighted_random_string(GameConfig.BLOOD_TYPE_SPAWN_WEIGHTS)
+		var _geno_dist: Dictionary = GameConfig.BLOOD_GENOTYPE_FROM_PHENOTYPE.get(_phenotype, {"OO": 100})
+		entity.blood_genotype = _weighted_random_string(_geno_dist)
+	entity.blood_type = GameConfig.BLOOD_GENOTYPE_TO_PHENOTYPE.get(entity.blood_genotype, "O")
+
+	## ── Layer 7: Zodiac Sign ─────────────────────────────────────────────────────
+	if entity.birth_date.size() > 0:
+		entity.zodiac_sign = _get_zodiac_sign(
+			entity.birth_date.get("month", 1),
+			entity.birth_date.get("day", 1)
+		)
+
 	## ── Layer 7: Speech Style — Upgraded [Costa & McCrae 1992, Ekman 1992] ──────
 	## HEXACO axis 6개 + Plutchik 3감정 → tone/verbosity/humor
 	var _axes: Dictionary = entity.personality.axes  # H/E/X/A/C/O (0~1)
@@ -457,6 +479,27 @@ func _weighted_random_string(weights: Dictionary) -> String:
 		if roll < cumulative:
 			return k
 	return weights.keys()[0]
+
+
+## 생일 month(1~12) + day(1~31) → zodiac_sign String
+static func _get_zodiac_sign(month: int, day: int) -> String:
+	## 황도 12궁 경계: [월, 해당월_경계일, 경계일_이상_별자리]
+	var _boundaries: Array = [
+		[1, 20, "aquarius"], [2, 19, "pisces"],      [3, 21, "aries"],
+		[4, 20, "taurus"],   [5, 21, "gemini"],      [6, 21, "cancer"],
+		[7, 23, "leo"],      [8, 23, "virgo"],        [9, 23, "libra"],
+		[10, 23, "scorpio"], [11, 22, "sagittarius"], [12, 22, "capricorn"]
+	]
+	## 이전 달 말일 기준 별자리 (경계일 미만일 때)
+	var _prev_signs: Array = [
+		"capricorn", "aquarius", "pisces", "aries", "taurus", "gemini",
+		"cancer", "leo", "virgo", "libra", "scorpio", "sagittarius"
+	]
+	for i in range(_boundaries.size()):
+		var _b: Array = _boundaries[i]
+		if month == _b[0]:
+			return _b[2] if day >= _b[1] else _prev_signs[i]
+	return "capricorn"  ## fallback (12월 말)
 
 
 ## Weighted random index from Array[int] weights

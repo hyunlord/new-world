@@ -162,11 +162,13 @@ static func initialize_values(
 		var hs: float = hexaco_seed.get(vkey, 0.0)
 		var noise: float = _randfn_static(rng, 0.0, 0.50)
 		var culture_contrib: float = culture * 0.20 if culture_values != null else 0.0
+		## [Knafo & Schwartz 2004] 가치별 차등 유전율 적용
+		var h_v: float = GameConfig.VALUE_HERITABILITY.get(vkey, 0.15)
 		var final_val: float = clampf(
 			hs      * 0.40
 			+ noise   * 0.40
 			+ culture_contrib
-			+ (genetic - hs) * 0.20,
+			+ (genetic - hs) * h_v,
 			-1.0, 1.0
 		)
 		result[vkey] = final_val

@@ -1239,5 +1239,21 @@
 	"UI_SKILL_BLACKSMITHING": "Blacksmithing",
 	"UI_SKILL_READING_WRITING": "Reading & Writing",
 	"UI_SKILL_MATHEMATICS": "Mathematics",
-	"UI_SKILL_SWORDSMANSHIP": "Swordsmanship"
+	"UI_SKILL_SWORDSMANSHIP": "Swordsmanship",
+	"BLOOD_TYPE_A": "Blood Type A",
+	"BLOOD_TYPE_B": "Blood Type B",
+	"BLOOD_TYPE_AB": "Blood Type AB",
+	"BLOOD_TYPE_O": "Blood Type O",
+	"ZODIAC_ARIES": "Aries",
+	"ZODIAC_TAURUS": "Taurus",
+	"ZODIAC_GEMINI": "Gemini",
+	"ZODIAC_CANCER": "Cancer",
+	"ZODIAC_LEO": "Leo",
+	"ZODIAC_VIRGO": "Virgo",
+	"ZODIAC_LIBRA": "Libra",
+	"ZODIAC_SCORPIO": "Scorpio",
+	"ZODIAC_SAGITTARIUS": "Sagittarius",
+	"ZODIAC_CAPRICORN": "Capricorn",
+	"ZODIAC_AQUARIUS": "Aquarius",
+	"ZODIAC_PISCES": "Pisces"
 }

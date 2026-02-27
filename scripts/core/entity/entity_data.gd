@@ -165,6 +165,11 @@ var eye_color: String = "brown"
 ## Array of localization key IDs (e.g. ["MARK_SCAR_FACE"])
 var distinguishing_marks: Array = []
 
+## ── Layer 7: ABO Blood Type & Zodiac (Human Definition v3 §13) ──────────────
+var blood_type: String = "O"       ## 표현형: "A"/"B"/"AB"/"O"
+var blood_genotype: String = "OO"  ## 유전자형: "AA"/"AO"/"BB"/"BO"/"AB"/"OO"
+var zodiac_sign: String = ""       ## "aries"/"taurus"/.."pisces" (12궁)
+
 ## ── Layer 7: Speech Style (Human Definition v3 §13) ──────────────────────────
 ## Derived from personality at spawn. tone: aggressive/gentle/formal/casual/sarcastic
 var speech_tone: String = "casual"
@@ -355,6 +360,9 @@ func to_dict() -> Dictionary:
 		"wealth_score": wealth_score,
 		"wealth_norm": wealth_norm,
 		"economic_tendencies": economic_tendencies.duplicate(),
+		"blood_type":     blood_type,
+		"blood_genotype": blood_genotype,
+		"zodiac_sign":    zodiac_sign,
 	}
 
 
@@ -510,6 +518,9 @@ static func from_dict(data: Dictionary) -> RefCounted:
 		"generosity": et_data.get("generosity", 0.0),
 		"materialism": et_data.get("materialism", 0.0),
 	}
+	e.blood_type     = data.get("blood_type",     "O")
+	e.blood_genotype = data.get("blood_genotype", "OO")
+	e.zodiac_sign    = data.get("zodiac_sign",    "")
 	return e
 
 
