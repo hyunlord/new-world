@@ -306,6 +306,11 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 			scores["seek_shelter"] = _urgency_curve(warmth_deficit) * 0.6 \
 				+ _urgency_curve(safety_deficit) * 0.4
 
+	## [Frederick et al. 2002 / Zuckerman 1979 / Trivers 1971 / Richins & Dawson 1992]
+	## Layer 4.7 경제 행동 성향 기반 utility 보정 (가산)
+	for action_id in scores:
+		scores[action_id] = _apply_economic_modifiers(action_id, scores[action_id], entity)
+
 	## [Schwartz 1992] 가치관 기반 행동 score 보정 (entity.values 비어있으면 no-op)
 	for action_id in scores:
 		scores[action_id] = _apply_value_modifiers(scores[action_id], action_id, entity)
@@ -335,6 +340,22 @@ func _apply_value_modifiers(base_score: float, action_id: StringName, entity: Re
 		var kohlberg_mod: float = _ValueDefs.KOHLBERG_MODIFIERS.get(stage, {}).get(vkey, 1.0)
 		bonus += alignment * my_val * kohlberg_mod
 	return base_score * (1.0 + clampf(bonus * VALUE_MOD_SCALE, -VALUE_MOD_SCALE, VALUE_MOD_SCALE))
+
+
+## [Frederick et al. 2002 / Zuckerman 1979 / Trivers 1971 / Richins & Dawson 1992]
+## Layer 4.7 경제 행동 성향 기반 utility 보정 (가산)
+## entity.economic_tendencies 비어있으면 no-op
+func _apply_economic_modifiers(action_id: String, base_score: float, entity: RefCounted) -> float:
+	if entity.economic_tendencies.is_empty():
+		return base_score
+	var weights: Dictionary = GameConfig.ECON_BEHAVIOR_WEIGHTS.get(action_id, {})
+	if weights.is_empty():
+		return base_score
+	var delta: float = 0.0
+	for tkey in weights:
+		var tendency: float = entity.economic_tendencies.get(tkey, 0.0)
+		delta += tendency * weights[tkey]
+	return maxf(0.0, base_score + delta)
 
 
 ## [Festinger 1957] 가치관 위반 행동 시 스트레스 주입 및 자기합리화 기록

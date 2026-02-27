@@ -829,6 +829,29 @@ const ECON_MATERIALISM_JOY_PENALTY: float = 3.0
 ## Theft temptation constants
 const THEFT_SCARCITY_FOOD_DAYS: float = 3.0
 
+## [Frederick et al. 2002, Zuckerman 1979, Trivers 1971, Richins & Dawson 1992]
+## Economic tendency → behavior utility additive weights
+## Format: { action_id: { tendency_key: weight, ... }, ... }
+## weight 부호: + = 성향 높을수록 행동 점수 상승, - = 반대
+const ECON_BEHAVIOR_WEIGHTS: Dictionary = {
+	"gather_food":          { "saving": 0.15, "materialism": 0.10 },
+	"gather_wood":          { "saving": 0.15, "materialism": 0.10 },
+	"gather_stone":         { "saving": 0.10, "materialism": 0.10 },
+	"herb_gather":          { "saving": 0.05, "materialism": 0.05 },
+	"trap_hunt":            { "risk":   0.20, "materialism": 0.05 },
+	"wander":               { "risk":   0.15, "saving": -0.05 },
+	"rest":                 { "saving": -0.10, "risk": -0.05, "materialism": -0.05 },
+	"sit_by_fire":          { "saving": -0.05, "risk": -0.10 },
+	"socialize":            { "generosity": 0.15, "materialism": -0.10 },
+	"visit_partner":        { "generosity": 0.10, "materialism": -0.05 },
+	"deliver_to_stockpile": { "saving": 0.20, "generosity": 0.15 },
+	"take_from_stockpile":  { "saving": -0.10, "generosity": -0.10, "materialism": 0.15 },
+	"seek_shelter":         { "saving": 0.05, "risk": -0.15 },
+	"build":                { "saving": 0.10, "materialism": 0.10 },
+	"fine_woodwork":        { "saving": 0.05, "materialism": 0.05 },
+	"ore_vein":             { "saving": 0.05, "materialism": 0.08 },
+}
+
 ## ━━ JOB SATISFACTION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## [Holland 1959, Hackman & Oldham 1976, Deci & Ryan 1985, Judge 2001]
 
