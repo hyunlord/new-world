@@ -324,9 +324,10 @@ func get_spawn_suggestions(world_data: RefCounted,
 						return [{"pos": Vector2i(px, py), "dist_sq": 0, "food": 0.0}]
 		return []
 
-	## 거리 오름차순 정렬 후 최대 5개
+	## 거리 오름차순 정렬 후 최적 1개만 반환
+	## 복수 스폰 포인트는 유저가 스폰 브러시로 직접 배치해야 함
 	candidates.sort_custom(func(a, b): return a.dist_sq < b.dist_sq)
 	var result: Array = []
-	for i in range(mini(5, candidates.size())):
-		result.append(candidates[i].pos)
+	if not candidates.is_empty():
+		result.append(candidates[0].pos)
 	return result
