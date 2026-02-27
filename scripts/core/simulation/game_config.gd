@@ -1,5 +1,4 @@
 extends Node
-class_name GameConfig
 
 ## World constants
 const WORLD_SIZE := Vector2i(256, 256)
