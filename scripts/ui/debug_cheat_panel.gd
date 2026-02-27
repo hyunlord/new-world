@@ -1,4 +1,3 @@
-class_name DebugCheatPanel
 extends CanvasLayer
 
 ## Developer debug panel — F12 toggle.

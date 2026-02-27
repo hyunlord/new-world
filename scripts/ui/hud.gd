@@ -1,4 +1,3 @@
-class_name HUD
 extends CanvasLayer
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")

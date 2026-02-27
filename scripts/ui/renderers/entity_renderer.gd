@@ -1,4 +1,3 @@
-class_name EntityRenderer
 extends Node2D
 
 const EntityDataClass = preload("res://scripts/core/entity/entity_data.gd")

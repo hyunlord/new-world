@@ -1,4 +1,3 @@
-class_name BuildingRenderer
 extends Node2D
 
 var _building_manager: RefCounted

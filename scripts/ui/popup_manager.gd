@@ -1,4 +1,3 @@
-class_name PopupManager
 extends CanvasLayer
 
 var _sim_engine: RefCounted

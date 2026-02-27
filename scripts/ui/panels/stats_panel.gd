@@ -1,4 +1,3 @@
-class_name StatsPanel
 extends Control
 
 var _stats_recorder: RefCounted

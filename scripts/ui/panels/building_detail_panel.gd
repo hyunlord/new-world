@@ -1,4 +1,3 @@
-class_name BuildingDetailPanel
 extends Control
 
 var _building_manager: RefCounted
