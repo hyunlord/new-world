@@ -76,7 +76,11 @@ func _is_leader(entity: RefCounted) -> bool:
 	return s != null and s.leader_id == entity.id
 
 
-func _process(_delta: float) -> void:
+func _ready() -> void:
+	SimulationBus.tick_completed.connect(_on_tick)
+
+
+func _on_tick(_tick: int) -> void:
 	queue_redraw()
 
 

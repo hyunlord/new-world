@@ -95,21 +95,22 @@ func execute_tick(tick: int) -> void:
 					settlement_food += sp.storage.get("food", 0.0)
 		var date: Dictionary = GameCalendar.tick_to_date(tick)
 		var month_label: String = Locale.get_month_name(date.month)
-		print("[DEMOGRAPHY] Y%d %s --- Yearly Report ---" % [
-			date.year, month_label,
-		])
-		print("  Pop: %d (Adults: %d, Teens: %d, Children: %d, Infants: %d)" % [
-			pop, adults, teens, children, infants,
-		])
-		print("  Births: %d, Deaths: %d" % [
-			_entity_manager.total_births, _entity_manager.total_deaths,
-		])
-		print("  Couples: %d, Pregnant: %d" % [
-			couples, pregnant,
-		])
-		print("  Settlement food: %.1f" % [
-			settlement_food,
-		])
+		if GameConfig.DEBUG_DEMOGRAPHY_LOG:
+			print("[DEMOGRAPHY] Y%d %s --- Yearly Report ---" % [
+				date.year, month_label,
+			])
+			print("  Pop: %d (Adults: %d, Teens: %d, Children: %d, Infants: %d)" % [
+				pop, adults, teens, children, infants,
+			])
+			print("  Births: %d, Deaths: %d" % [
+				_entity_manager.total_births, _entity_manager.total_deaths,
+			])
+			print("  Couples: %d, Pregnant: %d" % [
+				couples, pregnant,
+			])
+			print("  Settlement food: %.1f" % [
+				settlement_food,
+			])
 
 
 ## ─── Widowhood: detect dead partners ──────────────────────

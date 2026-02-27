@@ -36,7 +36,6 @@ func set_locale(locale: String) -> void:
 	load_locale(locale)
 	_save_settings()
 	locale_changed.emit(locale)
-	print("[Locale] Changed to: %s" % locale)
 
 
 ## Load all translation files for a locale
@@ -53,7 +52,6 @@ func load_locale(locale: String) -> void:
 		var json = JSON.new()
 		json.parse(file.get_as_text())
 		_strings[cat] = json.data if json.data else {}
-	print("[Locale] Loaded %s: %d categories" % [locale, _strings.size()])
 
 
 ## Lookup translation string by key (searches all categories)

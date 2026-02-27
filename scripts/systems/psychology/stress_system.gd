@@ -53,7 +53,7 @@ const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full dela
 func _init() -> void:
 	system_name = "stress"
 	priority = 34        # after emotion(32), before social(37)
-	tick_interval = 2    # every 2 ticks (same cadence as needs_system)
+	tick_interval = GameConfig.STRESS_SYSTEM_TICK_INTERVAL
 
 
 func init(entity_manager: RefCounted) -> void:
@@ -162,7 +162,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 
 # ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
-func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
+func _calc_appraisal_scale(entity: RefCounted, _pd, ed) -> float:
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
@@ -273,7 +273,7 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 
 
 # ── 5) 회복 ──────────────────────────────────────────────────────────
-func _calc_recovery(entity: RefCounted, ed, pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
+func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
 	var decay: float = BASE_DECAY_PER_TICK + DECAY_FRAC * ed.stress
 
 	if is_safe:
@@ -295,7 +295,7 @@ func _calc_recovery(entity: RefCounted, ed, pd, is_sleeping: bool, is_safe: bool
 
 
 # ── 7) Reserve (GAS) ─────────────────────────────────────────────────
-func _update_reserve(ed, pd, is_sleeping: bool) -> void:
+func _update_reserve(ed, _pd, is_sleeping: bool) -> void:
 	var resilience: float = ed.resilience
 
 	var drain: float = maxf(0.0, (ed.stress - 150.0) / 350.0) * (0.7 + 0.6 * (1.0 - resilience))
@@ -529,7 +529,7 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	_inject_emotions(ed, emo_inject, total_scale)
 
 	# 9) 디버그 로그
-	if OS.is_debug_build():
+	if GameConfig.DEBUG_STRESS_LOG:
 		var ename = entity.entity_name if "entity_name" in entity else "?"
 		print("[STRESS_EVENT] %s | %s | inst=%.0f ptk=%.1f | p=%.2f r=%.2f c=%.2f | loss=%s" % [
 			ename, event_id, final_instant, final_per_tick,
@@ -655,9 +655,7 @@ func _process_rebound_queue(ed: RefCounted) -> void:
 
 # ── Debug log ─────────────────────────────────────────────────────────
 func _debug_log(entity: RefCounted, ed, delta: float) -> void:
-	if not OS.is_debug_build():
-		return
-	if absf(delta) < 1.0 and ed.stress < 50.0:
+	if not GameConfig.DEBUG_STRESS_LOG:
 		return
 
 	var ename = entity.entity_name

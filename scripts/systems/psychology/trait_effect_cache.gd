@@ -69,7 +69,7 @@ static func rebuild(entity: RefCounted) -> void:
 
 	entity.set_meta("trait_effect_cache", cache)
 
-	if OS.is_debug_build():
+	if GameConfig.DEBUG_TRAIT_VIOLATION_LOG:
 		var blocked_keys = cache.get("behavior_blocked", {}).keys()
 		var _eid = entity.get("id")
 		print("[TraitEffectCache] rebuilt for entity %s: blocked=%s stress_accum=%.2f threshold_add=%.1f" % [

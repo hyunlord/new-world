@@ -105,13 +105,6 @@ static func _ensure_loaded() -> void:
 	_build_mutex_pairs()
 
 	_loaded = true
-	print("[TraitSystem] v3=%d v2=%d behavior=%d emotion=%d violation=%d" % [
-		_v3_defs.size(),
-		_v2_defs.size(),
-		_behavior_map.size(),
-		_emotion_map.size(),
-		_violation_map.size(),
-	])
 
 
 static func _load_json(path: String):

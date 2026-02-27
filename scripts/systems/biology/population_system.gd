@@ -133,9 +133,10 @@ func _log_population_status(tick: int, alive_count: int) -> void:
 		block_reason = "housing(%d < %d)" % [total_shelters * 6, alive_count]
 	else:
 		block_reason = "NONE (birth allowed)"
-	print("[Tick %d] [Pop] pop=%d food=%.0f/%.0f shelters=%d(%d built) cap=%d max=%d | block=%s" % [
-		tick, alive_count, total_food, food_threshold, total_shelters, built_shelters, housing_cap, GameConfig.MAX_ENTITIES, block_reason,
-	])
+	if GameConfig.DEBUG_DEMOGRAPHY_LOG:
+		print("[Tick %d] [Pop] pop=%d food=%.0f/%.0f shelters=%d(%d built) cap=%d max=%d | block=%s" % [
+			tick, alive_count, total_food, food_threshold, total_shelters, built_shelters, housing_cap, GameConfig.MAX_ENTITIES, block_reason,
+		])
 
 
 func _find_walkable_near(cx: int, cy: int) -> Vector2i:

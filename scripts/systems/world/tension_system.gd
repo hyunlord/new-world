@@ -10,6 +10,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## priority=64, tick_interval=TENSION_CHECK_INTERVAL_TICKS (bi-annual)
 
 const CombatResolverScript = preload("res://scripts/core/combat/combat_resolver.gd")
+const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
 
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
@@ -241,7 +242,7 @@ func _get_leader_charisma(settlement: RefCounted) -> float:
 	var leader: RefCounted = _entity_manager.get_entity(settlement.leader_id)
 	if leader == null or not leader.is_alive:
 		return 0.3
-	return float(leader.stat_cache.get(&"DERIVED_CHARISMA", 500)) / 1000.0
+	return float(StatCacheScript.get_value(leader.stat_cache, &"DERIVED_CHARISMA", 500)) / 1000.0
 
 
 func _compute_side_morale(fighters: Array, leader_charisma: float,

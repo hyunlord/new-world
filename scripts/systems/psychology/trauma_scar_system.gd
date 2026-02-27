@@ -36,7 +36,6 @@ func _load_scar_defs() -> void:
 		push_error("[TraumaScarSystem] JSON parse error in %s" % TRAUMA_SCARS_PATH)
 		return
 	_scar_defs = json.get_data()
-	print("[TraumaScarSystem] Loaded %d scar definitions" % _scar_defs.size())
 
 
 ## 정신붕괴 종료 시 MentalBreakSystem이 호출 — 확률적으로 흉터 획득
@@ -72,9 +71,10 @@ func try_acquire_scar(entity: RefCounted, scar_id: String, base_chance: float, t
 		entity.trauma_scars.append({"scar_id": scar_id, "stacks": 1, "acquired_tick": tick})
 
 	var new_stacks: int = existing_stacks + 1
-	print("[TraumaScarSystem] %s acquired scar: %s (stacks: %d, chance: %.1f%%)" % [
-		entity.entity_name, scar_id, new_stacks, chance * 100.0
-	])
+	if GameConfig.DEBUG_TRAUMA_LOG:
+		print("[TraumaScarSystem] %s acquired scar: %s (stacks: %d, chance: %.1f%%)" % [
+			entity.entity_name, scar_id, new_stacks, chance * 100.0
+		])
 
 	if SimulationBus.has_signal("scar_acquired"):
 		SimulationBus.scar_acquired.emit({
@@ -98,9 +98,10 @@ func check_reactivation(entity: RefCounted, context_type: String, tick: int) -> 
 		var sdef: Dictionary = _scar_defs.get(scar_id, {})
 		var triggers: Array = sdef.get("reactivation_triggers", [])
 		if context_type in triggers:
-			print("[TraumaScarSystem] %s scar reactivated: %s (trigger: %s)" % [
-				entity.entity_name, scar_id, context_type
-			])
+			if GameConfig.DEBUG_TRAUMA_LOG:
+				print("[TraumaScarSystem] %s scar reactivated: %s (trigger: %s)" % [
+					entity.entity_name, scar_id, context_type
+				])
 			if SimulationBus.has_signal("scar_reactivated"):
 				SimulationBus.scar_reactivated.emit({
 					"entity_id": entity.id,

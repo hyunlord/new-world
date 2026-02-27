@@ -46,7 +46,6 @@ func _load_all_cultures() -> void:
 
 	if loaded_count == 0:
 		push_warning("[NameGenerator] No naming culture JSON files found in %s" % dir_path)
-	print("[NameGenerator] Loaded %d cultures: %s" % [cultures.size(), str(cultures.keys())])
 
 
 func generate_name(gender: String, culture_id: String = "proto_syllabic", settlement_id: int = -1, parent_a_name: String = "", parent_b_name: String = "") -> String:
