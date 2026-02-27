@@ -56,11 +56,13 @@ func _init() -> void:
 	tick_interval = GameConfig.STRESS_SYSTEM_TICK_INTERVAL
 
 
+## Initializes the stress system with the entity manager and loads stressor definitions from JSON.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_stressor_defs()
 
 
+## Sets the TraumaScarSystem reference used to apply scar-based resilience modifiers.
 func set_trauma_scar_system(tss) -> void:
 	_trauma_scar_system = tss
 
@@ -78,6 +80,7 @@ func schedule_rebound(entity_id: int, amount: float, delay_ticks: int) -> void:
 	ed.set_meta("rebound_queue", queue)
 
 
+## Updates stress for all alive entities each tick: processes rebound queues, continuous stressors, emotion contributions, recovery, allostatic load, and reserve.
 func execute_tick(_tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
@@ -416,6 +419,7 @@ func _calc_support_score(_entity: RefCounted) -> float:
 
 
 # ── Yerkes-Dodson work efficiency ─────────────────────────────────────
+## Returns a Yerkes-Dodson work efficiency multiplier (0.35–1.10) based on the entity's current stress level.
 func get_work_efficiency(ed) -> float:
 	var s: float = ed.stress
 	var perf: float
@@ -432,6 +436,7 @@ func get_work_efficiency(ed) -> float:
 
 
 # ── Event stress injection (COR loss aversion x2.5) ──────────────────
+## Injects an immediate stress event into an entity's emotion_data, with optional per-tick trace and COR loss-aversion multiplier.
 func inject_stress_event(ed, source_id: String, instant: float,
 		per_tick: float = 0.0, decay_rate: float = 0.05,
 		is_loss: bool = false, appraisal_scale: float = 1.0) -> void:

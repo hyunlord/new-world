@@ -61,6 +61,7 @@ func _ready() -> void:
 		Locale.locale_changed.connect(_on_locale_changed)
 
 
+## Initializes the panel with EntityManager, BuildingManager, and SettlementManager references for list display.
 func init(entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager

@@ -53,6 +53,7 @@ func _ready() -> void:
 	_show_main()
 
 
+## Provides the SaveManager reference used to read slot info and trigger save/load operations.
 func set_save_manager(sm: RefCounted) -> void:
 	_save_manager = sm
 
@@ -263,6 +264,7 @@ func _update_lang_highlight() -> void:
 			btn.remove_theme_color_override("font_color")
 
 
+## Toggles the pause menu open or closed.
 func toggle_menu() -> void:
 	if _visible:
 		hide_menu()
@@ -270,6 +272,7 @@ func toggle_menu() -> void:
 		show_menu()
 
 
+## Opens the pause menu and pauses the scene tree.
 func show_menu() -> void:
 	_visible = true
 	visible = true
@@ -277,6 +280,7 @@ func show_menu() -> void:
 	_show_main()
 
 
+## Closes the pause menu and resumes the scene tree.
 func hide_menu() -> void:
 	_visible = false
 	visible = false
@@ -285,6 +289,7 @@ func hide_menu() -> void:
 	_show_main()
 
 
+## Returns whether the pause menu is currently visible.
 func is_menu_visible() -> bool:
 	return _visible
 

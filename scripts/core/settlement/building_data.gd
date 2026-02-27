@@ -10,6 +10,7 @@ var storage: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
 var settlement_id: int = 0
 
 
+## Serialize this building to a save-friendly dictionary.
 func to_dict() -> Dictionary:
 	return {
 		"id": id,

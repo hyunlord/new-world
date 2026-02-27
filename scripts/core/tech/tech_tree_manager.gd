@@ -13,6 +13,7 @@ const TECH_DATA_DIRS: Array = [
 var _definitions: Dictionary = {}  ## tech_id -> Dictionary (raw JSON)
 
 
+## Load all tech node definitions from the configured JSON data directories.
 func load_all() -> void:
 	for dir_path in TECH_DATA_DIRS:
 		var dir: DirAccess = DirAccess.open(dir_path)
@@ -32,10 +33,12 @@ func load_all() -> void:
 			fname = dir.get_next()
 
 
+## Return the raw JSON definition dictionary for the given tech ID, or empty if not found.
 func get_def(tech_id: String) -> Dictionary:
 	return _definitions.get(tech_id, {})
 
 
+## Return an array of all loaded tech IDs.
 func get_all_ids() -> Array:
 	return _definitions.keys()
 

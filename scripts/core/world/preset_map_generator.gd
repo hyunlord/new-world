@@ -9,6 +9,7 @@ const WorldGeneratorScript = preload("res://scripts/core/world/world_generator.g
 ## 프리셋 생성 진입점
 ## preset_id: "island" | "continent" | "archipelago" | "random"
 ## seed_value: random일 때 사용 (island/continent/archipelago는 내부 고정 시드)
+## Generate world tiles and resources using a named preset layout and optional seed.
 func generate_preset(world_data: RefCounted, resource_map: RefCounted,
 		preset_id: String, seed_value: int) -> void:
 	var rng := RandomNumberGenerator.new()
@@ -287,6 +288,7 @@ func _populate_resources(world_data: RefCounted, resource_map: RefCounted,
 
 ## ── 스폰 위치 추천 ────────────────────────────────────────────────────────────
 ## walkable + 식량 >= 3.0인 타일 중 최대 5개 반환
+## Return up to 5 walkable tile positions near the map center suitable for spawning entities.
 func get_spawn_suggestions(world_data: RefCounted,
 		resource_map: RefCounted) -> Array:
 	var w: int = world_data.width

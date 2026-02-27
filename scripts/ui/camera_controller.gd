@@ -24,25 +24,30 @@ func _ready() -> void:
 	make_current()
 
 
+## Sets the entity manager used to look up entity positions during follow mode.
 func set_entity_manager(em: RefCounted) -> void:
 	_entity_manager = em
 
 
+## Begins following the given entity, emitting a follow request on SimulationBus.
 func follow_entity(entity_id: int) -> void:
 	_following_entity_id = entity_id
 	SimulationBus.follow_entity_requested.emit(entity_id)
 
 
+## Stops following the current entity and emits a follow-stopped signal.
 func stop_following() -> void:
 	if _following_entity_id >= 0:
 		_following_entity_id = -1
 		SimulationBus.follow_entity_stopped.emit()
 
 
+## Returns true if the camera is currently tracking an entity.
 func is_following() -> bool:
 	return _following_entity_id >= 0
 
 
+## Returns the ID of the entity currently being followed, or -1 if none.
 func get_following_id() -> int:
 	return _following_entity_id
 

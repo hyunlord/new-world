@@ -101,7 +101,7 @@ func get_building_count() -> int:
 	return _buildings.size()
 
 
-## Serialization
+## Serialize all buildings to an array of dictionaries for saving.
 func to_save_data() -> Array:
 	var result: Array = []
 	var all_buildings: Array = _buildings.values()
@@ -110,6 +110,7 @@ func to_save_data() -> Array:
 	return result
 
 
+## Restore all buildings from saved array of dictionaries.
 func load_save_data(data: Array) -> void:
 	_buildings.clear()
 	_tile_map.clear()

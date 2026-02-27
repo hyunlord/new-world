@@ -11,6 +11,7 @@ var _chronicle_panel: Control
 var _list_panel: Control
 
 
+## Stores the simulation engine reference for pause/resume control.
 func init(sim_engine: RefCounted) -> void:
 	_sim_engine = sim_engine
 
@@ -31,6 +32,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_on_viewport_resized)
 
 
+## Registers the statistics panel and adds it as a child of the dim background.
 func add_stats_panel(panel: Control) -> void:
 	_stats_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -39,6 +41,7 @@ func add_stats_panel(panel: Control) -> void:
 	_dim_bg.add_child(panel)
 
 
+## Registers the entity detail panel and adds it as a child of the dim background.
 func add_entity_panel(panel: Control) -> void:
 	_entity_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -47,6 +50,7 @@ func add_entity_panel(panel: Control) -> void:
 	_dim_bg.add_child(panel)
 
 
+## Registers the building detail panel and adds it as a child of the dim background.
 func add_building_panel(panel: Control) -> void:
 	_building_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -55,6 +59,7 @@ func add_building_panel(panel: Control) -> void:
 	_dim_bg.add_child(panel)
 
 
+## Registers the chronicle panel and adds it as a child of the dim background.
 func add_chronicle_panel(panel: Control) -> void:
 	_chronicle_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -63,6 +68,7 @@ func add_chronicle_panel(panel: Control) -> void:
 	_dim_bg.add_child(panel)
 
 
+## Registers the entity list panel and adds it as a child of the dim background.
 func add_list_panel(panel: Control) -> void:
 	_list_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -76,6 +82,7 @@ func _on_bg_input(event: InputEvent) -> void:
 		close_all()
 
 
+## Opens the statistics panel, pausing the simulation and dimming the background.
 func open_stats() -> void:
 	if _stats_panel == null:
 		return
@@ -91,6 +98,7 @@ func open_stats() -> void:
 	_center_panel(_stats_panel, 0.75, 0.8)
 
 
+## Opens the entity detail panel for the given entity, pausing the simulation.
 func open_entity(entity_id: int) -> void:
 	if _entity_panel == null:
 		return
@@ -107,9 +115,8 @@ func open_entity(entity_id: int) -> void:
 	_center_panel(_entity_panel, 0.55, 0.85)
 
 
-## Debug용: dim_bg 없이 entity panel 열기.
-## Debug Panel과 동시 사용 가능. 시뮬레이션 일시정지 없음.
-## 배경 클릭으로 닫히지 않음 — 패널 자체의 닫기 버튼으로 닫음.
+## Opens the entity detail panel without dimming the background or pausing the simulation.
+## Intended for simultaneous use with the debug panel; panel closes via its own close button.
 func open_entity_no_dim(entity_id: int) -> void:
 	if _entity_panel == null:
 		return
@@ -128,6 +135,7 @@ func open_entity_no_dim(entity_id: int) -> void:
 	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
 
 
+## Opens the building detail panel for the given building, pausing the simulation.
 func open_building(building_id: int) -> void:
 	if _building_panel == null:
 		return
@@ -144,6 +152,7 @@ func open_building(building_id: int) -> void:
 	_center_panel(_building_panel, 0.45, 0.5)
 
 
+## Opens the chronicle panel, pausing the simulation and dimming the background.
 func open_chronicle() -> void:
 	if _chronicle_panel == null:
 		return
@@ -159,6 +168,7 @@ func open_chronicle() -> void:
 	_center_panel(_chronicle_panel, 0.6, 0.8)
 
 
+## Opens the entity list panel, pausing the simulation and dimming the background.
 func open_list() -> void:
 	if _list_panel == null:
 		return
@@ -174,16 +184,19 @@ func open_list() -> void:
 	_center_panel(_list_panel, 0.7, 0.8)
 
 
+## Closes all panels, hides the dim background, and resumes the simulation.
 func close_all() -> void:
 	_hide_all_panels()
 	_dim_bg.visible = false
 	_resume_sim()
 
 
+## Returns true if any panel is currently visible (dim background is shown).
 func is_any_visible() -> bool:
 	return _dim_bg.visible
 
 
+## Returns true if the entity or building detail panel is currently visible.
 func is_detail_visible() -> bool:
 	if _entity_panel != null and _entity_panel.visible:
 		return true

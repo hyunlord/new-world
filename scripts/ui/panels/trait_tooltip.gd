@@ -31,17 +31,20 @@ func _ready() -> void:
 	_apply_panel_style(Color(0.3, 0.4, 0.5, 0.6))
 
 
+## Schedules the tooltip to appear after a short delay, positioned near the given anchor rect.
 func request_show(trait_def: Dictionary, anchor_rect: Rect2) -> void:
 	_current_trait = trait_def
 	_anchor_rect = anchor_rect
 	_timer.start()
 
 
+## Cancels any pending show timer and hides the tooltip immediately.
 func request_hide() -> void:
 	_timer.stop()
 	visible = false
 
 
+## Shows the tooltip immediately without the delay timer, positioned near the given anchor rect.
 func show_immediate(trait_def: Dictionary, anchor_rect: Rect2) -> void:
 	_current_trait = trait_def
 	_anchor_rect = anchor_rect

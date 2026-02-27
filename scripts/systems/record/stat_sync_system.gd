@@ -15,6 +15,7 @@ func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
+## Syncs all alive entities' raw fields (needs, HEXACO, emotions, skills) into their stat_cache each tick.
 func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return

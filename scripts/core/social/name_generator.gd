@@ -10,6 +10,7 @@ func _ready() -> void:
 	_load_all_cultures()
 
 
+## Initialize the generator with a shared RNG and entity manager reference.
 func init(rng: RandomNumberGenerator, entity_manager: RefCounted) -> void:
 	_rng = rng
 	_entity_manager = entity_manager
@@ -48,6 +49,7 @@ func _load_all_cultures() -> void:
 		push_warning("[NameGenerator] No naming culture JSON files found in %s" % dir_path)
 
 
+## Generate a unique name for an entity using the given culture, gender, and optional parent names for patronymics.
 func generate_name(gender: String, culture_id: String = "proto_syllabic", settlement_id: int = -1, parent_a_name: String = "", parent_b_name: String = "") -> String:
 	var culture = cultures.get(culture_id, {})
 	if culture.is_empty():
@@ -106,6 +108,7 @@ func generate_name(gender: String, culture_id: String = "proto_syllabic", settle
 	return chosen_full
 
 
+## Generate a name by combining syllable pools from the given culture and gender.
 func generate_syllabic_name(culture: Dictionary, gender: String) -> String:
 	var syllable_pools = culture.get("syllable_pools", {})
 	var pools: Dictionary = {}
@@ -185,6 +188,7 @@ func generate_syllabic_name(culture: Dictionary, gender: String) -> String:
 	return built.left(1).to_upper() + built.substr(1)
 
 
+## Append a culture-specific patronymic suffix or prefix to the given name using the parent's name.
 func apply_patronymic(given: String, parent_name: String, gender: String, culture: Dictionary) -> String:
 	var patronymic_rule: String = str(culture.get("patronymic_rule", "none"))
 	var config = culture.get("patronymic_config", {})
@@ -203,6 +207,7 @@ func apply_patronymic(given: String, parent_name: String, gender: String, cultur
 			return given
 
 
+## Return true if the name is already in use within the given settlement.
 func is_name_duplicate(name_str: String, settlement_id: int) -> bool:
 	if settlement_id < 0:
 		return false
@@ -213,6 +218,7 @@ func is_name_duplicate(name_str: String, settlement_id: int) -> bool:
 	return false
 
 
+## Mark a name as used within the given settlement to prevent duplicates.
 func register_name(name_str: String, settlement_id: int) -> void:
 	if settlement_id < 0:
 		return
@@ -224,6 +230,7 @@ func register_name(name_str: String, settlement_id: int) -> void:
 		names_dict[name_str] = true
 
 
+## Remove a name from a settlement's used-name registry (called on entity death).
 func unregister_name(name_str: String, settlement_id: int) -> void:
 	if settlement_id < 0:
 		return
@@ -247,6 +254,7 @@ func _on_entity_died(entity_id: int, _entity_name: String, _cause: String, _age_
 	unregister_name(_entity_name, settlement_id)
 
 
+## Save the used-name registry for all settlements to a JSON file at the given path.
 func save_registry(path: String) -> void:
 	var save_data: Dictionary = {}
 	var keys: Array = used_names_per_settlement.keys()
@@ -262,6 +270,7 @@ func save_registry(path: String) -> void:
 		fa.store_string(JSON.stringify(save_data))
 
 
+## Load the used-name registry from a JSON file, restoring per-settlement name sets.
 func load_registry(path: String) -> void:
 	used_names_per_settlement.clear()
 	if not FileAccess.file_exists(path):
@@ -287,5 +296,6 @@ func load_registry(path: String) -> void:
 			used_names_per_settlement[sid][str(names_array[j])] = true
 
 
+## Clear all used-name registries across all settlements.
 func clear_registry() -> void:
 	used_names_per_settlement.clear()

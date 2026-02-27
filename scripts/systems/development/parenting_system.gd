@@ -12,12 +12,14 @@ func _init() -> void:
 	tick_interval = 240  # every 10 days (24 ticks/day)
 
 
+## Initializes the parenting system with the entity manager and loads the attachment system.
 func init(entity_manager) -> void:
 	_entity_manager = entity_manager
 	var AttachmentSystem = load("res://scripts/systems/development/attachment_system.gd")
 	_attachment_system = AttachmentSystem.new()
 
 
+## Updates parenting quality for adults, applies one-time adulthood transitions, and models Bandura coping observation for children.
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return

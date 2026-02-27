@@ -32,11 +32,12 @@ var _last_prune_year: int = 0
 var _entity_manager: RefCounted
 
 
+## Initializes the chronicle system with the entity manager for name lookups.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
-## Log an event
+## Records a simulation event to world and personal event histories with date, importance, and optional localization data.
 func log_event(type: String, entity_id: int, description: String,
 		importance: int = 3, related_ids: Array = [], tick: int = -1,
 		l10n: Dictionary = {}) -> void:

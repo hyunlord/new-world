@@ -13,6 +13,7 @@ var _needs_update: bool = true
 var minimap_size: int = 250
 
 
+## Initializes the panel with WorldData, EntityManager, BuildingManager, SettlementManager, and the main Camera2D.
 func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted, camera: Camera2D) -> void:
 	_world_data = world_data
 	_entity_manager = entity_manager
@@ -77,10 +78,12 @@ func _process(_delta: float) -> void:
 	queue_redraw()
 
 
+## Marks the minimap texture as stale so it will be regenerated on the next update_minimap call.
 func request_update() -> void:
 	_needs_update = true
 
 
+## Regenerates the minimap texture from current world, building, and entity data if a update is pending.
 func update_minimap() -> void:
 	if not _needs_update or _world_data == null:
 		return

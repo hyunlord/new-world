@@ -13,12 +13,14 @@ func _init() -> void:
 	tick_interval = 2  # Deliberately override config to match NeedsSystem frequency
 
 
+## Initializes the childcare system with entity, building, and settlement managers.
 func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
 
 
+## Feeds hungry infants, toddlers, children, and teens from settlement stockpiles each tick, prioritizing the hungriest.
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	var hungry_children: Array = []
