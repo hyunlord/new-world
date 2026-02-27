@@ -13,6 +13,7 @@ signal preset_selected(preset_id: String)
 signal seed_changed(seed_value: int)
 signal regenerate_requested
 signal start_simulation_requested
+signal resource_overlay_toggled
 
 var _controller = null ## MapEditorController ref (untyped, injected by WorldSetup)
 
@@ -46,6 +47,8 @@ var _selected_biome: int = 3 ## GRASSLAND
 
 ## seed LineEdit 참조
 var _seed_edit: LineEdit = null
+## 스폰 총 인원 표시 Label
+var _spawn_total_label: Label = null
 
 
 func _ready() -> void:
@@ -169,6 +172,19 @@ func _build_ui() -> void:
 	spawn_spin.value_changed.connect(_on_spawn_count_changed)
 	vbox.add_child(spawn_spin)
 
+	## ── ResourceOverlay 토글 ──
+	var overlay_btn: Button = Button.new()
+	overlay_btn.text = Locale.ltr("UI_MAP_OVERLAY_TOGGLE")
+	overlay_btn.toggle_mode = true
+	overlay_btn.pressed.connect(_on_overlay_toggle)
+	vbox.add_child(overlay_btn)
+
+	## ── 스폰 총 인원 표시 ──
+	_spawn_total_label = Label.new()
+	_spawn_total_label.text = Locale.trf("UI_MAP_SPAWN_TOTAL", {"count": 0})
+	_spawn_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_spawn_total_label)
+
 	## ── 시작 버튼 ──
 	var start_btn: Button = Button.new()
 	start_btn.text = Locale.ltr("UI_MAP_START_SIM")
@@ -220,5 +236,15 @@ func _on_spawn_count_changed(value: float) -> void:
 	spawn_count_changed.emit(int(value))
 
 
+func _on_overlay_toggle() -> void:
+	resource_overlay_toggled.emit()
+
+
 func _on_start_pressed() -> void:
 	start_simulation_requested.emit()
+
+
+## world_setup.gd에서 스폰 포인트 변경 시 호출
+func update_spawn_total(total: int) -> void:
+	if _spawn_total_label != null:
+		_spawn_total_label.text = Locale.trf("UI_MAP_SPAWN_TOTAL", {"count": total})
