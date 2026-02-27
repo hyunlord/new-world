@@ -121,6 +121,7 @@ func _load_settings() -> void:
 func _save_settings() -> void:
 	var data = {}
 	if FileAccess.file_exists(SETTINGS_PATH):
+		@warning_ignore("confusable_local_declaration")
 		var f = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
 		var json = JSON.new()
 		json.parse(f.get_as_text())

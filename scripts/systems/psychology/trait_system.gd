@@ -534,7 +534,6 @@ static func get_effect_value(entity: RefCounted, effect_type: String, key: Strin
 			return _calc_violation_stress(entity, key)
 		_:
 			return _calc_generic_mult(entity, effect_type, key)
-	return 1.0
 
 
 static func _calc_behavior_weight(entity: RefCounted, action: String) -> float:
