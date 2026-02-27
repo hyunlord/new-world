@@ -29,6 +29,145 @@ const VALUE_VIOLATION_THRESHOLD: float = 0.30
 const VALUE_STRESS_BASE: float = 15.0
 const VALUE_STRESS_SCALE: float = 30.0
 
+## [McCrae & Costa 1987, Tett & Burnett 2003] HEXACO personality → behavior score modifier scale.
+## At axis value extremes (0.0 or 1.0), the maximum modifier is ±(HEXACO_MOD_SCALE/2).
+## Default 0.60 → ±30% at extremes, ±9% at 1-σ (axis=0.35 or 0.65).
+const HEXACO_MOD_SCALE: float = 0.60
+
+## [Lee & Ashton 2004, 2018] Action → HEXACO axis/facet influence weights.
+## Format: action_id → { axis_or_facet_key: weight }
+## Weight range: [-1.0, +1.0]. Positive = high axis value boosts this action.
+## Uses axis keys ("H","E","X","A","C","O") or facet keys ("H_sincerity", etc.).
+const ACTION_HEXACO_WEIGHTS: Dictionary = {
+	## ── Gathering / Work actions ───────────────────────────────
+	&"gather_food": {
+		"C": 0.35,                  # [C] Conscientious → diligent gathering
+		"C_diligence": 0.20,        # [C facet] Specifically diligent workers gather more
+		"A": 0.15,                  # [A] Agreeable → cooperative resource sharing mindset
+	},
+	&"gather_wood": {
+		"C": 0.40,                  # [C] Conscientious → sustained physical labor
+		"C_diligence": 0.25,        # [C facet] Diligence directly maps to labor output
+		"O": -0.15,                 # [O] Open → bored by repetitive manual work
+	},
+	&"gather_stone": {
+		"C": 0.45,                  # [C] Conscientious → most tedious/demanding gathering
+		"C_diligence": 0.30,        # [C facet] Requires extreme diligence
+		"E": -0.20,                 # [E] Low emotionality → tolerates harsh conditions
+		"O": -0.20,                 # [O] Open → dislikes monotonous mining
+	},
+	&"build": {
+		"C": 0.40,                  # [C] Conscientious → methodical construction
+		"C_organization": 0.25,     # [C facet] Organized builders are more motivated
+		"C_perfectionism": 0.20,    # [C facet] Perfectionist → cares about build quality
+		"O_creativity": 0.15,       # [O facet] Creative → enjoys designing structures
+	},
+
+	## ── Social actions ────────────────────────────────────────
+	&"socialize": {
+		"X": 0.50,                  # [X] Extraversion → primary social approach driver
+		"X_sociability": 0.30,      # [X facet] Sociability directly maps
+		"A": 0.20,                  # [A] Agreeable → enjoys harmonious interaction
+		"A_gentleness": 0.15,       # [A facet] Gentle → approachable
+		"E_dependence": 0.10,       # [E facet] Dependent → seeks social connection
+	},
+	&"visit_partner": {
+		"X": 0.25,                  # [X] Extraversion → social drive
+		"E_sentimentality": 0.35,   # [E facet] Sentimental → romantic attachment
+		"E_dependence": 0.25,       # [E facet] Dependent → needs partner proximity
+		"A": 0.15,                  # [A] Agreeable → maintains relationships
+	},
+	&"share_food": {
+		"H": 0.40,                  # [H] Honesty-Humility → prosocial behavior
+		"H_greed_avoidance": 0.35,  # [H facet] Not greedy → willing to share
+		"A": 0.30,                  # [A] Agreeable → altruistic tendency
+		"A_gentleness": 0.20,       # [A facet] Gentle → empathetic giving
+	},
+
+	## ── Rest / Self-care ──────────────────────────────────────
+	&"rest": {
+		"C": -0.25,                 # [C] Conscientious → reluctant to rest while work exists
+		"C_diligence": -0.20,       # [C facet] Diligent → pushes through fatigue
+		"E": 0.15,                  # [E] Emotional → needs more recovery from stress
+		"E_anxiety": 0.20,          # [E facet] Anxious → rest as anxiety coping
+	},
+	&"sit_by_fire": {
+		"X_sociability": 0.15,      # [X facet] Social → enjoys communal fire
+		"E_sentimentality": 0.15,   # [E facet] Sentimental → enjoys warmth/comfort
+		"A": 0.10,                  # [A] Agreeable → enjoys group setting
+	},
+	&"seek_shelter": {
+		"E": 0.30,                  # [E] Emotional → seeks safety/shelter
+		"E_fearfulness": 0.25,      # [E facet] Fearful → more shelter-seeking
+		"C_prudence": 0.15,         # [C facet] Prudent → prepares for weather
+	},
+
+	## ── Exploration / Wander ──────────────────────────────────
+	&"wander": {
+		"O": 0.40,                  # [O] Open → loves exploring
+		"O_inquisitiveness": 0.30,  # [O facet] Curious → wander to discover
+		"X_social_boldness": 0.15,  # [X facet] Bold → ventures into unknown
+		"E": -0.20,                 # [E] Emotional → fear of unknown suppresses wandering
+		"C": -0.15,                 # [C] Conscientious → prefers productive activity
+	},
+	&"drink_water": {},             # Basic survival — no personality influence
+
+	## ── Emotion-driven actions ────────────────────────────────
+	&"hide": {
+		"E": 0.45,                  # [E] Emotional → fear-driven hiding
+		"E_fearfulness": 0.35,      # [E facet] Fearful → strong hide drive
+		"X_social_boldness": -0.30, # [X facet] Bold → resists hiding
+		"C_prudence": 0.15,         # [C facet] Prudent → strategic withdrawal
+	},
+	&"grieve": {
+		"E": 0.40,                  # [E] Emotional → expresses grief
+		"E_sentimentality": 0.35,   # [E facet] Sentimental → deep grief
+		"X": -0.15,                 # [X] Extraversion → extraverts grieve socially, not alone
+		"A_gentleness": 0.15,       # [A facet] Gentle → soft-hearted grief
+	},
+	&"confront": {
+		"X_social_boldness": 0.35,  # [X facet] Bold → confrontational
+		"A": -0.40,                 # [A] Agreeable → avoids confrontation
+		"A_patience": -0.30,        # [A facet] Patient → waits rather than confronts
+		"A_forgiveness": -0.25,     # [A facet] Forgiving → less likely to confront
+		"E_fearfulness": -0.20,     # [E facet] Fearful → avoids confrontation
+		"H_modesty": -0.10,         # [H facet] Modest → doesn't assert dominance
+	},
+
+	## ── Work-related advanced ─────────────────────────────────
+	&"deliver_to_stockpile": {
+		"C": 0.30,                  # [C] Conscientious → organized delivery
+		"C_organization": 0.25,     # [C facet] Organized → systematic resource management
+		"H": 0.15,                  # [H] Honest → contributes fairly to commons
+	},
+	&"take_from_stockpile": {
+		"H": -0.20,                 # [H] High honesty → takes only what's needed
+		"H_greed_avoidance": -0.25, # [H facet] Not greedy → minimal taking
+	},
+
+	## ── Skill-unlocked actions ────────────────────────────────
+	&"herb_gather": {
+		"O": 0.30,                  # [O] Open → interested in herbal knowledge
+		"O_inquisitiveness": 0.25,  # [O facet] Curious about plants
+		"C": 0.20,                  # [C] Conscientious → careful gathering
+		"A_gentleness": 0.15,       # [A facet] Gentle → healing inclination
+	},
+	&"fine_woodwork": {
+		"C_perfectionism": 0.40,    # [C facet] Perfectionist → fine craftsmanship
+		"O_aesthetic": 0.30,        # [O facet] Aesthetic → appreciates beauty in craft
+		"C_diligence": 0.20,        # [C facet] Diligent → sustained precision work
+	},
+	&"ore_vein": {
+		"C": 0.35,                  # [C] Conscientious → persistent vein mining
+		"E": -0.15,                 # [E] Low emotionality → tolerates danger
+	},
+	&"trap_hunt": {
+		"O": 0.20,                  # [O] Open → creative trapping strategies
+		"C_prudence": 0.25,         # [C facet] Prudent → patient trap-setting
+		"E_fearfulness": -0.15,     # [E facet] Not fearful → handles animal danger
+	},
+}
+
 
 func _init() -> void:
 	system_name = "behavior"
@@ -290,6 +429,9 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 				scores[str(_teach_sn)] = 0.15 + _rng.randf() * 0.05
 	## ─────────────────────────────────────────────────────────────────────────────
 
+	## [McCrae & Costa 1987] HEXACO personality → behavior score modifiers
+	_apply_hexaco_modifiers(scores, entity)
+
 	# Apply trait / morale / stress weights
 	for action in scores.keys():
 		scores[action] *= TraitSystem.get_behavior_weight(entity, action)
@@ -392,6 +534,33 @@ func _apply_economic_modifiers(action_id: String, base_score: float, entity: Ref
 		var tendency: float = entity.economic_tendencies.get(tkey, 0.0)
 		delta += tendency * weights[tkey]
 	return maxf(0.0, base_score + delta)
+
+
+## [McCrae & Costa 1987, Tett & Burnett 2003 Trait Activation Theory]
+## Applies HEXACO personality modifiers to action scores.
+## Each action has 0~6 relevant axes/facets with signed weights.
+## Modifier = 1.0 + Σ(weight × (value - 0.5) × HEXACO_MOD_SCALE)
+## Centered at 0.5 (population mean) → average personality has zero effect.
+func _apply_hexaco_modifiers(scores: Dictionary, entity: RefCounted) -> void:
+	if entity.personality == null:
+		return
+	for action_id in scores:
+		var weights: Dictionary = ACTION_HEXACO_WEIGHTS.get(action_id, {})
+		if weights.is_empty():
+			continue
+		var total_mod: float = 0.0
+		for key in weights:
+			var w: float = weights[key]
+			var val: float = 0.5
+			if key.length() == 1:
+				## Axis key: "H", "E", "X", "A", "C", "O"
+				val = entity.personality.axes.get(key, 0.5)
+			else:
+				## Facet key: "H_sincerity", "E_fearfulness", etc.
+				val = entity.personality.facets.get(key, 0.5)
+			total_mod += w * (val - 0.5) * HEXACO_MOD_SCALE
+		## Clamp to prevent negative scores (minimum 10% of original)
+		scores[action_id] = maxf(scores[action_id] * (1.0 + clampf(total_mod, -0.90, 0.90)), 0.0)
 
 
 ## [Festinger 1957] 가치관 위반 행동 시 스트레스 주입 및 자기합리화 기록
