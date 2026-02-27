@@ -1,0 +1,13 @@
+{
+  "id": "SOCIAL_FACTION_LOYALTY",
+  "display_key": "UI_STAT_SOCIAL_FACTION_LOYALTY",
+  "category": "SOCIAL",
+  "storage_type": "int",
+  "range": [0, 1000],
+  "default": 0,
+  "tier": 2,
+  "growth": { "type": "EXTERNAL" },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "social", "descriptor_table": "7_step" }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "SOCIAL_TITLE_COUNT",
+  "display_key": "UI_STAT_SOCIAL_TITLE_COUNT",
+  "category": "SOCIAL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 2,
+  "growth": { "type": "EXTERNAL" },
+  "thresholds": [],
+  "affects": [],
+  "display": { "visible": true, "show_in_panel": "social", "descriptor_table": "7_step" }
+}
