@@ -53,7 +53,7 @@ const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full dela
 func _init() -> void:
 	system_name = "stress"
 	priority = 34        # after emotion(32), before social(37)
-	tick_interval = 2    # every 2 ticks (same cadence as needs_system)
+	tick_interval = GameConfig.STRESS_SYSTEM_TICK_INTERVAL
 
 
 func init(entity_manager: RefCounted) -> void:

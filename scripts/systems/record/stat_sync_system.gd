@@ -7,7 +7,7 @@ var _entity_manager: RefCounted
 func _init() -> void:
 	system_name = "stat_sync"
 	priority = 1
-	tick_interval = 1
+	tick_interval = 10
 
 
 ## entity_manager를 받아 초기화

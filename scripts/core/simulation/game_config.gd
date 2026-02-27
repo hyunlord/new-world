@@ -389,7 +389,8 @@ const CAMERA_PAN_SPEED: float = 500.0
 const CAMERA_ZOOM_SPEED: float = 0.15
 
 ## System tick intervals
-const NEEDS_TICK_INTERVAL: int = 2
+const NEEDS_TICK_INTERVAL: int = 4
+const STRESS_SYSTEM_TICK_INTERVAL: int = 4
 const BEHAVIOR_TICK_INTERVAL: int = 10
 const MOVEMENT_TICK_INTERVAL: int = 3
 
