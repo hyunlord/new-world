@@ -5,8 +5,6 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager: RefCounted
 
-## Maps occupation name → legacy job category for behavior_system compatibility
-var _category_map: Dictionary = {}
 ## Reverse: occupation name → legacy job string
 var _occupation_to_job: Dictionary = {}
 
