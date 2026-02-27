@@ -828,13 +828,19 @@ func _draw() -> void:
 	# ── Skills (기술) ──
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_SKILLS"), "skills")
 	if not _section_collapsed.get("skills", false):
-		var _skill_entries: Array = [
-			{ "id": &"SKILL_FORAGING",     "label_key": "UI_SKILL_FORAGING",     "color": Color(0.4, 0.8, 0.4) },
-			{ "id": &"SKILL_WOODCUTTING",  "label_key": "UI_SKILL_WOODCUTTING",  "color": Color(0.8, 0.6, 0.3) },
-			{ "id": &"SKILL_MINING",       "label_key": "UI_SKILL_MINING",       "color": Color(0.6, 0.6, 0.7) },
-			{ "id": &"SKILL_CONSTRUCTION", "label_key": "UI_SKILL_CONSTRUCTION", "color": Color(0.9, 0.75, 0.3) },
-			{ "id": &"SKILL_HUNTING",      "label_key": "UI_SKILL_HUNTING",      "color": Color(0.8, 0.3, 0.3) },
-		]
+		## Data-driven: show all skills entity has trained, sorted by level descending
+		var _skill_entries: Array = []
+		for _raw_sid in entity.skill_levels.keys():
+			var _sid_str: String = str(_raw_sid)
+			var _skill_id: StringName = StringName(_sid_str)
+			var _label_key: String = "UI_SKILL_" + _sid_str.replace("SKILL_", "")
+			_skill_entries.append({
+				"id": _skill_id,
+				"label_key": _label_key,
+				"color": Color(0.6, 0.8, 0.6),
+				"level": int(entity.skill_levels.get(_raw_sid, 0))
+			})
+		_skill_entries.sort_custom(func(a, b): return a["level"] > b["level"])
 		for _se in _skill_entries:
 			var _sid: StringName = _se["id"]
 			var _info: Dictionary = StatQuery.get_skill_xp_info(entity, _sid)

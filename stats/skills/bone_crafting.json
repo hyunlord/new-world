@@ -1,0 +1,30 @@
+{
+  "id": "SKILL_BONE_CRAFTING",
+  "display_key": "SKILL_BONE_CRAFTING",
+  "category": "SKILL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 1,
+  "required_tech": "stone_age",
+  "prerequisites": [{"skill_id": "SKILL_HUNTING", "min_level": 10}],
+  "growth": {
+    "type": "LOG_DIMINISHING",
+    "params": {"base_xp": 100, "exponent": 1.8, "level_breakpoints": [25, 50, 75], "breakpoint_multipliers": [1.0, 1.5, 2.0, 3.0]},
+    "talent_key": "BODY_AGI_TRAINABILITY",
+    "talent_ceiling_map": {"0": 40, "200": 60, "400": 80, "600": 90, "800": 100}
+  },
+  "thresholds": [
+    {"value": 25, "direction": "above", "effect": "UNLOCK_ACTION_CRAFT_BONE_TOOL"}
+  ],
+  "affects": [{
+    "target": "craft_quality",
+    "evaluator": "CURVE",
+    "curve": "LINEAR",
+    "params": {},
+    "weight": 0.50,
+    "direction": "positive",
+    "context": "crafting"
+  }],
+  "display": {"visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step"}
+}

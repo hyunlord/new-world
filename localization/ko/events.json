@@ -19,5 +19,13 @@
   "EVT_JOB_DRIFT": "{name}이(가) {old}에서 {new}(으)로 전직",
   "EVT_GINI_UNREST": "{settlement}에서 불평등 심화",
   "EVT_STRAT_PHASE": "{settlement}이(가) {phase} 단계 진입",
-  "EVT_GOSSIP": "{target}에 대한 소문이 퍼짐"
+  "EVT_GOSSIP": "{target}에 대한 소문이 퍼짐",
+  "EVT_ENTITY_DRANK": "{name}이(가) 물을 마셨다 (갈증: {thirst})",
+  "EVT_ENTITY_WARMED": "{name}이(가) 불로 몸을 녹였다 (체온: {warmth})",
+  "EVT_ENTITY_SHELTERED": "{name}이(가) 피신했다 (체온: {warmth}, 안전: {safety})",
+  "EVT_ERG_REGRESSION_STARTED": "{name}이(가) 성장 욕구 좌절로 생존에 집착하기 시작했다",
+  "EVT_ERG_RELATEDNESS_REGRESSION": "{name}이(가) 소속감 좌절로 관계에 집착하기 시작했다",
+  "EVT_ENTITY_SHARED_FOOD": "{name}이(가) {target_name}에게 식량 {amount}을(를) 나눴다",
+  "EVT_ENTITY_HOARDING": "{name}이(가) 자원을 축적하고 있다 (물질주의: {materialism})",
+  "EVT_ECON_TENDENCY_SHIFT": "{name}의 경제 성향이 변화했다 ({tendency}: {value})"
 }

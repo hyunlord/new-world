@@ -1,0 +1,22 @@
+{
+  "id": "SKILL_BASKET_WEAVING",
+  "display_key": "SKILL_BASKET_WEAVING",
+  "category": "SKILL",
+  "storage_type": "int",
+  "range": [0, 100],
+  "default": 0,
+  "tier": 2,
+  "required_tech": "stone_age",
+  "prerequisites": [{"skill_id": "SKILL_WEAVING", "min_level": 5}],
+  "growth": {
+    "type": "LOG_DIMINISHING",
+    "params": {"base_xp": 90, "exponent": 1.75, "level_breakpoints": [25, 50, 75], "breakpoint_multipliers": [1.0, 1.4, 1.9, 2.7]},
+    "talent_key": "BODY_AGI_TRAINABILITY",
+    "talent_ceiling_map": {"0": 45, "200": 65, "400": 83, "600": 93, "800": 100}
+  },
+  "thresholds": [
+    {"value": 20, "direction": "above", "effect": "UNLOCK_ACTION_CRAFT_BASKET"}
+  ],
+  "affects": [{"target": "carry_capacity", "evaluator": "CURVE", "curve": "LINEAR", "params": {}, "weight": 0.35, "direction": "positive", "context": "crafting"}],
+  "display": {"visible": true, "show_in_panel": "skills", "descriptor_table": "skill_6_step"}
+}

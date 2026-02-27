@@ -50,6 +50,7 @@
 	"ACTION_LIE": "Lie",
 	"ACTION_TAKE_BRIBE": "Take Bribe",
 	"ACTION_SHARE": "Share",
+	"ACTION_SHARE_FOOD": "Share Food",
 	"ACTION_HELP": "Help",
 	"ACTION_NURTURE": "Nurture",
 	"ACTION_EXPLORE": "Explore",

@@ -74,29 +74,29 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 ```
 scripts/
   core/                 ← see scripts/core/CLAUDE.md
-    entity/             — EntityData, EntityManager, PersonalityData, BodyAttributes, EmotionData
-    stats/              — StatQuery, StatCache, StatCurve, StatDefinition, StatGraph, StatModifier
-    world/              — WorldData, WorldGenerator, ResourceMap, ChunkIndex, Pathfinder
-    settlement/         — SettlementData, SettlementManager, BuildingData, BuildingManager
-    social/             — RelationshipData, RelationshipManager, ValueDefs, NameGenerator
-    simulation/         — SimulationEngine, SimulationSystem, SimulationBus, GameConfig, GameCalendar
-    locale.gd           — Locale Autoload (i18n)
-    save_manager.gd
-    event_logger.gd
-    deceased_registry.gd
+	entity/             — EntityData, EntityManager, PersonalityData, BodyAttributes, EmotionData
+	stats/              — StatQuery, StatCache, StatCurve, StatDefinition, StatGraph, StatModifier
+	world/              — WorldData, WorldGenerator, ResourceMap, ChunkIndex, Pathfinder
+	settlement/         — SettlementData, SettlementManager, BuildingData, BuildingManager
+	social/             — RelationshipData, RelationshipManager, ValueDefs, NameGenerator
+	simulation/         — SimulationEngine, SimulationSystem, SimulationBus, GameConfig, GameCalendar
+	locale.gd           — Locale Autoload (i18n)
+	save_manager.gd
+	event_logger.gd
+	deceased_registry.gd
   systems/              ← see scripts/systems/CLAUDE.md
-    lifecycle/          — PopulationSystem, MortalitySystem, AgeSystem, FamilySystem
-    psychology/         — EmotionSystem, StressSystem, MentalBreakSystem, PersonalityMaturationSystem
-    economy/            — NeedsSystem, GatheringSystem, ConstructionSystem, JobAssignmentSystem
-    social/             — SocialEventSystem, ChronicleSystem, ReputationSystem
-    world/              — ResourceRegenSystem, BuildingEffectSystem, MovementSystem, MigrationSystem
-    stats/              — StatsRecorderSystem
+	lifecycle/          — PopulationSystem, MortalitySystem, AgeSystem, FamilySystem
+	psychology/         — EmotionSystem, StressSystem, MentalBreakSystem, PersonalityMaturationSystem
+	economy/            — NeedsSystem, GatheringSystem, ConstructionSystem, JobAssignmentSystem
+	social/             — SocialEventSystem, ChronicleSystem, ReputationSystem
+	world/              — ResourceRegenSystem, BuildingEffectSystem, MovementSystem, MigrationSystem
+	stats/              — StatsRecorderSystem
   ai/                   ← see scripts/ai/CLAUDE.md
-    behavior_system.gd
+	behavior_system.gd
   ui/                   ← see scripts/ui/CLAUDE.md
-    panels/             — EntityDetailPanel, BuildingDetailPanel, etc.
-    renderers/          — WorldRenderer, EntityRenderer, BuildingRenderer
-    hud.gd, camera_controller.gd, popup_manager.gd
+	panels/             — EntityDetailPanel, BuildingDetailPanel, etc.
+	renderers/          — WorldRenderer, EntityRenderer, BuildingRenderer
+	hud.gd, camera_controller.gd, popup_manager.gd
 data/                   ← see data/CLAUDE.md
   species/, traits/, stressors/, emotions/, buildings/, skills/
 localization/

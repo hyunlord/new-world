@@ -19,5 +19,13 @@
   "EVT_JOB_DRIFT": "{name} switched from {old} to {new}",
   "EVT_GINI_UNREST": "Growing inequality in {settlement}",
   "EVT_STRAT_PHASE": "{settlement} entered {phase} phase",
-  "EVT_GOSSIP": "Gossip about {target} spread"
+  "EVT_GOSSIP": "Gossip about {target} spread",
+  "EVT_ENTITY_DRANK": "{name} drank water (thirst: {thirst})",
+  "EVT_ENTITY_WARMED": "{name} warmed by fire (warmth: {warmth})",
+  "EVT_ENTITY_SHELTERED": "{name} took shelter (warmth: {warmth}, safety: {safety})",
+  "EVT_ERG_REGRESSION_STARTED": "{name} obsessively seeks survival (frustrated growth needs)",
+  "EVT_ERG_RELATEDNESS_REGRESSION": "{name} desperately seeks connection (frustrated belonging)",
+  "EVT_ENTITY_SHARED_FOOD": "{name} shared {amount} food with {target_name}",
+  "EVT_ENTITY_HOARDING": "{name} is hoarding resources (materialism: {materialism})",
+  "EVT_ECON_TENDENCY_SHIFT": "{name}'s economic outlook shifted ({tendency}: {value})"
 }
