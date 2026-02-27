@@ -18,10 +18,12 @@ func _init() -> void:
 	tick_interval = 5
 
 
+## Initializes the threshold system with the entity manager.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
+## Evaluates all stat thresholds for every alive entity and applies or removes threshold effects.
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return

@@ -39,6 +39,7 @@ func _init() -> void:
 	tick_interval = 12  # Once per game day
 
 
+## Initializes the emotion system with the entity manager and loads event presets and decay parameters from data files.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_event_presets()
@@ -101,6 +102,7 @@ func queue_event(entity_id: int, event_key: String, overrides: Dictionary = {}) 
 	_pending_events[entity_id].append(event)
 
 
+## Processes Plutchik emotion dynamics for all alive entities: applies event impulses, decays fast/slow/memory-trace layers, runs contagion, and checks for mental breaks.
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	var dt_hours: float = float(tick_interval) / 12.0  # 12 ticks = 1 game day = 24h, so 1 tick = 2h

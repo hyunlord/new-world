@@ -30,6 +30,7 @@ var _agent_tab_root: Control
 var _system_tab_root: Control
 
 
+## Initialises the debug panel with the entity and settlement managers, then builds the UI.
 func init(em: RefCounted, sm: RefCounted = null) -> void:
 	_entity_manager = em
 	_settlement_manager = sm
@@ -37,6 +38,7 @@ func init(em: RefCounted, sm: RefCounted = null) -> void:
 	visible = false
 
 
+## Toggles the panel's visibility and refreshes dropdowns and agent values when shown.
 func toggle() -> void:
 	visible = not visible
 	if visible:

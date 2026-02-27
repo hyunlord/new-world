@@ -26,7 +26,8 @@ const ERA_ORDER = ["stone_age", "tribal", "bronze_age", "iron_age"]
 ## Settlement manager reference — set via init_settlement_manager() after scene is ready
 var _settlement_manager = null
 
-## Called by main.gd (or SimulationEngine) after all autoloads are ready
+## Called by main.gd (or SimulationEngine) after all autoloads are ready.
+## Stores the SettlementManager reference used for tech-era and prerequisite gating in add_xp.
 func init_settlement_manager(mgr) -> void:
 	_settlement_manager = mgr
 
@@ -42,6 +43,7 @@ func _ready() -> void:
 
 ## 현재 스탯 값 반환 (int)
 ## Phase 0: entity.stat_cache에 있으면 그것, 없으면 fallback
+## Returns the current cached stat value for the entity, or fallback if missing or dirty.
 func get_stat(entity: RefCounted, stat_id: StringName,
 		fallback: int = 0) -> int:
 	if entity == null:
@@ -57,6 +59,7 @@ func get_stat(entity: RefCounted, stat_id: StringName,
 	return fallback
 
 ## 정규화 값 반환 (0.0~1.0)
+## Returns the stat value normalized to [0.0, 1.0] based on its defined min/max range.
 func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
 	var range_arr: Array = StatDefinitionScript.get_range(stat_id)
 	var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
@@ -67,6 +70,7 @@ func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
 
 ## 영향력 값 반환 (InfluenceCurve 적용된 float)
 ## Phase 0: stub, 항상 1.0 반환
+## Returns the multiplicative influence of a stat on a given context, applying curve and evaluator affects.
 func get_influence(entity: RefCounted, stat_id: StringName,
 		context: StringName, extra_context: Dictionary = {}) -> float:
 	if entity == null:
@@ -211,6 +215,7 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 스탯 값 직접 설정 (초기화/이벤트)
+## Clamps value to the stat's defined range and writes it directly into the entity's stat cache.
 func set_value(entity: RefCounted, stat_id: StringName,
 		value: int, tick: int = 0) -> void:
 	if entity == null:
@@ -225,6 +230,7 @@ func set_value(entity: RefCounted, stat_id: StringName,
 	StatCacheScript.set_value(cache as Dictionary, stat_id, clamped, tick)
 
 ## StatModifier 추가
+## Adds a StatModifier to the entity's stat cache, replacing or stack-contesting as needed.
 func apply_modifier(entity: RefCounted, modifier: RefCounted) -> void:
 	if entity == null or modifier == null:
 		return
@@ -234,6 +240,7 @@ func apply_modifier(entity: RefCounted, modifier: RefCounted) -> void:
 	StatCacheScript.add_modifier(cache as Dictionary, modifier)
 
 ## StatModifier 제거
+## Removes the modifier with the given modifier_id from the entity's cache entry for stat_id.
 func remove_modifier(entity: RefCounted, stat_id: StringName,
 		modifier_id: StringName) -> void:
 	if entity == null:
@@ -387,6 +394,7 @@ func _compute_talent_ceiling(entity: RefCounted, def: Dictionary) -> int:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 스탯이 왜 이 값인지 전체 추적
+## Returns a debug Dictionary describing the current value, dirty state, modifiers, and definition metadata for a stat.
 func explain(entity: RefCounted, stat_id: StringName) -> Dictionary:
 	if entity == null:
 		return {}

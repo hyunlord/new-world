@@ -1,0 +1,53 @@
+{
+  "_comment": "Title definitions for TitleSystem [Barth 1969, Turner 1974]",
+  "titles": [
+    {
+      "id": "TITLE_ELDER",
+      "display_key": "TITLE_ELDER",
+      "category": "age",
+      "condition": {"type": "age_min", "value": 55.0},
+      "social_capital_bonus": 3.0,
+      "prestige": 0.15
+    },
+    {
+      "id": "TITLE_CHIEF",
+      "display_key": "TITLE_CHIEF",
+      "category": "leadership",
+      "condition": {"type": "is_leader"},
+      "social_capital_bonus": 10.0,
+      "prestige": 0.40
+    },
+    {
+      "id": "TITLE_FORMER_CHIEF",
+      "display_key": "TITLE_FORMER_CHIEF",
+      "category": "leadership",
+      "condition": {"type": "was_leader"},
+      "social_capital_bonus": 5.0,
+      "prestige": 0.20
+    },
+    {
+      "id": "TITLE_MASTER",
+      "display_key": "TITLE_MASTER",
+      "category": "skill",
+      "condition": {"type": "skill_level", "value": 75},
+      "social_capital_bonus": 5.0,
+      "prestige": 0.25
+    },
+    {
+      "id": "TITLE_EXPERT",
+      "display_key": "TITLE_EXPERT",
+      "category": "skill",
+      "condition": {"type": "skill_level", "value": 50},
+      "social_capital_bonus": 2.0,
+      "prestige": 0.10
+    },
+    {
+      "id": "TITLE_VETERAN",
+      "display_key": "TITLE_VETERAN",
+      "category": "combat",
+      "condition": {"type": "battles_survived", "value": 5},
+      "social_capital_bonus": 4.0,
+      "prestige": 0.20
+    }
+  ]
+}

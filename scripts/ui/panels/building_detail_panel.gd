@@ -5,6 +5,7 @@ var _settlement_manager: RefCounted
 var _building_id: int = -1
 
 
+## Initializes the panel with the BuildingManager and optional SettlementManager references.
 func init(building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
@@ -14,6 +15,7 @@ func _ready() -> void:
 	Locale.locale_changed.connect(func(_l): queue_redraw())
 
 
+## Sets the building to display by its ID; redraws the panel on next frame.
 func set_building_id(id: int) -> void:
 	_building_id = id
 

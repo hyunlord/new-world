@@ -8,6 +8,7 @@ var graph_h: int = 70
 var bar_h: int = 14
 
 
+## Initializes the panel with the StatsRecorder reference used to read population and resource history.
 func init(stats_recorder: RefCounted) -> void:
 	_stats_recorder = stats_recorder
 

@@ -17,6 +17,7 @@ var _scrollbar_dragging: bool = false
 var _scrollbar_rect: Rect2 = Rect2()
 
 
+## Initializes the panel with StatsRecorder, SettlementManager, EntityManager, and RelationshipManager references.
 func init(stats_recorder: RefCounted, settlement_manager: RefCounted = null, entity_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
 	_stats_recorder = stats_recorder
 	_settlement_manager = settlement_manager

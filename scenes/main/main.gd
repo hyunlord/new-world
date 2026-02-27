@@ -55,6 +55,8 @@ const NetworkSystemScript = preload("res://scripts/systems/social/network_system
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
 const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
+const OccupationSystem = preload("res://scripts/systems/social/occupation_system.gd")
+const TitleSystem = preload("res://scripts/systems/social/title_system.gd")
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
 
 var sim_engine: RefCounted
@@ -116,6 +118,8 @@ var network_system: RefCounted
 var tech_tree_manager: RefCounted
 var tech_discovery_system: RefCounted
 var tension_system: RefCounted
+var occupation_system: RefCounted
+var title_system: RefCounted
 var _world_setup: Node = null
 var _loading_overlay: CanvasLayer = null
 var _loading_bar: ProgressBar = null
@@ -284,6 +288,13 @@ func _ready() -> void:
 	leader_system = LeaderSystem.new()
 	leader_system.init(entity_manager, settlement_manager, relationship_manager)
 
+	# ── Layer 4.5: Occupation & Title Systems ─────────────
+	occupation_system = OccupationSystem.new()
+	occupation_system.init(entity_manager)
+
+	title_system = TitleSystem.new()
+	title_system.init(entity_manager, settlement_manager)
+
 	# ── Phase 6: Social Identity & Economic Behavior ──────
 	reputation_manager = ReputationManagerScript.new()
 
@@ -335,7 +346,9 @@ func _ready() -> void:
 	sim_engine.register_system(child_stress_processor)   # priority 32 (Phase 5)
 	sim_engine.register_system(stress_system)             # priority 34
 	sim_engine.register_system(mental_break_system)       # priority 35
+	sim_engine.register_system(occupation_system)          # priority 36 (Layer 4.5)
 	sim_engine.register_system(trauma_scar_system)        # priority 36
+	sim_engine.register_system(title_system)              # priority 37 (Layer 4.5)
 	sim_engine.register_system(trait_violation_system)   # priority 37
 	sim_engine.register_system(social_event_system)       # priority 37
 	sim_engine.register_system(age_system)                # priority 48

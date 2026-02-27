@@ -23,6 +23,7 @@ var stack_group: String = ""     ## 같은 그룹 → max(|value|) 하나만 적
 var priority: int = 0            ## OVERRIDE 충돌 해소
 
 ## 편의 생성자
+## Creates and returns a new ADD-type StatModifier with the given id, target, value, source, and optional duration.
 static func make_add(id_: StringName, target_: StringName,
 		val: float, src: String, duration_: int = -1) -> RefCounted:
 	var m = load("res://scripts/core/stats/stat_modifier.gd").new()
@@ -31,6 +32,7 @@ static func make_add(id_: StringName, target_: StringName,
 	m.source = src; m.duration = duration_
 	return m
 
+## Creates and returns a new MULTIPLY-type StatModifier with the given id, target, value, source, and optional duration.
 static func make_multiply(id_: StringName, target_: StringName,
 		val: float, src: String, duration_: int = -1) -> RefCounted:
 	var m = load("res://scripts/core/stats/stat_modifier.gd").new()
@@ -40,6 +42,7 @@ static func make_multiply(id_: StringName, target_: StringName,
 	return m
 
 ## 직렬화
+## Serializes this modifier to a plain Dictionary suitable for storage or FFI transfer.
 func to_dict() -> Dictionary:
 	return {
 		"id": str(id), "target": str(target),

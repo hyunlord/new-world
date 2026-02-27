@@ -18,10 +18,12 @@ func _init() -> void:
 	tick_interval = GameConfig.MEMORY_COMPRESS_INTERVAL_TICKS
 
 
+## Initializes the memory system with the entity manager.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 
 
+## Runs decay, capacity eviction, and compression on all alive entities' working memory each tick.
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return

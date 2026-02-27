@@ -16,6 +16,7 @@ const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 const StatGraphScript = preload("res://scripts/core/stats/stat_graph.gd")
 
 ## 엔트리 초기화 (존재하지 않으면 생성)
+## Ensures a cache entry exists for stat_id, creating it with default_value if absent.
 static func ensure(stat_cache: Dictionary, stat_id: StringName,
 		default_value: int) -> void:
 	if not stat_cache.has(stat_id):
@@ -27,6 +28,7 @@ static func ensure(stat_cache: Dictionary, stat_id: StringName,
 		}
 
 ## 값 읽기 (dirty 체크 없음 — StatQuery가 담당)
+## Returns the cached value for stat_id, or fallback if the entry does not exist.
 static func get_value(stat_cache: Dictionary, stat_id: StringName,
 		fallback: int = 0) -> int:
 	if not stat_cache.has(stat_id):
@@ -34,6 +36,7 @@ static func get_value(stat_cache: Dictionary, stat_id: StringName,
 	return int(stat_cache[stat_id].get("value", fallback))
 
 ## 값 쓰기 + downstream dirty 전파
+## Writes value into the cache entry for stat_id and propagates dirty to dependents.
 static func set_value(stat_cache: Dictionary, stat_id: StringName,
 		value: int, tick: int = 0) -> void:
 	ensure(stat_cache, stat_id, value)
@@ -43,18 +46,21 @@ static func set_value(stat_cache: Dictionary, stat_id: StringName,
 	_propagate_dirty(stat_cache, stat_id)
 
 ## dirty 마킹
+## Marks the cache entry for stat_id as dirty and propagates to downstream dependents.
 static func mark_dirty(stat_cache: Dictionary, stat_id: StringName) -> void:
 	if stat_cache.has(stat_id):
 		stat_cache[stat_id]["dirty"] = true
 	_propagate_dirty(stat_cache, stat_id)
 
 ## dirty 여부 확인
+## Returns true if the cache entry for stat_id is missing or marked dirty.
 static func is_dirty(stat_cache: Dictionary, stat_id: StringName) -> bool:
 	if not stat_cache.has(stat_id):
 		return true
 	return bool(stat_cache[stat_id].get("dirty", true))
 
 ## Modifier 추가 (같은 id → 교체, stack_group → max 비교)
+## Adds a modifier to the cache, replacing an existing one with the same id or winning stack_group slot.
 static func add_modifier(stat_cache: Dictionary, modifier: RefCounted) -> void:
 	var sid: StringName = modifier.target
 	ensure(stat_cache, sid, 0)
@@ -82,6 +88,7 @@ static func add_modifier(stat_cache: Dictionary, modifier: RefCounted) -> void:
 	mark_dirty(stat_cache, sid)
 
 ## Modifier 제거
+## Removes the modifier with the given modifier_id from the cache entry for stat_id.
 static func remove_modifier(stat_cache: Dictionary,
 		stat_id: StringName, modifier_id: StringName) -> void:
 	if not stat_cache.has(stat_id):
@@ -95,6 +102,7 @@ static func remove_modifier(stat_cache: Dictionary,
 
 ## Modifier 만료 처리 (매 틱 호출)
 ## 반환: 만료된 modifier id 배열
+## Advances modifier durations by one tick, removes expired ones, and returns their ids.
 static func tick_modifiers(stat_cache: Dictionary,
 		stat_id: StringName) -> Array:
 	if not stat_cache.has(stat_id):
@@ -130,6 +138,7 @@ static func tick_modifiers(stat_cache: Dictionary,
 	return expired
 
 ## Modifier 적용 (ADD → MULTIPLY → CLAMP → OVERRIDE 순서)
+## Applies all modifiers to base_value in ADD→MULTIPLY→CLAMP→OVERRIDE order, clamped to stat_range.
 static func apply_modifiers(base_value: int, mods: Array,
 		stat_range: Array) -> int:
 	var result: float = float(base_value)

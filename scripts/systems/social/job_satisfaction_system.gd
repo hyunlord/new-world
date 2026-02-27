@@ -27,16 +27,25 @@ func init(entity_manager: RefCounted, settlement_manager: RefCounted,
 
 
 func _load_job_profiles() -> void:
-	var job_ids: Array = ["gatherer", "lumberjack", "builder", "miner"]
-	for job_id in job_ids:
-		var path: String = "res://data/jobs/" + job_id + ".json"
-		var file = FileAccess.open(path, FileAccess.READ)
-		if file == null:
-			continue
-		var json = JSON.new()
-		if json.parse(file.get_as_text()) == OK:
-			_job_profiles[job_id] = json.data
-		file.close()
+	## [Layer 4.5] Load ALL job profiles from data/jobs/ — not just 4 hardcoded ones
+	var dir := DirAccess.open("res://data/jobs")
+	if dir == null:
+		push_warning("[JobSatisfactionSystem] Cannot open data/jobs/")
+		return
+	dir.list_dir_begin()
+	var fname: String = dir.get_next()
+	while fname != "":
+		if not dir.current_is_dir() and fname.ends_with(".json"):
+			var job_id: String = fname.get_basename()
+			var path: String = "res://data/jobs/" + fname
+			var file = FileAccess.open(path, FileAccess.READ)
+			if file != null:
+				var json = JSON.new()
+				if json.parse(file.get_as_text()) == OK:
+					_job_profiles[job_id] = json.data
+				file.close()
+		fname = dir.get_next()
+	dir.list_dir_end()
 
 
 func execute_tick(tick: int) -> void:
@@ -52,7 +61,10 @@ func execute_tick(tick: int) -> void:
 			entity.job_satisfaction = 0.50
 			_apply_work_speed_modifier_flag(entity)
 			continue
-		var profile = _job_profiles.get(entity.job, {})
+		## [Layer 4.5] Try occupation-specific profile first, fall back to legacy job profile
+		var profile = _job_profiles.get(entity.occupation, {})
+		if profile.is_empty():
+			profile = _job_profiles.get(entity.job, {})
 		if profile.is_empty():
 			entity.job_satisfaction = 0.50
 			_apply_work_speed_modifier_flag(entity)

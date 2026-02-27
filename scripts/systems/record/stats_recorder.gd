@@ -16,6 +16,7 @@ func _init() -> void:
 	tick_interval = 200
 
 
+## Initializes the recorder with entity, building, and optional settlement managers.
 func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager

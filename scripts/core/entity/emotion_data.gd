@@ -153,6 +153,7 @@ func _load_dyad_definitions() -> void:
 
 
 # === Final emotion value (fast + slow + memory, clamped 0~100) ===
+## Returns the combined emotion intensity (fast + slow + memory traces) for the given emotion ID, clamped to 0–100.
 func get_emotion(emotion_id: String) -> float:
 	var f = fast.get(emotion_id, 0.0)
 	var s = slow.get(emotion_id, 0.0)
@@ -169,6 +170,7 @@ func _get_memory_total(emotion_id: String) -> float:
 
 
 # === Intensity labels (UI display) ===
+## Returns the English intensity label (e.g. "Serenity", "Joy", "Ecstasy") for the given emotion ID, or "" if below threshold.
 func get_intensity_label(emotion_id: String) -> String:
 	var val: float = get_emotion(emotion_id)
 	if val < 1.0:
@@ -181,6 +183,7 @@ func get_intensity_label(emotion_id: String) -> String:
 	return labels[2]         # intense
 
 
+## Returns the Korean intensity label for the given emotion ID, or "" if below threshold.
 func get_intensity_label_kr(emotion_id: String) -> String:
 	var val: float = get_emotion(emotion_id)
 	if val < 1.0:
@@ -193,6 +196,7 @@ func get_intensity_label_kr(emotion_id: String) -> String:
 	return labels[2]
 
 # === Valence-Arousal calculation ===
+## Recalculates valence and arousal derived values from current emotion intensities.
 func recalculate_va() -> void:
 	var pos: float = 0.0
 	for emo in _valence_positive:
@@ -213,6 +217,7 @@ func recalculate_va() -> void:
 		arousal = 0.0
 
 
+## Returns the geometric mean intensity of the two component emotions for the given dyad ID.
 func get_dyad(dyad_id: String) -> float:
 	var pair = _dyads.get(dyad_id, [])
 	if pair.size() < 2:
@@ -237,22 +242,27 @@ func get_active_dyads(threshold: float = 30.0) -> Array:
 # === Legacy 5-emotion compatibility ===
 # Existing systems reference these values. Derived from Plutchik emotions.
 
+## Returns happiness as a 0.0–1.0 value derived from joy minus sadness.
 func get_legacy_happy() -> float:
 	return clampf(get_emotion("joy") - get_emotion("sadness"), 0.0, 100.0) / 100.0
 
 
+## Returns love as a 0.0–1.0 value derived from the love dyad (joy + trust).
 func get_legacy_love() -> float:
 	return get_dyad("love") / 100.0
 
 
+## Returns grief as a 0.0–1.0 value derived from sadness intensity.
 func get_legacy_grief() -> float:
 	return get_emotion("sadness") / 100.0
 
 
+## Returns stress as a 0.0–1.0 value derived from fear, anger, and anticipation.
 func get_legacy_stress() -> float:
 	return clampf((get_emotion("fear") + get_emotion("anger") + get_emotion("anticipation")) / 3.0, 0.0, 100.0) / 100.0
 
 
+## Returns loneliness as a 0.0–1.0 value derived from low trust and elevated sadness.
 func get_legacy_lonely() -> float:
 	return clampf(50.0 - get_emotion("trust") + get_emotion("sadness") * 0.5, 0.0, 100.0) / 100.0
 
@@ -270,6 +280,7 @@ func to_legacy_dict() -> Dictionary:
 
 # === Serialization ===
 
+## Serializes all emotion state (fast, slow, memory traces, stress, VA, etc.) to a Dictionary for save/load.
 func to_dict() -> Dictionary:
 	var mt: Dictionary = {}
 	for emo in memory_traces:

@@ -6,6 +6,7 @@ var _settlements: Dictionary = {}  # id -> settlement
 var _next_id: int = 1
 
 
+## Create and register a new settlement centered at (cx, cy), founded at the given tick.
 func create_settlement(cx: int, cy: int, tick: int) -> RefCounted:
 	var settlement = SettlementDataScript.new()
 	settlement.id = _next_id
@@ -17,14 +18,17 @@ func create_settlement(cx: int, cy: int, tick: int) -> RefCounted:
 	return settlement
 
 
+## Return the settlement with the given ID, or null if not found.
 func get_settlement(id: int) -> RefCounted:
 	return _settlements.get(id, null)
 
 
+## Return all registered settlements.
 func get_all_settlements() -> Array:
 	return _settlements.values()
 
 
+## Return the settlement whose center is closest (Manhattan distance) to (x, y).
 func get_nearest_settlement(x: int, y: int) -> RefCounted:
 	var nearest: RefCounted = null
 	var best_dist: int = 2147483647
@@ -38,6 +42,7 @@ func get_nearest_settlement(x: int, y: int) -> RefCounted:
 	return nearest
 
 
+## Add an entity to a settlement's member list (no-op if already a member).
 func add_member(settlement_id: int, entity_id: int) -> void:
 	var settlement = _settlements.get(settlement_id, null)
 	if settlement == null:
@@ -46,6 +51,7 @@ func add_member(settlement_id: int, entity_id: int) -> void:
 		settlement.member_ids.append(entity_id)
 
 
+## Remove an entity from a settlement's member list.
 func remove_member(settlement_id: int, entity_id: int) -> void:
 	var settlement = _settlements.get(settlement_id, null)
 	if settlement == null:
@@ -55,6 +61,7 @@ func remove_member(settlement_id: int, entity_id: int) -> void:
 		settlement.member_ids.remove_at(idx)
 
 
+## Register a building ID under a settlement (no-op if already registered).
 func add_building(settlement_id: int, building_id: int) -> void:
 	var settlement = _settlements.get(settlement_id, null)
 	if settlement == null:
@@ -63,6 +70,7 @@ func add_building(settlement_id: int, building_id: int) -> void:
 		settlement.building_ids.append(building_id)
 
 
+## Return the current member count of a settlement (0 if not found).
 func get_settlement_population(id: int) -> int:
 	var settlement = _settlements.get(id, null)
 	if settlement == null:
@@ -70,6 +78,7 @@ func get_settlement_population(id: int) -> int:
 	return settlement.member_ids.size()
 
 
+## Serialize all settlements to an array of dictionaries for saving.
 func to_save_data() -> Array:
 	var result: Array = []
 	var all_settlements: Array = _settlements.values()
@@ -78,6 +87,7 @@ func to_save_data() -> Array:
 	return result
 
 
+## Return the total number of registered settlements.
 func get_settlement_count() -> int:
 	return _settlements.size()
 
@@ -103,10 +113,12 @@ func cleanup_empty_settlements() -> void:
 		_settlements.erase(to_remove[i])
 
 
+## Remove a settlement by ID from the registry.
 func remove_settlement(id: int) -> void:
 	_settlements.erase(id)
 
 
+## Restore all settlements from a saved array of dictionaries.
 func load_save_data(data: Array) -> void:
 	_settlements.clear()
 	_next_id = 1

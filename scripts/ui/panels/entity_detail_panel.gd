@@ -263,6 +263,7 @@ class DeceasedEntityProxy extends RefCounted:
 			emotion_data = EScript.from_dict(e_dict)
 
 
+## Initializes the panel with EntityManager, BuildingManager, RelationshipManager, SettlementManager, and ReputationManager references.
 func init(entity_manager: RefCounted, building_manager: RefCounted = null, relationship_manager: RefCounted = null, settlement_manager: RefCounted = null, reputation_manager: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
@@ -271,6 +272,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted = null, relat
 	_reputation_manager = reputation_manager
 
 
+## Sets the entity to display by ID, resetting scroll position and clearing any previously shown deceased record.
 func set_entity_id(id: int) -> void:
 	_entity_id = id
 	_scroll_offset = 0.0
@@ -1876,6 +1878,7 @@ func _show_deceased(record: Dictionary) -> void:
 	queue_redraw()
 
 
+## Displays the given entity if alive, or falls back to showing their deceased registry record.
 func show_entity_or_deceased(entity_id: int) -> void:
 	var entity: RefCounted = _entity_manager.get_entity(entity_id)
 	if entity != null and entity.is_alive:

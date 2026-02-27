@@ -44,6 +44,7 @@ const EVENT_STYLES: Dictionary = {
 var _filter_rects: Array = []  # [{rect: Rect2, index: int}]
 
 
+## Initializes the panel with the EntityManager reference for entity name resolution and navigation.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 

@@ -127,6 +127,7 @@ var _pop_milestone_init: bool = false
 var _last_pop_milestone: int = 0
 
 
+## Stores all manager and engine references required for HUD display and interaction.
 func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, world_data: RefCounted = null, camera: Camera2D = null, stats_recorder: RefCounted = null, relationship_manager: RefCounted = null, reputation_manager: RefCounted = null) -> void:
 	_sim_engine = sim_engine
 	_entity_manager = entity_manager
@@ -955,6 +956,7 @@ func _refresh_hud_texts() -> void:
 
 # --- Toggle functions ---
 
+## Cycles the minimap through small, large, and hidden sizes.
 func toggle_minimap() -> void:
 	if _minimap_panel == null:
 		return
@@ -970,11 +972,13 @@ func toggle_minimap() -> void:
 		_minimap_panel.resize(new_size)
 
 
+## Opens or closes the statistics detail panel via the popup manager.
 func toggle_stats() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_stats()
 
 
+## Toggles the keyboard shortcut help overlay, pausing the simulation while it is shown.
 func toggle_help() -> void:
 	_help_visible = not _help_visible
 	_help_overlay.visible = _help_visible
@@ -991,6 +995,7 @@ func toggle_help() -> void:
 			SimulationBus.pause_changed.emit(false)
 
 
+## Closes any open popup panel or the help overlay. Returns true if something was closed.
 func close_all_popups() -> bool:
 	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
@@ -1001,6 +1006,7 @@ func close_all_popups() -> bool:
 	return false
 
 
+## Opens the full entity detail panel for the currently selected entity.
 func open_entity_detail() -> void:
 	if _popup_manager != null and _selected_entity_id >= 0:
 		if OS.is_debug_build():
@@ -1009,21 +1015,25 @@ func open_entity_detail() -> void:
 			_popup_manager.open_entity(_selected_entity_id)
 
 
+## Opens the full building detail panel for the currently selected building.
 func open_building_detail() -> void:
 	if _popup_manager != null and _selected_building_id >= 0:
 		_popup_manager.open_building(_selected_building_id)
 
 
+## Opens or closes the chronicle event history panel.
 func toggle_chronicle() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_chronicle()
 
 
+## Opens or closes the entity list panel.
 func toggle_list() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_list()
 
 
+## Lazily initialises and toggles the F12 debug cheat panel.
 func toggle_debug_panel() -> void:
 	if _debug_panel == null:
 		var PanelClass = load("res://scripts/ui/debug_cheat_panel.gd")
@@ -1033,6 +1043,7 @@ func toggle_debug_panel() -> void:
 	_debug_panel.toggle()
 
 
+## Displays a startup toast notification showing the initial population count.
 func show_startup_toast(pop_count: int) -> void:
 	_add_notification(Locale.trf("UI_NOTIF_WORLDSIM_STARTED_FMT", {"n": pop_count}), Color.WHITE)
 
@@ -1078,25 +1089,30 @@ func _on_follow_stopped() -> void:
 	_follow_label.visible = false
 
 
+## Shows or hides the resource overlay colour legend.
 func set_resource_legend_visible(vis: bool) -> void:
 	_resource_legend.visible = vis
 
 
+## Returns the minimap panel control, or null if it has not been created yet.
 func get_minimap() -> Control:
 	return _minimap_panel
 
 
+## Returns true if an entity or building detail panel is currently open.
 func is_detail_visible() -> bool:
 	if _popup_manager != null:
 		return _popup_manager.is_detail_visible()
 	return false
 
 
+## Closes all popup panels managed by the popup manager.
 func close_detail() -> void:
 	if _popup_manager != null:
 		_popup_manager.close_all()
 
 
+## Reapplies font sizes and minimap dimensions to all tracked UI elements after a scale change.
 func apply_ui_scale() -> void:
 	# Update all tracked labels
 	for entry in _tracked_labels:

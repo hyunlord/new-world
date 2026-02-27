@@ -206,7 +206,56 @@ var moral_stage: int = 1
 ## { "TRUTH": 3, "LOYALTY": 1 }
 var value_violation_count: Dictionary = {}
 
-## === Layer 4.5: Social Identity ===
+## === Layer 4.5: Social Identity [Human Definition v3 §9] ===
+
+## [Holland 1959] Skill-based occupation. Derived from highest skill.
+## Format: skill_id without "SKILL_" prefix, lowercase. e.g. "foraging", "blacksmithing"
+## Updated by OccupationSystem every OCCUPATION_EVAL_INTERVAL ticks.
+var occupation: String = "none"
+
+## [Holland 1959] Previous occupation (for career change events)
+var previous_occupation: String = "none"
+
+## [Barth 1969] Accumulated social titles. Array of StringName.
+## e.g. [&"TITLE_CHIEF", &"TITLE_ELDER", &"TITLE_MASTER_FORAGING"]
+## Granted/revoked by TitleSystem based on conditions.
+var titles: Array = []
+
+## ── Faction (Phase C scaffold — no logic yet) ─────────────────────────────
+
+## Faction ID this entity belongs to. "" = no faction.
+var faction_id: String = ""
+
+## [0.0, 1.0] Loyalty to current faction. 0.0 = about to defect, 1.0 = die-hard.
+var faction_loyalty: float = 0.5
+
+## Role within faction: "member" / "officer" / "leader" / "outcast"
+var faction_role: String = "member"
+
+## ── Phase D scaffold (dormant — no logic yet) ─────────────────────────────
+
+## [0.0, 1.0] Faith strength. 0.0 = atheist, 1.0 = fervent believer.
+var faith_strength: float = 0.0
+
+## Faith tradition ID. "" = none.
+var faith_tradition: String = ""
+
+## Is this entity a priest? (Phase D activates)
+var priest_status: bool = false
+
+## Oracle messages this entity remembers. Array of Dictionary.
+var oracle_memory: Array = []
+
+## ── Phase B.5 scaffold (environment adaptation) ───────────────────────────
+
+## Known resource locations: {resource_type: [Vector2i positions]}
+var environment_knowledge: Dictionary = {}
+
+## How far this entity has explored (tiles from home)
+var exploration_range: float = 0.0
+
+## [0.0, 1.0] Attachment to current settlement. High = resists migration.
+var home_attachment: float = 0.5
 
 ## [Hackman & Oldham 1976] Job satisfaction [0.0, 1.0]
 var job_satisfaction: float = 0.50
@@ -361,6 +410,19 @@ func to_dict() -> Dictionary:
 		"working_memory": working_memory.duplicate(true),
 		"permanent_history": permanent_history.duplicate(true),
 		"stat_cache": _serialize_stat_cache(stat_cache),
+		"occupation": occupation,
+		"previous_occupation": previous_occupation,
+		"titles": titles.duplicate(),
+		"faction_id": faction_id,
+		"faction_loyalty": faction_loyalty,
+		"faction_role": faction_role,
+		"faith_strength": faith_strength,
+		"faith_tradition": faith_tradition,
+		"priest_status": priest_status,
+		"oracle_memory": oracle_memory.duplicate(),
+		"environment_knowledge": environment_knowledge.duplicate(),
+		"exploration_range": exploration_range,
+		"home_attachment": home_attachment,
 		"job_satisfaction": job_satisfaction,
 		"status_score": status_score,
 		"status_tier": status_tier,
@@ -517,6 +579,20 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.working_memory       = data.get("working_memory",       []).duplicate()
 	e.permanent_history    = data.get("permanent_history",    []).duplicate()
 	e.stat_cache = _deserialize_stat_cache(data.get("stat_cache", {}))
+	e.occupation = data.get("occupation", "none")
+	e.previous_occupation = data.get("previous_occupation", "none")
+	e.titles = data.get("titles", []).duplicate()
+	e.faction_id = data.get("faction_id", "")
+	e.faction_loyalty = float(data.get("faction_loyalty", 0.5))
+	e.faction_role = data.get("faction_role", "member")
+	e.faith_strength = float(data.get("faith_strength", 0.0))
+	e.faith_tradition = data.get("faith_tradition", "")
+	e.priest_status = data.get("priest_status", false)
+	e.oracle_memory = data.get("oracle_memory", []).duplicate()
+	var env_know = data.get("environment_knowledge", {})
+	e.environment_knowledge = env_know.duplicate() if env_know is Dictionary else {}
+	e.exploration_range = float(data.get("exploration_range", 0.0))
+	e.home_attachment = float(data.get("home_attachment", 0.5))
 	e.job_satisfaction = data.get("job_satisfaction", 0.50)
 	e.status_score = data.get("status_score", 0.0)
 	e.status_tier = data.get("status_tier", "common")
