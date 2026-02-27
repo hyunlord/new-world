@@ -5273,3 +5273,15 @@ All 10 categories + synergy fully defined:
 | **Total** | | **242** | |
 
 Dispatch ratio: 0% (Codex MCP unavailable — ToolSearch returned empty for ask_codex)
+
+## Layer 7: 혈액형 + 별자리 + 가치관 유전율 차등화
+
+| Ticket | Description | Mode | Tool | Status |
+|--------|-------------|------|------|--------|
+| t-L7-01 | game_config.gd — BLOOD_TYPE + ZODIAC + VALUE_HERITABILITY 상수 | 🟢 DISPATCH | codex_dispatch.sh | ⏳ PENDING |
+| t-L7-02 | entity_data.gd — blood_type/blood_genotype/zodiac_sign 필드 + serialize | 🟢 DISPATCH | codex_dispatch.sh | ⏳ PENDING |
+| t-L7-03 | entity_manager.gd — _get_zodiac_sign() + spawn_entity blood/zodiac | 🟢 DISPATCH | codex_dispatch.sh | ⏳ WAITING |
+| t-L7-04 | value_system.gd — initialize_values() 유전율 차등화 | 🔴 DIRECT | Edit | ✅ Done |
+
+Dispatch ratio: 75% (3/4 via Codex)
+Localization: en/ui.json + ko/ui.json 16 keys each ✅

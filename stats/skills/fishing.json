@@ -1,6 +1,6 @@
 {
-  "id": "SKILL_FORAGING",
-  "display_key": "SKILL_FORAGING",
+  "id": "SKILL_FISHING",
+  "display_key": "UI_SKILL_FISHING",
   "category": "SKILL",
   "storage_type": "int",
   "range": [0, 100],
@@ -11,8 +11,8 @@
   "growth": {
     "type": "LOG_DIMINISHING",
     "params": {
-      "base_xp": 100,
-      "exponent": 1.8,
+      "base_xp": 90,
+      "exponent": 1.75,
       "level_breakpoints": [25, 50, 75],
       "breakpoint_multipliers": [1.0, 1.5, 2.0, 3.0]
     },
@@ -20,11 +20,11 @@
     "talent_ceiling_map": {"0": 40, "200": 60, "400": 80, "600": 90, "800": 100}
   },
   "thresholds": [
-    {"value": 50, "direction": "above", "effect": "UNLOCK_ACTION_HERB_GATHER"},
-    {"value": 75, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_FORAGING"}
+    {"value": 50, "direction": "above", "effect": "UNLOCK_ACTION_NET_FISH"},
+    {"value": 75, "direction": "above", "effect": "UNLOCK_ACTION_TEACH_FISHING"}
   ],
   "affects": [{
-    "target": "gather_yield_plant",
+    "target": "gather_yield_fish",
     "evaluator": "CURVE",
     "curve": "POWER",
     "params": {"exponent": 1.3},

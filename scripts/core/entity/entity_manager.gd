@@ -253,49 +253,103 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 		if _rng.randf() < GameConfig.DISTINGUISHING_MARK_CHANCE:
 			entity.distinguishing_marks.append(_mark_id)
 
-	## ── Layer 7: Speech Style [Human Definition v3 §13] ─────────────────────────
-	var _facets: Dictionary = entity.personality.facets
-	var _a_forgive: float = _facets.get("A_forgiveness", 0.5)
-	var _a_gentle_f: float = _facets.get("A_gentleness",  0.5)
-	var _h_sincere: float  = _facets.get("H_sincerity",   0.5)
-	var _c_organ: float    = _facets.get("C_organization",0.5)
-	var _o_inq: float      = _facets.get("O_inquisitiveness", 0.5)
-	var _e_senti: float    = _facets.get("E_sentimentality",  0.5)
-	var _x_bold: float     = _facets.get("X_social_boldness",  0.5)
-	var _x_socio: float    = _facets.get("X_sociability",      0.5)
+	## ── Layer 7: Blood Type [ABO Genetics — Human Definition v3 §13] ──────────
+	if parent_a != null and parent_b != null:
+		var _g1: String = parent_a.blood_genotype
+		var _g2: String = parent_b.blood_genotype
+		## 알파벳순 정렬로 교배키 생성
+		var _cross_key: String = (_g1 + "_" + _g2) if _g1 <= _g2 else (_g2 + "_" + _g1)
+		var _cross: Dictionary = GameConfig.BLOOD_CROSS_TABLE.get(_cross_key, {"OO": 100})
+		entity.blood_genotype = _weighted_random_string(_cross)
+	else:
+		## 초기 스폰: 표현형 먼저 결정 → 유전자형 결정
+		var _phenotype: String = _weighted_random_string(GameConfig.BLOOD_TYPE_SPAWN_WEIGHTS)
+		var _geno_dist: Dictionary = GameConfig.BLOOD_GENOTYPE_FROM_PHENOTYPE.get(_phenotype, {"OO": 100})
+		entity.blood_genotype = _weighted_random_string(_geno_dist)
+	entity.blood_type = GameConfig.BLOOD_GENOTYPE_TO_PHENOTYPE.get(entity.blood_genotype, "O")
 
-	var _tone_scores: Dictionary = {
-		"aggressive": (1.0 - _a_forgive) * 0.5 + (1.0 - _h_sincere) * 0.5,
-		"gentle":     _a_gentle_f * 0.6 + _e_senti * 0.4,
-		"formal":     _c_organ * 0.5 + (1.0 - _x_bold) * 0.5,
-		"sarcastic":  _o_inq * 0.5 + (1.0 - _h_sincere) * 0.5,
-		"casual":     _x_socio * 0.4 + 0.3,
-	}
-	var _best_tone: String = "casual"
-	var _best_score: float = -1.0
-	for _t in _tone_scores:
-		if _tone_scores[_t] > _best_score:
-			_best_score = _tone_scores[_t]
-			_best_tone = _t
-	entity.speech_tone = _best_tone
+	## ── Layer 7: Zodiac Sign ─────────────────────────────────────────────────────
+	if entity.birth_date.size() > 0:
+		entity.zodiac_sign = _get_zodiac_sign(
+			entity.birth_date.get("month", 1),
+			entity.birth_date.get("day", 1)
+		)
 
-	var _x_avg: float = (_x_bold + _x_socio + _facets.get("X_liveliness", 0.5) + _facets.get("X_social_self_esteem", 0.5)) / 4.0
-	if _x_avg < 0.35:
-		entity.speech_verbosity = "taciturn"
-	elif _x_avg > 0.65:
+	## ── Layer 7: Speech Style — Upgraded [Costa & McCrae 1992, Ekman 1992] ──────
+	## HEXACO axis 6개 + Plutchik 3감정 → tone/verbosity/humor
+	var _axes: Dictionary = entity.personality.axes  # H/E/X/A/C/O (0~1)
+	var _H: float = _axes.get("H", 0.5)
+	var _E: float = _axes.get("E", 0.5)
+	var _X: float = _axes.get("X", 0.5)
+	var _A: float = _axes.get("A", 0.5)
+	var _C: float = _axes.get("C", 0.5)
+	var _O: float = _axes.get("O", 0.5)
+	## 감정은 spawn 시점에서는 기본값 0 (출생시 감정 없음)
+	## → entity.emotion_data가 null이면 0으로 처리
+	var _anger: float = 0.0
+	var _joy:   float = 0.0
+	var _fear:  float = 0.0
+	if entity.emotion_data != null:
+		_anger = entity.emotion_data.get_emotion("anger") / 100.0
+		_joy   = entity.emotion_data.get_emotion("joy")   / 100.0
+		_fear  = entity.emotion_data.get_emotion("fear")  / 100.0
+
+	## tone 점수 계산 [Costa & McCrae 1992, Ashton & Lee 2007]
+	var _agg:  float = clampf(0.30*(1.0-_A) + 0.20*(1.0-_H) + 0.15*_X + 0.10*(1.0-_C) + 0.20*_anger + 0.05*(1.0-_fear), 0.0, 1.0)
+	var _gent: float = clampf(0.30*_A + 0.20*_H + 0.15*_E + 0.10*_C + 0.15*(1.0-_anger) + 0.10*_joy, 0.0, 1.0)
+	var _form: float = clampf(0.35*_C + 0.25*_H + 0.15*(1.0-_X) + 0.10*(1.0-_O) + 0.10*_fear + 0.05*(1.0-_joy), 0.0, 1.0)
+	var _cas:  float = clampf(0.35*_X + 0.20*_O + 0.15*_joy + 0.15*(1.0-_C) + 0.10*_A + 0.05*(1.0-_fear), 0.0, 1.0)
+	var _sarc: float = clampf(0.30*_O + 0.25*(1.0-_A) + 0.15*_X + 0.15*_anger + 0.10*_joy + 0.05*(1.0-_H), 0.0, 1.0)
+
+	## 결정 규칙 (임계값 + 우선순위)
+	var _speech_tone: String = "casual"  # default
+	if _agg >= 0.65 and _anger >= 0.55:
+		_speech_tone = "aggressive"
+	elif _sarc >= 0.62 and _O >= 0.55 and _anger >= 0.35:
+		_speech_tone = "sarcastic"
+	elif _form >= 0.62 and _C >= 0.65:
+		_speech_tone = "formal"
+	elif _gent >= 0.62 and _A >= 0.65 and _H >= 0.60 and _anger <= 0.35:
+		_speech_tone = "gentle"
+	else:
+		## 조건 미달 시 최고 점수 tone
+		var _tone_scores_v2: Dictionary = {"aggressive": _agg, "gentle": _gent, "formal": _form, "casual": _cas, "sarcastic": _sarc}
+		var _best: float = -1.0
+		for _t2 in _tone_scores_v2:
+			if _tone_scores_v2[_t2] > _best:
+				_best = _tone_scores_v2[_t2]
+				_speech_tone = _t2
+	entity.speech_tone = _speech_tone
+
+	## verbosity [Funder & Colvin 1991]: X 주도, 두려움이 말수 억제
+	var _ver: float = clampf(0.55*_X + 0.15*_O + 0.10*_joy + 0.05*_anger + 0.10*(1.0-_fear) + 0.05*(1.0-_C), 0.0, 1.0)
+	if _ver >= 0.67 or _X >= 0.75:
 		entity.speech_verbosity = "talkative"
+	elif _ver <= 0.33 or _X <= 0.25 or (_fear >= 0.70 and _X <= 0.55):
+		entity.speech_verbosity = "taciturn"
 	else:
 		entity.speech_verbosity = "normal"
 
-	var _merriment: float = entity.values.get(&"MERRIMENT", 0.0)
-	var _ling_intel: float = entity.intelligences.get("linguistic", 0.5)
-	var _humor_score: float = (_merriment + 1.0) / 2.0
-	if _humor_score > 0.55:
-		entity.speech_humor = "witty" if _ling_intel > 0.55 else "slapstick"
-	elif _humor_score < 0.35 and _ling_intel > 0.55:
-		entity.speech_humor = "dry"
-	else:
+	## humor [Greengross & Miller 2011]: Openness + Extraversion + joy → humor drive
+	var _hum: float = clampf(0.35*_O + 0.20*_X + 0.15*_joy + 0.15*(1.0-_A) + 0.10*(1.0-_fear) + 0.05*(1.0-_C), 0.0, 1.0)
+	if _hum < 0.40:
 		entity.speech_humor = "none"
+	else:
+		var _slap: float = clampf(0.45*_X + 0.30*_joy + 0.15*(1.0-_C) + 0.10*(1.0-_fear), 0.0, 1.0)
+		var _wit:  float = clampf(0.45*_O + 0.20*_X + 0.15*_joy + 0.10*_C + 0.10*_H - 0.20*_anger, 0.0, 1.0)
+		var _dry:  float = clampf(0.35*_C + 0.25*(1.0-_X) + 0.20*_O + 0.10*(1.0-_joy) + 0.10*_anger, 0.0, 1.0)
+		if _slap >= 0.60 and _X >= 0.65 and _joy >= 0.55:
+			entity.speech_humor = "slapstick"
+		elif _wit >= 0.60 and _O >= 0.60:
+			entity.speech_humor = "witty"
+		else:
+			## 가드 미달 시 최고 점수 스타일 (동률: X 높으면 slapstick, O 높으면 witty)
+			if _slap >= _wit and _slap >= _dry:
+				entity.speech_humor = "slapstick"
+			elif _wit >= _dry:
+				entity.speech_humor = "witty"
+			else:
+				entity.speech_humor = "dry"
 
 	## ── Layer 7: Preferences [Linden et al. 2010] ────────────────────────────────
 	var _o_axis: float = (_facets.get("O_inquisitiveness", 0.5) + _facets.get("O_aesthetic", 0.5)) / 2.0
@@ -425,6 +479,27 @@ func _weighted_random_string(weights: Dictionary) -> String:
 		if roll < cumulative:
 			return k
 	return weights.keys()[0]
+
+
+## 생일 month(1~12) + day(1~31) → zodiac_sign String
+static func _get_zodiac_sign(month: int, day: int) -> String:
+	## 황도 12궁 경계: [월, 해당월_경계일, 경계일_이상_별자리]
+	var _boundaries: Array = [
+		[1, 20, "aquarius"], [2, 19, "pisces"],      [3, 21, "aries"],
+		[4, 20, "taurus"],   [5, 21, "gemini"],      [6, 21, "cancer"],
+		[7, 23, "leo"],      [8, 23, "virgo"],        [9, 23, "libra"],
+		[10, 23, "scorpio"], [11, 22, "sagittarius"], [12, 22, "capricorn"]
+	]
+	## 이전 달 말일 기준 별자리 (경계일 미만일 때)
+	var _prev_signs: Array = [
+		"capricorn", "aquarius", "pisces", "aries", "taurus", "gemini",
+		"cancer", "leo", "virgo", "libra", "scorpio", "sagittarius"
+	]
+	for i in range(_boundaries.size()):
+		var _b: Array = _boundaries[i]
+		if month == _b[0]:
+			return _b[2] if day >= _b[1] else _prev_signs[i]
+	return "capricorn"  ## fallback (12월 말)
 
 
 ## Weighted random index from Array[int] weights

@@ -829,6 +829,101 @@ const ECON_MATERIALISM_JOY_PENALTY: float = 3.0
 ## Theft temptation constants
 const THEFT_SCARCITY_FOOD_DAYS: float = 3.0
 
+## [Frederick et al. 2002, Zuckerman 1979, Trivers 1971, Richins & Dawson 1992]
+## Economic tendency → behavior utility additive weights
+## Format: { action_id: { tendency_key: weight, ... }, ... }
+## weight 부호: + = 성향 높을수록 행동 점수 상승, - = 반대
+const ECON_BEHAVIOR_WEIGHTS: Dictionary = {
+	"gather_food":          { "saving": 0.15, "materialism": 0.10 },
+	"gather_wood":          { "saving": 0.15, "materialism": 0.10 },
+	"gather_stone":         { "saving": 0.10, "materialism": 0.10 },
+	"herb_gather":          { "saving": 0.05, "materialism": 0.05 },
+	"trap_hunt":            { "risk":   0.20, "materialism": 0.05 },
+	"wander":               { "risk":   0.15, "saving": -0.05 },
+	"rest":                 { "saving": -0.10, "risk": -0.05, "materialism": -0.05 },
+	"sit_by_fire":          { "saving": -0.05, "risk": -0.10 },
+	"socialize":            { "generosity": 0.15, "materialism": -0.10 },
+	"visit_partner":        { "generosity": 0.10, "materialism": -0.05 },
+	"deliver_to_stockpile": { "saving": 0.20, "generosity": 0.15 },
+	"take_from_stockpile":  { "saving": -0.10, "generosity": -0.10, "materialism": 0.15 },
+	"seek_shelter":         { "saving": 0.05, "risk": -0.15 },
+	"build":                { "saving": 0.10, "materialism": 0.10 },
+	"fine_woodwork":        { "saving": 0.05, "materialism": 0.05 },
+	"ore_vein":             { "saving": 0.05, "materialism": 0.08 },
+}
+
+## ━━ BLOOD TYPE SYSTEM [Layer 7 — ABO Genetics] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 초기 집단 스폰 시 혈액형 표현형 가중치 [세계 인구 기준 근사치]
+const BLOOD_TYPE_SPAWN_WEIGHTS: Dictionary = {"O": 45, "A": 40, "B": 11, "AB": 4}
+
+## 표현형 → 초기 유전자형 분포 가중치 (초기 스폰용)
+## A형: 2/3 확률로 AO (이형), 1/3 확률로 AA (동형)
+const BLOOD_GENOTYPE_FROM_PHENOTYPE: Dictionary = {
+	"A":  {"AA": 33, "AO": 67},
+	"B":  {"BB": 33, "BO": 67},
+	"AB": {"AB": 100},
+	"O":  {"OO": 100}
+}
+
+## 두 유전자형 교배 시 자녀 유전자형 확률 테이블 (알파벳순 정렬 키)
+const BLOOD_CROSS_TABLE: Dictionary = {
+	"AA_AA": {"AA": 100},
+	"AA_AO": {"AA": 50, "AO": 50},
+	"AA_AB": {"AA": 50, "AB": 50},
+	"AA_BB": {"AB": 100},
+	"AA_BO": {"AB": 50, "AO": 50},
+	"AA_OO": {"AO": 100},
+	"AB_AB": {"AA": 25, "AB": 50, "BB": 25},
+	"AB_OO": {"AO": 50, "BO": 50},
+	"AO_AB": {"AA": 25, "AB": 25, "AO": 25, "BO": 25},
+	"AO_AO": {"AA": 25, "AO": 50, "OO": 25},
+	"AO_BB": {"AB": 50, "BO": 50},
+	"AO_BO": {"AB": 25, "AO": 25, "BO": 25, "OO": 25},
+	"AO_OO": {"AO": 50, "OO": 50},
+	"BB_BB": {"BB": 100},
+	"BB_AB": {"AB": 50, "BB": 50},
+	"BB_BO": {"BB": 50, "BO": 50},
+	"BB_OO": {"BO": 100},
+	"BO_AB": {"AB": 25, "AO": 25, "BB": 25, "BO": 25},
+	"BO_BO": {"BB": 25, "BO": 50, "OO": 25},
+	"BO_OO": {"BO": 50, "OO": 50},
+	"OO_OO": {"OO": 100}
+}
+
+## 유전자형 → 표현형 매핑
+const BLOOD_GENOTYPE_TO_PHENOTYPE: Dictionary = {
+	"AA": "A", "AO": "A", "BB": "B", "BO": "B", "AB": "AB", "OO": "O"
+}
+
+## ━━ ZODIAC SYSTEM [Layer 7 — GameCalendar 그레고리력 기반] ━━━━━━━━━━━━━━━━━
+const ZODIAC_SIGN_NAMES: Array = [
+	"aries", "taurus", "gemini", "cancer", "leo", "virgo",
+	"libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"
+]
+
+## ━━ VALUE HERITABILITY [Knafo & Schwartz 2004, Plomin 1994] ━━━━━━━━━━━━━━━
+## 가치별 유전율 h_v ∈ [0.10, 0.20]
+## 문화 의존 큰 가치(전통/권위/순응) → 0.10~0.12
+## 자기절제/근면 등 기질 연관 → 0.18~0.20
+## 중간(공정/협력) → 0.13~0.17
+const VALUE_HERITABILITY: Dictionary = {
+	## 문화 의존 높음 (h_v ≈ 0.10~0.12)
+	"TRADITION":    0.10, "LAW":         0.10, "DECORUM":      0.11,
+	"LOYALTY":      0.11, "STOICISM":    0.11, "HARMONY":      0.12,
+	"PEACE":        0.12, "FAMILY":      0.12, "COOPERATION":  0.12,
+	"SACRIFICE":    0.12,
+	## 중간 (h_v ≈ 0.13~0.17)
+	"FAIRNESS":     0.13, "FRIENDSHIP":  0.13, "TRUTH":        0.14,
+	"INTROSPECTION":0.14, "TRANQUILITY": 0.14, "COMMERCE":     0.15,
+	"KNOWLEDGE":    0.15, "INDEPENDENCE":0.15, "NATURE":       0.15,
+	"SKILL":        0.15, "ROMANCE":     0.15, "CRAFTSMANSHIP":0.16,
+	"ELOQUENCE":    0.16, "ARTWORK":     0.16, "MERRIMENT":    0.16,
+	"LEISURE":      0.17, "PERSEVERANCE":0.17,
+	## 기질 연관 높음 (h_v ≈ 0.18~0.20)
+	"SELF_CONTROL": 0.18, "HARD_WORK":   0.18, "CUNNING":      0.18,
+	"COMPETITION":  0.19, "MARTIAL_PROWESS": 0.19, "POWER":    0.20,
+}
+
 ## ━━ JOB SATISFACTION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## [Holland 1959, Hackman & Oldham 1976, Deci & Ryan 1985, Judge 2001]
 
