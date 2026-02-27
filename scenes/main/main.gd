@@ -809,6 +809,8 @@ func _print_startup_banner(seed_value: int) -> void:
 
 
 func _log_balance(tick: int) -> void:
+	if not GameConfig.DEBUG_BALANCE_LOG:
+		return
 	var alive: Array = entity_manager.get_alive_entities()
 	var pop: int = alive.size()
 	if pop == 0:

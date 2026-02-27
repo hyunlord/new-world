@@ -402,6 +402,15 @@ const NEEDS_EXPANSION_ENABLED: bool = true  ## was false — enabled Prompt 01
 ## Set false before shipping. When false, F12 does nothing.
 const DEBUG_PANEL_ENABLED: bool = true
 
+## ── Debug log flags ─────────────────────────────────────────────────────────
+## 기본값 전부 false. 개발 시 필요한 플래그만 true로 변경.
+const DEBUG_STRESS_LOG:          bool = false  ## stress_system 매틱 로그
+const DEBUG_MENTAL_BREAK_LOG:    bool = false  ## 멘탈 브레이크 발생/종료
+const DEBUG_TRAUMA_LOG:          bool = false  ## 트라우마 스카 획득/재활성화
+const DEBUG_TRAIT_VIOLATION_LOG: bool = false  ## 특성 위반 스트레스 이벤트
+const DEBUG_DEMOGRAPHY_LOG:      bool = false  ## 인구/출생/사망 주기 리포트
+const DEBUG_BALANCE_LOG:         bool = false  ## 500틱마다 밸런스 스냅샷
+
 ## Entity need decay rates (per needs tick, adjusted for TICK_HOURS=2)
 const HUNGER_DECAY_RATE: float = 0.002
 ## Metabolic curve: hunger decays slower when already hungry (Keys et al. 1950)

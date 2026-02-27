@@ -245,10 +245,11 @@ func _print_monthly_pop_log(tick: int) -> void:
 		else:
 			child_count += 1
 	var date: Dictionary = GameCalendar.tick_to_date(tick)
-	print("[POP] Y%d M%d | Pop:%d (Adult:%d Child:%d) | Births:%d | Deaths(starve:%d siler:%d)" % [
-		date.year, date.month, total_pop, adult_count, child_count,
-		_month_births, _month_deaths_starve, _month_deaths_siler,
-	])
+	if GameConfig.DEBUG_DEMOGRAPHY_LOG:
+		print("[POP] Y%d M%d | Pop:%d (Adult:%d Child:%d) | Births:%d | Deaths(starve:%d siler:%d)" % [
+			date.year, date.month, total_pop, adult_count, child_count,
+			_month_births, _month_deaths_starve, _month_deaths_siler,
+		])
 
 
 func _check_annual_demography_log(tick: int) -> void:
@@ -271,6 +272,8 @@ func _check_annual_demography_log(tick: int) -> void:
 
 
 func _print_demography_log(year: int, tick: int) -> void:
+	if not GameConfig.DEBUG_DEMOGRAPHY_LOG:
+		return
 	var pop: int = _entity_manager.get_alive_count()
 	var q0: float = 0.0
 	if _year_births > 0:

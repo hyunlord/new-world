@@ -194,9 +194,10 @@ func _trigger_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 
 	SimulationBus.mental_break_started.emit(entity.id, break_type, tick)
 
-	print("[MENTAL_BREAK] %s → %s (%.0f ticks, stress=%.0f)" % [
-		entity.entity_name, break_type, duration, ed.stress
-	])
+	if GameConfig.DEBUG_MENTAL_BREAK_LOG:
+		print("[MENTAL_BREAK] %s → %s (%.0f ticks, stress=%.0f)" % [
+			entity.entity_name, break_type, duration, ed.stress
+		])
 
 ## Debug: 강제 멘탈 브레이크 발동 (debug build 전용)
 ## _trigger_break()의 public wrapper
@@ -207,7 +208,7 @@ func force_break(entity: RefCounted, tick: int) -> void:
 	if ed == null:
 		return
 	if ed.mental_break_type != "":
-		print("[MentalBreakSystem] force_break: %s already in break (%s)" % [entity.entity_name, ed.mental_break_type])
+		push_warning("[MentalBreakSystem] force_break: %s already in break (%s)" % [entity.entity_name, ed.mental_break_type])
 		return
 	_trigger_break(entity, ed, tick)
 
@@ -247,9 +248,10 @@ func _end_break(entity: RefCounted, ed: RefCounted) -> void:
 	ed.set_meta("shaken_remaining", shaken_ticks)
 	ed.set_meta("shaken_work_penalty", shaken_penalty)
 
-	print("[MENTAL_BREAK_END] %s: %s ended, catharsis %.0f%%, shaken %d ticks" % [
-		entity.entity_name, break_type, catharsis * 100.0, shaken_ticks
-	])
+	if GameConfig.DEBUG_MENTAL_BREAK_LOG:
+		print("[MENTAL_BREAK_END] %s: %s ended, catharsis %.0f%%, shaken %d ticks" % [
+			entity.entity_name, break_type, catharsis * 100.0, shaken_ticks
+		])
 
 	# 3.5) 트라우마 흉터 획득 시도 (TraumaScarSystem에 위임)
 	if _trauma_scar_system != null:

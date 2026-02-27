@@ -235,9 +235,10 @@ func on_action_performed(entity: RefCounted, action_id: String, context: Diction
 	elif total_stress >= MODERATE_THRESHOLD:
 		severity = "moderate"
 
-	print("[TraitViolationSystem] %s violated trait via '%s': stress=%.1f (%s)" % [
-		entity.entity_name, action_id, total_stress, severity
-	])
+	if GameConfig.DEBUG_TRAIT_VIOLATION_LOG:
+		print("[TraitViolationSystem] %s violated trait via '%s': stress=%.1f (%s)" % [
+			entity.entity_name, action_id, total_stress, severity
+		])
 	if SimulationBus.has_signal("simulation_event"):
 		SimulationBus.emit_event("trait_violation", {
 			"entity_id": entity.id,
@@ -310,9 +311,10 @@ func _process_intrusive_thoughts(entity: RefCounted, current_tick: int) -> void:
 		if _rng.randf() < chance:
 			var stress_amount: float = 15.0 + _rng.randf() * 25.0  # 15~40
 			_inject_violation_stress(entity, action_id, stress_amount, current_tick)
-			print("[TraitViolationSystem] %s intrusive thought: '%s' stress=%.1f" % [
-				entity.entity_name, action_id, stress_amount
-			])
+			if GameConfig.DEBUG_TRAIT_VIOLATION_LOG:
+				print("[TraitViolationSystem] %s intrusive thought: '%s' stress=%.1f" % [
+					entity.entity_name, action_id, stress_amount
+				])
 			if SimulationBus.has_signal("simulation_event"):
 				SimulationBus.emit_event("violation_intrusive_thought", {
 					"entity_id": entity.id,
@@ -411,7 +413,8 @@ func _apply_ptg(entity: RefCounted, current_tick: int) -> void:
 	else:
 		return  # PTG 성향 없음
 
-	print("[TraitViolationSystem] %s Post-Traumatic Growth: %s" % [entity.entity_name, ptg_type])
+	if GameConfig.DEBUG_TRAIT_VIOLATION_LOG:
+		print("[TraitViolationSystem] %s Post-Traumatic Growth: %s" % [entity.entity_name, ptg_type])
 	if SimulationBus.has_signal("simulation_event"):
 		SimulationBus.emit_event("violation_ptg", {
 			"entity_id": entity.id,

@@ -529,7 +529,7 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	_inject_emotions(ed, emo_inject, total_scale)
 
 	# 9) 디버그 로그
-	if OS.is_debug_build():
+	if GameConfig.DEBUG_STRESS_LOG:
 		var ename = entity.entity_name if "entity_name" in entity else "?"
 		print("[STRESS_EVENT] %s | %s | inst=%.0f ptk=%.1f | p=%.2f r=%.2f c=%.2f | loss=%s" % [
 			ename, event_id, final_instant, final_per_tick,
@@ -655,9 +655,7 @@ func _process_rebound_queue(ed: RefCounted) -> void:
 
 # ── Debug log ─────────────────────────────────────────────────────────
 func _debug_log(entity: RefCounted, ed, delta: float) -> void:
-	if not OS.is_debug_build():
-		return
-	if absf(delta) < 1.0 and ed.stress < 50.0:
+	if not GameConfig.DEBUG_STRESS_LOG:
 		return
 
 	var ename = entity.entity_name
