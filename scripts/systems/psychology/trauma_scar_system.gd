@@ -157,7 +157,7 @@ func get_scar_def(scar_id: String) -> Dictionary:
 
 
 ## 감정 기준선 드리프트 적용 (매 tick_interval 틱마다)
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
 	var entities = _entity_manager.get_alive_entities()

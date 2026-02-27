@@ -88,7 +88,7 @@ func _get_state(entity) -> Dictionary:
 	return _entity_coping[eid]
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
 	var alive: Array = _entity_manager.get_alive_entities()

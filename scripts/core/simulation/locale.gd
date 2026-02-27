@@ -127,5 +127,6 @@ func _save_settings() -> void:
 		if json.data:
 			data = json.data
 	data["locale"] = current_locale
+	@warning_ignore("confusable_local_declaration")
 	var f = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
 	f.store_string(JSON.stringify(data, "  "))

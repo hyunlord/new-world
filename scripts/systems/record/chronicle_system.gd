@@ -102,6 +102,7 @@ func get_event_count() -> int:
 
 ## Periodic memory management
 func prune_old_events(current_tick: int) -> void:
+	@warning_ignore("integer_division")
 	var current_year: int = current_tick / GameConfig.TICKS_PER_YEAR
 	if current_year - _last_prune_year < PRUNE_INTERVAL_YEARS:
 		return

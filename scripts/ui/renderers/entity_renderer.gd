@@ -320,6 +320,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 	# Convert screen position to world position
 	var canvas_transform := get_canvas_transform()
 	var world_pos: Vector2 = canvas_transform.affine_inverse() * screen_pos
+	@warning_ignore("integer_division")
 	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
 
 	# Check building at tile first

@@ -17,7 +17,7 @@ func init(entity_manager) -> void:
 	_entity_manager = entity_manager
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	if _entity_manager == null:
 		return
 	var entities: Array = _entity_manager.get_alive_entities()

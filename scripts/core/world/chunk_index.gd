@@ -11,6 +11,7 @@ var _chunks: Dictionary = {}
 
 ## Get the chunk coordinate for a tile position
 static func tile_to_chunk(x: int, y: int) -> Vector2i:
+	@warning_ignore("integer_division")
 	return Vector2i(x / CHUNK_SIZE, y / CHUNK_SIZE)
 
 

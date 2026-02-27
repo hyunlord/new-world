@@ -40,6 +40,7 @@ func execute_tick(tick: int) -> void:
 		var build_ticks: int = GameConfig.BUILDING_TYPES.get(
 			building.building_type, {}
 		).get("build_ticks", 50)
+		@warning_ignore("integer_division")
 		var ticks_per_cycle: int = build_ticks / GameConfig.CONSTRUCTION_TICK_INTERVAL
 		if ticks_per_cycle < 1:
 			ticks_per_cycle = 1
