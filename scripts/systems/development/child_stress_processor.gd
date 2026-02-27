@@ -278,9 +278,9 @@ func execute_tick(tick: int) -> void:
 	for entity in alive:
 		if entity.emotion_data == null:
 			continue
-		var childhood_data = entity.get_meta("childhood_data", null)
-		if childhood_data == null:
+		if not entity.has_meta("childhood_data"):
 			continue
+		var childhood_data = entity.get_meta("childhood_data")
 
 		var stage = childhood_data.get("current_stage", "")
 		if stage == "":

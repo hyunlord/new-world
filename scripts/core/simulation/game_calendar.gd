@@ -223,7 +223,9 @@ static func to_julian_day(date: Dictionary) -> int:
 	if m <= 2:
 		y -= 1
 		m += 12
+	@warning_ignore("integer_division")
 	var A: int = y / 100
+	@warning_ignore("integer_division")
 	var B: int = 2 - A + A / 4
 	return int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d + B - 1524
 

@@ -13,6 +13,8 @@ const PRUNE_THRESHOLD_YEARS: int = 100  # In-game years before eligible for prun
 ## Register a death — call BEFORE removing entity from EntityManager
 func register_death(entity: RefCounted, cause: String, current_tick: int) -> void:
 	var age_years: float = float(entity.age) / float(GameConfig.TICKS_PER_YEAR)
+	@warning_ignore("integer_division")
+	var death_age_days: int = (current_tick - entity.birth_tick) / 12
 	var record: Dictionary = {
 		"id": entity.id,
 		"name": entity.entity_name,
@@ -44,7 +46,7 @@ func register_death(entity: RefCounted, cause: String, current_tick: int) -> voi
 		"emotion_data": entity.emotion_data.to_dict() if entity.emotion_data != null else {},
 		"birth_date": entity.birth_date.duplicate() if not entity.birth_date.is_empty() else {},
 		"death_date": _current_date_from_tick(current_tick),
-		"death_age_days": (current_tick - entity.birth_tick) / 12,
+		"death_age_days": death_age_days,
 		# ── Extended snapshot fields ──
 		"values": entity.values.duplicate() if not entity.values.is_empty() else {},
 		"skill_xp": entity.skill_xp.duplicate() if not entity.skill_xp.is_empty() else {},
@@ -109,6 +111,7 @@ func _prune_old_records(current_tick: int) -> void:
 		to_remove.append(r.id)
 
 	# Remove oldest first, keep at least half of MAX_RECORDS
+	@warning_ignore("integer_division")
 	var remove_count: int = mini(to_remove.size(), _records.size() - MAX_RECORDS / 2)
 	for i in range(remove_count):
 		_records.erase(to_remove[i])

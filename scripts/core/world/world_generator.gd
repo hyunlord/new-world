@@ -54,7 +54,7 @@ func _island_mask(x: int, y: int, w: int, h: int) -> float:
 
 
 ## Classify biome from elevation, moisture, temperature
-func _classify_biome(e: float, m: float, t: float) -> int:
+func _classify_biome(e: float, m: float, _t: float) -> int:
 	if e < 0.30:
 		return GameConfig.Biome.DEEP_WATER
 	if e < 0.40:

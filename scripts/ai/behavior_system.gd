@@ -946,6 +946,7 @@ func _should_place_building(entity: RefCounted) -> bool:
 	if campfire_count == 0:
 		return true
 	# More stockpiles as population grows
+	@warning_ignore("integer_division")
 	if stockpile_count < alive_count / 10 + 1:
 		return true
 	return false
@@ -972,13 +973,15 @@ func _try_place_building(entity: RefCounted) -> RefCounted:
 	var campfire_count: int = _count_settlement_buildings("campfire", sid)
 	var alive_count: int = _count_settlement_alive(sid)
 
+	@warning_ignore("integer_division")
+	var stockpile_need: int = alive_count / 10 + 1
 	if stockpile_count == 0:
 		btype = "stockpile"
 	elif shelter_count * 6 < alive_count + 6:
 		btype = "shelter"
 	elif campfire_count == 0:
 		btype = "campfire"
-	elif stockpile_count < alive_count / 10 + 1:
+	elif stockpile_count < stockpile_need:
 		btype = "stockpile"
 	else:
 		return null

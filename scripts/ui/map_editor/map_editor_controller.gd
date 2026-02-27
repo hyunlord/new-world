@@ -2,6 +2,9 @@
 ## WorldSetup에서 인스턴스화. UI 이벤트를 받아 WorldData/ResourceMap에 반영.
 extends RefCounted
 
+## FOOD/WOOD/STONE 브러시 적용 시 emit — world_setup이 overlay 갱신에 사용
+signal resource_changed
+
 ## 브러시 모드
 enum BrushMode {
 	TERRAIN,  ## 바이옴 직접 페인팅
@@ -77,6 +80,9 @@ func paint(tile_pos: Vector2i) -> void:
 	## 브러시 스트로크마다 GPU flush
 	if _world_renderer != null and _world_renderer.has_method("flush_pixel_updates"):
 		_world_renderer.flush_pixel_updates()
+	## FOOD/WOOD/STONE 브러시 후 resource_changed 알림
+	if brush_mode == BrushMode.FOOD or brush_mode == BrushMode.WOOD or brush_mode == BrushMode.STONE:
+		resource_changed.emit()
 
 
 ## 스폰 포인트 목록 반환. WorldSetup이 시작 시 사용.

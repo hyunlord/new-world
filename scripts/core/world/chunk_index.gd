@@ -57,9 +57,13 @@ func get_entities_in_chunk(cx: int, cy: int) -> Array:
 ## Get all entity IDs within radius tiles of a position.
 ## Scans only overlapping chunks — O(chunks_in_range * chunk_size).
 func get_nearby_entity_ids(pos: Vector2i, radius: int) -> Array:
+	@warning_ignore("integer_division")
 	var min_cx: int = (pos.x - radius) / CHUNK_SIZE
+	@warning_ignore("integer_division")
 	var max_cx: int = (pos.x + radius) / CHUNK_SIZE
+	@warning_ignore("integer_division")
 	var min_cy: int = (pos.y - radius) / CHUNK_SIZE
+	@warning_ignore("integer_division")
 	var max_cy: int = (pos.y + radius) / CHUNK_SIZE
 	var result: Array = []
 	for cy in range(min_cy, max_cy + 1):

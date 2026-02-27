@@ -12,7 +12,7 @@ func init(resource_map: RefCounted, world_data: RefCounted) -> void:
 	_world_data = world_data
 
 
-func execute_tick(tick: int) -> void:
+func execute_tick(_tick: int) -> void:
 	var w: int = _world_data.width
 	var h: int = _world_data.height
 	for y in range(h):

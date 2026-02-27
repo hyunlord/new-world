@@ -27,6 +27,14 @@ var _current_preset: String = "island"
 var _current_seed: int = GameConfig.PRESET_SEED_ISLAND
 var _is_painting: bool = false
 
+## 카메라 pan 상태
+var _is_panning: bool = false
+var _pan_start_mouse: Vector2 = Vector2.ZERO
+var _pan_start_cam: Vector2 = Vector2.ZERO
+
+## 스폰 포인트 시각화 오버레이
+var _spawn_overlay: Node2D = null
+
 
 ## main.gd에서 WorldData + ResourceMap 주입 후 setup() 호출
 func setup(world_data, resource_map) -> void:
@@ -77,10 +85,19 @@ func _build_scene() -> void:
 	## PresetMapGenerator
 	_preset_gen = PresetMapGeneratorScript.new()
 
+	## 스폰 포인트 시각화 오버레이 (월드 좌표계)
+	_spawn_overlay = Node2D.new()
+	add_child(_spawn_overlay)
+
 	## MapEditorController
 	_editor_ctrl = MapEditorControllerScript.new()
 	_editor_ctrl.setup(_world_data, _resource_map, _world_renderer)
 	_brush_palette.set_controller(_editor_ctrl)
+
+	## 시그널 연결: 자원 브러시 → 오버레이 갱신
+	_editor_ctrl.resource_changed.connect(_on_resource_changed)
+	## 시그널 연결: ResourceOverlay 토글 버튼
+	_brush_palette.resource_overlay_toggled.connect(_on_resource_overlay_toggled)
 
 
 # ── 프리셋 처리 ──────────────────────────────────────────────
@@ -120,6 +137,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.pressed:
 				var tile = _editor_ctrl.screen_to_tile(_camera, event.position)
 				_editor_ctrl.paint(tile)
+				_refresh_spawn_visual()
+		elif event.button_index == MOUSE_BUTTON_MIDDLE:
+			_is_panning = event.pressed
+			if event.pressed:
+				_pan_start_mouse = event.position
+				_pan_start_cam = _camera.position
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_camera.zoom *= 1.1
 			_camera.zoom = _camera.zoom.clamp(Vector2(0.5, 0.5), Vector2(4.0, 4.0))
@@ -127,10 +150,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			_camera.zoom *= 0.9
 			_camera.zoom = _camera.zoom.clamp(Vector2(0.5, 0.5), Vector2(4.0, 4.0))
 
-	## 마우스 드래그 (페인팅)
-	elif event is InputEventMouseMotion and _is_painting:
-		var tile = _editor_ctrl.screen_to_tile(_camera, event.position)
-		_editor_ctrl.paint(tile)
+	## 마우스 드래그
+	elif event is InputEventMouseMotion:
+		if _is_panning:
+			var delta: Vector2 = event.position - _pan_start_mouse
+			_camera.position = _pan_start_cam - delta / _camera.zoom
+		elif _is_painting:
+			var tile = _editor_ctrl.screen_to_tile(_camera, event.position)
+			_editor_ctrl.paint(tile)
+			_refresh_spawn_visual()
 
 
 # ── 시그널 핸들러 ────────────────────────────────────────────
@@ -165,6 +193,61 @@ func _on_start_pressed() -> void:
 			push_warning("WorldSetup: No walkable tiles. Cannot start simulation.")
 			return
 	setup_confirmed.emit(spawn_data)
+
+
+func _on_resource_changed() -> void:
+	if _world_renderer != null and _world_renderer.has_method("update_resource_overlay"):
+		_world_renderer.update_resource_overlay()
+
+
+func _on_resource_overlay_toggled() -> void:
+	if _world_renderer != null and _world_renderer.has_method("toggle_resource_overlay"):
+		_world_renderer.toggle_resource_overlay()
+
+
+## 스폰 포인트 시각화 갱신 — 마커 + 인원 수 표시
+func _refresh_spawn_visual() -> void:
+	if _spawn_overlay == null:
+		return
+	## 기존 마커 전부 제거
+	for child in _spawn_overlay.get_children():
+		child.queue_free()
+
+	var spawn_points: Array = _editor_ctrl.get_spawn_points()
+	var tile_px: int = GameConfig.TILE_SIZE
+
+	for sp in spawn_points:
+		var pos: Vector2i = sp.position
+		var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
+
+		## 노란색 ✕ 마커
+		var marker: Label = Label.new()
+		marker.text = "X"
+		marker.add_theme_color_override("font_color", Color.YELLOW)
+		marker.add_theme_font_size_override("font_size", 14)
+		marker.position = Vector2(
+			pos.x * tile_px - 5,
+			pos.y * tile_px - 7
+		)
+		_spawn_overlay.add_child(marker)
+
+		## 인원 수 레이블
+		var count_lbl: Label = Label.new()
+		count_lbl.text = str(count)
+		count_lbl.add_theme_color_override("font_color", Color.WHITE)
+		count_lbl.add_theme_font_size_override("font_size", 10)
+		count_lbl.position = Vector2(
+			pos.x * tile_px - 3,
+			pos.y * tile_px + 5
+		)
+		_spawn_overlay.add_child(count_lbl)
+
+	## 총 인원 표시 갱신
+	var total_count: int = 0
+	for sp in spawn_points:
+		total_count += sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
+	if _brush_palette != null:
+		_brush_palette.update_spawn_total(total_count)
 
 
 ## 맵 중앙에서 가장 가까운 walkable 타일 탐색
