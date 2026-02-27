@@ -5,6 +5,7 @@ const GameCalendarScript = preload("res://scripts/core/simulation/game_calendar.
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
 const PersonalitySystem = preload("res://scripts/core/entity/personality_system.gd")
 const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
+const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -749,7 +750,7 @@ func _draw() -> void:
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),          StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),          Color(0.7, 0.85, 0.5))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),      StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),      Color(0.9, 0.6, 0.3))
 			## [Burt 2004] Social capital (NetworkSystem writes annually)
-			var _sc_raw: int = entity.stat_cache.get(&"DERIVED_SOCIAL_CAPITAL", 0)
+			var _sc_raw: int = StatCacheScript.get_value(entity.stat_cache, &"DERIVED_SOCIAL_CAPITAL", 0)
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL_CAPITAL"),
 				float(_sc_raw) / 1000.0, Color(0.5, 0.85, 0.65))
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"),  StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"),  Color(0.5, 0.7, 0.9))

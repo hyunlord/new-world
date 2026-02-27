@@ -14,6 +14,8 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ##
 ## Notifications emitted via SimulationBus.emit_event for HUD display (Bug Fix 3).
 
+const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
+
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _relationship_manager: RefCounted
@@ -166,7 +168,7 @@ func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
 ## [Burt 2004] Read pre-computed social capital from stat_cache (NetworkSystem writes annually).
 ## Fallback to legacy count when NetworkSystem hasn't run yet (early ticks).
 func _compute_social_capital_norm(entity: RefCounted, settlement: RefCounted) -> float:
-	var cached: int = entity.stat_cache.get(&"DERIVED_SOCIAL_CAPITAL", -1)
+	var cached: int = StatCacheScript.get_value(entity.stat_cache, &"DERIVED_SOCIAL_CAPITAL", -1)
 	if cached >= 0:
 		return float(cached) / 1000.0
 	## Legacy fallback
