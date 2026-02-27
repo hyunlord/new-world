@@ -985,6 +985,25 @@ const JOB_SAT_CRITICAL_SPEED_MULT: float = 0.80
 ## [Judge 2001, r≈-0.40] Drift probability per season when dissatisfied
 const JOB_SAT_DRIFT_BASE: float = 0.15
 
+## ━━ OCCUPATION SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Holland 1959 RIASEC, Super 1957 Career Development]
+## Skill-based occupation: agent's highest skill becomes their profession.
+
+const OCCUPATION_EVAL_INTERVAL: int = 240			## ticks between occupation re-evaluation (~20 days)
+const OCCUPATION_MIN_SKILL_LEVEL: int = 10			## minimum skill level to count as occupation
+const OCCUPATION_CHANGE_HYSTERESIS: float = 0.15	## new skill must exceed current by this margin (normalized) to trigger change
+const OCCUPATION_SPECIALIZATION_BONUS: float = 1.2	## XP multiplier for practicing occupation skill
+
+## ━━ TITLE SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## [Barth 1969 ethnic boundary theory, Turner 1974 social drama]
+## Titles: accumulated social markers granted by condition.
+
+const TITLE_EVAL_INTERVAL: int = 500				## ticks between title evaluation
+const TITLE_ELDER_MIN_AGE_YEARS: float = 55.0		## minimum age for Elder title
+const TITLE_MASTER_SKILL_LEVEL: int = 75			## skill level for "Master X" title
+const TITLE_EXPERT_SKILL_LEVEL: int = 50			## skill level for "Expert X" title
+const TITLE_VETERAN_BATTLES: int = 5				## battles survived for Veteran title
+
 ## ━━ STRATIFICATION MONITOR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## [Boehm 1999, Kohler 2017, Scheidel 2017]
 

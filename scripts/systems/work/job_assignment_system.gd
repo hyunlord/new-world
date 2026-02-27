@@ -33,6 +33,11 @@ func execute_tick(tick: int) -> void:
 			if entity.job != "gatherer":
 				entity.job = "gatherer"
 			continue
+		## [Layer 4.5] OccupationSystem already assigned job via skill mapping — skip
+		if entity.occupation != "none" and entity.occupation != "laborer":
+			if job_counts.has(entity.job):
+				job_counts[entity.job] += 1
+			continue
 		if entity.job == "none":
 			unassigned.append(entity)
 		elif job_counts.has(entity.job):

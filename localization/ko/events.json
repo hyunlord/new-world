@@ -27,5 +27,9 @@
   "EVT_ERG_RELATEDNESS_REGRESSION": "{name}이(가) 소속감 좌절로 관계에 집착하기 시작했다",
   "EVT_ENTITY_SHARED_FOOD": "{name}이(가) {target_name}에게 식량 {amount}을(를) 나눴다",
   "EVT_ENTITY_HOARDING": "{name}이(가) 자원을 축적하고 있다 (물질주의: {materialism})",
-  "EVT_ECON_TENDENCY_SHIFT": "{name}의 경제 성향이 변화했다 ({tendency}: {value})"
+  "EVT_ECON_TENDENCY_SHIFT": "{name}의 경제 성향이 변화했다 ({tendency}: {value})",
+  "EVT_OCCUPATION_CHANGED": "{name}이(가) {occupation}(으)로 전직했습니다",
+  "EVT_OCCUPATION_FIRST": "{name}이(가) {occupation}이(가) 되었습니다",
+  "EVT_TITLE_GRANTED": "{name}이(가) '{title}' 칭호를 얻었습니다",
+  "EVT_TITLE_REVOKED": "{name}이(가) '{title}' 칭호를 잃었습니다"
 }

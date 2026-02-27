@@ -27,5 +27,9 @@
   "EVT_ERG_RELATEDNESS_REGRESSION": "{name} desperately seeks connection (frustrated belonging)",
   "EVT_ENTITY_SHARED_FOOD": "{name} shared {amount} food with {target_name}",
   "EVT_ENTITY_HOARDING": "{name} is hoarding resources (materialism: {materialism})",
-  "EVT_ECON_TENDENCY_SHIFT": "{name}'s economic outlook shifted ({tendency}: {value})"
+  "EVT_ECON_TENDENCY_SHIFT": "{name}'s economic outlook shifted ({tendency}: {value})",
+  "EVT_OCCUPATION_CHANGED": "{name} is now a {occupation}",
+  "EVT_OCCUPATION_FIRST": "{name} has become a {occupation}",
+  "EVT_TITLE_GRANTED": "{name} earned the title: {title}",
+  "EVT_TITLE_REVOKED": "{name} lost the title: {title}"
 }

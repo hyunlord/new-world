@@ -95,6 +95,18 @@ signal status_tier_changed(entity_id: int, old_tier: String, new_tier: String, t
 @warning_ignore("unused_signal")
 signal stratification_phase_changed(settlement_id: int, old_phase: String, new_phase: String, tick: int)
 
+## [Holland 1959] Occupation changed due to skill progression
+@warning_ignore("unused_signal")
+signal occupation_changed(entity_id: int, entity_name: String, old_occupation: String, new_occupation: String, tick: int)
+
+## [Barth 1969] Title granted to entity
+@warning_ignore("unused_signal")
+signal title_granted(entity_id: int, entity_name: String, title_id: StringName, tick: int)
+
+## [Barth 1969] Title revoked from entity
+@warning_ignore("unused_signal")
+signal title_revoked(entity_id: int, entity_name: String, title_id: StringName, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

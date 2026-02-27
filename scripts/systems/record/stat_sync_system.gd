@@ -66,6 +66,7 @@ func _sync_entity(entity: RefCounted) -> void:
 		_sync_facets(entity)
 		_sync_intelligences(entity)
 		_sync_economic(entity)
+		_sync_social_identity(entity)
 		return
 	StatQuery.set_value(entity, &"EMOTION_STRESS",     int(ed.stress * 20.0), 0)
 	StatQuery.set_value(entity, &"EMOTION_ALLOSTATIC",  int(ed.allostatic), 0)
@@ -74,6 +75,7 @@ func _sync_entity(entity: RefCounted) -> void:
 	_sync_facets(entity)
 	_sync_intelligences(entity)
 	_sync_economic(entity)
+	_sync_social_identity(entity)
 
 
 ## COMPOSITE 파생 스탯 계산 및 stat_cache에 저장.
@@ -205,3 +207,10 @@ func _sync_economic(entity: RefCounted) -> void:
 	StatQuery.set_value(entity, &"JOB_SATISFACTION", int(entity.job_satisfaction * 1000), 0)
 	StatQuery.set_value(entity, &"WEALTH_NORM", int(entity.wealth_norm * 1000), 0)
 	StatQuery.set_value(entity, &"STATUS_SCORE", int((entity.status_score + 1.0) / 2.0 * 1000), 0)
+
+
+func _sync_social_identity(entity: RefCounted) -> void:
+	## Social identity stats for stat_cache queries
+	StatQuery.set_value(entity, &"SOCIAL_TITLE_COUNT", entity.titles.size(), 0)
+	StatQuery.set_value(entity, &"SOCIAL_FACTION_LOYALTY", int(entity.faction_loyalty * 1000), 0)
+	StatQuery.set_value(entity, &"SOCIAL_FAITH_STRENGTH", int(entity.faith_strength * 1000), 0)
