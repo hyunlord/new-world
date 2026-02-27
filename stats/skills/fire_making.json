@@ -6,7 +6,7 @@
   "range": [0, 100],
   "default": 0,
   "tier": 1,
-  "required_tech": "TECH_FIRE_MAKING",
+  "required_tech": "stone_age",
   "prerequisites": [],
   "growth": {
     "type": "LOG_DIMINISHING",

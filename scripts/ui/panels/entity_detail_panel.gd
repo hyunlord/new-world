@@ -555,11 +555,36 @@ func _draw() -> void:
 		if settlement != null and settlement.leader_id == entity.id:
 			is_leader = true
 
-	## Build header text — leader badge appended after name
+	## Build title suffix from entity.titles
+	var title_suffix: String = ""
+	if not entity.titles.is_empty():
+		var title_names: Array = []
+		for t_id in entity.titles:
+			var t_str: String = str(t_id)
+			if t_str.begins_with("TITLE_MASTER_"):
+				var skill_part: String = t_str.replace("TITLE_MASTER_", "")
+				var occ_key: String = "OCCUPATION_" + skill_part
+				title_names.append(Locale.ltr("TITLE_MASTER") + " " + Locale.ltr(occ_key))
+				continue
+			elif t_str.begins_with("TITLE_EXPERT_"):
+				var skill_part: String = t_str.replace("TITLE_EXPERT_", "")
+				var occ_key: String = "OCCUPATION_" + skill_part
+				title_names.append(Locale.ltr("TITLE_EXPERT") + " " + Locale.ltr(occ_key))
+				continue
+			title_names.append(Locale.ltr(t_str))
+		if not title_names.is_empty():
+			title_suffix = " [%s]" % ", ".join(title_names)
+
+	## Use occupation for display if available, fall back to job
+	var display_job: String = job_label
+	if entity.occupation != "none" and entity.occupation != "laborer":
+		display_job = Locale.ltr("OCCUPATION_" + entity.occupation.to_upper())
+
+	## Build header text — leader badge appended after name, titles after job
 	var leader_tag: String = ""
 	if is_leader:
 		leader_tag = " [%s]" % Locale.ltr("UI_LEADER")
-	var header_text: String = "%s %s%s%s - %s (%s)" % [gender_icon, name_prefix, entity.entity_name, leader_tag, job_label, stage_label]
+	var header_text: String = "%s %s%s%s - %s%s (%s)" % [gender_icon, name_prefix, entity.entity_name, leader_tag, display_job, title_suffix, stage_label]
 	draw_string(font, Vector2(cx, cy), header_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title"), jc)
 
 	## Draw leader badge in gold over the same line

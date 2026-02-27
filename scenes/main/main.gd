@@ -288,6 +288,9 @@ func _ready() -> void:
 	leader_system = LeaderSystem.new()
 	leader_system.init(entity_manager, settlement_manager, relationship_manager)
 
+	# ── Bug #2 fix: StatQuery needs settlement_manager for skill XP gating ──
+	StatQuery.init_settlement_manager(settlement_manager)
+
 	# ── Layer 4.5: Occupation & Title Systems ─────────────
 	occupation_system = OccupationSystem.new()
 	occupation_system.init(entity_manager)
