@@ -168,6 +168,116 @@ const ACTION_HEXACO_WEIGHTS: Dictionary = {
 	},
 }
 
+## [Plutchik 1980] Minimum emotion intensity (0–100 scale) to activate behavior modifiers.
+## Below this threshold, the emotion is too weak to influence action selection.
+const EMOTION_BEHAVIOR_THRESHOLD: float = 20.0
+
+## [Plutchik 1980, 2001] Emotion → action score modifier weights.
+## Format: emotion_id → { action_id: weight }
+## Positive weight = emotion boosts this action. Negative = suppresses.
+## Applied as: score *= 1.0 + weight × (emotion_value / 100.0)
+## Only applied when emotion > EMOTION_BEHAVIOR_THRESHOLD.
+const EMOTION_ACTION_MODIFIERS: Dictionary = {
+	## ── JOY (Reproduction/Affiliation) ────────────────────────
+	## [Fredrickson 2001 Broaden-and-Build] Positive emotions broaden behavioral
+	## repertoire and build social resources. Joy increases productivity and sociability.
+	"joy": {
+		&"socialize":    0.40,   # Joy → social approach
+		&"visit_partner": 0.35,  # Joy → romantic bonding
+		&"share_food":   0.30,   # Joy → generosity
+		&"build":        0.20,   # Joy → productive construction
+		&"gather_food":  0.15,   # Joy → energized gathering
+		&"gather_wood":  0.15,   # Joy → energized gathering
+		&"wander":       0.20,   # Joy → playful exploration
+		&"celebrate":    0.80,   # Joy → celebration (new action)
+		&"rest":        -0.20,   # Joy → less need to rest
+		&"hide":        -0.30,   # Joy → no fear-hiding
+		&"grieve":      -0.40,   # Joy → suppresses grief
+	},
+
+	## ── TRUST (Group Cohesion) ────────────────────────────────
+	## [Rempel et al. 1985] Trust enables cooperation and reduces social vigilance.
+	## High trust → more cooperative, sharing, less confrontational.
+	"trust": {
+		&"socialize":    0.35,   # Trust → social approach
+		&"share_food":   0.40,   # Trust → resource sharing
+		&"deliver_to_stockpile": 0.30,  # Trust → contribute to commons
+		&"build":        0.15,   # Trust → collective effort
+		&"visit_partner": 0.20,  # Trust → relationship investment
+		&"confront":    -0.35,   # Trust → suppresses confrontation
+		&"hide":        -0.20,   # Trust → less need to hide
+		&"take_from_stockpile": -0.15,  # Trust → less hoarding
+	},
+
+	## ── SURPRISE (Orientation) ────────────────────────────────
+	## [Scherer 1984] Surprise interrupts ongoing activity for reappraisal.
+	## Brief penalty to all deliberate actions, boost to reactive/exploratory.
+	"surprise": {
+		&"wander":       0.30,   # Surprise → disoriented movement
+		&"rest":        -0.25,   # Surprise → too alert to rest
+		&"gather_food": -0.15,   # Surprise → interrupted routine
+		&"gather_wood": -0.15,   # Surprise → interrupted routine
+		&"gather_stone": -0.15,  # Surprise → interrupted routine
+		&"build":       -0.20,   # Surprise → can't focus on construction
+		&"socialize":    0.15,   # Surprise → seeks explanation from others
+	},
+
+	## ── ANTICIPATION (Exploration/Preparation) ────────────────
+	## [Panksepp 1998 SEEKING system] Anticipation activates goal-directed behavior,
+	## resource accumulation, and forward planning.
+	"anticipation": {
+		&"gather_food":  0.30,   # Anticipation → stockpile food
+		&"gather_wood":  0.25,   # Anticipation → stockpile materials
+		&"gather_stone": 0.20,   # Anticipation → stockpile materials
+		&"deliver_to_stockpile": 0.35,  # Anticipation → organize reserves
+		&"build":        0.30,   # Anticipation → prepare infrastructure
+		&"trap_hunt":    0.25,   # Anticipation → set up traps
+		&"seek_shelter": 0.20,   # Anticipation → prepare for danger
+		&"rest":        -0.20,   # Anticipation → too energized to rest
+		&"wander":      -0.15,   # Anticipation → focused, not aimless
+	},
+
+	## ── DISGUST (Rejection/Contamination Avoidance) ──────────
+	## [Rozin et al. 2008] Disgust drives social/physical avoidance.
+	## Reduces social approach, increases isolation.
+	"disgust": {
+		&"socialize":   -0.40,   # Disgust → social withdrawal
+		&"share_food":  -0.35,   # Disgust → unwilling to share
+		&"visit_partner": -0.20, # Disgust → avoids intimacy
+		&"take_from_stockpile": -0.20,  # Disgust → avoids communal food
+		&"hide":         0.15,   # Disgust → withdraw/isolate
+		&"wander":       0.25,   # Disgust → leave current environment
+		&"rest":         0.10,   # Disgust → withdraw inward
+	},
+
+	## ── Existing 3 emotions: enhance with score modifiers too ──
+	## These already have dedicated action injection (fear→hide, etc.)
+	## but also modulate OTHER actions.
+	"fear": {
+		&"gather_food": -0.20,   # Fear → avoids exposed foraging
+		&"wander":      -0.25,   # Fear → avoids exploration
+		&"socialize":   -0.15,   # Fear → social withdrawal
+		&"confront":    -0.30,   # Fear → flee, not fight
+		&"build":       -0.15,   # Fear → can't focus
+		&"seek_shelter": 0.40,   # Fear → shelter-seeking
+	},
+	"sadness": {
+		&"socialize":   -0.30,   # Sadness → social withdrawal
+		&"gather_food": -0.20,   # Sadness → low motivation
+		&"gather_wood": -0.20,   # Sadness → low motivation
+		&"build":       -0.25,   # Sadness → low motivation
+		&"wander":       0.15,   # Sadness → aimless movement
+		&"rest":         0.25,   # Sadness → lethargy
+	},
+	"anger": {
+		&"socialize":   -0.20,   # Anger → hostile social approach
+		&"share_food":  -0.35,   # Anger → no generosity
+		&"rest":        -0.25,   # Anger → too agitated to rest
+		&"build":        0.10,   # Anger → channel into physical labor
+		&"gather_stone": 0.15,   # Anger → smash rocks (catharsis)
+	},
+}
+
 
 func _init() -> void:
 	system_name = "behavior"
@@ -459,6 +569,17 @@ func _evaluate_actions(entity: RefCounted) -> Dictionary:
 		if anger_val > 40.0:
 			scores["confront"] = (anger_val / 100.0) * 2.0
 
+		## [Fredrickson 2001] Joy → Celebrate: social gathering with mood boost.
+		## Only when joy > 60 (strong joy). Competes with socialize.
+		var joy_val: float = entity.emotion_data.get_emotion("joy")
+		if joy_val > 60.0:
+			scores["celebrate"] = (joy_val / 100.0) * 1.5
+
+	## [Plutchik 1980] Emotion score modifiers — all 8 emotions adjust existing action scores.
+	## Applied AFTER dedicated emotion actions (fear→hide, sadness→grieve, anger→confront, joy→celebrate)
+	## so that modifiers can also adjust the newly-set emotion action scores.
+	_apply_emotion_modifiers(scores, entity)
+
 	## [Maslow (1943) L1-L2 — 갈증/체온/안전 urgency] Only when NEEDS_EXPANSION_ENABLED
 	if GameConfig.NEEDS_EXPANSION_ENABLED:
 		var thirst_deficit: float = 1.0 - StatQuery.get_normalized(entity, &"NEED_THIRST")
@@ -561,6 +682,72 @@ func _apply_hexaco_modifiers(scores: Dictionary, entity: RefCounted) -> void:
 			total_mod += w * (val - 0.5) * HEXACO_MOD_SCALE
 		## Clamp to prevent negative scores (minimum 10% of original)
 		scores[action_id] = maxf(scores[action_id] * (1.0 + clampf(total_mod, -0.90, 0.90)), 0.0)
+
+
+## [Plutchik 1980, Fredrickson 2001 Broaden-and-Build]
+## Applies all 8 emotion modifiers to action scores.
+## Each emotion above threshold adjusts relevant action scores multiplicatively.
+## Multiple emotions stack additively within the multiplier.
+func _apply_emotion_modifiers(scores: Dictionary, entity: RefCounted) -> void:
+	if entity.emotion_data == null:
+		return
+	for action_id in scores:
+		var total_mod: float = 0.0
+		for emotion_id in EMOTION_ACTION_MODIFIERS:
+			var emo_val: float = entity.emotion_data.get_emotion(emotion_id)
+			if emo_val <= EMOTION_BEHAVIOR_THRESHOLD:
+				continue
+			var action_weights: Dictionary = EMOTION_ACTION_MODIFIERS[emotion_id]
+			var w: float = action_weights.get(action_id, 0.0)
+			if absf(w) < 0.01:
+				continue
+			## Normalize emotion to 0.0–1.0 range above threshold
+			var normalized: float = (emo_val - EMOTION_BEHAVIOR_THRESHOLD) / (100.0 - EMOTION_BEHAVIOR_THRESHOLD)
+			total_mod += w * normalized
+		if absf(total_mod) > 0.001:
+			scores[action_id] = maxf(scores[action_id] * (1.0 + clampf(total_mod, -0.80, 0.80)), 0.0)
+
+
+## [Yerkes & Dodson 1908, McEwen 2004, Hockey 1997 Compensatory Control]
+## Returns a multiplier for action_timer based on entity's stress level.
+## < 150 stress: eustress → slight speed boost (×0.90 = 10% faster)
+## 150–400: normal range → ×1.0
+## 400–700: distress → linear ramp to ×1.30 (30% slower)
+## 700+: severe → linear ramp to ×1.60 max (60% slower)
+## GAS exhaustion stage (gas_stage >= 3) adds additional ×1.15 penalty.
+func _get_stress_timer_multiplier(entity: RefCounted) -> float:
+	if entity.emotion_data == null:
+		return 1.0
+	var stress: float = entity.emotion_data.stress
+	var mult: float = 1.0
+
+	if stress < GameConfig.STRESS_EFFICIENCY_EUSTRESS_PEAK:
+		## Eustress zone: slight boost that peaks at EUSTRESS_PEAK
+		var t: float = stress / GameConfig.STRESS_EFFICIENCY_EUSTRESS_PEAK
+		mult = lerpf(1.0, GameConfig.STRESS_EFFICIENCY_EUSTRESS_BONUS, t)
+	elif stress < GameConfig.STRESS_EFFICIENCY_DISTRESS_START:
+		## Normal zone: no modifier
+		mult = 1.0
+	elif stress < GameConfig.STRESS_EFFICIENCY_SEVERE_START:
+		## Distress zone: linear ramp from 1.0 to 1.30
+		var t: float = (stress - GameConfig.STRESS_EFFICIENCY_DISTRESS_START) / \
+			(GameConfig.STRESS_EFFICIENCY_SEVERE_START - GameConfig.STRESS_EFFICIENCY_DISTRESS_START)
+		mult = lerpf(1.0, 1.30, t)
+	else:
+		## Severe zone: linear ramp from 1.30 to MAX_PENALTY
+		var t: float = clampf(
+			(stress - GameConfig.STRESS_EFFICIENCY_SEVERE_START) / 300.0, 0.0, 1.0)
+		mult = lerpf(1.30, GameConfig.STRESS_EFFICIENCY_MAX_PENALTY, t)
+
+	## [Selye 1956] GAS exhaustion stage (stage 3+) compounds stress penalty
+	if entity.emotion_data.gas_stage >= 3:
+		mult *= 1.15
+
+	## [McEwen 2004] High allostatic load further degrades performance
+	if entity.emotion_data.allostatic > 50.0:
+		mult *= 1.0 + (entity.emotion_data.allostatic - 50.0) / 500.0  ## +0.1 per 50 allostatic above 50
+
+	return clampf(mult, 0.85, 2.0)
 
 
 ## [Festinger 1957] 가치관 위반 행동 시 스트레스 주입 및 자기합리화 기록
@@ -773,6 +960,12 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			## [Plutchik anger response] Move toward nearest entity.
 			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 8
+		"celebrate":
+			## [Fredrickson 2001] Joyful celebration — move to nearest entity, social boost.
+			entity.action_target = _find_nearest_entity(entity)
+			entity.action_timer = 10
+			## Celebration boosts both social and happiness for nearby entities
+			entity.social = minf(1.0, entity.social + 0.20)
 		## [Maslow (1943) L1 — 갈증 해소]
 		## 인근 water 타일로 이동, 없으면 현위치 유지.
 		## 실제 thirst 회복은 movement_system._apply_arrival_effect()에서 처리.
@@ -857,6 +1050,14 @@ func _assign_action(entity: RefCounted, action: String, tick: int) -> void:
 			entity.action_target = _find_nearest_entity(entity)
 			entity.action_timer = 40
 		## ─────────────────────────────────────────────────────────────────────────
+
+	## [Yerkes-Dodson 1908] Stress efficiency: adjust action timer based on stress level.
+	## Applied after all action-specific timers are set.
+	## Survival actions (drink_water, seek_shelter, hide, confront) are exempt — adrenaline.
+	var _stress_exempt: bool = action in ["drink_water", "seek_shelter", "hide", "confront"]
+	if not _stress_exempt and entity.action_timer > 0:
+		var _stress_mult: float = _get_stress_timer_multiplier(entity)
+		entity.action_timer = maxi(1, int(float(entity.action_timer) * _stress_mult))
 
 	emit_event("action_chosen", {
 		"entity_id": entity.id,
