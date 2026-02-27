@@ -162,7 +162,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 
 # ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
-func _calc_appraisal_scale(entity: RefCounted, pd, ed) -> float:
+func _calc_appraisal_scale(entity: RefCounted, _pd, ed) -> float:
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
@@ -273,7 +273,7 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 
 
 # ── 5) 회복 ──────────────────────────────────────────────────────────
-func _calc_recovery(entity: RefCounted, ed, pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
+func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
 	var decay: float = BASE_DECAY_PER_TICK + DECAY_FRAC * ed.stress
 
 	if is_safe:
@@ -295,7 +295,7 @@ func _calc_recovery(entity: RefCounted, ed, pd, is_sleeping: bool, is_safe: bool
 
 
 # ── 7) Reserve (GAS) ─────────────────────────────────────────────────
-func _update_reserve(ed, pd, is_sleeping: bool) -> void:
+func _update_reserve(ed, _pd, is_sleeping: bool) -> void:
 	var resilience: float = ed.resilience
 
 	var drain: float = maxf(0.0, (ed.stress - 150.0) / 350.0) * (0.7 + 0.6 * (1.0 - resilience))

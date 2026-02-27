@@ -56,7 +56,7 @@ func _compute_settlement_social_capital(settlement: RefCounted) -> void:
 		if entity == null or not entity.is_alive:
 			continue
 		var sc: float = _compute_entity_social_capital(entity, member_set, settlement)
-		entity.stat_cache[&"DERIVED_SOCIAL_CAPITAL"] = int(clampf(sc, 0.0, 1.0) * 1000.0)
+		StatCacheScript.set_value(entity.stat_cache, &"DERIVED_SOCIAL_CAPITAL", int(clampf(sc, 0.0, 1.0) * 1000.0))
 
 
 ## [Burt 2004] social_capital = strong×3 + weak×1 + bridge×5 + reputation×10, normalized.
@@ -209,7 +209,7 @@ func _find_rebel_leader(settlement: RefCounted) -> RefCounted:
 			continue
 		if float(e.values.get(&"INDEPENDENCE", 0.0)) < 0.3:
 			continue
-		var charisma: float = float(e.stat_cache.get(&"DERIVED_CHARISMA", 0)) / 1000.0
+		var charisma: float = float(StatCacheScript.get_value(e.stat_cache, &"DERIVED_CHARISMA", 0)) / 1000.0
 		if charisma > best_score:
 			best_score = charisma
 			best = e

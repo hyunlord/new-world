@@ -1309,5 +1309,7 @@
 	"UI_MAP_BIOME_HILL": "언덕",
 	"UI_MAP_BIOME_MOUNTAIN": "산",
 	"UI_MAP_BIOME_SNOW": "설원",
-	"UI_MAP_NO_WALKABLE_WARNING": "걸을 수 있는 타일이 없습니다! 먼저 육지를 그려주세요."
+	"UI_MAP_NO_WALKABLE_WARNING": "걸을 수 있는 타일이 없습니다! 먼저 육지를 그려주세요.",
+	"UI_LOADING_SPAWNING": "주민을 소환하는 중...",
+	"UI_LOADING_COUNT_FMT": "{current} / {total}"
 }

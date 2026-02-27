@@ -1306,5 +1306,7 @@
 	"UI_MAP_BIOME_HILL": "Hill",
 	"UI_MAP_BIOME_MOUNTAIN": "Mountain",
 	"UI_MAP_BIOME_SNOW": "Snow",
-	"UI_MAP_NO_WALKABLE_WARNING": "No walkable tiles! Paint some land first."
+	"UI_MAP_NO_WALKABLE_WARNING": "No walkable tiles! Paint some land first.",
+	"UI_LOADING_SPAWNING": "Summoning inhabitants...",
+	"UI_LOADING_COUNT_FMT": "{current} / {total}"
 }
