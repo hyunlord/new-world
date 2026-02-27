@@ -1138,7 +1138,7 @@ func _draw() -> void:
 		cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_PANEL_CHILDHOOD"), "childhood")
 		if not _section_collapsed.get("childhood", true):
 			# ── Developmental stage (children only) ──
-			var childhood_data = entity.get_meta("childhood_data", null)
+			var childhood_data = entity.get_meta("childhood_data") if entity.has_meta("childhood_data") else null
 			if childhood_data is Dictionary:
 				var stage = childhood_data.get("current_stage", "")
 				if stage != "" and stage != "adult":
@@ -1150,7 +1150,7 @@ func _draw() -> void:
 					cy += 16.0
 
 			# ── ACE score bar (3-segment color: 0~3 green, 4~6 yellow, 7~10 red) ──
-			var ace_tracker = entity.get_meta("ace_tracker", null)
+			var ace_tracker = entity.get_meta("ace_tracker") if entity.has_meta("ace_tracker") else null
 			var ace_score: float = 0.0
 			var ace_threat: float = 0.0
 			var ace_deprivation: float = 0.0

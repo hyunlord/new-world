@@ -36,7 +36,9 @@ func execute_tick(tick: int) -> void:
 			_apply_adulthood_transition(entity, tick)
 
 		# Bandura coping modeling: children observe parents
-		var childhood_data = entity.get_meta("childhood_data", null)
+		if not entity.has_meta("childhood_data"):
+			continue
+		var childhood_data = entity.get_meta("childhood_data")
 		if childhood_data is Dictionary:
 			_apply_bandura_modeling(entity, childhood_data, tick)
 
@@ -64,7 +66,7 @@ func _apply_adulthood_transition(entity, tick: int) -> void:
 		)
 
 	# 4. Apply HEXACO caps via ace_tracker
-	var ace_tracker = entity.get_meta("ace_tracker", null)
+	var ace_tracker = entity.get_meta("ace_tracker") if entity.has_meta("ace_tracker") else null
 	if ace_tracker != null and ace_tracker.has_method("apply_hexaco_caps"):
 		ace_tracker.apply_hexaco_caps(entity)
 
@@ -101,7 +103,7 @@ func _apply_adulthood_transition(entity, tick: int) -> void:
 ## [Felitti 1998 — dose-response curve; ace_adult_modifiers.json 3-segment acceleration]
 ## Retrieve ACE adult modifiers from ace_tracker instance or compute from ace_score_total.
 func _get_ace_modifiers(entity) -> Dictionary:
-	var ace_tracker = entity.get_meta("ace_tracker", null)
+	var ace_tracker = entity.get_meta("ace_tracker") if entity.has_meta("ace_tracker") else null
 	if ace_tracker != null and ace_tracker.has_method("calculate_adult_modifiers"):
 		return ace_tracker.calculate_adult_modifiers()
 

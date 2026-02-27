@@ -88,15 +88,14 @@ func _draw_resource_graph(font: Font) -> void:
 	var wood_pts := PackedVector2Array()
 	var stone_pts := PackedVector2Array()
 	var count: int = history.size()
-	@warning_ignore("confusable_local_usage")
-	var graph_h: float = rect.size.y - 15.0
+	var res_graph_h: float = rect.size.y - 15.0
 
 	for i in range(count):
 		var x: float = float(i) / float(count - 1) * rect.size.x
 		var s: Dictionary = history[i]
-		food_pts.append(Vector2(x, y_off + rect.size.y - (s.food / max_res * graph_h)))
-		wood_pts.append(Vector2(x, y_off + rect.size.y - (s.wood / max_res * graph_h)))
-		stone_pts.append(Vector2(x, y_off + rect.size.y - (s.stone / max_res * graph_h)))
+		food_pts.append(Vector2(x, y_off + rect.size.y - (s.food / max_res * res_graph_h)))
+		wood_pts.append(Vector2(x, y_off + rect.size.y - (s.wood / max_res * res_graph_h)))
+		stone_pts.append(Vector2(x, y_off + rect.size.y - (s.stone / max_res * res_graph_h)))
 
 	draw_polyline(food_pts, Color(0.9, 0.8, 0.1), 1.5)
 	draw_polyline(wood_pts, Color(0.6, 0.4, 0.2), 1.5)
