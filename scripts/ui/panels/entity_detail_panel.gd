@@ -1,4 +1,3 @@
-class_name EntityDetailPanel
 extends Control
 
 const GameCalendarScript = preload("res://scripts/core/simulation/game_calendar.gd")

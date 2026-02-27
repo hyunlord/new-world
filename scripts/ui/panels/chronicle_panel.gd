@@ -1,4 +1,3 @@
-class_name ChroniclePanel
 extends Control
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")

@@ -1,4 +1,3 @@
-class_name ListPanel
 extends Control
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")

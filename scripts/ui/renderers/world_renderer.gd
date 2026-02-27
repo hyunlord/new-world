@@ -1,4 +1,3 @@
-class_name WorldRenderer
 extends Sprite2D
 
 const WorldDataClass = preload("res://scripts/core/world/world_data.gd")

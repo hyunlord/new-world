@@ -1,4 +1,3 @@
-class_name MinimapPanel
 extends Control
 
 var _world_data: RefCounted

@@ -1,4 +1,3 @@
-class_name CameraController
 extends Camera2D
 
 var _target_zoom: float = 1.0
