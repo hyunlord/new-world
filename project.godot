@@ -27,7 +27,10 @@ NameGenerator="*res://scripts/core/social/name_generator.gd"
 Locale="*res://scripts/core/simulation/locale.gd"
 StatQuery="*res://scripts/core/stats/stat_query.gd"
 GodotTestMcpHarness="*res://addons/godot_test_mcp/test_harness.gd"
-"#godot-test-mcp-injected[display]window/size/viewport_width"=1280
+
+[display]
+
+window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
