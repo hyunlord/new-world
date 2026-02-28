@@ -1,0 +1,23 @@
+{
+    "KNOWLEDGE_TYPE_UNIVERSAL_INTUITIVE": "보편적 지식",
+    "KNOWLEDGE_TYPE_UNIVERSAL_INTUITIVE_DESC": "잃어버리기 거의 불가능한 기본 생존 지식. 관찰만으로 누구나 배울 수 있습니다.",
+    "KNOWLEDGE_TYPE_COMMON_PRACTICE": "일반 관행",
+    "KNOWLEDGE_TYPE_COMMON_PRACTICE_DESC": "공동체에서 널리 실천되는 기술. 최소한의 실천자가 필요합니다.",
+    "KNOWLEDGE_TYPE_CRAFT_TACIT": "장인 지식",
+    "KNOWLEDGE_TYPE_CRAFT_TACIT_DESC": "사제 관계를 통해 전승되는 전문 기술. 전승 고리가 끊기면 취약합니다.",
+    "KNOWLEDGE_TYPE_ELITE_SCHOLARLY": "학술 지식",
+    "KNOWLEDGE_TYPE_ELITE_SCHOLARLY_DESC": "정규 교육과 제도적 지원이 필요한 전문 지식.",
+    "KNOWLEDGE_TYPE_INSTITUTIONAL_STATE": "제도적 지식",
+    "KNOWLEDGE_TYPE_INSTITUTIONAL_STATE_DESC": "조직과 역할에 내재된 지식. 제도가 무너지면 함께 소멸합니다.",
+    "KNOWLEDGE_TYPE_INFRASTRUCTURE_NETWORKED": "인프라 지식",
+    "KNOWLEDGE_TYPE_INFRASTRUCTURE_NETWORKED_DESC": "물리적 기반시설과 교역망에 의존하는 지식.",
+    "TECH_STATE_UNKNOWN": "미지",
+    "TECH_STATE_KNOWN_LOW": "취약",
+    "TECH_STATE_KNOWN_STABLE": "안정",
+    "TECH_STATE_FORGOTTEN_RECENT": "최근 소실",
+    "TECH_STATE_FORGOTTEN_LONG": "망각",
+    "TECH_LOST_FMT": "{tech}에 대한 지식이 소실되었습니다...",
+    "TECH_REDISCOVERED_FMT": "{entity}이(가) 잃어버린 {tech}의 지식을 재발견했습니다!",
+    "TECH_REGRESSION_WARNING_FMT": "{tech}의 지식이 사라지고 있습니다 — 실천자가 {count}명뿐입니다.",
+    "TECH_STATE_CHANGED_FMT": "{tech}: {old_state} → {new_state}"
+}

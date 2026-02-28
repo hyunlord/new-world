@@ -107,6 +107,16 @@ signal title_granted(entity_id: int, entity_name: String, title_id: StringName, 
 @warning_ignore("unused_signal")
 signal title_revoked(entity_id: int, entity_name: String, title_id: StringName, tick: int)
 
+## [Henrich 2004, Tainter 1988] Tech V2 state machine transitions
+@warning_ignore("unused_signal")
+signal tech_state_changed(settlement_id: int, tech_id: String, old_state: String, new_state: String, tick: int)
+@warning_ignore("unused_signal")
+signal tech_regression_started(settlement_id: int, tech_id: String, atrophy_years: int, grace_years: int, tick: int)
+@warning_ignore("unused_signal")
+signal tech_lost(settlement_id: int, tech_id: String, cultural_memory: float, tick: int)
+@warning_ignore("unused_signal")
+signal tech_rediscovered(settlement_id: int, tech_id: String, rediscovered_count: int, tick: int)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

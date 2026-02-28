@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
+
 ## Developer debug panel — F12 toggle.
 ## Agent tab: override skills/needs/emotions for any live entity.
 ## System tab: force-trigger revolution, combat, tech discovery.
@@ -366,20 +368,21 @@ func _populate_tech_dropdown() -> void:
 	if _tech_dropdown == null:
 		return
 	_tech_dropdown.clear()
-	var dir: DirAccess = DirAccess.open("res://data/tech_tree/")
-	if dir == null:
-		_tech_dropdown.add_item("(Tech tree not implemented)", -1)
-		return
-	dir.list_dir_begin()
-	var fname: String = dir.get_next()
-	while fname != "":
-		if fname.ends_with(".json") and not dir.current_is_dir():
-			var tech_id: String = fname.replace(".json", "")
-			var idx: int = _tech_dropdown.item_count
-			_tech_dropdown.add_item(tech_id, idx)
-			_tech_dropdown.set_item_metadata(idx, tech_id)
-		fname = dir.get_next()
-	dir.list_dir_end()
+	var tech_dirs: Array = ["res://data/tech/stone_age/", "res://data/tech/tribal/", "res://data/tech/bronze_age/"]
+	for dir_path in tech_dirs:
+		var dir: DirAccess = DirAccess.open(dir_path)
+		if dir == null:
+			continue
+		dir.list_dir_begin()
+		var fname: String = dir.get_next()
+		while fname != "":
+			if fname.ends_with(".json") and not dir.current_is_dir():
+				var tech_id: String = fname.replace(".json", "")
+				var idx: int = _tech_dropdown.item_count
+				_tech_dropdown.add_item(tech_id, idx)
+				_tech_dropdown.set_item_metadata(idx, tech_id)
+			fname = dir.get_next()
+		dir.list_dir_end()
 	if _tech_dropdown.item_count == 0:
 		_tech_dropdown.add_item("(No techs found)", -1)
 
@@ -523,11 +526,11 @@ func _on_discover_tech() -> void:
 	if settlement == null:
 		push_warning("[DebugPanel] Settlement %d not found" % sid)
 		return
-	if tech_id in settlement.discovered_techs:
+	if settlement.has_tech(tech_id):
 		if OS.is_debug_build():
 			print("[DebugPanel] Tech %s already discovered by S%d" % [tech_id, sid])
 		return
-	settlement.discovered_techs.append(tech_id)
+	settlement.tech_states[tech_id] = CivTechState.create_discovered(tech_id, 0)
 	if OS.is_debug_build():
 		print("[DebugPanel] Discovered tech '%s' for settlement S%d" % [tech_id, sid])
 

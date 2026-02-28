@@ -1081,6 +1081,27 @@ const TECH_DISCOVERY_POP_SCALE:   float = 0.005  ## +0.5% per person over pop_mi
 const TECH_DISCOVERY_MAX_BONUS:   float = 0.40   ## max bonus from all modifiers combined
 ## Era progression: era changes to "tribal" when these techs are all discovered
 const TECH_ERA_TRIBAL_REQUIRES: Array = ["TECH_FIRE_MAKING", "TECH_BASIC_TOOLS", "TECH_SHELTER_BUILDING"]
+## ── Tech V2 [Henrich 2004, Boyd & Richerson 1985, Tainter 1988] ────────────
+## Scan radius (tiles) around settlement center for biome/resource checks
+const TECH_BIOME_SCAN_RADIUS: int = 15
+## Bonus to discovery chance per discovered soft prerequisite
+const TECH_SOFT_PREREQ_BONUS: float = 0.05
+## Effective carriers added per matching institution tag
+const TECH_INSTITUTION_CARRIER_BONUS: int = 3
+## Effective carriers added per matching artifact (building/item)
+const TECH_ARTIFACT_CARRIER_VALUE: int = 2
+## Threshold: effective_carriers / min_practitioners ratio for KNOWN_STABLE
+const TECH_STABLE_THRESHOLD: float = 1.5
+## Memory threshold below which forgotten_recent -> forgotten_long
+const TECH_LONG_FORGOTTEN_MEMORY: float = 0.3
+## Era progression: era changes to "bronze_age" when these techs are all discovered
+const TECH_ERA_BRONZE_AGE_REQUIRES: Array = []  ## populated in C-1b
+## Era directories for tech JSON loading (V2 replaces V1 TECH_DATA_DIRS)
+const TECH_DATA_DIRS_V2: Array = [
+	"res://data/tech/stone_age/",
+	"res://data/tech/tribal/",
+	"res://data/tech/bronze_age/",
+]
 
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death

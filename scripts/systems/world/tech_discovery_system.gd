@@ -6,6 +6,10 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## priority=62 (after network_system=58, before stratification_monitor=90)
 ## tick_interval=TECH_DISCOVERY_INTERVAL_TICKS (annual)
 
+const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
+const TechState = preload("res://scripts/core/tech/tech_state.gd")
+const KnowledgeType = preload("res://scripts/core/tech/knowledge_type.gd")
+
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
@@ -46,55 +50,127 @@ func _check_discoveries(settlement: RefCounted, tick: int) -> void:
 ## [Henrich 2004] discovery_prob = base + pop_bonus + innovator_bonuses
 func _compute_discovery_prob(settlement: RefCounted, tech_id: String) -> float:
 	var def: Dictionary = _tech_tree_manager.get_def(tech_id)
-	var cond: Dictionary = def.get("discovery_conditions", {})
+	## V2 "discovery" block with V1 "discovery_conditions" fallback
+	var disc: Dictionary = def.get("discovery", {})
+	if disc.is_empty():
+		disc = def.get("discovery_conditions", {})
 
-	var base: float = float(cond.get("base_discovery_chance_per_year", 0.20))
-	var pop_min: int = int(cond.get("population_minimum", 2))
+	## V2 field names with V1 fallback
+	var base: float = float(disc.get("base_chance_per_year",
+		disc.get("base_discovery_chance_per_year", 0.20)))
+	var pop_min: int = int(disc.get("required_population",
+		disc.get("population_minimum", 2)))
 	var pop: int = settlement.member_ids.size()
 
 	if pop < pop_min:
-		return 0.0  ## population gate not met
+		return 0.0
 
-	## Population bonus: +TECH_DISCOVERY_POP_SCALE per person above minimum
 	var pop_bonus: float = float(pop - pop_min) * GameConfig.TECH_DISCOVERY_POP_SCALE
 
-	## Required skills check (any alive adult/elder member must meet the minimum)
-	var req_skills: Dictionary = cond.get("required_skills", {})
+	## Required skills check
+	var req_skills: Dictionary = disc.get("required_skills", {})
 	for skill_id in req_skills:
 		var min_level: int = int(req_skills[skill_id])
 		if not _any_member_has_skill(settlement, skill_id, min_level):
 			return 0.0
 
-	## Innovator bonus: knowledge value × openness × logical intel
-	var knowledge_bonus: float = float(cond.get("knowledge_value_bonus", 0.0)) \
+	## V2 modifiers block with V1 flat field fallback
+	var mods: Dictionary = disc.get("modifiers", {})
+	var knowledge_bonus: float = float(mods.get("knowledge_value",
+		disc.get("knowledge_value_bonus", 0.0))) \
 		* _settlement_avg_value(settlement, &"KNOWLEDGE")
-	var openness_bonus: float = float(cond.get("openness_bonus", 0.0)) \
+	var openness_bonus: float = float(mods.get("openness",
+		disc.get("openness_bonus", 0.0))) \
 		* _settlement_avg_hexaco(settlement, "O")
-	var logical_bonus: float = float(cond.get("logical_intel_bonus", 0.0)) \
+	var logical_bonus: float = float(mods.get("logical_intel",
+		disc.get("logical_intel_bonus", 0.0))) \
 		* _settlement_avg_intel(settlement, "logical")
+	var naturalistic_bonus: float = float(mods.get("naturalistic_intel", 0.0)) \
+		* _settlement_avg_intel(settlement, "naturalistic")
 
-	var total: float = base + pop_bonus + knowledge_bonus + openness_bonus + logical_bonus
-	return clampf(total, 0.0, base + GameConfig.TECH_DISCOVERY_MAX_BONUS)
+	## Soft prereq bonus (V2 only)
+	var prereq: Dictionary = def.get("prereq_logic", {})
+	var soft_bonus: float = 0.0
+	for soft_tech in prereq.get("soft", []):
+		if settlement.has_tech(soft_tech):
+			soft_bonus += GameConfig.TECH_SOFT_PREREQ_BONUS
+
+	## Rediscovery bonus (if tech was previously forgotten)
+	var rediscovery_bonus: float = 0.0
+	if settlement.tech_states.has(tech_id):
+		var cts: Dictionary = settlement.tech_states[tech_id]
+		var state_enum: int = CivTechState.get_state_enum(cts)
+		if TechState.is_forgotten(state_enum):
+			var kt: int = KnowledgeType.resolve_from_def(def)
+			var kt_config: Dictionary = KnowledgeType.CONFIG[kt]
+			var memory: float = float(cts.get("cultural_memory", 0.0))
+			rediscovery_bonus = float(kt_config["rediscovery_bonus"]) \
+				* (0.5 + 0.5 * memory)
+
+	var total: float = base + pop_bonus + knowledge_bonus + openness_bonus \
+		+ logical_bonus + naturalistic_bonus + soft_bonus + rediscovery_bonus
+	return clampf(total, 0.0, base + GameConfig.TECH_DISCOVERY_MAX_BONUS + rediscovery_bonus)
 
 
 func _apply_discovery(settlement: RefCounted, tech_id: String, tick: int) -> void:
-	settlement.discovered_techs.append(tech_id)
+	## Find discoverer (highest relevant skill holder)
+	var discoverer_id: int = _find_best_discoverer(settlement, tech_id)
+
+	## Determine old state for signal
+	var old_state: String = "unknown"
+	if settlement.tech_states.has(tech_id):
+		old_state = settlement.tech_states[tech_id].get("state", "unknown")
+
+	## Create CivTechState
+	var cts: Dictionary = CivTechState.create_discovered(tech_id, tick, discoverer_id)
+	settlement.tech_states[tech_id] = cts
 
 	## Update era
 	_tech_tree_manager.update_era(settlement)
 
 	## Chronicle
 	if _chronicle != null:
-		_chronicle.log_event("tech_discovered", -1,
+		_chronicle.log_event("tech_discovered", discoverer_id,
 			"[Settlement %d] discovered %s" % [settlement.id, tech_id],
 			4, [], tick,
 			{"key": "TECH_DISCOVERED_FMT", "params": {"tech": tech_id}})
 
+	SimulationBus.tech_state_changed.emit(
+		settlement.id, tech_id, old_state, "known_low", tick)
 	SimulationBus.emit_event("tech_discovered", {
 		"settlement_id": settlement.id,
 		"tech_id": tech_id,
 		"tick": tick,
+		"discoverer_id": discoverer_id,
 	})
+
+
+func _find_best_discoverer(settlement: RefCounted, tech_id: String) -> int:
+	var def: Dictionary = _tech_tree_manager.get_def(tech_id)
+	var disc: Dictionary = def.get("discovery", {})
+	if disc.is_empty():
+		disc = def.get("discovery_conditions", {})
+	var req_skills: Dictionary = disc.get("required_skills", {})
+	var best_id: int = -1
+	var best_score: float = -1.0
+	for mid in settlement.member_ids:
+		var e: RefCounted = _entity_manager.get_entity(mid)
+		if e == null or not e.is_alive:
+			continue
+		if e.age_stage != "adult" and e.age_stage != "elder":
+			continue
+		var score: float = 0.0
+		for skill_id in req_skills:
+			score += float(e.skill_levels.get(StringName(skill_id), 0))
+		score += float(e.intelligences.get("logical", 0.5))
+		if e.personality != null:
+			score += float(e.personality.axes.get("O", 0.5))
+		else:
+			score += 0.5
+		if score > best_score:
+			best_score = score
+			best_id = e.id
+	return best_id
 
 
 ## Helper: does any alive adult/elder member have skill >= min_level?
