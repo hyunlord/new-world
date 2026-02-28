@@ -107,9 +107,19 @@ func _compute_discovery_prob(settlement: RefCounted, tech_id: String) -> float:
 			rediscovery_bonus = float(kt_config["rediscovery_bonus"]) \
 				* (0.5 + 0.5 * memory)
 
-	var total: float = base + pop_bonus + knowledge_bonus + openness_bonus \
+	var annual_total: float = base + pop_bonus + knowledge_bonus + openness_bonus \
 		+ logical_bonus + naturalistic_bonus + soft_bonus + rediscovery_bonus
-	return clampf(total, 0.0, base + GameConfig.TECH_DISCOVERY_MAX_BONUS + rediscovery_bonus)
+	annual_total = clampf(annual_total, 0.0,
+		base + GameConfig.TECH_DISCOVERY_MAX_BONUS + rediscovery_bonus)
+
+	## Convert annual probability → per-check probability
+	## With monthly checks (interval=365), checks_per_year=12.
+	## P_check = 1 - (1 - P_annual)^(1/checks_per_year)
+	## This preserves the same expected annual discovery rate.
+	var checks_per_year: float = 4380.0 / float(tick_interval)
+	if checks_per_year <= 1.0 or annual_total >= 1.0:
+		return clampf(annual_total, 0.0, 1.0)
+	return 1.0 - pow(1.0 - annual_total, 1.0 / checks_per_year)
 
 
 func _apply_discovery(settlement: RefCounted, tech_id: String, tick: int) -> void:

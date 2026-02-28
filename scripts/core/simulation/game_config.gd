@@ -1074,8 +1074,10 @@ const ATTACHMENT_ANXIOUS_STRESS_RATE: float = 0.02
 const ATTACHMENT_ANXIOUS_STRESS_THRESHOLD: float = 0.40
 
 ## ── Tech Tree [Henrich 2004, Boyd & Richerson 1985] ──────────────────────────
-## Scan interval: tech discovery checked annually
-const TECH_DISCOVERY_INTERVAL_TICKS: int = 4380  ## 1 year
+## Scan interval: tech discovery checked monthly (was annual=4380)
+## Monthly granularity gives first check at tick 365 (~12s at 3x speed)
+## TechDiscoverySystem converts base_chance_per_year → per-check automatically
+const TECH_DISCOVERY_INTERVAL_TICKS: int = 365  ## 1 month
 ## Discovery probability scaling
 const TECH_DISCOVERY_POP_SCALE:   float = 0.005  ## +0.5% per person over pop_minimum
 const TECH_DISCOVERY_MAX_BONUS:   float = 0.40   ## max bonus from all modifiers combined
