@@ -17,7 +17,7 @@ const TAB_ACTIVE_COLOR: Color = Color(0.3, 0.6, 0.9)
 
 ## Draw the overview tab content into the parent panel's canvas.
 ## Returns the y position after all content is drawn.
-func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: float, width: float, click_regions: Array) -> float:
+func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: float, _width: float, click_regions: Array) -> float:
 	var heading_size: int = GameConfig.get_font_size("popup_heading")
 	var body_size: int = GameConfig.get_font_size("popup_body")
 	var small_size: int = GameConfig.get_font_size("popup_small")

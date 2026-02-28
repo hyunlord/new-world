@@ -11,7 +11,7 @@ const SECTION_GAP: float = 15.0
 
 ## Draw the resources tab content into the parent panel's canvas.
 ## Returns the y position after all content is drawn.
-func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: float, width: float, click_regions: Array) -> float:
+func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: float, _width: float, click_regions: Array) -> float:
 	var heading_size: int = GameConfig.get_font_size("popup_heading")
 	var body_size: int = GameConfig.get_font_size("popup_body")
 
@@ -161,7 +161,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		var s_id = summary.get("id", 0)
 		var settlement = summary.get("settlement", null)
 		var building_count: int = 0
-		if settlement != null and settlement.get("building_ids", null) != null:
+		if settlement != null:
 			building_count = settlement.building_ids.size()
 
 		var building_line: String = (

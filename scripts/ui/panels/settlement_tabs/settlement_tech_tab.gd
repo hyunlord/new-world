@@ -343,7 +343,7 @@ func _draw_forgotten_tech(canvas: Control, font: Font, cx: float, cy: float, wid
 
 ## Draw an unknown (undiscovered) tech. Returns updated cy.
 func _draw_unknown_tech(canvas: Control, font: Font, cx: float, cy: float, width: float,
-		tech_id: String, tech_name: String, tech_def: Dictionary, members: Array, population: int) -> float:
+		_tech_id: String, tech_name: String, tech_def: Dictionary, members: Array, population: int) -> float:
 
 	var unknown_label: String = "❌ " + tech_name + " — " + Locale.ltr("UI_TECH_UNDISCOVERED")
 	canvas.draw_string(font, Vector2(cx + INDENT, cy + 14.0), unknown_label,
@@ -401,9 +401,9 @@ func _draw_unknown_tech(canvas: Control, font: Font, cx: float, cy: float, width
 
 ## Handle a click at pos. Returns true if a toggle was hit and state changed.
 func handle_click(pos: Vector2) -> bool:
-	for tr in _toggle_rects:
-		if tr["rect"].has_point(pos):
-			var tid: String = tr["tech_id"]
+	for toggle_rect in _toggle_rects:
+		if toggle_rect["rect"].has_point(pos):
+			var tid: String = toggle_rect["tech_id"]
 			_expanded_techs[tid] = not _expanded_techs.get(tid, false)
 			return true
 	return false
