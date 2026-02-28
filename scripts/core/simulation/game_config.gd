@@ -1189,6 +1189,20 @@ const ADOPTION_CURIOSITY_WEIGHT: float = 0.25
 const ADOPTION_CONSCIENTIOUSNESS_WEIGHT: float = 0.20
 const ADOPTION_KNOWLEDGE_VALUE_WEIGHT: float = 0.20
 
+## ── Settlement Detail Panel [C-1h] ───────────────────────────────────────────
+## Auto-refresh interval while panel is open (in simulation ticks)
+const SETTLEMENT_PANEL_REFRESH_TICKS: int = 60
+## Max practitioners shown before "and N more..." truncation
+const SETTLEMENT_PANEL_MAX_PRACTITIONERS: int = 20
+## Age bracket definitions for population tab
+const SETTLEMENT_PANEL_AGE_BRACKETS: Array = [
+	{"label_key": "UI_AGE_CHILD", "min": 0, "max": 11},
+	{"label_key": "UI_AGE_TEEN", "min": 12, "max": 17},
+	{"label_key": "UI_AGE_YOUNG_ADULT", "min": 18, "max": 29},
+	{"label_key": "UI_AGE_MIDDLE", "min": 30, "max": 54},
+	{"label_key": "UI_AGE_ELDER", "min": 55, "max": 999},
+]
+
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death
 const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death

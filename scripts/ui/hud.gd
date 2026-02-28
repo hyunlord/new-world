@@ -9,6 +9,7 @@ const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detai
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
 const ListPanelClass = preload("res://scripts/ui/panels/list_panel.gd")
+const SettlementDetailPanelClass = preload("res://scripts/ui/panels/settlement_detail_panel.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -105,6 +106,7 @@ var _entity_detail_panel: Control
 var _building_detail_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
+var _settlement_detail_panel: Control
 
 # Follow indicator
 var _follow_label: Label
@@ -199,6 +201,12 @@ func _build_minimap_and_stats() -> void:
 	_list_panel.init(_entity_manager, _building_manager, _settlement_manager)
 	_popup_manager.add_list_panel(_list_panel)
 
+	# Settlement detail panel
+	if _settlement_manager != null:
+		_settlement_detail_panel = SettlementDetailPanelClass.new()
+		_settlement_detail_panel.init(_settlement_manager, _entity_manager, _building_manager, null)
+		_popup_manager.add_settlement_panel(_settlement_detail_panel)
+
 	# Follow indicator label (top-center)
 	_follow_label = Label.new()
 	_follow_label.visible = false
@@ -225,6 +233,7 @@ func _connect_signals() -> void:
 	SimulationBus.tech_state_changed.connect(_on_tech_state_changed)
 	SimulationBus.tech_regression_started.connect(_on_tech_regression_started)
 	SimulationBus.tech_lost.connect(_on_tech_lost)
+	SimulationBus.settlement_panel_requested.connect(_on_settlement_panel_requested)
 
 
 func _build_top_bar() -> void:
@@ -1001,6 +1010,8 @@ func _update_era_label() -> void:
 func set_tech_tree_manager(ttm: RefCounted) -> void:
 	if _stats_detail_panel != null:
 		_stats_detail_panel.set_tech_tree_manager(ttm)
+	if _settlement_detail_panel != null:
+		_settlement_detail_panel._tech_tree_manager = ttm
 
 
 func _on_locale_changed(_new_locale: String) -> void:
@@ -1102,6 +1113,16 @@ func open_entity_detail() -> void:
 func open_building_detail() -> void:
 	if _popup_manager != null and _selected_building_id >= 0:
 		_popup_manager.open_building(_selected_building_id)
+
+
+## Opens the settlement detail panel for the given settlement.
+func open_settlement_detail(settlement_id: int) -> void:
+	if _popup_manager != null and settlement_id >= 0:
+		_popup_manager.open_settlement(settlement_id)
+
+
+func _on_settlement_panel_requested(settlement_id: int) -> void:
+	open_settlement_detail(settlement_id)
 
 
 ## Opens or closes the chronicle event history panel.

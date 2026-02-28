@@ -153,6 +153,12 @@ signal capability_lost(settlement_id: int, capability: String)
 @warning_ignore("unused_signal")
 signal era_changed(settlement_id: int, old_era: String, new_era: String)
 
+## [C-1h] Settlement detail panel open/close
+@warning_ignore("unused_signal")
+signal settlement_panel_requested(settlement_id: int)
+@warning_ignore("unused_signal")
+signal settlement_panel_closed()
+
 ## [Diamond 1997, Boyd & Richerson 2005] Cross-settlement propagation
 @warning_ignore("unused_signal")
 signal tech_spread_attempt(source_settlement: int, target_settlement: int, tech_id: String, channel: String, success: bool)
