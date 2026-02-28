@@ -191,7 +191,7 @@ func _load_data() -> void:
 	var total_deaths_recent: int = 0
 	var history: Array = _stats_recorder.history
 	if history.size() >= 2:
-		var latest: Dictionary = history[history.size() - 1]
+		var _latest: Dictionary = history[history.size() - 1]
 		total_births_recent = _stats_recorder.total_births
 		total_deaths_recent = _stats_recorder.total_deaths
 

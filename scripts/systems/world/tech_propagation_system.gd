@@ -77,7 +77,7 @@ func _update_teaching_sessions(tick: int) -> void:
 
 			## Student gains skill XP
 			var skill_sn = StringName(session["skill_id"])
-			var old_level: int = int(student.skill_levels.get(skill_sn, 0))
+			var _old_level: int = int(student.skill_levels.get(skill_sn, 0))
 			var xp_gain: float = _calculate_xp_gain(session, teacher)
 			student.skill_xp[skill_sn] = float(student.skill_xp.get(skill_sn, 0.0)) + xp_gain
 
