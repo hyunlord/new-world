@@ -20,6 +20,8 @@
     "TECH_REDISCOVERED_FMT": "{entity}이(가) 잃어버린 {tech}의 지식을 재발견했습니다!",
     "TECH_REGRESSION_WARNING_FMT": "{tech}의 지식이 사라지고 있습니다 — 실천자가 {count}명뿐입니다.",
     "TECH_STATE_CHANGED_FMT": "{tech}: {old_state} → {new_state}",
+    "TECH_STABILIZED_FMT": "{settlement}에서 {tech} 지식이 확고히 자리잡았습니다.",
+    "TECH_FALLBACK_FMT": "{settlement}이(가) {tech}를 잃고 {fallback}(으)로 후퇴했습니다.",
 
     "TECH_ANIMISM": "정령 신앙",
     "TECH_ANIMISM_DESC": "자연의 모든 사물에 영혼이 깃들어 있다는 믿음. 공동체의 세계관과 의례의 토대.",

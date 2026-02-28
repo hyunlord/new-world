@@ -1106,6 +1106,24 @@ const TECH_DATA_DIRS_V2: Array = [
 	"res://data/tech/bronze_age/",
 ]
 
+## ── Tech Maintenance / Regression [Henrich 2004, Tainter 1988] ───────────────
+## Atrophy: how quickly knowledge degrades when undermaintained
+const TECH_ATROPHY_BASE_RATE: float = 1.0          ## +1.0 atrophy_years per year when under threshold
+const TECH_ATROPHY_RECOVERY_RATE: float = 0.5       ## atrophy_years recovered per year when above threshold
+## Cultural memory floor (0.0–1.0)
+const TECH_CULTURAL_MEMORY_FLOOR: float = 0.05      ## never fully forgotten (oral legends persist)
+## State transition thresholds
+const TECH_KNOWN_STABLE_THRESHOLD_YEARS: float = 5.0   ## years at 0 atrophy → KNOWN_LOW upgrades to KNOWN_STABLE
+const TECH_FORGOTTEN_RECENT_YEARS: float = 10.0        ## years in FORGOTTEN_RECENT → transitions to FORGOTTEN_LONG
+## Population factor [Henrich 2004]: larger populations slow atrophy
+const TECH_POP_MAINTENANCE_BONUS: float = 0.01   ## per person above min_practitioners → slows atrophy
+const TECH_POP_MAINTENANCE_CAP: float = 0.5       ## max atrophy reduction from population
+## Active use bonus
+const TECH_ACTIVE_USE_ATROPHY_REDUCTION: float = 0.3  ## if actively used, atrophy rate × (1.0 - 0.3)
+## Artifact/institution grace period extension
+const TECH_ARTIFACT_GRACE_BONUS: float = 0.2    ## per artifact building → extends grace period multiplier
+const TECH_FORGOTTEN_LONG_DECAY_MULTIPLIER: float = 0.4  ## oral legends fade slowly in FORGOTTEN_LONG state
+
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death
 const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death

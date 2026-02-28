@@ -54,6 +54,7 @@ const MemorySystemScript = preload("res://scripts/systems/record/memory_system.g
 const NetworkSystemScript = preload("res://scripts/systems/social/network_system.gd")
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
+const TechMaintenanceSystemScript = preload("res://scripts/systems/world/tech_maintenance_system.gd")
 const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
 const OccupationSystem = preload("res://scripts/systems/social/occupation_system.gd")
 const TitleSystem = preload("res://scripts/systems/social/title_system.gd")
@@ -117,6 +118,7 @@ var memory_system: RefCounted
 var network_system: RefCounted
 var tech_tree_manager: RefCounted
 var tech_discovery_system: RefCounted
+var tech_maintenance_system: RefCounted
 var tension_system: RefCounted
 var occupation_system: RefCounted
 var title_system: RefCounted
@@ -327,6 +329,9 @@ func _ready() -> void:
 	tech_discovery_system = TechDiscoverySystemScript.new()
 	tech_discovery_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
 
+	tech_maintenance_system = TechMaintenanceSystemScript.new()
+	tech_maintenance_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
+
 	tension_system = TensionSystemScript.new()
 	tension_system.init(entity_manager, settlement_manager, world_data, ChronicleSystem, sim_engine.rng)
 
@@ -363,6 +368,7 @@ func _ready() -> void:
 	sim_engine.register_system(network_system)            # priority 58 (annual: social capital + authority + revolution)
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(tech_discovery_system)     # priority 62 (annual tech discovery)
+	sim_engine.register_system(tech_maintenance_system)   # priority 63 (annual tech regression)
 	sim_engine.register_system(tension_system)            # priority 64 (bi-annual tension + skirmish)
 	sim_engine.register_system(stratification_monitor)    # priority 90
 	sim_engine.register_system(stats_recorder)            # priority 90

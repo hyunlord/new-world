@@ -20,6 +20,8 @@
     "TECH_REDISCOVERED_FMT": "{entity} rediscovered the lost knowledge of {tech}!",
     "TECH_REGRESSION_WARNING_FMT": "Knowledge of {tech} is fading — only {count} practitioners remain.",
     "TECH_STATE_CHANGED_FMT": "{tech}: {old_state} → {new_state}",
+    "TECH_STABILIZED_FMT": "Knowledge of {tech} is now firmly established in {settlement}.",
+    "TECH_FALLBACK_FMT": "{settlement} has reverted to {fallback} after losing {tech}.",
 
     "TECH_ANIMISM": "Animism",
     "TECH_ANIMISM_DESC": "The belief that spirits inhabit natural objects and forces, giving early humans a framework to interpret and negotiate with the world around them.",
