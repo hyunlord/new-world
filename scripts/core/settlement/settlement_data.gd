@@ -1,5 +1,7 @@
 extends RefCounted
 
+const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
+
 var id: int = 0
 var center_x: int = 0
 var center_y: int = 0
@@ -33,10 +35,32 @@ var authority_type: String = "charismatic"
 var revolution_cooldown_tick: int = -1
 
 ## ── Tech Tree State [Boyd & Richerson 1985, Henrich 2004] ──────────────────
-## IDs of discovered TechNodes. Populated by TechDiscoverySystem.
-var discovered_techs: Array = []
-## Current era label (highest era achieved). "stone_age" → "tribal" → "bronze_age" ...
+## [Henrich 2004] Per-tech dynamic state. Key = tech_id (String), Value = CivTechState dict.
+## See civ_tech_state.gd for dict structure.
+var tech_states: Dictionary = {}
+## Current era label (highest era achieved). "stone_age" -> "tribal" -> "bronze_age" ...
 var tech_era: String = "stone_age"
+
+
+## Is this tech currently known (active/usable)?
+func has_tech(tech_id: String) -> bool:
+	if not tech_states.has(tech_id):
+		return false
+	return CivTechState.is_active(tech_states[tech_id])
+
+
+## Get all currently known (active) tech IDs.
+func get_known_techs() -> Array:
+	var result: Array = []
+	for tech_id in tech_states:
+		if CivTechState.is_active(tech_states[tech_id]):
+			result.append(tech_id)
+	return result
+
+
+## Get all tech IDs in any non-unknown state (including forgotten).
+func get_all_encountered_techs() -> Array:
+	return tech_states.keys()
 
 
 func to_dict() -> Dictionary:
@@ -56,9 +80,16 @@ func to_dict() -> Dictionary:
 		"wealth_p90": wealth_p90,
 		"authority_type": authority_type,
 		"revolution_cooldown_tick": revolution_cooldown_tick,
-		"discovered_techs": discovered_techs.duplicate(),
+		"tech_states": _serialize_tech_states(),
 		"tech_era": tech_era,
 	}
+
+
+func _serialize_tech_states() -> Dictionary:
+	var result: Dictionary = {}
+	for tech_id in tech_states:
+		result[tech_id] = CivTechState.to_save_dict(tech_states[tech_id])
+	return result
 
 
 static func from_dict(data: Dictionary) -> RefCounted:
@@ -90,7 +121,16 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	settlement.wealth_p90 = data.get("wealth_p90", 1.0)
 	settlement.authority_type = data.get("authority_type", "charismatic")
 	settlement.revolution_cooldown_tick = data.get("revolution_cooldown_tick", -1)
-	settlement.discovered_techs = data.get("discovered_techs", []).duplicate()
+	## V2 tech_states deserialization with V1 migration
+	var raw_ts = data.get("tech_states", {})
+	if raw_ts is Dictionary and raw_ts.size() > 0:
+		for tech_id in raw_ts:
+			settlement.tech_states[tech_id] = CivTechState.from_save_dict(raw_ts[tech_id])
+	else:
+		## V1 migration: convert discovered_techs array to tech_states dict
+		var old_techs: Array = data.get("discovered_techs", [])
+		for tech_id in old_techs:
+			settlement.tech_states[tech_id] = CivTechState.create_migrated(tech_id)
 	settlement.tech_era = data.get("tech_era", "stone_age")
 
 	return settlement

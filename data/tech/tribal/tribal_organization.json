@@ -1,18 +1,28 @@
 {
-	"id": "TECH_TRIBAL_ORGANIZATION",
-	"display_key": "TECH_TRIBAL_ORGANIZATION",
-	"era": "tribal",
-	"prerequisites": ["TECH_FIRE_MAKING", "TECH_SHELTER_BUILDING"],
-	"discovery_conditions": {
-		"population_minimum": 8,
-		"required_skills": {},
-		"base_discovery_chance_per_year": 0.15,
-		"knowledge_value_bonus": 0.15,
-		"openness_bonus": 0.05,
-		"logical_intel_bonus": 0.10
-	},
-	"unlocks_skills": ["SKILL_LEADERSHIP", "SKILL_TEACHING"],
-	"unlocks_buildings": ["communal_hall"],
-	"unlocks_jobs": [],
-	"description_key": "TECH_TRIBAL_ORGANIZATION_DESC"
+    "id": "TECH_TRIBAL_ORGANIZATION",
+    "display_key": "TECH_TRIBAL_ORGANIZATION",
+    "description_key": "TECH_TRIBAL_ORGANIZATION_DESC",
+    "era": "tribal",
+    "tier": 1,
+    "categories": ["social_organization"],
+    "tags": ["leadership", "organization", "social", "cooperation"],
+    "knowledge_type": "common_practice",
+    "prereq_logic": {"all_of": ["TECH_FIRE_MAKING", "TECH_SHELTER_BUILDING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.15,
+        "required_skills": {},
+        "required_population": 8,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.15, "openness": 0.05, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 1, "regression_grace_years": 15, "carrier_roles": ["leader", "elder"], "requires_active_use": true, "active_use_threshold": 0.2, "artifact_carriers": [], "institution_tags_help": ["tribal_council"]},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration", "conquest"], "adoption_contact_years": 5, "prestige_bias": 0.1, "conformist_bias": 0.1},
+    "unlocks": {"skills": ["SKILL_LEADERSHIP", "SKILL_TEACHING"], "buildings": ["communal_hall"], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {},
+    "regression_fallback": "",
+    "ui": {"group": "Social Organization", "subgroup": "Basics", "icon": "icon_tribe", "tree_x": 3, "tree_y": 2}
 }

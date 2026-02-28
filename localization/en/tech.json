@@ -1,0 +1,23 @@
+{
+    "KNOWLEDGE_TYPE_UNIVERSAL_INTUITIVE": "Universal Knowledge",
+    "KNOWLEDGE_TYPE_UNIVERSAL_INTUITIVE_DESC": "Basic survival knowledge that is nearly impossible to lose. Anyone can learn by observation.",
+    "KNOWLEDGE_TYPE_COMMON_PRACTICE": "Common Practice",
+    "KNOWLEDGE_TYPE_COMMON_PRACTICE_DESC": "Widely practiced community skills. Requires a minimum number of active practitioners.",
+    "KNOWLEDGE_TYPE_CRAFT_TACIT": "Craft Knowledge",
+    "KNOWLEDGE_TYPE_CRAFT_TACIT_DESC": "Specialized skills passed through master-apprentice chains. Vulnerable if the chain breaks.",
+    "KNOWLEDGE_TYPE_ELITE_SCHOLARLY": "Scholarly Knowledge",
+    "KNOWLEDGE_TYPE_ELITE_SCHOLARLY_DESC": "Expert knowledge requiring formal education and institutional support.",
+    "KNOWLEDGE_TYPE_INSTITUTIONAL_STATE": "Institutional Knowledge",
+    "KNOWLEDGE_TYPE_INSTITUTIONAL_STATE_DESC": "Knowledge embedded in organizations and roles. Collapses when institutions fail.",
+    "KNOWLEDGE_TYPE_INFRASTRUCTURE_NETWORKED": "Infrastructure Knowledge",
+    "KNOWLEDGE_TYPE_INFRASTRUCTURE_NETWORKED_DESC": "Knowledge dependent on physical infrastructure and trade networks.",
+    "TECH_STATE_UNKNOWN": "Unknown",
+    "TECH_STATE_KNOWN_LOW": "Fragile",
+    "TECH_STATE_KNOWN_STABLE": "Established",
+    "TECH_STATE_FORGOTTEN_RECENT": "Recently Lost",
+    "TECH_STATE_FORGOTTEN_LONG": "Forgotten",
+    "TECH_LOST_FMT": "The knowledge of {tech} has been lost...",
+    "TECH_REDISCOVERED_FMT": "{entity} rediscovered the lost knowledge of {tech}!",
+    "TECH_REGRESSION_WARNING_FMT": "Knowledge of {tech} is fading — only {count} practitioners remain.",
+    "TECH_STATE_CHANGED_FMT": "{tech}: {old_state} → {new_state}"
+}

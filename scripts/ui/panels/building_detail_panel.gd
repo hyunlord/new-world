@@ -121,12 +121,13 @@ func _draw() -> void:
 				Locale.ltr("UI_TECH_ERA") + ": " + Locale.ltr(_era_key),
 				HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.85, 0.5))
 			cy += 16.0
-			if (_s.discovered_techs as Array).size() > 0:
+			var _known_techs: Array = _s.get_known_techs()
+			if _known_techs.size() > 0:
 				draw_string(font, Vector2(cx, cy + 12),
 					Locale.ltr("UI_DISCOVERED_TECHS") + ":",
 					HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.6, 0.6, 0.6))
 				cy += 14.0
-				for _tid in _s.discovered_techs:
+				for _tid in _known_techs:
 					draw_string(font, Vector2(cx + 10, cy + 12),
 						"\u2022 " + Locale.ltr(str(_tid)),
 						HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40, GameConfig.get_font_size("popup_body") - 1, Color(0.5, 0.75, 0.55))

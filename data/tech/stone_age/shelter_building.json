@@ -1,18 +1,28 @@
 {
-	"id": "TECH_SHELTER_BUILDING",
-	"display_key": "TECH_SHELTER_BUILDING",
-	"era": "stone_age",
-	"prerequisites": ["TECH_BASIC_TOOLS"],
-	"discovery_conditions": {
-		"population_minimum": 4,
-		"required_skills": {"SKILL_WOODCUTTING": 15},
-		"base_discovery_chance_per_year": 0.25,
-		"knowledge_value_bonus": 0.10,
-		"openness_bonus": 0.05,
-		"logical_intel_bonus": 0.10
-	},
-	"unlocks_skills": ["SKILL_CONSTRUCTION"],
-	"unlocks_buildings": ["shelter", "storage_hut"],
-	"unlocks_jobs": [],
-	"description_key": "TECH_SHELTER_BUILDING_DESC"
+    "id": "TECH_SHELTER_BUILDING",
+    "display_key": "TECH_SHELTER_BUILDING",
+    "description_key": "TECH_SHELTER_BUILDING_DESC",
+    "era": "stone_age",
+    "tier": 0,
+    "categories": ["construction"],
+    "tags": ["shelter", "construction", "protection"],
+    "knowledge_type": "universal_intuitive",
+    "prereq_logic": {"all_of": ["TECH_BASIC_TOOLS"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.25,
+        "required_skills": {"SKILL_WOODCUTTING": 15},
+        "required_population": 4,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.05, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 1, "regression_grace_years": 30, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": ["shelter"], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration", "conquest"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": ["SKILL_CONSTRUCTION"], "buildings": ["shelter", "storage_hut"], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {},
+    "regression_fallback": "",
+    "ui": {"group": "Construction", "subgroup": "Basics", "icon": "icon_shelter", "tree_x": 2, "tree_y": 1}
 }
