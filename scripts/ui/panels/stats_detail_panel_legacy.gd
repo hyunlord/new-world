@@ -4,6 +4,7 @@ var _stats_recorder: RefCounted
 var _settlement_manager: RefCounted
 var _entity_manager: RefCounted
 var _relationship_manager: RefCounted
+var _tech_tree_manager: RefCounted
 
 const GRAPH_HEIGHT: float = 120.0
 const SECTION_GAP: float = 10.0
@@ -23,6 +24,11 @@ func init(stats_recorder: RefCounted, settlement_manager: RefCounted = null, ent
 	_settlement_manager = settlement_manager
 	_entity_manager = entity_manager
 	_relationship_manager = relationship_manager
+
+
+## Sets the TechTreeManager reference for tech section display.
+func set_tech_tree_manager(ttm: RefCounted) -> void:
+	_tech_tree_manager = ttm
 
 
 func _ready() -> void:
@@ -127,6 +133,11 @@ func _draw() -> void:
 			settlement_rows = active.size() * 3 + 1
 		var max_rows: int = maxi(job_rows + 2, settlement_rows + 1)
 		cy = jobs_y + 20.0 + float(max_rows) * 14.0
+
+	# Technologies section
+	if _settlement_manager != null:
+		cy += SECTION_GAP
+		cy = _draw_tech_section(font, cx, cy, content_w)
 
 	# Track content height for scrolling
 	_content_height = cy + _scroll_offset + 40.0
@@ -428,3 +439,105 @@ func _draw_settlements_section(font: Font, x: float, y: float, _w: float) -> voi
 			leader_color = Color(0.5, 0.5, 0.5)
 		draw_string(font, Vector2(x + 4, y + 11), leader_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), leader_color)
 		y += 16.0
+
+
+## ── Technologies (기술 현황) ──────────────────────────────────────────────────
+## Shows known/forgotten techs grouped by state for the first settlement.
+func _draw_tech_section(font: Font, x: float, y: float, w: float) -> float:
+	draw_string(font, Vector2(x, y + 14), Locale.ltr("UI_SETTLEMENT_TECHS"),
+		HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"),
+		Color(0.9, 0.75, 0.3))
+	y += 20.0
+
+	var settlements: Array = _settlement_manager.get_all_settlements()
+	if settlements.is_empty():
+		return y
+	var settlement: RefCounted = settlements[0]
+
+	## Era display
+	var era_key: String = "ERA_" + settlement.tech_era.to_upper()
+	draw_string(font, Vector2(x + 4, y + 12),
+		Locale.ltr("UI_CURRENT_ERA") + ": " + Locale.ltr(era_key),
+		HORIZONTAL_ALIGNMENT_LEFT, w, GameConfig.get_font_size("popup_body"),
+		Color(1.0, 0.85, 0.4))
+	y += 18.0
+
+	## Count known and forgotten
+	var known_count: int = 0
+	var forgotten_count: int = 0
+	var known_techs: Array = []
+	var forgotten_techs: Array = []
+	for tech_id in settlement.tech_states:
+		var cts: Dictionary = settlement.tech_states[tech_id]
+		var state: String = cts.get("state", "unknown")
+		if state == "known_low" or state == "known_stable":
+			known_count += 1
+			known_techs.append({"id": tech_id, "state": state, "cts": cts})
+		elif state == "forgotten_recent" or state == "forgotten_long":
+			forgotten_count += 1
+			forgotten_techs.append({"id": tech_id, "state": state, "cts": cts})
+
+	draw_string(font, Vector2(x + 4, y + 12),
+		Locale.trf("UI_TECH_COUNT_FMT", {
+			"known": str(known_count), "forgotten": str(forgotten_count)}),
+		HORIZONTAL_ALIGNMENT_LEFT, w, GameConfig.get_font_size("popup_small"),
+		Color(0.7, 0.7, 0.7))
+	y += 16.0
+
+	## ── Known techs ──
+	if not known_techs.is_empty():
+		y += 4.0
+		draw_string(font, Vector2(x + 4, y + 12),
+			Locale.ltr("UI_TECH_KNOWN_HEADER"),
+			HORIZONTAL_ALIGNMENT_LEFT, w, GameConfig.get_font_size("popup_small"),
+			Color(0.5, 0.9, 0.5))
+		y += 16.0
+
+		## Sort by tier then alphabetical
+		known_techs.sort_custom(func(a, b):
+			var ta: int = _get_tech_tier(a["id"])
+			var tb: int = _get_tech_tier(b["id"])
+			if ta != tb: return ta < tb
+			return a["id"] < b["id"]
+		)
+
+		for entry in known_techs:
+			var tech_display: String = Locale.ltr(entry["id"])
+			var state_icon: String = "\u25cf" if entry["state"] == "known_stable" else "\u25cb"
+			var state_color: Color = Color(0.3, 0.8, 0.3) if entry["state"] == "known_stable" else Color(0.8, 0.8, 0.3)
+			draw_string(font, Vector2(x + 12, y + 12),
+				state_icon + " " + tech_display,
+				HORIZONTAL_ALIGNMENT_LEFT, w - 16, GameConfig.get_font_size("popup_body"),
+				state_color)
+			y += 14.0
+
+	## ── Forgotten techs ──
+	if not forgotten_techs.is_empty():
+		y += 8.0
+		draw_string(font, Vector2(x + 4, y + 12),
+			Locale.ltr("UI_TECH_FORGOTTEN_HEADER"),
+			HORIZONTAL_ALIGNMENT_LEFT, w, GameConfig.get_font_size("popup_small"),
+			Color(0.9, 0.4, 0.3))
+		y += 16.0
+
+		for entry in forgotten_techs:
+			var tech_display: String = Locale.ltr(entry["id"])
+			var memory: float = float(entry["cts"].get("cultural_memory", 0.0))
+			var memory_pct: String = "%d%%" % int(memory * 100)
+			var fcolor: Color = Color(0.6, 0.3, 0.3) if entry["state"] == "forgotten_long" else Color(0.8, 0.5, 0.3)
+			draw_string(font, Vector2(x + 12, y + 12),
+				"\u2715 " + tech_display + " (" + Locale.ltr("UI_TECH_MEMORY") + ": " + memory_pct + ")",
+				HORIZONTAL_ALIGNMENT_LEFT, w - 16, GameConfig.get_font_size("popup_body"),
+				fcolor)
+			y += 14.0
+
+	y += 8.0
+	return y
+
+
+## Returns the tier of a tech definition for sorting purposes.
+func _get_tech_tier(tech_id: String) -> int:
+	if _tech_tree_manager != null:
+		var def: Dictionary = _tech_tree_manager.get_def(tech_id)
+		return int(def.get("tier", 0))
+	return 0

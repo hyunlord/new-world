@@ -128,6 +128,7 @@ var _section_collapsed: Dictionary = {
 	"life_events": false,
 	"intelligence": false,
 	"skills": false,
+	"discoveries": true,
 	"combat": true,
 	"values": true,
 	"appearance": true,
@@ -904,6 +905,28 @@ func _draw() -> void:
 					HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20, 11, Color(0.5, 0.85, 0.6))
 				cy += 14
 		cy += 4.0
+
+	# ── Discoveries (이 인물의 발견) ──
+	if _settlement_manager != null and entity.settlement_id > 0:
+		var _disc_settlement: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
+		if _disc_settlement != null:
+			var _my_discoveries: Array = []
+			for _disc_tech_id in _disc_settlement.tech_states:
+				var _disc_cts: Dictionary = _disc_settlement.tech_states[_disc_tech_id]
+				if _disc_cts.get("discoverer_id", -1) == entity.id:
+					_my_discoveries.append(_disc_tech_id)
+			if not _my_discoveries.is_empty():
+				cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_ENTITY_DISCOVERIES"), "discoveries")
+				if not _section_collapsed.get("discoveries", true):
+					for _disc_tid in _my_discoveries:
+						var _disc_display: String = Locale.ltr(_disc_tid)
+						draw_string(font, Vector2(cx + 20, cy + 12),
+							"\u2605 " + _disc_display,
+							HORIZONTAL_ALIGNMENT_LEFT, bar_w - 20,
+							GameConfig.get_font_size("popup_body"),
+							Color(0.9, 0.8, 0.3))
+						cy += 14.0
+					cy += 4.0
 
 	# ── Combat ──
 	if entity.age_stage == "adult" or entity.age_stage == "elder":

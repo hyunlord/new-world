@@ -4,25 +4,93 @@
     "description_key": "TECH_ORAL_TRADITION_DESC",
     "era": "stone_age",
     "tier": 0,
-    "categories": ["knowledge_science", "social_organization"],
-    "tags": ["storytelling", "memory", "culture", "knowledge", "oral"],
+    "categories": [
+        "knowledge_science",
+        "social_organization"
+    ],
+    "tags": [
+        "storytelling",
+        "memory",
+        "culture",
+        "knowledge",
+        "oral"
+    ],
     "knowledge_type": "universal_intuitive",
-    "prereq_logic": {"all_of": [], "any_of": [], "soft": []},
-    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "prereq_logic": {
+        "all_of": [],
+        "any_of": [],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": [],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
     "discovery": {
-        "base_chance_per_year": 0.30,
+        "base_chance_per_year": 0.8,
         "required_skills": {},
         "required_population": 4,
         "required_cooperation": 0,
-        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
         "eureka": false,
         "eureka_conditions": {}
     },
-    "maintenance": {"min_practitioners": 2, "regression_grace_years": 20, "carrier_roles": ["elder", "storyteller"], "requires_active_use": true, "active_use_threshold": 0.1, "artifact_carriers": [], "institution_tags_help": []},
-    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
-    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
-    "unlocks": {"skills": ["SKILL_STORYTELLING"], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
-    "effects": {"knowledge_retention": 0.3, "cultural_identity": 0.2},
+    "maintenance": {
+        "min_practitioners": 2,
+        "regression_grace_years": 20,
+        "carrier_roles": [
+            "elder",
+            "storyteller"
+        ],
+        "requires_active_use": true,
+        "active_use_threshold": 0.1,
+        "artifact_carriers": [],
+        "institution_tags_help": []
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration"
+        ],
+        "adoption_contact_years": 0,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [
+            "SKILL_STORYTELLING"
+        ],
+        "buildings": [],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "knowledge_retention": 0.3,
+        "cultural_identity": 0.2
+    },
     "regression_fallback": "",
-    "ui": {"group": "Knowledge Science", "subgroup": "Memory", "icon": "icon_oral", "tree_x": 0, "tree_y": 12}
+    "ui": {
+        "group": "Knowledge Science",
+        "subgroup": "Memory",
+        "icon": "icon_oral",
+        "tree_x": 0,
+        "tree_y": 12
+    }
 }

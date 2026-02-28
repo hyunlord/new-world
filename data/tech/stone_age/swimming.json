@@ -4,25 +4,89 @@
     "description_key": "TECH_SWIMMING_DESC",
     "era": "stone_age",
     "tier": 0,
-    "categories": ["maritime"],
-    "tags": ["swimming", "water", "movement", "survival"],
+    "categories": [
+        "maritime"
+    ],
+    "tags": [
+        "swimming",
+        "water",
+        "movement",
+        "survival"
+    ],
     "knowledge_type": "universal_intuitive",
-    "prereq_logic": {"all_of": [], "any_of": [], "soft": []},
-    "requirements": {"biomes_nearby": ["shallow_water"], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "prereq_logic": {
+        "all_of": [],
+        "any_of": [],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": [
+            "shallow_water"
+        ],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
     "discovery": {
-        "base_chance_per_year": 0.25,
+        "base_chance_per_year": 0.85,
         "required_skills": {},
         "required_population": 2,
         "required_cooperation": 0,
-        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
         "eureka": false,
         "eureka_conditions": {}
     },
-    "maintenance": {"min_practitioners": 1, "regression_grace_years": 50, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
-    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
-    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
-    "unlocks": {"skills": ["SKILL_SWIMMING"], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
-    "effects": {"water_traversal": 0.3},
+    "maintenance": {
+        "min_practitioners": 1,
+        "regression_grace_years": 50,
+        "carrier_roles": [],
+        "requires_active_use": false,
+        "active_use_threshold": 0.0,
+        "artifact_carriers": [],
+        "institution_tags_help": []
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration"
+        ],
+        "adoption_contact_years": 0,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [
+            "SKILL_SWIMMING"
+        ],
+        "buildings": [],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "water_traversal": 0.3
+    },
     "regression_fallback": "",
-    "ui": {"group": "Maritime", "subgroup": "Basics", "icon": "icon_swimming", "tree_x": 0, "tree_y": 9}
+    "ui": {
+        "group": "Maritime",
+        "subgroup": "Basics",
+        "icon": "icon_swimming",
+        "tree_x": 0,
+        "tree_y": 9
+    }
 }

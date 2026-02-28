@@ -4,25 +4,103 @@
     "description_key": "TECH_FIRE_MAKING_DESC",
     "era": "stone_age",
     "tier": 0,
-    "categories": ["food_production", "materials_crafting"],
-    "tags": ["fire", "survival", "universal", "warmth", "cooking"],
+    "categories": [
+        "food_production",
+        "materials_crafting"
+    ],
+    "tags": [
+        "fire",
+        "survival",
+        "universal",
+        "warmth",
+        "cooking"
+    ],
     "knowledge_type": "universal_intuitive",
-    "prereq_logic": {"all_of": [], "any_of": [], "soft": []},
-    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "prereq_logic": {
+        "all_of": [],
+        "any_of": [],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": [],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
     "discovery": {
-        "base_chance_per_year": 0.40,
+        "base_chance_per_year": 0.99,
         "required_skills": {},
         "required_population": 2,
         "required_cooperation": 0,
-        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
         "eureka": true,
-        "eureka_conditions": {"event": "lightning_strike_near_camp", "chance": 0.02}
+        "eureka_conditions": {
+            "event": "lightning_strike_near_camp",
+            "chance": 0.02
+        }
     },
-    "maintenance": {"min_practitioners": 1, "regression_grace_years": 50, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": ["campfire", "hearth"], "institution_tags_help": []},
-    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
-    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration", "conquest"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
-    "unlocks": {"skills": ["SKILL_FIRE_MAKING"], "buildings": ["campfire"], "jobs": [], "actions": ["cook_food", "warm_self"], "techs_enabled": []},
-    "effects": {"food_spoilage_reduction": 0.3, "warmth_bonus": 0.4, "predator_deterrence": 0.5},
+    "maintenance": {
+        "min_practitioners": 1,
+        "regression_grace_years": 50,
+        "carrier_roles": [],
+        "requires_active_use": false,
+        "active_use_threshold": 0.0,
+        "artifact_carriers": [
+            "campfire",
+            "hearth"
+        ],
+        "institution_tags_help": []
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration",
+            "conquest"
+        ],
+        "adoption_contact_years": 0,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [
+            "SKILL_FIRE_MAKING"
+        ],
+        "buildings": [
+            "campfire"
+        ],
+        "jobs": [],
+        "actions": [
+            "cook_food",
+            "warm_self"
+        ],
+        "techs_enabled": []
+    },
+    "effects": {
+        "food_spoilage_reduction": 0.3,
+        "warmth_bonus": 0.4,
+        "predator_deterrence": 0.5
+    },
     "regression_fallback": "",
-    "ui": {"group": "Food Production", "subgroup": "Basics", "icon": "icon_fire", "tree_x": 1, "tree_y": 3}
+    "ui": {
+        "group": "Food Production",
+        "subgroup": "Basics",
+        "icon": "icon_fire",
+        "tree_x": 1,
+        "tree_y": 3
+    }
 }

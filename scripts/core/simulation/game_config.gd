@@ -1074,8 +1074,10 @@ const ATTACHMENT_ANXIOUS_STRESS_RATE: float = 0.02
 const ATTACHMENT_ANXIOUS_STRESS_THRESHOLD: float = 0.40
 
 ## ── Tech Tree [Henrich 2004, Boyd & Richerson 1985] ──────────────────────────
-## Scan interval: tech discovery checked annually
-const TECH_DISCOVERY_INTERVAL_TICKS: int = 4380  ## 1 year
+## Scan interval: tech discovery checked monthly (was annual=4380)
+## Monthly granularity gives first check at tick 365 (~12s at 3x speed)
+## TechDiscoverySystem converts base_chance_per_year → per-check automatically
+const TECH_DISCOVERY_INTERVAL_TICKS: int = 365  ## 1 month
 ## Discovery probability scaling
 const TECH_DISCOVERY_POP_SCALE:   float = 0.005  ## +0.5% per person over pop_minimum
 const TECH_DISCOVERY_MAX_BONUS:   float = 0.40   ## max bonus from all modifiers combined
@@ -1105,6 +1107,112 @@ const TECH_DATA_DIRS_V2: Array = [
 	"res://data/tech/tribal/",
 	"res://data/tech/bronze_age/",
 ]
+
+## ── Tech Maintenance / Regression [Henrich 2004, Tainter 1988] ───────────────
+## Atrophy: how quickly knowledge degrades when undermaintained
+const TECH_ATROPHY_BASE_RATE: float = 1.0          ## +1.0 atrophy_years per year when under threshold
+const TECH_ATROPHY_RECOVERY_RATE: float = 0.5       ## atrophy_years recovered per year when above threshold
+## Cultural memory floor (0.0–1.0)
+const TECH_CULTURAL_MEMORY_FLOOR: float = 0.05      ## never fully forgotten (oral legends persist)
+## State transition thresholds
+const TECH_KNOWN_STABLE_THRESHOLD_YEARS: float = 5.0   ## years at 0 atrophy → KNOWN_LOW upgrades to KNOWN_STABLE
+const TECH_FORGOTTEN_RECENT_YEARS: float = 10.0        ## years in FORGOTTEN_RECENT → transitions to FORGOTTEN_LONG
+## Population factor [Henrich 2004]: larger populations slow atrophy
+const TECH_POP_MAINTENANCE_BONUS: float = 0.01   ## per person above min_practitioners → slows atrophy
+const TECH_POP_MAINTENANCE_CAP: float = 0.5       ## max atrophy reduction from population
+## Active use bonus
+const TECH_ACTIVE_USE_ATROPHY_REDUCTION: float = 0.3  ## if actively used, atrophy rate × (1.0 - 0.3)
+## Artifact/institution grace period extension
+const TECH_ARTIFACT_GRACE_BONUS: float = 0.2    ## per artifact building → extends grace period multiplier
+const TECH_FORGOTTEN_LONG_DECAY_MULTIPLIER: float = 0.4  ## oral legends fade slowly in FORGOTTEN_LONG state
+
+## ── Tech Utilization [White 1959, Diamond 1997, Durkheim 1893] ─────────────────
+## Modifier stacking caps (prevent runaway values)
+const TECH_MODIFIER_STACK_CAP: float = 10.0            ## Maximum multiplier from stacking
+const TECH_MODIFIER_ADDITIVE_STACK_CAP: float = 500.0  ## Max additive bonus (e.g., population cap)
+const TECH_RECALC_COOLDOWN_TICKS: int = 5              ## Minimum ticks between recalculations
+
+## Modifier target classification — determines how stacking works
+const TECH_MODIFIER_MULTIPLIER_TARGETS: Array = [
+	"food_production", "wood_production", "stone_production", "metal_production",
+	"craft_quality", "craft_speed", "build_speed", "build_quality",
+	"combat_effectiveness", "defense_strength", "weapon_quality", "armor_quality",
+	"trade_efficiency", "storage_capacity", "knowledge_retention", "learning_speed",
+	"disease_resistance", "healing_rate",
+]
+const TECH_MODIFIER_ADDITIVE_TARGETS: Array = [
+	"population_cap", "trade_range", "max_building_tier", "settlement_stability",
+	"lifespan_modifier",
+]
+
+## Era progression thresholds (active known techs per era tier)
+const TECH_ERA_STONE_AGE_COUNT: int = 0      ## Starts here
+const TECH_ERA_TRIBAL_COUNT: int = 5         ## Need 5 tribal-era techs known for era transition
+const TECH_ERA_BRONZE_AGE_COUNT: int = 12    ## Need 12 bronze-era techs known
+
+## Era base modifiers — settlement-wide bonuses from era alone
+const TECH_ERA_MODIFIERS: Dictionary = {
+	"stone_age":  {"population_cap": 20, "trade_range": 0, "max_building_tier": 1},
+	"tribal":     {"population_cap": 100, "trade_range": 5, "max_building_tier": 2},
+	"bronze_age": {"population_cap": 500, "trade_range": 15, "max_building_tier": 3},
+}
+
+## ── Tech Propagation [Lave & Wenger 1991, Vygotsky 1978, Rogers 2003] ────────
+## Within-settlement: teacher-student pair model
+const TEACHING_TICK_INTERVAL: int = 24                ## Check every game-day (24 ticks = 2 days)
+const TEACHING_BASE_EFFECTIVENESS: float = 0.02       ## Base progress per teaching tick
+const TEACHING_SKILL_GAP_MIN: int = 3                 ## Teacher must be ≥3 levels above student
+const TEACHING_SKILL_GAP_OPTIMAL: int = 5             ## Sweet spot for ZPD
+const TEACHING_SKILL_GAP_MAX: int = 10                ## Beyond this, teacher "too advanced" penalty
+const TEACHING_MAX_STUDENTS: int = 3                  ## One teacher, max 3 students simultaneously
+const TEACHING_WILLINGNESS_THRESHOLD: float = 0.3     ## Minimum relationship affinity to teach
+const TEACHING_SESSION_TICKS: int = 72                ## 3 game-days per learning cycle
+const TEACHING_ABANDON_TICKS: int = 480               ## 20 days without progress → abandon
+
+## Cross-settlement propagation [Diamond 1997, Granovetter 1973, Boyd & Richerson 2005]
+const CROSS_PROP_TRADE_BASE: float = 0.05             ## Base chance per trade interaction
+const CROSS_PROP_MIGRATION_BASE: float = 0.8          ## Migrant brings knowledge (high)
+const CROSS_PROP_WAR_CAPTURE_BASE: float = 0.3        ## Captured artisan chance
+const CROSS_PROP_DIPLOMACY_BASE: float = 0.1          ## Diplomatic exchange chance
+const CROSS_PROP_LANGUAGE_THRESHOLD: float = 0.6      ## language_divergence above this → severe penalty
+const CROSS_PROP_LANGUAGE_BLOCK: float = 0.9          ## Above this → propagation impossible without translator
+
+## Adoption curve thresholds [Rogers 2003 Diffusion of Innovations]
+const ADOPTION_INNOVATOR_PCT: float = 0.025           ## 2.5% — already covered by discoverer
+const ADOPTION_EARLY_ADOPTER_PCT: float = 0.16        ## 16% cumulative
+const ADOPTION_EARLY_MAJORITY_PCT: float = 0.50       ## 50% cumulative
+const ADOPTION_LATE_MAJORITY_PCT: float = 0.84        ## 84% cumulative
+
+## Personality thresholds for adoption willingness
+const ADOPTION_OPENNESS_WEIGHT: float = 0.35
+const ADOPTION_CURIOSITY_WEIGHT: float = 0.25
+const ADOPTION_CONSCIENTIOUSNESS_WEIGHT: float = 0.20
+const ADOPTION_KNOWLEDGE_VALUE_WEIGHT: float = 0.20
+
+## ── Settlement Detail Panel [C-1h] ───────────────────────────────────────────
+## Auto-refresh interval while panel is open (in simulation ticks)
+const SETTLEMENT_PANEL_REFRESH_TICKS: int = 60
+## Max practitioners shown before "and N more..." truncation
+const SETTLEMENT_PANEL_MAX_PRACTITIONERS: int = 20
+## Age bracket definitions for population tab
+const SETTLEMENT_PANEL_AGE_BRACKETS: Array = [
+	{"label_key": "UI_AGE_CHILD", "min": 0, "max": 11},
+	{"label_key": "UI_AGE_TEEN", "min": 12, "max": 17},
+	{"label_key": "UI_AGE_YOUNG_ADULT", "min": 18, "max": 29},
+	{"label_key": "UI_AGE_MIDDLE", "min": 30, "max": 54},
+	{"label_key": "UI_AGE_ELDER", "min": 55, "max": 999},
+]
+
+## ── World Statistics Panel [C-1i] ────────────────────────────────────────────
+## Auto-refresh interval while panel is open (in simulation ticks)
+const STATS_PANEL_REFRESH_INTERVAL: int = 120
+## Resource supply thresholds (days of supply at current consumption)
+const STATS_RESOURCE_DANGER_DAYS: float = 7.0
+const STATS_RESOURCE_LOW_DAYS: float = 30.0
+const STATS_RESOURCE_ABUNDANT_DAYS: float = 90.0
+## Recent events display limits
+const STATS_RECENT_EVENTS_MAX: int = 20
+const STATS_RECENT_PERIOD_TICKS: int = 365
 
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death

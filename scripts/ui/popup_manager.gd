@@ -9,6 +9,7 @@ var _entity_panel: Control
 var _building_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
+var _settlement_panel: Control
 
 
 ## Stores the simulation engine reference for pause/resume control.
@@ -71,6 +72,15 @@ func add_chronicle_panel(panel: Control) -> void:
 ## Registers the entity list panel and adds it as a child of the dim background.
 func add_list_panel(panel: Control) -> void:
 	_list_panel = panel
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
+	panel.visible = false
+	_dim_bg.add_child(panel)
+
+
+## Registers the settlement detail panel and adds it as a child of the dim background.
+func add_settlement_panel(panel: Control) -> void:
+	_settlement_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.clip_contents = true
 	panel.visible = false
@@ -168,6 +178,23 @@ func open_chronicle() -> void:
 	_center_panel(_chronicle_panel, 0.6, 0.8)
 
 
+## Opens the settlement detail panel for the given settlement, pausing the simulation.
+func open_settlement(settlement_id: int) -> void:
+	if _settlement_panel == null:
+		return
+	if _settlement_panel.visible:
+		close_all()
+		return
+	if not _dim_bg.visible:
+		_pause_sim()
+	_hide_all_panels()
+	_settlement_panel.set_settlement_id(settlement_id)
+	_settlement_panel.visible = true
+	_dim_bg.visible = true
+	_panel_ratios[_settlement_panel] = Vector2(0.80, 0.85)
+	_center_panel(_settlement_panel, 0.80, 0.85)
+
+
 ## Opens the entity list panel, pausing the simulation and dimming the background.
 func open_list() -> void:
 	if _list_panel == null:
@@ -196,11 +223,13 @@ func is_any_visible() -> bool:
 	return _dim_bg.visible
 
 
-## Returns true if the entity or building detail panel is currently visible.
+## Returns true if the entity, building, or settlement detail panel is currently visible.
 func is_detail_visible() -> bool:
 	if _entity_panel != null and _entity_panel.visible:
 		return true
 	if _building_panel != null and _building_panel.visible:
+		return true
+	if _settlement_panel != null and _settlement_panel.visible:
 		return true
 	return false
 
@@ -220,6 +249,8 @@ func _process(_delta: float) -> void:
 		any = true
 	if _list_panel != null and _list_panel.visible:
 		any = true
+	if _settlement_panel != null and _settlement_panel.visible:
+		any = true
 	if not any:
 		close_all()
 
@@ -235,6 +266,8 @@ func _hide_all_panels() -> void:
 		_chronicle_panel.visible = false
 	if _list_panel != null:
 		_list_panel.visible = false
+	if _settlement_panel != null:
+		_settlement_panel.visible = false
 
 
 func _pause_sim() -> void:
@@ -253,7 +286,7 @@ func _resume_sim() -> void:
 
 func _on_viewport_resized() -> void:
 	# Re-center any visible panel on viewport resize
-	for panel in [_stats_panel, _entity_panel, _building_panel, _chronicle_panel, _list_panel]:
+	for panel in [_stats_panel, _entity_panel, _building_panel, _chronicle_panel, _list_panel, _settlement_panel]:
 		if panel != null and panel.visible and _panel_ratios.has(panel):
 			var ratios: Vector2 = _panel_ratios[panel]
 			_center_panel(panel, ratios.x, ratios.y)

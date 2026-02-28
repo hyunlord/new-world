@@ -4,25 +4,95 @@
     "description_key": "TECH_ANIMISM_DESC",
     "era": "stone_age",
     "tier": 0,
-    "categories": ["social_organization", "art_culture"],
-    "tags": ["religion", "spirits", "nature", "ritual", "belief"],
+    "categories": [
+        "social_organization",
+        "art_culture"
+    ],
+    "tags": [
+        "religion",
+        "spirits",
+        "nature",
+        "ritual",
+        "belief"
+    ],
     "knowledge_type": "universal_intuitive",
-    "prereq_logic": {"all_of": [], "any_of": [], "soft": ["TECH_ORAL_TRADITION"]},
-    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "prereq_logic": {
+        "all_of": [],
+        "any_of": [],
+        "soft": [
+            "TECH_ORAL_TRADITION"
+        ]
+    },
+    "requirements": {
+        "biomes_nearby": [],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
     "discovery": {
-        "base_chance_per_year": 0.25,
+        "base_chance_per_year": 0.75,
         "required_skills": {},
         "required_population": 4,
         "required_cooperation": 0,
-        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
         "eureka": false,
         "eureka_conditions": {}
     },
-    "maintenance": {"min_practitioners": 1, "regression_grace_years": 30, "carrier_roles": ["shaman"], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
-    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
-    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
-    "unlocks": {"skills": ["SKILL_RITUAL"], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
-    "effects": {"social_cohesion": 0.2, "fear_reduction": 0.15, "meaning_need_bonus": 0.2},
+    "maintenance": {
+        "min_practitioners": 1,
+        "regression_grace_years": 30,
+        "carrier_roles": [
+            "shaman"
+        ],
+        "requires_active_use": false,
+        "active_use_threshold": 0.0,
+        "artifact_carriers": [],
+        "institution_tags_help": []
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration"
+        ],
+        "adoption_contact_years": 0,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [
+            "SKILL_RITUAL"
+        ],
+        "buildings": [],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "social_cohesion": 0.2,
+        "fear_reduction": 0.15,
+        "meaning_need_bonus": 0.2
+    },
     "regression_fallback": "",
-    "ui": {"group": "Social Organization", "subgroup": "Religion", "icon": "icon_animism", "tree_x": 1, "tree_y": 13}
+    "ui": {
+        "group": "Social Organization",
+        "subgroup": "Religion",
+        "icon": "icon_animism",
+        "tree_x": 1,
+        "tree_y": 13
+    }
 }

@@ -22,6 +22,10 @@ static func create_discovered(tech_id: String, tick: int, discoverer_id: int = -
 		"rediscovered_count": 0,
 		"acquisition_method": "invented",
 		"source_settlement_id": -1,
+		"propagation_rate": 0.0,
+		"adoption_curve_phase": "innovator",
+		"total_ever_learned": 1,
+		"cross_settlement_sources": [],
 	}
 
 
@@ -41,6 +45,10 @@ static func create_migrated(tech_id: String) -> Dictionary:
 		"rediscovered_count": 0,
 		"acquisition_method": "invented",
 		"source_settlement_id": -1,
+		"propagation_rate": 0.0,
+		"adoption_curve_phase": "laggard",
+		"total_ever_learned": 99,
+		"cross_settlement_sources": [],
 	}
 
 
@@ -74,4 +82,12 @@ static func from_save_dict(data: Dictionary) -> Dictionary:
 		result["acquisition_method"] = "invented"
 	if not result.has("source_settlement_id"):
 		result["source_settlement_id"] = -1
+	if not result.has("propagation_rate"):
+		result["propagation_rate"] = 0.0
+	if not result.has("adoption_curve_phase"):
+		result["adoption_curve_phase"] = "innovator"
+	if not result.has("total_ever_learned"):
+		result["total_ever_learned"] = 1
+	if not result.has("cross_settlement_sources"):
+		result["cross_settlement_sources"] = []
 	return result

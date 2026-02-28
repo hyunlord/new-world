@@ -154,6 +154,18 @@ var skill_levels: Dictionary = {}
 ## Read by BehaviorSystem._evaluate_actions() to gate score computation.
 var unlocked_actions: Dictionary = {}
 
+## ── Teaching State [Lave & Wenger 1991, Vygotsky 1978] ──────────────────────
+## Who this agent is currently teaching (-1 = nobody)
+var teaching_target_id: int = -1
+## Who this agent is learning from (-1 = nobody)
+var learning_from_id: int = -1
+## Derived teaching ability: Interpersonal×0.3 + Linguistic×0.2 + patience×0.2 + mastery×0.3
+var teaching_skill: float = 0.0
+## Progress toward learning each skill: {tech_id: {skill_id: float 0.0~1.0}}
+var knowledge_received: Dictionary = {}
+## Permanent record: [{teacher_id, skill_id, ticks_learned, final_level}]
+var apprenticeship_history: Array = []
+
 ## ── Layer 1.5: Appearance (Eagly 1991, Stulp 2015) ──────────────────────────
 ## float 0.0~1.0, mean=0.5. Heritability: attractiveness h²=0.80, height h²=0.85.
 var attractiveness: float = 0.5
@@ -436,6 +448,11 @@ func to_dict() -> Dictionary:
 		"blood_type":     blood_type,
 		"blood_genotype": blood_genotype,
 		"zodiac_sign":    zodiac_sign,
+		"teaching_target_id": teaching_target_id,
+		"learning_from_id": learning_from_id,
+		"teaching_skill": teaching_skill,
+		"knowledge_received": knowledge_received.duplicate(true),
+		"apprenticeship_history": apprenticeship_history.duplicate(true),
 	}
 
 
@@ -612,6 +629,11 @@ static func from_dict(data: Dictionary) -> RefCounted:
 	e.blood_type     = data.get("blood_type",     "O")
 	e.blood_genotype = data.get("blood_genotype", "OO")
 	e.zodiac_sign    = data.get("zodiac_sign",    "")
+	e.teaching_target_id = data.get("teaching_target_id", -1)
+	e.learning_from_id = data.get("learning_from_id", -1)
+	e.teaching_skill = float(data.get("teaching_skill", 0.0))
+	e.knowledge_received = data.get("knowledge_received", {}).duplicate(true)
+	e.apprenticeship_history = data.get("apprenticeship_history", []).duplicate(true)
 	return e
 
 

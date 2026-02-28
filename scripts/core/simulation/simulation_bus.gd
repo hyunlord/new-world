@@ -117,6 +117,56 @@ signal tech_lost(settlement_id: int, tech_id: String, cultural_memory: float, ti
 @warning_ignore("unused_signal")
 signal tech_rediscovered(settlement_id: int, tech_id: String, rediscovered_count: int, tick: int)
 
+## [Lave & Wenger 1991, Vygotsky 1978] Teaching / tech propagation
+@warning_ignore("unused_signal")
+signal teaching_session_started(teacher_id: int, student_id: int, tech_id: String, skill_id: String)
+@warning_ignore("unused_signal")
+signal teaching_session_completed(teacher_id: int, student_id: int, tech_id: String, skill_id: String, new_level: int)
+@warning_ignore("unused_signal")
+signal teaching_session_abandoned(teacher_id: int, student_id: int, tech_id: String, reason: String)
+@warning_ignore("unused_signal")
+signal apprenticeship_formed(teacher_id: int, student_id: int, tech_id: String)
+
+## [Rogers 2003] Within-settlement propagation milestones
+@warning_ignore("unused_signal")
+signal tech_adoption_phase_changed(settlement_id: int, tech_id: String, old_phase: String, new_phase: String)
+@warning_ignore("unused_signal")
+signal tech_reached_stable(settlement_id: int, tech_id: String, practitioner_count: int)
+
+## [White 1959, Diamond 1997] Tech Utilization — gameplay effects of active technologies
+@warning_ignore("unused_signal")
+signal tech_modifier_pool_updated(settlement_id: int)
+@warning_ignore("unused_signal")
+signal building_type_unlocked(settlement_id: int, building_id: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal item_type_unlocked(settlement_id: int, item_id: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal action_type_unlocked(settlement_id: int, action_id: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal skill_type_unlocked(settlement_id: int, skill_id: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal job_type_unlocked(settlement_id: int, job_id: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal capability_gained(settlement_id: int, capability: String, tech_id: String)
+@warning_ignore("unused_signal")
+signal capability_lost(settlement_id: int, capability: String)
+@warning_ignore("unused_signal")
+signal era_changed(settlement_id: int, old_era: String, new_era: String)
+
+## [C-1h] Settlement detail panel open/close
+@warning_ignore("unused_signal")
+signal settlement_panel_requested(settlement_id: int)
+@warning_ignore("unused_signal")
+signal settlement_panel_closed()
+
+## [Diamond 1997, Boyd & Richerson 2005] Cross-settlement propagation
+@warning_ignore("unused_signal")
+signal tech_spread_attempt(source_settlement: int, target_settlement: int, tech_id: String, channel: String, success: bool)
+@warning_ignore("unused_signal")
+signal tech_imported(settlement_id: int, tech_id: String, source_settlement: int, carrier_id: int, channel: String)
+@warning_ignore("unused_signal")
+signal tech_spread_blocked(source_settlement: int, target_settlement: int, tech_id: String, reason: String)
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {
