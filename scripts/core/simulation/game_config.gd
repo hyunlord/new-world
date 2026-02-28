@@ -1203,6 +1203,17 @@ const SETTLEMENT_PANEL_AGE_BRACKETS: Array = [
 	{"label_key": "UI_AGE_ELDER", "min": 55, "max": 999},
 ]
 
+## ── World Statistics Panel [C-1i] ────────────────────────────────────────────
+## Auto-refresh interval while panel is open (in simulation ticks)
+const STATS_PANEL_REFRESH_INTERVAL: int = 120
+## Resource supply thresholds (days of supply at current consumption)
+const STATS_RESOURCE_DANGER_DAYS: float = 7.0
+const STATS_RESOURCE_LOW_DAYS: float = 30.0
+const STATS_RESOURCE_ABUNDANT_DAYS: float = 90.0
+## Recent events display limits
+const STATS_RECENT_EVENTS_MAX: int = 20
+const STATS_RECENT_PERIOD_TICKS: int = 365
+
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death
 const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death

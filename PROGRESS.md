@@ -66,3 +66,60 @@ But with annual checks, even 0.99 base means minimum 4380 ticks (~2.4 min at 3x)
 Justification: Prompt spec was based on incorrect assumptions about the discovery system
 (per-tick vs per-year, field names, schema). All changes are shared interface modifications
 or batch corrections requiring probability conversion math. Each <50 lines, tightly coupled.
+
+---
+
+# C-1h: Settlement Detail Panel — CK3-Style Fullscreen Overlay
+
+## Classification Table
+
+| Ticket | Description | 🟢/🔴 | Tool | Status |
+|--------|-------------|--------|------|--------|
+| C-1h-T6 | SimulationBus signals (settlement_panel_requested/closed) | 🔴 DIRECT | — | ✅ Done |
+| C-1h-T8 | Localization: en/ko keys for settlement panel | 🟢 DISPATCH | Task agent | 🔄 In Progress |
+| C-1h-T9 | GameConfig: settlement panel constants | 🟢 DISPATCH | Task agent | 🔄 In Progress |
+| C-1h-T1 | settlement_detail_panel.gd — Main panel | 🟢 DISPATCH | Task agent | 🔄 In Progress |
+| C-1h-T2 | settlement_overview_tab.gd — Overview tab | 🟢 DISPATCH | Task agent | ⏳ Pending |
+| C-1h-T3 | settlement_tech_tab.gd — Tech tab | 🟢 DISPATCH | Task agent | ⏳ Pending |
+| C-1h-T4 | settlement_population_tab.gd — Population tab | 🟢 DISPATCH | Task agent | ⏳ Pending |
+| C-1h-T5 | settlement_economy_tab.gd — Economy tab | 🟢 DISPATCH | Task agent | ⏳ Pending |
+| C-1h-T7 | hud.gd + popup_manager.gd integration | 🔴 DIRECT | — | ⏳ Pending |
+
+**Dispatch ratio: 7/9 = 78%** ✅
+
+Note: ask_codex MCP unavailable this session. Using Task agents for DISPATCH tickets.
+
+---
+
+# C-1i: World Statistics Panel Redesign — Comprehensive Dashboard
+
+## Classification Table
+
+| Ticket | Description | 🟢/🔴 | Tool | Status |
+|--------|-------------|--------|------|--------|
+| C-1i-T7 | GameConfig: 6 stats panel constants | 🔴 DIRECT | — | ✅ Done |
+| C-1i-T8 | Localization: ~47 en/ko keys | 🔴 DIRECT | — | ✅ Done |
+| C-1i-T1 | world_stats_panel.gd — Core panel (tabs, refresh, scroll, cache) | 🔴 DIRECT | — | ✅ Done |
+| C-1i-T2 | world_stats_population_tab.gd — Population tab | 🟢 DISPATCH | Task agent | ✅ Done |
+| C-1i-T3 | world_stats_tech_tab.gd — Technology tab | 🟢 DISPATCH | Task agent | ✅ Done |
+| C-1i-T4 | world_stats_resources_tab.gd — Resources tab | 🟢 DISPATCH | Task agent | ✅ Done |
+| C-1i-T5 | world_stats_social_tab.gd — Social tab | 🟢 DISPATCH | Task agent | ✅ Done |
+| C-1i-T6 | hud.gd — Replace StatsDetailPanel preload + settlement click-through | 🔴 DIRECT | — | ✅ Done |
+
+**Dispatch ratio: 4/8 = 50%**
+
+Note: ask_codex MCP unavailable. T1/T6/T7/T8 are DIRECT (shared interfaces, integration wiring, localization).
+T2-T5 dispatched to parallel Task agents.
+
+## Post-Dispatch Fixes
+- Fixed indentation bug in social tab (HEXACO personality loop)
+- Added 2 missing localization keys: UI_DAYS_SUPPLY, UI_NO_DATA (en + ko)
+- Renamed stats_detail_panel.gd → stats_detail_panel_legacy.gd
+
+## Verification
+- Gate: **PASS** (Godot headless import + quit, no script errors)
+- Localization JSON: OK (valid JSON, no hardcoded strings)
+- All 4 tabs follow RefCounted + draw_content() pattern
+- Preload paths verified: 4 tab files match world_stats_panel.gd preloads
+- hud.gd preload updated to world_stats_panel.gd
+- Settlement click-through handler added to hud.gd _on_ui_notification()

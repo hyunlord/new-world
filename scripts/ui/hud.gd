@@ -3,7 +3,7 @@ extends CanvasLayer
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
-const StatsDetailPanelClass = preload("res://scripts/ui/panels/stats_detail_panel.gd")
+const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
 const EntityDetailPanelClass = preload("res://scripts/ui/panels/entity_detail_panel.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
@@ -1163,6 +1163,10 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		toggle_chronicle()
 	elif msg == "open_list":
 		toggle_list()
+	elif msg.begins_with("open_settlement_"):
+		var sid_str: String = msg.replace("open_settlement_", "")
+		if sid_str.is_valid_int():
+			open_settlement_detail(int(sid_str))
 	elif msg.begins_with("open_entity_"):
 		var id_str: String = msg.replace("open_entity_", "")
 		if id_str.is_valid_int():
