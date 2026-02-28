@@ -11,7 +11,7 @@
     "requirements": {"biomes_nearby": [], "resources_nearby": ["game"], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
     "discovery": {
         "base_chance_per_year": 0.20,
-        "required_skills": {"SKILL_HUNTING": 20},
+        "required_skills": {"SKILL_HUNTING": 3},
         "required_population": 5,
         "required_cooperation": 0,
         "modifiers": {"knowledge_value": 0.10, "openness": 0.15, "logical_intel": 0.05, "curiosity": 0.0, "naturalistic_intel": 0.0},

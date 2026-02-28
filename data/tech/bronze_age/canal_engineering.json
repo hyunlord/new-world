@@ -1,0 +1,83 @@
+{
+    "id": "TECH_CANAL_ENGINEERING",
+    "display_key": "TECH_CANAL_ENGINEERING",
+    "description_key": "TECH_CANAL_ENGINEERING_DESC",
+    "era": "bronze_age",
+    "tier": 3,
+    "categories": ["construction"],
+    "tags": ["canal", "engineering", "water", "infrastructure", "major"],
+    "knowledge_type": "infrastructure_networked",
+    "prereq_logic": {
+        "all_of": ["TECH_CANAL_IRRIGATION"],
+        "any_of": [],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": ["shallow_water"],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
+    "discovery": {
+        "base_chance_per_year": 0.015,
+        "required_skills": {
+            "SKILL_IRRIGATION": 5,
+            "SKILL_CONSTRUCTION": 5
+        },
+        "required_population": 100,
+        "required_cooperation": 0,
+        "modifiers": {
+            "knowledge_value": 0.10,
+            "openness": 0.10,
+            "logical_intel": 0.10,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {
+        "min_practitioners": 5,
+        "regression_grace_years": 15,
+        "carrier_roles": [],
+        "requires_active_use": true,
+        "active_use_threshold": 0.3,
+        "artifact_carriers": [],
+        "institution_tags_help": ["irrigation_bureau"]
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": ["trade", "migration"],
+        "adoption_contact_years": 5,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [],
+        "buildings": ["major_canal"],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "water_management": 0.5,
+        "trade_transport": 0.3,
+        "flood_control": 0.4
+    },
+    "regression_fallback": "",
+    "ui": {
+        "group": "Construction",
+        "subgroup": "Infrastructure",
+        "icon": "icon_canal_eng",
+        "tree_x": 7,
+        "tree_y": 3
+    }
+}

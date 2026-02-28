@@ -11,7 +11,7 @@
     "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
     "discovery": {
         "base_chance_per_year": 0.30,
-        "required_skills": {"SKILL_FORAGING": 10},
+        "required_skills": {"SKILL_FORAGING": 3},
         "required_population": 3,
         "required_cooperation": 0,
         "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.15, "curiosity": 0.0, "naturalistic_intel": 0.0},

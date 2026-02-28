@@ -35,3 +35,5 @@ desktop.ini
 tools/notion_add_qa.py
 tools/notion_migrate_qa.py
 .omc/
+
+addons/godot_test_mcp/

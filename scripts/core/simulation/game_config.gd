@@ -1095,7 +1095,10 @@ const TECH_STABLE_THRESHOLD: float = 1.5
 ## Memory threshold below which forgotten_recent -> forgotten_long
 const TECH_LONG_FORGOTTEN_MEMORY: float = 0.3
 ## Era progression: era changes to "bronze_age" when these techs are all discovered
-const TECH_ERA_BRONZE_AGE_REQUIRES: Array = []  ## populated in C-1b
+const TECH_ERA_BRONZE_AGE_REQUIRES: Array = [
+	"TECH_TRIBAL_ORGANIZATION", "TECH_POTTERY",
+	"TECH_AGRICULTURE", "TECH_NATIVE_COPPER_SMELTING",
+]
 ## Era directories for tech JSON loading (V2 replaces V1 TECH_DATA_DIRS)
 const TECH_DATA_DIRS_V2: Array = [
 	"res://data/tech/stone_age/",

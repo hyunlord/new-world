@@ -1,0 +1,28 @@
+{
+    "id": "TECH_MAP_MAKING",
+    "display_key": "TECH_MAP_MAKING",
+    "description_key": "TECH_MAP_MAKING_DESC",
+    "era": "bronze_age",
+    "tier": 2,
+    "categories": ["knowledge_science"],
+    "tags": ["map", "cartography", "navigation", "territory", "geography"],
+    "knowledge_type": "elite_scholarly",
+    "prereq_logic": {"all_of": ["TECH_TALLY_COUNTING"], "any_of": [], "soft": ["TECH_STAR_MAP"]},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.03,
+        "required_skills": {},
+        "required_population": 40,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 2, "regression_grace_years": 20, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 5, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"navigation_accuracy": 0.25, "trade_route_knowledge": 0.2, "territory_awareness": 0.3},
+    "regression_fallback": "",
+    "ui": {"group": "Knowledge Science", "subgroup": "Geography", "icon": "icon_map", "tree_x": 7, "tree_y": 10}
+}

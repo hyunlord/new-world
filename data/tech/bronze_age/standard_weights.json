@@ -1,0 +1,28 @@
+{
+    "id": "TECH_STANDARD_WEIGHTS",
+    "display_key": "TECH_STANDARD_WEIGHTS",
+    "description_key": "TECH_STANDARD_WEIGHTS_DESC",
+    "era": "bronze_age",
+    "tier": 2,
+    "categories": ["trade_economy"],
+    "tags": ["weights", "measures", "standard", "trade", "fairness"],
+    "knowledge_type": "common_practice",
+    "prereq_logic": {"all_of": ["TECH_BARTER_TRADE", "TECH_TALLY_COUNTING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.04,
+        "required_skills": {},
+        "required_population": 40,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 3, "regression_grace_years": 20, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 5, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"trade_efficiency": 0.3, "dispute_reduction": 0.2},
+    "regression_fallback": "",
+    "ui": {"group": "Trade Economy", "subgroup": "Standards", "icon": "icon_weights", "tree_x": 6, "tree_y": 15}
+}

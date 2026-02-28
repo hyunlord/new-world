@@ -11,7 +11,7 @@
     "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
     "discovery": {
         "base_chance_per_year": 0.25,
-        "required_skills": {"SKILL_WOODCUTTING": 15},
+        "required_skills": {"SKILL_WOODCUTTING": 3},
         "required_population": 4,
         "required_cooperation": 0,
         "modifiers": {"knowledge_value": 0.10, "openness": 0.05, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
