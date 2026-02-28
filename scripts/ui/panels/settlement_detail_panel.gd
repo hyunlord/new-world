@@ -359,9 +359,10 @@ func _update_scroll_from_mouse(mouse_y: float) -> void:
 ## Returns a color for the given era string.
 func _era_color(era: String) -> Color:
 	match era:
-		"stone": return Color(0.75, 0.7, 0.6)
-		"bronze": return Color(0.9, 0.65, 0.2)
-		"iron": return Color(0.6, 0.65, 0.75)
+		"stone_age": return Color(0.75, 0.7, 0.6)
+		"tribal": return Color(0.6, 0.8, 0.3)
+		"bronze_age": return Color(0.9, 0.65, 0.2)
+		"iron_age": return Color(0.6, 0.65, 0.75)
 		"medieval": return Color(0.4, 0.7, 0.5)
 		"renaissance": return Color(0.7, 0.5, 0.8)
 		_: return Color(0.8, 0.8, 0.8)

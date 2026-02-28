@@ -193,7 +193,8 @@ func _draw_known_tech(canvas: Control, font: Font, cx: float, cy: float, width: 
 			var effect_val = effects[effect_key]
 			var val_f: float = float(effect_val)
 			var sign_str: String = "+" if val_f >= 0.0 else ""
-			var effect_line: String = "  " + effect_key + ": " + sign_str + ("%.2f" % val_f)
+			var effect_label: String = Locale.ltr("EFFECT_" + effect_key.to_upper())
+			var effect_line: String = "  " + effect_label + ": " + sign_str + ("%.2f" % val_f)
 			var eff_color: Color = POSITIVE_COLOR if val_f >= 0.0 else NEGATIVE_COLOR
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.5, cy + 12.0), effect_line,
 					HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.5,
@@ -270,8 +271,8 @@ func _draw_practitioner_list(canvas: Control, font: Font, cx: float, cy: float, 
 		var entity = prac.entity
 		var lvl: int = prac.level
 		var is_teaching: bool = entity.teaching_target_id > -1
-		var teach_suffix: String = " [T]" if is_teaching else ""
-		var prac_line: String = "· " + entity.entity_name + " (Lv." + str(lvl) + ")" + teach_suffix
+		var teach_suffix: String = (" " + Locale.ltr("UI_TEACHING_MARKER")) if is_teaching else ""
+		var prac_line: String = "· " + entity.entity_name + " (" + Locale.ltr("UI_LEVEL_ABBREV") + str(lvl) + ")" + teach_suffix
 		var prac_rect := Rect2(cx + INDENT * 3.0, cy, width - INDENT * 3.0, LINE_HEIGHT)
 		var prac_color: Color = Color(0.6, 0.9, 0.6) if is_teaching else NEUTRAL_COLOR
 		canvas.draw_string(font, Vector2(cx + INDENT * 3.0, cy + 12.0), prac_line,

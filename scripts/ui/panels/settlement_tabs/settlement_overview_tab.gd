@@ -112,13 +112,14 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			var modifiers = tech_def.get("modifiers", [])
 			for mod in modifiers:
 				var target_name: String = mod.get("target", "")
+				var target_label: String = Locale.ltr("MOD_TARGET_" + target_name.to_upper())
 				var mod_value = mod.get("value", 1.0)
 				var mod_type: String = mod.get("type", "multiplier")
 				var mod_text: String
 				if mod_type == "multiplier":
-					mod_text = target_name + " ×" + "%.2f" % float(mod_value)
+					mod_text = target_label + " ×" + "%.2f" % float(mod_value)
 				else:
-					mod_text = target_name + " +" + "%.2f" % float(mod_value)
+					mod_text = target_label + " +" + "%.2f" % float(mod_value)
 				canvas.draw_string(font, Vector2(cx + 8.0, cy), mod_text, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, POSITIVE_COLOR)
 				cy += LINE_HEIGHT
 				any_modifier_drawn = true
