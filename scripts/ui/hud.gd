@@ -31,6 +31,7 @@ var _wood_label: Label
 var _stone_label: Label
 var _building_label: Label
 var _fps_label: Label
+var _era_label: Label
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -153,6 +154,7 @@ func _ready() -> void:
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
 	_connect_signals()
+	_update_era_label()
 	call_deferred("_build_minimap_and_stats")
 
 
@@ -220,6 +222,9 @@ func _connect_signals() -> void:
 	SimulationBus.ui_notification.connect(_on_ui_notification)
 	SimulationBus.follow_entity_requested.connect(_on_follow_entity)
 	SimulationBus.follow_entity_stopped.connect(_on_follow_stopped)
+	SimulationBus.tech_state_changed.connect(_on_tech_state_changed)
+	SimulationBus.tech_regression_started.connect(_on_tech_regression_started)
+	SimulationBus.tech_lost.connect(_on_tech_lost)
 
 
 func _build_top_bar() -> void:
@@ -240,6 +245,7 @@ func _build_top_bar() -> void:
 	_speed_label = _make_label("1x", "hud")
 	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
 	_pop_label = _make_label("Pop: 0", "hud")
+	_era_label = _make_label("", "hud", Color(1.0, 0.85, 0.4))
 	_food_label = _make_label("F:0", "hud", Color(0.4, 0.8, 0.2))
 	_wood_label = _make_label("W:0", "hud", Color(0.6, 0.4, 0.2))
 	_stone_label = _make_label("S:0", "hud", Color(0.7, 0.7, 0.7))
@@ -250,6 +256,7 @@ func _build_top_bar() -> void:
 	hbox.add_child(_speed_label)
 	hbox.add_child(_time_label)
 	hbox.add_child(_pop_label)
+	hbox.add_child(_era_label)
 	hbox.add_child(_food_label)
 	hbox.add_child(_wood_label)
 	hbox.add_child(_stone_label)
@@ -919,6 +926,81 @@ func _on_simulation_event(event: Dictionary) -> void:
 				Locale.trf("UI_NOTIF_LEADER_LOST_FMT", {"sid": sid2}),
 				Color(0.5, 0.5, 0.5)
 			)
+		"tech_discovered":
+			var td_tech: String = event.get("tech_id", "")
+			var td_disc_id: int = event.get("discoverer_id", -1)
+			var td_name: String = ""
+			if td_disc_id >= 0 and _entity_manager != null:
+				var td_e: RefCounted = _entity_manager.get_entity(td_disc_id)
+				if td_e != null:
+					td_name = td_e.entity_name
+			var td_display: String = Locale.ltr(td_tech)
+			_add_notification(
+				Locale.trf("UI_NOTIF_TECH_DISCOVERED_FMT", {"name": td_name, "tech": td_display}),
+				Color(1.0, 0.85, 0.2))
+		"era_advanced":
+			var ea_era: String = event.get("new_era", "")
+			var ea_display: String = Locale.ltr("ERA_" + ea_era.to_upper())
+			_add_notification(
+				Locale.trf("UI_NOTIF_ERA_ADVANCED_FMT", {"era": ea_display}),
+				Color(1.0, 0.9, 0.5))
+			_update_era_label()
+		"tech_atrophy_warning":
+			var ta_tech: String = Locale.ltr(event.get("tech_id", ""))
+			var ta_curr: int = event.get("practitioners", 0)
+			var ta_req: int = event.get("min_required", 0)
+			_add_notification(
+				Locale.trf("UI_NOTIF_TECH_ATROPHY_FMT", {
+					"tech": ta_tech, "current": str(ta_curr), "required": str(ta_req)}),
+				Color(0.8, 0.4, 0.1))
+		"tech_fallback":
+			var tf_lost: String = Locale.ltr(event.get("lost_tech", ""))
+			var tf_fb: String = Locale.ltr(event.get("fallback_tech", ""))
+			_add_notification(
+				Locale.trf("UI_NOTIF_TECH_FALLBACK_FMT", {"lost": tf_lost, "fallback": tf_fb}),
+				Color(0.7, 0.4, 0.1))
+
+
+func _on_tech_state_changed(_settlement_id: int, tech_id: String,
+		_old_state: String, new_state: String, _tick: int) -> void:
+	if new_state == "known_stable":
+		var ts_display: String = Locale.ltr(tech_id)
+		_add_notification(
+			Locale.trf("UI_NOTIF_TECH_STABILIZED_FMT", {"tech": ts_display}),
+			Color(0.3, 0.8, 0.3))
+
+
+func _on_tech_regression_started(_settlement_id: int, tech_id: String,
+		_atrophy_years: int, _grace_years: int, _tick: int) -> void:
+	var tr_display: String = Locale.ltr(tech_id)
+	_add_notification(
+		Locale.trf("UI_NOTIF_TECH_REGRESSION_FMT", {"tech": tr_display}),
+		Color(0.9, 0.5, 0.1))
+
+
+func _on_tech_lost(_settlement_id: int, tech_id: String,
+		_cultural_memory: float, _tick: int) -> void:
+	var tl_display: String = Locale.ltr(tech_id)
+	_add_notification(
+		Locale.trf("UI_NOTIF_TECH_LOST_FMT", {"tech": tl_display}),
+		Color(0.85, 0.2, 0.2))
+
+
+func _update_era_label() -> void:
+	if _era_label == null:
+		return
+	var era: String = "stone_age"
+	if _settlement_manager != null:
+		var setts: Array = _settlement_manager.get_all_settlements()
+		if not setts.is_empty():
+			era = setts[0].tech_era
+	_era_label.text = "[" + Locale.ltr("ERA_" + era.to_upper()) + "]"
+
+
+## Sets the TechTreeManager reference for tech-related UI sections.
+func set_tech_tree_manager(ttm: RefCounted) -> void:
+	if _stats_detail_panel != null:
+		_stats_detail_panel.set_tech_tree_manager(ttm)
 
 
 func _on_locale_changed(_new_locale: String) -> void:
@@ -952,6 +1034,7 @@ func _refresh_hud_texts() -> void:
 		_safety_name_label.text = Locale.ltr("NEED_SAFETY") + ":"
 	if _social_name_label != null:
 		_social_name_label.text = Locale.ltr("UI_SOCIAL") + ":"
+	_update_era_label()
 
 
 # --- Toggle functions ---

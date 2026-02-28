@@ -1124,6 +1124,69 @@ const TECH_ACTIVE_USE_ATROPHY_REDUCTION: float = 0.3  ## if actively used, atrop
 const TECH_ARTIFACT_GRACE_BONUS: float = 0.2    ## per artifact building → extends grace period multiplier
 const TECH_FORGOTTEN_LONG_DECAY_MULTIPLIER: float = 0.4  ## oral legends fade slowly in FORGOTTEN_LONG state
 
+## ── Tech Utilization [White 1959, Diamond 1997, Durkheim 1893] ─────────────────
+## Modifier stacking caps (prevent runaway values)
+const TECH_MODIFIER_STACK_CAP: float = 10.0            ## Maximum multiplier from stacking
+const TECH_MODIFIER_ADDITIVE_STACK_CAP: float = 500.0  ## Max additive bonus (e.g., population cap)
+const TECH_RECALC_COOLDOWN_TICKS: int = 5              ## Minimum ticks between recalculations
+
+## Modifier target classification — determines how stacking works
+const TECH_MODIFIER_MULTIPLIER_TARGETS: Array = [
+	"food_production", "wood_production", "stone_production", "metal_production",
+	"craft_quality", "craft_speed", "build_speed", "build_quality",
+	"combat_effectiveness", "defense_strength", "weapon_quality", "armor_quality",
+	"trade_efficiency", "storage_capacity", "knowledge_retention", "learning_speed",
+	"disease_resistance", "healing_rate",
+]
+const TECH_MODIFIER_ADDITIVE_TARGETS: Array = [
+	"population_cap", "trade_range", "max_building_tier", "settlement_stability",
+	"lifespan_modifier",
+]
+
+## Era progression thresholds (active known techs per era tier)
+const TECH_ERA_STONE_AGE_COUNT: int = 0      ## Starts here
+const TECH_ERA_TRIBAL_COUNT: int = 5         ## Need 5 tribal-era techs known for era transition
+const TECH_ERA_BRONZE_AGE_COUNT: int = 12    ## Need 12 bronze-era techs known
+
+## Era base modifiers — settlement-wide bonuses from era alone
+const TECH_ERA_MODIFIERS: Dictionary = {
+	"stone_age":  {"population_cap": 20, "trade_range": 0, "max_building_tier": 1},
+	"tribal":     {"population_cap": 100, "trade_range": 5, "max_building_tier": 2},
+	"bronze_age": {"population_cap": 500, "trade_range": 15, "max_building_tier": 3},
+}
+
+## ── Tech Propagation [Lave & Wenger 1991, Vygotsky 1978, Rogers 2003] ────────
+## Within-settlement: teacher-student pair model
+const TEACHING_TICK_INTERVAL: int = 24                ## Check every game-day (24 ticks = 2 days)
+const TEACHING_BASE_EFFECTIVENESS: float = 0.02       ## Base progress per teaching tick
+const TEACHING_SKILL_GAP_MIN: int = 3                 ## Teacher must be ≥3 levels above student
+const TEACHING_SKILL_GAP_OPTIMAL: int = 5             ## Sweet spot for ZPD
+const TEACHING_SKILL_GAP_MAX: int = 10                ## Beyond this, teacher "too advanced" penalty
+const TEACHING_MAX_STUDENTS: int = 3                  ## One teacher, max 3 students simultaneously
+const TEACHING_WILLINGNESS_THRESHOLD: float = 0.3     ## Minimum relationship affinity to teach
+const TEACHING_SESSION_TICKS: int = 72                ## 3 game-days per learning cycle
+const TEACHING_ABANDON_TICKS: int = 480               ## 20 days without progress → abandon
+
+## Cross-settlement propagation [Diamond 1997, Granovetter 1973, Boyd & Richerson 2005]
+const CROSS_PROP_TRADE_BASE: float = 0.05             ## Base chance per trade interaction
+const CROSS_PROP_MIGRATION_BASE: float = 0.8          ## Migrant brings knowledge (high)
+const CROSS_PROP_WAR_CAPTURE_BASE: float = 0.3        ## Captured artisan chance
+const CROSS_PROP_DIPLOMACY_BASE: float = 0.1          ## Diplomatic exchange chance
+const CROSS_PROP_LANGUAGE_THRESHOLD: float = 0.6      ## language_divergence above this → severe penalty
+const CROSS_PROP_LANGUAGE_BLOCK: float = 0.9          ## Above this → propagation impossible without translator
+
+## Adoption curve thresholds [Rogers 2003 Diffusion of Innovations]
+const ADOPTION_INNOVATOR_PCT: float = 0.025           ## 2.5% — already covered by discoverer
+const ADOPTION_EARLY_ADOPTER_PCT: float = 0.16        ## 16% cumulative
+const ADOPTION_EARLY_MAJORITY_PCT: float = 0.50       ## 50% cumulative
+const ADOPTION_LATE_MAJORITY_PCT: float = 0.84        ## 84% cumulative
+
+## Personality thresholds for adoption willingness
+const ADOPTION_OPENNESS_WEIGHT: float = 0.35
+const ADOPTION_CURIOSITY_WEIGHT: float = 0.25
+const ADOPTION_CONSCIENTIOUSNESS_WEIGHT: float = 0.20
+const ADOPTION_KNOWLEDGE_VALUE_WEIGHT: float = 0.20
+
 ## ── Combat System [Keeley 1996, Human Definition v3 §19] ─────────────────────
 ## Body part integrity thresholds for death
 const COMBAT_HEAD_DEATH_THRESHOLD:  float = 0.70  ## head integrity < 0.30 → death

@@ -1310,5 +1310,29 @@
 	"UI_MAP_OVERLAY_TOGGLE": "Resource Overlay",
 	"UI_MAP_SPAWN_TOTAL": "Total: {count} settlers",
 	"UI_LOADING_SPAWNING": "Summoning inhabitants...",
-	"UI_LOADING_COUNT_FMT": "{current} / {total}"
+	"UI_LOADING_COUNT_FMT": "{current} / {total}",
+
+	"UI_NOTIF_TECH_DISCOVERED_FMT": "{name} discovered {tech}!",
+	"UI_NOTIF_TECH_EUREKA_FMT": "Eureka! {name} discovered {tech}!",
+	"UI_NOTIF_TECH_REDISCOVERED_FMT": "{tech} has been rediscovered!",
+	"UI_NOTIF_ERA_ADVANCED_FMT": "A new age begins: {era}!",
+	"UI_NOTIF_TECH_REGRESSION_FMT": "Knowledge of {tech} is fading...",
+	"UI_NOTIF_TECH_LOST_FMT": "{tech} has been lost!",
+	"UI_NOTIF_TECH_STABILIZED_FMT": "{tech} is now well-established.",
+	"UI_NOTIF_TECH_ATROPHY_FMT": "Only {current}/{required} practitioners of {tech} remain!",
+	"UI_NOTIF_TECH_FALLBACK_FMT": "Lost {lost}, reverted to {fallback}.",
+
+	"ERA_STONE_AGE": "Stone Age",
+	"ERA_TRIBAL": "Tribal Age",
+	"ERA_BRONZE_AGE": "Bronze Age",
+
+	"UI_SETTLEMENT_TECHS": "Technologies",
+	"UI_CURRENT_ERA": "Current Era",
+	"UI_TECH_COUNT_FMT": "Known: {known} / Forgotten: {forgotten}",
+	"UI_TECH_KNOWN_HEADER": "Known Technologies",
+	"UI_TECH_FORGOTTEN_HEADER": "Lost Technologies",
+	"UI_TECH_MEMORY": "Memory",
+	"UI_ENTITY_DISCOVERIES": "Discoveries",
+	"UI_TECH_STATE_KNOWN_LOW": "Fragile",
+	"UI_TECH_STATE_KNOWN_STABLE": "Established"
 }

@@ -1313,5 +1313,29 @@
 	"UI_MAP_OVERLAY_TOGGLE": "자원 오버레이",
 	"UI_MAP_SPAWN_TOTAL": "총 {count}명 배치",
 	"UI_LOADING_SPAWNING": "주민을 소환하는 중...",
-	"UI_LOADING_COUNT_FMT": "{current} / {total}"
+	"UI_LOADING_COUNT_FMT": "{current} / {total}",
+
+	"UI_NOTIF_TECH_DISCOVERED_FMT": "{name}이(가) {tech}을(를) 발견했습니다!",
+	"UI_NOTIF_TECH_EUREKA_FMT": "유레카! {name}이(가) {tech}을(를) 발견!",
+	"UI_NOTIF_TECH_REDISCOVERED_FMT": "{tech}이(가) 재발견되었습니다!",
+	"UI_NOTIF_ERA_ADVANCED_FMT": "새 시대의 시작: {era}!",
+	"UI_NOTIF_TECH_REGRESSION_FMT": "{tech} 지식이 사라지고 있습니다...",
+	"UI_NOTIF_TECH_LOST_FMT": "{tech}이(가) 실전되었습니다!",
+	"UI_NOTIF_TECH_STABILIZED_FMT": "{tech} 지식이 확립되었습니다.",
+	"UI_NOTIF_TECH_ATROPHY_FMT": "{tech} 기술자가 {current}/{required}명뿐입니다!",
+	"UI_NOTIF_TECH_FALLBACK_FMT": "{lost}을(를) 잃고 {fallback}(으)로 후퇴.",
+
+	"ERA_STONE_AGE": "석기 시대",
+	"ERA_TRIBAL": "부족 시대",
+	"ERA_BRONZE_AGE": "청동기 시대",
+
+	"UI_SETTLEMENT_TECHS": "기술 현황",
+	"UI_CURRENT_ERA": "현재 시대",
+	"UI_TECH_COUNT_FMT": "보유: {known} / 실전: {forgotten}",
+	"UI_TECH_KNOWN_HEADER": "보유 기술",
+	"UI_TECH_FORGOTTEN_HEADER": "실전된 기술",
+	"UI_TECH_MEMORY": "기억",
+	"UI_ENTITY_DISCOVERIES": "발견한 기술",
+	"UI_TECH_STATE_KNOWN_LOW": "취약",
+	"UI_TECH_STATE_KNOWN_STABLE": "확립"
 }

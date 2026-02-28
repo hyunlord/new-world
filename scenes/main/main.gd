@@ -55,7 +55,9 @@ const NetworkSystemScript = preload("res://scripts/systems/social/network_system
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
 const TechMaintenanceSystemScript = preload("res://scripts/systems/world/tech_maintenance_system.gd")
+const TechPropagationSystemScript = preload("res://scripts/systems/world/tech_propagation_system.gd")
 const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
+const TechUtilizationSystemScript = preload("res://scripts/systems/world/tech_utilization_system.gd")
 const OccupationSystem = preload("res://scripts/systems/social/occupation_system.gd")
 const TitleSystem = preload("res://scripts/systems/social/title_system.gd")
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
@@ -119,7 +121,9 @@ var network_system: RefCounted
 var tech_tree_manager: RefCounted
 var tech_discovery_system: RefCounted
 var tech_maintenance_system: RefCounted
+var tech_propagation_system: RefCounted
 var tension_system: RefCounted
+var tech_utilization_system: RefCounted
 var occupation_system: RefCounted
 var title_system: RefCounted
 var _world_setup: Node = null
@@ -332,8 +336,14 @@ func _ready() -> void:
 	tech_maintenance_system = TechMaintenanceSystemScript.new()
 	tech_maintenance_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
 
+	tech_propagation_system = TechPropagationSystemScript.new()
+	tech_propagation_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
+
 	tension_system = TensionSystemScript.new()
 	tension_system.init(entity_manager, settlement_manager, world_data, ChronicleSystem, sim_engine.rng)
+
+	tech_utilization_system = TechUtilizationSystemScript.new()
+	tech_utilization_system.init(settlement_manager, tech_tree_manager)
 
 	# ── Register all systems (auto-sorted by priority) ─────
 	sim_engine.register_system(stat_sync_system)          # priority 1
@@ -369,7 +379,9 @@ func _ready() -> void:
 	sim_engine.register_system(migration_system)          # priority 60
 	sim_engine.register_system(tech_discovery_system)     # priority 62 (annual tech discovery)
 	sim_engine.register_system(tech_maintenance_system)   # priority 63 (annual tech regression)
+	sim_engine.register_system(tech_propagation_system)  # priority 62 (daily teacher-student propagation)
 	sim_engine.register_system(tension_system)            # priority 64 (bi-annual tension + skirmish)
+	sim_engine.register_system(tech_utilization_system)  # priority 65 (tech utilization modifiers)
 	sim_engine.register_system(stratification_monitor)    # priority 90
 	sim_engine.register_system(stats_recorder)            # priority 90
 	sim_engine.register_system(contagion_system)          # priority 38
@@ -385,6 +397,7 @@ func _ready() -> void:
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
+	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
 	pause_menu = PauseMenuClass.new()
 	pause_menu.set_save_manager(save_manager)
 	pause_menu.save_requested.connect(_save_game_slot)
