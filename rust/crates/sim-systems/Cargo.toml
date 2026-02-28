@@ -1,0 +1,16 @@
+[package]
+name = "sim-systems"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sim-core = { path = "../sim-core" }
+sim-data = { path = "../sim-data" }
+sim-engine = { path = "../sim-engine" }
+hecs = { workspace = true }
+rand = { workspace = true }
+rayon = { workspace = true }
+log = { workspace = true }
+
+[lints]
+workspace = true

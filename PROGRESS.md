@@ -123,3 +123,28 @@ T2-T5 dispatched to parallel Task agents.
 - Preload paths verified: 4 tab files match world_stats_panel.gd preloads
 - hud.gd preload updated to world_stats_panel.gd
 - Settlement click-through handler added to hud.gd _on_ui_notification()
+
+---
+
+# Phase R-0: Rust Simulation Core Infrastructure
+
+## Dispatch Table
+
+| # | Ticket | File/Concern | Mode | Status |
+|---|--------|-------------|------|--------|
+| T1 | Workspace scaffold | Cargo.toml, toolchain, .cargo/config, all crate Cargo.toml stubs | 🔴 DIRECT | ✅ Done |
+| T2 | sim-core enums.rs | All enumerations with serde + strum derives | 🟢 DISPATCH | ⏳ Pending |
+| T3 | sim-core ids + config + calendar | ids.rs, config.rs (from game_config.gd), calendar.rs | 🔴 DIRECT | ⏳ Pending |
+| T4 | sim-core components group 1 | personality, body, intelligence, needs, emotion, values, stress | 🟢 DISPATCH | ⏳ Pending |
+| T5 | sim-core components group 2 | traits, skills, social, memory, economic, behavior, age, position, coping, faith, identity | 🟢 DISPATCH | ⏳ Pending |
+| T6 | sim-core world + settlement + building + lib | world/, settlement.rs, building.rs, lib.rs | 🟢 DISPATCH | ⏳ Pending |
+| T7 | sim-engine all files | events, event_bus, system_trait, engine, command, snapshot, lib | 🔴 DIRECT | ⏳ Pending |
+| T8 | sim-data loaders + tests | All JSON loaders + loading tests | 🟢 DISPATCH | ⏳ Pending |
+| T9 | sim-test binary | Headless test main.rs | 🟢 DISPATCH | ⏳ Pending |
+
+**Dispatch ratio: 5/9 = 56% 🟡**
+
+**DIRECT justification:**
+- T1: Pure directory + Cargo structure, faster directly
+- T3: Must read game_config.gd line-by-line to port 200+ constants exactly; cross-referencing not suitable for blind dispatch
+- T7: Core architecture decision — SimResources struct composition, SimSystem trait API

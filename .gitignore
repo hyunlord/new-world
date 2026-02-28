@@ -37,3 +37,5 @@ tools/notion_migrate_qa.py
 .omc/
 
 addons/godot_test_mcp/
+override.cfg
+.mcp.json

@@ -1,0 +1,41 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/sim-core",
+    "crates/sim-data",
+    "crates/sim-engine",
+    "crates/sim-systems",
+    "crates/sim-bridge",
+    "crates/sim-test",
+]
+
+[workspace.dependencies]
+# ECS
+hecs = "0.10"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Random
+rand = { version = "0.8", features = ["std_rng"] }
+rand_distr = "0.4"
+
+# Performance
+rayon = "1"
+ahash = "0.8"
+smallvec = { version = "1", features = ["serde"] }
+
+# Utilities
+ordered-float = { version = "4", features = ["serde"] }
+log = "0.4"
+env_logger = "0.11"
+thiserror = "2"
+strum = { version = "0.26", features = ["derive"] }
+strum_macros = "0.26"
+
+# GDExtension (sim-bridge only — uncomment in Phase R-3)
+# godot = "0.2"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
