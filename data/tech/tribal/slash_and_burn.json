@@ -1,0 +1,28 @@
+{
+    "id": "TECH_SLASH_AND_BURN",
+    "display_key": "TECH_SLASH_AND_BURN",
+    "description_key": "TECH_SLASH_AND_BURN_DESC",
+    "era": "tribal",
+    "tier": 1,
+    "categories": ["food_production"],
+    "tags": ["farming", "forest", "fire", "clearing"],
+    "knowledge_type": "common_practice",
+    "prereq_logic": {"all_of": ["TECH_AGRICULTURE", "TECH_CONTROLLED_BURN"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": ["forest"], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.10,
+        "required_skills": {"SKILL_CROP_FARMING": 2, "SKILL_FIRE_MAKING": 2},
+        "required_population": 15,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 2, "regression_grace_years": 25, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "FOOD_AGRICULTURE_METHOD", "branches_from": "TECH_AGRICULTURE", "branch_type": "environmental_variant", "mutually_exclusive_with": [], "selection_weights": {"forest": 3.0, "dense_forest": 2.0}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 2, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"food_yield_farming": 0.25, "land_clearing": 0.4},
+    "regression_fallback": "",
+    "ui": {"group": "Food Production", "subgroup": "Agriculture", "icon": "icon_slash_burn", "tree_x": 4, "tree_y": 5}
+}

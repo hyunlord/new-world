@@ -1,0 +1,28 @@
+{
+    "id": "TECH_HORSE_DOMESTICATION",
+    "display_key": "TECH_HORSE_DOMESTICATION",
+    "description_key": "TECH_HORSE_DOMESTICATION_DESC",
+    "era": "tribal",
+    "tier": 2,
+    "categories": ["animal", "military"],
+    "tags": ["horse", "riding", "steppe", "mobility", "transport"],
+    "knowledge_type": "craft_tacit",
+    "prereq_logic": {"all_of": ["TECH_ANIMAL_DOMESTICATION"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": ["grassland"], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.04,
+        "required_skills": {"SKILL_ANIMAL_HUSBANDRY": 4},
+        "required_population": 25,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 3, "regression_grace_years": 20, "carrier_roles": ["horse_master"], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 2, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"movement_speed": 0.4, "trade_range": 0.3, "military_power": 0.2},
+    "regression_fallback": "",
+    "ui": {"group": "Animal", "subgroup": "Riding", "icon": "icon_horse", "tree_x": 5, "tree_y": 7}
+}

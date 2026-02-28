@@ -1,0 +1,28 @@
+{
+    "id": "TECH_SPEAR",
+    "display_key": "TECH_SPEAR",
+    "description_key": "TECH_SPEAR_DESC",
+    "era": "tribal",
+    "tier": 1,
+    "categories": ["military"],
+    "tags": ["spear", "weapon", "hunting", "ranged", "melee"],
+    "knowledge_type": "common_practice",
+    "prereq_logic": {"all_of": ["TECH_BASIC_TOOLS", "TECH_BASIC_HUNTING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.12,
+        "required_skills": {},
+        "required_population": 10,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 2, "regression_grace_years": 30, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 2, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": ["SKILL_SPEAR_HUNTING", "SKILL_JAVELIN_THROWING"], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"hunting_efficiency": 0.25, "melee_damage": 0.2, "ranged_damage": 0.15},
+    "regression_fallback": "",
+    "ui": {"group": "Military", "subgroup": "Polearm", "icon": "icon_spear", "tree_x": 3, "tree_y": 18}
+}

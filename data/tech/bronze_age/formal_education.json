@@ -1,0 +1,104 @@
+{
+    "id": "TECH_FORMAL_EDUCATION",
+    "display_key": "TECH_FORMAL_EDUCATION",
+    "description_key": "TECH_FORMAL_EDUCATION_DESC",
+    "era": "bronze_age",
+    "tier": 3,
+    "categories": [
+        "social_organization",
+        "knowledge_science"
+    ],
+    "tags": [
+        "education",
+        "school",
+        "teaching",
+        "learning",
+        "scribal"
+    ],
+    "knowledge_type": "institutional_state",
+    "prereq_logic": {
+        "all_of": [],
+        "any_of": [
+            [
+                "TECH_CUNEIFORM",
+                "TECH_HIEROGLYPHICS"
+            ]
+        ],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": [],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
+    "discovery": {
+        "base_chance_per_year": 0.01,
+        "required_skills": {},
+        "required_population": 100,
+        "required_cooperation": 0,
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {
+        "min_practitioners": 5,
+        "regression_grace_years": 15,
+        "carrier_roles": [
+            "teacher",
+            "scribe"
+        ],
+        "requires_active_use": true,
+        "active_use_threshold": 0.0,
+        "artifact_carriers": [],
+        "institution_tags_help": [
+            "scribal_school"
+        ]
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration"
+        ],
+        "adoption_contact_years": 5,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [
+            "SKILL_TEACHING"
+        ],
+        "buildings": [],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "knowledge_retention": 0.4,
+        "skill_learning_speed": 0.3,
+        "literacy_rate": 0.25
+    },
+    "regression_fallback": "",
+    "ui": {
+        "group": "Social Organization",
+        "subgroup": "Education",
+        "icon": "icon_education",
+        "tree_x": 9,
+        "tree_y": 11
+    }
+}

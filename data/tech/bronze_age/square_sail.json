@@ -1,0 +1,103 @@
+{
+    "id": "TECH_SQUARE_SAIL",
+    "display_key": "TECH_SQUARE_SAIL",
+    "description_key": "TECH_SQUARE_SAIL_DESC",
+    "era": "bronze_age",
+    "tier": 2,
+    "categories": [
+        "maritime"
+    ],
+    "tags": [
+        "sail",
+        "wind",
+        "navigation",
+        "boat",
+        "trade"
+    ],
+    "knowledge_type": "craft_tacit",
+    "prereq_logic": {
+        "all_of": [
+            "TECH_TEXTILE_WEAVING"
+        ],
+        "any_of": [
+            [
+                "TECH_DUGOUT_CANOE",
+                "TECH_REED_RAFT",
+                "TECH_OUTRIGGER_HULL"
+            ]
+        ],
+        "soft": []
+    },
+    "requirements": {
+        "biomes_nearby": [
+            "shallow_water"
+        ],
+        "resources_nearby": [],
+        "settlement_tags": [],
+        "institution_tags": [],
+        "infrastructure_tags": []
+    },
+    "discovery": {
+        "base_chance_per_year": 0.03,
+        "required_skills": {},
+        "required_population": 35,
+        "required_cooperation": 0,
+        "modifiers": {
+            "knowledge_value": 0.1,
+            "openness": 0.1,
+            "logical_intel": 0.1,
+            "curiosity": 0.0,
+            "naturalistic_intel": 0.0
+        },
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {
+        "min_practitioners": 3,
+        "regression_grace_years": 20,
+        "carrier_roles": [
+            "sailor"
+        ],
+        "requires_active_use": false,
+        "active_use_threshold": 0.0,
+        "artifact_carriers": [],
+        "institution_tags_help": []
+    },
+    "branching": {
+        "branch_family_id": "",
+        "branches_from": "",
+        "branch_type": "",
+        "mutually_exclusive_with": [],
+        "selection_weights": {}
+    },
+    "diffusion": {
+        "can_spread": true,
+        "spread_channels": [
+            "trade",
+            "migration"
+        ],
+        "adoption_contact_years": 5,
+        "prestige_bias": 0.0,
+        "conformist_bias": 0.0
+    },
+    "unlocks": {
+        "skills": [],
+        "buildings": [],
+        "jobs": [],
+        "actions": [],
+        "techs_enabled": []
+    },
+    "effects": {
+        "sailing_speed": 0.4,
+        "trade_range": 0.3,
+        "wind_power": 0.35
+    },
+    "regression_fallback": "",
+    "ui": {
+        "group": "Maritime",
+        "subgroup": "Sailing",
+        "icon": "icon_sail",
+        "tree_x": 6,
+        "tree_y": 9
+    }
+}

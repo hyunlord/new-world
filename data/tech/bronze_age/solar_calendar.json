@@ -1,0 +1,28 @@
+{
+    "id": "TECH_SOLAR_CALENDAR",
+    "display_key": "TECH_SOLAR_CALENDAR",
+    "description_key": "TECH_SOLAR_CALENDAR_DESC",
+    "era": "bronze_age",
+    "tier": 2,
+    "categories": ["knowledge_science"],
+    "tags": ["calendar", "sun", "year", "astronomy", "precision"],
+    "knowledge_type": "elite_scholarly",
+    "prereq_logic": {"all_of": ["TECH_LUNAR_CALENDAR"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.03,
+        "required_skills": {"SKILL_BASIC_ASTRONOMY": 3},
+        "required_population": 40,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 2, "regression_grace_years": 20, "carrier_roles": ["astronomer"], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 5, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"agricultural_timing": 0.3, "ritual_precision": 0.2},
+    "regression_fallback": "",
+    "ui": {"group": "Knowledge Science", "subgroup": "Astronomy", "icon": "icon_solar", "tree_x": 6, "tree_y": 10}
+}

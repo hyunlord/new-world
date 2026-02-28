@@ -1,0 +1,28 @@
+{
+    "id": "TECH_CUNEIFORM",
+    "display_key": "TECH_CUNEIFORM",
+    "description_key": "TECH_CUNEIFORM_DESC",
+    "era": "bronze_age",
+    "tier": 3,
+    "categories": ["knowledge_science"],
+    "tags": ["writing", "cuneiform", "clay", "tablet", "record", "mesopotamia"],
+    "knowledge_type": "elite_scholarly",
+    "prereq_logic": {"all_of": ["TECH_SEAL_STAMP", "TECH_TALLY_COUNTING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.008,
+        "required_skills": {"SKILL_MATHEMATICS": 4},
+        "required_population": 100,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 5, "regression_grace_years": 15, "carrier_roles": ["scribe"], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 5, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": ["SKILL_READING_WRITING"], "buildings": [], "jobs": ["scribe"], "actions": [], "techs_enabled": []},
+    "effects": {"record_keeping": 0.5, "knowledge_retention": 0.4, "administration": 0.35},
+    "regression_fallback": "",
+    "ui": {"group": "Knowledge Science", "subgroup": "Writing", "icon": "icon_cuneiform", "tree_x": 8, "tree_y": 11}
+}

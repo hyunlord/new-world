@@ -1,0 +1,28 @@
+{
+    "id": "TECH_GRANARY_ADMIN",
+    "display_key": "TECH_GRANARY_ADMIN",
+    "description_key": "TECH_GRANARY_ADMIN_DESC",
+    "era": "bronze_age",
+    "tier": 3,
+    "categories": ["food_production", "social_organization"],
+    "tags": ["administration", "storage", "surplus", "management", "record"],
+    "knowledge_type": "elite_scholarly",
+    "prereq_logic": {"all_of": ["TECH_COMMUNAL_STORAGE", "TECH_TALLY_COUNTING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.02,
+        "required_skills": {"SKILL_MATHEMATICS": 3},
+        "required_population": 80,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 3, "regression_grace_years": 15, "carrier_roles": ["administrator", "scribe"], "requires_active_use": true, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": ["bureaucracy"]},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 5, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"storage_efficiency": 0.4, "surplus_management": 0.5, "famine_resistance": 0.3},
+    "regression_fallback": "",
+    "ui": {"group": "Food Production", "subgroup": "Administration", "icon": "icon_granary_admin", "tree_x": 6, "tree_y": 4}
+}

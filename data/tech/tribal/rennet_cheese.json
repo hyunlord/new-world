@@ -1,0 +1,28 @@
+{
+    "id": "TECH_RENNET_CHEESE",
+    "display_key": "TECH_RENNET_CHEESE",
+    "description_key": "TECH_RENNET_CHEESE_DESC",
+    "era": "tribal",
+    "tier": 1,
+    "categories": ["food_production"],
+    "tags": ["cheese", "rennet", "dairy", "accidental"],
+    "knowledge_type": "common_practice",
+    "prereq_logic": {"all_of": ["TECH_DAIRY_PROCESSING"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.06,
+        "required_skills": {},
+        "required_population": 15,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": true,
+        "eureka_conditions": {"event": "milk_in_stomach_pouch", "chance": 0.02}
+    },
+    "maintenance": {"min_practitioners": 2, "regression_grace_years": 25, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 2, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"food_preservation": 0.25, "food_variety": 0.15, "trade_value": 0.1},
+    "regression_fallback": "",
+    "ui": {"group": "Food Production", "subgroup": "Dairy", "icon": "icon_cheese", "tree_x": 6, "tree_y": 9}
+}

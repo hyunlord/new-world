@@ -1,0 +1,28 @@
+{
+    "id": "TECH_FLUTE_MAKING",
+    "display_key": "TECH_FLUTE_MAKING",
+    "description_key": "TECH_FLUTE_MAKING_DESC",
+    "era": "stone_age",
+    "tier": 0,
+    "categories": ["art_culture"],
+    "tags": ["music", "flute", "bone", "expression", "ritual"],
+    "knowledge_type": "universal_intuitive",
+    "prereq_logic": {"all_of": ["TECH_BONE_TOOLS"], "any_of": [], "soft": []},
+    "requirements": {"biomes_nearby": [], "resources_nearby": [], "settlement_tags": [], "institution_tags": [], "infrastructure_tags": []},
+    "discovery": {
+        "base_chance_per_year": 0.20,
+        "required_skills": {"SKILL_BONE_CRAFTING": 1},
+        "required_population": 3,
+        "required_cooperation": 0,
+        "modifiers": {"knowledge_value": 0.10, "openness": 0.10, "logical_intel": 0.10, "curiosity": 0.0, "naturalistic_intel": 0.0},
+        "eureka": false,
+        "eureka_conditions": {}
+    },
+    "maintenance": {"min_practitioners": 1, "regression_grace_years": 30, "carrier_roles": [], "requires_active_use": false, "active_use_threshold": 0.0, "artifact_carriers": [], "institution_tags_help": []},
+    "branching": {"branch_family_id": "", "branches_from": "", "branch_type": "", "mutually_exclusive_with": [], "selection_weights": {}},
+    "diffusion": {"can_spread": true, "spread_channels": ["trade", "migration"], "adoption_contact_years": 0, "prestige_bias": 0.0, "conformist_bias": 0.0},
+    "unlocks": {"skills": [], "buildings": [], "jobs": [], "actions": [], "techs_enabled": []},
+    "effects": {"social_cohesion": 0.15, "morale_bonus": 0.1},
+    "regression_fallback": "",
+    "ui": {"group": "Art Culture", "subgroup": "Music", "icon": "icon_flute", "tree_x": 2, "tree_y": 11}
+}
