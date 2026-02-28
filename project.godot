@@ -26,7 +26,6 @@ ChronicleSystem="*res://scripts/systems/record/chronicle_system.gd"
 NameGenerator="*res://scripts/core/social/name_generator.gd"
 Locale="*res://scripts/core/simulation/locale.gd"
 StatQuery="*res://scripts/core/stats/stat_query.gd"
-GodotTestMcpHarness="*res://addons/godot_test_mcp/test_harness.gd"
 
 [display]
 
