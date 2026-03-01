@@ -133,3 +133,7 @@
 - `trait_definitions`, `stressor_events`, `emotion_definition`, `species_definition`의 inline 다국어 필드 제거.
 - `*_key` + `data_generated` 보존 모드 기반 key-first 데이터 구조로 전환 완료.
 - strict localization audit 지표에서 inline localized fields 0 달성.
+
+## Commit 028
+- `SimBridge` pathfinding backend 모드 동기화에 last-mode 캐시를 추가해 중복 bridge 호출을 제거.
+- 모드가 바뀌지 않는 일반 프레임에서 동기화 call overhead를 줄이고, 모드 변경 시 동작은 유지.

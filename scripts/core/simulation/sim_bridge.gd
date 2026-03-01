@@ -49,6 +49,7 @@ var _pathfind_batch_xy_method_name: String = ""
 var _set_pathfind_backend_method_name: String = ""
 var _get_pathfind_backend_method_name: String = ""
 var _resolve_pathfind_backend_method_name: String = ""
+var _last_synced_pathfind_backend_mode: String = ""
 
 
 ## Delegates pathfinding to native bridge when available.
@@ -494,7 +495,14 @@ func _sync_pathfinding_backend_mode(bridge: Object) -> void:
 		_set_pathfind_backend_method_name = method_name
 	if method_name == "":
 		return
-	bridge.call(method_name, _resolve_desired_pathfinding_backend_mode())
+	var desired_mode: String = _resolve_desired_pathfinding_backend_mode()
+	if desired_mode == _last_synced_pathfind_backend_mode:
+		return
+
+	var applied: Variant = bridge.call(method_name, desired_mode)
+	if applied is bool and not bool(applied):
+		return
+	_last_synced_pathfind_backend_mode = desired_mode
 
 
 func _resolve_pathfinding_backend_mode(bridge: Object) -> String:
