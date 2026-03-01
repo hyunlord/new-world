@@ -2522,6 +2522,15 @@ mod tests {
     }
 
     #[test]
+    fn pathfind_grid_returns_empty_when_start_is_out_of_bounds() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let path = pathfind_grid_bytes(4, 4, &walkable, &move_cost, -1, 0, 3, 3, 200)
+            .expect("out-of-bounds start should be handled");
+        assert!(path.is_empty());
+    }
+
+    #[test]
     fn pathfind_grid_batch_processes_multiple_queries() {
         let walkable = vec![1_u8; 25];
         let move_cost = vec![1.0_f32; 25];
@@ -2647,6 +2656,27 @@ mod tests {
         )
         .expect("stationary vec2 batch should succeed");
         assert_eq!(grouped_vec2, grouped);
+    }
+
+    #[test]
+    fn pathfind_grid_batch_returns_empty_for_out_of_bounds_start() {
+        let walkable = vec![1_u8; 25];
+        let move_cost = vec![1.0_f32; 25];
+        let from = vec![(-1, 0), (0, 0)];
+        let to = vec![(4, 4), (4, 4)];
+
+        let grouped = pathfind_grid_batch_bytes(5, 5, &walkable, &move_cost, &from, &to, 200)
+            .expect("batch should succeed");
+        assert_eq!(grouped.len(), 2);
+        assert!(grouped[0].is_empty());
+        assert!(!grouped[1].is_empty());
+
+        let from_xy = vec![-1, 0, 0, 0];
+        let to_xy = vec![4, 4, 4, 4];
+        let grouped_xy =
+            pathfind_grid_batch_xy_bytes(5, 5, &walkable, &move_cost, &from_xy, &to_xy, 200)
+                .expect("xy batch should succeed");
+        assert_eq!(grouped_xy, grouped);
     }
 
     #[test]
