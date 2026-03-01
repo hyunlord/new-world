@@ -1310,3 +1310,8 @@
 - `migration_verify_report.json`이 `audit.json`과 `owner_policy_compare.json`의 핵심 카운트를 직접 포함하도록 `audit_summary`, `owner_policy_compare_summary`를 추가.
 - JSON 파일에서 int/array-length/string을 안전 추출하는 헬퍼를 도입해 아티팩트 누락 시에도 `null` 직렬화를 유지.
 - `/tmp/worldsim_audit_artifacts26/migration_verify_report.json`에서 duplicate/owner-policy/compare 요약 지표 반영을 확인.
+
+## Commit 265
+- `migration_verify_report.json`에 카운트 기반 상태 플래그 `verification_status`를 추가해 핵심 품질 결과를 boolean으로 즉시 해석 가능하게 확장.
+- parity/duplicate/owner-policy/compare 상태를 각 요약 카운트에서 계산하고, bench 미사용 시 bench 상태는 `null`로 직렬화.
+- `/tmp/worldsim_audit_artifacts27/migration_verify_report.json`에서 `audit_parity_clean=true`, `audit_duplicate_conflict_free=false`, `owner_policy_compare_clean=true` 반영을 확인.

@@ -960,6 +960,32 @@ if [[ -n "${verify_report_json}" ]]; then
     )"
     to_json_opt_string "${raw_value}"
   }
+  to_json_zero_is_true() {
+    local raw_value="$1"
+    if [[ "${raw_value}" =~ ^[0-9]+$ ]]; then
+      if [[ "${raw_value}" -eq 0 ]]; then
+        echo "true"
+      else
+        echo "false"
+      fi
+    else
+      echo "null"
+    fi
+  }
+  to_json_three_zeros_is_true() {
+    local first="$1"
+    local second="$2"
+    local third="$3"
+    if [[ "${first}" =~ ^[0-9]+$ && "${second}" =~ ^[0-9]+$ && "${third}" =~ ^[0-9]+$ ]]; then
+      if [[ "${first}" -eq 0 && "${second}" -eq 0 && "${third}" -eq 0 ]]; then
+        echo "true"
+      else
+        echo "false"
+      fi
+    else
+      echo "null"
+    fi
+  }
   to_json_opt_string() {
     local raw_value="$1"
     if [[ -z "${raw_value}" ]]; then
@@ -1106,6 +1132,28 @@ if [[ -n "${verify_report_json}" ]]; then
   count_artifact_presence "${audit_owner_policy_compare_report_json}"
   count_artifact_presence "${bench_report_json}"
   artifact_missing_count=$((artifact_expected_count - artifact_present_count))
+  artifacts_complete_status="false"
+  if [[ "${artifact_missing_count}" -eq 0 ]]; then
+    artifacts_complete_status="true"
+  fi
+  audit_parity_clean_status="$(to_json_zero_is_true "${audit_parity_issue_count}")"
+  audit_duplicate_conflict_free_status="$(to_json_zero_is_true "${audit_duplicate_conflict_count}")"
+  audit_owner_policy_missing_duplicate_clean_status="$(to_json_zero_is_true "${audit_owner_policy_missing_duplicate_count}")"
+  audit_owner_policy_unused_clean_status="$(to_json_zero_is_true "${audit_owner_policy_unused_count}")"
+  owner_policy_compare_clean_status="$(
+    to_json_three_zeros_is_true \
+      "${compare_missing_count}" \
+      "${compare_extra_count}" \
+      "${compare_changed_count}"
+  )"
+  bench_report_present_when_enabled_status="null"
+  if [[ "${WITH_BENCHES}" == "true" ]]; then
+    if [[ "${bench_report_json_exists}" == "true" ]]; then
+      bench_report_present_when_enabled_status="true"
+    elif [[ "${bench_report_json_exists}" == "false" ]]; then
+      bench_report_present_when_enabled_status="false"
+    fi
+  fi
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -1192,6 +1240,15 @@ if [[ -n "${verify_report_json}" ]]; then
     "missing_count": ${compare_missing_count},
     "extra_count": ${compare_extra_count},
     "changed_count": ${compare_changed_count}
+  },
+  "verification_status": {
+    "artifacts_complete": ${artifacts_complete_status},
+    "audit_parity_clean": ${audit_parity_clean_status},
+    "audit_duplicate_conflict_free": ${audit_duplicate_conflict_free_status},
+    "audit_owner_policy_missing_duplicate_clean": ${audit_owner_policy_missing_duplicate_clean_status},
+    "audit_owner_policy_unused_clean": ${audit_owner_policy_unused_clean_status},
+    "owner_policy_compare_clean": ${owner_policy_compare_clean_status},
+    "bench_report_present_when_enabled": ${bench_report_present_when_enabled_status}
   },
   "artifact_sha256": {
     "compile_report_json": ${compile_report_json_sha256},
