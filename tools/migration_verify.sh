@@ -157,6 +157,21 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   path_backend_smoke_expect_auto="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED:-}"
   path_backend_smoke_expect_gpu="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED:-}"
   expected_resolved_backend="${MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND:-}"
+  bench_report_json="${MIGRATION_BENCH_REPORT_JSON:-}"
+  if [[ -n "${audit_report_dir}" && -z "${bench_report_json}" ]]; then
+    bench_report_json="${audit_report_dir_prefix}/bench_report.json"
+  fi
+  LAST_BENCH_CHECKSUM=""
+  PATH_SPLIT_TUPLE_CHECKSUM=""
+  PATH_SPLIT_XY_CHECKSUM=""
+  PATH_SPLIT_TUPLE_TOTAL=""
+  PATH_SPLIT_XY_TOTAL=""
+  PATH_SMOKE_CHECKSUM=""
+  PATH_SMOKE_TOTAL=""
+  PATH_SMOKE_RESOLVED_AUTO=""
+  PATH_SMOKE_RESOLVED_GPU=""
+  STRESS_CHECKSUM=""
+  NEEDS_CHECKSUM=""
   for value in "${path_iters}" "${stress_iters}" "${needs_iters}" "${path_backend_smoke_iters}"; do
     if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
       echo "[migration_verify] bench iterations must be positive integers" >&2
@@ -208,6 +223,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "[migration_verify] ${name} checksum mismatch: expected=${expected_checksum} got=${checksum}" >&2
       exit 1
     fi
+    LAST_BENCH_CHECKSUM="${checksum}"
     echo "[migration_verify] ${name} checksum ok: ${checksum}"
   }
 
@@ -224,6 +240,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "[migration_verify] ${name} checksum parse failed" >&2
       exit 1
     fi
+    LAST_BENCH_CHECKSUM="${checksum}"
     echo "[migration_verify] ${name} checksum observed (non-default iters): ${checksum}"
   }
 
@@ -276,6 +293,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       done <<< "${resolved_lines}"
       echo "[migration_verify] pathfind-bridge-split resolved backend ok: ${expected_resolved_backend}"
     fi
+    PATH_SPLIT_TUPLE_CHECKSUM="${tuple_checksum}"
+    PATH_SPLIT_XY_CHECKSUM="${xy_checksum}"
+    PATH_SPLIT_TUPLE_TOTAL="${tuple_total}"
+    PATH_SPLIT_XY_TOTAL="${xy_total}"
     echo "[migration_verify] pathfind-bridge-split dispatch totals ok: tuple=${tuple_total} xy=${xy_total}"
     echo "[migration_verify] pathfind-bridge-split checksums observed: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
@@ -336,6 +357,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       done <<< "${resolved_lines}"
       echo "[migration_verify] pathfind-bridge-split resolved backend ok: ${expected_resolved_backend}"
     fi
+    PATH_SPLIT_TUPLE_CHECKSUM="${tuple_checksum}"
+    PATH_SPLIT_XY_CHECKSUM="${xy_checksum}"
+    PATH_SPLIT_TUPLE_TOTAL="${tuple_total}"
+    PATH_SPLIT_XY_TOTAL="${xy_total}"
     echo "[migration_verify] pathfind-bridge-split dispatch totals ok: tuple=${tuple_total} xy=${xy_total}"
     echo "[migration_verify] pathfind-bridge-split checksums ok: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
@@ -463,6 +488,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "[migration_verify] pathfind-backend-smoke resolved=gpu must have cpu=0 for gpu mode, got=${cpu_gpu}" >&2
       exit 1
     fi
+    PATH_SMOKE_CHECKSUM="${checksum_auto}"
+    PATH_SMOKE_TOTAL="${expected_total}"
+    PATH_SMOKE_RESOLVED_AUTO="${resolved_auto}"
+    PATH_SMOKE_RESOLVED_GPU="${resolved_gpu}"
     echo "[migration_verify] pathfind-backend-smoke checksums/dispatch/resolved ok: checksum=${checksum_auto} total_each=${expected_total} resolved_auto=${resolved_auto:-unknown} resolved_gpu=${resolved_gpu:-unknown}"
   }
 
@@ -473,6 +502,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "${path_output}"
       path_checksum="$(echo "${path_output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | head -n 1)"
       path_total="$(echo "${path_output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p' | head -n 1)"
+      path_resolved="$(echo "${path_output}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
       if [[ -z "${path_checksum}" ]]; then
         echo "[migration_verify] pathfind-bridge checksum parse failed" >&2
         exit 1
@@ -509,6 +539,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "${path_output}"
       path_checksum="$(echo "${path_output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | head -n 1)"
       path_total="$(echo "${path_output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p' | head -n 1)"
+      path_resolved="$(echo "${path_output}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
       if [[ -z "${path_checksum}" ]]; then
         echo "[migration_verify] pathfind-bridge checksum parse failed" >&2
         exit 1
@@ -565,6 +596,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
         "stress-math" \
         cargo run -q -p sim-test --release -- --bench-stress-math --iters "${stress_iters}"
     fi
+    STRESS_CHECKSUM="${LAST_BENCH_CHECKSUM}"
     if [[ "${needs_iters}" == "10000" ]]; then
       run_bench_and_check \
         "needs-math" \
@@ -574,6 +606,45 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       run_bench_observe \
         "needs-math" \
         cargo run -q -p sim-test --release -- --bench-needs-math --iters "${needs_iters}"
+    fi
+    NEEDS_CHECKSUM="${LAST_BENCH_CHECKSUM}"
+
+    if [[ -n "${bench_report_json}" ]]; then
+      bench_report_out="${bench_report_json}"
+      if [[ "${bench_report_out}" != /* ]]; then
+        bench_report_out="${ROOT_DIR}/${bench_report_out}"
+      fi
+      mkdir -p "$(dirname "${bench_report_out}")"
+      cat > "${bench_report_out}" <<EOF
+{
+  "path_iters": ${path_iters},
+  "stress_iters": ${stress_iters},
+  "needs_iters": ${needs_iters},
+  "path_backend": "${path_backend}",
+  "path_split_enabled": ${path_split},
+  "path_smoke_enabled": ${path_backend_smoke},
+  "path": {
+    "checksum": "${path_checksum}",
+    "total": ${path_total},
+    "resolved": "${path_resolved:-}"
+  },
+  "path_split": {
+    "tuple_checksum": "${PATH_SPLIT_TUPLE_CHECKSUM}",
+    "xy_checksum": "${PATH_SPLIT_XY_CHECKSUM}",
+    "tuple_total": "${PATH_SPLIT_TUPLE_TOTAL}",
+    "xy_total": "${PATH_SPLIT_XY_TOTAL}"
+  },
+  "path_smoke": {
+    "checksum": "${PATH_SMOKE_CHECKSUM}",
+    "total_each": "${PATH_SMOKE_TOTAL}",
+    "resolved_auto": "${PATH_SMOKE_RESOLVED_AUTO}",
+    "resolved_gpu": "${PATH_SMOKE_RESOLVED_GPU}"
+  },
+  "stress_checksum": "${STRESS_CHECKSUM}",
+  "needs_checksum": "${NEEDS_CHECKSUM}"
+}
+EOF
+      echo "[migration_verify] bench report written: ${bench_report_out}"
     fi
   )
 fi

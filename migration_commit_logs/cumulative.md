@@ -1195,3 +1195,8 @@
 - `localization_audit`에 `--owner-policy-compare-report-json`을 추가해 owner-policy drift 비교 결과(missing/extra/changed)를 구조화된 JSON으로 출력 가능하게 확장.
 - `migration_verify`에 `MIGRATION_AUDIT_OWNER_POLICY_COMPARE_REPORT_JSON` 전달 경로를 추가하고, `MIGRATION_AUDIT_REPORT_DIR` 사용 시 기본 아티팩트 `owner_policy_compare.json` 자동 생성을 연결.
 - `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts3 tools/migration_verify.sh`에서 compare JSON 아티팩트 생성/값(0 drift) 확인.
+
+## Commit 242
+- `migration_verify`에 `MIGRATION_BENCH_REPORT_JSON`을 추가해 bench 체크 결과(checksum/dispatch/resolved)를 JSON 아티팩트로 저장 가능하게 확장.
+- `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `bench_report.json` 기본 경로를 자동 할당해 audit/bench 아티팩트를 단일 디렉터리로 수집 가능.
+- `--with-benches` 실행에서 `bench_report.json` 생성과 path/smoke/stress/needs 핵심 지표 기록을 검증.
