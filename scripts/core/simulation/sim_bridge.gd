@@ -596,6 +596,27 @@ func stat_stress_tick_step(
 	)
 
 
+## Delegates full stress tick step (packed output) to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_tick_step_packed(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float,
+	scalar_inputs: PackedFloat32Array,
+	flags: PackedByteArray
+):
+	return _call_native_if_exists(
+		"stat_stress_tick_step_packed",
+		[
+			per_tick,
+			decay_rate,
+			min_keep,
+			scalar_inputs,
+			flags
+		]
+	)
+
+
 ## Delegates final stress delta step (including denial redirect) to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_delta_step(

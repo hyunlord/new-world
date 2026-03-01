@@ -318,3 +318,8 @@
 - relationship method 전달을 문자열에서 method code(enum) 기반으로 확장(`*_step_code`)해 브리지 경계 문자열 오버헤드를 완화.
 - `inject_event`는 `_r_method_code`를 사용해 code 기반 event scale/inject step을 호출하도록 전환.
 - string 기반 기존 API는 유지해 호환성을 보존하고 신규 code 경로는 동등성 테스트로 검증.
+
+## Commit 066
+- `stress_tick_step` 결과를 packed 출력(`scalars`/`ints`)으로 수신하는 경로를 추가하고 `StressSystem`은 인덱스 기반 해석으로 전환.
+- tick 핫패스의 dictionary key 조회를 줄이기 위해 state/meta 반영 경로를 packed 값 직접 적용 방식으로 재구성.
+- 기존 dictionary 반환 경로는 유지하면서 `StatCurve` fallback에서 packed 변환을 제공해 호환성을 유지.

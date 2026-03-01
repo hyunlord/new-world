@@ -853,6 +853,82 @@ static func stress_tick_step(
 	}
 
 
+## Full stress tick step with packed outputs.
+## Returns Dictionary: { scalars, ints, updated_per_tick, active_mask }
+static func stress_tick_step_packed(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float,
+	scalar_inputs: PackedFloat32Array,
+	flags: PackedByteArray
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_tick_step_packed",
+		[
+			per_tick,
+			decay_rate,
+			min_keep,
+			scalar_inputs,
+			flags
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var tick: Dictionary = stress_tick_step(
+		per_tick,
+		decay_rate,
+		min_keep,
+		scalar_inputs,
+		flags
+	)
+	var scalars: PackedFloat32Array = PackedFloat32Array()
+	scalars.resize(31)
+	scalars[0] = float(tick.get("appraisal_scale", 1.0))
+	scalars[1] = float(tick.get("hunger", 0.0))
+	scalars[2] = float(tick.get("energy_deficit", 0.0))
+	scalars[3] = float(tick.get("social_isolation", 0.0))
+	scalars[4] = float(tick.get("total_trace_contribution", 0.0))
+	scalars[5] = float(tick.get("fear", 0.0))
+	scalars[6] = float(tick.get("anger", 0.0))
+	scalars[7] = float(tick.get("sadness", 0.0))
+	scalars[8] = float(tick.get("disgust", 0.0))
+	scalars[9] = float(tick.get("surprise", 0.0))
+	scalars[10] = float(tick.get("joy", 0.0))
+	scalars[11] = float(tick.get("trust", 0.0))
+	scalars[12] = float(tick.get("anticipation", 0.0))
+	scalars[13] = float(tick.get("va_composite", 0.0))
+	scalars[14] = float(tick.get("recovery", 0.0))
+	scalars[15] = float(tick.get("delta", 0.0))
+	scalars[16] = float(tick.get("hidden_threat_accumulator", 0.0))
+	scalars[17] = float(tick.get("stress", 0.0))
+	scalars[18] = float(tick.get("reserve", 0.0))
+	scalars[19] = float(tick.get("allostatic", 0.0))
+	scalars[20] = float(tick.get("resilience", 0.0))
+	scalars[21] = float(tick.get("stress_mu_sadness", 0.0))
+	scalars[22] = float(tick.get("stress_mu_anger", 0.0))
+	scalars[23] = float(tick.get("stress_mu_fear", 0.0))
+	scalars[24] = float(tick.get("stress_mu_joy", 0.0))
+	scalars[25] = float(tick.get("stress_mu_trust", 0.0))
+	scalars[26] = float(tick.get("stress_neg_gain_mult", 1.0))
+	scalars[27] = float(tick.get("stress_pos_gain_mult", 1.0))
+	scalars[28] = float(tick.get("stress_blunt_mult", 1.0))
+	scalars[29] = float(tick.get("continuous_total", 0.0))
+	scalars[30] = float(tick.get("emotion_total", 0.0))
+
+	var ints: PackedInt32Array = PackedInt32Array()
+	ints.resize(2)
+	ints[0] = int(tick.get("gas_stage", 0))
+	ints[1] = int(tick.get("stress_state", 0))
+
+	return {
+		"scalars": scalars,
+		"ints": ints,
+		"updated_per_tick": tick.get("updated_per_tick", PackedFloat32Array()),
+		"active_mask": tick.get("active_mask", PackedByteArray()),
+	}
+
+
 ## Combined post-stress step:
 ## reserve + GAS transition + allostatic update + stress state snapshot
 static func stress_post_update_step(

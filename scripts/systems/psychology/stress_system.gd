@@ -19,6 +19,36 @@ const STRESS_EPSILON: float = 0.05
 
 const _TICK_SCALAR_LEN: int = 40
 const _TICK_FLAG_LEN: int = 3
+const _TICK_OUT_SC_HUNGER: int = 1
+const _TICK_OUT_SC_ENERGY_DEFICIT: int = 2
+const _TICK_OUT_SC_SOCIAL_ISOLATION: int = 3
+const _TICK_OUT_SC_TRACE_TOTAL: int = 4
+const _TICK_OUT_SC_FEAR: int = 5
+const _TICK_OUT_SC_ANGER: int = 6
+const _TICK_OUT_SC_SADNESS: int = 7
+const _TICK_OUT_SC_DISGUST: int = 8
+const _TICK_OUT_SC_SURPRISE: int = 9
+const _TICK_OUT_SC_JOY: int = 10
+const _TICK_OUT_SC_TRUST: int = 11
+const _TICK_OUT_SC_ANTICIPATION: int = 12
+const _TICK_OUT_SC_VA_COMPOSITE: int = 13
+const _TICK_OUT_SC_RECOVERY: int = 14
+const _TICK_OUT_SC_DELTA: int = 15
+const _TICK_OUT_SC_HIDDEN_THREAT: int = 16
+const _TICK_OUT_SC_STRESS: int = 17
+const _TICK_OUT_SC_RESERVE: int = 18
+const _TICK_OUT_SC_ALLOSTATIC: int = 19
+const _TICK_OUT_SC_RESILIENCE: int = 20
+const _TICK_OUT_SC_MU_SADNESS: int = 21
+const _TICK_OUT_SC_MU_ANGER: int = 22
+const _TICK_OUT_SC_MU_FEAR: int = 23
+const _TICK_OUT_SC_MU_JOY: int = 24
+const _TICK_OUT_SC_MU_TRUST: int = 25
+const _TICK_OUT_SC_NEG_GAIN: int = 26
+const _TICK_OUT_SC_POS_GAIN: int = 27
+const _TICK_OUT_SC_BLUNT: int = 28
+const _TICK_OUT_INT_GAS_STAGE: int = 0
+const _TICK_OUT_INT_STRESS_STATE: int = 1
 const _EMOTION_ORDER: Array[String] = [
 	"fear",
 	"anger",
@@ -28,6 +58,16 @@ const _EMOTION_ORDER: Array[String] = [
 	"joy",
 	"trust",
 	"anticipation"
+]
+const _EMOTION_SCALAR_INDEX: Array[int] = [
+	_TICK_OUT_SC_FEAR,
+	_TICK_OUT_SC_ANGER,
+	_TICK_OUT_SC_SADNESS,
+	_TICK_OUT_SC_DISGUST,
+	_TICK_OUT_SC_SURPRISE,
+	_TICK_OUT_SC_JOY,
+	_TICK_OUT_SC_TRUST,
+	_TICK_OUT_SC_ANTICIPATION
 ]
 const _EMOTION_INDEX: Dictionary = {
 	"fear": 0,
@@ -202,21 +242,23 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	_tick_flags[0] = 1 if is_sleeping else 0
 	_tick_flags[1] = 1 if is_safe else 0
 	_tick_flags[2] = 1 if denial_active else 0
-	var tick_step: Dictionary = StatCurveScript.stress_tick_step(
+	var tick_step: Dictionary = StatCurveScript.stress_tick_step_packed(
 		_tick_trace_per_tick,
 		_tick_trace_decay,
 		0.01,
 		_tick_scalar_inputs,
 		_tick_flags
 	)
+	var scalars: PackedFloat32Array = tick_step.get("scalars", PackedFloat32Array())
+	var ints: PackedInt32Array = tick_step.get("ints", PackedInt32Array())
 
-	var s_hunger: float = float(tick_step.get("hunger", 0.0))
+	var s_hunger: float = _packed_scalar(scalars, _TICK_OUT_SC_HUNGER, 0.0)
 	if s_hunger > STRESS_EPSILON:
 		breakdown["hunger"] = s_hunger
-	var s_energy: float = float(tick_step.get("energy_deficit", 0.0))
+	var s_energy: float = _packed_scalar(scalars, _TICK_OUT_SC_ENERGY_DEFICIT, 0.0)
 	if s_energy > STRESS_EPSILON:
 		breakdown["energy_deficit"] = s_energy
-	var s_social: float = float(tick_step.get("social_isolation", 0.0))
+	var s_social: float = _packed_scalar(scalars, _TICK_OUT_SC_SOCIAL_ISOLATION, 0.0)
 	if s_social > STRESS_EPSILON:
 		breakdown["social_isolation"] = s_social
 
@@ -236,19 +278,22 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 	for i in range(_EMOTION_ORDER.size()):
 		var emotion_name: String = _EMOTION_ORDER[i]
-		var contrib: float = float(tick_step.get(emotion_name, 0.0))
+		var contrib: float = _packed_scalar(scalars, int(_EMOTION_SCALAR_INDEX[i]), 0.0)
 		if absf(contrib) > STRESS_EPSILON:
 			breakdown["emo_%s" % emotion_name] = contrib
-	var va_contrib: float = float(tick_step.get("va_composite", 0.0))
+	var va_contrib: float = _packed_scalar(scalars, _TICK_OUT_SC_VA_COMPOSITE, 0.0)
 	if va_contrib > STRESS_EPSILON:
 		breakdown["va_composite"] = va_contrib
-	var recovery: float = float(tick_step.get("recovery", 0.0))
+	var recovery: float = _packed_scalar(scalars, _TICK_OUT_SC_RECOVERY, 0.0)
 	breakdown["recovery"] = -recovery
 
-	var delta: float = float(tick_step.get("delta", 0.0))
-	ed.set_meta("hidden_threat_accumulator", float(tick_step.get("hidden_threat_accumulator", hidden)))
+	var delta: float = _packed_scalar(scalars, _TICK_OUT_SC_DELTA, 0.0)
+	ed.set_meta(
+		"hidden_threat_accumulator",
+		_packed_scalar(scalars, _TICK_OUT_SC_HIDDEN_THREAT, hidden)
+	)
 
-	ed.stress = clampf(float(tick_step.get("stress", ed.stress)), 0.0, STRESS_CLAMP_MAX)
+	ed.stress = clampf(_packed_scalar(scalars, _TICK_OUT_SC_STRESS, ed.stress), 0.0, STRESS_CLAMP_MAX)
 	ed.stress_delta_last = delta
 	ed.stress_breakdown = breakdown
 
@@ -260,37 +305,34 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		if shaken_remaining <= 0:
 			ed.set_meta("shaken_work_penalty", 0.0)
 
-	ed.reserve = float(tick_step.get("reserve", ed.reserve))
-	ed.gas_stage = int(tick_step.get("gas_stage", ed.gas_stage))
-	ed.allostatic = float(tick_step.get("allostatic", ed.allostatic))
-	ed.resilience = float(tick_step.get("resilience", ed.resilience))
-	var state_snapshot: Dictionary = tick_step
-
-	# 8) 스트레스 상태
-	_update_stress_state(ed, state_snapshot)
-
-	# 9) 스트레스 → 감정 역방향
-	_apply_stress_to_emotions(ed, state_snapshot)
+	ed.reserve = _packed_scalar(scalars, _TICK_OUT_SC_RESERVE, ed.reserve)
+	ed.gas_stage = _packed_int(ints, _TICK_OUT_INT_GAS_STAGE, ed.gas_stage)
+	ed.allostatic = _packed_scalar(scalars, _TICK_OUT_SC_ALLOSTATIC, ed.allostatic)
+	ed.resilience = _packed_scalar(scalars, _TICK_OUT_SC_RESILIENCE, ed.resilience)
+	ed.stress_state = _packed_int(ints, _TICK_OUT_INT_STRESS_STATE, ed.stress_state)
+	ed.set_meta("stress_mu_sadness", _packed_scalar(scalars, _TICK_OUT_SC_MU_SADNESS, 0.0))
+	ed.set_meta("stress_mu_anger", _packed_scalar(scalars, _TICK_OUT_SC_MU_ANGER, 0.0))
+	ed.set_meta("stress_mu_fear", _packed_scalar(scalars, _TICK_OUT_SC_MU_FEAR, 0.0))
+	ed.set_meta("stress_mu_joy", _packed_scalar(scalars, _TICK_OUT_SC_MU_JOY, 0.0))
+	ed.set_meta("stress_mu_trust", _packed_scalar(scalars, _TICK_OUT_SC_MU_TRUST, 0.0))
+	ed.set_meta("stress_neg_gain_mult", _packed_scalar(scalars, _TICK_OUT_SC_NEG_GAIN, 1.0))
+	ed.set_meta("stress_pos_gain_mult", _packed_scalar(scalars, _TICK_OUT_SC_POS_GAIN, 1.0))
+	ed.set_meta("stress_blunt_mult", _packed_scalar(scalars, _TICK_OUT_SC_BLUNT, 1.0))
 
 	# 10) 디버그 로그
 	_debug_log(entity, ed, delta)
 
 
-# ── 8) 스트레스 상태 ──────────────────────────────────────────────────
-func _update_stress_state(ed, snapshot: Dictionary) -> void:
-	ed.stress_state = int(snapshot.get("stress_state", 0))
+func _packed_scalar(values: PackedFloat32Array, idx: int, fallback: float) -> float:
+	if idx < 0 or idx >= values.size():
+		return fallback
+	return float(values[idx])
 
 
-# ── 11) 스트레스 → 감정 역방향 ───────────────────────────────────────
-func _apply_stress_to_emotions(ed, snapshot: Dictionary) -> void:
-	ed.set_meta("stress_mu_sadness", float(snapshot.get("stress_mu_sadness", 0.0)))
-	ed.set_meta("stress_mu_anger", float(snapshot.get("stress_mu_anger", 0.0)))
-	ed.set_meta("stress_mu_fear", float(snapshot.get("stress_mu_fear", 0.0)))
-	ed.set_meta("stress_mu_joy", float(snapshot.get("stress_mu_joy", 0.0)))
-	ed.set_meta("stress_mu_trust", float(snapshot.get("stress_mu_trust", 0.0)))
-	ed.set_meta("stress_neg_gain_mult", float(snapshot.get("stress_neg_gain_mult", 1.0)))
-	ed.set_meta("stress_pos_gain_mult", float(snapshot.get("stress_pos_gain_mult", 1.0)))
-	ed.set_meta("stress_blunt_mult", float(snapshot.get("stress_blunt_mult", 1.0)))
+func _packed_int(values: PackedInt32Array, idx: int, fallback: int) -> int:
+	if idx < 0 or idx >= values.size():
+		return fallback
+	return int(values[idx])
 
 
 # ── Support score ─────────────────────────────────────────────────────

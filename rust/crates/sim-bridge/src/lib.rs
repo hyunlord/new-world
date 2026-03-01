@@ -1059,6 +1059,112 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_tick_step_packed(
+        &self,
+        per_tick: PackedFloat32Array,
+        decay_rate: PackedFloat32Array,
+        min_keep: f32,
+        scalar_inputs: PackedFloat32Array,
+        flags: PackedByteArray,
+    ) -> VarDictionary {
+        let s = scalar_inputs.as_slice();
+        let f = flags.as_slice();
+        let sf = |idx: usize, fallback: f32| -> f32 { s.get(idx).copied().unwrap_or(fallback) };
+        let bf = |idx: usize| -> bool { f.get(idx).copied().unwrap_or(0_u8) != 0_u8 };
+
+        let out = stat_curve::stress_tick_step(
+            per_tick.as_slice(),
+            decay_rate.as_slice(),
+            min_keep,
+            sf(0, 0.5),
+            sf(1, 0.5),
+            sf(2, 0.5),
+            sf(3, 0.0),
+            sf(4, 0.0),
+            sf(5, 0.3),
+            sf(6, 0.5),
+            sf(7, 0.0),
+            sf(8, 0.0),
+            sf(9, 0.5),
+            sf(10, 0.5),
+            sf(11, 0.5),
+            sf(12, 0.0),
+            sf(13, 0.0),
+            sf(14, 0.0),
+            sf(15, 0.0),
+            sf(16, 0.0),
+            sf(17, 0.0),
+            sf(18, 0.0),
+            sf(19, 0.0),
+            sf(20, 0.0),
+            sf(21, 0.5),
+            sf(22, 50.0),
+            sf(23, 0.0),
+            sf(24, 0.0) as i32,
+            bf(0),
+            bf(1),
+            sf(25, 0.0),
+            sf(26, 1.0),
+            sf(27, 1.0),
+            sf(28, 0.05),
+            bf(2),
+            sf(29, 0.6),
+            sf(30, 0.0),
+            sf(31, 800.0),
+            sf(32, 1.0),
+            sf(33, 0.5),
+            sf(34, 0.5),
+            sf(35, 0.5),
+            sf(36, 0.5),
+            sf(37, 0.5),
+            sf(38, 0.5),
+            sf(39, 0.0),
+        );
+
+        let scalars: Vec<f32> = vec![
+            out.appraisal_scale,
+            out.hunger,
+            out.energy_deficit,
+            out.social_isolation,
+            out.total_trace_contribution,
+            out.fear,
+            out.anger,
+            out.sadness,
+            out.disgust,
+            out.surprise,
+            out.joy,
+            out.trust,
+            out.anticipation,
+            out.va_composite,
+            out.recovery,
+            out.delta,
+            out.hidden_threat_accumulator,
+            out.stress,
+            out.reserve,
+            out.allostatic,
+            out.resilience,
+            out.stress_mu_sadness,
+            out.stress_mu_anger,
+            out.stress_mu_fear,
+            out.stress_mu_joy,
+            out.stress_mu_trust,
+            out.stress_neg_gain_mult,
+            out.stress_pos_gain_mult,
+            out.stress_blunt_mult,
+            out.continuous_total,
+            out.emotion_total,
+        ];
+        let ints: Vec<i32> = vec![out.gas_stage, out.stress_state];
+
+        let mut dict = VarDictionary::new();
+        dict.set("scalars", vec_f32_to_packed(scalars));
+        dict.set("ints", vec_i32_to_packed(ints));
+        dict.set("updated_per_tick", vec_f32_to_packed(out.updated_per_tick));
+        dict.set("active_mask", vec_u8_to_packed(out.active_mask));
+        dict
+    }
+
+    #[func]
     fn stat_stress_delta_step(
         &self,
         continuous_input: f32,
