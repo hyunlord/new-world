@@ -312,6 +312,25 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     }
 
 
+def _load_manifest_dict(project_root: Path) -> Dict[str, Any]:
+    manifest_path = project_root / "localization" / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+    payload = _load_json(manifest_path)
+    if not isinstance(payload, dict):
+        return {}
+    return payload
+
+
+def _resolve_manifest_key_owner_policy_path(project_root: Path) -> Path:
+    manifest = _load_manifest_dict(project_root)
+    localization_root = project_root / "localization"
+    rel = "key_owners.json"
+    if "key_owners_path" in manifest:
+        rel = str(manifest.get("key_owners_path") or rel)
+    return (localization_root / rel).resolve()
+
+
 def _print_report(report: Dict[str, Any]) -> None:
     print("== Localization Audit ==")
     print(f"parity_issues: {len(report['parity_issues'])}")
@@ -562,6 +581,11 @@ def main() -> int:
         default="",
         help="optional path to existing key-owner policy json to compare against generated owners",
     )
+    parser.add_argument(
+        "--compare-key-owner-policy-auto",
+        action="store_true",
+        help="compare against key_owners_path from localization/manifest.json",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
@@ -591,8 +615,13 @@ def main() -> int:
         _write_json(out, owner_policy_payload)
 
     owner_policy_mismatch = False
+    compare_path: Path | None = None
     if args.compare_key_owner_policy:
         compare_path = (project_root / args.compare_key_owner_policy).resolve()
+    elif args.compare_key_owner_policy_auto:
+        compare_path = _resolve_manifest_key_owner_policy_path(project_root)
+
+    if compare_path is not None:
         compare_payload: Any = {}
         if compare_path.exists():
             compare_payload = _load_json(compare_path)

@@ -1090,3 +1090,8 @@
 - `sim-bridge` pathfinding backend 제어 로직을 `pathfinding_backend.rs`로 분리해 모드 저장/파싱/해석 책임을 모듈화.
 - 브리지 API/dispatch 경로는 유지하면서 backend 상태 접근을 모듈 getter/setter로 통일.
 - GPU 실구현을 위한 구조적 확장 지점을 정리하고 전체 검증(`migration_verify --with-benches`)으로 checksum 유지 확인.
+
+## Commit 221
+- `localization_audit`에 `--compare-key-owner-policy-auto`를 추가해 manifest의 `key_owners_path`를 기준으로 owner 정책 drift를 자동 비교.
+- `migration_verify` 기본 audit 단계에 auto compare를 포함시켜 owner 정책 일관성을 기본 게이트로 승격.
+- 필요 시 `MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY`로 명시 대상 비교를 override 가능하게 유지.
