@@ -651,3 +651,8 @@
 - `body_attributes`에 `calc_realized_values_packed`를 추가해 realized 6축 배치 결과를 `PackedInt32Array`로 직접 처리하는 경로를 제공하고, 기존 Dictionary API는 wrapper로 유지.
 - `age_system`과 `entity_manager`가 realized 반영 시 packed 인덱스 접근을 사용하도록 전환되어 딕셔너리 생성/키 조회 오버헤드를 축소.
 - 계산 의미와 clamp 범위는 유지한 채 연간/스폰 body realized 갱신 경로의 메모리 churn을 완화.
+
+## Commit 133
+- `body_attributes`에 `get_age_trainability_modifier_packed`를 추가해 trainability 5축 배치 결과를 `PackedFloat32Array`로 직접 처리하는 경로를 제공하고, 기존 Dictionary API는 wrapper로 유지.
+- `gathering_system`과 `construction_system`이 trainability 조회 시 packed 인덱스 접근을 사용하도록 전환되어 딕셔너리 할당/키 조회 오버헤드를 축소.
+- trainability 수치 의미를 유지하면서 작업 XP 누적 경로의 메모리 churn을 완화.

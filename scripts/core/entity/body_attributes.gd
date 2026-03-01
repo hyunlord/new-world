@@ -185,24 +185,40 @@ static func get_age_trainability_modifier(axis: String, age_years: float) -> flo
 
 ## 5축 나이별 훈련 효율 배치 계산 (str/agi/end/tou/rec)
 ## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
-static func get_age_trainability_modifier_batch(age_years: float) -> Dictionary:
+static func get_age_trainability_modifier_packed(age_years: float) -> PackedFloat32Array:
 	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifiers", [age_years])
 	if rust_result is PackedFloat32Array:
 		var packed: PackedFloat32Array = rust_result
 		if packed.size() >= _AGE_TRAINABILITY_AXIS_COUNT:
-			return {
-				"str": float(packed[0]),
-				"agi": float(packed[1]),
-				"end": float(packed[2]),
-				"tou": float(packed[3]),
-				"rec": float(packed[4]),
-			}
+			return packed
 
-	var modifiers: Dictionary = {}
+	var fallback: PackedFloat32Array = PackedFloat32Array()
+	fallback.resize(_AGE_TRAINABILITY_AXIS_COUNT)
 	for i in range(_AGE_TRAINABILITY_AXES.size()):
 		var axis: String = _AGE_TRAINABILITY_AXES[i]
-		modifiers[axis] = get_age_trainability_modifier(axis, age_years)
-	return modifiers
+		fallback[i] = get_age_trainability_modifier(axis, age_years)
+	return fallback
+
+
+## 5축 나이별 훈련 효율 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+static func get_age_trainability_modifier_batch(age_years: float) -> Dictionary:
+	var packed: PackedFloat32Array = get_age_trainability_modifier_packed(age_years)
+	if packed.size() >= _AGE_TRAINABILITY_AXIS_COUNT:
+		return {
+			"str": float(packed[0]),
+			"agi": float(packed[1]),
+			"end": float(packed[2]),
+			"tou": float(packed[3]),
+			"rec": float(packed[4]),
+		}
+	return {
+		"str": 1.0,
+		"agi": 1.0,
+		"end": 1.0,
+		"tou": 1.0,
+		"rec": 1.0,
+	}
 
 ## 훈련으로 추가된 능력치 반환 (int)
 ## DR은 훈련 미적용 (innate_immunity 고정)
