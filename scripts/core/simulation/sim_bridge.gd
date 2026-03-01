@@ -947,6 +947,37 @@ func stat_stress_event_scale_step(
 	)
 
 
+## Delegates combined stress event scale step (method code) to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_event_scale_step_code(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	appraisal_scale: float,
+	relationship_method_code: int,
+	bond_strength: float,
+	relationship_min_mult: float,
+	relationship_max_mult: float,
+	context_active_multipliers: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_stress_event_scale_step_code",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			appraisal_scale,
+			relationship_method_code,
+			bond_strength,
+			relationship_min_mult,
+			relationship_max_mult,
+			context_active_multipliers
+		]
+	)
+
+
 ## Delegates combined stress event scale + emotion inject step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_event_inject_step(
@@ -974,6 +1005,45 @@ func stat_stress_event_inject_step(
 			personality_scale,
 			appraisal_scale,
 			relationship_method,
+			bond_strength,
+			relationship_min_mult,
+			relationship_max_mult,
+			context_active_multipliers,
+			fast_current,
+			slow_current,
+			fast_inject,
+			slow_inject
+		]
+	)
+
+
+## Delegates combined stress event scale + emotion inject step (method code) to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_event_inject_step_code(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	appraisal_scale: float,
+	relationship_method_code: int,
+	bond_strength: float,
+	relationship_min_mult: float,
+	relationship_max_mult: float,
+	context_active_multipliers: PackedFloat32Array,
+	fast_current: PackedFloat32Array,
+	slow_current: PackedFloat32Array,
+	fast_inject: PackedFloat32Array,
+	slow_inject: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_stress_event_inject_step_code",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			appraisal_scale,
+			relationship_method_code,
 			bond_strength,
 			relationship_min_mult,
 			relationship_max_mult,

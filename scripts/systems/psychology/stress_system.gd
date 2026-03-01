@@ -39,6 +39,8 @@ const _EMOTION_INDEX: Dictionary = {
 	"trust": 6,
 	"anticipation": 7
 }
+const _REL_METHOD_NONE: int = 0
+const _REL_METHOD_BOND_STRENGTH: int = 1
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
 ## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
@@ -382,7 +384,7 @@ func _load_stressor_defs() -> void:
 			stressor_def["_p_spec_high"] = compiled_personality.get("spec_high", PackedByteArray())
 			stressor_def["_p_trait_ids"] = compiled_personality.get("trait_ids", PackedStringArray())
 			stressor_def["_p_trait_multipliers"] = compiled_personality.get("trait_multipliers", PackedFloat32Array())
-			stressor_def["_r_method"] = compiled_relationship.get("method", "none")
+			stressor_def["_r_method_code"] = int(compiled_relationship.get("method_code", _REL_METHOD_NONE))
 			stressor_def["_r_min_mult"] = compiled_relationship.get("min_mult", 0.3)
 			stressor_def["_r_max_mult"] = compiled_relationship.get("max_mult", 1.5)
 			stressor_def["_c_keys"] = compiled_context.get("keys", PackedStringArray())
@@ -435,7 +437,7 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	)
 
 	# 3) 관계 스케일
-	var r_method: String = String(sdef.get("_r_method", "none"))
+	var r_method_code: int = int(sdef.get("_r_method_code", _REL_METHOD_NONE))
 	var r_min_mult: float = float(sdef.get("_r_min_mult", 0.3))
 	var r_max_mult: float = float(sdef.get("_r_max_mult", 1.5))
 	var bond_strength: float = float(context.get("bond_strength", 0.5))
@@ -456,13 +458,13 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var scaled: Dictionary
 	if emo_has_values:
 		_fill_event_emotion_current(ed)
-		scaled = StatCurveScript.stress_event_inject_step(
+		scaled = StatCurveScript.stress_event_inject_step_code(
 			instant,
 			per_tick,
 			is_loss,
 			personality_scale,
 			1.0,
-			r_method,
+			r_method_code,
 			bond_strength,
 			r_min_mult,
 			r_max_mult,
@@ -473,13 +475,13 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 			emo_slow
 		)
 	else:
-		scaled = StatCurveScript.stress_event_scale_step(
+		scaled = StatCurveScript.stress_event_scale_step_code(
 			instant,
 			per_tick,
 			is_loss,
 			personality_scale,
 			1.0,
-			r_method,
+			r_method_code,
 			bond_strength,
 			r_min_mult,
 			r_max_mult,
@@ -649,15 +651,19 @@ func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 
 func _compile_relationship_scaling(r_def: Variant) -> Dictionary:
 	var method: String = "none"
+	var method_code: int = _REL_METHOD_NONE
 	var min_mult: float = 0.3
 	var max_mult: float = 1.5
 	if typeof(r_def) == TYPE_DICTIONARY:
 		var r_def_dict: Dictionary = r_def
 		method = String(r_def_dict.get("method", "none"))
+		if method == "bond_strength":
+			method_code = _REL_METHOD_BOND_STRENGTH
 		min_mult = float(r_def_dict.get("min_mult", 0.3))
 		max_mult = float(r_def_dict.get("max_mult", 1.5))
 	return {
 		"method": method,
+		"method_code": method_code,
 		"min_mult": min_mult,
 		"max_mult": max_mult,
 	}

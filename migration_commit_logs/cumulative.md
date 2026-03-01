@@ -313,3 +313,8 @@
 ## Commit 064
 - `emotion_inject`가 실질적으로 없는 stressor에 대해 `_emo_has_values` 플래그를 도입하고 `inject_event`에서 scale-only fast path를 사용하도록 분기.
 - 감정 주입이 없는 이벤트에서는 emotion snapshot/결합 step 호출을 건너뛰어 이벤트 주입 경로의 불필요한 오버헤드를 절감.
+
+## Commit 065
+- relationship method 전달을 문자열에서 method code(enum) 기반으로 확장(`*_step_code`)해 브리지 경계 문자열 오버헤드를 완화.
+- `inject_event`는 `_r_method_code`를 사용해 code 기반 event scale/inject step을 호출하도록 전환.
+- string 기반 기존 API는 유지해 호환성을 보존하고 신규 code 경로는 동등성 테스트로 검증.

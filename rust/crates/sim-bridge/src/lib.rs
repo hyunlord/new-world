@@ -1403,6 +1403,42 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_event_scale_step_code(
+        &self,
+        base_instant: f32,
+        base_per_tick: f32,
+        is_loss: bool,
+        personality_scale: f32,
+        appraisal_scale: f32,
+        relationship_method_code: i32,
+        bond_strength: f32,
+        relationship_min_mult: f32,
+        relationship_max_mult: f32,
+        context_active_multipliers: PackedFloat32Array,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_event_scale_step_code(
+            base_instant,
+            base_per_tick,
+            is_loss,
+            personality_scale,
+            appraisal_scale,
+            relationship_method_code,
+            bond_strength,
+            relationship_min_mult,
+            relationship_max_mult,
+            &packed_f32_to_vec(&context_active_multipliers),
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("relationship_scale", out.relationship_scale as f64);
+        dict.set("context_scale", out.context_scale as f64);
+        dict.set("total_scale", out.total_scale as f64);
+        dict.set("loss_mult", out.loss_mult as f64);
+        dict.set("final_instant", out.final_instant as f64);
+        dict.set("final_per_tick", out.final_per_tick as f64);
+        dict
+    }
+
+    #[func]
     fn stat_stress_event_inject_step(
         &self,
         base_instant: f32,
@@ -1427,6 +1463,52 @@ impl WorldSimBridge {
             personality_scale,
             appraisal_scale,
             &relationship_method.to_string(),
+            bond_strength,
+            relationship_min_mult,
+            relationship_max_mult,
+            &packed_f32_to_vec(&context_active_multipliers),
+            &packed_f32_to_vec(&fast_current),
+            &packed_f32_to_vec(&slow_current),
+            &packed_f32_to_vec(&fast_inject),
+            &packed_f32_to_vec(&slow_inject),
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("relationship_scale", out.relationship_scale as f64);
+        dict.set("context_scale", out.context_scale as f64);
+        dict.set("total_scale", out.total_scale as f64);
+        dict.set("loss_mult", out.loss_mult as f64);
+        dict.set("final_instant", out.final_instant as f64);
+        dict.set("final_per_tick", out.final_per_tick as f64);
+        dict.set("fast", vec_f32_to_packed(out.fast));
+        dict.set("slow", vec_f32_to_packed(out.slow));
+        dict
+    }
+
+    #[func]
+    fn stat_stress_event_inject_step_code(
+        &self,
+        base_instant: f32,
+        base_per_tick: f32,
+        is_loss: bool,
+        personality_scale: f32,
+        appraisal_scale: f32,
+        relationship_method_code: i32,
+        bond_strength: f32,
+        relationship_min_mult: f32,
+        relationship_max_mult: f32,
+        context_active_multipliers: PackedFloat32Array,
+        fast_current: PackedFloat32Array,
+        slow_current: PackedFloat32Array,
+        fast_inject: PackedFloat32Array,
+        slow_inject: PackedFloat32Array,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_event_inject_step_code(
+            base_instant,
+            base_per_tick,
+            is_loss,
+            personality_scale,
+            appraisal_scale,
+            relationship_method_code,
             bond_strength,
             relationship_min_mult,
             relationship_max_mult,

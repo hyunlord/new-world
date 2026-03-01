@@ -1,4 +1,6 @@
 const VALUE_SCALE: f32 = 1000.0;
+const RELATIONSHIP_METHOD_NONE: i32 = 0;
+const RELATIONSHIP_METHOD_BOND_STRENGTH: i32 = 1;
 
 #[inline]
 fn lerpf(a: f32, b: f32, t: f32) -> f32 {
@@ -1147,6 +1149,22 @@ pub fn stress_relationship_scale(
     1.0
 }
 
+/// Computes relationship-derived stress scaling for event injection from method code.
+pub fn stress_relationship_scale_code(
+    method_code: i32,
+    bond_strength: f32,
+    min_mult: f32,
+    max_mult: f32,
+) -> f32 {
+    match method_code {
+        RELATIONSHIP_METHOD_BOND_STRENGTH => {
+            stress_relationship_scale("bond_strength", bond_strength, min_mult, max_mult)
+        }
+        RELATIONSHIP_METHOD_NONE => 1.0,
+        _ => 1.0,
+    }
+}
+
 /// Computes context-derived stress scaling for event injection.
 pub fn stress_context_scale(active_multipliers: &[f32]) -> f32 {
     let mut scale = 1.0_f32;
@@ -1253,6 +1271,45 @@ pub fn stress_event_scale_step(
     }
 }
 
+/// Computes relationship/context/event scaling in a single step (method code variant).
+pub fn stress_event_scale_step_code(
+    base_instant: f32,
+    base_per_tick: f32,
+    is_loss: bool,
+    personality_scale: f32,
+    appraisal_scale: f32,
+    relationship_method_code: i32,
+    bond_strength: f32,
+    relationship_min_mult: f32,
+    relationship_max_mult: f32,
+    context_active_multipliers: &[f32],
+) -> StressEventScaleStep {
+    let relationship_scale = stress_relationship_scale_code(
+        relationship_method_code,
+        bond_strength,
+        relationship_min_mult,
+        relationship_max_mult,
+    );
+    let context_scale = stress_context_scale(context_active_multipliers);
+    let scaled = stress_event_scaled(
+        base_instant,
+        base_per_tick,
+        is_loss,
+        personality_scale,
+        relationship_scale,
+        context_scale,
+        appraisal_scale,
+    );
+    StressEventScaleStep {
+        relationship_scale,
+        context_scale,
+        total_scale: scaled.total_scale,
+        loss_mult: scaled.loss_mult,
+        final_instant: scaled.final_instant,
+        final_per_tick: scaled.final_per_tick,
+    }
+}
+
 /// Computes event scaling and emotion layer injection in a single step.
 pub fn stress_event_inject_step(
     base_instant: f32,
@@ -1290,6 +1347,54 @@ pub fn stress_event_inject_step(
         scaled.total_scale,
     );
 
+    StressEventInjectStep {
+        relationship_scale: scaled.relationship_scale,
+        context_scale: scaled.context_scale,
+        total_scale: scaled.total_scale,
+        loss_mult: scaled.loss_mult,
+        final_instant: scaled.final_instant,
+        final_per_tick: scaled.final_per_tick,
+        fast: emotion.fast,
+        slow: emotion.slow,
+    }
+}
+
+/// Computes event scaling and emotion layer injection in a single step (method code variant).
+pub fn stress_event_inject_step_code(
+    base_instant: f32,
+    base_per_tick: f32,
+    is_loss: bool,
+    personality_scale: f32,
+    appraisal_scale: f32,
+    relationship_method_code: i32,
+    bond_strength: f32,
+    relationship_min_mult: f32,
+    relationship_max_mult: f32,
+    context_active_multipliers: &[f32],
+    fast_current: &[f32],
+    slow_current: &[f32],
+    fast_inject: &[f32],
+    slow_inject: &[f32],
+) -> StressEventInjectStep {
+    let scaled = stress_event_scale_step_code(
+        base_instant,
+        base_per_tick,
+        is_loss,
+        personality_scale,
+        appraisal_scale,
+        relationship_method_code,
+        bond_strength,
+        relationship_min_mult,
+        relationship_max_mult,
+        context_active_multipliers,
+    );
+    let emotion = stress_emotion_inject_step(
+        fast_current,
+        slow_current,
+        fast_inject,
+        slow_inject,
+        scaled.total_scale,
+    );
     StressEventInjectStep {
         relationship_scale: scaled.relationship_scale,
         context_scale: scaled.context_scale,
@@ -1878,6 +1983,19 @@ mod tests {
     }
 
     #[test]
+    fn stress_relationship_scale_code_matches_string_variant() {
+        let bond = stress_relationship_scale("bond_strength", 0.8, 0.3, 1.5);
+        let bond_code =
+            stress_relationship_scale_code(RELATIONSHIP_METHOD_BOND_STRENGTH, 0.8, 0.3, 1.5);
+        assert!((bond - bond_code).abs() < 1e-6);
+        assert_eq!(
+            stress_relationship_scale_code(RELATIONSHIP_METHOD_NONE, 0.8, 0.3, 1.5),
+            1.0
+        );
+        assert_eq!(stress_relationship_scale_code(999, 0.8, 0.3, 1.5), 1.0);
+    }
+
+    #[test]
     fn stress_context_scale_applies_and_clamps_multipliers() {
         let normal = stress_context_scale(&[1.2, 0.8, 1.5]);
         let low = stress_context_scale(&[0.01, 0.01]);
@@ -1945,6 +2063,36 @@ mod tests {
     }
 
     #[test]
+    fn stress_event_scale_step_code_matches_string_variant() {
+        let string_step = stress_event_scale_step(
+            12.0,
+            0.8,
+            true,
+            1.15,
+            1.0,
+            "bond_strength",
+            0.7,
+            0.3,
+            1.5,
+            &[1.2, 0.9],
+        );
+        let code_step = stress_event_scale_step_code(
+            12.0,
+            0.8,
+            true,
+            1.15,
+            1.0,
+            RELATIONSHIP_METHOD_BOND_STRENGTH,
+            0.7,
+            0.3,
+            1.5,
+            &[1.2, 0.9],
+        );
+        assert!((string_step.total_scale - code_step.total_scale).abs() < 1e-6);
+        assert!((string_step.final_instant - code_step.final_instant).abs() < 1e-6);
+    }
+
+    #[test]
     fn stress_event_inject_step_matches_scale_plus_emotion_step() {
         let out = stress_event_inject_step(
             12.0,
@@ -1986,6 +2134,45 @@ mod tests {
         assert!((out.final_per_tick - scaled.final_per_tick).abs() < 1e-6);
         assert_eq!(out.fast, emotion.fast);
         assert_eq!(out.slow, emotion.slow);
+    }
+
+    #[test]
+    fn stress_event_inject_step_code_matches_string_variant() {
+        let string_step = stress_event_inject_step(
+            12.0,
+            0.8,
+            false,
+            1.2,
+            1.0,
+            "bond_strength",
+            0.6,
+            0.3,
+            1.5,
+            &[1.1, 0.9],
+            &[20.0, 50.0, 10.0],
+            &[5.0, -5.0, 10.0],
+            &[2.0, -1.0, 3.5],
+            &[0.5, 1.2, -0.6],
+        );
+        let code_step = stress_event_inject_step_code(
+            12.0,
+            0.8,
+            false,
+            1.2,
+            1.0,
+            RELATIONSHIP_METHOD_BOND_STRENGTH,
+            0.6,
+            0.3,
+            1.5,
+            &[1.1, 0.9],
+            &[20.0, 50.0, 10.0],
+            &[5.0, -5.0, 10.0],
+            &[2.0, -1.0, 3.5],
+            &[0.5, 1.2, -0.6],
+        );
+        assert!((string_step.final_instant - code_step.final_instant).abs() < 1e-6);
+        assert_eq!(string_step.fast, code_step.fast);
+        assert_eq!(string_step.slow, code_step.slow);
     }
 
     #[test]
