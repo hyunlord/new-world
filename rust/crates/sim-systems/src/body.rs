@@ -1878,6 +1878,19 @@ pub fn building_add_capped(current: f32, delta: f32, cap: f32) -> f32 {
     (current + delta).min(cap)
 }
 
+/// Childcare stockpile withdrawal amount for one stockpile step.
+pub fn childcare_take_food(available: f32, remaining: f32) -> f32 {
+    if available <= 0.0 || remaining <= 0.0 {
+        return 0.0;
+    }
+    available.min(remaining)
+}
+
+/// Childcare hunger update after food withdrawal.
+pub fn childcare_hunger_after(current_hunger: f32, withdrawn: f32, food_hunger_restore: f32) -> f32 {
+    clamp_f32(current_hunger + withdrawn * food_hunger_restore, 0.0, 1.0)
+}
+
 /// Culture receptivity modifier for cross-settlement tech propagation.
 pub fn tech_propagation_culture_modifier(
     knowledge_avg: f32,
@@ -2509,6 +2522,7 @@ mod tests {
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
+        childcare_take_food, childcare_hunger_after,
         tech_propagation_culture_modifier, tech_propagation_carrier_bonus,
         tech_propagation_final_prob, mortality_hazards_and_prob,
         cognition_activity_modifier,
@@ -3465,6 +3479,20 @@ mod tests {
     fn building_add_capped_limits_to_cap() {
         assert!((building_add_capped(0.8, 0.1, 1.0) - 0.9).abs() < 1e-6);
         assert!((building_add_capped(0.95, 0.2, 1.0) - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn childcare_take_food_clamps_to_remaining_and_zero_bounds() {
+        assert!((childcare_take_food(10.0, 3.5) - 3.5).abs() < 1e-6);
+        assert!((childcare_take_food(2.0, 5.0) - 2.0).abs() < 1e-6);
+        assert_eq!(childcare_take_food(0.0, 2.0), 0.0);
+        assert_eq!(childcare_take_food(2.0, 0.0), 0.0);
+    }
+
+    #[test]
+    fn childcare_hunger_after_applies_restore_and_clamp() {
+        assert!((childcare_hunger_after(0.2, 0.3, 1.5) - 0.65).abs() < 1e-6);
+        assert_eq!(childcare_hunger_after(0.9, 1.0, 0.5), 1.0);
     }
 
     #[test]

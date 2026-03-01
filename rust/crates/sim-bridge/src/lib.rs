@@ -1989,6 +1989,21 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_childcare_take_food(&self, available: f32, remaining: f32) -> f32 {
+        body::childcare_take_food(available, remaining)
+    }
+
+    #[func]
+    fn body_childcare_hunger_after(
+        &self,
+        current_hunger: f32,
+        withdrawn: f32,
+        food_hunger_restore: f32,
+    ) -> f32 {
+        body::childcare_hunger_after(current_hunger, withdrawn, food_hunger_restore)
+    }
+
+    #[func]
     fn body_tech_propagation_culture_modifier(
         &self,
         knowledge_avg: f32,
