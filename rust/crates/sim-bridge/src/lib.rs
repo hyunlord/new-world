@@ -1089,6 +1089,42 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_economic_tendencies_step(
+        &self,
+        scalar_inputs: PackedFloat32Array,
+        is_male: bool,
+        wealth_generosity_penalty: f32,
+    ) -> PackedFloat32Array {
+        let scalars = scalar_inputs.as_slice();
+        let out = body::economic_tendencies_step(
+            *scalars.first().unwrap_or(&0.5),
+            *scalars.get(1).unwrap_or(&0.5),
+            *scalars.get(2).unwrap_or(&0.5),
+            *scalars.get(3).unwrap_or(&0.5),
+            *scalars.get(4).unwrap_or(&0.5),
+            *scalars.get(5).unwrap_or(&0.5),
+            *scalars.get(6).unwrap_or(&0.0),
+            *scalars.get(7).unwrap_or(&0.0),
+            *scalars.get(8).unwrap_or(&0.0),
+            *scalars.get(9).unwrap_or(&0.0),
+            *scalars.get(10).unwrap_or(&0.0),
+            *scalars.get(11).unwrap_or(&0.0),
+            *scalars.get(12).unwrap_or(&0.0),
+            *scalars.get(13).unwrap_or(&0.0),
+            *scalars.get(14).unwrap_or(&0.0),
+            *scalars.get(15).unwrap_or(&0.0),
+            *scalars.get(16).unwrap_or(&0.0),
+            *scalars.get(17).unwrap_or(&0.0),
+            *scalars.get(18).unwrap_or(&0.0),
+            *scalars.get(19).unwrap_or(&0.0),
+            *scalars.get(20).unwrap_or(&0.0),
+            is_male,
+            wealth_generosity_penalty,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

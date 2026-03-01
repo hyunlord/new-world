@@ -621,9 +621,100 @@ pub fn reputation_decay_value(value: f32, pos_decay: f32, neg_decay: f32) -> f32
     value * decay
 }
 
+/// Economic tendency step:
+/// returns `[saving, risk, generosity, materialism]` in `[-1.0, 1.0]`.
+#[allow(clippy::too_many_arguments)]
+pub fn economic_tendencies_step(
+    h: f32,
+    e: f32,
+    x: f32,
+    a: f32,
+    c: f32,
+    o: f32,
+    age_years: f32,
+    val_self_control: f32,
+    val_law: f32,
+    val_commerce: f32,
+    val_competition: f32,
+    val_martial_prowess: f32,
+    val_sacrifice: f32,
+    val_cooperation: f32,
+    val_family: f32,
+    val_power: f32,
+    val_fairness: f32,
+    belonging: f32,
+    wealth_norm: f32,
+    culture_gen: f32,
+    culture_mat: f32,
+    is_male: bool,
+    wealth_generosity_penalty: f32,
+) -> [f32; 4] {
+    let age_factor = 1.0 / (1.0 + (-(age_years - 22.0) / 10.0).exp());
+
+    let saving = clamp_f32(
+        bipolar(c) * 0.40
+            + val_self_control * 0.20
+            + bipolar(e) * 0.15
+            + bipolar(age_factor) * 0.10
+            + val_law * 0.10
+            + (-val_commerce) * 0.05,
+        -1.0,
+        1.0,
+    );
+
+    let mut risk = clamp_f32(
+        -bipolar(e) * 0.25
+            + bipolar(x) * 0.20
+            + -bipolar(c) * 0.20
+            + bipolar(o) * 0.15
+            + val_competition * 0.10
+            + val_martial_prowess * 0.05
+            + -bipolar(age_factor) * 0.05,
+        -1.0,
+        1.0,
+    );
+    if is_male {
+        risk = clamp_f32(risk + 0.06, -1.0, 1.0);
+    }
+
+    let mut generosity = clamp_f32(
+        bipolar(h) * 0.25
+            + bipolar(a) * 0.20
+            + val_sacrifice * 0.20
+            + val_cooperation * 0.15
+            + bipolar(belonging) * 0.10
+            + val_family * 0.05
+            + culture_gen * 0.05,
+        -1.0,
+        1.0,
+    );
+    if wealth_norm > 0.80 {
+        generosity *= wealth_generosity_penalty;
+    }
+
+    let materialism = clamp_f32(
+        -bipolar(h) * 0.30
+            + val_commerce * 0.20
+            + val_power * 0.15
+            + -val_fairness * 0.10
+            + bipolar(wealth_norm) * 0.10
+            + val_competition * 0.10
+            + culture_mat * 0.05,
+        -1.0,
+        1.0,
+    );
+
+    [saving, risk, generosity, materialism]
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
+}
+
+#[inline]
+fn bipolar(value: f32) -> f32 {
+    (value - 0.5) * 2.0
 }
 
 /// Parent-to-child stress transfer under attachment/co-regulation factors.
@@ -1093,14 +1184,14 @@ mod tests {
         child_parent_transfer_apply_step, child_shrp_step, child_simultaneous_ace_step,
         child_social_buffered_intensity, child_stage_code_from_age_ticks, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
-        erg_frustration_step, job_satisfaction_score, job_satisfaction_score_batch,
-        leader_age_respect, leader_score, needs_base_decay_step, needs_critical_severity_step,
-        network_social_capital_norm, occupation_best_skill_index, occupation_should_switch,
-        reputation_decay_value, reputation_event_delta, rest_energy_recovery,
-        revolution_risk_score, stress_injection_apply_step, stress_rebound_apply_step,
-        stress_shaken_countdown_step, stress_support_score, thirst_decay,
-        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        warmth_decay,
+        economic_tendencies_step, erg_frustration_step, job_satisfaction_score,
+        job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
+        needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
+        occupation_should_switch, reputation_decay_value, reputation_event_delta,
+        rest_energy_recovery, revolution_risk_score, stress_injection_apply_step,
+        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
+        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
+        upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -1476,6 +1567,29 @@ mod tests {
     fn reputation_decay_value_uses_sign_specific_decay() {
         assert_eq!(reputation_decay_value(0.5, 0.9, 0.8), 0.45);
         assert_eq!(reputation_decay_value(-0.5, 0.9, 0.8), -0.4);
+    }
+
+    #[test]
+    fn economic_tendencies_step_returns_bounded_values() {
+        let out = economic_tendencies_step(
+            0.6, 0.4, 0.7, 0.5, 0.8, 0.65, 28.0, 0.2, 0.3, 0.1, 0.25, 0.05, 0.4, 0.35, 0.2, 0.3,
+            0.1, 0.7, 0.85, 0.2, 0.15, true, 0.8,
+        );
+        assert!(out.iter().all(|v| (-1.0..=1.0).contains(v)));
+    }
+
+    #[test]
+    fn economic_tendencies_step_applies_gender_and_wealth_adjustments() {
+        let female = economic_tendencies_step(
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 30.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.4, 0.0, 0.0, 0.0, 0.0,
+            0.5, 0.9, 0.0, 0.0, false, 0.5,
+        );
+        let male = economic_tendencies_step(
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 30.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.4, 0.0, 0.0, 0.0, 0.0,
+            0.5, 0.9, 0.0, 0.0, true, 0.5,
+        );
+        assert!(male[1] > female[1]);
+        assert!(male[2] <= female[2]); // wealth penalty reduces generosity
     }
 
     #[test]

@@ -1408,3 +1408,10 @@
 - `reputation_system.gd`의 이벤트 delta 계산 및 decay 계산을 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `9/56` 적용.
+
+## Commit 281
+- `sim-systems/body`에 `economic_tendencies_step`을 추가해 saving/risk/generosity/materialism 4개 경제 성향 수식을 Rust 함수로 확장하고 관련 단위 테스트를 추가.
+- `sim-bridge`에 `body_economic_tendencies_step` 메서드를 추가해 GDScript에서 경제 성향 수식을 PackedFloat32Array 기반으로 직접 호출 가능하게 확장.
+- `economic_tendency_system.gd`의 `_compute_tendencies`를 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `10/56` 적용.
