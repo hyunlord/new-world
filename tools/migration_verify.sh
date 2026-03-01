@@ -5,6 +5,12 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPLY_KEY_FIELDS="false"
 STRIP_INLINE_FIELDS="false"
 WITH_BENCHES="false"
+VERIFY_STARTED_EPOCH="$(date +%s)"
+STEP_TESTS_DURATION=0
+STEP_EXTRACT_DURATION=0
+STEP_COMPILE_DURATION=0
+STEP_AUDIT_DURATION=0
+STEP_BENCH_DURATION=0
 
 for arg in "$@"; do
   case "${arg}" in
@@ -29,12 +35,15 @@ done
 echo "[migration_verify] root=${ROOT_DIR}"
 
 echo "[migration_verify] 1/4 rust workspace tests"
+step_started_epoch="$(date +%s)"
 (
   cd "${ROOT_DIR}/rust"
   cargo test -q
 )
+STEP_TESTS_DURATION=$(( $(date +%s) - step_started_epoch ))
 
 echo "[migration_verify] 2/4 data localization extraction"
+step_started_epoch="$(date +%s)"
 extract_cmd=(python3 "${ROOT_DIR}/tools/data_localization_extract.py" --project-root "${ROOT_DIR}")
 if [[ "${APPLY_KEY_FIELDS}" == "true" ]]; then
   extract_cmd+=(--apply-key-fields)
@@ -43,8 +52,10 @@ if [[ "${STRIP_INLINE_FIELDS}" == "true" ]]; then
   extract_cmd+=(--strip-inline-fields)
 fi
 "${extract_cmd[@]}"
+STEP_EXTRACT_DURATION=$(( $(date +%s) - step_started_epoch ))
 
 echo "[migration_verify] 3/4 localization compile"
+step_started_epoch="$(date +%s)"
 compile_report_json="${MIGRATION_COMPILE_REPORT_JSON:-}"
 compile_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
 if [[ -n "${compile_report_dir}" && -z "${compile_report_json}" ]]; then
@@ -62,8 +73,10 @@ if [[ -n "${compile_report_json}" ]]; then
   compile_cmd+=(--report-json "${compile_report_json}")
 fi
 "${compile_cmd[@]}"
+STEP_COMPILE_DURATION=$(( $(date +%s) - step_started_epoch ))
 
 echo "[migration_verify] 4/4 localization strict audit"
+step_started_epoch="$(date +%s)"
 audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
 audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
 audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
@@ -169,9 +182,11 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
   audit_cmd+=(--compare-key-owner-policy "${audit_compare_key_owner_policy}")
 fi
 "${audit_cmd[@]}"
+STEP_AUDIT_DURATION=$(( $(date +%s) - step_started_epoch ))
 
 bench_report_json="${MIGRATION_BENCH_REPORT_JSON:-}"
 if [[ "${WITH_BENCHES}" == "true" ]]; then
+  step_started_epoch="$(date +%s)"
   echo "[migration_verify] 5/5 rust bench checksum verification"
   path_iters="${MIGRATION_BENCH_PATH_ITERS:-100}"
   stress_iters="${MIGRATION_BENCH_STRESS_ITERS:-10000}"
@@ -773,6 +788,7 @@ EOF
       echo "[migration_verify] bench report written: ${bench_report_out}"
     fi
   )
+  STEP_BENCH_DURATION=$(( $(date +%s) - step_started_epoch ))
 fi
 
 if [[ -n "${verify_report_json}" ]]; then
@@ -863,6 +879,8 @@ if [[ -n "${verify_report_json}" ]]; then
   verify_report_out="$(to_abs_path "${verify_report_json}")"
   mkdir -p "$(dirname "${verify_report_out}")"
   generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  verify_finished_epoch="$(date +%s)"
+  total_duration_seconds=$((verify_finished_epoch - VERIFY_STARTED_EPOCH))
   git_branch="$(git -C "${ROOT_DIR}" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
   git_head="$(git -C "${ROOT_DIR}" rev-parse HEAD 2>/dev/null || true)"
   git_dirty="false"
@@ -913,6 +931,14 @@ if [[ -n "${verify_report_json}" ]]; then
   "apply_key_fields": ${APPLY_KEY_FIELDS},
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},
   "assert_artifacts": ${verify_assert_artifacts},
+  "total_duration_seconds": ${total_duration_seconds},
+  "timings_seconds": {
+    "rust_tests": ${STEP_TESTS_DURATION},
+    "data_localization_extract": ${STEP_EXTRACT_DURATION},
+    "localization_compile": ${STEP_COMPILE_DURATION},
+    "localization_audit": ${STEP_AUDIT_DURATION},
+    "rust_bench": ${STEP_BENCH_DURATION}
+  },
   "artifacts": {
     "compile_report_json": ${compile_report_json_value},
     "audit_report_json": ${audit_report_json_value},

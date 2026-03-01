@@ -1260,3 +1260,8 @@
 - `migration_verify_report.json`에 `artifact_size_bytes` 객체를 추가해 compile/audit/bench 산출물의 파일 크기(bytes)를 함께 기록.
 - 파일이 없는 항목은 `null`, 존재하는 항목은 정수 바이트 크기로 출력해 파서 일관성을 유지.
 - `/tmp/worldsim_audit_artifacts16/migration_verify_report.json`에서 artifact size 필드 반영과 non-bench 기준 bench size null을 확인.
+
+## Commit 255
+- `migration_verify`가 전체 실행 시간과 단계별 소요 시간(초)을 측정해 `migration_verify_report.json`의 `total_duration_seconds`, `timings_seconds`로 기록하도록 확장.
+- 단계별 메트릭은 `rust_tests`, `data_localization_extract`, `localization_compile`, `localization_audit`, `rust_bench`(선택)를 포함.
+- `/tmp/worldsim_audit_artifacts17/migration_verify_report.json`에서 시간 메트릭 필드 반영을 확인.
