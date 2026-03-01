@@ -280,9 +280,12 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		var trace: Dictionary = ed.stress_traces[i]
 		var contribution: float = float(_tick_trace_per_tick[i])
 		trace["per_tick"] = float(updated[i])
+		var trace_key: String = String(trace.get("breakdown_key", ""))
+		if trace_key.is_empty():
+			trace_key = "trace_%s" % str(trace.get("source_id", "unknown"))
+			trace["breakdown_key"] = trace_key
 		if int(active_mask[i]) != 0:
-			var key: String = "trace_%s" % str(trace.get("source_id", "unknown"))
-			breakdown[key] = contribution
+			breakdown[trace_key] = contribution
 			next_traces.append(trace)
 	ed.stress_traces = next_traces
 
@@ -393,6 +396,7 @@ func inject_stress_event(ed, source_id: String, instant: float,
 	if absf(final_per_tick) > 0.01:
 		ed.stress_traces.append({
 			"source_id": source_id,
+			"breakdown_key": "trace_%s" % source_id,
 			"per_tick": final_per_tick,
 			"decay_rate": decay_rate,
 		})
@@ -549,6 +553,7 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	if absf(final_per_tick) > 0.01:
 		ed.stress_traces.append({
 			"source_id": event_id,
+			"breakdown_key": "trace_%s" % event_id,
 			"per_tick": final_per_tick,
 			"decay_rate": decay_rate,
 		})

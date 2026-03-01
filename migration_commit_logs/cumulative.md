@@ -327,3 +327,7 @@
 ## Commit 067
 - stress tick breakdown의 감정 키를 `_EMOTION_BREAKDOWN_KEYS` 상수 배열로 고정해 루프 내 문자열 포맷팅 비용을 제거.
 - breakdown 키 체계(`emo_*`) 의미는 유지하면서 미세 오버헤드를 완화.
+
+## Commit 068
+- stress trace breakdown 키(`trace_<source_id>`)를 trace 데이터(`breakdown_key`)에 캐시해 tick 루프 문자열 포맷팅을 줄임.
+- 기존 trace 데이터에는 키가 없을 수 있으므로 처리 중 1회 생성/저장하는 보정 경로를 추가해 호환성을 유지.
