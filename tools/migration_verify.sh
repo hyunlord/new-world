@@ -850,6 +850,20 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "${size_bytes}"
     fi
   }
+  to_json_opt_exists() {
+    local raw_path="$1"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    if [[ -f "${abs_path}" ]]; then
+      echo "true"
+    else
+      echo "false"
+    fi
+  }
   to_json_opt_bool_literal() {
     local raw_value="$1"
     if [[ "${raw_value}" == "true" || "${raw_value}" == "false" ]]; then
@@ -958,6 +972,14 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_size="$(to_json_opt_size_bytes "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_size="$(to_json_opt_size_bytes "${audit_owner_policy_compare_report_json}")"
   bench_report_json_size="$(to_json_opt_size_bytes "${bench_report_json}")"
+  compile_report_json_exists="$(to_json_opt_exists "${compile_report_json}")"
+  audit_report_json_exists="$(to_json_opt_exists "${audit_report_json}")"
+  audit_duplicate_report_json_exists="$(to_json_opt_exists "${audit_duplicate_report_json}")"
+  audit_conflict_markdown_exists="$(to_json_opt_exists "${audit_conflict_markdown}")"
+  audit_key_owner_policy_json_exists="$(to_json_opt_exists "${audit_key_owner_policy_json}")"
+  audit_owner_policy_markdown_exists="$(to_json_opt_exists "${audit_owner_policy_markdown}")"
+  audit_owner_policy_compare_report_json_exists="$(to_json_opt_exists "${audit_owner_policy_compare_report_json}")"
+  bench_report_json_exists="$(to_json_opt_exists "${bench_report_json}")"
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -1027,6 +1049,16 @@ if [[ -n "${verify_report_json}" ]]; then
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_size},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_size},
     "bench_report_json": ${bench_report_json_size}
+  },
+  "artifact_exists": {
+    "compile_report_json": ${compile_report_json_exists},
+    "audit_report_json": ${audit_report_json_exists},
+    "audit_duplicate_report_json": ${audit_duplicate_report_json_exists},
+    "audit_conflict_markdown": ${audit_conflict_markdown_exists},
+    "audit_key_owner_policy_json": ${audit_key_owner_policy_json_exists},
+    "audit_owner_policy_markdown": ${audit_owner_policy_markdown_exists},
+    "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_exists},
+    "bench_report_json": ${bench_report_json_exists}
   }
 }
 EOF
