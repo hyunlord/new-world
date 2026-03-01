@@ -798,6 +798,26 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "\"${abs_path}\""
     fi
   }
+  to_json_opt_sha256() {
+    local raw_path="$1"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local hash=""
+    if command -v shasum >/dev/null 2>&1; then
+      hash="$(shasum -a 256 "${abs_path}" | awk '{print $1}')"
+    elif command -v sha256sum >/dev/null 2>&1; then
+      hash="$(sha256sum "${abs_path}" | awk '{print $1}')"
+    fi
+    if [[ -z "${hash}" ]]; then
+      echo "null"
+    else
+      echo "\"${hash}\""
+    fi
+  }
   assert_artifact_exists() {
     local artifact_name="$1"
     local raw_path="$2"
@@ -849,6 +869,14 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_value="$(to_json_opt_path "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_value="$(to_json_opt_path "${audit_owner_policy_compare_report_json}")"
   bench_report_json_value="$(to_json_opt_path "${bench_report_json}")"
+  compile_report_json_sha256="$(to_json_opt_sha256 "${compile_report_json}")"
+  audit_report_json_sha256="$(to_json_opt_sha256 "${audit_report_json}")"
+  audit_duplicate_report_json_sha256="$(to_json_opt_sha256 "${audit_duplicate_report_json}")"
+  audit_conflict_markdown_sha256="$(to_json_opt_sha256 "${audit_conflict_markdown}")"
+  audit_key_owner_policy_json_sha256="$(to_json_opt_sha256 "${audit_key_owner_policy_json}")"
+  audit_owner_policy_markdown_sha256="$(to_json_opt_sha256 "${audit_owner_policy_markdown}")"
+  audit_owner_policy_compare_report_json_sha256="$(to_json_opt_sha256 "${audit_owner_policy_compare_report_json}")"
+  bench_report_json_sha256="$(to_json_opt_sha256 "${bench_report_json}")"
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -870,6 +898,16 @@ if [[ -n "${verify_report_json}" ]]; then
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_value},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_value},
     "bench_report_json": ${bench_report_json_value}
+  },
+  "artifact_sha256": {
+    "compile_report_json": ${compile_report_json_sha256},
+    "audit_report_json": ${audit_report_json_sha256},
+    "audit_duplicate_report_json": ${audit_duplicate_report_json_sha256},
+    "audit_conflict_markdown": ${audit_conflict_markdown_sha256},
+    "audit_key_owner_policy_json": ${audit_key_owner_policy_json_sha256},
+    "audit_owner_policy_markdown": ${audit_owner_policy_markdown_sha256},
+    "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_sha256},
+    "bench_report_json": ${bench_report_json_sha256}
   }
 }
 EOF

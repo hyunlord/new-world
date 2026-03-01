@@ -1250,3 +1250,8 @@
 - `localization_audit` 출력 JSON(`audit.json`, `duplicate.json`)에 `schema_version`, `generated_at_utc` 메타를 추가해 아티팩트 버전/생성시각 추적을 지원.
 - `run_audit` 결과와 duplicate report export payload를 함께 확장해 두 출력 간 메타 일관성을 유지.
 - `/tmp/worldsim_audit_artifacts14/audit.json`, `/tmp/worldsim_audit_artifacts14/duplicate.json`에서 메타 필드 반영 확인.
+
+## Commit 253
+- `migration_verify_report.json`에 `artifact_sha256` 객체를 추가해 compile/audit/bench 산출물의 SHA-256 무결성 해시를 함께 기록.
+- `shasum`(macOS)과 `sha256sum`(Linux) 양쪽을 지원하며, 파일이 없는 항목은 `null`로 표준화.
+- `/tmp/worldsim_audit_artifacts15/migration_verify_report.json`에서 non-bench 실행 기준 아티팩트 해시 채움 + bench 해시 null을 확인.
