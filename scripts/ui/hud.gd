@@ -773,13 +773,17 @@ func _update_building_panel() -> void:
 	_building_info_label.text = settlement_text + "(" + str(building.tile_x) + ", " + str(building.tile_y) + ")"
 
 	match building.building_type:
-		"stockpile":
-			if building.is_built:
-				_building_storage_label.text = Locale.trf("UI_BUILDING_STORAGE_FMT", {
-					"food": "%.0f" % building.storage.get("food", 0.0),
-					"wood": "%.0f" % building.storage.get("wood", 0.0),
-					"stone": "%.0f" % building.storage.get("stone", 0.0),
-				})
+			"stockpile":
+				if building.is_built:
+					_building_storage_label.text = Locale.trf3(
+						"UI_BUILDING_STORAGE_FMT",
+						"food",
+						"%.0f" % building.storage.get("food", 0.0),
+						"wood",
+						"%.0f" % building.storage.get("wood", 0.0),
+						"stone",
+						"%.0f" % building.storage.get("stone", 0.0)
+					)
 			else:
 				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		"shelter":
@@ -917,38 +921,46 @@ func _on_simulation_event(event: Dictionary) -> void:
 			_add_notification(Locale.ltr("UI_NOTIF_GAME_LOADED"), Color.WHITE)
 		"settlement_founded":
 			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1))
-		"building_completed":
-			var btype: String = event.get("building_type", "building")
-			_add_notification(Locale.trf("UI_NOTIF_BUILDING_BUILT_FMT", {"type": btype.capitalize()}), Color(1.0, 0.9, 0.3))
-		"entity_starved":
-			var starved_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_DIED_STARVED_FMT", {"name": starved_name}), Color(0.9, 0.2, 0.2))
+			"building_completed":
+				var btype: String = event.get("building_type", "building")
+				_add_notification(Locale.trf1("UI_NOTIF_BUILDING_BUILT_FMT", "type", btype.capitalize()), Color(1.0, 0.9, 0.3))
+			"entity_starved":
+				var starved_name: String = event.get("entity_name", "?")
+				_add_notification(Locale.trf1("UI_NOTIF_DIED_STARVED_FMT", "name", starved_name), Color(0.9, 0.2, 0.2))
 		"entity_died_siler":
 			var died_name: String = event.get("entity_name", "?")
 			var died_cause: String = event.get("cause", "unknown")
 			var died_age: float = event.get("age_years", 0.0)
 			var cause_loc: String = Locale.tr_id("DEATH", died_cause)
 			var age_str: String = "%.0fy" % died_age
-			_add_notification(Locale.trf("UI_NOTIF_DIED_CAUSE_AGE_FMT", {"name": died_name, "cause": cause_loc, "age": age_str}), Color(0.7, 0.3, 0.3))
-		"maternal_death":
-			var m_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_MATERNAL_FMT", {"name": m_name}), Color(0.8, 0.3, 0.5))
-		"stillborn":
-			var s_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_STILLBORN_FMT", {"name": s_name}), Color(0.6, 0.3, 0.3))
-		"leader_elected":
-			var lname: String = event.get("leader_name", "?")
-			var sid: int = event.get("settlement_id", 0)
-			_add_notification(
-				Locale.trf("UI_NOTIF_LEADER_ELECTED_FMT", {"name": lname, "sid": sid}),
-				Color(1.0, 0.82, 0.1)
-			)
-		"leader_lost":
-			var sid2: int = event.get("settlement_id", 0)
-			_add_notification(
-				Locale.trf("UI_NOTIF_LEADER_LOST_FMT", {"sid": sid2}),
-				Color(0.5, 0.5, 0.5)
-			)
+				_add_notification(Locale.trf3(
+					"UI_NOTIF_DIED_CAUSE_AGE_FMT",
+					"name",
+					died_name,
+					"cause",
+					cause_loc,
+					"age",
+					age_str
+				), Color(0.7, 0.3, 0.3))
+			"maternal_death":
+				var m_name: String = event.get("entity_name", "?")
+				_add_notification(Locale.trf1("UI_NOTIF_MATERNAL_FMT", "name", m_name), Color(0.8, 0.3, 0.5))
+			"stillborn":
+				var s_name: String = event.get("entity_name", "?")
+				_add_notification(Locale.trf1("UI_NOTIF_STILLBORN_FMT", "name", s_name), Color(0.6, 0.3, 0.3))
+			"leader_elected":
+				var lname: String = event.get("leader_name", "?")
+				var sid: int = event.get("settlement_id", 0)
+				_add_notification(
+					Locale.trf2("UI_NOTIF_LEADER_ELECTED_FMT", "name", lname, "sid", sid),
+					Color(1.0, 0.82, 0.1)
+				)
+			"leader_lost":
+				var sid2: int = event.get("settlement_id", 0)
+				_add_notification(
+					Locale.trf1("UI_NOTIF_LEADER_LOST_FMT", "sid", sid2),
+					Color(0.5, 0.5, 0.5)
+				)
 		"tech_discovered":
 			var td_tech: String = event.get("tech_id", "")
 			var td_disc_id: int = event.get("discoverer_id", -1)
@@ -957,47 +969,52 @@ func _on_simulation_event(event: Dictionary) -> void:
 				var td_e: RefCounted = _entity_manager.get_entity(td_disc_id)
 				if td_e != null:
 					td_name = td_e.entity_name
-			var td_display: String = Locale.ltr(td_tech)
-			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_DISCOVERED_FMT", {"name": td_name, "tech": td_display}),
-				Color(1.0, 0.85, 0.2))
-		"era_advanced":
-			var ea_era: String = event.get("new_era", "")
-			var ea_display: String = Locale.ltr("ERA_" + ea_era.to_upper())
-			_add_notification(
-				Locale.trf("UI_NOTIF_ERA_ADVANCED_FMT", {"era": ea_display}),
-				Color(1.0, 0.9, 0.5))
-			_update_era_label()
+				var td_display: String = Locale.ltr(td_tech)
+				_add_notification(
+					Locale.trf2("UI_NOTIF_TECH_DISCOVERED_FMT", "name", td_name, "tech", td_display),
+					Color(1.0, 0.85, 0.2))
+			"era_advanced":
+				var ea_era: String = event.get("new_era", "")
+				var ea_display: String = Locale.ltr("ERA_" + ea_era.to_upper())
+				_add_notification(
+					Locale.trf1("UI_NOTIF_ERA_ADVANCED_FMT", "era", ea_display),
+					Color(1.0, 0.9, 0.5))
+				_update_era_label()
 		"tech_atrophy_warning":
 			var ta_tech: String = Locale.ltr(event.get("tech_id", ""))
 			var ta_curr: int = event.get("practitioners", 0)
 			var ta_req: int = event.get("min_required", 0)
-			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_ATROPHY_FMT", {
-					"tech": ta_tech, "current": str(ta_curr), "required": str(ta_req)}),
-				Color(0.8, 0.4, 0.1))
+				_add_notification(Locale.trf3(
+					"UI_NOTIF_TECH_ATROPHY_FMT",
+					"tech",
+					ta_tech,
+					"current",
+					ta_curr,
+					"required",
+					ta_req
+				), Color(0.8, 0.4, 0.1))
 		"tech_fallback":
-			var tf_lost: String = Locale.ltr(event.get("lost_tech", ""))
-			var tf_fb: String = Locale.ltr(event.get("fallback_tech", ""))
-			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_FALLBACK_FMT", {"lost": tf_lost, "fallback": tf_fb}),
-				Color(0.7, 0.4, 0.1))
+				var tf_lost: String = Locale.ltr(event.get("lost_tech", ""))
+				var tf_fb: String = Locale.ltr(event.get("fallback_tech", ""))
+				_add_notification(
+					Locale.trf2("UI_NOTIF_TECH_FALLBACK_FMT", "lost", tf_lost, "fallback", tf_fb),
+					Color(0.7, 0.4, 0.1))
 
 
 func _on_tech_state_changed(_settlement_id: int, tech_id: String,
 		_old_state: String, new_state: String, _tick: int) -> void:
-	if new_state == "known_stable":
-		var ts_display: String = Locale.ltr(tech_id)
-		_add_notification(
-			Locale.trf("UI_NOTIF_TECH_STABILIZED_FMT", {"tech": ts_display}),
-			Color(0.3, 0.8, 0.3))
+		if new_state == "known_stable":
+			var ts_display: String = Locale.ltr(tech_id)
+			_add_notification(
+				Locale.trf1("UI_NOTIF_TECH_STABILIZED_FMT", "tech", ts_display),
+				Color(0.3, 0.8, 0.3))
 
 
 func _on_tech_regression_started(_settlement_id: int, tech_id: String,
 		_atrophy_years: int, _grace_years: int, _tick: int) -> void:
 	var tr_display: String = Locale.ltr(tech_id)
 	_add_notification(
-		Locale.trf("UI_NOTIF_TECH_REGRESSION_FMT", {"tech": tr_display}),
+		Locale.trf1("UI_NOTIF_TECH_REGRESSION_FMT", "tech", tr_display),
 		Color(0.9, 0.5, 0.1))
 
 
@@ -1005,7 +1022,7 @@ func _on_tech_lost(_settlement_id: int, tech_id: String,
 		_cultural_memory: float, _tick: int) -> void:
 	var tl_display: String = Locale.ltr(tech_id)
 	_add_notification(
-		Locale.trf("UI_NOTIF_TECH_LOST_FMT", {"tech": tl_display}),
+		Locale.trf1("UI_NOTIF_TECH_LOST_FMT", "tech", tl_display),
 		Color(0.85, 0.2, 0.2))
 
 
@@ -1163,7 +1180,7 @@ func toggle_debug_panel() -> void:
 
 ## Displays a startup toast notification showing the initial population count.
 func show_startup_toast(pop_count: int) -> void:
-	_add_notification(Locale.trf("UI_NOTIF_WORLDSIM_STARTED_FMT", {"n": pop_count}), Color.WHITE)
+	_add_notification(Locale.trf1("UI_NOTIF_WORLDSIM_STARTED_FMT", "n", pop_count), Color.WHITE)
 
 
 func _on_ui_notification(msg: String, _category: String) -> void:
@@ -1199,10 +1216,10 @@ func _on_follow_entity(entity_id: int) -> void:
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
-			_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": entity.entity_name})
+			_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", entity.entity_name)
 			_follow_label.visible = true
 			return
-	_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": "#%d" % entity_id})
+	_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", "#%d" % entity_id)
 	_follow_label.visible = true
 
 
