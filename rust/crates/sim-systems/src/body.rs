@@ -1938,6 +1938,71 @@ pub fn psychology_break_type_label(code: i32) -> &'static str {
     }
 }
 
+/// Coping learn probability during/after mental-break processing.
+pub fn coping_learn_probability(
+    stress: f32,
+    allostatic: f32,
+    is_recovery: bool,
+    break_count: i32,
+    owned_count: i32,
+    coping_count_max: f32,
+) -> f32 {
+    let stress_norm = clamp_f32(stress / 2000.0, 0.0, 1.0);
+    let allostatic_norm = clamp_f32(allostatic / 100.0, 0.0, 1.0);
+    let n = break_count.max(0) as f32;
+    let k_n = 1.0 - (-0.35 * n).exp();
+
+    let safe_count_max = if coping_count_max <= 0.0 {
+        1.0
+    } else {
+        coping_count_max
+    };
+    let s_n = ((1.0 + owned_count.max(0) as f32).ln() / (1.0 + safe_count_max).ln())
+        .clamp(0.0, 1.0);
+
+    let mut logit = -2.5;
+    logit += clamp_f32((stress_norm - 0.6) / 0.4, 0.0, 1.0);
+    logit += 0.7 * clamp_f32((allostatic_norm - 0.5) / 0.5, 0.0, 1.0);
+    logit += if is_recovery { 1.2 } else { 0.0 };
+    logit += 1.4 * k_n;
+    logit -= 1.1 * s_n;
+
+    let mut p = 1.0 / (1.0 + (-logit).exp());
+    p *= if is_recovery { 1.0 } else { 0.30 };
+    clamp_f32(p, 0.0, 1.0)
+}
+
+/// Softmax categorical pick from score list using `roll01 in [0,1]`.
+///
+/// Returns selected index or `-1` when input is empty.
+pub fn coping_softmax_index(scores: &[f32], roll01: f32) -> i32 {
+    if scores.is_empty() {
+        return -1;
+    }
+    let mut max_score = f32::NEG_INFINITY;
+    for score in scores {
+        max_score = max_score.max(*score);
+    }
+    let mut exp_scores: Vec<f32> = Vec::with_capacity(scores.len());
+    let mut sum = 0.0_f32;
+    for score in scores {
+        let ev = (*score - max_score).exp();
+        exp_scores.push(ev);
+        sum += ev;
+    }
+    if sum <= 0.0 {
+        return 0;
+    }
+    let mut target = clamp_f32(roll01, 0.0, 1.0) * sum;
+    for (idx, ev) in exp_scores.iter().enumerate() {
+        if target <= *ev {
+            return idx as i32;
+        }
+        target -= *ev;
+    }
+    (exp_scores.len() - 1) as i32
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2630,6 +2695,7 @@ mod tests {
         migration_should_attempt, population_housing_cap, population_birth_block_code,
         chronicle_should_prune, chronicle_cutoff_tick, chronicle_keep_world_event,
         chronicle_keep_personal_event, psychology_break_type_code, psychology_break_type_label,
+        coping_learn_probability, coping_softmax_index,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3608,6 +3674,25 @@ mod tests {
         }
         assert_eq!(psychology_break_type_code("unknown"), 0);
         assert_eq!(psychology_break_type_label(0), "");
+    }
+
+    #[test]
+    fn coping_learn_probability_rises_with_stress_and_recovery() {
+        let low = coping_learn_probability(400.0, 20.0, false, 0, 2, 15.0);
+        let high = coping_learn_probability(1800.0, 80.0, true, 5, 2, 15.0);
+        assert!(high > low);
+        assert!((0.0..=1.0).contains(&low));
+        assert!((0.0..=1.0).contains(&high));
+    }
+
+    #[test]
+    fn coping_softmax_index_selects_valid_index() {
+        let scores = [1.0_f32, 3.0_f32, 2.0_f32];
+        let idx_low = coping_softmax_index(&scores, 0.0);
+        let idx_high = coping_softmax_index(&scores, 1.0);
+        assert!((0..=2).contains(&idx_low));
+        assert!((0..=2).contains(&idx_high));
+        assert_eq!(coping_softmax_index(&[], 0.5), -1);
     }
 
     #[test]

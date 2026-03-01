@@ -2023,6 +2023,31 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_coping_learn_probability(
+        &self,
+        stress: f32,
+        allostatic: f32,
+        is_recovery: bool,
+        break_count: i32,
+        owned_count: i32,
+        coping_count_max: f32,
+    ) -> f32 {
+        body::coping_learn_probability(
+            stress,
+            allostatic,
+            is_recovery,
+            break_count,
+            owned_count,
+            coping_count_max,
+        )
+    }
+
+    #[func]
+    fn body_coping_softmax_index(&self, scores: PackedFloat32Array, roll01: f32) -> i32 {
+        body::coping_softmax_index(&packed_f32_to_vec(&scores), roll01)
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

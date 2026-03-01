@@ -1670,3 +1670,8 @@
 - `psychology_coordinator`의 break 타입 캐시/복구 경로를 Rust 코드 매핑(`string↔code`) 기반으로 이관.
 - `sim-systems`에 coordinator 보조 함수 2종과 단위 테스트 1건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 문자열 처리 fallback을 유지해 기존 동작을 보존.
+
+## Commit 322
+- `coping_system`의 확률/선택 핵심 수식(learn probability, softmax pick)을 Rust-first 경로로 이관.
+- `sim-systems`에 coping 순수 함수 2종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
