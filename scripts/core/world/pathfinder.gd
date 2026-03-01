@@ -207,17 +207,19 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 			return {"used": false, "paths": []}
 		var xy_groups: Array = result
 		var xy_normalized: Array = []
+		xy_normalized.resize(xy_groups.size())
 		for i in range(xy_groups.size()):
-			xy_normalized.append(_normalize_path_xy_result(xy_groups[i]))
+			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
 		return {"used": true, "paths": xy_normalized}
 
 	if result == null or not (result is Array):
 		return {"used": false, "paths": []}
 
-	var normalized: Array = []
 	var groups: Array = result
+	var normalized: Array = []
+	normalized.resize(groups.size())
 	for i in range(groups.size()):
-		normalized.append(_normalize_path_result(groups[i]))
+		normalized[i] = _normalize_path_result(groups[i])
 	return {"used": true, "paths": normalized}
 
 
@@ -284,16 +286,18 @@ func _find_paths_rust_batch_xy(
 			return {"used": false, "paths": []}
 		var xy_groups: Array = result
 		var xy_normalized: Array = []
+		xy_normalized.resize(xy_groups.size())
 		for i in range(xy_groups.size()):
-			xy_normalized.append(_normalize_path_xy_result(xy_groups[i]))
+			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
 		return {"used": true, "paths": xy_normalized}
 
 	if not (result is Array):
 		return {"used": false, "paths": []}
-	var normalized: Array = []
 	var groups: Array = result
+	var normalized: Array = []
+	normalized.resize(groups.size())
 	for i in range(groups.size()):
-		normalized.append(_normalize_path_result(groups[i]))
+		normalized[i] = _normalize_path_result(groups[i])
 	return {"used": true, "paths": normalized}
 
 

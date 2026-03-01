@@ -887,3 +887,8 @@
 - `pathfinder` path 정규화 함수들이 `append` 누적 대신 `resize + index write`와 `write_idx` compaction을 사용하도록 전환.
 - `PackedInt32Array`/`PackedVector2Array` 및 `Array` 입력 모두에서 결과 좌표 의미를 유지하며 배열 생성 churn을 완화.
 - pathfinding hot path 정규화 단계의 미세 성능 최적화를 반영.
+
+## Commit 180
+- `pathfinder` batch 결과 정규화 배열(`xy_normalized`, `normalized`)을 `append` 누적에서 `resize + index write`로 전환.
+- `_find_paths_rust_batch`와 `_find_paths_rust_batch_xy` 모두에 동일 패턴을 적용해 그룹 포장 단계의 동적 확장 비용을 완화.
+- path 결과 의미는 유지하면서 batch pathfinding 후처리 오버헤드를 미세 최적화.
