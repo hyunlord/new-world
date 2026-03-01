@@ -48,10 +48,11 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		prev_pop = old_snapshot.get("total_population", total_pop)
 
 	var trend = _trend_text(float(total_pop), float(prev_pop))
-	var pop_line: String = Locale.trf("UI_STAT_POP_FMT", {"n": total_pop}) + "  " + trend["text"]
+	var total_pop_text: String = Locale.trf1("UI_STAT_POP_FMT", "n", total_pop)
+	var pop_line: String = total_pop_text + "  " + trend["text"]
 	canvas.draw_string(font, Vector2(cx, cy), pop_line, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
 	# Draw trend arrow in its own color after the main text
-	var pop_prefix_w: float = font.get_string_size(Locale.trf("UI_STAT_POP_FMT", {"n": total_pop}) + "  ", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
+	var pop_prefix_w: float = font.get_string_size(total_pop_text + "  ", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
 	canvas.draw_string(font, Vector2(cx + pop_prefix_w, cy), trend["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, trend["color"])
 	cy += LINE_HEIGHT
 
@@ -69,7 +70,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	cy += LINE_HEIGHT
 
 	# Gender ratio
-	var gender_line: String = Locale.ltr("UI_GENDER_RATIO") + ": " + Locale.trf("UI_STAT_GENDER_FMT", {"m": total_male, "f": total_female})
+	var gender_line: String = Locale.ltr("UI_GENDER_RATIO") + ": " + Locale.trf2("UI_STAT_GENDER_FMT", "m", total_male, "f", total_female)
 	canvas.draw_string(font, Vector2(cx, cy), gender_line, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 	cy += LINE_HEIGHT
 
@@ -162,14 +163,16 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 					break
 
 		var s_trend = _trend_text(float(s_pop), float(s_prev_pop))
-		var row_text: String = "S" + str(s_id) + ": " + Locale.trf("UI_STAT_POP_FMT", {"n": s_pop}) + " (M:" + str(s_male) + " F:" + str(s_female) + ")  " + s_trend["text"]
+		var s_pop_text: String = Locale.trf1("UI_STAT_POP_FMT", "n", s_pop)
+		var row_prefix: String = "S" + str(s_id) + ": " + s_pop_text + " (M:" + str(s_male) + " F:" + str(s_female) + ")"
+		var row_text: String = row_prefix + "  " + s_trend["text"]
 
 		# Settlement row — clickable
-		var row_w: float = font.get_string_size("S" + str(s_id) + ": " + Locale.trf("UI_STAT_POP_FMT", {"n": s_pop}) + " (M:" + str(s_male) + " F:" + str(s_female) + ")", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
+		var row_w: float = font.get_string_size(row_prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
 		canvas.draw_string(font, Vector2(cx, cy), row_text, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
 
 		# Trend arrow color overlay
-		var trend_x_offset: float = font.get_string_size("S" + str(s_id) + ": " + Locale.trf("UI_STAT_POP_FMT", {"n": s_pop}) + " (M:" + str(s_male) + " F:" + str(s_female) + ")  ", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
+		var trend_x_offset: float = font.get_string_size(row_prefix + "  ", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
 		canvas.draw_string(font, Vector2(cx + trend_x_offset, cy), s_trend["text"], HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, s_trend["color"])
 
 		if settlement != null:

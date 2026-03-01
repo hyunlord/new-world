@@ -471,3 +471,8 @@
 - `HUD._update_building_panel`의 `UI_UNDER_CONSTRUCTION_FMT`, `UI_BUILDING_WIP_FMT` 포맷을 `Locale.trf1`로 전환.
 - `HUD._on_speed_changed`의 `UI_SPEED_MULT_FMT` 포맷을 `Locale.trf1`로 전환.
 - 표시 의미는 유지하면서 HUD 건물 상태/속도 라벨 갱신 경로의 임시 params Dictionary 생성을 줄임.
+
+## Commit 097
+- `world_stats_population_tab`에서 `UI_STAT_POP_FMT` 결과를 `total_pop_text`/`s_pop_text`로 1회 생성 후 폭 계산/행 문자열 조립에 재사용.
+- `UI_STAT_GENDER_FMT` 호출을 `Locale.trf2` 경량 경로로 전환.
+- draw 루프의 중복 포맷/문자열 조립 비용을 줄여 Population 탭 렌더 경로를 경량화.
