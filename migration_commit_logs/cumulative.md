@@ -1690,3 +1690,8 @@
 - `emotion_system`의 appraisal→8감정 impulse 핵심 수식을 Tier-2로 Rust-first 이관.
 - `sim-systems`에 impulse 변환 함수 1종과 단위 테스트 1건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
+
+## Commit 326
+- `emotion_system`의 이벤트 impulse 변환을 Rust 배치 호출(1회) 경로로 확장해 브리지 왕복 오버헤드를 축소.
+- `sim-systems`에 impulse batch 함수 1종과 단위 테스트 1건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 batch 실패 시 기존 per-event Rust/순수 계산 fallback을 유지해 동작 안정성을 보존.

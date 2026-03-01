@@ -2118,6 +2118,12 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_emotion_event_impulse_batch(&self, flat_inputs: PackedFloat32Array) -> PackedFloat32Array {
+        let out = body::emotion_event_impulse_batch(&packed_f32_to_vec(&flat_inputs));
+        vec_f32_to_packed(out)
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

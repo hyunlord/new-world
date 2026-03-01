@@ -20,6 +20,7 @@ const _SIM_BRIDGE_HABITUATION_METHOD: String = "body_emotion_habituation_factor"
 const _SIM_BRIDGE_CONTAGION_SUS_METHOD: String = "body_emotion_contagion_susceptibility"
 const _SIM_BRIDGE_CONTAGION_DIST_METHOD: String = "body_emotion_contagion_distance_factor"
 const _SIM_BRIDGE_EVENT_IMPULSE_METHOD: String = "body_emotion_event_impulse_from_appraisal"
+const _SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD: String = "body_emotion_event_impulse_batch"
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -80,7 +81,8 @@ func _get_sim_bridge() -> Object:
 	and node.has_method(_SIM_BRIDGE_HABITUATION_METHOD) \
 	and node.has_method(_SIM_BRIDGE_CONTAGION_SUS_METHOD) \
 	and node.has_method(_SIM_BRIDGE_CONTAGION_DIST_METHOD) \
-	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_METHOD):
+	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD):
 		_sim_bridge = node
 	return _sim_bridge
 
@@ -261,6 +263,58 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 	var total: Dictionary = {}
 	for emo in ed.fast:
 		total[emo] = 0.0
+	if events.is_empty():
+		return total
+
+	var sens: Dictionary = _get_personality_sensitivity(entity, pd)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var flat_inputs: PackedFloat32Array = PackedFloat32Array()
+		for j in range(events.size()):
+			var ev: Dictionary = events[j]
+			flat_inputs.push_back(float(ev.get("goal_congruence", 0.0)))
+			flat_inputs.push_back(float(ev.get("novelty", 0.0)))
+			flat_inputs.push_back(float(ev.get("controllability", 0.5)))
+			flat_inputs.push_back(float(ev.get("agency", 0.0)))
+			flat_inputs.push_back(float(ev.get("norm_violation", 0.0)))
+			flat_inputs.push_back(float(ev.get("pathogen", 0.0)))
+			flat_inputs.push_back(float(ev.get("social_bond", 0.0)))
+			flat_inputs.push_back(float(ev.get("future_relevance", 0.0)))
+			flat_inputs.push_back(float(ev.get("intensity", 30.0)))
+			flat_inputs.push_back(float(sens.get("joy", 1.0)))
+			flat_inputs.push_back(float(sens.get("sadness", 1.0)))
+			flat_inputs.push_back(float(sens.get("anger", 1.0)))
+			flat_inputs.push_back(float(sens.get("fear", 1.0)))
+			flat_inputs.push_back(float(sens.get("disgust", 1.0)))
+			flat_inputs.push_back(float(sens.get("surprise", 1.0)))
+			flat_inputs.push_back(float(sens.get("trust", 1.0)))
+			flat_inputs.push_back(float(sens.get("anticipation", 1.0)))
+
+		var batch_variant: Variant = bridge.call(_SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD, flat_inputs)
+		if batch_variant is PackedFloat32Array:
+			var batch_out: PackedFloat32Array = batch_variant
+			if batch_out.size() >= events.size() * 8:
+				for j in range(events.size()):
+					var event: Dictionary = events[j]
+					var base_intensity: float = float(event.get("intensity", 30.0))
+					var hab: float = _get_habituation(ed, event.get("category", "generic"))
+					var idx: int = j * 8
+					var impulse: Dictionary = {
+						"joy": float(batch_out[idx + 0]),
+						"sadness": float(batch_out[idx + 1]),
+						"anger": float(batch_out[idx + 2]),
+						"fear": float(batch_out[idx + 3]),
+						"disgust": float(batch_out[idx + 4]),
+						"surprise": float(batch_out[idx + 5]),
+						"trust": float(batch_out[idx + 6]),
+						"anticipation": float(batch_out[idx + 7]),
+					}
+					for emo in impulse:
+						impulse[emo] *= hab
+						total[emo] += impulse[emo]
+					if base_intensity >= _memory_trace_threshold:
+						_create_memory_trace(ed, impulse, event)
+				return total
 
 	for j in range(events.size()):
 		var event: Dictionary = events[j]
@@ -277,12 +331,8 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 		# Habituation factor
 		var hab: float = _get_habituation(ed, event.get("category", "generic"))
 
-		# Personality sensitivity
-		var sens: Dictionary = _get_personality_sensitivity(entity, pd)
-
 		# Appraisal -> 8 emotion impulses
 		var impulse: Dictionary = {}
-		var bridge: Object = _get_sim_bridge()
 		if bridge != null:
 			var rust_inputs: PackedFloat32Array = PackedFloat32Array([
 				g, n, c, a, m, p, b, fr, base_intensity,

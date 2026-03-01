@@ -2143,6 +2143,26 @@ pub fn emotion_event_impulse_from_appraisal(inputs: &[f32]) -> [f32; 8] {
     ]
 }
 
+/// Batch variant of `emotion_event_impulse_from_appraisal`.
+///
+/// Input is a flat buffer with stride 17 per event.
+/// Output is a flat buffer with stride 8 per event.
+pub fn emotion_event_impulse_batch(flat_inputs: &[f32]) -> Vec<f32> {
+    const IN_STRIDE: usize = 17;
+    let mut out: Vec<f32> = Vec::new();
+    if flat_inputs.len() < IN_STRIDE {
+        return out;
+    }
+    let count = flat_inputs.len() / IN_STRIDE;
+    out.reserve(count * 8);
+    for idx in 0..count {
+        let start = idx * IN_STRIDE;
+        let impulse = emotion_event_impulse_from_appraisal(&flat_inputs[start..start + IN_STRIDE]);
+        out.extend_from_slice(&impulse);
+    }
+    out
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2839,7 +2859,7 @@ mod tests {
         emotion_break_threshold, emotion_break_trigger_probability, emotion_break_type_code,
         emotion_adjusted_half_life, emotion_baseline_value, emotion_habituation_factor,
         emotion_contagion_susceptibility, emotion_contagion_distance_factor,
-        emotion_event_impulse_from_appraisal,
+        emotion_event_impulse_from_appraisal, emotion_event_impulse_batch,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3888,6 +3908,16 @@ mod tests {
         assert_eq!(out[1], 0.0);
         assert!(out[6] > 0.0);
         assert!(out[7] > 0.0);
+    }
+
+    #[test]
+    fn emotion_event_impulse_batch_emits_expected_flat_length() {
+        let flat = [
+            0.8, 0.4, 0.6, 0.2, 0.1, 0.0, 0.7, 0.5, 30.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            -0.6, 0.2, 0.3, 0.1, 0.2, 0.3, 0.4, 0.2, 20.0, 0.9, 1.1, 1.2, 1.0, 1.0, 0.8, 1.0, 1.0,
+        ];
+        let out = emotion_event_impulse_batch(&flat);
+        assert_eq!(out.len(), 16);
     }
 
     #[test]
