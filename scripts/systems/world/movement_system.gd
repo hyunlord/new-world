@@ -62,27 +62,27 @@ func execute_tick(tick: int) -> void:
 			continue
 
 		# Move: A* if pathfinder available, else greedy
-			if _pathfinder != null:
-				path_entities.append(entity)
-				if _needs_path_recalc(entity, tick):
-					recalc_entities.append(entity)
-					_recalc_from_xy.append(entity.position.x)
-					_recalc_from_xy.append(entity.position.y)
-					_recalc_to_xy.append(entity.action_target.x)
-					_recalc_to_xy.append(entity.action_target.y)
-			else:
-				_move_toward_target(entity, tick)
+		if _pathfinder != null:
+			path_entities.append(entity)
+			if _needs_path_recalc(entity, tick):
+				recalc_entities.append(entity)
+				_recalc_from_xy.append(entity.position.x)
+				_recalc_from_xy.append(entity.position.y)
+				_recalc_to_xy.append(entity.action_target.x)
+				_recalc_to_xy.append(entity.action_target.y)
+		else:
+			_move_toward_target(entity, tick)
 
-		if _pathfinder != null and not recalc_entities.is_empty():
-			var paths: Array = _pathfinder.find_paths_batch_xy(
-				_world_data,
-				_recalc_from_xy,
-				_recalc_to_xy
-			)
-			var count: int = mini(paths.size(), recalc_entities.size())
-			for i in range(count):
-				_apply_recalculated_path(recalc_entities[i], paths[i])
-		for i in range(count, recalc_entities.size()):
+	if _pathfinder != null and not recalc_entities.is_empty():
+		var paths: Array = _pathfinder.find_paths_batch_xy(
+			_world_data,
+			_recalc_from_xy,
+			_recalc_to_xy
+		)
+		var recalc_count: int = mini(paths.size(), recalc_entities.size())
+		for i in range(recalc_count):
+			_apply_recalculated_path(recalc_entities[i], paths[i])
+		for i in range(recalc_count, recalc_entities.size()):
 			_apply_recalculated_path(recalc_entities[i], [])
 
 	if _pathfinder != null:

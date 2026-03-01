@@ -852,3 +852,8 @@
 - `movement_system`의 `path_entities`/`recalc_entities`를 scratch Array로 전환해 tick 루프에서 임시 Array 할당을 제거.
 - 기존 packed XY recalc 버퍼 재사용 경로와 결합해 movement hot path의 메모리 churn을 추가 완화.
 - 이동/경로 의미는 유지하면서 실행 경로 효율을 개선.
+
+## Commit 173
+- `movement_system`의 path recalc 배치 호출을 엔티티 스캔 이후 1회 처리로 정렬해 loop 내부 중복 호출을 제거.
+- `execute_tick`의 `_pathfinder` 분기 들여쓰기/스코프를 정리해 recalc 적용 로직(`recalc_count`)을 안정화.
+- 이동 의미는 유지하면서 movement hot path에서 불필요한 경로탐색 호출 비용을 완화.
