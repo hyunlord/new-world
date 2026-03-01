@@ -52,6 +52,17 @@ python3 "${ROOT_DIR}/tools/localization_audit.py" --project-root "${ROOT_DIR}" -
 
 if [[ "${WITH_BENCHES}" == "true" ]]; then
   echo "[migration_verify] 5/5 rust bench checksum verification"
+  path_iters="${MIGRATION_BENCH_PATH_ITERS:-100}"
+  stress_iters="${MIGRATION_BENCH_STRESS_ITERS:-10000}"
+  needs_iters="${MIGRATION_BENCH_NEEDS_ITERS:-10000}"
+  for value in "${path_iters}" "${stress_iters}" "${needs_iters}"; do
+    if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
+      echo "[migration_verify] bench iterations must be positive integers" >&2
+      exit 1
+    fi
+  done
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters}"
+
   run_bench_and_check() {
     local name="$1"
     local expected_checksum="$2"
@@ -74,20 +85,54 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] ${name} checksum ok: ${checksum}"
   }
 
+  run_bench_observe() {
+    local name="$1"
+    shift
+    local output
+    output="$("$@")"
+    echo "${output}"
+
+    local checksum
+    checksum="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | tail -n 1)"
+    if [[ -z "${checksum}" ]]; then
+      echo "[migration_verify] ${name} checksum parse failed" >&2
+      exit 1
+    fi
+    echo "[migration_verify] ${name} checksum observed (non-default iters): ${checksum}"
+  }
+
   (
     cd "${ROOT_DIR}/rust"
-    run_bench_and_check \
-      "pathfind-bridge" \
-      "70800.00000" \
-      cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters 100
-    run_bench_and_check \
-      "stress-math" \
-      "24032652.00000" \
-      cargo run -q -p sim-test --release -- --bench-stress-math --iters 10000
-    run_bench_and_check \
-      "needs-math" \
-      "38457848.00000" \
-      cargo run -q -p sim-test --release -- --bench-needs-math --iters 10000
+    if [[ "${path_iters}" == "100" ]]; then
+      run_bench_and_check \
+        "pathfind-bridge" \
+        "70800.00000" \
+        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
+    else
+      run_bench_observe \
+        "pathfind-bridge" \
+        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
+    fi
+    if [[ "${stress_iters}" == "10000" ]]; then
+      run_bench_and_check \
+        "stress-math" \
+        "24032652.00000" \
+        cargo run -q -p sim-test --release -- --bench-stress-math --iters "${stress_iters}"
+    else
+      run_bench_observe \
+        "stress-math" \
+        cargo run -q -p sim-test --release -- --bench-stress-math --iters "${stress_iters}"
+    fi
+    if [[ "${needs_iters}" == "10000" ]]; then
+      run_bench_and_check \
+        "needs-math" \
+        "38457848.00000" \
+        cargo run -q -p sim-test --release -- --bench-needs-math --iters "${needs_iters}"
+    else
+      run_bench_observe \
+        "needs-math" \
+        cargo run -q -p sim-test --release -- --bench-needs-math --iters "${needs_iters}"
+    fi
   )
 fi
 

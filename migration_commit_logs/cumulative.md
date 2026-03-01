@@ -986,3 +986,8 @@
 - `sim-bridge` batch pathfinding(tuple/XY/Vec2)에 stationary 질의 fast-path를 추가해 `from==to` 항목에서 A* 호출을 생략하고 singleton path를 즉시 반환하도록 최적화.
 - 전체 배치가 stationary인 경우 grid 구성 자체를 건너뛰는 early-return 경로를 추가해 batch 오버헤드를 추가 절감.
 - tuple/XY/Vec2 모두에 대해 stationary 반환 의미를 테스트로 고정.
+
+## Commit 200
+- `migration_verify.sh --with-benches`에 벤치 반복 수 환경변수(`MIGRATION_BENCH_*_ITERS`)를 추가하고 입력 유효성 검사를 도입.
+- 기본 반복 수일 때는 기존 checksum 기준선 검증을 유지하고, 비기본 반복 수일 때는 관측 모드로 자동 전환해 파이프라인 유연성을 확장.
+- 벤치 단계가 현재 반복 수 설정을 명시적으로 출력하도록 개선해 실행 컨텍스트 추적성을 강화.
