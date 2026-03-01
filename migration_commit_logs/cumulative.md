@@ -872,3 +872,8 @@
 - `sim_bridge`에 pathfinding backend resolve 캐시를 도입해 경로탐색 호출 시 반복 resolve bridge call을 축소.
 - `resolve_pathfinding_backend`/`_prefer_gpu`가 공통 캐시 헬퍼를 사용하도록 정리하고, mode sync/bridge 교체 시 캐시 무효화 규칙을 추가.
 - backend 선택 의미는 유지하면서 GPU 옵션 경로의 런타임 분기 오버헤드를 완화.
+
+## Commit 177
+- `movement_system`에서 periodic path recalc 판정(`50 tick`)을 tick당 1회 계산해 엔티티 루프에서 재사용.
+- `_needs_path_recalc`가 modulo 연산 대신 전달된 bool을 사용하도록 정리하고 호출부 시그니처를 일치화.
+- recalc 의미는 유지하면서 movement hot path의 반복 연산 비용을 미세 완화.

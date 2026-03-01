@@ -28,6 +28,7 @@ func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	var path_entities: Array = _path_entities_scratch
 	var recalc_entities: Array = _recalc_entities_scratch
+	var periodic_recalc_tick: bool = (tick % 50) == 0
 	path_entities.clear()
 	recalc_entities.clear()
 	_recalc_from_xy.resize(0)
@@ -64,7 +65,7 @@ func execute_tick(tick: int) -> void:
 		# Move: A* if pathfinder available, else greedy
 		if _pathfinder != null:
 			path_entities.append(entity)
-			if _needs_path_recalc(entity, tick):
+			if _needs_path_recalc(entity, periodic_recalc_tick):
 				recalc_entities.append(entity)
 				_recalc_from_xy.append(entity.position.x)
 				_recalc_from_xy.append(entity.position.y)
@@ -93,7 +94,7 @@ func execute_tick(tick: int) -> void:
 ## ─── A* Pathfinding Movement ─────────────────────────────
 
 func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = true) -> void:
-	if allow_recalc and _needs_path_recalc(entity, tick):
+	if allow_recalc and _needs_path_recalc(entity, (tick % 50) == 0):
 		entity.cached_path = _pathfinder.find_path(
 			_world_data, entity.position, entity.action_target
 		)
@@ -124,12 +125,12 @@ func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = 
 		_move_toward_target(entity, tick)
 
 
-func _needs_path_recalc(entity: RefCounted, tick: int) -> bool:
+func _needs_path_recalc(entity: RefCounted, periodic_recalc_tick: bool) -> bool:
 	if entity.cached_path.is_empty():
 		return true
 	if entity.path_index >= entity.cached_path.size():
 		return true
-	if tick % 50 == 0:
+	if periodic_recalc_tick:
 		return true
 	return false
 
