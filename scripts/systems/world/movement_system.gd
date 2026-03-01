@@ -124,9 +124,10 @@ func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = 
 
 
 func _needs_path_recalc(entity: RefCounted, periodic_recalc_tick: bool) -> bool:
-	if entity.cached_path.is_empty():
+	var cached_size: int = entity.cached_path.size()
+	if cached_size <= 0:
 		return true
-	if entity.path_index >= entity.cached_path.size():
+	if entity.path_index >= cached_size:
 		return true
 	if periodic_recalc_tick:
 		return true
@@ -134,13 +135,14 @@ func _needs_path_recalc(entity: RefCounted, periodic_recalc_tick: bool) -> bool:
 
 
 func _apply_recalculated_path(entity: RefCounted, path: Array) -> void:
-	if path.is_empty():
+	var path_size: int = path.size()
+	if path_size <= 0:
 		_clear_cached_path(entity)
 		return
 	entity.cached_path = path
 	entity.path_index = 0
 	# Skip starting position if it matches current
-	if entity.cached_path.size() > 0 and entity.cached_path[0] == entity.position:
+	if entity.cached_path[0] == entity.position:
 		entity.path_index = 1
 
 

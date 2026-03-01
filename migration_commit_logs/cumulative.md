@@ -902,3 +902,7 @@
 - `pathfinder` 내부 Rust 경로 반환을 `{used, path(s)}` 딕셔너리 래퍼에서 `null/Array` 반환으로 정리.
 - `find_path`/`find_paths_batch`/`find_paths_batch_xy` 호출부가 `Variant` null 체크 기반 분기를 사용하도록 갱신.
 - path 계산 의미는 유지하면서 hot path 딕셔너리 할당/키 조회 비용을 완화.
+
+## Commit 183
+- `movement_system`의 `_needs_path_recalc`, `_apply_recalculated_path`에서 path size 조회를 지역 변수로 통일해 중복 호출/분기를 정리.
+- 경로 재계산/적용 의미는 유지하면서 movement hot path의 미세 계산 비용을 완화.
