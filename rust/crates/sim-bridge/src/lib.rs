@@ -4,18 +4,17 @@
 //! For now, this module provides pure-Rust conversion helpers that can be
 //! reused by the future FFI layer.
 
+mod pathfinding_backend;
+
 use godot::prelude::*;
+use pathfinding_backend::{
+    get_backend_mode, has_gpu_backend, set_backend_mode, PATHFIND_BACKEND_GPU,
+};
 use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     stat_curve,
 };
-use std::sync::atomic::{AtomicU8, Ordering};
-
-const PATHFIND_BACKEND_AUTO: u8 = 0;
-const PATHFIND_BACKEND_CPU: u8 = 1;
-const PATHFIND_BACKEND_GPU: u8 = 2;
-static PATHFIND_BACKEND_MODE: AtomicU8 = AtomicU8::new(PATHFIND_BACKEND_AUTO);
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -541,12 +540,7 @@ fn encode_path_vec2(path: Vec<GridPos>) -> PackedVector2Array {
 }
 
 fn parse_pathfind_backend(mode: &str) -> Option<u8> {
-    match mode.to_ascii_lowercase().as_str() {
-        "auto" => Some(PATHFIND_BACKEND_AUTO),
-        "cpu" => Some(PATHFIND_BACKEND_CPU),
-        "gpu" => Some(PATHFIND_BACKEND_GPU),
-        _ => None,
-    }
+    pathfinding_backend::parse_backend_mode(mode)
 }
 
 #[inline]
@@ -559,38 +553,15 @@ fn normalize_max_steps(max_steps: i32) -> usize {
 }
 
 fn resolve_backend_mode_code(mode: u8) -> u8 {
-    match mode {
-        PATHFIND_BACKEND_CPU => PATHFIND_BACKEND_CPU,
-        PATHFIND_BACKEND_GPU => {
-            if cfg!(feature = "gpu") {
-                PATHFIND_BACKEND_GPU
-            } else {
-                PATHFIND_BACKEND_CPU
-            }
-        }
-        _ => {
-            if cfg!(feature = "gpu") {
-                PATHFIND_BACKEND_GPU
-            } else {
-                PATHFIND_BACKEND_CPU
-            }
-        }
-    }
+    pathfinding_backend::resolve_backend_mode_code(mode)
 }
 
 fn backend_mode_to_str(mode: u8) -> &'static str {
-    match mode {
-        PATHFIND_BACKEND_CPU => "cpu",
-        PATHFIND_BACKEND_GPU => "gpu",
-        _ => "auto",
-    }
+    pathfinding_backend::backend_mode_to_str(mode)
 }
 
 fn resolve_backend_mode(mode: u8) -> &'static str {
-    match resolve_backend_mode_code(mode) {
-        PATHFIND_BACKEND_GPU => "gpu",
-        _ => "cpu",
-    }
+    pathfinding_backend::resolve_backend_mode_str(mode)
 }
 
 #[derive(GodotClass)]
@@ -614,25 +585,25 @@ impl WorldSimBridge {
         let Some(parsed) = parse_pathfind_backend(&mode_string) else {
             return false;
         };
-        PATHFIND_BACKEND_MODE.store(parsed, Ordering::Relaxed);
+        set_backend_mode(parsed);
         true
     }
 
     #[func]
     fn get_pathfinding_backend(&self) -> GString {
-        let mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let mode = get_backend_mode();
         backend_mode_to_str(mode).into()
     }
 
     #[func]
     fn resolve_pathfinding_backend(&self) -> GString {
-        let mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let mode = get_backend_mode();
         resolve_backend_mode(mode).into()
     }
 
     #[func]
     fn has_gpu_pathfinding(&self) -> bool {
-        cfg!(feature = "gpu")
+        has_gpu_backend()
     }
 
     #[func]
@@ -1204,7 +1175,7 @@ impl WorldSimBridge {
         max_steps: i32,
     ) -> PackedVector2Array {
         let steps = normalize_max_steps(max_steps);
-        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let backend_mode = get_backend_mode();
 
         let path = match dispatch_pathfind_grid_bytes(
             backend_mode,
@@ -1239,7 +1210,7 @@ impl WorldSimBridge {
         max_steps: i32,
     ) -> PackedInt32Array {
         let steps = normalize_max_steps(max_steps);
-        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let backend_mode = get_backend_mode();
 
         let path = match dispatch_pathfind_grid_bytes(
             backend_mode,
@@ -1340,7 +1311,7 @@ impl WorldSimBridge {
         max_steps: i32,
     ) -> Array<PackedVector2Array> {
         let steps = normalize_max_steps(max_steps);
-        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let backend_mode = get_backend_mode();
 
         let path_groups = match dispatch_pathfind_grid_batch_vec2_bytes(
             backend_mode,
@@ -1401,7 +1372,7 @@ impl WorldSimBridge {
         max_steps: i32,
     ) -> Array<PackedInt32Array> {
         let steps = normalize_max_steps(max_steps);
-        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        let backend_mode = get_backend_mode();
 
         let path_groups = match dispatch_pathfind_grid_batch_xy_bytes(
             backend_mode,
@@ -2621,10 +2592,12 @@ mod tests {
         dispatch_pathfind_grid_bytes, parse_pathfind_backend, pathfind_from_flat,
         pathfind_grid_batch_bytes, pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
         pathfind_grid_bytes, resolve_backend_mode, PathfindError, PathfindInput,
-        PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
     };
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
+    use super::pathfinding_backend::{
+        PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
+    };
 
     fn base_input() -> PathfindInput {
         PathfindInput {

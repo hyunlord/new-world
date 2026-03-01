@@ -1085,3 +1085,8 @@
 - `localization_audit`에 key-owner 정책 비교 모드(`--compare-key-owner-policy`)를 추가해 generated owners와 저장 정책 간 drift를 자동 검출.
 - 비교 결과를 `missing/extra/changed`로 출력하고 불일치 시 실패하도록 해 정책 동기화 게이트를 강화.
 - `migration_verify`에 `MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY` 연동을 추가해 검증 파이프라인에서 owner 정책 일관성을 강제.
+
+## Commit 220
+- `sim-bridge` pathfinding backend 제어 로직을 `pathfinding_backend.rs`로 분리해 모드 저장/파싱/해석 책임을 모듈화.
+- 브리지 API/dispatch 경로는 유지하면서 backend 상태 접근을 모듈 getter/setter로 통일.
+- GPU 실구현을 위한 구조적 확장 지점을 정리하고 전체 검증(`migration_verify --with-benches`)으로 checksum 유지 확인.
