@@ -964,6 +964,9 @@ if [[ -n "${verify_report_json}" ]]; then
   bench_path_backend_smoke_expect_auto_value="$(to_json_opt_string "${path_backend_smoke_expect_auto-}")"
   bench_path_backend_smoke_expect_gpu_value="$(to_json_opt_string "${path_backend_smoke_expect_gpu-}")"
   bench_expected_resolved_backend_value="$(to_json_opt_string "${expected_resolved_backend-}")"
+  python3_version_value="$(to_json_opt_string "$(python3 --version 2>/dev/null || true)")"
+  cargo_version_value="$(to_json_opt_string "$(cargo --version 2>/dev/null || true)")"
+  rustc_version_value="$(to_json_opt_string "$(rustc --version 2>/dev/null || true)")"
   compile_report_json_size="$(to_json_opt_size_bytes "${compile_report_json}")"
   audit_report_json_size="$(to_json_opt_size_bytes "${audit_report_json}")"
   audit_duplicate_report_json_size="$(to_json_opt_size_bytes "${audit_duplicate_report_json}")"
@@ -993,6 +996,11 @@ if [[ -n "${verify_report_json}" ]]; then
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},
   "assert_artifacts": ${verify_assert_artifacts},
   "total_duration_seconds": ${total_duration_seconds},
+  "toolchain": {
+    "python3": ${python3_version_value},
+    "cargo": ${cargo_version_value},
+    "rustc": ${rustc_version_value}
+  },
   "config": {
     "audit_report_dir": ${audit_report_dir_value},
     "audit_compare_key_owner_policy": ${audit_compare_key_owner_policy_value},

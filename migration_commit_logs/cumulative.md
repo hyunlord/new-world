@@ -1275,3 +1275,8 @@
 - `migration_verify_report.json`에 `artifact_exists` 객체를 추가해 compile/audit/bench 아티팩트의 파일 존재 상태(true/false/null)를 함께 기록.
 - 경로 미설정은 `null`, 경로 설정 후 파일 존재/미존재는 `true/false`로 표준화해 파서 상태 판정 단순화.
 - `/tmp/worldsim_audit_artifacts19/migration_verify_report.json`에서 non-bench 기준 bench exists null과 주요 아티팩트 exists true를 확인.
+
+## Commit 258
+- `migration_verify_report.json`에 `toolchain` 객체를 추가해 실행 시점의 `python3`, `cargo`, `rustc` 버전을 함께 기록.
+- 버전 조회 실패/미설치 환경은 `null`로 직렬화해 리포트 생성 안정성을 유지.
+- `/tmp/worldsim_audit_artifacts20/migration_verify_report.json`에서 `toolchain.python3/cargo/rustc` 필드 반영을 확인.
