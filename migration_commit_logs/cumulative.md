@@ -386,3 +386,8 @@
 - localization compiler에 `include_sources` 옵션을 도입하고 기본값을 `false`로 설정해 compiled 산출물에서 `sources`를 기본 제외.
 - compiled meta에 `include_sources` 상태를 기록하고 필요 시에만 `sources`를 포함하도록 분기.
 - 런타임 미사용 데이터 제거로 compiled 파일 크기를 크게 축소해 locale 로드 I/O/파싱 비용을 완화.
+
+## Commit 080
+- `Locale.tr_id`에 최종 결과 캐시(`_tr_id_result_cache`)를 추가해 동일 `(prefix,id)` 조회를 즉시 반환하도록 최적화.
+- miss 시 기존 key-id 변환 경로로 계산한 결과(번역/미번역 fallback)를 캐시에 저장해 반복 miss 비용을 줄임.
+- locale reload 시 결과 캐시를 초기화해 locale 전환 이후 정합성을 유지.
