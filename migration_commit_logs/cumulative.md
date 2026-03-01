@@ -897,3 +897,8 @@
 - `pathfinder` fallback batch API(`find_paths_batch`, `find_paths_batch_xy`)의 결과 배열 생성을 `append`에서 `resize + index write`로 전환.
 - Rust 경로가 없는 환경에서도 fallback 결과 포장 오버헤드를 줄이도록 정렬.
 - path 결과 의미는 유지하면서 fallback 경로의 메모리 churn을 미세 완화.
+
+## Commit 182
+- `pathfinder` 내부 Rust 경로 반환을 `{used, path(s)}` 딕셔너리 래퍼에서 `null/Array` 반환으로 정리.
+- `find_path`/`find_paths_batch`/`find_paths_batch_xy` 호출부가 `Variant` null 체크 기반 분기를 사용하도록 갱신.
+- path 계산 의미는 유지하면서 hot path 딕셔너리 할당/키 조회 비용을 완화.

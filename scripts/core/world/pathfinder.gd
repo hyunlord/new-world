@@ -32,9 +32,9 @@ func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: 
 	if not world_data.is_walkable(to.x, to.y):
 		return []
 
-	var rust_result: Dictionary = _find_path_rust(world_data, from, to, max_steps)
-	if bool(rust_result.get("used", false)):
-		return rust_result.get("path", [])
+	var rust_path: Variant = _find_path_rust(world_data, from, to, max_steps)
+	if rust_path != null:
+		return rust_path
 
 	return _find_path_gd(world_data, from, to, max_steps)
 
@@ -44,9 +44,9 @@ func find_paths_batch(world_data: RefCounted, requests: Array, max_steps: int = 
 	if requests.is_empty():
 		return []
 
-	var rust_batch: Dictionary = _find_paths_rust_batch(world_data, requests, max_steps)
-	if bool(rust_batch.get("used", false)):
-		return rust_batch.get("paths", [])
+	var rust_paths: Variant = _find_paths_rust_batch(world_data, requests, max_steps)
+	if rust_paths != null:
+		return rust_paths
 
 	var out: Array = []
 	out.resize(requests.size())
@@ -71,9 +71,9 @@ func find_paths_batch_xy(
 	if from_xy.size() != to_xy.size() or (from_xy.size() % 2) != 0:
 		return []
 
-	var rust_batch: Dictionary = _find_paths_rust_batch_xy(world_data, from_xy, to_xy, max_steps)
-	if bool(rust_batch.get("used", false)):
-		return rust_batch.get("paths", [])
+	var rust_paths: Variant = _find_paths_rust_batch_xy(world_data, from_xy, to_xy, max_steps)
+	if rust_paths != null:
+		return rust_paths
 
 	var out: Array = []
 	var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
@@ -86,19 +86,19 @@ func find_paths_batch_xy(
 	return out
 
 
-func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Dictionary:
+func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Variant:
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
-		return {"used": false, "path": []}
+		return null
 	_ensure_bridge_method_cache(bridge)
 	var has_xy: bool = _bridge_has_pathfind_xy
 	var has_vec2: bool = _bridge_has_pathfind
 	if not has_xy and not has_vec2:
-		return {"used": false, "path": []}
+		return null
 
 	_ensure_world_cache(world_data)
 	if _cached_width <= 0 or _cached_height <= 0:
-		return {"used": false, "path": []}
+		return null
 
 	var result: Variant = null
 	var used_xy: bool = false
@@ -130,25 +130,25 @@ func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_s
 			max_steps
 		)
 	if result == null:
-		return {"used": false, "path": []}
+		return null
 	if used_xy:
-		return {"used": true, "path": _normalize_path_xy_result(result)}
-	return {"used": true, "path": _normalize_path_result(result)}
+		return _normalize_path_xy_result(result)
+	return _normalize_path_result(result)
 
 
-func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: int) -> Dictionary:
+func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: int) -> Variant:
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
-		return {"used": false, "paths": []}
+		return null
 	_ensure_bridge_method_cache(bridge)
 	var has_batch_xy: bool = _bridge_has_batch_xy
 	var has_batch_vec2: bool = _bridge_has_batch
 	if not has_batch_xy and not has_batch_vec2:
-		return {"used": false, "paths": []}
+		return null
 
 	_ensure_world_cache(world_data)
 	if _cached_width <= 0 or _cached_height <= 0:
-		return {"used": false, "paths": []}
+		return null
 
 	var result: Variant = null
 	var used_batch_xy: bool = false
@@ -202,27 +202,27 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 		)
 
 	if result == null:
-		return {"used": false, "paths": []}
+		return null
 
 	if used_batch_xy:
 		if not (result is Array):
-			return {"used": false, "paths": []}
+			return null
 		var xy_groups: Array = result
 		var xy_normalized: Array = []
 		xy_normalized.resize(xy_groups.size())
 		for i in range(xy_groups.size()):
 			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
-		return {"used": true, "paths": xy_normalized}
+		return xy_normalized
 
 	if result == null or not (result is Array):
-		return {"used": false, "paths": []}
+		return null
 
 	var groups: Array = result
 	var normalized: Array = []
 	normalized.resize(groups.size())
 	for i in range(groups.size()):
 		normalized[i] = _normalize_path_result(groups[i])
-	return {"used": true, "paths": normalized}
+	return normalized
 
 
 func _find_paths_rust_batch_xy(
@@ -230,19 +230,19 @@ func _find_paths_rust_batch_xy(
 	from_xy: PackedInt32Array,
 	to_xy: PackedInt32Array,
 	max_steps: int
-) -> Dictionary:
+) -> Variant:
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
-		return {"used": false, "paths": []}
+		return null
 	_ensure_bridge_method_cache(bridge)
 	var has_batch_xy: bool = _bridge_has_batch_xy
 	var has_batch_vec2: bool = _bridge_has_batch
 	if not has_batch_xy and not has_batch_vec2:
-		return {"used": false, "paths": []}
+		return null
 
 	_ensure_world_cache(world_data)
 	if _cached_width <= 0 or _cached_height <= 0:
-		return {"used": false, "paths": []}
+		return null
 
 	var result: Variant = null
 	var used_batch_xy: bool = false
@@ -281,26 +281,26 @@ func _find_paths_rust_batch_xy(
 		)
 
 	if result == null:
-		return {"used": false, "paths": []}
+		return null
 
 	if used_batch_xy:
 		if not (result is Array):
-			return {"used": false, "paths": []}
+			return null
 		var xy_groups: Array = result
 		var xy_normalized: Array = []
 		xy_normalized.resize(xy_groups.size())
 		for i in range(xy_groups.size()):
 			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
-		return {"used": true, "paths": xy_normalized}
+		return xy_normalized
 
 	if not (result is Array):
-		return {"used": false, "paths": []}
+		return null
 	var groups: Array = result
 	var normalized: Array = []
 	normalized.resize(groups.size())
 	for i in range(groups.size()):
 		normalized[i] = _normalize_path_result(groups[i])
-	return {"used": true, "paths": normalized}
+	return normalized
 
 
 func _normalize_path_xy_result(result: Variant) -> Array:
