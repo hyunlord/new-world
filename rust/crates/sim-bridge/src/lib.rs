@@ -1412,6 +1412,28 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_memory_decay_batch(
+        &self,
+        intensities: PackedFloat32Array,
+        rates: PackedFloat32Array,
+        dt_years: f32,
+    ) -> PackedFloat32Array {
+        let intensity_vec = packed_f32_to_vec(&intensities);
+        let rate_vec = packed_f32_to_vec(&rates);
+        let out = body::memory_decay_batch(&intensity_vec, &rate_vec, dt_years);
+        vec_f32_to_packed(out)
+    }
+
+    #[func]
+    fn body_memory_summary_intensity(
+        &self,
+        max_intensity: f32,
+        summary_scale: f32,
+    ) -> f32 {
+        body::memory_summary_intensity(max_intensity, summary_scale)
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

@@ -1130,6 +1130,26 @@ pub fn trauma_scar_sensitivity_factor(base_mult: f32, stacks: i32) -> f32 {
     1.0 + delta * (1.0 + 0.5 * (safe_stacks - 1.0))
 }
 
+/// Memory intensity decay step: `intensity * exp(-rate * dt_years)`.
+pub fn memory_decay_intensity(intensity: f32, rate: f32, dt_years: f32) -> f32 {
+    intensity * (-rate * dt_years).exp()
+}
+
+/// Batch memory intensity decay for paired `(intensity, rate)` inputs.
+pub fn memory_decay_batch(intensities: &[f32], rates: &[f32], dt_years: f32) -> Vec<f32> {
+    let len = intensities.len().min(rates.len());
+    let mut out = Vec::with_capacity(len);
+    for idx in 0..len {
+        out.push(memory_decay_intensity(intensities[idx], rates[idx], dt_years));
+    }
+    out
+}
+
+/// Summary intensity for compressed memory entries.
+pub fn memory_summary_intensity(max_intensity: f32, summary_scale: f32) -> f32 {
+    max_intensity * summary_scale
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2187,6 +2207,7 @@ mod tests {
         trait_violation_context_modifier, trait_violation_facet_scale,
         trait_violation_intrusive_chance,
         trauma_scar_acquire_chance, trauma_scar_sensitivity_factor,
+        memory_decay_intensity, memory_decay_batch, memory_summary_intensity,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2771,6 +2792,25 @@ mod tests {
         let three_stacks = trauma_scar_sensitivity_factor(1.4, 3);
         assert!(three_stacks > one_stack);
         assert!((one_stack - 1.4).abs() < 1e-6);
+    }
+
+    #[test]
+    fn memory_decay_intensity_matches_exponential_formula() {
+        let out = memory_decay_intensity(0.8, 0.5, 1.0);
+        assert!((out - (0.8 * (-0.5_f32).exp())).abs() < 1e-6);
+    }
+
+    #[test]
+    fn memory_decay_batch_uses_pairwise_min_length() {
+        let out = memory_decay_batch(&[1.0, 0.5, 0.25], &[0.1, 0.2], 0.5);
+        assert_eq!(out.len(), 2);
+        assert!(out[0] < 1.0);
+        assert!(out[1] < 0.5);
+    }
+
+    #[test]
+    fn memory_summary_intensity_scales_max_value() {
+        assert!((memory_summary_intensity(0.9, 0.7) - 0.63).abs() < 1e-6);
     }
 
     #[test]
