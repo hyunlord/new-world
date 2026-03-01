@@ -302,16 +302,22 @@ func _normalize_path_xy_result(result: Variant) -> Array:
 	if result is PackedInt32Array:
 		var packed: PackedInt32Array = result
 		var pair_count: int = packed.size() / 2
+		path.resize(pair_count)
 		for i in range(pair_count):
 			var base_idx: int = i * 2
-			path.append(Vector2i(packed[base_idx], packed[base_idx + 1]))
+			path[i] = Vector2i(packed[base_idx], packed[base_idx + 1])
 		return path
 	if result is Array:
 		var arr: Array = result
+		path.resize(arr.size())
+		var write_idx: int = 0
 		for i in range(arr.size()):
 			var item: Variant = arr[i]
 			if item is Vector2i:
-				path.append(item)
+				path[write_idx] = item
+				write_idx += 1
+		if write_idx != path.size():
+			path.resize(write_idx)
 	return path
 
 
@@ -378,24 +384,32 @@ func _normalize_path_result(result: Variant) -> Array:
 	var path: Array = []
 	if result is PackedVector2Array:
 		var packed: PackedVector2Array = result
+		path.resize(packed.size())
 		for i in range(packed.size()):
 			var p: Vector2 = packed[i]
-			path.append(Vector2i(int(round(p.x)), int(round(p.y))))
+			path[i] = Vector2i(int(round(p.x)), int(round(p.y)))
 		return path
 
 	if result is Array:
 		var arr: Array = result
+		path.resize(arr.size())
+		var write_idx: int = 0
 		for i in range(arr.size()):
 			var item: Variant = arr[i]
 			if item is Vector2i:
-				path.append(item)
+				path[write_idx] = item
+				write_idx += 1
 			elif item is Vector2:
 				var p2: Vector2 = item
-				path.append(Vector2i(int(round(p2.x)), int(round(p2.y))))
+				path[write_idx] = Vector2i(int(round(p2.x)), int(round(p2.y)))
+				write_idx += 1
 			elif item is Dictionary:
 				var d: Dictionary = item
 				if d.has("x") and d.has("y"):
-					path.append(Vector2i(int(d["x"]), int(d["y"])))
+					path[write_idx] = Vector2i(int(d["x"]), int(d["y"]))
+					write_idx += 1
+		if write_idx != path.size():
+			path.resize(write_idx)
 	return path
 
 

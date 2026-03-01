@@ -882,3 +882,8 @@
 - `movement_system`에 `_clear_cached_path`를 도입해 빈 경로 처리 시 `cached_path` 배열을 재사용하고 재할당을 최소화.
 - action 완료/재계산 실패/path blocked 구간의 경로 초기화를 공통 헬퍼로 통일.
 - 이동 의미는 유지하면서 movement hot path의 빈 경로 처리 메모리 churn을 완화.
+
+## Commit 179
+- `pathfinder` path 정규화 함수들이 `append` 누적 대신 `resize + index write`와 `write_idx` compaction을 사용하도록 전환.
+- `PackedInt32Array`/`PackedVector2Array` 및 `Array` 입력 모두에서 결과 좌표 의미를 유지하며 배열 생성 churn을 완화.
+- pathfinding hot path 정규화 단계의 미세 성능 최적화를 반영.
