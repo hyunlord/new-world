@@ -73,6 +73,7 @@ audit_owner_policy_compare_report_json="${MIGRATION_AUDIT_OWNER_POLICY_COMPARE_R
 audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
 audit_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
+verify_report_json="${MIGRATION_VERIFY_REPORT_JSON:-}"
 if [[ -n "${audit_report_dir}" ]]; then
   audit_report_dir_prefix="${audit_report_dir%/}"
   if [[ -z "${audit_report_dir_prefix}" ]]; then
@@ -95,6 +96,9 @@ if [[ -n "${audit_report_dir}" ]]; then
   fi
   if [[ -z "${audit_owner_policy_compare_report_json}" ]]; then
     audit_owner_policy_compare_report_json="${audit_report_dir_prefix}/owner_policy_compare.json"
+  fi
+  if [[ -z "${verify_report_json}" ]]; then
+    verify_report_json="${audit_report_dir_prefix}/migration_verify_report.json"
   fi
   echo "[migration_verify] audit artifact dir=${audit_report_dir_prefix}"
 fi
@@ -161,6 +165,7 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
 fi
 "${audit_cmd[@]}"
 
+bench_report_json="${MIGRATION_BENCH_REPORT_JSON:-}"
 if [[ "${WITH_BENCHES}" == "true" ]]; then
   echo "[migration_verify] 5/5 rust bench checksum verification"
   path_iters="${MIGRATION_BENCH_PATH_ITERS:-100}"
@@ -699,6 +704,62 @@ EOF
       echo "[migration_verify] bench report written: ${bench_report_out}"
     fi
   )
+fi
+
+if [[ -n "${verify_report_json}" ]]; then
+  to_abs_path() {
+    local raw_path="$1"
+    if [[ -z "${raw_path}" ]]; then
+      echo ""
+      return
+    fi
+    if [[ "${raw_path}" == /* ]]; then
+      echo "${raw_path}"
+    else
+      echo "${ROOT_DIR}/${raw_path}"
+    fi
+  }
+  to_json_opt_path() {
+    local raw_path="$1"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" ]]; then
+      echo "null"
+    else
+      echo "\"${abs_path}\""
+    fi
+  }
+  verify_report_out="$(to_abs_path "${verify_report_json}")"
+  mkdir -p "$(dirname "${verify_report_out}")"
+  generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  compile_report_json_value="$(to_json_opt_path "${compile_report_json}")"
+  audit_report_json_value="$(to_json_opt_path "${audit_report_json}")"
+  audit_duplicate_report_json_value="$(to_json_opt_path "${audit_duplicate_report_json}")"
+  audit_conflict_markdown_value="$(to_json_opt_path "${audit_conflict_markdown}")"
+  audit_key_owner_policy_json_value="$(to_json_opt_path "${audit_key_owner_policy_json}")"
+  audit_owner_policy_markdown_value="$(to_json_opt_path "${audit_owner_policy_markdown}")"
+  audit_owner_policy_compare_report_json_value="$(to_json_opt_path "${audit_owner_policy_compare_report_json}")"
+  bench_report_json_value="$(to_json_opt_path "${bench_report_json}")"
+  cat > "${verify_report_out}" <<EOF
+{
+  "generated_at_utc": "${generated_at}",
+  "root_dir": "${ROOT_DIR}",
+  "with_benches": ${WITH_BENCHES},
+  "apply_key_fields": ${APPLY_KEY_FIELDS},
+  "strip_inline_fields": ${STRIP_INLINE_FIELDS},
+  "artifacts": {
+    "compile_report_json": ${compile_report_json_value},
+    "audit_report_json": ${audit_report_json_value},
+    "audit_duplicate_report_json": ${audit_duplicate_report_json_value},
+    "audit_conflict_markdown": ${audit_conflict_markdown_value},
+    "audit_key_owner_policy_json": ${audit_key_owner_policy_json_value},
+    "audit_owner_policy_markdown": ${audit_owner_policy_markdown_value},
+    "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_value},
+    "bench_report_json": ${bench_report_json_value}
+  }
+}
+EOF
+  echo "[migration_verify] verify report written: ${verify_report_out}"
 fi
 
 echo "[migration_verify] completed"

@@ -1210,3 +1210,8 @@
 - `localization_compile`에 `--report-json`을 추가해 compile 전역/locale 지표를 JSON 아티팩트로 출력 가능하게 확장.
 - `migration_verify` compile 단계가 `MIGRATION_COMPILE_REPORT_JSON`을 지원하고, `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `compile_report.json` 자동 생성을 연결.
 - `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts6 tools/migration_verify.sh`에서 compile report 생성과 JSON 유효성을 확인.
+
+## Commit 245
+- `migration_verify`에 `MIGRATION_VERIFY_REPORT_JSON`을 추가해 실행 옵션과 아티팩트 경로를 단일 메타 JSON으로 출력.
+- `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `migration_verify_report.json`을 기본 생성해 report dir 내 산출물 인덱스를 제공.
+- verify report는 상대 경로를 절대 경로로 정규화하고, 미사용 아티팩트는 `null`로 표준화해 후처리 파서 호환성을 강화.
