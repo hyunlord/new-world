@@ -203,6 +203,7 @@ func _draw() -> void:
 
 	# Draw events grouped by year
 	var current_year: int = -1
+	var deceased_registry: Node = get_node_or_null("/root/DeceasedRegistry")
 	for i in range(events.size()):
 		var evt: Dictionary = events[i]
 		var year: int = evt.get("year", 0)
@@ -234,14 +235,14 @@ func _draw() -> void:
 			date_str = GameCalendar.format_short_datetime_with_year(event_tick)
 		elif evt.has("hour"):
 			date_str = "M%d D%d %02d:00" % [int(evt.get("month", 0)), int(evt.get("day", 0)), int(evt.get("hour", 0))]
-			else:
-				date_str = Locale.trf2(
-					"UI_SHORT_DATE",
-					"month",
-					int(evt.get("month", 0)),
-					"day",
-					int(evt.get("day", 0))
-				)
+		else:
+			date_str = Locale.trf2(
+				"UI_SHORT_DATE",
+				"month",
+				int(evt.get("month", 0)),
+				"day",
+				int(evt.get("day", 0))
+			)
 		draw_string(font, Vector2(cx + 5, cy + 12), date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 		# Icon
@@ -290,9 +291,8 @@ func _draw() -> void:
 			if rentity != null:
 				rname = rentity.entity_name
 			else:
-				var registry: Node = get_node_or_null("/root/DeceasedRegistry")
-				if registry != null:
-					rname = registry.get_record(rid).get("name", "")
+				if deceased_registry != null:
+					rname = deceased_registry.get_record(rid).get("name", "")
 			if rname.length() == 0:
 				continue
 			var rstart: int = desc.find(rname)

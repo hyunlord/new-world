@@ -591,3 +591,8 @@
 - `chronicle_system`에 DeceasedRegistry 노드 캐시(`_deceased_registry`)와 조회 헬퍼(`_get_deceased_registry`)를 추가.
 - `_get_entity_name`에서 반복 `has_node/get_node` 탐색 대신 캐시 조회 경로로 전환.
 - 이름 조회 의미를 유지하면서 chronicle 이벤트 기록 시 노드 탐색 오버헤드를 완화.
+
+## Commit 121
+- `chronicle_panel` 이벤트 렌더 루프에서 DeceasedRegistry를 루프 외부 1회 조회해 related entity 이름 조회 시 재사용.
+- related entity 처리에서 반복 `get_node_or_null` 호출을 제거.
+- 날짜 fallback 분기(`else`) 정렬을 정리해 동일 동작을 유지하면서 코드 안정성을 보강.
