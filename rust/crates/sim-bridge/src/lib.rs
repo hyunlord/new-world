@@ -533,6 +533,44 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_erg_frustration_step_packed(
+        &self,
+        scalar_inputs: PackedFloat32Array,
+        flag_inputs: PackedByteArray,
+    ) -> PackedInt32Array {
+        let scalars = scalar_inputs.as_slice();
+        let competence = *scalars.first().unwrap_or(&0.0);
+        let autonomy = *scalars.get(1).unwrap_or(&0.0);
+        let self_actualization = *scalars.get(2).unwrap_or(&0.0);
+        let belonging = *scalars.get(3).unwrap_or(&0.0);
+        let intimacy = *scalars.get(4).unwrap_or(&0.0);
+        let growth_threshold = *scalars.get(5).unwrap_or(&0.0);
+        let relatedness_threshold = *scalars.get(6).unwrap_or(&0.0);
+        let frustration_window = scalars.get(7).copied().unwrap_or(0.0).round() as i32;
+        let growth_ticks = scalars.get(8).copied().unwrap_or(0.0).round() as i32;
+        let relatedness_ticks = scalars.get(9).copied().unwrap_or(0.0).round() as i32;
+        let flags = flag_inputs.as_slice();
+        let was_regressing_growth = flags.first().copied().unwrap_or(0) != 0;
+        let was_regressing_relatedness = flags.get(1).copied().unwrap_or(0) != 0;
+
+        let out = body::erg_frustration_step(
+            competence,
+            autonomy,
+            self_actualization,
+            belonging,
+            intimacy,
+            growth_threshold,
+            relatedness_threshold,
+            frustration_window,
+            growth_ticks,
+            relatedness_ticks,
+            was_regressing_growth,
+            was_regressing_relatedness,
+        );
+        vec_i32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

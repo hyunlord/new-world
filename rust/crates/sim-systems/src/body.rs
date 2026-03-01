@@ -210,6 +210,57 @@ pub fn needs_critical_severity_step(
     ]
 }
 
+/// Combined ERG frustration tick update.
+///
+/// Returns:
+/// `[growth_ticks, relatedness_ticks, growth_regressing, growth_started, relatedness_regressing, relatedness_started]`.
+pub fn erg_frustration_step(
+    competence: f32,
+    autonomy: f32,
+    self_actualization: f32,
+    belonging: f32,
+    intimacy: f32,
+    growth_threshold: f32,
+    relatedness_threshold: f32,
+    frustration_window: i32,
+    growth_ticks: i32,
+    relatedness_ticks: i32,
+    was_regressing_growth: bool,
+    was_regressing_relatedness: bool,
+) -> [i32; 6] {
+    let growth_frustrated = competence < growth_threshold
+        && autonomy < growth_threshold
+        && self_actualization < growth_threshold;
+    let relatedness_frustrated =
+        belonging < relatedness_threshold && intimacy < relatedness_threshold;
+
+    let new_growth_ticks = if growth_frustrated {
+        growth_ticks + 1
+    } else {
+        (growth_ticks - 10).max(0)
+    };
+    let new_relatedness_ticks = if relatedness_frustrated {
+        relatedness_ticks + 1
+    } else {
+        (relatedness_ticks - 10).max(0)
+    };
+
+    let window = frustration_window.max(0);
+    let growth_regressing = new_growth_ticks >= window;
+    let relatedness_regressing = new_relatedness_ticks >= window;
+    let growth_started = growth_regressing && !was_regressing_growth;
+    let relatedness_started = relatedness_regressing && !was_regressing_relatedness;
+
+    [
+        new_growth_ticks,
+        new_relatedness_ticks,
+        if growth_regressing { 1 } else { 0 },
+        if growth_started { 1 } else { 0 },
+        if relatedness_regressing { 1 } else { 0 },
+        if relatedness_started { 1 } else { 0 },
+    ]
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -391,9 +442,9 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 #[cfg(test)]
 mod tests {
     use super::{
-        age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
-        action_energy_cost, calc_realized_values, calc_training_gains,
-        compute_age_curve, compute_age_curves, critical_severity, needs_base_decay_step,
+        action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
+        calc_realized_values, calc_training_gain, calc_training_gains, compute_age_curve,
+        compute_age_curves, critical_severity, erg_frustration_step, needs_base_decay_step,
         needs_critical_severity_step, rest_energy_recovery, thirst_decay, warmth_decay,
     };
 
@@ -499,8 +550,8 @@ mod tests {
     #[test]
     fn base_decay_step_matches_manual_formula() {
         let out = needs_base_decay_step(
-            0.7, 0.004, 0.8, 0.5, 0.5, 0.003, 0.002, 0.001, 0.005, 0.01, 0.2, true, 0.5, 0.1,
-            0.3, true,
+            0.7, 0.004, 0.8, 0.5, 0.5, 0.003, 0.002, 0.001, 0.005, 0.01, 0.2, true, 0.5, 0.1, 0.3,
+            true,
         );
         let expected_hunger = 0.004 * 0.8 * (0.5 + 0.5 * 0.7);
         assert_eq!(out[0], expected_hunger);
@@ -523,6 +574,29 @@ mod tests {
         assert_eq!(out[0], critical_severity(0.1, 0.4));
         assert_eq!(out[1], critical_severity(0.2, 0.5));
         assert_eq!(out[2], critical_severity(0.3, 0.6));
+    }
+
+    #[test]
+    fn erg_frustration_step_increments_and_starts_regression() {
+        let out =
+            erg_frustration_step(0.1, 0.2, 0.3, 0.2, 0.2, 0.5, 0.4, 100, 99, 99, false, false);
+        assert_eq!(out[0], 100);
+        assert_eq!(out[1], 100);
+        assert_eq!(out[2], 1);
+        assert_eq!(out[3], 1);
+        assert_eq!(out[4], 1);
+        assert_eq!(out[5], 1);
+    }
+
+    #[test]
+    fn erg_frustration_step_recovers_ticks_when_not_frustrated() {
+        let out = erg_frustration_step(0.9, 0.8, 0.9, 0.9, 0.8, 0.5, 0.4, 100, 7, 3, true, true);
+        assert_eq!(out[0], 0);
+        assert_eq!(out[1], 0);
+        assert_eq!(out[2], 0);
+        assert_eq!(out[3], 0);
+        assert_eq!(out[4], 0);
+        assert_eq!(out[5], 0);
     }
 
     #[test]
@@ -583,17 +657,17 @@ mod tests {
     fn realized_values_match_manual_formula() {
         let potentials = [1000, 900, 800, 700, 600, 500];
         let trainabilities = [500, 600, 700, 800, 900];
-        let xps = [2_000.0_f32, 3_000.0_f32, 4_000.0_f32, 5_000.0_f32, 6_000.0_f32];
+        let xps = [
+            2_000.0_f32,
+            3_000.0_f32,
+            4_000.0_f32,
+            5_000.0_f32,
+            6_000.0_f32,
+        ];
         let ceilings = [0.5_f32, 0.3_f32, 1.5_f32, 0.2_f32, 0.6_f32];
         let age = 30.0_f32;
-        let out = calc_realized_values(
-            &potentials,
-            &trainabilities,
-            &xps,
-            &ceilings,
-            age,
-            10_000.0,
-        );
+        let out =
+            calc_realized_values(&potentials, &trainabilities, &xps, &ceilings, age, 10_000.0);
         assert_eq!(out.len(), 6);
         let curves = compute_age_curves(age);
         for idx in 0..5 {

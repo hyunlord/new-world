@@ -4,6 +4,8 @@ const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 const _BASE_DECAY_SCALAR_COUNT: int = 14
 const _BASE_DECAY_FLAG_COUNT: int = 2
 const _CRITICAL_SEVERITY_SCALAR_COUNT: int = 6
+const _ERG_FRUSTRATION_SCALAR_COUNT: int = 10
+const _ERG_FRUSTRATION_FLAG_COUNT: int = 2
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -14,6 +16,8 @@ var _last_tick: int = 0
 var _base_decay_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _base_decay_flag_inputs: PackedByteArray = PackedByteArray()
 var _critical_severity_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _erg_frustration_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _erg_frustration_flag_inputs: PackedByteArray = PackedByteArray()
 
 
 func _init() -> void:
@@ -37,6 +41,10 @@ func execute_tick(tick: int) -> void:
 		_base_decay_flag_inputs.resize(_BASE_DECAY_FLAG_COUNT)
 	if _critical_severity_scalar_inputs.size() < _CRITICAL_SEVERITY_SCALAR_COUNT:
 		_critical_severity_scalar_inputs.resize(_CRITICAL_SEVERITY_SCALAR_COUNT)
+	if _erg_frustration_scalar_inputs.size() < _ERG_FRUSTRATION_SCALAR_COUNT:
+		_erg_frustration_scalar_inputs.resize(_ERG_FRUSTRATION_SCALAR_COUNT)
+	if _erg_frustration_flag_inputs.size() < _ERG_FRUSTRATION_FLAG_COUNT:
+		_erg_frustration_flag_inputs.resize(_ERG_FRUSTRATION_FLAG_COUNT)
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -315,22 +323,73 @@ func set_stress_system(ss) -> void:
 func _update_erg_frustration(entity: RefCounted) -> void:
 	if not entity.is_alive:
 		return
-	# --- Growth frustration check ---
-	var growth_frustrated: bool = (
-		entity.competence < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
-		entity.autonomy < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
-		entity.self_actualization < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
-	)
-	if growth_frustrated:
-		entity.erg_growth_frustration_ticks += 1
-	else:
-		entity.erg_growth_frustration_ticks = maxi(0, entity.erg_growth_frustration_ticks - 10)
+	var started_growth_regression: bool = false
+	var started_relatedness_regression: bool = false
+	var rust_applied: bool = false
 
-	var was_regressing_growth: bool = entity.erg_regressing_to_existence
-	entity.erg_regressing_to_existence = (
-		entity.erg_growth_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+	_erg_frustration_scalar_inputs[0] = entity.competence
+	_erg_frustration_scalar_inputs[1] = entity.autonomy
+	_erg_frustration_scalar_inputs[2] = entity.self_actualization
+	_erg_frustration_scalar_inputs[3] = entity.belonging
+	_erg_frustration_scalar_inputs[4] = entity.intimacy
+	_erg_frustration_scalar_inputs[5] = GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
+	_erg_frustration_scalar_inputs[6] = GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+	_erg_frustration_scalar_inputs[7] = float(GameConfig.ERG_FRUSTRATION_WINDOW)
+	_erg_frustration_scalar_inputs[8] = float(entity.erg_growth_frustration_ticks)
+	_erg_frustration_scalar_inputs[9] = float(entity.erg_relatedness_frustration_ticks)
+	_erg_frustration_flag_inputs[0] = 1 if entity.erg_regressing_to_existence else 0
+	_erg_frustration_flag_inputs[1] = 1 if entity.erg_regressing_to_relatedness else 0
+
+	var erg_step_variant: Variant = SimBridge.body_erg_frustration_step_packed(
+		_erg_frustration_scalar_inputs,
+		_erg_frustration_flag_inputs
 	)
-	if entity.erg_regressing_to_existence and not was_regressing_growth:
+	if erg_step_variant is PackedInt32Array:
+		var packed_erg_step: PackedInt32Array = erg_step_variant
+		if packed_erg_step.size() >= 6:
+			entity.erg_growth_frustration_ticks = int(packed_erg_step[0])
+			entity.erg_relatedness_frustration_ticks = int(packed_erg_step[1])
+			entity.erg_regressing_to_existence = int(packed_erg_step[2]) != 0
+			started_growth_regression = int(packed_erg_step[3]) != 0
+			entity.erg_regressing_to_relatedness = int(packed_erg_step[4]) != 0
+			started_relatedness_regression = int(packed_erg_step[5]) != 0
+			rust_applied = true
+
+	if not rust_applied:
+		# --- Growth frustration check ---
+		var growth_frustrated: bool = (
+			entity.competence < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+			entity.autonomy < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+			entity.self_actualization < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
+		)
+		if growth_frustrated:
+			entity.erg_growth_frustration_ticks += 1
+		else:
+			entity.erg_growth_frustration_ticks = maxi(0, entity.erg_growth_frustration_ticks - 10)
+
+		var was_regressing_growth: bool = entity.erg_regressing_to_existence
+		entity.erg_regressing_to_existence = (
+			entity.erg_growth_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+		)
+		started_growth_regression = entity.erg_regressing_to_existence and not was_regressing_growth
+
+		# --- Relatedness frustration check ---
+		var relatedness_frustrated: bool = (
+			entity.belonging < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD and
+			entity.intimacy < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+		)
+		if relatedness_frustrated:
+			entity.erg_relatedness_frustration_ticks += 1
+		else:
+			entity.erg_relatedness_frustration_ticks = maxi(0, entity.erg_relatedness_frustration_ticks - 10)
+
+		var was_regressing_rel: bool = entity.erg_regressing_to_relatedness
+		entity.erg_regressing_to_relatedness = (
+			entity.erg_relatedness_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+		)
+		started_relatedness_regression = entity.erg_regressing_to_relatedness and not was_regressing_rel
+
+	if started_growth_regression:
 		if entity.emotion_data != null and _stress_system != null:
 			_stress_system.inject_stress_event(entity.emotion_data, "erg_growth_regression", 5.0)
 		emit_event("erg_regression_started", {
@@ -340,21 +399,7 @@ func _update_erg_frustration(entity: RefCounted) -> void:
 			"tick": _last_tick,
 		})
 
-	# --- Relatedness frustration check ---
-	var relatedness_frustrated: bool = (
-		entity.belonging < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD and
-		entity.intimacy < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
-	)
-	if relatedness_frustrated:
-		entity.erg_relatedness_frustration_ticks += 1
-	else:
-		entity.erg_relatedness_frustration_ticks = maxi(0, entity.erg_relatedness_frustration_ticks - 10)
-
-	var was_regressing_rel: bool = entity.erg_regressing_to_relatedness
-	entity.erg_regressing_to_relatedness = (
-		entity.erg_relatedness_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
-	)
-	if entity.erg_regressing_to_relatedness and not was_regressing_rel:
+	if started_relatedness_regression:
 		if entity.emotion_data != null and _stress_system != null:
 			_stress_system.inject_stress_event(entity.emotion_data, "erg_relatedness_regression", 4.0)
 		emit_event("erg_regression_started", {

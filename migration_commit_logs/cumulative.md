@@ -716,3 +716,8 @@
 - `sim-test`에 `--bench-needs-math` 모드를 추가해 body/needs Rust 수학 경로(`age_curve/trainability/training_gain/realized/needs_decay/critical_severity`)를 독립적으로 마이크로벤치 가능하게 확장.
 - 벤치 반복 횟수 파싱 로직을 `parse_bench_iterations`로 공통화해 `--bench-stress-math`와 `--bench-needs-math`가 동일한 `--iters` 인터페이스를 사용.
 - 기존 stress 벤치 동작은 유지한 채, needs/body 경로의 성능 회귀 추적 기준점(`checksum=29719684.00000` @ 10k iters)을 추가.
+
+## Commit 146
+- `sim-systems::body`에 `erg_frustration_step` 배치 함수를 추가해 성장/관계 좌절 누적 tick 갱신과 회귀 전이(started) 판정을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 `body_erg_frustration_step_packed` 경로를 추가하고, `needs_system`이 scratch packed 입력을 재사용해 엔티티당 1회 호출로 상태를 반영하도록 전환.
+- bridge 미지원 시 기존 GDScript fallback 계산을 유지하면서, 스트레스 주입/`erg_regression_started` 이벤트 조건은 started 플래그 기준으로 동일 의미를 유지.

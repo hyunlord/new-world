@@ -1476,6 +1476,21 @@ func body_needs_critical_severity_step(
 	return body_needs_critical_severity_step_packed(scalar_inputs)
 
 
+## Delegates ERG frustration tick-step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_erg_frustration_step_packed(
+	scalar_inputs: PackedFloat32Array,
+	flag_inputs: PackedByteArray
+):
+	return _call_native_if_exists(
+		"body_erg_frustration_step_packed",
+		[
+			scalar_inputs,
+			flag_inputs
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge
