@@ -278,9 +278,10 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	var updated: PackedFloat32Array = tick_step.get("updated_per_tick", PackedFloat32Array())
 	var active_mask: PackedByteArray = tick_step.get("active_mask", PackedByteArray())
 	var usable_len: int = mini(trace_count, mini(updated.size(), active_mask.size()))
-	var next_traces: Array = []
+	var traces: Array = ed.stress_traces
+	var write_idx: int = 0
 	for i in range(usable_len):
-		var trace: Dictionary = ed.stress_traces[i]
+		var trace: Dictionary = traces[i]
 		trace["per_tick"] = float(updated[i])
 		var is_active: bool = int(active_mask[i]) != 0
 		if collect_breakdown and is_active:
@@ -290,8 +291,11 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 				trace["breakdown_key"] = trace_key
 			breakdown[trace_key] = float(_tick_trace_per_tick[i])
 		if is_active:
-			next_traces.append(trace)
-	ed.stress_traces = next_traces
+			traces[write_idx] = trace
+			write_idx += 1
+	if traces.size() != write_idx:
+		traces.resize(write_idx)
+	ed.stress_traces = traces
 
 	if collect_breakdown:
 		for i in range(_EMOTION_ORDER.size()):

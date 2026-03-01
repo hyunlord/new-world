@@ -346,3 +346,8 @@
 - `execute_tick`에서 `DEBUG_STRESS_LOG`를 tick당 1회 계산하고 `_update_entity_stress`로 전달하도록 변경.
 - `_update_entity_stress` 내부의 반복 `GameConfig.DEBUG_STRESS_LOG` 조회를 제거해 엔티티 루프 미세 오버헤드를 완화.
 - stress breakdown/로그 출력 의미는 유지하면서 디버그 플래그 조회 경로를 단순화.
+
+## Commit 072
+- stress trace 유지 필터링 경로를 `next_traces` 신규 배열 append 방식에서 in-place compact(`write_idx`) 방식으로 전환.
+- trace 갱신 후 `resize(write_idx)`로 비활성 tail을 제거해 tick당 trace 배열 재할당/복사 비용을 완화.
+- trace 업데이트/활성 판정 의미는 유지하면서 stress tick 메모리 churn을 줄임.
