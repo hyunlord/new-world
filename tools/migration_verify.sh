@@ -311,54 +311,62 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     output="$("$@")"
     echo "${output}"
 
-    local checksum_lines
-    local total_lines
-    local mode_lines
-    checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
-    total_lines="$(echo "${output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
-    mode_lines="$(echo "${output}" | sed -n 's/.*mode=\([a-z]*\).*/\1/p')"
-    local checksum_count
-    local total_count
-    local mode_count
-    checksum_count="$(echo "${checksum_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
-    total_count="$(echo "${total_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
-    mode_count="$(echo "${mode_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
-    if [[ "${checksum_count}" != "3" || "${total_count}" != "3" || "${mode_count}" != "3" ]]; then
-      echo "[migration_verify] pathfind-backend-smoke parse failed: checksum_count=${checksum_count} total_count=${total_count} mode_count=${mode_count}" >&2
-      exit 1
-    fi
-    if ! echo "${mode_lines}" | grep -qx "auto" || ! echo "${mode_lines}" | grep -qx "cpu" || ! echo "${mode_lines}" | grep -qx "gpu"; then
-      echo "[migration_verify] pathfind-backend-smoke mode lines missing expected modes" >&2
+    local line_auto
+    local line_cpu
+    local line_gpu
+    line_auto="$(echo "${output}" | sed -n '/^\[sim-test\] pathfind-backend-smoke: mode=auto /p' | head -n 1)"
+    line_cpu="$(echo "${output}" | sed -n '/^\[sim-test\] pathfind-backend-smoke: mode=cpu /p' | head -n 1)"
+    line_gpu="$(echo "${output}" | sed -n '/^\[sim-test\] pathfind-backend-smoke: mode=gpu /p' | head -n 1)"
+    if [[ -z "${line_auto}" || -z "${line_cpu}" || -z "${line_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke mode lines missing expected modes(auto/cpu/gpu)" >&2
       exit 1
     fi
     local checksum_auto
     local checksum_cpu
     local checksum_gpu
-    checksum_auto="$(echo "${checksum_lines}" | sed -n '1p')"
-    checksum_cpu="$(echo "${checksum_lines}" | sed -n '2p')"
-    checksum_gpu="$(echo "${checksum_lines}" | sed -n '3p')"
+    checksum_auto="$(echo "${line_auto}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    checksum_cpu="$(echo "${line_cpu}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    checksum_gpu="$(echo "${line_gpu}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    if [[ -z "${checksum_auto}" || -z "${checksum_cpu}" || -z "${checksum_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke checksum parse failed" >&2
+      exit 1
+    fi
     if [[ "${checksum_auto}" != "${checksum_cpu}" || "${checksum_cpu}" != "${checksum_gpu}" ]]; then
       echo "[migration_verify] pathfind-backend-smoke checksum mismatch: auto=${checksum_auto} cpu=${checksum_cpu} gpu=${checksum_gpu}" >&2
       exit 1
     fi
     local expected_total
     expected_total=$((smoke_iters * 2))
-    local total
-    while IFS= read -r total; do
-      if [[ -z "${total}" ]]; then
-        continue
-      fi
-      if [[ "${total}" != "${expected_total}" ]]; then
-        echo "[migration_verify] pathfind-backend-smoke dispatch total mismatch: expected=${expected_total} got=${total}" >&2
-        exit 1
-      fi
-    done <<< "${total_lines}"
+    local total_auto
+    local total_cpu
+    local total_gpu
+    total_auto="$(echo "${line_auto}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    total_cpu="$(echo "${line_cpu}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    total_gpu="$(echo "${line_gpu}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    if [[ -z "${total_auto}" || -z "${total_cpu}" || -z "${total_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke dispatch total parse failed" >&2
+      exit 1
+    fi
+    if [[ "${total_auto}" != "${expected_total}" || "${total_cpu}" != "${expected_total}" || "${total_gpu}" != "${expected_total}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke dispatch total mismatch: expected=${expected_total} got_auto=${total_auto} got_cpu=${total_cpu} got_gpu=${total_gpu}" >&2
+      exit 1
+    fi
+    local configured_auto
+    local configured_cpu
+    local configured_gpu
+    configured_auto="$(echo "${line_auto}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
+    configured_cpu="$(echo "${line_cpu}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
+    configured_gpu="$(echo "${line_gpu}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
+    if [[ "${configured_auto}" != "auto" || "${configured_cpu}" != "cpu" || "${configured_gpu}" != "gpu" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke configured mode mismatch: auto=${configured_auto:-<empty>} cpu=${configured_cpu:-<empty>} gpu=${configured_gpu:-<empty>}" >&2
+      exit 1
+    fi
     local resolved_cpu
     local resolved_auto
     local resolved_gpu
-    resolved_auto="$(echo "${output}" | sed -n 's/.*mode=auto .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
-    resolved_cpu="$(echo "${output}" | sed -n 's/.*mode=cpu .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
-    resolved_gpu="$(echo "${output}" | sed -n 's/.*mode=gpu .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
+    resolved_auto="$(echo "${line_auto}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p')"
+    resolved_cpu="$(echo "${line_cpu}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p')"
+    resolved_gpu="$(echo "${line_gpu}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p')"
     if [[ "${resolved_cpu}" != "cpu" ]]; then
       echo "[migration_verify] pathfind-backend-smoke cpu mode must resolve to cpu, got=${resolved_cpu:-<empty>}" >&2
       exit 1

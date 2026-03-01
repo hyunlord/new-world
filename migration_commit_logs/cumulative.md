@@ -1165,3 +1165,8 @@
 - `migration_verify` smoke 검증에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED`/`MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED`를 추가해 mode별 resolved 기대값을 명시적으로 강제할 수 있게 확장.
 - smoke 파서가 `resolved_auto/resolved_gpu`를 함께 추출하고, 기대값 지정 시 불일치 즉시 실패하도록 게이트를 강화.
 - CPU fallback 환경에서 `auto=cpu`, `gpu=cpu` 기대값을 적용한 전체 검증(`tools/migration_verify.sh --with-benches`) 통과를 확인.
+
+## Commit 236
+- `migration_verify` smoke 파서를 모드 라인 직접 매칭(`auto/cpu/gpu`)으로 전환해 출력 순서 의존성을 제거.
+- mode별 `configured/checksum/total/resolved`를 독립 파싱·검증하고, `configured` 값이 모드와 일치하는지까지 게이트를 확장.
+- `MIGRATION_BENCH_PATH_BACKEND_SMOKE=true ... tools/migration_verify.sh --with-benches` 재검증으로 smoke + 기존 checksum 게이트 동시 통과를 확인.
