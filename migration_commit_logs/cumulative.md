@@ -641,3 +641,8 @@
 - `sim-systems::body`에 `calc_realized_values(...)`를 추가해 연간 body realized 6축(`str/agi/end/tou/rec/dr`) 계산을 단일 수학 경로로 통합하고, `calc_training_gains`에 `trainability < 0` sentinel(0 gain) 처리를 보강.
 - `sim-bridge`/`SimBridge`에 `body_calc_realized_values`를 추가해 GDScript가 연간 realized를 1회 bridge 호출로 수신하는 경로를 제공.
 - `body_attributes.calc_realized_values_batch`와 `age_system`이 단일 realized 배치 결과를 재사용하도록 전환되어 연간 body 재계산 hot path의 경계 호출 수를 추가 축소.
+
+## Commit 131
+- `entity_manager`의 스폰 초기 `body.realized` 계산이 `calc_realized_values_batch` 단일 호출 경로로 전환되어 연간 갱신 경로와 실행 구조를 일치시킴.
+- 초기화 루프에서 개별 age-curve 기반 수동 계산을 제거하고, 배치 결과(`str/agi/end/tou/rec/dr`)를 직접 반영하도록 정리.
+- bridge 지원 시 스폰 경로의 body 수학 호출이 단일 realized 배치 호출 중심으로 수렴.
