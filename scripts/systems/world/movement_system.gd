@@ -8,6 +8,10 @@ var _recalc_from_xy: PackedInt32Array = PackedInt32Array()
 var _recalc_to_xy: PackedInt32Array = PackedInt32Array()
 var _path_entities_scratch: Array = []
 var _recalc_entities_scratch: Array = []
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_MOVE_SKIP_METHOD: String = "body_movement_should_skip_tick"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -24,6 +28,22 @@ func init(entity_manager: RefCounted, world_data: RefCounted, pathfinder: RefCou
 	_building_manager = building_manager
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_MOVE_SKIP_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	var path_entities: Array = _path_entities_scratch
@@ -33,6 +53,7 @@ func execute_tick(tick: int) -> void:
 	recalc_entities.clear()
 	_recalc_from_xy.resize(0)
 	_recalc_to_xy.resize(0)
+	var bridge: Object = _get_sim_bridge()
 
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -50,7 +71,17 @@ func execute_tick(tick: int) -> void:
 
 		# Age-based movement speed: skip ticks based on config
 		var skip_mod: int = GameConfig.CHILD_MOVE_SKIP_MOD.get(entity.age_stage, 0)
-		if skip_mod > 0 and (tick + entity.id) % skip_mod == 0:
+		var should_skip: bool = skip_mod > 0 and (tick + entity.id) % skip_mod == 0
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_MOVE_SKIP_METHOD,
+				skip_mod,
+				tick,
+				entity.id,
+			)
+			if rust_variant != null:
+				should_skip = bool(rust_variant)
+		if should_skip:
 			continue
 
 		# Skip movement for rest/idle or if already at target

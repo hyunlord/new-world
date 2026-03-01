@@ -967,6 +967,11 @@ pub fn tech_modifier_stack_clamp(
     [mul, add]
 }
 
+/// Age-stage movement skip gate used in movement tick loop.
+pub fn movement_should_skip_tick(skip_mod: i32, tick: i32, entity_id: i32) -> bool {
+    skip_mod > 0 && (tick + entity_id) % skip_mod == 0
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1457,6 +1462,7 @@ mod tests {
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
+        movement_should_skip_tick,
     };
 
     #[test]
@@ -1996,6 +2002,14 @@ mod tests {
         let out2 = tech_modifier_stack_clamp(0.0, -2.0, 2.0, 0.5);
         assert!((out2[0] - 0.01).abs() < 1e-6);
         assert!((out2[1] + 0.5).abs() < 1e-6);
+    }
+
+    #[test]
+    fn movement_should_skip_tick_matches_mod_logic() {
+        assert!(movement_should_skip_tick(3, 6, 0));
+        assert!(movement_should_skip_tick(3, 5, 1));
+        assert!(!movement_should_skip_tick(3, 5, 2));
+        assert!(!movement_should_skip_tick(0, 6, 0));
     }
 
     #[test]

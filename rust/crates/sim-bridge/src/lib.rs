@@ -1318,6 +1318,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_movement_should_skip_tick(&self, skip_mod: i32, tick: i32, entity_id: i32) -> bool {
+        body::movement_should_skip_tick(skip_mod, tick, entity_id)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
