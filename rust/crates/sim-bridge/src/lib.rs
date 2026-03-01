@@ -1119,6 +1119,30 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_personality_child_axis_z(
+        &self,
+        has_parents: bool,
+        parent_a_axis: f32,
+        parent_b_axis: f32,
+        heritability: f32,
+        random_axis_z: f32,
+        is_female: bool,
+        sex_diff_d: f32,
+        culture_shift: f32,
+    ) -> f32 {
+        body::personality_child_axis_z(
+            has_parents,
+            parent_a_axis,
+            parent_b_axis,
+            heritability,
+            random_axis_z,
+            is_female,
+            sex_diff_d,
+            culture_shift,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

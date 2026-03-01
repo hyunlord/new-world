@@ -1584,3 +1584,10 @@
 - `intelligence_generator.gd`의 `_generate_g`를 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `34/56` 적용.
+
+## Commit 306
+- `sim-systems/body`에 `personality_child_axis_z`를 추가해 PersonalityGenerator의 자식 축 z-score 합성 수식을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_personality_child_axis_z` 메서드를 추가해 GDScript에서 해당 수식을 직접 호출 가능하게 확장.
+- `personality_generator.gd`의 axis별 `z_child` 계산을 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 실측 기준) `39/56` 적용.

@@ -713,6 +713,32 @@ pub fn intelligence_g_value(
     base + openness_weight * (openness_mean - 0.5) + noise
 }
 
+/// Computes child axis z-score from inheritance, sex shift, and culture shift.
+pub fn personality_child_axis_z(
+    has_parents: bool,
+    parent_a_axis: f32,
+    parent_b_axis: f32,
+    heritability: f32,
+    random_axis_z: f32,
+    is_female: bool,
+    sex_diff_d: f32,
+    culture_shift: f32,
+) -> f32 {
+    let z_mid = if has_parents {
+        0.5 * (parent_a_axis + parent_b_axis)
+    } else {
+        0.0
+    };
+    let env_factor = (1.0 - 0.5 * heritability * heritability).sqrt();
+    let mut z_child = heritability * z_mid + env_factor * random_axis_z;
+    if is_female {
+        z_child += sex_diff_d * 0.5;
+    } else {
+        z_child -= sex_diff_d * 0.5;
+    }
+    z_child + culture_shift
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1762,7 +1788,7 @@ mod tests {
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
         stat_threshold_is_active, stats_resource_deltas_per_100,
         personality_linear_target, intelligence_effective_value,
-        intelligence_g_value,
+        intelligence_g_value, personality_child_axis_z,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2199,6 +2225,20 @@ mod tests {
         let shifted = intelligence_g_value(false, 0.0, 0.0, 0.6, 0.5, 0.7, 0.2, 0.01);
         assert!((base - 0.5).abs() < 1e-6);
         assert!((shifted - 0.55).abs() < 1e-6);
+    }
+
+    #[test]
+    fn personality_child_axis_z_applies_inheritance_and_sex_shift() {
+        let female = personality_child_axis_z(true, 0.6, 0.2, 0.5, 0.1, true, 0.4, 0.0);
+        let male = personality_child_axis_z(true, 0.6, 0.2, 0.5, 0.1, false, 0.4, 0.0);
+        assert!(female > male);
+    }
+
+    #[test]
+    fn personality_child_axis_z_applies_culture_shift() {
+        let neutral = personality_child_axis_z(false, 0.0, 0.0, 0.5, 0.2, true, 0.0, 0.0);
+        let shifted = personality_child_axis_z(false, 0.0, 0.0, 0.5, 0.2, true, 0.0, 0.3);
+        assert!((shifted - neutral - 0.3).abs() < 1e-6);
     }
 
     #[test]
