@@ -1290,3 +1290,8 @@
 - `migration_verify` 문자열 직렬화 경로를 보강해 경로/버전/git 메타의 JSON 인코딩을 `json.dumps` 기반으로 안전 처리.
 - `to_json_opt_string`, `to_json_opt_path`, `to_json_opt_sha256`가 공통 문자열 인코더(`to_json_string`)를 사용하도록 정리.
 - `/tmp/worldsim_audit_artifacts22/migration_verify_report.json`를 Python으로 파싱해 리포트 JSON 유효성과 주요 문자열 필드 조회를 확인.
+
+## Commit 261
+- `migration_verify_report.json`에 `started_at_utc`, `finished_at_utc`를 추가해 실행 시작/종료 절대시각을 함께 기록.
+- `generated_at_utc`는 종료 시각과 동일 값을 유지하면서 `total_duration_seconds`와 시간 메타의 일관성을 강화.
+- `/tmp/worldsim_audit_artifacts23/migration_verify_report.json`에서 시작/종료 시각 및 duration 필드 반영을 확인.

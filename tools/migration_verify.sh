@@ -6,6 +6,7 @@ APPLY_KEY_FIELDS="false"
 STRIP_INLINE_FIELDS="false"
 WITH_BENCHES="false"
 VERIFY_STARTED_EPOCH="$(date +%s)"
+VERIFY_STARTED_AT_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 STEP_TESTS_DURATION=0
 STEP_EXTRACT_DURATION=0
 STEP_COMPILE_DURATION=0
@@ -920,7 +921,8 @@ if [[ -n "${verify_report_json}" ]]; then
   fi
   verify_report_out="$(to_abs_path "${verify_report_json}")"
   mkdir -p "$(dirname "${verify_report_out}")"
-  generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  verify_finished_at_utc="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  generated_at="${verify_finished_at_utc}"
   verify_finished_epoch="$(date +%s)"
   total_duration_seconds=$((verify_finished_epoch - VERIFY_STARTED_EPOCH))
   git_branch="$(git -C "${ROOT_DIR}" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
@@ -999,6 +1001,8 @@ if [[ -n "${verify_report_json}" ]]; then
 {
   "schema_version": 1,
   "generated_at_utc": "${generated_at}",
+  "started_at_utc": "${VERIFY_STARTED_AT_UTC}",
+  "finished_at_utc": "${verify_finished_at_utc}",
   "root_dir": "${ROOT_DIR}",
   "git_branch": ${git_branch_json},
   "git_head": ${git_head_json},
