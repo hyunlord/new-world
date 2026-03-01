@@ -2109,6 +2109,15 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_emotion_event_impulse_from_appraisal(
+        &self,
+        inputs: PackedFloat32Array,
+    ) -> PackedFloat32Array {
+        let out = body::emotion_event_impulse_from_appraisal(&packed_f32_to_vec(&inputs));
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

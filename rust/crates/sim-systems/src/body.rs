@@ -2092,6 +2092,57 @@ pub fn emotion_contagion_distance_factor(distance: f32, distance_scale: f32) -> 
     (-distance / distance_scale).exp()
 }
 
+/// Emotion impulse vector from appraisal dimensions and per-emotion sensitivities.
+///
+/// Input order:
+/// `[g, n, c, a, m, p, b, fr, base_intensity,
+///   sens_joy, sens_sadness, sens_anger, sens_fear,
+///   sens_disgust, sens_surprise, sens_trust, sens_anticipation]`
+///
+/// Returns `[joy, sadness, anger, fear, disgust, surprise, trust, anticipation]`.
+pub fn emotion_event_impulse_from_appraisal(inputs: &[f32]) -> [f32; 8] {
+    if inputs.len() < 17 {
+        return [0.0; 8];
+    }
+    let g = inputs[0];
+    let n = inputs[1];
+    let c = inputs[2];
+    let a = inputs[3];
+    let m = inputs[4];
+    let p = inputs[5];
+    let b = inputs[6];
+    let fr = inputs[7];
+    let base_intensity = inputs[8];
+    let sens_joy = inputs[9];
+    let sens_sadness = inputs[10];
+    let sens_anger = inputs[11];
+    let sens_fear = inputs[12];
+    let sens_disgust = inputs[13];
+    let sens_surprise = inputs[14];
+    let sens_trust = inputs[15];
+    let sens_anticipation = inputs[16];
+
+    let joy = base_intensity * g.max(0.0) * (1.0 + 0.5 * n) * sens_joy;
+    let sadness = base_intensity * (-g).max(0.0) * (1.0 - c) * sens_sadness;
+    let anger = base_intensity * (-g).max(0.0) * c * (-a + m).max(0.0) * sens_anger;
+    let fear = base_intensity * (-g).max(0.0) * (1.0 - c) * (0.5 + 0.5 * n) * sens_fear;
+    let disgust = base_intensity * (p + 0.7 * m) * (0.5 + 0.5 * (-g).max(0.0)) * sens_disgust;
+    let surprise = base_intensity * n * sens_surprise;
+    let trust = base_intensity * b.max(0.0) * (1.0 - p) * (1.0 - m) * sens_trust;
+    let anticipation = base_intensity * fr * (0.5 + 0.5 * g.max(0.0)) * sens_anticipation;
+
+    [
+        joy,
+        sadness,
+        anger,
+        fear,
+        disgust,
+        surprise,
+        trust,
+        anticipation,
+    ]
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2788,6 +2839,7 @@ mod tests {
         emotion_break_threshold, emotion_break_trigger_probability, emotion_break_type_code,
         emotion_adjusted_half_life, emotion_baseline_value, emotion_habituation_factor,
         emotion_contagion_susceptibility, emotion_contagion_distance_factor,
+        emotion_event_impulse_from_appraisal,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3824,6 +3876,18 @@ mod tests {
         assert!(hab5 < hab0);
         assert!(sus > 1.0);
         assert!(near > far);
+    }
+
+    #[test]
+    fn emotion_event_impulse_from_appraisal_matches_expected_shape() {
+        let out = emotion_event_impulse_from_appraisal(&[
+            0.8, 0.4, 0.6, 0.2, 0.1, 0.0, 0.7, 0.5, 30.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+        ]);
+        assert_eq!(out.len(), 8);
+        assert!(out[0] > 0.0);
+        assert_eq!(out[1], 0.0);
+        assert!(out[6] > 0.0);
+        assert!(out[7] > 0.0);
     }
 
     #[test]

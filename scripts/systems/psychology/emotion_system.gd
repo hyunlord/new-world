@@ -19,6 +19,7 @@ const _SIM_BRIDGE_BASELINE_METHOD: String = "body_emotion_baseline_value"
 const _SIM_BRIDGE_HABITUATION_METHOD: String = "body_emotion_habituation_factor"
 const _SIM_BRIDGE_CONTAGION_SUS_METHOD: String = "body_emotion_contagion_susceptibility"
 const _SIM_BRIDGE_CONTAGION_DIST_METHOD: String = "body_emotion_contagion_distance_factor"
+const _SIM_BRIDGE_EVENT_IMPULSE_METHOD: String = "body_emotion_event_impulse_from_appraisal"
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -78,7 +79,8 @@ func _get_sim_bridge() -> Object:
 	and node.has_method(_SIM_BRIDGE_BASELINE_METHOD) \
 	and node.has_method(_SIM_BRIDGE_HABITUATION_METHOD) \
 	and node.has_method(_SIM_BRIDGE_CONTAGION_SUS_METHOD) \
-	and node.has_method(_SIM_BRIDGE_CONTAGION_DIST_METHOD):
+	and node.has_method(_SIM_BRIDGE_CONTAGION_DIST_METHOD) \
+	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_METHOD):
 		_sim_bridge = node
 	return _sim_bridge
 
@@ -280,14 +282,41 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 
 		# Appraisal -> 8 emotion impulses
 		var impulse: Dictionary = {}
-		impulse["joy"] = base_intensity * maxf(0.0, g) * (1.0 + 0.5 * n) * sens.get("joy", 1.0)
-		impulse["sadness"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * sens.get("sadness", 1.0)
-		impulse["anger"] = base_intensity * maxf(0.0, -g) * c * maxf(0.0, -a + m) * sens.get("anger", 1.0)
-		impulse["fear"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * (0.5 + 0.5 * n) * sens.get("fear", 1.0)
-		impulse["disgust"] = base_intensity * (p + 0.7 * m) * (0.5 + 0.5 * maxf(0.0, -g)) * sens.get("disgust", 1.0)
-		impulse["surprise"] = base_intensity * n * sens.get("surprise", 1.0)
-		impulse["trust"] = base_intensity * maxf(0.0, b) * (1.0 - p) * (1.0 - m) * sens.get("trust", 1.0)
-		impulse["anticipation"] = base_intensity * fr * (0.5 + 0.5 * maxf(0.0, g)) * sens.get("anticipation", 1.0)
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_inputs: PackedFloat32Array = PackedFloat32Array([
+				g, n, c, a, m, p, b, fr, base_intensity,
+				float(sens.get("joy", 1.0)),
+				float(sens.get("sadness", 1.0)),
+				float(sens.get("anger", 1.0)),
+				float(sens.get("fear", 1.0)),
+				float(sens.get("disgust", 1.0)),
+				float(sens.get("surprise", 1.0)),
+				float(sens.get("trust", 1.0)),
+				float(sens.get("anticipation", 1.0)),
+			])
+			var rust_variant: Variant = bridge.call(_SIM_BRIDGE_EVENT_IMPULSE_METHOD, rust_inputs)
+			if rust_variant is PackedFloat32Array:
+				var out: PackedFloat32Array = rust_variant
+				if out.size() >= 8:
+					impulse["joy"] = float(out[0])
+					impulse["sadness"] = float(out[1])
+					impulse["anger"] = float(out[2])
+					impulse["fear"] = float(out[3])
+					impulse["disgust"] = float(out[4])
+					impulse["surprise"] = float(out[5])
+					impulse["trust"] = float(out[6])
+					impulse["anticipation"] = float(out[7])
+
+		if impulse.is_empty():
+			impulse["joy"] = base_intensity * maxf(0.0, g) * (1.0 + 0.5 * n) * sens.get("joy", 1.0)
+			impulse["sadness"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * sens.get("sadness", 1.0)
+			impulse["anger"] = base_intensity * maxf(0.0, -g) * c * maxf(0.0, -a + m) * sens.get("anger", 1.0)
+			impulse["fear"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * (0.5 + 0.5 * n) * sens.get("fear", 1.0)
+			impulse["disgust"] = base_intensity * (p + 0.7 * m) * (0.5 + 0.5 * maxf(0.0, -g)) * sens.get("disgust", 1.0)
+			impulse["surprise"] = base_intensity * n * sens.get("surprise", 1.0)
+			impulse["trust"] = base_intensity * maxf(0.0, b) * (1.0 - p) * (1.0 - m) * sens.get("trust", 1.0)
+			impulse["anticipation"] = base_intensity * fr * (0.5 + 0.5 * maxf(0.0, g)) * sens.get("anticipation", 1.0)
 
 		# Apply habituation and accumulate
 		for emo in impulse:
