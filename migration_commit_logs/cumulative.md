@@ -1335,3 +1335,8 @@
 - `migration_verify_report.json`에 `audit_conflict_preview`를 추가해 duplicate value conflict 키 상위 N개(기본 10개)를 report에 직접 포함.
 - `audit.json`의 `duplicate_details`에서 `value_conflict=true` 키를 추출/정렬/슬라이싱하는 헬퍼를 추가해 triage 친화적 요약을 제공.
 - `/tmp/worldsim_audit_artifacts31/migration_verify_report.json`에서 `limit=10`, `count=10`, 충돌 키 프리뷰 배열 반영을 확인.
+
+## Commit 270
+- duplicate conflict 프리뷰 개수를 `MIGRATION_VERIFY_AUDIT_CONFLICT_PREVIEW_LIMIT`로 제어 가능하게 확장(기본 10).
+- 입력값 비음수 정수 검증을 추가하고, verify report의 `config.audit_conflict_preview_limit` 및 `audit_conflict_preview` 계산에 동일 설정을 반영.
+- `/tmp/worldsim_audit_artifacts32/migration_verify_report.json`에서 limit=3 설정 시 프리뷰 count/keys 길이가 3으로 반영됨을 확인.

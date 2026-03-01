@@ -89,8 +89,13 @@ audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-fals
 audit_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
 verify_report_json="${MIGRATION_VERIFY_REPORT_JSON:-}"
 verify_assert_artifacts="${MIGRATION_VERIFY_ASSERT_ARTIFACTS:-false}"
+verify_audit_conflict_preview_limit="${MIGRATION_VERIFY_AUDIT_CONFLICT_PREVIEW_LIMIT:-10}"
 if [[ "${verify_assert_artifacts}" != "true" && "${verify_assert_artifacts}" != "false" ]]; then
   echo "[migration_verify] MIGRATION_VERIFY_ASSERT_ARTIFACTS must be true or false" >&2
+  exit 1
+fi
+if ! [[ "${verify_audit_conflict_preview_limit}" =~ ^[0-9]+$ ]]; then
+  echo "[migration_verify] MIGRATION_VERIFY_AUDIT_CONFLICT_PREVIEW_LIMIT must be a non-negative integer" >&2
   exit 1
 fi
 if [[ -n "${audit_report_dir}" ]]; then
@@ -1287,7 +1292,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
       "${compile_threshold_duplicate_owner_missing_count_ok}" \
       "${compile_threshold_owner_unused_count_ok}"
   )"
-  audit_conflict_preview_limit=10
+  audit_conflict_preview_limit="${verify_audit_conflict_preview_limit}"
   audit_conflict_key_preview="$(to_json_conflict_key_preview "${audit_report_json}" "${audit_conflict_preview_limit}")"
   audit_conflict_key_preview_count="$(to_json_conflict_key_preview_count "${audit_report_json}" "${audit_conflict_preview_limit}")"
   bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
@@ -1362,6 +1367,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_report_dir": ${audit_report_dir_value},
     "audit_compare_key_owner_policy": ${audit_compare_key_owner_policy_value},
     "audit_refresh_key_owner_policy": ${audit_refresh_key_owner_policy},
+    "audit_conflict_preview_limit": ${verify_audit_conflict_preview_limit},
     "compile_report_json": ${compile_report_json_config_value},
     "bench_report_json": ${bench_report_json_config_value},
     "bench": {
