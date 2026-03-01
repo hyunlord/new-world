@@ -289,6 +289,15 @@ fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Arr
     output
 }
 
+fn encode_path_groups_vec2(path_groups: Vec<Vec<GridPos>>) -> Array<PackedVector2Array> {
+    let mut output: Array<PackedVector2Array> = Array::new();
+    for group in path_groups {
+        let packed = encode_path_vec2(group);
+        output.push(&packed);
+    }
+    output
+}
+
 fn encode_path_xy(path: Vec<GridPos>) -> PackedInt32Array {
     let mut packed: PackedInt32Array = PackedInt32Array::new();
     packed.resize(path.len() * 2);
@@ -296,6 +305,15 @@ fn encode_path_xy(path: Vec<GridPos>) -> PackedInt32Array {
         let base = idx * 2;
         packed[base] = p.x;
         packed[base + 1] = p.y;
+    }
+    packed
+}
+
+fn encode_path_vec2(path: Vec<GridPos>) -> PackedVector2Array {
+    let mut packed: PackedVector2Array = PackedVector2Array::new();
+    packed.resize(path.len());
+    for (idx, p) in path.into_iter().enumerate() {
+        packed[idx] = Vector2::new(p.x as f32, p.y as f32);
     }
     packed
 }
@@ -968,11 +986,7 @@ impl WorldSimBridge {
             Err(_) => return PackedVector2Array::new(),
         };
 
-        let points: Vec<Vector2> = path
-            .into_iter()
-            .map(|p| Vector2::new(p.x as f32, p.y as f32))
-            .collect();
-        PackedVector2Array::from(points)
+        encode_path_vec2(path)
     }
 
     #[func]
@@ -1080,16 +1094,7 @@ impl WorldSimBridge {
             Err(_) => return Array::new(),
         };
 
-        let mut output: Array<PackedVector2Array> = Array::new();
-        for group in path_groups {
-            let points: Vec<Vector2> = group
-                .into_iter()
-                .map(|p| Vector2::new(p.x as f32, p.y as f32))
-                .collect();
-            let packed = PackedVector2Array::from(points);
-            output.push(&packed);
-        }
-        output
+        encode_path_groups_vec2(path_groups)
     }
 
     #[func]

@@ -941,3 +941,8 @@
 - `sim-bridge` Vec2 batch pathfinding 경로에 슬라이스 직접 순회 헬퍼(`pathfind_grid_batch_vec2_bytes`)를 추가해 tuple 디코딩 벡터 할당을 제거.
 - `pathfind_grid_batch`가 중간 좌표 변환 벡터 없이 배치당 1회 grid 재사용 + 직접 순회 경로를 사용하도록 전환.
 - path 의미를 유지하면서 Vec2 batch 경로의 변환 오버헤드를 완화.
+
+## Commit 191
+- `sim-bridge` path 출력 인코딩에 `encode_path_vec2`/`encode_path_groups_vec2`를 도입해 `Vec<Vector2>` 중간 collect를 제거.
+- `pathfind_grid`/`pathfind_grid_batch`가 Packed 배열 직접 인코딩 경로를 사용하도록 정리.
+- path 의미를 유지하면서 bridge 결과 포장 단계의 메모리/CPU 오버헤드를 완화.
