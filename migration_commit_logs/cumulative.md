@@ -526,3 +526,8 @@
 - `settlement_overview_tab`의 `UI_ERA_PROGRESS_FMT` 호출을 `Locale.trf3` 경량 포맷 경로로 전환.
 - 출력 의미를 유지하면서 3-파라미터 포맷 호출의 임시 params Dictionary 생성을 줄임.
 - Settlement Overview 탭 draw 경로의 미세 오버헤드를 완화.
+
+## Commit 108
+- `pause_menu`의 단일 placeholder 포맷 호출(`UI_OVERWRITE_CONFIRM`, `UI_TIME_AGO_MINUTES/HOURS/DAYS`)을 `Locale.trf1`로 전환.
+- 출력 의미를 유지하면서 메뉴 갱신 경로의 임시 params Dictionary 생성을 줄임.
+- Pause 메뉴 텍스트 업데이트 경로의 미세 오버헤드를 완화.
