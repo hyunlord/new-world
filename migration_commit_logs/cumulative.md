@@ -926,3 +926,8 @@
 - `world_data`에 타일 배치 업데이트 API(`begin_tile_update`/`end_tile_update`)를 추가해 대량 `set_tile` 구간의 revision 증가를 1회로 coalescing.
 - `world_generator`와 `preset_map_generator`가 생성 루프를 배치 업데이트로 감싸 생성 중 revision churn을 크게 감소.
 - 지형 결과 의미를 유지하면서 revision 기반 cache invalidation 경로의 운영 비용을 완화.
+
+## Commit 188
+- `sim-bridge` batch pathfinding 경로에서 월드 그리드를 요청마다 재구성하던 구조를 제거하고, 배치당 1회 grid 빌드 후 재사용하도록 개선.
+- 길이 검증 + grid 생성 로직을 `build_grid_cost_map`으로 공통화해 `pathfind_grid_bytes`/`pathfind_grid_batch_bytes` 경로를 단순화.
+- path 의미/에러 의미는 유지하면서 batch pathfinding의 핵심 오버헤드를 완화.

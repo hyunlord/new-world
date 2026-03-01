@@ -101,6 +101,21 @@ pub fn pathfind_grid_bytes(
     to_y: i32,
     max_steps: usize,
 ) -> Result<Vec<GridPos>, PathfindError> {
+    let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    Ok(find_path(
+        &grid,
+        GridPos::new(from_x, from_y),
+        GridPos::new(to_x, to_y),
+        max_steps,
+    ))
+}
+
+fn build_grid_cost_map(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+) -> Result<GridCostMap, PathfindError> {
     let expected = (width * height) as usize;
     if walkable.len() != expected {
         return Err(PathfindError::InvalidWalkableLength {
@@ -115,16 +130,15 @@ pub fn pathfind_grid_bytes(
         });
     }
 
-    let input = PathfindInput {
-        width,
-        height,
-        walkable: walkable.iter().map(|v| *v != 0).collect(),
-        move_cost: move_cost.to_vec(),
-        from: GridPos::new(from_x, from_y),
-        to: GridPos::new(to_x, to_y),
-        max_steps,
-    };
-    pathfind_from_flat(input)
+    let mut grid = GridCostMap::new(width, height);
+    for y in 0..height {
+        for x in 0..width {
+            let idx = (y * width + x) as usize;
+            grid.set_walkable(x, y, walkable[idx] != 0);
+            grid.set_move_cost(x, y, move_cost[idx]);
+        }
+    }
+    Ok(grid)
 }
 
 pub fn pathfind_grid_batch_bytes(
@@ -143,13 +157,17 @@ pub fn pathfind_grid_batch_bytes(
         });
     }
 
+    let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
     let mut out = Vec::with_capacity(from_points.len());
     for idx in 0..from_points.len() {
         let (from_x, from_y) = from_points[idx];
         let (to_x, to_y) = to_points[idx];
-        let path = pathfind_grid_bytes(
-            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-        )?;
+        let path = find_path(
+            &grid,
+            GridPos::new(from_x, from_y),
+            GridPos::new(to_x, to_y),
+            max_steps,
+        );
         out.push(path);
     }
     Ok(out)
