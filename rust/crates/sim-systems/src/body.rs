@@ -72,6 +72,22 @@ pub fn calc_training_gain(
     clamped_gain as i32
 }
 
+/// Energy cost multiplier for action execution.
+///
+/// Mirrors `needs_system` action energy cost formula.
+pub fn action_energy_cost(base_cost: f32, end_norm: f32, end_cost_reduction: f32) -> f32 {
+    let clamped_end = clamp_f32(end_norm, 0.0, 1.0);
+    base_cost * (1.0 - end_cost_reduction * clamped_end)
+}
+
+/// Energy recovery amount during rest.
+///
+/// Mirrors `needs_system` rest recovery formula.
+pub fn rest_energy_recovery(base_recovery: f32, rec_norm: f32, rec_recovery_bonus: f32) -> f32 {
+    let clamped_rec = clamp_f32(rec_norm, 0.0, 1.0);
+    base_recovery * (1.0 + rec_recovery_bonus * clamped_rec)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -254,8 +270,9 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 mod tests {
     use super::{
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
-        calc_realized_values, calc_training_gains,
+        action_energy_cost, calc_realized_values, calc_training_gains,
         compute_age_curve, compute_age_curves,
+        rest_energy_recovery,
     };
 
     #[test]
@@ -321,6 +338,20 @@ mod tests {
         let gain = calc_training_gain(1000, 5000, 10_000_000.0, 0.5, 1.0);
         assert!(gain <= 1000);
         assert!(gain > 0);
+    }
+
+    #[test]
+    fn action_energy_cost_decreases_with_endurance() {
+        let low = action_energy_cost(0.01, 0.1, 0.5);
+        let high = action_energy_cost(0.01, 0.9, 0.5);
+        assert!(high < low);
+    }
+
+    #[test]
+    fn rest_energy_recovery_increases_with_recovery_stat() {
+        let low = rest_energy_recovery(0.02, 0.1, 0.5);
+        let high = rest_energy_recovery(0.02, 0.9, 0.5);
+        assert!(high > low);
     }
 
     #[test]

@@ -183,6 +183,38 @@ static func get_age_trainability_modifier(axis: String, age_years: float) -> flo
 	return 1.00
 
 
+## 행동 중 에너지 소모량 계산
+## needs_system의 action energy cost 수식을 Rust 우선 + GDScript fallback으로 계산.
+static func compute_action_energy_cost(end_norm: float) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"body_action_energy_cost",
+		[
+			GameConfig.ENERGY_ACTION_COST,
+			end_norm,
+			GameConfig.BODY_END_COST_REDUCTION
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+	return GameConfig.ENERGY_ACTION_COST * (1.0 - GameConfig.BODY_END_COST_REDUCTION * end_norm)
+
+
+## 휴식 중 에너지 회복량 계산
+## needs_system의 rest recovery 수식을 Rust 우선 + GDScript fallback으로 계산.
+static func compute_rest_energy_recovery(rec_norm: float) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"body_rest_energy_recovery",
+		[
+			GameConfig.BODY_REST_ENERGY_RECOVERY,
+			rec_norm,
+			GameConfig.BODY_REC_RECOVERY_BONUS
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+	return GameConfig.BODY_REST_ENERGY_RECOVERY * (1.0 + GameConfig.BODY_REC_RECOVERY_BONUS * rec_norm)
+
+
 ## 5축 나이별 훈련 효율 배치 계산 (str/agi/end/tou/rec)
 ## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
 static func get_age_trainability_modifier_packed(age_years: float) -> PackedFloat32Array:

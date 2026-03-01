@@ -393,6 +393,26 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_action_energy_cost(
+        &self,
+        base_cost: f32,
+        end_norm: f32,
+        end_cost_reduction: f32,
+    ) -> f32 {
+        body::action_energy_cost(base_cost, end_norm, end_cost_reduction)
+    }
+
+    #[func]
+    fn body_rest_energy_recovery(
+        &self,
+        base_recovery: f32,
+        rec_norm: f32,
+        rec_recovery_bonus: f32,
+    ) -> f32 {
+        body::rest_energy_recovery(base_recovery, rec_norm, rec_recovery_bonus)
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

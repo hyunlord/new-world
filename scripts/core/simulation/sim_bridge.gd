@@ -1302,6 +1302,40 @@ func body_age_trainability_modifiers(age_years: float):
 	)
 
 
+## Delegates body action energy cost computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_action_energy_cost(
+	base_cost: float,
+	end_norm: float,
+	end_cost_reduction: float
+):
+	return _call_native_if_exists(
+		"body_action_energy_cost",
+		[
+			base_cost,
+			end_norm,
+			end_cost_reduction
+		]
+	)
+
+
+## Delegates body rest energy recovery computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_rest_energy_recovery(
+	base_recovery: float,
+	rec_norm: float,
+	rec_recovery_bonus: float
+):
+	return _call_native_if_exists(
+		"body_rest_energy_recovery",
+		[
+			base_recovery,
+			rec_norm,
+			rec_recovery_bonus
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

@@ -661,3 +661,8 @@
 - `body_attributes`에 `calc_training_gain_packed`를 추가해 training gain 5축 배치 결과를 `PackedInt32Array`로 직접 처리하는 경로를 제공하고, 기존 Dictionary API는 wrapper로 유지.
 - `calc_realized_values_packed` fallback이 gain 조회 시 packed 인덱스 접근을 사용하도록 전환되어 Dictionary 기반 lookup 오버헤드를 추가로 축소.
 - 계산 의미는 유지하면서 bridge 미지원 경로의 body 수학 처리 메모리 churn을 완화.
+
+## Commit 135
+- `sim-systems::body`에 `action_energy_cost`/`rest_energy_recovery`를 추가해 needs 시스템의 에너지 소모/회복 수식을 Rust 함수로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `BodyAttributes` 헬퍼(`compute_action_energy_cost`, `compute_rest_energy_recovery`)로 Rust 우선 + GDScript fallback 경로를 제공.
+- `needs_system`이 해당 헬퍼를 사용하도록 전환되어 needs tick의 body 에너지 수학 연산 네이티브화 범위를 확장.

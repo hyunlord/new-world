@@ -74,13 +74,13 @@ func execute_tick(tick: int) -> void:
 			var _end_norm: float = 0.5
 			if entity.body != null and entity.body.realized.has("end"):
 				_end_norm = clampf(float(entity.body.realized["end"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
-			var _action_cost: float = GameConfig.ENERGY_ACTION_COST * (1.0 - GameConfig.BODY_END_COST_REDUCTION * _end_norm)
+			var _action_cost: float = BodyAttributes.compute_action_energy_cost(_end_norm)
 			entity.energy -= _action_cost
 		elif entity.current_action == "rest":
 			var _rec_norm: float = 0.5
 			if entity.body != null and entity.body.realized.has("rec"):
 				_rec_norm = clampf(float(entity.body.realized["rec"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
-			entity.energy += GameConfig.BODY_REST_ENERGY_RECOVERY * (1.0 + GameConfig.BODY_REC_RECOVERY_BONUS * _rec_norm)
+			entity.energy += BodyAttributes.compute_rest_energy_recovery(_rec_norm)
 			# [훈련 XP 누적] 휴식 → 회복력 훈련 (Buchheit & Laursen 2013)
 			if entity.body != null:
 				var _age_mod = BodyAttributes.get_age_trainability_modifier("rec", float(entity.age))
