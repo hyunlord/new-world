@@ -29,5 +29,7 @@
   "max_duplicate_key_count": 248,
   "max_duplicate_conflict_count": 35,
   "max_missing_key_fill_count": 0,
-  "max_owner_rule_miss_count": 0
+  "max_owner_rule_miss_count": 0,
+  "max_owner_unused_count": 0,
+  "max_duplicate_owner_missing_count": 0
 }

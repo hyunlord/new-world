@@ -1140,3 +1140,8 @@
 - `migration_verify`에 `MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND`를 추가해 pathfinding 벤치 출력의 resolved backend(cpu/gpu)를 기대값으로 강제 검증.
 - 일반/split pathfinding 벤치 모두에서 resolved 파싱/불일치 실패 로직을 추가.
 - checksum 기준선은 유지하면서 backend 해석 검증 정확도를 강화.
+
+## Commit 231
+- `localization_compile`에 owner policy 품질 지표(duplicate coverage missing, unused owner keys)를 추가하고 manifest 임계치 게이트로 회귀 차단.
+- 컴파일 로그/compiled meta에 owner policy 요약 정보를 노출해 운영 관측성을 강화.
+- `manifest`에 `max_owner_unused_count=0`, `max_duplicate_owner_missing_count=0`을 설정해 정책 정합성을 기본 강제.

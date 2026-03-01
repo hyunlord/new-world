@@ -48,6 +48,8 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "max_duplicate_conflict_count": None,
     "max_missing_key_fill_count": None,
     "max_owner_rule_miss_count": None,
+    "max_owner_unused_count": None,
+    "max_duplicate_owner_missing_count": None,
 }
 
 
@@ -335,6 +337,28 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 file=sys.stderr,
             )
             return 1
+    max_owner_unused_count_raw = manifest.get("max_owner_unused_count")
+    max_owner_unused_count: int | None = None
+    if max_owner_unused_count_raw is not None:
+        try:
+            max_owner_unused_count = int(max_owner_unused_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_owner_unused_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
+    max_duplicate_owner_missing_count_raw = manifest.get("max_duplicate_owner_missing_count")
+    max_duplicate_owner_missing_count: int | None = None
+    if max_duplicate_owner_missing_count_raw is not None:
+        try:
+            max_duplicate_owner_missing_count = int(max_duplicate_owner_missing_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_duplicate_owner_missing_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -374,6 +398,19 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     for compiled in compiled_by_locale.values():
         canonical_key_set.update(compiled["strings"].keys())
     canonical_keys: List[str] = sorted(canonical_key_set)
+    duplicate_key_union: set[str] = set()
+    for compiled in compiled_by_locale.values():
+        duplicate_key_union.update(compiled["duplicate_keys"].keys())
+    owner_keys = set(key_owners.keys())
+    duplicate_owner_missing_keys = sorted(duplicate_key_union - owner_keys)
+    owner_unused_keys = sorted(owner_keys - canonical_key_set)
+    duplicate_owner_missing_count = len(duplicate_owner_missing_keys)
+    owner_unused_count = len(owner_unused_keys)
+    print(
+        "[localization_compile] owner-policy: "
+        f"entries={len(key_owners)} duplicate_keys={len(duplicate_key_union)} "
+        f"missing_for_duplicates={duplicate_owner_missing_count} unused={owner_unused_count}"
+    )
     key_registry_path = localization_root / key_registry_rel
     existing_registry_keys = _load_key_registry(key_registry_path)
     registry_keys = _build_key_registry(
@@ -434,6 +471,9 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "owner_rule_hit_count": owner_rule_hit_count,
                 "owner_rule_miss_count": owner_rule_miss_count,
                 "owner_rule_override_count": owner_rule_override_count,
+                "owner_policy_entry_count": len(key_owners),
+                "owner_policy_missing_duplicate_count": duplicate_owner_missing_count,
+                "owner_policy_unused_count": owner_unused_count,
             },
             "strings": locale_strings,
         }
@@ -497,6 +537,24 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             "[localization_compile] owner-rule miss regression: "
             f"max_locale_owner_rule_misses={max_locale_owner_rule_misses} "
             f"max_allowed={max_owner_rule_miss_count}",
+            file=sys.stderr,
+        )
+        return 1
+    if max_owner_unused_count is not None and owner_unused_count > max_owner_unused_count:
+        print(
+            "[localization_compile] owner-policy unused regression: "
+            f"owner_unused_count={owner_unused_count} max_allowed={max_owner_unused_count}",
+            file=sys.stderr,
+        )
+        return 1
+    if (
+        max_duplicate_owner_missing_count is not None
+        and duplicate_owner_missing_count > max_duplicate_owner_missing_count
+    ):
+        print(
+            "[localization_compile] owner-policy duplicate coverage regression: "
+            f"missing_for_duplicates={duplicate_owner_missing_count} "
+            f"max_allowed={max_duplicate_owner_missing_count}",
             file=sys.stderr,
         )
         return 1
