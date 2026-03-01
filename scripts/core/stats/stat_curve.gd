@@ -10,6 +10,11 @@ extends RefCounted
 # GROWTH CURVES
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+
+static var _bridge_checked: bool = false
+static var _bridge_ref: Object = null
+
 ## LOG_DIMINISHING: 스킬, 신체 훈련
 ## "처음은 빠르게, 올라갈수록 점점 더 많은 XP 필요"
 ## 반환: 다음 레벨까지 필요한 XP (float)
@@ -20,6 +25,18 @@ static func log_xp_required(level: int, params: Dictionary) -> float:
 	var exponent: float = float(params.get("exponent", 1.8))
 	var bp: Array = params.get("level_breakpoints", [])
 	var bm: Array = params.get("breakpoint_multipliers", [])
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_log_xp_required",
+		[
+			level,
+			base,
+			exponent,
+			_to_packed_i32(bp),
+			_to_packed_f32(bm)
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
 	var mult: float = bm[0] if bm.size() > 0 else 1.0
 	for i in range(bp.size()):
 		if level >= bp[i] and i + 1 < bm.size():
@@ -28,6 +45,24 @@ static func log_xp_required(level: int, params: Dictionary) -> float:
 
 ## LOG_DIMINISHING의 역함수: 누적 XP → 현재 레벨
 static func xp_to_level(xp: float, params: Dictionary, max_level: int = 100) -> int:
+	var base: float = float(params.get("base_xp", 100.0))
+	var exponent: float = float(params.get("exponent", 1.8))
+	var bp: Array = params.get("level_breakpoints", [])
+	var bm: Array = params.get("breakpoint_multipliers", [])
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_xp_to_level",
+		[
+			xp,
+			base,
+			exponent,
+			_to_packed_i32(bp),
+			_to_packed_f32(bm),
+			max_level
+		]
+	)
+	if rust_result != null:
+		return int(rust_result)
+
 	var cumulative: float = 0.0
 	for lv in range(1, max_level + 1):
 		cumulative += log_xp_required(lv, params)
@@ -41,6 +76,16 @@ static func xp_to_level(xp: float, params: Dictionary, max_level: int = 100) -> 
 static func scurve_speed(current_value: int, params: Dictionary) -> float:
 	var bps: Array = params.get("phase_breakpoints", [300, 700])
 	var speeds: Array = params.get("phase_speeds", [1.5, 1.0, 0.3])
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_scurve_speed",
+		[
+			current_value,
+			_to_packed_i32(bps),
+			_to_packed_f32(speeds)
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
 	if current_value < bps[0]:
 		return float(speeds[0]) if speeds.size() > 0 else 1.0
 	elif current_value < bps[1]:
@@ -53,6 +98,19 @@ static func scurve_speed(current_value: int, params: Dictionary) -> float:
 static func need_decay(current: int, decay_per_year: int,
 		ticks_elapsed: int, metabolic_mult: float,
 		ticks_per_year: int = 4380) -> int:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_need_decay",
+		[
+			current,
+			decay_per_year,
+			ticks_elapsed,
+			metabolic_mult,
+			ticks_per_year
+		]
+	)
+	if rust_result != null:
+		return int(rust_result)
+
 	var decay_per_tick: float = float(decay_per_year) / float(ticks_per_year)
 	var total_decay: float = decay_per_tick * float(ticks_elapsed) * metabolic_mult
 	return clampi(current - int(total_decay), 0, 1000)
@@ -68,6 +126,17 @@ static func sigmoid_extreme(value: int, params: Dictionary) -> float:
 	var flat_lo: float = float(params.get("flat_zone", [200, 800])[0]) / 1000.0
 	var flat_hi: float = float(params.get("flat_zone", [200, 800])[1]) / 1000.0
 	var pole: float = float(params.get("pole_multiplier", 3.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_sigmoid_extreme",
+		[
+			value,
+			int(round(flat_lo * 1000.0)),
+			int(round(flat_hi * 1000.0)),
+			pole
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
 	var norm: float = float(value) / 1000.0
 
 	if norm >= flat_lo and norm <= flat_hi:
@@ -85,6 +154,9 @@ static func sigmoid_extreme(value: int, params: Dictionary) -> float:
 ## effect = (value / 1000)^exponent
 static func power_influence(value: int, params: Dictionary) -> float:
 	var exponent: float = float(params.get("exponent", 1.5))
+	var rust_result: Variant = _call_sim_bridge("stat_power_influence", [value, exponent])
+	if rust_result != null:
+		return float(rust_result)
 	return pow(float(value) / 1000.0, exponent)
 
 ## THRESHOLD_POWER: 임계값 이하에서만 활성화
@@ -93,6 +165,17 @@ static func threshold_power(value: int, params: Dictionary) -> float:
 	var threshold: int = int(params.get("threshold", 350))
 	var exponent: float = float(params.get("exponent", 2.0))
 	var max_output: float = float(params.get("max_output", 12.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_threshold_power",
+		[
+			value,
+			threshold,
+			exponent,
+			max_output
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
 	if value >= threshold:
 		return 0.0
 	var deficit: float = float(threshold - value) / float(threshold)
@@ -100,6 +183,9 @@ static func threshold_power(value: int, params: Dictionary) -> float:
 
 ## LINEAR: 단순 비례
 static func linear_influence(value: int, _params: Dictionary) -> float:
+	var rust_result: Variant = _call_sim_bridge("stat_linear_influence", [value])
+	if rust_result != null:
+		return float(rust_result)
 	return float(value) / 1000.0
 
 ## STEP: 임계값 이분
@@ -107,11 +193,41 @@ static func step_influence(value: int, params: Dictionary) -> float:
 	var threshold: int = int(params.get("threshold", 500))
 	var above: float = float(params.get("above_value", 1.0))
 	var below: float = float(params.get("below_value", 0.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_step_influence",
+		[
+			value,
+			threshold,
+			above,
+			below
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
 	return above if value >= threshold else below
 
 ## STEP_LINEAR: 단계별 선형 보간
 static func step_linear(value: int, params: Dictionary) -> float:
 	var steps: Array = params.get("steps", [])
+	var below_thresholds: PackedInt32Array = PackedInt32Array()
+	var multipliers: PackedFloat32Array = PackedFloat32Array()
+	below_thresholds.resize(steps.size())
+	multipliers.resize(steps.size())
+	for i in range(steps.size()):
+		var step: Dictionary = steps[i]
+		below_thresholds[i] = int(step.get("below", 0))
+		multipliers[i] = float(step.get("multiply", 1.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_step_linear",
+		[
+			value,
+			below_thresholds,
+			multipliers
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
 	var result: float = 1.0
 	for step in steps:
 		if value < int(step.get("below", 0)):
@@ -137,3 +253,46 @@ static func apply(value: int, affect: Dictionary) -> float:
 		_:
 			push_error("StatCurve: unknown curve type: " + curve)
 			return 1.0
+
+
+static func _to_packed_i32(values: Array) -> PackedInt32Array:
+	var packed: PackedInt32Array = PackedInt32Array()
+	packed.resize(values.size())
+	for i in range(values.size()):
+		packed[i] = int(values[i])
+	return packed
+
+
+static func _to_packed_f32(values: Array) -> PackedFloat32Array:
+	var packed: PackedFloat32Array = PackedFloat32Array()
+	packed.resize(values.size())
+	for i in range(values.size()):
+		packed[i] = float(values[i])
+	return packed
+
+
+static func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _bridge_ref
+	_bridge_checked = true
+
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root != null:
+		var node_from_root: Node = tree.root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+		if node_from_root != null:
+			_bridge_ref = node_from_root
+			return _bridge_ref
+
+	if Engine.has_singleton(_SIM_BRIDGE_NODE_NAME):
+		_bridge_ref = Engine.get_singleton(_SIM_BRIDGE_NODE_NAME)
+
+	return _bridge_ref
+
+
+static func _call_sim_bridge(method_name: String, args: Array):
+	var bridge: Object = _get_sim_bridge()
+	if bridge == null:
+		return null
+	if not bridge.has_method(method_name):
+		return null
+	return bridge.callv(method_name, args)

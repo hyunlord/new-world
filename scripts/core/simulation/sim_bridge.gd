@@ -88,6 +88,174 @@ func pathfind_grid_batch(
 	)
 
 
+## Delegates LOG_DIMINISHING XP requirement curve to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_log_xp_required(
+	level: int,
+	base_xp: float,
+	exponent: float,
+	level_breakpoints: PackedInt32Array,
+	breakpoint_multipliers: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_log_xp_required",
+		[
+			level,
+			base_xp,
+			exponent,
+			level_breakpoints,
+			breakpoint_multipliers
+		]
+	)
+
+
+## Delegates cumulative XP->level conversion to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_xp_to_level(
+	xp: float,
+	base_xp: float,
+	exponent: float,
+	level_breakpoints: PackedInt32Array,
+	breakpoint_multipliers: PackedFloat32Array,
+	max_level: int
+):
+	return _call_native_if_exists(
+		"stat_xp_to_level",
+		[
+			xp,
+			base_xp,
+			exponent,
+			level_breakpoints,
+			breakpoint_multipliers,
+			max_level
+		]
+	)
+
+
+## Delegates SCURVE phase speed lookup to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_scurve_speed(
+	current_value: int,
+	phase_breakpoints: PackedInt32Array,
+	phase_speeds: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_scurve_speed",
+		[
+			current_value,
+			phase_breakpoints,
+			phase_speeds
+		]
+	)
+
+
+## Delegates natural need decay curve to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_need_decay(
+	current: int,
+	decay_per_year: int,
+	ticks_elapsed: int,
+	metabolic_mult: float,
+	ticks_per_year: int
+):
+	return _call_native_if_exists(
+		"stat_need_decay",
+		[
+			current,
+			decay_per_year,
+			ticks_elapsed,
+			metabolic_mult,
+			ticks_per_year
+		]
+	)
+
+
+## Delegates SIGMOID_EXTREME influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_sigmoid_extreme(
+	value: int,
+	flat_zone_lo: int,
+	flat_zone_hi: int,
+	pole_multiplier: float
+):
+	return _call_native_if_exists(
+		"stat_sigmoid_extreme",
+		[
+			value,
+			flat_zone_lo,
+			flat_zone_hi,
+			pole_multiplier
+		]
+	)
+
+
+## Delegates POWER influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_power_influence(value: int, exponent: float):
+	return _call_native_if_exists("stat_power_influence", [value, exponent])
+
+
+## Delegates THRESHOLD_POWER influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_threshold_power(
+	value: int,
+	threshold: int,
+	exponent: float,
+	max_output: float
+):
+	return _call_native_if_exists(
+		"stat_threshold_power",
+		[
+			value,
+			threshold,
+			exponent,
+			max_output
+		]
+	)
+
+
+## Delegates LINEAR influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_linear_influence(value: int):
+	return _call_native_if_exists("stat_linear_influence", [value])
+
+
+## Delegates STEP influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_step_influence(
+	value: int,
+	threshold: int,
+	above_value: float,
+	below_value: float
+):
+	return _call_native_if_exists(
+		"stat_step_influence",
+		[
+			value,
+			threshold,
+			above_value,
+			below_value
+		]
+	)
+
+
+## Delegates STEP_LINEAR influence to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_step_linear(
+	value: int,
+	below_thresholds: PackedInt32Array,
+	multipliers: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_step_linear",
+		[
+			value,
+			below_thresholds,
+			multipliers
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge
@@ -149,3 +317,12 @@ func _pick_method(candidates: Array[String], fallback: String) -> String:
 		if _native_bridge.has_method(name):
 			return name
 	return fallback
+
+
+func _call_native_if_exists(method_name: String, args: Array):
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return null
+	if not bridge.has_method(method_name):
+		return null
+	return bridge.callv(method_name, args)

@@ -4,8 +4,11 @@
 //! For now, this module provides pure-Rust conversion helpers that can be
 //! reused by the future FFI layer.
 
-use sim_systems::pathfinding::{find_path, GridCostMap, GridPos};
 use godot::prelude::*;
+use sim_systems::{
+    pathfinding::{find_path, GridCostMap, GridPos},
+    stat_curve,
+};
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -138,19 +141,31 @@ pub fn pathfind_grid_batch_bytes(
         let (from_x, from_y) = from_points[idx];
         let (to_x, to_y) = to_points[idx];
         let path = pathfind_grid_bytes(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_x,
-            from_y,
-            to_x,
-            to_y,
-            max_steps,
+            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
         )?;
         out.push(path);
     }
     Ok(out)
+}
+
+fn packed_i32_to_vec(values: &PackedInt32Array) -> Vec<i32> {
+    values.as_slice().to_vec()
+}
+
+fn packed_f32_to_vec(values: &PackedFloat32Array) -> Vec<f32> {
+    values.as_slice().to_vec()
+}
+
+fn build_step_pairs(
+    thresholds: &PackedInt32Array,
+    multipliers: &PackedFloat32Array,
+) -> Vec<(i32, f32)> {
+    let len = thresholds.len().min(multipliers.len());
+    let mut pairs: Vec<(i32, f32)> = Vec::with_capacity(len);
+    for idx in 0..len {
+        pairs.push((thresholds[idx], multipliers[idx]));
+    }
+    pairs
 }
 
 #[derive(GodotClass)]
@@ -224,15 +239,7 @@ impl WorldSimBridge {
     ) -> PackedVector2Array {
         // GPU path is not implemented yet; use CPU pathfinding as fallback.
         self.pathfind_grid(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_x,
-            from_y,
-            to_x,
-            to_y,
-            max_steps,
+            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
         )
     }
 
@@ -247,7 +254,11 @@ impl WorldSimBridge {
         to_points: PackedVector2Array,
         max_steps: i32,
     ) -> Array<PackedVector2Array> {
-        let steps = if max_steps <= 0 { 200_usize } else { max_steps as usize };
+        let steps = if max_steps <= 0 {
+            200_usize
+        } else {
+            max_steps as usize
+        };
 
         let from_pairs: Vec<(i32, i32)> = from_points
             .as_slice()
@@ -307,6 +318,119 @@ impl WorldSimBridge {
             max_steps,
         )
     }
+
+    #[func]
+    fn stat_log_xp_required(
+        &self,
+        level: i32,
+        base_xp: f32,
+        exponent: f32,
+        level_breakpoints: PackedInt32Array,
+        breakpoint_multipliers: PackedFloat32Array,
+    ) -> f32 {
+        let breakpoints = packed_i32_to_vec(&level_breakpoints);
+        let multipliers = packed_f32_to_vec(&breakpoint_multipliers);
+        stat_curve::log_xp_required(level, base_xp, exponent, &breakpoints, &multipliers)
+    }
+
+    #[func]
+    fn stat_xp_to_level(
+        &self,
+        xp: f32,
+        base_xp: f32,
+        exponent: f32,
+        level_breakpoints: PackedInt32Array,
+        breakpoint_multipliers: PackedFloat32Array,
+        max_level: i32,
+    ) -> i32 {
+        let breakpoints = packed_i32_to_vec(&level_breakpoints);
+        let multipliers = packed_f32_to_vec(&breakpoint_multipliers);
+        stat_curve::xp_to_level(xp, base_xp, exponent, &breakpoints, &multipliers, max_level)
+    }
+
+    #[func]
+    fn stat_scurve_speed(
+        &self,
+        current_value: i32,
+        phase_breakpoints: PackedInt32Array,
+        phase_speeds: PackedFloat32Array,
+    ) -> f32 {
+        let breakpoints = packed_i32_to_vec(&phase_breakpoints);
+        let speeds = packed_f32_to_vec(&phase_speeds);
+        stat_curve::scurve_speed(current_value, &breakpoints, &speeds)
+    }
+
+    #[func]
+    fn stat_need_decay(
+        &self,
+        current: i32,
+        decay_per_year: i32,
+        ticks_elapsed: i32,
+        metabolic_mult: f32,
+        ticks_per_year: i32,
+    ) -> i32 {
+        stat_curve::need_decay(
+            current,
+            decay_per_year,
+            ticks_elapsed,
+            metabolic_mult,
+            ticks_per_year,
+        )
+    }
+
+    #[func]
+    fn stat_sigmoid_extreme(
+        &self,
+        value: i32,
+        flat_zone_lo: i32,
+        flat_zone_hi: i32,
+        pole_multiplier: f32,
+    ) -> f32 {
+        stat_curve::sigmoid_extreme(value, flat_zone_lo, flat_zone_hi, pole_multiplier)
+    }
+
+    #[func]
+    fn stat_power_influence(&self, value: i32, exponent: f32) -> f32 {
+        stat_curve::power_influence(value, exponent)
+    }
+
+    #[func]
+    fn stat_threshold_power(
+        &self,
+        value: i32,
+        threshold: i32,
+        exponent: f32,
+        max_output: f32,
+    ) -> f32 {
+        stat_curve::threshold_power(value, threshold, exponent, max_output)
+    }
+
+    #[func]
+    fn stat_linear_influence(&self, value: i32) -> f32 {
+        stat_curve::linear_influence(value)
+    }
+
+    #[func]
+    fn stat_step_influence(
+        &self,
+        value: i32,
+        threshold: i32,
+        above_value: f32,
+        below_value: f32,
+    ) -> f32 {
+        stat_curve::step_influence(value, threshold, above_value, below_value)
+    }
+
+    #[func]
+    fn stat_step_linear(
+        &self,
+        value: i32,
+        below_thresholds: PackedInt32Array,
+        multipliers: PackedFloat32Array,
+    ) -> f32 {
+        let step_pairs = build_step_pairs(&below_thresholds, &multipliers);
+        stat_curve::step_linear(value, &step_pairs)
+    }
 }
 
 struct SimBridgeExtension;
@@ -316,7 +440,10 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 
 #[cfg(test)]
 mod tests {
-    use super::{pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes, PathfindError, PathfindInput};
+    use super::{
+        pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes, PathfindError,
+        PathfindInput,
+    };
     use sim_systems::pathfinding::GridPos;
 
     fn base_input() -> PathfindInput {

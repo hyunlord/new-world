@@ -34,3 +34,8 @@
 - `sim-systems::stat_curve` 모듈 신규 추가.
 - 기존 GDScript stat curve 수학 함수들을 Rust 순수 함수로 1차 이관.
 - 단위 테스트 추가로 수학 로직 회귀 방지.
+
+## Commit 008
+- Rust `sim-bridge`에 stat curve API 10종 노출.
+- `SimBridge`/`StatCurve`를 Rust 우선 + GDScript fallback 구조로 연결.
+- 기존 수학 로직 보존하면서 hot path를 점진적으로 Rust 실행 경로로 이전.
