@@ -1340,3 +1340,8 @@
 - duplicate conflict 프리뷰 개수를 `MIGRATION_VERIFY_AUDIT_CONFLICT_PREVIEW_LIMIT`로 제어 가능하게 확장(기본 10).
 - 입력값 비음수 정수 검증을 추가하고, verify report의 `config.audit_conflict_preview_limit` 및 `audit_conflict_preview` 계산에 동일 설정을 반영.
 - `/tmp/worldsim_audit_artifacts32/migration_verify_report.json`에서 limit=3 설정 시 프리뷰 count/keys 길이가 3으로 반영됨을 확인.
+
+## Commit 271
+- `audit_conflict_preview`에 `total_conflict_key_count`, `truncated`를 추가해 프리뷰가 전체 충돌의 부분집합인지 여부를 report에서 즉시 판정 가능하게 확장.
+- 정수 비교 헬퍼(`to_json_gt_ints`)를 도입해 `total > preview_count` 조건을 boolean으로 직렬화.
+- `/tmp/worldsim_audit_artifacts33/migration_verify_report.json`에서 `total_conflict_key_count=35`, `count=3`, `truncated=true` 반영을 확인.

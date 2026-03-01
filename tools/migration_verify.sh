@@ -1105,6 +1105,19 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
       echo "null"
     fi
   }
+  to_json_gt_ints() {
+    local lhs="$1"
+    local rhs="$2"
+    if [[ "${lhs}" =~ ^[0-9]+$ && "${rhs}" =~ ^[0-9]+$ ]]; then
+      if [[ "${lhs}" -gt "${rhs}" ]]; then
+        echo "true"
+      else
+        echo "false"
+      fi
+    else
+      echo "null"
+    fi
+  }
   to_json_bool_and() {
     local has_null="false"
     local value
@@ -1295,6 +1308,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_conflict_preview_limit="${verify_audit_conflict_preview_limit}"
   audit_conflict_key_preview="$(to_json_conflict_key_preview "${audit_report_json}" "${audit_conflict_preview_limit}")"
   audit_conflict_key_preview_count="$(to_json_conflict_key_preview_count "${audit_report_json}" "${audit_conflict_preview_limit}")"
+  audit_conflict_preview_truncated="$(to_json_gt_ints "${audit_duplicate_conflict_count}" "${audit_conflict_key_preview_count}")"
   bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
   bench_stress_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "stress_iters")"
   bench_needs_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "needs_iters")"
@@ -1422,7 +1436,9 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   },
   "audit_conflict_preview": {
     "limit": ${audit_conflict_preview_limit},
+    "total_conflict_key_count": ${audit_duplicate_conflict_count},
     "count": ${audit_conflict_key_preview_count},
+    "truncated": ${audit_conflict_preview_truncated},
     "keys": ${audit_conflict_key_preview}
   },
   "owner_policy_compare_summary": {
