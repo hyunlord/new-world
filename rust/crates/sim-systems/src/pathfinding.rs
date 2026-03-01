@@ -48,10 +48,12 @@ impl PartialOrd for OpenEntry {
 pub struct PathfindWorkspace {
     node_count: usize,
     open_set: BinaryHeap<OpenEntry>,
-    came_from: Vec<Option<usize>>,
+    query_id: u32,
+    seen_gen: Vec<u32>,
+    closed_gen: Vec<u32>,
+    came_from: Vec<usize>,
     g_score: Vec<f32>,
     f_score: Vec<f32>,
-    closed_set: Vec<bool>,
 }
 
 impl PathfindWorkspace {
@@ -60,10 +62,12 @@ impl PathfindWorkspace {
         Self {
             node_count,
             open_set: BinaryHeap::new(),
-            came_from: vec![None; node_count],
+            query_id: 0,
+            seen_gen: vec![0; node_count],
+            closed_gen: vec![0; node_count],
+            came_from: vec![usize::MAX; node_count],
             g_score: vec![INF_SCORE; node_count],
             f_score: vec![INF_SCORE; node_count],
-            closed_set: vec![false; node_count],
         }
     }
 
@@ -73,18 +77,24 @@ impl PathfindWorkspace {
         }
         self.node_count = node_count;
         self.open_set.clear();
-        self.came_from = vec![None; node_count];
+        self.query_id = 0;
+        self.seen_gen = vec![0; node_count];
+        self.closed_gen = vec![0; node_count];
+        self.came_from = vec![usize::MAX; node_count];
         self.g_score = vec![INF_SCORE; node_count];
         self.f_score = vec![INF_SCORE; node_count];
-        self.closed_set = vec![false; node_count];
     }
 
-    fn reset(&mut self) {
+    fn begin_query(&mut self) -> u32 {
         self.open_set.clear();
-        self.came_from.fill(None);
-        self.g_score.fill(INF_SCORE);
-        self.f_score.fill(INF_SCORE);
-        self.closed_set.fill(false);
+        if self.query_id == u32::MAX {
+            self.seen_gen.fill(0);
+            self.closed_gen.fill(0);
+            self.query_id = 1;
+        } else {
+            self.query_id += 1;
+        }
+        self.query_id
     }
 }
 
@@ -261,8 +271,10 @@ pub fn find_path_with_workspace(
     let to_y = to.y;
     let node_count = (grid.width * grid.height) as usize;
     workspace.ensure_node_count(node_count);
-    workspace.reset();
+    let query_id = workspace.begin_query();
 
+    workspace.seen_gen[from_idx] = query_id;
+    workspace.came_from[from_idx] = from_idx;
     workspace.g_score[from_idx] = 0.0;
     workspace.f_score[from_idx] = chebyshev_xy(from.x, from.y, to_x, to_y);
     workspace.open_set.push(OpenEntry {
@@ -273,7 +285,10 @@ pub fn find_path_with_workspace(
     let mut steps = 0usize;
     while let Some(current_entry) = workspace.open_set.pop() {
         let current_idx = current_entry.idx;
-        if workspace.closed_set[current_idx] {
+        if workspace.seen_gen[current_idx] != query_id {
+            continue;
+        }
+        if workspace.closed_gen[current_idx] == query_id {
             continue;
         }
         if current_entry.f > workspace.f_score[current_idx] {
@@ -285,10 +300,10 @@ pub fn find_path_with_workspace(
         steps += 1;
 
         if current_idx == to_idx {
-            return reconstruct_path(&workspace.came_from, current_idx, grid.width);
+            return reconstruct_path(&workspace.came_from, current_idx, from_idx, grid.width);
         }
 
-        workspace.closed_set[current_idx] = true;
+        workspace.closed_gen[current_idx] = query_id;
         let current_x = (current_idx as i32) % grid.width;
         let current_y = (current_idx as i32) / grid.width;
 
@@ -308,7 +323,7 @@ pub fn find_path_with_workspace(
                     continue;
                 }
                 let neighbor_idx = (neighbor_y * grid.width + neighbor_x) as usize;
-                if workspace.closed_set[neighbor_idx] || !grid.walkable[neighbor_idx] {
+                if workspace.closed_gen[neighbor_idx] == query_id || !grid.walkable[neighbor_idx] {
                     continue;
                 }
 
@@ -320,8 +335,9 @@ pub fn find_path_with_workspace(
                 let tentative_g =
                     workspace.g_score[current_idx] + (step_cost * grid.move_cost[neighbor_idx]);
 
-                if tentative_g < workspace.g_score[neighbor_idx] {
-                    workspace.came_from[neighbor_idx] = Some(current_idx);
+                if workspace.seen_gen[neighbor_idx] != query_id || tentative_g < workspace.g_score[neighbor_idx] {
+                    workspace.seen_gen[neighbor_idx] = query_id;
+                    workspace.came_from[neighbor_idx] = current_idx;
                     workspace.g_score[neighbor_idx] = tentative_g;
                     let neighbor_f = tentative_g + chebyshev_xy(neighbor_x, neighbor_y, to_x, to_y);
                     workspace.f_score[neighbor_idx] = neighbor_f;
@@ -342,9 +358,18 @@ fn chebyshev_xy(ax: i32, ay: i32, bx: i32, by: i32) -> f32 {
     (ax.abs_diff(bx).max(ay.abs_diff(by))) as f32
 }
 
-fn reconstruct_path(came_from: &[Option<usize>], mut current_idx: usize, width: i32) -> Vec<GridPos> {
+fn reconstruct_path(
+    came_from: &[usize],
+    mut current_idx: usize,
+    start_idx: usize,
+    width: i32,
+) -> Vec<GridPos> {
     let mut path_indices: Vec<usize> = vec![current_idx];
-    while let Some(prev_idx) = came_from[current_idx] {
+    while current_idx != start_idx {
+        let prev_idx = came_from[current_idx];
+        if prev_idx == usize::MAX {
+            return Vec::new();
+        }
         current_idx = prev_idx;
         path_indices.push(current_idx);
     }
@@ -447,6 +472,27 @@ mod tests {
 
         let expected_a = find_path(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300);
         let expected_b = find_path(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300);
+        assert_eq!(path_a, expected_a);
+        assert_eq!(path_b, expected_b);
+    }
+
+    #[test]
+    fn wraps_workspace_generation_counter_without_state_leak() {
+        let grid = GridCostMap::new(8, 8);
+        let mut ws = PathfindWorkspace::new(64);
+        ws.query_id = u32::MAX;
+        ws.seen_gen.fill(u32::MAX);
+        ws.closed_gen.fill(u32::MAX);
+
+        let path_a =
+            find_path_with_workspace(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300, &mut ws);
+        let path_b =
+            find_path_with_workspace(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300, &mut ws);
+
+        let expected_a = find_path(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300);
+        let expected_b = find_path(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300);
+
+        assert_eq!(ws.query_id, 2);
         assert_eq!(path_a, expected_a);
         assert_eq!(path_b, expected_b);
     }

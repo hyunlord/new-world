@@ -1060,3 +1060,8 @@
 - localization duplicate conflict Markdown 리포트에 `Canonical (Suggested)` 컬럼을 추가해 충돌 키 통합 기준 파일을 자동 제안.
 - 추천 우선순위를 `ui.json > game.json > events.json`으로 적용해 실제 정리 워크플로우 의사결정 시간을 단축.
 - 기존 리포트/검증 파이프라인과 호환되며 출력 가독성을 강화.
+
+## Commit 215
+- `sim-systems` `PathfindWorkspace`를 generation stamp 기반으로 전환해 쿼리마다 발생하던 배열 전체 `fill` 초기화 비용을 제거.
+- A* 본문을 `seen_gen/closed_gen` 판별과 `came_from` sentinel 체인 복원으로 정리해 재사용 워크스페이스의 hot path를 최적화.
+- generation 카운터 래핑(`u32::MAX`) 회귀 테스트를 추가하고, checksum/벤치 검증(`migration_verify --with-benches`)을 통과.
