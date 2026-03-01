@@ -42,6 +42,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "include_sources": False,
     "key_registry_path": "key_registry.json",
     "preserve_key_ids": True,
+    "embed_keys": False,
 }
 
 
@@ -207,6 +208,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     include_sources = bool(manifest.get("include_sources", False))
     key_registry_rel = str(manifest.get("key_registry_path", "key_registry.json"))
     preserve_key_ids = bool(manifest.get("preserve_key_ids", True))
+    embed_keys = bool(manifest.get("embed_keys", False))
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -278,10 +280,12 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "include_sources": include_sources,
                 "key_registry_path": key_registry_rel,
                 "preserve_key_ids": preserve_key_ids,
+                "embed_keys": embed_keys,
             },
-            "keys": registry_keys,
             "strings": locale_strings,
         }
+        if embed_keys:
+            output["keys"] = registry_keys
         if include_sources:
             output["sources"] = locale_sources
         out_path = compiled_root / f"{locale}.json"

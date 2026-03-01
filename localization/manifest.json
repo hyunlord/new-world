@@ -23,5 +23,6 @@
   ],
   "compiled_dir": "compiled",
   "key_registry_path": "key_registry.json",
-  "preserve_key_ids": true
+  "preserve_key_ids": true,
+  "embed_keys": false
 }

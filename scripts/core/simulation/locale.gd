@@ -12,11 +12,13 @@ const MANIFEST_PATH: String = LOCALES_DIR + "manifest.json"
 const SUPPORTED_LOCALES: Array = ["ko", "en"]
 const DEFAULT_LOCALE: String = "ko"
 const COMPILED_DIR_DEFAULT: String = "compiled"
+const KEY_REGISTRY_DEFAULT: String = "key_registry.json"
 
 var current_locale: String = DEFAULT_LOCALE
 var _supported_locales: Array = SUPPORTED_LOCALES.duplicate()
 var _default_locale: String = DEFAULT_LOCALE
 var _compiled_dir: String = COMPILED_DIR_DEFAULT
+var _key_registry_path: String = KEY_REGISTRY_DEFAULT
 var _tr_data_warned: bool = false
 
 ## Loaded translation data: { "ui": {"UI_SAVE": "...", ...}, "game": {...}, ... }
@@ -31,6 +33,7 @@ var _tr_id_key_id_cache: Dictionary = {}
 var _tr_id_result_cache: Dictionary = {}
 var _trf_key_id_cache: Dictionary = {}
 var _key_index_version: int = 0
+var _registry_keys: Array = []
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -68,6 +71,7 @@ func load_locale(locale: String) -> void:
 	_tr_id_key_id_cache.clear()
 	_tr_id_result_cache.clear()
 	_trf_key_id_cache.clear()
+	_registry_keys.clear()
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
 		_key_index_version += 1
@@ -358,6 +362,8 @@ func _load_manifest() -> void:
 
 	if manifest.has("compiled_dir"):
 		_compiled_dir = str(manifest["compiled_dir"])
+	if manifest.has("key_registry_path"):
+		_key_registry_path = str(manifest["key_registry_path"])
 
 	if current_locale not in _supported_locales:
 		current_locale = _default_locale
@@ -391,7 +397,7 @@ func _load_compiled_locale(locale: String) -> bool:
 	for i in range(keys.size()):
 		var key: String = str(keys[i])
 		_flat_strings[key] = str(strings[key])
-	_rebuild_key_index(root, strings)
+	_rebuild_key_index(root, strings, _load_key_registry_keys())
 	return true
 
 
@@ -407,12 +413,14 @@ func _rebuild_key_index_from_flat() -> void:
 		_id_to_value[i] = str(_flat_strings[key])
 
 
-func _rebuild_key_index(root: Dictionary, strings: Dictionary) -> void:
+func _rebuild_key_index(root: Dictionary, strings: Dictionary, registry_keys: Array = []) -> void:
 	_key_to_id.clear()
 	_id_to_value.resize(0)
 	var keys: Array = []
 	if root.has("keys") and root["keys"] is Array:
 		keys = root["keys"]
+	elif registry_keys.size() > 0:
+		keys = registry_keys
 	else:
 		keys = strings.keys()
 		keys.sort()
@@ -422,6 +430,30 @@ func _rebuild_key_index(root: Dictionary, strings: Dictionary) -> void:
 		var key: String = str(keys[i])
 		_key_to_id[key] = i
 		_id_to_value[i] = str(strings.get(key, key))
+
+
+func _load_key_registry_keys() -> Array:
+	if _registry_keys.size() > 0:
+		return _registry_keys
+	var path: String = LOCALES_DIR + _key_registry_path
+	if not FileAccess.file_exists(path):
+		return []
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var json: JSON = JSON.new()
+	var parse_err: int = json.parse(file.get_as_text())
+	if parse_err != OK:
+		return []
+	if not (json.data is Dictionary):
+		return []
+	var root: Dictionary = json.data
+	if not root.has("keys") or not (root["keys"] is Array):
+		return []
+	var parsed: Array = []
+	var raw_keys: Array = root["keys"]
+	for i in range(raw_keys.size()):
+		parsed.append(str(raw_keys[i]))
+	_registry_keys = parsed
+	return _registry_keys
 
 
 func _refresh_month_key_ids() -> void:

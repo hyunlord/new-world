@@ -742,3 +742,8 @@
 - `localization_compile`에 append-only key registry(`key_registry.json`)를 도입해 기존 key ID 순서를 유지하면서 신규 키만 뒤에 추가하는 구조로 확장.
 - `manifest.json`에 `key_registry_path`/`preserve_key_ids` 옵션을 추가했고, compiled locale meta에 `active_key_count` 및 registry 관련 메타를 반영.
 - 런타임 번역 값은 유지하면서, 장기 확장/마이그레이션 시 key ID 안정성과 추적성을 강화.
+
+## Commit 151
+- `localization_compile`에 `embed_keys` 옵션을 추가해 compiled locale에서 중복 `keys` 배열을 제거할 수 있도록 확장(현재 `false`).
+- `Locale` 런타임이 compiled JSON에 `keys`가 없을 때 `key_registry.json`의 키 순서를 읽어 key-id 인덱스를 재구성하도록 개선.
+- 번역 결과는 유지하면서 compiled payload 중복을 줄이고, registry 기반 안정 key-id 체계를 런타임 경로까지 연결.
