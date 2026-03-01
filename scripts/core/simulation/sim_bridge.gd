@@ -1683,6 +1683,17 @@ func body_child_stress_apply_step(
 	)
 
 
+## Delegates stress support score computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_stress_support_score(strengths: PackedFloat32Array):
+	return _call_native_if_exists(
+		"body_stress_support_score",
+		[
+			strengths
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

@@ -792,3 +792,8 @@
 - `sim-systems::body`에 `child_stress_apply_step`를 추가해 child stress positive/tolerable/toxic 상태 업데이트 수식을 Rust로 통합 이관.
 - `sim-bridge`/`SimBridge`에 `body_child_shrp_step`, `body_child_stress_type_code`, `body_child_stress_apply_step` 경로를 추가하고 `child_stress_processor`가 Rust 우선 + fallback 구조를 사용하도록 전환.
 - `sim-test --bench-needs-math`에 child apply 관련 수식 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `33378700.00000`).
+
+## Commit 161
+- `sim-systems::body`에 `stress_support_score`를 추가해 strongest tie + weak ties 포화 결합 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 `body_stress_support_score` 경로를 추가하고, `stress_system._calc_support_score`가 Rust 우선 + fallback 구조를 사용하도록 전환.
+- `sim-test --bench-stress-math`에 support score 호출을 포함해 회귀 추적 범위를 확장(신규 checksum 기준: `13767388.00000` @ 10k iters).

@@ -389,15 +389,31 @@ func _packed_int(values: PackedInt32Array, idx: int, fallback: int) -> int:
 
 # ── Support score ─────────────────────────────────────────────────────
 func _calc_support_score(_entity: RefCounted) -> float:
-	var relationships = []
+	var relationships: Array = []
 	if relationships.is_empty():
 		return 0.3
+
+	var strengths: PackedFloat32Array = PackedFloat32Array()
+	strengths.resize(relationships.size())
+	for i in range(relationships.size()):
+		var rel: Variant = relationships[i]
+		if rel is Dictionary:
+			strengths[i] = clampf(float(rel.get("strength", 0.0)), 0.0, 1.0)
+		else:
+			strengths[i] = 0.0
+	var support_variant: Variant = SimBridge.body_stress_support_score(strengths)
+	if support_variant != null:
+		return float(support_variant)
 
 	var strong: float = 0.0
 	var weak_sum: float = 0.0
 
-	for rel in relationships:
-		var strength: float = rel.get("strength", 0.0)
+	for i in range(relationships.size()):
+		var rel_variant: Variant = relationships[i]
+		if not (rel_variant is Dictionary):
+			continue
+		var rel: Dictionary = rel_variant
+		var strength: float = float(rel.get("strength", 0.0))
 		if strength > strong:
 			weak_sum += strong
 			strong = strength

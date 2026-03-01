@@ -305,6 +305,12 @@ fn run_stress_math_bench(args: &[String]) {
         let social = 0.15 + 0.6 * t;
         let stress = 120.0 + 520.0 * t;
         let allostatic = 5.0 + 80.0 * t;
+        let support_score = body::stress_support_score(&[
+            0.1 + 0.8 * t,
+            0.2 + 0.6 * (1.0 - t),
+            0.15 + 0.5 * t,
+            0.05 + 0.4 * (1.0 - t),
+        ]);
 
         let primary = stat_curve::stress_primary_step(
             hunger,
@@ -620,6 +626,7 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(post_res_step.resilience)
             + black_box(resilience)
             + black_box(work_eff)
+            + black_box(support_score)
             + black_box(personality_scale)
             + black_box(relationship_scale)
             + black_box(context_scale)

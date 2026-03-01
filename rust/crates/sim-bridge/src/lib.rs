@@ -778,6 +778,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stress_support_score(&self, strengths: PackedFloat32Array) -> f32 {
+        body::stress_support_score(strengths.as_slice())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

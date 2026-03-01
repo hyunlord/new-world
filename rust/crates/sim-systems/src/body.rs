@@ -529,6 +529,31 @@ pub fn child_stress_apply_step(
     ]
 }
 
+/// Computes stress support score from relationship strength samples.
+///
+/// Strength samples are expected in `[0, 1]` and clamped defensively.
+/// Empty input returns baseline support `0.3`.
+pub fn stress_support_score(strengths: &[f32]) -> f32 {
+    if strengths.is_empty() {
+        return 0.3;
+    }
+
+    let mut strong = 0.0_f32;
+    let mut weak_sum = 0.0_f32;
+
+    for raw in strengths {
+        let strength = clamp_f32(*raw, 0.0, 1.0);
+        if strength > strong {
+            weak_sum += strong;
+            strong = strength;
+        } else {
+            weak_sum += strength;
+        }
+    }
+
+    clamp_f32(0.65 * strong + 0.35 * (1.0 - (-weak_sum / 1.5).exp()), 0.0, 1.0)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -716,8 +741,9 @@ mod tests {
         child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
-        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
-        upper_needs_job_alignment, upper_needs_step, warmth_decay,
+        rest_energy_recovery, stress_support_score, thirst_decay,
+        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        warmth_decay,
     };
 
     #[test]
@@ -999,6 +1025,19 @@ mod tests {
         assert!(out[2] > 200.0);
         assert!(out[3] > 10.0);
         assert!(out[4] > 0.0);
+    }
+
+    #[test]
+    fn stress_support_score_returns_default_when_empty() {
+        assert_eq!(stress_support_score(&[]), 0.3);
+    }
+
+    #[test]
+    fn stress_support_score_prefers_stronger_primary_tie() {
+        let weak_only = stress_support_score(&[0.25, 0.20, 0.15]);
+        let one_strong = stress_support_score(&[0.80, 0.20, 0.15]);
+        assert!(one_strong > weak_only);
+        assert!((0.0..=1.0).contains(&one_strong));
     }
 
     #[test]
