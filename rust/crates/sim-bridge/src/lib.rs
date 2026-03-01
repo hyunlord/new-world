@@ -760,6 +760,31 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_reserve_step(
+        &self,
+        reserve: f32,
+        stress: f32,
+        resilience: f32,
+        stress_delta_last: f32,
+        gas_stage: i32,
+        is_sleeping: bool,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_reserve_step(
+            reserve,
+            stress,
+            resilience,
+            stress_delta_last,
+            gas_stage,
+            is_sleeping,
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("reserve", out.reserve as f64);
+        dict.set("gas_stage", out.gas_stage);
+        dict
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

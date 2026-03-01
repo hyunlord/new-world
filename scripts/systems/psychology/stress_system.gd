@@ -21,8 +21,6 @@ const THRESHOLD_TENSE: float = 200.0
 const THRESHOLD_CRISIS: float = 350.0
 const THRESHOLD_BREAK_RISK: float = 500.0
 
-const RESERVE_MAX: float = 100.0
-
 const ALLO_RATE: float = 0.035
 const ALLO_STRESS_THRESHOLD: float = 250.0
 const ALLO_RECOVERY_THRESHOLD: float = 120.0
@@ -322,24 +320,16 @@ func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: boo
 
 # ── 7) Reserve (GAS) ─────────────────────────────────────────────────
 func _update_reserve(ed, _pd, is_sleeping: bool) -> void:
-	var resilience: float = ed.resilience
-
-	var drain: float = maxf(0.0, (ed.stress - 150.0) / 350.0) * (0.7 + 0.6 * (1.0 - resilience))
-	var recover_base: float = 0.4 + 0.6 * resilience
-	var recover: float = recover_base * (1.0 if is_sleeping else 0.15)
-
-	ed.reserve = clampf(ed.reserve - drain + recover, 0.0, RESERVE_MAX)
-
-	if ed.stress_delta_last > 40.0 or ed.stress > 400.0:
-		if ed.gas_stage == 0:
-			ed.gas_stage = 1  # Alarm
-
-	if ed.reserve >= 30.0 and ed.stress < 500.0:
-		if ed.gas_stage == 1:
-			ed.gas_stage = 2  # Resistance
-
-	if ed.reserve < 30.0:
-		ed.gas_stage = 3  # Exhaustion
+	var result: Dictionary = StatCurveScript.stress_reserve_step(
+		ed.reserve,
+		ed.stress,
+		ed.resilience,
+		ed.stress_delta_last,
+		ed.gas_stage,
+		is_sleeping
+	)
+	ed.reserve = float(result.get("reserve", ed.reserve))
+	ed.gas_stage = int(result.get("gas_stage", ed.gas_stage))
 
 
 # ── 8) Allostatic Load ────────────────────────────────────────────────

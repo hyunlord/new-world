@@ -35,6 +35,12 @@ pub struct EmotionStressContribution {
     pub total: f32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressReserveStep {
+    pub reserve: f32,
+    pub gas_stage: i32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -255,6 +261,37 @@ pub fn stress_recovery_value(
     decay
 }
 
+/// Reserve + GAS stage transition step.
+pub fn stress_reserve_step(
+    reserve: f32,
+    stress: f32,
+    resilience: f32,
+    stress_delta_last: f32,
+    gas_stage: i32,
+    is_sleeping: bool,
+) -> StressReserveStep {
+    let drain = f32::max(0.0, (stress - 150.0) / 350.0) * (0.7 + 0.6 * (1.0 - resilience));
+    let recover_base = 0.4 + 0.6 * resilience;
+    let recover = recover_base * if is_sleeping { 1.0 } else { 0.15 };
+    let new_reserve = (reserve - drain + recover).clamp(0.0, 100.0);
+
+    let mut new_stage = gas_stage;
+    if (stress_delta_last > 40.0 || stress > 400.0) && new_stage == 0 {
+        new_stage = 1;
+    }
+    if new_reserve >= 30.0 && stress < 500.0 && new_stage == 1 {
+        new_stage = 2;
+    }
+    if new_reserve < 30.0 {
+        new_stage = 3;
+    }
+
+    StressReserveStep {
+        reserve: new_reserve,
+        gas_stage: new_stage,
+    }
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -442,5 +479,21 @@ mod tests {
         let normal = stress_recovery_value(300.0, 0.5, 0.5, 50.0, false, true);
         let low_reserve = stress_recovery_value(300.0, 0.5, 0.5, 10.0, false, true);
         assert!(low_reserve < normal);
+    }
+
+    #[test]
+    fn stress_reserve_step_enters_alarm_and_resistance() {
+        let alarm = stress_reserve_step(80.0, 450.0, 0.5, 50.0, 0, false);
+        assert_eq!(alarm.gas_stage, 2);
+
+        let resistance = stress_reserve_step(80.0, 300.0, 0.6, 0.0, 1, true);
+        assert_eq!(resistance.gas_stage, 2);
+    }
+
+    #[test]
+    fn stress_reserve_step_enters_exhaustion_on_low_reserve() {
+        let step = stress_reserve_step(10.0, 600.0, 0.2, 10.0, 1, false);
+        assert!(step.reserve < 30.0);
+        assert_eq!(step.gas_stage, 3);
     }
 }

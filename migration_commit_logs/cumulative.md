@@ -166,3 +166,8 @@
 - `StressSystem`의 회복(decay) 수식을 Rust(`sim-systems`) 함수로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve` 경유 호출로 GDScript는 입력 수집 + breakdown 처리만 수행.
 - recovery 관련 상수를 Rust fallback 함수로 정리해 stress hot path 네이티브 전환 범위를 확장.
+
+## Commit 035
+- `StressSystem`의 reserve 갱신 + GAS 단계 전이 로직을 Rust step 함수(`stress_reserve_step`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 reserve-step API를 추가해 GDScript는 결과 반영만 담당.
+- stress 파이프라인의 핵심 수학 경로(연속 입력/appraisal/emotion/recovery/reserve)를 연속적으로 네이티브화.

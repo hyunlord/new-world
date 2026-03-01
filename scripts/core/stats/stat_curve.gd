@@ -379,6 +379,49 @@ static func stress_recovery_value(
 		decay *= 0.85
 	return decay
 
+
+## Reserve + GAS stage transition step.
+## Returns Dictionary: { "reserve": float, "gas_stage": int }
+static func stress_reserve_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_reserve_step",
+		[
+			reserve,
+			stress,
+			resilience,
+			stress_delta_last,
+			gas_stage,
+			is_sleeping
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var drain: float = maxf(0.0, (stress - 150.0) / 350.0) * (0.7 + 0.6 * (1.0 - resilience))
+	var recover_base: float = 0.4 + 0.6 * resilience
+	var recover: float = recover_base * (1.0 if is_sleeping else 0.15)
+	var next_reserve: float = clampf(reserve - drain + recover, 0.0, 100.0)
+
+	var next_stage: int = gas_stage
+	if (stress_delta_last > 40.0 or stress > 400.0) and next_stage == 0:
+		next_stage = 1
+	if next_reserve >= 30.0 and stress < 500.0 and next_stage == 1:
+		next_stage = 2
+	if next_reserve < 30.0:
+		next_stage = 3
+
+	return {
+		"reserve": next_reserve,
+		"gas_stage": next_stage,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

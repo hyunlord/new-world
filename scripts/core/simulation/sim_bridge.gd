@@ -396,6 +396,29 @@ func stat_stress_recovery_value(
 	)
 
 
+## Delegates reserve + GAS stage transition step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_reserve_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool
+):
+	return _call_native_if_exists(
+		"stat_stress_reserve_step",
+		[
+			reserve,
+			stress,
+			resilience,
+			stress_delta_last,
+			gas_stage,
+			is_sleeping
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(
