@@ -837,3 +837,8 @@
 - `SimBridge`에 pathfinding backend 제어/조회 공개 API(`set/get/resolve/has_gpu`)를 추가해 GPU 옵션 구조를 스크립트 레벨에서 직접 다룰 수 있게 확장.
 - `ComputeBackend`가 `_ready` 및 `set_mode` 시점에 pathfinding backend 선호 모드를 bridge와 즉시 동기화하도록 연결.
 - GPU 미구현 환경에서도 기존 CPU fallback 의미를 유지하면서, 향후 GPU 경로 구현을 위한 옵션-전달 구조를 고정.
+
+## Commit 170
+- `pathfinder.gd` 배치 Rust 경로탐색에서 `PackedInt32Array`/`PackedVector2Array` scratch 버퍼를 재사용하도록 전환.
+- 호출마다 임시 배열을 새로 만들던 경로를 `resize + index write` 방식으로 바꿔 allocation churn을 감소.
+- 결과 수치 의미는 유지하면서 대규모 배치 pathfinding 경로의 런타임 효율을 개선.

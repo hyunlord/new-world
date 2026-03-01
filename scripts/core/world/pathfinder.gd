@@ -14,6 +14,10 @@ var _cached_width: int = 0
 var _cached_height: int = 0
 var _cached_walkable: PackedByteArray = PackedByteArray()
 var _cached_move_cost: PackedFloat32Array = PackedFloat32Array()
+var _batch_from_xy: PackedInt32Array = PackedInt32Array()
+var _batch_to_xy: PackedInt32Array = PackedInt32Array()
+var _batch_from_points: PackedVector2Array = PackedVector2Array()
+var _batch_to_points: PackedVector2Array = PackedVector2Array()
 
 
 ## A* pathfinding with 8-directional movement and Chebyshev heuristic
@@ -113,39 +117,42 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	var result: Variant = null
 	var used_batch_xy: bool = false
 	if has_batch_xy:
-		var from_xy: PackedInt32Array = PackedInt32Array()
-		var to_xy: PackedInt32Array = PackedInt32Array()
-		from_xy.resize(requests.size() * 2)
-		to_xy.resize(requests.size() * 2)
+		var pair_len: int = requests.size() * 2
+		if _batch_from_xy.size() != pair_len:
+			_batch_from_xy.resize(pair_len)
+		if _batch_to_xy.size() != pair_len:
+			_batch_to_xy.resize(pair_len)
 		for i in range(requests.size()):
 			var req_xy: Dictionary = requests[i]
 			var from_xy_point: Vector2i = req_xy.get("from", Vector2i(-1, -1))
 			var to_xy_point: Vector2i = req_xy.get("to", Vector2i(-1, -1))
 			var base_idx: int = i * 2
-			from_xy[base_idx] = from_xy_point.x
-			from_xy[base_idx + 1] = from_xy_point.y
-			to_xy[base_idx] = to_xy_point.x
-			to_xy[base_idx + 1] = to_xy_point.y
+			_batch_from_xy[base_idx] = from_xy_point.x
+			_batch_from_xy[base_idx + 1] = from_xy_point.y
+			_batch_to_xy[base_idx] = to_xy_point.x
+			_batch_to_xy[base_idx + 1] = to_xy_point.y
 		result = bridge.call(
 			_RUST_BRIDGE_BATCH_XY_METHOD_NAME,
 			_cached_width,
 			_cached_height,
 			_cached_walkable,
 			_cached_move_cost,
-			from_xy,
-			to_xy,
+			_batch_from_xy,
+			_batch_to_xy,
 			max_steps
 		)
 		used_batch_xy = (result != null)
 	if result == null and has_batch_vec2:
-		var from_points: PackedVector2Array = PackedVector2Array()
-		var to_points: PackedVector2Array = PackedVector2Array()
+		if _batch_from_points.size() != requests.size():
+			_batch_from_points.resize(requests.size())
+		if _batch_to_points.size() != requests.size():
+			_batch_to_points.resize(requests.size())
 		for i in range(requests.size()):
 			var req: Dictionary = requests[i]
 			var from: Vector2i = req.get("from", Vector2i(-1, -1))
 			var to: Vector2i = req.get("to", Vector2i(-1, -1))
-			from_points.push_back(Vector2(from.x, from.y))
-			to_points.push_back(Vector2(to.x, to.y))
+			_batch_from_points[i] = Vector2(from.x, from.y)
+			_batch_to_points[i] = Vector2(to.x, to.y)
 
 		result = bridge.call(
 			_RUST_BRIDGE_BATCH_METHOD_NAME,
@@ -153,8 +160,8 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 			_cached_height,
 			_cached_walkable,
 			_cached_move_cost,
-			from_points,
-			to_points,
+			_batch_from_points,
+			_batch_to_points,
 			max_steps
 		)
 
