@@ -822,3 +822,8 @@
 - `stress_system`의 rebound queue 처리에 packed cache(`rebound_queue_amounts`, `rebound_queue_delays`)를 도입해 tick당 딕셔너리 파싱 비용을 완화.
 - `schedule_rebound`/`_process_rebound_queue`가 legacy `rebound_queue`와 packed cache를 동기화하도록 확장해 기존 호환성을 유지.
 - 벤치 checksum은 유지(`stress=24032652.00000`, `needs=38457848.00000` @ 10k iters)하며 런타임 처리 경로 효율을 개선.
+
+## Commit 167
+- `localization_compile`에 `max_missing_key_fill_count` 회귀 게이트를 추가해 locale 누락 채움 수 증가를 컴파일 단계에서 차단.
+- `localization/manifest.json`에 기준선(`max_missing_key_fill_count: 0`)을 추가해 확장 시 번역 누락 회귀를 조기 검출.
+- 런타임 번역 동작은 유지하면서 localization 품질 게이트를 강화.

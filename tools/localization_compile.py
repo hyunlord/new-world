@@ -44,6 +44,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "preserve_key_ids": True,
     "embed_keys": False,
     "max_duplicate_key_count": None,
+    "max_missing_key_fill_count": None,
 }
 
 
@@ -232,6 +233,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 file=sys.stderr,
             )
             return 1
+    max_missing_key_fill_count_raw = manifest.get("max_missing_key_fill_count")
+    max_missing_key_fill_count: int | None = None
+    if max_missing_key_fill_count_raw is not None:
+        try:
+            max_missing_key_fill_count = int(max_missing_key_fill_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_missing_key_fill_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -274,6 +286,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     fallback_strings: Dict[str, str] = {}
     if "en" in compiled_by_locale:
         fallback_strings = dict(compiled_by_locale["en"]["strings"])
+    max_locale_missing_filled = 0
 
     for locale in supported_locales:
         compiled = compiled_by_locale[locale]
@@ -291,6 +304,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             else:
                 locale_strings[key] = key
                 locale_sources[key] = "fallback/key"
+        max_locale_missing_filled = max(max_locale_missing_filled, missing_filled_count)
 
         output = {
             "meta": {
@@ -333,6 +347,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         print(
             "[localization_compile] duplicate regression: "
             f"max_locale_duplicates={max_locale_duplicates} max_allowed={max_duplicate_key_count}",
+            file=sys.stderr,
+        )
+        return 1
+    if (
+        max_missing_key_fill_count is not None
+        and max_locale_missing_filled > max_missing_key_fill_count
+    ):
+        print(
+            "[localization_compile] missing-fill regression: "
+            f"max_locale_missing_filled={max_locale_missing_filled} "
+            f"max_allowed={max_missing_key_fill_count}",
             file=sys.stderr,
         )
         return 1
