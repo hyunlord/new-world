@@ -405,6 +405,44 @@ def _format_value_sample(value: Any, max_len: int = 96) -> str:
     return rendered.replace("|", "\\|")
 
 
+def _suggest_canonical_file(files: List[str]) -> str:
+    if not files:
+        return ""
+    canonical_file = files[0]
+    for preferred in ("ui.json", "game.json", "events.json"):
+        if preferred in files:
+            canonical_file = preferred
+            break
+    return canonical_file
+
+
+def _category_from_file_name(file_name: str) -> str:
+    if file_name.endswith(".json"):
+        return file_name[: -len(".json")]
+    return file_name
+
+
+def _build_key_owner_policy_payload(report: Dict[str, Any]) -> Dict[str, Any]:
+    owners: Dict[str, str] = {}
+    duplicate_details = report.get("duplicate_details", {})
+    if isinstance(duplicate_details, dict):
+        for key, item in duplicate_details.items():
+            if not isinstance(item, dict):
+                continue
+            files = [str(x) for x in item.get("files", [])]
+            canonical_file = _suggest_canonical_file(files)
+            if not canonical_file:
+                continue
+            owners[str(key)] = _category_from_file_name(canonical_file)
+
+    return {
+        "version": 1,
+        "duplicate_report_locale": str(report.get("duplicate_report_locale", "")),
+        "owner_key_count": len(owners),
+        "owners": dict(sorted(owners.items(), key=lambda item: item[0])),
+    }
+
+
 def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
     locale = str(report.get("duplicate_report_locale", "unknown"))
     conflict_items = [
@@ -438,11 +476,7 @@ def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
         for file_name in files[:3]:
             sample_value = _format_value_sample(values_by_file.get(file_name))
             sample_parts.append(f"{file_name}: {sample_value}")
-        canonical_file = files[0] if files else ""
-        for preferred in ("ui.json", "game.json", "events.json"):
-            if preferred in files:
-                canonical_file = preferred
-                break
+        canonical_file = _suggest_canonical_file(files)
         files_joined = ", ".join(files).replace("|", "\\|")
         sample_joined = " / ".join(sample_parts)
         lines.append(
@@ -480,6 +514,11 @@ def main() -> int:
         default="",
         help="optional output path for duplicate conflict markdown report",
     )
+    parser.add_argument(
+        "--key-owner-policy-json",
+        default="",
+        help="optional output path for canonical key-owner policy json",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
@@ -503,6 +542,9 @@ def main() -> int:
     if args.duplicate_conflict_markdown:
         out = (project_root / args.duplicate_conflict_markdown).resolve()
         _write_text(out, _build_duplicate_conflict_markdown(report))
+    if args.key_owner_policy_json:
+        out = (project_root / args.key_owner_policy_json).resolve()
+        _write_json(out, _build_key_owner_policy_payload(report))
 
     strict_duplicate_conflicts = int(report["duplicate_conflict_count"]) > 0
     if args.strict:

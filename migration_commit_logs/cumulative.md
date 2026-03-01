@@ -1070,3 +1070,8 @@
 - `sim-bridge` pathfinding에 backend 디스패처 레이어를 추가해 `auto/cpu/gpu` 설정이 실제 실행 경로에 반영되도록 연결.
 - GPU 전용 엔트리포인트 스텁(현재 CPU 폴백)과 공통 `normalize_max_steps`를 도입해 GPU 실구현 이전에도 호출 계약을 안정화.
 - 디스패처 회귀 테스트(단건/배치)를 추가하고 `migration_verify --with-benches`로 checksum 유지를 검증.
+
+## Commit 217
+- `localization_audit`에 `--key-owner-policy-json`을 추가해 duplicate key canonical 소스 제안을 JSON 정책(`owners`)으로 내보낼 수 있게 확장.
+- canonical 선택 로직을 공통화해 Markdown 리포트와 정책 JSON의 기준 일관성을 보장.
+- `migration_verify`가 `MIGRATION_AUDIT_KEY_OWNER_POLICY` 환경변수로 key-owner 정책 아티팩트를 생성하도록 연동.
