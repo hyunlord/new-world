@@ -360,6 +360,27 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_calc_realized_values(
+        &self,
+        potentials: PackedInt32Array,
+        trainabilities: PackedInt32Array,
+        xps: PackedFloat32Array,
+        training_ceilings: PackedFloat32Array,
+        age_years: f32,
+        xp_for_full_progress: f32,
+    ) -> PackedInt32Array {
+        let realized = body::calc_realized_values(
+            potentials.as_slice(),
+            trainabilities.as_slice(),
+            xps.as_slice(),
+            training_ceilings.as_slice(),
+            age_years,
+            xp_for_full_progress,
+        );
+        vec_i32_to_packed(realized)
+    }
+
+    #[func]
     fn body_age_trainability_modifier(&self, axis: GString, age_years: f32) -> f32 {
         let axis_string = axis.to_string();
         body::age_trainability_modifier(axis_string.as_str(), age_years)

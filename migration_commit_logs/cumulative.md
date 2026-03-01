@@ -636,3 +636,8 @@
 - `sim-systems::body`에 `calc_training_gains(...)` 배치 API를 추가하고, 배치 결과가 단건 `calc_training_gain`과 동일함을 테스트로 검증.
 - `sim-bridge`/`SimBridge`에 `body_calc_training_gains`를 추가해 training gain 5축을 단일 bridge 호출로 계산하는 경로를 제공.
 - `body_attributes.calc_training_gain_batch`와 `age_system` 연간 재계산 루프가 배치 gain 결과를 재사용하도록 전환되어 body training gain hot path의 경계 호출 수를 축소.
+
+## Commit 130
+- `sim-systems::body`에 `calc_realized_values(...)`를 추가해 연간 body realized 6축(`str/agi/end/tou/rec/dr`) 계산을 단일 수학 경로로 통합하고, `calc_training_gains`에 `trainability < 0` sentinel(0 gain) 처리를 보강.
+- `sim-bridge`/`SimBridge`에 `body_calc_realized_values`를 추가해 GDScript가 연간 realized를 1회 bridge 호출로 수신하는 경로를 제공.
+- `body_attributes.calc_realized_values_batch`와 `age_system`이 단일 realized 배치 결과를 재사용하도록 전환되어 연간 body 재계산 hot path의 경계 호출 수를 추가 축소.

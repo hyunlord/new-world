@@ -89,6 +89,10 @@ pub fn calc_training_gains(
         .min(training_ceilings.len());
     let mut out = Vec::with_capacity(len);
     for idx in 0..len {
+        if trainabilities[idx] < 0 {
+            out.push(0);
+            continue;
+        }
         out.push(calc_training_gain(
             potentials[idx],
             trainabilities[idx],
@@ -98,6 +102,52 @@ pub fn calc_training_gains(
         ));
     }
     out
+}
+
+/// Compute realized body values in fixed order:
+/// `[str, agi, end, tou, rec, dr]`.
+///
+/// - `potentials` expects at least 6 values (`dr` at index 5).
+/// - `trainabilities`, `xps`, `training_ceilings` expect 5 values.
+/// - `trainability < 0` means "axis disabled", producing zero training gain.
+pub fn calc_realized_values(
+    potentials: &[i32],
+    trainabilities: &[i32],
+    xps: &[f32],
+    training_ceilings: &[f32],
+    age_years: f32,
+    xp_for_full_progress: f32,
+) -> Vec<i32> {
+    let curves = compute_age_curves(age_years);
+    let mut realized = vec![0_i32; 6];
+    let len = 5_usize
+        .min(potentials.len())
+        .min(trainabilities.len())
+        .min(xps.len())
+        .min(training_ceilings.len());
+
+    for idx in 0..len {
+        let gain = if trainabilities[idx] < 0 {
+            0
+        } else {
+            calc_training_gain(
+                potentials[idx],
+                trainabilities[idx],
+                xps[idx],
+                training_ceilings[idx],
+                xp_for_full_progress,
+            )
+        };
+        let value = ((potentials[idx] + gain) as f32 * curves[idx]) as i32;
+        realized[idx] = value.clamp(0, 15_000);
+    }
+
+    if potentials.len() > 5 {
+        let dr = ((potentials[5] as f32) * curves[5]) as i32;
+        realized[5] = dr.clamp(0, 10_000);
+    }
+
+    realized
 }
 
 /// Age-based trainability modifier for each body axis.
@@ -204,7 +254,7 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 mod tests {
     use super::{
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
-        calc_training_gains,
+        calc_realized_values, calc_training_gains,
         compute_age_curve, compute_age_curves,
     };
 
@@ -294,6 +344,17 @@ mod tests {
     }
 
     #[test]
+    fn batch_training_gains_skip_negative_trainability() {
+        let potentials = [1000, 700];
+        let trainabilities = [-1, 600];
+        let xps = [10_000.0_f32, 10_000.0_f32];
+        let ceilings = [0.5_f32, 0.5_f32];
+        let batched = calc_training_gains(&potentials, &trainabilities, &xps, &ceilings, 10_000.0);
+        assert_eq!(batched[0], 0);
+        assert!(batched[1] > 0);
+    }
+
+    #[test]
     fn trainability_modifier_defaults_to_one_for_unknown_axis() {
         assert_eq!(age_trainability_modifier("unknown", 20.0), 1.0);
     }
@@ -314,5 +375,37 @@ mod tests {
         assert_eq!(mods[2], age_trainability_modifier("end", age));
         assert_eq!(mods[3], age_trainability_modifier("tou", age));
         assert_eq!(mods[4], age_trainability_modifier("rec", age));
+    }
+
+    #[test]
+    fn realized_values_match_manual_formula() {
+        let potentials = [1000, 900, 800, 700, 600, 500];
+        let trainabilities = [500, 600, 700, 800, 900];
+        let xps = [2_000.0_f32, 3_000.0_f32, 4_000.0_f32, 5_000.0_f32, 6_000.0_f32];
+        let ceilings = [0.5_f32, 0.3_f32, 1.5_f32, 0.2_f32, 0.6_f32];
+        let age = 30.0_f32;
+        let out = calc_realized_values(
+            &potentials,
+            &trainabilities,
+            &xps,
+            &ceilings,
+            age,
+            10_000.0,
+        );
+        assert_eq!(out.len(), 6);
+        let curves = compute_age_curves(age);
+        for idx in 0..5 {
+            let gain = calc_training_gain(
+                potentials[idx],
+                trainabilities[idx],
+                xps[idx],
+                ceilings[idx],
+                10_000.0,
+            );
+            let expected = ((potentials[idx] + gain) as f32 * curves[idx]) as i32;
+            assert_eq!(out[idx], expected.clamp(0, 15_000));
+        }
+        let expected_dr = ((potentials[5] as f32) * curves[5]) as i32;
+        assert_eq!(out[5], expected_dr.clamp(0, 10_000));
     }
 }

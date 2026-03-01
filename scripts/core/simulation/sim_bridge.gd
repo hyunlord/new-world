@@ -1254,6 +1254,30 @@ func body_calc_training_gains(
 	)
 
 
+## Delegates batched body realized value computation to native bridge.
+## Axis order in output: [str, agi, end, tou, rec, dr].
+## Returns null when native bridge/method is unavailable.
+func body_calc_realized_values(
+	potentials: PackedInt32Array,
+	trainabilities: PackedInt32Array,
+	xps: PackedFloat32Array,
+	training_ceilings: PackedFloat32Array,
+	age_years: float,
+	xp_for_full_progress: float
+):
+	return _call_native_if_exists(
+		"body_calc_realized_values",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			age_years,
+			xp_for_full_progress
+		]
+	)
+
+
 ## Delegates age-based body trainability modifier to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_age_trainability_modifier(axis: String, age_years: float):

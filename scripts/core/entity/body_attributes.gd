@@ -245,9 +245,15 @@ func calc_training_gain_batch() -> Dictionary:
 	for i in range(_TRAINING_GAIN_AXES.size()):
 		var axis: String = _TRAINING_GAIN_AXES[i]
 		potentials.append(int(potential.get(axis, 700)))
-		trainabilities.append(int(trainability.get(axis, 500)))
-		xps.append(float(training_xp.get(axis, 0.0)))
-		training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+		var has_trainability: bool = trainability.has(axis)
+		if has_trainability:
+			trainabilities.append(int(trainability.get(axis, 500)))
+			xps.append(float(training_xp.get(axis, 0.0)))
+			training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+		else:
+			trainabilities.append(-1)
+			xps.append(0.0)
+			training_ceilings.append(0.0)
 
 	var rust_result: Variant = _call_sim_bridge(
 		"body_calc_training_gains",
@@ -275,6 +281,63 @@ func calc_training_gain_batch() -> Dictionary:
 		var axis: String = _TRAINING_GAIN_AXES[i]
 		gains[axis] = calc_training_gain(axis)
 	return gains
+
+
+## 6축 realized 배치 계산 (str/agi/end/tou/rec/dr)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 배치/단건 계산으로 fallback.
+func calc_realized_values_batch(age_years: float) -> Dictionary:
+	var potentials: PackedInt32Array = PackedInt32Array()
+	var trainabilities: PackedInt32Array = PackedInt32Array()
+	var xps: PackedFloat32Array = PackedFloat32Array()
+	var training_ceilings: PackedFloat32Array = PackedFloat32Array()
+
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		potentials.append(int(potential.get(axis, 700)))
+		var has_trainability: bool = trainability.has(axis)
+		if has_trainability:
+			trainabilities.append(int(trainability.get(axis, 500)))
+			xps.append(float(training_xp.get(axis, 0.0)))
+			training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+		else:
+			trainabilities.append(-1)
+			xps.append(0.0)
+			training_ceilings.append(0.0)
+	potentials.append(int(potential.get("dr", 700)))
+
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_realized_values",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			age_years,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result is PackedInt32Array:
+		var packed: PackedInt32Array = rust_result
+		if packed.size() >= _AGE_CURVE_AXIS_COUNT:
+			return {
+				"str": int(packed[0]),
+				"agi": int(packed[1]),
+				"end": int(packed[2]),
+				"tou": int(packed[3]),
+				"rec": int(packed[4]),
+				"dr": int(packed[5]),
+			}
+
+	var age_curves: Dictionary = compute_age_curve_batch(age_years)
+	var gains: Dictionary = calc_training_gain_batch()
+	return {
+		"str": clampi(int(float(potential.get("str", 700) + gains.get("str", 0)) * float(age_curves.get("str", 0.5))), 0, 15000),
+		"agi": clampi(int(float(potential.get("agi", 700) + gains.get("agi", 0)) * float(age_curves.get("agi", 0.5))), 0, 15000),
+		"end": clampi(int(float(potential.get("end", 700) + gains.get("end", 0)) * float(age_curves.get("end", 0.5))), 0, 15000),
+		"tou": clampi(int(float(potential.get("tou", 700) + gains.get("tou", 0)) * float(age_curves.get("tou", 0.5))), 0, 15000),
+		"rec": clampi(int(float(potential.get("rec", 700) + gains.get("rec", 0)) * float(age_curves.get("rec", 0.5))), 0, 15000),
+		"dr": clampi(int(float(potential.get("dr", 700)) * float(age_curves.get("dr", 0.5))), 0, 10000),
+	}
 
 ## 아동기 환경 평균 → trainability 영구 수정
 ## age_system이 12세 도달 시 1회 호출
