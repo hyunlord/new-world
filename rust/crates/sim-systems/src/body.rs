@@ -1332,6 +1332,30 @@ pub fn intergen_meaney_repair_load(
     (current_load - repair_rate * (parenting_quality - threshold) * 2.0).max(min_load)
 }
 
+/// Parenting adulthood stress gain multiplier after epigenetic HPA sensitivity adjustment.
+pub fn parenting_hpa_adjusted_stress_gain(
+    current_stress_mult: f32,
+    epigenetic_load: f32,
+    hpa_load_weight: f32,
+) -> f32 {
+    current_stress_mult * intergen_hpa_sensitivity(epigenetic_load, hpa_load_weight)
+}
+
+/// Bandura observational learning base rate for coping familiarity update.
+pub fn parenting_bandura_base_rate(
+    base_coeff: f32,
+    coping_mult: f32,
+    observation_strength: f32,
+    is_maladaptive: bool,
+    maladaptive_multiplier: f32,
+) -> f32 {
+    let mut rate = base_coeff * coping_mult * observation_strength;
+    if is_maladaptive {
+        rate *= maladaptive_multiplier;
+    }
+    rate
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2394,6 +2418,7 @@ mod tests {
         attachment_coping_quality_step, attachment_protective_factor,
         intergen_scar_index, intergen_child_epigenetic_step,
         intergen_hpa_sensitivity, intergen_meaney_repair_load,
+        parenting_hpa_adjusted_stress_gain, parenting_bandura_base_rate,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -3072,6 +3097,20 @@ mod tests {
         assert_eq!(unchanged, 0.4);
         assert!(repaired < unchanged);
         assert_eq!(floored, 0.05);
+    }
+
+    #[test]
+    fn parenting_hpa_adjusted_stress_gain_tracks_epigenetic_load() {
+        let low = parenting_hpa_adjusted_stress_gain(1.2, 0.1, 0.6);
+        let high = parenting_hpa_adjusted_stress_gain(1.2, 0.8, 0.6);
+        assert!(high > low);
+    }
+
+    #[test]
+    fn parenting_bandura_base_rate_applies_maladaptive_multiplier() {
+        let adaptive = parenting_bandura_base_rate(0.002, 1.1, 0.7, false, 1.5);
+        let maladaptive = parenting_bandura_base_rate(0.002, 1.1, 0.7, true, 1.5);
+        assert!(maladaptive > adaptive);
     }
 
     #[test]

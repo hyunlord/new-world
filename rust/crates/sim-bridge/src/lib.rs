@@ -1558,6 +1558,38 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_parenting_hpa_adjusted_stress_gain(
+        &self,
+        current_stress_mult: f32,
+        epigenetic_load: f32,
+        hpa_load_weight: f32,
+    ) -> f32 {
+        body::parenting_hpa_adjusted_stress_gain(
+            current_stress_mult,
+            epigenetic_load,
+            hpa_load_weight,
+        )
+    }
+
+    #[func]
+    fn body_parenting_bandura_base_rate(
+        &self,
+        base_coeff: f32,
+        coping_mult: f32,
+        observation_strength: f32,
+        is_maladaptive: bool,
+        maladaptive_multiplier: f32,
+    ) -> f32 {
+        body::parenting_bandura_base_rate(
+            base_coeff,
+            coping_mult,
+            observation_strength,
+            is_maladaptive,
+            maladaptive_multiplier,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
