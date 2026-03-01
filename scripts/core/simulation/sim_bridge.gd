@@ -18,11 +18,18 @@ const _PATHFIND_BATCH_METHOD_CANDIDATES: Array[String] = [
 const _PATHFIND_BATCH_GPU_METHOD_CANDIDATES: Array[String] = [
 	"pathfind_grid_gpu_batch",
 ]
+const _PATHFIND_BATCH_XY_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_batch_xy",
+]
+const _PATHFIND_BATCH_XY_GPU_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_gpu_batch_xy",
+]
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
 var _pathfind_method_name: String = ""
 var _pathfind_batch_method_name: String = ""
+var _pathfind_batch_xy_method_name: String = ""
 
 
 ## Delegates pathfinding to native bridge when available.
@@ -84,6 +91,37 @@ func pathfind_grid_batch(
 		move_cost,
 		from_points,
 		to_points,
+		max_steps
+	)
+
+
+## Delegates batch pathfinding with PackedInt32Array(x,y,...) points.
+## Returns null when native bridge is unavailable, so caller can fallback.
+func pathfind_grid_batch_xy(
+	width: int,
+	height: int,
+	walkable: PackedByteArray,
+	move_cost: PackedFloat32Array,
+	from_xy: PackedInt32Array,
+	to_xy: PackedInt32Array,
+	max_steps: int
+):
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return null
+	if _pathfind_batch_xy_method_name == "":
+		return null
+	var method_name: String = _pathfind_batch_xy_method_name
+	if _prefer_gpu():
+		method_name = _pick_method(_PATHFIND_BATCH_XY_GPU_METHOD_CANDIDATES, _pathfind_batch_xy_method_name)
+	return bridge.call(
+		method_name,
+		width,
+		height,
+		walkable,
+		move_cost,
+		from_xy,
+		to_xy,
 		max_steps
 	)
 
@@ -301,6 +339,9 @@ func _get_native_bridge() -> Object:
 				_pathfind_batch_method_name = _pick_method(
 					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
 				)
+				_pathfind_batch_xy_method_name = _pick_method(
+					_PATHFIND_BATCH_XY_METHOD_CANDIDATES, ""
+				)
 				return _native_bridge
 
 	for i in range(_NATIVE_SINGLETON_CANDIDATES.size()):
@@ -317,6 +358,9 @@ func _get_native_bridge() -> Object:
 				_pathfind_method_name = method_name
 				_pathfind_batch_method_name = _pick_method(
 					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
+				)
+				_pathfind_batch_xy_method_name = _pick_method(
+					_PATHFIND_BATCH_XY_METHOD_CANDIDATES, ""
 				)
 				return _native_bridge
 

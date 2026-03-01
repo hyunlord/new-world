@@ -168,6 +168,35 @@ fn build_step_pairs(
     pairs
 }
 
+fn decode_xy_pairs(values: &PackedInt32Array) -> Option<Vec<(i32, i32)>> {
+    if values.len() % 2 != 0 {
+        return None;
+    }
+    let mut out: Vec<(i32, i32)> = Vec::with_capacity(values.len() / 2);
+    let slice = values.as_slice();
+    let mut i = 0usize;
+    while i + 1 < slice.len() {
+        out.push((slice[i], slice[i + 1]));
+        i += 2;
+    }
+    Some(out)
+}
+
+fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Array> {
+    let mut output: Array<PackedInt32Array> = Array::new();
+    for group in path_groups {
+        let mut packed: PackedInt32Array = PackedInt32Array::new();
+        packed.resize(group.len() * 2);
+        for (idx, p) in group.into_iter().enumerate() {
+            let base = idx * 2;
+            packed[base] = p.x;
+            packed[base + 1] = p.y;
+        }
+        output.push(&packed);
+    }
+    output
+}
+
 #[derive(GodotClass)]
 #[class(base=Object, singleton)]
 pub struct WorldSimBridge {
@@ -321,6 +350,65 @@ impl WorldSimBridge {
             from_points,
             to_points,
             max_steps,
+        )
+    }
+
+    #[func]
+    fn pathfind_grid_batch_xy(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_xy: PackedInt32Array,
+        to_xy: PackedInt32Array,
+        max_steps: i32,
+    ) -> Array<PackedInt32Array> {
+        let steps = if max_steps <= 0 {
+            200_usize
+        } else {
+            max_steps as usize
+        };
+
+        let from_pairs = match decode_xy_pairs(&from_xy) {
+            Some(v) => v,
+            None => return Array::new(),
+        };
+        let to_pairs = match decode_xy_pairs(&to_xy) {
+            Some(v) => v,
+            None => return Array::new(),
+        };
+
+        let path_groups = match pathfind_grid_batch_bytes(
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            &from_pairs,
+            &to_pairs,
+            steps,
+        ) {
+            Ok(groups) => groups,
+            Err(_) => return Array::new(),
+        };
+
+        encode_path_groups_xy(path_groups)
+    }
+
+    #[func]
+    fn pathfind_grid_gpu_batch_xy(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_xy: PackedInt32Array,
+        to_xy: PackedInt32Array,
+        max_steps: i32,
+    ) -> Array<PackedInt32Array> {
+        // GPU path is not implemented yet; use CPU batch pathfinding as fallback.
+        self.pathfind_grid_batch_xy(
+            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
         )
     }
 

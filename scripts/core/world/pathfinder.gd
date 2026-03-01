@@ -3,6 +3,7 @@ extends RefCounted
 const _RUST_BRIDGE_NODE_NAME: String = "SimBridge"
 const _RUST_BRIDGE_METHOD_NAME: String = "pathfind_grid"
 const _RUST_BRIDGE_BATCH_METHOD_NAME: String = "pathfind_grid_batch"
+const _RUST_BRIDGE_BATCH_XY_METHOD_NAME: String = "pathfind_grid_batch_xy"
 
 var _bridge_checked: bool = false
 var _rust_bridge: Object = null
@@ -78,32 +79,73 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
 		return {"used": false, "paths": []}
-	if not bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME):
+	var has_batch_xy: bool = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
+	var has_batch_vec2: bool = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	if not has_batch_xy and not has_batch_vec2:
 		return {"used": false, "paths": []}
 
 	_ensure_world_cache(world_data)
 	if _cached_width <= 0 or _cached_height <= 0:
 		return {"used": false, "paths": []}
 
-	var from_points: PackedVector2Array = PackedVector2Array()
-	var to_points: PackedVector2Array = PackedVector2Array()
-	for i in range(requests.size()):
-		var req: Dictionary = requests[i]
-		var from: Vector2i = req.get("from", Vector2i(-1, -1))
-		var to: Vector2i = req.get("to", Vector2i(-1, -1))
-		from_points.push_back(Vector2(from.x, from.y))
-		to_points.push_back(Vector2(to.x, to.y))
+	var result: Variant = null
+	if has_batch_xy:
+		var from_xy: PackedInt32Array = PackedInt32Array()
+		var to_xy: PackedInt32Array = PackedInt32Array()
+		from_xy.resize(requests.size() * 2)
+		to_xy.resize(requests.size() * 2)
+		for i in range(requests.size()):
+			var req_xy: Dictionary = requests[i]
+			var from_xy_point: Vector2i = req_xy.get("from", Vector2i(-1, -1))
+			var to_xy_point: Vector2i = req_xy.get("to", Vector2i(-1, -1))
+			var base_idx: int = i * 2
+			from_xy[base_idx] = from_xy_point.x
+			from_xy[base_idx + 1] = from_xy_point.y
+			to_xy[base_idx] = to_xy_point.x
+			to_xy[base_idx + 1] = to_xy_point.y
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_XY_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from_xy,
+			to_xy,
+			max_steps
+		)
+	elif has_batch_vec2:
+		var from_points: PackedVector2Array = PackedVector2Array()
+		var to_points: PackedVector2Array = PackedVector2Array()
+		for i in range(requests.size()):
+			var req: Dictionary = requests[i]
+			var from: Vector2i = req.get("from", Vector2i(-1, -1))
+			var to: Vector2i = req.get("to", Vector2i(-1, -1))
+			from_points.push_back(Vector2(from.x, from.y))
+			to_points.push_back(Vector2(to.x, to.y))
 
-	var result: Variant = bridge.call(
-		_RUST_BRIDGE_BATCH_METHOD_NAME,
-		_cached_width,
-		_cached_height,
-		_cached_walkable,
-		_cached_move_cost,
-		from_points,
-		to_points,
-		max_steps
-	)
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from_points,
+			to_points,
+			max_steps
+		)
+
+	if result == null:
+		return {"used": false, "paths": []}
+
+	if has_batch_xy:
+		if not (result is Array):
+			return {"used": false, "paths": []}
+		var xy_groups: Array = result
+		var xy_normalized: Array = []
+		for i in range(xy_groups.size()):
+			xy_normalized.append(_normalize_path_xy_result(xy_groups[i]))
+		return {"used": true, "paths": xy_normalized}
+
 	if result == null or not (result is Array):
 		return {"used": false, "paths": []}
 
@@ -112,6 +154,24 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	for i in range(groups.size()):
 		normalized.append(_normalize_path_result(groups[i]))
 	return {"used": true, "paths": normalized}
+
+
+func _normalize_path_xy_result(result: Variant) -> Array:
+	var path: Array = []
+	if result is PackedInt32Array:
+		var packed: PackedInt32Array = result
+		var pair_count: int = packed.size() / 2
+		for i in range(pair_count):
+			var base_idx: int = i * 2
+			path.append(Vector2i(packed[base_idx], packed[base_idx + 1]))
+		return path
+	if result is Array:
+		var arr: Array = result
+		for i in range(arr.size()):
+			var item: Variant = arr[i]
+			if item is Vector2i:
+				path.append(item)
+	return path
 
 
 func _get_rust_bridge() -> Object:

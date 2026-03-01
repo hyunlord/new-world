@@ -98,3 +98,8 @@
 - Emotion label/intensity 표시를 `EMO_*` locale key 기반으로 통합.
 - `emotion_definition.json`의 object형 inline 다국어 필드 제거.
 - localization audit에서 non-keyable inline 그룹 0 달성.
+
+## Commit 021
+- Pathfinding batch에 `PackedInt32Array(x,y,...)` 기반 bridge API 추가.
+- `Pathfinder`가 int-packed 경로를 우선 사용하도록 연결하고 기존 vec2 경로는 fallback으로 유지.
+- batch 좌표 변환/반올림 오버헤드를 줄여 이동 시스템 재계산 경로 성능 개선.
