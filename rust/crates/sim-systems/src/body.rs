@@ -693,6 +693,26 @@ pub fn intelligence_effective_value(
     clamp_f32((potential - env_penalty) * effective_mod, min_val, max_val)
 }
 
+/// Computes intelligence `g` value from parental blend, openness shift, and noise.
+pub fn intelligence_g_value(
+    has_parents: bool,
+    parent_a_g: f32,
+    parent_b_g: f32,
+    heritability_g: f32,
+    g_mean: f32,
+    openness_mean: f32,
+    openness_weight: f32,
+    noise: f32,
+) -> f32 {
+    let base = if has_parents {
+        let mid = (parent_a_g + parent_b_g) * 0.5;
+        mid * heritability_g + g_mean * (1.0 - heritability_g)
+    } else {
+        g_mean
+    };
+    base + openness_weight * (openness_mean - 0.5) + noise
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1742,6 +1762,7 @@ mod tests {
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
         stat_threshold_is_active, stats_resource_deltas_per_100,
         personality_linear_target, intelligence_effective_value,
+        intelligence_g_value,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2163,6 +2184,21 @@ mod tests {
     fn intelligence_effective_value_uses_base_when_not_declining() {
         let out = intelligence_effective_value(0.6, 1.05, 20.0, true, 0.9, 1.2, 0.1, 0.02, 0.98);
         assert!((out - 0.525).abs() < 1e-6);
+    }
+
+    #[test]
+    fn intelligence_g_value_uses_parental_blend_when_available() {
+        let with_parents = intelligence_g_value(true, 0.7, 0.5, 0.6, 0.5, 0.6, 0.2, 0.01);
+        let without_parents = intelligence_g_value(false, 0.7, 0.5, 0.6, 0.5, 0.6, 0.2, 0.01);
+        assert!(with_parents > without_parents);
+    }
+
+    #[test]
+    fn intelligence_g_value_applies_openness_shift_and_noise() {
+        let base = intelligence_g_value(false, 0.0, 0.0, 0.6, 0.5, 0.5, 0.2, 0.0);
+        let shifted = intelligence_g_value(false, 0.0, 0.0, 0.6, 0.5, 0.7, 0.2, 0.01);
+        assert!((base - 0.5).abs() < 1e-6);
+        assert!((shifted - 0.55).abs() < 1e-6);
     }
 
     #[test]

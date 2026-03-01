@@ -1095,6 +1095,30 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_intelligence_g_value(
+        &self,
+        has_parents: bool,
+        parent_a_g: f32,
+        parent_b_g: f32,
+        heritability_g: f32,
+        g_mean: f32,
+        openness_mean: f32,
+        openness_weight: f32,
+        noise: f32,
+    ) -> f32 {
+        body::intelligence_g_value(
+            has_parents,
+            parent_a_g,
+            parent_b_g,
+            heritability_g,
+            g_mean,
+            openness_mean,
+            openness_weight,
+            noise,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
