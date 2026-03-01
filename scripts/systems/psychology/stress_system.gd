@@ -389,6 +389,7 @@ func _load_stressor_defs() -> void:
 			stressor_def["_c_multipliers"] = compiled_context.get("multipliers", PackedFloat32Array())
 			stressor_def["_emo_fast"] = compiled_emo.get("fast", PackedFloat32Array())
 			stressor_def["_emo_slow"] = compiled_emo.get("slow", PackedFloat32Array())
+			stressor_def["_emo_has_values"] = bool(compiled_emo.get("has_values", false))
 			_stressor_defs[key] = stressor_def
 
 
@@ -449,25 +450,41 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	)
 	var emo_fast: PackedFloat32Array = sdef.get("_emo_fast", PackedFloat32Array())
 	var emo_slow: PackedFloat32Array = sdef.get("_emo_slow", PackedFloat32Array())
-	_fill_event_emotion_current(ed)
+	var emo_has_values: bool = bool(sdef.get("_emo_has_values", false))
 
-	# 5) 관계/상황/최종 스케일 + 감정 주입 결합 계산 (Rust curve helper)
-	var scaled: Dictionary = StatCurveScript.stress_event_inject_step(
-		instant,
-		per_tick,
-		is_loss,
-		personality_scale,
-		1.0,
-		r_method,
-		bond_strength,
-		r_min_mult,
-		r_max_mult,
-		active_context_multipliers,
-		_event_fast_current,
-		_event_slow_current,
-		emo_fast,
-		emo_slow
-	)
+	# 5) 관계/상황/최종 스케일 계산 (필요 시 감정 주입 결합 step 사용)
+	var scaled: Dictionary
+	if emo_has_values:
+		_fill_event_emotion_current(ed)
+		scaled = StatCurveScript.stress_event_inject_step(
+			instant,
+			per_tick,
+			is_loss,
+			personality_scale,
+			1.0,
+			r_method,
+			bond_strength,
+			r_min_mult,
+			r_max_mult,
+			active_context_multipliers,
+			_event_fast_current,
+			_event_slow_current,
+			emo_fast,
+			emo_slow
+		)
+	else:
+		scaled = StatCurveScript.stress_event_scale_step(
+			instant,
+			per_tick,
+			is_loss,
+			personality_scale,
+			1.0,
+			r_method,
+			bond_strength,
+			r_min_mult,
+			r_max_mult,
+			active_context_multipliers
+		)
 	var relationship_scale: float = float(scaled.get("relationship_scale", 1.0))
 	var context_scale: float = float(scaled.get("context_scale", 1.0))
 	var final_instant: float = float(scaled.get("final_instant", 0.0))
@@ -483,10 +500,11 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 			"decay_rate": decay_rate,
 		})
 
-	# 7) 감정 직접 주입 반영
-	var next_fast: PackedFloat32Array = scaled.get("fast", _event_fast_current)
-	var next_slow: PackedFloat32Array = scaled.get("slow", _event_slow_current)
-	_apply_event_emotion_layers(ed, next_fast, next_slow)
+	# 7) 감정 직접 주입 반영 (주입값이 있는 이벤트만)
+	if emo_has_values:
+		var next_fast: PackedFloat32Array = scaled.get("fast", _event_fast_current)
+		var next_slow: PackedFloat32Array = scaled.get("slow", _event_slow_current)
+		_apply_event_emotion_layers(ed, next_fast, next_slow)
 
 	# 8) 디버그 로그
 	if GameConfig.DEBUG_STRESS_LOG:
@@ -670,11 +688,12 @@ func _build_trait_id_map(entity) -> Dictionary:
 func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
 	var fast: PackedFloat32Array = PackedFloat32Array()
 	var slow: PackedFloat32Array = PackedFloat32Array()
+	var has_values: bool = false
 	fast.resize(_EMOTION_ORDER.size())
 	slow.resize(_EMOTION_ORDER.size())
 
 	if typeof(emo_inject) != TYPE_DICTIONARY:
-		return {"fast": fast, "slow": slow}
+		return {"fast": fast, "slow": slow, "has_values": has_values}
 
 	var emo_inject_dict: Dictionary = emo_inject
 	for key in emo_inject_dict:
@@ -688,12 +707,14 @@ func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
 		var idx: int = int(_EMOTION_INDEX.get(emo_name, -1))
 		if idx < 0:
 			continue
+		if not is_zero_approx(raw_val):
+			has_values = true
 		if layer == "fast":
 			fast[idx] += raw_val
 		elif layer == "slow":
 			slow[idx] += raw_val
 
-	return {"fast": fast, "slow": slow}
+	return {"fast": fast, "slow": slow, "has_values": has_values}
 
 
 func _fill_event_emotion_current(ed) -> void:

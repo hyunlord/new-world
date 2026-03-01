@@ -309,3 +309,7 @@
 - stressor personality spec(`axis/facet/weight/direction`)를 `_p_spec_*` Packed 배열로 사전컴파일해 `Array[Dictionary]` 해석 비용을 축소.
 - `_calc_personality_scale`를 spec 배열 인덱스 순회 기반으로 전환해 이벤트 경로 타입 캐스팅/분기 오버헤드를 완화.
 - 성격 스케일 수식 의미와 Rust helper 호출 구조는 유지.
+
+## Commit 064
+- `emotion_inject`가 실질적으로 없는 stressor에 대해 `_emo_has_values` 플래그를 도입하고 `inject_event`에서 scale-only fast path를 사용하도록 분기.
+- 감정 주입이 없는 이벤트에서는 emotion snapshot/결합 step 호출을 건너뛰어 이벤트 주입 경로의 불필요한 오버헤드를 절감.
