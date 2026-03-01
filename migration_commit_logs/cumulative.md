@@ -491,3 +491,8 @@
 - `world_stats_tech_tab`의 `UI_TECH_COUNT_FMT` 호출을 `Locale.trf2` 경량 포맷 경로로 전환.
 - 출력 의미를 유지하면서 2-파라미터 포맷 호출의 임시 params Dictionary 생성을 줄임.
 - World Stats Tech 탭 렌더 경로의 미세 오버헤드를 완화.
+
+## Commit 101
+- `world_stats_panel` 헤더/푸터의 정착지 수 표시(`UI_SETTLEMENT_COUNT_FMT`)를 `Locale.trf1` 1회 생성 후 재사용 구조로 전환.
+- 동일 draw 프레임에서 중복되던 locale 포맷 호출을 제거해 문자열 계산/임시 객체 생성을 줄임.
+- 출력 의미를 유지하면서 World Stats 패널 렌더 경로를 경량화.

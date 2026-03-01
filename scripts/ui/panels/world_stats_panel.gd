@@ -266,8 +266,9 @@ func _draw() -> void:
 
 	# Settlement count
 	var settlement_count: int = _cached_data.get("settlement_summaries", []).size()
+	var settlement_count_text: String = Locale.trf1("UI_SETTLEMENT_COUNT_FMT", "n", settlement_count)
 	draw_string(font, Vector2(20.0, 47.0),
-		Locale.trf("UI_SETTLEMENT_COUNT_FMT", {"n": settlement_count}),
+		settlement_count_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1,
 		GameConfig.get_font_size("popup_small"), NEUTRAL_COLOR)
 
@@ -324,7 +325,7 @@ func _draw() -> void:
 	_content_height = end_y + _scroll_offset + 40.0
 
 	# Footer
-	var footer_text: String = Locale.trf("UI_SETTLEMENT_COUNT_FMT", {"n": settlement_count})
+	var footer_text: String = settlement_count_text
 	draw_string(font, Vector2(panel_w * 0.5 - 40.0, panel_h - 12.0), footer_text,
 		HORIZONTAL_ALIGNMENT_CENTER, -1,
 		GameConfig.get_font_size("popup_small"), Color(0.4, 0.4, 0.4))
