@@ -137,3 +137,7 @@
 ## Commit 028
 - `SimBridge` pathfinding backend 모드 동기화에 last-mode 캐시를 추가해 중복 bridge 호출을 제거.
 - 모드가 바뀌지 않는 일반 프레임에서 동기화 call overhead를 줄이고, 모드 변경 시 동작은 유지.
+
+## Commit 029
+- `StatCurve`의 `scurve_speed`/`step_linear`에서 PackedArray 변환 결과를 params 내 캐시로 재사용.
+- 영향 계산 핫패스의 반복 할당/변환 비용을 줄여 Rust bridge 호출 경로 오버헤드 완화.

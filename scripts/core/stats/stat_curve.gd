@@ -132,12 +132,20 @@ static func skill_xp_progress(
 static func scurve_speed(current_value: int, params: Dictionary) -> float:
 	var bps: Array = params.get("phase_breakpoints", [300, 700])
 	var speeds: Array = params.get("phase_speeds", [1.5, 1.0, 0.3])
+	var bps_packed: PackedInt32Array = params.get("_phase_breakpoints_packed", PackedInt32Array())
+	var speeds_packed: PackedFloat32Array = params.get("_phase_speeds_packed", PackedFloat32Array())
+	if bps_packed.size() != bps.size():
+		bps_packed = _to_packed_i32(bps)
+		params["_phase_breakpoints_packed"] = bps_packed
+	if speeds_packed.size() != speeds.size():
+		speeds_packed = _to_packed_f32(speeds)
+		params["_phase_speeds_packed"] = speeds_packed
 	var rust_result: Variant = _call_sim_bridge(
 		"stat_scurve_speed",
 		[
 			current_value,
-			_to_packed_i32(bps),
-			_to_packed_f32(speeds)
+			bps_packed,
+			speeds_packed
 		]
 	)
 	if rust_result != null:
@@ -265,14 +273,17 @@ static func step_influence(value: int, params: Dictionary) -> float:
 ## STEP_LINEAR: 단계별 선형 보간
 static func step_linear(value: int, params: Dictionary) -> float:
 	var steps: Array = params.get("steps", [])
-	var below_thresholds: PackedInt32Array = PackedInt32Array()
-	var multipliers: PackedFloat32Array = PackedFloat32Array()
-	below_thresholds.resize(steps.size())
-	multipliers.resize(steps.size())
-	for i in range(steps.size()):
-		var step: Dictionary = steps[i]
-		below_thresholds[i] = int(step.get("below", 0))
-		multipliers[i] = float(step.get("multiply", 1.0))
+	var below_thresholds: PackedInt32Array = params.get("_step_below_thresholds_packed", PackedInt32Array())
+	var multipliers: PackedFloat32Array = params.get("_step_multipliers_packed", PackedFloat32Array())
+	if below_thresholds.size() != steps.size() or multipliers.size() != steps.size():
+		below_thresholds.resize(steps.size())
+		multipliers.resize(steps.size())
+		for i in range(steps.size()):
+			var step: Dictionary = steps[i]
+			below_thresholds[i] = int(step.get("below", 0))
+			multipliers[i] = float(step.get("multiply", 1.0))
+		params["_step_below_thresholds_packed"] = below_thresholds
+		params["_step_multipliers_packed"] = multipliers
 	var rust_result: Variant = _call_sim_bridge(
 		"stat_step_linear",
 		[
