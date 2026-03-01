@@ -361,7 +361,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 						"died": d_died_days, "died_display": d_died_display,
 						"job": r.get("job", ""),
 						"job_display": Locale.tr_id("JOB", str(r.get("job", ""))),
-						"status": Locale.trf("UI_DECEASED_STATUS_FMT", {"cause": cause_loc}), "settlement": r.get("settlement_id", 0),
+						"status": Locale.trf1("UI_DECEASED_STATUS_FMT", "cause", cause_loc), "settlement": r.get("settlement_id", 0),
 						"hunger": 0.0, "deceased": true, "is_leader": false,
 					})
 
@@ -481,7 +481,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 
 	# Footer: total count
 	var footer_y: float = panel_h - 24
-	var count_text: String = Locale.trf("UI_ENTITIES_COUNT_FMT", {"n": rows.size()})
+	var count_text: String = Locale.trf1("UI_ENTITIES_COUNT_FMT", "n", rows.size())
 	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), count_text, HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
 
 

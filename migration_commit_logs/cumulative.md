@@ -456,3 +456,8 @@
 - `Locale`에 `trf1`/`trf2` 경량 포맷 API를 추가해 1~2 placeholder 치환에서 임시 params Dictionary 생성을 줄이는 경로를 도입.
 - `HUD`의 프레임 루프 포맷 호출(`UI_POP_FMT`, `UI_BLD_*`, `UI_RES_*`, `UI_POS_FMT`, `UI_ENTITY_STATS_FMT`)을 `trf1`/`trf2`로 치환.
 - 표시 의미를 유지하면서 HUD locale 포맷 핫패스의 호출 오버헤드를 완화.
+
+## Commit 094
+- `ListPanel`의 deceased status 포맷(`UI_DECEASED_STATUS_FMT`)과 footer count 포맷(`UI_ENTITIES_COUNT_FMT`)을 `Locale.trf1` 경로로 전환.
+- 기존 placeholder/출력 의미는 유지하면서 draw 경로의 임시 params Dictionary 생성을 줄임.
+- 리스트 패널 포맷 호출 핫패스의 미세 오버헤드를 완화.
