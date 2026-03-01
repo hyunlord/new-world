@@ -736,8 +736,11 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
         smoke_resolved_gpu_json="\"${PATH_SMOKE_RESOLVED_GPU}\""
       fi
       mkdir -p "$(dirname "${bench_report_out}")"
+      bench_generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
       cat > "${bench_report_out}" <<EOF
 {
+  "schema_version": 1,
+  "generated_at_utc": "${bench_generated_at}",
   "path_iters": ${path_iters},
   "stress_iters": ${stress_iters},
   "needs_iters": ${needs_iters},
@@ -834,6 +837,7 @@ if [[ -n "${verify_report_json}" ]]; then
   bench_report_json_value="$(to_json_opt_path "${bench_report_json}")"
   cat > "${verify_report_out}" <<EOF
 {
+  "schema_version": 1,
   "generated_at_utc": "${generated_at}",
   "root_dir": "${ROOT_DIR}",
   "with_benches": ${WITH_BENCHES},

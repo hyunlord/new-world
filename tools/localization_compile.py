@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -574,6 +575,8 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
     if report_json:
         report_path = (project_root / report_json).resolve()
         report_payload: Dict[str, Any] = {
+            "schema_version": 1,
+            "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             "default_locale": default_locale,
             "supported_locales": supported_locales,
             "categories_order": categories,

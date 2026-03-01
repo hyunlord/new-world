@@ -1230,3 +1230,8 @@
 - `migration_verify`에 `MIGRATION_VERIFY_ASSERT_ARTIFACTS`를 추가해 report 아티팩트 파일 존재를 검증 단계에서 강제 가능하게 확장.
 - `assert=true`일 때 compile/audit 아티팩트(및 `WITH_BENCHES=true` 시 bench report) 존재를 체크하고 누락 시 즉시 실패.
 - `migration_verify_report.json`에 `assert_artifacts` 메타 필드를 추가해 실행 시점의 아티팩트 강제 여부를 기록.
+
+## Commit 249
+- `localization_compile` summary report에 `schema_version`, `generated_at_utc` 메타를 추가해 스키마 버전 관리와 실행 시각 추적을 지원.
+- `migration_verify`가 생성하는 `bench_report.json`, `migration_verify_report.json`에도 `schema_version` 메타를 추가해 아티팩트 간 형식 일관성을 강화.
+- `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts11 ... tools/migration_verify.sh --with-benches` 실행에서 compile/bench/verify 리포트의 메타 필드 존재를 확인.
