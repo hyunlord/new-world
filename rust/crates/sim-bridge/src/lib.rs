@@ -347,6 +347,12 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_age_trainability_modifiers(&self, age_years: f32) -> PackedFloat32Array {
+        let modifiers = body::age_trainability_modifiers(age_years);
+        vec_f32_to_packed(modifiers.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

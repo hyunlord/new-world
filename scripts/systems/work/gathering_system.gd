@@ -81,20 +81,21 @@ func execute_tick(tick: int) -> void:
 			# [훈련 XP 누적] 채집 종류별 신체능력 XP (Heritage 1999, Ahtiainen 2016)
 			if entity.body != null:
 				var _xp_age: float = float(entity.age)
+				var _age_mods: Dictionary = BodyAttributes.get_age_trainability_modifier_batch(_xp_age)
 				match res_name:
 					"food":
-						var _m_end = BodyAttributes.get_age_trainability_modifier("end", _xp_age)
-						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
+						var _m_end: float = float(_age_mods.get("end", 1.0))
+						var _m_str: float = float(_age_mods.get("str", 1.0))
 						entity.body.training_xp["end"] = entity.body.training_xp.get("end", 0.0) + GameConfig.BODY_XP_GATHER_FOOD * _m_end
 						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_FOOD * 0.5 * _m_str
 					"wood":
-						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
-						var _m_end = BodyAttributes.get_age_trainability_modifier("end", _xp_age)
+						var _m_str: float = float(_age_mods.get("str", 1.0))
+						var _m_end: float = float(_age_mods.get("end", 1.0))
 						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_WOOD * _m_str
 						entity.body.training_xp["end"] = entity.body.training_xp.get("end", 0.0) + GameConfig.BODY_XP_GATHER_WOOD * 0.5 * _m_end
 					"stone":
-						var _m_str = BodyAttributes.get_age_trainability_modifier("str", _xp_age)
-						var _m_tou = BodyAttributes.get_age_trainability_modifier("tou", _xp_age)
+						var _m_str: float = float(_age_mods.get("str", 1.0))
+						var _m_tou: float = float(_age_mods.get("tou", 1.0))
 						entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_GATHER_STONE * _m_str
 						entity.body.training_xp["tou"] = entity.body.training_xp.get("tou", 0.0) + GameConfig.BODY_XP_GATHER_STONE * 0.5 * _m_tou
 			## [Skill XP — Newell & Rosenbloom 1981 Power Law of Practice]

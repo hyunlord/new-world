@@ -160,10 +160,23 @@ pub fn age_trainability_modifier(axis: &str, age_years: f32) -> f32 {
     }
 }
 
+/// Compute age-based trainability modifiers in fixed axis order:
+/// `[str, agi, end, tou, rec]`.
+pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
+    [
+        age_trainability_modifier("str", age_years),
+        age_trainability_modifier("agi", age_years),
+        age_trainability_modifier("end", age_years),
+        age_trainability_modifier("tou", age_years),
+        age_trainability_modifier("rec", age_years),
+    ]
+}
+
 #[cfg(test)]
 mod tests {
     use super::{
-        age_trainability_modifier, calc_training_gain, compute_age_curve, compute_age_curves,
+        age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
+        compute_age_curve, compute_age_curves,
     };
 
     #[test]
@@ -241,5 +254,16 @@ mod tests {
         let adult = age_trainability_modifier("str", 25.0);
         let elder = age_trainability_modifier("str", 85.0);
         assert!(adult > elder);
+    }
+
+    #[test]
+    fn batch_trainability_order_matches_single_calls() {
+        let age = 44.0_f32;
+        let mods = age_trainability_modifiers(age);
+        assert_eq!(mods[0], age_trainability_modifier("str", age));
+        assert_eq!(mods[1], age_trainability_modifier("agi", age));
+        assert_eq!(mods[2], age_trainability_modifier("end", age));
+        assert_eq!(mods[3], age_trainability_modifier("tou", age));
+        assert_eq!(mods[4], age_trainability_modifier("rec", age));
     }
 }

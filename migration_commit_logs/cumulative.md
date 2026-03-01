@@ -626,3 +626,8 @@
 - `sim-systems::body`에 `compute_age_curves(age_years)` 배치 API를 추가하고, 인덱스 순서(`str/agi/end/tou/rec/dr`) 일치 테스트를 확장.
 - `sim-bridge`/`SimBridge`에 `body_compute_age_curves`를 추가해 6축 나이 커브를 단일 bridge 호출로 수신하는 경로를 제공.
 - `age_system`과 `entity_manager`의 realized 계산 루프가 배치 커브 결과를 재사용하도록 전환되어 body age curve hot path의 경계 호출 수를 축소.
+
+## Commit 128
+- `sim-systems::body`에 `age_trainability_modifiers(age_years)` 배치 API를 추가하고, 배치 인덱스 순서가 단건 호출과 일치하는 테스트를 확장.
+- `sim-bridge`/`SimBridge`에 `body_age_trainability_modifiers`를 추가해 연령 기반 훈련 효율 5축을 단일 bridge 호출로 수신하는 경로를 제공.
+- `gathering_system`과 `construction_system`의 XP 누적 경로가 배치 trainability 결과를 재사용하도록 전환되어 body trainability hot path의 경계 호출 수를 축소.
