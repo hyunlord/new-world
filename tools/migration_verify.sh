@@ -887,6 +887,18 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "false"
     fi
   }
+  count_artifact_presence() {
+    local raw_path="$1"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" ]]; then
+      return
+    fi
+    artifact_expected_count=$((artifact_expected_count + 1))
+    if [[ -f "${abs_path}" ]]; then
+      artifact_present_count=$((artifact_present_count + 1))
+    fi
+  }
   to_json_opt_bool_literal() {
     local raw_value="$1"
     if [[ "${raw_value}" == "true" || "${raw_value}" == "false" ]]; then
@@ -1023,6 +1035,17 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_exists="$(to_json_opt_exists "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_exists="$(to_json_opt_exists "${audit_owner_policy_compare_report_json}")"
   bench_report_json_exists="$(to_json_opt_exists "${bench_report_json}")"
+  artifact_expected_count=0
+  artifact_present_count=0
+  count_artifact_presence "${compile_report_json}"
+  count_artifact_presence "${audit_report_json}"
+  count_artifact_presence "${audit_duplicate_report_json}"
+  count_artifact_presence "${audit_conflict_markdown}"
+  count_artifact_presence "${audit_key_owner_policy_json}"
+  count_artifact_presence "${audit_owner_policy_markdown}"
+  count_artifact_presence "${audit_owner_policy_compare_report_json}"
+  count_artifact_presence "${bench_report_json}"
+  artifact_missing_count=$((artifact_expected_count - artifact_present_count))
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -1085,6 +1108,11 @@ if [[ -n "${verify_report_json}" ]]; then
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_value},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_value},
     "bench_report_json": ${bench_report_json_value}
+  },
+  "artifact_counts": {
+    "expected": ${artifact_expected_count},
+    "present": ${artifact_present_count},
+    "missing": ${artifact_missing_count}
   },
   "artifact_sha256": {
     "compile_report_json": ${compile_report_json_sha256},

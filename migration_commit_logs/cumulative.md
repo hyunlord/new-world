@@ -1300,3 +1300,8 @@
 - `migration_verify_report.json`에 `artifact_mtime_utc` 객체를 추가해 compile/audit/bench 아티팩트의 마지막 수정 시각(UTC)을 함께 기록.
 - 파일 미설정/미존재 항목은 `null`, 존재 항목은 ISO-8601 UTC 문자열로 표준화.
 - `/tmp/worldsim_audit_artifacts24/migration_verify_report.json`에서 compile mtime 반영과 non-bench 기준 bench mtime null을 확인.
+
+## Commit 263
+- `migration_verify_report.json`에 `artifact_counts`(`expected`, `present`, `missing`)를 추가해 산출물 상태를 요약 지표로 제공.
+- 경로가 설정된 아티팩트만 기대치에 포함하고 실제 파일 존재 여부로 present/missing을 계산하도록 집계 로직을 추가.
+- `/tmp/worldsim_audit_artifacts25/migration_verify_report.json`에서 expected=7, present=7, missing=0 반영을 확인.
