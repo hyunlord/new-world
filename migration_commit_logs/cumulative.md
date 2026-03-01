@@ -251,3 +251,8 @@
 - 이벤트 주입 경로의 `_calc_personality_scale` 곱셈/클램프 수식을 Rust helper(`stress_personality_scale`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 personality-scale API를 추가해 GDScript는 입력 수집 후 네이티브 호출 중심으로 전환.
 - HEXACO 편차 방향(`high_amplifies`)과 trait multiplier 의미를 유지한 채 성격 스케일 계산 경로를 일원화.
+
+## Commit 052
+- 이벤트 주입 경로의 `_calc_relationship_scale`, `_calc_context_scale` 수식을 Rust helper(`stress_relationship_scale`, `stress_context_scale`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 관계/상황 scale API를 추가하고 `StressSystem`은 입력 구성 후 네이티브 호출 중심으로 전환.
+- method 처리(`none`, `bond_strength`, unknown) 및 context multiplier clamp 범위를 유지하면서 이벤트 스케일링 계산 경로를 통일.

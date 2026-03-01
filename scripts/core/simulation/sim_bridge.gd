@@ -848,6 +848,36 @@ func stat_stress_personality_scale(
 	)
 
 
+## Delegates stress relationship scaling to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_relationship_scale(
+	method: String,
+	bond_strength: float,
+	min_mult: float,
+	max_mult: float
+):
+	return _call_native_if_exists(
+		"stat_stress_relationship_scale",
+		[
+			method,
+			bond_strength,
+			min_mult,
+			max_mult
+		]
+	)
+
+
+## Delegates stress context scaling to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_context_scale(active_multipliers: PackedFloat32Array):
+	return _call_native_if_exists(
+		"stat_stress_context_scale",
+		[
+			active_multipliers
+		]
+	)
+
+
 ## Delegates stress event final scaling to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_event_scaled(

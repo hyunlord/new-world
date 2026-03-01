@@ -1239,6 +1239,49 @@ static func stress_personality_scale(
 	return clampf(scale, 0.05, 4.0)
 
 
+## Computes relationship-derived stress scale for event injection.
+static func stress_relationship_scale(
+	method: String,
+	bond_strength: float,
+	min_mult: float,
+	max_mult: float
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_relationship_scale",
+		[
+			method,
+			bond_strength,
+			min_mult,
+			max_mult
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	if method == "none" or method == "":
+		return 1.0
+	if method == "bond_strength":
+		return clampf(min_mult + (max_mult - min_mult) * bond_strength, min_mult, max_mult)
+	return 1.0
+
+
+## Computes context-derived stress scale for event injection.
+static func stress_context_scale(active_multipliers: PackedFloat32Array) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_context_scale",
+		[
+			active_multipliers
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var scale: float = 1.0
+	for mult in active_multipliers:
+		scale *= mult
+	return clampf(scale, 0.1, 5.0)
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(

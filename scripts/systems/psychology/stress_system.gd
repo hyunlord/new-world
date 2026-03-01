@@ -462,23 +462,19 @@ func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
 
 
 func _calc_relationship_scale(context: Dictionary, r_def: Dictionary) -> float:
-	var method = r_def.get("method", "none")
-	if method == "none" or method == "":
-		return 1.0
-	if method == "bond_strength":
-		var bond = float(context.get("bond_strength", 0.5))
-		var min_m = float(r_def.get("min_mult", 0.3))
-		var max_m = float(r_def.get("max_mult", 1.5))
-		return clampf(min_m + (max_m - min_m) * bond, min_m, max_m)
-	return 1.0
+	var method: String = String(r_def.get("method", "none"))
+	var bond: float = float(context.get("bond_strength", 0.5))
+	var min_m: float = float(r_def.get("min_mult", 0.3))
+	var max_m: float = float(r_def.get("max_mult", 1.5))
+	return StatCurveScript.stress_relationship_scale(method, bond, min_m, max_m)
 
 
 func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
-	var scale: float = 1.0
+	var active_multipliers: PackedFloat32Array = PackedFloat32Array()
 	for key in c_mods:
 		if context.get(key, false):
-			scale *= float(c_mods[key])
-	return clampf(scale, 0.1, 5.0)
+			active_multipliers.append(float(c_mods[key]))
+	return StatCurveScript.stress_context_scale(active_multipliers)
 
 
 func _entity_has_trait(entity, trait_id: String) -> bool:

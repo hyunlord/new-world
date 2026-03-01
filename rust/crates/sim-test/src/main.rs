@@ -222,6 +222,14 @@ fn run_stress_math_bench(args: &[String]) {
             &[1_u8, 0_u8, 1_u8],
             &[if i % 2 == 0 { 1.15 } else { 0.9 }],
         );
+        let relationship_scale = stat_curve::stress_relationship_scale(
+            if i % 3 == 0 { "bond_strength" } else { "none" },
+            0.2 + 0.6 * t,
+            0.3,
+            1.5,
+        );
+        let context_scale =
+            stat_curve::stress_context_scale(&[1.1, if i % 2 == 0 { 0.9 } else { 1.3 }]);
         let event_scaled = stat_curve::stress_event_scaled(
             12.0 + 18.0 * t,
             0.8 + 0.5 * t,
@@ -363,6 +371,8 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(resilience)
             + black_box(work_eff)
             + black_box(personality_scale)
+            + black_box(relationship_scale)
+            + black_box(context_scale)
             + black_box(event_scaled.final_instant)
             + black_box(traces.total_contribution)
             + black_box(delta_step.delta)

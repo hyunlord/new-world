@@ -1302,6 +1302,23 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_relationship_scale(
+        &self,
+        method: GString,
+        bond_strength: f32,
+        min_mult: f32,
+        max_mult: f32,
+    ) -> f32 {
+        let method_string = method.to_string();
+        stat_curve::stress_relationship_scale(&method_string, bond_strength, min_mult, max_mult)
+    }
+
+    #[func]
+    fn stat_stress_context_scale(&self, active_multipliers: PackedFloat32Array) -> f32 {
+        stat_curve::stress_context_scale(&packed_f32_to_vec(&active_multipliers))
+    }
+
+    #[func]
     fn stat_stress_event_scaled(
         &self,
         base_instant: f32,

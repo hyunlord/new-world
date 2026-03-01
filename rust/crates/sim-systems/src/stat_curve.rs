@@ -1093,6 +1093,34 @@ pub fn stress_personality_scale(
     scale.clamp(0.05, 4.0)
 }
 
+/// Computes relationship-derived stress scaling for event injection.
+pub fn stress_relationship_scale(
+    method: &str,
+    bond_strength: f32,
+    min_mult: f32,
+    max_mult: f32,
+) -> f32 {
+    if method.is_empty() || method == "none" {
+        return 1.0;
+    }
+    if method == "bond_strength" {
+        let lo = min_mult.min(max_mult);
+        let hi = min_mult.max(max_mult);
+        let raw = min_mult + (max_mult - min_mult) * bond_strength;
+        return raw.clamp(lo, hi);
+    }
+    1.0
+}
+
+/// Computes context-derived stress scaling for event injection.
+pub fn stress_context_scale(active_multipliers: &[f32]) -> f32 {
+    let mut scale = 1.0_f32;
+    for mult in active_multipliers {
+        scale *= *mult;
+    }
+    scale.clamp(0.1, 5.0)
+}
+
 /// Scales stress event instant/per_tick with accumulated multipliers.
 pub fn stress_event_scaled(
     base_instant: f32,
@@ -1658,6 +1686,24 @@ mod tests {
         let high = stress_personality_scale(&[1.0], &[2.0], &[1_u8], &[3.0]);
         assert_eq!(low, 0.05);
         assert_eq!(high, 4.0);
+    }
+
+    #[test]
+    fn stress_relationship_scale_matches_bond_formula() {
+        assert_eq!(stress_relationship_scale("none", 0.9, 0.3, 1.5), 1.0);
+        let scaled = stress_relationship_scale("bond_strength", 0.8, 0.3, 1.5);
+        assert!((scaled - 1.26).abs() < 1e-6);
+        assert_eq!(stress_relationship_scale("unknown", 0.8, 0.3, 1.5), 1.0);
+    }
+
+    #[test]
+    fn stress_context_scale_applies_and_clamps_multipliers() {
+        let normal = stress_context_scale(&[1.2, 0.8, 1.5]);
+        let low = stress_context_scale(&[0.01, 0.01]);
+        let high = stress_context_scale(&[10.0, 10.0]);
+        assert!((normal - 1.44).abs() < 1e-6);
+        assert_eq!(low, 0.1);
+        assert_eq!(high, 5.0);
     }
 
     #[test]
