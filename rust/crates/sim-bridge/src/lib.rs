@@ -5,10 +5,14 @@
 //! reused by the future FFI layer.
 
 mod pathfinding_backend;
+mod pathfinding_gpu;
 
 use godot::prelude::*;
 use pathfinding_backend::{
     get_backend_mode, has_gpu_backend, set_backend_mode, PATHFIND_BACKEND_GPU,
+};
+use pathfinding_gpu::{
+    pathfind_grid_batch_vec2_gpu_bytes, pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
 };
 use sim_systems::{
     body,
@@ -330,59 +334,6 @@ pub fn pathfind_grid_batch_vec2_bytes(
         out.push(path);
     }
     Ok(out)
-}
-
-fn pathfind_grid_gpu_bytes(
-    width: i32,
-    height: i32,
-    walkable: &[u8],
-    move_cost: &[f32],
-    from_x: i32,
-    from_y: i32,
-    to_x: i32,
-    to_y: i32,
-    max_steps: usize,
-) -> Result<Vec<GridPos>, PathfindError> {
-    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
-    pathfind_grid_bytes(
-        width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-    )
-}
-
-fn pathfind_grid_batch_vec2_gpu_bytes(
-    width: i32,
-    height: i32,
-    walkable: &[u8],
-    move_cost: &[f32],
-    from_points: &[Vector2],
-    to_points: &[Vector2],
-    max_steps: usize,
-) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
-    pathfind_grid_batch_vec2_bytes(
-        width,
-        height,
-        walkable,
-        move_cost,
-        from_points,
-        to_points,
-        max_steps,
-    )
-}
-
-fn pathfind_grid_batch_xy_gpu_bytes(
-    width: i32,
-    height: i32,
-    walkable: &[u8],
-    move_cost: &[f32],
-    from_xy: &[i32],
-    to_xy: &[i32],
-    max_steps: usize,
-) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
-    pathfind_grid_batch_xy_bytes(
-        width, height, walkable, move_cost, from_xy, to_xy, max_steps,
-    )
 }
 
 fn dispatch_pathfind_grid_bytes(

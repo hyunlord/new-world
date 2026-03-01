@@ -1095,3 +1095,8 @@
 - `localization_audit`에 `--compare-key-owner-policy-auto`를 추가해 manifest의 `key_owners_path`를 기준으로 owner 정책 drift를 자동 비교.
 - `migration_verify` 기본 audit 단계에 auto compare를 포함시켜 owner 정책 일관성을 기본 게이트로 승격.
 - 필요 시 `MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY`로 명시 대상 비교를 override 가능하게 유지.
+
+## Commit 222
+- `sim-bridge` GPU placeholder pathfinding 엔트리포인트를 `pathfinding_gpu.rs`로 분리해 GPU 구현 확장 지점을 모듈화.
+- 기존 dispatch 인터페이스/동작은 유지하고 CPU fallback semantics를 동일하게 보장.
+- 전체 검증(`migration_verify --with-benches`)으로 checksum 유지 확인.
