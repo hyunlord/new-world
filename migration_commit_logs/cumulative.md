@@ -191,3 +191,8 @@
 - `StressSystem`의 resilience 업데이트 수식을 Rust 함수(`stress_resilience_value`)로 이관.
 - HEXACO/지원도/allostatic/피로/scar 보정 입력을 받아 최종 resilience를 네이티브 경로에서 계산.
 - stress 수학 업데이트 경로의 remaining hot path를 추가로 네이티브화.
+
+## Commit 040
+- `sim-test`에 `--bench-stress-math` CLI 모드를 추가해 stress 수학 Rust 경로를 마이크로벤치 가능하게 확장.
+- iteration 옵션(`--iters`)과 `black_box`/`Instant` 기반 측정으로 회귀 비교에 필요한 지표(`elapsed_ms`, `ns_per_iter`, `checksum`)를 출력.
+- 기존 기본 실행 경로는 유지하면서 성능 검증용 실행 경로를 분리해 지속 측정 기반 최적화 루프를 지원.
