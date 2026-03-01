@@ -842,3 +842,8 @@
 - `pathfinder.gd` 배치 Rust 경로탐색에서 `PackedInt32Array`/`PackedVector2Array` scratch 버퍼를 재사용하도록 전환.
 - 호출마다 임시 배열을 새로 만들던 경로를 `resize + index write` 방식으로 바꿔 allocation churn을 감소.
 - 결과 수치 의미는 유지하면서 대규모 배치 pathfinding 경로의 런타임 효율을 개선.
+
+## Commit 171
+- `pathfinder`에 packed XY 전용 batch API를 추가하고, movement 시스템이 recalc 요청을 Dictionary 배열 대신 packed 좌표 버퍼로 구성하도록 전환.
+- 배치 경로 계산에서 Rust batch-xy 경로를 우선 사용하고 vec2/GDScript fallback을 유지.
+- 경로 의미는 유지하면서 movement tick의 요청 구성 오버헤드를 완화.

@@ -4,6 +4,8 @@ var _entity_manager: RefCounted
 var _world_data: RefCounted
 var _pathfinder: RefCounted
 var _building_manager: RefCounted
+var _recalc_from_xy: PackedInt32Array = PackedInt32Array()
+var _recalc_to_xy: PackedInt32Array = PackedInt32Array()
 
 
 func _init() -> void:
@@ -24,7 +26,8 @@ func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	var path_entities: Array = []
 	var recalc_entities: Array = []
-	var recalc_requests: Array = []
+	_recalc_from_xy.resize(0)
+	_recalc_to_xy.resize(0)
 
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -55,22 +58,26 @@ func execute_tick(tick: int) -> void:
 			continue
 
 		# Move: A* if pathfinder available, else greedy
-		if _pathfinder != null:
-			path_entities.append(entity)
-			if _needs_path_recalc(entity, tick):
-				recalc_entities.append(entity)
-				recalc_requests.append({
-					"from": entity.position,
-					"to": entity.action_target,
-				})
-		else:
-			_move_toward_target(entity, tick)
+			if _pathfinder != null:
+				path_entities.append(entity)
+				if _needs_path_recalc(entity, tick):
+					recalc_entities.append(entity)
+					_recalc_from_xy.append(entity.position.x)
+					_recalc_from_xy.append(entity.position.y)
+					_recalc_to_xy.append(entity.action_target.x)
+					_recalc_to_xy.append(entity.action_target.y)
+			else:
+				_move_toward_target(entity, tick)
 
-	if _pathfinder != null and not recalc_entities.is_empty():
-		var paths: Array = _pathfinder.find_paths_batch(_world_data, recalc_requests)
-		var count: int = mini(paths.size(), recalc_entities.size())
-		for i in range(count):
-			_apply_recalculated_path(recalc_entities[i], paths[i])
+		if _pathfinder != null and not recalc_entities.is_empty():
+			var paths: Array = _pathfinder.find_paths_batch_xy(
+				_world_data,
+				_recalc_from_xy,
+				_recalc_to_xy
+			)
+			var count: int = mini(paths.size(), recalc_entities.size())
+			for i in range(count):
+				_apply_recalculated_path(recalc_entities[i], paths[i])
 		for i in range(count, recalc_entities.size()):
 			_apply_recalculated_path(recalc_entities[i], [])
 

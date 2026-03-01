@@ -52,6 +52,33 @@ func find_paths_batch(world_data: RefCounted, requests: Array, max_steps: int = 
 	return out
 
 
+## Batch pathfinding for packed XY request pairs.
+## Inputs are [x0, y0, x1, y1, ...] for from/to arrays.
+func find_paths_batch_xy(
+	world_data: RefCounted,
+	from_xy: PackedInt32Array,
+	to_xy: PackedInt32Array,
+	max_steps: int = 200
+) -> Array:
+	if from_xy.is_empty() or to_xy.is_empty():
+		return []
+	if from_xy.size() != to_xy.size() or (from_xy.size() % 2) != 0:
+		return []
+
+	var rust_batch: Dictionary = _find_paths_rust_batch_xy(world_data, from_xy, to_xy, max_steps)
+	if bool(rust_batch.get("used", false)):
+		return rust_batch.get("paths", [])
+
+	var out: Array = []
+	var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
+	for i in range(pair_count):
+		var base_idx: int = i * 2
+		var from: Vector2i = Vector2i(from_xy[base_idx], from_xy[base_idx + 1])
+		var to: Vector2i = Vector2i(to_xy[base_idx], to_xy[base_idx + 1])
+		out.append(find_path(world_data, from, to, max_steps))
+	return out
+
+
 func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Dictionary:
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
@@ -180,6 +207,81 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	if result == null or not (result is Array):
 		return {"used": false, "paths": []}
 
+	var normalized: Array = []
+	var groups: Array = result
+	for i in range(groups.size()):
+		normalized.append(_normalize_path_result(groups[i]))
+	return {"used": true, "paths": normalized}
+
+
+func _find_paths_rust_batch_xy(
+	world_data: RefCounted,
+	from_xy: PackedInt32Array,
+	to_xy: PackedInt32Array,
+	max_steps: int
+) -> Dictionary:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return {"used": false, "paths": []}
+	var has_batch_xy: bool = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
+	var has_batch_vec2: bool = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	if not has_batch_xy and not has_batch_vec2:
+		return {"used": false, "paths": []}
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return {"used": false, "paths": []}
+
+	var result: Variant = null
+	var used_batch_xy: bool = false
+	if has_batch_xy:
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_XY_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from_xy,
+			to_xy,
+			max_steps
+		)
+		used_batch_xy = (result != null)
+
+	if result == null and has_batch_vec2:
+		var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
+		if _batch_from_points.size() != pair_count:
+			_batch_from_points.resize(pair_count)
+		if _batch_to_points.size() != pair_count:
+			_batch_to_points.resize(pair_count)
+		for i in range(pair_count):
+			var base_idx: int = i * 2
+			_batch_from_points[i] = Vector2(from_xy[base_idx], from_xy[base_idx + 1])
+			_batch_to_points[i] = Vector2(to_xy[base_idx], to_xy[base_idx + 1])
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			_batch_from_points,
+			_batch_to_points,
+			max_steps
+		)
+
+	if result == null:
+		return {"used": false, "paths": []}
+
+	if used_batch_xy:
+		if not (result is Array):
+			return {"used": false, "paths": []}
+		var xy_groups: Array = result
+		var xy_normalized: Array = []
+		for i in range(xy_groups.size()):
+			xy_normalized.append(_normalize_path_xy_result(xy_groups[i]))
+		return {"used": true, "paths": xy_normalized}
+
+	if not (result is Array):
+		return {"used": false, "paths": []}
 	var normalized: Array = []
 	var groups: Array = result
 	for i in range(groups.size()):
