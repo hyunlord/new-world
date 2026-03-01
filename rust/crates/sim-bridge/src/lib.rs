@@ -1323,6 +1323,21 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_building_campfire_social_boost(
+        &self,
+        is_night: bool,
+        day_boost: f32,
+        night_boost: f32,
+    ) -> f32 {
+        body::building_campfire_social_boost(is_night, day_boost, night_boost)
+    }
+
+    #[func]
+    fn body_building_add_capped(&self, current: f32, delta: f32, cap: f32) -> f32 {
+        body::building_add_capped(current, delta, cap)
+    }
+
+    #[func]
     fn body_cognition_activity_modifier(
         &self,
         active_skill_count: i32,

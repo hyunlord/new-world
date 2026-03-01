@@ -972,6 +972,20 @@ pub fn movement_should_skip_tick(skip_mod: i32, tick: i32, entity_id: i32) -> bo
     skip_mod > 0 && (tick + entity_id) % skip_mod == 0
 }
 
+/// Campfire social boost selector by day/night.
+pub fn building_campfire_social_boost(is_night: bool, day_boost: f32, night_boost: f32) -> f32 {
+    if is_night {
+        night_boost
+    } else {
+        day_boost
+    }
+}
+
+/// Additive capped value update.
+pub fn building_add_capped(current: f32, delta: f32, cap: f32) -> f32 {
+    (current + delta).min(cap)
+}
+
 /// Intelligence activity modifier ("use it or lose it").
 pub fn cognition_activity_modifier(
     active_skill_count: i32,
@@ -1488,7 +1502,8 @@ mod tests {
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
-        movement_should_skip_tick, cognition_activity_modifier,
+        movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
+        cognition_activity_modifier,
         cognition_ace_fluid_decline_mult,
     };
 
@@ -2037,6 +2052,18 @@ mod tests {
         assert!(movement_should_skip_tick(3, 5, 1));
         assert!(!movement_should_skip_tick(3, 5, 2));
         assert!(!movement_should_skip_tick(0, 6, 0));
+    }
+
+    #[test]
+    fn building_campfire_social_boost_selects_by_time() {
+        assert!((building_campfire_social_boost(true, 0.01, 0.02) - 0.02).abs() < 1e-6);
+        assert!((building_campfire_social_boost(false, 0.01, 0.02) - 0.01).abs() < 1e-6);
+    }
+
+    #[test]
+    fn building_add_capped_limits_to_cap() {
+        assert!((building_add_capped(0.8, 0.1, 1.0) - 0.9).abs() < 1e-6);
+        assert!((building_add_capped(0.95, 0.2, 1.0) - 1.0).abs() < 1e-6);
     }
 
     #[test]
