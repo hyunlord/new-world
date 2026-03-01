@@ -7,7 +7,7 @@
 use godot::prelude::*;
 use sim_systems::{
     body,
-    pathfinding::{find_path, GridCostMap, GridPos},
+    pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     stat_curve,
 };
 use std::sync::atomic::{AtomicU8, Ordering};
@@ -191,6 +191,7 @@ pub fn pathfind_grid_batch_bytes(
     }
 
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    let mut workspace = PathfindWorkspace::new((width * height) as usize);
     let mut out = Vec::with_capacity(from_points.len());
     for idx in 0..from_points.len() {
         let (from_x, from_y) = from_points[idx];
@@ -199,11 +200,12 @@ pub fn pathfind_grid_batch_bytes(
             out.push(vec![GridPos::new(from_x, from_y)]);
             continue;
         }
-        let path = find_path(
+        let path = find_path_with_workspace(
             &grid,
             GridPos::new(from_x, from_y),
             GridPos::new(to_x, to_y),
             max_steps,
+            &mut workspace,
         );
         out.push(path);
     }
@@ -248,6 +250,7 @@ pub fn pathfind_grid_batch_xy_bytes(
     }
 
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    let mut workspace = PathfindWorkspace::new((width * height) as usize);
     let pair_count = from_xy.len() / 2;
     let mut out = Vec::with_capacity(pair_count);
     let mut cursor = 0usize;
@@ -261,11 +264,12 @@ pub fn pathfind_grid_batch_xy_bytes(
             cursor += 2;
             continue;
         }
-        let path = find_path(
+        let path = find_path_with_workspace(
             &grid,
             GridPos::new(from_x, from_y),
             GridPos::new(to_x, to_y),
             max_steps,
+            &mut workspace,
         );
         out.push(path);
         cursor += 2;
@@ -309,6 +313,7 @@ pub fn pathfind_grid_batch_vec2_bytes(
     }
 
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    let mut workspace = PathfindWorkspace::new((width * height) as usize);
     let mut out = Vec::with_capacity(from_points.len());
     for idx in 0..from_points.len() {
         let from = from_points[idx];
@@ -321,11 +326,12 @@ pub fn pathfind_grid_batch_vec2_bytes(
             out.push(vec![GridPos::new(from_x, from_y)]);
             continue;
         }
-        let path = find_path(
+        let path = find_path_with_workspace(
             &grid,
             GridPos::new(from_x, from_y),
             GridPos::new(to_x, to_y),
             max_steps,
+            &mut workspace,
         );
         out.push(path);
     }

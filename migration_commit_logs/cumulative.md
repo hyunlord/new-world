@@ -1050,3 +1050,8 @@
 - `sim-bridge` pathfinding 테스트에 시작점 out-of-bounds 케이스(단건/배치)를 추가해 OOB 시작 질의의 빈 경로 반환 의미를 고정.
 - batch 테스트에서 OOB/정상 질의를 함께 검증해 부분 실패 시나리오의 동작 안정성을 보강.
 - 런타임 변경 없이 경계 조건 회귀 탐지 범위를 확장.
+
+## Commit 213
+- `sim-systems`에 재사용 가능한 `PathfindWorkspace`와 `find_path_with_workspace`를 추가해 pathfinding scratch 버퍼를 호출 간 재사용 가능하게 확장.
+- `sim-bridge` batch pathfinding(tuple/xy/vec2)이 batch당 1회 workspace를 생성해 모든 질의에서 재사용하도록 연결.
+- checksum 유지 상태로 batch 경로의 메모리 할당 churn을 추가 완화.

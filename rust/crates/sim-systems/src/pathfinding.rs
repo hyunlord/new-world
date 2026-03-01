@@ -43,6 +43,51 @@ impl PartialOrd for OpenEntry {
     }
 }
 
+/// Reusable scratch buffers for repeated pathfinding on the same grid size.
+#[derive(Debug, Clone)]
+pub struct PathfindWorkspace {
+    node_count: usize,
+    open_set: BinaryHeap<OpenEntry>,
+    came_from: Vec<Option<usize>>,
+    g_score: Vec<f32>,
+    f_score: Vec<f32>,
+    closed_set: Vec<bool>,
+}
+
+impl PathfindWorkspace {
+    /// Creates a workspace sized for `node_count` grid nodes.
+    pub fn new(node_count: usize) -> Self {
+        Self {
+            node_count,
+            open_set: BinaryHeap::new(),
+            came_from: vec![None; node_count],
+            g_score: vec![INF_SCORE; node_count],
+            f_score: vec![INF_SCORE; node_count],
+            closed_set: vec![false; node_count],
+        }
+    }
+
+    fn ensure_node_count(&mut self, node_count: usize) {
+        if self.node_count == node_count {
+            return;
+        }
+        self.node_count = node_count;
+        self.open_set.clear();
+        self.came_from = vec![None; node_count];
+        self.g_score = vec![INF_SCORE; node_count];
+        self.f_score = vec![INF_SCORE; node_count];
+        self.closed_set = vec![false; node_count];
+    }
+
+    fn reset(&mut self) {
+        self.open_set.clear();
+        self.came_from.fill(None);
+        self.g_score.fill(INF_SCORE);
+        self.f_score.fill(INF_SCORE);
+        self.closed_set.fill(false);
+    }
+}
+
 /// Lightweight grid view for A* pathfinding.
 ///
 /// - `walkable`: whether each tile is traversable.
@@ -181,6 +226,19 @@ impl GridCostMap {
 /// - returns empty path when target is not walkable
 /// - bounded by `max_steps` to avoid pathological spikes
 pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usize) -> Vec<GridPos> {
+    let node_count = (grid.width * grid.height) as usize;
+    let mut workspace = PathfindWorkspace::new(node_count);
+    find_path_with_workspace(grid, from, to, max_steps, &mut workspace)
+}
+
+/// A* pathfinding using caller-provided reusable scratch buffers.
+pub fn find_path_with_workspace(
+    grid: &GridCostMap,
+    from: GridPos,
+    to: GridPos,
+    max_steps: usize,
+    workspace: &mut PathfindWorkspace,
+) -> Vec<GridPos> {
     if from == to {
         return vec![from];
     }
@@ -202,27 +260,23 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
     let to_x = to.x;
     let to_y = to.y;
     let node_count = (grid.width * grid.height) as usize;
+    workspace.ensure_node_count(node_count);
+    workspace.reset();
 
-    let mut open_set: BinaryHeap<OpenEntry> = BinaryHeap::new();
-    let mut came_from: Vec<Option<usize>> = vec![None; node_count];
-    let mut g_score: Vec<f32> = vec![INF_SCORE; node_count];
-    let mut f_score: Vec<f32> = vec![INF_SCORE; node_count];
-    let mut closed_set: Vec<bool> = vec![false; node_count];
-
-    g_score[from_idx] = 0.0;
-    f_score[from_idx] = chebyshev_xy(from.x, from.y, to_x, to_y);
-    open_set.push(OpenEntry {
+    workspace.g_score[from_idx] = 0.0;
+    workspace.f_score[from_idx] = chebyshev_xy(from.x, from.y, to_x, to_y);
+    workspace.open_set.push(OpenEntry {
         idx: from_idx,
-        f: f_score[from_idx],
+        f: workspace.f_score[from_idx],
     });
 
     let mut steps = 0usize;
-    while let Some(current_entry) = open_set.pop() {
+    while let Some(current_entry) = workspace.open_set.pop() {
         let current_idx = current_entry.idx;
-        if closed_set[current_idx] {
+        if workspace.closed_set[current_idx] {
             continue;
         }
-        if current_entry.f > f_score[current_idx] {
+        if current_entry.f > workspace.f_score[current_idx] {
             continue;
         }
         if steps >= max_steps {
@@ -231,10 +285,10 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
         steps += 1;
 
         if current_idx == to_idx {
-            return reconstruct_path(&came_from, current_idx, grid.width);
+            return reconstruct_path(&workspace.came_from, current_idx, grid.width);
         }
 
-        closed_set[current_idx] = true;
+        workspace.closed_set[current_idx] = true;
         let current_x = (current_idx as i32) % grid.width;
         let current_y = (current_idx as i32) / grid.width;
 
@@ -254,7 +308,7 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                     continue;
                 }
                 let neighbor_idx = (neighbor_y * grid.width + neighbor_x) as usize;
-                if closed_set[neighbor_idx] || !grid.walkable[neighbor_idx] {
+                if workspace.closed_set[neighbor_idx] || !grid.walkable[neighbor_idx] {
                     continue;
                 }
 
@@ -263,14 +317,15 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                 } else {
                     DIAGONAL_COST
                 };
-                let tentative_g = g_score[current_idx] + (step_cost * grid.move_cost[neighbor_idx]);
+                let tentative_g =
+                    workspace.g_score[current_idx] + (step_cost * grid.move_cost[neighbor_idx]);
 
-                if tentative_g < g_score[neighbor_idx] {
-                    came_from[neighbor_idx] = Some(current_idx);
-                    g_score[neighbor_idx] = tentative_g;
+                if tentative_g < workspace.g_score[neighbor_idx] {
+                    workspace.came_from[neighbor_idx] = Some(current_idx);
+                    workspace.g_score[neighbor_idx] = tentative_g;
                     let neighbor_f = tentative_g + chebyshev_xy(neighbor_x, neighbor_y, to_x, to_y);
-                    f_score[neighbor_idx] = neighbor_f;
-                    open_set.push(OpenEntry {
+                    workspace.f_score[neighbor_idx] = neighbor_f;
+                    workspace.open_set.push(OpenEntry {
                         idx: neighbor_idx,
                         f: neighbor_f,
                     });
@@ -305,7 +360,7 @@ fn reconstruct_path(came_from: &[Option<usize>], mut current_idx: usize, width: 
 
 #[cfg(test)]
 mod tests {
-    use super::{find_path, GridCostMap, GridPos};
+    use super::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace};
 
     #[test]
     fn returns_singleton_when_from_equals_to() {
@@ -379,5 +434,20 @@ mod tests {
         let grid = GridCostMap::new(8, 8);
         let path = find_path(&grid, GridPos::new(-1, 0), GridPos::new(6, 6), 200);
         assert!(path.is_empty());
+    }
+
+    #[test]
+    fn reuses_workspace_without_state_leak() {
+        let mut grid = GridCostMap::new(8, 8);
+        grid.set_walkable(3, 3, false);
+
+        let mut ws = PathfindWorkspace::new(64);
+        let path_a = find_path_with_workspace(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300, &mut ws);
+        let path_b = find_path_with_workspace(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300, &mut ws);
+
+        let expected_a = find_path(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300);
+        let expected_b = find_path(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300);
+        assert_eq!(path_a, expected_a);
+        assert_eq!(path_b, expected_b);
     }
 }
