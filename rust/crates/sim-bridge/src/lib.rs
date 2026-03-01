@@ -341,6 +341,25 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_calc_training_gains(
+        &self,
+        potentials: PackedInt32Array,
+        trainabilities: PackedInt32Array,
+        xps: PackedFloat32Array,
+        training_ceilings: PackedFloat32Array,
+        xp_for_full_progress: f32,
+    ) -> PackedInt32Array {
+        let gains = body::calc_training_gains(
+            potentials.as_slice(),
+            trainabilities.as_slice(),
+            xps.as_slice(),
+            training_ceilings.as_slice(),
+            xp_for_full_progress,
+        );
+        vec_i32_to_packed(gains)
+    }
+
+    #[func]
     fn body_age_trainability_modifier(&self, axis: GString, age_years: f32) -> f32 {
         let axis_string = axis.to_string();
         body::age_trainability_modifier(axis_string.as_str(), age_years)

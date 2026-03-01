@@ -65,6 +65,8 @@ const _AGE_CURVE_AXES: Array[String] = ["str", "agi", "end", "tou", "rec", "dr"]
 const _AGE_CURVE_AXIS_COUNT: int = 6
 const _AGE_TRAINABILITY_AXES: Array[String] = ["str", "agi", "end", "tou", "rec"]
 const _AGE_TRAINABILITY_AXIS_COUNT: int = 5
+const _TRAINING_GAIN_AXES: Array[String] = ["str", "agi", "end", "tou", "rec"]
+const _TRAINING_GAIN_AXIS_COUNT: int = 5
 
 static var _bridge_checked: bool = false
 static var _bridge_ref: Object = null
@@ -230,6 +232,49 @@ func calc_training_gain(axis: String) -> int:
 	var train_factor: float = clampf(float(trainability_value) / 500.0, 0.1, 2.0)
 	var gain: float = max_gain * xp_factor * train_factor
 	return clampi(int(gain), 0, int(max_gain * 2.0))
+
+
+## 훈련 gain 5축 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+func calc_training_gain_batch() -> Dictionary:
+	var potentials: PackedInt32Array = PackedInt32Array()
+	var trainabilities: PackedInt32Array = PackedInt32Array()
+	var xps: PackedFloat32Array = PackedFloat32Array()
+	var training_ceilings: PackedFloat32Array = PackedFloat32Array()
+
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		potentials.append(int(potential.get(axis, 700)))
+		trainabilities.append(int(trainability.get(axis, 500)))
+		xps.append(float(training_xp.get(axis, 0.0)))
+		training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_training_gains",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result is PackedInt32Array:
+		var packed: PackedInt32Array = rust_result
+		if packed.size() >= _TRAINING_GAIN_AXIS_COUNT:
+			return {
+				"str": int(packed[0]),
+				"agi": int(packed[1]),
+				"end": int(packed[2]),
+				"tou": int(packed[3]),
+				"rec": int(packed[4]),
+			}
+
+	var gains: Dictionary = {}
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		gains[axis] = calc_training_gain(axis)
+	return gains
 
 ## 아동기 환경 평균 → trainability 영구 수정
 ## age_system이 12세 도달 시 1회 호출

@@ -631,3 +631,8 @@
 - `sim-systems::body`에 `age_trainability_modifiers(age_years)` 배치 API를 추가하고, 배치 인덱스 순서가 단건 호출과 일치하는 테스트를 확장.
 - `sim-bridge`/`SimBridge`에 `body_age_trainability_modifiers`를 추가해 연령 기반 훈련 효율 5축을 단일 bridge 호출로 수신하는 경로를 제공.
 - `gathering_system`과 `construction_system`의 XP 누적 경로가 배치 trainability 결과를 재사용하도록 전환되어 body trainability hot path의 경계 호출 수를 축소.
+
+## Commit 129
+- `sim-systems::body`에 `calc_training_gains(...)` 배치 API를 추가하고, 배치 결과가 단건 `calc_training_gain`과 동일함을 테스트로 검증.
+- `sim-bridge`/`SimBridge`에 `body_calc_training_gains`를 추가해 training gain 5축을 단일 bridge 호출로 계산하는 경로를 제공.
+- `body_attributes.calc_training_gain_batch`와 `age_system` 연간 재계산 루프가 배치 gain 결과를 재사용하도록 전환되어 body training gain hot path의 경계 호출 수를 축소.

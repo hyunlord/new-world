@@ -1233,6 +1233,27 @@ func body_calc_training_gain(
 	)
 
 
+## Delegates batched body training gain computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_calc_training_gains(
+	potentials: PackedInt32Array,
+	trainabilities: PackedInt32Array,
+	xps: PackedFloat32Array,
+	training_ceilings: PackedFloat32Array,
+	xp_for_full_progress: float
+):
+	return _call_native_if_exists(
+		"body_calc_training_gains",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			xp_for_full_progress
+		]
+	)
+
+
 ## Delegates age-based body trainability modifier to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_age_trainability_modifier(axis: String, age_years: float):

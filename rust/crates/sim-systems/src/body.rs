@@ -72,6 +72,34 @@ pub fn calc_training_gain(
     clamped_gain as i32
 }
 
+/// Compute training gains for multiple axes in one pass.
+///
+/// Uses the shortest input length among the provided slices.
+pub fn calc_training_gains(
+    potentials: &[i32],
+    trainabilities: &[i32],
+    xps: &[f32],
+    training_ceilings: &[f32],
+    xp_for_full_progress: f32,
+) -> Vec<i32> {
+    let len = potentials
+        .len()
+        .min(trainabilities.len())
+        .min(xps.len())
+        .min(training_ceilings.len());
+    let mut out = Vec::with_capacity(len);
+    for idx in 0..len {
+        out.push(calc_training_gain(
+            potentials[idx],
+            trainabilities[idx],
+            xps[idx],
+            training_ceilings[idx],
+            xp_for_full_progress,
+        ));
+    }
+    out
+}
+
 /// Age-based trainability modifier for each body axis.
 ///
 /// Mirrors `BodyAttributes.get_age_trainability_modifier`.
@@ -176,6 +204,7 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 mod tests {
     use super::{
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
+        calc_training_gains,
         compute_age_curve, compute_age_curves,
     };
 
@@ -242,6 +271,26 @@ mod tests {
         let gain = calc_training_gain(1000, 5000, 10_000_000.0, 0.5, 1.0);
         assert!(gain <= 1000);
         assert!(gain > 0);
+    }
+
+    #[test]
+    fn batch_training_gains_match_single_calls() {
+        let potentials = [1000, 700, 900];
+        let trainabilities = [400, 600, 800];
+        let xps = [500.0_f32, 2500.0_f32, 10_000.0_f32];
+        let ceilings = [0.5_f32, 0.3_f32, 1.5_f32];
+        let batched = calc_training_gains(&potentials, &trainabilities, &xps, &ceilings, 10_000.0);
+        assert_eq!(batched.len(), 3);
+        for idx in 0..batched.len() {
+            let single = calc_training_gain(
+                potentials[idx],
+                trainabilities[idx],
+                xps[idx],
+                ceilings[idx],
+                10_000.0,
+            );
+            assert_eq!(batched[idx], single);
+        }
     }
 
     #[test]

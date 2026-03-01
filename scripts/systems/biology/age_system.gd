@@ -59,9 +59,10 @@ func execute_tick(tick: int) -> void:
 						})
 				# ── [B] realized 재계산 (5축: potential + training_gain × age_curve) ──
 				var age_curves: Dictionary = BodyAttributes.compute_age_curve_batch(body_age_y)
+				var training_gains: Dictionary = entity.body.calc_training_gain_batch()
 				for body_axis in ["str", "agi", "end", "tou", "rec"]:
 					var old_realized: int = entity.body.realized.get(body_axis, 0)
-					var gain: int = entity.body.calc_training_gain(body_axis)
+					var gain: int = int(training_gains.get(body_axis, 0))
 					var age_c: float = float(age_curves.get(body_axis, 0.5))
 					var new_realized: int = clampi(int(float(entity.body.potential.get(body_axis, 700) + gain) * age_c), 0, 15000)
 					entity.body.realized[body_axis] = new_realized
