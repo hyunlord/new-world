@@ -1160,3 +1160,8 @@
 - `sim-test`에 `--bench-pathfind-backend-smoke`를 추가해 `auto/cpu/gpu` 3모드의 pathfinding dispatch 동작을 동일 입력으로 연속 검증.
 - `migration_verify`에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE`/`MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS`를 추가하고, smoke 출력 파싱으로 모드 존재/체크섬 일치/dispatch total/CPU mode resolved를 강제.
 - `MIGRATION_BENCH_PATH_BACKEND_SMOKE=true MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS=5 tools/migration_verify.sh --with-benches` 기준으로 smoke + 기존 checksum 게이트 동시 통과를 확인.
+
+## Commit 235
+- `migration_verify` smoke 검증에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED`/`MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED`를 추가해 mode별 resolved 기대값을 명시적으로 강제할 수 있게 확장.
+- smoke 파서가 `resolved_auto/resolved_gpu`를 함께 추출하고, 기대값 지정 시 불일치 즉시 실패하도록 게이트를 강화.
+- CPU fallback 환경에서 `auto=cpu`, `gpu=cpu` 기대값을 적용한 전체 검증(`tools/migration_verify.sh --with-benches`) 통과를 확인.

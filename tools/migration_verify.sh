@@ -114,6 +114,8 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   path_backend="${MIGRATION_BENCH_PATH_BACKEND:-auto}"
   path_backend_smoke="${MIGRATION_BENCH_PATH_BACKEND_SMOKE:-false}"
   path_backend_smoke_iters="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS:-10}"
+  path_backend_smoke_expect_auto="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED:-}"
+  path_backend_smoke_expect_gpu="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED:-}"
   expected_resolved_backend="${MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND:-}"
   for value in "${path_iters}" "${stress_iters}" "${needs_iters}" "${path_backend_smoke_iters}"; do
     if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
@@ -137,7 +139,15 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND must be cpu or gpu" >&2
     exit 1
   fi
-  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} smoke=${path_backend_smoke} smoke_iters=${path_backend_smoke_iters} expected_resolved=${expected_resolved_backend:-none}"
+  if [[ -n "${path_backend_smoke_expect_auto}" && "${path_backend_smoke_expect_auto}" != "cpu" && "${path_backend_smoke_expect_auto}" != "gpu" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED must be cpu or gpu" >&2
+    exit 1
+  fi
+  if [[ -n "${path_backend_smoke_expect_gpu}" && "${path_backend_smoke_expect_gpu}" != "cpu" && "${path_backend_smoke_expect_gpu}" != "gpu" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED must be cpu or gpu" >&2
+    exit 1
+  fi
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} smoke=${path_backend_smoke} smoke_iters=${path_backend_smoke_iters} smoke_expect_auto=${path_backend_smoke_expect_auto:-none} smoke_expect_gpu=${path_backend_smoke_expect_gpu:-none} expected_resolved=${expected_resolved_backend:-none}"
 
   run_bench_and_check() {
     local name="$1"
@@ -292,6 +302,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
 
   run_path_backend_smoke_and_check() {
     local smoke_iters="$1"
+    local expect_auto="$2"
+    local expect_gpu="$3"
+    shift
+    shift
     shift
     local output
     output="$("$@")"
@@ -340,12 +354,24 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       fi
     done <<< "${total_lines}"
     local resolved_cpu
+    local resolved_auto
+    local resolved_gpu
+    resolved_auto="$(echo "${output}" | sed -n 's/.*mode=auto .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
     resolved_cpu="$(echo "${output}" | sed -n 's/.*mode=cpu .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
+    resolved_gpu="$(echo "${output}" | sed -n 's/.*mode=gpu .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
     if [[ "${resolved_cpu}" != "cpu" ]]; then
       echo "[migration_verify] pathfind-backend-smoke cpu mode must resolve to cpu, got=${resolved_cpu:-<empty>}" >&2
       exit 1
     fi
-    echo "[migration_verify] pathfind-backend-smoke checksums/dispatch totals ok: checksum=${checksum_auto} total_each=${expected_total}"
+    if [[ -n "${expect_auto}" && "${resolved_auto}" != "${expect_auto}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke auto mode resolve mismatch: expected=${expect_auto} got=${resolved_auto:-<empty>}" >&2
+      exit 1
+    fi
+    if [[ -n "${expect_gpu}" && "${resolved_gpu}" != "${expect_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke gpu mode resolve mismatch: expected=${expect_gpu} got=${resolved_gpu:-<empty>}" >&2
+      exit 1
+    fi
+    echo "[migration_verify] pathfind-backend-smoke checksums/dispatch/resolved ok: checksum=${checksum_auto} total_each=${expected_total} resolved_auto=${resolved_auto:-unknown} resolved_gpu=${resolved_gpu:-unknown}"
   }
 
   (
@@ -433,6 +459,8 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     if [[ "${path_backend_smoke}" == "true" ]]; then
       run_path_backend_smoke_and_check \
         "${path_backend_smoke_iters}" \
+        "${path_backend_smoke_expect_auto}" \
+        "${path_backend_smoke_expect_gpu}" \
         cargo run -q -p sim-test --release -- --bench-pathfind-backend-smoke --iters "${path_backend_smoke_iters}"
     fi
     if [[ "${stress_iters}" == "10000" ]]; then
