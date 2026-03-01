@@ -441,3 +441,8 @@
 - `HUD` 엔티티 패널 needs 갱신을 `StatQuery.get_normalized_batch_into` 1회 호출 + scratch buffer 재사용 구조로 전환.
 - `NEED_HUNGER/ENERGY/SOCIAL/THIRST/WARMTH/SAFETY` 개별 조회를 버퍼 인덱스 참조로 치환해 `StatQuery` 반복 호출을 축소.
 - 저배고픔 blink 판정은 추가 조회 없이 같은 batch 결과(`hunger_norm`)를 재사용해 HUD tick 핫패스를 경량화.
+
+## Commit 091
+- `HUD._process()`에서 건물 카운트(`built/wip`)와 stockpile 자원 합계를 동일 루프에서 함께 계산하도록 통합.
+- `get_all_buildings()` 결과를 1회 순회해 `UI_BLD_*`와 `UI_RES_*` 라벨 갱신 입력값을 동시에 수집.
+- 중복 순회 helper(`_get_stockpile_totals`)를 제거해 HUD 프레임 업데이트 경로를 경량화.

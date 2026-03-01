@@ -598,27 +598,31 @@ func _process(delta: float) -> void:
 				_last_pop_milestone = m
 				_add_notification("Population: %d!" % m, Color(0.3, 0.9, 0.3))
 
-	# Building count
+	# Building count + resource totals
 	if _building_manager != null:
 		var all_buildings: Array = _building_manager.get_all_buildings()
 		var built_count: int = 0
 		var wip_count: int = 0
+		var total_food: float = 0.0
+		var total_wood: float = 0.0
+		var total_stone: float = 0.0
 		for i in range(all_buildings.size()):
-			if all_buildings[i].is_built:
+			var building = all_buildings[i]
+			if building.is_built:
 				built_count += 1
+				if building.building_type == "stockpile":
+					total_food += float(building.storage.get("food", 0.0))
+					total_wood += float(building.storage.get("wood", 0.0))
+					total_stone += float(building.storage.get("stone", 0.0))
 			else:
 				wip_count += 1
 		if wip_count > 0:
 			_building_label.text = Locale.trf("UI_BLD_WIP_FMT", {"n": built_count, "wip": wip_count})
 		else:
 			_building_label.text = Locale.trf("UI_BLD_FMT", {"n": built_count})
-
-	# Resource totals (color-coded)
-	if _building_manager != null:
-		var totals: Dictionary = _get_stockpile_totals()
-		_food_label.text = Locale.trf("UI_RES_FOOD_FMT", {"n": int(totals.get("food", 0.0))})
-		_wood_label.text = Locale.trf("UI_RES_WOOD_FMT", {"n": int(totals.get("wood", 0.0))})
-		_stone_label.text = Locale.trf("UI_RES_STONE_FMT", {"n": int(totals.get("stone", 0.0))})
+		_food_label.text = Locale.trf("UI_RES_FOOD_FMT", {"n": int(total_food)})
+		_wood_label.text = Locale.trf("UI_RES_WOOD_FMT", {"n": int(total_wood)})
+		_stone_label.text = Locale.trf("UI_RES_STONE_FMT", {"n": int(total_stone)})
 
 	# Update selected entity
 	if _selected_entity_id >= 0 and _entity_manager:
@@ -804,20 +808,6 @@ func _update_notifications(delta: float) -> void:
 	for j in range(_notifications.size()):
 		if _notifications[j].node != null:
 			_notifications[j].node.position.y = j * 32.0
-
-
-func _get_stockpile_totals() -> Dictionary:
-	var totals: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
-	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-	for i in range(stockpiles.size()):
-		var sp = stockpiles[i]
-		if not sp.is_built:
-			continue
-		var keys: Array = sp.storage.keys()
-		for j in range(keys.size()):
-			var res: String = keys[j]
-			totals[res] = totals.get(res, 0.0) + sp.storage[res]
-	return totals
 
 
 func _get_building_by_id(bid: int):
