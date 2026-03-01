@@ -279,7 +279,7 @@ def _write_key_registry(path: Path, keys: List[str], active_keys: List[str]) -> 
     _write_json_if_changed(path, output)
 
 
-def run(project_root: Path, strict_duplicates: bool) -> int:
+def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> int:
     localization_root = project_root / "localization"
     manifest_path = localization_root / "manifest.json"
     manifest = _load_manifest(manifest_path)
@@ -374,6 +374,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     max_locale_duplicates = 0
     max_locale_duplicate_conflicts = 0
     max_locale_owner_rule_misses = 0
+    locale_summary: Dict[str, Dict[str, Any]] = {}
     for locale in supported_locales:
         compiled = _compile_locale(
             localization_root=localization_root,
@@ -483,6 +484,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             output["sources"] = locale_sources
         out_path = compiled_root / f"{locale}.json"
         updated = _write_json_if_changed(out_path, output)
+        locale_summary[locale] = {
+            "string_count": len(locale_strings),
+            "duplicate_key_count": duplicate_count,
+            "duplicate_conflict_count": duplicate_conflict_count,
+            "missing_key_fill_count": missing_filled_count,
+            "owner_rule_seen_count": owner_rule_seen_count,
+            "owner_rule_hit_count": owner_rule_hit_count,
+            "owner_rule_miss_count": owner_rule_miss_count,
+            "owner_rule_override_count": owner_rule_override_count,
+            "output_path": str(out_path),
+        }
 
         print(
             f"[localization_compile] {locale}: "
@@ -559,6 +571,32 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         )
         return 1
 
+    if report_json:
+        report_path = (project_root / report_json).resolve()
+        report_payload: Dict[str, Any] = {
+            "default_locale": default_locale,
+            "supported_locales": supported_locales,
+            "categories_order": categories,
+            "compiled_dir": compiled_dir_name,
+            "key_registry_path": key_registry_rel,
+            "key_owners_path": key_owners_rel,
+            "strict_duplicates": strict_duplicates,
+            "max_locale_duplicates": max_locale_duplicates,
+            "max_locale_duplicate_conflicts": max_locale_duplicate_conflicts,
+            "max_locale_missing_filled": max_locale_missing_filled,
+            "max_locale_owner_rule_misses": max_locale_owner_rule_misses,
+            "owner_policy_entry_count": len(key_owners),
+            "owner_policy_missing_duplicate_count": duplicate_owner_missing_count,
+            "owner_policy_unused_count": owner_unused_count,
+            "owner_policy_missing_duplicate_keys": duplicate_owner_missing_keys,
+            "owner_policy_unused_keys": owner_unused_keys,
+            "registry_key_count": len(registry_keys),
+            "active_key_count": len(canonical_keys),
+            "locales": locale_summary,
+        }
+        _write_json(report_path, report_payload)
+        print(f"[localization_compile] report written: {report_path}")
+
     return 0
 
 
@@ -570,10 +608,19 @@ def main() -> int:
         action="store_true",
         help="return non-zero when duplicate localization keys exist",
     )
+    parser.add_argument(
+        "--report-json",
+        default="",
+        help="optional output path for compile summary json",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
-    return run(project_root=project_root, strict_duplicates=args.strict_duplicates)
+    return run(
+        project_root=project_root,
+        strict_duplicates=args.strict_duplicates,
+        report_json=args.report_json,
+    )
 
 
 if __name__ == "__main__":

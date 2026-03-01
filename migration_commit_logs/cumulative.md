@@ -1205,3 +1205,8 @@
 - `migration_verify` bench report 출력에서 선택 필드의 빈 문자열 표현을 제거하고 `null`/숫자/문자열 타입을 명확히 정규화.
 - split 비활성 시 split checksum/total을 `null`로, smoke total은 숫자로 출력해 후속 파서의 타입 안정성을 개선.
 - `python3 -m json.tool` 검증으로 `bench_report.json` 유효성과 타입 반영을 확인.
+
+## Commit 244
+- `localization_compile`에 `--report-json`을 추가해 compile 전역/locale 지표를 JSON 아티팩트로 출력 가능하게 확장.
+- `migration_verify` compile 단계가 `MIGRATION_COMPILE_REPORT_JSON`을 지원하고, `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `compile_report.json` 자동 생성을 연결.
+- `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts6 tools/migration_verify.sh`에서 compile report 생성과 JSON 유효성을 확인.

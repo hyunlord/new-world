@@ -45,7 +45,23 @@ fi
 "${extract_cmd[@]}"
 
 echo "[migration_verify] 3/4 localization compile"
-python3 "${ROOT_DIR}/tools/localization_compile.py" --project-root "${ROOT_DIR}"
+compile_report_json="${MIGRATION_COMPILE_REPORT_JSON:-}"
+compile_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
+if [[ -n "${compile_report_dir}" && -z "${compile_report_json}" ]]; then
+  compile_report_dir_prefix="${compile_report_dir%/}"
+  if [[ -z "${compile_report_dir_prefix}" ]]; then
+    compile_report_dir_prefix="${compile_report_dir}"
+  fi
+  compile_report_json="${compile_report_dir_prefix}/compile_report.json"
+fi
+compile_cmd=(
+  python3 "${ROOT_DIR}/tools/localization_compile.py"
+  --project-root "${ROOT_DIR}"
+)
+if [[ -n "${compile_report_json}" ]]; then
+  compile_cmd+=(--report-json "${compile_report_json}")
+fi
+"${compile_cmd[@]}"
 
 echo "[migration_verify] 4/4 localization strict audit"
 audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
