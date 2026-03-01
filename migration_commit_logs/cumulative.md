@@ -271,3 +271,8 @@
 - `stressor_events` 로드 시 relationship/context modifier를 `_r_*`/`_c_*` 필드로 사전 컴파일해 `inject_event` 런타임 dictionary 해석 비용을 축소.
 - `_calc_relationship_scale`, `_calc_context_scale` 입력을 사전 컴파일 스키마 기반으로 전환해 이벤트 경로 분기/순회 오버헤드를 완화.
 - 관계/상황 배수 계산은 기존 Rust helper 호출(`stress_relationship_scale`, `stress_context_scale`)을 유지해 수식 의미를 보존.
+
+## Commit 056
+- `_calc_personality_scale`의 trait multiplier 적용 경로를 trait id 맵 기반 조회로 전환해 반복 선형 탐색 비용을 축소.
+- personality spec에 axis stat 문자열(`axis_stat`)을 사전 컴파일해 런타임 문자열 결합 비용을 완화.
+- 성격 스케일 계산 수식 및 Rust helper 호출 구조는 유지해 동작 의미를 보존.

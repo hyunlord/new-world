@@ -464,6 +464,7 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 		return 1.0
 
 	var pd = entity.personality
+	var trait_id_map: Dictionary = _build_trait_id_map(entity)
 	var values: PackedFloat32Array = PackedFloat32Array()
 	var weights: PackedFloat32Array = PackedFloat32Array()
 	var high_amplifies: PackedByteArray = PackedByteArray()
@@ -482,7 +483,8 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 		var value: float = 0.5
 		if pd != null:
 			if spec_kind == "axis":
-				value = StatQuery.get_normalized(entity, StringName("HEXACO_" + spec_id))
+				var axis_stat: String = String(spec.get("axis_stat", "HEXACO_" + spec_id))
+				value = StatQuery.get_normalized(entity, StringName(axis_stat))
 			else:
 				value = float(pd.facets.get(spec_id, 0.5))
 
@@ -492,7 +494,7 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 
 	# Trait 배수
 	for trait_id in p_traits:
-		if _entity_has_trait(entity, trait_id):
+		if trait_id_map.has(trait_id):
 			trait_multipliers.append(float(p_traits[trait_id]))
 
 	return StatCurveScript.stress_personality_scale(
@@ -554,6 +556,7 @@ func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 		specs.append({
 			"kind": spec_kind,
 			"id": spec_id,
+			"axis_stat": "HEXACO_" + spec_id,
 			"weight": float(mod_dict.get("weight", 0.0)),
 			"high_amplifies": String(mod_dict.get("direction", "high_amplifies")) == "high_amplifies",
 		})
@@ -590,11 +593,13 @@ func _compile_context_modifiers(c_mods: Variant) -> Dictionary:
 	return {"keys": keys, "multipliers": multipliers}
 
 
-func _entity_has_trait(entity, trait_id: String) -> bool:
+func _build_trait_id_map(entity) -> Dictionary:
+	var out: Dictionary = {}
 	for t in entity.display_traits:
-		if t.get("id", "") == trait_id:
-			return true
-	return false
+		var trait_id: String = String(t.get("id", ""))
+		if not trait_id.is_empty():
+			out[trait_id] = true
+	return out
 
 
 func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
