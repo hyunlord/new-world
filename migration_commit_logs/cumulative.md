@@ -1200,3 +1200,8 @@
 - `migration_verify`에 `MIGRATION_BENCH_REPORT_JSON`을 추가해 bench 체크 결과(checksum/dispatch/resolved)를 JSON 아티팩트로 저장 가능하게 확장.
 - `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `bench_report.json` 기본 경로를 자동 할당해 audit/bench 아티팩트를 단일 디렉터리로 수집 가능.
 - `--with-benches` 실행에서 `bench_report.json` 생성과 path/smoke/stress/needs 핵심 지표 기록을 검증.
+
+## Commit 243
+- `migration_verify` bench report 출력에서 선택 필드의 빈 문자열 표현을 제거하고 `null`/숫자/문자열 타입을 명확히 정규화.
+- split 비활성 시 split checksum/total을 `null`로, smoke total은 숫자로 출력해 후속 파서의 타입 안정성을 개선.
+- `python3 -m json.tool` 검증으로 `bench_report.json` 유효성과 타입 반영을 확인.

@@ -614,6 +614,42 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       if [[ "${bench_report_out}" != /* ]]; then
         bench_report_out="${ROOT_DIR}/${bench_report_out}"
       fi
+      path_resolved_json="null"
+      if [[ -n "${path_resolved:-}" ]]; then
+        path_resolved_json="\"${path_resolved}\""
+      fi
+      split_tuple_checksum_json="null"
+      split_xy_checksum_json="null"
+      split_tuple_total_json="null"
+      split_xy_total_json="null"
+      if [[ -n "${PATH_SPLIT_TUPLE_CHECKSUM}" ]]; then
+        split_tuple_checksum_json="\"${PATH_SPLIT_TUPLE_CHECKSUM}\""
+      fi
+      if [[ -n "${PATH_SPLIT_XY_CHECKSUM}" ]]; then
+        split_xy_checksum_json="\"${PATH_SPLIT_XY_CHECKSUM}\""
+      fi
+      if [[ -n "${PATH_SPLIT_TUPLE_TOTAL}" ]]; then
+        split_tuple_total_json="${PATH_SPLIT_TUPLE_TOTAL}"
+      fi
+      if [[ -n "${PATH_SPLIT_XY_TOTAL}" ]]; then
+        split_xy_total_json="${PATH_SPLIT_XY_TOTAL}"
+      fi
+      smoke_checksum_json="null"
+      smoke_total_json="null"
+      smoke_resolved_auto_json="null"
+      smoke_resolved_gpu_json="null"
+      if [[ -n "${PATH_SMOKE_CHECKSUM}" ]]; then
+        smoke_checksum_json="\"${PATH_SMOKE_CHECKSUM}\""
+      fi
+      if [[ -n "${PATH_SMOKE_TOTAL}" ]]; then
+        smoke_total_json="${PATH_SMOKE_TOTAL}"
+      fi
+      if [[ -n "${PATH_SMOKE_RESOLVED_AUTO}" ]]; then
+        smoke_resolved_auto_json="\"${PATH_SMOKE_RESOLVED_AUTO}\""
+      fi
+      if [[ -n "${PATH_SMOKE_RESOLVED_GPU}" ]]; then
+        smoke_resolved_gpu_json="\"${PATH_SMOKE_RESOLVED_GPU}\""
+      fi
       mkdir -p "$(dirname "${bench_report_out}")"
       cat > "${bench_report_out}" <<EOF
 {
@@ -626,19 +662,19 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   "path": {
     "checksum": "${path_checksum}",
     "total": ${path_total},
-    "resolved": "${path_resolved:-}"
+    "resolved": ${path_resolved_json}
   },
   "path_split": {
-    "tuple_checksum": "${PATH_SPLIT_TUPLE_CHECKSUM}",
-    "xy_checksum": "${PATH_SPLIT_XY_CHECKSUM}",
-    "tuple_total": "${PATH_SPLIT_TUPLE_TOTAL}",
-    "xy_total": "${PATH_SPLIT_XY_TOTAL}"
+    "tuple_checksum": ${split_tuple_checksum_json},
+    "xy_checksum": ${split_xy_checksum_json},
+    "tuple_total": ${split_tuple_total_json},
+    "xy_total": ${split_xy_total_json}
   },
   "path_smoke": {
-    "checksum": "${PATH_SMOKE_CHECKSUM}",
-    "total_each": "${PATH_SMOKE_TOTAL}",
-    "resolved_auto": "${PATH_SMOKE_RESOLVED_AUTO}",
-    "resolved_gpu": "${PATH_SMOKE_RESOLVED_GPU}"
+    "checksum": ${smoke_checksum_json},
+    "total_each": ${smoke_total_json},
+    "resolved_auto": ${smoke_resolved_auto_json},
+    "resolved_gpu": ${smoke_resolved_gpu_json}
   },
   "stress_checksum": "${STRESS_CHECKSUM}",
   "needs_checksum": "${NEEDS_CHECKSUM}"
