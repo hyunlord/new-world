@@ -64,3 +64,8 @@
 - `localization_audit`를 inline->key 전환 커버리지 관점으로 확장.
 - `inline_groups_with_key/without_key` 지표로 이관 진행률을 수치화.
 - 생성 산출물 스캔 노이즈를 제거해 감사 신뢰도 개선.
+
+## Commit 014
+- `StatQuery` XP 계산을 수동 수식에서 `StatCurveScript` 호출로 통합.
+- `_compute_level_from_xp`가 Rust-backed `xp_to_level` 경로를 사용하도록 변경.
+- breakpoint multiplier 중복 구현 제거로 수식 단일화.

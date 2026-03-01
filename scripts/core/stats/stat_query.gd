@@ -183,22 +183,15 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 	## Compute cumulative XP at the start of current level
 	## (sum of XP required for all levels up to but not including current)
 	var params: Dictionary = growth.get("params", {})
-	var base_xp: float = float(params.get("base_xp", 100.0))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var breakpoints: Array = params.get("level_breakpoints", [])
-	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
 
 	var xp_at_level: float = 0.0
 	for l in range(1, level + 1):
-		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
-		xp_at_level += base_xp * pow(float(l), exponent) * mult
+		xp_at_level += StatCurveScript.log_xp_required(l, params)
 
 	## XP needed to complete current level (reach level + 1)
 	var xp_to_next: float = 0.0
 	if level < max_level:
-		var next_level: int = level + 1
-		var next_mult: float = _get_breakpoint_multiplier(next_level, breakpoints, multipliers)
-		xp_to_next = base_xp * pow(float(next_level), exponent) * next_mult
+		xp_to_next = StatCurveScript.log_xp_required(level + 1, params)
 	## If at max level, xp_to_next = 0 (no further progress possible)
 
 	return {
@@ -323,38 +316,8 @@ func add_xp(entity: RefCounted, stat_id: StringName,
 ## Total XP to reach level L = sum_{i=1}^{L} xp_per_level(i)
 func _compute_level_from_xp(total_xp: float, growth: Dictionary, max_level: int) -> int:
 	var params: Dictionary = growth.get("params", {})
-	var base_xp: float = float(params.get("base_xp", 100))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var breakpoints: Array = params.get("level_breakpoints", [])
-	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
-
-	var cumulative_xp: float = 0.0
-	var level: int = 0
-
-	for l in range(1, max_level + 1):
-		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
-		var xp_this_level: float = base_xp * pow(float(l), exponent) * mult
-		if cumulative_xp + xp_this_level > total_xp:
-			break
-		cumulative_xp += xp_this_level
-		level = l
-
+	var level: int = StatCurveScript.xp_to_level(total_xp, params, max_level)
 	return clampi(level, 0, max_level)
-
-
-## Get breakpoint multiplier for a given level.
-## breakpoints: [25, 50, 75], multipliers: [1.0, 1.5, 2.0, 3.0]
-## Level < 25 → 1.0, Level 25-49 → 1.5, Level 50-74 → 2.0, Level 75+ → 3.0
-func _get_breakpoint_multiplier(level: int, breakpoints: Array, multipliers: Array) -> float:
-	var mult_idx: int = 0
-	for bp in breakpoints:
-		if level >= int(bp):
-			mult_idx += 1
-		else:
-			break
-	if multipliers.is_empty():
-		return 1.0
-	return float(multipliers[clampi(mult_idx, 0, multipliers.size() - 1)])
 
 
 ## Compute the talent ceiling (max achievable level) for this entity+skill.
