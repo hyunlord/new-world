@@ -924,6 +924,21 @@ pub fn tech_discovery_prob(
     1.0 - (1.0 - annual_total).powf(1.0 / checks_per_year)
 }
 
+/// Migration food-scarcity decision from nearby food and population.
+pub fn migration_food_scarce(nearby_food: f32, population: i32, per_capita_threshold: f32) -> bool {
+    nearby_food < population as f32 * per_capita_threshold
+}
+
+/// Migration attempt gate from pressures and random roll.
+pub fn migration_should_attempt(
+    overcrowded: bool,
+    food_scarce: bool,
+    chance_roll: f32,
+    migration_chance: f32,
+) -> bool {
+    overcrowded || food_scarce || chance_roll < migration_chance
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1412,7 +1427,8 @@ mod tests {
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
-        age_body_speed, age_body_strength, tech_discovery_prob,
+        age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
+        migration_should_attempt,
     };
 
     #[test]
@@ -1918,6 +1934,20 @@ mod tests {
         assert!(annual_only > 0.0 && annual_only < 0.24);
         let clamped = tech_discovery_prob(2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0);
         assert!((clamped - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn migration_food_scarce_checks_threshold() {
+        assert!(migration_food_scarce(9.0, 40, 0.3));
+        assert!(!migration_food_scarce(15.0, 40, 0.3));
+    }
+
+    #[test]
+    fn migration_should_attempt_when_any_pressure_or_roll_hits() {
+        assert!(migration_should_attempt(true, false, 1.0, 0.0));
+        assert!(migration_should_attempt(false, true, 1.0, 0.0));
+        assert!(migration_should_attempt(false, false, 0.1, 0.2));
+        assert!(!migration_should_attempt(false, false, 0.3, 0.2));
     }
 
     #[test]

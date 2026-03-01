@@ -1262,6 +1262,27 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_migration_food_scarce(
+        &self,
+        nearby_food: f32,
+        population: i32,
+        per_capita_threshold: f32,
+    ) -> bool {
+        body::migration_food_scarce(nearby_food, population, per_capita_threshold)
+    }
+
+    #[func]
+    fn body_migration_should_attempt(
+        &self,
+        overcrowded: bool,
+        food_scarce: bool,
+        chance_roll: f32,
+        migration_chance: f32,
+    ) -> bool {
+        body::migration_should_attempt(overcrowded, food_scarce, chance_roll, migration_chance)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
