@@ -571,3 +571,8 @@
 - `chronicle_panel`의 `UI_SHORT_DATE` 호출에서 `month/day`를 문자열로 선변환하지 않고 정수로 직접 전달.
 - `stats_detail_panel_legacy`의 `UI_TECH_COUNT_FMT` 호출에서 `known/forgotten` 선 문자열 변환을 제거.
 - 출력 의미를 유지하면서 경량 포맷 호출 전 중복 문자열 변환 비용을 완화.
+
+## Commit 117
+- `Locale.trf`에 빈 파라미터 조기 반환 경로(`params.is_empty()`)를 추가.
+- key-id 캐시 및 fallback 로직을 유지하면서 placeholder가 없는 동적 호출의 치환 루프를 생략.
+- 출력 의미를 유지하면서 일반 `trf` 호출 경로의 미세 오버헤드를 완화.

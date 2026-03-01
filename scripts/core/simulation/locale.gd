@@ -134,6 +134,8 @@ func trf(key: String, params: Dictionary = {}) -> String:
 		text = ltr_id(key_id_cached)
 	if text.is_empty():
 		text = ltr(key)
+	if params.is_empty():
+		return text
 	for p in params:
 		text = text.replace("{%s}" % p, str(params[p]))
 	return text
