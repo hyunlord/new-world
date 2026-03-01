@@ -906,3 +906,8 @@
 ## Commit 183
 - `movement_system`의 `_needs_path_recalc`, `_apply_recalculated_path`에서 path size 조회를 지역 변수로 통일해 중복 호출/분기를 정리.
 - 경로 재계산/적용 의미는 유지하면서 movement hot path의 미세 계산 비용을 완화.
+
+## Commit 184
+- `sim_bridge`에 GPU pathfinding capability probe 캐시를 도입해 `has_gpu_pathfinding`/`_prefer_gpu`의 반복 메서드 확인 및 호출 비용을 축소.
+- native bridge 교체 시 capability 캐시를 함께 무효화하도록 초기화 경로를 보강.
+- GPU 가능 여부 의미를 유지하면서 pathfinding backend 분기 hot path를 미세 최적화.
