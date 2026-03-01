@@ -406,3 +406,8 @@
 - `StatQuery`에 정규화 range 캐시(`_normalized_range_cache`)를 도입해 `get_range` 반복 호출을 축소.
 - `get_normalized`/`get_normalized_batch`가 캐시된 range를 공통으로 사용하도록 정리.
 - 정규화 결과 의미는 유지하면서 stat range 조회 경로의 반복 비용을 완화.
+
+## Commit 084
+- `StatQuery`에 output buffer 재사용 API(`get_normalized_batch_into`)를 추가해 batch 결과 배열 할당을 줄임.
+- 기존 `get_normalized_batch`는 새 API를 호출하는 호환 래퍼로 유지.
+- `StressSystem`이 scratch norm buffer를 재사용하도록 전환해 엔티티 루프 임시 할당/GC 부담을 완화.

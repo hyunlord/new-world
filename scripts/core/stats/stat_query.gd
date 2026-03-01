@@ -73,10 +73,18 @@ func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
 
 ## Returns normalized values for multiple stats in one pass, using a shared cache lookup path.
 func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> PackedFloat32Array:
-	var results: PackedFloat32Array = PackedFloat32Array()
-	results.resize(stat_ids.size())
+	var out_values: PackedFloat32Array = PackedFloat32Array()
+	return get_normalized_batch_into(entity, stat_ids, out_values)
+
+
+## Writes normalized values for multiple stats into a provided buffer and returns that buffer.
+func get_normalized_batch_into(entity: RefCounted, stat_ids: Array[StringName], out_values: PackedFloat32Array) -> PackedFloat32Array:
+	if out_values.size() != stat_ids.size():
+		out_values.resize(stat_ids.size())
 	if entity == null:
-		return results
+		for i in range(stat_ids.size()):
+			out_values[i] = 0.0
+		return out_values
 
 	var cache = entity.get("stat_cache")
 	var cache_dict: Dictionary = {}
@@ -87,19 +95,19 @@ func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> Pa
 	for i in range(stat_ids.size()):
 		var stat_id: StringName = stat_ids[i]
 		if not StatDefinitionScript.has_def(stat_id):
-			results[i] = 0.0
+			out_values[i] = 0.0
 			continue
 		var range_arr: Array = _get_normalized_range_cached(stat_id)
 		var rmin: int = int(range_arr[0])
 		var rmax: int = int(range_arr[1])
 		if rmax == rmin:
-			results[i] = 0.0
+			out_values[i] = 0.0
 			continue
 		var value: int = rmin
 		if has_cache_dict and cache_dict.has(stat_id) and not bool(cache_dict[stat_id].get("dirty", true)):
 			value = int(cache_dict[stat_id].get("value", rmin))
-		results[i] = float(value - rmin) / float(rmax - rmin)
-	return results
+		out_values[i] = float(value - rmin) / float(rmax - rmin)
+	return out_values
 
 
 func _get_normalized_range_cached(stat_id: StringName) -> Array:

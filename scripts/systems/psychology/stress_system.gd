@@ -121,6 +121,7 @@ const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full dela
 
 var _tick_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _tick_flags: PackedByteArray = PackedByteArray()
+var _tick_norm_values: PackedFloat32Array = PackedFloat32Array()
 var _tick_trace_per_tick: PackedFloat32Array = PackedFloat32Array()
 var _tick_trace_decay: PackedFloat32Array = PackedFloat32Array()
 var _rebound_amounts: PackedFloat32Array = PackedFloat32Array()
@@ -186,7 +187,11 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	var breakdown: Dictionary
 	if collect_breakdown:
 		breakdown = {}
-	var norm_values: PackedFloat32Array = StatQuery.get_normalized_batch(entity, _TICK_NORM_STAT_IDS)
+	var norm_values: PackedFloat32Array = StatQuery.get_normalized_batch_into(
+		entity,
+		_TICK_NORM_STAT_IDS,
+		_tick_norm_values
+	)
 	var hunger: float = float(norm_values[_TICK_NORM_IDX_HUNGER])
 	var energy: float = float(norm_values[_TICK_NORM_IDX_ENERGY])
 	var social: float = float(norm_values[_TICK_NORM_IDX_SOCIAL])
