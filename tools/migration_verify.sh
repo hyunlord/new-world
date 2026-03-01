@@ -967,6 +967,20 @@ if [[ -n "${verify_report_json}" ]]; then
   python3_version_value="$(to_json_opt_string "$(python3 --version 2>/dev/null || true)")"
   cargo_version_value="$(to_json_opt_string "$(cargo --version 2>/dev/null || true)")"
   rustc_version_value="$(to_json_opt_string "$(rustc --version 2>/dev/null || true)")"
+  host_os_value="$(to_json_opt_string "$(uname -s 2>/dev/null || true)")"
+  host_kernel_release_value="$(to_json_opt_string "$(uname -r 2>/dev/null || true)")"
+  host_arch_value="$(to_json_opt_string "$(uname -m 2>/dev/null || true)")"
+  host_cpu_count_raw=""
+  if command -v getconf >/dev/null 2>&1; then
+    host_cpu_count_raw="$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)"
+  fi
+  if [[ -z "${host_cpu_count_raw}" ]] && command -v nproc >/dev/null 2>&1; then
+    host_cpu_count_raw="$(nproc 2>/dev/null || true)"
+  fi
+  if [[ -z "${host_cpu_count_raw}" ]] && command -v sysctl >/dev/null 2>&1; then
+    host_cpu_count_raw="$(sysctl -n hw.ncpu 2>/dev/null || true)"
+  fi
+  host_cpu_count_value="$(to_json_opt_int "${host_cpu_count_raw}")"
   compile_report_json_size="$(to_json_opt_size_bytes "${compile_report_json}")"
   audit_report_json_size="$(to_json_opt_size_bytes "${audit_report_json}")"
   audit_duplicate_report_json_size="$(to_json_opt_size_bytes "${audit_duplicate_report_json}")"
@@ -1000,6 +1014,12 @@ if [[ -n "${verify_report_json}" ]]; then
     "python3": ${python3_version_value},
     "cargo": ${cargo_version_value},
     "rustc": ${rustc_version_value}
+  },
+  "host": {
+    "os": ${host_os_value},
+    "kernel_release": ${host_kernel_release_value},
+    "arch": ${host_arch_value},
+    "cpu_count": ${host_cpu_count_value}
   },
   "config": {
     "audit_report_dir": ${audit_report_dir_value},

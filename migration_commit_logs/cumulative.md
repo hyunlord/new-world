@@ -1280,3 +1280,8 @@
 - `migration_verify_report.json`에 `toolchain` 객체를 추가해 실행 시점의 `python3`, `cargo`, `rustc` 버전을 함께 기록.
 - 버전 조회 실패/미설치 환경은 `null`로 직렬화해 리포트 생성 안정성을 유지.
 - `/tmp/worldsim_audit_artifacts20/migration_verify_report.json`에서 `toolchain.python3/cargo/rustc` 필드 반영을 확인.
+
+## Commit 259
+- `migration_verify_report.json`에 `host` 객체(`os`, `kernel_release`, `arch`, `cpu_count`)를 추가해 실행 호스트 환경 메타데이터를 함께 기록.
+- CPU 코어 수는 `getconf`→`nproc`→`sysctl` 순으로 탐지하고, 실패 시 `null`로 직렬화해 이식성을 유지.
+- `/tmp/worldsim_audit_artifacts21/migration_verify_report.json`에서 host 메타데이터 필드 반영을 확인.
