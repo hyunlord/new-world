@@ -1010,3 +1010,8 @@
 - `migration_verify.sh`에 `MIGRATION_BENCH_PATH_SPLIT` 옵션을 추가해 path split 벤치를 선택적으로 실행하고 tuple/XY checksum 정합성을 자동 확인하도록 확장.
 - split 벤치 checksum 파싱/검증 로직을 추가하고, macOS bash 3.x 호환을 위해 `mapfile` 없이 `sed` 기반 파싱으로 구현.
 - 기본 검증 경로는 유지하면서 필요 시 경로별 벤치 관측을 파이프라인에 통합.
+
+## Commit 205
+- `migration_verify` strict audit 단계에 `MIGRATION_AUDIT_REPORT_JSON`/`MIGRATION_AUDIT_DUPLICATE_REPORT_JSON` 환경변수 연동을 추가해 localization audit 결과를 JSON 아티팩트로 바로 저장 가능하게 확장.
+- 환경변수 미설정 시 기존 strict audit 동작을 그대로 유지해 기존 파이프라인과 호환.
+- 벤치 옵션과 함께 사용해 검증 + 리포트 산출을 한 번에 수행할 수 있도록 운영성을 보강.

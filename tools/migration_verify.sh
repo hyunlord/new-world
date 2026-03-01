@@ -48,7 +48,16 @@ echo "[migration_verify] 3/4 localization compile"
 python3 "${ROOT_DIR}/tools/localization_compile.py" --project-root "${ROOT_DIR}"
 
 echo "[migration_verify] 4/4 localization strict audit"
-python3 "${ROOT_DIR}/tools/localization_audit.py" --project-root "${ROOT_DIR}" --strict
+audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
+audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
+audit_cmd=(python3 "${ROOT_DIR}/tools/localization_audit.py" --project-root "${ROOT_DIR}" --strict)
+if [[ -n "${audit_report_json}" ]]; then
+  audit_cmd+=(--report-json "${audit_report_json}")
+fi
+if [[ -n "${audit_duplicate_report_json}" ]]; then
+  audit_cmd+=(--duplicate-report-json "${audit_duplicate_report_json}")
+fi
+"${audit_cmd[@]}"
 
 if [[ "${WITH_BENCHES}" == "true" ]]; then
   echo "[migration_verify] 5/5 rust bench checksum verification"
