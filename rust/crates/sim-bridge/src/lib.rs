@@ -990,6 +990,33 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_job_assignment_best_job_code(
+        &self,
+        ratios: PackedFloat32Array,
+        counts: PackedInt32Array,
+        alive_count: i32,
+    ) -> i32 {
+        body::job_assignment_best_job_code(ratios.as_slice(), counts.as_slice(), alive_count)
+    }
+
+    #[func]
+    fn body_job_assignment_rebalance_codes(
+        &self,
+        ratios: PackedFloat32Array,
+        counts: PackedInt32Array,
+        alive_count: i32,
+        threshold: f32,
+    ) -> PackedInt32Array {
+        let out = body::job_assignment_rebalance_codes(
+            ratios.as_slice(),
+            counts.as_slice(),
+            alive_count,
+            threshold,
+        );
+        vec_i32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

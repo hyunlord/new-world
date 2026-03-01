@@ -541,6 +541,66 @@ pub fn occupation_should_switch(
     normalized_margin >= change_hysteresis
 }
 
+/// Returns job index with maximum deficit (`target - current`).
+///
+/// Falls back to `0` when inputs are empty.
+pub fn job_assignment_best_job_code(ratios: &[f32], counts: &[i32], alive_count: i32) -> i32 {
+    let len = ratios.len().min(counts.len());
+    if len == 0 {
+        return 0;
+    }
+    let mut best_idx: i32 = 0;
+    let mut best_deficit: f32 = f32::MIN;
+    for idx in 0..len {
+        let target = ratios[idx] * alive_count as f32;
+        let deficit = target - counts[idx] as f32;
+        if deficit > best_deficit {
+            best_deficit = deficit;
+            best_idx = idx as i32;
+        }
+    }
+    best_idx
+}
+
+/// Returns `[worst_surplus_job_idx, worst_deficit_job_idx]` for rebalancing.
+///
+/// Returns `[-1, -1]` when no rebalance is needed.
+pub fn job_assignment_rebalance_codes(
+    ratios: &[f32],
+    counts: &[i32],
+    alive_count: i32,
+    threshold: f32,
+) -> [i32; 2] {
+    let len = ratios.len().min(counts.len());
+    if len == 0 {
+        return [-1, -1];
+    }
+    let mut worst_surplus_idx: i32 = -1;
+    let mut worst_surplus: f32 = 0.0;
+    let mut worst_deficit_idx: i32 = -1;
+    let mut worst_deficit: f32 = 0.0;
+
+    for idx in 0..len {
+        let target = ratios[idx] * alive_count as f32;
+        let current = counts[idx] as f32;
+        let surplus = current - target;
+        if surplus > worst_surplus {
+            worst_surplus = surplus;
+            worst_surplus_idx = idx as i32;
+        }
+        let deficit = target - current;
+        if deficit > worst_deficit {
+            worst_deficit = deficit;
+            worst_deficit_idx = idx as i32;
+        }
+    }
+
+    if worst_surplus < threshold || worst_deficit < threshold {
+        return [-1, -1];
+    }
+    [worst_surplus_idx, worst_deficit_idx]
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1587,7 +1647,8 @@ mod tests {
         economic_tendencies_step, erg_frustration_step, job_satisfaction_score,
         job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
-        occupation_should_switch, reputation_decay_value, reputation_event_delta,
+        occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
+        reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
@@ -1929,6 +1990,28 @@ mod tests {
     fn occupation_should_switch_uses_hysteresis_margin() {
         assert!(occupation_should_switch(65, 50, 0.1));
         assert!(!occupation_should_switch(56, 50, 0.1));
+    }
+
+    #[test]
+    fn job_assignment_best_job_code_picks_largest_deficit() {
+        let ratios = [0.5, 0.2, 0.2, 0.1];
+        let counts = [10, 2, 2, 1];
+        assert_eq!(job_assignment_best_job_code(&ratios, &counts, 20), 1);
+    }
+
+    #[test]
+    fn job_assignment_rebalance_codes_respects_threshold() {
+        let ratios = [0.5, 0.2, 0.2, 0.1];
+        let balanced_counts = [10, 4, 4, 2];
+        assert_eq!(
+            job_assignment_rebalance_codes(&ratios, &balanced_counts, 20, 1.5),
+            [-1, -1]
+        );
+        let skewed_counts = [14, 2, 2, 2];
+        assert_eq!(
+            job_assignment_rebalance_codes(&ratios, &skewed_counts, 20, 1.5),
+            [0, 1]
+        );
     }
 
     #[test]
