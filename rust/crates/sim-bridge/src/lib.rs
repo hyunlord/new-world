@@ -1218,6 +1218,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_resource_regen_next(&self, current: f32, cap: f32, rate: f32) -> f32 {
+        body::resource_regen_next(current, cap, rate)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

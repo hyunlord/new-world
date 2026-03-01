@@ -877,6 +877,14 @@ pub fn tension_next_value(
     clamp_f32(current + scarcity_pressure - decay, 0.0, 1.0)
 }
 
+/// Resource regeneration next value: `min(current + rate, cap)` with guards.
+pub fn resource_regen_next(current: f32, cap: f32, rate: f32) -> f32 {
+    if cap <= 0.0 || rate <= 0.0 || current >= cap {
+        return current;
+    }
+    (current + rate).min(cap)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1364,7 +1372,7 @@ mod tests {
         thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
-        tension_scarcity_pressure, tension_next_value,
+        tension_scarcity_pressure, tension_next_value, resource_regen_next,
     };
 
     #[test]
@@ -1848,6 +1856,14 @@ mod tests {
         assert!((tension_next_value(0.5, 0.1, 0.2, 0.5) - 0.5).abs() < 1e-6);
         assert!((tension_next_value(0.95, 0.3, 0.0, 0.0) - 1.0).abs() < 1e-6);
         assert!((tension_next_value(0.1, 0.0, 1.0, 0.5) - 0.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn resource_regen_next_applies_cap_and_guards() {
+        assert!((resource_regen_next(2.0, 10.0, 0.5) - 2.5).abs() < 1e-6);
+        assert!((resource_regen_next(9.9, 10.0, 0.5) - 10.0).abs() < 1e-6);
+        assert!((resource_regen_next(5.0, 0.0, 0.5) - 5.0).abs() < 1e-6);
+        assert!((resource_regen_next(5.0, 10.0, 0.0) - 5.0).abs() < 1e-6);
     }
 
     #[test]
