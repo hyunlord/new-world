@@ -14,6 +14,10 @@ fn main() {
         run_needs_math_bench(&args);
         return;
     }
+    if args.iter().any(|arg| arg == "--bench-pathfind-bridge-split") {
+        run_pathfind_bridge_split_bench(&args);
+        return;
+    }
     if args.iter().any(|arg| arg == "--bench-pathfind-bridge") {
         run_pathfind_bridge_bench(&args);
         return;
@@ -314,8 +318,17 @@ fn run_needs_math_bench(args: &[String]) {
     );
 }
 
-fn run_pathfind_bridge_bench(args: &[String]) {
-    let iterations = parse_bench_iterations(args, 1_000);
+fn pathfind_bench_inputs() -> (
+    i32,
+    i32,
+    Vec<u8>,
+    Vec<f32>,
+    [(i32, i32); 8],
+    [(i32, i32); 8],
+    Vec<i32>,
+    Vec<i32>,
+    usize,
+) {
     let width: i32 = 64;
     let height: i32 = 64;
     let cell_count = (width * height) as usize;
@@ -361,6 +374,16 @@ fn run_pathfind_bridge_bench(args: &[String]) {
         to_xy.push(to_points[idx].1);
     }
 
+    (
+        width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps,
+    )
+}
+
+fn run_pathfind_bridge_bench(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 1_000);
+    let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
+        pathfind_bench_inputs();
+
     let started = Instant::now();
     let mut checksum = 0.0_f32;
     for _ in 0..iterations {
@@ -395,6 +418,60 @@ fn run_pathfind_bridge_bench(args: &[String]) {
         elapsed.as_secs_f64() * 1000.0,
         ns_per_iter,
         checksum
+    );
+}
+
+fn run_pathfind_bridge_split_bench(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 1_000);
+    let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
+        pathfind_bench_inputs();
+
+    let started_tuple = Instant::now();
+    let mut checksum_tuple = 0.0_f32;
+    for _ in 0..iterations {
+        let groups = pathfind_grid_batch_bytes(
+            width,
+            height,
+            &walkable,
+            &move_cost,
+            &from_points,
+            &to_points,
+            max_steps,
+        )
+        .expect("pathfind_grid_batch_bytes");
+        for i in 0..groups.len() {
+            checksum_tuple += black_box(groups[i].len() as f32);
+        }
+    }
+    let elapsed_tuple = started_tuple.elapsed();
+    let tuple_ns_per_iter = elapsed_tuple.as_nanos() as f64 / f64::from(iterations);
+    println!(
+        "[sim-test] pathfind-bridge-split tuple: iterations={} elapsed_ms={:.3} ns_per_iter={:.1} checksum={:.5}",
+        iterations,
+        elapsed_tuple.as_secs_f64() * 1000.0,
+        tuple_ns_per_iter,
+        checksum_tuple
+    );
+
+    let started_xy = Instant::now();
+    let mut checksum_xy = 0.0_f32;
+    for _ in 0..iterations {
+        let groups_xy = pathfind_grid_batch_xy_bytes(
+            width, height, &walkable, &move_cost, &from_xy, &to_xy, max_steps,
+        )
+        .expect("pathfind_grid_batch_xy_bytes");
+        for i in 0..groups_xy.len() {
+            checksum_xy += black_box(groups_xy[i].len() as f32);
+        }
+    }
+    let elapsed_xy = started_xy.elapsed();
+    let xy_ns_per_iter = elapsed_xy.as_nanos() as f64 / f64::from(iterations);
+    println!(
+        "[sim-test] pathfind-bridge-split xy: iterations={} elapsed_ms={:.3} ns_per_iter={:.1} checksum={:.5}",
+        iterations,
+        elapsed_xy.as_secs_f64() * 1000.0,
+        xy_ns_per_iter,
+        checksum_xy
     );
 }
 

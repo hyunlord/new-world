@@ -1000,3 +1000,8 @@
 ## Commit 202
 - `from_flat_bytes_unchecked`가 중간 `Vec<bool>` 재복사 경로를 제거하고 최종 `GridCostMap`을 직접 구성하도록 정리.
 - move_cost clamp 의미는 유지하면서 byte 기반 grid 초기화 경로의 할당/복사 오버헤드를 추가 절감.
+
+## Commit 203
+- `sim-test`에 `--bench-pathfind-bridge-split` 모드를 추가해 tuple batch와 packed XY batch 경로의 성능/체크섬을 독립적으로 관측할 수 있게 확장.
+- pathfinding 벤치 입력 생성 로직을 공통 헬퍼로 분리해 split/combined 모드 간 입력 정합성을 고정.
+- split 기준선 관측값: tuple `354000.00000`, xy `354000.00000` (@1000).
