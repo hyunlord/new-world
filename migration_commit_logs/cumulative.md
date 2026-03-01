@@ -671,3 +671,8 @@
 - `sim-systems::body`에 `thirst_decay`/`warmth_decay`를 추가해 needs 시스템의 갈증/체온 소모 수식을 Rust 함수로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `needs_system`이 Rust 우선 + GDScript fallback으로 호출하도록 전환.
 - 온도 기반 소모 의미를 유지하면서 needs tick의 환경 소모 계산 네이티브화 범위를 확장.
+
+## Commit 137
+- `sim-systems::body`에 `needs_temp_decay_step`를 추가해 갈증/체온 온도 소모를 단일 함수로 통합하고, 기존 개별 함수 재사용으로 수식 의미를 유지.
+- `sim-bridge`/`SimBridge`에 `body_needs_temp_decay_step`를 추가해 needs 시스템이 온도 소모 값을 1회 bridge 호출로 수신하도록 확장.
+- `needs_system`이 단일 결과를 재사용하도록 전환되어 온도 소모 계산 경로의 bridge round-trip을 추가 축소.

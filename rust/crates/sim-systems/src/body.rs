@@ -127,6 +127,31 @@ pub fn warmth_decay(
     base_decay * (1.0 + cold_ratio * 2.0)
 }
 
+/// Combined temperature-driven need decays.
+///
+/// Returns `[thirst_decay, warmth_decay]`.
+pub fn needs_temp_decay_step(
+    thirst_base_decay: f32,
+    warmth_base_decay: f32,
+    tile_temp: f32,
+    has_tile_temp: bool,
+    temp_neutral: f32,
+    temp_freezing: f32,
+    temp_cold: f32,
+) -> [f32; 2] {
+    [
+        thirst_decay(thirst_base_decay, tile_temp, temp_neutral),
+        warmth_decay(
+            warmth_base_decay,
+            tile_temp,
+            has_tile_temp,
+            temp_neutral,
+            temp_freezing,
+            temp_cold,
+        ),
+    ]
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -311,7 +336,7 @@ mod tests {
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
         action_energy_cost, calc_realized_values, calc_training_gains,
         compute_age_curve, compute_age_curves,
-        rest_energy_recovery, thirst_decay, warmth_decay,
+        needs_temp_decay_step, rest_energy_recovery, thirst_decay, warmth_decay,
     };
 
     #[test]
@@ -411,6 +436,13 @@ mod tests {
         assert_eq!(freezing, base * 5.0);
         let cold = warmth_decay(base, 0.2, true, 0.5, 0.1, 0.3);
         assert_eq!(cold, base * 3.0);
+    }
+
+    #[test]
+    fn combined_temp_decay_matches_individual_functions() {
+        let out = needs_temp_decay_step(0.005, 0.01, 0.2, true, 0.5, 0.1, 0.3);
+        assert_eq!(out[0], thirst_decay(0.005, 0.2, 0.5));
+        assert_eq!(out[1], warmth_decay(0.01, 0.2, true, 0.5, 0.1, 0.3));
     }
 
     #[test]

@@ -39,18 +39,28 @@ func execute_tick(tick: int) -> void:
 		if _world_data != null:
 			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
 			has_tile_temp = true
+		var rust_temp_decay: PackedFloat32Array = PackedFloat32Array()
+		if GameConfig.NEEDS_EXPANSION_ENABLED:
+			var rust_temp_decay_variant: Variant = SimBridge.body_needs_temp_decay_step(
+				GameConfig.THIRST_DECAY_RATE,
+				GameConfig.WARMTH_DECAY_RATE,
+				tile_temp,
+				has_tile_temp,
+				GameConfig.WARMTH_TEMP_NEUTRAL,
+				GameConfig.WARMTH_TEMP_FREEZING,
+				GameConfig.WARMTH_TEMP_COLD
+			)
+			if rust_temp_decay_variant is PackedFloat32Array:
+				var packed_temp_decay: PackedFloat32Array = rust_temp_decay_variant
+				if packed_temp_decay.size() >= 2:
+					rust_temp_decay = packed_temp_decay
 
 		## [Maslow (1943) L1 — 갈증 소모]
 		## 기본 소모 + 더운 타일에서 가속 (최대 2배)
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
-			var rust_thirst_decay: Variant = SimBridge.body_thirst_decay(
-				GameConfig.THIRST_DECAY_RATE,
-				tile_temp,
-				GameConfig.WARMTH_TEMP_NEUTRAL
-			)
-			if rust_thirst_decay != null:
-				thirst_decay = float(rust_thirst_decay)
+			if rust_temp_decay.size() >= 2:
+				thirst_decay = float(rust_temp_decay[0])
 			elif has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
 				thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
 			entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
@@ -59,16 +69,8 @@ func execute_tick(tick: int) -> void:
 		## 중립 온도(0.5) 이상이면 소모 없음, 추울수록 가속
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var warmth_decay: float = 0.0
-			var rust_warmth_decay: Variant = SimBridge.body_warmth_decay(
-				GameConfig.WARMTH_DECAY_RATE,
-				tile_temp,
-				has_tile_temp,
-				GameConfig.WARMTH_TEMP_NEUTRAL,
-				GameConfig.WARMTH_TEMP_FREEZING,
-				GameConfig.WARMTH_TEMP_COLD
-			)
-			if rust_warmth_decay != null:
-				warmth_decay = float(rust_warmth_decay)
+			if rust_temp_decay.size() >= 2:
+				warmth_decay = float(rust_temp_decay[1])
 			elif has_tile_temp:
 				if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
 					if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
