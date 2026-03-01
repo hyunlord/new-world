@@ -209,9 +209,11 @@ func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int 
 	# ── training_xp 초기화 ──
 	entity.body.training_xp = {"str": 0.0, "agi": 0.0, "end": 0.0, "tou": 0.0, "rec": 0.0}
 	# ── realized 초기화 (훈련 XP 0, potential × age_curve) ──
-	var _realized_values: Dictionary = entity.body.calc_realized_values_batch(_body_age_y)
-	for _r_axis in ["str", "agi", "end", "tou", "rec", "dr"]:
-		entity.body.realized[_r_axis] = int(_realized_values.get(_r_axis, 0))
+	var _realized_values: PackedInt32Array = entity.body.calc_realized_values_packed(_body_age_y)
+	var _realized_axes: Array[String] = ["str", "agi", "end", "tou", "rec", "dr"]
+	for _r_idx in range(_realized_axes.size()):
+		var _r_axis: String = _realized_axes[_r_idx]
+		entity.body.realized[_r_axis] = int(_realized_values[_r_idx])
 
 	## ── Layer 1.5: Appearance Generation [Eagly 1991, Stulp 2015] ───────────────
 	if parent_a != null and parent_b != null:

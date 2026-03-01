@@ -646,3 +646,8 @@
 - `entity_manager`의 스폰 초기 `body.realized` 계산이 `calc_realized_values_batch` 단일 호출 경로로 전환되어 연간 갱신 경로와 실행 구조를 일치시킴.
 - 초기화 루프에서 개별 age-curve 기반 수동 계산을 제거하고, 배치 결과(`str/agi/end/tou/rec/dr`)를 직접 반영하도록 정리.
 - bridge 지원 시 스폰 경로의 body 수학 호출이 단일 realized 배치 호출 중심으로 수렴.
+
+## Commit 132
+- `body_attributes`에 `calc_realized_values_packed`를 추가해 realized 6축 배치 결과를 `PackedInt32Array`로 직접 처리하는 경로를 제공하고, 기존 Dictionary API는 wrapper로 유지.
+- `age_system`과 `entity_manager`가 realized 반영 시 packed 인덱스 접근을 사용하도록 전환되어 딕셔너리 생성/키 조회 오버헤드를 축소.
+- 계산 의미와 clamp 범위는 유지한 채 연간/스폰 body realized 갱신 경로의 메모리 churn을 완화.
