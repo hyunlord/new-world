@@ -341,3 +341,8 @@
 - `DEBUG_STRESS_LOG` 비활성 틱에서 `breakdown` 빈 Dictionary 초기화를 생략하도록 초기화 시점을 조건부로 변경.
 - debug off 틱에서 `_debug_log` 함수 호출 자체를 건너뛰어 호출 오버헤드를 제거.
 - stress 계산/상태 업데이트 의미는 유지하면서 디버그 비활성 운영 경로의 미세 비용을 완화.
+
+## Commit 071
+- `execute_tick`에서 `DEBUG_STRESS_LOG`를 tick당 1회 계산하고 `_update_entity_stress`로 전달하도록 변경.
+- `_update_entity_stress` 내부의 반복 `GameConfig.DEBUG_STRESS_LOG` 조회를 제거해 엔티티 루프 미세 오버헤드를 완화.
+- stress breakdown/로그 출력 의미는 유지하면서 디버그 플래그 조회 경로를 단순화.
