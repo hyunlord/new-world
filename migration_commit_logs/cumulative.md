@@ -141,3 +141,8 @@
 ## Commit 029
 - `StatCurve`의 `scurve_speed`/`step_linear`에서 PackedArray 변환 결과를 params 내 캐시로 재사용.
 - 영향 계산 핫패스의 반복 할당/변환 비용을 줄여 Rust bridge 호출 경로 오버헤드 완화.
+
+## Commit 030
+- `StressSystem` 연속 입력 계산(배고픔/에너지/사회 결핍)을 Rust(`sim-systems`) 함수로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 대응 API를 추가해 GDScript는 단일 호출로 결과를 수신.
+- stress breakdown 키/의미는 유지하면서 hot path 연산을 네이티브 경로로 전환.

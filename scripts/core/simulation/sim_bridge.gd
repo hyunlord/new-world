@@ -288,6 +288,25 @@ func stat_need_decay(
 	)
 
 
+## Delegates continuous stress inputs from unmet needs to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_continuous_inputs(
+	hunger: float,
+	energy: float,
+	social: float,
+	appraisal_scale: float
+):
+	return _call_native_if_exists(
+		"stat_stress_continuous_inputs",
+		[
+			hunger,
+			energy,
+			social,
+			appraisal_scale
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

@@ -5,6 +5,22 @@ fn lerpf(a: f32, b: f32, t: f32) -> f32 {
     a + (b - a) * t
 }
 
+#[inline]
+fn need_deficit(value: f32, threshold: f32) -> f32 {
+    if threshold <= 0.0 {
+        return 0.0;
+    }
+    ((threshold - value) / threshold).clamp(0.0, 1.0)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ContinuousStressInputs {
+    pub hunger: f32,
+    pub energy_deficit: f32,
+    pub social_isolation: f32,
+    pub total: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -80,6 +96,29 @@ pub fn need_decay(
     let decay_per_tick = decay_per_year as f32 / ticks_per_year as f32;
     let total_decay = decay_per_tick * ticks_elapsed as f32 * metabolic_mult;
     (current - total_decay as i32).clamp(0, 1000)
+}
+
+/// Continuous stress contribution from unmet lower needs.
+pub fn stress_continuous_inputs(
+    hunger: f32,
+    energy: f32,
+    social: f32,
+    appraisal_scale: f32,
+) -> ContinuousStressInputs {
+    let h_def = need_deficit(hunger, 0.35);
+    let e_def = need_deficit(energy, 0.40);
+    let soc_def = need_deficit(social, 0.25);
+
+    let s_hunger = (3.0 * h_def + 9.0 * h_def * h_def) * appraisal_scale;
+    let s_energy = (2.0 * e_def + 10.0 * e_def * e_def) * appraisal_scale;
+    let s_social = 2.0 * soc_def * soc_def * appraisal_scale;
+
+    ContinuousStressInputs {
+        hunger: s_hunger,
+        energy_deficit: s_energy,
+        social_isolation: s_social,
+        total: s_hunger + s_energy + s_social,
+    }
 }
 
 /// SIGMOID_EXTREME influence.
@@ -182,5 +221,29 @@ mod tests {
         assert_eq!(step_linear(700, &steps), 0.9);
         assert_eq!(step_linear(500, &steps), 0.8);
         assert_eq!(step_linear(200, &steps), 0.6);
+    }
+
+    #[test]
+    fn stress_continuous_inputs_zero_when_needs_are_high() {
+        let out = stress_continuous_inputs(0.9, 0.9, 0.9, 1.2);
+        assert_eq!(
+            out,
+            ContinuousStressInputs {
+                hunger: 0.0,
+                energy_deficit: 0.0,
+                social_isolation: 0.0,
+                total: 0.0
+            }
+        );
+    }
+
+    #[test]
+    fn stress_continuous_inputs_increase_with_deficit() {
+        let mild = stress_continuous_inputs(0.30, 0.35, 0.20, 1.0);
+        let severe = stress_continuous_inputs(0.10, 0.10, 0.05, 1.0);
+        assert!(severe.hunger > mild.hunger);
+        assert!(severe.energy_deficit > mild.energy_deficit);
+        assert!(severe.social_isolation > mild.social_isolation);
+        assert!(severe.total > mild.total);
     }
 }

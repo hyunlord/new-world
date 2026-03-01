@@ -649,6 +649,24 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_continuous_inputs(
+        &self,
+        hunger: f32,
+        energy: f32,
+        social: f32,
+        appraisal_scale: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_continuous_inputs(hunger, energy, social, appraisal_scale);
+
+        let mut dict = VarDictionary::new();
+        dict.set("hunger", out.hunger as f64);
+        dict.set("energy_deficit", out.energy_deficit as f64);
+        dict.set("social_isolation", out.social_isolation as f64);
+        dict.set("total", out.total as f64);
+        dict
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

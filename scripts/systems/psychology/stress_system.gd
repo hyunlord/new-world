@@ -13,6 +13,7 @@ var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
 
 # ── Constants ─────────────────────────────────────────────────────────
 const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
+const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
@@ -197,27 +198,27 @@ func _calc_appraisal_scale(entity: RefCounted, _pd, ed) -> float:
 
 # ── 2) 지속 스트레서 ──────────────────────────────────────────────────
 func _calc_continuous_stressors(entity: RefCounted, appraisal_scale: float, breakdown: Dictionary) -> float:
-	var total: float = 0.0
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+	var inputs: Dictionary = StatCurveScript.stress_continuous_inputs(
+		hunger,
+		energy,
+		social,
+		appraisal_scale
+	)
 
-	var h_def: float = clampf((0.35 - hunger) / 0.35, 0.0, 1.0)
-	var s_hunger: float = (3.0 * h_def + 9.0 * h_def * h_def) * appraisal_scale
+	var total: float = float(inputs.get("total", 0.0))
+	var s_hunger: float = float(inputs.get("hunger", 0.0))
 	if s_hunger > STRESS_EPSILON:
-		total += s_hunger
 		breakdown["hunger"] = s_hunger
 
-	var e_def: float = clampf((0.40 - energy) / 0.40, 0.0, 1.0)
-	var s_energy: float = (2.0 * e_def + 10.0 * e_def * e_def) * appraisal_scale
+	var s_energy: float = float(inputs.get("energy_deficit", 0.0))
 	if s_energy > STRESS_EPSILON:
-		total += s_energy
 		breakdown["energy_deficit"] = s_energy
 
-	var soc_def: float = clampf((0.25 - social) / 0.25, 0.0, 1.0)
-	var s_social: float = 2.0 * soc_def * soc_def * appraisal_scale
+	var s_social: float = float(inputs.get("social_isolation", 0.0))
 	if s_social > STRESS_EPSILON:
-		total += s_social
 		breakdown["social_isolation"] = s_social
 
 	return total

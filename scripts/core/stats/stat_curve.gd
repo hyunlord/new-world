@@ -179,6 +179,43 @@ static func need_decay(current: int, decay_per_year: int,
 	var total_decay: float = decay_per_tick * float(ticks_elapsed) * metabolic_mult
 	return clampi(current - int(total_decay), 0, 1000)
 
+
+## Continuous stress input from unmet hunger/energy/social needs.
+## Returns Dictionary:
+## { "hunger": float, "energy_deficit": float, "social_isolation": float, "total": float }
+static func stress_continuous_inputs(
+	hunger: float,
+	energy: float,
+	social: float,
+	appraisal_scale: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_continuous_inputs",
+		[
+			hunger,
+			energy,
+			social,
+			appraisal_scale
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var h_def: float = clampf((0.35 - hunger) / 0.35, 0.0, 1.0)
+	var e_def: float = clampf((0.40 - energy) / 0.40, 0.0, 1.0)
+	var soc_def: float = clampf((0.25 - social) / 0.25, 0.0, 1.0)
+
+	var s_hunger: float = (3.0 * h_def + 9.0 * h_def * h_def) * appraisal_scale
+	var s_energy: float = (2.0 * e_def + 10.0 * e_def * e_def) * appraisal_scale
+	var s_social: float = 2.0 * soc_def * soc_def * appraisal_scale
+
+	return {
+		"hunger": s_hunger,
+		"energy_deficit": s_energy,
+		"social_isolation": s_social,
+		"total": s_hunger + s_energy + s_social,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)
