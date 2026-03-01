@@ -220,6 +220,16 @@ fn run_needs_math_bench(args: &[String]) {
             i % 4 != 0,
             i % 5 != 0,
         );
+        let parent_transfer = body::child_parent_stress_transfer(
+            0.1 + 0.8 * t,
+            0.3 + 0.6 * (1.0 - t),
+            (i % 4) as i32,
+            i % 2 == 0,
+            0.1 + 0.6 * t,
+            0.2 + 0.4 * (1.0 - t),
+        );
+        let ace_step =
+            body::child_simultaneous_ace_step(&[0.2 + 0.5 * t, 0.1 + 0.6 * t, 0.3], 0.4 * t);
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -243,7 +253,11 @@ fn run_needs_math_bench(args: &[String]) {
             + black_box(alignment)
             + black_box(upper_step[0])
             + black_box(upper_step[4])
-            + black_box(upper_step[7]);
+            + black_box(upper_step[7])
+            + black_box(parent_transfer)
+            + black_box(ace_step[0])
+            + black_box(ace_step[1])
+            + black_box(ace_step[2]);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);

@@ -772,3 +772,8 @@
 - `sim-systems::body`에 `child_simultaneous_ace_step`를 추가해 동시 ACE severity 집계의 burst/residual/kindling 계산을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 `body_child_simultaneous_ace_step` 경로를 추가하고, `child_stress_processor`가 scratch 버퍼 기반 Rust 우선 처리 + 기존 fallback 구조를 사용하도록 전환.
 - child stress의 동시 ACE 처리 의미를 유지하면서 해당 수학 경로의 스크립트 연산 비중을 추가로 축소.
+
+## Commit 157
+- `sim-test --bench-needs-math`에 `child_parent_stress_transfer`와 `child_simultaneous_ace_step` 호출을 추가해 child stress Rust 수식까지 회귀 추적 범위를 확장.
+- 벤치 checksum 기준을 child 수식 포함 값(`29781070.00000` @ 10k iters)으로 갱신.
+- 런타임 코드 경로는 변경하지 않고 성능/회귀 관측 지표를 강화.
