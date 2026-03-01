@@ -110,6 +110,9 @@ static func _call_sim_bridge(method_name: String, args: Array):
 ## 나이별 훈련 효율 배수 반환 (0.0~1.0)
 ## 과거 축적 gain은 유지됨 — 오직 "지금 훈련 효과"만 결정
 static func get_age_trainability_modifier(axis: String, age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifier", [axis, age_years])
+	if rust_result != null:
+		return float(rust_result)
 	match axis:
 		"str":
 			if age_years < 13.0: return 0.60

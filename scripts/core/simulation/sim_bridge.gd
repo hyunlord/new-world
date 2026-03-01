@@ -1221,6 +1221,18 @@ func body_calc_training_gain(
 	)
 
 
+## Delegates age-based body trainability modifier to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_age_trainability_modifier(axis: String, age_years: float):
+	return _call_native_if_exists(
+		"body_age_trainability_modifier",
+		[
+			axis,
+			age_years
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

@@ -616,3 +616,8 @@
 - `sim-systems::body`에 `calc_training_gain` 수식을 추가하고 관련 unit test를 확장.
 - `sim-bridge`/`SimBridge`에 `body_calc_training_gain` API를 추가해 BodyAttributes 훈련 gain 계산의 Rust 호출 경로를 연결.
 - `body_attributes.calc_training_gain`이 Rust 우선 + GDScript fallback 구조로 전환되어 신체 훈련 gain 계산 네이티브화 범위를 확장.
+
+## Commit 126
+- `sim-systems::body`에 `age_trainability_modifier` 분기표를 추가하고 unit test를 확장.
+- `sim-bridge`/`SimBridge`에 `body_age_trainability_modifier` API를 추가해 BodyAttributes 나이 기반 훈련 효율 계산의 Rust 호출 경로를 연결.
+- `body_attributes.get_age_trainability_modifier`가 Rust 우선 + GDScript fallback 구조로 전환되어 신체 훈련 관련 수학 경로 네이티브화를 확대.

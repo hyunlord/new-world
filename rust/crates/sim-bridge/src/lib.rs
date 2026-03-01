@@ -335,6 +335,12 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_age_trainability_modifier(&self, axis: GString, age_years: f32) -> f32 {
+        let axis_string = axis.to_string();
+        body::age_trainability_modifier(axis_string.as_str(), age_years)
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

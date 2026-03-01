@@ -59,9 +59,97 @@ pub fn calc_training_gain(
     clamped_gain as i32
 }
 
+/// Age-based trainability modifier for each body axis.
+///
+/// Mirrors `BodyAttributes.get_age_trainability_modifier`.
+pub fn age_trainability_modifier(axis: &str, age_years: f32) -> f32 {
+    match axis {
+        "str" => {
+            if age_years < 13.0 {
+                0.60
+            } else if age_years < 18.0 {
+                0.85
+            } else if age_years < 31.0 {
+                1.00
+            } else if age_years < 51.0 {
+                0.85
+            } else if age_years < 66.0 {
+                0.65
+            } else if age_years < 81.0 {
+                0.45
+            } else {
+                0.30
+            }
+        }
+        "end" => {
+            if age_years < 13.0 {
+                0.70
+            } else if age_years < 18.0 {
+                0.90
+            } else if age_years < 31.0 {
+                1.00
+            } else if age_years < 51.0 {
+                0.90
+            } else if age_years < 66.0 {
+                0.75
+            } else if age_years < 81.0 {
+                0.55
+            } else {
+                0.35
+            }
+        }
+        "agi" => {
+            if age_years < 7.0 {
+                0.70
+            } else if age_years < 14.0 {
+                1.00
+            } else if age_years < 18.0 {
+                0.85
+            } else if age_years < 31.0 {
+                0.80
+            } else if age_years < 51.0 {
+                0.65
+            } else {
+                0.45
+            }
+        }
+        "tou" => {
+            if age_years < 13.0 {
+                1.00
+            } else if age_years < 26.0 {
+                0.90
+            } else if age_years < 41.0 {
+                0.50
+            } else if age_years < 61.0 {
+                0.30
+            } else {
+                0.15
+            }
+        }
+        "rec" => {
+            if age_years < 13.0 {
+                0.60
+            } else if age_years < 18.0 {
+                0.85
+            } else if age_years < 31.0 {
+                1.00
+            } else if age_years < 51.0 {
+                0.80
+            } else if age_years < 66.0 {
+                0.60
+            } else if age_years < 81.0 {
+                0.40
+            } else {
+                0.25
+            }
+        }
+        _ => 1.00,
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{calc_training_gain, compute_age_curve};
+    use super::{age_trainability_modifier, calc_training_gain, compute_age_curve};
 
     #[test]
     fn unknown_axis_returns_default_midpoint() {
@@ -114,5 +202,17 @@ mod tests {
         let gain = calc_training_gain(1000, 5000, 10_000_000.0, 0.5, 1.0);
         assert!(gain <= 1000);
         assert!(gain > 0);
+    }
+
+    #[test]
+    fn trainability_modifier_defaults_to_one_for_unknown_axis() {
+        assert_eq!(age_trainability_modifier("unknown", 20.0), 1.0);
+    }
+
+    #[test]
+    fn trainability_modifier_declines_with_age_for_strength() {
+        let adult = age_trainability_modifier("str", 25.0);
+        let elder = age_trainability_modifier("str", 85.0);
+        assert!(adult > elder);
     }
 }
