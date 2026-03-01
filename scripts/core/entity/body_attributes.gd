@@ -252,7 +252,7 @@ func calc_training_gain(axis: String) -> int:
 
 ## 훈련 gain 5축 배치 계산 (str/agi/end/tou/rec)
 ## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
-func calc_training_gain_batch() -> Dictionary:
+func calc_training_gain_packed() -> PackedInt32Array:
 	var potentials: PackedInt32Array = PackedInt32Array()
 	var trainabilities: PackedInt32Array = PackedInt32Array()
 	var xps: PackedFloat32Array = PackedFloat32Array()
@@ -284,19 +284,35 @@ func calc_training_gain_batch() -> Dictionary:
 	if rust_result is PackedInt32Array:
 		var packed: PackedInt32Array = rust_result
 		if packed.size() >= _TRAINING_GAIN_AXIS_COUNT:
-			return {
-				"str": int(packed[0]),
-				"agi": int(packed[1]),
-				"end": int(packed[2]),
-				"tou": int(packed[3]),
-				"rec": int(packed[4]),
-			}
+			return packed
 
-	var gains: Dictionary = {}
+	var fallback: PackedInt32Array = PackedInt32Array()
+	fallback.resize(_TRAINING_GAIN_AXIS_COUNT)
 	for i in range(_TRAINING_GAIN_AXES.size()):
 		var axis: String = _TRAINING_GAIN_AXES[i]
-		gains[axis] = calc_training_gain(axis)
-	return gains
+		fallback[i] = calc_training_gain(axis)
+	return fallback
+
+
+## 훈련 gain 5축 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+func calc_training_gain_batch() -> Dictionary:
+	var packed: PackedInt32Array = calc_training_gain_packed()
+	if packed.size() >= _TRAINING_GAIN_AXIS_COUNT:
+		return {
+			"str": int(packed[0]),
+			"agi": int(packed[1]),
+			"end": int(packed[2]),
+			"tou": int(packed[3]),
+			"rec": int(packed[4]),
+		}
+	return {
+		"str": 0,
+		"agi": 0,
+		"end": 0,
+		"tou": 0,
+		"rec": 0,
+	}
 
 
 ## 6축 realized 배치 계산 (str/agi/end/tou/rec/dr)
@@ -338,14 +354,14 @@ func calc_realized_values_packed(age_years: float) -> PackedInt32Array:
 			return packed
 
 	var age_curves: Dictionary = compute_age_curve_batch(age_years)
-	var gains: Dictionary = calc_training_gain_batch()
+	var gains: PackedInt32Array = calc_training_gain_packed()
 	var fallback: PackedInt32Array = PackedInt32Array()
 	fallback.resize(_AGE_CURVE_AXIS_COUNT)
-	fallback[0] = clampi(int(float(potential.get("str", 700) + gains.get("str", 0)) * float(age_curves.get("str", 0.5))), 0, 15000)
-	fallback[1] = clampi(int(float(potential.get("agi", 700) + gains.get("agi", 0)) * float(age_curves.get("agi", 0.5))), 0, 15000)
-	fallback[2] = clampi(int(float(potential.get("end", 700) + gains.get("end", 0)) * float(age_curves.get("end", 0.5))), 0, 15000)
-	fallback[3] = clampi(int(float(potential.get("tou", 700) + gains.get("tou", 0)) * float(age_curves.get("tou", 0.5))), 0, 15000)
-	fallback[4] = clampi(int(float(potential.get("rec", 700) + gains.get("rec", 0)) * float(age_curves.get("rec", 0.5))), 0, 15000)
+	fallback[0] = clampi(int(float(potential.get("str", 700) + gains[0]) * float(age_curves.get("str", 0.5))), 0, 15000)
+	fallback[1] = clampi(int(float(potential.get("agi", 700) + gains[1]) * float(age_curves.get("agi", 0.5))), 0, 15000)
+	fallback[2] = clampi(int(float(potential.get("end", 700) + gains[2]) * float(age_curves.get("end", 0.5))), 0, 15000)
+	fallback[3] = clampi(int(float(potential.get("tou", 700) + gains[3]) * float(age_curves.get("tou", 0.5))), 0, 15000)
+	fallback[4] = clampi(int(float(potential.get("rec", 700) + gains[4]) * float(age_curves.get("rec", 0.5))), 0, 15000)
 	fallback[5] = clampi(int(float(potential.get("dr", 700)) * float(age_curves.get("dr", 0.5))), 0, 10000)
 	return fallback
 
