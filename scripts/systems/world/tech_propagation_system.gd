@@ -103,15 +103,15 @@ func _update_teaching_sessions(tick: int) -> void:
 			_check_apprenticeship(session["teacher_id"], session["student_id"],
 				session["tech_id"])
 
-			if _chronicle != null:
-				_chronicle.log_event("teaching_completed", session["student_id"],
-					"Learned %s from teacher %d" % [session["skill_id"], session["teacher_id"]],
-					3, [session["teacher_id"]], tick,
-					{"key": "TOAST_TEACHING_COMPLETED",
-					"params": {"student": str(session["student_id"]),
-						"teacher": str(session["teacher_id"]),
-						"skill": session["skill_id"],
-						"level": str(current_level)}})
+				if _chronicle != null:
+					_chronicle.log_event("teaching_completed", session["student_id"],
+						"Learned %s from teacher %d" % [session["skill_id"], session["teacher_id"]],
+						3, [session["teacher_id"]], tick,
+						{"key": "TOAST_TEACHING_COMPLETED",
+						"params": {"student": session["student_id"],
+							"teacher": session["teacher_id"],
+							"skill": session["skill_id"],
+							"level": current_level}})
 
 		## Check abandonment (no progress for too long)
 		var elapsed: int = tick - session["started_tick"]
@@ -136,8 +136,8 @@ func _abandon_session(session: Dictionary, reason: String, tick: int) -> void:
 			"Teaching of %s abandoned: %s" % [session["skill_id"], reason],
 			2, [session["teacher_id"]], tick,
 			{"key": "TOAST_TEACHING_ABANDONED",
-			"params": {"student": str(session["student_id"]),
-				"teacher": str(session["teacher_id"]),
+			"params": {"student": session["student_id"],
+				"teacher": session["teacher_id"],
 				"skill": session["skill_id"]}})
 
 
@@ -247,14 +247,14 @@ func _match_pairs_for_skill(settlement: RefCounted, tech_id: String,
 			SimulationBus.teaching_session_started.emit(
 				t_data["id"], s_data["id"], tech_id, skill_id)
 
-			if _chronicle != null:
-				_chronicle.log_event("teaching_started", s_data["id"],
-					"Learning %s from teacher %d" % [skill_id, t_data["id"]],
-					2, [t_data["id"]], tick,
-					{"key": "TOAST_TEACHING_STARTED",
-					"params": {"teacher": str(t_data["id"]),
-						"student": str(s_data["id"]),
-						"skill": skill_id}})
+				if _chronicle != null:
+					_chronicle.log_event("teaching_started", s_data["id"],
+						"Learning %s from teacher %d" % [skill_id, t_data["id"]],
+						2, [t_data["id"]], tick,
+						{"key": "TOAST_TEACHING_STARTED",
+						"params": {"teacher": t_data["id"],
+							"student": s_data["id"],
+							"skill": skill_id}})
 
 			if _count_students(t_data["id"]) >= GameConfig.TEACHING_MAX_STUDENTS:
 				break
@@ -652,15 +652,15 @@ func _import_tech(target: RefCounted, tech_id: String,
 			_:
 				toast_key = "TOAST_TECH_IMPORTED_TRADE"
 
-		_chronicle.log_event("tech_imported", carrier_id,
-			"[Settlement %d] imported %s via %s from settlement %d" \
-				% [target.id, tech_id, channel, source_id],
-			4, [], tick,
-			{"key": toast_key,
-			"params": {"settlement": str(target.id),
-				"tech": tech_id,
-				"source": str(source_id),
-				"carrier": str(carrier_id)}})
+			_chronicle.log_event("tech_imported", carrier_id,
+				"[Settlement %d] imported %s via %s from settlement %d" \
+					% [target.id, tech_id, channel, source_id],
+				4, [], tick,
+				{"key": toast_key,
+				"params": {"settlement": target.id,
+					"tech": tech_id,
+					"source": source_id,
+					"carrier": carrier_id}})
 
 
 ## Calculate cultural modifier for the target settlement.

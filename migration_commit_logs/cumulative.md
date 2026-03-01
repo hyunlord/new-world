@@ -581,3 +581,8 @@
 - `chronicle_system.log_event`의 `l10n` 저장 경로를 정규화해 `l10n_key`가 비어있으면 저장하지 않도록 변경.
 - `l10n_params`가 비어있는 경우 엔트리에 기록하지 않도록 변경.
 - 렌더 fallback 의미를 유지하면서 chronicle 이벤트 엔트리 payload 크기를 소폭 축소.
+
+## Commit 119
+- `tech_maintenance_system`의 chronicle params에서 `settlement` 값을 문자열 선변환 없이 정수로 직접 전달.
+- `tech_propagation_system`의 teaching/imported 이벤트 params(`student`, `teacher`, `level`, `settlement`, `source`, `carrier`) 선 문자열 변환 제거.
+- 출력 의미를 유지하면서 chronicle params 생성 시 불필요한 문자열 할당을 줄임.
