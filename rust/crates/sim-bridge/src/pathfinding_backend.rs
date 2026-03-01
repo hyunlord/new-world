@@ -1,10 +1,12 @@
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
 
 pub const PATHFIND_BACKEND_AUTO: u8 = 0;
 pub const PATHFIND_BACKEND_CPU: u8 = 1;
 pub const PATHFIND_BACKEND_GPU: u8 = 2;
 
 static PATHFIND_BACKEND_MODE: AtomicU8 = AtomicU8::new(PATHFIND_BACKEND_AUTO);
+static CPU_DISPATCH_COUNT: AtomicU64 = AtomicU64::new(0);
+static GPU_DISPATCH_COUNT: AtomicU64 = AtomicU64::new(0);
 
 #[inline]
 pub fn set_backend_mode(mode: u8) {
@@ -67,4 +69,30 @@ pub fn resolve_backend_mode_str(mode: u8) -> &'static str {
 #[inline]
 pub fn has_gpu_backend() -> bool {
     cfg!(feature = "gpu")
+}
+
+#[inline]
+pub fn record_dispatch(resolved_mode: u8) {
+    match resolved_mode {
+        PATHFIND_BACKEND_GPU => {
+            GPU_DISPATCH_COUNT.fetch_add(1, Ordering::Relaxed);
+        }
+        _ => {
+            CPU_DISPATCH_COUNT.fetch_add(1, Ordering::Relaxed);
+        }
+    }
+}
+
+#[inline]
+pub fn read_dispatch_counts() -> (u64, u64) {
+    (
+        CPU_DISPATCH_COUNT.load(Ordering::Relaxed),
+        GPU_DISPATCH_COUNT.load(Ordering::Relaxed),
+    )
+}
+
+#[inline]
+pub fn reset_dispatch_counts() {
+    CPU_DISPATCH_COUNT.store(0, Ordering::Relaxed);
+    GPU_DISPATCH_COUNT.store(0, Ordering::Relaxed);
 }

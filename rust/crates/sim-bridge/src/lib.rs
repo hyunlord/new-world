@@ -9,7 +9,8 @@ mod pathfinding_gpu;
 
 use godot::prelude::*;
 use pathfinding_backend::{
-    get_backend_mode, has_gpu_backend, set_backend_mode, PATHFIND_BACKEND_GPU,
+    get_backend_mode, has_gpu_backend, read_dispatch_counts, record_dispatch,
+    reset_dispatch_counts, set_backend_mode, PATHFIND_BACKEND_GPU,
 };
 use pathfinding_gpu::{
     pathfind_grid_batch_vec2_gpu_bytes, pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
@@ -348,7 +349,9 @@ fn dispatch_pathfind_grid_bytes(
     to_y: i32,
     max_steps: usize,
 ) -> Result<Vec<GridPos>, PathfindError> {
-    match resolve_backend_mode_code(backend_mode) {
+    let resolved_mode = resolve_backend_mode_code(backend_mode);
+    record_dispatch(resolved_mode);
+    match resolved_mode {
         PATHFIND_BACKEND_GPU => pathfind_grid_gpu_bytes(
             width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
         ),
@@ -368,7 +371,9 @@ fn dispatch_pathfind_grid_batch_vec2_bytes(
     to_points: &[Vector2],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    match resolve_backend_mode_code(backend_mode) {
+    let resolved_mode = resolve_backend_mode_code(backend_mode);
+    record_dispatch(resolved_mode);
+    match resolved_mode {
         PATHFIND_BACKEND_GPU => pathfind_grid_batch_vec2_gpu_bytes(
             width,
             height,
@@ -400,7 +405,9 @@ fn dispatch_pathfind_grid_batch_xy_bytes(
     to_xy: &[i32],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    match resolve_backend_mode_code(backend_mode) {
+    let resolved_mode = resolve_backend_mode_code(backend_mode);
+    record_dispatch(resolved_mode);
+    match resolved_mode {
         PATHFIND_BACKEND_GPU => pathfind_grid_batch_xy_gpu_bytes(
             width, height, walkable, move_cost, from_xy, to_xy, max_steps,
         ),
@@ -555,6 +562,26 @@ impl WorldSimBridge {
     #[func]
     fn has_gpu_pathfinding(&self) -> bool {
         has_gpu_backend()
+    }
+
+    #[func]
+    fn get_pathfinding_backend_stats(&self) -> VarDictionary {
+        let configured_mode = get_backend_mode();
+        let resolved_mode = resolve_backend_mode_code(configured_mode);
+        let (cpu_dispatches, gpu_dispatches) = read_dispatch_counts();
+
+        let mut dict = VarDictionary::new();
+        dict.set("configured", backend_mode_to_str(configured_mode));
+        dict.set("resolved", resolve_backend_mode(resolved_mode));
+        dict.set("cpu_dispatches", cpu_dispatches as i64);
+        dict.set("gpu_dispatches", gpu_dispatches as i64);
+        dict.set("total_dispatches", (cpu_dispatches + gpu_dispatches) as i64);
+        dict
+    }
+
+    #[func]
+    fn reset_pathfinding_backend_stats(&self) {
+        reset_dispatch_counts();
     }
 
     #[func]
@@ -2547,7 +2574,8 @@ mod tests {
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
     use super::pathfinding_backend::{
-        PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
+        read_dispatch_counts, reset_dispatch_counts, PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU,
+        PATHFIND_BACKEND_GPU,
     };
 
     fn base_input() -> PathfindInput {
@@ -2822,6 +2850,51 @@ mod tests {
                 height: 0
             }
         );
+    }
+
+    #[test]
+    fn backend_dispatch_counters_track_resolved_modes() {
+        reset_dispatch_counts();
+
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let (cpu_before, gpu_before) = read_dispatch_counts();
+        let _ = dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_CPU,
+            4,
+            4,
+            &walkable,
+            &move_cost,
+            0,
+            0,
+            3,
+            3,
+            200,
+        )
+        .expect("cpu dispatch should succeed");
+        let (cpu_after_cpu_call, gpu_after_cpu_call) = read_dispatch_counts();
+        let _ = dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_GPU,
+            4,
+            4,
+            &walkable,
+            &move_cost,
+            0,
+            0,
+            3,
+            3,
+            200,
+        )
+        .expect("gpu dispatch should succeed");
+        let (cpu_after_gpu_call, gpu_after_gpu_call) = read_dispatch_counts();
+
+        assert!(cpu_after_cpu_call + gpu_after_cpu_call >= cpu_before + gpu_before + 1);
+        assert!(cpu_after_gpu_call + gpu_after_gpu_call >= cpu_after_cpu_call + gpu_after_cpu_call + 1);
+        if cfg!(feature = "gpu") {
+            assert!(gpu_after_gpu_call >= gpu_after_cpu_call + 1);
+        } else {
+            assert!(cpu_after_gpu_call >= cpu_after_cpu_call + 1);
+        }
     }
 
     #[test]

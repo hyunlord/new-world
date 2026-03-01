@@ -1100,3 +1100,8 @@
 - `sim-bridge` GPU placeholder pathfinding 엔트리포인트를 `pathfinding_gpu.rs`로 분리해 GPU 구현 확장 지점을 모듈화.
 - 기존 dispatch 인터페이스/동작은 유지하고 CPU fallback semantics를 동일하게 보장.
 - 전체 검증(`migration_verify --with-benches`)으로 checksum 유지 확인.
+
+## Commit 223
+- pathfinding backend 레이어에 CPU/GPU dispatch 카운터를 추가하고 dispatch 경로에서 resolved backend 기준으로 계측.
+- `WorldSimBridge`에 `get_pathfinding_backend_stats`/`reset_pathfinding_backend_stats`를 추가해 런타임 관측성을 강화.
+- 병렬 테스트 환경에서도 안정적인 델타 기반 회귀 테스트를 추가하고 전체 검증(`migration_verify --with-benches`) 통과.
