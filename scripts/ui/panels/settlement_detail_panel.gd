@@ -196,7 +196,7 @@ func _draw() -> void:
 			GameConfig.get_font_size("popup_body"), era_color)
 
 	# Population count
-	var pop_text: String = Locale.trf("UI_STAT_POP_FMT", {"n": _cached_data.get("population", 0)})
+	var pop_text: String = Locale.trf1("UI_STAT_POP_FMT", "n", _cached_data.get("population", 0))
 	draw_string(font, Vector2(20.0, 47.0), pop_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1,
 		GameConfig.get_font_size("popup_small"), NEUTRAL_COLOR)
