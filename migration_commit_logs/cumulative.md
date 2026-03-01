@@ -726,3 +726,8 @@
 - `sim-systems::body`에 `anxious_attachment_stress_delta`를 추가해 anxious attachment 조건의 사회욕구 기반 스트레스 증가 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 `body_anxious_attachment_stress_delta` 경로를 추가하고, `needs_system` 분기가 Rust 우선 + 기존 비교 fallback 구조를 사용하도록 전환.
 - 스트레스 증가 조건(`social < threshold`)과 clamp 의미는 유지하면서 needs tick 수학 경로의 네이티브화 범위를 확장.
+
+## Commit 148
+- `needs_system`에서 base decay/critical severity 처리 시 임시 `PackedFloat32Array`(`base_decay_step`, `rust_temp_decay`, `severity_step`) 생성 경로를 제거.
+- Rust 반환 packed 값을 즉시 스칼라로 디코드해 갈증/체온/안전감 소모 및 severity 계산에 재사용하도록 전환.
+- 계산 의미는 유지하면서 needs tick 루프의 메모리 할당 churn을 추가 완화.

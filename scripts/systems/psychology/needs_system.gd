@@ -55,7 +55,13 @@ func execute_tick(tick: int) -> void:
 		if _world_data != null:
 			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
 			has_tile_temp = true
-		var base_decay_step: PackedFloat32Array = PackedFloat32Array()
+		var has_rust_base_decay: bool = false
+		var rust_hunger_decay: float = 0.0
+		var rust_energy_decay: float = 0.0
+		var rust_social_decay: float = 0.0
+		var rust_thirst_decay: float = 0.0
+		var rust_warmth_decay: float = 0.0
+		var rust_safety_decay: float = 0.0
 		_base_decay_scalar_inputs[0] = entity.hunger
 		_base_decay_scalar_inputs[1] = GameConfig.HUNGER_DECAY_RATE
 		_base_decay_scalar_inputs[2] = hunger_mult
@@ -79,13 +85,19 @@ func execute_tick(tick: int) -> void:
 		if base_decay_variant is PackedFloat32Array:
 			var packed_base_decay: PackedFloat32Array = base_decay_variant
 			if packed_base_decay.size() >= 6:
-				base_decay_step = packed_base_decay
-		if base_decay_step.size() >= 6:
-			entity.hunger -= float(base_decay_step[0])
-			entity.energy -= float(base_decay_step[1])
-			entity.social -= float(base_decay_step[2])
+				rust_hunger_decay = float(packed_base_decay[0])
+				rust_energy_decay = float(packed_base_decay[1])
+				rust_social_decay = float(packed_base_decay[2])
+				rust_thirst_decay = float(packed_base_decay[3])
+				rust_warmth_decay = float(packed_base_decay[4])
+				rust_safety_decay = float(packed_base_decay[5])
+				has_rust_base_decay = true
+		if has_rust_base_decay:
+			entity.hunger -= rust_hunger_decay
+			entity.energy -= rust_energy_decay
+			entity.social -= rust_social_decay
 			if GameConfig.NEEDS_EXPANSION_ENABLED:
-				entity.safety = maxf(0.0, entity.safety - float(base_decay_step[5]))
+				entity.safety = maxf(0.0, entity.safety - rust_safety_decay)
 		else:
 			var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
 			entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
@@ -94,17 +106,12 @@ func execute_tick(tick: int) -> void:
 			if GameConfig.NEEDS_EXPANSION_ENABLED:
 				entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
-		var rust_temp_decay: PackedFloat32Array = PackedFloat32Array()
-		if GameConfig.NEEDS_EXPANSION_ENABLED and base_decay_step.size() >= 6:
-			rust_temp_decay.append(float(base_decay_step[3]))
-			rust_temp_decay.append(float(base_decay_step[4]))
-
 		## [Maslow (1943) L1 — 갈증 소모]
 		## 기본 소모 + 더운 타일에서 가속 (최대 2배)
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
-			if rust_temp_decay.size() >= 2:
-				thirst_decay = float(rust_temp_decay[0])
+			if has_rust_base_decay:
+				thirst_decay = rust_thirst_decay
 			elif has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
 				thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
 			entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
@@ -113,8 +120,8 @@ func execute_tick(tick: int) -> void:
 		## 중립 온도(0.5) 이상이면 소모 없음, 추울수록 가속
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var warmth_decay: float = 0.0
-			if rust_temp_decay.size() >= 2:
-				warmth_decay = float(rust_temp_decay[1])
+			if has_rust_base_decay:
+				warmth_decay = rust_warmth_decay
 			elif has_tile_temp:
 				if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
 					if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
@@ -169,7 +176,10 @@ func execute_tick(tick: int) -> void:
 
 		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
 		if GameConfig.NEEDS_EXPANSION_ENABLED and entity.emotion_data != null:
-			var severity_step: PackedFloat32Array = PackedFloat32Array()
+			var has_rust_severity: bool = false
+			var rust_sev_thirst: float = 0.0
+			var rust_sev_warmth: float = 0.0
+			var rust_sev_safety: float = 0.0
 			_critical_severity_scalar_inputs[0] = entity.thirst
 			_critical_severity_scalar_inputs[1] = entity.warmth
 			_critical_severity_scalar_inputs[2] = entity.safety
@@ -182,27 +192,30 @@ func execute_tick(tick: int) -> void:
 			if severity_variant is PackedFloat32Array:
 				var packed_severity: PackedFloat32Array = severity_variant
 				if packed_severity.size() >= 3:
-					severity_step = packed_severity
+					rust_sev_thirst = float(packed_severity[0])
+					rust_sev_warmth = float(packed_severity[1])
+					rust_sev_safety = float(packed_severity[2])
+					has_rust_severity = true
 			if entity.thirst < GameConfig.THIRST_CRITICAL:
 				var sev_thirst: float = 1.0 - (entity.thirst / GameConfig.THIRST_CRITICAL)
-				if severity_step.size() >= 3:
-					sev_thirst = float(severity_step[0])
+				if has_rust_severity:
+					sev_thirst = rust_sev_thirst
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "dehydration", 3.0 * sev_thirst)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 3.0 * sev_thirst, 0.0, 100.0)
 			if entity.warmth < GameConfig.WARMTH_CRITICAL:
 				var sev_warmth: float = 1.0 - (entity.warmth / GameConfig.WARMTH_CRITICAL)
-				if severity_step.size() >= 3:
-					sev_warmth = float(severity_step[1])
+				if has_rust_severity:
+					sev_warmth = rust_sev_warmth
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "hypothermia", 4.0 * sev_warmth)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 4.0 * sev_warmth, 0.0, 100.0)
 			if entity.safety < GameConfig.SAFETY_CRITICAL:
 				var sev_safety: float = 1.0 - (entity.safety / GameConfig.SAFETY_CRITICAL)
-				if severity_step.size() >= 3:
-					sev_safety = float(severity_step[2])
+				if has_rust_severity:
+					sev_safety = rust_sev_safety
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "constant_threat", 2.0 * sev_safety)
 				else:
