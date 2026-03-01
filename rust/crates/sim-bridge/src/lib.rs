@@ -507,6 +507,27 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_needs_critical_severity_step(
+        &self,
+        thirst: f32,
+        warmth: f32,
+        safety: f32,
+        thirst_critical: f32,
+        warmth_critical: f32,
+        safety_critical: f32,
+    ) -> PackedFloat32Array {
+        let out = body::needs_critical_severity_step(
+            thirst,
+            warmth,
+            safety,
+            thirst_critical,
+            warmth_critical,
+            safety_critical,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

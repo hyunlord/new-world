@@ -207,6 +207,34 @@ pub fn needs_base_decay_step(
     ]
 }
 
+/// Compute normalized severity for a critical threshold crossing.
+///
+/// Returns `0.0` when the value is above threshold or threshold is invalid.
+pub fn critical_severity(value: f32, critical_threshold: f32) -> f32 {
+    if critical_threshold <= 0.0 || value >= critical_threshold {
+        return 0.0;
+    }
+    clamp_f32(1.0 - (value / critical_threshold), 0.0, 1.0)
+}
+
+/// Combined critical severities for thirst/warmth/safety.
+///
+/// Returns `[thirst_severity, warmth_severity, safety_severity]`.
+pub fn needs_critical_severity_step(
+    thirst: f32,
+    warmth: f32,
+    safety: f32,
+    thirst_critical: f32,
+    warmth_critical: f32,
+    safety_critical: f32,
+) -> [f32; 3] {
+    [
+        critical_severity(thirst, thirst_critical),
+        critical_severity(warmth, warmth_critical),
+        critical_severity(safety, safety_critical),
+    ]
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -390,8 +418,8 @@ mod tests {
     use super::{
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
         action_energy_cost, calc_realized_values, calc_training_gains,
-        compute_age_curve, compute_age_curves,
-        needs_base_decay_step, needs_temp_decay_step, rest_energy_recovery, thirst_decay,
+        compute_age_curve, compute_age_curves, critical_severity, needs_base_decay_step,
+        needs_critical_severity_step, needs_temp_decay_step, rest_energy_recovery, thirst_decay,
         warmth_decay,
     };
 
@@ -514,6 +542,20 @@ mod tests {
         assert_eq!(out[3], thirst_decay(0.005, 0.2, 0.5));
         assert_eq!(out[4], warmth_decay(0.01, 0.2, true, 0.5, 0.1, 0.3));
         assert_eq!(out[5], 0.001);
+    }
+
+    #[test]
+    fn critical_severity_returns_zero_above_threshold() {
+        assert_eq!(critical_severity(0.9, 0.5), 0.0);
+        assert_eq!(critical_severity(0.9, 0.0), 0.0);
+    }
+
+    #[test]
+    fn critical_severity_step_matches_individual_calculations() {
+        let out = needs_critical_severity_step(0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
+        assert_eq!(out[0], critical_severity(0.1, 0.4));
+        assert_eq!(out[1], critical_severity(0.2, 0.5));
+        assert_eq!(out[2], critical_severity(0.3, 0.6));
     }
 
     #[test]

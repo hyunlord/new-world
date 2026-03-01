@@ -1457,6 +1457,29 @@ func body_needs_base_decay_step(
 	return body_needs_base_decay_step_packed(scalar_inputs, flag_inputs)
 
 
+## Delegates critical severity step for thirst/warmth/safety to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_needs_critical_severity_step(
+	thirst: float,
+	warmth: float,
+	safety: float,
+	thirst_critical: float,
+	warmth_critical: float,
+	safety_critical: float
+):
+	return _call_native_if_exists(
+		"body_needs_critical_severity_step",
+		[
+			thirst,
+			warmth,
+			safety,
+			thirst_critical,
+			warmth_critical,
+			safety_critical
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

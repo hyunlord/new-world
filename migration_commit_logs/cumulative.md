@@ -691,3 +691,8 @@
 - `needs_base_decay_step` 출력을 6축으로 확장해 safety decay를 base step에 포함하고, `needs_expansion_enabled` 조건에서만 안전감 소모가 반영되도록 통합.
 - `sim-bridge`/`SimBridge` packed scalar 인코딩 순서를 safety 포함 구조로 조정.
 - `needs_system`이 base step 결과에서 safety를 직접 반영하도록 전환되어 기본 소모 경로의 분리 safety 감산 블록을 제거하고 실행 경로를 단순화.
+
+## Commit 141
+- `sim-systems::body`에 `critical_severity`와 `needs_critical_severity_step`를 추가해 갈증/체온/안전감 임계치 severity 계산을 Rust 배치 함수로 이관.
+- `sim-bridge`/`SimBridge`에 `body_needs_critical_severity_step`를 추가하고, `needs_system`이 단일 결과를 재사용하도록 전환.
+- needs stressor 구간의 severity 계산 의미를 유지하면서 bridge 호출/중복 계산 경로를 정리.

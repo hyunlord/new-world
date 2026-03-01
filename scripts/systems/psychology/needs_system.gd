@@ -171,20 +171,39 @@ func execute_tick(tick: int) -> void:
 
 		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
 		if GameConfig.NEEDS_EXPANSION_ENABLED and entity.emotion_data != null:
+			var severity_step: PackedFloat32Array = PackedFloat32Array()
+			var severity_variant: Variant = SimBridge.body_needs_critical_severity_step(
+				entity.thirst,
+				entity.warmth,
+				entity.safety,
+				GameConfig.THIRST_CRITICAL,
+				GameConfig.WARMTH_CRITICAL,
+				GameConfig.SAFETY_CRITICAL
+			)
+			if severity_variant is PackedFloat32Array:
+				var packed_severity: PackedFloat32Array = severity_variant
+				if packed_severity.size() >= 3:
+					severity_step = packed_severity
 			if entity.thirst < GameConfig.THIRST_CRITICAL:
 				var sev_thirst: float = 1.0 - (entity.thirst / GameConfig.THIRST_CRITICAL)
+				if severity_step.size() >= 3:
+					sev_thirst = float(severity_step[0])
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "dehydration", 3.0 * sev_thirst)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 3.0 * sev_thirst, 0.0, 100.0)
 			if entity.warmth < GameConfig.WARMTH_CRITICAL:
 				var sev_warmth: float = 1.0 - (entity.warmth / GameConfig.WARMTH_CRITICAL)
+				if severity_step.size() >= 3:
+					sev_warmth = float(severity_step[1])
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "hypothermia", 4.0 * sev_warmth)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 4.0 * sev_warmth, 0.0, 100.0)
 			if entity.safety < GameConfig.SAFETY_CRITICAL:
 				var sev_safety: float = 1.0 - (entity.safety / GameConfig.SAFETY_CRITICAL)
+				if severity_step.size() >= 3:
+					sev_safety = float(severity_step[2])
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "constant_threat", 2.0 * sev_safety)
 				else:
