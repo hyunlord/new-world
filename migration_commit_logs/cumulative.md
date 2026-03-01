@@ -931,3 +931,8 @@
 - `sim-bridge` batch pathfinding 경로에서 월드 그리드를 요청마다 재구성하던 구조를 제거하고, 배치당 1회 grid 빌드 후 재사용하도록 개선.
 - 길이 검증 + grid 생성 로직을 `build_grid_cost_map`으로 공통화해 `pathfind_grid_bytes`/`pathfind_grid_batch_bytes` 경로를 단순화.
 - path 의미/에러 의미는 유지하면서 batch pathfinding의 핵심 오버헤드를 완화.
+
+## Commit 189
+- `sim-bridge`에 packed XY 슬라이스 직접 순회 경로(`pathfind_grid_batch_xy_bytes`)를 추가해 `pathfind_grid_batch_xy`의 tuple 디코딩 중간 할당을 제거.
+- 기존 `decode_xy_pairs`를 제거하고 XY batch 브리지 호출이 곧바로 슬라이스 기반 batch pathfinding을 사용하도록 전환.
+- path 의미를 유지하면서 XY batch 경로의 메모리/CPU 오버헤드를 완화.

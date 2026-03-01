@@ -173,6 +173,39 @@ pub fn pathfind_grid_batch_bytes(
     Ok(out)
 }
 
+pub fn pathfind_grid_batch_xy_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_xy: &[i32],
+    to_xy: &[i32],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    if from_xy.len() != to_xy.len() || from_xy.len() % 2 != 0 {
+        return Err(PathfindError::MismatchedBatchLength {
+            from_len: from_xy.len(),
+            to_len: to_xy.len(),
+        });
+    }
+
+    let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    let pair_count = from_xy.len() / 2;
+    let mut out = Vec::with_capacity(pair_count);
+    let mut idx = 0usize;
+    while idx + 1 < from_xy.len() {
+        let path = find_path(
+            &grid,
+            GridPos::new(from_xy[idx], from_xy[idx + 1]),
+            GridPos::new(to_xy[idx], to_xy[idx + 1]),
+            max_steps,
+        );
+        out.push(path);
+        idx += 2;
+    }
+    Ok(out)
+}
+
 fn packed_i32_to_vec(values: &PackedInt32Array) -> Vec<i32> {
     values.as_slice().to_vec()
 }
@@ -207,20 +240,6 @@ fn build_step_pairs(
         pairs.push((thresholds[idx], multipliers[idx]));
     }
     pairs
-}
-
-fn decode_xy_pairs(values: &PackedInt32Array) -> Option<Vec<(i32, i32)>> {
-    if values.len() % 2 != 0 {
-        return None;
-    }
-    let mut out: Vec<(i32, i32)> = Vec::with_capacity(values.len() / 2);
-    let slice = values.as_slice();
-    let mut i = 0usize;
-    while i + 1 < slice.len() {
-        out.push((slice[i], slice[i + 1]));
-        i += 2;
-    }
-    Some(out)
 }
 
 fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Array> {
@@ -1092,22 +1111,13 @@ impl WorldSimBridge {
             max_steps as usize
         };
 
-        let from_pairs = match decode_xy_pairs(&from_xy) {
-            Some(v) => v,
-            None => return Array::new(),
-        };
-        let to_pairs = match decode_xy_pairs(&to_xy) {
-            Some(v) => v,
-            None => return Array::new(),
-        };
-
-        let path_groups = match pathfind_grid_batch_bytes(
+        let path_groups = match pathfind_grid_batch_xy_bytes(
             width,
             height,
             walkable.as_slice(),
             move_cost.as_slice(),
-            &from_pairs,
-            &to_pairs,
+            from_xy.as_slice(),
+            to_xy.as_slice(),
             steps,
         ) {
             Ok(groups) => groups,
