@@ -777,3 +777,8 @@
 - `sim-test --bench-needs-math`에 `child_parent_stress_transfer`와 `child_simultaneous_ace_step` 호출을 추가해 child stress Rust 수식까지 회귀 추적 범위를 확장.
 - 벤치 checksum 기준을 child 수식 포함 값(`29781070.00000` @ 10k iters)으로 갱신.
 - 런타임 코드 경로는 변경하지 않고 성능/회귀 관측 지표를 강화.
+
+## Commit 158
+- `sim-systems::body`에 `child_social_buffered_intensity`를 추가해 child stress social-buffer 감쇠 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor._apply_social_buffer`가 Rust 우선 + 기존 fallback 구조를 사용하도록 전환.
+- child stress 경로의 순수 감쇠 수학을 네이티브화하면서 기존 의미와 호환성을 유지.

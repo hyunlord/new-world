@@ -708,6 +708,22 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_social_buffered_intensity(
+        &self,
+        intensity: f32,
+        attachment_quality: f32,
+        caregiver_present: bool,
+        buffer_power: f32,
+    ) -> f32 {
+        body::child_social_buffered_intensity(
+            intensity,
+            attachment_quality,
+            caregiver_present,
+            buffer_power,
+        )
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

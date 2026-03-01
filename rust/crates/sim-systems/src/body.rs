@@ -426,6 +426,20 @@ pub fn child_simultaneous_ace_step(severities: &[f32], prev_residual: f32) -> [f
     [effective_damage, max_index as f32, kindling_bonus]
 }
 
+/// Child stress social-buffer attenuation.
+pub fn child_social_buffered_intensity(
+    intensity: f32,
+    attachment_quality: f32,
+    caregiver_present: bool,
+    buffer_power: f32,
+) -> f32 {
+    if !caregiver_present {
+        return intensity;
+    }
+    let social_buffer = attachment_quality * buffer_power;
+    intensity * (1.0 - social_buffer)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -610,10 +624,10 @@ mod tests {
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
         calc_training_gains, child_parent_stress_transfer, child_simultaneous_ace_step,
-        compute_age_curve, compute_age_curves, critical_severity, erg_frustration_step,
-        needs_base_decay_step, needs_critical_severity_step, rest_energy_recovery, thirst_decay,
-        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        warmth_decay,
+        child_social_buffered_intensity, compute_age_curve, compute_age_curves, critical_severity,
+        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
+        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
+        upper_needs_job_alignment, upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -849,6 +863,13 @@ mod tests {
         assert_eq!(out[0], 0.0);
         assert_eq!(out[1], -1.0);
         assert_eq!(out[2], 0.0);
+    }
+
+    #[test]
+    fn child_social_buffered_intensity_reduces_when_caregiver_present() {
+        let no_support = child_social_buffered_intensity(0.8, 0.7, false, 0.5);
+        let with_support = child_social_buffered_intensity(0.8, 0.7, true, 0.5);
+        assert!(with_support < no_support);
     }
 
     #[test]

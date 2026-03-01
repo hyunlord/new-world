@@ -211,6 +211,14 @@ func _apply_social_buffer(intensity: float, stage: String,
 		return intensity
 	var stage_data = _stages.get(stage, {})
 	var buffer_power: float = float(stage_data.get("buffer_power", 0.0))
+	var buffered_variant: Variant = SimBridge.body_child_social_buffered_intensity(
+		intensity,
+		attachment_quality,
+		caregiver_present,
+		buffer_power
+	)
+	if buffered_variant != null:
+		return float(buffered_variant)
 	var social_buffer: float = attachment_quality * buffer_power
 	return intensity * (1.0 - social_buffer)
 

@@ -1599,6 +1599,25 @@ func body_child_simultaneous_ace_step(
 	)
 
 
+## Delegates child social-buffer attenuation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_social_buffered_intensity(
+	intensity: float,
+	attachment_quality: float,
+	caregiver_present: bool,
+	buffer_power: float
+):
+	return _call_native_if_exists(
+		"body_child_social_buffered_intensity",
+		[
+			intensity,
+			attachment_quality,
+			caregiver_present,
+			buffer_power
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge
