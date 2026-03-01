@@ -66,8 +66,56 @@ pub fn load_species_catalog(base_dir: &Path) -> DataResult<SpeciesCatalog> {
             continue;
         }
         let def: SpeciesDefinition = load_json(&def_path)?;
+        validate_species_definition(&def, &def_path)?;
         by_id.insert(def.species_id.clone(), def);
     }
 
     Ok(SpeciesCatalog(by_id))
+}
+
+fn validate_species_definition(def: &SpeciesDefinition, path: &Path) -> DataResult<()> {
+    let p = path.display().to_string();
+    if def.species_id.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "species_id".to_string(),
+            path: p,
+        });
+    }
+    if def.species_name.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "species_name".to_string(),
+            path: p,
+        });
+    }
+    if def.personality_model.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "personality_model".to_string(),
+            path: p,
+        });
+    }
+    if def.emotion_model.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "emotion_model".to_string(),
+            path: p,
+        });
+    }
+    if def.mortality_model.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "mortality_model".to_string(),
+            path: p,
+        });
+    }
+    if def.needs_model.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "needs_model".to_string(),
+            path: p,
+        });
+    }
+    if def.species_name_key.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "species_name_key".to_string(),
+            path: p,
+        });
+    }
+    Ok(())
 }

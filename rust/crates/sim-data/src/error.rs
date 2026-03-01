@@ -16,6 +16,12 @@ pub enum DataError {
     },
     #[error("Missing required field '{field}' in {path}")]
     MissingField { field: String, path: String },
+    #[error("Invalid value for field '{field}' in {path}: {reason}")]
+    InvalidField {
+        field: String,
+        path: String,
+        reason: String,
+    },
 }
 
 pub type DataResult<T> = Result<T, DataError>;

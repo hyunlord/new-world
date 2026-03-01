@@ -1358,3 +1358,10 @@
 - `rust/tests/data_loading_test.rs`를 확장해 species/mortality/developmental non-empty 및 attachment 설정 유효성(`determination_window_days > 0`)을 통합 검증.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량(데이터 로더 축): `8/9` 완료, `1/9` 잔여.
+
+## Commit 274
+- `sim-data` 신규 로더(species/mortality/developmental/attachment)에 스키마 sanity 검증을 추가해 필수 필드/범위 위반 시 로딩 단계에서 즉시 실패하도록 강화.
+- `DataError::InvalidField`를 도입하고, species 필수 문자열 필드/ mortaliy 수치 파라미터/ developmental age_range 형태/ attachment threshold 범위를 각각 검증.
+- `rust/tests/data_loading_test.rs`에 임시 디렉터리 기반 invalid JSON 테스트 4개를 추가해 실패 경로를 회귀 테스트로 고정.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량(데이터 로더 축): `8/9` 완료, `1/9` 잔여.

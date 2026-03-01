@@ -72,8 +72,82 @@ pub fn load_mortality_catalog(base_dir: &Path) -> DataResult<MortalityCatalog> {
             continue;
         }
         let profile: MortalityProfile = load_json(&profile_path)?;
+        validate_mortality_profile(&profile, &profile_path)?;
         by_species.insert(species_id, profile);
     }
 
     Ok(MortalityCatalog(by_species))
+}
+
+fn validate_mortality_profile(profile: &MortalityProfile, path: &Path) -> DataResult<()> {
+    if profile.model.trim().is_empty() {
+        return Err(DataError::MissingField {
+            field: "model".to_string(),
+            path: path.display().to_string(),
+        });
+    }
+
+    let p = path.display().to_string();
+    let a1 = required_number(&profile.baseline, "a1", &p, "baseline")?;
+    let b1 = required_number(&profile.baseline, "b1", &p, "baseline")?;
+    let a2 = required_number(&profile.baseline, "a2", &p, "baseline")?;
+    let a3 = required_number(&profile.baseline, "a3", &p, "baseline")?;
+    let b3 = required_number(&profile.baseline, "b3", &p, "baseline")?;
+    if a1 < 0.0 || a2 < 0.0 || a3 < 0.0 || b1 <= 0.0 || b3 <= 0.0 {
+        return Err(DataError::InvalidField {
+            field: "baseline".to_string(),
+            path: p.clone(),
+            reason: "expected a1/a2/a3 >= 0 and b1/b3 > 0".to_string(),
+        });
+    }
+
+    let k1 = required_number(&profile.tech_modifiers, "k1", &p, "tech_modifiers")?;
+    let k2 = required_number(&profile.tech_modifiers, "k2", &p, "tech_modifiers")?;
+    let k3 = required_number(&profile.tech_modifiers, "k3", &p, "tech_modifiers")?;
+    if k1 < 0.0 || k2 < 0.0 || k3 < 0.0 {
+        return Err(DataError::InvalidField {
+            field: "tech_modifiers".to_string(),
+            path: p.clone(),
+            reason: "expected k1/k2/k3 >= 0".to_string(),
+        });
+    }
+
+    let hunger_min = required_number(
+        &profile.care_protection,
+        "hunger_min",
+        &p,
+        "care_protection",
+    )?;
+    let protection_factor = required_number(
+        &profile.care_protection,
+        "protection_factor",
+        &p,
+        "care_protection",
+    )?;
+    if !(0.0..=1.0).contains(&hunger_min) || !(0.0..=1.0).contains(&protection_factor) {
+        return Err(DataError::InvalidField {
+            field: "care_protection".to_string(),
+            path: p,
+            reason: "expected hunger_min/protection_factor in [0, 1]".to_string(),
+        });
+    }
+
+    Ok(())
+}
+
+fn required_number(value: &Value, key: &str, path: &str, parent_field: &str) -> DataResult<f64> {
+    let object = value.as_object().ok_or_else(|| DataError::InvalidField {
+        field: parent_field.to_string(),
+        path: path.to_string(),
+        reason: "expected object".to_string(),
+    })?;
+    let number =
+        object
+            .get(key)
+            .and_then(|v| v.as_f64())
+            .ok_or_else(|| DataError::MissingField {
+                field: format!("{}.{}", parent_field, key),
+                path: path.to_string(),
+            })?;
+    Ok(number)
 }
