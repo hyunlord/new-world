@@ -11,3 +11,8 @@
 - `Pathfinder`에 Rust 우선 + GDScript fallback 경로탐색 분기 추가.
 - `SimBridge` autoload shim 추가 및 `project.godot`에 등록.
 - `Locale.ltr()`를 flat dictionary lookup으로 최적화하고 `tech` 카테고리 로딩 추가.
+
+## Commit 003
+- Rust bridge에 `pathfind_grid_batch` 계열 배치 API 추가.
+- GDScript `Pathfinder`/`SimBridge`에 배치 프록시 경로 추가.
+- `MovementSystem`이 재계산 엔티티를 모아 배치 호출하도록 최적화.

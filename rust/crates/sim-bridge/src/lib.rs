@@ -58,6 +58,7 @@ pub enum PathfindError {
     InvalidDimensions { width: i32, height: i32 },
     InvalidWalkableLength { expected: usize, got: usize },
     InvalidMoveCostLength { expected: usize, got: usize },
+    MismatchedBatchLength { from_len: usize, to_len: usize },
 }
 
 /// Executes pathfinding from bridge-friendly flat buffers.
@@ -116,6 +117,42 @@ pub fn pathfind_grid_bytes(
     pathfind_from_flat(input)
 }
 
+pub fn pathfind_grid_batch_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[(i32, i32)],
+    to_points: &[(i32, i32)],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    if from_points.len() != to_points.len() {
+        return Err(PathfindError::MismatchedBatchLength {
+            from_len: from_points.len(),
+            to_len: to_points.len(),
+        });
+    }
+
+    let mut out = Vec::with_capacity(from_points.len());
+    for idx in 0..from_points.len() {
+        let (from_x, from_y) = from_points[idx];
+        let (to_x, to_y) = to_points[idx];
+        let path = pathfind_grid_bytes(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_x,
+            from_y,
+            to_x,
+            to_y,
+            max_steps,
+        )?;
+        out.push(path);
+    }
+    Ok(out)
+}
+
 #[derive(GodotClass)]
 #[class(base=Object, singleton)]
 pub struct WorldSimBridge {
@@ -171,6 +208,55 @@ impl WorldSimBridge {
             .collect();
         PackedVector2Array::from(points)
     }
+
+    #[func]
+    fn pathfind_grid_batch(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_points: PackedVector2Array,
+        to_points: PackedVector2Array,
+        max_steps: i32,
+    ) -> Array<PackedVector2Array> {
+        let steps = if max_steps <= 0 { 200_usize } else { max_steps as usize };
+
+        let from_pairs: Vec<(i32, i32)> = from_points
+            .as_slice()
+            .iter()
+            .map(|p| (p.x.round() as i32, p.y.round() as i32))
+            .collect();
+        let to_pairs: Vec<(i32, i32)> = to_points
+            .as_slice()
+            .iter()
+            .map(|p| (p.x.round() as i32, p.y.round() as i32))
+            .collect();
+
+        let path_groups = match pathfind_grid_batch_bytes(
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            &from_pairs,
+            &to_pairs,
+            steps,
+        ) {
+            Ok(groups) => groups,
+            Err(_) => return Array::new(),
+        };
+
+        let mut output: Array<PackedVector2Array> = Array::new();
+        for group in path_groups {
+            let points: Vec<Vector2> = group
+                .into_iter()
+                .map(|p| Vector2::new(p.x as f32, p.y as f32))
+                .collect();
+            let packed = PackedVector2Array::from(points);
+            output.push(&packed);
+        }
+        output
+    }
 }
 
 struct SimBridgeExtension;
@@ -180,7 +266,7 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 
 #[cfg(test)]
 mod tests {
-    use super::{pathfind_from_flat, pathfind_grid_bytes, PathfindError, PathfindInput};
+    use super::{pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes, PathfindError, PathfindInput};
     use sim_systems::pathfinding::GridPos;
 
     fn base_input() -> PathfindInput {
@@ -239,5 +325,37 @@ mod tests {
             .expect("pathfinding should succeed");
         assert_eq!(path.first().copied(), Some(GridPos::new(0, 0)));
         assert_eq!(path.last().copied(), Some(GridPos::new(3, 3)));
+    }
+
+    #[test]
+    fn pathfind_grid_batch_processes_multiple_queries() {
+        let walkable = vec![1_u8; 25];
+        let move_cost = vec![1.0_f32; 25];
+        let from = vec![(0, 0), (4, 0), (0, 4)];
+        let to = vec![(4, 4), (0, 4), (4, 0)];
+
+        let groups = pathfind_grid_batch_bytes(5, 5, &walkable, &move_cost, &from, &to, 200)
+            .expect("batch pathfinding should succeed");
+        assert_eq!(groups.len(), 3);
+        assert_eq!(groups[0].first().copied(), Some(GridPos::new(0, 0)));
+        assert_eq!(groups[0].last().copied(), Some(GridPos::new(4, 4)));
+    }
+
+    #[test]
+    fn pathfind_grid_batch_rejects_mismatched_input_lengths() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let from = vec![(0, 0), (1, 1)];
+        let to = vec![(3, 3)];
+
+        let err = pathfind_grid_batch_bytes(4, 4, &walkable, &move_cost, &from, &to, 200)
+            .expect_err("mismatched input lengths must fail");
+        assert_eq!(
+            err,
+            PathfindError::MismatchedBatchLength {
+                from_len: 2,
+                to_len: 1
+            }
+        );
     }
 }

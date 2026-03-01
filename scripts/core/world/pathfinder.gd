@@ -2,6 +2,7 @@ extends RefCounted
 
 const _RUST_BRIDGE_NODE_NAME: String = "SimBridge"
 const _RUST_BRIDGE_METHOD_NAME: String = "pathfind_grid"
+const _RUST_BRIDGE_BATCH_METHOD_NAME: String = "pathfind_grid_batch"
 
 var _bridge_checked: bool = false
 var _rust_bridge: Object = null
@@ -25,6 +26,24 @@ func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: 
 		return rust_result.get("path", [])
 
 	return _find_path_gd(world_data, from, to, max_steps)
+
+## Batch pathfinding for multiple (from,to) requests.
+## Each request item must be a Dictionary: {"from": Vector2i, "to": Vector2i}
+func find_paths_batch(world_data: RefCounted, requests: Array, max_steps: int = 200) -> Array:
+	if requests.is_empty():
+		return []
+
+	var rust_batch: Dictionary = _find_paths_rust_batch(world_data, requests, max_steps)
+	if bool(rust_batch.get("used", false)):
+		return rust_batch.get("paths", [])
+
+	var out: Array = []
+	for i in range(requests.size()):
+		var req: Dictionary = requests[i]
+		var from: Vector2i = req.get("from", Vector2i(-1, -1))
+		var to: Vector2i = req.get("to", Vector2i(-1, -1))
+		out.append(find_path(world_data, from, to, max_steps))
+	return out
 
 
 func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Dictionary:
@@ -53,6 +72,46 @@ func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_s
 	if result == null:
 		return {"used": false, "path": []}
 	return {"used": true, "path": _normalize_path_result(result)}
+
+
+func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: int) -> Dictionary:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return {"used": false, "paths": []}
+	if not bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME):
+		return {"used": false, "paths": []}
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return {"used": false, "paths": []}
+
+	var from_points: PackedVector2Array = PackedVector2Array()
+	var to_points: PackedVector2Array = PackedVector2Array()
+	for i in range(requests.size()):
+		var req: Dictionary = requests[i]
+		var from: Vector2i = req.get("from", Vector2i(-1, -1))
+		var to: Vector2i = req.get("to", Vector2i(-1, -1))
+		from_points.push_back(Vector2(from.x, from.y))
+		to_points.push_back(Vector2(to.x, to.y))
+
+	var result: Variant = bridge.call(
+		_RUST_BRIDGE_BATCH_METHOD_NAME,
+		_cached_width,
+		_cached_height,
+		_cached_walkable,
+		_cached_move_cost,
+		from_points,
+		to_points,
+		max_steps
+	)
+	if result == null or not (result is Array):
+		return {"used": false, "paths": []}
+
+	var normalized: Array = []
+	var groups: Array = result
+	for i in range(groups.size()):
+		normalized.append(_normalize_path_result(groups[i]))
+	return {"used": true, "paths": normalized}
 
 
 func _get_rust_bridge() -> Object:

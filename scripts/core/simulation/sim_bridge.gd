@@ -44,6 +44,33 @@ func pathfind_grid(
 		max_steps
 	)
 
+## Delegates batch pathfinding to native bridge when available.
+## Returns null when native bridge is unavailable, so caller can fallback.
+func pathfind_grid_batch(
+	width: int,
+	height: int,
+	walkable: PackedByteArray,
+	move_cost: PackedFloat32Array,
+	from_points: PackedVector2Array,
+	to_points: PackedVector2Array,
+	max_steps: int
+):
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return null
+	if not bridge.has_method("pathfind_grid_batch"):
+		return null
+	return bridge.call(
+		"pathfind_grid_batch",
+		width,
+		height,
+		walkable,
+		move_cost,
+		from_points,
+		to_points,
+		max_steps
+	)
+
 
 func _get_native_bridge() -> Object:
 	if _native_checked:

@@ -22,6 +22,10 @@ func init(entity_manager: RefCounted, world_data: RefCounted, pathfinder: RefCou
 
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
+	var path_entities: Array = []
+	var recalc_entities: Array = []
+	var recalc_requests: Array = []
+
 	for i in range(alive.size()):
 		var entity = alive[i]
 		# Countdown action timer
@@ -52,30 +56,37 @@ func execute_tick(tick: int) -> void:
 
 		# Move: A* if pathfinder available, else greedy
 		if _pathfinder != null:
-			_move_with_pathfinding(entity, tick)
+			path_entities.append(entity)
+			if _needs_path_recalc(entity, tick):
+				recalc_entities.append(entity)
+				recalc_requests.append({
+					"from": entity.position,
+					"to": entity.action_target,
+				})
 		else:
 			_move_toward_target(entity, tick)
+
+	if _pathfinder != null and not recalc_entities.is_empty():
+		var paths: Array = _pathfinder.find_paths_batch(_world_data, recalc_requests)
+		var count: int = mini(paths.size(), recalc_entities.size())
+		for i in range(count):
+			_apply_recalculated_path(recalc_entities[i], paths[i])
+		for i in range(count, recalc_entities.size()):
+			_apply_recalculated_path(recalc_entities[i], [])
+
+	if _pathfinder != null:
+		for i in range(path_entities.size()):
+			_move_with_pathfinding(path_entities[i], tick, false)
 
 
 ## ─── A* Pathfinding Movement ─────────────────────────────
 
-func _move_with_pathfinding(entity: RefCounted, tick: int) -> void:
-	var needs_recalc: bool = false
-	if entity.cached_path.is_empty():
-		needs_recalc = true
-	elif entity.path_index >= entity.cached_path.size():
-		needs_recalc = true
-	elif tick % 50 == 0:
-		needs_recalc = true
-
-	if needs_recalc:
+func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = true) -> void:
+	if allow_recalc and _needs_path_recalc(entity, tick):
 		entity.cached_path = _pathfinder.find_path(
 			_world_data, entity.position, entity.action_target
 		)
-		entity.path_index = 0
-		# Skip starting position if it matches current
-		if entity.cached_path.size() > 0 and entity.cached_path[0] == entity.position:
-			entity.path_index = 1
+		_apply_recalculated_path(entity, entity.cached_path)
 
 	# Follow cached path
 	if entity.path_index < entity.cached_path.size():
@@ -100,6 +111,24 @@ func _move_with_pathfinding(entity: RefCounted, tick: int) -> void:
 	else:
 		# Path exhausted, fall back to greedy
 		_move_toward_target(entity, tick)
+
+
+func _needs_path_recalc(entity: RefCounted, tick: int) -> bool:
+	if entity.cached_path.is_empty():
+		return true
+	if entity.path_index >= entity.cached_path.size():
+		return true
+	if tick % 50 == 0:
+		return true
+	return false
+
+
+func _apply_recalculated_path(entity: RefCounted, path: Array) -> void:
+	entity.cached_path = path
+	entity.path_index = 0
+	# Skip starting position if it matches current
+	if entity.cached_path.size() > 0 and entity.cached_path[0] == entity.position:
+		entity.path_index = 1
 
 
 ## ─── Greedy Fallback Movement ────────────────────────────
