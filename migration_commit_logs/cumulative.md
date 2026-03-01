@@ -108,3 +108,8 @@
 - Single pathfinding에 `pathfind_grid_xy`/`pathfind_grid_gpu_xy` int-packed API 추가.
 - `Pathfinder` single/batch 모두 XY 우선 + vec2 fallback 체계로 정렬.
 - 브리지 래퍼 노출/네이티브 미지원 조합에서도 안전 fallback되도록 호출 순서 보강.
+
+## Commit 023
+- Rust `sim-bridge`에 pathfinding backend 모드 제어 API(`set/get/resolve_pathfinding_backend`) 추가.
+- `SimBridge`가 `ComputeBackend` 모드를 Rust backend로 동기화하고 resolve 결과 기준으로 GPU 선호 판단.
+- GPU 미지원 환경은 기존처럼 CPU로 안전 fallback되며, 향후 실제 GPU 경로 구현을 위한 정책 레이어 확보.

@@ -9,6 +9,12 @@ use sim_systems::{
     pathfinding::{find_path, GridCostMap, GridPos},
     stat_curve,
 };
+use std::sync::atomic::{AtomicU8, Ordering};
+
+const PATHFIND_BACKEND_AUTO: u8 = 0;
+const PATHFIND_BACKEND_CPU: u8 = 1;
+const PATHFIND_BACKEND_GPU: u8 = 2;
+static PATHFIND_BACKEND_MODE: AtomicU8 = AtomicU8::new(PATHFIND_BACKEND_AUTO);
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -208,6 +214,43 @@ fn encode_path_xy(path: Vec<GridPos>) -> PackedInt32Array {
     packed
 }
 
+fn parse_pathfind_backend(mode: &str) -> Option<u8> {
+    match mode.to_ascii_lowercase().as_str() {
+        "auto" => Some(PATHFIND_BACKEND_AUTO),
+        "cpu" => Some(PATHFIND_BACKEND_CPU),
+        "gpu" => Some(PATHFIND_BACKEND_GPU),
+        _ => None,
+    }
+}
+
+fn backend_mode_to_str(mode: u8) -> &'static str {
+    match mode {
+        PATHFIND_BACKEND_CPU => "cpu",
+        PATHFIND_BACKEND_GPU => "gpu",
+        _ => "auto",
+    }
+}
+
+fn resolve_backend_mode(mode: u8) -> &'static str {
+    match mode {
+        PATHFIND_BACKEND_CPU => "cpu",
+        PATHFIND_BACKEND_GPU => {
+            if cfg!(feature = "gpu") {
+                "gpu"
+            } else {
+                "cpu"
+            }
+        }
+        _ => {
+            if cfg!(feature = "gpu") {
+                "gpu"
+            } else {
+                "cpu"
+            }
+        }
+    }
+}
+
 #[derive(GodotClass)]
 #[class(base=Object, singleton)]
 pub struct WorldSimBridge {
@@ -223,6 +266,28 @@ impl IObject for WorldSimBridge {
 
 #[godot_api]
 impl WorldSimBridge {
+    #[func]
+    fn set_pathfinding_backend(&self, mode: GString) -> bool {
+        let mode_string = mode.to_string();
+        let Some(parsed) = parse_pathfind_backend(&mode_string) else {
+            return false;
+        };
+        PATHFIND_BACKEND_MODE.store(parsed, Ordering::Relaxed);
+        true
+    }
+
+    #[func]
+    fn get_pathfinding_backend(&self) -> GString {
+        let mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        backend_mode_to_str(mode).into()
+    }
+
+    #[func]
+    fn resolve_pathfinding_backend(&self) -> GString {
+        let mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
+        resolve_backend_mode(mode).into()
+    }
+
     #[func]
     fn has_gpu_pathfinding(&self) -> bool {
         cfg!(feature = "gpu")
@@ -646,8 +711,9 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 #[cfg(test)]
 mod tests {
     use super::{
-        pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes, PathfindError,
-        PathfindInput,
+        parse_pathfind_backend, pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes,
+        resolve_backend_mode, PathfindError, PathfindInput, PATHFIND_BACKEND_AUTO,
+        PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
     };
     use sim_systems::pathfinding::GridPos;
 
@@ -738,6 +804,28 @@ mod tests {
                 from_len: 2,
                 to_len: 1
             }
+        );
+    }
+
+    #[test]
+    fn parses_pathfinding_backend_modes() {
+        assert_eq!(parse_pathfind_backend("auto"), Some(PATHFIND_BACKEND_AUTO));
+        assert_eq!(parse_pathfind_backend("cpu"), Some(PATHFIND_BACKEND_CPU));
+        assert_eq!(parse_pathfind_backend("gpu"), Some(PATHFIND_BACKEND_GPU));
+        assert_eq!(parse_pathfind_backend("GPU"), Some(PATHFIND_BACKEND_GPU));
+        assert_eq!(parse_pathfind_backend("unknown"), None);
+    }
+
+    #[test]
+    fn resolves_pathfinding_backend_with_feature_gate() {
+        assert_eq!(resolve_backend_mode(PATHFIND_BACKEND_CPU), "cpu");
+        assert_eq!(
+            resolve_backend_mode(PATHFIND_BACKEND_GPU),
+            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
+        );
+        assert_eq!(
+            resolve_backend_mode(PATHFIND_BACKEND_AUTO),
+            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
         );
     }
 }

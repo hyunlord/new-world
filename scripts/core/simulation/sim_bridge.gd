@@ -30,6 +30,15 @@ const _PATHFIND_BATCH_XY_METHOD_CANDIDATES: Array[String] = [
 const _PATHFIND_BATCH_XY_GPU_METHOD_CANDIDATES: Array[String] = [
 	"pathfind_grid_gpu_batch_xy",
 ]
+const _SET_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
+	"set_pathfinding_backend",
+]
+const _GET_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
+	"get_pathfinding_backend",
+]
+const _RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
+	"resolve_pathfinding_backend",
+]
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
@@ -37,6 +46,9 @@ var _pathfind_method_name: String = ""
 var _pathfind_xy_method_name: String = ""
 var _pathfind_batch_method_name: String = ""
 var _pathfind_batch_xy_method_name: String = ""
+var _set_pathfind_backend_method_name: String = ""
+var _get_pathfind_backend_method_name: String = ""
+var _resolve_pathfind_backend_method_name: String = ""
 
 
 ## Delegates pathfinding to native bridge when available.
@@ -387,6 +399,15 @@ func _get_native_bridge() -> Object:
 				_pathfind_batch_xy_method_name = _pick_method(
 					_PATHFIND_BATCH_XY_METHOD_CANDIDATES, ""
 				)
+				_set_pathfind_backend_method_name = _pick_method(
+					_SET_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
+				_get_pathfind_backend_method_name = _pick_method(
+					_GET_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
+				_resolve_pathfind_backend_method_name = _pick_method(
+					_RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
 				return _native_bridge
 
 	for i in range(_NATIVE_SINGLETON_CANDIDATES.size()):
@@ -410,12 +431,30 @@ func _get_native_bridge() -> Object:
 				_pathfind_batch_xy_method_name = _pick_method(
 					_PATHFIND_BATCH_XY_METHOD_CANDIDATES, ""
 				)
+				_set_pathfind_backend_method_name = _pick_method(
+					_SET_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
+				_get_pathfind_backend_method_name = _pick_method(
+					_GET_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
+				_resolve_pathfind_backend_method_name = _pick_method(
+					_RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES, ""
+				)
 				return _native_bridge
 
 	return null
 
 
 func _prefer_gpu() -> bool:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return false
+
+	_sync_pathfinding_backend_mode(bridge)
+	var resolved_backend: String = _resolve_pathfinding_backend_mode(bridge)
+	if resolved_backend != "":
+		return resolved_backend == "gpu"
+
 	if not Engine.has_singleton("ComputeBackend"):
 		return false
 	var backend: Object = Engine.get_singleton("ComputeBackend")
@@ -426,12 +465,46 @@ func _prefer_gpu() -> bool:
 	if str(backend.call("resolve_mode")) != "gpu":
 		return false
 
-	var bridge: Object = _get_native_bridge()
-	if bridge == null:
-		return false
 	if bridge.has_method("has_gpu_pathfinding"):
 		return bool(bridge.call("has_gpu_pathfinding"))
 	return bridge.has_method("pathfind_grid_gpu")
+
+
+func _resolve_desired_pathfinding_backend_mode() -> String:
+	if not Engine.has_singleton("ComputeBackend"):
+		return "auto"
+	var backend: Object = Engine.get_singleton("ComputeBackend")
+	if backend == null:
+		return "auto"
+	if not backend.has_method("get_mode"):
+		return "auto"
+
+	var mode: String = str(backend.call("get_mode"))
+	if mode == "cpu":
+		return "cpu"
+	if mode == "gpu_force":
+		return "gpu"
+	return "auto"
+
+
+func _sync_pathfinding_backend_mode(bridge: Object) -> void:
+	var method_name: String = _set_pathfind_backend_method_name
+	if method_name == "":
+		method_name = _pick_method(_SET_PATHFIND_BACKEND_METHOD_CANDIDATES, "")
+		_set_pathfind_backend_method_name = method_name
+	if method_name == "":
+		return
+	bridge.call(method_name, _resolve_desired_pathfinding_backend_mode())
+
+
+func _resolve_pathfinding_backend_mode(bridge: Object) -> String:
+	var method_name: String = _resolve_pathfind_backend_method_name
+	if method_name == "":
+		method_name = _pick_method(_RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES, "")
+		_resolve_pathfind_backend_method_name = method_name
+	if method_name == "":
+		return ""
+	return str(bridge.call(method_name))
 
 
 func _pick_method(candidates: Array[String], fallback: String) -> String:
