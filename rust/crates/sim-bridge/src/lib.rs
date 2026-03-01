@@ -387,6 +387,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_age_trainability_modifier_rec(&self, age_years: f32) -> f32 {
+        body::age_trainability_modifier("rec", age_years)
+    }
+
+    #[func]
     fn body_age_trainability_modifiers(&self, age_years: f32) -> PackedFloat32Array {
         let modifiers = body::age_trainability_modifiers(age_years);
         vec_f32_to_packed(modifiers.to_vec())

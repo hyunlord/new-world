@@ -1290,6 +1290,17 @@ func body_age_trainability_modifier(axis: String, age_years: float):
 	)
 
 
+## Delegates age-based REC trainability modifier to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_age_trainability_modifier_rec(age_years: float):
+	return _call_native_if_exists(
+		"body_age_trainability_modifier_rec",
+		[
+			age_years
+		]
+	)
+
+
 ## Delegates batched age-based trainability modifiers to native bridge.
 ## Axis order: [str, agi, end, tou, rec].
 ## Returns null when native bridge/method is unavailable.

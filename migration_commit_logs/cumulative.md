@@ -706,3 +706,8 @@
 - `sim-bridge`/`SimBridge`에 `body_needs_critical_severity_step_packed`를 추가하고 기존 scalar API는 packed 경로로 위임하도록 정리.
 - `needs_system`이 임계치 severity 입력을 scratch `PackedFloat32Array`로 재사용하도록 전환되어 엔티티 루프의 인자 구성 할당 오버헤드를 축소.
 - severity 계산 의미를 유지하면서 needs stressor 경로의 메모리 churn을 완화.
+
+## Commit 144
+- `sim-bridge`/`SimBridge`에 `body_age_trainability_modifier_rec` 전용 API를 추가해 휴식 경로의 REC trainability 조회를 축 문자열 전달 없이 처리.
+- `body_attributes`에 `get_rec_age_trainability_modifier` 헬퍼를 추가하고 Rust 우선 + 기존 축 기반 함수 fallback 구조를 제공.
+- `needs_system` 휴식 XP 경로가 REC 전용 helper를 사용하도록 전환되어 미세 호출 오버헤드를 완화.

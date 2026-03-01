@@ -134,7 +134,7 @@ func execute_tick(tick: int) -> void:
 			entity.energy += BodyAttributes.compute_rest_energy_recovery(_rec_norm)
 			# [훈련 XP 누적] 휴식 → 회복력 훈련 (Buchheit & Laursen 2013)
 			if entity.body != null:
-				var _age_mod = BodyAttributes.get_age_trainability_modifier("rec", float(entity.age))
+				var _age_mod: float = BodyAttributes.get_rec_age_trainability_modifier(float(entity.age))
 				entity.body.training_xp["rec"] = entity.body.training_xp.get("rec", 0.0) + GameConfig.BODY_XP_REST * _age_mod * 0.01
 
 		# Age: derive from birth_tick (not incremental — avoids drift)

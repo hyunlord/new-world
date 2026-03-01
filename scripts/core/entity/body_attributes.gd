@@ -183,6 +183,15 @@ static func get_age_trainability_modifier(axis: String, age_years: float) -> flo
 	return 1.00
 
 
+## REC 전용 나이별 훈련 효율 배수 반환 (0.0~1.0)
+## 휴식 경로 hot path 최적화를 위해 전용 bridge 메서드를 우선 사용.
+static func get_rec_age_trainability_modifier(age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifier_rec", [age_years])
+	if rust_result != null:
+		return float(rust_result)
+	return get_age_trainability_modifier("rec", age_years)
+
+
 ## 행동 중 에너지 소모량 계산
 ## needs_system의 action energy cost 수식을 Rust 우선 + GDScript fallback으로 계산.
 static func compute_action_energy_cost(end_norm: float) -> float:
