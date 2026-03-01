@@ -220,6 +220,10 @@ func _accumulate_deprivation_damage(entity, stressor: Dictionary, _stage_data: D
 		return
 	var rate: float = float(stressor.get("developmental_damage_rate", 0.01))
 	var current: float = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+	var next_variant: Variant = SimBridge.body_child_deprivation_damage_step(current, rate)
+	if next_variant != null:
+		entity.emotion_data.set_meta("developmental_damage", float(next_variant))
+		return
 	entity.emotion_data.set_meta("developmental_damage", current + rate)
 
 
@@ -409,10 +413,19 @@ func execute_tick(tick: int) -> void:
 						stage,
 						contagion_in
 					)
-				if transferred > 0.05:
-					entity.emotion_data.stress = clampf(
-						entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+					var next_stress_variant: Variant = SimBridge.body_child_parent_transfer_apply_step(
+						float(entity.emotion_data.stress),
+						transferred,
+						0.05,
+						20.0,
+						2000.0
 					)
+					if next_stress_variant != null:
+						entity.emotion_data.stress = float(next_stress_variant)
+					elif transferred > 0.05:
+						entity.emotion_data.stress = clampf(
+							entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+						)
 
 		var pending_stressors = childhood_data.get("pending_stressors", [])
 		if pending_stressors is Array:

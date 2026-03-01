@@ -778,6 +778,29 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_parent_transfer_apply_step(
+        &self,
+        current_stress: f32,
+        transferred: f32,
+        transfer_threshold: f32,
+        transfer_scale: f32,
+        stress_clamp_max: f32,
+    ) -> f32 {
+        body::child_parent_transfer_apply_step(
+            current_stress,
+            transferred,
+            transfer_threshold,
+            transfer_scale,
+            stress_clamp_max,
+        )
+    }
+
+    #[func]
+    fn body_child_deprivation_damage_step(&self, current_damage: f32, damage_rate: f32) -> f32 {
+        body::child_deprivation_damage_step(current_damage, damage_rate)
+    }
+
+    #[func]
     fn body_stress_support_score(&self, strengths: PackedFloat32Array) -> f32 {
         body::stress_support_score(strengths.as_slice())
     }

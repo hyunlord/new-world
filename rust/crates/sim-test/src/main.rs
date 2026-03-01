@@ -244,6 +244,15 @@ fn run_needs_math_bench(args: &[String]) {
             0.8 + 0.6 * t,
             stress_type_code,
         );
+        let child_parent_applied = body::child_parent_transfer_apply_step(
+            100.0 + 800.0 * t,
+            parent_transfer,
+            0.05,
+            20.0,
+            2000.0,
+        );
+        let child_deprivation =
+            body::child_deprivation_damage_step(0.2 + 1.0 * t, 0.01 + 0.03 * (1.0 - t));
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -277,7 +286,9 @@ fn run_needs_math_bench(args: &[String]) {
             + black_box(stress_type_code as f32)
             + black_box(child_apply[0])
             + black_box(child_apply[2])
-            + black_box(child_apply[4]);
+            + black_box(child_apply[4])
+            + black_box(child_parent_applied)
+            + black_box(child_deprivation);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);

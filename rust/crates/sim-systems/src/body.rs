@@ -529,6 +529,29 @@ pub fn child_stress_apply_step(
     ]
 }
 
+/// Applies parent-transfer stress to child stress gauge when transfer exceeds threshold.
+pub fn child_parent_transfer_apply_step(
+    current_stress: f32,
+    transferred: f32,
+    transfer_threshold: f32,
+    transfer_scale: f32,
+    stress_clamp_max: f32,
+) -> f32 {
+    if transferred <= transfer_threshold {
+        return current_stress;
+    }
+    clamp_f32(
+        current_stress + transferred * transfer_scale,
+        0.0,
+        stress_clamp_max,
+    )
+}
+
+/// Applies deprivation developmental-damage accumulation step.
+pub fn child_deprivation_damage_step(current_damage: f32, damage_rate: f32) -> f32 {
+    current_damage + damage_rate
+}
+
 /// Computes stress support score from relationship strength samples.
 ///
 /// Strength samples are expected in `[0, 1]` and clamped defensively.
@@ -737,7 +760,8 @@ mod tests {
     use super::{
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
-        calc_training_gains, child_parent_stress_transfer, child_shrp_step,
+        calc_training_gains, child_deprivation_damage_step, child_parent_stress_transfer,
+        child_parent_transfer_apply_step, child_shrp_step,
         child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
@@ -1025,6 +1049,20 @@ mod tests {
         assert!(out[2] > 200.0);
         assert!(out[3] > 10.0);
         assert!(out[4] > 0.0);
+    }
+
+    #[test]
+    fn child_parent_transfer_apply_step_respects_threshold() {
+        let unchanged = child_parent_transfer_apply_step(120.0, 0.04, 0.05, 20.0, 2000.0);
+        let applied = child_parent_transfer_apply_step(120.0, 0.10, 0.05, 20.0, 2000.0);
+        assert_eq!(unchanged, 120.0);
+        assert!(applied > unchanged);
+    }
+
+    #[test]
+    fn child_deprivation_damage_step_accumulates_linearly() {
+        let next = child_deprivation_damage_step(0.3, 0.02);
+        assert!((next - 0.32).abs() < 1e-6);
     }
 
     #[test]

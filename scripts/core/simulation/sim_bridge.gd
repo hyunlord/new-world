@@ -1683,6 +1683,39 @@ func body_child_stress_apply_step(
 	)
 
 
+## Delegates child parent-transfer stress apply step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_parent_transfer_apply_step(
+	current_stress: float,
+	transferred: float,
+	transfer_threshold: float,
+	transfer_scale: float,
+	stress_clamp_max: float
+):
+	return _call_native_if_exists(
+		"body_child_parent_transfer_apply_step",
+		[
+			current_stress,
+			transferred,
+			transfer_threshold,
+			transfer_scale,
+			stress_clamp_max
+		]
+	)
+
+
+## Delegates child deprivation-damage accumulation step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_deprivation_damage_step(current_damage: float, damage_rate: float):
+	return _call_native_if_exists(
+		"body_child_deprivation_damage_step",
+		[
+			current_damage,
+			damage_rate
+		]
+	)
+
+
 ## Delegates stress support score computation to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_stress_support_score(strengths: PackedFloat32Array):

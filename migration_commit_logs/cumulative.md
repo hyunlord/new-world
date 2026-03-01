@@ -797,3 +797,8 @@
 - `sim-systems::body`에 `stress_support_score`를 추가해 strongest tie + weak ties 포화 결합 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 `body_stress_support_score` 경로를 추가하고, `stress_system._calc_support_score`가 Rust 우선 + fallback 구조를 사용하도록 전환.
 - `sim-test --bench-stress-math`에 support score 호출을 포함해 회귀 추적 범위를 확장(신규 checksum 기준: `13767388.00000` @ 10k iters).
+
+## Commit 162
+- `sim-systems::body`에 `child_parent_transfer_apply_step`, `child_deprivation_damage_step`를 추가해 child stress의 잔여 단순 수식(전이 반영, deprivation 누적)을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor`가 Rust 우선 + fallback 구조로 해당 분기를 처리하도록 전환.
+- `sim-test --bench-needs-math`에 두 수식 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `38434752.00000` @ 10k iters).
