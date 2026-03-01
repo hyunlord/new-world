@@ -1286,6 +1286,60 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_mental_break_threshold(
+        &self,
+        base_break_threshold: f32,
+        resilience: f32,
+        c_axis: f32,
+        e_axis: f32,
+        allostatic: f32,
+        energy_norm: f32,
+        hunger_norm: f32,
+        ace_break_threshold_mult: f32,
+        trait_break_threshold_add: f32,
+        threshold_min: f32,
+        threshold_max: f32,
+        reserve: f32,
+        scar_threshold_reduction: f32,
+    ) -> f32 {
+        body::mental_break_threshold(
+            base_break_threshold,
+            resilience,
+            c_axis,
+            e_axis,
+            allostatic,
+            energy_norm,
+            hunger_norm,
+            ace_break_threshold_mult,
+            trait_break_threshold_add,
+            threshold_min,
+            threshold_max,
+            reserve,
+            scar_threshold_reduction,
+        )
+    }
+
+    #[func]
+    fn body_mental_break_chance(
+        &self,
+        stress: f32,
+        threshold: f32,
+        reserve: f32,
+        allostatic: f32,
+        break_scale: f32,
+        break_cap_per_tick: f32,
+    ) -> f32 {
+        body::mental_break_chance(
+            stress,
+            threshold,
+            reserve,
+            allostatic,
+            break_scale,
+            break_cap_per_tick,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

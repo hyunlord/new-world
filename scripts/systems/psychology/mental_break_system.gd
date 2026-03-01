@@ -8,6 +8,9 @@ const THRESHOLD_MIN: float = 420.0
 const THRESHOLD_MAX: float = 900.0
 const BREAK_SCALE: float = 6000.0
 const BREAK_CAP_PER_TICK: float = 0.25
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_THRESHOLD_METHOD: String = "body_mental_break_threshold"
+const _SIM_BRIDGE_CHANCE_METHOD: String = "body_mental_break_chance"
 const SHAKEN_WORK_PENALTY_MINOR: float = -0.05
 const SHAKEN_WORK_PENALTY_MAJOR: float = -0.12
 const SHAKEN_WORK_PENALTY_EXTREME: float = -0.20
@@ -20,6 +23,8 @@ var _rng: RandomNumberGenerator
 var _break_defs: Dictionary = {}
 var _trauma_scar_system = null  # TraumaScarSystem (RefCounted), set by main.gd
 var _current_tick: int = 0      # Phase 4: stored for _end_break signal emission
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -33,6 +38,24 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 	_entity_manager = entity_manager
 	_rng = rng
 	_load_break_definitions()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_THRESHOLD_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CHANCE_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func set_trauma_scar_system(tss) -> void:
@@ -93,18 +116,46 @@ func _check_mental_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 	var E: float = StatQuery.get_normalized(entity, &"HEXACO_E")
 	var C: float = StatQuery.get_normalized(entity, &"HEXACO_C")
+	var energy_norm: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	var hunger_norm: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	# Phase 5: ACE history permanently lowers break threshold (Teicher & Samson 2016)
+	var ace_break_threshold_mult: float = float(entity.get_meta("ace_break_threshold_mult", 1.0))
+	# v3 trait effect: stress/add target=mental_break_threshold
+	var trait_break_threshold_add: float = _TraitEffectCache.get_stress_break_threshold_add(entity)
+	var scar_threshold_reduction: float = 0.0
+	if _trauma_scar_system != null:
+		scar_threshold_reduction = _trauma_scar_system.get_scar_threshold_reduction(entity)
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_threshold_variant: Variant = bridge.call(
+			_SIM_BRIDGE_THRESHOLD_METHOD,
+			BASE_BREAK_THRESHOLD,
+			ed.resilience,
+			C,
+			E,
+			ed.allostatic,
+			energy_norm,
+			hunger_norm,
+			ace_break_threshold_mult,
+			trait_break_threshold_add,
+			THRESHOLD_MIN,
+			THRESHOLD_MAX,
+			ed.reserve,
+			scar_threshold_reduction
+		)
+		if rust_threshold_variant is float:
+			return float(rust_threshold_variant)
 
 	var threshold: float = BASE_BREAK_THRESHOLD
 	threshold *= (1.0 + 0.40 * (ed.resilience - 0.5) * 2.0)
 	threshold *= (1.0 + 0.25 * (C - 0.5) * 2.0)
 	threshold *= (1.0 - 0.35 * (E - 0.5) * 2.0)
 	threshold *= (1.0 - 0.25 * (ed.allostatic / 100.0))
-	threshold *= (0.85 + 0.15 * StatQuery.get_normalized(entity, &"NEED_ENERGY"))
-	threshold *= (0.85 + 0.15 * StatQuery.get_normalized(entity, &"NEED_HUNGER"))
-	# Phase 5: ACE history permanently lowers break threshold (Teicher & Samson 2016)
-	threshold *= float(entity.get_meta("ace_break_threshold_mult", 1.0))
-	# v3 trait effect: stress/add target=mental_break_threshold
-	threshold += _TraitEffectCache.get_stress_break_threshold_add(entity)
+	threshold *= (0.85 + 0.15 * energy_norm)
+	threshold *= (0.85 + 0.15 * hunger_norm)
+	threshold *= ace_break_threshold_mult
+	threshold += trait_break_threshold_add
 	threshold = clampf(threshold, THRESHOLD_MIN, THRESHOLD_MAX)
 
 	# GAS Exhaustion 보정
@@ -114,8 +165,7 @@ func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 		threshold -= 80.0
 
 	# 트라우마 흉터 역치 감소
-	if _trauma_scar_system != null:
-		threshold -= _trauma_scar_system.get_scar_threshold_reduction(entity)
+	threshold -= scar_threshold_reduction
 
 	return maxf(threshold, THRESHOLD_MIN)
 
@@ -123,6 +173,19 @@ func _calc_threshold(entity: RefCounted, ed: RefCounted) -> float:
 ## 발동 확률 계산 (stress가 threshold 초과량에 비례)
 func _calc_break_chance(stress: float, threshold: float,
 		reserve: float, allostatic: float) -> float:
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_chance_variant: Variant = bridge.call(
+			_SIM_BRIDGE_CHANCE_METHOD,
+			stress,
+			threshold,
+			reserve,
+			allostatic,
+			BREAK_SCALE,
+			BREAK_CAP_PER_TICK
+		)
+		if rust_chance_variant is float:
+			return float(rust_chance_variant)
 	if stress <= threshold:
 		return 0.0
 	var p: float = clampf((stress - threshold) / BREAK_SCALE, 0.0, BREAK_CAP_PER_TICK)

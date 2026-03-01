@@ -995,6 +995,64 @@ pub fn contagion_spiral_increment(
     clamp_f32(intensity_scale * stress_norm * valence_norm, 0.0, max_increment)
 }
 
+/// Mental-break threshold from resilience, personality, resources, and trauma modifiers.
+pub fn mental_break_threshold(
+    base_break_threshold: f32,
+    resilience: f32,
+    c_axis: f32,
+    e_axis: f32,
+    allostatic: f32,
+    energy_norm: f32,
+    hunger_norm: f32,
+    ace_break_threshold_mult: f32,
+    trait_break_threshold_add: f32,
+    threshold_min: f32,
+    threshold_max: f32,
+    reserve: f32,
+    scar_threshold_reduction: f32,
+) -> f32 {
+    let mut threshold = base_break_threshold;
+    threshold *= 1.0 + 0.40 * (resilience - 0.5) * 2.0;
+    threshold *= 1.0 + 0.25 * (c_axis - 0.5) * 2.0;
+    threshold *= 1.0 - 0.35 * (e_axis - 0.5) * 2.0;
+    threshold *= 1.0 - 0.25 * (allostatic / 100.0);
+    threshold *= 0.85 + 0.15 * energy_norm;
+    threshold *= 0.85 + 0.15 * hunger_norm;
+    threshold *= ace_break_threshold_mult;
+    threshold += trait_break_threshold_add;
+    threshold = clamp_f32(threshold, threshold_min, threshold_max);
+    if reserve < 30.0 {
+        threshold -= 40.0;
+    }
+    if reserve < 15.0 {
+        threshold -= 80.0;
+    }
+    threshold -= scar_threshold_reduction;
+    threshold.max(threshold_min)
+}
+
+/// Mental-break trigger chance from stress over-threshold amount and stress-state multipliers.
+pub fn mental_break_chance(
+    stress: f32,
+    threshold: f32,
+    reserve: f32,
+    allostatic: f32,
+    break_scale: f32,
+    break_cap_per_tick: f32,
+) -> f32 {
+    if stress <= threshold || break_scale <= 0.0 {
+        return 0.0;
+    }
+    let mut p = clamp_f32((stress - threshold) / break_scale, 0.0, break_cap_per_tick);
+    if reserve < 30.0 {
+        p *= 1.3;
+    }
+    if allostatic > 60.0 {
+        p *= 1.2;
+    }
+    p
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2048,6 +2106,7 @@ mod tests {
         morale_behavior_weight_multiplier, morale_migration_probability,
         stat_sync_derived_scores, contagion_aoe_total_susceptibility,
         contagion_stress_delta, contagion_network_delta, contagion_spiral_increment,
+        mental_break_threshold, mental_break_chance,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2568,6 +2627,26 @@ mod tests {
             contagion_spiral_increment(900.0, -70.0, 500.0, -40.0, 1500.0, 60.0, 3.0, 12.0);
         assert_eq!(none, 0.0);
         assert!(active > 0.0);
+    }
+
+    #[test]
+    fn mental_break_threshold_applies_reserve_and_scar_reductions() {
+        let baseline = mental_break_threshold(
+            520.0, 0.5, 0.5, 0.5, 40.0, 1.0, 1.0, 1.0, 0.0, 420.0, 900.0, 40.0, 0.0,
+        );
+        let depleted = mental_break_threshold(
+            520.0, 0.5, 0.5, 0.5, 40.0, 1.0, 1.0, 1.0, 0.0, 420.0, 900.0, 10.0, 25.0,
+        );
+        assert!(depleted < baseline);
+    }
+
+    #[test]
+    fn mental_break_chance_respects_threshold_and_modifiers() {
+        let none = mental_break_chance(400.0, 500.0, 100.0, 10.0, 6000.0, 0.25);
+        let base = mental_break_chance(900.0, 500.0, 100.0, 10.0, 6000.0, 0.25);
+        let amplified = mental_break_chance(900.0, 500.0, 20.0, 70.0, 6000.0, 0.25);
+        assert_eq!(none, 0.0);
+        assert!(amplified > base);
     }
 
     #[test]

@@ -1610,3 +1610,8 @@
 - `contagion_system`의 AoE/Network/Spiral 핵심 수식(`total_susceptibility`, `stress_delta`, `network_delta`, `spiral_increment`)을 Rust-first 경로로 이관.
 - `sim-systems`에 contagion 전용 순수 함수 4종과 단위 테스트 4건을 추가하고 `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 후 Rust 호출, 실패 시 기존 계산식 fallback을 유지해 동작 안정성을 보존.
+
+## Commit 310
+- `mental_break_system`의 핵심 판정 수식(역치 계산, 발동 확률 계산)을 Rust-first 경로로 이관.
+- `sim-systems`에 `mental_break_threshold`/`mental_break_chance` 순수 함수와 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드 노출.
+- GDScript는 SimBridge 캐시 후 Rust 호출, 실패 시 기존 계산식 fallback 구조를 유지해 동작 안정성을 보존.
