@@ -74,15 +74,18 @@ pub enum PathfindError {
 /// Executes pathfinding from bridge-friendly flat buffers.
 pub fn pathfind_from_flat(input: PathfindInput) -> Result<Vec<GridPos>, PathfindError> {
     input.validate()?;
+    let PathfindInput {
+        width,
+        height,
+        walkable,
+        move_cost,
+        from,
+        to,
+        max_steps,
+    } = input;
 
-    let grid = GridCostMap::from_flat_unchecked(
-        input.width,
-        input.height,
-        &input.walkable,
-        &input.move_cost,
-    );
-
-    Ok(find_path(&grid, input.from, input.to, input.max_steps))
+    let grid = GridCostMap::from_flat_owned_unchecked(width, height, walkable, move_cost);
+    Ok(find_path(&grid, from, to, max_steps))
 }
 
 /// Pathfinding entry shape intended for future Godot bridge exposure.

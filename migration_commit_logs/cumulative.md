@@ -1035,3 +1035,8 @@
 - `find_path` 휴리스틱 계산을 `GridPos` 임시 생성 경로에서 좌표 직접 계산(`chebyshev_xy`)으로 정리해 미세 오버헤드를 줄이고 경고를 제거.
 - 목표 좌표 캐시(`to_x`, `to_y`)를 도입해 neighbor 평가 경로의 반복 필드 접근을 축소.
 - checksum 유지 상태로 pathfinding 경로의 미세 최적화를 추가 반영.
+
+## Commit 210
+- `GridCostMap::from_flat_owned_unchecked`를 추가해 소유 `walkable/move_cost` 버퍼를 직접 소비하고 move_cost clamp를 in-place 처리하도록 확장.
+- `sim-bridge.pathfind_from_flat`가 새 소유 버퍼 경로를 사용하도록 전환되어 flat 입력 pathfinding의 재복사를 제거.
+- checksum 유지 상태로 bridge flat 입력 경로의 메모리 효율을 개선.

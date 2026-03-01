@@ -85,6 +85,28 @@ impl GridCostMap {
         }
     }
 
+    /// Builds a grid from owned flat vectors, clamping move-cost in place.
+    ///
+    /// Caller must ensure lengths match `width * height`.
+    pub fn from_flat_owned_unchecked(
+        width: i32,
+        height: i32,
+        walkable: Vec<bool>,
+        mut move_cost: Vec<f32>,
+    ) -> Self {
+        debug_assert_eq!(walkable.len(), (width * height) as usize);
+        debug_assert_eq!(move_cost.len(), (width * height) as usize);
+        for cost in &mut move_cost {
+            *cost = (*cost).max(0.0);
+        }
+        Self {
+            width,
+            height,
+            walkable,
+            move_cost,
+        }
+    }
+
     /// Builds a grid directly from flat byte flags (0=blocked, non-zero=walkable).
     ///
     /// Caller must ensure lengths match `width * height`.
@@ -331,6 +353,19 @@ mod tests {
         let walkable = vec![1_u8, 0_u8, 1_u8, 1_u8];
         let move_cost = vec![1.0_f32, -2.0_f32, 3.5_f32, 0.2_f32];
         let grid = GridCostMap::from_flat_bytes_unchecked(2, 2, &walkable, &move_cost);
+
+        assert!(grid.is_walkable(0, 0));
+        assert!(!grid.is_walkable(1, 0));
+        assert_eq!(grid.get_move_cost(0, 0), 1.0);
+        assert_eq!(grid.get_move_cost(1, 0), 0.0);
+        assert_eq!(grid.get_move_cost(0, 1), 3.5);
+    }
+
+    #[test]
+    fn builds_grid_from_owned_flat_vectors_with_clamped_costs() {
+        let walkable = vec![true, false, true, true];
+        let move_cost = vec![1.0_f32, -2.0_f32, 3.5_f32, 0.2_f32];
+        let grid = GridCostMap::from_flat_owned_unchecked(2, 2, walkable, move_cost);
 
         assert!(grid.is_walkable(0, 0));
         assert!(!grid.is_walkable(1, 0));
