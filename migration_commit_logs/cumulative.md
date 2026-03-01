@@ -236,3 +236,8 @@
 - `StressSystem.get_work_efficiency`의 Yerkes-Dodson 수식을 Rust 함수(`stress_work_efficiency`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 work-efficiency API를 추가하고 GDScript는 네이티브 우선 호출 경로로 전환.
 - stress 관련 남은 GDScript 수식 경로를 추가 축소하면서 기존 piecewise/penalty/clamp 의미를 유지.
+
+## Commit 049
+- `StressSystem`의 `stress_tick_step` 입력 경로에서 `PackedFloat32Array`/`PackedByteArray`를 엔티티마다 새로 생성하지 않고 scratch buffer 재사용 방식으로 전환.
+- trace/scalar/flag 입력 배열을 resize + 인덱스 갱신 패턴으로 채워 GDScript 할당/GC 오버헤드를 줄임.
+- stress 수식/상태 업데이트/breakdown 동작 의미는 유지한 채 실행 경로의 메모리 churn을 완화.

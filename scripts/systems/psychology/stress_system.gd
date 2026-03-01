@@ -17,12 +17,20 @@ const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
+const _TICK_SCALAR_LEN: int = 40
+const _TICK_FLAG_LEN: int = 3
+
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
 ## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
 ## Folkman & Lazarus (1988) — denial as maladaptive avoidant coping
 const DENIAL_REDIRECT_FRACTION: float = 0.60   # fraction of stress redirected to hidden accumulator
 const DENIAL_MAX_ACCUMULATOR: float = 800.0    # cap on hidden threat accumulator
 const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full delayed payment)
+
+var _tick_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _tick_flags: PackedByteArray = PackedByteArray()
+var _tick_trace_per_tick: PackedFloat32Array = PackedFloat32Array()
+var _tick_trace_decay: PackedFloat32Array = PackedFloat32Array()
 
 
 func _init() -> void:
@@ -107,68 +115,67 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		scar_resilience_mod = _trauma_scar_system.get_scar_resilience_mod(entity)
 
 	var trace_count: int = ed.stress_traces.size()
-	var per_tick: PackedFloat32Array = PackedFloat32Array()
-	var decay_rate: PackedFloat32Array = PackedFloat32Array()
-	per_tick.resize(trace_count)
-	decay_rate.resize(trace_count)
+	_tick_trace_per_tick.resize(trace_count)
+	_tick_trace_decay.resize(trace_count)
 	for i in range(trace_count):
 		var trace_data: Dictionary = ed.stress_traces[i]
-		per_tick[i] = float(trace_data.get("per_tick", 0.0))
-		decay_rate[i] = float(trace_data.get("decay_rate", 0.05))
+		_tick_trace_per_tick[i] = float(trace_data.get("per_tick", 0.0))
+		_tick_trace_decay[i] = float(trace_data.get("decay_rate", 0.05))
 
-	var scalar_inputs: PackedFloat32Array = PackedFloat32Array([
-		hunger,
-		energy,
-		social,
-		0.0, # threat
-		0.0, # conflict
-		support_score,
-		E_axis,
-		fear_val,
-		trust_val,
-		C_axis,
-		O_axis,
-		reserve_ratio,
-		anger_val,
-		sadness_val,
-		disgust_val,
-		surprise_val,
-		joy_val,
-		anticipation_val,
-		ed.valence,
-		ed.arousal,
-		ed.stress,
-		ed.resilience,
-		ed.reserve,
-		ed.stress_delta_last,
-		float(ed.gas_stage),
-		ed.allostatic,
-		ace_stress_mult,
-		trait_accum_mult,
-		STRESS_EPSILON,
-		DENIAL_REDIRECT_FRACTION,
-		hidden,
-		DENIAL_MAX_ACCUMULATOR,
-		avoidant_mult,
-		E_axis,
-		C_axis,
-		X_axis,
-		O_axis,
-		A_axis,
-		H_axis,
-		scar_resilience_mod,
-	])
-	var flags: PackedByteArray = PackedByteArray([
-		1 if is_sleeping else 0,
-		1 if is_safe else 0,
-		1 if denial_active else 0,
-	])
+	if _tick_scalar_inputs.size() != _TICK_SCALAR_LEN:
+		_tick_scalar_inputs.resize(_TICK_SCALAR_LEN)
+	_tick_scalar_inputs[0] = hunger
+	_tick_scalar_inputs[1] = energy
+	_tick_scalar_inputs[2] = social
+	_tick_scalar_inputs[3] = 0.0
+	_tick_scalar_inputs[4] = 0.0
+	_tick_scalar_inputs[5] = support_score
+	_tick_scalar_inputs[6] = E_axis
+	_tick_scalar_inputs[7] = fear_val
+	_tick_scalar_inputs[8] = trust_val
+	_tick_scalar_inputs[9] = C_axis
+	_tick_scalar_inputs[10] = O_axis
+	_tick_scalar_inputs[11] = reserve_ratio
+	_tick_scalar_inputs[12] = anger_val
+	_tick_scalar_inputs[13] = sadness_val
+	_tick_scalar_inputs[14] = disgust_val
+	_tick_scalar_inputs[15] = surprise_val
+	_tick_scalar_inputs[16] = joy_val
+	_tick_scalar_inputs[17] = anticipation_val
+	_tick_scalar_inputs[18] = ed.valence
+	_tick_scalar_inputs[19] = ed.arousal
+	_tick_scalar_inputs[20] = ed.stress
+	_tick_scalar_inputs[21] = ed.resilience
+	_tick_scalar_inputs[22] = ed.reserve
+	_tick_scalar_inputs[23] = ed.stress_delta_last
+	_tick_scalar_inputs[24] = float(ed.gas_stage)
+	_tick_scalar_inputs[25] = ed.allostatic
+	_tick_scalar_inputs[26] = ace_stress_mult
+	_tick_scalar_inputs[27] = trait_accum_mult
+	_tick_scalar_inputs[28] = STRESS_EPSILON
+	_tick_scalar_inputs[29] = DENIAL_REDIRECT_FRACTION
+	_tick_scalar_inputs[30] = hidden
+	_tick_scalar_inputs[31] = DENIAL_MAX_ACCUMULATOR
+	_tick_scalar_inputs[32] = avoidant_mult
+	_tick_scalar_inputs[33] = E_axis
+	_tick_scalar_inputs[34] = C_axis
+	_tick_scalar_inputs[35] = X_axis
+	_tick_scalar_inputs[36] = O_axis
+	_tick_scalar_inputs[37] = A_axis
+	_tick_scalar_inputs[38] = H_axis
+	_tick_scalar_inputs[39] = scar_resilience_mod
+
+	if _tick_flags.size() != _TICK_FLAG_LEN:
+		_tick_flags.resize(_TICK_FLAG_LEN)
+	_tick_flags[0] = 1 if is_sleeping else 0
+	_tick_flags[1] = 1 if is_safe else 0
+	_tick_flags[2] = 1 if denial_active else 0
 	var tick_step: Dictionary = StatCurveScript.stress_tick_step(
-		per_tick,
-		decay_rate,
+		_tick_trace_per_tick,
+		_tick_trace_decay,
 		0.01,
-		scalar_inputs,
-		flags
+		_tick_scalar_inputs,
+		_tick_flags
 	)
 
 	var s_hunger: float = float(tick_step.get("hunger", 0.0))
@@ -187,7 +194,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var next_traces: Array = []
 	for i in range(usable_len):
 		var trace: Dictionary = ed.stress_traces[i]
-		var contribution: float = float(per_tick[i])
+		var contribution: float = float(_tick_trace_per_tick[i])
 		trace["per_tick"] = float(updated[i])
 		if int(active_mask[i]) != 0:
 			var key: String = "trace_%s" % str(trace.get("source_id", "unknown"))
