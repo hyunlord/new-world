@@ -862,3 +862,8 @@
 - `pathfinder`에 bridge 메서드 capability 캐시를 추가해 hot path의 반복 `has_method` 체크를 1회 캐시로 전환.
 - `_find_path_rust`/`_find_paths_rust_batch`/`_find_paths_rust_batch_xy`가 캐시 기반 분기를 사용하도록 정리.
 - 경로 계산 의미는 유지하면서 pathfinding 호출 경로의 분기 오버헤드를 미세 완화.
+
+## Commit 175
+- `movement_system` greedy fallback 이동에서 후보 `Array[Vector2i]` 생성/순회를 제거하고 분기 기반 이동 시도로 전환.
+- 공통 이동 처리를 `_try_move_candidate`로 추출해 walkable 체크/이동 이벤트 emit 경로를 단순화.
+- 이동 우선순위 의미는 유지하면서 fallback 경로의 메모리 할당 churn을 완화.

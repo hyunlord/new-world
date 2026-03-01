@@ -150,29 +150,31 @@ func _move_toward_target(entity: RefCounted, tick: int) -> void:
 	var dx: int = signi(target.x - pos.x)
 	var dy: int = signi(target.y - pos.y)
 
-	# Try diagonal first, then axis-aligned
-	var candidates: Array[Vector2i] = []
+	# Try diagonal first, then axis-aligned (same priority, no temp array allocation).
 	if dx != 0 and dy != 0:
-		candidates.append(Vector2i(pos.x + dx, pos.y + dy))
-	if dx != 0:
-		candidates.append(Vector2i(pos.x + dx, pos.y))
-	if dy != 0:
-		candidates.append(Vector2i(pos.x, pos.y + dy))
-
-	for j in range(candidates.size()):
-		var candidate: Vector2i = candidates[j]
-		if _world_data.is_walkable(candidate.x, candidate.y):
-			var old_pos: Vector2i = entity.position
-			_entity_manager.move_entity(entity, candidate)
-			SimulationBus.emit_event("entity_moved", {
-				"entity_id": entity.id,
-				"from_x": old_pos.x,
-				"from_y": old_pos.y,
-				"to_x": candidate.x,
-				"to_y": candidate.y,
-				"tick": tick,
-			})
+		if _try_move_candidate(entity, tick, Vector2i(pos.x + dx, pos.y + dy)):
 			return
+	if dx != 0:
+		if _try_move_candidate(entity, tick, Vector2i(pos.x + dx, pos.y)):
+			return
+	if dy != 0:
+		_try_move_candidate(entity, tick, Vector2i(pos.x, pos.y + dy))
+
+
+func _try_move_candidate(entity: RefCounted, tick: int, candidate: Vector2i) -> bool:
+	if not _world_data.is_walkable(candidate.x, candidate.y):
+		return false
+	var old_pos: Vector2i = entity.position
+	_entity_manager.move_entity(entity, candidate)
+	SimulationBus.emit_event("entity_moved", {
+		"entity_id": entity.id,
+		"from_x": old_pos.x,
+		"from_y": old_pos.y,
+		"to_x": candidate.x,
+		"to_y": candidate.y,
+		"tick": tick,
+	})
+	return true
 
 
 ## ─── Arrival Effects ─────────────────────────────────────
