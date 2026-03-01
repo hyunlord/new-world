@@ -25,3 +25,7 @@
 ## Commit 005
 - Rust `WorldSimBridge`에 `pathfind_grid_gpu` / `pathfind_grid_gpu_batch` 메서드 추가.
 - 현재 구현은 CPU 경로 재사용 fallback으로 안정 동작 보장.
+
+## Commit 006
+- `tools/localization_audit.py` 추가.
+- en/ko parity, 중복 키, data 내 inline localized field 자동 감사 가능.
