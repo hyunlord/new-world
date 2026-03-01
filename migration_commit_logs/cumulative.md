@@ -936,3 +936,8 @@
 - `sim-bridge`에 packed XY 슬라이스 직접 순회 경로(`pathfind_grid_batch_xy_bytes`)를 추가해 `pathfind_grid_batch_xy`의 tuple 디코딩 중간 할당을 제거.
 - 기존 `decode_xy_pairs`를 제거하고 XY batch 브리지 호출이 곧바로 슬라이스 기반 batch pathfinding을 사용하도록 전환.
 - path 의미를 유지하면서 XY batch 경로의 메모리/CPU 오버헤드를 완화.
+
+## Commit 190
+- `sim-bridge` Vec2 batch pathfinding 경로에 슬라이스 직접 순회 헬퍼(`pathfind_grid_batch_vec2_bytes`)를 추가해 tuple 디코딩 벡터 할당을 제거.
+- `pathfind_grid_batch`가 중간 좌표 변환 벡터 없이 배치당 1회 grid 재사용 + 직접 순회 경로를 사용하도록 전환.
+- path 의미를 유지하면서 Vec2 batch 경로의 변환 오버헤드를 완화.

@@ -206,6 +206,38 @@ pub fn pathfind_grid_batch_xy_bytes(
     Ok(out)
 }
 
+pub fn pathfind_grid_batch_vec2_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[Vector2],
+    to_points: &[Vector2],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    if from_points.len() != to_points.len() {
+        return Err(PathfindError::MismatchedBatchLength {
+            from_len: from_points.len(),
+            to_len: to_points.len(),
+        });
+    }
+
+    let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    let mut out = Vec::with_capacity(from_points.len());
+    for idx in 0..from_points.len() {
+        let from = from_points[idx];
+        let to = to_points[idx];
+        let path = find_path(
+            &grid,
+            GridPos::new(from.x.round() as i32, from.y.round() as i32),
+            GridPos::new(to.x.round() as i32, to.y.round() as i32),
+            max_steps,
+        );
+        out.push(path);
+    }
+    Ok(out)
+}
+
 fn packed_i32_to_vec(values: &PackedInt32Array) -> Vec<i32> {
     values.as_slice().to_vec()
 }
@@ -1035,24 +1067,13 @@ impl WorldSimBridge {
             max_steps as usize
         };
 
-        let from_pairs: Vec<(i32, i32)> = from_points
-            .as_slice()
-            .iter()
-            .map(|p| (p.x.round() as i32, p.y.round() as i32))
-            .collect();
-        let to_pairs: Vec<(i32, i32)> = to_points
-            .as_slice()
-            .iter()
-            .map(|p| (p.x.round() as i32, p.y.round() as i32))
-            .collect();
-
-        let path_groups = match pathfind_grid_batch_bytes(
+        let path_groups = match pathfind_grid_batch_vec2_bytes(
             width,
             height,
             walkable.as_slice(),
             move_cost.as_slice(),
-            &from_pairs,
-            &to_pairs,
+            from_points.as_slice(),
+            to_points.as_slice(),
             steps,
         ) {
             Ok(groups) => groups,
