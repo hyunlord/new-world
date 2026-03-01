@@ -584,7 +584,7 @@ func _process(delta: float) -> void:
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
-		_pop_label.text = Locale.trf("UI_POP_FMT", {"n": pop})
+		_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
 
 		# Population milestones
 		if not _pop_milestone_init:
@@ -617,12 +617,12 @@ func _process(delta: float) -> void:
 			else:
 				wip_count += 1
 		if wip_count > 0:
-			_building_label.text = Locale.trf("UI_BLD_WIP_FMT", {"n": built_count, "wip": wip_count})
+			_building_label.text = Locale.trf2("UI_BLD_WIP_FMT", "n", built_count, "wip", wip_count)
 		else:
-			_building_label.text = Locale.trf("UI_BLD_FMT", {"n": built_count})
-		_food_label.text = Locale.trf("UI_RES_FOOD_FMT", {"n": int(total_food)})
-		_wood_label.text = Locale.trf("UI_RES_WOOD_FMT", {"n": int(total_wood)})
-		_stone_label.text = Locale.trf("UI_RES_STONE_FMT", {"n": int(total_stone)})
+			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", built_count)
+		_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(total_food))
+		_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(total_wood))
+		_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(total_stone))
 
 	# Update selected entity
 	if _selected_entity_id >= 0 and _entity_manager:
@@ -673,7 +673,13 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_job_label.text = stage_tr + " | " + job_tr + settlement_text + " | " + age_text
 
 	# Position
-	_entity_info_label.text = Locale.trf("UI_POS_FMT", {"x": int(entity.position.x), "y": int(entity.position.y)})
+	_entity_info_label.text = Locale.trf2(
+		"UI_POS_FMT",
+		"x",
+		int(entity.position.x),
+		"y",
+		int(entity.position.y)
+	)
 
 	# Action + path
 	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
@@ -691,9 +697,9 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_action_label.text = action_text
 
 	# Inventory
-	var inv_food_text: String = Locale.trf("UI_RES_FOOD_FMT", {"n": "%.1f" % entity.inventory.get("food", 0.0)})
-	var inv_wood_text: String = Locale.trf("UI_RES_WOOD_FMT", {"n": "%.1f" % entity.inventory.get("wood", 0.0)})
-	var inv_stone_text: String = Locale.trf("UI_RES_STONE_FMT", {"n": "%.1f" % entity.inventory.get("stone", 0.0)})
+	var inv_food_text: String = Locale.trf1("UI_RES_FOOD_FMT", "n", "%.1f" % entity.inventory.get("food", 0.0))
+	var inv_wood_text: String = Locale.trf1("UI_RES_WOOD_FMT", "n", "%.1f" % entity.inventory.get("wood", 0.0))
+	var inv_stone_text: String = Locale.trf1("UI_RES_STONE_FMT", "n", "%.1f" % entity.inventory.get("stone", 0.0))
 	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Need bars + percentage
@@ -737,7 +743,13 @@ func _update_entity_panel(delta: float) -> void:
 		_hunger_bar.modulate = Color.WHITE
 		_hunger_blink_timer = 0.0
 
-	_entity_stats_label.text = Locale.trf("UI_ENTITY_STATS_FMT", {"spd": "%.1f" % entity.speed, "str_val": "%.1f" % entity.strength})
+	_entity_stats_label.text = Locale.trf2(
+		"UI_ENTITY_STATS_FMT",
+		"spd",
+		"%.1f" % entity.speed,
+		"str_val",
+		"%.1f" % entity.strength
+	)
 
 
 func _update_building_panel() -> void:

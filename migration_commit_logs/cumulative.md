@@ -451,3 +451,8 @@
 - `BuildingManager`에 `get_building(id)` 직접 조회 API를 추가해 건물 ID 조회를 dictionary lookup 경로로 노출.
 - `HUD._get_building_by_id`를 전체 배열 선형 탐색에서 `get_building` 직접 호출로 전환.
 - 선택 건물 패널 갱신 시 불필요한 건물 전체 순회를 제거해 조회 경로를 경량화.
+
+## Commit 093
+- `Locale`에 `trf1`/`trf2` 경량 포맷 API를 추가해 1~2 placeholder 치환에서 임시 params Dictionary 생성을 줄이는 경로를 도입.
+- `HUD`의 프레임 루프 포맷 호출(`UI_POP_FMT`, `UI_BLD_*`, `UI_RES_*`, `UI_POS_FMT`, `UI_ENTITY_STATS_FMT`)을 `trf1`/`trf2`로 치환.
+- 표시 의미를 유지하면서 HUD locale 포맷 핫패스의 호출 오버헤드를 완화.
