@@ -21,3 +21,7 @@
 - `ComputeBackend` autoload 추가(`cpu/gpu_auto/gpu_force`).
 - `SimBridge`에 GPU 메서드 우선 탐색 경로 추가(없으면 CPU fallback).
 - `project.godot` autoload에 `ComputeBackend` 등록.
+
+## Commit 005
+- Rust `WorldSimBridge`에 `pathfind_grid_gpu` / `pathfind_grid_gpu_batch` 메서드 추가.
+- 현재 구현은 CPU 경로 재사용 fallback으로 안정 동작 보장.

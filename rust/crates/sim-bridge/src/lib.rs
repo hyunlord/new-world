@@ -210,6 +210,33 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn pathfind_grid_gpu(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_x: i32,
+        from_y: i32,
+        to_x: i32,
+        to_y: i32,
+        max_steps: i32,
+    ) -> PackedVector2Array {
+        // GPU path is not implemented yet; use CPU pathfinding as fallback.
+        self.pathfind_grid(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_x,
+            from_y,
+            to_x,
+            to_y,
+            max_steps,
+        )
+    }
+
+    #[func]
     fn pathfind_grid_batch(
         &self,
         width: i32,
@@ -256,6 +283,29 @@ impl WorldSimBridge {
             output.push(&packed);
         }
         output
+    }
+
+    #[func]
+    fn pathfind_grid_gpu_batch(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_points: PackedVector2Array,
+        to_points: PackedVector2Array,
+        max_steps: i32,
+    ) -> Array<PackedVector2Array> {
+        // GPU path is not implemented yet; use CPU batch pathfinding as fallback.
+        self.pathfind_grid_batch(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_points,
+            to_points,
+            max_steps,
+        )
     }
 }
 
