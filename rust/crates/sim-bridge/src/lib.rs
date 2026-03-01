@@ -1029,6 +1029,50 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_network_social_capital_norm(
+        &self,
+        strong_count: f32,
+        weak_count: f32,
+        bridge_count: f32,
+        rep_score: f32,
+        strong_weight: f32,
+        weak_weight: f32,
+        bridge_weight: f32,
+        rep_weight: f32,
+        norm_div: f32,
+    ) -> f32 {
+        body::network_social_capital_norm(
+            strong_count,
+            weak_count,
+            bridge_count,
+            rep_score,
+            strong_weight,
+            weak_weight,
+            bridge_weight,
+            rep_weight,
+            norm_div,
+        )
+    }
+
+    #[func]
+    fn body_revolution_risk_score(
+        &self,
+        unhappiness: f32,
+        frustration: f32,
+        inequality: f32,
+        leader_unpopularity: f32,
+        independence_ratio: f32,
+    ) -> f32 {
+        body::revolution_risk_score(
+            unhappiness,
+            frustration,
+            inequality,
+            leader_unpopularity,
+            independence_ratio,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

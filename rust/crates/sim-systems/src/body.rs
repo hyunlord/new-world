@@ -571,6 +571,40 @@ pub fn leader_score(
     base_score * (1.0 + rep_overall * 0.20)
 }
 
+/// Social capital score normalized to `[0.0, 1.0+]` before caller-side clamp.
+pub fn network_social_capital_norm(
+    strong_count: f32,
+    weak_count: f32,
+    bridge_count: f32,
+    rep_score: f32,
+    strong_weight: f32,
+    weak_weight: f32,
+    bridge_weight: f32,
+    rep_weight: f32,
+    norm_div: f32,
+) -> f32 {
+    let raw = strong_count * strong_weight
+        + weak_count * weak_weight
+        + bridge_count * bridge_weight
+        + rep_score * rep_weight;
+    if norm_div <= 0.0 {
+        raw
+    } else {
+        raw / norm_div
+    }
+}
+
+/// Composite revolution risk from five equal-weight components.
+pub fn revolution_risk_score(
+    unhappiness: f32,
+    frustration: f32,
+    inequality: f32,
+    leader_unpopularity: f32,
+    independence_ratio: f32,
+) -> f32 {
+    (unhappiness + frustration + inequality + leader_unpopularity + independence_ratio) / 5.0
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1045,10 +1079,11 @@ mod tests {
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, job_satisfaction_score, job_satisfaction_score_batch,
         leader_age_respect, leader_score, needs_base_decay_step, needs_critical_severity_step,
-        occupation_best_skill_index, occupation_should_switch, rest_energy_recovery,
-        stress_injection_apply_step, stress_rebound_apply_step, stress_shaken_countdown_step,
-        stress_support_score, thirst_decay, upper_needs_best_skill_normalized,
-        upper_needs_job_alignment, upper_needs_step, warmth_decay,
+        network_social_capital_norm, occupation_best_skill_index, occupation_should_switch,
+        rest_energy_recovery, revolution_risk_score, stress_injection_apply_step,
+        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
+        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
+        upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -1395,6 +1430,21 @@ mod tests {
             0.6, 0.5, 0.7, 0.2, 0.4, 0.8, 0.25, 0.15, 0.15, 0.15, 0.15, 0.15, 0.4,
         );
         assert!(with_bonus > no_bonus);
+    }
+
+    #[test]
+    fn network_social_capital_norm_scales_by_weights_and_divisor() {
+        let score = network_social_capital_norm(2.0, 3.0, 1.0, 0.5, 3.0, 1.0, 5.0, 10.0, 20.0);
+        assert_eq!(
+            score,
+            (2.0 * 3.0 + 3.0 * 1.0 + 1.0 * 5.0 + 0.5 * 10.0) / 20.0
+        );
+    }
+
+    #[test]
+    fn revolution_risk_score_is_component_average() {
+        let risk = revolution_risk_score(0.2, 0.4, 0.6, 0.8, 0.0);
+        assert_eq!(risk, 0.4);
     }
 
     #[test]

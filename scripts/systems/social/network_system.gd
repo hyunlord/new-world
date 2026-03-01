@@ -14,6 +14,11 @@ var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _relationship_manager: RefCounted
 var _reputation_manager: RefCounted
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_SOCIAL_CAP_METHOD: String = "body_network_social_capital_norm"
+const _SIM_BRIDGE_REVOLUTION_RISK_METHOD: String = "body_revolution_risk_score"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -28,6 +33,24 @@ func init(entity_manager: RefCounted, settlement_manager: RefCounted,
 	_settlement_manager = settlement_manager
 	_relationship_manager = relationship_manager
 	_reputation_manager = reputation_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+			and node.has_method(_SIM_BRIDGE_SOCIAL_CAP_METHOD) \
+			and node.has_method(_SIM_BRIDGE_REVOLUTION_RISK_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -90,6 +113,23 @@ func _compute_entity_social_capital(
 	if _reputation_manager != null:
 		var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
 		rep_score = (avg_rep.get("overall", 0.0) + 1.0) / 2.0  ## remap -1~1 to 0~1
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_SOCIAL_CAP_METHOD,
+			strong_count,
+			weak_count,
+			bridge_count,
+			rep_score,
+			float(GameConfig.NETWORK_SOCIAL_CAP_STRONG_W),
+			float(GameConfig.NETWORK_SOCIAL_CAP_WEAK_W),
+			float(GameConfig.NETWORK_SOCIAL_CAP_BRIDGE_W),
+			float(GameConfig.NETWORK_SOCIAL_CAP_REP_W),
+			float(GameConfig.NETWORK_SOCIAL_CAP_NORM_DIV)
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 
 	var raw_sc: float = (
 		strong_count * GameConfig.NETWORK_SOCIAL_CAP_STRONG_W
@@ -193,6 +233,19 @@ func _compute_revolution_risk(settlement: RefCounted) -> float:
 		if float(e.values.get(&"INDEPENDENCE", 0.0)) > 0.3:
 			independence_count += 1
 	var independence_ratio: float = float(independence_count) / float(alive_members.size())
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_REVOLUTION_RISK_METHOD,
+			unhappiness,
+			frustration,
+			inequality,
+			leader_unpopularity,
+			independence_ratio
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 
 	return (unhappiness + frustration + inequality + leader_unpopularity + independence_ratio) / 5.0
 
