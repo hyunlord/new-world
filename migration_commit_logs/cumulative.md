@@ -981,3 +981,8 @@
 - `sim-bridge`에 `validate_grid_inputs`를 추가해 grid pathfinding API의 차원/버퍼 길이 검증을 공통화하고 `InvalidDimensions`를 명시적으로 반환하도록 보강.
 - 단일 경로 API(`pathfind_grid_bytes`)에서 `from==to` stationary 케이스를 검증 후 즉시 반환해 불필요한 그리드 빌드 오버헤드를 제거.
 - 관련 경계 테스트(차원 오류/stationary 반환)를 추가해 입력 검증과 fast-path 의미를 고정.
+
+## Commit 199
+- `sim-bridge` batch pathfinding(tuple/XY/Vec2)에 stationary 질의 fast-path를 추가해 `from==to` 항목에서 A* 호출을 생략하고 singleton path를 즉시 반환하도록 최적화.
+- 전체 배치가 stationary인 경우 grid 구성 자체를 건너뛰는 early-return 경로를 추가해 batch 오버헤드를 추가 절감.
+- tuple/XY/Vec2 모두에 대해 stationary 반환 의미를 테스트로 고정.

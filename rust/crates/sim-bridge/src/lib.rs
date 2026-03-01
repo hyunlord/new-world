@@ -184,11 +184,28 @@ pub fn pathfind_grid_batch_bytes(
         });
     }
 
+    if from_points
+        .iter()
+        .zip(to_points.iter())
+        .all(|(from, to)| from == to)
+    {
+        validate_grid_inputs(width, height, walkable, move_cost)?;
+        let mut out = Vec::with_capacity(from_points.len());
+        for &(x, y) in from_points {
+            out.push(vec![GridPos::new(x, y)]);
+        }
+        return Ok(out);
+    }
+
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
     let mut out = Vec::with_capacity(from_points.len());
     for idx in 0..from_points.len() {
         let (from_x, from_y) = from_points[idx];
         let (to_x, to_y) = to_points[idx];
+        if from_x == to_x && from_y == to_y {
+            out.push(vec![GridPos::new(from_x, from_y)]);
+            continue;
+        }
         let path = find_path(
             &grid,
             GridPos::new(from_x, from_y),
@@ -216,19 +233,49 @@ pub fn pathfind_grid_batch_xy_bytes(
         });
     }
 
+    let mut all_stationary = true;
+    let mut idx = 0usize;
+    while idx + 1 < from_xy.len() {
+        if from_xy[idx] != to_xy[idx] || from_xy[idx + 1] != to_xy[idx + 1] {
+            all_stationary = false;
+            break;
+        }
+        idx += 2;
+    }
+    if all_stationary {
+        validate_grid_inputs(width, height, walkable, move_cost)?;
+        let pair_count = from_xy.len() / 2;
+        let mut out = Vec::with_capacity(pair_count);
+        let mut i = 0usize;
+        while i + 1 < from_xy.len() {
+            out.push(vec![GridPos::new(from_xy[i], from_xy[i + 1])]);
+            i += 2;
+        }
+        return Ok(out);
+    }
+
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
     let pair_count = from_xy.len() / 2;
     let mut out = Vec::with_capacity(pair_count);
-    let mut idx = 0usize;
-    while idx + 1 < from_xy.len() {
+    let mut cursor = 0usize;
+    while cursor + 1 < from_xy.len() {
+        let from_x = from_xy[cursor];
+        let from_y = from_xy[cursor + 1];
+        let to_x = to_xy[cursor];
+        let to_y = to_xy[cursor + 1];
+        if from_x == to_x && from_y == to_y {
+            out.push(vec![GridPos::new(from_x, from_y)]);
+            cursor += 2;
+            continue;
+        }
         let path = find_path(
             &grid,
-            GridPos::new(from_xy[idx], from_xy[idx + 1]),
-            GridPos::new(to_xy[idx], to_xy[idx + 1]),
+            GridPos::new(from_x, from_y),
+            GridPos::new(to_x, to_y),
             max_steps,
         );
         out.push(path);
-        idx += 2;
+        cursor += 2;
     }
     Ok(out)
 }
@@ -249,15 +296,42 @@ pub fn pathfind_grid_batch_vec2_bytes(
         });
     }
 
+    if from_points
+        .iter()
+        .zip(to_points.iter())
+        .all(|(from, to)| {
+            from.x.round() as i32 == to.x.round() as i32
+                && from.y.round() as i32 == to.y.round() as i32
+        })
+    {
+        validate_grid_inputs(width, height, walkable, move_cost)?;
+        let mut out = Vec::with_capacity(from_points.len());
+        for from in from_points {
+            out.push(vec![GridPos::new(
+                from.x.round() as i32,
+                from.y.round() as i32,
+            )]);
+        }
+        return Ok(out);
+    }
+
     let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
     let mut out = Vec::with_capacity(from_points.len());
     for idx in 0..from_points.len() {
         let from = from_points[idx];
         let to = to_points[idx];
+        let from_x = from.x.round() as i32;
+        let from_y = from.y.round() as i32;
+        let to_x = to.x.round() as i32;
+        let to_y = to.y.round() as i32;
+        if from_x == to_x && from_y == to_y {
+            out.push(vec![GridPos::new(from_x, from_y)]);
+            continue;
+        }
         let path = find_path(
             &grid,
-            GridPos::new(from.x.round() as i32, from.y.round() as i32),
-            GridPos::new(to.x.round() as i32, to.y.round() as i32),
+            GridPos::new(from_x, from_y),
+            GridPos::new(to_x, to_y),
             max_steps,
         );
         out.push(path);
@@ -2537,6 +2611,48 @@ mod tests {
         )
         .expect("vec2 batch should succeed");
 
+        assert_eq!(grouped_vec2, grouped);
+    }
+
+    #[test]
+    fn pathfind_grid_batch_returns_singletons_for_stationary_queries() {
+        let walkable = vec![0_u8; 25];
+        let move_cost = vec![1.0_f32; 25];
+        let from = vec![(1, 1), (2, 3), (4, 0)];
+        let to = vec![(1, 1), (2, 3), (4, 0)];
+
+        let grouped = pathfind_grid_batch_bytes(5, 5, &walkable, &move_cost, &from, &to, 200)
+            .expect("stationary tuple batch should succeed");
+        assert_eq!(
+            grouped,
+            vec![
+                vec![GridPos::new(1, 1)],
+                vec![GridPos::new(2, 3)],
+                vec![GridPos::new(4, 0)]
+            ]
+        );
+
+        let from_xy = vec![1, 1, 2, 3, 4, 0];
+        let to_xy = vec![1, 1, 2, 3, 4, 0];
+        let grouped_xy =
+            pathfind_grid_batch_xy_bytes(5, 5, &walkable, &move_cost, &from_xy, &to_xy, 200)
+                .expect("stationary xy batch should succeed");
+        assert_eq!(grouped_xy, grouped);
+
+        let from_vec2 = vec![
+            Vector2::new(1.0, 1.0),
+            Vector2::new(2.0, 3.0),
+            Vector2::new(4.0, 0.0),
+        ];
+        let to_vec2 = vec![
+            Vector2::new(1.0, 1.0),
+            Vector2::new(2.0, 3.0),
+            Vector2::new(4.0, 0.0),
+        ];
+        let grouped_vec2 = pathfind_grid_batch_vec2_bytes(
+            5, 5, &walkable, &move_cost, &from_vec2, &to_vec2, 200,
+        )
+        .expect("stationary vec2 batch should succeed");
         assert_eq!(grouped_vec2, grouped);
     }
 
