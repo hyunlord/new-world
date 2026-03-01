@@ -39,3 +39,8 @@
 - Rust `sim-bridge`에 stat curve API 10종 노출.
 - `SimBridge`/`StatCurve`를 Rust 우선 + GDScript fallback 구조로 연결.
 - 기존 수학 로직 보존하면서 hot path를 점진적으로 Rust 실행 경로로 이전.
+
+## Commit 009
+- `localization/manifest.json` + `tools/localization_compile.py` 도입.
+- locale 카테고리 파일을 `compiled/<locale>.json` 단일 인덱스로 빌드/운영하는 경로 추가.
+- `Locale` 로더를 compiled 우선 + legacy fallback 구조로 개편.

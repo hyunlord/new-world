@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+"""Compile category-based localization JSON files into per-locale flat maps.
+
+This keeps authoring ergonomics (split files by category) while giving runtime
+fast O(1) lookup from a single loaded JSON payload.
+
+Usage:
+  python3 tools/localization_compile.py --project-root .
+  python3 tools/localization_compile.py --project-root . --strict-duplicates
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+
+DEFAULT_MANIFEST: Dict[str, Any] = {
+    "default_locale": "ko",
+    "supported_locales": ["ko", "en"],
+    "categories_order": [
+        "ui",
+        "game",
+        "traits",
+        "emotions",
+        "events",
+        "deaths",
+        "buildings",
+        "tutorial",
+        "debug",
+        "coping",
+        "childhood",
+        "reputation",
+        "economy",
+        "tech",
+    ],
+    "compiled_dir": "compiled",
+}
+
+
+def _load_json(path: Path) -> Any:
+    with path.open("r", encoding="utf-8") as fp:
+        return json.load(fp)
+
+
+def _write_json(path: Path, data: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fp:
+        json.dump(data, fp, ensure_ascii=False, indent=2, sort_keys=True)
+        fp.write("\n")
+
+
+def _load_manifest(manifest_path: Path) -> Dict[str, Any]:
+    if not manifest_path.exists():
+        return dict(DEFAULT_MANIFEST)
+    data = _load_json(manifest_path)
+    if not isinstance(data, dict):
+        return dict(DEFAULT_MANIFEST)
+
+    merged = dict(DEFAULT_MANIFEST)
+    merged.update(data)
+    return merged
+
+
+def _load_category_data(
+    localization_root: Path,
+    locale: str,
+    category: str,
+    fallback_locale: str,
+) -> Tuple[Dict[str, Any], str]:
+    locale_file = localization_root / locale / f"{category}.json"
+    if locale_file.exists():
+        data = _load_json(locale_file)
+        if isinstance(data, dict):
+            return data, locale
+        return {}, locale
+
+    fallback_file = localization_root / fallback_locale / f"{category}.json"
+    if fallback_file.exists():
+        data = _load_json(fallback_file)
+        if isinstance(data, dict):
+            return data, fallback_locale
+        return {}, fallback_locale
+
+    return {}, ""
+
+
+def _compile_locale(
+    localization_root: Path,
+    locale: str,
+    fallback_locale: str,
+    categories: List[str],
+) -> Dict[str, Any]:
+    flat: Dict[str, str] = {}
+    key_sources: Dict[str, str] = {}
+    duplicate_keys: Dict[str, List[str]] = {}
+
+    for category in categories:
+        category_data, loaded_from = _load_category_data(
+            localization_root=localization_root,
+            locale=locale,
+            category=category,
+            fallback_locale=fallback_locale,
+        )
+
+        for raw_key, raw_value in category_data.items():
+            key = str(raw_key)
+            value = str(raw_value)
+            source_label = f"{loaded_from}/{category}" if loaded_from else f"missing/{category}"
+
+            if key in flat:
+                duplicate_keys.setdefault(key, [key_sources[key]]).append(source_label)
+                # Preserve first-wins semantics to match existing Locale loader behavior.
+                continue
+
+            flat[key] = value
+            key_sources[key] = source_label
+
+    return {
+        "strings": flat,
+        "sources": key_sources,
+        "duplicate_keys": duplicate_keys,
+    }
+
+
+def run(project_root: Path, strict_duplicates: bool) -> int:
+    localization_root = project_root / "localization"
+    manifest_path = localization_root / "manifest.json"
+    manifest = _load_manifest(manifest_path)
+
+    default_locale = str(manifest.get("default_locale", "ko"))
+    supported_locales = [str(x) for x in manifest.get("supported_locales", ["ko", "en"])]
+    categories = [str(x) for x in manifest.get("categories_order", [])]
+    compiled_dir_name = str(manifest.get("compiled_dir", "compiled"))
+
+    if not categories:
+        print("[localization_compile] categories_order is empty", file=sys.stderr)
+        return 1
+
+    compiled_root = localization_root / compiled_dir_name
+    compiled_root.mkdir(parents=True, exist_ok=True)
+
+    total_duplicates = 0
+    for locale in supported_locales:
+        compiled = _compile_locale(
+            localization_root=localization_root,
+            locale=locale,
+            fallback_locale="en",
+            categories=categories,
+        )
+        duplicate_count = len(compiled["duplicate_keys"])
+        total_duplicates += duplicate_count
+
+        output = {
+            "meta": {
+                "locale": locale,
+                "default_locale": default_locale,
+                "categories_order": categories,
+                "fallback_locale": "en",
+                "duplicate_key_count": duplicate_count,
+            },
+            "strings": compiled["strings"],
+            "sources": compiled["sources"],
+        }
+        out_path = compiled_root / f"{locale}.json"
+        _write_json(out_path, output)
+
+        print(
+            f"[localization_compile] {locale}: "
+            f"strings={len(compiled['strings'])} duplicates={duplicate_count} -> {out_path}"
+        )
+
+    if strict_duplicates and total_duplicates > 0:
+        print(
+            f"[localization_compile] strict mode failed: duplicate_keys={total_duplicates}",
+            file=sys.stderr,
+        )
+        return 1
+
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--project-root", default=".", help="WorldSim project root")
+    parser.add_argument(
+        "--strict-duplicates",
+        action="store_true",
+        help="return non-zero when duplicate localization keys exist",
+    )
+    args = parser.parse_args()
+
+    project_root = Path(args.project_root).resolve()
+    return run(project_root=project_root, strict_duplicates=args.strict_duplicates)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

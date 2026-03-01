@@ -8,10 +8,15 @@ signal locale_changed(new_locale: String)
 
 const LOCALES_DIR: String = "res://localization/"
 const SETTINGS_PATH: String = "user://settings.json"
+const MANIFEST_PATH: String = LOCALES_DIR + "manifest.json"
 const SUPPORTED_LOCALES: Array = ["ko", "en"]
 const DEFAULT_LOCALE: String = "ko"
+const COMPILED_DIR_DEFAULT: String = "compiled"
 
 var current_locale: String = DEFAULT_LOCALE
+var _supported_locales: Array = SUPPORTED_LOCALES.duplicate()
+var _default_locale: String = DEFAULT_LOCALE
+var _compiled_dir: String = COMPILED_DIR_DEFAULT
 
 ## Loaded translation data: { "ui": {"UI_SAVE": "...", ...}, "game": {...}, ... }
 var _strings: Dictionary = {}
@@ -23,13 +28,14 @@ var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths"
 
 
 func _ready() -> void:
+	_load_manifest()
 	_load_settings()
 	load_locale(current_locale)
 
 
 ## Switch locale at runtime
 func set_locale(locale: String) -> void:
-	if locale not in SUPPORTED_LOCALES:
+	if locale not in _supported_locales:
 		push_warning("[Locale] Unsupported locale: %s" % locale)
 		return
 	if locale == current_locale:
@@ -42,8 +48,14 @@ func set_locale(locale: String) -> void:
 
 ## Load all translation files for a locale
 func load_locale(locale: String) -> void:
+	if locale not in _supported_locales:
+		locale = _default_locale
+	current_locale = locale
 	_strings.clear()
 	_flat_strings.clear()
+	if _load_compiled_locale(locale):
+		return
+
 	for cat in _categories:
 		var path: String = LOCALES_DIR + locale + "/" + cat + ".json"
 		if not FileAccess.file_exists(path):
@@ -119,23 +131,98 @@ func get_month_name(month: int) -> String:
 func _load_settings() -> void:
 	if not FileAccess.file_exists(SETTINGS_PATH):
 		return
-	var f = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
-	var json = JSON.new()
+	var f: FileAccess = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
+	var json: JSON = JSON.new()
 	json.parse(f.get_as_text())
 	if json.data and json.data.has("locale"):
 		current_locale = str(json.data.locale)
+	if current_locale not in _supported_locales:
+		current_locale = _default_locale
 
 
 func _save_settings() -> void:
-	var data = {}
+	var data: Dictionary = {}
 	if FileAccess.file_exists(SETTINGS_PATH):
 		@warning_ignore("confusable_local_declaration")
-		var f = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
-		var json = JSON.new()
+		var f: FileAccess = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
+		var json: JSON = JSON.new()
 		json.parse(f.get_as_text())
-		if json.data:
+		if json.data is Dictionary:
 			data = json.data
 	data["locale"] = current_locale
 	@warning_ignore("confusable_local_declaration")
-	var f = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
+	var f: FileAccess = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
 	f.store_string(JSON.stringify(data, "  "))
+
+
+func _load_manifest() -> void:
+	if not FileAccess.file_exists(MANIFEST_PATH):
+		return
+
+	var file: FileAccess = FileAccess.open(MANIFEST_PATH, FileAccess.READ)
+	var json: JSON = JSON.new()
+	var parse_err: int = json.parse(file.get_as_text())
+	if parse_err != OK:
+		push_warning("[Locale] Failed to parse manifest: %s" % MANIFEST_PATH)
+		return
+	if not (json.data is Dictionary):
+		return
+
+	var manifest: Dictionary = json.data
+	if manifest.has("default_locale"):
+		_default_locale = str(manifest["default_locale"])
+		if current_locale == DEFAULT_LOCALE:
+			current_locale = _default_locale
+
+	if manifest.has("supported_locales") and manifest["supported_locales"] is Array:
+		var parsed_locales: Array = []
+		var raw_locales: Array = manifest["supported_locales"]
+		for i in range(raw_locales.size()):
+			parsed_locales.append(str(raw_locales[i]))
+		if parsed_locales.size() > 0:
+			_supported_locales = parsed_locales
+
+	if manifest.has("categories_order") and manifest["categories_order"] is Array:
+		var parsed_categories: Array = []
+		var raw_categories: Array = manifest["categories_order"]
+		for i in range(raw_categories.size()):
+			parsed_categories.append(str(raw_categories[i]))
+		if parsed_categories.size() > 0:
+			_categories = parsed_categories
+
+	if manifest.has("compiled_dir"):
+		_compiled_dir = str(manifest["compiled_dir"])
+
+	if current_locale not in _supported_locales:
+		current_locale = _default_locale
+
+
+func _load_compiled_locale(locale: String) -> bool:
+	var path: String = LOCALES_DIR + _compiled_dir + "/" + locale + ".json"
+	if not FileAccess.file_exists(path):
+		if locale != "en":
+			path = LOCALES_DIR + _compiled_dir + "/en.json"
+		if not FileAccess.file_exists(path):
+			return false
+
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var json: JSON = JSON.new()
+	var parse_err: int = json.parse(file.get_as_text())
+	if parse_err != OK:
+		return false
+	if not (json.data is Dictionary):
+		return false
+
+	var root: Dictionary = json.data
+	if not root.has("strings"):
+		return false
+	if not (root["strings"] is Dictionary):
+		return false
+
+	var strings: Dictionary = root["strings"]
+	_strings["compiled"] = strings
+	var keys: Array = strings.keys()
+	for i in range(keys.size()):
+		var key: String = str(keys[i])
+		_flat_strings[key] = str(strings[key])
+	return true

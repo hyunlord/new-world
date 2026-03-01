@@ -1,0 +1,24 @@
+{
+  "default_locale": "ko",
+  "supported_locales": [
+    "ko",
+    "en"
+  ],
+  "categories_order": [
+    "ui",
+    "game",
+    "traits",
+    "emotions",
+    "events",
+    "deaths",
+    "buildings",
+    "tutorial",
+    "debug",
+    "coping",
+    "childhood",
+    "reputation",
+    "economy",
+    "tech"
+  ],
+  "compiled_dir": "compiled"
+}
