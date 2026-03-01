@@ -1336,6 +1336,46 @@ func body_rest_energy_recovery(
 	)
 
 
+## Delegates thirst decay computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_thirst_decay(
+	base_decay: float,
+	tile_temp: float,
+	temp_neutral: float
+):
+	return _call_native_if_exists(
+		"body_thirst_decay",
+		[
+			base_decay,
+			tile_temp,
+			temp_neutral
+		]
+	)
+
+
+## Delegates warmth decay computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_warmth_decay(
+	base_decay: float,
+	tile_temp: float,
+	has_tile_temp: bool,
+	temp_neutral: float,
+	temp_freezing: float,
+	temp_cold: float
+):
+	return _call_native_if_exists(
+		"body_warmth_decay",
+		[
+			base_decay,
+			tile_temp,
+			has_tile_temp,
+			temp_neutral,
+			temp_freezing,
+			temp_cold
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

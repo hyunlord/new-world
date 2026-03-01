@@ -413,6 +413,31 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_thirst_decay(&self, base_decay: f32, tile_temp: f32, temp_neutral: f32) -> f32 {
+        body::thirst_decay(base_decay, tile_temp, temp_neutral)
+    }
+
+    #[func]
+    fn body_warmth_decay(
+        &self,
+        base_decay: f32,
+        tile_temp: f32,
+        has_tile_temp: bool,
+        temp_neutral: f32,
+        temp_freezing: f32,
+        temp_cold: f32,
+    ) -> f32 {
+        body::warmth_decay(
+            base_decay,
+            tile_temp,
+            has_tile_temp,
+            temp_neutral,
+            temp_freezing,
+            temp_cold,
+        )
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

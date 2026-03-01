@@ -88,6 +88,45 @@ pub fn rest_energy_recovery(base_recovery: f32, rec_norm: f32, rec_recovery_bonu
     base_recovery * (1.0 + rec_recovery_bonus * clamped_rec)
 }
 
+/// Thirst decay step with temperature acceleration.
+///
+/// Mirrors `needs_system` thirst decay branch.
+pub fn thirst_decay(base_decay: f32, tile_temp: f32, temp_neutral: f32) -> f32 {
+    if tile_temp > temp_neutral {
+        base_decay * (1.0 + (tile_temp - temp_neutral) * 2.0)
+    } else {
+        base_decay
+    }
+}
+
+/// Warmth decay step from tile temperature bands.
+///
+/// Mirrors `needs_system` warmth decay branch.
+pub fn warmth_decay(
+    base_decay: f32,
+    tile_temp: f32,
+    has_tile_temp: bool,
+    temp_neutral: f32,
+    temp_freezing: f32,
+    temp_cold: f32,
+) -> f32 {
+    if !has_tile_temp {
+        return base_decay;
+    }
+    if tile_temp >= temp_neutral {
+        return 0.0;
+    }
+    if tile_temp < temp_freezing {
+        return base_decay * 5.0;
+    }
+    if tile_temp < temp_cold {
+        return base_decay * 3.0;
+    }
+    let denom = (temp_neutral - temp_cold).max(0.000_001);
+    let cold_ratio = (temp_neutral - tile_temp) / denom;
+    base_decay * (1.0 + cold_ratio * 2.0)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -272,7 +311,7 @@ mod tests {
         age_trainability_modifier, age_trainability_modifiers, calc_training_gain,
         action_energy_cost, calc_realized_values, calc_training_gains,
         compute_age_curve, compute_age_curves,
-        rest_energy_recovery,
+        rest_energy_recovery, thirst_decay, warmth_decay,
     };
 
     #[test]
@@ -352,6 +391,26 @@ mod tests {
         let low = rest_energy_recovery(0.02, 0.1, 0.5);
         let high = rest_energy_recovery(0.02, 0.9, 0.5);
         assert!(high > low);
+    }
+
+    #[test]
+    fn thirst_decay_accelerates_above_neutral_temp() {
+        let neutral = thirst_decay(0.01, 0.5, 0.5);
+        let hot = thirst_decay(0.01, 0.8, 0.5);
+        assert!(hot > neutral);
+    }
+
+    #[test]
+    fn warmth_decay_uses_expected_temperature_bands() {
+        let base = 0.01_f32;
+        let no_temp = warmth_decay(base, 0.2, false, 0.5, 0.1, 0.3);
+        assert_eq!(no_temp, base);
+        let warm = warmth_decay(base, 0.6, true, 0.5, 0.1, 0.3);
+        assert_eq!(warm, 0.0);
+        let freezing = warmth_decay(base, 0.05, true, 0.5, 0.1, 0.3);
+        assert_eq!(freezing, base * 5.0);
+        let cold = warmth_decay(base, 0.2, true, 0.5, 0.1, 0.3);
+        assert_eq!(cold, base * 3.0);
     }
 
     #[test]

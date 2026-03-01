@@ -666,3 +666,8 @@
 - `sim-systems::body`에 `action_energy_cost`/`rest_energy_recovery`를 추가해 needs 시스템의 에너지 소모/회복 수식을 Rust 함수로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `BodyAttributes` 헬퍼(`compute_action_energy_cost`, `compute_rest_energy_recovery`)로 Rust 우선 + GDScript fallback 경로를 제공.
 - `needs_system`이 해당 헬퍼를 사용하도록 전환되어 needs tick의 body 에너지 수학 연산 네이티브화 범위를 확장.
+
+## Commit 136
+- `sim-systems::body`에 `thirst_decay`/`warmth_decay`를 추가해 needs 시스템의 갈증/체온 소모 수식을 Rust 함수로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `needs_system`이 Rust 우선 + GDScript fallback으로 호출하도록 전환.
+- 온도 기반 소모 의미를 유지하면서 needs tick의 환경 소모 계산 네이티브화 범위를 확장.
