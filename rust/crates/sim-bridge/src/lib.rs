@@ -2337,10 +2337,12 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 #[cfg(test)]
 mod tests {
     use super::{
-        parse_pathfind_backend, pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_bytes,
+        parse_pathfind_backend, pathfind_from_flat, pathfind_grid_batch_bytes,
+        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes, pathfind_grid_bytes,
         resolve_backend_mode, PathfindError, PathfindInput, PATHFIND_BACKEND_AUTO,
         PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
     };
+    use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
 
     fn base_input() -> PathfindInput {
@@ -2429,6 +2431,78 @@ mod tests {
             PathfindError::MismatchedBatchLength {
                 from_len: 2,
                 to_len: 1
+            }
+        );
+    }
+
+    #[test]
+    fn pathfind_grid_batch_xy_matches_tuple_results() {
+        let walkable = vec![1_u8; 36];
+        let move_cost = vec![1.0_f32; 36];
+        let from = vec![(0, 0), (5, 0), (0, 5), (2, 3)];
+        let to = vec![(5, 5), (0, 5), (5, 0), (4, 1)];
+
+        let mut from_xy: Vec<i32> = Vec::with_capacity(from.len() * 2);
+        let mut to_xy: Vec<i32> = Vec::with_capacity(to.len() * 2);
+        for idx in 0..from.len() {
+            from_xy.push(from[idx].0);
+            from_xy.push(from[idx].1);
+            to_xy.push(to[idx].0);
+            to_xy.push(to[idx].1);
+        }
+
+        let grouped = pathfind_grid_batch_bytes(6, 6, &walkable, &move_cost, &from, &to, 400)
+            .expect("tuple batch should succeed");
+        let grouped_xy =
+            pathfind_grid_batch_xy_bytes(6, 6, &walkable, &move_cost, &from_xy, &to_xy, 400)
+                .expect("xy batch should succeed");
+
+        assert_eq!(grouped_xy, grouped);
+    }
+
+    #[test]
+    fn pathfind_grid_batch_vec2_matches_tuple_results() {
+        let walkable = vec![1_u8; 36];
+        let move_cost = vec![1.0_f32; 36];
+        let from = vec![(0, 0), (5, 0), (0, 5), (2, 3)];
+        let to = vec![(5, 5), (0, 5), (5, 0), (4, 1)];
+        let from_vec2 = vec![
+            Vector2::new(0.0, 0.0),
+            Vector2::new(5.0, 0.0),
+            Vector2::new(0.0, 5.0),
+            Vector2::new(2.0, 3.0),
+        ];
+        let to_vec2 = vec![
+            Vector2::new(5.0, 5.0),
+            Vector2::new(0.0, 5.0),
+            Vector2::new(5.0, 0.0),
+            Vector2::new(4.0, 1.0),
+        ];
+
+        let grouped = pathfind_grid_batch_bytes(6, 6, &walkable, &move_cost, &from, &to, 400)
+            .expect("tuple batch should succeed");
+        let grouped_vec2 = pathfind_grid_batch_vec2_bytes(
+            6, 6, &walkable, &move_cost, &from_vec2, &to_vec2, 400,
+        )
+        .expect("vec2 batch should succeed");
+
+        assert_eq!(grouped_vec2, grouped);
+    }
+
+    #[test]
+    fn pathfind_grid_batch_xy_rejects_odd_length_inputs() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let from_xy = vec![0, 0, 1];
+        let to_xy = vec![3, 3, 2];
+
+        let err = pathfind_grid_batch_xy_bytes(4, 4, &walkable, &move_cost, &from_xy, &to_xy, 200)
+            .expect_err("odd-length xy arrays must fail");
+        assert_eq!(
+            err,
+            PathfindError::MismatchedBatchLength {
+                from_len: 3,
+                to_len: 3
             }
         );
     }

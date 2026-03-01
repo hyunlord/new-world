@@ -956,3 +956,8 @@
 - `tools/migration_verify.sh`에 `--with-benches` 옵션을 추가해 기본 4단계 검증은 유지하면서 선택적으로 Rust 벤치 체크섬 회귀까지 자동 검증할 수 있게 확장.
 - `run_bench_and_check` 헬퍼를 도입해 벤치 출력 `checksum` 파싱/비교를 표준화하고 mismatch 시 즉시 실패하도록 강화.
 - 벤치 기준선으로 `pathfind-bridge=70800.00000`(@100), `stress=24032652.00000`(@10k), `needs=38457848.00000`(@10k)를 검증 파이프라인에 연결.
+
+## Commit 194
+- `sim-bridge` 테스트에 tuple/packed XY/Vec2 batch pathfinding 결과 동치성 검증을 추가해 최근 batch 최적화 경로의 회귀 탐지 범위를 확장.
+- XY packed 입력 홀수 길이 오류 케이스를 명시적으로 테스트해 입력 검증 경계를 강화.
+- 런타임 로직 변경 없이 브리지 API 안정성을 테스트 레벨에서 보강.
