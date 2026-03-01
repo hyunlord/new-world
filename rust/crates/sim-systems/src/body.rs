@@ -1879,6 +1879,41 @@ pub fn population_birth_block_code(
     0
 }
 
+/// Chronicle prune scheduler gate.
+pub fn chronicle_should_prune(
+    current_year: i32,
+    last_prune_year: i32,
+    prune_interval_years: i32,
+) -> bool {
+    current_year - last_prune_year >= prune_interval_years
+}
+
+/// Chronicle cutoff tick for `max_age_years`.
+pub fn chronicle_cutoff_tick(current_year: i32, max_age_years: i32, ticks_per_year: i32) -> i32 {
+    (current_year - max_age_years) * ticks_per_year
+}
+
+/// Chronicle world-event retention rule.
+pub fn chronicle_keep_world_event(
+    event_tick: i32,
+    importance: i32,
+    low_cutoff_tick: i32,
+    med_cutoff_tick: i32,
+) -> bool {
+    if importance <= 2 && event_tick < low_cutoff_tick {
+        return false;
+    }
+    if importance == 3 && event_tick < med_cutoff_tick {
+        return false;
+    }
+    true
+}
+
+/// Chronicle personal-event retention rule.
+pub fn chronicle_keep_personal_event(has_valid_world_tick: bool, importance: i32) -> bool {
+    has_valid_world_tick || importance >= 4
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2569,6 +2604,8 @@ mod tests {
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, population_housing_cap, population_birth_block_code,
+        chronicle_should_prune, chronicle_cutoff_tick, chronicle_keep_world_event,
+        chronicle_keep_personal_event,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3508,6 +3545,34 @@ mod tests {
         assert_eq!(housing, 3);
         assert_eq!(food, 4);
         assert_eq!(allow, 0);
+    }
+
+    #[test]
+    fn chronicle_should_prune_respects_interval() {
+        assert!(!chronicle_should_prune(12, 5, 10));
+        assert!(chronicle_should_prune(15, 5, 10));
+    }
+
+    #[test]
+    fn chronicle_cutoff_tick_calculates_age_window() {
+        assert_eq!(chronicle_cutoff_tick(100, 20, 4380), 350400);
+    }
+
+    #[test]
+    fn chronicle_keep_world_event_applies_importance_bands() {
+        let keep_low_old = chronicle_keep_world_event(100, 2, 200, 50);
+        let keep_med_old = chronicle_keep_world_event(100, 3, 50, 150);
+        let keep_high = chronicle_keep_world_event(10, 4, 200, 150);
+        assert!(!keep_low_old);
+        assert!(!keep_med_old);
+        assert!(keep_high);
+    }
+
+    #[test]
+    fn chronicle_keep_personal_event_keeps_high_importance_or_valid_world_tick() {
+        assert!(chronicle_keep_personal_event(true, 1));
+        assert!(chronicle_keep_personal_event(false, 4));
+        assert!(!chronicle_keep_personal_event(false, 3));
     }
 
     #[test]

@@ -1660,3 +1660,8 @@
 - `population_system`의 출생 게이트 수식(주거 용량 산정, 출생 차단 코드 계산)을 Rust-first 경로로 이관.
 - `sim-systems`에 population 순수 함수 2종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
+
+## Commit 320
+- `chronicle_system`의 prune 규칙 수식(주기 판정, cutoff 계산, world/personal keep 판정)을 Rust-first 경로로 이관.
+- `sim-systems`에 chronicle 순수 함수 4종과 단위 테스트 4건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.

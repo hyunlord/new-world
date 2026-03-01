@@ -1973,6 +1973,46 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_chronicle_should_prune(
+        &self,
+        current_year: i32,
+        last_prune_year: i32,
+        prune_interval_years: i32,
+    ) -> bool {
+        body::chronicle_should_prune(current_year, last_prune_year, prune_interval_years)
+    }
+
+    #[func]
+    fn body_chronicle_cutoff_tick(
+        &self,
+        current_year: i32,
+        max_age_years: i32,
+        ticks_per_year: i32,
+    ) -> i32 {
+        body::chronicle_cutoff_tick(current_year, max_age_years, ticks_per_year)
+    }
+
+    #[func]
+    fn body_chronicle_keep_world_event(
+        &self,
+        event_tick: i32,
+        importance: i32,
+        low_cutoff_tick: i32,
+        med_cutoff_tick: i32,
+    ) -> bool {
+        body::chronicle_keep_world_event(event_tick, importance, low_cutoff_tick, med_cutoff_tick)
+    }
+
+    #[func]
+    fn body_chronicle_keep_personal_event(
+        &self,
+        has_valid_world_tick: bool,
+        importance: i32,
+    ) -> bool {
+        body::chronicle_keep_personal_event(has_valid_world_tick, importance)
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,
