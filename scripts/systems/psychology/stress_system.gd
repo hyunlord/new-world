@@ -163,7 +163,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var ed = entity.emotion_data
 
 	var collect_breakdown: bool = GameConfig.DEBUG_STRESS_LOG
-	var breakdown: Dictionary = {} if collect_breakdown else {}
+	var breakdown: Dictionary
+	if collect_breakdown:
+		breakdown = {}
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
@@ -338,7 +340,8 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	ed.set_meta("stress_blunt_mult", _packed_scalar(scalars, _TICK_OUT_SC_BLUNT, 1.0))
 
 	# 10) 디버그 로그
-	_debug_log(entity, ed, delta)
+	if collect_breakdown:
+		_debug_log(entity, ed, delta)
 
 
 func _packed_scalar(values: PackedFloat32Array, idx: int, fallback: float) -> float:

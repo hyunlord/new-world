@@ -336,3 +336,8 @@
 - `DEBUG_STRESS_LOG` 비활성 시 stress tick의 breakdown 조립 경로(continuous/trace/emotion/recovery)를 건너뛰도록 최적화.
 - trace breakdown 키 생성(`trace_<source_id>`)을 debug 활성 케이스로 제한해 문자열 처리 오버헤드를 완화.
 - debug off 상태에서는 `ed.stress_breakdown`이 기존 값이 있을 때만 clear해 불필요한 tick별 dictionary 재할당을 줄임.
+
+## Commit 070
+- `DEBUG_STRESS_LOG` 비활성 틱에서 `breakdown` 빈 Dictionary 초기화를 생략하도록 초기화 시점을 조건부로 변경.
+- debug off 틱에서 `_debug_log` 함수 호출 자체를 건너뛰어 호출 오버헤드를 제거.
+- stress 계산/상태 업데이트 의미는 유지하면서 디버그 비활성 운영 경로의 미세 비용을 완화.
