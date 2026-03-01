@@ -2000,6 +2000,8 @@ func _sync_pathfinding_backend_mode(bridge: Object) -> void:
 
 
 func _resolve_pathfinding_backend_cached(bridge: Object) -> String:
+	if _resolved_pathfind_backend_cached:
+		return _resolved_pathfind_backend_cache
 	_sync_pathfinding_backend_mode(bridge)
 	if _resolved_pathfind_backend_cached:
 		return _resolved_pathfind_backend_cache

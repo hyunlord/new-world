@@ -911,3 +911,8 @@
 - `sim_bridge`에 GPU pathfinding capability probe 캐시를 도입해 `has_gpu_pathfinding`/`_prefer_gpu`의 반복 메서드 확인 및 호출 비용을 축소.
 - native bridge 교체 시 capability 캐시를 함께 무효화하도록 초기화 경로를 보강.
 - GPU 가능 여부 의미를 유지하면서 pathfinding backend 분기 hot path를 미세 최적화.
+
+## Commit 185
+- `sim_bridge`의 `_resolve_pathfinding_backend_cached`가 cache hit 시 즉시 반환하도록 순서를 조정해 매 호출 sync 비용을 줄임.
+- cache miss에서만 sync를 수행하고, sync 후 cache 설정 가능성을 고려한 재확인 분기를 추가.
+- backend 결정 의미를 유지하면서 `_prefer_gpu` hot path 분기 오버헤드를 미세 최적화.
