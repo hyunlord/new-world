@@ -1301,6 +1301,23 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_tech_modifier_stack_clamp(
+        &self,
+        multiplier_product: f32,
+        additive_sum: f32,
+        multiplier_cap: f32,
+        additive_cap: f32,
+    ) -> PackedFloat32Array {
+        let out = body::tech_modifier_stack_clamp(
+            multiplier_product,
+            additive_sum,
+            multiplier_cap,
+            additive_cap,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

@@ -12,12 +12,16 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## tick_interval=1 (processes pending recalcs each tick)
 
 const TechState = preload("res://scripts/core/tech/tech_state.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_TECH_STACK_CLAMP_METHOD: String = "body_tech_modifier_stack_clamp"
 
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
 var _pools: Dictionary = {}           ## settlement_id -> pool Dictionary
 var _pending_recalc: Array = []       ## settlement_ids needing recalc
 var _first_tick_done: bool = false
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 ## ── Effects-to-Modifier Fallback Mapping ────────────────────────────────────
@@ -86,6 +90,22 @@ func init(p_settlement_manager: RefCounted, p_tech_tree_manager: RefCounted) -> 
 	_settlement_manager = p_settlement_manager
 	_tech_tree_manager = p_tech_tree_manager
 	SimulationBus.tech_state_changed.connect(_on_tech_state_changed)
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_TECH_STACK_CLAMP_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## ── Signal Handler ──────────────────────────────────────────────────────────
@@ -455,6 +475,20 @@ func get_modifier(settlement_id: int, target: String) -> float:
 	additive_sum = clampf(additive_sum,
 		-GameConfig.TECH_MODIFIER_ADDITIVE_STACK_CAP,
 		GameConfig.TECH_MODIFIER_ADDITIVE_STACK_CAP)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_TECH_STACK_CLAMP_METHOD,
+			multiplier_product,
+			additive_sum,
+			float(GameConfig.TECH_MODIFIER_STACK_CAP),
+			float(GameConfig.TECH_MODIFIER_ADDITIVE_STACK_CAP),
+		)
+		if rust_variant is PackedFloat32Array:
+			var out: PackedFloat32Array = rust_variant
+			if out.size() >= 2:
+				multiplier_product = float(out[0])
+				additive_sum = float(out[1])
 
 	## Return based on target classification
 	if target in GameConfig.TECH_MODIFIER_MULTIPLIER_TARGETS:

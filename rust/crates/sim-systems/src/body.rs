@@ -955,6 +955,18 @@ pub fn tech_cultural_memory_decay(
     (current_memory - decay_rate).max(memory_floor)
 }
 
+/// Clamp stacked tech modifiers (multiplier/additive) within configured caps.
+pub fn tech_modifier_stack_clamp(
+    multiplier_product: f32,
+    additive_sum: f32,
+    multiplier_cap: f32,
+    additive_cap: f32,
+) -> [f32; 2] {
+    let mul = clamp_f32(multiplier_product, 0.01, multiplier_cap);
+    let add = clamp_f32(additive_sum, -additive_cap, additive_cap);
+    [mul, add]
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1444,7 +1456,7 @@ mod tests {
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
-        migration_should_attempt, tech_cultural_memory_decay,
+        migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
     };
 
     #[test]
@@ -1974,6 +1986,16 @@ mod tests {
         assert!((long - 0.975).abs() < 1e-6);
         let floored = tech_cultural_memory_decay(0.12, 0.5, 1.0, 0.1, true);
         assert!((floored - 0.1).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tech_modifier_stack_clamp_applies_caps() {
+        let out = tech_modifier_stack_clamp(2.5, 1.2, 1.8, 0.7);
+        assert!((out[0] - 1.8).abs() < 1e-6);
+        assert!((out[1] - 0.7).abs() < 1e-6);
+        let out2 = tech_modifier_stack_clamp(0.0, -2.0, 2.0, 0.5);
+        assert!((out2[0] - 0.01).abs() < 1e-6);
+        assert!((out2[1] + 0.5).abs() < 1e-6);
     }
 
     #[test]
