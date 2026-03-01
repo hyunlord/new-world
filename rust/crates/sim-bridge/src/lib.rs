@@ -1073,6 +1073,22 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_reputation_event_delta(
+        &self,
+        valence: f32,
+        magnitude: f32,
+        delta_scale: f32,
+        neg_bias: f32,
+    ) -> f32 {
+        body::reputation_event_delta(valence, magnitude, delta_scale, neg_bias)
+    }
+
+    #[func]
+    fn body_reputation_decay_value(&self, value: f32, pos_decay: f32, neg_decay: f32) -> f32 {
+        body::reputation_decay_value(value, pos_decay, neg_decay)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

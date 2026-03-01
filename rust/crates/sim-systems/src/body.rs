@@ -605,6 +605,22 @@ pub fn revolution_risk_score(
     (unhappiness + frustration + inequality + leader_unpopularity + independence_ratio) / 5.0
 }
 
+/// Reputation event delta after valence/magnitude scaling and negativity bias.
+pub fn reputation_event_delta(
+    valence: f32,
+    magnitude: f32,
+    delta_scale: f32,
+    neg_bias: f32,
+) -> f32 {
+    valence * magnitude * delta_scale * neg_bias
+}
+
+/// Reputation decay step preserving sign-specific retention.
+pub fn reputation_decay_value(value: f32, pos_decay: f32, neg_decay: f32) -> f32 {
+    let decay = if value < 0.0 { neg_decay } else { pos_decay };
+    value * decay
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1080,10 +1096,11 @@ mod tests {
         erg_frustration_step, job_satisfaction_score, job_satisfaction_score_batch,
         leader_age_respect, leader_score, needs_base_decay_step, needs_critical_severity_step,
         network_social_capital_norm, occupation_best_skill_index, occupation_should_switch,
-        rest_energy_recovery, revolution_risk_score, stress_injection_apply_step,
-        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
-        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
-        upper_needs_step, warmth_decay,
+        reputation_decay_value, reputation_event_delta, rest_energy_recovery,
+        revolution_risk_score, stress_injection_apply_step, stress_rebound_apply_step,
+        stress_shaken_countdown_step, stress_support_score, thirst_decay,
+        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        warmth_decay,
     };
 
     #[test]
@@ -1445,6 +1462,20 @@ mod tests {
     fn revolution_risk_score_is_component_average() {
         let risk = revolution_risk_score(0.2, 0.4, 0.6, 0.8, 0.0);
         assert_eq!(risk, 0.4);
+    }
+
+    #[test]
+    fn reputation_event_delta_applies_negativity_bias() {
+        let positive = reputation_event_delta(1.0, 0.5, 0.2, 1.0);
+        let negative = reputation_event_delta(-1.0, 0.5, 0.2, 2.0);
+        assert_eq!(positive, 0.1);
+        assert_eq!(negative, -0.2);
+    }
+
+    #[test]
+    fn reputation_decay_value_uses_sign_specific_decay() {
+        assert_eq!(reputation_decay_value(0.5, 0.9, 0.8), 0.45);
+        assert_eq!(reputation_decay_value(-0.5, 0.9, 0.8), -0.4);
     }
 
     #[test]

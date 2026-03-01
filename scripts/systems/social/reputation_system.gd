@@ -10,6 +10,11 @@ var _relationship_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _event_deltas: Dictionary = {}
 var _pending_events: Array = []
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_REP_EVENT_DELTA_METHOD: String = "body_reputation_event_delta"
+const _SIM_BRIDGE_REP_DECAY_METHOD: String = "body_reputation_decay_value"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -38,6 +43,24 @@ func _load_event_deltas() -> void:
 	if json.parse(file.get_as_text()) == OK and json.data is Dictionary:
 		_event_deltas = json.data
 	file.close()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+			and node.has_method(_SIM_BRIDGE_REP_EVENT_DELTA_METHOD) \
+			and node.has_method(_SIM_BRIDGE_REP_DECAY_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _on_reputation_event(data: Dictionary) -> void:
@@ -92,6 +115,17 @@ func _apply_reputation_event(data: Dictionary) -> void:
 				neg_bias = GameConfig.REP_NEG_BIAS_GENEROSITY
 
 	var delta = valence * magnitude * GameConfig.REP_EVENT_DELTA_SCALE * neg_bias
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_delta_variant: Variant = bridge.call(
+			_SIM_BRIDGE_REP_EVENT_DELTA_METHOD,
+			float(valence),
+			float(magnitude),
+			float(GameConfig.REP_EVENT_DELTA_SCALE),
+			neg_bias
+		)
+		if rust_delta_variant != null:
+			delta = float(rust_delta_variant)
 	_apply_domain_delta(rep, domain, delta)
 
 	# Update metadata
@@ -249,6 +283,7 @@ func _decay_all(_tick: int) -> void:
 	var ticks_per_year: float = float(GameConfig.TICKS_PER_YEAR) / float(GameConfig.REPUTATION_TICK_INTERVAL)
 	var pos_decay: float = pow(GameConfig.REP_POSITIVE_YEARLY_RETENTION, 1.0 / ticks_per_year)
 	var neg_decay: float = pow(GameConfig.REP_NEGATIVE_YEARLY_RETENTION, 1.0 / ticks_per_year)
+	var bridge: Object = _get_sim_bridge()
 
 	for observer_id in _reputation_manager._reputations:
 		var inner: Dictionary = _reputation_manager._reputations[observer_id]
@@ -256,6 +291,16 @@ func _decay_all(_tick: int) -> void:
 			var rep = inner[target_id]
 			for domain in ["morality", "sociability", "competence", "dominance", "generosity"]:
 				var val: float = _get_domain_val(rep, domain)
+				if bridge != null:
+					var rust_decay_variant: Variant = bridge.call(
+						_SIM_BRIDGE_REP_DECAY_METHOD,
+						val,
+						pos_decay,
+						neg_decay
+					)
+					if rust_decay_variant != null:
+						_set_domain_val(rep, domain, float(rust_decay_variant))
+						continue
 				var decay: float = neg_decay if val < 0.0 else pos_decay
 				_set_domain_val(rep, domain, val * decay)
 
