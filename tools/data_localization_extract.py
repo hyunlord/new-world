@@ -9,6 +9,8 @@ Scans `data/**/*.json` for keys with `_en`, `_ko`, `_kr` suffixes and generates:
 Default mode is non-destructive (data JSON files are not modified).
 When `--apply-key-fields` is set, the script injects `*_key` references while
 keeping existing inline localized text for backward compatibility.
+When `--strip-inline-fields` is also set, inline `*_en/*_ko/*_kr` fields are
+removed after matching `*_key` assignment for key-first data operation.
 """
 
 from __future__ import annotations
@@ -88,7 +90,7 @@ def _build_unique_key(
         index += 1
 
 
-def run(project_root: Path, apply_key_fields: bool) -> int:
+def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -> int:
     data_root = project_root / "data"
     localization_root = project_root / "localization"
 
@@ -102,6 +104,7 @@ def run(project_root: Path, apply_key_fields: bool) -> int:
     used_keys: Dict[str, Tuple[str, str]] = {}
 
     changed_files: List[Path] = []
+    stripped_field_count = 0
     for json_file in sorted(data_root.rglob("*.json")):
         if json_file.name.startswith("localization_"):
             continue
@@ -158,6 +161,22 @@ def run(project_root: Path, apply_key_fields: bool) -> int:
                         node[key_field] = key
                         file_changed = True
 
+                if strip_inline_fields:
+                    key_field = f"{base_field}_key"
+                    if str(node.get(key_field, "")) != key:
+                        if apply_key_fields:
+                            node[key_field] = key
+                            file_changed = True
+                        else:
+                            continue
+
+                    for suffix in INLINE_SUFFIXES:
+                        inline_field = f"{base_field}{suffix}"
+                        if inline_field in node:
+                            del node[inline_field]
+                            stripped_field_count += 1
+                            file_changed = True
+
                 entries.append(
                     {
                         "file": str(rel_file),
@@ -170,7 +189,7 @@ def run(project_root: Path, apply_key_fields: bool) -> int:
                     }
                 )
 
-        if apply_key_fields and file_changed:
+        if (apply_key_fields or strip_inline_fields) and file_changed:
             _write_json(json_file, data, indent=4, sort_keys=False)
             changed_files.append(rel_file)
 
@@ -180,6 +199,8 @@ def run(project_root: Path, apply_key_fields: bool) -> int:
             "generated_key_count": len(en_map),
             "ko_empty_count": sum(1 for value in ko_map.values() if value == ""),
             "en_empty_count": sum(1 for value in en_map.values() if value == ""),
+            "changed_file_count": len(changed_files),
+            "stripped_field_count": stripped_field_count,
         },
         "entries": entries,
     }
@@ -193,8 +214,14 @@ def run(project_root: Path, apply_key_fields: bool) -> int:
         f"entries={len(entries)} keys={len(en_map)} "
         f"en={out_en} ko={out_ko} map={out_map}"
     )
-    if apply_key_fields:
-        print(f"[data_localization_extract] apply_key_fields: changed_files={len(changed_files)}")
+    if apply_key_fields or strip_inline_fields:
+        print(
+            "[data_localization_extract] "
+            f"apply_key_fields={str(apply_key_fields).lower()} "
+            f"strip_inline_fields={str(strip_inline_fields).lower()} "
+            f"changed_files={len(changed_files)} "
+            f"stripped_fields={stripped_field_count}"
+        )
     return 0
 
 
@@ -206,10 +233,21 @@ def main() -> int:
         action="store_true",
         help="write *_key fields into source data JSON files (inline localized text is kept)",
     )
+    parser.add_argument(
+        "--strip-inline-fields",
+        action="store_true",
+        help="remove *_en/*_ko/*_kr fields (requires --apply-key-fields)",
+    )
     args = parser.parse_args()
+    if args.strip_inline_fields and not args.apply_key_fields:
+        parser.error("--strip-inline-fields requires --apply-key-fields")
 
     project_root = Path(args.project_root).resolve()
-    return run(project_root=project_root, apply_key_fields=args.apply_key_fields)
+    return run(
+        project_root=project_root,
+        apply_key_fields=args.apply_key_fields,
+        strip_inline_fields=args.strip_inline_fields,
+    )
 
 
 if __name__ == "__main__":

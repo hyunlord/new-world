@@ -3935,9 +3935,11 @@
     }
   ],
   "summary": {
+    "changed_file_count": 0,
     "en_empty_count": 1,
     "entry_count": 437,
     "generated_key_count": 437,
-    "ko_empty_count": 0
+    "ko_empty_count": 0,
+    "stripped_field_count": 0
   }
 }

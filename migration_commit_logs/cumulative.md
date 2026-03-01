@@ -113,3 +113,8 @@
 - Rust `sim-bridge`에 pathfinding backend 모드 제어 API(`set/get/resolve_pathfinding_backend`) 추가.
 - `SimBridge`가 `ComputeBackend` 모드를 Rust backend로 동기화하고 resolve 결과 기준으로 GPU 선호 판단.
 - GPU 미지원 환경은 기존처럼 CPU로 안전 fallback되며, 향후 실제 GPU 경로 구현을 위한 정책 레이어 확보.
+
+## Commit 024
+- `tools/data_localization_extract.py`에 `--strip-inline-fields` 옵션 추가(`--apply-key-fields`와 함께 사용).
+- key 매핑이 확정된 그룹의 inline 다국어 필드를 자동 제거해 key-first 데이터 구조 정리 자동화.
+- `tools/migration_verify.sh`가 신규 옵션을 지원하도록 확장되어 반복 검증/정리 파이프라인 통합.
