@@ -1053,6 +1053,62 @@ pub fn mental_break_chance(
     p
 }
 
+/// Trait-violation context multiplier from forced/survival/witness conditions.
+pub fn trait_violation_context_modifier(
+    is_habit: bool,
+    forced_by_authority: bool,
+    survival_necessity: bool,
+    no_witness: bool,
+    repeated_habit_modifier: f32,
+    forced_modifier: f32,
+    survival_modifier: f32,
+    no_witness_modifier: f32,
+) -> f32 {
+    if is_habit {
+        return repeated_habit_modifier;
+    }
+    let mut mult = 1.0;
+    if forced_by_authority {
+        mult *= forced_modifier;
+    }
+    if survival_necessity {
+        mult *= survival_modifier;
+    }
+    if no_witness {
+        mult *= no_witness_modifier;
+    }
+    mult
+}
+
+/// Trait-violation facet scale where extreme facets amplify dissonance stress.
+pub fn trait_violation_facet_scale(facet_value: f32, threshold: f32) -> f32 {
+    if facet_value <= threshold {
+        return 1.0;
+    }
+    let denom = (1.0 - threshold).max(0.000_001);
+    (facet_value - threshold) / denom
+}
+
+/// Intrusive-thought trigger chance from PTSD multiplier and history decay.
+pub fn trait_violation_intrusive_chance(
+    base_chance: f32,
+    ptsd_mult: f32,
+    ticks_since: i32,
+    history_decay_ticks: i32,
+    has_trauma_scars: bool,
+) -> f32 {
+    if ptsd_mult < 1.4 {
+        return 0.0;
+    }
+    let decay_div = history_decay_ticks.max(1) as f32;
+    let decay_factor = (-(ticks_since.max(0) as f32) / decay_div).exp();
+    let mut chance = base_chance * (ptsd_mult - 1.0) * decay_factor;
+    if has_trauma_scars {
+        chance *= 2.0;
+    }
+    chance
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2107,6 +2163,8 @@ mod tests {
         stat_sync_derived_scores, contagion_aoe_total_susceptibility,
         contagion_stress_delta, contagion_network_delta, contagion_spiral_increment,
         mental_break_threshold, mental_break_chance,
+        trait_violation_context_modifier, trait_violation_facet_scale,
+        trait_violation_intrusive_chance,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2647,6 +2705,33 @@ mod tests {
         let amplified = mental_break_chance(900.0, 500.0, 20.0, 70.0, 6000.0, 0.25);
         assert_eq!(none, 0.0);
         assert!(amplified > base);
+    }
+
+    #[test]
+    fn trait_violation_context_modifier_applies_expected_multipliers() {
+        let habitual =
+            trait_violation_context_modifier(true, true, true, true, 0.0, 0.5, 0.4, 0.85);
+        let contextual =
+            trait_violation_context_modifier(false, true, true, true, 0.0, 0.5, 0.4, 0.85);
+        assert_eq!(habitual, 0.0);
+        assert!((contextual - (0.5 * 0.4 * 0.85)).abs() < 1e-6);
+    }
+
+    #[test]
+    fn trait_violation_facet_scale_increases_above_threshold() {
+        assert_eq!(trait_violation_facet_scale(0.4, 0.6), 1.0);
+        assert!((trait_violation_facet_scale(0.9, 0.6) - 0.75).abs() < 1e-6);
+    }
+
+    #[test]
+    fn trait_violation_intrusive_chance_requires_ptsd_and_decays_over_time() {
+        let below = trait_violation_intrusive_chance(0.005, 1.2, 10, 100, false);
+        let recent = trait_violation_intrusive_chance(0.005, 1.8, 10, 100, false);
+        let old = trait_violation_intrusive_chance(0.005, 1.8, 400, 100, false);
+        let scar_boosted = trait_violation_intrusive_chance(0.005, 1.8, 10, 100, true);
+        assert_eq!(below, 0.0);
+        assert!(recent > old);
+        assert!(scar_boosted > recent);
     }
 
     #[test]

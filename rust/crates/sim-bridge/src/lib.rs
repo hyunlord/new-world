@@ -1340,6 +1340,53 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_trait_violation_context_modifier(
+        &self,
+        is_habit: bool,
+        forced_by_authority: bool,
+        survival_necessity: bool,
+        no_witness: bool,
+        repeated_habit_modifier: f32,
+        forced_modifier: f32,
+        survival_modifier: f32,
+        no_witness_modifier: f32,
+    ) -> f32 {
+        body::trait_violation_context_modifier(
+            is_habit,
+            forced_by_authority,
+            survival_necessity,
+            no_witness,
+            repeated_habit_modifier,
+            forced_modifier,
+            survival_modifier,
+            no_witness_modifier,
+        )
+    }
+
+    #[func]
+    fn body_trait_violation_facet_scale(&self, facet_value: f32, threshold: f32) -> f32 {
+        body::trait_violation_facet_scale(facet_value, threshold)
+    }
+
+    #[func]
+    fn body_trait_violation_intrusive_chance(
+        &self,
+        base_chance: f32,
+        ptsd_mult: f32,
+        ticks_since: i32,
+        history_decay_ticks: i32,
+        has_trauma_scars: bool,
+    ) -> f32 {
+        body::trait_violation_intrusive_chance(
+            base_chance,
+            ptsd_mult,
+            ticks_since,
+            history_decay_ticks,
+            has_trauma_scars,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
