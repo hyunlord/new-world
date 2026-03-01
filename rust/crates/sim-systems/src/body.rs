@@ -601,6 +601,35 @@ pub fn job_assignment_rebalance_codes(
     [worst_surplus_idx, worst_deficit_idx]
 }
 
+/// Returns whether a threshold effect should be active.
+///
+/// `direction_code`: `0=below`, `1=above`.
+pub fn stat_threshold_is_active(
+    value: i32,
+    threshold: i32,
+    direction_code: i32,
+    hysteresis: i32,
+    currently_active: bool,
+) -> bool {
+    match direction_code {
+        0 => {
+            if currently_active {
+                value < threshold + hysteresis
+            } else {
+                value < threshold
+            }
+        }
+        1 => {
+            if currently_active {
+                value > threshold - hysteresis
+            } else {
+                value > threshold
+            }
+        }
+        _ => false,
+    }
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1648,7 +1677,7 @@ mod tests {
         job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
-        reputation_decay_value, reputation_event_delta,
+        stat_threshold_is_active, reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
@@ -2012,6 +2041,22 @@ mod tests {
             job_assignment_rebalance_codes(&ratios, &skewed_counts, 20, 1.5),
             [0, 1]
         );
+    }
+
+    #[test]
+    fn stat_threshold_is_active_handles_below_and_hysteresis() {
+        assert!(stat_threshold_is_active(4, 5, 0, 2, false));
+        assert!(!stat_threshold_is_active(5, 5, 0, 2, false));
+        assert!(stat_threshold_is_active(6, 5, 0, 2, true));
+        assert!(!stat_threshold_is_active(7, 5, 0, 2, true));
+    }
+
+    #[test]
+    fn stat_threshold_is_active_handles_above_and_hysteresis() {
+        assert!(stat_threshold_is_active(6, 5, 1, 2, false));
+        assert!(!stat_threshold_is_active(5, 5, 1, 2, false));
+        assert!(stat_threshold_is_active(4, 5, 1, 2, true));
+        assert!(!stat_threshold_is_active(3, 5, 1, 2, true));
     }
 
     #[test]

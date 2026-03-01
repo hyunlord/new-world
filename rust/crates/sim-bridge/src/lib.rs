@@ -1017,6 +1017,24 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stat_threshold_is_active(
+        &self,
+        value: i32,
+        threshold: i32,
+        direction_code: i32,
+        hysteresis: i32,
+        currently_active: bool,
+    ) -> bool {
+        body::stat_threshold_is_active(
+            value,
+            threshold,
+            direction_code,
+            hysteresis,
+            currently_active,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
