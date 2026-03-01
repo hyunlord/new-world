@@ -396,3 +396,8 @@
 - localization compile 결과를 locale별 독립 key 목록이 아닌 지원 locale union 기반 canonical key index로 고정.
 - locale별 누락 키는 `en` fallback(또는 key 자체)으로 채워 모든 locale 산출물의 key 집합/순서를 일치시킴.
 - locale 전환 이후에도 key-id 캐시가 동일 인덱스 의미를 유지하도록 안정성을 강화.
+
+## Commit 082
+- `StatQuery`에 `get_normalized_batch`를 추가해 다수 stat 정규화 조회를 단일 캐시 경로로 처리.
+- `StressSystem`은 NEED/HEXACO 정규화 입력을 batch 호출 1회로 수집하도록 전환해 입력 준비 오버헤드를 완화.
+- stress 계산 수식/결과 의미는 유지하면서 tick 핫패스의 중복 호출을 줄임.

@@ -91,6 +91,26 @@ const _EMOTION_INDEX: Dictionary = {
 }
 const _REL_METHOD_NONE: int = 0
 const _REL_METHOD_BOND_STRENGTH: int = 1
+const _TICK_NORM_STAT_IDS: Array[StringName] = [
+	&"NEED_HUNGER",
+	&"NEED_ENERGY",
+	&"NEED_SOCIAL",
+	&"HEXACO_E",
+	&"HEXACO_C",
+	&"HEXACO_X",
+	&"HEXACO_O",
+	&"HEXACO_A",
+	&"HEXACO_H",
+]
+const _TICK_NORM_IDX_HUNGER: int = 0
+const _TICK_NORM_IDX_ENERGY: int = 1
+const _TICK_NORM_IDX_SOCIAL: int = 2
+const _TICK_NORM_IDX_E: int = 3
+const _TICK_NORM_IDX_C: int = 4
+const _TICK_NORM_IDX_X: int = 5
+const _TICK_NORM_IDX_O: int = 6
+const _TICK_NORM_IDX_A: int = 7
+const _TICK_NORM_IDX_H: int = 8
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
 ## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
@@ -166,20 +186,21 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	var breakdown: Dictionary
 	if collect_breakdown:
 		breakdown = {}
-	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
-	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
-	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+	var norm_values: PackedFloat32Array = StatQuery.get_normalized_batch(entity, _TICK_NORM_STAT_IDS)
+	var hunger: float = float(norm_values[_TICK_NORM_IDX_HUNGER])
+	var energy: float = float(norm_values[_TICK_NORM_IDX_ENERGY])
+	var social: float = float(norm_values[_TICK_NORM_IDX_SOCIAL])
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
 	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
 	var denial_active: bool = ed.get_meta("denial_active", false)
 	var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
 	var support_score: float = _calc_support_score(entity)
-	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
-	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
-	var X_axis: float = StatQuery.get_normalized(entity, &"HEXACO_X")
-	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
-	var A_axis: float = StatQuery.get_normalized(entity, &"HEXACO_A")
-	var H_axis: float = StatQuery.get_normalized(entity, &"HEXACO_H")
+	var E_axis: float = float(norm_values[_TICK_NORM_IDX_E])
+	var C_axis: float = float(norm_values[_TICK_NORM_IDX_C])
+	var X_axis: float = float(norm_values[_TICK_NORM_IDX_X])
+	var O_axis: float = float(norm_values[_TICK_NORM_IDX_O])
+	var A_axis: float = float(norm_values[_TICK_NORM_IDX_A])
+	var H_axis: float = float(norm_values[_TICK_NORM_IDX_H])
 
 	var fear_val: float = ed.get_emotion("fear")
 	var anger_val: float = ed.get_emotion("anger")

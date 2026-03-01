@@ -68,6 +68,37 @@ func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
 		return 0.0
 	return float(get_stat(entity, stat_id, rmin) - rmin) / float(rmax - rmin)
 
+
+## Returns normalized values for multiple stats in one pass, using a shared cache lookup path.
+func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> PackedFloat32Array:
+	var results: PackedFloat32Array = PackedFloat32Array()
+	results.resize(stat_ids.size())
+	if entity == null:
+		return results
+
+	var cache = entity.get("stat_cache")
+	var cache_dict: Dictionary = {}
+	var has_cache_dict: bool = cache != null and cache is Dictionary
+	if has_cache_dict:
+		cache_dict = cache as Dictionary
+
+	for i in range(stat_ids.size()):
+		var stat_id: StringName = stat_ids[i]
+		if not StatDefinitionScript.has_def(stat_id):
+			results[i] = 0.0
+			continue
+		var range_arr: Array = StatDefinitionScript.get_range(stat_id)
+		var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
+		var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+		if rmax == rmin:
+			results[i] = 0.0
+			continue
+		var value: int = rmin
+		if has_cache_dict and cache_dict.has(stat_id) and not bool(cache_dict[stat_id].get("dirty", true)):
+			value = int(cache_dict[stat_id].get("value", rmin))
+		results[i] = float(value - rmin) / float(rmax - rmin)
+	return results
+
 ## 영향력 값 반환 (InfluenceCurve 적용된 float)
 ## Phase 0: stub, 항상 1.0 반환
 ## Returns the multiplicative influence of a stat on a given context, applying curve and evaluator affects.
