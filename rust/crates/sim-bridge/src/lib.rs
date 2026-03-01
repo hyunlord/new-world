@@ -785,6 +785,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_allostatic_step(
+        &self,
+        allostatic: f32,
+        stress: f32,
+        avoidant_allostatic_mult: f32,
+    ) -> f32 {
+        stat_curve::stress_allostatic_step(allostatic, stress, avoidant_allostatic_mult)
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

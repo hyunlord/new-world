@@ -292,6 +292,26 @@ pub fn stress_reserve_step(
     }
 }
 
+/// Allostatic load update step.
+pub fn stress_allostatic_step(allostatic: f32, stress: f32, avoidant_allostatic_mult: f32) -> f32 {
+    const ALLO_RATE: f32 = 0.035;
+    const ALLO_STRESS_THRESHOLD: f32 = 250.0;
+    const ALLO_RECOVERY_THRESHOLD: f32 = 120.0;
+    const ALLO_RECOVERY_RATE: f32 = 0.003;
+
+    let mut next = allostatic;
+    if stress > ALLO_STRESS_THRESHOLD {
+        let mut allo_inc =
+            ALLO_RATE * f32::max(0.0, stress - ALLO_STRESS_THRESHOLD) / ALLO_STRESS_THRESHOLD;
+        allo_inc = f32::min(allo_inc, 0.05);
+        next = (next + allo_inc * avoidant_allostatic_mult).clamp(0.0, 100.0);
+    }
+    if stress < ALLO_RECOVERY_THRESHOLD {
+        next = (next - ALLO_RECOVERY_RATE).clamp(0.0, 100.0);
+    }
+    next
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -495,5 +515,19 @@ mod tests {
         let step = stress_reserve_step(10.0, 600.0, 0.2, 10.0, 1, false);
         assert!(step.reserve < 30.0);
         assert_eq!(step.gas_stage, 3);
+    }
+
+    #[test]
+    fn stress_allostatic_step_increases_under_high_stress() {
+        let base = stress_allostatic_step(10.0, 300.0, 1.0);
+        let avoidant = stress_allostatic_step(10.0, 300.0, 1.5);
+        assert!(base > 10.0);
+        assert!(avoidant > base);
+    }
+
+    #[test]
+    fn stress_allostatic_step_recovers_under_low_stress() {
+        let next = stress_allostatic_step(10.0, 80.0, 1.0);
+        assert!(next < 10.0);
     }
 }

@@ -21,11 +21,6 @@ const THRESHOLD_TENSE: float = 200.0
 const THRESHOLD_CRISIS: float = 350.0
 const THRESHOLD_BREAK_RISK: float = 500.0
 
-const ALLO_RATE: float = 0.035
-const ALLO_STRESS_THRESHOLD: float = 250.0
-const ALLO_RECOVERY_THRESHOLD: float = 120.0
-const ALLO_RECOVERY_RATE: float = 0.003
-
 const EUSTRESS_OPTIMAL: float = 150.0
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
@@ -334,15 +329,17 @@ func _update_reserve(ed, _pd, is_sleeping: bool) -> void:
 
 # ── 8) Allostatic Load ────────────────────────────────────────────────
 func _update_allostatic(ed, entity) -> void:
-	if ed.stress > ALLO_STRESS_THRESHOLD:
-		var allo_inc: float = ALLO_RATE * maxf(0.0, ed.stress - ALLO_STRESS_THRESHOLD) / ALLO_STRESS_THRESHOLD
-		allo_inc = minf(allo_inc, 0.05)
-		# [Mikulincer 1998 — Avoidant deactivation: stress suppressed but allostatic load builds faster]
-		var _allo_mult: float = GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT if str(entity.get_meta("attachment_type", "secure")) == "avoidant" else 1.0
-		ed.allostatic = clampf(ed.allostatic + allo_inc * _allo_mult, 0.0, 100.0)
-
-	if ed.stress < ALLO_RECOVERY_THRESHOLD:
-		ed.allostatic = clampf(ed.allostatic - ALLO_RECOVERY_RATE, 0.0, 100.0)
+	# [Mikulincer 1998 — Avoidant deactivation: stress suppressed but allostatic load builds faster]
+	var avoidant_mult: float = (
+		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
+		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
+		else 1.0
+	)
+	ed.allostatic = StatCurveScript.stress_allostatic_step(
+		ed.allostatic,
+		ed.stress,
+		avoidant_mult
+	)
 
 
 # ── 9) 스트레스 상태 ──────────────────────────────────────────────────

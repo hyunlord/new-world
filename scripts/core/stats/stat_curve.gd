@@ -422,6 +422,33 @@ static func stress_reserve_step(
 		"gas_stage": next_stage,
 	}
 
+
+## Allostatic load update step.
+static func stress_allostatic_step(
+	allostatic: float,
+	stress: float,
+	avoidant_allostatic_mult: float
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_allostatic_step",
+		[
+			allostatic,
+			stress,
+			avoidant_allostatic_mult
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var next: float = allostatic
+	if stress > 250.0:
+		var allo_inc: float = 0.035 * maxf(0.0, stress - 250.0) / 250.0
+		allo_inc = minf(allo_inc, 0.05)
+		next = clampf(next + allo_inc * avoidant_allostatic_mult, 0.0, 100.0)
+	if stress < 120.0:
+		next = clampf(next - 0.003, 0.0, 100.0)
+	return next
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

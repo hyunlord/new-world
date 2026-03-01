@@ -171,3 +171,8 @@
 - `StressSystem`의 reserve 갱신 + GAS 단계 전이 로직을 Rust step 함수(`stress_reserve_step`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 reserve-step API를 추가해 GDScript는 결과 반영만 담당.
 - stress 파이프라인의 핵심 수학 경로(연속 입력/appraisal/emotion/recovery/reserve)를 연속적으로 네이티브화.
+
+## Commit 036
+- `StressSystem`의 allostatic load 업데이트를 Rust step 함수(`stress_allostatic_step`)로 이관.
+- avoidant attachment 배율은 GDScript에서 산출하고 수치 업데이트는 Rust 경로로 위임.
+- stress 파이프라인의 주요 수학 업데이트 경로가 대부분 네이티브 함수 호출 기반으로 정리됨.

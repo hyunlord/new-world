@@ -419,6 +419,23 @@ func stat_stress_reserve_step(
 	)
 
 
+## Delegates allostatic load update step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_allostatic_step(
+	allostatic: float,
+	stress: float,
+	avoidant_allostatic_mult: float
+):
+	return _call_native_if_exists(
+		"stat_stress_allostatic_step",
+		[
+			allostatic,
+			stress,
+			avoidant_allostatic_mult
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(
