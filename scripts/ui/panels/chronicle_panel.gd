@@ -156,7 +156,7 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 
 	# Event count
 	if events_count > 0:
-		draw_string(font, Vector2(panel_w - 120, 28), Locale.trf("UI_EVENTS_COUNT", {"n": events_count}), HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
+		draw_string(font, Vector2(panel_w - 120, 28), Locale.trf1("UI_EVENTS_COUNT", "n", events_count), HORIZONTAL_ALIGNMENT_RIGHT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 	return cy
 
@@ -235,7 +235,13 @@ func _draw() -> void:
 		elif evt.has("hour"):
 			date_str = "M%d D%d %02d:00" % [int(evt.get("month", 0)), int(evt.get("day", 0)), int(evt.get("hour", 0))]
 		else:
-			date_str = Locale.trf("UI_SHORT_DATE", {"month": str(evt.get("month", 0)), "day": str(evt.get("day", 0))})
+			date_str = Locale.trf2(
+				"UI_SHORT_DATE",
+				"month",
+				str(evt.get("month", 0)),
+				"day",
+				str(evt.get("day", 0))
+			)
 		draw_string(font, Vector2(cx + 5, cy + 12), date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 		# Icon

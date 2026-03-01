@@ -461,3 +461,8 @@
 - `ListPanel`의 deceased status 포맷(`UI_DECEASED_STATUS_FMT`)과 footer count 포맷(`UI_ENTITIES_COUNT_FMT`)을 `Locale.trf1` 경로로 전환.
 - 기존 placeholder/출력 의미는 유지하면서 draw 경로의 임시 params Dictionary 생성을 줄임.
 - 리스트 패널 포맷 호출 핫패스의 미세 오버헤드를 완화.
+
+## Commit 095
+- `ChroniclePanel` draw 경로의 이벤트 개수(`UI_EVENTS_COUNT`) 포맷을 `Locale.trf1`로 전환.
+- 짧은 날짜 fallback(`UI_SHORT_DATE`) 포맷을 `Locale.trf2`로 전환.
+- 표시 의미를 유지하면서 Chronicle 렌더 경로의 고정 포맷 호출 오버헤드를 완화.
