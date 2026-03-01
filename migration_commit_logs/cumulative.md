@@ -103,3 +103,8 @@
 - Pathfinding batch에 `PackedInt32Array(x,y,...)` 기반 bridge API 추가.
 - `Pathfinder`가 int-packed 경로를 우선 사용하도록 연결하고 기존 vec2 경로는 fallback으로 유지.
 - batch 좌표 변환/반올림 오버헤드를 줄여 이동 시스템 재계산 경로 성능 개선.
+
+## Commit 022
+- Single pathfinding에 `pathfind_grid_xy`/`pathfind_grid_gpu_xy` int-packed API 추가.
+- `Pathfinder` single/batch 모두 XY 우선 + vec2 fallback 체계로 정렬.
+- 브리지 래퍼 노출/네이티브 미지원 조합에서도 안전 fallback되도록 호출 순서 보강.

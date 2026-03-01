@@ -12,6 +12,12 @@ const _PATHFIND_METHOD_CANDIDATES: Array[String] = [
 const _PATHFIND_GPU_METHOD_CANDIDATES: Array[String] = [
 	"pathfind_grid_gpu",
 ]
+const _PATHFIND_XY_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_xy",
+]
+const _PATHFIND_XY_GPU_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_gpu_xy",
+]
 const _PATHFIND_BATCH_METHOD_CANDIDATES: Array[String] = [
 	"pathfind_grid_batch",
 ]
@@ -28,6 +34,7 @@ const _PATHFIND_BATCH_XY_GPU_METHOD_CANDIDATES: Array[String] = [
 var _native_checked: bool = false
 var _native_bridge: Object = null
 var _pathfind_method_name: String = ""
+var _pathfind_xy_method_name: String = ""
 var _pathfind_batch_method_name: String = ""
 var _pathfind_batch_xy_method_name: String = ""
 
@@ -51,6 +58,41 @@ func pathfind_grid(
 	var method_name: String = _pathfind_method_name
 	if _prefer_gpu():
 		method_name = _pick_method(_PATHFIND_GPU_METHOD_CANDIDATES, _pathfind_method_name)
+	return bridge.call(
+		method_name,
+		width,
+		height,
+		walkable,
+		move_cost,
+		from_x,
+		from_y,
+		to_x,
+		to_y,
+		max_steps
+	)
+
+
+## Delegates pathfinding with PackedInt32Array(x,y,...) output when available.
+## Returns null when native bridge is unavailable, so caller can fallback.
+func pathfind_grid_xy(
+	width: int,
+	height: int,
+	walkable: PackedByteArray,
+	move_cost: PackedFloat32Array,
+	from_x: int,
+	from_y: int,
+	to_x: int,
+	to_y: int,
+	max_steps: int
+):
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return null
+	if _pathfind_xy_method_name == "":
+		return null
+	var method_name: String = _pathfind_xy_method_name
+	if _prefer_gpu():
+		method_name = _pick_method(_PATHFIND_XY_GPU_METHOD_CANDIDATES, _pathfind_xy_method_name)
 	return bridge.call(
 		method_name,
 		width,
@@ -336,6 +378,9 @@ func _get_native_bridge() -> Object:
 			if singleton_obj.has_method(method_name):
 				_native_bridge = singleton_obj
 				_pathfind_method_name = method_name
+				_pathfind_xy_method_name = _pick_method(
+					_PATHFIND_XY_METHOD_CANDIDATES, ""
+				)
 				_pathfind_batch_method_name = _pick_method(
 					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
 				)
@@ -356,6 +401,9 @@ func _get_native_bridge() -> Object:
 			if instance.has_method(method_name):
 				_native_bridge = instance
 				_pathfind_method_name = method_name
+				_pathfind_xy_method_name = _pick_method(
+					_PATHFIND_XY_METHOD_CANDIDATES, ""
+				)
 				_pathfind_batch_method_name = _pick_method(
 					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
 				)

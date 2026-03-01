@@ -2,6 +2,7 @@ extends RefCounted
 
 const _RUST_BRIDGE_NODE_NAME: String = "SimBridge"
 const _RUST_BRIDGE_METHOD_NAME: String = "pathfind_grid"
+const _RUST_BRIDGE_METHOD_XY_NAME: String = "pathfind_grid_xy"
 const _RUST_BRIDGE_BATCH_METHOD_NAME: String = "pathfind_grid_batch"
 const _RUST_BRIDGE_BATCH_XY_METHOD_NAME: String = "pathfind_grid_batch_xy"
 
@@ -51,27 +52,48 @@ func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_s
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
 		return {"used": false, "path": []}
-	if not bridge.has_method(_RUST_BRIDGE_METHOD_NAME):
+	var has_xy: bool = bridge.has_method(_RUST_BRIDGE_METHOD_XY_NAME)
+	var has_vec2: bool = bridge.has_method(_RUST_BRIDGE_METHOD_NAME)
+	if not has_xy and not has_vec2:
 		return {"used": false, "path": []}
 
 	_ensure_world_cache(world_data)
 	if _cached_width <= 0 or _cached_height <= 0:
 		return {"used": false, "path": []}
 
-	var result: Variant = bridge.call(
-		_RUST_BRIDGE_METHOD_NAME,
-		_cached_width,
-		_cached_height,
-		_cached_walkable,
-		_cached_move_cost,
-		from.x,
-		from.y,
-		to.x,
-		to.y,
-		max_steps
-	)
+	var result: Variant = null
+	var used_xy: bool = false
+	if has_xy:
+		result = bridge.call(
+			_RUST_BRIDGE_METHOD_XY_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from.x,
+			from.y,
+			to.x,
+			to.y,
+			max_steps
+		)
+		used_xy = (result != null)
+	if result == null and has_vec2:
+		result = bridge.call(
+			_RUST_BRIDGE_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from.x,
+			from.y,
+			to.x,
+			to.y,
+			max_steps
+		)
 	if result == null:
 		return {"used": false, "path": []}
+	if used_xy:
+		return {"used": true, "path": _normalize_path_xy_result(result)}
 	return {"used": true, "path": _normalize_path_result(result)}
 
 
@@ -89,6 +111,7 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 		return {"used": false, "paths": []}
 
 	var result: Variant = null
+	var used_batch_xy: bool = false
 	if has_batch_xy:
 		var from_xy: PackedInt32Array = PackedInt32Array()
 		var to_xy: PackedInt32Array = PackedInt32Array()
@@ -113,7 +136,8 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 			to_xy,
 			max_steps
 		)
-	elif has_batch_vec2:
+		used_batch_xy = (result != null)
+	if result == null and has_batch_vec2:
 		var from_points: PackedVector2Array = PackedVector2Array()
 		var to_points: PackedVector2Array = PackedVector2Array()
 		for i in range(requests.size()):
@@ -137,7 +161,7 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	if result == null:
 		return {"used": false, "paths": []}
 
-	if has_batch_xy:
+	if used_batch_xy:
 		if not (result is Array):
 			return {"used": false, "paths": []}
 		var xy_groups: Array = result

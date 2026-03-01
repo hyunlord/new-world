@@ -197,6 +197,17 @@ fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Arr
     output
 }
 
+fn encode_path_xy(path: Vec<GridPos>) -> PackedInt32Array {
+    let mut packed: PackedInt32Array = PackedInt32Array::new();
+    packed.resize(path.len() * 2);
+    for (idx, p) in path.into_iter().enumerate() {
+        let base = idx * 2;
+        packed[base] = p.x;
+        packed[base + 1] = p.y;
+    }
+    packed
+}
+
 #[derive(GodotClass)]
 #[class(base=Object, singleton)]
 pub struct WorldSimBridge {
@@ -259,6 +270,43 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn pathfind_grid_xy(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_x: i32,
+        from_y: i32,
+        to_x: i32,
+        to_y: i32,
+        max_steps: i32,
+    ) -> PackedInt32Array {
+        let steps = if max_steps <= 0 {
+            200_usize
+        } else {
+            max_steps as usize
+        };
+
+        let path = match pathfind_grid_bytes(
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            from_x,
+            from_y,
+            to_x,
+            to_y,
+            steps,
+        ) {
+            Ok(path) => path,
+            Err(_) => return PackedInt32Array::new(),
+        };
+
+        encode_path_xy(path)
+    }
+
+    #[func]
     fn pathfind_grid_gpu(
         &self,
         width: i32,
@@ -273,6 +321,25 @@ impl WorldSimBridge {
     ) -> PackedVector2Array {
         // GPU path is not implemented yet; use CPU pathfinding as fallback.
         self.pathfind_grid(
+            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
+        )
+    }
+
+    #[func]
+    fn pathfind_grid_gpu_xy(
+        &self,
+        width: i32,
+        height: i32,
+        walkable: PackedByteArray,
+        move_cost: PackedFloat32Array,
+        from_x: i32,
+        from_y: i32,
+        to_x: i32,
+        to_y: i32,
+        max_steps: i32,
+    ) -> PackedInt32Array {
+        // GPU path is not implemented yet; use CPU pathfinding as fallback.
+        self.pathfind_grid_xy(
             width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
         )
     }
