@@ -1125,3 +1125,8 @@
 - `migration_verify` 벤치 단계에 `MIGRATION_BENCH_PATH_BACKEND`(auto/cpu/gpu)를 추가해 pathfinding backend 모드 제어를 지원.
 - pathfinding/split 벤치 호출에 `--backend` 인자를 전달하고 입력값 유효성 검사를 도입.
 - `auto`, `cpu` 모드 모두에서 checksum 기준선 유지 확인.
+
+## Commit 228
+- `sim-bridge` 공개 backend helper API(`set/get/resolve`, dispatch counter, dispatch batch API)에 대한 단위 테스트 2개를 추가.
+- mode roundtrip/invalid rejection과 counter 증가를 검증해 API 계약을 테스트로 고정.
+- 전체 검증(`migration_verify --with-benches`) 통과로 checksum 유지 확인.

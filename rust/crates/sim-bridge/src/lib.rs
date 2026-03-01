@@ -2673,9 +2673,12 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 mod tests {
     use super::{
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
-        dispatch_pathfind_grid_bytes, parse_pathfind_backend, pathfind_from_flat,
-        pathfind_grid_batch_bytes, pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
-        pathfind_grid_bytes, resolve_backend_mode, PathfindError, PathfindInput,
+        dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, parse_pathfind_backend,
+        pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
+        pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
+        pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
+        reset_pathfind_backend_dispatch_counts, resolve_backend_mode, resolve_pathfind_backend_mode,
+        set_pathfind_backend_mode, PathfindError, PathfindInput,
     };
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
@@ -3164,5 +3167,51 @@ mod tests {
         assert_eq!(gpu_vec2, cpu_vec2);
         assert_eq!(auto_xy, cpu_xy);
         assert_eq!(gpu_xy, cpu_xy);
+    }
+
+    #[test]
+    fn public_backend_mode_helpers_roundtrip_and_validate() {
+        let previous = get_pathfind_backend_mode().to_string();
+
+        assert!(set_pathfind_backend_mode("cpu"));
+        assert_eq!(get_pathfind_backend_mode(), "cpu");
+        assert_eq!(resolve_pathfind_backend_mode(), "cpu");
+
+        assert!(set_pathfind_backend_mode("auto"));
+        assert_eq!(get_pathfind_backend_mode(), "auto");
+        assert_eq!(
+            resolve_pathfind_backend_mode(),
+            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
+        );
+
+        assert!(!set_pathfind_backend_mode("invalid-mode"));
+        assert!(set_pathfind_backend_mode(&previous));
+    }
+
+    #[test]
+    fn public_dispatch_counter_helpers_track_dispatch_paths() {
+        let previous = get_pathfind_backend_mode().to_string();
+        assert!(set_pathfind_backend_mode("cpu"));
+        reset_pathfind_backend_dispatch_counts();
+
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let from = vec![(0, 0), (1, 1)];
+        let to = vec![(3, 3), (2, 2)];
+        let from_xy = vec![0, 0, 1, 1];
+        let to_xy = vec![3, 3, 2, 2];
+
+        let (cpu_before, gpu_before) = pathfind_backend_dispatch_counts();
+        let _ = pathfind_grid_batch_dispatch_bytes(4, 4, &walkable, &move_cost, &from, &to, 200)
+            .expect("dispatch tuple batch should succeed");
+        let _ = pathfind_grid_batch_xy_dispatch_bytes(
+            4, 4, &walkable, &move_cost, &from_xy, &to_xy, 200,
+        )
+        .expect("dispatch xy batch should succeed");
+        let (cpu_after, gpu_after) = pathfind_backend_dispatch_counts();
+
+        assert!(cpu_after >= cpu_before + 2);
+        assert_eq!(gpu_after, gpu_before);
+        assert!(set_pathfind_backend_mode(&previous));
     }
 }
