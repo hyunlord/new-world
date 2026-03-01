@@ -74,3 +74,8 @@
 - Rust `sim-bridge`에 `stat_skill_xp_progress` 단일 호출 API 추가.
 - `StatCurve`에 progress 헬퍼를 추가해 Rust 우선 + GDScript fallback 유지.
 - `StatQuery.get_skill_xp_info`를 단일 호출 기반으로 전환해 FFI 호출 횟수 최적화.
+
+## Commit 016
+- inline localization 감사 지표를 keyable(문자열) / non-keyable(객체/배열 등)로 분리.
+- strict 기준을 keyable 누락 중심으로 재정의해 진행률 평가 정확도 향상.
+- 현재 keyable 그룹 기준 `*_key` 누락 0 달성.

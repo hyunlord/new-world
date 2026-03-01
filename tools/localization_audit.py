@@ -85,6 +85,7 @@ def _find_inline_localized_groups(data_file: Path) -> List[Dict[str, Any]]:
             continue
 
         grouped_langs: Dict[str, Set[str]] = {}
+        grouped_types: Dict[str, Set[str]] = {}
         for key in node.keys():
             key_str = str(key)
             for suffix in INLINE_SUFFIXES:
@@ -92,16 +93,36 @@ def _find_inline_localized_groups(data_file: Path) -> List[Dict[str, Any]]:
                     base_field = key_str[: -len(suffix)]
                     lang = suffix[1:]
                     grouped_langs.setdefault(base_field, set()).add(lang)
+                    value = node[key]
+                    if isinstance(value, str):
+                        value_type = "string"
+                    elif value is None:
+                        value_type = "null"
+                    elif isinstance(value, bool):
+                        value_type = "bool"
+                    elif isinstance(value, (int, float)):
+                        value_type = "number"
+                    elif isinstance(value, list):
+                        value_type = "array"
+                    elif isinstance(value, dict):
+                        value_type = "object"
+                    else:
+                        value_type = type(value).__name__
+                    grouped_types.setdefault(base_field, set()).add(value_type)
                     break
 
         for base_field, langs in grouped_langs.items():
             key_field = f"{base_field}_key"
+            value_types = sorted(grouped_types.get(base_field, set()))
+            keyable_group = value_types == ["string"]
             groups.append(
                 {
                     "file": str(data_file),
                     "path": json_path,
                     "base_field": base_field,
                     "languages": sorted(langs),
+                    "value_types": value_types,
+                    "keyable_group": keyable_group,
                     "has_key_field": key_field in node,
                     "key_field": key_field,
                 }
@@ -144,10 +165,14 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         inline_localized_fields.extend(_find_inline_localized_fields(json_file))
         inline_localized_groups.extend(_find_inline_localized_groups(json_file))
 
-    inline_group_with_key_count = sum(
-        1 for item in inline_localized_groups if bool(item.get("has_key_field", False))
+    keyable_groups = [item for item in inline_localized_groups if bool(item.get("keyable_group", False))]
+    non_keyable_groups = [
+        item for item in inline_localized_groups if not bool(item.get("keyable_group", False))
+    ]
+    keyable_group_with_key_count = sum(
+        1 for item in keyable_groups if bool(item.get("has_key_field", False))
     )
-    inline_group_without_key_count = len(inline_localized_groups) - inline_group_with_key_count
+    keyable_group_without_key_count = len(keyable_groups) - keyable_group_with_key_count
 
     return {
         "parity_issues": parity_issues,
@@ -156,9 +181,13 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         "inline_localized_field_count": len(inline_localized_fields),
         "inline_localized_fields": inline_localized_fields,
         "inline_localized_group_count": len(inline_localized_groups),
-        "inline_group_with_key_count": inline_group_with_key_count,
-        "inline_group_without_key_count": inline_group_without_key_count,
+        "inline_keyable_group_count": len(keyable_groups),
+        "inline_non_keyable_group_count": len(non_keyable_groups),
+        "inline_keyable_group_with_key_count": keyable_group_with_key_count,
+        "inline_keyable_group_without_key_count": keyable_group_without_key_count,
         "inline_localized_groups": inline_localized_groups,
+        "inline_keyable_groups": keyable_groups,
+        "inline_non_keyable_groups": non_keyable_groups,
     }
 
 
@@ -168,8 +197,10 @@ def _print_report(report: Dict[str, Any]) -> None:
     print(f"duplicate_keys: {report['duplicate_key_count']}")
     print(f"inline_localized_fields: {report['inline_localized_field_count']}")
     print(f"inline_groups: {report['inline_localized_group_count']}")
-    print(f"inline_groups_with_key: {report['inline_group_with_key_count']}")
-    print(f"inline_groups_without_key: {report['inline_group_without_key_count']}")
+    print(f"inline_keyable_groups: {report['inline_keyable_group_count']}")
+    print(f"inline_non_keyable_groups: {report['inline_non_keyable_group_count']}")
+    print(f"inline_keyable_with_key: {report['inline_keyable_group_with_key_count']}")
+    print(f"inline_keyable_without_key: {report['inline_keyable_group_without_key_count']}")
 
     if report["parity_issues"]:
         print("\n-- parity issues --")
@@ -185,19 +216,27 @@ def _print_report(report: Dict[str, Any]) -> None:
         for item in report["inline_localized_fields"][:20]:
             print(f"* {item['file']} :: {item['path']} :: {item['key']}")
 
-    if report["inline_localized_groups"]:
+    if report["inline_keyable_groups"]:
         missing = [
             item
-            for item in report["inline_localized_groups"]
+            for item in report["inline_keyable_groups"]
             if not bool(item.get("has_key_field", False))
         ]
         if missing:
-            print("\n-- inline groups without *_key (first 20) --")
+            print("\n-- keyable inline groups without *_key (first 20) --")
             for item in missing[:20]:
                 print(
                     f"* {item['file']} :: {item['path']} :: "
                     f"{item['base_field']} -> expected {item['key_field']}"
                 )
+
+    if report["inline_non_keyable_groups"]:
+        print("\n-- non-keyable inline groups (first 20) --")
+        for item in report["inline_non_keyable_groups"][:20]:
+            print(
+                f"* {item['file']} :: {item['path']} :: {item['base_field']} "
+                f"(types={','.join(item.get('value_types', []))})"
+            )
 
 
 def main() -> int:
@@ -215,7 +254,9 @@ def main() -> int:
     _print_report(report)
 
     if args.strict:
-        has_issues = bool(report["parity_issues"]) or bool(report["inline_localized_fields"])
+        has_issues = bool(report["parity_issues"]) or (
+            int(report["inline_keyable_group_without_key_count"]) > 0
+        )
         return 1 if has_issues else 0
     return 0
 
