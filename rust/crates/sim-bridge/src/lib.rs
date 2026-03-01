@@ -943,6 +943,114 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_tick_step(
+        &self,
+        per_tick: PackedFloat32Array,
+        decay_rate: PackedFloat32Array,
+        min_keep: f32,
+        scalar_inputs: PackedFloat32Array,
+        flags: PackedByteArray,
+    ) -> VarDictionary {
+        let s = scalar_inputs.as_slice();
+        let f = flags.as_slice();
+        let sf = |idx: usize, fallback: f32| -> f32 { s.get(idx).copied().unwrap_or(fallback) };
+        let bf = |idx: usize| -> bool { f.get(idx).copied().unwrap_or(0_u8) != 0_u8 };
+
+        let out = stat_curve::stress_tick_step(
+            per_tick.as_slice(),
+            decay_rate.as_slice(),
+            min_keep,
+            sf(0, 0.5),         // hunger
+            sf(1, 0.5),         // energy
+            sf(2, 0.5),         // social
+            sf(3, 0.0),         // threat
+            sf(4, 0.0),         // conflict
+            sf(5, 0.3),         // support_score
+            sf(6, 0.5),         // extroversion
+            sf(7, 0.0),         // fear
+            sf(8, 0.0),         // trust
+            sf(9, 0.5),         // conscientiousness
+            sf(10, 0.5),        // openness
+            sf(11, 0.5),        // reserve_ratio
+            sf(12, 0.0),        // anger
+            sf(13, 0.0),        // sadness
+            sf(14, 0.0),        // disgust
+            sf(15, 0.0),        // surprise
+            sf(16, 0.0),        // joy
+            sf(17, 0.0),        // anticipation
+            sf(18, 0.0),        // valence
+            sf(19, 0.0),        // arousal
+            sf(20, 0.0),        // stress
+            sf(21, 0.5),        // resilience
+            sf(22, 50.0),       // reserve
+            sf(23, 0.0),        // stress_delta_last
+            sf(24, 0.0) as i32, // gas_stage
+            bf(0),              // is_sleeping
+            bf(1),              // is_safe
+            sf(25, 0.0),        // allostatic
+            sf(26, 1.0),        // ace_stress_mult
+            sf(27, 1.0),        // trait_accum_mult
+            sf(28, 0.05),       // epsilon
+            bf(2),              // denial_active
+            sf(29, 0.6),        // denial_redirect_fraction
+            sf(30, 0.0),        // hidden_threat_accumulator
+            sf(31, 800.0),      // denial_max_accumulator
+            sf(32, 1.0),        // avoidant_allostatic_mult
+            sf(33, 0.5),        // e_axis
+            sf(34, 0.5),        // c_axis
+            sf(35, 0.5),        // x_axis
+            sf(36, 0.5),        // o_axis
+            sf(37, 0.5),        // a_axis
+            sf(38, 0.5),        // h_axis
+            sf(39, 0.0),        // scar_resilience_mod
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("appraisal_scale", out.appraisal_scale as f64);
+        dict.set("hunger", out.hunger as f64);
+        dict.set("energy_deficit", out.energy_deficit as f64);
+        dict.set("social_isolation", out.social_isolation as f64);
+        dict.set("continuous_total", out.continuous_total as f64);
+        dict.set(
+            "total_trace_contribution",
+            out.total_trace_contribution as f64,
+        );
+        dict.set("updated_per_tick", vec_f32_to_packed(out.updated_per_tick));
+        dict.set("active_mask", vec_u8_to_packed(out.active_mask));
+        dict.set("fear", out.fear as f64);
+        dict.set("anger", out.anger as f64);
+        dict.set("sadness", out.sadness as f64);
+        dict.set("disgust", out.disgust as f64);
+        dict.set("surprise", out.surprise as f64);
+        dict.set("joy", out.joy as f64);
+        dict.set("trust", out.trust as f64);
+        dict.set("anticipation", out.anticipation as f64);
+        dict.set("va_composite", out.va_composite as f64);
+        dict.set("emotion_total", out.emotion_total as f64);
+        dict.set("recovery", out.recovery as f64);
+        dict.set("delta", out.delta as f64);
+        dict.set(
+            "hidden_threat_accumulator",
+            out.hidden_threat_accumulator as f64,
+        );
+        dict.set("stress", out.stress as f64);
+        dict.set("reserve", out.reserve as f64);
+        dict.set("gas_stage", out.gas_stage);
+        dict.set("allostatic", out.allostatic as f64);
+        dict.set("stress_state", out.stress_state);
+        dict.set("stress_mu_sadness", out.stress_mu_sadness as f64);
+        dict.set("stress_mu_anger", out.stress_mu_anger as f64);
+        dict.set("stress_mu_fear", out.stress_mu_fear as f64);
+        dict.set("stress_mu_joy", out.stress_mu_joy as f64);
+        dict.set("stress_mu_trust", out.stress_mu_trust as f64);
+        dict.set("stress_neg_gain_mult", out.stress_neg_gain_mult as f64);
+        dict.set("stress_pos_gain_mult", out.stress_pos_gain_mult as f64);
+        dict.set("stress_blunt_mult", out.stress_blunt_mult as f64);
+        dict.set("resilience", out.resilience as f64);
+        dict
+    }
+
+    #[func]
     fn stat_stress_delta_step(
         &self,
         continuous_input: f32,

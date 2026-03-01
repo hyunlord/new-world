@@ -226,3 +226,8 @@
 - stress 틱 후반의 post-update(reserve/GAS/allostatic/state)와 resilience 계산을 단일 Rust step(`stress_post_update_resilience_step`)으로 통합.
 - `StressSystem`은 결합 step 결과로 reserve/gas/allostatic/resilience를 한 번에 반영하도록 변경되고 기존 `_update_resilience` 함수는 제거됨.
 - stress 핵심 수학 파이프라인이 결합 step 중심으로 정리되며 브리지 호출 수가 추가로 축소됨.
+
+## Commit 047
+- stress 틱 핵심 수학 경로를 `stress_tick_step` 단일 Rust step으로 통합해 Primary/Trace+Emotion+Recovery+Delta/Post+Resilience를 1회 호출로 수렴.
+- `StressSystem`은 단일 step 결과를 반영하는 구조로 재구성되고 기존 내부 helper(`_calc_primary_inputs`, `_calc_trace_emotion_recovery_delta`)는 제거.
+- breakdown/trace/hidden accumulator 의미를 유지하면서 stress 파이프라인의 브리지 round-trip을 최소화.

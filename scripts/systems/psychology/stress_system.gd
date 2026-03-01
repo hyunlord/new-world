@@ -73,176 +73,40 @@ func execute_tick(_tick: int) -> void:
 
 func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool) -> void:
 	var ed = entity.emotion_data
-	var pd = entity.personality
 
 	var breakdown: Dictionary = {}
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
-
-	# 1) Lazarus appraisal + unmet-needs stress (combined native step)
-	var primary_input: Dictionary = _calc_primary_inputs(entity, pd, ed, hunger, energy, social, breakdown)
-	var continuous_input: float = float(primary_input.get("total", 0.0))
-
-	# 3) trace decay + 감정/회복/delta 통합 step
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
-	# v3 trait effect: stress/mult target=accumulation_rate
 	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
-
-	# Phase 4: C05 Denial — redirect fraction of incoming stress to hidden accumulator
-	## Folkman & Lazarus (1988): denial suppresses immediate distress at cost of later rebound
 	var denial_active: bool = ed.get_meta("denial_active", false)
 	var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
 	var support_score: float = _calc_support_score(entity)
-	var delta_step: Dictionary = _calc_trace_emotion_recovery_delta(
-		ed,
-		support_score,
-		is_sleeping,
-		is_safe,
-		continuous_input,
-		ace_stress_mult,
-		trait_accum_mult,
-		denial_active,
-		hidden,
-		breakdown
-	)
-	var delta: float = float(delta_step.get("delta", 0.0))
-	if denial_active:
-		ed.set_meta("hidden_threat_accumulator", float(delta_step.get("hidden_threat_accumulator", hidden)))
-
-	ed.stress = clampf(ed.stress + delta, 0.0, STRESS_CLAMP_MAX)
-	ed.stress_delta_last = delta
-	ed.stress_breakdown = breakdown
-
-	# Shaken 상태 카운트다운
-	var shaken_remaining: int = ed.get_meta("shaken_remaining", 0)
-	if shaken_remaining > 0:
-		shaken_remaining -= 1
-		ed.set_meta("shaken_remaining", shaken_remaining)
-		if shaken_remaining <= 0:
-			ed.set_meta("shaken_work_penalty", 0.0)
-
-	# 7) Reserve + Allostatic + State + Resilience (combined native step)
-	var avoidant_mult: float = (
-		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
-		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
-		else 1.0
-	)
 	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
 	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 	var X_axis: float = StatQuery.get_normalized(entity, &"HEXACO_X")
 	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
 	var A_axis: float = StatQuery.get_normalized(entity, &"HEXACO_A")
 	var H_axis: float = StatQuery.get_normalized(entity, &"HEXACO_H")
+
+	var fear_val: float = ed.get_emotion("fear")
+	var anger_val: float = ed.get_emotion("anger")
+	var sadness_val: float = ed.get_emotion("sadness")
+	var disgust_val: float = ed.get_emotion("disgust")
+	var surprise_val: float = ed.get_emotion("surprise")
+	var joy_val: float = ed.get_emotion("joy")
+	var trust_val: float = ed.get_emotion("trust")
+	var anticipation_val: float = ed.get_emotion("anticipation")
+	var reserve_ratio: float = ed.reserve / 100.0
+	var avoidant_mult: float = (
+		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
+		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
+		else 1.0
+	)
 	var scar_resilience_mod: float = 0.0
 	if _trauma_scar_system != null:
 		scar_resilience_mod = _trauma_scar_system.get_scar_resilience_mod(entity)
-
-	var post_step: Dictionary = StatCurveScript.stress_post_update_resilience_step(
-		ed.reserve,
-		ed.stress,
-		ed.resilience,
-		ed.stress_delta_last,
-		ed.gas_stage,
-		is_sleeping,
-		ed.allostatic,
-		avoidant_mult,
-		E_axis,
-		C_axis,
-		X_axis,
-		O_axis,
-		A_axis,
-		H_axis,
-		support_score,
-		hunger,
-		energy,
-		scar_resilience_mod
-	)
-	ed.reserve = float(post_step.get("reserve", ed.reserve))
-	ed.gas_stage = int(post_step.get("gas_stage", ed.gas_stage))
-	ed.allostatic = float(post_step.get("allostatic", ed.allostatic))
-	ed.resilience = float(post_step.get("resilience", ed.resilience))
-	var state_snapshot: Dictionary = post_step
-
-	# 8) 스트레스 상태
-	_update_stress_state(ed, state_snapshot)
-
-	# 9) 스트레스 → 감정 역방향
-	_apply_stress_to_emotions(ed, state_snapshot)
-
-	# 10) 디버그 로그
-	_debug_log(entity, ed, delta)
-
-
-# ── 1) Lazarus appraisal + unmet-needs stress (combined) ─────────────
-func _calc_primary_inputs(
-	entity: RefCounted,
-	_pd,
-	ed,
-	hunger: float,
-	energy: float,
-	social: float,
-	breakdown: Dictionary
-) -> Dictionary:
-	var threat: float = 0.0
-	var conflict: float = 0.0
-	var support_score: float = _calc_support_score(entity)
-
-	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
-	var fear_val: float = ed.get_emotion("fear") if ed != null else 0.0
-	var trust_val: float = ed.get_emotion("trust") if ed != null else 0.0
-
-	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
-	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
-	var reserve_ratio: float = ed.reserve / 100.0 if ed != null else 0.5
-	var inputs: Dictionary = StatCurveScript.stress_primary_step(
-		hunger,
-		energy,
-		social,
-		threat,
-		conflict,
-		support_score,
-		E_axis,
-		fear_val,
-		trust_val,
-		C_axis,
-		O_axis,
-		reserve_ratio
-	)
-
-	var s_hunger: float = float(inputs.get("hunger", 0.0))
-	if s_hunger > STRESS_EPSILON:
-		breakdown["hunger"] = s_hunger
-
-	var s_energy: float = float(inputs.get("energy_deficit", 0.0))
-	if s_energy > STRESS_EPSILON:
-		breakdown["energy_deficit"] = s_energy
-
-	var s_social: float = float(inputs.get("social_isolation", 0.0))
-	if s_social > STRESS_EPSILON:
-		breakdown["social_isolation"] = s_social
-
-	return inputs
-
-
-# ── 3) trace + 감정 + 회복 + delta 통합 ───────────────────────────────
-func _calc_trace_emotion_recovery_delta(
-	ed,
-	support_score: float,
-	is_sleeping: bool,
-	is_safe: bool,
-	continuous_input: float,
-	ace_stress_mult: float,
-	trait_accum_mult: float,
-	denial_active: bool,
-	hidden_threat_accumulator: float,
-	breakdown: Dictionary
-) -> Dictionary:
-	if ed == null:
-		return {
-			"delta": 0.0,
-			"hidden_threat_accumulator": hidden_threat_accumulator,
-		}
 
 	var trace_count: int = ed.stress_traces.size()
 	var per_tick: PackedFloat32Array = PackedFloat32Array()
@@ -254,46 +118,73 @@ func _calc_trace_emotion_recovery_delta(
 		per_tick[i] = float(trace_data.get("per_tick", 0.0))
 		decay_rate[i] = float(trace_data.get("decay_rate", 0.05))
 
-	var fear_val: float = ed.get_emotion("fear")
-	var anger_val: float = ed.get_emotion("anger")
-	var sadness_val: float = ed.get_emotion("sadness")
-	var disgust_val: float = ed.get_emotion("disgust")
-	var surprise_val: float = ed.get_emotion("surprise")
-	var joy_val: float = ed.get_emotion("joy")
-	var trust_val: float = ed.get_emotion("trust")
-	var anticipation_val: float = ed.get_emotion("anticipation")
-	var out: Dictionary = StatCurveScript.stress_trace_emotion_recovery_delta_step(
-		per_tick,
-		decay_rate,
-		0.01,
+	var scalar_inputs: PackedFloat32Array = PackedFloat32Array([
+		hunger,
+		energy,
+		social,
+		0.0, # threat
+		0.0, # conflict
+		support_score,
+		E_axis,
 		fear_val,
+		trust_val,
+		C_axis,
+		O_axis,
+		reserve_ratio,
 		anger_val,
 		sadness_val,
 		disgust_val,
 		surprise_val,
 		joy_val,
-		trust_val,
 		anticipation_val,
 		ed.valence,
 		ed.arousal,
 		ed.stress,
-		support_score,
 		ed.resilience,
 		ed.reserve,
-		is_sleeping,
-		is_safe,
-		continuous_input,
+		ed.stress_delta_last,
+		float(ed.gas_stage),
+		ed.allostatic,
 		ace_stress_mult,
 		trait_accum_mult,
 		STRESS_EPSILON,
-		denial_active,
 		DENIAL_REDIRECT_FRACTION,
-		hidden_threat_accumulator,
-		DENIAL_MAX_ACCUMULATOR
+		hidden,
+		DENIAL_MAX_ACCUMULATOR,
+		avoidant_mult,
+		E_axis,
+		C_axis,
+		X_axis,
+		O_axis,
+		A_axis,
+		H_axis,
+		scar_resilience_mod,
+	])
+	var flags: PackedByteArray = PackedByteArray([
+		1 if is_sleeping else 0,
+		1 if is_safe else 0,
+		1 if denial_active else 0,
+	])
+	var tick_step: Dictionary = StatCurveScript.stress_tick_step(
+		per_tick,
+		decay_rate,
+		0.01,
+		scalar_inputs,
+		flags
 	)
 
-	var updated: PackedFloat32Array = out.get("updated_per_tick", PackedFloat32Array())
-	var active_mask: PackedByteArray = out.get("active_mask", PackedByteArray())
+	var s_hunger: float = float(tick_step.get("hunger", 0.0))
+	if s_hunger > STRESS_EPSILON:
+		breakdown["hunger"] = s_hunger
+	var s_energy: float = float(tick_step.get("energy_deficit", 0.0))
+	if s_energy > STRESS_EPSILON:
+		breakdown["energy_deficit"] = s_energy
+	var s_social: float = float(tick_step.get("social_isolation", 0.0))
+	if s_social > STRESS_EPSILON:
+		breakdown["social_isolation"] = s_social
+
+	var updated: PackedFloat32Array = tick_step.get("updated_per_tick", PackedFloat32Array())
+	var active_mask: PackedByteArray = tick_step.get("active_mask", PackedByteArray())
 	var usable_len: int = mini(trace_count, mini(updated.size(), active_mask.size()))
 	var next_traces: Array = []
 	for i in range(usable_len):
@@ -309,17 +200,44 @@ func _calc_trace_emotion_recovery_delta(
 	var emotion_keys: Array[String] = ["fear", "anger", "sadness", "disgust", "surprise", "joy", "trust", "anticipation"]
 	for i in range(emotion_keys.size()):
 		var emotion_name: String = emotion_keys[i]
-		var contrib: float = float(out.get(emotion_name, 0.0))
+		var contrib: float = float(tick_step.get(emotion_name, 0.0))
 		if absf(contrib) > STRESS_EPSILON:
 			breakdown["emo_%s" % emotion_name] = contrib
-
-	var va_contrib: float = float(out.get("va_composite", 0.0))
+	var va_contrib: float = float(tick_step.get("va_composite", 0.0))
 	if va_contrib > STRESS_EPSILON:
 		breakdown["va_composite"] = va_contrib
-
-	var recovery: float = float(out.get("recovery", 0.0))
+	var recovery: float = float(tick_step.get("recovery", 0.0))
 	breakdown["recovery"] = -recovery
-	return out
+
+	var delta: float = float(tick_step.get("delta", 0.0))
+	ed.set_meta("hidden_threat_accumulator", float(tick_step.get("hidden_threat_accumulator", hidden)))
+
+	ed.stress = clampf(float(tick_step.get("stress", ed.stress)), 0.0, STRESS_CLAMP_MAX)
+	ed.stress_delta_last = delta
+	ed.stress_breakdown = breakdown
+
+	# Shaken 상태 카운트다운
+	var shaken_remaining: int = ed.get_meta("shaken_remaining", 0)
+	if shaken_remaining > 0:
+		shaken_remaining -= 1
+		ed.set_meta("shaken_remaining", shaken_remaining)
+		if shaken_remaining <= 0:
+			ed.set_meta("shaken_work_penalty", 0.0)
+
+	ed.reserve = float(tick_step.get("reserve", ed.reserve))
+	ed.gas_stage = int(tick_step.get("gas_stage", ed.gas_stage))
+	ed.allostatic = float(tick_step.get("allostatic", ed.allostatic))
+	ed.resilience = float(tick_step.get("resilience", ed.resilience))
+	var state_snapshot: Dictionary = tick_step
+
+	# 8) 스트레스 상태
+	_update_stress_state(ed, state_snapshot)
+
+	# 9) 스트레스 → 감정 역방향
+	_apply_stress_to_emotions(ed, state_snapshot)
+
+	# 10) 디버그 로그
+	_debug_log(entity, ed, delta)
 
 
 # ── 8) 스트레스 상태 ──────────────────────────────────────────────────

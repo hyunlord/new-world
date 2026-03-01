@@ -720,6 +720,137 @@ static func stress_trace_emotion_recovery_delta_step(
 	}
 
 
+## Full stress tick step:
+## primary + trace/emotion/recovery/delta + post/resilience.
+static func stress_tick_step(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float,
+	scalar_inputs: PackedFloat32Array,
+	flags: PackedByteArray
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_tick_step",
+		[
+			per_tick,
+			decay_rate,
+			min_keep,
+			scalar_inputs,
+			flags
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var sf = func(idx: int, fallback: float) -> float:
+		return float(scalar_inputs[idx]) if idx < scalar_inputs.size() else fallback
+	var bf = func(idx: int) -> bool:
+		return int(flags[idx]) != 0 if idx < flags.size() else false
+
+	var primary: Dictionary = stress_primary_step(
+		sf.call(0, 0.5),
+		sf.call(1, 0.5),
+		sf.call(2, 0.5),
+		sf.call(3, 0.0),
+		sf.call(4, 0.0),
+		sf.call(5, 0.3),
+		sf.call(6, 0.5),
+		sf.call(7, 0.0),
+		sf.call(8, 0.0),
+		sf.call(9, 0.5),
+		sf.call(10, 0.5),
+		sf.call(11, 0.5)
+	)
+	var tr: Dictionary = stress_trace_emotion_recovery_delta_step(
+		per_tick,
+		decay_rate,
+		min_keep,
+		sf.call(7, 0.0),
+		sf.call(12, 0.0),
+		sf.call(13, 0.0),
+		sf.call(14, 0.0),
+		sf.call(15, 0.0),
+		sf.call(16, 0.0),
+		sf.call(8, 0.0),
+		sf.call(17, 0.0),
+		sf.call(18, 0.0),
+		sf.call(19, 0.0),
+		sf.call(20, 0.0),
+		sf.call(5, 0.3),
+		sf.call(21, 0.5),
+		sf.call(22, 50.0),
+		bf.call(0),
+		bf.call(1),
+		float(primary.get("total", 0.0)),
+		sf.call(26, 1.0),
+		sf.call(27, 1.0),
+		sf.call(28, 0.05),
+		bf.call(2),
+		sf.call(29, 0.6),
+		sf.call(30, 0.0),
+		sf.call(31, 800.0)
+	)
+	var next_stress: float = clampf(sf.call(20, 0.0) + float(tr.get("delta", 0.0)), 0.0, 2000.0)
+	var post: Dictionary = stress_post_update_resilience_step(
+		sf.call(22, 50.0),
+		next_stress,
+		sf.call(21, 0.5),
+		float(tr.get("delta", 0.0)),
+		int(round(sf.call(24, 0.0))),
+		bf.call(0),
+		sf.call(25, 0.0),
+		sf.call(32, 1.0),
+		sf.call(33, 0.5),
+		sf.call(34, 0.5),
+		sf.call(35, 0.5),
+		sf.call(36, 0.5),
+		sf.call(37, 0.5),
+		sf.call(38, 0.5),
+		sf.call(5, 0.3),
+		sf.call(0, 0.5),
+		sf.call(1, 0.5),
+		sf.call(39, 0.0)
+	)
+
+	return {
+		"appraisal_scale": float(primary.get("appraisal_scale", 1.0)),
+		"hunger": float(primary.get("hunger", 0.0)),
+		"energy_deficit": float(primary.get("energy_deficit", 0.0)),
+		"social_isolation": float(primary.get("social_isolation", 0.0)),
+		"continuous_total": float(primary.get("total", 0.0)),
+		"total_trace_contribution": float(tr.get("total_trace_contribution", 0.0)),
+		"updated_per_tick": tr.get("updated_per_tick", PackedFloat32Array()),
+		"active_mask": tr.get("active_mask", PackedByteArray()),
+		"fear": float(tr.get("fear", 0.0)),
+		"anger": float(tr.get("anger", 0.0)),
+		"sadness": float(tr.get("sadness", 0.0)),
+		"disgust": float(tr.get("disgust", 0.0)),
+		"surprise": float(tr.get("surprise", 0.0)),
+		"joy": float(tr.get("joy", 0.0)),
+		"trust": float(tr.get("trust", 0.0)),
+		"anticipation": float(tr.get("anticipation", 0.0)),
+		"va_composite": float(tr.get("va_composite", 0.0)),
+		"emotion_total": float(tr.get("emotion_total", 0.0)),
+		"recovery": float(tr.get("recovery", 0.0)),
+		"delta": float(tr.get("delta", 0.0)),
+		"hidden_threat_accumulator": float(tr.get("hidden_threat_accumulator", sf.call(30, 0.0))),
+		"stress": next_stress,
+		"reserve": float(post.get("reserve", sf.call(22, 50.0))),
+		"gas_stage": int(post.get("gas_stage", int(round(sf.call(24, 0.0))))),
+		"allostatic": float(post.get("allostatic", sf.call(25, 0.0))),
+		"stress_state": int(post.get("stress_state", 0)),
+		"stress_mu_sadness": float(post.get("stress_mu_sadness", 0.0)),
+		"stress_mu_anger": float(post.get("stress_mu_anger", 0.0)),
+		"stress_mu_fear": float(post.get("stress_mu_fear", 0.0)),
+		"stress_mu_joy": float(post.get("stress_mu_joy", 0.0)),
+		"stress_mu_trust": float(post.get("stress_mu_trust", 0.0)),
+		"stress_neg_gain_mult": float(post.get("stress_neg_gain_mult", 1.0)),
+		"stress_pos_gain_mult": float(post.get("stress_pos_gain_mult", 1.0)),
+		"stress_blunt_mult": float(post.get("stress_blunt_mult", 1.0)),
+		"resilience": float(post.get("resilience", sf.call(21, 0.5))),
+	}
+
+
 ## Combined post-stress step:
 ## reserve + GAS transition + allostatic update + stress state snapshot
 static func stress_post_update_step(
