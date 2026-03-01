@@ -293,14 +293,9 @@ pub fn pathfind_grid_batch_vec2_bytes(
         });
     }
 
-    if from_points
-        .iter()
-        .zip(to_points.iter())
-        .all(|(from, to)| {
-            from.x.round() as i32 == to.x.round() as i32
-                && from.y.round() as i32 == to.y.round() as i32
-        })
-    {
+    if from_points.iter().zip(to_points.iter()).all(|(from, to)| {
+        from.x.round() as i32 == to.x.round() as i32 && from.y.round() as i32 == to.y.round() as i32
+    }) {
         validate_grid_inputs(width, height, walkable, move_cost)?;
         let mut out = Vec::with_capacity(from_points.len());
         for from in from_points {
@@ -336,6 +331,133 @@ pub fn pathfind_grid_batch_vec2_bytes(
         out.push(path);
     }
     Ok(out)
+}
+
+fn pathfind_grid_gpu_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_x: i32,
+    from_y: i32,
+    to_x: i32,
+    to_y: i32,
+    max_steps: usize,
+) -> Result<Vec<GridPos>, PathfindError> {
+    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
+    pathfind_grid_bytes(
+        width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
+    )
+}
+
+fn pathfind_grid_batch_vec2_gpu_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[Vector2],
+    to_points: &[Vector2],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
+    pathfind_grid_batch_vec2_bytes(
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        max_steps,
+    )
+}
+
+fn pathfind_grid_batch_xy_gpu_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_xy: &[i32],
+    to_xy: &[i32],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
+    pathfind_grid_batch_xy_bytes(
+        width, height, walkable, move_cost, from_xy, to_xy, max_steps,
+    )
+}
+
+fn dispatch_pathfind_grid_bytes(
+    backend_mode: u8,
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_x: i32,
+    from_y: i32,
+    to_x: i32,
+    to_y: i32,
+    max_steps: usize,
+) -> Result<Vec<GridPos>, PathfindError> {
+    match resolve_backend_mode_code(backend_mode) {
+        PATHFIND_BACKEND_GPU => pathfind_grid_gpu_bytes(
+            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
+        ),
+        _ => pathfind_grid_bytes(
+            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
+        ),
+    }
+}
+
+fn dispatch_pathfind_grid_batch_vec2_bytes(
+    backend_mode: u8,
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[Vector2],
+    to_points: &[Vector2],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    match resolve_backend_mode_code(backend_mode) {
+        PATHFIND_BACKEND_GPU => pathfind_grid_batch_vec2_gpu_bytes(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_points,
+            to_points,
+            max_steps,
+        ),
+        _ => pathfind_grid_batch_vec2_bytes(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_points,
+            to_points,
+            max_steps,
+        ),
+    }
+}
+
+fn dispatch_pathfind_grid_batch_xy_bytes(
+    backend_mode: u8,
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_xy: &[i32],
+    to_xy: &[i32],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    match resolve_backend_mode_code(backend_mode) {
+        PATHFIND_BACKEND_GPU => pathfind_grid_batch_xy_gpu_bytes(
+            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
+        ),
+        _ => pathfind_grid_batch_xy_bytes(
+            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
+        ),
+    }
 }
 
 fn packed_i32_to_vec(values: &PackedInt32Array) -> Vec<i32> {
@@ -427,6 +549,35 @@ fn parse_pathfind_backend(mode: &str) -> Option<u8> {
     }
 }
 
+#[inline]
+fn normalize_max_steps(max_steps: i32) -> usize {
+    if max_steps <= 0 {
+        200_usize
+    } else {
+        max_steps as usize
+    }
+}
+
+fn resolve_backend_mode_code(mode: u8) -> u8 {
+    match mode {
+        PATHFIND_BACKEND_CPU => PATHFIND_BACKEND_CPU,
+        PATHFIND_BACKEND_GPU => {
+            if cfg!(feature = "gpu") {
+                PATHFIND_BACKEND_GPU
+            } else {
+                PATHFIND_BACKEND_CPU
+            }
+        }
+        _ => {
+            if cfg!(feature = "gpu") {
+                PATHFIND_BACKEND_GPU
+            } else {
+                PATHFIND_BACKEND_CPU
+            }
+        }
+    }
+}
+
 fn backend_mode_to_str(mode: u8) -> &'static str {
     match mode {
         PATHFIND_BACKEND_CPU => "cpu",
@@ -436,22 +587,9 @@ fn backend_mode_to_str(mode: u8) -> &'static str {
 }
 
 fn resolve_backend_mode(mode: u8) -> &'static str {
-    match mode {
-        PATHFIND_BACKEND_CPU => "cpu",
-        PATHFIND_BACKEND_GPU => {
-            if cfg!(feature = "gpu") {
-                "gpu"
-            } else {
-                "cpu"
-            }
-        }
-        _ => {
-            if cfg!(feature = "gpu") {
-                "gpu"
-            } else {
-                "cpu"
-            }
-        }
+    match resolve_backend_mode_code(mode) {
+        PATHFIND_BACKEND_GPU => "gpu",
+        _ => "cpu",
     }
 }
 
@@ -1065,13 +1203,11 @@ impl WorldSimBridge {
         to_y: i32,
         max_steps: i32,
     ) -> PackedVector2Array {
-        let steps = if max_steps <= 0 {
-            200_usize
-        } else {
-            max_steps as usize
-        };
+        let steps = normalize_max_steps(max_steps);
+        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
 
-        let path = match pathfind_grid_bytes(
+        let path = match dispatch_pathfind_grid_bytes(
+            backend_mode,
             width,
             height,
             walkable.as_slice(),
@@ -1102,13 +1238,11 @@ impl WorldSimBridge {
         to_y: i32,
         max_steps: i32,
     ) -> PackedInt32Array {
-        let steps = if max_steps <= 0 {
-            200_usize
-        } else {
-            max_steps as usize
-        };
+        let steps = normalize_max_steps(max_steps);
+        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
 
-        let path = match pathfind_grid_bytes(
+        let path = match dispatch_pathfind_grid_bytes(
+            backend_mode,
             width,
             height,
             walkable.as_slice(),
@@ -1139,10 +1273,25 @@ impl WorldSimBridge {
         to_y: i32,
         max_steps: i32,
     ) -> PackedVector2Array {
-        // GPU path is not implemented yet; use CPU pathfinding as fallback.
-        self.pathfind_grid(
-            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-        )
+        let steps = normalize_max_steps(max_steps);
+
+        let path = match dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_GPU,
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            from_x,
+            from_y,
+            to_x,
+            to_y,
+            steps,
+        ) {
+            Ok(path) => path,
+            Err(_) => return PackedVector2Array::new(),
+        };
+
+        encode_path_vec2(path)
     }
 
     #[func]
@@ -1158,10 +1307,25 @@ impl WorldSimBridge {
         to_y: i32,
         max_steps: i32,
     ) -> PackedInt32Array {
-        // GPU path is not implemented yet; use CPU pathfinding as fallback.
-        self.pathfind_grid_xy(
-            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-        )
+        let steps = normalize_max_steps(max_steps);
+
+        let path = match dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_GPU,
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            from_x,
+            from_y,
+            to_x,
+            to_y,
+            steps,
+        ) {
+            Ok(path) => path,
+            Err(_) => return PackedInt32Array::new(),
+        };
+
+        encode_path_xy(path)
     }
 
     #[func]
@@ -1175,13 +1339,11 @@ impl WorldSimBridge {
         to_points: PackedVector2Array,
         max_steps: i32,
     ) -> Array<PackedVector2Array> {
-        let steps = if max_steps <= 0 {
-            200_usize
-        } else {
-            max_steps as usize
-        };
+        let steps = normalize_max_steps(max_steps);
+        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
 
-        let path_groups = match pathfind_grid_batch_vec2_bytes(
+        let path_groups = match dispatch_pathfind_grid_batch_vec2_bytes(
+            backend_mode,
             width,
             height,
             walkable.as_slice(),
@@ -1208,16 +1370,23 @@ impl WorldSimBridge {
         to_points: PackedVector2Array,
         max_steps: i32,
     ) -> Array<PackedVector2Array> {
-        // GPU path is not implemented yet; use CPU batch pathfinding as fallback.
-        self.pathfind_grid_batch(
+        let steps = normalize_max_steps(max_steps);
+
+        let path_groups = match dispatch_pathfind_grid_batch_vec2_bytes(
+            PATHFIND_BACKEND_GPU,
             width,
             height,
-            walkable,
-            move_cost,
-            from_points,
-            to_points,
-            max_steps,
-        )
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            from_points.as_slice(),
+            to_points.as_slice(),
+            steps,
+        ) {
+            Ok(groups) => groups,
+            Err(_) => return Array::new(),
+        };
+
+        encode_path_groups_vec2(path_groups)
     }
 
     #[func]
@@ -1231,13 +1400,11 @@ impl WorldSimBridge {
         to_xy: PackedInt32Array,
         max_steps: i32,
     ) -> Array<PackedInt32Array> {
-        let steps = if max_steps <= 0 {
-            200_usize
-        } else {
-            max_steps as usize
-        };
+        let steps = normalize_max_steps(max_steps);
+        let backend_mode = PATHFIND_BACKEND_MODE.load(Ordering::Relaxed);
 
-        let path_groups = match pathfind_grid_batch_xy_bytes(
+        let path_groups = match dispatch_pathfind_grid_batch_xy_bytes(
+            backend_mode,
             width,
             height,
             walkable.as_slice(),
@@ -1264,10 +1431,23 @@ impl WorldSimBridge {
         to_xy: PackedInt32Array,
         max_steps: i32,
     ) -> Array<PackedInt32Array> {
-        // GPU path is not implemented yet; use CPU batch pathfinding as fallback.
-        self.pathfind_grid_batch_xy(
-            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
-        )
+        let steps = normalize_max_steps(max_steps);
+
+        let path_groups = match dispatch_pathfind_grid_batch_xy_bytes(
+            PATHFIND_BACKEND_GPU,
+            width,
+            height,
+            walkable.as_slice(),
+            move_cost.as_slice(),
+            from_xy.as_slice(),
+            to_xy.as_slice(),
+            steps,
+        ) {
+            Ok(groups) => groups,
+            Err(_) => return Array::new(),
+        };
+
+        encode_path_groups_xy(path_groups)
     }
 
     #[func]
@@ -2437,10 +2617,11 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 #[cfg(test)]
 mod tests {
     use super::{
-        parse_pathfind_backend, pathfind_from_flat, pathfind_grid_batch_bytes,
-        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes, pathfind_grid_bytes,
-        resolve_backend_mode, PathfindError, PathfindInput, PATHFIND_BACKEND_AUTO,
-        PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
+        dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
+        dispatch_pathfind_grid_bytes, parse_pathfind_backend, pathfind_from_flat,
+        pathfind_grid_batch_bytes, pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
+        pathfind_grid_bytes, resolve_backend_mode, PathfindError, PathfindInput,
+        PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU, PATHFIND_BACKEND_GPU,
     };
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
@@ -2614,10 +2795,9 @@ mod tests {
 
         let grouped = pathfind_grid_batch_bytes(6, 6, &walkable, &move_cost, &from, &to, 400)
             .expect("tuple batch should succeed");
-        let grouped_vec2 = pathfind_grid_batch_vec2_bytes(
-            6, 6, &walkable, &move_cost, &from_vec2, &to_vec2, 400,
-        )
-        .expect("vec2 batch should succeed");
+        let grouped_vec2 =
+            pathfind_grid_batch_vec2_bytes(6, 6, &walkable, &move_cost, &from_vec2, &to_vec2, 400)
+                .expect("vec2 batch should succeed");
 
         assert_eq!(grouped_vec2, grouped);
     }
@@ -2657,10 +2837,9 @@ mod tests {
             Vector2::new(2.0, 3.0),
             Vector2::new(4.0, 0.0),
         ];
-        let grouped_vec2 = pathfind_grid_batch_vec2_bytes(
-            5, 5, &walkable, &move_cost, &from_vec2, &to_vec2, 200,
-        )
-        .expect("stationary vec2 batch should succeed");
+        let grouped_vec2 =
+            pathfind_grid_batch_vec2_bytes(5, 5, &walkable, &move_cost, &from_vec2, &to_vec2, 200)
+                .expect("stationary vec2 batch should succeed");
         assert_eq!(grouped_vec2, grouped);
     }
 
@@ -2741,5 +2920,146 @@ mod tests {
             resolve_backend_mode(PATHFIND_BACKEND_AUTO),
             if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
         );
+    }
+
+    #[test]
+    fn backend_dispatch_single_matches_cpu_path() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let cpu = dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_CPU,
+            4,
+            4,
+            &walkable,
+            &move_cost,
+            0,
+            0,
+            3,
+            3,
+            200,
+        )
+        .expect("cpu dispatch should succeed");
+
+        let auto = dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_AUTO,
+            4,
+            4,
+            &walkable,
+            &move_cost,
+            0,
+            0,
+            3,
+            3,
+            200,
+        )
+        .expect("auto dispatch should succeed");
+
+        let gpu = dispatch_pathfind_grid_bytes(
+            PATHFIND_BACKEND_GPU,
+            4,
+            4,
+            &walkable,
+            &move_cost,
+            0,
+            0,
+            3,
+            3,
+            200,
+        )
+        .expect("gpu dispatch should succeed");
+
+        assert_eq!(auto, cpu);
+        assert_eq!(gpu, cpu);
+    }
+
+    #[test]
+    fn backend_dispatch_batch_modes_match_cpu_path() {
+        let walkable = vec![1_u8; 36];
+        let move_cost = vec![1.0_f32; 36];
+        let from_vec2 = vec![
+            Vector2::new(0.0, 0.0),
+            Vector2::new(5.0, 0.0),
+            Vector2::new(0.0, 5.0),
+        ];
+        let to_vec2 = vec![
+            Vector2::new(5.0, 5.0),
+            Vector2::new(0.0, 5.0),
+            Vector2::new(5.0, 0.0),
+        ];
+        let from_xy = vec![0, 0, 5, 0, 0, 5];
+        let to_xy = vec![5, 5, 0, 5, 5, 0];
+
+        let cpu_vec2 = dispatch_pathfind_grid_batch_vec2_bytes(
+            PATHFIND_BACKEND_CPU,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_vec2,
+            &to_vec2,
+            300,
+        )
+        .expect("cpu vec2 dispatch should succeed");
+        let auto_vec2 = dispatch_pathfind_grid_batch_vec2_bytes(
+            PATHFIND_BACKEND_AUTO,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_vec2,
+            &to_vec2,
+            300,
+        )
+        .expect("auto vec2 dispatch should succeed");
+        let gpu_vec2 = dispatch_pathfind_grid_batch_vec2_bytes(
+            PATHFIND_BACKEND_GPU,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_vec2,
+            &to_vec2,
+            300,
+        )
+        .expect("gpu vec2 dispatch should succeed");
+
+        let cpu_xy = dispatch_pathfind_grid_batch_xy_bytes(
+            PATHFIND_BACKEND_CPU,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_xy,
+            &to_xy,
+            300,
+        )
+        .expect("cpu xy dispatch should succeed");
+        let auto_xy = dispatch_pathfind_grid_batch_xy_bytes(
+            PATHFIND_BACKEND_AUTO,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_xy,
+            &to_xy,
+            300,
+        )
+        .expect("auto xy dispatch should succeed");
+        let gpu_xy = dispatch_pathfind_grid_batch_xy_bytes(
+            PATHFIND_BACKEND_GPU,
+            6,
+            6,
+            &walkable,
+            &move_cost,
+            &from_xy,
+            &to_xy,
+            300,
+        )
+        .expect("gpu xy dispatch should succeed");
+
+        assert_eq!(auto_vec2, cpu_vec2);
+        assert_eq!(gpu_vec2, cpu_vec2);
+        assert_eq!(auto_xy, cpu_xy);
+        assert_eq!(gpu_xy, cpu_xy);
     }
 }

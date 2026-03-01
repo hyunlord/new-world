@@ -1065,3 +1065,8 @@
 - `sim-systems` `PathfindWorkspace`를 generation stamp 기반으로 전환해 쿼리마다 발생하던 배열 전체 `fill` 초기화 비용을 제거.
 - A* 본문을 `seen_gen/closed_gen` 판별과 `came_from` sentinel 체인 복원으로 정리해 재사용 워크스페이스의 hot path를 최적화.
 - generation 카운터 래핑(`u32::MAX`) 회귀 테스트를 추가하고, checksum/벤치 검증(`migration_verify --with-benches`)을 통과.
+
+## Commit 216
+- `sim-bridge` pathfinding에 backend 디스패처 레이어를 추가해 `auto/cpu/gpu` 설정이 실제 실행 경로에 반영되도록 연결.
+- GPU 전용 엔트리포인트 스텁(현재 CPU 폴백)과 공통 `normalize_max_steps`를 도입해 GPU 실구현 이전에도 호출 계약을 안정화.
+- 디스패처 회귀 테스트(단건/배치)를 추가하고 `migration_verify --with-benches`로 checksum 유지를 검증.
