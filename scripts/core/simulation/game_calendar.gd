@@ -14,6 +14,7 @@ const MONTH_DAYS: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 static var _ui_age_years_id: int = -1
 static var _ui_age_months_id: int = -1
 static var _ui_age_days_id: int = -1
+static var _locale_key_version: int = -1
 
 
 static func is_leap_year(year: int) -> bool:
@@ -317,6 +318,7 @@ static func format_number(n: int) -> String:
 
 
 static func _age_years_label() -> String:
+	_ensure_locale_key_cache()
 	if _ui_age_years_id < 0:
 		_ui_age_years_id = Locale.key_id("UI_AGE_YEARS")
 	if _ui_age_years_id >= 0:
@@ -325,6 +327,7 @@ static func _age_years_label() -> String:
 
 
 static func _age_months_label() -> String:
+	_ensure_locale_key_cache()
 	if _ui_age_months_id < 0:
 		_ui_age_months_id = Locale.key_id("UI_AGE_MONTHS")
 	if _ui_age_months_id >= 0:
@@ -333,8 +336,19 @@ static func _age_months_label() -> String:
 
 
 static func _age_days_label() -> String:
+	_ensure_locale_key_cache()
 	if _ui_age_days_id < 0:
 		_ui_age_days_id = Locale.key_id("UI_AGE_DAYS")
 	if _ui_age_days_id >= 0:
 		return Locale.ltr_id(_ui_age_days_id)
 	return Locale.ltr("UI_AGE_DAYS")
+
+
+static func _ensure_locale_key_cache() -> void:
+	var current_version: int = Locale.key_index_version()
+	if current_version == _locale_key_version:
+		return
+	_locale_key_version = current_version
+	_ui_age_years_id = -1
+	_ui_age_months_id = -1
+	_ui_age_days_id = -1

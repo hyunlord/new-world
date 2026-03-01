@@ -411,3 +411,8 @@
 - `StatQuery`에 output buffer 재사용 API(`get_normalized_batch_into`)를 추가해 batch 결과 배열 할당을 줄임.
 - 기존 `get_normalized_batch`는 새 API를 호출하는 호환 래퍼로 유지.
 - `StressSystem`이 scratch norm buffer를 재사용하도록 전환해 엔티티 루프 임시 할당/GC 부담을 완화.
+
+## Commit 085
+- `Locale`에 key index 버전(`key_index_version`)을 도입해 locale 로드 시 캐시 무효화 기준을 제공.
+- `GameCalendar`와 `EmotionData`의 정적 key-id 캐시가 버전 변경을 감지해 자동 초기화되도록 보강.
+- locale 전환/재로딩 이후에도 key-id 캐시 정합성을 유지하는 안전장치를 추가.

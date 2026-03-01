@@ -30,6 +30,7 @@ var _month_key_ids: PackedInt32Array = PackedInt32Array()
 var _tr_id_key_id_cache: Dictionary = {}
 var _tr_id_result_cache: Dictionary = {}
 var _trf_key_id_cache: Dictionary = {}
+var _key_index_version: int = 0
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -69,6 +70,7 @@ func load_locale(locale: String) -> void:
 	_trf_key_id_cache.clear()
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
+		_key_index_version += 1
 		return
 
 	for cat in _categories:
@@ -90,6 +92,7 @@ func load_locale(locale: String) -> void:
 				_flat_strings[key] = str(cat_data[key])
 	_rebuild_key_index_from_flat()
 	_refresh_month_key_ids()
+	_key_index_version += 1
 
 
 ## Lookup translation string by key (searches all categories)
@@ -113,6 +116,10 @@ func ltr_id(id: int) -> String:
 	if id < 0 or id >= _id_to_value.size():
 		return ""
 	return str(_id_to_value[id])
+
+
+func key_index_version() -> int:
+	return _key_index_version
 
 
 ## Format string with placeholder substitution

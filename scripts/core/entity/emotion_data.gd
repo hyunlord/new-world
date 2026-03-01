@@ -77,6 +77,7 @@ var _valence_positive: Dictionary = {}
 var _valence_negative: Dictionary = {}
 var _arousal_weights: Dictionary = {}
 static var _intensity_key_id_cache: Dictionary = {}
+static var _intensity_key_cache_version: int = -1
 
 
 func _init() -> void:
@@ -138,6 +139,11 @@ func _get_memory_total(emotion_id: String) -> float:
 # === Intensity labels (UI display) ===
 ## Returns the English intensity label (e.g. "Serenity", "Joy", "Ecstasy") for the given emotion ID, or "" if below threshold.
 func get_intensity_label(emotion_id: String) -> String:
+	var locale_key_version: int = Locale.key_index_version()
+	if locale_key_version != _intensity_key_cache_version:
+		_intensity_key_cache_version = locale_key_version
+		_intensity_key_id_cache.clear()
+
 	var val: float = get_emotion(emotion_id)
 	if val < 1.0:
 		return ""
