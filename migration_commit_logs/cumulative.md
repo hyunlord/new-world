@@ -556,3 +556,8 @@
 - `contagion_system`의 `CONTAGION_SPIRAL_WARNING` 포맷을 `Locale.trf2`로 전환.
 - `attachment_system`의 `ATTACHMENT_FORMED` 포맷을 `Locale.trf2`로 전환.
 - `coping_system`의 `COPING_ACQUIRED`/`COPING_UPGRADED` 포맷을 `Locale.trf1`로 전환해 이벤트 로그 경로의 임시 params Dictionary 생성을 줄임.
+
+## Commit 114
+- `parenting_system`의 `ADULTHOOD_TRANSITION` 설명 문자열 생성을 `Locale.trf1`로 전환.
+- `child_stress_processor`의 `SHRP_OVERRIDE` 설명 문자열 생성을 `Locale.trf1`로 전환.
+- `ace_tracker`의 `ACE_EVENT_RECORDED`/`HEXACO_CAP_MODIFIED` 설명 문자열 생성을 `Locale.trf2`/`trf1`로 전환하면서 chronicle 메타의 `params` 구조는 유지.

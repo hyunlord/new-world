@@ -86,7 +86,7 @@ func _apply_adulthood_transition(entity, tick: int) -> void:
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle != null:
 		var params: Dictionary = {"name": entity.entity_name}
-		var desc: String = Locale.trf("ADULTHOOD_TRANSITION", params)
+		var desc: String = Locale.trf1("ADULTHOOD_TRANSITION", "name", params.get("name", ""))
 		chronicle.log_event("adulthood_transition", entity.id, desc, 3, [], tick, {
 			"key": "ADULTHOOD_TRANSITION",
 			"params": params,

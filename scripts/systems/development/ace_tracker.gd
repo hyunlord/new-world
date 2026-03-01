@@ -98,7 +98,13 @@ func record_ace_event(item_id: String, severity: float, tick: int, entity_name: 
 		var name_key = str(item_def.get("name_key", item_id))
 		var ace_type_name = Locale.ltr(name_key)
 		var params = {"name": entity_name, "ace_type": ace_type_name}
-		var desc = Locale.trf("ACE_EVENT_RECORDED", params)
+		var desc = Locale.trf2(
+			"ACE_EVENT_RECORDED",
+			"name",
+			params.get("name", ""),
+			"ace_type",
+			params.get("ace_type", "")
+		)
 		var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 		if chronicle != null and chronicle.has_method("log_event"):
 			chronicle.log_event("ace_event", -1, desc, 2, [], tick, {"key": "ACE_EVENT_RECORDED", "params": params})
@@ -255,7 +261,7 @@ func apply_hexaco_caps(entity) -> void:
 
 			if chronicle != null and chronicle.has_method("log_event"):
 				var params = {"facet": str(facet_id)}
-				var desc = Locale.trf("HEXACO_CAP_MODIFIED", params)
+				var desc = Locale.trf1("HEXACO_CAP_MODIFIED", "facet", params.get("facet", ""))
 				var entity_id: int = int(entity.get("id")) if entity.get("id") != null else -1
 				var tick: int = int(entity.get_meta("current_tick", -1))
 				if tick >= 0:

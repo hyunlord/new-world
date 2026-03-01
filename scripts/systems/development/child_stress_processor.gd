@@ -167,7 +167,7 @@ func _handle_shrp_override(entity, stressor: Dictionary) -> void:
 	if chronicle != null:
 		var tick: int = int(stressor.get("tick", -1))
 		var params: Dictionary = {"name": entity.entity_name}
-		var desc: String = Locale.trf("SHRP_OVERRIDE", params)
+		var desc: String = Locale.trf1("SHRP_OVERRIDE", "name", params.get("name", ""))
 		chronicle.log_event("child_stress", entity.id, desc, 4, [], tick, {
 			"key": "SHRP_OVERRIDE",
 			"params": params,
