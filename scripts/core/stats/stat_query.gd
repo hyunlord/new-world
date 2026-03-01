@@ -17,6 +17,7 @@ const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 const PHASE: int = 2  ## 현재 구현 Phase.
 
 var _affinity_cache: Dictionary = {}
+var _normalized_range_cache: Dictionary = {}
 
 ## [Human Definition v3 §11] Tech era ordering for required_tech gate
 ## Must be kept in sync with SettlementData.tech_era progression.
@@ -33,6 +34,7 @@ func init_settlement_manager(mgr) -> void:
 
 func _ready() -> void:
 	StatDefinitionScript.load_all("res://stats/")
+	_normalized_range_cache.clear()
 	var ok: bool = StatGraphScript.build()
 	if not ok:
 		push_error("StatQuery: StatGraph build failed — check for cycles")
@@ -61,9 +63,9 @@ func get_stat(entity: RefCounted, stat_id: StringName,
 ## 정규화 값 반환 (0.0~1.0)
 ## Returns the stat value normalized to [0.0, 1.0] based on its defined min/max range.
 func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
-	var range_arr: Array = StatDefinitionScript.get_range(stat_id)
-	var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
-	var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+	var range_arr: Array = _get_normalized_range_cached(stat_id)
+	var rmin: int = int(range_arr[0])
+	var rmax: int = int(range_arr[1])
 	if rmax == rmin:
 		return 0.0
 	return float(get_stat(entity, stat_id, rmin) - rmin) / float(rmax - rmin)
@@ -87,9 +89,9 @@ func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> Pa
 		if not StatDefinitionScript.has_def(stat_id):
 			results[i] = 0.0
 			continue
-		var range_arr: Array = StatDefinitionScript.get_range(stat_id)
-		var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
-		var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+		var range_arr: Array = _get_normalized_range_cached(stat_id)
+		var rmin: int = int(range_arr[0])
+		var rmax: int = int(range_arr[1])
 		if rmax == rmin:
 			results[i] = 0.0
 			continue
@@ -98,6 +100,17 @@ func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> Pa
 			value = int(cache_dict[stat_id].get("value", rmin))
 		results[i] = float(value - rmin) / float(rmax - rmin)
 	return results
+
+
+func _get_normalized_range_cached(stat_id: StringName) -> Array:
+	if _normalized_range_cache.has(stat_id):
+		return _normalized_range_cache[stat_id]
+	var range_arr: Array = StatDefinitionScript.get_range(stat_id)
+	var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
+	var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+	var cached: Array = [rmin, rmax]
+	_normalized_range_cache[stat_id] = cached
+	return cached
 
 ## 영향력 값 반환 (InfluenceCurve 적용된 float)
 ## Phase 0: stub, 항상 1.0 반환

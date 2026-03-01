@@ -401,3 +401,8 @@
 - `StatQuery`에 `get_normalized_batch`를 추가해 다수 stat 정규화 조회를 단일 캐시 경로로 처리.
 - `StressSystem`은 NEED/HEXACO 정규화 입력을 batch 호출 1회로 수집하도록 전환해 입력 준비 오버헤드를 완화.
 - stress 계산 수식/결과 의미는 유지하면서 tick 핫패스의 중복 호출을 줄임.
+
+## Commit 083
+- `StatQuery`에 정규화 range 캐시(`_normalized_range_cache`)를 도입해 `get_range` 반복 호출을 축소.
+- `get_normalized`/`get_normalized_batch`가 캐시된 range를 공통으로 사용하도록 정리.
+- 정규화 결과 의미는 유지하면서 stat range 조회 경로의 반복 비용을 완화.
