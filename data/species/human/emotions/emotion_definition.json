@@ -2,57 +2,41 @@
     "model": "plutchik",
     "emotions": {
         "joy": {
-            "name_kr": "기쁨",
-            "name_en": "Joy",
             "color": "#FFE135",
             "opposite": "sadness",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_JOY_NAME"
         },
         "trust": {
-            "name_kr": "신뢰",
-            "name_en": "Trust",
             "color": "#7BC67E",
             "opposite": "disgust",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_TRUST_NAME"
         },
         "fear": {
-            "name_kr": "공포",
-            "name_en": "Fear",
             "color": "#6BAF7B",
             "opposite": "anger",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_FEAR_NAME"
         },
         "surprise": {
-            "name_kr": "놀람",
-            "name_en": "Surprise",
             "color": "#5B9BD5",
             "opposite": "anticipation",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_SURPRISE_NAME"
         },
         "sadness": {
-            "name_kr": "슬픔",
-            "name_en": "Sadness",
             "color": "#3F51B5",
             "opposite": "joy",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_SADNESS_NAME"
         },
         "disgust": {
-            "name_kr": "혐오",
-            "name_en": "Disgust",
             "color": "#9C27B0",
             "opposite": "trust",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_DISGUST_NAME"
         },
         "anger": {
-            "name_kr": "분노",
-            "name_en": "Anger",
             "color": "#F44336",
             "opposite": "fear",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_ANGER_NAME"
         },
         "anticipation": {
-            "name_kr": "기대",
-            "name_en": "Anticipation",
             "color": "#FF9800",
             "opposite": "surprise",
             "name_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_ANTICIPATION_NAME"

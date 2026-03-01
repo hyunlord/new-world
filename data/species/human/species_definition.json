@@ -1,7 +1,6 @@
 {
     "species_id": "human",
     "species_name": "Human",
-    "species_name_kr": "인간",
     "personality_model": "hexaco",
     "personality_path": "res://data/species/human/personality/",
     "emotion_model": "plutchik",

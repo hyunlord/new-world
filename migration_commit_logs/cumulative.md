@@ -128,3 +128,8 @@
 - `trait_tooltip`, `trauma_scar_system`, `emotion_data`에서 inline locale 필드 직접 참조를 제거.
 - trait/scar 표시는 `*_key` 기반 조회로 통일하고, 미번역 시 원시 키 노출 대신 안전 fallback 적용.
 - data inline 제거 작업 전제(코드 경로 의존성 제거)를 위한 선행 정리 완료.
+
+## Commit 027
+- `trait_definitions`, `stressor_events`, `emotion_definition`, `species_definition`의 inline 다국어 필드 제거.
+- `*_key` + `data_generated` 보존 모드 기반 key-first 데이터 구조로 전환 완료.
+- strict localization audit 지표에서 inline localized fields 0 달성.
