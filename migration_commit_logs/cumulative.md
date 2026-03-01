@@ -1620,3 +1620,8 @@
 - `trait_violation_system`의 보조 수식(맥락 modifier, facet scale, intrusive chance)을 Rust-first 경로로 이관.
 - `sim-systems`에 trait violation 순수 함수 3종과 단위 테스트 3건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
+
+## Commit 312
+- `trauma_scar_system`의 핵심 보조 수식(흉터 획득 확률, 스트레스 민감도 factor)을 Rust-first 경로로 이관.
+- `sim-systems`에 trauma scar 순수 함수 2종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.

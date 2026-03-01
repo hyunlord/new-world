@@ -1109,6 +1109,27 @@ pub fn trait_violation_intrusive_chance(
     chance
 }
 
+/// Trauma-scar acquisition chance with kindling amplification and global scaling.
+pub fn trauma_scar_acquire_chance(
+    base_chance: f32,
+    chance_scale: f32,
+    existing_stacks: i32,
+    kindling_factor: f32,
+) -> f32 {
+    let mut chance = base_chance * chance_scale;
+    if existing_stacks > 0 {
+        chance *= 1.0 + kindling_factor * existing_stacks as f32;
+    }
+    clamp_f32(chance, 0.0, 1.0)
+}
+
+/// Trauma-scar stress-sensitivity factor for one scar entry.
+pub fn trauma_scar_sensitivity_factor(base_mult: f32, stacks: i32) -> f32 {
+    let safe_stacks = stacks.max(1) as f32;
+    let delta = base_mult - 1.0;
+    1.0 + delta * (1.0 + 0.5 * (safe_stacks - 1.0))
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2165,6 +2186,7 @@ mod tests {
         mental_break_threshold, mental_break_chance,
         trait_violation_context_modifier, trait_violation_facet_scale,
         trait_violation_intrusive_chance,
+        trauma_scar_acquire_chance, trauma_scar_sensitivity_factor,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2732,6 +2754,23 @@ mod tests {
         assert_eq!(below, 0.0);
         assert!(recent > old);
         assert!(scar_boosted > recent);
+    }
+
+    #[test]
+    fn trauma_scar_acquire_chance_scales_and_clamps() {
+        let base = trauma_scar_acquire_chance(0.2, 1.0, 0, 0.3);
+        let kindled = trauma_scar_acquire_chance(0.2, 1.0, 2, 0.3);
+        let capped = trauma_scar_acquire_chance(0.9, 2.0, 5, 0.3);
+        assert!(kindled > base);
+        assert_eq!(capped, 1.0);
+    }
+
+    #[test]
+    fn trauma_scar_sensitivity_factor_applies_diminishing_stack_bonus() {
+        let one_stack = trauma_scar_sensitivity_factor(1.4, 1);
+        let three_stacks = trauma_scar_sensitivity_factor(1.4, 3);
+        assert!(three_stacks > one_stack);
+        assert!((one_stack - 1.4).abs() < 1e-6);
     }
 
     #[test]

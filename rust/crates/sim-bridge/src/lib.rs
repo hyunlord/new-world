@@ -1387,6 +1387,31 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_trauma_scar_acquire_chance(
+        &self,
+        base_chance: f32,
+        chance_scale: f32,
+        existing_stacks: i32,
+        kindling_factor: f32,
+    ) -> f32 {
+        body::trauma_scar_acquire_chance(
+            base_chance,
+            chance_scale,
+            existing_stacks,
+            kindling_factor,
+        )
+    }
+
+    #[func]
+    fn body_trauma_scar_sensitivity_factor(
+        &self,
+        base_mult: f32,
+        stacks: i32,
+    ) -> f32 {
+        body::trauma_scar_sensitivity_factor(base_mult, stacks)
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
