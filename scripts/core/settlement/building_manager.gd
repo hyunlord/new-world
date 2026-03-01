@@ -46,6 +46,11 @@ func get_building_at(x: int, y: int) -> RefCounted:
 	return _buildings.get(bid, null)
 
 
+## Get building by id (or null)
+func get_building(id: int) -> RefCounted:
+	return _buildings.get(id, null)
+
+
 ## Get all buildings of a given type
 func get_buildings_by_type(type: String) -> Array:
 	var result: Array = []

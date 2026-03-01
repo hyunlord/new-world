@@ -446,3 +446,8 @@
 - `HUD._process()`에서 건물 카운트(`built/wip`)와 stockpile 자원 합계를 동일 루프에서 함께 계산하도록 통합.
 - `get_all_buildings()` 결과를 1회 순회해 `UI_BLD_*`와 `UI_RES_*` 라벨 갱신 입력값을 동시에 수집.
 - 중복 순회 helper(`_get_stockpile_totals`)를 제거해 HUD 프레임 업데이트 경로를 경량화.
+
+## Commit 092
+- `BuildingManager`에 `get_building(id)` 직접 조회 API를 추가해 건물 ID 조회를 dictionary lookup 경로로 노출.
+- `HUD._get_building_by_id`를 전체 배열 선형 탐색에서 `get_building` 직접 호출로 전환.
+- 선택 건물 패널 갱신 시 불필요한 건물 전체 순회를 제거해 조회 경로를 경량화.

@@ -813,11 +813,7 @@ func _update_notifications(delta: float) -> void:
 func _get_building_by_id(bid: int):
 	if _building_manager == null:
 		return null
-	var all: Array = _building_manager.get_all_buildings()
-	for i in range(all.size()):
-		if all[i].id == bid:
-			return all[i]
-	return null
+	return _building_manager.get_building(bid)
 
 
 func _add_notification(text: String, color: Color) -> void:
