@@ -179,6 +179,20 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     en_dir = localization_root / "en"
     ko_dir = localization_root / "ko"
     data_dir = project_root / "data"
+    manifest_path = localization_root / "manifest.json"
+    supported_locales: List[str] = ["ko", "en"]
+    if manifest_path.exists():
+        raw_manifest = _load_json(manifest_path)
+        if isinstance(raw_manifest, dict):
+            raw_locales = raw_manifest.get("supported_locales")
+            if isinstance(raw_locales, list):
+                normalized: List[str] = []
+                for item in raw_locales:
+                    locale = str(item)
+                    if locale and locale not in normalized:
+                        normalized.append(locale)
+                if normalized:
+                    supported_locales = normalized
 
     en_keys = _collect_top_level_keys(en_dir)
     ko_keys = _collect_top_level_keys(ko_dir)
@@ -199,12 +213,55 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
                 }
             )
 
-    duplicate_keys = _find_duplicates(en_keys)
-    duplicate_details = _find_duplicate_details(_collect_top_level_entries(en_dir))
-    duplicate_conflict_count = sum(
-        1
-        for item in duplicate_details.values()
-        if bool(item.get("value_conflict", False))
+    duplicate_locale_summary: Dict[str, Dict[str, Any]] = {}
+    for locale in supported_locales:
+        locale_dir = localization_root / locale
+        if not locale_dir.exists():
+            continue
+        locale_keys = _collect_top_level_keys(locale_dir)
+        locale_duplicates = _find_duplicates(locale_keys)
+        locale_duplicate_details = _find_duplicate_details(_collect_top_level_entries(locale_dir))
+        locale_conflict_count = sum(
+            1
+            for item in locale_duplicate_details.values()
+            if bool(item.get("value_conflict", False))
+        )
+        duplicate_locale_summary[locale] = {
+            "duplicate_key_count": len(locale_duplicates),
+            "duplicate_conflict_count": locale_conflict_count,
+            "duplicate_keys": locale_duplicates,
+            "duplicate_details": locale_duplicate_details,
+        }
+
+    duplicate_report_locale = ""
+    if duplicate_locale_summary:
+        duplicate_report_locale = sorted(
+            duplicate_locale_summary.keys(),
+            key=lambda locale: (
+                int(duplicate_locale_summary[locale]["duplicate_conflict_count"]),
+                int(duplicate_locale_summary[locale]["duplicate_key_count"]),
+                locale == "en",
+            ),
+            reverse=True,
+        )[0]
+    duplicate_report = duplicate_locale_summary.get(duplicate_report_locale, {})
+    duplicate_keys = dict(duplicate_report.get("duplicate_keys", {}))
+    duplicate_details = dict(duplicate_report.get("duplicate_details", {}))
+    duplicate_report_key_count = int(duplicate_report.get("duplicate_key_count", 0))
+    duplicate_report_conflict_count = int(duplicate_report.get("duplicate_conflict_count", 0))
+    max_duplicate_key_count = max(
+        (
+            int(item.get("duplicate_key_count", 0))
+            for item in duplicate_locale_summary.values()
+        ),
+        default=0,
+    )
+    max_duplicate_conflict_count = max(
+        (
+            int(item.get("duplicate_conflict_count", 0))
+            for item in duplicate_locale_summary.values()
+        ),
+        default=0,
     )
 
     inline_localized_fields: List[Dict[str, str]] = []
@@ -226,10 +283,21 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
 
     return {
         "parity_issues": parity_issues,
-        "duplicate_key_count": len(duplicate_keys),
+        "duplicate_key_count": max_duplicate_key_count,
         "duplicate_keys": duplicate_keys,
-        "duplicate_conflict_count": duplicate_conflict_count,
-        "duplicate_consistent_count": len(duplicate_details) - duplicate_conflict_count,
+        "duplicate_conflict_count": max_duplicate_conflict_count,
+        "duplicate_consistent_count": duplicate_report_key_count
+        - duplicate_report_conflict_count,
+        "duplicate_report_locale": duplicate_report_locale,
+        "duplicate_report_key_count": duplicate_report_key_count,
+        "duplicate_report_conflict_count": duplicate_report_conflict_count,
+        "duplicate_locale_summary": {
+            locale: {
+                "duplicate_key_count": int(item.get("duplicate_key_count", 0)),
+                "duplicate_conflict_count": int(item.get("duplicate_conflict_count", 0)),
+            }
+            for locale, item in duplicate_locale_summary.items()
+        },
         "duplicate_details": duplicate_details,
         "inline_localized_field_count": len(inline_localized_fields),
         "inline_localized_fields": inline_localized_fields,
@@ -250,6 +318,7 @@ def _print_report(report: Dict[str, Any]) -> None:
     print(f"duplicate_keys: {report['duplicate_key_count']}")
     print(f"duplicate_conflicts: {report['duplicate_conflict_count']}")
     print(f"duplicate_consistent: {report['duplicate_consistent_count']}")
+    print(f"duplicate_report_locale: {report['duplicate_report_locale']}")
     print(f"inline_localized_fields: {report['inline_localized_field_count']}")
     print(f"inline_groups: {report['inline_localized_group_count']}")
     print(f"inline_keyable_groups: {report['inline_keyable_group_count']}")
@@ -293,13 +362,25 @@ def _print_report(report: Dict[str, Any]) -> None:
                 f"(types={','.join(item.get('value_types', []))})"
             )
 
+    if report.get("duplicate_locale_summary"):
+        print("\n-- duplicate summary by locale --")
+        for locale in sorted(report["duplicate_locale_summary"].keys()):
+            item = report["duplicate_locale_summary"][locale]
+            print(
+                f"* {locale}: keys={item['duplicate_key_count']} "
+                f"conflicts={item['duplicate_conflict_count']}"
+            )
+
     conflict_items = [
         (key, item)
         for key, item in report.get("duplicate_details", {}).items()
         if bool(item.get("value_conflict", False))
     ]
     if conflict_items:
-        print("\n-- duplicate keys with value conflicts (first 20) --")
+        print(
+            "\n-- duplicate keys with value conflicts in "
+            f"{report.get('duplicate_report_locale', 'unknown')} (first 20) --"
+        )
         for key, item in conflict_items[:20]:
             files = ",".join(item.get("files", []))
             print(f"* {key} :: files={files}")

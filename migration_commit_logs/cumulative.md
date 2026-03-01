@@ -971,3 +971,8 @@
 - `localization_compile.py`가 duplicate key 중 값 충돌(`duplicate_conflict_keys`)을 별도 계산하도록 확장되고, locale meta/log에 `duplicate_conflict_count`를 노출.
 - manifest에 `max_duplicate_conflict_count` 기준선을 추가해 값 충돌 중복의 증가를 컴파일 단계에서 자동 차단.
 - compiled locale(`en/ko`) meta에도 충돌 수를 기록해 산출물 기준으로 중복 위험도를 추적 가능하게 정리.
+
+## Commit 197
+- `localization_audit.py`의 duplicate 집계를 `supported_locales` 전체로 확장하고 로케일별 충돌 요약(`duplicate_locale_summary`)을 추가.
+- 충돌 최대 로케일을 `duplicate_report_locale`로 선택해 top-level `duplicate_conflicts`와 상세 충돌 목록 기준을 compile 게이트 관점과 일치시킴.
+- 결과적으로 audit/compile가 동일하게 `ko=35` 충돌 기준을 보고하도록 정렬.
