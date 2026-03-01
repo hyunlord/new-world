@@ -371,3 +371,8 @@
 - `EmotionData.get_intensity_label`에 key id 정적 캐시를 추가해 강도 라벨 키 해석을 1회 후 재사용.
 - 라벨 조회 시 `Locale.ltr_id` 경로를 우선 사용하고, 미지원 상황은 기존 `Locale.ltr` fallback으로 호환 유지.
 - 감정 강도 라벨 반복 조회의 locale key 문자열 lookup 비용을 완화.
+
+## Commit 077
+- `Locale.tr_id`에 조합 키 기반 key-id 캐시(`_tr_id_key_id_cache`)를 추가해 반복 key 해석을 1회로 축소.
+- `tr_id`는 `ltr_id` 경로를 우선 사용하고, 미지원 시 기존 `ltr` + raw `id` fallback 의미를 그대로 유지.
+- locale reload 시 캐시를 초기화해 locale 전환 이후에도 안전하게 동작하도록 보강.

@@ -27,6 +27,7 @@ var _flat_strings: Dictionary = {}
 var _key_to_id: Dictionary = {}
 var _id_to_value: PackedStringArray = PackedStringArray()
 var _month_key_ids: PackedInt32Array = PackedInt32Array()
+var _tr_id_key_id_cache: Dictionary = {}
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -61,6 +62,7 @@ func load_locale(locale: String) -> void:
 	_key_to_id.clear()
 	_id_to_value.resize(0)
 	_month_key_ids.resize(0)
+	_tr_id_key_id_cache.clear()
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
 		return
@@ -121,8 +123,16 @@ func trf(key: String, params: Dictionary = {}) -> String:
 ## Game internal ID -> translation (job, status, death cause, etc.)
 ## Example: Locale.tr_id("STATUS", "gather_wood") -> "Gather Wood" or "목재 채집"
 func tr_id(prefix: String, id: String) -> String:
-	var key = prefix + "_" + id.to_upper()
-	var result = ltr(key)
+	var key: String = prefix + "_" + id.to_upper()
+	var key_id_cached: int = int(_tr_id_key_id_cache.get(key, -2))
+	if key_id_cached == -2:
+		key_id_cached = key_id(key)
+		_tr_id_key_id_cache[key] = key_id_cached
+	if key_id_cached >= 0:
+		var result_id: String = ltr_id(key_id_cached)
+		if not result_id.is_empty() and result_id != key:
+			return result_id
+	var result: String = ltr(key)
 	if result == key:
 		return id
 	return result
