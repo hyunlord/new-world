@@ -6,6 +6,8 @@ var _pathfinder: RefCounted
 var _building_manager: RefCounted
 var _recalc_from_xy: PackedInt32Array = PackedInt32Array()
 var _recalc_to_xy: PackedInt32Array = PackedInt32Array()
+var _path_entities_scratch: Array = []
+var _recalc_entities_scratch: Array = []
 
 
 func _init() -> void:
@@ -24,8 +26,10 @@ func init(entity_manager: RefCounted, world_data: RefCounted, pathfinder: RefCou
 
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
-	var path_entities: Array = []
-	var recalc_entities: Array = []
+	var path_entities: Array = _path_entities_scratch
+	var recalc_entities: Array = _recalc_entities_scratch
+	path_entities.clear()
+	recalc_entities.clear()
 	_recalc_from_xy.resize(0)
 	_recalc_to_xy.resize(0)
 

@@ -847,3 +847,8 @@
 - `pathfinder`에 packed XY 전용 batch API를 추가하고, movement 시스템이 recalc 요청을 Dictionary 배열 대신 packed 좌표 버퍼로 구성하도록 전환.
 - 배치 경로 계산에서 Rust batch-xy 경로를 우선 사용하고 vec2/GDScript fallback을 유지.
 - 경로 의미는 유지하면서 movement tick의 요청 구성 오버헤드를 완화.
+
+## Commit 172
+- `movement_system`의 `path_entities`/`recalc_entities`를 scratch Array로 전환해 tick 루프에서 임시 Array 할당을 제거.
+- 기존 packed XY recalc 버퍼 재사용 경로와 결합해 movement hot path의 메모리 churn을 추가 완화.
+- 이동/경로 의미는 유지하면서 실행 경로 효율을 개선.
