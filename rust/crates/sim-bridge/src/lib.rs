@@ -975,6 +975,21 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_occupation_best_skill_index(&self, skill_levels: PackedInt32Array) -> i32 {
+        body::occupation_best_skill_index(skill_levels.as_slice())
+    }
+
+    #[func]
+    fn body_occupation_should_switch(
+        &self,
+        best_skill_level: i32,
+        current_skill_level: i32,
+        change_hysteresis: f32,
+    ) -> bool {
+        body::occupation_should_switch(best_skill_level, current_skill_level, change_hysteresis)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
@@ -1028,6 +1043,43 @@ impl WorldSimBridge {
             w_personality_fit,
             w_need_fit,
         )
+    }
+
+    #[func]
+    fn body_job_satisfaction_score_batch(
+        &self,
+        personality_actual: PackedFloat32Array,
+        personality_ideals_flat: PackedFloat32Array,
+        value_actual: PackedFloat32Array,
+        value_weights_flat: PackedFloat32Array,
+        skill_fits: PackedFloat32Array,
+        autonomy: f32,
+        competence: f32,
+        meaning: f32,
+        autonomy_levels: PackedFloat32Array,
+        prestiges: PackedFloat32Array,
+        w_skill_fit: f32,
+        w_value_fit: f32,
+        w_personality_fit: f32,
+        w_need_fit: f32,
+    ) -> PackedFloat32Array {
+        let out = body::job_satisfaction_score_batch(
+            personality_actual.as_slice(),
+            personality_ideals_flat.as_slice(),
+            value_actual.as_slice(),
+            value_weights_flat.as_slice(),
+            skill_fits.as_slice(),
+            autonomy,
+            competence,
+            meaning,
+            autonomy_levels.as_slice(),
+            prestiges.as_slice(),
+            w_skill_fit,
+            w_value_fit,
+            w_personality_fit,
+            w_need_fit,
+        );
+        vec_f32_to_packed(out)
     }
 
     #[func]

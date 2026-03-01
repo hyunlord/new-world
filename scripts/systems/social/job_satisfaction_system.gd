@@ -7,8 +7,11 @@ var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _job_profiles: Dictionary = {}  # job_id -> profile dict
+var _profile_runtime: Dictionary = {}  # job_id -> packed runtime profile
+var _value_key_list: PackedStringArray = PackedStringArray()
 const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
 const _SIM_BRIDGE_JOB_SAT_METHOD: String = "body_job_satisfaction_score"
+const _SIM_BRIDGE_JOB_SAT_BATCH_METHOD: String = "body_job_satisfaction_score_batch"
 const _HEXACO_AXES: PackedStringArray = ["H", "E", "X", "A", "C", "O"]
 var _bridge_checked: bool = false
 var _sim_bridge: Object = null
@@ -33,7 +36,8 @@ func init(entity_manager: RefCounted, settlement_manager: RefCounted,
 
 func _load_job_profiles() -> void:
 	## [Layer 4.5] Load ALL job profiles from data/jobs/ — not just 4 hardcoded ones
-	var dir := DirAccess.open("res://data/jobs")
+	_job_profiles.clear()
+	var dir: DirAccess = DirAccess.open("res://data/jobs")
 	if dir == null:
 		push_warning("[JobSatisfactionSystem] Cannot open data/jobs/")
 		return
@@ -51,6 +55,61 @@ func _load_job_profiles() -> void:
 				file.close()
 		fname = dir.get_next()
 	dir.list_dir_end()
+	_rebuild_profile_runtime_cache()
+
+
+func _rebuild_profile_runtime_cache() -> void:
+	_profile_runtime.clear()
+	_value_key_list = PackedStringArray()
+
+	var value_key_set: Dictionary = {}
+	for profile_id_variant in _job_profiles:
+		var profile_data: Dictionary = _job_profiles[profile_id_variant]
+		var value_weights: Dictionary = profile_data.get("value_weights", {})
+		for vkey in value_weights:
+			value_key_set[str(vkey)] = true
+
+	var value_keys: Array[String] = []
+	for vkey_variant in value_key_set:
+		value_keys.append(str(vkey_variant))
+	value_keys.sort()
+	for vkey in value_keys:
+		_value_key_list.append(vkey)
+
+	for profile_id_variant in _job_profiles:
+		var profile_id: String = str(profile_id_variant)
+		var profile_data: Dictionary = _job_profiles[profile_id_variant]
+		var hex_ideal: Dictionary = profile_data.get("hexaco_ideal", {})
+		var value_weights: Dictionary = profile_data.get("value_weights", {})
+		var packed_hex_ideal: PackedFloat32Array = PackedFloat32Array()
+		for axis in _HEXACO_AXES:
+			packed_hex_ideal.append(float(hex_ideal.get(axis, 0.0)))
+		var packed_value_weights: PackedFloat32Array = PackedFloat32Array()
+		for vkey in _value_key_list:
+			packed_value_weights.append(float(value_weights.get(vkey, 0.0)))
+
+		_profile_runtime[profile_id] = {
+			"personality_ideal": packed_hex_ideal,
+			"value_weights": packed_value_weights,
+			"primary_skill_name": StringName(str(profile_data.get("primary_skill", ""))),
+			"autonomy_level": float(profile_data.get("autonomy_level", 0.5)),
+			"prestige": float(profile_data.get("prestige", 0.3))
+		}
+
+
+func _build_entity_personality_actual(entity: RefCounted) -> PackedFloat32Array:
+	var out: PackedFloat32Array = PackedFloat32Array()
+	for axis in _HEXACO_AXES:
+		out.append(float(entity.personality.axes.get(axis, 0.5)))
+	return out
+
+
+func _build_entity_value_actual(entity: RefCounted) -> PackedFloat32Array:
+	var out: PackedFloat32Array = PackedFloat32Array()
+	for vkey in _value_key_list:
+		var v01: float = (float(entity.values.get(vkey, 0.0)) + 1.0) / 2.0
+		out.append(v01)
+	return out
 
 
 func _get_sim_bridge() -> Object:
@@ -83,44 +142,36 @@ func execute_tick(tick: int) -> void:
 			_apply_work_speed_modifier_flag(entity)
 			continue
 		## [Layer 4.5] Try occupation-specific profile first, fall back to legacy job profile
-		var profile = _job_profiles.get(entity.occupation, {})
-		if profile.is_empty():
-			profile = _job_profiles.get(entity.job, {})
-		if profile.is_empty():
+		var runtime_profile: Dictionary = _profile_runtime.get(entity.occupation, {})
+		if runtime_profile.is_empty():
+			runtime_profile = _profile_runtime.get(entity.job, {})
+		if runtime_profile.is_empty():
 			entity.job_satisfaction = 0.50
 			_apply_work_speed_modifier_flag(entity)
 			continue
-		entity.job_satisfaction = _compute_satisfaction(entity, profile)
+		entity.job_satisfaction = _compute_satisfaction(entity, runtime_profile)
 		_apply_work_speed_modifier_flag(entity)
 		_check_job_drift(entity, tick)
 
 
-func _compute_satisfaction(entity: RefCounted, job_profile: Dictionary) -> float:
+func _compute_satisfaction(entity: RefCounted, runtime_profile: Dictionary) -> float:
 	if entity.personality == null:
 		return 0.50
 
-	var hex_ideal: Dictionary = job_profile.get("hexaco_ideal", {})
-	var val_weights: Dictionary = job_profile.get("value_weights", {})
-	var personality_actual: PackedFloat32Array = PackedFloat32Array()
-	var personality_ideal: PackedFloat32Array = PackedFloat32Array()
-	for axis in _HEXACO_AXES:
-		personality_actual.append(float(entity.personality.axes.get(axis, 0.5)))
-		personality_ideal.append(float(hex_ideal.get(axis, 0.0)))
-
-	var value_actual: PackedFloat32Array = PackedFloat32Array()
-	var value_weight_packed: PackedFloat32Array = PackedFloat32Array()
-	for vkey in val_weights:
-		var w: float = float(val_weights[vkey])
-		var v01: float = (float(entity.values.get(vkey, 0.0)) + 1.0) / 2.0
-		value_actual.append(v01)
-		value_weight_packed.append(w)
-
-	var primary_skill: String = str(job_profile.get("primary_skill", ""))
-	var skill_level: int = int(entity.skill_levels.get(StringName(primary_skill), 0))
+	var personality_actual: PackedFloat32Array = _build_entity_personality_actual(entity)
+	var personality_ideal: PackedFloat32Array = runtime_profile.get(
+		"personality_ideal", PackedFloat32Array()
+	)
+	var value_actual: PackedFloat32Array = _build_entity_value_actual(entity)
+	var value_weight_packed: PackedFloat32Array = runtime_profile.get(
+		"value_weights", PackedFloat32Array()
+	)
+	var primary_skill_name: StringName = runtime_profile.get("primary_skill_name", &"")
+	var skill_level: int = int(entity.skill_levels.get(primary_skill_name, 0))
 	var skill_fit: float = clampf(float(skill_level) / 10.0, 0.0, 1.0)
 
-	var autonomy_level: float = float(job_profile.get("autonomy_level", 0.5))
-	var prestige: float = float(job_profile.get("prestige", 0.3))
+	var autonomy_level: float = float(runtime_profile.get("autonomy_level", 0.5))
+	var prestige: float = float(runtime_profile.get("prestige", 0.3))
 	var bridge: Object = _get_sim_bridge()
 	if bridge != null:
 		var rust_variant: Variant = bridge.call(
@@ -162,7 +213,8 @@ func _compute_satisfaction(entity: RefCounted, job_profile: Dictionary) -> float
 
 	var value_fit: float = 0.0
 	var val_total: float = 0.0
-	for i in range(value_weight_packed.size()):
+	var value_count: int = mini(value_weight_packed.size(), value_actual.size())
+	for i in range(value_count):
 		var w: float = value_weight_packed[i]
 		var v01: float = value_actual[i]
 		value_fit += w * v01
@@ -201,19 +253,83 @@ func _apply_work_speed_modifier_flag(entity: RefCounted) -> void:
 func _check_job_drift(entity: RefCounted, tick: int) -> void:
 	if entity.job_satisfaction >= GameConfig.JOB_SAT_LOW_THRESHOLD:
 		return
+	if entity.personality == null:
+		return
 	var drift_prob: float = GameConfig.JOB_SAT_DRIFT_BASE * (1.0 - entity.job_satisfaction)
-	if _rng.randf() > drift_prob:
+	var drift_roll: float = _rng.randf()
+	if drift_roll > drift_prob:
 		return
 
 	var best_job: String = entity.job
 	var best_sat: float = entity.job_satisfaction
-	for profile_id in _job_profiles:
+	if _profile_runtime.is_empty():
+		return
+
+	var candidate_ids: Array[String] = []
+	var personality_ideals_flat: PackedFloat32Array = PackedFloat32Array()
+	var value_weights_flat: PackedFloat32Array = PackedFloat32Array()
+	var skill_fits: PackedFloat32Array = PackedFloat32Array()
+	var autonomy_levels: PackedFloat32Array = PackedFloat32Array()
+	var prestiges: PackedFloat32Array = PackedFloat32Array()
+
+	var personality_actual: PackedFloat32Array = _build_entity_personality_actual(entity)
+	var value_actual: PackedFloat32Array = _build_entity_value_actual(entity)
+
+	for profile_id_variant in _profile_runtime:
+		var profile_id: String = str(profile_id_variant)
 		if profile_id == entity.job:
 			continue
-		var sat: float = _compute_satisfaction(entity, _job_profiles[profile_id])
+		var runtime_profile: Dictionary = _profile_runtime[profile_id]
+		candidate_ids.append(profile_id)
+		personality_ideals_flat.append_array(
+			runtime_profile.get("personality_ideal", PackedFloat32Array())
+		)
+		value_weights_flat.append_array(
+			runtime_profile.get("value_weights", PackedFloat32Array())
+		)
+		var primary_skill_name: StringName = runtime_profile.get("primary_skill_name", &"")
+		var skill_level: int = int(entity.skill_levels.get(primary_skill_name, 0))
+		skill_fits.append(clampf(float(skill_level) / 10.0, 0.0, 1.0))
+		autonomy_levels.append(float(runtime_profile.get("autonomy_level", 0.5)))
+		prestiges.append(float(runtime_profile.get("prestige", 0.3)))
+
+	if candidate_ids.is_empty():
+		return
+
+	var scores: PackedFloat32Array = PackedFloat32Array()
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null and bridge.has_method(_SIM_BRIDGE_JOB_SAT_BATCH_METHOD):
+		var rust_scores_variant: Variant = bridge.call(
+			_SIM_BRIDGE_JOB_SAT_BATCH_METHOD,
+			personality_actual,
+			personality_ideals_flat,
+			value_actual,
+			value_weights_flat,
+			skill_fits,
+			float(entity.autonomy),
+			float(entity.competence),
+			float(entity.meaning),
+			autonomy_levels,
+			prestiges,
+			float(GameConfig.JOB_SAT_W_SKILL_FIT),
+			float(GameConfig.JOB_SAT_W_VALUE_FIT),
+			float(GameConfig.JOB_SAT_W_PERSONALITY_FIT),
+			float(GameConfig.JOB_SAT_W_NEED_FIT)
+		)
+		if rust_scores_variant is PackedFloat32Array:
+			scores = rust_scores_variant
+
+	if scores.size() != candidate_ids.size():
+		scores.resize(candidate_ids.size())
+		for i in range(candidate_ids.size()):
+			var fallback_profile: Dictionary = _profile_runtime.get(candidate_ids[i], {})
+			scores[i] = _compute_satisfaction(entity, fallback_profile)
+
+	for i in range(candidate_ids.size()):
+		var sat: float = float(scores[i])
 		if sat > best_sat + 0.10:
-			best_job = str(profile_id)
 			best_sat = sat
+			best_job = candidate_ids[i]
 
 	if best_job != entity.job:
 		var old_job: String = entity.job

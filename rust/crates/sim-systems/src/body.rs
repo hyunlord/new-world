@@ -445,6 +445,102 @@ pub fn job_satisfaction_score(
     )
 }
 
+/// Batch version of [`job_satisfaction_score`].
+///
+/// Candidate vectors are flattened in row-major order:
+/// - `personality_ideals_flat`: `candidate_count * axis_count`
+/// - `value_weights_flat`: `candidate_count * value_count`
+pub fn job_satisfaction_score_batch(
+    personality_actual: &[f32],
+    personality_ideals_flat: &[f32],
+    value_actual: &[f32],
+    value_weights_flat: &[f32],
+    skill_fits: &[f32],
+    autonomy: f32,
+    competence: f32,
+    meaning: f32,
+    autonomy_levels: &[f32],
+    prestiges: &[f32],
+    w_skill_fit: f32,
+    w_value_fit: f32,
+    w_personality_fit: f32,
+    w_need_fit: f32,
+) -> Vec<f32> {
+    let axis_count = personality_actual.len();
+    let value_count = value_actual.len();
+    if axis_count == 0 || value_count == 0 {
+        return Vec::new();
+    }
+
+    let by_personality = personality_ideals_flat.len() / axis_count;
+    let by_value = value_weights_flat.len() / value_count;
+    let candidate_count = by_personality
+        .min(by_value)
+        .min(skill_fits.len())
+        .min(autonomy_levels.len())
+        .min(prestiges.len());
+    if candidate_count == 0 {
+        return Vec::new();
+    }
+
+    let mut out = Vec::with_capacity(candidate_count);
+    for idx in 0..candidate_count {
+        let pi_start = idx * axis_count;
+        let pi_end = pi_start + axis_count;
+        let vw_start = idx * value_count;
+        let vw_end = vw_start + value_count;
+        let score = job_satisfaction_score(
+            personality_actual,
+            &personality_ideals_flat[pi_start..pi_end],
+            value_actual,
+            &value_weights_flat[vw_start..vw_end],
+            skill_fits[idx],
+            autonomy,
+            competence,
+            meaning,
+            autonomy_levels[idx],
+            prestiges[idx],
+            w_skill_fit,
+            w_value_fit,
+            w_personality_fit,
+            w_need_fit,
+        );
+        out.push(score);
+    }
+    out
+}
+
+/// Returns the index of the highest skill level.
+///
+/// When multiple entries share the maximum value, the first index is returned.
+/// Returns `-1` for an empty input slice.
+pub fn occupation_best_skill_index(skill_levels: &[i32]) -> i32 {
+    if skill_levels.is_empty() {
+        return -1;
+    }
+    let mut best_idx: i32 = 0;
+    let mut best_level: i32 = skill_levels[0];
+    for (idx, level) in skill_levels.iter().enumerate() {
+        if *level > best_level {
+            best_level = *level;
+            best_idx = idx as i32;
+        }
+    }
+    best_idx
+}
+
+/// Returns whether occupation should switch based on normalized margin.
+///
+/// Normalized margin is `(best_skill_level - current_skill_level) / 100.0`.
+pub fn occupation_should_switch(
+    best_skill_level: i32,
+    current_skill_level: i32,
+    change_hysteresis: f32,
+) -> bool {
+    let normalized_margin = (best_skill_level as f32 - current_skill_level as f32) / 100.0;
+    normalized_margin >= change_hysteresis
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -917,8 +1013,9 @@ mod tests {
         child_parent_transfer_apply_step, child_shrp_step, child_simultaneous_ace_step,
         child_social_buffered_intensity, child_stage_code_from_age_ticks, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
-        erg_frustration_step, job_satisfaction_score, needs_base_decay_step,
-        needs_critical_severity_step, rest_energy_recovery, stress_injection_apply_step,
+        erg_frustration_step, job_satisfaction_score, job_satisfaction_score_batch,
+        needs_base_decay_step, needs_critical_severity_step, occupation_best_skill_index,
+        occupation_should_switch, rest_energy_recovery, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
         thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
         upper_needs_step, warmth_decay,
@@ -1170,6 +1267,85 @@ mod tests {
             0.25,
         );
         assert_eq!(score, 0.4375);
+    }
+
+    #[test]
+    fn job_satisfaction_score_batch_matches_single_calls() {
+        let personality_actual = [0.7, 0.4, 0.5, 0.6, 0.8, 0.3];
+        let personality_ideals_flat = [
+            0.2, -0.1, 0.0, 0.15, 0.3, 0.1, 0.1, 0.0, -0.2, 0.1, 0.25, -0.1,
+        ];
+        let value_actual = [0.8, 0.6, 0.4];
+        let value_weights_flat = [0.5, 0.3, 0.2, 0.2, 0.4, 0.4];
+        let skill_fits = [0.75, 0.35];
+        let autonomy_levels = [0.4, 0.25];
+        let prestiges = [0.45, 0.3];
+
+        let batch = job_satisfaction_score_batch(
+            &personality_actual,
+            &personality_ideals_flat,
+            &value_actual,
+            &value_weights_flat,
+            &skill_fits,
+            0.6,
+            0.7,
+            0.5,
+            &autonomy_levels,
+            &prestiges,
+            0.35,
+            0.25,
+            0.2,
+            0.2,
+        );
+        assert_eq!(batch.len(), 2);
+
+        let single0 = job_satisfaction_score(
+            &personality_actual,
+            &personality_ideals_flat[0..6],
+            &value_actual,
+            &value_weights_flat[0..3],
+            skill_fits[0],
+            0.6,
+            0.7,
+            0.5,
+            autonomy_levels[0],
+            prestiges[0],
+            0.35,
+            0.25,
+            0.2,
+            0.2,
+        );
+        let single1 = job_satisfaction_score(
+            &personality_actual,
+            &personality_ideals_flat[6..12],
+            &value_actual,
+            &value_weights_flat[3..6],
+            skill_fits[1],
+            0.6,
+            0.7,
+            0.5,
+            autonomy_levels[1],
+            prestiges[1],
+            0.35,
+            0.25,
+            0.2,
+            0.2,
+        );
+
+        assert_eq!(batch[0], single0);
+        assert_eq!(batch[1], single1);
+    }
+
+    #[test]
+    fn occupation_best_skill_index_returns_first_max() {
+        assert_eq!(occupation_best_skill_index(&[]), -1);
+        assert_eq!(occupation_best_skill_index(&[4, 9, 7, 9]), 1);
+    }
+
+    #[test]
+    fn occupation_should_switch_uses_hysteresis_margin() {
+        assert!(occupation_should_switch(65, 50, 0.1));
+        assert!(!occupation_should_switch(56, 50, 0.1));
     }
 
     #[test]
