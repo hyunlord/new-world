@@ -426,3 +426,8 @@
 - `ListPanel` entity row 생성 시 `job_display`를 선계산해 draw 루프의 `Locale.tr_id` 반복 호출을 제거.
 - building list에 타입별 번역 캐시(`building_type_cache`)와 built 라벨 1회 조회를 적용해 루프 내 locale 조회를 축소.
 - UI 표시 문자열 의미는 유지하면서 패널 렌더 핫루프의 번역 조회 오버헤드를 완화.
+
+## Commit 088
+- `EntityDetailPanel`의 needs/personality/derived 구간을 `StatQuery.get_normalized_batch_into` 기반으로 전환.
+- 기본/상위 욕구, HEXACO 축, 파생 스탯 조회를 scratch buffer 재사용 batch 호출로 수집해 draw 루프의 개별 정규화 호출을 축소.
+- 패널 표시 의미는 유지하면서 UI 상세 패널 렌더 경로의 stat 조회 오버헤드를 완화.

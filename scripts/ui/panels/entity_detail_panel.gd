@@ -84,6 +84,51 @@ const GENDER_COLORS: Dictionary = {
 	"female": Color(0.9, 0.4, 0.6),
 }
 
+const _NEEDS_BASIC_STAT_IDS: Array[StringName] = [
+	&"NEED_HUNGER",
+	&"NEED_THIRST",
+	&"NEED_ENERGY",
+	&"NEED_WARMTH",
+	&"NEED_SAFETY",
+	&"NEED_SOCIAL",
+]
+const _NEEDS_HIGHER_STAT_IDS: Array[StringName] = [
+	&"NEED_BELONGING",
+	&"NEED_INTIMACY",
+	&"NEED_RECOGNITION",
+	&"NEED_AUTONOMY",
+	&"NEED_COMPETENCE",
+	&"NEED_SELF_ACTUALIZATION",
+	&"NEED_MEANING",
+	&"NEED_TRANSCENDENCE",
+]
+const _PERSONALITY_AXIS_STAT_IDS: Array[StringName] = [
+	&"HEXACO_H",
+	&"HEXACO_E",
+	&"HEXACO_X",
+	&"HEXACO_A",
+	&"HEXACO_C",
+	&"HEXACO_O",
+]
+const _PERSONALITY_AXIS_INDEX: Dictionary = {
+	"H": 0,
+	"E": 1,
+	"X": 2,
+	"A": 3,
+	"C": 4,
+	"O": 5,
+}
+const _DERIVED_STAT_IDS: Array[StringName] = [
+	&"DERIVED_CHARISMA",
+	&"DERIVED_INTIMIDATION",
+	&"DERIVED_ALLURE",
+	&"DERIVED_TRUSTWORTHINESS",
+	&"DERIVED_CREATIVITY",
+	&"DERIVED_WISDOM",
+	&"DERIVED_POPULARITY",
+	&"DERIVED_RISK_TOLERANCE",
+]
+
 ## Scroll state
 var _scroll_offset: float = 0.0
 var _content_height: float = 0.0
@@ -139,6 +184,10 @@ var _section_collapsed: Dictionary = {
 }
 ## Section header rects for click detection (cleared each _draw frame)
 var _section_header_rects: Dictionary = {}
+var _needs_basic_norm_values: PackedFloat32Array = PackedFloat32Array()
+var _needs_higher_norm_values: PackedFloat32Array = PackedFloat32Array()
+var _personality_axis_norm_values: PackedFloat32Array = PackedFloat32Array()
+var _derived_norm_values: PackedFloat32Array = PackedFloat32Array()
 
 
 class DeceasedEntityProxy extends RefCounted:
@@ -663,12 +712,18 @@ func _draw() -> void:
 		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_BASIC"), "needs_basic")
 		if not _section_collapsed.get("needs_basic", false):
 			if use_stat_query:
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    StatQuery.get_normalized(entity, &"NEED_HUNGER"), Color(0.9, 0.2, 0.2))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   StatQuery.get_normalized(entity, &"NEED_THIRST"), Color(0.392, 0.710, 0.965))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"),     StatQuery.get_normalized(entity, &"NEED_ENERGY"), Color(0.9, 0.8, 0.2))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"),   StatQuery.get_normalized(entity, &"NEED_WARMTH"), Color(1.0, 0.541, 0.396))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"),   StatQuery.get_normalized(entity, &"NEED_SAFETY"), Color(0.584, 0.459, 0.804))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"),     StatQuery.get_normalized(entity, &"NEED_SOCIAL"), Color(0.3, 0.5, 0.9))
+				var basic_norms: PackedFloat32Array = StatQuery.get_normalized_batch_into(
+					entity,
+					_NEEDS_BASIC_STAT_IDS,
+					_needs_basic_norm_values,
+					true
+				)
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"), float(basic_norms[0]), Color(0.9, 0.2, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"), float(basic_norms[1]), Color(0.392, 0.710, 0.965))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_ENERGY"), float(basic_norms[2]), Color(0.9, 0.8, 0.2))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_WARMTH"), float(basic_norms[3]), Color(1.0, 0.541, 0.396))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_SAFETY"), float(basic_norms[4]), Color(0.584, 0.459, 0.804))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_SOCIAL"), float(basic_norms[5]), Color(0.3, 0.5, 0.9))
 			else:
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_HUNGER"),    entity.hunger, Color(0.9, 0.2, 0.2))
 				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("NEED_THIRST"),   entity.thirst, Color(0.392, 0.710, 0.965))
@@ -682,14 +737,20 @@ func _draw() -> void:
 		cy = _draw_section_header(font, cx + 10, cy, Locale.ltr("UI_NEEDS_HIGHER"), "needs_higher")
 		if not _section_collapsed.get("needs_higher", false):
 			if use_stat_query:
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_BELONGING"),          StatQuery.get_normalized(entity, &"NEED_BELONGING"),          Color(0.4, 0.65, 0.9))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_INTIMACY"),           StatQuery.get_normalized(entity, &"NEED_INTIMACY"),           Color(0.9, 0.45, 0.65))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_RECOGNITION"),        StatQuery.get_normalized(entity, &"NEED_RECOGNITION"),        Color(0.85, 0.75, 0.3))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_AUTONOMY"),           StatQuery.get_normalized(entity, &"NEED_AUTONOMY"),           Color(0.55, 0.85, 0.65))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"),         StatQuery.get_normalized(entity, &"NEED_COMPETENCE"),         Color(0.45, 0.7, 0.85))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), StatQuery.get_normalized(entity, &"NEED_SELF_ACTUALIZATION"), Color(0.75, 0.55, 0.9))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"),            StatQuery.get_normalized(entity, &"NEED_MEANING"),            Color(0.6, 0.6, 0.6))
-				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_TRANSCENDENCE"), StatQuery.get_normalized(entity, &"NEED_TRANSCENDENCE"), Color(0.75, 0.60, 0.90))
+				var higher_norms: PackedFloat32Array = StatQuery.get_normalized_batch_into(
+					entity,
+					_NEEDS_HIGHER_STAT_IDS,
+					_needs_higher_norm_values,
+					true
+				)
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_BELONGING"), float(higher_norms[0]), Color(0.4, 0.65, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_INTIMACY"), float(higher_norms[1]), Color(0.9, 0.45, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_RECOGNITION"), float(higher_norms[2]), Color(0.85, 0.75, 0.3))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_AUTONOMY"), float(higher_norms[3]), Color(0.55, 0.85, 0.65))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_COMPETENCE"), float(higher_norms[4]), Color(0.45, 0.7, 0.85))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_SELF_ACTUALIZATION"), float(higher_norms[5]), Color(0.75, 0.55, 0.9))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_MEANING"), float(higher_norms[6]), Color(0.6, 0.6, 0.6))
+				cy = _draw_bar(font, cx + 20, cy, bar_w - 10, Locale.ltr("UI_STAT_NEED_TRANSCENDENCE"), float(higher_norms[7]), Color(0.75, 0.60, 0.90))
 			## 사망/레거시 엔티티는 심리적 욕구 stat_cache 없음 → 표시 생략
 			cy += 4.0
 
@@ -709,10 +770,20 @@ func _draw() -> void:
 
 	var pd = entity.personality
 	if not _section_collapsed.get("personality", false) and pd != null:
+		var use_personality_stat_query: bool = entity.is_alive and not _showing_deceased
+		var axis_norms: PackedFloat32Array = PackedFloat32Array()
+		if use_personality_stat_query:
+			axis_norms = StatQuery.get_normalized_batch_into(
+				entity,
+				_PERSONALITY_AXIS_STAT_IDS,
+				_personality_axis_norm_values,
+				true
+			)
 		for axis_id in pd.AXIS_IDS:
 			var axis_val: float
-			if entity.is_alive and not _showing_deceased:
-				axis_val = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis_id))
+			if use_personality_stat_query:
+				var axis_idx: int = int(_PERSONALITY_AXIS_INDEX.get(axis_id, -1))
+				axis_val = float(axis_norms[axis_idx]) if axis_idx >= 0 and axis_idx < axis_norms.size() else pd.axes.get(axis_id, 0.5)
 			else:
 				axis_val = pd.axes.get(axis_id, 0.5)
 			var color: Color = PERSONALITY_COLORS.get(axis_id, Color.GRAY)
@@ -769,18 +840,24 @@ func _draw() -> void:
 	cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_DERIVED_STATS"), "derived")
 	if not _section_collapsed.get("derived", false):
 		if entity.is_alive and not _showing_deceased:
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CHARISMA"),        StatQuery.get_normalized(entity, &"DERIVED_CHARISMA"),        Color(0.9, 0.7, 0.3))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_INTIMIDATION"),    StatQuery.get_normalized(entity, &"DERIVED_INTIMIDATION"),    Color(0.8, 0.3, 0.3))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_ALLURE"),          StatQuery.get_normalized(entity, &"DERIVED_ALLURE"),          Color(0.9, 0.5, 0.7))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_TRUSTWORTHINESS"), StatQuery.get_normalized(entity, &"DERIVED_TRUSTWORTHINESS"), Color(0.4, 0.8, 0.6))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"),      StatQuery.get_normalized(entity, &"DERIVED_CREATIVITY"),      Color(0.6, 0.4, 0.9))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"),          StatQuery.get_normalized(entity, &"DERIVED_WISDOM"),          Color(0.7, 0.85, 0.5))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"),      StatQuery.get_normalized(entity, &"DERIVED_POPULARITY"),      Color(0.9, 0.6, 0.3))
+			var derived_norms: PackedFloat32Array = StatQuery.get_normalized_batch_into(
+				entity,
+				_DERIVED_STAT_IDS,
+				_derived_norm_values,
+				true
+			)
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CHARISMA"), float(derived_norms[0]), Color(0.9, 0.7, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_INTIMIDATION"), float(derived_norms[1]), Color(0.8, 0.3, 0.3))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_ALLURE"), float(derived_norms[2]), Color(0.9, 0.5, 0.7))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_TRUSTWORTHINESS"), float(derived_norms[3]), Color(0.4, 0.8, 0.6))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_CREATIVITY"), float(derived_norms[4]), Color(0.6, 0.4, 0.9))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_WISDOM"), float(derived_norms[5]), Color(0.7, 0.85, 0.5))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_POPULARITY"), float(derived_norms[6]), Color(0.9, 0.6, 0.3))
 			## [Burt 2004] Social capital (NetworkSystem writes annually)
 			var _sc_raw: int = StatCacheScript.get_value(entity.stat_cache, &"DERIVED_SOCIAL_CAPITAL", 0)
 			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_SOCIAL_CAPITAL"),
 				float(_sc_raw) / 1000.0, Color(0.5, 0.85, 0.65))
-			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"),  StatQuery.get_normalized(entity, &"DERIVED_RISK_TOLERANCE"),  Color(0.5, 0.7, 0.9))
+			cy = _draw_bar(font, cx + 10, cy, bar_w, Locale.ltr("UI_DERIVED_RISK_TOLERANCE"), float(derived_norms[7]), Color(0.5, 0.7, 0.9))
 		else:
 			## 사망 엔티티: stat_cache 없음 → 표시 불가
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DERIVED_UNAVAILABLE"),
