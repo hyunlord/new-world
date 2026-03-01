@@ -55,6 +55,11 @@ var _rebound_amounts: PackedFloat32Array = PackedFloat32Array()
 var _rebound_delays: PackedInt32Array = PackedInt32Array()
 var _event_fast_current: PackedFloat32Array = PackedFloat32Array()
 var _event_slow_current: PackedFloat32Array = PackedFloat32Array()
+var _event_personality_values: PackedFloat32Array = PackedFloat32Array()
+var _event_personality_weights: PackedFloat32Array = PackedFloat32Array()
+var _event_personality_high: PackedByteArray = PackedByteArray()
+var _event_personality_traits: PackedFloat32Array = PackedFloat32Array()
+var _event_active_context_multipliers: PackedFloat32Array = PackedFloat32Array()
 
 
 func _init() -> void:
@@ -479,10 +484,10 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 
 	var pd = entity.personality
 	var trait_id_map: Dictionary = _build_trait_id_map(entity)
-	var values: PackedFloat32Array = PackedFloat32Array()
-	var weights: PackedFloat32Array = PackedFloat32Array()
-	var high_amplifies: PackedByteArray = PackedByteArray()
-	var trait_multipliers: PackedFloat32Array = PackedFloat32Array()
+	_event_personality_values.resize(0)
+	_event_personality_weights.resize(0)
+	_event_personality_high.resize(0)
+	_event_personality_traits.resize(0)
 
 	for item in p_specs:
 		if typeof(item) != TYPE_DICTIONARY:
@@ -502,20 +507,20 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 			else:
 				value = float(pd.facets.get(spec_id, 0.5))
 
-		values.append(value)
-		weights.append(weight)
-		high_amplifies.append(1 if is_high_amplifies else 0)
+		_event_personality_values.append(value)
+		_event_personality_weights.append(weight)
+		_event_personality_high.append(1 if is_high_amplifies else 0)
 
 	# Trait 배수
 	for trait_id in p_traits:
 		if trait_id_map.has(trait_id):
-			trait_multipliers.append(float(p_traits[trait_id]))
+			_event_personality_traits.append(float(p_traits[trait_id]))
 
 	return StatCurveScript.stress_personality_scale(
-		values,
-		weights,
-		high_amplifies,
-		trait_multipliers
+		_event_personality_values,
+		_event_personality_weights,
+		_event_personality_high,
+		_event_personality_traits
 	)
 
 
@@ -524,13 +529,13 @@ func _collect_active_context_multipliers(
 	c_keys: PackedStringArray,
 	c_multipliers: PackedFloat32Array
 ) -> PackedFloat32Array:
-	var active_multipliers: PackedFloat32Array = PackedFloat32Array()
+	_event_active_context_multipliers.resize(0)
 	var count: int = mini(c_keys.size(), c_multipliers.size())
 	for idx in range(count):
 		var context_key: String = c_keys[idx]
 		if context.get(context_key, false):
-			active_multipliers.append(c_multipliers[idx])
-	return active_multipliers
+			_event_active_context_multipliers.append(c_multipliers[idx])
+	return _event_active_context_multipliers
 
 
 func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
