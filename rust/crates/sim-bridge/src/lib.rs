@@ -1177,6 +1177,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_title_is_elder(&self, age_years: f32, elder_min_age_years: f32) -> bool {
+        body::title_is_elder(age_years, elder_min_age_years)
+    }
+
+    #[func]
+    fn body_title_skill_tier(&self, level: i32, expert_level: i32, master_level: i32) -> i32 {
+        body::title_skill_tier(level, expert_level, master_level)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

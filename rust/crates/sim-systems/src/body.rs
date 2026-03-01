@@ -827,6 +827,22 @@ pub fn family_newborn_health(
     clamp_f32(health, 0.0, 1.0)
 }
 
+/// Returns whether an entity is eligible for elder title by age.
+pub fn title_is_elder(age_years: f32, elder_min_age_years: f32) -> bool {
+    age_years >= elder_min_age_years
+}
+
+/// Returns title tier code from skill level (`0=none`, `1=expert`, `2=master`).
+pub fn title_skill_tier(level: i32, expert_level: i32, master_level: i32) -> i32 {
+    if level >= master_level {
+        2
+    } else if level >= expert_level {
+        1
+    } else {
+        0
+    }
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1312,7 +1328,7 @@ mod tests {
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
         thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        value_plasticity, warmth_decay, family_newborn_health,
+        value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
     };
 
     #[test]
@@ -1755,6 +1771,19 @@ mod tests {
         assert!((0.0..=1.0).contains(&preterm));
         assert!((0.0..=1.0).contains(&term));
         assert!(term > preterm);
+    }
+
+    #[test]
+    fn title_is_elder_uses_min_age_threshold() {
+        assert!(title_is_elder(60.0, 55.0));
+        assert!(!title_is_elder(40.0, 55.0));
+    }
+
+    #[test]
+    fn title_skill_tier_prioritizes_master_over_expert() {
+        assert_eq!(title_skill_tier(95, 60, 90), 2);
+        assert_eq!(title_skill_tier(70, 60, 90), 1);
+        assert_eq!(title_skill_tier(40, 60, 90), 0);
     }
 
     #[test]
