@@ -73,7 +73,7 @@ func _draw() -> void:
 		draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_STATUS_ACTIVE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
 	else:
 		var pct: int = int(building.build_progress * 100)
-		draw_string(font, Vector2(cx, cy + 12), Locale.trf("UI_STATUS_UNDER_CONSTRUCTION_FMT", {"pct": pct}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.8, 0.2))
+		draw_string(font, Vector2(cx, cy + 12), Locale.trf1("UI_STATUS_UNDER_CONSTRUCTION_FMT", "pct", pct), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.8, 0.2))
 		cy += 18.0
 		var bar_w: float = panel_w - 60
 		draw_rect(Rect2(cx + 10, cy, bar_w, 12), Color(0.2, 0.2, 0.2, 0.8))
@@ -102,12 +102,12 @@ func _draw() -> void:
 		"shelter":
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DETAIL_HOUSING"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_CAPACITY_FMT", {"n": 6}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf1("UI_DETAIL_CAPACITY_FMT", "n", 6), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		"campfire":
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_DETAIL_CAMPFIRE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 			cy += 16.0
 			var radius: int = GameConfig.BUILDING_TYPES.get("campfire", {}).get("radius", 5)
-			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf("UI_DETAIL_EFFECT_RADIUS_FMT", {"n": radius}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
+			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf1("UI_DETAIL_EFFECT_RADIUS_FMT", "n", radius), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 
 	# Settlement tech era + discoveries
 	if _settlement_manager != null and building.settlement_id > 0:
