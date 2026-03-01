@@ -818,6 +818,22 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "\"${hash}\""
     fi
   }
+  to_json_opt_size_bytes() {
+    local raw_path="$1"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local size_bytes
+    size_bytes="$(wc -c < "${abs_path}" | tr -d ' ')"
+    if [[ -z "${size_bytes}" ]]; then
+      echo "null"
+    else
+      echo "${size_bytes}"
+    fi
+  }
   assert_artifact_exists() {
     local artifact_name="$1"
     local raw_path="$2"
@@ -877,6 +893,14 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_sha256="$(to_json_opt_sha256 "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_sha256="$(to_json_opt_sha256 "${audit_owner_policy_compare_report_json}")"
   bench_report_json_sha256="$(to_json_opt_sha256 "${bench_report_json}")"
+  compile_report_json_size="$(to_json_opt_size_bytes "${compile_report_json}")"
+  audit_report_json_size="$(to_json_opt_size_bytes "${audit_report_json}")"
+  audit_duplicate_report_json_size="$(to_json_opt_size_bytes "${audit_duplicate_report_json}")"
+  audit_conflict_markdown_size="$(to_json_opt_size_bytes "${audit_conflict_markdown}")"
+  audit_key_owner_policy_json_size="$(to_json_opt_size_bytes "${audit_key_owner_policy_json}")"
+  audit_owner_policy_markdown_size="$(to_json_opt_size_bytes "${audit_owner_policy_markdown}")"
+  audit_owner_policy_compare_report_json_size="$(to_json_opt_size_bytes "${audit_owner_policy_compare_report_json}")"
+  bench_report_json_size="$(to_json_opt_size_bytes "${bench_report_json}")"
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -908,6 +932,16 @@ if [[ -n "${verify_report_json}" ]]; then
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_sha256},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_sha256},
     "bench_report_json": ${bench_report_json_sha256}
+  },
+  "artifact_size_bytes": {
+    "compile_report_json": ${compile_report_json_size},
+    "audit_report_json": ${audit_report_json_size},
+    "audit_duplicate_report_json": ${audit_duplicate_report_json_size},
+    "audit_conflict_markdown": ${audit_conflict_markdown_size},
+    "audit_key_owner_policy_json": ${audit_key_owner_policy_json_size},
+    "audit_owner_policy_markdown": ${audit_owner_policy_markdown_size},
+    "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_size},
+    "bench_report_json": ${bench_report_json_size}
   }
 }
 EOF

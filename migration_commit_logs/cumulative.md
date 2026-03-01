@@ -1255,3 +1255,8 @@
 - `migration_verify_report.json`에 `artifact_sha256` 객체를 추가해 compile/audit/bench 산출물의 SHA-256 무결성 해시를 함께 기록.
 - `shasum`(macOS)과 `sha256sum`(Linux) 양쪽을 지원하며, 파일이 없는 항목은 `null`로 표준화.
 - `/tmp/worldsim_audit_artifacts15/migration_verify_report.json`에서 non-bench 실행 기준 아티팩트 해시 채움 + bench 해시 null을 확인.
+
+## Commit 254
+- `migration_verify_report.json`에 `artifact_size_bytes` 객체를 추가해 compile/audit/bench 산출물의 파일 크기(bytes)를 함께 기록.
+- 파일이 없는 항목은 `null`, 존재하는 항목은 정수 바이트 크기로 출력해 파서 일관성을 유지.
+- `/tmp/worldsim_audit_artifacts16/migration_verify_report.json`에서 artifact size 필드 반영과 non-bench 기준 bench size null을 확인.
