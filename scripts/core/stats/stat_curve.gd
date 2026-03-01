@@ -216,6 +216,64 @@ static func stress_continuous_inputs(
 		"total": s_hunger + s_energy + s_social,
 	}
 
+
+## Lazarus appraisal-derived stress scale.
+## Returns a clamped multiplier [0.7, 1.9].
+static func stress_appraisal_scale(
+	hunger: float,
+	energy: float,
+	social: float,
+	threat: float,
+	conflict: float,
+	support_score: float,
+	extroversion: float,
+	fear_value: float,
+	trust_value: float,
+	conscientiousness: float,
+	openness: float,
+	reserve_ratio: float
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_appraisal_scale",
+		[
+			hunger,
+			energy,
+			social,
+			threat,
+			conflict,
+			support_score,
+			extroversion,
+			fear_value,
+			trust_value,
+			conscientiousness,
+			openness,
+			reserve_ratio
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var d_dep: float = 0.45 * (1.0 - hunger) + 0.35 * (1.0 - energy) + 0.20 * (1.0 - social)
+	var d: float = clampf(0.30 * d_dep + 0.40 * threat + 0.20 * conflict, 0.0, 1.0)
+	var r_physical: float = 0.5 * hunger + 0.5 * energy
+	var r_safety: float = 1.0 - threat
+	var r: float = clampf(0.30 * r_physical + 0.30 * r_safety + 0.25 * support_score + 0.15 * 0.5, 0.0, 1.0)
+
+	var threat_appraisal: float = d * (
+		1.0
+		+ 0.55 * (extroversion - 0.5) * 2.0
+		+ 0.25 * (fear_value / 100.0)
+		- 0.15 * (trust_value / 100.0)
+	)
+	var coping_appraisal: float = r * (
+		1.0
+		+ 0.35 * (conscientiousness - 0.5) * 2.0
+		+ 0.20 * (openness - 0.5) * 2.0
+		+ 0.20 * reserve_ratio
+	)
+	var imbalance: float = maxf(0.0, threat_appraisal - coping_appraisal)
+	return clampf(1.0 + 0.8 * imbalance, 0.7, 1.9)
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

@@ -667,6 +667,38 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_appraisal_scale(
+        &self,
+        hunger: f32,
+        energy: f32,
+        social: f32,
+        threat: f32,
+        conflict: f32,
+        support_score: f32,
+        extroversion: f32,
+        fear_value: f32,
+        trust_value: f32,
+        conscientiousness: f32,
+        openness: f32,
+        reserve_ratio: f32,
+    ) -> f32 {
+        stat_curve::stress_appraisal_scale(
+            hunger,
+            energy,
+            social,
+            threat,
+            conflict,
+            support_score,
+            extroversion,
+            fear_value,
+            trust_value,
+            conscientiousness,
+            openness,
+            reserve_ratio,
+        )
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

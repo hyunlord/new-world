@@ -185,28 +185,29 @@ func _calc_appraisal_scale(
 ) -> float:
 	var threat: float = 0.0
 	var conflict: float = 0.0
-
-	var D_dep: float = 0.45 * (1.0 - hunger) + 0.35 * (1.0 - energy) + 0.20 * (1.0 - social)
-	var D: float = clampf(0.30 * D_dep + 0.40 * threat + 0.20 * conflict, 0.0, 1.0)
-
-	var R_physical: float = 0.5 * hunger + 0.5 * energy
-	var R_safety: float = 1.0 - threat
-	var R_support: float = _calc_support_score(entity)
-	var R: float = clampf(0.30 * R_physical + 0.30 * R_safety + 0.25 * R_support + 0.15 * 0.5, 0.0, 1.0)
+	var support_score: float = _calc_support_score(entity)
 
 	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
 	var fear_val: float = ed.get_emotion("fear") if ed != null else 0.0
 	var trust_val: float = ed.get_emotion("trust") if ed != null else 0.0
 
-	var threat_appraisal: float = D * (1.0 + 0.55 * (E_axis - 0.5) * 2.0 + 0.25 * (fear_val / 100.0) - 0.15 * (trust_val / 100.0))
-
 	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
 	var reserve_ratio: float = ed.reserve / 100.0 if ed != null else 0.5
-	var coping_appraisal: float = R * (1.0 + 0.35 * (C_axis - 0.5) * 2.0 + 0.20 * (O_axis - 0.5) * 2.0 + 0.20 * reserve_ratio)
-
-	var imbalance: float = maxf(0.0, threat_appraisal - coping_appraisal)
-	return clampf(1.0 + 0.8 * imbalance, 0.7, 1.9)
+	return StatCurveScript.stress_appraisal_scale(
+		hunger,
+		energy,
+		social,
+		threat,
+		conflict,
+		support_score,
+		E_axis,
+		fear_val,
+		trust_val,
+		C_axis,
+		O_axis,
+		reserve_ratio
+	)
 
 
 # ── 2) 지속 스트레서 ──────────────────────────────────────────────────

@@ -121,6 +121,43 @@ pub fn stress_continuous_inputs(
     }
 }
 
+/// Lazarus appraisal-derived stress scale.
+pub fn stress_appraisal_scale(
+    hunger: f32,
+    energy: f32,
+    social: f32,
+    threat: f32,
+    conflict: f32,
+    support_score: f32,
+    extroversion: f32,
+    fear_value: f32,
+    trust_value: f32,
+    conscientiousness: f32,
+    openness: f32,
+    reserve_ratio: f32,
+) -> f32 {
+    let d_dep = 0.45 * (1.0 - hunger) + 0.35 * (1.0 - energy) + 0.20 * (1.0 - social);
+    let d = (0.30 * d_dep + 0.40 * threat + 0.20 * conflict).clamp(0.0, 1.0);
+
+    let r_physical = 0.5 * hunger + 0.5 * energy;
+    let r_safety = 1.0 - threat;
+    let r =
+        (0.30 * r_physical + 0.30 * r_safety + 0.25 * support_score + 0.15 * 0.5).clamp(0.0, 1.0);
+
+    let threat_appraisal = d
+        * (1.0 + 0.55 * (extroversion - 0.5) * 2.0 + 0.25 * (fear_value / 100.0)
+            - 0.15 * (trust_value / 100.0));
+
+    let coping_appraisal = r
+        * (1.0
+            + 0.35 * (conscientiousness - 0.5) * 2.0
+            + 0.20 * (openness - 0.5) * 2.0
+            + 0.20 * reserve_ratio);
+
+    let imbalance = f32::max(0.0, threat_appraisal - coping_appraisal);
+    (1.0 + 0.8 * imbalance).clamp(0.7, 1.9)
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -245,5 +282,24 @@ mod tests {
         assert!(severe.energy_deficit > mild.energy_deficit);
         assert!(severe.social_isolation > mild.social_isolation);
         assert!(severe.total > mild.total);
+    }
+
+    #[test]
+    fn stress_appraisal_scale_is_clamped() {
+        let low =
+            stress_appraisal_scale(1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.5, 0.0, 100.0, 1.0, 1.0, 1.0);
+        let high =
+            stress_appraisal_scale(0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 100.0, 0.0, 0.0, 0.0, 0.0);
+        assert!((0.7..=1.9).contains(&low));
+        assert!((0.7..=1.9).contains(&high));
+    }
+
+    #[test]
+    fn stress_appraisal_scale_rises_with_worse_context() {
+        let baseline =
+            stress_appraisal_scale(0.8, 0.8, 0.8, 0.1, 0.0, 0.8, 0.5, 10.0, 80.0, 0.7, 0.7, 0.7);
+        let stressed =
+            stress_appraisal_scale(0.2, 0.3, 0.2, 0.8, 0.4, 0.1, 0.8, 80.0, 20.0, 0.2, 0.2, 0.2);
+        assert!(stressed >= baseline);
     }
 }

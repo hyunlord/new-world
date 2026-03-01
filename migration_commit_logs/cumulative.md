@@ -151,3 +151,8 @@
 - `StressSystem`에서 `NEED_HUNGER/ENERGY/SOCIAL` 정규화 조회를 틱당 1회로 통합.
 - `_calc_appraisal_scale`와 `_calc_continuous_stressors`가 전달 인자 기반으로 동작하도록 시그니처 정리.
 - 수식 동일성은 유지한 채 `StatQuery` 중복 호출을 제거해 CPU 오버헤드를 절감.
+
+## Commit 032
+- `StressSystem`의 Lazarus appraisal 스케일 수식을 Rust(`sim-systems`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 appraisal API를 추가해 GDScript는 입력 수집 후 단일 호출.
+- 수식 의미와 clamp 범위(0.7~1.9)를 유지하면서 stress 계산 hot path를 네이티브화.
