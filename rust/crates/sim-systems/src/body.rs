@@ -653,6 +653,20 @@ pub fn stats_resource_deltas_per_100(
     ]
 }
 
+/// Linear maturation target:
+/// `0` below `start_age`, `max_shift` at/after `end_age`, linear in between.
+pub fn personality_linear_target(age: i32, max_shift: f32, start_age: i32, end_age: i32) -> f32 {
+    if age < start_age {
+        return 0.0;
+    }
+    let span = (end_age - start_age) as f32;
+    if span <= 0.0 {
+        return max_shift;
+    }
+    let t = clamp_f32((age - start_age) as f32 / span, 0.0, 1.0);
+    max_shift * t
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1701,6 +1715,7 @@ mod tests {
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
         stat_threshold_is_active, stats_resource_deltas_per_100,
+        personality_linear_target,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2095,6 +2110,19 @@ mod tests {
     fn stats_resource_deltas_per_100_returns_zero_when_tick_diff_invalid() {
         let out = stats_resource_deltas_per_100(10.0, 10.0, 10.0, 5.0, 5.0, 5.0, 0.0);
         assert_eq!(out, [0.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn personality_linear_target_clamps_by_age_window() {
+        assert!((personality_linear_target(10, 1.0, 18, 60) - 0.0).abs() < 1e-6);
+        assert!((personality_linear_target(60, 1.0, 18, 60) - 1.0).abs() < 1e-6);
+        assert!((personality_linear_target(80, 1.0, 18, 60) - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn personality_linear_target_interpolates_linearly() {
+        let mid = personality_linear_target(39, 0.8, 18, 60);
+        assert!((mid - 0.4).abs() < 1e-6);
     }
 
     #[test]

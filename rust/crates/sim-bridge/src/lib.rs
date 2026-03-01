@@ -1058,6 +1058,17 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_personality_linear_target(
+        &self,
+        age: i32,
+        max_shift: f32,
+        start_age: i32,
+        end_age: i32,
+    ) -> f32 {
+        body::personality_linear_target(age, max_shift, start_age, end_age)
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
