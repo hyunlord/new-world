@@ -73,7 +73,6 @@ var mental_break_remaining: float = 0.0  # hours remaining
 
 var _emotion_order: Array = []
 var _dyads: Dictionary = {}           # dyad_id -> Array of 2 emotion ids
-var _dyad_labels_kr: Dictionary = {}
 var _valence_positive: Dictionary = {}
 var _valence_negative: Dictionary = {}
 var _arousal_weights: Dictionary = {}
@@ -97,11 +96,9 @@ func _load_dyad_definitions() -> void:
 	var dd = SpeciesManager.dyad_definition
 	var dyads_raw = dd.get("dyads", {})
 	_dyads = {}
-	_dyad_labels_kr = {}
 	for dyad_id in dyads_raw:
 		var entry = dyads_raw[dyad_id]
 		_dyads[dyad_id] = entry.get("components", [])
-		_dyad_labels_kr[dyad_id] = str(entry.get("name_kr", dyad_id))
 	# Fallback if empty
 	if _dyads.is_empty():
 		_dyads = {

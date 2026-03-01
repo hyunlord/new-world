@@ -123,3 +123,8 @@
 - `data_localization_extract` 기본 동작에 기존 `data_generated` 보존(merge) 레이어를 추가.
 - inline 제거 이후 재검증 시 `data_generated`가 0으로 리셋되는 문제를 방지해 key-first 운영 안정화.
 - 필요 시 `--no-preserve-existing-generated` 옵션으로 강제 재생성 가능.
+
+## Commit 026
+- `trait_tooltip`, `trauma_scar_system`, `emotion_data`에서 inline locale 필드 직접 참조를 제거.
+- trait/scar 표시는 `*_key` 기반 조회로 통일하고, 미번역 시 원시 키 노출 대신 안전 fallback 적용.
+- data inline 제거 작업 전제(코드 경로 의존성 제거)를 위한 선행 정리 완료.

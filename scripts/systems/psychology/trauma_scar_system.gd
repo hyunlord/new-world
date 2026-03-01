@@ -77,11 +77,15 @@ func try_acquire_scar(entity: RefCounted, scar_id: String, base_chance: float, t
 		])
 
 	if SimulationBus.has_signal("scar_acquired"):
+		var scar_name: String = _resolve_scar_name(sdef, scar_id)
+		var scar_name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
 		SimulationBus.scar_acquired.emit({
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,
 			"scar_id": scar_id,
-			"scar_name_kr": sdef.get("name_kr", scar_id),
+			"scar_name": scar_name,
+			"scar_name_key": scar_name_key,
+			"scar_name_kr": scar_name,
 			"stacks": new_stacks,
 			"tick": tick,
 		})
@@ -103,11 +107,15 @@ func check_reactivation(entity: RefCounted, context_type: String, tick: int) -> 
 					entity.entity_name, scar_id, context_type
 				])
 			if SimulationBus.has_signal("scar_reactivated"):
+				var scar_name: String = _resolve_scar_name(sdef, scar_id)
+				var scar_name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
 				SimulationBus.scar_reactivated.emit({
 					"entity_id": entity.id,
 					"entity_name": entity.entity_name,
 					"scar_id": scar_id,
-					"scar_name_kr": sdef.get("name_kr", scar_id),
+					"scar_name": scar_name,
+					"scar_name_key": scar_name_key,
+					"scar_name_kr": scar_name,
 					"trigger": context_type,
 					"tick": tick,
 				})
@@ -187,3 +195,11 @@ func _get_scar_stacks(entity: RefCounted, scar_id: String) -> int:
 		if scar_entry.get("scar_id") == scar_id:
 			return int(scar_entry.get("stacks", 0))
 	return 0
+
+
+func _resolve_scar_name(sdef: Dictionary, scar_id: String) -> String:
+	var name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
+	var translated: String = Locale.ltr(name_key)
+	if translated == name_key or translated == "???":
+		return scar_id
+	return translated
