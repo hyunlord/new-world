@@ -344,13 +344,19 @@ func _refresh_slot_buttons(is_save: bool) -> void:
 			var month: int = int(info.get("game_month", 0))
 			var pop: int = int(info.get("population", 0))
 			var time_ago: String = _format_time_ago(str(info.get("save_time", "")))
-			btn.text = Locale.trf("UI_SLOT_FORMAT", {
-				"slot": slot,
-				"year": year,
-				"month": month,
-				"pop": pop,
-				"time_ago": time_ago
-			})
+			btn.text = Locale.trf5(
+				"UI_SLOT_FORMAT",
+				"slot",
+				slot,
+				"year",
+				year,
+				"month",
+				month,
+				"pop",
+				pop,
+				"time_ago",
+				time_ago
+			)
 			btn.disabled = false
 			btn.modulate = Color(1, 1, 1, 1)
 		else:

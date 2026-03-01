@@ -546,3 +546,8 @@
 - `hud.gd`의 건물 저장소/시뮬레이션 이벤트/기술 상태 알림 포맷 호출을 `Locale.trf1/trf2/trf3` 경량 경로로 전환.
 - `UI_NOTIF_WORLDSIM_STARTED_FMT`, `UI_FOLLOWING_FMT`를 `trf1`로 치환해 HUD 라벨 갱신의 params Dictionary 생성을 줄임.
 - 출력 의미를 유지하면서 HUD 알림/라벨 갱신 경로의 미세 오버헤드를 완화.
+
+## Commit 112
+- `Locale`에 `trf5` 경량 포맷 API를 추가해 5-placeholder 치환의 params Dictionary 생성을 줄이는 경로를 확장.
+- `game_calendar`의 날짜/시간/나이 포맷 호출을 `trf1~trf5`로 전환해 반복 포맷 경로를 경량화.
+- `pause_menu`의 `UI_SLOT_FORMAT`을 `trf5`로 치환해 슬롯 버튼 텍스트 갱신의 미세 오버헤드를 완화.
