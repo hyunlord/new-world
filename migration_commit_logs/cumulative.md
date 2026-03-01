@@ -807,3 +807,8 @@
 - `sim-systems::body`에 `stress_rebound_apply_step`, `stress_shaken_countdown_step`를 추가해 stress 후처리(rebound 반영/hidden 감소, shaken 카운트다운) 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `stress_system`이 해당 구간을 Rust 우선 + fallback 구조로 처리하도록 전환.
 - `sim-test --bench-stress-math`에 rebound/shaken step 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `20039734.00000` @ 10k iters).
+
+## Commit 164
+- `sim-systems::body`에 `child_stage_code_from_age_ticks`를 추가해 child stage 연령 구간 판정 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor`가 stage cutoff 캐시 기반으로 Rust 우선 판정을 사용하도록 전환.
+- `sim-test --bench-needs-math`에 stage code 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `38457848.00000` @ 10k iters).

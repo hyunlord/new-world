@@ -4,6 +4,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager
 var _stages: Dictionary = {}
+var _stage_age_cutoffs: PackedFloat32Array = PackedFloat32Array([2.0, 5.0, 12.0, 18.0])
 var _simultaneous_ace_severities: PackedFloat32Array = PackedFloat32Array()
 var _simultaneous_ace_scar_candidates: Array = []
 
@@ -38,29 +39,67 @@ func _load_stages() -> void:
 	var data = json.get_data()
 	if data is Dictionary:
 		_stages = data
+	_refresh_stage_age_cutoffs()
+
+
+func _refresh_stage_age_cutoffs() -> void:
+	if _stage_age_cutoffs.size() != 4:
+		_stage_age_cutoffs.resize(4)
+	_stage_age_cutoffs[0] = 2.0
+	_stage_age_cutoffs[1] = 5.0
+	_stage_age_cutoffs[2] = 12.0
+	_stage_age_cutoffs[3] = 18.0
+	var stage_names: Array[String] = ["infant", "toddler", "child", "teen"]
+	for i in range(stage_names.size()):
+		var stage_name: String = stage_names[i]
+		var stage_data_variant: Variant = _stages.get(stage_name, {})
+		if not (stage_data_variant is Dictionary):
+			continue
+		var stage_data: Dictionary = stage_data_variant
+		var age_range_variant: Variant = stage_data.get("age_range", [])
+		if age_range_variant is Array:
+			var age_range: Array = age_range_variant
+			if age_range.size() >= 2:
+				_stage_age_cutoffs[i] = float(age_range[1])
 
 
 func get_current_stage(age_ticks: int) -> String:
-	var years: float = float(age_ticks) / 8760.0
-	for stage_name in ["infant", "toddler", "child", "teen"]:
-		var stage_data = _stages.get(stage_name, {})
-		if not (stage_data is Dictionary):
-			continue
-		var age_range = stage_data.get("age_range", [])
-		if age_range is Array and age_range.size() >= 2:
-			var min_age: float = float(age_range[0])
-			var max_age: float = float(age_range[1])
-			if years >= min_age and years < max_age:
-				return stage_name
+	var infant_max: float = float(_stage_age_cutoffs[0]) if _stage_age_cutoffs.size() > 0 else 2.0
+	var toddler_max: float = float(_stage_age_cutoffs[1]) if _stage_age_cutoffs.size() > 1 else 5.0
+	var child_max: float = float(_stage_age_cutoffs[2]) if _stage_age_cutoffs.size() > 2 else 12.0
+	var teen_max: float = float(_stage_age_cutoffs[3]) if _stage_age_cutoffs.size() > 3 else 18.0
+	var stage_code_variant: Variant = SimBridge.body_child_stage_code_from_age_ticks(
+		age_ticks,
+		infant_max,
+		toddler_max,
+		child_max,
+		teen_max
+	)
+	if stage_code_variant != null:
+		return _stage_name_from_code(int(stage_code_variant))
 
-	if years < 2.0:
+	var years: float = float(age_ticks) / 8760.0
+	if years < infant_max:
 		return "infant"
-	if years < 5.0:
+	if years < toddler_max:
 		return "toddler"
-	if years < 12.0:
+	if years < child_max:
 		return "child"
-	if years < 18.0:
+	if years < teen_max:
 		return "teen"
+	return "adult"
+
+
+func _stage_name_from_code(stage_code: int) -> String:
+	match stage_code:
+		0:
+			return "infant"
+		1:
+			return "toddler"
+		2:
+			return "child"
+		3:
+			return "teen"
 	return "adult"
 
 

@@ -801,6 +801,24 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_stage_code_from_age_ticks(
+        &self,
+        age_ticks: i32,
+        infant_max_years: f32,
+        toddler_max_years: f32,
+        child_max_years: f32,
+        teen_max_years: f32,
+    ) -> i32 {
+        body::child_stage_code_from_age_ticks(
+            age_ticks,
+            infant_max_years,
+            toddler_max_years,
+            child_max_years,
+            teen_max_years,
+        )
+    }
+
+    #[func]
     fn body_stress_rebound_apply_step(
         &self,
         stress: f32,

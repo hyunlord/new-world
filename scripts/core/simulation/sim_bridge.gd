@@ -1716,6 +1716,27 @@ func body_child_deprivation_damage_step(current_damage: float, damage_rate: floa
 	)
 
 
+## Delegates child stage code classification from age ticks to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_stage_code_from_age_ticks(
+	age_ticks: int,
+	infant_max_years: float,
+	toddler_max_years: float,
+	child_max_years: float,
+	teen_max_years: float
+):
+	return _call_native_if_exists(
+		"body_child_stage_code_from_age_ticks",
+		[
+			age_ticks,
+			infant_max_years,
+			toddler_max_years,
+			child_max_years,
+			teen_max_years
+		]
+	)
+
+
 ## Delegates stress rebound apply step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_stress_rebound_apply_step(

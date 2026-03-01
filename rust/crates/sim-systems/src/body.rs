@@ -552,6 +552,30 @@ pub fn child_deprivation_damage_step(current_damage: f32, damage_rate: f32) -> f
     current_damage + damage_rate
 }
 
+/// Child developmental stage classification from age ticks.
+///
+/// Returns `0=infant`, `1=toddler`, `2=child`, `3=teen`, `4=adult`.
+pub fn child_stage_code_from_age_ticks(
+    age_ticks: i32,
+    infant_max_years: f32,
+    toddler_max_years: f32,
+    child_max_years: f32,
+    teen_max_years: f32,
+) -> i32 {
+    let years = (age_ticks as f32) / 8760.0;
+    if years < infant_max_years {
+        0
+    } else if years < toddler_max_years {
+        1
+    } else if years < child_max_years {
+        2
+    } else if years < teen_max_years {
+        3
+    } else {
+        4
+    }
+}
+
 /// Applies rebound stress and hidden-threat accumulator release.
 ///
 /// Returns `[next_stress, next_hidden_threat]`.
@@ -792,9 +816,10 @@ mod tests {
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
         calc_training_gains, child_deprivation_damage_step, child_parent_stress_transfer,
         child_parent_transfer_apply_step, child_shrp_step,
-        child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_apply_step,
-        child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
-        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
+        child_simultaneous_ace_step, child_social_buffered_intensity, child_stage_code_from_age_ticks,
+        child_stress_apply_step, child_stress_type_code, compute_age_curve, compute_age_curves,
+        critical_severity, erg_frustration_step, needs_base_decay_step,
+        needs_critical_severity_step,
         rest_energy_recovery, stress_rebound_apply_step, stress_shaken_countdown_step,
         stress_support_score, thirst_decay,
         upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
@@ -1094,6 +1119,15 @@ mod tests {
     fn child_deprivation_damage_step_accumulates_linearly() {
         let next = child_deprivation_damage_step(0.3, 0.02);
         assert!((next - 0.32).abs() < 1e-6);
+    }
+
+    #[test]
+    fn child_stage_code_from_age_ticks_uses_cutoffs() {
+        assert_eq!(child_stage_code_from_age_ticks(0, 2.0, 5.0, 12.0, 18.0), 0);
+        assert_eq!(child_stage_code_from_age_ticks(8760 * 3, 2.0, 5.0, 12.0, 18.0), 1);
+        assert_eq!(child_stage_code_from_age_ticks(8760 * 8, 2.0, 5.0, 12.0, 18.0), 2);
+        assert_eq!(child_stage_code_from_age_ticks(8760 * 15, 2.0, 5.0, 12.0, 18.0), 3);
+        assert_eq!(child_stage_code_from_age_ticks(8760 * 20, 2.0, 5.0, 12.0, 18.0), 4);
     }
 
     #[test]

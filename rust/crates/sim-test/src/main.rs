@@ -253,6 +253,13 @@ fn run_needs_math_bench(args: &[String]) {
         );
         let child_deprivation =
             body::child_deprivation_damage_step(0.2 + 1.0 * t, 0.01 + 0.03 * (1.0 - t));
+        let child_stage_code = body::child_stage_code_from_age_ticks(
+            8760 * ((i % 22) as i32),
+            2.0,
+            5.0,
+            12.0,
+            18.0,
+        );
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -288,7 +295,8 @@ fn run_needs_math_bench(args: &[String]) {
             + black_box(child_apply[2])
             + black_box(child_apply[4])
             + black_box(child_parent_applied)
-            + black_box(child_deprivation);
+            + black_box(child_deprivation)
+            + black_box(child_stage_code as f32);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);
