@@ -61,6 +61,26 @@ pub struct StressEmotionRecoveryDeltaStep {
     pub hidden_threat_accumulator: f32,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct StressTraceEmotionRecoveryDeltaStep {
+    pub total_trace_contribution: f32,
+    pub updated_per_tick: Vec<f32>,
+    pub active_mask: Vec<u8>,
+    pub fear: f32,
+    pub anger: f32,
+    pub sadness: f32,
+    pub disgust: f32,
+    pub surprise: f32,
+    pub joy: f32,
+    pub trust: f32,
+    pub anticipation: f32,
+    pub va_composite: f32,
+    pub emotion_total: f32,
+    pub recovery: f32,
+    pub delta: f32,
+    pub hidden_threat_accumulator: f32,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StressReserveStep {
     pub reserve: f32,
@@ -481,6 +501,86 @@ pub fn stress_emotion_recovery_delta_step(
         recovery,
         delta: delta_step.delta,
         hidden_threat_accumulator: delta_step.hidden_threat_accumulator,
+    }
+}
+
+/// Combined step:
+/// trace batch decay + emotion/recovery/delta.
+pub fn stress_trace_emotion_recovery_delta_step(
+    per_tick: &[f32],
+    decay_rate: &[f32],
+    min_keep: f32,
+    fear: f32,
+    anger: f32,
+    sadness: f32,
+    disgust: f32,
+    surprise: f32,
+    joy: f32,
+    trust: f32,
+    anticipation: f32,
+    valence: f32,
+    arousal: f32,
+    stress: f32,
+    support_score: f32,
+    resilience: f32,
+    reserve: f32,
+    is_sleeping: bool,
+    is_safe: bool,
+    continuous_input: f32,
+    ace_stress_mult: f32,
+    trait_accum_mult: f32,
+    epsilon: f32,
+    denial_active: bool,
+    denial_redirect_fraction: f32,
+    hidden_threat_accumulator: f32,
+    denial_max_accumulator: f32,
+) -> StressTraceEmotionRecoveryDeltaStep {
+    let trace_step = stress_trace_batch_step(per_tick, decay_rate, min_keep);
+    let combined = stress_emotion_recovery_delta_step(
+        fear,
+        anger,
+        sadness,
+        disgust,
+        surprise,
+        joy,
+        trust,
+        anticipation,
+        valence,
+        arousal,
+        stress,
+        support_score,
+        resilience,
+        reserve,
+        is_sleeping,
+        is_safe,
+        continuous_input,
+        trace_step.total_contribution,
+        ace_stress_mult,
+        trait_accum_mult,
+        epsilon,
+        denial_active,
+        denial_redirect_fraction,
+        hidden_threat_accumulator,
+        denial_max_accumulator,
+    );
+
+    StressTraceEmotionRecoveryDeltaStep {
+        total_trace_contribution: trace_step.total_contribution,
+        updated_per_tick: trace_step.updated_per_tick,
+        active_mask: trace_step.active_mask,
+        fear: combined.fear,
+        anger: combined.anger,
+        sadness: combined.sadness,
+        disgust: combined.disgust,
+        surprise: combined.surprise,
+        joy: combined.joy,
+        trust: combined.trust,
+        anticipation: combined.anticipation,
+        va_composite: combined.va_composite,
+        emotion_total: combined.emotion_total,
+        recovery: combined.recovery,
+        delta: combined.delta,
+        hidden_threat_accumulator: combined.hidden_threat_accumulator,
     }
 }
 
@@ -924,6 +1024,76 @@ mod tests {
         assert!(
             (combined.hidden_threat_accumulator - delta.hidden_threat_accumulator).abs() < 1e-6
         );
+    }
+
+    #[test]
+    fn stress_trace_emotion_recovery_delta_step_matches_component_steps() {
+        let combined = stress_trace_emotion_recovery_delta_step(
+            &[2.0, 1.0],
+            &[0.1, 0.2],
+            0.01,
+            70.0,
+            60.0,
+            55.0,
+            40.0,
+            35.0,
+            20.0,
+            30.0,
+            25.0,
+            -40.0,
+            65.0,
+            320.0,
+            0.35,
+            0.55,
+            45.0,
+            false,
+            true,
+            12.0,
+            1.1,
+            0.95,
+            0.05,
+            true,
+            0.6,
+            120.0,
+            800.0,
+        );
+        let trace = stress_trace_batch_step(&[2.0, 1.0], &[0.1, 0.2], 0.01);
+        let erd = stress_emotion_recovery_delta_step(
+            70.0,
+            60.0,
+            55.0,
+            40.0,
+            35.0,
+            20.0,
+            30.0,
+            25.0,
+            -40.0,
+            65.0,
+            320.0,
+            0.35,
+            0.55,
+            45.0,
+            false,
+            true,
+            12.0,
+            trace.total_contribution,
+            1.1,
+            0.95,
+            0.05,
+            true,
+            0.6,
+            120.0,
+            800.0,
+        );
+
+        assert!((combined.total_trace_contribution - trace.total_contribution).abs() < 1e-6);
+        assert_eq!(combined.active_mask, trace.active_mask);
+        assert_eq!(
+            combined.updated_per_tick.len(),
+            trace.updated_per_tick.len()
+        );
+        assert!((combined.delta - erd.delta).abs() < 1e-6);
+        assert!((combined.recovery - erd.recovery).abs() < 1e-6);
     }
 
     #[test]

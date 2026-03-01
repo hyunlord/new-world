@@ -84,10 +84,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var primary_input: Dictionary = _calc_primary_inputs(entity, pd, ed, hunger, energy, social, breakdown)
 	var continuous_input: float = float(primary_input.get("total", 0.0))
 
-	# 3) 스트레스 후유증 traces
-	var trace_input: float = _process_stress_traces(ed, breakdown)
-
-	# 4) 감정 + 회복 + 최종 delta(denial 포함) 통합 step
+	# 3) trace decay + 감정/회복/delta 통합 step
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
 	# v3 trait effect: stress/mult target=accumulation_rate
 	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
@@ -97,13 +94,12 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var denial_active: bool = ed.get_meta("denial_active", false)
 	var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
 	var support_score: float = _calc_support_score(entity)
-	var delta_step: Dictionary = _calc_emotion_recovery_delta(
+	var delta_step: Dictionary = _calc_trace_emotion_recovery_delta(
 		ed,
 		support_score,
 		is_sleeping,
 		is_safe,
 		continuous_input,
-		trace_input,
 		ace_stress_mult,
 		trait_accum_mult,
 		denial_active,
@@ -211,47 +207,13 @@ func _calc_primary_inputs(
 	return inputs
 
 
-# ── 3) 스트레스 후유증 traces ─────────────────────────────────────────
-func _process_stress_traces(ed, breakdown: Dictionary) -> float:
-	var trace_count: int = ed.stress_traces.size()
-	if trace_count <= 0:
-		return 0.0
-
-	var per_tick: PackedFloat32Array = PackedFloat32Array()
-	var decay_rate: PackedFloat32Array = PackedFloat32Array()
-	per_tick.resize(trace_count)
-	decay_rate.resize(trace_count)
-	for i in range(trace_count):
-		var trace_data: Dictionary = ed.stress_traces[i]
-		per_tick[i] = float(trace_data.get("per_tick", 0.0))
-		decay_rate[i] = float(trace_data.get("decay_rate", 0.05))
-
-	var result: Dictionary = StatCurveScript.stress_trace_batch_step(per_tick, decay_rate, 0.01)
-	var total: float = float(result.get("total_contribution", 0.0))
-	var updated: PackedFloat32Array = result.get("updated_per_tick", PackedFloat32Array())
-	var active_mask: PackedByteArray = result.get("active_mask", PackedByteArray())
-	var usable_len: int = mini(trace_count, mini(updated.size(), active_mask.size()))
-	var next_traces: Array = []
-	for i in range(usable_len):
-		var trace: Dictionary = ed.stress_traces[i]
-		var contribution: float = float(per_tick[i])
-		trace["per_tick"] = float(updated[i])
-		if int(active_mask[i]) != 0:
-			var key: String = "trace_%s" % str(trace.get("source_id", "unknown"))
-			breakdown[key] = contribution
-			next_traces.append(trace)
-	ed.stress_traces = next_traces
-	return total
-
-
-# ── 4) 감정 + 회복 + delta 통합 ───────────────────────────────────────
-func _calc_emotion_recovery_delta(
+# ── 3) trace + 감정 + 회복 + delta 통합 ───────────────────────────────
+func _calc_trace_emotion_recovery_delta(
 	ed,
 	support_score: float,
 	is_sleeping: bool,
 	is_safe: bool,
 	continuous_input: float,
-	trace_input: float,
 	ace_stress_mult: float,
 	trait_accum_mult: float,
 	denial_active: bool,
@@ -264,6 +226,16 @@ func _calc_emotion_recovery_delta(
 			"hidden_threat_accumulator": hidden_threat_accumulator,
 		}
 
+	var trace_count: int = ed.stress_traces.size()
+	var per_tick: PackedFloat32Array = PackedFloat32Array()
+	var decay_rate: PackedFloat32Array = PackedFloat32Array()
+	per_tick.resize(trace_count)
+	decay_rate.resize(trace_count)
+	for i in range(trace_count):
+		var trace_data: Dictionary = ed.stress_traces[i]
+		per_tick[i] = float(trace_data.get("per_tick", 0.0))
+		decay_rate[i] = float(trace_data.get("decay_rate", 0.05))
+
 	var fear_val: float = ed.get_emotion("fear")
 	var anger_val: float = ed.get_emotion("anger")
 	var sadness_val: float = ed.get_emotion("sadness")
@@ -272,7 +244,10 @@ func _calc_emotion_recovery_delta(
 	var joy_val: float = ed.get_emotion("joy")
 	var trust_val: float = ed.get_emotion("trust")
 	var anticipation_val: float = ed.get_emotion("anticipation")
-	var out: Dictionary = StatCurveScript.stress_emotion_recovery_delta_step(
+	var out: Dictionary = StatCurveScript.stress_trace_emotion_recovery_delta_step(
+		per_tick,
+		decay_rate,
+		0.01,
 		fear_val,
 		anger_val,
 		sadness_val,
@@ -290,7 +265,6 @@ func _calc_emotion_recovery_delta(
 		is_sleeping,
 		is_safe,
 		continuous_input,
-		trace_input,
 		ace_stress_mult,
 		trait_accum_mult,
 		STRESS_EPSILON,
@@ -299,6 +273,20 @@ func _calc_emotion_recovery_delta(
 		hidden_threat_accumulator,
 		DENIAL_MAX_ACCUMULATOR
 	)
+
+	var updated: PackedFloat32Array = out.get("updated_per_tick", PackedFloat32Array())
+	var active_mask: PackedByteArray = out.get("active_mask", PackedByteArray())
+	var usable_len: int = mini(trace_count, mini(updated.size(), active_mask.size()))
+	var next_traces: Array = []
+	for i in range(usable_len):
+		var trace: Dictionary = ed.stress_traces[i]
+		var contribution: float = float(per_tick[i])
+		trace["per_tick"] = float(updated[i])
+		if int(active_mask[i]) != 0:
+			var key: String = "trace_%s" % str(trace.get("source_id", "unknown"))
+			breakdown[key] = contribution
+			next_traces.append(trace)
+	ed.stress_traces = next_traces
 
 	var emotion_keys: Array[String] = ["fear", "anger", "sadness", "disgust", "surprise", "joy", "trust", "anticipation"]
 	for i in range(emotion_keys.size()):

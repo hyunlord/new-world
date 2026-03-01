@@ -602,6 +602,124 @@ static func stress_emotion_recovery_delta_step(
 	}
 
 
+## Combined step:
+## trace decay batch + emotion/recovery/delta.
+## Returns Dictionary:
+## { total_trace_contribution, updated_per_tick, active_mask,
+##   fear, anger, sadness, disgust, surprise, joy, trust, anticipation,
+##   va_composite, emotion_total, recovery, delta, hidden_threat_accumulator }
+static func stress_trace_emotion_recovery_delta_step(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float,
+	fear: float,
+	anger: float,
+	sadness: float,
+	disgust: float,
+	surprise: float,
+	joy: float,
+	trust: float,
+	anticipation: float,
+	valence: float,
+	arousal: float,
+	stress: float,
+	support_score: float,
+	resilience: float,
+	reserve: float,
+	is_sleeping: bool,
+	is_safe: bool,
+	continuous_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	epsilon: float,
+	denial_active: bool,
+	denial_redirect_fraction: float,
+	hidden_threat_accumulator: float,
+	denial_max_accumulator: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_trace_emotion_recovery_delta_step",
+		[
+			per_tick,
+			decay_rate,
+			min_keep,
+			fear,
+			anger,
+			sadness,
+			disgust,
+			surprise,
+			joy,
+			trust,
+			anticipation,
+			valence,
+			arousal,
+			stress,
+			support_score,
+			resilience,
+			reserve,
+			is_sleeping,
+			is_safe,
+			continuous_input,
+			ace_stress_mult,
+			trait_accum_mult,
+			epsilon,
+			denial_active,
+			denial_redirect_fraction,
+			hidden_threat_accumulator,
+			denial_max_accumulator
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var trace_out: Dictionary = stress_trace_batch_step(per_tick, decay_rate, min_keep)
+	var erd_out: Dictionary = stress_emotion_recovery_delta_step(
+		fear,
+		anger,
+		sadness,
+		disgust,
+		surprise,
+		joy,
+		trust,
+		anticipation,
+		valence,
+		arousal,
+		stress,
+		support_score,
+		resilience,
+		reserve,
+		is_sleeping,
+		is_safe,
+		continuous_input,
+		float(trace_out.get("total_contribution", 0.0)),
+		ace_stress_mult,
+		trait_accum_mult,
+		epsilon,
+		denial_active,
+		denial_redirect_fraction,
+		hidden_threat_accumulator,
+		denial_max_accumulator
+	)
+	return {
+		"total_trace_contribution": float(trace_out.get("total_contribution", 0.0)),
+		"updated_per_tick": trace_out.get("updated_per_tick", PackedFloat32Array()),
+		"active_mask": trace_out.get("active_mask", PackedByteArray()),
+		"fear": float(erd_out.get("fear", 0.0)),
+		"anger": float(erd_out.get("anger", 0.0)),
+		"sadness": float(erd_out.get("sadness", 0.0)),
+		"disgust": float(erd_out.get("disgust", 0.0)),
+		"surprise": float(erd_out.get("surprise", 0.0)),
+		"joy": float(erd_out.get("joy", 0.0)),
+		"trust": float(erd_out.get("trust", 0.0)),
+		"anticipation": float(erd_out.get("anticipation", 0.0)),
+		"va_composite": float(erd_out.get("va_composite", 0.0)),
+		"emotion_total": float(erd_out.get("emotion_total", 0.0)),
+		"recovery": float(erd_out.get("recovery", 0.0)),
+		"delta": float(erd_out.get("delta", 0.0)),
+		"hidden_threat_accumulator": float(erd_out.get("hidden_threat_accumulator", hidden_threat_accumulator)),
+	}
+
+
 ## Combined post-stress step:
 ## reserve + GAS transition + allostatic update + stress state snapshot
 static func stress_post_update_step(

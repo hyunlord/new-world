@@ -216,3 +216,8 @@
 - stress 틱 중반의 emotion contribution, recovery, delta/denial 계산을 단일 Rust step(`stress_emotion_recovery_delta_step`)으로 통합.
 - `sim-bridge`는 Godot 메서드 파라미터 개수 제한을 피하기 위해 PackedFloat32Array/PackedByteArray 인코딩 경로로 노출.
 - `StressSystem`은 기존 3단계 호출을 결합 step으로 치환하면서 breakdown 키(`emo_*`, `va_composite`, `recovery`)와 hidden accumulator 의미를 유지.
+
+## Commit 045
+- stress 틱의 trace decay 처리와 emotion/recovery/delta 계산을 단일 Rust step(`stress_trace_emotion_recovery_delta_step`)으로 통합.
+- `StressSystem`에서 trace 처리 함수와 emotion/recovery/delta 함수의 분리 경로를 제거하고 결합 helper 경로로 치환.
+- trace/emotion/recovery breakdown 의미를 유지하면서 브리지 round-trip을 추가로 축소.

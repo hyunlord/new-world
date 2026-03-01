@@ -236,6 +236,35 @@ fn run_stress_math_bench(args: &[String]) {
             50.0 + 400.0 * t,
             800.0,
         );
+        let trace_emotion_delta_step = stat_curve::stress_trace_emotion_recovery_delta_step(
+            &trace_per_tick,
+            &trace_decay,
+            0.01,
+            10.0 + 80.0 * t,
+            5.0 + 70.0 * t,
+            12.0 + 65.0 * t,
+            8.0 + 50.0 * t,
+            8.0 + 35.0 * t,
+            30.0 - 20.0 * t,
+            30.0 - 15.0 * t,
+            25.0 - 10.0 * t,
+            -50.0 + 20.0 * t,
+            40.0 + 45.0 * t,
+            stress,
+            0.2 + 0.6 * t,
+            0.1 + 0.7 * (1.0 - t),
+            30.0 + 60.0 * (1.0 - t),
+            i % 3 == 0,
+            i % 2 == 0,
+            primary.total,
+            1.1,
+            0.95,
+            0.05,
+            i % 2 == 0,
+            0.6,
+            50.0 + 400.0 * t,
+            800.0,
+        );
 
         checksum += black_box(primary.total)
             + black_box(primary.appraisal_scale)
@@ -251,7 +280,9 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(delta_step.delta)
             + black_box(delta_step.hidden_threat_accumulator)
             + black_box(emotion_delta_step.delta)
-            + black_box(emotion_delta_step.hidden_threat_accumulator);
+            + black_box(emotion_delta_step.hidden_threat_accumulator)
+            + black_box(trace_emotion_delta_step.delta)
+            + black_box(trace_emotion_delta_step.hidden_threat_accumulator);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);
