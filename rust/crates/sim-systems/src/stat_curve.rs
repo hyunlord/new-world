@@ -199,6 +199,13 @@ pub struct StressEmotionInjectStep {
     pub slow: Vec<f32>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct StressReboundQueueStep {
+    pub total_rebound: f32,
+    pub remaining_amounts: Vec<f32>,
+    pub remaining_delays: Vec<i32>,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -1150,6 +1157,41 @@ pub fn stress_emotion_inject_step(
     StressEmotionInjectStep { fast, slow }
 }
 
+/// Processes delayed rebound queue entries:
+/// - decrements delay by 1
+/// - optionally decays amount
+/// - accumulates entries whose delay reached zero
+/// - returns remaining entries
+pub fn stress_rebound_queue_step(
+    amounts: &[f32],
+    delays: &[i32],
+    decay_per_tick: f32,
+) -> StressReboundQueueStep {
+    let len = amounts.len().min(delays.len());
+    let decay = decay_per_tick.clamp(0.0, 1.0);
+    let decay_mult = 1.0 - decay;
+    let mut total_rebound = 0.0_f32;
+    let mut remaining_amounts: Vec<f32> = Vec::with_capacity(len);
+    let mut remaining_delays: Vec<i32> = Vec::with_capacity(len);
+
+    for idx in 0..len {
+        let next_delay = delays[idx] - 1;
+        let amount = (amounts[idx] * decay_mult).max(0.0);
+        if next_delay <= 0 {
+            total_rebound += amount;
+        } else if amount > 0.0 {
+            remaining_amounts.push(amount);
+            remaining_delays.push(next_delay);
+        }
+    }
+
+    StressReboundQueueStep {
+        total_rebound,
+        remaining_amounts,
+        remaining_delays,
+    }
+}
+
 /// Scales stress event instant/per_tick with accumulated multipliers.
 pub fn stress_event_scaled(
     base_instant: f32,
@@ -1746,6 +1788,25 @@ mod tests {
         );
         assert_eq!(out.fast, vec![18.0, 100.0, 4.0]);
         assert_eq!(out.slow, vec![4.0, -50.0, 100.0]);
+    }
+
+    #[test]
+    fn stress_rebound_queue_step_consumes_and_keeps_entries() {
+        let out = stress_rebound_queue_step(&[5.0, 3.0, 2.0], &[1, 3, 2], 0.0);
+        assert!((out.total_rebound - 5.0).abs() < 1e-6);
+        assert_eq!(out.remaining_amounts, vec![3.0, 2.0]);
+        assert_eq!(out.remaining_delays, vec![2, 1]);
+    }
+
+    #[test]
+    fn stress_rebound_queue_step_applies_decay_and_clamps_decay_rate() {
+        let out = stress_rebound_queue_step(&[10.0, 6.0], &[1, 2], 0.25);
+        assert!((out.total_rebound - 7.5).abs() < 1e-6);
+        assert_eq!(out.remaining_amounts, vec![4.5]);
+        assert_eq!(out.remaining_delays, vec![1]);
+
+        let clamped = stress_rebound_queue_step(&[4.0], &[1], 3.0);
+        assert_eq!(clamped.total_rebound, 0.0);
     }
 
     #[test]

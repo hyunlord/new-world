@@ -276,3 +276,8 @@
 - `_calc_personality_scale`의 trait multiplier 적용 경로를 trait id 맵 기반 조회로 전환해 반복 선형 탐색 비용을 축소.
 - personality spec에 axis stat 문자열(`axis_stat`)을 사전 컴파일해 런타임 문자열 결합 비용을 완화.
 - 성격 스케일 계산 수식 및 Rust helper 호출 구조는 유지해 동작 의미를 보존.
+
+## Commit 057
+- rebound queue 처리 루프(`_process_rebound_queue`)를 Rust batch step(`stress_rebound_queue_step`) 호출 중심으로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 rebound queue API를 추가해 GDScript는 배열 입력 구성/결과 반영만 담당.
+- 현재 `REBOUND_DECAY_PER_TICK=0.0` 설정에서는 기존 만료/합산 의미를 유지하면서 런타임 순회 계산 경로를 네이티브화.

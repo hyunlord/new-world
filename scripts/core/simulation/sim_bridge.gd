@@ -899,6 +899,23 @@ func stat_stress_emotion_inject_step(
 	)
 
 
+## Delegates stress rebound queue step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_rebound_queue_step(
+	amounts: PackedFloat32Array,
+	delays: PackedInt32Array,
+	decay_per_tick: float
+):
+	return _call_native_if_exists(
+		"stat_stress_rebound_queue_step",
+		[
+			amounts,
+			delays,
+			decay_per_tick
+		]
+	)
+
+
 ## Delegates stress event final scaling to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_event_scaled(

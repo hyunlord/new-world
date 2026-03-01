@@ -1320,6 +1320,46 @@ static func stress_emotion_inject_step(
 	}
 
 
+## Processes delayed rebound queue entries.
+## Returns Dictionary: { total_rebound, remaining_amounts, remaining_delays }
+static func stress_rebound_queue_step(
+	amounts: PackedFloat32Array,
+	delays: PackedInt32Array,
+	decay_per_tick: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_rebound_queue_step",
+		[
+			amounts,
+			delays,
+			decay_per_tick
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var count: int = mini(amounts.size(), delays.size())
+	var decay: float = clampf(decay_per_tick, 0.0, 1.0)
+	var decay_mult: float = 1.0 - decay
+	var total_rebound: float = 0.0
+	var remaining_amounts: PackedFloat32Array = PackedFloat32Array()
+	var remaining_delays: PackedInt32Array = PackedInt32Array()
+	for idx in range(count):
+		var next_delay: int = int(delays[idx]) - 1
+		var amount: float = maxf(0.0, float(amounts[idx]) * decay_mult)
+		if next_delay <= 0:
+			total_rebound += amount
+		elif amount > 0.0:
+			remaining_amounts.append(amount)
+			remaining_delays.append(next_delay)
+
+	return {
+		"total_rebound": total_rebound,
+		"remaining_amounts": remaining_amounts,
+		"remaining_delays": remaining_delays,
+	}
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(

@@ -166,6 +166,10 @@ fn packed_u8_to_vec(values: &PackedByteArray) -> Vec<u8> {
     values.as_slice().to_vec()
 }
 
+fn vec_i32_to_packed(values: Vec<i32>) -> PackedInt32Array {
+    PackedInt32Array::from(values)
+}
+
 fn vec_f32_to_packed(values: Vec<f32>) -> PackedFloat32Array {
     PackedFloat32Array::from(values)
 }
@@ -1337,6 +1341,28 @@ impl WorldSimBridge {
         let mut dict = VarDictionary::new();
         dict.set("fast", vec_f32_to_packed(out.fast));
         dict.set("slow", vec_f32_to_packed(out.slow));
+        dict
+    }
+
+    #[func]
+    fn stat_stress_rebound_queue_step(
+        &self,
+        amounts: PackedFloat32Array,
+        delays: PackedInt32Array,
+        decay_per_tick: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_rebound_queue_step(
+            &packed_f32_to_vec(&amounts),
+            &packed_i32_to_vec(&delays),
+            decay_per_tick,
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("total_rebound", out.total_rebound as f64);
+        dict.set(
+            "remaining_amounts",
+            vec_f32_to_packed(out.remaining_amounts),
+        );
+        dict.set("remaining_delays", vec_i32_to_packed(out.remaining_delays));
         dict
     }
 

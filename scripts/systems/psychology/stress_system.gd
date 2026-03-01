@@ -51,6 +51,8 @@ var _tick_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _tick_flags: PackedByteArray = PackedByteArray()
 var _tick_trace_per_tick: PackedFloat32Array = PackedFloat32Array()
 var _tick_trace_decay: PackedFloat32Array = PackedFloat32Array()
+var _rebound_amounts: PackedFloat32Array = PackedFloat32Array()
+var _rebound_delays: PackedInt32Array = PackedInt32Array()
 
 
 func _init() -> void:
@@ -671,19 +673,38 @@ func _inject_emotions(
 func _process_rebound_queue(ed: RefCounted) -> void:
 	## Gross (1998): suppressed stress surfaces when denial coping terminates
 	## Queue format: Array of {amount: float, delay: int}
-	var queue = ed.get_meta("rebound_queue", [])
+	var queue: Array = ed.get_meta("rebound_queue", [])
 	if queue.is_empty():
 		return
 
-	var remaining: Array = []
-	var total_rebound: float = 0.0
-
-	for entry in queue:
-		entry["delay"] -= 1
-		if entry["delay"] <= 0:
-			total_rebound += entry.get("amount", 0.0)
+	var queue_count: int = queue.size()
+	_rebound_amounts.resize(queue_count)
+	_rebound_delays.resize(queue_count)
+	for idx in range(queue_count):
+		var entry: Variant = queue[idx]
+		if typeof(entry) == TYPE_DICTIONARY:
+			var entry_dict: Dictionary = entry
+			_rebound_amounts[idx] = float(entry_dict.get("amount", 0.0))
+			_rebound_delays[idx] = int(entry_dict.get("delay", 0))
 		else:
-			remaining.append(entry)
+			_rebound_amounts[idx] = 0.0
+			_rebound_delays[idx] = 1
+
+	var step: Dictionary = StatCurveScript.stress_rebound_queue_step(
+		_rebound_amounts,
+		_rebound_delays,
+		REBOUND_DECAY_PER_TICK
+	)
+	var total_rebound: float = float(step.get("total_rebound", 0.0))
+	var remaining_amounts: PackedFloat32Array = step.get("remaining_amounts", PackedFloat32Array())
+	var remaining_delays: PackedInt32Array = step.get("remaining_delays", PackedInt32Array())
+	var remaining: Array = []
+	var remaining_count: int = mini(remaining_amounts.size(), remaining_delays.size())
+	for idx in range(remaining_count):
+		remaining.append({
+			"amount": float(remaining_amounts[idx]),
+			"delay": int(remaining_delays[idx]),
+		})
 
 	ed.set_meta("rebound_queue", remaining)
 
