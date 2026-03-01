@@ -8,6 +8,11 @@ const _RUST_BRIDGE_BATCH_XY_METHOD_NAME: String = "pathfind_grid_batch_xy"
 
 var _bridge_checked: bool = false
 var _rust_bridge: Object = null
+var _bridge_methods_cached: bool = false
+var _bridge_has_pathfind: bool = false
+var _bridge_has_pathfind_xy: bool = false
+var _bridge_has_batch: bool = false
+var _bridge_has_batch_xy: bool = false
 
 var _cached_world_data: RefCounted = null
 var _cached_width: int = 0
@@ -83,8 +88,9 @@ func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_s
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
 		return {"used": false, "path": []}
-	var has_xy: bool = bridge.has_method(_RUST_BRIDGE_METHOD_XY_NAME)
-	var has_vec2: bool = bridge.has_method(_RUST_BRIDGE_METHOD_NAME)
+	_ensure_bridge_method_cache(bridge)
+	var has_xy: bool = _bridge_has_pathfind_xy
+	var has_vec2: bool = _bridge_has_pathfind
 	if not has_xy and not has_vec2:
 		return {"used": false, "path": []}
 
@@ -132,8 +138,9 @@ func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: 
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
 		return {"used": false, "paths": []}
-	var has_batch_xy: bool = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
-	var has_batch_vec2: bool = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	_ensure_bridge_method_cache(bridge)
+	var has_batch_xy: bool = _bridge_has_batch_xy
+	var has_batch_vec2: bool = _bridge_has_batch
 	if not has_batch_xy and not has_batch_vec2:
 		return {"used": false, "paths": []}
 
@@ -223,8 +230,9 @@ func _find_paths_rust_batch_xy(
 	var bridge: Object = _get_rust_bridge()
 	if bridge == null:
 		return {"used": false, "paths": []}
-	var has_batch_xy: bool = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
-	var has_batch_vec2: bool = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	_ensure_bridge_method_cache(bridge)
+	var has_batch_xy: bool = _bridge_has_batch_xy
+	var has_batch_vec2: bool = _bridge_has_batch
 	if not has_batch_xy and not has_batch_vec2:
 		return {"used": false, "paths": []}
 
@@ -317,12 +325,24 @@ func _get_rust_bridge() -> Object:
 		var node_from_root: Node = tree.root.get_node_or_null(_RUST_BRIDGE_NODE_NAME)
 		if node_from_root != null:
 			_rust_bridge = node_from_root
+			_bridge_methods_cached = false
 			return _rust_bridge
 
 	if Engine.has_singleton(_RUST_BRIDGE_NODE_NAME):
 		_rust_bridge = Engine.get_singleton(_RUST_BRIDGE_NODE_NAME)
+		_bridge_methods_cached = false
 
 	return _rust_bridge
+
+
+func _ensure_bridge_method_cache(bridge: Object) -> void:
+	if _bridge_methods_cached:
+		return
+	_bridge_has_pathfind = bridge.has_method(_RUST_BRIDGE_METHOD_NAME)
+	_bridge_has_pathfind_xy = bridge.has_method(_RUST_BRIDGE_METHOD_XY_NAME)
+	_bridge_has_batch = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	_bridge_has_batch_xy = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
+	_bridge_methods_cached = true
 
 
 func _ensure_world_cache(world_data: RefCounted) -> void:

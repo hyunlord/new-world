@@ -857,3 +857,8 @@
 - `movement_system`의 path recalc 배치 호출을 엔티티 스캔 이후 1회 처리로 정렬해 loop 내부 중복 호출을 제거.
 - `execute_tick`의 `_pathfinder` 분기 들여쓰기/스코프를 정리해 recalc 적용 로직(`recalc_count`)을 안정화.
 - 이동 의미는 유지하면서 movement hot path에서 불필요한 경로탐색 호출 비용을 완화.
+
+## Commit 174
+- `pathfinder`에 bridge 메서드 capability 캐시를 추가해 hot path의 반복 `has_method` 체크를 1회 캐시로 전환.
+- `_find_path_rust`/`_find_paths_rust_batch`/`_find_paths_rust_batch_xy`가 캐시 기반 분기를 사용하도록 정리.
+- 경로 계산 의미는 유지하면서 pathfinding 호출 경로의 분기 오버헤드를 미세 완화.
