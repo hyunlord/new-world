@@ -88,3 +88,8 @@
 - `StatCurve` LOG_DIMINISHING 경로에 XP 파라미터 PackedArray 캐시 추가.
 - 동일 곡선 파라미터 재사용 시 브리지 인자 변환 오버헤드 감소.
 - 캐시 상한 기반 단순 bounded 메모리 전략 적용.
+
+## Commit 019
+- `tools/migration_verify.sh` 추가로 Rust + localization 파이프라인 검증 절차를 단일 명령으로 통합.
+- 선택 옵션 `--apply-key-fields`를 통해 데이터 key 주입까지 포함한 검증 지원.
+- 반복 커밋 검증의 일관성/속도 향상.
