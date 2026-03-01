@@ -1345,3 +1345,9 @@
 - `audit_conflict_preview`에 `total_conflict_key_count`, `truncated`를 추가해 프리뷰가 전체 충돌의 부분집합인지 여부를 report에서 즉시 판정 가능하게 확장.
 - 정수 비교 헬퍼(`to_json_gt_ints`)를 도입해 `total > preview_count` 조건을 boolean으로 직렬화.
 - `/tmp/worldsim_audit_artifacts33/migration_verify_report.json`에서 `total_conflict_key_count=35`, `count=3`, `truncated=true` 반영을 확인.
+
+## Commit 272
+- `sim-data`를 확장해 `stressor_events`, `coping`, `mental_breaks`, `trait_defs` 로더를 추가하고 `load_all`을 `DataBundle` 기반 7종 데이터 로딩으로 확장.
+- `sim-test` 데이터 로드 로그에 신규 데이터셋 카운트를 포함하고, `rust/tests/data_loading_test.rs`의 placeholder를 실제 통합 로딩 검증 테스트로 교체.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량(데이터 로더 축): `7/9` 완료, `2/9` 잔여.

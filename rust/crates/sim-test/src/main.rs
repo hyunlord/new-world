@@ -1,13 +1,13 @@
+use sim_bridge::{
+    get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
+    pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,
+    reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
+    set_pathfind_backend_mode,
+};
 use sim_core::config::GameConfig;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
-use sim_bridge::{
-    get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
-    pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,
-    resolve_pathfind_backend_mode, reset_pathfind_backend_dispatch_counts,
-    set_pathfind_backend_mode,
-};
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
 use std::sync::{Arc, Mutex};
@@ -19,11 +19,17 @@ fn main() {
         run_needs_math_bench(&args);
         return;
     }
-    if args.iter().any(|arg| arg == "--bench-pathfind-bridge-split") {
+    if args
+        .iter()
+        .any(|arg| arg == "--bench-pathfind-bridge-split")
+    {
         run_pathfind_bridge_split_bench(&args);
         return;
     }
-    if args.iter().any(|arg| arg == "--bench-pathfind-backend-smoke") {
+    if args
+        .iter()
+        .any(|arg| arg == "--bench-pathfind-backend-smoke")
+    {
         run_pathfind_backend_smoke(&args);
         return;
     }
@@ -59,12 +65,16 @@ fn main() {
         .join("data");
 
     match sim_data::load_all(&data_dir) {
-        Ok((emotions, tech, values)) => {
+        Ok(data) => {
             log::info!(
-                "[sim-test] data loaded: {} emotions, {} techs, {} value_events",
-                emotions.len(),
-                tech.len(),
-                values.len(),
+                "[sim-test] data loaded: {} emotions, {} techs, {} value_events, {} stressors, {} coping_defs, {} mental_breaks, {} traits",
+                data.emotions.len(),
+                data.tech.len(),
+                data.values.len(),
+                data.stressors.len(),
+                data.coping.len(),
+                data.mental_breaks.len(),
+                data.traits.len(),
             );
         }
         Err(_) => {
@@ -281,13 +291,8 @@ fn run_needs_math_bench(args: &[String]) {
         );
         let child_deprivation =
             body::child_deprivation_damage_step(0.2 + 1.0 * t, 0.01 + 0.03 * (1.0 - t));
-        let child_stage_code = body::child_stage_code_from_age_ticks(
-            8760 * ((i % 22) as i32),
-            2.0,
-            5.0,
-            12.0,
-            18.0,
-        );
+        let child_stage_code =
+            body::child_stage_code_from_age_ticks(8760 * ((i % 22) as i32), 2.0, 5.0, 12.0, 18.0);
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -394,7 +399,15 @@ fn pathfind_bench_inputs() -> (
     }
 
     (
-        width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps,
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        from_xy,
+        to_xy,
+        max_steps,
     )
 }
 
@@ -616,19 +629,10 @@ fn run_stress_math_bench(args: &[String]) {
             0.15 + 0.5 * t,
             0.05 + 0.4 * (1.0 - t),
         ]);
-        let rebound_apply = body::stress_rebound_apply_step(
-            stress,
-            50.0 + 400.0 * t,
-            2.0 + 10.0 * t,
-            2000.0,
-        );
-        let injection_apply = body::stress_injection_apply_step(
-            stress,
-            12.0 + 18.0 * t,
-            0.8 + 0.5 * t,
-            0.01,
-            2000.0,
-        );
+        let rebound_apply =
+            body::stress_rebound_apply_step(stress, 50.0 + 400.0 * t, 2.0 + 10.0 * t, 2000.0);
+        let injection_apply =
+            body::stress_injection_apply_step(stress, 12.0 + 18.0 * t, 0.8 + 0.5 * t, 0.01, 2000.0);
         let shaken_step = body::stress_shaken_countdown_step((i % 6) as i32);
 
         let primary = stat_curve::stress_primary_step(
