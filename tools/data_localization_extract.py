@@ -38,6 +38,18 @@ def _write_json(path: Path, data: Any, indent: int = 2, sort_keys: bool = True) 
         fp.write("\n")
 
 
+def _load_string_dict(path: Path) -> Dict[str, str]:
+    if not path.exists():
+        return {}
+    data = _load_json(path)
+    if not isinstance(data, dict):
+        return {}
+    out: Dict[str, str] = {}
+    for key, value in data.items():
+        out[str(key)] = str(value)
+    return out
+
+
 def _walk_json_paths(obj: Any, path: str = "$") -> Iterable[Tuple[str, Any]]:
     yield path, obj
     if isinstance(obj, dict):
@@ -90,7 +102,12 @@ def _build_unique_key(
         index += 1
 
 
-def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -> int:
+def run(
+    project_root: Path,
+    apply_key_fields: bool,
+    strip_inline_fields: bool,
+    preserve_existing_generated: bool,
+) -> int:
     data_root = project_root / "data"
     localization_root = project_root / "localization"
 
@@ -100,8 +117,16 @@ def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -
 
     en_map: Dict[str, str] = {}
     ko_map: Dict[str, str] = {}
+    if preserve_existing_generated:
+        en_map.update(_load_string_dict(out_en))
+        ko_map.update(_load_string_dict(out_ko))
+
     entries: List[Dict[str, Any]] = []
     used_keys: Dict[str, Tuple[str, str]] = {}
+    seed_keys = set(en_map.keys()) | set(ko_map.keys())
+    for key in seed_keys:
+        used_keys[key] = (en_map.get(key, ""), ko_map.get(key, ""))
+    preserved_generated_key_count = len(seed_keys)
 
     changed_files: List[Path] = []
     stripped_field_count = 0
@@ -150,10 +175,8 @@ def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -
                 preferred_key = f"DATA_{identity}_{field_token}"
                 key = _build_unique_key(preferred_key, en_text, ko_text, used_keys)
 
-                if key not in en_map:
-                    en_map[key] = en_text
-                if key not in ko_map:
-                    ko_map[key] = ko_text
+                en_map[key] = en_text
+                ko_map[key] = ko_text
 
                 if apply_key_fields:
                     key_field = f"{base_field}_key"
@@ -199,6 +222,8 @@ def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -
             "generated_key_count": len(en_map),
             "ko_empty_count": sum(1 for value in ko_map.values() if value == ""),
             "en_empty_count": sum(1 for value in en_map.values() if value == ""),
+            "preserve_existing_generated": preserve_existing_generated,
+            "preserved_generated_key_count": preserved_generated_key_count,
             "changed_file_count": len(changed_files),
             "stripped_field_count": stripped_field_count,
         },
@@ -212,6 +237,7 @@ def run(project_root: Path, apply_key_fields: bool, strip_inline_fields: bool) -
     print(
         "[data_localization_extract] "
         f"entries={len(entries)} keys={len(en_map)} "
+        f"preserved={preserved_generated_key_count} "
         f"en={out_en} ko={out_ko} map={out_map}"
     )
     if apply_key_fields or strip_inline_fields:
@@ -238,6 +264,11 @@ def main() -> int:
         action="store_true",
         help="remove *_en/*_ko/*_kr fields (requires --apply-key-fields)",
     )
+    parser.add_argument(
+        "--no-preserve-existing-generated",
+        action="store_true",
+        help="regenerate data_generated maps from scanned inline fields only",
+    )
     args = parser.parse_args()
     if args.strip_inline_fields and not args.apply_key_fields:
         parser.error("--strip-inline-fields requires --apply-key-fields")
@@ -247,6 +278,7 @@ def main() -> int:
         project_root=project_root,
         apply_key_fields=args.apply_key_fields,
         strip_inline_fields=args.strip_inline_fields,
+        preserve_existing_generated=not args.no_preserve_existing_generated,
     )
 
 

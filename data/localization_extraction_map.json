@@ -3940,6 +3940,8 @@
     "entry_count": 437,
     "generated_key_count": 437,
     "ko_empty_count": 0,
+    "preserve_existing_generated": true,
+    "preserved_generated_key_count": 437,
     "stripped_field_count": 0
   }
 }

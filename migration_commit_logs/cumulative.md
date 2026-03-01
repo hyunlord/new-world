@@ -118,3 +118,8 @@
 - `tools/data_localization_extract.py`에 `--strip-inline-fields` 옵션 추가(`--apply-key-fields`와 함께 사용).
 - key 매핑이 확정된 그룹의 inline 다국어 필드를 자동 제거해 key-first 데이터 구조 정리 자동화.
 - `tools/migration_verify.sh`가 신규 옵션을 지원하도록 확장되어 반복 검증/정리 파이프라인 통합.
+
+## Commit 025
+- `data_localization_extract` 기본 동작에 기존 `data_generated` 보존(merge) 레이어를 추가.
+- inline 제거 이후 재검증 시 `data_generated`가 0으로 리셋되는 문제를 방지해 key-first 운영 안정화.
+- 필요 시 `--no-preserve-existing-generated` 옵션으로 강제 재생성 가능.
