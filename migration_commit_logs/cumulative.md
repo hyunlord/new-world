@@ -817,3 +817,8 @@
 - `sim-systems::body`에 `stress_injection_apply_step`를 추가해 stress 이벤트 주입 후처리(즉시 clamp + trace append 판정) 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `stress_system`의 `inject_stress_event`/`inject_event`가 Rust 우선 + fallback 구조를 사용하도록 전환.
 - `sim-test --bench-stress-math`에 injection apply step 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `24032652.00000` @ 10k iters).
+
+## Commit 166
+- `stress_system`의 rebound queue 처리에 packed cache(`rebound_queue_amounts`, `rebound_queue_delays`)를 도입해 tick당 딕셔너리 파싱 비용을 완화.
+- `schedule_rebound`/`_process_rebound_queue`가 legacy `rebound_queue`와 packed cache를 동기화하도록 확장해 기존 호환성을 유지.
+- 벤치 checksum은 유지(`stress=24032652.00000`, `needs=38457848.00000` @ 10k iters)하며 런타임 처리 경로 효율을 개선.

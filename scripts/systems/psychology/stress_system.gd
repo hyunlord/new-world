@@ -118,6 +118,9 @@ const _TICK_NORM_IDX_H: int = 8
 const DENIAL_REDIRECT_FRACTION: float = 0.60   # fraction of stress redirected to hidden accumulator
 const DENIAL_MAX_ACCUMULATOR: float = 800.0    # cap on hidden threat accumulator
 const REBOUND_DECAY_PER_TICK: float = 0.0      # rebounds don't decay (full delayed payment)
+const _REBOUND_QUEUE_META_KEY: StringName = &"rebound_queue"
+const _REBOUND_AMOUNTS_META_KEY: StringName = &"rebound_queue_amounts"
+const _REBOUND_DELAYS_META_KEY: StringName = &"rebound_queue_delays"
 
 var _tick_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _tick_flags: PackedByteArray = PackedByteArray()
@@ -161,9 +164,16 @@ func schedule_rebound(entity_id: int, amount: float, delay_ticks: int) -> void:
 	if entity == null or entity.emotion_data == null:
 		return
 	var ed = entity.emotion_data
-	var queue = ed.get_meta("rebound_queue", [])
+	var queue: Array = ed.get_meta(_REBOUND_QUEUE_META_KEY, [])
 	queue.append({"amount": amount, "delay": delay_ticks})
-	ed.set_meta("rebound_queue", queue)
+	ed.set_meta(_REBOUND_QUEUE_META_KEY, queue)
+
+	var rebound_amounts: PackedFloat32Array = ed.get_meta(_REBOUND_AMOUNTS_META_KEY, PackedFloat32Array())
+	var rebound_delays: PackedInt32Array = ed.get_meta(_REBOUND_DELAYS_META_KEY, PackedInt32Array())
+	rebound_amounts.append(amount)
+	rebound_delays.append(delay_ticks)
+	ed.set_meta(_REBOUND_AMOUNTS_META_KEY, rebound_amounts)
+	ed.set_meta(_REBOUND_DELAYS_META_KEY, rebound_delays)
 
 
 ## Updates stress for all alive entities each tick: processes rebound queues, continuous stressors, emotion contributions, recovery, allostatic load, and reserve.
@@ -905,27 +915,33 @@ func _apply_event_emotion_layers(
 # ── Phase 4: Rebound Queue Processing ────────────────────────────────
 func _process_rebound_queue(ed: RefCounted) -> void:
 	## Gross (1998): suppressed stress surfaces when denial coping terminates
-	## Queue format: Array of {amount: float, delay: int}
-	var queue: Array = ed.get_meta("rebound_queue", [])
-	if queue.is_empty():
-		return
+	## Queue format(compat): Array[{amount,delay}] + packed caches.
+	var rebound_amounts: PackedFloat32Array = ed.get_meta(_REBOUND_AMOUNTS_META_KEY, PackedFloat32Array())
+	var rebound_delays: PackedInt32Array = ed.get_meta(_REBOUND_DELAYS_META_KEY, PackedInt32Array())
+	var has_packed_cache: bool = rebound_amounts.size() > 0 and rebound_amounts.size() == rebound_delays.size()
 
-	var queue_count: int = queue.size()
-	_rebound_amounts.resize(queue_count)
-	_rebound_delays.resize(queue_count)
-	for idx in range(queue_count):
-		var entry: Variant = queue[idx]
-		if typeof(entry) == TYPE_DICTIONARY:
-			var entry_dict: Dictionary = entry
-			_rebound_amounts[idx] = float(entry_dict.get("amount", 0.0))
-			_rebound_delays[idx] = int(entry_dict.get("delay", 0))
-		else:
-			_rebound_amounts[idx] = 0.0
-			_rebound_delays[idx] = 1
+	if not has_packed_cache:
+		var queue: Array = ed.get_meta(_REBOUND_QUEUE_META_KEY, [])
+		if queue.is_empty():
+			return
+		var queue_count: int = queue.size()
+		_rebound_amounts.resize(queue_count)
+		_rebound_delays.resize(queue_count)
+		for idx in range(queue_count):
+			var entry: Variant = queue[idx]
+			if typeof(entry) == TYPE_DICTIONARY:
+				var entry_dict: Dictionary = entry
+				_rebound_amounts[idx] = float(entry_dict.get("amount", 0.0))
+				_rebound_delays[idx] = int(entry_dict.get("delay", 0))
+			else:
+				_rebound_amounts[idx] = 0.0
+				_rebound_delays[idx] = 1
+		rebound_amounts = _rebound_amounts
+		rebound_delays = _rebound_delays
 
 	var step: Dictionary = StatCurveScript.stress_rebound_queue_step(
-		_rebound_amounts,
-		_rebound_delays,
+		rebound_amounts,
+		rebound_delays,
 		REBOUND_DECAY_PER_TICK
 	)
 	var total_rebound: float = float(step.get("total_rebound", 0.0))
@@ -939,7 +955,9 @@ func _process_rebound_queue(ed: RefCounted) -> void:
 			"delay": int(remaining_delays[idx]),
 		})
 
-	ed.set_meta("rebound_queue", remaining)
+	ed.set_meta(_REBOUND_QUEUE_META_KEY, remaining)
+	ed.set_meta(_REBOUND_AMOUNTS_META_KEY, remaining_amounts)
+	ed.set_meta(_REBOUND_DELAYS_META_KEY, remaining_delays)
 
 	if total_rebound > 0.0:
 		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
