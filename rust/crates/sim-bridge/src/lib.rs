@@ -836,6 +836,25 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stress_injection_apply_step(
+        &self,
+        stress: f32,
+        final_instant: f32,
+        final_per_tick: f32,
+        trace_threshold: f32,
+        stress_clamp_max: f32,
+    ) -> PackedFloat32Array {
+        let out = body::stress_injection_apply_step(
+            stress,
+            final_instant,
+            final_per_tick,
+            trace_threshold,
+            stress_clamp_max,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_stress_shaken_countdown_step(&self, shaken_remaining: i32) -> PackedFloat32Array {
         let out = body::stress_shaken_countdown_step(shaken_remaining);
         vec_f32_to_packed(out.to_vec())

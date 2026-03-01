@@ -336,6 +336,13 @@ fn run_stress_math_bench(args: &[String]) {
             2.0 + 10.0 * t,
             2000.0,
         );
+        let injection_apply = body::stress_injection_apply_step(
+            stress,
+            12.0 + 18.0 * t,
+            0.8 + 0.5 * t,
+            0.01,
+            2000.0,
+        );
         let shaken_step = body::stress_shaken_countdown_step((i % 6) as i32);
 
         let primary = stat_curve::stress_primary_step(
@@ -655,6 +662,8 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(support_score)
             + black_box(rebound_apply[0])
             + black_box(rebound_apply[1])
+            + black_box(injection_apply[0])
+            + black_box(injection_apply[1])
             + black_box(shaken_step[0])
             + black_box(shaken_step[1])
             + black_box(personality_scale)

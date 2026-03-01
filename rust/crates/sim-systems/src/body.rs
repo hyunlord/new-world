@@ -594,6 +594,25 @@ pub fn stress_rebound_apply_step(
     ]
 }
 
+/// Applies event stress injection outputs to current stress gauge.
+///
+/// Returns `[next_stress, append_trace_flag]`.
+pub fn stress_injection_apply_step(
+    stress: f32,
+    final_instant: f32,
+    final_per_tick: f32,
+    trace_threshold: f32,
+    stress_clamp_max: f32,
+) -> [f32; 2] {
+    let next_stress = clamp_f32(stress + final_instant, 0.0, stress_clamp_max);
+    let append_flag = if final_per_tick.abs() > trace_threshold {
+        1.0
+    } else {
+        0.0
+    };
+    [next_stress, append_flag]
+}
+
 /// Updates shaken countdown and returns whether work penalty should be cleared.
 ///
 /// Returns `[next_shaken_remaining, clear_penalty_flag]`.
@@ -820,7 +839,8 @@ mod tests {
         child_stress_apply_step, child_stress_type_code, compute_age_curve, compute_age_curves,
         critical_severity, erg_frustration_step, needs_base_decay_step,
         needs_critical_severity_step,
-        rest_energy_recovery, stress_rebound_apply_step, stress_shaken_countdown_step,
+        rest_energy_recovery, stress_injection_apply_step, stress_rebound_apply_step,
+        stress_shaken_countdown_step,
         stress_support_score, thirst_decay,
         upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         warmth_decay,
@@ -1142,6 +1162,19 @@ mod tests {
         let out = stress_shaken_countdown_step(1);
         assert_eq!(out[0], 0.0);
         assert_eq!(out[1], 1.0);
+    }
+
+    #[test]
+    fn stress_injection_apply_step_sets_trace_flag_when_over_threshold() {
+        let out = stress_injection_apply_step(120.0, 30.0, 0.02, 0.01, 2000.0);
+        assert_eq!(out[0], 150.0);
+        assert_eq!(out[1], 1.0);
+    }
+
+    #[test]
+    fn stress_injection_apply_step_clears_trace_flag_when_under_threshold() {
+        let out = stress_injection_apply_step(120.0, 30.0, 0.005, 0.01, 2000.0);
+        assert_eq!(out[1], 0.0);
     }
 
     #[test]

@@ -812,3 +812,8 @@
 - `sim-systems::body`에 `child_stage_code_from_age_ticks`를 추가해 child stage 연령 구간 판정 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor`가 stage cutoff 캐시 기반으로 Rust 우선 판정을 사용하도록 전환.
 - `sim-test --bench-needs-math`에 stage code 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `38457848.00000` @ 10k iters).
+
+## Commit 165
+- `sim-systems::body`에 `stress_injection_apply_step`를 추가해 stress 이벤트 주입 후처리(즉시 clamp + trace append 판정) 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `stress_system`의 `inject_stress_event`/`inject_event`가 Rust 우선 + fallback 구조를 사용하도록 전환.
+- `sim-test --bench-stress-math`에 injection apply step 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `24032652.00000` @ 10k iters).

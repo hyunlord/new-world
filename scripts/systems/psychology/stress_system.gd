@@ -455,10 +455,27 @@ func inject_stress_event(ed, source_id: String, instant: float,
 	)
 	var final_instant: float = float(scaled.get("final_instant", 0.0))
 	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
+	var append_trace: bool = false
+	var injection_variant: Variant = SimBridge.body_stress_injection_apply_step(
+		float(ed.stress),
+		final_instant,
+		final_per_tick,
+		0.01,
+		STRESS_CLAMP_MAX
+	)
+	if injection_variant is PackedFloat32Array:
+		var packed_injection: PackedFloat32Array = injection_variant
+		if packed_injection.size() >= 2:
+			ed.stress = float(packed_injection[0])
+			append_trace = int(round(float(packed_injection[1]))) != 0
+		else:
+			ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+			append_trace = absf(final_per_tick) > 0.01
+	else:
+		ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+		append_trace = absf(final_per_tick) > 0.01
 
-	ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
-
-	if absf(final_per_tick) > 0.01:
+	if append_trace:
 		ed.stress_traces.append({
 			"source_id": source_id,
 			"breakdown_key": "trace_%s" % source_id,
@@ -613,9 +630,27 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
 
 	# 6) Stress 주입
-	ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+	var append_trace: bool = false
+	var injection_variant: Variant = SimBridge.body_stress_injection_apply_step(
+		float(ed.stress),
+		final_instant,
+		final_per_tick,
+		0.01,
+		STRESS_CLAMP_MAX
+	)
+	if injection_variant is PackedFloat32Array:
+		var packed_injection: PackedFloat32Array = injection_variant
+		if packed_injection.size() >= 2:
+			ed.stress = float(packed_injection[0])
+			append_trace = int(round(float(packed_injection[1]))) != 0
+		else:
+			ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+			append_trace = absf(final_per_tick) > 0.01
+	else:
+		ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
+		append_trace = absf(final_per_tick) > 0.01
 
-	if absf(final_per_tick) > 0.01:
+	if append_trace:
 		ed.stress_traces.append({
 			"source_id": event_id,
 			"breakdown_key": "trace_%s" % event_id,

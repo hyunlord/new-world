@@ -1756,6 +1756,27 @@ func body_stress_rebound_apply_step(
 	)
 
 
+## Delegates stress event injection apply step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_stress_injection_apply_step(
+	stress: float,
+	final_instant: float,
+	final_per_tick: float,
+	trace_threshold: float,
+	stress_clamp_max: float
+):
+	return _call_native_if_exists(
+		"body_stress_injection_apply_step",
+		[
+			stress,
+			final_instant,
+			final_per_tick,
+			trace_threshold,
+			stress_clamp_max
+		]
+	)
+
+
 ## Delegates shaken countdown step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_stress_shaken_countdown_step(shaken_remaining: int):
