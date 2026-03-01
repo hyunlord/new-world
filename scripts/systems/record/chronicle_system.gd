@@ -30,6 +30,7 @@ var _last_prune_year: int = 0
 
 ## Entity manager reference (for name lookups)
 var _entity_manager: RefCounted
+var _deceased_registry: Node = null
 
 
 ## Initializes the chronicle system with the entity manager for name lookups.
@@ -159,12 +160,19 @@ func _get_entity_name(entity_id: int) -> String:
 	if entity != null:
 		return entity.entity_name
 	# Check DeceasedRegistry
-	if has_node("/root/DeceasedRegistry"):
-		var registry: Node = get_node("/root/DeceasedRegistry")
+	var registry: Node = _get_deceased_registry()
+	if registry != null:
 		var record: Dictionary = registry.get_record(entity_id)
 		if record.size() > 0:
 			return record.get("name", "?")
 	return "?"
+
+
+func _get_deceased_registry() -> Node:
+	if _deceased_registry != null and is_instance_valid(_deceased_registry):
+		return _deceased_registry
+	_deceased_registry = get_node_or_null("/root/DeceasedRegistry")
+	return _deceased_registry
 
 
 ## Dual-write helper: log to chronicle AND to entity's personal working_memory.

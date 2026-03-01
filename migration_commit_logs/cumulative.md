@@ -586,3 +586,8 @@
 - `tech_maintenance_system`의 chronicle params에서 `settlement` 값을 문자열 선변환 없이 정수로 직접 전달.
 - `tech_propagation_system`의 teaching/imported 이벤트 params(`student`, `teacher`, `level`, `settlement`, `source`, `carrier`) 선 문자열 변환 제거.
 - 출력 의미를 유지하면서 chronicle params 생성 시 불필요한 문자열 할당을 줄임.
+
+## Commit 120
+- `chronicle_system`에 DeceasedRegistry 노드 캐시(`_deceased_registry`)와 조회 헬퍼(`_get_deceased_registry`)를 추가.
+- `_get_entity_name`에서 반복 `has_node/get_node` 탐색 대신 캐시 조회 경로로 전환.
+- 이름 조회 의미를 유지하면서 chronicle 이벤트 기록 시 노드 탐색 오버헤드를 완화.
