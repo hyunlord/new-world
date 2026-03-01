@@ -1245,3 +1245,8 @@
 - `localization_compile` summary report에 `thresholds` 객체를 추가해 manifest 기반 품질 게이트 임계치들을 JSON 아티팩트에 함께 기록.
 - compile 결과 지표와 임계치를 동일 리포트에서 비교할 수 있어 검증 기준 추적성과 운영 가시성을 강화.
 - `/tmp/worldsim_audit_artifacts13/compile_report.json`에서 `thresholds` 6개 필드 반영을 확인.
+
+## Commit 252
+- `localization_audit` 출력 JSON(`audit.json`, `duplicate.json`)에 `schema_version`, `generated_at_utc` 메타를 추가해 아티팩트 버전/생성시각 추적을 지원.
+- `run_audit` 결과와 duplicate report export payload를 함께 확장해 두 출력 간 메타 일관성을 유지.
+- `/tmp/worldsim_audit_artifacts14/audit.json`, `/tmp/worldsim_audit_artifacts14/duplicate.json`에서 메타 필드 반영 확인.

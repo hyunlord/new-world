@@ -19,6 +19,7 @@ import argparse
 import json
 import sys
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Set, Tuple
 
@@ -175,6 +176,7 @@ def _find_inline_localized_groups(data_file: Path) -> List[Dict[str, Any]]:
 
 
 def run_audit(project_root: Path) -> Dict[str, Any]:
+    generated_at_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     localization_root = project_root / "localization"
     en_dir = localization_root / "en"
     ko_dir = localization_root / "ko"
@@ -300,6 +302,8 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         owner_policy_category_counts[str(category)] += 1
 
     return {
+        "schema_version": 1,
+        "generated_at_utc": generated_at_utc,
         "parity_issues": parity_issues,
         "duplicate_key_count": max_duplicate_key_count,
         "duplicate_keys": duplicate_keys,
@@ -710,6 +714,8 @@ def main() -> int:
         _write_json(
             out,
             {
+                "schema_version": report.get("schema_version", 1),
+                "generated_at_utc": report.get("generated_at_utc", ""),
                 "duplicate_key_count": report["duplicate_key_count"],
                 "duplicate_conflict_count": report["duplicate_conflict_count"],
                 "duplicate_consistent_count": report["duplicate_consistent_count"],
