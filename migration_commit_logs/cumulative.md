@@ -79,3 +79,7 @@
 - inline localization 감사 지표를 keyable(문자열) / non-keyable(객체/배열 등)로 분리.
 - strict 기준을 keyable 누락 중심으로 재정의해 진행률 평가 정확도 향상.
 - 현재 keyable 그룹 기준 `*_key` 누락 0 달성.
+
+## Commit 017
+- `Locale.tr_data()` deprecated 경고를 1회 출력으로 제한.
+- key-first 조회는 유지하면서 반복 호출 시 로그/성능 오버헤드 완화.
