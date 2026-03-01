@@ -16,3 +16,8 @@
 - Rust bridge에 `pathfind_grid_batch` 계열 배치 API 추가.
 - GDScript `Pathfinder`/`SimBridge`에 배치 프록시 경로 추가.
 - `MovementSystem`이 재계산 엔티티를 모아 배치 호출하도록 최적화.
+
+## Commit 004
+- `ComputeBackend` autoload 추가(`cpu/gpu_auto/gpu_force`).
+- `SimBridge`에 GPU 메서드 우선 탐색 경로 추가(없으면 CPU fallback).
+- `project.godot` autoload에 `ComputeBackend` 등록.

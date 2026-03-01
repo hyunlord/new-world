@@ -9,10 +9,20 @@ const _PATHFIND_METHOD_CANDIDATES: Array[String] = [
 	"pathfind_grid",
 	"pathfind",
 ]
+const _PATHFIND_GPU_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_gpu",
+]
+const _PATHFIND_BATCH_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_batch",
+]
+const _PATHFIND_BATCH_GPU_METHOD_CANDIDATES: Array[String] = [
+	"pathfind_grid_gpu_batch",
+]
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
 var _pathfind_method_name: String = ""
+var _pathfind_batch_method_name: String = ""
 
 
 ## Delegates pathfinding to native bridge when available.
@@ -31,8 +41,11 @@ func pathfind_grid(
 	var bridge: Object = _get_native_bridge()
 	if bridge == null:
 		return null
+	var method_name: String = _pathfind_method_name
+	if _prefer_gpu():
+		method_name = _pick_method(_PATHFIND_GPU_METHOD_CANDIDATES, _pathfind_method_name)
 	return bridge.call(
-		_pathfind_method_name,
+		method_name,
 		width,
 		height,
 		walkable,
@@ -58,10 +71,13 @@ func pathfind_grid_batch(
 	var bridge: Object = _get_native_bridge()
 	if bridge == null:
 		return null
-	if not bridge.has_method("pathfind_grid_batch"):
+	if _pathfind_batch_method_name == "":
 		return null
+	var method_name: String = _pathfind_batch_method_name
+	if _prefer_gpu():
+		method_name = _pick_method(_PATHFIND_BATCH_GPU_METHOD_CANDIDATES, _pathfind_batch_method_name)
 	return bridge.call(
-		"pathfind_grid_batch",
+		method_name,
 		width,
 		height,
 		walkable,
@@ -89,6 +105,9 @@ func _get_native_bridge() -> Object:
 			if singleton_obj.has_method(method_name):
 				_native_bridge = singleton_obj
 				_pathfind_method_name = method_name
+				_pathfind_batch_method_name = _pick_method(
+					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
+				)
 				return _native_bridge
 
 	for i in range(_NATIVE_SINGLETON_CANDIDATES.size()):
@@ -103,6 +122,30 @@ func _get_native_bridge() -> Object:
 			if instance.has_method(method_name):
 				_native_bridge = instance
 				_pathfind_method_name = method_name
+				_pathfind_batch_method_name = _pick_method(
+					_PATHFIND_BATCH_METHOD_CANDIDATES, ""
+				)
 				return _native_bridge
 
 	return null
+
+
+func _prefer_gpu() -> bool:
+	if not Engine.has_singleton("ComputeBackend"):
+		return false
+	var backend: Object = Engine.get_singleton("ComputeBackend")
+	if backend == null:
+		return false
+	if not backend.has_method("resolve_mode"):
+		return false
+	return str(backend.call("resolve_mode")) == "gpu"
+
+
+func _pick_method(candidates: Array[String], fallback: String) -> String:
+	if _native_bridge == null:
+		return fallback
+	for i in range(candidates.size()):
+		var name: String = candidates[i]
+		if _native_bridge.has_method(name):
+			return name
+	return fallback

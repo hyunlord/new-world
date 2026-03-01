@@ -27,6 +27,7 @@ NameGenerator="*res://scripts/core/social/name_generator.gd"
 Locale="*res://scripts/core/simulation/locale.gd"
 StatQuery="*res://scripts/core/stats/stat_query.gd"
 SimBridge="*res://scripts/core/simulation/sim_bridge.gd"
+ComputeBackend="*res://scripts/core/simulation/compute_backend.gd"
 
 [display]
 
