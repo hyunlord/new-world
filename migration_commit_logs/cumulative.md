@@ -501,3 +501,8 @@
 - `building_detail_panel`의 `UI_STATUS_UNDER_CONSTRUCTION_FMT`, `UI_DETAIL_CAPACITY_FMT`, `UI_DETAIL_EFFECT_RADIUS_FMT` 호출을 `Locale.trf1` 경량 포맷 경로로 전환.
 - 출력 의미를 유지하면서 단일 placeholder 포맷 호출의 임시 params Dictionary 생성을 줄임.
 - Building Detail 패널 draw 경로의 미세 오버헤드를 완화.
+
+## Commit 103
+- `building_detail_panel`의 건물 조회를 `get_all_buildings()` 선형 탐색에서 `get_building(id)` direct lookup으로 전환.
+- 패널 draw 경로에서 프레임당 건물 전체 순회를 제거해 조회 비용을 줄임.
+- 표시 의미를 유지하면서 Building Detail 조회 핫패스를 경량화.

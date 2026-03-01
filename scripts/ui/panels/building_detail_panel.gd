@@ -29,12 +29,7 @@ func _draw() -> void:
 	if not visible or _building_manager == null or _building_id < 0:
 		return
 
-	var building = null
-	var all_buildings: Array = _building_manager.get_all_buildings()
-	for i in range(all_buildings.size()):
-		if all_buildings[i].id == _building_id:
-			building = all_buildings[i]
-			break
+	var building = _building_manager.get_building(_building_id)
 	if building == null:
 		visible = false
 		return
