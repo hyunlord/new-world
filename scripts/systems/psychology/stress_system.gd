@@ -17,8 +17,6 @@ const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
-const EUSTRESS_OPTIMAL: float = 150.0
-
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
 ## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
 ## Folkman & Lazarus (1988) — denial as maladaptive avoidant coping
@@ -280,18 +278,8 @@ func _calc_support_score(_entity: RefCounted) -> float:
 # ── Yerkes-Dodson work efficiency ─────────────────────────────────────
 ## Returns a Yerkes-Dodson work efficiency multiplier (0.35–1.10) based on the entity's current stress level.
 func get_work_efficiency(ed) -> float:
-	var s: float = ed.stress
-	var perf: float
-	if s < 150.0:
-		perf = 1.0 + 0.0006 * s
-	elif s < 350.0:
-		perf = 1.09 - 0.0004 * (s - 150.0)
-	else:
-		perf = 1.01 - 0.0012 * (s - 350.0)
-	# Shaken 후유증 패널티
 	var shaken_penalty: float = ed.get_meta("shaken_work_penalty", 0.0)
-	perf += shaken_penalty
-	return clampf(perf, 0.35, 1.10)
+	return StatCurveScript.stress_work_efficiency(ed.stress, shaken_penalty)
 
 
 # ── Event stress injection (COR loss aversion x2.5) ──────────────────

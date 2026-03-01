@@ -814,6 +814,21 @@ func stat_stress_resilience_value(
 	)
 
 
+## Delegates stress work efficiency curve to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_work_efficiency(
+	stress: float,
+	shaken_penalty: float
+):
+	return _call_native_if_exists(
+		"stat_stress_work_efficiency",
+		[
+			stress,
+			shaken_penalty
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

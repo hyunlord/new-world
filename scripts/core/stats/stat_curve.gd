@@ -1181,6 +1181,32 @@ static func stress_resilience_value(
 	r += scar_resilience_mod
 	return clampf(r, 0.05, 1.0)
 
+
+## Yerkes-Dodson work efficiency multiplier.
+static func stress_work_efficiency(
+	stress: float,
+	shaken_penalty: float
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_work_efficiency",
+		[
+			stress,
+			shaken_penalty
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var perf: float
+	if stress < 150.0:
+		perf = 1.0 + 0.0006 * stress
+	elif stress < 350.0:
+		perf = 1.09 - 0.0004 * (stress - 150.0)
+	else:
+		perf = 1.01 - 0.0012 * (stress - 350.0)
+	perf += shaken_penalty
+	return clampf(perf, 0.35, 1.10)
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

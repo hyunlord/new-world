@@ -231,3 +231,8 @@
 - stress 틱 핵심 수학 경로를 `stress_tick_step` 단일 Rust step으로 통합해 Primary/Trace+Emotion+Recovery+Delta/Post+Resilience를 1회 호출로 수렴.
 - `StressSystem`은 단일 step 결과를 반영하는 구조로 재구성되고 기존 내부 helper(`_calc_primary_inputs`, `_calc_trace_emotion_recovery_delta`)는 제거.
 - breakdown/trace/hidden accumulator 의미를 유지하면서 stress 파이프라인의 브리지 round-trip을 최소화.
+
+## Commit 048
+- `StressSystem.get_work_efficiency`의 Yerkes-Dodson 수식을 Rust 함수(`stress_work_efficiency`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 work-efficiency API를 추가하고 GDScript는 네이티브 우선 호출 경로로 전환.
+- stress 관련 남은 GDScript 수식 경로를 추가 축소하면서 기존 piecewise/penalty/clamp 의미를 유지.

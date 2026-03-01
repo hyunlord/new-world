@@ -1277,6 +1277,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_work_efficiency(&self, stress: f32, shaken_penalty: f32) -> f32 {
+        stat_curve::stress_work_efficiency(stress, shaken_penalty)
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

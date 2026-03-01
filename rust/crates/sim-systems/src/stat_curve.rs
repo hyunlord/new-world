@@ -1046,6 +1046,19 @@ pub fn stress_resilience_value(
     r.clamp(0.05, 1.0)
 }
 
+/// Yerkes-Dodson work efficiency multiplier.
+pub fn stress_work_efficiency(stress: f32, shaken_penalty: f32) -> f32 {
+    let mut perf = if stress < 150.0 {
+        1.0 + 0.0006 * stress
+    } else if stress < 350.0 {
+        1.09 - 0.0004 * (stress - 150.0)
+    } else {
+        1.01 - 0.0012 * (stress - 350.0)
+    };
+    perf += shaken_penalty;
+    perf.clamp(0.35, 1.10)
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -1537,6 +1550,24 @@ mod tests {
         assert!((out.delta - tr.delta).abs() < 1e-6);
         assert!((out.stress - next_stress).abs() < 1e-6);
         assert!((out.resilience - post.resilience).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_work_efficiency_matches_piecewise_curve() {
+        let low = stress_work_efficiency(100.0, 0.0);
+        let mid = stress_work_efficiency(200.0, 0.0);
+        let high = stress_work_efficiency(500.0, 0.0);
+        assert!((low - 1.06).abs() < 1e-6);
+        assert!((mid - 1.07).abs() < 1e-6);
+        assert!((high - 0.83).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_work_efficiency_applies_penalty_and_clamp() {
+        let with_penalty = stress_work_efficiency(200.0, -0.2);
+        let clamped = stress_work_efficiency(2000.0, -2.0);
+        assert!(with_penalty < stress_work_efficiency(200.0, 0.0));
+        assert!((0.35..=1.10).contains(&clamped));
     }
 
     #[test]
