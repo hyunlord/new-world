@@ -427,8 +427,8 @@ def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
 
     lines.extend(
         [
-            "| Key | Files | Sample Values |",
-            "| --- | --- | --- |",
+            "| Key | Canonical (Suggested) | Files | Sample Values |",
+            "| --- | --- | --- | --- |",
         ]
     )
     for key, item in conflict_items:
@@ -438,9 +438,16 @@ def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
         for file_name in files[:3]:
             sample_value = _format_value_sample(values_by_file.get(file_name))
             sample_parts.append(f"{file_name}: {sample_value}")
+        canonical_file = files[0] if files else ""
+        for preferred in ("ui.json", "game.json", "events.json"):
+            if preferred in files:
+                canonical_file = preferred
+                break
         files_joined = ", ".join(files).replace("|", "\\|")
         sample_joined = " / ".join(sample_parts)
-        lines.append(f"| `{key}` | {files_joined} | {sample_joined} |")
+        lines.append(
+            f"| `{key}` | `{canonical_file}` | {files_joined} | {sample_joined} |"
+        )
     lines.append("")
     return "\n".join(lines)
 

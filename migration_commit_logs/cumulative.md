@@ -1055,3 +1055,8 @@
 - `sim-systems`에 재사용 가능한 `PathfindWorkspace`와 `find_path_with_workspace`를 추가해 pathfinding scratch 버퍼를 호출 간 재사용 가능하게 확장.
 - `sim-bridge` batch pathfinding(tuple/xy/vec2)이 batch당 1회 workspace를 생성해 모든 질의에서 재사용하도록 연결.
 - checksum 유지 상태로 batch 경로의 메모리 할당 churn을 추가 완화.
+
+## Commit 214
+- localization duplicate conflict Markdown 리포트에 `Canonical (Suggested)` 컬럼을 추가해 충돌 키 통합 기준 파일을 자동 제안.
+- 추천 우선순위를 `ui.json > game.json > events.json`으로 적용해 실제 정리 워크플로우 의사결정 시간을 단축.
+- 기존 리포트/검증 파이프라인과 호환되며 출력 가독성을 강화.
