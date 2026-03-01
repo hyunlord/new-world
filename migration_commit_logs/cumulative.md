@@ -241,3 +241,8 @@
 - `StressSystem`의 `stress_tick_step` 입력 경로에서 `PackedFloat32Array`/`PackedByteArray`를 엔티티마다 새로 생성하지 않고 scratch buffer 재사용 방식으로 전환.
 - trace/scalar/flag 입력 배열을 resize + 인덱스 갱신 패턴으로 채워 GDScript 할당/GC 오버헤드를 줄임.
 - stress 수식/상태 업데이트/breakdown 동작 의미는 유지한 채 실행 경로의 메모리 churn을 완화.
+
+## Commit 050
+- 이벤트 기반 stress 주입 경로(`inject_stress_event`, `inject_event`)의 최종 스케일 계산을 Rust helper(`stress_event_scaled`)로 공통화.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 대응 API를 추가하고 GDScript의 중복 수식 경로를 네이티브 우선 호출로 치환.
+- `total_scale`/`loss_mult`/`final_instant`/`final_per_tick` 의미를 유지하면서 이벤트 주입 계산 일관성과 유지보수성을 강화.

@@ -1207,6 +1207,42 @@ static func stress_work_efficiency(
 	perf += shaken_penalty
 	return clampf(perf, 0.35, 1.10)
 
+
+## Scales stress event instant/per_tick with accumulated multipliers.
+## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
+static func stress_event_scaled(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	relationship_scale: float,
+	context_scale: float,
+	appraisal_scale: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_event_scaled",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			relationship_scale,
+			context_scale,
+			appraisal_scale
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var loss_mult: float = 2.5 if is_loss else 1.0
+	var total_scale: float = personality_scale * relationship_scale * context_scale * appraisal_scale
+	return {
+		"total_scale": total_scale,
+		"loss_mult": loss_mult,
+		"final_instant": base_instant * total_scale * loss_mult,
+		"final_per_tick": base_per_tick * total_scale * loss_mult,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

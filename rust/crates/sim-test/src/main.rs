@@ -216,6 +216,15 @@ fn run_stress_math_bench(args: &[String]) {
             -0.03 * t,
         );
         let work_eff = stat_curve::stress_work_efficiency(stress, -0.03 * t);
+        let event_scaled = stat_curve::stress_event_scaled(
+            12.0 + 18.0 * t,
+            0.8 + 0.5 * t,
+            i % 2 == 0,
+            0.8 + 0.4 * t,
+            0.6 + 0.6 * (1.0 - t),
+            0.7 + 0.5 * t,
+            1.0,
+        );
         let traces = stat_curve::stress_trace_batch_step(&trace_per_tick, &trace_decay, 0.01);
         let delta_step = stat_curve::stress_delta_step(
             primary.total,
@@ -347,6 +356,7 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(post_res_step.resilience)
             + black_box(resilience)
             + black_box(work_eff)
+            + black_box(event_scaled.final_instant)
             + black_box(traces.total_contribution)
             + black_box(delta_step.delta)
             + black_box(delta_step.hidden_threat_accumulator)

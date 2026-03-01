@@ -294,15 +294,24 @@ func get_work_efficiency(ed) -> float:
 func inject_stress_event(ed, source_id: String, instant: float,
 		per_tick: float = 0.0, decay_rate: float = 0.05,
 		is_loss: bool = false, appraisal_scale: float = 1.0) -> void:
-	var loss_mult: float = 2.5 if is_loss else 1.0
-	var final_instant: float = instant * loss_mult * appraisal_scale
+	var scaled: Dictionary = StatCurveScript.stress_event_scaled(
+		instant,
+		per_tick,
+		is_loss,
+		1.0,
+		1.0,
+		1.0,
+		appraisal_scale
+	)
+	var final_instant: float = float(scaled.get("final_instant", 0.0))
+	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
 
 	ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
 
-	if per_tick > 0.01:
+	if absf(final_per_tick) > 0.01:
 		ed.stress_traces.append({
 			"source_id": source_id,
-			"per_tick": per_tick * loss_mult * appraisal_scale,
+			"per_tick": final_per_tick,
 			"decay_rate": decay_rate,
 		})
 
@@ -365,15 +374,21 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var c_mods = sdef.get("context_modifiers", {})
 	var context_scale = _calc_context_scale(context, c_mods)
 
-	# 5) COR 손실 혐오
-	var loss_mult: float = 2.5 if is_loss else 1.0
+	# 5) 최종 계산 (Rust curve helper)
+	var scaled: Dictionary = StatCurveScript.stress_event_scaled(
+		instant,
+		per_tick,
+		is_loss,
+		personality_scale,
+		relationship_scale,
+		context_scale,
+		1.0
+	)
+	var total_scale: float = float(scaled.get("total_scale", 1.0))
+	var final_instant: float = float(scaled.get("final_instant", 0.0))
+	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
 
-	# 6) 최종 계산
-	var total_scale = personality_scale * relationship_scale * context_scale
-	var final_instant = instant * total_scale * loss_mult
-	var final_per_tick = per_tick * total_scale * loss_mult
-
-	# 7) Stress 주입
+	# 6) Stress 주입
 	ed.stress = clampf(ed.stress + final_instant, 0.0, STRESS_CLAMP_MAX)
 
 	if absf(final_per_tick) > 0.01:
@@ -383,11 +398,11 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 			"decay_rate": decay_rate,
 		})
 
-	# 8) 감정 직접 주입
+	# 7) 감정 직접 주입
 	var emo_inject = sdef.get("emotion_inject", {})
 	_inject_emotions(ed, emo_inject, total_scale)
 
-	# 9) 디버그 로그
+	# 8) 디버그 로그
 	if GameConfig.DEBUG_STRESS_LOG:
 		var ename = entity.entity_name if "entity_name" in entity else "?"
 		print("[STRESS_EVENT] %s | %s | inst=%.0f ptk=%.1f | p=%.2f r=%.2f c=%.2f | loss=%s" % [

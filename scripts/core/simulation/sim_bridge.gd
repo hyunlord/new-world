@@ -829,6 +829,31 @@ func stat_stress_work_efficiency(
 	)
 
 
+## Delegates stress event final scaling to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_event_scaled(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	relationship_scale: float,
+	context_scale: float,
+	appraisal_scale: float
+):
+	return _call_native_if_exists(
+		"stat_stress_event_scaled",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			relationship_scale,
+			context_scale,
+			appraisal_scale
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

@@ -1282,6 +1282,34 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_event_scaled(
+        &self,
+        base_instant: f32,
+        base_per_tick: f32,
+        is_loss: bool,
+        personality_scale: f32,
+        relationship_scale: f32,
+        context_scale: f32,
+        appraisal_scale: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_event_scaled(
+            base_instant,
+            base_per_tick,
+            is_loss,
+            personality_scale,
+            relationship_scale,
+            context_scale,
+            appraisal_scale,
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("total_scale", out.total_scale as f64);
+        dict.set("loss_mult", out.loss_mult as f64);
+        dict.set("final_instant", out.final_instant as f64);
+        dict.set("final_per_tick", out.final_per_tick as f64);
+        dict
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

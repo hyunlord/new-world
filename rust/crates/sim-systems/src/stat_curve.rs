@@ -185,6 +185,14 @@ pub struct StressTickStep {
     pub resilience: f32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressEventScaled {
+    pub total_scale: f32,
+    pub loss_mult: f32,
+    pub final_instant: f32,
+    pub final_per_tick: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -1059,6 +1067,26 @@ pub fn stress_work_efficiency(stress: f32, shaken_penalty: f32) -> f32 {
     perf.clamp(0.35, 1.10)
 }
 
+/// Scales stress event instant/per_tick with accumulated multipliers.
+pub fn stress_event_scaled(
+    base_instant: f32,
+    base_per_tick: f32,
+    is_loss: bool,
+    personality_scale: f32,
+    relationship_scale: f32,
+    context_scale: f32,
+    appraisal_scale: f32,
+) -> StressEventScaled {
+    let loss_mult = if is_loss { 2.5 } else { 1.0 };
+    let total_scale = personality_scale * relationship_scale * context_scale * appraisal_scale;
+    StressEventScaled {
+        total_scale,
+        loss_mult,
+        final_instant: base_instant * total_scale * loss_mult,
+        final_per_tick: base_per_tick * total_scale * loss_mult,
+    }
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -1568,6 +1596,24 @@ mod tests {
         let clamped = stress_work_efficiency(2000.0, -2.0);
         assert!(with_penalty < stress_work_efficiency(200.0, 0.0));
         assert!((0.35..=1.10).contains(&clamped));
+    }
+
+    #[test]
+    fn stress_event_scaled_applies_all_multipliers() {
+        let out = stress_event_scaled(10.0, 2.0, false, 1.2, 0.8, 1.1, 0.9);
+        assert!((out.total_scale - 0.9504).abs() < 1e-6);
+        assert_eq!(out.loss_mult, 1.0);
+        assert!((out.final_instant - 9.504).abs() < 1e-6);
+        assert!((out.final_per_tick - 1.9008).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_event_scaled_uses_loss_aversion_multiplier() {
+        let gain = stress_event_scaled(10.0, 0.0, false, 1.0, 1.0, 1.0, 1.0);
+        let loss = stress_event_scaled(10.0, 0.0, true, 1.0, 1.0, 1.0, 1.0);
+        assert_eq!(gain.final_instant, 10.0);
+        assert_eq!(loss.final_instant, 25.0);
+        assert_eq!(loss.loss_mult, 2.5);
     }
 
     #[test]
