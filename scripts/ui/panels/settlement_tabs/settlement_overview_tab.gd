@@ -84,7 +84,15 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	var progress_val: float = clampf(float(known_count) / float(maxi(required, 1)), 0.0, 1.0)
 	_draw_bar(canvas, cx, cy, BAR_WIDTH, BAR_HEIGHT, progress_val, TAB_ACTIVE_COLOR)
-	var progress_label: String = Locale.trf("UI_ERA_PROGRESS_FMT", {"era": era_badge, "count": known_count, "required": required})
+	var progress_label: String = Locale.trf3(
+		"UI_ERA_PROGRESS_FMT",
+		"era",
+		era_badge,
+		"count",
+		known_count,
+		"required",
+		required
+	)
 	canvas.draw_string(font, Vector2(cx + BAR_WIDTH + 6.0, cy + BAR_HEIGHT - 2.0), progress_label, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 	cy += BAR_HEIGHT + SECTION_GAP
 
