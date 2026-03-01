@@ -154,7 +154,7 @@ pub fn needs_temp_decay_step(
 
 /// Combined baseline need decays.
 ///
-/// Returns `[hunger_decay, energy_decay, social_decay, thirst_decay, warmth_decay]`.
+/// Returns `[hunger_decay, energy_decay, social_decay, thirst_decay, warmth_decay, safety_decay]`.
 pub fn needs_base_decay_step(
     hunger_value: f32,
     hunger_decay_rate: f32,
@@ -163,6 +163,7 @@ pub fn needs_base_decay_step(
     hunger_metabolic_range: f32,
     energy_decay_rate: f32,
     social_decay_rate: f32,
+    safety_decay_rate: f32,
     thirst_base_decay: f32,
     warmth_base_decay: f32,
     tile_temp: f32,
@@ -171,7 +172,7 @@ pub fn needs_base_decay_step(
     temp_freezing: f32,
     temp_cold: f32,
     needs_expansion_enabled: bool,
-) -> [f32; 5] {
+) -> [f32; 6] {
     let metabolic_factor = hunger_metabolic_min + hunger_metabolic_range * hunger_value;
     let hunger_decay = hunger_decay_rate * hunger_stage_mult * metabolic_factor;
     let thirst = if needs_expansion_enabled {
@@ -191,7 +192,19 @@ pub fn needs_base_decay_step(
     } else {
         0.0
     };
-    [hunger_decay, energy_decay_rate, social_decay_rate, thirst, warmth]
+    let safety = if needs_expansion_enabled {
+        safety_decay_rate
+    } else {
+        0.0
+    };
+    [
+        hunger_decay,
+        energy_decay_rate,
+        social_decay_rate,
+        thirst,
+        warmth,
+        safety,
+    ]
 }
 
 /// Compute training gains for multiple axes in one pass.
@@ -491,7 +504,7 @@ mod tests {
     #[test]
     fn base_decay_step_matches_manual_formula() {
         let out = needs_base_decay_step(
-            0.7, 0.004, 0.8, 0.5, 0.5, 0.003, 0.002, 0.005, 0.01, 0.2, true, 0.5, 0.1,
+            0.7, 0.004, 0.8, 0.5, 0.5, 0.003, 0.002, 0.001, 0.005, 0.01, 0.2, true, 0.5, 0.1,
             0.3, true,
         );
         let expected_hunger = 0.004 * 0.8 * (0.5 + 0.5 * 0.7);
@@ -500,6 +513,7 @@ mod tests {
         assert_eq!(out[2], 0.002);
         assert_eq!(out[3], thirst_decay(0.005, 0.2, 0.5));
         assert_eq!(out[4], warmth_decay(0.01, 0.2, true, 0.5, 0.1, 0.3));
+        assert_eq!(out[5], 0.001);
     }
 
     #[test]

@@ -1,7 +1,7 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
 const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
-const _BASE_DECAY_SCALAR_COUNT: int = 13
+const _BASE_DECAY_SCALAR_COUNT: int = 14
 const _BASE_DECAY_FLAG_COUNT: int = 2
 
 var _entity_manager: RefCounted
@@ -51,12 +51,13 @@ func execute_tick(tick: int) -> void:
 		_base_decay_scalar_inputs[4] = GameConfig.HUNGER_METABOLIC_RANGE
 		_base_decay_scalar_inputs[5] = GameConfig.ENERGY_DECAY_RATE
 		_base_decay_scalar_inputs[6] = GameConfig.SOCIAL_DECAY_RATE
-		_base_decay_scalar_inputs[7] = GameConfig.THIRST_DECAY_RATE
-		_base_decay_scalar_inputs[8] = GameConfig.WARMTH_DECAY_RATE
-		_base_decay_scalar_inputs[9] = tile_temp
-		_base_decay_scalar_inputs[10] = GameConfig.WARMTH_TEMP_NEUTRAL
-		_base_decay_scalar_inputs[11] = GameConfig.WARMTH_TEMP_FREEZING
-		_base_decay_scalar_inputs[12] = GameConfig.WARMTH_TEMP_COLD
+		_base_decay_scalar_inputs[7] = GameConfig.SAFETY_DECAY_RATE
+		_base_decay_scalar_inputs[8] = GameConfig.THIRST_DECAY_RATE
+		_base_decay_scalar_inputs[9] = GameConfig.WARMTH_DECAY_RATE
+		_base_decay_scalar_inputs[10] = tile_temp
+		_base_decay_scalar_inputs[11] = GameConfig.WARMTH_TEMP_NEUTRAL
+		_base_decay_scalar_inputs[12] = GameConfig.WARMTH_TEMP_FREEZING
+		_base_decay_scalar_inputs[13] = GameConfig.WARMTH_TEMP_COLD
 		_base_decay_flag_inputs[0] = 1 if has_tile_temp else 0
 		_base_decay_flag_inputs[1] = 1 if GameConfig.NEEDS_EXPANSION_ENABLED else 0
 		var base_decay_variant: Variant = SimBridge.body_needs_base_decay_step_packed(
@@ -65,20 +66,24 @@ func execute_tick(tick: int) -> void:
 		)
 		if base_decay_variant is PackedFloat32Array:
 			var packed_base_decay: PackedFloat32Array = base_decay_variant
-			if packed_base_decay.size() >= 5:
+			if packed_base_decay.size() >= 6:
 				base_decay_step = packed_base_decay
-		if base_decay_step.size() >= 5:
+		if base_decay_step.size() >= 6:
 			entity.hunger -= float(base_decay_step[0])
 			entity.energy -= float(base_decay_step[1])
 			entity.social -= float(base_decay_step[2])
+			if GameConfig.NEEDS_EXPANSION_ENABLED:
+				entity.safety = maxf(0.0, entity.safety - float(base_decay_step[5]))
 		else:
 			var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
 			entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
 			entity.energy -= GameConfig.ENERGY_DECAY_RATE
 			entity.social -= GameConfig.SOCIAL_DECAY_RATE
+			if GameConfig.NEEDS_EXPANSION_ENABLED:
+				entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
 		var rust_temp_decay: PackedFloat32Array = PackedFloat32Array()
-		if GameConfig.NEEDS_EXPANSION_ENABLED and base_decay_step.size() >= 5:
+		if GameConfig.NEEDS_EXPANSION_ENABLED and base_decay_step.size() >= 6:
 			rust_temp_decay.append(float(base_decay_step[3]))
 			rust_temp_decay.append(float(base_decay_step[4]))
 		elif GameConfig.NEEDS_EXPANSION_ENABLED:
@@ -124,10 +129,6 @@ func execute_tick(tick: int) -> void:
 			else:
 				warmth_decay = GameConfig.WARMTH_DECAY_RATE
 			entity.warmth = maxf(0.0, entity.warmth - warmth_decay)
-
-		## [Maslow (1943) L2 — 안전감 소모]
-		if GameConfig.NEEDS_EXPANSION_ENABLED:
-			entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
 		# Extra energy cost when performing actions / recovery when resting
 		if entity.current_action != "idle" and entity.current_action != "rest":

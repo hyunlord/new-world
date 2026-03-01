@@ -686,3 +686,8 @@
 - `SimBridge`에 `body_needs_base_decay_step_packed`를 추가하고 기존 scalar wrapper는 packed 호출로 위임하도록 정리.
 - `needs_system`이 base decay 입력을 scratch `PackedFloat32Array`/`PackedByteArray`로 재사용하도록 전환되어 엔티티 루프의 배열 생성/append 오버헤드를 축소.
 - base decay 계산 의미를 유지하면서 needs tick 경로의 메모리 churn을 추가 완화.
+
+## Commit 140
+- `needs_base_decay_step` 출력을 6축으로 확장해 safety decay를 base step에 포함하고, `needs_expansion_enabled` 조건에서만 안전감 소모가 반영되도록 통합.
+- `sim-bridge`/`SimBridge` packed scalar 인코딩 순서를 safety 포함 구조로 조정.
+- `needs_system`이 base step 결과에서 safety를 직접 반영하도록 전환되어 기본 소모 경로의 분리 safety 감산 블록을 제거하고 실행 경로를 단순화.

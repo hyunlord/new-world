@@ -474,12 +474,13 @@ impl WorldSimBridge {
         let hunger_metabolic_range = *scalars.get(4).unwrap_or(&0.0);
         let energy_decay_rate = *scalars.get(5).unwrap_or(&0.0);
         let social_decay_rate = *scalars.get(6).unwrap_or(&0.0);
-        let thirst_base_decay = *scalars.get(7).unwrap_or(&0.0);
-        let warmth_base_decay = *scalars.get(8).unwrap_or(&0.0);
-        let tile_temp = *scalars.get(9).unwrap_or(&0.0);
-        let temp_neutral = *scalars.get(10).unwrap_or(&0.5);
-        let temp_freezing = *scalars.get(11).unwrap_or(&0.0);
-        let temp_cold = *scalars.get(12).unwrap_or(&0.25);
+        let safety_decay_rate = *scalars.get(7).unwrap_or(&0.0);
+        let thirst_base_decay = *scalars.get(8).unwrap_or(&0.0);
+        let warmth_base_decay = *scalars.get(9).unwrap_or(&0.0);
+        let tile_temp = *scalars.get(10).unwrap_or(&0.0);
+        let temp_neutral = *scalars.get(11).unwrap_or(&0.5);
+        let temp_freezing = *scalars.get(12).unwrap_or(&0.0);
+        let temp_cold = *scalars.get(13).unwrap_or(&0.25);
         let flags = flag_inputs.as_slice();
         let has_tile_temp = flags.first().copied().unwrap_or(0) != 0;
         let needs_expansion_enabled = flags.get(1).copied().unwrap_or(0) != 0;
@@ -492,6 +493,7 @@ impl WorldSimBridge {
             hunger_metabolic_range,
             energy_decay_rate,
             social_decay_rate,
+            safety_decay_rate,
             thirst_base_decay,
             warmth_base_decay,
             tile_temp,

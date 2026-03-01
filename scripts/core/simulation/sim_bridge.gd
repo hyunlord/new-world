@@ -1426,6 +1426,7 @@ func body_needs_base_decay_step(
 	hunger_metabolic_range: float,
 	energy_decay_rate: float,
 	social_decay_rate: float,
+	safety_decay_rate: float,
 	thirst_base_decay: float,
 	warmth_base_decay: float,
 	tile_temp: float,
@@ -1443,6 +1444,7 @@ func body_needs_base_decay_step(
 	scalar_inputs.append(hunger_metabolic_range)
 	scalar_inputs.append(energy_decay_rate)
 	scalar_inputs.append(social_decay_rate)
+	scalar_inputs.append(safety_decay_rate)
 	scalar_inputs.append(thirst_base_decay)
 	scalar_inputs.append(warmth_base_decay)
 	scalar_inputs.append(tile_temp)
