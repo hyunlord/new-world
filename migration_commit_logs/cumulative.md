@@ -832,3 +832,8 @@
 - `Locale.ltr()`에 key-id 캐시(`_ltr_key_id_cache`)를 도입해 반복 키 조회를 id 기반 경로(`ltr_id`)로 통일.
 - locale 재로딩 시 캐시를 초기화해 key index 변경과의 정합성을 유지.
 - 번역 의미는 유지하면서 런타임 localization 조회 경로를 추가 최적화.
+
+## Commit 169
+- `SimBridge`에 pathfinding backend 제어/조회 공개 API(`set/get/resolve/has_gpu`)를 추가해 GPU 옵션 구조를 스크립트 레벨에서 직접 다룰 수 있게 확장.
+- `ComputeBackend`가 `_ready` 및 `set_mode` 시점에 pathfinding backend 선호 모드를 bridge와 즉시 동기화하도록 연결.
+- GPU 미구현 환경에서도 기존 CPU fallback 의미를 유지하면서, 향후 GPU 경로 구현을 위한 옵션-전달 구조를 고정.

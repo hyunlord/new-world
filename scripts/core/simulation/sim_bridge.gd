@@ -52,6 +52,65 @@ var _resolve_pathfind_backend_method_name: String = ""
 var _last_synced_pathfind_backend_mode: String = ""
 
 
+## Sets native pathfinding backend mode (`auto`, `cpu`, `gpu`) when supported.
+## Returns true when mode was accepted by bridge.
+func set_pathfinding_backend(mode: String) -> bool:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return false
+	var method_name: String = _set_pathfind_backend_method_name
+	if method_name == "":
+		method_name = _pick_method(_SET_PATHFIND_BACKEND_METHOD_CANDIDATES, "")
+		_set_pathfind_backend_method_name = method_name
+	if method_name == "":
+		return false
+	var applied: Variant = bridge.call(method_name, mode)
+	if applied is bool and not bool(applied):
+		return false
+	_last_synced_pathfind_backend_mode = mode
+	return true
+
+
+## Returns configured native pathfinding backend mode (`auto`, `cpu`, `gpu`) when supported.
+func get_pathfinding_backend() -> String:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return "auto"
+	var method_name: String = _get_pathfind_backend_method_name
+	if method_name == "":
+		method_name = _pick_method(_GET_PATHFIND_BACKEND_METHOD_CANDIDATES, "")
+		_get_pathfind_backend_method_name = method_name
+	if method_name == "":
+		return "auto"
+	return str(bridge.call(method_name))
+
+
+## Returns resolved runtime pathfinding backend (`cpu` or `gpu`) when supported.
+func resolve_pathfinding_backend() -> String:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return "cpu"
+	_sync_pathfinding_backend_mode(bridge)
+	var resolved: String = _resolve_pathfinding_backend_mode(bridge)
+	if not resolved.is_empty():
+		return resolved
+	if Engine.has_singleton("ComputeBackend"):
+		var backend: Object = Engine.get_singleton("ComputeBackend")
+		if backend != null and backend.has_method("resolve_mode"):
+			return str(backend.call("resolve_mode"))
+	return "cpu"
+
+
+## Returns true when native bridge reports GPU pathfinding capability.
+func has_gpu_pathfinding() -> bool:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return false
+	if bridge.has_method("has_gpu_pathfinding"):
+		return bool(bridge.call("has_gpu_pathfinding"))
+	return _pick_method(_PATHFIND_GPU_METHOD_CANDIDATES, "").length() > 0
+
+
 ## Delegates pathfinding to native bridge when available.
 ## Returns null when native bridge is unavailable, so caller can fallback.
 func pathfind_grid(

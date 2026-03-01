@@ -11,6 +11,7 @@ var _mode: String = DEFAULT_MODE
 
 func _ready() -> void:
 	_load_settings()
+	_sync_pathfinding_backend_mode()
 
 
 ## Returns configured compute mode (`cpu`, `gpu_auto`, `gpu_force`).
@@ -27,6 +28,7 @@ func set_mode(new_mode: String) -> void:
 		return
 	_mode = new_mode
 	_save_settings()
+	_sync_pathfinding_backend_mode()
 	compute_mode_changed.emit(_mode, resolve_mode())
 
 
@@ -73,3 +75,19 @@ func _save_settings() -> void:
 	data["compute_mode"] = _mode
 	var f_write: FileAccess = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
 	f_write.store_string(JSON.stringify(data, "  "))
+
+
+func _resolve_pathfinding_backend_mode() -> String:
+	if _mode == "cpu":
+		return "cpu"
+	if _mode == "gpu_force":
+		return "gpu"
+	return "auto"
+
+
+func _sync_pathfinding_backend_mode() -> void:
+	if SimBridge == null:
+		return
+	if not SimBridge.has_method("set_pathfinding_backend"):
+		return
+	SimBridge.set_pathfinding_backend(_resolve_pathfinding_backend_mode())
