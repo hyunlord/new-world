@@ -147,6 +147,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     compiled_root = localization_root / compiled_dir_name
     compiled_root.mkdir(parents=True, exist_ok=True)
 
+    compiled_by_locale: Dict[str, Dict[str, Any]] = {}
     total_duplicates = 0
     for locale in supported_locales:
         compiled = _compile_locale(
@@ -155,8 +156,34 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             fallback_locale="en",
             categories=categories,
         )
+        compiled_by_locale[locale] = compiled
         duplicate_count = len(compiled["duplicate_keys"])
         total_duplicates += duplicate_count
+
+    canonical_key_set: set[str] = set()
+    for compiled in compiled_by_locale.values():
+        canonical_key_set.update(compiled["strings"].keys())
+    canonical_keys: List[str] = sorted(canonical_key_set)
+    fallback_strings: Dict[str, str] = {}
+    if "en" in compiled_by_locale:
+        fallback_strings = dict(compiled_by_locale["en"]["strings"])
+
+    for locale in supported_locales:
+        compiled = compiled_by_locale[locale]
+        duplicate_count = len(compiled["duplicate_keys"])
+        locale_strings: Dict[str, str] = dict(compiled["strings"])
+        locale_sources: Dict[str, str] = dict(compiled["sources"])
+        missing_filled_count = 0
+        for key in canonical_keys:
+            if key in locale_strings:
+                continue
+            missing_filled_count += 1
+            if key in fallback_strings:
+                locale_strings[key] = fallback_strings[key]
+                locale_sources[key] = "fallback/en"
+            else:
+                locale_strings[key] = key
+                locale_sources[key] = "fallback/key"
 
         output = {
             "meta": {
@@ -165,20 +192,22 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "categories_order": categories,
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
-                "key_count": len(compiled["keys"]),
+                "key_count": len(canonical_keys),
+                "missing_key_fill_count": missing_filled_count,
                 "include_sources": include_sources,
             },
-            "keys": compiled["keys"],
-            "strings": compiled["strings"],
+            "keys": canonical_keys,
+            "strings": locale_strings,
         }
         if include_sources:
-            output["sources"] = compiled["sources"]
+            output["sources"] = locale_sources
         out_path = compiled_root / f"{locale}.json"
         _write_json(out_path, output)
 
         print(
             f"[localization_compile] {locale}: "
-            f"strings={len(compiled['strings'])} duplicates={duplicate_count} -> {out_path}"
+            f"strings={len(locale_strings)} duplicates={duplicate_count} "
+            f"filled={missing_filled_count} -> {out_path}"
         )
 
     if strict_duplicates and total_duplicates > 0:

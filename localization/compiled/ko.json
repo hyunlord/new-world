@@ -4054,7 +4054,8 @@
     "fallback_locale": "en",
     "include_sources": false,
     "key_count": 4030,
-    "locale": "ko"
+    "locale": "ko",
+    "missing_key_fill_count": 0
   },
   "strings": {
     "ACE_DOMESTIC_VIOLENCE": "가정폭력 목격",

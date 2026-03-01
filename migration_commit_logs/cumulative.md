@@ -391,3 +391,8 @@
 - `Locale.tr_id`에 최종 결과 캐시(`_tr_id_result_cache`)를 추가해 동일 `(prefix,id)` 조회를 즉시 반환하도록 최적화.
 - miss 시 기존 key-id 변환 경로로 계산한 결과(번역/미번역 fallback)를 캐시에 저장해 반복 miss 비용을 줄임.
 - locale reload 시 결과 캐시를 초기화해 locale 전환 이후 정합성을 유지.
+
+## Commit 081
+- localization compile 결과를 locale별 독립 key 목록이 아닌 지원 locale union 기반 canonical key index로 고정.
+- locale별 누락 키는 `en` fallback(또는 key 자체)으로 채워 모든 locale 산출물의 key 집합/순서를 일치시킴.
+- locale 전환 이후에도 key-id 캐시가 동일 인덱스 의미를 유지하도록 안정성을 강화.
