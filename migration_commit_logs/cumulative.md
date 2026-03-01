@@ -29,3 +29,8 @@
 ## Commit 006
 - `tools/localization_audit.py` 추가.
 - en/ko parity, 중복 키, data 내 inline localized field 자동 감사 가능.
+
+## Commit 007
+- `sim-systems::stat_curve` 모듈 신규 추가.
+- 기존 GDScript stat curve 수학 함수들을 Rust 순수 함수로 1차 이관.
+- 단위 테스트 추가로 수학 로직 회귀 방지.

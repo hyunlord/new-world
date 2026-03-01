@@ -4,3 +4,4 @@
 //! The first migrated hot path is A* pathfinding used by movement.
 
 pub mod pathfinding;
+pub mod stat_curve;

@@ -96,7 +96,11 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
         return Vec::new();
     }
 
-    let max_steps = if max_steps == 0 { DEFAULT_MAX_STEPS } else { max_steps };
+    let max_steps = if max_steps == 0 {
+        DEFAULT_MAX_STEPS
+    } else {
+        max_steps
+    };
 
     let mut open_set: Vec<GridPos> = vec![from];
     let mut in_open: HashSet<GridPos> = HashSet::from([from]);
