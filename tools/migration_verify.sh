@@ -74,6 +74,11 @@ audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
 audit_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
 verify_report_json="${MIGRATION_VERIFY_REPORT_JSON:-}"
+verify_assert_artifacts="${MIGRATION_VERIFY_ASSERT_ARTIFACTS:-false}"
+if [[ "${verify_assert_artifacts}" != "true" && "${verify_assert_artifacts}" != "false" ]]; then
+  echo "[migration_verify] MIGRATION_VERIFY_ASSERT_ARTIFACTS must be true or false" >&2
+  exit 1
+fi
 if [[ -n "${audit_report_dir}" ]]; then
   audit_report_dir_prefix="${audit_report_dir%/}"
   if [[ -z "${audit_report_dir_prefix}" ]]; then
@@ -790,6 +795,32 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "\"${abs_path}\""
     fi
   }
+  assert_artifact_exists() {
+    local artifact_name="$1"
+    local raw_path="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" ]]; then
+      return
+    fi
+    if [[ ! -f "${abs_path}" ]]; then
+      echo "[migration_verify] required artifact missing: ${artifact_name} -> ${abs_path}" >&2
+      exit 1
+    fi
+  }
+  if [[ "${verify_assert_artifacts}" == "true" ]]; then
+    assert_artifact_exists "compile_report_json" "${compile_report_json}"
+    assert_artifact_exists "audit_report_json" "${audit_report_json}"
+    assert_artifact_exists "audit_duplicate_report_json" "${audit_duplicate_report_json}"
+    assert_artifact_exists "audit_conflict_markdown" "${audit_conflict_markdown}"
+    assert_artifact_exists "audit_key_owner_policy_json" "${audit_key_owner_policy_json}"
+    assert_artifact_exists "audit_owner_policy_markdown" "${audit_owner_policy_markdown}"
+    assert_artifact_exists "audit_owner_policy_compare_report_json" "${audit_owner_policy_compare_report_json}"
+    if [[ "${WITH_BENCHES}" == "true" ]]; then
+      assert_artifact_exists "bench_report_json" "${bench_report_json}"
+    fi
+    echo "[migration_verify] artifact existence checks passed"
+  fi
   verify_report_out="$(to_abs_path "${verify_report_json}")"
   mkdir -p "$(dirname "${verify_report_out}")"
   generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
@@ -808,6 +839,7 @@ if [[ -n "${verify_report_json}" ]]; then
   "with_benches": ${WITH_BENCHES},
   "apply_key_fields": ${APPLY_KEY_FIELDS},
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},
+  "assert_artifacts": ${verify_assert_artifacts},
   "artifacts": {
     "compile_report_json": ${compile_report_json_value},
     "audit_report_json": ${audit_report_json_value},

@@ -1225,3 +1225,8 @@
 - `migration_verify`에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_HAS_GPU`를 추가해 smoke capability 기대값(`true|false`)을 명시적으로 강제 검증 가능하게 확장.
 - smoke 파서가 mode별 `has_gpu` 일치 + 기대 capability 일치를 검증하고, bench 컨텍스트 로그에 `smoke_expect_has_gpu`를 노출.
 - `bench_report.json`에 `path_smoke_expect_has_gpu`를 추가해 capability 기대 설정까지 아티팩트에 보존.
+
+## Commit 248
+- `migration_verify`에 `MIGRATION_VERIFY_ASSERT_ARTIFACTS`를 추가해 report 아티팩트 파일 존재를 검증 단계에서 강제 가능하게 확장.
+- `assert=true`일 때 compile/audit 아티팩트(및 `WITH_BENCHES=true` 시 bench report) 존재를 체크하고 누락 시 즉시 실패.
+- `migration_verify_report.json`에 `assert_artifacts` 메타 필드를 추가해 실행 시점의 아티팩트 강제 여부를 기록.
