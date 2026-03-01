@@ -1135,3 +1135,8 @@
 - `localization_audit`에 `--refresh-key-owner-policy-auto`를 추가해 manifest의 `key_owners_path`로 owner 정책 자동 갱신을 지원.
 - `migration_verify`에 `MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY` 환경변수를 추가해 필요 시 검증 중 정책 동기화를 수행.
 - 기본 게이트(비갱신 compare) 호환성을 유지하면서 로컬 운영 편의성을 확장.
+
+## Commit 230
+- `migration_verify`에 `MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND`를 추가해 pathfinding 벤치 출력의 resolved backend(cpu/gpu)를 기대값으로 강제 검증.
+- 일반/split pathfinding 벤치 모두에서 resolved 파싱/불일치 실패 로직을 추가.
+- checksum 기준선은 유지하면서 backend 해석 검증 정확도를 강화.
