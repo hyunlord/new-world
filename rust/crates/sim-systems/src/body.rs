@@ -786,6 +786,117 @@ pub fn morale_migration_probability(
     clamp_f32(p_base - resistance, 0.0, max_probability)
 }
 
+/// Computes StatSync derived scores.
+///
+/// Input order:
+/// `[X, A, H, E, O, C, joy, anticipation, anger, str_pot, romance, truth, artwork,
+///   knowledge, merriment, friendship, competition, recognition, i_ling, i_log, i_spa,
+///   i_mus, i_kin, i_inter, i_intra, i_nat, attract, ent_height, age_years]`
+///
+/// Returns:
+/// `[charisma, intimidation, allure, trustworthiness, creativity, wisdom, popularity, risk_tolerance]`
+pub fn stat_sync_derived_scores(inputs: &[f32]) -> [f32; 8] {
+    if inputs.len() < 29 {
+        return [0.0; 8];
+    }
+    let x = inputs[0];
+    let a = inputs[1];
+    let h = inputs[2];
+    let e = inputs[3];
+    let o = inputs[4];
+    let c = inputs[5];
+    let joy = inputs[6];
+    let anticipation = inputs[7];
+    let anger = inputs[8];
+    let str_pot = inputs[9];
+    let romance = inputs[10];
+    let truth = inputs[11];
+    let artwork = inputs[12];
+    let knowledge = inputs[13];
+    let merriment = inputs[14];
+    let friendship = inputs[15];
+    let competition = inputs[16];
+    let recognition = inputs[17];
+    let i_ling = inputs[18];
+    let i_log = inputs[19];
+    let i_spa = inputs[20];
+    let i_mus = inputs[21];
+    let i_kin = inputs[22];
+    let i_inter = inputs[23];
+    let i_intra = inputs[24];
+    let i_nat = inputs[25];
+    let attract = inputs[26];
+    let ent_height = inputs[27];
+    let age_years = inputs[28];
+
+    let charisma = clamp_f32(
+        i_inter * 0.16
+            + i_ling * 0.10
+            + x * 0.22
+            + a * 0.16
+            + h * 0.08
+            + joy * 0.08
+            + (1.0 - e) * 0.06
+            + recognition * 0.04
+            + merriment * 0.05
+            + friendship * 0.05,
+        0.0,
+        1.0,
+    );
+    let intimidation = clamp_f32(
+        str_pot * 0.28
+            + ent_height * 0.17
+            + anger * 0.22
+            + (1.0 - e) * 0.12
+            + x * 0.10
+            + competition * 0.06
+            + i_kin * 0.05,
+        0.0,
+        1.0,
+    );
+    let allure = clamp_f32(attract * 0.35 + charisma * 0.35 + romance * 0.20 + x * 0.10, 0.0, 1.0);
+    let trustworthiness = clamp_f32(h * 0.40 + a * 0.30 + truth * 0.30, 0.0, 1.0);
+    let creativity = clamp_f32(
+        i_spa * 0.15
+            + i_mus * 0.10
+            + i_ling * 0.05
+            + o * 0.25
+            + anticipation * 0.15
+            + artwork * 0.15
+            + i_intra * 0.05
+            + x * 0.10,
+        0.0,
+        1.0,
+    );
+    let age_factor = clamp_f32((age_years - 25.0) / 35.0, 0.0, 1.0);
+    let wisdom = clamp_f32(
+        i_intra * 0.16
+            + i_log * 0.12
+            + c * 0.14
+            + o * 0.10
+            + a * 0.10
+            + knowledge * 0.14
+            + age_factor * 0.12
+            + i_ling * 0.06
+            + i_nat * 0.06,
+        0.0,
+        1.0,
+    );
+    let popularity = clamp_f32(charisma * 0.50 + merriment * 0.25 + friendship * 0.25, 0.0, 1.0);
+    let risk_tolerance = clamp_f32((1.0 - e) * 0.40 + o * 0.30 + competition * 0.15 + (1.0 - c) * 0.15, 0.0, 1.0);
+
+    [
+        charisma,
+        intimidation,
+        allure,
+        trustworthiness,
+        creativity,
+        wisdom,
+        popularity,
+        risk_tolerance,
+    ]
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1837,6 +1948,7 @@ mod tests {
         personality_linear_target, intelligence_effective_value,
         intelligence_g_value, personality_child_axis_z,
         morale_behavior_weight_multiplier, morale_migration_probability,
+        stat_sync_derived_scores,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2310,6 +2422,23 @@ mod tests {
         let low_morale = morale_migration_probability(0.2, 10.0, 0.35, 0.5, 0.3, 0.95);
         assert!(low_morale > high_morale);
         assert!((0.0..=0.95).contains(&low_morale));
+    }
+
+    #[test]
+    fn stat_sync_derived_scores_returns_expected_shape() {
+        let inputs = [
+            0.6, 0.5, 0.5, 0.4, 0.7, 0.6, 0.6, 0.5, 0.3, 0.7, 0.4, 0.8, 0.5, 0.7, 0.5, 0.6, 0.4,
+            0.5, 0.6, 0.7, 0.5, 0.4, 0.6, 0.7, 0.6, 0.5, 0.5, 0.6, 35.0,
+        ];
+        let out = stat_sync_derived_scores(&inputs);
+        assert_eq!(out.len(), 8);
+        assert!(out.iter().all(|v| (0.0..=1.0).contains(v)));
+    }
+
+    #[test]
+    fn stat_sync_derived_scores_handles_short_input() {
+        let out = stat_sync_derived_scores(&[0.1, 0.2]);
+        assert_eq!(out, [0.0; 8]);
     }
 
     #[test]

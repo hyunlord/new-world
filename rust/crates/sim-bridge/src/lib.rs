@@ -1191,6 +1191,13 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stat_sync_derived_scores(&self, inputs: PackedFloat32Array) -> PackedFloat32Array {
+        let v = packed_f32_to_vec(&inputs);
+        let out = body::stat_sync_derived_scores(&v);
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
