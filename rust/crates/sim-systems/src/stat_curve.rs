@@ -22,6 +22,15 @@ pub struct ContinuousStressInputs {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressPrimaryStep {
+    pub appraisal_scale: f32,
+    pub hunger: f32,
+    pub energy_deficit: f32,
+    pub social_isolation: f32,
+    pub total: f32,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct EmotionStressContribution {
     pub fear: f32,
     pub anger: f32,
@@ -218,6 +227,47 @@ pub fn stress_appraisal_scale(
 
     let imbalance = f32::max(0.0, threat_appraisal - coping_appraisal);
     (1.0 + 0.8 * imbalance).clamp(0.7, 1.9)
+}
+
+/// Combined primary stress step:
+/// Lazarus appraisal scale + continuous unmet-needs stress.
+pub fn stress_primary_step(
+    hunger: f32,
+    energy: f32,
+    social: f32,
+    threat: f32,
+    conflict: f32,
+    support_score: f32,
+    extroversion: f32,
+    fear_value: f32,
+    trust_value: f32,
+    conscientiousness: f32,
+    openness: f32,
+    reserve_ratio: f32,
+) -> StressPrimaryStep {
+    let appraisal = stress_appraisal_scale(
+        hunger,
+        energy,
+        social,
+        threat,
+        conflict,
+        support_score,
+        extroversion,
+        fear_value,
+        trust_value,
+        conscientiousness,
+        openness,
+        reserve_ratio,
+    );
+    let continuous = stress_continuous_inputs(hunger, energy, social, appraisal);
+
+    StressPrimaryStep {
+        appraisal_scale: appraisal,
+        hunger: continuous.hunger,
+        energy_deficit: continuous.energy_deficit,
+        social_isolation: continuous.social_isolation,
+        total: continuous.total,
+    }
 }
 
 /// Emotion-to-stress contribution with fixed weights and VA composite term.
@@ -670,6 +720,23 @@ mod tests {
         let stressed =
             stress_appraisal_scale(0.2, 0.3, 0.2, 0.8, 0.4, 0.1, 0.8, 80.0, 20.0, 0.2, 0.2, 0.2);
         assert!(stressed >= baseline);
+    }
+
+    #[test]
+    fn stress_primary_step_matches_appraisal_plus_continuous() {
+        let step = stress_primary_step(
+            0.22, 0.38, 0.17, 0.4, 0.2, 0.3, 0.7, 60.0, 40.0, 0.5, 0.6, 0.4,
+        );
+        let appraisal = stress_appraisal_scale(
+            0.22, 0.38, 0.17, 0.4, 0.2, 0.3, 0.7, 60.0, 40.0, 0.5, 0.6, 0.4,
+        );
+        let cont = stress_continuous_inputs(0.22, 0.38, 0.17, appraisal);
+
+        assert!((step.appraisal_scale - appraisal).abs() < 1e-6);
+        assert!((step.hunger - cont.hunger).abs() < 1e-6);
+        assert!((step.energy_deficit - cont.energy_deficit).abs() < 1e-6);
+        assert!((step.social_isolation - cont.social_isolation).abs() < 1e-6);
+        assert!((step.total - cont.total).abs() < 1e-6);
     }
 
     #[test]

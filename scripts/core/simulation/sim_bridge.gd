@@ -342,6 +342,41 @@ func stat_stress_appraisal_scale(
 	)
 
 
+## Delegates combined appraisal + continuous stress primary step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_primary_step(
+	hunger: float,
+	energy: float,
+	social: float,
+	threat: float,
+	conflict: float,
+	support_score: float,
+	extroversion: float,
+	fear_value: float,
+	trust_value: float,
+	conscientiousness: float,
+	openness: float,
+	reserve_ratio: float
+):
+	return _call_native_if_exists(
+		"stat_stress_primary_step",
+		[
+			hunger,
+			energy,
+			social,
+			threat,
+			conflict,
+			support_score,
+			extroversion,
+			fear_value,
+			trust_value,
+			conscientiousness,
+			openness,
+			reserve_ratio
+		]
+	)
+
+
 ## Delegates emotion-to-stress contribution computation to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_emotion_contribution(

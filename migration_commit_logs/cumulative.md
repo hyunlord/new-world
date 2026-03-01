@@ -206,3 +206,8 @@
 - stress 틱 후반의 reserve/GAS, allostatic, state snapshot 갱신을 단일 Rust batch step(`stress_post_update_step`)으로 통합.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 post-update API를 추가하고 `StressSystem`은 분리 호출 3회를 1회 호출로 치환.
 - `sim-test` stress 벤치에 post-update batch step을 포함해 네이티브 핫패스 측정 커버리지를 확장.
+
+## Commit 043
+- stress 틱 초반의 Lazarus appraisal 계산과 unmet-needs continuous 입력 계산을 단일 Rust step(`stress_primary_step`)으로 통합.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 primary-step API를 추가하고 `StressSystem`의 분리 호출 경로를 결합 호출로 치환.
+- stress breakdown 키/동작은 유지하면서 브리지 round-trip을 추가로 축소.

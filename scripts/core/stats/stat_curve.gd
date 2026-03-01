@@ -275,6 +275,63 @@ static func stress_appraisal_scale(
 	return clampf(1.0 + 0.8 * imbalance, 0.7, 1.9)
 
 
+## Combined primary step:
+## appraisal scale + continuous unmet-needs stress output.
+## Returns Dictionary:
+## { "appraisal_scale", "hunger", "energy_deficit", "social_isolation", "total" }
+static func stress_primary_step(
+	hunger: float,
+	energy: float,
+	social: float,
+	threat: float,
+	conflict: float,
+	support_score: float,
+	extroversion: float,
+	fear_value: float,
+	trust_value: float,
+	conscientiousness: float,
+	openness: float,
+	reserve_ratio: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_primary_step",
+		[
+			hunger,
+			energy,
+			social,
+			threat,
+			conflict,
+			support_score,
+			extroversion,
+			fear_value,
+			trust_value,
+			conscientiousness,
+			openness,
+			reserve_ratio
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var appraisal: float = stress_appraisal_scale(
+		hunger,
+		energy,
+		social,
+		threat,
+		conflict,
+		support_score,
+		extroversion,
+		fear_value,
+		trust_value,
+		conscientiousness,
+		openness,
+		reserve_ratio
+	)
+	var continuous: Dictionary = stress_continuous_inputs(hunger, energy, social, appraisal)
+	continuous["appraisal_scale"] = appraisal
+	return continuous
+
+
 ## Emotion-to-stress contribution with fixed weights and VA composite term.
 ## Returns Dictionary:
 ## { fear, anger, sadness, disgust, surprise, joy, trust, anticipation, va_composite, total }

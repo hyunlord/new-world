@@ -124,9 +124,7 @@ fn run_stress_math_bench(args: &[String]) {
         let stress = 120.0 + 520.0 * t;
         let allostatic = 5.0 + 80.0 * t;
 
-        let continuous =
-            stat_curve::stress_continuous_inputs(hunger, energy, social, 1.0 + 0.5 * t);
-        let appraisal = stat_curve::stress_appraisal_scale(
+        let primary = stat_curve::stress_primary_step(
             hunger,
             energy,
             social,
@@ -199,7 +197,7 @@ fn run_stress_math_bench(args: &[String]) {
         );
         let traces = stat_curve::stress_trace_batch_step(&trace_per_tick, &trace_decay, 0.01);
         let delta_step = stat_curve::stress_delta_step(
-            continuous.total,
+            primary.total,
             traces.total_contribution,
             emotion.total,
             1.1,
@@ -212,8 +210,8 @@ fn run_stress_math_bench(args: &[String]) {
             800.0,
         );
 
-        checksum += black_box(continuous.total)
-            + black_box(appraisal)
+        checksum += black_box(primary.total)
+            + black_box(primary.appraisal_scale)
             + black_box(emotion.total)
             + black_box(recovery)
             + black_box(reserve_step.reserve)

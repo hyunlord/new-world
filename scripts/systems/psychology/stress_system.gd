@@ -80,17 +80,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 
-	# 1) Lazarus Appraisal Scale
-	var appraisal_scale: float = _calc_appraisal_scale(entity, pd, ed, hunger, energy, social)
-
-	# 2) 지속 스트레서 (욕구 결핍)
-	var continuous_input: float = _calc_continuous_stressors(
-		hunger,
-		energy,
-		social,
-		appraisal_scale,
-		breakdown
-	)
+	# 1) Lazarus appraisal + unmet-needs stress (combined native step)
+	var primary_input: Dictionary = _calc_primary_inputs(entity, pd, ed, hunger, energy, social, breakdown)
+	var continuous_input: float = float(primary_input.get("total", 0.0))
 
 	# 3) 스트레스 후유증 traces
 	var trace_input: float = _process_stress_traces(ed, breakdown)
@@ -173,15 +165,16 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	_debug_log(entity, ed, delta)
 
 
-# ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
-func _calc_appraisal_scale(
+# ── 1) Lazarus appraisal + unmet-needs stress (combined) ─────────────
+func _calc_primary_inputs(
 	entity: RefCounted,
 	_pd,
 	ed,
 	hunger: float,
 	energy: float,
-	social: float
-) -> float:
+	social: float,
+	breakdown: Dictionary
+) -> Dictionary:
 	var threat: float = 0.0
 	var conflict: float = 0.0
 	var support_score: float = _calc_support_score(entity)
@@ -193,7 +186,7 @@ func _calc_appraisal_scale(
 	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
 	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
 	var reserve_ratio: float = ed.reserve / 100.0 if ed != null else 0.5
-	return StatCurveScript.stress_appraisal_scale(
+	var inputs: Dictionary = StatCurveScript.stress_primary_step(
 		hunger,
 		energy,
 		social,
@@ -208,23 +201,6 @@ func _calc_appraisal_scale(
 		reserve_ratio
 	)
 
-
-# ── 2) 지속 스트레서 ──────────────────────────────────────────────────
-func _calc_continuous_stressors(
-	hunger: float,
-	energy: float,
-	social: float,
-	appraisal_scale: float,
-	breakdown: Dictionary
-) -> float:
-	var inputs: Dictionary = StatCurveScript.stress_continuous_inputs(
-		hunger,
-		energy,
-		social,
-		appraisal_scale
-	)
-
-	var total: float = float(inputs.get("total", 0.0))
 	var s_hunger: float = float(inputs.get("hunger", 0.0))
 	if s_hunger > STRESS_EPSILON:
 		breakdown["hunger"] = s_hunger
@@ -237,7 +213,7 @@ func _calc_continuous_stressors(
 	if s_social > STRESS_EPSILON:
 		breakdown["social_isolation"] = s_social
 
-	return total
+	return inputs
 
 
 # ── 3) 스트레스 후유증 traces ─────────────────────────────────────────

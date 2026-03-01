@@ -707,6 +707,46 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_primary_step(
+        &self,
+        hunger: f32,
+        energy: f32,
+        social: f32,
+        threat: f32,
+        conflict: f32,
+        support_score: f32,
+        extroversion: f32,
+        fear_value: f32,
+        trust_value: f32,
+        conscientiousness: f32,
+        openness: f32,
+        reserve_ratio: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_primary_step(
+            hunger,
+            energy,
+            social,
+            threat,
+            conflict,
+            support_score,
+            extroversion,
+            fear_value,
+            trust_value,
+            conscientiousness,
+            openness,
+            reserve_ratio,
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("appraisal_scale", out.appraisal_scale as f64);
+        dict.set("hunger", out.hunger as f64);
+        dict.set("energy_deficit", out.energy_deficit as f64);
+        dict.set("social_isolation", out.social_isolation as f64);
+        dict.set("total", out.total as f64);
+        dict
+    }
+
+    #[func]
     fn stat_stress_emotion_contribution(
         &self,
         fear: f32,
