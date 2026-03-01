@@ -9,6 +9,8 @@ Checks:
 Usage:
   python3 tools/localization_audit.py --project-root .
   python3 tools/localization_audit.py --project-root . --strict
+  python3 tools/localization_audit.py --project-root . --report-json localization/reports/audit.json
+  python3 tools/localization_audit.py --project-root . --strict-duplicate-conflicts
 """
 
 from __future__ import annotations
@@ -39,12 +41,54 @@ def _collect_top_level_keys(locale_dir: Path) -> Dict[str, Set[str]]:
     return result
 
 
+def _collect_top_level_entries(locale_dir: Path) -> Dict[str, Dict[str, Any]]:
+    result: Dict[str, Dict[str, Any]] = {}
+    for file in sorted(locale_dir.glob("*.json")):
+        data = _load_json(file)
+        if not isinstance(data, dict):
+            continue
+        result[file.name] = dict(data)
+    return result
+
+
 def _find_duplicates(keys_by_file: Dict[str, Set[str]]) -> Dict[str, List[str]]:
     owners: Dict[str, List[str]] = defaultdict(list)
     for file_name, keyset in keys_by_file.items():
         for key in keyset:
             owners[key].append(file_name)
     return {k: sorted(v) for k, v in owners.items() if len(v) > 1}
+
+
+def _find_duplicate_details(
+    entries_by_file: Dict[str, Dict[str, Any]]
+) -> Dict[str, Dict[str, Any]]:
+    owners: Dict[str, List[str]] = defaultdict(list)
+    values_by_key: Dict[str, Dict[str, Any]] = defaultdict(dict)
+    for file_name, entries in entries_by_file.items():
+        for key, value in entries.items():
+            key_name = str(key)
+            owners[key_name].append(file_name)
+            values_by_key[key_name][file_name] = value
+
+    result: Dict[str, Dict[str, Any]] = {}
+    for key in sorted(owners.keys()):
+        files = sorted(owners[key])
+        if len(files) <= 1:
+            continue
+        values = values_by_key[key]
+        canonical = json.dumps(values[files[0]], ensure_ascii=False, sort_keys=True)
+        value_conflict = False
+        for file_name in files[1:]:
+            sample = json.dumps(values[file_name], ensure_ascii=False, sort_keys=True)
+            if sample != canonical:
+                value_conflict = True
+                break
+        result[key] = {
+            "files": files,
+            "value_conflict": value_conflict,
+            "values_by_file": {file_name: values[file_name] for file_name in files},
+        }
+    return result
 
 
 def _walk_json_paths(obj: Any, path: str = "$") -> Iterable[Tuple[str, Any]]:
@@ -156,6 +200,12 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
             )
 
     duplicate_keys = _find_duplicates(en_keys)
+    duplicate_details = _find_duplicate_details(_collect_top_level_entries(en_dir))
+    duplicate_conflict_count = sum(
+        1
+        for item in duplicate_details.values()
+        if bool(item.get("value_conflict", False))
+    )
 
     inline_localized_fields: List[Dict[str, str]] = []
     inline_localized_groups: List[Dict[str, Any]] = []
@@ -178,6 +228,9 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         "parity_issues": parity_issues,
         "duplicate_key_count": len(duplicate_keys),
         "duplicate_keys": duplicate_keys,
+        "duplicate_conflict_count": duplicate_conflict_count,
+        "duplicate_consistent_count": len(duplicate_details) - duplicate_conflict_count,
+        "duplicate_details": duplicate_details,
         "inline_localized_field_count": len(inline_localized_fields),
         "inline_localized_fields": inline_localized_fields,
         "inline_localized_group_count": len(inline_localized_groups),
@@ -195,6 +248,8 @@ def _print_report(report: Dict[str, Any]) -> None:
     print("== Localization Audit ==")
     print(f"parity_issues: {len(report['parity_issues'])}")
     print(f"duplicate_keys: {report['duplicate_key_count']}")
+    print(f"duplicate_conflicts: {report['duplicate_conflict_count']}")
+    print(f"duplicate_consistent: {report['duplicate_consistent_count']}")
     print(f"inline_localized_fields: {report['inline_localized_field_count']}")
     print(f"inline_groups: {report['inline_localized_group_count']}")
     print(f"inline_keyable_groups: {report['inline_keyable_group_count']}")
@@ -238,6 +293,24 @@ def _print_report(report: Dict[str, Any]) -> None:
                 f"(types={','.join(item.get('value_types', []))})"
             )
 
+    conflict_items = [
+        (key, item)
+        for key, item in report.get("duplicate_details", {}).items()
+        if bool(item.get("value_conflict", False))
+    ]
+    if conflict_items:
+        print("\n-- duplicate keys with value conflicts (first 20) --")
+        for key, item in conflict_items[:20]:
+            files = ",".join(item.get("files", []))
+            print(f"* {key} :: files={files}")
+
+
+def _write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fp:
+        json.dump(payload, fp, ensure_ascii=False, indent=2, sort_keys=True)
+        fp.write("\n")
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -247,17 +320,52 @@ def main() -> int:
         action="store_true",
         help="return non-zero when any issue is found",
     )
+    parser.add_argument(
+        "--strict-duplicate-conflicts",
+        action="store_true",
+        help="return non-zero when duplicate keys contain value conflicts",
+    )
+    parser.add_argument(
+        "--report-json",
+        default="",
+        help="optional output path for full audit report json",
+    )
+    parser.add_argument(
+        "--duplicate-report-json",
+        default="",
+        help="optional output path for duplicate key detail json",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
     report = run_audit(project_root)
     _print_report(report)
 
+    if args.report_json:
+        out = (project_root / args.report_json).resolve()
+        _write_json(out, report)
+    if args.duplicate_report_json:
+        out = (project_root / args.duplicate_report_json).resolve()
+        _write_json(
+            out,
+            {
+                "duplicate_key_count": report["duplicate_key_count"],
+                "duplicate_conflict_count": report["duplicate_conflict_count"],
+                "duplicate_consistent_count": report["duplicate_consistent_count"],
+                "duplicate_details": report["duplicate_details"],
+            },
+        )
+
+    strict_duplicate_conflicts = int(report["duplicate_conflict_count"]) > 0
     if args.strict:
         has_issues = bool(report["parity_issues"]) or (
             int(report["inline_keyable_group_without_key_count"]) > 0
         )
+        if args.strict_duplicate_conflicts:
+            has_issues = has_issues or strict_duplicate_conflicts
         return 1 if has_issues else 0
+    if args.strict_duplicate_conflicts and strict_duplicate_conflicts:
+        return 1
     return 0
 
 

@@ -961,3 +961,8 @@
 - `sim-bridge` 테스트에 tuple/packed XY/Vec2 batch pathfinding 결과 동치성 검증을 추가해 최근 batch 최적화 경로의 회귀 탐지 범위를 확장.
 - XY packed 입력 홀수 길이 오류 케이스를 명시적으로 테스트해 입력 검증 경계를 강화.
 - 런타임 로직 변경 없이 브리지 API 안정성을 테스트 레벨에서 보강.
+
+## Commit 195
+- `localization_audit.py`에 중복 키 상세 분석(`duplicate_details`)을 추가해 파일별 값과 `value_conflict` 여부를 추적하도록 확장.
+- 출력 요약에 `duplicate_conflicts`/`duplicate_consistent`를 추가하고, 충돌 키 상위 목록을 즉시 노출하도록 개선.
+- `--strict-duplicate-conflicts`, `--report-json`, `--duplicate-report-json` 옵션을 추가해 중복 충돌을 선택적으로 품질 게이트/산출물화 가능하게 정리.
