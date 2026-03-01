@@ -1295,3 +1295,8 @@
 - `migration_verify_report.json`에 `started_at_utc`, `finished_at_utc`를 추가해 실행 시작/종료 절대시각을 함께 기록.
 - `generated_at_utc`는 종료 시각과 동일 값을 유지하면서 `total_duration_seconds`와 시간 메타의 일관성을 강화.
 - `/tmp/worldsim_audit_artifacts23/migration_verify_report.json`에서 시작/종료 시각 및 duration 필드 반영을 확인.
+
+## Commit 262
+- `migration_verify_report.json`에 `artifact_mtime_utc` 객체를 추가해 compile/audit/bench 아티팩트의 마지막 수정 시각(UTC)을 함께 기록.
+- 파일 미설정/미존재 항목은 `null`, 존재 항목은 ISO-8601 UTC 문자열로 표준화.
+- `/tmp/worldsim_audit_artifacts24/migration_verify_report.json`에서 compile mtime 반영과 non-bench 기준 bench mtime null을 확인.
