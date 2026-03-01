@@ -375,7 +375,11 @@ func _load_stressor_defs() -> void:
 			var compiled_relationship: Dictionary = _compile_relationship_scaling(stressor_def.get("relationship_scaling", {}))
 			var compiled_context: Dictionary = _compile_context_modifiers(stressor_def.get("context_modifiers", {}))
 			var compiled_emo: Dictionary = _compile_emotion_inject(stressor_def.get("emotion_inject", {}))
-			stressor_def["_p_specs"] = compiled_personality.get("specs", [])
+			stressor_def["_p_spec_kinds"] = compiled_personality.get("spec_kinds", PackedByteArray())
+			stressor_def["_p_spec_ids"] = compiled_personality.get("spec_ids", PackedStringArray())
+			stressor_def["_p_spec_axis_stats"] = compiled_personality.get("spec_axis_stats", PackedStringArray())
+			stressor_def["_p_spec_weights"] = compiled_personality.get("spec_weights", PackedFloat32Array())
+			stressor_def["_p_spec_high"] = compiled_personality.get("spec_high", PackedByteArray())
 			stressor_def["_p_trait_ids"] = compiled_personality.get("trait_ids", PackedStringArray())
 			stressor_def["_p_trait_multipliers"] = compiled_personality.get("trait_multipliers", PackedFloat32Array())
 			stressor_def["_r_method"] = compiled_relationship.get("method", "none")
@@ -411,12 +415,20 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var is_loss = sdef.get("is_loss", false)
 
 	# 2) 성격 스케일
-	var p_specs: Array = sdef.get("_p_specs", [])
+	var p_spec_kinds: PackedByteArray = sdef.get("_p_spec_kinds", PackedByteArray())
+	var p_spec_ids: PackedStringArray = sdef.get("_p_spec_ids", PackedStringArray())
+	var p_spec_axis_stats: PackedStringArray = sdef.get("_p_spec_axis_stats", PackedStringArray())
+	var p_spec_weights: PackedFloat32Array = sdef.get("_p_spec_weights", PackedFloat32Array())
+	var p_spec_high: PackedByteArray = sdef.get("_p_spec_high", PackedByteArray())
 	var p_trait_ids: PackedStringArray = sdef.get("_p_trait_ids", PackedStringArray())
 	var p_trait_multipliers: PackedFloat32Array = sdef.get("_p_trait_multipliers", PackedFloat32Array())
 	var personality_scale = _calc_personality_scale(
 		entity,
-		p_specs,
+		p_spec_kinds,
+		p_spec_ids,
+		p_spec_axis_stats,
+		p_spec_weights,
+		p_spec_high,
 		p_trait_ids,
 		p_trait_multipliers
 	)
@@ -488,11 +500,15 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 
 func _calc_personality_scale(
 	entity,
-	p_specs: Array,
+	p_spec_kinds: PackedByteArray,
+	p_spec_ids: PackedStringArray,
+	p_spec_axis_stats: PackedStringArray,
+	p_spec_weights: PackedFloat32Array,
+	p_spec_high: PackedByteArray,
 	p_trait_ids: PackedStringArray,
 	p_trait_multipliers: PackedFloat32Array
 ) -> float:
-	if p_specs.is_empty() and p_trait_ids.size() == 0:
+	if p_spec_ids.size() == 0 and p_trait_ids.size() == 0:
 		return 1.0
 
 	var pd = entity.personality
@@ -502,20 +518,23 @@ func _calc_personality_scale(
 	_event_personality_high.resize(0)
 	_event_personality_traits.resize(0)
 
-	for item in p_specs:
-		if typeof(item) != TYPE_DICTIONARY:
-			continue
-		var spec: Dictionary = item
-		var weight: float = float(spec.get("weight", 0.0))
-		var is_high_amplifies: bool = bool(spec.get("high_amplifies", true))
-		var spec_kind: String = String(spec.get("kind", "facet"))
-		var spec_id: String = String(spec.get("id", ""))
-
+	var spec_count: int = mini(
+		p_spec_ids.size(),
+		mini(
+			p_spec_weights.size(),
+			mini(p_spec_high.size(), mini(p_spec_kinds.size(), p_spec_axis_stats.size()))
+		)
+	)
+	for idx in range(spec_count):
+		var weight: float = float(p_spec_weights[idx])
+		var is_high_amplifies: bool = int(p_spec_high[idx]) != 0
+		var is_axis: bool = int(p_spec_kinds[idx]) != 0
+		var spec_id: String = p_spec_ids[idx]
 		# 축 또는 facet 값 가져오기
 		var value: float = 0.5
 		if pd != null:
-			if spec_kind == "axis":
-				var axis_stat: String = String(spec.get("axis_stat", "HEXACO_" + spec_id))
+			if is_axis:
+				var axis_stat: String = p_spec_axis_stats[idx]
 				value = StatQuery.get_normalized(entity, StringName(axis_stat))
 			else:
 				value = float(pd.facets.get(spec_id, 0.5))
@@ -554,12 +573,20 @@ func _collect_active_context_multipliers(
 
 
 func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
-	var specs: Array = []
+	var spec_kinds: PackedByteArray = PackedByteArray()
+	var spec_ids: PackedStringArray = PackedStringArray()
+	var spec_axis_stats: PackedStringArray = PackedStringArray()
+	var spec_weights: PackedFloat32Array = PackedFloat32Array()
+	var spec_high: PackedByteArray = PackedByteArray()
 	var trait_ids: PackedStringArray = PackedStringArray()
 	var trait_multipliers: PackedFloat32Array = PackedFloat32Array()
 	if typeof(p_mods) != TYPE_DICTIONARY:
 		return {
-			"specs": specs,
+			"spec_kinds": spec_kinds,
+			"spec_ids": spec_ids,
+			"spec_axis_stats": spec_axis_stats,
+			"spec_weights": spec_weights,
+			"spec_high": spec_high,
 			"trait_ids": trait_ids,
 			"trait_multipliers": trait_multipliers,
 		}
@@ -580,21 +607,23 @@ func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 			continue
 		var mod_dict: Dictionary = mod
 		var key_str: String = String(key)
-		var spec_kind: String = "facet"
+		var is_axis: bool = false
 		var spec_id: String = key_str
 		if key_str.ends_with("_axis"):
-			spec_kind = "axis"
+			is_axis = true
 			spec_id = key_str.substr(0, key_str.length() - 5)
-		specs.append({
-			"kind": spec_kind,
-			"id": spec_id,
-			"axis_stat": "HEXACO_" + spec_id,
-			"weight": float(mod_dict.get("weight", 0.0)),
-			"high_amplifies": String(mod_dict.get("direction", "high_amplifies")) == "high_amplifies",
-		})
+		spec_kinds.append(1 if is_axis else 0)
+		spec_ids.append(spec_id)
+		spec_axis_stats.append("HEXACO_" + spec_id if is_axis else "")
+		spec_weights.append(float(mod_dict.get("weight", 0.0)))
+		spec_high.append(1 if String(mod_dict.get("direction", "high_amplifies")) == "high_amplifies" else 0)
 
 	return {
-		"specs": specs,
+		"spec_kinds": spec_kinds,
+		"spec_ids": spec_ids,
+		"spec_axis_stats": spec_axis_stats,
+		"spec_weights": spec_weights,
+		"spec_high": spec_high,
 		"trait_ids": trait_ids,
 		"trait_multipliers": trait_multipliers,
 	}

@@ -304,3 +304,8 @@
 - stressor personality trait modifier를 `_p_trait_ids`/`_p_trait_multipliers` Packed 배열로 사전컴파일해 런타임 dictionary 해석 비용을 축소.
 - `_calc_personality_scale`를 trait 배열 인덱스 순회 기반으로 전환하고 trait id map도 scratch dictionary 재사용으로 최적화.
 - 성격 스케일 수식 및 Rust helper 호출 구조는 유지해 동작 의미를 보존.
+
+## Commit 063
+- stressor personality spec(`axis/facet/weight/direction`)를 `_p_spec_*` Packed 배열로 사전컴파일해 `Array[Dictionary]` 해석 비용을 축소.
+- `_calc_personality_scale`를 spec 배열 인덱스 순회 기반으로 전환해 이벤트 경로 타입 캐스팅/분기 오버헤드를 완화.
+- 성격 스케일 수식 의미와 Rust helper 호출 구조는 유지.
