@@ -83,3 +83,8 @@
 ## Commit 017
 - `Locale.tr_data()` deprecated 경고를 1회 출력으로 제한.
 - key-first 조회는 유지하면서 반복 호출 시 로그/성능 오버헤드 완화.
+
+## Commit 018
+- `StatCurve` LOG_DIMINISHING 경로에 XP 파라미터 PackedArray 캐시 추가.
+- 동일 곡선 파라미터 재사용 시 브리지 인자 변환 오버헤드 감소.
+- 캐시 상한 기반 단순 bounded 메모리 전략 적용.

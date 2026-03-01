@@ -11,9 +11,11 @@ extends RefCounted
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _XP_CURVE_CACHE_MAX: int = 128
 
 static var _bridge_checked: bool = false
 static var _bridge_ref: Object = null
+static var _xp_curve_cache: Dictionary = {}
 
 ## LOG_DIMINISHING: 스킬, 신체 훈련
 ## "처음은 빠르게, 올라갈수록 점점 더 많은 XP 필요"
@@ -21,18 +23,21 @@ static var _bridge_ref: Object = null
 static func log_xp_required(level: int, params: Dictionary) -> float:
 	if level <= 0:
 		return 0.0
-	var base: float = float(params.get("base_xp", 100.0))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var bp: Array = params.get("level_breakpoints", [])
-	var bm: Array = params.get("breakpoint_multipliers", [])
+	var xp_meta: Dictionary = _get_xp_curve_meta(params)
+	var base: float = float(xp_meta.get("base", 100.0))
+	var exponent: float = float(xp_meta.get("exponent", 1.8))
+	var bp: Array = xp_meta.get("breakpoints", [])
+	var bm: Array = xp_meta.get("multipliers", [])
+	var bp_packed: PackedInt32Array = xp_meta.get("breakpoints_packed", PackedInt32Array())
+	var bm_packed: PackedFloat32Array = xp_meta.get("multipliers_packed", PackedFloat32Array())
 	var rust_result: Variant = _call_sim_bridge(
 		"stat_log_xp_required",
 		[
 			level,
 			base,
 			exponent,
-			_to_packed_i32(bp),
-			_to_packed_f32(bm)
+			bp_packed,
+			bm_packed
 		]
 	)
 	if rust_result != null:
@@ -45,18 +50,21 @@ static func log_xp_required(level: int, params: Dictionary) -> float:
 
 ## LOG_DIMINISHING의 역함수: 누적 XP → 현재 레벨
 static func xp_to_level(xp: float, params: Dictionary, max_level: int = 100) -> int:
-	var base: float = float(params.get("base_xp", 100.0))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var bp: Array = params.get("level_breakpoints", [])
-	var bm: Array = params.get("breakpoint_multipliers", [])
+	var xp_meta: Dictionary = _get_xp_curve_meta(params)
+	var base: float = float(xp_meta.get("base", 100.0))
+	var exponent: float = float(xp_meta.get("exponent", 1.8))
+	var bp: Array = xp_meta.get("breakpoints", [])
+	var bm: Array = xp_meta.get("multipliers", [])
+	var bp_packed: PackedInt32Array = xp_meta.get("breakpoints_packed", PackedInt32Array())
+	var bm_packed: PackedFloat32Array = xp_meta.get("multipliers_packed", PackedFloat32Array())
 	var rust_result: Variant = _call_sim_bridge(
 		"stat_xp_to_level",
 		[
 			xp,
 			base,
 			exponent,
-			_to_packed_i32(bp),
-			_to_packed_f32(bm),
+			bp_packed,
+			bm_packed,
 			max_level
 		]
 	)
@@ -79,10 +87,13 @@ static func skill_xp_progress(
 	params: Dictionary,
 	max_level: int = 100
 ) -> Dictionary:
-	var base: float = float(params.get("base_xp", 100.0))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var bp: Array = params.get("level_breakpoints", [])
-	var bm: Array = params.get("breakpoint_multipliers", [])
+	var xp_meta: Dictionary = _get_xp_curve_meta(params)
+	var base: float = float(xp_meta.get("base", 100.0))
+	var exponent: float = float(xp_meta.get("exponent", 1.8))
+	var bp: Array = xp_meta.get("breakpoints", [])
+	var bm: Array = xp_meta.get("multipliers", [])
+	var bp_packed: PackedInt32Array = xp_meta.get("breakpoints_packed", PackedInt32Array())
+	var bm_packed: PackedFloat32Array = xp_meta.get("multipliers_packed", PackedFloat32Array())
 	var rust_result: Variant = _call_sim_bridge(
 		"stat_skill_xp_progress",
 		[
@@ -90,8 +101,8 @@ static func skill_xp_progress(
 			xp,
 			base,
 			exponent,
-			_to_packed_i32(bp),
-			_to_packed_f32(bm),
+			bp_packed,
+			bm_packed,
 			max_level
 		]
 	)
@@ -314,6 +325,41 @@ static func _to_packed_f32(values: Array) -> PackedFloat32Array:
 	for i in range(values.size()):
 		packed[i] = float(values[i])
 	return packed
+
+
+static func _xp_curve_cache_key(bp: Array, bm: Array) -> String:
+	return JSON.stringify(bp) + "|" + JSON.stringify(bm)
+
+
+static func _get_xp_curve_meta(params: Dictionary) -> Dictionary:
+	var base: float = float(params.get("base_xp", 100.0))
+	var exponent: float = float(params.get("exponent", 1.8))
+	var bp: Array = params.get("level_breakpoints", [])
+	var bm: Array = params.get("breakpoint_multipliers", [])
+	var cache_key: String = _xp_curve_cache_key(bp, bm)
+
+	var cached: Dictionary = {}
+	if _xp_curve_cache.has(cache_key):
+		cached = _xp_curve_cache[cache_key]
+	else:
+		cached = {
+			"breakpoints": bp.duplicate(),
+			"multipliers": bm.duplicate(),
+			"breakpoints_packed": _to_packed_i32(bp),
+			"multipliers_packed": _to_packed_f32(bm),
+		}
+		if _xp_curve_cache.size() >= _XP_CURVE_CACHE_MAX:
+			_xp_curve_cache.clear()
+		_xp_curve_cache[cache_key] = cached
+
+	return {
+		"base": base,
+		"exponent": exponent,
+		"breakpoints": cached.get("breakpoints", []),
+		"multipliers": cached.get("multipliers", []),
+		"breakpoints_packed": cached.get("breakpoints_packed", PackedInt32Array()),
+		"multipliers_packed": cached.get("multipliers_packed", PackedFloat32Array()),
+	}
 
 
 static func _get_sim_bridge() -> Object:
