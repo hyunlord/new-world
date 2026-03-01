@@ -75,14 +75,12 @@ pub enum PathfindError {
 pub fn pathfind_from_flat(input: PathfindInput) -> Result<Vec<GridPos>, PathfindError> {
     input.validate()?;
 
-    let mut grid = GridCostMap::new(input.width, input.height);
-    for y in 0..input.height {
-        for x in 0..input.width {
-            let idx = (y * input.width + x) as usize;
-            grid.set_walkable(x, y, input.walkable[idx]);
-            grid.set_move_cost(x, y, input.move_cost[idx]);
-        }
-    }
+    let grid = GridCostMap::from_flat_unchecked(
+        input.width,
+        input.height,
+        &input.walkable,
+        &input.move_cost,
+    );
 
     Ok(find_path(&grid, input.from, input.to, input.max_steps))
 }
@@ -145,15 +143,7 @@ fn build_grid_cost_map_unchecked(
     walkable: &[u8],
     move_cost: &[f32],
 ) -> GridCostMap {
-    let mut grid = GridCostMap::new(width, height);
-    for y in 0..height {
-        for x in 0..width {
-            let idx = (y * width + x) as usize;
-            grid.set_walkable(x, y, walkable[idx] != 0);
-            grid.set_move_cost(x, y, move_cost[idx]);
-        }
-    }
-    grid
+    GridCostMap::from_flat_bytes_unchecked(width, height, walkable, move_cost)
 }
 
 fn build_grid_cost_map(

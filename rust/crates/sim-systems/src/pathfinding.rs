@@ -42,6 +42,42 @@ impl GridCostMap {
         }
     }
 
+    /// Builds a grid directly from flat bool/cost slices without per-cell setters.
+    ///
+    /// Caller must ensure lengths match `width * height`.
+    pub fn from_flat_unchecked(width: i32, height: i32, walkable: &[bool], move_cost: &[f32]) -> Self {
+        debug_assert_eq!(walkable.len(), (width * height) as usize);
+        debug_assert_eq!(move_cost.len(), (width * height) as usize);
+        let mut clamped_move_cost: Vec<f32> = Vec::with_capacity(move_cost.len());
+        for &cost in move_cost {
+            clamped_move_cost.push(cost.max(0.0));
+        }
+        Self {
+            width,
+            height,
+            walkable: walkable.to_vec(),
+            move_cost: clamped_move_cost,
+        }
+    }
+
+    /// Builds a grid directly from flat byte flags (0=blocked, non-zero=walkable).
+    ///
+    /// Caller must ensure lengths match `width * height`.
+    pub fn from_flat_bytes_unchecked(
+        width: i32,
+        height: i32,
+        walkable: &[u8],
+        move_cost: &[f32],
+    ) -> Self {
+        debug_assert_eq!(walkable.len(), (width * height) as usize);
+        debug_assert_eq!(move_cost.len(), (width * height) as usize);
+        let mut bool_walkable: Vec<bool> = Vec::with_capacity(walkable.len());
+        for &flag in walkable {
+            bool_walkable.push(flag != 0);
+        }
+        Self::from_flat_unchecked(width, height, &bool_walkable, move_cost)
+    }
+
     #[inline]
     fn index(&self, x: i32, y: i32) -> Option<usize> {
         if x < 0 || y < 0 || x >= self.width || y >= self.height {
@@ -233,5 +269,18 @@ mod tests {
         assert_eq!(path.first().copied(), Some(GridPos::new(1, 1)));
         assert_eq!(path.last().copied(), Some(GridPos::new(6, 6)));
         assert!(path.contains(&GridPos::new(3, 4)));
+    }
+
+    #[test]
+    fn builds_grid_from_flat_bytes_with_clamped_costs() {
+        let walkable = vec![1_u8, 0_u8, 1_u8, 1_u8];
+        let move_cost = vec![1.0_f32, -2.0_f32, 3.5_f32, 0.2_f32];
+        let grid = GridCostMap::from_flat_bytes_unchecked(2, 2, &walkable, &move_cost);
+
+        assert!(grid.is_walkable(0, 0));
+        assert!(!grid.is_walkable(1, 0));
+        assert_eq!(grid.get_move_cost(0, 0), 1.0);
+        assert_eq!(grid.get_move_cost(1, 0), 0.0);
+        assert_eq!(grid.get_move_cost(0, 1), 3.5);
     }
 }

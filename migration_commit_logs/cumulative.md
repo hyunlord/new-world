@@ -991,3 +991,8 @@
 - `migration_verify.sh --with-benches`에 벤치 반복 수 환경변수(`MIGRATION_BENCH_*_ITERS`)를 추가하고 입력 유효성 검사를 도입.
 - 기본 반복 수일 때는 기존 checksum 기준선 검증을 유지하고, 비기본 반복 수일 때는 관측 모드로 자동 전환해 파이프라인 유연성을 확장.
 - 벤치 단계가 현재 반복 수 설정을 명시적으로 출력하도록 개선해 실행 컨텍스트 추적성을 강화.
+
+## Commit 201
+- `GridCostMap`에 flat bool/byte 버퍼 직생성 API(`from_flat_unchecked`, `from_flat_bytes_unchecked`)를 추가해 grid 초기화 시 per-cell setter 경로를 대체.
+- `sim-bridge`가 새 직생성 API를 사용하도록 연결해 pathfinding grid 구성 오버헤드를 완화.
+- move_cost clamp 의미(`max(0.0)`)를 테스트와 함께 유지해 기존 동작 호환성을 보장.
