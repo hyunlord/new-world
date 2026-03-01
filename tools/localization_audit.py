@@ -586,6 +586,11 @@ def main() -> int:
         action="store_true",
         help="compare against key_owners_path from localization/manifest.json",
     )
+    parser.add_argument(
+        "--refresh-key-owner-policy-auto",
+        action="store_true",
+        help="write generated owner policy to key_owners_path from localization/manifest.json",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
@@ -613,6 +618,10 @@ def main() -> int:
     if args.key_owner_policy_json:
         out = (project_root / args.key_owner_policy_json).resolve()
         _write_json(out, owner_policy_payload)
+    if args.refresh_key_owner_policy_auto:
+        out = _resolve_manifest_key_owner_policy_path(project_root)
+        _write_json(out, owner_policy_payload)
+        print(f"[localization_audit] key-owner-policy refreshed: {out}")
 
     owner_policy_mismatch = False
     compare_path: Path | None = None

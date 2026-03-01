@@ -53,12 +53,17 @@ audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
 audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
 audit_key_owner_policy_json="${MIGRATION_AUDIT_KEY_OWNER_POLICY:-}"
 audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
+audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
 audit_cmd=(
   python3 "${ROOT_DIR}/tools/localization_audit.py"
   --project-root "${ROOT_DIR}"
   --strict
   --compare-key-owner-policy-auto
 )
+if [[ "${audit_refresh_key_owner_policy}" != "true" && "${audit_refresh_key_owner_policy}" != "false" ]]; then
+  echo "[migration_verify] MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY must be true or false" >&2
+  exit 1
+fi
 if [[ -n "${audit_report_json}" ]]; then
   audit_cmd+=(--report-json "${audit_report_json}")
 fi
@@ -70,6 +75,9 @@ if [[ -n "${audit_conflict_markdown}" ]]; then
 fi
 if [[ -n "${audit_key_owner_policy_json}" ]]; then
   audit_cmd+=(--key-owner-policy-json "${audit_key_owner_policy_json}")
+fi
+if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
+  audit_cmd+=(--refresh-key-owner-policy-auto)
 fi
 if [[ -n "${audit_compare_key_owner_policy}" ]]; then
   # Explicit path overrides auto-manifest compare target.
@@ -89,6 +97,9 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
   fi
   if [[ -n "${audit_key_owner_policy_json}" ]]; then
     audit_cmd+=(--key-owner-policy-json "${audit_key_owner_policy_json}")
+  fi
+  if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
+    audit_cmd+=(--refresh-key-owner-policy-auto)
   fi
   audit_cmd+=(--compare-key-owner-policy "${audit_compare_key_owner_policy}")
 fi
