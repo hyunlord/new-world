@@ -180,14 +180,28 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
     local tuple_checksum
     local xy_checksum
+    local total_lines
+    local tuple_total
+    local xy_total
     tuple_checksum="$(echo "${checksum_lines}" | sed -n '1p')"
     xy_checksum="$(echo "${checksum_lines}" | sed -n '2p')"
+    total_lines="$(echo "${output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    tuple_total="$(echo "${total_lines}" | sed -n '1p')"
+    xy_total="$(echo "${total_lines}" | sed -n '2p')"
     if [[ -z "${tuple_checksum}" || -z "${xy_checksum}" ]]; then
       echo "[migration_verify] pathfind-bridge-split checksum parse failed" >&2
       exit 1
     fi
+    if [[ -z "${tuple_total}" || -z "${xy_total}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split dispatch total parse failed" >&2
+      exit 1
+    fi
     if [[ "${tuple_checksum}" != "${xy_checksum}" ]]; then
       echo "[migration_verify] pathfind-bridge-split checksum mismatch: tuple=${tuple_checksum} xy=${xy_checksum}" >&2
+      exit 1
+    fi
+    if [[ "${tuple_total}" != "${path_iters}" || "${xy_total}" != "${path_iters}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split dispatch total mismatch: expected_each=${path_iters} got_tuple=${tuple_total} got_xy=${xy_total}" >&2
       exit 1
     fi
     if [[ -n "${expected_resolved_backend}" ]]; then
@@ -206,6 +220,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       done <<< "${resolved_lines}"
       echo "[migration_verify] pathfind-bridge-split resolved backend ok: ${expected_resolved_backend}"
     fi
+    echo "[migration_verify] pathfind-bridge-split dispatch totals ok: tuple=${tuple_total} xy=${xy_total}"
     echo "[migration_verify] pathfind-bridge-split checksums observed: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
 
@@ -221,10 +236,20 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
     local tuple_checksum
     local xy_checksum
+    local total_lines
+    local tuple_total
+    local xy_total
     tuple_checksum="$(echo "${checksum_lines}" | sed -n '1p')"
     xy_checksum="$(echo "${checksum_lines}" | sed -n '2p')"
+    total_lines="$(echo "${output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    tuple_total="$(echo "${total_lines}" | sed -n '1p')"
+    xy_total="$(echo "${total_lines}" | sed -n '2p')"
     if [[ -z "${tuple_checksum}" || -z "${xy_checksum}" ]]; then
       echo "[migration_verify] pathfind-bridge-split checksum parse failed" >&2
+      exit 1
+    fi
+    if [[ -z "${tuple_total}" || -z "${xy_total}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split dispatch total parse failed" >&2
       exit 1
     fi
     if [[ "${tuple_checksum}" != "${expected_tuple}" || "${xy_checksum}" != "${expected_xy}" ]]; then
@@ -233,6 +258,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     fi
     if [[ "${tuple_checksum}" != "${xy_checksum}" ]]; then
       echo "[migration_verify] pathfind-bridge-split checksum mismatch: tuple=${tuple_checksum} xy=${xy_checksum}" >&2
+      exit 1
+    fi
+    if [[ "${tuple_total}" != "${path_iters}" || "${xy_total}" != "${path_iters}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split dispatch total mismatch: expected_each=${path_iters} got_tuple=${tuple_total} got_xy=${xy_total}" >&2
       exit 1
     fi
     if [[ -n "${expected_resolved_backend}" ]]; then
@@ -251,6 +280,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       done <<< "${resolved_lines}"
       echo "[migration_verify] pathfind-bridge-split resolved backend ok: ${expected_resolved_backend}"
     fi
+    echo "[migration_verify] pathfind-bridge-split dispatch totals ok: tuple=${tuple_total} xy=${xy_total}"
     echo "[migration_verify] pathfind-bridge-split checksums ok: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
 
@@ -260,33 +290,22 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       path_output="$(cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}" --backend "${path_backend}")"
       echo "${path_output}"
       path_checksum="$(echo "${path_output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | head -n 1)"
+      path_total="$(echo "${path_output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p' | head -n 1)"
       if [[ -z "${path_checksum}" ]]; then
         echo "[migration_verify] pathfind-bridge checksum parse failed" >&2
+        exit 1
+      fi
+      if [[ -z "${path_total}" ]]; then
+        echo "[migration_verify] pathfind-bridge dispatch total parse failed" >&2
         exit 1
       fi
       if [[ "${path_checksum}" != "70800.00000" ]]; then
         echo "[migration_verify] pathfind-bridge checksum mismatch: expected=70800.00000 got=${path_checksum}" >&2
         exit 1
       fi
-      if [[ -n "${expected_resolved_backend}" ]]; then
-        path_resolved="$(echo "${path_output}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
-        if [[ -z "${path_resolved}" ]]; then
-          echo "[migration_verify] pathfind-bridge resolved backend parse failed" >&2
-          exit 1
-        fi
-        if [[ "${path_resolved}" != "${expected_resolved_backend}" ]]; then
-          echo "[migration_verify] pathfind-bridge resolved backend mismatch: expected=${expected_resolved_backend} got=${path_resolved}" >&2
-          exit 1
-        fi
-        echo "[migration_verify] pathfind-bridge resolved backend ok: ${path_resolved}"
-      fi
-      echo "[migration_verify] pathfind-bridge checksum ok: ${path_checksum}"
-    else
-      path_output="$(cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}" --backend "${path_backend}")"
-      echo "${path_output}"
-      path_checksum="$(echo "${path_output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | head -n 1)"
-      if [[ -z "${path_checksum}" ]]; then
-        echo "[migration_verify] pathfind-bridge checksum parse failed" >&2
+      expected_path_total=$((path_iters * 2))
+      if [[ "${path_total}" != "${expected_path_total}" ]]; then
+        echo "[migration_verify] pathfind-bridge dispatch total mismatch: expected=${expected_path_total} got=${path_total}" >&2
         exit 1
       fi
       if [[ -n "${expected_resolved_backend}" ]]; then
@@ -301,6 +320,39 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
         fi
         echo "[migration_verify] pathfind-bridge resolved backend ok: ${path_resolved}"
       fi
+      echo "[migration_verify] pathfind-bridge dispatch total ok: ${path_total}"
+      echo "[migration_verify] pathfind-bridge checksum ok: ${path_checksum}"
+    else
+      path_output="$(cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}" --backend "${path_backend}")"
+      echo "${path_output}"
+      path_checksum="$(echo "${path_output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p' | head -n 1)"
+      path_total="$(echo "${path_output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p' | head -n 1)"
+      if [[ -z "${path_checksum}" ]]; then
+        echo "[migration_verify] pathfind-bridge checksum parse failed" >&2
+        exit 1
+      fi
+      if [[ -z "${path_total}" ]]; then
+        echo "[migration_verify] pathfind-bridge dispatch total parse failed" >&2
+        exit 1
+      fi
+      expected_path_total=$((path_iters * 2))
+      if [[ "${path_total}" != "${expected_path_total}" ]]; then
+        echo "[migration_verify] pathfind-bridge dispatch total mismatch: expected=${expected_path_total} got=${path_total}" >&2
+        exit 1
+      fi
+      if [[ -n "${expected_resolved_backend}" ]]; then
+        path_resolved="$(echo "${path_output}" | sed -n 's/.*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
+        if [[ -z "${path_resolved}" ]]; then
+          echo "[migration_verify] pathfind-bridge resolved backend parse failed" >&2
+          exit 1
+        fi
+        if [[ "${path_resolved}" != "${expected_resolved_backend}" ]]; then
+          echo "[migration_verify] pathfind-bridge resolved backend mismatch: expected=${expected_resolved_backend} got=${path_resolved}" >&2
+          exit 1
+        fi
+        echo "[migration_verify] pathfind-bridge resolved backend ok: ${path_resolved}"
+      fi
+      echo "[migration_verify] pathfind-bridge dispatch total ok: ${path_total}"
       echo "[migration_verify] pathfind-bridge checksum observed (non-default iters): ${path_checksum}"
     fi
     if [[ "${path_split}" == "true" ]]; then

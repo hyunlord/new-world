@@ -1150,3 +1150,8 @@
 - `localization_audit` 리포트에 owner policy 품질 지표(entry count, duplicate coverage miss, unused keys)를 추가.
 - strict audit 출력에서 owner policy 상태를 함께 노출해 검증 가시성을 강화.
 - 전체 검증(`migration_verify --with-benches`)에서 owner 정책 지표와 checksum 유지를 확인.
+
+## Commit 233
+- `migration_verify` pathfinding 벤치 검증에 dispatch total 파싱/기대값 검증을 추가해 checksum + 실행 경로 계측을 함께 게이트화.
+- 일반 벤치는 `total=iters*2`, split 벤치는 tuple/xy 각각 `total=iters`를 강제.
+- split + resolved backend 검증 조합으로 전체 파이프라인 통과를 확인.
