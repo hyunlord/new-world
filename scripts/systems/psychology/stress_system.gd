@@ -361,7 +361,10 @@ func _load_stressor_defs() -> void:
 				_stressor_defs[key] = raw_def
 				continue
 			var stressor_def: Dictionary = raw_def
+			var compiled_personality: Dictionary = _compile_personality_modifiers(stressor_def.get("personality_modifiers", {}))
 			var compiled_emo: Dictionary = _compile_emotion_inject(stressor_def.get("emotion_inject", {}))
+			stressor_def["_p_specs"] = compiled_personality.get("specs", [])
+			stressor_def["_p_traits"] = compiled_personality.get("traits", {})
 			stressor_def["_emo_fast"] = compiled_emo.get("fast", PackedFloat32Array())
 			stressor_def["_emo_slow"] = compiled_emo.get("slow", PackedFloat32Array())
 			_stressor_defs[key] = stressor_def
@@ -390,8 +393,9 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var is_loss = sdef.get("is_loss", false)
 
 	# 2) 성격 스케일
-	var p_mods = sdef.get("personality_modifiers", {})
-	var personality_scale = _calc_personality_scale(entity, p_mods)
+	var p_specs: Array = sdef.get("_p_specs", [])
+	var p_traits: Dictionary = sdef.get("_p_traits", {})
+	var personality_scale = _calc_personality_scale(entity, p_specs, p_traits)
 
 	# 3) 관계 스케일
 	var r_def = sdef.get("relationship_scaling", {})
@@ -440,8 +444,8 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 		])
 
 
-func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
-	if p_mods.is_empty():
+func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> float:
+	if p_specs.is_empty() and p_traits.is_empty():
 		return 1.0
 
 	var pd = entity.personality
@@ -450,36 +454,31 @@ func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
 	var high_amplifies: PackedByteArray = PackedByteArray()
 	var trait_multipliers: PackedFloat32Array = PackedFloat32Array()
 
-	for key in p_mods:
-		if key == "traits":
+	for item in p_specs:
+		if typeof(item) != TYPE_DICTIONARY:
 			continue
-		var mod: Variant = p_mods[key]
-		if typeof(mod) != TYPE_DICTIONARY:
-			continue
-		var mod_dict: Dictionary = mod
-		var weight: float = float(mod_dict.get("weight", 0.0))
-		var direction: Variant = mod_dict.get("direction", "high_amplifies")
+		var spec: Dictionary = item
+		var weight: float = float(spec.get("weight", 0.0))
+		var is_high_amplifies: bool = bool(spec.get("high_amplifies", true))
+		var spec_kind: String = String(spec.get("kind", "facet"))
+		var spec_id: String = String(spec.get("id", ""))
 
 		# 축 또는 facet 값 가져오기
 		var value: float = 0.5
 		if pd != null:
-			if key.ends_with("_axis"):
-				var axis_id: String = key.substr(0, key.length() - 5)
-				value = StatQuery.get_normalized(entity, StringName("HEXACO_" + axis_id))
+			if spec_kind == "axis":
+				value = StatQuery.get_normalized(entity, StringName("HEXACO_" + spec_id))
 			else:
-				value = float(pd.facets.get(key, 0.5))
+				value = float(pd.facets.get(spec_id, 0.5))
 
 		values.append(value)
 		weights.append(weight)
-		high_amplifies.append(1 if direction == "high_amplifies" else 0)
+		high_amplifies.append(1 if is_high_amplifies else 0)
 
 	# Trait 배수
-	var trait_mods: Variant = p_mods.get("traits", {})
-	if typeof(trait_mods) == TYPE_DICTIONARY:
-		var trait_mods_dict: Dictionary = trait_mods
-		for trait_id in trait_mods_dict:
-			if _entity_has_trait(entity, trait_id):
-				trait_multipliers.append(float(trait_mods_dict[trait_id]))
+	for trait_id in p_traits:
+		if _entity_has_trait(entity, trait_id):
+			trait_multipliers.append(float(p_traits[trait_id]))
 
 	return StatCurveScript.stress_personality_scale(
 		values,
@@ -503,6 +502,40 @@ func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
 		if context.get(key, false):
 			active_multipliers.append(float(c_mods[key]))
 	return StatCurveScript.stress_context_scale(active_multipliers)
+
+
+func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
+	var specs: Array = []
+	var traits: Dictionary = {}
+	if typeof(p_mods) != TYPE_DICTIONARY:
+		return {"specs": specs, "traits": traits}
+
+	var p_mods_dict: Dictionary = p_mods
+	var trait_mods: Variant = p_mods_dict.get("traits", {})
+	if typeof(trait_mods) == TYPE_DICTIONARY:
+		traits = trait_mods
+
+	for key in p_mods_dict:
+		if key == "traits":
+			continue
+		var mod: Variant = p_mods_dict[key]
+		if typeof(mod) != TYPE_DICTIONARY:
+			continue
+		var mod_dict: Dictionary = mod
+		var key_str: String = String(key)
+		var spec_kind: String = "facet"
+		var spec_id: String = key_str
+		if key_str.ends_with("_axis"):
+			spec_kind = "axis"
+			spec_id = key_str.substr(0, key_str.length() - 5)
+		specs.append({
+			"kind": spec_kind,
+			"id": spec_id,
+			"weight": float(mod_dict.get("weight", 0.0)),
+			"high_amplifies": String(mod_dict.get("direction", "high_amplifies")) == "high_amplifies",
+		})
+
+	return {"specs": specs, "traits": traits}
 
 
 func _entity_has_trait(entity, trait_id: String) -> bool:

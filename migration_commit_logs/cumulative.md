@@ -261,3 +261,8 @@
 - 이벤트 감정 주입 수식(`fast`/`slow` layer clamp + scale 적용)을 Rust step(`stress_emotion_inject_step`)으로 이관.
 - stressor 로드 시 `emotion_inject`를 `_emo_fast`/`_emo_slow` 배열로 사전 컴파일해 이벤트 실행 시 문자열 파싱 비용을 축소.
 - `StressSystem` 감정 주입 경로를 사전 컴파일 + 네이티브 step 호출 기반으로 정리하면서 기존 레이어 경계값 의미를 유지.
+
+## Commit 054
+- `stressor_events` 로드 시 personality modifier를 `_p_specs`/`_p_traits`로 사전 컴파일해 `inject_event` 런타임 파싱 비용을 축소.
+- `_calc_personality_scale` 입력을 원본 Dictionary 대신 사전 컴파일된 spec 기반으로 전환해 이벤트 경로 분기/문자열 처리 오버헤드를 완화.
+- 성격 스케일 계산은 기존 Rust helper(`stress_personality_scale`) 호출 구조를 유지해 수식 의미 일관성을 보존.
