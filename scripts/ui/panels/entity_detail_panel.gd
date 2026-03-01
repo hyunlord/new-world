@@ -1752,7 +1752,7 @@ func _draw() -> void:
 						var desc: String
 						if evt.has("l10n_key") and not evt.get("l10n_key", "").is_empty():
 							var l10n_key: String = evt.get("l10n_key", "")
-							var l10n_params_final: Dictionary = evt.get("l10n_params", {}).duplicate()
+							var l10n_params_final: Dictionary = evt.get("l10n_params", {})
 							desc = Locale.trf(l10n_key, l10n_params_final)
 						else:
 							desc = evt.get("description", "?")

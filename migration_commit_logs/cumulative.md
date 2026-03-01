@@ -561,3 +561,8 @@
 - `parenting_system`의 `ADULTHOOD_TRANSITION` 설명 문자열 생성을 `Locale.trf1`로 전환.
 - `child_stress_processor`의 `SHRP_OVERRIDE` 설명 문자열 생성을 `Locale.trf1`로 전환.
 - `ace_tracker`의 `ACE_EVENT_RECORDED`/`HEXACO_CAP_MODIFIED` 설명 문자열 생성을 `Locale.trf2`/`trf1`로 전환하면서 chronicle 메타의 `params` 구조는 유지.
+
+## Commit 115
+- `chronicle_panel`의 이벤트 설명 렌더 경로에서 `l10n_params`를 기본 참조로 사용하고, `cause_id` 보정이 필요한 경우에만 `duplicate()`하도록 변경.
+- `entity_detail_panel`의 life event 렌더 경로에서 `l10n_params` 매 프레임 복사를 제거.
+- 동적 로컬라이징 표시 의미를 유지하면서 이벤트 목록 렌더의 dictionary 복사 오버헤드를 완화.

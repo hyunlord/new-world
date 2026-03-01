@@ -253,11 +253,13 @@ func _draw() -> void:
 		var desc: String
 		if evt.has("l10n_key"):
 			var l10n_key: String = evt.get("l10n_key", "")
-			var l10n_params = evt.get("l10n_params", {}).duplicate()
-			# Translate cause_id at render time
+			var l10n_params: Dictionary = evt.get("l10n_params", {})
 			if l10n_params.has("cause_id"):
-				l10n_params["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
-			desc = Locale.trf(l10n_key, l10n_params)
+				var l10n_params_with_cause: Dictionary = l10n_params.duplicate()
+				l10n_params_with_cause["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
+				desc = Locale.trf(l10n_key, l10n_params_with_cause)
+			else:
+				desc = Locale.trf(l10n_key, l10n_params)
 		else:
 			desc = evt.get("description", "?")
 		if desc.length() > 55:
