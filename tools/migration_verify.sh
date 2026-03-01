@@ -175,6 +175,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   path_backend="${MIGRATION_BENCH_PATH_BACKEND:-auto}"
   path_backend_smoke="${MIGRATION_BENCH_PATH_BACKEND_SMOKE:-false}"
   path_backend_smoke_iters="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS:-10}"
+  path_backend_smoke_expect_has_gpu="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_HAS_GPU:-}"
   path_backend_smoke_expect_auto="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED:-}"
   path_backend_smoke_expect_gpu="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED:-}"
   expected_resolved_backend="${MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND:-}"
@@ -220,11 +221,15 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_AUTO_RESOLVED must be cpu or gpu" >&2
     exit 1
   fi
+  if [[ -n "${path_backend_smoke_expect_has_gpu}" && "${path_backend_smoke_expect_has_gpu}" != "true" && "${path_backend_smoke_expect_has_gpu}" != "false" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_HAS_GPU must be true or false" >&2
+    exit 1
+  fi
   if [[ -n "${path_backend_smoke_expect_gpu}" && "${path_backend_smoke_expect_gpu}" != "cpu" && "${path_backend_smoke_expect_gpu}" != "gpu" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_GPU_RESOLVED must be cpu or gpu" >&2
     exit 1
   fi
-  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} smoke=${path_backend_smoke} smoke_iters=${path_backend_smoke_iters} smoke_expect_auto=${path_backend_smoke_expect_auto:-none} smoke_expect_gpu=${path_backend_smoke_expect_gpu:-none} expected_resolved=${expected_resolved_backend:-none}"
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} smoke=${path_backend_smoke} smoke_iters=${path_backend_smoke_iters} smoke_expect_has_gpu=${path_backend_smoke_expect_has_gpu:-none} smoke_expect_auto=${path_backend_smoke_expect_auto:-none} smoke_expect_gpu=${path_backend_smoke_expect_gpu:-none} expected_resolved=${expected_resolved_backend:-none}"
 
   run_bench_and_check() {
     local name="$1"
@@ -389,8 +394,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
 
   run_path_backend_smoke_and_check() {
     local smoke_iters="$1"
-    local expect_auto="$2"
-    local expect_gpu="$3"
+    local expect_has_gpu="$2"
+    local expect_auto="$3"
+    local expect_gpu="$4"
+    shift
     shift
     shift
     shift
@@ -465,6 +472,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     fi
     if [[ "${has_gpu_auto}" != "${has_gpu_cpu}" || "${has_gpu_cpu}" != "${has_gpu_gpu}" ]]; then
       echo "[migration_verify] pathfind-backend-smoke has_gpu mismatch across modes: auto=${has_gpu_auto} cpu=${has_gpu_cpu} gpu=${has_gpu_gpu}" >&2
+      exit 1
+    fi
+    if [[ -n "${expect_has_gpu}" && "${has_gpu_auto}" != "${expect_has_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu mismatch: expected=${expect_has_gpu} got=${has_gpu_auto}" >&2
       exit 1
     fi
     configured_auto="$(echo "${line_auto}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
@@ -642,6 +653,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     if [[ "${path_backend_smoke}" == "true" ]]; then
       run_path_backend_smoke_and_check \
         "${path_backend_smoke_iters}" \
+        "${path_backend_smoke_expect_has_gpu}" \
         "${path_backend_smoke_expect_auto}" \
         "${path_backend_smoke_expect_gpu}" \
         cargo run -q -p sim-test --release -- --bench-pathfind-backend-smoke --iters "${path_backend_smoke_iters}"
@@ -697,6 +709,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       smoke_checksum_json="null"
       smoke_total_json="null"
       smoke_has_gpu_json="null"
+      smoke_expect_has_gpu_json="null"
       smoke_resolved_auto_json="null"
       smoke_resolved_gpu_json="null"
       if [[ -n "${PATH_SMOKE_CHECKSUM}" ]]; then
@@ -704,6 +717,9 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       fi
       if [[ -n "${PATH_SMOKE_TOTAL}" ]]; then
         smoke_total_json="${PATH_SMOKE_TOTAL}"
+      fi
+      if [[ -n "${path_backend_smoke_expect_has_gpu}" ]]; then
+        smoke_expect_has_gpu_json="${path_backend_smoke_expect_has_gpu}"
       fi
       if [[ -n "${PATH_SMOKE_HAS_GPU}" ]]; then
         smoke_has_gpu_json="${PATH_SMOKE_HAS_GPU}"
@@ -723,6 +739,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   "path_backend": "${path_backend}",
   "path_split_enabled": ${path_split},
   "path_smoke_enabled": ${path_backend_smoke},
+  "path_smoke_expect_has_gpu": ${smoke_expect_has_gpu_json},
   "path": {
     "checksum": "${path_checksum}",
     "total": ${path_total},

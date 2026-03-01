@@ -1220,3 +1220,8 @@
 - `sim-bridge` 공개 API에 `has_gpu_pathfind_backend()`를 추가하고, 관련 테스트에서 feature-gated capability 값을 검증.
 - `sim-test` pathfind backend smoke 출력에 `has_gpu` 필드를 추가해 capability 상태를 벤치 로그로 노출.
 - `migration_verify` smoke 검증이 `has_gpu` 파싱/모드 간 일치/resolve 정책 일관성을 강제하도록 확장하고, `bench_report.json`에 `path_smoke.has_gpu`를 반영.
+
+## Commit 247
+- `migration_verify`에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE_EXPECT_HAS_GPU`를 추가해 smoke capability 기대값(`true|false`)을 명시적으로 강제 검증 가능하게 확장.
+- smoke 파서가 mode별 `has_gpu` 일치 + 기대 capability 일치를 검증하고, bench 컨텍스트 로그에 `smoke_expect_has_gpu`를 노출.
+- `bench_report.json`에 `path_smoke_expect_has_gpu`를 추가해 capability 기대 설정까지 아티팩트에 보존.
