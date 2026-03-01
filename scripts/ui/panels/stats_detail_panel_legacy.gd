@@ -482,14 +482,14 @@ func _draw_tech_section(font: Font, x: float, y: float, w: float) -> float:
 			forgotten_count += 1
 			forgotten_techs.append({"id": tech_id, "state": state, "cts": cts})
 
-	draw_string(
-		font,
-		Vector2(x + 4, y + 12),
-		Locale.trf2("UI_TECH_COUNT_FMT", "known", str(known_count), "forgotten", str(forgotten_count)),
-		HORIZONTAL_ALIGNMENT_LEFT,
-		w,
-		GameConfig.get_font_size("popup_small"),
-		Color(0.7, 0.7, 0.7)
+		draw_string(
+			font,
+			Vector2(x + 4, y + 12),
+			Locale.trf2("UI_TECH_COUNT_FMT", "known", known_count, "forgotten", forgotten_count),
+			HORIZONTAL_ALIGNMENT_LEFT,
+			w,
+			GameConfig.get_font_size("popup_small"),
+			Color(0.7, 0.7, 0.7)
 	)
 	y += 16.0
 

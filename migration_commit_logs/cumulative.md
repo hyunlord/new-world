@@ -566,3 +566,8 @@
 - `chronicle_panel`의 이벤트 설명 렌더 경로에서 `l10n_params`를 기본 참조로 사용하고, `cause_id` 보정이 필요한 경우에만 `duplicate()`하도록 변경.
 - `entity_detail_panel`의 life event 렌더 경로에서 `l10n_params` 매 프레임 복사를 제거.
 - 동적 로컬라이징 표시 의미를 유지하면서 이벤트 목록 렌더의 dictionary 복사 오버헤드를 완화.
+
+## Commit 116
+- `chronicle_panel`의 `UI_SHORT_DATE` 호출에서 `month/day`를 문자열로 선변환하지 않고 정수로 직접 전달.
+- `stats_detail_panel_legacy`의 `UI_TECH_COUNT_FMT` 호출에서 `known/forgotten` 선 문자열 변환을 제거.
+- 출력 의미를 유지하면서 경량 포맷 호출 전 중복 문자열 변환 비용을 완화.

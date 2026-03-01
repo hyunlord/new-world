@@ -234,14 +234,14 @@ func _draw() -> void:
 			date_str = GameCalendar.format_short_datetime_with_year(event_tick)
 		elif evt.has("hour"):
 			date_str = "M%d D%d %02d:00" % [int(evt.get("month", 0)), int(evt.get("day", 0)), int(evt.get("hour", 0))]
-		else:
-			date_str = Locale.trf2(
-				"UI_SHORT_DATE",
-				"month",
-				str(evt.get("month", 0)),
-				"day",
-				str(evt.get("day", 0))
-			)
+			else:
+				date_str = Locale.trf2(
+					"UI_SHORT_DATE",
+					"month",
+					int(evt.get("month", 0)),
+					"day",
+					int(evt.get("day", 0))
+				)
 		draw_string(font, Vector2(cx + 5, cy + 12), date_str, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.5, 0.5, 0.5))
 
 		# Icon
