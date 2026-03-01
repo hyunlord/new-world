@@ -885,6 +885,16 @@ pub fn resource_regen_next(current: f32, cap: f32, rate: f32) -> f32 {
     (current + rate).min(cap)
 }
 
+/// Age-system derived movement speed from realized agility.
+pub fn age_body_speed(agi_realized: i32, speed_scale: f32, speed_base: f32) -> f32 {
+    agi_realized as f32 * speed_scale + speed_base
+}
+
+/// Age-system derived strength from realized strength.
+pub fn age_body_strength(str_realized: i32) -> f32 {
+    str_realized as f32 / 1000.0
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1373,6 +1383,7 @@ mod tests {
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
+        age_body_speed, age_body_strength,
     };
 
     #[test]
@@ -1864,6 +1875,12 @@ mod tests {
         assert!((resource_regen_next(9.9, 10.0, 0.5) - 10.0).abs() < 1e-6);
         assert!((resource_regen_next(5.0, 0.0, 0.5) - 5.0).abs() < 1e-6);
         assert!((resource_regen_next(5.0, 10.0, 0.0) - 5.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn age_body_speed_and_strength_follow_scaling() {
+        assert!((age_body_speed(800, 0.001, 0.2) - 1.0).abs() < 1e-6);
+        assert!((age_body_strength(750) - 0.75).abs() < 1e-6);
     }
 
     #[test]

@@ -1472,3 +1472,10 @@
 - `resource_regen_system.gd`의 food/wood 리젠 계산을 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `18/56` 적용.
+
+## Commit 290
+- `sim-systems/body`에 `age_body_speed`, `age_body_strength`를 추가해 AgeSystem의 body 파생치 수식을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_age_body_speed`, `body_age_body_strength` 메서드를 추가해 GDScript에서 해당 수식을 직접 호출 가능하게 확장.
+- `age_system.gd`의 speed/strength 계산을 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `19/56` 적용.

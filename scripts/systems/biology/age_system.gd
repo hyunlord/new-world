@@ -5,8 +5,13 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## Runs every 50 ticks (~4 days).
 
 const PersonalityMaturation = preload("res://scripts/systems/psychology/personality_maturation.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_AGE_SPEED_METHOD: String = "body_age_body_speed"
+const _SIM_BRIDGE_AGE_STRENGTH_METHOD: String = "body_age_body_strength"
 var _entity_manager: RefCounted
 var _personality_maturation: RefCounted
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -22,8 +27,27 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator = null) -> void
 		_personality_maturation.init(rng)
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_AGE_SPEED_METHOD) \
+	and node.has_method(_SIM_BRIDGE_AGE_STRENGTH_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
+	var bridge: Object = _get_sim_bridge()
 	for i in range(alive.size()):
 		var entity: RefCounted = alive[i]
 		var new_stage: String = GameConfig.get_age_stage(entity.age)
@@ -74,8 +98,25 @@ func execute_tick(tick: int) -> void:
 				# DR: potential × age_curve only (exposure system Phase 5)
 				entity.body.realized["dr"] = int(realized_values[5])
 				# ── [C] entity 속도/근력 갱신 ──
-				entity.speed = float(entity.body.realized.get("agi", 700)) * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
-				entity.strength = float(entity.body.realized.get("str", 700)) / 1000.0
+				var agi_realized: int = int(entity.body.realized.get("agi", 700))
+				var str_realized: int = int(entity.body.realized.get("str", 700))
+				entity.speed = float(agi_realized) * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
+				entity.strength = float(str_realized) / 1000.0
+				if bridge != null:
+					var speed_variant: Variant = bridge.call(
+						_SIM_BRIDGE_AGE_SPEED_METHOD,
+						agi_realized,
+						float(GameConfig.BODY_SPEED_SCALE),
+						float(GameConfig.BODY_SPEED_BASE),
+					)
+					if speed_variant != null:
+						entity.speed = float(speed_variant)
+					var strength_variant: Variant = bridge.call(
+						_SIM_BRIDGE_AGE_STRENGTH_METHOD,
+						str_realized,
+					)
+					if strength_variant != null:
+						entity.strength = float(strength_variant)
 
 
 func _on_stage_changed(entity: RefCounted, old_stage: String, new_stage: String, tick: int) -> void:

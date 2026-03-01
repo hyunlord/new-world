@@ -1223,6 +1223,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_age_body_speed(&self, agi_realized: i32, speed_scale: f32, speed_base: f32) -> f32 {
+        body::age_body_speed(agi_realized, speed_scale, speed_base)
+    }
+
+    #[func]
+    fn body_age_body_strength(&self, str_realized: i32) -> f32 {
+        body::age_body_strength(str_realized)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
