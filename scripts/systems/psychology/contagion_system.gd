@@ -252,11 +252,14 @@ func _run_spiral_dampener(alive: Array, tick: int) -> void:
 		ed.stress = maxf(ed.stress, ed.stress + spiral_increment)
 		ed.set_meta("spiral_applied", true)
 
-		if spiral_increment > 5.0:
-			var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-			if chronicle:
-				var desc: String = Locale.trf("CONTAGION_SPIRAL_WARNING", {
-					"stress": "%.0f" % ed.stress,
-					"valence": "%.1f" % ed.valence
-				})
-				chronicle.log_event("contagion_spiral", entity.id, desc, 4, [], tick)
+			if spiral_increment > 5.0:
+				var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+				if chronicle:
+					var desc: String = Locale.trf2(
+						"CONTAGION_SPIRAL_WARNING",
+						"stress",
+						"%.0f" % ed.stress,
+						"valence",
+						"%.1f" % ed.valence
+					)
+					chronicle.log_event("contagion_spiral", entity.id, desc, 4, [], tick)

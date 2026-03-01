@@ -551,3 +551,8 @@
 - `Locale`에 `trf5` 경량 포맷 API를 추가해 5-placeholder 치환의 params Dictionary 생성을 줄이는 경로를 확장.
 - `game_calendar`의 날짜/시간/나이 포맷 호출을 `trf1~trf5`로 전환해 반복 포맷 경로를 경량화.
 - `pause_menu`의 `UI_SLOT_FORMAT`을 `trf5`로 치환해 슬롯 버튼 텍스트 갱신의 미세 오버헤드를 완화.
+
+## Commit 113
+- `contagion_system`의 `CONTAGION_SPIRAL_WARNING` 포맷을 `Locale.trf2`로 전환.
+- `attachment_system`의 `ATTACHMENT_FORMED` 포맷을 `Locale.trf2`로 전환.
+- `coping_system`의 `COPING_ACQUIRED`/`COPING_UPGRADED` 포맷을 `Locale.trf1`로 전환해 이벤트 로그 경로의 임시 params Dictionary 생성을 줄임.

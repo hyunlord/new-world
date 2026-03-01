@@ -69,10 +69,7 @@ func finalize_attachment(entity, attachment_type: String, tick: int) -> void:
 		entity_name = str(entity.entity_name)
 
 	var type_key: String = "ATTACHMENT_" + attachment_type.to_upper()
-	var desc: String = Locale.trf("ATTACHMENT_FORMED", {
-		"name": entity_name,
-		"type": Locale.ltr(type_key),
-	})
+	var desc: String = Locale.trf2("ATTACHMENT_FORMED", "name", entity_name, "type", Locale.ltr(type_key))
 
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle != null:

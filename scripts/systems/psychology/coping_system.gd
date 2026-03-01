@@ -623,7 +623,7 @@ func _log_coping_acquired(entity, coping_id: String, tick: int) -> void:
 	var name_key: String = coping_id
 	if typeof(cdef) == TYPE_DICTIONARY:
 		name_key = str(cdef.get("name_key", coping_id))
-	var desc: String = Locale.trf("COPING_ACQUIRED", {"name": Locale.ltr(name_key)})
+	var desc: String = Locale.trf1("COPING_ACQUIRED", "name", Locale.ltr(name_key))
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle:
 		chronicle.log_event("coping_acquired", _get_entity_id(entity), desc, 2, [], tick)
@@ -634,7 +634,7 @@ func _log_coping_upgraded(entity, coping_id: String, tick: int) -> void:
 	var name_key: String = coping_id
 	if typeof(cdef) == TYPE_DICTIONARY:
 		name_key = str(cdef.get("name_key", coping_id))
-	var desc: String = Locale.trf("COPING_UPGRADED", {"name": Locale.ltr(name_key)})
+	var desc: String = Locale.trf1("COPING_UPGRADED", "name", Locale.ltr(name_key))
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle:
 		chronicle.log_event("coping_upgraded", _get_entity_id(entity), desc, 2, [], tick)
