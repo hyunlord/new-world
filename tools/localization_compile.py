@@ -41,11 +41,13 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "compiled_dir": "compiled",
     "include_sources": False,
     "key_registry_path": "key_registry.json",
+    "key_owners_path": "key_owners.json",
     "preserve_key_ids": True,
     "embed_keys": False,
     "max_duplicate_key_count": None,
     "max_duplicate_conflict_count": None,
     "max_missing_key_fill_count": None,
+    "max_owner_rule_miss_count": None,
 }
 
 
@@ -112,11 +114,17 @@ def _compile_locale(
     locale: str,
     fallback_locale: str,
     categories: List[str],
+    key_owners: Dict[str, str],
 ) -> Dict[str, Any]:
     flat: Dict[str, str] = {}
     key_sources: Dict[str, str] = {}
     duplicate_keys: Dict[str, List[str]] = {}
     duplicate_conflict_keys: Dict[str, List[str]] = {}
+    entries_by_key: Dict[str, List[Tuple[str, str, str]]] = {}
+    owner_rule_seen_count = 0
+    owner_rule_hit_count = 0
+    owner_rule_miss_count = 0
+    owner_rule_override_count = 0
 
     for category in categories:
         category_data, loaded_from = _load_category_data(
@@ -130,24 +138,48 @@ def _compile_locale(
             key = str(raw_key)
             value = str(raw_value)
             source_label = f"{loaded_from}/{category}" if loaded_from else f"missing/{category}"
+            entries_by_key.setdefault(key, []).append((category, source_label, value))
 
-            if key in flat:
-                duplicate_keys.setdefault(key, [key_sources[key]]).append(source_label)
-                if flat[key] != value:
-                    duplicate_conflict_keys.setdefault(key, [key_sources[key]]).append(source_label)
-                elif key in duplicate_conflict_keys:
-                    duplicate_conflict_keys[key].append(source_label)
-                # Preserve first-wins semantics to match existing Locale loader behavior.
-                continue
+    for key, entries in entries_by_key.items():
+        if len(entries) > 1:
+            duplicate_sources = [item[1] for item in entries]
+            duplicate_keys[key] = duplicate_sources
+            distinct_values = {item[2] for item in entries}
+            if len(distinct_values) > 1:
+                duplicate_conflict_keys[key] = list(duplicate_sources)
 
-            flat[key] = value
-            key_sources[key] = source_label
+        _, first_source, first_value = entries[0]
+        selected_source = first_source
+        selected_value = first_value
+
+        owner_category = key_owners.get(key, "")
+        if owner_category:
+            owner_rule_seen_count += 1
+            owner_match: Tuple[str, str, str] | None = None
+            for entry in entries:
+                if entry[0] == owner_category:
+                    owner_match = entry
+                    break
+            if owner_match is None:
+                owner_rule_miss_count += 1
+            else:
+                owner_rule_hit_count += 1
+                _, selected_source, selected_value = owner_match
+                if selected_source != first_source:
+                    owner_rule_override_count += 1
+
+        flat[key] = selected_value
+        key_sources[key] = selected_source
 
     return {
         "strings": flat,
         "sources": key_sources,
         "duplicate_keys": duplicate_keys,
         "duplicate_conflict_keys": duplicate_conflict_keys,
+        "owner_rule_seen_count": owner_rule_seen_count,
+        "owner_rule_hit_count": owner_rule_hit_count,
+        "owner_rule_miss_count": owner_rule_miss_count,
+        "owner_rule_override_count": owner_rule_override_count,
         "keys": sorted(flat.keys()),
     }
 
@@ -170,6 +202,35 @@ def _load_key_registry(path: Path) -> List[str]:
         seen.add(key)
         deduped.append(key)
     return deduped
+
+
+def _normalize_owner_category(raw: Any) -> str:
+    category = str(raw).strip()
+    if category.endswith(".json"):
+        category = category[: -len(".json")]
+    return category
+
+
+def _load_key_owners(path: Path) -> Dict[str, str]:
+    if not path.exists():
+        return {}
+    data = _load_json(path)
+    if not isinstance(data, dict):
+        return {}
+    raw_owners: Any = data
+    if "owners" in data and isinstance(data["owners"], dict):
+        raw_owners = data["owners"]
+    if not isinstance(raw_owners, dict):
+        return {}
+
+    owners: Dict[str, str] = {}
+    for raw_key, raw_category in raw_owners.items():
+        key = str(raw_key)
+        category = _normalize_owner_category(raw_category)
+        if not key or not category:
+            continue
+        owners[key] = category
+    return owners
 
 
 def _build_key_registry(
@@ -227,6 +288,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     compiled_dir_name = str(manifest.get("compiled_dir", "compiled"))
     include_sources = bool(manifest.get("include_sources", False))
     key_registry_rel = str(manifest.get("key_registry_path", "key_registry.json"))
+    key_owners_rel = str(manifest.get("key_owners_path", "key_owners.json"))
     preserve_key_ids = bool(manifest.get("preserve_key_ids", True))
     embed_keys = bool(manifest.get("embed_keys", False))
     max_duplicate_key_count_raw = manifest.get("max_duplicate_key_count")
@@ -262,6 +324,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 file=sys.stderr,
             )
             return 1
+    max_owner_rule_miss_count_raw = manifest.get("max_owner_rule_miss_count")
+    max_owner_rule_miss_count: int | None = None
+    if max_owner_rule_miss_count_raw is not None:
+        try:
+            max_owner_rule_miss_count = int(max_owner_rule_miss_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_owner_rule_miss_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -269,17 +342,21 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
 
     compiled_root = localization_root / compiled_dir_name
     compiled_root.mkdir(parents=True, exist_ok=True)
+    key_owners_path = localization_root / key_owners_rel
+    key_owners = _load_key_owners(key_owners_path)
 
     compiled_by_locale: Dict[str, Dict[str, Any]] = {}
     total_duplicates = 0
     max_locale_duplicates = 0
     max_locale_duplicate_conflicts = 0
+    max_locale_owner_rule_misses = 0
     for locale in supported_locales:
         compiled = _compile_locale(
             localization_root=localization_root,
             locale=locale,
             fallback_locale="en",
             categories=categories,
+            key_owners=key_owners,
         )
         compiled_by_locale[locale] = compiled
         duplicate_count = len(compiled["duplicate_keys"])
@@ -288,6 +365,9 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         max_locale_duplicates = max(max_locale_duplicates, duplicate_count)
         max_locale_duplicate_conflicts = max(
             max_locale_duplicate_conflicts, duplicate_conflict_count
+        )
+        max_locale_owner_rule_misses = max(
+            max_locale_owner_rule_misses, int(compiled.get("owner_rule_miss_count", 0))
         )
 
     canonical_key_set: set[str] = set()
@@ -315,6 +395,10 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         compiled = compiled_by_locale[locale]
         duplicate_count = len(compiled["duplicate_keys"])
         duplicate_conflict_count = len(compiled["duplicate_conflict_keys"])
+        owner_rule_seen_count = int(compiled.get("owner_rule_seen_count", 0))
+        owner_rule_hit_count = int(compiled.get("owner_rule_hit_count", 0))
+        owner_rule_miss_count = int(compiled.get("owner_rule_miss_count", 0))
+        owner_rule_override_count = int(compiled.get("owner_rule_override_count", 0))
         locale_strings: Dict[str, str] = dict(compiled["strings"])
         locale_sources: Dict[str, str] = dict(compiled["sources"])
         missing_filled_count = 0
@@ -359,6 +443,8 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             f"[localization_compile] {locale}: "
             f"strings={len(locale_strings)} duplicates={duplicate_count} "
             f"duplicate_conflicts={duplicate_conflict_count} "
+            f"owner_seen={owner_rule_seen_count} owner_hits={owner_rule_hit_count} "
+            f"owner_misses={owner_rule_miss_count} owner_overrides={owner_rule_override_count} "
             f"filled={missing_filled_count} updated={1 if updated else 0} -> {out_path}"
         )
 
@@ -395,6 +481,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
             "[localization_compile] missing-fill regression: "
             f"max_locale_missing_filled={max_locale_missing_filled} "
             f"max_allowed={max_missing_key_fill_count}",
+            file=sys.stderr,
+        )
+        return 1
+    if (
+        max_owner_rule_miss_count is not None
+        and max_locale_owner_rule_misses > max_owner_rule_miss_count
+    ):
+        print(
+            "[localization_compile] owner-rule miss regression: "
+            f"max_locale_owner_rule_misses={max_locale_owner_rule_misses} "
+            f"max_allowed={max_owner_rule_miss_count}",
             file=sys.stderr,
         )
         return 1

@@ -1075,3 +1075,8 @@
 - `localization_audit`에 `--key-owner-policy-json`을 추가해 duplicate key canonical 소스 제안을 JSON 정책(`owners`)으로 내보낼 수 있게 확장.
 - canonical 선택 로직을 공통화해 Markdown 리포트와 정책 JSON의 기준 일관성을 보장.
 - `migration_verify`가 `MIGRATION_AUDIT_KEY_OWNER_POLICY` 환경변수로 key-owner 정책 아티팩트를 생성하도록 연동.
+
+## Commit 218
+- `localization_compile`에 key-owner 정책 로딩/적용을 추가해 key별 canonical category를 compile 단계에서 강제할 수 있게 확장.
+- manifest에 `key_owners_path`, `max_owner_rule_miss_count`를 도입하고 `localization/key_owners.json`(248 keys) 정책 파일을 연결.
+- owner miss 회귀 게이트를 추가하고 전체 검증(`migration_verify --with-benches`)에서 `owner_misses=0` 및 checksum 유지를 확인.
