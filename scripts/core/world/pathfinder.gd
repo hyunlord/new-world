@@ -17,6 +17,7 @@ var _bridge_has_batch_xy: bool = false
 var _cached_world_data: RefCounted = null
 var _cached_width: int = 0
 var _cached_height: int = 0
+var _cached_world_revision: int = -1
 var _cached_walkable: PackedByteArray = PackedByteArray()
 var _cached_move_cost: PackedFloat32Array = PackedFloat32Array()
 var _batch_from_xy: PackedInt32Array = PackedInt32Array()
@@ -360,11 +361,13 @@ func _ensure_bridge_method_cache(bridge: Object) -> void:
 func _ensure_world_cache(world_data: RefCounted) -> void:
 	var width: int = int(world_data.width)
 	var height: int = int(world_data.height)
+	var world_revision: int = int(world_data.terrain_revision)
 	var expected_size: int = width * height
 	var needs_rebuild: bool = (
 		world_data != _cached_world_data
 		or width != _cached_width
 		or height != _cached_height
+		or world_revision != _cached_world_revision
 		or _cached_walkable.size() != expected_size
 		or _cached_move_cost.size() != expected_size
 	)
@@ -374,6 +377,7 @@ func _ensure_world_cache(world_data: RefCounted) -> void:
 	_cached_world_data = world_data
 	_cached_width = width
 	_cached_height = height
+	_cached_world_revision = world_revision
 	_cached_walkable.resize(expected_size)
 	_cached_move_cost.resize(expected_size)
 

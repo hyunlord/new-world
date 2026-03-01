@@ -7,6 +7,7 @@ var elevation: PackedFloat32Array
 var moisture: PackedFloat32Array
 var temperature: PackedFloat32Array
 var _entity_map: Dictionary = {}  # Vector2i -> Array[int]
+var terrain_revision: int = 0
 
 
 ## Initialize world arrays
@@ -19,6 +20,7 @@ func init_world(w: int, h: int) -> void:
 	moisture.resize(size)
 	temperature.resize(size)
 	_entity_map.clear()
+	terrain_revision += 1
 
 
 ## Convert 2D coords to 1D index
@@ -51,10 +53,18 @@ func get_temperature(x: int, y: int) -> float:
 ## Set all tile data at once
 func set_tile(x: int, y: int, b: int, e: float, m: float, t: float) -> void:
 	var idx: int = _idx(x, y)
+	var changed: bool = (
+		biomes[idx] != b
+		or elevation[idx] != e
+		or moisture[idx] != m
+		or temperature[idx] != t
+	)
 	biomes[idx] = b
 	elevation[idx] = e
 	moisture[idx] = m
 	temperature[idx] = t
+	if changed:
+		terrain_revision += 1
 
 
 ## Check if a tile is walkable (move cost > 0)

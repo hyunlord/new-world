@@ -916,3 +916,8 @@
 - `sim_bridge`의 `_resolve_pathfinding_backend_cached`가 cache hit 시 즉시 반환하도록 순서를 조정해 매 호출 sync 비용을 줄임.
 - cache miss에서만 sync를 수행하고, sync 후 cache 설정 가능성을 고려한 재확인 분기를 추가.
 - backend 결정 의미를 유지하면서 `_prefer_gpu` hot path 분기 오버헤드를 미세 최적화.
+
+## Commit 186
+- `world_data`에 `terrain_revision`을 도입하고 `set_tile` 실변경 시 revision을 증가시켜 지형 변경 추적을 명시화.
+- `pathfinder` 캐시 재빌드 조건에 revision 비교를 추가해 동적 지형 변경 후 stale walkable/move_cost 캐시 사용을 방지.
+- 캐시 재사용 효율은 유지하면서 pathfinding 정합성을 강화.
