@@ -156,3 +156,8 @@
 - `StressSystem`의 Lazarus appraisal 스케일 수식을 Rust(`sim-systems`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 appraisal API를 추가해 GDScript는 입력 수집 후 단일 호출.
 - 수식 의미와 clamp 범위(0.7~1.9)를 유지하면서 stress 계산 hot path를 네이티브화.
+
+## Commit 033
+- `StressSystem`의 감정 기여 계산(8감정 가중치 + VA composite)을 Rust 함수로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 emotion contribution API를 추가해 GDScript는 breakdown 조립만 담당.
+- stress breakdown 키 체계를 유지한 채 감정 수식 핫패스를 네이티브 경로로 전환.

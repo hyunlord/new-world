@@ -21,6 +21,20 @@ pub struct ContinuousStressInputs {
     pub total: f32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct EmotionStressContribution {
+    pub fear: f32,
+    pub anger: f32,
+    pub sadness: f32,
+    pub disgust: f32,
+    pub surprise: f32,
+    pub joy: f32,
+    pub trust: f32,
+    pub anticipation: f32,
+    pub va_composite: f32,
+    pub total: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -156,6 +170,59 @@ pub fn stress_appraisal_scale(
 
     let imbalance = f32::max(0.0, threat_appraisal - coping_appraisal);
     (1.0 + 0.8 * imbalance).clamp(0.7, 1.9)
+}
+
+/// Emotion-to-stress contribution with fixed weights and VA composite term.
+pub fn stress_emotion_contribution(
+    fear: f32,
+    anger: f32,
+    sadness: f32,
+    disgust: f32,
+    surprise: f32,
+    joy: f32,
+    trust: f32,
+    anticipation: f32,
+    valence: f32,
+    arousal: f32,
+) -> EmotionStressContribution {
+    const EMOTION_STRESS_THRESHOLD: f32 = 20.0;
+    const VA_GAMMA: f32 = 3.0;
+
+    let fear_c = 0.09 * f32::max(0.0, fear - EMOTION_STRESS_THRESHOLD);
+    let anger_c = 0.06 * f32::max(0.0, anger - EMOTION_STRESS_THRESHOLD);
+    let sadness_c = 0.05 * f32::max(0.0, sadness - EMOTION_STRESS_THRESHOLD);
+    let disgust_c = 0.04 * f32::max(0.0, disgust - EMOTION_STRESS_THRESHOLD);
+    let surprise_c = 0.03 * f32::max(0.0, surprise - EMOTION_STRESS_THRESHOLD);
+    let joy_c = -0.05 * f32::max(0.0, joy - EMOTION_STRESS_THRESHOLD);
+    let trust_c = -0.04 * f32::max(0.0, trust - EMOTION_STRESS_THRESHOLD);
+    let anticipation_c = -0.02 * f32::max(0.0, anticipation - EMOTION_STRESS_THRESHOLD);
+
+    let neg = (-valence / 100.0).clamp(0.0, 1.0);
+    let ar = (arousal / 100.0).clamp(0.0, 1.0);
+    let va = VA_GAMMA * ar * neg;
+
+    let total = fear_c
+        + anger_c
+        + sadness_c
+        + disgust_c
+        + surprise_c
+        + joy_c
+        + trust_c
+        + anticipation_c
+        + va;
+
+    EmotionStressContribution {
+        fear: fear_c,
+        anger: anger_c,
+        sadness: sadness_c,
+        disgust: disgust_c,
+        surprise: surprise_c,
+        joy: joy_c,
+        trust: trust_c,
+        anticipation: anticipation_c,
+        va_composite: va,
+        total,
+    }
 }
 
 /// SIGMOID_EXTREME influence.
@@ -301,5 +368,35 @@ mod tests {
         let stressed =
             stress_appraisal_scale(0.2, 0.3, 0.2, 0.8, 0.4, 0.1, 0.8, 80.0, 20.0, 0.2, 0.2, 0.2);
         assert!(stressed >= baseline);
+    }
+
+    #[test]
+    fn stress_emotion_contribution_is_zero_at_neutral_inputs() {
+        let out =
+            stress_emotion_contribution(10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 0.0, 0.0);
+        assert_eq!(
+            out,
+            EmotionStressContribution {
+                fear: 0.0,
+                anger: 0.0,
+                sadness: 0.0,
+                disgust: 0.0,
+                surprise: 0.0,
+                joy: -0.0,
+                trust: -0.0,
+                anticipation: -0.0,
+                va_composite: 0.0,
+                total: 0.0
+            }
+        );
+    }
+
+    #[test]
+    fn stress_emotion_contribution_adds_va_when_negative_high_arousal() {
+        let out = stress_emotion_contribution(
+            10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, -100.0, 100.0,
+        );
+        assert_eq!(out.va_composite, 3.0);
+        assert_eq!(out.total, 3.0);
     }
 }

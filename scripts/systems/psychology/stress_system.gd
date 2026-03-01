@@ -34,13 +34,6 @@ const ALLO_STRESS_THRESHOLD: float = 250.0
 const ALLO_RECOVERY_THRESHOLD: float = 120.0
 const ALLO_RECOVERY_RATE: float = 0.003
 
-const EMOTION_STRESS_THRESHOLD: float = 20.0
-const EMOTION_WEIGHTS: Dictionary = {
-	"fear": 0.09, "anger": 0.06, "sadness": 0.05,
-	"disgust": 0.04, "surprise": 0.03,
-	"joy": -0.05, "trust": -0.04, "anticipation": -0.02
-}
-const VA_GAMMA: float = 3.0
 const EUSTRESS_OPTIMAL: float = 150.0
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
@@ -268,26 +261,49 @@ func _process_stress_traces(ed, breakdown: Dictionary) -> float:
 
 # ── 4) 감정 → 스트레스 ───────────────────────────────────────────────
 func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
-	var total: float = 0.0
 	if ed == null:
 		return 0.0
 
-	for emotion_name in EMOTION_WEIGHTS:
-		var weight: float = EMOTION_WEIGHTS[emotion_name]
-		var value: float = ed.get_emotion(emotion_name)
-		var excess: float = maxf(0.0, value - EMOTION_STRESS_THRESHOLD)
-		var contrib: float = weight * excess
+	var fear_val: float = ed.get_emotion("fear")
+	var anger_val: float = ed.get_emotion("anger")
+	var sadness_val: float = ed.get_emotion("sadness")
+	var disgust_val: float = ed.get_emotion("disgust")
+	var surprise_val: float = ed.get_emotion("surprise")
+	var joy_val: float = ed.get_emotion("joy")
+	var trust_val: float = ed.get_emotion("trust")
+	var anticipation_val: float = ed.get_emotion("anticipation")
+	var out: Dictionary = StatCurveScript.stress_emotion_contribution(
+		fear_val,
+		anger_val,
+		sadness_val,
+		disgust_val,
+		surprise_val,
+		joy_val,
+		trust_val,
+		anticipation_val,
+		ed.valence,
+		ed.arousal
+	)
+
+	var total: float = float(out.get("total", 0.0))
+	var emotion_keys: Array[String] = [
+		"fear",
+		"anger",
+		"sadness",
+		"disgust",
+		"surprise",
+		"joy",
+		"trust",
+		"anticipation",
+	]
+	for i in range(emotion_keys.size()):
+		var emotion_name: String = emotion_keys[i]
+		var contrib: float = float(out.get(emotion_name, 0.0))
 		if absf(contrib) > STRESS_EPSILON:
-			total += contrib
 			breakdown["emo_%s" % emotion_name] = contrib
 
-	var valence: float = ed.valence
-	var arousal: float = ed.arousal
-	var neg: float = clampf(-valence / 100.0, 0.0, 1.0)
-	var ar: float = clampf(arousal / 100.0, 0.0, 1.0)
-	var va_contrib: float = VA_GAMMA * ar * neg
+	var va_contrib: float = float(out.get("va_composite", 0.0))
 	if va_contrib > STRESS_EPSILON:
-		total += va_contrib
 		breakdown["va_composite"] = va_contrib
 
 	return total

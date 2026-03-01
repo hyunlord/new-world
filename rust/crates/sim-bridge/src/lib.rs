@@ -699,6 +699,47 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_emotion_contribution(
+        &self,
+        fear: f32,
+        anger: f32,
+        sadness: f32,
+        disgust: f32,
+        surprise: f32,
+        joy: f32,
+        trust: f32,
+        anticipation: f32,
+        valence: f32,
+        arousal: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_emotion_contribution(
+            fear,
+            anger,
+            sadness,
+            disgust,
+            surprise,
+            joy,
+            trust,
+            anticipation,
+            valence,
+            arousal,
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("fear", out.fear as f64);
+        dict.set("anger", out.anger as f64);
+        dict.set("sadness", out.sadness as f64);
+        dict.set("disgust", out.disgust as f64);
+        dict.set("surprise", out.surprise as f64);
+        dict.set("joy", out.joy as f64);
+        dict.set("trust", out.trust as f64);
+        dict.set("anticipation", out.anticipation as f64);
+        dict.set("va_composite", out.va_composite as f64);
+        dict.set("total", out.total as f64);
+        dict
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

@@ -342,6 +342,37 @@ func stat_stress_appraisal_scale(
 	)
 
 
+## Delegates emotion-to-stress contribution computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_emotion_contribution(
+	fear: float,
+	anger: float,
+	sadness: float,
+	disgust: float,
+	surprise: float,
+	joy: float,
+	trust: float,
+	anticipation: float,
+	valence: float,
+	arousal: float
+):
+	return _call_native_if_exists(
+		"stat_stress_emotion_contribution",
+		[
+			fear,
+			anger,
+			sadness,
+			disgust,
+			surprise,
+			joy,
+			trust,
+			anticipation,
+			valence,
+			arousal
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

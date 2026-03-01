@@ -274,6 +274,76 @@ static func stress_appraisal_scale(
 	var imbalance: float = maxf(0.0, threat_appraisal - coping_appraisal)
 	return clampf(1.0 + 0.8 * imbalance, 0.7, 1.9)
 
+
+## Emotion-to-stress contribution with fixed weights and VA composite term.
+## Returns Dictionary:
+## { fear, anger, sadness, disgust, surprise, joy, trust, anticipation, va_composite, total }
+static func stress_emotion_contribution(
+	fear: float,
+	anger: float,
+	sadness: float,
+	disgust: float,
+	surprise: float,
+	joy: float,
+	trust: float,
+	anticipation: float,
+	valence: float,
+	arousal: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_emotion_contribution",
+		[
+			fear,
+			anger,
+			sadness,
+			disgust,
+			surprise,
+			joy,
+			trust,
+			anticipation,
+			valence,
+			arousal
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	const emotion_stress_threshold: float = 20.0
+	var values: Dictionary = {
+		"fear": fear,
+		"anger": anger,
+		"sadness": sadness,
+		"disgust": disgust,
+		"surprise": surprise,
+		"joy": joy,
+		"trust": trust,
+		"anticipation": anticipation,
+	}
+	var weights: Dictionary = {
+		"fear": 0.09,
+		"anger": 0.06,
+		"sadness": 0.05,
+		"disgust": 0.04,
+		"surprise": 0.03,
+		"joy": -0.05,
+		"trust": -0.04,
+		"anticipation": -0.02,
+	}
+	var out: Dictionary = {}
+	var total: float = 0.0
+	for key in weights.keys():
+		var excess: float = maxf(0.0, float(values.get(key, 0.0)) - emotion_stress_threshold)
+		var contrib: float = float(weights.get(key, 0.0)) * excess
+		out[key] = contrib
+		total += contrib
+
+	var neg: float = clampf(-valence / 100.0, 0.0, 1.0)
+	var ar: float = clampf(arousal / 100.0, 0.0, 1.0)
+	var va_contrib: float = 3.0 * ar * neg
+	out["va_composite"] = va_contrib
+	out["total"] = total + va_contrib
+	return out
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)
