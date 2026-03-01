@@ -767,3 +767,8 @@
 - `sim-systems::body`에 `child_parent_stress_transfer`를 추가해 부모→아동 스트레스 전이(attachment/버퍼/contagion 결합) 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 `body_child_parent_stress_transfer` 경로를 추가하고, `child_stress_processor`가 Rust 우선 호출 + 기존 함수 fallback 구조를 사용하도록 전환.
 - child stress tick hot path에서 전이 수식의 스크립트 연산을 줄이면서 기존 의미와 fallback 호환성을 유지.
+
+## Commit 156
+- `sim-systems::body`에 `child_simultaneous_ace_step`를 추가해 동시 ACE severity 집계의 burst/residual/kindling 계산을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 `body_child_simultaneous_ace_step` 경로를 추가하고, `child_stress_processor`가 scratch 버퍼 기반 Rust 우선 처리 + 기존 fallback 구조를 사용하도록 전환.
+- child stress의 동시 ACE 처리 의미를 유지하면서 해당 수학 경로의 스크립트 연산 비중을 추가로 축소.

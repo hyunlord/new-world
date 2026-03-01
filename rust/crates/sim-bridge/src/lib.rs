@@ -698,6 +698,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_simultaneous_ace_step(
+        &self,
+        prev_residual: f32,
+        severities: PackedFloat32Array,
+    ) -> PackedFloat32Array {
+        let out = body::child_simultaneous_ace_step(severities.as_slice(), prev_residual);
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

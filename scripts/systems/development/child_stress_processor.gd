@@ -4,6 +4,8 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager
 var _stages: Dictionary = {}
+var _simultaneous_ace_severities: PackedFloat32Array = PackedFloat32Array()
+var _simultaneous_ace_scar_candidates: Array = []
 
 
 func _init() -> void:
@@ -347,7 +349,35 @@ func execute_tick(tick: int) -> void:
 		var simultaneous_events = childhood_data.get("simultaneous_ace_events", [])
 		if simultaneous_events is Array and simultaneous_events.size() > 0:
 			var prev_residual: float = float(childhood_data.get("ace_residual_arousal", 0.0))
-			var ace_result: Dictionary = _handle_simultaneous_ace_events(simultaneous_events, prev_residual)
+			var ace_result: Dictionary = {}
+			_simultaneous_ace_severities.resize(0)
+			_simultaneous_ace_scar_candidates.clear()
+			for i in range(simultaneous_events.size()):
+				var event = simultaneous_events[i]
+				if event is Dictionary:
+					_simultaneous_ace_severities.append(float(event.get("severity", 0.0)))
+					_simultaneous_ace_scar_candidates.append(str(event.get("scar_type", "")))
+				else:
+					_simultaneous_ace_severities.append(0.0)
+					_simultaneous_ace_scar_candidates.append("")
+			var ace_variant: Variant = SimBridge.body_child_simultaneous_ace_step(
+				prev_residual,
+				_simultaneous_ace_severities
+			)
+			if ace_variant is PackedFloat32Array:
+				var packed_ace: PackedFloat32Array = ace_variant
+				if packed_ace.size() >= 3:
+					var scar_idx: int = int(round(float(packed_ace[1])))
+					var scar_candidate: String = ""
+					if scar_idx >= 0 and scar_idx < _simultaneous_ace_scar_candidates.size():
+						scar_candidate = str(_simultaneous_ace_scar_candidates[scar_idx])
+					ace_result = {
+						"effective_damage": float(packed_ace[0]),
+						"scar_candidate": scar_candidate,
+						"kindling_bonus": int(round(float(packed_ace[2]))),
+					}
+			if ace_result.is_empty():
+				ace_result = _handle_simultaneous_ace_events(simultaneous_events, prev_residual)
 			childhood_data["ace_residual_arousal"] = ace_result.get("effective_damage", 0.0)
 			if entity.emotion_data != null:
 				entity.emotion_data.set_meta("ace_kindling_bonus", ace_result.get("kindling_bonus", 0))

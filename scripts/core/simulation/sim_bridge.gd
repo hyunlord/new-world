@@ -1584,6 +1584,21 @@ func body_child_parent_stress_transfer(
 	)
 
 
+## Delegates simultaneous ACE burst step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_simultaneous_ace_step(
+	prev_residual: float,
+	severities: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"body_child_simultaneous_ace_step",
+		[
+			prev_residual,
+			severities
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

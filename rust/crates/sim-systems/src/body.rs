@@ -401,6 +401,31 @@ pub fn child_parent_stress_transfer(
     clamp_f32(combined, 0.0, 1.0)
 }
 
+/// Simultaneous ACE burst aggregation.
+///
+/// Returns `[effective_damage, max_severity_index, kindling_bonus]`.
+pub fn child_simultaneous_ace_step(severities: &[f32], prev_residual: f32) -> [f32; 3] {
+    if severities.is_empty() {
+        return [0.0, -1.0, 0.0];
+    }
+
+    let mut burst = 1.0_f32;
+    let mut max_severity = -1.0_f32;
+    let mut max_index: i32 = -1;
+    for (idx, severity_raw) in severities.iter().enumerate() {
+        let severity = clamp_f32(*severity_raw, 0.0, 1.0);
+        burst *= 1.0 - severity;
+        if severity > max_severity {
+            max_severity = severity;
+            max_index = idx as i32;
+        }
+    }
+    burst = 1.0 - burst;
+    let effective_damage = clamp_f32(burst * (1.0 + prev_residual), 0.0, 1.25);
+    let kindling_bonus = severities.len().saturating_sub(1) as f32;
+    [effective_damage, max_index as f32, kindling_bonus]
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -584,9 +609,9 @@ mod tests {
     use super::{
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
-        calc_training_gains, child_parent_stress_transfer, compute_age_curve, compute_age_curves,
-        critical_severity, erg_frustration_step, needs_base_decay_step,
-        needs_critical_severity_step, rest_energy_recovery, thirst_decay,
+        calc_training_gains, child_parent_stress_transfer, child_simultaneous_ace_step,
+        compute_age_curve, compute_age_curves, critical_severity, erg_frustration_step,
+        needs_base_decay_step, needs_critical_severity_step, rest_energy_recovery, thirst_decay,
         upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         warmth_decay,
     };
@@ -808,6 +833,22 @@ mod tests {
         let no_buffer = child_parent_stress_transfer(0.8, 0.7, 1, false, 0.4, 0.0);
         let with_buffer = child_parent_stress_transfer(0.8, 0.7, 1, true, 0.4, 0.0);
         assert!(with_buffer < no_buffer);
+    }
+
+    #[test]
+    fn child_simultaneous_ace_step_matches_expected_shape() {
+        let out = child_simultaneous_ace_step(&[0.2, 0.8, 0.1], 0.1);
+        assert!(out[0] > 0.0);
+        assert_eq!(out[1], 1.0);
+        assert_eq!(out[2], 2.0);
+    }
+
+    #[test]
+    fn child_simultaneous_ace_step_empty_input_returns_zero() {
+        let out = child_simultaneous_ace_step(&[], 0.4);
+        assert_eq!(out[0], 0.0);
+        assert_eq!(out[1], -1.0);
+        assert_eq!(out[2], 0.0);
     }
 
     #[test]
