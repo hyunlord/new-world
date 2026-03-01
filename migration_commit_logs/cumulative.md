@@ -323,3 +323,7 @@
 - `stress_tick_step` 결과를 packed 출력(`scalars`/`ints`)으로 수신하는 경로를 추가하고 `StressSystem`은 인덱스 기반 해석으로 전환.
 - tick 핫패스의 dictionary key 조회를 줄이기 위해 state/meta 반영 경로를 packed 값 직접 적용 방식으로 재구성.
 - 기존 dictionary 반환 경로는 유지하면서 `StatCurve` fallback에서 packed 변환을 제공해 호환성을 유지.
+
+## Commit 067
+- stress tick breakdown의 감정 키를 `_EMOTION_BREAKDOWN_KEYS` 상수 배열로 고정해 루프 내 문자열 포맷팅 비용을 제거.
+- breakdown 키 체계(`emo_*`) 의미는 유지하면서 미세 오버헤드를 완화.

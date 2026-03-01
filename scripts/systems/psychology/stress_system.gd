@@ -59,6 +59,16 @@ const _EMOTION_ORDER: Array[String] = [
 	"trust",
 	"anticipation"
 ]
+const _EMOTION_BREAKDOWN_KEYS: Array[String] = [
+	"emo_fear",
+	"emo_anger",
+	"emo_sadness",
+	"emo_disgust",
+	"emo_surprise",
+	"emo_joy",
+	"emo_trust",
+	"emo_anticipation"
+]
 const _EMOTION_SCALAR_INDEX: Array[int] = [
 	_TICK_OUT_SC_FEAR,
 	_TICK_OUT_SC_ANGER,
@@ -277,10 +287,9 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	ed.stress_traces = next_traces
 
 	for i in range(_EMOTION_ORDER.size()):
-		var emotion_name: String = _EMOTION_ORDER[i]
 		var contrib: float = _packed_scalar(scalars, int(_EMOTION_SCALAR_INDEX[i]), 0.0)
 		if absf(contrib) > STRESS_EPSILON:
-			breakdown["emo_%s" % emotion_name] = contrib
+			breakdown[_EMOTION_BREAKDOWN_KEYS[i]] = contrib
 	var va_contrib: float = _packed_scalar(scalars, _TICK_OUT_SC_VA_COMPOSITE, 0.0)
 	if va_contrib > STRESS_EPSILON:
 		breakdown["va_composite"] = va_contrib
