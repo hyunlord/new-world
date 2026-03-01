@@ -536,3 +536,8 @@
 - `stats_detail_panel_legacy`의 정적 포맷 호출(`UI_STAT_CURRENT_FMT`, `UI_STAT_GENDER_FMT`, `UI_STAT_COUPLES_FMT`, `UI_STAT_POP_FMT`, `UI_TECH_COUNT_FMT`)을 `Locale.trf1/trf2/trf4` 경량 경로로 전환.
 - 출력 의미를 유지하면서 draw 경로 임시 params Dictionary 생성을 줄임.
 - Legacy stats 패널 렌더 경로의 미세 오버헤드를 완화.
+
+## Commit 110
+- `map_editor/brush_palette`의 `UI_MAP_SPAWN_TOTAL` 호출 2곳을 `Locale.trf1` 경량 포맷 경로로 전환.
+- 출력 의미를 유지하면서 스폰 합계 라벨 갱신 경로의 임시 params Dictionary 생성을 줄임.
+- Map editor HUD 라벨 갱신의 미세 오버헤드를 완화.
