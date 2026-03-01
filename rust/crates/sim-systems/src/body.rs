@@ -1831,6 +1831,54 @@ pub fn migration_should_attempt(
     overcrowded || food_scarce || chance_roll < migration_chance
 }
 
+/// Population-system housing cap from shelter count.
+pub fn population_housing_cap(
+    total_shelters: i32,
+    free_population_cap: i32,
+    shelter_capacity_per_building: i32,
+) -> i32 {
+    if total_shelters <= 0 {
+        free_population_cap
+    } else {
+        total_shelters.max(0) * shelter_capacity_per_building.max(0)
+    }
+}
+
+/// Population birth blocking rule code.
+///
+/// Returns:
+/// - `0`: birth allowed
+/// - `1`: blocked by max entities
+/// - `2`: blocked by minimum population gate
+/// - `3`: blocked by housing capacity
+/// - `4`: blocked by food threshold
+pub fn population_birth_block_code(
+    alive_count: i32,
+    max_entities: i32,
+    total_shelters: i32,
+    total_food: f32,
+    min_population: i32,
+    free_population_cap: i32,
+    shelter_capacity_per_building: i32,
+    food_per_alive: f32,
+) -> i32 {
+    if alive_count >= max_entities {
+        return 1;
+    }
+    if alive_count < min_population {
+        return 2;
+    }
+    if alive_count >= free_population_cap
+        && total_shelters.max(0) * shelter_capacity_per_building.max(0) < alive_count
+    {
+        return 3;
+    }
+    if total_food < alive_count.max(0) as f32 * food_per_alive {
+        return 4;
+    }
+    0
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2520,7 +2568,8 @@ mod tests {
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
-        migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
+        migration_should_attempt, population_housing_cap, population_birth_block_code,
+        tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
         tech_propagation_culture_modifier, tech_propagation_carrier_bonus,
@@ -3439,6 +3488,26 @@ mod tests {
         assert!(migration_should_attempt(false, true, 1.0, 0.0));
         assert!(migration_should_attempt(false, false, 0.1, 0.2));
         assert!(!migration_should_attempt(false, false, 0.3, 0.2));
+    }
+
+    #[test]
+    fn population_housing_cap_uses_free_cap_without_shelters() {
+        assert_eq!(population_housing_cap(0, 25, 6), 25);
+        assert_eq!(population_housing_cap(3, 25, 6), 18);
+    }
+
+    #[test]
+    fn population_birth_block_code_follows_gate_order() {
+        let maxed = population_birth_block_code(100, 100, 10, 1000.0, 5, 25, 6, 0.5);
+        let too_few = population_birth_block_code(3, 100, 10, 1000.0, 5, 25, 6, 0.5);
+        let housing = population_birth_block_code(40, 100, 6, 1000.0, 5, 25, 6, 0.5);
+        let food = population_birth_block_code(40, 100, 10, 5.0, 5, 25, 6, 0.5);
+        let allow = population_birth_block_code(40, 100, 10, 1000.0, 5, 25, 6, 0.5);
+        assert_eq!(maxed, 1);
+        assert_eq!(too_few, 2);
+        assert_eq!(housing, 3);
+        assert_eq!(food, 4);
+        assert_eq!(allow, 0);
     }
 
     #[test]

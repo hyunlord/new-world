@@ -1655,3 +1655,8 @@
 - `childcare_system`의 핵심 수식(취식량 계산, hunger 갱신)을 Rust-first 경로로 이관.
 - `sim-systems`에 childcare 순수 함수 2종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
+
+## Commit 319
+- `population_system`의 출생 게이트 수식(주거 용량 산정, 출생 차단 코드 계산)을 Rust-first 경로로 이관.
+- `sim-systems`에 population 순수 함수 2종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.

@@ -1934,6 +1934,45 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_population_housing_cap(
+        &self,
+        total_shelters: i32,
+        free_population_cap: i32,
+        shelter_capacity_per_building: i32,
+    ) -> i32 {
+        body::population_housing_cap(
+            total_shelters,
+            free_population_cap,
+            shelter_capacity_per_building,
+        )
+    }
+
+    #[func]
+    #[allow(clippy::too_many_arguments)]
+    fn body_population_birth_block_code(
+        &self,
+        alive_count: i32,
+        max_entities: i32,
+        total_shelters: i32,
+        total_food: f32,
+        min_population: i32,
+        free_population_cap: i32,
+        shelter_capacity_per_building: i32,
+        food_per_alive: f32,
+    ) -> i32 {
+        body::population_birth_block_code(
+            alive_count,
+            max_entities,
+            total_shelters,
+            total_food,
+            min_population,
+            free_population_cap,
+            shelter_capacity_per_building,
+            food_per_alive,
+        )
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

@@ -1,10 +1,20 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_POP_BLOCK_METHOD: String = "body_population_birth_block_code"
+const _SIM_BRIDGE_POP_HOUSING_CAP_METHOD: String = "body_population_housing_cap"
+const _POP_MIN_FOR_BIRTH: int = 5
+const _POP_FREE_HOUSING_CAP: int = 25
+const _POP_SHELTER_CAPACITY: int = 6
+const _POP_FOOD_PER_ALIVE: float = 0.5
+
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _world_data: RefCounted
 var _rng: RandomNumberGenerator
 var _settlement_manager: RefCounted
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -21,6 +31,68 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 	_settlement_manager = settlement_manager
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_POP_BLOCK_METHOD) \
+	and node.has_method(_SIM_BRIDGE_POP_HOUSING_CAP_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
+func _population_birth_block_code(alive_count: int, total_shelters: int, total_food: float) -> int:
+	var max_entities: int = int(GameConfig.MAX_ENTITIES)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_POP_BLOCK_METHOD,
+			alive_count,
+			max_entities,
+			total_shelters,
+			total_food,
+			_POP_MIN_FOR_BIRTH,
+			_POP_FREE_HOUSING_CAP,
+			_POP_SHELTER_CAPACITY,
+			_POP_FOOD_PER_ALIVE
+		)
+		if rust_variant is int:
+			return int(rust_variant)
+	if alive_count >= max_entities:
+		return 1
+	if alive_count < _POP_MIN_FOR_BIRTH:
+		return 2
+	if alive_count >= _POP_FREE_HOUSING_CAP and total_shelters * _POP_SHELTER_CAPACITY < alive_count:
+		return 3
+	if total_food < float(alive_count) * _POP_FOOD_PER_ALIVE:
+		return 4
+	return 0
+
+
+func _population_housing_cap(total_shelters: int) -> int:
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_POP_HOUSING_CAP_METHOD,
+			total_shelters,
+			_POP_FREE_HOUSING_CAP,
+			_POP_SHELTER_CAPACITY
+		)
+		if rust_variant is int:
+			return int(rust_variant)
+	if total_shelters <= 0:
+		return _POP_FREE_HOUSING_CAP
+	return total_shelters * _POP_SHELTER_CAPACITY
+
+
 func execute_tick(_tick: int) -> void:
 	# Births disabled: all reproduction handled by FamilySystem (T-1090)
 	# Natural deaths disabled: handled by MortalitySystem (T-2000, Siler model)
@@ -33,24 +105,12 @@ func _check_births(tick: int) -> void:
 	var alive_count: int = _entity_manager.get_alive_count()
 
 	# Diagnostic logging every 200 ticks (more frequent for debugging)
-	if tick % 200 == 0 and alive_count >= 5:
+	if tick % 200 == 0 and alive_count >= _POP_MIN_FOR_BIRTH:
 		_log_population_status(tick, alive_count)
-
-	if alive_count >= GameConfig.MAX_ENTITIES:
-		return
-
-	# Minimum population for births
-	if alive_count < 5:
-		return
 
 	# Count ALL shelters (built + under construction count toward housing)
 	var shelters: Array = _building_manager.get_buildings_by_type("shelter")
 	var total_shelters: int = shelters.size()
-
-	# Housing check: allow up to 25 pop without shelters, then need shelters
-	# Use < instead of <= so growth is allowed at exact boundary
-	if alive_count >= 25 and total_shelters * 6 < alive_count:
-		return
 
 	# Sum food across all built stockpiles
 	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
@@ -67,8 +127,8 @@ func _check_births(tick: int) -> void:
 			best_food = food
 			best_stockpile = sp
 
-	# Food threshold: need food >= alive_count * 0.5 (lowered from 1.0 — was blocking growth at ~49)
-	if total_food < float(alive_count) * 0.5:
+	var block_code: int = _population_birth_block_code(alive_count, total_shelters, total_food)
+	if block_code != 0:
 		return
 	if best_stockpile == null:
 		return
@@ -119,18 +179,18 @@ func _log_population_status(tick: int, alive_count: int) -> void:
 		var sp = stockpiles[i]
 		if sp.is_built:
 			total_food += sp.storage.get("food", 0.0)
-	var housing_cap: int = 25 if total_shelters == 0 else total_shelters * 6
-	var food_threshold: float = float(alive_count) * 0.5
-	var food_ok: bool = total_food >= food_threshold
-	var housing_ok: bool = alive_count < 25 or total_shelters * 6 >= alive_count
-	var at_max: bool = alive_count >= GameConfig.MAX_ENTITIES
+	var housing_cap: int = _population_housing_cap(total_shelters)
+	var food_threshold: float = float(alive_count) * _POP_FOOD_PER_ALIVE
+	var block_code: int = _population_birth_block_code(alive_count, total_shelters, total_food)
 	var block_reason: String = ""
-	if at_max:
+	if block_code == 1:
 		block_reason = "MAX_ENTITIES(%d)" % GameConfig.MAX_ENTITIES
-	elif not food_ok:
+	elif block_code == 2:
+		block_reason = "MIN_POPULATION(%d)" % _POP_MIN_FOR_BIRTH
+	elif block_code == 3:
+		block_reason = "housing(%d < %d)" % [total_shelters * _POP_SHELTER_CAPACITY, alive_count]
+	elif block_code == 4:
 		block_reason = "food(%.0f < %.0f)" % [total_food, food_threshold]
-	elif not housing_ok:
-		block_reason = "housing(%d < %d)" % [total_shelters * 6, alive_count]
 	else:
 		block_reason = "NONE (birth allowed)"
 	if GameConfig.DEBUG_DEMOGRAPHY_LOG:
