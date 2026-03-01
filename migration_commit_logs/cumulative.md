@@ -59,3 +59,8 @@
 - `data_localization_extract`에 `--apply-key-fields` 추가.
 - 인라인 다국어 포함 data 4개 파일에 `*_key` 참조 자동 주입.
 - 인라인 원문을 유지해 점진 이관/하위호환을 동시에 보장.
+
+## Commit 013
+- `localization_audit`를 inline->key 전환 커버리지 관점으로 확장.
+- `inline_groups_with_key/without_key` 지표로 이관 진행률을 수치화.
+- 생성 산출물 스캔 노이즈를 제거해 감사 신뢰도 개선.

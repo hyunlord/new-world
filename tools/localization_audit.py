@@ -77,6 +77,38 @@ def _find_inline_localized_fields(data_file: Path) -> List[Dict[str, str]]:
     return matches
 
 
+def _find_inline_localized_groups(data_file: Path) -> List[Dict[str, Any]]:
+    data = _load_json(data_file)
+    groups: List[Dict[str, Any]] = []
+    for json_path, node in _walk_json_paths(data):
+        if not isinstance(node, dict):
+            continue
+
+        grouped_langs: Dict[str, Set[str]] = {}
+        for key in node.keys():
+            key_str = str(key)
+            for suffix in INLINE_SUFFIXES:
+                if key_str.endswith(suffix):
+                    base_field = key_str[: -len(suffix)]
+                    lang = suffix[1:]
+                    grouped_langs.setdefault(base_field, set()).add(lang)
+                    break
+
+        for base_field, langs in grouped_langs.items():
+            key_field = f"{base_field}_key"
+            groups.append(
+                {
+                    "file": str(data_file),
+                    "path": json_path,
+                    "base_field": base_field,
+                    "languages": sorted(langs),
+                    "has_key_field": key_field in node,
+                    "key_field": key_field,
+                }
+            )
+    return groups
+
+
 def run_audit(project_root: Path) -> Dict[str, Any]:
     localization_root = project_root / "localization"
     en_dir = localization_root / "en"
@@ -105,8 +137,17 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     duplicate_keys = _find_duplicates(en_keys)
 
     inline_localized_fields: List[Dict[str, str]] = []
+    inline_localized_groups: List[Dict[str, Any]] = []
     for json_file in sorted(data_dir.rglob("*.json")):
+        if json_file.name.startswith("localization_"):
+            continue
         inline_localized_fields.extend(_find_inline_localized_fields(json_file))
+        inline_localized_groups.extend(_find_inline_localized_groups(json_file))
+
+    inline_group_with_key_count = sum(
+        1 for item in inline_localized_groups if bool(item.get("has_key_field", False))
+    )
+    inline_group_without_key_count = len(inline_localized_groups) - inline_group_with_key_count
 
     return {
         "parity_issues": parity_issues,
@@ -114,6 +155,10 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         "duplicate_keys": duplicate_keys,
         "inline_localized_field_count": len(inline_localized_fields),
         "inline_localized_fields": inline_localized_fields,
+        "inline_localized_group_count": len(inline_localized_groups),
+        "inline_group_with_key_count": inline_group_with_key_count,
+        "inline_group_without_key_count": inline_group_without_key_count,
+        "inline_localized_groups": inline_localized_groups,
     }
 
 
@@ -122,6 +167,9 @@ def _print_report(report: Dict[str, Any]) -> None:
     print(f"parity_issues: {len(report['parity_issues'])}")
     print(f"duplicate_keys: {report['duplicate_key_count']}")
     print(f"inline_localized_fields: {report['inline_localized_field_count']}")
+    print(f"inline_groups: {report['inline_localized_group_count']}")
+    print(f"inline_groups_with_key: {report['inline_group_with_key_count']}")
+    print(f"inline_groups_without_key: {report['inline_group_without_key_count']}")
 
     if report["parity_issues"]:
         print("\n-- parity issues --")
@@ -136,6 +184,20 @@ def _print_report(report: Dict[str, Any]) -> None:
         print("\n-- inline localized fields (first 20) --")
         for item in report["inline_localized_fields"][:20]:
             print(f"* {item['file']} :: {item['path']} :: {item['key']}")
+
+    if report["inline_localized_groups"]:
+        missing = [
+            item
+            for item in report["inline_localized_groups"]
+            if not bool(item.get("has_key_field", False))
+        ]
+        if missing:
+            print("\n-- inline groups without *_key (first 20) --")
+            for item in missing[:20]:
+                print(
+                    f"* {item['file']} :: {item['path']} :: "
+                    f"{item['base_field']} -> expected {item['key_field']}"
+                )
 
 
 def main() -> int:
