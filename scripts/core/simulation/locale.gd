@@ -23,6 +23,9 @@ var _tr_data_warned: bool = false
 var _strings: Dictionary = {}
 ## Flattened lookup table: { "UI_SAVE": "...", "TECH_FIRE": "...", ... }
 var _flat_strings: Dictionary = {}
+## Stable key ID lookup for bridge/Rust paths.
+var _key_to_id: Dictionary = {}
+var _id_to_value: PackedStringArray = PackedStringArray()
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -54,6 +57,8 @@ func load_locale(locale: String) -> void:
 	current_locale = locale
 	_strings.clear()
 	_flat_strings.clear()
+	_key_to_id.clear()
+	_id_to_value.resize(0)
 	if _load_compiled_locale(locale):
 		return
 
@@ -74,6 +79,7 @@ func load_locale(locale: String) -> void:
 			var key: String = str(keys[i])
 			if not _flat_strings.has(key):
 				_flat_strings[key] = str(cat_data[key])
+	_rebuild_key_index_from_flat()
 
 
 ## Lookup translation string by key (searches all categories)
@@ -81,6 +87,22 @@ func ltr(key: String) -> String:
 	if _flat_strings.has(key):
 		return str(_flat_strings[key])
 	return key
+
+
+func has_key(key: String) -> bool:
+	return _flat_strings.has(key)
+
+
+func key_id(key: String) -> int:
+	if _key_to_id.has(key):
+		return int(_key_to_id[key])
+	return -1
+
+
+func ltr_id(id: int) -> String:
+	if id < 0 or id >= _id_to_value.size():
+		return ""
+	return str(_id_to_value[id])
 
 
 ## Format string with placeholder substitution
@@ -231,4 +253,34 @@ func _load_compiled_locale(locale: String) -> bool:
 	for i in range(keys.size()):
 		var key: String = str(keys[i])
 		_flat_strings[key] = str(strings[key])
+	_rebuild_key_index(root, strings)
 	return true
+
+
+func _rebuild_key_index_from_flat() -> void:
+	_key_to_id.clear()
+	_id_to_value.resize(0)
+	var keys: Array = _flat_strings.keys()
+	keys.sort()
+	_id_to_value.resize(keys.size())
+	for i in range(keys.size()):
+		var key: String = str(keys[i])
+		_key_to_id[key] = i
+		_id_to_value[i] = str(_flat_strings[key])
+
+
+func _rebuild_key_index(root: Dictionary, strings: Dictionary) -> void:
+	_key_to_id.clear()
+	_id_to_value.resize(0)
+	var keys: Array = []
+	if root.has("keys") and root["keys"] is Array:
+		keys = root["keys"]
+	else:
+		keys = strings.keys()
+		keys.sort()
+
+	_id_to_value.resize(keys.size())
+	for i in range(keys.size()):
+		var key: String = str(keys[i])
+		_key_to_id[key] = i
+		_id_to_value[i] = str(strings.get(key, key))

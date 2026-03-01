@@ -124,6 +124,7 @@ def _compile_locale(
         "strings": flat,
         "sources": key_sources,
         "duplicate_keys": duplicate_keys,
+        "keys": sorted(flat.keys()),
     }
 
 
@@ -162,7 +163,9 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "categories_order": categories,
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
+                "key_count": len(compiled["keys"]),
             },
+            "keys": compiled["keys"],
             "strings": compiled["strings"],
             "sources": compiled["sources"],
         }

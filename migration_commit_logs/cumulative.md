@@ -351,3 +351,8 @@
 - stress trace 유지 필터링 경로를 `next_traces` 신규 배열 append 방식에서 in-place compact(`write_idx`) 방식으로 전환.
 - trace 갱신 후 `resize(write_idx)`로 비활성 tail을 제거해 tick당 trace 배열 재할당/복사 비용을 완화.
 - trace 업데이트/활성 판정 의미는 유지하면서 stress tick 메모리 churn을 줄임.
+
+## Commit 073
+- localization compile 산출물에 stable key index(`keys`)와 `meta.key_count`를 추가해 key 집합 추적을 구조화.
+- `Locale`에 key↔id 조회 API(`has_key`, `key_id`, `ltr_id`)를 추가하고 compiled `keys` 기준 인덱스를 런타임에 구성.
+- 기존 `ltr()` 호환성을 유지하면서 Rust/GDExtension 경로의 정수 key id 기반 조회 확장을 위한 기반을 마련.
