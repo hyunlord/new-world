@@ -76,6 +76,7 @@ var _dyads: Dictionary = {}           # dyad_id -> Array of 2 emotion ids
 var _valence_positive: Dictionary = {}
 var _valence_negative: Dictionary = {}
 var _arousal_weights: Dictionary = {}
+static var _intensity_key_id_cache: Dictionary = {}
 
 
 func _init() -> void:
@@ -149,6 +150,14 @@ func get_intensity_label(emotion_id: String) -> String:
 		level_idx = 2
 
 	var key: String = _get_intensity_locale_key(emotion_id, level_idx)
+	var key_id: int = int(_intensity_key_id_cache.get(key, -2))
+	if key_id == -2:
+		key_id = Locale.key_id(key)
+		_intensity_key_id_cache[key] = key_id
+	if key_id >= 0:
+		var translated_id: String = Locale.ltr_id(key_id)
+		if not translated_id.is_empty() and translated_id != key:
+			return translated_id
 	var translated: String = Locale.ltr(key)
 	if translated == key:
 		return ""

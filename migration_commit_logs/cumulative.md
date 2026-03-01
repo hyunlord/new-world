@@ -366,3 +366,8 @@
 - `Locale`에 `MONTH_1..12` key id 캐시(`_month_key_ids`)를 추가하고 locale 로드 시 선계산.
 - `get_month_name`이 `ltr_id` 경로를 우선 사용해 월 이름 반복 조회의 문자열 key lookup 비용을 줄임.
 - key id가 없을 때는 기존 `ltr("MONTH_n")` fallback을 유지해 동작 호환성을 보장.
+
+## Commit 076
+- `EmotionData.get_intensity_label`에 key id 정적 캐시를 추가해 강도 라벨 키 해석을 1회 후 재사용.
+- 라벨 조회 시 `Locale.ltr_id` 경로를 우선 사용하고, 미지원 상황은 기존 `Locale.ltr` fallback으로 호환 유지.
+- 감정 강도 라벨 반복 조회의 locale key 문자열 lookup 비용을 완화.
