@@ -32,6 +32,7 @@ var _month_key_ids: PackedInt32Array = PackedInt32Array()
 var _tr_id_key_id_cache: Dictionary = {}
 var _tr_id_result_cache: Dictionary = {}
 var _trf_key_id_cache: Dictionary = {}
+var _ltr_key_id_cache: Dictionary = {}
 var _key_index_version: int = 0
 var _registry_keys: Array = []
 
@@ -71,6 +72,7 @@ func load_locale(locale: String) -> void:
 	_tr_id_key_id_cache.clear()
 	_tr_id_result_cache.clear()
 	_trf_key_id_cache.clear()
+	_ltr_key_id_cache.clear()
 	_registry_keys.clear()
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
@@ -101,8 +103,12 @@ func load_locale(locale: String) -> void:
 
 ## Lookup translation string by key (searches all categories)
 func ltr(key: String) -> String:
-	if _flat_strings.has(key):
-		return str(_flat_strings[key])
+	var key_id_cached: int = int(_ltr_key_id_cache.get(key, -2))
+	if key_id_cached == -2:
+		key_id_cached = key_id(key)
+		_ltr_key_id_cache[key] = key_id_cached
+	if key_id_cached >= 0:
+		return ltr_id(key_id_cached)
 	return key
 
 

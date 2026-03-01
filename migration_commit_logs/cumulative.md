@@ -827,3 +827,8 @@
 - `localization_compile`에 `max_missing_key_fill_count` 회귀 게이트를 추가해 locale 누락 채움 수 증가를 컴파일 단계에서 차단.
 - `localization/manifest.json`에 기준선(`max_missing_key_fill_count: 0`)을 추가해 확장 시 번역 누락 회귀를 조기 검출.
 - 런타임 번역 동작은 유지하면서 localization 품질 게이트를 강화.
+
+## Commit 168
+- `Locale.ltr()`에 key-id 캐시(`_ltr_key_id_cache`)를 도입해 반복 키 조회를 id 기반 경로(`ltr_id`)로 통일.
+- locale 재로딩 시 캐시를 초기화해 key index 변경과의 정합성을 유지.
+- 번역 의미는 유지하면서 런타임 localization 조회 경로를 추가 최적화.
