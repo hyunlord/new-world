@@ -295,6 +295,9 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     owner_keys: Set[str] = set(owner_policy_map.keys())
     owner_policy_missing_duplicate_keys = sorted(duplicate_key_union - owner_keys)
     owner_policy_unused_keys = sorted(owner_keys - all_localization_keys)
+    owner_policy_category_counts: Dict[str, int] = defaultdict(int)
+    for category in owner_policy_map.values():
+        owner_policy_category_counts[str(category)] += 1
 
     return {
         "parity_issues": parity_issues,
@@ -323,6 +326,10 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         "inline_keyable_group_without_key_count": keyable_group_without_key_count,
         "owner_policy_path": str(owner_policy_path),
         "owner_policy_entry_count": len(owner_keys),
+        "owner_policy_category_count": len(owner_policy_category_counts),
+        "owner_policy_category_counts": dict(
+            sorted(owner_policy_category_counts.items(), key=lambda item: item[0])
+        ),
         "owner_policy_missing_duplicate_count": len(owner_policy_missing_duplicate_keys),
         "owner_policy_unused_count": len(owner_policy_unused_keys),
         "owner_policy_missing_duplicate_keys": owner_policy_missing_duplicate_keys,
@@ -366,6 +373,7 @@ def _print_report(report: Dict[str, Any]) -> None:
     print(f"inline_keyable_with_key: {report['inline_keyable_group_with_key_count']}")
     print(f"inline_keyable_without_key: {report['inline_keyable_group_without_key_count']}")
     print(f"owner_policy_entries: {report['owner_policy_entry_count']}")
+    print(f"owner_policy_categories: {report['owner_policy_category_count']}")
     print(
         "owner_policy_missing_duplicates: "
         f"{report['owner_policy_missing_duplicate_count']}"
@@ -586,12 +594,23 @@ def _build_owner_policy_markdown(report: Dict[str, Any]) -> str:
         "",
         f"- owner_policy_path: `{report.get('owner_policy_path', '')}`",
         f"- owner_policy_entries: `{report.get('owner_policy_entry_count', 0)}`",
+        f"- owner_policy_categories: `{report.get('owner_policy_category_count', 0)}`",
         f"- missing_for_duplicates: `{report.get('owner_policy_missing_duplicate_count', 0)}`",
         f"- owner_unused: `{report.get('owner_policy_unused_count', 0)}`",
         "",
     ]
+    category_counts = dict(report.get("owner_policy_category_counts", {}))
     missing_keys = [str(x) for x in report.get("owner_policy_missing_duplicate_keys", [])]
     unused_keys = [str(x) for x in report.get("owner_policy_unused_keys", [])]
+
+    lines.extend(["## Owner Category Distribution", ""])
+    if category_counts:
+        lines.extend(["| Category | Keys |", "| --- | ---: |"])
+        for category in sorted(category_counts.keys()):
+            lines.append(f"| `{category}` | {int(category_counts[category])} |")
+    else:
+        lines.append("No owner categories found.")
+    lines.append("")
 
     if not missing_keys and not unused_keys:
         lines.append("No owner policy coverage issues found.")

@@ -1180,3 +1180,8 @@
 - `migration_verify`에 `MIGRATION_AUDIT_REPORT_DIR`를 추가해 audit 산출물 경로를 디렉터리 단위로 일괄 설정 가능하게 확장.
 - 개별 경로 env가 비어 있을 때만 기본 파일명(`audit.json`, `duplicate.json`, `duplicate_conflicts.md`, `key_owner_policy.generated.json`, `owner_policy.md`)을 자동 할당.
 - `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts tools/migration_verify.sh`로 아티팩트 5종 자동 생성을 검증.
+
+## Commit 239
+- `localization_audit` 리포트에 owner-policy 카테고리 분포 지표(`owner_policy_category_count`, `owner_policy_category_counts`)를 추가.
+- 콘솔 요약에 `owner_policy_categories`를 포함하고, owner-policy markdown에 `Owner Category Distribution` 표를 추가해 분포 가시성을 강화.
+- `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts2 tools/migration_verify.sh`로 신규 지표가 JSON/Markdown 양쪽에 반영됨을 확인.
