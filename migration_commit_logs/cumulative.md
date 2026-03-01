@@ -701,3 +701,8 @@
 - `needs_base_decay_step` 통합 이후 중복이 된 `needs_temp_decay_step`(sim-systems/sim-bridge/SimBridge)를 제거해 API 표면과 코드 복잡도를 축소.
 - `needs_system`이 temp-decay 계산에서 중복 bridge 재호출 없이 base decay 결과 재사용 또는 GDScript fallback만 사용하도록 정리.
 - 계산 의미를 유지하면서 needs 소모 경로의 중복 분기와 유지보수 비용을 완화.
+
+## Commit 143
+- `sim-bridge`/`SimBridge`에 `body_needs_critical_severity_step_packed`를 추가하고 기존 scalar API는 packed 경로로 위임하도록 정리.
+- `needs_system`이 임계치 severity 입력을 scratch `PackedFloat32Array`로 재사용하도록 전환되어 엔티티 루프의 인자 구성 할당 오버헤드를 축소.
+- severity 계산 의미를 유지하면서 needs stressor 경로의 메모리 churn을 완화.

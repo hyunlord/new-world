@@ -3,6 +3,7 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 const _BASE_DECAY_SCALAR_COUNT: int = 14
 const _BASE_DECAY_FLAG_COUNT: int = 2
+const _CRITICAL_SEVERITY_SCALAR_COUNT: int = 6
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -12,6 +13,7 @@ var _stress_system = null
 var _last_tick: int = 0
 var _base_decay_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _base_decay_flag_inputs: PackedByteArray = PackedByteArray()
+var _critical_severity_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 
 
 func _init() -> void:
@@ -33,6 +35,8 @@ func execute_tick(tick: int) -> void:
 		_base_decay_scalar_inputs.resize(_BASE_DECAY_SCALAR_COUNT)
 	if _base_decay_flag_inputs.size() < _BASE_DECAY_FLAG_COUNT:
 		_base_decay_flag_inputs.resize(_BASE_DECAY_FLAG_COUNT)
+	if _critical_severity_scalar_inputs.size() < _CRITICAL_SEVERITY_SCALAR_COUNT:
+		_critical_severity_scalar_inputs.resize(_CRITICAL_SEVERITY_SCALAR_COUNT)
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -158,13 +162,14 @@ func execute_tick(tick: int) -> void:
 		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
 		if GameConfig.NEEDS_EXPANSION_ENABLED and entity.emotion_data != null:
 			var severity_step: PackedFloat32Array = PackedFloat32Array()
-			var severity_variant: Variant = SimBridge.body_needs_critical_severity_step(
-				entity.thirst,
-				entity.warmth,
-				entity.safety,
-				GameConfig.THIRST_CRITICAL,
-				GameConfig.WARMTH_CRITICAL,
-				GameConfig.SAFETY_CRITICAL
+			_critical_severity_scalar_inputs[0] = entity.thirst
+			_critical_severity_scalar_inputs[1] = entity.warmth
+			_critical_severity_scalar_inputs[2] = entity.safety
+			_critical_severity_scalar_inputs[3] = GameConfig.THIRST_CRITICAL
+			_critical_severity_scalar_inputs[4] = GameConfig.WARMTH_CRITICAL
+			_critical_severity_scalar_inputs[5] = GameConfig.SAFETY_CRITICAL
+			var severity_variant: Variant = SimBridge.body_needs_critical_severity_step_packed(
+				_critical_severity_scalar_inputs
 			)
 			if severity_variant is PackedFloat32Array:
 				var packed_severity: PackedFloat32Array = severity_variant

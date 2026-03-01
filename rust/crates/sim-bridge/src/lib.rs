@@ -484,15 +484,17 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_needs_critical_severity_step(
+    fn body_needs_critical_severity_step_packed(
         &self,
-        thirst: f32,
-        warmth: f32,
-        safety: f32,
-        thirst_critical: f32,
-        warmth_critical: f32,
-        safety_critical: f32,
+        scalar_inputs: PackedFloat32Array,
     ) -> PackedFloat32Array {
+        let scalars = scalar_inputs.as_slice();
+        let thirst = *scalars.first().unwrap_or(&0.0);
+        let warmth = *scalars.get(1).unwrap_or(&0.0);
+        let safety = *scalars.get(2).unwrap_or(&0.0);
+        let thirst_critical = *scalars.get(3).unwrap_or(&0.0);
+        let warmth_critical = *scalars.get(4).unwrap_or(&0.0);
+        let safety_critical = *scalars.get(5).unwrap_or(&0.0);
         let out = body::needs_critical_severity_step(
             thirst,
             warmth,
@@ -502,6 +504,27 @@ impl WorldSimBridge {
             safety_critical,
         );
         vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_needs_critical_severity_step(
+        &self,
+        thirst: f32,
+        warmth: f32,
+        safety: f32,
+        thirst_critical: f32,
+        warmth_critical: f32,
+        safety_critical: f32,
+    ) -> PackedFloat32Array {
+        let scalar_inputs = vec_f32_to_packed(vec![
+            thirst,
+            warmth,
+            safety,
+            thirst_critical,
+            warmth_critical,
+            safety_critical,
+        ]);
+        self.body_needs_critical_severity_step_packed(scalar_inputs)
     }
 
     #[func]
