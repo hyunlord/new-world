@@ -53,6 +53,8 @@ var _tick_trace_per_tick: PackedFloat32Array = PackedFloat32Array()
 var _tick_trace_decay: PackedFloat32Array = PackedFloat32Array()
 var _rebound_amounts: PackedFloat32Array = PackedFloat32Array()
 var _rebound_delays: PackedInt32Array = PackedInt32Array()
+var _event_fast_current: PackedFloat32Array = PackedFloat32Array()
+var _event_slow_current: PackedFloat32Array = PackedFloat32Array()
 
 
 func _init() -> void:
@@ -642,24 +644,22 @@ func _inject_emotions(
 	if emo_fast.size() == 0 and emo_slow.size() == 0:
 		return
 
-	var current_fast: PackedFloat32Array = PackedFloat32Array()
-	var current_slow: PackedFloat32Array = PackedFloat32Array()
-	current_fast.resize(_EMOTION_ORDER.size())
-	current_slow.resize(_EMOTION_ORDER.size())
+	_event_fast_current.resize(_EMOTION_ORDER.size())
+	_event_slow_current.resize(_EMOTION_ORDER.size())
 	for idx in range(_EMOTION_ORDER.size()):
 		var emotion_name: String = _EMOTION_ORDER[idx]
-		current_fast[idx] = float(ed.fast.get(emotion_name, 0.0))
-		current_slow[idx] = float(ed.slow.get(emotion_name, 0.0))
+		_event_fast_current[idx] = float(ed.fast.get(emotion_name, 0.0))
+		_event_slow_current[idx] = float(ed.slow.get(emotion_name, 0.0))
 
 	var out: Dictionary = StatCurveScript.stress_emotion_inject_step(
-		current_fast,
-		current_slow,
+		_event_fast_current,
+		_event_slow_current,
 		emo_fast,
 		emo_slow,
 		scale
 	)
-	var next_fast: PackedFloat32Array = out.get("fast", current_fast)
-	var next_slow: PackedFloat32Array = out.get("slow", current_slow)
+	var next_fast: PackedFloat32Array = out.get("fast", _event_fast_current)
+	var next_slow: PackedFloat32Array = out.get("slow", _event_slow_current)
 	var count: int = mini(_EMOTION_ORDER.size(), mini(next_fast.size(), next_slow.size()))
 	for idx in range(count):
 		var emotion_name: String = _EMOTION_ORDER[idx]

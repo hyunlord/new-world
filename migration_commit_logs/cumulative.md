@@ -281,3 +281,7 @@
 - rebound queue 처리 루프(`_process_rebound_queue`)를 Rust batch step(`stress_rebound_queue_step`) 호출 중심으로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 rebound queue API를 추가해 GDScript는 배열 입력 구성/결과 반영만 담당.
 - 현재 `REBOUND_DECAY_PER_TICK=0.0` 설정에서는 기존 만료/합산 의미를 유지하면서 런타임 순회 계산 경로를 네이티브화.
+
+## Commit 058
+- 이벤트 감정 주입 경로(`_inject_emotions`)에서 current fast/slow `PackedFloat32Array`를 매 호출 신규 생성하지 않고 scratch buffer 재사용 방식으로 전환.
+- `stress_emotion_inject_step` 호출 구조와 결과 반영 의미를 유지한 채 GDScript 임시 할당/GC 오버헤드를 완화.
