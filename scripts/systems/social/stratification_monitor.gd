@@ -7,6 +7,11 @@ var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _reputation_manager: RefCounted
 var _current_tick: int = 0
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_GINI_METHOD: String = "body_stratification_gini"
+const _SIM_BRIDGE_STATUS_METHOD: String = "body_stratification_status_score"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -19,6 +24,22 @@ func init(entity_manager: RefCounted, settlement_manager: RefCounted, reputation
 	_entity_manager = entity_manager
 	_settlement_manager = settlement_manager
 	_reputation_manager = reputation_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_GINI_METHOD) and node.has_method(_SIM_BRIDGE_STATUS_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -102,6 +123,16 @@ func _compute_gini(settlement: RefCounted) -> void:
 		var entity = _entity_manager.get_entity(mid)
 		if entity != null and entity.is_alive:
 			values.append(entity.wealth_score)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var packed_values: PackedFloat32Array = PackedFloat32Array()
+		packed_values.resize(values.size())
+		for i in range(values.size()):
+			packed_values[i] = float(values[i])
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_GINI_METHOD, packed_values)
+		if rust_variant != null:
+			settlement.gini_coefficient = clampf(float(rust_variant), 0.0, 1.0)
+			return
 	settlement.gini_coefficient = _calculate_gini(values)
 
 
@@ -144,16 +175,34 @@ func _compute_entity_status(entity: RefCounted, settlement: RefCounted) -> void:
 
 	var age_years: float = GameConfig.get_age_years(entity.age)
 	var age_respect: float = clampf((age_years - 30.0) / 40.0, 0.0, 1.0)
-	var rep_overall = avg_rep.get("overall", 0.0)
-	var rep_competence = avg_rep.get("competence", 0.0)
-
-	entity.status_score = clampf(
+	var rep_overall: float = float(avg_rep.get("overall", 0.0))
+	var rep_competence: float = float(avg_rep.get("competence", 0.0))
+	var fallback_status_score: float = clampf(
 		rep_overall * GameConfig.STATUS_W_REPUTATION
 		+ entity.wealth_norm * GameConfig.STATUS_W_WEALTH
 		+ leader_bonus * GameConfig.STATUS_W_LEADER
 		+ age_respect * GameConfig.STATUS_W_AGE
 		+ rep_competence * GameConfig.STATUS_W_COMPETENCE,
 		-1.0, 1.0)
+	entity.status_score = fallback_status_score
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var scalar_inputs: PackedFloat32Array = PackedFloat32Array([
+			rep_overall,
+			entity.wealth_norm,
+			leader_bonus,
+			age_years,
+			rep_competence,
+			float(GameConfig.STATUS_W_REPUTATION),
+			float(GameConfig.STATUS_W_WEALTH),
+			float(GameConfig.STATUS_W_LEADER),
+			float(GameConfig.STATUS_W_AGE),
+			float(GameConfig.STATUS_W_COMPETENCE),
+		])
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_STATUS_METHOD, scalar_inputs)
+		if rust_variant != null:
+			entity.status_score = clampf(float(rust_variant), -1.0, 1.0)
 
 	var old_tier: String = entity.status_tier
 	if entity.status_score > GameConfig.STATUS_TIER_ELITE:

@@ -1125,6 +1125,28 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stratification_gini(&self, values: PackedFloat32Array) -> f32 {
+        body::stratification_gini(values.as_slice())
+    }
+
+    #[func]
+    fn body_stratification_status_score(&self, scalar_inputs: PackedFloat32Array) -> f32 {
+        let scalars = scalar_inputs.as_slice();
+        body::stratification_status_score(
+            *scalars.first().unwrap_or(&0.0),
+            *scalars.get(1).unwrap_or(&0.0),
+            *scalars.get(2).unwrap_or(&0.0),
+            *scalars.get(3).unwrap_or(&0.0),
+            *scalars.get(4).unwrap_or(&0.0),
+            *scalars.get(5).unwrap_or(&0.0),
+            *scalars.get(6).unwrap_or(&0.0),
+            *scalars.get(7).unwrap_or(&0.0),
+            *scalars.get(8).unwrap_or(&0.0),
+            *scalars.get(9).unwrap_or(&0.0),
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

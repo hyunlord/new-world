@@ -707,6 +707,54 @@ pub fn economic_tendencies_step(
     [saving, risk, generosity, materialism]
 }
 
+/// Gini coefficient from a slice of wealth-like values.
+pub fn stratification_gini(values: &[f32]) -> f32 {
+    let n = values.len();
+    if n < 2 {
+        return 0.0;
+    }
+
+    let mut sorted_vals = values.to_vec();
+    sorted_vals.sort_by(|a, b| a.total_cmp(b));
+
+    let mut sum_diff = 0.0_f32;
+    let mut total = 0.0_f32;
+    for (i, value) in sorted_vals.iter().enumerate() {
+        total += *value;
+        sum_diff += (2.0 * i as f32 - n as f32 + 1.0) * *value;
+    }
+    if total < 0.001 {
+        return 0.0;
+    }
+    clamp_f32(sum_diff / (n as f32 * total), 0.0, 1.0)
+}
+
+/// Composite status score for stratification monitor.
+#[allow(clippy::too_many_arguments)]
+pub fn stratification_status_score(
+    rep_overall: f32,
+    wealth_norm: f32,
+    leader_bonus: f32,
+    age_years: f32,
+    rep_competence: f32,
+    w_reputation: f32,
+    w_wealth: f32,
+    w_leader: f32,
+    w_age: f32,
+    w_competence: f32,
+) -> f32 {
+    let age_respect = clamp_f32((age_years - 30.0) / 40.0, 0.0, 1.0);
+    clamp_f32(
+        rep_overall * w_reputation
+            + wealth_norm * w_wealth
+            + leader_bonus * w_leader
+            + age_respect * w_age
+            + rep_competence * w_competence,
+        -1.0,
+        1.0,
+    )
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1188,10 +1236,11 @@ mod tests {
         job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, reputation_decay_value, reputation_event_delta,
-        rest_energy_recovery, revolution_risk_score, stress_injection_apply_step,
-        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
-        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
-        upper_needs_step, warmth_decay,
+        rest_energy_recovery, revolution_risk_score, stratification_gini,
+        stratification_status_score, stress_injection_apply_step, stress_rebound_apply_step,
+        stress_shaken_countdown_step, stress_support_score, thirst_decay,
+        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        warmth_decay,
     };
 
     #[test]
@@ -1590,6 +1639,25 @@ mod tests {
         );
         assert!(male[1] > female[1]);
         assert!(male[2] <= female[2]); // wealth penalty reduces generosity
+    }
+
+    #[test]
+    fn stratification_gini_detects_inequality() {
+        let equal = stratification_gini(&[1.0, 1.0, 1.0, 1.0]);
+        let skewed = stratification_gini(&[0.0, 0.0, 0.0, 10.0]);
+        assert!(equal <= 0.0001);
+        assert!(skewed > 0.7);
+    }
+
+    #[test]
+    fn stratification_status_score_matches_weighted_formula() {
+        let out =
+            stratification_status_score(0.4, 0.7, 0.6, 50.0, 0.3, 0.3, 0.2, 0.1, 0.2, 0.2);
+        assert!((out - 0.48).abs() < 1e-6);
+
+        let clipped =
+            stratification_status_score(2.0, 2.0, 2.0, 90.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+        assert!(clipped <= 1.0);
     }
 
     #[test]

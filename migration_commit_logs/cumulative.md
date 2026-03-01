@@ -1415,3 +1415,10 @@
 - `economic_tendency_system.gd`의 `_compute_tendencies`를 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `10/56` 적용.
+
+## Commit 282
+- `sim-systems/body`에 `stratification_gini`, `stratification_status_score`를 추가해 계층화 모니터 핵심 수식 연산을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_stratification_gini`, `body_stratification_status_score` 메서드를 추가해 GDScript에서 해당 수식을 직접 호출 가능하게 확장.
+- `stratification_monitor.gd`의 Gini 계산 및 status score 계산을 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `11/56` 적용.
