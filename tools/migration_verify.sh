@@ -827,6 +827,20 @@ if [[ -n "${verify_report_json}" ]]; then
   verify_report_out="$(to_abs_path "${verify_report_json}")"
   mkdir -p "$(dirname "${verify_report_out}")"
   generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  git_branch="$(git -C "${ROOT_DIR}" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  git_head="$(git -C "${ROOT_DIR}" rev-parse HEAD 2>/dev/null || true)"
+  git_dirty="false"
+  if [[ -n "$(git -C "${ROOT_DIR}" status --porcelain 2>/dev/null || true)" ]]; then
+    git_dirty="true"
+  fi
+  git_branch_json="null"
+  git_head_json="null"
+  if [[ -n "${git_branch}" ]]; then
+    git_branch_json="\"${git_branch}\""
+  fi
+  if [[ -n "${git_head}" ]]; then
+    git_head_json="\"${git_head}\""
+  fi
   compile_report_json_value="$(to_json_opt_path "${compile_report_json}")"
   audit_report_json_value="$(to_json_opt_path "${audit_report_json}")"
   audit_duplicate_report_json_value="$(to_json_opt_path "${audit_duplicate_report_json}")"
@@ -840,6 +854,9 @@ if [[ -n "${verify_report_json}" ]]; then
   "schema_version": 1,
   "generated_at_utc": "${generated_at}",
   "root_dir": "${ROOT_DIR}",
+  "git_branch": ${git_branch_json},
+  "git_head": ${git_head_json},
+  "git_dirty": ${git_dirty},
   "with_benches": ${WITH_BENCHES},
   "apply_key_fields": ${APPLY_KEY_FIELDS},
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},

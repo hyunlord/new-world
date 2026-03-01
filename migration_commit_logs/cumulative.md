@@ -1235,3 +1235,8 @@
 - `localization_compile` summary report에 `schema_version`, `generated_at_utc` 메타를 추가해 스키마 버전 관리와 실행 시각 추적을 지원.
 - `migration_verify`가 생성하는 `bench_report.json`, `migration_verify_report.json`에도 `schema_version` 메타를 추가해 아티팩트 간 형식 일관성을 강화.
 - `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts11 ... tools/migration_verify.sh --with-benches` 실행에서 compile/bench/verify 리포트의 메타 필드 존재를 확인.
+
+## Commit 250
+- `migration_verify_report.json`에 git 실행 컨텍스트(`git_branch`, `git_head`, `git_dirty`)를 추가해 검증 결과를 코드 상태와 직접 연결.
+- git 정보 조회 실패 시 null 안전 처리로 보고서 생성 안정성을 유지.
+- `/tmp/worldsim_audit_artifacts12/migration_verify_report.json`에서 branch/SHA/dirty 필드 반영을 확인.
