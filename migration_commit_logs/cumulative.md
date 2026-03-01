@@ -1330,3 +1330,8 @@
 - `migration_verify_report.json`에 `compile_thresholds`와 `compile_threshold_status`를 추가해 compile 임계치와 충족 여부를 report에서 직접 제공.
 - `compile_report.json`의 `thresholds.*` 중첩 경로를 추출하는 헬퍼와 `<=` 비교/AND 집계 헬퍼를 도입해 임계치 pass/fail 계산을 자동화.
 - `/tmp/worldsim_audit_artifacts30/migration_verify_report.json`에서 `compile_threshold_status.all_ok=true`, `verification_status.compile_thresholds_all_ok=true` 반영을 확인.
+
+## Commit 269
+- `migration_verify_report.json`에 `audit_conflict_preview`를 추가해 duplicate value conflict 키 상위 N개(기본 10개)를 report에 직접 포함.
+- `audit.json`의 `duplicate_details`에서 `value_conflict=true` 키를 추출/정렬/슬라이싱하는 헬퍼를 추가해 triage 친화적 요약을 제공.
+- `/tmp/worldsim_audit_artifacts31/migration_verify_report.json`에서 `limit=10`, `count=10`, 충돌 키 프리뷰 배열 반영을 확인.

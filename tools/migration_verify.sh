@@ -997,6 +997,70 @@ print(v if isinstance(v, int) else "")' "${abs_path}" "${key_path}" 2>/dev/null 
     )"
     to_json_opt_bool_literal "${raw_value}"
   }
+  to_json_conflict_key_preview() {
+    local raw_path="$1"
+    local max_items="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local preview_json
+    preview_json="$(
+      python3 -c 'import json,sys
+d=json.load(open(sys.argv[1], encoding="utf-8"))
+try:
+    limit=max(0,int(sys.argv[2]))
+except Exception:
+    print("null")
+    raise SystemExit(0)
+details=d.get("duplicate_details")
+if not isinstance(details, dict):
+    print("null")
+    raise SystemExit(0)
+keys=sorted(
+    k for k,v in details.items()
+    if isinstance(v, dict) and v.get("value_conflict") is True
+)
+print(json.dumps(keys[:limit]))' "${abs_path}" "${max_items}" 2>/dev/null || true
+    )"
+    if [[ -z "${preview_json}" ]]; then
+      echo "null"
+    else
+      echo "${preview_json}"
+    fi
+  }
+  to_json_conflict_key_preview_count() {
+    local raw_path="$1"
+    local max_items="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local preview_count
+    preview_count="$(
+      python3 -c 'import json,sys
+d=json.load(open(sys.argv[1], encoding="utf-8"))
+try:
+    limit=max(0,int(sys.argv[2]))
+except Exception:
+    print("")
+    raise SystemExit(0)
+details=d.get("duplicate_details")
+if not isinstance(details, dict):
+    print("")
+    raise SystemExit(0)
+keys=sorted(
+    k for k,v in details.items()
+    if isinstance(v, dict) and v.get("value_conflict") is True
+)
+print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
+    )"
+    to_json_opt_int "${preview_count}"
+  }
   to_json_zero_is_true() {
     local raw_value="$1"
     if [[ "${raw_value}" =~ ^[0-9]+$ ]]; then
@@ -1223,6 +1287,9 @@ print(v if isinstance(v, int) else "")' "${abs_path}" "${key_path}" 2>/dev/null 
       "${compile_threshold_duplicate_owner_missing_count_ok}" \
       "${compile_threshold_owner_unused_count_ok}"
   )"
+  audit_conflict_preview_limit=10
+  audit_conflict_key_preview="$(to_json_conflict_key_preview "${audit_report_json}" "${audit_conflict_preview_limit}")"
+  audit_conflict_key_preview_count="$(to_json_conflict_key_preview_count "${audit_report_json}" "${audit_conflict_preview_limit}")"
   bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
   bench_stress_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "stress_iters")"
   bench_needs_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "needs_iters")"
@@ -1346,6 +1413,11 @@ print(v if isinstance(v, int) else "")' "${abs_path}" "${key_path}" 2>/dev/null 
     "owner_policy_category_count": ${audit_owner_policy_category_count},
     "owner_policy_missing_duplicate_count": ${audit_owner_policy_missing_duplicate_count},
     "owner_policy_unused_count": ${audit_owner_policy_unused_count}
+  },
+  "audit_conflict_preview": {
+    "limit": ${audit_conflict_preview_limit},
+    "count": ${audit_conflict_key_preview_count},
+    "keys": ${audit_conflict_key_preview}
   },
   "owner_policy_compare_summary": {
     "missing_count": ${compare_missing_count},
