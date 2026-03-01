@@ -369,6 +369,82 @@ pub fn upper_needs_step(
     out
 }
 
+/// Computes job satisfaction score in `[0.0, 1.0]`.
+///
+/// Inputs are normalized:
+/// - personality actual axes in `[0,1]`
+/// - personality ideal axes in `[-1,1]` (sign indicates direction)
+/// - value actual in `[0,1]`
+/// - value weights in `[0,1]`
+pub fn job_satisfaction_score(
+    personality_actual: &[f32],
+    personality_ideal: &[f32],
+    value_actual: &[f32],
+    value_weights: &[f32],
+    skill_fit: f32,
+    autonomy: f32,
+    competence: f32,
+    meaning: f32,
+    autonomy_level: f32,
+    prestige: f32,
+    w_skill_fit: f32,
+    w_value_fit: f32,
+    w_personality_fit: f32,
+    w_need_fit: f32,
+) -> f32 {
+    let personality_len = personality_actual.len().min(personality_ideal.len());
+    let mut personality_sum = 0.0_f32;
+    let mut personality_weight = 0.0_f32;
+    for i in 0..personality_len {
+        let ideal = personality_ideal[i];
+        if ideal.abs() <= f32::EPSILON {
+            continue;
+        }
+        let actual = clamp_f32(personality_actual[i], 0.0, 1.0);
+        let weight = ideal.abs();
+        if ideal > 0.0 {
+            personality_sum += weight * actual;
+        } else {
+            personality_sum += weight * (1.0 - actual);
+        }
+        personality_weight += weight;
+    }
+    let personality_fit = if personality_weight > 0.0 {
+        personality_sum / personality_weight
+    } else {
+        0.5
+    };
+
+    let value_len = value_actual.len().min(value_weights.len());
+    let mut value_sum = 0.0_f32;
+    let mut value_weight = 0.0_f32;
+    for i in 0..value_len {
+        let weight = value_weights[i];
+        let actual = clamp_f32(value_actual[i], 0.0, 1.0);
+        value_sum += weight * actual;
+        value_weight += weight;
+    }
+    let value_fit = if value_weight > 0.0 {
+        value_sum / value_weight
+    } else {
+        0.5
+    };
+
+    let clamped_skill_fit = clamp_f32(skill_fit, 0.0, 1.0);
+    let need_fit = autonomy * autonomy_level * 0.35
+        + competence * clamped_skill_fit * 0.35
+        + meaning * prestige * 0.30;
+
+    clamp_f32(
+        clamped_skill_fit * w_skill_fit
+            + value_fit * w_value_fit
+            + personality_fit * w_personality_fit
+            + need_fit * w_need_fit,
+        0.0,
+        1.0,
+    )
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -647,7 +723,11 @@ pub fn stress_support_score(strengths: &[f32]) -> f32 {
         }
     }
 
-    clamp_f32(0.65 * strong + 0.35 * (1.0 - (-weak_sum / 1.5).exp()), 0.0, 1.0)
+    clamp_f32(
+        0.65 * strong + 0.35 * (1.0 - (-weak_sum / 1.5).exp()),
+        0.0,
+        1.0,
+    )
 }
 
 /// Compute training gains for multiple axes in one pass.
@@ -834,16 +914,14 @@ mod tests {
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
         calc_training_gains, child_deprivation_damage_step, child_parent_stress_transfer,
-        child_parent_transfer_apply_step, child_shrp_step,
-        child_simultaneous_ace_step, child_social_buffered_intensity, child_stage_code_from_age_ticks,
-        child_stress_apply_step, child_stress_type_code, compute_age_curve, compute_age_curves,
-        critical_severity, erg_frustration_step, needs_base_decay_step,
-        needs_critical_severity_step,
-        rest_energy_recovery, stress_injection_apply_step, stress_rebound_apply_step,
-        stress_shaken_countdown_step,
-        stress_support_score, thirst_decay,
-        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        warmth_decay,
+        child_parent_transfer_apply_step, child_shrp_step, child_simultaneous_ace_step,
+        child_social_buffered_intensity, child_stage_code_from_age_ticks, child_stress_apply_step,
+        child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
+        erg_frustration_step, job_satisfaction_score, needs_base_decay_step,
+        needs_critical_severity_step, rest_energy_recovery, stress_injection_apply_step,
+        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
+        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
+        upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -1052,6 +1130,49 @@ mod tests {
     }
 
     #[test]
+    fn job_satisfaction_score_matches_weighted_formula_shape() {
+        let score = job_satisfaction_score(
+            &[0.7, 0.4, 0.5, 0.6, 0.8, 0.3],
+            &[0.2, -0.1, 0.0, 0.15, 0.3, 0.1],
+            &[0.8, 0.6, 0.4],
+            &[0.5, 0.3, 0.2],
+            0.75,
+            0.6,
+            0.7,
+            0.5,
+            0.4,
+            0.45,
+            0.35,
+            0.25,
+            0.2,
+            0.2,
+        );
+        assert!((0.0..=1.0).contains(&score));
+        assert!(score > 0.5);
+    }
+
+    #[test]
+    fn job_satisfaction_score_defaults_midpoint_without_weights() {
+        let score = job_satisfaction_score(
+            &[0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+            &[0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            &[],
+            &[],
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+        );
+        assert_eq!(score, 0.4375);
+    }
+
+    #[test]
     fn child_parent_stress_transfer_respects_attachment_profile() {
         let secure = child_parent_stress_transfer(0.7, 0.8, 0, false, 0.0, 0.0);
         let disorganized = child_parent_stress_transfer(0.7, 0.8, 3, false, 0.0, 0.0);
@@ -1144,10 +1265,22 @@ mod tests {
     #[test]
     fn child_stage_code_from_age_ticks_uses_cutoffs() {
         assert_eq!(child_stage_code_from_age_ticks(0, 2.0, 5.0, 12.0, 18.0), 0);
-        assert_eq!(child_stage_code_from_age_ticks(8760 * 3, 2.0, 5.0, 12.0, 18.0), 1);
-        assert_eq!(child_stage_code_from_age_ticks(8760 * 8, 2.0, 5.0, 12.0, 18.0), 2);
-        assert_eq!(child_stage_code_from_age_ticks(8760 * 15, 2.0, 5.0, 12.0, 18.0), 3);
-        assert_eq!(child_stage_code_from_age_ticks(8760 * 20, 2.0, 5.0, 12.0, 18.0), 4);
+        assert_eq!(
+            child_stage_code_from_age_ticks(8760 * 3, 2.0, 5.0, 12.0, 18.0),
+            1
+        );
+        assert_eq!(
+            child_stage_code_from_age_ticks(8760 * 8, 2.0, 5.0, 12.0, 18.0),
+            2
+        );
+        assert_eq!(
+            child_stage_code_from_age_ticks(8760 * 15, 2.0, 5.0, 12.0, 18.0),
+            3
+        );
+        assert_eq!(
+            child_stage_code_from_age_ticks(8760 * 20, 2.0, 5.0, 12.0, 18.0),
+            4
+        );
     }
 
     #[test]

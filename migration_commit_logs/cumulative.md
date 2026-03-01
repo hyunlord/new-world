@@ -1372,3 +1372,10 @@
 - `sim-test` 데이터 로드 로그에 `occupation_categories`, `job_profiles` 카운트를 추가하고, 통합 테스트에 occupation 적재 검증 + invalid `job_id`/파일명 mismatch 실패 테스트를 추가.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량(데이터 로더 축): `9/9` 완료, `0/9` 잔여.
+
+## Commit 276
+- `sim-systems/body`에 `job_satisfaction_score` 순수 함수와 단위 테스트를 추가해 job satisfaction 계산 핫패스를 Rust로 이전.
+- `sim-bridge`에 `body_job_satisfaction_score` GDExtension 메서드를 추가해 GDScript에서 PackedArray 기반 Rust 계산 경로를 직접 호출 가능하게 확장.
+- `scripts/systems/social/job_satisfaction_system.gd`의 `_compute_satisfaction`를 Rust-first 호출 + GDScript fallback 구조로 전환해 동작 안정성을 유지하면서 계산 경로를 이관.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `5/56` 적용.

@@ -7,6 +7,11 @@ var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _job_profiles: Dictionary = {}  # job_id -> profile dict
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_JOB_SAT_METHOD: String = "body_job_satisfaction_score"
+const _HEXACO_AXES: PackedStringArray = ["H", "E", "X", "A", "C", "O"]
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -48,6 +53,22 @@ func _load_job_profiles() -> void:
 	dir.list_dir_end()
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_JOB_SAT_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return
@@ -78,15 +99,57 @@ func _compute_satisfaction(entity: RefCounted, job_profile: Dictionary) -> float
 	if entity.personality == null:
 		return 0.50
 
-	# 1. Personality fit
 	var hex_ideal: Dictionary = job_profile.get("hexaco_ideal", {})
+	var val_weights: Dictionary = job_profile.get("value_weights", {})
+	var personality_actual: PackedFloat32Array = PackedFloat32Array()
+	var personality_ideal: PackedFloat32Array = PackedFloat32Array()
+	for axis in _HEXACO_AXES:
+		personality_actual.append(float(entity.personality.axes.get(axis, 0.5)))
+		personality_ideal.append(float(hex_ideal.get(axis, 0.0)))
+
+	var value_actual: PackedFloat32Array = PackedFloat32Array()
+	var value_weight_packed: PackedFloat32Array = PackedFloat32Array()
+	for vkey in val_weights:
+		var w: float = float(val_weights[vkey])
+		var v01: float = (float(entity.values.get(vkey, 0.0)) + 1.0) / 2.0
+		value_actual.append(v01)
+		value_weight_packed.append(w)
+
+	var primary_skill: String = str(job_profile.get("primary_skill", ""))
+	var skill_level: int = int(entity.skill_levels.get(StringName(primary_skill), 0))
+	var skill_fit: float = clampf(float(skill_level) / 10.0, 0.0, 1.0)
+
+	var autonomy_level: float = float(job_profile.get("autonomy_level", 0.5))
+	var prestige: float = float(job_profile.get("prestige", 0.3))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_JOB_SAT_METHOD,
+			personality_actual,
+			personality_ideal,
+			value_actual,
+			value_weight_packed,
+			skill_fit,
+			float(entity.autonomy),
+			float(entity.competence),
+			float(entity.meaning),
+			autonomy_level,
+			prestige,
+			float(GameConfig.JOB_SAT_W_SKILL_FIT),
+			float(GameConfig.JOB_SAT_W_VALUE_FIT),
+			float(GameConfig.JOB_SAT_W_PERSONALITY_FIT),
+			float(GameConfig.JOB_SAT_W_NEED_FIT)
+		)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.0, 1.0)
+
 	var personality_fit: float = 0.0
 	var total_weight: float = 0.0
-	for axis in ["H", "E", "X", "A", "C", "O"]:
-		var ideal: float = float(hex_ideal.get(axis, 0.0))
+	for i in range(personality_ideal.size()):
+		var ideal: float = personality_ideal[i]
 		if is_zero_approx(ideal):
 			continue
-		var actual: float = float(entity.personality.axes.get(axis, 0.5))
+		var actual: float = personality_actual[i]
 		if ideal > 0.0:
 			personality_fit += absf(ideal) * actual
 		else:
@@ -97,13 +160,11 @@ func _compute_satisfaction(entity: RefCounted, job_profile: Dictionary) -> float
 	else:
 		personality_fit = 0.5
 
-	# 2. Value fit
-	var val_weights: Dictionary = job_profile.get("value_weights", {})
 	var value_fit: float = 0.0
 	var val_total: float = 0.0
-	for vkey in val_weights:
-		var w: float = float(val_weights[vkey])
-		var v01: float = (float(entity.values.get(vkey, 0.0)) + 1.0) / 2.0
+	for i in range(value_weight_packed.size()):
+		var w: float = value_weight_packed[i]
+		var v01: float = value_actual[i]
 		value_fit += w * v01
 		val_total += w
 	if val_total > 0.0:
@@ -111,14 +172,6 @@ func _compute_satisfaction(entity: RefCounted, job_profile: Dictionary) -> float
 	else:
 		value_fit = 0.5
 
-	# 3. Skill fit
-	var primary_skill: String = str(job_profile.get("primary_skill", ""))
-	var skill_level: int = int(entity.skill_levels.get(StringName(primary_skill), 0))
-	var skill_fit: float = clampf(float(skill_level) / 10.0, 0.0, 1.0)
-
-	# 4. Need fit
-	var autonomy_level: float = float(job_profile.get("autonomy_level", 0.5))
-	var prestige: float = float(job_profile.get("prestige", 0.3))
 	var need_fit: float = (
 		entity.autonomy * autonomy_level * 0.35
 		+ entity.competence * skill_fit * 0.35

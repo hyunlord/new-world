@@ -995,6 +995,42 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_job_satisfaction_score(
+        &self,
+        personality_actual: PackedFloat32Array,
+        personality_ideal: PackedFloat32Array,
+        value_actual: PackedFloat32Array,
+        value_weights: PackedFloat32Array,
+        skill_fit: f32,
+        autonomy: f32,
+        competence: f32,
+        meaning: f32,
+        autonomy_level: f32,
+        prestige: f32,
+        w_skill_fit: f32,
+        w_value_fit: f32,
+        w_personality_fit: f32,
+        w_need_fit: f32,
+    ) -> f32 {
+        body::job_satisfaction_score(
+            personality_actual.as_slice(),
+            personality_ideal.as_slice(),
+            value_actual.as_slice(),
+            value_weights.as_slice(),
+            skill_fit,
+            autonomy,
+            competence,
+            meaning,
+            autonomy_level,
+            prestige,
+            w_skill_fit,
+            w_value_fit,
+            w_personality_fit,
+            w_need_fit,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_step_packed(
         &self,
         scalar_inputs: PackedFloat32Array,
@@ -2676,6 +2712,10 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 
 #[cfg(test)]
 mod tests {
+    use super::pathfinding_backend::{
+        read_dispatch_counts, reset_dispatch_counts, PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU,
+        PATHFIND_BACKEND_GPU,
+    };
     use super::{
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
         dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, has_gpu_pathfind_backend,
@@ -2688,10 +2728,6 @@ mod tests {
     };
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
-    use super::pathfinding_backend::{
-        read_dispatch_counts, reset_dispatch_counts, PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU,
-        PATHFIND_BACKEND_GPU,
-    };
 
     fn base_input() -> PathfindInput {
         PathfindInput {
@@ -3004,7 +3040,9 @@ mod tests {
         let (cpu_after_gpu_call, gpu_after_gpu_call) = read_dispatch_counts();
 
         assert!(cpu_after_cpu_call + gpu_after_cpu_call >= cpu_before + gpu_before + 1);
-        assert!(cpu_after_gpu_call + gpu_after_gpu_call >= cpu_after_cpu_call + gpu_after_cpu_call + 1);
+        assert!(
+            cpu_after_gpu_call + gpu_after_gpu_call >= cpu_after_cpu_call + gpu_after_cpu_call + 1
+        );
         if cfg!(feature = "gpu") {
             assert!(gpu_after_gpu_call >= gpu_after_cpu_call + 1);
         } else {
