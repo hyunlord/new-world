@@ -58,10 +58,11 @@ func execute_tick(tick: int) -> void:
 							"activity_avg": entity.body.child_activity_sum / maxf(float(entity.body.child_activity_count), 1.0),
 						})
 				# ── [B] realized 재계산 (5축: potential + training_gain × age_curve) ──
+				var age_curves: Dictionary = BodyAttributes.compute_age_curve_batch(body_age_y)
 				for body_axis in ["str", "agi", "end", "tou", "rec"]:
 					var old_realized: int = entity.body.realized.get(body_axis, 0)
 					var gain: int = entity.body.calc_training_gain(body_axis)
-					var age_c: float = BodyAttributes.compute_age_curve(body_axis, body_age_y)
+					var age_c: float = float(age_curves.get(body_axis, 0.5))
 					var new_realized: int = clampi(int(float(entity.body.potential.get(body_axis, 700) + gain) * age_c), 0, 15000)
 					entity.body.realized[body_axis] = new_realized
 					if abs(new_realized - old_realized) >= 50:
@@ -73,7 +74,7 @@ func execute_tick(tick: int) -> void:
 							"age_years": body_age_y,
 						})
 				# DR: potential × age_curve only (exposure system Phase 5)
-				entity.body.realized["dr"] = clampi(int(float(entity.body.potential.get("dr", 700)) * BodyAttributes.compute_age_curve("dr", body_age_y)), 0, 10000)
+				entity.body.realized["dr"] = clampi(int(float(entity.body.potential.get("dr", 700)) * float(age_curves.get("dr", 0.5))), 0, 10000)
 				# ── [C] entity 속도/근력 갱신 ──
 				entity.speed = float(entity.body.realized.get("agi", 700)) * GameConfig.BODY_SPEED_SCALE + GameConfig.BODY_SPEED_BASE
 				entity.strength = float(entity.body.realized.get("str", 700)) / 1000.0

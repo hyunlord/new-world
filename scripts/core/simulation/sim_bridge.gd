@@ -1200,6 +1200,18 @@ func body_compute_age_curve(axis: String, age_years: float):
 	)
 
 
+## Delegates batched body age curve computation to native bridge.
+## Axis order: [str, agi, end, tou, rec, dr].
+## Returns null when native bridge/method is unavailable.
+func body_compute_age_curves(age_years: float):
+	return _call_native_if_exists(
+		"body_compute_age_curves",
+		[
+			age_years
+		]
+	)
+
+
 ## Delegates body training gain computation to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_calc_training_gain(

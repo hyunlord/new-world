@@ -621,3 +621,8 @@
 - `sim-systems::body`에 `age_trainability_modifier` 분기표를 추가하고 unit test를 확장.
 - `sim-bridge`/`SimBridge`에 `body_age_trainability_modifier` API를 추가해 BodyAttributes 나이 기반 훈련 효율 계산의 Rust 호출 경로를 연결.
 - `body_attributes.get_age_trainability_modifier`가 Rust 우선 + GDScript fallback 구조로 전환되어 신체 훈련 관련 수학 경로 네이티브화를 확대.
+
+## Commit 127
+- `sim-systems::body`에 `compute_age_curves(age_years)` 배치 API를 추가하고, 인덱스 순서(`str/agi/end/tou/rec/dr`) 일치 테스트를 확장.
+- `sim-bridge`/`SimBridge`에 `body_compute_age_curves`를 추가해 6축 나이 커브를 단일 bridge 호출로 수신하는 경로를 제공.
+- `age_system`과 `entity_manager`의 realized 계산 루프가 배치 커브 결과를 재사용하도록 전환되어 body age curve hot path의 경계 호출 수를 축소.

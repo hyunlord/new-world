@@ -317,6 +317,12 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_compute_age_curves(&self, age_years: f32) -> PackedFloat32Array {
+        let curves = body::compute_age_curves(age_years);
+        vec_f32_to_packed(curves.to_vec())
+    }
+
+    #[func]
     fn body_calc_training_gain(
         &self,
         potential: i32,

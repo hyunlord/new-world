@@ -35,6 +35,19 @@ pub fn compute_age_curve(axis: &str, age_years: f32) -> f32 {
     }
 }
 
+/// Compute all body age curves in fixed axis order:
+/// `[str, agi, end, tou, rec, dr]`.
+pub fn compute_age_curves(age_years: f32) -> [f32; 6] {
+    [
+        compute_age_curve("str", age_years),
+        compute_age_curve("agi", age_years),
+        compute_age_curve("end", age_years),
+        compute_age_curve("tou", age_years),
+        compute_age_curve("rec", age_years),
+        compute_age_curve("dr", age_years),
+    ]
+}
+
 /// Compute training gain for a body axis.
 ///
 /// Mirrors `BodyAttributes.calc_training_gain` math.
@@ -149,7 +162,9 @@ pub fn age_trainability_modifier(axis: &str, age_years: f32) -> f32 {
 
 #[cfg(test)]
 mod tests {
-    use super::{age_trainability_modifier, calc_training_gain, compute_age_curve};
+    use super::{
+        age_trainability_modifier, calc_training_gain, compute_age_curve, compute_age_curves,
+    };
 
     #[test]
     fn unknown_axis_returns_default_midpoint() {
@@ -182,6 +197,18 @@ mod tests {
         let raw = grow.clamp(0.02_f32, 1.0_f32);
         let with_bonus = compute_age_curve("dr", age);
         assert!(with_bonus > raw);
+    }
+
+    #[test]
+    fn batch_curve_order_matches_single_curve_calls() {
+        let age = 29.0_f32;
+        let curves = compute_age_curves(age);
+        assert_eq!(curves[0], compute_age_curve("str", age));
+        assert_eq!(curves[1], compute_age_curve("agi", age));
+        assert_eq!(curves[2], compute_age_curve("end", age));
+        assert_eq!(curves[3], compute_age_curve("tou", age));
+        assert_eq!(curves[4], compute_age_curve("rec", age));
+        assert_eq!(curves[5], compute_age_curve("dr", age));
     }
 
     #[test]

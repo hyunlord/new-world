@@ -61,6 +61,8 @@ const TRAINING_CEILING: Dictionary = {
 	"tou": 0.20,
 	"rec": 0.60,
 }
+const _AGE_CURVE_AXES: Array[String] = ["str", "agi", "end", "tou", "rec", "dr"]
+const _AGE_CURVE_AXIS_COUNT: int = 6
 
 static var _bridge_checked: bool = false
 static var _bridge_ref: Object = null
@@ -82,6 +84,29 @@ static func compute_age_curve(axis: String, age_years: float) -> float:
 		var maternal_bonus: float = 0.20 * exp(-age_years / 0.5)
 		return clampf(raw + maternal_bonus, 0.02, 1.0)
 	return raw
+
+
+## 6축 나이 커브 배치 계산 (str/agi/end/tou/rec/dr)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+static func compute_age_curve_batch(age_years: float) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge("body_compute_age_curves", [age_years])
+	if rust_result is PackedFloat32Array:
+		var packed: PackedFloat32Array = rust_result
+		if packed.size() >= _AGE_CURVE_AXIS_COUNT:
+			return {
+				"str": float(packed[0]),
+				"agi": float(packed[1]),
+				"end": float(packed[2]),
+				"tou": float(packed[3]),
+				"rec": float(packed[4]),
+				"dr": float(packed[5]),
+			}
+
+	var curves: Dictionary = {}
+	for i in range(_AGE_CURVE_AXES.size()):
+		var axis: String = _AGE_CURVE_AXES[i]
+		curves[axis] = compute_age_curve(axis, age_years)
+	return curves
 
 
 static func _get_sim_bridge() -> Object:
