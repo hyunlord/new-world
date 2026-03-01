@@ -476,3 +476,8 @@
 - `world_stats_population_tab`에서 `UI_STAT_POP_FMT` 결과를 `total_pop_text`/`s_pop_text`로 1회 생성 후 폭 계산/행 문자열 조립에 재사용.
 - `UI_STAT_GENDER_FMT` 호출을 `Locale.trf2` 경량 경로로 전환.
 - draw 루프의 중복 포맷/문자열 조립 비용을 줄여 Population 탭 렌더 경로를 경량화.
+
+## Commit 098
+- `settlement_overview_tab`의 `UI_CHARISMA_FMT`, `UI_TOTAL_POP_FMT` 호출을 `Locale.trf1` 경량 포맷 경로로 전환.
+- 기존 placeholder/출력 의미를 유지하면서 단순 포맷 호출의 임시 params Dictionary 생성을 줄임.
+- Settlement Overview 탭 draw 경로의 미세 오버헤드를 완화.
