@@ -915,6 +915,51 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "null"
     fi
   }
+  to_json_opt_int_from_json_file_key() {
+    local raw_path="$1"
+    local key="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local raw_value
+    raw_value="$(
+      python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); v=d.get(sys.argv[2]); print(v if isinstance(v, int) else "")' "${abs_path}" "${key}" 2>/dev/null || true
+    )"
+    to_json_opt_int "${raw_value}"
+  }
+  to_json_opt_array_len_from_json_file_key() {
+    local raw_path="$1"
+    local key="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local raw_value
+    raw_value="$(
+      python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); v=d.get(sys.argv[2]); print(len(v) if isinstance(v, list) else "")' "${abs_path}" "${key}" 2>/dev/null || true
+    )"
+    to_json_opt_int "${raw_value}"
+  }
+  to_json_opt_string_from_json_file_key() {
+    local raw_path="$1"
+    local key="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local raw_value
+    raw_value="$(
+      python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); v=d.get(sys.argv[2]); print(v if isinstance(v, str) else "")' "${abs_path}" "${key}" 2>/dev/null || true
+    )"
+    to_json_opt_string "${raw_value}"
+  }
   to_json_opt_string() {
     local raw_value="$1"
     if [[ -z "${raw_value}" ]]; then
@@ -1035,6 +1080,21 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_exists="$(to_json_opt_exists "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_exists="$(to_json_opt_exists "${audit_owner_policy_compare_report_json}")"
   bench_report_json_exists="$(to_json_opt_exists "${bench_report_json}")"
+  audit_parity_issue_count="$(to_json_opt_array_len_from_json_file_key "${audit_report_json}" "parity_issues")"
+  audit_duplicate_key_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_key_count")"
+  audit_duplicate_conflict_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_conflict_count")"
+  audit_duplicate_consistent_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_consistent_count")"
+  audit_duplicate_report_key_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_report_key_count")"
+  audit_duplicate_report_conflict_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_report_conflict_count")"
+  audit_duplicate_report_locale="$(to_json_opt_string_from_json_file_key "${audit_report_json}" "duplicate_report_locale")"
+  audit_inline_localized_field_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "inline_localized_field_count")"
+  audit_owner_policy_entry_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "owner_policy_entry_count")"
+  audit_owner_policy_category_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "owner_policy_category_count")"
+  audit_owner_policy_missing_duplicate_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "owner_policy_missing_duplicate_count")"
+  audit_owner_policy_unused_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "owner_policy_unused_count")"
+  compare_missing_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "missing_count")"
+  compare_extra_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "extra_count")"
+  compare_changed_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "changed_count")"
   artifact_expected_count=0
   artifact_present_count=0
   count_artifact_presence "${compile_report_json}"
@@ -1113,6 +1173,25 @@ if [[ -n "${verify_report_json}" ]]; then
     "expected": ${artifact_expected_count},
     "present": ${artifact_present_count},
     "missing": ${artifact_missing_count}
+  },
+  "audit_summary": {
+    "parity_issue_count": ${audit_parity_issue_count},
+    "duplicate_key_count": ${audit_duplicate_key_count},
+    "duplicate_conflict_count": ${audit_duplicate_conflict_count},
+    "duplicate_consistent_count": ${audit_duplicate_consistent_count},
+    "duplicate_report_key_count": ${audit_duplicate_report_key_count},
+    "duplicate_report_conflict_count": ${audit_duplicate_report_conflict_count},
+    "duplicate_report_locale": ${audit_duplicate_report_locale},
+    "inline_localized_field_count": ${audit_inline_localized_field_count},
+    "owner_policy_entry_count": ${audit_owner_policy_entry_count},
+    "owner_policy_category_count": ${audit_owner_policy_category_count},
+    "owner_policy_missing_duplicate_count": ${audit_owner_policy_missing_duplicate_count},
+    "owner_policy_unused_count": ${audit_owner_policy_unused_count}
+  },
+  "owner_policy_compare_summary": {
+    "missing_count": ${compare_missing_count},
+    "extra_count": ${compare_extra_count},
+    "changed_count": ${compare_changed_count}
   },
   "artifact_sha256": {
     "compile_report_json": ${compile_report_json_sha256},

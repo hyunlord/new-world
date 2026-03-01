@@ -1305,3 +1305,8 @@
 - `migration_verify_report.json`에 `artifact_counts`(`expected`, `present`, `missing`)를 추가해 산출물 상태를 요약 지표로 제공.
 - 경로가 설정된 아티팩트만 기대치에 포함하고 실제 파일 존재 여부로 present/missing을 계산하도록 집계 로직을 추가.
 - `/tmp/worldsim_audit_artifacts25/migration_verify_report.json`에서 expected=7, present=7, missing=0 반영을 확인.
+
+## Commit 264
+- `migration_verify_report.json`이 `audit.json`과 `owner_policy_compare.json`의 핵심 카운트를 직접 포함하도록 `audit_summary`, `owner_policy_compare_summary`를 추가.
+- JSON 파일에서 int/array-length/string을 안전 추출하는 헬퍼를 도입해 아티팩트 누락 시에도 `null` 직렬화를 유지.
+- `/tmp/worldsim_audit_artifacts26/migration_verify_report.json`에서 duplicate/owner-policy/compare 요약 지표 반영을 확인.
