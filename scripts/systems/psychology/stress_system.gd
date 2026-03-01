@@ -139,27 +139,37 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		if shaken_remaining <= 0:
 			ed.set_meta("shaken_work_penalty", 0.0)
 
-	# 7) Reserve (GAS)
-	_update_reserve(ed, pd, is_sleeping)
-
-	# 8) Allostatic Load
-	_update_allostatic(ed, entity)
-
-	var state_snapshot: Dictionary = StatCurveScript.stress_state_snapshot(
-		ed.stress,
-		ed.allostatic
+	# 7) Reserve + Allostatic + State snapshot (combined native step)
+	var avoidant_mult: float = (
+		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
+		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
+		else 1.0
 	)
+	var post_step: Dictionary = StatCurveScript.stress_post_update_step(
+		ed.reserve,
+		ed.stress,
+		ed.resilience,
+		ed.stress_delta_last,
+		ed.gas_stage,
+		is_sleeping,
+		ed.allostatic,
+		avoidant_mult
+	)
+	ed.reserve = float(post_step.get("reserve", ed.reserve))
+	ed.gas_stage = int(post_step.get("gas_stage", ed.gas_stage))
+	ed.allostatic = float(post_step.get("allostatic", ed.allostatic))
+	var state_snapshot: Dictionary = post_step
 
-	# 9) 스트레스 상태
+	# 8) 스트레스 상태
 	_update_stress_state(ed, state_snapshot)
 
-	# 10) Resilience
+	# 9) Resilience
 	_update_resilience(entity, ed, pd)
 
-	# 11) 스트레스 → 감정 역방향
+	# 10) 스트레스 → 감정 역방향
 	_apply_stress_to_emotions(ed, state_snapshot)
 
-	# 12) 디버그 로그
+	# 11) 디버그 로그
 	_debug_log(entity, ed, delta)
 
 
@@ -328,35 +338,6 @@ func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: boo
 
 	breakdown["recovery"] = -decay
 	return decay
-
-
-# ── 7) Reserve (GAS) ─────────────────────────────────────────────────
-func _update_reserve(ed, _pd, is_sleeping: bool) -> void:
-	var result: Dictionary = StatCurveScript.stress_reserve_step(
-		ed.reserve,
-		ed.stress,
-		ed.resilience,
-		ed.stress_delta_last,
-		ed.gas_stage,
-		is_sleeping
-	)
-	ed.reserve = float(result.get("reserve", ed.reserve))
-	ed.gas_stage = int(result.get("gas_stage", ed.gas_stage))
-
-
-# ── 8) Allostatic Load ────────────────────────────────────────────────
-func _update_allostatic(ed, entity) -> void:
-	# [Mikulincer 1998 — Avoidant deactivation: stress suppressed but allostatic load builds faster]
-	var avoidant_mult: float = (
-		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
-		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
-		else 1.0
-	)
-	ed.allostatic = StatCurveScript.stress_allostatic_step(
-		ed.allostatic,
-		ed.stress,
-		avoidant_mult
-	)
 
 
 # ── 9) 스트레스 상태 ──────────────────────────────────────────────────

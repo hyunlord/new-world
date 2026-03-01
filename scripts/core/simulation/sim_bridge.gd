@@ -429,6 +429,33 @@ func stat_stress_delta_step(
 	)
 
 
+## Delegates post-stress reserve/allostatic/state combined step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_post_update_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool,
+	allostatic: float,
+	avoidant_allostatic_mult: float
+):
+	return _call_native_if_exists(
+		"stat_stress_post_update_step",
+		[
+			reserve,
+			stress,
+			resilience,
+			stress_delta_last,
+			gas_stage,
+			is_sleeping,
+			allostatic,
+			avoidant_allostatic_mult
+		]
+	)
+
+
 ## Delegates reserve + GAS stage transition step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_reserve_step(

@@ -201,3 +201,8 @@
 - `StressSystem`의 최종 delta 계산과 C05 denial redirect 누적 처리 로직을 Rust step 함수(`stress_delta_step`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 delta-step API를 추가하고 GDScript는 입력 수집/결과 반영만 수행하도록 정리.
 - `sim-test` stress 마이크로벤치에 delta-step 경로를 포함해 stress hot path 네이티브 성능 측정 범위를 확장.
+
+## Commit 042
+- stress 틱 후반의 reserve/GAS, allostatic, state snapshot 갱신을 단일 Rust batch step(`stress_post_update_step`)으로 통합.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 post-update API를 추가하고 `StressSystem`은 분리 호출 3회를 1회 호출로 치환.
+- `sim-test` stress 벤치에 post-update batch step을 포함해 네이티브 핫패스 측정 커버리지를 확장.

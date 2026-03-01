@@ -174,6 +174,16 @@ fn run_stress_math_bench(args: &[String]) {
             if i % 2 == 0 { 1.35 } else { 1.0 },
         );
         let state = stat_curve::stress_state_snapshot(stress, allostatic);
+        let post_step = stat_curve::stress_post_update_step(
+            30.0 + 60.0 * (1.0 - t),
+            stress,
+            0.1 + 0.7 * (1.0 - t),
+            -10.0 + 80.0 * t,
+            (i % 4) as i32,
+            i % 3 == 0,
+            allostatic,
+            if i % 2 == 0 { 1.35 } else { 1.0 },
+        );
         let resilience = stat_curve::stress_resilience_value(
             0.2 + 0.6 * t,
             0.2 + 0.7 * (1.0 - t),
@@ -209,6 +219,8 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(reserve_step.reserve)
             + black_box(allo_step)
             + black_box(state.stress_blunt_mult)
+            + black_box(post_step.allostatic)
+            + black_box(post_step.stress_blunt_mult)
             + black_box(resilience)
             + black_box(traces.total_contribution)
             + black_box(delta_step.delta)

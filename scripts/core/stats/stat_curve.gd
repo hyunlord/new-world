@@ -430,6 +430,50 @@ static func stress_delta_step(
 	}
 
 
+## Combined post-stress step:
+## reserve + GAS transition + allostatic update + stress state snapshot
+static func stress_post_update_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool,
+	allostatic: float,
+	avoidant_allostatic_mult: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_post_update_step",
+		[
+			reserve,
+			stress,
+			resilience,
+			stress_delta_last,
+			gas_stage,
+			is_sleeping,
+			allostatic,
+			avoidant_allostatic_mult
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var reserve_step: Dictionary = stress_reserve_step(
+		reserve,
+		stress,
+		resilience,
+		stress_delta_last,
+		gas_stage,
+		is_sleeping
+	)
+	var next_allostatic: float = stress_allostatic_step(allostatic, stress, avoidant_allostatic_mult)
+	var snapshot: Dictionary = stress_state_snapshot(stress, next_allostatic)
+	snapshot["reserve"] = float(reserve_step.get("reserve", reserve))
+	snapshot["gas_stage"] = int(reserve_step.get("gas_stage", gas_stage))
+	snapshot["allostatic"] = next_allostatic
+	return snapshot
+
+
 ## Reserve + GAS stage transition step.
 ## Returns Dictionary: { "reserve": float, "gas_stage": int }
 static func stress_reserve_step(

@@ -67,6 +67,22 @@ pub struct StressDeltaStep {
     pub hidden_threat_accumulator: f32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressPostUpdateStep {
+    pub reserve: f32,
+    pub gas_stage: i32,
+    pub allostatic: f32,
+    pub stress_state: i32,
+    pub stress_mu_sadness: f32,
+    pub stress_mu_anger: f32,
+    pub stress_mu_fear: f32,
+    pub stress_mu_joy: f32,
+    pub stress_mu_trust: f32,
+    pub stress_neg_gain_mult: f32,
+    pub stress_pos_gain_mult: f32,
+    pub stress_blunt_mult: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -349,6 +365,45 @@ pub fn stress_reserve_step(
     StressReserveStep {
         reserve: new_reserve,
         gas_stage: new_stage,
+    }
+}
+
+/// Combined post-stress update step:
+/// reserve + GAS transition + allostatic update + state snapshot.
+pub fn stress_post_update_step(
+    reserve: f32,
+    stress: f32,
+    resilience: f32,
+    stress_delta_last: f32,
+    gas_stage: i32,
+    is_sleeping: bool,
+    allostatic: f32,
+    avoidant_allostatic_mult: f32,
+) -> StressPostUpdateStep {
+    let reserve_step = stress_reserve_step(
+        reserve,
+        stress,
+        resilience,
+        stress_delta_last,
+        gas_stage,
+        is_sleeping,
+    );
+    let next_allostatic = stress_allostatic_step(allostatic, stress, avoidant_allostatic_mult);
+    let snapshot = stress_state_snapshot(stress, next_allostatic);
+
+    StressPostUpdateStep {
+        reserve: reserve_step.reserve,
+        gas_stage: reserve_step.gas_stage,
+        allostatic: next_allostatic,
+        stress_state: snapshot.stress_state,
+        stress_mu_sadness: snapshot.stress_mu_sadness,
+        stress_mu_anger: snapshot.stress_mu_anger,
+        stress_mu_fear: snapshot.stress_mu_fear,
+        stress_mu_joy: snapshot.stress_mu_joy,
+        stress_mu_trust: snapshot.stress_mu_trust,
+        stress_neg_gain_mult: snapshot.stress_neg_gain_mult,
+        stress_pos_gain_mult: snapshot.stress_pos_gain_mult,
+        stress_blunt_mult: snapshot.stress_blunt_mult,
     }
 }
 
@@ -689,6 +744,20 @@ mod tests {
         let step = stress_reserve_step(10.0, 600.0, 0.2, 10.0, 1, false);
         assert!(step.reserve < 30.0);
         assert_eq!(step.gas_stage, 3);
+    }
+
+    #[test]
+    fn stress_post_update_step_matches_component_steps() {
+        let reserve_step = stress_reserve_step(80.0, 420.0, 0.6, 25.0, 1, false);
+        let allo = stress_allostatic_step(20.0, 420.0, 1.35);
+        let snap = stress_state_snapshot(420.0, allo);
+        let combined = stress_post_update_step(80.0, 420.0, 0.6, 25.0, 1, false, 20.0, 1.35);
+
+        assert!((combined.reserve - reserve_step.reserve).abs() < 1e-6);
+        assert_eq!(combined.gas_stage, reserve_step.gas_stage);
+        assert!((combined.allostatic - allo).abs() < 1e-6);
+        assert_eq!(combined.stress_state, snap.stress_state);
+        assert!((combined.stress_blunt_mult - snap.stress_blunt_mult).abs() < 1e-6);
     }
 
     #[test]
