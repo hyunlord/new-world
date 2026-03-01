@@ -1005,3 +1005,8 @@
 - `sim-test`에 `--bench-pathfind-bridge-split` 모드를 추가해 tuple batch와 packed XY batch 경로의 성능/체크섬을 독립적으로 관측할 수 있게 확장.
 - pathfinding 벤치 입력 생성 로직을 공통 헬퍼로 분리해 split/combined 모드 간 입력 정합성을 고정.
 - split 기준선 관측값: tuple `354000.00000`, xy `354000.00000` (@1000).
+
+## Commit 204
+- `migration_verify.sh`에 `MIGRATION_BENCH_PATH_SPLIT` 옵션을 추가해 path split 벤치를 선택적으로 실행하고 tuple/XY checksum 정합성을 자동 확인하도록 확장.
+- split 벤치 checksum 파싱/검증 로직을 추가하고, macOS bash 3.x 호환을 위해 `mapfile` 없이 `sed` 기반 파싱으로 구현.
+- 기본 검증 경로는 유지하면서 필요 시 경로별 벤치 관측을 파이프라인에 통합.

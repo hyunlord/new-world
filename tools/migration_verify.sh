@@ -55,13 +55,18 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   path_iters="${MIGRATION_BENCH_PATH_ITERS:-100}"
   stress_iters="${MIGRATION_BENCH_STRESS_ITERS:-10000}"
   needs_iters="${MIGRATION_BENCH_NEEDS_ITERS:-10000}"
+  path_split="${MIGRATION_BENCH_PATH_SPLIT:-false}"
   for value in "${path_iters}" "${stress_iters}" "${needs_iters}"; do
     if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
       echo "[migration_verify] bench iterations must be positive integers" >&2
       exit 1
     fi
   done
-  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters}"
+  if [[ "${path_split}" != "true" && "${path_split}" != "false" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_SPLIT must be true or false" >&2
+    exit 1
+  fi
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split}"
 
   run_bench_and_check() {
     local name="$1"
@@ -101,6 +106,28 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] ${name} checksum observed (non-default iters): ${checksum}"
   }
 
+  run_path_split_observe() {
+    local output
+    output="$("$@")"
+    echo "${output}"
+
+    local checksum_lines
+    checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    local tuple_checksum
+    local xy_checksum
+    tuple_checksum="$(echo "${checksum_lines}" | sed -n '1p')"
+    xy_checksum="$(echo "${checksum_lines}" | sed -n '2p')"
+    if [[ -z "${tuple_checksum}" || -z "${xy_checksum}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split checksum parse failed" >&2
+      exit 1
+    fi
+    if [[ "${tuple_checksum}" != "${xy_checksum}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split checksum mismatch: tuple=${tuple_checksum} xy=${xy_checksum}" >&2
+      exit 1
+    fi
+    echo "[migration_verify] pathfind-bridge-split checksums observed: tuple=${tuple_checksum} xy=${xy_checksum}"
+  }
+
   (
     cd "${ROOT_DIR}/rust"
     if [[ "${path_iters}" == "100" ]]; then
@@ -112,6 +139,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       run_bench_observe \
         "pathfind-bridge" \
         cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
+    fi
+    if [[ "${path_split}" == "true" ]]; then
+      run_path_split_observe \
+        cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
     fi
     if [[ "${stress_iters}" == "10000" ]]; then
       run_bench_and_check \
