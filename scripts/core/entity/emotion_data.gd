@@ -71,11 +71,7 @@ var habituation: Dictionary = {}
 var mental_break_type: String = ""      # "" = none, "panic"/"rage"/"shutdown"/"purge"/"outrage_violence"
 var mental_break_remaining: float = 0.0  # hours remaining
 
-var _intensity_labels: Dictionary = {}
-var _intensity_labels_kr: Dictionary = {}
 var _emotion_order: Array = []
-var _emotion_labels_en: Dictionary = {}
-var _emotion_labels_kr: Dictionary = {}
 var _dyads: Dictionary = {}           # dyad_id -> Array of 2 emotion ids
 var _dyad_labels_kr: Dictionary = {}
 var _valence_positive: Dictionary = {}
@@ -90,35 +86,7 @@ func _init() -> void:
 
 func _load_emotion_definitions() -> void:
 	var ed = SpeciesManager.emotion_definition
-	_intensity_labels = ed.get("intensity_labels", {
-		"joy": ["Serenity", "Joy", "Ecstasy"],
-		"trust": ["Acceptance", "Trust", "Admiration"],
-		"fear": ["Apprehension", "Fear", "Terror"],
-		"surprise": ["Distraction", "Surprise", "Amazement"],
-		"sadness": ["Pensiveness", "Sadness", "Grief"],
-		"disgust": ["Boredom", "Disgust", "Loathing"],
-		"anger": ["Annoyance", "Anger", "Rage"],
-		"anticipation": ["Interest", "Anticipation", "Vigilance"]
-	})
-	_intensity_labels_kr = ed.get("intensity_labels_kr", {
-		"joy": ["Serenity", "Joy", "Ecstasy"],
-		"trust": ["Acceptance", "Trust", "Admiration"],
-		"fear": ["Apprehension", "Fear", "Terror"],
-		"surprise": ["Distraction", "Surprise", "Amazement"],
-		"sadness": ["Pensiveness", "Sadness", "Grief"],
-		"disgust": ["Boredom", "Disgust", "Loathing"],
-		"anger": ["Annoyance", "Anger", "Rage"],
-		"anticipation": ["Interest", "Anticipation", "Vigilance"]
-	})
 	_emotion_order = ed.get("emotion_order", ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"])
-	_emotion_labels_en = ed.get("labels_en", {
-		"joy": "Joy", "trust": "Trust", "fear": "Fear", "surprise": "Surprise",
-		"sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation"
-	})
-	_emotion_labels_kr = ed.get("labels_kr", {
-		"joy": "Joy", "trust": "Trust", "fear": "Fear", "surprise": "Surprise",
-		"sadness": "Sadness", "disgust": "Disgust", "anger": "Anger", "anticipation": "Anticipation"
-	})
 	var vw = ed.get("valence_weights", {})
 	_valence_positive = vw.get("positive", {"joy": 1.0, "trust": 1.0, "anticipation": 0.5})
 	_valence_negative = vw.get("negative", {"sadness": 1.0, "disgust": 1.0, "fear": 0.5})
@@ -175,25 +143,33 @@ func get_intensity_label(emotion_id: String) -> String:
 	var val: float = get_emotion(emotion_id)
 	if val < 1.0:
 		return ""
-	var labels = _intensity_labels.get(emotion_id, ["", "", ""])
+	var level_idx: int = 0
 	if val <= 33.0:
-		return labels[0]    # mild
-	if val <= 66.0:
-		return labels[1]    # base
-	return labels[2]         # intense
+		level_idx = 0
+	elif val <= 66.0:
+		level_idx = 1
+	else:
+		level_idx = 2
+
+	var key: String = _get_intensity_locale_key(emotion_id, level_idx)
+	var translated: String = Locale.ltr(key)
+	if translated == key:
+		return ""
+	return translated
 
 
 ## Returns the Korean intensity label for the given emotion ID, or "" if below threshold.
 func get_intensity_label_kr(emotion_id: String) -> String:
-	var val: float = get_emotion(emotion_id)
-	if val < 1.0:
-		return ""
-	var labels = _intensity_labels_kr.get(emotion_id, ["", "", ""])
-	if val <= 33.0:
-		return labels[0]
-	if val <= 66.0:
-		return labels[1]
-	return labels[2]
+	return get_intensity_label(emotion_id)
+
+
+func _get_intensity_locale_key(emotion_id: String, level_idx: int) -> String:
+	var base: String = "EMO_" + emotion_id.to_upper()
+	if level_idx <= 0:
+		return base + "_MILD"
+	if level_idx == 1:
+		return base + "_BASE"
+	return base + "_INTENSE"
 
 # === Valence-Arousal calculation ===
 ## Recalculates valence and arousal derived values from current emotion intensities.

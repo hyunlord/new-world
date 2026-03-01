@@ -93,3 +93,8 @@
 - `tools/migration_verify.sh` 추가로 Rust + localization 파이프라인 검증 절차를 단일 명령으로 통합.
 - 선택 옵션 `--apply-key-fields`를 통해 데이터 key 주입까지 포함한 검증 지원.
 - 반복 커밋 검증의 일관성/속도 향상.
+
+## Commit 020
+- Emotion label/intensity 표시를 `EMO_*` locale key 기반으로 통합.
+- `emotion_definition.json`의 object형 inline 다국어 필드 제거.
+- localization audit에서 non-keyable inline 그룹 0 달성.
