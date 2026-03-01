@@ -1233,6 +1233,35 @@ impl WorldSimBridge {
     }
 
     #[func]
+    #[allow(clippy::too_many_arguments)]
+    fn body_tech_discovery_prob(
+        &self,
+        base: f32,
+        pop_bonus: f32,
+        knowledge_bonus: f32,
+        openness_bonus: f32,
+        logical_bonus: f32,
+        naturalistic_bonus: f32,
+        soft_bonus: f32,
+        rediscovery_bonus: f32,
+        max_bonus: f32,
+        checks_per_year: f32,
+    ) -> f32 {
+        body::tech_discovery_prob(
+            base,
+            pop_bonus,
+            knowledge_bonus,
+            openness_bonus,
+            logical_bonus,
+            naturalistic_bonus,
+            soft_bonus,
+            rediscovery_bonus,
+            max_bonus,
+            checks_per_year,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

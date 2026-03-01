@@ -895,6 +895,35 @@ pub fn age_body_strength(str_realized: i32) -> f32 {
     str_realized as f32 / 1000.0
 }
 
+/// Tech discovery per-check probability from annual components.
+#[allow(clippy::too_many_arguments)]
+pub fn tech_discovery_prob(
+    base: f32,
+    pop_bonus: f32,
+    knowledge_bonus: f32,
+    openness_bonus: f32,
+    logical_bonus: f32,
+    naturalistic_bonus: f32,
+    soft_bonus: f32,
+    rediscovery_bonus: f32,
+    max_bonus: f32,
+    checks_per_year: f32,
+) -> f32 {
+    let mut annual_total = base
+        + pop_bonus
+        + knowledge_bonus
+        + openness_bonus
+        + logical_bonus
+        + naturalistic_bonus
+        + soft_bonus
+        + rediscovery_bonus;
+    annual_total = clamp_f32(annual_total, 0.0, base + max_bonus + rediscovery_bonus);
+    if checks_per_year <= 1.0 || annual_total >= 1.0 {
+        return clamp_f32(annual_total, 0.0, 1.0);
+    }
+    1.0 - (1.0 - annual_total).powf(1.0 / checks_per_year)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1383,7 +1412,7 @@ mod tests {
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
-        age_body_speed, age_body_strength,
+        age_body_speed, age_body_strength, tech_discovery_prob,
     };
 
     #[test]
@@ -1881,6 +1910,14 @@ mod tests {
     fn age_body_speed_and_strength_follow_scaling() {
         assert!((age_body_speed(800, 0.001, 0.2) - 1.0).abs() < 1e-6);
         assert!((age_body_strength(750) - 0.75).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tech_discovery_prob_converts_annual_to_per_check() {
+        let annual_only = tech_discovery_prob(0.24, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 12.0);
+        assert!(annual_only > 0.0 && annual_only < 0.24);
+        let clamped = tech_discovery_prob(2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0);
+        assert!((clamped - 1.0).abs() < 1e-6);
     }
 
     #[test]
