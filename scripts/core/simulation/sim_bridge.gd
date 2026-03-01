@@ -396,6 +396,39 @@ func stat_stress_recovery_value(
 	)
 
 
+## Delegates final stress delta step (including denial redirect) to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_delta_step(
+	continuous_input: float,
+	trace_input: float,
+	emotion_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	recovery: float,
+	epsilon: float,
+	denial_active: bool,
+	denial_redirect_fraction: float,
+	hidden_threat_accumulator: float,
+	denial_max_accumulator: float
+):
+	return _call_native_if_exists(
+		"stat_stress_delta_step",
+		[
+			continuous_input,
+			trace_input,
+			emotion_input,
+			ace_stress_mult,
+			trait_accum_mult,
+			recovery,
+			epsilon,
+			denial_active,
+			denial_redirect_fraction,
+			hidden_threat_accumulator,
+			denial_max_accumulator
+		]
+	)
+
+
 ## Delegates reserve + GAS stage transition step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_reserve_step(

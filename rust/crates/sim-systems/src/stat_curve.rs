@@ -61,6 +61,12 @@ pub struct StressTraceBatchStep {
     pub active_mask: Vec<u8>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressDeltaStep {
+    pub delta: f32,
+    pub hidden_threat_accumulator: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -279,6 +285,40 @@ pub fn stress_recovery_value(
         decay *= 0.85;
     }
     decay
+}
+
+/// Final stress delta step with denial redirect handling.
+pub fn stress_delta_step(
+    continuous_input: f32,
+    trace_input: f32,
+    emotion_input: f32,
+    ace_stress_mult: f32,
+    trait_accum_mult: f32,
+    recovery: f32,
+    epsilon: f32,
+    denial_active: bool,
+    denial_redirect_fraction: f32,
+    hidden_threat_accumulator: f32,
+    denial_max_accumulator: f32,
+) -> StressDeltaStep {
+    let mut delta =
+        (continuous_input + trace_input + emotion_input) * ace_stress_mult * trait_accum_mult
+            - recovery;
+    if delta.abs() < epsilon {
+        delta = 0.0;
+    }
+
+    let mut hidden = hidden_threat_accumulator;
+    if denial_active && delta > 0.0 {
+        let redirected = delta * denial_redirect_fraction;
+        hidden = (hidden + redirected).min(denial_max_accumulator);
+        delta -= redirected;
+    }
+
+    StressDeltaStep {
+        delta,
+        hidden_threat_accumulator: hidden,
+    }
 }
 
 /// Reserve + GAS stage transition step.
@@ -619,6 +659,20 @@ mod tests {
         let normal = stress_recovery_value(300.0, 0.5, 0.5, 50.0, false, true);
         let low_reserve = stress_recovery_value(300.0, 0.5, 0.5, 10.0, false, true);
         assert!(low_reserve < normal);
+    }
+
+    #[test]
+    fn stress_delta_step_zeroes_small_delta_by_epsilon() {
+        let out = stress_delta_step(1.0, 1.0, 1.0, 1.0, 1.0, 3.01, 0.05, false, 0.6, 0.0, 800.0);
+        assert_eq!(out.delta, 0.0);
+        assert_eq!(out.hidden_threat_accumulator, 0.0);
+    }
+
+    #[test]
+    fn stress_delta_step_redirects_and_caps_hidden_when_denial_active() {
+        let out = stress_delta_step(10.0, 5.0, 5.0, 1.0, 1.0, 0.0, 0.05, true, 0.6, 790.0, 800.0);
+        assert!((out.delta - 8.0).abs() < 1e-6);
+        assert_eq!(out.hidden_threat_accumulator, 800.0);
     }
 
     #[test]

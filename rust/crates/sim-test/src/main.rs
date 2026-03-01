@@ -188,6 +188,19 @@ fn run_stress_math_bench(args: &[String]) {
             -0.03 * t,
         );
         let traces = stat_curve::stress_trace_batch_step(&trace_per_tick, &trace_decay, 0.01);
+        let delta_step = stat_curve::stress_delta_step(
+            continuous.total,
+            traces.total_contribution,
+            emotion.total,
+            1.1,
+            0.95,
+            recovery,
+            0.05,
+            i % 2 == 0,
+            0.6,
+            50.0 + 400.0 * t,
+            800.0,
+        );
 
         checksum += black_box(continuous.total)
             + black_box(appraisal)
@@ -197,7 +210,9 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(allo_step)
             + black_box(state.stress_blunt_mult)
             + black_box(resilience)
-            + black_box(traces.total_contribution);
+            + black_box(traces.total_contribution)
+            + black_box(delta_step.delta)
+            + black_box(delta_step.hidden_threat_accumulator);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);

@@ -768,6 +768,44 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_delta_step(
+        &self,
+        continuous_input: f32,
+        trace_input: f32,
+        emotion_input: f32,
+        ace_stress_mult: f32,
+        trait_accum_mult: f32,
+        recovery: f32,
+        epsilon: f32,
+        denial_active: bool,
+        denial_redirect_fraction: f32,
+        hidden_threat_accumulator: f32,
+        denial_max_accumulator: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_delta_step(
+            continuous_input,
+            trace_input,
+            emotion_input,
+            ace_stress_mult,
+            trait_accum_mult,
+            recovery,
+            epsilon,
+            denial_active,
+            denial_redirect_fraction,
+            hidden_threat_accumulator,
+            denial_max_accumulator,
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("delta", out.delta as f64);
+        dict.set(
+            "hidden_threat_accumulator",
+            out.hidden_threat_accumulator as f64,
+        );
+        dict
+    }
+
+    #[func]
     fn stat_stress_reserve_step(
         &self,
         reserve: f32,

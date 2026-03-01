@@ -196,3 +196,8 @@
 - `sim-test`에 `--bench-stress-math` CLI 모드를 추가해 stress 수학 Rust 경로를 마이크로벤치 가능하게 확장.
 - iteration 옵션(`--iters`)과 `black_box`/`Instant` 기반 측정으로 회귀 비교에 필요한 지표(`elapsed_ms`, `ns_per_iter`, `checksum`)를 출력.
 - 기존 기본 실행 경로는 유지하면서 성능 검증용 실행 경로를 분리해 지속 측정 기반 최적화 루프를 지원.
+
+## Commit 041
+- `StressSystem`의 최종 delta 계산과 C05 denial redirect 누적 처리 로직을 Rust step 함수(`stress_delta_step`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 delta-step API를 추가하고 GDScript는 입력 수집/결과 반영만 수행하도록 정리.
+- `sim-test` stress 마이크로벤치에 delta-step 경로를 포함해 stress hot path 네이티브 성능 측정 범위를 확장.

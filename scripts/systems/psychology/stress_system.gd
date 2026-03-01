@@ -105,19 +105,27 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
 	# v3 trait effect: stress/mult target=accumulation_rate
 	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
-	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult * trait_accum_mult - recovery
-	if absf(delta) < STRESS_EPSILON:
-		delta = 0.0
 
 	# Phase 4: C05 Denial — redirect fraction of incoming stress to hidden accumulator
 	## Folkman & Lazarus (1988): denial suppresses immediate distress at cost of later rebound
 	var denial_active: bool = ed.get_meta("denial_active", false)
-	if denial_active and delta > 0.0:
-		var redirected: float = delta * DENIAL_REDIRECT_FRACTION
-		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
-		hidden = minf(hidden + redirected, DENIAL_MAX_ACCUMULATOR)
-		ed.set_meta("hidden_threat_accumulator", hidden)
-		delta -= redirected  # only partial stress hits immediately
+	var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
+	var delta_step: Dictionary = StatCurveScript.stress_delta_step(
+		continuous_input,
+		trace_input,
+		emotion_input,
+		ace_stress_mult,
+		trait_accum_mult,
+		recovery,
+		STRESS_EPSILON,
+		denial_active,
+		DENIAL_REDIRECT_FRACTION,
+		hidden,
+		DENIAL_MAX_ACCUMULATOR
+	)
+	var delta: float = float(delta_step.get("delta", 0.0))
+	if denial_active:
+		ed.set_meta("hidden_threat_accumulator", float(delta_step.get("hidden_threat_accumulator", hidden)))
 
 	ed.stress = clampf(ed.stress + delta, 0.0, STRESS_CLAMP_MAX)
 	ed.stress_delta_last = delta

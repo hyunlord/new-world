@@ -380,6 +380,56 @@ static func stress_recovery_value(
 	return decay
 
 
+## Final stress delta step with denial redirect handling.
+## Returns Dictionary: { "delta": float, "hidden_threat_accumulator": float }
+static func stress_delta_step(
+	continuous_input: float,
+	trace_input: float,
+	emotion_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	recovery: float,
+	epsilon: float,
+	denial_active: bool,
+	denial_redirect_fraction: float,
+	hidden_threat_accumulator: float,
+	denial_max_accumulator: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_delta_step",
+		[
+			continuous_input,
+			trace_input,
+			emotion_input,
+			ace_stress_mult,
+			trait_accum_mult,
+			recovery,
+			epsilon,
+			denial_active,
+			denial_redirect_fraction,
+			hidden_threat_accumulator,
+			denial_max_accumulator
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var delta: float = (continuous_input + trace_input + emotion_input) * ace_stress_mult * trait_accum_mult - recovery
+	if absf(delta) < epsilon:
+		delta = 0.0
+
+	var hidden: float = hidden_threat_accumulator
+	if denial_active and delta > 0.0:
+		var redirected: float = delta * denial_redirect_fraction
+		hidden = minf(hidden + redirected, denial_max_accumulator)
+		delta -= redirected
+
+	return {
+		"delta": delta,
+		"hidden_threat_accumulator": hidden,
+	}
+
+
 ## Reserve + GAS stage transition step.
 ## Returns Dictionary: { "reserve": float, "gas_stage": int }
 static func stress_reserve_step(
