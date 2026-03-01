@@ -1197,6 +1197,27 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_tension_scarcity_pressure(
+        &self,
+        s1_deficit: bool,
+        s2_deficit: bool,
+        per_shared_resource: f32,
+    ) -> f32 {
+        body::tension_scarcity_pressure(s1_deficit, s2_deficit, per_shared_resource)
+    }
+
+    #[func]
+    fn body_tension_next_value(
+        &self,
+        current: f32,
+        scarcity_pressure: f32,
+        decay_per_year: f32,
+        dt_years: f32,
+    ) -> f32 {
+        body::tension_next_value(current, scarcity_pressure, decay_per_year, dt_years)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

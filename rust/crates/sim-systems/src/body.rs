@@ -853,6 +853,30 @@ pub fn social_proposal_accept_prob(romantic_interest: f32, compatibility: f32) -
     clamp_f32((romantic_interest / 100.0) * compatibility, 0.0, 1.0)
 }
 
+/// Tension scarcity pressure for settlement pair.
+pub fn tension_scarcity_pressure(
+    s1_deficit: bool,
+    s2_deficit: bool,
+    per_shared_resource: f32,
+) -> f32 {
+    if s1_deficit || s2_deficit {
+        per_shared_resource * 2.0
+    } else {
+        0.0
+    }
+}
+
+/// Next tension value after scarcity pressure and natural decay.
+pub fn tension_next_value(
+    current: f32,
+    scarcity_pressure: f32,
+    decay_per_year: f32,
+    dt_years: f32,
+) -> f32 {
+    let decay = decay_per_year * dt_years;
+    clamp_f32(current + scarcity_pressure - decay, 0.0, 1.0)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1340,6 +1364,7 @@ mod tests {
         thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
+        tension_scarcity_pressure, tension_next_value,
     };
 
     #[test]
@@ -1809,6 +1834,20 @@ mod tests {
         assert!((social_proposal_accept_prob(80.0, 0.75) - 0.6).abs() < 1e-6);
         assert!((social_proposal_accept_prob(200.0, 2.0) - 1.0).abs() < 1e-6);
         assert!((social_proposal_accept_prob(-20.0, 1.0) - 0.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tension_scarcity_pressure_activates_when_any_side_deficit() {
+        assert!((tension_scarcity_pressure(false, false, 0.2) - 0.0).abs() < 1e-6);
+        assert!((tension_scarcity_pressure(true, false, 0.2) - 0.4).abs() < 1e-6);
+        assert!((tension_scarcity_pressure(false, true, 0.2) - 0.4).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tension_next_value_applies_decay_and_clamp() {
+        assert!((tension_next_value(0.5, 0.1, 0.2, 0.5) - 0.5).abs() < 1e-6);
+        assert!((tension_next_value(0.95, 0.3, 0.0, 0.0) - 1.0).abs() < 1e-6);
+        assert!((tension_next_value(0.1, 0.0, 1.0, 0.5) - 0.0).abs() < 1e-6);
     }
 
     #[test]
