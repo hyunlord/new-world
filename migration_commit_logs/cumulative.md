@@ -696,3 +696,8 @@
 - `sim-systems::body`에 `critical_severity`와 `needs_critical_severity_step`를 추가해 갈증/체온/안전감 임계치 severity 계산을 Rust 배치 함수로 이관.
 - `sim-bridge`/`SimBridge`에 `body_needs_critical_severity_step`를 추가하고, `needs_system`이 단일 결과를 재사용하도록 전환.
 - needs stressor 구간의 severity 계산 의미를 유지하면서 bridge 호출/중복 계산 경로를 정리.
+
+## Commit 142
+- `needs_base_decay_step` 통합 이후 중복이 된 `needs_temp_decay_step`(sim-systems/sim-bridge/SimBridge)를 제거해 API 표면과 코드 복잡도를 축소.
+- `needs_system`이 temp-decay 계산에서 중복 bridge 재호출 없이 base decay 결과 재사용 또는 GDScript fallback만 사용하도록 정리.
+- 계산 의미를 유지하면서 needs 소모 경로의 중복 분기와 유지보수 비용을 완화.

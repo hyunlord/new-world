@@ -86,20 +86,6 @@ func execute_tick(tick: int) -> void:
 		if GameConfig.NEEDS_EXPANSION_ENABLED and base_decay_step.size() >= 6:
 			rust_temp_decay.append(float(base_decay_step[3]))
 			rust_temp_decay.append(float(base_decay_step[4]))
-		elif GameConfig.NEEDS_EXPANSION_ENABLED:
-			var rust_temp_decay_variant: Variant = SimBridge.body_needs_temp_decay_step(
-				GameConfig.THIRST_DECAY_RATE,
-				GameConfig.WARMTH_DECAY_RATE,
-				tile_temp,
-				has_tile_temp,
-				GameConfig.WARMTH_TEMP_NEUTRAL,
-				GameConfig.WARMTH_TEMP_FREEZING,
-				GameConfig.WARMTH_TEMP_COLD
-			)
-			if rust_temp_decay_variant is PackedFloat32Array:
-				var packed_temp_decay: PackedFloat32Array = rust_temp_decay_variant
-				if packed_temp_decay.size() >= 2:
-					rust_temp_decay = packed_temp_decay
 
 		## [Maslow (1943) L1 — 갈증 소모]
 		## 기본 소모 + 더운 타일에서 가속 (최대 2배)

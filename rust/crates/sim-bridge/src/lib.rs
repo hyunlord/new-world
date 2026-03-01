@@ -438,29 +438,6 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_needs_temp_decay_step(
-        &self,
-        thirst_base_decay: f32,
-        warmth_base_decay: f32,
-        tile_temp: f32,
-        has_tile_temp: bool,
-        temp_neutral: f32,
-        temp_freezing: f32,
-        temp_cold: f32,
-    ) -> PackedFloat32Array {
-        let out = body::needs_temp_decay_step(
-            thirst_base_decay,
-            warmth_base_decay,
-            tile_temp,
-            has_tile_temp,
-            temp_neutral,
-            temp_freezing,
-            temp_cold,
-        );
-        vec_f32_to_packed(out.to_vec())
-    }
-
-    #[func]
     fn body_needs_base_decay_step(
         &self,
         scalar_inputs: PackedFloat32Array,

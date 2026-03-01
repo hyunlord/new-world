@@ -1376,31 +1376,6 @@ func body_warmth_decay(
 	)
 
 
-## Delegates combined temperature decay step for thirst/warmth to native bridge.
-## Returns null when native bridge/method is unavailable.
-func body_needs_temp_decay_step(
-	thirst_base_decay: float,
-	warmth_base_decay: float,
-	tile_temp: float,
-	has_tile_temp: bool,
-	temp_neutral: float,
-	temp_freezing: float,
-	temp_cold: float
-):
-	return _call_native_if_exists(
-		"body_needs_temp_decay_step",
-		[
-			thirst_base_decay,
-			warmth_base_decay,
-			tile_temp,
-			has_tile_temp,
-			temp_neutral,
-			temp_freezing,
-			temp_cold
-		]
-	)
-
-
 ## Delegates combined baseline need decay step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_needs_base_decay_step_packed(
