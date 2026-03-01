@@ -24,6 +24,7 @@ func generate(world_data: RefCounted, seed_value: int) -> void:
 	var w: int = world_data.width
 	var h: int = world_data.height
 
+	world_data.begin_tile_update()
 	for y in range(h):
 		for x in range(w):
 			# Raw noise values remapped to [0, 1]
@@ -43,6 +44,7 @@ func generate(world_data: RefCounted, seed_value: int) -> void:
 			# Classify biome
 			var biome: int = _classify_biome(e, raw_m, t)
 			world_data.set_tile(x, y, biome, e, raw_m, t)
+	world_data.end_tile_update()
 
 
 ## Island shape mask: edges become ocean

@@ -8,6 +8,8 @@ var moisture: PackedFloat32Array
 var temperature: PackedFloat32Array
 var _entity_map: Dictionary = {}  # Vector2i -> Array[int]
 var terrain_revision: int = 0
+var _tile_update_depth: int = 0
+var _tile_update_changed: bool = false
 
 
 ## Initialize world arrays
@@ -20,6 +22,8 @@ func init_world(w: int, h: int) -> void:
 	moisture.resize(size)
 	temperature.resize(size)
 	_entity_map.clear()
+	_tile_update_depth = 0
+	_tile_update_changed = false
 	terrain_revision += 1
 
 
@@ -64,7 +68,26 @@ func set_tile(x: int, y: int, b: int, e: float, m: float, t: float) -> void:
 	moisture[idx] = m
 	temperature[idx] = t
 	if changed:
+		if _tile_update_depth > 0:
+			_tile_update_changed = true
+		else:
+			terrain_revision += 1
+
+
+## Begin a batched tile update section (single revision bump on end).
+func begin_tile_update() -> void:
+	_tile_update_depth += 1
+
+
+## End a batched tile update section and commit one revision if any tile changed.
+func end_tile_update() -> void:
+	if _tile_update_depth <= 0:
+		_tile_update_depth = 0
+		return
+	_tile_update_depth -= 1
+	if _tile_update_depth == 0 and _tile_update_changed:
 		terrain_revision += 1
+		_tile_update_changed = false
 
 
 ## Check if a tile is walkable (move cost > 0)
