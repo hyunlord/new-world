@@ -867,3 +867,8 @@
 - `movement_system` greedy fallback 이동에서 후보 `Array[Vector2i]` 생성/순회를 제거하고 분기 기반 이동 시도로 전환.
 - 공통 이동 처리를 `_try_move_candidate`로 추출해 walkable 체크/이동 이벤트 emit 경로를 단순화.
 - 이동 우선순위 의미는 유지하면서 fallback 경로의 메모리 할당 churn을 완화.
+
+## Commit 176
+- `sim_bridge`에 pathfinding backend resolve 캐시를 도입해 경로탐색 호출 시 반복 resolve bridge call을 축소.
+- `resolve_pathfinding_backend`/`_prefer_gpu`가 공통 캐시 헬퍼를 사용하도록 정리하고, mode sync/bridge 교체 시 캐시 무효화 규칙을 추가.
+- backend 선택 의미는 유지하면서 GPU 옵션 경로의 런타임 분기 오버헤드를 완화.

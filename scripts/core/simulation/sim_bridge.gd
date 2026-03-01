@@ -50,6 +50,8 @@ var _set_pathfind_backend_method_name: String = ""
 var _get_pathfind_backend_method_name: String = ""
 var _resolve_pathfind_backend_method_name: String = ""
 var _last_synced_pathfind_backend_mode: String = ""
+var _resolved_pathfind_backend_cache: String = ""
+var _resolved_pathfind_backend_cached: bool = false
 
 
 ## Sets native pathfinding backend mode (`auto`, `cpu`, `gpu`) when supported.
@@ -68,6 +70,8 @@ func set_pathfinding_backend(mode: String) -> bool:
 	if applied is bool and not bool(applied):
 		return false
 	_last_synced_pathfind_backend_mode = mode
+	_resolved_pathfind_backend_cached = false
+	_resolved_pathfind_backend_cache = ""
 	return true
 
 
@@ -90,8 +94,7 @@ func resolve_pathfinding_backend() -> String:
 	var bridge: Object = _get_native_bridge()
 	if bridge == null:
 		return "cpu"
-	_sync_pathfinding_backend_mode(bridge)
-	var resolved: String = _resolve_pathfinding_backend_mode(bridge)
+	var resolved: String = _resolve_pathfinding_backend_cached(bridge)
 	if not resolved.is_empty():
 		return resolved
 	if Engine.has_singleton("ComputeBackend"):
@@ -1874,6 +1877,8 @@ func _get_native_bridge() -> Object:
 			var method_name: String = _PATHFIND_METHOD_CANDIDATES[j]
 			if singleton_obj.has_method(method_name):
 				_native_bridge = singleton_obj
+				_resolved_pathfind_backend_cached = false
+				_resolved_pathfind_backend_cache = ""
 				_pathfind_method_name = method_name
 				_pathfind_xy_method_name = _pick_method(
 					_PATHFIND_XY_METHOD_CANDIDATES, ""
@@ -1906,6 +1911,8 @@ func _get_native_bridge() -> Object:
 			var method_name: String = _PATHFIND_METHOD_CANDIDATES[j]
 			if instance.has_method(method_name):
 				_native_bridge = instance
+				_resolved_pathfind_backend_cached = false
+				_resolved_pathfind_backend_cache = ""
 				_pathfind_method_name = method_name
 				_pathfind_xy_method_name = _pick_method(
 					_PATHFIND_XY_METHOD_CANDIDATES, ""
@@ -1935,8 +1942,7 @@ func _prefer_gpu() -> bool:
 	if bridge == null:
 		return false
 
-	_sync_pathfinding_backend_mode(bridge)
-	var resolved_backend: String = _resolve_pathfinding_backend_mode(bridge)
+	var resolved_backend: String = _resolve_pathfinding_backend_cached(bridge)
 	if resolved_backend != "":
 		return resolved_backend == "gpu"
 
@@ -1987,6 +1993,20 @@ func _sync_pathfinding_backend_mode(bridge: Object) -> void:
 	if applied is bool and not bool(applied):
 		return
 	_last_synced_pathfind_backend_mode = desired_mode
+	_resolved_pathfind_backend_cached = false
+	_resolved_pathfind_backend_cache = ""
+
+
+func _resolve_pathfinding_backend_cached(bridge: Object) -> String:
+	_sync_pathfinding_backend_mode(bridge)
+	if _resolved_pathfind_backend_cached:
+		return _resolved_pathfind_backend_cache
+	var resolved: String = _resolve_pathfinding_backend_mode(bridge)
+	if resolved == "":
+		return ""
+	_resolved_pathfind_backend_cache = resolved
+	_resolved_pathfind_backend_cached = true
+	return resolved
 
 
 func _resolve_pathfinding_backend_mode(bridge: Object) -> String:
