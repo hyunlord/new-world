@@ -9,6 +9,11 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const EmotionDataScript = preload("res://scripts/core/entity/emotion_data.gd")
 const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_BREAK_THRESHOLD_METHOD: String = "body_emotion_break_threshold"
+const _SIM_BRIDGE_BREAK_PROB_METHOD: String = "body_emotion_break_trigger_probability"
+const _SIM_BRIDGE_BREAK_TYPE_CODE_METHOD: String = "body_emotion_break_type_code"
+const _SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD: String = "body_psychology_break_type_label"
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -31,6 +36,8 @@ var _break_behaviors: Dictionary = {}
 var _personality_sensitivity: Dictionary = {}
 var _baselines: Dictionary = {}
 var _half_life_adjustments: Dictionary = {}
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -44,6 +51,26 @@ func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_event_presets()
 	_load_decay_parameters()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_BREAK_THRESHOLD_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_PROB_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_CODE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_event_presets() -> void:
@@ -447,15 +474,36 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, _tick: int) -> voi
 	# C(Conscientiousness) ↑ → higher threshold (more self-control)
 	var z_C: float = _axis_z(entity, &"HEXACO_C")
 	var threshold: float = 300.0 + 50.0 * z_C
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var threshold_variant: Variant = bridge.call(_SIM_BRIDGE_BREAK_THRESHOLD_METHOD, z_C, 300.0, 50.0)
+		if threshold_variant is float:
+			threshold = float(threshold_variant)
 
 	# Skip check if stress is well below threshold
 	if ed.stress < threshold * 0.5:
 		return
 
 	# Sigmoid probability
-	var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+	var trigger_prob: float = 0.0
+	if bridge != null:
+		var p_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BREAK_PROB_METHOD,
+			float(ed.stress),
+			threshold,
+			_break_beta,
+			_break_tick_prob
+		)
+		if p_variant is float:
+			trigger_prob = float(p_variant)
+		else:
+			var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+			trigger_prob = p * _break_tick_prob
+	else:
+		var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+		trigger_prob = p * _break_tick_prob
 
-	if randf() < p * _break_tick_prob:
+	if randf() < trigger_prob:
 		var break_type: String = _determine_break_type(ed)
 		if break_type != "":
 			ed.mental_break_type = break_type
@@ -484,19 +532,38 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, _tick: int) -> voi
 
 ## Determine break type based on dominant negative emotion
 func _determine_break_type(ed: RefCounted) -> String:
-	# Special check: Outrage (Surprise+Anger dyad) > 60 → outrage_violence
+	# Special check + dominant negative emotion selection
 	var outrage: float = ed.get_dyad("outrage")
+	var fear: float = ed.get_emotion("fear")
+	var anger: float = ed.get_emotion("anger")
+	var sadness: float = ed.get_emotion("sadness")
+	var disgust: float = ed.get_emotion("disgust")
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var code_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BREAK_TYPE_CODE_METHOD,
+			outrage,
+			fear,
+			anger,
+			sadness,
+			disgust,
+			60.0
+		)
+		if code_variant is int:
+			var label_variant: Variant = bridge.call(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD, int(code_variant))
+			if label_variant is String:
+				var label: String = str(label_variant)
+				if not label.is_empty():
+					return label
+
 	if outrage > 60.0:
 		return "outrage_violence"
-
-	# Otherwise, dominant negative emotion determines type
 	var candidates: Dictionary = {
-		"panic": ed.get_emotion("fear"),
-		"rage": ed.get_emotion("anger"),
-		"shutdown": ed.get_emotion("sadness"),
-		"purge": ed.get_emotion("disgust"),
+		"panic": fear,
+		"rage": anger,
+		"shutdown": sadness,
+		"purge": disgust,
 	}
-
 	var max_type: String = "shutdown"  # default fallback
 	var max_val: float = 0.0
 	for btype in candidates:

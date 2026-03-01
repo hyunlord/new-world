@@ -2048,6 +2048,35 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_emotion_break_threshold(&self, z_c: f32, base_threshold: f32, z_scale: f32) -> f32 {
+        body::emotion_break_threshold(z_c, base_threshold, z_scale)
+    }
+
+    #[func]
+    fn body_emotion_break_trigger_probability(
+        &self,
+        stress: f32,
+        threshold: f32,
+        beta: f32,
+        tick_prob: f32,
+    ) -> f32 {
+        body::emotion_break_trigger_probability(stress, threshold, beta, tick_prob)
+    }
+
+    #[func]
+    fn body_emotion_break_type_code(
+        &self,
+        outrage: f32,
+        fear: f32,
+        anger: f32,
+        sadness: f32,
+        disgust: f32,
+        outrage_threshold: f32,
+    ) -> i32 {
+        body::emotion_break_type_code(outrage, fear, anger, sadness, disgust, outrage_threshold)
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

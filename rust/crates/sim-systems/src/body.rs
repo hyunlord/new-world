@@ -2003,6 +2003,56 @@ pub fn coping_softmax_index(scores: &[f32], roll01: f32) -> i32 {
     (exp_scores.len() - 1) as i32
 }
 
+/// Emotion mental-break threshold from conscientiousness z-score.
+pub fn emotion_break_threshold(z_c: f32, base_threshold: f32, z_scale: f32) -> f32 {
+    base_threshold + z_scale * z_c
+}
+
+/// Emotion mental-break trigger probability for one tick.
+pub fn emotion_break_trigger_probability(
+    stress: f32,
+    threshold: f32,
+    beta: f32,
+    tick_prob: f32,
+) -> f32 {
+    if beta <= 0.0 {
+        return 0.0;
+    }
+    let p = 1.0 / (1.0 + (-(stress - threshold) / beta).exp());
+    clamp_f32(p * tick_prob, 0.0, 1.0)
+}
+
+/// Emotion mental-break type code from dominant negative emotion.
+///
+/// Returns codes compatible with `psychology_break_type_label`:
+/// `1=outrage_violence`, `2=panic`, `3=rage`, `4=shutdown`, `5=purge`.
+pub fn emotion_break_type_code(
+    outrage: f32,
+    fear: f32,
+    anger: f32,
+    sadness: f32,
+    disgust: f32,
+    outrage_threshold: f32,
+) -> i32 {
+    if outrage > outrage_threshold {
+        return 1;
+    }
+    let mut code = 4;
+    let mut max_val = sadness;
+    if fear > max_val {
+        max_val = fear;
+        code = 2;
+    }
+    if anger > max_val {
+        max_val = anger;
+        code = 3;
+    }
+    if disgust > max_val {
+        code = 5;
+    }
+    code
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2696,6 +2746,7 @@ mod tests {
         chronicle_should_prune, chronicle_cutoff_tick, chronicle_keep_world_event,
         chronicle_keep_personal_event, psychology_break_type_code, psychology_break_type_label,
         coping_learn_probability, coping_softmax_index,
+        emotion_break_threshold, emotion_break_trigger_probability, emotion_break_type_code,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3693,6 +3744,24 @@ mod tests {
         assert!((0..=2).contains(&idx_low));
         assert!((0..=2).contains(&idx_high));
         assert_eq!(coping_softmax_index(&[], 0.5), -1);
+    }
+
+    #[test]
+    fn emotion_break_threshold_and_probability_are_bounded() {
+        let threshold = emotion_break_threshold(1.0, 300.0, 50.0);
+        let low = emotion_break_trigger_probability(200.0, threshold, 60.0, 0.01);
+        let high = emotion_break_trigger_probability(1200.0, threshold, 60.0, 0.01);
+        assert!((threshold - 350.0).abs() < 1e-6);
+        assert!(high > low);
+        assert!((0.0..=1.0).contains(&high));
+    }
+
+    #[test]
+    fn emotion_break_type_code_prioritizes_outrage_then_dominant_emotion() {
+        assert_eq!(emotion_break_type_code(80.0, 10.0, 20.0, 30.0, 40.0, 60.0), 1);
+        assert_eq!(emotion_break_type_code(20.0, 50.0, 30.0, 10.0, 20.0, 60.0), 2);
+        assert_eq!(emotion_break_type_code(20.0, 10.0, 55.0, 10.0, 20.0, 60.0), 3);
+        assert_eq!(emotion_break_type_code(20.0, 10.0, 10.0, 15.0, 20.0, 60.0), 5);
     }
 
     #[test]
