@@ -8,6 +8,7 @@ var _settlement_manager: RefCounted
 var _reputation_manager: RefCounted
 var _current_tick: int = 0
 const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_WEALTH_METHOD: String = "body_stratification_wealth_score"
 const _SIM_BRIDGE_GINI_METHOD: String = "body_stratification_gini"
 const _SIM_BRIDGE_STATUS_METHOD: String = "body_stratification_status_score"
 var _bridge_checked: bool = false
@@ -37,7 +38,10 @@ func _get_sim_bridge() -> Object:
 	if root == null:
 		return null
 	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
-	if node != null and node.has_method(_SIM_BRIDGE_GINI_METHOD) and node.has_method(_SIM_BRIDGE_STATUS_METHOD):
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_WEALTH_METHOD) \
+	and node.has_method(_SIM_BRIDGE_GINI_METHOD) \
+	and node.has_method(_SIM_BRIDGE_STATUS_METHOD):
 		_sim_bridge = node
 	return _sim_bridge
 
@@ -63,6 +67,7 @@ func _compute_wealth_scores(settlement: RefCounted) -> void:
 	var avg_wood: float = _get_settlement_avg(settlement, "wood")
 	var avg_stone: float = _get_settlement_avg(settlement, "stone")
 	var scores: Array = []
+	var bridge: Object = _get_sim_bridge()
 
 	for m_idx in range(settlement.member_ids.size()):
 		var mid = settlement.member_ids[m_idx]
@@ -78,11 +83,24 @@ func _compute_wealth_scores(settlement: RefCounted) -> void:
 		var wood_norm: float = wood_amount / maxf(avg_wood, 1.0)
 		var stone_norm: float = stone_amount / maxf(avg_stone, 1.0)
 
-		entity.wealth_score = (
+		var fallback_wealth_score: float = (
 			GameConfig.WEALTH_W_FOOD * log(1.0 + food_days)
 			+ GameConfig.WEALTH_W_WOOD * log(1.0 + 10.0 * wood_norm)
 			+ GameConfig.WEALTH_W_STONE * log(1.0 + 10.0 * stone_norm)
 		)
+		entity.wealth_score = fallback_wealth_score
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_WEALTH_METHOD,
+				food_days,
+				wood_norm,
+				stone_norm,
+				float(GameConfig.WEALTH_W_FOOD),
+				float(GameConfig.WEALTH_W_WOOD),
+				float(GameConfig.WEALTH_W_STONE),
+			)
+			if rust_variant != null:
+				entity.wealth_score = float(rust_variant)
 		scores.append(entity.wealth_score)
 
 	scores.sort()

@@ -1147,6 +1147,19 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stratification_wealth_score(
+        &self,
+        food_days: f32,
+        wood_norm: f32,
+        stone_norm: f32,
+        w_food: f32,
+        w_wood: f32,
+        w_stone: f32,
+    ) -> f32 {
+        body::stratification_wealth_score(food_days, wood_norm, stone_norm, w_food, w_wood, w_stone)
+    }
+
+    #[func]
     fn body_value_plasticity(&self, age_years: f32) -> f32 {
         body::value_plasticity(age_years)
     }

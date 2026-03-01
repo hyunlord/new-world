@@ -755,6 +755,23 @@ pub fn stratification_status_score(
     )
 }
 
+/// Wealth score used by stratification monitor from normalized resources.
+pub fn stratification_wealth_score(
+    food_days: f32,
+    wood_norm: f32,
+    stone_norm: f32,
+    w_food: f32,
+    w_wood: f32,
+    w_stone: f32,
+) -> f32 {
+    let safe_food = food_days.max(0.0);
+    let safe_wood = wood_norm.max(0.0);
+    let safe_stone = stone_norm.max(0.0);
+    w_food * (1.0 + safe_food).ln()
+        + w_wood * (1.0 + 10.0 * safe_wood).ln()
+        + w_stone * (1.0 + 10.0 * safe_stone).ln()
+}
+
 /// Age-based value plasticity in `[0.10, 1.0]`.
 pub fn value_plasticity(age_years: f32) -> f32 {
     if age_years < 7.0 {
@@ -1257,10 +1274,10 @@ mod tests {
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
-        stratification_status_score, stress_injection_apply_step, stress_rebound_apply_step,
-        stress_shaken_countdown_step, stress_support_score, thirst_decay,
-        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        value_plasticity, warmth_decay,
+        stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
+        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
+        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
+        upper_needs_step, value_plasticity, warmth_decay,
     };
 
     #[test]
@@ -1686,6 +1703,14 @@ mod tests {
         assert!((value_plasticity(15.0) - 0.70).abs() < 1e-6);
         assert!((value_plasticity(25.0) - 0.30).abs() < 1e-6);
         assert!((value_plasticity(55.0) - 0.10).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stratification_wealth_score_increases_with_resources() {
+        let low = stratification_wealth_score(0.0, 0.0, 0.0, 0.4, 0.3, 0.3);
+        let high = stratification_wealth_score(2.0, 1.0, 1.0, 0.4, 0.3, 0.3);
+        assert!(low.abs() < 1e-6);
+        assert!(high > low);
     }
 
     #[test]
