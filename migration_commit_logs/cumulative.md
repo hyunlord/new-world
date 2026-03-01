@@ -1115,3 +1115,8 @@
 - `sim-bridge`에 backend dispatch 경유 공개 batch API(`pathfind_grid_batch_dispatch_bytes`, `pathfind_grid_batch_xy_dispatch_bytes`)를 추가.
 - `sim-test` pathfinding 벤치가 dispatch 경로를 사용하고 backend dispatch 카운터(cpu/gpu/total)를 함께 출력하도록 연동.
 - checksum 유지 상태에서 벤치 관측성(backend 사용량)까지 확장.
+
+## Commit 226
+- `sim-bridge`에 non-Godot backend 모드 제어/조회 공개 API(`set/get/resolve_pathfind_backend_mode`)를 추가.
+- `sim-test` pathfinding 벤치에 `--backend auto|cpu|gpu` 옵션을 연결해 모드별 실행/관측을 지원.
+- 기본 검증 파이프라인에서는 기존 checksum을 유지하면서 backend 관측 출력을 확장.

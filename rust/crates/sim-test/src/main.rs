@@ -3,8 +3,9 @@ use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
 use sim_bridge::{
-    pathfind_backend_dispatch_counts, pathfind_grid_batch_dispatch_bytes,
-    pathfind_grid_batch_xy_dispatch_bytes, reset_pathfind_backend_dispatch_counts,
+    get_pathfind_backend_mode, pathfind_backend_dispatch_counts, pathfind_grid_batch_dispatch_bytes,
+    pathfind_grid_batch_xy_dispatch_bytes, resolve_pathfind_backend_mode,
+    reset_pathfind_backend_dispatch_counts, set_pathfind_backend_mode,
 };
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
@@ -127,6 +128,16 @@ fn parse_bench_iterations(args: &[String], default_iterations: u32) -> u32 {
         }
     }
     iterations
+}
+
+fn parse_pathfind_backend_arg(args: &[String]) -> String {
+    let mut mode = String::from("auto");
+    for i in 0..args.len() {
+        if args[i] == "--backend" && i + 1 < args.len() {
+            mode = args[i + 1].to_ascii_lowercase();
+        }
+    }
+    mode
 }
 
 fn run_needs_math_bench(args: &[String]) {
@@ -384,6 +395,14 @@ fn pathfind_bench_inputs() -> (
 
 fn run_pathfind_bridge_bench(args: &[String]) {
     let iterations = parse_bench_iterations(args, 1_000);
+    let backend_mode = parse_pathfind_backend_arg(args);
+    if !set_pathfind_backend_mode(&backend_mode) {
+        eprintln!(
+            "[sim-test] invalid --backend value: {} (expected auto|cpu|gpu)",
+            backend_mode
+        );
+        std::process::exit(2);
+    }
     let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
         pathfind_bench_inputs();
 
@@ -425,7 +444,9 @@ fn run_pathfind_bridge_bench(args: &[String]) {
     );
     let (cpu_dispatches, gpu_dispatches) = pathfind_backend_dispatch_counts();
     println!(
-        "[sim-test] pathfind-bridge backend-dispatches: cpu={} gpu={} total={}",
+        "[sim-test] pathfind-bridge backend: configured={} resolved={} cpu={} gpu={} total={}",
+        get_pathfind_backend_mode(),
+        resolve_pathfind_backend_mode(),
         cpu_dispatches,
         gpu_dispatches,
         cpu_dispatches + gpu_dispatches
@@ -434,6 +455,14 @@ fn run_pathfind_bridge_bench(args: &[String]) {
 
 fn run_pathfind_bridge_split_bench(args: &[String]) {
     let iterations = parse_bench_iterations(args, 1_000);
+    let backend_mode = parse_pathfind_backend_arg(args);
+    if !set_pathfind_backend_mode(&backend_mode) {
+        eprintln!(
+            "[sim-test] invalid --backend value: {} (expected auto|cpu|gpu)",
+            backend_mode
+        );
+        std::process::exit(2);
+    }
     let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
         pathfind_bench_inputs();
 
@@ -466,7 +495,9 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
     );
     let (cpu_tuple, gpu_tuple) = pathfind_backend_dispatch_counts();
     println!(
-        "[sim-test] pathfind-bridge-split tuple-backend-dispatches: cpu={} gpu={} total={}",
+        "[sim-test] pathfind-bridge-split tuple-backend-dispatches: configured={} resolved={} cpu={} gpu={} total={}",
+        get_pathfind_backend_mode(),
+        resolve_pathfind_backend_mode(),
         cpu_tuple,
         gpu_tuple,
         cpu_tuple + gpu_tuple
@@ -495,7 +526,9 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
     );
     let (cpu_xy, gpu_xy) = pathfind_backend_dispatch_counts();
     println!(
-        "[sim-test] pathfind-bridge-split xy-backend-dispatches: cpu={} gpu={} total={}",
+        "[sim-test] pathfind-bridge-split xy-backend-dispatches: configured={} resolved={} cpu={} gpu={} total={}",
+        get_pathfind_backend_mode(),
+        resolve_pathfind_backend_mode(),
         cpu_xy,
         gpu_xy,
         cpu_xy + gpu_xy

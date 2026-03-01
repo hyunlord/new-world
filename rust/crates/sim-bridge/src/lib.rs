@@ -103,6 +103,27 @@ pub fn reset_pathfind_backend_dispatch_counts() {
     reset_dispatch_counts();
 }
 
+/// Sets configured pathfinding backend mode from string (`auto`, `cpu`, `gpu`).
+pub fn set_pathfind_backend_mode(mode: &str) -> bool {
+    let Some(parsed) = parse_pathfind_backend(mode) else {
+        return false;
+    };
+    set_backend_mode(parsed);
+    true
+}
+
+/// Returns configured pathfinding backend mode string.
+pub fn get_pathfind_backend_mode() -> &'static str {
+    let mode = get_backend_mode();
+    backend_mode_to_str(mode)
+}
+
+/// Returns resolved pathfinding backend mode string (feature-gated resolution).
+pub fn resolve_pathfind_backend_mode() -> &'static str {
+    let mode = get_backend_mode();
+    resolve_backend_mode(mode)
+}
+
 /// Pathfinding entry shape intended for future Godot bridge exposure.
 ///
 /// `walkable` uses byte flags where 0 = blocked, non-zero = walkable.
@@ -631,23 +652,17 @@ impl WorldSimBridge {
     #[func]
     fn set_pathfinding_backend(&self, mode: GString) -> bool {
         let mode_string = mode.to_string();
-        let Some(parsed) = parse_pathfind_backend(&mode_string) else {
-            return false;
-        };
-        set_backend_mode(parsed);
-        true
+        set_pathfind_backend_mode(&mode_string)
     }
 
     #[func]
     fn get_pathfinding_backend(&self) -> GString {
-        let mode = get_backend_mode();
-        backend_mode_to_str(mode).into()
+        get_pathfind_backend_mode().into()
     }
 
     #[func]
     fn resolve_pathfinding_backend(&self) -> GString {
-        let mode = get_backend_mode();
-        resolve_backend_mode(mode).into()
+        resolve_pathfind_backend_mode().into()
     }
 
     #[func]
