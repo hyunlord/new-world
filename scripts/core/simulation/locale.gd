@@ -28,6 +28,7 @@ var _key_to_id: Dictionary = {}
 var _id_to_value: PackedStringArray = PackedStringArray()
 var _month_key_ids: PackedInt32Array = PackedInt32Array()
 var _tr_id_key_id_cache: Dictionary = {}
+var _trf_key_id_cache: Dictionary = {}
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -63,6 +64,7 @@ func load_locale(locale: String) -> void:
 	_id_to_value.resize(0)
 	_month_key_ids.resize(0)
 	_tr_id_key_id_cache.clear()
+	_trf_key_id_cache.clear()
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
 		return
@@ -114,7 +116,15 @@ func ltr_id(id: int) -> String:
 ## Format string with placeholder substitution
 ## Example: Locale.trf("EVT_CHILD_BORN", {"name": "Aria", "mother": "Bea", "father": "Cal"})
 func trf(key: String, params: Dictionary = {}) -> String:
-	var text = ltr(key)
+	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
+	if key_id_cached == -2:
+		key_id_cached = key_id(key)
+		_trf_key_id_cache[key] = key_id_cached
+	var text: String = ""
+	if key_id_cached >= 0:
+		text = ltr_id(key_id_cached)
+	if text.is_empty():
+		text = ltr(key)
 	for p in params:
 		text = text.replace("{%s}" % p, str(params[p]))
 	return text
