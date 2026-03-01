@@ -747,3 +747,8 @@
 - `localization_compile`에 `embed_keys` 옵션을 추가해 compiled locale에서 중복 `keys` 배열을 제거할 수 있도록 확장(현재 `false`).
 - `Locale` 런타임이 compiled JSON에 `keys`가 없을 때 `key_registry.json`의 키 순서를 읽어 key-id 인덱스를 재구성하도록 개선.
 - 번역 결과는 유지하면서 compiled payload 중복을 줄이고, registry 기반 안정 key-id 체계를 런타임 경로까지 연결.
+
+## Commit 152
+- `localization_compile`에 `_write_json_if_changed`를 도입해 내용 동일 시 compiled/registry 파일 쓰기를 생략하도록 개선.
+- 컴파일 로그에 `updated` 플래그를 추가해 실제 파일 갱신 여부를 즉시 확인 가능하게 확장.
+- 반복 검증 시 불필요한 localization 산출물 재작성 및 git noise를 감소.

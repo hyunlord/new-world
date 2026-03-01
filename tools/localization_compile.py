@@ -58,6 +58,17 @@ def _write_json(path: Path, data: Any) -> None:
         fp.write("\n")
 
 
+def _write_json_if_changed(path: Path, data: Any) -> bool:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rendered = json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    if path.exists():
+        existing = path.read_text(encoding="utf-8")
+        if existing == rendered:
+            return False
+    path.write_text(rendered, encoding="utf-8")
+    return True
+
+
 def _load_manifest(manifest_path: Path) -> Dict[str, Any]:
     if not manifest_path.exists():
         return dict(DEFAULT_MANIFEST)
@@ -193,7 +204,7 @@ def _write_key_registry(path: Path, keys: List[str], active_keys: List[str]) -> 
         "key_to_id": key_to_id,
         "removed_keys": removed_keys,
     }
-    _write_json(path, output)
+    _write_json_if_changed(path, output)
 
 
 def run(project_root: Path, strict_duplicates: bool) -> int:
@@ -289,12 +300,12 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         if include_sources:
             output["sources"] = locale_sources
         out_path = compiled_root / f"{locale}.json"
-        _write_json(out_path, output)
+        updated = _write_json_if_changed(out_path, output)
 
         print(
             f"[localization_compile] {locale}: "
             f"strings={len(locale_strings)} duplicates={duplicate_count} "
-            f"filled={missing_filled_count} -> {out_path}"
+            f"filled={missing_filled_count} updated={1 if updated else 0} -> {out_path}"
         )
 
     if strict_duplicates and total_duplicates > 0:
