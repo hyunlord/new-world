@@ -986,6 +986,42 @@ pub fn building_add_capped(current: f32, delta: f32, cap: f32) -> f32 {
     (current + delta).min(cap)
 }
 
+/// Culture receptivity modifier for cross-settlement tech propagation.
+pub fn tech_propagation_culture_modifier(
+    knowledge_avg: f32,
+    tradition_avg: f32,
+    knowledge_weight: f32,
+    tradition_weight: f32,
+    min_mod: f32,
+    max_mod: f32,
+) -> f32 {
+    let mut culture_mod = 1.0_f32;
+    culture_mod += (knowledge_avg + 1.0) * 0.5 * knowledge_weight;
+    culture_mod -= (tradition_avg + 1.0) * 0.5 * tradition_weight;
+    clamp_f32(culture_mod, min_mod, max_mod)
+}
+
+/// Carrier skill-to-propagation bonus.
+pub fn tech_propagation_carrier_bonus(max_skill: i32, skill_divisor: f32, weight: f32) -> f32 {
+    if skill_divisor <= 0.0 {
+        return 1.0;
+    }
+    1.0 + (max_skill as f32 / skill_divisor) * weight
+}
+
+/// Final cross-settlement propagation probability with upper cap.
+pub fn tech_propagation_final_prob(
+    base_prob: f32,
+    lang_penalty: f32,
+    culture_mod: f32,
+    carrier_bonus: f32,
+    stability_bonus: f32,
+    max_prob: f32,
+) -> f32 {
+    let raw = base_prob * lang_penalty * culture_mod * carrier_bonus * stability_bonus;
+    clamp_f32(raw, 0.0, max_prob)
+}
+
 /// Intelligence activity modifier ("use it or lose it").
 pub fn cognition_activity_modifier(
     active_skill_count: i32,
@@ -1503,6 +1539,8 @@ mod tests {
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
+        tech_propagation_culture_modifier, tech_propagation_carrier_bonus,
+        tech_propagation_final_prob,
         cognition_activity_modifier,
         cognition_ace_fluid_decline_mult,
     };
@@ -2064,6 +2102,28 @@ mod tests {
     fn building_add_capped_limits_to_cap() {
         assert!((building_add_capped(0.8, 0.1, 1.0) - 0.9).abs() < 1e-6);
         assert!((building_add_capped(0.95, 0.2, 1.0) - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tech_propagation_culture_modifier_applies_weights_and_clamp() {
+        let neutral = tech_propagation_culture_modifier(0.0, 0.0, 0.3, 0.4, 0.1, 2.0);
+        assert!((neutral - 0.95).abs() < 1e-6);
+        let floored = tech_propagation_culture_modifier(-1.0, 1.0, 0.3, 0.4, 0.1, 2.0);
+        assert!((floored - 0.6).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tech_propagation_carrier_bonus_scales_by_skill() {
+        assert!((tech_propagation_carrier_bonus(0, 20.0, 0.5) - 1.0).abs() < 1e-6);
+        assert!((tech_propagation_carrier_bonus(20, 20.0, 0.5) - 1.5).abs() < 1e-6);
+    }
+
+    #[test]
+    fn tech_propagation_final_prob_multiplies_and_clamps() {
+        let base = tech_propagation_final_prob(0.2, 1.0, 1.5, 1.4, 1.3, 0.95);
+        assert!((base - 0.546).abs() < 1e-6);
+        let capped = tech_propagation_final_prob(1.0, 2.0, 2.0, 2.0, 2.0, 0.95);
+        assert!((capped - 0.95).abs() < 1e-6);
     }
 
     #[test]

@@ -1338,6 +1338,56 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_tech_propagation_culture_modifier(
+        &self,
+        knowledge_avg: f32,
+        tradition_avg: f32,
+        knowledge_weight: f32,
+        tradition_weight: f32,
+        min_mod: f32,
+        max_mod: f32,
+    ) -> f32 {
+        body::tech_propagation_culture_modifier(
+            knowledge_avg,
+            tradition_avg,
+            knowledge_weight,
+            tradition_weight,
+            min_mod,
+            max_mod,
+        )
+    }
+
+    #[func]
+    fn body_tech_propagation_carrier_bonus(
+        &self,
+        max_skill: i32,
+        skill_divisor: f32,
+        weight: f32,
+    ) -> f32 {
+        body::tech_propagation_carrier_bonus(max_skill, skill_divisor, weight)
+    }
+
+    #[func]
+    fn body_tech_propagation_final_prob(
+        &self,
+        base_prob: f32,
+        lang_penalty: f32,
+        culture_mod: f32,
+        carrier_bonus: f32,
+        stability_bonus: f32,
+        max_prob: f32,
+    ) -> f32 {
+        body::tech_propagation_final_prob(
+            base_prob,
+            lang_penalty,
+            culture_mod,
+            carrier_bonus,
+            stability_bonus,
+            max_prob,
+        )
+    }
+
+    #[func]
     fn body_cognition_activity_modifier(
         &self,
         active_skill_count: i32,
