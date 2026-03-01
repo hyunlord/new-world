@@ -7,6 +7,7 @@ pub mod error;
 pub mod loader;
 pub mod mental_breaks;
 pub mod mortality;
+pub mod occupations;
 pub mod species;
 pub mod stressor_events;
 pub mod tech;
@@ -15,11 +16,16 @@ pub mod value_events;
 
 pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
-pub use developmental_stages::{load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages};
+pub use developmental_stages::{
+    load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,
+};
 pub use emotion_presets::{load_emotion_presets, EmotionPreset, EmotionPresets};
 pub use error::{DataError, DataResult};
 pub use mental_breaks::{load_mental_breaks, MentalBreakCatalog, MentalBreakDef};
 pub use mortality::{load_mortality_catalog, MortalityCatalog, MortalityProfile};
+pub use occupations::{
+    load_occupation_data, JobProfile, JobProfiles, OccupationCategories, OccupationData,
+};
 pub use species::{load_species_catalog, SpeciesCatalog, SpeciesDefinition};
 pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents};
 pub use tech::{load_tech_catalog, TechCatalog, TechDef};
@@ -40,6 +46,7 @@ pub struct DataBundle {
     pub mortality: MortalityCatalog,
     pub developmental_stages: DevelopmentalStages,
     pub attachment: AttachmentConfig,
+    pub occupation: OccupationData,
 }
 
 /// Load all currently-supported data from a base data directory.
@@ -56,6 +63,7 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
     let mortality = load_mortality_catalog(base_dir)?;
     let developmental_stages = load_developmental_stages(base_dir)?;
     let attachment = load_attachment_config(base_dir)?;
+    let occupation = load_occupation_data(base_dir)?;
     Ok(DataBundle {
         emotions,
         tech,
@@ -68,6 +76,7 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
         mortality,
         developmental_stages,
         attachment,
+        occupation,
     })
 }
 
@@ -112,5 +121,10 @@ mod tests {
             data.attachment.determination_window_days > 0,
             "attachment config not loaded"
         );
+        assert!(
+            !data.occupation.categories.is_empty(),
+            "occupation categories not loaded"
+        );
+        assert!(!data.occupation.jobs.is_empty(), "job profiles not loaded");
     }
 }

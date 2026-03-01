@@ -76,6 +76,12 @@ fn load_all_contains_r1_core_datasets() {
         data.attachment.determination_window_days > 0,
         "attachment config invalid"
     );
+    assert!(
+        !data.occupation.categories.is_empty(),
+        "occupation categories empty"
+    );
+    assert!(!data.occupation.jobs.is_empty(), "job profiles empty");
+    assert_eq!(data.occupation.categories.default_job(), "laborer");
 }
 
 #[test]
@@ -189,4 +195,36 @@ fn attachment_loader_rejects_out_of_range_threshold() {
 
     let result = sim_data::load_attachment_config(&temp.path);
     assert!(result.is_err(), "expected invalid attachment file to fail");
+}
+
+#[test]
+fn occupation_loader_rejects_job_id_filename_mismatch() {
+    let temp = TempDirGuard::new("occupation_invalid");
+    write_json_file(
+        &temp
+            .path
+            .join("occupations")
+            .join("occupation_categories.json"),
+        r#"{
+            "categories": {"builder": ["construction"]},
+            "default": "laborer"
+        }"#,
+    );
+    write_json_file(
+        &temp.path.join("jobs").join("builder.json"),
+        r#"{
+            "job_id": "wrong_id",
+            "riasec": "RI",
+            "hexaco_ideal": {"H": 0.0, "E": -0.1, "X": 0.0, "A": 0.1, "C": 0.3, "O": 0.1},
+            "value_weights": {"HARD_WORK": 0.4},
+            "primary_skill": "SKILL_CONSTRUCTION",
+            "prestige": 0.45,
+            "autonomy_level": 0.40,
+            "danger_level": 0.25,
+            "creativity_level": 0.35
+        }"#,
+    );
+
+    let result = sim_data::load_occupation_data(&temp.path);
+    assert!(result.is_err(), "expected invalid occupation data to fail");
 }

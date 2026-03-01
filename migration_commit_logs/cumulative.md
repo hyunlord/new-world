@@ -1365,3 +1365,10 @@
 - `rust/tests/data_loading_test.rs`에 임시 디렉터리 기반 invalid JSON 테스트 4개를 추가해 실패 경로를 회귀 테스트로 고정.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량(데이터 로더 축): `8/9` 완료, `1/9` 잔여.
+
+## Commit 275
+- `sim-data`에 `occupations/jobs` 도메인 로더(`occupations.rs`)를 추가하고 `DataBundle`/`load_all`에 통합해 직업 카테고리 + job profile 데이터를 Rust에서 직접 적재 가능하게 확장.
+- `occupation_categories.json`의 `default/categories`와 `jobs/*.json`의 job profile 스키마를 검증하며, `job_id`와 파일명 일치 및 핵심 수치 필드 범위([0,1], hexaco는 [-1,1]) 체크를 추가.
+- `sim-test` 데이터 로드 로그에 `occupation_categories`, `job_profiles` 카운트를 추가하고, 통합 테스트에 occupation 적재 검증 + invalid `job_id`/파일명 mismatch 실패 테스트를 추가.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량(데이터 로더 축): `9/9` 완료, `0/9` 잔여.

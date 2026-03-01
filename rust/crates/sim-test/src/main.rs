@@ -67,7 +67,7 @@ fn main() {
     match sim_data::load_all(&data_dir) {
         Ok(data) => {
             log::info!(
-                "[sim-test] data loaded: {} emotions, {} techs, {} value_events, {} stressors, {} coping_defs, {} mental_breaks, {} traits, {} species, {} mortality_profiles, {} developmental_stages",
+                "[sim-test] data loaded: {} emotions, {} techs, {} value_events, {} stressors, {} coping_defs, {} mental_breaks, {} traits, {} species, {} mortality_profiles, {} developmental_stages, {} occupation_categories, {} job_profiles",
                 data.emotions.len(),
                 data.tech.len(),
                 data.values.len(),
@@ -78,6 +78,8 @@ fn main() {
                 data.species.len(),
                 data.mortality.len(),
                 data.developmental_stages.len(),
+                data.occupation.categories.len(),
+                data.occupation.jobs.len(),
             );
         }
         Err(_) => {
