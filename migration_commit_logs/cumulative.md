@@ -356,3 +356,8 @@
 - localization compile 산출물에 stable key index(`keys`)와 `meta.key_count`를 추가해 key 집합 추적을 구조화.
 - `Locale`에 key↔id 조회 API(`has_key`, `key_id`, `ltr_id`)를 추가하고 compiled `keys` 기준 인덱스를 런타임에 구성.
 - 기존 `ltr()` 호환성을 유지하면서 Rust/GDExtension 경로의 정수 key id 기반 조회 확장을 위한 기반을 마련.
+
+## Commit 074
+- `GameCalendar`의 age 단위 텍스트(`UI_AGE_YEARS/MONTHS/DAYS`) 조회를 key-id 캐시 + `Locale.ltr_id()` 경로로 전환.
+- 정적 key id 캐시를 도입하고 최초 1회 `Locale.key_id(...)` 해석 후 재사용하도록 구성.
+- 결과 문자열 의미는 유지하면서 반복 포맷 경로의 locale key 문자열 조회 오버헤드를 완화.
