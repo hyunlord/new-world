@@ -3,9 +3,10 @@ use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
 use sim_bridge::{
-    get_pathfind_backend_mode, pathfind_backend_dispatch_counts, pathfind_grid_batch_dispatch_bytes,
-    pathfind_grid_batch_xy_dispatch_bytes, resolve_pathfind_backend_mode,
-    reset_pathfind_backend_dispatch_counts, set_pathfind_backend_mode,
+    get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
+    pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,
+    resolve_pathfind_backend_mode, reset_pathfind_backend_dispatch_counts,
+    set_pathfind_backend_mode,
 };
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
@@ -580,8 +581,9 @@ fn run_pathfind_backend_smoke(args: &[String]) {
 
         let (cpu_dispatches, gpu_dispatches) = pathfind_backend_dispatch_counts();
         println!(
-            "[sim-test] pathfind-backend-smoke: mode={} configured={} resolved={} iterations={} checksum={:.5} cpu={} gpu={} total={}",
+            "[sim-test] pathfind-backend-smoke: mode={} has_gpu={} configured={} resolved={} iterations={} checksum={:.5} cpu={} gpu={} total={}",
             mode,
+            has_gpu_pathfind_backend(),
             get_pathfind_backend_mode(),
             resolve_pathfind_backend_mode(),
             iterations,

@@ -124,6 +124,11 @@ pub fn resolve_pathfind_backend_mode() -> &'static str {
     resolve_backend_mode(mode)
 }
 
+/// Returns whether GPU backend is available in this build.
+pub fn has_gpu_pathfind_backend() -> bool {
+    has_gpu_backend()
+}
+
 /// Pathfinding entry shape intended for future Godot bridge exposure.
 ///
 /// `walkable` uses byte flags where 0 = blocked, non-zero = walkable.
@@ -2673,12 +2678,13 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 mod tests {
     use super::{
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
-        dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, parse_pathfind_backend,
-        pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
-        pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
-        pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
-        reset_pathfind_backend_dispatch_counts, resolve_backend_mode, resolve_pathfind_backend_mode,
-        set_pathfind_backend_mode, PathfindError, PathfindInput,
+        dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, has_gpu_pathfind_backend,
+        parse_pathfind_backend, pathfind_backend_dispatch_counts, pathfind_from_flat,
+        pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
+        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
+        pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
+        reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
+        resolve_pathfind_backend_mode, set_pathfind_backend_mode, PathfindError, PathfindInput,
     };
     use godot::prelude::Vector2;
     use sim_systems::pathfinding::GridPos;
@@ -3172,6 +3178,7 @@ mod tests {
     #[test]
     fn public_backend_mode_helpers_roundtrip_and_validate() {
         let previous = get_pathfind_backend_mode().to_string();
+        assert_eq!(has_gpu_pathfind_backend(), cfg!(feature = "gpu"));
 
         assert!(set_pathfind_backend_mode("cpu"));
         assert_eq!(get_pathfind_backend_mode(), "cpu");

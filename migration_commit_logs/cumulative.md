@@ -1215,3 +1215,8 @@
 - `migration_verify`에 `MIGRATION_VERIFY_REPORT_JSON`을 추가해 실행 옵션과 아티팩트 경로를 단일 메타 JSON으로 출력.
 - `MIGRATION_AUDIT_REPORT_DIR` 사용 시 `migration_verify_report.json`을 기본 생성해 report dir 내 산출물 인덱스를 제공.
 - verify report는 상대 경로를 절대 경로로 정규화하고, 미사용 아티팩트는 `null`로 표준화해 후처리 파서 호환성을 강화.
+
+## Commit 246
+- `sim-bridge` 공개 API에 `has_gpu_pathfind_backend()`를 추가하고, 관련 테스트에서 feature-gated capability 값을 검증.
+- `sim-test` pathfind backend smoke 출력에 `has_gpu` 필드를 추가해 capability 상태를 벤치 로그로 노출.
+- `migration_verify` smoke 검증이 `has_gpu` 파싱/모드 간 일치/resolve 정책 일관성을 강제하도록 확장하고, `bench_report.json`에 `path_smoke.has_gpu`를 반영.

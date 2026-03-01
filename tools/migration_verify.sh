@@ -191,6 +191,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   PATH_SMOKE_TOTAL=""
   PATH_SMOKE_RESOLVED_AUTO=""
   PATH_SMOKE_RESOLVED_GPU=""
+  PATH_SMOKE_HAS_GPU=""
   STRESS_CHECKSUM=""
   NEEDS_CHECKSUM=""
   for value in "${path_iters}" "${stress_iters}" "${needs_iters}" "${path_backend_smoke_iters}"; do
@@ -440,6 +441,32 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     local configured_auto
     local configured_cpu
     local configured_gpu
+    local has_gpu_auto
+    local has_gpu_cpu
+    local has_gpu_gpu
+    has_gpu_auto="$(echo "${line_auto}" | sed -n 's/.*has_gpu=\([a-z]*\).*/\1/p')"
+    has_gpu_cpu="$(echo "${line_cpu}" | sed -n 's/.*has_gpu=\([a-z]*\).*/\1/p')"
+    has_gpu_gpu="$(echo "${line_gpu}" | sed -n 's/.*has_gpu=\([a-z]*\).*/\1/p')"
+    if [[ -z "${has_gpu_auto}" || -z "${has_gpu_cpu}" || -z "${has_gpu_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu parse failed" >&2
+      exit 1
+    fi
+    if [[ "${has_gpu_auto}" != "true" && "${has_gpu_auto}" != "false" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu value invalid: auto=${has_gpu_auto}" >&2
+      exit 1
+    fi
+    if [[ "${has_gpu_cpu}" != "true" && "${has_gpu_cpu}" != "false" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu value invalid: cpu=${has_gpu_cpu}" >&2
+      exit 1
+    fi
+    if [[ "${has_gpu_gpu}" != "true" && "${has_gpu_gpu}" != "false" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu value invalid: gpu=${has_gpu_gpu}" >&2
+      exit 1
+    fi
+    if [[ "${has_gpu_auto}" != "${has_gpu_cpu}" || "${has_gpu_cpu}" != "${has_gpu_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke has_gpu mismatch across modes: auto=${has_gpu_auto} cpu=${has_gpu_cpu} gpu=${has_gpu_gpu}" >&2
+      exit 1
+    fi
     configured_auto="$(echo "${line_auto}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
     configured_cpu="$(echo "${line_cpu}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
     configured_gpu="$(echo "${line_gpu}" | sed -n 's/.*configured=\([a-z]*\).*/\1/p')"
@@ -509,11 +536,23 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "[migration_verify] pathfind-backend-smoke resolved=gpu must have cpu=0 for gpu mode, got=${cpu_gpu}" >&2
       exit 1
     fi
+    if [[ "${has_gpu_auto}" == "true" ]]; then
+      if [[ "${resolved_auto}" != "gpu" || "${resolved_gpu}" != "gpu" ]]; then
+        echo "[migration_verify] pathfind-backend-smoke has_gpu=true expects resolved auto/gpu to be gpu, got_auto=${resolved_auto} got_gpu=${resolved_gpu}" >&2
+        exit 1
+      fi
+    else
+      if [[ "${resolved_auto}" != "cpu" || "${resolved_gpu}" != "cpu" ]]; then
+        echo "[migration_verify] pathfind-backend-smoke has_gpu=false expects resolved auto/gpu to be cpu, got_auto=${resolved_auto} got_gpu=${resolved_gpu}" >&2
+        exit 1
+      fi
+    fi
     PATH_SMOKE_CHECKSUM="${checksum_auto}"
     PATH_SMOKE_TOTAL="${expected_total}"
     PATH_SMOKE_RESOLVED_AUTO="${resolved_auto}"
     PATH_SMOKE_RESOLVED_GPU="${resolved_gpu}"
-    echo "[migration_verify] pathfind-backend-smoke checksums/dispatch/resolved ok: checksum=${checksum_auto} total_each=${expected_total} resolved_auto=${resolved_auto:-unknown} resolved_gpu=${resolved_gpu:-unknown}"
+    PATH_SMOKE_HAS_GPU="${has_gpu_auto}"
+    echo "[migration_verify] pathfind-backend-smoke checksums/dispatch/resolved ok: checksum=${checksum_auto} total_each=${expected_total} has_gpu=${has_gpu_auto} resolved_auto=${resolved_auto:-unknown} resolved_gpu=${resolved_gpu:-unknown}"
   }
 
   (
@@ -657,6 +696,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       fi
       smoke_checksum_json="null"
       smoke_total_json="null"
+      smoke_has_gpu_json="null"
       smoke_resolved_auto_json="null"
       smoke_resolved_gpu_json="null"
       if [[ -n "${PATH_SMOKE_CHECKSUM}" ]]; then
@@ -664,6 +704,9 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       fi
       if [[ -n "${PATH_SMOKE_TOTAL}" ]]; then
         smoke_total_json="${PATH_SMOKE_TOTAL}"
+      fi
+      if [[ -n "${PATH_SMOKE_HAS_GPU}" ]]; then
+        smoke_has_gpu_json="${PATH_SMOKE_HAS_GPU}"
       fi
       if [[ -n "${PATH_SMOKE_RESOLVED_AUTO}" ]]; then
         smoke_resolved_auto_json="\"${PATH_SMOKE_RESOLVED_AUTO}\""
@@ -694,6 +737,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   "path_smoke": {
     "checksum": ${smoke_checksum_json},
     "total_each": ${smoke_total_json},
+    "has_gpu": ${smoke_has_gpu_json},
     "resolved_auto": ${smoke_resolved_auto_json},
     "resolved_gpu": ${smoke_resolved_gpu_json}
   },
