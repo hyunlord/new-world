@@ -850,6 +850,30 @@ if [[ -n "${verify_report_json}" ]]; then
       echo "${size_bytes}"
     fi
   }
+  to_json_opt_bool_literal() {
+    local raw_value="$1"
+    if [[ "${raw_value}" == "true" || "${raw_value}" == "false" ]]; then
+      echo "${raw_value}"
+    else
+      echo "null"
+    fi
+  }
+  to_json_opt_int() {
+    local raw_value="$1"
+    if [[ "${raw_value}" =~ ^[0-9]+$ ]]; then
+      echo "${raw_value}"
+    else
+      echo "null"
+    fi
+  }
+  to_json_opt_string() {
+    local raw_value="$1"
+    if [[ -z "${raw_value}" ]]; then
+      echo "null"
+    else
+      echo "\"${raw_value}\""
+    fi
+  }
   assert_artifact_exists() {
     local artifact_name="$1"
     local raw_path="$2"
@@ -911,6 +935,21 @@ if [[ -n "${verify_report_json}" ]]; then
   audit_owner_policy_markdown_sha256="$(to_json_opt_sha256 "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_sha256="$(to_json_opt_sha256 "${audit_owner_policy_compare_report_json}")"
   bench_report_json_sha256="$(to_json_opt_sha256 "${bench_report_json}")"
+  audit_report_dir_value="$(to_json_opt_path "${audit_report_dir}")"
+  audit_compare_key_owner_policy_value="$(to_json_opt_string "${audit_compare_key_owner_policy}")"
+  compile_report_json_config_value="$(to_json_opt_path "${compile_report_json}")"
+  bench_report_json_config_value="$(to_json_opt_path "${bench_report_json}")"
+  bench_path_iters_value="$(to_json_opt_int "${path_iters-}")"
+  bench_stress_iters_value="$(to_json_opt_int "${stress_iters-}")"
+  bench_needs_iters_value="$(to_json_opt_int "${needs_iters-}")"
+  bench_path_backend_value="$(to_json_opt_string "${path_backend-}")"
+  bench_path_split_value="$(to_json_opt_bool_literal "${path_split-}")"
+  bench_path_backend_smoke_value="$(to_json_opt_bool_literal "${path_backend_smoke-}")"
+  bench_path_backend_smoke_iters_value="$(to_json_opt_int "${path_backend_smoke_iters-}")"
+  bench_path_backend_smoke_expect_has_gpu_value="$(to_json_opt_bool_literal "${path_backend_smoke_expect_has_gpu-}")"
+  bench_path_backend_smoke_expect_auto_value="$(to_json_opt_string "${path_backend_smoke_expect_auto-}")"
+  bench_path_backend_smoke_expect_gpu_value="$(to_json_opt_string "${path_backend_smoke_expect_gpu-}")"
+  bench_expected_resolved_backend_value="$(to_json_opt_string "${expected_resolved_backend-}")"
   compile_report_json_size="$(to_json_opt_size_bytes "${compile_report_json}")"
   audit_report_json_size="$(to_json_opt_size_bytes "${audit_report_json}")"
   audit_duplicate_report_json_size="$(to_json_opt_size_bytes "${audit_duplicate_report_json}")"
@@ -932,6 +971,26 @@ if [[ -n "${verify_report_json}" ]]; then
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},
   "assert_artifacts": ${verify_assert_artifacts},
   "total_duration_seconds": ${total_duration_seconds},
+  "config": {
+    "audit_report_dir": ${audit_report_dir_value},
+    "audit_compare_key_owner_policy": ${audit_compare_key_owner_policy_value},
+    "audit_refresh_key_owner_policy": ${audit_refresh_key_owner_policy},
+    "compile_report_json": ${compile_report_json_config_value},
+    "bench_report_json": ${bench_report_json_config_value},
+    "bench": {
+      "path_iters": ${bench_path_iters_value},
+      "stress_iters": ${bench_stress_iters_value},
+      "needs_iters": ${bench_needs_iters_value},
+      "path_backend": ${bench_path_backend_value},
+      "path_split": ${bench_path_split_value},
+      "path_backend_smoke": ${bench_path_backend_smoke_value},
+      "path_backend_smoke_iters": ${bench_path_backend_smoke_iters_value},
+      "path_backend_smoke_expect_has_gpu": ${bench_path_backend_smoke_expect_has_gpu_value},
+      "path_backend_smoke_expect_auto": ${bench_path_backend_smoke_expect_auto_value},
+      "path_backend_smoke_expect_gpu": ${bench_path_backend_smoke_expect_gpu_value},
+      "expected_resolved_backend": ${bench_expected_resolved_backend_value}
+    }
+  },
   "timings_seconds": {
     "rust_tests": ${STEP_TESTS_DURATION},
     "data_localization_extract": ${STEP_EXTRACT_DURATION},

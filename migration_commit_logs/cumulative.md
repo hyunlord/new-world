@@ -1265,3 +1265,8 @@
 - `migration_verify`가 전체 실행 시간과 단계별 소요 시간(초)을 측정해 `migration_verify_report.json`의 `total_duration_seconds`, `timings_seconds`로 기록하도록 확장.
 - 단계별 메트릭은 `rust_tests`, `data_localization_extract`, `localization_compile`, `localization_audit`, `rust_bench`(선택)를 포함.
 - `/tmp/worldsim_audit_artifacts17/migration_verify_report.json`에서 시간 메트릭 필드 반영을 확인.
+
+## Commit 256
+- `migration_verify_report.json`에 실행 설정 스냅샷 `config`를 추가해 audit/bench 옵션 조합을 구조화된 형태로 함께 기록.
+- bool/int/string/null 변환 헬퍼를 도입해 `WITH_BENCHES` on/off 모두에서 안전하게 설정값을 직렬화.
+- `/tmp/worldsim_audit_artifacts18/migration_verify_report.json`에서 bench 관련 기대값(`expected_resolved_backend`, `path_backend_smoke_expect_*`)을 포함한 config 필드 반영을 확인.
