@@ -36,6 +36,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
         "reputation",
         "economy",
         "tech",
+        "data_generated",
     ],
     "compiled_dir": "compiled",
 }

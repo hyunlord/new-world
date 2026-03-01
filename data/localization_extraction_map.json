@@ -1,0 +1,3943 @@
+{
+  "entries": [
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_JOY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.joy"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_TRUST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.trust"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_FEAR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.fear"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_SURPRISE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.surprise"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_SADNESS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.sadness"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_DISGUST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.disgust"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_ANGER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.anger"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/emotions/emotion_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_EMOTIONS_EMOTION_DEFINITION_ROOT_EMOTIONS_ANTICIPATION_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.emotions.anticipation"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SINCERE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[0]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SINCERE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[0]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DECEPTIVE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[1]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DECEPTIVE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[1]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FAIR_MINDED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[2]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FAIR_MINDED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[2]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CORRUPT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[3]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CORRUPT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[3]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FRUGAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[4]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FRUGAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[4]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GREEDY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[5]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GREEDY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[5]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_MODEST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[6]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_MODEST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[6]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SELF_IMPORTANT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[7]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SELF_IMPORTANT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[7]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FEARFUL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[8]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FEARFUL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[8]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FEARLESS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[9]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FEARLESS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[9]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ANXIOUS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[10]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ANXIOUS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[10]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CALM_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[11]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CALM_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[11]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DEPENDENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[12]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DEPENDENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[12]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SELF_RELIANT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[13]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SELF_RELIANT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[13]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SENTIMENTAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[14]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SENTIMENTAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[14]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_TOUGH_MINDED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[15]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_TOUGH_MINDED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[15]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CONFIDENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[16]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CONFIDENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[16]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_INSECURE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[17]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_INSECURE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[17]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_BOLD_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[18]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_BOLD_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[18]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SHY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[19]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SHY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[19]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GREGARIOUS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[20]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GREGARIOUS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[20]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SOLITARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[21]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_SOLITARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[21]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ENERGETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[22]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ENERGETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[22]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_RESERVED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[23]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_RESERVED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[23]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FORGIVING_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[24]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FORGIVING_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[24]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_VENGEFUL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[25]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_VENGEFUL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[25]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GENTLE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[26]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_GENTLE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[26]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_HARSH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[27]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_HARSH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[27]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FLEXIBLE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[28]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_FLEXIBLE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[28]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_STUBBORN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[29]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_STUBBORN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[29]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PATIENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[30]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PATIENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[30]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_HOT_TEMPERED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[31]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_HOT_TEMPERED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[31]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ORGANIZED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[32]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_ORGANIZED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[32]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DISORGANIZED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[33]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_DISORGANIZED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[33]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_INDUSTRIOUS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[34]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_INDUSTRIOUS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[34]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_LAZY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[35]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_LAZY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[35]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PERFECTIONIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[36]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PERFECTIONIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[36]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CARELESS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[37]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CARELESS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[37]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PRUDENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[38]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_PRUDENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[38]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_RECKLESS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[39]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_RECKLESS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[39]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_AESTHETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[40]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_AESTHETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[40]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_UTILITARIAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[41]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_UTILITARIAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[41]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CURIOUS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[42]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CURIOUS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[42]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_APATHETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[43]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_APATHETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[43]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CREATIVE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[44]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CREATIVE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[44]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CONVENTIONAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[45]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_CONVENTIONAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[45]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_NONCONFORMIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[46]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_NONCONFORMIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[46]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_TRADITIONALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[47]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_F_TRADITIONALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[47]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_HH_TENDER_CONSCIENCE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[48]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_HH_TENDER_CONSCIENCE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[48]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_HL_STOIC_HONEST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[49]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_HL_STOIC_HONEST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[49]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_LH_ANXIOUS_SWINDLER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[50]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_LH_ANXIOUS_SWINDLER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[50]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_LL_COLD_EXPLOITER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[51]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HE_LL_COLD_EXPLOITER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[51]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_HH_HONEST_LEADER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[52]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_HH_HONEST_LEADER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[52]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_HL_HONEST_RECLUSE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[53]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_HL_HONEST_RECLUSE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[53]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_LH_CHARISMATIC_CON_ARTIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[54]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_LH_CHARISMATIC_CON_ARTIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[54]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_LL_SLY_LONER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[55]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HX_LL_SLY_LONER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[55]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_HH_KIND_HEARTED_HONEST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[56]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_HH_KIND_HEARTED_HONEST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[56]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_HL_STERN_JUDGE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[57]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_HL_STERN_JUDGE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[57]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_LH_SMILING_EXPLOITER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[58]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_LH_SMILING_EXPLOITER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[58]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_LL_CRUEL_RAIDER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[59]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HA_LL_CRUEL_RAIDER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[59]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_HH_HONEST_ADMINISTRATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[60]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_HH_HONEST_ADMINISTRATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[60]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_HL_WELL_MEANING_SLACKER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[61]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_HL_WELL_MEANING_SLACKER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[61]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_LH_CALCULATING_SCHEMER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[62]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_LH_CALCULATING_SCHEMER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[62]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_LL_IRRESPONSIBLE_CHEAT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[63]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HC_LL_IRRESPONSIBLE_CHEAT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[63]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_HH_IDEALISTIC_INNOVATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[64]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_HH_IDEALISTIC_INNOVATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[64]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_HL_TRADITIONAL_MORALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[65]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_HL_TRADITIONAL_MORALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[65]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_LH_CUNNING_INVENTOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[66]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_LH_CUNNING_INVENTOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[66]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_LL_CORRUPT_TRADITIONALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[67]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HO_LL_CORRUPT_TRADITIONALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[67]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_HH_EMOTIONAL_SOCIALITE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[68]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_HH_EMOTIONAL_SOCIALITE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[68]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_HL_TIMID_RECLUSE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[69]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_HL_TIMID_RECLUSE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[69]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_LH_DAREDEVIL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[70]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_LH_DAREDEVIL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[70]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_LL_STOIC_LONER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[71]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EX_LL_STOIC_LONER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[71]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_HH_COMPASSIONATE_RECONCILER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[72]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_HH_COMPASSIONATE_RECONCILER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[72]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_HL_TIMID_HELPER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[73]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_HL_TIMID_HELPER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[73]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_LH_VOLATILE_BULLY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[74]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_LH_VOLATILE_BULLY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[74]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_LL_CALLOUS_ABUSER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[75]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EA_LL_CALLOUS_ABUSER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[75]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_HH_ANXIOUS_PLANNER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[76]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_HH_ANXIOUS_PLANNER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[76]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_HL_ANXIOUS_DRIFTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[77]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_HL_ANXIOUS_DRIFTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[77]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_LH_COOL_STRATEGIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[78]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_LH_COOL_STRATEGIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[78]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_LL_RECKLESS_DRIFTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[79]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EC_LL_RECKLESS_DRIFTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[79]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_HH_SENSITIVE_ARTIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[80]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_HH_SENSITIVE_ARTIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[80]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_HL_ANXIOUS_TRADITIONALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[81]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_HL_ANXIOUS_TRADITIONALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[81]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_LH_COLD_EXPERIMENTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[82]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_LH_COLD_EXPERIMENTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[82]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_LL_UNFEELING_REALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[83]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_EO_LL_UNFEELING_REALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[83]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_HH_SOCIAL_PEACEMAKER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[84]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_HH_SOCIAL_PEACEMAKER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[84]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_HL_DOMINATING_AGITATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[85]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_HL_DOMINATING_AGITATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[85]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_LH_QUIET_HELPER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[86]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_LH_QUIET_HELPER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[86]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_LL_ISOLATED_BRAWLER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[87]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XA_LL_ISOLATED_BRAWLER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[87]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_HH_COMPETENT_LEADER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[88]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_HH_COMPETENT_LEADER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[88]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_HL_CHARMING_IMPROVISER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[89]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_HL_CHARMING_IMPROVISER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[89]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_LH_SILENT_CRAFTSMAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[90]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_LH_SILENT_CRAFTSMAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[90]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_LL_APATHETIC_RECLUSE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[91]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XC_LL_APATHETIC_RECLUSE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[91]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_HH_CHARISMATIC_VISIONARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[92]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_HH_CHARISMATIC_VISIONARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[92]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_HL_POPULIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[93]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_HL_POPULIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[93]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_LH_SOLITARY_SCHOLAR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[94]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_LH_SOLITARY_SCHOLAR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[94]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_LL_WALLFLOWER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[95]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_XO_LL_WALLFLOWER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[95]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_HH_RELIABLE_TEAMWORKER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[96]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_HH_RELIABLE_TEAMWORKER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[96]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_HL_KIND_DREAMER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[97]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_HL_KIND_DREAMER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[97]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_LH_STRICT_COMMANDER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[98]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_LH_STRICT_COMMANDER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[98]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_LL_UNRULY_BRUTE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[99]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AC_LL_UNRULY_BRUTE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[99]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_HH_OPEN_MINDED_HUMANITARIAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[100]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_HH_OPEN_MINDED_HUMANITARIAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[100]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_HL_BENEVOLENT_TRADITIONALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[101]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_HL_BENEVOLENT_TRADITIONALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[101]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_LH_CYNICAL_HERETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[102]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_LH_CYNICAL_HERETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[102]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_LL_RIGID_OPPRESSOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[103]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AO_LL_RIGID_OPPRESSOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[103]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_HH_METHODICAL_INVENTOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[104]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_HH_METHODICAL_INVENTOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[104]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_HL_CONSERVATIVE_MANAGER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[105]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_HL_CONSERVATIVE_MANAGER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[105]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_LH_FREE_SPIRIT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[106]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_LH_FREE_SPIRIT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[106]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_LL_CARELESS_WASTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[107]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CO_LL_CARELESS_WASTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[107]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PSYCHOPATH_PRIMARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[108]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PSYCHOPATH_PRIMARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[108]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PSYCHOPATH_SECONDARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[109]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PSYCHOPATH_SECONDARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[109]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_MACHIAVELLIAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[110]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_MACHIAVELLIAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[110]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_NARCISSIST_GRANDIOSE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[111]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_NARCISSIST_GRANDIOSE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[111]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_NARCISSIST_VULNERABLE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[112]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_NARCISSIST_VULNERABLE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[112]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_SADIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[113]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_SADIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[113]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CON_ARTIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[114]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CON_ARTIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[114]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CULT_LEADER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[115]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CULT_LEADER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[115]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_OPPORTUNIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[116]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_OPPORTUNIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[116]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_BULLY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[117]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_BULLY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[117]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CALLOUS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[118]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CALLOUS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[118]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_BACKSTABBER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[119]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_BACKSTABBER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[119]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CORRUPT_OFFICIAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[120]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_CORRUPT_OFFICIAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[120]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PREDATORY_RAIDER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[121]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_PREDATORY_RAIDER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[121]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_HISTRIONIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[122]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_D_HISTRIONIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[122]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SAINT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[123]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SAINT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[123]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SAINTESS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[124]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SAINTESS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[124]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_TYRANT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[125]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_TYRANT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[125]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COLD_DICTATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[126]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COLD_DICTATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[126]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRATEGIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[127]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRATEGIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[127]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MASTER_CRAFTSMAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[128]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MASTER_CRAFTSMAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[128]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_VISIONARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[129]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_VISIONARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[129]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HERMIT_SAGE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[130]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HERMIT_SAGE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[130]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_RECONCILER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[131]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_RECONCILER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[131]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BERSERKER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[132]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BERSERKER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[132]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CAREGIVER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[133]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CAREGIVER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[133]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ADVENTURER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[134]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ADVENTURER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[134]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASCETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[135]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASCETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[135]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_FREE_SPIRIT_EXTRO_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[136]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_FREE_SPIRIT_EXTRO_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[136]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ZEALOT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[137]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ZEALOT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[137]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_POLYMATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[138]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_POLYMATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[138]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_WALLFLOWER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[139]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_WALLFLOWER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[139]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BORN_LEADER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[140]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BORN_LEADER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[140]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_TRICKSTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[141]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_TRICKSTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[141]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCIENTIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[142]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCIENTIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[142]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_REVOLUTIONARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[143]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_REVOLUTIONARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[143]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DEMOCRATIC_LEADER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[144]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DEMOCRATIC_LEADER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[144]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ARTIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[145]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ARTIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[145]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SURVIVALIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[146]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SURVIVALIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[146]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PHILANTHROPIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[147]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PHILANTHROPIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[147]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MISER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[148]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MISER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[148]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPENDTHRIFT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[149]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPENDTHRIFT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[149]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPECULATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[150]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPECULATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[150]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BORN_MERCHANT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[151]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BORN_MERCHANT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[151]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COLLECTOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[152]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COLLECTOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[152]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ARCHITECT_MASTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[153]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ARCHITECT_MASTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[153]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ENGINEER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[154]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ENGINEER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[154]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_LABOR_HERO_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[155]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_LABOR_HERO_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[155]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CHEF_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[156]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_CHEF_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[156]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BUILDER_FOREMAN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[157]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BUILDER_FOREMAN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[157]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DIPLOMAT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[158]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DIPLOMAT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[158]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPYMASTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[159]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SPYMASTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[159]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASSASSIN_INSTINCT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[160]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASSASSIN_INSTINCT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[160]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PACIFIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[161]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PACIFIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[161]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MERCENARY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[162]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MERCENARY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[162]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DEFENDER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[163]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_DEFENDER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[163]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASSAULT_CAPTAIN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[164]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ASSAULT_CAPTAIN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[164]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRATEGIST_GENERAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[165]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRATEGIST_GENERAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[165]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_GOSSIP_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[166]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_GOSSIP_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[166]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COUNSELOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[167]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_COUNSELOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[167]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STORYTELLER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[168]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STORYTELLER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[168]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MYSTIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[169]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MYSTIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[169]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SKEPTIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[170]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SKEPTIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[170]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PRAGMATIST_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[171]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PRAGMATIST_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[171]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SETTLER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[172]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SETTLER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[172]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_NOMAD_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[173]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_NOMAD_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[173]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HEALER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[174]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HEALER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[174]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ANIMAL_TAMER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[175]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ANIMAL_TAMER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[175]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCOUT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[176]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCOUT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[176]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRICT_COMMANDER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[177]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_STRICT_COMMANDER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[177]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BACKROOM_BROKER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[178]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_BACKROOM_BROKER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[178]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCHOLAR_SCRIBE_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[179]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_SCHOLAR_SCRIBE_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[179]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_THIEF_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[180]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_THIEF_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[180]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PEACEKEEPER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[181]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_PEACEKEEPER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[181]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AGITATOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[182]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_AGITATOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[182]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_INVENTOR_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[183]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_INVENTOR_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[183]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ENCYCLOPEDIA_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[184]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_ENCYCLOPEDIA_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[184]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HERETIC_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[185]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_HERETIC_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[185]"
+    },
+    {
+      "field": "name",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MEDIATOR_KING_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[186]"
+    },
+    {
+      "field": "description",
+      "file": "data/species/human/personality/trait_definitions.json",
+      "generated_key": "DATA_C_MEDIATOR_KING_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$[186]"
+    },
+    {
+      "field": "species_name",
+      "file": "data/species/human/species_definition.json",
+      "generated_key": "DATA_DATA_SPECIES_HUMAN_SPECIES_DEFINITION_ROOT_SPECIES_NAME",
+      "has_en_value": false,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNER_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.partner_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNER_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.partner_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILD_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.child_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILD_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.child_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARENT_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.parent_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARENT_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.parent_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SIBLING_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.sibling_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SIBLING_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.sibling_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CLOSE_FRIEND_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.close_friend_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CLOSE_FRIEND_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.close_friend_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ACQUAINTANCE_DEATH_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.acquaintance_death"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ACQUAINTANCE_DEATH_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.acquaintance_death"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_MATERNAL_DEATH_PARTNER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.maternal_death_partner"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_MATERNAL_DEATH_PARTNER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.maternal_death_partner"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STILLBORN_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.stillborn"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STILLBORN_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.stillborn"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ARGUMENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.argument"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ARGUMENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.argument"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BETRAYAL_DISCOVERED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.betrayal_discovered"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BETRAYAL_DISCOVERED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.betrayal_discovered"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_REJECTION_SOCIAL_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.rejection_social"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_REJECTION_SOCIAL_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.rejection_social"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNERSHIP_BREAKUP_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.partnership_breakup"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNERSHIP_BREAKUP_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.partnership_breakup"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_EXILE_BANISHMENT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.exile_banishment"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_EXILE_BANISHMENT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.exile_banishment"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_THEFT_VICTIM_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.theft_victim"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_THEFT_VICTIM_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.theft_victim"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SEVERE_INJURY_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.severe_injury"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SEVERE_INJURY_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.severe_injury"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STARVATION_CRISIS_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.starvation_crisis"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STARVATION_CRISIS_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.starvation_crisis"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PREDATOR_ENCOUNTER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.predator_encounter"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PREDATOR_ENCOUNTER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.predator_encounter"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_COMBAT_ENGAGED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.combat_engaged"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_COMBAT_ENGAGED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.combat_engaged"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_FORCED_ACTION_BY_GOD_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.forced_action_by_god"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_FORCED_ACTION_BY_GOD_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.forced_action_by_god"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_OVERCROWDING_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.overcrowding"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_OVERCROWDING_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.overcrowding"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_MOTHER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.childbirth_mother"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_MOTHER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.childbirth_mother"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_FATHER_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.childbirth_father"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_FATHER_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.childbirth_father"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SUCCESSFUL_HUNT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.successful_hunt"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SUCCESSFUL_HUNT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.successful_hunt"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BUILDING_COMPLETED_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.building_completed"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BUILDING_COMPLETED_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.building_completed"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_DEHYDRATION_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.dehydration"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_DEHYDRATION_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.dehydration"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_HYPOTHERMIA_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.hypothermia"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_HYPOTHERMIA_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.hypothermia"
+    },
+    {
+      "field": "name",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CONSTANT_THREAT_NAME",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.constant_threat"
+    },
+    {
+      "field": "description",
+      "file": "data/stressor_events.json",
+      "generated_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CONSTANT_THREAT_DESCRIPTION",
+      "has_en_value": true,
+      "has_ko_value": false,
+      "has_kr_value": true,
+      "json_path": "$.constant_threat"
+    }
+  ],
+  "summary": {
+    "en_empty_count": 1,
+    "entry_count": 437,
+    "generated_key_count": 437,
+    "ko_empty_count": 0
+  }
+}

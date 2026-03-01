@@ -49,3 +49,8 @@
 - `sim-bridge`에 `gpu` feature 플래그와 `has_gpu_pathfinding()` capability API 추가.
 - `SimBridge` GPU 선택 로직을 모드 + 네이티브 capability 이중 체크로 강화.
 - GPU 미지원 빌드에서 CPU fallback 경로를 더 명시적으로 보장.
+
+## Commit 011
+- `tools/data_localization_extract.py`로 data inline 다국어 -> locale key 자동 추출 경로 추가.
+- `data_generated` 카테고리를 manifest/컴파일/런타임 로더에 통합.
+- `Locale.tr_data()`를 `*_key` 일반 패턴까지 확장해 점진 이관 호환성 강화.

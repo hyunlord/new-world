@@ -24,7 +24,7 @@ var _strings: Dictionary = {}
 var _flat_strings: Dictionary = {}
 
 ## All category file names (no extension)
-var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech"]
+var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
 
 
 func _ready() -> void:
@@ -109,6 +109,9 @@ func tr_data(data: Dictionary, field: String = "name") -> String:
 		return ltr(str(data["name_key"]))
 	if field == "description" and "desc_key" in data:
 		return ltr(str(data["desc_key"]))
+	var key_lookup: String = field + "_key"
+	if key_lookup in data:
+		return ltr(str(data[key_lookup]))
 	var key_direct = field + "_" + current_locale
 	if key_direct in data:
 		return str(data[key_direct])

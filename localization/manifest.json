@@ -18,7 +18,8 @@
     "childhood",
     "reputation",
     "economy",
-    "tech"
+    "tech",
+    "data_generated"
   ],
   "compiled_dir": "compiled"
 }
