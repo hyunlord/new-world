@@ -1,903 +1,1098 @@
 {
-  "_comment": "==========================================================",
-  "_comment2": "카테고리 1: 사망/상실 (Death & Loss)",
-  "_comment3": "학술: Holmes & Rahe — 배우자 사망은 최고 스트레스 사건",
-  "_comment4": "COR: is_loss=true → 2.5배 적용",
-  "_comment5": "==========================================================",
-
-  "partner_death": {
-    "name_kr": "파트너 사망",
-    "name_en": "Partner Death",
-    "description_kr": "파트너의 죽음으로 발생하는 가장 큰 즉각 스트레스 사건 중 하나. 유대 강도에 비례하며 목격 시, 갑작스러울수록 충격이 커진다.",
-    "description_en": "One of the highest-impact loss events, scaling with bond strength. Witnessing the death or sudden unexpectedness significantly amplifies the stress.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 450.0,
-    "base_per_tick": 10.0,
-    "base_decay_rate": 0.01,
-    "personality_modifiers": {
-      "E_axis": {"weight": 0.40, "direction": "high_amplifies"},
-      "E_sentimentality": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_dependence": {"weight": 0.20, "direction": "high_amplifies"},
-      "A_axis": {"weight": 0.10, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.3,
-        "f_dependent": 1.25,
-        "f_tough_minded": 0.7,
-        "f_self_reliant": 0.75,
-        "d_psychopath_primary": 0.15,
-        "d_psychopath_secondary": 0.30,
-        "d_callous": 0.25,
-        "d_narcissist_grandiose": 0.50,
-        "c_stoic_loner": 0.60,
-        "c_compassionate_reconciler": 1.35,
-        "c_healer": 1.20
-      }
+    "_comment": "==========================================================",
+    "_comment2": "카테고리 1: 사망/상실 (Death & Loss)",
+    "_comment3": "학술: Holmes & Rahe — 배우자 사망은 최고 스트레스 사건",
+    "_comment4": "COR: is_loss=true → 2.5배 적용",
+    "_comment5": "==========================================================",
+    "partner_death": {
+        "name_kr": "파트너 사망",
+        "name_en": "Partner Death",
+        "description_kr": "파트너의 죽음으로 발생하는 가장 큰 즉각 스트레스 사건 중 하나. 유대 강도에 비례하며 목격 시, 갑작스러울수록 충격이 커진다.",
+        "description_en": "One of the highest-impact loss events, scaling with bond strength. Witnessing the death or sudden unexpectedness significantly amplifies the stress.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 450.0,
+        "base_per_tick": 10.0,
+        "base_decay_rate": 0.01,
+        "personality_modifiers": {
+            "E_axis": {
+                "weight": 0.4,
+                "direction": "high_amplifies"
+            },
+            "E_sentimentality": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_dependence": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "A_axis": {
+                "weight": 0.1,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.3,
+                "f_dependent": 1.25,
+                "f_tough_minded": 0.7,
+                "f_self_reliant": 0.75,
+                "d_psychopath_primary": 0.15,
+                "d_psychopath_secondary": 0.3,
+                "d_callous": 0.25,
+                "d_narcissist_grandiose": 0.5,
+                "c_stoic_loner": 0.6,
+                "c_compassionate_reconciler": 1.35,
+                "c_healer": 1.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.5,
+            "max_mult": 1.3
+        },
+        "context_modifiers": {
+            "witnessed_death": 1.3,
+            "sudden_unexpected": 1.2,
+            "has_children_together": 1.15,
+            "was_estranged": 0.4
+        },
+        "emotion_inject": {
+            "sadness_fast": 80,
+            "fear_fast": 30,
+            "anger_fast": 20,
+            "trust_slow": -25,
+            "joy_slow": -40
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNER_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNER_DEATH_DESCRIPTION"
     },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.5,
-      "max_mult": 1.3
+    "child_death": {
+        "name_kr": "자녀 사망",
+        "name_en": "Child Death",
+        "description_kr": "게임 내 최고 즉각 스트레스 수치를 유발하는 사건. 자녀의 나이가 많을수록, 목격할수록 충격이 크다.",
+        "description_en": "The highest base instant stress event in the simulation. Impact scales with child's age at death and whether the parent witnessed it.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 550.0,
+        "base_per_tick": 12.0,
+        "base_decay_rate": 0.008,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.35,
+                "direction": "high_amplifies"
+            },
+            "E_axis": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "A_gentleness": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.4,
+                "f_tough_minded": 0.65,
+                "c_caregiver": 1.5,
+                "c_healer": 1.3,
+                "d_psychopath_primary": 0.1,
+                "d_callous": 0.2,
+                "c_stoic_loner": 0.55
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.3,
+            "max_mult": 1.4
+        },
+        "context_modifiers": {
+            "child_age_infant": 0.85,
+            "child_age_toddler": 1.0,
+            "child_age_child": 1.15,
+            "child_age_teen": 1.25,
+            "witnessed_death": 1.35,
+            "only_child": 1.2
+        },
+        "emotion_inject": {
+            "sadness_fast": 90,
+            "fear_fast": 20,
+            "anger_fast": 35,
+            "trust_slow": -20,
+            "joy_slow": -50
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILD_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILD_DEATH_DESCRIPTION"
     },
-    "context_modifiers": {
-      "witnessed_death": 1.3,
-      "sudden_unexpected": 1.2,
-      "has_children_together": 1.15,
-      "was_estranged": 0.4
+    "parent_death": {
+        "name_kr": "부모 사망",
+        "name_en": "Parent Death",
+        "description_kr": "부모 사망에 의한 스트레스. 에이전트가 어릴수록 충격이 훨씬 크며, 마지막 생존 부모인 경우 추가 가중.",
+        "description_en": "Stress from losing a parent. Impact is dramatically higher for child-aged agents and when the deceased was the last surviving parent.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 350.0,
+        "base_per_tick": 8.0,
+        "base_decay_rate": 0.012,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.3,
+                "direction": "high_amplifies"
+            },
+            "E_dependence": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_axis": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.3,
+                "f_dependent": 1.35,
+                "f_self_reliant": 0.7,
+                "f_tough_minded": 0.65,
+                "d_psychopath_primary": 0.15,
+                "d_callous": 0.25,
+                "c_caregiver": 1.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.4,
+            "max_mult": 1.3
+        },
+        "context_modifiers": {
+            "agent_is_child": 1.85,
+            "agent_is_teen": 1.4,
+            "agent_is_adult": 1.0,
+            "agent_is_elder": 0.75,
+            "last_surviving_parent": 1.3,
+            "was_estranged": 0.35
+        },
+        "emotion_inject": {
+            "sadness_fast": 70,
+            "fear_fast": 25,
+            "trust_slow": -15,
+            "joy_slow": -30
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARENT_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARENT_DEATH_DESCRIPTION"
     },
-    "emotion_inject": {
-      "sadness_fast": 80,
-      "fear_fast": 30,
-      "anger_fast": 20,
-      "trust_slow": -25,
-      "joy_slow": -40
+    "sibling_death": {
+        "name_kr": "형제자매 사망",
+        "name_en": "Sibling Death",
+        "description_kr": "형제자매의 죽음으로 인한 스트레스. 어린 시절 경험할수록 충격이 더 크다.",
+        "description_en": "Stress from losing a sibling, amplified if the agent is a child. Scales with bond strength.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 250.0,
+        "base_per_tick": 6.0,
+        "base_decay_rate": 0.015,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_axis": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.25,
+                "d_psychopath_primary": 0.2,
+                "d_callous": 0.3
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.3,
+            "max_mult": 1.3
+        },
+        "context_modifiers": {
+            "agent_is_child": 1.5
+        },
+        "emotion_inject": {
+            "sadness_fast": 55,
+            "fear_fast": 15,
+            "trust_slow": -10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SIBLING_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SIBLING_DEATH_DESCRIPTION"
+    },
+    "close_friend_death": {
+        "name_kr": "절친 사망",
+        "name_en": "Close Friend Death",
+        "description_kr": "절친한 친구의 죽음. 유대 강도에 따라 충격이 크게 달라지며, 반사회적 성향은 충격을 줄인다.",
+        "description_en": "Loss of a close friend, scaling strongly with bond strength. Callous and psychopathic traits significantly reduce impact.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 200.0,
+        "base_per_tick": 5.0,
+        "base_decay_rate": 0.02,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "X_sociability": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.2,
+                "d_psychopath_primary": 0.2,
+                "d_callous": 0.3
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.2,
+            "max_mult": 1.5
+        },
+        "context_modifiers": {},
+        "emotion_inject": {
+            "sadness_fast": 45,
+            "trust_slow": -10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CLOSE_FRIEND_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CLOSE_FRIEND_DEATH_DESCRIPTION"
+    },
+    "acquaintance_death": {
+        "name_kr": "지인 사망",
+        "name_en": "Acquaintance Death",
+        "description_kr": "지인의 죽음으로 인한 낮은 수준의 스트레스. 같은 정착지 거주 시 소폭 증가.",
+        "description_en": "Low-intensity stress from the death of an acquaintance. Slightly amplified if they lived in the same settlement.",
+        "category": "death",
+        "is_loss": false,
+        "base_instant": 60.0,
+        "base_per_tick": 1.5,
+        "base_decay_rate": 0.05,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.15,
+                "d_psychopath_primary": 0.1,
+                "d_callous": 0.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.1,
+            "max_mult": 1.0
+        },
+        "context_modifiers": {
+            "same_settlement": 1.1
+        },
+        "emotion_inject": {
+            "sadness_fast": 20,
+            "fear_fast": 10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ACQUAINTANCE_DEATH_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ACQUAINTANCE_DEATH_DESCRIPTION"
+    },
+    "maternal_death_partner": {
+        "name_kr": "출산 중 파트너 사망",
+        "name_en": "Partner Died in Childbirth",
+        "description_kr": "파트너가 출산 중 사망하는 복합 트라우마 사건. 신생아도 함께 사망했을 경우 충격이 대폭 증가한다.",
+        "description_en": "A compound trauma of losing a partner during childbirth. If the newborn also died, the stress amplification is severe.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 500.0,
+        "base_per_tick": 12.0,
+        "base_decay_rate": 0.008,
+        "personality_modifiers": {
+            "E_axis": {
+                "weight": 0.35,
+                "direction": "high_amplifies"
+            },
+            "E_sentimentality": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "d_psychopath_primary": 0.15,
+                "d_callous": 0.25,
+                "c_caregiver": 1.3
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.6,
+            "max_mult": 1.3
+        },
+        "context_modifiers": {
+            "newborn_survived": 0.9,
+            "newborn_also_died": 1.4
+        },
+        "emotion_inject": {
+            "sadness_fast": 90,
+            "fear_fast": 40,
+            "anger_fast": 30,
+            "trust_slow": -30,
+            "joy_slow": -50
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_MATERNAL_DEATH_PARTNER_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_MATERNAL_DEATH_PARTNER_DESCRIPTION"
+    },
+    "stillborn": {
+        "name_kr": "사산",
+        "name_en": "Stillborn",
+        "description_kr": "아이를 사산하는 트라우마. 첫 임신인 경우 충격이 더 크며 슬픔과 분노가 주요 감정으로 주입된다.",
+        "description_en": "The trauma of a stillbirth. Amplified for first pregnancies; primary injected emotions are sadness and anger.",
+        "category": "death",
+        "is_loss": true,
+        "base_instant": 350.0,
+        "base_per_tick": 8.0,
+        "base_decay_rate": 0.015,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.35,
+                "direction": "high_amplifies"
+            },
+            "E_axis": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sentimental": 1.35,
+                "c_caregiver": 1.3,
+                "d_psychopath_primary": 0.15,
+                "d_callous": 0.25
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "first_pregnancy": 1.25
+        },
+        "emotion_inject": {
+            "sadness_fast": 75,
+            "anger_fast": 20,
+            "joy_slow": -40
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STILLBORN_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STILLBORN_DESCRIPTION"
+    },
+    "_comment6": "==========================================================",
+    "_comment7": "카테고리 2: 사회적 사건 (Social Events)",
+    "_comment8": "==========================================================",
+    "argument": {
+        "name_kr": "말다툼",
+        "name_en": "Argument",
+        "description_kr": "타인과의 말다툼으로 인한 낮은 스트레스. 인내심이 낮거나 고집이 강한 성격에서 더 큰 영향을 받는다.",
+        "description_en": "Low-level stress from an argument. Patience and calmness traits reduce impact; stubbornness and hot temper amplify it.",
+        "category": "social",
+        "is_loss": false,
+        "base_instant": 40.0,
+        "base_per_tick": 1.0,
+        "base_decay_rate": 0.08,
+        "personality_modifiers": {
+            "A_patience": {
+                "weight": 0.3,
+                "direction": "low_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "A_axis": {
+                "weight": 0.15,
+                "direction": "low_amplifies"
+            },
+            "traits": {
+                "f_hot_tempered": 1.3,
+                "f_patient": 0.6,
+                "f_calm": 0.65,
+                "f_stubborn": 1.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.5,
+            "max_mult": 1.5
+        },
+        "context_modifiers": {
+            "public_argument": 1.25,
+            "with_partner": 1.2,
+            "with_parent": 1.15
+        },
+        "emotion_inject": {
+            "anger_fast": 30,
+            "sadness_fast": 10,
+            "trust_slow": -8
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ARGUMENT_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_ARGUMENT_DESCRIPTION"
+    },
+    "betrayal_discovered": {
+        "name_kr": "배신 발각",
+        "name_en": "Betrayal Discovered",
+        "description_kr": "신뢰하던 관계에서 배신을 발견하는 사건. 파트너나 절친에게 배신당할수록 충격이 크며 신뢰 감소가 장기간 지속된다.",
+        "description_en": "The discovery of betrayal by a trusted individual. Amplified significantly when the betrayer is a partner or close friend; causes lasting trust reduction.",
+        "category": "social",
+        "is_loss": true,
+        "base_instant": 200.0,
+        "base_per_tick": 5.0,
+        "base_decay_rate": 0.02,
+        "personality_modifiers": {
+            "H_sincerity": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "A_axis": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_sincere": 1.3,
+                "f_anxious": 1.2,
+                "d_psychopath_primary": 0.3,
+                "d_machiavellian": 0.5
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.3,
+            "max_mult": 1.8
+        },
+        "context_modifiers": {
+            "by_partner": 1.5,
+            "by_close_friend": 1.3
+        },
+        "emotion_inject": {
+            "anger_fast": 60,
+            "sadness_fast": 40,
+            "disgust_fast": 30,
+            "trust_slow": -40,
+            "surprise_fast": 25
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BETRAYAL_DISCOVERED_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BETRAYAL_DISCOVERED_DESCRIPTION"
+    },
+    "rejection_social": {
+        "name_kr": "사회적 거부",
+        "name_en": "Social Rejection",
+        "description_kr": "집단 또는 개인으로부터 거부당하는 사건. 낭만적 거부나 공개적 거부일수록 충격이 크며, 자존감이 낮을수록 취약하다.",
+        "description_en": "Being excluded or rejected by a group or individual. Public or romantic rejection dramatically increases impact; low social self-esteem amplifies vulnerability.",
+        "category": "social",
+        "is_loss": false,
+        "base_instant": 80.0,
+        "base_per_tick": 2.0,
+        "base_decay_rate": 0.04,
+        "personality_modifiers": {
+            "X_social_self_esteem": {
+                "weight": 0.3,
+                "direction": "low_amplifies"
+            },
+            "E_dependence": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_insecure": 1.35,
+                "f_dependent": 1.25,
+                "f_confident": 0.65,
+                "f_self_reliant": 0.7
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "public_rejection": 1.3,
+            "romantic_rejection": 1.4
+        },
+        "emotion_inject": {
+            "sadness_fast": 35,
+            "anger_fast": 15,
+            "fear_fast": 10,
+            "trust_slow": -12
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_REJECTION_SOCIAL_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_REJECTION_SOCIAL_DESCRIPTION"
+    },
+    "partnership_breakup": {
+        "name_kr": "결별",
+        "name_en": "Partnership Breakup",
+        "description_kr": "파트너 관계의 종료. 자신이 먼저 이별을 결정했다면 충격이 절반 이하로 감소하며, 의존 성향이 강할수록 피해가 크다.",
+        "description_en": "Dissolution of a romantic partnership. Self-initiated breakups reduce impact significantly; high dependence traits amplify the damage.",
+        "category": "social",
+        "is_loss": true,
+        "base_instant": 250.0,
+        "base_per_tick": 6.0,
+        "base_decay_rate": 0.02,
+        "personality_modifiers": {
+            "E_dependence": {
+                "weight": 0.3,
+                "direction": "high_amplifies"
+            },
+            "E_sentimentality": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_dependent": 1.35,
+                "f_self_reliant": 0.65,
+                "d_psychopath_primary": 0.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.4,
+            "max_mult": 1.4
+        },
+        "context_modifiers": {
+            "initiated_by_other": 1.3,
+            "initiated_by_self": 0.6
+        },
+        "emotion_inject": {
+            "sadness_fast": 60,
+            "anger_fast": 30,
+            "trust_slow": -25,
+            "joy_slow": -30
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNERSHIP_BREAKUP_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PARTNERSHIP_BREAKUP_DESCRIPTION"
+    },
+    "exile_banishment": {
+        "name_kr": "추방",
+        "name_en": "Exile / Banishment",
+        "description_kr": "정착지에서 추방당하는 사건. 가족을 남기고 떠나거나 부당한 추방일수록 더 큰 스트레스와 분노를 유발한다.",
+        "description_en": "Being exiled from the settlement. Amplified when leaving family behind or when the exile is perceived as unjust; triggers fear, sadness, and anger.",
+        "category": "social",
+        "is_loss": true,
+        "base_instant": 300.0,
+        "base_per_tick": 8.0,
+        "base_decay_rate": 0.015,
+        "personality_modifiers": {
+            "X_sociability": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_dependence": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_gregarious": 1.3,
+                "f_solitary": 0.55,
+                "c_nomad": 0.5,
+                "d_psychopath_primary": 0.35
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "family_left_behind": 1.4,
+            "unjust_exile": 1.35
+        },
+        "emotion_inject": {
+            "sadness_fast": 50,
+            "anger_fast": 45,
+            "fear_fast": 35,
+            "trust_slow": -35
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_EXILE_BANISHMENT_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_EXILE_BANISHMENT_DESCRIPTION"
+    },
+    "theft_victim": {
+        "name_kr": "도난 피해",
+        "name_en": "Theft Victim",
+        "description_kr": "소유물을 도난당하는 사건. 기아 상태에서 식량을 도난당했을 경우 충격이 크게 증가한다.",
+        "description_en": "Having possessions stolen. Dramatically amplified when food is stolen while the agent is already starving.",
+        "category": "social",
+        "is_loss": true,
+        "base_instant": 100.0,
+        "base_per_tick": 2.0,
+        "base_decay_rate": 0.04,
+        "personality_modifiers": {
+            "H_fairness": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_fair_minded": 1.25,
+                "c_hoarder": 1.4,
+                "d_psychopath_primary": 0.4
+            }
+        },
+        "relationship_scaling": {
+            "method": "bond_strength",
+            "min_mult": 0.8,
+            "max_mult": 1.5
+        },
+        "context_modifiers": {
+            "food_stolen_while_starving": 1.8
+        },
+        "emotion_inject": {
+            "anger_fast": 40,
+            "disgust_fast": 20,
+            "trust_slow": -15
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_THEFT_VICTIM_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_THEFT_VICTIM_DESCRIPTION"
+    },
+    "_comment9": "==========================================================",
+    "_comment10": "카테고리 3: 생존/신체 (Survival & Physical)",
+    "_comment11": "==========================================================",
+    "severe_injury": {
+        "name_kr": "중상",
+        "name_en": "Severe Injury",
+        "description_kr": "심각한 부상을 입는 사건. 영구 장애로 이어질 경우 스트레스가 50% 증가하며 공포와 슬픔이 주요 감정이다.",
+        "description_en": "Suffering a severe physical injury. Permanent disability amplifies stress by 50%. Fear and sadness are the primary injected emotions.",
+        "category": "survival",
+        "is_loss": false,
+        "base_instant": 150.0,
+        "base_per_tick": 4.0,
+        "base_decay_rate": 0.03,
+        "personality_modifiers": {
+            "E_fearfulness": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_fearful": 1.25,
+                "f_fearless": 0.7,
+                "c_berserker": 0.55,
+                "d_psychopath_primary": 0.5
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "permanent_disability": 1.5
+        },
+        "emotion_inject": {
+            "fear_fast": 45,
+            "anger_fast": 20,
+            "sadness_fast": 25
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SEVERE_INJURY_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SEVERE_INJURY_DESCRIPTION"
+    },
+    "starvation_crisis": {
+        "name_kr": "기아 위기",
+        "name_en": "Starvation Crisis",
+        "description_kr": "극심한 식량 부족 상태. 부양가족이 있거나 정착지 전체가 기아 상태일 때 스트레스가 더 크게 지속된다.",
+        "description_en": "Experiencing extreme food shortage. Amplified when the agent has dependents or when settlement-wide famine is occurring.",
+        "category": "survival",
+        "is_loss": false,
+        "base_instant": 100.0,
+        "base_per_tick": 6.0,
+        "base_decay_rate": 0.05,
+        "personality_modifiers": {
+            "E_anxiety": {
+                "weight": 0.2,
+                "direction": "high_amplifies"
+            },
+            "C_prudence": {
+                "weight": 0.15,
+                "direction": "low_amplifies"
+            },
+            "traits": {
+                "f_anxious": 1.2,
+                "f_calm": 0.75,
+                "c_survivalist": 0.7
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "has_dependents": 1.35,
+            "settlement_wide_famine": 1.25
+        },
+        "emotion_inject": {
+            "fear_fast": 40,
+            "anger_fast": 25,
+            "sadness_fast": 15
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STARVATION_CRISIS_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_STARVATION_CRISIS_DESCRIPTION"
+    },
+    "predator_encounter": {
+        "name_kr": "포식자 조우",
+        "name_en": "Predator Encounter",
+        "description_kr": "포식 동물과의 조우. 어린이이거나 단독 조우일 때 충격이 크며, 집단 동행 시 감소한다.",
+        "description_en": "Encountering a predatory animal. Highly amplified for child agents and when alone; group presence significantly reduces impact.",
+        "category": "survival",
+        "is_loss": false,
+        "base_instant": 130.0,
+        "base_per_tick": 5.0,
+        "base_decay_rate": 0.06,
+        "personality_modifiers": {
+            "E_fearfulness": {
+                "weight": 0.3,
+                "direction": "high_amplifies"
+            },
+            "E_anxiety": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_fearful": 1.4,
+                "f_fearless": 0.5,
+                "c_berserker": 0.4,
+                "c_adventurer": 0.6
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "near_children": 1.4,
+            "alone": 1.25,
+            "in_group": 0.75,
+            "agent_is_child": 1.8
+        },
+        "emotion_inject": {
+            "fear_fast": 65,
+            "surprise_fast": 30,
+            "anger_fast": 10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PREDATOR_ENCOUNTER_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_PREDATOR_ENCOUNTER_DESCRIPTION"
+    },
+    "combat_engaged": {
+        "name_kr": "전투 참여",
+        "name_en": "Combat Engaged",
+        "description_kr": "전투에 참여하는 지속 스트레스 사건. 틱당 스트레스 발생이 높으며, 평화주의자나 온순한 성격에서 매우 큰 충격을 받는다.",
+        "description_en": "Active combat engagement with the highest per-tick stress rate. Pacifist and gentle traits dramatically amplify distress; berserkers and mercenaries are nearly unaffected.",
+        "category": "survival",
+        "is_loss": false,
+        "base_instant": 80.0,
+        "base_per_tick": 15.0,
+        "base_decay_rate": 0.12,
+        "personality_modifiers": {
+            "E_fearfulness": {
+                "weight": 0.25,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_fearful": 1.35,
+                "f_fearless": 0.5,
+                "c_berserker": 0.3,
+                "c_pacifist": 1.6,
+                "f_gentle": 1.3,
+                "c_mercenary": 0.4
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "outnumbered": 1.4,
+            "defending_settlement": 0.8
+        },
+        "emotion_inject": {
+            "fear_fast": 40,
+            "anger_fast": 35,
+            "surprise_fast": 15
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_COMBAT_ENGAGED_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_COMBAT_ENGAGED_DESCRIPTION"
+    },
+    "_comment12": "==========================================================",
+    "_comment13": "카테고리 4: 심리적 사건 (Psychological)",
+    "_comment14": "==========================================================",
+    "forced_action_by_god": {
+        "name_kr": "신의 강제 명령",
+        "name_en": "Forced by God Command",
+        "description_kr": "플레이어 명령으로 원치 않는 행동을 강요당하는 스트레스. 성격과 반대되는 행동이거나 위험한 임무일수록 충격이 커진다.",
+        "description_en": "Stress from being forced to perform an action by the player god. Amplified when the commanded action conflicts with personality or involves danger.",
+        "category": "psychological",
+        "is_loss": false,
+        "base_instant": 60.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.0,
+        "personality_modifiers": {
+            "C_axis": {
+                "weight": 0.2,
+                "direction": "low_amplifies"
+            },
+            "O_unconventionality": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_stubborn": 1.3,
+                "f_flexible": 0.6,
+                "c_zealot": 0.5
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "against_personality": 1.5,
+            "dangerous_task": 1.4
+        },
+        "emotion_inject": {
+            "anger_fast": 25,
+            "fear_fast": 15,
+            "trust_slow": -10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_FORCED_ACTION_BY_GOD_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_FORCED_ACTION_BY_GOD_DESCRIPTION"
+    },
+    "overcrowding": {
+        "name_kr": "과밀 스트레스",
+        "name_en": "Overcrowding",
+        "description_kr": "정착지 과밀로 발생하는 지속 스트레스. 즉각 스트레스는 없으며 외향성이 낮거나 은둔자 성향일수록 민감하게 반응한다.",
+        "description_en": "Continuous low-level stress from living in an overcrowded settlement. No instant hit; low sociability and hermit traits amplify ongoing sensitivity.",
+        "category": "psychological",
+        "is_loss": false,
+        "base_instant": 0.0,
+        "base_per_tick": 2.0,
+        "base_decay_rate": 0.06,
+        "personality_modifiers": {
+            "X_sociability": {
+                "weight": 0.3,
+                "direction": "low_amplifies"
+            },
+            "traits": {
+                "f_solitary": 1.4,
+                "f_gregarious": 0.6,
+                "c_hermit_sage": 1.5
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {},
+        "emotion_inject": {
+            "anger_fast": 8,
+            "disgust_fast": 5
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_OVERCROWDING_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_OVERCROWDING_DESCRIPTION"
+    },
+    "_comment15": "==========================================================",
+    "_comment16": "카테고리 5: 긍정적 사건 / 유스트레스 (Eustress)",
+    "_comment17": "Holmes & Rahe: 긍정 사건도 stress 유발 가능 (결혼 50점)",
+    "_comment18": "==========================================================",
+    "childbirth_mother": {
+        "name_kr": "출산 (산모)",
+        "name_en": "Giving Birth",
+        "description_kr": "출산 성공으로 인한 스트레스 감소 사건. 즉각적으로 스트레스를 낮추며 기쁨과 신뢰 감정이 크게 주입된다.",
+        "description_en": "A positive stress event where successful childbirth instantly reduces stress. Joy, trust, and anticipation are the dominant injected emotions.",
+        "category": "eustress",
+        "is_loss": false,
+        "base_instant": -120.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.0,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "c_caregiver": 1.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "first_child": 1.2,
+            "complication": 0.3
+        },
+        "emotion_inject": {
+            "joy_fast": 70,
+            "trust_fast": 30,
+            "anticipation_fast": 25,
+            "fear_fast": 15
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_MOTHER_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_MOTHER_DESCRIPTION"
+    },
+    "childbirth_father": {
+        "name_kr": "자녀 출생 (아버지)",
+        "name_en": "Child Born (Father)",
+        "description_kr": "자녀 출생으로 아버지가 경험하는 스트레스 감소. 산모보다 낮은 수준이지만 첫 자녀일 경우 효과가 증가한다.",
+        "description_en": "Positive stress relief for the father upon the birth of a child. Lower magnitude than the mother; amplified for the firstborn.",
+        "category": "eustress",
+        "is_loss": false,
+        "base_instant": -80.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.0,
+        "personality_modifiers": {
+            "E_sentimentality": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "c_caregiver": 1.15,
+                "d_psychopath_primary": 0.2
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "first_child": 1.2
+        },
+        "emotion_inject": {
+            "joy_fast": 50,
+            "trust_fast": 20,
+            "anticipation_fast": 20
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_FATHER_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CHILDBIRTH_FATHER_DESCRIPTION"
+    },
+    "successful_hunt": {
+        "name_kr": "사냥 성공",
+        "name_en": "Successful Hunt",
+        "description_kr": "성공적인 사냥으로 인한 소규모 스트레스 해소. 기근 중 사냥에 성공할 경우 효과가 1.5배로 증가한다.",
+        "description_en": "A minor stress relief event from a successful hunt. Amplified 1.5x during famine conditions when food is most needed.",
+        "category": "eustress",
+        "is_loss": false,
+        "base_instant": -30.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.0,
+        "personality_modifiers": {
+            "traits": {
+                "c_survivalist": 1.15,
+                "c_adventurer": 1.1
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "during_famine": 1.5
+        },
+        "emotion_inject": {
+            "joy_fast": 25,
+            "trust_fast": 10,
+            "anticipation_fast": 10
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SUCCESSFUL_HUNT_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_SUCCESSFUL_HUNT_DESCRIPTION"
+    },
+    "building_completed": {
+        "name_kr": "건축 완료",
+        "name_en": "Building Completed",
+        "description_kr": "건축물 완공으로 인한 소규모 스트레스 해소. 첫 건물 완공 시 효과가 30% 증가하며 기쁨과 기대 감정이 주입된다.",
+        "description_en": "A minor stress relief event from completing a building. Amplified 30% for the first building completed; injects joy and anticipation.",
+        "category": "eustress",
+        "is_loss": false,
+        "base_instant": -25.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.0,
+        "personality_modifiers": {
+            "C_diligence": {
+                "weight": 0.15,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "c_master_craftsman": 1.2,
+                "c_labor_hero": 1.15
+            }
+        },
+        "relationship_scaling": {
+            "method": "none"
+        },
+        "context_modifiers": {
+            "first_building": 1.3
+        },
+        "emotion_inject": {
+            "joy_fast": 20,
+            "anticipation_fast": 15,
+            "trust_fast": 8
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BUILDING_COMPLETED_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_BUILDING_COMPLETED_DESCRIPTION"
+    },
+    "dehydration": {
+        "name_kr": "탈수",
+        "name_en": "Dehydration",
+        "description_kr": "수분 부족으로 인한 생리적 스트레스. 갈증 임계값 이하 지속 시 스트레스가 누적된다.",
+        "description_en": "Physiological stress from dehydration. Accumulates when thirst drops below critical threshold.",
+        "category": "physical",
+        "is_loss": false,
+        "base_instant": 3.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.05,
+        "personality_modifiers": {
+            "X_axis": {
+                "weight": 0.3,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_tough_minded": 0.7,
+                "f_self_reliant": 0.8
+            }
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_DEHYDRATION_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_DEHYDRATION_DESCRIPTION"
+    },
+    "hypothermia": {
+        "name_kr": "저체온",
+        "name_en": "Hypothermia",
+        "description_kr": "체온 하락으로 인한 생리적 위협 스트레스. 혹한 환경에서 warmth가 임계값 이하로 떨어질 때 발생.",
+        "description_en": "Physical threat stress from body temperature drop. Occurs when warmth falls below critical in cold environments.",
+        "category": "physical",
+        "is_loss": false,
+        "base_instant": 4.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.05,
+        "personality_modifiers": {
+            "X_axis": {
+                "weight": 0.35,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_tough_minded": 0.65,
+                "c_stoic_loner": 0.75
+            }
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_HYPOTHERMIA_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_HYPOTHERMIA_DESCRIPTION"
+    },
+    "constant_threat": {
+        "name_kr": "지속적 위협",
+        "name_en": "Constant Threat",
+        "description_kr": "안전감 결핍으로 인한 만성 스트레스. 위험 환경에 장기 노출 시 누적.",
+        "description_en": "Chronic stress from lack of safety. Accumulates during prolonged exposure to unsafe environments.",
+        "category": "threat",
+        "is_loss": false,
+        "base_instant": 2.0,
+        "base_per_tick": 0.0,
+        "base_decay_rate": 0.03,
+        "personality_modifiers": {
+            "X_axis": {
+                "weight": 0.4,
+                "direction": "high_amplifies"
+            },
+            "traits": {
+                "f_tough_minded": 0.6,
+                "d_psychopath_primary": 0.2,
+                "c_stoic_loner": 0.7
+            }
+        },
+        "name_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CONSTANT_THREAT_NAME",
+        "description_key": "DATA_DATA_STRESSOR_EVENTS_ROOT_CONSTANT_THREAT_DESCRIPTION"
     }
-  },
-
-  "child_death": {
-    "name_kr": "자녀 사망",
-    "name_en": "Child Death",
-    "description_kr": "게임 내 최고 즉각 스트레스 수치를 유발하는 사건. 자녀의 나이가 많을수록, 목격할수록 충격이 크다.",
-    "description_en": "The highest base instant stress event in the simulation. Impact scales with child's age at death and whether the parent witnessed it.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 550.0,
-    "base_per_tick": 12.0,
-    "base_decay_rate": 0.008,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.35, "direction": "high_amplifies"},
-      "E_axis": {"weight": 0.25, "direction": "high_amplifies"},
-      "A_gentleness": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.4,
-        "f_tough_minded": 0.65,
-        "c_caregiver": 1.5,
-        "c_healer": 1.3,
-        "d_psychopath_primary": 0.10,
-        "d_callous": 0.20,
-        "c_stoic_loner": 0.55
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.3,
-      "max_mult": 1.4
-    },
-    "context_modifiers": {
-      "child_age_infant": 0.85,
-      "child_age_toddler": 1.0,
-      "child_age_child": 1.15,
-      "child_age_teen": 1.25,
-      "witnessed_death": 1.35,
-      "only_child": 1.20
-    },
-    "emotion_inject": {
-      "sadness_fast": 90,
-      "fear_fast": 20,
-      "anger_fast": 35,
-      "trust_slow": -20,
-      "joy_slow": -50
-    }
-  },
-
-  "parent_death": {
-    "name_kr": "부모 사망",
-    "name_en": "Parent Death",
-    "description_kr": "부모 사망에 의한 스트레스. 에이전트가 어릴수록 충격이 훨씬 크며, 마지막 생존 부모인 경우 추가 가중.",
-    "description_en": "Stress from losing a parent. Impact is dramatically higher for child-aged agents and when the deceased was the last surviving parent.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 350.0,
-    "base_per_tick": 8.0,
-    "base_decay_rate": 0.012,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.30, "direction": "high_amplifies"},
-      "E_dependence": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_axis": {"weight": 0.20, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.3,
-        "f_dependent": 1.35,
-        "f_self_reliant": 0.70,
-        "f_tough_minded": 0.65,
-        "d_psychopath_primary": 0.15,
-        "d_callous": 0.25,
-        "c_caregiver": 1.20
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.4,
-      "max_mult": 1.3
-    },
-    "context_modifiers": {
-      "agent_is_child": 1.85,
-      "agent_is_teen": 1.40,
-      "agent_is_adult": 1.0,
-      "agent_is_elder": 0.75,
-      "last_surviving_parent": 1.30,
-      "was_estranged": 0.35
-    },
-    "emotion_inject": {
-      "sadness_fast": 70,
-      "fear_fast": 25,
-      "trust_slow": -15,
-      "joy_slow": -30
-    }
-  },
-
-  "sibling_death": {
-    "name_kr": "형제자매 사망",
-    "name_en": "Sibling Death",
-    "description_kr": "형제자매의 죽음으로 인한 스트레스. 어린 시절 경험할수록 충격이 더 크다.",
-    "description_en": "Stress from losing a sibling, amplified if the agent is a child. Scales with bond strength.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 250.0,
-    "base_per_tick": 6.0,
-    "base_decay_rate": 0.015,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_axis": {"weight": 0.20, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.25,
-        "d_psychopath_primary": 0.20,
-        "d_callous": 0.30
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.3,
-      "max_mult": 1.3
-    },
-    "context_modifiers": {
-      "agent_is_child": 1.50
-    },
-    "emotion_inject": {
-      "sadness_fast": 55,
-      "fear_fast": 15,
-      "trust_slow": -10
-    }
-  },
-
-  "close_friend_death": {
-    "name_kr": "절친 사망",
-    "name_en": "Close Friend Death",
-    "description_kr": "절친한 친구의 죽음. 유대 강도에 따라 충격이 크게 달라지며, 반사회적 성향은 충격을 줄인다.",
-    "description_en": "Loss of a close friend, scaling strongly with bond strength. Callous and psychopathic traits significantly reduce impact.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 200.0,
-    "base_per_tick": 5.0,
-    "base_decay_rate": 0.02,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.25, "direction": "high_amplifies"},
-      "X_sociability": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.20,
-        "d_psychopath_primary": 0.20,
-        "d_callous": 0.30
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.2,
-      "max_mult": 1.5
-    },
-    "context_modifiers": {},
-    "emotion_inject": {
-      "sadness_fast": 45,
-      "trust_slow": -10
-    }
-  },
-
-  "acquaintance_death": {
-    "name_kr": "지인 사망",
-    "name_en": "Acquaintance Death",
-    "description_kr": "지인의 죽음으로 인한 낮은 수준의 스트레스. 같은 정착지 거주 시 소폭 증가.",
-    "description_en": "Low-intensity stress from the death of an acquaintance. Slightly amplified if they lived in the same settlement.",
-    "category": "death",
-    "is_loss": false,
-    "base_instant": 60.0,
-    "base_per_tick": 1.5,
-    "base_decay_rate": 0.05,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.20, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.15,
-        "d_psychopath_primary": 0.10,
-        "d_callous": 0.20
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.1,
-      "max_mult": 1.0
-    },
-    "context_modifiers": {
-      "same_settlement": 1.10
-    },
-    "emotion_inject": {
-      "sadness_fast": 20,
-      "fear_fast": 10
-    }
-  },
-
-  "maternal_death_partner": {
-    "name_kr": "출산 중 파트너 사망",
-    "name_en": "Partner Died in Childbirth",
-    "description_kr": "파트너가 출산 중 사망하는 복합 트라우마 사건. 신생아도 함께 사망했을 경우 충격이 대폭 증가한다.",
-    "description_en": "A compound trauma of losing a partner during childbirth. If the newborn also died, the stress amplification is severe.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 500.0,
-    "base_per_tick": 12.0,
-    "base_decay_rate": 0.008,
-    "personality_modifiers": {
-      "E_axis": {"weight": 0.35, "direction": "high_amplifies"},
-      "E_sentimentality": {"weight": 0.25, "direction": "high_amplifies"},
-      "traits": {
-        "d_psychopath_primary": 0.15,
-        "d_callous": 0.25,
-        "c_caregiver": 1.30
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.6,
-      "max_mult": 1.3
-    },
-    "context_modifiers": {
-      "newborn_survived": 0.90,
-      "newborn_also_died": 1.40
-    },
-    "emotion_inject": {
-      "sadness_fast": 90,
-      "fear_fast": 40,
-      "anger_fast": 30,
-      "trust_slow": -30,
-      "joy_slow": -50
-    }
-  },
-
-  "stillborn": {
-    "name_kr": "사산",
-    "name_en": "Stillborn",
-    "description_kr": "아이를 사산하는 트라우마. 첫 임신인 경우 충격이 더 크며 슬픔과 분노가 주요 감정으로 주입된다.",
-    "description_en": "The trauma of a stillbirth. Amplified for first pregnancies; primary injected emotions are sadness and anger.",
-    "category": "death",
-    "is_loss": true,
-    "base_instant": 350.0,
-    "base_per_tick": 8.0,
-    "base_decay_rate": 0.015,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.35, "direction": "high_amplifies"},
-      "E_axis": {"weight": 0.25, "direction": "high_amplifies"},
-      "traits": {
-        "f_sentimental": 1.35,
-        "c_caregiver": 1.30,
-        "d_psychopath_primary": 0.15,
-        "d_callous": 0.25
-      }
-    },
-    "relationship_scaling": {
-      "method": "none"
-    },
-    "context_modifiers": {
-      "first_pregnancy": 1.25
-    },
-    "emotion_inject": {
-      "sadness_fast": 75,
-      "anger_fast": 20,
-      "joy_slow": -40
-    }
-  },
-
-  "_comment6": "==========================================================",
-  "_comment7": "카테고리 2: 사회적 사건 (Social Events)",
-  "_comment8": "==========================================================",
-
-  "argument": {
-    "name_kr": "말다툼",
-    "name_en": "Argument",
-    "description_kr": "타인과의 말다툼으로 인한 낮은 스트레스. 인내심이 낮거나 고집이 강한 성격에서 더 큰 영향을 받는다.",
-    "description_en": "Low-level stress from an argument. Patience and calmness traits reduce impact; stubbornness and hot temper amplify it.",
-    "category": "social",
-    "is_loss": false,
-    "base_instant": 40.0,
-    "base_per_tick": 1.0,
-    "base_decay_rate": 0.08,
-    "personality_modifiers": {
-      "A_patience": {"weight": 0.30, "direction": "low_amplifies"},
-      "E_anxiety": {"weight": 0.20, "direction": "high_amplifies"},
-      "A_axis": {"weight": 0.15, "direction": "low_amplifies"},
-      "traits": {
-        "f_hot_tempered": 1.30,
-        "f_patient": 0.60,
-        "f_calm": 0.65,
-        "f_stubborn": 1.20
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.5,
-      "max_mult": 1.5
-    },
-    "context_modifiers": {
-      "public_argument": 1.25,
-      "with_partner": 1.20,
-      "with_parent": 1.15
-    },
-    "emotion_inject": {
-      "anger_fast": 30,
-      "sadness_fast": 10,
-      "trust_slow": -8
-    }
-  },
-
-  "betrayal_discovered": {
-    "name_kr": "배신 발각",
-    "name_en": "Betrayal Discovered",
-    "description_kr": "신뢰하던 관계에서 배신을 발견하는 사건. 파트너나 절친에게 배신당할수록 충격이 크며 신뢰 감소가 장기간 지속된다.",
-    "description_en": "The discovery of betrayal by a trusted individual. Amplified significantly when the betrayer is a partner or close friend; causes lasting trust reduction.",
-    "category": "social",
-    "is_loss": true,
-    "base_instant": 200.0,
-    "base_per_tick": 5.0,
-    "base_decay_rate": 0.02,
-    "personality_modifiers": {
-      "H_sincerity": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_anxiety": {"weight": 0.20, "direction": "high_amplifies"},
-      "A_axis": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_sincere": 1.30,
-        "f_anxious": 1.20,
-        "d_psychopath_primary": 0.30,
-        "d_machiavellian": 0.50
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.3,
-      "max_mult": 1.8
-    },
-    "context_modifiers": {
-      "by_partner": 1.50,
-      "by_close_friend": 1.30
-    },
-    "emotion_inject": {
-      "anger_fast": 60,
-      "sadness_fast": 40,
-      "disgust_fast": 30,
-      "trust_slow": -40,
-      "surprise_fast": 25
-    }
-  },
-
-  "rejection_social": {
-    "name_kr": "사회적 거부",
-    "name_en": "Social Rejection",
-    "description_kr": "집단 또는 개인으로부터 거부당하는 사건. 낭만적 거부나 공개적 거부일수록 충격이 크며, 자존감이 낮을수록 취약하다.",
-    "description_en": "Being excluded or rejected by a group or individual. Public or romantic rejection dramatically increases impact; low social self-esteem amplifies vulnerability.",
-    "category": "social",
-    "is_loss": false,
-    "base_instant": 80.0,
-    "base_per_tick": 2.0,
-    "base_decay_rate": 0.04,
-    "personality_modifiers": {
-      "X_social_self_esteem": {"weight": 0.30, "direction": "low_amplifies"},
-      "E_dependence": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_anxiety": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_insecure": 1.35,
-        "f_dependent": 1.25,
-        "f_confident": 0.65,
-        "f_self_reliant": 0.70
-      }
-    },
-    "relationship_scaling": {
-      "method": "none"
-    },
-    "context_modifiers": {
-      "public_rejection": 1.30,
-      "romantic_rejection": 1.40
-    },
-    "emotion_inject": {
-      "sadness_fast": 35,
-      "anger_fast": 15,
-      "fear_fast": 10,
-      "trust_slow": -12
-    }
-  },
-
-  "partnership_breakup": {
-    "name_kr": "결별",
-    "name_en": "Partnership Breakup",
-    "description_kr": "파트너 관계의 종료. 자신이 먼저 이별을 결정했다면 충격이 절반 이하로 감소하며, 의존 성향이 강할수록 피해가 크다.",
-    "description_en": "Dissolution of a romantic partnership. Self-initiated breakups reduce impact significantly; high dependence traits amplify the damage.",
-    "category": "social",
-    "is_loss": true,
-    "base_instant": 250.0,
-    "base_per_tick": 6.0,
-    "base_decay_rate": 0.02,
-    "personality_modifiers": {
-      "E_dependence": {"weight": 0.30, "direction": "high_amplifies"},
-      "E_sentimentality": {"weight": 0.20, "direction": "high_amplifies"},
-      "traits": {
-        "f_dependent": 1.35,
-        "f_self_reliant": 0.65,
-        "d_psychopath_primary": 0.20
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.4,
-      "max_mult": 1.4
-    },
-    "context_modifiers": {
-      "initiated_by_other": 1.30,
-      "initiated_by_self": 0.60
-    },
-    "emotion_inject": {
-      "sadness_fast": 60,
-      "anger_fast": 30,
-      "trust_slow": -25,
-      "joy_slow": -30
-    }
-  },
-
-  "exile_banishment": {
-    "name_kr": "추방",
-    "name_en": "Exile / Banishment",
-    "description_kr": "정착지에서 추방당하는 사건. 가족을 남기고 떠나거나 부당한 추방일수록 더 큰 스트레스와 분노를 유발한다.",
-    "description_en": "Being exiled from the settlement. Amplified when leaving family behind or when the exile is perceived as unjust; triggers fear, sadness, and anger.",
-    "category": "social",
-    "is_loss": true,
-    "base_instant": 300.0,
-    "base_per_tick": 8.0,
-    "base_decay_rate": 0.015,
-    "personality_modifiers": {
-      "X_sociability": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_dependence": {"weight": 0.20, "direction": "high_amplifies"},
-      "traits": {
-        "f_gregarious": 1.30,
-        "f_solitary": 0.55,
-        "c_nomad": 0.50,
-        "d_psychopath_primary": 0.35
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "family_left_behind": 1.40,
-      "unjust_exile": 1.35
-    },
-    "emotion_inject": {
-      "sadness_fast": 50,
-      "anger_fast": 45,
-      "fear_fast": 35,
-      "trust_slow": -35
-    }
-  },
-
-  "theft_victim": {
-    "name_kr": "도난 피해",
-    "name_en": "Theft Victim",
-    "description_kr": "소유물을 도난당하는 사건. 기아 상태에서 식량을 도난당했을 경우 충격이 크게 증가한다.",
-    "description_en": "Having possessions stolen. Dramatically amplified when food is stolen while the agent is already starving.",
-    "category": "social",
-    "is_loss": true,
-    "base_instant": 100.0,
-    "base_per_tick": 2.0,
-    "base_decay_rate": 0.04,
-    "personality_modifiers": {
-      "H_fairness": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_anxiety": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_fair_minded": 1.25,
-        "c_hoarder": 1.40,
-        "d_psychopath_primary": 0.40
-      }
-    },
-    "relationship_scaling": {
-      "method": "bond_strength",
-      "min_mult": 0.8,
-      "max_mult": 1.5
-    },
-    "context_modifiers": {
-      "food_stolen_while_starving": 1.80
-    },
-    "emotion_inject": {
-      "anger_fast": 40,
-      "disgust_fast": 20,
-      "trust_slow": -15
-    }
-  },
-
-  "_comment9": "==========================================================",
-  "_comment10": "카테고리 3: 생존/신체 (Survival & Physical)",
-  "_comment11": "==========================================================",
-
-  "severe_injury": {
-    "name_kr": "중상",
-    "name_en": "Severe Injury",
-    "description_kr": "심각한 부상을 입는 사건. 영구 장애로 이어질 경우 스트레스가 50% 증가하며 공포와 슬픔이 주요 감정이다.",
-    "description_en": "Suffering a severe physical injury. Permanent disability amplifies stress by 50%. Fear and sadness are the primary injected emotions.",
-    "category": "survival",
-    "is_loss": false,
-    "base_instant": 150.0,
-    "base_per_tick": 4.0,
-    "base_decay_rate": 0.03,
-    "personality_modifiers": {
-      "E_fearfulness": {"weight": 0.25, "direction": "high_amplifies"},
-      "E_anxiety": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_fearful": 1.25,
-        "f_fearless": 0.70,
-        "c_berserker": 0.55,
-        "d_psychopath_primary": 0.50
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "permanent_disability": 1.50
-    },
-    "emotion_inject": {
-      "fear_fast": 45,
-      "anger_fast": 20,
-      "sadness_fast": 25
-    }
-  },
-
-  "starvation_crisis": {
-    "name_kr": "기아 위기",
-    "name_en": "Starvation Crisis",
-    "description_kr": "극심한 식량 부족 상태. 부양가족이 있거나 정착지 전체가 기아 상태일 때 스트레스가 더 크게 지속된다.",
-    "description_en": "Experiencing extreme food shortage. Amplified when the agent has dependents or when settlement-wide famine is occurring.",
-    "category": "survival",
-    "is_loss": false,
-    "base_instant": 100.0,
-    "base_per_tick": 6.0,
-    "base_decay_rate": 0.05,
-    "personality_modifiers": {
-      "E_anxiety": {"weight": 0.20, "direction": "high_amplifies"},
-      "C_prudence": {"weight": 0.15, "direction": "low_amplifies"},
-      "traits": {
-        "f_anxious": 1.20,
-        "f_calm": 0.75,
-        "c_survivalist": 0.70
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "has_dependents": 1.35,
-      "settlement_wide_famine": 1.25
-    },
-    "emotion_inject": {
-      "fear_fast": 40,
-      "anger_fast": 25,
-      "sadness_fast": 15
-    }
-  },
-
-  "predator_encounter": {
-    "name_kr": "포식자 조우",
-    "name_en": "Predator Encounter",
-    "description_kr": "포식 동물과의 조우. 어린이이거나 단독 조우일 때 충격이 크며, 집단 동행 시 감소한다.",
-    "description_en": "Encountering a predatory animal. Highly amplified for child agents and when alone; group presence significantly reduces impact.",
-    "category": "survival",
-    "is_loss": false,
-    "base_instant": 130.0,
-    "base_per_tick": 5.0,
-    "base_decay_rate": 0.06,
-    "personality_modifiers": {
-      "E_fearfulness": {"weight": 0.30, "direction": "high_amplifies"},
-      "E_anxiety": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_fearful": 1.40,
-        "f_fearless": 0.50,
-        "c_berserker": 0.40,
-        "c_adventurer": 0.60
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "near_children": 1.40,
-      "alone": 1.25,
-      "in_group": 0.75,
-      "agent_is_child": 1.80
-    },
-    "emotion_inject": {
-      "fear_fast": 65,
-      "surprise_fast": 30,
-      "anger_fast": 10
-    }
-  },
-
-  "combat_engaged": {
-    "name_kr": "전투 참여",
-    "name_en": "Combat Engaged",
-    "description_kr": "전투에 참여하는 지속 스트레스 사건. 틱당 스트레스 발생이 높으며, 평화주의자나 온순한 성격에서 매우 큰 충격을 받는다.",
-    "description_en": "Active combat engagement with the highest per-tick stress rate. Pacifist and gentle traits dramatically amplify distress; berserkers and mercenaries are nearly unaffected.",
-    "category": "survival",
-    "is_loss": false,
-    "base_instant": 80.0,
-    "base_per_tick": 15.0,
-    "base_decay_rate": 0.12,
-    "personality_modifiers": {
-      "E_fearfulness": {"weight": 0.25, "direction": "high_amplifies"},
-      "traits": {
-        "f_fearful": 1.35,
-        "f_fearless": 0.50,
-        "c_berserker": 0.30,
-        "c_pacifist": 1.60,
-        "f_gentle": 1.30,
-        "c_mercenary": 0.40
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "outnumbered": 1.40,
-      "defending_settlement": 0.80
-    },
-    "emotion_inject": {
-      "fear_fast": 40,
-      "anger_fast": 35,
-      "surprise_fast": 15
-    }
-  },
-
-  "_comment12": "==========================================================",
-  "_comment13": "카테고리 4: 심리적 사건 (Psychological)",
-  "_comment14": "==========================================================",
-
-  "forced_action_by_god": {
-    "name_kr": "신의 강제 명령",
-    "name_en": "Forced by God Command",
-    "description_kr": "플레이어 명령으로 원치 않는 행동을 강요당하는 스트레스. 성격과 반대되는 행동이거나 위험한 임무일수록 충격이 커진다.",
-    "description_en": "Stress from being forced to perform an action by the player god. Amplified when the commanded action conflicts with personality or involves danger.",
-    "category": "psychological",
-    "is_loss": false,
-    "base_instant": 60.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.0,
-    "personality_modifiers": {
-      "C_axis": {"weight": 0.20, "direction": "low_amplifies"},
-      "O_unconventionality": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "f_stubborn": 1.30,
-        "f_flexible": 0.60,
-        "c_zealot": 0.50
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "against_personality": 1.50,
-      "dangerous_task": 1.40
-    },
-    "emotion_inject": {
-      "anger_fast": 25,
-      "fear_fast": 15,
-      "trust_slow": -10
-    }
-  },
-
-  "overcrowding": {
-    "name_kr": "과밀 스트레스",
-    "name_en": "Overcrowding",
-    "description_kr": "정착지 과밀로 발생하는 지속 스트레스. 즉각 스트레스는 없으며 외향성이 낮거나 은둔자 성향일수록 민감하게 반응한다.",
-    "description_en": "Continuous low-level stress from living in an overcrowded settlement. No instant hit; low sociability and hermit traits amplify ongoing sensitivity.",
-    "category": "psychological",
-    "is_loss": false,
-    "base_instant": 0.0,
-    "base_per_tick": 2.0,
-    "base_decay_rate": 0.06,
-    "personality_modifiers": {
-      "X_sociability": {"weight": 0.30, "direction": "low_amplifies"},
-      "traits": {
-        "f_solitary": 1.40,
-        "f_gregarious": 0.60,
-        "c_hermit_sage": 1.50
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {},
-    "emotion_inject": {
-      "anger_fast": 8,
-      "disgust_fast": 5
-    }
-  },
-
-  "_comment15": "==========================================================",
-  "_comment16": "카테고리 5: 긍정적 사건 / 유스트레스 (Eustress)",
-  "_comment17": "Holmes & Rahe: 긍정 사건도 stress 유발 가능 (결혼 50점)",
-  "_comment18": "==========================================================",
-
-  "childbirth_mother": {
-    "name_kr": "출산 (산모)",
-    "name_en": "Giving Birth",
-    "description_kr": "출산 성공으로 인한 스트레스 감소 사건. 즉각적으로 스트레스를 낮추며 기쁨과 신뢰 감정이 크게 주입된다.",
-    "description_en": "A positive stress event where successful childbirth instantly reduces stress. Joy, trust, and anticipation are the dominant injected emotions.",
-    "category": "eustress",
-    "is_loss": false,
-    "base_instant": -120.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.0,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "c_caregiver": 1.20
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "first_child": 1.20,
-      "complication": 0.30
-    },
-    "emotion_inject": {
-      "joy_fast": 70,
-      "trust_fast": 30,
-      "anticipation_fast": 25,
-      "fear_fast": 15
-    }
-  },
-
-  "childbirth_father": {
-    "name_kr": "자녀 출생 (아버지)",
-    "name_en": "Child Born (Father)",
-    "description_kr": "자녀 출생으로 아버지가 경험하는 스트레스 감소. 산모보다 낮은 수준이지만 첫 자녀일 경우 효과가 증가한다.",
-    "description_en": "Positive stress relief for the father upon the birth of a child. Lower magnitude than the mother; amplified for the firstborn.",
-    "category": "eustress",
-    "is_loss": false,
-    "base_instant": -80.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.0,
-    "personality_modifiers": {
-      "E_sentimentality": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "c_caregiver": 1.15,
-        "d_psychopath_primary": 0.20
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "first_child": 1.20
-    },
-    "emotion_inject": {
-      "joy_fast": 50,
-      "trust_fast": 20,
-      "anticipation_fast": 20
-    }
-  },
-
-  "successful_hunt": {
-    "name_kr": "사냥 성공",
-    "name_en": "Successful Hunt",
-    "description_kr": "성공적인 사냥으로 인한 소규모 스트레스 해소. 기근 중 사냥에 성공할 경우 효과가 1.5배로 증가한다.",
-    "description_en": "A minor stress relief event from a successful hunt. Amplified 1.5x during famine conditions when food is most needed.",
-    "category": "eustress",
-    "is_loss": false,
-    "base_instant": -30.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.0,
-    "personality_modifiers": {
-      "traits": {
-        "c_survivalist": 1.15,
-        "c_adventurer": 1.10
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "during_famine": 1.50
-    },
-    "emotion_inject": {
-      "joy_fast": 25,
-      "trust_fast": 10,
-      "anticipation_fast": 10
-    }
-  },
-
-  "building_completed": {
-    "name_kr": "건축 완료",
-    "name_en": "Building Completed",
-    "description_kr": "건축물 완공으로 인한 소규모 스트레스 해소. 첫 건물 완공 시 효과가 30% 증가하며 기쁨과 기대 감정이 주입된다.",
-    "description_en": "A minor stress relief event from completing a building. Amplified 30% for the first building completed; injects joy and anticipation.",
-    "category": "eustress",
-    "is_loss": false,
-    "base_instant": -25.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.0,
-    "personality_modifiers": {
-      "C_diligence": {"weight": 0.15, "direction": "high_amplifies"},
-      "traits": {
-        "c_master_craftsman": 1.20,
-        "c_labor_hero": 1.15
-      }
-    },
-    "relationship_scaling": {"method": "none"},
-    "context_modifiers": {
-      "first_building": 1.30
-    },
-    "emotion_inject": {
-      "joy_fast": 20,
-      "anticipation_fast": 15,
-      "trust_fast": 8
-    }
-  },
-
-  "dehydration": {
-    "name_kr": "탈수",
-    "name_en": "Dehydration",
-    "description_kr": "수분 부족으로 인한 생리적 스트레스. 갈증 임계값 이하 지속 시 스트레스가 누적된다.",
-    "description_en": "Physiological stress from dehydration. Accumulates when thirst drops below critical threshold.",
-    "category": "physical",
-    "is_loss": false,
-    "base_instant": 3.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.05,
-    "personality_modifiers": {
-      "X_axis": {"weight": 0.3, "direction": "high_amplifies"},
-      "traits": {
-        "f_tough_minded": 0.7,
-        "f_self_reliant": 0.8
-      }
-    }
-  },
-
-  "hypothermia": {
-    "name_kr": "저체온",
-    "name_en": "Hypothermia",
-    "description_kr": "체온 하락으로 인한 생리적 위협 스트레스. 혹한 환경에서 warmth가 임계값 이하로 떨어질 때 발생.",
-    "description_en": "Physical threat stress from body temperature drop. Occurs when warmth falls below critical in cold environments.",
-    "category": "physical",
-    "is_loss": false,
-    "base_instant": 4.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.05,
-    "personality_modifiers": {
-      "X_axis": {"weight": 0.35, "direction": "high_amplifies"},
-      "traits": {
-        "f_tough_minded": 0.65,
-        "c_stoic_loner": 0.75
-      }
-    }
-  },
-
-  "constant_threat": {
-    "name_kr": "지속적 위협",
-    "name_en": "Constant Threat",
-    "description_kr": "안전감 결핍으로 인한 만성 스트레스. 위험 환경에 장기 노출 시 누적.",
-    "description_en": "Chronic stress from lack of safety. Accumulates during prolonged exposure to unsafe environments.",
-    "category": "threat",
-    "is_loss": false,
-    "base_instant": 2.0,
-    "base_per_tick": 0.0,
-    "base_decay_rate": 0.03,
-    "personality_modifiers": {
-      "X_axis": {"weight": 0.4, "direction": "high_amplifies"},
-      "traits": {
-        "f_tough_minded": 0.6,
-        "d_psychopath_primary": 0.2,
-        "c_stoic_loner": 0.7
-      }
-    }
-  }
 }

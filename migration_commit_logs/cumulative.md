@@ -54,3 +54,8 @@
 - `tools/data_localization_extract.py`로 data inline 다국어 -> locale key 자동 추출 경로 추가.
 - `data_generated` 카테고리를 manifest/컴파일/런타임 로더에 통합.
 - `Locale.tr_data()`를 `*_key` 일반 패턴까지 확장해 점진 이관 호환성 강화.
+
+## Commit 012
+- `data_localization_extract`에 `--apply-key-fields` 추가.
+- 인라인 다국어 포함 data 4개 파일에 `*_key` 참조 자동 주입.
+- 인라인 원문을 유지해 점진 이관/하위호환을 동시에 보장.
