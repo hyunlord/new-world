@@ -1325,3 +1325,8 @@
 - `migration_verify_report.json`에 `compile_summary`를 추가해 compile report 핵심 지표(default locale, key counts, duplicate/miss metrics, strict mode)를 단일 report로 집약.
 - compile report JSON에서 int/string/bool 필드를 안전 추출해 파일 부재 시에도 `null` 직렬화를 유지.
 - `/tmp/worldsim_audit_artifacts29/migration_verify_report.json`에서 `active_key_count=4030`, `max_locale_duplicate_conflicts=35`, `strict_duplicates=false` 반영을 확인.
+
+## Commit 268
+- `migration_verify_report.json`에 `compile_thresholds`와 `compile_threshold_status`를 추가해 compile 임계치와 충족 여부를 report에서 직접 제공.
+- `compile_report.json`의 `thresholds.*` 중첩 경로를 추출하는 헬퍼와 `<=` 비교/AND 집계 헬퍼를 도입해 임계치 pass/fail 계산을 자동화.
+- `/tmp/worldsim_audit_artifacts30/migration_verify_report.json`에서 `compile_threshold_status.all_ok=true`, `verification_status.compile_thresholds_all_ok=true` 반영을 확인.

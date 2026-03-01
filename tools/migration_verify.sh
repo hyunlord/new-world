@@ -930,6 +930,28 @@ if [[ -n "${verify_report_json}" ]]; then
     )"
     to_json_opt_int "${raw_value}"
   }
+  to_json_opt_int_from_json_file_path() {
+    local raw_path="$1"
+    local key_path="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local raw_value
+    raw_value="$(
+      python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); v=d
+for part in sys.argv[2].split("."):
+    if isinstance(v, dict):
+        v=v.get(part)
+    else:
+        v=None
+        break
+print(v if isinstance(v, int) else "")' "${abs_path}" "${key_path}" 2>/dev/null || true
+    )"
+    to_json_opt_int "${raw_value}"
+  }
   to_json_opt_array_len_from_json_file_key() {
     local raw_path="$1"
     local key="$2"
@@ -999,6 +1021,37 @@ if [[ -n "${verify_report_json}" ]]; then
       fi
     else
       echo "null"
+    fi
+  }
+  to_json_leq_ints() {
+    local lhs="$1"
+    local rhs="$2"
+    if [[ "${lhs}" =~ ^[0-9]+$ && "${rhs}" =~ ^[0-9]+$ ]]; then
+      if [[ "${lhs}" -le "${rhs}" ]]; then
+        echo "true"
+      else
+        echo "false"
+      fi
+    else
+      echo "null"
+    fi
+  }
+  to_json_bool_and() {
+    local has_null="false"
+    local value
+    for value in "$@"; do
+      if [[ "${value}" == "false" ]]; then
+        echo "false"
+        return
+      fi
+      if [[ "${value}" != "true" ]]; then
+        has_null="true"
+      fi
+    done
+    if [[ "${has_null}" == "true" ]]; then
+      echo "null"
+    else
+      echo "true"
     fi
   }
   to_json_opt_string() {
@@ -1149,6 +1202,27 @@ if [[ -n "${verify_report_json}" ]]; then
   compile_owner_policy_missing_duplicate_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "owner_policy_missing_duplicate_count")"
   compile_owner_policy_unused_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "owner_policy_unused_count")"
   compile_strict_duplicates_from_report="$(to_json_opt_bool_from_json_file_key "${compile_report_json}" "strict_duplicates")"
+  compile_threshold_max_duplicate_key_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_duplicate_key_count")"
+  compile_threshold_max_duplicate_conflict_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_duplicate_conflict_count")"
+  compile_threshold_max_missing_key_fill_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_missing_key_fill_count")"
+  compile_threshold_max_owner_rule_miss_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_owner_rule_miss_count")"
+  compile_threshold_max_duplicate_owner_missing_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_duplicate_owner_missing_count")"
+  compile_threshold_max_owner_unused_count="$(to_json_opt_int_from_json_file_path "${compile_report_json}" "thresholds.max_owner_unused_count")"
+  compile_threshold_duplicate_key_count_ok="$(to_json_leq_ints "${compile_max_locale_duplicates_from_report}" "${compile_threshold_max_duplicate_key_count}")"
+  compile_threshold_duplicate_conflict_count_ok="$(to_json_leq_ints "${compile_max_locale_duplicate_conflicts_from_report}" "${compile_threshold_max_duplicate_conflict_count}")"
+  compile_threshold_missing_key_fill_count_ok="$(to_json_leq_ints "${compile_max_locale_missing_filled_from_report}" "${compile_threshold_max_missing_key_fill_count}")"
+  compile_threshold_owner_rule_miss_count_ok="$(to_json_leq_ints "${compile_max_locale_owner_rule_misses_from_report}" "${compile_threshold_max_owner_rule_miss_count}")"
+  compile_threshold_duplicate_owner_missing_count_ok="$(to_json_leq_ints "${compile_owner_policy_missing_duplicate_count_from_report}" "${compile_threshold_max_duplicate_owner_missing_count}")"
+  compile_threshold_owner_unused_count_ok="$(to_json_leq_ints "${compile_owner_policy_unused_count_from_report}" "${compile_threshold_max_owner_unused_count}")"
+  compile_thresholds_all_ok="$(
+    to_json_bool_and \
+      "${compile_threshold_duplicate_key_count_ok}" \
+      "${compile_threshold_duplicate_conflict_count_ok}" \
+      "${compile_threshold_missing_key_fill_count_ok}" \
+      "${compile_threshold_owner_rule_miss_count_ok}" \
+      "${compile_threshold_duplicate_owner_missing_count_ok}" \
+      "${compile_threshold_owner_unused_count_ok}"
+  )"
   bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
   bench_stress_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "stress_iters")"
   bench_needs_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "needs_iters")"
@@ -1293,6 +1367,23 @@ if [[ -n "${verify_report_json}" ]]; then
     "owner_policy_unused_count": ${compile_owner_policy_unused_count_from_report},
     "strict_duplicates": ${compile_strict_duplicates_from_report}
   },
+  "compile_thresholds": {
+    "max_duplicate_key_count": ${compile_threshold_max_duplicate_key_count},
+    "max_duplicate_conflict_count": ${compile_threshold_max_duplicate_conflict_count},
+    "max_missing_key_fill_count": ${compile_threshold_max_missing_key_fill_count},
+    "max_owner_rule_miss_count": ${compile_threshold_max_owner_rule_miss_count},
+    "max_duplicate_owner_missing_count": ${compile_threshold_max_duplicate_owner_missing_count},
+    "max_owner_unused_count": ${compile_threshold_max_owner_unused_count}
+  },
+  "compile_threshold_status": {
+    "duplicate_key_count_ok": ${compile_threshold_duplicate_key_count_ok},
+    "duplicate_conflict_count_ok": ${compile_threshold_duplicate_conflict_count_ok},
+    "missing_key_fill_count_ok": ${compile_threshold_missing_key_fill_count_ok},
+    "owner_rule_miss_count_ok": ${compile_threshold_owner_rule_miss_count_ok},
+    "duplicate_owner_missing_count_ok": ${compile_threshold_duplicate_owner_missing_count_ok},
+    "owner_unused_count_ok": ${compile_threshold_owner_unused_count_ok},
+    "all_ok": ${compile_thresholds_all_ok}
+  },
   "bench_summary": {
     "path_iters": ${bench_path_iters_from_report},
     "stress_iters": ${bench_stress_iters_from_report},
@@ -1311,7 +1402,8 @@ if [[ -n "${verify_report_json}" ]]; then
     "audit_owner_policy_missing_duplicate_clean": ${audit_owner_policy_missing_duplicate_clean_status},
     "audit_owner_policy_unused_clean": ${audit_owner_policy_unused_clean_status},
     "owner_policy_compare_clean": ${owner_policy_compare_clean_status},
-    "bench_report_present_when_enabled": ${bench_report_present_when_enabled_status}
+    "bench_report_present_when_enabled": ${bench_report_present_when_enabled_status},
+    "compile_thresholds_all_ok": ${compile_thresholds_all_ok}
   },
   "artifact_sha256": {
     "compile_report_json": ${compile_report_json_sha256},
