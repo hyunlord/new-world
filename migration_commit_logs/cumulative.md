@@ -181,3 +181,8 @@
 - `StressSystem`의 `stress_state` 판정과 stress→emotion meta 계산을 Rust snapshot 함수로 통합 이관.
 - GDScript는 snapshot을 1회 호출해 상태와 meta를 반영하도록 변경되어 중복 계산/호출을 줄임.
 - stress 수학 파이프라인이 snapshot/step 중심의 Rust API 구조로 정돈됨.
+
+## Commit 038
+- `StressSystem`의 trace decay/keep 처리(`_process_stress_traces`)를 Rust batch step API로 이관.
+- packed 배열 기반으로 contribution 합/갱신값/active mask를 계산하고 GDScript는 결과 반영만 수행.
+- stress trace 처리 경로까지 네이티브 수학 파이프라인으로 편입.

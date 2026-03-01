@@ -162,6 +162,14 @@ fn packed_f32_to_vec(values: &PackedFloat32Array) -> Vec<f32> {
     values.as_slice().to_vec()
 }
 
+fn vec_f32_to_packed(values: Vec<f32>) -> PackedFloat32Array {
+    PackedFloat32Array::from(values)
+}
+
+fn vec_u8_to_packed(values: Vec<u8>) -> PackedByteArray {
+    PackedByteArray::from(values)
+}
+
 fn build_step_pairs(
     thresholds: &PackedInt32Array,
     multipliers: &PackedFloat32Array,
@@ -807,6 +815,25 @@ impl WorldSimBridge {
         dict.set("stress_neg_gain_mult", out.stress_neg_gain_mult as f64);
         dict.set("stress_pos_gain_mult", out.stress_pos_gain_mult as f64);
         dict.set("stress_blunt_mult", out.stress_blunt_mult as f64);
+        dict
+    }
+
+    #[func]
+    fn stat_stress_trace_batch_step(
+        &self,
+        per_tick: PackedFloat32Array,
+        decay_rate: PackedFloat32Array,
+        min_keep: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_trace_batch_step(
+            per_tick.as_slice(),
+            decay_rate.as_slice(),
+            min_keep,
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("total_contribution", out.total_contribution as f64);
+        dict.set("updated_per_tick", vec_f32_to_packed(out.updated_per_tick));
+        dict.set("active_mask", vec_u8_to_packed(out.active_mask));
         dict
     }
 

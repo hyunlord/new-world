@@ -224,26 +224,34 @@ func _calc_continuous_stressors(
 
 # ── 3) 스트레스 후유증 traces ─────────────────────────────────────────
 func _process_stress_traces(ed, breakdown: Dictionary) -> float:
-	var total: float = 0.0
-	var to_remove: Array = []
+	var trace_count: int = ed.stress_traces.size()
+	if trace_count <= 0:
+		return 0.0
 
-	for i in range(ed.stress_traces.size()):
-		var trace = ed.stress_traces[i]
-		var contribution: float = trace.get("per_tick", 0.0)
-		total += contribution
+	var per_tick: PackedFloat32Array = PackedFloat32Array()
+	var decay_rate: PackedFloat32Array = PackedFloat32Array()
+	per_tick.resize(trace_count)
+	decay_rate.resize(trace_count)
+	for i in range(trace_count):
+		var trace_data: Dictionary = ed.stress_traces[i]
+		per_tick[i] = float(trace_data.get("per_tick", 0.0))
+		decay_rate[i] = float(trace_data.get("decay_rate", 0.05))
 
-		var decay: float = trace.get("decay_rate", 0.05)
-		trace["per_tick"] = contribution * (1.0 - decay)
-
-		if trace["per_tick"] < 0.01:
-			to_remove.append(i)
-		else:
-			var key = "trace_%s" % trace.get("source_id", "unknown")
+	var result: Dictionary = StatCurveScript.stress_trace_batch_step(per_tick, decay_rate, 0.01)
+	var total: float = float(result.get("total_contribution", 0.0))
+	var updated: PackedFloat32Array = result.get("updated_per_tick", PackedFloat32Array())
+	var active_mask: PackedByteArray = result.get("active_mask", PackedByteArray())
+	var usable_len: int = mini(trace_count, mini(updated.size(), active_mask.size()))
+	var next_traces: Array = []
+	for i in range(usable_len):
+		var trace: Dictionary = ed.stress_traces[i]
+		var contribution: float = float(per_tick[i])
+		trace["per_tick"] = float(updated[i])
+		if int(active_mask[i]) != 0:
+			var key: String = "trace_%s" % str(trace.get("source_id", "unknown"))
 			breakdown[key] = contribution
-
-	for i in range(to_remove.size() - 1, -1, -1):
-		ed.stress_traces.remove_at(to_remove[i])
-
+			next_traces.append(trace)
+	ed.stress_traces = next_traces
 	return total
 
 

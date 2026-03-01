@@ -451,6 +451,23 @@ func stat_stress_state_snapshot(
 	)
 
 
+## Delegates batch stress-trace decay/keep step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_trace_batch_step(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float
+):
+	return _call_native_if_exists(
+		"stat_stress_trace_batch_step",
+		[
+			per_tick,
+			decay_rate,
+			min_keep
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

@@ -54,6 +54,13 @@ pub struct StressStateSnapshot {
     pub stress_blunt_mult: f32,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct StressTraceBatchStep {
+    pub total_contribution: f32,
+    pub updated_per_tick: Vec<f32>,
+    pub active_mask: Vec<u8>,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -366,6 +373,35 @@ pub fn stress_state_snapshot(stress: f32, allostatic: f32) -> StressStateSnapsho
     }
 }
 
+/// Batch step for stress traces:
+/// - sums current per_tick values
+/// - applies per-entry decay
+/// - marks entries active when decayed value >= min_keep
+pub fn stress_trace_batch_step(
+    per_tick: &[f32],
+    decay_rate: &[f32],
+    min_keep: f32,
+) -> StressTraceBatchStep {
+    let len = per_tick.len().min(decay_rate.len());
+    let mut total = 0.0_f32;
+    let mut updated: Vec<f32> = Vec::with_capacity(len);
+    let mut active: Vec<u8> = Vec::with_capacity(len);
+
+    for idx in 0..len {
+        let contribution = per_tick[idx];
+        total += contribution;
+        let next = contribution * (1.0 - decay_rate[idx]);
+        updated.push(next);
+        active.push(if next >= min_keep { 1_u8 } else { 0_u8 });
+    }
+
+    StressTraceBatchStep {
+        total_contribution: total,
+        updated_per_tick: updated,
+        active_mask: active,
+    }
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -598,5 +634,21 @@ mod tests {
         let low = stress_state_snapshot(300.0, 20.0);
         let high = stress_state_snapshot(300.0, 80.0);
         assert!(high.stress_blunt_mult < low.stress_blunt_mult);
+    }
+
+    #[test]
+    fn stress_trace_batch_step_marks_active_and_sums_total() {
+        let out = stress_trace_batch_step(&[1.0, 0.5, 0.01], &[0.1, 0.2, 0.5], 0.01);
+        assert!((out.total_contribution - 1.51).abs() < 1e-6);
+        assert_eq!(out.active_mask, vec![1, 1, 0]);
+        assert_eq!(out.updated_per_tick.len(), 3);
+    }
+
+    #[test]
+    fn stress_trace_batch_step_uses_min_len() {
+        let out = stress_trace_batch_step(&[1.0, 2.0], &[0.1], 0.01);
+        assert_eq!(out.updated_per_tick.len(), 1);
+        assert_eq!(out.active_mask.len(), 1);
+        assert!((out.total_contribution - 1.0).abs() < 1e-6);
     }
 }

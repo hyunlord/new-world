@@ -502,6 +502,45 @@ static func stress_state_snapshot(
 		"stress_blunt_mult": stress_blunt_mult,
 	}
 
+
+## Batch step for stress traces.
+## Input arrays must be aligned by index.
+## Returns Dictionary:
+## { "total_contribution": float, "updated_per_tick": PackedFloat32Array, "active_mask": PackedByteArray }
+static func stress_trace_batch_step(
+	per_tick: PackedFloat32Array,
+	decay_rate: PackedFloat32Array,
+	min_keep: float = 0.01
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_trace_batch_step",
+		[
+			per_tick,
+			decay_rate,
+			min_keep
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var len: int = mini(per_tick.size(), decay_rate.size())
+	var updated: PackedFloat32Array = PackedFloat32Array()
+	var active: PackedByteArray = PackedByteArray()
+	updated.resize(len)
+	active.resize(len)
+	var total: float = 0.0
+	for i in range(len):
+		var contribution: float = float(per_tick[i])
+		total += contribution
+		var next: float = contribution * (1.0 - float(decay_rate[i]))
+		updated[i] = next
+		active[i] = 1 if next >= min_keep else 0
+	return {
+		"total_contribution": total,
+		"updated_per_tick": updated,
+		"active_mask": active,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)
