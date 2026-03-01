@@ -101,7 +101,11 @@ pub fn pathfind_grid_bytes(
     to_y: i32,
     max_steps: usize,
 ) -> Result<Vec<GridPos>, PathfindError> {
-    let grid = build_grid_cost_map(width, height, walkable, move_cost)?;
+    validate_grid_inputs(width, height, walkable, move_cost)?;
+    if from_x == to_x && from_y == to_y {
+        return Ok(vec![GridPos::new(from_x, from_y)]);
+    }
+    let grid = build_grid_cost_map_unchecked(width, height, walkable, move_cost);
     Ok(find_path(
         &grid,
         GridPos::new(from_x, from_y),
@@ -110,12 +114,15 @@ pub fn pathfind_grid_bytes(
     ))
 }
 
-fn build_grid_cost_map(
+fn validate_grid_inputs(
     width: i32,
     height: i32,
     walkable: &[u8],
     move_cost: &[f32],
-) -> Result<GridCostMap, PathfindError> {
+) -> Result<(), PathfindError> {
+    if width <= 0 || height <= 0 {
+        return Err(PathfindError::InvalidDimensions { width, height });
+    }
     let expected = (width * height) as usize;
     if walkable.len() != expected {
         return Err(PathfindError::InvalidWalkableLength {
@@ -129,7 +136,15 @@ fn build_grid_cost_map(
             got: move_cost.len(),
         });
     }
+    Ok(())
+}
 
+fn build_grid_cost_map_unchecked(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+) -> GridCostMap {
     let mut grid = GridCostMap::new(width, height);
     for y in 0..height {
         for x in 0..width {
@@ -138,7 +153,19 @@ fn build_grid_cost_map(
             grid.set_move_cost(x, y, move_cost[idx]);
         }
     }
-    Ok(grid)
+    grid
+}
+
+fn build_grid_cost_map(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+) -> Result<GridCostMap, PathfindError> {
+    validate_grid_inputs(width, height, walkable, move_cost)?;
+    Ok(build_grid_cost_map_unchecked(
+        width, height, walkable, move_cost,
+    ))
 }
 
 pub fn pathfind_grid_batch_bytes(
@@ -2404,6 +2431,30 @@ mod tests {
     }
 
     #[test]
+    fn pathfind_grid_rejects_invalid_dimensions() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let err = pathfind_grid_bytes(0, 4, &walkable, &move_cost, 0, 0, 3, 3, 200)
+            .expect_err("zero width must fail");
+        assert_eq!(
+            err,
+            PathfindError::InvalidDimensions {
+                width: 0,
+                height: 4
+            }
+        );
+    }
+
+    #[test]
+    fn pathfind_grid_returns_singleton_for_stationary_query() {
+        let walkable = vec![0_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let path = pathfind_grid_bytes(4, 4, &walkable, &move_cost, 2, 2, 2, 2, 200)
+            .expect("stationary query should succeed");
+        assert_eq!(path, vec![GridPos::new(2, 2)]);
+    }
+
+    #[test]
     fn pathfind_grid_batch_processes_multiple_queries() {
         let walkable = vec![1_u8; 25];
         let move_cost = vec![1.0_f32; 25];
@@ -2503,6 +2554,24 @@ mod tests {
             PathfindError::MismatchedBatchLength {
                 from_len: 3,
                 to_len: 3
+            }
+        );
+    }
+
+    #[test]
+    fn pathfind_grid_batch_xy_rejects_invalid_dimensions() {
+        let walkable = vec![1_u8; 16];
+        let move_cost = vec![1.0_f32; 16];
+        let from_xy = vec![0, 0];
+        let to_xy = vec![1, 1];
+
+        let err = pathfind_grid_batch_xy_bytes(4, 0, &walkable, &move_cost, &from_xy, &to_xy, 200)
+            .expect_err("zero height must fail");
+        assert_eq!(
+            err,
+            PathfindError::InvalidDimensions {
+                width: 4,
+                height: 0
             }
         );
     }

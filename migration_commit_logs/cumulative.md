@@ -976,3 +976,8 @@
 - `localization_audit.py`의 duplicate 집계를 `supported_locales` 전체로 확장하고 로케일별 충돌 요약(`duplicate_locale_summary`)을 추가.
 - 충돌 최대 로케일을 `duplicate_report_locale`로 선택해 top-level `duplicate_conflicts`와 상세 충돌 목록 기준을 compile 게이트 관점과 일치시킴.
 - 결과적으로 audit/compile가 동일하게 `ko=35` 충돌 기준을 보고하도록 정렬.
+
+## Commit 198
+- `sim-bridge`에 `validate_grid_inputs`를 추가해 grid pathfinding API의 차원/버퍼 길이 검증을 공통화하고 `InvalidDimensions`를 명시적으로 반환하도록 보강.
+- 단일 경로 API(`pathfind_grid_bytes`)에서 `from==to` stationary 케이스를 검증 후 즉시 반환해 불필요한 그리드 빌드 오버헤드를 제거.
+- 관련 경계 테스트(차원 오류/stationary 반환)를 추가해 입력 검증과 fast-path 의미를 고정.
