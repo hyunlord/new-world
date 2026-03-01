@@ -1175,3 +1175,8 @@
 - `localization_audit`에 owner-policy 전용 Markdown 리포트 생성 옵션(`--owner-policy-markdown`)을 추가.
 - 리포트는 owner policy 요약 수치와 누락/미사용 키 목록을 분리해 출력하며, 이슈가 없을 때는 명시적으로 clean 상태를 기록.
 - `migration_verify`에 `MIGRATION_AUDIT_OWNER_POLICY_MARKDOWN` 전달 경로를 연결해 검증 파이프라인에서 owner-policy 문서 아티팩트 생성을 자동화.
+
+## Commit 238
+- `migration_verify`에 `MIGRATION_AUDIT_REPORT_DIR`를 추가해 audit 산출물 경로를 디렉터리 단위로 일괄 설정 가능하게 확장.
+- 개별 경로 env가 비어 있을 때만 기본 파일명(`audit.json`, `duplicate.json`, `duplicate_conflicts.md`, `key_owner_policy.generated.json`, `owner_policy.md`)을 자동 할당.
+- `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts tools/migration_verify.sh`로 아티팩트 5종 자동 생성을 검증.

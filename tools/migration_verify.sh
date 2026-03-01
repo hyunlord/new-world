@@ -55,6 +55,29 @@ audit_key_owner_policy_json="${MIGRATION_AUDIT_KEY_OWNER_POLICY:-}"
 audit_owner_policy_markdown="${MIGRATION_AUDIT_OWNER_POLICY_MARKDOWN:-}"
 audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
+audit_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
+if [[ -n "${audit_report_dir}" ]]; then
+  audit_report_dir_prefix="${audit_report_dir%/}"
+  if [[ -z "${audit_report_dir_prefix}" ]]; then
+    audit_report_dir_prefix="${audit_report_dir}"
+  fi
+  if [[ -z "${audit_report_json}" ]]; then
+    audit_report_json="${audit_report_dir_prefix}/audit.json"
+  fi
+  if [[ -z "${audit_duplicate_report_json}" ]]; then
+    audit_duplicate_report_json="${audit_report_dir_prefix}/duplicate.json"
+  fi
+  if [[ -z "${audit_conflict_markdown}" ]]; then
+    audit_conflict_markdown="${audit_report_dir_prefix}/duplicate_conflicts.md"
+  fi
+  if [[ -z "${audit_key_owner_policy_json}" ]]; then
+    audit_key_owner_policy_json="${audit_report_dir_prefix}/key_owner_policy.generated.json"
+  fi
+  if [[ -z "${audit_owner_policy_markdown}" ]]; then
+    audit_owner_policy_markdown="${audit_report_dir_prefix}/owner_policy.md"
+  fi
+  echo "[migration_verify] audit artifact dir=${audit_report_dir_prefix}"
+fi
 audit_cmd=(
   python3 "${ROOT_DIR}/tools/localization_audit.py"
   --project-root "${ROOT_DIR}"
