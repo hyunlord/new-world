@@ -427,8 +427,13 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "missing_key_fill_count": missing_filled_count,
                 "include_sources": include_sources,
                 "key_registry_path": key_registry_rel,
+                "key_owners_path": key_owners_rel,
                 "preserve_key_ids": preserve_key_ids,
                 "embed_keys": embed_keys,
+                "owner_rule_seen_count": owner_rule_seen_count,
+                "owner_rule_hit_count": owner_rule_hit_count,
+                "owner_rule_miss_count": owner_rule_miss_count,
+                "owner_rule_override_count": owner_rule_override_count,
             },
             "strings": locale_strings,
         }

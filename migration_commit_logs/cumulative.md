@@ -1105,3 +1105,8 @@
 - pathfinding backend 레이어에 CPU/GPU dispatch 카운터를 추가하고 dispatch 경로에서 resolved backend 기준으로 계측.
 - `WorldSimBridge`에 `get_pathfinding_backend_stats`/`reset_pathfinding_backend_stats`를 추가해 런타임 관측성을 강화.
 - 병렬 테스트 환경에서도 안정적인 델타 기반 회귀 테스트를 추가하고 전체 검증(`migration_verify --with-benches`) 통과.
+
+## Commit 224
+- `localization_compile` 산출물 meta에 key-owner 정책 경로/적용 통계(seen/hit/miss/override)를 추가.
+- `compiled/en.json`, `compiled/ko.json`에 신규 meta 필드를 반영해 아티팩트 자체의 관측성을 강화.
+- 전체 검증(`migration_verify --with-benches`) 통과로 checksum 유지 확인.
