@@ -1190,3 +1190,8 @@
 - `migration_verify` pathfinding backend smoke 검증에 mode별 `cpu/gpu` dispatch 카운트 파싱을 추가하고 `cpu+gpu=total` 관계를 강제.
 - `resolved` 결과와 dispatch 방향 일관성(`resolved=cpu -> gpu=0`, `resolved=gpu -> cpu=0`)을 mode별(`auto/cpu/gpu`)로 검증하도록 게이트를 확장.
 - `MIGRATION_BENCH_PATH_BACKEND_SMOKE=true ... tools/migration_verify.sh --with-benches` 재검증으로 checksum/dispatch/resolved 게이트 동시 통과를 확인.
+
+## Commit 241
+- `localization_audit`에 `--owner-policy-compare-report-json`을 추가해 owner-policy drift 비교 결과(missing/extra/changed)를 구조화된 JSON으로 출력 가능하게 확장.
+- `migration_verify`에 `MIGRATION_AUDIT_OWNER_POLICY_COMPARE_REPORT_JSON` 전달 경로를 추가하고, `MIGRATION_AUDIT_REPORT_DIR` 사용 시 기본 아티팩트 `owner_policy_compare.json` 자동 생성을 연결.
+- `MIGRATION_AUDIT_REPORT_DIR=/tmp/worldsim_audit_artifacts3 tools/migration_verify.sh`에서 compare JSON 아티팩트 생성/값(0 drift) 확인.

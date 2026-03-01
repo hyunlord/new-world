@@ -53,6 +53,7 @@ audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
 audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
 audit_key_owner_policy_json="${MIGRATION_AUDIT_KEY_OWNER_POLICY:-}"
 audit_owner_policy_markdown="${MIGRATION_AUDIT_OWNER_POLICY_MARKDOWN:-}"
+audit_owner_policy_compare_report_json="${MIGRATION_AUDIT_OWNER_POLICY_COMPARE_REPORT_JSON:-}"
 audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
 audit_report_dir="${MIGRATION_AUDIT_REPORT_DIR:-}"
@@ -75,6 +76,9 @@ if [[ -n "${audit_report_dir}" ]]; then
   fi
   if [[ -z "${audit_owner_policy_markdown}" ]]; then
     audit_owner_policy_markdown="${audit_report_dir_prefix}/owner_policy.md"
+  fi
+  if [[ -z "${audit_owner_policy_compare_report_json}" ]]; then
+    audit_owner_policy_compare_report_json="${audit_report_dir_prefix}/owner_policy_compare.json"
   fi
   echo "[migration_verify] audit artifact dir=${audit_report_dir_prefix}"
 fi
@@ -103,6 +107,9 @@ fi
 if [[ -n "${audit_owner_policy_markdown}" ]]; then
   audit_cmd+=(--owner-policy-markdown "${audit_owner_policy_markdown}")
 fi
+if [[ -n "${audit_owner_policy_compare_report_json}" ]]; then
+  audit_cmd+=(--owner-policy-compare-report-json "${audit_owner_policy_compare_report_json}")
+fi
 if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
   audit_cmd+=(--refresh-key-owner-policy-auto)
 fi
@@ -127,6 +134,9 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
   fi
   if [[ -n "${audit_owner_policy_markdown}" ]]; then
     audit_cmd+=(--owner-policy-markdown "${audit_owner_policy_markdown}")
+  fi
+  if [[ -n "${audit_owner_policy_compare_report_json}" ]]; then
+    audit_cmd+=(--owner-policy-compare-report-json "${audit_owner_policy_compare_report_json}")
   fi
   if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
     audit_cmd+=(--refresh-key-owner-policy-auto)

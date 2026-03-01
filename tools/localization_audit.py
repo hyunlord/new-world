@@ -686,6 +686,11 @@ def main() -> int:
         help="compare against key_owners_path from localization/manifest.json",
     )
     parser.add_argument(
+        "--owner-policy-compare-report-json",
+        default="",
+        help="optional output path for owner policy compare result json",
+    )
+    parser.add_argument(
         "--refresh-key-owner-policy-auto",
         action="store_true",
         help="write generated owner policy to key_owners_path from localization/manifest.json",
@@ -727,6 +732,7 @@ def main() -> int:
 
     owner_policy_mismatch = False
     compare_path: Path | None = None
+    compare_result: Dict[str, Any] | None = None
     if args.compare_key_owner_policy:
         compare_path = (project_root / args.compare_key_owner_policy).resolve()
     elif args.compare_key_owner_policy_auto:
@@ -770,6 +776,21 @@ def main() -> int:
                     + ", ".join(compare_result["changed_keys"][:preview_limit]),
                     file=sys.stderr,
                 )
+    if args.owner_policy_compare_report_json:
+        out = (project_root / args.owner_policy_compare_report_json).resolve()
+        payload: Dict[str, Any] = {
+            "compare_enabled": compare_path is not None,
+            "compare_path": str(compare_path) if compare_path is not None else "",
+            "missing_keys": [],
+            "extra_keys": [],
+            "changed_keys": [],
+            "missing_count": 0,
+            "extra_count": 0,
+            "changed_count": 0,
+        }
+        if compare_result is not None:
+            payload.update(compare_result)
+        _write_json(out, payload)
 
     strict_duplicate_conflicts = int(report["duplicate_conflict_count"]) > 0
     if owner_policy_mismatch:
