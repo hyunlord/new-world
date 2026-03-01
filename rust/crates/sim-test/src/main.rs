@@ -2,6 +2,7 @@ use sim_core::config::GameConfig;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
+use sim_bridge::{pathfind_grid_batch_bytes, pathfind_grid_batch_xy_bytes};
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
 use std::sync::{Arc, Mutex};
@@ -11,6 +12,10 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.iter().any(|arg| arg == "--bench-needs-math") {
         run_needs_math_bench(&args);
+        return;
+    }
+    if args.iter().any(|arg| arg == "--bench-pathfind-bridge") {
+        run_pathfind_bridge_bench(&args);
         return;
     }
     if args.iter().any(|arg| arg == "--bench-stress-math") {
@@ -302,6 +307,90 @@ fn run_needs_math_bench(args: &[String]) {
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);
     println!(
         "[sim-test] needs-math bench: iterations={} elapsed_ms={:.3} ns_per_iter={:.1} checksum={:.5}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        ns_per_iter,
+        checksum
+    );
+}
+
+fn run_pathfind_bridge_bench(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 1_000);
+    let width: i32 = 64;
+    let height: i32 = 64;
+    let cell_count = (width * height) as usize;
+    let max_steps: usize = cell_count;
+
+    let mut walkable: Vec<u8> = vec![1; cell_count];
+    let mut move_cost: Vec<f32> = vec![1.0; cell_count];
+    for y in 0..height {
+        for x in 0..width {
+            let idx = (y * width + x) as usize;
+            walkable[idx] = 1;
+            move_cost[idx] = 1.0 + ((x * 3 + y * 5) % 7) as f32 * 0.05;
+        }
+    }
+
+    let from_points: [(i32, i32); 8] = [
+        (1, 1),
+        (2, 40),
+        (8, 10),
+        (12, 50),
+        (20, 4),
+        (32, 18),
+        (40, 40),
+        (5, 58),
+    ];
+    let to_points: [(i32, i32); 8] = [
+        (62, 62),
+        (55, 3),
+        (45, 20),
+        (50, 54),
+        (60, 8),
+        (10, 45),
+        (3, 60),
+        (58, 12),
+    ];
+
+    let mut from_xy: Vec<i32> = Vec::with_capacity(from_points.len() * 2);
+    let mut to_xy: Vec<i32> = Vec::with_capacity(to_points.len() * 2);
+    for idx in 0..from_points.len() {
+        from_xy.push(from_points[idx].0);
+        from_xy.push(from_points[idx].1);
+        to_xy.push(to_points[idx].0);
+        to_xy.push(to_points[idx].1);
+    }
+
+    let started = Instant::now();
+    let mut checksum = 0.0_f32;
+    for _ in 0..iterations {
+        let groups = pathfind_grid_batch_bytes(
+            width,
+            height,
+            &walkable,
+            &move_cost,
+            &from_points,
+            &to_points,
+            max_steps,
+        )
+        .expect("pathfind_grid_batch_bytes");
+        let groups_xy = pathfind_grid_batch_xy_bytes(
+            width, height, &walkable, &move_cost, &from_xy, &to_xy, max_steps,
+        )
+        .expect("pathfind_grid_batch_xy_bytes");
+
+        for i in 0..groups.len() {
+            checksum += black_box(groups[i].len() as f32);
+        }
+        for i in 0..groups_xy.len() {
+            checksum += black_box(groups_xy[i].len() as f32);
+        }
+    }
+
+    let elapsed = started.elapsed();
+    let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);
+    println!(
+        "[sim-test] pathfind-bridge bench: iterations={} elapsed_ms={:.3} ns_per_iter={:.1} checksum={:.5}",
         iterations,
         elapsed.as_secs_f64() * 1000.0,
         ns_per_iter,

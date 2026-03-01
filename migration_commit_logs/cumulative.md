@@ -946,3 +946,8 @@
 - `sim-bridge` path 출력 인코딩에 `encode_path_vec2`/`encode_path_groups_vec2`를 도입해 `Vec<Vector2>` 중간 collect를 제거.
 - `pathfind_grid`/`pathfind_grid_batch`가 Packed 배열 직접 인코딩 경로를 사용하도록 정리.
 - path 의미를 유지하면서 bridge 결과 포장 단계의 메모리/CPU 오버헤드를 완화.
+
+## Commit 192
+- `sim-test`에 `--bench-pathfind-bridge` 모드를 추가해 Rust bridge batch pathfinding(`tuple`, `packed XY`) 경로를 직접 벤치 가능하게 확장.
+- 벤치 경로에서 장거리 탐색이 빈 결과로 수렴하지 않도록 `max_steps`를 맵 셀 수 기반으로 조정하고, 기본 반복 수를 `1000`으로 낮춰 실사용 가능한 실행 시간을 확보.
+- 기존 stress/needs 체크섬(`24032652.00000`, `38457848.00000`)은 유지하면서 pathfinding 벤치 checksum 기준(`708000.00000` @ 1k, `7080000.00000` @ 10k)을 추가.
