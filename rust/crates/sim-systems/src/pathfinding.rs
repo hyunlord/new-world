@@ -1,3 +1,6 @@
+use std::cmp::Ordering;
+use std::collections::BinaryHeap;
+
 const DEFAULT_MAX_STEPS: usize = 200;
 const CARDINAL_COST: f32 = 1.0;
 const DIAGONAL_COST: f32 = 1.414;
@@ -13,6 +16,30 @@ pub struct GridPos {
 impl GridPos {
     pub const fn new(x: i32, y: i32) -> Self {
         Self { x, y }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct OpenEntry {
+    idx: usize,
+    f: f32,
+}
+
+impl Eq for OpenEntry {}
+
+impl Ord for OpenEntry {
+    fn cmp(&self, other: &Self) -> Ordering {
+        other
+            .f
+            .partial_cmp(&self.f)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| other.idx.cmp(&self.idx))
+    }
+}
+
+impl PartialOrd for OpenEntry {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -152,33 +179,32 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
     };
     let node_count = (grid.width * grid.height) as usize;
 
-    let mut open_set: Vec<usize> = vec![from_idx];
-    let mut in_open: Vec<bool> = vec![false; node_count];
+    let mut open_set: BinaryHeap<OpenEntry> = BinaryHeap::new();
     let mut came_from: Vec<Option<usize>> = vec![None; node_count];
     let mut g_score: Vec<f32> = vec![INF_SCORE; node_count];
     let mut f_score: Vec<f32> = vec![INF_SCORE; node_count];
     let mut closed_set: Vec<bool> = vec![false; node_count];
 
-    in_open[from_idx] = true;
     g_score[from_idx] = 0.0;
     f_score[from_idx] = chebyshev(from, to);
+    open_set.push(OpenEntry {
+        idx: from_idx,
+        f: f_score[from_idx],
+    });
 
     let mut steps = 0usize;
-    while !open_set.is_empty() && steps < max_steps {
-        steps += 1;
-
-        let mut best_idx = 0usize;
-        let mut best_f = f_score[open_set[0]];
-        for (idx, node_idx) in open_set.iter().enumerate().skip(1) {
-            let f = f_score[*node_idx];
-            if f < best_f {
-                best_f = f;
-                best_idx = idx;
-            }
+    while let Some(current_entry) = open_set.pop() {
+        let current_idx = current_entry.idx;
+        if closed_set[current_idx] {
+            continue;
         }
-
-        let current_idx = open_set.remove(best_idx);
-        in_open[current_idx] = false;
+        if current_entry.f > f_score[current_idx] {
+            continue;
+        }
+        if steps >= max_steps {
+            break;
+        }
+        steps += 1;
 
         if current_idx == to_idx {
             return reconstruct_path(&came_from, current_idx, grid.width);
@@ -218,13 +244,12 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                 if tentative_g < g_score[neighbor_idx] {
                     came_from[neighbor_idx] = Some(current_idx);
                     g_score[neighbor_idx] = tentative_g;
-                    f_score[neighbor_idx] =
-                        tentative_g + chebyshev(GridPos::new(neighbor_x, neighbor_y), to);
-
-                    if !in_open[neighbor_idx] {
-                        open_set.push(neighbor_idx);
-                        in_open[neighbor_idx] = true;
-                    }
+                    let neighbor_f = tentative_g + chebyshev(GridPos::new(neighbor_x, neighbor_y), to);
+                    f_score[neighbor_idx] = neighbor_f;
+                    open_set.push(OpenEntry {
+                        idx: neighbor_idx,
+                        f: neighbor_f,
+                    });
                 }
             }
         }

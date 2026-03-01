@@ -1025,3 +1025,8 @@
 - `sim-systems` A* 코어를 `HashMap/HashSet`에서 인덱스 기반 `Vec` 상태 배열로 전환해 pathfinding hot path의 해시/할당 오버헤드를 제거.
 - 경로 재구성도 인덱스 체인 기반으로 교체하고 시작점 out-of-bounds 경계 테스트를 추가해 의미를 고정.
 - checksum은 유지하면서 `pathfind-bridge` 성능이 약 `20.1ms/iter -> 2.9ms/iter` 수준으로 크게 개선.
+
+## Commit 208
+- `sim-systems` A* open-set 선택 로직을 선형 스캔에서 `BinaryHeap` 기반 우선순위 큐로 전환해 최소 f-score 탐색 비용을 추가 절감.
+- stale heap entry 스킵 + 유효 확장 노드 기준 `max_steps` 카운팅으로 의미를 유지하면서 조기 종료 리스크를 제거.
+- checksum을 유지한 상태에서 `pathfind-bridge` 성능이 추가로 `~2.9ms/iter -> ~2.0ms/iter` 수준으로 개선.
