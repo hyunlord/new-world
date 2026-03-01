@@ -1387,3 +1387,10 @@
 - `occupation_system.gd`를 Rust-first best-skill/hysteresis 판정으로 전환(브리지 미사용 시 기존 로직 fallback).
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `6/56` 적용.
+
+## Commit 278
+- `sim-systems/body`에 `leader_age_respect`, `leader_score`를 추가해 리더 선출 점수 연산을 Rust 함수로 확장하고 관련 단위 테스트를 추가.
+- `sim-bridge`에 `body_leader_age_respect`, `body_leader_score` 메서드를 추가해 GDScript에서 리더 점수 계산 경로를 직접 호출 가능하게 확장.
+- `leader_system.gd`의 `_compute_age_respect`, `_compute_leader_score`를 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `7/56` 적용.

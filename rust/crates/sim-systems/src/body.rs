@@ -541,6 +541,36 @@ pub fn occupation_should_switch(
     normalized_margin >= change_hysteresis
 }
 
+/// Age-based leadership respect score in `[0.0, 1.0]`.
+pub fn leader_age_respect(age_years: f32) -> f32 {
+    clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
+}
+
+/// Weighted leadership score with optional reputation bonus.
+pub fn leader_score(
+    charisma: f32,
+    wisdom: f32,
+    trustworthiness: f32,
+    intimidation: f32,
+    social_capital: f32,
+    age_respect: f32,
+    w_charisma: f32,
+    w_wisdom: f32,
+    w_trustworthiness: f32,
+    w_intimidation: f32,
+    w_social_capital: f32,
+    w_age_respect: f32,
+    rep_overall: f32,
+) -> f32 {
+    let base_score = charisma * w_charisma
+        + wisdom * w_wisdom
+        + trustworthiness * w_trustworthiness
+        + intimidation * w_intimidation
+        + social_capital * w_social_capital
+        + age_respect * w_age_respect;
+    base_score * (1.0 + rep_overall * 0.20)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1014,11 +1044,11 @@ mod tests {
         child_social_buffered_intensity, child_stage_code_from_age_ticks, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, job_satisfaction_score, job_satisfaction_score_batch,
-        needs_base_decay_step, needs_critical_severity_step, occupation_best_skill_index,
-        occupation_should_switch, rest_energy_recovery, stress_injection_apply_step,
-        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
-        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
-        upper_needs_step, warmth_decay,
+        leader_age_respect, leader_score, needs_base_decay_step, needs_critical_severity_step,
+        occupation_best_skill_index, occupation_should_switch, rest_energy_recovery,
+        stress_injection_apply_step, stress_rebound_apply_step, stress_shaken_countdown_step,
+        stress_support_score, thirst_decay, upper_needs_best_skill_normalized,
+        upper_needs_job_alignment, upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -1346,6 +1376,25 @@ mod tests {
     fn occupation_should_switch_uses_hysteresis_margin() {
         assert!(occupation_should_switch(65, 50, 0.1));
         assert!(!occupation_should_switch(56, 50, 0.1));
+    }
+
+    #[test]
+    fn leader_age_respect_is_clamped() {
+        assert_eq!(leader_age_respect(10.0), 0.0);
+        assert_eq!(leader_age_respect(18.0), 0.0);
+        assert_eq!(leader_age_respect(58.0), 1.0);
+        assert_eq!(leader_age_respect(90.0), 1.0);
+    }
+
+    #[test]
+    fn leader_score_applies_reputation_bonus() {
+        let no_bonus = leader_score(
+            0.6, 0.5, 0.7, 0.2, 0.4, 0.8, 0.25, 0.15, 0.15, 0.15, 0.15, 0.15, 0.0,
+        );
+        let with_bonus = leader_score(
+            0.6, 0.5, 0.7, 0.2, 0.4, 0.8, 0.25, 0.15, 0.15, 0.15, 0.15, 0.15, 0.4,
+        );
+        assert!(with_bonus > no_bonus);
     }
 
     #[test]

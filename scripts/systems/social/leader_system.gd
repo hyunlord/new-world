@@ -20,6 +20,11 @@ var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _relationship_manager: RefCounted
 var _reputation_manager: RefCounted
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_LEADER_SCORE_METHOD: String = "body_leader_score"
+const _SIM_BRIDGE_LEADER_AGE_METHOD: String = "body_leader_age_respect"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func init(entity_manager: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted = null) -> void:
@@ -29,6 +34,22 @@ func init(entity_manager: RefCounted, settlement_manager: RefCounted, relationsh
 	system_name = "leader"
 	priority = 52           ## runs before value_system (priority 55)
 	tick_interval = GameConfig.LEADER_CHECK_INTERVAL
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_LEADER_SCORE_METHOD) and node.has_method(_SIM_BRIDGE_LEADER_AGE_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -162,6 +183,26 @@ func _compute_leader_score(entity: RefCounted, settlement: RefCounted) -> float:
 	if _reputation_manager != null:
 		var avg_rep: Dictionary = _reputation_manager.get_settlement_average(entity.id, settlement.member_ids)
 		rep_bonus = avg_rep.get("overall", 0.0) * 0.20
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_score_variant: Variant = bridge.call(
+			_SIM_BRIDGE_LEADER_SCORE_METHOD,
+			charisma,
+			wisdom,
+			trustworthiness,
+			intimidation,
+			social_cap,
+			age_respect,
+			float(GameConfig.LEADER_W_CHARISMA),
+			float(GameConfig.LEADER_W_WISDOM),
+			w_trust,
+			float(GameConfig.LEADER_W_INTIMIDATION),
+			float(GameConfig.LEADER_W_SOCIAL_CAPITAL),
+			w_age_resp,
+			float(rep_bonus / 0.20)
+		)
+		if rust_score_variant != null:
+			return float(rust_score_variant)
 	return base_score * (1.0 + rep_bonus)
 
 
@@ -191,6 +232,11 @@ func _compute_social_capital_norm(entity: RefCounted, settlement: RefCounted) ->
 ## then stays at max. Reflects traditional societies' elder deference.
 func _compute_age_respect(entity: RefCounted) -> float:
 	var age_years: float = GameConfig.get_age_years(entity.age)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_LEADER_AGE_METHOD, age_years)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.0, 1.0)
 	return clampf((age_years - 18.0) / 40.0, 0.0, 1.0)
 
 

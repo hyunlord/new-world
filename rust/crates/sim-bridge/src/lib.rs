@@ -990,6 +990,45 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_leader_age_respect(&self, age_years: f32) -> f32 {
+        body::leader_age_respect(age_years)
+    }
+
+    #[func]
+    fn body_leader_score(
+        &self,
+        charisma: f32,
+        wisdom: f32,
+        trustworthiness: f32,
+        intimidation: f32,
+        social_capital: f32,
+        age_respect: f32,
+        w_charisma: f32,
+        w_wisdom: f32,
+        w_trustworthiness: f32,
+        w_intimidation: f32,
+        w_social_capital: f32,
+        w_age_respect: f32,
+        rep_overall: f32,
+    ) -> f32 {
+        body::leader_score(
+            charisma,
+            wisdom,
+            trustworthiness,
+            intimidation,
+            social_capital,
+            age_respect,
+            w_charisma,
+            w_wisdom,
+            w_trustworthiness,
+            w_intimidation,
+            w_social_capital,
+            w_age_respect,
+            rep_overall,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
