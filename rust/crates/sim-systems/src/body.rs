@@ -792,6 +792,41 @@ pub fn value_plasticity(age_years: f32) -> f32 {
     0.10
 }
 
+/// Newborn health score from gestation, nutrition, maternal age, and genetics.
+pub fn family_newborn_health(
+    gestation_weeks: i32,
+    mother_nutrition: f32,
+    mother_age: f32,
+    genetics_z: f32,
+    tech: f32,
+) -> f32 {
+    let tech_t = clamp_f32(tech / 10.0, 0.0, 1.0);
+    let w50 = 35.0 + (24.0 - 35.0) * tech_t;
+    let survival_base = 1.0 / (1.0 + (-(gestation_weeks as f32 - w50) / 2.0).exp());
+
+    let damage = if gestation_weeks < 28 {
+        0.9 + (0.3 - 0.9) * tech_t
+    } else if gestation_weeks < 32 {
+        0.5 + (0.1 - 0.5) * tech_t
+    } else if gestation_weeks < 37 {
+        0.2 + (0.02 - 0.2) * tech_t
+    } else {
+        0.01
+    };
+
+    let nutrition_factor = 0.6 + (1.1 - 0.6) * clamp_f32(mother_nutrition, 0.0, 1.0);
+    let age_factor = if mother_age < 16.0 || mother_age > 45.0 {
+        0.7
+    } else if mother_age < 18.0 || mother_age > 40.0 {
+        0.85
+    } else {
+        1.0
+    };
+    let genetics_factor = clamp_f32(genetics_z, 0.7, 1.3);
+    let health = survival_base * (1.0 - damage) * nutrition_factor * age_factor * genetics_factor;
+    clamp_f32(health, 0.0, 1.0)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1276,8 +1311,8 @@ mod tests {
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
-        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment,
-        upper_needs_step, value_plasticity, warmth_decay,
+        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        value_plasticity, warmth_decay, family_newborn_health,
     };
 
     #[test]
@@ -1711,6 +1746,15 @@ mod tests {
         let high = stratification_wealth_score(2.0, 1.0, 1.0, 0.4, 0.3, 0.3);
         assert!(low.abs() < 1e-6);
         assert!(high > low);
+    }
+
+    #[test]
+    fn family_newborn_health_penalizes_preterm_birth() {
+        let preterm = family_newborn_health(30, 0.8, 28.0, 1.0, 0.0);
+        let term = family_newborn_health(39, 0.8, 28.0, 1.0, 0.0);
+        assert!((0.0..=1.0).contains(&preterm));
+        assert!((0.0..=1.0).contains(&term));
+        assert!(term > preterm);
     }
 
     #[test]

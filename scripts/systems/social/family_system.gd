@@ -4,6 +4,8 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## Gaussian gestation duration with preterm birth mechanics (T-2000).
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_NEWBORN_HEALTH_METHOD: String = "body_family_newborn_health"
 
 var _entity_manager: RefCounted
 var _relationship_manager: RefCounted
@@ -12,6 +14,8 @@ var _settlement_manager: RefCounted
 var _mortality_system: RefCounted  # For registering births in demography log
 var _stress_system: RefCounted = null
 var _rng: RandomNumberGenerator
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 ## Fertile age range in ticks (15-45 years)
 var _fertility_start: int = 15 * GameConfig.TICKS_PER_YEAR
@@ -52,6 +56,22 @@ func init(entity_manager: RefCounted, relationship_manager: RefCounted, building
 	_settlement_manager = settlement_manager
 	_rng = rng
 	_mortality_system = mortality_system
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_NEWBORN_HEALTH_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -412,6 +432,19 @@ func _spawn_baby(mother: RefCounted, father: RefCounted, tick: int, gestation_we
 ## ─── Newborn health calculation ──────────────────────────
 
 func _calc_newborn_health(gestation_weeks: int, mother_nutrition: float, mother_age: float, genetics_z: float) -> float:
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_NEWBORN_HEALTH_METHOD,
+			gestation_weeks,
+			mother_nutrition,
+			mother_age,
+			genetics_z,
+			0.0,
+		)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.0, 1.0)
+
 	# 1. Gestational age survival (logistic curve)
 	# w50 = weeks at 50% survival; tech=0 → 35, tech=10 → 24
 	var tech: float = 0.0  # Will be connected to tech system later

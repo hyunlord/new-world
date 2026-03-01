@@ -1165,6 +1165,18 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_family_newborn_health(
+        &self,
+        gestation_weeks: i32,
+        mother_nutrition: f32,
+        mother_age: f32,
+        genetics_z: f32,
+        tech: f32,
+    ) -> f32 {
+        body::family_newborn_health(gestation_weeks, mother_nutrition, mother_age, genetics_z, tech)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
