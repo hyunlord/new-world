@@ -1323,6 +1323,30 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_cognition_activity_modifier(
+        &self,
+        active_skill_count: i32,
+        activity_buffer: f32,
+        inactivity_accel: f32,
+    ) -> f32 {
+        body::cognition_activity_modifier(active_skill_count, activity_buffer, inactivity_accel)
+    }
+
+    #[func]
+    fn body_cognition_ace_fluid_decline_mult(
+        &self,
+        ace_penalty: f32,
+        ace_penalty_minor: f32,
+        ace_fluid_decline_mult: f32,
+    ) -> f32 {
+        body::cognition_ace_fluid_decline_mult(
+            ace_penalty,
+            ace_penalty_minor,
+            ace_fluid_decline_mult,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,

@@ -972,6 +972,32 @@ pub fn movement_should_skip_tick(skip_mod: i32, tick: i32, entity_id: i32) -> bo
     skip_mod > 0 && (tick + entity_id) % skip_mod == 0
 }
 
+/// Intelligence activity modifier ("use it or lose it").
+pub fn cognition_activity_modifier(
+    active_skill_count: i32,
+    activity_buffer: f32,
+    inactivity_accel: f32,
+) -> f32 {
+    if active_skill_count >= 1 {
+        activity_buffer
+    } else {
+        inactivity_accel
+    }
+}
+
+/// ACE-based fluid decline multiplier gate.
+pub fn cognition_ace_fluid_decline_mult(
+    ace_penalty: f32,
+    ace_penalty_minor: f32,
+    ace_fluid_decline_mult: f32,
+) -> f32 {
+    if ace_penalty >= ace_penalty_minor {
+        ace_fluid_decline_mult
+    } else {
+        1.0
+    }
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1462,7 +1488,8 @@ mod tests {
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
-        movement_should_skip_tick,
+        movement_should_skip_tick, cognition_activity_modifier,
+        cognition_ace_fluid_decline_mult,
     };
 
     #[test]
@@ -2010,6 +2037,18 @@ mod tests {
         assert!(movement_should_skip_tick(3, 5, 1));
         assert!(!movement_should_skip_tick(3, 5, 2));
         assert!(!movement_should_skip_tick(0, 6, 0));
+    }
+
+    #[test]
+    fn cognition_activity_modifier_switches_by_active_skill_count() {
+        assert!((cognition_activity_modifier(0, 0.9, 1.2) - 1.2).abs() < 1e-6);
+        assert!((cognition_activity_modifier(2, 0.9, 1.2) - 0.9).abs() < 1e-6);
+    }
+
+    #[test]
+    fn cognition_ace_fluid_decline_mult_applies_threshold_gate() {
+        assert!((cognition_ace_fluid_decline_mult(0.3, 0.4, 1.5) - 1.0).abs() < 1e-6);
+        assert!((cognition_ace_fluid_decline_mult(0.5, 0.4, 1.5) - 1.5).abs() < 1e-6);
     }
 
     #[test]

@@ -1514,3 +1514,10 @@
 - `movement_system.gd`의 이동 skip 판정을 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `24/56` 적용.
+
+## Commit 296
+- `sim-systems/body`에 `cognition_activity_modifier`, `cognition_ace_fluid_decline_mult`를 추가해 IntelligenceCurves 보정 수식을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_cognition_activity_modifier`, `body_cognition_ace_fluid_decline_mult` 메서드를 추가해 GDScript에서 해당 수식을 직접 호출 가능하게 확장.
+- `intelligence_curves.gd`의 activity/ACE 보정 계산을 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `25/56` 적용.
