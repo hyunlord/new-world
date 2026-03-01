@@ -35,6 +35,12 @@ var _tab_rects: Array = []
 var _sort_rects: Array = []
 var _page_rects: Array = []  # [{rect: Rect2, action: String}]
 var _toggle_deceased_rect: Rect2 = Rect2()
+var _cached_tab_labels: Array[String] = []
+var _cached_entity_column_labels: Dictionary = {}
+var _cached_building_column_labels: Dictionary = {}
+var _cached_deceased_label: String = ""
+var _cached_sort_asc_label: String = ""
+var _cached_sort_desc_label: String = ""
 
 ## Column definitions for entities
 const ENTITY_COLUMNS: Array = [
@@ -57,6 +63,7 @@ const BUILDING_COLUMNS: Array = [
 
 
 func _ready() -> void:
+	_refresh_locale_cache()
 	if not Locale.locale_changed.is_connected(_on_locale_changed):
 		Locale.locale_changed.connect(_on_locale_changed)
 
@@ -69,13 +76,36 @@ func init(entity_manager: RefCounted, building_manager: RefCounted = null, settl
 
 
 func _on_locale_changed(_locale: String) -> void:
+	_refresh_locale_cache()
 	queue_redraw()
 
 
 func _get_tab_label(index: int) -> String:
-	if index == 0:
-		return Locale.ltr("UI_ENTITIES")
-	return Locale.ltr("UI_BUILDINGS")
+	if index >= 0 and index < _cached_tab_labels.size():
+		return _cached_tab_labels[index]
+	return Locale.ltr("UI_ENTITIES") if index == 0 else Locale.ltr("UI_BUILDINGS")
+
+
+func _refresh_locale_cache() -> void:
+	_cached_tab_labels = [
+		Locale.ltr("UI_ENTITIES"),
+		Locale.ltr("UI_BUILDINGS"),
+	]
+	_cached_deceased_label = Locale.ltr("UI_DECEASED")
+	_cached_sort_asc_label = Locale.ltr("UI_SORT_ASC")
+	_cached_sort_desc_label = Locale.ltr("UI_SORT_DESC")
+
+	_cached_entity_column_labels.clear()
+	for i in range(ENTITY_COLUMNS.size()):
+		var col: Dictionary = ENTITY_COLUMNS[i]
+		var label_key: String = str(col.get("label", ""))
+		_cached_entity_column_labels[label_key] = Locale.ltr(label_key)
+
+	_cached_building_column_labels.clear()
+	for i in range(BUILDING_COLUMNS.size()):
+		var col: Dictionary = BUILDING_COLUMNS[i]
+		var label_key: String = str(col.get("label", ""))
+		_cached_building_column_labels[label_key] = Locale.ltr(label_key)
 
 
 static func _format_date_compact(date: Dictionary) -> String:
@@ -218,7 +248,7 @@ func _draw() -> void:
 
 	# Deceased toggle (entities tab only)
 	if _current_tab == 0:
-		var toggle_label: String = "[%s] %s" % [("x" if _show_deceased else " "), Locale.ltr("UI_DECEASED")]
+		var toggle_label: String = "[%s] %s" % [("x" if _show_deceased else " "), _cached_deceased_label]
 		var toggle_w: float = font.get_string_size(toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small).x + 8
 		_toggle_deceased_rect = Rect2(panel_w - toggle_w - 15, cy + 2, toggle_w, 20)
 		draw_string(font, Vector2(panel_w - toggle_w - 11, cy + 17), toggle_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.6, 0.6, 0.6))
@@ -355,9 +385,10 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	for idx in range(ENTITY_COLUMNS.size()):
 		var col: Dictionary = ENTITY_COLUMNS[idx]
 		var cw: float = col_widths[idx]
-		var label: String = Locale.ltr(col.label)
+		var label_key: String = str(col.get("label", ""))
+		var label: String = str(_cached_entity_column_labels.get(label_key, Locale.ltr(label_key)))
 		if _sort_key == col.key:
-			label += " %s" % (Locale.ltr("UI_SORT_ASC") if _sort_ascending else Locale.ltr("UI_SORT_DESC"))
+			label += " %s" % (_cached_sort_asc_label if _sort_ascending else _cached_sort_desc_label)
 		var header_rect := Rect2(col_x, cy, cw, 16)
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, int(cw) - 2, fs_small, Color(0.8, 0.8, 0.3))
 		_sort_rects.append({"rect": header_rect, "key": col.key})
@@ -470,7 +501,8 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	# Column headers
 	var col_x: float = cx + 5
 	for col in BUILDING_COLUMNS:
-		var label: String = Locale.ltr(col.label)
+		var label_key: String = str(col.get("label", ""))
+		var label: String = str(_cached_building_column_labels.get(label_key, Locale.ltr(label_key)))
 		draw_string(font, Vector2(col_x, cy + 12), label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.8, 0.8, 0.3))
 		col_x += col.width + COL_PAD
 	cy += 18.0

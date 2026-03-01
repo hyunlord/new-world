@@ -431,3 +431,8 @@
 - `EntityDetailPanel`의 needs/personality/derived 구간을 `StatQuery.get_normalized_batch_into` 기반으로 전환.
 - 기본/상위 욕구, HEXACO 축, 파생 스탯 조회를 scratch buffer 재사용 batch 호출로 수집해 draw 루프의 개별 정규화 호출을 축소.
 - 패널 표시 의미는 유지하면서 UI 상세 패널 렌더 경로의 stat 조회 오버헤드를 완화.
+
+## Commit 089
+- `ListPanel`에 locale 라벨 캐시(`tabs/columns/sort/deceased`)를 도입하고 locale 변경 시점에만 갱신하도록 구조화.
+- draw 루프에서 정적 라벨의 `Locale.ltr` 호출을 캐시 문자열 사용으로 치환해 반복 조회 비용을 줄임.
+- 탭/헤더/정렬 표시 동작은 유지하면서 UI 목록 패널 렌더 경로를 경량화.
