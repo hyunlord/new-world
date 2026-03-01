@@ -1680,3 +1680,8 @@
 - `emotion_system`의 mental break 핵심 수식(역치, 발동 확률, break type 결정)을 Rust-first 경로로 이관.
 - `sim-systems`에 emotion break 순수 함수 3종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.
+
+## Commit 324
+- `emotion_system`의 반복 보조 수식(half-life, baseline, habituation, contagion 보정)을 Tier-2로 Rust-first 이관.
+- `sim-systems`에 emotion 보조 함수 5종과 단위 테스트 2건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 기반 Rust 호출 후 실패 시 기존 계산식 fallback을 유지해 기존 동작을 보존.

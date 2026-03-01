@@ -2053,6 +2053,45 @@ pub fn emotion_break_type_code(
     code
 }
 
+/// Emotion half-life adjustment from trait z-score.
+pub fn emotion_adjusted_half_life(base_half_life: f32, coeff: f32, z: f32) -> f32 {
+    let base = if base_half_life <= 0.000_001 {
+        0.000_001
+    } else {
+        base_half_life
+    };
+    (base * (coeff * z).exp()).max(0.000_001)
+}
+
+/// Emotion baseline value from linear trait term and clamp band.
+pub fn emotion_baseline_value(
+    base_value: f32,
+    scale_value: f32,
+    z: f32,
+    min_value: f32,
+    max_value: f32,
+) -> f32 {
+    clamp_f32(base_value + scale_value * z, min_value, max_value)
+}
+
+/// Emotion habituation factor from repeated count.
+pub fn emotion_habituation_factor(eta: f32, repeat_count: i32) -> f32 {
+    (-eta * repeat_count.max(0) as f32).exp()
+}
+
+/// Emotion contagion susceptibility from HEXACO E/A z-scores.
+pub fn emotion_contagion_susceptibility(z_e: f32, z_a: f32) -> f32 {
+    (0.2 * z_e + 0.1 * z_a).exp()
+}
+
+/// Emotion contagion distance attenuation factor.
+pub fn emotion_contagion_distance_factor(distance: f32, distance_scale: f32) -> f32 {
+    if distance_scale <= 0.000_001 {
+        return 0.0;
+    }
+    (-distance / distance_scale).exp()
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2747,6 +2786,8 @@ mod tests {
         chronicle_keep_personal_event, psychology_break_type_code, psychology_break_type_label,
         coping_learn_probability, coping_softmax_index,
         emotion_break_threshold, emotion_break_trigger_probability, emotion_break_type_code,
+        emotion_adjusted_half_life, emotion_baseline_value, emotion_habituation_factor,
+        emotion_contagion_susceptibility, emotion_contagion_distance_factor,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3762,6 +3803,27 @@ mod tests {
         assert_eq!(emotion_break_type_code(20.0, 50.0, 30.0, 10.0, 20.0, 60.0), 2);
         assert_eq!(emotion_break_type_code(20.0, 10.0, 55.0, 10.0, 20.0, 60.0), 3);
         assert_eq!(emotion_break_type_code(20.0, 10.0, 10.0, 15.0, 20.0, 60.0), 5);
+    }
+
+    #[test]
+    fn emotion_adjusted_half_life_and_baseline_follow_formula() {
+        let hl = emotion_adjusted_half_life(2.0, 0.5, 1.0);
+        let baseline = emotion_baseline_value(10.0, 4.0, 0.5, 0.0, 12.0);
+        assert!(hl > 2.0);
+        assert!((baseline - 12.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn emotion_habituation_and_contagion_factors_are_sensible() {
+        let hab0 = emotion_habituation_factor(0.2, 0);
+        let hab5 = emotion_habituation_factor(0.2, 5);
+        let sus = emotion_contagion_susceptibility(1.0, 1.0);
+        let near = emotion_contagion_distance_factor(1.0, 5.0);
+        let far = emotion_contagion_distance_factor(20.0, 5.0);
+        assert_eq!(hab0, 1.0);
+        assert!(hab5 < hab0);
+        assert!(sus > 1.0);
+        assert!(near > far);
     }
 
     #[test]

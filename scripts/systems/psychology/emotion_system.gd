@@ -14,6 +14,11 @@ const _SIM_BRIDGE_BREAK_THRESHOLD_METHOD: String = "body_emotion_break_threshold
 const _SIM_BRIDGE_BREAK_PROB_METHOD: String = "body_emotion_break_trigger_probability"
 const _SIM_BRIDGE_BREAK_TYPE_CODE_METHOD: String = "body_emotion_break_type_code"
 const _SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD: String = "body_psychology_break_type_label"
+const _SIM_BRIDGE_HALF_LIFE_METHOD: String = "body_emotion_adjusted_half_life"
+const _SIM_BRIDGE_BASELINE_METHOD: String = "body_emotion_baseline_value"
+const _SIM_BRIDGE_HABITUATION_METHOD: String = "body_emotion_habituation_factor"
+const _SIM_BRIDGE_CONTAGION_SUS_METHOD: String = "body_emotion_contagion_susceptibility"
+const _SIM_BRIDGE_CONTAGION_DIST_METHOD: String = "body_emotion_contagion_distance_factor"
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -68,7 +73,12 @@ func _get_sim_bridge() -> Object:
 	and node.has_method(_SIM_BRIDGE_BREAK_THRESHOLD_METHOD) \
 	and node.has_method(_SIM_BRIDGE_BREAK_PROB_METHOD) \
 	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_CODE_METHOD) \
-	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD):
+	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HALF_LIFE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BASELINE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HABITUATION_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CONTAGION_SUS_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CONTAGION_DIST_METHOD):
 		_sim_bridge = node
 	return _sim_bridge
 
@@ -326,6 +336,11 @@ func _get_adjusted_half_life(emo: String, entity: RefCounted, _pd: RefCounted, l
 	var axis_id = str(adj.get("axis", "X"))
 	var coeff = float(adj.get("coeff", 0.0))
 	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_HALF_LIFE_METHOD, base, coeff, z)
+		if rust_variant is float:
+			return float(rust_variant)
 	return base * exp(coeff * z)
 
 
@@ -339,6 +354,18 @@ func _get_baseline(emo: String, entity: RefCounted, _pd: RefCounted) -> float:
 	var min_val = float(cfg.get("min", 0.0))
 	var max_val = float(cfg.get("max", 100.0))
 	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BASELINE_METHOD,
+			base_val,
+			scale_val,
+			z,
+			min_val,
+			max_val
+		)
+		if rust_variant is float:
+			return float(rust_variant)
 	return clampf(base_val + scale_val * z, min_val, max_val)
 
 
@@ -352,6 +379,11 @@ func _get_habituation(ed: RefCounted, category: String) -> float:
 	var data = ed.habituation[category]
 	var n_count: int = int(data.get("count", 0))
 	var eta: float = _habituation_eta
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_HABITUATION_METHOD, eta, n_count)
+		if rust_variant is float:
+			return float(rust_variant)
 	return exp(-eta * float(n_count))
 
 
@@ -394,6 +426,11 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 		var z_E: float = _axis_z(target, &"HEXACO_E")
 		var z_A: float = _axis_z(target, &"HEXACO_A")
 		var susceptibility: float = exp(0.2 * z_E + 0.1 * z_A)
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var susceptibility_variant: Variant = bridge.call(_SIM_BRIDGE_CONTAGION_SUS_METHOD, z_E, z_A)
+			if susceptibility_variant is float:
+				susceptibility = float(susceptibility_variant)
 
 		var delta: Dictionary = {}
 		for emo in _contagion_kappa:
@@ -411,6 +448,10 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 			var dy: float = float(target.position.y - source.position.y)
 			var distance: float = sqrt(dx * dx + dy * dy)
 			var distance_factor: float = exp(-distance / _contagion_distance_scale)
+			if bridge != null:
+				var distance_variant: Variant = bridge.call(_SIM_BRIDGE_CONTAGION_DIST_METHOD, distance, _contagion_distance_scale)
+				if distance_variant is float:
+					distance_factor = float(distance_variant)
 
 			# Skip if too far (optimization)
 			if distance_factor < 0.01:

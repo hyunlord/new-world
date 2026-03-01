@@ -2077,6 +2077,38 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_emotion_adjusted_half_life(&self, base_half_life: f32, coeff: f32, z: f32) -> f32 {
+        body::emotion_adjusted_half_life(base_half_life, coeff, z)
+    }
+
+    #[func]
+    fn body_emotion_baseline_value(
+        &self,
+        base_value: f32,
+        scale_value: f32,
+        z: f32,
+        min_value: f32,
+        max_value: f32,
+    ) -> f32 {
+        body::emotion_baseline_value(base_value, scale_value, z, min_value, max_value)
+    }
+
+    #[func]
+    fn body_emotion_habituation_factor(&self, eta: f32, repeat_count: i32) -> f32 {
+        body::emotion_habituation_factor(eta, repeat_count)
+    }
+
+    #[func]
+    fn body_emotion_contagion_susceptibility(&self, z_e: f32, z_a: f32) -> f32 {
+        body::emotion_contagion_susceptibility(z_e, z_a)
+    }
+
+    #[func]
+    fn body_emotion_contagion_distance_factor(&self, distance: f32, distance_scale: f32) -> f32 {
+        body::emotion_contagion_distance_factor(distance, distance_scale)
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,
