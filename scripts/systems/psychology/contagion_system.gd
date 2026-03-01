@@ -21,9 +21,16 @@ const MAX_STRESS_CONTAGION_DELTA: float = 30.0
 const MAX_EMOTION_CONTAGION_DELTA: float = 8.0
 
 const EMOTION_CONTAGION_KEYS: Array = ["joy", "sadness", "fear", "anger", "trust"]
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_AOE_TOTAL_METHOD: String = "body_contagion_aoe_total_susceptibility"
+const _SIM_BRIDGE_STRESS_DELTA_METHOD: String = "body_contagion_stress_delta"
+const _SIM_BRIDGE_NETWORK_DELTA_METHOD: String = "body_contagion_network_delta"
+const _SIM_BRIDGE_SPIRAL_METHOD: String = "body_contagion_spiral_increment"
 
 var _entity_manager: RefCounted
 var _config: Dictionary = {}
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -35,6 +42,26 @@ func _init() -> void:
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_config()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_AOE_TOTAL_METHOD) \
+	and node.has_method(_SIM_BRIDGE_STRESS_DELTA_METHOD) \
+	and node.has_method(_SIM_BRIDGE_NETWORK_DELTA_METHOD) \
+	and node.has_method(_SIM_BRIDGE_SPIRAL_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_config() -> void:
@@ -101,18 +128,31 @@ func _run_aoe_contagion(alive: Array, _tick: int) -> void:
 		if donors.is_empty():
 			continue
 
-		# Crowd dilution - Le Bon (1895)
-		var crowd_factor: float = 1.0 / sqrt(maxf(1.0, float(donors.size()) / CROWD_DILUTE_DIVISOR))
-
-		# Refractory susceptibility
+		# Refractory + personality + crowd dilution susceptibility
 		var refractory: int = r_ed.get_meta("contagion_refractory", 0)
-		var susceptibility: float = REFRACTORY_SUSCEPTIBILITY if refractory > 0 else 1.0
-
-		# Personality susceptibility
 		var X_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_X")
 		var E_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_E")
-		var personality_susceptibility: float = 0.7 + 0.3 * X_axis + 0.2 * (E_axis - 0.5)
-		var total_susceptibility: float = susceptibility * personality_susceptibility * crowd_factor
+		var total_susceptibility: float = 0.0
+		var used_rust_total: bool = false
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_total_variant: Variant = bridge.call(
+				_SIM_BRIDGE_AOE_TOTAL_METHOD,
+				donors.size(),
+				CROWD_DILUTE_DIVISOR,
+				refractory > 0,
+				REFRACTORY_SUSCEPTIBILITY,
+				X_axis,
+				E_axis
+			)
+			if rust_total_variant is float:
+				total_susceptibility = float(rust_total_variant)
+				used_rust_total = true
+		if not used_rust_total:
+			var crowd_factor: float = 1.0 / sqrt(maxf(1.0, float(donors.size()) / CROWD_DILUTE_DIVISOR))
+			var susceptibility: float = REFRACTORY_SUSCEPTIBILITY if refractory > 0 else 1.0
+			var personality_susceptibility: float = 0.7 + 0.3 * X_axis + 0.2 * (E_axis - 0.5)
+			total_susceptibility = susceptibility * personality_susceptibility * crowd_factor
 
 		# Aggregate emotional signal from donors
 		for emotion_key in EMOTION_CONTAGION_KEYS:
@@ -138,12 +178,27 @@ func _run_aoe_contagion(alive: Array, _tick: int) -> void:
 		avg_stress /= float(donors.size())
 
 		var stress_gap: float = avg_stress - r_ed.stress
-		if stress_gap > 10.0:
-			var stress_delta: float = clampf(
+		var stress_delta: float = 0.0
+		var used_rust_stress: bool = false
+		if bridge != null:
+			var rust_stress_variant: Variant = bridge.call(
+				_SIM_BRIDGE_STRESS_DELTA_METHOD,
+				stress_gap,
+				10.0,
+				0.04,
+				total_susceptibility,
+				MAX_STRESS_CONTAGION_DELTA
+			)
+			if rust_stress_variant is float:
+				stress_delta = float(rust_stress_variant)
+				used_rust_stress = true
+		if not used_rust_stress and stress_gap > 10.0:
+			stress_delta = clampf(
 				stress_gap * 0.04 * total_susceptibility,
 				0.0,
 				MAX_STRESS_CONTAGION_DELTA
 			)
+		if stress_delta > 0.0:
 			r_ed.stress = clampf(r_ed.stress + stress_delta, 0.0, 2000.0)
 
 		# Apply refractory on meaningful contagion exposure
@@ -193,18 +248,9 @@ func _run_network_contagion(alive: Array, _tick: int) -> void:
 		if hop1_donors.is_empty():
 			continue
 
-		# Refractory check + hop decay
+		# Refractory check
 		var refractory: int = r_ed.get_meta("contagion_refractory", 0)
-		var base_weight: float = REFRACTORY_SUSCEPTIBILITY if refractory > 0 else 1.0
-		base_weight *= NETWORK_DECAY
-
-		# A axis (agreeableness) raises social susceptibility
 		var A_axis: float = StatQuery.get_normalized(recipient, &"HEXACO_A")
-		base_weight *= (0.8 + 0.4 * A_axis)
-
-		# Crowd dilution
-		var crowd_factor: float = 1.0 / sqrt(maxf(1.0, float(hop1_donors.size()) / CROWD_DILUTE_DIVISOR))
-		base_weight *= crowd_factor
 
 		# Average valence donor signal
 		var avg_valence: float = 0.0
@@ -213,11 +259,36 @@ func _run_network_contagion(alive: Array, _tick: int) -> void:
 		avg_valence /= float(hop1_donors.size())
 
 		var valence_gap: float = avg_valence - r_ed.valence
-		var network_delta: float = clampf(
-			valence_gap * base_weight * 0.04,
-			-4.0,
-			4.0
-		)
+		var network_delta: float = 0.0
+		var used_rust_network: bool = false
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_network_variant: Variant = bridge.call(
+				_SIM_BRIDGE_NETWORK_DELTA_METHOD,
+				hop1_donors.size(),
+				CROWD_DILUTE_DIVISOR,
+				refractory > 0,
+				REFRACTORY_SUSCEPTIBILITY,
+				NETWORK_DECAY,
+				A_axis,
+				valence_gap,
+				0.04,
+				4.0
+			)
+			if rust_network_variant is float:
+				network_delta = float(rust_network_variant)
+				used_rust_network = true
+		if not used_rust_network:
+			var base_weight: float = REFRACTORY_SUSCEPTIBILITY if refractory > 0 else 1.0
+			base_weight *= NETWORK_DECAY
+			base_weight *= (0.8 + 0.4 * A_axis)
+			var crowd_factor: float = 1.0 / sqrt(maxf(1.0, float(hop1_donors.size()) / CROWD_DILUTE_DIVISOR))
+			base_weight *= crowd_factor
+			network_delta = clampf(
+				valence_gap * base_weight * 0.04,
+				-4.0,
+				4.0
+			)
 		if absf(network_delta) > 0.01:
 			r_ed.valence = clampf(r_ed.valence + network_delta, -100.0, 100.0)
 
@@ -240,26 +311,45 @@ func _run_spiral_dampener(alive: Array, tick: int) -> void:
 			continue
 
 		# Spiral conditions met
-		var spiral_intensity: float = (ed.stress - SPIRAL_STRESS_THRESHOLD) / 1500.0
-		var valence_depth: float = absf(ed.valence - SPIRAL_VALENCE_THRESHOLD) / 60.0
-		var spiral_increment: float = clampf(
-			3.0 * spiral_intensity * valence_depth,
-			0.0,
-			12.0
-		)
+		var spiral_increment: float = 0.0
+		var used_rust_spiral: bool = false
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_spiral_variant: Variant = bridge.call(
+				_SIM_BRIDGE_SPIRAL_METHOD,
+				ed.stress,
+				ed.valence,
+				SPIRAL_STRESS_THRESHOLD,
+				SPIRAL_VALENCE_THRESHOLD,
+				1500.0,
+				60.0,
+				3.0,
+				12.0
+			)
+			if rust_spiral_variant is float:
+				spiral_increment = float(rust_spiral_variant)
+				used_rust_spiral = true
+		if not used_rust_spiral:
+			var spiral_intensity: float = (ed.stress - SPIRAL_STRESS_THRESHOLD) / 1500.0
+			var valence_depth: float = absf(ed.valence - SPIRAL_VALENCE_THRESHOLD) / 60.0
+			spiral_increment = clampf(
+				3.0 * spiral_intensity * valence_depth,
+				0.0,
+				12.0
+			)
 
 		# Additive + maxf idempotent pattern (no multiplicative explosion)
 		ed.stress = maxf(ed.stress, ed.stress + spiral_increment)
 		ed.set_meta("spiral_applied", true)
 
-			if spiral_increment > 5.0:
-				var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-				if chronicle:
-					var desc: String = Locale.trf2(
-						"CONTAGION_SPIRAL_WARNING",
-						"stress",
-						"%.0f" % ed.stress,
-						"valence",
-						"%.1f" % ed.valence
-					)
-					chronicle.log_event("contagion_spiral", entity.id, desc, 4, [], tick)
+		if spiral_increment > 5.0:
+			var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+			if chronicle:
+				var desc: String = Locale.trf2(
+					"CONTAGION_SPIRAL_WARNING",
+					"stress",
+					"%.0f" % ed.stress,
+					"valence",
+					"%.1f" % ed.valence
+				)
+				chronicle.log_event("contagion_spiral", entity.id, desc, 4, [], tick)

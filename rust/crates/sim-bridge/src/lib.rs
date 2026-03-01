@@ -1198,6 +1198,94 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_contagion_aoe_total_susceptibility(
+        &self,
+        donor_count: i32,
+        crowd_dilute_divisor: f32,
+        refractory_active: bool,
+        refractory_susceptibility: f32,
+        x_axis: f32,
+        e_axis: f32,
+    ) -> f32 {
+        body::contagion_aoe_total_susceptibility(
+            donor_count,
+            crowd_dilute_divisor,
+            refractory_active,
+            refractory_susceptibility,
+            x_axis,
+            e_axis,
+        )
+    }
+
+    #[func]
+    fn body_contagion_stress_delta(
+        &self,
+        stress_gap: f32,
+        stress_gap_threshold: f32,
+        transfer_rate: f32,
+        total_susceptibility: f32,
+        max_delta: f32,
+    ) -> f32 {
+        body::contagion_stress_delta(
+            stress_gap,
+            stress_gap_threshold,
+            transfer_rate,
+            total_susceptibility,
+            max_delta,
+        )
+    }
+
+    #[func]
+    fn body_contagion_network_delta(
+        &self,
+        donor_count: i32,
+        crowd_dilute_divisor: f32,
+        refractory_active: bool,
+        refractory_susceptibility: f32,
+        network_decay: f32,
+        a_axis: f32,
+        valence_gap: f32,
+        delta_scale: f32,
+        max_abs_delta: f32,
+    ) -> f32 {
+        body::contagion_network_delta(
+            donor_count,
+            crowd_dilute_divisor,
+            refractory_active,
+            refractory_susceptibility,
+            network_decay,
+            a_axis,
+            valence_gap,
+            delta_scale,
+            max_abs_delta,
+        )
+    }
+
+    #[func]
+    fn body_contagion_spiral_increment(
+        &self,
+        stress: f32,
+        valence: f32,
+        stress_threshold: f32,
+        valence_threshold: f32,
+        stress_divisor: f32,
+        valence_divisor: f32,
+        intensity_scale: f32,
+        max_increment: f32,
+    ) -> f32 {
+        body::contagion_spiral_increment(
+            stress,
+            valence,
+            stress_threshold,
+            valence_threshold,
+            stress_divisor,
+            valence_divisor,
+            intensity_scale,
+            max_increment,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

@@ -1605,3 +1605,8 @@
 - `stat_sync_system.gd`의 `_compute_derived`를 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 실측 기준) `41/56` 적용.
+
+## Commit 309
+- `contagion_system`의 AoE/Network/Spiral 핵심 수식(`total_susceptibility`, `stress_delta`, `network_delta`, `spiral_increment`)을 Rust-first 경로로 이관.
+- `sim-systems`에 contagion 전용 순수 함수 4종과 단위 테스트 4건을 추가하고 `sim-bridge`에 대응 GDExtension 메서드를 노출.
+- GDScript는 SimBridge 캐시 후 Rust 호출, 실패 시 기존 계산식 fallback을 유지해 동작 안정성을 보존.

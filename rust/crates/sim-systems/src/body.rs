@@ -897,6 +897,104 @@ pub fn stat_sync_derived_scores(inputs: &[f32]) -> [f32; 8] {
     ]
 }
 
+/// Total AoE contagion susceptibility from refractory, personality, and crowd dilution.
+pub fn contagion_aoe_total_susceptibility(
+    donor_count: i32,
+    crowd_dilute_divisor: f32,
+    refractory_active: bool,
+    refractory_susceptibility: f32,
+    x_axis: f32,
+    e_axis: f32,
+) -> f32 {
+    let divisor = if crowd_dilute_divisor <= 0.0 {
+        1.0
+    } else {
+        crowd_dilute_divisor
+    };
+    let donor_ratio = (donor_count.max(0) as f32) / divisor;
+    let crowd_factor = 1.0 / donor_ratio.max(1.0).sqrt();
+    let susceptibility = if refractory_active {
+        refractory_susceptibility
+    } else {
+        1.0
+    };
+    let personality_susceptibility = 0.7 + 0.3 * x_axis + 0.2 * (e_axis - 0.5);
+    susceptibility * personality_susceptibility * crowd_factor
+}
+
+/// Stress contagion delta under a minimum gap threshold.
+pub fn contagion_stress_delta(
+    stress_gap: f32,
+    stress_gap_threshold: f32,
+    transfer_rate: f32,
+    total_susceptibility: f32,
+    max_delta: f32,
+) -> f32 {
+    if stress_gap <= stress_gap_threshold {
+        return 0.0;
+    }
+    clamp_f32(stress_gap * transfer_rate * total_susceptibility, 0.0, max_delta)
+}
+
+/// Network contagion valence delta from social susceptibility and crowd dilution.
+pub fn contagion_network_delta(
+    donor_count: i32,
+    crowd_dilute_divisor: f32,
+    refractory_active: bool,
+    refractory_susceptibility: f32,
+    network_decay: f32,
+    a_axis: f32,
+    valence_gap: f32,
+    delta_scale: f32,
+    max_abs_delta: f32,
+) -> f32 {
+    let divisor = if crowd_dilute_divisor <= 0.0 {
+        1.0
+    } else {
+        crowd_dilute_divisor
+    };
+    let donor_ratio = (donor_count.max(0) as f32) / divisor;
+    let crowd_factor = 1.0 / donor_ratio.max(1.0).sqrt();
+    let mut base_weight = if refractory_active {
+        refractory_susceptibility
+    } else {
+        1.0
+    };
+    base_weight *= network_decay;
+    base_weight *= 0.8 + 0.4 * a_axis;
+    base_weight *= crowd_factor;
+    clamp_f32(valence_gap * base_weight * delta_scale, -max_abs_delta, max_abs_delta)
+}
+
+/// Spiral amplification increment for high-stress negative-valence states.
+pub fn contagion_spiral_increment(
+    stress: f32,
+    valence: f32,
+    stress_threshold: f32,
+    valence_threshold: f32,
+    stress_divisor: f32,
+    valence_divisor: f32,
+    intensity_scale: f32,
+    max_increment: f32,
+) -> f32 {
+    if stress < stress_threshold || valence >= valence_threshold {
+        return 0.0;
+    }
+    let stress_norm = (stress - stress_threshold)
+        / if stress_divisor <= 0.0 {
+            1.0
+        } else {
+            stress_divisor
+        };
+    let valence_norm = (valence - valence_threshold).abs()
+        / if valence_divisor <= 0.0 {
+            1.0
+        } else {
+            valence_divisor
+        };
+    clamp_f32(intensity_scale * stress_norm * valence_norm, 0.0, max_increment)
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1948,7 +2046,8 @@ mod tests {
         personality_linear_target, intelligence_effective_value,
         intelligence_g_value, personality_child_axis_z,
         morale_behavior_weight_multiplier, morale_migration_probability,
-        stat_sync_derived_scores,
+        stat_sync_derived_scores, contagion_aoe_total_susceptibility,
+        contagion_stress_delta, contagion_network_delta, contagion_spiral_increment,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2439,6 +2538,36 @@ mod tests {
     fn stat_sync_derived_scores_handles_short_input() {
         let out = stat_sync_derived_scores(&[0.1, 0.2]);
         assert_eq!(out, [0.0; 8]);
+    }
+
+    #[test]
+    fn contagion_aoe_total_susceptibility_drops_with_larger_crowd() {
+        let small_group = contagion_aoe_total_susceptibility(2, 6.0, false, 0.25, 0.6, 0.5);
+        let larger_group = contagion_aoe_total_susceptibility(18, 6.0, false, 0.25, 0.6, 0.5);
+        assert!(small_group > larger_group);
+    }
+
+    #[test]
+    fn contagion_stress_delta_applies_threshold_and_cap() {
+        let below_threshold = contagion_stress_delta(8.0, 10.0, 0.04, 1.0, 30.0);
+        let capped = contagion_stress_delta(5000.0, 10.0, 0.04, 1.0, 30.0);
+        assert_eq!(below_threshold, 0.0);
+        assert_eq!(capped, 30.0);
+    }
+
+    #[test]
+    fn contagion_network_delta_is_clamped_to_band() {
+        let delta = contagion_network_delta(20, 6.0, false, 0.25, 0.5, 0.7, 500.0, 0.04, 4.0);
+        assert_eq!(delta, 4.0);
+    }
+
+    #[test]
+    fn contagion_spiral_increment_respects_conditions() {
+        let none = contagion_spiral_increment(300.0, -50.0, 500.0, -40.0, 1500.0, 60.0, 3.0, 12.0);
+        let active =
+            contagion_spiral_increment(900.0, -70.0, 500.0, -40.0, 1500.0, 60.0, 3.0, 12.0);
+        assert_eq!(none, 0.0);
+        assert!(active > 0.0);
     }
 
     #[test]
