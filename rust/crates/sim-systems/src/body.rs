@@ -1356,6 +1356,83 @@ pub fn parenting_bandura_base_rate(
     rate
 }
 
+/// Next ACE partial score after applying one event.
+pub fn ace_partial_score_next(current_partial: f32, severity: f32, ace_weight: f32) -> f32 {
+    clamp_f32(
+        current_partial + severity.max(0.0) * ace_weight,
+        0.0,
+        1.0,
+    )
+}
+
+/// Aggregate ACE total from all item partial scores.
+pub fn ace_score_total_from_partials(partials: &[f32]) -> f32 {
+    let mut total = 0.0_f32;
+    for partial in partials {
+        total += *partial;
+    }
+    clamp_f32(total, 0.0, 10.0)
+}
+
+/// Aggregate threat/deprivation totals from item partial scores.
+///
+/// `type_codes` uses:
+/// - `1`: threat
+/// - `2`: deprivation
+/// - any other value: ignored
+///
+/// Returns `[threat_total, deprivation_total]`.
+pub fn ace_threat_deprivation_totals(partials: &[f32], type_codes: &[i32]) -> [f32; 2] {
+    let len = partials.len().min(type_codes.len());
+    let mut threat = 0.0_f32;
+    let mut deprivation = 0.0_f32;
+    for idx in 0..len {
+        match type_codes[idx] {
+            1 => threat += partials[idx],
+            2 => deprivation += partials[idx],
+            _ => {}
+        }
+    }
+    [threat, deprivation]
+}
+
+/// ACE adulthood modifier adjustment with protective factor mitigation.
+///
+/// Returns `[stress_gain_mult, break_threshold_mult, allostatic_base]`.
+pub fn ace_adult_modifiers_adjusted(
+    base_stress_gain_mult: f32,
+    base_break_threshold_mult: f32,
+    base_allostatic_base: f32,
+    break_floor: f32,
+    protective_factor: f32,
+) -> [f32; 3] {
+    let pf = clamp_f32(protective_factor, 0.0, 1.0);
+    let break_mult = base_break_threshold_mult.max(break_floor);
+    let stress_gain_mult = 1.0 + (base_stress_gain_mult - 1.0) * (1.0 - pf);
+    let break_threshold_mult = 1.0 - (1.0 - break_mult) * (1.0 - pf);
+    let allostatic_base = base_allostatic_base * (1.0 - 0.5 * pf);
+    [stress_gain_mult, break_threshold_mult, allostatic_base]
+}
+
+/// Backfilled ACE score estimate for adults without childhood history.
+///
+/// `attachment_code`: `0=secure`, `1=anxious`, `2=avoidant`, `3=disorganized`.
+pub fn ace_backfill_score(allostatic: f32, trauma_count: i32, attachment_code: i32) -> f32 {
+    let disorg_bonus = if attachment_code == 3 { 1.5 } else { 0.0 };
+    let insecure_bonus = if attachment_code == 1 || attachment_code == 2 {
+        0.7
+    } else {
+        0.0
+    };
+    let stress_component = 0.08 * clamp_f32(allostatic, 0.0, 100.0);
+    let scar_component = 0.8 * trauma_count.max(0) as f32;
+    clamp_f32(
+        stress_component + scar_component + disorg_bonus + insecure_bonus,
+        0.0,
+        10.0,
+    )
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2419,6 +2496,8 @@ mod tests {
         intergen_scar_index, intergen_child_epigenetic_step,
         intergen_hpa_sensitivity, intergen_meaney_repair_load,
         parenting_hpa_adjusted_stress_gain, parenting_bandura_base_rate,
+        ace_partial_score_next, ace_score_total_from_partials,
+        ace_threat_deprivation_totals, ace_adult_modifiers_adjusted, ace_backfill_score,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -3111,6 +3190,49 @@ mod tests {
         let adaptive = parenting_bandura_base_rate(0.002, 1.1, 0.7, false, 1.5);
         let maladaptive = parenting_bandura_base_rate(0.002, 1.1, 0.7, true, 1.5);
         assert!(maladaptive > adaptive);
+    }
+
+    #[test]
+    fn ace_partial_score_next_clamps_to_unit_interval() {
+        let next = ace_partial_score_next(0.9, 0.8, 0.5);
+        let unchanged = ace_partial_score_next(0.4, -1.0, 0.7);
+        assert_eq!(next, 1.0);
+        assert_eq!(unchanged, 0.4);
+    }
+
+    #[test]
+    fn ace_score_total_from_partials_clamps_to_ten() {
+        let total = ace_score_total_from_partials(&[0.5, 0.8, 0.9, 0.3]);
+        let capped = ace_score_total_from_partials(&[2.0, 3.0, 4.0, 5.0]);
+        assert!((total - 2.5).abs() < 1e-6);
+        assert_eq!(capped, 10.0);
+    }
+
+    #[test]
+    fn ace_threat_deprivation_totals_routes_by_type_code() {
+        let out = ace_threat_deprivation_totals(
+            &[0.5, 0.8, 0.2, 1.0, 0.1],
+            &[1, 2, 1, 0, 2],
+        );
+        assert!((out[0] - 0.7).abs() < 1e-6);
+        assert!((out[1] - 0.9).abs() < 1e-6);
+    }
+
+    #[test]
+    fn ace_adult_modifiers_adjusted_applies_floor_and_protective_factor() {
+        let out = ace_adult_modifiers_adjusted(1.6, 0.3, 20.0, 0.5, 0.4);
+        assert!((out[0] - 1.36).abs() < 1e-6);
+        assert!((out[1] - 0.7).abs() < 1e-6);
+        assert!((out[2] - 16.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn ace_backfill_score_accounts_for_attachment_and_scars() {
+        let secure = ace_backfill_score(20.0, 1, 0);
+        let disorganized = ace_backfill_score(20.0, 1, 3);
+        let capped = ace_backfill_score(500.0, 20, 3);
+        assert!(disorganized > secure);
+        assert_eq!(capped, 10.0);
     }
 
     #[test]

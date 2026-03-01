@@ -1590,6 +1590,57 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_ace_partial_score_next(
+        &self,
+        current_partial: f32,
+        severity: f32,
+        ace_weight: f32,
+    ) -> f32 {
+        body::ace_partial_score_next(current_partial, severity, ace_weight)
+    }
+
+    #[func]
+    fn body_ace_score_total_from_partials(&self, partials: PackedFloat32Array) -> f32 {
+        body::ace_score_total_from_partials(&packed_f32_to_vec(&partials))
+    }
+
+    #[func]
+    fn body_ace_threat_deprivation_totals(
+        &self,
+        partials: PackedFloat32Array,
+        type_codes: PackedInt32Array,
+    ) -> PackedFloat32Array {
+        let partial_vec = packed_f32_to_vec(&partials);
+        let code_vec = packed_i32_to_vec(&type_codes);
+        let out = body::ace_threat_deprivation_totals(&partial_vec, &code_vec);
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_ace_adult_modifiers_adjusted(
+        &self,
+        base_stress_gain_mult: f32,
+        base_break_threshold_mult: f32,
+        base_allostatic_base: f32,
+        break_floor: f32,
+        protective_factor: f32,
+    ) -> PackedFloat32Array {
+        let out = body::ace_adult_modifiers_adjusted(
+            base_stress_gain_mult,
+            base_break_threshold_mult,
+            base_allostatic_base,
+            break_floor,
+            protective_factor,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_ace_backfill_score(&self, allostatic: f32, trauma_count: i32, attachment_code: i32) -> f32 {
+        body::ace_backfill_score(allostatic, trauma_count, attachment_code)
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
