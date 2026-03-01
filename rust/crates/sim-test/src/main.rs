@@ -22,6 +22,10 @@ fn main() {
         run_pathfind_bridge_split_bench(&args);
         return;
     }
+    if args.iter().any(|arg| arg == "--bench-pathfind-backend-smoke") {
+        run_pathfind_backend_smoke(&args);
+        return;
+    }
     if args.iter().any(|arg| arg == "--bench-pathfind-bridge") {
         run_pathfind_bridge_bench(&args);
         return;
@@ -533,6 +537,60 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
         gpu_xy,
         cpu_xy + gpu_xy
     );
+}
+
+fn run_pathfind_backend_smoke(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 10);
+    let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
+        pathfind_bench_inputs();
+
+    for mode in ["auto", "cpu", "gpu"] {
+        if !set_pathfind_backend_mode(mode) {
+            eprintln!(
+                "[sim-test] invalid backend mode in smoke run: {} (expected auto|cpu|gpu)",
+                mode
+            );
+            std::process::exit(2);
+        }
+        reset_pathfind_backend_dispatch_counts();
+
+        let mut checksum = 0.0_f32;
+        for _ in 0..iterations {
+            let groups = pathfind_grid_batch_dispatch_bytes(
+                width,
+                height,
+                &walkable,
+                &move_cost,
+                &from_points,
+                &to_points,
+                max_steps,
+            )
+            .expect("pathfind_grid_batch_dispatch_bytes");
+            let groups_xy = pathfind_grid_batch_xy_dispatch_bytes(
+                width, height, &walkable, &move_cost, &from_xy, &to_xy, max_steps,
+            )
+            .expect("pathfind_grid_batch_xy_dispatch_bytes");
+            for i in 0..groups.len() {
+                checksum += black_box(groups[i].len() as f32);
+            }
+            for i in 0..groups_xy.len() {
+                checksum += black_box(groups_xy[i].len() as f32);
+            }
+        }
+
+        let (cpu_dispatches, gpu_dispatches) = pathfind_backend_dispatch_counts();
+        println!(
+            "[sim-test] pathfind-backend-smoke: mode={} configured={} resolved={} iterations={} checksum={:.5} cpu={} gpu={} total={}",
+            mode,
+            get_pathfind_backend_mode(),
+            resolve_pathfind_backend_mode(),
+            iterations,
+            checksum,
+            cpu_dispatches,
+            gpu_dispatches,
+            cpu_dispatches + gpu_dispatches
+        );
+    }
 }
 
 fn run_stress_math_bench(args: &[String]) {

@@ -112,8 +112,10 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   needs_iters="${MIGRATION_BENCH_NEEDS_ITERS:-10000}"
   path_split="${MIGRATION_BENCH_PATH_SPLIT:-false}"
   path_backend="${MIGRATION_BENCH_PATH_BACKEND:-auto}"
+  path_backend_smoke="${MIGRATION_BENCH_PATH_BACKEND_SMOKE:-false}"
+  path_backend_smoke_iters="${MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS:-10}"
   expected_resolved_backend="${MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND:-}"
-  for value in "${path_iters}" "${stress_iters}" "${needs_iters}"; do
+  for value in "${path_iters}" "${stress_iters}" "${needs_iters}" "${path_backend_smoke_iters}"; do
     if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
       echo "[migration_verify] bench iterations must be positive integers" >&2
       exit 1
@@ -127,11 +129,15 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND must be auto, cpu, or gpu" >&2
     exit 1
   fi
+  if [[ "${path_backend_smoke}" != "true" && "${path_backend_smoke}" != "false" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND_SMOKE must be true or false" >&2
+    exit 1
+  fi
   if [[ -n "${expected_resolved_backend}" && "${expected_resolved_backend}" != "cpu" && "${expected_resolved_backend}" != "gpu" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_EXPECT_RESOLVED_BACKEND must be cpu or gpu" >&2
     exit 1
   fi
-  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} expected_resolved=${expected_resolved_backend:-none}"
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend} smoke=${path_backend_smoke} smoke_iters=${path_backend_smoke_iters} expected_resolved=${expected_resolved_backend:-none}"
 
   run_bench_and_check() {
     local name="$1"
@@ -284,6 +290,64 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] pathfind-bridge-split checksums ok: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
 
+  run_path_backend_smoke_and_check() {
+    local smoke_iters="$1"
+    shift
+    local output
+    output="$("$@")"
+    echo "${output}"
+
+    local checksum_lines
+    local total_lines
+    local mode_lines
+    checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    total_lines="$(echo "${output}" | sed -n 's/.*total=\([0-9][0-9]*\).*/\1/p')"
+    mode_lines="$(echo "${output}" | sed -n 's/.*mode=\([a-z]*\).*/\1/p')"
+    local checksum_count
+    local total_count
+    local mode_count
+    checksum_count="$(echo "${checksum_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
+    total_count="$(echo "${total_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
+    mode_count="$(echo "${mode_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
+    if [[ "${checksum_count}" != "3" || "${total_count}" != "3" || "${mode_count}" != "3" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke parse failed: checksum_count=${checksum_count} total_count=${total_count} mode_count=${mode_count}" >&2
+      exit 1
+    fi
+    if ! echo "${mode_lines}" | grep -qx "auto" || ! echo "${mode_lines}" | grep -qx "cpu" || ! echo "${mode_lines}" | grep -qx "gpu"; then
+      echo "[migration_verify] pathfind-backend-smoke mode lines missing expected modes" >&2
+      exit 1
+    fi
+    local checksum_auto
+    local checksum_cpu
+    local checksum_gpu
+    checksum_auto="$(echo "${checksum_lines}" | sed -n '1p')"
+    checksum_cpu="$(echo "${checksum_lines}" | sed -n '2p')"
+    checksum_gpu="$(echo "${checksum_lines}" | sed -n '3p')"
+    if [[ "${checksum_auto}" != "${checksum_cpu}" || "${checksum_cpu}" != "${checksum_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke checksum mismatch: auto=${checksum_auto} cpu=${checksum_cpu} gpu=${checksum_gpu}" >&2
+      exit 1
+    fi
+    local expected_total
+    expected_total=$((smoke_iters * 2))
+    local total
+    while IFS= read -r total; do
+      if [[ -z "${total}" ]]; then
+        continue
+      fi
+      if [[ "${total}" != "${expected_total}" ]]; then
+        echo "[migration_verify] pathfind-backend-smoke dispatch total mismatch: expected=${expected_total} got=${total}" >&2
+        exit 1
+      fi
+    done <<< "${total_lines}"
+    local resolved_cpu
+    resolved_cpu="$(echo "${output}" | sed -n 's/.*mode=cpu .*resolved=\([a-z]*\).*/\1/p' | head -n 1)"
+    if [[ "${resolved_cpu}" != "cpu" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke cpu mode must resolve to cpu, got=${resolved_cpu:-<empty>}" >&2
+      exit 1
+    fi
+    echo "[migration_verify] pathfind-backend-smoke checksums/dispatch totals ok: checksum=${checksum_auto} total_each=${expected_total}"
+  }
+
   (
     cd "${ROOT_DIR}/rust"
     if [[ "${path_iters}" == "100" ]]; then
@@ -365,6 +429,11 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
         run_path_split_observe \
           cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}" --backend "${path_backend}"
       fi
+    fi
+    if [[ "${path_backend_smoke}" == "true" ]]; then
+      run_path_backend_smoke_and_check \
+        "${path_backend_smoke_iters}" \
+        cargo run -q -p sim-test --release -- --bench-pathfind-backend-smoke --iters "${path_backend_smoke_iters}"
     fi
     if [[ "${stress_iters}" == "10000" ]]; then
       run_bench_and_check \

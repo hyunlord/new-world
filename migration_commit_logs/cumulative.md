@@ -1155,3 +1155,8 @@
 - `migration_verify` pathfinding 벤치 검증에 dispatch total 파싱/기대값 검증을 추가해 checksum + 실행 경로 계측을 함께 게이트화.
 - 일반 벤치는 `total=iters*2`, split 벤치는 tuple/xy 각각 `total=iters`를 강제.
 - split + resolved backend 검증 조합으로 전체 파이프라인 통과를 확인.
+
+## Commit 234
+- `sim-test`에 `--bench-pathfind-backend-smoke`를 추가해 `auto/cpu/gpu` 3모드의 pathfinding dispatch 동작을 동일 입력으로 연속 검증.
+- `migration_verify`에 `MIGRATION_BENCH_PATH_BACKEND_SMOKE`/`MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS`를 추가하고, smoke 출력 파싱으로 모드 존재/체크섬 일치/dispatch total/CPU mode resolved를 강제.
+- `MIGRATION_BENCH_PATH_BACKEND_SMOKE=true MIGRATION_BENCH_PATH_BACKEND_SMOKE_ITERS=5 tools/migration_verify.sh --with-benches` 기준으로 smoke + 기존 checksum 게이트 동시 통과를 확인.
