@@ -393,6 +393,58 @@ def _write_json(path: Path, payload: Any) -> None:
         fp.write("\n")
 
 
+def _write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def _format_value_sample(value: Any, max_len: int = 96) -> str:
+    rendered = json.dumps(value, ensure_ascii=False, sort_keys=True)
+    if len(rendered) > max_len:
+        rendered = rendered[: max_len - 3] + "..."
+    return rendered.replace("|", "\\|")
+
+
+def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
+    locale = str(report.get("duplicate_report_locale", "unknown"))
+    conflict_items = [
+        (key, item)
+        for key, item in report.get("duplicate_details", {}).items()
+        if bool(item.get("value_conflict", False))
+    ]
+    lines: List[str] = [
+        "# Localization Duplicate Conflict Report",
+        "",
+        f"- duplicate_report_locale: `{locale}`",
+        f"- duplicate_conflicts: `{report.get('duplicate_conflict_count', 0)}`",
+        f"- duplicate_keys: `{report.get('duplicate_key_count', 0)}`",
+        "",
+    ]
+    if not conflict_items:
+        lines.append("No duplicate conflicts found.")
+        lines.append("")
+        return "\n".join(lines)
+
+    lines.extend(
+        [
+            "| Key | Files | Sample Values |",
+            "| --- | --- | --- |",
+        ]
+    )
+    for key, item in conflict_items:
+        files = [str(x) for x in item.get("files", [])]
+        values_by_file = item.get("values_by_file", {})
+        sample_parts: List[str] = []
+        for file_name in files[:3]:
+            sample_value = _format_value_sample(values_by_file.get(file_name))
+            sample_parts.append(f"{file_name}: {sample_value}")
+        files_joined = ", ".join(files).replace("|", "\\|")
+        sample_joined = " / ".join(sample_parts)
+        lines.append(f"| `{key}` | {files_joined} | {sample_joined} |")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", default=".", help="WorldSim project root")
@@ -416,6 +468,11 @@ def main() -> int:
         default="",
         help="optional output path for duplicate key detail json",
     )
+    parser.add_argument(
+        "--duplicate-conflict-markdown",
+        default="",
+        help="optional output path for duplicate conflict markdown report",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
@@ -436,6 +493,9 @@ def main() -> int:
                 "duplicate_details": report["duplicate_details"],
             },
         )
+    if args.duplicate_conflict_markdown:
+        out = (project_root / args.duplicate_conflict_markdown).resolve()
+        _write_text(out, _build_duplicate_conflict_markdown(report))
 
     strict_duplicate_conflicts = int(report["duplicate_conflict_count"]) > 0
     if args.strict:

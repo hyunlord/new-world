@@ -1040,3 +1040,8 @@
 - `GridCostMap::from_flat_owned_unchecked`를 추가해 소유 `walkable/move_cost` 버퍼를 직접 소비하고 move_cost clamp를 in-place 처리하도록 확장.
 - `sim-bridge.pathfind_from_flat`가 새 소유 버퍼 경로를 사용하도록 전환되어 flat 입력 pathfinding의 재복사를 제거.
 - checksum 유지 상태로 bridge flat 입력 경로의 메모리 효율을 개선.
+
+## Commit 211
+- `localization_audit.py`에 중복 충돌 Markdown 리포트 생성기(`--duplicate-conflict-markdown`)를 추가해 conflict key/파일/값 샘플을 표 형태로 출력 가능하게 확장.
+- `migration_verify`가 `MIGRATION_AUDIT_CONFLICT_MARKDOWN` 환경변수를 통해 strict audit 실행 중 Markdown 산출물을 생성하도록 연동.
+- 기존 JSON 리포트 경로와 병행해 사람이 바로 검토 가능한 충돌 요약 아티팩트 생산성을 강화.

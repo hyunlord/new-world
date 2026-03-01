@@ -50,12 +50,16 @@ python3 "${ROOT_DIR}/tools/localization_compile.py" --project-root "${ROOT_DIR}"
 echo "[migration_verify] 4/4 localization strict audit"
 audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
 audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
+audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
 audit_cmd=(python3 "${ROOT_DIR}/tools/localization_audit.py" --project-root "${ROOT_DIR}" --strict)
 if [[ -n "${audit_report_json}" ]]; then
   audit_cmd+=(--report-json "${audit_report_json}")
 fi
 if [[ -n "${audit_duplicate_report_json}" ]]; then
   audit_cmd+=(--duplicate-report-json "${audit_duplicate_report_json}")
+fi
+if [[ -n "${audit_conflict_markdown}" ]]; then
+  audit_cmd+=(--duplicate-conflict-markdown "${audit_conflict_markdown}")
 fi
 "${audit_cmd[@]}"
 
