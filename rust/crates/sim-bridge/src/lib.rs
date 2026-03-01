@@ -1434,6 +1434,95 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_attachment_type_code(
+        &self,
+        sensitivity: f32,
+        consistency: f32,
+        ace_score: f32,
+        abuser_is_caregiver: bool,
+        sensitivity_threshold_secure: f32,
+        consistency_threshold_secure: f32,
+        sensitivity_threshold_anxious: f32,
+        consistency_threshold_disorganized: f32,
+        abuser_is_caregiver_ace_min: f32,
+        avoidant_sensitivity_max: f32,
+        avoidant_consistency_min: f32,
+    ) -> i32 {
+        body::attachment_type_code(
+            sensitivity,
+            consistency,
+            ace_score,
+            abuser_is_caregiver,
+            sensitivity_threshold_secure,
+            consistency_threshold_secure,
+            sensitivity_threshold_anxious,
+            consistency_threshold_disorganized,
+            abuser_is_caregiver_ace_min,
+            avoidant_sensitivity_max,
+            avoidant_consistency_min,
+        )
+    }
+
+    #[func]
+    fn body_attachment_raw_parenting_quality(
+        &self,
+        has_personality: bool,
+        a_axis: f32,
+        e_axis: f32,
+        has_emotion_data: bool,
+        stress: f32,
+        allostatic: f32,
+        has_active_break: bool,
+        ace_score: f32,
+    ) -> f32 {
+        body::attachment_raw_parenting_quality(
+            has_personality,
+            a_axis,
+            e_axis,
+            has_emotion_data,
+            stress,
+            allostatic,
+            has_active_break,
+            ace_score,
+        )
+    }
+
+    #[func]
+    fn body_attachment_coping_quality_step(
+        &self,
+        base_quality: f32,
+        dependency: f32,
+        neglect_chance: f32,
+        consistency_penalty: f32,
+    ) -> PackedFloat32Array {
+        let out = body::attachment_coping_quality_step(
+            base_quality,
+            dependency,
+            neglect_chance,
+            consistency_penalty,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_attachment_protective_factor(
+        &self,
+        is_secure: bool,
+        eh: f32,
+        secure_weight: f32,
+        eh_weight: f32,
+        max_pf: f32,
+    ) -> f32 {
+        body::attachment_protective_factor(
+            is_secure,
+            eh,
+            secure_weight,
+            eh_weight,
+            max_pf,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

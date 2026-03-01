@@ -1150,6 +1150,101 @@ pub fn memory_summary_intensity(max_intensity: f32, summary_scale: f32) -> f32 {
     max_intensity * summary_scale
 }
 
+/// Attachment type classifier code.
+///
+/// Returns:
+/// `0=secure`, `1=anxious`, `2=avoidant`, `3=disorganized`.
+pub fn attachment_type_code(
+    sensitivity: f32,
+    consistency: f32,
+    ace_score: f32,
+    abuser_is_caregiver: bool,
+    sensitivity_threshold_secure: f32,
+    consistency_threshold_secure: f32,
+    sensitivity_threshold_anxious: f32,
+    consistency_threshold_disorganized: f32,
+    abuser_is_caregiver_ace_min: f32,
+    avoidant_sensitivity_max: f32,
+    avoidant_consistency_min: f32,
+) -> i32 {
+    if sensitivity >= sensitivity_threshold_secure
+        && consistency >= consistency_threshold_secure
+    {
+        return 0;
+    }
+    if sensitivity >= sensitivity_threshold_anxious
+        && consistency < consistency_threshold_disorganized
+    {
+        return 1;
+    }
+    if sensitivity < avoidant_sensitivity_max && consistency >= avoidant_consistency_min {
+        return 2;
+    }
+    if ace_score >= abuser_is_caregiver_ace_min && abuser_is_caregiver {
+        return 3;
+    }
+    1
+}
+
+/// Parenting raw quality from personality, stress burden, break state, and ACE score.
+pub fn attachment_raw_parenting_quality(
+    has_personality: bool,
+    a_axis: f32,
+    e_axis: f32,
+    has_emotion_data: bool,
+    stress: f32,
+    allostatic: f32,
+    has_active_break: bool,
+    ace_score: f32,
+) -> f32 {
+    let mut base = 0.50_f32;
+    if has_personality {
+        base += 0.15 * a_axis;
+        base += 0.10 * e_axis;
+    }
+    if has_emotion_data {
+        base -= 0.20 * clamp_f32(stress / 2000.0, 0.0, 1.0);
+        base -= 0.15 * clamp_f32(allostatic / 100.0, 0.0, 1.0);
+    }
+    if has_active_break {
+        base -= 0.30;
+    }
+    base -= 0.10 * clamp_f32(ace_score / 10.0, 0.0, 1.0);
+    clamp_f32(base, 0.0, 1.0)
+}
+
+/// Substance coping effect step for parenting quality and side-effect accumulators.
+///
+/// Returns `[new_quality, new_neglect_chance, new_consistency_penalty]`.
+pub fn attachment_coping_quality_step(
+    base_quality: f32,
+    dependency: f32,
+    neglect_chance: f32,
+    consistency_penalty: f32,
+) -> [f32; 3] {
+    let dep = clamp_f32(dependency, 0.0, 1.0);
+    let quality = clamp_f32(base_quality - (0.10 + 0.15 * dep), 0.0, 1.0);
+    let new_neglect = neglect_chance + 0.02 * (1.0 + dep);
+    let new_consistency = consistency_penalty + 0.15;
+    [quality, new_neglect, new_consistency]
+}
+
+/// Attachment protective factor from secure-bond bonus and emotional health term.
+pub fn attachment_protective_factor(
+    is_secure: bool,
+    eh: f32,
+    secure_weight: f32,
+    eh_weight: f32,
+    max_pf: f32,
+) -> f32 {
+    let mut pf = 0.0_f32;
+    if is_secure {
+        pf += secure_weight;
+    }
+    pf += eh_weight * eh;
+    clamp_f32(pf, 0.0, max_pf)
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2208,6 +2303,8 @@ mod tests {
         trait_violation_intrusive_chance,
         trauma_scar_acquire_chance, trauma_scar_sensitivity_factor,
         memory_decay_intensity, memory_decay_batch, memory_summary_intensity,
+        attachment_type_code, attachment_raw_parenting_quality,
+        attachment_coping_quality_step, attachment_protective_factor,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2811,6 +2908,45 @@ mod tests {
     #[test]
     fn memory_summary_intensity_scales_max_value() {
         assert!((memory_summary_intensity(0.9, 0.7) - 0.63).abs() < 1e-6);
+    }
+
+    #[test]
+    fn attachment_type_code_follows_threshold_ordering() {
+        let secure = attachment_type_code(0.8, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
+        let anxious = attachment_type_code(0.5, 0.2, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
+        let avoidant = attachment_type_code(0.2, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
+        let disorganized =
+            attachment_type_code(0.2, 0.2, 5.0, true, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
+        assert_eq!(secure, 0);
+        assert_eq!(anxious, 1);
+        assert_eq!(avoidant, 2);
+        assert_eq!(disorganized, 3);
+    }
+
+    #[test]
+    fn attachment_raw_parenting_quality_decreases_with_burden() {
+        let low_burden =
+            attachment_raw_parenting_quality(true, 0.7, 0.7, true, 200.0, 20.0, false, 1.0);
+        let high_burden =
+            attachment_raw_parenting_quality(true, 0.7, 0.7, true, 1800.0, 90.0, true, 9.0);
+        assert!(low_burden > high_burden);
+    }
+
+    #[test]
+    fn attachment_coping_quality_step_returns_adjusted_triplet() {
+        let out = attachment_coping_quality_step(0.8, 0.5, 0.1, 0.2);
+        assert!(out[0] < 0.8);
+        assert!(out[1] > 0.1);
+        assert!(out[2] > 0.2);
+    }
+
+    #[test]
+    fn attachment_protective_factor_is_clamped() {
+        let secure = attachment_protective_factor(true, 1.0, 0.30, 0.15, 0.45);
+        let insecure = attachment_protective_factor(false, 1.0, 0.30, 0.15, 0.45);
+        let clamped = attachment_protective_factor(true, 10.0, 0.30, 0.15, 0.45);
+        assert!(secure > insecure);
+        assert_eq!(clamped, 0.45);
     }
 
     #[test]
