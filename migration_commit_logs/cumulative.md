@@ -361,3 +361,8 @@
 - `GameCalendar`의 age 단위 텍스트(`UI_AGE_YEARS/MONTHS/DAYS`) 조회를 key-id 캐시 + `Locale.ltr_id()` 경로로 전환.
 - 정적 key id 캐시를 도입하고 최초 1회 `Locale.key_id(...)` 해석 후 재사용하도록 구성.
 - 결과 문자열 의미는 유지하면서 반복 포맷 경로의 locale key 문자열 조회 오버헤드를 완화.
+
+## Commit 075
+- `Locale`에 `MONTH_1..12` key id 캐시(`_month_key_ids`)를 추가하고 locale 로드 시 선계산.
+- `get_month_name`이 `ltr_id` 경로를 우선 사용해 월 이름 반복 조회의 문자열 key lookup 비용을 줄임.
+- key id가 없을 때는 기존 `ltr("MONTH_n")` fallback을 유지해 동작 호환성을 보장.

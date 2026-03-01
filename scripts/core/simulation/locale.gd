@@ -26,6 +26,7 @@ var _flat_strings: Dictionary = {}
 ## Stable key ID lookup for bridge/Rust paths.
 var _key_to_id: Dictionary = {}
 var _id_to_value: PackedStringArray = PackedStringArray()
+var _month_key_ids: PackedInt32Array = PackedInt32Array()
 
 ## All category file names (no extension)
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
@@ -59,7 +60,9 @@ func load_locale(locale: String) -> void:
 	_flat_strings.clear()
 	_key_to_id.clear()
 	_id_to_value.resize(0)
+	_month_key_ids.resize(0)
 	if _load_compiled_locale(locale):
+		_refresh_month_key_ids()
 		return
 
 	for cat in _categories:
@@ -80,6 +83,7 @@ func load_locale(locale: String) -> void:
 			if not _flat_strings.has(key):
 				_flat_strings[key] = str(cat_data[key])
 	_rebuild_key_index_from_flat()
+	_refresh_month_key_ids()
 
 
 ## Lookup translation string by key (searches all categories)
@@ -152,6 +156,13 @@ func tr_data(data: Dictionary, field: String = "name") -> String:
 
 ## Get month name from 1-based month number
 func get_month_name(month: int) -> String:
+	var idx: int = clampi(month, 1, 12) - 1
+	if idx >= 0 and idx < _month_key_ids.size():
+		var month_key_id: int = int(_month_key_ids[idx])
+		if month_key_id >= 0:
+			var value: String = ltr_id(month_key_id)
+			if not value.is_empty():
+				return value
 	var key = "MONTH_%d" % clampi(month, 1, 12)
 	return ltr(key)
 
@@ -284,3 +295,10 @@ func _rebuild_key_index(root: Dictionary, strings: Dictionary) -> void:
 		var key: String = str(keys[i])
 		_key_to_id[key] = i
 		_id_to_value[i] = str(strings.get(key, key))
+
+
+func _refresh_month_key_ids() -> void:
+	_month_key_ids.resize(12)
+	for i in range(12):
+		var key: String = "MONTH_%d" % (i + 1)
+		_month_key_ids[i] = key_id(key)
