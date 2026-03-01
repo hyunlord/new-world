@@ -939,6 +939,22 @@ pub fn migration_should_attempt(
     overcrowded || food_scarce || chance_roll < migration_chance
 }
 
+/// Cultural-memory decay step for technology forgetting.
+pub fn tech_cultural_memory_decay(
+    current_memory: f32,
+    base_decay: f32,
+    forgotten_long_multiplier: f32,
+    memory_floor: f32,
+    forgotten_recent: bool,
+) -> f32 {
+    let decay_rate = if forgotten_recent {
+        base_decay
+    } else {
+        base_decay * forgotten_long_multiplier
+    };
+    (current_memory - decay_rate).max(memory_floor)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1428,7 +1444,7 @@ mod tests {
         social_attachment_affinity_multiplier, social_proposal_accept_prob,
         tension_scarcity_pressure, tension_next_value, resource_regen_next,
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
-        migration_should_attempt,
+        migration_should_attempt, tech_cultural_memory_decay,
     };
 
     #[test]
@@ -1948,6 +1964,16 @@ mod tests {
         assert!(migration_should_attempt(false, true, 1.0, 0.0));
         assert!(migration_should_attempt(false, false, 0.1, 0.2));
         assert!(!migration_should_attempt(false, false, 0.3, 0.2));
+    }
+
+    #[test]
+    fn tech_cultural_memory_decay_respects_state_and_floor() {
+        let recent = tech_cultural_memory_decay(1.0, 0.05, 0.5, 0.1, true);
+        let long = tech_cultural_memory_decay(1.0, 0.05, 0.5, 0.1, false);
+        assert!((recent - 0.95).abs() < 1e-6);
+        assert!((long - 0.975).abs() < 1e-6);
+        let floored = tech_cultural_memory_decay(0.12, 0.5, 1.0, 0.1, true);
+        assert!((floored - 0.1).abs() < 1e-6);
     }
 
     #[test]

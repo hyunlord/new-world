@@ -1283,6 +1283,24 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_tech_cultural_memory_decay(
+        &self,
+        current_memory: f32,
+        base_decay: f32,
+        forgotten_long_multiplier: f32,
+        memory_floor: f32,
+        forgotten_recent: bool,
+    ) -> f32 {
+        body::tech_cultural_memory_decay(
+            current_memory,
+            base_decay,
+            forgotten_long_multiplier,
+            memory_floor,
+            forgotten_recent,
+        )
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
