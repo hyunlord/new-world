@@ -45,8 +45,7 @@ func execute_tick(tick: int) -> void:
 			_apply_arrival_effect(entity, tick)
 			entity.current_action = "idle"
 			entity.action_target = Vector2i(-1, -1)
-			entity.cached_path = []
-			entity.path_index = 0
+			_clear_cached_path(entity)
 			continue
 
 		# Age-based movement speed: skip ticks based on config
@@ -84,7 +83,7 @@ func execute_tick(tick: int) -> void:
 		for i in range(recalc_count):
 			_apply_recalculated_path(recalc_entities[i], paths[i])
 		for i in range(recalc_count, recalc_entities.size()):
-			_apply_recalculated_path(recalc_entities[i], [])
+			_clear_cached_path(recalc_entities[i])
 
 	if _pathfinder != null:
 		for i in range(path_entities.size()):
@@ -95,10 +94,10 @@ func execute_tick(tick: int) -> void:
 
 func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = true) -> void:
 	if allow_recalc and _needs_path_recalc(entity, (tick % 50) == 0):
-		entity.cached_path = _pathfinder.find_path(
+		var recalculated_path: Array = _pathfinder.find_path(
 			_world_data, entity.position, entity.action_target
 		)
-		_apply_recalculated_path(entity, entity.cached_path)
+		_apply_recalculated_path(entity, recalculated_path)
 
 	# Follow cached path
 	if entity.path_index < entity.cached_path.size():
@@ -117,8 +116,7 @@ func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = 
 			})
 		else:
 			# Path blocked, clear and fall back to greedy
-			entity.cached_path = []
-			entity.path_index = 0
+			_clear_cached_path(entity)
 			_move_toward_target(entity, tick)
 	else:
 		# Path exhausted, fall back to greedy
@@ -136,11 +134,22 @@ func _needs_path_recalc(entity: RefCounted, periodic_recalc_tick: bool) -> bool:
 
 
 func _apply_recalculated_path(entity: RefCounted, path: Array) -> void:
+	if path.is_empty():
+		_clear_cached_path(entity)
+		return
 	entity.cached_path = path
 	entity.path_index = 0
 	# Skip starting position if it matches current
 	if entity.cached_path.size() > 0 and entity.cached_path[0] == entity.position:
 		entity.path_index = 1
+
+
+func _clear_cached_path(entity: RefCounted) -> void:
+	if entity.cached_path is Array:
+		entity.cached_path.clear()
+	else:
+		entity.cached_path = []
+	entity.path_index = 0
 
 
 ## ─── Greedy Fallback Movement ────────────────────────────
