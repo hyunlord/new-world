@@ -213,6 +213,19 @@ func _apply_social_buffer(intensity: float, stage: String,
 	return intensity * (1.0 - social_buffer)
 
 
+func _attachment_type_to_code(attachment_type: String) -> int:
+	match attachment_type:
+		"secure":
+			return 0
+		"anxious":
+			return 1
+		"avoidant":
+			return 2
+		"disorganized":
+			return 3
+	return -1
+
+
 ## [Conradt et al., 2013 - Co-regulation / Parent→Child stress transfer]
 func _calculate_parent_stress_transfer(parent_stress: float, parent_dependency: float,
 		attachment_type: String, caregiver_support_active: bool,
@@ -290,22 +303,38 @@ func execute_tick(tick: int) -> void:
 			entity.set_meta("childhood_data", childhood_data)
 			continue
 
-		# Process parent stress transfer this tick
-		var parent_stress = childhood_data.get("parent_stress_level", 0.0)
-		if parent_stress > 0.1:
-			var contagion_in = entity.emotion_data.get_meta("contagion_stress_this_tick", 0.0)
-			var transferred = _calculate_parent_stress_transfer(
-				parent_stress,
-				_stages.get(stage, {}).get("parent_dependency", 0.5),
-				childhood_data.get("attachment_type", "secure"),
-				childhood_data.get("caregiver_support_active", false),
-				stage,
-				contagion_in
-			)
-			if transferred > 0.05:
-				entity.emotion_data.stress = clampf(
-					entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+			# Process parent stress transfer this tick
+			var parent_stress = childhood_data.get("parent_stress_level", 0.0)
+			if parent_stress > 0.1:
+				var parent_dependency: float = float(_stages.get(stage, {}).get("parent_dependency", 0.5))
+				var attachment_type: String = str(childhood_data.get("attachment_type", "secure"))
+				var caregiver_support_active: bool = bool(childhood_data.get("caregiver_support_active", false))
+				var buffer_power: float = float(_stages.get(stage, {}).get("buffer_power", 0.0))
+				var contagion_in: float = float(entity.emotion_data.get_meta("contagion_stress_this_tick", 0.0))
+				var transferred: float = 0.0
+				var transferred_variant: Variant = SimBridge.body_child_parent_stress_transfer(
+					float(parent_stress),
+					parent_dependency,
+					_attachment_type_to_code(attachment_type),
+					caregiver_support_active,
+					buffer_power,
+					contagion_in
 				)
+				if transferred_variant != null:
+					transferred = float(transferred_variant)
+				else:
+					transferred = _calculate_parent_stress_transfer(
+						float(parent_stress),
+						parent_dependency,
+						attachment_type,
+						caregiver_support_active,
+						stage,
+						contagion_in
+					)
+				if transferred > 0.05:
+					entity.emotion_data.stress = clampf(
+						entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+					)
 
 		var pending_stressors = childhood_data.get("pending_stressors", [])
 		if pending_stressors is Array:

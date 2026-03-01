@@ -1561,6 +1561,29 @@ func body_upper_needs_step_packed(
 	)
 
 
+## Delegates child parent-stress transfer computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_parent_stress_transfer(
+	parent_stress: float,
+	parent_dependency: float,
+	attachment_code: int,
+	caregiver_support_active: bool,
+	buffer_power: float,
+	contagion_input: float
+):
+	return _call_native_if_exists(
+		"body_child_parent_stress_transfer",
+		[
+			parent_stress,
+			parent_dependency,
+			attachment_code,
+			caregiver_support_active,
+			buffer_power,
+			contagion_input
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

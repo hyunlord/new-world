@@ -678,6 +678,26 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_parent_stress_transfer(
+        &self,
+        parent_stress: f32,
+        parent_dependency: f32,
+        attachment_code: i32,
+        caregiver_support_active: bool,
+        buffer_power: f32,
+        contagion_input: f32,
+    ) -> f32 {
+        body::child_parent_stress_transfer(
+            parent_stress,
+            parent_dependency,
+            attachment_code,
+            caregiver_support_active,
+            buffer_power,
+            contagion_input,
+        )
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

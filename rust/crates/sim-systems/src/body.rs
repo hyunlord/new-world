@@ -374,6 +374,33 @@ fn maxf32(value: f32) -> f32 {
     value.max(0.0)
 }
 
+/// Parent-to-child stress transfer under attachment/co-regulation factors.
+///
+/// `attachment_code`: `0=secure`, `1=anxious`, `2=avoidant`, `3=disorganized`.
+pub fn child_parent_stress_transfer(
+    parent_stress: f32,
+    parent_dependency: f32,
+    attachment_code: i32,
+    caregiver_support_active: bool,
+    buffer_power: f32,
+    contagion_input: f32,
+) -> f32 {
+    let coefficient = match attachment_code {
+        0 => 0.15,
+        1 => 0.35,
+        2 => 0.20,
+        3 => 0.45,
+        _ => 0.25,
+    };
+
+    let mut base_transfer = parent_stress * parent_dependency * coefficient;
+    if caregiver_support_active {
+        base_transfer *= 1.0 - buffer_power;
+    }
+    let combined = 1.0 - (1.0 - base_transfer) * (1.0 - contagion_input);
+    clamp_f32(combined, 0.0, 1.0)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -557,10 +584,11 @@ mod tests {
     use super::{
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
-        calc_training_gains, compute_age_curve, compute_age_curves, critical_severity,
-        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
-        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
-        upper_needs_job_alignment, upper_needs_step, warmth_decay,
+        calc_training_gains, child_parent_stress_transfer, compute_age_curve, compute_age_curves,
+        critical_severity, erg_frustration_step, needs_base_decay_step,
+        needs_critical_severity_step, rest_energy_recovery, thirst_decay,
+        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        warmth_decay,
     };
 
     #[test]
@@ -766,6 +794,20 @@ mod tests {
         assert!(out[0] > 0.1);
         assert!(out[4] > 0.9 - 0.01);
         assert!(out[3] <= 1.0);
+    }
+
+    #[test]
+    fn child_parent_stress_transfer_respects_attachment_profile() {
+        let secure = child_parent_stress_transfer(0.7, 0.8, 0, false, 0.0, 0.0);
+        let disorganized = child_parent_stress_transfer(0.7, 0.8, 3, false, 0.0, 0.0);
+        assert!(disorganized > secure);
+    }
+
+    #[test]
+    fn child_parent_stress_transfer_applies_social_buffer() {
+        let no_buffer = child_parent_stress_transfer(0.8, 0.7, 1, false, 0.4, 0.0);
+        let with_buffer = child_parent_stress_transfer(0.8, 0.7, 1, true, 0.4, 0.0);
+        assert!(with_buffer < no_buffer);
     }
 
     #[test]

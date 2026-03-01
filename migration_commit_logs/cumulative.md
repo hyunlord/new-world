@@ -762,3 +762,8 @@
 - `upper_needs_system`의 Rust 우선 경로에서 fallback(`_get_best_skill_normalized`, `_get_job_value_alignment`) 선계산을 제거.
 - bridge 결과가 없을 때만 fallback을 계산하도록 변경해 Rust 활성 환경의 불필요한 GDScript 연산을 절감.
 - 수치 의미는 유지하면서 상위욕구 tick 경로의 호출당 비용을 미세 최적화.
+
+## Commit 155
+- `sim-systems::body`에 `child_parent_stress_transfer`를 추가해 부모→아동 스트레스 전이(attachment/버퍼/contagion 결합) 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 `body_child_parent_stress_transfer` 경로를 추가하고, `child_stress_processor`가 Rust 우선 호출 + 기존 함수 fallback 구조를 사용하도록 전환.
+- child stress tick hot path에서 전이 수식의 스크립트 연산을 줄이면서 기존 의미와 fallback 호환성을 유지.
