@@ -391,6 +391,26 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       echo "[migration_verify] pathfind-backend-smoke configured mode mismatch: auto=${configured_auto:-<empty>} cpu=${configured_cpu:-<empty>} gpu=${configured_gpu:-<empty>}" >&2
       exit 1
     fi
+    local cpu_auto
+    local cpu_cpu
+    local cpu_gpu
+    local gpu_auto
+    local gpu_cpu
+    local gpu_gpu
+    cpu_auto="$(echo "${line_auto}" | sed -n 's/.* cpu=\([0-9][0-9]*\) gpu=.*/\1/p')"
+    cpu_cpu="$(echo "${line_cpu}" | sed -n 's/.* cpu=\([0-9][0-9]*\) gpu=.*/\1/p')"
+    cpu_gpu="$(echo "${line_gpu}" | sed -n 's/.* cpu=\([0-9][0-9]*\) gpu=.*/\1/p')"
+    gpu_auto="$(echo "${line_auto}" | sed -n 's/.* gpu=\([0-9][0-9]*\) total=.*/\1/p')"
+    gpu_cpu="$(echo "${line_cpu}" | sed -n 's/.* gpu=\([0-9][0-9]*\) total=.*/\1/p')"
+    gpu_gpu="$(echo "${line_gpu}" | sed -n 's/.* gpu=\([0-9][0-9]*\) total=.*/\1/p')"
+    if [[ -z "${cpu_auto}" || -z "${cpu_cpu}" || -z "${cpu_gpu}" || -z "${gpu_auto}" || -z "${gpu_cpu}" || -z "${gpu_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke cpu/gpu dispatch count parse failed" >&2
+      exit 1
+    fi
+    if [[ $((cpu_auto + gpu_auto)) -ne "${total_auto}" || $((cpu_cpu + gpu_cpu)) -ne "${total_cpu}" || $((cpu_gpu + gpu_gpu)) -ne "${total_gpu}" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke dispatch sum mismatch: auto=${cpu_auto}+${gpu_auto}!=$total_auto cpu=${cpu_cpu}+${gpu_cpu}!=$total_cpu gpu=${cpu_gpu}+${gpu_gpu}!=$total_gpu" >&2
+      exit 1
+    fi
     local resolved_cpu
     local resolved_auto
     local resolved_gpu
@@ -407,6 +427,30 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     fi
     if [[ -n "${expect_gpu}" && "${resolved_gpu}" != "${expect_gpu}" ]]; then
       echo "[migration_verify] pathfind-backend-smoke gpu mode resolve mismatch: expected=${expect_gpu} got=${resolved_gpu:-<empty>}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_auto}" == "cpu" && "${gpu_auto}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=cpu must have gpu=0 for auto mode, got=${gpu_auto}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_auto}" == "gpu" && "${cpu_auto}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=gpu must have cpu=0 for auto mode, got=${cpu_auto}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_cpu}" == "cpu" && "${gpu_cpu}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=cpu must have gpu=0 for cpu mode, got=${gpu_cpu}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_cpu}" == "gpu" && "${cpu_cpu}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=gpu must have cpu=0 for cpu mode, got=${cpu_cpu}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_gpu}" == "cpu" && "${gpu_gpu}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=cpu must have gpu=0 for gpu mode, got=${gpu_gpu}" >&2
+      exit 1
+    fi
+    if [[ "${resolved_gpu}" == "gpu" && "${cpu_gpu}" != "0" ]]; then
+      echo "[migration_verify] pathfind-backend-smoke resolved=gpu must have cpu=0 for gpu mode, got=${cpu_gpu}" >&2
       exit 1
     fi
     echo "[migration_verify] pathfind-backend-smoke checksums/dispatch/resolved ok: checksum=${checksum_auto} total_each=${expected_total} resolved_auto=${resolved_auto:-unknown} resolved_gpu=${resolved_gpu:-unknown}"
