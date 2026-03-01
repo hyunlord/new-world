@@ -681,3 +681,8 @@
 - `sim-systems::body`에 `needs_base_decay_step`를 추가해 hunger/energy/social + (옵션) thirst/warmth 기본 소모를 단일 함수로 통합.
 - `sim-bridge`/`SimBridge`에 `body_needs_base_decay_step`를 추가하고, Godot 파라미터 제한을 피하기 위해 packed scalar/flag 인코딩 경로로 노출.
 - `needs_system`이 배치 결과를 재사용하도록 전환되어 needs 기본 소모 계산 경로의 bridge round-trip과 중복 계산을 추가 축소.
+
+## Commit 139
+- `SimBridge`에 `body_needs_base_decay_step_packed`를 추가하고 기존 scalar wrapper는 packed 호출로 위임하도록 정리.
+- `needs_system`이 base decay 입력을 scratch `PackedFloat32Array`/`PackedByteArray`로 재사용하도록 전환되어 엔티티 루프의 배열 생성/append 오버헤드를 축소.
+- base decay 계산 의미를 유지하면서 needs tick 경로의 메모리 churn을 추가 완화.

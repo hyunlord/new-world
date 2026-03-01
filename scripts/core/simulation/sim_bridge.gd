@@ -1403,6 +1403,21 @@ func body_needs_temp_decay_step(
 
 ## Delegates combined baseline need decay step to native bridge.
 ## Returns null when native bridge/method is unavailable.
+func body_needs_base_decay_step_packed(
+	scalar_inputs: PackedFloat32Array,
+	flag_inputs: PackedByteArray
+):
+	return _call_native_if_exists(
+		"body_needs_base_decay_step",
+		[
+			scalar_inputs,
+			flag_inputs
+		]
+	)
+
+
+## Delegates combined baseline need decay step to native bridge.
+## Returns null when native bridge/method is unavailable.
 func body_needs_base_decay_step(
 	hunger_value: float,
 	hunger_decay_rate: float,
@@ -1437,13 +1452,7 @@ func body_needs_base_decay_step(
 	var flag_inputs: PackedByteArray = PackedByteArray()
 	flag_inputs.append(1 if has_tile_temp else 0)
 	flag_inputs.append(1 if needs_expansion_enabled else 0)
-	return _call_native_if_exists(
-		"body_needs_base_decay_step",
-		[
-			scalar_inputs,
-			flag_inputs
-		]
-	)
+	return body_needs_base_decay_step_packed(scalar_inputs, flag_inputs)
 
 
 func _get_native_bridge() -> Object:

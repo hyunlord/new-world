@@ -1,6 +1,8 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
 const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
+const _BASE_DECAY_SCALAR_COUNT: int = 13
+const _BASE_DECAY_FLAG_COUNT: int = 2
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -8,6 +10,8 @@ var _mortality_system: RefCounted
 var _world_data: RefCounted = null
 var _stress_system = null
 var _last_tick: int = 0
+var _base_decay_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _base_decay_flag_inputs: PackedByteArray = PackedByteArray()
 
 
 func _init() -> void:
@@ -25,6 +29,10 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 
 func execute_tick(tick: int) -> void:
 	_last_tick = tick
+	if _base_decay_scalar_inputs.size() < _BASE_DECAY_SCALAR_COUNT:
+		_base_decay_scalar_inputs.resize(_BASE_DECAY_SCALAR_COUNT)
+	if _base_decay_flag_inputs.size() < _BASE_DECAY_FLAG_COUNT:
+		_base_decay_flag_inputs.resize(_BASE_DECAY_FLAG_COUNT)
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
@@ -36,22 +44,24 @@ func execute_tick(tick: int) -> void:
 			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
 			has_tile_temp = true
 		var base_decay_step: PackedFloat32Array = PackedFloat32Array()
-		var base_decay_variant: Variant = SimBridge.body_needs_base_decay_step(
-			entity.hunger,
-			GameConfig.HUNGER_DECAY_RATE,
-			hunger_mult,
-			GameConfig.HUNGER_METABOLIC_MIN,
-			GameConfig.HUNGER_METABOLIC_RANGE,
-			GameConfig.ENERGY_DECAY_RATE,
-			GameConfig.SOCIAL_DECAY_RATE,
-			GameConfig.THIRST_DECAY_RATE,
-			GameConfig.WARMTH_DECAY_RATE,
-			tile_temp,
-			has_tile_temp,
-			GameConfig.WARMTH_TEMP_NEUTRAL,
-			GameConfig.WARMTH_TEMP_FREEZING,
-			GameConfig.WARMTH_TEMP_COLD,
-			GameConfig.NEEDS_EXPANSION_ENABLED
+		_base_decay_scalar_inputs[0] = entity.hunger
+		_base_decay_scalar_inputs[1] = GameConfig.HUNGER_DECAY_RATE
+		_base_decay_scalar_inputs[2] = hunger_mult
+		_base_decay_scalar_inputs[3] = GameConfig.HUNGER_METABOLIC_MIN
+		_base_decay_scalar_inputs[4] = GameConfig.HUNGER_METABOLIC_RANGE
+		_base_decay_scalar_inputs[5] = GameConfig.ENERGY_DECAY_RATE
+		_base_decay_scalar_inputs[6] = GameConfig.SOCIAL_DECAY_RATE
+		_base_decay_scalar_inputs[7] = GameConfig.THIRST_DECAY_RATE
+		_base_decay_scalar_inputs[8] = GameConfig.WARMTH_DECAY_RATE
+		_base_decay_scalar_inputs[9] = tile_temp
+		_base_decay_scalar_inputs[10] = GameConfig.WARMTH_TEMP_NEUTRAL
+		_base_decay_scalar_inputs[11] = GameConfig.WARMTH_TEMP_FREEZING
+		_base_decay_scalar_inputs[12] = GameConfig.WARMTH_TEMP_COLD
+		_base_decay_flag_inputs[0] = 1 if has_tile_temp else 0
+		_base_decay_flag_inputs[1] = 1 if GameConfig.NEEDS_EXPANSION_ENABLED else 0
+		var base_decay_variant: Variant = SimBridge.body_needs_base_decay_step_packed(
+			_base_decay_scalar_inputs,
+			_base_decay_flag_inputs
 		)
 		if base_decay_variant is PackedFloat32Array:
 			var packed_base_decay: PackedFloat32Array = base_decay_variant
