@@ -630,6 +630,29 @@ pub fn stat_threshold_is_active(
     }
 }
 
+/// Computes food/wood/stone delta rates per 100 ticks.
+///
+/// Returns `[food_rate, wood_rate, stone_rate]`.
+pub fn stats_resource_deltas_per_100(
+    latest_food: f32,
+    latest_wood: f32,
+    latest_stone: f32,
+    older_food: f32,
+    older_wood: f32,
+    older_stone: f32,
+    tick_diff: f32,
+) -> [f32; 3] {
+    if tick_diff <= 0.0 {
+        return [0.0, 0.0, 0.0];
+    }
+    let scale = 100.0 / tick_diff;
+    [
+        (latest_food - older_food) * scale,
+        (latest_wood - older_wood) * scale,
+        (latest_stone - older_stone) * scale,
+    ]
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1677,7 +1700,8 @@ mod tests {
         job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
-        stat_threshold_is_active, reputation_decay_value, reputation_event_delta,
+        stat_threshold_is_active, stats_resource_deltas_per_100,
+        reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
@@ -2057,6 +2081,20 @@ mod tests {
         assert!(!stat_threshold_is_active(5, 5, 1, 2, false));
         assert!(stat_threshold_is_active(4, 5, 1, 2, true));
         assert!(!stat_threshold_is_active(3, 5, 1, 2, true));
+    }
+
+    #[test]
+    fn stats_resource_deltas_per_100_scales_by_tick_diff() {
+        let out = stats_resource_deltas_per_100(120.0, 55.0, 20.0, 100.0, 40.0, 10.0, 200.0);
+        assert!((out[0] - 10.0).abs() < 1e-6);
+        assert!((out[1] - 7.5).abs() < 1e-6);
+        assert!((out[2] - 5.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stats_resource_deltas_per_100_returns_zero_when_tick_diff_invalid() {
+        let out = stats_resource_deltas_per_100(10.0, 10.0, 10.0, 5.0, 5.0, 5.0, 0.0);
+        assert_eq!(out, [0.0, 0.0, 0.0]);
     }
 
     #[test]

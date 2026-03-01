@@ -1035,6 +1035,29 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stats_resource_deltas_per_100(
+        &self,
+        latest_food: f32,
+        latest_wood: f32,
+        latest_stone: f32,
+        older_food: f32,
+        older_wood: f32,
+        older_stone: f32,
+        tick_diff: f32,
+    ) -> PackedFloat32Array {
+        let out = body::stats_resource_deltas_per_100(
+            latest_food,
+            latest_wood,
+            latest_stone,
+            older_food,
+            older_wood,
+            older_stone,
+            tick_diff,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

@@ -1556,3 +1556,10 @@
 - `stat_threshold_system.gd`의 `_check_threshold`를 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `30/56` 적용.
+
+## Commit 302
+- `sim-systems/body`에 `stats_resource_deltas_per_100`를 추가해 StatsRecorder의 리소스 변화율 계산 수식을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_stats_resource_deltas_per_100` 메서드를 추가해 GDScript에서 해당 수식을 직접 호출 가능하게 확장.
+- `stats_recorder.gd`의 `get_resource_deltas`를 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `31/56` 적용.
