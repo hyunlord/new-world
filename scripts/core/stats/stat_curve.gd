@@ -541,6 +541,55 @@ static func stress_trace_batch_step(
 		"active_mask": active,
 	}
 
+
+## Resilience value update.
+static func stress_resilience_value(
+	e_axis: float,
+	c_axis: float,
+	x_axis: float,
+	o_axis: float,
+	a_axis: float,
+	h_axis: float,
+	support_score: float,
+	allostatic: float,
+	hunger: float,
+	energy: float,
+	scar_resilience_mod: float
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_resilience_value",
+		[
+			e_axis,
+			c_axis,
+			x_axis,
+			o_axis,
+			a_axis,
+			h_axis,
+			support_score,
+			allostatic,
+			hunger,
+			energy,
+			scar_resilience_mod
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var r: float = (
+		0.35 * (1.0 - e_axis)
+		+ 0.25 * c_axis
+		+ 0.15 * x_axis
+		+ 0.10 * o_axis
+		+ 0.10 * a_axis
+		+ 0.05 * h_axis
+		+ 0.25 * support_score
+		- 0.30 * (allostatic / 100.0)
+	)
+	var fatigue_penalty: float = clampf((0.3 - energy) / 0.3, 0.0, 0.3) + clampf((0.3 - hunger) / 0.3, 0.0, 0.2)
+	r -= 0.20 * fatigue_penalty
+	r += scar_resilience_mod
+	return clampf(r, 0.05, 1.0)
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

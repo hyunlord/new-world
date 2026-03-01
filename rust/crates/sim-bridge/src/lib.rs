@@ -838,6 +838,36 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_resilience_value(
+        &self,
+        e_axis: f32,
+        c_axis: f32,
+        x_axis: f32,
+        o_axis: f32,
+        a_axis: f32,
+        h_axis: f32,
+        support_score: f32,
+        allostatic: f32,
+        hunger: f32,
+        energy: f32,
+        scar_resilience_mod: f32,
+    ) -> f32 {
+        stat_curve::stress_resilience_value(
+            e_axis,
+            c_axis,
+            x_axis,
+            o_axis,
+            a_axis,
+            h_axis,
+            support_score,
+            allostatic,
+            hunger,
+            energy,
+            scar_resilience_mod,
+        )
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

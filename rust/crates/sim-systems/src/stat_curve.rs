@@ -402,6 +402,36 @@ pub fn stress_trace_batch_step(
     }
 }
 
+/// Resilience value update.
+pub fn stress_resilience_value(
+    e_axis: f32,
+    c_axis: f32,
+    x_axis: f32,
+    o_axis: f32,
+    a_axis: f32,
+    h_axis: f32,
+    support_score: f32,
+    allostatic: f32,
+    hunger: f32,
+    energy: f32,
+    scar_resilience_mod: f32,
+) -> f32 {
+    let mut r = 0.35 * (1.0 - e_axis)
+        + 0.25 * c_axis
+        + 0.15 * x_axis
+        + 0.10 * o_axis
+        + 0.10 * a_axis
+        + 0.05 * h_axis
+        + 0.25 * support_score
+        - 0.30 * (allostatic / 100.0);
+
+    let fatigue_penalty =
+        ((0.3 - energy) / 0.3).clamp(0.0, 0.3) + ((0.3 - hunger) / 0.3).clamp(0.0, 0.2);
+    r -= 0.20 * fatigue_penalty;
+    r += scar_resilience_mod;
+    r.clamp(0.05, 1.0)
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -650,5 +680,22 @@ mod tests {
         assert_eq!(out.updated_per_tick.len(), 1);
         assert_eq!(out.active_mask.len(), 1);
         assert!((out.total_contribution - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_resilience_value_is_clamped() {
+        let low = stress_resilience_value(1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, -1.0);
+        let high = stress_resilience_value(0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0);
+        assert!((0.05..=1.0).contains(&low));
+        assert!((0.05..=1.0).contains(&high));
+    }
+
+    #[test]
+    fn stress_resilience_value_drops_with_fatigue() {
+        let rested =
+            stress_resilience_value(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.3, 20.0, 1.0, 1.0, 0.0);
+        let fatigued =
+            stress_resilience_value(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.3, 20.0, 0.1, 0.1, 0.0);
+        assert!(fatigued < rested);
     }
 }

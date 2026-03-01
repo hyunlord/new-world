@@ -370,25 +370,27 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 	var H: float = StatQuery.get_normalized(entity, &"HEXACO_H")
 
 	var support: float = _calc_support_score(entity)
-
-	var r: float = (0.35 * (1.0 - E)
-		+ 0.25 * C
-		+ 0.15 * X
-		+ 0.10 * O
-		+ 0.10 * A
-		+ 0.05 * H
-		+ 0.25 * support
-		- 0.30 * (ed.allostatic / 100.0))
-
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
-	var fatigue_penalty: float = clampf((0.3 - energy) / 0.3, 0.0, 0.3) + clampf((0.3 - hunger) / 0.3, 0.0, 0.2)
-	r -= 0.20 * fatigue_penalty
 
 	# 트라우마 흉터 회복력 모디파이어 (음수 = 회복 더 느림)
+	var scar_resilience_mod: float = 0.0
 	if _trauma_scar_system != null:
-		r += _trauma_scar_system.get_scar_resilience_mod(entity)
-	ed.resilience = clampf(r, 0.05, 1.0)
+		scar_resilience_mod = _trauma_scar_system.get_scar_resilience_mod(entity)
+
+	ed.resilience = StatCurveScript.stress_resilience_value(
+		E,
+		C,
+		X,
+		O,
+		A,
+		H,
+		support,
+		ed.allostatic,
+		hunger,
+		energy,
+		scar_resilience_mod
+	)
 
 
 # ── 11) 스트레스 → 감정 역방향 ───────────────────────────────────────

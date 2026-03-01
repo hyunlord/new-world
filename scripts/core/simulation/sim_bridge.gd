@@ -468,6 +468,39 @@ func stat_stress_trace_batch_step(
 	)
 
 
+## Delegates stress resilience value computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_resilience_value(
+	e_axis: float,
+	c_axis: float,
+	x_axis: float,
+	o_axis: float,
+	a_axis: float,
+	h_axis: float,
+	support_score: float,
+	allostatic: float,
+	hunger: float,
+	energy: float,
+	scar_resilience_mod: float
+):
+	return _call_native_if_exists(
+		"stat_stress_resilience_value",
+		[
+			e_axis,
+			c_axis,
+			x_axis,
+			o_axis,
+			a_axis,
+			h_axis,
+			support_score,
+			allostatic,
+			hunger,
+			energy,
+			scar_resilience_mod
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

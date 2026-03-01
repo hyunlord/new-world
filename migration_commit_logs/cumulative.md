@@ -186,3 +186,8 @@
 - `StressSystem`의 trace decay/keep 처리(`_process_stress_traces`)를 Rust batch step API로 이관.
 - packed 배열 기반으로 contribution 합/갱신값/active mask를 계산하고 GDScript는 결과 반영만 수행.
 - stress trace 처리 경로까지 네이티브 수학 파이프라인으로 편입.
+
+## Commit 039
+- `StressSystem`의 resilience 업데이트 수식을 Rust 함수(`stress_resilience_value`)로 이관.
+- HEXACO/지원도/allostatic/피로/scar 보정 입력을 받아 최종 resilience를 네이티브 경로에서 계산.
+- stress 수학 업데이트 경로의 remaining hot path를 추가로 네이티브화.
