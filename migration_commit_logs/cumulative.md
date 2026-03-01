@@ -1015,3 +1015,8 @@
 - `migration_verify` strict audit 단계에 `MIGRATION_AUDIT_REPORT_JSON`/`MIGRATION_AUDIT_DUPLICATE_REPORT_JSON` 환경변수 연동을 추가해 localization audit 결과를 JSON 아티팩트로 바로 저장 가능하게 확장.
 - 환경변수 미설정 시 기존 strict audit 동작을 그대로 유지해 기존 파이프라인과 호환.
 - 벤치 옵션과 함께 사용해 검증 + 리포트 산출을 한 번에 수행할 수 있도록 운영성을 보강.
+
+## Commit 206
+- `migration_verify` split path 벤치에 기본 반복수(`path=100`) 전용 strict checksum 기준선 검증을 추가해 tuple/xy 회귀를 자동 차단.
+- 비기본 반복수에서는 기존 관측 모드를 유지해 실험/튜닝 유연성을 보장.
+- split 체크섬 기준선: tuple=`35400.00000`, xy=`35400.00000`.

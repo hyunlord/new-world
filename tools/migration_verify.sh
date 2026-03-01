@@ -137,6 +137,35 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] pathfind-bridge-split checksums observed: tuple=${tuple_checksum} xy=${xy_checksum}"
   }
 
+  run_path_split_and_check() {
+    local expected_tuple="$1"
+    local expected_xy="$2"
+    shift 2
+    local output
+    output="$("$@")"
+    echo "${output}"
+
+    local checksum_lines
+    checksum_lines="$(echo "${output}" | sed -n 's/.*checksum=\([0-9.]*\).*/\1/p')"
+    local tuple_checksum
+    local xy_checksum
+    tuple_checksum="$(echo "${checksum_lines}" | sed -n '1p')"
+    xy_checksum="$(echo "${checksum_lines}" | sed -n '2p')"
+    if [[ -z "${tuple_checksum}" || -z "${xy_checksum}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split checksum parse failed" >&2
+      exit 1
+    fi
+    if [[ "${tuple_checksum}" != "${expected_tuple}" || "${xy_checksum}" != "${expected_xy}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split checksum baseline mismatch: expected_tuple=${expected_tuple} got_tuple=${tuple_checksum} expected_xy=${expected_xy} got_xy=${xy_checksum}" >&2
+      exit 1
+    fi
+    if [[ "${tuple_checksum}" != "${xy_checksum}" ]]; then
+      echo "[migration_verify] pathfind-bridge-split checksum mismatch: tuple=${tuple_checksum} xy=${xy_checksum}" >&2
+      exit 1
+    fi
+    echo "[migration_verify] pathfind-bridge-split checksums ok: tuple=${tuple_checksum} xy=${xy_checksum}"
+  }
+
   (
     cd "${ROOT_DIR}/rust"
     if [[ "${path_iters}" == "100" ]]; then
@@ -150,8 +179,15 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
         cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
     fi
     if [[ "${path_split}" == "true" ]]; then
-      run_path_split_observe \
-        cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
+      if [[ "${path_iters}" == "100" ]]; then
+        run_path_split_and_check \
+          "35400.00000" \
+          "35400.00000" \
+          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
+      else
+        run_path_split_observe \
+          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
+      fi
     fi
     if [[ "${stress_iters}" == "10000" ]]; then
       run_bench_and_check \
