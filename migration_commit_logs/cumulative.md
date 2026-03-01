@@ -1351,3 +1351,10 @@
 - `sim-test` 데이터 로드 로그에 신규 데이터셋 카운트를 포함하고, `rust/tests/data_loading_test.rs`의 placeholder를 실제 통합 로딩 검증 테스트로 교체.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량(데이터 로더 축): `7/9` 완료, `2/9` 잔여.
+
+## Commit 273
+- `sim-data`를 확장해 `species`, `mortality`, `developmental_stages`, `attachment_config` 로더를 추가하고 `DataBundle`/`load_all`을 해당 4개 데이터셋까지 로딩하도록 확장.
+- `sim-test` 데이터 로드 로그에 `species`, `mortality_profiles`, `developmental_stages` 카운트를 추가해 신규 로더 적재 상태를 즉시 확인 가능하게 개선.
+- `rust/tests/data_loading_test.rs`를 확장해 species/mortality/developmental non-empty 및 attachment 설정 유효성(`determination_window_days > 0`)을 통합 검증.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량(데이터 로더 축): `8/9` 완료, `1/9` 잔여.

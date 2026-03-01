@@ -27,6 +27,16 @@ fn load_all_contains_r1_core_datasets() {
     assert!(!data.coping.is_empty(), "coping definitions empty");
     assert!(!data.mental_breaks.is_empty(), "mental break definitions empty");
     assert!(!data.traits.is_empty(), "trait definitions empty");
+    assert!(!data.species.is_empty(), "species definitions empty");
+    assert!(!data.mortality.is_empty(), "mortality profiles empty");
+    assert!(
+        !data.developmental_stages.is_empty(),
+        "developmental stages empty"
+    );
+    assert!(
+        data.attachment.determination_window_days > 0,
+        "attachment config invalid"
+    );
 }
 
 #[test]
