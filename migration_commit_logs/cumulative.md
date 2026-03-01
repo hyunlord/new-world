@@ -44,3 +44,8 @@
 - `localization/manifest.json` + `tools/localization_compile.py` 도입.
 - locale 카테고리 파일을 `compiled/<locale>.json` 단일 인덱스로 빌드/운영하는 경로 추가.
 - `Locale` 로더를 compiled 우선 + legacy fallback 구조로 개편.
+
+## Commit 010
+- `sim-bridge`에 `gpu` feature 플래그와 `has_gpu_pathfinding()` capability API 추가.
+- `SimBridge` GPU 선택 로직을 모드 + 네이티브 capability 이중 체크로 강화.
+- GPU 미지원 빌드에서 CPU fallback 경로를 더 명시적으로 보장.

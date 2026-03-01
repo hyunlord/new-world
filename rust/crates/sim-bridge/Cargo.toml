@@ -6,6 +6,10 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[features]
+default = []
+gpu = []
+
 [dependencies]
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }

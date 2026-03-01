@@ -184,6 +184,11 @@ impl IObject for WorldSimBridge {
 #[godot_api]
 impl WorldSimBridge {
     #[func]
+    fn has_gpu_pathfinding(&self) -> bool {
+        cfg!(feature = "gpu")
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

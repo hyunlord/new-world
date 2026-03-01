@@ -306,7 +306,15 @@ func _prefer_gpu() -> bool:
 		return false
 	if not backend.has_method("resolve_mode"):
 		return false
-	return str(backend.call("resolve_mode")) == "gpu"
+	if str(backend.call("resolve_mode")) != "gpu":
+		return false
+
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return false
+	if bridge.has_method("has_gpu_pathfinding"):
+		return bool(bridge.call("has_gpu_pathfinding"))
+	return bridge.has_method("pathfind_grid_gpu")
 
 
 func _pick_method(candidates: Array[String], fallback: String) -> String:
