@@ -44,6 +44,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "preserve_key_ids": True,
     "embed_keys": False,
     "max_duplicate_key_count": None,
+    "max_duplicate_conflict_count": None,
     "max_missing_key_fill_count": None,
 }
 
@@ -115,6 +116,7 @@ def _compile_locale(
     flat: Dict[str, str] = {}
     key_sources: Dict[str, str] = {}
     duplicate_keys: Dict[str, List[str]] = {}
+    duplicate_conflict_keys: Dict[str, List[str]] = {}
 
     for category in categories:
         category_data, loaded_from = _load_category_data(
@@ -131,6 +133,10 @@ def _compile_locale(
 
             if key in flat:
                 duplicate_keys.setdefault(key, [key_sources[key]]).append(source_label)
+                if flat[key] != value:
+                    duplicate_conflict_keys.setdefault(key, [key_sources[key]]).append(source_label)
+                elif key in duplicate_conflict_keys:
+                    duplicate_conflict_keys[key].append(source_label)
                 # Preserve first-wins semantics to match existing Locale loader behavior.
                 continue
 
@@ -141,6 +147,7 @@ def _compile_locale(
         "strings": flat,
         "sources": key_sources,
         "duplicate_keys": duplicate_keys,
+        "duplicate_conflict_keys": duplicate_conflict_keys,
         "keys": sorted(flat.keys()),
     }
 
@@ -233,6 +240,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 file=sys.stderr,
             )
             return 1
+    max_duplicate_conflict_count_raw = manifest.get("max_duplicate_conflict_count")
+    max_duplicate_conflict_count: int | None = None
+    if max_duplicate_conflict_count_raw is not None:
+        try:
+            max_duplicate_conflict_count = int(max_duplicate_conflict_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_duplicate_conflict_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
     max_missing_key_fill_count_raw = manifest.get("max_missing_key_fill_count")
     max_missing_key_fill_count: int | None = None
     if max_missing_key_fill_count_raw is not None:
@@ -255,6 +273,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     compiled_by_locale: Dict[str, Dict[str, Any]] = {}
     total_duplicates = 0
     max_locale_duplicates = 0
+    max_locale_duplicate_conflicts = 0
     for locale in supported_locales:
         compiled = _compile_locale(
             localization_root=localization_root,
@@ -264,8 +283,12 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         )
         compiled_by_locale[locale] = compiled
         duplicate_count = len(compiled["duplicate_keys"])
+        duplicate_conflict_count = len(compiled["duplicate_conflict_keys"])
         total_duplicates += duplicate_count
         max_locale_duplicates = max(max_locale_duplicates, duplicate_count)
+        max_locale_duplicate_conflicts = max(
+            max_locale_duplicate_conflicts, duplicate_conflict_count
+        )
 
     canonical_key_set: set[str] = set()
     for compiled in compiled_by_locale.values():
@@ -291,6 +314,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     for locale in supported_locales:
         compiled = compiled_by_locale[locale]
         duplicate_count = len(compiled["duplicate_keys"])
+        duplicate_conflict_count = len(compiled["duplicate_conflict_keys"])
         locale_strings: Dict[str, str] = dict(compiled["strings"])
         locale_sources: Dict[str, str] = dict(compiled["sources"])
         missing_filled_count = 0
@@ -313,6 +337,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "categories_order": categories,
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
+                "duplicate_conflict_count": duplicate_conflict_count,
                 "key_count": len(registry_keys),
                 "active_key_count": len(canonical_keys),
                 "missing_key_fill_count": missing_filled_count,
@@ -333,6 +358,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         print(
             f"[localization_compile] {locale}: "
             f"strings={len(locale_strings)} duplicates={duplicate_count} "
+            f"duplicate_conflicts={duplicate_conflict_count} "
             f"filled={missing_filled_count} updated={1 if updated else 0} -> {out_path}"
         )
 
@@ -347,6 +373,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         print(
             "[localization_compile] duplicate regression: "
             f"max_locale_duplicates={max_locale_duplicates} max_allowed={max_duplicate_key_count}",
+            file=sys.stderr,
+        )
+        return 1
+    if (
+        max_duplicate_conflict_count is not None
+        and max_locale_duplicate_conflicts > max_duplicate_conflict_count
+    ):
+        print(
+            "[localization_compile] duplicate-conflict regression: "
+            f"max_locale_duplicate_conflicts={max_locale_duplicate_conflicts} "
+            f"max_allowed={max_duplicate_conflict_count}",
             file=sys.stderr,
         )
         return 1

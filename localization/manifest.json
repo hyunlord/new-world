@@ -26,5 +26,6 @@
   "preserve_key_ids": true,
   "embed_keys": false,
   "max_duplicate_key_count": 248,
+  "max_duplicate_conflict_count": 35,
   "max_missing_key_fill_count": 0
 }

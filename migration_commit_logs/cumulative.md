@@ -966,3 +966,8 @@
 - `localization_audit.py`에 중복 키 상세 분석(`duplicate_details`)을 추가해 파일별 값과 `value_conflict` 여부를 추적하도록 확장.
 - 출력 요약에 `duplicate_conflicts`/`duplicate_consistent`를 추가하고, 충돌 키 상위 목록을 즉시 노출하도록 개선.
 - `--strict-duplicate-conflicts`, `--report-json`, `--duplicate-report-json` 옵션을 추가해 중복 충돌을 선택적으로 품질 게이트/산출물화 가능하게 정리.
+
+## Commit 196
+- `localization_compile.py`가 duplicate key 중 값 충돌(`duplicate_conflict_keys`)을 별도 계산하도록 확장되고, locale meta/log에 `duplicate_conflict_count`를 노출.
+- manifest에 `max_duplicate_conflict_count` 기준선을 추가해 값 충돌 중복의 증가를 컴파일 단계에서 자동 차단.
+- compiled locale(`en/ko`) meta에도 충돌 수를 기록해 산출물 기준으로 중복 위험도를 추적 가능하게 정리.

@@ -19,6 +19,7 @@
       "data_generated"
     ],
     "default_locale": "ko",
+    "duplicate_conflict_count": 24,
     "duplicate_key_count": 248,
     "embed_keys": false,
     "fallback_locale": "en",
