@@ -45,6 +45,23 @@ pub struct EmotionStressContribution {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressEmotionRecoveryDeltaStep {
+    pub fear: f32,
+    pub anger: f32,
+    pub sadness: f32,
+    pub disgust: f32,
+    pub surprise: f32,
+    pub joy: f32,
+    pub trust: f32,
+    pub anticipation: f32,
+    pub va_composite: f32,
+    pub emotion_total: f32,
+    pub recovery: f32,
+    pub delta: f32,
+    pub hidden_threat_accumulator: f32,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StressReserveStep {
     pub reserve: f32,
     pub gas_stage: i32,
@@ -384,6 +401,86 @@ pub fn stress_delta_step(
     StressDeltaStep {
         delta,
         hidden_threat_accumulator: hidden,
+    }
+}
+
+/// Combined step:
+/// emotion contribution + recovery + final delta(denial redirect).
+pub fn stress_emotion_recovery_delta_step(
+    fear: f32,
+    anger: f32,
+    sadness: f32,
+    disgust: f32,
+    surprise: f32,
+    joy: f32,
+    trust: f32,
+    anticipation: f32,
+    valence: f32,
+    arousal: f32,
+    stress: f32,
+    support_score: f32,
+    resilience: f32,
+    reserve: f32,
+    is_sleeping: bool,
+    is_safe: bool,
+    continuous_input: f32,
+    trace_input: f32,
+    ace_stress_mult: f32,
+    trait_accum_mult: f32,
+    epsilon: f32,
+    denial_active: bool,
+    denial_redirect_fraction: f32,
+    hidden_threat_accumulator: f32,
+    denial_max_accumulator: f32,
+) -> StressEmotionRecoveryDeltaStep {
+    let emotion = stress_emotion_contribution(
+        fear,
+        anger,
+        sadness,
+        disgust,
+        surprise,
+        joy,
+        trust,
+        anticipation,
+        valence,
+        arousal,
+    );
+    let recovery = stress_recovery_value(
+        stress,
+        support_score,
+        resilience,
+        reserve,
+        is_sleeping,
+        is_safe,
+    );
+    let delta_step = stress_delta_step(
+        continuous_input,
+        trace_input,
+        emotion.total,
+        ace_stress_mult,
+        trait_accum_mult,
+        recovery,
+        epsilon,
+        denial_active,
+        denial_redirect_fraction,
+        hidden_threat_accumulator,
+        denial_max_accumulator,
+    );
+
+    StressEmotionRecoveryDeltaStep {
+        fear: emotion.fear,
+        anger: emotion.anger,
+        sadness: emotion.sadness,
+        disgust: emotion.disgust,
+        surprise: emotion.surprise,
+        joy: emotion.joy,
+        trust: emotion.trust,
+        anticipation: emotion.anticipation,
+        va_composite: emotion.va_composite,
+        emotion_total: emotion.total,
+        recovery,
+        delta: delta_step.delta,
+        hidden_threat_accumulator: delta_step.hidden_threat_accumulator,
     }
 }
 
@@ -795,6 +892,38 @@ mod tests {
         let out = stress_delta_step(10.0, 5.0, 5.0, 1.0, 1.0, 0.0, 0.05, true, 0.6, 790.0, 800.0);
         assert!((out.delta - 8.0).abs() < 1e-6);
         assert_eq!(out.hidden_threat_accumulator, 800.0);
+    }
+
+    #[test]
+    fn stress_emotion_recovery_delta_step_matches_component_steps() {
+        let combined = stress_emotion_recovery_delta_step(
+            70.0, 60.0, 55.0, 40.0, 35.0, 20.0, 30.0, 25.0, -40.0, 65.0, 320.0, 0.35, 0.55, 45.0,
+            false, true, 12.0, 3.5, 1.1, 0.95, 0.05, true, 0.6, 120.0, 800.0,
+        );
+        let emotion = stress_emotion_contribution(
+            70.0, 60.0, 55.0, 40.0, 35.0, 20.0, 30.0, 25.0, -40.0, 65.0,
+        );
+        let recovery = stress_recovery_value(320.0, 0.35, 0.55, 45.0, false, true);
+        let delta = stress_delta_step(
+            12.0,
+            3.5,
+            emotion.total,
+            1.1,
+            0.95,
+            recovery,
+            0.05,
+            true,
+            0.6,
+            120.0,
+            800.0,
+        );
+
+        assert!((combined.emotion_total - emotion.total).abs() < 1e-6);
+        assert!((combined.recovery - recovery).abs() < 1e-6);
+        assert!((combined.delta - delta.delta).abs() < 1e-6);
+        assert!(
+            (combined.hidden_threat_accumulator - delta.hidden_threat_accumulator).abs() < 1e-6
+        );
     }
 
     #[test]

@@ -211,3 +211,8 @@
 - stress 틱 초반의 Lazarus appraisal 계산과 unmet-needs continuous 입력 계산을 단일 Rust step(`stress_primary_step`)으로 통합.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 primary-step API를 추가하고 `StressSystem`의 분리 호출 경로를 결합 호출로 치환.
 - stress breakdown 키/동작은 유지하면서 브리지 round-trip을 추가로 축소.
+
+## Commit 044
+- stress 틱 중반의 emotion contribution, recovery, delta/denial 계산을 단일 Rust step(`stress_emotion_recovery_delta_step`)으로 통합.
+- `sim-bridge`는 Godot 메서드 파라미터 개수 제한을 피하기 위해 PackedFloat32Array/PackedByteArray 인코딩 경로로 노출.
+- `StressSystem`은 기존 3단계 호출을 결합 step으로 치환하면서 breakdown 키(`emo_*`, `va_composite`, `recovery`)와 hidden accumulator 의미를 유지.

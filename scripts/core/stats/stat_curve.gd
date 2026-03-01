@@ -487,6 +487,121 @@ static func stress_delta_step(
 	}
 
 
+## Combined step:
+## emotion contribution + recovery + final delta(denial redirect).
+## Returns Dictionary:
+## { fear, anger, sadness, disgust, surprise, joy, trust, anticipation, va_composite,
+##   emotion_total, recovery, delta, hidden_threat_accumulator }
+static func stress_emotion_recovery_delta_step(
+	fear: float,
+	anger: float,
+	sadness: float,
+	disgust: float,
+	surprise: float,
+	joy: float,
+	trust: float,
+	anticipation: float,
+	valence: float,
+	arousal: float,
+	stress: float,
+	support_score: float,
+	resilience: float,
+	reserve: float,
+	is_sleeping: bool,
+	is_safe: bool,
+	continuous_input: float,
+	trace_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	epsilon: float,
+	denial_active: bool,
+	denial_redirect_fraction: float,
+	hidden_threat_accumulator: float,
+	denial_max_accumulator: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_emotion_recovery_delta_step",
+		[
+			fear,
+			anger,
+			sadness,
+			disgust,
+			surprise,
+			joy,
+			trust,
+			anticipation,
+			valence,
+			arousal,
+			stress,
+			support_score,
+			resilience,
+			reserve,
+			is_sleeping,
+			is_safe,
+			continuous_input,
+			trace_input,
+			ace_stress_mult,
+			trait_accum_mult,
+			epsilon,
+			denial_active,
+			denial_redirect_fraction,
+			hidden_threat_accumulator,
+			denial_max_accumulator
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var emotion_out: Dictionary = stress_emotion_contribution(
+		fear,
+		anger,
+		sadness,
+		disgust,
+		surprise,
+		joy,
+		trust,
+		anticipation,
+		valence,
+		arousal
+	)
+	var recovery: float = stress_recovery_value(
+		stress,
+		support_score,
+		resilience,
+		reserve,
+		is_sleeping,
+		is_safe
+	)
+	var delta_out: Dictionary = stress_delta_step(
+		continuous_input,
+		trace_input,
+		float(emotion_out.get("total", 0.0)),
+		ace_stress_mult,
+		trait_accum_mult,
+		recovery,
+		epsilon,
+		denial_active,
+		denial_redirect_fraction,
+		hidden_threat_accumulator,
+		denial_max_accumulator
+	)
+	return {
+		"fear": float(emotion_out.get("fear", 0.0)),
+		"anger": float(emotion_out.get("anger", 0.0)),
+		"sadness": float(emotion_out.get("sadness", 0.0)),
+		"disgust": float(emotion_out.get("disgust", 0.0)),
+		"surprise": float(emotion_out.get("surprise", 0.0)),
+		"joy": float(emotion_out.get("joy", 0.0)),
+		"trust": float(emotion_out.get("trust", 0.0)),
+		"anticipation": float(emotion_out.get("anticipation", 0.0)),
+		"va_composite": float(emotion_out.get("va_composite", 0.0)),
+		"emotion_total": float(emotion_out.get("total", 0.0)),
+		"recovery": recovery,
+		"delta": float(delta_out.get("delta", 0.0)),
+		"hidden_threat_accumulator": float(delta_out.get("hidden_threat_accumulator", hidden_threat_accumulator)),
+	}
+
+
 ## Combined post-stress step:
 ## reserve + GAS transition + allostatic update + stress state snapshot
 static func stress_post_update_step(

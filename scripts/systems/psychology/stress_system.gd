@@ -87,13 +87,7 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	# 3) 스트레스 후유증 traces
 	var trace_input: float = _process_stress_traces(ed, breakdown)
 
-	# 4) 감정 → 스트레스
-	var emotion_input: float = _calc_emotion_contribution(ed, breakdown)
-
-	# 5) 회복
-	var recovery: float = _calc_recovery(entity, ed, pd, is_sleeping, is_safe, breakdown)
-
-	# 6) 최종 업데이트 (Phase 5: ACE stress gain multiplier — Felitti 1998 dose-response)
+	# 4) 감정 + 회복 + 최종 delta(denial 포함) 통합 step
 	var ace_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
 	# v3 trait effect: stress/mult target=accumulation_rate
 	var trait_accum_mult: float = _TraitEffectCache.get_stress_accum_mult(entity)
@@ -102,18 +96,19 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	## Folkman & Lazarus (1988): denial suppresses immediate distress at cost of later rebound
 	var denial_active: bool = ed.get_meta("denial_active", false)
 	var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
-	var delta_step: Dictionary = StatCurveScript.stress_delta_step(
+	var support_score: float = _calc_support_score(entity)
+	var delta_step: Dictionary = _calc_emotion_recovery_delta(
+		ed,
+		support_score,
+		is_sleeping,
+		is_safe,
 		continuous_input,
 		trace_input,
-		emotion_input,
 		ace_stress_mult,
 		trait_accum_mult,
-		recovery,
-		STRESS_EPSILON,
 		denial_active,
-		DENIAL_REDIRECT_FRACTION,
 		hidden,
-		DENIAL_MAX_ACCUMULATOR
+		breakdown
 	)
 	var delta: float = float(delta_step.get("delta", 0.0))
 	if denial_active:
@@ -249,10 +244,25 @@ func _process_stress_traces(ed, breakdown: Dictionary) -> float:
 	return total
 
 
-# ── 4) 감정 → 스트레스 ───────────────────────────────────────────────
-func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
+# ── 4) 감정 + 회복 + delta 통합 ───────────────────────────────────────
+func _calc_emotion_recovery_delta(
+	ed,
+	support_score: float,
+	is_sleeping: bool,
+	is_safe: bool,
+	continuous_input: float,
+	trace_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	denial_active: bool,
+	hidden_threat_accumulator: float,
+	breakdown: Dictionary
+) -> Dictionary:
 	if ed == null:
-		return 0.0
+		return {
+			"delta": 0.0,
+			"hidden_threat_accumulator": hidden_threat_accumulator,
+		}
 
 	var fear_val: float = ed.get_emotion("fear")
 	var anger_val: float = ed.get_emotion("anger")
@@ -262,7 +272,7 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 	var joy_val: float = ed.get_emotion("joy")
 	var trust_val: float = ed.get_emotion("trust")
 	var anticipation_val: float = ed.get_emotion("anticipation")
-	var out: Dictionary = StatCurveScript.stress_emotion_contribution(
+	var out: Dictionary = StatCurveScript.stress_emotion_recovery_delta_step(
 		fear_val,
 		anger_val,
 		sadness_val,
@@ -272,20 +282,25 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 		trust_val,
 		anticipation_val,
 		ed.valence,
-		ed.arousal
+		ed.arousal,
+		ed.stress,
+		support_score,
+		ed.resilience,
+		ed.reserve,
+		is_sleeping,
+		is_safe,
+		continuous_input,
+		trace_input,
+		ace_stress_mult,
+		trait_accum_mult,
+		STRESS_EPSILON,
+		denial_active,
+		DENIAL_REDIRECT_FRACTION,
+		hidden_threat_accumulator,
+		DENIAL_MAX_ACCUMULATOR
 	)
 
-	var total: float = float(out.get("total", 0.0))
-	var emotion_keys: Array[String] = [
-		"fear",
-		"anger",
-		"sadness",
-		"disgust",
-		"surprise",
-		"joy",
-		"trust",
-		"anticipation",
-	]
+	var emotion_keys: Array[String] = ["fear", "anger", "sadness", "disgust", "surprise", "joy", "trust", "anticipation"]
 	for i in range(emotion_keys.size()):
 		var emotion_name: String = emotion_keys[i]
 		var contrib: float = float(out.get(emotion_name, 0.0))
@@ -296,32 +311,17 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 	if va_contrib > STRESS_EPSILON:
 		breakdown["va_composite"] = va_contrib
 
-	return total
+	var recovery: float = float(out.get("recovery", 0.0))
+	breakdown["recovery"] = -recovery
+	return out
 
 
-# ── 5) 회복 ──────────────────────────────────────────────────────────
-func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
-	var support: float = _calc_support_score(entity)
-	var resilience: float = ed.resilience if ed != null else 0.5
-	var decay: float = StatCurveScript.stress_recovery_value(
-		ed.stress,
-		support,
-		resilience,
-		ed.reserve,
-		is_sleeping,
-		is_safe
-	)
-
-	breakdown["recovery"] = -decay
-	return decay
-
-
-# ── 9) 스트레스 상태 ──────────────────────────────────────────────────
+# ── 8) 스트레스 상태 ──────────────────────────────────────────────────
 func _update_stress_state(ed, snapshot: Dictionary) -> void:
 	ed.stress_state = int(snapshot.get("stress_state", 0))
 
 
-# ── 10) Resilience ────────────────────────────────────────────────────
+# ── 9) Resilience ────────────────────────────────────────────────────
 func _update_resilience(entity: RefCounted, ed, pd) -> void:
 	if pd == null:
 		ed.resilience = 0.5

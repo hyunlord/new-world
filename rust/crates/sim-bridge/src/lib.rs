@@ -808,6 +808,68 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_emotion_recovery_delta_step(
+        &self,
+        emotion_inputs: PackedFloat32Array,
+        scalar_inputs: PackedFloat32Array,
+        flags: PackedByteArray,
+    ) -> VarDictionary {
+        let e = emotion_inputs.as_slice();
+        let s = scalar_inputs.as_slice();
+        let f = flags.as_slice();
+        let ef = |idx: usize, fallback: f32| -> f32 { e.get(idx).copied().unwrap_or(fallback) };
+        let sf = |idx: usize, fallback: f32| -> f32 { s.get(idx).copied().unwrap_or(fallback) };
+        let bf = |idx: usize| -> bool { f.get(idx).copied().unwrap_or(0_u8) != 0_u8 };
+
+        let out = stat_curve::stress_emotion_recovery_delta_step(
+            ef(0, 0.0),
+            ef(1, 0.0),
+            ef(2, 0.0),
+            ef(3, 0.0),
+            ef(4, 0.0),
+            ef(5, 0.0),
+            ef(6, 0.0),
+            ef(7, 0.0),
+            ef(8, 0.0),
+            ef(9, 0.0),
+            sf(0, 0.0),
+            sf(1, 0.3),
+            sf(2, 0.5),
+            sf(3, 50.0),
+            bf(0),
+            bf(1),
+            sf(4, 0.0),
+            sf(5, 0.0),
+            sf(6, 1.0),
+            sf(7, 1.0),
+            sf(8, 0.05),
+            bf(2),
+            sf(9, 0.6),
+            sf(10, 0.0),
+            sf(11, 800.0),
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("fear", out.fear as f64);
+        dict.set("anger", out.anger as f64);
+        dict.set("sadness", out.sadness as f64);
+        dict.set("disgust", out.disgust as f64);
+        dict.set("surprise", out.surprise as f64);
+        dict.set("joy", out.joy as f64);
+        dict.set("trust", out.trust as f64);
+        dict.set("anticipation", out.anticipation as f64);
+        dict.set("va_composite", out.va_composite as f64);
+        dict.set("emotion_total", out.emotion_total as f64);
+        dict.set("recovery", out.recovery as f64);
+        dict.set("delta", out.delta as f64);
+        dict.set(
+            "hidden_threat_accumulator",
+            out.hidden_threat_accumulator as f64,
+        );
+        dict
+    }
+
+    #[func]
     fn stat_stress_delta_step(
         &self,
         continuous_input: f32,

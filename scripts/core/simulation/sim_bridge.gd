@@ -431,6 +431,76 @@ func stat_stress_recovery_value(
 	)
 
 
+## Delegates emotion+recovery+delta(denial) combined step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_emotion_recovery_delta_step(
+	fear: float,
+	anger: float,
+	sadness: float,
+	disgust: float,
+	surprise: float,
+	joy: float,
+	trust: float,
+	anticipation: float,
+	valence: float,
+	arousal: float,
+	stress: float,
+	support_score: float,
+	resilience: float,
+	reserve: float,
+	is_sleeping: bool,
+	is_safe: bool,
+	continuous_input: float,
+	trace_input: float,
+	ace_stress_mult: float,
+	trait_accum_mult: float,
+	epsilon: float,
+	denial_active: bool,
+	denial_redirect_fraction: float,
+	hidden_threat_accumulator: float,
+	denial_max_accumulator: float
+):
+	var emotion_inputs: PackedFloat32Array = PackedFloat32Array([
+		fear,
+		anger,
+		sadness,
+		disgust,
+		surprise,
+		joy,
+		trust,
+		anticipation,
+		valence,
+		arousal,
+	])
+	var scalar_inputs: PackedFloat32Array = PackedFloat32Array([
+		stress,
+		support_score,
+		resilience,
+		reserve,
+		continuous_input,
+		trace_input,
+		ace_stress_mult,
+		trait_accum_mult,
+		epsilon,
+		denial_redirect_fraction,
+		hidden_threat_accumulator,
+		denial_max_accumulator,
+	])
+	var flags: PackedByteArray = PackedByteArray([
+		1 if is_sleeping else 0,
+		1 if is_safe else 0,
+		1 if denial_active else 0,
+	])
+	return _call_native_if_exists(
+		"stat_stress_emotion_recovery_delta_step",
+		[
+			emotion_inputs,
+			scalar_inputs,
+			flags
+		]
+	)
+
+
 ## Delegates final stress delta step (including denial redirect) to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_delta_step(
