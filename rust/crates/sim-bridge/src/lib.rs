@@ -1388,6 +1388,26 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_mortality_hazards_and_prob(
+        &self,
+        model_inputs: PackedFloat32Array,
+        env_inputs: PackedFloat32Array,
+        is_monthly: bool,
+    ) -> PackedFloat32Array {
+        let m = packed_f32_to_vec(&model_inputs);
+        let e = packed_f32_to_vec(&env_inputs);
+        if m.len() < 10 || e.len() < 8 {
+            return PackedFloat32Array::new();
+        }
+        let out = body::mortality_hazards_and_prob(
+            m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], e[0], e[1], e[2], e[3],
+            e[4], e[5], e[6], e[7],
+            is_monthly,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_cognition_activity_modifier(
         &self,
         active_skill_count: i32,

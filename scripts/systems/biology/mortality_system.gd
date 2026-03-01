@@ -6,6 +6,8 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## Infants (0-1yr) checked monthly for higher resolution.
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_MORTALITY_METHOD: String = "body_mortality_hazards_and_prob"
 
 var _entity_manager: RefCounted
 var _rng: RandomNumberGenerator
@@ -47,6 +49,8 @@ var _last_log_month_year: int = 0
 
 ## Stress system reference (injected by main.gd after init)
 var _stress_system: RefCounted = null
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -59,6 +63,22 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 	_entity_manager = entity_manager
 	_rng = rng
 	_load_siler_parameters()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_MORTALITY_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_siler_parameters() -> void:
@@ -129,57 +149,90 @@ func _check_infant_monthly(tick: int) -> void:
 
 func _do_mortality_check(entity: RefCounted, tick: int, is_monthly: bool) -> void:
 	var age_years: float = GameConfig.get_age_years(entity.age)
-
-	# Siler hazard components
-	var mu_infant: float = _a1 * exp(-_b1 * age_years)
-	var mu_background: float = _a2
-	var mu_senescence: float = _a3 * exp(_b3 * age_years)
-
-	# Tech modifiers
-	var m1: float = exp(-_tech_k1 * tech_level)
-	var m2: float = exp(-_tech_k2 * tech_level)
-	var m3: float = exp(-_tech_k3 * tech_level)
-
-	# Nutrition modifier (based on hunger)
 	var nutrition: float = clampf(StatQuery.get_normalized(entity, &"NEED_HUNGER"), 0.0, 1.0)
-	m1 *= lerpf(2.0, 0.8, nutrition)
-	m2 *= lerpf(1.5, 0.9, nutrition)
-	# Care protection: well-fed infants/toddlers get reduced infant mortality
-	if age_years <= 2.0 and nutrition > _care_hunger_min:
-		m1 *= _care_protection_factor  # 0.6 = 40% reduction
-
-	# Season modifier
 	var date: Dictionary = GameCalendar.tick_to_date(tick)
 	var season: String = GameCalendar.get_season(date.day_of_year)
-	var season_mod = _season_modifiers.get(season, {})
+	var season_mod: Dictionary = _season_modifiers.get(season, {})
+	var season_infant_mod: float = 1.0
+	var season_background_mod: float = 1.0
 	if not season_mod.is_empty():
-		m1 *= float(season_mod.get("infant", 1.0))
-		m2 *= float(season_mod.get("background", 1.0))
-
-	# Total hazard rate (annual)
-	var h_infant: float = m1 * mu_infant
-	var h_background: float = m2 * mu_background
-	var h_senescence: float = m3 * mu_senescence
-	var mu_total: float = h_infant + h_background + h_senescence
-
-	# Individual frailty
-	mu_total *= entity.frailty
-
-	# Disease resistance modifier (DR realized → mortality reduction, max 35%)
+		season_infant_mod = float(season_mod.get("infant", 1.0))
+		season_background_mod = float(season_mod.get("background", 1.0))
 	var _dr_norm: float = 0.5
 	if entity.body != null and entity.body.realized.has("dr"):
 		_dr_norm = clampf(float(entity.body.realized["dr"]) / float(GameConfig.BODY_REALIZED_DR_MAX), 0.0, 1.0)
-	mu_total *= (1.0 - GameConfig.BODY_DR_MORTALITY_REDUCTION * _dr_norm)
 
-	# Annual death probability: q = 1 - exp(-μ)
-	var q_annual: float = 1.0 - exp(-mu_total)
-	q_annual = clampf(q_annual, 0.0, 0.999)
+	var h_infant: float = 0.0
+	var h_background: float = 0.0
+	var h_senescence: float = 0.0
+	var mu_total: float = 0.0
+	var q_annual: float = 0.0
+	var q_check: float = 0.0
+	var used_rust: bool = false
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var model_inputs: PackedFloat32Array = PackedFloat32Array([
+			age_years,
+			_a1,
+			_b1,
+			_a2,
+			_a3,
+			_b3,
+			_tech_k1,
+			_tech_k2,
+			_tech_k3,
+			tech_level,
+		])
+		var env_inputs: PackedFloat32Array = PackedFloat32Array([
+			nutrition,
+			_care_hunger_min,
+			_care_protection_factor,
+			season_infant_mod,
+			season_background_mod,
+			float(entity.frailty),
+			_dr_norm,
+			float(GameConfig.BODY_DR_MORTALITY_REDUCTION),
+		])
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_MORTALITY_METHOD,
+			model_inputs,
+			env_inputs,
+			is_monthly,
+		)
+		if rust_variant is PackedFloat32Array:
+			var out: PackedFloat32Array = rust_variant
+			if out.size() >= 6:
+				h_infant = float(out[0])
+				h_background = float(out[1])
+				h_senescence = float(out[2])
+				mu_total = float(out[3])
+				q_annual = float(out[4])
+				q_check = float(out[5])
+				used_rust = true
 
-	# Convert to check period probability
-	var q_check: float = q_annual
-	if is_monthly:
-		# Monthly: q_month = 1 - (1 - q_annual)^(1/12)
-		q_check = 1.0 - pow(1.0 - q_annual, 1.0 / 12.0)
+	if not used_rust:
+		var mu_infant: float = _a1 * exp(-_b1 * age_years)
+		var mu_background: float = _a2
+		var mu_senescence: float = _a3 * exp(_b3 * age_years)
+		var m1: float = exp(-_tech_k1 * tech_level)
+		var m2: float = exp(-_tech_k2 * tech_level)
+		var m3: float = exp(-_tech_k3 * tech_level)
+		m1 *= lerpf(2.0, 0.8, nutrition)
+		m2 *= lerpf(1.5, 0.9, nutrition)
+		if age_years <= 2.0 and nutrition > _care_hunger_min:
+			m1 *= _care_protection_factor
+		m1 *= season_infant_mod
+		m2 *= season_background_mod
+		h_infant = m1 * mu_infant
+		h_background = m2 * mu_background
+		h_senescence = m3 * mu_senescence
+		mu_total = h_infant + h_background + h_senescence
+		mu_total *= entity.frailty
+		mu_total *= (1.0 - GameConfig.BODY_DR_MORTALITY_REDUCTION * _dr_norm)
+		q_annual = clampf(1.0 - exp(-mu_total), 0.0, 0.999)
+		q_check = q_annual
+		if is_monthly:
+			q_check = 1.0 - pow(1.0 - q_annual, 1.0 / 12.0)
 
 	# Roll
 	if _rng.randf() < q_check:

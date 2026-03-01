@@ -1535,3 +1535,10 @@
 - `tech_propagation_system.gd`의 문화 보정/캐리어 보너스/최종 전파 확률 계산을 Rust-first 호출 + fallback 구조로 전환.
 - `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
 - Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `27/56` 적용.
+
+## Commit 299
+- `sim-systems/body`에 `mortality_hazards_and_prob`를 추가해 MortalitySystem 핵심 Siler hazard/사망확률 수식을 Rust 함수로 확장하고 단위 테스트를 추가.
+- `sim-bridge`에 `body_mortality_hazards_and_prob` 메서드를 추가하고 Godot 인자 수 제한을 고려해 `PackedFloat32Array` 입력 시그니처로 구성.
+- `mortality_system.gd`의 `_do_mortality_check`를 Rust-first 호출 + fallback 구조로 전환.
+- `cd rust && cargo test -q`, `cd rust && cargo run -q -p sim-test` 통과 확인.
+- Rust 전환 잔여량: 데이터 로더 축 `9/9` 완료, 시스템 실행 축(브리지 적용 기준) `28/56` 적용.

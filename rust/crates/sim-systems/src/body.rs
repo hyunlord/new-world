@@ -1022,6 +1022,65 @@ pub fn tech_propagation_final_prob(
     clamp_f32(raw, 0.0, max_prob)
 }
 
+/// Siler-model hazard decomposition and check-period death probability.
+///
+/// Returns `[h_infant, h_background, h_senescence, mu_total, q_annual, q_check]`.
+pub fn mortality_hazards_and_prob(
+    age_years: f32,
+    a1: f32,
+    b1: f32,
+    a2: f32,
+    a3: f32,
+    b3: f32,
+    tech_k1: f32,
+    tech_k2: f32,
+    tech_k3: f32,
+    tech_level: f32,
+    nutrition: f32,
+    care_hunger_min: f32,
+    care_protection_factor: f32,
+    season_infant_mod: f32,
+    season_background_mod: f32,
+    frailty: f32,
+    dr_norm: f32,
+    dr_mortality_reduction: f32,
+    is_monthly: bool,
+) -> [f32; 6] {
+    let mu_infant = a1 * (-b1 * age_years).exp();
+    let mu_background = a2;
+    let mu_senescence = a3 * (b3 * age_years).exp();
+
+    let mut m1 = (-tech_k1 * tech_level).exp();
+    let mut m2 = (-tech_k2 * tech_level).exp();
+    let m3 = (-tech_k3 * tech_level).exp();
+
+    m1 *= 2.0 + (0.8 - 2.0) * nutrition;
+    m2 *= 1.5 + (0.9 - 1.5) * nutrition;
+    if age_years <= 2.0 && nutrition > care_hunger_min {
+        m1 *= care_protection_factor;
+    }
+
+    m1 *= season_infant_mod;
+    m2 *= season_background_mod;
+
+    let h_infant = m1 * mu_infant;
+    let h_background = m2 * mu_background;
+    let h_senescence = m3 * mu_senescence;
+
+    let mut mu_total = h_infant + h_background + h_senescence;
+    mu_total *= frailty;
+    mu_total *= 1.0 - dr_mortality_reduction * dr_norm;
+
+    let q_annual = clamp_f32(1.0 - (-mu_total).exp(), 0.0, 0.999);
+    let q_check = if is_monthly {
+        1.0 - (1.0 - q_annual).powf(1.0 / 12.0)
+    } else {
+        q_annual
+    };
+
+    [h_infant, h_background, h_senescence, mu_total, q_annual, q_check]
+}
+
 /// Intelligence activity modifier ("use it or lose it").
 pub fn cognition_activity_modifier(
     active_skill_count: i32,
@@ -1540,7 +1599,7 @@ mod tests {
         migration_should_attempt, tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         tech_propagation_culture_modifier, tech_propagation_carrier_bonus,
-        tech_propagation_final_prob,
+        tech_propagation_final_prob, mortality_hazards_and_prob,
         cognition_activity_modifier,
         cognition_ace_fluid_decline_mult,
     };
@@ -2124,6 +2183,34 @@ mod tests {
         assert!((base - 0.546).abs() < 1e-6);
         let capped = tech_propagation_final_prob(1.0, 2.0, 2.0, 2.0, 2.0, 0.95);
         assert!((capped - 0.95).abs() < 1e-6);
+    }
+
+    #[test]
+    fn mortality_hazards_and_prob_monthly_check_is_lower_than_annual() {
+        let annual = mortality_hazards_and_prob(
+            35.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 0.7, 0.3, 0.6, 1.0,
+            1.0, 1.0, 0.2, 0.35, false,
+        );
+        let monthly = mortality_hazards_and_prob(
+            35.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 0.7, 0.3, 0.6, 1.0,
+            1.0, 1.0, 0.2, 0.35, true,
+        );
+        assert!((0.0..=0.999).contains(&annual[4]));
+        assert!(monthly[5] <= annual[4]);
+    }
+
+    #[test]
+    fn mortality_hazards_and_prob_applies_care_protection_and_dr_reduction() {
+        let no_protection = mortality_hazards_and_prob(
+            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 2.0, 0.6, 1.0,
+            1.0, 1.0, 0.0, 0.35, false,
+        );
+        let with_protection = mortality_hazards_and_prob(
+            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 0.3, 0.6, 1.0,
+            1.0, 1.0, 1.0, 0.35, false,
+        );
+        assert!(with_protection[0] < no_protection[0]);
+        assert!(with_protection[3] < no_protection[3]);
     }
 
     #[test]
