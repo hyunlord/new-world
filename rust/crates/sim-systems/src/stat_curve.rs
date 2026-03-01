@@ -129,6 +129,23 @@ pub struct StressPostUpdateStep {
     pub stress_blunt_mult: f32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressPostUpdateResilienceStep {
+    pub reserve: f32,
+    pub gas_stage: i32,
+    pub allostatic: f32,
+    pub stress_state: i32,
+    pub stress_mu_sadness: f32,
+    pub stress_mu_anger: f32,
+    pub stress_mu_fear: f32,
+    pub stress_mu_joy: f32,
+    pub stress_mu_trust: f32,
+    pub stress_neg_gain_mult: f32,
+    pub stress_pos_gain_mult: f32,
+    pub stress_blunt_mult: f32,
+    pub resilience: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -654,6 +671,68 @@ pub fn stress_post_update_step(
     }
 }
 
+/// Combined post-stress update + resilience update step.
+pub fn stress_post_update_resilience_step(
+    reserve: f32,
+    stress: f32,
+    resilience: f32,
+    stress_delta_last: f32,
+    gas_stage: i32,
+    is_sleeping: bool,
+    allostatic: f32,
+    avoidant_allostatic_mult: f32,
+    e_axis: f32,
+    c_axis: f32,
+    x_axis: f32,
+    o_axis: f32,
+    a_axis: f32,
+    h_axis: f32,
+    support_score: f32,
+    hunger: f32,
+    energy: f32,
+    scar_resilience_mod: f32,
+) -> StressPostUpdateResilienceStep {
+    let post = stress_post_update_step(
+        reserve,
+        stress,
+        resilience,
+        stress_delta_last,
+        gas_stage,
+        is_sleeping,
+        allostatic,
+        avoidant_allostatic_mult,
+    );
+    let next_resilience = stress_resilience_value(
+        e_axis,
+        c_axis,
+        x_axis,
+        o_axis,
+        a_axis,
+        h_axis,
+        support_score,
+        post.allostatic,
+        hunger,
+        energy,
+        scar_resilience_mod,
+    );
+
+    StressPostUpdateResilienceStep {
+        reserve: post.reserve,
+        gas_stage: post.gas_stage,
+        allostatic: post.allostatic,
+        stress_state: post.stress_state,
+        stress_mu_sadness: post.stress_mu_sadness,
+        stress_mu_anger: post.stress_mu_anger,
+        stress_mu_fear: post.stress_mu_fear,
+        stress_mu_joy: post.stress_mu_joy,
+        stress_mu_trust: post.stress_mu_trust,
+        stress_neg_gain_mult: post.stress_neg_gain_mult,
+        stress_pos_gain_mult: post.stress_pos_gain_mult,
+        stress_blunt_mult: post.stress_blunt_mult,
+        resilience: next_resilience,
+    }
+}
+
 /// Allostatic load update step.
 pub fn stress_allostatic_step(allostatic: f32, stress: f32, avoidant_allostatic_mult: f32) -> f32 {
     const ALLO_RATE: f32 = 0.035;
@@ -1124,6 +1203,34 @@ mod tests {
         assert!((combined.allostatic - allo).abs() < 1e-6);
         assert_eq!(combined.stress_state, snap.stress_state);
         assert!((combined.stress_blunt_mult - snap.stress_blunt_mult).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_post_update_resilience_step_matches_component_steps() {
+        let post = stress_post_update_step(80.0, 420.0, 0.6, 25.0, 1, false, 20.0, 1.35);
+        let next_res = stress_resilience_value(
+            0.4,
+            0.6,
+            0.5,
+            0.5,
+            0.55,
+            0.45,
+            0.35,
+            post.allostatic,
+            0.3,
+            0.4,
+            -0.02,
+        );
+        let combined = stress_post_update_resilience_step(
+            80.0, 420.0, 0.6, 25.0, 1, false, 20.0, 1.35, 0.4, 0.6, 0.5, 0.5, 0.55, 0.45, 0.35,
+            0.3, 0.4, -0.02,
+        );
+
+        assert!((combined.reserve - post.reserve).abs() < 1e-6);
+        assert_eq!(combined.gas_stage, post.gas_stage);
+        assert!((combined.allostatic - post.allostatic).abs() < 1e-6);
+        assert_eq!(combined.stress_state, post.stress_state);
+        assert!((combined.resilience - next_res).abs() < 1e-6);
     }
 
     #[test]

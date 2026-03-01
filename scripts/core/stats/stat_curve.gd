@@ -764,6 +764,82 @@ static func stress_post_update_step(
 	return snapshot
 
 
+## Combined post-stress step with resilience update.
+## Returns Dictionary:
+## reserve, gas_stage, allostatic, stress_state, stress_mu_*, stress_*_gain_mult, stress_blunt_mult, resilience
+static func stress_post_update_resilience_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool,
+	allostatic: float,
+	avoidant_allostatic_mult: float,
+	e_axis: float,
+	c_axis: float,
+	x_axis: float,
+	o_axis: float,
+	a_axis: float,
+	h_axis: float,
+	support_score: float,
+	hunger: float,
+	energy: float,
+	scar_resilience_mod: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_post_update_resilience_step",
+		[
+			reserve,
+			stress,
+			resilience,
+			stress_delta_last,
+			gas_stage,
+			is_sleeping,
+			allostatic,
+			avoidant_allostatic_mult,
+			e_axis,
+			c_axis,
+			x_axis,
+			o_axis,
+			a_axis,
+			h_axis,
+			support_score,
+			hunger,
+			energy,
+			scar_resilience_mod
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var out: Dictionary = stress_post_update_step(
+		reserve,
+		stress,
+		resilience,
+		stress_delta_last,
+		gas_stage,
+		is_sleeping,
+		allostatic,
+		avoidant_allostatic_mult
+	)
+	var next_resilience: float = stress_resilience_value(
+		e_axis,
+		c_axis,
+		x_axis,
+		o_axis,
+		a_axis,
+		h_axis,
+		support_score,
+		float(out.get("allostatic", allostatic)),
+		hunger,
+		energy,
+		scar_resilience_mod
+	)
+	out["resilience"] = next_resilience
+	return out
+
+
 ## Reserve + GAS stage transition step.
 ## Returns Dictionary: { "reserve": float, "gas_stage": int }
 static func stress_reserve_step(

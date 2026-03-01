@@ -1020,6 +1020,55 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_post_update_resilience_step(
+        &self,
+        scalar_inputs: PackedFloat32Array,
+        flags: PackedByteArray,
+    ) -> VarDictionary {
+        let s = scalar_inputs.as_slice();
+        let f = flags.as_slice();
+        let sf = |idx: usize, fallback: f32| -> f32 { s.get(idx).copied().unwrap_or(fallback) };
+        let bf = |idx: usize| -> bool { f.get(idx).copied().unwrap_or(0_u8) != 0_u8 };
+
+        let out = stat_curve::stress_post_update_resilience_step(
+            sf(0, 0.0),        // reserve
+            sf(1, 0.0),        // stress
+            sf(2, 0.5),        // resilience
+            sf(3, 0.0),        // stress_delta_last
+            sf(4, 0.0) as i32, // gas_stage
+            bf(0),             // is_sleeping
+            sf(5, 0.0),        // allostatic
+            sf(6, 1.0),        // avoidant_allostatic_mult
+            sf(7, 0.5),        // e_axis
+            sf(8, 0.5),        // c_axis
+            sf(9, 0.5),        // x_axis
+            sf(10, 0.5),       // o_axis
+            sf(11, 0.5),       // a_axis
+            sf(12, 0.5),       // h_axis
+            sf(13, 0.3),       // support_score
+            sf(14, 0.5),       // hunger
+            sf(15, 0.5),       // energy
+            sf(16, 0.0),       // scar_resilience_mod
+        );
+
+        let mut dict = VarDictionary::new();
+        dict.set("reserve", out.reserve as f64);
+        dict.set("gas_stage", out.gas_stage);
+        dict.set("allostatic", out.allostatic as f64);
+        dict.set("stress_state", out.stress_state);
+        dict.set("stress_mu_sadness", out.stress_mu_sadness as f64);
+        dict.set("stress_mu_anger", out.stress_mu_anger as f64);
+        dict.set("stress_mu_fear", out.stress_mu_fear as f64);
+        dict.set("stress_mu_joy", out.stress_mu_joy as f64);
+        dict.set("stress_mu_trust", out.stress_mu_trust as f64);
+        dict.set("stress_neg_gain_mult", out.stress_neg_gain_mult as f64);
+        dict.set("stress_pos_gain_mult", out.stress_pos_gain_mult as f64);
+        dict.set("stress_blunt_mult", out.stress_blunt_mult as f64);
+        dict.set("resilience", out.resilience as f64);
+        dict
+    }
+
+    #[func]
     fn stat_stress_reserve_step(
         &self,
         reserve: f32,

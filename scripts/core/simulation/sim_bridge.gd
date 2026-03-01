@@ -635,6 +635,59 @@ func stat_stress_post_update_step(
 	)
 
 
+## Delegates post-update + resilience combined step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_post_update_resilience_step(
+	reserve: float,
+	stress: float,
+	resilience: float,
+	stress_delta_last: float,
+	gas_stage: int,
+	is_sleeping: bool,
+	allostatic: float,
+	avoidant_allostatic_mult: float,
+	e_axis: float,
+	c_axis: float,
+	x_axis: float,
+	o_axis: float,
+	a_axis: float,
+	h_axis: float,
+	support_score: float,
+	hunger: float,
+	energy: float,
+	scar_resilience_mod: float
+):
+	var scalar_inputs: PackedFloat32Array = PackedFloat32Array([
+		reserve,
+		stress,
+		resilience,
+		stress_delta_last,
+		float(gas_stage),
+		allostatic,
+		avoidant_allostatic_mult,
+		e_axis,
+		c_axis,
+		x_axis,
+		o_axis,
+		a_axis,
+		h_axis,
+		support_score,
+		hunger,
+		energy,
+		scar_resilience_mod,
+	])
+	var flags: PackedByteArray = PackedByteArray([
+		1 if is_sleeping else 0,
+	])
+	return _call_native_if_exists(
+		"stat_stress_post_update_resilience_step",
+		[
+			scalar_inputs,
+			flags
+		]
+	)
+
+
 ## Delegates reserve + GAS stage transition step to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_reserve_step(

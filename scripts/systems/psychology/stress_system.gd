@@ -122,13 +122,23 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		if shaken_remaining <= 0:
 			ed.set_meta("shaken_work_penalty", 0.0)
 
-	# 7) Reserve + Allostatic + State snapshot (combined native step)
+	# 7) Reserve + Allostatic + State + Resilience (combined native step)
 	var avoidant_mult: float = (
 		GameConfig.ATTACHMENT_AVOIDANT_ALLO_MULT
 		if str(entity.get_meta("attachment_type", "secure")) == "avoidant"
 		else 1.0
 	)
-	var post_step: Dictionary = StatCurveScript.stress_post_update_step(
+	var E_axis: float = StatQuery.get_normalized(entity, &"HEXACO_E")
+	var C_axis: float = StatQuery.get_normalized(entity, &"HEXACO_C")
+	var X_axis: float = StatQuery.get_normalized(entity, &"HEXACO_X")
+	var O_axis: float = StatQuery.get_normalized(entity, &"HEXACO_O")
+	var A_axis: float = StatQuery.get_normalized(entity, &"HEXACO_A")
+	var H_axis: float = StatQuery.get_normalized(entity, &"HEXACO_H")
+	var scar_resilience_mod: float = 0.0
+	if _trauma_scar_system != null:
+		scar_resilience_mod = _trauma_scar_system.get_scar_resilience_mod(entity)
+
+	var post_step: Dictionary = StatCurveScript.stress_post_update_resilience_step(
 		ed.reserve,
 		ed.stress,
 		ed.resilience,
@@ -136,23 +146,31 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 		ed.gas_stage,
 		is_sleeping,
 		ed.allostatic,
-		avoidant_mult
+		avoidant_mult,
+		E_axis,
+		C_axis,
+		X_axis,
+		O_axis,
+		A_axis,
+		H_axis,
+		support_score,
+		hunger,
+		energy,
+		scar_resilience_mod
 	)
 	ed.reserve = float(post_step.get("reserve", ed.reserve))
 	ed.gas_stage = int(post_step.get("gas_stage", ed.gas_stage))
 	ed.allostatic = float(post_step.get("allostatic", ed.allostatic))
+	ed.resilience = float(post_step.get("resilience", ed.resilience))
 	var state_snapshot: Dictionary = post_step
 
 	# 8) 스트레스 상태
 	_update_stress_state(ed, state_snapshot)
 
-	# 9) Resilience
-	_update_resilience(entity, ed, pd)
-
-	# 10) 스트레스 → 감정 역방향
+	# 9) 스트레스 → 감정 역방향
 	_apply_stress_to_emotions(ed, state_snapshot)
 
-	# 11) 디버그 로그
+	# 10) 디버그 로그
 	_debug_log(entity, ed, delta)
 
 
@@ -307,43 +325,6 @@ func _calc_trace_emotion_recovery_delta(
 # ── 8) 스트레스 상태 ──────────────────────────────────────────────────
 func _update_stress_state(ed, snapshot: Dictionary) -> void:
 	ed.stress_state = int(snapshot.get("stress_state", 0))
-
-
-# ── 9) Resilience ────────────────────────────────────────────────────
-func _update_resilience(entity: RefCounted, ed, pd) -> void:
-	if pd == null:
-		ed.resilience = 0.5
-		return
-
-	var E: float = StatQuery.get_normalized(entity, &"HEXACO_E")
-	var C: float = StatQuery.get_normalized(entity, &"HEXACO_C")
-	var X: float = StatQuery.get_normalized(entity, &"HEXACO_X")
-	var O: float = StatQuery.get_normalized(entity, &"HEXACO_O")
-	var A: float = StatQuery.get_normalized(entity, &"HEXACO_A")
-	var H: float = StatQuery.get_normalized(entity, &"HEXACO_H")
-
-	var support: float = _calc_support_score(entity)
-	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
-	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
-
-	# 트라우마 흉터 회복력 모디파이어 (음수 = 회복 더 느림)
-	var scar_resilience_mod: float = 0.0
-	if _trauma_scar_system != null:
-		scar_resilience_mod = _trauma_scar_system.get_scar_resilience_mod(entity)
-
-	ed.resilience = StatCurveScript.stress_resilience_value(
-		E,
-		C,
-		X,
-		O,
-		A,
-		H,
-		support,
-		ed.allostatic,
-		hunger,
-		energy,
-		scar_resilience_mod
-	)
 
 
 # ── 11) 스트레스 → 감정 역방향 ───────────────────────────────────────

@@ -221,3 +221,8 @@
 - stress 틱의 trace decay 처리와 emotion/recovery/delta 계산을 단일 Rust step(`stress_trace_emotion_recovery_delta_step`)으로 통합.
 - `StressSystem`에서 trace 처리 함수와 emotion/recovery/delta 함수의 분리 경로를 제거하고 결합 helper 경로로 치환.
 - trace/emotion/recovery breakdown 의미를 유지하면서 브리지 round-trip을 추가로 축소.
+
+## Commit 046
+- stress 틱 후반의 post-update(reserve/GAS/allostatic/state)와 resilience 계산을 단일 Rust step(`stress_post_update_resilience_step`)으로 통합.
+- `StressSystem`은 결합 step 결과로 reserve/gas/allostatic/resilience를 한 번에 반영하도록 변경되고 기존 `_update_resilience` 함수는 제거됨.
+- stress 핵심 수학 파이프라인이 결합 step 중심으로 정리되며 브리지 호출 수가 추가로 축소됨.
