@@ -100,6 +100,7 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
   stress_iters="${MIGRATION_BENCH_STRESS_ITERS:-10000}"
   needs_iters="${MIGRATION_BENCH_NEEDS_ITERS:-10000}"
   path_split="${MIGRATION_BENCH_PATH_SPLIT:-false}"
+  path_backend="${MIGRATION_BENCH_PATH_BACKEND:-auto}"
   for value in "${path_iters}" "${stress_iters}" "${needs_iters}"; do
     if ! [[ "${value}" =~ ^[0-9]+$ ]] || [[ "${value}" -le 0 ]]; then
       echo "[migration_verify] bench iterations must be positive integers" >&2
@@ -110,7 +111,11 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
     echo "[migration_verify] MIGRATION_BENCH_PATH_SPLIT must be true or false" >&2
     exit 1
   fi
-  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split}"
+  if [[ "${path_backend}" != "auto" && "${path_backend}" != "cpu" && "${path_backend}" != "gpu" ]]; then
+    echo "[migration_verify] MIGRATION_BENCH_PATH_BACKEND must be auto, cpu, or gpu" >&2
+    exit 1
+  fi
+  echo "[migration_verify] bench iters: path=${path_iters} stress=${stress_iters} needs=${needs_iters} split=${path_split} path_backend=${path_backend}"
 
   run_bench_and_check() {
     local name="$1"
@@ -207,21 +212,21 @@ if [[ "${WITH_BENCHES}" == "true" ]]; then
       run_bench_and_check \
         "pathfind-bridge" \
         "70800.00000" \
-        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
+        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}" --backend "${path_backend}"
     else
       run_bench_observe \
         "pathfind-bridge" \
-        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}"
+        cargo run -q -p sim-test --release -- --bench-pathfind-bridge --iters "${path_iters}" --backend "${path_backend}"
     fi
     if [[ "${path_split}" == "true" ]]; then
       if [[ "${path_iters}" == "100" ]]; then
         run_path_split_and_check \
           "35400.00000" \
           "35400.00000" \
-          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
+          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}" --backend "${path_backend}"
       else
         run_path_split_observe \
-          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}"
+          cargo run -q -p sim-test --release -- --bench-pathfind-bridge-split --iters "${path_iters}" --backend "${path_backend}"
       fi
     fi
     if [[ "${stress_iters}" == "10000" ]]; then

@@ -1120,3 +1120,8 @@
 - `sim-bridge`에 non-Godot backend 모드 제어/조회 공개 API(`set/get/resolve_pathfind_backend_mode`)를 추가.
 - `sim-test` pathfinding 벤치에 `--backend auto|cpu|gpu` 옵션을 연결해 모드별 실행/관측을 지원.
 - 기본 검증 파이프라인에서는 기존 checksum을 유지하면서 backend 관측 출력을 확장.
+
+## Commit 227
+- `migration_verify` 벤치 단계에 `MIGRATION_BENCH_PATH_BACKEND`(auto/cpu/gpu)를 추가해 pathfinding backend 모드 제어를 지원.
+- pathfinding/split 벤치 호출에 `--backend` 인자를 전달하고 입력값 유효성 검사를 도입.
+- `auto`, `cpu` 모드 모두에서 checksum 기준선 유지 확인.
