@@ -39,6 +39,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
         "data_generated",
     ],
     "compiled_dir": "compiled",
+    "include_sources": False,
 }
 
 
@@ -137,6 +138,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     supported_locales = [str(x) for x in manifest.get("supported_locales", ["ko", "en"])]
     categories = [str(x) for x in manifest.get("categories_order", [])]
     compiled_dir_name = str(manifest.get("compiled_dir", "compiled"))
+    include_sources = bool(manifest.get("include_sources", False))
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -164,11 +166,13 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
                 "key_count": len(compiled["keys"]),
+                "include_sources": include_sources,
             },
             "keys": compiled["keys"],
             "strings": compiled["strings"],
-            "sources": compiled["sources"],
         }
+        if include_sources:
+            output["sources"] = compiled["sources"]
         out_path = compiled_root / f"{locale}.json"
         _write_json(out_path, output)
 

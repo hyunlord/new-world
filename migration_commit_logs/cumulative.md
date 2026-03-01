@@ -381,3 +381,8 @@
 - `Locale.trf`에 포맷 키 기반 key-id 캐시(`_trf_key_id_cache`)를 추가해 반복 key 해석 비용을 축소.
 - `trf`는 `ltr_id` 경로를 우선 사용하고, 미지원 상황은 기존 `ltr` fallback을 유지해 호환성을 보장.
 - placeholder 치환 로직은 변경하지 않고 조회 경로만 최적화.
+
+## Commit 079
+- localization compiler에 `include_sources` 옵션을 도입하고 기본값을 `false`로 설정해 compiled 산출물에서 `sources`를 기본 제외.
+- compiled meta에 `include_sources` 상태를 기록하고 필요 시에만 `sources`를 포함하도록 분기.
+- 런타임 미사용 데이터 제거로 compiled 파일 크기를 크게 축소해 locale 로드 I/O/파싱 비용을 완화.
