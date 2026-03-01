@@ -146,3 +146,8 @@
 - `StressSystem` 연속 입력 계산(배고픔/에너지/사회 결핍)을 Rust(`sim-systems`) 함수로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 대응 API를 추가해 GDScript는 단일 호출로 결과를 수신.
 - stress breakdown 키/의미는 유지하면서 hot path 연산을 네이티브 경로로 전환.
+
+## Commit 031
+- `StressSystem`에서 `NEED_HUNGER/ENERGY/SOCIAL` 정규화 조회를 틱당 1회로 통합.
+- `_calc_appraisal_scale`와 `_calc_continuous_stressors`가 전달 인자 기반으로 동작하도록 시그니처 정리.
+- 수식 동일성은 유지한 채 `StatQuery` 중복 호출을 제거해 CPU 오버헤드를 절감.

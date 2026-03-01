@@ -100,12 +100,21 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var pd = entity.personality
 
 	var breakdown: Dictionary = {}
+	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
+	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
+	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
 
 	# 1) Lazarus Appraisal Scale
-	var appraisal_scale: float = _calc_appraisal_scale(entity, pd, ed)
+	var appraisal_scale: float = _calc_appraisal_scale(entity, pd, ed, hunger, energy, social)
 
 	# 2) 지속 스트레서 (욕구 결핍)
-	var continuous_input: float = _calc_continuous_stressors(entity, appraisal_scale, breakdown)
+	var continuous_input: float = _calc_continuous_stressors(
+		hunger,
+		energy,
+		social,
+		appraisal_scale,
+		breakdown
+	)
 
 	# 3) 스트레스 후유증 traces
 	var trace_input: float = _process_stress_traces(ed, breakdown)
@@ -166,10 +175,14 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 
 # ── 1) Lazarus Appraisal Scale ────────────────────────────────────────
-func _calc_appraisal_scale(entity: RefCounted, _pd, ed) -> float:
-	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
-	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
-	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+func _calc_appraisal_scale(
+	entity: RefCounted,
+	_pd,
+	ed,
+	hunger: float,
+	energy: float,
+	social: float
+) -> float:
 	var threat: float = 0.0
 	var conflict: float = 0.0
 
@@ -197,10 +210,13 @@ func _calc_appraisal_scale(entity: RefCounted, _pd, ed) -> float:
 
 
 # ── 2) 지속 스트레서 ──────────────────────────────────────────────────
-func _calc_continuous_stressors(entity: RefCounted, appraisal_scale: float, breakdown: Dictionary) -> float:
-	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
-	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
-	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
+func _calc_continuous_stressors(
+	hunger: float,
+	energy: float,
+	social: float,
+	appraisal_scale: float,
+	breakdown: Dictionary
+) -> float:
 	var inputs: Dictionary = StatCurveScript.stress_continuous_inputs(
 		hunger,
 		energy,
