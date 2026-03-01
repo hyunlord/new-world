@@ -1245,6 +1245,93 @@ pub fn attachment_protective_factor(
     clamp_f32(pf, 0.0, max_pf)
 }
 
+/// Normalized scar index from scar count.
+pub fn intergen_scar_index(scar_count: i32, norm_divisor: f32) -> f32 {
+    let divisor = if norm_divisor <= 0.0 {
+        1.0
+    } else {
+        norm_divisor
+    };
+    clamp_f32((scar_count.max(0) as f32) / divisor, 0.0, 1.0)
+}
+
+/// Intergenerational epigenetic load step.
+///
+/// Input order:
+/// `[epi_m, allo_m, scar_m, mw_epi, mw_allo, mw_scar,
+///   epi_f, allo_f, scar_f, fw_epi, fw_allo, fw_scar,
+///   base_t, max_t, bonus_t, adversity, preg_stress, malnutrition,
+///   prenatal_w_stress, prenatal_w_malnutrition, prenatal_max,
+///   baseline, maternal_weight, paternal_weight]`
+///
+/// Returns `[child_epi_load, transmission_rate]`.
+pub fn intergen_child_epigenetic_step(inputs: &[f32]) -> [f32; 2] {
+    if inputs.len() < 24 {
+        return [0.05, 0.30];
+    }
+    let epi_m = inputs[0];
+    let allo_m = inputs[1];
+    let scar_m = inputs[2];
+    let mw_epi = inputs[3];
+    let mw_allo = inputs[4];
+    let mw_scar = inputs[5];
+
+    let epi_f = inputs[6];
+    let allo_f = inputs[7];
+    let scar_f = inputs[8];
+    let fw_epi = inputs[9];
+    let fw_allo = inputs[10];
+    let fw_scar = inputs[11];
+
+    let base_t = inputs[12];
+    let max_t = inputs[13];
+    let bonus_t = inputs[14];
+    let adversity = inputs[15];
+    let preg_stress = inputs[16];
+    let malnutrition = inputs[17];
+    let prenatal_w_stress = inputs[18];
+    let prenatal_w_malnutrition = inputs[19];
+    let prenatal_max = inputs[20];
+    let baseline = inputs[21];
+    let maternal_weight = inputs[22];
+    let paternal_weight = inputs[23];
+
+    let mother_state = clamp_f32(mw_epi * epi_m + mw_allo * allo_m + mw_scar * scar_m, 0.0, 1.0);
+    let father_state = clamp_f32(fw_epi * epi_f + fw_allo * allo_f + fw_scar * scar_f, 0.0, 1.0);
+
+    let transmission_rate = clamp_f32(base_t + bonus_t * adversity, base_t, max_t);
+    let prenatal = clamp_f32(
+        prenatal_w_stress * preg_stress + prenatal_w_malnutrition * malnutrition,
+        0.0,
+        prenatal_max,
+    );
+    let child = clamp_f32(
+        baseline + transmission_rate * (maternal_weight * mother_state + paternal_weight * father_state) + prenatal,
+        0.0,
+        1.0,
+    );
+    [child, transmission_rate]
+}
+
+/// HPA sensitivity multiplier from epigenetic load.
+pub fn intergen_hpa_sensitivity(epigenetic_load: f32, hpa_load_weight: f32) -> f32 {
+    1.0 + epigenetic_load * hpa_load_weight
+}
+
+/// Meaney-style repair update for epigenetic load.
+pub fn intergen_meaney_repair_load(
+    current_load: f32,
+    parenting_quality: f32,
+    threshold: f32,
+    repair_rate: f32,
+    min_load: f32,
+) -> f32 {
+    if parenting_quality < threshold {
+        return current_load;
+    }
+    (current_load - repair_rate * (parenting_quality - threshold) * 2.0).max(min_load)
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -2305,6 +2392,8 @@ mod tests {
         memory_decay_intensity, memory_decay_batch, memory_summary_intensity,
         attachment_type_code, attachment_raw_parenting_quality,
         attachment_coping_quality_step, attachment_protective_factor,
+        intergen_scar_index, intergen_child_epigenetic_step,
+        intergen_hpa_sensitivity, intergen_meaney_repair_load,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2947,6 +3036,42 @@ mod tests {
         let clamped = attachment_protective_factor(true, 10.0, 0.30, 0.15, 0.45);
         assert!(secure > insecure);
         assert_eq!(clamped, 0.45);
+    }
+
+    #[test]
+    fn intergen_scar_index_is_normalized() {
+        assert_eq!(intergen_scar_index(0, 5.0), 0.0);
+        assert_eq!(intergen_scar_index(5, 5.0), 1.0);
+        assert_eq!(intergen_scar_index(7, 5.0), 1.0);
+    }
+
+    #[test]
+    fn intergen_child_epigenetic_step_returns_load_and_t() {
+        let inputs = [
+            0.2, 0.3, 0.1, 0.5, 0.3, 0.2, 0.1, 0.2, 0.1, 0.6, 0.25, 0.15, 0.3, 0.4, 0.1, 0.5,
+            0.4, 0.2, 0.25, 0.10, 0.35, 0.05, 0.65, 0.35,
+        ];
+        let out = intergen_child_epigenetic_step(&inputs);
+        assert_eq!(out.len(), 2);
+        assert!((0.0..=1.0).contains(&out[0]));
+        assert!((0.3..=0.4).contains(&out[1]));
+    }
+
+    #[test]
+    fn intergen_hpa_sensitivity_scales_with_load() {
+        let low = intergen_hpa_sensitivity(0.1, 0.6);
+        let high = intergen_hpa_sensitivity(0.8, 0.6);
+        assert!(high > low);
+    }
+
+    #[test]
+    fn intergen_meaney_repair_load_applies_threshold_and_floor() {
+        let unchanged = intergen_meaney_repair_load(0.4, 0.5, 0.7, 0.002, 0.05);
+        let repaired = intergen_meaney_repair_load(0.4, 0.9, 0.7, 0.002, 0.05);
+        let floored = intergen_meaney_repair_load(0.051, 1.0, 0.7, 10.0, 0.05);
+        assert_eq!(unchanged, 0.4);
+        assert!(repaired < unchanged);
+        assert_eq!(floored, 0.05);
     }
 
     #[test]

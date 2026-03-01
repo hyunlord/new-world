@@ -1523,6 +1523,41 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_intergen_scar_index(&self, scar_count: i32, norm_divisor: f32) -> f32 {
+        body::intergen_scar_index(scar_count, norm_divisor)
+    }
+
+    #[func]
+    fn body_intergen_child_epigenetic_step(&self, inputs: PackedFloat32Array) -> PackedFloat32Array {
+        let v = packed_f32_to_vec(&inputs);
+        let out = body::intergen_child_epigenetic_step(&v);
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_intergen_hpa_sensitivity(&self, epigenetic_load: f32, hpa_load_weight: f32) -> f32 {
+        body::intergen_hpa_sensitivity(epigenetic_load, hpa_load_weight)
+    }
+
+    #[func]
+    fn body_intergen_meaney_repair_load(
+        &self,
+        current_load: f32,
+        parenting_quality: f32,
+        threshold: f32,
+        repair_rate: f32,
+        min_load: f32,
+    ) -> f32 {
+        body::intergen_meaney_repair_load(
+            current_load,
+            parenting_quality,
+            threshold,
+            repair_rate,
+            min_load,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

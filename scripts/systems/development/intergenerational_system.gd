@@ -1,10 +1,18 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 # NO class_name (Godot 4.6 headless compatibility)
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_CHILD_EPI_METHOD: String = "body_intergen_child_epigenetic_step"
+const _SIM_BRIDGE_HPA_METHOD: String = "body_intergen_hpa_sensitivity"
+const _SIM_BRIDGE_MEANEY_METHOD: String = "body_intergen_meaney_repair_load"
+const _SIM_BRIDGE_SCAR_INDEX_METHOD: String = "body_intergen_scar_index"
+
 var _epi_config: Dictionary = {}
 var _entity_manager  # injected
 var _settlement_manager  # injected (may be null)
 var _current_T: float = 0.30  # current transmission rate, can drift
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -34,6 +42,26 @@ func _load_config() -> void:
 	var data = json.get_data()
 	if data is Dictionary:
 		_epi_config = data
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_CHILD_EPI_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HPA_METHOD) \
+	and node.has_method(_SIM_BRIDGE_MEANEY_METHOD) \
+	and node.has_method(_SIM_BRIDGE_SCAR_INDEX_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -114,6 +142,25 @@ func calculate_child_epigenetic_load(mother, father, adversity_index: float) -> 
 	var baseline = _epi_config.get("baseline", 0.05)
 	var mw = _epi_config.get("maternal_weight", 0.65)
 	var pw2 = _epi_config.get("paternal_weight", 0.35)
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var inputs: PackedFloat32Array = PackedFloat32Array([
+			epi_load_m, allo_norm_m, scar_m, mother_weights.get("epigenetic_load_effective", 0.50),
+			mother_weights.get("allostatic_load_normalized", 0.30), mother_weights.get("scar_index", 0.20),
+			epi_load_f, allo_norm_f, scar_f, father_weights.get("epigenetic_load_effective", 0.60),
+			father_weights.get("allostatic_load_normalized", 0.25), father_weights.get("scar_index", 0.15),
+			base_t, max_t, bonus_t, adversity_index, preg_stress, malnutrition,
+			prenatal_weights.get("pregnancy_avg_stress", 0.25), prenatal_weights.get("malnutrition_index", 0.10),
+			prenatal_max, baseline, mw, pw2,
+		])
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_CHILD_EPI_METHOD, inputs)
+		if rust_variant is PackedFloat32Array:
+			var out: PackedFloat32Array = rust_variant
+			if out.size() >= 2:
+				_current_T = float(out[1])
+				return float(out[0])
+
 	var result = clampf(baseline + T * (mw * m_state + pw2 * f_state) + prenatal, 0.0, 1.0)
 	return result
 
@@ -126,6 +173,11 @@ func _scar_index(entity) -> float:
 		var prop_scars = entity.get("trauma_scars")
 		if prop_scars is Array:
 			trauma_scars = prop_scars
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_SCAR_INDEX_METHOD, trauma_scars.size(), 5.0)
+		if rust_variant is float:
+			return float(rust_variant)
 	return clampf(float(trauma_scars.size()) / 5.0, 0.0, 1.0)
 
 
@@ -134,6 +186,11 @@ func get_hpa_sensitivity(epigenetic_load: float) -> float:
 	## [Yehuda 2016 + epigenetic_config hpa_sensitivity_formula]
 	## Higher epigenetic load → heightened HPA axis reactivity → more stress gain per stressor.
 	## Formula: 1.0 + load * 0.6 (range: 1.0 to 1.6 for load 0~1)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_HPA_METHOD, epigenetic_load, 0.6)
+		if rust_variant is float:
+			return float(rust_variant)
 	return 1.0 + epigenetic_load * 0.6
 
 
@@ -151,6 +208,19 @@ func apply_meaney_repair(entity, parenting_quality: float, _tick: int) -> void:
 		return
 	var repair_rate = _epi_config.get("meaney_repair_rate", 0.002)
 	var current_load = entity.get_meta("epigenetic_load_effective", 0.05)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_MEANEY_METHOD,
+			current_load,
+			parenting_quality,
+			threshold,
+			repair_rate,
+			0.05
+		)
+		if rust_variant is float:
+			entity.set_meta("epigenetic_load_effective", float(rust_variant))
+			return
 	var new_load = maxf(0.05, current_load - repair_rate * (parenting_quality - threshold) * 2.0)
 	entity.set_meta("epigenetic_load_effective", new_load)
 
