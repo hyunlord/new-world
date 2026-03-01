@@ -1320,3 +1320,8 @@
 - `migration_verify_report.json`이 `bench_report.json`의 핵심 벤치 설정/체크섬을 직접 포함하도록 `bench_summary`를 추가.
 - JSON bool 추출 헬퍼를 도입해 `path_split_enabled`/`path_smoke_enabled`/`path_smoke_expect_has_gpu`를 안전 직렬화.
 - `/tmp/worldsim_audit_artifacts28/migration_verify_report.json`에서 bench summary 필드와 `verification_status.bench_report_present_when_enabled=true` 반영을 확인.
+
+## Commit 267
+- `migration_verify_report.json`에 `compile_summary`를 추가해 compile report 핵심 지표(default locale, key counts, duplicate/miss metrics, strict mode)를 단일 report로 집약.
+- compile report JSON에서 int/string/bool 필드를 안전 추출해 파일 부재 시에도 `null` 직렬화를 유지.
+- `/tmp/worldsim_audit_artifacts29/migration_verify_report.json`에서 `active_key_count=4030`, `max_locale_duplicate_conflicts=35`, `strict_duplicates=false` 반영을 확인.

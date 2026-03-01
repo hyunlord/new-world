@@ -1136,6 +1136,19 @@ if [[ -n "${verify_report_json}" ]]; then
   compare_missing_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "missing_count")"
   compare_extra_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "extra_count")"
   compare_changed_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "changed_count")"
+  compile_generated_at_utc_from_report="$(to_json_opt_string_from_json_file_key "${compile_report_json}" "generated_at_utc")"
+  compile_default_locale_from_report="$(to_json_opt_string_from_json_file_key "${compile_report_json}" "default_locale")"
+  compile_supported_locale_count_from_report="$(to_json_opt_array_len_from_json_file_key "${compile_report_json}" "supported_locales")"
+  compile_active_key_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "active_key_count")"
+  compile_registry_key_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "registry_key_count")"
+  compile_max_locale_duplicates_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "max_locale_duplicates")"
+  compile_max_locale_duplicate_conflicts_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "max_locale_duplicate_conflicts")"
+  compile_max_locale_missing_filled_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "max_locale_missing_filled")"
+  compile_max_locale_owner_rule_misses_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "max_locale_owner_rule_misses")"
+  compile_owner_policy_entry_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "owner_policy_entry_count")"
+  compile_owner_policy_missing_duplicate_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "owner_policy_missing_duplicate_count")"
+  compile_owner_policy_unused_count_from_report="$(to_json_opt_int_from_json_file_key "${compile_report_json}" "owner_policy_unused_count")"
+  compile_strict_duplicates_from_report="$(to_json_opt_bool_from_json_file_key "${compile_report_json}" "strict_duplicates")"
   bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
   bench_stress_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "stress_iters")"
   bench_needs_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "needs_iters")"
@@ -1264,6 +1277,21 @@ if [[ -n "${verify_report_json}" ]]; then
     "missing_count": ${compare_missing_count},
     "extra_count": ${compare_extra_count},
     "changed_count": ${compare_changed_count}
+  },
+  "compile_summary": {
+    "generated_at_utc": ${compile_generated_at_utc_from_report},
+    "default_locale": ${compile_default_locale_from_report},
+    "supported_locale_count": ${compile_supported_locale_count_from_report},
+    "active_key_count": ${compile_active_key_count_from_report},
+    "registry_key_count": ${compile_registry_key_count_from_report},
+    "max_locale_duplicates": ${compile_max_locale_duplicates_from_report},
+    "max_locale_duplicate_conflicts": ${compile_max_locale_duplicate_conflicts_from_report},
+    "max_locale_missing_filled": ${compile_max_locale_missing_filled_from_report},
+    "max_locale_owner_rule_misses": ${compile_max_locale_owner_rule_misses_from_report},
+    "owner_policy_entry_count": ${compile_owner_policy_entry_count_from_report},
+    "owner_policy_missing_duplicate_count": ${compile_owner_policy_missing_duplicate_count_from_report},
+    "owner_policy_unused_count": ${compile_owner_policy_unused_count_from_report},
+    "strict_duplicates": ${compile_strict_duplicates_from_report}
   },
   "bench_summary": {
     "path_iters": ${bench_path_iters_from_report},
