@@ -1418,6 +1418,77 @@ static func stress_event_scale_step(
 	}
 
 
+## Computes event scaling and emotion injection in a single step.
+## Returns Dictionary: { relationship_scale, context_scale, total_scale, loss_mult, final_instant, final_per_tick, fast, slow }
+static func stress_event_inject_step(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	appraisal_scale: float,
+	relationship_method: String,
+	bond_strength: float,
+	relationship_min_mult: float,
+	relationship_max_mult: float,
+	context_active_multipliers: PackedFloat32Array,
+	fast_current: PackedFloat32Array,
+	slow_current: PackedFloat32Array,
+	fast_inject: PackedFloat32Array,
+	slow_inject: PackedFloat32Array
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_event_inject_step",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			appraisal_scale,
+			relationship_method,
+			bond_strength,
+			relationship_min_mult,
+			relationship_max_mult,
+			context_active_multipliers,
+			fast_current,
+			slow_current,
+			fast_inject,
+			slow_inject
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var scaled: Dictionary = stress_event_scale_step(
+		base_instant,
+		base_per_tick,
+		is_loss,
+		personality_scale,
+		appraisal_scale,
+		relationship_method,
+		bond_strength,
+		relationship_min_mult,
+		relationship_max_mult,
+		context_active_multipliers
+	)
+	var emotion: Dictionary = stress_emotion_inject_step(
+		fast_current,
+		slow_current,
+		fast_inject,
+		slow_inject,
+		float(scaled.get("total_scale", 1.0))
+	)
+	return {
+		"relationship_scale": float(scaled.get("relationship_scale", 1.0)),
+		"context_scale": float(scaled.get("context_scale", 1.0)),
+		"total_scale": float(scaled.get("total_scale", 1.0)),
+		"loss_mult": float(scaled.get("loss_mult", 1.0)),
+		"final_instant": float(scaled.get("final_instant", 0.0)),
+		"final_per_tick": float(scaled.get("final_per_tick", 0.0)),
+		"fast": emotion.get("fast", fast_current),
+		"slow": emotion.get("slow", slow_current),
+	}
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(

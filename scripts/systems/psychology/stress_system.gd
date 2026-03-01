@@ -422,9 +422,12 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 		c_keys,
 		c_multipliers
 	)
+	var emo_fast: PackedFloat32Array = sdef.get("_emo_fast", PackedFloat32Array())
+	var emo_slow: PackedFloat32Array = sdef.get("_emo_slow", PackedFloat32Array())
+	_fill_event_emotion_current(ed)
 
-	# 5) 관계/상황/최종 스케일 결합 계산 (Rust curve helper)
-	var scaled: Dictionary = StatCurveScript.stress_event_scale_step(
+	# 5) 관계/상황/최종 스케일 + 감정 주입 결합 계산 (Rust curve helper)
+	var scaled: Dictionary = StatCurveScript.stress_event_inject_step(
 		instant,
 		per_tick,
 		is_loss,
@@ -434,11 +437,14 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 		bond_strength,
 		r_min_mult,
 		r_max_mult,
-		active_context_multipliers
+		active_context_multipliers,
+		_event_fast_current,
+		_event_slow_current,
+		emo_fast,
+		emo_slow
 	)
 	var relationship_scale: float = float(scaled.get("relationship_scale", 1.0))
 	var context_scale: float = float(scaled.get("context_scale", 1.0))
-	var total_scale: float = float(scaled.get("total_scale", 1.0))
 	var final_instant: float = float(scaled.get("final_instant", 0.0))
 	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
 
@@ -452,10 +458,10 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 			"decay_rate": decay_rate,
 		})
 
-	# 7) 감정 직접 주입
-	var emo_fast: PackedFloat32Array = sdef.get("_emo_fast", PackedFloat32Array())
-	var emo_slow: PackedFloat32Array = sdef.get("_emo_slow", PackedFloat32Array())
-	_inject_emotions(ed, emo_fast, emo_slow, total_scale)
+	# 7) 감정 직접 주입 반영
+	var next_fast: PackedFloat32Array = scaled.get("fast", _event_fast_current)
+	var next_slow: PackedFloat32Array = scaled.get("slow", _event_slow_current)
+	_apply_event_emotion_layers(ed, next_fast, next_slow)
 
 	# 8) 디버그 로그
 	if GameConfig.DEBUG_STRESS_LOG:
@@ -629,15 +635,7 @@ func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
 	return {"fast": fast, "slow": slow}
 
 
-func _inject_emotions(
-	ed,
-	emo_fast: PackedFloat32Array,
-	emo_slow: PackedFloat32Array,
-	scale: float
-) -> void:
-	if emo_fast.size() == 0 and emo_slow.size() == 0:
-		return
-
+func _fill_event_emotion_current(ed) -> void:
 	_event_fast_current.resize(_EMOTION_ORDER.size())
 	_event_slow_current.resize(_EMOTION_ORDER.size())
 	for idx in range(_EMOTION_ORDER.size()):
@@ -645,15 +643,12 @@ func _inject_emotions(
 		_event_fast_current[idx] = float(ed.fast.get(emotion_name, 0.0))
 		_event_slow_current[idx] = float(ed.slow.get(emotion_name, 0.0))
 
-	var out: Dictionary = StatCurveScript.stress_emotion_inject_step(
-		_event_fast_current,
-		_event_slow_current,
-		emo_fast,
-		emo_slow,
-		scale
-	)
-	var next_fast: PackedFloat32Array = out.get("fast", _event_fast_current)
-	var next_slow: PackedFloat32Array = out.get("slow", _event_slow_current)
+
+func _apply_event_emotion_layers(
+	ed,
+	next_fast: PackedFloat32Array,
+	next_slow: PackedFloat32Array
+) -> void:
 	var count: int = mini(_EMOTION_ORDER.size(), mini(next_fast.size(), next_slow.size()))
 	for idx in range(count):
 		var emotion_name: String = _EMOTION_ORDER[idx]

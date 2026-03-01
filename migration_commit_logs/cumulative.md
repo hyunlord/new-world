@@ -290,3 +290,8 @@
 - `inject_event`의 relationship/context/event scaling 계산을 단일 Rust step(`stress_event_scale_step`)으로 결합해 bridge round-trip을 축소.
 - `StressSystem`은 context 활성 multiplier 수집만 수행하고 스케일 계산은 결합 step 결과를 사용하도록 재구성.
 - 분리 helper(`_calc_relationship_scale`, `_calc_context_scale`)를 정리하면서 기존 최종 수식 의미를 유지.
+
+## Commit 060
+- `inject_event`의 scale 계산과 emotion layer 반영을 단일 Rust step(`stress_event_inject_step`)으로 결합해 이벤트 경로 bridge 호출을 추가로 축소.
+- `StressSystem`은 현재 emotion layer snapshot 수집 후 결합 step 결과를 반영하는 구조로 재구성되고 기존 `_inject_emotions` 경로는 제거.
+- 기존 최종 stress/trace/emotion 반영 의미를 유지하면서 이벤트 주입 핫패스의 GDScript 조립 비용을 완화.
