@@ -331,3 +331,8 @@
 ## Commit 068
 - stress trace breakdown 키(`trace_<source_id>`)를 trace 데이터(`breakdown_key`)에 캐시해 tick 루프 문자열 포맷팅을 줄임.
 - 기존 trace 데이터에는 키가 없을 수 있으므로 처리 중 1회 생성/저장하는 보정 경로를 추가해 호환성을 유지.
+
+## Commit 069
+- `DEBUG_STRESS_LOG` 비활성 시 stress tick의 breakdown 조립 경로(continuous/trace/emotion/recovery)를 건너뛰도록 최적화.
+- trace breakdown 키 생성(`trace_<source_id>`)을 debug 활성 케이스로 제한해 문자열 처리 오버헤드를 완화.
+- debug off 상태에서는 `ed.stress_breakdown`이 기존 값이 있을 때만 clear해 불필요한 tick별 dictionary 재할당을 줄임.

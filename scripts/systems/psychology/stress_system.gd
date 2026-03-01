@@ -162,7 +162,8 @@ func execute_tick(_tick: int) -> void:
 func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool) -> void:
 	var ed = entity.emotion_data
 
-	var breakdown: Dictionary = {}
+	var collect_breakdown: bool = GameConfig.DEBUG_STRESS_LOG
+	var breakdown: Dictionary = {} if collect_breakdown else {}
 	var hunger: float = StatQuery.get_normalized(entity, &"NEED_HUNGER")
 	var energy: float = StatQuery.get_normalized(entity, &"NEED_ENERGY")
 	var social: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL")
@@ -263,13 +264,13 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var ints: PackedInt32Array = tick_step.get("ints", PackedInt32Array())
 
 	var s_hunger: float = _packed_scalar(scalars, _TICK_OUT_SC_HUNGER, 0.0)
-	if s_hunger > STRESS_EPSILON:
+	if collect_breakdown and s_hunger > STRESS_EPSILON:
 		breakdown["hunger"] = s_hunger
 	var s_energy: float = _packed_scalar(scalars, _TICK_OUT_SC_ENERGY_DEFICIT, 0.0)
-	if s_energy > STRESS_EPSILON:
+	if collect_breakdown and s_energy > STRESS_EPSILON:
 		breakdown["energy_deficit"] = s_energy
 	var s_social: float = _packed_scalar(scalars, _TICK_OUT_SC_SOCIAL_ISOLATION, 0.0)
-	if s_social > STRESS_EPSILON:
+	if collect_breakdown and s_social > STRESS_EPSILON:
 		breakdown["social_isolation"] = s_social
 
 	var updated: PackedFloat32Array = tick_step.get("updated_per_tick", PackedFloat32Array())
@@ -278,26 +279,28 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	var next_traces: Array = []
 	for i in range(usable_len):
 		var trace: Dictionary = ed.stress_traces[i]
-		var contribution: float = float(_tick_trace_per_tick[i])
 		trace["per_tick"] = float(updated[i])
-		var trace_key: String = String(trace.get("breakdown_key", ""))
-		if trace_key.is_empty():
-			trace_key = "trace_%s" % str(trace.get("source_id", "unknown"))
-			trace["breakdown_key"] = trace_key
-		if int(active_mask[i]) != 0:
-			breakdown[trace_key] = contribution
+		var is_active: bool = int(active_mask[i]) != 0
+		if collect_breakdown and is_active:
+			var trace_key: String = String(trace.get("breakdown_key", ""))
+			if trace_key.is_empty():
+				trace_key = "trace_%s" % str(trace.get("source_id", "unknown"))
+				trace["breakdown_key"] = trace_key
+			breakdown[trace_key] = float(_tick_trace_per_tick[i])
+		if is_active:
 			next_traces.append(trace)
 	ed.stress_traces = next_traces
 
-	for i in range(_EMOTION_ORDER.size()):
-		var contrib: float = _packed_scalar(scalars, int(_EMOTION_SCALAR_INDEX[i]), 0.0)
-		if absf(contrib) > STRESS_EPSILON:
-			breakdown[_EMOTION_BREAKDOWN_KEYS[i]] = contrib
-	var va_contrib: float = _packed_scalar(scalars, _TICK_OUT_SC_VA_COMPOSITE, 0.0)
-	if va_contrib > STRESS_EPSILON:
-		breakdown["va_composite"] = va_contrib
-	var recovery: float = _packed_scalar(scalars, _TICK_OUT_SC_RECOVERY, 0.0)
-	breakdown["recovery"] = -recovery
+	if collect_breakdown:
+		for i in range(_EMOTION_ORDER.size()):
+			var contrib: float = _packed_scalar(scalars, int(_EMOTION_SCALAR_INDEX[i]), 0.0)
+			if absf(contrib) > STRESS_EPSILON:
+				breakdown[_EMOTION_BREAKDOWN_KEYS[i]] = contrib
+		var va_contrib: float = _packed_scalar(scalars, _TICK_OUT_SC_VA_COMPOSITE, 0.0)
+		if va_contrib > STRESS_EPSILON:
+			breakdown["va_composite"] = va_contrib
+		var recovery: float = _packed_scalar(scalars, _TICK_OUT_SC_RECOVERY, 0.0)
+		breakdown["recovery"] = -recovery
 
 	var delta: float = _packed_scalar(scalars, _TICK_OUT_SC_DELTA, 0.0)
 	ed.set_meta(
@@ -307,7 +310,10 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 
 	ed.stress = clampf(_packed_scalar(scalars, _TICK_OUT_SC_STRESS, ed.stress), 0.0, STRESS_CLAMP_MAX)
 	ed.stress_delta_last = delta
-	ed.stress_breakdown = breakdown
+	if collect_breakdown:
+		ed.stress_breakdown = breakdown
+	elif ed.stress_breakdown.size() > 0:
+		ed.stress_breakdown = {}
 
 	# Shaken 상태 카운트다운
 	var shaken_remaining: int = ed.get_meta("shaken_remaining", 0)
