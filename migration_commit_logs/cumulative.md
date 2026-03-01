@@ -531,3 +531,8 @@
 - `pause_menu`의 단일 placeholder 포맷 호출(`UI_OVERWRITE_CONFIRM`, `UI_TIME_AGO_MINUTES/HOURS/DAYS`)을 `Locale.trf1`로 전환.
 - 출력 의미를 유지하면서 메뉴 갱신 경로의 임시 params Dictionary 생성을 줄임.
 - Pause 메뉴 텍스트 업데이트 경로의 미세 오버헤드를 완화.
+
+## Commit 109
+- `stats_detail_panel_legacy`의 정적 포맷 호출(`UI_STAT_CURRENT_FMT`, `UI_STAT_GENDER_FMT`, `UI_STAT_COUPLES_FMT`, `UI_STAT_POP_FMT`, `UI_TECH_COUNT_FMT`)을 `Locale.trf1/trf2/trf4` 경량 경로로 전환.
+- 출력 의미를 유지하면서 draw 경로 임시 params Dictionary 생성을 줄임.
+- Legacy stats 패널 렌더 경로의 미세 오버헤드를 완화.

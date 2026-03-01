@@ -206,12 +206,17 @@ func _draw_population_section(font: Font, x: float, y: float, w: float) -> float
 
 	y += GRAPH_HEIGHT + 5.0
 
-	var pop_line: String = Locale.trf("UI_STAT_CURRENT_FMT", {
-		"current": latest.pop,
-		"peak": _stats_recorder.peak_pop,
-		"deaths": _stats_recorder.total_deaths,
-		"births": _stats_recorder.total_births,
-	})
+	var pop_line: String = Locale.trf4(
+		"UI_STAT_CURRENT_FMT",
+		"current",
+		latest.pop,
+		"peak",
+		_stats_recorder.peak_pop,
+		"deaths",
+		_stats_recorder.total_deaths,
+		"births",
+		_stats_recorder.total_births
+	)
 	draw_string(font, Vector2(x, y + 12), pop_line, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 	return y + 18.0
 
@@ -265,11 +270,11 @@ func _draw_demographics_section(font: Font, x: float, y: float, w: float) -> flo
 	var avg_happiness: float = total_happiness / float(total) if total > 0 else 0.0
 
 	# Gender line
-	draw_string(font, Vector2(x, y + 12), Locale.trf("UI_STAT_GENDER_FMT", {"m": male_count, "f": female_count}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
+	draw_string(font, Vector2(x, y + 12), Locale.trf2("UI_STAT_GENDER_FMT", "m", male_count, "f", female_count), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.7, 0.7, 0.8))
 	y += 16.0
 
 	# Couples line
-	draw_string(font, Vector2(x, y + 12), Locale.trf("UI_STAT_COUPLES_FMT", {"couples": couple_count, "single": single_adult_count}), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
+	draw_string(font, Vector2(x, y + 12), Locale.trf2("UI_STAT_COUPLES_FMT", "couples", couple_count, "single", single_adult_count), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.9, 0.5, 0.6))
 	y += 16.0
 
 	# Average happiness bar
@@ -411,7 +416,7 @@ func _draw_settlements_section(font: Font, x: float, y: float, _w: float) -> voi
 
 	for i in range(settlements.size()):
 		var s: Dictionary = settlements[i]
-		var pop_text: String = Locale.trf("UI_STAT_POP_FMT", {"n": s.pop})
+		var pop_text: String = Locale.trf1("UI_STAT_POP_FMT", "n", s.pop)
 		var buildings_text: String = "%s: %d" % [Locale.ltr("UI_BUILDINGS_COUNT"), s.buildings]
 		draw_string(font, Vector2(x + 4, y + 11), "S%d: %s, %s" % [s.id, pop_text, buildings_text], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 		y += 14.0
@@ -477,11 +482,15 @@ func _draw_tech_section(font: Font, x: float, y: float, w: float) -> float:
 			forgotten_count += 1
 			forgotten_techs.append({"id": tech_id, "state": state, "cts": cts})
 
-	draw_string(font, Vector2(x + 4, y + 12),
-		Locale.trf("UI_TECH_COUNT_FMT", {
-			"known": str(known_count), "forgotten": str(forgotten_count)}),
-		HORIZONTAL_ALIGNMENT_LEFT, w, GameConfig.get_font_size("popup_small"),
-		Color(0.7, 0.7, 0.7))
+	draw_string(
+		font,
+		Vector2(x + 4, y + 12),
+		Locale.trf2("UI_TECH_COUNT_FMT", "known", str(known_count), "forgotten", str(forgotten_count)),
+		HORIZONTAL_ALIGNMENT_LEFT,
+		w,
+		GameConfig.get_font_size("popup_small"),
+		Color(0.7, 0.7, 0.7)
+	)
 	y += 16.0
 
 	## ── Known techs ──
