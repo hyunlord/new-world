@@ -781,24 +781,24 @@ func _update_building_panel() -> void:
 					"stone": "%.0f" % building.storage.get("stone", 0.0),
 				})
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		"shelter":
 			if building.is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_SHELTER_DESC")
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		"campfire":
 			if building.is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_CAMPFIRE_DESC")
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		_:
 			_building_storage_label.text = Locale.ltr("")
 
 	if building.is_built:
 		_building_status_label.text = Locale.ltr("UI_BUILDING_ACTIVE")
 	else:
-		_building_status_label.text = Locale.trf("UI_BUILDING_WIP_FMT", {"pct": int(building.build_progress * 100)})
+		_building_status_label.text = Locale.trf1("UI_BUILDING_WIP_FMT", "pct", int(building.build_progress * 100))
 
 
 func _update_notifications(delta: float) -> void:
@@ -901,7 +901,7 @@ func _on_building_deselected() -> void:
 
 
 func _on_speed_changed(speed_index: int) -> void:
-	_speed_label.text = Locale.trf("UI_SPEED_MULT_FMT", {"n": GameConfig.SPEED_OPTIONS[speed_index]})
+	_speed_label.text = Locale.trf1("UI_SPEED_MULT_FMT", "n", GameConfig.SPEED_OPTIONS[speed_index])
 
 
 func _on_pause_changed(paused: bool) -> void:

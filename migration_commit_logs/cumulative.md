@@ -466,3 +466,8 @@
 - `ChroniclePanel` draw 경로의 이벤트 개수(`UI_EVENTS_COUNT`) 포맷을 `Locale.trf1`로 전환.
 - 짧은 날짜 fallback(`UI_SHORT_DATE`) 포맷을 `Locale.trf2`로 전환.
 - 표시 의미를 유지하면서 Chronicle 렌더 경로의 고정 포맷 호출 오버헤드를 완화.
+
+## Commit 096
+- `HUD._update_building_panel`의 `UI_UNDER_CONSTRUCTION_FMT`, `UI_BUILDING_WIP_FMT` 포맷을 `Locale.trf1`로 전환.
+- `HUD._on_speed_changed`의 `UI_SPEED_MULT_FMT` 포맷을 `Locale.trf1`로 전환.
+- 표시 의미는 유지하면서 HUD 건물 상태/속도 라벨 갱신 경로의 임시 params Dictionary 생성을 줄임.
