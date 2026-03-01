@@ -1285,3 +1285,8 @@
 - `migration_verify_report.json`에 `host` 객체(`os`, `kernel_release`, `arch`, `cpu_count`)를 추가해 실행 호스트 환경 메타데이터를 함께 기록.
 - CPU 코어 수는 `getconf`→`nproc`→`sysctl` 순으로 탐지하고, 실패 시 `null`로 직렬화해 이식성을 유지.
 - `/tmp/worldsim_audit_artifacts21/migration_verify_report.json`에서 host 메타데이터 필드 반영을 확인.
+
+## Commit 260
+- `migration_verify` 문자열 직렬화 경로를 보강해 경로/버전/git 메타의 JSON 인코딩을 `json.dumps` 기반으로 안전 처리.
+- `to_json_opt_string`, `to_json_opt_path`, `to_json_opt_sha256`가 공통 문자열 인코더(`to_json_string`)를 사용하도록 정리.
+- `/tmp/worldsim_audit_artifacts22/migration_verify_report.json`를 Python으로 파싱해 리포트 JSON 유효성과 주요 문자열 필드 조회를 확인.

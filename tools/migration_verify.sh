@@ -792,6 +792,10 @@ EOF
 fi
 
 if [[ -n "${verify_report_json}" ]]; then
+  to_json_string() {
+    local raw_value="$1"
+    python3 -c 'import json,sys; print(json.dumps(sys.argv[1]))' "${raw_value}"
+  }
   to_abs_path() {
     local raw_path="$1"
     if [[ -z "${raw_path}" ]]; then
@@ -811,7 +815,7 @@ if [[ -n "${verify_report_json}" ]]; then
     if [[ -z "${abs_path}" ]]; then
       echo "null"
     else
-      echo "\"${abs_path}\""
+      to_json_string "${abs_path}"
     fi
   }
   to_json_opt_sha256() {
@@ -831,7 +835,7 @@ if [[ -n "${verify_report_json}" ]]; then
     if [[ -z "${hash}" ]]; then
       echo "null"
     else
-      echo "\"${hash}\""
+      to_json_string "${hash}"
     fi
   }
   to_json_opt_size_bytes() {
@@ -885,7 +889,7 @@ if [[ -n "${verify_report_json}" ]]; then
     if [[ -z "${raw_value}" ]]; then
       echo "null"
     else
-      echo "\"${raw_value}\""
+      to_json_string "${raw_value}"
     fi
   }
   assert_artifact_exists() {
@@ -925,14 +929,8 @@ if [[ -n "${verify_report_json}" ]]; then
   if [[ -n "$(git -C "${ROOT_DIR}" status --porcelain 2>/dev/null || true)" ]]; then
     git_dirty="true"
   fi
-  git_branch_json="null"
-  git_head_json="null"
-  if [[ -n "${git_branch}" ]]; then
-    git_branch_json="\"${git_branch}\""
-  fi
-  if [[ -n "${git_head}" ]]; then
-    git_head_json="\"${git_head}\""
-  fi
+  git_branch_json="$(to_json_opt_string "${git_branch}")"
+  git_head_json="$(to_json_opt_string "${git_head}")"
   compile_report_json_value="$(to_json_opt_path "${compile_report_json}")"
   audit_report_json_value="$(to_json_opt_path "${audit_report_json}")"
   audit_duplicate_report_json_value="$(to_json_opt_path "${audit_duplicate_report_json}")"
