@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 const DEFAULT_MAX_STEPS: usize = 200;
 const CARDINAL_COST: f32 = 1.0;
 const DIAGONAL_COST: f32 = 1.414;
@@ -137,48 +135,58 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
     if from == to {
         return vec![from];
     }
-    if !grid.is_walkable(to.x, to.y) {
+    let Some(to_idx) = grid.index(to.x, to.y) else {
+        return Vec::new();
+    };
+    if !grid.walkable[to_idx] {
         return Vec::new();
     }
+    let Some(from_idx) = grid.index(from.x, from.y) else {
+        return Vec::new();
+    };
 
     let max_steps = if max_steps == 0 {
         DEFAULT_MAX_STEPS
     } else {
         max_steps
     };
+    let node_count = (grid.width * grid.height) as usize;
 
-    let mut open_set: Vec<GridPos> = vec![from];
-    let mut in_open: HashSet<GridPos> = HashSet::from([from]);
-    let mut came_from: HashMap<GridPos, GridPos> = HashMap::new();
-    let mut g_score: HashMap<GridPos, f32> = HashMap::new();
-    let mut f_score: HashMap<GridPos, f32> = HashMap::new();
-    let mut closed_set: HashSet<GridPos> = HashSet::new();
+    let mut open_set: Vec<usize> = vec![from_idx];
+    let mut in_open: Vec<bool> = vec![false; node_count];
+    let mut came_from: Vec<Option<usize>> = vec![None; node_count];
+    let mut g_score: Vec<f32> = vec![INF_SCORE; node_count];
+    let mut f_score: Vec<f32> = vec![INF_SCORE; node_count];
+    let mut closed_set: Vec<bool> = vec![false; node_count];
 
-    g_score.insert(from, 0.0);
-    f_score.insert(from, chebyshev(from, to));
+    in_open[from_idx] = true;
+    g_score[from_idx] = 0.0;
+    f_score[from_idx] = chebyshev(from, to);
 
     let mut steps = 0usize;
     while !open_set.is_empty() && steps < max_steps {
         steps += 1;
 
         let mut best_idx = 0usize;
-        let mut best_f = *f_score.get(&open_set[0]).unwrap_or(&INF_SCORE);
-        for (idx, pos) in open_set.iter().enumerate().skip(1) {
-            let f = *f_score.get(pos).unwrap_or(&INF_SCORE);
+        let mut best_f = f_score[open_set[0]];
+        for (idx, node_idx) in open_set.iter().enumerate().skip(1) {
+            let f = f_score[*node_idx];
             if f < best_f {
                 best_f = f;
                 best_idx = idx;
             }
         }
 
-        let current = open_set.remove(best_idx);
-        in_open.remove(&current);
+        let current_idx = open_set.remove(best_idx);
+        in_open[current_idx] = false;
 
-        if current == to {
-            return reconstruct_path(&came_from, current);
+        if current_idx == to_idx {
+            return reconstruct_path(&came_from, current_idx, grid.width);
         }
 
-        closed_set.insert(current);
+        closed_set[current_idx] = true;
+        let current_x = (current_idx as i32) % grid.width;
+        let current_y = (current_idx as i32) / grid.width;
 
         for dy in -1..=1 {
             for dx in -1..=1 {
@@ -186,11 +194,17 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                     continue;
                 }
 
-                let neighbor = GridPos::new(current.x + dx, current.y + dy);
-                if closed_set.contains(&neighbor) {
+                let neighbor_x = current_x + dx;
+                let neighbor_y = current_y + dy;
+                if neighbor_x < 0
+                    || neighbor_y < 0
+                    || neighbor_x >= grid.width
+                    || neighbor_y >= grid.height
+                {
                     continue;
                 }
-                if !grid.is_walkable(neighbor.x, neighbor.y) {
+                let neighbor_idx = (neighbor_y * grid.width + neighbor_x) as usize;
+                if closed_set[neighbor_idx] || !grid.walkable[neighbor_idx] {
                     continue;
                 }
 
@@ -199,18 +213,17 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                 } else {
                     DIAGONAL_COST
                 };
-                let terrain_cost = grid.get_move_cost(neighbor.x, neighbor.y);
-                let tentative_g = g_score.get(&current).copied().unwrap_or(INF_SCORE)
-                    + (step_cost * terrain_cost);
+                let tentative_g = g_score[current_idx] + (step_cost * grid.move_cost[neighbor_idx]);
 
-                if tentative_g < g_score.get(&neighbor).copied().unwrap_or(INF_SCORE) {
-                    came_from.insert(neighbor, current);
-                    g_score.insert(neighbor, tentative_g);
-                    f_score.insert(neighbor, tentative_g + chebyshev(neighbor, to));
+                if tentative_g < g_score[neighbor_idx] {
+                    came_from[neighbor_idx] = Some(current_idx);
+                    g_score[neighbor_idx] = tentative_g;
+                    f_score[neighbor_idx] =
+                        tentative_g + chebyshev(GridPos::new(neighbor_x, neighbor_y), to);
 
-                    if !in_open.contains(&neighbor) {
-                        open_set.push(neighbor);
-                        in_open.insert(neighbor);
+                    if !in_open[neighbor_idx] {
+                        open_set.push(neighbor_idx);
+                        in_open[neighbor_idx] = true;
                     }
                 }
             }
@@ -225,13 +238,19 @@ fn chebyshev(a: GridPos, b: GridPos) -> f32 {
     (a.x.abs_diff(b.x).max(a.y.abs_diff(b.y))) as f32
 }
 
-fn reconstruct_path(came_from: &HashMap<GridPos, GridPos>, mut current: GridPos) -> Vec<GridPos> {
-    let mut path = vec![current];
-    while let Some(prev) = came_from.get(&current).copied() {
-        current = prev;
-        path.push(current);
+fn reconstruct_path(came_from: &[Option<usize>], mut current_idx: usize, width: i32) -> Vec<GridPos> {
+    let mut path_indices: Vec<usize> = vec![current_idx];
+    while let Some(prev_idx) = came_from[current_idx] {
+        current_idx = prev_idx;
+        path_indices.push(current_idx);
     }
-    path.reverse();
+    path_indices.reverse();
+    let mut path: Vec<GridPos> = Vec::with_capacity(path_indices.len());
+    for idx in path_indices {
+        let x = (idx as i32) % width;
+        let y = (idx as i32) / width;
+        path.push(GridPos::new(x, y));
+    }
     path
 }
 
@@ -291,5 +310,12 @@ mod tests {
         assert_eq!(grid.get_move_cost(0, 0), 1.0);
         assert_eq!(grid.get_move_cost(1, 0), 0.0);
         assert_eq!(grid.get_move_cost(0, 1), 3.5);
+    }
+
+    #[test]
+    fn returns_empty_when_start_is_out_of_bounds() {
+        let grid = GridCostMap::new(8, 8);
+        let path = find_path(&grid, GridPos::new(-1, 0), GridPos::new(6, 6), 200);
+        assert!(path.is_empty());
     }
 }

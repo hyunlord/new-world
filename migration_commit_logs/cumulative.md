@@ -1020,3 +1020,8 @@
 - `migration_verify` split path 벤치에 기본 반복수(`path=100`) 전용 strict checksum 기준선 검증을 추가해 tuple/xy 회귀를 자동 차단.
 - 비기본 반복수에서는 기존 관측 모드를 유지해 실험/튜닝 유연성을 보장.
 - split 체크섬 기준선: tuple=`35400.00000`, xy=`35400.00000`.
+
+## Commit 207
+- `sim-systems` A* 코어를 `HashMap/HashSet`에서 인덱스 기반 `Vec` 상태 배열로 전환해 pathfinding hot path의 해시/할당 오버헤드를 제거.
+- 경로 재구성도 인덱스 체인 기반으로 교체하고 시작점 out-of-bounds 경계 테스트를 추가해 의미를 고정.
+- checksum은 유지하면서 `pathfind-bridge` 성능이 약 `20.1ms/iter -> 2.9ms/iter` 수준으로 크게 개선.
