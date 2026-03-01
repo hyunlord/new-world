@@ -1360,6 +1360,64 @@ static func stress_rebound_queue_step(
 	}
 
 
+## Computes relationship/context/event scaling in a single step.
+## Returns Dictionary: { relationship_scale, context_scale, total_scale, loss_mult, final_instant, final_per_tick }
+static func stress_event_scale_step(
+	base_instant: float,
+	base_per_tick: float,
+	is_loss: bool,
+	personality_scale: float,
+	appraisal_scale: float,
+	relationship_method: String,
+	bond_strength: float,
+	relationship_min_mult: float,
+	relationship_max_mult: float,
+	context_active_multipliers: PackedFloat32Array
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_event_scale_step",
+		[
+			base_instant,
+			base_per_tick,
+			is_loss,
+			personality_scale,
+			appraisal_scale,
+			relationship_method,
+			bond_strength,
+			relationship_min_mult,
+			relationship_max_mult,
+			context_active_multipliers
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var relationship_scale: float = stress_relationship_scale(
+		relationship_method,
+		bond_strength,
+		relationship_min_mult,
+		relationship_max_mult
+	)
+	var context_scale: float = stress_context_scale(context_active_multipliers)
+	var scaled: Dictionary = stress_event_scaled(
+		base_instant,
+		base_per_tick,
+		is_loss,
+		personality_scale,
+		relationship_scale,
+		context_scale,
+		appraisal_scale
+	)
+	return {
+		"relationship_scale": relationship_scale,
+		"context_scale": context_scale,
+		"total_scale": float(scaled.get("total_scale", personality_scale * relationship_scale * context_scale * appraisal_scale)),
+		"loss_mult": float(scaled.get("loss_mult", 1.0)),
+		"final_instant": float(scaled.get("final_instant", 0.0)),
+		"final_per_tick": float(scaled.get("final_per_tick", 0.0)),
+	}
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(

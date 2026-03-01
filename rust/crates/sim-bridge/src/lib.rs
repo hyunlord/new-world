@@ -1367,6 +1367,42 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_event_scale_step(
+        &self,
+        base_instant: f32,
+        base_per_tick: f32,
+        is_loss: bool,
+        personality_scale: f32,
+        appraisal_scale: f32,
+        relationship_method: GString,
+        bond_strength: f32,
+        relationship_min_mult: f32,
+        relationship_max_mult: f32,
+        context_active_multipliers: PackedFloat32Array,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_event_scale_step(
+            base_instant,
+            base_per_tick,
+            is_loss,
+            personality_scale,
+            appraisal_scale,
+            &relationship_method.to_string(),
+            bond_strength,
+            relationship_min_mult,
+            relationship_max_mult,
+            &packed_f32_to_vec(&context_active_multipliers),
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("relationship_scale", out.relationship_scale as f64);
+        dict.set("context_scale", out.context_scale as f64);
+        dict.set("total_scale", out.total_scale as f64);
+        dict.set("loss_mult", out.loss_mult as f64);
+        dict.set("final_instant", out.final_instant as f64);
+        dict.set("final_per_tick", out.final_per_tick as f64);
+        dict
+    }
+
+    #[func]
     fn stat_stress_event_scaled(
         &self,
         base_instant: f32,

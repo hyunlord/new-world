@@ -285,3 +285,8 @@
 ## Commit 058
 - 이벤트 감정 주입 경로(`_inject_emotions`)에서 current fast/slow `PackedFloat32Array`를 매 호출 신규 생성하지 않고 scratch buffer 재사용 방식으로 전환.
 - `stress_emotion_inject_step` 호출 구조와 결과 반영 의미를 유지한 채 GDScript 임시 할당/GC 오버헤드를 완화.
+
+## Commit 059
+- `inject_event`의 relationship/context/event scaling 계산을 단일 Rust step(`stress_event_scale_step`)으로 결합해 bridge round-trip을 축소.
+- `StressSystem`은 context 활성 multiplier 수집만 수행하고 스케일 계산은 결합 step 결과를 사용하도록 재구성.
+- 분리 helper(`_calc_relationship_scale`, `_calc_context_scale`)를 정리하면서 기존 최종 수식 의미를 유지.

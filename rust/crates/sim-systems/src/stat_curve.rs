@@ -206,6 +206,16 @@ pub struct StressReboundQueueStep {
     pub remaining_delays: Vec<i32>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressEventScaleStep {
+    pub relationship_scale: f32,
+    pub context_scale: f32,
+    pub total_scale: f32,
+    pub loss_mult: f32,
+    pub final_instant: f32,
+    pub final_per_tick: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -1192,6 +1202,45 @@ pub fn stress_rebound_queue_step(
     }
 }
 
+/// Computes relationship/context/event scaling in a single step.
+pub fn stress_event_scale_step(
+    base_instant: f32,
+    base_per_tick: f32,
+    is_loss: bool,
+    personality_scale: f32,
+    appraisal_scale: f32,
+    relationship_method: &str,
+    bond_strength: f32,
+    relationship_min_mult: f32,
+    relationship_max_mult: f32,
+    context_active_multipliers: &[f32],
+) -> StressEventScaleStep {
+    let relationship_scale = stress_relationship_scale(
+        relationship_method,
+        bond_strength,
+        relationship_min_mult,
+        relationship_max_mult,
+    );
+    let context_scale = stress_context_scale(context_active_multipliers);
+    let scaled = stress_event_scaled(
+        base_instant,
+        base_per_tick,
+        is_loss,
+        personality_scale,
+        relationship_scale,
+        context_scale,
+        appraisal_scale,
+    );
+    StressEventScaleStep {
+        relationship_scale,
+        context_scale,
+        total_scale: scaled.total_scale,
+        loss_mult: scaled.loss_mult,
+        final_instant: scaled.final_instant,
+        final_per_tick: scaled.final_per_tick,
+    }
+}
+
 /// Scales stress event instant/per_tick with accumulated multipliers.
 pub fn stress_event_scaled(
     base_instant: f32,
@@ -1807,6 +1856,31 @@ mod tests {
 
         let clamped = stress_rebound_queue_step(&[4.0], &[1], 3.0);
         assert_eq!(clamped.total_rebound, 0.0);
+    }
+
+    #[test]
+    fn stress_event_scale_step_matches_composed_steps() {
+        let out = stress_event_scale_step(
+            12.0,
+            0.8,
+            true,
+            1.15,
+            1.0,
+            "bond_strength",
+            0.7,
+            0.3,
+            1.5,
+            &[1.2, 0.9],
+        );
+        let relationship = stress_relationship_scale("bond_strength", 0.7, 0.3, 1.5);
+        let context = stress_context_scale(&[1.2, 0.9]);
+        let scaled = stress_event_scaled(12.0, 0.8, true, 1.15, relationship, context, 1.0);
+
+        assert!((out.relationship_scale - relationship).abs() < 1e-6);
+        assert!((out.context_scale - context).abs() < 1e-6);
+        assert!((out.total_scale - scaled.total_scale).abs() < 1e-6);
+        assert!((out.final_instant - scaled.final_instant).abs() < 1e-6);
+        assert!((out.final_per_tick - scaled.final_per_tick).abs() < 1e-6);
     }
 
     #[test]

@@ -412,28 +412,32 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var r_method: String = String(sdef.get("_r_method", "none"))
 	var r_min_mult: float = float(sdef.get("_r_min_mult", 0.3))
 	var r_max_mult: float = float(sdef.get("_r_max_mult", 1.5))
-	var relationship_scale = _calc_relationship_scale(
-		context,
-		r_method,
-		r_min_mult,
-		r_max_mult
-	)
+	var bond_strength: float = float(context.get("bond_strength", 0.5))
 
 	# 4) 상황 스케일
 	var c_keys: PackedStringArray = sdef.get("_c_keys", PackedStringArray())
 	var c_multipliers: PackedFloat32Array = sdef.get("_c_multipliers", PackedFloat32Array())
-	var context_scale = _calc_context_scale(context, c_keys, c_multipliers)
+	var active_context_multipliers: PackedFloat32Array = _collect_active_context_multipliers(
+		context,
+		c_keys,
+		c_multipliers
+	)
 
-	# 5) 최종 계산 (Rust curve helper)
-	var scaled: Dictionary = StatCurveScript.stress_event_scaled(
+	# 5) 관계/상황/최종 스케일 결합 계산 (Rust curve helper)
+	var scaled: Dictionary = StatCurveScript.stress_event_scale_step(
 		instant,
 		per_tick,
 		is_loss,
 		personality_scale,
-		relationship_scale,
-		context_scale,
-		1.0
+		1.0,
+		r_method,
+		bond_strength,
+		r_min_mult,
+		r_max_mult,
+		active_context_multipliers
 	)
+	var relationship_scale: float = float(scaled.get("relationship_scale", 1.0))
+	var context_scale: float = float(scaled.get("context_scale", 1.0))
 	var total_scale: float = float(scaled.get("total_scale", 1.0))
 	var final_instant: float = float(scaled.get("final_instant", 0.0))
 	var final_per_tick: float = float(scaled.get("final_per_tick", 0.0))
@@ -509,28 +513,18 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 	)
 
 
-func _calc_relationship_scale(
-	context: Dictionary,
-	method: String,
-	min_m: float,
-	max_m: float
-) -> float:
-	var bond: float = float(context.get("bond_strength", 0.5))
-	return StatCurveScript.stress_relationship_scale(method, bond, min_m, max_m)
-
-
-func _calc_context_scale(
+func _collect_active_context_multipliers(
 	context: Dictionary,
 	c_keys: PackedStringArray,
 	c_multipliers: PackedFloat32Array
-) -> float:
+) -> PackedFloat32Array:
 	var active_multipliers: PackedFloat32Array = PackedFloat32Array()
 	var count: int = mini(c_keys.size(), c_multipliers.size())
 	for idx in range(count):
 		var context_key: String = c_keys[idx]
 		if context.get(context_key, false):
 			active_multipliers.append(c_multipliers[idx])
-	return StatCurveScript.stress_context_scale(active_multipliers)
+	return active_multipliers
 
 
 func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
