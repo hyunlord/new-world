@@ -162,6 +162,10 @@ fn packed_f32_to_vec(values: &PackedFloat32Array) -> Vec<f32> {
     values.as_slice().to_vec()
 }
 
+fn packed_u8_to_vec(values: &PackedByteArray) -> Vec<u8> {
+    values.as_slice().to_vec()
+}
+
 fn vec_f32_to_packed(values: Vec<f32>) -> PackedFloat32Array {
     PackedFloat32Array::from(values)
 }
@@ -1279,6 +1283,22 @@ impl WorldSimBridge {
     #[func]
     fn stat_stress_work_efficiency(&self, stress: f32, shaken_penalty: f32) -> f32 {
         stat_curve::stress_work_efficiency(stress, shaken_penalty)
+    }
+
+    #[func]
+    fn stat_stress_personality_scale(
+        &self,
+        values: PackedFloat32Array,
+        weights: PackedFloat32Array,
+        high_amplifies: PackedByteArray,
+        trait_multipliers: PackedFloat32Array,
+    ) -> f32 {
+        stat_curve::stress_personality_scale(
+            &packed_f32_to_vec(&values),
+            &packed_f32_to_vec(&weights),
+            &packed_u8_to_vec(&high_amplifies),
+            &packed_f32_to_vec(&trait_multipliers),
+        )
     }
 
     #[func]

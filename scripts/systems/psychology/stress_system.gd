@@ -417,16 +417,20 @@ func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
 		return 1.0
 
 	var pd = entity.personality
-	var scale: float = 1.0
+	var values: PackedFloat32Array = PackedFloat32Array()
+	var weights: PackedFloat32Array = PackedFloat32Array()
+	var high_amplifies: PackedByteArray = PackedByteArray()
+	var trait_multipliers: PackedFloat32Array = PackedFloat32Array()
 
 	for key in p_mods:
 		if key == "traits":
 			continue
-		var mod = p_mods[key]
+		var mod: Variant = p_mods[key]
 		if typeof(mod) != TYPE_DICTIONARY:
 			continue
-		var weight = float(mod.get("weight", 0.0))
-		var direction = mod.get("direction", "high_amplifies")
+		var mod_dict: Dictionary = mod
+		var weight: float = float(mod_dict.get("weight", 0.0))
+		var direction: Variant = mod_dict.get("direction", "high_amplifies")
 
 		# 축 또는 facet 값 가져오기
 		var value: float = 0.5
@@ -437,23 +441,24 @@ func _calc_personality_scale(entity, p_mods: Dictionary) -> float:
 			else:
 				value = float(pd.facets.get(key, 0.5))
 
-		# 방향에 따른 배수
-		var deviation: float
-		if direction == "high_amplifies":
-			deviation = (value - 0.5) * 2.0
-		else:
-			deviation = (0.5 - value) * 2.0
-
-		scale *= (1.0 + weight * deviation)
+		values.append(value)
+		weights.append(weight)
+		high_amplifies.append(1 if direction == "high_amplifies" else 0)
 
 	# Trait 배수
-	var trait_mods = p_mods.get("traits", {})
+	var trait_mods: Variant = p_mods.get("traits", {})
 	if typeof(trait_mods) == TYPE_DICTIONARY:
-		for trait_id in trait_mods:
+		var trait_mods_dict: Dictionary = trait_mods
+		for trait_id in trait_mods_dict:
 			if _entity_has_trait(entity, trait_id):
-				scale *= float(trait_mods[trait_id])
+				trait_multipliers.append(float(trait_mods_dict[trait_id]))
 
-	return clampf(scale, 0.05, 4.0)
+	return StatCurveScript.stress_personality_scale(
+		values,
+		weights,
+		high_amplifies,
+		trait_multipliers
+	)
 
 
 func _calc_relationship_scale(context: Dictionary, r_def: Dictionary) -> float:

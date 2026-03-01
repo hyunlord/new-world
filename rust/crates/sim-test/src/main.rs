@@ -216,6 +216,12 @@ fn run_stress_math_bench(args: &[String]) {
             -0.03 * t,
         );
         let work_eff = stat_curve::stress_work_efficiency(stress, -0.03 * t);
+        let personality_scale = stat_curve::stress_personality_scale(
+            &[0.2 + 0.7 * t, 0.1 + 0.8 * (1.0 - t), 0.4 + 0.5 * t],
+            &[0.8, 0.6, 0.5],
+            &[1_u8, 0_u8, 1_u8],
+            &[if i % 2 == 0 { 1.15 } else { 0.9 }],
+        );
         let event_scaled = stat_curve::stress_event_scaled(
             12.0 + 18.0 * t,
             0.8 + 0.5 * t,
@@ -356,6 +362,7 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(post_res_step.resilience)
             + black_box(resilience)
             + black_box(work_eff)
+            + black_box(personality_scale)
             + black_box(event_scaled.final_instant)
             + black_box(traces.total_contribution)
             + black_box(delta_step.delta)

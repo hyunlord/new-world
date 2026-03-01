@@ -1067,6 +1067,32 @@ pub fn stress_work_efficiency(stress: f32, shaken_penalty: f32) -> f32 {
     perf.clamp(0.35, 1.10)
 }
 
+/// Computes personality-derived stress scaling from axis/facet deviations and trait multipliers.
+pub fn stress_personality_scale(
+    values: &[f32],
+    weights: &[f32],
+    high_amplifies: &[u8],
+    trait_multipliers: &[f32],
+) -> f32 {
+    let len = values.len().min(weights.len()).min(high_amplifies.len());
+    let mut scale = 1.0_f32;
+
+    for idx in 0..len {
+        let deviation = if high_amplifies[idx] != 0 {
+            (values[idx] - 0.5) * 2.0
+        } else {
+            (0.5 - values[idx]) * 2.0
+        };
+        scale *= 1.0 + weights[idx] * deviation;
+    }
+
+    for mult in trait_multipliers {
+        scale *= *mult;
+    }
+
+    scale.clamp(0.05, 4.0)
+}
+
 /// Scales stress event instant/per_tick with accumulated multipliers.
 pub fn stress_event_scaled(
     base_instant: f32,
@@ -1614,6 +1640,24 @@ mod tests {
         assert_eq!(gain.final_instant, 10.0);
         assert_eq!(loss.final_instant, 25.0);
         assert_eq!(loss.loss_mult, 2.5);
+    }
+
+    #[test]
+    fn stress_personality_scale_applies_axis_and_trait_multipliers() {
+        let values = vec![0.8, 0.2];
+        let weights = vec![0.5, 0.4];
+        let high = vec![1_u8, 0_u8];
+        let traits = vec![1.2];
+        let out = stress_personality_scale(&values, &weights, &high, &traits);
+        assert!((out - 1.9344).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_personality_scale_clamps_output_range() {
+        let low = stress_personality_scale(&[1.0], &[5.0], &[0_u8], &[]);
+        let high = stress_personality_scale(&[1.0], &[2.0], &[1_u8], &[3.0]);
+        assert_eq!(low, 0.05);
+        assert_eq!(high, 4.0);
     }
 
     #[test]

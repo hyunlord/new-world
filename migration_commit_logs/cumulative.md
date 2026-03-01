@@ -246,3 +246,8 @@
 - 이벤트 기반 stress 주입 경로(`inject_stress_event`, `inject_event`)의 최종 스케일 계산을 Rust helper(`stress_event_scaled`)로 공통화.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 대응 API를 추가하고 GDScript의 중복 수식 경로를 네이티브 우선 호출로 치환.
 - `total_scale`/`loss_mult`/`final_instant`/`final_per_tick` 의미를 유지하면서 이벤트 주입 계산 일관성과 유지보수성을 강화.
+
+## Commit 051
+- 이벤트 주입 경로의 `_calc_personality_scale` 곱셈/클램프 수식을 Rust helper(`stress_personality_scale`)로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve`에 personality-scale API를 추가해 GDScript는 입력 수집 후 네이티브 호출 중심으로 전환.
+- HEXACO 편차 방향(`high_amplifies`)과 trait multiplier 의미를 유지한 채 성격 스케일 계산 경로를 일원화.

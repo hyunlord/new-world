@@ -829,6 +829,25 @@ func stat_stress_work_efficiency(
 	)
 
 
+## Delegates stress personality scaling curve to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_personality_scale(
+	values: PackedFloat32Array,
+	weights: PackedFloat32Array,
+	high_amplifies: PackedByteArray,
+	trait_multipliers: PackedFloat32Array
+):
+	return _call_native_if_exists(
+		"stat_stress_personality_scale",
+		[
+			values,
+			weights,
+			high_amplifies,
+			trait_multipliers
+		]
+	)
+
+
 ## Delegates stress event final scaling to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_event_scaled(

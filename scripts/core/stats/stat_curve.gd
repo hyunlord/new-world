@@ -1208,6 +1208,37 @@ static func stress_work_efficiency(
 	return clampf(perf, 0.35, 1.10)
 
 
+## Computes personality-derived stress scale from axis/facet deviations and trait multipliers.
+static func stress_personality_scale(
+	values: PackedFloat32Array,
+	weights: PackedFloat32Array,
+	high_amplifies: PackedByteArray,
+	trait_multipliers: PackedFloat32Array
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_personality_scale",
+		[
+			values,
+			weights,
+			high_amplifies,
+			trait_multipliers
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var count: int = mini(values.size(), mini(weights.size(), high_amplifies.size()))
+	var scale: float = 1.0
+	for idx in range(count):
+		var deviation: float = (values[idx] - 0.5) * 2.0
+		if high_amplifies[idx] == 0:
+			deviation = (0.5 - values[idx]) * 2.0
+		scale *= (1.0 + weights[idx] * deviation)
+	for mult in trait_multipliers:
+		scale *= mult
+	return clampf(scale, 0.05, 4.0)
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(
