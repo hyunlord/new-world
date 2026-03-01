@@ -667,6 +667,32 @@ pub fn personality_linear_target(age: i32, max_shift: f32, start_age: i32, end_a
     max_shift * t
 }
 
+/// Computes effective intelligence value with age/activity/ACE modifiers.
+pub fn intelligence_effective_value(
+    potential: f32,
+    base_mod: f32,
+    age_years: f32,
+    is_fluid: bool,
+    activity_mod: f32,
+    ace_fluid_mult: f32,
+    env_penalty: f32,
+    min_val: f32,
+    max_val: f32,
+) -> f32 {
+    let effective_mod = if base_mod < 1.0 && age_years > 25.0 {
+        let mut decline_amount = 1.0 - base_mod;
+        if is_fluid {
+            decline_amount *= activity_mod * ace_fluid_mult;
+        } else {
+            decline_amount *= activity_mod;
+        }
+        1.0 - decline_amount
+    } else {
+        base_mod
+    };
+    clamp_f32((potential - env_penalty) * effective_mod, min_val, max_val)
+}
+
 /// Age-based leadership respect score in `[0.0, 1.0]`.
 pub fn leader_age_respect(age_years: f32) -> f32 {
     clamp_f32((age_years - 18.0) / 40.0, 0.0, 1.0)
@@ -1715,7 +1741,7 @@ mod tests {
         needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
         occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
         stat_threshold_is_active, stats_resource_deltas_per_100,
-        personality_linear_target,
+        personality_linear_target, intelligence_effective_value,
         reputation_decay_value, reputation_event_delta,
         rest_energy_recovery, revolution_risk_score, stratification_gini,
         stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
@@ -2123,6 +2149,20 @@ mod tests {
     fn personality_linear_target_interpolates_linearly() {
         let mid = personality_linear_target(39, 0.8, 18, 60);
         assert!((mid - 0.4).abs() < 1e-6);
+    }
+
+    #[test]
+    fn intelligence_effective_value_applies_fluid_decline_modifiers() {
+        let fluid = intelligence_effective_value(0.8, 0.7, 40.0, true, 0.9, 1.2, 0.1, 0.02, 0.98);
+        let cryst = intelligence_effective_value(0.8, 0.7, 40.0, false, 0.9, 1.2, 0.1, 0.02, 0.98);
+        assert!(fluid < cryst);
+        assert!((0.02..=0.98).contains(&fluid));
+    }
+
+    #[test]
+    fn intelligence_effective_value_uses_base_when_not_declining() {
+        let out = intelligence_effective_value(0.6, 1.05, 20.0, true, 0.9, 1.2, 0.1, 0.02, 0.98);
+        assert!((out - 0.525).abs() < 1e-6);
     }
 
     #[test]

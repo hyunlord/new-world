@@ -1069,6 +1069,32 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_intelligence_effective_value(
+        &self,
+        potential: f32,
+        base_mod: f32,
+        age_years: f32,
+        is_fluid: bool,
+        activity_mod: f32,
+        ace_fluid_mult: f32,
+        env_penalty: f32,
+        min_val: f32,
+        max_val: f32,
+    ) -> f32 {
+        body::intelligence_effective_value(
+            potential,
+            base_mod,
+            age_years,
+            is_fluid,
+            activity_mod,
+            ace_fluid_mult,
+            env_penalty,
+            min_val,
+            max_val,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }
