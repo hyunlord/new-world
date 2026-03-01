@@ -35,9 +35,33 @@ pub fn compute_age_curve(axis: &str, age_years: f32) -> f32 {
     }
 }
 
+/// Compute training gain for a body axis.
+///
+/// Mirrors `BodyAttributes.calc_training_gain` math.
+pub fn calc_training_gain(
+    potential: i32,
+    trainability: i32,
+    xp: f32,
+    training_ceiling: f32,
+    xp_for_full_progress: f32,
+) -> i32 {
+    let max_gain = (potential as f32) * training_ceiling;
+    let progress_divisor = if xp_for_full_progress <= 0.0 {
+        1.0
+    } else {
+        xp_for_full_progress
+    };
+    let xp_progress = clamp_f32(xp / progress_divisor, 0.0, 1.0);
+    let xp_factor = 1.0 - (-3.0 * xp_progress).exp();
+    let train_factor = clamp_f32((trainability as f32) / 500.0, 0.1, 2.0);
+    let gain = max_gain * xp_factor * train_factor;
+    let clamped_gain = clamp_f32(gain, 0.0, max_gain * 2.0);
+    clamped_gain as i32
+}
+
 #[cfg(test)]
 mod tests {
-    use super::compute_age_curve;
+    use super::{calc_training_gain, compute_age_curve};
 
     #[test]
     fn unknown_axis_returns_default_midpoint() {
@@ -70,5 +94,25 @@ mod tests {
         let raw = grow.clamp(0.02_f32, 1.0_f32);
         let with_bonus = compute_age_curve("dr", age);
         assert!(with_bonus > raw);
+    }
+
+    #[test]
+    fn training_gain_is_zero_at_zero_xp() {
+        let gain = calc_training_gain(1000, 500, 0.0, 0.5, 10_000.0);
+        assert_eq!(gain, 0);
+    }
+
+    #[test]
+    fn training_gain_scales_with_trainability() {
+        let low = calc_training_gain(1000, 300, 10_000.0, 0.5, 10_000.0);
+        let high = calc_training_gain(1000, 800, 10_000.0, 0.5, 10_000.0);
+        assert!(high > low);
+    }
+
+    #[test]
+    fn training_gain_clamps_to_twice_max_gain() {
+        let gain = calc_training_gain(1000, 5000, 10_000_000.0, 0.5, 1.0);
+        assert!(gain <= 1000);
+        assert!(gain > 0);
     }
 }

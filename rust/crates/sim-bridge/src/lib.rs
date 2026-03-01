@@ -317,6 +317,24 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_calc_training_gain(
+        &self,
+        potential: i32,
+        trainability: i32,
+        xp: f32,
+        training_ceiling: f32,
+        xp_for_full_progress: f32,
+    ) -> i32 {
+        body::calc_training_gain(
+            potential,
+            trainability,
+            xp,
+            training_ceiling,
+            xp_for_full_progress,
+        )
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

@@ -1200,6 +1200,27 @@ func body_compute_age_curve(axis: String, age_years: float):
 	)
 
 
+## Delegates body training gain computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_calc_training_gain(
+	potential: int,
+	trainability: int,
+	xp: float,
+	training_ceiling: float,
+	xp_for_full_progress: float
+):
+	return _call_native_if_exists(
+		"body_calc_training_gain",
+		[
+			potential,
+			trainability,
+			xp,
+			training_ceiling,
+			xp_for_full_progress
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

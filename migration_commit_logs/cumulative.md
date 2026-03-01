@@ -611,3 +611,8 @@
 - `sim-systems`에 body age curve 수식 모듈(`body::compute_age_curve`)을 추가하고 unit test로 검증.
 - `sim-bridge`/`SimBridge`에 `body_compute_age_curve` API를 추가해 GDScript에서 Rust 연산 호출 경로를 노출.
 - `body_attributes.compute_age_curve`가 Rust 우선 + GDScript fallback 구조로 전환되어 신체 나이 커브 계산의 네이티브 실행 경로를 확장.
+
+## Commit 125
+- `sim-systems::body`에 `calc_training_gain` 수식을 추가하고 관련 unit test를 확장.
+- `sim-bridge`/`SimBridge`에 `body_calc_training_gain` API를 추가해 BodyAttributes 훈련 gain 계산의 Rust 호출 경로를 연결.
+- `body_attributes.calc_training_gain`이 Rust 우선 + GDScript fallback 구조로 전환되어 신체 훈련 gain 계산 네이티브화 범위를 확장.

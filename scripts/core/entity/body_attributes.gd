@@ -155,12 +155,27 @@ static func get_age_trainability_modifier(axis: String, age_years: float) -> flo
 func calc_training_gain(axis: String) -> int:
 	if axis == "dr" or not trainability.has(axis):
 		return 0
-	var pot: int = potential.get(axis, 700)
-	var max_gain: float = float(pot) * TRAINING_CEILING.get(axis, 0.5)
-	var xp: float = training_xp.get(axis, 0.0)
+	var pot: int = int(potential.get(axis, 700))
+	var training_ceiling: float = float(TRAINING_CEILING.get(axis, 0.5))
+	var trainability_value: int = int(trainability.get(axis, 500))
+	var xp: float = float(training_xp.get(axis, 0.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_training_gain",
+		[
+			pot,
+			trainability_value,
+			xp,
+			training_ceiling,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result != null:
+		return int(rust_result)
+
+	var max_gain: float = float(pot) * training_ceiling
 	var xp_progress: float = clampf(xp / GameConfig.XP_FOR_FULL_PROGRESS, 0.0, 1.0)
 	var xp_factor: float = 1.0 - exp(-3.0 * xp_progress)
-	var train_factor: float = clampf(float(trainability.get(axis, 500)) / 500.0, 0.1, 2.0)
+	var train_factor: float = clampf(float(trainability_value) / 500.0, 0.1, 2.0)
 	var gain: float = max_gain * xp_factor * train_factor
 	return clampi(int(gain), 0, int(max_gain * 2.0))
 
