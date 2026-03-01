@@ -6,6 +6,7 @@
 
 use godot::prelude::*;
 use sim_systems::{
+    body,
     pathfinding::{find_path, GridCostMap, GridPos},
     stat_curve,
 };
@@ -307,6 +308,12 @@ impl WorldSimBridge {
     #[func]
     fn has_gpu_pathfinding(&self) -> bool {
         cfg!(feature = "gpu")
+    }
+
+    #[func]
+    fn body_compute_age_curve(&self, axis: GString, age_years: f32) -> f32 {
+        let axis_string = axis.to_string();
+        body::compute_age_curve(axis_string.as_str(), age_years)
     }
 
     #[func]

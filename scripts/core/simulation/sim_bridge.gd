@@ -1188,6 +1188,18 @@ func stat_step_linear(
 	)
 
 
+## Delegates body age curve computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_compute_age_curve(axis: String, age_years: float):
+	return _call_native_if_exists(
+		"body_compute_age_curve",
+		[
+			axis,
+			age_years
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

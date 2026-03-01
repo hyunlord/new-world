@@ -4,6 +4,8 @@
 ## 참조: const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 extends RefCounted
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+
 ## ── 유전 기반 (태생 결정, 불변) ───────────────────────────
 ## potential: 0~10,000 int. 훈련 없이 나이 커브만 적용한 기준값
 var potential: Dictionary = {}
@@ -60,9 +62,15 @@ const TRAINING_CEILING: Dictionary = {
 	"rec": 0.60,
 }
 
+static var _bridge_checked: bool = false
+static var _bridge_ref: Object = null
+
 ## 단일 축 나이 커브 계산 (0.02 ~ 1.0)
 ## grow(로지스틱) × decl1(초중년 감쇠) × decl2(노년 가속 감쇠)
 static func compute_age_curve(axis: String, age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_compute_age_curve", [axis, age_years])
+	if rust_result != null:
+		return float(rust_result)
 	if not CURVE_PARAMS.has(axis):
 		return 0.5
 	var p: Dictionary = CURVE_PARAMS[axis]
@@ -74,6 +82,30 @@ static func compute_age_curve(axis: String, age_years: float) -> float:
 		var maternal_bonus: float = 0.20 * exp(-age_years / 0.5)
 		return clampf(raw + maternal_bonus, 0.02, 1.0)
 	return raw
+
+
+static func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _bridge_ref
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root != null:
+		var node_from_root: Node = tree.root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+		if node_from_root != null:
+			_bridge_ref = node_from_root
+			return _bridge_ref
+	if Engine.has_singleton(_SIM_BRIDGE_NODE_NAME):
+		_bridge_ref = Engine.get_singleton(_SIM_BRIDGE_NODE_NAME)
+	return _bridge_ref
+
+
+static func _call_sim_bridge(method_name: String, args: Array):
+	var bridge: Object = _get_sim_bridge()
+	if bridge == null:
+		return null
+	if not bridge.has_method(method_name):
+		return null
+	return bridge.callv(method_name, args)
 
 ## 나이별 훈련 효율 배수 반환 (0.0~1.0)
 ## 과거 축적 gain은 유지됨 — 오직 "지금 훈련 효과"만 결정
