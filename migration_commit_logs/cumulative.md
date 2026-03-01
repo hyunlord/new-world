@@ -299,3 +299,8 @@
 ## Commit 061
 - `inject_event` 입력 수집(personality/context)에서 반복 생성되던 PackedArray를 scratch buffer 재사용(`resize(0)`) 방식으로 전환.
 - `_calc_personality_scale`, `_collect_active_context_multipliers` 경로의 임시 할당을 줄여 이벤트 주입 핫패스의 GDScript GC 압력을 완화.
+
+## Commit 062
+- stressor personality trait modifier를 `_p_trait_ids`/`_p_trait_multipliers` Packed 배열로 사전컴파일해 런타임 dictionary 해석 비용을 축소.
+- `_calc_personality_scale`를 trait 배열 인덱스 순회 기반으로 전환하고 trait id map도 scratch dictionary 재사용으로 최적화.
+- 성격 스케일 수식 및 Rust helper 호출 구조는 유지해 동작 의미를 보존.

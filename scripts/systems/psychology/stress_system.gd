@@ -60,6 +60,7 @@ var _event_personality_weights: PackedFloat32Array = PackedFloat32Array()
 var _event_personality_high: PackedByteArray = PackedByteArray()
 var _event_personality_traits: PackedFloat32Array = PackedFloat32Array()
 var _event_active_context_multipliers: PackedFloat32Array = PackedFloat32Array()
+var _event_trait_id_map: Dictionary = {}
 
 
 func _init() -> void:
@@ -375,7 +376,8 @@ func _load_stressor_defs() -> void:
 			var compiled_context: Dictionary = _compile_context_modifiers(stressor_def.get("context_modifiers", {}))
 			var compiled_emo: Dictionary = _compile_emotion_inject(stressor_def.get("emotion_inject", {}))
 			stressor_def["_p_specs"] = compiled_personality.get("specs", [])
-			stressor_def["_p_traits"] = compiled_personality.get("traits", {})
+			stressor_def["_p_trait_ids"] = compiled_personality.get("trait_ids", PackedStringArray())
+			stressor_def["_p_trait_multipliers"] = compiled_personality.get("trait_multipliers", PackedFloat32Array())
 			stressor_def["_r_method"] = compiled_relationship.get("method", "none")
 			stressor_def["_r_min_mult"] = compiled_relationship.get("min_mult", 0.3)
 			stressor_def["_r_max_mult"] = compiled_relationship.get("max_mult", 1.5)
@@ -410,8 +412,14 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 
 	# 2) 성격 스케일
 	var p_specs: Array = sdef.get("_p_specs", [])
-	var p_traits: Dictionary = sdef.get("_p_traits", {})
-	var personality_scale = _calc_personality_scale(entity, p_specs, p_traits)
+	var p_trait_ids: PackedStringArray = sdef.get("_p_trait_ids", PackedStringArray())
+	var p_trait_multipliers: PackedFloat32Array = sdef.get("_p_trait_multipliers", PackedFloat32Array())
+	var personality_scale = _calc_personality_scale(
+		entity,
+		p_specs,
+		p_trait_ids,
+		p_trait_multipliers
+	)
 
 	# 3) 관계 스케일
 	var r_method: String = String(sdef.get("_r_method", "none"))
@@ -478,8 +486,13 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 		])
 
 
-func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> float:
-	if p_specs.is_empty() and p_traits.is_empty():
+func _calc_personality_scale(
+	entity,
+	p_specs: Array,
+	p_trait_ids: PackedStringArray,
+	p_trait_multipliers: PackedFloat32Array
+) -> float:
+	if p_specs.is_empty() and p_trait_ids.size() == 0:
 		return 1.0
 
 	var pd = entity.personality
@@ -512,9 +525,11 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 		_event_personality_high.append(1 if is_high_amplifies else 0)
 
 	# Trait 배수
-	for trait_id in p_traits:
+	var trait_count: int = mini(p_trait_ids.size(), p_trait_multipliers.size())
+	for idx in range(trait_count):
+		var trait_id: String = p_trait_ids[idx]
 		if trait_id_map.has(trait_id):
-			_event_personality_traits.append(float(p_traits[trait_id]))
+			_event_personality_traits.append(float(p_trait_multipliers[idx]))
 
 	return StatCurveScript.stress_personality_scale(
 		_event_personality_values,
@@ -540,14 +555,22 @@ func _collect_active_context_multipliers(
 
 func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 	var specs: Array = []
-	var traits: Dictionary = {}
+	var trait_ids: PackedStringArray = PackedStringArray()
+	var trait_multipliers: PackedFloat32Array = PackedFloat32Array()
 	if typeof(p_mods) != TYPE_DICTIONARY:
-		return {"specs": specs, "traits": traits}
+		return {
+			"specs": specs,
+			"trait_ids": trait_ids,
+			"trait_multipliers": trait_multipliers,
+		}
 
 	var p_mods_dict: Dictionary = p_mods
 	var trait_mods: Variant = p_mods_dict.get("traits", {})
 	if typeof(trait_mods) == TYPE_DICTIONARY:
-		traits = trait_mods
+		var trait_mods_dict: Dictionary = trait_mods
+		for trait_id in trait_mods_dict:
+			trait_ids.append(String(trait_id))
+			trait_multipliers.append(float(trait_mods_dict[trait_id]))
 
 	for key in p_mods_dict:
 		if key == "traits":
@@ -570,7 +593,11 @@ func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 			"high_amplifies": String(mod_dict.get("direction", "high_amplifies")) == "high_amplifies",
 		})
 
-	return {"specs": specs, "traits": traits}
+	return {
+		"specs": specs,
+		"trait_ids": trait_ids,
+		"trait_multipliers": trait_multipliers,
+	}
 
 
 func _compile_relationship_scaling(r_def: Variant) -> Dictionary:
@@ -603,12 +630,12 @@ func _compile_context_modifiers(c_mods: Variant) -> Dictionary:
 
 
 func _build_trait_id_map(entity) -> Dictionary:
-	var out: Dictionary = {}
+	_event_trait_id_map.clear()
 	for t in entity.display_traits:
 		var trait_id: String = String(t.get("id", ""))
 		if not trait_id.is_empty():
-			out[trait_id] = true
-	return out
+			_event_trait_id_map[trait_id] = true
+	return _event_trait_id_map
 
 
 func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
