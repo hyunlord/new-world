@@ -1145,3 +1145,8 @@
 - `localization_compile`에 owner policy 품질 지표(duplicate coverage missing, unused owner keys)를 추가하고 manifest 임계치 게이트로 회귀 차단.
 - 컴파일 로그/compiled meta에 owner policy 요약 정보를 노출해 운영 관측성을 강화.
 - `manifest`에 `max_owner_unused_count=0`, `max_duplicate_owner_missing_count=0`을 설정해 정책 정합성을 기본 강제.
+
+## Commit 232
+- `localization_audit` 리포트에 owner policy 품질 지표(entry count, duplicate coverage miss, unused keys)를 추가.
+- strict audit 출력에서 owner policy 상태를 함께 노출해 검증 가시성을 강화.
+- 전체 검증(`migration_verify --with-benches`)에서 owner 정책 지표와 checksum 유지를 확인.

@@ -214,11 +214,14 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
             )
 
     duplicate_locale_summary: Dict[str, Dict[str, Any]] = {}
+    all_localization_keys: Set[str] = set()
     for locale in supported_locales:
         locale_dir = localization_root / locale
         if not locale_dir.exists():
             continue
         locale_keys = _collect_top_level_keys(locale_dir)
+        for keyset in locale_keys.values():
+            all_localization_keys.update(keyset)
         locale_duplicates = _find_duplicates(locale_keys)
         locale_duplicate_details = _find_duplicate_details(_collect_top_level_entries(locale_dir))
         locale_conflict_count = sum(
@@ -280,6 +283,18 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         1 for item in keyable_groups if bool(item.get("has_key_field", False))
     )
     keyable_group_without_key_count = len(keyable_groups) - keyable_group_with_key_count
+    owner_policy_path = _resolve_manifest_key_owner_policy_path(project_root)
+    owner_policy_payload: Any = {}
+    if owner_policy_path.exists():
+        owner_policy_payload = _load_json(owner_policy_path)
+    owner_policy_map = _extract_owner_map(owner_policy_payload)
+    duplicate_key_union: Set[str] = set()
+    for item in duplicate_locale_summary.values():
+        for key in dict(item.get("duplicate_keys", {})).keys():
+            duplicate_key_union.add(str(key))
+    owner_keys: Set[str] = set(owner_policy_map.keys())
+    owner_policy_missing_duplicate_keys = sorted(duplicate_key_union - owner_keys)
+    owner_policy_unused_keys = sorted(owner_keys - all_localization_keys)
 
     return {
         "parity_issues": parity_issues,
@@ -306,6 +321,12 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
         "inline_non_keyable_group_count": len(non_keyable_groups),
         "inline_keyable_group_with_key_count": keyable_group_with_key_count,
         "inline_keyable_group_without_key_count": keyable_group_without_key_count,
+        "owner_policy_path": str(owner_policy_path),
+        "owner_policy_entry_count": len(owner_keys),
+        "owner_policy_missing_duplicate_count": len(owner_policy_missing_duplicate_keys),
+        "owner_policy_unused_count": len(owner_policy_unused_keys),
+        "owner_policy_missing_duplicate_keys": owner_policy_missing_duplicate_keys,
+        "owner_policy_unused_keys": owner_policy_unused_keys,
         "inline_localized_groups": inline_localized_groups,
         "inline_keyable_groups": keyable_groups,
         "inline_non_keyable_groups": non_keyable_groups,
@@ -344,6 +365,12 @@ def _print_report(report: Dict[str, Any]) -> None:
     print(f"inline_non_keyable_groups: {report['inline_non_keyable_group_count']}")
     print(f"inline_keyable_with_key: {report['inline_keyable_group_with_key_count']}")
     print(f"inline_keyable_without_key: {report['inline_keyable_group_without_key_count']}")
+    print(f"owner_policy_entries: {report['owner_policy_entry_count']}")
+    print(
+        "owner_policy_missing_duplicates: "
+        f"{report['owner_policy_missing_duplicate_count']}"
+    )
+    print(f"owner_policy_unused: {report['owner_policy_unused_count']}")
 
     if report["parity_issues"]:
         print("\n-- parity issues --")
@@ -389,6 +416,16 @@ def _print_report(report: Dict[str, Any]) -> None:
                 f"* {locale}: keys={item['duplicate_key_count']} "
                 f"conflicts={item['duplicate_conflict_count']}"
             )
+
+    if report.get("owner_policy_missing_duplicate_keys"):
+        print("\n-- owner policy missing duplicate keys (first 20) --")
+        for key in report["owner_policy_missing_duplicate_keys"][:20]:
+            print(f"* {key}")
+
+    if report.get("owner_policy_unused_keys"):
+        print("\n-- owner policy unused keys (first 20) --")
+        for key in report["owner_policy_unused_keys"][:20]:
+            print(f"* {key}")
 
     conflict_items = [
         (key, item)
