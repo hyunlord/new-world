@@ -782,3 +782,8 @@
 - `sim-systems::body`에 `child_social_buffered_intensity`를 추가해 child stress social-buffer 감쇠 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor._apply_social_buffer`가 Rust 우선 + 기존 fallback 구조를 사용하도록 전환.
 - child stress 경로의 순수 감쇠 수학을 네이티브화하면서 기존 의미와 호환성을 유지.
+
+## Commit 159
+- `sim-systems::body`에 `child_shrp_step`, `child_stress_type_code`를 추가해 child stress의 SHRP/분류 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor`가 Rust 우선 + 기존 fallback 구조를 사용하도록 전환.
+- toxic onset Chronicle 이벤트 부작용은 GDScript에 유지해 기능 의미를 보존하면서 계산 경로의 네이티브화를 확장.

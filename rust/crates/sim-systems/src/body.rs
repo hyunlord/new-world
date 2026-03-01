@@ -440,6 +440,41 @@ pub fn child_social_buffered_intensity(
     intensity * (1.0 - social_buffer)
 }
 
+/// SHRP adjusted intensity and override flag.
+///
+/// Returns `[adjusted_intensity, override_flag]`.
+pub fn child_shrp_step(
+    intensity: f32,
+    shrp_active: bool,
+    shrp_override_threshold: f32,
+    vulnerability_mult: f32,
+) -> [f32; 2] {
+    if !shrp_active {
+        return [intensity, 0.0];
+    }
+    if intensity < shrp_override_threshold {
+        return [0.0, 0.0];
+    }
+    [intensity * vulnerability_mult, 1.0]
+}
+
+/// Child stress type classification code.
+///
+/// Returns `0=positive`, `1=tolerable`, `2=toxic`.
+pub fn child_stress_type_code(
+    intensity: f32,
+    attachment_present: bool,
+    attachment_quality: f32,
+) -> i32 {
+    if intensity < 0.30 {
+        0
+    } else if attachment_present && attachment_quality > 0.50 {
+        1
+    } else {
+        2
+    }
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -623,11 +658,12 @@ mod tests {
     use super::{
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
-        calc_training_gains, child_parent_stress_transfer, child_simultaneous_ace_step,
-        child_social_buffered_intensity, compute_age_curve, compute_age_curves, critical_severity,
-        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
-        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
-        upper_needs_job_alignment, upper_needs_step, warmth_decay,
+        calc_training_gains, child_parent_stress_transfer, child_shrp_step,
+        child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_type_code,
+        compute_age_curve, compute_age_curves, critical_severity, erg_frustration_step,
+        needs_base_decay_step, needs_critical_severity_step, rest_energy_recovery, thirst_decay,
+        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
+        warmth_decay,
     };
 
     #[test]
@@ -870,6 +906,27 @@ mod tests {
         let no_support = child_social_buffered_intensity(0.8, 0.7, false, 0.5);
         let with_support = child_social_buffered_intensity(0.8, 0.7, true, 0.5);
         assert!(with_support < no_support);
+    }
+
+    #[test]
+    fn child_shrp_step_blocks_below_threshold() {
+        let out = child_shrp_step(0.6, true, 0.85, 1.3);
+        assert_eq!(out[0], 0.0);
+        assert_eq!(out[1], 0.0);
+    }
+
+    #[test]
+    fn child_shrp_step_applies_multiplier_and_flag() {
+        let out = child_shrp_step(0.9, true, 0.85, 1.2);
+        assert_eq!(out[0], 1.08);
+        assert_eq!(out[1], 1.0);
+    }
+
+    #[test]
+    fn child_stress_type_code_uses_expected_thresholds() {
+        assert_eq!(child_stress_type_code(0.2, false, 0.0), 0);
+        assert_eq!(child_stress_type_code(0.6, true, 0.8), 1);
+        assert_eq!(child_stress_type_code(0.6, false, 0.8), 2);
     }
 
     #[test]

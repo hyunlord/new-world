@@ -724,6 +724,33 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_shrp_step(
+        &self,
+        intensity: f32,
+        shrp_active: bool,
+        shrp_override_threshold: f32,
+        vulnerability_mult: f32,
+    ) -> PackedFloat32Array {
+        let out = body::child_shrp_step(
+            intensity,
+            shrp_active,
+            shrp_override_threshold,
+            vulnerability_mult,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_child_stress_type_code(
+        &self,
+        intensity: f32,
+        attachment_present: bool,
+        attachment_quality: f32,
+    ) -> i32 {
+        body::child_stress_type_code(intensity, attachment_present, attachment_quality)
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

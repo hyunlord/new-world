@@ -150,13 +150,27 @@ func process_stressor(entity, stressor: Dictionary, tick: int) -> void:
 ##   deprivation bypasses SHRP entirely (handled via developmental_damage channel).
 func _apply_shrp(stressor: Dictionary, stage_data: Dictionary, entity = null) -> float:
 	var intensity: float = float(stressor.get("intensity", 0.0))
-	if not bool(stage_data.get("shrp_active", false)):
+	var shrp_active: bool = bool(stage_data.get("shrp_active", false))
+	if not shrp_active:
 		return intensity
 	var threshold: float = float(stage_data.get("shrp_override_threshold", 0.85))
+	var vulnerability_mult: float = float(stage_data.get("vulnerability_mult", 1.0))
+	var shrp_variant: Variant = SimBridge.body_child_shrp_step(
+		intensity,
+		shrp_active,
+		threshold,
+		vulnerability_mult
+	)
+	if shrp_variant is PackedFloat32Array:
+		var packed_shrp: PackedFloat32Array = shrp_variant
+		if packed_shrp.size() >= 2:
+			if int(round(float(packed_shrp[1]))) != 0:
+				_handle_shrp_override(entity, stressor)
+			return float(packed_shrp[0])
 	if intensity < threshold:
 		return 0.0
 	_handle_shrp_override(entity, stressor)
-	return intensity * float(stage_data.get("vulnerability_mult", 1.0))
+	return intensity * vulnerability_mult
 
 
 func _handle_shrp_override(entity, stressor: Dictionary) -> void:
@@ -188,12 +202,23 @@ func _accumulate_deprivation_damage(entity, stressor: Dictionary, _stage_data: D
 ## Key: caregiver presence determines toxic vs tolerable, NOT just intensity.
 func _classify_stress_type(intensity: float, attachment_present: bool, quality: float,
 		entity = null, tick: int = -1) -> String:
-	if intensity < 0.30:
-		return "positive"
-	if attachment_present and quality > 0.50:
-		return "tolerable"
+	var stress_type: String = ""
+	var type_variant: Variant = SimBridge.body_child_stress_type_code(
+		intensity,
+		attachment_present,
+		quality
+	)
+	if type_variant != null:
+		stress_type = _stress_type_from_code(int(type_variant))
+	else:
+		if intensity < 0.30:
+			stress_type = "positive"
+		elif attachment_present and quality > 0.50:
+			stress_type = "tolerable"
+		else:
+			stress_type = "toxic"
 
-	if entity != null:
+	if stress_type == "toxic" and entity != null:
 		var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 		if chronicle != null:
 			var desc: String = Locale.ltr("TOXIC_STRESS_ONSET")
@@ -201,6 +226,15 @@ func _classify_stress_type(intensity: float, attachment_present: bool, quality: 
 				"key": "TOXIC_STRESS_ONSET",
 				"params": {"name": entity.entity_name},
 			})
+	return stress_type
+
+
+func _stress_type_from_code(stress_type_code: int) -> String:
+	match stress_type_code:
+		0:
+			return "positive"
+		1:
+			return "tolerable"
 	return "toxic"
 
 

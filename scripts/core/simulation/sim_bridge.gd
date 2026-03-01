@@ -1618,6 +1618,42 @@ func body_child_social_buffered_intensity(
 	)
 
 
+## Delegates child SHRP step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_shrp_step(
+	intensity: float,
+	shrp_active: bool,
+	shrp_override_threshold: float,
+	vulnerability_mult: float
+):
+	return _call_native_if_exists(
+		"body_child_shrp_step",
+		[
+			intensity,
+			shrp_active,
+			shrp_override_threshold,
+			vulnerability_mult
+		]
+	)
+
+
+## Delegates child stress type classification to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_stress_type_code(
+	intensity: float,
+	attachment_present: bool,
+	attachment_quality: float
+):
+	return _call_native_if_exists(
+		"body_child_stress_type_code",
+		[
+			intensity,
+			attachment_present,
+			attachment_quality
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge
