@@ -5,7 +5,6 @@ pub use tile::{Tile, TileResource};
 pub use resource_map::ResourceMap;
 
 use serde::{Deserialize, Serialize};
-use crate::world::tile::Tile;
 
 /// The full world map (flat array, 256×256 by default)
 #[derive(Debug, Clone, Serialize, Deserialize)]

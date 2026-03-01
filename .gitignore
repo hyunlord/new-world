@@ -39,3 +39,6 @@ tools/notion_migrate_qa.py
 addons/godot_test_mcp/
 override.cfg
 .mcp.json
+
+# Rust build artifacts
+rust/target/

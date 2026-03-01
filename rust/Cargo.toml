@@ -18,7 +18,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 # Random
-rand = { version = "0.8", features = ["std_rng"] }
+rand = { version = "0.8", features = ["std_rng", "small_rng"] }
 rand_distr = "0.4"
 
 # Performance
@@ -34,8 +34,8 @@ thiserror = "2"
 strum = { version = "0.26", features = ["derive"] }
 strum_macros = "0.26"
 
-# GDExtension (sim-bridge only — uncomment in Phase R-3)
-# godot = "0.2"
+# GDExtension (sim-bridge only)
+godot = "0.4.5"
 
 [workspace.lints.rust]
 unsafe_code = "deny"

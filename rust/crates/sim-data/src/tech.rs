@@ -5,11 +5,24 @@ use crate::error::DataResult;
 use crate::loader::{load_json, list_json_files_recursive};
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(untagged)]
+pub enum TechAnyOf {
+    Flat(Vec<String>),
+    Groups(Vec<Vec<String>>),
+}
+
+impl Default for TechAnyOf {
+    fn default() -> Self {
+        Self::Flat(Vec::new())
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct TechPrereqLogic {
     #[serde(default)]
     pub all_of: Vec<String>,
     #[serde(default)]
-    pub any_of: Vec<String>,
+    pub any_of: TechAnyOf,
     #[serde(default)]
     pub soft: Vec<String>,
 }

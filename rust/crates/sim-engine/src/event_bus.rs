@@ -92,7 +92,6 @@ impl std::fmt::Debug for EventBus {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sim_core::ids::EntityId;
     use crate::events::GameEvent;
     use std::sync::{Arc, Mutex};
 

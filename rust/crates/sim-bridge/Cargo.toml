@@ -3,6 +3,9 @@ name = "sim-bridge"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
@@ -11,9 +14,7 @@ sim-data = { path = "../sim-data" }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-
-# Uncomment in Phase R-3:
-# godot = { workspace = true }
+godot = { workspace = true }
 
 # sim-bridge needs unsafe for GDExtension FFI — override workspace deny
 [lints.rust]

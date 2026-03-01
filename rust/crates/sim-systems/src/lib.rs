@@ -1,2 +1,6 @@
-// sim-systems — Phase R-2 placeholder
-// All simulation systems will be implemented in Phase R-2.
+//! sim-systems: Simulation systems and hot-path algorithms.
+//!
+//! This crate will progressively absorb performance-critical logic from GDScript.
+//! The first migrated hot path is A* pathfinding used by movement.
+
+pub mod pathfinding;

@@ -3,7 +3,6 @@ use sim_core::config::GameConfig;
 use sim_core::{GameCalendar, WorldMap, Settlement};
 use sim_core::ids::SettlementId;
 use sim_engine::{SimEngine, SimResources};
-use sim_systems as _systems; // Phase R-1 will populate this
 
 fn main() {
     env_logger::Builder::from_env(

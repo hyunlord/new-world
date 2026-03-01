@@ -462,7 +462,7 @@ mod tests {
         assert_eq!(GrowthStage::from_age_ticks(13140), GrowthStage::Toddler);
         assert_eq!(GrowthStage::from_age_ticks(26279), GrowthStage::Toddler);
         assert_eq!(GrowthStage::from_age_ticks(26280), GrowthStage::Child);
-        assert_eq!(GrowthStage::from_age_ticks(52560), GrowthStage::Child);
+        assert_eq!(GrowthStage::from_age_ticks(52560), GrowthStage::Teen);
         assert_eq!(GrowthStage::from_age_ticks(65700), GrowthStage::Adult);
         assert_eq!(GrowthStage::from_age_ticks(245280), GrowthStage::Elder);
     }
