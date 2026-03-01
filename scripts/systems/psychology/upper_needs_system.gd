@@ -59,17 +59,18 @@ func _apply_upper_needs_rust_step(entity: RefCounted) -> bool:
 	_upper_needs_skill_levels[3] = int(entity.skill_levels.get(&"SKILL_CONSTRUCTION", 0))
 	_upper_needs_skill_levels[4] = int(entity.skill_levels.get(&"SKILL_HUNTING", 0))
 
-	var best_skill_norm: float = _get_best_skill_normalized(entity)
+	var best_skill_norm: float = 0.0
 	var best_skill_variant: Variant = SimBridge.body_upper_needs_best_skill_normalized(
 		_upper_needs_skill_levels,
 		100
 	)
 	if best_skill_variant != null:
 		best_skill_norm = float(best_skill_variant)
+	else:
+		best_skill_norm = _get_best_skill_normalized(entity)
 
 	var alignment: float = 0.0
 	if has_job:
-		alignment = _get_job_value_alignment(entity)
 		var values: Dictionary = entity.values
 		var job_code: int = _get_job_code(entity.job)
 		var alignment_variant: Variant = SimBridge.body_upper_needs_job_alignment(
@@ -82,6 +83,8 @@ func _apply_upper_needs_rust_step(entity: RefCounted) -> bool:
 		)
 		if alignment_variant != null:
 			alignment = float(alignment_variant)
+		else:
+			alignment = _get_job_value_alignment(entity)
 
 	_upper_needs_scalar_inputs[0] = entity.competence
 	_upper_needs_scalar_inputs[1] = entity.autonomy

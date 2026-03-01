@@ -757,3 +757,8 @@
 - localization manifest에 `max_duplicate_key_count`를 도입해 중복 키 개수 기준선을 명시(현재 248).
 - `localization_compile`이 로케일별 최대 중복 개수를 계산해 기준 초과 시 실패하도록 회귀 가드를 추가.
 - 향후 확장 시 중복 키 증가를 컴파일 단계에서 조기 차단하도록 품질 게이트를 강화.
+
+## Commit 154
+- `upper_needs_system`의 Rust 우선 경로에서 fallback(`_get_best_skill_normalized`, `_get_job_value_alignment`) 선계산을 제거.
+- bridge 결과가 없을 때만 fallback을 계산하도록 변경해 Rust 활성 환경의 불필요한 GDScript 연산을 절감.
+- 수치 의미는 유지하면서 상위욕구 tick 경로의 호출당 비용을 미세 최적화.
