@@ -596,3 +596,8 @@
 - `chronicle_panel` 이벤트 렌더 루프에서 DeceasedRegistry를 루프 외부 1회 조회해 related entity 이름 조회 시 재사용.
 - related entity 처리에서 반복 `get_node_or_null` 호출을 제거.
 - 날짜 fallback 분기(`else`) 정렬을 정리해 동일 동작을 유지하면서 코드 안정성을 보강.
+
+## Commit 122
+- `chronicle_panel`에 이벤트 설명 문자열 캐시(`_desc_cache`, `_desc_cache_signature`)를 도입.
+- locale 변경/필터 변경 시 캐시 무효화하고, 이벤트 집합 시그니처가 바뀔 때만 설명 문자열(`Locale.trf` 포함) 재생성.
+- 표시 의미를 유지하면서 패널 redraw 루프에서 동적 로컬라이징/문자열 조립 오버헤드를 완화.

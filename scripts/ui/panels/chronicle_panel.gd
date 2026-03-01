@@ -27,6 +27,8 @@ var _scrollbar_rect: Rect2 = Rect2()
 
 ## Clickable regions
 var _click_regions: Array = []  # [{rect: Rect2, entity_id: int}]
+var _desc_cache: PackedStringArray = PackedStringArray()
+var _desc_cache_signature: String = ""
 
 ## Event type icons and colors
 const EVENT_STYLES: Dictionary = {
@@ -50,7 +52,10 @@ func init(entity_manager: RefCounted) -> void:
 
 
 func _ready() -> void:
-	Locale.locale_changed.connect(func(_l): queue_redraw())
+	Locale.locale_changed.connect(func(_l):
+		_invalidate_desc_cache()
+		queue_redraw()
+	)
 
 
 func _process(_delta: float) -> void:
@@ -93,6 +98,7 @@ func _gui_input(event: InputEvent) -> void:
 					_filter_index = fr.index
 					_filter_type = FILTER_OPTIONS[_filter_index]
 					_scroll_offset = 0.0
+					_invalidate_desc_cache()
 					accept_event()
 					return
 			# Check entity click regions
@@ -202,6 +208,7 @@ func _draw() -> void:
 	cy -= _scroll_offset
 
 	# Draw events grouped by year
+	_ensure_desc_cache(events)
 	var current_year: int = -1
 	var deceased_registry: Node = get_node_or_null("/root/DeceasedRegistry")
 	for i in range(events.size()):
@@ -251,20 +258,7 @@ func _draw() -> void:
 		draw_string(font, Vector2(icon_x, cy + 12), style.icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), icon_color)
 
 		# Description (localized if l10n_key present, fallback to stored description)
-		var desc: String
-		if evt.has("l10n_key"):
-			var l10n_key: String = evt.get("l10n_key", "")
-			var l10n_params: Dictionary = evt.get("l10n_params", {})
-			if l10n_params.has("cause_id"):
-				var l10n_params_with_cause: Dictionary = l10n_params.duplicate()
-				l10n_params_with_cause["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
-				desc = Locale.trf(l10n_key, l10n_params_with_cause)
-			else:
-				desc = Locale.trf(l10n_key, l10n_params)
-		else:
-			desc = evt.get("description", "?")
-		if desc.length() > 55:
-			desc = desc.substr(0, 52) + "..."
+		var desc: String = _desc_cache[i] if i < _desc_cache.size() else _resolve_event_description(evt)
 		draw_string(font, Vector2(icon_x + 18, cy + 12), desc, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.8, 0.8, 0.8))
 
 		# Make entity name clickable
@@ -358,3 +352,53 @@ func _navigate_to_entity(entity_id: int) -> void:
 	else:
 		# Try to open deceased detail
 		SimulationBus.ui_notification.emit("open_deceased_%d" % entity_id, "command")
+
+
+func _invalidate_desc_cache() -> void:
+	_desc_cache_signature = ""
+	_desc_cache.resize(0)
+
+
+func _ensure_desc_cache(events: Array) -> void:
+	var signature: String = _compute_desc_cache_signature(events)
+	if _desc_cache_signature == signature and _desc_cache.size() == events.size():
+		return
+	_desc_cache_signature = signature
+	_desc_cache.resize(events.size())
+	for i in range(events.size()):
+		_desc_cache[i] = _resolve_event_description(events[i])
+
+
+func _compute_desc_cache_signature(events: Array) -> String:
+	var locale_key: String = str(Locale.current_locale)
+	if events.is_empty():
+		return locale_key + "|" + _filter_type + "|0"
+	var first_evt: Dictionary = events[0]
+	var last_evt: Dictionary = events[events.size() - 1]
+	return "%s|%s|%d|%d|%s|%d|%s|%d" % [
+		locale_key,
+		_filter_type,
+		events.size(),
+		int(first_evt.get("tick", -1)),
+		str(first_evt.get("event_type", "")),
+		int(last_evt.get("tick", -1)),
+		str(last_evt.get("event_type", "")),
+		int(last_evt.get("entity_id", -1))
+	]
+
+
+func _resolve_event_description(evt: Dictionary) -> String:
+	var desc: String = str(evt.get("description", "?"))
+	if evt.has("l10n_key"):
+		var l10n_key: String = str(evt.get("l10n_key", ""))
+		if not l10n_key.is_empty():
+			var l10n_params: Dictionary = evt.get("l10n_params", {})
+			if l10n_params.has("cause_id"):
+				var l10n_params_with_cause: Dictionary = l10n_params.duplicate()
+				l10n_params_with_cause["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
+				desc = Locale.trf(l10n_key, l10n_params_with_cause)
+			else:
+				desc = Locale.trf(l10n_key, l10n_params)
+	if desc.length() > 55:
+		return desc.substr(0, 52) + "..."
+	return desc
