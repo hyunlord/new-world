@@ -1716,6 +1716,36 @@ func body_child_deprivation_damage_step(current_damage: float, damage_rate: floa
 	)
 
 
+## Delegates stress rebound apply step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_stress_rebound_apply_step(
+	stress: float,
+	hidden_threat_accumulator: float,
+	total_rebound: float,
+	stress_clamp_max: float
+):
+	return _call_native_if_exists(
+		"body_stress_rebound_apply_step",
+		[
+			stress,
+			hidden_threat_accumulator,
+			total_rebound,
+			stress_clamp_max
+		]
+	)
+
+
+## Delegates shaken countdown step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_stress_shaken_countdown_step(shaken_remaining: int):
+	return _call_native_if_exists(
+		"body_stress_shaken_countdown_step",
+		[
+			shaken_remaining
+		]
+	)
+
+
 ## Delegates stress support score computation to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func body_stress_support_score(strengths: PackedFloat32Array):

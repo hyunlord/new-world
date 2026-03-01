@@ -552,6 +552,36 @@ pub fn child_deprivation_damage_step(current_damage: f32, damage_rate: f32) -> f
     current_damage + damage_rate
 }
 
+/// Applies rebound stress and hidden-threat accumulator release.
+///
+/// Returns `[next_stress, next_hidden_threat]`.
+pub fn stress_rebound_apply_step(
+    stress: f32,
+    hidden_threat_accumulator: f32,
+    total_rebound: f32,
+    stress_clamp_max: f32,
+) -> [f32; 2] {
+    if total_rebound <= 0.0 {
+        return [stress, hidden_threat_accumulator];
+    }
+    [
+        clamp_f32(stress + total_rebound, 0.0, stress_clamp_max),
+        maxf32(hidden_threat_accumulator - total_rebound),
+    ]
+}
+
+/// Updates shaken countdown and returns whether work penalty should be cleared.
+///
+/// Returns `[next_shaken_remaining, clear_penalty_flag]`.
+pub fn stress_shaken_countdown_step(shaken_remaining: i32) -> [f32; 2] {
+    if shaken_remaining <= 0 {
+        return [0.0, 0.0];
+    }
+    let next_remaining = (shaken_remaining - 1).max(0);
+    let clear_penalty = if next_remaining <= 0 { 1.0 } else { 0.0 };
+    [next_remaining as f32, clear_penalty]
+}
+
 /// Computes stress support score from relationship strength samples.
 ///
 /// Strength samples are expected in `[0, 1]` and clamped defensively.
@@ -765,7 +795,8 @@ mod tests {
         child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_apply_step,
         child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
-        rest_energy_recovery, stress_support_score, thirst_decay,
+        rest_energy_recovery, stress_rebound_apply_step, stress_shaken_countdown_step,
+        stress_support_score, thirst_decay,
         upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         warmth_decay,
     };
@@ -1063,6 +1094,20 @@ mod tests {
     fn child_deprivation_damage_step_accumulates_linearly() {
         let next = child_deprivation_damage_step(0.3, 0.02);
         assert!((next - 0.32).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_rebound_apply_step_updates_stress_and_hidden() {
+        let out = stress_rebound_apply_step(150.0, 80.0, 20.0, 2000.0);
+        assert_eq!(out[0], 170.0);
+        assert_eq!(out[1], 60.0);
+    }
+
+    #[test]
+    fn stress_shaken_countdown_step_reports_clear_at_zero() {
+        let out = stress_shaken_countdown_step(1);
+        assert_eq!(out[0], 0.0);
+        assert_eq!(out[1], 1.0);
     }
 
     #[test]

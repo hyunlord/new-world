@@ -801,6 +801,29 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_stress_rebound_apply_step(
+        &self,
+        stress: f32,
+        hidden_threat_accumulator: f32,
+        total_rebound: f32,
+        stress_clamp_max: f32,
+    ) -> PackedFloat32Array {
+        let out = body::stress_rebound_apply_step(
+            stress,
+            hidden_threat_accumulator,
+            total_rebound,
+            stress_clamp_max,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
+    fn body_stress_shaken_countdown_step(&self, shaken_remaining: i32) -> PackedFloat32Array {
+        let out = body::stress_shaken_countdown_step(shaken_remaining);
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn body_stress_support_score(&self, strengths: PackedFloat32Array) -> f32 {
         body::stress_support_score(strengths.as_slice())
     }

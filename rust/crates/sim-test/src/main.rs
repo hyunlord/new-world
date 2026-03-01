@@ -322,6 +322,13 @@ fn run_stress_math_bench(args: &[String]) {
             0.15 + 0.5 * t,
             0.05 + 0.4 * (1.0 - t),
         ]);
+        let rebound_apply = body::stress_rebound_apply_step(
+            stress,
+            50.0 + 400.0 * t,
+            2.0 + 10.0 * t,
+            2000.0,
+        );
+        let shaken_step = body::stress_shaken_countdown_step((i % 6) as i32);
 
         let primary = stat_curve::stress_primary_step(
             hunger,
@@ -638,6 +645,10 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(resilience)
             + black_box(work_eff)
             + black_box(support_score)
+            + black_box(rebound_apply[0])
+            + black_box(rebound_apply[1])
+            + black_box(shaken_step[0])
+            + black_box(shaken_step[1])
             + black_box(personality_scale)
             + black_box(relationship_scale)
             + black_box(context_scale)

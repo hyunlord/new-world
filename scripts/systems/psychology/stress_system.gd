@@ -351,10 +351,19 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	# Shaken 상태 카운트다운
 	var shaken_remaining: int = ed.get_meta("shaken_remaining", 0)
 	if shaken_remaining > 0:
-		shaken_remaining -= 1
-		ed.set_meta("shaken_remaining", shaken_remaining)
-		if shaken_remaining <= 0:
-			ed.set_meta("shaken_work_penalty", 0.0)
+		var shaken_variant: Variant = SimBridge.body_stress_shaken_countdown_step(shaken_remaining)
+		if shaken_variant is PackedFloat32Array:
+			var packed_shaken: PackedFloat32Array = shaken_variant
+			if packed_shaken.size() >= 2:
+				shaken_remaining = int(round(float(packed_shaken[0])))
+				ed.set_meta("shaken_remaining", shaken_remaining)
+				if int(round(float(packed_shaken[1]))) != 0:
+					ed.set_meta("shaken_work_penalty", 0.0)
+		else:
+			shaken_remaining -= 1
+			ed.set_meta("shaken_remaining", shaken_remaining)
+			if shaken_remaining <= 0:
+				ed.set_meta("shaken_work_penalty", 0.0)
 
 	ed.reserve = _packed_scalar(scalars, _TICK_OUT_SC_RESERVE, ed.reserve)
 	ed.gas_stage = _packed_int(ints, _TICK_OUT_INT_GAS_STAGE, ed.gas_stage)
@@ -898,9 +907,21 @@ func _process_rebound_queue(ed: RefCounted) -> void:
 	ed.set_meta("rebound_queue", remaining)
 
 	if total_rebound > 0.0:
+		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
+		var rebound_variant: Variant = SimBridge.body_stress_rebound_apply_step(
+			float(ed.stress),
+			hidden,
+			total_rebound,
+			STRESS_CLAMP_MAX
+		)
+		if rebound_variant is PackedFloat32Array:
+			var packed_rebound: PackedFloat32Array = rebound_variant
+			if packed_rebound.size() >= 2:
+				ed.stress = float(packed_rebound[0])
+				ed.set_meta("hidden_threat_accumulator", float(packed_rebound[1]))
+				return
 		ed.stress = clampf(ed.stress + total_rebound, 0.0, STRESS_CLAMP_MAX)
 		# Clears hidden accumulator proportionally (rebounded stress is no longer hidden)
-		var hidden: float = ed.get_meta("hidden_threat_accumulator", 0.0)
 		ed.set_meta("hidden_threat_accumulator", maxf(0.0, hidden - total_rebound))
 
 
