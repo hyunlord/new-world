@@ -421,3 +421,8 @@
 - `StatQuery.get_normalized_batch_into`에 `assume_defined` fast-path 옵션을 추가해 반복 `has_def` 체크를 선택적으로 생략.
 - `StressSystem`의 고정 stat id batch 조회는 `assume_defined=true`로 호출해 입력 수집 분기 비용을 완화.
 - 기본 경로는 기존 안전 동작(`assume_defined=false`)을 유지해 호환성을 보장.
+
+## Commit 087
+- `ListPanel` entity row 생성 시 `job_display`를 선계산해 draw 루프의 `Locale.tr_id` 반복 호출을 제거.
+- building list에 타입별 번역 캐시(`building_type_cache`)와 built 라벨 1회 조회를 적용해 루프 내 locale 조회를 축소.
+- UI 표시 문자열 의미는 유지하면서 패널 렌더 핫루프의 번역 조회 오버헤드를 완화.
