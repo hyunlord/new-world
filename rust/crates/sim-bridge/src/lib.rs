@@ -2013,6 +2013,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_psychology_break_type_code(&self, break_type: GString) -> i32 {
+        body::psychology_break_type_code(&break_type.to_string())
+    }
+
+    #[func]
+    fn body_psychology_break_type_label(&self, code: i32) -> GString {
+        GString::from(body::psychology_break_type_label(code))
+    }
+
+    #[func]
     fn body_tech_cultural_memory_decay(
         &self,
         current_memory: f32,

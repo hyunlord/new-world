@@ -1914,6 +1914,30 @@ pub fn chronicle_keep_personal_event(has_valid_world_tick: bool, importance: i32
     has_valid_world_tick || importance >= 4
 }
 
+/// Encodes psychology break type string to compact code.
+pub fn psychology_break_type_code(break_type: &str) -> i32 {
+    match break_type {
+        "outrage_violence" => 1,
+        "panic" => 2,
+        "rage" => 3,
+        "shutdown" => 4,
+        "purge" => 5,
+        _ => 0,
+    }
+}
+
+/// Decodes psychology break type code to string.
+pub fn psychology_break_type_label(code: i32) -> &'static str {
+    match code {
+        1 => "outrage_violence",
+        2 => "panic",
+        3 => "rage",
+        4 => "shutdown",
+        5 => "purge",
+        _ => "",
+    }
+}
+
 /// Cultural-memory decay step for technology forgetting.
 pub fn tech_cultural_memory_decay(
     current_memory: f32,
@@ -2605,7 +2629,7 @@ mod tests {
         age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
         migration_should_attempt, population_housing_cap, population_birth_block_code,
         chronicle_should_prune, chronicle_cutoff_tick, chronicle_keep_world_event,
-        chronicle_keep_personal_event,
+        chronicle_keep_personal_event, psychology_break_type_code, psychology_break_type_label,
         tech_cultural_memory_decay, tech_modifier_stack_clamp,
         movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
         childcare_take_food, childcare_hunger_after,
@@ -3573,6 +3597,17 @@ mod tests {
         assert!(chronicle_keep_personal_event(true, 1));
         assert!(chronicle_keep_personal_event(false, 4));
         assert!(!chronicle_keep_personal_event(false, 3));
+    }
+
+    #[test]
+    fn psychology_break_type_code_roundtrips_known_types() {
+        for kind in ["outrage_violence", "panic", "rage", "shutdown", "purge"] {
+            let code = psychology_break_type_code(kind);
+            let out = psychology_break_type_label(code);
+            assert_eq!(out, kind);
+        }
+        assert_eq!(psychology_break_type_code("unknown"), 0);
+        assert_eq!(psychology_break_type_label(0), "");
     }
 
     #[test]
