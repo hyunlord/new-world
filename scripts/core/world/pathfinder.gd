@@ -49,11 +49,12 @@ func find_paths_batch(world_data: RefCounted, requests: Array, max_steps: int = 
 		return rust_batch.get("paths", [])
 
 	var out: Array = []
+	out.resize(requests.size())
 	for i in range(requests.size()):
 		var req: Dictionary = requests[i]
 		var from: Vector2i = req.get("from", Vector2i(-1, -1))
 		var to: Vector2i = req.get("to", Vector2i(-1, -1))
-		out.append(find_path(world_data, from, to, max_steps))
+		out[i] = find_path(world_data, from, to, max_steps)
 	return out
 
 
@@ -76,11 +77,12 @@ func find_paths_batch_xy(
 
 	var out: Array = []
 	var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
+	out.resize(pair_count)
 	for i in range(pair_count):
 		var base_idx: int = i * 2
 		var from: Vector2i = Vector2i(from_xy[base_idx], from_xy[base_idx + 1])
 		var to: Vector2i = Vector2i(to_xy[base_idx], to_xy[base_idx + 1])
-		out.append(find_path(world_data, from, to, max_steps))
+		out[i] = find_path(world_data, from, to, max_steps)
 	return out
 
 

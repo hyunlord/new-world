@@ -892,3 +892,8 @@
 - `pathfinder` batch 결과 정규화 배열(`xy_normalized`, `normalized`)을 `append` 누적에서 `resize + index write`로 전환.
 - `_find_paths_rust_batch`와 `_find_paths_rust_batch_xy` 모두에 동일 패턴을 적용해 그룹 포장 단계의 동적 확장 비용을 완화.
 - path 결과 의미는 유지하면서 batch pathfinding 후처리 오버헤드를 미세 최적화.
+
+## Commit 181
+- `pathfinder` fallback batch API(`find_paths_batch`, `find_paths_batch_xy`)의 결과 배열 생성을 `append`에서 `resize + index write`로 전환.
+- Rust 경로가 없는 환경에서도 fallback 결과 포장 오버헤드를 줄이도록 정렬.
+- path 결과 의미는 유지하면서 fallback 경로의 메모리 churn을 미세 완화.
