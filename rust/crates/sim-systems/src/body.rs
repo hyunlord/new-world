@@ -843,6 +843,16 @@ pub fn title_skill_tier(level: i32, expert_level: i32, master_level: i32) -> i32
     }
 }
 
+/// Attachment-based affinity multiplier clamped to social bounds.
+pub fn social_attachment_affinity_multiplier(a_mult: f32, b_mult: f32) -> f32 {
+    clamp_f32(a_mult.min(b_mult), 0.40, 1.60)
+}
+
+/// Proposal acceptance probability from romantic interest and compatibility.
+pub fn social_proposal_accept_prob(romantic_interest: f32, compatibility: f32) -> f32 {
+    clamp_f32((romantic_interest / 100.0) * compatibility, 0.0, 1.0)
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1329,6 +1339,7 @@ mod tests {
         stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
         thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
         value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
+        social_attachment_affinity_multiplier, social_proposal_accept_prob,
     };
 
     #[test]
@@ -1784,6 +1795,20 @@ mod tests {
         assert_eq!(title_skill_tier(95, 60, 90), 2);
         assert_eq!(title_skill_tier(70, 60, 90), 1);
         assert_eq!(title_skill_tier(40, 60, 90), 0);
+    }
+
+    #[test]
+    fn social_attachment_affinity_multiplier_clamps_to_bounds() {
+        assert!((social_attachment_affinity_multiplier(0.2, 0.3) - 0.4).abs() < 1e-6);
+        assert!((social_attachment_affinity_multiplier(2.0, 1.8) - 1.6).abs() < 1e-6);
+        assert!((social_attachment_affinity_multiplier(1.2, 0.9) - 0.9).abs() < 1e-6);
+    }
+
+    #[test]
+    fn social_proposal_accept_prob_is_bounded() {
+        assert!((social_proposal_accept_prob(80.0, 0.75) - 0.6).abs() < 1e-6);
+        assert!((social_proposal_accept_prob(200.0, 2.0) - 1.0).abs() < 1e-6);
+        assert!((social_proposal_accept_prob(-20.0, 1.0) - 0.0).abs() < 1e-6);
     }
 
     #[test]

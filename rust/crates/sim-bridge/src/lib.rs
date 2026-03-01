@@ -1187,6 +1187,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_social_attachment_affinity_multiplier(&self, a_mult: f32, b_mult: f32) -> f32 {
+        body::social_attachment_affinity_multiplier(a_mult, b_mult)
+    }
+
+    #[func]
+    fn body_social_proposal_accept_prob(&self, romantic_interest: f32, compatibility: f32) -> f32 {
+        body::social_proposal_accept_prob(romantic_interest, compatibility)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
