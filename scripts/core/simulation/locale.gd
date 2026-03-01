@@ -15,9 +15,11 @@ var current_locale: String = DEFAULT_LOCALE
 
 ## Loaded translation data: { "ui": {"UI_SAVE": "...", ...}, "game": {...}, ... }
 var _strings: Dictionary = {}
+## Flattened lookup table: { "UI_SAVE": "...", "TECH_FIRE": "...", ... }
+var _flat_strings: Dictionary = {}
 
 ## All category file names (no extension)
-var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy"]
+var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech"]
 
 
 func _ready() -> void:
@@ -41,24 +43,30 @@ func set_locale(locale: String) -> void:
 ## Load all translation files for a locale
 func load_locale(locale: String) -> void:
 	_strings.clear()
+	_flat_strings.clear()
 	for cat in _categories:
-		var path = LOCALES_DIR + locale + "/" + cat + ".json"
+		var path: String = LOCALES_DIR + locale + "/" + cat + ".json"
 		if not FileAccess.file_exists(path):
 			path = LOCALES_DIR + "en/" + cat + ".json"
 		if not FileAccess.file_exists(path):
 			_strings[cat] = {}
 			continue
-		var file = FileAccess.open(path, FileAccess.READ)
-		var json = JSON.new()
+		var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+		var json: JSON = JSON.new()
 		json.parse(file.get_as_text())
-		_strings[cat] = json.data if json.data else {}
+		var cat_data: Dictionary = json.data if json.data else {}
+		_strings[cat] = cat_data
+		var keys: Array = cat_data.keys()
+		for i in range(keys.size()):
+			var key: String = str(keys[i])
+			if not _flat_strings.has(key):
+				_flat_strings[key] = str(cat_data[key])
 
 
 ## Lookup translation string by key (searches all categories)
 func ltr(key: String) -> String:
-	for cat in _strings:
-		if key in _strings[cat]:
-			return str(_strings[cat][key])
+	if _flat_strings.has(key):
+		return str(_flat_strings[key])
 	return key
 
 

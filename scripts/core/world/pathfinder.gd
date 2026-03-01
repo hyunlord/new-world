@@ -1,5 +1,17 @@
 extends RefCounted
 
+const _RUST_BRIDGE_NODE_NAME: String = "SimBridge"
+const _RUST_BRIDGE_METHOD_NAME: String = "pathfind_grid"
+
+var _bridge_checked: bool = false
+var _rust_bridge: Object = null
+
+var _cached_world_data: RefCounted = null
+var _cached_width: int = 0
+var _cached_height: int = 0
+var _cached_walkable: PackedByteArray = PackedByteArray()
+var _cached_move_cost: PackedFloat32Array = PackedFloat32Array()
+
 
 ## A* pathfinding with 8-directional movement and Chebyshev heuristic
 func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int = 200) -> Array:
@@ -8,6 +20,114 @@ func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: 
 	if not world_data.is_walkable(to.x, to.y):
 		return []
 
+	var rust_result: Dictionary = _find_path_rust(world_data, from, to, max_steps)
+	if bool(rust_result.get("used", false)):
+		return rust_result.get("path", [])
+
+	return _find_path_gd(world_data, from, to, max_steps)
+
+
+func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Dictionary:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return {"used": false, "path": []}
+	if not bridge.has_method(_RUST_BRIDGE_METHOD_NAME):
+		return {"used": false, "path": []}
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return {"used": false, "path": []}
+
+	var result: Variant = bridge.call(
+		_RUST_BRIDGE_METHOD_NAME,
+		_cached_width,
+		_cached_height,
+		_cached_walkable,
+		_cached_move_cost,
+		from.x,
+		from.y,
+		to.x,
+		to.y,
+		max_steps
+	)
+	if result == null:
+		return {"used": false, "path": []}
+	return {"used": true, "path": _normalize_path_result(result)}
+
+
+func _get_rust_bridge() -> Object:
+	if _bridge_checked:
+		return _rust_bridge
+	_bridge_checked = true
+
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root != null:
+		var node_from_root: Node = tree.root.get_node_or_null(_RUST_BRIDGE_NODE_NAME)
+		if node_from_root != null:
+			_rust_bridge = node_from_root
+			return _rust_bridge
+
+	if Engine.has_singleton(_RUST_BRIDGE_NODE_NAME):
+		_rust_bridge = Engine.get_singleton(_RUST_BRIDGE_NODE_NAME)
+
+	return _rust_bridge
+
+
+func _ensure_world_cache(world_data: RefCounted) -> void:
+	var width: int = int(world_data.width)
+	var height: int = int(world_data.height)
+	var expected_size: int = width * height
+	var needs_rebuild: bool = (
+		world_data != _cached_world_data
+		or width != _cached_width
+		or height != _cached_height
+		or _cached_walkable.size() != expected_size
+		or _cached_move_cost.size() != expected_size
+	)
+	if not needs_rebuild:
+		return
+
+	_cached_world_data = world_data
+	_cached_width = width
+	_cached_height = height
+	_cached_walkable.resize(expected_size)
+	_cached_move_cost.resize(expected_size)
+
+	var idx: int = 0
+	for y in range(height):
+		for x in range(width):
+			var walkable: bool = world_data.is_walkable(x, y)
+			_cached_walkable[idx] = 1 if walkable else 0
+			_cached_move_cost[idx] = world_data.get_move_cost(x, y)
+			idx += 1
+
+
+func _normalize_path_result(result: Variant) -> Array:
+	var path: Array = []
+	if result is PackedVector2Array:
+		var packed: PackedVector2Array = result
+		for i in range(packed.size()):
+			var p: Vector2 = packed[i]
+			path.append(Vector2i(int(round(p.x)), int(round(p.y))))
+		return path
+
+	if result is Array:
+		var arr: Array = result
+		for i in range(arr.size()):
+			var item: Variant = arr[i]
+			if item is Vector2i:
+				path.append(item)
+			elif item is Vector2:
+				var p2: Vector2 = item
+				path.append(Vector2i(int(round(p2.x)), int(round(p2.y))))
+			elif item is Dictionary:
+				var d: Dictionary = item
+				if d.has("x") and d.has("y"):
+					path.append(Vector2i(int(d["x"]), int(d["y"])))
+	return path
+
+
+func _find_path_gd(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int = 200) -> Array:
 	var open_set: Array = [from]
 	var in_open: Dictionary = {from: true}
 	var came_from: Dictionary = {}
