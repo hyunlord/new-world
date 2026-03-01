@@ -436,3 +436,8 @@
 - `ListPanel`에 locale 라벨 캐시(`tabs/columns/sort/deceased`)를 도입하고 locale 변경 시점에만 갱신하도록 구조화.
 - draw 루프에서 정적 라벨의 `Locale.ltr` 호출을 캐시 문자열 사용으로 치환해 반복 조회 비용을 줄임.
 - 탭/헤더/정렬 표시 동작은 유지하면서 UI 목록 패널 렌더 경로를 경량화.
+
+## Commit 090
+- `HUD` 엔티티 패널 needs 갱신을 `StatQuery.get_normalized_batch_into` 1회 호출 + scratch buffer 재사용 구조로 전환.
+- `NEED_HUNGER/ENERGY/SOCIAL/THIRST/WARMTH/SAFETY` 개별 조회를 버퍼 인덱스 참조로 치환해 `StatQuery` 반복 호출을 축소.
+- 저배고픔 blink 판정은 추가 조회 없이 같은 batch 결과(`hunger_norm`)를 재사용해 HUD tick 핫패스를 경량화.

@@ -124,6 +124,15 @@ var _debug_panel: CanvasLayer = null
 
 # Hunger blink
 var _hunger_blink_timer: float = 0.0
+const _ENTITY_NEED_STAT_IDS: Array[StringName] = [
+	&"NEED_HUNGER",
+	&"NEED_ENERGY",
+	&"NEED_SOCIAL",
+	&"NEED_THIRST",
+	&"NEED_WARMTH",
+	&"NEED_SAFETY",
+]
+var _entity_need_norm_values: PackedFloat32Array = PackedFloat32Array()
 
 # Population milestones
 var _pop_milestone_init: bool = false
@@ -684,32 +693,39 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Need bars + percentage
-	var hunger_pct: float = StatQuery.get_normalized(entity, &"NEED_HUNGER") * 100.0
+	StatQuery.get_normalized_batch_into(
+		entity,
+		_ENTITY_NEED_STAT_IDS,
+		_entity_need_norm_values,
+		true
+	)
+	var hunger_norm: float = _entity_need_norm_values[0]
+	var hunger_pct: float = hunger_norm * 100.0
 	_hunger_bar.value = hunger_pct
 	_hunger_pct_label.text = str(int(hunger_pct)) + "%"
 
-	var energy_pct: float = StatQuery.get_normalized(entity, &"NEED_ENERGY") * 100.0
+	var energy_pct: float = _entity_need_norm_values[1] * 100.0
 	_energy_bar.value = energy_pct
 	_energy_pct_label.text = str(int(energy_pct)) + "%"
 
-	var social_pct: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL") * 100.0
+	var social_pct: float = _entity_need_norm_values[2] * 100.0
 	_social_bar.value = social_pct
 	_social_pct_label.text = str(int(social_pct)) + "%"
 
-	var thirst_pct: float = StatQuery.get_normalized(entity, &"NEED_THIRST") * 100.0
+	var thirst_pct: float = _entity_need_norm_values[3] * 100.0
 	_thirst_bar.value = thirst_pct
 	_thirst_pct_label.text = str(int(thirst_pct)) + "%"
 
-	var warmth_pct: float = StatQuery.get_normalized(entity, &"NEED_WARMTH") * 100.0
+	var warmth_pct: float = _entity_need_norm_values[4] * 100.0
 	_warmth_bar.value = warmth_pct
 	_warmth_pct_label.text = str(int(warmth_pct)) + "%"
 
-	var safety_pct: float = StatQuery.get_normalized(entity, &"NEED_SAFETY") * 100.0
+	var safety_pct: float = _entity_need_norm_values[5] * 100.0
 	_safety_bar.value = safety_pct
 	_safety_pct_label.text = str(int(safety_pct)) + "%"
 
 	# Low hunger blink
-	if StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.2:
+	if hunger_norm < 0.2:
 		_hunger_blink_timer += delta * 4.0
 		var blink_alpha: float = 0.5 + 0.5 * sin(_hunger_blink_timer)
 		_hunger_bar.modulate = Color(1, 1, 1, blink_alpha)
