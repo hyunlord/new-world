@@ -951,3 +951,8 @@
 - `sim-test`에 `--bench-pathfind-bridge` 모드를 추가해 Rust bridge batch pathfinding(`tuple`, `packed XY`) 경로를 직접 벤치 가능하게 확장.
 - 벤치 경로에서 장거리 탐색이 빈 결과로 수렴하지 않도록 `max_steps`를 맵 셀 수 기반으로 조정하고, 기본 반복 수를 `1000`으로 낮춰 실사용 가능한 실행 시간을 확보.
 - 기존 stress/needs 체크섬(`24032652.00000`, `38457848.00000`)은 유지하면서 pathfinding 벤치 checksum 기준(`708000.00000` @ 1k, `7080000.00000` @ 10k)을 추가.
+
+## Commit 193
+- `tools/migration_verify.sh`에 `--with-benches` 옵션을 추가해 기본 4단계 검증은 유지하면서 선택적으로 Rust 벤치 체크섬 회귀까지 자동 검증할 수 있게 확장.
+- `run_bench_and_check` 헬퍼를 도입해 벤치 출력 `checksum` 파싱/비교를 표준화하고 mismatch 시 즉시 실패하도록 강화.
+- 벤치 기준선으로 `pathfind-bridge=70800.00000`(@100), `stress=24032652.00000`(@10k), `needs=38457848.00000`(@10k)를 검증 파이프라인에 연결.
