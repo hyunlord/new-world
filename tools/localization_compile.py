@@ -40,6 +40,8 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     ],
     "compiled_dir": "compiled",
     "include_sources": False,
+    "key_registry_path": "key_registry.json",
+    "preserve_key_ids": True,
 }
 
 
@@ -129,6 +131,70 @@ def _compile_locale(
     }
 
 
+def _load_key_registry(path: Path) -> List[str]:
+    if not path.exists():
+        return []
+    data = _load_json(path)
+    if not isinstance(data, dict):
+        return []
+    keys = data.get("keys")
+    if not isinstance(keys, list):
+        return []
+    deduped: List[str] = []
+    seen: set[str] = set()
+    for item in keys:
+        key = str(item)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(key)
+    return deduped
+
+
+def _build_key_registry(
+    canonical_keys: List[str],
+    existing_registry_keys: List[str],
+    preserve_key_ids: bool,
+) -> List[str]:
+    if not preserve_key_ids:
+        return list(canonical_keys)
+
+    merged: List[str] = []
+    seen: set[str] = set()
+    for key in existing_registry_keys:
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(key)
+    for key in canonical_keys:
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(key)
+    return merged
+
+
+def _write_key_registry(path: Path, keys: List[str], active_keys: List[str]) -> None:
+    key_to_id: Dict[str, int] = {}
+    for idx, key in enumerate(keys):
+        key_to_id[key] = idx
+    active_set = set(active_keys)
+    removed_keys: List[str] = []
+    for key in keys:
+        if key not in active_set:
+            removed_keys.append(key)
+    output: Dict[str, Any] = {
+        "version": 1,
+        "key_count": len(keys),
+        "active_key_count": len(active_keys),
+        "removed_key_count": len(removed_keys),
+        "keys": keys,
+        "key_to_id": key_to_id,
+        "removed_keys": removed_keys,
+    }
+    _write_json(path, output)
+
+
 def run(project_root: Path, strict_duplicates: bool) -> int:
     localization_root = project_root / "localization"
     manifest_path = localization_root / "manifest.json"
@@ -139,6 +205,8 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     categories = [str(x) for x in manifest.get("categories_order", [])]
     compiled_dir_name = str(manifest.get("compiled_dir", "compiled"))
     include_sources = bool(manifest.get("include_sources", False))
+    key_registry_rel = str(manifest.get("key_registry_path", "key_registry.json"))
+    preserve_key_ids = bool(manifest.get("preserve_key_ids", True))
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -164,6 +232,18 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     for compiled in compiled_by_locale.values():
         canonical_key_set.update(compiled["strings"].keys())
     canonical_keys: List[str] = sorted(canonical_key_set)
+    key_registry_path = localization_root / key_registry_rel
+    existing_registry_keys = _load_key_registry(key_registry_path)
+    registry_keys = _build_key_registry(
+        canonical_keys=canonical_keys,
+        existing_registry_keys=existing_registry_keys,
+        preserve_key_ids=preserve_key_ids,
+    )
+    _write_key_registry(
+        path=key_registry_path,
+        keys=registry_keys,
+        active_keys=canonical_keys,
+    )
     fallback_strings: Dict[str, str] = {}
     if "en" in compiled_by_locale:
         fallback_strings = dict(compiled_by_locale["en"]["strings"])
@@ -174,7 +254,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         locale_strings: Dict[str, str] = dict(compiled["strings"])
         locale_sources: Dict[str, str] = dict(compiled["sources"])
         missing_filled_count = 0
-        for key in canonical_keys:
+        for key in registry_keys:
             if key in locale_strings:
                 continue
             missing_filled_count += 1
@@ -192,11 +272,14 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
                 "categories_order": categories,
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
-                "key_count": len(canonical_keys),
+                "key_count": len(registry_keys),
+                "active_key_count": len(canonical_keys),
                 "missing_key_fill_count": missing_filled_count,
                 "include_sources": include_sources,
+                "key_registry_path": key_registry_rel,
+                "preserve_key_ids": preserve_key_ids,
             },
-            "keys": canonical_keys,
+            "keys": registry_keys,
             "strings": locale_strings,
         }
         if include_sources:

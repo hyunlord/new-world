@@ -21,5 +21,7 @@
     "tech",
     "data_generated"
   ],
-  "compiled_dir": "compiled"
+  "compiled_dir": "compiled",
+  "key_registry_path": "key_registry.json",
+  "preserve_key_ids": true
 }

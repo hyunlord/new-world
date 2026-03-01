@@ -737,3 +737,8 @@
 - `sim-bridge`/`SimBridge`에 upper-needs 전용 bridge API 3종을 추가해 GDScript가 packed 입력으로 상위욕구 통합 스텝을 1회 호출할 수 있도록 확장.
 - `upper_needs_system`이 Rust 통합 스텝 우선 + 기존 `_apply_decay/_apply_fulfillment/_clamp_upper_needs` fallback 구조로 전환되었고, scratch packed 버퍼 재사용으로 루프 할당을 억제.
 - `sim-test --bench-needs-math`에 upper-needs 수학 호출을 포함해 회귀 추적 범위를 확장(신규 checksum 기준: `29743414.00000` @ 10k iters).
+
+## Commit 150
+- `localization_compile`에 append-only key registry(`key_registry.json`)를 도입해 기존 key ID 순서를 유지하면서 신규 키만 뒤에 추가하는 구조로 확장.
+- `manifest.json`에 `key_registry_path`/`preserve_key_ids` 옵션을 추가했고, compiled locale meta에 `active_key_count` 및 registry 관련 메타를 반영.
+- 런타임 번역 값은 유지하면서, 장기 확장/마이그레이션 시 key ID 안정성과 추적성을 강화.
