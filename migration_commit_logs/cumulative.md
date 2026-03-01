@@ -996,3 +996,7 @@
 - `GridCostMap`에 flat bool/byte 버퍼 직생성 API(`from_flat_unchecked`, `from_flat_bytes_unchecked`)를 추가해 grid 초기화 시 per-cell setter 경로를 대체.
 - `sim-bridge`가 새 직생성 API를 사용하도록 연결해 pathfinding grid 구성 오버헤드를 완화.
 - move_cost clamp 의미(`max(0.0)`)를 테스트와 함께 유지해 기존 동작 호환성을 보장.
+
+## Commit 202
+- `from_flat_bytes_unchecked`가 중간 `Vec<bool>` 재복사 경로를 제거하고 최종 `GridCostMap`을 직접 구성하도록 정리.
+- move_cost clamp 의미는 유지하면서 byte 기반 grid 초기화 경로의 할당/복사 오버헤드를 추가 절감.

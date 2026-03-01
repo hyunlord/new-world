@@ -75,7 +75,16 @@ impl GridCostMap {
         for &flag in walkable {
             bool_walkable.push(flag != 0);
         }
-        Self::from_flat_unchecked(width, height, &bool_walkable, move_cost)
+        let mut clamped_move_cost: Vec<f32> = Vec::with_capacity(move_cost.len());
+        for &cost in move_cost {
+            clamped_move_cost.push(cost.max(0.0));
+        }
+        Self {
+            width,
+            height,
+            walkable: bool_walkable,
+            move_cost: clamped_move_cost,
+        }
     }
 
     #[inline]
