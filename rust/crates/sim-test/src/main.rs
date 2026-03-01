@@ -187,6 +187,39 @@ fn run_needs_math_bench(args: &[String]) {
             0.25,
             0.35,
         );
+        let best_skill_norm = body::upper_needs_best_skill_normalized(
+            &[
+                20 + (i % 30) as i32,
+                15 + (i % 40) as i32,
+                10 + (i % 45) as i32,
+                12,
+                18,
+            ],
+            100,
+        );
+        let job_code = if i % 2 == 0 { 1 } else { 2 };
+        let alignment =
+            body::upper_needs_job_alignment(job_code, 0.5 + 0.3 * t, 0.4 + 0.2 * t, 0.3, 0.6, 0.5);
+        let upper_step = body::upper_needs_step(
+            &[0.5, 0.6, 0.55, 0.52, 0.48, 0.51, 0.58, 0.47],
+            &[0.002, 0.002, 0.002, 0.0015, 0.0012, 0.0018, 0.0017, 0.0016],
+            0.01,
+            0.01,
+            0.01,
+            0.01,
+            0.02,
+            0.02,
+            0.005,
+            0.008,
+            0.006,
+            0.007,
+            best_skill_norm,
+            alignment,
+            -0.2 + 1.0 * t,
+            i % 3 != 0,
+            i % 4 != 0,
+            i % 5 != 0,
+        );
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -205,7 +238,12 @@ fn run_needs_math_bench(args: &[String]) {
             + black_box(decay_step[5])
             + black_box(severity[0])
             + black_box(severity[1])
-            + black_box(severity[2]);
+            + black_box(severity[2])
+            + black_box(best_skill_norm)
+            + black_box(alignment)
+            + black_box(upper_step[0])
+            + black_box(upper_step[4])
+            + black_box(upper_step[7]);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);

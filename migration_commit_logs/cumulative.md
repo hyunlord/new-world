@@ -731,3 +731,9 @@
 - `needs_system`에서 base decay/critical severity 처리 시 임시 `PackedFloat32Array`(`base_decay_step`, `rust_temp_decay`, `severity_step`) 생성 경로를 제거.
 - Rust 반환 packed 값을 즉시 스칼라로 디코드해 갈증/체온/안전감 소모 및 severity 계산에 재사용하도록 전환.
 - 계산 의미는 유지하면서 needs tick 루프의 메모리 할당 churn을 추가 완화.
+
+## Commit 149
+- `sim-systems::body`에 upper-needs 관련 Rust 수학 함수(`upper_needs_best_skill_normalized`, `upper_needs_job_alignment`, `upper_needs_step`)를 추가하고 unit test를 확장.
+- `sim-bridge`/`SimBridge`에 upper-needs 전용 bridge API 3종을 추가해 GDScript가 packed 입력으로 상위욕구 통합 스텝을 1회 호출할 수 있도록 확장.
+- `upper_needs_system`이 Rust 통합 스텝 우선 + 기존 `_apply_decay/_apply_fulfillment/_clamp_upper_needs` fallback 구조로 전환되었고, scratch packed 버퍼 재사용으로 루프 할당을 억제.
+- `sim-test --bench-needs-math`에 upper-needs 수학 호출을 포함해 회귀 추적 범위를 확장(신규 checksum 기준: `29743414.00000` @ 10k iters).

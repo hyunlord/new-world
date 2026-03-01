@@ -581,6 +581,103 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_upper_needs_best_skill_normalized(
+        &self,
+        skill_levels: PackedInt32Array,
+        max_level: i32,
+    ) -> f32 {
+        body::upper_needs_best_skill_normalized(skill_levels.as_slice(), max_level)
+    }
+
+    #[func]
+    fn body_upper_needs_job_alignment(
+        &self,
+        job_code: i32,
+        craftsmanship: f32,
+        skill: f32,
+        hard_work: f32,
+        nature: f32,
+        independence: f32,
+    ) -> f32 {
+        body::upper_needs_job_alignment(
+            job_code,
+            craftsmanship,
+            skill,
+            hard_work,
+            nature,
+            independence,
+        )
+    }
+
+    #[func]
+    fn body_upper_needs_step_packed(
+        &self,
+        scalar_inputs: PackedFloat32Array,
+        flag_inputs: PackedByteArray,
+    ) -> PackedFloat32Array {
+        let scalars = scalar_inputs.as_slice();
+        let current_values = [
+            *scalars.first().unwrap_or(&0.0),
+            *scalars.get(1).unwrap_or(&0.0),
+            *scalars.get(2).unwrap_or(&0.0),
+            *scalars.get(3).unwrap_or(&0.0),
+            *scalars.get(4).unwrap_or(&0.0),
+            *scalars.get(5).unwrap_or(&0.0),
+            *scalars.get(6).unwrap_or(&0.0),
+            *scalars.get(7).unwrap_or(&0.0),
+        ];
+        let decay_values = [
+            *scalars.get(8).unwrap_or(&0.0),
+            *scalars.get(9).unwrap_or(&0.0),
+            *scalars.get(10).unwrap_or(&0.0),
+            *scalars.get(11).unwrap_or(&0.0),
+            *scalars.get(12).unwrap_or(&0.0),
+            *scalars.get(13).unwrap_or(&0.0),
+            *scalars.get(14).unwrap_or(&0.0),
+            *scalars.get(15).unwrap_or(&0.0),
+        ];
+        let competence_job_gain = *scalars.get(16).unwrap_or(&0.0);
+        let autonomy_job_gain = *scalars.get(17).unwrap_or(&0.0);
+        let belonging_settlement_gain = *scalars.get(18).unwrap_or(&0.0);
+        let intimacy_partner_gain = *scalars.get(19).unwrap_or(&0.0);
+        let recognition_skill_coeff = *scalars.get(20).unwrap_or(&0.0);
+        let self_act_skill_coeff = *scalars.get(21).unwrap_or(&0.0);
+        let meaning_base_gain = *scalars.get(22).unwrap_or(&0.0);
+        let meaning_aligned_gain = *scalars.get(23).unwrap_or(&0.0);
+        let transcendence_settlement_gain = *scalars.get(24).unwrap_or(&0.0);
+        let transcendence_sacrifice_coeff = *scalars.get(25).unwrap_or(&0.0);
+        let best_skill_norm = *scalars.get(26).unwrap_or(&0.0);
+        let alignment = *scalars.get(27).unwrap_or(&0.0);
+        let sacrifice_value = *scalars.get(28).unwrap_or(&0.0);
+        let flags = flag_inputs.as_slice();
+        let has_job = flags.first().copied().unwrap_or(0) != 0;
+        let has_settlement = flags.get(1).copied().unwrap_or(0) != 0;
+        let has_partner = flags.get(2).copied().unwrap_or(0) != 0;
+
+        let out = body::upper_needs_step(
+            &current_values,
+            &decay_values,
+            competence_job_gain,
+            autonomy_job_gain,
+            belonging_settlement_gain,
+            intimacy_partner_gain,
+            recognition_skill_coeff,
+            self_act_skill_coeff,
+            meaning_base_gain,
+            meaning_aligned_gain,
+            transcendence_settlement_gain,
+            transcendence_sacrifice_coeff,
+            best_skill_norm,
+            alignment,
+            sacrifice_value,
+            has_job,
+            has_settlement,
+            has_partner,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

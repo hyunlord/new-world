@@ -1508,6 +1508,59 @@ func body_anxious_attachment_stress_delta(
 	)
 
 
+## Delegates upper-needs best-skill normalization to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_upper_needs_best_skill_normalized(
+	skill_levels: PackedInt32Array,
+	max_level: int
+):
+	return _call_native_if_exists(
+		"body_upper_needs_best_skill_normalized",
+		[
+			skill_levels,
+			max_level
+		]
+	)
+
+
+## Delegates upper-needs job alignment to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_upper_needs_job_alignment(
+	job_code: int,
+	craftsmanship: float,
+	skill: float,
+	hard_work: float,
+	nature: float,
+	independence: float
+):
+	return _call_native_if_exists(
+		"body_upper_needs_job_alignment",
+		[
+			job_code,
+			craftsmanship,
+			skill,
+			hard_work,
+			nature,
+			independence
+		]
+	)
+
+
+## Delegates upper-needs combined step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_upper_needs_step_packed(
+	scalar_inputs: PackedFloat32Array,
+	flag_inputs: PackedByteArray
+):
+	return _call_native_if_exists(
+		"body_upper_needs_step_packed",
+		[
+			scalar_inputs,
+			flag_inputs
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

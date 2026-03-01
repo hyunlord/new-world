@@ -276,6 +276,104 @@ pub fn anxious_attachment_stress_delta(
     }
 }
 
+/// Returns normalized best-skill value in `[0.0, 1.0]`.
+///
+/// `max_level` is clamped to at least `1` to avoid division by zero.
+pub fn upper_needs_best_skill_normalized(skill_levels: &[i32], max_level: i32) -> f32 {
+    let mut best = 0_i32;
+    for level in skill_levels {
+        if *level > best {
+            best = *level;
+        }
+    }
+    let denom = max_level.max(1) as f32;
+    clamp_f32((best as f32) / denom, 0.0, 1.0)
+}
+
+/// Computes job-value alignment in `[0.0, 1.0]`.
+///
+/// `job_code`: `1 = builder/miner`, `2 = gatherer/lumberjack`, others = no alignment bonus.
+pub fn upper_needs_job_alignment(
+    job_code: i32,
+    craftsmanship: f32,
+    skill: f32,
+    hard_work: f32,
+    nature: f32,
+    independence: f32,
+) -> f32 {
+    let alignment = match job_code {
+        1 => maxf32(craftsmanship) * 0.5 + maxf32(skill) * 0.3 + maxf32(hard_work) * 0.2,
+        2 => maxf32(nature) * 0.5 + maxf32(independence) * 0.3 + maxf32(hard_work) * 0.2,
+        _ => 0.0,
+    };
+    clamp_f32(alignment, 0.0, 1.0)
+}
+
+/// Combined upper-needs decay + fulfillment step.
+///
+/// Current value order:
+/// `[competence, autonomy, self_actualization, meaning, transcendence, recognition, belonging, intimacy]`.
+pub fn upper_needs_step(
+    current_values: &[f32; 8],
+    decay_values: &[f32; 8],
+    competence_job_gain: f32,
+    autonomy_job_gain: f32,
+    belonging_settlement_gain: f32,
+    intimacy_partner_gain: f32,
+    recognition_skill_coeff: f32,
+    self_act_skill_coeff: f32,
+    meaning_base_gain: f32,
+    meaning_aligned_gain: f32,
+    transcendence_settlement_gain: f32,
+    transcendence_sacrifice_coeff: f32,
+    best_skill_norm: f32,
+    alignment: f32,
+    sacrifice_value: f32,
+    has_job: bool,
+    has_settlement: bool,
+    has_partner: bool,
+) -> [f32; 8] {
+    let mut out = [0.0_f32; 8];
+    for i in 0..8 {
+        out[i] = current_values[i] - decay_values[i];
+    }
+
+    if has_job {
+        out[0] += competence_job_gain;
+        out[1] += autonomy_job_gain;
+    }
+    if has_settlement {
+        out[6] += belonging_settlement_gain;
+    }
+    if has_partner {
+        out[7] += intimacy_partner_gain;
+    }
+
+    out[5] += recognition_skill_coeff * best_skill_norm;
+    out[2] += self_act_skill_coeff * best_skill_norm;
+
+    out[3] += meaning_base_gain;
+    if has_job {
+        out[3] += meaning_aligned_gain * alignment;
+    }
+
+    if has_settlement {
+        out[4] += transcendence_settlement_gain;
+    }
+    let sacrifice_norm = clamp_f32((sacrifice_value + 1.0) * 0.5, 0.0, 1.0);
+    out[4] += transcendence_sacrifice_coeff * sacrifice_norm;
+
+    for i in 0..8 {
+        out[i] = clamp_f32(out[i], 0.0, 1.0);
+    }
+    out
+}
+
+#[inline]
+fn maxf32(value: f32) -> f32 {
+    value.max(0.0)
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -461,7 +559,8 @@ mod tests {
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
         calc_training_gains, compute_age_curve, compute_age_curves, critical_severity,
         erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
-        rest_energy_recovery, thirst_decay, warmth_decay,
+        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
+        upper_needs_job_alignment, upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -627,6 +726,46 @@ mod tests {
         let above = anxious_attachment_stress_delta(0.5, 0.3, 0.15);
         assert_eq!(at_threshold, 0.0);
         assert_eq!(above, 0.0);
+    }
+
+    #[test]
+    fn upper_needs_best_skill_normalized_uses_max_level() {
+        let norm = upper_needs_best_skill_normalized(&[12, 45, 31, 20, 44], 100);
+        assert_eq!(norm, 0.45);
+    }
+
+    #[test]
+    fn upper_needs_job_alignment_matches_builder_weights() {
+        let alignment = upper_needs_job_alignment(1, 0.8, 0.6, 0.5, 0.1, 0.2);
+        assert_eq!(alignment, 0.8 * 0.5 + 0.6 * 0.3 + 0.5 * 0.2);
+    }
+
+    #[test]
+    fn upper_needs_step_applies_decay_gain_and_clamp() {
+        let out = upper_needs_step(
+            &[0.1, 0.2, 0.3, 0.95, 0.9, 0.5, 0.2, 0.1],
+            &[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01],
+            0.05,
+            0.04,
+            0.03,
+            0.02,
+            0.10,
+            0.12,
+            0.02,
+            0.08,
+            0.03,
+            0.04,
+            0.5,
+            0.8,
+            0.6,
+            true,
+            true,
+            true,
+        );
+        assert!(out.iter().all(|v| (0.0..=1.0).contains(v)));
+        assert!(out[0] > 0.1);
+        assert!(out[4] > 0.9 - 0.01);
+        assert!(out[3] <= 1.0);
     }
 
     #[test]
