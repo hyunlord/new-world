@@ -1143,6 +1143,54 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_morale_behavior_weight_multiplier(
+        &self,
+        morale: f32,
+        flourishing_threshold: f32,
+        flourishing_min: f32,
+        flourishing_max: f32,
+        normal_min: f32,
+        normal_max: f32,
+        dissatisfied_min: f32,
+        dissatisfied_max: f32,
+        languishing_min: f32,
+        languishing_max: f32,
+    ) -> f32 {
+        body::morale_behavior_weight_multiplier(
+            morale,
+            flourishing_threshold,
+            flourishing_min,
+            flourishing_max,
+            normal_min,
+            normal_max,
+            dissatisfied_min,
+            dissatisfied_max,
+            languishing_min,
+            languishing_max,
+        )
+    }
+
+    #[func]
+    fn body_morale_migration_probability(
+        &self,
+        morale_s: f32,
+        k: f32,
+        threshold_morale: f32,
+        patience: f32,
+        patience_resistance: f32,
+        max_probability: f32,
+    ) -> f32 {
+        body::morale_migration_probability(
+            morale_s,
+            k,
+            threshold_morale,
+            patience,
+            patience_resistance,
+            max_probability,
+        )
+    }
+
+    #[func]
     fn body_leader_age_respect(&self, age_years: f32) -> f32 {
         body::leader_age_respect(age_years)
     }

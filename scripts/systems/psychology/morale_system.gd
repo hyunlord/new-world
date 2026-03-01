@@ -4,12 +4,18 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 # Phase 4: Morale System
 # Implements personal and settlement morale based on psychological research
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_BWM_METHOD: String = "body_morale_behavior_weight_multiplier"
+const _SIM_BRIDGE_MIGRATION_METHOD: String = "body_morale_migration_probability"
+
 var _entity_manager: RefCounted
 var _cfg: Dictionary = {}                   # morale_config.json
 var _personal_morale: Dictionary = {}       # entity_id -> float (-1~1)
 var _settlement_morale: Dictionary = {}     # settlement_id -> Dictionary
 var _grievance: Dictionary = {}             # settlement_id -> float (0~1)
 var _expectation_base: Dictionary = {}      # entity_id -> float (hedonic treadmill baseline)
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -21,6 +27,24 @@ func _init() -> void:
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_config()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_BWM_METHOD) \
+	and node.has_method(_SIM_BRIDGE_MIGRATION_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_config() -> void:
@@ -231,7 +255,24 @@ func _calculate_warr_contributions(entity) -> float:
 ## Reference: Huppert, F.A. & So, T.T.C. (2013). Psychological Medicine, 43(1), 1-13.
 func get_behavior_weight_multiplier(entity_id: int) -> float:
 	var morale: float = _personal_morale.get(entity_id, 0.5)
-	var bwm = _cfg.get("behavior_weight_multiplier", {})
+	var bwm: Dictionary = _cfg.get("behavior_weight_multiplier", {})
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BWM_METHOD,
+			morale,
+			float(bwm.get("flourishing_threshold", 0.6)),
+			float(bwm.get("flourishing_min", 1.2)),
+			float(bwm.get("flourishing_max", 1.55)),
+			float(bwm.get("normal_min", 0.85)),
+			float(bwm.get("normal_max", 1.2)),
+			float(bwm.get("dissatisfied_min", 0.55)),
+			float(bwm.get("dissatisfied_max", 0.85)),
+			float(bwm.get("languishing_min", 0.30)),
+			float(bwm.get("languishing_max", 0.55)),
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 
 	var flourishing_threshold: float = float(bwm.get("flourishing_threshold", 0.6))
 	if morale >= flourishing_threshold:
@@ -299,18 +340,31 @@ func get_migration_probability(entity_id: int) -> float:
 	var m0: float = float(mcfg.get("threshold_morale", 0.35))
 	var max_prob: float = float(mcfg.get("max_probability", 0.95))
 
-	# sigmoid: p = 1/(1+exp(-k*(m0 - morale_s)))
-	# morale_s=0.2 (낮음) → m0-morale_s=0.15>0 → sigmoid>0.5 → 높은 확률 ✅
-	# morale_s=0.8 (높음) → m0-morale_s=-0.45<0 → sigmoid<0.5 → 낮은 확률 ✅
-	var p_base: float = 1.0 / (1.0 + exp(-k * (m0 - morale_s)))
-
 	# A_patience로 저항
 	var patience: float = 0.5
 	var entity = _entity_manager.get_entity(entity_id) if _entity_manager else null
 	if entity and entity.personality:
 		patience = float(entity.personality.facets.get("A_patience", 0.5))
-	var resistance: float = float(mcfg.get("patience_resistance", 0.3)) * patience
+	var patience_resistance: float = float(mcfg.get("patience_resistance", 0.3))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_MIGRATION_METHOD,
+			morale_s,
+			k,
+			m0,
+			patience,
+			patience_resistance,
+			max_prob,
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 
+	# sigmoid: p = 1/(1+exp(-k*(m0 - morale_s)))
+	# morale_s=0.2 (낮음) → m0-morale_s=0.15>0 → sigmoid>0.5 → 높은 확률 ✅
+	# morale_s=0.8 (높음) → m0-morale_s=-0.45<0 → sigmoid<0.5 → 낮은 확률 ✅
+	var p_base: float = 1.0 / (1.0 + exp(-k * (m0 - morale_s)))
+	var resistance: float = patience_resistance * patience
 	return clampf(p_base - resistance, 0.0, max_prob)
 
 
