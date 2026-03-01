@@ -176,3 +176,8 @@
 - `StressSystem`의 allostatic load 업데이트를 Rust step 함수(`stress_allostatic_step`)로 이관.
 - avoidant attachment 배율은 GDScript에서 산출하고 수치 업데이트는 Rust 경로로 위임.
 - stress 파이프라인의 주요 수학 업데이트 경로가 대부분 네이티브 함수 호출 기반으로 정리됨.
+
+## Commit 037
+- `StressSystem`의 `stress_state` 판정과 stress→emotion meta 계산을 Rust snapshot 함수로 통합 이관.
+- GDScript는 snapshot을 1회 호출해 상태와 meta를 반영하도록 변경되어 중복 계산/호출을 줄임.
+- stress 수학 파이프라인이 snapshot/step 중심의 Rust API 구조로 정돈됨.

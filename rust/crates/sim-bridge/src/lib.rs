@@ -795,6 +795,22 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_state_snapshot(&self, stress: f32, allostatic: f32) -> VarDictionary {
+        let out = stat_curve::stress_state_snapshot(stress, allostatic);
+        let mut dict = VarDictionary::new();
+        dict.set("stress_state", out.stress_state);
+        dict.set("stress_mu_sadness", out.stress_mu_sadness as f64);
+        dict.set("stress_mu_anger", out.stress_mu_anger as f64);
+        dict.set("stress_mu_fear", out.stress_mu_fear as f64);
+        dict.set("stress_mu_joy", out.stress_mu_joy as f64);
+        dict.set("stress_mu_trust", out.stress_mu_trust as f64);
+        dict.set("stress_neg_gain_mult", out.stress_neg_gain_mult as f64);
+        dict.set("stress_pos_gain_mult", out.stress_pos_gain_mult as f64);
+        dict.set("stress_blunt_mult", out.stress_blunt_mult as f64);
+        dict
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,

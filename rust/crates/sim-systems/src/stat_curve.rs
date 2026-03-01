@@ -41,6 +41,19 @@ pub struct StressReserveStep {
     pub gas_stage: i32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StressStateSnapshot {
+    pub stress_state: i32,
+    pub stress_mu_sadness: f32,
+    pub stress_mu_anger: f32,
+    pub stress_mu_fear: f32,
+    pub stress_mu_joy: f32,
+    pub stress_mu_trust: f32,
+    pub stress_neg_gain_mult: f32,
+    pub stress_pos_gain_mult: f32,
+    pub stress_blunt_mult: f32,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -312,6 +325,47 @@ pub fn stress_allostatic_step(allostatic: f32, stress: f32, avoidant_allostatic_
     next
 }
 
+/// Stress state bucket + stress-driven emotion meta snapshot.
+pub fn stress_state_snapshot(stress: f32, allostatic: f32) -> StressStateSnapshot {
+    let stress_state = if stress >= 500.0 {
+        3
+    } else if stress >= 350.0 {
+        2
+    } else if stress >= 200.0 {
+        1
+    } else {
+        0
+    };
+
+    let s1 = ((stress - 100.0) / 400.0).clamp(0.0, 1.0);
+    let s2 = ((stress - 300.0) / 400.0).clamp(0.0, 1.0);
+    let allo_ratio = allostatic / 100.0;
+
+    let stress_mu_sadness = 6.0 * s1 + 10.0 * allo_ratio;
+    let stress_mu_anger = 4.0 * s1 + 8.0 * allo_ratio;
+    let stress_mu_fear = 5.0 * s1 + 12.0 * allo_ratio;
+    let stress_mu_joy = -(5.0 * s1 + 12.0 * allo_ratio);
+    let stress_mu_trust = -(4.0 * s1 + 10.0 * allo_ratio);
+
+    let stress_neg_gain_mult = 1.0 + 0.7 * s2;
+    let stress_pos_gain_mult = 1.0 - 0.5 * s2;
+
+    let blunt_denom = 1.0 + 0.9 * allo_ratio * if allo_ratio > 0.6 { 2.0 } else { 1.0 };
+    let stress_blunt_mult = 1.0 / blunt_denom;
+
+    StressStateSnapshot {
+        stress_state,
+        stress_mu_sadness,
+        stress_mu_anger,
+        stress_mu_fear,
+        stress_mu_joy,
+        stress_mu_trust,
+        stress_neg_gain_mult,
+        stress_pos_gain_mult,
+        stress_blunt_mult,
+    }
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -529,5 +583,20 @@ mod tests {
     fn stress_allostatic_step_recovers_under_low_stress() {
         let next = stress_allostatic_step(10.0, 80.0, 1.0);
         assert!(next < 10.0);
+    }
+
+    #[test]
+    fn stress_state_snapshot_buckets_thresholds() {
+        assert_eq!(stress_state_snapshot(100.0, 0.0).stress_state, 0);
+        assert_eq!(stress_state_snapshot(250.0, 0.0).stress_state, 1);
+        assert_eq!(stress_state_snapshot(400.0, 0.0).stress_state, 2);
+        assert_eq!(stress_state_snapshot(600.0, 0.0).stress_state, 3);
+    }
+
+    #[test]
+    fn stress_state_snapshot_blunt_multiplier_drops_with_allostatic_load() {
+        let low = stress_state_snapshot(300.0, 20.0);
+        let high = stress_state_snapshot(300.0, 80.0);
+        assert!(high.stress_blunt_mult < low.stress_blunt_mult);
     }
 }

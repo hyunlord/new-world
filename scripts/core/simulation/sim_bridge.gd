@@ -436,6 +436,21 @@ func stat_stress_allostatic_step(
 	)
 
 
+## Delegates stress state + emotion-meta snapshot to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_state_snapshot(
+	stress: float,
+	allostatic: float
+):
+	return _call_native_if_exists(
+		"stat_stress_state_snapshot",
+		[
+			stress,
+			allostatic
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

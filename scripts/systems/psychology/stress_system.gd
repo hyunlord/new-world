@@ -17,10 +17,6 @@ const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
-const THRESHOLD_TENSE: float = 200.0
-const THRESHOLD_CRISIS: float = 350.0
-const THRESHOLD_BREAK_RISK: float = 500.0
-
 const EUSTRESS_OPTIMAL: float = 150.0
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
@@ -141,14 +137,19 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 	# 8) Allostatic Load
 	_update_allostatic(ed, entity)
 
+	var state_snapshot: Dictionary = StatCurveScript.stress_state_snapshot(
+		ed.stress,
+		ed.allostatic
+	)
+
 	# 9) 스트레스 상태
-	_update_stress_state(ed)
+	_update_stress_state(ed, state_snapshot)
 
 	# 10) Resilience
 	_update_resilience(entity, ed, pd)
 
 	# 11) 스트레스 → 감정 역방향
-	_apply_stress_to_emotions(ed)
+	_apply_stress_to_emotions(ed, state_snapshot)
 
 	# 12) 디버그 로그
 	_debug_log(entity, ed, delta)
@@ -343,15 +344,8 @@ func _update_allostatic(ed, entity) -> void:
 
 
 # ── 9) 스트레스 상태 ──────────────────────────────────────────────────
-func _update_stress_state(ed) -> void:
-	if ed.stress >= THRESHOLD_BREAK_RISK:
-		ed.stress_state = 3
-	elif ed.stress >= THRESHOLD_CRISIS:
-		ed.stress_state = 2
-	elif ed.stress >= THRESHOLD_TENSE:
-		ed.stress_state = 1
-	else:
-		ed.stress_state = 0
+func _update_stress_state(ed, snapshot: Dictionary) -> void:
+	ed.stress_state = int(snapshot.get("stress_state", 0))
 
 
 # ── 10) Resilience ────────────────────────────────────────────────────
@@ -390,22 +384,15 @@ func _update_resilience(entity: RefCounted, ed, pd) -> void:
 
 
 # ── 11) 스트레스 → 감정 역방향 ───────────────────────────────────────
-func _apply_stress_to_emotions(ed) -> void:
-	var s1: float = clampf((ed.stress - 100.0) / 400.0, 0.0, 1.0)
-	var s2: float = clampf((ed.stress - 300.0) / 400.0, 0.0, 1.0)
-	var allo_ratio: float = ed.allostatic / 100.0
-
-	ed.set_meta("stress_mu_sadness", 6.0 * s1 + 10.0 * allo_ratio)
-	ed.set_meta("stress_mu_anger", 4.0 * s1 + 8.0 * allo_ratio)
-	ed.set_meta("stress_mu_fear", 5.0 * s1 + 12.0 * allo_ratio)
-	ed.set_meta("stress_mu_joy", -(5.0 * s1 + 12.0 * allo_ratio))
-	ed.set_meta("stress_mu_trust", -(4.0 * s1 + 10.0 * allo_ratio))
-
-	ed.set_meta("stress_neg_gain_mult", 1.0 + 0.7 * s2)
-	ed.set_meta("stress_pos_gain_mult", 1.0 - 0.5 * s2)
-
-	var blunt_denom: float = 1.0 + 0.9 * allo_ratio * (2.0 if allo_ratio > 0.6 else 1.0)
-	ed.set_meta("stress_blunt_mult", 1.0 / blunt_denom)
+func _apply_stress_to_emotions(ed, snapshot: Dictionary) -> void:
+	ed.set_meta("stress_mu_sadness", float(snapshot.get("stress_mu_sadness", 0.0)))
+	ed.set_meta("stress_mu_anger", float(snapshot.get("stress_mu_anger", 0.0)))
+	ed.set_meta("stress_mu_fear", float(snapshot.get("stress_mu_fear", 0.0)))
+	ed.set_meta("stress_mu_joy", float(snapshot.get("stress_mu_joy", 0.0)))
+	ed.set_meta("stress_mu_trust", float(snapshot.get("stress_mu_trust", 0.0)))
+	ed.set_meta("stress_neg_gain_mult", float(snapshot.get("stress_neg_gain_mult", 1.0)))
+	ed.set_meta("stress_pos_gain_mult", float(snapshot.get("stress_pos_gain_mult", 1.0)))
+	ed.set_meta("stress_blunt_mult", float(snapshot.get("stress_blunt_mult", 1.0)))
 
 
 # ── Support score ─────────────────────────────────────────────────────

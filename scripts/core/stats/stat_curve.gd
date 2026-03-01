@@ -449,6 +449,59 @@ static func stress_allostatic_step(
 		next = clampf(next - 0.003, 0.0, 100.0)
 	return next
 
+
+## Stress state bucket + stress-driven emotion meta snapshot.
+## Returns Dictionary with:
+## stress_state, stress_mu_*, stress_neg_gain_mult, stress_pos_gain_mult, stress_blunt_mult
+static func stress_state_snapshot(
+	stress: float,
+	allostatic: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_state_snapshot",
+		[
+			stress,
+			allostatic
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var stress_state: int = 0
+	if stress >= 500.0:
+		stress_state = 3
+	elif stress >= 350.0:
+		stress_state = 2
+	elif stress >= 200.0:
+		stress_state = 1
+
+	var s1: float = clampf((stress - 100.0) / 400.0, 0.0, 1.0)
+	var s2: float = clampf((stress - 300.0) / 400.0, 0.0, 1.0)
+	var allo_ratio: float = allostatic / 100.0
+
+	var stress_mu_sadness: float = 6.0 * s1 + 10.0 * allo_ratio
+	var stress_mu_anger: float = 4.0 * s1 + 8.0 * allo_ratio
+	var stress_mu_fear: float = 5.0 * s1 + 12.0 * allo_ratio
+	var stress_mu_joy: float = -(5.0 * s1 + 12.0 * allo_ratio)
+	var stress_mu_trust: float = -(4.0 * s1 + 10.0 * allo_ratio)
+
+	var stress_neg_gain_mult: float = 1.0 + 0.7 * s2
+	var stress_pos_gain_mult: float = 1.0 - 0.5 * s2
+	var blunt_denom: float = 1.0 + 0.9 * allo_ratio * (2.0 if allo_ratio > 0.6 else 1.0)
+	var stress_blunt_mult: float = 1.0 / blunt_denom
+
+	return {
+		"stress_state": stress_state,
+		"stress_mu_sadness": stress_mu_sadness,
+		"stress_mu_anger": stress_mu_anger,
+		"stress_mu_fear": stress_mu_fear,
+		"stress_mu_joy": stress_mu_joy,
+		"stress_mu_trust": stress_mu_trust,
+		"stress_neg_gain_mult": stress_neg_gain_mult,
+		"stress_pos_gain_mult": stress_pos_gain_mult,
+		"stress_blunt_mult": stress_blunt_mult,
+	}
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)
