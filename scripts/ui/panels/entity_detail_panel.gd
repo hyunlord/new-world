@@ -188,6 +188,8 @@ var _needs_basic_norm_values: PackedFloat32Array = PackedFloat32Array()
 var _needs_higher_norm_values: PackedFloat32Array = PackedFloat32Array()
 var _personality_axis_norm_values: PackedFloat32Array = PackedFloat32Array()
 var _derived_norm_values: PackedFloat32Array = PackedFloat32Array()
+var _life_event_desc_cache: PackedStringArray = PackedStringArray()
+var _life_event_desc_signature: String = ""
 
 
 class DeceasedEntityProxy extends RefCounted:
@@ -332,6 +334,7 @@ func set_entity_id(id: int) -> void:
 	_trait_badge_regions.clear()
 	_active_trait_id = ""
 	_section_header_rects.clear()
+	_invalidate_life_event_desc_cache()
 	if _trait_tooltip != null:
 		_trait_tooltip.request_hide()
 
@@ -347,6 +350,7 @@ func _ready() -> void:
 
 
 func _on_locale_changed(_locale: String = "") -> void:
+	_invalidate_life_event_desc_cache()
 	queue_redraw()
 
 
@@ -1733,37 +1737,30 @@ func _draw() -> void:
 				hist_count += 1
 
 	# ── Life Events (deceased only) ──
-	if not entity.is_alive:
-		var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-		if chronicle != null:
-			cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_LIFE_EVENTS"), "life_events")
-			if not _section_collapsed.get("life_events", false):
-				var events: Array = chronicle.get_personal_events(entity.id)
-				var show_count: int = mini(8, events.size())
-				if show_count == 0:
-					draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_RECORDED_EVENTS"),
-						HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
-					cy += 16.0
-				else:
-					var ev_idx: int = events.size() - 1
-					var count: int = 0
-					while ev_idx >= 0 and count < show_count:
-						var evt: Dictionary = events[ev_idx]
-						var desc: String
-						if evt.has("l10n_key") and not evt.get("l10n_key", "").is_empty():
-							var l10n_key: String = evt.get("l10n_key", "")
-							var l10n_params_final: Dictionary = evt.get("l10n_params", {})
-							desc = Locale.trf(l10n_key, l10n_params_final)
-						else:
-							desc = evt.get("description", "?")
-						if desc.length() > 50:
-							desc = desc.substr(0, 47) + "..."
-						draw_string(font, Vector2(cx + 10, cy + 11),
-							"Y%d M%d: %s" % [evt.get("year", 0), evt.get("month", 0), desc],
-							HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
-						cy += 13.0
-						ev_idx -= 1
-						count += 1
+		if not entity.is_alive:
+			var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+			if chronicle != null:
+				cy = _draw_section_header(font, cx, cy, Locale.ltr("UI_LIFE_EVENTS"), "life_events")
+				if not _section_collapsed.get("life_events", false):
+					var events: Array = chronicle.get_personal_events(entity.id)
+					var show_count: int = mini(8, events.size())
+					if show_count == 0:
+						draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_NO_RECORDED_EVENTS"),
+							HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
+						cy += 16.0
+					else:
+						_ensure_life_event_desc_cache(entity.id, events)
+						var ev_idx: int = events.size() - 1
+						var count: int = 0
+						while ev_idx >= 0 and count < show_count:
+							var evt: Dictionary = events[ev_idx]
+							var desc: String = _life_event_desc_cache[ev_idx] if ev_idx < _life_event_desc_cache.size() else _resolve_life_event_description(evt)
+							draw_string(font, Vector2(cx + 10, cy + 11),
+								"Y%d M%d: %s" % [evt.get("year", 0), evt.get("month", 0), desc],
+								HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.6, 0.6, 0.6))
+							cy += 13.0
+							ev_idx -= 1
+							count += 1
 
 	# Track content height for scrolling
 	_content_height = cy + _scroll_offset + 20.0
@@ -2000,6 +1997,7 @@ func _show_deceased(record: Dictionary) -> void:
 	_entity_id = record.get("id", -1)
 	_scroll_offset = 0.0
 	_deceased_proxy = DeceasedEntityProxy.new(record)
+	_invalidate_life_event_desc_cache()
 	queue_redraw()
 
 
@@ -2015,6 +2013,49 @@ func show_entity_or_deceased(entity_id: int) -> void:
 			var record: Dictionary = registry.get_record(entity_id)
 			if record.size() > 0:
 				_show_deceased(record)
+
+
+func _invalidate_life_event_desc_cache() -> void:
+	_life_event_desc_signature = ""
+	_life_event_desc_cache.resize(0)
+
+
+func _ensure_life_event_desc_cache(entity_id: int, events: Array) -> void:
+	var signature: String = _compute_life_event_desc_signature(entity_id, events)
+	if _life_event_desc_signature == signature and _life_event_desc_cache.size() == events.size():
+		return
+	_life_event_desc_signature = signature
+	_life_event_desc_cache.resize(events.size())
+	for i in range(events.size()):
+		_life_event_desc_cache[i] = _resolve_life_event_description(events[i])
+
+
+func _compute_life_event_desc_signature(entity_id: int, events: Array) -> String:
+	var locale_key: String = str(Locale.current_locale)
+	if events.is_empty():
+		return "%s|%d|0" % [locale_key, entity_id]
+	var first_evt: Dictionary = events[0]
+	var last_evt: Dictionary = events[events.size() - 1]
+	return "%s|%d|%d|%d|%s|%d|%s" % [
+		locale_key,
+		entity_id,
+		events.size(),
+		int(first_evt.get("tick", -1)),
+		str(first_evt.get("event_type", "")),
+		int(last_evt.get("tick", -1)),
+		str(last_evt.get("event_type", ""))
+	]
+
+
+func _resolve_life_event_description(evt: Dictionary) -> String:
+	var desc: String = str(evt.get("description", "?"))
+	if evt.has("l10n_key") and not str(evt.get("l10n_key", "")).is_empty():
+		var l10n_key: String = str(evt.get("l10n_key", ""))
+		var l10n_params_final: Dictionary = evt.get("l10n_params", {})
+		desc = Locale.trf(l10n_key, l10n_params_final)
+	if desc.length() > 50:
+		return desc.substr(0, 47) + "..."
+	return desc
 
 
 func _lookup_name(entity_id: int) -> String:

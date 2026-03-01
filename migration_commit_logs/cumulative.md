@@ -601,3 +601,8 @@
 - `chronicle_panel`에 이벤트 설명 문자열 캐시(`_desc_cache`, `_desc_cache_signature`)를 도입.
 - locale 변경/필터 변경 시 캐시 무효화하고, 이벤트 집합 시그니처가 바뀔 때만 설명 문자열(`Locale.trf` 포함) 재생성.
 - 표시 의미를 유지하면서 패널 redraw 루프에서 동적 로컬라이징/문자열 조립 오버헤드를 완화.
+
+## Commit 123
+- `entity_detail_panel` deceased life_events 렌더 경로에 설명 문자열 캐시(`_life_event_desc_cache`)를 도입.
+- entity/locale 전환 시 캐시 무효화하고, 이벤트 시그니처 변경 시에만 `Locale.trf` 기반 설명 문자열을 재생성.
+- 출력 의미를 유지하면서 Entity Detail 패널 redraw 루프의 life event 문자열 계산 오버헤드를 완화.
