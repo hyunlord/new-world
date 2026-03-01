@@ -261,6 +261,21 @@ pub fn erg_frustration_step(
     ]
 }
 
+/// Additional stress delta for anxious attachment state.
+///
+/// Returns `stress_rate` only when social need is below `social_threshold`.
+pub fn anxious_attachment_stress_delta(
+    social: f32,
+    social_threshold: f32,
+    stress_rate: f32,
+) -> f32 {
+    if social < social_threshold {
+        stress_rate
+    } else {
+        0.0
+    }
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -443,9 +458,10 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 mod tests {
     use super::{
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
-        calc_realized_values, calc_training_gain, calc_training_gains, compute_age_curve,
-        compute_age_curves, critical_severity, erg_frustration_step, needs_base_decay_step,
-        needs_critical_severity_step, rest_energy_recovery, thirst_decay, warmth_decay,
+        anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
+        calc_training_gains, compute_age_curve, compute_age_curves, critical_severity,
+        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
+        rest_energy_recovery, thirst_decay, warmth_decay,
     };
 
     #[test]
@@ -597,6 +613,20 @@ mod tests {
         assert_eq!(out[3], 0);
         assert_eq!(out[4], 0);
         assert_eq!(out[5], 0);
+    }
+
+    #[test]
+    fn anxious_attachment_stress_delta_applies_below_threshold() {
+        let delta = anxious_attachment_stress_delta(0.2, 0.3, 0.15);
+        assert_eq!(delta, 0.15);
+    }
+
+    #[test]
+    fn anxious_attachment_stress_delta_is_zero_at_or_above_threshold() {
+        let at_threshold = anxious_attachment_stress_delta(0.3, 0.3, 0.15);
+        let above = anxious_attachment_stress_delta(0.5, 0.3, 0.15);
+        assert_eq!(at_threshold, 0.0);
+        assert_eq!(above, 0.0);
     }
 
     #[test]

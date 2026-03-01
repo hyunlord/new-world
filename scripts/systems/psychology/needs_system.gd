@@ -209,9 +209,19 @@ func execute_tick(tick: int) -> void:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 2.0 * sev_safety, 0.0, 100.0)
 			# [Cassidy & Berlin 1994 — Anxious attachment: chronic low-level stress when social need unmet]
 			if str(entity.get_meta("attachment_type", "secure")) == "anxious":
-				if entity.social < GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD:
+				var attachment_stress_delta: float = 0.0
+				var attachment_stress_variant: Variant = SimBridge.body_anxious_attachment_stress_delta(
+					entity.social,
+					GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD,
+					GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE
+				)
+				if attachment_stress_variant != null:
+					attachment_stress_delta = float(attachment_stress_variant)
+				elif entity.social < GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD:
+					attachment_stress_delta = GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE
+				if attachment_stress_delta > 0.0:
 					entity.emotion_data.stress = minf(
-						entity.emotion_data.stress + GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE,
+						entity.emotion_data.stress + attachment_stress_delta,
 						100.0
 					)
 

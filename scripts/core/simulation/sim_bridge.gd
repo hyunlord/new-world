@@ -1491,6 +1491,23 @@ func body_erg_frustration_step_packed(
 	)
 
 
+## Delegates anxious-attachment stress delta computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_anxious_attachment_stress_delta(
+	social: float,
+	social_threshold: float,
+	stress_rate: float
+):
+	return _call_native_if_exists(
+		"body_anxious_attachment_stress_delta",
+		[
+			social,
+			social_threshold,
+			stress_rate
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

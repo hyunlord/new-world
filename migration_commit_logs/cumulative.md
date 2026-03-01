@@ -721,3 +721,8 @@
 - `sim-systems::body`에 `erg_frustration_step` 배치 함수를 추가해 성장/관계 좌절 누적 tick 갱신과 회귀 전이(started) 판정을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 `body_erg_frustration_step_packed` 경로를 추가하고, `needs_system`이 scratch packed 입력을 재사용해 엔티티당 1회 호출로 상태를 반영하도록 전환.
 - bridge 미지원 시 기존 GDScript fallback 계산을 유지하면서, 스트레스 주입/`erg_regression_started` 이벤트 조건은 started 플래그 기준으로 동일 의미를 유지.
+
+## Commit 147
+- `sim-systems::body`에 `anxious_attachment_stress_delta`를 추가해 anxious attachment 조건의 사회욕구 기반 스트레스 증가 수식을 Rust로 이관.
+- `sim-bridge`/`SimBridge`에 `body_anxious_attachment_stress_delta` 경로를 추가하고, `needs_system` 분기가 Rust 우선 + 기존 비교 fallback 구조를 사용하도록 전환.
+- 스트레스 증가 조건(`social < threshold`)과 clamp 의미는 유지하면서 needs tick 수학 경로의 네이티브화 범위를 확장.

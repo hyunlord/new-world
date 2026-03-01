@@ -571,6 +571,16 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_anxious_attachment_stress_delta(
+        &self,
+        social: f32,
+        social_threshold: f32,
+        stress_rate: f32,
+    ) -> f32 {
+        body::anxious_attachment_stress_delta(social, social_threshold, stress_rate)
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,
