@@ -266,3 +266,8 @@
 - `stressor_events` 로드 시 personality modifier를 `_p_specs`/`_p_traits`로 사전 컴파일해 `inject_event` 런타임 파싱 비용을 축소.
 - `_calc_personality_scale` 입력을 원본 Dictionary 대신 사전 컴파일된 spec 기반으로 전환해 이벤트 경로 분기/문자열 처리 오버헤드를 완화.
 - 성격 스케일 계산은 기존 Rust helper(`stress_personality_scale`) 호출 구조를 유지해 수식 의미 일관성을 보존.
+
+## Commit 055
+- `stressor_events` 로드 시 relationship/context modifier를 `_r_*`/`_c_*` 필드로 사전 컴파일해 `inject_event` 런타임 dictionary 해석 비용을 축소.
+- `_calc_relationship_scale`, `_calc_context_scale` 입력을 사전 컴파일 스키마 기반으로 전환해 이벤트 경로 분기/순회 오버헤드를 완화.
+- 관계/상황 배수 계산은 기존 Rust helper 호출(`stress_relationship_scale`, `stress_context_scale`)을 유지해 수식 의미를 보존.

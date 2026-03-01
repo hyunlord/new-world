@@ -362,9 +362,16 @@ func _load_stressor_defs() -> void:
 				continue
 			var stressor_def: Dictionary = raw_def
 			var compiled_personality: Dictionary = _compile_personality_modifiers(stressor_def.get("personality_modifiers", {}))
+			var compiled_relationship: Dictionary = _compile_relationship_scaling(stressor_def.get("relationship_scaling", {}))
+			var compiled_context: Dictionary = _compile_context_modifiers(stressor_def.get("context_modifiers", {}))
 			var compiled_emo: Dictionary = _compile_emotion_inject(stressor_def.get("emotion_inject", {}))
 			stressor_def["_p_specs"] = compiled_personality.get("specs", [])
 			stressor_def["_p_traits"] = compiled_personality.get("traits", {})
+			stressor_def["_r_method"] = compiled_relationship.get("method", "none")
+			stressor_def["_r_min_mult"] = compiled_relationship.get("min_mult", 0.3)
+			stressor_def["_r_max_mult"] = compiled_relationship.get("max_mult", 1.5)
+			stressor_def["_c_keys"] = compiled_context.get("keys", PackedStringArray())
+			stressor_def["_c_multipliers"] = compiled_context.get("multipliers", PackedFloat32Array())
 			stressor_def["_emo_fast"] = compiled_emo.get("fast", PackedFloat32Array())
 			stressor_def["_emo_slow"] = compiled_emo.get("slow", PackedFloat32Array())
 			_stressor_defs[key] = stressor_def
@@ -398,12 +405,20 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 	var personality_scale = _calc_personality_scale(entity, p_specs, p_traits)
 
 	# 3) 관계 스케일
-	var r_def = sdef.get("relationship_scaling", {})
-	var relationship_scale = _calc_relationship_scale(context, r_def)
+	var r_method: String = String(sdef.get("_r_method", "none"))
+	var r_min_mult: float = float(sdef.get("_r_min_mult", 0.3))
+	var r_max_mult: float = float(sdef.get("_r_max_mult", 1.5))
+	var relationship_scale = _calc_relationship_scale(
+		context,
+		r_method,
+		r_min_mult,
+		r_max_mult
+	)
 
 	# 4) 상황 스케일
-	var c_mods = sdef.get("context_modifiers", {})
-	var context_scale = _calc_context_scale(context, c_mods)
+	var c_keys: PackedStringArray = sdef.get("_c_keys", PackedStringArray())
+	var c_multipliers: PackedFloat32Array = sdef.get("_c_multipliers", PackedFloat32Array())
+	var context_scale = _calc_context_scale(context, c_keys, c_multipliers)
 
 	# 5) 최종 계산 (Rust curve helper)
 	var scaled: Dictionary = StatCurveScript.stress_event_scaled(
@@ -488,19 +503,27 @@ func _calc_personality_scale(entity, p_specs: Array, p_traits: Dictionary) -> fl
 	)
 
 
-func _calc_relationship_scale(context: Dictionary, r_def: Dictionary) -> float:
-	var method: String = String(r_def.get("method", "none"))
+func _calc_relationship_scale(
+	context: Dictionary,
+	method: String,
+	min_m: float,
+	max_m: float
+) -> float:
 	var bond: float = float(context.get("bond_strength", 0.5))
-	var min_m: float = float(r_def.get("min_mult", 0.3))
-	var max_m: float = float(r_def.get("max_mult", 1.5))
 	return StatCurveScript.stress_relationship_scale(method, bond, min_m, max_m)
 
 
-func _calc_context_scale(context: Dictionary, c_mods: Dictionary) -> float:
+func _calc_context_scale(
+	context: Dictionary,
+	c_keys: PackedStringArray,
+	c_multipliers: PackedFloat32Array
+) -> float:
 	var active_multipliers: PackedFloat32Array = PackedFloat32Array()
-	for key in c_mods:
-		if context.get(key, false):
-			active_multipliers.append(float(c_mods[key]))
+	var count: int = mini(c_keys.size(), c_multipliers.size())
+	for idx in range(count):
+		var context_key: String = c_keys[idx]
+		if context.get(context_key, false):
+			active_multipliers.append(c_multipliers[idx])
 	return StatCurveScript.stress_context_scale(active_multipliers)
 
 
@@ -536,6 +559,35 @@ func _compile_personality_modifiers(p_mods: Variant) -> Dictionary:
 		})
 
 	return {"specs": specs, "traits": traits}
+
+
+func _compile_relationship_scaling(r_def: Variant) -> Dictionary:
+	var method: String = "none"
+	var min_mult: float = 0.3
+	var max_mult: float = 1.5
+	if typeof(r_def) == TYPE_DICTIONARY:
+		var r_def_dict: Dictionary = r_def
+		method = String(r_def_dict.get("method", "none"))
+		min_mult = float(r_def_dict.get("min_mult", 0.3))
+		max_mult = float(r_def_dict.get("max_mult", 1.5))
+	return {
+		"method": method,
+		"min_mult": min_mult,
+		"max_mult": max_mult,
+	}
+
+
+func _compile_context_modifiers(c_mods: Variant) -> Dictionary:
+	var keys: PackedStringArray = PackedStringArray()
+	var multipliers: PackedFloat32Array = PackedFloat32Array()
+	if typeof(c_mods) != TYPE_DICTIONARY:
+		return {"keys": keys, "multipliers": multipliers}
+
+	var c_mods_dict: Dictionary = c_mods
+	for key in c_mods_dict:
+		keys.append(String(key))
+		multipliers.append(float(c_mods_dict[key]))
+	return {"keys": keys, "multipliers": multipliers}
 
 
 func _entity_has_trait(entity, trait_id: String) -> bool:
