@@ -443,6 +443,44 @@ def _build_key_owner_policy_payload(report: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _extract_owner_map(payload: Any) -> Dict[str, str]:
+    if not isinstance(payload, dict):
+        return {}
+    raw = payload
+    if isinstance(payload.get("owners"), dict):
+        raw = payload["owners"]
+    if not isinstance(raw, dict):
+        return {}
+    out: Dict[str, str] = {}
+    for raw_key, raw_value in raw.items():
+        key = str(raw_key)
+        value = str(raw_value)
+        if not key or not value:
+            continue
+        out[key] = value
+    return out
+
+
+def _compare_owner_maps(expected: Dict[str, str], actual: Dict[str, str]) -> Dict[str, Any]:
+    expected_keys = set(expected.keys())
+    actual_keys = set(actual.keys())
+    missing_keys = sorted(expected_keys - actual_keys)
+    extra_keys = sorted(actual_keys - expected_keys)
+    changed_keys = sorted(
+        key
+        for key in (expected_keys & actual_keys)
+        if str(expected.get(key)) != str(actual.get(key))
+    )
+    return {
+        "missing_keys": missing_keys,
+        "extra_keys": extra_keys,
+        "changed_keys": changed_keys,
+        "missing_count": len(missing_keys),
+        "extra_count": len(extra_keys),
+        "changed_count": len(changed_keys),
+    }
+
+
 def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
     locale = str(report.get("duplicate_report_locale", "unknown"))
     conflict_items = [
@@ -519,11 +557,17 @@ def main() -> int:
         default="",
         help="optional output path for canonical key-owner policy json",
     )
+    parser.add_argument(
+        "--compare-key-owner-policy",
+        default="",
+        help="optional path to existing key-owner policy json to compare against generated owners",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
     report = run_audit(project_root)
     _print_report(report)
+    owner_policy_payload = _build_key_owner_policy_payload(report)
 
     if args.report_json:
         out = (project_root / args.report_json).resolve()
@@ -544,9 +588,52 @@ def main() -> int:
         _write_text(out, _build_duplicate_conflict_markdown(report))
     if args.key_owner_policy_json:
         out = (project_root / args.key_owner_policy_json).resolve()
-        _write_json(out, _build_key_owner_policy_payload(report))
+        _write_json(out, owner_policy_payload)
+
+    owner_policy_mismatch = False
+    if args.compare_key_owner_policy:
+        compare_path = (project_root / args.compare_key_owner_policy).resolve()
+        compare_payload: Any = {}
+        if compare_path.exists():
+            compare_payload = _load_json(compare_path)
+        generated_owners = _extract_owner_map(owner_policy_payload)
+        existing_owners = _extract_owner_map(compare_payload)
+        compare_result = _compare_owner_maps(generated_owners, existing_owners)
+        print(
+            "[localization_audit] key-owner-policy compare: "
+            f"missing={compare_result['missing_count']} "
+            f"extra={compare_result['extra_count']} "
+            f"changed={compare_result['changed_count']}"
+        )
+        owner_policy_mismatch = (
+            int(compare_result["missing_count"]) > 0
+            or int(compare_result["extra_count"]) > 0
+            or int(compare_result["changed_count"]) > 0
+        )
+        if owner_policy_mismatch:
+            preview_limit = 10
+            if compare_result["missing_keys"]:
+                print(
+                    "[localization_audit] missing owner keys (first 10): "
+                    + ", ".join(compare_result["missing_keys"][:preview_limit]),
+                    file=sys.stderr,
+                )
+            if compare_result["extra_keys"]:
+                print(
+                    "[localization_audit] extra owner keys (first 10): "
+                    + ", ".join(compare_result["extra_keys"][:preview_limit]),
+                    file=sys.stderr,
+                )
+            if compare_result["changed_keys"]:
+                print(
+                    "[localization_audit] changed owner keys (first 10): "
+                    + ", ".join(compare_result["changed_keys"][:preview_limit]),
+                    file=sys.stderr,
+                )
 
     strict_duplicate_conflicts = int(report["duplicate_conflict_count"]) > 0
+    if owner_policy_mismatch:
+        return 1
     if args.strict:
         has_issues = bool(report["parity_issues"]) or (
             int(report["inline_keyable_group_without_key_count"]) > 0

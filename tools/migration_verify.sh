@@ -52,6 +52,7 @@ audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
 audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
 audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
 audit_key_owner_policy_json="${MIGRATION_AUDIT_KEY_OWNER_POLICY:-}"
+audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_cmd=(python3 "${ROOT_DIR}/tools/localization_audit.py" --project-root "${ROOT_DIR}" --strict)
 if [[ -n "${audit_report_json}" ]]; then
   audit_cmd+=(--report-json "${audit_report_json}")
@@ -64,6 +65,9 @@ if [[ -n "${audit_conflict_markdown}" ]]; then
 fi
 if [[ -n "${audit_key_owner_policy_json}" ]]; then
   audit_cmd+=(--key-owner-policy-json "${audit_key_owner_policy_json}")
+fi
+if [[ -n "${audit_compare_key_owner_policy}" ]]; then
+  audit_cmd+=(--compare-key-owner-policy "${audit_compare_key_owner_policy}")
 fi
 "${audit_cmd[@]}"
 

@@ -1080,3 +1080,8 @@
 - `localization_compile`에 key-owner 정책 로딩/적용을 추가해 key별 canonical category를 compile 단계에서 강제할 수 있게 확장.
 - manifest에 `key_owners_path`, `max_owner_rule_miss_count`를 도입하고 `localization/key_owners.json`(248 keys) 정책 파일을 연결.
 - owner miss 회귀 게이트를 추가하고 전체 검증(`migration_verify --with-benches`)에서 `owner_misses=0` 및 checksum 유지를 확인.
+
+## Commit 219
+- `localization_audit`에 key-owner 정책 비교 모드(`--compare-key-owner-policy`)를 추가해 generated owners와 저장 정책 간 drift를 자동 검출.
+- 비교 결과를 `missing/extra/changed`로 출력하고 불일치 시 실패하도록 해 정책 동기화 게이트를 강화.
+- `migration_verify`에 `MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY` 연동을 추가해 검증 파이프라인에서 owner 정책 일관성을 강제.
