@@ -1030,3 +1030,8 @@
 - `sim-systems` A* open-set 선택 로직을 선형 스캔에서 `BinaryHeap` 기반 우선순위 큐로 전환해 최소 f-score 탐색 비용을 추가 절감.
 - stale heap entry 스킵 + 유효 확장 노드 기준 `max_steps` 카운팅으로 의미를 유지하면서 조기 종료 리스크를 제거.
 - checksum을 유지한 상태에서 `pathfind-bridge` 성능이 추가로 `~2.9ms/iter -> ~2.0ms/iter` 수준으로 개선.
+
+## Commit 209
+- `find_path` 휴리스틱 계산을 `GridPos` 임시 생성 경로에서 좌표 직접 계산(`chebyshev_xy`)으로 정리해 미세 오버헤드를 줄이고 경고를 제거.
+- 목표 좌표 캐시(`to_x`, `to_y`)를 도입해 neighbor 평가 경로의 반복 필드 접근을 축소.
+- checksum 유지 상태로 pathfinding 경로의 미세 최적화를 추가 반영.

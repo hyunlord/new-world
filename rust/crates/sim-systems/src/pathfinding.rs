@@ -177,6 +177,8 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
     } else {
         max_steps
     };
+    let to_x = to.x;
+    let to_y = to.y;
     let node_count = (grid.width * grid.height) as usize;
 
     let mut open_set: BinaryHeap<OpenEntry> = BinaryHeap::new();
@@ -186,7 +188,7 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
     let mut closed_set: Vec<bool> = vec![false; node_count];
 
     g_score[from_idx] = 0.0;
-    f_score[from_idx] = chebyshev(from, to);
+    f_score[from_idx] = chebyshev_xy(from.x, from.y, to_x, to_y);
     open_set.push(OpenEntry {
         idx: from_idx,
         f: f_score[from_idx],
@@ -244,7 +246,7 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
                 if tentative_g < g_score[neighbor_idx] {
                     came_from[neighbor_idx] = Some(current_idx);
                     g_score[neighbor_idx] = tentative_g;
-                    let neighbor_f = tentative_g + chebyshev(GridPos::new(neighbor_x, neighbor_y), to);
+                    let neighbor_f = tentative_g + chebyshev_xy(neighbor_x, neighbor_y, to_x, to_y);
                     f_score[neighbor_idx] = neighbor_f;
                     open_set.push(OpenEntry {
                         idx: neighbor_idx,
@@ -259,8 +261,8 @@ pub fn find_path(grid: &GridCostMap, from: GridPos, to: GridPos, max_steps: usiz
 }
 
 #[inline]
-fn chebyshev(a: GridPos, b: GridPos) -> f32 {
-    (a.x.abs_diff(b.x).max(a.y.abs_diff(b.y))) as f32
+fn chebyshev_xy(ax: i32, ay: i32, bx: i32, by: i32) -> f32 {
+    (ax.abs_diff(bx).max(ay.abs_diff(by))) as f32
 }
 
 fn reconstruct_path(came_from: &[Option<usize>], mut current_idx: usize, width: i32) -> Vec<GridPos> {
