@@ -1282,6 +1282,44 @@ static func stress_context_scale(active_multipliers: PackedFloat32Array) -> floa
 	return clampf(scale, 0.1, 5.0)
 
 
+## Applies scaled event emotion injection to fast/slow layers.
+## Returns Dictionary: { fast: PackedFloat32Array, slow: PackedFloat32Array }
+static func stress_emotion_inject_step(
+	fast_current: PackedFloat32Array,
+	slow_current: PackedFloat32Array,
+	fast_inject: PackedFloat32Array,
+	slow_inject: PackedFloat32Array,
+	scale: float
+) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_emotion_inject_step",
+		[
+			fast_current,
+			slow_current,
+			fast_inject,
+			slow_inject,
+			scale
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var fast_len: int = mini(fast_current.size(), fast_inject.size())
+	var slow_len: int = mini(slow_current.size(), slow_inject.size())
+	var fast_out: PackedFloat32Array = PackedFloat32Array()
+	var slow_out: PackedFloat32Array = PackedFloat32Array()
+	fast_out.resize(fast_len)
+	slow_out.resize(slow_len)
+	for idx in range(fast_len):
+		fast_out[idx] = clampf(fast_current[idx] + fast_inject[idx] * scale, 0.0, 100.0)
+	for idx in range(slow_len):
+		slow_out[idx] = clampf(slow_current[idx] + slow_inject[idx] * scale, -50.0, 100.0)
+	return {
+		"fast": fast_out,
+		"slow": slow_out,
+	}
+
+
 ## Scales stress event instant/per_tick with accumulated multipliers.
 ## Returns Dictionary: { total_scale, loss_mult, final_instant, final_per_tick }
 static func stress_event_scaled(

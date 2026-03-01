@@ -1319,6 +1319,28 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_emotion_inject_step(
+        &self,
+        fast_current: PackedFloat32Array,
+        slow_current: PackedFloat32Array,
+        fast_inject: PackedFloat32Array,
+        slow_inject: PackedFloat32Array,
+        scale: f32,
+    ) -> VarDictionary {
+        let out = stat_curve::stress_emotion_inject_step(
+            &packed_f32_to_vec(&fast_current),
+            &packed_f32_to_vec(&slow_current),
+            &packed_f32_to_vec(&fast_inject),
+            &packed_f32_to_vec(&slow_inject),
+            scale,
+        );
+        let mut dict = VarDictionary::new();
+        dict.set("fast", vec_f32_to_packed(out.fast));
+        dict.set("slow", vec_f32_to_packed(out.slow));
+        dict
+    }
+
+    #[func]
     fn stat_stress_event_scaled(
         &self,
         base_instant: f32,

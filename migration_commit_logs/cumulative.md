@@ -256,3 +256,8 @@
 - 이벤트 주입 경로의 `_calc_relationship_scale`, `_calc_context_scale` 수식을 Rust helper(`stress_relationship_scale`, `stress_context_scale`)로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 관계/상황 scale API를 추가하고 `StressSystem`은 입력 구성 후 네이티브 호출 중심으로 전환.
 - method 처리(`none`, `bond_strength`, unknown) 및 context multiplier clamp 범위를 유지하면서 이벤트 스케일링 계산 경로를 통일.
+
+## Commit 053
+- 이벤트 감정 주입 수식(`fast`/`slow` layer clamp + scale 적용)을 Rust step(`stress_emotion_inject_step`)으로 이관.
+- stressor 로드 시 `emotion_inject`를 `_emo_fast`/`_emo_slow` 배열로 사전 컴파일해 이벤트 실행 시 문자열 파싱 비용을 축소.
+- `StressSystem` 감정 주입 경로를 사전 컴파일 + 네이티브 step 호출 기반으로 정리하면서 기존 레이어 경계값 의미를 유지.

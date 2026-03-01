@@ -230,6 +230,13 @@ fn run_stress_math_bench(args: &[String]) {
         );
         let context_scale =
             stat_curve::stress_context_scale(&[1.1, if i % 2 == 0 { 0.9 } else { 1.3 }]);
+        let emotion_inject = stat_curve::stress_emotion_inject_step(
+            &[20.0, 50.0, 10.0, 5.0, 8.0, 35.0, 40.0, 25.0],
+            &[-10.0, 20.0, 5.0, -5.0, 3.0, 15.0, 12.0, 6.0],
+            &[2.0, -1.0, 3.5, 0.0, 1.5, -2.0, 1.0, 0.5],
+            &[0.5, 1.2, -0.6, 0.8, 0.0, -1.1, 0.7, -0.3],
+            0.8 + 0.6 * t,
+        );
         let event_scaled = stat_curve::stress_event_scaled(
             12.0 + 18.0 * t,
             0.8 + 0.5 * t,
@@ -373,6 +380,8 @@ fn run_stress_math_bench(args: &[String]) {
             + black_box(personality_scale)
             + black_box(relationship_scale)
             + black_box(context_scale)
+            + black_box(emotion_inject.fast[0])
+            + black_box(emotion_inject.slow[1])
             + black_box(event_scaled.final_instant)
             + black_box(traces.total_contribution)
             + black_box(delta_step.delta)

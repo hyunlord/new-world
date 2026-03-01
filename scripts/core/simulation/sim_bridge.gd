@@ -878,6 +878,27 @@ func stat_stress_context_scale(active_multipliers: PackedFloat32Array):
 	)
 
 
+## Delegates stress emotion injection step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_emotion_inject_step(
+	fast_current: PackedFloat32Array,
+	slow_current: PackedFloat32Array,
+	fast_inject: PackedFloat32Array,
+	slow_inject: PackedFloat32Array,
+	scale: float
+):
+	return _call_native_if_exists(
+		"stat_stress_emotion_inject_step",
+		[
+			fast_current,
+			slow_current,
+			fast_inject,
+			slow_inject,
+			scale
+		]
+	)
+
+
 ## Delegates stress event final scaling to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_stress_event_scaled(

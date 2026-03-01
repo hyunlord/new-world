@@ -19,6 +19,26 @@ const STRESS_EPSILON: float = 0.05
 
 const _TICK_SCALAR_LEN: int = 40
 const _TICK_FLAG_LEN: int = 3
+const _EMOTION_ORDER: Array[String] = [
+	"fear",
+	"anger",
+	"sadness",
+	"disgust",
+	"surprise",
+	"joy",
+	"trust",
+	"anticipation"
+]
+const _EMOTION_INDEX: Dictionary = {
+	"fear": 0,
+	"anger": 1,
+	"sadness": 2,
+	"disgust": 3,
+	"surprise": 4,
+	"joy": 5,
+	"trust": 6,
+	"anticipation": 7
+}
 
 # ── Phase 4 Extension: C05 Denial + Rebound Queue ─────────────────────
 ## Gross (1998) Emotion Regulation — cognitive reappraisal and suppression
@@ -202,9 +222,8 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool)
 			next_traces.append(trace)
 	ed.stress_traces = next_traces
 
-	var emotion_keys: Array[String] = ["fear", "anger", "sadness", "disgust", "surprise", "joy", "trust", "anticipation"]
-	for i in range(emotion_keys.size()):
-		var emotion_name: String = emotion_keys[i]
+	for i in range(_EMOTION_ORDER.size()):
+		var emotion_name: String = _EMOTION_ORDER[i]
 		var contrib: float = float(tick_step.get(emotion_name, 0.0))
 		if absf(contrib) > STRESS_EPSILON:
 			breakdown["emo_%s" % emotion_name] = contrib
@@ -337,7 +356,15 @@ func _load_stressor_defs() -> void:
 	# _comment 키 제거
 	for key in raw.keys():
 		if not key.begins_with("_comment"):
-			_stressor_defs[key] = raw[key]
+			var raw_def: Variant = raw[key]
+			if typeof(raw_def) != TYPE_DICTIONARY:
+				_stressor_defs[key] = raw_def
+				continue
+			var stressor_def: Dictionary = raw_def
+			var compiled_emo: Dictionary = _compile_emotion_inject(stressor_def.get("emotion_inject", {}))
+			stressor_def["_emo_fast"] = compiled_emo.get("fast", PackedFloat32Array())
+			stressor_def["_emo_slow"] = compiled_emo.get("slow", PackedFloat32Array())
+			_stressor_defs[key] = stressor_def
 
 
 # ── Personality-aware 이벤트 스트레스 주입 ───────────────────────────
@@ -399,8 +426,9 @@ func inject_event(entity, event_id: String, context: Dictionary = {}) -> void:
 		})
 
 	# 7) 감정 직접 주입
-	var emo_inject = sdef.get("emotion_inject", {})
-	_inject_emotions(ed, emo_inject, total_scale)
+	var emo_fast: PackedFloat32Array = sdef.get("_emo_fast", PackedFloat32Array())
+	var emo_slow: PackedFloat32Array = sdef.get("_emo_slow", PackedFloat32Array())
+	_inject_emotions(ed, emo_fast, emo_slow, total_scale)
 
 	# 8) 디버그 로그
 	if GameConfig.DEBUG_STRESS_LOG:
@@ -484,21 +512,69 @@ func _entity_has_trait(entity, trait_id: String) -> bool:
 	return false
 
 
-func _inject_emotions(ed, emo_inject: Dictionary, scale: float) -> void:
-	for key in emo_inject:
-		var raw_val = float(emo_inject[key]) * scale
-		# key 형식: "sadness_fast", "trust_slow"
-		var last_underscore: int = key.rfind("_")
+func _compile_emotion_inject(emo_inject: Variant) -> Dictionary:
+	var fast: PackedFloat32Array = PackedFloat32Array()
+	var slow: PackedFloat32Array = PackedFloat32Array()
+	fast.resize(_EMOTION_ORDER.size())
+	slow.resize(_EMOTION_ORDER.size())
+
+	if typeof(emo_inject) != TYPE_DICTIONARY:
+		return {"fast": fast, "slow": slow}
+
+	var emo_inject_dict: Dictionary = emo_inject
+	for key in emo_inject_dict:
+		var key_str: String = String(key)
+		var raw_val: float = float(emo_inject_dict[key])
+		var last_underscore: int = key_str.rfind("_")
 		if last_underscore < 0:
 			continue
-		var emo_name: String = key.substr(0, last_underscore)
-		var layer: String = key.substr(last_underscore + 1)
+		var emo_name: String = key_str.substr(0, last_underscore)
+		var layer: String = key_str.substr(last_underscore + 1)
+		var idx: int = int(_EMOTION_INDEX.get(emo_name, -1))
+		if idx < 0:
+			continue
 		if layer == "fast":
-			if ed.fast.has(emo_name):
-				ed.fast[emo_name] = clampf(ed.fast.get(emo_name, 0.0) + raw_val, 0.0, 100.0)
+			fast[idx] += raw_val
 		elif layer == "slow":
-			if ed.slow.has(emo_name):
-				ed.slow[emo_name] = clampf(ed.slow.get(emo_name, 0.0) + raw_val, -50.0, 100.0)
+			slow[idx] += raw_val
+
+	return {"fast": fast, "slow": slow}
+
+
+func _inject_emotions(
+	ed,
+	emo_fast: PackedFloat32Array,
+	emo_slow: PackedFloat32Array,
+	scale: float
+) -> void:
+	if emo_fast.size() == 0 and emo_slow.size() == 0:
+		return
+
+	var current_fast: PackedFloat32Array = PackedFloat32Array()
+	var current_slow: PackedFloat32Array = PackedFloat32Array()
+	current_fast.resize(_EMOTION_ORDER.size())
+	current_slow.resize(_EMOTION_ORDER.size())
+	for idx in range(_EMOTION_ORDER.size()):
+		var emotion_name: String = _EMOTION_ORDER[idx]
+		current_fast[idx] = float(ed.fast.get(emotion_name, 0.0))
+		current_slow[idx] = float(ed.slow.get(emotion_name, 0.0))
+
+	var out: Dictionary = StatCurveScript.stress_emotion_inject_step(
+		current_fast,
+		current_slow,
+		emo_fast,
+		emo_slow,
+		scale
+	)
+	var next_fast: PackedFloat32Array = out.get("fast", current_fast)
+	var next_slow: PackedFloat32Array = out.get("slow", current_slow)
+	var count: int = mini(_EMOTION_ORDER.size(), mini(next_fast.size(), next_slow.size()))
+	for idx in range(count):
+		var emotion_name: String = _EMOTION_ORDER[idx]
+		if ed.fast.has(emotion_name):
+			ed.fast[emotion_name] = float(next_fast[idx])
+		if ed.slow.has(emotion_name):
+			ed.slow[emotion_name] = float(next_slow[idx])
 
 
 # ── Phase 4: Rebound Queue Processing ────────────────────────────────

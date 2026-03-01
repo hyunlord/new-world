@@ -193,6 +193,12 @@ pub struct StressEventScaled {
     pub final_per_tick: f32,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct StressEmotionInjectStep {
+    pub fast: Vec<f32>,
+    pub slow: Vec<f32>,
+}
+
 /// LOG_DIMINISHING: XP required for a level step.
 pub fn log_xp_required(
     level: i32,
@@ -1121,6 +1127,29 @@ pub fn stress_context_scale(active_multipliers: &[f32]) -> f32 {
     scale.clamp(0.1, 5.0)
 }
 
+/// Applies scaled event emotion injection to fast/slow layers.
+pub fn stress_emotion_inject_step(
+    fast_current: &[f32],
+    slow_current: &[f32],
+    fast_inject: &[f32],
+    slow_inject: &[f32],
+    scale: f32,
+) -> StressEmotionInjectStep {
+    let fast_len = fast_current.len().min(fast_inject.len());
+    let slow_len = slow_current.len().min(slow_inject.len());
+    let mut fast: Vec<f32> = Vec::with_capacity(fast_len);
+    let mut slow: Vec<f32> = Vec::with_capacity(slow_len);
+
+    for idx in 0..fast_len {
+        fast.push((fast_current[idx] + fast_inject[idx] * scale).clamp(0.0, 100.0));
+    }
+    for idx in 0..slow_len {
+        slow.push((slow_current[idx] + slow_inject[idx] * scale).clamp(-50.0, 100.0));
+    }
+
+    StressEmotionInjectStep { fast, slow }
+}
+
 /// Scales stress event instant/per_tick with accumulated multipliers.
 pub fn stress_event_scaled(
     base_instant: f32,
@@ -1704,6 +1733,19 @@ mod tests {
         assert!((normal - 1.44).abs() < 1e-6);
         assert_eq!(low, 0.1);
         assert_eq!(high, 5.0);
+    }
+
+    #[test]
+    fn stress_emotion_inject_step_scales_and_clamps_layers() {
+        let out = stress_emotion_inject_step(
+            &[10.0, 95.0, 20.0],
+            &[0.0, -45.0, 70.0],
+            &[4.0, 10.0, -8.0],
+            &[2.0, -20.0, 30.0],
+            2.0,
+        );
+        assert_eq!(out.fast, vec![18.0, 100.0, 4.0]);
+        assert_eq!(out.slow, vec![4.0, -50.0, 100.0]);
     }
 
     #[test]
