@@ -516,3 +516,8 @@
 - `Locale`에 `trf3`/`trf4` 경량 포맷 API를 추가해 3~4 placeholder 치환 시 임시 params Dictionary 생성을 줄이는 경로를 확장.
 - `world_stats_population_tab`의 `UI_STAT_CURRENT_FMT`를 `trf4`로 전환.
 - `settlement_overview_tab`의 `UI_POP_SUMMARY_FMT`를 `trf3`로 전환해 draw 경로 오버헤드를 완화.
+
+## Commit 106
+- `settlement_tech_tab`의 반복 포맷 호출을 `Locale.trf1/trf2/trf3` 경량 경로로 전환 (`UI_PRACTITIONERS_FMT`, `UI_NEEDS_MORE_FMT`, `UI_DISCOVERER_FMT`, `UI_AND_N_MORE`, `UI_STAT_POP_FMT`).
+- 출력 의미를 유지하면서 draw 경로 임시 params Dictionary 생성을 줄임.
+- Technology 탭 렌더 경로의 미세 오버헤드를 완화.
