@@ -960,6 +960,21 @@ if [[ -n "${verify_report_json}" ]]; then
     )"
     to_json_opt_string "${raw_value}"
   }
+  to_json_opt_bool_from_json_file_key() {
+    local raw_path="$1"
+    local key="$2"
+    local abs_path
+    abs_path="$(to_abs_path "${raw_path}")"
+    if [[ -z "${abs_path}" || ! -f "${abs_path}" ]]; then
+      echo "null"
+      return
+    fi
+    local raw_value
+    raw_value="$(
+      python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); v=d.get(sys.argv[2]); print("true" if v is True else ("false" if v is False else ""))' "${abs_path}" "${key}" 2>/dev/null || true
+    )"
+    to_json_opt_bool_literal "${raw_value}"
+  }
   to_json_zero_is_true() {
     local raw_value="$1"
     if [[ "${raw_value}" =~ ^[0-9]+$ ]]; then
@@ -1121,6 +1136,15 @@ if [[ -n "${verify_report_json}" ]]; then
   compare_missing_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "missing_count")"
   compare_extra_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "extra_count")"
   compare_changed_count="$(to_json_opt_int_from_json_file_key "${audit_owner_policy_compare_report_json}" "changed_count")"
+  bench_path_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "path_iters")"
+  bench_stress_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "stress_iters")"
+  bench_needs_iters_from_report="$(to_json_opt_int_from_json_file_key "${bench_report_json}" "needs_iters")"
+  bench_path_backend_from_report="$(to_json_opt_string_from_json_file_key "${bench_report_json}" "path_backend")"
+  bench_path_split_enabled_from_report="$(to_json_opt_bool_from_json_file_key "${bench_report_json}" "path_split_enabled")"
+  bench_path_smoke_enabled_from_report="$(to_json_opt_bool_from_json_file_key "${bench_report_json}" "path_smoke_enabled")"
+  bench_path_smoke_expect_has_gpu_from_report="$(to_json_opt_bool_from_json_file_key "${bench_report_json}" "path_smoke_expect_has_gpu")"
+  bench_stress_checksum_from_report="$(to_json_opt_string_from_json_file_key "${bench_report_json}" "stress_checksum")"
+  bench_needs_checksum_from_report="$(to_json_opt_string_from_json_file_key "${bench_report_json}" "needs_checksum")"
   artifact_expected_count=0
   artifact_present_count=0
   count_artifact_presence "${compile_report_json}"
@@ -1240,6 +1264,17 @@ if [[ -n "${verify_report_json}" ]]; then
     "missing_count": ${compare_missing_count},
     "extra_count": ${compare_extra_count},
     "changed_count": ${compare_changed_count}
+  },
+  "bench_summary": {
+    "path_iters": ${bench_path_iters_from_report},
+    "stress_iters": ${bench_stress_iters_from_report},
+    "needs_iters": ${bench_needs_iters_from_report},
+    "path_backend": ${bench_path_backend_from_report},
+    "path_split_enabled": ${bench_path_split_enabled_from_report},
+    "path_smoke_enabled": ${bench_path_smoke_enabled_from_report},
+    "path_smoke_expect_has_gpu": ${bench_path_smoke_expect_has_gpu_from_report},
+    "stress_checksum": ${bench_stress_checksum_from_report},
+    "needs_checksum": ${bench_needs_checksum_from_report}
   },
   "verification_status": {
     "artifacts_complete": ${artifacts_complete_status},

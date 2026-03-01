@@ -1315,3 +1315,8 @@
 - `migration_verify_report.json`에 카운트 기반 상태 플래그 `verification_status`를 추가해 핵심 품질 결과를 boolean으로 즉시 해석 가능하게 확장.
 - parity/duplicate/owner-policy/compare 상태를 각 요약 카운트에서 계산하고, bench 미사용 시 bench 상태는 `null`로 직렬화.
 - `/tmp/worldsim_audit_artifacts27/migration_verify_report.json`에서 `audit_parity_clean=true`, `audit_duplicate_conflict_free=false`, `owner_policy_compare_clean=true` 반영을 확인.
+
+## Commit 266
+- `migration_verify_report.json`이 `bench_report.json`의 핵심 벤치 설정/체크섬을 직접 포함하도록 `bench_summary`를 추가.
+- JSON bool 추출 헬퍼를 도입해 `path_split_enabled`/`path_smoke_enabled`/`path_smoke_expect_has_gpu`를 안전 직렬화.
+- `/tmp/worldsim_audit_artifacts28/migration_verify_report.json`에서 bench summary 필드와 `verification_status.bench_report_present_when_enabled=true` 반영을 확인.
