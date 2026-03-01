@@ -711,3 +711,8 @@
 - `sim-bridge`/`SimBridge`에 `body_age_trainability_modifier_rec` 전용 API를 추가해 휴식 경로의 REC trainability 조회를 축 문자열 전달 없이 처리.
 - `body_attributes`에 `get_rec_age_trainability_modifier` 헬퍼를 추가하고 Rust 우선 + 기존 축 기반 함수 fallback 구조를 제공.
 - `needs_system` 휴식 XP 경로가 REC 전용 helper를 사용하도록 전환되어 미세 호출 오버헤드를 완화.
+
+## Commit 145
+- `sim-test`에 `--bench-needs-math` 모드를 추가해 body/needs Rust 수학 경로(`age_curve/trainability/training_gain/realized/needs_decay/critical_severity`)를 독립적으로 마이크로벤치 가능하게 확장.
+- 벤치 반복 횟수 파싱 로직을 `parse_bench_iterations`로 공통화해 `--bench-stress-math`와 `--bench-needs-math`가 동일한 `--iters` 인터페이스를 사용.
+- 기존 stress 벤치 동작은 유지한 채, needs/body 경로의 성능 회귀 추적 기준점(`checksum=29719684.00000` @ 10k iters)을 추가.

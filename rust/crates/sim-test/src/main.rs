@@ -2,13 +2,17 @@ use sim_core::config::GameConfig;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
-use sim_systems::stat_curve;
+use sim_systems::{body, stat_curve};
 use std::hint::black_box;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    if args.iter().any(|arg| arg == "--bench-needs-math") {
+        run_needs_math_bench(&args);
+        return;
+    }
     if args.iter().any(|arg| arg == "--bench-stress-math") {
         run_stress_math_bench(&args);
         return;
@@ -101,8 +105,8 @@ fn main() {
     assert_eq!(snap.settlement_count, 1, "should have 1 settlement");
 }
 
-fn run_stress_math_bench(args: &[String]) {
-    let mut iterations: u32 = 200_000;
+fn parse_bench_iterations(args: &[String], default_iterations: u32) -> u32 {
+    let mut iterations: u32 = default_iterations.max(1);
     for i in 0..args.len() {
         if args[i] == "--iters" && i + 1 < args.len() {
             if let Ok(parsed) = args[i + 1].parse::<u32>() {
@@ -110,6 +114,112 @@ fn run_stress_math_bench(args: &[String]) {
             }
         }
     }
+    iterations
+}
+
+fn run_needs_math_bench(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 200_000);
+    let potentials: [i32; 6] = [640, 700, 670, 620, 690, 710];
+    let trainabilities: [i32; 5] = [560, 520, 610, 500, 580];
+    let training_ceilings: [f32; 5] = [2.5, 0.3, 1.5, 0.2, 0.6];
+
+    let started = Instant::now();
+    let mut checksum = 0.0_f32;
+    for i in 0..iterations {
+        let t = (i % 100) as f32 / 100.0;
+        let age_years = 5.0 + 85.0 * t;
+        let end_norm = 0.1 + 0.8 * t;
+        let rec_norm = 0.9 - 0.7 * t;
+        let hunger = 0.1 + 0.8 * (1.0 - t);
+        let tile_temp = -0.2 + 1.2 * t;
+        let xps = [
+            100.0 + 1800.0 * t,
+            120.0 + 1400.0 * t,
+            90.0 + 2100.0 * t,
+            30.0 + 700.0 * t,
+            140.0 + 1700.0 * t,
+        ];
+
+        let curves = body::compute_age_curves(age_years);
+        let train_mods = body::age_trainability_modifiers(age_years);
+        let gains = body::calc_training_gains(
+            &potentials[..5],
+            &trainabilities,
+            &xps,
+            &training_ceilings,
+            5000.0,
+        );
+        let realized = body::calc_realized_values(
+            &potentials,
+            &trainabilities,
+            &xps,
+            &training_ceilings,
+            age_years,
+            5000.0,
+        );
+        let action_cost = body::action_energy_cost(0.006, end_norm, 0.35);
+        let rest_recovery = body::rest_energy_recovery(0.012, rec_norm, 0.5);
+        let thirst = body::thirst_decay(0.0035, tile_temp, 0.5);
+        let warmth = body::warmth_decay(0.0030, tile_temp, i % 5 != 0, 0.5, 0.2, 0.35);
+        let decay_step = body::needs_base_decay_step(
+            hunger,
+            0.0030,
+            1.0,
+            0.2,
+            0.7,
+            0.0020,
+            0.0016,
+            0.0012,
+            0.0035,
+            0.0030,
+            tile_temp,
+            i % 7 != 0,
+            0.5,
+            0.2,
+            0.35,
+            true,
+        );
+        let severity = body::needs_critical_severity_step(
+            0.09 + 0.5 * t,
+            0.12 + 0.45 * t,
+            0.2 + 0.5 * t,
+            0.2,
+            0.25,
+            0.35,
+        );
+
+        checksum += black_box(curves[0])
+            + black_box(curves[5])
+            + black_box(train_mods[2])
+            + black_box(train_mods[4])
+            + black_box(*gains.first().unwrap_or(&0) as f32)
+            + black_box(*gains.get(2).unwrap_or(&0) as f32)
+            + black_box(*realized.first().unwrap_or(&0) as f32)
+            + black_box(*realized.get(5).unwrap_or(&0) as f32)
+            + black_box(action_cost)
+            + black_box(rest_recovery)
+            + black_box(thirst)
+            + black_box(warmth)
+            + black_box(decay_step[0])
+            + black_box(decay_step[4])
+            + black_box(decay_step[5])
+            + black_box(severity[0])
+            + black_box(severity[1])
+            + black_box(severity[2]);
+    }
+    let elapsed = started.elapsed();
+    let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);
+    println!(
+        "[sim-test] needs-math bench: iterations={} elapsed_ms={:.3} ns_per_iter={:.1} checksum={:.5}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        ns_per_iter,
+        checksum
+    );
+}
+
+fn run_stress_math_bench(args: &[String]) {
+    let iterations = parse_bench_iterations(args, 200_000);
 
     let trace_per_tick: [f32; 8] = [3.0, 2.5, 2.0, 1.5, 1.0, 0.8, 0.5, 0.2];
     let trace_decay: [f32; 8] = [0.05, 0.04, 0.03, 0.02, 0.05, 0.06, 0.07, 0.08];
