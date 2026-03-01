@@ -1240,3 +1240,8 @@
 - `migration_verify_report.json`에 git 실행 컨텍스트(`git_branch`, `git_head`, `git_dirty`)를 추가해 검증 결과를 코드 상태와 직접 연결.
 - git 정보 조회 실패 시 null 안전 처리로 보고서 생성 안정성을 유지.
 - `/tmp/worldsim_audit_artifacts12/migration_verify_report.json`에서 branch/SHA/dirty 필드 반영을 확인.
+
+## Commit 251
+- `localization_compile` summary report에 `thresholds` 객체를 추가해 manifest 기반 품질 게이트 임계치들을 JSON 아티팩트에 함께 기록.
+- compile 결과 지표와 임계치를 동일 리포트에서 비교할 수 있어 검증 기준 추적성과 운영 가시성을 강화.
+- `/tmp/worldsim_audit_artifacts13/compile_report.json`에서 `thresholds` 6개 필드 반영을 확인.
