@@ -755,6 +755,26 @@ pub fn stratification_status_score(
     )
 }
 
+/// Age-based value plasticity in `[0.10, 1.0]`.
+pub fn value_plasticity(age_years: f32) -> f32 {
+    if age_years < 7.0 {
+        return 1.0;
+    }
+    if age_years < 15.0 {
+        let t = (age_years - 7.0) / 8.0;
+        return 1.0 + (0.70 - 1.0) * t;
+    }
+    if age_years < 25.0 {
+        let t = (age_years - 15.0) / 10.0;
+        return 0.70 + (0.30 - 0.70) * t;
+    }
+    if age_years < 50.0 {
+        let t = (age_years - 25.0) / 25.0;
+        return 0.30 + (0.10 - 0.30) * t;
+    }
+    0.10
+}
+
 #[inline]
 fn maxf32(value: f32) -> f32 {
     value.max(0.0)
@@ -1240,7 +1260,7 @@ mod tests {
         stratification_status_score, stress_injection_apply_step, stress_rebound_apply_step,
         stress_shaken_countdown_step, stress_support_score, thirst_decay,
         upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        warmth_decay,
+        value_plasticity, warmth_decay,
     };
 
     #[test]
@@ -1658,6 +1678,14 @@ mod tests {
         let clipped =
             stratification_status_score(2.0, 2.0, 2.0, 90.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0);
         assert!(clipped <= 1.0);
+    }
+
+    #[test]
+    fn value_plasticity_decreases_by_age_stage() {
+        assert!((value_plasticity(5.0) - 1.0).abs() < 1e-6);
+        assert!((value_plasticity(15.0) - 0.70).abs() < 1e-6);
+        assert!((value_plasticity(25.0) - 0.30).abs() < 1e-6);
+        assert!((value_plasticity(55.0) - 0.10).abs() < 1e-6);
     }
 
     #[test]

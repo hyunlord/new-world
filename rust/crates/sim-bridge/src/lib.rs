@@ -1147,6 +1147,11 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_value_plasticity(&self, age_years: f32) -> f32 {
+        body::value_plasticity(age_years)
+    }
+
+    #[func]
     fn body_upper_needs_job_alignment(
         &self,
         job_code: i32,
