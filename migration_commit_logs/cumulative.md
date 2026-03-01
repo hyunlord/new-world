@@ -416,3 +416,8 @@
 - `Locale`에 key index 버전(`key_index_version`)을 도입해 locale 로드 시 캐시 무효화 기준을 제공.
 - `GameCalendar`와 `EmotionData`의 정적 key-id 캐시가 버전 변경을 감지해 자동 초기화되도록 보강.
 - locale 전환/재로딩 이후에도 key-id 캐시 정합성을 유지하는 안전장치를 추가.
+
+## Commit 086
+- `StatQuery.get_normalized_batch_into`에 `assume_defined` fast-path 옵션을 추가해 반복 `has_def` 체크를 선택적으로 생략.
+- `StressSystem`의 고정 stat id batch 조회는 `assume_defined=true`로 호출해 입력 수집 분기 비용을 완화.
+- 기본 경로는 기존 안전 동작(`assume_defined=false`)을 유지해 호환성을 보장.

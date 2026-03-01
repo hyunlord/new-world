@@ -190,7 +190,8 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	var norm_values: PackedFloat32Array = StatQuery.get_normalized_batch_into(
 		entity,
 		_TICK_NORM_STAT_IDS,
-		_tick_norm_values
+		_tick_norm_values,
+		true
 	)
 	var hunger: float = float(norm_values[_TICK_NORM_IDX_HUNGER])
 	var energy: float = float(norm_values[_TICK_NORM_IDX_ENERGY])

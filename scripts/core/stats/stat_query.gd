@@ -78,7 +78,8 @@ func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> Pa
 
 
 ## Writes normalized values for multiple stats into a provided buffer and returns that buffer.
-func get_normalized_batch_into(entity: RefCounted, stat_ids: Array[StringName], out_values: PackedFloat32Array) -> PackedFloat32Array:
+func get_normalized_batch_into(entity: RefCounted, stat_ids: Array[StringName], out_values: PackedFloat32Array,
+		assume_defined: bool = false) -> PackedFloat32Array:
 	if out_values.size() != stat_ids.size():
 		out_values.resize(stat_ids.size())
 	if entity == null:
@@ -94,7 +95,7 @@ func get_normalized_batch_into(entity: RefCounted, stat_ids: Array[StringName], 
 
 	for i in range(stat_ids.size()):
 		var stat_id: StringName = stat_ids[i]
-		if not StatDefinitionScript.has_def(stat_id):
+		if not assume_defined and not StatDefinitionScript.has_def(stat_id):
 			out_values[i] = 0.0
 			continue
 		var range_arr: Array = _get_normalized_range_cached(stat_id)
