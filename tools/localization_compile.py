@@ -43,6 +43,7 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "key_registry_path": "key_registry.json",
     "preserve_key_ids": True,
     "embed_keys": False,
+    "max_duplicate_key_count": None,
 }
 
 
@@ -220,6 +221,17 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     key_registry_rel = str(manifest.get("key_registry_path", "key_registry.json"))
     preserve_key_ids = bool(manifest.get("preserve_key_ids", True))
     embed_keys = bool(manifest.get("embed_keys", False))
+    max_duplicate_key_count_raw = manifest.get("max_duplicate_key_count")
+    max_duplicate_key_count: int | None = None
+    if max_duplicate_key_count_raw is not None:
+        try:
+            max_duplicate_key_count = int(max_duplicate_key_count_raw)
+        except (TypeError, ValueError):
+            print(
+                "[localization_compile] invalid max_duplicate_key_count in manifest",
+                file=sys.stderr,
+            )
+            return 1
 
     if not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
@@ -230,6 +242,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
 
     compiled_by_locale: Dict[str, Dict[str, Any]] = {}
     total_duplicates = 0
+    max_locale_duplicates = 0
     for locale in supported_locales:
         compiled = _compile_locale(
             localization_root=localization_root,
@@ -240,6 +253,7 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
         compiled_by_locale[locale] = compiled
         duplicate_count = len(compiled["duplicate_keys"])
         total_duplicates += duplicate_count
+        max_locale_duplicates = max(max_locale_duplicates, duplicate_count)
 
     canonical_key_set: set[str] = set()
     for compiled in compiled_by_locale.values():
@@ -311,6 +325,14 @@ def run(project_root: Path, strict_duplicates: bool) -> int:
     if strict_duplicates and total_duplicates > 0:
         print(
             f"[localization_compile] strict mode failed: duplicate_keys={total_duplicates}",
+            file=sys.stderr,
+        )
+        return 1
+
+    if max_duplicate_key_count is not None and max_locale_duplicates > max_duplicate_key_count:
+        print(
+            "[localization_compile] duplicate regression: "
+            f"max_locale_duplicates={max_locale_duplicates} max_allowed={max_duplicate_key_count}",
             file=sys.stderr,
         )
         return 1

@@ -752,3 +752,8 @@
 - `localization_compile`에 `_write_json_if_changed`를 도입해 내용 동일 시 compiled/registry 파일 쓰기를 생략하도록 개선.
 - 컴파일 로그에 `updated` 플래그를 추가해 실제 파일 갱신 여부를 즉시 확인 가능하게 확장.
 - 반복 검증 시 불필요한 localization 산출물 재작성 및 git noise를 감소.
+
+## Commit 153
+- localization manifest에 `max_duplicate_key_count`를 도입해 중복 키 개수 기준선을 명시(현재 248).
+- `localization_compile`이 로케일별 최대 중복 개수를 계산해 기준 초과 시 실패하도록 회귀 가드를 추가.
+- 향후 확장 시 중복 키 증가를 컴파일 단계에서 조기 차단하도록 품질 게이트를 강화.
