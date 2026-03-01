@@ -1110,3 +1110,8 @@
 - `localization_compile` 산출물 meta에 key-owner 정책 경로/적용 통계(seen/hit/miss/override)를 추가.
 - `compiled/en.json`, `compiled/ko.json`에 신규 meta 필드를 반영해 아티팩트 자체의 관측성을 강화.
 - 전체 검증(`migration_verify --with-benches`) 통과로 checksum 유지 확인.
+
+## Commit 225
+- `sim-bridge`에 backend dispatch 경유 공개 batch API(`pathfind_grid_batch_dispatch_bytes`, `pathfind_grid_batch_xy_dispatch_bytes`)를 추가.
+- `sim-test` pathfinding 벤치가 dispatch 경로를 사용하고 backend dispatch 카운터(cpu/gpu/total)를 함께 출력하도록 연동.
+- checksum 유지 상태에서 벤치 관측성(backend 사용량)까지 확장.

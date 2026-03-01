@@ -13,7 +13,8 @@ use pathfinding_backend::{
     reset_dispatch_counts, set_backend_mode, PATHFIND_BACKEND_GPU,
 };
 use pathfinding_gpu::{
-    pathfind_grid_batch_vec2_gpu_bytes, pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
+    pathfind_grid_batch_tuple_gpu_bytes, pathfind_grid_batch_vec2_gpu_bytes,
+    pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
 };
 use sim_systems::{
     body,
@@ -90,6 +91,16 @@ pub fn pathfind_from_flat(input: PathfindInput) -> Result<Vec<GridPos>, Pathfind
 
     let grid = GridCostMap::from_flat_owned_unchecked(width, height, walkable, move_cost);
     Ok(find_path(&grid, from, to, max_steps))
+}
+
+/// Returns accumulated resolved backend dispatch counters `(cpu, gpu)`.
+pub fn pathfind_backend_dispatch_counts() -> (u64, u64) {
+    read_dispatch_counts()
+}
+
+/// Resets accumulated resolved backend dispatch counters.
+pub fn reset_pathfind_backend_dispatch_counts() {
+    reset_dispatch_counts();
 }
 
 /// Pathfinding entry shape intended for future Godot bridge exposure.
@@ -337,6 +348,52 @@ pub fn pathfind_grid_batch_vec2_bytes(
     Ok(out)
 }
 
+/// Dispatches tuple batch pathfinding according to current backend mode.
+pub fn pathfind_grid_batch_dispatch_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[(i32, i32)],
+    to_points: &[(i32, i32)],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    let backend_mode = get_backend_mode();
+    dispatch_pathfind_grid_batch_bytes(
+        backend_mode,
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        max_steps,
+    )
+}
+
+/// Dispatches packed-xy batch pathfinding according to current backend mode.
+pub fn pathfind_grid_batch_xy_dispatch_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_xy: &[i32],
+    to_xy: &[i32],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    let backend_mode = get_backend_mode();
+    dispatch_pathfind_grid_batch_xy_bytes(
+        backend_mode,
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_xy,
+        to_xy,
+        max_steps,
+    )
+}
+
 fn dispatch_pathfind_grid_bytes(
     backend_mode: u8,
     width: i32,
@@ -384,6 +441,40 @@ fn dispatch_pathfind_grid_batch_vec2_bytes(
             max_steps,
         ),
         _ => pathfind_grid_batch_vec2_bytes(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_points,
+            to_points,
+            max_steps,
+        ),
+    }
+}
+
+fn dispatch_pathfind_grid_batch_bytes(
+    backend_mode: u8,
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[(i32, i32)],
+    to_points: &[(i32, i32)],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    let resolved_mode = resolve_backend_mode_code(backend_mode);
+    record_dispatch(resolved_mode);
+    match resolved_mode {
+        PATHFIND_BACKEND_GPU => pathfind_grid_batch_tuple_gpu_bytes(
+            width,
+            height,
+            walkable,
+            move_cost,
+            from_points,
+            to_points,
+            max_steps,
+        ),
+        _ => pathfind_grid_batch_bytes(
             width,
             height,
             walkable,

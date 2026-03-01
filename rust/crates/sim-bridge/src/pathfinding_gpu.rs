@@ -41,6 +41,27 @@ pub(crate) fn pathfind_grid_batch_vec2_gpu_bytes(
     )
 }
 
+pub(crate) fn pathfind_grid_batch_tuple_gpu_bytes(
+    width: i32,
+    height: i32,
+    walkable: &[u8],
+    move_cost: &[f32],
+    from_points: &[(i32, i32)],
+    to_points: &[(i32, i32)],
+    max_steps: usize,
+) -> Result<Vec<Vec<GridPos>>, PathfindError> {
+    // Placeholder GPU entrypoint: keep behavior stable until compute path is integrated.
+    crate::pathfind_grid_batch_bytes(
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        max_steps,
+    )
+}
+
 pub(crate) fn pathfind_grid_batch_xy_gpu_bytes(
     width: i32,
     height: i32,

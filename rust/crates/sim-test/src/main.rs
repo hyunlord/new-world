@@ -2,7 +2,10 @@ use sim_core::config::GameConfig;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
-use sim_bridge::{pathfind_grid_batch_bytes, pathfind_grid_batch_xy_bytes};
+use sim_bridge::{
+    pathfind_backend_dispatch_counts, pathfind_grid_batch_dispatch_bytes,
+    pathfind_grid_batch_xy_dispatch_bytes, reset_pathfind_backend_dispatch_counts,
+};
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
 use std::sync::{Arc, Mutex};
@@ -384,10 +387,11 @@ fn run_pathfind_bridge_bench(args: &[String]) {
     let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
         pathfind_bench_inputs();
 
+    reset_pathfind_backend_dispatch_counts();
     let started = Instant::now();
     let mut checksum = 0.0_f32;
     for _ in 0..iterations {
-        let groups = pathfind_grid_batch_bytes(
+        let groups = pathfind_grid_batch_dispatch_bytes(
             width,
             height,
             &walkable,
@@ -396,11 +400,11 @@ fn run_pathfind_bridge_bench(args: &[String]) {
             &to_points,
             max_steps,
         )
-        .expect("pathfind_grid_batch_bytes");
-        let groups_xy = pathfind_grid_batch_xy_bytes(
+        .expect("pathfind_grid_batch_dispatch_bytes");
+        let groups_xy = pathfind_grid_batch_xy_dispatch_bytes(
             width, height, &walkable, &move_cost, &from_xy, &to_xy, max_steps,
         )
-        .expect("pathfind_grid_batch_xy_bytes");
+        .expect("pathfind_grid_batch_xy_dispatch_bytes");
 
         for i in 0..groups.len() {
             checksum += black_box(groups[i].len() as f32);
@@ -419,6 +423,13 @@ fn run_pathfind_bridge_bench(args: &[String]) {
         ns_per_iter,
         checksum
     );
+    let (cpu_dispatches, gpu_dispatches) = pathfind_backend_dispatch_counts();
+    println!(
+        "[sim-test] pathfind-bridge backend-dispatches: cpu={} gpu={} total={}",
+        cpu_dispatches,
+        gpu_dispatches,
+        cpu_dispatches + gpu_dispatches
+    );
 }
 
 fn run_pathfind_bridge_split_bench(args: &[String]) {
@@ -426,10 +437,11 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
     let (width, height, walkable, move_cost, from_points, to_points, from_xy, to_xy, max_steps) =
         pathfind_bench_inputs();
 
+    reset_pathfind_backend_dispatch_counts();
     let started_tuple = Instant::now();
     let mut checksum_tuple = 0.0_f32;
     for _ in 0..iterations {
-        let groups = pathfind_grid_batch_bytes(
+        let groups = pathfind_grid_batch_dispatch_bytes(
             width,
             height,
             &walkable,
@@ -438,7 +450,7 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
             &to_points,
             max_steps,
         )
-        .expect("pathfind_grid_batch_bytes");
+        .expect("pathfind_grid_batch_dispatch_bytes");
         for i in 0..groups.len() {
             checksum_tuple += black_box(groups[i].len() as f32);
         }
@@ -452,14 +464,22 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
         tuple_ns_per_iter,
         checksum_tuple
     );
+    let (cpu_tuple, gpu_tuple) = pathfind_backend_dispatch_counts();
+    println!(
+        "[sim-test] pathfind-bridge-split tuple-backend-dispatches: cpu={} gpu={} total={}",
+        cpu_tuple,
+        gpu_tuple,
+        cpu_tuple + gpu_tuple
+    );
 
+    reset_pathfind_backend_dispatch_counts();
     let started_xy = Instant::now();
     let mut checksum_xy = 0.0_f32;
     for _ in 0..iterations {
-        let groups_xy = pathfind_grid_batch_xy_bytes(
+        let groups_xy = pathfind_grid_batch_xy_dispatch_bytes(
             width, height, &walkable, &move_cost, &from_xy, &to_xy, max_steps,
         )
-        .expect("pathfind_grid_batch_xy_bytes");
+        .expect("pathfind_grid_batch_xy_dispatch_bytes");
         for i in 0..groups_xy.len() {
             checksum_xy += black_box(groups_xy[i].len() as f32);
         }
@@ -472,6 +492,13 @@ fn run_pathfind_bridge_split_bench(args: &[String]) {
         elapsed_xy.as_secs_f64() * 1000.0,
         xy_ns_per_iter,
         checksum_xy
+    );
+    let (cpu_xy, gpu_xy) = pathfind_backend_dispatch_counts();
+    println!(
+        "[sim-test] pathfind-bridge-split xy-backend-dispatches: cpu={} gpu={} total={}",
+        cpu_xy,
+        gpu_xy,
+        cpu_xy + gpu_xy
     );
 }
 
