@@ -40,7 +40,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_TAB_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 
-	canvas.draw_string(font, Vector2(cx, cy), Locale.trf("UI_TOTAL_POP_FMT", {"n": population}), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
+	canvas.draw_string(font, Vector2(cx, cy), Locale.trf1("UI_TOTAL_POP_FMT", "n", population), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
 	cy += LINE_HEIGHT
 
 	var gender_line: String = (

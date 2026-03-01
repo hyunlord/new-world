@@ -481,3 +481,8 @@
 - `settlement_overview_tab`의 `UI_CHARISMA_FMT`, `UI_TOTAL_POP_FMT` 호출을 `Locale.trf1` 경량 포맷 경로로 전환.
 - 기존 placeholder/출력 의미를 유지하면서 단순 포맷 호출의 임시 params Dictionary 생성을 줄임.
 - Settlement Overview 탭 draw 경로의 미세 오버헤드를 완화.
+
+## Commit 099
+- `settlement_population_tab`의 `UI_TOTAL_POP_FMT` 호출을 `Locale.trf1` 경량 포맷 경로로 전환.
+- 출력 의미를 유지하면서 draw 경로의 단일 placeholder 포맷 호출 임시 params Dictionary 생성을 줄임.
+- Settlement Population 탭 렌더 미세 오버헤드를 완화.
