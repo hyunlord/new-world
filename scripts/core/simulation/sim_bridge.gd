@@ -373,6 +373,29 @@ func stat_stress_emotion_contribution(
 	)
 
 
+## Delegates stress recovery decay computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_stress_recovery_value(
+	stress: float,
+	support_score: float,
+	resilience: float,
+	reserve: float,
+	is_sleeping: bool,
+	is_safe: bool
+):
+	return _call_native_if_exists(
+		"stat_stress_recovery_value",
+		[
+			stress,
+			support_score,
+			resilience,
+			reserve,
+			is_sleeping,
+			is_safe
+		]
+	)
+
+
 ## Delegates SIGMOID_EXTREME influence to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_sigmoid_extreme(

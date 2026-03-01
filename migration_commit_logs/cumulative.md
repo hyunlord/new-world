@@ -161,3 +161,8 @@
 - `StressSystem`의 감정 기여 계산(8감정 가중치 + VA composite)을 Rust 함수로 이관.
 - `sim-bridge`/`SimBridge`/`StatCurve`에 emotion contribution API를 추가해 GDScript는 breakdown 조립만 담당.
 - stress breakdown 키 체계를 유지한 채 감정 수식 핫패스를 네이티브 경로로 전환.
+
+## Commit 034
+- `StressSystem`의 회복(decay) 수식을 Rust(`sim-systems`) 함수로 이관.
+- `sim-bridge`/`SimBridge`/`StatCurve` 경유 호출로 GDScript는 입력 수집 + breakdown 처리만 수행.
+- recovery 관련 상수를 Rust fallback 함수로 정리해 stress hot path 네이티브 전환 범위를 확장.

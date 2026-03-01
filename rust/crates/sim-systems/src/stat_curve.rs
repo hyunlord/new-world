@@ -225,6 +225,36 @@ pub fn stress_emotion_contribution(
     }
 }
 
+/// Stress recovery decay value per tick.
+pub fn stress_recovery_value(
+    stress: f32,
+    support_score: f32,
+    resilience: f32,
+    reserve: f32,
+    is_sleeping: bool,
+    is_safe: bool,
+) -> f32 {
+    const BASE_DECAY_PER_TICK: f32 = 1.2;
+    const DECAY_FRAC: f32 = 0.006;
+    const SAFE_DECAY_BONUS: f32 = 0.8;
+    const SLEEP_DECAY_BONUS: f32 = 1.5;
+    const SUPPORT_DECAY_MULT: f32 = 0.12;
+
+    let mut decay = BASE_DECAY_PER_TICK + DECAY_FRAC * stress;
+    if is_safe {
+        decay += SAFE_DECAY_BONUS;
+    }
+    if is_sleeping {
+        decay += SLEEP_DECAY_BONUS;
+    }
+    decay *= 1.0 + SUPPORT_DECAY_MULT * support_score;
+    decay *= 1.0 + 0.10 * (resilience - 0.5) * 2.0;
+    if reserve < 30.0 {
+        decay *= 0.85;
+    }
+    decay
+}
+
 /// SIGMOID_EXTREME influence.
 pub fn sigmoid_extreme(
     value: i32,
@@ -398,5 +428,19 @@ mod tests {
         );
         assert_eq!(out.va_composite, 3.0);
         assert_eq!(out.total, 3.0);
+    }
+
+    #[test]
+    fn stress_recovery_value_higher_when_sleeping_and_safe() {
+        let awake_unsafe = stress_recovery_value(300.0, 0.3, 0.5, 50.0, false, false);
+        let sleep_safe = stress_recovery_value(300.0, 0.3, 0.5, 50.0, true, true);
+        assert!(sleep_safe > awake_unsafe);
+    }
+
+    #[test]
+    fn stress_recovery_value_reduced_on_low_reserve() {
+        let normal = stress_recovery_value(300.0, 0.5, 0.5, 50.0, false, true);
+        let low_reserve = stress_recovery_value(300.0, 0.5, 0.5, 10.0, false, true);
+        assert!(low_reserve < normal);
     }
 }

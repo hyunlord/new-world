@@ -17,12 +17,6 @@ const StatCurveScript = preload("res://scripts/core/stats/stat_curve.gd")
 const STRESS_CLAMP_MAX: float = 2000.0
 const STRESS_EPSILON: float = 0.05
 
-const BASE_DECAY_PER_TICK: float = 1.2
-const DECAY_FRAC: float = 0.006
-const SAFE_DECAY_BONUS: float = 0.8
-const SLEEP_DECAY_BONUS: float = 1.5
-const SUPPORT_DECAY_MULT: float = 0.12
-
 const THRESHOLD_TENSE: float = 200.0
 const THRESHOLD_CRISIS: float = 350.0
 const THRESHOLD_BREAK_RISK: float = 500.0
@@ -311,21 +305,16 @@ func _calc_emotion_contribution(ed, breakdown: Dictionary) -> float:
 
 # ── 5) 회복 ──────────────────────────────────────────────────────────
 func _calc_recovery(entity: RefCounted, ed, _pd, is_sleeping: bool, is_safe: bool, breakdown: Dictionary) -> float:
-	var decay: float = BASE_DECAY_PER_TICK + DECAY_FRAC * ed.stress
-
-	if is_safe:
-		decay += SAFE_DECAY_BONUS
-	if is_sleeping:
-		decay += SLEEP_DECAY_BONUS
-
 	var support: float = _calc_support_score(entity)
-	decay *= 1.0 + SUPPORT_DECAY_MULT * support
-
 	var resilience: float = ed.resilience if ed != null else 0.5
-	decay *= 1.0 + 0.10 * (resilience - 0.5) * 2.0
-
-	if ed.reserve < 30.0:
-		decay *= 0.85
+	var decay: float = StatCurveScript.stress_recovery_value(
+		ed.stress,
+		support,
+		resilience,
+		ed.reserve,
+		is_sleeping,
+		is_safe
+	)
 
 	breakdown["recovery"] = -decay
 	return decay

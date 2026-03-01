@@ -344,6 +344,41 @@ static func stress_emotion_contribution(
 	out["total"] = total + va_contrib
 	return out
 
+
+## Stress recovery decay value per tick.
+static func stress_recovery_value(
+	stress: float,
+	support_score: float,
+	resilience: float,
+	reserve: float,
+	is_sleeping: bool,
+	is_safe: bool
+) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_stress_recovery_value",
+		[
+			stress,
+			support_score,
+			resilience,
+			reserve,
+			is_sleeping,
+			is_safe
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+
+	var decay: float = 1.2 + 0.006 * stress
+	if is_safe:
+		decay += 0.8
+	if is_sleeping:
+		decay += 1.5
+	decay *= 1.0 + 0.12 * support_score
+	decay *= 1.0 + 0.10 * (resilience - 0.5) * 2.0
+	if reserve < 30.0:
+		decay *= 0.85
+	return decay
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # INFLUENCE CURVES
 # 반환값: float 배수 (1.0 = 중립, >1.0 = 증폭, <1.0 = 감쇠)

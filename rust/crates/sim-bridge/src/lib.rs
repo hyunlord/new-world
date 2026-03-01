@@ -740,6 +740,26 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_stress_recovery_value(
+        &self,
+        stress: f32,
+        support_score: f32,
+        resilience: f32,
+        reserve: f32,
+        is_sleeping: bool,
+        is_safe: bool,
+    ) -> f32 {
+        stat_curve::stress_recovery_value(
+            stress,
+            support_score,
+            resilience,
+            reserve,
+            is_sleeping,
+            is_safe,
+        )
+    }
+
+    #[func]
     fn stat_sigmoid_extreme(
         &self,
         value: i32,
