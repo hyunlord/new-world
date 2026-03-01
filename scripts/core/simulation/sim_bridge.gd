@@ -1654,6 +1654,35 @@ func body_child_stress_type_code(
 	)
 
 
+## Delegates child stress state apply step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_child_stress_apply_step(
+	resilience: float,
+	reserve: float,
+	stress: float,
+	allostatic: float,
+	intensity: float,
+	spike_mult: float,
+	vulnerability_mult: float,
+	break_threshold_mult: float,
+	stress_type_code: int
+):
+	return _call_native_if_exists(
+		"body_child_stress_apply_step",
+		[
+			resilience,
+			reserve,
+			stress,
+			allostatic,
+			intensity,
+			spike_mult,
+			vulnerability_mult,
+			break_threshold_mult,
+			stress_type_code
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

@@ -787,3 +787,8 @@
 - `sim-systems::body`에 `child_shrp_step`, `child_stress_type_code`를 추가해 child stress의 SHRP/분류 수식을 Rust로 이관.
 - `sim-bridge`/`SimBridge`에 대응 API를 추가하고, `child_stress_processor`가 Rust 우선 + 기존 fallback 구조를 사용하도록 전환.
 - toxic onset Chronicle 이벤트 부작용은 GDScript에 유지해 기능 의미를 보존하면서 계산 경로의 네이티브화를 확장.
+
+## Commit 160
+- `sim-systems::body`에 `child_stress_apply_step`를 추가해 child stress positive/tolerable/toxic 상태 업데이트 수식을 Rust로 통합 이관.
+- `sim-bridge`/`SimBridge`에 `body_child_shrp_step`, `body_child_stress_type_code`, `body_child_stress_apply_step` 경로를 추가하고 `child_stress_processor`가 Rust 우선 + fallback 구조를 사용하도록 전환.
+- `sim-test --bench-needs-math`에 child apply 관련 수식 호출을 추가해 회귀 추적 범위를 확장(신규 checksum 기준: `33378700.00000`).

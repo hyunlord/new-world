@@ -475,6 +475,60 @@ pub fn child_stress_type_code(
     }
 }
 
+/// Applies child stress state update for the classified stress type.
+///
+/// Returns `[next_resilience, next_reserve, next_stress, next_allostatic, developmental_damage_delta]`.
+pub fn child_stress_apply_step(
+    resilience: f32,
+    reserve: f32,
+    stress: f32,
+    allostatic: f32,
+    intensity: f32,
+    spike_mult: f32,
+    vulnerability_mult: f32,
+    break_threshold_mult: f32,
+    stress_type_code: i32,
+) -> [f32; 5] {
+    let mut next_resilience = resilience;
+    let mut next_reserve = reserve;
+    let mut next_stress = stress;
+    let mut next_allostatic = allostatic;
+    let mut developmental_damage_delta = 0.0_f32;
+
+    match stress_type_code {
+        0 => {
+            next_resilience = clamp_f32(next_resilience + 0.01 * intensity, 0.0, 1.0);
+            next_reserve = clamp_f32(next_reserve + 0.5 * intensity, 0.0, 100.0);
+        }
+        1 => {
+            let gas_cost = intensity * spike_mult * 6.0;
+            next_reserve = clamp_f32(next_reserve - gas_cost, 0.0, 100.0);
+            next_stress = clamp_f32(next_stress + intensity * spike_mult * 8.0, 0.0, 2000.0);
+        }
+        _ => {
+            next_stress = clamp_f32(
+                next_stress + intensity * spike_mult * vulnerability_mult * 16.0,
+                0.0,
+                2000.0,
+            );
+            next_allostatic = clamp_f32(
+                next_allostatic + intensity * vulnerability_mult * 1.5,
+                0.0,
+                100.0,
+            );
+            developmental_damage_delta = intensity * break_threshold_mult * 0.02;
+        }
+    }
+
+    [
+        next_resilience,
+        next_reserve,
+        next_stress,
+        next_allostatic,
+        developmental_damage_delta,
+    ]
+}
+
 /// Compute training gains for multiple axes in one pass.
 ///
 /// Uses the shortest input length among the provided slices.
@@ -659,11 +713,11 @@ mod tests {
         action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
         anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
         calc_training_gains, child_parent_stress_transfer, child_shrp_step,
-        child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_type_code,
-        compute_age_curve, compute_age_curves, critical_severity, erg_frustration_step,
-        needs_base_decay_step, needs_critical_severity_step, rest_energy_recovery, thirst_decay,
-        upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        warmth_decay,
+        child_simultaneous_ace_step, child_social_buffered_intensity, child_stress_apply_step,
+        child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
+        erg_frustration_step, needs_base_decay_step, needs_critical_severity_step,
+        rest_energy_recovery, thirst_decay, upper_needs_best_skill_normalized,
+        upper_needs_job_alignment, upper_needs_step, warmth_decay,
     };
 
     #[test]
@@ -927,6 +981,24 @@ mod tests {
         assert_eq!(child_stress_type_code(0.2, false, 0.0), 0);
         assert_eq!(child_stress_type_code(0.6, true, 0.8), 1);
         assert_eq!(child_stress_type_code(0.6, false, 0.8), 2);
+    }
+
+    #[test]
+    fn child_stress_apply_step_matches_tolerable_shape() {
+        let out = child_stress_apply_step(0.5, 80.0, 200.0, 10.0, 0.7, 1.2, 1.4, 1.0, 1);
+        assert_eq!(out[0], 0.5);
+        assert!(out[1] < 80.0);
+        assert!(out[2] > 200.0);
+        assert_eq!(out[3], 10.0);
+        assert_eq!(out[4], 0.0);
+    }
+
+    #[test]
+    fn child_stress_apply_step_toxic_produces_damage_delta() {
+        let out = child_stress_apply_step(0.5, 80.0, 200.0, 10.0, 0.8, 1.1, 1.3, 1.2, 2);
+        assert!(out[2] > 200.0);
+        assert!(out[3] > 10.0);
+        assert!(out[4] > 0.0);
     }
 
     #[test]

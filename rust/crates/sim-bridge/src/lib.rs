@@ -751,6 +751,33 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_child_stress_apply_step(
+        &self,
+        resilience: f32,
+        reserve: f32,
+        stress: f32,
+        allostatic: f32,
+        intensity: f32,
+        spike_mult: f32,
+        vulnerability_mult: f32,
+        break_threshold_mult: f32,
+        stress_type_code: i32,
+    ) -> PackedFloat32Array {
+        let out = body::child_stress_apply_step(
+            resilience,
+            reserve,
+            stress,
+            allostatic,
+            intensity,
+            spike_mult,
+            vulnerability_mult,
+            break_threshold_mult,
+            stress_type_code,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

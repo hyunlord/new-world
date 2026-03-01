@@ -230,6 +230,20 @@ fn run_needs_math_bench(args: &[String]) {
         );
         let ace_step =
             body::child_simultaneous_ace_step(&[0.2 + 0.5 * t, 0.1 + 0.6 * t, 0.3], 0.4 * t);
+        let shrp_step = body::child_shrp_step(0.2 + 0.9 * t, i % 2 == 0, 0.7, 1.2);
+        let stress_type_code =
+            body::child_stress_type_code(0.2 + 0.7 * t, i % 3 == 0, 0.4 + 0.5 * t);
+        let child_apply = body::child_stress_apply_step(
+            0.3 + 0.4 * t,
+            50.0 + 40.0 * (1.0 - t),
+            200.0 + 300.0 * t,
+            5.0 + 25.0 * t,
+            0.2 + 0.7 * t,
+            0.9 + 0.5 * t,
+            0.8 + 0.7 * (1.0 - t),
+            0.8 + 0.6 * t,
+            stress_type_code,
+        );
 
         checksum += black_box(curves[0])
             + black_box(curves[5])
@@ -257,7 +271,13 @@ fn run_needs_math_bench(args: &[String]) {
             + black_box(parent_transfer)
             + black_box(ace_step[0])
             + black_box(ace_step[1])
-            + black_box(ace_step[2]);
+            + black_box(ace_step[2])
+            + black_box(shrp_step[0])
+            + black_box(shrp_step[1])
+            + black_box(stress_type_code as f32)
+            + black_box(child_apply[0])
+            + black_box(child_apply[2])
+            + black_box(child_apply[4]);
     }
     let elapsed = started.elapsed();
     let ns_per_iter = elapsed.as_nanos() as f64 / f64::from(iterations);

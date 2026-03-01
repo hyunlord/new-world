@@ -107,29 +107,54 @@ func process_stressor(entity, stressor: Dictionary, tick: int) -> void:
 	var stress_type: String = _classify_stress_type(intensity, caregiver_present, attachment_quality, entity, tick)
 	var spike_mult: float = float(stage_data.get("cortisol_spike_mult", 1.0))
 	var vulnerability_mult: float = float(stage_data.get("vulnerability_mult", 1.0))
-
-	match stress_type:
-		"positive":
-			entity.emotion_data.resilience = clampf(entity.emotion_data.resilience + 0.01 * intensity, 0.0, 1.0)
-			entity.emotion_data.reserve = clampf(entity.emotion_data.reserve + 0.5 * intensity, 0.0, 100.0)
-		"tolerable":
-			var gas_cost: float = intensity * spike_mult * 6.0
-			entity.emotion_data.reserve = clampf(entity.emotion_data.reserve - gas_cost, 0.0, 100.0)
-			entity.emotion_data.stress = clampf(entity.emotion_data.stress + intensity * spike_mult * 8.0, 0.0, 2000.0)
-		"toxic":
-			entity.emotion_data.stress = clampf(
-				entity.emotion_data.stress + intensity * spike_mult * vulnerability_mult * 16.0,
-				0.0,
-				2000.0
-			)
-			entity.emotion_data.allostatic = clampf(
-				entity.emotion_data.allostatic + intensity * vulnerability_mult * 1.5,
-				0.0,
-				100.0
-			)
-			var developmental_damage = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
-			developmental_damage += intensity * float(stage_data.get("break_threshold_mult", 1.0)) * 0.02
-			entity.emotion_data.set_meta("developmental_damage", developmental_damage)
+	var applied_rust: bool = false
+	var break_threshold_mult: float = float(stage_data.get("break_threshold_mult", 1.0))
+	var apply_variant: Variant = SimBridge.body_child_stress_apply_step(
+		float(entity.emotion_data.resilience),
+		float(entity.emotion_data.reserve),
+		float(entity.emotion_data.stress),
+		float(entity.emotion_data.allostatic),
+		intensity,
+		spike_mult,
+		vulnerability_mult,
+		break_threshold_mult,
+		_stress_type_to_code(stress_type)
+	)
+	if apply_variant is PackedFloat32Array:
+		var packed_apply: PackedFloat32Array = apply_variant
+		if packed_apply.size() >= 5:
+			entity.emotion_data.resilience = float(packed_apply[0])
+			entity.emotion_data.reserve = float(packed_apply[1])
+			entity.emotion_data.stress = float(packed_apply[2])
+			entity.emotion_data.allostatic = float(packed_apply[3])
+			var dd_delta: float = float(packed_apply[4])
+			if dd_delta > 0.0:
+				var developmental_damage: float = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+				entity.emotion_data.set_meta("developmental_damage", developmental_damage + dd_delta)
+			applied_rust = true
+	if not applied_rust:
+		match stress_type:
+			"positive":
+				entity.emotion_data.resilience = clampf(entity.emotion_data.resilience + 0.01 * intensity, 0.0, 1.0)
+				entity.emotion_data.reserve = clampf(entity.emotion_data.reserve + 0.5 * intensity, 0.0, 100.0)
+			"tolerable":
+				var gas_cost: float = intensity * spike_mult * 6.0
+				entity.emotion_data.reserve = clampf(entity.emotion_data.reserve - gas_cost, 0.0, 100.0)
+				entity.emotion_data.stress = clampf(entity.emotion_data.stress + intensity * spike_mult * 8.0, 0.0, 2000.0)
+			"toxic":
+				entity.emotion_data.stress = clampf(
+					entity.emotion_data.stress + intensity * spike_mult * vulnerability_mult * 16.0,
+					0.0,
+					2000.0
+				)
+				entity.emotion_data.allostatic = clampf(
+					entity.emotion_data.allostatic + intensity * vulnerability_mult * 1.5,
+					0.0,
+					100.0
+				)
+				var developmental_damage = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+				developmental_damage += intensity * break_threshold_mult * 0.02
+				entity.emotion_data.set_meta("developmental_damage", developmental_damage)
 
 	var stress_type_label: String = Locale.ltr("STRESS_TYPE_" + stress_type.to_upper())
 	emit_event("child_stress_processed", {
@@ -236,6 +261,15 @@ func _stress_type_from_code(stress_type_code: int) -> String:
 		1:
 			return "tolerable"
 	return "toxic"
+
+
+func _stress_type_to_code(stress_type: String) -> int:
+	match stress_type:
+		"positive":
+			return 0
+		"tolerable":
+			return 1
+	return 2
 
 
 ## [Hostinar, Sullivan & Gunnar, 2014 - Social Buffering]
