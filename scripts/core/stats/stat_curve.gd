@@ -70,6 +70,51 @@ static func xp_to_level(xp: float, params: Dictionary, max_level: int = 100) -> 
 			return lv - 1
 	return max_level
 
+
+## LOG_DIMINISHING 진행도 계산:
+## 입력된 현재 level/xp 기준으로 xp_at_level, xp_to_next, progress_in_level 산출.
+static func skill_xp_progress(
+	level: int,
+	xp: float,
+	params: Dictionary,
+	max_level: int = 100
+) -> Dictionary:
+	var base: float = float(params.get("base_xp", 100.0))
+	var exponent: float = float(params.get("exponent", 1.8))
+	var bp: Array = params.get("level_breakpoints", [])
+	var bm: Array = params.get("breakpoint_multipliers", [])
+	var rust_result: Variant = _call_sim_bridge(
+		"stat_skill_xp_progress",
+		[
+			level,
+			xp,
+			base,
+			exponent,
+			_to_packed_i32(bp),
+			_to_packed_f32(bm),
+			max_level
+		]
+	)
+	if rust_result is Dictionary:
+		return rust_result
+
+	var clamped_level: int = clampi(level, 0, max_level)
+	var xp_at_level: float = 0.0
+	for lv in range(1, clamped_level + 1):
+		xp_at_level += log_xp_required(lv, params)
+
+	var xp_to_next: float = 0.0
+	if clamped_level < max_level:
+		xp_to_next = log_xp_required(clamped_level + 1, params)
+
+	return {
+		"level": clamped_level,
+		"max_level": max_level,
+		"xp_at_level": xp_at_level,
+		"xp_to_next": xp_to_next,
+		"progress_in_level": xp - xp_at_level,
+	}
+
 ## SCURVE: 성격, 가치관
 ## "초반은 빠르게 형성, 중반에 굳어짐, 후반은 거의 불변"
 ## 반환: 변화 속도 배수 (float)

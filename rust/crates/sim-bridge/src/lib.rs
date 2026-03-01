@@ -354,6 +354,51 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn stat_skill_xp_progress(
+        &self,
+        level: i32,
+        xp: f32,
+        base_xp: f32,
+        exponent: f32,
+        level_breakpoints: PackedInt32Array,
+        breakpoint_multipliers: PackedFloat32Array,
+        max_level: i32,
+    ) -> VarDictionary {
+        let breakpoints = packed_i32_to_vec(&level_breakpoints);
+        let multipliers = packed_f32_to_vec(&breakpoint_multipliers);
+        let clamped_max = max_level.max(0);
+        let clamped_level = level.clamp(0, clamped_max);
+
+        let mut xp_at_level = 0.0_f32;
+        for lv in 1..=clamped_level {
+            xp_at_level +=
+                stat_curve::log_xp_required(lv, base_xp, exponent, &breakpoints, &multipliers);
+        }
+
+        let xp_to_next = if clamped_level < clamped_max {
+            stat_curve::log_xp_required(
+                clamped_level + 1,
+                base_xp,
+                exponent,
+                &breakpoints,
+                &multipliers,
+            )
+        } else {
+            0.0_f32
+        };
+
+        let progress = xp - xp_at_level;
+
+        let mut dict = VarDictionary::new();
+        dict.set("level", clamped_level);
+        dict.set("max_level", clamped_max);
+        dict.set("xp_at_level", xp_at_level as f64);
+        dict.set("xp_to_next", xp_to_next as f64);
+        dict.set("progress_in_level", progress as f64);
+        dict
+    }
+
+    #[func]
     fn stat_scurve_speed(
         &self,
         current_value: i32,

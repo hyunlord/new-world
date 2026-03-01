@@ -69,3 +69,8 @@
 - `StatQuery` XP 계산을 수동 수식에서 `StatCurveScript` 호출로 통합.
 - `_compute_level_from_xp`가 Rust-backed `xp_to_level` 경로를 사용하도록 변경.
 - breakpoint multiplier 중복 구현 제거로 수식 단일화.
+
+## Commit 015
+- Rust `sim-bridge`에 `stat_skill_xp_progress` 단일 호출 API 추가.
+- `StatCurve`에 progress 헬퍼를 추가해 Rust 우선 + GDScript fallback 유지.
+- `StatQuery.get_skill_xp_info`를 단일 호출 기반으로 전환해 FFI 호출 횟수 최적화.

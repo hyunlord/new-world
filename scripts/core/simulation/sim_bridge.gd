@@ -132,6 +132,31 @@ func stat_xp_to_level(
 	)
 
 
+## Delegates skill XP progress computation to native bridge.
+## Returns null when native bridge/method is unavailable.
+func stat_skill_xp_progress(
+	level: int,
+	xp: float,
+	base_xp: float,
+	exponent: float,
+	level_breakpoints: PackedInt32Array,
+	breakpoint_multipliers: PackedFloat32Array,
+	max_level: int
+):
+	return _call_native_if_exists(
+		"stat_skill_xp_progress",
+		[
+			level,
+			xp,
+			base_xp,
+			exponent,
+			level_breakpoints,
+			breakpoint_multipliers,
+			max_level
+		]
+	)
+
+
 ## Delegates SCURVE phase speed lookup to native bridge.
 ## Returns null when native bridge/method is unavailable.
 func stat_scurve_speed(

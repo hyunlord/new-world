@@ -183,16 +183,12 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 	## Compute cumulative XP at the start of current level
 	## (sum of XP required for all levels up to but not including current)
 	var params: Dictionary = growth.get("params", {})
-
-	var xp_at_level: float = 0.0
-	for l in range(1, level + 1):
-		xp_at_level += StatCurveScript.log_xp_required(l, params)
-
-	## XP needed to complete current level (reach level + 1)
-	var xp_to_next: float = 0.0
-	if level < max_level:
-		xp_to_next = StatCurveScript.log_xp_required(level + 1, params)
-	## If at max level, xp_to_next = 0 (no further progress possible)
+	var progress: Dictionary = StatCurveScript.skill_xp_progress(
+		level, current_xp, params, max_level
+	)
+	var xp_at_level: float = float(progress.get("xp_at_level", 0.0))
+	var xp_to_next: float = float(progress.get("xp_to_next", 0.0))
+	var progress_in_level: float = float(progress.get("progress_in_level", 0.0))
 
 	return {
 		"level": level,
@@ -200,7 +196,7 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 		"current_xp": current_xp,
 		"xp_at_level": xp_at_level,
 		"xp_to_next": xp_to_next,
-		"progress_in_level": current_xp - xp_at_level,
+		"progress_in_level": progress_in_level,
 	}
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
