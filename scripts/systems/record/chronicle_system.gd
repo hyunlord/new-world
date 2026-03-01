@@ -57,8 +57,12 @@ func log_event(type: String, entity_id: int, description: String,
 		"importance": importance,
 	}
 	if l10n.size() > 0:
-		entry["l10n_key"] = l10n.get("key", "")
-		entry["l10n_params"] = l10n.get("params", {})
+		var l10n_key: String = str(l10n.get("key", ""))
+		if not l10n_key.is_empty():
+			entry["l10n_key"] = l10n_key
+			var l10n_params: Dictionary = l10n.get("params", {})
+			if not l10n_params.is_empty():
+				entry["l10n_params"] = l10n_params
 
 	_world_events.append(entry)
 

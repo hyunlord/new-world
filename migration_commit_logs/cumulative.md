@@ -576,3 +576,8 @@
 - `Locale.trf`에 빈 파라미터 조기 반환 경로(`params.is_empty()`)를 추가.
 - key-id 캐시 및 fallback 로직을 유지하면서 placeholder가 없는 동적 호출의 치환 루프를 생략.
 - 출력 의미를 유지하면서 일반 `trf` 호출 경로의 미세 오버헤드를 완화.
+
+## Commit 118
+- `chronicle_system.log_event`의 `l10n` 저장 경로를 정규화해 `l10n_key`가 비어있으면 저장하지 않도록 변경.
+- `l10n_params`가 비어있는 경우 엔트리에 기록하지 않도록 변경.
+- 렌더 fallback 의미를 유지하면서 chronicle 이벤트 엔트리 payload 크기를 소폭 축소.
