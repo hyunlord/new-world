@@ -580,6 +580,44 @@ def _build_duplicate_conflict_markdown(report: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _build_owner_policy_markdown(report: Dict[str, Any]) -> str:
+    lines: List[str] = [
+        "# Localization Owner Policy Report",
+        "",
+        f"- owner_policy_path: `{report.get('owner_policy_path', '')}`",
+        f"- owner_policy_entries: `{report.get('owner_policy_entry_count', 0)}`",
+        f"- missing_for_duplicates: `{report.get('owner_policy_missing_duplicate_count', 0)}`",
+        f"- owner_unused: `{report.get('owner_policy_unused_count', 0)}`",
+        "",
+    ]
+    missing_keys = [str(x) for x in report.get("owner_policy_missing_duplicate_keys", [])]
+    unused_keys = [str(x) for x in report.get("owner_policy_unused_keys", [])]
+
+    if not missing_keys and not unused_keys:
+        lines.append("No owner policy coverage issues found.")
+        lines.append("")
+        return "\n".join(lines)
+
+    lines.extend(["## Missing Owner For Duplicate Keys", ""])
+    if missing_keys:
+        lines.extend(["| Key |", "| --- |"])
+        for key in missing_keys:
+            lines.append(f"| `{key}` |")
+    else:
+        lines.append("None")
+    lines.append("")
+
+    lines.extend(["## Unused Owner Keys", ""])
+    if unused_keys:
+        lines.extend(["| Key |", "| --- |"])
+        for key in unused_keys:
+            lines.append(f"| `{key}` |")
+    else:
+        lines.append("None")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", default=".", help="WorldSim project root")
@@ -612,6 +650,11 @@ def main() -> int:
         "--key-owner-policy-json",
         default="",
         help="optional output path for canonical key-owner policy json",
+    )
+    parser.add_argument(
+        "--owner-policy-markdown",
+        default="",
+        help="optional output path for owner policy markdown report",
     )
     parser.add_argument(
         "--compare-key-owner-policy",
@@ -655,6 +698,9 @@ def main() -> int:
     if args.key_owner_policy_json:
         out = (project_root / args.key_owner_policy_json).resolve()
         _write_json(out, owner_policy_payload)
+    if args.owner_policy_markdown:
+        out = (project_root / args.owner_policy_markdown).resolve()
+        _write_text(out, _build_owner_policy_markdown(report))
     if args.refresh_key_owner_policy_auto:
         out = _resolve_manifest_key_owner_policy_path(project_root)
         _write_json(out, owner_policy_payload)

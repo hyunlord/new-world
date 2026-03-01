@@ -1170,3 +1170,8 @@
 - `migration_verify` smoke 파서를 모드 라인 직접 매칭(`auto/cpu/gpu`)으로 전환해 출력 순서 의존성을 제거.
 - mode별 `configured/checksum/total/resolved`를 독립 파싱·검증하고, `configured` 값이 모드와 일치하는지까지 게이트를 확장.
 - `MIGRATION_BENCH_PATH_BACKEND_SMOKE=true ... tools/migration_verify.sh --with-benches` 재검증으로 smoke + 기존 checksum 게이트 동시 통과를 확인.
+
+## Commit 237
+- `localization_audit`에 owner-policy 전용 Markdown 리포트 생성 옵션(`--owner-policy-markdown`)을 추가.
+- 리포트는 owner policy 요약 수치와 누락/미사용 키 목록을 분리해 출력하며, 이슈가 없을 때는 명시적으로 clean 상태를 기록.
+- `migration_verify`에 `MIGRATION_AUDIT_OWNER_POLICY_MARKDOWN` 전달 경로를 연결해 검증 파이프라인에서 owner-policy 문서 아티팩트 생성을 자동화.

@@ -52,6 +52,7 @@ audit_report_json="${MIGRATION_AUDIT_REPORT_JSON:-}"
 audit_duplicate_report_json="${MIGRATION_AUDIT_DUPLICATE_REPORT_JSON:-}"
 audit_conflict_markdown="${MIGRATION_AUDIT_CONFLICT_MARKDOWN:-}"
 audit_key_owner_policy_json="${MIGRATION_AUDIT_KEY_OWNER_POLICY:-}"
+audit_owner_policy_markdown="${MIGRATION_AUDIT_OWNER_POLICY_MARKDOWN:-}"
 audit_compare_key_owner_policy="${MIGRATION_AUDIT_COMPARE_KEY_OWNER_POLICY:-}"
 audit_refresh_key_owner_policy="${MIGRATION_AUDIT_REFRESH_KEY_OWNER_POLICY:-false}"
 audit_cmd=(
@@ -76,6 +77,9 @@ fi
 if [[ -n "${audit_key_owner_policy_json}" ]]; then
   audit_cmd+=(--key-owner-policy-json "${audit_key_owner_policy_json}")
 fi
+if [[ -n "${audit_owner_policy_markdown}" ]]; then
+  audit_cmd+=(--owner-policy-markdown "${audit_owner_policy_markdown}")
+fi
 if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
   audit_cmd+=(--refresh-key-owner-policy-auto)
 fi
@@ -97,6 +101,9 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
   fi
   if [[ -n "${audit_key_owner_policy_json}" ]]; then
     audit_cmd+=(--key-owner-policy-json "${audit_key_owner_policy_json}")
+  fi
+  if [[ -n "${audit_owner_policy_markdown}" ]]; then
+    audit_cmd+=(--owner-policy-markdown "${audit_owner_policy_markdown}")
   fi
   if [[ "${audit_refresh_key_owner_policy}" == "true" ]]; then
     audit_cmd+=(--refresh-key-owner-policy-auto)
