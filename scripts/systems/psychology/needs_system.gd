@@ -30,17 +30,48 @@ func execute_tick(tick: int) -> void:
 		var entity = alive[i]
 		# Decay needs
 		var hunger_mult: float = GameConfig.CHILD_HUNGER_DECAY_MULT.get(entity.age_stage, 1.0)
-		var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
-		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
-		entity.energy -= GameConfig.ENERGY_DECAY_RATE
-		entity.social -= GameConfig.SOCIAL_DECAY_RATE
 		var tile_temp: float = GameConfig.WARMTH_TEMP_NEUTRAL
 		var has_tile_temp: bool = false
 		if _world_data != null:
 			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
 			has_tile_temp = true
+		var base_decay_step: PackedFloat32Array = PackedFloat32Array()
+		var base_decay_variant: Variant = SimBridge.body_needs_base_decay_step(
+			entity.hunger,
+			GameConfig.HUNGER_DECAY_RATE,
+			hunger_mult,
+			GameConfig.HUNGER_METABOLIC_MIN,
+			GameConfig.HUNGER_METABOLIC_RANGE,
+			GameConfig.ENERGY_DECAY_RATE,
+			GameConfig.SOCIAL_DECAY_RATE,
+			GameConfig.THIRST_DECAY_RATE,
+			GameConfig.WARMTH_DECAY_RATE,
+			tile_temp,
+			has_tile_temp,
+			GameConfig.WARMTH_TEMP_NEUTRAL,
+			GameConfig.WARMTH_TEMP_FREEZING,
+			GameConfig.WARMTH_TEMP_COLD,
+			GameConfig.NEEDS_EXPANSION_ENABLED
+		)
+		if base_decay_variant is PackedFloat32Array:
+			var packed_base_decay: PackedFloat32Array = base_decay_variant
+			if packed_base_decay.size() >= 5:
+				base_decay_step = packed_base_decay
+		if base_decay_step.size() >= 5:
+			entity.hunger -= float(base_decay_step[0])
+			entity.energy -= float(base_decay_step[1])
+			entity.social -= float(base_decay_step[2])
+		else:
+			var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
+			entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
+			entity.energy -= GameConfig.ENERGY_DECAY_RATE
+			entity.social -= GameConfig.SOCIAL_DECAY_RATE
+
 		var rust_temp_decay: PackedFloat32Array = PackedFloat32Array()
-		if GameConfig.NEEDS_EXPANSION_ENABLED:
+		if GameConfig.NEEDS_EXPANSION_ENABLED and base_decay_step.size() >= 5:
+			rust_temp_decay.append(float(base_decay_step[3]))
+			rust_temp_decay.append(float(base_decay_step[4]))
+		elif GameConfig.NEEDS_EXPANSION_ENABLED:
 			var rust_temp_decay_variant: Variant = SimBridge.body_needs_temp_decay_step(
 				GameConfig.THIRST_DECAY_RATE,
 				GameConfig.WARMTH_DECAY_RATE,

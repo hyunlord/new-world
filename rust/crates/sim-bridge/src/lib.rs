@@ -461,6 +461,50 @@ impl WorldSimBridge {
     }
 
     #[func]
+    fn body_needs_base_decay_step(
+        &self,
+        scalar_inputs: PackedFloat32Array,
+        flag_inputs: PackedByteArray,
+    ) -> PackedFloat32Array {
+        let scalars = scalar_inputs.as_slice();
+        let hunger_value = *scalars.first().unwrap_or(&0.0);
+        let hunger_decay_rate = *scalars.get(1).unwrap_or(&0.0);
+        let hunger_stage_mult = *scalars.get(2).unwrap_or(&1.0);
+        let hunger_metabolic_min = *scalars.get(3).unwrap_or(&0.0);
+        let hunger_metabolic_range = *scalars.get(4).unwrap_or(&0.0);
+        let energy_decay_rate = *scalars.get(5).unwrap_or(&0.0);
+        let social_decay_rate = *scalars.get(6).unwrap_or(&0.0);
+        let thirst_base_decay = *scalars.get(7).unwrap_or(&0.0);
+        let warmth_base_decay = *scalars.get(8).unwrap_or(&0.0);
+        let tile_temp = *scalars.get(9).unwrap_or(&0.0);
+        let temp_neutral = *scalars.get(10).unwrap_or(&0.5);
+        let temp_freezing = *scalars.get(11).unwrap_or(&0.0);
+        let temp_cold = *scalars.get(12).unwrap_or(&0.25);
+        let flags = flag_inputs.as_slice();
+        let has_tile_temp = flags.first().copied().unwrap_or(0) != 0;
+        let needs_expansion_enabled = flags.get(1).copied().unwrap_or(0) != 0;
+
+        let out = body::needs_base_decay_step(
+            hunger_value,
+            hunger_decay_rate,
+            hunger_stage_mult,
+            hunger_metabolic_min,
+            hunger_metabolic_range,
+            energy_decay_rate,
+            social_decay_rate,
+            thirst_base_decay,
+            warmth_base_decay,
+            tile_temp,
+            has_tile_temp,
+            temp_neutral,
+            temp_freezing,
+            temp_cold,
+            needs_expansion_enabled,
+        );
+        vec_f32_to_packed(out.to_vec())
+    }
+
+    #[func]
     fn pathfind_grid(
         &self,
         width: i32,

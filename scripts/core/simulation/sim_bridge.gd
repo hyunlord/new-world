@@ -1401,6 +1401,51 @@ func body_needs_temp_decay_step(
 	)
 
 
+## Delegates combined baseline need decay step to native bridge.
+## Returns null when native bridge/method is unavailable.
+func body_needs_base_decay_step(
+	hunger_value: float,
+	hunger_decay_rate: float,
+	hunger_stage_mult: float,
+	hunger_metabolic_min: float,
+	hunger_metabolic_range: float,
+	energy_decay_rate: float,
+	social_decay_rate: float,
+	thirst_base_decay: float,
+	warmth_base_decay: float,
+	tile_temp: float,
+	has_tile_temp: bool,
+	temp_neutral: float,
+	temp_freezing: float,
+	temp_cold: float,
+	needs_expansion_enabled: bool
+):
+	var scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+	scalar_inputs.append(hunger_value)
+	scalar_inputs.append(hunger_decay_rate)
+	scalar_inputs.append(hunger_stage_mult)
+	scalar_inputs.append(hunger_metabolic_min)
+	scalar_inputs.append(hunger_metabolic_range)
+	scalar_inputs.append(energy_decay_rate)
+	scalar_inputs.append(social_decay_rate)
+	scalar_inputs.append(thirst_base_decay)
+	scalar_inputs.append(warmth_base_decay)
+	scalar_inputs.append(tile_temp)
+	scalar_inputs.append(temp_neutral)
+	scalar_inputs.append(temp_freezing)
+	scalar_inputs.append(temp_cold)
+	var flag_inputs: PackedByteArray = PackedByteArray()
+	flag_inputs.append(1 if has_tile_temp else 0)
+	flag_inputs.append(1 if needs_expansion_enabled else 0)
+	return _call_native_if_exists(
+		"body_needs_base_decay_step",
+		[
+			scalar_inputs,
+			flag_inputs
+		]
+	)
+
+
 func _get_native_bridge() -> Object:
 	if _native_checked:
 		return _native_bridge

@@ -676,3 +676,8 @@
 - `sim-systems::body`에 `needs_temp_decay_step`를 추가해 갈증/체온 온도 소모를 단일 함수로 통합하고, 기존 개별 함수 재사용으로 수식 의미를 유지.
 - `sim-bridge`/`SimBridge`에 `body_needs_temp_decay_step`를 추가해 needs 시스템이 온도 소모 값을 1회 bridge 호출로 수신하도록 확장.
 - `needs_system`이 단일 결과를 재사용하도록 전환되어 온도 소모 계산 경로의 bridge round-trip을 추가 축소.
+
+## Commit 138
+- `sim-systems::body`에 `needs_base_decay_step`를 추가해 hunger/energy/social + (옵션) thirst/warmth 기본 소모를 단일 함수로 통합.
+- `sim-bridge`/`SimBridge`에 `body_needs_base_decay_step`를 추가하고, Godot 파라미터 제한을 피하기 위해 packed scalar/flag 인코딩 경로로 노출.
+- `needs_system`이 배치 결과를 재사용하도록 전환되어 needs 기본 소모 계산 경로의 bridge round-trip과 중복 계산을 추가 축소.
