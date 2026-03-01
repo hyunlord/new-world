@@ -93,7 +93,23 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	cy += LINE_HEIGHT
 	canvas.draw_string(font, Vector2(cx, cy), Locale.trf1("UI_TOTAL_POP_FMT", "n", data.get("population", 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
 	cy += LINE_HEIGHT
-	canvas.draw_string(font, Vector2(cx, cy), Locale.trf("UI_POP_SUMMARY_FMT", {"adults": data.get("adults", 0), "children": data.get("children", 0), "elders": data.get("elders", 0)}), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
+	canvas.draw_string(
+		font,
+		Vector2(cx, cy),
+		Locale.trf3(
+			"UI_POP_SUMMARY_FMT",
+			"adults",
+			data.get("adults", 0),
+			"children",
+			data.get("children", 0),
+			"elders",
+			data.get("elders", 0)
+		),
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		body_size,
+		NEUTRAL_COLOR
+	)
 	cy += LINE_HEIGHT + SECTION_GAP
 
 	# ── 4. Active Tech Modifiers ───────────────────────────────────────────

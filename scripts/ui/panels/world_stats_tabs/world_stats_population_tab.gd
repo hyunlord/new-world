@@ -57,7 +57,17 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	cy += LINE_HEIGHT
 
 	# Peak population
-	var peak_line: String = Locale.trf("UI_STAT_CURRENT_FMT", {"current": total_pop, "peak": peak_pop, "deaths": total_deaths, "births": total_births})
+	var peak_line: String = Locale.trf4(
+		"UI_STAT_CURRENT_FMT",
+		"current",
+		total_pop,
+		"peak",
+		peak_pop,
+		"deaths",
+		total_deaths,
+		"births",
+		total_births
+	)
 	canvas.draw_string(font, Vector2(cx, cy), peak_line, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 	cy += LINE_HEIGHT
 

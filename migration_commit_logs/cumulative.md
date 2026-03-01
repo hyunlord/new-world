@@ -511,3 +511,8 @@
 - `settlement_detail_panel` 헤더 인구 라벨(`UI_STAT_POP_FMT`) 호출을 `Locale.trf1` 경량 포맷 경로로 전환.
 - 출력 의미를 유지하면서 단일 placeholder 포맷 호출의 임시 params Dictionary 생성을 줄임.
 - Settlement Detail 패널 draw 경로의 미세 오버헤드를 완화.
+
+## Commit 105
+- `Locale`에 `trf3`/`trf4` 경량 포맷 API를 추가해 3~4 placeholder 치환 시 임시 params Dictionary 생성을 줄이는 경로를 확장.
+- `world_stats_population_tab`의 `UI_STAT_CURRENT_FMT`를 `trf4`로 전환.
+- `settlement_overview_tab`의 `UI_POP_SUMMARY_FMT`를 `trf3`로 전환해 draw 경로 오버헤드를 완화.

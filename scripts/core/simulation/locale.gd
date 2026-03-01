@@ -169,6 +169,44 @@ func trf2(key: String, param_a_key: String, param_a_value: Variant,
 	return text.replace("{%s}" % param_b_key, str(param_b_value))
 
 
+## Fast path for three placeholders without creating params Dictionary at call sites.
+func trf3(key: String, param_a_key: String, param_a_value: Variant,
+		param_b_key: String, param_b_value: Variant,
+		param_c_key: String, param_c_value: Variant) -> String:
+	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
+	if key_id_cached == -2:
+		key_id_cached = key_id(key)
+		_trf_key_id_cache[key] = key_id_cached
+	var text: String = ""
+	if key_id_cached >= 0:
+		text = ltr_id(key_id_cached)
+	if text.is_empty():
+		text = ltr(key)
+	text = text.replace("{%s}" % param_a_key, str(param_a_value))
+	text = text.replace("{%s}" % param_b_key, str(param_b_value))
+	return text.replace("{%s}" % param_c_key, str(param_c_value))
+
+
+## Fast path for four placeholders without creating params Dictionary at call sites.
+func trf4(key: String, param_a_key: String, param_a_value: Variant,
+		param_b_key: String, param_b_value: Variant,
+		param_c_key: String, param_c_value: Variant,
+		param_d_key: String, param_d_value: Variant) -> String:
+	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
+	if key_id_cached == -2:
+		key_id_cached = key_id(key)
+		_trf_key_id_cache[key] = key_id_cached
+	var text: String = ""
+	if key_id_cached >= 0:
+		text = ltr_id(key_id_cached)
+	if text.is_empty():
+		text = ltr(key)
+	text = text.replace("{%s}" % param_a_key, str(param_a_value))
+	text = text.replace("{%s}" % param_b_key, str(param_b_value))
+	text = text.replace("{%s}" % param_c_key, str(param_c_value))
+	return text.replace("{%s}" % param_d_key, str(param_d_value))
+
+
 ## Game internal ID -> translation (job, status, death cause, etc.)
 ## Example: Locale.tr_id("STATUS", "gather_wood") -> "Gather Wood" or "목재 채집"
 func tr_id(prefix: String, id: String) -> String:
