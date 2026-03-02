@@ -1007,6 +1007,11 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn runtime_is_initialized(&self) -> bool {
+        self.state.is_some()
+    }
+
+    #[func]
     fn runtime_tick_frame(
         &mut self,
         delta_sec: f64,

@@ -56,6 +56,10 @@ func load_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 func _is_ws2_runtime_ready() -> bool:
 	if SimBridge == null:
 		return false
+	if not SimBridge.has_method("runtime_is_initialized"):
+		return false
+	if not SimBridge.runtime_is_initialized():
+		return false
 	if not SimBridge.has_method("runtime_save_ws2"):
 		return false
 	if not SimBridge.has_method("runtime_load_ws2"):

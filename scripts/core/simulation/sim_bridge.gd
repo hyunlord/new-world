@@ -72,6 +72,16 @@ func runtime_init(seed: int, config_json: String) -> bool:
 	return bool(runtime.call("runtime_init", seed, config_json))
 
 
+## Returns true when Rust runtime instance currently has initialized state.
+func runtime_is_initialized() -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("runtime_is_initialized"):
+		return false
+	return bool(runtime.call("runtime_is_initialized"))
+
+
 ## Ticks Rust runtime with frame delta.
 ## Returns state dictionary:
 ## { initialized, current_tick, ticks_processed, speed_index, paused, accumulator }.

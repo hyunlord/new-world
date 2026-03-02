@@ -95,3 +95,9 @@
 - Completion after commit: 96%
 - Remaining after commit: 4%
 - Details: [0015-phase-e-legacy-call-removal.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0015-phase-e-legacy-call-removal.md)
+
+### 0016 - ws2 runtime-ready guard
+- Commit: `[rust-r0-116] Add runtime-initialized guard for ws2 save path`
+- Completion after commit: 98%
+- Remaining after commit: 2%
+- Details: [0016-phase-e-runtime-ready-guard.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0016-phase-e-runtime-ready-guard.md)
