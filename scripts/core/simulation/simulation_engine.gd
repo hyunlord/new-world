@@ -70,6 +70,8 @@ var _registered_system_count: int = 0
 var _registered_system_payloads: Array[Dictionary] = []
 var _system_key_by_instance_id: Dictionary = {}
 var _runtime_rust_registered_keys: Dictionary = {}
+var _gdscript_fallback_systems: Array[RefCounted] = []
+var _gdscript_fallback_system_keys: PackedStringArray = PackedStringArray()
 
 
 ## Initialize the engine with a deterministic seed
@@ -82,6 +84,8 @@ func init_with_seed(seed_value: int) -> void:
 	_registered_system_payloads.clear()
 	_system_key_by_instance_id.clear()
 	_runtime_rust_registered_keys.clear()
+	_gdscript_fallback_systems.clear()
+	_gdscript_fallback_system_keys.clear()
 	_init_rust_runtime()
 
 
@@ -113,6 +117,7 @@ func register_system(system: RefCounted) -> void:
 		_queue_runtime_command(StringName("register_system"), system_payload)
 	_systems.append(system)
 	_systems.sort_custom(func(a, b): return a.priority < b.priority)
+	_refresh_gdscript_fallback_cache()
 
 
 ## Validates Rust runtime registry snapshot against GDScript registration metadata.
@@ -195,7 +200,7 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 	var ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
-	if ticks_processed > 0:
+	if ticks_processed > 0 and not _gdscript_fallback_systems.is_empty():
 		var end_tick: int = current_tick
 		var start_tick: int = maxi(1, end_tick - ticks_processed + 1)
 		_run_gdscript_fallback_ticks(start_tick, end_tick)
@@ -474,14 +479,18 @@ func _runtime_system_key_from_name(name: String) -> String:
 func _refresh_runtime_registry_cache() -> void:
 	_runtime_rust_registered_keys.clear()
 	if not _rust_runtime_available:
+		_refresh_gdscript_fallback_cache()
 		return
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null:
+		_refresh_gdscript_fallback_cache()
 		return
 	if not sim_bridge.has_method("runtime_get_registry_snapshot"):
+		_refresh_gdscript_fallback_cache()
 		return
 	var snapshot_raw: Variant = sim_bridge.call("runtime_get_registry_snapshot")
 	if not (snapshot_raw is Array):
+		_refresh_gdscript_fallback_cache()
 		return
 	var snapshot: Array = snapshot_raw
 	for i in range(snapshot.size()):
@@ -497,6 +506,30 @@ func _refresh_runtime_registry_cache() -> void:
 		if key.is_empty():
 			continue
 		_runtime_rust_registered_keys[key] = true
+	_refresh_gdscript_fallback_cache()
+
+
+func _refresh_gdscript_fallback_cache() -> void:
+	_gdscript_fallback_systems.clear()
+	_gdscript_fallback_system_keys.clear()
+	if _systems.is_empty():
+		return
+	for i in range(_systems.size()):
+		var system_raw: Variant = _systems[i]
+		if not (system_raw is RefCounted):
+			continue
+		var system: RefCounted = system_raw
+		var key: String = str(_system_key_by_instance_id.get(system.get_instance_id(), ""))
+		var needs_fallback: bool = false
+		if key.is_empty():
+			needs_fallback = true
+		elif not _RUST_OWNER_READY_SYSTEM_KEYS.has(key):
+			needs_fallback = true
+		elif not bool(_runtime_rust_registered_keys.get(key, false)):
+			needs_fallback = true
+		if needs_fallback:
+			_gdscript_fallback_systems.append(system)
+			_gdscript_fallback_system_keys.append(key)
 
 
 func _is_rust_registered_system(system: RefCounted) -> bool:
@@ -509,14 +542,12 @@ func _is_rust_registered_system(system: RefCounted) -> bool:
 
 
 func _run_gdscript_fallback_ticks(start_tick: int, end_tick: int) -> void:
-	if _systems.is_empty():
+	if _gdscript_fallback_systems.is_empty():
 		return
 	for tick_value in range(start_tick, end_tick + 1):
-		for i in range(_systems.size()):
-			var system = _systems[i]
+		for i in range(_gdscript_fallback_systems.size()):
+			var system: RefCounted = _gdscript_fallback_systems[i]
 			if not bool(system.get("is_active")):
-				continue
-			if _is_rust_registered_system(system):
 				continue
 			var interval: int = maxi(1, int(system.get("tick_interval")))
 			if tick_value % interval == 0:
