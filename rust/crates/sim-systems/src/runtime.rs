@@ -3597,6 +3597,238 @@ impl SimSystem for TechDiscoveryRuntimeSystem {
     }
 }
 
+const TECH_PROP_LANG_PENALTY: f32 = 1.0;
+const TECH_PROP_MAX_PROB: f32 = 0.95;
+const TECH_PROP_CULTURE_KNOWLEDGE_WEIGHT: f32 = 0.3;
+const TECH_PROP_CULTURE_TRADITION_WEIGHT: f32 = 0.4;
+const TECH_PROP_CULTURE_MIN: f32 = 0.1;
+const TECH_PROP_CULTURE_MAX: f32 = 2.0;
+const TECH_PROP_CARRIER_SKILL_DIVISOR: f32 = 20.0;
+const TECH_PROP_CARRIER_WEIGHT: f32 = 0.5;
+const TECH_PROP_STABILITY_BONUS_STABLE: f32 = 1.3;
+const TECH_PROP_STABILITY_BONUS_LOW: f32 = 0.7;
+
+#[derive(Debug, Clone, Copy, Default)]
+struct TechPropagationProfile {
+    knowledge_sum: f32,
+    tradition_sum: f32,
+    member_count: u32,
+    max_skill: i32,
+}
+
+impl TechPropagationProfile {
+    fn record_member(&mut self, knowledge: f32, tradition: f32, skill_level: i32) {
+        self.knowledge_sum += knowledge;
+        self.tradition_sum += tradition;
+        self.member_count += 1;
+        self.max_skill = self.max_skill.max(skill_level);
+    }
+
+    fn knowledge_avg(&self) -> f32 {
+        if self.member_count == 0 {
+            0.0
+        } else {
+            self.knowledge_sum / self.member_count as f32
+        }
+    }
+
+    fn tradition_avg(&self) -> f32 {
+        if self.member_count == 0 {
+            0.0
+        } else {
+            self.tradition_sum / self.member_count as f32
+        }
+    }
+}
+
+/// Rust runtime system for cross-settlement technology propagation.
+///
+/// This performs active writes on `Settlement.tech_states` by importing unknown
+/// or forgotten tech entries from other settlements that already know the tech.
+#[derive(Debug, Clone)]
+pub struct TechPropagationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechPropagationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechPropagationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_propagation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        if resources.settlements.len() < 2 {
+            return;
+        }
+
+        let mut profiles: HashMap<SettlementId, TechPropagationProfile> = HashMap::new();
+        {
+            let mut query = world.query::<(&Identity, Option<&Values>, Option<&Skills>, Option<&Age>)>();
+            for (_, (identity, values_opt, skills_opt, age_opt)) in &mut query {
+                if let Some(age) = age_opt {
+                    if !age.alive {
+                        continue;
+                    }
+                }
+                let Some(settlement_id) = identity.settlement_id else {
+                    continue;
+                };
+                let knowledge = values_opt
+                    .map(|values| values.get(ValueType::Knowledge) as f32)
+                    .unwrap_or(0.0);
+                let tradition = values_opt
+                    .map(|values| values.get(ValueType::Tradition) as f32)
+                    .unwrap_or(0.0);
+                let best_skill_level =
+                    skills_opt.map(|skills| skills.best_skill_level() as i32).unwrap_or(0);
+
+                profiles
+                    .entry(settlement_id)
+                    .or_default()
+                    .record_member(knowledge, tradition, best_skill_level);
+            }
+        }
+
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for target_id in settlement_ids.iter().copied() {
+            let candidate_tech_ids: Vec<String> = {
+                let Some(target_settlement) = resources.settlements.get(&target_id) else {
+                    continue;
+                };
+                if target_settlement.members.is_empty() {
+                    continue;
+                }
+                let mut ids: Vec<String> = target_settlement
+                    .tech_states
+                    .iter()
+                    .filter(|(_, state)| {
+                        matches!(
+                            state,
+                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                        )
+                    })
+                    .map(|(tech_id, _)| tech_id.clone())
+                    .collect();
+                ids.sort();
+                ids
+            };
+            if candidate_tech_ids.is_empty() {
+                continue;
+            }
+
+            let target_profile = profiles.get(&target_id).copied().unwrap_or_default();
+            let culture_mod = body::tech_propagation_culture_modifier(
+                target_profile.knowledge_avg(),
+                target_profile.tradition_avg(),
+                TECH_PROP_CULTURE_KNOWLEDGE_WEIGHT,
+                TECH_PROP_CULTURE_TRADITION_WEIGHT,
+                TECH_PROP_CULTURE_MIN,
+                TECH_PROP_CULTURE_MAX,
+            );
+
+            for tech_id in candidate_tech_ids {
+                let mut source_pick: Option<(SettlementId, TechState, i32)> = None;
+                for source_id in settlement_ids.iter().copied() {
+                    if source_id == target_id {
+                        continue;
+                    }
+                    let Some(source_settlement) = resources.settlements.get(&source_id) else {
+                        continue;
+                    };
+                    let Some(source_state) = source_settlement.tech_states.get(&tech_id).copied() else {
+                        continue;
+                    };
+                    if !matches!(source_state, TechState::KnownLow | TechState::KnownStable) {
+                        continue;
+                    }
+
+                    let source_skill = profiles
+                        .get(&source_id)
+                        .map(|profile| profile.max_skill)
+                        .unwrap_or(0);
+                    let source_score = source_settlement.members.len() as i32 + source_skill;
+                    match source_pick {
+                        Some((_, _, best_score)) if source_score <= best_score => {}
+                        _ => source_pick = Some((source_id, source_state, source_score)),
+                    }
+                }
+
+                let Some((source_id, source_state, _)) = source_pick else {
+                    continue;
+                };
+                let source_skill = profiles
+                    .get(&source_id)
+                    .map(|profile| profile.max_skill)
+                    .unwrap_or(0);
+                let carrier_bonus = body::tech_propagation_carrier_bonus(
+                    source_skill,
+                    TECH_PROP_CARRIER_SKILL_DIVISOR,
+                    TECH_PROP_CARRIER_WEIGHT,
+                );
+                let stability_bonus = if matches!(source_state, TechState::KnownStable) {
+                    TECH_PROP_STABILITY_BONUS_STABLE
+                } else {
+                    TECH_PROP_STABILITY_BONUS_LOW
+                };
+                let base_prob = if matches!(source_state, TechState::KnownStable) {
+                    config::CROSS_PROP_MIGRATION_BASE as f32
+                } else {
+                    config::CROSS_PROP_TRADE_BASE as f32
+                };
+                let final_prob = body::tech_propagation_final_prob(
+                    base_prob,
+                    TECH_PROP_LANG_PENALTY,
+                    culture_mod,
+                    carrier_bonus,
+                    stability_bonus,
+                    TECH_PROP_MAX_PROB,
+                )
+                .clamp(0.0, TECH_PROP_MAX_PROB);
+                let should_import = if final_prob >= TECH_PROP_MAX_PROB {
+                    true
+                } else {
+                    resources.rng.gen_range(0.0..1.0) < final_prob
+                };
+                if !should_import {
+                    continue;
+                }
+
+                if let Some(target_settlement) = resources.settlements.get_mut(&target_id) {
+                    target_settlement
+                        .tech_states
+                        .insert(tech_id.clone(), TechState::KnownLow);
+                }
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id: target_id,
+                        tech_id,
+                    });
+                break;
+            }
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5286,6 +5518,7 @@ mod tests {
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
         TechDiscoveryRuntimeSystem,
         TechMaintenanceRuntimeSystem,
+        TechPropagationRuntimeSystem,
         TechUtilizationRuntimeSystem,
         TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -7778,6 +8011,118 @@ mod tests {
             settlement_after.tech_states.get("pottery"),
             Some(&TechState::Unknown)
         );
+    }
+
+    #[test]
+    fn tech_propagation_runtime_system_imports_unknown_tech_from_stable_source() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 31);
+        let mut resources = SimResources::new(calendar, map, 61);
+        let mut world = World::new();
+
+        let source_id = SettlementId(85);
+        let mut source = sim_core::Settlement::new(source_id, "source".to_string(), 1, 1, 0);
+        source
+            .tech_states
+            .insert("pottery".to_string(), TechState::KnownStable);
+
+        let mut source_values = Values::default();
+        source_values.set(ValueType::Knowledge, 0.4);
+        source_values.set(ValueType::Tradition, -0.2);
+        let mut source_skills = Skills::default();
+        source_skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            sim_core::components::SkillEntry { level: 100, xp: 0.0 },
+        );
+        let source_entity = world.spawn((
+            Identity {
+                settlement_id: Some(source_id),
+                ..Identity::default()
+            },
+            source_values,
+            source_skills,
+            Age::default(),
+        ));
+        source.members = vec![EntityId(source_entity.id() as u64)];
+        resources.settlements.insert(source_id, source);
+
+        let target_id = SettlementId(86);
+        let mut target = sim_core::Settlement::new(target_id, "target".to_string(), 6, 6, 0);
+        target
+            .tech_states
+            .insert("pottery".to_string(), TechState::Unknown);
+        let mut target_values = Values::default();
+        target_values.set(ValueType::Knowledge, 1.0);
+        target_values.set(ValueType::Tradition, -1.0);
+        let target_entity = world.spawn((
+            Identity {
+                settlement_id: Some(target_id),
+                ..Identity::default()
+            },
+            target_values,
+            Skills::default(),
+            Age::default(),
+        ));
+        target.members = vec![EntityId(target_entity.id() as u64)];
+        resources.settlements.insert(target_id, target);
+
+        let mut system = TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TEACHING_TICK_INTERVAL,
+        );
+
+        let target_after = resources
+            .settlements
+            .get(&target_id)
+            .expect("target settlement should exist");
+        assert_eq!(
+            target_after.tech_states.get("pottery"),
+            Some(&TechState::KnownLow)
+        );
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn tech_propagation_runtime_system_skips_without_known_source() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 37);
+        let mut resources = SimResources::new(calendar, map, 71);
+        let mut world = World::new();
+
+        let source_id = SettlementId(87);
+        let mut source = sim_core::Settlement::new(source_id, "source".to_string(), 1, 1, 0);
+        source
+            .tech_states
+            .insert("pottery".to_string(), TechState::Unknown);
+        resources.settlements.insert(source_id, source);
+
+        let target_id = SettlementId(88);
+        let mut target = sim_core::Settlement::new(target_id, "target".to_string(), 8, 8, 0);
+        target
+            .tech_states
+            .insert("pottery".to_string(), TechState::Unknown);
+        resources.settlements.insert(target_id, target);
+
+        let mut system = TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TEACHING_TICK_INTERVAL,
+        );
+
+        let target_after = resources
+            .settlements
+            .get(&target_id)
+            .expect("target settlement should exist");
+        assert_eq!(
+            target_after.tech_states.get("pottery"),
+            Some(&TechState::Unknown)
+        );
+        assert_eq!(resources.event_bus.pending_count(), 0);
     }
 
     #[test]
