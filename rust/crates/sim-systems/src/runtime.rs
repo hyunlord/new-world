@@ -3149,6 +3149,273 @@ impl SimSystem for TensionRuntimeSystem {
     }
 }
 
+#[inline]
+fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
+    resources
+        .buildings
+        .values()
+        .filter(|building| {
+            building.is_complete
+                && building.settlement_id == settlement_id
+                && building.building_type == "shelter"
+        })
+        .count()
+}
+
+#[inline]
+fn migration_food_in_radius(resources: &SimResources, cx: i32, cy: i32, radius: i32) -> f32 {
+    let mut total_food = 0.0_f32;
+    for dx in -radius..=radius {
+        for dy in -radius..=radius {
+            if dx.abs() + dy.abs() > radius {
+                continue;
+            }
+            let x = cx + dx;
+            let y = cy + dy;
+            if !resources.map.in_bounds(x, y) {
+                continue;
+            }
+            let tile = resources.map.get(x as u32, y as u32);
+            for deposit in &tile.resources {
+                if deposit.resource_type == ResourceType::Food {
+                    total_food += deposit.amount as f32;
+                }
+            }
+        }
+    }
+    total_food
+}
+
+fn migration_find_site(resources: &mut SimResources, source_x: i32, source_y: i32) -> Option<(i32, i32)> {
+    let min_radius = config::MIGRATION_SEARCH_RADIUS_MIN;
+    let max_radius = config::MIGRATION_SEARCH_RADIUS_MAX;
+    let min_settlement_distance = config::SETTLEMENT_MIN_DISTANCE;
+    let settlement_positions: Vec<(i32, i32)> =
+        resources.settlements.values().map(|s| (s.x, s.y)).collect();
+
+    for _ in 0..20 {
+        let dx = resources.rng.gen_range(-max_radius..=max_radius);
+        let dy = resources.rng.gen_range(-max_radius..=max_radius);
+        let manhattan = dx.abs() + dy.abs();
+        if manhattan < min_radius || manhattan > max_radius {
+            continue;
+        }
+        let x = source_x + dx;
+        let y = source_y + dy;
+        if !resources.map.in_bounds(x, y) {
+            continue;
+        }
+        if !resources.map.get(x as u32, y as u32).passable {
+            continue;
+        }
+        let mut far_enough = true;
+        for (settlement_x, settlement_y) in settlement_positions.iter().copied() {
+            let distance = (settlement_x - x).abs() + (settlement_y - y).abs();
+            if distance < min_settlement_distance {
+                far_enough = false;
+                break;
+            }
+        }
+        if !far_enough {
+            continue;
+        }
+        let food_score = migration_food_in_radius(resources, x, y, 5);
+        if food_score <= 3.0 {
+            continue;
+        }
+        return Some((x, y));
+    }
+    None
+}
+
+/// Rust runtime system for settlement migration and founding.
+///
+/// This performs active writes on `SimResources.settlements`,
+/// `Identity.settlement_id`, and `Behavior` migration fields.
+#[derive(Debug, Clone)]
+pub struct MigrationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MigrationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MigrationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "migration_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        if resources.settlements.len() < 1 {
+            return;
+        }
+        if resources.settlements.len() as u32 >= config::MAX_SETTLEMENTS {
+            return;
+        }
+
+        for settlement in resources.settlements.values_mut() {
+            if settlement.migration_cooldown > 0 {
+                settlement.migration_cooldown = settlement
+                    .migration_cooldown
+                    .saturating_sub(self.tick_interval as u32);
+            }
+        }
+
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for source_id in settlement_ids {
+            if resources.settlements.len() as u32 >= config::MAX_SETTLEMENTS {
+                break;
+            }
+            let Some(source_snapshot) = resources.settlements.get(&source_id) else {
+                continue;
+            };
+            let source_x = source_snapshot.x;
+            let source_y = source_snapshot.y;
+            let source_population = source_snapshot.population();
+            let source_food_stockpile = source_snapshot.stockpile_food;
+            let source_cooldown = source_snapshot.migration_cooldown;
+            if source_population < config::MIGRATION_MIN_POP as usize {
+                continue;
+            }
+            if source_cooldown > 0 {
+                continue;
+            }
+
+            let shelter_count = migration_count_shelters(resources, source_id);
+            let overcrowded = source_population > shelter_count.saturating_mul(8);
+            let nearby_food = migration_food_in_radius(resources, source_x, source_y, 20);
+            let food_scarce =
+                body::migration_food_scarce(nearby_food, source_population as i32, 0.3);
+            let chance_roll: f32 = resources.rng.gen_range(0.0..1.0);
+            let should_attempt = body::migration_should_attempt(
+                overcrowded,
+                food_scarce,
+                chance_roll,
+                config::MIGRATION_CHANCE as f32,
+            );
+            if !should_attempt {
+                continue;
+            }
+            if source_food_stockpile < config::MIGRATION_STARTUP_FOOD {
+                continue;
+            }
+
+            let mut candidates: Vec<Entity> = Vec::new();
+            {
+                let mut query = world.query::<(&Identity, &Age)>();
+                for (entity, (identity, age)) in &mut query {
+                    if !age.alive {
+                        continue;
+                    }
+                    if identity.settlement_id != Some(source_id) {
+                        continue;
+                    }
+                    candidates.push(entity);
+                }
+            }
+            if candidates.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+            candidates.sort_by_key(|entity| entity.id());
+
+            let group_size_roll: u32 = resources.rng.gen_range(
+                config::MIGRATION_GROUP_SIZE_MIN..=config::MIGRATION_GROUP_SIZE_MAX,
+            );
+            let group_size = (group_size_roll as usize).min(candidates.len());
+            let migrants: Vec<Entity> = candidates.into_iter().take(group_size).collect();
+            if migrants.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+
+            let Some((site_x, site_y)) = migration_find_site(resources, source_x, source_y) else {
+                continue;
+            };
+
+            let next_settlement_raw = resources
+                .settlements
+                .keys()
+                .map(|settlement_id| settlement_id.0)
+                .max()
+                .unwrap_or(0)
+                + 1;
+            let next_settlement_id = SettlementId(next_settlement_raw);
+            let mut migrated_member_ids: Vec<EntityId> = Vec::with_capacity(migrants.len());
+            for entity in migrants {
+                if let Ok(mut one) = world.query_one::<(&mut Identity, Option<&mut Behavior>)>(entity)
+                {
+                    if let Some((identity, behavior_opt)) = one.get() {
+                        identity.settlement_id = Some(next_settlement_id);
+                        if let Some(behavior) = behavior_opt {
+                            behavior.current_action = ActionType::Migrate;
+                            behavior.action_target_x = Some(site_x);
+                            behavior.action_target_y = Some(site_y);
+                            behavior.action_timer = 100;
+                        }
+                        migrated_member_ids.push(EntityId(entity.id() as u64));
+                    }
+                }
+            }
+            if migrated_member_ids.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+
+            let moved_set: HashSet<EntityId> = migrated_member_ids.iter().copied().collect();
+            if let Some(source_settlement) = resources.settlements.get_mut(&source_id) {
+                source_settlement.stockpile_food =
+                    (source_settlement.stockpile_food - config::MIGRATION_STARTUP_FOOD).max(0.0);
+                source_settlement.migration_cooldown = config::MIGRATION_COOLDOWN_TICKS as u32;
+                source_settlement
+                    .members
+                    .retain(|member_id| !moved_set.contains(member_id));
+            }
+
+            let mut new_settlement = sim_core::Settlement::new(
+                next_settlement_id,
+                format!("settlement_{}", next_settlement_raw),
+                site_x,
+                site_y,
+                tick,
+            );
+            new_settlement.stockpile_food = config::MIGRATION_STARTUP_FOOD;
+            new_settlement.members = migrated_member_ids.clone();
+            resources.settlements.insert(next_settlement_id, new_settlement);
+
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::SettlementFounded {
+                    settlement_id: next_settlement_id,
+                });
+            for entity_id in migrated_member_ids {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::MigrationOccurred {
+                        entity_id,
+                        from_settlement: source_id,
+                        to_settlement: next_settlement_id,
+                    });
+            }
+            break;
+        }
+    }
+}
+
 /// Rust runtime system for settlement leadership election and countdown.
 ///
 /// This performs active writes on `Settlement.leader_id` and
@@ -4565,6 +4832,7 @@ mod tests {
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
+        MigrationRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
@@ -6796,6 +7064,115 @@ mod tests {
         );
         assert!((pair_after as f32 - expected).abs() < 1e-6);
         assert!((0.0..=1.0).contains(&pair_after));
+    }
+
+    #[test]
+    fn migration_runtime_system_founds_new_settlement_and_moves_members() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let mut map = WorldMap::new(256, 256, 77);
+        for x in 0..map.width {
+            for y in 0..map.height {
+                map.get_mut(x, y).resources.push(TileResource {
+                    resource_type: ResourceType::Food,
+                    amount: 8.0,
+                    max_amount: 8.0,
+                    regen_rate: 0.0,
+                });
+            }
+        }
+        let mut resources = SimResources::new(calendar, map, 91);
+        let mut world = World::new();
+
+        let source_id = SettlementId(61);
+        let mut source = sim_core::Settlement::new(source_id, "origin".to_string(), 128, 128, 0);
+        source.stockpile_food = 200.0;
+        resources.settlements.insert(source_id, source);
+        resources.buildings.insert(
+            BuildingId(701),
+            Building {
+                id: BuildingId(701),
+                building_type: "shelter".to_string(),
+                settlement_id: source_id,
+                x: 128,
+                y: 128,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut members: Vec<EntityId> = Vec::new();
+        for _ in 0..50 {
+            let entity = world.spawn((
+                Age {
+                    alive: true,
+                    stage: GrowthStage::Adult,
+                    years: 24.0,
+                    ..Age::default()
+                },
+                Identity {
+                    settlement_id: Some(source_id),
+                    ..Identity::default()
+                },
+                Behavior::default(),
+            ));
+            members.push(EntityId(entity.id() as u64));
+        }
+        resources
+            .settlements
+            .get_mut(&source_id)
+            .expect("source settlement should be mutable")
+            .members = members;
+
+        let mut system = MigrationRuntimeSystem::new(60, sim_core::config::MIGRATION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::MIGRATION_TICK_INTERVAL,
+        );
+
+        assert_eq!(resources.settlements.len(), 2);
+        let new_id = resources
+            .settlements
+            .keys()
+            .copied()
+            .find(|settlement_id| *settlement_id != source_id)
+            .expect("new settlement should be created");
+
+        let source_after = resources
+            .settlements
+            .get(&source_id)
+            .expect("source settlement should exist");
+        let new_settlement = resources
+            .settlements
+            .get(&new_id)
+            .expect("new settlement should exist");
+        assert!(source_after.migration_cooldown > 0);
+        assert!(source_after.stockpile_food < 200.0);
+        assert_eq!(new_settlement.stockpile_food, sim_core::config::MIGRATION_STARTUP_FOOD);
+        assert!(
+            new_settlement.members.len() as u32 >= sim_core::config::MIGRATION_GROUP_SIZE_MIN
+        );
+        assert!(
+            new_settlement.members.len() as u32 <= sim_core::config::MIGRATION_GROUP_SIZE_MAX
+        );
+
+        let mut moved_count: usize = 0;
+        let mut query = world.query::<(&Identity, &Behavior)>();
+        for (_, (identity, behavior)) in &mut query {
+            if identity.settlement_id != Some(new_id) {
+                continue;
+            }
+            moved_count += 1;
+            assert_eq!(behavior.current_action, ActionType::Migrate);
+            assert_eq!(behavior.action_timer, 100);
+            assert_eq!(behavior.action_target_x, Some(new_settlement.x));
+            assert_eq!(behavior.action_target_y, Some(new_settlement.y));
+        }
+        assert_eq!(moved_count, new_settlement.members.len());
+        assert!(resources.event_bus.pending_count() >= moved_count + 1);
     }
 
     #[test]

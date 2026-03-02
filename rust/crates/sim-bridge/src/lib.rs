@@ -48,6 +48,7 @@ use sim_systems::{
         CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
         IntelligenceRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
         LeaderRuntimeSystem,
+        MigrationRuntimeSystem,
         MemoryRuntimeSystem, MentalBreakRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
         MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
@@ -610,6 +611,7 @@ const RUNTIME_SYSTEM_KEY_TITLE: &str = "title_system";
 const RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR: &str = "stratification_monitor";
 const RUNTIME_SYSTEM_KEY_TENSION: &str = "tension_system";
 const RUNTIME_SYSTEM_KEY_BUILDING_EFFECT: &str = "building_effect_system";
+const RUNTIME_SYSTEM_KEY_MIGRATION: &str = "migration_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -758,6 +760,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR
             | RUNTIME_SYSTEM_KEY_TENSION
             | RUNTIME_SYSTEM_KEY_BUILDING_EFFECT
+            | RUNTIME_SYSTEM_KEY_MIGRATION
     )
 }
 
@@ -889,6 +892,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(BuildingEffectRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_MIGRATION => {
+            state
+                .engine
+                .register(MigrationRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5525,12 +5533,12 @@ mod tests {
         assert!(runtime_supports_rust_system("stratification_monitor"));
         assert!(runtime_supports_rust_system("tension_system"));
         assert!(runtime_supports_rust_system("building_effect_system"));
+        assert!(runtime_supports_rust_system("migration_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
         assert!(!runtime_supports_rust_system("family_system"));
         assert!(!runtime_supports_rust_system("population_system"));
-        assert!(!runtime_supports_rust_system("migration_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

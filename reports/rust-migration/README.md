@@ -879,3 +879,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 67.39% (31/46)
 - Remaining (strict state-write basis): 32.61%
 - Details: [0106-owner-transfer-allowlist-phase24.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0106-owner-transfer-allowlist-phase24.md)
+
+### 0107 - migration runtime active-write port
+- Commit: `[rust-r0-207] Port migration runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 69.57% (32/46)
+- Actual state-write coverage (strict): 69.57% (32/46)
+- Owner transfer coverage (`exec_owner=rust`): 67.39% (31/46)
+- Remaining (strict state-write basis): 30.43%
+- Details: [0107-migration-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0107-migration-runtime-active-write-port.md)
