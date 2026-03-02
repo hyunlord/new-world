@@ -43,10 +43,10 @@ use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
-        AgeRuntimeSystem, EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
-        NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        ContagionRuntimeSystem, OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
+        JobSatisfactionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     },
     stat_curve,
 };
@@ -580,6 +580,7 @@ const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
 const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
 const RUNTIME_SYSTEM_KEY_CONTAGION: &str = "contagion_system";
 const RUNTIME_SYSTEM_KEY_AGE: &str = "age_system";
+const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
@@ -715,6 +716,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_OCCUPATION
             | RUNTIME_SYSTEM_KEY_CONTAGION
             | RUNTIME_SYSTEM_KEY_AGE
+            | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
     )
 }
@@ -738,6 +740,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(AgeRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT => {
+            state
+                .engine
+                .register(JobAssignmentRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_CONTAGION => {
             state
@@ -5376,6 +5383,7 @@ mod tests {
         assert!(runtime_supports_rust_system("occupation_system"));
         assert!(runtime_supports_rust_system("contagion_system"));
         assert!(runtime_supports_rust_system("age_system"));
+        assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(runtime_supports_rust_system("job_satisfaction_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
@@ -5391,7 +5399,6 @@ mod tests {
         assert!(!runtime_supports_rust_system("mortality_system"));
         assert!(!runtime_supports_rust_system("population_system"));
         assert!(!runtime_supports_rust_system("migration_system"));
-        assert!(!runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

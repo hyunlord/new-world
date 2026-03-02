@@ -7,7 +7,7 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, NeedType, RelationType,
-    ValueType,
+    ResourceType, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -189,6 +189,188 @@ impl SimSystem for NeedsRuntimeSystem {
             );
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);
+        }
+    }
+}
+
+/// Rust runtime system for population-scale job assignment/rebalance.
+///
+/// This performs active writes on `Behavior.job` and mirrors the core
+/// assignment rules from `job_assignment_system.gd`:
+/// - infant/toddler: `none`
+/// - child/teen assignment constraints
+/// - ratio-based unassigned fill
+/// - one-per-tick rebalance when distributions drift
+#[derive(Debug, Clone)]
+pub struct JobAssignmentRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl JobAssignmentRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const JOB_ASSIGNMENT_ORDER: [&str; 4] = ["gatherer", "lumberjack", "builder", "miner"];
+const JOB_ASSIGNMENT_SURVIVAL_RATIOS: [f32; 4] = [0.8, 0.1, 0.1, 0.0];
+const JOB_ASSIGNMENT_CRISIS_RATIOS: [f32; 4] = [0.6, 0.2, 0.1, 0.1];
+const JOB_ASSIGNMENT_DEFAULT_RATIOS: [f32; 4] = [0.5, 0.25, 0.15, 0.1];
+const JOB_ASSIGNMENT_CRISIS_FOOD_PER_ALIVE: f32 = 1.5;
+const JOB_ASSIGNMENT_REBALANCE_THRESHOLD: f32 = 1.5;
+
+#[inline]
+fn job_assignment_job_index(job: &str) -> Option<usize> {
+    match job {
+        "gatherer" => Some(0),
+        "lumberjack" => Some(1),
+        "builder" => Some(2),
+        "miner" => Some(3),
+        _ => None,
+    }
+}
+
+#[inline]
+fn job_assignment_ratios(resources: &SimResources, alive_count: i32) -> [f32; 4] {
+    if alive_count < 10 {
+        return JOB_ASSIGNMENT_SURVIVAL_RATIOS;
+    }
+
+    let mut total_food = 0.0_f32;
+    let width = resources.map.width;
+    let height = resources.map.height;
+    for y in 0..height {
+        for x in 0..width {
+            let tile = resources.map.get(x, y);
+            for deposit in &tile.resources {
+                if matches!(deposit.resource_type, ResourceType::Food) {
+                    total_food += (deposit.amount as f32).max(0.0);
+                }
+            }
+        }
+    }
+    if total_food < alive_count as f32 * JOB_ASSIGNMENT_CRISIS_FOOD_PER_ALIVE {
+        JOB_ASSIGNMENT_CRISIS_RATIOS
+    } else {
+        JOB_ASSIGNMENT_DEFAULT_RATIOS
+    }
+}
+
+impl SimSystem for JobAssignmentRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "job_assignment_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut alive_count: i32 = 0;
+        let mut job_counts: [i32; 4] = [0; 4];
+        let mut unassigned: Vec<(Entity, GrowthStage)> = Vec::new();
+
+        let mut query = world.query::<(&Age, &mut Behavior)>();
+        for (entity, (age, behavior)) in &mut query {
+            alive_count += 1;
+            match age.stage {
+                GrowthStage::Infant | GrowthStage::Toddler => {
+                    if behavior.job != "none" {
+                        behavior.job = "none".to_string();
+                    }
+                    continue;
+                }
+                GrowthStage::Child => {
+                    if behavior.job != "gatherer" {
+                        behavior.job = "gatherer".to_string();
+                    }
+                    continue;
+                }
+                _ => {}
+            }
+
+            if !behavior.occupation.is_empty()
+                && behavior.occupation != "none"
+                && behavior.occupation != "laborer"
+            {
+                if let Some(idx) = job_assignment_job_index(behavior.job.as_str()) {
+                    job_counts[idx] += 1;
+                }
+                continue;
+            }
+
+            if behavior.job == "none" {
+                unassigned.push((entity, age.stage));
+            } else if let Some(idx) = job_assignment_job_index(behavior.job.as_str()) {
+                job_counts[idx] += 1;
+            }
+        }
+        drop(query);
+
+        if alive_count <= 0 {
+            return;
+        }
+        let ratios = job_assignment_ratios(resources, alive_count);
+
+        for (entity, stage) in &unassigned {
+            let mut target_idx = if matches!(stage, GrowthStage::Teen) {
+                0_usize
+            } else {
+                let raw_idx = body::job_assignment_best_job_code(&ratios, &job_counts, alive_count);
+                if raw_idx < 0 || raw_idx as usize >= JOB_ASSIGNMENT_ORDER.len() {
+                    0
+                } else {
+                    raw_idx as usize
+                }
+            };
+
+            let mut target_job = JOB_ASSIGNMENT_ORDER[target_idx];
+            if matches!(stage, GrowthStage::Elder) && target_job == "builder" {
+                target_idx = 0;
+                target_job = JOB_ASSIGNMENT_ORDER[target_idx];
+            }
+
+            if let Ok(mut one) = world.query_one::<&mut Behavior>(*entity) {
+                if let Some(behavior) = one.get() {
+                    behavior.job = target_job.to_string();
+                    job_counts[target_idx] += 1;
+                }
+            }
+        }
+
+        if unassigned.is_empty() && alive_count >= 5 {
+            let pair = body::job_assignment_rebalance_codes(
+                &ratios,
+                &job_counts,
+                alive_count,
+                JOB_ASSIGNMENT_REBALANCE_THRESHOLD,
+            );
+            let surplus_idx = pair[0];
+            let deficit_idx = pair[1];
+            if surplus_idx >= 0
+                && deficit_idx >= 0
+                && (surplus_idx as usize) < JOB_ASSIGNMENT_ORDER.len()
+                && (deficit_idx as usize) < JOB_ASSIGNMENT_ORDER.len()
+                && surplus_idx != deficit_idx
+            {
+                let surplus_job = JOB_ASSIGNMENT_ORDER[surplus_idx as usize];
+                let deficit_job = JOB_ASSIGNMENT_ORDER[deficit_idx as usize];
+                let mut rebalance_query = world.query::<&mut Behavior>();
+                for (_, behavior) in &mut rebalance_query {
+                    if behavior.job == surplus_job && behavior.current_action == ActionType::Idle {
+                        behavior.job = deficit_job.to_string();
+                        break;
+                    }
+                }
+            }
         }
     }
 }
@@ -1954,11 +2136,11 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, EmotionRuntimeSystem, JobSatisfactionRuntimeSystem,
-        MoraleRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem,
-        ResourceRegenSystem, ContagionRuntimeSystem, OccupationRuntimeSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
-        ValueRuntimeSystem,
+        AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
+        JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
+        NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
+        ReputationRuntimeSystem, ResourceRegenSystem, SocialEventRuntimeSystem,
+        StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -2379,6 +2561,153 @@ mod tests {
         assert!(updated.job_satisfaction > 0.30);
         assert!(updated.occupation_satisfaction > 0.35);
         assert!((0.0..=1.0).contains(&updated.job_satisfaction));
+    }
+
+    #[test]
+    fn job_assignment_runtime_system_assigns_jobs_with_age_rules() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        resources.map.get_mut(0, 0).resources[0].amount = 300.0;
+
+        let adult_age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let adult_behavior = Behavior {
+            job: "none".to_string(),
+            occupation: "none".to_string(),
+            ..Behavior::default()
+        };
+        let adult = world.spawn((adult_age, adult_behavior));
+
+        let teen_age = Age {
+            stage: GrowthStage::Teen,
+            ..Age::default()
+        };
+        let teen_behavior = Behavior {
+            job: "none".to_string(),
+            occupation: "none".to_string(),
+            ..Behavior::default()
+        };
+        let teen = world.spawn((teen_age, teen_behavior));
+
+        let child_age = Age {
+            stage: GrowthStage::Child,
+            ..Age::default()
+        };
+        let child_behavior = Behavior {
+            job: "none".to_string(),
+            occupation: "none".to_string(),
+            ..Behavior::default()
+        };
+        let child = world.spawn((child_age, child_behavior));
+
+        let infant_age = Age {
+            stage: GrowthStage::Infant,
+            ..Age::default()
+        };
+        let infant_behavior = Behavior {
+            job: "builder".to_string(),
+            occupation: "none".to_string(),
+            ..Behavior::default()
+        };
+        let infant = world.spawn((infant_age, infant_behavior));
+
+        let mut system = JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL,
+        );
+
+        let adult_updated = world
+            .get::<&Behavior>(adult)
+            .expect("adult behavior should be queryable");
+        assert_ne!(adult_updated.job, "none");
+        assert!(matches!(
+            adult_updated.job.as_str(),
+            "gatherer" | "lumberjack" | "builder" | "miner"
+        ));
+        drop(adult_updated);
+
+        let teen_updated = world
+            .get::<&Behavior>(teen)
+            .expect("teen behavior should be queryable");
+        assert_eq!(teen_updated.job, "gatherer");
+        drop(teen_updated);
+
+        let child_updated = world
+            .get::<&Behavior>(child)
+            .expect("child behavior should be queryable");
+        assert_eq!(child_updated.job, "gatherer");
+        drop(child_updated);
+
+        let infant_updated = world
+            .get::<&Behavior>(infant)
+            .expect("infant behavior should be queryable");
+        assert_eq!(infant_updated.job, "none");
+    }
+
+    #[test]
+    fn job_assignment_runtime_system_rebalances_one_idle_surplus_job() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        resources.map.get_mut(0, 0).resources[0].amount = 300.0;
+
+        for _ in 0..5 {
+            let age = Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            };
+            let behavior = Behavior {
+                job: "builder".to_string(),
+                occupation: "none".to_string(),
+                current_action: ActionType::Idle,
+                ..Behavior::default()
+            };
+            world.spawn((age, behavior));
+        }
+        for job in ["gatherer", "lumberjack", "miner"] {
+            let age = Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            };
+            let behavior = Behavior {
+                job: job.to_string(),
+                occupation: "none".to_string(),
+                current_action: ActionType::Idle,
+                ..Behavior::default()
+            };
+            world.spawn((age, behavior));
+        }
+
+        let count_jobs = |world_ref: &World, job_name: &str| -> usize {
+            let mut total = 0_usize;
+            let mut query = world_ref.query::<&Behavior>();
+            for (_, behavior) in &mut query {
+                if behavior.job == job_name {
+                    total += 1;
+                }
+            }
+            total
+        };
+
+        let before_builder = count_jobs(&world, "builder");
+        let before_gatherer = count_jobs(&world, "gatherer");
+        assert_eq!(before_builder, 5);
+        assert_eq!(before_gatherer, 1);
+
+        let mut system = JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL,
+        );
+
+        let after_builder = count_jobs(&world, "builder");
+        let after_gatherer = count_jobs(&world, "gatherer");
+        assert_eq!(after_builder, 4);
+        assert_eq!(after_gatherer, 2);
     }
 
     #[test]
