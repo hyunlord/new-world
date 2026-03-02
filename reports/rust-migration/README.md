@@ -387,3 +387,13 @@
 - Logic implementation completion after commit: 50.00%
 - Logic implementation remaining after commit: 50.00%
 - Details: [0046-age-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0046-age-runtime-rust-baseline.md)
+
+### 0047 - Rust runtime baseline port (trait_violation_system)
+- Commit: `[rust-r0-147] Add trait-violation runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 52.17%
+- Logic implementation remaining after commit: 47.83%
+- Details: [0047-trait-violation-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0047-trait-violation-runtime-rust-baseline.md)

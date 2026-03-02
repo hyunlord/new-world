@@ -32,7 +32,7 @@ use sim_systems::{
         ResourceRegenSystem, StatSyncSystem,
         BuildingEffectRuntimeSystem,
         SocialEventRuntimeSystem,
-        StatThresholdRuntimeSystem, StatsRecorderSystem, StressRuntimeSystem,
+        StatThresholdRuntimeSystem, StatsRecorderSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
         OccupationRuntimeSystem, TitleRuntimeSystem, TraumaScarRuntimeSystem, ValueRuntimeSystem,
         UpperNeedsRuntimeSystem,
     },
@@ -673,6 +673,7 @@ const RUNTIME_SYSTEM_KEY_MENTAL_BREAK: &str = "mental_break_system";
 const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
 const RUNTIME_SYSTEM_KEY_TRAUMA_SCAR: &str = "trauma_scar_system";
 const RUNTIME_SYSTEM_KEY_TITLE: &str = "title_system";
+const RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION: &str = "trait_violation_system";
 const RUNTIME_SYSTEM_KEY_VALUE: &str = "value_system";
 const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
 const RUNTIME_SYSTEM_KEY_SOCIAL_EVENT: &str = "social_event_system";
@@ -818,6 +819,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_OCCUPATION
             | RUNTIME_SYSTEM_KEY_TRAUMA_SCAR
             | RUNTIME_SYSTEM_KEY_TITLE
+            | RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION
             | RUNTIME_SYSTEM_KEY_VALUE
             | RUNTIME_SYSTEM_KEY_NETWORK
             | RUNTIME_SYSTEM_KEY_SOCIAL_EVENT
@@ -898,6 +900,14 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(TitleRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
+        }
+        RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION => {
+            state
+                .engine
+                .register(TraitViolationRuntimeSystem::new(
                     priority_u32,
                     tick_interval_u64,
                 ));
@@ -5700,6 +5710,7 @@ mod tests {
         assert!(runtime_supports_rust_system("occupation_system"));
         assert!(runtime_supports_rust_system("trauma_scar_system"));
         assert!(runtime_supports_rust_system("title_system"));
+        assert!(runtime_supports_rust_system("trait_violation_system"));
         assert!(runtime_supports_rust_system("value_system"));
         assert!(runtime_supports_rust_system("network_system"));
         assert!(runtime_supports_rust_system("social_event_system"));

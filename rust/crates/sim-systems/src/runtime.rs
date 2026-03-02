@@ -1,8 +1,8 @@
 use hecs::World;
 use std::collections::HashMap;
 use sim_core::components::{
-    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
-    Social, Stress, Values,
+    Behavior, Body as BodyComponent, Emotion, Identity, Memory, Needs, Personality, Position,
+    Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -1574,6 +1574,81 @@ impl SimSystem for MigrationRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for trait-violation stress evaluation.
+///
+/// Full parity requires Rust-owned violation history state, stress injection,
+/// and intrusive-thought / scar side-effect handling.
+#[derive(Debug, Clone)]
+pub struct TraitViolationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TraitViolationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TraitViolationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "trait_violation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        const INTRUSIVE_BASE_CHANCE: f32 = 0.005;
+        const VIOLATION_HISTORY_DECAY_TICKS: i32 = 365 * 12;
+        const REPEATED_HABIT_MODIFIER: f32 = 0.0;
+        const FORCED_MODIFIER: f32 = 0.5;
+        const SURVIVAL_MODIFIER: f32 = 0.4;
+        const NO_WITNESS_MODIFIER: f32 = 0.85;
+        const FACET_THRESHOLD: f32 = 0.6;
+
+        let mut query = world.query::<(Option<&Traits>, Option<&Stress>, Option<&Memory>)>();
+        for (_, (traits_opt, stress_opt, memory_opt)) in &mut query {
+            let stress_level = stress_opt.map(|stress| stress.level as f32).unwrap_or(0.5);
+            let context = body::trait_violation_context_modifier(
+                false,
+                stress_level > 0.8,
+                stress_level > 0.9,
+                true,
+                REPEATED_HABIT_MODIFIER,
+                FORCED_MODIFIER,
+                SURVIVAL_MODIFIER,
+                NO_WITNESS_MODIFIER,
+            );
+            let _facet_scale = body::trait_violation_facet_scale(stress_level, FACET_THRESHOLD);
+            let ptsd_mult = stress_opt
+                .map(|stress| 1.0 + (stress.allostatic_load as f32).clamp(0.0, 1.0))
+                .unwrap_or(1.0);
+            let ticks_since = traits_opt
+                .map(|traits| (traits.active.len().min(i32::MAX as usize) as i32) * 10)
+                .unwrap_or(0);
+            let has_trauma_scars = memory_opt
+                .map(|memory| !memory.trauma_scars.is_empty())
+                .unwrap_or(false);
+            let _intrusive_chance = body::trait_violation_intrusive_chance(
+                INTRUSIVE_BASE_CHANCE * context.max(0.0),
+                ptsd_mult,
+                ticks_since,
+                VIOLATION_HISTORY_DECAY_TICKS,
+                has_trauma_scars,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1746,14 +1821,14 @@ mod tests {
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
-        TitleRuntimeSystem, TraumaScarRuntimeSystem,
+        TitleRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
         Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
-        SkillEntry, Skills, Social, Stress, TraumaScar, Values, Memory, RelationshipEdge,
+        SkillEntry, Skills, Social, Stress, TraumaScar, Traits, Values, Memory, RelationshipEdge,
     };
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, Settlement, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
@@ -2372,6 +2447,48 @@ mod tests {
         assert_eq!(after.members.len(), 4);
         assert_eq!(after.buildings.len(), 1);
         assert!((after.stockpile_food - 10.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn trait_violation_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let traits = Traits {
+            active: vec!["lawful".to_string()],
+            salience_scores: vec![("lawful".to_string(), 0.9)],
+        };
+        let stress = Stress {
+            level: 0.85,
+            reserve: 0.35,
+            allostatic_load: 0.75,
+            ..Stress::default()
+        };
+        let memory = Memory {
+            trauma_scars: vec![TraumaScar {
+                scar_id: "betrayal".to_string(),
+                acquired_tick: 120,
+                severity: 0.5,
+                reactivation_count: 1,
+            }],
+            ..Memory::default()
+        };
+        let entity = world.spawn((traits, stress, memory));
+
+        let mut system = TraitViolationRuntimeSystem::new(37, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let after_traits = world
+            .get::<&Traits>(entity)
+            .expect("traits component should remain available");
+        let after_stress = world
+            .get::<&Stress>(entity)
+            .expect("stress component should remain available");
+        let after_memory = world
+            .get::<&Memory>(entity)
+            .expect("memory component should remain available");
+        assert_eq!(after_traits.active.len(), 1);
+        assert!((after_stress.level - 0.85).abs() < 1e-9);
+        assert_eq!(after_memory.trauma_scars.len(), 1);
     }
 
     #[test]
