@@ -1695,3 +1695,7 @@
 - `emotion_system`의 이벤트 impulse 변환을 Rust 배치 호출(1회) 경로로 확장해 브리지 왕복 오버헤드를 축소.
 - `sim-systems`에 impulse batch 함수 1종과 단위 테스트 1건을 추가하고, `sim-bridge`에 대응 GDExtension 메서드를 노출.
 - GDScript는 batch 실패 시 기존 per-event Rust/순수 계산 fallback을 유지해 동작 안정성을 보존.
+
+## Commit 327
+- Rust 전환 전체 이력을 요약한 종합 문서 `rust-migration-detailed-summary.md`를 추가.
+- 코어 전환 완료(56/56), 데이터 로더 완료(9/9), Tier-2 진행 상태와 브리지 연동 파일 목록을 한 문서로 통합.
