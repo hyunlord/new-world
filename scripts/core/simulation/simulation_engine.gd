@@ -1,6 +1,7 @@
 extends RefCounted
 
 const RuntimeShadowReporter = preload("res://scripts/core/simulation/runtime_shadow_reporter.gd")
+const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
 
 var current_tick: int = 0
 var is_paused: bool = false
@@ -55,12 +56,13 @@ func validate_runtime_registry() -> Dictionary:
 	}
 	if not _rust_runtime_available:
 		return result
-	if SimBridge == null:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
 		return result
-	if not SimBridge.has_method("runtime_get_registry_snapshot"):
+	if not sim_bridge.has_method("runtime_get_registry_snapshot"):
 		return result
 	_apply_runtime_commands_v2()
-	var runtime_snapshot: Array = SimBridge.runtime_get_registry_snapshot()
+	var runtime_snapshot: Array = sim_bridge.call("runtime_get_registry_snapshot")
 	var runtime_count: int = runtime_snapshot.size()
 	result["runtime_count"] = runtime_count
 	result["count_match"] = runtime_count == _registered_system_count
@@ -109,20 +111,41 @@ func _update_gdscript(delta: float) -> void:
 
 
 func _update_rust_primary(delta: float, paused: bool) -> void:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
+		return
 	_apply_runtime_commands_v2()
-	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, paused)
+	if not sim_bridge.has_method("runtime_tick_frame"):
+		return
+	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
+	if not (runtime_state_raw is Dictionary):
+		return
+	var runtime_state: Dictionary = runtime_state_raw
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
 	_consume_runtime_events_v2()
 
 
 func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
+		return
 	_apply_runtime_commands_v2()
-	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, paused)
+	if not sim_bridge.has_method("runtime_tick_frame"):
+		return
+	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
+	if not (runtime_state_raw is Dictionary):
+		return
+	var runtime_state: Dictionary = runtime_state_raw
 	var shadow_tick: int = int(runtime_state.get("current_tick", current_tick))
 	# Shadow mode: drain v2 events so runtime buffer does not grow,
 	# but do not forward them to avoid duplicate v1/v2 emissions.
-	var shadow_events: Array = SimBridge.runtime_export_events_v2()
+	if not sim_bridge.has_method("runtime_export_events_v2"):
+		return
+	var shadow_events_raw: Variant = sim_bridge.call("runtime_export_events_v2")
+	if not (shadow_events_raw is Array):
+		return
+	var shadow_events: Array = shadow_events_raw
 	var shadow_event_count: int = shadow_events.size()
 	if _shadow_reporter != null and _shadow_reporter.has_method("record_frame"):
 		_shadow_reporter.call(
@@ -145,7 +168,15 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 
 
 func _consume_runtime_events_v2() -> void:
-	var events: Array = SimBridge.runtime_export_events_v2()
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
+		return
+	if not sim_bridge.has_method("runtime_export_events_v2"):
+		return
+	var events_raw: Variant = sim_bridge.call("runtime_export_events_v2")
+	if not (events_raw is Array):
+		return
+	var events: Array = events_raw
 	if events.is_empty():
 		return
 	var bus_v2: Object = _get_simulation_bus_v2()
@@ -173,7 +204,10 @@ func _apply_runtime_commands_v2() -> void:
 		return
 	if not bus_v2.has_method("drain_runtime_commands"):
 		return
-	if not SimBridge.has_method("runtime_apply_commands_v2"):
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
+		return
+	if not sim_bridge.has_method("runtime_apply_commands_v2"):
 		return
 	var commands_raw: Variant = bus_v2.call("drain_runtime_commands")
 	if not (commands_raw is Array):
@@ -181,7 +215,7 @@ func _apply_runtime_commands_v2() -> void:
 	var commands: Array = commands_raw
 	if commands.is_empty():
 		return
-	SimBridge.runtime_apply_commands_v2(commands)
+	sim_bridge.call("runtime_apply_commands_v2", commands)
 
 
 func _process_tick() -> void:
@@ -190,7 +224,9 @@ func _process_tick() -> void:
 		var system = _systems[i]
 		if system.is_active and current_tick % system.tick_interval == 0:
 			system.execute_tick(current_tick)
-	SimulationBus.tick_completed.emit(current_tick)
+	var simulation_bus: Object = _get_simulation_bus()
+	if simulation_bus != null:
+		simulation_bus.emit_signal("tick_completed", current_tick)
 
 
 ## Toggle pause state
@@ -198,7 +234,9 @@ func toggle_pause() -> void:
 	is_paused = not is_paused
 	if _use_rust_primary():
 		return
-	SimulationBus.pause_changed.emit(is_paused)
+	var simulation_bus: Object = _get_simulation_bus()
+	if simulation_bus != null:
+		simulation_bus.emit_signal("pause_changed", is_paused)
 
 
 ## Set speed by index
@@ -207,7 +245,9 @@ func set_speed(index: int) -> void:
 	_queue_runtime_command(StringName("set_speed_index"), {"speed_index": speed_index})
 	if _use_rust_primary():
 		return
-	SimulationBus.speed_changed.emit(speed_index)
+	var simulation_bus: Object = _get_simulation_bus()
+	if simulation_bus != null:
+		simulation_bus.emit_signal("speed_changed", speed_index)
 
 
 ## Increase speed to next level
@@ -222,7 +262,12 @@ func decrease_speed() -> void:
 
 ## Convert current tick to game time
 func get_game_time() -> Dictionary:
-	return GameConfig.tick_to_date(current_tick)
+	var game_config_singleton: Object = _get_game_config_singleton()
+	if game_config_singleton != null and game_config_singleton.has_method("tick_to_date"):
+		var result_raw: Variant = game_config_singleton.call("tick_to_date", current_tick)
+		if result_raw is Dictionary:
+			return result_raw
+	return {"year": 1, "month": 1, "day": 1}
 
 
 ## Debug: N 틱 즉시 일괄 처리 (debug build 전용)
@@ -246,21 +291,22 @@ func _init_rust_runtime() -> void:
 	_shadow_reporter = null
 	if _runtime_mode == GameConfig.SIM_RUNTIME_MODE_GDSCRIPT:
 		return
-	if SimBridge == null:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
 		push_warning("[SimulationEngine] SimBridge autoload missing. Falling back to GDScript runtime.")
 		_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
 		return
-	if not SimBridge.has_method("runtime_init"):
+	if not sim_bridge.has_method("runtime_init"):
 		push_warning("[SimulationEngine] runtime_init not found. Falling back to GDScript runtime.")
 		_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
 		return
 
 	var config_json: String = _build_runtime_config_json()
-	_rust_runtime_initialized = bool(SimBridge.runtime_init(_seed, config_json))
+	_rust_runtime_initialized = bool(sim_bridge.call("runtime_init", _seed, config_json))
 	_rust_runtime_available = _rust_runtime_initialized
 	if _rust_runtime_available:
-		if SimBridge.has_method("runtime_clear_registry"):
-			SimBridge.runtime_clear_registry()
+		if sim_bridge.has_method("runtime_clear_registry"):
+			sim_bridge.call("runtime_clear_registry")
 		if _use_rust_shadow():
 			_shadow_reporter = RuntimeShadowReporter.new()
 			_shadow_reporter.call(
@@ -358,6 +404,46 @@ func _runtime_registry_names(runtime_snapshot: Array) -> PackedStringArray:
 		var row: Dictionary = row_raw
 		names.append(str(row.get("name", "")))
 	return names
+
+
+func _get_sim_bridge() -> Object:
+	if Engine.has_singleton("SimBridge"):
+		var bridge_singleton: Object = Engine.get_singleton("SimBridge")
+		if bridge_singleton != null:
+			return bridge_singleton
+	var main_loop: MainLoop = Engine.get_main_loop()
+	if main_loop == null:
+		return null
+	if not (main_loop is SceneTree):
+		return null
+	var tree: SceneTree = main_loop
+	if tree.root == null:
+		return null
+	return tree.root.get_node_or_null("SimBridge")
+
+
+func _get_game_config_singleton() -> Object:
+	if Engine.has_singleton("GameConfig"):
+		var config_singleton: Object = Engine.get_singleton("GameConfig")
+		if config_singleton != null:
+			return config_singleton
+	return null
+
+
+func _get_simulation_bus() -> Object:
+	if Engine.has_singleton("SimulationBus"):
+		var bus_singleton: Object = Engine.get_singleton("SimulationBus")
+		if bus_singleton != null:
+			return bus_singleton
+	var main_loop: MainLoop = Engine.get_main_loop()
+	if main_loop == null:
+		return null
+	if not (main_loop is SceneTree):
+		return null
+	var tree: SceneTree = main_loop
+	if tree.root == null:
+		return null
+	return tree.root.get_node_or_null("SimulationBus")
 
 
 func _get_simulation_bus_v2() -> Object:

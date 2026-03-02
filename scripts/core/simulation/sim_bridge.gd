@@ -42,11 +42,13 @@ const _RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
 const _RUNTIME_CLASS_CANDIDATES: Array[String] = [
 	"WorldSimRuntime",
 ]
+const _GDEXTENSION_PATH: String = "res://rust/worldsim.gdextension"
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
 var _native_runtime_checked: bool = false
 var _native_runtime: Object = null
+var _gdextension_checked: bool = false
 var _pathfind_method_name: String = ""
 var _pathfind_xy_method_name: String = ""
 var _pathfind_batch_method_name: String = ""
@@ -2036,6 +2038,7 @@ func body_stress_support_score(strengths: PackedFloat32Array):
 
 
 func _get_native_bridge() -> Object:
+	_ensure_gdextension_loaded()
 	if _native_checked:
 		return _native_bridge
 	_native_checked = true
@@ -2077,10 +2080,10 @@ func _get_native_bridge() -> Object:
 				return _native_bridge
 
 	for i in range(_NATIVE_SINGLETON_CANDIDATES.size()):
-		var class_name: String = _NATIVE_SINGLETON_CANDIDATES[i]
-		if not ClassDB.class_exists(class_name):
+		var native_class_name: String = _NATIVE_SINGLETON_CANDIDATES[i]
+		if not ClassDB.class_exists(native_class_name):
 			continue
-		var instance: Object = ClassDB.instantiate(class_name)
+		var instance: Object = ClassDB.instantiate(native_class_name)
 		if instance == null:
 			continue
 		for j in range(_PATHFIND_METHOD_CANDIDATES.size()):
@@ -2234,18 +2237,39 @@ func _call_native_if_exists(method_name: String, args: Array):
 
 
 func _get_native_runtime() -> Object:
+	_ensure_gdextension_loaded()
 	if _native_runtime_checked:
 		return _native_runtime
 	_native_runtime_checked = true
 
 	for i in range(_RUNTIME_CLASS_CANDIDATES.size()):
-		var class_name: String = _RUNTIME_CLASS_CANDIDATES[i]
-		if not ClassDB.class_exists(class_name):
+		var runtime_class_name: String = _RUNTIME_CLASS_CANDIDATES[i]
+		if not ClassDB.class_exists(runtime_class_name):
 			continue
-		var instance: Object = ClassDB.instantiate(class_name)
+		var instance: Object = ClassDB.instantiate(runtime_class_name)
 		if instance == null:
 			continue
 		if instance.has_method("runtime_init") and instance.has_method("runtime_tick_frame"):
 			_native_runtime = instance
-			return _native_runtime
-	return null
+	return _native_runtime
+
+
+func _ensure_gdextension_loaded() -> void:
+	if _gdextension_checked:
+		return
+	_gdextension_checked = true
+	if not Engine.has_singleton("GDExtensionManager"):
+		return
+	var manager: Object = Engine.get_singleton("GDExtensionManager")
+	if manager == null:
+		return
+	if not manager.has_method("is_extension_loaded"):
+		return
+	var loaded: bool = bool(manager.call("is_extension_loaded", _GDEXTENSION_PATH))
+	if loaded:
+		return
+	if not manager.has_method("load_extension"):
+		return
+	var load_result: int = int(manager.call("load_extension", _GDEXTENSION_PATH))
+	if load_result != OK:
+		push_warning("[SimBridge] Failed to load GDExtension: %s (error=%d)" % [_GDEXTENSION_PATH, load_result])

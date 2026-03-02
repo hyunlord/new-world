@@ -107,3 +107,9 @@
 - Completion after commit: 99%
 - Remaining after commit: 1%
 - Details: [0017-phase-h-cutover-check-script.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0017-phase-h-cutover-check-script.md)
+
+### 0018 - Headless shadow verification + extension load hardening
+- Commit: `[rust-r0-118] Validate headless shadow cutover with runtime registration`
+- Completion after commit: 100%
+- Remaining after commit: 0%
+- Details: [0018-phase-h-headless-shadow-verification.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0018-phase-h-headless-shadow-verification.md)
