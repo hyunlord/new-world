@@ -983,3 +983,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 80.43% (37/46)
 - Remaining (strict state-write basis): 17.39%
 - Details: [0119-gathering-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0119-gathering-runtime-active-write-port.md)
+
+### 0120 - owner transfer allowlist phase 31
+- Commit: `[rust-r0-220] Expand owner-ready allowlist with gathering system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 82.61% (38/46)
+- Actual state-write coverage (strict): 82.61% (38/46)
+- Owner transfer coverage (`exec_owner=rust`): 82.61% (38/46)
+- Remaining (strict state-write basis): 17.39%
+- Details: [0120-owner-transfer-allowlist-phase31.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0120-owner-transfer-allowlist-phase31.md)
