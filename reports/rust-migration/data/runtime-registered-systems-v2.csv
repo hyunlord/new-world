@@ -7,7 +7,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 6,stat_threshold_system,StatThresholdSystem,res://scripts/systems/record/stat_threshold_system.gd,stat_threshold_system,gdscript,yes,simbridge_pattern_scan_v1,no
 7,upper_needs_system,UpperNeedsSystem,res://scripts/systems/psychology/upper_needs_system.gd,upper_needs_system,rust,yes,simbridge_pattern_scan_v1,yes
 8,building_effect_system,BuildingEffectSystem,res://scripts/systems/work/building_effect_system.gd,building_effect_system,gdscript,yes,simbridge_pattern_scan_v1,no
-9,intelligence_system,IntelligenceSystem,res://scripts/systems/cognition/intelligence_system.gd,intelligence_system,gdscript,yes,simbridge_pattern_scan_v1,no
+9,intelligence_system,IntelligenceSystem,res://scripts/systems/cognition/intelligence_system.gd,intelligence_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 10,memory_system,MemorySystemScript,res://scripts/systems/record/memory_system.gd,memory_system,gdscript,yes,simbridge_pattern_scan_v1,no
 11,behavior_system,BehaviorSystem,res://scripts/ai/behavior_system.gd,behavior_system,gdscript,no,simbridge_pattern_scan_v1,no
 12,gathering_system,GatheringSystem,res://scripts/systems/work/gathering_system.gd,gathering_system,gdscript,no,simbridge_pattern_scan_v1,no

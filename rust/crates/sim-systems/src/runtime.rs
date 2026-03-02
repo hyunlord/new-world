@@ -2,13 +2,13 @@ use hecs::{Entity, World};
 use rand::Rng;
 use std::collections::HashMap;
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
-    Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Intelligence, Memory,
+    Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    MentalBreakType, NeedType, RelationType, ResourceType, Sex, ValueType,
+    IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType, Sex, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -1632,6 +1632,249 @@ impl SimSystem for EconomicTendencyRuntimeSystem {
     }
 }
 
+/// Rust runtime system for age/environment-adjusted intelligence updates.
+///
+/// This performs active writes on `Intelligence.values`, `Intelligence.g_factor`,
+/// `Intelligence.ace_penalty`, and `Intelligence.nutrition_penalty`.
+#[derive(Debug, Clone)]
+pub struct IntelligenceRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    potential_baselines: HashMap<Entity, [f32; 8]>,
+}
+
+impl IntelligenceRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            potential_baselines: HashMap::new(),
+        }
+    }
+}
+
+const INTEL_CURVE_FLUID: [(f32, f32); 8] = [
+    (0.0, 0.20),
+    (5.0, 0.50),
+    (15.0, 0.85),
+    (22.0, 1.00),
+    (35.0, 1.00),
+    (55.0, 0.85),
+    (75.0, 0.60),
+    (100.0, 0.50),
+];
+const INTEL_CURVE_CRYSTALLIZED: [(f32, f32); 8] = [
+    (0.0, 0.15),
+    (5.0, 0.30),
+    (15.0, 0.55),
+    (25.0, 0.75),
+    (50.0, 0.95),
+    (65.0, 1.00),
+    (80.0, 0.85),
+    (100.0, 0.75),
+];
+const INTEL_CURVE_PHYSICAL: [(f32, f32); 9] = [
+    (0.0, 0.10),
+    (5.0, 0.35),
+    (12.0, 0.65),
+    (20.0, 0.90),
+    (28.0, 1.00),
+    (40.0, 0.85),
+    (60.0, 0.60),
+    (80.0, 0.45),
+    (100.0, 0.35),
+];
+
+#[inline]
+fn interpolate_curve(curve: &[(f32, f32)], age_years: f32) -> f32 {
+    if curve.is_empty() {
+        return 1.0;
+    }
+    if age_years <= curve[0].0 {
+        return curve[0].1;
+    }
+    let last_idx = curve.len() - 1;
+    if age_years >= curve[last_idx].0 {
+        return curve[last_idx].1;
+    }
+    for idx in 1..curve.len() {
+        let prev = curve[idx - 1];
+        let next = curve[idx];
+        if age_years <= next.0 {
+            let span = (next.0 - prev.0).max(0.000_001);
+            let t = ((age_years - prev.0) / span).clamp(0.0, 1.0);
+            return prev.1 + (next.1 - prev.1) * t;
+        }
+    }
+    curve[last_idx].1
+}
+
+#[inline]
+fn is_fluid_intelligence(kind: IntelligenceType) -> bool {
+    matches!(kind, IntelligenceType::Logical | IntelligenceType::Spatial)
+}
+
+#[inline]
+fn intelligence_age_modifier(kind: IntelligenceType, age_years: f32) -> f32 {
+    if is_fluid_intelligence(kind) {
+        return interpolate_curve(&INTEL_CURVE_FLUID, age_years);
+    }
+    if matches!(kind, IntelligenceType::Kinesthetic) {
+        return interpolate_curve(&INTEL_CURVE_PHYSICAL, age_years);
+    }
+    interpolate_curve(&INTEL_CURVE_CRYSTALLIZED, age_years)
+}
+
+impl SimSystem for IntelligenceRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "intelligence_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Intelligence,
+            Option<&Age>,
+            Option<&Needs>,
+            Option<&Skills>,
+            Option<&Memory>,
+            Option<&Identity>,
+            Option<&Personality>,
+        )>();
+        for (entity, (intelligence, age_opt, needs_opt, skills_opt, memory_opt, identity_opt, personality_opt)) in &mut query {
+            let baseline = self.potential_baselines.entry(entity).or_insert_with(|| {
+                intelligence
+                    .values
+                    .map(|value| (value as f32).clamp(0.02, 0.98))
+            });
+            let age_ticks = age_opt.map(|age| age.ticks).unwrap_or(0);
+            let age_years = age_opt
+                .map(|age| {
+                    if age.years > 0.0 {
+                        age.years as f32
+                    } else {
+                        age.ticks as f32 / config::TICKS_PER_YEAR as f32
+                    }
+                })
+                .unwrap_or(0.0)
+                .max(0.0);
+
+            if age_ticks <= config::INTEL_NUTRITION_CRIT_AGE_TICKS as u64
+                && intelligence.nutrition_penalty < config::INTEL_NUTRITION_MAX_PENALTY
+            {
+                let hunger = needs_opt
+                    .map(|needs| needs.get(NeedType::Hunger) as f32)
+                    .unwrap_or(1.0)
+                    .clamp(0.0, 1.0);
+                if hunger < config::INTEL_NUTRITION_HUNGER_THRESHOLD as f32 {
+                    let severity = 1.0
+                        - hunger / config::INTEL_NUTRITION_HUNGER_THRESHOLD as f32;
+                    let delta = config::INTEL_NUTRITION_PENALTY_PER_TICK as f32 * severity;
+                    intelligence.nutrition_penalty = (intelligence.nutrition_penalty as f32 + delta)
+                        .min(config::INTEL_NUTRITION_MAX_PENALTY as f32)
+                        as f64;
+                }
+            }
+
+            if age_years >= config::INTEL_ACE_CRIT_AGE_YEARS as f32
+                && intelligence.ace_penalty <= 0.0
+            {
+                let birth_tick = identity_opt.map(|identity| identity.birth_tick).unwrap_or(0);
+                let cutoff = birth_tick + (config::INTEL_ACE_CRIT_AGE_YEARS as f32
+                    * config::TICKS_PER_YEAR as f32) as u64;
+                let scar_count = memory_opt
+                    .map(|memory| {
+                        memory
+                            .trauma_scars
+                            .iter()
+                            .filter(|scar| scar.acquired_tick < cutoff)
+                            .count() as u32
+                    })
+                    .unwrap_or(0);
+                if scar_count >= config::INTEL_ACE_SCARS_THRESHOLD_MAJOR {
+                    intelligence.ace_penalty = config::INTEL_ACE_PENALTY_MAJOR;
+                } else if scar_count >= config::INTEL_ACE_SCARS_THRESHOLD_MINOR {
+                    intelligence.ace_penalty = config::INTEL_ACE_PENALTY_MINOR;
+                }
+            }
+
+            let active_skill_count = skills_opt
+                .map(|skills| {
+                    skills
+                        .entries
+                        .values()
+                        .filter(|entry| {
+                            u32::from(entry.level) >= config::INTEL_ACTIVITY_SKILL_THRESHOLD
+                        })
+                        .count() as i32
+                })
+                .unwrap_or(0);
+            let activity_mod = body::cognition_activity_modifier(
+                active_skill_count,
+                config::INTEL_ACTIVITY_BUFFER as f32,
+                config::INTEL_INACTIVITY_ACCEL as f32,
+            );
+            let ace_fluid_mult = body::cognition_ace_fluid_decline_mult(
+                intelligence.ace_penalty as f32,
+                config::INTEL_ACE_PENALTY_MINOR as f32,
+                config::INTEL_ACE_FLUID_DECLINE_MULT as f32,
+            );
+            let env_penalty =
+                (intelligence.nutrition_penalty + intelligence.ace_penalty) as f32;
+
+            let intel_order = [
+                IntelligenceType::Linguistic,
+                IntelligenceType::Logical,
+                IntelligenceType::Spatial,
+                IntelligenceType::Musical,
+                IntelligenceType::Kinesthetic,
+                IntelligenceType::Interpersonal,
+                IntelligenceType::Intrapersonal,
+                IntelligenceType::Naturalistic,
+            ];
+            for (idx, kind) in intel_order.iter().enumerate() {
+                let potential = baseline[idx];
+                let base_mod = intelligence_age_modifier(*kind, age_years);
+                let effective = body::intelligence_effective_value(
+                    potential,
+                    base_mod,
+                    age_years,
+                    is_fluid_intelligence(*kind),
+                    activity_mod,
+                    ace_fluid_mult,
+                    env_penalty,
+                    0.02,
+                    0.98,
+                );
+                intelligence.values[idx] = effective as f64;
+            }
+
+            let openness = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::O) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            intelligence.g_factor = body::intelligence_g_value(
+                false,
+                0.0,
+                0.0,
+                config::INTEL_HERITABILITY_G as f32,
+                config::INTEL_G_MEAN as f32,
+                openness,
+                config::INTEL_OPENNESS_G_WEIGHT as f32,
+                0.0,
+            )
+            .clamp(0.0, 1.0) as f64;
+        }
+    }
+}
+
 /// Rust runtime system for value drift updates.
 ///
 /// This applies age-plasticity-scaled drift to selected `Values` axes using
@@ -2728,7 +2971,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
-        EmotionRuntimeSystem,
+        EmotionRuntimeSystem, IntelligenceRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
@@ -2739,14 +2982,15 @@ mod tests {
     use hecs::World;
     use sim_core::components::{
         Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
-        Position, SkillEntry, Skills, Social, Stress, Traits, Values,
+        Position, SkillEntry, Skills, Social, Stress, Traits, Values, Intelligence, Memory,
+        TraumaScar,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
-        HexacoFacet, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex,
-        ValueType, WorldMap,
+        HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+        SettlementId, Sex, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -3365,6 +3609,99 @@ mod tests {
         assert!((updated.risk_appetite as f32 - 0.5).abs() < 1e-6);
         assert!((updated.generosity as f32 - 0.5).abs() < 1e-6);
         assert!((updated.materialism as f32 - 0.3).abs() < 1e-6);
+    }
+
+    #[test]
+    fn intelligence_runtime_system_applies_nutrition_penalty_in_critical_window() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.0);
+        let age = Age {
+            ticks: 100,
+            years: 0.02,
+            stage: GrowthStage::Infant,
+            alive: true,
+        };
+        let intelligence = Intelligence {
+            values: [0.80; 8],
+            g_factor: 0.50,
+            ace_penalty: 0.0,
+            nutrition_penalty: 0.0,
+        };
+        let entity = world.spawn((intelligence, age, needs, Skills::default()));
+
+        let mut system = IntelligenceRuntimeSystem::new(18, 50);
+        system.run(&mut world, &mut resources, 50);
+
+        let updated = world
+            .get::<&Intelligence>(entity)
+            .expect("intelligence should be queryable");
+        assert!(updated.nutrition_penalty > 0.0);
+        assert!(updated.values[IntelligenceType::Logical as usize] < 0.80);
+    }
+
+    #[test]
+    fn intelligence_runtime_system_applies_ace_penalty_and_fluid_decline() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            ticks: (60.0 * sim_core::config::TICKS_PER_YEAR as f32) as u64,
+            years: 60.0,
+            stage: GrowthStage::Adult,
+            alive: true,
+        };
+        let identity = Identity {
+            birth_tick: 0,
+            ..Identity::default()
+        };
+        let memory = Memory {
+            trauma_scars: vec![
+                TraumaScar {
+                    scar_id: "scar_a".to_string(),
+                    acquired_tick: 1000,
+                    severity: 0.6,
+                    reactivation_count: 0,
+                },
+                TraumaScar {
+                    scar_id: "scar_b".to_string(),
+                    acquired_tick: 2000,
+                    severity: 0.7,
+                    reactivation_count: 0,
+                },
+                TraumaScar {
+                    scar_id: "scar_c".to_string(),
+                    acquired_tick: 3000,
+                    severity: 0.8,
+                    reactivation_count: 0,
+                },
+            ],
+            ..Memory::default()
+        };
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::O as usize] = 0.80;
+        let intelligence = Intelligence {
+            values: [0.90; 8],
+            g_factor: 0.50,
+            ace_penalty: 0.0,
+            nutrition_penalty: 0.0,
+        };
+        let entity = world.spawn((intelligence, age, identity, memory, personality));
+
+        let mut system = IntelligenceRuntimeSystem::new(18, 50);
+        system.run(&mut world, &mut resources, 50);
+
+        let updated = world
+            .get::<&Intelligence>(entity)
+            .expect("intelligence should be queryable");
+        assert!((updated.ace_penalty as f32 - sim_core::config::INTEL_ACE_PENALTY_MAJOR as f32).abs() < 1e-6);
+        assert!(
+            updated.values[IntelligenceType::Logical as usize]
+                < updated.values[IntelligenceType::Linguistic as usize]
+        );
+        assert!(updated.g_factor > 0.50);
     }
 
     #[test]

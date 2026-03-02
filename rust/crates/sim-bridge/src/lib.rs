@@ -44,10 +44,11 @@ use sim_systems::{
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
-        EmotionRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
-        MentalBreakRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem,
-        NetworkRuntimeSystem, OccupationRuntimeSystem, ReputationRuntimeSystem,
-        ResourceRegenSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
+        EmotionRuntimeSystem, IntelligenceRuntimeSystem, JobAssignmentRuntimeSystem,
+        JobSatisfactionRuntimeSystem, MentalBreakRuntimeSystem, MoraleRuntimeSystem,
+        MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem,
         TraitViolationRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     },
     stat_curve,
@@ -579,6 +580,7 @@ const RUNTIME_SYSTEM_KEY_MORALE: &str = "morale_system";
 const RUNTIME_SYSTEM_KEY_VALUE: &str = "value_system";
 const RUNTIME_SYSTEM_KEY_JOB_SATISFACTION: &str = "job_satisfaction_system";
 const RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY: &str = "economic_tendency_system";
+const RUNTIME_SYSTEM_KEY_INTELLIGENCE: &str = "intelligence_system";
 const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
 const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
 const RUNTIME_SYSTEM_KEY_CONTAGION: &str = "contagion_system";
@@ -728,6 +730,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION
             | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
             | RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY
+            | RUNTIME_SYSTEM_KEY_INTELLIGENCE
     )
 }
 
@@ -795,6 +798,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(EconomicTendencyRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_INTELLIGENCE => {
+            state
+                .engine
+                .register(IntelligenceRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5419,6 +5427,7 @@ mod tests {
         assert!(runtime_supports_rust_system("trait_violation_system"));
         assert!(runtime_supports_rust_system("job_satisfaction_system"));
         assert!(runtime_supports_rust_system("economic_tendency_system"));
+        assert!(runtime_supports_rust_system("intelligence_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
