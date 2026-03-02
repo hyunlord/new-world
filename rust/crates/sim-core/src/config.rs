@@ -286,6 +286,14 @@ pub const UPPER_NEEDS_SKILLUP_SELF_ACT_BONUS: f64 = 0.05;
 
 // ── Childcare ─────────────────────────────────────────────────────────────────
 pub const CHILDCARE_TICK_INTERVAL: u64 = 10;
+pub const CHILDCARE_HUNGER_THRESHOLD_INFANT: f64 = 0.85;
+pub const CHILDCARE_HUNGER_THRESHOLD_TODDLER: f64 = 0.80;
+pub const CHILDCARE_HUNGER_THRESHOLD_CHILD: f64 = 0.75;
+pub const CHILDCARE_HUNGER_THRESHOLD_TEEN: f64 = 0.70;
+pub const CHILDCARE_FEED_AMOUNT_INFANT: f64 = 0.40;
+pub const CHILDCARE_FEED_AMOUNT_TODDLER: f64 = 0.50;
+pub const CHILDCARE_FEED_AMOUNT_CHILD: f64 = 0.50;
+pub const CHILDCARE_FEED_AMOUNT_TEEN: f64 = 0.60;
 
 // ── World Generation ──────────────────────────────────────────────────────────
 pub const WORLD_SEED: u64 = 42;

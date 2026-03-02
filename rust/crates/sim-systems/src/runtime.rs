@@ -10,7 +10,7 @@ use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
     CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    Sex, ValueType,
+    SettlementId, Sex, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -192,6 +192,111 @@ impl SimSystem for NeedsRuntimeSystem {
             );
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);
+        }
+    }
+}
+
+/// Rust runtime system for child hunger feeding from settlement stockpiles.
+///
+/// This performs active writes on `Needs.hunger` for child-stage entities and
+/// decrements `Settlement.stockpile_food` according to childcare feed rules.
+#[derive(Debug, Clone)]
+pub struct ChildcareRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ChildcareRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn childcare_profile(stage: GrowthStage) -> Option<(f64, f64)> {
+    match stage {
+        GrowthStage::Infant => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_INFANT,
+            config::CHILDCARE_FEED_AMOUNT_INFANT,
+        )),
+        GrowthStage::Toddler => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_TODDLER,
+            config::CHILDCARE_FEED_AMOUNT_TODDLER,
+        )),
+        GrowthStage::Child => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_CHILD,
+            config::CHILDCARE_FEED_AMOUNT_CHILD,
+        )),
+        GrowthStage::Teen => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_TEEN,
+            config::CHILDCARE_FEED_AMOUNT_TEEN,
+        )),
+        _ => None,
+    }
+}
+
+impl SimSystem for ChildcareRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "childcare_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut candidates: Vec<(Entity, SettlementId, f64, f64)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Needs, &Identity)>();
+            for (entity, (age, needs, identity)) in &mut query {
+                let Some((threshold, feed_amount)) = childcare_profile(age.stage) else {
+                    continue;
+                };
+                let Some(settlement_id) = identity.settlement_id else {
+                    continue;
+                };
+                let hunger = needs.get(NeedType::Hunger);
+                if hunger >= threshold {
+                    continue;
+                }
+                candidates.push((entity, settlement_id, hunger, feed_amount));
+            }
+        }
+        candidates.sort_by(|left, right| {
+            left.2
+                .partial_cmp(&right.2)
+                .unwrap_or(Ordering::Equal)
+        });
+
+        for (entity, settlement_id, _hunger, feed_amount) in candidates {
+            let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                continue;
+            };
+            let available = settlement.stockpile_food.max(0.0);
+            if available <= 0.0 {
+                continue;
+            }
+            let withdrawn = body::childcare_take_food(available as f32, feed_amount as f32) as f64;
+            if withdrawn <= 0.0 {
+                continue;
+            }
+            settlement.stockpile_food = (available - withdrawn).max(0.0);
+
+            if let Ok(mut needs) = world.get::<&mut Needs>(entity) {
+                let next = body::childcare_hunger_after(
+                    needs.get(NeedType::Hunger) as f32,
+                    withdrawn as f32,
+                    config::FOOD_HUNGER_RESTORE as f32,
+                ) as f64;
+                needs.set(NeedType::Hunger, next);
+            }
         }
     }
 }
@@ -3753,7 +3858,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem,
+        AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
+        ContagionRuntimeSystem,
         EconomicTendencyRuntimeSystem, MovementRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
@@ -3877,6 +3983,109 @@ mod tests {
         assert!((updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs() < 1e-6);
         assert!((updated.energy as f32 - expected_energy).abs() < 1e-6);
         assert!((updated.get(NeedType::Sleep) as f32 - expected_energy).abs() < 1e-6);
+    }
+
+    #[test]
+    fn childcare_runtime_system_feeds_hungry_child_and_decrements_stockpile() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut settlement = sim_core::Settlement::new(
+            SettlementId(1),
+            "alpha".to_string(),
+            0,
+            0,
+            0,
+        );
+        settlement.stockpile_food = 1.5;
+        resources.settlements.insert(settlement.id, settlement);
+
+        let age = Age {
+            stage: GrowthStage::Child,
+            ..Age::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.20);
+        let identity = Identity {
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        let entity = world.spawn((age, needs, identity));
+
+        let mut system = ChildcareRuntimeSystem::new(8, sim_core::config::CHILDCARE_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::CHILDCARE_TICK_INTERVAL);
+
+        let updated_needs = world
+            .get::<&Needs>(entity)
+            .expect("child needs should be queryable");
+        assert!(
+            (updated_needs.get(NeedType::Hunger) as f32 - 0.35).abs() < 1e-6,
+            "child hunger should increase by feed_amount * FOOD_HUNGER_RESTORE"
+        );
+        drop(updated_needs);
+
+        let settlement_after = resources
+            .settlements
+            .get(&SettlementId(1))
+            .expect("settlement should remain present");
+        assert!((settlement_after.stockpile_food as f32 - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn childcare_runtime_system_prioritizes_more_hungry_child_when_food_limited() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut settlement = sim_core::Settlement::new(
+            SettlementId(3),
+            "beta".to_string(),
+            0,
+            0,
+            0,
+        );
+        settlement.stockpile_food = 0.5;
+        resources.settlements.insert(settlement.id, settlement);
+
+        let low_hunger_age = Age {
+            stage: GrowthStage::Child,
+            ..Age::default()
+        };
+        let mut low_hunger_needs = Needs::default();
+        low_hunger_needs.set(NeedType::Hunger, 0.20);
+        let low_hunger_identity = Identity {
+            settlement_id: Some(SettlementId(3)),
+            ..Identity::default()
+        };
+        let low_hunger_entity = world.spawn((low_hunger_age, low_hunger_needs, low_hunger_identity));
+
+        let high_hunger_age = Age {
+            stage: GrowthStage::Toddler,
+            ..Age::default()
+        };
+        let mut high_hunger_needs = Needs::default();
+        high_hunger_needs.set(NeedType::Hunger, 0.60);
+        let high_hunger_identity = Identity {
+            settlement_id: Some(SettlementId(3)),
+            ..Identity::default()
+        };
+        let high_hunger_entity =
+            world.spawn((high_hunger_age, high_hunger_needs, high_hunger_identity));
+
+        let mut system = ChildcareRuntimeSystem::new(8, sim_core::config::CHILDCARE_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::CHILDCARE_TICK_INTERVAL);
+
+        let low_hunger_after = world
+            .get::<&Needs>(low_hunger_entity)
+            .expect("first child needs should be queryable");
+        let high_hunger_after = world
+            .get::<&Needs>(high_hunger_entity)
+            .expect("second child needs should be queryable");
+        assert!(
+            (low_hunger_after.get(NeedType::Hunger) as f32 - 0.35).abs() < 1e-6,
+            "hungrier child should be fed first"
+        );
+        assert!(
+            (high_hunger_after.get(NeedType::Hunger) as f32 - 0.60).abs() < 1e-6,
+            "less hungry child should remain unchanged when stockpile is exhausted"
+        );
     }
 
     #[test]
