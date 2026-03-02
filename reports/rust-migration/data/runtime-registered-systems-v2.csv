@@ -1,7 +1,7 @@
 registration_order,var_name,const_name,script_path,system_key,exec_owner,simbridge_offload,simbridge_offload_rule,rust_runtime_impl
 1,stat_sync_system,StatSyncSystem,res://scripts/systems/record/stat_sync_system.gd,stat_sync_system,gdscript,yes,simbridge_pattern_scan_v1,no
 2,resource_regen_system,ResourceRegenSystem,res://scripts/systems/world/resource_regen_system.gd,resource_regen_system,rust,yes,simbridge_pattern_scan_v1,yes
-3,childcare_system,ChildcareSystem,res://scripts/systems/development/childcare_system.gd,childcare_system,gdscript,yes,simbridge_pattern_scan_v1,yes
+3,childcare_system,ChildcareSystem,res://scripts/systems/development/childcare_system.gd,childcare_system,rust,yes,simbridge_pattern_scan_v1,yes
 4,job_assignment_system,JobAssignmentSystem,res://scripts/systems/work/job_assignment_system.gd,job_assignment_system,rust,yes,simbridge_pattern_scan_v1,yes
 5,needs_system,NeedsSystem,res://scripts/systems/psychology/needs_system.gd,needs_system,rust,yes,simbridge_pattern_scan_v1,yes
 6,stat_threshold_system,StatThresholdSystem,res://scripts/systems/record/stat_threshold_system.gd,stat_threshold_system,gdscript,yes,simbridge_pattern_scan_v1,no

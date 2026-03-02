@@ -791,3 +791,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 54.35% (25/46)
 - Remaining (strict state-write basis): 43.48%
 - Details: [0095-childcare-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0095-childcare-runtime-active-write-port.md)
+
+### 0096 - owner transfer allowlist phase 19
+- Commit: `[rust-r0-196] Expand owner-ready allowlist with childcare system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 56.52% (26/46)
+- Actual state-write coverage (strict): 56.52% (26/46)
+- Owner transfer coverage (`exec_owner=rust`): 56.52% (26/46)
+- Remaining (strict state-write basis): 43.48%
+- Details: [0096-owner-transfer-allowlist-phase19.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0096-owner-transfer-allowlist-phase19.md)
