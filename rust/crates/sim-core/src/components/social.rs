@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::RelationType;
 use crate::ids::EntityId;
+use serde::{Deserialize, Serialize};
 
 /// A single social relationship edge
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -68,6 +68,9 @@ pub struct Social {
     pub reputation_regional: f64,
     /// Reputation tags (e.g., "generous", "thief")
     pub reputation_tags: Vec<String>,
+    /// Granted social titles (e.g., "TITLE_ELDER", "TITLE_CHIEF")
+    #[serde(default)]
+    pub titles: Vec<String>,
     /// Social capital (derived from network structure)
     pub social_capital: f64,
 }
@@ -88,5 +91,20 @@ impl Social {
             self.edges.push(RelationshipEdge::new(target));
             self.edges.last_mut().unwrap()
         }
+    }
+
+    pub fn has_title(&self, title_id: &str) -> bool {
+        self.titles.iter().any(|title| title == title_id)
+    }
+
+    pub fn grant_title(&mut self, title_id: &str) {
+        if self.has_title(title_id) {
+            return;
+        }
+        self.titles.push(title_id.to_string());
+    }
+
+    pub fn revoke_title(&mut self, title_id: &str) {
+        self.titles.retain(|title| title != title_id);
     }
 }

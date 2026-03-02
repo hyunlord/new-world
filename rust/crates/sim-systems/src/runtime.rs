@@ -2763,6 +2763,103 @@ impl SimSystem for OccupationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for social title grant/revoke evaluation.
+///
+/// This performs active writes on `Social.titles` using age, skill tiers,
+/// and settlement leadership ownership.
+#[derive(Debug, Clone)]
+pub struct TitleRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TitleRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn skill_id_to_title_suffix(skill_id: &str) -> String {
+    skill_id
+        .strip_prefix("SKILL_")
+        .unwrap_or(skill_id)
+        .to_ascii_uppercase()
+}
+
+impl SimSystem for TitleRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "title_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let leader_ids: HashSet<EntityId> = resources
+            .settlements
+            .values()
+            .filter_map(|settlement| settlement.leader_id)
+            .collect();
+        let elder_min_age_years = config::TITLE_ELDER_MIN_AGE_YEARS as f32;
+        let expert_level = config::TITLE_EXPERT_SKILL_LEVEL as i32;
+        let master_level = config::TITLE_MASTER_SKILL_LEVEL as i32;
+
+        let mut query = world.query::<(&Age, Option<&Skills>, &mut Social)>();
+        for (entity, (age, skills_opt, social)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+
+            let is_elder = body::title_is_elder(age.years as f32, elder_min_age_years);
+            if is_elder {
+                social.grant_title("TITLE_ELDER");
+            } else {
+                social.revoke_title("TITLE_ELDER");
+            }
+
+            if let Some(skills) = skills_opt {
+                for (skill_id, entry) in &skills.entries {
+                    let tier =
+                        body::title_skill_tier(i32::from(entry.level), expert_level, master_level);
+                    let title_suffix = skill_id_to_title_suffix(skill_id.as_str());
+                    if title_suffix.is_empty() {
+                        continue;
+                    }
+                    let master_title = format!("TITLE_MASTER_{title_suffix}");
+                    let expert_title = format!("TITLE_EXPERT_{title_suffix}");
+
+                    if tier >= 2 {
+                        social.grant_title(master_title.as_str());
+                        social.revoke_title(expert_title.as_str());
+                    } else if tier >= 1 {
+                        social.grant_title(expert_title.as_str());
+                    } else {
+                        social.revoke_title(master_title.as_str());
+                        social.revoke_title(expert_title.as_str());
+                    }
+                }
+            }
+
+            let entity_id = EntityId(entity.id() as u64);
+            if leader_ids.contains(&entity_id) {
+                social.grant_title("TITLE_CHIEF");
+            } else if social.has_title("TITLE_CHIEF") {
+                social.revoke_title("TITLE_CHIEF");
+                social.grant_title("TITLE_FORMER_CHIEF");
+            }
+        }
+    }
+}
+
 /// Rust runtime system for settlement leadership election and countdown.
 ///
 /// This performs active writes on `Settlement.leader_id` and
@@ -4065,7 +4162,7 @@ mod tests {
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
@@ -5933,6 +6030,108 @@ mod tests {
             settlement_after.leader_reelection_countdown,
             sim_core::config::LEADER_REELECTION_INTERVAL as u32
         );
+    }
+
+    #[test]
+    fn title_runtime_system_grants_elder_master_and_chief_titles() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(31);
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "title-a".to_string(), 0, 0, 0),
+        );
+
+        let mut skills = Skills::default();
+        skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            SkillEntry {
+                level: 85,
+                xp: 0.0,
+            },
+        );
+        let social = Social {
+            titles: vec!["TITLE_EXPERT_FORAGING".to_string()],
+            ..Social::default()
+        };
+        let entity = world.spawn((
+            Age {
+                alive: true,
+                years: 61.0,
+                stage: GrowthStage::Elder,
+                ..Age::default()
+            },
+            skills,
+            social,
+        ));
+
+        {
+            let settlement = resources
+                .settlements
+                .get_mut(&settlement_id)
+                .expect("settlement should be mutable");
+            settlement.leader_id = Some(EntityId(entity.id() as u64));
+        }
+
+        let mut system = TitleRuntimeSystem::new(37, sim_core::config::TITLE_EVAL_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::TITLE_EVAL_INTERVAL);
+
+        let updated = world.get::<&Social>(entity).expect("social should be queryable");
+        assert!(updated.has_title("TITLE_ELDER"));
+        assert!(updated.has_title("TITLE_MASTER_FORAGING"));
+        assert!(!updated.has_title("TITLE_EXPERT_FORAGING"));
+        assert!(updated.has_title("TITLE_CHIEF"));
+    }
+
+    #[test]
+    fn title_runtime_system_revokes_titles_and_marks_former_chief() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(32);
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "title-b".to_string(), 0, 0, 0),
+        );
+
+        let mut skills = Skills::default();
+        skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            SkillEntry {
+                level: 20,
+                xp: 0.0,
+            },
+        );
+        let social = Social {
+            titles: vec![
+                "TITLE_ELDER".to_string(),
+                "TITLE_CHIEF".to_string(),
+                "TITLE_MASTER_FORAGING".to_string(),
+                "TITLE_EXPERT_FORAGING".to_string(),
+            ],
+            ..Social::default()
+        };
+        let entity = world.spawn((
+            Age {
+                alive: true,
+                years: 25.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            skills,
+            social,
+        ));
+
+        let mut system = TitleRuntimeSystem::new(37, sim_core::config::TITLE_EVAL_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::TITLE_EVAL_INTERVAL);
+
+        let updated = world.get::<&Social>(entity).expect("social should be queryable");
+        assert!(!updated.has_title("TITLE_ELDER"));
+        assert!(!updated.has_title("TITLE_CHIEF"));
+        assert!(updated.has_title("TITLE_FORMER_CHIEF"));
+        assert!(!updated.has_title("TITLE_MASTER_FORAGING"));
+        assert!(!updated.has_title("TITLE_EXPERT_FORAGING"));
     }
 
     #[test]
