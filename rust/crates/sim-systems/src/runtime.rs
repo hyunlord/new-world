@@ -810,6 +810,63 @@ impl SimSystem for OccupationRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for trauma-scar processing.
+///
+/// Full parity requires Rust-owned scar definition tables, scar stack mutation,
+/// reactivation triggers, and emotion-baseline drift updates.
+#[derive(Debug, Clone)]
+pub struct TraumaScarRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TraumaScarRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TraumaScarRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "trauma_scar_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&sim_core::components::Memory, Option<&Stress>)>();
+        for (_, (memory, stress_opt)) in &mut query {
+            if memory.trauma_scars.is_empty() {
+                continue;
+            }
+            let mut stress_sensitivity_mult = 1.0_f32;
+            for scar in &memory.trauma_scars {
+                let stacks = (scar.reactivation_count as i32 + 1).max(1);
+                let base_chance = (scar.severity as f32 * 0.2).clamp(0.0, 1.0);
+                let _acquire_chance =
+                    body::trauma_scar_acquire_chance(base_chance, 1.0, stacks, 0.30);
+
+                let base_mult = 1.0 + (scar.severity as f32 * 0.5);
+                let factor = body::trauma_scar_sensitivity_factor(base_mult, stacks);
+                stress_sensitivity_mult *= factor;
+            }
+            let _clamped_mult = stress_sensitivity_mult.clamp(0.5, 3.0);
+            if let Some(stress) = stress_opt {
+                let _stress_probe = stress.level as f32 * stress_sensitivity_mult;
+            }
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -981,13 +1038,14 @@ mod tests {
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
         MentalBreakRuntimeSystem, NeedsRuntimeSystem, OccupationRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
+        TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
         Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
-        SkillEntry, Skills, Social, Stress, Values,
+        SkillEntry, Skills, Social, Stress, TraumaScar, Values, Memory,
     };
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
@@ -1263,6 +1321,38 @@ mod tests {
             .expect("behavior component should remain available");
         assert_eq!(after.occupation, "foraging");
         assert_eq!(after.job, "gatherer");
+    }
+
+    #[test]
+    fn trauma_scar_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let memory = Memory {
+            trauma_scars: vec![TraumaScar {
+                scar_id: "betrayal".to_string(),
+                acquired_tick: 120,
+                severity: 0.6,
+                reactivation_count: 2,
+            }],
+            ..Memory::default()
+        };
+        let stress = Stress {
+            level: 0.4,
+            reserve: 0.8,
+            allostatic_load: 0.15,
+            ..Stress::default()
+        };
+        let entity = world.spawn((memory, stress));
+
+        let mut system = TraumaScarRuntimeSystem::new(36, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let after = world
+            .get::<&Memory>(entity)
+            .expect("memory component should remain available");
+        assert_eq!(after.trauma_scars.len(), 1);
+        assert_eq!(after.trauma_scars[0].scar_id, "betrayal");
+        assert_eq!(after.trauma_scars[0].reactivation_count, 2);
     }
 
     #[test]

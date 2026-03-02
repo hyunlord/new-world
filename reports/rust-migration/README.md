@@ -277,3 +277,13 @@
 - Logic implementation completion after commit: 26.09%
 - Logic implementation remaining after commit: 73.91%
 - Details: [0035-occupation-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0035-occupation-runtime-rust-baseline.md)
+
+### 0036 - Rust runtime baseline port (trauma_scar_system)
+- Commit: `[rust-r0-136] Add trauma-scar runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 28.26%
+- Logic implementation remaining after commit: 71.74%
+- Details: [0036-trauma-scar-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0036-trauma-scar-runtime-rust-baseline.md)

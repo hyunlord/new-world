@@ -29,7 +29,7 @@ use sim_systems::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
         MentalBreakRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StatSyncSystem,
         StatThresholdRuntimeSystem, StatsRecorderSystem, StressRuntimeSystem,
-        OccupationRuntimeSystem,
+        OccupationRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem,
     },
     stat_curve,
@@ -667,6 +667,7 @@ const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR: &str = "child_stress_processor";
 const RUNTIME_SYSTEM_KEY_MENTAL_BREAK: &str = "mental_break_system";
 const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
+const RUNTIME_SYSTEM_KEY_TRAUMA_SCAR: &str = "trauma_scar_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
@@ -801,6 +802,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR
             | RUNTIME_SYSTEM_KEY_MENTAL_BREAK
             | RUNTIME_SYSTEM_KEY_OCCUPATION
+            | RUNTIME_SYSTEM_KEY_TRAUMA_SCAR
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
     )
@@ -856,6 +858,14 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(OccupationRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
+        }
+        RUNTIME_SYSTEM_KEY_TRAUMA_SCAR => {
+            state
+                .engine
+                .register(TraumaScarRuntimeSystem::new(
                     priority_u32,
                     tick_interval_u64,
                 ));
@@ -5584,6 +5594,7 @@ mod tests {
         assert!(runtime_supports_rust_system("child_stress_processor"));
         assert!(runtime_supports_rust_system("mental_break_system"));
         assert!(runtime_supports_rust_system("occupation_system"));
+        assert!(runtime_supports_rust_system("trauma_scar_system"));
         assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
