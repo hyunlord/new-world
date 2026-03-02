@@ -567,3 +567,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 21.74% (10/46)
 - Remaining (strict state-write basis): 73.91%
 - Details: [0067-owner-transfer-allowlist-phase4.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0067-owner-transfer-allowlist-phase4.md)
+
+### 0068 - contagion runtime active-write port
+- Commit: `[rust-r0-168] Port contagion runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 28.26% (13/46)
+- Actual state-write coverage (strict): 28.26% (13/46)
+- Owner transfer coverage (`exec_owner=rust`): 21.74% (10/46)
+- Remaining (strict state-write basis): 71.74%
+- Details: [0068-contagion-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0068-contagion-runtime-active-write-port.md)

@@ -1,4 +1,5 @@
-use hecs::World;
+use hecs::{Entity, World};
+use std::collections::HashMap;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
     Social, Stress, Values,
@@ -1464,6 +1465,271 @@ impl SimSystem for OccupationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for emotion/stress contagion propagation.
+///
+/// This performs active writes to `Emotion.primary` and `Stress.level` using
+/// AoE and same-settlement network spread kernels.
+#[derive(Debug, Clone)]
+pub struct ContagionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ContagionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct ContagionSnapshot {
+    entity: Entity,
+    x: i32,
+    y: i32,
+    settlement_id: Option<u64>,
+    emotions: [f32; 8],
+    stress_2000: f32,
+    valence: f32,
+    x_axis: f32,
+    e_axis: f32,
+    a_axis: f32,
+}
+
+#[inline]
+fn contagion_valence(emotions: &[f32; 8]) -> f32 {
+    let joy = emotions[EmotionType::Joy as usize];
+    let trust = emotions[EmotionType::Trust as usize];
+    let anticipation = emotions[EmotionType::Anticipation as usize];
+    let fear = emotions[EmotionType::Fear as usize];
+    let sadness = emotions[EmotionType::Sadness as usize];
+    let anger = emotions[EmotionType::Anger as usize];
+    let disgust = emotions[EmotionType::Disgust as usize];
+    let surprise = emotions[EmotionType::Surprise as usize];
+    let positive = (joy + trust + anticipation) / 3.0;
+    let negative = (fear + sadness + anger + disgust + surprise) / 5.0;
+    ((positive - negative) * 100.0).clamp(-100.0, 100.0)
+}
+
+impl SimSystem for ContagionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "contagion_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        const AOE_RADIUS: i32 = 3;
+        const NETWORK_HOP_RADIUS: i32 = 15;
+        const CROWD_DILUTE_DIVISOR: f32 = 6.0;
+        const REFRACTORY_SUSCEPTIBILITY: f32 = 0.25;
+        const BASE_MIMICRY_WEIGHT: f32 = 0.08;
+        const MAX_EMOTION_CONTAGION_DELTA: f32 = 0.08;
+        const MAX_STRESS_CONTAGION_DELTA: f32 = 30.0;
+        const STRESS_SCALE: f32 = 2000.0;
+        const NETWORK_DECAY: f32 = 0.5;
+
+        let mut snapshots: Vec<ContagionSnapshot> = Vec::new();
+        let mut read_query =
+            world.query::<(&Position, &Emotion, &Stress, Option<&Personality>, Option<&Identity>)>();
+        for (entity, (position, emotion, stress, personality_opt, identity_opt)) in &mut read_query {
+            let mut emotions = [0.0_f32; 8];
+            for (idx, value) in emotion.primary.iter().enumerate() {
+                emotions[idx] = *value as f32;
+            }
+            let x_axis = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let e_axis = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::E) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let a_axis = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::A) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            snapshots.push(ContagionSnapshot {
+                entity,
+                x: position.x,
+                y: position.y,
+                settlement_id: identity_opt.and_then(|identity| identity.settlement_id.map(|id| id.0)),
+                emotions,
+                stress_2000: (stress.level as f32 * STRESS_SCALE).clamp(0.0, STRESS_SCALE),
+                valence: contagion_valence(&emotions),
+                x_axis,
+                e_axis,
+                a_axis,
+            });
+        }
+        drop(read_query);
+
+        if snapshots.len() < 2 {
+            return;
+        }
+
+        let mut emotion_deltas: HashMap<Entity, [f32; 8]> = HashMap::new();
+        let mut stress_deltas: HashMap<Entity, f32> = HashMap::new();
+        let emotion_keys: [EmotionType; 5] = [
+            EmotionType::Joy,
+            EmotionType::Sadness,
+            EmotionType::Fear,
+            EmotionType::Anger,
+            EmotionType::Trust,
+        ];
+
+        for recipient in &snapshots {
+            let mut donor_count = 0_i32;
+            let mut donor_emotion_sums = [0.0_f32; 8];
+            let mut donor_stress_sum = 0.0_f32;
+            for donor in &snapshots {
+                if donor.entity == recipient.entity {
+                    continue;
+                }
+                let dist = (donor.x - recipient.x).abs() + (donor.y - recipient.y).abs();
+                if dist > AOE_RADIUS {
+                    continue;
+                }
+                donor_count += 1;
+                donor_stress_sum += donor.stress_2000;
+                for (idx, sum) in donor_emotion_sums.iter_mut().enumerate() {
+                    *sum += donor.emotions[idx];
+                }
+            }
+            if donor_count <= 0 {
+                continue;
+            }
+
+            let total_susceptibility = body::contagion_aoe_total_susceptibility(
+                donor_count,
+                CROWD_DILUTE_DIVISOR,
+                false,
+                REFRACTORY_SUSCEPTIBILITY,
+                recipient.x_axis,
+                recipient.e_axis,
+            );
+            let mut entry = [0.0_f32; 8];
+            for emotion_key in emotion_keys {
+                let idx = emotion_key as usize;
+                let donor_avg = donor_emotion_sums[idx] / donor_count as f32;
+                let gap = donor_avg - recipient.emotions[idx];
+                entry[idx] = (gap * BASE_MIMICRY_WEIGHT * total_susceptibility)
+                    .clamp(-MAX_EMOTION_CONTAGION_DELTA, MAX_EMOTION_CONTAGION_DELTA);
+            }
+            emotion_deltas.insert(recipient.entity, entry);
+
+            let avg_stress = donor_stress_sum / donor_count as f32;
+            let stress_gap = avg_stress - recipient.stress_2000;
+            let stress_delta = body::contagion_stress_delta(
+                stress_gap,
+                10.0,
+                0.04,
+                total_susceptibility,
+                MAX_STRESS_CONTAGION_DELTA,
+            ) / STRESS_SCALE;
+            if stress_delta > 0.0 {
+                stress_deltas
+                    .entry(recipient.entity)
+                    .and_modify(|value| *value += stress_delta)
+                    .or_insert(stress_delta);
+            }
+        }
+
+        for recipient in &snapshots {
+            let Some(settlement_id) = recipient.settlement_id else {
+                continue;
+            };
+            let mut donors: Vec<&ContagionSnapshot> = Vec::new();
+            for donor in &snapshots {
+                if donor.entity == recipient.entity {
+                    continue;
+                }
+                if donor.settlement_id != Some(settlement_id) {
+                    continue;
+                }
+                let dist = (donor.x - recipient.x).abs() + (donor.y - recipient.y).abs();
+                if dist <= NETWORK_HOP_RADIUS {
+                    donors.push(donor);
+                }
+            }
+            if donors.is_empty() {
+                continue;
+            }
+            let donor_count = donors.len() as i32;
+            let avg_valence = donors.iter().map(|donor| donor.valence).sum::<f32>() / donor_count as f32;
+            let valence_gap = avg_valence - recipient.valence;
+            let valence_delta = body::contagion_network_delta(
+                donor_count,
+                CROWD_DILUTE_DIVISOR,
+                false,
+                REFRACTORY_SUSCEPTIBILITY,
+                NETWORK_DECAY,
+                recipient.a_axis,
+                valence_gap,
+                0.04,
+                4.0,
+            );
+            if valence_delta.abs() <= 0.01 {
+                continue;
+            }
+            let joy_delta = (valence_delta / 100.0).clamp(-0.04, 0.04);
+            let sadness_delta = (-valence_delta / 100.0).clamp(-0.04, 0.04);
+            let entry = emotion_deltas.entry(recipient.entity).or_insert([0.0_f32; 8]);
+            entry[EmotionType::Joy as usize] += joy_delta;
+            entry[EmotionType::Trust as usize] += joy_delta * 0.5;
+            entry[EmotionType::Sadness as usize] += sadness_delta;
+            entry[EmotionType::Fear as usize] += sadness_delta * 0.5;
+        }
+
+        for recipient in &snapshots {
+            let spiral_increment = body::contagion_spiral_increment(
+                recipient.stress_2000,
+                recipient.valence,
+                500.0,
+                -40.0,
+                1500.0,
+                60.0,
+                3.0,
+                12.0,
+            ) / STRESS_SCALE;
+            if spiral_increment > 0.0 {
+                stress_deltas
+                    .entry(recipient.entity)
+                    .and_modify(|value| *value += spiral_increment)
+                    .or_insert(spiral_increment);
+            }
+        }
+
+        let mut write_query = world.query::<(&mut Emotion, &mut Stress)>();
+        for (entity, (emotion, stress)) in &mut write_query {
+            if let Some(delta_emotions) = emotion_deltas.get(&entity) {
+                for (idx, delta) in delta_emotions.iter().enumerate() {
+                    let next = (emotion.primary[idx] as f32 + *delta).clamp(0.0, 1.0);
+                    emotion.primary[idx] = next as f64;
+                }
+            }
+            if let Some(stress_delta) = stress_deltas.get(&entity) {
+                let next_level = (stress.level as f32 + *stress_delta).clamp(0.0, 1.0);
+                stress.level = next_level as f64;
+                if *stress_delta > 0.0 {
+                    let next_allostatic = (stress.allostatic_load as f32 + *stress_delta * 0.25)
+                        .clamp(0.0, 1.0);
+                    stress.allostatic_load = next_allostatic as f64;
+                }
+                stress.recalculate_state();
+            }
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1636,7 +1902,7 @@ mod tests {
     use super::{
         EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
+        ContagionRuntimeSystem, OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
@@ -2190,6 +2456,104 @@ mod tests {
             .expect("low-skill adult behavior should be queryable");
         assert_eq!(low_adult_updated.occupation, "laborer");
         assert_eq!(low_adult_updated.job, "gatherer");
+    }
+
+    #[test]
+    fn contagion_runtime_system_propagates_emotion_and_stress() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut recipient_emotion = Emotion::default();
+        *recipient_emotion.get_mut(EmotionType::Joy) = 0.10;
+        *recipient_emotion.get_mut(EmotionType::Trust) = 0.10;
+        *recipient_emotion.get_mut(EmotionType::Sadness) = 0.60;
+        *recipient_emotion.get_mut(EmotionType::Fear) = 0.40;
+        let recipient_stress = Stress {
+            level: 0.20,
+            allostatic_load: 0.05,
+            ..Stress::default()
+        };
+        let mut recipient_personality = Personality::default();
+        recipient_personality.axes[HexacoAxis::X as usize] = 0.80;
+        recipient_personality.axes[HexacoAxis::E as usize] = 0.70;
+        recipient_personality.axes[HexacoAxis::A as usize] = 0.75;
+        let recipient_identity = Identity {
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        let recipient = world.spawn((
+            Position::new(0, 0),
+            recipient_emotion,
+            recipient_stress,
+            recipient_personality,
+            recipient_identity,
+        ));
+
+        let mut donor1_emotion = Emotion::default();
+        *donor1_emotion.get_mut(EmotionType::Joy) = 0.90;
+        *donor1_emotion.get_mut(EmotionType::Trust) = 0.80;
+        *donor1_emotion.get_mut(EmotionType::Sadness) = 0.10;
+        *donor1_emotion.get_mut(EmotionType::Fear) = 0.10;
+        let donor1_stress = Stress {
+            level: 0.80,
+            allostatic_load: 0.30,
+            ..Stress::default()
+        };
+        let donor1_identity = Identity {
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        world.spawn((
+            Position::new(1, 0),
+            donor1_emotion,
+            donor1_stress,
+            Personality::default(),
+            donor1_identity,
+        ));
+
+        let mut donor2_emotion = Emotion::default();
+        *donor2_emotion.get_mut(EmotionType::Joy) = 0.85;
+        *donor2_emotion.get_mut(EmotionType::Trust) = 0.75;
+        *donor2_emotion.get_mut(EmotionType::Sadness) = 0.05;
+        *donor2_emotion.get_mut(EmotionType::Fear) = 0.05;
+        let donor2_stress = Stress {
+            level: 0.70,
+            allostatic_load: 0.20,
+            ..Stress::default()
+        };
+        let donor2_identity = Identity {
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        world.spawn((
+            Position::new(2, 1),
+            donor2_emotion,
+            donor2_stress,
+            Personality::default(),
+            donor2_identity,
+        ));
+
+        let mut system = ContagionRuntimeSystem::new(38, 3);
+        system.run(&mut world, &mut resources, 3);
+
+        let mut query_one = world
+            .query_one::<(&Emotion, &Stress)>(recipient)
+            .expect("recipient components should be queryable");
+        let (updated_emotion, updated_stress) = query_one
+            .get()
+            .expect("recipient emotion/stress tuple should be readable");
+        let joy = updated_emotion.get(EmotionType::Joy);
+        let trust = updated_emotion.get(EmotionType::Trust);
+        let sadness = updated_emotion.get(EmotionType::Sadness);
+        let stress_level = updated_stress.level;
+        let allostatic = updated_stress.allostatic_load;
+        drop(query_one);
+
+        assert!(joy > 0.10);
+        assert!(trust > 0.10);
+        assert!(sadness < 0.60);
+        assert!(stress_level > 0.20);
+        assert!(allostatic >= 0.05);
     }
 
     #[test]
