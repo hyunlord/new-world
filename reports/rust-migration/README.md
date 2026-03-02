@@ -1239,3 +1239,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0151-rust-primary-fallback-cache-pruning.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0151-rust-primary-fallback-cache-pruning.md)
+
+### 0152 - sim-bridge ws2 codec module split
+- Commit: `[rust-r0-252] Extract ws2 save codec into dedicated sim-bridge module`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0152-sim-bridge-ws2-codec-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0152-sim-bridge-ws2-codec-module-split.md)
