@@ -3354,6 +3354,122 @@ impl SimSystem for LeaderRuntimeSystem {
 /// This performs active writes on `Position`, `Behavior`, and selected `Needs`
 /// fields by applying movement skip policy, passable-tile step movement, and
 /// action-complete restore effects.
+#[derive(Debug, Clone, Copy)]
+enum BuildingEffectKind {
+    Campfire,
+    Shelter,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct BuildingEffectSnapshot {
+    kind: BuildingEffectKind,
+    x: i32,
+    y: i32,
+}
+
+/// Rust runtime system for passive building aura effects.
+///
+/// This performs active writes on `Needs.belonging`, `Needs.warmth`,
+/// `Needs.safety`, and `Needs.energy` based on nearby completed buildings.
+#[derive(Debug, Clone)]
+pub struct BuildingEffectRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl BuildingEffectRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for BuildingEffectRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "building_effect_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        if resources.buildings.is_empty() {
+            return;
+        }
+        let mut effects: Vec<BuildingEffectSnapshot> = Vec::new();
+        for building in resources.buildings.values() {
+            if !building.is_complete {
+                continue;
+            }
+            let kind = match building.building_type.as_str() {
+                "campfire" => BuildingEffectKind::Campfire,
+                "shelter" => BuildingEffectKind::Shelter,
+                _ => continue,
+            };
+            effects.push(BuildingEffectSnapshot {
+                kind,
+                x: building.x,
+                y: building.y,
+            });
+        }
+        if effects.is_empty() {
+            return;
+        }
+
+        let ticks_per_day = resources.calendar.ticks_per_day.max(1) as u64;
+        let hour = ((resources.calendar.tick % ticks_per_day) * config::TICK_HOURS as u64) as i32;
+        let is_night = hour >= 20 || hour < 6;
+        let campfire_social_boost = body::building_campfire_social_boost(is_night, 0.01, 0.02);
+
+        let mut query = world.query::<(&Position, &mut Needs)>();
+        for (_, (position, needs)) in &mut query {
+            for effect in effects.iter().copied() {
+                match effect.kind {
+                    BuildingEffectKind::Campfire => {
+                        let dx = (position.x - effect.x).abs();
+                        let dy = (position.y - effect.y).abs();
+                        if dx + dy > config::BUILDING_CAMPFIRE_RADIUS {
+                            continue;
+                        }
+                        needs.set(
+                            NeedType::Belonging,
+                            needs.get(NeedType::Belonging) + campfire_social_boost as f64,
+                        );
+                        needs.set(
+                            NeedType::Warmth,
+                            needs.get(NeedType::Warmth) + config::WARMTH_FIRE_RESTORE,
+                        );
+                    }
+                    BuildingEffectKind::Shelter => {
+                        let dx = (position.x - effect.x).abs();
+                        let dy = (position.y - effect.y).abs();
+                        if dx + dy > config::BUILDING_SHELTER_RADIUS {
+                            continue;
+                        }
+                        needs.energy =
+                            (needs.energy + config::BUILDING_SHELTER_ENERGY_RESTORE).clamp(0.0, 1.0);
+                        needs.set(
+                            NeedType::Warmth,
+                            needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
+                        );
+                        needs.set(
+                            NeedType::Safety,
+                            needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
+                        );
+                    }
+                }
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct MovementRuntimeSystem {
     priority: u32,
@@ -4444,8 +4560,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
-        ContagionRuntimeSystem,
+        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
+        ChildcareRuntimeSystem, ContagionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
@@ -4466,6 +4582,7 @@ mod tests {
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
+        Building, BuildingId,
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
         HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
         SettlementId, Sex, SocialClass, ValueType, WorldMap,
@@ -5962,6 +6079,98 @@ mod tests {
             .expect("low-skill adult behavior should be queryable");
         assert_eq!(low_adult_updated.occupation, "laborer");
         assert_eq!(low_adult_updated.job, "gatherer");
+    }
+
+    #[test]
+    fn building_effect_runtime_system_applies_campfire_social_and_warmth() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        resources.calendar.tick = 10; // hour=20 => night boost path
+        resources.buildings.insert(
+            BuildingId(1),
+            Building {
+                id: BuildingId(1),
+                building_type: "campfire".to_string(),
+                settlement_id: SettlementId(1),
+                x: 0,
+                y: 0,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.40);
+        needs.set(NeedType::Warmth, 0.30);
+        let entity = world.spawn((Position::new(1, 1), needs));
+
+        let mut system = BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::BUILDING_EFFECT_TICK_INTERVAL,
+        );
+
+        let updated = world.get::<&Needs>(entity).expect("needs should be queryable");
+        assert!((updated.get(NeedType::Belonging) as f32 - 0.42).abs() < 1e-6);
+        assert!(
+            (updated.get(NeedType::Warmth) as f32 - (0.30 + sim_core::config::WARMTH_FIRE_RESTORE as f32)).abs()
+                < 1e-6
+        );
+    }
+
+    #[test]
+    fn building_effect_runtime_system_applies_shelter_energy_warmth_and_safety() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        resources.buildings.insert(
+            BuildingId(2),
+            Building {
+                id: BuildingId(2),
+                building_type: "shelter".to_string(),
+                settlement_id: SettlementId(1),
+                x: 2,
+                y: 0,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut needs = Needs::default();
+        needs.energy = 0.25;
+        needs.set(NeedType::Warmth, 0.20);
+        needs.set(NeedType::Safety, 0.10);
+        let entity = world.spawn((Position::new(2, 0), needs));
+
+        let mut system = BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::BUILDING_EFFECT_TICK_INTERVAL,
+        );
+
+        let updated = world.get::<&Needs>(entity).expect("needs should be queryable");
+        assert!(
+            (updated.energy as f32 - (0.25 + sim_core::config::BUILDING_SHELTER_ENERGY_RESTORE as f32))
+                .abs()
+                < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Warmth) as f32
+                - (0.20 + sim_core::config::WARMTH_SHELTER_RESTORE as f32))
+                .abs()
+                < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Safety) as f32
+                - (0.10 + sim_core::config::SAFETY_SHELTER_RESTORE as f32))
+                .abs()
+                < 1e-6
+        );
     }
 
     #[test]

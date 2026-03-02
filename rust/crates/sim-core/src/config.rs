@@ -320,6 +320,10 @@ pub const JOB_ASSIGNMENT_TICK_INTERVAL: u64 = 24;
 pub const GATHERING_TICK_INTERVAL: u64 = 3;
 pub const CONSTRUCTION_TICK_INTERVAL: u64 = 5;
 pub const BUILDING_EFFECT_TICK_INTERVAL: u64 = 10;
+pub const BUILDING_STOCKPILE_RADIUS: i32 = 8;
+pub const BUILDING_SHELTER_RADIUS: i32 = 0;
+pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
+pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
 
 // ── Settlement & Migration ────────────────────────────────────────────────────
 pub const SETTLEMENT_MIN_DISTANCE: i32 = 25;

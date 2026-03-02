@@ -13,7 +13,7 @@ use std::collections::HashMap;
 use hecs::World;
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
-use sim_core::{GameCalendar, WorldMap, Settlement, SettlementId};
+use sim_core::{Building, BuildingId, GameCalendar, Settlement, SettlementId, WorldMap};
 use crate::event_bus::EventBus;
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
@@ -32,6 +32,8 @@ pub struct SimResources {
     pub map: WorldMap,
     /// All settlements keyed by their ID.
     pub settlements: HashMap<SettlementId, Settlement>,
+    /// All buildings keyed by their ID.
+    pub buildings: HashMap<BuildingId, Building>,
     /// Inter-settlement tension cache (`min_id:max_id` -> 0.0..=1.0).
     pub tension_pairs: HashMap<String, f64>,
     /// Seeded RNG — use this for all randomness to preserve determinism.
@@ -52,6 +54,7 @@ impl SimResources {
             calendar,
             map,
             settlements: HashMap::new(),
+            buildings: HashMap::new(),
             tension_pairs: HashMap::new(),
             rng: SmallRng::seed_from_u64(seed),
             event_bus: EventBus::new(),
@@ -64,6 +67,7 @@ impl std::fmt::Debug for SimResources {
         f.debug_struct("SimResources")
             .field("tick", &self.calendar.tick)
             .field("settlements", &self.settlements.len())
+            .field("buildings", &self.buildings.len())
             .field("tension_pairs", &self.tension_pairs.len())
             .field("event_bus", &self.event_bus)
             .finish_non_exhaustive()
