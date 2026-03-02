@@ -3149,6 +3149,159 @@ impl SimSystem for TensionRuntimeSystem {
     }
 }
 
+const POPULATION_MIN_FOR_BIRTH: i32 = 5;
+const POPULATION_FREE_HOUSING_CAP: i32 = 25;
+const POPULATION_SHELTER_CAPACITY: i32 = 6;
+const POPULATION_FOOD_PER_ALIVE: f32 = 0.5;
+
+/// Rust runtime system for population growth births.
+///
+/// This performs active writes on:
+/// - `SimResources.settlements[*].stockpile_food`
+/// - `SimResources.settlements[*].members`
+/// - ECS world via spawning a newborn entity
+#[derive(Debug, Clone)]
+pub struct PopulationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl PopulationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for PopulationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "population_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        if resources.settlements.is_empty() {
+            return;
+        }
+
+        let mut alive_count: i32 = 0;
+        {
+            let mut query = world.query::<&Age>();
+            for (_, age) in &mut query {
+                if age.alive {
+                    alive_count += 1;
+                }
+            }
+        }
+
+        let total_shelters: i32 = resources
+            .buildings
+            .values()
+            .filter(|building| building.building_type == "shelter")
+            .count() as i32;
+
+        let total_food: f32 = resources
+            .settlements
+            .values()
+            .map(|settlement| settlement.stockpile_food.max(0.0) as f32)
+            .sum();
+
+        let block_code = body::population_birth_block_code(
+            alive_count,
+            config::MAX_ENTITIES as i32,
+            total_shelters,
+            total_food,
+            POPULATION_MIN_FOR_BIRTH,
+            POPULATION_FREE_HOUSING_CAP,
+            POPULATION_SHELTER_CAPACITY,
+            POPULATION_FOOD_PER_ALIVE,
+        );
+        if block_code != 0 {
+            return;
+        }
+
+        let mut selected_settlement_id: Option<SettlementId> = None;
+        let mut selected_x: i32 = 0;
+        let mut selected_y: i32 = 0;
+        let mut best_food: f64 = -1.0;
+        for settlement in resources.settlements.values() {
+            if settlement.stockpile_food < config::BIRTH_FOOD_COST {
+                continue;
+            }
+            if settlement.stockpile_food > best_food {
+                best_food = settlement.stockpile_food;
+                selected_settlement_id = Some(settlement.id);
+                selected_x = settlement.x;
+                selected_y = settlement.y;
+            }
+        }
+        let Some(settlement_id) = selected_settlement_id else {
+            return;
+        };
+
+        if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+            settlement.stockpile_food =
+                (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
+        }
+
+        let mut age = Age::default();
+        age.ticks = 0;
+        age.years = 0.0;
+        age.stage = GrowthStage::Infant;
+        age.alive = true;
+
+        let mut identity = Identity::default();
+        identity.birth_tick = tick;
+        identity.settlement_id = Some(settlement_id);
+        identity.growth_stage = GrowthStage::Infant;
+        identity.sex = if resources.rng.gen_bool(0.5) {
+            Sex::Male
+        } else {
+            Sex::Female
+        };
+
+        let mut behavior = Behavior::default();
+        behavior.current_action = ActionType::Idle;
+
+        let entity = world.spawn((
+            age,
+            identity,
+            behavior,
+            Needs::default(),
+            Emotion::default(),
+            Stress::default(),
+            Social::default(),
+            Position::new(selected_x, selected_y),
+        ));
+        let entity_id = EntityId(entity.id() as u64);
+
+        if let Ok(mut one) = world.query_one::<&mut Identity>(entity) {
+            if let Some(identity_mut) = one.get() {
+                identity_mut.name = format!("child_{}", entity.id());
+            }
+        }
+
+        if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+            if !settlement.members.contains(&entity_id) {
+                settlement.members.push(entity_id);
+            }
+        }
+
+        resources
+            .event_bus
+            .emit(sim_engine::GameEvent::EntitySpawned { entity_id });
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -4834,7 +4987,7 @@ mod tests {
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
         TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -7064,6 +7217,90 @@ mod tests {
         );
         assert!((pair_after as f32 - expected).abs() < 1e-6);
         assert!((0.0..=1.0).contains(&pair_after));
+    }
+
+    #[test]
+    fn population_runtime_system_spawns_infant_and_consumes_food() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 17);
+        let mut resources = SimResources::new(calendar, map, 9);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(61);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "core".to_string(), 12, 14, 0);
+        settlement.stockpile_food = 120.0;
+        resources.settlements.insert(settlement_id, settlement);
+        resources.buildings.insert(
+            BuildingId(901),
+            Building {
+                id: BuildingId(901),
+                building_type: "shelter".to_string(),
+                settlement_id,
+                x: 12,
+                y: 14,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut member_ids: Vec<EntityId> = Vec::new();
+        for _ in 0..8 {
+            let entity = world.spawn((
+                Age {
+                    alive: true,
+                    stage: GrowthStage::Adult,
+                    years: 26.0,
+                    ..Age::default()
+                },
+                Identity {
+                    settlement_id: Some(settlement_id),
+                    growth_stage: GrowthStage::Adult,
+                    ..Identity::default()
+                },
+                Behavior::default(),
+                Needs::default(),
+                Emotion::default(),
+                Stress::default(),
+            ));
+            member_ids.push(EntityId(entity.id() as u64));
+        }
+        resources
+            .settlements
+            .get_mut(&settlement_id)
+            .expect("settlement should exist")
+            .members = member_ids;
+
+        let world_before = world.len();
+        let mut system = PopulationRuntimeSystem::new(50, sim_core::config::POPULATION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::POPULATION_TICK_INTERVAL,
+        );
+
+        assert_eq!(world.len(), world_before + 1);
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist after population tick");
+        assert_eq!(
+            settlement_after.stockpile_food,
+            120.0 - sim_core::config::BIRTH_FOOD_COST
+        );
+        assert_eq!(settlement_after.members.len(), 9);
+
+        let mut infant_count: usize = 0;
+        let mut query = world.query::<(&Age, &Identity)>();
+        for (_, (age, identity)) in &mut query {
+            if age.stage == GrowthStage::Infant && identity.settlement_id == Some(settlement_id) {
+                infant_count += 1;
+            }
+        }
+        assert_eq!(infant_count, 1);
+        assert!(resources.event_bus.pending_count() >= 1);
     }
 
     #[test]
