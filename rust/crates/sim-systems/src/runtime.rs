@@ -1082,6 +1082,180 @@ impl SimSystem for ValueRuntimeSystem {
     }
 }
 
+/// Rust runtime system for job-satisfaction updates.
+///
+/// Uses `body::job_satisfaction_score` to update
+/// `Behavior.job_satisfaction` and `Behavior.occupation_satisfaction`.
+#[derive(Debug, Clone)]
+pub struct JobSatisfactionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl JobSatisfactionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct JobSatProfile {
+    personality_ideal: [f32; 6],
+    value_weights: [f32; 6],
+    primary_skill: &'static str,
+    autonomy_level: f32,
+    prestige: f32,
+}
+
+#[inline]
+fn job_satisfaction_profile(job: &str) -> JobSatProfile {
+    match job {
+        "builder" => JobSatProfile {
+            personality_ideal: [0.10, 0.00, -0.10, 0.20, 0.80, 0.10],
+            value_weights: [0.20, 0.20, 0.10, 0.30, 0.10, 0.10],
+            primary_skill: "SKILL_CONSTRUCTION",
+            autonomy_level: 0.55,
+            prestige: 0.45,
+        },
+        "miner" => JobSatProfile {
+            personality_ideal: [0.05, -0.10, -0.15, 0.10, 0.75, -0.05],
+            value_weights: [0.15, 0.15, 0.20, 0.25, 0.05, 0.20],
+            primary_skill: "SKILL_MINING",
+            autonomy_level: 0.45,
+            prestige: 0.40,
+        },
+        "lumberjack" => JobSatProfile {
+            personality_ideal: [0.10, 0.00, 0.10, 0.15, 0.65, 0.20],
+            value_weights: [0.20, 0.15, 0.15, 0.20, 0.20, 0.10],
+            primary_skill: "SKILL_WOODCUTTING",
+            autonomy_level: 0.50,
+            prestige: 0.38,
+        },
+        "hunter" => JobSatProfile {
+            personality_ideal: [0.00, 0.10, 0.25, 0.10, 0.60, 0.20],
+            value_weights: [0.10, 0.10, 0.30, 0.15, 0.20, 0.15],
+            primary_skill: "SKILL_HUNTING",
+            autonomy_level: 0.60,
+            prestige: 0.55,
+        },
+        _ => JobSatProfile {
+            personality_ideal: [0.10, 0.00, 0.15, 0.20, 0.50, 0.15],
+            value_weights: [0.20, 0.20, 0.15, 0.20, 0.15, 0.10],
+            primary_skill: "SKILL_FORAGING",
+            autonomy_level: 0.50,
+            prestige: 0.35,
+        },
+    }
+}
+
+impl SimSystem for JobSatisfactionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "job_satisfaction_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Behavior,
+            Option<&Personality>,
+            Option<&Values>,
+            Option<&Needs>,
+            Option<&Skills>,
+            Option<&Age>,
+        )>();
+        for (_, (behavior, personality_opt, values_opt, needs_opt, skills_opt, age_opt)) in &mut query {
+            if let Some(age) = age_opt {
+                if matches!(age.stage, GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child) {
+                    behavior.job_satisfaction = 0.50;
+                    behavior.occupation_satisfaction = 0.50;
+                    continue;
+                }
+            }
+
+            if behavior.job.is_empty() || behavior.job == "none" {
+                behavior.job_satisfaction = 0.50;
+                behavior.occupation_satisfaction = 0.50;
+                continue;
+            }
+
+            let profile = job_satisfaction_profile(behavior.job.as_str());
+            let personality_actual = if let Some(personality) = personality_opt {
+                [
+                    personality.axis(HexacoAxis::H) as f32,
+                    personality.axis(HexacoAxis::E) as f32,
+                    personality.axis(HexacoAxis::X) as f32,
+                    personality.axis(HexacoAxis::A) as f32,
+                    personality.axis(HexacoAxis::C) as f32,
+                    personality.axis(HexacoAxis::O) as f32,
+                ]
+            } else {
+                [0.5; 6]
+            };
+
+            let value_actual = if let Some(values) = values_opt {
+                [
+                    ((values.get(ValueType::Cooperation) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                    ((values.get(ValueType::Fairness) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                    ((values.get(ValueType::Competition) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                    ((values.get(ValueType::HardWork) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                    ((values.get(ValueType::Nature) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                    ((values.get(ValueType::Power) as f32 + 1.0) * 0.5).clamp(0.0, 1.0),
+                ]
+            } else {
+                [0.5; 6]
+            };
+
+            let skill_fit = skills_opt
+                .map(|skills| skills.get_level(profile.primary_skill) as f32 / 10.0)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let autonomy = needs_opt
+                .map(|needs| needs.get(NeedType::Autonomy) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let competence = needs_opt
+                .map(|needs| needs.get(NeedType::Competence) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let meaning = needs_opt
+                .map(|needs| needs.get(NeedType::Meaning) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+
+            let sat = body::job_satisfaction_score(
+                &personality_actual,
+                &profile.personality_ideal,
+                &value_actual,
+                &profile.value_weights,
+                skill_fit,
+                autonomy,
+                competence,
+                meaning,
+                profile.autonomy_level,
+                profile.prestige,
+                config::JOB_SAT_W_SKILL_FIT as f32,
+                config::JOB_SAT_W_VALUE_FIT as f32,
+                config::JOB_SAT_W_PERSONALITY_FIT as f32,
+                config::JOB_SAT_W_NEED_FIT as f32,
+            );
+
+            behavior.job_satisfaction = sat.clamp(0.0, 1.0);
+            behavior.occupation_satisfaction =
+                (behavior.occupation_satisfaction * 0.80 + sat * 0.20).clamp(0.0, 1.0);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1252,7 +1426,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem,
+        EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem,
         ResourceRegenSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
         ValueRuntimeSystem,
     };
@@ -1629,6 +1803,52 @@ mod tests {
         assert!(updated.get(ValueType::Fairness) > 0.0);
         assert!(updated.get(ValueType::Family) > 0.0);
         assert!(updated.get(ValueType::Law) > 0.0);
+    }
+
+    #[test]
+    fn job_satisfaction_runtime_system_updates_behavior_scores() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let behavior = Behavior {
+            job: "builder".to_string(),
+            job_satisfaction: 0.30,
+            occupation_satisfaction: 0.35,
+            ..Behavior::default()
+        };
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::A as usize] = 0.75;
+        personality.axes[HexacoAxis::C as usize] = 0.80;
+        let mut values = Values::default();
+        values.set(ValueType::HardWork, 0.70);
+        values.set(ValueType::Cooperation, 0.60);
+        values.set(ValueType::Fairness, 0.60);
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Autonomy, 0.65);
+        needs.set(NeedType::Competence, 0.70);
+        needs.set(NeedType::Meaning, 0.60);
+
+        let mut skills = Skills::default();
+        skills.entries.insert(
+            "SKILL_CONSTRUCTION".to_string(),
+            SkillEntry { level: 8, xp: 0.0 },
+        );
+        let age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+
+        let entity = world.spawn((behavior, personality, values, needs, skills, age));
+        let mut system = JobSatisfactionRuntimeSystem::new(40, 120);
+        system.run(&mut world, &mut resources, 120);
+
+        let updated = world
+            .get::<&Behavior>(entity)
+            .expect("updated behavior should be queryable");
+        assert!(updated.job_satisfaction > 0.30);
+        assert!(updated.occupation_satisfaction > 0.35);
+        assert!((0.0..=1.0).contains(&updated.job_satisfaction));
     }
 
     #[test]
