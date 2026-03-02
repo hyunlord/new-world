@@ -1404,6 +1404,58 @@ impl SimSystem for LeaderRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for age-stage/body recalc evaluation.
+///
+/// Full parity requires Rust-owned stage transition events, yearly maturation,
+/// and body realized-value mutation paths.
+#[derive(Debug, Clone)]
+pub struct AgeRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl AgeRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for AgeRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "age_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(&Identity, Option<&BodyComponent>)>();
+        for (_, (identity, body_opt)) in &mut query {
+            let age_ticks = tick.saturating_sub(identity.birth_tick);
+            let age_years = age_ticks as f32 / config::TICKS_PER_YEAR as f32;
+            let _is_elder = body::title_is_elder(age_years, config::TITLE_ELDER_MIN_AGE_YEARS as f32);
+            let _curves = body::compute_age_curves(age_years);
+
+            if let Some(body_component) = body_opt {
+                let _speed = body::age_body_speed(
+                    body_component.agi_realized,
+                    config::BODY_SPEED_SCALE as f32,
+                    config::BODY_SPEED_BASE as f32,
+                );
+                let _strength = body::age_body_strength(body_component.str_realized);
+            }
+        }
+    }
+}
+
 /// Rust runtime baseline system for population gate evaluation.
 ///
 /// Full parity requires Rust-owned building/resource managers and birth/death side effects.
@@ -1690,7 +1742,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
+        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
@@ -2221,6 +2273,37 @@ mod tests {
             .expect("social component should remain available");
         assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
         assert!((after_social.social_capital - 0.4).abs() < 1e-9);
+    }
+
+    #[test]
+    fn age_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let body = BodyComponent::default();
+        let entity = world.spawn((identity, body));
+
+        let mut system = AgeRuntimeSystem::new(48, 50);
+        system.run(
+            &mut world,
+            &mut resources,
+            (sim_core::config::TICKS_PER_YEAR as u64) * 20,
+        );
+
+        let after_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity component should remain available");
+        let after_body = world
+            .get::<&BodyComponent>(entity)
+            .expect("body component should remain available");
+        assert_eq!(after_identity.birth_tick, 0);
+        assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
+        assert_eq!(after_body.agi_realized, 700);
+        assert_eq!(after_body.str_realized, 1000);
     }
 
     #[test]
