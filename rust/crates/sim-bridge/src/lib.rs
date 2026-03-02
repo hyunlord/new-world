@@ -25,9 +25,10 @@ use sim_engine::{EngineSnapshot, GameEvent, SimEngine, SimResources};
 use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
+    runtime::StatsRecorderSystem,
     stat_curve,
 };
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::sync::{Arc, Mutex, OnceLock};
 use unic_langid::LanguageIdentifier;
@@ -654,6 +655,7 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
+const RUNTIME_SYSTEM_KEY_STATS_RECORDER: &str = "stats_recorder";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -690,16 +692,21 @@ struct RuntimeState {
     paused: bool,
     captured_events: Arc<Mutex<Vec<GameEvent>>>,
     registered_systems: Vec<RuntimeSystemEntry>,
+    rust_registered_systems: HashSet<String>,
     compute_domain_modes: HashMap<String, String>,
 }
 
 #[derive(Debug, Clone)]
 struct RuntimeSystemEntry {
     name: String,
+    system_key: String,
     priority: i32,
     tick_interval: i32,
     active: bool,
     registration_index: i32,
+    rust_implemented: bool,
+    rust_registered: bool,
+    exec_backend: String,
 }
 
 impl RuntimeState {
@@ -731,6 +738,7 @@ impl RuntimeState {
             paused: false,
             captured_events,
             registered_systems: Vec::new(),
+            rust_registered_systems: HashSet::new(),
             compute_domain_modes: runtime_default_compute_domain_modes(),
         }
     }
@@ -750,6 +758,51 @@ fn clamp_speed_index(index: i32) -> i32 {
 fn runtime_speed_multiplier(index: i32) -> f64 {
     let clamped = clamp_speed_index(index) as usize;
     f64::from(RUNTIME_SPEED_OPTIONS[clamped])
+}
+
+fn runtime_system_key_from_name(name: &str) -> String {
+    let trimmed = name.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    let normalized = trimmed.replace('\\', "/").to_lowercase();
+    let tail = normalized.rsplit('/').next().unwrap_or_default();
+    let key = tail.strip_suffix(".gd").unwrap_or(tail);
+    key.to_string()
+}
+
+fn runtime_supports_rust_system(system_key: &str) -> bool {
+    matches!(system_key, RUNTIME_SYSTEM_KEY_STATS_RECORDER)
+}
+
+fn register_supported_rust_system(
+    state: &mut RuntimeState,
+    system_key: &str,
+    priority: i32,
+    tick_interval: i32,
+) -> bool {
+    if !runtime_supports_rust_system(system_key) {
+        return false;
+    }
+    if state.rust_registered_systems.contains(system_key) {
+        return true;
+    }
+    let priority_u32 = priority.max(0) as u32;
+    let tick_interval_u64 = tick_interval.max(1) as u64;
+    match system_key {
+        RUNTIME_SYSTEM_KEY_STATS_RECORDER => {
+            state
+                .engine
+                .register(StatsRecorderSystem::new(priority_u32, tick_interval_u64));
+        }
+        _ => {
+            return false;
+        }
+    }
+    state
+        .rust_registered_systems
+        .insert(system_key.to_string());
+    true
 }
 
 fn game_event_type_id(event: &GameEvent) -> i32 {
@@ -1174,10 +1227,14 @@ impl WorldSimRuntime {
         for entry in &state.registered_systems {
             let mut dict = VarDictionary::new();
             dict.set("name", entry.name.clone());
+            dict.set("system_key", entry.system_key.clone());
             dict.set("priority", entry.priority);
             dict.set("tick_interval", entry.tick_interval);
             dict.set("active", entry.active);
             dict.set("registration_index", entry.registration_index);
+            dict.set("rust_implemented", entry.rust_implemented);
+            dict.set("rust_registered", entry.rust_registered);
+            dict.set("exec_backend", entry.exec_backend.clone());
             out.push(&dict);
         }
         out
@@ -1201,6 +1258,8 @@ impl WorldSimRuntime {
             return;
         };
         state.registered_systems.clear();
+        state.rust_registered_systems.clear();
+        state.engine.clear_systems();
     }
 
     #[func]
@@ -1231,6 +1290,8 @@ impl WorldSimRuntime {
             }
             if command_id == "clear_registry" {
                 state.registered_systems.clear();
+                state.rust_registered_systems.clear();
+                state.engine.clear_systems();
                 continue;
             }
             if command_id == "register_system" {
@@ -1246,22 +1307,47 @@ impl WorldSimRuntime {
                 let active = dict_get_bool(&payload, "active").unwrap_or(true);
                 let registration_index =
                     dict_get_i32(&payload, "registration_index").unwrap_or(i32::MAX);
+                let system_key = runtime_system_key_from_name(&name);
+                let rust_implemented = runtime_supports_rust_system(system_key.as_str());
+                let rust_registered = if rust_implemented {
+                    register_supported_rust_system(
+                        state,
+                        system_key.as_str(),
+                        priority,
+                        tick_interval,
+                    )
+                } else {
+                    false
+                };
+                let exec_backend = if rust_registered {
+                    "rust".to_string()
+                } else {
+                    "gdscript".to_string()
+                };
                 if let Some(existing) = state
                     .registered_systems
                     .iter_mut()
                     .find(|entry| entry.name == name)
                 {
+                    existing.system_key = system_key;
                     existing.priority = priority;
                     existing.tick_interval = tick_interval;
                     existing.active = active;
                     existing.registration_index = registration_index;
+                    existing.rust_implemented = rust_implemented;
+                    existing.rust_registered = rust_registered;
+                    existing.exec_backend = exec_backend;
                 } else {
                     state.registered_systems.push(RuntimeSystemEntry {
                         name,
+                        system_key,
                         priority,
                         tick_interval,
                         active,
                         registration_index,
+                        rust_implemented,
+                        rust_registered,
+                        exec_backend,
                     });
                 }
                 state
@@ -4782,7 +4868,8 @@ mod tests {
         pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
         pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
-        resolve_pathfind_backend_mode, set_pathfind_backend_mode, PathfindError, PathfindInput,
+        resolve_pathfind_backend_mode, runtime_supports_rust_system,
+        runtime_system_key_from_name, set_pathfind_backend_mode, PathfindError, PathfindInput,
     };
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
@@ -5371,5 +5458,24 @@ mod tests {
         bytes[1] = b'A';
         bytes[2] = b'D';
         assert!(decode_ws2_blob(&bytes).is_none());
+    }
+
+    #[test]
+    fn runtime_system_key_normalizes_script_paths() {
+        assert_eq!(
+            runtime_system_key_from_name("res://scripts/systems/record/stats_recorder.gd"),
+            "stats_recorder"
+        );
+        assert_eq!(
+            runtime_system_key_from_name("res:\\scripts\\systems\\record\\stats_recorder.gd"),
+            "stats_recorder"
+        );
+        assert_eq!(runtime_system_key_from_name("stats_recorder"), "stats_recorder");
+    }
+
+    #[test]
+    fn runtime_supports_expected_first_ported_system() {
+        assert!(runtime_supports_rust_system("stats_recorder"));
+        assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

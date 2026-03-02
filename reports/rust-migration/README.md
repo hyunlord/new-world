@@ -137,3 +137,13 @@
   - `reports/rust-migration/data/gd-inventory.csv`
   - `reports/rust-migration/data/runtime-registered-systems-v2.csv`
   - `reports/rust-migration/data/tracking-metadata.json`
+
+### 0022 - First Rust runtime system port (stats_recorder)
+- Commit: `[rust-r0-122] Add first production Rust runtime system integration`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 2.17%
+- Logic implementation remaining after commit: 97.83%
+- Details: [0022-first-rust-runtime-system-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0022-first-rust-runtime-system-port.md)

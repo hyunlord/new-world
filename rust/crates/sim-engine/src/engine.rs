@@ -184,6 +184,14 @@ impl SimEngine {
         self.systems.len()
     }
 
+    /// Clears all registered systems from the engine.
+    ///
+    /// Used by runtime bridge reconfiguration paths before re-registering
+    /// system sets from external orchestrators.
+    pub fn clear_systems(&mut self) {
+        self.systems.clear();
+    }
+
     /// Capture a lightweight read-only snapshot for diagnostics or save metadata.
     pub fn snapshot(&self) -> EngineSnapshot {
         EngineSnapshot {
