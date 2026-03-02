@@ -39,9 +39,14 @@ const _GET_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
 const _RESOLVE_PATHFIND_BACKEND_METHOD_CANDIDATES: Array[String] = [
 	"resolve_pathfinding_backend",
 ]
+const _RUNTIME_CLASS_CANDIDATES: Array[String] = [
+	"WorldSimRuntime",
+]
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
+var _native_runtime_checked: bool = false
+var _native_runtime: Object = null
 var _pathfind_method_name: String = ""
 var _pathfind_xy_method_name: String = ""
 var _pathfind_batch_method_name: String = ""
@@ -54,6 +59,68 @@ var _resolved_pathfind_backend_cache: String = ""
 var _resolved_pathfind_backend_cached: bool = false
 var _gpu_pathfinding_capability_cached: bool = false
 var _gpu_pathfinding_capability: bool = false
+
+
+## Initializes Rust runtime coordinator.
+## Returns true when runtime instance is available and initialized.
+func runtime_init(seed: int, config_json: String) -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("runtime_init"):
+		return false
+	return bool(runtime.call("runtime_init", seed, config_json))
+
+
+## Ticks Rust runtime with frame delta.
+## Returns state dictionary:
+## { initialized, current_tick, ticks_processed, speed_index, paused, accumulator }.
+func runtime_tick_frame(delta_sec: float, speed_index: int, paused: bool) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"initialized": false}
+	if not runtime.has_method("runtime_tick_frame"):
+		return {"initialized": false}
+	var result: Variant = runtime.call("runtime_tick_frame", delta_sec, speed_index, paused)
+	if result is Dictionary:
+		return result
+	return {"initialized": false}
+
+
+## Returns runtime snapshot bytes.
+func runtime_get_snapshot() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("runtime_get_snapshot"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("runtime_get_snapshot")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
+## Exports runtime events in Bus v2 payload format.
+func runtime_export_events_v2() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("runtime_export_events_v2"):
+		return []
+	var result: Variant = runtime.call("runtime_export_events_v2")
+	if result is Array:
+		return result
+	return []
+
+
+## Applies runtime commands in Bus v2 command format.
+func runtime_apply_commands_v2(commands: Array) -> void:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return
+	if not runtime.has_method("runtime_apply_commands_v2"):
+		return
+	runtime.call("runtime_apply_commands_v2", commands)
 
 
 ## Sets native pathfinding backend mode (`auto`, `cpu`, `gpu`) when supported.
@@ -1875,13 +1942,13 @@ func _get_native_bridge() -> Object:
 			continue
 		for j in range(_PATHFIND_METHOD_CANDIDATES.size()):
 			var method_name: String = _PATHFIND_METHOD_CANDIDATES[j]
-				if singleton_obj.has_method(method_name):
-					_native_bridge = singleton_obj
-					_resolved_pathfind_backend_cached = false
-					_resolved_pathfind_backend_cache = ""
-					_gpu_pathfinding_capability_cached = false
-					_gpu_pathfinding_capability = false
-					_pathfind_method_name = method_name
+			if singleton_obj.has_method(method_name):
+				_native_bridge = singleton_obj
+				_resolved_pathfind_backend_cached = false
+				_resolved_pathfind_backend_cache = ""
+				_gpu_pathfinding_capability_cached = false
+				_gpu_pathfinding_capability = false
+				_pathfind_method_name = method_name
 				_pathfind_xy_method_name = _pick_method(
 					_PATHFIND_XY_METHOD_CANDIDATES, ""
 				)
@@ -2053,3 +2120,21 @@ func _call_native_if_exists(method_name: String, args: Array):
 	if not bridge.has_method(method_name):
 		return null
 	return bridge.callv(method_name, args)
+
+
+func _get_native_runtime() -> Object:
+	if _native_runtime_checked:
+		return _native_runtime
+	_native_runtime_checked = true
+
+	for i in range(_RUNTIME_CLASS_CANDIDATES.size()):
+		var class_name: String = _RUNTIME_CLASS_CANDIDATES[i]
+		if not ClassDB.class_exists(class_name):
+			continue
+		var instance: Object = ClassDB.instantiate(class_name)
+		if instance == null:
+			continue
+		if instance.has_method("runtime_init") and instance.has_method("runtime_tick_frame"):
+			_native_runtime = instance
+			return _native_runtime
+	return null

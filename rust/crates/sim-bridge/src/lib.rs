@@ -16,11 +16,15 @@ use pathfinding_gpu::{
     pathfind_grid_batch_tuple_gpu_bytes, pathfind_grid_batch_vec2_gpu_bytes,
     pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
 };
+use serde::Deserialize;
+use sim_core::{config::GameConfig, GameCalendar, WorldMap};
+use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     stat_curve,
 };
+use std::sync::{Arc, Mutex};
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -637,6 +641,234 @@ fn backend_mode_to_str(mode: u8) -> &'static str {
 
 fn resolve_backend_mode(mode: u8) -> &'static str {
     pathfinding_backend::resolve_backend_mode_str(mode)
+}
+
+const EVENT_TYPE_ID_TICK_COMPLETED: i32 = 1;
+const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
+const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
+const EVENT_TYPE_ID_GENERIC: i32 = 9000;
+const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
+
+#[derive(Debug, Clone, Deserialize)]
+struct RuntimeConfig {
+    world_width: Option<u32>,
+    world_height: Option<u32>,
+    ticks_per_second: Option<u32>,
+    max_ticks_per_frame: Option<u32>,
+}
+
+impl Default for RuntimeConfig {
+    fn default() -> Self {
+        Self {
+            world_width: Some(256),
+            world_height: Some(256),
+            ticks_per_second: Some(10),
+            max_ticks_per_frame: Some(5),
+        }
+    }
+}
+
+struct RuntimeState {
+    engine: SimEngine,
+    accumulator: f64,
+    ticks_per_second: u32,
+    max_ticks_per_frame: u32,
+    speed_index: i32,
+    captured_events: Arc<Mutex<Vec<GameEvent>>>,
+}
+
+impl RuntimeState {
+    fn from_seed(seed: u64, config: RuntimeConfig) -> Self {
+        let game_config = GameConfig::default();
+        let world_width = config.world_width.unwrap_or(256).max(1);
+        let world_height = config.world_height.unwrap_or(256).max(1);
+        let ticks_per_second = config.ticks_per_second.unwrap_or(10).max(1);
+        let max_ticks_per_frame = config.max_ticks_per_frame.unwrap_or(5).max(1);
+        let calendar = GameCalendar::new(&game_config);
+        let map = WorldMap::new(world_width, world_height, seed);
+        let captured_events = Arc::new(Mutex::new(Vec::<GameEvent>::with_capacity(256)));
+        let mut resources = SimResources::new(calendar, map, seed);
+        let event_sink = Arc::clone(&captured_events);
+        resources
+            .event_bus
+            .subscribe(Box::new(move |event: &GameEvent| {
+                if let Ok(mut buffer) = event_sink.lock() {
+                    buffer.push(event.clone());
+                }
+            }));
+        let engine = SimEngine::new(resources);
+        Self {
+            engine,
+            accumulator: 0.0,
+            ticks_per_second,
+            max_ticks_per_frame,
+            speed_index: 0,
+            captured_events,
+        }
+    }
+}
+
+fn parse_runtime_config(config_json: &str) -> RuntimeConfig {
+    if config_json.trim().is_empty() {
+        return RuntimeConfig::default();
+    }
+    serde_json::from_str::<RuntimeConfig>(config_json).unwrap_or_default()
+}
+
+fn clamp_speed_index(index: i32) -> i32 {
+    index.clamp(0, (RUNTIME_SPEED_OPTIONS.len() - 1) as i32)
+}
+
+fn runtime_speed_multiplier(index: i32) -> f64 {
+    let clamped = clamp_speed_index(index) as usize;
+    f64::from(RUNTIME_SPEED_OPTIONS[clamped])
+}
+
+fn game_event_type_id(event: &GameEvent) -> i32 {
+    match event {
+        GameEvent::TickCompleted { .. } => EVENT_TYPE_ID_TICK_COMPLETED,
+        GameEvent::SimulationPaused => EVENT_TYPE_ID_SIMULATION_PAUSED,
+        GameEvent::SimulationResumed => EVENT_TYPE_ID_SIMULATION_RESUMED,
+        _ => EVENT_TYPE_ID_GENERIC,
+    }
+}
+
+fn game_event_tick(event: &GameEvent) -> i64 {
+    match event {
+        GameEvent::TickCompleted { tick } => *tick as i64,
+        _ => -1,
+    }
+}
+
+fn game_event_payload(event: &GameEvent) -> VarDictionary {
+    let mut payload = VarDictionary::new();
+    match event {
+        GameEvent::TickCompleted { tick } => {
+            payload.set("tick", *tick as i64);
+        }
+        GameEvent::EntityDied { entity_id, cause } => {
+            payload.set("entity_id", entity_id.0 as i64);
+            payload.set("cause", cause.clone());
+        }
+        GameEvent::EntitySpawned { entity_id } => {
+            payload.set("entity_id", entity_id.0 as i64);
+        }
+        _ => {}
+    }
+    payload
+}
+
+fn game_event_to_v2_dict(event: &GameEvent) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("event_type_id", game_event_type_id(event));
+    dict.set("event_name", event.name());
+    dict.set("tick", game_event_tick(event));
+    dict.set("payload", game_event_payload(event));
+    dict
+}
+
+#[derive(GodotClass)]
+#[class(base=Object)]
+pub struct WorldSimRuntime {
+    base: Base<Object>,
+    state: Option<RuntimeState>,
+}
+
+#[godot_api]
+impl IObject for WorldSimRuntime {
+    fn init(base: Base<Object>) -> Self {
+        Self { base, state: None }
+    }
+}
+
+#[godot_api]
+impl WorldSimRuntime {
+    #[func]
+    fn runtime_init(&mut self, seed: i64, config_json: GString) -> bool {
+        let config = parse_runtime_config(&config_json.to_string());
+        self.state = Some(RuntimeState::from_seed(seed.max(0) as u64, config));
+        true
+    }
+
+    #[func]
+    fn runtime_tick_frame(
+        &mut self,
+        delta_sec: f64,
+        speed_index: i32,
+        paused: bool,
+    ) -> VarDictionary {
+        let mut out = VarDictionary::new();
+        let Some(state) = self.state.as_mut() else {
+            out.set("initialized", false);
+            out.set("current_tick", 0_i64);
+            out.set("ticks_processed", 0_i64);
+            out.set("speed_index", 0_i64);
+            out.set("paused", true);
+            out.set("accumulator", 0.0_f64);
+            return out;
+        };
+
+        state.speed_index = clamp_speed_index(speed_index);
+        let mut ticks_processed: u32 = 0;
+
+        if !paused {
+            let tick_duration = 1.0_f64 / f64::from(state.ticks_per_second);
+            state.accumulator += delta_sec.max(0.0) * runtime_speed_multiplier(state.speed_index);
+            while state.accumulator >= tick_duration && ticks_processed < state.max_ticks_per_frame
+            {
+                let emitted_tick = state.engine.current_tick() + 1;
+                state
+                    .engine
+                    .resources_mut()
+                    .event_bus
+                    .emit(GameEvent::TickCompleted { tick: emitted_tick });
+                state.engine.tick();
+                state.accumulator -= tick_duration;
+                ticks_processed += 1;
+            }
+            if state.accumulator > tick_duration * 3.0 {
+                state.accumulator = 0.0;
+            }
+        }
+
+        out.set("initialized", true);
+        out.set("current_tick", state.engine.current_tick() as i64);
+        out.set("ticks_processed", ticks_processed as i64);
+        out.set("speed_index", state.speed_index as i64);
+        out.set("paused", paused);
+        out.set("accumulator", state.accumulator);
+        out
+    }
+
+    #[func]
+    fn runtime_get_snapshot(&self) -> PackedByteArray {
+        let Some(state) = self.state.as_ref() else {
+            return PackedByteArray::new();
+        };
+        let snapshot = state.engine.snapshot();
+        let bytes = serde_json::to_vec(&snapshot).unwrap_or_default();
+        PackedByteArray::from(bytes)
+    }
+
+    #[func]
+    fn runtime_export_events_v2(&mut self) -> Array<VarDictionary> {
+        let mut out: Array<VarDictionary> = Array::new();
+        let Some(state) = self.state.as_mut() else {
+            return out;
+        };
+        let mut drained: Vec<GameEvent> = Vec::new();
+        if let Ok(mut events) = state.captured_events.lock() {
+            drained.extend(events.drain(..));
+        }
+        for event in drained {
+            let dict = game_event_to_v2_dict(&event);
+            out.push(&dict);
+        }
+        out
+    }
+
+    #[func]
+    fn runtime_apply_commands_v2(&mut self, _commands: Array<VarDictionary>) {}
 }
 
 #[derive(GodotClass)]
@@ -1403,11 +1635,7 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_trauma_scar_sensitivity_factor(
-        &self,
-        base_mult: f32,
-        stacks: i32,
-    ) -> f32 {
+    fn body_trauma_scar_sensitivity_factor(&self, base_mult: f32, stacks: i32) -> f32 {
         body::trauma_scar_sensitivity_factor(base_mult, stacks)
     }
 
@@ -1425,11 +1653,7 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_memory_summary_intensity(
-        &self,
-        max_intensity: f32,
-        summary_scale: f32,
-    ) -> f32 {
+    fn body_memory_summary_intensity(&self, max_intensity: f32, summary_scale: f32) -> f32 {
         body::memory_summary_intensity(max_intensity, summary_scale)
     }
 
@@ -1513,13 +1737,7 @@ impl WorldSimBridge {
         eh_weight: f32,
         max_pf: f32,
     ) -> f32 {
-        body::attachment_protective_factor(
-            is_secure,
-            eh,
-            secure_weight,
-            eh_weight,
-            max_pf,
-        )
+        body::attachment_protective_factor(is_secure, eh, secure_weight, eh_weight, max_pf)
     }
 
     #[func]
@@ -1528,7 +1746,10 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_intergen_child_epigenetic_step(&self, inputs: PackedFloat32Array) -> PackedFloat32Array {
+    fn body_intergen_child_epigenetic_step(
+        &self,
+        inputs: PackedFloat32Array,
+    ) -> PackedFloat32Array {
         let v = packed_f32_to_vec(&inputs);
         let out = body::intergen_child_epigenetic_step(&v);
         vec_f32_to_packed(out.to_vec())
@@ -1636,7 +1857,12 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_ace_backfill_score(&self, allostatic: f32, trauma_count: i32, attachment_code: i32) -> f32 {
+    fn body_ace_backfill_score(
+        &self,
+        allostatic: f32,
+        trauma_count: i32,
+        attachment_code: i32,
+    ) -> f32 {
         body::ace_backfill_score(allostatic, trauma_count, attachment_code)
     }
 
@@ -1824,7 +2050,13 @@ impl WorldSimBridge {
         genetics_z: f32,
         tech: f32,
     ) -> f32 {
-        body::family_newborn_health(gestation_weeks, mother_nutrition, mother_age, genetics_z, tech)
+        body::family_newborn_health(
+            gestation_weeks,
+            mother_nutrition,
+            mother_age,
+            genetics_z,
+            tech,
+        )
     }
 
     #[func]
@@ -2118,7 +2350,10 @@ impl WorldSimBridge {
     }
 
     #[func]
-    fn body_emotion_event_impulse_batch(&self, flat_inputs: PackedFloat32Array) -> PackedFloat32Array {
+    fn body_emotion_event_impulse_batch(
+        &self,
+        flat_inputs: PackedFloat32Array,
+    ) -> PackedFloat32Array {
         let out = body::emotion_event_impulse_batch(&packed_f32_to_vec(&flat_inputs));
         vec_f32_to_packed(out)
     }
@@ -2257,8 +2492,7 @@ impl WorldSimBridge {
         }
         let out = body::mortality_hazards_and_prob(
             m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], e[0], e[1], e[2], e[3],
-            e[4], e[5], e[6], e[7],
-            is_monthly,
+            e[4], e[5], e[6], e[7], is_monthly,
         );
         vec_f32_to_packed(out.to_vec())
     }

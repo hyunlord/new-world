@@ -167,6 +167,39 @@ signal tech_imported(settlement_id: int, tech_id: String, source_settlement: int
 @warning_ignore("unused_signal")
 signal tech_spread_blocked(source_settlement: int, target_settlement: int, tech_id: String, reason: String)
 
+const _EVENT_TICK_COMPLETED: int = 1
+const _EVENT_SIMULATION_PAUSED: int = 2
+const _EVENT_SIMULATION_RESUMED: int = 3
+
+
+func _ready() -> void:
+	var bus_v2: Object = get_node_or_null("/root/SimulationBusV2")
+	if bus_v2 == null:
+		return
+	if not bus_v2.has_signal("event_emitted"):
+		return
+	if bus_v2.is_connected("event_emitted", _on_v2_event_emitted):
+		return
+	bus_v2.connect("event_emitted", _on_v2_event_emitted)
+
+
+func _on_v2_event_emitted(event_type_id: int, payload: Dictionary, tick: int) -> void:
+	match event_type_id:
+		_EVENT_TICK_COMPLETED:
+			tick_completed.emit(tick)
+		_EVENT_SIMULATION_PAUSED:
+			pause_changed.emit(true)
+		_EVENT_SIMULATION_RESUMED:
+			pause_changed.emit(false)
+		_:
+			simulation_event.emit({
+				"type": "runtime_v2_event",
+				"event_type_id": event_type_id,
+				"payload": payload,
+				"tick": tick,
+				"timestamp": Time.get_ticks_msec(),
+			})
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

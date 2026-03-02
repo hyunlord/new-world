@@ -343,6 +343,15 @@ func get_age_stage(age_ticks: int) -> String:
 ## Speed options (multipliers)
 const SPEED_OPTIONS: Array[int] = [1, 2, 3, 5, 10]
 
+## Simulation runtime backend modes.
+## gdscript: 기존 GDScript 실행.
+## rust_shadow: GDScript 실행 + Rust 런타임 shadow 검증.
+## rust_primary: Rust 런타임 실행.
+const SIM_RUNTIME_MODE_GDSCRIPT: String = "gdscript"
+const SIM_RUNTIME_MODE_RUST_SHADOW: String = "rust_shadow"
+const SIM_RUNTIME_MODE_RUST_PRIMARY: String = "rust_primary"
+const SIM_RUNTIME_MODE: String = SIM_RUNTIME_MODE_RUST_SHADOW
+
 ## Biome enum
 enum Biome {
 	DEEP_WATER,
