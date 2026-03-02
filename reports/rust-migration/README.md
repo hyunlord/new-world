@@ -679,3 +679,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 39.13% (18/46)
 - Remaining (strict state-write basis): 58.70%
 - Details: [0081-economic-tendency-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0081-economic-tendency-runtime-active-write-port.md)
+
+### 0082 - owner transfer allowlist phase 12
+- Commit: `[rust-r0-182] Expand owner-ready allowlist with economic-tendency system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 41.30% (19/46)
+- Actual state-write coverage (strict): 41.30% (19/46)
+- Owner transfer coverage (`exec_owner=rust`): 41.30% (19/46)
+- Remaining (strict state-write basis): 58.70%
+- Details: [0082-owner-transfer-allowlist-phase12.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0082-owner-transfer-allowlist-phase12.md)

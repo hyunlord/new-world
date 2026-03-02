@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-02 21:20:03 +0900",
+  "generated_at": "2026-03-02 21:21:24 +0900",
   "base_commit": "e8f9e3c",
   "dataset_version": "tracking-v2",
   "offload_rule": "simbridge_pattern_scan_v1",
-  "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(job_assignment_system|resource_regen_system|needs_system|upper_needs_system|stress_system|mental_break_system|trait_violation_system|emotion_system|reputation_system|social_event_system|morale_system|value_system|job_satisfaction_system|network_system|occupation_system|age_system|mortality_system|contagion_system)",
+  "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(job_assignment_system|resource_regen_system|needs_system|upper_needs_system|stress_system|mental_break_system|trait_violation_system|emotion_system|reputation_system|social_event_system|morale_system|value_system|job_satisfaction_system|economic_tendency_system|network_system|occupation_system|age_system|mortality_system|contagion_system)",
   "rust_runtime_impl_rule": "runtime_state_write_only_v1(resource_regen_system|needs_system|upper_needs_system|stress_system|emotion_system|reputation_system|social_event_system|morale_system|value_system|network_system|occupation_system|contagion_system|job_satisfaction_system|economic_tendency_system|age_system|job_assignment_system|mortality_system|mental_break_system|trait_violation_system)",
   "reference_scope": [
     "*.gd",
