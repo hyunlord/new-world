@@ -38,7 +38,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 37,stratification_monitor,StratificationMonitor,res://scripts/systems/social/stratification_monitor.gd,stratification_monitor,gdscript,yes,simbridge_pattern_scan_v1,no
 38,stats_recorder,StatsRecorder,res://scripts/systems/record/stats_recorder.gd,stats_recorder,gdscript,yes,simbridge_pattern_scan_v1,yes
 39,contagion_system,ContagionSystem,res://scripts/systems/psychology/contagion_system.gd,contagion_system,gdscript,yes,simbridge_pattern_scan_v1,no
-40,reputation_system,ReputationSystem,res://scripts/systems/social/reputation_system.gd,reputation_system,gdscript,yes,simbridge_pattern_scan_v1,no
+40,reputation_system,ReputationSystem,res://scripts/systems/social/reputation_system.gd,reputation_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 41,economic_tendency_system,EconomicTendencySystem,res://scripts/systems/social/economic_tendency_system.gd,economic_tendency_system,gdscript,yes,simbridge_pattern_scan_v1,no
 42,morale_system,MoraleSystem,res://scripts/systems/psychology/morale_system.gd,morale_system,gdscript,yes,simbridge_pattern_scan_v1,no
 43,job_satisfaction_system,JobSatisfactionSystem,res://scripts/systems/social/job_satisfaction_system.gd,job_satisfaction_system,gdscript,yes,simbridge_pattern_scan_v1,no

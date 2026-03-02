@@ -1734,6 +1734,76 @@ impl SimSystem for TraitViolationRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for reputation signal evaluation.
+///
+/// Full parity requires Rust-owned event queue integration, gossip propagation,
+/// and per-domain reputation mutation state.
+#[derive(Debug, Clone)]
+pub struct ReputationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ReputationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ReputationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "reputation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let ticks_per_year =
+            (config::TICKS_PER_YEAR as f32 / self.tick_interval as f32).max(1.0);
+        let pos_decay =
+            (config::REP_POSITIVE_YEARLY_RETENTION as f32).powf(1.0 / ticks_per_year);
+        let neg_decay =
+            (config::REP_NEGATIVE_YEARLY_RETENTION as f32).powf(1.0 / ticks_per_year);
+
+        let mut query = world.query::<&Social>();
+        for (_, social) in &mut query {
+            let rep_overall = ((social.reputation_local + social.reputation_regional) * 0.5) as f32;
+            let magnitude = rep_overall.abs().clamp(0.0, 1.0);
+            let valence = if rep_overall < 0.0 { -1.0 } else { 1.0 };
+            let neg_bias = if valence < 0.0 {
+                config::REP_NEG_BIAS_MORALITY as f32
+            } else {
+                1.0
+            };
+            let _event_delta = body::reputation_event_delta(
+                valence,
+                magnitude,
+                config::REP_EVENT_DELTA_SCALE as f32,
+                neg_bias,
+            );
+            let _local_next = body::reputation_decay_value(
+                social.reputation_local as f32,
+                pos_decay,
+                neg_decay,
+            );
+            let _regional_next = body::reputation_decay_value(
+                social.reputation_regional as f32,
+                pos_decay,
+                neg_decay,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1904,7 +1974,7 @@ mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
+        LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -2610,6 +2680,32 @@ mod tests {
         assert_eq!(after_traits.active.len(), 1);
         assert!((after_stress.level - 0.85).abs() < 1e-9);
         assert_eq!(after_memory.trauma_scars.len(), 1);
+    }
+
+    #[test]
+    fn reputation_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let social = Social {
+            reputation_local: 0.55,
+            reputation_regional: 0.35,
+            ..Social::default()
+        };
+        let entity = world.spawn((social,));
+
+        let mut system =
+            ReputationRuntimeSystem::new(38, sim_core::config::REPUTATION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::REPUTATION_TICK_INTERVAL,
+        );
+
+        let after = world
+            .get::<&Social>(entity)
+            .expect("social component should remain available");
+        assert!((after.reputation_local - 0.55).abs() < 1e-9);
+        assert!((after.reputation_regional - 0.35).abs() < 1e-9);
     }
 
     #[test]
