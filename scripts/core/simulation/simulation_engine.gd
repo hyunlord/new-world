@@ -6,6 +6,8 @@ const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
 	"resource_regen_system",
 	"needs_system",
 	"upper_needs_system",
+	"stress_system",
+	"emotion_system",
 ])
 
 var current_tick: int = 0

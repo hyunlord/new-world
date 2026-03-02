@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-02 20:05:00 +0900",
-  "base_commit": "6fa40d9",
+  "generated_at": "2026-03-02 20:25:00 +0900",
+  "base_commit": "97ed429",
   "dataset_version": "tracking-v2",
   "offload_rule": "simbridge_pattern_scan_v1",
-  "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(resource_regen_system|needs_system|upper_needs_system)",
+  "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(resource_regen_system|needs_system|upper_needs_system|stress_system|emotion_system)",
   "rust_runtime_impl_rule": "runtime_state_write_only_v1(resource_regen_system|needs_system|upper_needs_system|stress_system|emotion_system|reputation_system|social_event_system|morale_system)",
   "reference_scope": [
     "*.gd",

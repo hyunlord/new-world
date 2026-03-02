@@ -511,3 +511,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 6.52% (3/46)
 - Remaining (strict state-write basis): 82.61%
 - Details: [0060-owner-transfer-allowlist-phase1.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0060-owner-transfer-allowlist-phase1.md)
+
+### 0061 - owner transfer allowlist phase 2
+- Commit: `[rust-r0-161] Expand owner-ready allowlist with stress and emotion systems`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 17.39% (8/46)
+- Actual state-write coverage (strict): 17.39% (8/46)
+- Owner transfer coverage (`exec_owner=rust`): 10.87% (5/46)
+- Remaining (strict state-write basis): 82.61%
+- Details: [0061-owner-transfer-allowlist-phase2.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0061-owner-transfer-allowlist-phase2.md)
