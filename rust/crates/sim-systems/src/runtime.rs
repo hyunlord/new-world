@@ -4402,6 +4402,151 @@ impl SimSystem for IntergenerationalRuntimeSystem {
     }
 }
 
+const PARENTING_BASE_RATE: f32 = 0.002;
+const PARENTING_MALADAPTIVE_MULT: f32 = 1.5;
+const PARENTING_STRESS_DELTA_SCALE: f32 = 8.0;
+
+/// Rust runtime system for parenting transition and observational coping updates.
+///
+/// This performs active writes on parent/child `Stress` and child `Coping`
+/// based on parent regulation signals and Bandura-style modeling rates.
+#[derive(Debug, Clone)]
+pub struct ParentingRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ParentingRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ParentingRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "parenting_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut parent_signal_by_entity: HashMap<EntityId, f32> = HashMap::new();
+        let mut parent_updates: Vec<(Entity, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress)>();
+            for (entity, (age, social, stress)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if social.children.is_empty() {
+                    continue;
+                }
+
+                let current_level = (stress.level as f32).clamp(0.0, 1.0);
+                let epigenetic_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let adjusted_gain =
+                    body::parenting_hpa_adjusted_stress_gain(1.0, epigenetic_load, INTERGEN_HPA_LOAD_WEIGHT)
+                        .max(0.001);
+                let next_level = (current_level / adjusted_gain).clamp(0.0, 1.0);
+                parent_updates.push((entity, next_level, current_level));
+                parent_signal_by_entity.insert(EntityId(entity.id() as u64), (1.0 - next_level).clamp(0.0, 1.0));
+            }
+        }
+
+        for (entity, next_level, previous_level) in parent_updates {
+            if (next_level - previous_level).abs() < 1e-6 {
+                continue;
+            }
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                    entity_id: EntityId(entity.id() as u64),
+                    stress: next_level as f64,
+                });
+            }
+        }
+
+        let mut query = world.query::<(&Age, &Social, &mut Coping, &mut Stress)>();
+        for (entity, (age, social, coping, stress)) in &mut query {
+            if !age.alive || !age.stage.is_child_age() || social.parents.is_empty() {
+                continue;
+            }
+
+            let mut observation_sum = 0.0_f32;
+            let mut observation_count = 0_u32;
+            for parent_id in &social.parents {
+                let Some(signal) = parent_signal_by_entity.get(parent_id).copied() else {
+                    continue;
+                };
+                observation_sum += signal;
+                observation_count += 1;
+            }
+            if observation_count == 0 {
+                continue;
+            }
+            let observation_strength = (observation_sum / observation_count as f32).clamp(0.0, 1.0);
+            let adaptive_rate = body::parenting_bandura_base_rate(
+                PARENTING_BASE_RATE,
+                1.0,
+                observation_strength,
+                false,
+                PARENTING_MALADAPTIVE_MULT,
+            );
+            let maladaptive_rate = body::parenting_bandura_base_rate(
+                PARENTING_BASE_RATE,
+                1.0,
+                1.0 - observation_strength,
+                true,
+                PARENTING_MALADAPTIVE_MULT,
+            );
+
+            let (next_strategy, stress_delta) = if adaptive_rate >= maladaptive_rate {
+                (
+                    CopingStrategyId::ProblemSolving,
+                    -adaptive_rate * PARENTING_STRESS_DELTA_SCALE,
+                )
+            } else {
+                (
+                    CopingStrategyId::Denial,
+                    maladaptive_rate * PARENTING_STRESS_DELTA_SCALE,
+                )
+            };
+
+            coping.active_strategy = Some(next_strategy);
+            let usage = coping.usage_counts.entry(next_strategy).or_insert(0);
+            *usage = usage.saturating_add(1);
+
+            let previous_level = stress.level as f32;
+            let next_level = (previous_level + stress_delta).clamp(0.0, 1.0);
+            let next_allostatic =
+                ((stress.allostatic_load as f32) + stress_delta * 0.5).clamp(0.0, 1.0);
+            if (next_level - previous_level).abs() < 1e-6 && (next_allostatic - stress.allostatic_load as f32).abs() < 1e-6 {
+                continue;
+            }
+            stress.level = next_level as f64;
+            stress.allostatic_load = next_allostatic as f64;
+            stress.recalculate_state();
+            resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                entity_id: EntityId(entity.id() as u64),
+                stress: next_level as f64,
+            });
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -6087,6 +6232,7 @@ mod tests {
         FamilyRuntimeSystem,
         GatheringRuntimeSystem,
         IntergenerationalRuntimeSystem,
+        ParentingRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
@@ -9232,6 +9378,121 @@ mod tests {
             .expect("child stress should be queryable");
         assert!(updated_child.allostatic_load > 0.10);
         assert!(updated_child.level >= 0.20);
+    }
+
+    #[test]
+    fn parenting_runtime_system_updates_parent_regulation_state() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 71);
+        let mut resources = SimResources::new(calendar, map, 109);
+        let mut world = World::new();
+
+        let child = world.spawn((
+            Age {
+                stage: GrowthStage::Child,
+                ..Age::default()
+            },
+            Stress {
+                level: 0.20,
+                allostatic_load: 0.10,
+                ..Stress::default()
+            },
+            Coping::default(),
+            Social::default(),
+        ));
+        let parent = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Stress {
+                level: 0.82,
+                allostatic_load: 0.55,
+                ..Stress::default()
+            },
+            Social {
+                children: vec![EntityId(child.id() as u64)],
+                ..Social::default()
+            },
+        ));
+
+        if let Ok(mut child_social) = world.get::<&mut Social>(child) {
+            child_social.parents = vec![EntityId(parent.id() as u64)];
+        }
+
+        let mut system = ParentingRuntimeSystem::new(46, 240);
+        system.run(&mut world, &mut resources, 240);
+
+        let updated_parent = world
+            .get::<&Stress>(parent)
+            .expect("parent stress should be queryable");
+        assert!(updated_parent.level < 0.82);
+    }
+
+    #[test]
+    fn parenting_runtime_system_assigns_child_coping_strategy() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 73);
+        let mut resources = SimResources::new(calendar, map, 113);
+        let mut world = World::new();
+
+        let child = world.spawn((
+            Age {
+                stage: GrowthStage::Child,
+                ..Age::default()
+            },
+            Stress {
+                level: 0.50,
+                allostatic_load: 0.20,
+                ..Stress::default()
+            },
+            Coping::default(),
+            Social::default(),
+        ));
+        let parent = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Stress {
+                level: 0.18,
+                allostatic_load: 0.10,
+                ..Stress::default()
+            },
+            Social {
+                children: vec![EntityId(child.id() as u64)],
+                ..Social::default()
+            },
+        ));
+
+        if let Ok(mut child_social) = world.get::<&mut Social>(child) {
+            child_social.parents = vec![EntityId(parent.id() as u64)];
+        }
+
+        let mut system = ParentingRuntimeSystem::new(46, 240);
+        system.run(&mut world, &mut resources, 240);
+
+        let child_coping = world
+            .get::<&Coping>(child)
+            .expect("child coping should be queryable");
+        let child_stress = world
+            .get::<&Stress>(child)
+            .expect("child stress should be queryable");
+        assert_eq!(
+            child_coping.active_strategy,
+            Some(CopingStrategyId::ProblemSolving)
+        );
+        assert!(
+            child_coping
+                .usage_counts
+                .get(&CopingStrategyId::ProblemSolving)
+                .copied()
+                .unwrap_or(0)
+                >= 1
+        );
+        assert!(child_stress.level <= 0.50);
     }
 
     #[test]
