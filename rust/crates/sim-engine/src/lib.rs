@@ -36,6 +36,6 @@ pub mod snapshot;
 pub use events::GameEvent;
 pub use event_bus::{EventBus, Subscriber};
 pub use system_trait::SimSystem;
-pub use engine::{SimEngine, SimResources};
+pub use engine::{RuntimeStatsSnapshot, SimEngine, SimResources};
 pub use command::{Command, CommandQueue};
 pub use snapshot::EngineSnapshot;

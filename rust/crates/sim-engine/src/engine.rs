@@ -19,6 +19,20 @@ use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
 use log::{debug, info};
 
+#[derive(Debug, Clone, Default)]
+pub struct RuntimeStatsSnapshot {
+    pub tick: u64,
+    pub pop: usize,
+    pub food: f64,
+    pub wood: f64,
+    pub stone: f64,
+    pub gatherers: u32,
+    pub lumberjacks: u32,
+    pub builders: u32,
+    pub miners: u32,
+    pub none_job: u32,
+}
+
 // ── SimResources ──────────────────────────────────────────────────────────────
 
 /// Shared non-component data passed to every system on each tick.
@@ -40,6 +54,14 @@ pub struct SimResources {
     pub rng: SmallRng,
     /// Collect-then-drain event bus.
     pub event_bus: EventBus,
+    /// Stats recorder history snapshots.
+    pub stats_history: Vec<RuntimeStatsSnapshot>,
+    /// Peak population observed by runtime stats recorder.
+    pub stats_peak_population: usize,
+    /// Runtime total births counter mirror.
+    pub stats_total_births: u64,
+    /// Runtime total deaths counter mirror.
+    pub stats_total_deaths: u64,
 }
 
 impl SimResources {
@@ -58,6 +80,10 @@ impl SimResources {
             tension_pairs: HashMap::new(),
             rng: SmallRng::seed_from_u64(seed),
             event_bus: EventBus::new(),
+            stats_history: Vec::new(),
+            stats_peak_population: 0,
+            stats_total_births: 0,
+            stats_total_deaths: 0,
         }
     }
 }
@@ -69,6 +95,8 @@ impl std::fmt::Debug for SimResources {
             .field("settlements", &self.settlements.len())
             .field("buildings", &self.buildings.len())
             .field("tension_pairs", &self.tension_pairs.len())
+            .field("stats_history", &self.stats_history.len())
+            .field("stats_peak_population", &self.stats_peak_population)
             .field("event_bus", &self.event_bus)
             .finish_non_exhaustive()
     }

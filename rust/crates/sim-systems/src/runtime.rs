@@ -4547,6 +4547,98 @@ impl SimSystem for ParentingRuntimeSystem {
     }
 }
 
+const STATS_RECORDER_MAX_HISTORY: usize = 200;
+
+/// Rust runtime system for aggregated simulation stats snapshots.
+///
+/// This performs active writes on `SimResources.stats_history` and
+/// `SimResources.stats_peak_population`.
+#[derive(Debug, Clone)]
+pub struct StatsRecorderRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StatsRecorderRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StatsRecorderRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stats_recorder"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let mut pop = 0_usize;
+        let mut gatherers = 0_u32;
+        let mut lumberjacks = 0_u32;
+        let mut builders = 0_u32;
+        let mut miners = 0_u32;
+        let mut none_job = 0_u32;
+
+        let mut query = world.query::<(&Age, Option<&Behavior>)>();
+        for (_, (age, behavior_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            pop += 1;
+            let Some(behavior) = behavior_opt else {
+                none_job = none_job.saturating_add(1);
+                continue;
+            };
+            match behavior.job.as_str() {
+                "gatherer" => gatherers = gatherers.saturating_add(1),
+                "lumberjack" => lumberjacks = lumberjacks.saturating_add(1),
+                "builder" => builders = builders.saturating_add(1),
+                "miner" => miners = miners.saturating_add(1),
+                _ => none_job = none_job.saturating_add(1),
+            }
+        }
+
+        let mut food = 0.0_f64;
+        let mut wood = 0.0_f64;
+        let mut stone = 0.0_f64;
+        for settlement in resources.settlements.values() {
+            food += settlement.stockpile_food.max(0.0);
+            wood += settlement.stockpile_wood.max(0.0);
+            stone += settlement.stockpile_stone.max(0.0);
+        }
+
+        if pop > resources.stats_peak_population {
+            resources.stats_peak_population = pop;
+        }
+        resources.stats_history.push(sim_engine::RuntimeStatsSnapshot {
+            tick,
+            pop,
+            food,
+            wood,
+            stone,
+            gatherers,
+            lumberjacks,
+            builders,
+            miners,
+            none_job,
+        });
+        if resources.stats_history.len() > STATS_RECORDER_MAX_HISTORY {
+            let overflow = resources.stats_history.len() - STATS_RECORDER_MAX_HISTORY;
+            resources.stats_history.drain(0..overflow);
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -6233,6 +6325,7 @@ mod tests {
         GatheringRuntimeSystem,
         IntergenerationalRuntimeSystem,
         ParentingRuntimeSystem,
+        StatsRecorderRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
@@ -9493,6 +9586,102 @@ mod tests {
                 >= 1
         );
         assert!(child_stress.level <= 0.50);
+    }
+
+    #[test]
+    fn stats_recorder_runtime_system_records_snapshot_fields() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 79);
+        let mut resources = SimResources::new(calendar, map, 127);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(97);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "stats".to_string(), 2, 2, 0);
+        settlement.stockpile_food = 40.0;
+        settlement.stockpile_wood = 12.0;
+        settlement.stockpile_stone = 7.0;
+        resources.settlements.insert(settlement_id, settlement);
+
+        world.spawn((
+            Age::default(),
+            Behavior {
+                job: "gatherer".to_string(),
+                ..Behavior::default()
+            },
+        ));
+        world.spawn((
+            Age::default(),
+            Behavior {
+                job: "builder".to_string(),
+                ..Behavior::default()
+            },
+        ));
+        world.spawn((
+            Age {
+                alive: false,
+                ..Age::default()
+            },
+            Behavior {
+                job: "miner".to_string(),
+                ..Behavior::default()
+            },
+        ));
+
+        let mut system = StatsRecorderRuntimeSystem::new(90, 200);
+        system.run(&mut world, &mut resources, 200);
+
+        assert_eq!(resources.stats_history.len(), 1);
+        let snapshot = resources
+            .stats_history
+            .last()
+            .expect("stats snapshot should exist");
+        assert_eq!(snapshot.tick, 200);
+        assert_eq!(snapshot.pop, 2);
+        assert_eq!(snapshot.gatherers, 1);
+        assert_eq!(snapshot.builders, 1);
+        assert_eq!(snapshot.miners, 0);
+        assert_eq!(snapshot.none_job, 0);
+        assert!((snapshot.food - 40.0).abs() < 1e-6);
+        assert!((snapshot.wood - 12.0).abs() < 1e-6);
+        assert!((snapshot.stone - 7.0).abs() < 1e-6);
+        assert_eq!(resources.stats_peak_population, 2);
+    }
+
+    #[test]
+    fn stats_recorder_runtime_system_caps_history_window() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 83);
+        let mut resources = SimResources::new(calendar, map, 131);
+        let mut world = World::new();
+
+        world.spawn((
+            Age::default(),
+            Behavior {
+                job: "none".to_string(),
+                ..Behavior::default()
+            },
+        ));
+
+        let mut system = StatsRecorderRuntimeSystem::new(90, 200);
+        for idx in 0..220_u64 {
+            system.run(&mut world, &mut resources, idx);
+        }
+
+        assert_eq!(resources.stats_history.len(), 200);
+        let first_tick = resources
+            .stats_history
+            .first()
+            .expect("history should contain entries")
+            .tick;
+        let last_tick = resources
+            .stats_history
+            .last()
+            .expect("history should contain entries")
+            .tick;
+        assert_eq!(first_tick, 20);
+        assert_eq!(last_tick, 219);
     }
 
     #[test]
