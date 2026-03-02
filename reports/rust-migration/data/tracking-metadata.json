@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-02 15:08:29 +0900",
-  "base_commit": "5204fbe",
+  "generated_at": "2026-03-02 15:10:10 +0900",
+  "base_commit": "4a4d048",
   "dataset_version": "tracking-v2",
   "offload_rule": "simbridge_pattern_scan_v1",
-  "rust_runtime_impl_rule": "runtime_registry_match_v1(stats_recorder|resource_regen_system)",
+  "rust_runtime_impl_rule": "runtime_registry_match_v1(stats_recorder|resource_regen_system|stat_sync_system)",
   "reference_scope": [
     "*.gd",
     "*.tscn",

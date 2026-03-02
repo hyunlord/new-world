@@ -43,6 +43,46 @@ impl SimSystem for StatsRecorderSystem {
     }
 }
 
+/// Rust runtime baseline system for stat-cache synchronization.
+///
+/// Full parity requires Rust-owned entity stat storage (Phase D). Until then this
+/// keeps scheduler ownership migration and registry tracking in Rust.
+#[derive(Debug, Clone)]
+pub struct StatSyncSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StatSyncSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StatSyncSystem {
+    fn name(&self) -> &'static str {
+        "stat_sync_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        // Baseline: this system intentionally has no gameplay side effects
+        // until entity stat caches are migrated into Rust-owned data.
+        let _population_count: u32 = world.len();
+        let _map_tile_count: usize = resources.map.tile_count();
+    }
+}
+
 /// Rust runtime system for tile resource regeneration.
 ///
 /// This is the Rust execution counterpart of `resource_regen_system.gd`.

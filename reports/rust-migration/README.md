@@ -157,3 +157,13 @@
 - Logic implementation completion after commit: 4.35%
 - Logic implementation remaining after commit: 95.65%
 - Details: [0023-resource-regen-rust-runtime-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0023-resource-regen-rust-runtime-port.md)
+
+### 0024 - Rust runtime baseline port (stat_sync_system)
+- Commit: `[rust-r0-124] Add stat sync runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 6.52%
+- Logic implementation remaining after commit: 93.48%
+- Details: [0024-stat-sync-rust-runtime-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0024-stat-sync-rust-runtime-baseline.md)
