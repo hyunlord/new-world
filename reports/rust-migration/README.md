@@ -1103,3 +1103,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 95.65% (44/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0134-owner-transfer-allowlist-phase37.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0134-owner-transfer-allowlist-phase37.md)
+
+### 0135 - owner transfer allowlist phase 38
+- Commit: `[rust-r0-235] Expand owner-ready allowlist with stat sync and threshold`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0135-owner-transfer-allowlist-phase38.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0135-owner-transfer-allowlist-phase38.md)
