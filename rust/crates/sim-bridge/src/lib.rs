@@ -679,6 +679,15 @@ struct RuntimeState {
     max_ticks_per_frame: u32,
     speed_index: i32,
     captured_events: Arc<Mutex<Vec<GameEvent>>>,
+    registered_systems: Vec<RuntimeSystemEntry>,
+}
+
+#[derive(Debug, Clone)]
+struct RuntimeSystemEntry {
+    name: String,
+    priority: i32,
+    tick_interval: i32,
+    active: bool,
 }
 
 impl RuntimeState {
@@ -708,6 +717,7 @@ impl RuntimeState {
             max_ticks_per_frame,
             speed_index: 0,
             captured_events,
+            registered_systems: Vec::new(),
         }
     }
 }
@@ -769,6 +779,21 @@ fn game_event_to_v2_dict(event: &GameEvent) -> VarDictionary {
     dict.set("tick", game_event_tick(event));
     dict.set("payload", game_event_payload(event));
     dict
+}
+
+fn dict_get_string(dict: &VarDictionary, key: &str) -> Option<String> {
+    let value = dict.get(key)?;
+    Some(value.to::<GString>().to_string())
+}
+
+fn dict_get_i32(dict: &VarDictionary, key: &str) -> Option<i32> {
+    let value = dict.get(key)?;
+    Some(value.to::<i64>() as i32)
+}
+
+fn dict_get_bool(dict: &VarDictionary, key: &str) -> Option<bool> {
+    let value = dict.get(key)?;
+    Some(value.to::<bool>())
 }
 
 fn encode_ws2_blob(snapshot: &EngineSnapshot) -> Option<Vec<u8>> {
@@ -961,6 +986,31 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn runtime_get_registry_snapshot(&self) -> Array<VarDictionary> {
+        let mut out: Array<VarDictionary> = Array::new();
+        let Some(state) = self.state.as_ref() else {
+            return out;
+        };
+        for entry in &state.registered_systems {
+            let mut dict = VarDictionary::new();
+            dict.set("name", entry.name.clone());
+            dict.set("priority", entry.priority);
+            dict.set("tick_interval", entry.tick_interval);
+            dict.set("active", entry.active);
+            out.push(&dict);
+        }
+        out
+    }
+
+    #[func]
+    fn runtime_clear_registry(&mut self) {
+        let Some(state) = self.state.as_mut() else {
+            return;
+        };
+        state.registered_systems.clear();
+    }
+
+    #[func]
     fn runtime_apply_commands_v2(&mut self, commands: Array<VarDictionary>) {
         let Some(state) = self.state.as_mut() else {
             return;
@@ -984,6 +1034,29 @@ impl WorldSimRuntime {
             }
             if command_id == "reset_accumulator" {
                 state.accumulator = 0.0;
+                continue;
+            }
+            if command_id == "clear_registry" {
+                state.registered_systems.clear();
+                continue;
+            }
+            if command_id == "register_system" {
+                let Some(payload_var) = command.get("payload") else {
+                    continue;
+                };
+                let payload = payload_var.to::<VarDictionary>();
+                let Some(name) = dict_get_string(&payload, "name") else {
+                    continue;
+                };
+                let priority = dict_get_i32(&payload, "priority").unwrap_or(100);
+                let tick_interval = dict_get_i32(&payload, "tick_interval").unwrap_or(1);
+                let active = dict_get_bool(&payload, "active").unwrap_or(true);
+                state.registered_systems.push(RuntimeSystemEntry {
+                    name,
+                    priority,
+                    tick_interval,
+                    active,
+                });
                 continue;
             }
         }

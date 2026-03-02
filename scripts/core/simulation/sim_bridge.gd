@@ -143,6 +143,29 @@ func runtime_export_events_v2() -> Array:
 	return []
 
 
+## Returns registered runtime system metadata snapshot.
+func runtime_get_registry_snapshot() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("runtime_get_registry_snapshot"):
+		return []
+	var result: Variant = runtime.call("runtime_get_registry_snapshot")
+	if result is Array:
+		return result
+	return []
+
+
+## Clears registered runtime system metadata.
+func runtime_clear_registry() -> void:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return
+	if not runtime.has_method("runtime_clear_registry"):
+		return
+	runtime.call("runtime_clear_registry")
+
+
 ## Applies runtime commands in Bus v2 command format.
 func runtime_apply_commands_v2(commands: Array) -> void:
 	var runtime: Object = _get_native_runtime()

@@ -29,6 +29,8 @@ func init_with_seed(seed_value: int) -> void:
 
 ## Register a simulation system (sorted by priority)
 func register_system(system: RefCounted) -> void:
+	if _rust_runtime_available:
+		_queue_runtime_command(StringName("register_system"), _build_runtime_system_payload(system))
 	if _use_rust_primary():
 		return
 	_systems.append(system)
@@ -210,6 +212,8 @@ func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = bool(SimBridge.runtime_init(_seed, config_json))
 	_rust_runtime_available = _rust_runtime_initialized
 	if _rust_runtime_available:
+		if SimBridge.has_method("runtime_clear_registry"):
+			SimBridge.runtime_clear_registry()
 		if _use_rust_shadow():
 			_shadow_reporter = RuntimeShadowReporter.new()
 			_shadow_reporter.call(
@@ -249,6 +253,21 @@ func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void
 	if not bus_v2.has_method("queue_runtime_command"):
 		return
 	bus_v2.call("queue_runtime_command", command_id, payload)
+
+
+func _build_runtime_system_payload(system: RefCounted) -> Dictionary:
+	var payload: Dictionary = {}
+	var script_name: String = ""
+	var script_ref: Variant = system.get_script()
+	if script_ref is GDScript:
+		script_name = str(script_ref.resource_path)
+	if script_name.is_empty():
+		script_name = system.get_class()
+	payload["name"] = script_name
+	payload["priority"] = int(system.get("priority"))
+	payload["tick_interval"] = int(system.get("tick_interval"))
+	payload["active"] = bool(system.get("is_active"))
+	return payload
 
 
 func _get_simulation_bus_v2() -> Object:

@@ -35,3 +35,9 @@
 - Completion after commit: 62%
 - Remaining after commit: 38%
 - Details: [0005-phase-f-domain-compute-modes.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0005-phase-f-domain-compute-modes.md)
+
+### 0006 - Rust runtime system registry bridge
+- Commit: `[rust-r0-106] Bridge GDScript system registry into Rust runtime`
+- Completion after commit: 68%
+- Remaining after commit: 32%
+- Details: [0006-phase-b-system-registry-bridge.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0006-phase-b-system-registry-bridge.md)
