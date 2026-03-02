@@ -166,6 +166,19 @@ func runtime_clear_registry() -> void:
 	runtime.call("runtime_clear_registry")
 
 
+## Returns runtime compute-domain modes snapshot.
+func runtime_get_compute_domain_modes() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_compute_domain_modes"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_compute_domain_modes")
+	if result is Dictionary:
+		return result
+	return {}
+
+
 ## Applies runtime commands in Bus v2 command format.
 func runtime_apply_commands_v2(commands: Array) -> void:
 	var runtime: Object = _get_native_runtime()

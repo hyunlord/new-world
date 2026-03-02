@@ -24,6 +24,7 @@ use sim_systems::{
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     stat_curve,
 };
+use std::collections::HashMap;
 use std::fs;
 use std::sync::{Arc, Mutex};
 
@@ -649,6 +650,13 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
+const RUNTIME_COMPUTE_DOMAINS: [&str; 5] = [
+    "pathfinding",
+    "needs",
+    "stress",
+    "emotion",
+    "orchestration",
+];
 const WS2_MAGIC: [u8; 4] = *b"WS2\0";
 const WS2_VERSION: u16 = 1;
 const WS2_HEADER_SIZE: usize = 16;
@@ -680,6 +688,7 @@ struct RuntimeState {
     speed_index: i32,
     captured_events: Arc<Mutex<Vec<GameEvent>>>,
     registered_systems: Vec<RuntimeSystemEntry>,
+    compute_domain_modes: HashMap<String, String>,
 }
 
 #[derive(Debug, Clone)]
@@ -718,6 +727,7 @@ impl RuntimeState {
             speed_index: 0,
             captured_events,
             registered_systems: Vec::new(),
+            compute_domain_modes: runtime_default_compute_domain_modes(),
         }
     }
 }
@@ -779,6 +789,18 @@ fn game_event_to_v2_dict(event: &GameEvent) -> VarDictionary {
     dict.set("tick", game_event_tick(event));
     dict.set("payload", game_event_payload(event));
     dict
+}
+
+fn runtime_default_compute_domain_modes() -> HashMap<String, String> {
+    let mut modes = HashMap::<String, String>::new();
+    for domain in RUNTIME_COMPUTE_DOMAINS {
+        modes.insert(domain.to_string(), "gpu_auto".to_string());
+    }
+    modes
+}
+
+fn is_supported_compute_mode(mode: &str) -> bool {
+    matches!(mode, "cpu" | "gpu_auto" | "gpu_force")
 }
 
 fn dict_get_string(dict: &VarDictionary, key: &str) -> Option<String> {
@@ -1003,6 +1025,18 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn runtime_get_compute_domain_modes(&self) -> VarDictionary {
+        let mut out = VarDictionary::new();
+        let Some(state) = self.state.as_ref() else {
+            return out;
+        };
+        for (domain, mode) in &state.compute_domain_modes {
+            out.set(domain.as_str(), mode.as_str());
+        }
+        out
+    }
+
+    #[func]
     fn runtime_clear_registry(&mut self) {
         let Some(state) = self.state.as_mut() else {
             return;
@@ -1057,6 +1091,44 @@ impl WorldSimRuntime {
                     tick_interval,
                     active,
                 });
+                continue;
+            }
+            if command_id == "set_compute_domain_mode" {
+                let Some(payload_var) = command.get("payload") else {
+                    continue;
+                };
+                let payload = payload_var.to::<VarDictionary>();
+                let Some(domain) = dict_get_string(&payload, "domain") else {
+                    continue;
+                };
+                let Some(mode) = dict_get_string(&payload, "mode") else {
+                    continue;
+                };
+                if !is_supported_compute_mode(mode.as_str()) {
+                    continue;
+                }
+                if !RUNTIME_COMPUTE_DOMAINS.contains(&domain.as_str()) {
+                    continue;
+                }
+                state.compute_domain_modes.insert(domain, mode);
+                continue;
+            }
+            if command_id == "set_compute_mode_all" {
+                let Some(payload_var) = command.get("payload") else {
+                    continue;
+                };
+                let payload = payload_var.to::<VarDictionary>();
+                let Some(mode) = dict_get_string(&payload, "mode") else {
+                    continue;
+                };
+                if !is_supported_compute_mode(mode.as_str()) {
+                    continue;
+                }
+                for domain in RUNTIME_COMPUTE_DOMAINS {
+                    state
+                        .compute_domain_modes
+                        .insert(domain.to_string(), mode.clone());
+                }
                 continue;
             }
         }

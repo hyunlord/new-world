@@ -22,6 +22,7 @@ func _ready() -> void:
 	_load_settings()
 	_ensure_domain_modes()
 	_sync_pathfinding_backend_mode()
+	_sync_runtime_compute_modes()
 
 
 ## Returns configured compute mode (`cpu`, `gpu_auto`, `gpu_force`).
@@ -42,6 +43,7 @@ func set_mode(new_mode: String) -> void:
 		_domain_modes[domain] = _mode
 	_save_settings()
 	_sync_pathfinding_backend_mode()
+	_queue_runtime_command(StringName("set_compute_mode_all"), {"mode": _mode})
 	compute_mode_changed.emit(_mode, resolve_mode())
 	_emit_domain_mode_signals()
 
@@ -68,6 +70,10 @@ func set_mode_for_domain(domain: String, new_mode: String) -> void:
 	_save_settings()
 	if domain == "pathfinding":
 		_sync_pathfinding_backend_mode()
+	_queue_runtime_command(StringName("set_compute_domain_mode"), {
+		"domain": domain,
+		"mode": new_mode,
+	})
 	compute_domain_mode_changed.emit(domain, new_mode, resolve_mode_for_domain(domain))
 
 
@@ -173,3 +179,23 @@ func _emit_domain_mode_signals() -> void:
 		var domain: String = COMPUTE_DOMAINS[i]
 		var mode: String = get_mode_for_domain(domain)
 		compute_domain_mode_changed.emit(domain, mode, resolve_mode_for_domain(domain))
+
+
+func _sync_runtime_compute_modes() -> void:
+	_queue_runtime_command(StringName("set_compute_mode_all"), {"mode": _mode})
+	for i in range(COMPUTE_DOMAINS.size()):
+		var domain: String = COMPUTE_DOMAINS[i]
+		var mode: String = get_mode_for_domain(domain)
+		_queue_runtime_command(StringName("set_compute_domain_mode"), {
+			"domain": domain,
+			"mode": mode,
+		})
+
+
+func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void:
+	var bus_v2: Object = get_node_or_null("/root/SimulationBusV2")
+	if bus_v2 == null:
+		return
+	if not bus_v2.has_method("queue_runtime_command"):
+		return
+	bus_v2.call("queue_runtime_command", command_id, payload)

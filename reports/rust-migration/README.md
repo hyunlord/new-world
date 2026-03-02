@@ -47,3 +47,9 @@
 - Completion after commit: 72%
 - Remaining after commit: 28%
 - Details: [0007-phase-f-pathfinding-domain-route.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0007-phase-f-pathfinding-domain-route.md)
+
+### 0008 - Runtime compute-domain command synchronization
+- Commit: `[rust-r0-108] Sync compute domain commands into Rust runtime`
+- Completion after commit: 76%
+- Remaining after commit: 24%
+- Details: [0008-phase-f-runtime-compute-sync.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0008-phase-f-runtime-compute-sync.md)

@@ -39,15 +39,18 @@ func register_system(system: RefCounted) -> void:
 
 ## Called every frame from Main._process(delta)
 func update(delta: float) -> void:
-	if is_paused:
-		return
 	if _use_rust_primary():
-		_update_rust_primary(delta)
+		_update_rust_primary(delta, is_paused)
+		return
+	if is_paused:
+		if _use_rust_shadow():
+			_last_gd_ticks_processed = 0
+			_run_shadow_runtime(0.0, true)
 		return
 
 	_update_gdscript(delta)
 	if _use_rust_shadow():
-		_run_shadow_runtime(delta)
+		_run_shadow_runtime(delta, false)
 
 
 func _update_gdscript(delta: float) -> void:
@@ -66,17 +69,17 @@ func _update_gdscript(delta: float) -> void:
 		_accumulator = 0.0
 
 
-func _update_rust_primary(delta: float) -> void:
+func _update_rust_primary(delta: float, paused: bool) -> void:
 	_apply_runtime_commands_v2()
-	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, false)
+	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, paused)
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
 	_consume_runtime_events_v2()
 
 
-func _run_shadow_runtime(delta: float) -> void:
+func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 	_apply_runtime_commands_v2()
-	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, false)
+	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, paused)
 	var shadow_tick: int = int(runtime_state.get("current_tick", current_tick))
 	# Shadow mode: drain v2 events so runtime buffer does not grow,
 	# but do not forward them to avoid duplicate v1/v2 emissions.
@@ -184,7 +187,7 @@ func advance_ticks(n: int) -> void:
 	if _use_rust_primary():
 		var tick_duration: float = 1.0 / float(GameConfig.TICKS_PER_SECOND)
 		for i in range(n):
-			_update_rust_primary(tick_duration)
+			_update_rust_primary(tick_duration, false)
 		return
 	for i in range(n):
 		_process_tick()
