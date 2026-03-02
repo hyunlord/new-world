@@ -7,8 +7,8 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, NeedType, RelationType,
-    ResourceType, ValueType,
+    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, MentalBreakType, NeedType,
+    RelationType, ResourceType, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -473,6 +473,174 @@ impl SimSystem for StressRuntimeSystem {
             stress.reserve = next_reserve as f64;
             stress.allostatic_load = next_allostatic as f64;
             stress.recalculate_state();
+        }
+    }
+}
+
+/// Rust runtime system for mental-break trigger and recovery.
+///
+/// This performs active writes on `Stress.active_mental_break`,
+/// `Stress.mental_break_remaining`, and `Stress.mental_break_count`.
+#[derive(Debug, Clone)]
+pub struct MentalBreakRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MentalBreakRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const MENTAL_BREAK_BASE_THRESHOLD: f32 = 520.0;
+const MENTAL_BREAK_THRESHOLD_MIN: f32 = 420.0;
+const MENTAL_BREAK_THRESHOLD_MAX: f32 = 900.0;
+const MENTAL_BREAK_SCALE: f32 = 6000.0;
+const MENTAL_BREAK_CAP_PER_TICK: f32 = 0.25;
+const MENTAL_BREAK_STRESS_SCALE: f32 = 2000.0;
+const MENTAL_BREAK_OUTRAGE_THRESHOLD: f32 = 60.0;
+
+#[inline]
+fn mental_break_type_from_code(code: i32) -> MentalBreakType {
+    match code {
+        1 => MentalBreakType::OutrageViolence,
+        2 => MentalBreakType::Panic,
+        3 => MentalBreakType::Rage,
+        5 => MentalBreakType::Purge,
+        _ => MentalBreakType::Shutdown,
+    }
+}
+
+#[inline]
+fn mental_break_duration_ticks(kind: MentalBreakType) -> u32 {
+    match kind {
+        MentalBreakType::OutrageViolence => 24,
+        MentalBreakType::Panic => 16,
+        MentalBreakType::Rage => 20,
+        MentalBreakType::Purge => 18,
+        _ => 30,
+    }
+}
+
+impl SimSystem for MentalBreakRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "mental_break_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Stress,
+            Option<&Needs>,
+            Option<&Personality>,
+            Option<&Emotion>,
+        )>();
+        for (_, (stress, needs_opt, personality_opt, emotion_opt)) in &mut query {
+            if stress.active_mental_break.is_some() {
+                let dec = self.tick_interval.min(u32::MAX as u64) as u32;
+                if stress.mental_break_remaining > dec {
+                    stress.mental_break_remaining -= dec;
+                } else {
+                    stress.mental_break_remaining = 0;
+                    stress.active_mental_break = None;
+                    stress.level = (stress.level as f32 * 0.80).clamp(0.0, 1.0) as f64;
+                    stress.recalculate_state();
+                }
+                continue;
+            }
+
+            if stress.level < 0.70 {
+                continue;
+            }
+
+            let c_axis = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::C) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let e_axis = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::E) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let energy = needs_opt
+                .map(|needs| needs.energy as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let hunger = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let resilience = c_axis;
+            let reserve_scaled = (stress.reserve as f32 * 100.0).clamp(0.0, 100.0);
+            let allostatic_scaled = (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0);
+            let stress_scaled = (stress.level as f32 * MENTAL_BREAK_STRESS_SCALE).clamp(0.0, 4000.0);
+
+            let threshold = body::mental_break_threshold(
+                MENTAL_BREAK_BASE_THRESHOLD,
+                resilience,
+                c_axis,
+                e_axis,
+                allostatic_scaled,
+                energy,
+                hunger,
+                1.0,
+                0.0,
+                MENTAL_BREAK_THRESHOLD_MIN,
+                MENTAL_BREAK_THRESHOLD_MAX,
+                reserve_scaled,
+                0.0,
+            );
+            let trigger_p = body::mental_break_chance(
+                stress_scaled,
+                threshold,
+                reserve_scaled,
+                allostatic_scaled,
+                MENTAL_BREAK_SCALE,
+                MENTAL_BREAK_CAP_PER_TICK,
+            )
+            .clamp(0.0, 1.0);
+            if trigger_p <= 0.0 {
+                continue;
+            }
+
+            let roll: f32 = resources.rng.gen_range(0.0..1.0);
+            if roll >= trigger_p {
+                continue;
+            }
+
+            let (fear, anger, sadness, disgust) = if let Some(emotion) = emotion_opt {
+                (
+                    emotion.get(EmotionType::Fear) as f32 * 100.0,
+                    emotion.get(EmotionType::Anger) as f32 * 100.0,
+                    emotion.get(EmotionType::Sadness) as f32 * 100.0,
+                    emotion.get(EmotionType::Disgust) as f32 * 100.0,
+                )
+            } else {
+                (20.0, 20.0, 30.0, 15.0)
+            };
+            let outrage = (anger * 0.6 + fear * 0.4).clamp(0.0, 100.0);
+            let break_code = body::emotion_break_type_code(
+                outrage,
+                fear,
+                anger,
+                sadness,
+                disgust,
+                MENTAL_BREAK_OUTRAGE_THRESHOLD,
+            );
+            let break_type = mental_break_type_from_code(break_code);
+            stress.active_mental_break = Some(break_type);
+            stress.mental_break_count = stress.mental_break_count.saturating_add(1);
+            stress.mental_break_remaining = mental_break_duration_ticks(break_type);
         }
     }
 }
@@ -2253,7 +2421,7 @@ mod tests {
     use super::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
-        MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
         ValueRuntimeSystem,
@@ -2267,8 +2435,8 @@ mod tests {
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
-        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis, NeedType,
-        RelationType, ResourceType, SettlementId, ValueType, WorldMap,
+        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
+        MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -2402,6 +2570,72 @@ mod tests {
         assert!(updated.level > 0.0);
         assert!(updated.reserve <= 1.0);
         assert!(updated.allostatic_load >= 0.0);
+    }
+
+    #[test]
+    fn mental_break_runtime_system_triggers_break_and_sets_runtime_fields() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut stress = Stress {
+            level: 0.95,
+            reserve: 0.10,
+            allostatic_load: 0.90,
+            ..Stress::default()
+        };
+        stress.recalculate_state();
+        let mut needs = Needs::default();
+        needs.energy = 0.05;
+        needs.set(NeedType::Hunger, 0.05);
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::C as usize] = 0.20;
+        personality.axes[HexacoAxis::E as usize] = 0.85;
+        let mut emotion = Emotion::default();
+        *emotion.get_mut(EmotionType::Anger) = 0.95;
+        *emotion.get_mut(EmotionType::Fear) = 0.80;
+        *emotion.get_mut(EmotionType::Sadness) = 0.70;
+        *emotion.get_mut(EmotionType::Disgust) = 0.50;
+        let entity = world.spawn((stress, needs, personality, emotion));
+
+        let mut system = MentalBreakRuntimeSystem::new(35, 1);
+        for _ in 0..200 {
+            system.run(&mut world, &mut resources, 1);
+            let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+            if updated.active_mental_break.is_some() {
+                break;
+            }
+        }
+
+        let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+        assert!(updated.active_mental_break.is_some());
+        assert!(updated.mental_break_remaining > 0);
+        assert!(updated.mental_break_count >= 1);
+    }
+
+    #[test]
+    fn mental_break_runtime_system_clears_active_break_after_countdown() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut stress = Stress {
+            level: 0.90,
+            reserve: 0.20,
+            allostatic_load: 0.60,
+            active_mental_break: Some(MentalBreakType::Shutdown),
+            mental_break_remaining: 1,
+            mental_break_count: 1,
+            ..Stress::default()
+        };
+        stress.recalculate_state();
+        let entity = world.spawn((stress,));
+
+        let mut system = MentalBreakRuntimeSystem::new(35, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+        assert!(updated.active_mental_break.is_none());
+        assert_eq!(updated.mental_break_remaining, 0);
+        assert!(updated.level <= 0.90);
     }
 
     #[test]

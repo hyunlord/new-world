@@ -44,10 +44,11 @@ use sim_systems::{
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        JobSatisfactionRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
-        NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-        ReputationRuntimeSystem, ResourceRegenSystem, SocialEventRuntimeSystem,
-        StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        JobSatisfactionRuntimeSystem, MentalBreakRuntimeSystem, MoraleRuntimeSystem,
+        MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        ValueRuntimeSystem,
     },
     stat_curve,
 };
@@ -583,6 +584,7 @@ const RUNTIME_SYSTEM_KEY_CONTAGION: &str = "contagion_system";
 const RUNTIME_SYSTEM_KEY_AGE: &str = "age_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_MORTALITY: &str = "mortality_system";
+const RUNTIME_SYSTEM_KEY_MENTAL_BREAK: &str = "mental_break_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
@@ -720,6 +722,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_AGE
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_MORTALITY
+            | RUNTIME_SYSTEM_KEY_MENTAL_BREAK
             | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
     )
 }
@@ -748,6 +751,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(MortalityRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_MENTAL_BREAK => {
+            state
+                .engine
+                .register(MentalBreakRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT => {
             state
@@ -5393,12 +5401,12 @@ mod tests {
         assert!(runtime_supports_rust_system("age_system"));
         assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(runtime_supports_rust_system("mortality_system"));
+        assert!(runtime_supports_rust_system("mental_break_system"));
         assert!(runtime_supports_rust_system("job_satisfaction_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
         assert!(!runtime_supports_rust_system("child_stress_processor"));
-        assert!(!runtime_supports_rust_system("mental_break_system"));
         assert!(!runtime_supports_rust_system("trauma_scar_system"));
         assert!(!runtime_supports_rust_system("title_system"));
         assert!(!runtime_supports_rust_system("trait_violation_system"));
