@@ -519,3 +519,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 10.87% (5/46)
 - Remaining (strict state-write basis): 82.61%
 - Details: [0061-owner-transfer-allowlist-phase2.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0061-owner-transfer-allowlist-phase2.md)
+
+### 0062 - owner transfer allowlist phase 3
+- Commit: `[rust-r0-162] Expand owner-ready allowlist with reputation social-event and morale`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 17.39% (8/46)
+- Actual state-write coverage (strict): 17.39% (8/46)
+- Owner transfer coverage (`exec_owner=rust`): 17.39% (8/46)
+- Remaining (strict state-write basis): 82.61%
+- Details: [0062-owner-transfer-allowlist-phase3.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0062-owner-transfer-allowlist-phase3.md)
