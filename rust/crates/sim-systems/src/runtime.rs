@@ -1923,6 +1923,127 @@ impl SimSystem for ContagionRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for job-satisfaction score evaluation.
+///
+/// Full parity requires Rust-owned job profile data, drift decision flow,
+/// and work-speed multiplier side effects.
+#[derive(Debug, Clone)]
+pub struct JobSatisfactionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl JobSatisfactionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for JobSatisfactionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "job_satisfaction_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        const W_SKILL_FIT: f32 = 0.30;
+        const W_VALUE_FIT: f32 = 0.25;
+        const W_PERSONALITY_FIT: f32 = 0.25;
+        const W_NEED_FIT: f32 = 0.20;
+
+        let mut query = world.query::<(
+            &Behavior,
+            Option<&Personality>,
+            Option<&Skills>,
+            Option<&Values>,
+            Option<&Needs>,
+        )>();
+        for (_, (behavior, personality_opt, skills_opt, values_opt, needs_opt)) in &mut query {
+            if behavior.job.is_empty() || behavior.job == "none" {
+                continue;
+            }
+
+            let personality_actual = personality_opt
+                .map(|personality| {
+                    [
+                        personality.axis(sim_core::HexacoAxis::H) as f32,
+                        personality.axis(sim_core::HexacoAxis::E) as f32,
+                        personality.axis(sim_core::HexacoAxis::X) as f32,
+                        personality.axis(sim_core::HexacoAxis::A) as f32,
+                        personality.axis(sim_core::HexacoAxis::C) as f32,
+                        personality.axis(sim_core::HexacoAxis::O) as f32,
+                    ]
+                })
+                .unwrap_or([0.5; 6]);
+            let personality_ideal = [0.2_f32, 0.1_f32, 0.0_f32, 0.1_f32, 0.4_f32, 0.2_f32];
+
+            let value_actual = if let Some(values) = values_opt {
+                [
+                    ((values.get(ValueType::HardWork) as f32) + 1.0) * 0.5,
+                    ((values.get(ValueType::Skill) as f32) + 1.0) * 0.5,
+                    ((values.get(ValueType::Nature) as f32) + 1.0) * 0.5,
+                ]
+            } else {
+                [0.5, 0.5, 0.5]
+            };
+            let value_weights = [0.4_f32, 0.35_f32, 0.25_f32];
+
+            let skill_fit = skills_opt
+                .map(|skills| {
+                    let levels = [
+                        skills.get_level("SKILL_FORAGING") as i32,
+                        skills.get_level("SKILL_WOODCUTTING") as i32,
+                        skills.get_level("SKILL_MINING") as i32,
+                        skills.get_level("SKILL_CONSTRUCTION") as i32,
+                        skills.get_level("SKILL_HUNTING") as i32,
+                    ];
+                    (levels.into_iter().max().unwrap_or(0) as f32 / 100.0).clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.0);
+
+            let autonomy = needs_opt
+                .map(|needs| needs.get(NeedType::Autonomy) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let competence = needs_opt
+                .map(|needs| needs.get(NeedType::Competence) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let meaning = needs_opt
+                .map(|needs| needs.get(NeedType::Meaning) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+
+            let _score = body::job_satisfaction_score(
+                &personality_actual,
+                &personality_ideal,
+                &value_actual,
+                &value_weights,
+                skill_fit,
+                autonomy,
+                competence,
+                meaning,
+                0.5,
+                0.3,
+                W_SKILL_FIT,
+                W_VALUE_FIT,
+                W_PERSONALITY_FIT,
+                W_NEED_FIT,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -2092,7 +2213,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
-        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
@@ -2853,6 +2974,40 @@ mod tests {
         assert!((after_stress.level - 0.4).abs() < 1e-9);
         assert!((after_emotion.get(EmotionType::Joy) - 0.3).abs() < 1e-9);
         assert!((after_emotion.get(EmotionType::Fear) - 0.1).abs() < 1e-9);
+    }
+
+    #[test]
+    fn job_satisfaction_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let behavior = Behavior {
+            job: "gatherer".to_string(),
+            job_satisfaction: 0.45,
+            ..Behavior::default()
+        };
+        let personality = Personality::default();
+        let mut skills = Skills::default();
+        skills
+            .entries
+            .insert("SKILL_FORAGING".to_string(), SkillEntry { level: 72, xp: 0.0 });
+        let mut values = Values::default();
+        values.set(ValueType::HardWork, 0.4);
+        values.set(ValueType::Skill, 0.3);
+        values.set(ValueType::Nature, 0.2);
+        let mut needs = Needs::default();
+        needs.set(NeedType::Autonomy, 0.55);
+        needs.set(NeedType::Competence, 0.62);
+        needs.set(NeedType::Meaning, 0.48);
+        let entity = world.spawn((behavior, personality, skills, values, needs));
+
+        let mut system = JobSatisfactionRuntimeSystem::new(40, 30);
+        system.run(&mut world, &mut resources, 30);
+
+        let after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior component should remain available");
+        assert_eq!(after.job, "gatherer");
+        assert!((after.job_satisfaction - 0.45).abs() < 1e-9);
     }
 
     #[test]

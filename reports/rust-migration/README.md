@@ -427,3 +427,13 @@
 - Logic implementation completion after commit: 58.70%
 - Logic implementation remaining after commit: 41.30%
 - Details: [0050-contagion-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0050-contagion-runtime-rust-baseline.md)
+
+### 0051 - Rust runtime baseline port (job_satisfaction_system)
+- Commit: `[rust-r0-151] Add job-satisfaction runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 60.87%
+- Logic implementation remaining after commit: 39.13%
+- Details: [0051-job-satisfaction-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0051-job-satisfaction-runtime-rust-baseline.md)
