@@ -1279,3 +1279,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0156-sim-bridge-runtime-command-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0156-sim-bridge-runtime-command-module-split.md)
+
+### 0157 - shadow longrun CI wrapper
+- Commit: `[rust-r0-257] Add CI wrapper for migration verify shadow longrun`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0157-shadow-longrun-ci-wrapper.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0157-shadow-longrun-ci-wrapper.md)
