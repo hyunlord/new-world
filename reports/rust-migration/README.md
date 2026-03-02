@@ -727,3 +727,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 45.65% (21/46)
 - Remaining (strict state-write basis): 52.17%
 - Details: [0087-trauma-scar-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0087-trauma-scar-runtime-active-write-port.md)
+
+### 0088 - owner transfer allowlist phase 15
+- Commit: `[rust-r0-188] Expand owner-ready allowlist with trauma-scar system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 47.83% (22/46)
+- Actual state-write coverage (strict): 47.83% (22/46)
+- Owner transfer coverage (`exec_owner=rust`): 47.83% (22/46)
+- Remaining (strict state-write basis): 52.17%
+- Details: [0088-owner-transfer-allowlist-phase15.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0088-owner-transfer-allowlist-phase15.md)
