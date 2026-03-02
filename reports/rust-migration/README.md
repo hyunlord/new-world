@@ -297,3 +297,13 @@
 - Logic implementation completion after commit: 30.43%
 - Logic implementation remaining after commit: 69.57%
 - Details: [0037-title-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0037-title-runtime-rust-baseline.md)
+
+### 0038 - Rust runtime baseline port (value_system)
+- Commit: `[rust-r0-138] Add value runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 32.61%
+- Logic implementation remaining after commit: 67.39%
+- Details: [0038-value-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0038-value-runtime-rust-baseline.md)

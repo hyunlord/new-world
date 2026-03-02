@@ -919,6 +919,65 @@ impl SimSystem for TitleRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for value-system progression.
+///
+/// Full parity requires Rust-owned peer interaction selection, settlement culture sync,
+/// and value mutation/rationalization event flows.
+#[derive(Debug, Clone)]
+pub struct ValueRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ValueRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ValueRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "value_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(&Values, Option<&Identity>, Option<&Personality>)>();
+        for (_, (values, identity_opt, personality_opt)) in &mut query {
+            let age_years = identity_opt
+                .map(|identity| tick.saturating_sub(identity.birth_tick) as f32 / 8760.0)
+                .unwrap_or(25.0);
+            let plasticity = body::value_plasticity(age_years);
+
+            let mut abs_sum = 0.0_f32;
+            for value in values.values {
+                abs_sum += (value as f32).abs();
+            }
+            let mean_abs_value = abs_sum / values.values.len() as f32;
+
+            let openness = personality_opt
+                .map(|personality| personality.axes[5] as f32)
+                .unwrap_or(0.5);
+            let extraversion = personality_opt
+                .map(|personality| personality.axes[2] as f32)
+                .unwrap_or(0.5);
+            let _peer_receptivity =
+                ((openness + extraversion) * 0.5 * plasticity * (1.0 - mean_abs_value))
+                    .clamp(0.0, 1.0);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1091,7 +1150,7 @@ mod tests {
         MentalBreakRuntimeSystem, NeedsRuntimeSystem, OccupationRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
-        UpperNeedsRuntimeSystem,
+        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1436,6 +1495,31 @@ mod tests {
             after_skills.get_level("SKILL_FORAGING"),
             80,
         );
+    }
+
+    #[test]
+    fn value_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut values = Values::default();
+        values.set(ValueType::Tradition, 0.4);
+        values.set(ValueType::Nature, -0.2);
+        let identity = Identity {
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let personality = Personality::default();
+        let entity = world.spawn((values, identity, personality));
+
+        let mut system = ValueRuntimeSystem::new(55, 200);
+        system.run(&mut world, &mut resources, 8760 * 20);
+
+        let after = world
+            .get::<&Values>(entity)
+            .expect("values component should remain available");
+        assert!((after.get(ValueType::Tradition) - 0.4).abs() < 1e-9);
+        assert!((after.get(ValueType::Nature) + 0.2).abs() < 1e-9);
     }
 
     #[test]
