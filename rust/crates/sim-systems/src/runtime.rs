@@ -10,7 +10,7 @@ use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
     CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, ValueType,
+    SettlementId, Sex, SocialClass, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -2860,6 +2860,176 @@ impl SimSystem for TitleRuntimeSystem {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+struct StratificationMemberSnapshot {
+    entity: Entity,
+    wealth: f32,
+    rep_overall: f32,
+    rep_competence: f32,
+    age_years: f32,
+}
+
+#[inline]
+fn stratification_social_class(status_score: f32, is_leader: bool) -> SocialClass {
+    if is_leader {
+        return SocialClass::Ruler;
+    }
+    if status_score > config::STATUS_TIER_ELITE as f32 {
+        SocialClass::Noble
+    } else if status_score > config::STATUS_TIER_RESPECTED as f32 {
+        SocialClass::Merchant
+    } else if status_score > config::STATUS_TIER_MARGINAL as f32 {
+        SocialClass::Commoner
+    } else if status_score > config::STATUS_TIER_OUTCAST as f32 {
+        SocialClass::Artisan
+    } else {
+        SocialClass::Outcast
+    }
+}
+
+/// Rust runtime system for settlement stratification monitoring.
+///
+/// This performs active writes on `Settlement.gini_coefficient`,
+/// `Settlement.leveling_effectiveness`, `Settlement.stratification_phase`,
+/// `Social.social_class`, and `Economic.wealth_norm`.
+#[derive(Debug, Clone)]
+pub struct StratificationMonitorRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StratificationMonitorRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StratificationMonitorRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stratification_monitor"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut members_by_settlement: HashMap<SettlementId, Vec<StratificationMemberSnapshot>> =
+            HashMap::new();
+
+        let mut query = world.query::<(&Age, &Identity, &Social, Option<&Economic>)>();
+        for (entity, (age, identity, social, economic_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            let Some(settlement_id) = identity.settlement_id else {
+                continue;
+            };
+            let wealth = economic_opt
+                .map(|economic| economic.wealth as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let rep_overall =
+                ((social.reputation_local as f32 + social.reputation_regional as f32) * 0.5)
+                    .clamp(0.0, 1.0);
+            let rep_competence = social.social_capital as f32;
+            members_by_settlement
+                .entry(settlement_id)
+                .or_default()
+                .push(StratificationMemberSnapshot {
+                    entity,
+                    wealth,
+                    rep_overall,
+                    rep_competence,
+                    age_years: age.years as f32,
+                });
+        }
+        drop(query);
+
+        for (settlement_id, settlement) in resources.settlements.iter_mut() {
+            let Some(members) = members_by_settlement.get(settlement_id) else {
+                continue;
+            };
+            if members.is_empty() {
+                continue;
+            }
+
+            let mut wealth_values: Vec<f32> = members.iter().map(|member| member.wealth).collect();
+            let gini = body::stratification_gini(&wealth_values).clamp(0.0, 1.0);
+            settlement.gini_coefficient = gini as f64;
+
+            wealth_values.sort_by(|left, right| left.partial_cmp(right).unwrap_or(Ordering::Equal));
+            let p90_idx = ((wealth_values.len() as f32) * 0.90).floor() as usize;
+            let p90 = wealth_values
+                .get(p90_idx.min(wealth_values.len().saturating_sub(1)))
+                .copied()
+                .unwrap_or(0.0)
+                .max(0.0001);
+
+            let pop = members.len() as f32;
+            let dunbar_factor = (config::LEVELING_DUNBAR_N as f32 / pop.max(1.0)).min(1.0);
+            let mobility_factor = (1.0 - config::LEVELING_SEDENTISM_DEFAULT as f32).clamp(0.0, 1.0);
+            let need_30days = pop
+                * config::HUNGER_DECAY_RATE as f32
+                * config::TICKS_PER_DAY as f32
+                * 30.0;
+            let surplus_ratio = (settlement.stockpile_food as f32) / need_30days.max(1.0);
+            let leveling = (dunbar_factor * mobility_factor * (1.0 / (1.0 + surplus_ratio)))
+                .clamp(0.0, 1.0);
+            settlement.leveling_effectiveness = leveling as f64;
+            settlement.stratification_phase = if gini < config::GINI_UNREST_THRESHOLD as f32 && leveling > 0.5 {
+                "egalitarian".to_string()
+            } else if gini < config::GINI_ENTRENCHED_THRESHOLD as f32 && leveling > 0.2 {
+                "transitional".to_string()
+            } else {
+                "stratified".to_string()
+            };
+
+            for member in members {
+                let entity_id = EntityId(member.entity.id() as u64);
+                let is_leader = settlement
+                    .leader_id
+                    .map(|leader_id| leader_id == entity_id)
+                    .unwrap_or(false);
+                let leader_bonus = if is_leader {
+                    config::STATUS_LEADER_CURRENT as f32
+                } else {
+                    0.0
+                };
+                let wealth_norm = (member.wealth / p90).clamp(0.0, 1.0);
+                let status_score = body::stratification_status_score(
+                    member.rep_overall,
+                    wealth_norm,
+                    leader_bonus,
+                    member.age_years,
+                    member.rep_competence,
+                    config::STATUS_W_REPUTATION as f32,
+                    config::STATUS_W_WEALTH as f32,
+                    config::STATUS_W_LEADER as f32,
+                    config::STATUS_W_AGE as f32,
+                    config::STATUS_W_COMPETENCE as f32,
+                );
+                let class = stratification_social_class(status_score, is_leader);
+                if let Ok(mut one) = world.query_one::<(&mut Social, Option<&mut Economic>)>(member.entity) {
+                    if let Some((social, economic_opt)) = one.get() {
+                        social.social_class = class;
+                        if let Some(economic) = economic_opt {
+                            economic.wealth_norm = wealth_norm as f64;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// Rust runtime system for settlement leadership election and countdown.
 ///
 /// This performs active writes on `Settlement.leader_id` and
@@ -4162,7 +4332,8 @@ mod tests {
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
+        SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
@@ -4178,7 +4349,7 @@ mod tests {
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
         HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-        SettlementId, Sex, ValueType, WorldMap,
+        SettlementId, Sex, SocialClass, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -6132,6 +6303,124 @@ mod tests {
         assert!(updated.has_title("TITLE_FORMER_CHIEF"));
         assert!(!updated.has_title("TITLE_MASTER_FORAGING"));
         assert!(!updated.has_title("TITLE_EXPERT_FORAGING"));
+    }
+
+    #[test]
+    fn stratification_monitor_runtime_system_updates_settlement_and_class_state() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(41);
+        let mut settlement = sim_core::Settlement::new(
+            settlement_id,
+            "strat-a".to_string(),
+            0,
+            0,
+            0,
+        );
+        settlement.stockpile_food = 120.0;
+        resources.settlements.insert(settlement_id, settlement);
+
+        let leader_entity = world.spawn((
+            Age {
+                alive: true,
+                years: 45.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Social {
+                reputation_local: 0.80,
+                reputation_regional: 0.75,
+                social_capital: 0.70,
+                ..Social::default()
+            },
+            Economic {
+                wealth: 0.90,
+                ..Economic::default()
+            },
+        ));
+        world.spawn((
+            Age {
+                alive: true,
+                years: 31.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Social {
+                reputation_local: 0.55,
+                reputation_regional: 0.50,
+                social_capital: 0.45,
+                ..Social::default()
+            },
+            Economic {
+                wealth: 0.45,
+                ..Economic::default()
+            },
+        ));
+        world.spawn((
+            Age {
+                alive: true,
+                years: 24.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Social {
+                reputation_local: 0.20,
+                reputation_regional: 0.25,
+                social_capital: 0.20,
+                ..Social::default()
+            },
+            Economic {
+                wealth: 0.10,
+                ..Economic::default()
+            },
+        ));
+
+        {
+            let settlement_mut = resources
+                .settlements
+                .get_mut(&settlement_id)
+                .expect("settlement should be mutable");
+            settlement_mut.leader_id = Some(EntityId(leader_entity.id() as u64));
+        }
+
+        let mut system = StratificationMonitorRuntimeSystem::new(90, sim_core::config::STRAT_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::STRAT_TICK_INTERVAL);
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should be queryable");
+        assert!((0.0..=1.0).contains(&settlement_after.gini_coefficient));
+        assert!((0.0..=1.0).contains(&settlement_after.leveling_effectiveness));
+        assert!(
+            settlement_after.stratification_phase == "egalitarian"
+                || settlement_after.stratification_phase == "transitional"
+                || settlement_after.stratification_phase == "stratified"
+        );
+
+        let leader_social = world
+            .get::<&Social>(leader_entity)
+            .expect("leader social should be queryable");
+        assert_eq!(leader_social.social_class, SocialClass::Ruler);
+        drop(leader_social);
+
+        let leader_economic = world
+            .get::<&Economic>(leader_entity)
+            .expect("leader economic should be queryable");
+        assert!((0.0..=1.0).contains(&leader_economic.wealth_norm));
     }
 
     #[test]

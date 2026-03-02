@@ -6,6 +6,9 @@ use serde::{Deserialize, Serialize};
 pub struct Economic {
     /// Wealth score (0.0..=1.0, derived from resources)
     pub wealth: f64,
+    /// Settlement-relative wealth normalization (0.0..=1.0)
+    #[serde(default)]
+    pub wealth_norm: f64,
     /// Saving tendency (0.0..=1.0)
     pub saving_tendency: f64,
     /// Risk appetite (0.0..=1.0)
@@ -20,6 +23,7 @@ impl Default for Economic {
     fn default() -> Self {
         Self {
             wealth: 0.0,
+            wealth_norm: 0.0,
             saving_tendency: 0.5,
             risk_appetite: 0.5,
             generosity: 0.5,

@@ -35,7 +35,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 34,tech_propagation_system,TechPropagationSystemScript,res://scripts/systems/world/tech_propagation_system.gd,tech_propagation_system,gdscript,yes,simbridge_pattern_scan_v1,no
 35,tension_system,TensionSystemScript,res://scripts/systems/world/tension_system.gd,tension_system,gdscript,yes,simbridge_pattern_scan_v1,no
 36,tech_utilization_system,TechUtilizationSystemScript,res://scripts/systems/world/tech_utilization_system.gd,tech_utilization_system,gdscript,yes,simbridge_pattern_scan_v1,no
-37,stratification_monitor,StratificationMonitor,res://scripts/systems/social/stratification_monitor.gd,stratification_monitor,gdscript,yes,simbridge_pattern_scan_v1,no
+37,stratification_monitor,StratificationMonitor,res://scripts/systems/social/stratification_monitor.gd,stratification_monitor,gdscript,yes,simbridge_pattern_scan_v1,yes
 38,stats_recorder,StatsRecorder,res://scripts/systems/record/stats_recorder.gd,stats_recorder,gdscript,yes,simbridge_pattern_scan_v1,no
 39,contagion_system,ContagionSystem,res://scripts/systems/psychology/contagion_system.gd,contagion_system,rust,yes,simbridge_pattern_scan_v1,yes
 40,reputation_system,ReputationSystem,res://scripts/systems/social/reputation_system.gd,reputation_system,rust,yes,simbridge_pattern_scan_v1,yes

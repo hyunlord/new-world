@@ -31,6 +31,15 @@ pub struct Settlement {
     pub founded_tick: u64,
     /// Migration cooldown ticks remaining
     pub migration_cooldown: u32,
+    /// Wealth inequality index (0.0..=1.0)
+    #[serde(default)]
+    pub gini_coefficient: f64,
+    /// Egalitarian force estimate from Dunbar/mobility/surplus factors
+    #[serde(default)]
+    pub leveling_effectiveness: f64,
+    /// Stratification phase label (`egalitarian`, `transitional`, `stratified`)
+    #[serde(default)]
+    pub stratification_phase: String,
 }
 
 impl Settlement {
@@ -51,6 +60,9 @@ impl Settlement {
             current_era: "stone_age".to_string(),
             founded_tick,
             migration_cooldown: 0,
+            gini_coefficient: 0.0,
+            leveling_effectiveness: 0.0,
+            stratification_phase: "egalitarian".to_string(),
         }
     }
 
