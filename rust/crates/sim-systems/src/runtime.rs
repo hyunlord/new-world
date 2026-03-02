@@ -1339,6 +1339,131 @@ impl SimSystem for NetworkRuntimeSystem {
     }
 }
 
+/// Rust runtime system for occupation assignment and switching.
+///
+/// This performs active writes on `Behavior.occupation` and `Behavior.job`
+/// from skill distribution and age-stage policy.
+#[derive(Debug, Clone)]
+pub struct OccupationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl OccupationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn skill_id_to_occupation(skill_id: &str) -> String {
+    let upper = skill_id.trim();
+    if let Some(rest) = upper.strip_prefix("SKILL_") {
+        return rest.to_ascii_lowercase();
+    }
+    upper.to_ascii_lowercase()
+}
+
+#[inline]
+fn occupation_to_skill_id(occupation: &str) -> String {
+    format!("SKILL_{}", occupation.to_ascii_uppercase())
+}
+
+#[inline]
+fn occupation_to_legacy_job(occupation: &str) -> &'static str {
+    match occupation {
+        "builder" | "building" | "construction" => "builder",
+        "miner" | "mining" => "miner",
+        "lumberjack" | "woodcutting" | "logging" => "lumberjack",
+        "hunter" | "hunting" => "hunter",
+        "none" | "laborer" => "gatherer",
+        _ => "gatherer",
+    }
+}
+
+impl SimSystem for OccupationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "occupation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Age, &Skills, &mut Behavior)>();
+        for (_, (age, skills, behavior)) in &mut query {
+            if matches!(age.stage, GrowthStage::Infant | GrowthStage::Toddler) {
+                continue;
+            }
+
+            let mut skill_pairs: Vec<(&str, i32)> = skills
+                .entries
+                .iter()
+                .map(|(id, entry)| (id.as_str(), i32::from(entry.level)))
+                .collect();
+            skill_pairs.sort_by(|left, right| left.0.cmp(right.0));
+
+            let skill_levels: Vec<i32> = skill_pairs.iter().map(|(_, level)| *level).collect();
+            let best_index = body::occupation_best_skill_index(&skill_levels);
+            let (best_skill_id, best_skill_level) = if best_index >= 0 {
+                let idx = best_index as usize;
+                if idx < skill_pairs.len() {
+                    (skill_pairs[idx].0, skill_pairs[idx].1)
+                } else {
+                    ("", 0)
+                }
+            } else {
+                ("", 0)
+            };
+
+            if best_skill_level < config::OCCUPATION_MIN_SKILL_LEVEL as i32 {
+                let new_occupation = if matches!(age.stage, GrowthStage::Child | GrowthStage::Teen)
+                {
+                    "none"
+                } else {
+                    "laborer"
+                };
+                if behavior.occupation != new_occupation {
+                    behavior.occupation = new_occupation.to_string();
+                }
+                behavior.job = occupation_to_legacy_job(new_occupation).to_string();
+                continue;
+            }
+
+            let new_occupation = skill_id_to_occupation(best_skill_id);
+            let old_occupation = behavior.occupation.clone();
+            if new_occupation != old_occupation
+                && old_occupation != "none"
+                && old_occupation != "laborer"
+            {
+                let current_occ_skill = occupation_to_skill_id(old_occupation.as_str());
+                let current_level = i32::from(skills.get_level(current_occ_skill.as_str()));
+                let should_switch = body::occupation_should_switch(
+                    best_skill_level,
+                    current_level,
+                    config::OCCUPATION_CHANGE_HYSTERESIS as f32,
+                );
+                if !should_switch {
+                    continue;
+                }
+            }
+
+            if new_occupation != old_occupation {
+                behavior.occupation = new_occupation.clone();
+            }
+            behavior.job = occupation_to_legacy_job(new_occupation.as_str()).to_string();
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1511,7 +1636,8 @@ mod tests {
     use super::{
         EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1981,6 +2107,89 @@ mod tests {
         );
         assert!((updated.social_capital as f32 - expected).abs() < 1e-6);
         assert!((0.0..=1.0).contains(&updated.social_capital));
+    }
+
+    #[test]
+    fn occupation_runtime_system_assigns_and_switches_by_skill_margin() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut adult_skills = Skills::default();
+        adult_skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            SkillEntry { level: 20, xp: 0.0 },
+        );
+        adult_skills.entries.insert(
+            "SKILL_MINING".to_string(),
+            SkillEntry { level: 45, xp: 0.0 },
+        );
+        let adult_age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let adult_behavior = Behavior {
+            occupation: "foraging".to_string(),
+            job: "gatherer".to_string(),
+            ..Behavior::default()
+        };
+        let adult_entity = world.spawn((adult_age, adult_skills, adult_behavior));
+
+        let mut teen_skills = Skills::default();
+        teen_skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            SkillEntry { level: 4, xp: 0.0 },
+        );
+        let teen_age = Age {
+            stage: GrowthStage::Teen,
+            ..Age::default()
+        };
+        let teen_behavior = Behavior {
+            occupation: "laborer".to_string(),
+            job: "gatherer".to_string(),
+            ..Behavior::default()
+        };
+        let teen_entity = world.spawn((teen_age, teen_skills, teen_behavior));
+
+        let mut low_adult_skills = Skills::default();
+        low_adult_skills.entries.insert(
+            "SKILL_FORAGING".to_string(),
+            SkillEntry { level: 3, xp: 0.0 },
+        );
+        let low_adult_age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let low_adult_behavior = Behavior {
+            occupation: "foraging".to_string(),
+            job: "gatherer".to_string(),
+            ..Behavior::default()
+        };
+        let low_adult_entity = world.spawn((low_adult_age, low_adult_skills, low_adult_behavior));
+
+        let mut system = OccupationRuntimeSystem::new(36, sim_core::config::OCCUPATION_EVAL_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::OCCUPATION_EVAL_INTERVAL,
+        );
+
+        let adult_updated = world
+            .get::<&Behavior>(adult_entity)
+            .expect("adult behavior should be queryable");
+        assert_eq!(adult_updated.occupation, "mining");
+        assert_eq!(adult_updated.job, "miner");
+
+        let teen_updated = world
+            .get::<&Behavior>(teen_entity)
+            .expect("teen behavior should be queryable");
+        assert_eq!(teen_updated.occupation, "none");
+        assert_eq!(teen_updated.job, "gatherer");
+
+        let low_adult_updated = world
+            .get::<&Behavior>(low_adult_entity)
+            .expect("low-skill adult behavior should be queryable");
+        assert_eq!(low_adult_updated.occupation, "laborer");
+        assert_eq!(low_adult_updated.job, "gatherer");
     }
 
     #[test]

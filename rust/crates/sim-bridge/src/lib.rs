@@ -45,7 +45,8 @@ use sim_systems::{
     runtime::{
         EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     },
     stat_curve,
 };
@@ -576,6 +577,7 @@ const RUNTIME_SYSTEM_KEY_MORALE: &str = "morale_system";
 const RUNTIME_SYSTEM_KEY_VALUE: &str = "value_system";
 const RUNTIME_SYSTEM_KEY_JOB_SATISFACTION: &str = "job_satisfaction_system";
 const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
+const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
@@ -708,6 +710,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_MORALE
             | RUNTIME_SYSTEM_KEY_VALUE
             | RUNTIME_SYSTEM_KEY_NETWORK
+            | RUNTIME_SYSTEM_KEY_OCCUPATION
             | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
     )
 }
@@ -727,6 +730,11 @@ fn register_supported_rust_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_key {
+        RUNTIME_SYSTEM_KEY_OCCUPATION => {
+            state
+                .engine
+                .register(OccupationRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
         RUNTIME_SYSTEM_KEY_NETWORK => {
             state
                 .engine
@@ -5351,13 +5359,13 @@ mod tests {
         assert!(runtime_supports_rust_system("morale_system"));
         assert!(runtime_supports_rust_system("value_system"));
         assert!(runtime_supports_rust_system("network_system"));
+        assert!(runtime_supports_rust_system("occupation_system"));
         assert!(runtime_supports_rust_system("job_satisfaction_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
         assert!(!runtime_supports_rust_system("child_stress_processor"));
         assert!(!runtime_supports_rust_system("mental_break_system"));
-        assert!(!runtime_supports_rust_system("occupation_system"));
         assert!(!runtime_supports_rust_system("trauma_scar_system"));
         assert!(!runtime_supports_rust_system("title_system"));
         assert!(!runtime_supports_rust_system("trait_violation_system"));
