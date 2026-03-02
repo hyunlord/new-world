@@ -1484,6 +1484,60 @@ impl ContagionRuntimeSystem {
     }
 }
 
+/// Rust runtime system for age progression and growth-stage updates.
+///
+/// This performs active writes on `Age.ticks/years/stage`, mirrors growth
+/// stage into `Identity.growth_stage`, and clears builder job for elders.
+#[derive(Debug, Clone)]
+pub struct AgeRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl AgeRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for AgeRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "age_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&mut Age, Option<&mut Identity>, Option<&mut Behavior>)>();
+        for (_, (age, identity_opt, behavior_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            age.ticks = age.ticks.saturating_add(self.tick_interval);
+            age.update_derived(config::TICKS_PER_YEAR as u64);
+            if let Some(identity) = identity_opt {
+                identity.growth_stage = age.stage;
+            }
+            if matches!(age.stage, GrowthStage::Elder) {
+                if let Some(behavior) = behavior_opt {
+                    if behavior.job == "builder" {
+                        behavior.job = "none".to_string();
+                    }
+                }
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 struct ContagionSnapshot {
     entity: Entity,
@@ -1900,10 +1954,11 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
-        NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        ContagionRuntimeSystem, OccupationRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        AgeRuntimeSystem, EmotionRuntimeSystem, JobSatisfactionRuntimeSystem,
+        MoraleRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem,
+        ResourceRegenSystem, ContagionRuntimeSystem, OccupationRuntimeSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -2554,6 +2609,47 @@ mod tests {
         assert!(sadness < 0.60);
         assert!(stress_level > 0.20);
         assert!(allostatic >= 0.05);
+    }
+
+    #[test]
+    fn age_runtime_system_updates_stage_identity_and_elder_builder_job() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            ticks: sim_core::config::AGE_ADULT_END - 10,
+            years: 0.0,
+            stage: GrowthStage::Adult,
+            alive: true,
+        };
+        let identity = Identity {
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let behavior = Behavior {
+            job: "builder".to_string(),
+            ..Behavior::default()
+        };
+        let entity = world.spawn((age, identity, behavior));
+
+        let mut system = AgeRuntimeSystem::new(48, 20);
+        system.run(&mut world, &mut resources, 20);
+
+        let updated_age = world.get::<&Age>(entity).expect("age should be queryable");
+        assert_eq!(updated_age.stage, GrowthStage::Elder);
+        assert!(updated_age.years > 0.0);
+        drop(updated_age);
+
+        let updated_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity should be queryable");
+        assert_eq!(updated_identity.growth_stage, GrowthStage::Elder);
+        drop(updated_identity);
+
+        let updated_behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(updated_behavior.job, "none");
     }
 
     #[test]
