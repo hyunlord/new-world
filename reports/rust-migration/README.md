@@ -59,3 +59,9 @@
 - Completion after commit: 80%
 - Remaining after commit: 20%
 - Details: [0009-phase-c-runtime-state-events.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0009-phase-c-runtime-state-events.md)
+
+### 0010 - Rust Fluent runtime bridge
+- Commit: `[rust-r0-110] Add Rust Fluent runtime bridge for Locale formatting`
+- Completion after commit: 84%
+- Remaining after commit: 16%
+- Details: [0010-phase-g-rust-fluent-runtime.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0010-phase-g-rust-fluent-runtime.md)

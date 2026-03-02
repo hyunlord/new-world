@@ -37,6 +37,7 @@ var _tr_id_key_id_cache: Dictionary = {}
 var _tr_id_result_cache: Dictionary = {}
 var _trf_key_id_cache: Dictionary = {}
 var _ltr_key_id_cache: Dictionary = {}
+var _rust_fluent_ready: bool = false
 var _key_index_version: int = 0
 var _registry_keys: Array = []
 
@@ -77,6 +78,7 @@ func load_locale(locale: String) -> void:
 	_tr_id_result_cache.clear()
 	_trf_key_id_cache.clear()
 	_ltr_key_id_cache.clear()
+	_rust_fluent_ready = false
 	_registry_keys.clear()
 	if _use_fluent_runtime and _load_fluent_locale(locale):
 		_refresh_month_key_ids()
@@ -111,6 +113,9 @@ func load_locale(locale: String) -> void:
 
 ## Lookup translation string by key (searches all categories)
 func ltr(key: String) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_ltr_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -143,6 +148,9 @@ func key_index_version() -> int:
 ## Format string with placeholder substitution
 ## Example: Locale.trf("EVT_CHILD_BORN", {"name": "Aria", "mother": "Bea", "father": "Cal"})
 func trf(key: String, params: Dictionary = {}) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, params)
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -161,6 +169,9 @@ func trf(key: String, params: Dictionary = {}) -> String:
 
 ## Fast path for one placeholder without creating params Dictionary at call sites.
 func trf1(key: String, param_key: String, param_value: Variant) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {param_key: param_value})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -176,6 +187,12 @@ func trf1(key: String, param_key: String, param_value: Variant) -> String:
 ## Fast path for two placeholders without creating params Dictionary at call sites.
 func trf2(key: String, param_a_key: String, param_a_value: Variant,
 		param_b_key: String, param_b_value: Variant) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {
+		param_a_key: param_a_value,
+		param_b_key: param_b_value,
+	})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -193,6 +210,13 @@ func trf2(key: String, param_a_key: String, param_a_value: Variant,
 func trf3(key: String, param_a_key: String, param_a_value: Variant,
 		param_b_key: String, param_b_value: Variant,
 		param_c_key: String, param_c_value: Variant) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {
+		param_a_key: param_a_value,
+		param_b_key: param_b_value,
+		param_c_key: param_c_value,
+	})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -212,6 +236,14 @@ func trf4(key: String, param_a_key: String, param_a_value: Variant,
 		param_b_key: String, param_b_value: Variant,
 		param_c_key: String, param_c_value: Variant,
 		param_d_key: String, param_d_value: Variant) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {
+		param_a_key: param_a_value,
+		param_b_key: param_b_value,
+		param_c_key: param_c_value,
+		param_d_key: param_d_value,
+	})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -233,6 +265,15 @@ func trf5(key: String, param_a_key: String, param_a_value: Variant,
 		param_c_key: String, param_c_value: Variant,
 		param_d_key: String, param_d_value: Variant,
 		param_e_key: String, param_e_value: Variant) -> String:
+	var rust_text: String = _try_rust_fluent_format(key, {
+		param_a_key: param_a_value,
+		param_b_key: param_b_value,
+		param_c_key: param_c_value,
+		param_d_key: param_d_value,
+		param_e_key: param_e_value,
+	})
+	if not rust_text.is_empty():
+		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:
 		key_id_cached = key_id(key)
@@ -449,8 +490,32 @@ func _load_fluent_locale(locale: String) -> bool:
 		return false
 	_strings["fluent"] = parsed
 	_flat_strings = parsed.duplicate()
+	_rust_fluent_ready = _prime_rust_fluent(locale, text)
 	_rebuild_key_index_from_flat()
 	return true
+
+
+func _prime_rust_fluent(locale: String, source: String) -> bool:
+	if SimBridge == null:
+		return false
+	if not SimBridge.has_method("locale_load_fluent"):
+		return false
+	return bool(SimBridge.locale_load_fluent(locale, source))
+
+
+func _try_rust_fluent_format(key: String, params: Dictionary) -> String:
+	if not _use_fluent_runtime:
+		return ""
+	if not _rust_fluent_ready:
+		return ""
+	if SimBridge == null:
+		return ""
+	if not SimBridge.has_method("locale_format_fluent"):
+		return ""
+	var resolved: String = str(SimBridge.locale_format_fluent(current_locale, key, params))
+	if resolved == key:
+		return ""
+	return resolved
 
 
 func _rebuild_key_index_from_flat() -> void:

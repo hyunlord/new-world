@@ -18,6 +18,8 @@ sim-data = { path = "../sim-data" }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+fluent-bundle = { workspace = true }
+unic-langid = { workspace = true }
 bincode = { workspace = true }
 zstd = { workspace = true }
 crc32fast = { workspace = true }

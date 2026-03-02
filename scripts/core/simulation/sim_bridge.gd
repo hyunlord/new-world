@@ -189,6 +189,37 @@ func runtime_apply_commands_v2(commands: Array) -> void:
 	runtime.call("runtime_apply_commands_v2", commands)
 
 
+## Loads Fluent source text into Rust runtime localization cache.
+func locale_load_fluent(locale: String, source: String) -> bool:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return false
+	if not bridge.has_method("locale_load_fluent"):
+		return false
+	return bool(bridge.call("locale_load_fluent", locale, source))
+
+
+## Clears Fluent source text from Rust runtime localization cache.
+func locale_clear_fluent(locale: String) -> void:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return
+	if not bridge.has_method("locale_clear_fluent"):
+		return
+	bridge.call("locale_clear_fluent", locale)
+
+
+## Formats a Fluent message through Rust runtime localization cache.
+func locale_format_fluent(locale: String, key: String, params: Dictionary = {}) -> String:
+	var bridge: Object = _get_native_bridge()
+	if bridge == null:
+		return key
+	if not bridge.has_method("locale_format_fluent"):
+		return key
+	var result: Variant = bridge.call("locale_format_fluent", locale, key, params)
+	return str(result)
+
+
 ## Sets native pathfinding backend mode (`auto`, `cpu`, `gpu`) when supported.
 ## Returns true when mode was accepted by bridge.
 func set_pathfinding_backend(mode: String) -> bool:

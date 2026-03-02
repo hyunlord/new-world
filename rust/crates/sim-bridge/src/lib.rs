@@ -7,6 +7,9 @@
 mod pathfinding_backend;
 mod pathfinding_gpu;
 
+use fluent_bundle::types::FluentNumber;
+use fluent_bundle::{FluentArgs, FluentBundle, FluentResource, FluentValue};
+use godot::builtin::VariantType;
 use godot::prelude::*;
 use pathfinding_backend::{
     get_backend_mode, has_gpu_backend, read_dispatch_counts, record_dispatch,
@@ -26,7 +29,8 @@ use sim_systems::{
 };
 use std::collections::HashMap;
 use std::fs;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, OnceLock};
+use unic_langid::LanguageIdentifier;
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -656,6 +660,7 @@ const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
 const WS2_MAGIC: [u8; 4] = *b"WS2\0";
 const WS2_VERSION: u16 = 1;
 const WS2_HEADER_SIZE: usize = 16;
+static FLUENT_SOURCES: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
 
 #[derive(Debug, Clone, Deserialize)]
 struct RuntimeConfig {
@@ -818,6 +823,125 @@ fn dict_get_i32(dict: &VarDictionary, key: &str) -> Option<i32> {
 fn dict_get_bool(dict: &VarDictionary, key: &str) -> Option<bool> {
     let value = dict.get(key)?;
     Some(value.to::<bool>())
+}
+
+fn fluent_sources() -> &'static Mutex<HashMap<String, String>> {
+    FLUENT_SOURCES.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+fn locale_key(locale: &str) -> String {
+    locale.trim().to_lowercase()
+}
+
+fn parse_language_identifier(locale: &str) -> LanguageIdentifier {
+    locale
+        .parse::<LanguageIdentifier>()
+        .ok()
+        .or_else(|| "en-US".parse::<LanguageIdentifier>().ok())
+        .expect("fallback locale should parse")
+}
+
+fn store_fluent_source(locale: &str, source: &str) -> bool {
+    let key = locale_key(locale);
+    if key.is_empty() || source.trim().is_empty() {
+        return false;
+    }
+    let Ok(mut sources) = fluent_sources().lock() else {
+        return false;
+    };
+    sources.insert(key, source.to_string());
+    true
+}
+
+fn clear_fluent_source(locale: &str) {
+    let key = locale_key(locale);
+    if key.is_empty() {
+        return;
+    }
+    let Ok(mut sources) = fluent_sources().lock() else {
+        return;
+    };
+    sources.remove(&key);
+}
+
+fn lookup_fluent_source(locale: &str) -> Option<String> {
+    let key = locale_key(locale);
+    let Ok(sources) = fluent_sources().lock() else {
+        return None;
+    };
+    if let Some(source) = sources.get(&key) {
+        return Some(source.clone());
+    }
+    if key.contains('-') {
+        let base = key.split('-').next().unwrap_or_default();
+        if let Some(source) = sources.get(base) {
+            return Some(source.clone());
+        }
+    }
+    sources.get("en").cloned()
+}
+
+fn variant_to_fluent_value(value: &Variant) -> FluentValue<'static> {
+    match value.get_type() {
+        VariantType::INT => FluentValue::Number(FluentNumber::from(value.to::<i64>() as f64)),
+        VariantType::FLOAT => FluentValue::Number(FluentNumber::from(value.to::<f64>())),
+        VariantType::BOOL => {
+            let value_text = if value.to::<bool>() { "true" } else { "false" };
+            FluentValue::String(value_text.to_string().into())
+        }
+        _ => FluentValue::String(value.to::<GString>().to_string().into()),
+    }
+}
+
+fn build_fluent_args(params: &VarDictionary) -> Option<FluentArgs<'static>> {
+    let mut args = FluentArgs::new();
+    let mut has_arg = false;
+    for (key_var, value_var) in params.iter_shared() {
+        let key = key_var.to::<GString>().to_string();
+        if key.is_empty() {
+            continue;
+        }
+        args.set(key, variant_to_fluent_value(&value_var));
+        has_arg = true;
+    }
+    if has_arg {
+        Some(args)
+    } else {
+        None
+    }
+}
+
+fn format_fluent_from_source(
+    source: &str,
+    locale: &str,
+    key: &str,
+    params: &VarDictionary,
+) -> Option<String> {
+    let args = build_fluent_args(params);
+    format_fluent_from_source_args(source, locale, key, args)
+}
+
+fn format_fluent_from_source_args(
+    source: &str,
+    locale: &str,
+    key: &str,
+    args: Option<FluentArgs<'static>>,
+) -> Option<String> {
+    let resource = FluentResource::try_new(source.to_string()).ok()?;
+    let language_id = parse_language_identifier(locale);
+    let mut bundle = FluentBundle::new(vec![language_id]);
+    bundle.set_use_isolating(false);
+    bundle.add_resource(resource).ok()?;
+    let message = bundle.get_message(key)?;
+    let pattern = message.value()?;
+    let mut errors = Vec::new();
+    let resolved = bundle.format_pattern(pattern, args.as_ref(), &mut errors);
+    Some(resolved.into_owned())
+}
+
+fn format_fluent_message(locale: &str, key: &str, params: &VarDictionary) -> Option<String> {
+    let source = lookup_fluent_source(locale)?;
+    format_fluent_from_source(&source, locale, key, params)
 }
 
 fn encode_ws2_blob(snapshot: &EngineSnapshot) -> Option<Vec<u8>> {
@@ -1217,6 +1341,34 @@ impl WorldSimBridge {
     #[func]
     fn reset_pathfinding_backend_stats(&self) {
         reset_dispatch_counts();
+    }
+
+    #[func]
+    fn locale_load_fluent(&self, locale: GString, source: GString) -> bool {
+        store_fluent_source(&locale.to_string(), &source.to_string())
+    }
+
+    #[func]
+    fn locale_clear_fluent(&self, locale: GString) {
+        clear_fluent_source(&locale.to_string());
+    }
+
+    #[func]
+    fn locale_format_fluent(
+        &self,
+        locale: GString,
+        key: GString,
+        params: VarDictionary,
+    ) -> GString {
+        let key_string = key.to_string();
+        if key_string.is_empty() {
+            return GString::new();
+        }
+        let Some(resolved) = format_fluent_message(&locale.to_string(), &key_string, &params)
+        else {
+            return GString::from(key_string.as_str());
+        };
+        GString::from(resolved.as_str())
     }
 
     #[func]
@@ -4595,13 +4747,16 @@ mod tests {
     use super::{
         decode_ws2_blob, dispatch_pathfind_grid_batch_vec2_bytes,
         dispatch_pathfind_grid_batch_xy_bytes, dispatch_pathfind_grid_bytes, encode_ws2_blob,
-        get_pathfind_backend_mode, has_gpu_pathfind_backend, parse_pathfind_backend,
-        pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
-        pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
-        pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
+        format_fluent_from_source_args, get_pathfind_backend_mode, has_gpu_pathfind_backend,
+        parse_pathfind_backend, pathfind_backend_dispatch_counts, pathfind_from_flat,
+        pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
+        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
+        pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
         resolve_pathfind_backend_mode, set_pathfind_backend_mode, PathfindError, PathfindInput,
     };
+    use fluent_bundle::types::FluentNumber;
+    use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
     use sim_engine::EngineSnapshot;
     use sim_systems::pathfinding::GridPos;
@@ -4616,6 +4771,27 @@ mod tests {
             to: GridPos::new(3, 3),
             max_steps: 200,
         }
+    }
+
+    #[test]
+    fn fluent_format_replaces_named_params() {
+        let source = "ui-greeting = Hello, { $name }!";
+        let mut args = FluentArgs::new();
+        args.set("name", FluentValue::String("Aria".into()));
+        let value = format_fluent_from_source_args(source, "en-US", "ui-greeting", Some(args))
+            .expect("message should be formatted");
+        assert_eq!(value, "Hello, Aria!");
+    }
+
+    #[test]
+    fn fluent_format_supports_plural_rules() {
+        let source =
+            "ui-item-count = { $count ->\n    [one] One item\n   *[other] { $count } items\n}";
+        let mut args = FluentArgs::new();
+        args.set("count", FluentValue::Number(FluentNumber::from(3_i64)));
+        let value = format_fluent_from_source_args(source, "en-US", "ui-item-count", Some(args))
+            .expect("plural message should be formatted");
+        assert_eq!(value, "3 items");
     }
 
     #[test]
