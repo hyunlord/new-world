@@ -867,6 +867,58 @@ impl SimSystem for TraumaScarRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for title evaluation.
+///
+/// Full parity requires Rust-owned title grant/revoke state and settlement leadership linkage.
+#[derive(Debug, Clone)]
+pub struct TitleRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TitleRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TitleRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "title_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(&Identity, Option<&Skills>)>();
+        for (_, (identity, skills_opt)) in &mut query {
+            let age_ticks = tick.saturating_sub(identity.birth_tick);
+            let age_years = age_ticks as f32 / 8760.0;
+            let _is_elder =
+                body::title_is_elder(age_years, config::TITLE_ELDER_MIN_AGE_YEARS as f32);
+
+            if let Some(skills) = skills_opt {
+                for entry in skills.entries.values() {
+                    let _tier = body::title_skill_tier(
+                        entry.level as i32,
+                        config::TITLE_EXPERT_SKILL_LEVEL as i32,
+                        config::TITLE_MASTER_SKILL_LEVEL as i32,
+                    );
+                }
+            }
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1038,7 +1090,7 @@ mod tests {
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
         MentalBreakRuntimeSystem, NeedsRuntimeSystem, OccupationRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
-        TraumaScarRuntimeSystem,
+        TitleRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem,
     };
     use crate::body;
@@ -1353,6 +1405,37 @@ mod tests {
         assert_eq!(after.trauma_scars.len(), 1);
         assert_eq!(after.trauma_scars[0].scar_id, "betrayal");
         assert_eq!(after.trauma_scars[0].reactivation_count, 2);
+    }
+
+    #[test]
+    fn title_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let mut skills = Skills::default();
+        skills
+            .entries
+            .insert("SKILL_FORAGING".to_string(), SkillEntry { level: 80, xp: 0.0 });
+        let entity = world.spawn((identity, skills));
+
+        let mut system = TitleRuntimeSystem::new(37, sim_core::config::TITLE_EVAL_INTERVAL);
+        system.run(&mut world, &mut resources, 8760 * 60);
+
+        let after_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity component should remain available");
+        let after_skills = world
+            .get::<&Skills>(entity)
+            .expect("skills component should remain available");
+        assert_eq!(after_identity.birth_tick, 0);
+        assert_eq!(
+            after_skills.get_level("SKILL_FORAGING"),
+            80,
+        );
     }
 
     #[test]
