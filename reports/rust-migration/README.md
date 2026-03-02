@@ -775,3 +775,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 52.17% (24/46)
 - Remaining (strict state-write basis): 45.65%
 - Details: [0093-movement-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0093-movement-runtime-active-write-port.md)
+
+### 0094 - owner transfer allowlist phase 18
+- Commit: `[rust-r0-194] Expand owner-ready allowlist with movement system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 54.35% (25/46)
+- Actual state-write coverage (strict): 54.35% (25/46)
+- Owner transfer coverage (`exec_owner=rust`): 54.35% (25/46)
+- Remaining (strict state-write basis): 45.65%
+- Details: [0094-owner-transfer-allowlist-phase18.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0094-owner-transfer-allowlist-phase18.md)
