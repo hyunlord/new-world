@@ -695,3 +695,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 41.30% (19/46)
 - Remaining (strict state-write basis): 56.52%
 - Details: [0083-intelligence-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0083-intelligence-runtime-active-write-port.md)
+
+### 0084 - owner transfer allowlist phase 13
+- Commit: `[rust-r0-184] Expand owner-ready allowlist with intelligence system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 43.48% (20/46)
+- Actual state-write coverage (strict): 43.48% (20/46)
+- Owner transfer coverage (`exec_owner=rust`): 43.48% (20/46)
+- Remaining (strict state-write basis): 56.52%
+- Details: [0084-owner-transfer-allowlist-phase13.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0084-owner-transfer-allowlist-phase13.md)
