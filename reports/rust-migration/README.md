@@ -807,3 +807,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 56.52% (26/46)
 - Remaining (strict state-write basis): 41.30%
 - Details: [0097-leader-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0097-leader-runtime-active-write-port.md)
+
+### 0098 - owner transfer allowlist phase 20
+- Commit: `[rust-r0-198] Expand owner-ready allowlist with leader system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 58.70% (27/46)
+- Actual state-write coverage (strict): 58.70% (27/46)
+- Owner transfer coverage (`exec_owner=rust`): 58.70% (27/46)
+- Remaining (strict state-write basis): 41.30%
+- Details: [0098-owner-transfer-allowlist-phase20.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0098-owner-transfer-allowlist-phase20.md)
