@@ -3,13 +3,14 @@ use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Intelligence, Memory,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
     MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType, Sex, ValueType,
+    CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    Sex, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -3090,6 +3091,206 @@ impl SimSystem for ContagionRuntimeSystem {
     }
 }
 
+/// Rust runtime system for coping strategy cooldown/selection updates.
+///
+/// This performs active writes on `Coping.active_strategy`,
+/// `Coping.strategy_cooldowns`, and `Coping.usage_counts`.
+#[derive(Debug, Clone)]
+pub struct CopingRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl CopingRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const COPING_COUNT_MAX: f32 = 15.0;
+const COPING_CLEAR_STRESS_MAX: f32 = 0.20;
+const COPING_CLEAR_ALLOSTATIC_MAX: f32 = 0.20;
+const COPING_RECOVERY_STRESS_MAX: f32 = 0.55;
+const COPING_RECOVERY_ALLOSTATIC_MAX: f32 = 0.60;
+
+const COPING_STRATEGY_ORDER: [CopingStrategyId; 15] = [
+    CopingStrategyId::StrategicPlanning,
+    CopingStrategyId::InstrumentalSupport,
+    CopingStrategyId::EmotionalSupport,
+    CopingStrategyId::PositiveReframing,
+    CopingStrategyId::Denial,
+    CopingStrategyId::Acceptance,
+    CopingStrategyId::Humor,
+    CopingStrategyId::ReligiousCoping,
+    CopingStrategyId::Venting,
+    CopingStrategyId::ActiveDistraction,
+    CopingStrategyId::BehavioralDisengagement,
+    CopingStrategyId::SelfBlame,
+    CopingStrategyId::SubstanceUse,
+    CopingStrategyId::Rumination,
+    CopingStrategyId::ProblemSolving,
+];
+
+#[inline]
+fn coping_strategy_from_index(index: i32) -> Option<CopingStrategyId> {
+    if index < 0 || (index as usize) >= COPING_STRATEGY_ORDER.len() {
+        return None;
+    }
+    Some(COPING_STRATEGY_ORDER[index as usize])
+}
+
+#[inline]
+fn coping_strategy_cooldown_ticks(strategy: CopingStrategyId) -> u32 {
+    match strategy {
+        CopingStrategyId::Denial => 96,
+        CopingStrategyId::SubstanceUse => 120,
+        CopingStrategyId::Rumination => 72,
+        CopingStrategyId::BehavioralDisengagement => 72,
+        _ => 36,
+    }
+}
+
+#[inline]
+fn coping_axis(personality_opt: Option<&Personality>, axis: HexacoAxis) -> f32 {
+    personality_opt
+        .map(|personality| personality.axis(axis) as f32)
+        .unwrap_or(0.5)
+        .clamp(0.0, 1.0)
+}
+
+#[inline]
+fn coping_need(needs_opt: Option<&Needs>, need_type: NeedType, fallback: f32) -> f32 {
+    needs_opt
+        .map(|needs| needs.get(need_type) as f32)
+        .unwrap_or(fallback)
+        .clamp(0.0, 1.0)
+}
+
+fn coping_utility_scores(
+    personality_opt: Option<&Personality>,
+    needs_opt: Option<&Needs>,
+    stress_norm: f32,
+    allostatic_norm: f32,
+) -> [f32; 15] {
+    let x = coping_axis(personality_opt, HexacoAxis::X);
+    let a = coping_axis(personality_opt, HexacoAxis::A);
+    let h = coping_axis(personality_opt, HexacoAxis::H);
+    let e = coping_axis(personality_opt, HexacoAxis::E);
+    let o = coping_axis(personality_opt, HexacoAxis::O);
+    let c = coping_axis(personality_opt, HexacoAxis::C);
+
+    let belonging = coping_need(needs_opt, NeedType::Belonging, 0.5);
+    let safety = coping_need(needs_opt, NeedType::Safety, 0.5);
+    let energy = needs_opt
+        .map(|needs| needs.energy as f32)
+        .unwrap_or(0.5)
+        .clamp(0.0, 1.0);
+
+    let overwhelm = ((stress_norm + allostatic_norm) * 0.5).clamp(0.0, 1.0);
+    let social_buffer = ((belonging + safety) * 0.5).clamp(0.0, 1.0);
+
+    let mut scores = [0.0_f32; 15];
+    scores[0] = c * 0.80 + (1.0 - overwhelm) * 0.60 + safety * 0.20;
+    scores[1] = x * 0.40 + a * 0.40 + social_buffer * 0.30 + overwhelm * 0.20;
+    scores[2] = x * 0.50 + a * 0.40 + (1.0 - belonging) * 0.20;
+    scores[3] = o * 0.50 + c * 0.20 + (1.0 - overwhelm) * 0.30;
+    scores[4] = (1.0 - c) * 0.50 + overwhelm * 0.70;
+    scores[5] = c * 0.40 + a * 0.20 + overwhelm * 0.30;
+    scores[6] = x * 0.50 + o * 0.30 + (1.0 - overwhelm) * 0.20;
+    scores[7] = (1.0 - o) * 0.20 + a * 0.40 + overwhelm * 0.40;
+    scores[8] = x * 0.20 + (1.0 - a) * 0.60 + overwhelm * 0.60;
+    scores[9] = x * 0.30 + o * 0.30 + overwhelm * 0.40;
+    scores[10] = (1.0 - c) * 0.60 + overwhelm * 0.70;
+    scores[11] = h * 0.20 + (1.0 - e) * 0.50 + overwhelm * 0.60;
+    scores[12] = (1.0 - c) * 0.50 + (1.0 - h) * 0.40 + overwhelm * 0.80;
+    scores[13] = (1.0 - x) * 0.30 + (1.0 - e) * 0.40 + overwhelm * 0.70;
+    scores[14] = c * 0.70 + o * 0.30 + (1.0 - overwhelm) * 0.40 + energy * 0.20;
+    for score in &mut scores {
+        *score = (*score).clamp(0.001, 5.0);
+    }
+    scores
+}
+
+impl SimSystem for CopingRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "coping_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let dec = self.tick_interval.min(u32::MAX as u64) as u32;
+        let mut query = world.query::<(&mut Coping, Option<&Stress>, Option<&Personality>, Option<&Needs>)>();
+        for (_, (coping, stress_opt, personality_opt, needs_opt)) in &mut query {
+            for cooldown in coping.strategy_cooldowns.values_mut() {
+                *cooldown = cooldown.saturating_sub(dec);
+            }
+
+            let Some(stress) = stress_opt else {
+                continue;
+            };
+            let stress_norm = (stress.level as f32).clamp(0.0, 1.0);
+            let allostatic_norm = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+
+            if stress_norm <= COPING_CLEAR_STRESS_MAX && allostatic_norm <= COPING_CLEAR_ALLOSTATIC_MAX {
+                coping.active_strategy = None;
+                continue;
+            }
+
+            let is_recovery =
+                stress_norm <= COPING_RECOVERY_STRESS_MAX && allostatic_norm <= COPING_RECOVERY_ALLOSTATIC_MAX;
+            let break_count = stress.mental_break_count.min(i32::MAX as u32) as i32;
+            let owned_count = coping.usage_counts.len().min(i32::MAX as usize) as i32;
+            let learn_p = body::coping_learn_probability(
+                stress_norm * 2000.0,
+                allostatic_norm * 100.0,
+                is_recovery,
+                break_count,
+                owned_count,
+                COPING_COUNT_MAX,
+            )
+            .clamp(0.0, 1.0);
+            if learn_p <= 0.0 {
+                continue;
+            }
+
+            let learn_roll: f32 = resources.rng.gen_range(0.0..1.0);
+            if learn_roll >= learn_p {
+                continue;
+            }
+
+            let scores = coping_utility_scores(personality_opt, needs_opt, stress_norm, allostatic_norm);
+            let strategy_roll: f32 = resources.rng.gen_range(0.0..1.0);
+            let strategy_idx = body::coping_softmax_index(&scores, strategy_roll);
+            let Some(strategy) = coping_strategy_from_index(strategy_idx) else {
+                continue;
+            };
+            if coping.is_on_cooldown(strategy) {
+                continue;
+            }
+
+            coping.active_strategy = Some(strategy);
+            coping
+                .usage_counts
+                .entry(strategy)
+                .and_modify(|count| *count = count.saturating_add(1))
+                .or_insert(1);
+            coping
+                .strategy_cooldowns
+                .insert(strategy, coping_strategy_cooldown_ticks(strategy));
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -3261,7 +3462,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
-        EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
+        CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
@@ -3271,7 +3472,7 @@ mod tests {
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
+        Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Needs, Personality,
         Position, SkillEntry, Skills, Social, Stress, Traits, Values, Intelligence, Memory,
         MemoryEntry,
         TraumaScar,
@@ -3280,7 +3481,7 @@ mod tests {
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
-        HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+        HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
         SettlementId, Sex, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
@@ -3629,6 +3830,66 @@ mod tests {
             .expect("emotion should be queryable");
         for idx in 0..updated.baseline.len() {
             assert!((0.0..=1.0).contains(&updated.baseline[idx]));
+        }
+    }
+
+    #[test]
+    fn coping_runtime_system_decrements_strategy_cooldowns() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut coping = Coping::default();
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::Denial, 40);
+        let entity = world.spawn((coping,));
+
+        let mut system = CopingRuntimeSystem::new(42, 30);
+        system.run(&mut world, &mut resources, 30);
+
+        let updated = world.get::<&Coping>(entity).expect("coping should be queryable");
+        let remaining = updated
+            .strategy_cooldowns
+            .get(&CopingStrategyId::Denial)
+            .copied()
+            .unwrap_or(0);
+        assert_eq!(remaining, 10);
+    }
+
+    #[test]
+    fn coping_runtime_system_selects_strategy_and_updates_usage() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let coping = Coping::default();
+        let stress = Stress {
+            level: 0.30,
+            allostatic_load: 0.20,
+            mental_break_count: 8,
+            ..Stress::default()
+        };
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::C as usize] = 0.85;
+        personality.axes[HexacoAxis::O as usize] = 0.70;
+        personality.axes[HexacoAxis::A as usize] = 0.65;
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.55);
+        needs.set(NeedType::Safety, 0.60);
+        needs.energy = 0.70;
+        let entity = world.spawn((coping, stress, personality, needs));
+
+        let mut system = CopingRuntimeSystem::new(42, 30);
+        for step in 0..50 {
+            system.run(&mut world, &mut resources, step * 30);
+        }
+
+        let updated = world.get::<&Coping>(entity).expect("coping should be queryable");
+        assert!(updated.active_strategy.is_some());
+        let total_uses: u32 = updated.usage_counts.values().copied().sum();
+        assert!(total_uses >= 1);
+        if let Some(active) = updated.active_strategy {
+            let cooldown = updated.strategy_cooldowns.get(&active).copied().unwrap_or(0);
+            assert!(cooldown > 0);
         }
     }
 
