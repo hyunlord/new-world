@@ -65,3 +65,9 @@
 - Completion after commit: 84%
 - Remaining after commit: 16%
 - Details: [0010-phase-g-rust-fluent-runtime.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0010-phase-g-rust-fluent-runtime.md)
+
+### 0011 - Runtime registry validation + upsert
+- Commit: `[rust-r0-111] Validate and upsert runtime system registry`
+- Completion after commit: 87%
+- Remaining after commit: 13%
+- Details: [0011-phase-b-registry-validation.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0011-phase-b-registry-validation.md)

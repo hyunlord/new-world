@@ -392,6 +392,7 @@ func _ready() -> void:
 	sim_engine.register_system(coping_system)             # priority 42
 	sim_engine.register_system(intergenerational_system) # priority 45 (Phase 5)
 	sim_engine.register_system(parenting_system)         # priority 46 (Phase 5)
+	sim_engine.validate_runtime_registry()
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)

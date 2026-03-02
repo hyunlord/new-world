@@ -16,6 +16,8 @@ var _rust_runtime_available: bool = false
 var _shadow_mismatch_count: int = 0
 var _last_gd_ticks_processed: int = 0
 var _shadow_reporter: RefCounted = null
+var _registered_system_count: int = 0
+var _registered_system_payloads: Array[Dictionary] = []
 
 
 ## Initialize the engine with a deterministic seed
@@ -24,17 +26,54 @@ func init_with_seed(seed_value: int) -> void:
 	rng.seed = seed_value
 	current_tick = 0
 	_accumulator = 0.0
+	_registered_system_count = 0
+	_registered_system_payloads.clear()
 	_init_rust_runtime()
 
 
 ## Register a simulation system (sorted by priority)
 func register_system(system: RefCounted) -> void:
+	var system_payload: Dictionary = _build_runtime_system_payload(system)
+	_registered_system_count += 1
+	_registered_system_payloads.append(system_payload)
 	if _rust_runtime_available:
-		_queue_runtime_command(StringName("register_system"), _build_runtime_system_payload(system))
+		_queue_runtime_command(StringName("register_system"), system_payload)
 	if _use_rust_primary():
 		return
 	_systems.append(system)
 	_systems.sort_custom(func(a, b): return a.priority < b.priority)
+
+
+## Validates Rust runtime registry snapshot against GDScript registration metadata.
+func validate_runtime_registry() -> Dictionary:
+	var result: Dictionary = {
+		"runtime_available": _rust_runtime_available,
+		"expected_count": _registered_system_count,
+		"runtime_count": 0,
+		"count_match": false,
+		"order_match": false,
+	}
+	if not _rust_runtime_available:
+		return result
+	if SimBridge == null:
+		return result
+	if not SimBridge.has_method("runtime_get_registry_snapshot"):
+		return result
+	_apply_runtime_commands_v2()
+	var runtime_snapshot: Array = SimBridge.runtime_get_registry_snapshot()
+	var runtime_count: int = runtime_snapshot.size()
+	result["runtime_count"] = runtime_count
+	result["count_match"] = runtime_count == _registered_system_count
+	var expected_names: PackedStringArray = _expected_runtime_registry_names()
+	var runtime_names: PackedStringArray = _runtime_registry_names(runtime_snapshot)
+	result["order_match"] = expected_names == runtime_names
+	if bool(result["count_match"]) and bool(result["order_match"]):
+		return result
+	push_warning(
+		"[SimulationEngine] Runtime registry mismatch expected=%d runtime=%d order_match=%s" %
+		[_registered_system_count, runtime_count, str(result["order_match"])]
+	)
+	return result
 
 
 ## Called every frame from Main._process(delta)
@@ -275,6 +314,30 @@ func _build_runtime_system_payload(system: RefCounted) -> Dictionary:
 	payload["tick_interval"] = int(system.get("tick_interval"))
 	payload["active"] = bool(system.get("is_active"))
 	return payload
+
+
+func _expected_runtime_registry_names() -> PackedStringArray:
+	var sorted_payloads: Array = _registered_system_payloads.duplicate(true)
+	sorted_payloads.sort_custom(func(a, b): return int(a.get("priority", 100)) < int(b.get("priority", 100)))
+	var names: PackedStringArray = PackedStringArray()
+	for i in range(sorted_payloads.size()):
+		var payload_raw: Variant = sorted_payloads[i]
+		if not (payload_raw is Dictionary):
+			continue
+		var payload: Dictionary = payload_raw
+		names.append(str(payload.get("name", "")))
+	return names
+
+
+func _runtime_registry_names(runtime_snapshot: Array) -> PackedStringArray:
+	var names: PackedStringArray = PackedStringArray()
+	for i in range(runtime_snapshot.size()):
+		var row_raw: Variant = runtime_snapshot[i]
+		if not (row_raw is Dictionary):
+			continue
+		var row: Dictionary = row_raw
+		names.append(str(row.get("name", "")))
+	return names
 
 
 func _get_simulation_bus_v2() -> Object:

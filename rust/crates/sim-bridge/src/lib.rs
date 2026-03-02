@@ -1237,12 +1237,25 @@ impl WorldSimRuntime {
                 let priority = dict_get_i32(&payload, "priority").unwrap_or(100);
                 let tick_interval = dict_get_i32(&payload, "tick_interval").unwrap_or(1);
                 let active = dict_get_bool(&payload, "active").unwrap_or(true);
-                state.registered_systems.push(RuntimeSystemEntry {
-                    name,
-                    priority,
-                    tick_interval,
-                    active,
-                });
+                if let Some(existing) = state
+                    .registered_systems
+                    .iter_mut()
+                    .find(|entry| entry.name == name)
+                {
+                    existing.priority = priority;
+                    existing.tick_interval = tick_interval;
+                    existing.active = active;
+                } else {
+                    state.registered_systems.push(RuntimeSystemEntry {
+                        name,
+                        priority,
+                        tick_interval,
+                        active,
+                    });
+                }
+                state
+                    .registered_systems
+                    .sort_by(|a, b| a.priority.cmp(&b.priority));
                 continue;
             }
             if command_id == "set_compute_domain_mode" {
