@@ -575,3 +575,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 21.74% (10/46)
 - Remaining (strict state-write basis): 71.74%
 - Details: [0068-contagion-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0068-contagion-runtime-active-write-port.md)
+
+### 0069 - owner transfer allowlist phase 5
+- Commit: `[rust-r0-169] Expand owner-ready allowlist with network and occupation systems`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 28.26% (13/46)
+- Actual state-write coverage (strict): 28.26% (13/46)
+- Owner transfer coverage (`exec_owner=rust`): 26.09% (12/46)
+- Remaining (strict state-write basis): 71.74%
+- Details: [0069-owner-transfer-allowlist-phase5.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0069-owner-transfer-allowlist-phase5.md)

@@ -13,6 +13,8 @@ const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
 	"morale_system",
 	"value_system",
 	"job_satisfaction_system",
+	"network_system",
+	"occupation_system",
 ])
 
 var current_tick: int = 0
