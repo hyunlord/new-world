@@ -5,6 +5,7 @@ var _flush_interval_ticks: int = 500
 var _allowed_max_tick_delta: int = 0
 var _allowed_max_work_delta: int = 0
 var _allowed_mismatch_ratio: float = 0.0
+var _min_frames_for_cutover: int = 10000
 
 var _frames: int = 0
 var _mismatch_frames: int = 0
@@ -14,6 +15,7 @@ var _max_work_delta: int = 0
 var _sum_work_delta: int = 0
 var _last_flushed_tick: int = 0
 var _last_approved_for_cutover: bool = false
+var _last_payload: Dictionary = {}
 
 
 ## Initializes shadow reporter output path and flush interval.
@@ -22,14 +24,17 @@ func setup(
 	flush_interval_ticks: int,
 	allowed_max_tick_delta: int = 0,
 	allowed_max_work_delta: int = 0,
-	allowed_mismatch_ratio: float = 0.0
+	allowed_mismatch_ratio: float = 0.0,
+	min_frames_for_cutover: int = 10000
 ) -> void:
 	_report_path = report_path
 	_flush_interval_ticks = maxi(flush_interval_ticks, 1)
 	_allowed_max_tick_delta = maxi(allowed_max_tick_delta, 0)
 	_allowed_max_work_delta = maxi(allowed_max_work_delta, 0)
 	_allowed_mismatch_ratio = clampf(allowed_mismatch_ratio, 0.0, 1.0)
+	_min_frames_for_cutover = maxi(min_frames_for_cutover, 1)
 	_last_approved_for_cutover = false
+	_last_payload.clear()
 
 
 ## Records one frame of GD vs Rust shadow comparison.
@@ -61,16 +66,25 @@ func is_approved_for_cutover() -> bool:
 	return _last_approved_for_cutover
 
 
+## Returns last flushed report snapshot.
+func get_report_snapshot() -> Dictionary:
+	return _last_payload.duplicate(true)
+
+
 func _flush_report(current_tick: int) -> void:
 	var avg_tick_delta: float = 0.0
 	var avg_work_delta: float = 0.0
 	var mismatch_ratio: float = 0.0
+	var frames_ready: bool = false
 	var approved_for_cutover: bool = false
 	if _frames > 0:
 		avg_tick_delta = float(_sum_tick_delta) / float(_frames)
 		avg_work_delta = float(_sum_work_delta) / float(_frames)
 		mismatch_ratio = float(_mismatch_frames) / float(_frames)
+		frames_ready = _frames >= _min_frames_for_cutover
 		approved_for_cutover = (
+			frames_ready
+			and
 			_max_tick_delta <= _allowed_max_tick_delta
 			and _max_work_delta <= _allowed_max_work_delta
 			and mismatch_ratio <= _allowed_mismatch_ratio
@@ -93,9 +107,12 @@ func _flush_report(current_tick: int) -> void:
 		"allowed_max_work_delta": _allowed_max_work_delta,
 		"allowed_max_event_delta": _allowed_max_work_delta,
 		"allowed_mismatch_ratio": _allowed_mismatch_ratio,
+		"min_frames_for_cutover": _min_frames_for_cutover,
+		"frames_ready_for_cutover": frames_ready,
 		"approved_for_cutover": approved_for_cutover,
 		"generated_at_unix_ms": Time.get_ticks_msec(),
 	}
+	_last_payload = payload.duplicate(true)
 
 	var abs_path: String = ProjectSettings.globalize_path(_report_path)
 	var dir_path: String = abs_path.get_base_dir()

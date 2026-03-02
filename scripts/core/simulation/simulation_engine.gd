@@ -370,15 +370,16 @@ func _init_rust_runtime() -> void:
 			sim_bridge.call("runtime_clear_registry")
 		if _use_rust_shadow():
 			_shadow_reporter = RuntimeShadowReporter.new()
-			_shadow_reporter.call(
-				"setup",
-				GameConfig.RUST_SHADOW_REPORT_PATH,
-				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
-				GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
-				GameConfig.RUST_SHADOW_ALLOWED_MAX_EVENT_DELTA,
-				GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO
-			)
-		return
+				_shadow_reporter.call(
+					"setup",
+					GameConfig.RUST_SHADOW_REPORT_PATH,
+					GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
+					GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
+					GameConfig.RUST_SHADOW_ALLOWED_MAX_WORK_DELTA,
+					GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO,
+					GameConfig.RUST_SHADOW_MIN_FRAMES_FOR_CUTOVER
+				)
+			return
 	push_warning("[SimulationEngine] Rust runtime init failed. Falling back to GDScript runtime.")
 	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
 
@@ -503,8 +504,19 @@ func _try_shadow_auto_cutover() -> void:
 	var approved: bool = bool(_shadow_reporter.call("is_approved_for_cutover"))
 	if not approved:
 		return
+	var summary: Dictionary = {}
+	if _shadow_reporter.has_method("get_report_snapshot"):
+		var summary_raw: Variant = _shadow_reporter.call("get_report_snapshot")
+		if summary_raw is Dictionary:
+			summary = summary_raw
 	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
-	push_warning("[SimulationEngine] Shadow cutover approved. Switching runtime mode to rust_primary.")
+	push_warning(
+		"[SimulationEngine] Shadow cutover approved at frame=%d mismatch_ratio=%.6f. Switching runtime mode to rust_primary." %
+		[
+			int(summary.get("frames", 0)),
+			float(summary.get("mismatch_ratio", 0.0)),
+		]
+	)
 
 
 func _expected_runtime_registry_names() -> PackedStringArray:
