@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-02 15:41:51 +0900",
-  "base_commit": "aee6811",
+  "generated_at": "2026-03-02 15:45:37 +0900",
+  "base_commit": "0d0a76e",
   "dataset_version": "tracking-v2",
   "offload_rule": "simbridge_pattern_scan_v1",
   "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(empty_allowlist)",
-  "rust_runtime_impl_rule": "runtime_registry_match_v1(stats_recorder|resource_regen_system|stat_sync_system|stat_threshold_system|upper_needs_system|needs_system|stress_system|emotion_system)",
+  "rust_runtime_impl_rule": "runtime_registry_match_v1(stats_recorder|resource_regen_system|stat_sync_system|job_assignment_system|stat_threshold_system|upper_needs_system|needs_system|stress_system|emotion_system)",
   "reference_scope": [
     "*.gd",
     "*.tscn",

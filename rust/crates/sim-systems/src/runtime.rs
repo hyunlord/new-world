@@ -467,6 +467,90 @@ impl SimSystem for StatThresholdRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for job-assignment balancing.
+///
+/// Full parity requires Rust-owned population/job mutation and event emission.
+/// This phase ports ratio/deficit computation into Rust scheduler execution.
+#[derive(Debug, Clone)]
+pub struct JobAssignmentRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl JobAssignmentRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn job_code_from_name(job: &str) -> Option<usize> {
+    match job {
+        "gatherer" => Some(0),
+        "lumberjack" => Some(1),
+        "builder" => Some(2),
+        "miner" => Some(3),
+        _ => None,
+    }
+}
+
+#[inline]
+fn baseline_job_ratios(alive_count: i32) -> [f32; 4] {
+    if alive_count < 10 {
+        [0.8, 0.1, 0.1, 0.0]
+    } else {
+        [0.35, 0.25, 0.2, 0.2]
+    }
+}
+
+impl SimSystem for JobAssignmentRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "job_assignment_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut counts = [0_i32; 4];
+        let mut alive_count = 0_i32;
+        let mut query = world.query::<(&Behavior, Option<&Identity>)>();
+        for (_, (behavior, identity_opt)) in &mut query {
+            if let Some(identity) = identity_opt {
+                if matches!(
+                    identity.growth_stage,
+                    GrowthStage::Infant | GrowthStage::Toddler
+                ) {
+                    continue;
+                }
+                if matches!(identity.growth_stage, GrowthStage::Child | GrowthStage::Teen) {
+                    counts[0] += 1;
+                    alive_count += 1;
+                    continue;
+                }
+            }
+            alive_count += 1;
+            if let Some(code) = job_code_from_name(behavior.job.as_str()) {
+                counts[code] += 1;
+            }
+        }
+        if alive_count <= 0 {
+            return;
+        }
+        let ratios = baseline_job_ratios(alive_count);
+        let _best_job_code = body::job_assignment_best_job_code(&ratios, &counts, alive_count);
+        let _rebalance_codes = body::job_assignment_rebalance_codes(&ratios, &counts, alive_count, 1.5);
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -635,8 +719,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StatThresholdRuntimeSystem,
-        StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, JobAssignmentRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem,
+        StatThresholdRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -810,6 +894,29 @@ mod tests {
         assert!((after.get(NeedType::Thirst) - 0.30).abs() < 1e-9);
         assert!((after.get(NeedType::Warmth) - 0.22).abs() < 1e-9);
         assert!((after.get(NeedType::Safety) - 0.28).abs() < 1e-9);
+    }
+
+    #[test]
+    fn job_assignment_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let behavior = Behavior {
+            job: "builder".to_string(),
+            ..Behavior::default()
+        };
+        let identity = Identity {
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let entity = world.spawn((behavior, identity));
+
+        let mut system = JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+
+        let after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior component should remain available");
+        assert_eq!(after.job, "builder");
     }
 
     #[test]
