@@ -3829,6 +3829,117 @@ impl SimSystem for TechPropagationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for resource gathering from map tiles.
+///
+/// This performs active writes on tile resource deposits and settlement
+/// stockpile aggregates, then emits `ResourceGathered`.
+#[derive(Debug, Clone)]
+pub struct GatheringRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl GatheringRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn gathering_target_resource(action: ActionType) -> Option<(ResourceType, &'static str)> {
+    match action {
+        ActionType::Forage | ActionType::GatherHerbs => Some((ResourceType::Food, "food")),
+        ActionType::GatherWood => Some((ResourceType::Wood, "wood")),
+        ActionType::GatherStone => Some((ResourceType::Stone, "stone")),
+        _ => None,
+    }
+}
+
+impl SimSystem for GatheringRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "gathering_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let gather_amount = (config::GATHER_AMOUNT as f32).max(0.0);
+        if gather_amount <= 0.0 {
+            return;
+        }
+
+        let mut query = world.query::<(&Behavior, &Position, Option<&Age>, Option<&Identity>)>();
+        for (entity, (behavior, position, age_opt, identity_opt)) in &mut query {
+            if let Some(age) = age_opt {
+                if matches!(age.stage, GrowthStage::Infant | GrowthStage::Toddler) {
+                    continue;
+                }
+            }
+
+            let Some((resource_type, resource_name)) = gathering_target_resource(behavior.current_action)
+            else {
+                continue;
+            };
+            if !resources.map.in_bounds(position.x, position.y) {
+                continue;
+            }
+
+            let mut harvested = 0.0_f32;
+            {
+                let tile = resources.map.get_mut(position.x as u32, position.y as u32);
+                for deposit in &mut tile.resources {
+                    if deposit.resource_type != resource_type || deposit.amount <= 0.0 {
+                        continue;
+                    }
+                    harvested = gather_amount.min(deposit.amount as f32);
+                    if harvested <= 0.0 {
+                        continue;
+                    }
+                    deposit.amount = ((deposit.amount as f32 - harvested).max(0.0)) as f64;
+                    break;
+                }
+            }
+            if harvested <= 0.0 {
+                continue;
+            }
+
+            if let Some(settlement_id) = identity_opt.and_then(|identity| identity.settlement_id) {
+                if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+                    let gathered_f64 = harvested as f64;
+                    match resource_type {
+                        ResourceType::Food => {
+                            settlement.stockpile_food = (settlement.stockpile_food + gathered_f64).max(0.0);
+                        }
+                        ResourceType::Wood => {
+                            settlement.stockpile_wood = (settlement.stockpile_wood + gathered_f64).max(0.0);
+                        }
+                        ResourceType::Stone => {
+                            settlement.stockpile_stone = (settlement.stockpile_stone + gathered_f64).max(0.0);
+                        }
+                    }
+                }
+            }
+
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::ResourceGathered {
+                    entity_id: EntityId(entity.id() as u64),
+                    resource: resource_name.to_string(),
+                    amount: harvested as f64,
+                });
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5510,6 +5621,7 @@ mod tests {
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
         ChildcareRuntimeSystem, ContagionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
+        GatheringRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
@@ -8122,6 +8234,125 @@ mod tests {
             target_after.tech_states.get("pottery"),
             Some(&TechState::Unknown)
         );
+        assert_eq!(resources.event_bus.pending_count(), 0);
+    }
+
+    #[test]
+    fn gathering_runtime_system_harvests_tile_and_updates_stockpile() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let mut map = WorldMap::new(8, 8, 41);
+        map.get_mut(2, 3).resources.push(TileResource {
+            resource_type: ResourceType::Wood,
+            amount: 5.0,
+            max_amount: 5.0,
+            regen_rate: 0.0,
+        });
+        let mut resources = SimResources::new(calendar, map, 77);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(91);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "wood".to_string(), 2, 3, 0));
+
+        let entity = world.spawn((
+            Behavior {
+                current_action: ActionType::GatherWood,
+                ..Behavior::default()
+            },
+            Position::new(2, 3),
+            Age::default(),
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+        ));
+        resources
+            .settlements
+            .get_mut(&settlement_id)
+            .expect("settlement should exist")
+            .members = vec![EntityId(entity.id() as u64)];
+
+        let mut system = GatheringRuntimeSystem::new(25, sim_core::config::GATHERING_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::GATHERING_TICK_INTERVAL,
+        );
+
+        let tile_after = resources.map.get(2, 3);
+        let wood_after = tile_after
+            .resources
+            .iter()
+            .find(|resource| resource.resource_type == ResourceType::Wood)
+            .map(|resource| resource.amount)
+            .unwrap_or(0.0);
+        assert!((wood_after as f32 - (5.0 - sim_core::config::GATHER_AMOUNT) as f32).abs() < 1e-6);
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert!((settlement_after.stockpile_wood as f32 - sim_core::config::GATHER_AMOUNT as f32).abs() < 1e-6);
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn gathering_runtime_system_skips_infant_stage() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let mut map = WorldMap::new(8, 8, 43);
+        map.get_mut(1, 1).resources.push(TileResource {
+            resource_type: ResourceType::Food,
+            amount: 4.0,
+            max_amount: 4.0,
+            regen_rate: 0.0,
+        });
+        let mut resources = SimResources::new(calendar, map, 79);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(92);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "food".to_string(), 1, 1, 0));
+
+        world.spawn((
+            Behavior {
+                current_action: ActionType::Forage,
+                ..Behavior::default()
+            },
+            Position::new(1, 1),
+            Age {
+                stage: GrowthStage::Infant,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+        ));
+
+        let mut system = GatheringRuntimeSystem::new(25, sim_core::config::GATHERING_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::GATHERING_TICK_INTERVAL,
+        );
+
+        let tile_after = resources.map.get(1, 1);
+        let food_after = tile_after
+            .resources
+            .iter()
+            .find(|resource| resource.resource_type == ResourceType::Food)
+            .map(|resource| resource.amount)
+            .unwrap_or(0.0);
+        assert!((food_after - 4.0).abs() < 1e-6);
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(settlement_after.stockpile_food, 0.0);
         assert_eq!(resources.event_bus.pending_count(), 0);
     }
 
