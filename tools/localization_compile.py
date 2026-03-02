@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Tuple
 DEFAULT_MANIFEST: Dict[str, Any] = {
     "default_locale": "ko",
     "supported_locales": ["ko", "en"],
+    "source_format": "fluent_preferred",
     "categories_order": [
         "ui",
         "game",
@@ -52,6 +53,9 @@ DEFAULT_MANIFEST: Dict[str, Any] = {
     "max_owner_unused_count": None,
     "max_duplicate_owner_missing_count": None,
 }
+
+FLUENT_SOURCE_FORMATS: set[str] = {"fluent", "fluent_preferred"}
+SUPPORTED_SOURCE_FORMATS: set[str] = FLUENT_SOURCE_FORMATS | {"json"}
 
 
 def _load_json(path: Path) -> Any:
@@ -112,13 +116,123 @@ def _load_category_data(
     return {}, ""
 
 
+def _parse_fluent_source(source: str) -> Tuple[
+    Dict[str, str],
+    Dict[str, List[str]],
+    Dict[str, List[str]],
+]:
+    entries_by_key: Dict[str, List[str]] = {}
+    current_key = ""
+    for raw_line in source.splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if raw_line[:1].isspace() and current_key:
+            if current_key in entries_by_key and entries_by_key[current_key]:
+                entries_by_key[current_key][-1] = (
+                    entries_by_key[current_key][-1] + "\n" + stripped
+                )
+            continue
+        sep = raw_line.find("=")
+        if sep <= 0:
+            current_key = ""
+            continue
+        key = raw_line[:sep].strip()
+        value_raw = raw_line[sep + 1 :]
+        if value_raw.startswith(" "):
+            value_raw = value_raw[1:]
+        value = value_raw.replace("\\n", "\n").rstrip("\r")
+        if not key:
+            current_key = ""
+            continue
+        entries_by_key.setdefault(key, []).append(value)
+        current_key = key
+
+    flat: Dict[str, str] = {}
+    duplicate_keys: Dict[str, List[str]] = {}
+    duplicate_conflict_keys: Dict[str, List[str]] = {}
+    for key, values in entries_by_key.items():
+        if not values:
+            continue
+        if len(values) > 1:
+            duplicate_keys[key] = ["fluent" for _ in values]
+            if len(set(values)) > 1:
+                duplicate_conflict_keys[key] = ["fluent" for _ in values]
+        flat[key] = values[-1]
+    return flat, duplicate_keys, duplicate_conflict_keys
+
+
+def _load_fluent_locale_data(
+    localization_root: Path,
+    locale: str,
+    fallback_locale: str,
+) -> Tuple[
+    Dict[str, str],
+    Dict[str, List[str]],
+    Dict[str, List[str]],
+    str,
+]:
+    locale_file = localization_root / "fluent" / locale / "messages.ftl"
+    if locale_file.exists():
+        parsed = _parse_fluent_source(locale_file.read_text(encoding="utf-8"))
+        return parsed[0], parsed[1], parsed[2], locale
+
+    fallback_file = localization_root / "fluent" / fallback_locale / "messages.ftl"
+    if fallback_file.exists():
+        parsed = _parse_fluent_source(fallback_file.read_text(encoding="utf-8"))
+        return parsed[0], parsed[1], parsed[2], fallback_locale
+
+    return {}, {}, {}, ""
+
+
 def _compile_locale(
     localization_root: Path,
     locale: str,
     fallback_locale: str,
+    source_format: str,
     categories: List[str],
     key_owners: Dict[str, str],
 ) -> Dict[str, Any]:
+    if source_format in FLUENT_SOURCE_FORMATS:
+        (
+            fluent_flat,
+            fluent_duplicates,
+            fluent_duplicate_conflicts,
+            loaded_from,
+        ) = _load_fluent_locale_data(
+            localization_root=localization_root,
+            locale=locale,
+            fallback_locale=fallback_locale,
+        )
+        if fluent_flat:
+            key_sources = {
+                key: f"{loaded_from}/fluent" if loaded_from else "missing/fluent"
+                for key in fluent_flat.keys()
+            }
+            return {
+                "strings": fluent_flat,
+                "sources": key_sources,
+                "duplicate_keys": fluent_duplicates,
+                "duplicate_conflict_keys": fluent_duplicate_conflicts,
+                "owner_rule_seen_count": 0,
+                "owner_rule_hit_count": 0,
+                "owner_rule_miss_count": 0,
+                "owner_rule_override_count": 0,
+                "keys": sorted(fluent_flat.keys()),
+            }
+        if source_format == "fluent":
+            return {
+                "strings": {},
+                "sources": {},
+                "duplicate_keys": {},
+                "duplicate_conflict_keys": {},
+                "owner_rule_seen_count": 0,
+                "owner_rule_hit_count": 0,
+                "owner_rule_miss_count": 0,
+                "owner_rule_override_count": 0,
+                "keys": [],
+            }
+
     flat: Dict[str, str] = {}
     key_sources: Dict[str, str] = {}
     duplicate_keys: Dict[str, List[str]] = {}
@@ -287,6 +401,7 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
 
     default_locale = str(manifest.get("default_locale", "ko"))
     supported_locales = [str(x) for x in manifest.get("supported_locales", ["ko", "en"])]
+    source_format = str(manifest.get("source_format", "fluent_preferred")).strip().lower()
     categories = [str(x) for x in manifest.get("categories_order", [])]
     compiled_dir_name = str(manifest.get("compiled_dir", "compiled"))
     include_sources = bool(manifest.get("include_sources", False))
@@ -361,7 +476,14 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
             )
             return 1
 
-    if not categories:
+    if source_format not in SUPPORTED_SOURCE_FORMATS:
+        print(
+            f"[localization_compile] unsupported source_format: {source_format}",
+            file=sys.stderr,
+        )
+        return 1
+
+    if source_format == "json" and not categories:
         print("[localization_compile] categories_order is empty", file=sys.stderr)
         return 1
 
@@ -381,6 +503,7 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
             localization_root=localization_root,
             locale=locale,
             fallback_locale="en",
+            source_format=source_format,
             categories=categories,
             key_owners=key_owners,
         )
@@ -458,6 +581,7 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
                 "locale": locale,
                 "default_locale": default_locale,
                 "categories_order": categories,
+                "source_format": source_format,
                 "fallback_locale": "en",
                 "duplicate_key_count": duplicate_count,
                 "duplicate_conflict_count": duplicate_conflict_count,
@@ -580,6 +704,7 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
             "default_locale": default_locale,
             "supported_locales": supported_locales,
             "categories_order": categories,
+            "source_format": source_format,
             "compiled_dir": compiled_dir_name,
             "key_registry_path": key_registry_rel,
             "key_owners_path": key_owners_rel,

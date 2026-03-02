@@ -1191,3 +1191,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0145-locale-disable-legacy-json-fallback.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0145-locale-disable-legacy-json-fallback.md)
+
+### 0146 - localization compile fluent preferred
+- Commit: `[rust-r0-246] Switch localization compile pipeline to Fluent-preferred sources`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0146-localization-compile-fluent-preferred.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0146-localization-compile-fluent-preferred.md)

@@ -4,6 +4,7 @@
     "ko",
     "en"
   ],
+  "source_format": "fluent_preferred",
   "categories_order": [
     "ui",
     "game",

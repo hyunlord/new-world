@@ -19,8 +19,8 @@
       "data_generated"
     ],
     "default_locale": "ko",
-    "duplicate_conflict_count": 35,
-    "duplicate_key_count": 248,
+    "duplicate_conflict_count": 0,
+    "duplicate_key_count": 0,
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
@@ -32,11 +32,12 @@
     "owner_policy_entry_count": 248,
     "owner_policy_missing_duplicate_count": 0,
     "owner_policy_unused_count": 0,
-    "owner_rule_hit_count": 248,
+    "owner_rule_hit_count": 0,
     "owner_rule_miss_count": 0,
     "owner_rule_override_count": 0,
-    "owner_rule_seen_count": 248,
-    "preserve_key_ids": true
+    "owner_rule_seen_count": 0,
+    "preserve_key_ids": true,
+    "source_format": "fluent_preferred"
   },
   "strings": {
     "ACE_DOMESTIC_VIOLENCE": "가정폭력 목격",
