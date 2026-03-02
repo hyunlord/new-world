@@ -9,7 +9,7 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
@@ -3940,6 +3940,134 @@ impl SimSystem for GatheringRuntimeSystem {
     }
 }
 
+const CONSTRUCTION_BUILD_TICKS_DEFAULT: i32 = 50;
+
+#[inline]
+fn construction_build_ticks(building_type: &str) -> i32 {
+    match building_type {
+        "stockpile" => 36,
+        "shelter" => 60,
+        "campfire" => 24,
+        _ => CONSTRUCTION_BUILD_TICKS_DEFAULT,
+    }
+}
+
+#[inline]
+fn construction_skill_multiplier(skills_opt: Option<&Skills>) -> f32 {
+    let level = skills_opt
+        .map(|skills| skills.get_level("SKILL_CONSTRUCTION") as f32)
+        .unwrap_or(0.0)
+        .clamp(0.0, 100.0);
+    1.0 + (level / 100.0) * 0.70
+}
+
+/// Rust runtime system for construction progress updates.
+///
+/// This performs active writes on `Building.construction_progress` and
+/// `Building.is_complete`, then emits `BuildingConstructed` on completion.
+#[derive(Debug, Clone)]
+pub struct ConstructionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ConstructionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ConstructionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "construction_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Behavior, &Position, Option<&Age>, Option<&Skills>)>();
+        for (_, (behavior, position, age_opt, skills_opt)) in &mut query {
+            if behavior.current_action != ActionType::Build {
+                continue;
+            }
+            let Some(age) = age_opt else {
+                continue;
+            };
+            if age.stage != GrowthStage::Adult {
+                continue;
+            }
+
+            let Some(target_x) = behavior.action_target_x else {
+                continue;
+            };
+            let Some(target_y) = behavior.action_target_y else {
+                continue;
+            };
+
+            let dx = (position.x - target_x).abs();
+            let dy = (position.y - target_y).abs();
+            if dx > 1 || dy > 1 {
+                continue;
+            }
+
+            let mut target_building_id: Option<BuildingId> = None;
+            for (building_id, building) in resources.buildings.iter() {
+                if building.is_complete {
+                    continue;
+                }
+                if building.x != target_x || building.y != target_y {
+                    continue;
+                }
+                match target_building_id {
+                    Some(current) if building_id.0 >= current.0 => {}
+                    _ => target_building_id = Some(*building_id),
+                }
+            }
+            let Some(building_id) = target_building_id else {
+                continue;
+            };
+
+            let Some(building) = resources.buildings.get_mut(&building_id) else {
+                continue;
+            };
+            let build_ticks = construction_build_ticks(building.building_type.as_str()).max(1);
+            let mut ticks_per_cycle = build_ticks / config::CONSTRUCTION_TICK_INTERVAL as i32;
+            if ticks_per_cycle < 1 {
+                ticks_per_cycle = 1;
+            }
+            let progress_per_tick =
+                (1.0 / ticks_per_cycle as f32) * construction_skill_multiplier(skills_opt);
+            if progress_per_tick <= 0.0 {
+                continue;
+            }
+
+            building.construction_progress =
+                (building.construction_progress + progress_per_tick).min(1.0);
+            if building.construction_progress < 1.0 || building.is_complete {
+                continue;
+            }
+
+            building.construction_progress = 1.0;
+            building.is_complete = true;
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::BuildingConstructed {
+                    building_id,
+                    building_type: building.building_type.clone(),
+                });
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5620,6 +5748,7 @@ mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
         ChildcareRuntimeSystem, ContagionRuntimeSystem,
+        ConstructionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         GatheringRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
@@ -8353,6 +8482,146 @@ mod tests {
             .get(&settlement_id)
             .expect("settlement should exist");
         assert_eq!(settlement_after.stockpile_food, 0.0);
+        assert_eq!(resources.event_bus.pending_count(), 0);
+    }
+
+    #[test]
+    fn construction_runtime_system_progresses_and_completes_building() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 47);
+        let mut resources = SimResources::new(calendar, map, 83);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(93);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "build".to_string(), 4, 4, 0));
+
+        let building_id = BuildingId(901);
+        resources.buildings.insert(
+            building_id,
+            Building {
+                id: building_id,
+                building_type: "campfire".to_string(),
+                settlement_id,
+                x: 4,
+                y: 4,
+                construction_progress: 0.0,
+                is_complete: false,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut skills = Skills::default();
+        skills.entries.insert(
+            "SKILL_CONSTRUCTION".to_string(),
+            SkillEntry { level: 100, xp: 0.0 },
+        );
+        world.spawn((
+            Behavior {
+                current_action: ActionType::Build,
+                action_target_x: Some(4),
+                action_target_y: Some(4),
+                ..Behavior::default()
+            },
+            Position::new(4, 3),
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            skills,
+        ));
+
+        let mut system =
+            ConstructionRuntimeSystem::new(28, sim_core::config::CONSTRUCTION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::CONSTRUCTION_TICK_INTERVAL,
+        );
+        let progress_after_first = resources
+            .buildings
+            .get(&building_id)
+            .expect("building should exist")
+            .construction_progress;
+        assert!(progress_after_first > 0.0);
+
+        for _ in 0..4 {
+            system.run(
+                &mut world,
+                &mut resources,
+                sim_core::config::CONSTRUCTION_TICK_INTERVAL,
+            );
+        }
+
+        let building_after = resources
+            .buildings
+            .get(&building_id)
+            .expect("building should exist");
+        assert!(building_after.is_complete);
+        assert!((building_after.construction_progress - 1.0).abs() < 1e-6);
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn construction_runtime_system_skips_non_adult_stage() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 53);
+        let mut resources = SimResources::new(calendar, map, 89);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(94);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "teen".to_string(), 4, 4, 0));
+
+        let building_id = BuildingId(902);
+        resources.buildings.insert(
+            building_id,
+            Building {
+                id: building_id,
+                building_type: "stockpile".to_string(),
+                settlement_id,
+                x: 4,
+                y: 4,
+                construction_progress: 0.0,
+                is_complete: false,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        world.spawn((
+            Behavior {
+                current_action: ActionType::Build,
+                action_target_x: Some(4),
+                action_target_y: Some(4),
+                ..Behavior::default()
+            },
+            Position::new(4, 4),
+            Age {
+                stage: GrowthStage::Teen,
+                ..Age::default()
+            },
+        ));
+
+        let mut system =
+            ConstructionRuntimeSystem::new(28, sim_core::config::CONSTRUCTION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::CONSTRUCTION_TICK_INTERVAL,
+        );
+
+        let building_after = resources
+            .buildings
+            .get(&building_id)
+            .expect("building should exist");
+        assert!((building_after.construction_progress - 0.0).abs() < 1e-6);
+        assert!(!building_after.is_complete);
         assert_eq!(resources.event_bus.pending_count(), 0);
     }
 

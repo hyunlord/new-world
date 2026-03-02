@@ -11,7 +11,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 10,memory_system,MemorySystemScript,res://scripts/systems/record/memory_system.gd,memory_system,rust,yes,simbridge_pattern_scan_v1,yes
 11,behavior_system,BehaviorSystem,res://scripts/ai/behavior_system.gd,behavior_system,gdscript,no,simbridge_pattern_scan_v1,no
 12,gathering_system,GatheringSystem,res://scripts/systems/work/gathering_system.gd,gathering_system,rust,no,simbridge_pattern_scan_v1,yes
-13,construction_system,ConstructionSystem,res://scripts/systems/work/construction_system.gd,construction_system,gdscript,no,simbridge_pattern_scan_v1,no
+13,construction_system,ConstructionSystem,res://scripts/systems/work/construction_system.gd,construction_system,gdscript,no,simbridge_pattern_scan_v1,yes
 14,movement_system,MovementSystem,res://scripts/systems/world/movement_system.gd,movement_system,rust,yes,simbridge_pattern_scan_v1,yes
 15,emotion_system,EmotionSystem,res://scripts/systems/psychology/emotion_system.gd,emotion_system,rust,yes,simbridge_pattern_scan_v1,yes
 16,child_stress_processor,ChildStressProcessor,res://scripts/systems/development/child_stress_processor.gd,child_stress_processor,rust,yes,simbridge_pattern_scan_v1,yes
