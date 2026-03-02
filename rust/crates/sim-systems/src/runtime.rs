@@ -1256,6 +1256,89 @@ impl SimSystem for JobSatisfactionRuntimeSystem {
     }
 }
 
+/// Rust runtime system for annual social-capital normalization.
+///
+/// This performs active writes on `Social.social_capital` using
+/// relationship-edge strength/bridge topology and reputation context.
+#[derive(Debug, Clone)]
+pub struct NetworkRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl NetworkRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for NetworkRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "network_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<&mut Social>();
+        for (_, social) in &mut query {
+            let mut strong_count = 0.0_f32;
+            let mut weak_count = 0.0_f32;
+            let mut bridge_count = 0.0_f32;
+
+            for edge in &social.edges {
+                let affinity = edge.affinity as f32;
+                let strong_tie = affinity >= config::NETWORK_TIE_STRONG_MIN as f32
+                    || matches!(
+                        edge.relation_type,
+                        RelationType::CloseFriend | RelationType::Intimate | RelationType::Spouse
+                    );
+                let weak_tie = affinity >= config::NETWORK_TIE_WEAK_MIN as f32
+                    || matches!(edge.relation_type, RelationType::Friend | RelationType::Acquaintance);
+
+                if strong_tie {
+                    if edge.is_bridge {
+                        bridge_count += 1.0;
+                    } else {
+                        strong_count += 1.0;
+                    }
+                } else if weak_tie {
+                    if edge.is_bridge {
+                        bridge_count += 0.5;
+                    } else {
+                        weak_count += 1.0;
+                    }
+                }
+            }
+
+            let rep_score =
+                ((social.reputation_local as f32 + social.reputation_regional as f32) * 0.5)
+                    .clamp(0.0, 1.0);
+            social.social_capital = body::network_social_capital_norm(
+                strong_count,
+                weak_count,
+                bridge_count,
+                rep_score,
+                config::NETWORK_SOCIAL_CAP_STRONG_W as f32,
+                config::NETWORK_SOCIAL_CAP_WEAK_W as f32,
+                config::NETWORK_SOCIAL_CAP_BRIDGE_W as f32,
+                config::NETWORK_SOCIAL_CAP_REP_W as f32,
+                config::NETWORK_SOCIAL_CAP_NORM_DIV as f32,
+            )
+            .clamp(0.0, 1.0) as f64;
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1426,9 +1509,9 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem,
-        ResourceRegenSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
-        ValueRuntimeSystem,
+        EmotionRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
+        NeedsRuntimeSystem, NetworkRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1849,6 +1932,55 @@ mod tests {
         assert!(updated.job_satisfaction > 0.30);
         assert!(updated.occupation_satisfaction > 0.35);
         assert!((0.0..=1.0).contains(&updated.job_satisfaction));
+    }
+
+    #[test]
+    fn network_runtime_system_recomputes_social_capital_from_edges() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut social = Social::default();
+        social.reputation_local = 0.80;
+        social.reputation_regional = 0.60;
+
+        let mut strong_edge = sim_core::components::RelationshipEdge::new(EntityId(2));
+        strong_edge.affinity = 72.0;
+        strong_edge.relation_type = RelationType::CloseFriend;
+        strong_edge.is_bridge = false;
+        social.edges.push(strong_edge);
+
+        let mut bridge_weak_edge = sim_core::components::RelationshipEdge::new(EntityId(3));
+        bridge_weak_edge.affinity = 18.0;
+        bridge_weak_edge.relation_type = RelationType::Friend;
+        bridge_weak_edge.is_bridge = true;
+        social.edges.push(bridge_weak_edge);
+
+        let mut ignored_edge = sim_core::components::RelationshipEdge::new(EntityId(4));
+        ignored_edge.affinity = 1.0;
+        ignored_edge.relation_type = RelationType::Stranger;
+        ignored_edge.is_bridge = false;
+        social.edges.push(ignored_edge);
+
+        let entity = world.spawn((social,));
+        let mut system = NetworkRuntimeSystem::new(58, sim_core::config::REVOLUTION_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::REVOLUTION_TICK_INTERVAL);
+
+        let updated = world
+            .get::<&Social>(entity)
+            .expect("updated social component should be queryable");
+        let expected = body::network_social_capital_norm(
+            1.0,
+            0.0,
+            0.5,
+            0.70,
+            sim_core::config::NETWORK_SOCIAL_CAP_STRONG_W as f32,
+            sim_core::config::NETWORK_SOCIAL_CAP_WEAK_W as f32,
+            sim_core::config::NETWORK_SOCIAL_CAP_BRIDGE_W as f32,
+            sim_core::config::NETWORK_SOCIAL_CAP_REP_W as f32,
+            sim_core::config::NETWORK_SOCIAL_CAP_NORM_DIV as f32,
+        );
+        assert!((updated.social_capital as f32 - expected).abs() < 1e-6);
+        assert!((0.0..=1.0).contains(&updated.social_capital));
     }
 
     #[test]

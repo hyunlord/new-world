@@ -543,3 +543,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 17.39% (8/46)
 - Remaining (strict state-write basis): 78.26%
 - Details: [0064-job-satisfaction-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0064-job-satisfaction-runtime-active-write-port.md)
+
+### 0065 - network runtime active-write port
+- Commit: `[rust-r0-165] Port network runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 23.91% (11/46)
+- Actual state-write coverage (strict): 23.91% (11/46)
+- Owner transfer coverage (`exec_owner=rust`): 17.39% (8/46)
+- Remaining (strict state-write basis): 76.09%
+- Details: [0065-network-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0065-network-runtime-active-write-port.md)
