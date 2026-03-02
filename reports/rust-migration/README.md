@@ -1247,3 +1247,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0152-sim-bridge-ws2-codec-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0152-sim-bridge-ws2-codec-module-split.md)
+
+### 0153 - sim-bridge pathfinding core module split
+- Commit: `[rust-r0-253] Extract pathfinding core block from sim-bridge lib`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0153-sim-bridge-pathfinding-core-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0153-sim-bridge-pathfinding-core-module-split.md)
