@@ -3291,6 +3291,139 @@ impl SimSystem for CopingRuntimeSystem {
     }
 }
 
+/// Rust runtime system for child-stage stress processing.
+///
+/// This performs active writes on `Stress.level/reserve/allostatic_load` for
+/// infant/toddler/child/teen entities using child-stress body kernels.
+#[derive(Debug, Clone)]
+pub struct ChildStressProcessorRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ChildStressProcessorRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn child_stage_code(stage: GrowthStage) -> Option<i32> {
+    match stage {
+        GrowthStage::Infant => Some(0),
+        GrowthStage::Toddler => Some(1),
+        GrowthStage::Child => Some(2),
+        GrowthStage::Teen => Some(3),
+        _ => None,
+    }
+}
+
+#[inline]
+fn child_stage_multipliers(stage_code: i32) -> (f32, f32, f32) {
+    match stage_code {
+        0 => (0.90, 1.20, 1.20),
+        1 => (1.00, 1.10, 1.10),
+        2 => (1.10, 1.00, 1.00),
+        3 => (1.20, 1.05, 1.00),
+        _ => (1.00, 1.00, 1.00),
+    }
+}
+
+impl SimSystem for ChildStressProcessorRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "child_stress_processor"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &Age,
+            &mut Stress,
+            Option<&Needs>,
+            Option<&Social>,
+            Option<&Personality>,
+        )>();
+        for (_, (age, stress, needs_opt, social_opt, personality_opt)) in &mut query {
+            let Some(stage_code) = child_stage_code(age.stage) else {
+                continue;
+            };
+
+            let belonging = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let safety = needs_opt
+                .map(|needs| needs.get(NeedType::Safety) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let energy = needs_opt
+                .map(|needs| needs.energy as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let hunger = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let base_intensity = (1.0 - (belonging * 0.35 + safety * 0.35 + energy * 0.20 + hunger * 0.10))
+                .clamp(0.0, 1.0);
+            if base_intensity <= 0.05 {
+                continue;
+            }
+
+            let caregiver_present = social_opt
+                .map(|social| !social.parents.is_empty() || social.spouse.is_some())
+                .unwrap_or(false);
+            let attachment_quality = social_opt
+                .map(|social| social.reputation_local as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let buffered_intensity = body::child_social_buffered_intensity(
+                base_intensity,
+                attachment_quality,
+                caregiver_present,
+                0.5,
+            )
+            .clamp(0.0, 1.0);
+            let stress_type = body::child_stress_type_code(
+                buffered_intensity,
+                caregiver_present,
+                attachment_quality,
+            );
+            let (spike_mult, vulnerability_mult, break_threshold_mult) =
+                child_stage_multipliers(stage_code);
+            let resilience = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::C) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let out = body::child_stress_apply_step(
+                resilience,
+                (stress.reserve as f32 * 100.0).clamp(0.0, 100.0),
+                (stress.level as f32 * 2000.0).clamp(0.0, 2000.0),
+                (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0),
+                buffered_intensity,
+                spike_mult,
+                vulnerability_mult,
+                break_threshold_mult,
+                stress_type,
+            );
+            stress.reserve = (out[1] / 100.0).clamp(0.0, 1.0) as f64;
+            stress.level = (out[2] / 2000.0).clamp(0.0, 1.0) as f64;
+            stress.allostatic_load = (out[3] / 100.0).clamp(0.0, 1.0) as f64;
+            stress.recalculate_state();
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -3461,7 +3594,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
+        AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem,
+        EconomicTendencyRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
@@ -3891,6 +4025,72 @@ mod tests {
             let cooldown = updated.strategy_cooldowns.get(&active).copied().unwrap_or(0);
             assert!(cooldown > 0);
         }
+    }
+
+    #[test]
+    fn child_stress_processor_runtime_system_updates_child_stress_fields() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            stage: GrowthStage::Child,
+            years: 10.0,
+            ..Age::default()
+        };
+        let stress = Stress {
+            level: 0.10,
+            reserve: 0.90,
+            allostatic_load: 0.10,
+            ..Stress::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.05);
+        needs.set(NeedType::Safety, 0.05);
+        needs.set(NeedType::Hunger, 0.10);
+        needs.energy = 0.05;
+        let social = Social::default();
+        let personality = Personality::default();
+        let entity = world.spawn((age, stress, needs, social, personality));
+
+        let mut system = ChildStressProcessorRuntimeSystem::new(32, 2);
+        system.run(&mut world, &mut resources, 2);
+
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("stress should be queryable");
+        assert!(updated.level > 0.10);
+        assert!(updated.reserve < 0.90);
+        assert!(updated.allostatic_load >= 0.10);
+    }
+
+    #[test]
+    fn child_stress_processor_runtime_system_skips_non_child_stages() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            stage: GrowthStage::Adult,
+            years: 30.0,
+            ..Age::default()
+        };
+        let stress = Stress {
+            level: 0.25,
+            reserve: 0.60,
+            allostatic_load: 0.30,
+            ..Stress::default()
+        };
+        let needs = Needs::default();
+        let entity = world.spawn((age, stress, needs));
+
+        let mut system = ChildStressProcessorRuntimeSystem::new(32, 2);
+        system.run(&mut world, &mut resources, 2);
+
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("stress should be queryable");
+        assert!((updated.level as f32 - 0.25).abs() < 1e-6);
+        assert!((updated.reserve as f32 - 0.60).abs() < 1e-6);
+        assert!((updated.allostatic_load as f32 - 0.30).abs() < 1e-6);
     }
 
     #[test]
