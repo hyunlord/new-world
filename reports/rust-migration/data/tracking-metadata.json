@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-03-02 14:45:07 +0900",
+  "base_commit": "d84d1c4",
+  "dataset_version": "tracking-v1",
+  "offload_rule": "simbridge_pattern_scan_v1",
+  "reference_scope": [
+    "*.gd",
+    "*.tscn",
+    "*.tres",
+    "*.godot"
+  ]
+}

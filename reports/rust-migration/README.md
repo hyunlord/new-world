@@ -125,3 +125,15 @@
 - Completion after commit: 100%
 - Remaining after commit: 0%
 - Details: [0020-registry-order-determinism.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0020-registry-order-determinism.md)
+
+### 0021 - Full Rust tracking baseline (autopilot)
+- Commit: `[rust-r0-121] Add full Rust migration tracking baseline`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Details: [0021-full-rust-tracking-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0021-full-rust-tracking-baseline.md)
+- Data:
+  - `reports/rust-migration/data/gd-inventory.csv`
+  - `reports/rust-migration/data/runtime-registered-systems-v2.csv`
+  - `reports/rust-migration/data/tracking-metadata.json`
