@@ -9,7 +9,7 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
@@ -2763,6 +2763,206 @@ impl SimSystem for OccupationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for settlement leadership election and countdown.
+///
+/// This performs active writes on `Settlement.leader_id` and
+/// `Settlement.leader_reelection_countdown` using adult/elder candidate scoring.
+#[derive(Debug, Clone)]
+pub struct LeaderRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl LeaderRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct LeaderCandidateSnapshot {
+    entity: Entity,
+    charisma: f32,
+    wisdom: f32,
+    trustworthiness: f32,
+    intimidation: f32,
+    social_capital: f32,
+    age_respect: f32,
+    rep_overall: f32,
+}
+
+impl SimSystem for LeaderRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "leader_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut candidates_by_settlement: HashMap<SettlementId, Vec<LeaderCandidateSnapshot>> = HashMap::new();
+        let mut alive_settlement_by_entity: HashMap<EntityId, SettlementId> = HashMap::new();
+
+        let mut query = world.query::<(
+            &Age,
+            &Identity,
+            Option<&Personality>,
+            Option<&Social>,
+            Option<&Intelligence>,
+            Option<&BodyComponent>,
+        )>();
+        for (entity, (age, identity, personality_opt, social_opt, intelligence_opt, body_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            let Some(settlement_id) = identity.settlement_id else {
+                continue;
+            };
+
+            let entity_id = EntityId(entity.id() as u64);
+            alive_settlement_by_entity.insert(entity_id, settlement_id);
+
+            if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                continue;
+            }
+
+            let charisma = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let wisdom = intelligence_opt
+                .map(|intelligence| intelligence.g_factor as f32)
+                .or_else(|| personality_opt.map(|personality| personality.axis(HexacoAxis::O) as f32))
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let trustworthiness = social_opt
+                .map(|social| social.reputation_local as f32)
+                .or_else(|| personality_opt.map(|personality| personality.axis(HexacoAxis::H) as f32))
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let intimidation = body_opt
+                .map(|body| body.strength_norm())
+                .or_else(|| personality_opt.map(|personality| (1.0 - personality.axis(HexacoAxis::A) as f32).clamp(0.0, 1.0)))
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let social_capital = social_opt
+                .map(|social| social.social_capital as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let age_respect = body::leader_age_respect(age.years as f32);
+            let rep_overall = social_opt
+                .map(|social| ((social.reputation_local + social.reputation_regional) * 0.5) as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+
+            candidates_by_settlement
+                .entry(settlement_id)
+                .or_default()
+                .push(LeaderCandidateSnapshot {
+                    entity,
+                    charisma,
+                    wisdom,
+                    trustworthiness,
+                    intimidation,
+                    social_capital,
+                    age_respect,
+                    rep_overall,
+                });
+        }
+        drop(query);
+
+        let decrement = self.tick_interval.min(u32::MAX as u64) as u32;
+        let election_interval = config::LEADER_REELECTION_INTERVAL.min(u32::MAX as u64) as u32;
+        let min_population = config::LEADER_MIN_POPULATION as usize;
+        let tie_margin = config::LEADER_CHARISMA_TIE_MARGIN as f32;
+
+        for (settlement_id, settlement) in resources.settlements.iter_mut() {
+            let mut needs_election = settlement.leader_id.is_none();
+
+            if let Some(current_leader) = settlement.leader_id {
+                let still_valid = alive_settlement_by_entity
+                    .get(&current_leader)
+                    .map(|owner| *owner == *settlement_id)
+                    .unwrap_or(false);
+                if !still_valid {
+                    settlement.leader_id = None;
+                    settlement.leader_reelection_countdown = 0;
+                    needs_election = true;
+                } else {
+                    settlement.leader_reelection_countdown =
+                        settlement.leader_reelection_countdown.saturating_sub(decrement);
+                    if settlement.leader_reelection_countdown == 0 {
+                        needs_election = true;
+                    }
+                }
+            } else {
+                settlement.leader_reelection_countdown = 0;
+            }
+
+            if !needs_election {
+                continue;
+            }
+
+            let Some(candidates) = candidates_by_settlement.get(settlement_id) else {
+                continue;
+            };
+            if candidates.len() < min_population {
+                continue;
+            }
+
+            let mut best_score = f32::NEG_INFINITY;
+            let mut best_rep = f32::NEG_INFINITY;
+            let mut best_entity_raw = u64::MAX;
+            let mut best_entity = EntityId::NONE;
+
+            for candidate in candidates {
+                let score = body::leader_score(
+                    candidate.charisma,
+                    candidate.wisdom,
+                    candidate.trustworthiness,
+                    candidate.intimidation,
+                    candidate.social_capital,
+                    candidate.age_respect,
+                    config::LEADER_W_CHARISMA as f32,
+                    config::LEADER_W_WISDOM as f32,
+                    config::LEADER_W_TRUSTWORTHINESS as f32,
+                    config::LEADER_W_INTIMIDATION as f32,
+                    config::LEADER_W_SOCIAL_CAPITAL as f32,
+                    config::LEADER_W_AGE_RESPECT as f32,
+                    candidate.rep_overall,
+                );
+                let candidate_raw = candidate.entity.id() as u64;
+                let candidate_id = EntityId(candidate_raw);
+                let better_score = score > best_score + tie_margin;
+                let tie_with_best = (score - best_score).abs() <= tie_margin;
+                let better_tie = tie_with_best
+                    && (candidate.rep_overall > best_rep + 1e-6
+                        || ((candidate.rep_overall - best_rep).abs() <= 1e-6
+                            && candidate_raw < best_entity_raw));
+                if better_score || better_tie {
+                    best_score = score;
+                    best_rep = candidate.rep_overall;
+                    best_entity_raw = candidate_raw;
+                    best_entity = candidate_id;
+                }
+            }
+
+            if best_entity != EntityId::NONE {
+                settlement.leader_id = Some(best_entity);
+                settlement.leader_reelection_countdown = election_interval;
+            }
+        }
+    }
+}
+
 /// Rust runtime system for movement progression and arrival effects.
 ///
 /// This performs active writes on `Position`, `Behavior`, and selected `Needs`
@@ -3860,7 +4060,7 @@ mod tests {
     use super::{
         AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
         ContagionRuntimeSystem,
-        EconomicTendencyRuntimeSystem, MovementRuntimeSystem,
+        EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
@@ -5443,6 +5643,295 @@ mod tests {
         assert!(
             (needs_after.get(NeedType::Thirst) as f32 - 0.45).abs() < 1e-6,
             "thirst should increase by THIRST_DRINK_RESTORE"
+        );
+    }
+
+    #[test]
+    fn leader_runtime_system_elects_best_candidate_and_sets_countdown() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(17);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "delta".to_string(), 0, 0, 0));
+
+        let mut low_personality = Personality::default();
+        low_personality.axes[HexacoAxis::X as usize] = 0.20;
+        low_personality.axes[HexacoAxis::O as usize] = 0.20;
+        let low_social = Social {
+            reputation_local: 0.20,
+            reputation_regional: 0.20,
+            social_capital: 0.20,
+            ..Social::default()
+        };
+        let low_identity = Identity {
+            settlement_id: Some(settlement_id),
+            ..Identity::default()
+        };
+        world.spawn((
+            Age {
+                alive: true,
+                years: 24.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            low_identity,
+            low_personality,
+            low_social,
+            Intelligence {
+                g_factor: 0.20,
+                ..Intelligence::default()
+            },
+            BodyComponent {
+                str_realized: 900,
+                ..BodyComponent::default()
+            },
+        ));
+
+        let mut best_personality = Personality::default();
+        best_personality.axes[HexacoAxis::X as usize] = 0.90;
+        best_personality.axes[HexacoAxis::O as usize] = 0.90;
+        let best_social = Social {
+            reputation_local: 0.90,
+            reputation_regional: 0.80,
+            social_capital: 0.90,
+            ..Social::default()
+        };
+        let best_identity = Identity {
+            settlement_id: Some(settlement_id),
+            ..Identity::default()
+        };
+        let best_entity = world.spawn((
+            Age {
+                alive: true,
+                years: 42.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            best_identity,
+            best_personality,
+            best_social,
+            Intelligence {
+                g_factor: 0.95,
+                ..Intelligence::default()
+            },
+            BodyComponent {
+                str_realized: 1500,
+                ..BodyComponent::default()
+            },
+        ));
+
+        let mut mid_personality = Personality::default();
+        mid_personality.axes[HexacoAxis::X as usize] = 0.55;
+        mid_personality.axes[HexacoAxis::O as usize] = 0.45;
+        let mid_social = Social {
+            reputation_local: 0.40,
+            reputation_regional: 0.40,
+            social_capital: 0.45,
+            ..Social::default()
+        };
+        let mid_identity = Identity {
+            settlement_id: Some(settlement_id),
+            ..Identity::default()
+        };
+        world.spawn((
+            Age {
+                alive: true,
+                years: 30.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            mid_identity,
+            mid_personality,
+            mid_social,
+            Intelligence {
+                g_factor: 0.45,
+                ..Intelligence::default()
+            },
+            BodyComponent {
+                str_realized: 1100,
+                ..BodyComponent::default()
+            },
+        ));
+
+        let mut system = LeaderRuntimeSystem::new(52, sim_core::config::LEADER_CHECK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::LEADER_CHECK_INTERVAL);
+
+        let settlement = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should be queryable");
+        assert_eq!(
+            settlement.leader_id,
+            Some(EntityId(best_entity.id() as u64)),
+            "highest-score candidate should be elected leader"
+        );
+        assert_eq!(
+            settlement.leader_reelection_countdown,
+            sim_core::config::LEADER_REELECTION_INTERVAL as u32
+        );
+    }
+
+    #[test]
+    fn leader_runtime_system_decrements_countdown_without_re_election() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(22);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "omega".to_string(), 0, 0, 0);
+        settlement.leader_reelection_countdown = 50;
+        resources.settlements.insert(settlement_id, settlement);
+
+        let leader_entity = world.spawn((
+            Age {
+                alive: true,
+                years: 40.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social::default(),
+        ));
+
+        world.spawn((
+            Age {
+                alive: true,
+                years: 37.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social::default(),
+        ));
+        world.spawn((
+            Age {
+                alive: true,
+                years: 36.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social::default(),
+        ));
+
+        {
+            let settlement_mut = resources
+                .settlements
+                .get_mut(&settlement_id)
+                .expect("settlement should be mutable");
+            settlement_mut.leader_id = Some(EntityId(leader_entity.id() as u64));
+        }
+
+        let mut system = LeaderRuntimeSystem::new(52, 12);
+        system.run(&mut world, &mut resources, 12);
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should be queryable");
+        assert_eq!(
+            settlement_after.leader_id,
+            Some(EntityId(leader_entity.id() as u64)),
+            "leader should remain unchanged while countdown is still positive"
+        );
+        assert_eq!(settlement_after.leader_reelection_countdown, 38);
+    }
+
+    #[test]
+    fn leader_runtime_system_replaces_invalid_leader() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let settlement_id = SettlementId(25);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "zeta".to_string(), 0, 0, 0);
+        settlement.leader_id = Some(EntityId(9999));
+        settlement.leader_reelection_countdown = 100;
+        resources.settlements.insert(settlement_id, settlement);
+
+        let candidate_entity = world.spawn((
+            Age {
+                alive: true,
+                years: 45.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social {
+                reputation_local: 0.70,
+                reputation_regional: 0.60,
+                social_capital: 0.80,
+                ..Social::default()
+            },
+            Intelligence {
+                g_factor: 0.80,
+                ..Intelligence::default()
+            },
+        ));
+
+        world.spawn((
+            Age {
+                alive: true,
+                years: 39.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social::default(),
+            Intelligence::default(),
+        ));
+
+        world.spawn((
+            Age {
+                alive: true,
+                years: 35.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Social::default(),
+            Intelligence::default(),
+        ));
+
+        let mut system = LeaderRuntimeSystem::new(52, sim_core::config::LEADER_CHECK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::LEADER_CHECK_INTERVAL);
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should be queryable");
+        assert_eq!(
+            settlement_after.leader_id,
+            Some(EntityId(candidate_entity.id() as u64)),
+            "invalid incumbent should be replaced by a valid candidate"
+        );
+        assert_eq!(
+            settlement_after.leader_reelection_countdown,
+            sim_core::config::LEADER_REELECTION_INTERVAL as u32
         );
     }
 
