@@ -725,6 +725,91 @@ impl SimSystem for MentalBreakRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for occupation evaluation.
+///
+/// Full parity requires Rust-owned occupation category mapping, occupation/job mutation,
+/// and occupation-changed event emission.
+#[derive(Debug, Clone)]
+pub struct OccupationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl OccupationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn occupation_to_skill_id(occupation: &str) -> String {
+    format!("SKILL_{}", occupation.to_uppercase())
+}
+
+impl SimSystem for OccupationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "occupation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Behavior, Option<&Skills>, Option<&Identity>)>();
+        for (_, (behavior, skills_opt, identity_opt)) in &mut query {
+            if let Some(identity) = identity_opt {
+                if matches!(
+                    identity.growth_stage,
+                    GrowthStage::Infant | GrowthStage::Toddler
+                ) {
+                    continue;
+                }
+            }
+
+            let mut skill_levels: Vec<i32> = Vec::new();
+            if let Some(skills) = skills_opt {
+                skill_levels.reserve(skills.entries.len());
+                for entry in skills.entries.values() {
+                    skill_levels.push(entry.level as i32);
+                }
+            }
+            let best_index = body::occupation_best_skill_index(skill_levels.as_slice());
+            let best_skill_level = if best_index < 0 {
+                0
+            } else {
+                skill_levels[best_index as usize]
+            };
+            if best_skill_level < config::OCCUPATION_MIN_SKILL_LEVEL as i32 {
+                continue;
+            }
+
+            if behavior.occupation.is_empty()
+                || behavior.occupation == "none"
+                || behavior.occupation == "laborer"
+            {
+                continue;
+            }
+            let current_skill_id = occupation_to_skill_id(behavior.occupation.as_str());
+            let current_level = skills_opt
+                .map(|skills| skills.get_level(current_skill_id.as_str()) as i32)
+                .unwrap_or(0);
+            let _should_switch = body::occupation_should_switch(
+                best_skill_level,
+                current_level,
+                config::OCCUPATION_CHANGE_HYSTERESIS as f32,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -894,8 +979,9 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        MentalBreakRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem,
-        StatThresholdRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        MentalBreakRuntimeSystem, NeedsRuntimeSystem, OccupationRuntimeSystem,
+        ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1145,6 +1231,38 @@ mod tests {
         assert!((after.level - 0.62).abs() < 1e-9);
         assert!((after.reserve - 0.55).abs() < 1e-9);
         assert!((after.allostatic_load - 0.22).abs() < 1e-9);
+    }
+
+    #[test]
+    fn occupation_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let behavior = Behavior {
+            occupation: "foraging".to_string(),
+            job: "gatherer".to_string(),
+            ..Behavior::default()
+        };
+        let identity = Identity {
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let mut skills = Skills::default();
+        skills
+            .entries
+            .insert("SKILL_FORAGING".to_string(), SkillEntry { level: 65, xp: 0.0 });
+        skills
+            .entries
+            .insert("SKILL_MINING".to_string(), SkillEntry { level: 40, xp: 0.0 });
+        let entity = world.spawn((behavior, identity, skills));
+
+        let mut system = OccupationRuntimeSystem::new(36, sim_core::config::OCCUPATION_EVAL_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::OCCUPATION_EVAL_INTERVAL);
+
+        let after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior component should remain available");
+        assert_eq!(after.occupation, "foraging");
+        assert_eq!(after.job, "gatherer");
     }
 
     #[test]
