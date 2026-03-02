@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPLY_KEY_FIELDS="false"
 STRIP_INLINE_FIELDS="false"
 WITH_BENCHES="false"
+LOCALIZATION_SOURCE_FORMAT=""
 VERIFY_STARTED_EPOCH="$(date +%s)"
 VERIFY_STARTED_AT_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 STEP_TESTS_DURATION=0
@@ -35,6 +36,25 @@ done
 
 echo "[migration_verify] root=${ROOT_DIR}"
 
+LOCALIZATION_SOURCE_FORMAT="$(
+  python3 -c 'import json,sys,pathlib
+p=pathlib.Path(sys.argv[1])
+fmt="json"
+if p.exists():
+    try:
+        d=json.load(open(p,encoding="utf-8"))
+        raw=d.get("source_format","json")
+        if isinstance(raw,str) and raw.strip():
+            fmt=raw.strip().lower()
+    except Exception:
+        pass
+print(fmt)' "${ROOT_DIR}/localization/manifest.json"
+)"
+if [[ "${LOCALIZATION_SOURCE_FORMAT}" != "json" && "${LOCALIZATION_SOURCE_FORMAT}" != "fluent" && "${LOCALIZATION_SOURCE_FORMAT}" != "fluent_preferred" ]]; then
+  echo "[migration_verify] unsupported localization source_format: ${LOCALIZATION_SOURCE_FORMAT}" >&2
+  exit 1
+fi
+
 echo "[migration_verify] 1/4 rust workspace tests"
 step_started_epoch="$(date +%s)"
 (
@@ -43,17 +63,27 @@ step_started_epoch="$(date +%s)"
 )
 STEP_TESTS_DURATION=$(( $(date +%s) - step_started_epoch ))
 
-echo "[migration_verify] 2/4 data localization extraction"
-step_started_epoch="$(date +%s)"
-extract_cmd=(python3 "${ROOT_DIR}/tools/data_localization_extract.py" --project-root "${ROOT_DIR}")
-if [[ "${APPLY_KEY_FIELDS}" == "true" ]]; then
-  extract_cmd+=(--apply-key-fields)
+SKIP_EXTRACTION_FOR_FLUENT="false"
+if [[ "${LOCALIZATION_SOURCE_FORMAT}" != "json" && "${APPLY_KEY_FIELDS}" != "true" && "${STRIP_INLINE_FIELDS}" != "true" ]]; then
+  SKIP_EXTRACTION_FOR_FLUENT="true"
 fi
-if [[ "${STRIP_INLINE_FIELDS}" == "true" ]]; then
-  extract_cmd+=(--strip-inline-fields)
+
+if [[ "${SKIP_EXTRACTION_FOR_FLUENT}" == "true" ]]; then
+  echo "[migration_verify] 2/4 data localization extraction (skipped: source_format=${LOCALIZATION_SOURCE_FORMAT})"
+  STEP_EXTRACT_DURATION=0
+else
+  echo "[migration_verify] 2/4 data localization extraction"
+  step_started_epoch="$(date +%s)"
+  extract_cmd=(python3 "${ROOT_DIR}/tools/data_localization_extract.py" --project-root "${ROOT_DIR}")
+  if [[ "${APPLY_KEY_FIELDS}" == "true" ]]; then
+    extract_cmd+=(--apply-key-fields)
+  fi
+  if [[ "${STRIP_INLINE_FIELDS}" == "true" ]]; then
+    extract_cmd+=(--strip-inline-fields)
+  fi
+  "${extract_cmd[@]}"
+  STEP_EXTRACT_DURATION=$(( $(date +%s) - step_started_epoch ))
 fi
-"${extract_cmd[@]}"
-STEP_EXTRACT_DURATION=$(( $(date +%s) - step_started_epoch ))
 
 echo "[migration_verify] 3/4 localization compile"
 step_started_epoch="$(date +%s)"

@@ -1199,3 +1199,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0146-localization-compile-fluent-preferred.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0146-localization-compile-fluent-preferred.md)
+
+### 0147 - fluent only audit and verify alignment
+- Commit: `[rust-r0-247] Align migration verify/audit pipeline with fluent-only localization`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0147-fluent-only-audit-and-verify-alignment.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0147-fluent-only-audit-and-verify-alignment.md)

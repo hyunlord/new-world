@@ -37,7 +37,7 @@
     "owner_rule_override_count": 0,
     "owner_rule_seen_count": 0,
     "preserve_key_ids": true,
-    "source_format": "fluent_preferred"
+    "source_format": "fluent"
   },
   "strings": {
     "ACE_DOMESTIC_VIOLENCE": "Witnessed Domestic Violence",

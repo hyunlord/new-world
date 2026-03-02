@@ -25,6 +25,7 @@ from typing import Any, Dict, Iterable, List, Set, Tuple
 
 
 INLINE_SUFFIXES: Tuple[str, ...] = ("_en", "_ko", "_kr")
+FLUENT_SOURCE_FORMATS: Set[str] = {"fluent", "fluent_preferred"}
 
 
 def _load_json(path: Path) -> Any:
@@ -50,6 +51,26 @@ def _collect_top_level_entries(locale_dir: Path) -> Dict[str, Dict[str, Any]]:
             continue
         result[file.name] = dict(data)
     return result
+
+
+def _load_compiled_locale_payload(compiled_file: Path) -> Dict[str, Any]:
+    if not compiled_file.exists():
+        return {}
+    data = _load_json(compiled_file)
+    if not isinstance(data, dict):
+        return {}
+    return data
+
+
+def _collect_compiled_strings(compiled_file: Path) -> Dict[str, str]:
+    payload = _load_compiled_locale_payload(compiled_file)
+    raw_strings = payload.get("strings")
+    if not isinstance(raw_strings, dict):
+        return {}
+    strings: Dict[str, str] = {}
+    for key, value in raw_strings.items():
+        strings[str(key)] = str(value)
+    return strings
 
 
 def _find_duplicates(keys_by_file: Dict[str, Set[str]]) -> Dict[str, List[str]]:
@@ -181,43 +202,98 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     en_dir = localization_root / "en"
     ko_dir = localization_root / "ko"
     data_dir = project_root / "data"
-    manifest_path = localization_root / "manifest.json"
+    manifest = _load_manifest_dict(project_root)
     supported_locales: List[str] = ["ko", "en"]
-    if manifest_path.exists():
-        raw_manifest = _load_json(manifest_path)
-        if isinstance(raw_manifest, dict):
-            raw_locales = raw_manifest.get("supported_locales")
-            if isinstance(raw_locales, list):
-                normalized: List[str] = []
-                for item in raw_locales:
-                    locale = str(item)
-                    if locale and locale not in normalized:
-                        normalized.append(locale)
-                if normalized:
-                    supported_locales = normalized
-
-    en_keys = _collect_top_level_keys(en_dir)
-    ko_keys = _collect_top_level_keys(ko_dir)
+    raw_locales = manifest.get("supported_locales")
+    if isinstance(raw_locales, list):
+        normalized: List[str] = []
+        for item in raw_locales:
+            locale = str(item)
+            if locale and locale not in normalized:
+                normalized.append(locale)
+        if normalized:
+            supported_locales = normalized
+    raw_source_format = manifest.get("source_format", "json")
+    source_format = str(raw_source_format).strip().lower() if str(raw_source_format).strip() else "json"
+    compiled_dir_name = str(manifest.get("compiled_dir", "compiled")).strip() or "compiled"
+    use_compiled_mode = source_format in FLUENT_SOURCE_FORMATS
+    compiled_root = localization_root / compiled_dir_name
 
     parity_issues: List[Dict[str, Any]] = []
-    all_files = sorted(set(en_keys.keys()) | set(ko_keys.keys()))
-    for file_name in all_files:
-        en_set = en_keys.get(file_name, set())
-        ko_set = ko_keys.get(file_name, set())
-        missing_in_ko = sorted(en_set - ko_set)
-        missing_in_en = sorted(ko_set - en_set)
-        if missing_in_ko or missing_in_en:
-            parity_issues.append(
-                {
-                    "file": file_name,
-                    "missing_in_ko": missing_in_ko,
-                    "missing_in_en": missing_in_en,
-                }
-            )
+    if use_compiled_mode:
+        compiled_keysets: Dict[str, Set[str]] = {}
+        for locale in supported_locales:
+            compiled_file = compiled_root / f"{locale}.json"
+            if not compiled_file.exists():
+                compiled_keysets[locale] = set()
+                continue
+            compiled_strings = _collect_compiled_strings(compiled_file)
+            compiled_keysets[locale] = set(compiled_strings.keys())
+        baseline_locale = "en" if "en" in compiled_keysets else (
+            sorted(compiled_keysets.keys())[0] if compiled_keysets else ""
+        )
+        baseline_set = compiled_keysets.get(baseline_locale, set())
+        for locale in sorted(compiled_keysets.keys()):
+            locale_set = compiled_keysets.get(locale, set())
+            missing_in_locale = sorted(baseline_set - locale_set)
+            extra_in_locale = sorted(locale_set - baseline_set)
+            if missing_in_locale or extra_in_locale:
+                parity_issues.append(
+                    {
+                        "file": f"{compiled_dir_name}/{locale}.json",
+                        "missing_in_ko": missing_in_locale if locale == "ko" else [],
+                        "missing_in_en": extra_in_locale if locale == "ko" else [],
+                        "missing_in_locale": missing_in_locale,
+                        "extra_in_locale": extra_in_locale,
+                        "baseline_locale": baseline_locale,
+                        "locale": locale,
+                    }
+                )
+    else:
+        en_keys = _collect_top_level_keys(en_dir)
+        ko_keys = _collect_top_level_keys(ko_dir)
+        all_files = sorted(set(en_keys.keys()) | set(ko_keys.keys()))
+        for file_name in all_files:
+            en_set = en_keys.get(file_name, set())
+            ko_set = ko_keys.get(file_name, set())
+            missing_in_ko = sorted(en_set - ko_set)
+            missing_in_en = sorted(ko_set - en_set)
+            if missing_in_ko or missing_in_en:
+                parity_issues.append(
+                    {
+                        "file": file_name,
+                        "missing_in_ko": missing_in_ko,
+                        "missing_in_en": missing_in_en,
+                    }
+                )
+
+    def _to_int(value: Any, default: int = 0) -> int:
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return default
 
     duplicate_locale_summary: Dict[str, Dict[str, Any]] = {}
     all_localization_keys: Set[str] = set()
     for locale in supported_locales:
+        if use_compiled_mode:
+            compiled_file = compiled_root / f"{locale}.json"
+            if not compiled_file.exists():
+                continue
+            payload = _load_compiled_locale_payload(compiled_file)
+            meta = payload.get("meta")
+            if not isinstance(meta, dict):
+                meta = {}
+            strings = _collect_compiled_strings(compiled_file)
+            all_localization_keys.update(strings.keys())
+            duplicate_locale_summary[locale] = {
+                "duplicate_key_count": _to_int(meta.get("duplicate_key_count", 0)),
+                "duplicate_conflict_count": _to_int(meta.get("duplicate_conflict_count", 0)),
+                "duplicate_keys": {},
+                "duplicate_details": {},
+            }
+            continue
+
         locale_dir = localization_root / locale
         if not locale_dir.exists():
             continue
@@ -304,6 +380,8 @@ def run_audit(project_root: Path) -> Dict[str, Any]:
     return {
         "schema_version": 1,
         "generated_at_utc": generated_at_utc,
+        "localization_source_format": source_format,
+        "localization_audit_mode": "compiled" if use_compiled_mode else "json",
         "parity_issues": parity_issues,
         "duplicate_key_count": max_duplicate_key_count,
         "duplicate_keys": duplicate_keys,
@@ -365,6 +443,8 @@ def _resolve_manifest_key_owner_policy_path(project_root: Path) -> Path:
 
 def _print_report(report: Dict[str, Any]) -> None:
     print("== Localization Audit ==")
+    print(f"source_format: {report.get('localization_source_format', 'json')}")
+    print(f"audit_mode: {report.get('localization_audit_mode', 'json')}")
     print(f"parity_issues: {len(report['parity_issues'])}")
     print(f"duplicate_keys: {report['duplicate_key_count']}")
     print(f"duplicate_conflicts: {report['duplicate_conflict_count']}")
@@ -491,6 +571,19 @@ def _category_from_file_name(file_name: str) -> str:
 
 
 def _build_key_owner_policy_payload(report: Dict[str, Any]) -> Dict[str, Any]:
+    if str(report.get("localization_audit_mode", "")) == "compiled":
+        owner_policy_path = Path(str(report.get("owner_policy_path", "")))
+        existing_payload: Any = {}
+        if owner_policy_path.exists():
+            existing_payload = _load_json(owner_policy_path)
+        existing_owners = _extract_owner_map(existing_payload)
+        return {
+            "version": 1,
+            "duplicate_report_locale": str(report.get("duplicate_report_locale", "")),
+            "owner_key_count": len(existing_owners),
+            "owners": dict(sorted(existing_owners.items(), key=lambda item: item[0])),
+        }
+
     owners: Dict[str, str] = {}
     duplicate_details = report.get("duplicate_details", {})
     if isinstance(duplicate_details, dict):
