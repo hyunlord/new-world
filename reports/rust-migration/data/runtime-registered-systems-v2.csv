@@ -44,4 +44,4 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 43,job_satisfaction_system,JobSatisfactionSystem,res://scripts/systems/social/job_satisfaction_system.gd,job_satisfaction_system,rust,yes,simbridge_pattern_scan_v1,yes
 44,coping_system,CopingSystem,res://scripts/systems/psychology/coping_system.gd,coping_system,rust,yes,simbridge_pattern_scan_v1,yes
 45,intergenerational_system,IntergenerationalSystem,res://scripts/systems/development/intergenerational_system.gd,intergenerational_system,rust,yes,simbridge_pattern_scan_v1,yes
-46,parenting_system,ParentingSystem,res://scripts/systems/development/parenting_system.gd,parenting_system,gdscript,yes,simbridge_pattern_scan_v1,yes
+46,parenting_system,ParentingSystem,res://scripts/systems/development/parenting_system.gd,parenting_system,rust,yes,simbridge_pattern_scan_v1,yes
