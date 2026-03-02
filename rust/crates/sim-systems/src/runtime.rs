@@ -1315,6 +1315,95 @@ impl SimSystem for FamilyRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for leader election scoring.
+///
+/// Full parity requires Rust-owned settlement candidate filtering, leader assignment state,
+/// and leadership change event emission.
+#[derive(Debug, Clone)]
+pub struct LeaderRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl LeaderRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for LeaderRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "leader_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(
+            &Identity,
+            Option<&Personality>,
+            Option<&Social>,
+            Option<&Values>,
+        )>();
+        for (_, (identity, personality_opt, social_opt, values_opt)) in &mut query {
+            if identity.growth_stage < GrowthStage::Adult {
+                continue;
+            }
+            let age_years = tick.saturating_sub(identity.birth_tick) as f32 / 8760.0;
+            let age_respect = body::leader_age_respect(age_years);
+            let charisma = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::X) as f32)
+                .unwrap_or(0.5);
+            let wisdom = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::O) as f32)
+                .unwrap_or(0.5);
+            let trustworthiness = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::H) as f32)
+                .unwrap_or(0.5);
+            let intimidation = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::A) as f32)
+                .map(|a| (1.0 - a).clamp(0.0, 1.0))
+                .unwrap_or(0.5);
+            let social_capital = social_opt
+                .map(|social| social.social_capital as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let rep_overall = social_opt
+                .map(|social| ((social.reputation_local + social.reputation_regional) * 0.5) as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let _leader_score = body::leader_score(
+                charisma,
+                wisdom,
+                trustworthiness,
+                intimidation,
+                social_capital,
+                age_respect,
+                config::LEADER_W_CHARISMA as f32,
+                config::LEADER_W_WISDOM as f32,
+                config::LEADER_W_TRUSTWORTHINESS as f32,
+                config::LEADER_W_INTIMIDATION as f32,
+                config::LEADER_W_SOCIAL_CAPITAL as f32,
+                config::LEADER_W_AGE_RESPECT as f32,
+                rep_overall,
+            );
+
+            let _authority_hint = values_opt
+                .map(|values| values.get(ValueType::Law) as f32 - values.get(ValueType::Tradition) as f32)
+                .unwrap_or(0.0);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1485,7 +1574,7 @@ mod tests {
     use super::{
         BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        OccupationRuntimeSystem, SocialEventRuntimeSystem,
+        LeaderRuntimeSystem, OccupationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -1982,6 +2071,38 @@ mod tests {
             .expect("needs component should remain available");
         assert_eq!(after_identity.sex, sim_core::Sex::Female);
         assert!((after_needs.get(NeedType::Hunger) - 0.7).abs() < 1e-9);
+    }
+
+    #[test]
+    fn leader_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let personality = Personality::default();
+        let mut social = Social::default();
+        social.social_capital = 0.4;
+        social.reputation_local = 0.6;
+        social.reputation_regional = 0.5;
+        let mut values = Values::default();
+        values.set(ValueType::Law, 0.3);
+        values.set(ValueType::Tradition, 0.2);
+        let entity = world.spawn((identity, personality, social, values));
+
+        let mut system = LeaderRuntimeSystem::new(52, sim_core::config::LEADER_CHECK_INTERVAL);
+        system.run(&mut world, &mut resources, 8760 * 30);
+
+        let after_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity component should remain available");
+        let after_social = world
+            .get::<&Social>(entity)
+            .expect("social component should remain available");
+        assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
+        assert!((after_social.social_capital - 0.4).abs() < 1e-9);
     }
 
     #[test]

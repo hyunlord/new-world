@@ -27,7 +27,7 @@ use sim_systems::{
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        FamilyRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, LeaderRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         ResourceRegenSystem, StatSyncSystem,
         BuildingEffectRuntimeSystem,
         SocialEventRuntimeSystem,
@@ -677,6 +677,7 @@ const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
 const RUNTIME_SYSTEM_KEY_SOCIAL_EVENT: &str = "social_event_system";
 const RUNTIME_SYSTEM_KEY_BUILDING_EFFECT: &str = "building_effect_system";
 const RUNTIME_SYSTEM_KEY_FAMILY: &str = "family_system";
+const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
@@ -818,6 +819,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_SOCIAL_EVENT
             | RUNTIME_SYSTEM_KEY_BUILDING_EFFECT
             | RUNTIME_SYSTEM_KEY_FAMILY
+            | RUNTIME_SYSTEM_KEY_LEADER
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
     )
@@ -929,6 +931,14 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(FamilyRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
+        }
+        RUNTIME_SYSTEM_KEY_LEADER => {
+            state
+                .engine
+                .register(LeaderRuntimeSystem::new(
                     priority_u32,
                     tick_interval_u64,
                 ));
@@ -5664,6 +5674,7 @@ mod tests {
         assert!(runtime_supports_rust_system("social_event_system"));
         assert!(runtime_supports_rust_system("building_effect_system"));
         assert!(runtime_supports_rust_system("family_system"));
+        assert!(runtime_supports_rust_system("leader_system"));
         assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
