@@ -390,6 +390,83 @@ impl SimSystem for EmotionRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for stat-threshold evaluation.
+///
+/// Full parity requires Rust-owned modifier/effect state and event emission.
+/// This phase ports threshold predicate execution into the Rust scheduler.
+#[derive(Debug, Clone)]
+pub struct StatThresholdRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StatThresholdRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn norm_to_stat_i32(value: f64) -> i32 {
+    (value.clamp(0.0, 1.0) * 1000.0).round() as i32
+}
+
+impl SimSystem for StatThresholdRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stat_threshold_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<&Needs>();
+        for (_, needs) in &mut query {
+            let thirst_stat = norm_to_stat_i32(needs.get(NeedType::Thirst));
+            let warmth_stat = norm_to_stat_i32(needs.get(NeedType::Warmth));
+            let safety_stat = norm_to_stat_i32(needs.get(NeedType::Safety));
+            let hunger_stat = norm_to_stat_i32(needs.get(NeedType::Hunger));
+
+            let _thirst_low = body::stat_threshold_is_active(
+                thirst_stat,
+                norm_to_stat_i32(config::THIRST_LOW),
+                0,
+                25,
+                false,
+            );
+            let _warmth_low = body::stat_threshold_is_active(
+                warmth_stat,
+                norm_to_stat_i32(config::WARMTH_LOW),
+                0,
+                25,
+                false,
+            );
+            let _safety_low = body::stat_threshold_is_active(
+                safety_stat,
+                norm_to_stat_i32(config::SAFETY_LOW),
+                0,
+                25,
+                false,
+            );
+            let _hunger_low = body::stat_threshold_is_active(
+                hunger_stat,
+                norm_to_stat_i32(config::HUNGER_EAT_THRESHOLD),
+                0,
+                25,
+                false,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -558,8 +635,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StatThresholdRuntimeSystem,
+        StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -710,6 +787,29 @@ mod tests {
             .expect("emotion component should remain available");
         assert!((after.get(sim_core::EmotionType::Fear) - 0.0).abs() < 1e-9);
         assert!((after.get(sim_core::EmotionType::Joy) - 0.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn stat_threshold_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.45);
+        needs.set(NeedType::Thirst, 0.30);
+        needs.set(NeedType::Warmth, 0.22);
+        needs.set(NeedType::Safety, 0.28);
+        let entity = world.spawn((needs,));
+
+        let mut system = StatThresholdRuntimeSystem::new(12, 5);
+        system.run(&mut world, &mut resources, 5);
+
+        let after = world
+            .get::<&Needs>(entity)
+            .expect("needs component should remain available");
+        assert!((after.get(NeedType::Hunger) - 0.45).abs() < 1e-9);
+        assert!((after.get(NeedType::Thirst) - 0.30).abs() < 1e-9);
+        assert!((after.get(NeedType::Warmth) - 0.22).abs() < 1e-9);
+        assert!((after.get(NeedType::Safety) - 0.28).abs() < 1e-9);
     }
 
     #[test]

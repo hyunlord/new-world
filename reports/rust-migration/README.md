@@ -227,3 +227,13 @@
 - Logic implementation completion after commit: 15.22%
 - Logic implementation remaining after commit: 84.78%
 - Details: [0030-emotion-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0030-emotion-runtime-rust-baseline.md)
+
+### 0031 - Rust runtime baseline port (stat_threshold_system)
+- Commit: `[rust-r0-131] Add stat-threshold runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 17.39%
+- Logic implementation remaining after commit: 82.61%
+- Details: [0031-stat-threshold-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0031-stat-threshold-runtime-rust-baseline.md)
