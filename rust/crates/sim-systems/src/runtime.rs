@@ -4182,6 +4182,226 @@ impl SimSystem for FamilyRuntimeSystem {
     }
 }
 
+const INTERGEN_MEANEY_THRESHOLD: f32 = 0.70;
+const INTERGEN_MEANEY_REPAIR_RATE: f32 = 0.002;
+const INTERGEN_MIN_LOAD: f32 = 0.05;
+const INTERGEN_HPA_LOAD_WEIGHT: f32 = 0.60;
+
+#[derive(Debug, Clone, Copy)]
+struct IntergenParentProfile {
+    load: f32,
+    scar_index: f32,
+    sex: Sex,
+}
+
+#[inline]
+fn intergen_scar_index(memory_opt: Option<&Memory>) -> f32 {
+    let Some(memory) = memory_opt else {
+        return 0.0;
+    };
+    (memory.trauma_scars.len() as f32 / 5.0).clamp(0.0, 1.0)
+}
+
+#[inline]
+fn intergen_parenting_quality(needs_opt: Option<&Needs>, stress: &Stress) -> f32 {
+    let belonging = needs_opt
+        .map(|needs| needs.get(NeedType::Belonging) as f32)
+        .unwrap_or(0.5);
+    let intimacy = needs_opt
+        .map(|needs| needs.get(NeedType::Intimacy) as f32)
+        .unwrap_or(0.5);
+    let safety = needs_opt
+        .map(|needs| needs.get(NeedType::Safety) as f32)
+        .unwrap_or(0.5);
+    let calm_factor = (1.0 - stress.level as f32).clamp(0.0, 1.0);
+    (belonging * 0.35 + intimacy * 0.25 + safety * 0.20 + calm_factor * 0.20).clamp(0.0, 1.0)
+}
+
+/// Rust runtime system for intergenerational epigenetic transfer dynamics.
+///
+/// This performs active writes on `Stress.allostatic_load` and `Stress.level`
+/// for parents (Meaney-style repair) and child-stage entities (transmission).
+#[derive(Debug, Clone)]
+pub struct IntergenerationalRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl IntergenerationalRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for IntergenerationalRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "intergenerational_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut parent_profiles: HashMap<EntityId, IntergenParentProfile> = HashMap::new();
+        {
+            let mut query = world.query::<(&Stress, Option<&Memory>, Option<&Identity>)>();
+            for (entity, (stress, memory_opt, identity_opt)) in &mut query {
+                parent_profiles.insert(
+                    EntityId(entity.id() as u64),
+                    IntergenParentProfile {
+                        load: (stress.allostatic_load as f32).clamp(0.0, 1.0),
+                        scar_index: intergen_scar_index(memory_opt),
+                        sex: identity_opt.map(|identity| identity.sex).unwrap_or(Sex::Male),
+                    },
+                );
+            }
+        }
+
+        let mut parent_updates: Vec<(Entity, f32, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress, Option<&Needs>)>();
+            for (entity, (age, social, stress, needs_opt)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if social.children.is_empty() {
+                    continue;
+                }
+                let current_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let parenting_quality = intergen_parenting_quality(needs_opt, stress);
+                let next_load = body::intergen_meaney_repair_load(
+                    current_load,
+                    parenting_quality,
+                    INTERGEN_MEANEY_THRESHOLD,
+                    INTERGEN_MEANEY_REPAIR_RATE,
+                    INTERGEN_MIN_LOAD,
+                )
+                .clamp(0.0, 1.0);
+                if (next_load - current_load).abs() < 1e-6 {
+                    continue;
+                }
+                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let next_level = ((stress.level as f32) / hpa_sensitivity.max(0.001)).clamp(0.0, 1.0);
+                parent_updates.push((entity, next_load, next_level, stress.level as f32));
+                if let Some(profile) = parent_profiles.get_mut(&EntityId(entity.id() as u64)) {
+                    profile.load = next_load;
+                }
+            }
+        }
+
+        for (entity, next_load, next_level, previous_level) in parent_updates {
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.allostatic_load = next_load as f64;
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                if (next_level - previous_level).abs() >= 1e-6 {
+                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                        entity_id: EntityId(entity.id() as u64),
+                        stress: next_level as f64,
+                    });
+                }
+            }
+        }
+
+        let mut child_updates: Vec<(Entity, f32, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress, Option<&Needs>)>();
+            for (entity, (age, social, stress, needs_opt)) in &mut query {
+                if !age.alive || !age.stage.is_child_age() || social.parents.is_empty() {
+                    continue;
+                }
+                let mut mother_profile: Option<IntergenParentProfile> = None;
+                let mut father_profile: Option<IntergenParentProfile> = None;
+                for parent_id in &social.parents {
+                    let Some(profile) = parent_profiles.get(parent_id).copied() else {
+                        continue;
+                    };
+                    match profile.sex {
+                        Sex::Female if mother_profile.is_none() => mother_profile = Some(profile),
+                        Sex::Male if father_profile.is_none() => father_profile = Some(profile),
+                        _ => {}
+                    }
+                    if mother_profile.is_some() && father_profile.is_some() {
+                        break;
+                    }
+                }
+                let Some(mother) = mother_profile.or(father_profile) else {
+                    continue;
+                };
+                let father = father_profile.or(mother_profile).unwrap_or(mother);
+
+                let hunger = needs_opt
+                    .map(|needs| needs.get(NeedType::Hunger) as f32)
+                    .unwrap_or(0.5)
+                    .clamp(0.0, 1.0);
+                let adversity = (stress.level as f32).clamp(0.0, 1.0);
+                let malnutrition = (1.0 - hunger).clamp(0.0, 1.0);
+                let inputs = [
+                    mother.load,
+                    mother.load,
+                    mother.scar_index,
+                    0.50,
+                    0.30,
+                    0.20,
+                    father.load,
+                    father.load,
+                    father.scar_index,
+                    0.60,
+                    0.25,
+                    0.15,
+                    0.30,
+                    0.40,
+                    0.10,
+                    adversity,
+                    mother.load,
+                    malnutrition,
+                    0.25,
+                    0.10,
+                    0.35,
+                    INTERGEN_MIN_LOAD,
+                    0.65,
+                    0.35,
+                ];
+                let out = body::intergen_child_epigenetic_step(&inputs);
+                let inherited_load = out[0].clamp(0.0, 1.0);
+                let current_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let next_load = (current_load * 0.4 + inherited_load * 0.6).clamp(0.0, 1.0);
+                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let next_level = ((stress.level as f32) * hpa_sensitivity).clamp(0.0, 1.0);
+                if (next_load - current_load).abs() < 1e-6 && (next_level - stress.level as f32).abs() < 1e-6 {
+                    continue;
+                }
+                child_updates.push((entity, next_load, next_level, stress.level as f32));
+            }
+        }
+
+        for (entity, next_load, next_level, previous_level) in child_updates {
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.allostatic_load = next_load as f64;
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                if (next_level - previous_level).abs() >= 1e-6 {
+                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                        entity_id: EntityId(entity.id() as u64),
+                        stress: next_level as f64,
+                    });
+                }
+            }
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5866,6 +6086,7 @@ mod tests {
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         FamilyRuntimeSystem,
         GatheringRuntimeSystem,
+        IntergenerationalRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
@@ -8862,6 +9083,155 @@ mod tests {
             .expect("female social should be queryable");
         assert_eq!(teen_social.spouse, None);
         assert_eq!(female_social.spouse, None);
+    }
+
+    #[test]
+    fn intergenerational_runtime_system_applies_parent_meaney_repair() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 63);
+        let mut resources = SimResources::new(calendar, map, 103);
+        let mut world = World::new();
+
+        let child = world.spawn((
+            Age {
+                stage: GrowthStage::Child,
+                ..Age::default()
+            },
+            Stress {
+                level: 0.30,
+                allostatic_load: 0.20,
+                ..Stress::default()
+            },
+            Social::default(),
+        ));
+        let parent = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                sex: Sex::Female,
+                ..Identity::default()
+            },
+            Needs::default(),
+            Stress {
+                level: 0.55,
+                allostatic_load: 0.80,
+                ..Stress::default()
+            },
+            Social {
+                children: vec![EntityId(child.id() as u64)],
+                ..Social::default()
+            },
+        ));
+
+        if let Ok(mut child_social) = world.get::<&mut Social>(child) {
+            child_social.parents = vec![EntityId(parent.id() as u64)];
+        }
+
+        let mut system = IntergenerationalRuntimeSystem::new(45, 240);
+        system.run(&mut world, &mut resources, 240);
+
+        let updated_parent = world
+            .get::<&Stress>(parent)
+            .expect("parent stress should be queryable");
+        assert!(updated_parent.allostatic_load < 0.80);
+        assert!(updated_parent.level <= 0.55);
+    }
+
+    #[test]
+    fn intergenerational_runtime_system_applies_child_transmission() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 67);
+        let mut resources = SimResources::new(calendar, map, 107);
+        let mut world = World::new();
+
+        let mother = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                sex: Sex::Female,
+                ..Identity::default()
+            },
+            Stress {
+                level: 0.70,
+                allostatic_load: 0.92,
+                ..Stress::default()
+            },
+            Memory {
+                trauma_scars: vec![TraumaScar {
+                    scar_id: "m".to_string(),
+                    acquired_tick: 0,
+                    severity: 0.7,
+                    reactivation_count: 0,
+                }],
+                ..Memory::default()
+            },
+            Social::default(),
+        ));
+        let father = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                sex: Sex::Male,
+                ..Identity::default()
+            },
+            Stress {
+                level: 0.65,
+                allostatic_load: 0.86,
+                ..Stress::default()
+            },
+            Memory {
+                trauma_scars: vec![TraumaScar {
+                    scar_id: "f".to_string(),
+                    acquired_tick: 0,
+                    severity: 0.6,
+                    reactivation_count: 0,
+                }],
+                ..Memory::default()
+            },
+            Social::default(),
+        ));
+        let mut child_needs = Needs::default();
+        child_needs.set(NeedType::Hunger, 0.30);
+        let child = world.spawn((
+            Age {
+                stage: GrowthStage::Child,
+                ..Age::default()
+            },
+            child_needs,
+            Stress {
+                level: 0.20,
+                allostatic_load: 0.10,
+                ..Stress::default()
+            },
+            Social {
+                parents: vec![EntityId(mother.id() as u64), EntityId(father.id() as u64)],
+                ..Social::default()
+            },
+        ));
+
+        if let Ok(mut mother_social) = world.get::<&mut Social>(mother) {
+            mother_social.children = vec![EntityId(child.id() as u64)];
+        }
+        if let Ok(mut father_social) = world.get::<&mut Social>(father) {
+            father_social.children = vec![EntityId(child.id() as u64)];
+        }
+
+        let mut system = IntergenerationalRuntimeSystem::new(45, 240);
+        system.run(&mut world, &mut resources, 240);
+
+        let updated_child = world
+            .get::<&Stress>(child)
+            .expect("child stress should be queryable");
+        assert!(updated_child.allostatic_load > 0.10);
+        assert!(updated_child.level >= 0.20);
     }
 
     #[test]
