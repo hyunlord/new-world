@@ -871,3 +871,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 65.22% (30/46)
 - Remaining (strict state-write basis): 32.61%
 - Details: [0105-building-effect-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0105-building-effect-runtime-active-write-port.md)
+
+### 0106 - owner transfer allowlist phase 24
+- Commit: `[rust-r0-206] Expand owner-ready allowlist with building-effect system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 67.39% (31/46)
+- Actual state-write coverage (strict): 67.39% (31/46)
+- Owner transfer coverage (`exec_owner=rust`): 67.39% (31/46)
+- Remaining (strict state-write basis): 32.61%
+- Details: [0106-owner-transfer-allowlist-phase24.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0106-owner-transfer-allowlist-phase24.md)
