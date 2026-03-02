@@ -855,3 +855,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 63.04% (29/46)
 - Remaining (strict state-write basis): 34.78%
 - Details: [0103-tension-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0103-tension-runtime-active-write-port.md)
+
+### 0104 - owner transfer allowlist phase 23
+- Commit: `[rust-r0-204] Expand owner-ready allowlist with tension system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 65.22% (30/46)
+- Actual state-write coverage (strict): 65.22% (30/46)
+- Owner transfer coverage (`exec_owner=rust`): 65.22% (30/46)
+- Remaining (strict state-write basis): 34.78%
+- Details: [0104-owner-transfer-allowlist-phase23.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0104-owner-transfer-allowlist-phase23.md)
