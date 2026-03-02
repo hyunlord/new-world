@@ -487,3 +487,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
 - Remaining (strict state-write basis): 86.96%
 - Details: [0057-reputation-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0057-reputation-runtime-active-write-port.md)
+
+### 0058 - social-event runtime active-write port
+- Commit: `[rust-r0-158] Port social-event runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 15.22% (7/46)
+- Actual state-write coverage (strict): 15.22% (7/46)
+- Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
+- Remaining (strict state-write basis): 84.78%
+- Details: [0058-social-event-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0058-social-event-runtime-active-write-port.md)

@@ -4,7 +4,10 @@ use sim_core::components::{
     Social, Stress, Values,
 };
 use sim_core::config;
-use sim_core::{ActionType, EmotionType, GrowthStage, HexacoAxis, NeedType, ValueType};
+use sim_core::{
+    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, NeedType, RelationType,
+    ValueType,
+};
 use sim_engine::{SimResources, SimSystem};
 
 use crate::body;
@@ -634,6 +637,169 @@ impl SimSystem for ReputationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for social-event interaction updates.
+///
+/// This performs active writes on `Social.edges` and `Social.social_capital`,
+/// replacing no-op baseline behavior with deterministic per-tick interaction updates.
+#[derive(Debug, Clone)]
+pub struct SocialEventRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl SocialEventRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn attachment_socialize_mult(personality_opt: Option<&Personality>) -> f32 {
+    let index = personality_opt
+        .map(|personality| match personality.attachment {
+            AttachmentType::Secure => 0,
+            AttachmentType::Anxious => 1,
+            AttachmentType::Avoidant => 2,
+            AttachmentType::Fearful => 3,
+        })
+        .unwrap_or(0);
+    config::ATTACHMENT_SOCIALIZE_MULT[index] as f32
+}
+
+#[inline]
+fn action_social_drive(action: ActionType) -> f32 {
+    match action {
+        ActionType::Socialize | ActionType::VisitPartner => 1.00,
+        ActionType::Idle | ActionType::Rest => 0.45,
+        ActionType::Build
+        | ActionType::Craft
+        | ActionType::Forage
+        | ActionType::Hunt
+        | ActionType::Fish
+        | ActionType::GatherWood
+        | ActionType::GatherStone
+        | ActionType::GatherHerbs => 0.60,
+        ActionType::Fight | ActionType::Flee | ActionType::MentalBreak => 0.15,
+        _ => 0.25,
+    }
+}
+
+impl SimSystem for SocialEventRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "social_event_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(
+            &mut Social,
+            Option<&Personality>,
+            Option<&Behavior>,
+            Option<&Needs>,
+            Option<&Stress>,
+        )>();
+        for (_, (social, personality_opt, behavior_opt, needs_opt, stress_opt)) in &mut query {
+            let extraversion = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let agreeableness = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::A) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let social_need = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let action = behavior_opt
+                .map(|behavior| behavior.current_action)
+                .unwrap_or(ActionType::Idle);
+
+            let social_drive = action_social_drive(action);
+            let attach_mult = body::social_attachment_affinity_multiplier(
+                attachment_socialize_mult(personality_opt),
+                1.0,
+            );
+            let compatibility =
+                (extraversion * 0.45 + agreeableness * 0.35 + social_need * 0.20).clamp(0.0, 1.0);
+
+            for edge in &mut social.edges {
+                let romantic_interest = if matches!(
+                    edge.relation_type,
+                    RelationType::Intimate | RelationType::Spouse
+                ) {
+                    80.0
+                } else {
+                    20.0
+                };
+                let proposal_prob =
+                    body::social_proposal_accept_prob(romantic_interest, compatibility);
+                let interaction = (social_drive * 0.5 + proposal_prob * 0.5).clamp(0.0, 1.0);
+
+                let mut affinity_delta = ((interaction - 0.35) * 6.0
+                    - stress_level * 1.5
+                    + (social_need - 0.5) * 1.2)
+                    * attach_mult;
+                if stress_level > 0.7 && agreeableness < 0.4 {
+                    affinity_delta -= 1.5;
+                }
+                let trust_delta =
+                    (interaction * 0.04 + agreeableness * 0.02 - stress_level * 0.03).clamp(-0.06, 0.06);
+                let familiarity_delta = (0.01 + interaction * 0.02).clamp(0.0, 0.04);
+
+                edge.affinity = ((edge.affinity as f32 + affinity_delta).clamp(0.0, 100.0)) as f64;
+                edge.trust = ((edge.trust as f32 + trust_delta).clamp(0.0, 1.0)) as f64;
+                edge.familiarity =
+                    ((edge.familiarity as f32 + familiarity_delta).clamp(0.0, 1.0)) as f64;
+                edge.last_interaction_tick = tick;
+                edge.update_type();
+            }
+
+            let mut strong_count = 0.0_f32;
+            let mut weak_count = 0.0_f32;
+            let mut bridge_count = 0.0_f32;
+            for edge in &social.edges {
+                if edge.affinity >= config::NETWORK_TIE_STRONG_MIN {
+                    strong_count += 1.0;
+                } else if edge.affinity >= config::NETWORK_TIE_WEAK_MIN {
+                    weak_count += 1.0;
+                }
+                if edge.is_bridge {
+                    bridge_count += 1.0;
+                }
+            }
+            let rep_score = ((social.reputation_local as f32 + social.reputation_regional as f32) * 0.5)
+                .clamp(0.0, 1.0);
+            social.social_capital = body::network_social_capital_norm(
+                strong_count,
+                weak_count,
+                bridge_count,
+                rep_score,
+                config::NETWORK_SOCIAL_CAP_STRONG_W as f32,
+                config::NETWORK_SOCIAL_CAP_WEAK_W as f32,
+                config::NETWORK_SOCIAL_CAP_BRIDGE_W as f32,
+                config::NETWORK_SOCIAL_CAP_REP_W as f32,
+                config::NETWORK_SOCIAL_CAP_NORM_DIV as f32,
+            )
+            .clamp(0.0, 1.0) as f64;
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -805,7 +971,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -817,7 +983,7 @@ mod tests {
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, NeedType,
-        ResourceType, SettlementId, ValueType, WorldMap,
+        RelationType, ResourceType, SettlementId, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -1042,6 +1208,49 @@ mod tests {
             updated.reputation_tags.iter().any(|tag| tag == "suspect" || tag == "outcast"),
             "negative reputation tier tag should be assigned"
         );
+    }
+
+    #[test]
+    fn social_event_runtime_system_updates_edges_and_social_capital() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut social = Social::default();
+        social.reputation_local = 0.55;
+        social.reputation_regional = 0.50;
+        let mut edge = sim_core::components::RelationshipEdge::new(EntityId(2));
+        edge.affinity = 35.0;
+        edge.trust = 0.35;
+        edge.familiarity = 0.20;
+        edge.relation_type = RelationType::Friend;
+        edge.is_bridge = true;
+        social.edges.push(edge);
+
+        let personality = Personality::default();
+        let behavior = Behavior {
+            current_action: ActionType::Socialize,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.80);
+        let stress = Stress {
+            level: 0.20,
+            ..Stress::default()
+        };
+
+        let entity = world.spawn((social, personality, behavior, needs, stress));
+        let mut system = SocialEventRuntimeSystem::new(37, 30);
+        system.run(&mut world, &mut resources, 90);
+
+        let updated = world
+            .get::<&Social>(entity)
+            .expect("updated social component should be queryable");
+        assert_eq!(updated.edges.len(), 1);
+        assert!(updated.edges[0].affinity > 35.0);
+        assert!(updated.edges[0].trust >= 0.35);
+        assert!(updated.edges[0].familiarity > 0.20);
+        assert_eq!(updated.edges[0].last_interaction_tick, 90);
+        assert!((0.0..=1.0).contains(&updated.social_capital));
     }
 
     #[test]
