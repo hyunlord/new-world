@@ -4068,6 +4068,120 @@ impl SimSystem for ConstructionRuntimeSystem {
     }
 }
 
+const FAMILY_PAIR_BASE_PROB: f32 = 0.45;
+
+/// Rust runtime system for partner coupling and family formation.
+///
+/// This performs active writes on `Social.spouse` for single adult/elder
+/// entities within the same settlement and emits `FamilyFormed`.
+#[derive(Debug, Clone)]
+pub struct FamilyRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl FamilyRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for FamilyRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "family_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut candidates: HashMap<SettlementId, (Vec<Entity>, Vec<Entity>)> = HashMap::new();
+        {
+            let mut query = world.query::<(&Age, &Identity, &Social)>();
+            for (entity, (age, identity, social)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if social.spouse.is_some() {
+                    continue;
+                }
+                let Some(settlement_id) = identity.settlement_id else {
+                    continue;
+                };
+                let entry = candidates
+                    .entry(settlement_id)
+                    .or_insert_with(|| (Vec::new(), Vec::new()));
+                match identity.sex {
+                    Sex::Male => entry.0.push(entity),
+                    Sex::Female => entry.1.push(entity),
+                }
+            }
+        }
+
+        let mut settlement_ids: Vec<SettlementId> = candidates.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+        for settlement_id in settlement_ids {
+            let Some((males, females)) = candidates.get_mut(&settlement_id) else {
+                continue;
+            };
+            males.sort_by_key(|entity| entity.id());
+            females.sort_by_key(|entity| entity.id());
+            let pair_count = males.len().min(females.len());
+            for pair_idx in 0..pair_count {
+                if resources.rng.gen_range(0.0..1.0) > FAMILY_PAIR_BASE_PROB {
+                    continue;
+                }
+                let male_entity = males[pair_idx];
+                let female_entity = females[pair_idx];
+
+                let male_id = EntityId(male_entity.id() as u64);
+                let female_id = EntityId(female_entity.id() as u64);
+
+                let male_available = world
+                    .query_one::<&Social>(male_entity)
+                    .ok()
+                    .and_then(|mut query| query.get().map(|social| social.spouse.is_none()))
+                    .unwrap_or(false);
+                let female_available = world
+                    .query_one::<&Social>(female_entity)
+                    .ok()
+                    .and_then(|mut query| query.get().map(|social| social.spouse.is_none()))
+                    .unwrap_or(false);
+                if !male_available || !female_available {
+                    continue;
+                }
+
+                if let Ok(mut query) = world.query_one::<&mut Social>(male_entity) {
+                    if let Some(social) = query.get() {
+                        social.spouse = Some(female_id);
+                    }
+                }
+                if let Ok(mut query) = world.query_one::<&mut Social>(female_entity) {
+                    if let Some(social) = query.get() {
+                        social.spouse = Some(male_id);
+                    }
+                }
+
+                resources.event_bus.emit(sim_engine::GameEvent::FamilyFormed {
+                    entity_a: male_id,
+                    entity_b: female_id,
+                });
+            }
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5750,6 +5864,7 @@ mod tests {
         ChildcareRuntimeSystem, ContagionRuntimeSystem,
         ConstructionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
+        FamilyRuntimeSystem,
         GatheringRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
@@ -8623,6 +8738,130 @@ mod tests {
         assert!((building_after.construction_progress - 0.0).abs() < 1e-6);
         assert!(!building_after.is_complete);
         assert_eq!(resources.event_bus.pending_count(), 0);
+    }
+
+    #[test]
+    fn family_runtime_system_pairs_single_adults_in_same_settlement() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 59);
+        let mut resources = SimResources::new(calendar, map, 97);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(95);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "fam".to_string(), 2, 2, 0));
+
+        let male = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                sex: Sex::Male,
+                ..Identity::default()
+            },
+            Social::default(),
+        ));
+        let female = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                sex: Sex::Female,
+                ..Identity::default()
+            },
+            Social::default(),
+        ));
+        resources
+            .settlements
+            .get_mut(&settlement_id)
+            .expect("settlement should exist")
+            .members = vec![EntityId(male.id() as u64), EntityId(female.id() as u64)];
+
+        let mut system = FamilyRuntimeSystem::new(52, 365);
+        for _ in 0..64 {
+            system.run(&mut world, &mut resources, 365);
+            let male_spouse = world
+                .get::<&Social>(male)
+                .expect("male social should be queryable")
+                .spouse;
+            if male_spouse.is_some() {
+                break;
+            }
+        }
+
+        let male_social = world
+            .get::<&Social>(male)
+            .expect("male social should be queryable");
+        let female_social = world
+            .get::<&Social>(female)
+            .expect("female social should be queryable");
+        assert_eq!(male_social.spouse, Some(EntityId(female.id() as u64)));
+        assert_eq!(female_social.spouse, Some(EntityId(male.id() as u64)));
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn family_runtime_system_skips_non_adult_entities() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 61);
+        let mut resources = SimResources::new(calendar, map, 101);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(96);
+        resources
+            .settlements
+            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "fam2".to_string(), 3, 3, 0));
+
+        let teen_male = world.spawn((
+            Age {
+                stage: GrowthStage::Teen,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                sex: Sex::Male,
+                ..Identity::default()
+            },
+            Social::default(),
+        ));
+        let adult_female = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Identity {
+                settlement_id: Some(settlement_id),
+                sex: Sex::Female,
+                ..Identity::default()
+            },
+            Social::default(),
+        ));
+        resources
+            .settlements
+            .get_mut(&settlement_id)
+            .expect("settlement should exist")
+            .members = vec![EntityId(teen_male.id() as u64), EntityId(adult_female.id() as u64)];
+
+        let mut system = FamilyRuntimeSystem::new(52, 365);
+        for _ in 0..64 {
+            system.run(&mut world, &mut resources, 365);
+        }
+
+        let teen_social = world
+            .get::<&Social>(teen_male)
+            .expect("teen social should be queryable");
+        let female_social = world
+            .get::<&Social>(adult_female)
+            .expect("female social should be queryable");
+        assert_eq!(teen_social.spouse, None);
+        assert_eq!(female_social.spouse, None);
     }
 
     #[test]
