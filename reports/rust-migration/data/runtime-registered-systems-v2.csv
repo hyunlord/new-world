@@ -31,7 +31,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 30,network_system,NetworkSystemScript,res://scripts/systems/social/network_system.gd,network_system,rust,yes,simbridge_pattern_scan_v1,yes
 31,migration_system,MigrationSystem,res://scripts/systems/world/migration_system.gd,migration_system,rust,yes,simbridge_pattern_scan_v1,yes
 32,tech_discovery_system,TechDiscoverySystemScript,res://scripts/systems/world/tech_discovery_system.gd,tech_discovery_system,gdscript,yes,simbridge_pattern_scan_v1,no
-33,tech_maintenance_system,TechMaintenanceSystemScript,res://scripts/systems/world/tech_maintenance_system.gd,tech_maintenance_system,gdscript,yes,simbridge_pattern_scan_v1,no
+33,tech_maintenance_system,TechMaintenanceSystemScript,res://scripts/systems/world/tech_maintenance_system.gd,tech_maintenance_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 34,tech_propagation_system,TechPropagationSystemScript,res://scripts/systems/world/tech_propagation_system.gd,tech_propagation_system,gdscript,yes,simbridge_pattern_scan_v1,no
 35,tension_system,TensionSystemScript,res://scripts/systems/world/tension_system.gd,tension_system,rust,yes,simbridge_pattern_scan_v1,yes
 36,tech_utilization_system,TechUtilizationSystemScript,res://scripts/systems/world/tech_utilization_system.gd,tech_utilization_system,rust,yes,simbridge_pattern_scan_v1,yes

@@ -3369,6 +3369,121 @@ impl SimSystem for TechUtilizationRuntimeSystem {
     }
 }
 
+const TECH_MAINT_MIN_PRACTITIONERS: usize = 3;
+const TECH_MAINT_RECOVERY_POP: usize = 6;
+const TECH_MAINT_LONG_RECOVERY_POP: usize = 9;
+
+/// Rust runtime system for technology maintenance state transitions.
+///
+/// This performs active writes on `Settlement.tech_states` and emits
+/// rediscovery events when forgotten tech becomes known again.
+#[derive(Debug, Clone)]
+pub struct TechMaintenanceRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechMaintenanceRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechMaintenanceRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_maintenance_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let population = resources
+                .settlements
+                .get(&settlement_id)
+                .map(|settlement| settlement.members.len())
+                .unwrap_or(0);
+            let mut rediscovered: Vec<String> = Vec::new();
+
+            {
+                let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                    continue;
+                };
+                let mut tech_ids: Vec<String> = settlement.tech_states.keys().cloned().collect();
+                tech_ids.sort();
+
+                for tech_id in tech_ids {
+                    let Some(current_state) = settlement.tech_states.get(&tech_id).copied() else {
+                        continue;
+                    };
+                    let next_state = match current_state {
+                        TechState::KnownStable => {
+                            if population < TECH_MAINT_MIN_PRACTITIONERS {
+                                TechState::KnownLow
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::KnownLow => {
+                            if population < (TECH_MAINT_MIN_PRACTITIONERS / 2).max(1) {
+                                TechState::ForgottenRecent
+                            } else if population >= TECH_MAINT_RECOVERY_POP {
+                                TechState::KnownStable
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::ForgottenRecent => {
+                            if population >= TECH_MAINT_RECOVERY_POP {
+                                rediscovered.push(tech_id.clone());
+                                TechState::KnownLow
+                            } else if population == 0 {
+                                TechState::ForgottenLong
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::ForgottenLong => {
+                            if population >= TECH_MAINT_LONG_RECOVERY_POP {
+                                rediscovered.push(tech_id.clone());
+                                TechState::KnownLow
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::Unknown => current_state,
+                    };
+
+                    if next_state != current_state {
+                        settlement.tech_states.insert(tech_id, next_state);
+                    }
+                }
+            }
+
+            for tech_id in rediscovered {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id,
+                        tech_id,
+                    });
+            }
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5056,6 +5171,7 @@ mod tests {
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TechMaintenanceRuntimeSystem,
         TechUtilizationRuntimeSystem,
         TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -7402,6 +7518,82 @@ mod tests {
             .get(&settlement_id)
             .expect("settlement should exist");
         assert_eq!(settlement_after.current_era, "bronze_age");
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn tech_maintenance_runtime_system_transitions_states_by_population() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 19);
+        let mut resources = SimResources::new(calendar, map, 21);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(81);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "theta".to_string(), 3, 3, 0);
+        settlement.members = vec![EntityId(1)];
+        settlement
+            .tech_states
+            .insert("pottery".to_string(), TechState::KnownStable);
+        settlement
+            .tech_states
+            .insert("fishing".to_string(), TechState::KnownLow);
+        resources.settlements.insert(settlement_id, settlement);
+
+        let mut system = TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS,
+        );
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(
+            settlement_after.tech_states.get("pottery"),
+            Some(&TechState::KnownLow)
+        );
+        assert_eq!(
+            settlement_after.tech_states.get("fishing"),
+            Some(&TechState::KnownLow)
+        );
+    }
+
+    #[test]
+    fn tech_maintenance_runtime_system_rediscovery_emits_event() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 23);
+        let mut resources = SimResources::new(calendar, map, 31);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(82);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "lambda".to_string(), 8, 8, 0);
+        settlement.members = (0..6_u64)
+            .map(EntityId)
+            .collect();
+        settlement
+            .tech_states
+            .insert("weaving".to_string(), TechState::ForgottenRecent);
+        resources.settlements.insert(settlement_id, settlement);
+
+        let mut system = TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS,
+        );
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(
+            settlement_after.tech_states.get("weaving"),
+            Some(&TechState::KnownLow)
+        );
         assert!(resources.event_bus.pending_count() >= 1);
     }
 
