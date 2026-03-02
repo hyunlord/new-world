@@ -41,3 +41,9 @@
 - Completion after commit: 68%
 - Remaining after commit: 32%
 - Details: [0006-phase-b-system-registry-bridge.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0006-phase-b-system-registry-bridge.md)
+
+### 0007 - Pathfinding bridge uses domain compute mode
+- Commit: `[rust-r0-107] Route pathfinding bridge via domain compute mode`
+- Completion after commit: 72%
+- Remaining after commit: 28%
+- Details: [0007-phase-f-pathfinding-domain-route.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0007-phase-f-pathfinding-domain-route.md)

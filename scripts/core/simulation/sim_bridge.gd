@@ -2075,9 +2075,12 @@ func _prefer_gpu() -> bool:
 	var backend: Object = Engine.get_singleton("ComputeBackend")
 	if backend == null:
 		return false
-	if not backend.has_method("resolve_mode"):
-		return false
-	if str(backend.call("resolve_mode")) != "gpu":
+	var resolved_mode: String = ""
+	if backend.has_method("resolve_mode_for_domain"):
+		resolved_mode = str(backend.call("resolve_mode_for_domain", "pathfinding"))
+	elif backend.has_method("resolve_mode"):
+		resolved_mode = str(backend.call("resolve_mode"))
+	if resolved_mode != "gpu":
 		return false
 
 	return _resolve_gpu_pathfinding_capability(bridge)
@@ -2089,10 +2092,11 @@ func _resolve_desired_pathfinding_backend_mode() -> String:
 	var backend: Object = Engine.get_singleton("ComputeBackend")
 	if backend == null:
 		return "auto"
-	if not backend.has_method("get_mode"):
-		return "auto"
-
-	var mode: String = str(backend.call("get_mode"))
+	var mode: String = "auto"
+	if backend.has_method("get_mode_for_domain"):
+		mode = str(backend.call("get_mode_for_domain", "pathfinding"))
+	elif backend.has_method("get_mode"):
+		mode = str(backend.call("get_mode"))
 	if mode == "cpu":
 		return "cpu"
 	if mode == "gpu_force":
