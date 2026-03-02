@@ -648,15 +648,11 @@ fn resolve_backend_mode(mode: u8) -> &'static str {
 const EVENT_TYPE_ID_TICK_COMPLETED: i32 = 1;
 const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
+const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
-const RUNTIME_COMPUTE_DOMAINS: [&str; 5] = [
-    "pathfinding",
-    "needs",
-    "stress",
-    "emotion",
-    "orchestration",
-];
+const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
+    ["pathfinding", "needs", "stress", "emotion", "orchestration"];
 const WS2_MAGIC: [u8; 4] = *b"WS2\0";
 const WS2_VERSION: u16 = 1;
 const WS2_HEADER_SIZE: usize = 16;
@@ -686,6 +682,7 @@ struct RuntimeState {
     ticks_per_second: u32,
     max_ticks_per_frame: u32,
     speed_index: i32,
+    paused: bool,
     captured_events: Arc<Mutex<Vec<GameEvent>>>,
     registered_systems: Vec<RuntimeSystemEntry>,
     compute_domain_modes: HashMap<String, String>,
@@ -725,6 +722,7 @@ impl RuntimeState {
             ticks_per_second,
             max_ticks_per_frame,
             speed_index: 0,
+            paused: false,
             captured_events,
             registered_systems: Vec::new(),
             compute_domain_modes: runtime_default_compute_domain_modes(),
@@ -753,6 +751,7 @@ fn game_event_type_id(event: &GameEvent) -> i32 {
         GameEvent::TickCompleted { .. } => EVENT_TYPE_ID_TICK_COMPLETED,
         GameEvent::SimulationPaused => EVENT_TYPE_ID_SIMULATION_PAUSED,
         GameEvent::SimulationResumed => EVENT_TYPE_ID_SIMULATION_RESUMED,
+        GameEvent::SpeedChanged { .. } => EVENT_TYPE_ID_SPEED_CHANGED,
         _ => EVENT_TYPE_ID_GENERIC,
     }
 }
@@ -776,6 +775,9 @@ fn game_event_payload(event: &GameEvent) -> VarDictionary {
         }
         GameEvent::EntitySpawned { entity_id } => {
             payload.set("entity_id", entity_id.0 as i64);
+        }
+        GameEvent::SpeedChanged { speed_index } => {
+            payload.set("speed_index", *speed_index as i64);
         }
         _ => {}
     }
@@ -899,7 +901,33 @@ impl WorldSimRuntime {
         };
 
         if speed_index >= 0 {
-            state.speed_index = clamp_speed_index(speed_index);
+            let clamped_speed = clamp_speed_index(speed_index);
+            if clamped_speed != state.speed_index {
+                state.speed_index = clamped_speed;
+                state
+                    .engine
+                    .resources_mut()
+                    .event_bus
+                    .emit(GameEvent::SpeedChanged {
+                        speed_index: clamped_speed,
+                    });
+            }
+        }
+        if paused != state.paused {
+            state.paused = paused;
+            if paused {
+                state
+                    .engine
+                    .resources_mut()
+                    .event_bus
+                    .emit(GameEvent::SimulationPaused);
+            } else {
+                state
+                    .engine
+                    .resources_mut()
+                    .event_bus
+                    .emit(GameEvent::SimulationResumed);
+            }
         }
         let mut ticks_processed: u32 = 0;
 
@@ -4565,16 +4593,14 @@ mod tests {
         PATHFIND_BACKEND_GPU,
     };
     use super::{
-        decode_ws2_blob,
-        dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
-        dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, has_gpu_pathfind_backend,
-        parse_pathfind_backend, pathfind_backend_dispatch_counts, pathfind_from_flat,
-        pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
-        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
-        pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
+        decode_ws2_blob, dispatch_pathfind_grid_batch_vec2_bytes,
+        dispatch_pathfind_grid_batch_xy_bytes, dispatch_pathfind_grid_bytes, encode_ws2_blob,
+        get_pathfind_backend_mode, has_gpu_pathfind_backend, parse_pathfind_backend,
+        pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
+        pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
+        pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
         resolve_pathfind_backend_mode, set_pathfind_backend_mode, PathfindError, PathfindInput,
-        encode_ws2_blob,
     };
     use godot::prelude::Vector2;
     use sim_engine::EngineSnapshot;

@@ -156,6 +156,8 @@ func _process_tick() -> void:
 ## Toggle pause state
 func toggle_pause() -> void:
 	is_paused = not is_paused
+	if _use_rust_primary():
+		return
 	SimulationBus.pause_changed.emit(is_paused)
 
 
@@ -163,6 +165,8 @@ func toggle_pause() -> void:
 func set_speed(index: int) -> void:
 	speed_index = clampi(index, 0, GameConfig.SPEED_OPTIONS.size() - 1)
 	_queue_runtime_command(StringName("set_speed_index"), {"speed_index": speed_index})
+	if _use_rust_primary():
+		return
 	SimulationBus.speed_changed.emit(speed_index)
 
 

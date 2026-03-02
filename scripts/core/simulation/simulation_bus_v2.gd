@@ -14,6 +14,7 @@ signal ui_command(command_id: StringName, payload: Dictionary)
 const EVENT_TICK_COMPLETED: int = 1
 const EVENT_SIMULATION_PAUSED: int = 2
 const EVENT_SIMULATION_RESUMED: int = 3
+const EVENT_SPEED_CHANGED: int = 4
 const EVENT_UI_COMMAND: int = 1000
 
 var _pending_runtime_commands: Array[Dictionary] = []

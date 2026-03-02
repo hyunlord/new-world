@@ -170,6 +170,7 @@ signal tech_spread_blocked(source_settlement: int, target_settlement: int, tech_
 const _EVENT_TICK_COMPLETED: int = 1
 const _EVENT_SIMULATION_PAUSED: int = 2
 const _EVENT_SIMULATION_RESUMED: int = 3
+const _EVENT_SPEED_CHANGED: int = 4
 
 
 func _ready() -> void:
@@ -191,6 +192,10 @@ func _on_v2_event_emitted(event_type_id: int, payload: Dictionary, tick: int) ->
 			pause_changed.emit(true)
 		_EVENT_SIMULATION_RESUMED:
 			pause_changed.emit(false)
+		_EVENT_SPEED_CHANGED:
+			var new_speed_index: int = int(payload.get("speed_index", -1))
+			if new_speed_index >= 0:
+				speed_changed.emit(new_speed_index)
 		_:
 			simulation_event.emit({
 				"type": "runtime_v2_event",

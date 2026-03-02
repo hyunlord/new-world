@@ -53,3 +53,9 @@
 - Completion after commit: 76%
 - Remaining after commit: 24%
 - Details: [0008-phase-f-runtime-compute-sync.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0008-phase-f-runtime-compute-sync.md)
+
+### 0009 - Runtime state events on Bus v2
+- Commit: `[rust-r0-109] Route runtime state changes through Bus v2 events`
+- Completion after commit: 80%
+- Remaining after commit: 20%
+- Details: [0009-phase-c-runtime-state-events.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0009-phase-c-runtime-state-events.md)

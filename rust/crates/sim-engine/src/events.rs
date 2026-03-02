@@ -3,7 +3,7 @@
 /// Events are collected during each tick, then drained and published
 /// via EventBus at the end of the tick. This avoids borrow issues.
 use serde::{Deserialize, Serialize};
-use sim_core::ids::{EntityId, SettlementId, BuildingId};
+use sim_core::ids::{BuildingId, EntityId, SettlementId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum GameEvent {
@@ -25,6 +25,9 @@ pub enum GameEvent {
     },
     SimulationPaused,
     SimulationResumed,
+    SpeedChanged {
+        speed_index: i32,
+    },
 
     // ── Needs ─────────────────────────────────────────────────────────────────
     NeedChanged {
@@ -121,29 +124,30 @@ impl GameEvent {
     /// Returns a static string name for the event (for logging/metrics).
     pub fn name(&self) -> &'static str {
         match self {
-            GameEvent::EntitySpawned { .. }       => "entity_spawned",
-            GameEvent::EntityDied { .. }           => "entity_died",
-            GameEvent::EntityRemoved { .. }        => "entity_removed",
-            GameEvent::TickCompleted { .. }        => "tick_completed",
-            GameEvent::SimulationPaused            => "simulation_paused",
-            GameEvent::SimulationResumed           => "simulation_resumed",
-            GameEvent::NeedChanged { .. }          => "need_changed",
-            GameEvent::NeedCritical { .. }         => "need_critical",
-            GameEvent::EmotionChanged { .. }       => "emotion_changed",
-            GameEvent::StressChanged { .. }        => "stress_changed",
+            GameEvent::EntitySpawned { .. } => "entity_spawned",
+            GameEvent::EntityDied { .. } => "entity_died",
+            GameEvent::EntityRemoved { .. } => "entity_removed",
+            GameEvent::TickCompleted { .. } => "tick_completed",
+            GameEvent::SimulationPaused => "simulation_paused",
+            GameEvent::SimulationResumed => "simulation_resumed",
+            GameEvent::SpeedChanged { .. } => "speed_changed",
+            GameEvent::NeedChanged { .. } => "need_changed",
+            GameEvent::NeedCritical { .. } => "need_critical",
+            GameEvent::EmotionChanged { .. } => "emotion_changed",
+            GameEvent::StressChanged { .. } => "stress_changed",
             GameEvent::MentalBreakTriggered { .. } => "mental_break_triggered",
-            GameEvent::TraumaRecorded { .. }       => "trauma_recorded",
-            GameEvent::RelationshipChanged { .. }  => "relationship_changed",
-            GameEvent::SocialEventOccurred { .. }  => "social_event_occurred",
-            GameEvent::JobAssigned { .. }          => "job_assigned",
-            GameEvent::BuildingConstructed { .. }  => "building_constructed",
-            GameEvent::ResourceGathered { .. }     => "resource_gathered",
-            GameEvent::SettlementFounded { .. }    => "settlement_founded",
-            GameEvent::MigrationOccurred { .. }    => "migration_occurred",
-            GameEvent::BirthOccurred { .. }        => "birth_occurred",
-            GameEvent::FamilyFormed { .. }         => "family_formed",
-            GameEvent::TechDiscovered { .. }       => "tech_discovered",
-            GameEvent::EraAdvanced { .. }          => "era_advanced",
+            GameEvent::TraumaRecorded { .. } => "trauma_recorded",
+            GameEvent::RelationshipChanged { .. } => "relationship_changed",
+            GameEvent::SocialEventOccurred { .. } => "social_event_occurred",
+            GameEvent::JobAssigned { .. } => "job_assigned",
+            GameEvent::BuildingConstructed { .. } => "building_constructed",
+            GameEvent::ResourceGathered { .. } => "resource_gathered",
+            GameEvent::SettlementFounded { .. } => "settlement_founded",
+            GameEvent::MigrationOccurred { .. } => "migration_occurred",
+            GameEvent::BirthOccurred { .. } => "birth_occurred",
+            GameEvent::FamilyFormed { .. } => "family_formed",
+            GameEvent::TechDiscovered { .. } => "tech_discovered",
+            GameEvent::EraAdvanced { .. } => "era_advanced",
         }
     }
 }
@@ -159,8 +163,16 @@ mod tests {
     }
 
     #[test]
+    fn speed_changed_name_is_stable() {
+        let e = GameEvent::SpeedChanged { speed_index: 3 };
+        assert_eq!(e.name(), "speed_changed");
+    }
+
+    #[test]
     fn event_is_cloneable() {
-        let e = GameEvent::EntitySpawned { entity_id: EntityId(1) };
+        let e = GameEvent::EntitySpawned {
+            entity_id: EntityId(1),
+        };
         let _ = e.clone();
     }
 }
