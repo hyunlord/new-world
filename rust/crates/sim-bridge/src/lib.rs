@@ -699,6 +699,7 @@ struct RuntimeSystemEntry {
     priority: i32,
     tick_interval: i32,
     active: bool,
+    registration_index: i32,
 }
 
 impl RuntimeState {
@@ -1176,6 +1177,7 @@ impl WorldSimRuntime {
             dict.set("priority", entry.priority);
             dict.set("tick_interval", entry.tick_interval);
             dict.set("active", entry.active);
+            dict.set("registration_index", entry.registration_index);
             out.push(&dict);
         }
         out
@@ -1242,6 +1244,8 @@ impl WorldSimRuntime {
                 let priority = dict_get_i32(&payload, "priority").unwrap_or(100);
                 let tick_interval = dict_get_i32(&payload, "tick_interval").unwrap_or(1);
                 let active = dict_get_bool(&payload, "active").unwrap_or(true);
+                let registration_index =
+                    dict_get_i32(&payload, "registration_index").unwrap_or(i32::MAX);
                 if let Some(existing) = state
                     .registered_systems
                     .iter_mut()
@@ -1250,17 +1254,24 @@ impl WorldSimRuntime {
                     existing.priority = priority;
                     existing.tick_interval = tick_interval;
                     existing.active = active;
+                    existing.registration_index = registration_index;
                 } else {
                     state.registered_systems.push(RuntimeSystemEntry {
                         name,
                         priority,
                         tick_interval,
                         active,
+                        registration_index,
                     });
                 }
                 state
                     .registered_systems
-                    .sort_by(|a, b| a.priority.cmp(&b.priority));
+                    .sort_by(|a, b| {
+                        a.priority
+                            .cmp(&b.priority)
+                            .then(a.registration_index.cmp(&b.registration_index))
+                            .then(a.name.cmp(&b.name))
+                    });
                 continue;
             }
             if command_id == "set_compute_domain_mode" {

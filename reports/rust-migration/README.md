@@ -119,3 +119,9 @@
 - Completion after commit: 100%
 - Remaining after commit: 0%
 - Details: [0019-headless-gdscript-parse-stabilization.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0019-headless-gdscript-parse-stabilization.md)
+
+### 0020 - Runtime registry order determinism
+- Commit: `[rust-r0-120] Make runtime registry ordering deterministic`
+- Completion after commit: 100%
+- Remaining after commit: 0%
+- Details: [0020-registry-order-determinism.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0020-registry-order-determinism.md)

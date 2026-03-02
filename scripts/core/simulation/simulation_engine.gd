@@ -34,7 +34,7 @@ func init_with_seed(seed_value: int) -> void:
 
 ## Register a simulation system (sorted by priority)
 func register_system(system: RefCounted) -> void:
-	var system_payload: Dictionary = _build_runtime_system_payload(system)
+	var system_payload: Dictionary = _build_runtime_system_payload(system, _registered_system_count)
 	_registered_system_count += 1
 	_registered_system_payloads.append(system_payload)
 	if _rust_runtime_available:
@@ -351,7 +351,7 @@ func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void
 	bus_v2.call("queue_runtime_command", command_id, payload)
 
 
-func _build_runtime_system_payload(system: RefCounted) -> Dictionary:
+func _build_runtime_system_payload(system: RefCounted, registration_index: int) -> Dictionary:
 	var payload: Dictionary = {}
 	var script_name: String = ""
 	var script_ref: Variant = system.get_script()
@@ -363,6 +363,7 @@ func _build_runtime_system_payload(system: RefCounted) -> Dictionary:
 	payload["priority"] = int(system.get("priority"))
 	payload["tick_interval"] = int(system.get("tick_interval"))
 	payload["active"] = bool(system.get("is_active"))
+	payload["registration_index"] = registration_index
 	return payload
 
 
@@ -384,7 +385,13 @@ func _try_shadow_auto_cutover() -> void:
 
 func _expected_runtime_registry_names() -> PackedStringArray:
 	var sorted_payloads: Array = _registered_system_payloads.duplicate(true)
-	sorted_payloads.sort_custom(func(a, b): return int(a.get("priority", 100)) < int(b.get("priority", 100)))
+	sorted_payloads.sort_custom(func(a, b):
+		var a_priority: int = int(a.get("priority", 100))
+		var b_priority: int = int(b.get("priority", 100))
+		if a_priority == b_priority:
+			return int(a.get("registration_index", 0)) < int(b.get("registration_index", 0))
+		return a_priority < b_priority
+	)
 	var names: PackedStringArray = PackedStringArray()
 	for i in range(sorted_payloads.size()):
 		var payload_raw: Variant = sorted_payloads[i]
