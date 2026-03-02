@@ -60,6 +60,7 @@ var _accumulator: float = 0.0
 var _systems: Array = []
 var _seed: int = 0
 var _runtime_mode: String = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
+var _runtime_mode_override: String = ""
 var _rust_runtime_initialized: bool = false
 var _rust_runtime_available: bool = false
 var _shadow_mismatch_count: int = 0
@@ -82,6 +83,22 @@ func init_with_seed(seed_value: int) -> void:
 	_system_key_by_instance_id.clear()
 	_runtime_rust_registered_keys.clear()
 	_init_rust_runtime()
+
+
+## Sets an optional runtime mode override used during runtime initialization.
+## Supported values: `gdscript`, `rust_shadow`, `rust_primary`.
+func set_runtime_mode_override(mode: String) -> void:
+	var normalized: String = mode.strip_edges()
+	if normalized.is_empty():
+		_runtime_mode_override = ""
+		return
+	if not _is_supported_runtime_mode(normalized):
+		push_warning(
+			"[SimulationEngine] Unsupported runtime mode override '%s'. Keeping current override." %
+			normalized
+		)
+		return
+	_runtime_mode_override = normalized
 
 
 ## Register a simulation system (sorted by priority)
@@ -344,7 +361,7 @@ func advance_ticks(n: int) -> void:
 
 
 func _init_rust_runtime() -> void:
-	_runtime_mode = str(GameConfig.SIM_RUNTIME_MODE)
+	_runtime_mode = _resolve_runtime_mode()
 	_rust_runtime_initialized = false
 	_rust_runtime_available = false
 	_shadow_mismatch_count = 0
@@ -370,15 +387,15 @@ func _init_rust_runtime() -> void:
 			sim_bridge.call("runtime_clear_registry")
 		if _use_rust_shadow():
 			_shadow_reporter = RuntimeShadowReporter.new()
-				_shadow_reporter.call(
-					"setup",
-					GameConfig.RUST_SHADOW_REPORT_PATH,
-					GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
-					GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
-					GameConfig.RUST_SHADOW_ALLOWED_MAX_WORK_DELTA,
-					GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO,
-					GameConfig.RUST_SHADOW_MIN_FRAMES_FOR_CUTOVER
-				)
+			_shadow_reporter.call(
+				"setup",
+				GameConfig.RUST_SHADOW_REPORT_PATH,
+				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
+				GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
+				GameConfig.RUST_SHADOW_ALLOWED_MAX_WORK_DELTA,
+				GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO,
+				GameConfig.RUST_SHADOW_MIN_FRAMES_FOR_CUTOVER
+			)
 			return
 	push_warning("[SimulationEngine] Rust runtime init failed. Falling back to GDScript runtime.")
 	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
@@ -400,6 +417,20 @@ func _use_rust_primary() -> bool:
 
 func _use_rust_shadow() -> bool:
 	return _rust_runtime_available and _runtime_mode == GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW
+
+
+func _resolve_runtime_mode() -> String:
+	if not _runtime_mode_override.is_empty():
+		return _runtime_mode_override
+	return str(GameConfig.SIM_RUNTIME_MODE)
+
+
+func _is_supported_runtime_mode(mode: String) -> bool:
+	return (
+		mode == GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
+		or mode == GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW
+		or mode == GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
+	)
 
 
 func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void:
