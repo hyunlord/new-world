@@ -1456,6 +1456,91 @@ impl SimSystem for AgeRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for mortality hazard evaluation.
+///
+/// Full parity requires Rust-owned death roll, cause routing, and bereavement side effects.
+#[derive(Debug, Clone)]
+pub struct MortalityRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MortalityRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MortalityRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "mortality_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        const A1: f32 = 0.60;
+        const B1: f32 = 1.30;
+        const A2: f32 = 0.010;
+        const A3: f32 = 0.00006;
+        const B3: f32 = 0.090;
+        const TECH_K1: f32 = 0.30;
+        const TECH_K2: f32 = 0.20;
+        const TECH_K3: f32 = 0.05;
+        const TECH_LEVEL: f32 = 0.0;
+        const CARE_HUNGER_MIN: f32 = 0.3;
+        const CARE_PROTECTION_FACTOR: f32 = 0.6;
+        const SEASON_INFANT_MOD: f32 = 1.0;
+        const SEASON_BACKGROUND_MOD: f32 = 1.0;
+
+        let mut query = world.query::<(&Identity, Option<&Needs>, Option<&BodyComponent>)>();
+        for (_, (identity, needs_opt, body_opt)) in &mut query {
+            let age_ticks = tick.saturating_sub(identity.birth_tick);
+            let age_years = age_ticks as f32 / config::TICKS_PER_YEAR as f32;
+            let nutrition = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let dr_norm = body_opt
+                .map(|body_component| {
+                    (body_component.dr_realized as f32 / config::BODY_REALIZED_DR_MAX as f32)
+                        .clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let _hazards = body::mortality_hazards_and_prob(
+                age_years,
+                A1,
+                B1,
+                A2,
+                A3,
+                B3,
+                TECH_K1,
+                TECH_K2,
+                TECH_K3,
+                TECH_LEVEL,
+                nutrition,
+                CARE_HUNGER_MIN,
+                CARE_PROTECTION_FACTOR,
+                SEASON_INFANT_MOD,
+                SEASON_BACKGROUND_MOD,
+                1.0,
+                dr_norm,
+                config::BODY_DR_MORTALITY_REDUCTION as f32,
+                age_years < 1.0,
+            );
+        }
+    }
+}
+
 /// Rust runtime baseline system for population gate evaluation.
 ///
 /// Full parity requires Rust-owned building/resource managers and birth/death side effects.
@@ -1818,7 +1903,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
-        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
@@ -2379,6 +2464,42 @@ mod tests {
         assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
         assert_eq!(after_body.agi_realized, 700);
         assert_eq!(after_body.str_realized, 1000);
+    }
+
+    #[test]
+    fn mortality_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            ..Identity::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.75);
+        let mut body = BodyComponent::default();
+        body.dr_realized = 850;
+        let entity = world.spawn((identity, needs, body));
+
+        let mut system = MortalityRuntimeSystem::new(49, 1);
+        system.run(
+            &mut world,
+            &mut resources,
+            (sim_core::config::TICKS_PER_YEAR as u64) * 30,
+        );
+
+        let after_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity component should remain available");
+        let after_needs = world
+            .get::<&Needs>(entity)
+            .expect("needs component should remain available");
+        let after_body = world
+            .get::<&BodyComponent>(entity)
+            .expect("body component should remain available");
+        assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
+        assert!((after_needs.get(NeedType::Hunger) - 0.75).abs() < 1e-9);
+        assert_eq!(after_body.dr_realized, 850);
     }
 
     #[test]

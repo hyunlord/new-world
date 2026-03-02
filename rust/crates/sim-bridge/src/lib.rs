@@ -33,6 +33,7 @@ use sim_systems::{
         BuildingEffectRuntimeSystem,
         SocialEventRuntimeSystem,
         StatThresholdRuntimeSystem, StatsRecorderSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
+        MortalityRuntimeSystem,
         OccupationRuntimeSystem, TitleRuntimeSystem, TraumaScarRuntimeSystem, ValueRuntimeSystem,
         UpperNeedsRuntimeSystem,
     },
@@ -681,6 +682,7 @@ const RUNTIME_SYSTEM_KEY_BUILDING_EFFECT: &str = "building_effect_system";
 const RUNTIME_SYSTEM_KEY_FAMILY: &str = "family_system";
 const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
 const RUNTIME_SYSTEM_KEY_AGE: &str = "age_system";
+const RUNTIME_SYSTEM_KEY_MORTALITY: &str = "mortality_system";
 const RUNTIME_SYSTEM_KEY_POPULATION: &str = "population_system";
 const RUNTIME_SYSTEM_KEY_MIGRATION: &str = "migration_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
@@ -827,6 +829,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_FAMILY
             | RUNTIME_SYSTEM_KEY_LEADER
             | RUNTIME_SYSTEM_KEY_AGE
+            | RUNTIME_SYSTEM_KEY_MORTALITY
             | RUNTIME_SYSTEM_KEY_POPULATION
             | RUNTIME_SYSTEM_KEY_MIGRATION
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
@@ -964,6 +967,14 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(AgeRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
+        }
+        RUNTIME_SYSTEM_KEY_MORTALITY => {
+            state
+                .engine
+                .register(MortalityRuntimeSystem::new(
                     priority_u32,
                     tick_interval_u64,
                 ));
@@ -5718,6 +5729,7 @@ mod tests {
         assert!(runtime_supports_rust_system("family_system"));
         assert!(runtime_supports_rust_system("leader_system"));
         assert!(runtime_supports_rust_system("age_system"));
+        assert!(runtime_supports_rust_system("mortality_system"));
         assert!(runtime_supports_rust_system("population_system"));
         assert!(runtime_supports_rust_system("migration_system"));
         assert!(runtime_supports_rust_system("job_assignment_system"));
