@@ -1,6 +1,6 @@
 use hecs::World;
 use sim_core::components::{
-    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
+    Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
     Social, Stress, Values,
 };
 use sim_core::config;
@@ -972,6 +972,116 @@ impl SimSystem for MoraleRuntimeSystem {
     }
 }
 
+/// Rust runtime system for value drift updates.
+///
+/// This applies age-plasticity-scaled drift to selected `Values` axes using
+/// personality, needs, stress, and social context signals.
+#[derive(Debug, Clone)]
+pub struct ValueRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ValueRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn to_bipolar(value_01: f32) -> f32 {
+    (value_01.clamp(0.0, 1.0) * 2.0 - 1.0).clamp(-1.0, 1.0)
+}
+
+impl SimSystem for ValueRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "value_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Values,
+            Option<&Age>,
+            Option<&Personality>,
+            Option<&Needs>,
+            Option<&Stress>,
+            Option<&Social>,
+        )>();
+        for (_, (values, age_opt, personality_opt, needs_opt, stress_opt, social_opt)) in &mut query {
+            let age_years = age_opt.map(|age| age.years as f32).unwrap_or(25.0).max(0.0);
+            let plasticity = body::value_plasticity(age_years).clamp(0.10, 1.0);
+
+            let h = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::H) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let a = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::A) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let x = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+
+            let safety = needs_opt
+                .map(|needs| needs.get(NeedType::Safety) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let belonging = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let social_cap = social_opt
+                .map(|social| social.social_capital as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+
+            let pressure = (stress_level * 0.6 + (1.0 - safety) * 0.4).clamp(0.0, 1.0);
+            let step = (0.02 * plasticity * (1.0 - pressure * 0.35)).clamp(0.002, 0.03);
+
+            let target_cooperation = to_bipolar((a + belonging + social_cap) / 3.0);
+            let target_fairness = to_bipolar((h + a + (1.0 - pressure)) / 3.0);
+            let target_family = to_bipolar((belonging + h) * 0.5);
+            let target_friendship = to_bipolar((belonging + x) * 0.5);
+            let target_law = to_bipolar((safety + h) * 0.5);
+            let target_power = to_bipolar((pressure + (1.0 - a) * 0.5 + (1.0 - h) * 0.5).clamp(0.0, 1.0));
+            let target_competition = to_bipolar(((pressure + x) * 0.5).clamp(0.0, 1.0));
+            let target_peace = to_bipolar(((1.0 - stress_level) * 0.6 + a * 0.4).clamp(0.0, 1.0));
+
+            let mut apply_drift = |value_type: ValueType, target: f32| {
+                let current = values.get(value_type) as f32;
+                let next = (current + (target - current) * step).clamp(-1.0, 1.0);
+                values.set(value_type, next as f64);
+            };
+
+            apply_drift(ValueType::Cooperation, target_cooperation);
+            apply_drift(ValueType::Fairness, target_fairness);
+            apply_drift(ValueType::Family, target_family);
+            apply_drift(ValueType::Friendship, target_friendship);
+            apply_drift(ValueType::Law, target_law);
+            apply_drift(ValueType::Power, target_power);
+            apply_drift(ValueType::Competition, target_competition);
+            apply_drift(ValueType::Peace, target_peace);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1142,19 +1252,20 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        MoraleRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem,
+        ResourceRegenSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
+        Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
         SkillEntry, Skills, Social, Stress, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
-        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, NeedType,
+        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis, NeedType,
         RelationType, ResourceType, SettlementId, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
@@ -1478,6 +1589,46 @@ mod tests {
             (updated_needs.get(NeedType::Meaning) - 0.55).abs() > f64::EPSILON
                 || (updated_needs.get(NeedType::Transcendence) - 0.50).abs() > f64::EPSILON
         );
+    }
+
+    #[test]
+    fn value_runtime_system_updates_value_axes_with_context() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let values = Values::default();
+        let age = Age {
+            years: 12.0,
+            ..Age::default()
+        };
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::H as usize] = 0.80;
+        personality.axes[HexacoAxis::A as usize] = 0.75;
+        personality.axes[HexacoAxis::X as usize] = 0.65;
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Safety, 0.85);
+        needs.set(NeedType::Belonging, 0.90);
+        let stress = Stress {
+            level: 0.10,
+            ..Stress::default()
+        };
+        let social = Social {
+            social_capital: 0.70,
+            ..Social::default()
+        };
+
+        let entity = world.spawn((values, age, personality, needs, stress, social));
+        let mut system = ValueRuntimeSystem::new(55, 200);
+        system.run(&mut world, &mut resources, 200);
+
+        let updated = world
+            .get::<&Values>(entity)
+            .expect("updated values component should be queryable");
+        assert!(updated.get(ValueType::Cooperation) > 0.0);
+        assert!(updated.get(ValueType::Fairness) > 0.0);
+        assert!(updated.get(ValueType::Family) > 0.0);
+        assert!(updated.get(ValueType::Law) > 0.0);
     }
 
     #[test]
