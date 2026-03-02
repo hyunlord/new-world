@@ -1,9 +1,10 @@
 use hecs::{Entity, World};
 use rand::Rng;
-use std::collections::HashMap;
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Intelligence, Memory,
-    Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -1875,6 +1876,189 @@ impl SimSystem for IntelligenceRuntimeSystem {
     }
 }
 
+/// Rust runtime system for memory decay, eviction, compression, and promotion.
+///
+/// This ports the core working-memory management loop from `memory_system.gd`
+/// into Rust ECS state writes.
+#[derive(Debug, Clone)]
+pub struct MemoryRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MemoryRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const MEMORY_FORGET_THRESHOLD: f32 = 0.01;
+const MEMORY_SUMMARY_SCALE: f32 = 0.70;
+
+#[inline]
+fn memory_is_permanent_event(event_type: &str) -> bool {
+    matches!(
+        event_type,
+        "birth"
+            | "marriage"
+            | "child_born"
+            | "partner_died"
+            | "war"
+            | "migration"
+            | "promotion"
+            | "betrayal"
+            | "trauma"
+            | "achievement"
+            | "proposal"
+    )
+}
+
+#[inline]
+fn memory_decay_rate_from_encoding(intensity: f64) -> f32 {
+    config::memory_decay_rate(intensity.clamp(0.0, 1.0)) as f32
+}
+
+impl SimSystem for MemoryRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "memory_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let dt_years = self.tick_interval as f32 / config::TICKS_PER_YEAR as f32;
+        let cutoff_tick = tick.saturating_sub(config::MEMORY_COMPRESS_INTERVAL_TICKS);
+        let mut query = world.query::<&mut Memory>();
+        for (_, memory) in &mut query {
+            if !memory.short_term.is_empty() {
+                let entries: Vec<MemoryEntry> = memory.short_term.drain(..).collect();
+                let mut intensities: Vec<f32> = Vec::with_capacity(entries.len());
+                let mut rates: Vec<f32> = Vec::with_capacity(entries.len());
+                for entry in &entries {
+                    intensities.push(entry.current_intensity as f32);
+                    rates.push(memory_decay_rate_from_encoding(entry.intensity));
+                }
+                let decayed = body::memory_decay_batch(&intensities, &rates, dt_years);
+                let mut remaining: Vec<MemoryEntry> = Vec::with_capacity(entries.len());
+                for (idx, mut entry) in entries.into_iter().enumerate() {
+                    let next_intensity = decayed
+                        .get(idx)
+                        .copied()
+                        .unwrap_or(entry.current_intensity as f32)
+                        .clamp(0.0, 1.0);
+                    if next_intensity < MEMORY_FORGET_THRESHOLD {
+                        continue;
+                    }
+                    entry.current_intensity = next_intensity as f64;
+                    remaining.push(entry);
+                }
+                memory.short_term = remaining.into_iter().collect();
+            }
+
+            if memory.short_term.len() > config::MEMORY_WORKING_MAX {
+                let mut entries: Vec<MemoryEntry> = memory.short_term.drain(..).collect();
+                entries.sort_by(|a, b| {
+                    a.current_intensity
+                        .partial_cmp(&b.current_intensity)
+                        .unwrap_or(Ordering::Equal)
+                });
+                let excess = entries.len() - config::MEMORY_WORKING_MAX;
+                entries.drain(0..excess);
+                memory.short_term = entries.into_iter().collect();
+            }
+
+            let mut old_entries: Vec<MemoryEntry> = Vec::new();
+            let mut recent_entries: Vec<MemoryEntry> = Vec::new();
+            for entry in memory.short_term.drain(..) {
+                if entry.tick < cutoff_tick {
+                    old_entries.push(entry);
+                } else {
+                    recent_entries.push(entry);
+                }
+            }
+
+            let mut rebuilt: Vec<MemoryEntry> = Vec::with_capacity(old_entries.len() + recent_entries.len());
+            if old_entries.len() >= config::MEMORY_COMPRESS_MIN_GROUP {
+                let mut groups: HashMap<(String, Option<u64>), Vec<MemoryEntry>> = HashMap::new();
+                for entry in old_entries {
+                    let key = (entry.event_type.clone(), entry.target_id);
+                    groups.entry(key).or_default().push(entry);
+                }
+                let mut keys: Vec<(String, Option<u64>)> = groups.keys().cloned().collect();
+                keys.sort_by(|a, b| a.0.cmp(&b.0).then(a.1.cmp(&b.1)));
+                for key in keys {
+                    let Some(group) = groups.remove(&key) else {
+                        continue;
+                    };
+                    if group.len() < config::MEMORY_COMPRESS_MIN_GROUP {
+                        rebuilt.extend(group.into_iter());
+                        continue;
+                    }
+                    let mut max_intensity = 0.0_f32;
+                    let mut oldest_tick = u64::MAX;
+                    for entry in &group {
+                        max_intensity = max_intensity.max(entry.current_intensity as f32);
+                        oldest_tick = oldest_tick.min(entry.tick);
+                    }
+                    let event_type = group[0].event_type.clone();
+                    let target_id = group[0].target_id;
+                    let summary_intensity = body::memory_summary_intensity(
+                        max_intensity,
+                        MEMORY_SUMMARY_SCALE,
+                    )
+                    .clamp(0.0, 1.0);
+                    rebuilt.push(MemoryEntry {
+                        event_type: format!("{event_type}_summary"),
+                        target_id,
+                        tick: oldest_tick,
+                        intensity: summary_intensity as f64,
+                        current_intensity: summary_intensity as f64,
+                        is_permanent: false,
+                    });
+                }
+                memory.last_compression_tick = tick;
+            } else {
+                rebuilt.extend(old_entries.into_iter());
+            }
+            rebuilt.extend(recent_entries.into_iter());
+            memory.short_term = rebuilt.into_iter().collect();
+
+            let mut permanent_keys: HashSet<(String, u64)> = memory
+                .permanent
+                .iter()
+                .map(|entry| (entry.event_type.clone(), entry.tick))
+                .collect();
+            let mut promoted: Vec<MemoryEntry> = Vec::new();
+            for entry in memory.short_term.iter_mut() {
+                if entry.current_intensity < config::MEMORY_PERMANENT_THRESHOLD {
+                    continue;
+                }
+                if !memory_is_permanent_event(entry.event_type.as_str()) {
+                    continue;
+                }
+                let key = (entry.event_type.clone(), entry.tick);
+                if !permanent_keys.insert(key) {
+                    continue;
+                }
+                entry.is_permanent = true;
+                let mut permanent_entry = entry.clone();
+                permanent_entry.is_permanent = true;
+                promoted.push(permanent_entry);
+            }
+            memory.permanent.extend(promoted.into_iter());
+        }
+    }
+}
+
 /// Rust runtime system for value drift updates.
 ///
 /// This applies age-plasticity-scaled drift to selected `Values` axes using
@@ -2971,7 +3155,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
-        EmotionRuntimeSystem, IntelligenceRuntimeSystem,
+        EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
@@ -2983,6 +3167,7 @@ mod tests {
     use sim_core::components::{
         Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
         Position, SkillEntry, Skills, Social, Stress, Traits, Values, Intelligence, Memory,
+        MemoryEntry,
         TraumaScar,
     };
     use sim_core::ids::EntityId;
@@ -3702,6 +3887,130 @@ mod tests {
                 < updated.values[IntelligenceType::Linguistic as usize]
         );
         assert!(updated.g_factor > 0.50);
+    }
+
+    #[test]
+    fn memory_runtime_system_decays_evicts_and_promotes_entries() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut memory = Memory::default();
+        for idx in 0..101 {
+            memory.short_term.push_back(MemoryEntry {
+                event_type: format!("event_{idx}"),
+                target_id: None,
+                tick: 9_000 + idx as u64,
+                intensity: 0.55,
+                current_intensity: 0.55,
+                is_permanent: false,
+            });
+        }
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "proposal".to_string(),
+            target_id: Some(7),
+            tick: 9_999,
+            intensity: 0.80,
+            current_intensity: 0.80,
+            is_permanent: false,
+        });
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "forgettable".to_string(),
+            target_id: None,
+            tick: 10_000,
+            intensity: 0.05,
+            current_intensity: 0.02,
+            is_permanent: false,
+        });
+
+        let entity = world.spawn((memory,));
+        let mut system = MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS * 3,
+        );
+
+        let updated = world
+            .get::<&Memory>(entity)
+            .expect("memory component should be queryable");
+        assert_eq!(updated.short_term.len(), sim_core::config::MEMORY_WORKING_MAX);
+        assert!(updated.short_term.iter().all(|entry| entry.event_type != "forgettable"));
+        assert!(
+            updated
+                .short_term
+                .iter()
+                .any(|entry| entry.event_type == "proposal" && entry.is_permanent)
+        );
+        assert!(
+            updated
+                .permanent
+                .iter()
+                .any(|entry| entry.event_type == "proposal" && entry.tick == 9_999 && entry.is_permanent)
+        );
+    }
+
+    #[test]
+    fn memory_runtime_system_compresses_old_entries_into_summary() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut memory = Memory::default();
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "deep_talk".to_string(),
+            target_id: Some(42),
+            tick: 10,
+            intensity: 0.90,
+            current_intensity: 0.90,
+            is_permanent: false,
+        });
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "deep_talk".to_string(),
+            target_id: Some(42),
+            tick: 20,
+            intensity: 0.90,
+            current_intensity: 0.90,
+            is_permanent: false,
+        });
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "deep_talk".to_string(),
+            target_id: Some(42),
+            tick: 30,
+            intensity: 0.90,
+            current_intensity: 0.90,
+            is_permanent: false,
+        });
+        memory.short_term.push_back(MemoryEntry {
+            event_type: "casual_talk".to_string(),
+            target_id: Some(7),
+            tick: 9_000,
+            intensity: 0.10,
+            current_intensity: 0.10,
+            is_permanent: false,
+        });
+
+        let entity = world.spawn((memory,));
+        let mut system = MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
+        let tick = sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS * 3;
+        system.run(&mut world, &mut resources, tick);
+
+        let updated = world
+            .get::<&Memory>(entity)
+            .expect("memory component should be queryable");
+        assert_eq!(updated.short_term.len(), 2);
+        assert_eq!(updated.last_compression_tick, tick);
+        assert!(updated.short_term.iter().any(|entry| entry.event_type == "casual_talk"));
+
+        let summary = updated
+            .short_term
+            .iter()
+            .find(|entry| entry.event_type == "deep_talk_summary")
+            .expect("deep_talk summary entry should exist");
+        assert_eq!(summary.target_id, Some(42));
+        assert_eq!(summary.tick, 10);
+
+        let decayed = body::memory_decay_intensity(0.90, sim_core::config::memory_decay_rate(0.90) as f32, 1.0);
+        let expected_summary = body::memory_summary_intensity(decayed, 0.70);
+        assert!((summary.current_intensity as f32 - expected_summary).abs() < 1e-5);
     }
 
     #[test]
