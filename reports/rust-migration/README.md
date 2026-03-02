@@ -479,3 +479,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
 - Remaining (strict state-write basis): 89.13%
 - Details: [0056-emotion-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0056-emotion-runtime-active-write-port.md)
+
+### 0057 - reputation runtime active-write port
+- Commit: `[rust-r0-157] Port reputation runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 13.04% (6/46)
+- Actual state-write coverage (strict): 13.04% (6/46)
+- Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
+- Remaining (strict state-write basis): 86.96%
+- Details: [0057-reputation-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0057-reputation-runtime-active-write-port.md)

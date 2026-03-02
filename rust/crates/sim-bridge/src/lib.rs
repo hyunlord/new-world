@@ -43,8 +43,8 @@ use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        StressRuntimeSystem, UpperNeedsRuntimeSystem,
     },
     stat_curve,
 };
@@ -569,6 +569,7 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
+const RUNTIME_SYSTEM_KEY_REPUTATION: &str = "reputation_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
@@ -696,6 +697,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_NEEDS
             | RUNTIME_SYSTEM_KEY_STRESS
             | RUNTIME_SYSTEM_KEY_EMOTION
+            | RUNTIME_SYSTEM_KEY_REPUTATION
     )
 }
 
@@ -714,6 +716,11 @@ fn register_supported_rust_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_key {
+        RUNTIME_SYSTEM_KEY_REPUTATION => {
+            state
+                .engine
+                .register(ReputationRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
         RUNTIME_SYSTEM_KEY_EMOTION => {
             state
                 .engine
@@ -5303,6 +5310,7 @@ mod tests {
         assert!(runtime_supports_rust_system("needs_system"));
         assert!(runtime_supports_rust_system("stress_system"));
         assert!(runtime_supports_rust_system("emotion_system"));
+        assert!(runtime_supports_rust_system("reputation_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
@@ -5312,7 +5320,6 @@ mod tests {
         assert!(!runtime_supports_rust_system("trauma_scar_system"));
         assert!(!runtime_supports_rust_system("title_system"));
         assert!(!runtime_supports_rust_system("trait_violation_system"));
-        assert!(!runtime_supports_rust_system("reputation_system"));
         assert!(!runtime_supports_rust_system("value_system"));
         assert!(!runtime_supports_rust_system("network_system"));
         assert!(!runtime_supports_rust_system("social_event_system"));

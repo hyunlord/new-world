@@ -436,6 +436,204 @@ impl SimSystem for EmotionRuntimeSystem {
     }
 }
 
+/// Rust runtime system for reputation decay/event application.
+///
+/// This updates `Social.reputation_local/regional/tags` every tick from
+/// emotion/stress/needs/action signals using the shared reputation kernels.
+#[derive(Debug, Clone)]
+pub struct ReputationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ReputationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn reputation_domain_code(action: ActionType) -> i32 {
+    match action {
+        ActionType::Socialize | ActionType::Teach | ActionType::Learn | ActionType::VisitPartner => 1, // sociability
+        ActionType::Build
+        | ActionType::Craft
+        | ActionType::Forage
+        | ActionType::Hunt
+        | ActionType::Fish
+        | ActionType::GatherWood
+        | ActionType::GatherStone
+        | ActionType::GatherHerbs
+        | ActionType::DeliverToStockpile => 2, // competence
+        ActionType::Fight => 3, // dominance
+        ActionType::TakeFromStockpile => 4, // generosity
+        _ => 0,                 // morality
+    }
+}
+
+#[inline]
+fn reputation_neg_bias(domain_code: i32) -> f32 {
+    match domain_code {
+        1 => config::REP_NEG_BIAS_SOCIABILITY as f32,
+        2 => config::REP_NEG_BIAS_COMPETENCE as f32,
+        3 => config::REP_NEG_BIAS_DOMINANCE as f32,
+        4 => config::REP_NEG_BIAS_GENEROSITY as f32,
+        _ => config::REP_NEG_BIAS_MORALITY as f32,
+    }
+}
+
+#[inline]
+fn reputation_to_signed(value_01: f64) -> f32 {
+    ((value_01 as f32) * 2.0 - 1.0).clamp(-1.0, 1.0)
+}
+
+#[inline]
+fn reputation_to_unit(value_signed: f32) -> f64 {
+    (((value_signed.clamp(-1.0, 1.0) + 1.0) * 0.5).clamp(0.0, 1.0)) as f64
+}
+
+impl SimSystem for ReputationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "reputation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let ticks_per_year =
+            (config::TICKS_PER_YEAR as f32 / config::REPUTATION_TICK_INTERVAL as f32).max(1.0);
+        let pos_decay =
+            (config::REP_POSITIVE_YEARLY_RETENTION as f32).powf((1.0 / ticks_per_year).max(0.0));
+        let neg_decay =
+            (config::REP_NEGATIVE_YEARLY_RETENTION as f32).powf((1.0 / ticks_per_year).max(0.0));
+
+        let mut query = world.query::<(
+            &mut Social,
+            Option<&Emotion>,
+            Option<&Stress>,
+            Option<&Needs>,
+            Option<&Behavior>,
+            Option<&Values>,
+        )>();
+        for (_, (social, emotion_opt, stress_opt, needs_opt, behavior_opt, values_opt)) in &mut query {
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let hunger = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let safety = needs_opt
+                .map(|needs| needs.get(NeedType::Safety) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let social_need = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+
+            let (positive_emotion, negative_emotion) = if let Some(emotion) = emotion_opt {
+                let positive = (emotion.get(EmotionType::Joy)
+                    + emotion.get(EmotionType::Trust)
+                    + emotion.get(EmotionType::Anticipation)) as f32
+                    / 3.0;
+                let negative = (emotion.get(EmotionType::Fear)
+                    + emotion.get(EmotionType::Anger)
+                    + emotion.get(EmotionType::Sadness)
+                    + emotion.get(EmotionType::Disgust)
+                    + emotion.get(EmotionType::Surprise)) as f32
+                    / 5.0;
+                (positive, negative)
+            } else {
+                (0.5, 0.5)
+            };
+
+            let action = behavior_opt
+                .map(|behavior| behavior.current_action)
+                .unwrap_or(ActionType::Idle);
+            let action_signal = match action {
+                ActionType::Socialize | ActionType::Teach | ActionType::Learn | ActionType::VisitPartner => 0.10,
+                ActionType::Fight | ActionType::MentalBreak | ActionType::Flee => -0.15,
+                ActionType::Build
+                | ActionType::Craft
+                | ActionType::Forage
+                | ActionType::Hunt
+                | ActionType::Fish
+                | ActionType::GatherWood
+                | ActionType::GatherStone
+                | ActionType::GatherHerbs => 0.05,
+                _ => 0.0,
+            };
+
+            let valence =
+                (positive_emotion - negative_emotion + action_signal - stress_level * 0.25)
+                    .clamp(-1.0, 1.0);
+            let magnitude = (0.25
+                + stress_level * 0.35
+                + (1.0 - social_need) * 0.20
+                + (1.0 - safety) * 0.10
+                + (1.0 - hunger) * 0.10)
+                .clamp(0.0, 1.0);
+
+            let domain_code = reputation_domain_code(action);
+            let neg_bias = if valence < 0.0 {
+                reputation_neg_bias(domain_code)
+            } else {
+                1.0
+            };
+            let event_delta = body::reputation_event_delta(
+                valence,
+                magnitude,
+                config::REP_EVENT_DELTA_SCALE as f32,
+                neg_bias,
+            );
+
+            let decayed_local =
+                body::reputation_decay_value(reputation_to_signed(social.reputation_local), pos_decay, neg_decay);
+            let decayed_regional =
+                body::reputation_decay_value(reputation_to_signed(social.reputation_regional), pos_decay, neg_decay);
+            let next_local = (decayed_local + event_delta).clamp(-1.0, 1.0);
+            let next_regional = (decayed_regional + event_delta * 0.5).clamp(-1.0, 1.0);
+
+            social.reputation_local = reputation_to_unit(next_local);
+            social.reputation_regional = reputation_to_unit(next_regional);
+
+            let mut tags = Vec::<String>::new();
+            if next_local >= config::REP_TIER_RESPECTED as f32 {
+                tags.push("respected".to_string());
+            } else if next_local >= config::REP_TIER_GOOD as f32 {
+                tags.push("good".to_string());
+            } else if next_local <= config::REP_TIER_OUTCAST as f32 {
+                tags.push("outcast".to_string());
+            } else if next_local <= config::REP_TIER_SUSPECT as f32 {
+                tags.push("suspect".to_string());
+            }
+
+            if let Some(values) = values_opt {
+                let cooperation = values.get(ValueType::Cooperation) as f32;
+                let power = values.get(ValueType::Power) as f32;
+                if cooperation > 0.30 && next_local >= config::REP_TIER_GOOD as f32 {
+                    tags.push("generous".to_string());
+                }
+                if power > 0.40 && next_local <= config::REP_TIER_SUSPECT as f32 {
+                    tags.push("domineering".to_string());
+                }
+            }
+            social.reputation_tags = tags;
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -606,8 +804,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -789,6 +987,61 @@ mod tests {
         assert!(updated.get(EmotionType::Joy) < 0.2);
         assert!(updated.baseline(EmotionType::Trust) >= 0.0);
         assert!(updated.baseline(EmotionType::Trust) <= 1.0);
+    }
+
+    #[test]
+    fn reputation_runtime_system_updates_reputation_state_and_tags() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut social = Social::default();
+        social.reputation_local = 0.75;
+        social.reputation_regional = 0.70;
+
+        let mut emotion = Emotion::default();
+        *emotion.get_mut(EmotionType::Fear) = 0.90;
+        *emotion.get_mut(EmotionType::Anger) = 0.80;
+        *emotion.get_mut(EmotionType::Sadness) = 0.70;
+        *emotion.get_mut(EmotionType::Disgust) = 0.60;
+        *emotion.get_mut(EmotionType::Surprise) = 0.60;
+        *emotion.get_mut(EmotionType::Joy) = 0.10;
+        *emotion.get_mut(EmotionType::Trust) = 0.10;
+        *emotion.get_mut(EmotionType::Anticipation) = 0.10;
+
+        let stress = Stress {
+            level: 0.90,
+            reserve: 0.20,
+            allostatic_load: 0.60,
+            ..Stress::default()
+        };
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.20);
+        needs.set(NeedType::Safety, 0.10);
+        needs.set(NeedType::Belonging, 0.20);
+
+        let behavior = Behavior {
+            current_action: ActionType::Idle,
+            ..Behavior::default()
+        };
+        let mut values = Values::default();
+        values.set(ValueType::Power, 0.60);
+
+        let entity = world.spawn((social, emotion, stress, needs, behavior, values));
+        let mut system = ReputationRuntimeSystem::new(38, 30);
+        system.run(&mut world, &mut resources, 30);
+
+        let updated = world
+            .get::<&Social>(entity)
+            .expect("updated social component should be queryable");
+        assert!(updated.reputation_local < 0.75);
+        assert!(updated.reputation_regional < 0.70);
+        assert!((0.0..=1.0).contains(&updated.reputation_local));
+        assert!((0.0..=1.0).contains(&updated.reputation_regional));
+        assert!(
+            updated.reputation_tags.iter().any(|tag| tag == "suspect" || tag == "outcast"),
+            "negative reputation tier tag should be assigned"
+        );
     }
 
     #[test]
