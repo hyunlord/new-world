@@ -1207,3 +1207,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0147-fluent-only-audit-and-verify-alignment.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0147-fluent-only-audit-and-verify-alignment.md)
+
+### 0148 - shadow cutover check hardening
+- Commit: `[rust-r0-248] Harden shadow cutover gate checker and verify hook`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0148-shadow-cutover-check-hardening.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0148-shadow-cutover-check-hardening.md)

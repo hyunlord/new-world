@@ -13,6 +13,7 @@ STEP_EXTRACT_DURATION=0
 STEP_COMPILE_DURATION=0
 STEP_AUDIT_DURATION=0
 STEP_BENCH_DURATION=0
+STEP_SHADOW_CHECK_DURATION=0
 
 for arg in "$@"; do
   case "${arg}" in
@@ -219,6 +220,26 @@ if [[ -n "${audit_compare_key_owner_policy}" ]]; then
 fi
 "${audit_cmd[@]}"
 STEP_AUDIT_DURATION=$(( $(date +%s) - step_started_epoch ))
+
+shadow_report_json="${MIGRATION_SHADOW_REPORT_JSON:-}"
+shadow_required_min_frames="${MIGRATION_SHADOW_REQUIRED_MIN_FRAMES:-}"
+if [[ -n "${shadow_report_json}" ]]; then
+  echo "[migration_verify] shadow cutover gate check"
+  step_started_epoch="$(date +%s)"
+  shadow_cmd=(
+    python3 "${ROOT_DIR}/tools/rust_shadow_cutover_check.py"
+    --report "${shadow_report_json}"
+  )
+  if [[ -n "${shadow_required_min_frames}" ]]; then
+    if ! [[ "${shadow_required_min_frames}" =~ ^[0-9]+$ ]]; then
+      echo "[migration_verify] MIGRATION_SHADOW_REQUIRED_MIN_FRAMES must be a non-negative integer" >&2
+      exit 1
+    fi
+    shadow_cmd+=(--required-min-frames "${shadow_required_min_frames}")
+  fi
+  "${shadow_cmd[@]}"
+  STEP_SHADOW_CHECK_DURATION=$(( $(date +%s) - step_started_epoch ))
+fi
 
 bench_report_json="${MIGRATION_BENCH_REPORT_JSON:-}"
 if [[ "${WITH_BENCHES}" == "true" ]]; then
