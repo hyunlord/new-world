@@ -503,3 +503,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
 - Remaining (strict state-write basis): 82.61%
 - Details: [0059-morale-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0059-morale-runtime-active-write-port.md)
+
+### 0060 - owner transfer allowlist phase 1
+- Commit: `[rust-r0-160] Enable owner-ready allowlist for initial Rust runtime systems`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 17.39% (8/46)
+- Actual state-write coverage (strict): 17.39% (8/46)
+- Owner transfer coverage (`exec_owner=rust`): 6.52% (3/46)
+- Remaining (strict state-write basis): 82.61%
+- Details: [0060-owner-transfer-allowlist-phase1.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0060-owner-transfer-allowlist-phase1.md)
