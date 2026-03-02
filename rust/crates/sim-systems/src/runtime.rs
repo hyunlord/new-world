@@ -1804,6 +1804,125 @@ impl SimSystem for ReputationRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for emotional/stress contagion evaluation.
+///
+/// Full parity requires Rust-owned AoE/network neighbor selection,
+/// refractory state updates, and contagion result mutation paths.
+#[derive(Debug, Clone)]
+pub struct ContagionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ContagionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ContagionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "contagion_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        const CROWD_DILUTE_DIVISOR: f32 = 6.0;
+        const REFRACTORY_SUSCEPTIBILITY: f32 = 0.25;
+        const NETWORK_DECAY: f32 = 0.5;
+        const MAX_STRESS_CONTAGION_DELTA: f32 = 30.0;
+        const SPIRAL_STRESS_THRESHOLD: f32 = 500.0;
+        const SPIRAL_VALENCE_THRESHOLD: f32 = -40.0;
+
+        let mut query = world.query::<(
+            Option<&Emotion>,
+            Option<&Stress>,
+            Option<&Personality>,
+            Option<&Social>,
+        )>();
+        for (_, (emotion_opt, stress_opt, personality_opt, social_opt)) in &mut query {
+            let donor_count = social_opt
+                .map(|social| social.edges.len().min(i32::MAX as usize) as i32)
+                .unwrap_or(0);
+            let x_axis = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::X) as f32)
+                .unwrap_or(0.5);
+            let e_axis = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::E) as f32)
+                .unwrap_or(0.5);
+            let a_axis = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::A) as f32)
+                .unwrap_or(0.5);
+
+            let total_susceptibility = body::contagion_aoe_total_susceptibility(
+                donor_count,
+                CROWD_DILUTE_DIVISOR,
+                false,
+                REFRACTORY_SUSCEPTIBILITY,
+                x_axis,
+                e_axis,
+            );
+
+            let stress_level = stress_opt.map(|stress| stress.level as f32).unwrap_or(0.0);
+            let stress_signal = emotion_opt
+                .map(|emotion| (emotion.get(EmotionType::Fear) + emotion.get(EmotionType::Anger)) as f32)
+                .unwrap_or(0.0);
+            let stress_gap = (stress_signal * 100.0 - stress_level * 100.0).max(0.0);
+            let _stress_delta = body::contagion_stress_delta(
+                stress_gap,
+                10.0,
+                0.04,
+                total_susceptibility,
+                MAX_STRESS_CONTAGION_DELTA,
+            );
+
+            let valence = emotion_opt
+                .map(|emotion| {
+                    let positive = emotion.get(EmotionType::Joy) + emotion.get(EmotionType::Trust);
+                    let negative = emotion.get(EmotionType::Fear)
+                        + emotion.get(EmotionType::Anger)
+                        + emotion.get(EmotionType::Sadness)
+                        + emotion.get(EmotionType::Disgust);
+                    ((positive - negative) as f32).clamp(-1.0, 1.0)
+                })
+                .unwrap_or(0.0);
+            let valence_gap = valence * 100.0;
+            let _network_delta = body::contagion_network_delta(
+                donor_count,
+                CROWD_DILUTE_DIVISOR,
+                false,
+                REFRACTORY_SUSCEPTIBILITY,
+                NETWORK_DECAY,
+                a_axis,
+                valence_gap,
+                0.04,
+                4.0,
+            );
+
+            let _spiral_increment = body::contagion_spiral_increment(
+                stress_level * 2000.0,
+                valence * 100.0,
+                SPIRAL_STRESS_THRESHOLD,
+                SPIRAL_VALENCE_THRESHOLD,
+                1500.0,
+                60.0,
+                3.0,
+                12.0,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1972,7 +2091,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
+        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
@@ -1985,7 +2104,7 @@ mod tests {
         Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
         SkillEntry, Skills, Social, Stress, TraumaScar, Traits, Values, Memory, RelationshipEdge,
     };
-    use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, Settlement, SettlementId, ValueType, WorldMap, config::GameConfig};
+    use sim_core::{EmotionType, GameCalendar, GrowthStage, NeedType, ResourceType, Settlement, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
     use sim_core::ids::{BuildingId, EntityId};
     use sim_core::ActionType;
@@ -2706,6 +2825,34 @@ mod tests {
             .expect("social component should remain available");
         assert!((after.reputation_local - 0.55).abs() < 1e-9);
         assert!((after.reputation_regional - 0.35).abs() < 1e-9);
+    }
+
+    #[test]
+    fn contagion_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let personality = Personality::default();
+        let mut stress = Stress::default();
+        stress.level = 0.4;
+        let mut emotion = Emotion::default();
+        emotion.add(EmotionType::Joy, 0.3);
+        emotion.add(EmotionType::Trust, 0.2);
+        emotion.add(EmotionType::Fear, 0.1);
+        let social = Social::default();
+        let entity = world.spawn((personality, stress, emotion, social));
+
+        let mut system = ContagionRuntimeSystem::new(38, 3);
+        system.run(&mut world, &mut resources, 3);
+
+        let after_stress = world
+            .get::<&Stress>(entity)
+            .expect("stress component should remain available");
+        let after_emotion = world
+            .get::<&Emotion>(entity)
+            .expect("emotion component should remain available");
+        assert!((after_stress.level - 0.4).abs() < 1e-9);
+        assert!((after_emotion.get(EmotionType::Joy) - 0.3).abs() < 1e-9);
+        assert!((after_emotion.get(EmotionType::Fear) - 0.1).abs() < 1e-9);
     }
 
     #[test]
