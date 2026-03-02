@@ -759,3 +759,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 50.00% (23/46)
 - Remaining (strict state-write basis): 47.83%
 - Details: [0091-child-stress-processor-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0091-child-stress-processor-runtime-active-write-port.md)
+
+### 0092 - owner transfer allowlist phase 17
+- Commit: `[rust-r0-192] Expand owner-ready allowlist with child-stress-processor system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 52.17% (24/46)
+- Actual state-write coverage (strict): 52.17% (24/46)
+- Owner transfer coverage (`exec_owner=rust`): 52.17% (24/46)
+- Remaining (strict state-write basis): 47.83%
+- Details: [0092-owner-transfer-allowlist-phase17.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0092-owner-transfer-allowlist-phase17.md)
