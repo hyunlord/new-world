@@ -465,13 +465,60 @@ func _load_fluent_locale(locale: String) -> bool:
 	if not FileAccess.file_exists(path):
 		if locale != "en":
 			path = LOCALES_DIR + _fluent_dir + "/en/messages.ftl"
-		if not FileAccess.file_exists(path):
-			return false
+			if not FileAccess.file_exists(path):
+				return false
 
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	var text: String = file.get_as_text()
+	_rust_fluent_ready = _prime_rust_fluent(locale, text)
+	if _rust_fluent_ready:
+		var rust_flat: Dictionary = _build_flat_strings_from_rust_fluent(locale)
+		if not rust_flat.is_empty():
+			_strings["fluent"] = rust_flat.duplicate(true)
+			_flat_strings = rust_flat
+			_rebuild_key_index_from_flat()
+			return true
+
+	var parsed: Dictionary = _parse_fluent_source_basic(text)
+	if parsed.is_empty():
+		return false
+	_strings["fluent"] = parsed
+	_flat_strings = parsed.duplicate()
+	_rebuild_key_index_from_flat()
+	return true
+
+
+func _prime_rust_fluent(locale: String, source: String) -> bool:
+	if SimBridge == null:
+		return false
+	if not SimBridge.has_method("locale_load_fluent"):
+		return false
+	return bool(SimBridge.locale_load_fluent(locale, source))
+
+
+func _build_flat_strings_from_rust_fluent(locale: String) -> Dictionary:
+	var built: Dictionary = {}
+	if not _rust_fluent_ready:
+		return built
+	if SimBridge == null:
+		return built
+	if not SimBridge.has_method("locale_format_fluent"):
+		return built
+	var registry_keys: Array = _load_key_registry_keys()
+	if registry_keys.is_empty():
+		return built
+	for i in range(registry_keys.size()):
+		var key: String = str(registry_keys[i])
+		if key.is_empty():
+			continue
+		var resolved: String = str(SimBridge.locale_format_fluent(locale, key, {}))
+		built[key] = resolved if not resolved.is_empty() else key
+	return built
+
+
+func _parse_fluent_source_basic(source: String) -> Dictionary:
 	var parsed: Dictionary = {}
-	var lines: PackedStringArray = text.split("\n")
+	var lines: PackedStringArray = source.split("\n")
 	for i in range(lines.size()):
 		var raw_line: String = lines[i]
 		var line: String = raw_line.strip_edges()
@@ -486,21 +533,7 @@ func _load_fluent_locale(locale: String) -> bool:
 		if key.is_empty():
 			continue
 		parsed[key] = value
-	if parsed.is_empty():
-		return false
-	_strings["fluent"] = parsed
-	_flat_strings = parsed.duplicate()
-	_rust_fluent_ready = _prime_rust_fluent(locale, text)
-	_rebuild_key_index_from_flat()
-	return true
-
-
-func _prime_rust_fluent(locale: String, source: String) -> bool:
-	if SimBridge == null:
-		return false
-	if not SimBridge.has_method("locale_load_fluent"):
-		return false
-	return bool(SimBridge.locale_load_fluent(locale, source))
+	return parsed
 
 
 func _try_rust_fluent_format(key: String, params: Dictionary) -> String:
