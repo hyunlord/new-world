@@ -91,6 +91,10 @@ func resolve_mode_for_domain(domain: String) -> String:
 
 ## Returns true when current runtime can use GPU compute path.
 func is_gpu_capable() -> bool:
+	if SimBridge != null and SimBridge.has_method("has_gpu_pathfinding"):
+		var has_gpu_pathfinding: bool = bool(SimBridge.has_gpu_pathfinding())
+		if not has_gpu_pathfinding:
+			return false
 	var renderer_method: String = str(ProjectSettings.get_setting(
 		"rendering/renderer/rendering_method", "mobile"
 	))

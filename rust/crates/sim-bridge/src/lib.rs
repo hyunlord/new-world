@@ -5475,11 +5475,8 @@ mod tests {
         assert!(
             cpu_after_gpu_call + gpu_after_gpu_call >= cpu_after_cpu_call + gpu_after_cpu_call + 1
         );
-        if cfg!(feature = "gpu") {
-            assert!(gpu_after_gpu_call >= gpu_after_cpu_call + 1);
-        } else {
-            assert!(cpu_after_gpu_call >= cpu_after_cpu_call + 1);
-        }
+        assert!(cpu_after_gpu_call >= cpu_after_cpu_call + 1);
+        assert_eq!(gpu_after_gpu_call, gpu_after_cpu_call);
     }
 
     #[test]
@@ -5492,16 +5489,10 @@ mod tests {
     }
 
     #[test]
-    fn resolves_pathfinding_backend_with_feature_gate() {
+    fn resolves_pathfinding_backend_with_runtime_gate() {
         assert_eq!(resolve_backend_mode(PATHFIND_BACKEND_CPU), "cpu");
-        assert_eq!(
-            resolve_backend_mode(PATHFIND_BACKEND_GPU),
-            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
-        );
-        assert_eq!(
-            resolve_backend_mode(PATHFIND_BACKEND_AUTO),
-            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
-        );
+        assert_eq!(resolve_backend_mode(PATHFIND_BACKEND_GPU), "cpu");
+        assert_eq!(resolve_backend_mode(PATHFIND_BACKEND_AUTO), "cpu");
     }
 
     #[test]
@@ -5648,7 +5639,7 @@ mod tests {
     #[test]
     fn public_backend_mode_helpers_roundtrip_and_validate() {
         let previous = get_pathfind_backend_mode().to_string();
-        assert_eq!(has_gpu_pathfind_backend(), cfg!(feature = "gpu"));
+        assert!(!has_gpu_pathfind_backend());
 
         assert!(set_pathfind_backend_mode("cpu"));
         assert_eq!(get_pathfind_backend_mode(), "cpu");
@@ -5656,10 +5647,7 @@ mod tests {
 
         assert!(set_pathfind_backend_mode("auto"));
         assert_eq!(get_pathfind_backend_mode(), "auto");
-        assert_eq!(
-            resolve_pathfind_backend_mode(),
-            if cfg!(feature = "gpu") { "gpu" } else { "cpu" }
-        );
+        assert_eq!(resolve_pathfind_backend_mode(), "cpu");
 
         assert!(!set_pathfind_backend_mode("invalid-mode"));
         assert!(set_pathfind_backend_mode(&previous));

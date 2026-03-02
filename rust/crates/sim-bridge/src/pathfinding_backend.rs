@@ -3,6 +3,7 @@ use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
 pub const PATHFIND_BACKEND_AUTO: u8 = 0;
 pub const PATHFIND_BACKEND_CPU: u8 = 1;
 pub const PATHFIND_BACKEND_GPU: u8 = 2;
+const GPU_BACKEND_ACTIVE: bool = false;
 
 static PATHFIND_BACKEND_MODE: AtomicU8 = AtomicU8::new(PATHFIND_BACKEND_AUTO);
 static CPU_DISPATCH_COUNT: AtomicU64 = AtomicU64::new(0);
@@ -42,19 +43,13 @@ pub fn resolve_backend_mode_code(mode: u8) -> u8 {
     match mode {
         PATHFIND_BACKEND_CPU => PATHFIND_BACKEND_CPU,
         PATHFIND_BACKEND_GPU => {
-            if cfg!(feature = "gpu") {
+            if cfg!(feature = "gpu") && GPU_BACKEND_ACTIVE {
                 PATHFIND_BACKEND_GPU
             } else {
                 PATHFIND_BACKEND_CPU
             }
         }
-        _ => {
-            if cfg!(feature = "gpu") {
-                PATHFIND_BACKEND_GPU
-            } else {
-                PATHFIND_BACKEND_CPU
-            }
-        }
+        _ => PATHFIND_BACKEND_CPU,
     }
 }
 
@@ -68,7 +63,7 @@ pub fn resolve_backend_mode_str(mode: u8) -> &'static str {
 
 #[inline]
 pub fn has_gpu_backend() -> bool {
-    cfg!(feature = "gpu")
+    cfg!(feature = "gpu") && GPU_BACKEND_ACTIVE
 }
 
 #[inline]
