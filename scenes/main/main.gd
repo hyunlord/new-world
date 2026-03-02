@@ -167,7 +167,6 @@ func _ready() -> void:
 
 	# Initialize save manager
 	save_manager = SaveManager.new()
-	save_manager.migrate_legacy_save()
 
 	# Initialize settlement manager + first settlement
 	settlement_manager = SettlementManager.new()

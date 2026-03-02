@@ -89,3 +89,9 @@
 - Completion after commit: 95%
 - Remaining after commit: 5%
 - Details: [0014-phase-h-shadow-auto-cutover.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0014-phase-h-shadow-auto-cutover.md)
+
+### 0015 - Legacy migration call removal
+- Commit: `[rust-r0-115] Remove legacy save migration call path`
+- Completion after commit: 96%
+- Remaining after commit: 4%
+- Details: [0015-phase-e-legacy-call-removal.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0015-phase-e-legacy-call-removal.md)
