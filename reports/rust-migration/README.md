@@ -11,3 +11,9 @@
 - Completion after commit: 34%
 - Remaining after commit: 66%
 - Details: [0001-phase-a-c-h-runtime-bridge.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0001-phase-a-c-h-runtime-bridge.md)
+
+### 0002 - Save v2 (.ws2) runtime pipeline
+- Commit: `[rust-r0-102] Add ws2 save/load pipeline for Rust runtime`
+- Completion after commit: 42%
+- Remaining after commit: 58%
+- Details: [0002-phase-e-ws2-runtime-save.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0002-phase-e-ws2-runtime-save.md)

@@ -100,6 +100,36 @@ func runtime_get_snapshot() -> PackedByteArray:
 	return PackedByteArray()
 
 
+## Applies runtime snapshot bytes.
+func runtime_apply_snapshot(snapshot_bytes: PackedByteArray) -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("runtime_apply_snapshot"):
+		return false
+	return bool(runtime.call("runtime_apply_snapshot", snapshot_bytes))
+
+
+## Saves runtime snapshot in .ws2 binary format.
+func runtime_save_ws2(path: String) -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("runtime_save_ws2"):
+		return false
+	return bool(runtime.call("runtime_save_ws2", path))
+
+
+## Loads runtime snapshot from .ws2 binary format.
+func runtime_load_ws2(path: String) -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("runtime_load_ws2"):
+		return false
+	return bool(runtime.call("runtime_load_ws2", path))
+
+
 ## Exports runtime events in Bus v2 payload format.
 func runtime_export_events_v2() -> Array:
 	var runtime: Object = _get_native_runtime()

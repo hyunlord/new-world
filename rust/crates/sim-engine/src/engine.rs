@@ -196,6 +196,18 @@ impl SimEngine {
             events_dispatched: self.resources.event_bus.total_dispatched(),
         }
     }
+
+    /// Restores scalar engine timeline values from a snapshot.
+    ///
+    /// This intentionally restores only timeline counters. ECS world/entities and
+    /// settlements remain unchanged and are expected to be restored by a dedicated
+    /// save subsystem.
+    pub fn restore_from_snapshot(&mut self, snapshot: &EngineSnapshot) {
+        self.current_tick = snapshot.tick;
+        self.resources.calendar.tick = snapshot.tick;
+        self.resources.calendar.year = snapshot.year;
+        self.resources.calendar.day_of_year = snapshot.day_of_year;
+    }
 }
 
 impl std::fmt::Debug for SimEngine {
@@ -262,6 +274,21 @@ mod tests {
         assert_eq!(snap.tick, 12);
         // calendar should have advanced 1 day
         assert_eq!(snap.day_of_year, 2);
+    }
+
+    #[test]
+    fn restore_from_snapshot_sets_timeline_fields() {
+        let mut engine = make_engine();
+        engine.run_ticks(10);
+        let mut snapshot = engine.snapshot();
+        snapshot.tick = 123;
+        snapshot.year = 4;
+        snapshot.day_of_year = 77;
+        engine.restore_from_snapshot(&snapshot);
+        assert_eq!(engine.current_tick(), 123);
+        assert_eq!(engine.resources().calendar.tick, 123);
+        assert_eq!(engine.resources().calendar.year, 4);
+        assert_eq!(engine.resources().calendar.day_of_year, 77);
     }
 
     struct CountSystem {

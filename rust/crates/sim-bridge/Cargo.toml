@@ -18,6 +18,9 @@ sim-data = { path = "../sim-data" }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+bincode = { workspace = true }
+zstd = { workspace = true }
+crc32fast = { workspace = true }
 godot = { workspace = true }
 
 # sim-bridge needs unsafe for GDExtension FFI — override workspace deny

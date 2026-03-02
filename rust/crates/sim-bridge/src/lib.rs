@@ -18,12 +18,13 @@ use pathfinding_gpu::{
 };
 use serde::Deserialize;
 use sim_core::{config::GameConfig, GameCalendar, WorldMap};
-use sim_engine::{GameEvent, SimEngine, SimResources};
+use sim_engine::{EngineSnapshot, GameEvent, SimEngine, SimResources};
 use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     stat_curve,
 };
+use std::fs;
 use std::sync::{Arc, Mutex};
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
@@ -648,6 +649,9 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
+const WS2_MAGIC: [u8; 4] = *b"WS2\0";
+const WS2_VERSION: u16 = 1;
+const WS2_HEADER_SIZE: usize = 16;
 
 #[derive(Debug, Clone, Deserialize)]
 struct RuntimeConfig {
@@ -767,6 +771,45 @@ fn game_event_to_v2_dict(event: &GameEvent) -> VarDictionary {
     dict
 }
 
+fn encode_ws2_blob(snapshot: &EngineSnapshot) -> Option<Vec<u8>> {
+    let serialized = bincode::serialize(snapshot).ok()?;
+    let compressed = zstd::stream::encode_all(serialized.as_slice(), 3).ok()?;
+    let checksum = crc32fast::hash(&compressed);
+    let payload_len = compressed.len() as u32;
+    let mut out = Vec::with_capacity(WS2_HEADER_SIZE + compressed.len());
+    out.extend_from_slice(&WS2_MAGIC);
+    out.extend_from_slice(&WS2_VERSION.to_le_bytes());
+    out.extend_from_slice(&0_u16.to_le_bytes());
+    out.extend_from_slice(&checksum.to_le_bytes());
+    out.extend_from_slice(&payload_len.to_le_bytes());
+    out.extend_from_slice(compressed.as_slice());
+    Some(out)
+}
+
+fn decode_ws2_blob(bytes: &[u8]) -> Option<EngineSnapshot> {
+    if bytes.len() < WS2_HEADER_SIZE {
+        return None;
+    }
+    if bytes[0..4] != WS2_MAGIC {
+        return None;
+    }
+    let version = u16::from_le_bytes([bytes[4], bytes[5]]);
+    if version != WS2_VERSION {
+        return None;
+    }
+    let checksum = u32::from_le_bytes([bytes[8], bytes[9], bytes[10], bytes[11]]);
+    let payload_len = u32::from_le_bytes([bytes[12], bytes[13], bytes[14], bytes[15]]) as usize;
+    if bytes.len() != WS2_HEADER_SIZE + payload_len {
+        return None;
+    }
+    let payload = &bytes[WS2_HEADER_SIZE..];
+    if crc32fast::hash(payload) != checksum {
+        return None;
+    }
+    let decoded = zstd::stream::decode_all(payload).ok()?;
+    bincode::deserialize::<EngineSnapshot>(&decoded).ok()
+}
+
 #[derive(GodotClass)]
 #[class(base=Object)]
 pub struct WorldSimRuntime {
@@ -848,6 +891,54 @@ impl WorldSimRuntime {
         let snapshot = state.engine.snapshot();
         let bytes = serde_json::to_vec(&snapshot).unwrap_or_default();
         PackedByteArray::from(bytes)
+    }
+
+    #[func]
+    fn runtime_apply_snapshot(&mut self, snapshot_bytes: PackedByteArray) -> bool {
+        let Some(state) = self.state.as_mut() else {
+            return false;
+        };
+        let bytes = snapshot_bytes.as_slice();
+        let Ok(snapshot) = serde_json::from_slice::<EngineSnapshot>(bytes) else {
+            return false;
+        };
+        state.engine.restore_from_snapshot(&snapshot);
+        true
+    }
+
+    #[func]
+    fn runtime_save_ws2(&self, path: GString) -> bool {
+        let Some(state) = self.state.as_ref() else {
+            return false;
+        };
+        let path_string = path.to_string();
+        if path_string.is_empty() {
+            return false;
+        }
+        let snapshot = state.engine.snapshot();
+        let Some(blob) = encode_ws2_blob(&snapshot) else {
+            return false;
+        };
+        fs::write(path_string, blob).is_ok()
+    }
+
+    #[func]
+    fn runtime_load_ws2(&mut self, path: GString) -> bool {
+        let Some(state) = self.state.as_mut() else {
+            return false;
+        };
+        let path_string = path.to_string();
+        if path_string.is_empty() {
+            return false;
+        }
+        let Ok(bytes) = fs::read(path_string) else {
+            return false;
+        };
+        let Some(snapshot) = decode_ws2_blob(&bytes) else {
+            return false;
+        };
+        state.engine.restore_from_snapshot(&snapshot);
+        true
     }
 
     #[func]
@@ -4301,6 +4392,7 @@ mod tests {
         PATHFIND_BACKEND_GPU,
     };
     use super::{
+        decode_ws2_blob,
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
         dispatch_pathfind_grid_bytes, get_pathfind_backend_mode, has_gpu_pathfind_backend,
         parse_pathfind_backend, pathfind_backend_dispatch_counts, pathfind_from_flat,
@@ -4309,8 +4401,10 @@ mod tests {
         pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
         resolve_pathfind_backend_mode, set_pathfind_backend_mode, PathfindError, PathfindInput,
+        encode_ws2_blob,
     };
     use godot::prelude::Vector2;
+    use sim_engine::EngineSnapshot;
     use sim_systems::pathfinding::GridPos;
 
     fn base_input() -> PathfindInput {
@@ -4842,5 +4936,36 @@ mod tests {
         assert!(cpu_after >= cpu_before + 2);
         assert_eq!(gpu_after, gpu_before);
         assert!(set_pathfind_backend_mode(&previous));
+    }
+
+    #[test]
+    fn ws2_roundtrip_preserves_snapshot_scalars() {
+        let snapshot = EngineSnapshot {
+            tick: 42,
+            year: 3,
+            day_of_year: 12,
+            entity_count: 10,
+            settlement_count: 2,
+            system_count: 7,
+            events_dispatched: 99,
+        };
+        let encoded = encode_ws2_blob(&snapshot).expect("ws2 encode should succeed");
+        let decoded = decode_ws2_blob(&encoded).expect("ws2 decode should succeed");
+        assert_eq!(decoded.tick, 42);
+        assert_eq!(decoded.year, 3);
+        assert_eq!(decoded.day_of_year, 12);
+        assert_eq!(decoded.entity_count, 10);
+        assert_eq!(decoded.settlement_count, 2);
+        assert_eq!(decoded.system_count, 7);
+        assert_eq!(decoded.events_dispatched, 99);
+    }
+
+    #[test]
+    fn ws2_decode_rejects_invalid_magic() {
+        let mut bytes = vec![0_u8; 16];
+        bytes[0] = b'B';
+        bytes[1] = b'A';
+        bytes[2] = b'D';
+        assert!(decode_ws2_blob(&bytes).is_none());
     }
 }

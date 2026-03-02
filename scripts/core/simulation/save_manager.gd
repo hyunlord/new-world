@@ -6,6 +6,9 @@ extends RefCounted
 ##   settlements.bin, world.bin, stats.json
 
 const SAVE_VERSION: int = 8
+const WS2_FILE_NAME: String = "sim.ws2"
+const SAVE_BACKEND_LEGACY: String = "legacy_v8"
+const SAVE_BACKEND_RUST_WS2: String = "rust_ws2"
 
 ## Minimum loadable save version (v3 loads with defaults for new fields)
 const MIN_LOAD_VERSION: int = 3
@@ -33,11 +36,14 @@ func _s32(v: int) -> int:
 
 func save_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted, stats_recorder: RefCounted) -> bool:
 	DirAccess.make_dir_recursive_absolute(dir_path)
+	if _use_rust_ws2_backend():
+		return _save_game_ws2(dir_path, sim_engine)
 
 	# meta.json
 	var date: Dictionary = GameConfig.tick_to_date(sim_engine.current_tick)
 	var meta: Dictionary = {
 		"version": SAVE_VERSION,
+		"save_backend": SAVE_BACKEND_LEGACY,
 		"current_tick": sim_engine.current_tick,
 		"seed": sim_engine._seed,
 		"speed_index": sim_engine.speed_index,
@@ -77,6 +83,9 @@ func save_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 ## ═══════════════════════════════════════════════════
 
 func load_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, world_data: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted, stats_recorder: RefCounted) -> bool:
+	if _use_rust_ws2_backend():
+		return _load_game_ws2(dir_path, sim_engine)
+
 	var meta_path: String = dir_path + "/meta.json"
 	if not FileAccess.file_exists(meta_path):
 		push_warning("[SaveManager] Save not found: %s" % meta_path)
@@ -114,6 +123,69 @@ func load_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 	if not _load_resource_map(dir_path + "/world.bin", resource_map):
 		return false
 	_load_stats(dir_path + "/stats.json", stats_recorder)
+
+	SimulationBus.emit_event("game_loaded", {"path": dir_path, "tick": sim_engine.current_tick})
+	return true
+
+
+func _use_rust_ws2_backend() -> bool:
+	if str(GameConfig.SIM_RUNTIME_MODE) != GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY:
+		return false
+	if SimBridge == null:
+		return false
+	if not SimBridge.has_method("runtime_save_ws2"):
+		return false
+	if not SimBridge.has_method("runtime_load_ws2"):
+		return false
+	return true
+
+
+func _save_game_ws2(dir_path: String, sim_engine: RefCounted) -> bool:
+	var ws2_path: String = dir_path + "/" + WS2_FILE_NAME
+	var success: bool = SimBridge.runtime_save_ws2(ws2_path)
+	if not success:
+		push_warning("[SaveManager] Failed to save ws2 snapshot: %s" % ws2_path)
+		return false
+
+	var date: Dictionary = GameConfig.tick_to_date(sim_engine.current_tick)
+	var meta: Dictionary = {
+		"version": SAVE_VERSION,
+		"save_backend": SAVE_BACKEND_RUST_WS2,
+		"current_tick": sim_engine.current_tick,
+		"seed": sim_engine._seed,
+		"speed_index": sim_engine.speed_index,
+		"save_time": Time.get_datetime_string_from_system(),
+		"game_date": "Y%d M%d D%d" % [date.year, date.month, date.day],
+		"game_year": date.year,
+		"game_month": date.month,
+	}
+	var mf: FileAccess = FileAccess.open(dir_path + "/meta.json", FileAccess.WRITE)
+	if mf == null:
+		push_warning("[SaveManager] Cannot write ws2 meta.json")
+		return false
+	mf.store_string(JSON.stringify(meta))
+	mf = null
+	SimulationBus.emit_event("game_saved", {"path": dir_path, "tick": sim_engine.current_tick})
+	return true
+
+
+func _load_game_ws2(dir_path: String, sim_engine: RefCounted) -> bool:
+	var ws2_path: String = dir_path + "/" + WS2_FILE_NAME
+	if not FileAccess.file_exists(ws2_path):
+		push_warning("[SaveManager] ws2 save not found: %s" % ws2_path)
+		return false
+	var success: bool = SimBridge.runtime_load_ws2(ws2_path)
+	if not success:
+		push_warning("[SaveManager] Failed to load ws2 snapshot: %s" % ws2_path)
+		return false
+
+	var snapshot_bytes: PackedByteArray = SimBridge.runtime_get_snapshot()
+	if not snapshot_bytes.is_empty():
+		var json: JSON = JSON.new()
+		if json.parse(snapshot_bytes.get_string_from_utf8()) == OK and json.data is Dictionary:
+			var snapshot: Dictionary = json.data
+			sim_engine.current_tick = int(snapshot.get("tick", sim_engine.current_tick))
+			sim_engine.speed_index = int(snapshot.get("speed_index", sim_engine.speed_index))
 
 	SimulationBus.emit_event("game_loaded", {"path": dir_path, "tick": sim_engine.current_tick})
 	return true
