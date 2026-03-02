@@ -25,18 +25,7 @@ use sim_engine::{EngineSnapshot, GameEvent, SimEngine, SimResources};
 use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
-    runtime::{
-        AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        FamilyRuntimeSystem, LeaderRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        PopulationRuntimeSystem, MigrationRuntimeSystem,
-        ResourceRegenSystem, StatSyncSystem,
-        BuildingEffectRuntimeSystem,
-        SocialEventRuntimeSystem,
-        StatThresholdRuntimeSystem, StatsRecorderSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
-        ContagionRuntimeSystem, MortalityRuntimeSystem,
-        JobSatisfactionRuntimeSystem, MoraleRuntimeSystem, OccupationRuntimeSystem, ReputationRuntimeSystem, TitleRuntimeSystem, TraumaScarRuntimeSystem, ValueRuntimeSystem,
-        UpperNeedsRuntimeSystem,
-    },
+    runtime::{NeedsRuntimeSystem, ResourceRegenSystem, UpperNeedsRuntimeSystem},
     stat_curve,
 };
 use std::collections::{HashMap, HashSet};
@@ -666,35 +655,9 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
-const RUNTIME_SYSTEM_KEY_STAT_THRESHOLD: &str = "stat_threshold_system";
-const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
-const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
-const RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR: &str = "child_stress_processor";
-const RUNTIME_SYSTEM_KEY_MENTAL_BREAK: &str = "mental_break_system";
-const RUNTIME_SYSTEM_KEY_OCCUPATION: &str = "occupation_system";
-const RUNTIME_SYSTEM_KEY_TRAUMA_SCAR: &str = "trauma_scar_system";
-const RUNTIME_SYSTEM_KEY_TITLE: &str = "title_system";
-const RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION: &str = "trait_violation_system";
-const RUNTIME_SYSTEM_KEY_REPUTATION: &str = "reputation_system";
-const RUNTIME_SYSTEM_KEY_VALUE: &str = "value_system";
-const RUNTIME_SYSTEM_KEY_NETWORK: &str = "network_system";
-const RUNTIME_SYSTEM_KEY_SOCIAL_EVENT: &str = "social_event_system";
-const RUNTIME_SYSTEM_KEY_BUILDING_EFFECT: &str = "building_effect_system";
-const RUNTIME_SYSTEM_KEY_FAMILY: &str = "family_system";
-const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
-const RUNTIME_SYSTEM_KEY_AGE: &str = "age_system";
-const RUNTIME_SYSTEM_KEY_MORTALITY: &str = "mortality_system";
-const RUNTIME_SYSTEM_KEY_POPULATION: &str = "population_system";
-const RUNTIME_SYSTEM_KEY_MIGRATION: &str = "migration_system";
-const RUNTIME_SYSTEM_KEY_CONTAGION: &str = "contagion_system";
-const RUNTIME_SYSTEM_KEY_JOB_SATISFACTION: &str = "job_satisfaction_system";
-const RUNTIME_SYSTEM_KEY_MORALE: &str = "morale_system";
-const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
-const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
 const RUNTIME_SYSTEM_KEY_RESOURCE_REGEN: &str = "resource_regen_system";
-const RUNTIME_SYSTEM_KEY_STATS_RECORDER: &str = "stats_recorder";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -813,35 +776,9 @@ fn runtime_system_key_from_name(name: &str) -> String {
 fn runtime_supports_rust_system(system_key: &str) -> bool {
     matches!(
         system_key,
-        RUNTIME_SYSTEM_KEY_STATS_RECORDER
-            | RUNTIME_SYSTEM_KEY_RESOURCE_REGEN
-            | RUNTIME_SYSTEM_KEY_STAT_SYNC
+        RUNTIME_SYSTEM_KEY_RESOURCE_REGEN
             | RUNTIME_SYSTEM_KEY_UPPER_NEEDS
             | RUNTIME_SYSTEM_KEY_NEEDS
-            | RUNTIME_SYSTEM_KEY_STRESS
-            | RUNTIME_SYSTEM_KEY_EMOTION
-            | RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR
-            | RUNTIME_SYSTEM_KEY_MENTAL_BREAK
-            | RUNTIME_SYSTEM_KEY_OCCUPATION
-            | RUNTIME_SYSTEM_KEY_TRAUMA_SCAR
-            | RUNTIME_SYSTEM_KEY_TITLE
-            | RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION
-            | RUNTIME_SYSTEM_KEY_REPUTATION
-            | RUNTIME_SYSTEM_KEY_VALUE
-            | RUNTIME_SYSTEM_KEY_NETWORK
-            | RUNTIME_SYSTEM_KEY_SOCIAL_EVENT
-            | RUNTIME_SYSTEM_KEY_BUILDING_EFFECT
-            | RUNTIME_SYSTEM_KEY_FAMILY
-            | RUNTIME_SYSTEM_KEY_LEADER
-            | RUNTIME_SYSTEM_KEY_AGE
-            | RUNTIME_SYSTEM_KEY_MORTALITY
-            | RUNTIME_SYSTEM_KEY_POPULATION
-            | RUNTIME_SYSTEM_KEY_MIGRATION
-            | RUNTIME_SYSTEM_KEY_CONTAGION
-            | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
-            | RUNTIME_SYSTEM_KEY_MORALE
-            | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
-            | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
     )
 }
 
@@ -860,189 +797,6 @@ fn register_supported_rust_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_key {
-        RUNTIME_SYSTEM_KEY_STAT_THRESHOLD => {
-            state
-                .engine
-                .register(StatThresholdRuntimeSystem::new(priority_u32, tick_interval_u64));
-        }
-        RUNTIME_SYSTEM_KEY_EMOTION => {
-            state
-                .engine
-                .register(EmotionRuntimeSystem::new(priority_u32, tick_interval_u64));
-        }
-        RUNTIME_SYSTEM_KEY_STRESS => {
-            state
-                .engine
-                .register(StressRuntimeSystem::new(priority_u32, tick_interval_u64));
-        }
-        RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR => {
-            state
-                .engine
-                .register(ChildStressProcessorRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_MENTAL_BREAK => {
-            state
-                .engine
-                .register(MentalBreakRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_OCCUPATION => {
-            state
-                .engine
-                .register(OccupationRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_TRAUMA_SCAR => {
-            state
-                .engine
-                .register(TraumaScarRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_TITLE => {
-            state
-                .engine
-                .register(TitleRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION => {
-            state
-                .engine
-                .register(TraitViolationRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_REPUTATION => {
-            state
-                .engine
-                .register(ReputationRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_VALUE => {
-            state
-                .engine
-                .register(ValueRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_NETWORK => {
-            state
-                .engine
-                .register(NetworkRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_SOCIAL_EVENT => {
-            state
-                .engine
-                .register(SocialEventRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_BUILDING_EFFECT => {
-            state
-                .engine
-                .register(BuildingEffectRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_FAMILY => {
-            state
-                .engine
-                .register(FamilyRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_LEADER => {
-            state
-                .engine
-                .register(LeaderRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_AGE => {
-            state
-                .engine
-                .register(AgeRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_MORTALITY => {
-            state
-                .engine
-                .register(MortalityRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_POPULATION => {
-            state
-                .engine
-                .register(PopulationRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_MIGRATION => {
-            state
-                .engine
-                .register(MigrationRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_CONTAGION => {
-            state
-                .engine
-                .register(ContagionRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_JOB_SATISFACTION => {
-            state
-                .engine
-                .register(JobSatisfactionRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_MORALE => {
-            state
-                .engine
-                .register(MoraleRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
-        RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT => {
-            state
-                .engine
-                .register(JobAssignmentRuntimeSystem::new(
-                    priority_u32,
-                    tick_interval_u64,
-                ));
-        }
         RUNTIME_SYSTEM_KEY_NEEDS => {
             state
                 .engine
@@ -1053,20 +807,10 @@ fn register_supported_rust_system(
                 .engine
                 .register(UpperNeedsRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
-        RUNTIME_SYSTEM_KEY_STAT_SYNC => {
-            state
-                .engine
-                .register(StatSyncSystem::new(priority_u32, tick_interval_u64));
-        }
         RUNTIME_SYSTEM_KEY_RESOURCE_REGEN => {
             state
                 .engine
                 .register(ResourceRegenSystem::new(priority_u32, tick_interval_u64));
-        }
-        RUNTIME_SYSTEM_KEY_STATS_RECORDER => {
-            state
-                .engine
-                .register(StatsRecorderSystem::new(priority_u32, tick_interval_u64));
         }
         _ => {
             return false;
@@ -5748,35 +5492,35 @@ mod tests {
 
     #[test]
     fn runtime_supports_expected_ported_systems() {
-        assert!(runtime_supports_rust_system("stats_recorder"));
         assert!(runtime_supports_rust_system("resource_regen_system"));
-        assert!(runtime_supports_rust_system("stat_sync_system"));
-        assert!(runtime_supports_rust_system("stat_threshold_system"));
         assert!(runtime_supports_rust_system("upper_needs_system"));
         assert!(runtime_supports_rust_system("needs_system"));
-        assert!(runtime_supports_rust_system("stress_system"));
-        assert!(runtime_supports_rust_system("emotion_system"));
-        assert!(runtime_supports_rust_system("child_stress_processor"));
-        assert!(runtime_supports_rust_system("mental_break_system"));
-        assert!(runtime_supports_rust_system("occupation_system"));
-        assert!(runtime_supports_rust_system("trauma_scar_system"));
-        assert!(runtime_supports_rust_system("title_system"));
-        assert!(runtime_supports_rust_system("trait_violation_system"));
-        assert!(runtime_supports_rust_system("reputation_system"));
-        assert!(runtime_supports_rust_system("value_system"));
-        assert!(runtime_supports_rust_system("network_system"));
-        assert!(runtime_supports_rust_system("social_event_system"));
-        assert!(runtime_supports_rust_system("building_effect_system"));
-        assert!(runtime_supports_rust_system("family_system"));
-        assert!(runtime_supports_rust_system("leader_system"));
-        assert!(runtime_supports_rust_system("age_system"));
-        assert!(runtime_supports_rust_system("mortality_system"));
-        assert!(runtime_supports_rust_system("population_system"));
-        assert!(runtime_supports_rust_system("migration_system"));
-        assert!(runtime_supports_rust_system("contagion_system"));
-        assert!(runtime_supports_rust_system("job_satisfaction_system"));
-        assert!(runtime_supports_rust_system("morale_system"));
-        assert!(runtime_supports_rust_system("job_assignment_system"));
+        assert!(!runtime_supports_rust_system("stats_recorder"));
+        assert!(!runtime_supports_rust_system("stat_sync_system"));
+        assert!(!runtime_supports_rust_system("stat_threshold_system"));
+        assert!(!runtime_supports_rust_system("stress_system"));
+        assert!(!runtime_supports_rust_system("emotion_system"));
+        assert!(!runtime_supports_rust_system("child_stress_processor"));
+        assert!(!runtime_supports_rust_system("mental_break_system"));
+        assert!(!runtime_supports_rust_system("occupation_system"));
+        assert!(!runtime_supports_rust_system("trauma_scar_system"));
+        assert!(!runtime_supports_rust_system("title_system"));
+        assert!(!runtime_supports_rust_system("trait_violation_system"));
+        assert!(!runtime_supports_rust_system("reputation_system"));
+        assert!(!runtime_supports_rust_system("value_system"));
+        assert!(!runtime_supports_rust_system("network_system"));
+        assert!(!runtime_supports_rust_system("social_event_system"));
+        assert!(!runtime_supports_rust_system("building_effect_system"));
+        assert!(!runtime_supports_rust_system("family_system"));
+        assert!(!runtime_supports_rust_system("leader_system"));
+        assert!(!runtime_supports_rust_system("age_system"));
+        assert!(!runtime_supports_rust_system("mortality_system"));
+        assert!(!runtime_supports_rust_system("population_system"));
+        assert!(!runtime_supports_rust_system("migration_system"));
+        assert!(!runtime_supports_rust_system("contagion_system"));
+        assert!(!runtime_supports_rust_system("job_satisfaction_system"));
+        assert!(!runtime_supports_rust_system("morale_system"));
+        assert!(!runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

@@ -447,3 +447,11 @@
 - Logic implementation completion after commit: 63.04%
 - Logic implementation remaining after commit: 36.96%
 - Details: [0052-morale-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0052-morale-runtime-rust-baseline.md)
+
+### 0053 - Runtime no-op baseline removal + strict state-write rebaseline
+- Commit: `[rust-r0-153] Remove no-op runtime baselines and rebaseline strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 6.52% (3/46)
+- Actual state-write coverage (strict): 6.52% (3/46)
+- Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
+- Remaining (strict state-write basis): 93.48%
+- Details: [0053-runtime-noop-removal-and-strict-rebaseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0053-runtime-noop-removal-and-strict-rebaseline.md)
