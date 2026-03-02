@@ -317,3 +317,13 @@
 - Logic implementation completion after commit: 34.78%
 - Logic implementation remaining after commit: 65.22%
 - Details: [0039-network-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0039-network-runtime-rust-baseline.md)
+
+### 0040 - Rust runtime baseline port (social_event_system)
+- Commit: `[rust-r0-140] Add social-event runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 36.96%
+- Logic implementation remaining after commit: 63.04%
+- Details: [0040-social-event-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0040-social-event-runtime-rust-baseline.md)

@@ -5,7 +5,10 @@ use sim_core::components::{
     Social, Stress, Values,
 };
 use sim_core::config;
-use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, RelationType, SettlementId, ValueType};
+use sim_core::{
+    ActionType, AttachmentType, EmotionType, GrowthStage, NeedType, RelationType, SettlementId,
+    ValueType,
+};
 use sim_engine::{SimResources, SimSystem};
 use crate::body;
 
@@ -1124,6 +1127,69 @@ impl SimSystem for NetworkRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for social-event evaluation.
+///
+/// Full parity requires Rust-owned pair selection, relationship mutation, and social-event emission.
+#[derive(Debug, Clone)]
+pub struct SocialEventRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl SocialEventRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn attachment_socialize_mult(attachment: AttachmentType) -> f32 {
+    match attachment {
+        AttachmentType::Secure => config::ATTACHMENT_SOCIALIZE_MULT[0] as f32,
+        AttachmentType::Anxious => config::ATTACHMENT_SOCIALIZE_MULT[1] as f32,
+        AttachmentType::Avoidant => config::ATTACHMENT_SOCIALIZE_MULT[2] as f32,
+        AttachmentType::Fearful => config::ATTACHMENT_SOCIALIZE_MULT[3] as f32,
+    }
+}
+
+impl SimSystem for SocialEventRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "social_event_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Social, Option<&Personality>)>();
+        for (_, (social, personality_opt)) in &mut query {
+            let attachment = personality_opt
+                .map(|personality| personality.attachment)
+                .unwrap_or(AttachmentType::Secure);
+            let attach_mult = attachment_socialize_mult(attachment);
+            for edge in &social.edges {
+                let trust_norm = (edge.trust as f32).clamp(0.0, 1.0);
+                let familiarity_norm = (edge.familiarity as f32).clamp(0.0, 1.0);
+                let compat_proxy = (0.5 + 0.5 * (trust_norm + familiarity_norm) * 0.5).clamp(0.0, 1.0);
+                let _affinity_mult =
+                    body::social_attachment_affinity_multiplier(attach_mult, attach_mult);
+                let _proposal_prob = body::social_proposal_accept_prob(
+                    edge.affinity as f32,
+                    compat_proxy,
+                );
+            }
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1294,7 +1360,7 @@ mod tests {
     use super::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
         MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        OccupationRuntimeSystem,
+        OccupationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -1705,6 +1771,33 @@ mod tests {
             .expect("values component should remain available");
         assert_eq!(after_social.edges.len(), 1);
         assert!((after_values.get(ValueType::Independence) - 0.5).abs() < 1e-9);
+    }
+
+    #[test]
+    fn social_event_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut social = Social::default();
+        let mut edge = RelationshipEdge::new(EntityId(9));
+        edge.affinity = 65.0;
+        edge.trust = 0.55;
+        edge.familiarity = 0.45;
+        social.edges.push(edge);
+        let personality = Personality {
+            attachment: sim_core::AttachmentType::Anxious,
+            ..Personality::default()
+        };
+        let entity = world.spawn((social, personality));
+
+        let mut system = SocialEventRuntimeSystem::new(37, 30);
+        system.run(&mut world, &mut resources, 30);
+
+        let after = world
+            .get::<&Social>(entity)
+            .expect("social component should remain available");
+        assert_eq!(after.edges.len(), 1);
+        assert!((after.edges[0].affinity - 65.0).abs() < 1e-9);
+        assert!((after.edges[0].trust - 0.55).abs() < 1e-9);
     }
 
     #[test]
