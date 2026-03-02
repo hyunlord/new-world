@@ -28,7 +28,7 @@ use sim_systems::{
     runtime::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
         FamilyRuntimeSystem, LeaderRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        PopulationRuntimeSystem,
+        PopulationRuntimeSystem, MigrationRuntimeSystem,
         ResourceRegenSystem, StatSyncSystem,
         BuildingEffectRuntimeSystem,
         SocialEventRuntimeSystem,
@@ -680,6 +680,7 @@ const RUNTIME_SYSTEM_KEY_BUILDING_EFFECT: &str = "building_effect_system";
 const RUNTIME_SYSTEM_KEY_FAMILY: &str = "family_system";
 const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
 const RUNTIME_SYSTEM_KEY_POPULATION: &str = "population_system";
+const RUNTIME_SYSTEM_KEY_MIGRATION: &str = "migration_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
@@ -823,6 +824,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_FAMILY
             | RUNTIME_SYSTEM_KEY_LEADER
             | RUNTIME_SYSTEM_KEY_POPULATION
+            | RUNTIME_SYSTEM_KEY_MIGRATION
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
     )
@@ -950,6 +952,14 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(PopulationRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
+        }
+        RUNTIME_SYSTEM_KEY_MIGRATION => {
+            state
+                .engine
+                .register(MigrationRuntimeSystem::new(
                     priority_u32,
                     tick_interval_u64,
                 ));
@@ -5687,6 +5697,7 @@ mod tests {
         assert!(runtime_supports_rust_system("family_system"));
         assert!(runtime_supports_rust_system("leader_system"));
         assert!(runtime_supports_rust_system("population_system"));
+        assert!(runtime_supports_rust_system("migration_system"));
         assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }

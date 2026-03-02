@@ -1469,6 +1469,59 @@ impl SimSystem for PopulationRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for migration pressure evaluation.
+///
+/// Full parity requires Rust-owned candidate selection, settlement creation,
+/// and stockpile/member transfer side effects.
+#[derive(Debug, Clone)]
+pub struct MigrationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MigrationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MigrationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "migration_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        const OVERCROWD_PER_SHELTER: i32 = 8;
+        const FOOD_PER_CAPITA_THRESHOLD: f32 = 0.3;
+
+        for settlement in resources.settlements.values() {
+            let population = settlement.members.len().min(i32::MAX as usize) as i32;
+            let shelter_count = settlement.buildings.len().min(i32::MAX as usize) as i32;
+            let overcrowded = shelter_count > 0 && population > shelter_count * OVERCROWD_PER_SHELTER;
+            let nearby_food = settlement.stockpile_food.max(0.0) as f32;
+            let food_scarce =
+                body::migration_food_scarce(nearby_food, population, FOOD_PER_CAPITA_THRESHOLD);
+            let _should_attempt = body::migration_should_attempt(
+                overcrowded,
+                food_scarce,
+                0.5,
+                config::MIGRATION_CHANCE as f32,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1638,7 +1691,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
-        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
@@ -2202,6 +2255,40 @@ mod tests {
             .expect("settlement should remain available");
         assert_eq!(after.buildings.len(), 2);
         assert!((after.stockpile_food - 22.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn migration_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut settlement = Settlement::new(
+            SettlementId(2),
+            "settlement-2".to_string(),
+            8,
+            5,
+            0,
+        );
+        settlement.members = vec![EntityId(1), EntityId(2), EntityId(3), EntityId(4)];
+        settlement.buildings = vec![BuildingId(20)];
+        settlement.stockpile_food = 10.0;
+        resources.settlements.insert(settlement.id, settlement);
+
+        let mut system = MigrationRuntimeSystem::new(60, sim_core::config::MIGRATION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::MIGRATION_TICK_INTERVAL,
+        );
+
+        assert_eq!(world.len(), 0);
+        let after = resources
+            .settlements
+            .get(&SettlementId(2))
+            .expect("settlement should remain available");
+        assert_eq!(after.members.len(), 4);
+        assert_eq!(after.buildings.len(), 1);
+        assert!((after.stockpile_food - 10.0).abs() < 1e-9);
     }
 
     #[test]
