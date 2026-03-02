@@ -22,6 +22,8 @@
     "data_generated"
   ],
   "compiled_dir": "compiled",
+  "fluent_dir": "fluent",
+  "use_fluent_runtime": true,
   "key_registry_path": "key_registry.json",
   "key_owners_path": "key_owners.json",
   "preserve_key_ids": true,

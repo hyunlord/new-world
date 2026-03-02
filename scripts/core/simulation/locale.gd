@@ -12,13 +12,17 @@ const MANIFEST_PATH: String = LOCALES_DIR + "manifest.json"
 const SUPPORTED_LOCALES: Array = ["ko", "en"]
 const DEFAULT_LOCALE: String = "ko"
 const COMPILED_DIR_DEFAULT: String = "compiled"
+const FLUENT_DIR_DEFAULT: String = "fluent"
 const KEY_REGISTRY_DEFAULT: String = "key_registry.json"
+const USE_FLUENT_RUNTIME_DEFAULT: bool = false
 
 var current_locale: String = DEFAULT_LOCALE
 var _supported_locales: Array = SUPPORTED_LOCALES.duplicate()
 var _default_locale: String = DEFAULT_LOCALE
 var _compiled_dir: String = COMPILED_DIR_DEFAULT
+var _fluent_dir: String = FLUENT_DIR_DEFAULT
 var _key_registry_path: String = KEY_REGISTRY_DEFAULT
+var _use_fluent_runtime: bool = USE_FLUENT_RUNTIME_DEFAULT
 var _tr_data_warned: bool = false
 
 ## Loaded translation data: { "ui": {"UI_SAVE": "...", ...}, "game": {...}, ... }
@@ -74,6 +78,10 @@ func load_locale(locale: String) -> void:
 	_trf_key_id_cache.clear()
 	_ltr_key_id_cache.clear()
 	_registry_keys.clear()
+	if _use_fluent_runtime and _load_fluent_locale(locale):
+		_refresh_month_key_ids()
+		_key_index_version += 1
+		return
 	if _load_compiled_locale(locale):
 		_refresh_month_key_ids()
 		_key_index_version += 1
@@ -368,8 +376,12 @@ func _load_manifest() -> void:
 
 	if manifest.has("compiled_dir"):
 		_compiled_dir = str(manifest["compiled_dir"])
+	if manifest.has("fluent_dir"):
+		_fluent_dir = str(manifest["fluent_dir"])
 	if manifest.has("key_registry_path"):
 		_key_registry_path = str(manifest["key_registry_path"])
+	if manifest.has("use_fluent_runtime"):
+		_use_fluent_runtime = bool(manifest["use_fluent_runtime"])
 
 	if current_locale not in _supported_locales:
 		current_locale = _default_locale
@@ -404,6 +416,40 @@ func _load_compiled_locale(locale: String) -> bool:
 		var key: String = str(keys[i])
 		_flat_strings[key] = str(strings[key])
 	_rebuild_key_index(root, strings, _load_key_registry_keys())
+	return true
+
+
+func _load_fluent_locale(locale: String) -> bool:
+	var path: String = LOCALES_DIR + _fluent_dir + "/" + locale + "/messages.ftl"
+	if not FileAccess.file_exists(path):
+		if locale != "en":
+			path = LOCALES_DIR + _fluent_dir + "/en/messages.ftl"
+		if not FileAccess.file_exists(path):
+			return false
+
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var text: String = file.get_as_text()
+	var parsed: Dictionary = {}
+	var lines: PackedStringArray = text.split("\n")
+	for i in range(lines.size()):
+		var raw_line: String = lines[i]
+		var line: String = raw_line.strip_edges()
+		if line.is_empty() or line.begins_with("#"):
+			continue
+		var sep: int = line.find("=")
+		if sep <= 0:
+			continue
+		var key: String = line.substr(0, sep).strip_edges()
+		var value: String = line.substr(sep + 1).strip_edges()
+		value = value.replace("\\n", "\n")
+		if key.is_empty():
+			continue
+		parsed[key] = value
+	if parsed.is_empty():
+		return false
+	_strings["fluent"] = parsed
+	_flat_strings = parsed.duplicate()
+	_rebuild_key_index_from_flat()
 	return true
 
 

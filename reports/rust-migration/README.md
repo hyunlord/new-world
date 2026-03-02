@@ -17,3 +17,9 @@
 - Completion after commit: 42%
 - Remaining after commit: 58%
 - Details: [0002-phase-e-ws2-runtime-save.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0002-phase-e-ws2-runtime-save.md)
+
+### 0003 - Fluent source pipeline + Locale loader
+- Commit: `[rust-r0-103] Add Fluent source pipeline and Locale fluent loader`
+- Completion after commit: 50%
+- Remaining after commit: 50%
+- Details: [0003-phase-g-fluent-loader.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0003-phase-g-fluent-loader.md)
