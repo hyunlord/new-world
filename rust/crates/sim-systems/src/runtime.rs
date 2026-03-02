@@ -1,7 +1,7 @@
 use hecs::World;
 use sim_core::components::{
-    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, Skills, Social, Stress,
-    Values,
+    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
+    Social, Stress, Values,
 };
 use sim_core::config;
 use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, ValueType};
@@ -325,6 +325,71 @@ impl SimSystem for StressRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for emotion processing.
+///
+/// Full parity needs Rust migration of fast/slow/memory-trace emotion state and
+/// queued appraisal events. This phase provides Rust scheduler integration.
+#[derive(Debug, Clone)]
+pub struct EmotionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl EmotionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for EmotionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "emotion_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Emotion, Option<&Stress>, Option<&Personality>)>();
+        for (_, (emotion, stress_opt, personality_opt)) in &mut query {
+            let z_c = personality_opt
+                .map(|personality| ((personality.axis(sim_core::HexacoAxis::C) as f32) - 0.5) * 2.0)
+                .unwrap_or(0.0);
+            let threshold = body::emotion_break_threshold(z_c, 300.0, 50.0);
+            let stress_level = stress_opt.map(|stress| stress.level as f32 * 2000.0).unwrap_or(0.0);
+            let _trigger_p = body::emotion_break_trigger_probability(
+                stress_level,
+                threshold,
+                60.0,
+                0.01,
+            );
+            let fear = emotion.get(EmotionType::Fear) as f32;
+            let anger = emotion.get(EmotionType::Anger) as f32;
+            let sadness = emotion.get(EmotionType::Sadness) as f32;
+            let disgust = emotion.get(EmotionType::Disgust) as f32;
+            let joy = emotion.get(EmotionType::Joy) as f32;
+            let trust = emotion.get(EmotionType::Trust) as f32;
+            let outrage = (anger + fear - trust - joy).max(0.0);
+            let _break_type = body::emotion_break_type_code(
+                outrage,
+                fear,
+                anger,
+                sadness,
+                disgust,
+                0.7,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -492,12 +557,15 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::{NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem};
+    use super::{
+        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem,
+    };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, SkillEntry, Skills,
-        Social, Stress, Values,
+        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
+        SkillEntry, Skills, Social, Stress, Values,
     };
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
@@ -623,6 +691,25 @@ mod tests {
         assert!((after.level - 0.0).abs() < 1e-9);
         assert!((after.reserve - 1.0).abs() < 1e-9);
         assert!((after.allostatic_load - 0.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn emotion_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let emotion = Emotion::default();
+        let stress = Stress::default();
+        let personality = Personality::default();
+        let entity = world.spawn((emotion, stress, personality));
+
+        let mut system = EmotionRuntimeSystem::new(32, 12);
+        system.run(&mut world, &mut resources, 12);
+
+        let after = world
+            .get::<&Emotion>(entity)
+            .expect("emotion component should remain available");
+        assert!((after.get(sim_core::EmotionType::Fear) - 0.0).abs() < 1e-9);
+        assert!((after.get(sim_core::EmotionType::Joy) - 0.0).abs() < 1e-9);
     }
 
     #[test]
