@@ -71,3 +71,9 @@
 - Completion after commit: 87%
 - Remaining after commit: 13%
 - Details: [0011-phase-b-registry-validation.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0011-phase-b-registry-validation.md)
+
+### 0012 - ws2 save/load single-path cutover
+- Commit: `[rust-r0-112] Cut over SaveManager to ws2-only runtime path`
+- Completion after commit: 90%
+- Remaining after commit: 10%
+- Details: [0012-phase-e-ws2-cutover.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0012-phase-e-ws2-cutover.md)

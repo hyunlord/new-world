@@ -1,11 +1,11 @@
 extends RefCounted
 
-## Binary save/load system (version 2).
-## Structure: user://saves/quicksave/ directory with:
-##   meta.json, entities.bin, buildings.bin, relationships.bin,
-##   settlements.bin, world.bin, stats.json
+## Save v2 (.ws2) manager.
+## Structure: user://saves/slot_N/ with:
+##   meta.json, sim.ws2, names.json, tension.json (optional sidecar files)
 
 const SAVE_VERSION: int = 8
+const WS2_META_VERSION: int = 2
 const WS2_FILE_NAME: String = "sim.ws2"
 const SAVE_BACKEND_LEGACY: String = "legacy_v8"
 const SAVE_BACKEND_RUST_WS2: String = "rust_ws2"
@@ -36,46 +36,10 @@ func _s32(v: int) -> int:
 
 func save_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted, stats_recorder: RefCounted) -> bool:
 	DirAccess.make_dir_recursive_absolute(dir_path)
-	if _use_rust_ws2_backend():
-		return _save_game_ws2(dir_path, sim_engine)
-
-	# meta.json
-	var date: Dictionary = GameConfig.tick_to_date(sim_engine.current_tick)
-	var meta: Dictionary = {
-		"version": SAVE_VERSION,
-		"save_backend": SAVE_BACKEND_LEGACY,
-		"current_tick": sim_engine.current_tick,
-		"seed": sim_engine._seed,
-		"speed_index": sim_engine.speed_index,
-		"rng_state": sim_engine.rng.state,
-		"ui_scale": GameConfig.ui_scale,
-		"population": entity_manager.get_alive_count(),
-		"game_date": "Y%d M%d D%d" % [date.year, date.month, date.day],
-		"game_year": date.year,
-		"game_month": date.month,
-		"save_time": Time.get_datetime_string_from_system(),
-	}
-	var mf: FileAccess = FileAccess.open(dir_path + "/meta.json", FileAccess.WRITE)
-	if mf == null:
-		push_warning("[SaveManager] Cannot write meta.json")
+	if not _is_ws2_runtime_ready():
+		push_warning("[SaveManager] ws2 backend unavailable. Save requires initialized Rust runtime.")
 		return false
-	mf.store_string(JSON.stringify(meta))
-	mf = null
-
-	if not _save_entities(dir_path + "/entities.bin", entity_manager):
-		return false
-	if not _save_buildings(dir_path + "/buildings.bin", building_manager):
-		return false
-	if not _save_relationships(dir_path + "/relationships.bin", relationship_manager):
-		return false
-	if not _save_settlements(dir_path + "/settlements.bin", settlement_manager):
-		return false
-	if not _save_resource_map(dir_path + "/world.bin", resource_map):
-		return false
-	_save_stats(dir_path + "/stats.json", stats_recorder)
-
-	SimulationBus.emit_event("game_saved", {"path": dir_path, "tick": sim_engine.current_tick})
-	return true
+	return _save_game_ws2(dir_path, sim_engine)
 
 
 ## ═══════════════════════════════════════════════════
@@ -83,54 +47,13 @@ func save_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCoun
 ## ═══════════════════════════════════════════════════
 
 func load_game(dir_path: String, sim_engine: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, resource_map: RefCounted, world_data: RefCounted, settlement_manager: RefCounted, relationship_manager: RefCounted, stats_recorder: RefCounted) -> bool:
-	if _use_rust_ws2_backend():
-		return _load_game_ws2(dir_path, sim_engine)
-
-	var meta_path: String = dir_path + "/meta.json"
-	if not FileAccess.file_exists(meta_path):
-		push_warning("[SaveManager] Save not found: %s" % meta_path)
+	if not _is_ws2_runtime_ready():
+		push_warning("[SaveManager] ws2 backend unavailable. Load requires initialized Rust runtime.")
 		return false
-	var mf: FileAccess = FileAccess.open(meta_path, FileAccess.READ)
-	if mf == null:
-		return false
-	var json: JSON = JSON.new()
-	if json.parse(mf.get_as_text()) != OK:
-		push_warning("[SaveManager] Corrupted meta.json")
-		return false
-	mf = null
-	var meta: Dictionary = json.data
-	_load_version = int(meta.get("version", 0))
-	if _load_version < MIN_LOAD_VERSION or _load_version > SAVE_VERSION:
-		push_warning("[SaveManager] Incompatible save version: %d (need %d-%d)" % [_load_version, MIN_LOAD_VERSION, SAVE_VERSION])
-		return false
-
-	sim_engine.current_tick = int(meta.get("current_tick", 0))
-	sim_engine.speed_index = int(meta.get("speed_index", 0))
-	if meta.has("rng_state"):
-		sim_engine.rng.state = int(meta.get("rng_state", 0))
-	GameConfig.ui_scale = float(meta.get("ui_scale", 1.0))
-
-	world_data.clear_entities()
-
-	if not _load_entities(dir_path + "/entities.bin", entity_manager, world_data):
-		return false
-	if not _load_buildings(dir_path + "/buildings.bin", building_manager):
-		return false
-	if not _load_relationships(dir_path + "/relationships.bin", relationship_manager):
-		return false
-	if not _load_settlements(dir_path + "/settlements.bin", settlement_manager):
-		return false
-	if not _load_resource_map(dir_path + "/world.bin", resource_map):
-		return false
-	_load_stats(dir_path + "/stats.json", stats_recorder)
-
-	SimulationBus.emit_event("game_loaded", {"path": dir_path, "tick": sim_engine.current_tick})
-	return true
+	return _load_game_ws2(dir_path, sim_engine)
 
 
-func _use_rust_ws2_backend() -> bool:
-	if str(GameConfig.SIM_RUNTIME_MODE) != GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY:
-		return false
+func _is_ws2_runtime_ready() -> bool:
 	if SimBridge == null:
 		return false
 	if not SimBridge.has_method("runtime_save_ws2"):
@@ -149,7 +72,7 @@ func _save_game_ws2(dir_path: String, sim_engine: RefCounted) -> bool:
 
 	var date: Dictionary = GameConfig.tick_to_date(sim_engine.current_tick)
 	var meta: Dictionary = {
-		"version": SAVE_VERSION,
+		"version": WS2_META_VERSION,
 		"save_backend": SAVE_BACKEND_RUST_WS2,
 		"current_tick": sim_engine.current_tick,
 		"seed": sim_engine._seed,
@@ -666,7 +589,15 @@ func get_slot_dir(slot: int) -> String:
 func get_slot_info(slot: int) -> Dictionary:
 	var dir_path: String = get_slot_dir(slot)
 	var meta_path: String = dir_path + "/meta.json"
+	var ws2_path: String = dir_path + "/" + WS2_FILE_NAME
 	if not FileAccess.file_exists(meta_path):
+		if FileAccess.file_exists(ws2_path):
+			return {
+				"exists": true,
+				"slot": slot,
+				"save_backend": SAVE_BACKEND_RUST_WS2,
+				"version": WS2_META_VERSION,
+			}
 		return {"exists": false, "slot": slot}
 	var f: FileAccess = FileAccess.open(meta_path, FileAccess.READ)
 	if f == null:
@@ -690,9 +621,5 @@ func get_all_slots() -> Array:
 
 ## Migrate legacy quicksave to slot 1 (called once on startup)
 func migrate_legacy_save() -> void:
-	var legacy_path: String = SAVE_DIR + "quicksave"
-	var slot1_path: String = get_slot_dir(1)
-	if DirAccess.dir_exists_absolute(legacy_path) and not DirAccess.dir_exists_absolute(slot1_path):
-		var err: int = DirAccess.rename_absolute(legacy_path, slot1_path)
-		if err == OK:
-			print("[SaveManager] Migrated legacy quicksave to slot 1")
+	# Save v2/ws2 only: legacy quicksave migration is intentionally disabled.
+	return
