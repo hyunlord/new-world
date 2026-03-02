@@ -351,6 +351,8 @@ const SIM_RUNTIME_MODE_GDSCRIPT: String = "gdscript"
 const SIM_RUNTIME_MODE_RUST_SHADOW: String = "rust_shadow"
 const SIM_RUNTIME_MODE_RUST_PRIMARY: String = "rust_primary"
 const SIM_RUNTIME_MODE: String = SIM_RUNTIME_MODE_RUST_SHADOW
+const RUST_SHADOW_REPORT_PATH: String = "user://reports/rust_shadow/latest.json"
+const RUST_SHADOW_REPORT_INTERVAL_TICKS: int = 500
 
 ## Biome enum
 enum Biome {

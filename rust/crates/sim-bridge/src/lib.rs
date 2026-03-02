@@ -851,7 +851,9 @@ impl WorldSimRuntime {
             return out;
         };
 
-        state.speed_index = clamp_speed_index(speed_index);
+        if speed_index >= 0 {
+            state.speed_index = clamp_speed_index(speed_index);
+        }
         let mut ticks_processed: u32 = 0;
 
         if !paused {
@@ -959,7 +961,33 @@ impl WorldSimRuntime {
     }
 
     #[func]
-    fn runtime_apply_commands_v2(&mut self, _commands: Array<VarDictionary>) {}
+    fn runtime_apply_commands_v2(&mut self, commands: Array<VarDictionary>) {
+        let Some(state) = self.state.as_mut() else {
+            return;
+        };
+        for command in commands.iter_shared() {
+            let Some(command_id_var) = command.get("command_id") else {
+                continue;
+            };
+            let command_id = command_id_var.to::<GString>().to_string();
+            if command_id == "set_speed_index" {
+                let Some(payload_var) = command.get("payload") else {
+                    continue;
+                };
+                let payload = payload_var.to::<VarDictionary>();
+                let Some(speed_var) = payload.get("speed_index") else {
+                    continue;
+                };
+                let speed = speed_var.to::<i64>() as i32;
+                state.speed_index = clamp_speed_index(speed);
+                continue;
+            }
+            if command_id == "reset_accumulator" {
+                state.accumulator = 0.0;
+                continue;
+            }
+        }
+    }
 }
 
 #[derive(GodotClass)]

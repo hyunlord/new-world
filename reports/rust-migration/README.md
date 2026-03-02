@@ -23,3 +23,9 @@
 - Completion after commit: 50%
 - Remaining after commit: 50%
 - Details: [0003-phase-g-fluent-loader.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0003-phase-g-fluent-loader.md)
+
+### 0004 - Shadow diff reporter + Bus v2 command pipeline
+- Commit: `[rust-r0-104] Add shadow reporter and Bus v2 runtime commands`
+- Completion after commit: 57%
+- Remaining after commit: 43%
+- Details: [0004-phase-h-shadow-reporter.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0004-phase-h-shadow-reporter.md)

@@ -1,5 +1,7 @@
 extends RefCounted
 
+const RuntimeShadowReporter = preload("res://scripts/core/simulation/runtime_shadow_reporter.gd")
+
 var current_tick: int = 0
 var is_paused: bool = false
 var speed_index: int = 0
@@ -12,6 +14,8 @@ var _runtime_mode: String = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
 var _rust_runtime_initialized: bool = false
 var _rust_runtime_available: bool = false
 var _shadow_mismatch_count: int = 0
+var _last_gd_ticks_processed: int = 0
+var _shadow_reporter: RefCounted = null
 
 
 ## Initialize the engine with a deterministic seed
@@ -45,6 +49,7 @@ func update(delta: float) -> void:
 
 
 func _update_gdscript(delta: float) -> void:
+	_last_gd_ticks_processed = 0
 	var tick_duration: float = 1.0 / GameConfig.TICKS_PER_SECOND
 	var speed: int = GameConfig.SPEED_OPTIONS[speed_index]
 	_accumulator += delta * speed
@@ -53,12 +58,14 @@ func _update_gdscript(delta: float) -> void:
 		_process_tick()
 		_accumulator -= tick_duration
 		ticks_this_frame += 1
+	_last_gd_ticks_processed = ticks_this_frame
 	# Prevent spiral of death
 	if _accumulator > tick_duration * 3.0:
 		_accumulator = 0.0
 
 
 func _update_rust_primary(delta: float) -> void:
+	_apply_runtime_commands_v2()
 	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, false)
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
@@ -66,18 +73,29 @@ func _update_rust_primary(delta: float) -> void:
 
 
 func _run_shadow_runtime(delta: float) -> void:
+	_apply_runtime_commands_v2()
 	var runtime_state: Dictionary = SimBridge.runtime_tick_frame(delta, speed_index, false)
 	var shadow_tick: int = int(runtime_state.get("current_tick", current_tick))
 	# Shadow mode: drain v2 events so runtime buffer does not grow,
 	# but do not forward them to avoid duplicate v1/v2 emissions.
-	SimBridge.runtime_export_events_v2()
+	var shadow_events: Array = SimBridge.runtime_export_events_v2()
+	var shadow_event_count: int = shadow_events.size()
+	if _shadow_reporter != null and _shadow_reporter.has_method("record_frame"):
+		_shadow_reporter.call(
+			"record_frame",
+			current_tick,
+			current_tick,
+			shadow_tick,
+			_last_gd_ticks_processed,
+			shadow_event_count
+		)
 	if shadow_tick == current_tick:
 		return
 	_shadow_mismatch_count += 1
 	if _shadow_mismatch_count <= 5 or _shadow_mismatch_count % 100 == 0:
 		push_warning(
-			"[SimulationEngine] Rust shadow tick mismatch gd=%d rust=%d (count=%d)" %
-			[current_tick, shadow_tick, _shadow_mismatch_count]
+			"[SimulationEngine] Rust shadow mismatch gd_tick=%d rust_tick=%d gd_events=%d rust_events=%d (count=%d)" %
+			[current_tick, shadow_tick, _last_gd_ticks_processed, shadow_event_count, _shadow_mismatch_count]
 		)
 
 
@@ -104,6 +122,23 @@ func _consume_runtime_events_v2() -> void:
 		bus_v2.call("emit_runtime_event", event_type_id, payload, tick)
 
 
+func _apply_runtime_commands_v2() -> void:
+	var bus_v2: Object = _get_simulation_bus_v2()
+	if bus_v2 == null:
+		return
+	if not bus_v2.has_method("drain_runtime_commands"):
+		return
+	if not SimBridge.has_method("runtime_apply_commands_v2"):
+		return
+	var commands_raw: Variant = bus_v2.call("drain_runtime_commands")
+	if not (commands_raw is Array):
+		return
+	var commands: Array = commands_raw
+	if commands.is_empty():
+		return
+	SimBridge.runtime_apply_commands_v2(commands)
+
+
 func _process_tick() -> void:
 	current_tick += 1
 	for i in range(_systems.size()):
@@ -122,6 +157,7 @@ func toggle_pause() -> void:
 ## Set speed by index
 func set_speed(index: int) -> void:
 	speed_index = clampi(index, 0, GameConfig.SPEED_OPTIONS.size() - 1)
+	_queue_runtime_command(StringName("set_speed_index"), {"speed_index": speed_index})
 	SimulationBus.speed_changed.emit(speed_index)
 
 
@@ -157,6 +193,8 @@ func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = false
 	_rust_runtime_available = false
 	_shadow_mismatch_count = 0
+	_last_gd_ticks_processed = 0
+	_shadow_reporter = null
 	if _runtime_mode == GameConfig.SIM_RUNTIME_MODE_GDSCRIPT:
 		return
 	if SimBridge == null:
@@ -172,6 +210,13 @@ func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = bool(SimBridge.runtime_init(_seed, config_json))
 	_rust_runtime_available = _rust_runtime_initialized
 	if _rust_runtime_available:
+		if _use_rust_shadow():
+			_shadow_reporter = RuntimeShadowReporter.new()
+			_shadow_reporter.call(
+				"setup",
+				GameConfig.RUST_SHADOW_REPORT_PATH,
+				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS
+			)
 		return
 	push_warning("[SimulationEngine] Rust runtime init failed. Falling back to GDScript runtime.")
 	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
@@ -193,6 +238,17 @@ func _use_rust_primary() -> bool:
 
 func _use_rust_shadow() -> bool:
 	return _rust_runtime_available and _runtime_mode == GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW
+
+
+func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void:
+	if not _rust_runtime_available:
+		return
+	var bus_v2: Object = _get_simulation_bus_v2()
+	if bus_v2 == null:
+		return
+	if not bus_v2.has_method("queue_runtime_command"):
+		return
+	bus_v2.call("queue_runtime_command", command_id, payload)
 
 
 func _get_simulation_bus_v2() -> Object:
