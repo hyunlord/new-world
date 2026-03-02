@@ -4714,6 +4714,95 @@ impl SimSystem for StatSyncRuntimeSystem {
     }
 }
 
+const STAT_THRESHOLD_FLAG_HUNGER_LOW: u32 = 1 << 0;
+const STAT_THRESHOLD_FLAG_STRESS_HIGH: u32 = 1 << 1;
+
+/// Rust runtime system for threshold evaluation and effect application.
+///
+/// This performs active writes on `SimResources.stat_threshold_flags` and
+/// entity `Behavior.current_action`.
+#[derive(Debug, Clone)]
+pub struct StatThresholdRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StatThresholdRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StatThresholdRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stat_threshold_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let previous_flags = resources.stat_threshold_flags.clone();
+        let mut next_flags: HashMap<EntityId, u32> = HashMap::new();
+
+        let mut query = world.query::<(&Age, &Needs, &Stress, &mut Behavior)>();
+        for (entity, (age, needs, stress, behavior)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            let entity_id = EntityId(entity.id() as u64);
+            let current_flags = previous_flags.get(&entity_id).copied().unwrap_or(0);
+
+            let hunger_value = (needs.get(NeedType::Hunger) as f32 * 1000.0).round() as i32;
+            let stress_value = (stress.level as f32 * 1000.0).round() as i32;
+
+            let hunger_active = body::stat_threshold_is_active(
+                hunger_value,
+                200,
+                0,
+                50,
+                (current_flags & STAT_THRESHOLD_FLAG_HUNGER_LOW) != 0,
+            );
+            let stress_active = body::stat_threshold_is_active(
+                stress_value,
+                700,
+                1,
+                40,
+                (current_flags & STAT_THRESHOLD_FLAG_STRESS_HIGH) != 0,
+            );
+
+            let mut flags = 0_u32;
+            if hunger_active {
+                flags |= STAT_THRESHOLD_FLAG_HUNGER_LOW;
+            }
+            if stress_active {
+                flags |= STAT_THRESHOLD_FLAG_STRESS_HIGH;
+            }
+            if flags != 0 {
+                next_flags.insert(entity_id, flags);
+            }
+
+            if stress_active {
+                behavior.current_action = ActionType::Rest;
+            } else if hunger_active {
+                behavior.current_action = ActionType::Forage;
+            } else if matches!(behavior.current_action, ActionType::Rest | ActionType::Forage) {
+                behavior.current_action = ActionType::Idle;
+            }
+        }
+
+        resources.stat_threshold_flags = next_flags;
+    }
+}
+
 /// Rust runtime system for aggregated simulation stats snapshots.
 ///
 /// This performs active writes on `SimResources.stats_history` and
@@ -6491,6 +6580,8 @@ mod tests {
         IntergenerationalRuntimeSystem,
         ParentingRuntimeSystem,
         StatSyncRuntimeSystem,
+        StatThresholdRuntimeSystem,
+        STAT_THRESHOLD_FLAG_HUNGER_LOW,
         StatsRecorderRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
@@ -9813,6 +9904,81 @@ mod tests {
         assert!(resources
             .stat_sync_derived
             .contains_key(&EntityId(alive.id() as u64)));
+    }
+
+    #[test]
+    fn stat_threshold_runtime_system_applies_hunger_effect_action() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 81);
+        let mut resources = SimResources::new(calendar, map, 137);
+        let mut world = World::new();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        let entity = world.spawn((
+            Age::default(),
+            needs,
+            Stress::default(),
+            Behavior::default(),
+        ));
+
+        let mut system = StatThresholdRuntimeSystem::new(12, 5);
+        system.run(&mut world, &mut resources, 5);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Forage);
+        let flags = resources
+            .stat_threshold_flags
+            .get(&EntityId(entity.id() as u64))
+            .copied()
+            .unwrap_or(0);
+        assert!((flags & STAT_THRESHOLD_FLAG_HUNGER_LOW) != 0);
+    }
+
+    #[test]
+    fn stat_threshold_runtime_system_hysteresis_clears_effect_after_recovery() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 85);
+        let mut resources = SimResources::new(calendar, map, 139);
+        let mut world = World::new();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.12);
+        let entity = world.spawn((
+            Age::default(),
+            needs,
+            Stress::default(),
+            Behavior::default(),
+        ));
+
+        let mut system = StatThresholdRuntimeSystem::new(12, 5);
+        system.run(&mut world, &mut resources, 5);
+
+        if let Ok(mut entity_needs) = world.get::<&mut Needs>(entity) {
+            entity_needs.set(NeedType::Hunger, 0.24);
+        }
+        system.run(&mut world, &mut resources, 10);
+        let flags_after_hysteresis = resources
+            .stat_threshold_flags
+            .get(&EntityId(entity.id() as u64))
+            .copied()
+            .unwrap_or(0);
+        assert!((flags_after_hysteresis & STAT_THRESHOLD_FLAG_HUNGER_LOW) != 0);
+
+        if let Ok(mut entity_needs) = world.get::<&mut Needs>(entity) {
+            entity_needs.set(NeedType::Hunger, 0.80);
+        }
+        system.run(&mut world, &mut resources, 15);
+        let flags_after_recovery = resources
+            .stat_threshold_flags
+            .get(&EntityId(entity.id() as u64))
+            .copied()
+            .unwrap_or(0);
+        assert_eq!(flags_after_recovery & STAT_THRESHOLD_FLAG_HUNGER_LOW, 0);
     }
 
     #[test]

@@ -56,6 +56,7 @@ use sim_systems::{
         ParentingRuntimeSystem,
         PopulationRuntimeSystem,
         StatSyncRuntimeSystem,
+        StatThresholdRuntimeSystem,
         StatsRecorderRuntimeSystem,
         TechPropagationRuntimeSystem,
         TechDiscoveryRuntimeSystem,
@@ -636,6 +637,7 @@ const RUNTIME_SYSTEM_KEY_INTERGENERATIONAL: &str = "intergenerational_system";
 const RUNTIME_SYSTEM_KEY_PARENTING: &str = "parenting_system";
 const RUNTIME_SYSTEM_KEY_STATS_RECORDER: &str = "stats_recorder";
 const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
+const RUNTIME_SYSTEM_KEY_STAT_THRESHOLD: &str = "stat_threshold_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -796,6 +798,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_PARENTING
             | RUNTIME_SYSTEM_KEY_STATS_RECORDER
             | RUNTIME_SYSTEM_KEY_STAT_SYNC
+            | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
             | RUNTIME_SYSTEM_KEY_FAMILY
     )
 }
@@ -993,6 +996,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(StatSyncRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_STAT_THRESHOLD => {
+            state
+                .engine
+                .register(StatThresholdRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5642,7 +5650,7 @@ mod tests {
         assert!(runtime_supports_rust_system("parenting_system"));
         assert!(runtime_supports_rust_system("stats_recorder"));
         assert!(runtime_supports_rust_system("stat_sync_system"));
-        assert!(!runtime_supports_rust_system("stat_threshold_system"));
+        assert!(runtime_supports_rust_system("stat_threshold_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

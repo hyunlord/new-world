@@ -64,6 +64,8 @@ pub struct SimResources {
     pub stats_total_deaths: u64,
     /// Per-entity stat-sync derived cache (8 composite scores).
     pub stat_sync_derived: HashMap<EntityId, [f32; 8]>,
+    /// Per-entity stat-threshold active flags.
+    pub stat_threshold_flags: HashMap<EntityId, u32>,
 }
 
 impl SimResources {
@@ -87,6 +89,7 @@ impl SimResources {
             stats_total_births: 0,
             stats_total_deaths: 0,
             stat_sync_derived: HashMap::new(),
+            stat_threshold_flags: HashMap::new(),
         }
     }
 }
@@ -101,6 +104,7 @@ impl std::fmt::Debug for SimResources {
             .field("stats_history", &self.stats_history.len())
             .field("stats_peak_population", &self.stats_peak_population)
             .field("stat_sync_derived", &self.stat_sync_derived.len())
+            .field("stat_threshold_flags", &self.stat_threshold_flags.len())
             .field("event_bus", &self.event_bus)
             .finish_non_exhaustive()
     }
