@@ -1190,6 +1190,71 @@ impl SimSystem for SocialEventRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for building-effect evaluation.
+///
+/// Full parity requires Rust-owned building manager integration and proximity filtering.
+#[derive(Debug, Clone)]
+pub struct BuildingEffectRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl BuildingEffectRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for BuildingEffectRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "building_effect_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let hour = (tick % 24) as i32;
+        let is_night = hour >= 20 || hour < 6;
+        let social_boost = body::building_campfire_social_boost(is_night, 0.01, 0.02);
+        let mut query = world.query::<(&Needs, Option<&Social>)>();
+        for (_, (needs, social_opt)) in &mut query {
+            let social_capital_norm = social_opt
+                .map(|social| social.social_capital as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let _next_social = body::building_add_capped(
+                social_capital_norm,
+                social_boost,
+                1.0,
+            );
+            let _next_warmth = body::building_add_capped(
+                needs.get(NeedType::Warmth) as f32,
+                config::WARMTH_FIRE_RESTORE as f32,
+                1.0,
+            );
+            let _next_energy = body::building_add_capped(
+                needs.energy as f32,
+                0.01,
+                1.0,
+            );
+            let _next_safety = body::building_add_capped(
+                needs.get(NeedType::Safety) as f32,
+                config::SAFETY_SHELTER_RESTORE as f32,
+                1.0,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1358,8 +1423,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
+        JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
@@ -1798,6 +1863,33 @@ mod tests {
         assert_eq!(after.edges.len(), 1);
         assert!((after.edges[0].affinity - 65.0).abs() < 1e-9);
         assert!((after.edges[0].trust - 0.55).abs() < 1e-9);
+    }
+
+    #[test]
+    fn building_effect_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Warmth, 0.6);
+        needs.set(NeedType::Safety, 0.4);
+        needs.energy = 0.55;
+        let social = Social::default();
+        let entity = world.spawn((needs, social));
+
+        let mut system =
+            BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::BUILDING_EFFECT_TICK_INTERVAL,
+        );
+
+        let after = world
+            .get::<&Needs>(entity)
+            .expect("needs component should remain available");
+        assert!((after.get(NeedType::Warmth) - 0.6).abs() < 1e-9);
+        assert!((after.get(NeedType::Safety) - 0.4).abs() < 1e-9);
+        assert!((after.energy - 0.55).abs() < 1e-9);
     }
 
     #[test]
