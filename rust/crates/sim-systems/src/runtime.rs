@@ -1,10 +1,11 @@
 use hecs::World;
+use std::collections::HashMap;
 use sim_core::components::{
     Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
     Social, Stress, Values,
 };
 use sim_core::config;
-use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, ValueType};
+use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, RelationType, SettlementId, ValueType};
 use sim_engine::{SimResources, SimSystem};
 use crate::body;
 
@@ -978,6 +979,151 @@ impl SimSystem for ValueRuntimeSystem {
     }
 }
 
+#[derive(Default, Debug, Clone)]
+struct NetworkSettlementAccumulator {
+    population: u32,
+    unhappiness_sum: f32,
+    frustration_sum: f32,
+    independence_count: u32,
+}
+
+/// Rust runtime baseline system for social-network and revolution-risk evaluation.
+///
+/// Full parity requires Rust-owned settlement authority transitions, revolution cooldown
+/// state mutation, leader replacement, and event emission.
+#[derive(Debug, Clone)]
+pub struct NetworkRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl NetworkRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for NetworkRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "network_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut settlement_accumulators: HashMap<SettlementId, NetworkSettlementAccumulator> =
+            HashMap::new();
+        let mut query = world.query::<(
+            &Social,
+            Option<&Emotion>,
+            Option<&Needs>,
+            Option<&Values>,
+            Option<&Identity>,
+        )>();
+        for (_, (social, emotion_opt, needs_opt, values_opt, identity_opt)) in &mut query {
+            let mut strong_count = 0.0_f32;
+            let mut weak_count = 0.0_f32;
+            let mut bridge_count = 0.0_f32;
+            for edge in &social.edges {
+                let is_strong = matches!(
+                    edge.relation_type,
+                    RelationType::Friend
+                        | RelationType::CloseFriend
+                        | RelationType::Intimate
+                        | RelationType::Spouse
+                        | RelationType::Parent
+                        | RelationType::Child
+                        | RelationType::Sibling
+                );
+                if edge.is_bridge {
+                    bridge_count += if is_strong { 1.0 } else { 0.5 };
+                } else if is_strong {
+                    strong_count += 1.0;
+                } else {
+                    weak_count += 1.0;
+                }
+            }
+            let rep_score = ((social.reputation_local + social.reputation_regional) as f32 * 0.5)
+                .clamp(0.0, 1.0);
+            let _social_cap = body::network_social_capital_norm(
+                strong_count,
+                weak_count,
+                bridge_count,
+                rep_score,
+                config::NETWORK_SOCIAL_CAP_STRONG_W as f32,
+                config::NETWORK_SOCIAL_CAP_WEAK_W as f32,
+                config::NETWORK_SOCIAL_CAP_BRIDGE_W as f32,
+                config::NETWORK_SOCIAL_CAP_REP_W as f32,
+                config::NETWORK_SOCIAL_CAP_NORM_DIV as f32,
+            );
+
+            let Some(identity) = identity_opt else {
+                continue;
+            };
+            let Some(settlement_id) = identity.settlement_id else {
+                continue;
+            };
+            let accumulator = settlement_accumulators.entry(settlement_id).or_default();
+            accumulator.population += 1;
+
+            let valence_norm = if let Some(emotion) = emotion_opt {
+                let positive = emotion.get(EmotionType::Joy) as f32 + emotion.get(EmotionType::Trust) as f32;
+                let negative = emotion.get(EmotionType::Fear) as f32
+                    + emotion.get(EmotionType::Anger) as f32
+                    + emotion.get(EmotionType::Sadness) as f32
+                    + emotion.get(EmotionType::Disgust) as f32;
+                ((positive - negative).clamp(-1.0, 1.0) + 1.0) * 0.5
+            } else {
+                0.5
+            };
+            accumulator.unhappiness_sum += 1.0 - valence_norm.clamp(0.0, 1.0);
+
+            let frustration = if let Some(needs) = needs_opt {
+                let hunger = (1.0 - needs.get(NeedType::Hunger) as f32).max(0.0);
+                let energy = (1.0 - needs.energy as f32).max(0.0);
+                let safety = (1.0 - needs.get(NeedType::Safety) as f32).max(0.0);
+                (hunger + energy + safety) / 3.0
+            } else {
+                0.5
+            };
+            accumulator.frustration_sum += frustration.clamp(0.0, 1.0);
+
+            if values_opt
+                .map(|values| values.get(ValueType::Independence) as f32 > 0.3)
+                .unwrap_or(false)
+            {
+                accumulator.independence_count += 1;
+            }
+        }
+
+        for accumulator in settlement_accumulators.values() {
+            if accumulator.population == 0 {
+                continue;
+            }
+            let population = accumulator.population as f32;
+            let unhappiness = accumulator.unhappiness_sum / population;
+            let frustration = accumulator.frustration_sum / population;
+            let independence_ratio = accumulator.independence_count as f32 / population;
+            let _risk = body::revolution_risk_score(
+                unhappiness,
+                frustration,
+                0.5,
+                0.5,
+                independence_ratio,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1147,7 +1293,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        MentalBreakRuntimeSystem, NeedsRuntimeSystem, OccupationRuntimeSystem,
+        MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -1156,7 +1303,7 @@ mod tests {
     use hecs::World;
     use sim_core::components::{
         Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
-        SkillEntry, Skills, Social, Stress, TraumaScar, Values, Memory,
+        SkillEntry, Skills, Social, Stress, TraumaScar, Values, Memory, RelationshipEdge,
     };
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
@@ -1520,6 +1667,44 @@ mod tests {
             .expect("values component should remain available");
         assert!((after.get(ValueType::Tradition) - 0.4).abs() < 1e-9);
         assert!((after.get(ValueType::Nature) + 0.2).abs() < 1e-9);
+    }
+
+    #[test]
+    fn network_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut social = Social::default();
+        let mut edge = RelationshipEdge::new(EntityId(77));
+        edge.relation_type = sim_core::RelationType::Friend;
+        social.edges.push(edge);
+        social.reputation_local = 0.6;
+        social.reputation_regional = 0.4;
+
+        let mut values = Values::default();
+        values.set(ValueType::Independence, 0.5);
+        let identity = Identity {
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        let needs = Needs::default();
+        let emotion = Emotion::default();
+        let entity = world.spawn((social, values, identity, needs, emotion));
+
+        let mut system = NetworkRuntimeSystem::new(58, sim_core::config::REVOLUTION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::REVOLUTION_TICK_INTERVAL,
+        );
+
+        let after_social = world
+            .get::<&Social>(entity)
+            .expect("social component should remain available");
+        let after_values = world
+            .get::<&Values>(entity)
+            .expect("values component should remain available");
+        assert_eq!(after_social.edges.len(), 1);
+        assert!((after_values.get(ValueType::Independence) - 0.5).abs() < 1e-9);
     }
 
     #[test]
