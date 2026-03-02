@@ -1,7 +1,7 @@
 use hecs::World;
-use sim_core::components::{Behavior, Identity, Needs, Skills, Social, Values};
+use sim_core::components::{Behavior, Body as BodyComponent, Identity, Needs, Position, Skills, Social, Values};
 use sim_core::config;
-use sim_core::{GrowthStage, NeedType, ValueType};
+use sim_core::{ActionType, GrowthStage, NeedType, ValueType};
 use sim_engine::{SimResources, SimSystem};
 use crate::body;
 
@@ -132,6 +132,137 @@ impl SimSystem for ResourceRegenSystem {
                     deposit.amount = next_amount.min(deposit.max_amount);
                 }
             }
+        }
+    }
+}
+
+/// Rust runtime system for base-needs decay and energy adjustment.
+///
+/// This ports the hot-path math from `needs_system.gd` using the existing
+/// Rust body kernels (`needs_base_decay_step`, `action_energy_cost`,
+/// `rest_energy_recovery`).
+#[derive(Debug, Clone)]
+pub struct NeedsRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl NeedsRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for NeedsRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "needs_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Needs,
+            Option<&Behavior>,
+            Option<&BodyComponent>,
+            Option<&Position>,
+        )>();
+        for (_, (needs, behavior_opt, body_opt, position_opt)) in &mut query {
+            let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
+            let mut has_tile_temp = false;
+            if let Some(position) = position_opt {
+                let x = position.x;
+                let y = position.y;
+                if resources.map.in_bounds(x, y) {
+                    let tile = resources.map.get(x as u32, y as u32);
+                    tile_temp = tile.temperature;
+                    has_tile_temp = true;
+                }
+            }
+
+            let decays = body::needs_base_decay_step(
+                needs.get(NeedType::Hunger) as f32,
+                config::HUNGER_DECAY_RATE as f32,
+                1.0,
+                config::HUNGER_METABOLIC_MIN as f32,
+                config::HUNGER_METABOLIC_RANGE as f32,
+                config::ENERGY_DECAY_RATE as f32,
+                config::SOCIAL_DECAY_RATE as f32,
+                config::SAFETY_DECAY_RATE as f32,
+                config::THIRST_DECAY_RATE as f32,
+                config::WARMTH_DECAY_RATE as f32,
+                tile_temp,
+                has_tile_temp,
+                config::WARMTH_TEMP_NEUTRAL as f32,
+                config::WARMTH_TEMP_FREEZING as f32,
+                config::WARMTH_TEMP_COLD as f32,
+                true,
+            );
+
+            let mut energy = (needs.energy as f32 - decays[1]).clamp(0.0, 1.0);
+            if let Some(behavior) = behavior_opt {
+                if behavior.current_action != ActionType::Idle
+                    && behavior.current_action != ActionType::Rest
+                {
+                    let end_norm = body_opt
+                        .map(|body_component| {
+                            (body_component.end_realized as f32 / config::BODY_REALIZED_MAX as f32)
+                                .clamp(0.0, 1.0)
+                        })
+                        .unwrap_or(0.5);
+                    let action_cost = body::action_energy_cost(
+                        config::ENERGY_ACTION_COST as f32,
+                        end_norm,
+                        config::BODY_END_COST_REDUCTION as f32,
+                    );
+                    energy = (energy - action_cost).clamp(0.0, 1.0);
+                } else if behavior.current_action == ActionType::Rest {
+                    let rec_norm = body_opt
+                        .map(|body_component| {
+                            (body_component.rec_realized as f32 / config::BODY_REALIZED_MAX as f32)
+                                .clamp(0.0, 1.0)
+                        })
+                        .unwrap_or(0.5);
+                    let recovery = body::rest_energy_recovery(
+                        config::BODY_REST_ENERGY_RECOVERY as f32,
+                        rec_norm,
+                        config::BODY_REC_RECOVERY_BONUS as f32,
+                    );
+                    energy = (energy + recovery).clamp(0.0, 1.0);
+                }
+            }
+
+            needs.set(
+                NeedType::Hunger,
+                (needs.get(NeedType::Hunger) as f32 - decays[0]) as f64,
+            );
+            needs.set(
+                NeedType::Belonging,
+                (needs.get(NeedType::Belonging) as f32 - decays[2]) as f64,
+            );
+            needs.set(
+                NeedType::Thirst,
+                (needs.get(NeedType::Thirst) as f32 - decays[3]) as f64,
+            );
+            needs.set(
+                NeedType::Warmth,
+                (needs.get(NeedType::Warmth) as f32 - decays[4]) as f64,
+            );
+            needs.set(
+                NeedType::Safety,
+                (needs.get(NeedType::Safety) as f32 - decays[5]) as f64,
+            );
+            needs.energy = energy as f64;
+            needs.set(NeedType::Sleep, energy as f64);
         }
     }
 }
@@ -303,13 +434,14 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::{ResourceRegenSystem, UpperNeedsRuntimeSystem};
+    use super::{NeedsRuntimeSystem, ResourceRegenSystem, UpperNeedsRuntimeSystem};
     use crate::body;
     use hecs::World;
-    use sim_core::components::{Behavior, Identity, Needs, SkillEntry, Skills, Social, Values};
+    use sim_core::components::{Behavior, Body as BodyComponent, Identity, Needs, Position, SkillEntry, Skills, Social, Values};
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
     use sim_core::ids::EntityId;
+    use sim_core::ActionType;
     use sim_engine::{SimResources, SimSystem};
 
     fn make_resources() -> SimResources {
@@ -343,6 +475,73 @@ mod tests {
 
         let second = &resources.map.get(1, 0).resources[0];
         assert!((second.amount - 5.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn needs_runtime_system_applies_decay_and_action_energy_cost() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        resources.map.get_mut(0, 0).temperature = 0.2;
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.6);
+        needs.set(NeedType::Belonging, 0.7);
+        needs.set(NeedType::Thirst, 0.8);
+        needs.set(NeedType::Warmth, 0.9);
+        needs.set(NeedType::Safety, 0.85);
+        needs.energy = 0.75;
+        needs.set(NeedType::Sleep, 0.75);
+
+        let behavior = Behavior {
+            current_action: ActionType::GatherWood,
+            ..Behavior::default()
+        };
+        let body_component = BodyComponent {
+            end_realized: 6000,
+            rec_realized: 4000,
+            ..BodyComponent::default()
+        };
+        let position = Position::new(0, 0);
+        let entity = world.spawn((needs, behavior, body_component, position));
+
+        let mut system = NeedsRuntimeSystem::new(10, 4);
+        system.run(&mut world, &mut resources, 4);
+
+        let decays = body::needs_base_decay_step(
+            0.6,
+            sim_core::config::HUNGER_DECAY_RATE as f32,
+            1.0,
+            sim_core::config::HUNGER_METABOLIC_MIN as f32,
+            sim_core::config::HUNGER_METABOLIC_RANGE as f32,
+            sim_core::config::ENERGY_DECAY_RATE as f32,
+            sim_core::config::SOCIAL_DECAY_RATE as f32,
+            sim_core::config::SAFETY_DECAY_RATE as f32,
+            sim_core::config::THIRST_DECAY_RATE as f32,
+            sim_core::config::WARMTH_DECAY_RATE as f32,
+            0.2,
+            true,
+            sim_core::config::WARMTH_TEMP_NEUTRAL as f32,
+            sim_core::config::WARMTH_TEMP_FREEZING as f32,
+            sim_core::config::WARMTH_TEMP_COLD as f32,
+            true,
+        );
+        let action_cost = body::action_energy_cost(
+            sim_core::config::ENERGY_ACTION_COST as f32,
+            (6000.0 / sim_core::config::BODY_REALIZED_MAX as f32).clamp(0.0, 1.0),
+            sim_core::config::BODY_END_COST_REDUCTION as f32,
+        );
+        let expected_energy = (0.75 - decays[1] - action_cost).clamp(0.0, 1.0);
+
+        let updated = world
+            .get::<&Needs>(entity)
+            .expect("updated needs component should be queryable");
+        assert!((updated.get(NeedType::Hunger) as f32 - (0.6 - decays[0]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!((updated.get(NeedType::Belonging) as f32 - (0.7 - decays[2]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!((updated.get(NeedType::Thirst) as f32 - (0.8 - decays[3]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!((updated.get(NeedType::Warmth) as f32 - (0.9 - decays[4]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!((updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!((updated.energy as f32 - expected_energy).abs() < 1e-6);
+        assert!((updated.get(NeedType::Sleep) as f32 - expected_energy).abs() < 1e-6);
     }
 
     #[test]

@@ -3,7 +3,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 2,resource_regen_system,ResourceRegenSystem,res://scripts/systems/world/resource_regen_system.gd,resource_regen_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 3,childcare_system,ChildcareSystem,res://scripts/systems/development/childcare_system.gd,childcare_system,gdscript,yes,simbridge_pattern_scan_v1,no
 4,job_assignment_system,JobAssignmentSystem,res://scripts/systems/work/job_assignment_system.gd,job_assignment_system,gdscript,yes,simbridge_pattern_scan_v1,no
-5,needs_system,NeedsSystem,res://scripts/systems/psychology/needs_system.gd,needs_system,gdscript,yes,simbridge_pattern_scan_v1,no
+5,needs_system,NeedsSystem,res://scripts/systems/psychology/needs_system.gd,needs_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 6,stat_threshold_system,StatThresholdSystem,res://scripts/systems/record/stat_threshold_system.gd,stat_threshold_system,gdscript,yes,simbridge_pattern_scan_v1,no
 7,upper_needs_system,UpperNeedsSystem,res://scripts/systems/psychology/upper_needs_system.gd,upper_needs_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 8,building_effect_system,BuildingEffectSystem,res://scripts/systems/work/building_effect_system.gd,building_effect_system,gdscript,yes,simbridge_pattern_scan_v1,no
