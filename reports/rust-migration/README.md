@@ -591,3 +591,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 26.09% (12/46)
 - Remaining (strict state-write basis): 69.57%
 - Details: [0070-age-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0070-age-runtime-active-write-port.md)
+
+### 0071 - owner transfer allowlist phase 6
+- Commit: `[rust-r0-171] Expand owner-ready allowlist with age system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 30.43% (14/46)
+- Actual state-write coverage (strict): 30.43% (14/46)
+- Owner transfer coverage (`exec_owner=rust`): 28.26% (13/46)
+- Remaining (strict state-write basis): 69.57%
+- Details: [0071-owner-transfer-allowlist-phase6.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0071-owner-transfer-allowlist-phase6.md)
