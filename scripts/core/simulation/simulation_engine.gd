@@ -3,6 +3,7 @@ extends RefCounted
 const RuntimeShadowReporter = preload("res://scripts/core/simulation/runtime_shadow_reporter.gd")
 const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
 const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
+	"job_assignment_system",
 	"resource_regen_system",
 	"needs_system",
 	"upper_needs_system",
