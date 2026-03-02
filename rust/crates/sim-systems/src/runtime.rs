@@ -2044,6 +2044,108 @@ impl SimSystem for JobSatisfactionRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for morale evaluation.
+///
+/// Full parity requires Rust-owned config/profile state, settlement aggregation,
+/// grievance updates, and hedonic-treadmill persistence.
+#[derive(Debug, Clone)]
+pub struct MoraleRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MoraleRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MoraleRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "morale_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            Option<&Emotion>,
+            Option<&Needs>,
+            Option<&Behavior>,
+            Option<&Personality>,
+            Option<&Social>,
+        )>();
+        for (_, (emotion_opt, needs_opt, behavior_opt, personality_opt, social_opt)) in &mut query {
+            let pa = emotion_opt
+                .map(|emotion| ((emotion.get(EmotionType::Joy) + emotion.get(EmotionType::Trust)) * 0.5) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let na = emotion_opt
+                .map(|emotion| {
+                    ((emotion.get(EmotionType::Fear)
+                        + emotion.get(EmotionType::Anger)
+                        + emotion.get(EmotionType::Sadness))
+                        / 3.0) as f32
+                })
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let life_satisfaction = needs_opt
+                .map(|needs| {
+                    ((needs.get(NeedType::Hunger)
+                        + needs.energy
+                        + needs.get(NeedType::Belonging))
+                        / 3.0) as f32
+                })
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let morale = (0.40 * pa - 0.30 * na + 0.30 * life_satisfaction).clamp(-1.0, 1.0);
+
+            let _bwm = body::morale_behavior_weight_multiplier(
+                morale,
+                0.6,
+                1.2,
+                1.55,
+                0.85,
+                1.2,
+                0.55,
+                0.85,
+                0.30,
+                0.55,
+            );
+
+            let social_capital = social_opt
+                .map(|social| social.social_capital as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let patience = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::C) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let _migration_prob = body::morale_migration_probability(
+                morale,
+                10.0,
+                0.35,
+                patience,
+                (0.3 + 0.2 * social_capital).clamp(0.0, 1.0),
+                0.95,
+            );
+
+            let _job_sat = behavior_opt
+                .map(|behavior| behavior.job_satisfaction as f32)
+                .unwrap_or(0.5);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -2213,7 +2315,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
-        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
@@ -3008,6 +3110,45 @@ mod tests {
             .expect("behavior component should remain available");
         assert_eq!(after.job, "gatherer");
         assert!((after.job_satisfaction - 0.45).abs() < 1e-9);
+    }
+
+    #[test]
+    fn morale_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let behavior = Behavior {
+            job: "gatherer".to_string(),
+            job_satisfaction: 0.42,
+            ..Behavior::default()
+        };
+        let personality = Personality::default();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.8);
+        needs.energy = 0.7;
+        needs.set(NeedType::Belonging, 0.6);
+        let mut emotion = Emotion::default();
+        emotion.add(EmotionType::Joy, 0.3);
+        emotion.add(EmotionType::Trust, 0.2);
+        emotion.add(EmotionType::Fear, 0.1);
+        let mut social = Social::default();
+        social.social_capital = 0.4;
+        let entity = world.spawn((behavior, personality, needs, emotion, social));
+
+        let mut system = MoraleRuntimeSystem::new(40, 5);
+        system.run(&mut world, &mut resources, 5);
+
+        let after_behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior component should remain available");
+        let after_needs = world
+            .get::<&Needs>(entity)
+            .expect("needs component should remain available");
+        let after_emotion = world
+            .get::<&Emotion>(entity)
+            .expect("emotion component should remain available");
+        assert!((after_behavior.job_satisfaction - 0.42).abs() < 1e-9);
+        assert!((after_needs.energy - 0.7).abs() < 1e-9);
+        assert!((after_emotion.get(EmotionType::Joy) - 0.3).abs() < 1e-9);
     }
 
     #[test]

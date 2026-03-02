@@ -40,7 +40,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 39,contagion_system,ContagionSystem,res://scripts/systems/psychology/contagion_system.gd,contagion_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 40,reputation_system,ReputationSystem,res://scripts/systems/social/reputation_system.gd,reputation_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 41,economic_tendency_system,EconomicTendencySystem,res://scripts/systems/social/economic_tendency_system.gd,economic_tendency_system,gdscript,yes,simbridge_pattern_scan_v1,no
-42,morale_system,MoraleSystem,res://scripts/systems/psychology/morale_system.gd,morale_system,gdscript,yes,simbridge_pattern_scan_v1,no
+42,morale_system,MoraleSystem,res://scripts/systems/psychology/morale_system.gd,morale_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 43,job_satisfaction_system,JobSatisfactionSystem,res://scripts/systems/social/job_satisfaction_system.gd,job_satisfaction_system,gdscript,yes,simbridge_pattern_scan_v1,yes
 44,coping_system,CopingSystem,res://scripts/systems/psychology/coping_system.gd,coping_system,gdscript,yes,simbridge_pattern_scan_v1,no
 45,intergenerational_system,IntergenerationalSystem,res://scripts/systems/development/intergenerational_system.gd,intergenerational_system,gdscript,yes,simbridge_pattern_scan_v1,no

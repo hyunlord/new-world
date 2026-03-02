@@ -437,3 +437,13 @@
 - Logic implementation completion after commit: 60.87%
 - Logic implementation remaining after commit: 39.13%
 - Details: [0051-job-satisfaction-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0051-job-satisfaction-runtime-rust-baseline.md)
+
+### 0052 - Rust runtime baseline port (morale_system)
+- Commit: `[rust-r0-152] Add morale runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 63.04%
+- Logic implementation remaining after commit: 36.96%
+- Details: [0052-morale-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0052-morale-runtime-rust-baseline.md)
