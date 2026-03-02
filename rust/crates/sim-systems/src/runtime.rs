@@ -1,10 +1,10 @@
 use hecs::World;
 use sim_core::components::{
-    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, Skills, Social, Stress,
-    Values,
+    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
+    Social, Stress, Values,
 };
 use sim_core::config;
-use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, ValueType};
+use sim_core::{ActionType, EmotionType, GrowthStage, HexacoAxis, NeedType, ValueType};
 use sim_engine::{SimResources, SimSystem};
 
 use crate::body;
@@ -290,6 +290,152 @@ impl SimSystem for StressRuntimeSystem {
     }
 }
 
+/// Rust runtime system for emotion baseline/primary updates.
+///
+/// This performs active-write updates on `Emotion.primary` and `Emotion.baseline`
+/// using stress/needs context and personality-adjusted decay.
+#[derive(Debug, Clone)]
+pub struct EmotionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl EmotionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn personality_z(personality_opt: Option<&Personality>, axis: HexacoAxis) -> f32 {
+    let axis_val = personality_opt
+        .map(|personality| personality.axis(axis) as f32)
+        .unwrap_or(0.5);
+    ((axis_val - 0.5) / 0.15).clamp(-3.0, 3.0)
+}
+
+#[inline]
+fn needs_value(needs_opt: Option<&Needs>, need_type: NeedType, fallback: f32) -> f32 {
+    needs_opt
+        .map(|needs| needs.get(need_type) as f32)
+        .unwrap_or(fallback)
+        .clamp(0.0, 1.0)
+}
+
+impl SimSystem for EmotionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "emotion_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Emotion,
+            Option<&Stress>,
+            Option<&Needs>,
+            Option<&Personality>,
+        )>();
+        for (_, (emotion, stress_opt, needs_opt, personality_opt)) in &mut query {
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+
+            let hunger = needs_value(needs_opt, NeedType::Hunger, 1.0);
+            let thirst = needs_value(needs_opt, NeedType::Thirst, 1.0);
+            let warmth = needs_value(needs_opt, NeedType::Warmth, 1.0);
+            let safety = needs_value(needs_opt, NeedType::Safety, 1.0);
+            let social = needs_value(needs_opt, NeedType::Belonging, 1.0);
+            let energy = needs_opt
+                .map(|needs| needs.energy as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+
+            let deficit_hunger = (1.0 - hunger).clamp(0.0, 1.0);
+            let deficit_thirst = (1.0 - thirst).clamp(0.0, 1.0);
+            let deficit_warmth = (1.0 - warmth).clamp(0.0, 1.0);
+            let deficit_safety = (1.0 - safety).clamp(0.0, 1.0);
+            let deficit_social = (1.0 - social).clamp(0.0, 1.0);
+            let deficit_energy = (1.0 - energy).clamp(0.0, 1.0);
+
+            let z_e = personality_z(personality_opt, HexacoAxis::E);
+            let z_a = personality_z(personality_opt, HexacoAxis::A);
+            let z_c = personality_z(personality_opt, HexacoAxis::C);
+
+            let baseline_fear = body::emotion_baseline_value(0.10, 0.02, z_e, 0.0, 1.0);
+            let baseline_anger = body::emotion_baseline_value(0.08, -0.02, z_a, 0.0, 1.0);
+            let baseline_sadness = body::emotion_baseline_value(0.08, 0.015, z_e, 0.0, 1.0);
+            let baseline_disgust = body::emotion_baseline_value(0.06, -0.01, z_a, 0.0, 1.0);
+            let baseline_surprise = body::emotion_baseline_value(0.10, 0.01, z_e, 0.0, 1.0);
+            let baseline_joy = body::emotion_baseline_value(0.25, -0.02, z_e, 0.0, 1.0);
+            let baseline_trust = body::emotion_baseline_value(0.22, 0.02, z_a, 0.0, 1.0);
+            let baseline_anticipation = body::emotion_baseline_value(0.20, 0.01, z_c, 0.0, 1.0);
+
+            let fear_target = (baseline_fear + stress_level * 0.50 + deficit_safety * 0.35).clamp(0.0, 1.0);
+            let anger_target = (baseline_anger + stress_level * 0.35 + deficit_hunger * 0.20).clamp(0.0, 1.0);
+            let sadness_target = (baseline_sadness + stress_level * 0.30 + deficit_social * 0.30).clamp(0.0, 1.0);
+            let disgust_target = (baseline_disgust
+                + stress_level * 0.18
+                + (deficit_thirst * 0.10 + deficit_warmth * 0.10))
+                .clamp(0.0, 1.0);
+            let surprise_target = (baseline_surprise + stress_level * 0.15).clamp(0.0, 1.0);
+            let joy_target = (baseline_joy
+                - stress_level * 0.35
+                + social * 0.20
+                + energy * 0.15
+                - deficit_energy * 0.10)
+                .clamp(0.0, 1.0);
+            let trust_target = (baseline_trust - stress_level * 0.25 + social * 0.20 + safety * 0.20)
+                .clamp(0.0, 1.0);
+            let anticipation_target =
+                (baseline_anticipation - stress_level * 0.20 + energy * 0.20 + safety * 0.15)
+                    .clamp(0.0, 1.0);
+
+            let hl = body::emotion_adjusted_half_life(4.0, 0.25, z_c).max(0.001);
+            let k = 0.693_147 / hl;
+            let decay = (-k).exp();
+            let blend = (1.0 - decay).clamp(0.0, 1.0);
+
+            let update = |current: f64, target: f32| -> f64 {
+                ((current as f32) * decay + target * blend).clamp(0.0, 1.0) as f64
+            };
+
+            emotion.baseline[EmotionType::Fear as usize] = baseline_fear as f64;
+            emotion.baseline[EmotionType::Anger as usize] = baseline_anger as f64;
+            emotion.baseline[EmotionType::Sadness as usize] = baseline_sadness as f64;
+            emotion.baseline[EmotionType::Disgust as usize] = baseline_disgust as f64;
+            emotion.baseline[EmotionType::Surprise as usize] = baseline_surprise as f64;
+            emotion.baseline[EmotionType::Joy as usize] = baseline_joy as f64;
+            emotion.baseline[EmotionType::Trust as usize] = baseline_trust as f64;
+            emotion.baseline[EmotionType::Anticipation as usize] = baseline_anticipation as f64;
+
+            *emotion.get_mut(EmotionType::Fear) = update(emotion.get(EmotionType::Fear), fear_target);
+            *emotion.get_mut(EmotionType::Anger) = update(emotion.get(EmotionType::Anger), anger_target);
+            *emotion.get_mut(EmotionType::Sadness) =
+                update(emotion.get(EmotionType::Sadness), sadness_target);
+            *emotion.get_mut(EmotionType::Disgust) =
+                update(emotion.get(EmotionType::Disgust), disgust_target);
+            *emotion.get_mut(EmotionType::Surprise) =
+                update(emotion.get(EmotionType::Surprise), surprise_target);
+            *emotion.get_mut(EmotionType::Joy) = update(emotion.get(EmotionType::Joy), joy_target);
+            *emotion.get_mut(EmotionType::Trust) =
+                update(emotion.get(EmotionType::Trust), trust_target);
+            *emotion.get_mut(EmotionType::Anticipation) =
+                update(emotion.get(EmotionType::Anticipation), anticipation_target);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -459,18 +605,21 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::{NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem};
+    use super::{
+        EmotionRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem,
+    };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, SkillEntry, Skills,
-        Social, Stress, Values,
+        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
+        SkillEntry, Skills, Social, Stress, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
-        config::GameConfig, ActionType, GameCalendar, GrowthStage, NeedType, ResourceType,
-        SettlementId, ValueType, WorldMap, EmotionType,
+        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, NeedType,
+        ResourceType, SettlementId, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -604,6 +753,42 @@ mod tests {
         assert!(updated.level > 0.0);
         assert!(updated.reserve <= 1.0);
         assert!(updated.allostatic_load >= 0.0);
+    }
+
+    #[test]
+    fn emotion_runtime_system_updates_primary_and_baseline_values() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut emotion = Emotion::default();
+        *emotion.get_mut(EmotionType::Fear) = 0.1;
+        *emotion.get_mut(EmotionType::Joy) = 0.2;
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Safety, 0.2);
+        needs.set(NeedType::Belonging, 0.3);
+        needs.set(NeedType::Hunger, 0.25);
+        needs.energy = 0.3;
+
+        let stress = Stress {
+            level: 0.8,
+            reserve: 0.5,
+            allostatic_load: 0.2,
+            ..Stress::default()
+        };
+
+        let personality = Personality::default();
+        let entity = world.spawn((emotion, needs, stress, personality));
+        let mut system = EmotionRuntimeSystem::new(32, 12);
+        system.run(&mut world, &mut resources, 12);
+
+        let updated = world
+            .get::<&Emotion>(entity)
+            .expect("updated emotion component should be queryable");
+        assert!(updated.get(EmotionType::Fear) > 0.1);
+        assert!(updated.get(EmotionType::Joy) < 0.2);
+        assert!(updated.baseline(EmotionType::Trust) >= 0.0);
+        assert!(updated.baseline(EmotionType::Trust) <= 1.0);
     }
 
     #[test]
