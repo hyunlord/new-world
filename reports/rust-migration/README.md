@@ -1063,3 +1063,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 91.30% (42/46)
 - Remaining (strict state-write basis): 6.52%
 - Details: [0129-stats-recorder-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0129-stats-recorder-runtime-active-write-port.md)
+
+### 0130 - owner transfer allowlist phase 36
+- Commit: `[rust-r0-230] Expand owner-ready allowlist with stats recorder`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 93.48% (43/46)
+- Actual state-write coverage (strict): 93.48% (43/46)
+- Owner transfer coverage (`exec_owner=rust`): 93.48% (43/46)
+- Remaining (strict state-write basis): 6.52%
+- Details: [0130-owner-transfer-allowlist-phase36.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0130-owner-transfer-allowlist-phase36.md)

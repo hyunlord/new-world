@@ -45,6 +45,7 @@ const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
 	"age_system",
 	"mortality_system",
 	"contagion_system",
+	"stats_recorder",
 ])
 
 var current_tick: int = 0
