@@ -101,3 +101,9 @@
 - Completion after commit: 98%
 - Remaining after commit: 2%
 - Details: [0016-phase-e-runtime-ready-guard.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0016-phase-e-runtime-ready-guard.md)
+
+### 0017 - Shadow cutover check script
+- Commit: `[rust-r0-117] Add shadow cutover readiness check tool`
+- Completion after commit: 99%
+- Remaining after commit: 1%
+- Details: [0017-phase-h-cutover-check-script.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0017-phase-h-cutover-check-script.md)
