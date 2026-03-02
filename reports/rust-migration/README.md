@@ -671,3 +671,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 39.13% (18/46)
 - Remaining (strict state-write basis): 60.87%
 - Details: [0080-owner-transfer-allowlist-phase11.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0080-owner-transfer-allowlist-phase11.md)
+
+### 0081 - economic-tendency runtime active-write port
+- Commit: `[rust-r0-181] Port economic-tendency runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 41.30% (19/46)
+- Actual state-write coverage (strict): 41.30% (19/46)
+- Owner transfer coverage (`exec_owner=rust`): 39.13% (18/46)
+- Remaining (strict state-write basis): 58.70%
+- Details: [0081-economic-tendency-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0081-economic-tendency-runtime-active-write-port.md)

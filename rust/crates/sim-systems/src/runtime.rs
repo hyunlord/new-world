@@ -2,13 +2,13 @@ use hecs::{Entity, World};
 use rand::Rng;
 use std::collections::HashMap;
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
-    Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
+    Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    MentalBreakType, NeedType, RelationType, ResourceType, ValueType,
+    MentalBreakType, NeedType, RelationType, ResourceType, Sex, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -1524,6 +1524,114 @@ impl SimSystem for MoraleRuntimeSystem {
     }
 }
 
+/// Rust runtime system for per-entity economic tendency updates.
+///
+/// This performs active writes on `Economic` tendencies using personality,
+/// values, belonging, wealth, and sex context through
+/// `body::economic_tendencies_step`.
+#[derive(Debug, Clone)]
+pub struct EconomicTendencyRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl EconomicTendencyRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn value_or_default(values_opt: Option<&Values>, key: ValueType) -> f32 {
+    values_opt.map(|values| values.get(key) as f32).unwrap_or(0.0)
+}
+
+impl SimSystem for EconomicTendencyRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "economic_tendency_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Economic,
+            Option<&Personality>,
+            Option<&Values>,
+            Option<&Needs>,
+            Option<&Age>,
+            Option<&Identity>,
+        )>();
+        for (_, (economic, personality_opt, values_opt, needs_opt, age_opt, identity_opt)) in
+            &mut query
+        {
+            let Some(personality) = personality_opt else {
+                continue;
+            };
+            if let Some(age) = age_opt {
+                if matches!(age.stage, GrowthStage::Infant | GrowthStage::Child) {
+                    continue;
+                }
+            }
+
+            let h = personality.axis(HexacoAxis::H) as f32;
+            let e = personality.axis(HexacoAxis::E) as f32;
+            let x = personality.axis(HexacoAxis::X) as f32;
+            let a = personality.axis(HexacoAxis::A) as f32;
+            let c = personality.axis(HexacoAxis::C) as f32;
+            let o = personality.axis(HexacoAxis::O) as f32;
+            let age_years = age_opt.map(|age| age.years as f32).unwrap_or(0.0).max(0.0);
+            let belonging = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let wealth_norm = (economic.wealth as f32).clamp(0.0, 1.0);
+            let is_male = identity_opt
+                .map(|identity| matches!(identity.sex, Sex::Male))
+                .unwrap_or(false);
+
+            let out = body::economic_tendencies_step(
+                h,
+                e,
+                x,
+                a,
+                c,
+                o,
+                age_years,
+                value_or_default(values_opt, ValueType::SelfControl),
+                value_or_default(values_opt, ValueType::Law),
+                value_or_default(values_opt, ValueType::Commerce),
+                value_or_default(values_opt, ValueType::Competition),
+                value_or_default(values_opt, ValueType::MartialProwess),
+                value_or_default(values_opt, ValueType::Sacrifice),
+                value_or_default(values_opt, ValueType::Cooperation),
+                value_or_default(values_opt, ValueType::Family),
+                value_or_default(values_opt, ValueType::Power),
+                value_or_default(values_opt, ValueType::Fairness),
+                belonging,
+                wealth_norm,
+                0.0,
+                0.0,
+                is_male,
+                config::ECON_WEALTH_GENEROSITY_PENALTY as f32,
+            );
+            economic.saving_tendency = out[0] as f64;
+            economic.risk_appetite = out[1] as f64;
+            economic.generosity = out[2] as f64;
+            economic.materialism = out[3] as f64;
+        }
+    }
+}
+
 /// Rust runtime system for value drift updates.
 ///
 /// This applies age-plasticity-scaled drift to selected `Values` axes using
@@ -2619,7 +2727,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
+        AgeRuntimeSystem, ContagionRuntimeSystem, EconomicTendencyRuntimeSystem,
+        EmotionRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
@@ -2629,14 +2738,14 @@ mod tests {
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
-        SkillEntry, Skills, Social, Stress, Traits, Values,
+        Age, Behavior, Body as BodyComponent, Economic, Emotion, Identity, Needs, Personality,
+        Position, SkillEntry, Skills, Social, Stress, Traits, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
-        HexacoFacet, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId,
+        HexacoFacet, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex,
         ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
@@ -3111,6 +3220,151 @@ mod tests {
             (updated_needs.get(NeedType::Meaning) - 0.55).abs() > f64::EPSILON
                 || (updated_needs.get(NeedType::Transcendence) - 0.50).abs() > f64::EPSILON
         );
+    }
+
+    #[test]
+    fn economic_tendency_runtime_system_updates_tendencies_and_applies_male_risk_bias() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::H as usize] = 0.75;
+        personality.axes[HexacoAxis::E as usize] = 0.35;
+        personality.axes[HexacoAxis::X as usize] = 0.70;
+        personality.axes[HexacoAxis::A as usize] = 0.65;
+        personality.axes[HexacoAxis::C as usize] = 0.40;
+        personality.axes[HexacoAxis::O as usize] = 0.60;
+
+        let mut values = Values::default();
+        values.set(ValueType::SelfControl, 0.30);
+        values.set(ValueType::Law, 0.20);
+        values.set(ValueType::Commerce, 0.45);
+        values.set(ValueType::Competition, 0.35);
+        values.set(ValueType::MartialProwess, 0.10);
+        values.set(ValueType::Sacrifice, 0.25);
+        values.set(ValueType::Cooperation, 0.30);
+        values.set(ValueType::Family, 0.40);
+        values.set(ValueType::Power, 0.22);
+        values.set(ValueType::Fairness, 0.50);
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.72);
+
+        let age = Age {
+            years: 28.0,
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let economic = Economic {
+            wealth: 0.86,
+            ..Economic::default()
+        };
+
+        let male_identity = Identity {
+            sex: Sex::Male,
+            ..Identity::default()
+        };
+        let male = world.spawn((
+            economic.clone(),
+            personality.clone(),
+            values.clone(),
+            needs.clone(),
+            age,
+            male_identity,
+        ));
+
+        let female_identity = Identity {
+            sex: Sex::Female,
+            ..Identity::default()
+        };
+        let female = world.spawn((
+            economic,
+            personality.clone(),
+            values.clone(),
+            needs.clone(),
+            Age {
+                years: 28.0,
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            female_identity,
+        ));
+
+        let mut system = EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::ECON_TICK_INTERVAL);
+
+        let male_updated = world
+            .get::<&Economic>(male)
+            .expect("male economic component should be queryable");
+        let expected_male = body::economic_tendencies_step(
+            personality.axis(HexacoAxis::H) as f32,
+            personality.axis(HexacoAxis::E) as f32,
+            personality.axis(HexacoAxis::X) as f32,
+            personality.axis(HexacoAxis::A) as f32,
+            personality.axis(HexacoAxis::C) as f32,
+            personality.axis(HexacoAxis::O) as f32,
+            28.0,
+            values.get(ValueType::SelfControl) as f32,
+            values.get(ValueType::Law) as f32,
+            values.get(ValueType::Commerce) as f32,
+            values.get(ValueType::Competition) as f32,
+            values.get(ValueType::MartialProwess) as f32,
+            values.get(ValueType::Sacrifice) as f32,
+            values.get(ValueType::Cooperation) as f32,
+            values.get(ValueType::Family) as f32,
+            values.get(ValueType::Power) as f32,
+            values.get(ValueType::Fairness) as f32,
+            needs.get(NeedType::Belonging) as f32,
+            0.86,
+            0.0,
+            0.0,
+            true,
+            sim_core::config::ECON_WEALTH_GENEROSITY_PENALTY as f32,
+        );
+        assert!((male_updated.saving_tendency as f32 - expected_male[0]).abs() < 1e-6);
+        assert!((male_updated.risk_appetite as f32 - expected_male[1]).abs() < 1e-6);
+        assert!((male_updated.generosity as f32 - expected_male[2]).abs() < 1e-6);
+        assert!((male_updated.materialism as f32 - expected_male[3]).abs() < 1e-6);
+        drop(male_updated);
+
+        let female_updated = world
+            .get::<&Economic>(female)
+            .expect("female economic component should be queryable");
+        assert!(female_updated.risk_appetite < expected_male[1] as f64);
+    }
+
+    #[test]
+    fn economic_tendency_runtime_system_skips_child_stage() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let economic = Economic {
+            saving_tendency: 0.5,
+            risk_appetite: 0.5,
+            generosity: 0.5,
+            materialism: 0.3,
+            ..Economic::default()
+        };
+        let personality = Personality::default();
+        let values = Values::default();
+        let needs = Needs::default();
+        let age = Age {
+            years: 8.0,
+            stage: GrowthStage::Child,
+            ..Age::default()
+        };
+        let entity = world.spawn((economic, personality, values, needs, age));
+
+        let mut system = EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, sim_core::config::ECON_TICK_INTERVAL);
+
+        let updated = world
+            .get::<&Economic>(entity)
+            .expect("economic component should be queryable");
+        assert!((updated.saving_tendency as f32 - 0.5).abs() < 1e-6);
+        assert!((updated.risk_appetite as f32 - 0.5).abs() < 1e-6);
+        assert!((updated.generosity as f32 - 0.5).abs() < 1e-6);
+        assert!((updated.materialism as f32 - 0.3).abs() < 1e-6);
     }
 
     #[test]
