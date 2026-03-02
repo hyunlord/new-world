@@ -1,6 +1,6 @@
 registration_order,var_name,const_name,script_path,system_key,exec_owner,simbridge_offload,simbridge_offload_rule,rust_runtime_impl
-1,stat_sync_system,StatSyncSystem,res://scripts/systems/record/stat_sync_system.gd,stat_sync_system,gdscript,yes,simbridge_pattern_scan_v1,yes
-2,resource_regen_system,ResourceRegenSystem,res://scripts/systems/world/resource_regen_system.gd,resource_regen_system,gdscript,yes,simbridge_pattern_scan_v1,yes
+1,stat_sync_system,StatSyncSystem,res://scripts/systems/record/stat_sync_system.gd,stat_sync_system,hybrid_rust_primary,yes,simbridge_pattern_scan_v1,yes
+2,resource_regen_system,ResourceRegenSystem,res://scripts/systems/world/resource_regen_system.gd,resource_regen_system,hybrid_rust_primary,yes,simbridge_pattern_scan_v1,yes
 3,childcare_system,ChildcareSystem,res://scripts/systems/development/childcare_system.gd,childcare_system,gdscript,yes,simbridge_pattern_scan_v1,no
 4,job_assignment_system,JobAssignmentSystem,res://scripts/systems/work/job_assignment_system.gd,job_assignment_system,gdscript,yes,simbridge_pattern_scan_v1,no
 5,needs_system,NeedsSystem,res://scripts/systems/psychology/needs_system.gd,needs_system,gdscript,yes,simbridge_pattern_scan_v1,no
@@ -36,7 +36,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 35,tension_system,TensionSystemScript,res://scripts/systems/world/tension_system.gd,tension_system,gdscript,yes,simbridge_pattern_scan_v1,no
 36,tech_utilization_system,TechUtilizationSystemScript,res://scripts/systems/world/tech_utilization_system.gd,tech_utilization_system,gdscript,yes,simbridge_pattern_scan_v1,no
 37,stratification_monitor,StratificationMonitor,res://scripts/systems/social/stratification_monitor.gd,stratification_monitor,gdscript,yes,simbridge_pattern_scan_v1,no
-38,stats_recorder,StatsRecorder,res://scripts/systems/record/stats_recorder.gd,stats_recorder,gdscript,yes,simbridge_pattern_scan_v1,yes
+38,stats_recorder,StatsRecorder,res://scripts/systems/record/stats_recorder.gd,stats_recorder,hybrid_rust_primary,yes,simbridge_pattern_scan_v1,yes
 39,contagion_system,ContagionSystem,res://scripts/systems/psychology/contagion_system.gd,contagion_system,gdscript,yes,simbridge_pattern_scan_v1,no
 40,reputation_system,ReputationSystem,res://scripts/systems/social/reputation_system.gd,reputation_system,gdscript,yes,simbridge_pattern_scan_v1,no
 41,economic_tendency_system,EconomicTendencySystem,res://scripts/systems/social/economic_tendency_system.gd,economic_tendency_system,gdscript,yes,simbridge_pattern_scan_v1,no

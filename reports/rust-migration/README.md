@@ -167,3 +167,13 @@
 - Logic implementation completion after commit: 6.52%
 - Logic implementation remaining after commit: 93.48%
 - Details: [0024-stat-sync-rust-runtime-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0024-stat-sync-rust-runtime-baseline.md)
+
+### 0025 - Rust primary hybrid execution gate
+- Commit: `[rust-r0-125] Add rust-primary hybrid execution fallback gate`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 6.52%
+- Logic port remaining after commit: 93.48%
+- Logic implementation completion after commit: 6.52%
+- Logic implementation remaining after commit: 93.48%
+- Details: [0025-rust-primary-hybrid-execution-gate.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0025-rust-primary-hybrid-execution-gate.md)

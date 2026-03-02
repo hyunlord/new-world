@@ -19,6 +19,8 @@ var _last_gd_ticks_processed: int = 0
 var _shadow_reporter: RefCounted = null
 var _registered_system_count: int = 0
 var _registered_system_payloads: Array[Dictionary] = []
+var _system_key_by_instance_id: Dictionary = {}
+var _runtime_rust_registered_keys: Dictionary = {}
 
 
 ## Initialize the engine with a deterministic seed
@@ -29,6 +31,8 @@ func init_with_seed(seed_value: int) -> void:
 	_accumulator = 0.0
 	_registered_system_count = 0
 	_registered_system_payloads.clear()
+	_system_key_by_instance_id.clear()
+	_runtime_rust_registered_keys.clear()
 	_init_rust_runtime()
 
 
@@ -37,10 +41,11 @@ func register_system(system: RefCounted) -> void:
 	var system_payload: Dictionary = _build_runtime_system_payload(system, _registered_system_count)
 	_registered_system_count += 1
 	_registered_system_payloads.append(system_payload)
+	var key: String = _runtime_system_key_from_name(str(system_payload.get("name", "")))
+	if not key.is_empty():
+		_system_key_by_instance_id[system.get_instance_id()] = key
 	if _rust_runtime_available:
 		_queue_runtime_command(StringName("register_system"), system_payload)
-	if _use_rust_primary():
-		return
 	_systems.append(system)
 	_systems.sort_custom(func(a, b): return a.priority < b.priority)
 
@@ -115,14 +120,20 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 	if sim_bridge == null:
 		return
 	_apply_runtime_commands_v2()
+	_refresh_runtime_registry_cache()
 	if not sim_bridge.has_method("runtime_tick_frame"):
 		return
 	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
 	if not (runtime_state_raw is Dictionary):
 		return
 	var runtime_state: Dictionary = runtime_state_raw
+	var ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
+	if ticks_processed > 0:
+		var end_tick: int = current_tick
+		var start_tick: int = maxi(1, end_tick - ticks_processed + 1)
+		_run_gdscript_fallback_ticks(start_tick, end_tick)
 	_consume_runtime_events_v2()
 
 
@@ -131,6 +142,7 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 	if sim_bridge == null:
 		return
 	_apply_runtime_commands_v2()
+	_refresh_runtime_registry_cache()
 	if not sim_bridge.has_method("runtime_tick_frame"):
 		return
 	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
@@ -365,6 +377,67 @@ func _build_runtime_system_payload(system: RefCounted, registration_index: int) 
 	payload["active"] = bool(system.get("is_active"))
 	payload["registration_index"] = registration_index
 	return payload
+
+
+func _runtime_system_key_from_name(name: String) -> String:
+	var trimmed: String = name.strip_edges()
+	if trimmed.is_empty():
+		return ""
+	var normalized: String = trimmed.replace("\\", "/").to_lower()
+	var tail: String = normalized.get_file()
+	if tail.ends_with(".gd"):
+		tail = tail.left(tail.length() - 3)
+	return tail
+
+
+func _refresh_runtime_registry_cache() -> void:
+	_runtime_rust_registered_keys.clear()
+	if not _rust_runtime_available:
+		return
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null:
+		return
+	if not sim_bridge.has_method("runtime_get_registry_snapshot"):
+		return
+	var snapshot_raw: Variant = sim_bridge.call("runtime_get_registry_snapshot")
+	if not (snapshot_raw is Array):
+		return
+	var snapshot: Array = snapshot_raw
+	for i in range(snapshot.size()):
+		var row_raw: Variant = snapshot[i]
+		if not (row_raw is Dictionary):
+			continue
+		var row: Dictionary = row_raw
+		if not bool(row.get("rust_registered", false)):
+			continue
+		var key: String = str(row.get("system_key", ""))
+		if key.is_empty():
+			key = _runtime_system_key_from_name(str(row.get("name", "")))
+		if key.is_empty():
+			continue
+		_runtime_rust_registered_keys[key] = true
+
+
+func _is_rust_registered_system(system: RefCounted) -> bool:
+	var key: String = str(_system_key_by_instance_id.get(system.get_instance_id(), ""))
+	if key.is_empty():
+		return false
+	return bool(_runtime_rust_registered_keys.get(key, false))
+
+
+func _run_gdscript_fallback_ticks(start_tick: int, end_tick: int) -> void:
+	if _systems.is_empty():
+		return
+	for tick_value in range(start_tick, end_tick + 1):
+		for i in range(_systems.size()):
+			var system = _systems[i]
+			if not bool(system.get("is_active")):
+				continue
+			if _is_rust_registered_system(system):
+				continue
+			var interval: int = maxi(1, int(system.get("tick_interval")))
+			if tick_value % interval == 0:
+				system.execute_tick(tick_value)
 
 
 func _try_shadow_auto_cutover() -> void:
