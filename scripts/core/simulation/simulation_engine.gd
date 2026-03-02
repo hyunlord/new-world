@@ -198,6 +198,7 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 		return
 	var runtime_state: Dictionary = runtime_state_raw
 	var shadow_tick: int = int(runtime_state.get("current_tick", current_tick))
+	var shadow_ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
 	# Shadow mode: drain v2 events so runtime buffer does not grow,
 	# but do not forward them to avoid duplicate v1/v2 emissions.
 	if not sim_bridge.has_method("runtime_export_events_v2"):
@@ -214,7 +215,7 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 			current_tick,
 			shadow_tick,
 			_last_gd_ticks_processed,
-			shadow_event_count
+			shadow_ticks_processed
 		)
 		_try_shadow_auto_cutover()
 	if shadow_tick == current_tick:
@@ -222,8 +223,8 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 	_shadow_mismatch_count += 1
 	if _shadow_mismatch_count <= 5 or _shadow_mismatch_count % 100 == 0:
 		push_warning(
-			"[SimulationEngine] Rust shadow mismatch gd_tick=%d rust_tick=%d gd_events=%d rust_events=%d (count=%d)" %
-			[current_tick, shadow_tick, _last_gd_ticks_processed, shadow_event_count, _shadow_mismatch_count]
+			"[SimulationEngine] Rust shadow mismatch gd_tick=%d rust_tick=%d gd_ticks=%d rust_ticks=%d rust_events=%d (count=%d)" %
+			[current_tick, shadow_tick, _last_gd_ticks_processed, shadow_ticks_processed, shadow_event_count, _shadow_mismatch_count]
 		)
 
 

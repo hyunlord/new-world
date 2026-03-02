@@ -1159,3 +1159,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0141-save-manager-ws2-only-cleanup.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0141-save-manager-ws2-only-cleanup.md)
+
+### 0142 - shadow workload delta fix
+- Commit: `[rust-r0-242] Fix shadow comparison metric to use processed ticks`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0142-shadow-workload-delta-fix.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0142-shadow-workload-delta-fix.md)
