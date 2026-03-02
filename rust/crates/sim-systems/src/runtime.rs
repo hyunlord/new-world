@@ -3030,6 +3030,125 @@ impl SimSystem for StratificationMonitorRuntimeSystem {
     }
 }
 
+#[inline]
+fn tension_pair_key(left: SettlementId, right: SettlementId) -> String {
+    let (min_id, max_id) = if left.0 <= right.0 {
+        (left.0, right.0)
+    } else {
+        (right.0, left.0)
+    };
+    format!("{min_id}:{max_id}")
+}
+
+#[inline]
+fn tension_food_scarce(stockpile_food: f64, population: usize) -> bool {
+    if population == 0 {
+        return false;
+    }
+    let monthly_need = population as f32
+        * config::HUNGER_DECAY_RATE as f32
+        * config::TICKS_PER_DAY as f32
+        * 30.0;
+    let ratio = (stockpile_food as f32) / monthly_need.max(1.0);
+    ratio < config::TENSION_RESOURCE_DEFICIT_TRIGGER as f32
+}
+
+#[derive(Debug, Clone, Copy)]
+struct TensionSettlementSnapshot {
+    id: SettlementId,
+    x: i32,
+    y: i32,
+    stockpile_food: f64,
+    population: usize,
+}
+
+/// Rust runtime system for inter-settlement scarcity tension.
+///
+/// This performs active writes on `SimResources.tension_pairs`
+/// using settlement distance, food scarcity pressure, and natural decay.
+#[derive(Debug, Clone)]
+pub struct TensionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TensionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TensionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tension_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        if resources.settlements.len() < 2 {
+            return;
+        }
+        let mut settlements: Vec<TensionSettlementSnapshot> =
+            Vec::with_capacity(resources.settlements.len());
+        for settlement in resources.settlements.values() {
+            settlements.push(TensionSettlementSnapshot {
+                id: settlement.id,
+                x: settlement.x,
+                y: settlement.y,
+                stockpile_food: settlement.stockpile_food,
+                population: settlement.population(),
+            });
+        }
+
+        let proximity_radius = config::TENSION_PROXIMITY_RADIUS as f32;
+        let dt_years = self.tick_interval as f32 / config::TICKS_PER_YEAR as f32;
+        for left_idx in 0..settlements.len() {
+            let left = settlements[left_idx];
+            for right in settlements.iter().skip(left_idx + 1).copied() {
+                let dx = (left.x - right.x) as f32;
+                let dy = (left.y - right.y) as f32;
+                let distance = (dx * dx + dy * dy).sqrt();
+                if distance > proximity_radius {
+                    continue;
+                }
+
+                let left_scarce = tension_food_scarce(left.stockpile_food, left.population);
+                let right_scarce = tension_food_scarce(right.stockpile_food, right.population);
+                let scarcity_pressure = body::tension_scarcity_pressure(
+                    left_scarce,
+                    right_scarce,
+                    config::TENSION_PER_SHARED_RESOURCE as f32,
+                );
+
+                let pair_key = tension_pair_key(left.id, right.id);
+                let current = resources
+                    .tension_pairs
+                    .get(pair_key.as_str())
+                    .copied()
+                    .unwrap_or(0.0);
+                let next = body::tension_next_value(
+                    current as f32,
+                    scarcity_pressure,
+                    config::TENSION_DECAY_PER_YEAR as f32,
+                    dt_years,
+                )
+                .clamp(0.0, 1.0);
+                resources.tension_pairs.insert(pair_key, next as f64);
+            }
+        }
+    }
+}
+
 /// Rust runtime system for settlement leadership election and countdown.
 ///
 /// This performs active writes on `Settlement.leader_id` and
@@ -4333,7 +4452,7 @@ mod tests {
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
-        TitleRuntimeSystem, TraitViolationRuntimeSystem,
+        TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
@@ -6421,6 +6540,53 @@ mod tests {
             .get::<&Economic>(leader_entity)
             .expect("leader economic should be queryable");
         assert!((0.0..=1.0).contains(&leader_economic.wealth_norm));
+    }
+
+    #[test]
+    fn tension_runtime_system_updates_pair_tension_from_scarcity_and_decay() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut alpha = sim_core::Settlement::new(SettlementId(51), "alpha".to_string(), 0, 0, 0);
+        alpha.stockpile_food = 0.0;
+        alpha.members = vec![EntityId(1), EntityId(2), EntityId(3), EntityId(4)];
+        resources.settlements.insert(alpha.id, alpha);
+
+        let mut beta = sim_core::Settlement::new(SettlementId(52), "beta".to_string(), 3, 4, 0);
+        beta.stockpile_food = 8.0;
+        beta.members = vec![EntityId(11), EntityId(12), EntityId(13), EntityId(14)];
+        resources.settlements.insert(beta.id, beta);
+
+        resources
+            .tension_pairs
+            .insert("51:52".to_string(), 0.30);
+
+        let mut system = TensionRuntimeSystem::new(64, sim_core::config::TENSION_CHECK_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TENSION_CHECK_INTERVAL_TICKS,
+        );
+
+        let pair_after = resources
+            .tension_pairs
+            .get("51:52")
+            .copied()
+            .expect("pair tension should be written");
+        let scarcity = body::tension_scarcity_pressure(
+            true,
+            false,
+            sim_core::config::TENSION_PER_SHARED_RESOURCE as f32,
+        );
+        let expected = body::tension_next_value(
+            0.30,
+            scarcity,
+            sim_core::config::TENSION_DECAY_PER_YEAR as f32,
+            sim_core::config::TENSION_CHECK_INTERVAL_TICKS as f32
+                / sim_core::config::TICKS_PER_YEAR as f32,
+        );
+        assert!((pair_after as f32 - expected).abs() < 1e-6);
+        assert!((0.0..=1.0).contains(&pair_after));
     }
 
     #[test]

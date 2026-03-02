@@ -52,6 +52,7 @@ use sim_systems::{
         MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TensionRuntimeSystem,
         TraumaScarRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     },
@@ -607,6 +608,7 @@ const RUNTIME_SYSTEM_KEY_CHILDCARE: &str = "childcare_system";
 const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
 const RUNTIME_SYSTEM_KEY_TITLE: &str = "title_system";
 const RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR: &str = "stratification_monitor";
+const RUNTIME_SYSTEM_KEY_TENSION: &str = "tension_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -753,6 +755,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_LEADER
             | RUNTIME_SYSTEM_KEY_TITLE
             | RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR
+            | RUNTIME_SYSTEM_KEY_TENSION
     )
 }
 
@@ -874,6 +877,11 @@ fn register_supported_rust_system(
                     priority_u32,
                     tick_interval_u64,
                 ));
+        }
+        RUNTIME_SYSTEM_KEY_TENSION => {
+            state
+                .engine
+                .register(TensionRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5508,6 +5516,7 @@ mod tests {
         assert!(runtime_supports_rust_system("leader_system"));
         assert!(runtime_supports_rust_system("title_system"));
         assert!(runtime_supports_rust_system("stratification_monitor"));
+        assert!(runtime_supports_rust_system("tension_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));

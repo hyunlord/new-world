@@ -32,6 +32,8 @@ pub struct SimResources {
     pub map: WorldMap,
     /// All settlements keyed by their ID.
     pub settlements: HashMap<SettlementId, Settlement>,
+    /// Inter-settlement tension cache (`min_id:max_id` -> 0.0..=1.0).
+    pub tension_pairs: HashMap<String, f64>,
     /// Seeded RNG — use this for all randomness to preserve determinism.
     pub rng: SmallRng,
     /// Collect-then-drain event bus.
@@ -50,6 +52,7 @@ impl SimResources {
             calendar,
             map,
             settlements: HashMap::new(),
+            tension_pairs: HashMap::new(),
             rng: SmallRng::seed_from_u64(seed),
             event_bus: EventBus::new(),
         }
@@ -61,6 +64,7 @@ impl std::fmt::Debug for SimResources {
         f.debug_struct("SimResources")
             .field("tick", &self.calendar.tick)
             .field("settlements", &self.settlements.len())
+            .field("tension_pairs", &self.tension_pairs.len())
             .field("event_bus", &self.event_bus)
             .finish_non_exhaustive()
     }
