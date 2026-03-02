@@ -1167,3 +1167,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0142-shadow-workload-delta-fix.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0142-shadow-workload-delta-fix.md)
+
+### 0143 - bus v2 v1 re-emit expansion
+- Commit: `[rust-r0-243] Expand SimulationBus v2-to-v1 re-emission mapping`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0143-bus-v2-v1-reemit-expansion.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0143-bus-v2-v1-reemit-expansion.md)
