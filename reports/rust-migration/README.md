@@ -77,3 +77,9 @@
 - Completion after commit: 90%
 - Remaining after commit: 10%
 - Details: [0012-phase-e-ws2-cutover.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0012-phase-e-ws2-cutover.md)
+
+### 0013 - Shadow cutover gating metrics
+- Commit: `[rust-r0-113] Add shadow cutover approval metrics`
+- Completion after commit: 93%
+- Remaining after commit: 7%
+- Details: [0013-phase-h-shadow-cutover-gating.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0013-phase-h-shadow-cutover-gating.md)

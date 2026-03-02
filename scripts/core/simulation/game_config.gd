@@ -353,6 +353,9 @@ const SIM_RUNTIME_MODE_RUST_PRIMARY: String = "rust_primary"
 const SIM_RUNTIME_MODE: String = SIM_RUNTIME_MODE_RUST_SHADOW
 const RUST_SHADOW_REPORT_PATH: String = "user://reports/rust_shadow/latest.json"
 const RUST_SHADOW_REPORT_INTERVAL_TICKS: int = 500
+const RUST_SHADOW_ALLOWED_MAX_TICK_DELTA: int = 0
+const RUST_SHADOW_ALLOWED_MAX_EVENT_DELTA: int = 0
+const RUST_SHADOW_ALLOWED_MISMATCH_RATIO: float = 0.0
 
 ## Biome enum
 enum Biome {

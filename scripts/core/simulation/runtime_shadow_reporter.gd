@@ -2,6 +2,9 @@ extends RefCounted
 
 var _report_path: String = "user://reports/rust_shadow/latest.json"
 var _flush_interval_ticks: int = 500
+var _allowed_max_tick_delta: int = 0
+var _allowed_max_event_delta: int = 0
+var _allowed_mismatch_ratio: float = 0.0
 
 var _frames: int = 0
 var _mismatch_frames: int = 0
@@ -13,9 +16,18 @@ var _last_flushed_tick: int = 0
 
 
 ## Initializes shadow reporter output path and flush interval.
-func setup(report_path: String, flush_interval_ticks: int) -> void:
+func setup(
+	report_path: String,
+	flush_interval_ticks: int,
+	allowed_max_tick_delta: int = 0,
+	allowed_max_event_delta: int = 0,
+	allowed_mismatch_ratio: float = 0.0
+) -> void:
 	_report_path = report_path
 	_flush_interval_ticks = maxi(flush_interval_ticks, 1)
+	_allowed_max_tick_delta = maxi(allowed_max_tick_delta, 0)
+	_allowed_max_event_delta = maxi(allowed_max_event_delta, 0)
+	_allowed_mismatch_ratio = clampf(allowed_mismatch_ratio, 0.0, 1.0)
 
 
 ## Records one frame of GD vs Rust shadow comparison.
@@ -44,9 +56,17 @@ func flush_now(current_tick: int) -> void:
 func _flush_report(current_tick: int) -> void:
 	var avg_tick_delta: float = 0.0
 	var avg_event_delta: float = 0.0
+	var mismatch_ratio: float = 0.0
+	var approved_for_cutover: bool = false
 	if _frames > 0:
 		avg_tick_delta = float(_sum_tick_delta) / float(_frames)
 		avg_event_delta = float(_sum_event_delta) / float(_frames)
+		mismatch_ratio = float(_mismatch_frames) / float(_frames)
+		approved_for_cutover = (
+			_max_tick_delta <= _allowed_max_tick_delta
+			and _max_event_delta <= _allowed_max_event_delta
+			and mismatch_ratio <= _allowed_mismatch_ratio
+		)
 
 	var payload: Dictionary = {
 		"current_tick": current_tick,
@@ -56,6 +76,11 @@ func _flush_report(current_tick: int) -> void:
 		"avg_tick_delta": avg_tick_delta,
 		"max_event_delta": _max_event_delta,
 		"avg_event_delta": avg_event_delta,
+		"mismatch_ratio": mismatch_ratio,
+		"allowed_max_tick_delta": _allowed_max_tick_delta,
+		"allowed_max_event_delta": _allowed_max_event_delta,
+		"allowed_mismatch_ratio": _allowed_mismatch_ratio,
+		"approved_for_cutover": approved_for_cutover,
 		"generated_at_unix_ms": Time.get_ticks_msec(),
 	}
 

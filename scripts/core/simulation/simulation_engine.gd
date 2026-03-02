@@ -265,7 +265,10 @@ func _init_rust_runtime() -> void:
 			_shadow_reporter.call(
 				"setup",
 				GameConfig.RUST_SHADOW_REPORT_PATH,
-				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS
+				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
+				GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
+				GameConfig.RUST_SHADOW_ALLOWED_MAX_EVENT_DELTA,
+				GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO
 			)
 		return
 	push_warning("[SimulationEngine] Rust runtime init failed. Falling back to GDScript runtime.")
