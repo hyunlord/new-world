@@ -8,10 +8,6 @@ const SUPPORTED_MODES: Array[String] = ["cpu", "gpu_auto", "gpu_force"]
 const DEFAULT_MODE: String = "gpu_auto"
 const COMPUTE_DOMAINS: Array[String] = [
 	"pathfinding",
-	"needs",
-	"stress",
-	"emotion",
-	"orchestration",
 ]
 const GPU_ENABLED_DOMAINS: Array[String] = ["pathfinding"]
 

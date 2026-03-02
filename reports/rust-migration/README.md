@@ -1135,3 +1135,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0138-locale-fluent-rust-indexing.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0138-locale-fluent-rust-indexing.md)
+
+### 0139 - gpu domain exposure pathfinding only
+- Commit: `[rust-r0-239] Restrict compute domain exposure to pathfinding only`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0139-gpu-domain-exposure-pathfinding-only.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0139-gpu-domain-exposure-pathfinding-only.md)

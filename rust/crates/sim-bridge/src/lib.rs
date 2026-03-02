@@ -656,8 +656,7 @@ const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
 const RUNTIME_SYSTEM_KEY_STAT_THRESHOLD: &str = "stat_threshold_system";
 const RUNTIME_SYSTEM_KEY_BEHAVIOR: &str = "behavior_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
-const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
-    ["pathfinding", "needs", "stress", "emotion", "orchestration"];
+const RUNTIME_COMPUTE_DOMAINS: [&str; 1] = ["pathfinding"];
 const WS2_MAGIC: [u8; 4] = *b"WS2\0";
 const WS2_VERSION: u16 = 1;
 const WS2_HEADER_SIZE: usize = 16;
