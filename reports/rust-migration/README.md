@@ -647,3 +647,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 34.78% (16/46)
 - Remaining (strict state-write basis): 63.04%
 - Details: [0077-mental-break-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0077-mental-break-runtime-active-write-port.md)
+
+### 0078 - owner transfer allowlist phase 10
+- Commit: `[rust-r0-178] Expand owner-ready allowlist with mental-break system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 36.96% (17/46)
+- Actual state-write coverage (strict): 36.96% (17/46)
+- Owner transfer coverage (`exec_owner=rust`): 36.96% (17/46)
+- Remaining (strict state-write basis): 63.04%
+- Details: [0078-owner-transfer-allowlist-phase10.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0078-owner-transfer-allowlist-phase10.md)
