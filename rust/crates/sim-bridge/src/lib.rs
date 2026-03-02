@@ -4,21 +4,38 @@
 //! For now, this module provides pure-Rust conversion helpers that can be
 //! reused by the future FFI layer.
 
+mod body_bindings;
+mod locale_bindings;
 mod pathfinding_backend;
+mod pathfinding_bindings;
 mod pathfinding_gpu;
+mod runtime_bindings;
 
-use fluent_bundle::types::FluentNumber;
-use fluent_bundle::{FluentArgs, FluentBundle, FluentResource, FluentValue};
-use godot::builtin::VariantType;
 use godot::prelude::*;
+use body_bindings::{
+    build_step_pairs, packed_f32_to_vec, packed_i32_to_vec, packed_u8_to_vec, vec_f32_to_packed,
+    vec_i32_to_packed, vec_u8_to_packed,
+};
+use locale_bindings::{clear_fluent_source, format_fluent_message, store_fluent_source};
 use pathfinding_backend::{
     get_backend_mode, has_gpu_backend, read_dispatch_counts, record_dispatch,
     reset_dispatch_counts, set_backend_mode, PATHFIND_BACKEND_GPU,
+};
+use pathfinding_bindings::{
+    backend_mode_to_str, encode_path_groups_vec2, encode_path_groups_xy, encode_path_vec2,
+    encode_path_xy, normalize_max_steps, parse_pathfind_backend, resolve_backend_mode,
+    resolve_backend_mode_code,
 };
 use pathfinding_gpu::{
     pathfind_grid_batch_tuple_gpu_bytes, pathfind_grid_batch_vec2_gpu_bytes,
     pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
 };
+use runtime_bindings::{
+    is_supported_compute_mode, normalize_compute_mode_for_domain,
+    runtime_default_compute_domain_modes,
+};
+#[cfg(test)]
+use locale_bindings::format_fluent_from_source_args;
 use serde::Deserialize;
 use sim_core::{config::GameConfig, GameCalendar, WorldMap};
 use sim_engine::{EngineSnapshot, GameEvent, SimEngine, SimResources};
@@ -30,8 +47,7 @@ use sim_systems::{
 };
 use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::sync::{Arc, Mutex, OnceLock};
-use unic_langid::LanguageIdentifier;
+use std::sync::{Arc, Mutex};
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -545,111 +561,6 @@ fn dispatch_pathfind_grid_batch_xy_bytes(
     }
 }
 
-fn packed_i32_to_vec(values: &PackedInt32Array) -> Vec<i32> {
-    values.as_slice().to_vec()
-}
-
-fn packed_f32_to_vec(values: &PackedFloat32Array) -> Vec<f32> {
-    values.as_slice().to_vec()
-}
-
-fn packed_u8_to_vec(values: &PackedByteArray) -> Vec<u8> {
-    values.as_slice().to_vec()
-}
-
-fn vec_i32_to_packed(values: Vec<i32>) -> PackedInt32Array {
-    PackedInt32Array::from(values)
-}
-
-fn vec_f32_to_packed(values: Vec<f32>) -> PackedFloat32Array {
-    PackedFloat32Array::from(values)
-}
-
-fn vec_u8_to_packed(values: Vec<u8>) -> PackedByteArray {
-    PackedByteArray::from(values)
-}
-
-fn build_step_pairs(
-    thresholds: &PackedInt32Array,
-    multipliers: &PackedFloat32Array,
-) -> Vec<(i32, f32)> {
-    let len = thresholds.len().min(multipliers.len());
-    let mut pairs: Vec<(i32, f32)> = Vec::with_capacity(len);
-    for idx in 0..len {
-        pairs.push((thresholds[idx], multipliers[idx]));
-    }
-    pairs
-}
-
-fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Array> {
-    let mut output: Array<PackedInt32Array> = Array::new();
-    for group in path_groups {
-        let mut packed: PackedInt32Array = PackedInt32Array::new();
-        packed.resize(group.len() * 2);
-        for (idx, p) in group.into_iter().enumerate() {
-            let base = idx * 2;
-            packed[base] = p.x;
-            packed[base + 1] = p.y;
-        }
-        output.push(&packed);
-    }
-    output
-}
-
-fn encode_path_groups_vec2(path_groups: Vec<Vec<GridPos>>) -> Array<PackedVector2Array> {
-    let mut output: Array<PackedVector2Array> = Array::new();
-    for group in path_groups {
-        let packed = encode_path_vec2(group);
-        output.push(&packed);
-    }
-    output
-}
-
-fn encode_path_xy(path: Vec<GridPos>) -> PackedInt32Array {
-    let mut packed: PackedInt32Array = PackedInt32Array::new();
-    packed.resize(path.len() * 2);
-    for (idx, p) in path.into_iter().enumerate() {
-        let base = idx * 2;
-        packed[base] = p.x;
-        packed[base + 1] = p.y;
-    }
-    packed
-}
-
-fn encode_path_vec2(path: Vec<GridPos>) -> PackedVector2Array {
-    let mut packed: PackedVector2Array = PackedVector2Array::new();
-    packed.resize(path.len());
-    for (idx, p) in path.into_iter().enumerate() {
-        packed[idx] = Vector2::new(p.x as f32, p.y as f32);
-    }
-    packed
-}
-
-fn parse_pathfind_backend(mode: &str) -> Option<u8> {
-    pathfinding_backend::parse_backend_mode(mode)
-}
-
-#[inline]
-fn normalize_max_steps(max_steps: i32) -> usize {
-    if max_steps <= 0 {
-        200_usize
-    } else {
-        max_steps as usize
-    }
-}
-
-fn resolve_backend_mode_code(mode: u8) -> u8 {
-    pathfinding_backend::resolve_backend_mode_code(mode)
-}
-
-fn backend_mode_to_str(mode: u8) -> &'static str {
-    pathfinding_backend::backend_mode_to_str(mode)
-}
-
-fn resolve_backend_mode(mode: u8) -> &'static str {
-    pathfinding_backend::resolve_backend_mode_str(mode)
-}
-
 const EVENT_TYPE_ID_TICK_COMPLETED: i32 = 1;
 const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
@@ -664,7 +575,6 @@ const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
 const WS2_MAGIC: [u8; 4] = *b"WS2\0";
 const WS2_VERSION: u16 = 1;
 const WS2_HEADER_SIZE: usize = 16;
-static FLUENT_SOURCES: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
 
 #[derive(Debug, Clone, Deserialize)]
 struct RuntimeConfig {
@@ -741,7 +651,7 @@ impl RuntimeState {
             captured_events,
             registered_systems: Vec::new(),
             rust_registered_systems: HashSet::new(),
-            compute_domain_modes: runtime_default_compute_domain_modes(),
+            compute_domain_modes: runtime_default_compute_domain_modes(&RUNTIME_COMPUTE_DOMAINS),
         }
     }
 }
@@ -869,18 +779,6 @@ fn game_event_to_v2_dict(event: &GameEvent) -> VarDictionary {
     dict
 }
 
-fn runtime_default_compute_domain_modes() -> HashMap<String, String> {
-    let mut modes = HashMap::<String, String>::new();
-    for domain in RUNTIME_COMPUTE_DOMAINS {
-        modes.insert(domain.to_string(), "gpu_auto".to_string());
-    }
-    modes
-}
-
-fn is_supported_compute_mode(mode: &str) -> bool {
-    matches!(mode, "cpu" | "gpu_auto" | "gpu_force")
-}
-
 fn dict_get_string(dict: &VarDictionary, key: &str) -> Option<String> {
     let value = dict.get(key)?;
     Some(value.to::<GString>().to_string())
@@ -894,125 +792,6 @@ fn dict_get_i32(dict: &VarDictionary, key: &str) -> Option<i32> {
 fn dict_get_bool(dict: &VarDictionary, key: &str) -> Option<bool> {
     let value = dict.get(key)?;
     Some(value.to::<bool>())
-}
-
-fn fluent_sources() -> &'static Mutex<HashMap<String, String>> {
-    FLUENT_SOURCES.get_or_init(|| Mutex::new(HashMap::new()))
-}
-
-fn locale_key(locale: &str) -> String {
-    locale.trim().to_lowercase()
-}
-
-fn parse_language_identifier(locale: &str) -> LanguageIdentifier {
-    locale
-        .parse::<LanguageIdentifier>()
-        .ok()
-        .or_else(|| "en-US".parse::<LanguageIdentifier>().ok())
-        .expect("fallback locale should parse")
-}
-
-fn store_fluent_source(locale: &str, source: &str) -> bool {
-    let key = locale_key(locale);
-    if key.is_empty() || source.trim().is_empty() {
-        return false;
-    }
-    let Ok(mut sources) = fluent_sources().lock() else {
-        return false;
-    };
-    sources.insert(key, source.to_string());
-    true
-}
-
-fn clear_fluent_source(locale: &str) {
-    let key = locale_key(locale);
-    if key.is_empty() {
-        return;
-    }
-    let Ok(mut sources) = fluent_sources().lock() else {
-        return;
-    };
-    sources.remove(&key);
-}
-
-fn lookup_fluent_source(locale: &str) -> Option<String> {
-    let key = locale_key(locale);
-    let Ok(sources) = fluent_sources().lock() else {
-        return None;
-    };
-    if let Some(source) = sources.get(&key) {
-        return Some(source.clone());
-    }
-    if key.contains('-') {
-        let base = key.split('-').next().unwrap_or_default();
-        if let Some(source) = sources.get(base) {
-            return Some(source.clone());
-        }
-    }
-    sources.get("en").cloned()
-}
-
-fn variant_to_fluent_value(value: &Variant) -> FluentValue<'static> {
-    match value.get_type() {
-        VariantType::INT => FluentValue::Number(FluentNumber::from(value.to::<i64>() as f64)),
-        VariantType::FLOAT => FluentValue::Number(FluentNumber::from(value.to::<f64>())),
-        VariantType::BOOL => {
-            let value_text = if value.to::<bool>() { "true" } else { "false" };
-            FluentValue::String(value_text.to_string().into())
-        }
-        _ => FluentValue::String(value.to::<GString>().to_string().into()),
-    }
-}
-
-fn build_fluent_args(params: &VarDictionary) -> Option<FluentArgs<'static>> {
-    let mut args = FluentArgs::new();
-    let mut has_arg = false;
-    for (key_var, value_var) in params.iter_shared() {
-        let key = key_var.to::<GString>().to_string();
-        if key.is_empty() {
-            continue;
-        }
-        args.set(key, variant_to_fluent_value(&value_var));
-        has_arg = true;
-    }
-    if has_arg {
-        Some(args)
-    } else {
-        None
-    }
-}
-
-fn format_fluent_from_source(
-    source: &str,
-    locale: &str,
-    key: &str,
-    params: &VarDictionary,
-) -> Option<String> {
-    let args = build_fluent_args(params);
-    format_fluent_from_source_args(source, locale, key, args)
-}
-
-fn format_fluent_from_source_args(
-    source: &str,
-    locale: &str,
-    key: &str,
-    args: Option<FluentArgs<'static>>,
-) -> Option<String> {
-    let resource = FluentResource::try_new(source.to_string()).ok()?;
-    let language_id = parse_language_identifier(locale);
-    let mut bundle = FluentBundle::new(vec![language_id]);
-    bundle.set_use_isolating(false);
-    bundle.add_resource(resource).ok()?;
-    let message = bundle.get_message(key)?;
-    let pattern = message.value()?;
-    let mut errors = Vec::new();
-    let resolved = bundle.format_pattern(pattern, args.as_ref(), &mut errors);
-    Some(resolved.into_owned())
-}
-
-fn format_fluent_message(locale: &str, key: &str, params: &VarDictionary) -> Option<String> {
-    let source = lookup_fluent_source(locale)?;
-    format_fluent_from_source(&source, locale, key, params)
 }
 
 fn encode_ws2_blob(snapshot: &EngineSnapshot) -> Option<Vec<u8>> {
@@ -1394,7 +1173,12 @@ impl WorldSimRuntime {
                 if !RUNTIME_COMPUTE_DOMAINS.contains(&domain.as_str()) {
                     continue;
                 }
-                state.compute_domain_modes.insert(domain, mode);
+                let Some(normalized_mode) =
+                    normalize_compute_mode_for_domain(domain.as_str(), mode.as_str())
+                else {
+                    continue;
+                };
+                state.compute_domain_modes.insert(domain, normalized_mode);
                 continue;
             }
             if command_id == "set_compute_mode_all" {
@@ -1409,9 +1193,14 @@ impl WorldSimRuntime {
                     continue;
                 }
                 for domain in RUNTIME_COMPUTE_DOMAINS {
+                    let Some(normalized_mode) =
+                        normalize_compute_mode_for_domain(domain, mode.as_str())
+                    else {
+                        continue;
+                    };
                     state
                         .compute_domain_modes
-                        .insert(domain.to_string(), mode.clone());
+                        .insert(domain.to_string(), normalized_mode);
                 }
                 continue;
             }

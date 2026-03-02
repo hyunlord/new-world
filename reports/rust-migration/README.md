@@ -455,3 +455,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
 - Remaining (strict state-write basis): 93.48%
 - Details: [0053-runtime-noop-removal-and-strict-rebaseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0053-runtime-noop-removal-and-strict-rebaseline.md)
+
+### 0054 - sim-bridge module split + GPU placeholder hardening
+- Commit: `[rust-r0-154] Split sim-bridge modules and harden non-path GPU placeholders`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 6.52% (3/46)
+- Actual state-write coverage (strict): 6.52% (3/46)
+- Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
+- Remaining (strict state-write basis): 93.48%
+- Details: [0054-sim-bridge-module-split-and-gpu-placeholder-hardening.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0054-sim-bridge-module-split-and-gpu-placeholder-hardening.md)

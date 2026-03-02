@@ -13,6 +13,7 @@ const COMPUTE_DOMAINS: Array[String] = [
 	"emotion",
 	"orchestration",
 ]
+const GPU_ENABLED_DOMAINS: Array[String] = ["pathfinding"]
 
 var _mode: String = DEFAULT_MODE
 var _domain_modes: Dictionary = {}
@@ -40,7 +41,7 @@ func set_mode(new_mode: String) -> void:
 	_mode = new_mode
 	for i in range(COMPUTE_DOMAINS.size()):
 		var domain: String = COMPUTE_DOMAINS[i]
-		_domain_modes[domain] = _mode
+		_domain_modes[domain] = _mode if _domain_supports_gpu(domain) else "cpu"
 	_save_settings()
 	_sync_pathfinding_backend_mode()
 	_queue_runtime_command(StringName("set_compute_mode_all"), {"mode": _mode})
@@ -50,6 +51,8 @@ func set_mode(new_mode: String) -> void:
 
 ## Returns configured compute mode for a domain.
 func get_mode_for_domain(domain: String) -> String:
+	if not _domain_supports_gpu(domain):
+		return "cpu"
 	if domain in _domain_modes:
 		return str(_domain_modes[domain])
 	return _mode
@@ -63,22 +66,25 @@ func set_mode_for_domain(domain: String, new_mode: String) -> void:
 	if new_mode not in SUPPORTED_MODES:
 		push_warning("[ComputeBackend] Unsupported mode: %s" % new_mode)
 		return
+	var normalized_mode: String = new_mode if _domain_supports_gpu(domain) else "cpu"
 	var old_mode: String = get_mode_for_domain(domain)
-	if old_mode == new_mode:
+	if old_mode == normalized_mode:
 		return
-	_domain_modes[domain] = new_mode
+	_domain_modes[domain] = normalized_mode
 	_save_settings()
 	if domain == "pathfinding":
 		_sync_pathfinding_backend_mode()
 	_queue_runtime_command(StringName("set_compute_domain_mode"), {
 		"domain": domain,
-		"mode": new_mode,
+		"mode": normalized_mode,
 	})
-	compute_domain_mode_changed.emit(domain, new_mode, resolve_mode_for_domain(domain))
+	compute_domain_mode_changed.emit(domain, normalized_mode, resolve_mode_for_domain(domain))
 
 
 ## Returns resolved execution mode (`cpu` or `gpu`) for the given domain.
 func resolve_mode_for_domain(domain: String) -> String:
+	if not _domain_supports_gpu(domain):
+		return "cpu"
 	var configured: String = get_mode_for_domain(domain)
 	if configured == "cpu":
 		return "cpu"
@@ -170,8 +176,9 @@ func _ensure_domain_modes() -> void:
 	for i in range(COMPUTE_DOMAINS.size()):
 		var domain: String = COMPUTE_DOMAINS[i]
 		if _domain_modes.has(domain):
+			_domain_modes[domain] = str(_domain_modes[domain]) if _domain_supports_gpu(domain) else "cpu"
 			continue
-		_domain_modes[domain] = _mode
+		_domain_modes[domain] = _mode if _domain_supports_gpu(domain) else "cpu"
 
 
 func _emit_domain_mode_signals() -> void:
@@ -185,11 +192,15 @@ func _sync_runtime_compute_modes() -> void:
 	_queue_runtime_command(StringName("set_compute_mode_all"), {"mode": _mode})
 	for i in range(COMPUTE_DOMAINS.size()):
 		var domain: String = COMPUTE_DOMAINS[i]
-		var mode: String = get_mode_for_domain(domain)
+		var mode: String = get_mode_for_domain(domain) if _domain_supports_gpu(domain) else "cpu"
 		_queue_runtime_command(StringName("set_compute_domain_mode"), {
 			"domain": domain,
 			"mode": mode,
 		})
+
+
+func _domain_supports_gpu(domain: String) -> bool:
+	return domain in GPU_ENABLED_DOMAINS
 
 
 func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void:
