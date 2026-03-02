@@ -631,3 +631,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 32.61% (15/46)
 - Remaining (strict state-write basis): 65.22%
 - Details: [0075-mortality-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0075-mortality-runtime-active-write-port.md)
+
+### 0076 - owner transfer allowlist phase 9
+- Commit: `[rust-r0-176] Expand owner-ready allowlist with mortality system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 34.78% (16/46)
+- Actual state-write coverage (strict): 34.78% (16/46)
+- Owner transfer coverage (`exec_owner=rust`): 34.78% (16/46)
+- Remaining (strict state-write basis): 65.22%
+- Details: [0076-owner-transfer-allowlist-phase9.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0076-owner-transfer-allowlist-phase9.md)

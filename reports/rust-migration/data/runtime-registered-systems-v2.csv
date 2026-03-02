@@ -23,7 +23,7 @@ registration_order,var_name,const_name,script_path,system_key,exec_owner,simbrid
 22,trait_violation_system,TraitViolationSystem,res://scripts/systems/psychology/trait_violation_system.gd,trait_violation_system,gdscript,yes,simbridge_pattern_scan_v1,no
 23,social_event_system,SocialEventSystem,res://scripts/systems/social/social_event_system.gd,social_event_system,rust,yes,simbridge_pattern_scan_v1,yes
 24,age_system,AgeSystem,res://scripts/systems/biology/age_system.gd,age_system,rust,yes,simbridge_pattern_scan_v1,yes
-25,mortality_system,MortalitySystem,res://scripts/systems/biology/mortality_system.gd,mortality_system,gdscript,yes,simbridge_pattern_scan_v1,yes
+25,mortality_system,MortalitySystem,res://scripts/systems/biology/mortality_system.gd,mortality_system,rust,yes,simbridge_pattern_scan_v1,yes
 26,population_system,PopulationSystem,res://scripts/systems/biology/population_system.gd,population_system,gdscript,yes,simbridge_pattern_scan_v1,no
 27,family_system,FamilySystem,res://scripts/systems/social/family_system.gd,family_system,gdscript,yes,simbridge_pattern_scan_v1,no
 28,leader_system,LeaderSystem,res://scripts/systems/social/leader_system.gd,leader_system,gdscript,yes,simbridge_pattern_scan_v1,no
