@@ -14,7 +14,7 @@ const DEFAULT_LOCALE: String = "ko"
 const COMPILED_DIR_DEFAULT: String = "compiled"
 const FLUENT_DIR_DEFAULT: String = "fluent"
 const KEY_REGISTRY_DEFAULT: String = "key_registry.json"
-const USE_FLUENT_RUNTIME_DEFAULT: bool = false
+const USE_FLUENT_RUNTIME_DEFAULT: bool = true
 
 var current_locale: String = DEFAULT_LOCALE
 var _supported_locales: Array = SUPPORTED_LOCALES.duplicate()
@@ -41,7 +41,7 @@ var _rust_fluent_ready: bool = false
 var _key_index_version: int = 0
 var _registry_keys: Array = []
 
-## All category file names (no extension)
+## Legacy category list retained for manifest compatibility only.
 var _categories: Array = ["ui", "game", "traits", "emotions", "events", "deaths", "buildings", "tutorial", "debug", "coping", "childhood", "reputation", "economy", "tech", "data_generated"]
 
 
@@ -89,23 +89,7 @@ func load_locale(locale: String) -> void:
 		_key_index_version += 1
 		return
 
-	for cat in _categories:
-		var path: String = LOCALES_DIR + locale + "/" + cat + ".json"
-		if not FileAccess.file_exists(path):
-			path = LOCALES_DIR + "en/" + cat + ".json"
-		if not FileAccess.file_exists(path):
-			_strings[cat] = {}
-			continue
-		var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-		var json: JSON = JSON.new()
-		json.parse(file.get_as_text())
-		var cat_data: Dictionary = json.data if json.data else {}
-		_strings[cat] = cat_data
-		var keys: Array = cat_data.keys()
-		for i in range(keys.size()):
-			var key: String = str(keys[i])
-			if not _flat_strings.has(key):
-				_flat_strings[key] = str(cat_data[key])
+	push_warning("[Locale] Failed to load fluent/compiled locale assets for '%s'. Legacy category JSON fallback is disabled." % locale)
 	_rebuild_key_index_from_flat()
 	_refresh_month_key_ids()
 	_key_index_version += 1
