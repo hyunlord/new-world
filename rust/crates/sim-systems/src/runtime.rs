@@ -800,6 +800,178 @@ impl SimSystem for SocialEventRuntimeSystem {
     }
 }
 
+/// Rust runtime system for morale-driven behavior/need adjustment.
+///
+/// This computes a per-entity morale signal and applies active writes to
+/// `Behavior.job_satisfaction`, `Behavior.occupation_satisfaction`,
+/// `Needs.meaning`, and `Needs.transcendence`.
+#[derive(Debug, Clone)]
+pub struct MoraleRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MoraleRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn maslow_morale_multiplier(hunger: f32, energy: f32, safety: f32, belonging: f32) -> f32 {
+    if hunger < 0.3 || energy < 0.3 {
+        0.0
+    } else if hunger < 0.6 || energy < 0.6 {
+        0.4
+    } else if safety < 0.3 {
+        0.2
+    } else if safety < 0.6 {
+        0.6
+    } else if belonging < 0.3 {
+        0.7
+    } else {
+        1.0
+    }
+}
+
+impl SimSystem for MoraleRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "morale_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(
+            &mut Needs,
+            &mut Behavior,
+            Option<&Emotion>,
+            Option<&Stress>,
+            Option<&Personality>,
+            Option<&Social>,
+        )>();
+        for (_, (needs, behavior, emotion_opt, stress_opt, personality_opt, social_opt)) in &mut query {
+            let hunger = needs.get(NeedType::Hunger) as f32;
+            let energy = needs.energy as f32;
+            let safety = needs.get(NeedType::Safety) as f32;
+            let belonging = needs.get(NeedType::Belonging) as f32;
+
+            let pa = emotion_opt
+                .map(|emotion| {
+                    ((emotion.get(EmotionType::Joy)
+                        + emotion.get(EmotionType::Trust)
+                        + emotion.get(EmotionType::Anticipation)) as f32
+                        / 3.0)
+                        .clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let na = emotion_opt
+                .map(|emotion| {
+                    ((emotion.get(EmotionType::Fear)
+                        + emotion.get(EmotionType::Anger)
+                        + emotion.get(EmotionType::Sadness)
+                        + emotion.get(EmotionType::Disgust)
+                        + emotion.get(EmotionType::Surprise)) as f32
+                        / 5.0)
+                        .clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let ls = ((hunger + energy + belonging) / 3.0).clamp(0.0, 1.0);
+            let maslow_mult = maslow_morale_multiplier(hunger, energy, safety, belonging);
+
+            let mut morale = (0.40 * pa - 0.30 * na + 0.30 * ls) * maslow_mult;
+            let hygiene_threshold = 0.5;
+            let hygiene_penalty_rate = 0.8;
+            if safety < hygiene_threshold {
+                morale -= (hygiene_threshold - safety) * hygiene_penalty_rate * 0.3;
+            }
+            if belonging < hygiene_threshold {
+                morale -= (hygiene_threshold - belonging) * hygiene_penalty_rate * 0.2;
+            }
+            if hunger < hygiene_threshold {
+                morale -= (hygiene_threshold - hunger) * hygiene_penalty_rate * 0.25;
+            }
+            if energy < hygiene_threshold {
+                morale -= (hygiene_threshold - energy) * hygiene_penalty_rate * 0.25;
+            }
+
+            let extraversion = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let autonomy = needs.get(NeedType::Autonomy) as f32;
+            let warr_autonomy = -1.5 * (autonomy - 0.6).powi(2) + 0.15;
+            let warr_social = -2.0 * (belonging - 0.5).powi(2) + 0.12;
+            let warr_info = (extraversion / 0.7).min(1.0) * 0.10;
+            morale = (morale + (warr_autonomy + warr_social + warr_info).clamp(-0.3, 0.3))
+                .clamp(-1.0, 1.0);
+
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let settlement_morale = if let Some(social) = social_opt {
+                ((morale + social.social_capital as f32) * 0.5).clamp(-1.0, 1.0)
+            } else {
+                morale
+            };
+            let patience = personality_opt
+                .map(|personality| personality.axis(HexacoAxis::C) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let migration_p = body::morale_migration_probability(
+                settlement_morale,
+                10.0,
+                0.35,
+                patience,
+                0.3,
+                0.95,
+            );
+
+            let behavior_weight = body::morale_behavior_weight_multiplier(
+                morale,
+                0.6,
+                1.2,
+                1.55,
+                0.85,
+                1.2,
+                0.55,
+                0.85,
+                0.30,
+                0.55,
+            );
+            let stress_penalty = (stress_level * 0.12).clamp(0.0, 0.12);
+            behavior.job_satisfaction =
+                (behavior.job_satisfaction + (behavior_weight - 1.0) * 0.12 - stress_penalty)
+                    .clamp(0.0, 1.0);
+            behavior.occupation_satisfaction = (behavior.occupation_satisfaction
+                + (behavior_weight - 1.0) * 0.10
+                - stress_penalty * 0.8)
+                .clamp(0.0, 1.0);
+
+            let morale_unit = ((morale + 1.0) * 0.5).clamp(0.0, 1.0);
+            let next_meaning =
+                (needs.get(NeedType::Meaning) as f32 * 0.85 + morale_unit * 0.15 - migration_p * 0.05)
+                    .clamp(0.0, 1.0);
+            let next_transcendence = (needs.get(NeedType::Transcendence) as f32 * 0.90
+                + morale_unit * 0.10
+                - migration_p * 0.03)
+                .clamp(0.0, 1.0);
+            needs.set(NeedType::Meaning, next_meaning as f64);
+            needs.set(NeedType::Transcendence, next_transcendence as f64);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -971,7 +1143,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        MoraleRuntimeSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1251,6 +1423,61 @@ mod tests {
         assert!(updated.edges[0].familiarity > 0.20);
         assert_eq!(updated.edges[0].last_interaction_tick, 90);
         assert!((0.0..=1.0).contains(&updated.social_capital));
+    }
+
+    #[test]
+    fn morale_runtime_system_updates_behavior_and_upper_needs() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.30);
+        needs.set(NeedType::Safety, 0.25);
+        needs.set(NeedType::Belonging, 0.35);
+        needs.set(NeedType::Autonomy, 0.40);
+        needs.set(NeedType::Meaning, 0.55);
+        needs.set(NeedType::Transcendence, 0.50);
+        needs.energy = 0.30;
+
+        let behavior = Behavior {
+            job_satisfaction: 0.65,
+            occupation_satisfaction: 0.62,
+            ..Behavior::default()
+        };
+
+        let mut emotion = Emotion::default();
+        *emotion.get_mut(EmotionType::Fear) = 0.70;
+        *emotion.get_mut(EmotionType::Anger) = 0.60;
+        *emotion.get_mut(EmotionType::Sadness) = 0.65;
+        *emotion.get_mut(EmotionType::Joy) = 0.20;
+        *emotion.get_mut(EmotionType::Trust) = 0.25;
+        *emotion.get_mut(EmotionType::Anticipation) = 0.20;
+
+        let stress = Stress {
+            level: 0.75,
+            ..Stress::default()
+        };
+        let personality = Personality::default();
+        let social = Social::default();
+
+        let entity = world.spawn((needs, behavior, emotion, stress, personality, social));
+        let mut system = MoraleRuntimeSystem::new(40, 5);
+        system.run(&mut world, &mut resources, 5);
+
+        let updated_behavior = world
+            .get::<&Behavior>(entity)
+            .expect("updated behavior should be queryable");
+        let updated_needs = world
+            .get::<&Needs>(entity)
+            .expect("updated needs should be queryable");
+        assert!(updated_behavior.job_satisfaction < 0.65);
+        assert!(updated_behavior.occupation_satisfaction < 0.62);
+        assert!((0.0..=1.0).contains(&updated_needs.get(NeedType::Meaning)));
+        assert!((0.0..=1.0).contains(&updated_needs.get(NeedType::Transcendence)));
+        assert!(
+            (updated_needs.get(NeedType::Meaning) - 0.55).abs() > f64::EPSILON
+                || (updated_needs.get(NeedType::Transcendence) - 0.50).abs() > f64::EPSILON
+        );
     }
 
     #[test]

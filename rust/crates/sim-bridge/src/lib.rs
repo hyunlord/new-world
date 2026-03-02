@@ -43,8 +43,8 @@ use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
-        EmotionRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        EmotionRuntimeSystem, MoraleRuntimeSystem, NeedsRuntimeSystem, ReputationRuntimeSystem,
+        ResourceRegenSystem, SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
     },
     stat_curve,
 };
@@ -571,6 +571,7 @@ const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
 const RUNTIME_SYSTEM_KEY_REPUTATION: &str = "reputation_system";
 const RUNTIME_SYSTEM_KEY_SOCIAL_EVENT: &str = "social_event_system";
+const RUNTIME_SYSTEM_KEY_MORALE: &str = "morale_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
@@ -700,6 +701,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_EMOTION
             | RUNTIME_SYSTEM_KEY_REPUTATION
             | RUNTIME_SYSTEM_KEY_SOCIAL_EVENT
+            | RUNTIME_SYSTEM_KEY_MORALE
     )
 }
 
@@ -718,6 +720,11 @@ fn register_supported_rust_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_key {
+        RUNTIME_SYSTEM_KEY_MORALE => {
+            state
+                .engine
+                .register(MoraleRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
         RUNTIME_SYSTEM_KEY_SOCIAL_EVENT => {
             state
                 .engine
@@ -5319,6 +5326,7 @@ mod tests {
         assert!(runtime_supports_rust_system("emotion_system"));
         assert!(runtime_supports_rust_system("reputation_system"));
         assert!(runtime_supports_rust_system("social_event_system"));
+        assert!(runtime_supports_rust_system("morale_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
@@ -5339,7 +5347,6 @@ mod tests {
         assert!(!runtime_supports_rust_system("migration_system"));
         assert!(!runtime_supports_rust_system("contagion_system"));
         assert!(!runtime_supports_rust_system("job_satisfaction_system"));
-        assert!(!runtime_supports_rust_system("morale_system"));
         assert!(!runtime_supports_rust_system("job_assignment_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
