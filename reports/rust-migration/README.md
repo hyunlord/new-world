@@ -559,3 +559,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 17.39% (8/46)
 - Remaining (strict state-write basis): 73.91%
 - Details: [0066-occupation-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0066-occupation-runtime-active-write-port.md)
+
+### 0067 - owner transfer allowlist phase 4
+- Commit: `[rust-r0-167] Expand owner-ready allowlist with value and job-satisfaction systems`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 26.09% (12/46)
+- Actual state-write coverage (strict): 26.09% (12/46)
+- Owner transfer coverage (`exec_owner=rust`): 21.74% (10/46)
+- Remaining (strict state-write basis): 73.91%
+- Details: [0067-owner-transfer-allowlist-phase4.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0067-owner-transfer-allowlist-phase4.md)
