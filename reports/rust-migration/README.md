@@ -1095,3 +1095,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 93.48% (43/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0133-behavior-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0133-behavior-runtime-active-write-port.md)
+
+### 0134 - owner transfer allowlist phase 37
+- Commit: `[rust-r0-234] Expand owner-ready allowlist with behavior system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 95.65% (44/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0134-owner-transfer-allowlist-phase37.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0134-owner-transfer-allowlist-phase37.md)

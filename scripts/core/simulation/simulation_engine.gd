@@ -23,6 +23,7 @@ const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
 	"coping_system",
 	"intelligence_system",
 	"memory_system",
+	"behavior_system",
 	"movement_system",
 	"gathering_system",
 	"construction_system",
