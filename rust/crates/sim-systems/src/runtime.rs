@@ -1,4 +1,5 @@
 use hecs::{Entity, World};
+use rand::Rng;
 use std::collections::HashMap;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
@@ -1720,6 +1721,120 @@ impl SimSystem for AgeRuntimeSystem {
     }
 }
 
+/// Rust runtime system for Siler-model mortality checks.
+///
+/// This performs active writes on `Age.alive` based on age-gated
+/// monthly/annual hazard checks using `body::mortality_hazards_and_prob`.
+#[derive(Debug, Clone)]
+pub struct MortalityRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MortalityRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const MORTALITY_A1: f32 = 0.60;
+const MORTALITY_B1: f32 = 1.30;
+const MORTALITY_A2: f32 = 0.010;
+const MORTALITY_A3: f32 = 0.00006;
+const MORTALITY_B3: f32 = 0.090;
+const MORTALITY_TECH_K1: f32 = 0.30;
+const MORTALITY_TECH_K2: f32 = 0.20;
+const MORTALITY_TECH_K3: f32 = 0.05;
+const MORTALITY_TECH_LEVEL: f32 = 0.0;
+const MORTALITY_CARE_HUNGER_MIN: f32 = 0.3;
+const MORTALITY_CARE_PROTECTION_FACTOR: f32 = 0.6;
+const MORTALITY_SEASON_INFANT_MOD: f32 = 1.0;
+const MORTALITY_SEASON_BACKGROUND_MOD: f32 = 1.0;
+
+impl SimSystem for MortalityRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "mortality_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let ticks_per_year = config::TICKS_PER_YEAR as u64;
+        let ticks_per_month = config::TICKS_PER_MONTH as u64;
+        let mut query = world.query::<(
+            &mut Age,
+            Option<&Needs>,
+            Option<&BodyComponent>,
+            Option<&Stress>,
+        )>();
+        for (_, (age, needs_opt, body_opt, stress_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+
+            let age_ticks = age.ticks;
+            let is_infant = age_ticks < ticks_per_year;
+            let should_check = if is_infant {
+                age_ticks > 0 && age_ticks % ticks_per_month == 0
+            } else {
+                age_ticks > 0 && age_ticks % ticks_per_year == 0
+            };
+            if !should_check {
+                continue;
+            }
+
+            let age_years = (age_ticks as f32 / ticks_per_year as f32).max(0.0);
+            let nutrition = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let dr_norm = body_opt
+                .map(|body| {
+                    (body.dr_realized as f32 / config::BODY_REALIZED_DR_MAX as f32).clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let frailty = stress_opt
+                .map(|stress| (1.0 + stress.allostatic_load as f32 * 2.0).clamp(0.5, 4.0))
+                .unwrap_or(1.0);
+            let hazards = body::mortality_hazards_and_prob(
+                age_years,
+                MORTALITY_A1,
+                MORTALITY_B1,
+                MORTALITY_A2,
+                MORTALITY_A3,
+                MORTALITY_B3,
+                MORTALITY_TECH_K1,
+                MORTALITY_TECH_K2,
+                MORTALITY_TECH_K3,
+                MORTALITY_TECH_LEVEL,
+                nutrition,
+                MORTALITY_CARE_HUNGER_MIN,
+                MORTALITY_CARE_PROTECTION_FACTOR,
+                MORTALITY_SEASON_INFANT_MOD,
+                MORTALITY_SEASON_BACKGROUND_MOD,
+                frailty,
+                dr_norm,
+                config::BODY_DR_MORTALITY_REDUCTION as f32,
+                is_infant,
+            );
+            let q_check = hazards[5].clamp(0.0, 0.999);
+            let roll: f32 = resources.rng.gen_range(0.0..1.0);
+            if q_check >= 0.999 || roll < q_check {
+                age.alive = false;
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 struct ContagionSnapshot {
     entity: Entity,
@@ -2138,9 +2253,10 @@ mod tests {
     use super::{
         AgeRuntimeSystem, ContagionRuntimeSystem, EmotionRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
-        NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-        ReputationRuntimeSystem, ResourceRegenSystem, SocialEventRuntimeSystem,
-        StressRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -2979,6 +3095,42 @@ mod tests {
             .get::<&Behavior>(entity)
             .expect("behavior should be queryable");
         assert_eq!(updated_behavior.job, "none");
+    }
+
+    #[test]
+    fn mortality_runtime_system_marks_high_risk_entity_dead() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            ticks: sim_core::config::TICKS_PER_YEAR as u64,
+            years: 1.0,
+            stage: GrowthStage::Adult,
+            alive: true,
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.0);
+        let body = BodyComponent {
+            dr_realized: 0,
+            ..BodyComponent::default()
+        };
+        let stress = Stress {
+            allostatic_load: 1.0,
+            ..Stress::default()
+        };
+        let entity = world.spawn((age, needs, body, stress));
+
+        let mut system = MortalityRuntimeSystem::new(49, 1);
+        for _ in 0..100 {
+            system.run(&mut world, &mut resources, 1);
+            let current_age = world.get::<&Age>(entity).expect("age should be queryable");
+            if !current_age.alive {
+                break;
+            }
+        }
+
+        let updated_age = world.get::<&Age>(entity).expect("age should be queryable");
+        assert!(!updated_age.alive);
     }
 
     #[test]
