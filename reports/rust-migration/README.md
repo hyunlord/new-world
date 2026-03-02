@@ -919,3 +919,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 71.74% (33/46)
 - Remaining (strict state-write basis): 26.09%
 - Details: [0111-tech-utilization-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0111-tech-utilization-runtime-active-write-port.md)
+
+### 0112 - owner transfer allowlist phase 27
+- Commit: `[rust-r0-212] Expand owner-ready allowlist with tech-utilization system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 73.91% (34/46)
+- Actual state-write coverage (strict): 73.91% (34/46)
+- Owner transfer coverage (`exec_owner=rust`): 73.91% (34/46)
+- Remaining (strict state-write basis): 26.09%
+- Details: [0112-owner-transfer-allowlist-phase27.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0112-owner-transfer-allowlist-phase27.md)
