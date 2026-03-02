@@ -3,12 +3,12 @@ use rand::Rng;
 use std::collections::HashMap;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position, Skills,
-    Social, Stress, Values,
+    Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, MentalBreakType, NeedType,
-    RelationType, ResourceType, ValueType,
+    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
+    MentalBreakType, NeedType, RelationType, ResourceType, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -641,6 +641,206 @@ impl SimSystem for MentalBreakRuntimeSystem {
             stress.active_mental_break = Some(break_type);
             stress.mental_break_count = stress.mental_break_count.saturating_add(1);
             stress.mental_break_remaining = mental_break_duration_ticks(break_type);
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct TraitViolationHistory {
+    desensitize_mult: f32,
+    ptsd_mult: f32,
+    repeats: u32,
+    last_violation_tick: u64,
+}
+
+/// Rust runtime system for trait-violation stress updates.
+///
+/// This performs active writes on `Stress.level/reserve/allostatic_load` using
+/// trait-context mismatch checks and persistent desensitization/PTSD history.
+#[derive(Debug, Clone)]
+pub struct TraitViolationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    history: HashMap<Entity, TraitViolationHistory>,
+}
+
+impl TraitViolationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            history: HashMap::new(),
+        }
+    }
+}
+
+const TRAIT_VIOLATION_DESENSITIZE_DECAY: f32 = 0.85;
+const TRAIT_VIOLATION_DESENSITIZE_MIN: f32 = 0.30;
+const TRAIT_VIOLATION_PTSD_INCREASE: f32 = 1.10;
+const TRAIT_VIOLATION_PTSD_MAX: f32 = 2.0;
+const TRAIT_VIOLATION_ALLOSTATIC_THRESHOLD: f32 = 0.50;
+const TRAIT_VIOLATION_BASE_INTRUSIVE_CHANCE: f32 = 0.005;
+const TRAIT_VIOLATION_HISTORY_DECAY_TICKS: i32 = 365 * 12;
+
+#[inline]
+fn trait_violation_action_base(action: ActionType) -> Option<(&'static str, f32)> {
+    match action {
+        ActionType::TakeFromStockpile => Some(("steal", 22.0)),
+        ActionType::Fight => Some(("harm_innocent", 20.0)),
+        ActionType::MentalBreak => Some(("panic", 10.0)),
+        ActionType::Flee => Some(("retreat", 12.0)),
+        _ => None,
+    }
+}
+
+#[inline]
+fn trait_violation_matching_facet(
+    action_key: &str,
+    traits_opt: Option<&Traits>,
+    personality_opt: Option<&Personality>,
+) -> Option<f32> {
+    let traits = traits_opt?;
+    let personality = personality_opt?;
+    let match_trait = |id: &str| traits.has_trait(id);
+    match action_key {
+        "steal" if match_trait("f_fair_minded") => Some(personality.facet(HexacoFacet::Fairness) as f32),
+        "steal" if match_trait("f_sincere") => Some(personality.facet(HexacoFacet::Sincerity) as f32),
+        "harm_innocent" if match_trait("f_sentimental") => {
+            Some(personality.facet(HexacoFacet::Sentimentality) as f32)
+        }
+        "harm_innocent" if match_trait("f_gentle") => Some(personality.facet(HexacoFacet::Gentleness) as f32),
+        "panic" if match_trait("f_calm") => Some(personality.facet(HexacoFacet::Anxiety) as f32),
+        "retreat" if match_trait("f_fearless") => Some(personality.facet(HexacoFacet::Fearfulness) as f32),
+        _ => None,
+    }
+}
+
+impl SimSystem for TraitViolationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "trait_violation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(
+            &mut Stress,
+            Option<&Behavior>,
+            Option<&Needs>,
+            Option<&Social>,
+            Option<&Traits>,
+            Option<&Personality>,
+        )>();
+        for (entity, (stress, behavior_opt, needs_opt, social_opt, traits_opt, personality_opt)) in
+            &mut query
+        {
+            let mut history = self.history.get(&entity).copied().unwrap_or(TraitViolationHistory {
+                desensitize_mult: 1.0,
+                ptsd_mult: 1.0,
+                repeats: 0,
+                last_violation_tick: tick,
+            });
+
+            if let Some(behavior) = behavior_opt {
+                if let Some((action_key, base_stress)) =
+                    trait_violation_action_base(behavior.current_action)
+                {
+                    if let Some(facet_value) =
+                        trait_violation_matching_facet(action_key, traits_opt, personality_opt)
+                    {
+                        let survival_necessity = matches!(action_key, "steal")
+                            && needs_opt
+                                .map(|needs| (needs.get(NeedType::Hunger) as f32) < 0.2)
+                                .unwrap_or(false);
+                        let no_witness = social_opt
+                            .map(|social| (social.social_capital as f32) < 0.2)
+                            .unwrap_or(true);
+                        let is_habit = history.repeats >= 3
+                            && tick.saturating_sub(history.last_violation_tick) < 180;
+                        let context_mult = body::trait_violation_context_modifier(
+                            is_habit,
+                            false,
+                            survival_necessity,
+                            no_witness,
+                            0.0,
+                            0.5,
+                            0.4,
+                            0.85,
+                        );
+                        if context_mult > 0.0 {
+                            let facet_scale =
+                                body::trait_violation_facet_scale(facet_value.clamp(0.0, 1.0), 0.6);
+                            let stress_delta = (base_stress
+                                * facet_scale
+                                * history.desensitize_mult
+                                * history.ptsd_mult
+                                * context_mult
+                                / 400.0)
+                                .clamp(0.0, 0.25);
+                            if stress_delta > 0.0 {
+                                let next_level = (stress.level as f32 + stress_delta).clamp(0.0, 1.0);
+                                let next_allostatic = (stress.allostatic_load as f32 + stress_delta * 0.45)
+                                    .clamp(0.0, 1.0);
+                                let next_reserve =
+                                    (stress.reserve as f32 - stress_delta * 0.35).clamp(0.0, 1.0);
+                                stress.level = next_level as f64;
+                                stress.allostatic_load = next_allostatic as f64;
+                                stress.reserve = next_reserve as f64;
+                                stress.recalculate_state();
+
+                                if next_allostatic < TRAIT_VIOLATION_ALLOSTATIC_THRESHOLD {
+                                    history.desensitize_mult = (history.desensitize_mult
+                                        * TRAIT_VIOLATION_DESENSITIZE_DECAY)
+                                        .max(TRAIT_VIOLATION_DESENSITIZE_MIN);
+                                } else {
+                                    history.ptsd_mult = (history.ptsd_mult
+                                        * TRAIT_VIOLATION_PTSD_INCREASE)
+                                        .min(TRAIT_VIOLATION_PTSD_MAX);
+                                }
+                                history.repeats = history.repeats.saturating_add(1);
+                                history.last_violation_tick = tick;
+                            }
+                        } else {
+                            history.repeats = history.repeats.saturating_add(1);
+                            history.last_violation_tick = tick;
+                        }
+                    }
+                }
+            }
+
+            let ticks_since = tick.saturating_sub(history.last_violation_tick) as i32;
+            let intrusive_p = body::trait_violation_intrusive_chance(
+                TRAIT_VIOLATION_BASE_INTRUSIVE_CHANCE,
+                history.ptsd_mult,
+                ticks_since,
+                TRAIT_VIOLATION_HISTORY_DECAY_TICKS,
+                false,
+            )
+            .clamp(0.0, 1.0);
+            if intrusive_p > 0.0 {
+                let roll: f32 = resources.rng.gen_range(0.0..1.0);
+                if roll < intrusive_p {
+                    let intrusive_stress = (0.004 * history.ptsd_mult).clamp(0.0, 0.03);
+                    stress.level = (stress.level as f32 + intrusive_stress).clamp(0.0, 1.0) as f64;
+                    stress.allostatic_load = (stress.allostatic_load as f32 + intrusive_stress * 0.20)
+                        .clamp(0.0, 1.0) as f64;
+                    stress.recalculate_state();
+                }
+            }
+
+            if ticks_since > TRAIT_VIOLATION_HISTORY_DECAY_TICKS {
+                history.repeats = history.repeats.saturating_sub(1);
+                history.desensitize_mult =
+                    (history.desensitize_mult + 0.01).clamp(TRAIT_VIOLATION_DESENSITIZE_MIN, 1.0);
+                history.ptsd_mult = (history.ptsd_mult - 0.01).clamp(1.0, TRAIT_VIOLATION_PTSD_MAX);
+            }
+            self.history.insert(entity, history);
         }
     }
 }
@@ -2423,20 +2623,21 @@ mod tests {
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
-        ValueRuntimeSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
+        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
         Age, Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
-        SkillEntry, Skills, Social, Stress, Values,
+        SkillEntry, Skills, Social, Stress, Traits, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
-        MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, ValueType, WorldMap,
+        HexacoFacet, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId,
+        ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -2636,6 +2837,91 @@ mod tests {
         assert!(updated.active_mental_break.is_none());
         assert_eq!(updated.mental_break_remaining, 0);
         assert!(updated.level <= 0.90);
+    }
+
+    #[test]
+    fn trait_violation_runtime_system_increases_stress_on_violation() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let stress = Stress {
+            level: 0.12,
+            reserve: 0.82,
+            allostatic_load: 0.18,
+            ..Stress::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::TakeFromStockpile,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.80);
+        let social = Social {
+            social_capital: 0.80,
+            ..Social::default()
+        };
+        let mut traits = Traits::default();
+        traits.add_trait("f_fair_minded".to_string());
+        let mut personality = Personality::default();
+        personality.facets[HexacoFacet::Fairness as usize] = 0.95;
+
+        let entity = world.spawn((stress, behavior, needs, social, traits, personality));
+        let mut system = TraitViolationRuntimeSystem::new(36, 30);
+        system.run(&mut world, &mut resources, 30);
+
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("updated stress should be queryable");
+        assert!(updated.level > 0.12);
+        assert!(updated.reserve < 0.82);
+        assert!(updated.allostatic_load > 0.18);
+    }
+
+    #[test]
+    fn trait_violation_runtime_system_ptsd_path_amplifies_repeat_delta() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let stress = Stress {
+            level: 0.05,
+            reserve: 0.90,
+            allostatic_load: 0.90,
+            ..Stress::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::TakeFromStockpile,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.75);
+        let social = Social {
+            social_capital: 0.75,
+            ..Social::default()
+        };
+        let mut traits = Traits::default();
+        traits.add_trait("f_fair_minded".to_string());
+        let mut personality = Personality::default();
+        personality.facets[HexacoFacet::Fairness as usize] = 1.0;
+
+        let entity = world.spawn((stress, behavior, needs, social, traits, personality));
+        let mut system = TraitViolationRuntimeSystem::new(36, 30);
+
+        system.run(&mut world, &mut resources, 30);
+        let after_first = world
+            .get::<&Stress>(entity)
+            .expect("stress after first run should be queryable")
+            .level;
+
+        system.run(&mut world, &mut resources, 60);
+        let after_second = world
+            .get::<&Stress>(entity)
+            .expect("stress after second run should be queryable")
+            .level;
+
+        let first_delta = after_first - 0.05;
+        let second_delta = after_second - after_first;
+        assert!(first_delta > 0.0);
+        assert!(second_delta > first_delta);
     }
 
     #[test]
