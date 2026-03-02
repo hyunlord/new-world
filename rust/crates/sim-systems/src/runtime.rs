@@ -3484,6 +3484,119 @@ impl SimSystem for TechMaintenanceRuntimeSystem {
     }
 }
 
+const TECH_DISCOVERY_BASE_CHANCE: f32 = 0.02;
+const TECH_DISCOVERY_MIN_POP: usize = 2;
+const TECH_DISCOVERY_FORCE_POP: usize = 180;
+
+/// Rust runtime system for technology discovery progression.
+///
+/// This performs active writes on `Settlement.tech_states` and emits
+/// `TechDiscovered` for newly discovered or rediscovered tech entries.
+#[derive(Debug, Clone)]
+pub struct TechDiscoveryRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechDiscoveryRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechDiscoveryRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_discovery_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let checks_per_year = (config::TICKS_PER_YEAR as f32 / self.tick_interval as f32).max(1.0);
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let population = resources
+                .settlements
+                .get(&settlement_id)
+                .map(|settlement| settlement.members.len())
+                .unwrap_or(0);
+            if population < TECH_DISCOVERY_MIN_POP {
+                continue;
+            }
+
+            let mut discovered: Option<String> = None;
+            {
+                let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                    continue;
+                };
+                let mut candidate_ids: Vec<String> = settlement
+                    .tech_states
+                    .iter()
+                    .filter(|(_, state)| {
+                        matches!(
+                            state,
+                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                        )
+                    })
+                    .map(|(tech_id, _)| tech_id.clone())
+                    .collect();
+                candidate_ids.sort();
+
+                for tech_id in candidate_ids {
+                    let pop_bonus = ((population as i32 - 2).max(0) as f32)
+                        * config::TECH_DISCOVERY_POP_SCALE as f32;
+                    let prob = body::tech_discovery_prob(
+                        TECH_DISCOVERY_BASE_CHANCE,
+                        pop_bonus,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        config::TECH_DISCOVERY_MAX_BONUS as f32,
+                        checks_per_year,
+                    )
+                    .clamp(0.0, 1.0);
+                    let should_discover = if population >= TECH_DISCOVERY_FORCE_POP {
+                        true
+                    } else {
+                        resources.rng.gen_range(0.0..1.0) < prob
+                    };
+                    if !should_discover {
+                        continue;
+                    }
+                    settlement
+                        .tech_states
+                        .insert(tech_id.clone(), TechState::KnownLow);
+                    discovered = Some(tech_id);
+                    break;
+                }
+            }
+
+            if let Some(tech_id) = discovered {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id,
+                        tech_id,
+                    });
+            }
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -5171,6 +5284,7 @@ mod tests {
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TechDiscoveryRuntimeSystem,
         TechMaintenanceRuntimeSystem,
         TechUtilizationRuntimeSystem,
         TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
@@ -7595,6 +7709,75 @@ mod tests {
             Some(&TechState::KnownLow)
         );
         assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn tech_discovery_runtime_system_discovers_unknown_tech_with_force_pop() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 25);
+        let mut resources = SimResources::new(calendar, map, 41);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(83);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "sigma".to_string(), 9, 5, 0);
+        settlement.members = (0..180_u64).map(EntityId).collect();
+        settlement
+            .tech_states
+            .insert("bronze_working".to_string(), TechState::Unknown);
+        resources.settlements.insert(settlement_id, settlement);
+
+        let mut system =
+            TechDiscoveryRuntimeSystem::new(62, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS,
+        );
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(
+            settlement_after.tech_states.get("bronze_working"),
+            Some(&TechState::KnownLow)
+        );
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn tech_discovery_runtime_system_skips_when_population_too_low() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 29);
+        let mut resources = SimResources::new(calendar, map, 51);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(84);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "omega".to_string(), 2, 2, 0);
+        settlement.members = vec![EntityId(1)];
+        settlement
+            .tech_states
+            .insert("pottery".to_string(), TechState::Unknown);
+        resources.settlements.insert(settlement_id, settlement);
+
+        let mut system =
+            TechDiscoveryRuntimeSystem::new(62, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS,
+        );
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(
+            settlement_after.tech_states.get("pottery"),
+            Some(&TechState::Unknown)
+        );
     }
 
     #[test]
