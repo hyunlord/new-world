@@ -652,6 +652,79 @@ impl SimSystem for ChildStressProcessorRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for mental-break trigger evaluation.
+///
+/// Full parity requires Rust-owned break definition tables, stochastic trigger,
+/// active-break countdown state, and event emission.
+#[derive(Debug, Clone)]
+pub struct MentalBreakRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MentalBreakRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MentalBreakRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "mental_break_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Stress, Option<&Personality>, Option<&Needs>)>();
+        for (_, (stress, personality_opt, needs_opt)) in &mut query {
+            let c_axis = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::C) as f32)
+                .unwrap_or(0.5);
+            let e_axis = personality_opt
+                .map(|personality| personality.axis(sim_core::HexacoAxis::E) as f32)
+                .unwrap_or(0.5);
+            let energy_norm = needs_opt
+                .map(|needs| needs.energy as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let hunger_norm = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(1.0)
+                .clamp(0.0, 1.0);
+            let reserve = (stress.reserve as f32 * 100.0).clamp(0.0, 100.0);
+            let allostatic = (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0);
+            let threshold = body::mental_break_threshold(
+                520.0,
+                0.5,
+                c_axis,
+                e_axis,
+                allostatic,
+                energy_norm,
+                hunger_norm,
+                1.0,
+                0.0,
+                420.0,
+                900.0,
+                reserve,
+                0.0,
+            );
+            let stress_scaled = (stress.level as f32 * 2000.0).clamp(0.0, 2000.0);
+            let _trigger_p =
+                body::mental_break_chance(stress_scaled, threshold, reserve, allostatic, 6000.0, 0.25);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -821,8 +894,8 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
-        NeedsRuntimeSystem, ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
-        UpperNeedsRuntimeSystem,
+        MentalBreakRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem,
+        StatThresholdRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -1047,6 +1120,31 @@ mod tests {
         assert!((after.level - 0.35).abs() < 1e-9);
         assert!((after.reserve - 0.85).abs() < 1e-9);
         assert!((after.allostatic_load - 0.1).abs() < 1e-9);
+    }
+
+    #[test]
+    fn mental_break_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let stress = Stress {
+            level: 0.62,
+            reserve: 0.55,
+            allostatic_load: 0.22,
+            ..Stress::default()
+        };
+        let personality = Personality::default();
+        let needs = Needs::default();
+        let entity = world.spawn((stress, personality, needs));
+
+        let mut system = MentalBreakRuntimeSystem::new(35, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let after = world
+            .get::<&Stress>(entity)
+            .expect("stress component should remain available");
+        assert!((after.level - 0.62).abs() < 1e-9);
+        assert!((after.reserve - 0.55).abs() < 1e-9);
+        assert!((after.allostatic_load - 0.22).abs() < 1e-9);
     }
 
     #[test]
