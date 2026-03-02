@@ -357,3 +357,13 @@
 - Logic implementation completion after commit: 43.48%
 - Logic implementation remaining after commit: 56.52%
 - Details: [0043-leader-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0043-leader-runtime-rust-baseline.md)
+
+### 0044 - Rust runtime baseline port (population_system)
+- Commit: `[rust-r0-144] Add population runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 45.65%
+- Logic implementation remaining after commit: 54.35%
+- Details: [0044-population-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0044-population-runtime-rust-baseline.md)

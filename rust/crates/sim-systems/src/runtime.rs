@@ -1404,6 +1404,71 @@ impl SimSystem for LeaderRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for population gate evaluation.
+///
+/// Full parity requires Rust-owned building/resource managers and birth/death side effects.
+#[derive(Debug, Clone)]
+pub struct PopulationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl PopulationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for PopulationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "population_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        const POP_MIN_FOR_BIRTH: i32 = 5;
+        const POP_FREE_HOUSING_CAP: i32 = 25;
+        const POP_SHELTER_CAPACITY: i32 = 6;
+        const POP_FOOD_PER_ALIVE: f32 = 0.5;
+
+        let alive_count = world.len().min(i32::MAX as u32) as i32;
+        let mut total_shelters: i32 = 0;
+        let mut total_food: f32 = 0.0;
+
+        for settlement in resources.settlements.values() {
+            total_food += settlement.stockpile_food.max(0.0) as f32;
+            total_shelters += settlement.buildings.len().min(i32::MAX as usize) as i32;
+        }
+
+        let max_entities = (config::MAX_ENTITIES.min(i32::MAX as u32)) as i32;
+        let _housing_cap = body::population_housing_cap(
+            total_shelters,
+            POP_FREE_HOUSING_CAP,
+            POP_SHELTER_CAPACITY,
+        );
+        let _birth_block_code = body::population_birth_block_code(
+            alive_count,
+            max_entities,
+            total_shelters,
+            total_food,
+            POP_MIN_FOR_BIRTH,
+            POP_FREE_HOUSING_CAP,
+            POP_SHELTER_CAPACITY,
+            POP_FOOD_PER_ALIVE,
+        );
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1574,7 +1639,7 @@ mod tests {
     use super::{
         BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        LeaderRuntimeSystem, OccupationRuntimeSystem, SocialEventRuntimeSystem,
+        LeaderRuntimeSystem, OccupationRuntimeSystem, PopulationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
         UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -1585,9 +1650,9 @@ mod tests {
         Behavior, Body as BodyComponent, Emotion, Identity, Needs, Personality, Position,
         SkillEntry, Skills, Social, Stress, TraumaScar, Values, Memory, RelationshipEdge,
     };
-    use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
+    use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, Settlement, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
-    use sim_core::ids::EntityId;
+    use sim_core::ids::{BuildingId, EntityId};
     use sim_core::ActionType;
     use sim_engine::{SimResources, SimSystem};
 
@@ -2103,6 +2168,40 @@ mod tests {
             .expect("social component should remain available");
         assert_eq!(after_identity.growth_stage, GrowthStage::Adult);
         assert!((after_social.social_capital - 0.4).abs() < 1e-9);
+    }
+
+    #[test]
+    fn population_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity::default();
+        world.spawn((identity,));
+
+        let mut settlement = Settlement::new(
+            SettlementId(1),
+            "settlement-1".to_string(),
+            0,
+            0,
+            0,
+        );
+        settlement.stockpile_food = 22.0;
+        settlement.buildings = vec![BuildingId(10), BuildingId(11)];
+        resources.settlements.insert(settlement.id, settlement);
+
+        let mut system = PopulationRuntimeSystem::new(50, sim_core::config::POPULATION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::POPULATION_TICK_INTERVAL,
+        );
+
+        assert_eq!(world.len(), 1);
+        let after = resources
+            .settlements
+            .get(&SettlementId(1))
+            .expect("settlement should remain available");
+        assert_eq!(after.buildings.len(), 2);
+        assert!((after.stockpile_food - 22.0).abs() < 1e-9);
     }
 
     #[test]
