@@ -4549,6 +4549,171 @@ impl SimSystem for ParentingRuntimeSystem {
 
 const STATS_RECORDER_MAX_HISTORY: usize = 200;
 
+/// Rust runtime system for stat-sync derived composite cache refresh.
+///
+/// This performs active writes on `SimResources.stat_sync_derived`.
+#[derive(Debug, Clone)]
+pub struct StatSyncRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StatSyncRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StatSyncRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stat_sync_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut next_cache: HashMap<EntityId, [f32; 8]> = HashMap::new();
+
+        let mut query = world.query::<(
+            &Age,
+            Option<&Personality>,
+            Option<&Emotion>,
+            Option<&BodyComponent>,
+            Option<&Values>,
+            Option<&Needs>,
+            Option<&Intelligence>,
+        )>();
+        for (entity, (age, personality_opt, emotion_opt, body_opt, values_opt, needs_opt, intel_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            let x = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5);
+            let a = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::A) as f32)
+                .unwrap_or(0.5);
+            let h = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::H) as f32)
+                .unwrap_or(0.5);
+            let e = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::E) as f32)
+                .unwrap_or(0.5);
+            let o = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::O) as f32)
+                .unwrap_or(0.5);
+            let c = personality_opt
+                .map(|personality_component| personality_component.axis(HexacoAxis::C) as f32)
+                .unwrap_or(0.5);
+
+            let joy = emotion_opt
+                .map(|emotion| emotion.get(EmotionType::Joy) as f32)
+                .unwrap_or(0.0);
+            let anticipation = emotion_opt
+                .map(|emotion| emotion.get(EmotionType::Anticipation) as f32)
+                .unwrap_or(0.0);
+            let anger = emotion_opt
+                .map(|emotion| emotion.get(EmotionType::Anger) as f32)
+                .unwrap_or(0.0);
+
+            let str_pot = body_opt
+                .map(|body_component| {
+                    (body_component.str_potential as f32 / config::BODY_POTENTIAL_MAX as f32)
+                        .clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let attractiveness = body_opt.map(|body_component| body_component.attractiveness).unwrap_or(0.5);
+            let height = body_opt.map(|body_component| body_component.height).unwrap_or(0.5);
+
+            let value_norm = |value_type: ValueType| -> f32 {
+                values_opt
+                    .map(|values| ((values.get(value_type) as f32 + 1.0) * 0.5).clamp(0.0, 1.0))
+                    .unwrap_or(0.5)
+            };
+            let romance = value_norm(ValueType::Romance);
+            let truth = value_norm(ValueType::Truth);
+            let artwork = value_norm(ValueType::Artwork);
+            let knowledge = value_norm(ValueType::Knowledge);
+            let merriment = value_norm(ValueType::Merriment);
+            let friendship = value_norm(ValueType::Friendship);
+            let competition = value_norm(ValueType::Competition);
+            let recognition = needs_opt
+                .map(|needs| needs.get(NeedType::Recognition) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+
+            let i_ling = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Linguistic) as f32)
+                .unwrap_or(0.5);
+            let i_log = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Logical) as f32)
+                .unwrap_or(0.5);
+            let i_spa = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Spatial) as f32)
+                .unwrap_or(0.5);
+            let i_mus = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Musical) as f32)
+                .unwrap_or(0.5);
+            let i_kin = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Kinesthetic) as f32)
+                .unwrap_or(0.5);
+            let i_inter = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Interpersonal) as f32)
+                .unwrap_or(0.5);
+            let i_intra = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Intrapersonal) as f32)
+                .unwrap_or(0.5);
+            let i_nat = intel_opt
+                .map(|intelligence| intelligence.get(IntelligenceType::Naturalistic) as f32)
+                .unwrap_or(0.5);
+
+            let inputs = [
+                x,
+                a,
+                h,
+                e,
+                o,
+                c,
+                joy,
+                anticipation,
+                anger,
+                str_pot,
+                romance,
+                truth,
+                artwork,
+                knowledge,
+                merriment,
+                friendship,
+                competition,
+                recognition,
+                i_ling,
+                i_log,
+                i_spa,
+                i_mus,
+                i_kin,
+                i_inter,
+                i_intra,
+                i_nat,
+                attractiveness,
+                height,
+                age.years as f32,
+            ];
+            let derived = body::stat_sync_derived_scores(&inputs);
+            next_cache.insert(EntityId(entity.id() as u64), derived);
+        }
+        resources.stat_sync_derived = next_cache;
+    }
+}
+
 /// Rust runtime system for aggregated simulation stats snapshots.
 ///
 /// This performs active writes on `SimResources.stats_history` and
@@ -6325,6 +6490,7 @@ mod tests {
         GatheringRuntimeSystem,
         IntergenerationalRuntimeSystem,
         ParentingRuntimeSystem,
+        StatSyncRuntimeSystem,
         StatsRecorderRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
@@ -9586,6 +9752,67 @@ mod tests {
                 >= 1
         );
         assert!(child_stress.level <= 0.50);
+    }
+
+    #[test]
+    fn stat_sync_runtime_system_populates_derived_cache() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 75);
+        let mut resources = SimResources::new(calendar, map, 117);
+        let mut world = World::new();
+
+        let mut values = Values::default();
+        values.set(ValueType::Romance, 0.8);
+        values.set(ValueType::Truth, 0.9);
+        let entity = world.spawn((
+            Age {
+                years: 30.0,
+                ..Age::default()
+            },
+            Personality::default(),
+            Emotion::default(),
+            BodyComponent::default(),
+            values,
+            Needs::default(),
+            Intelligence::default(),
+        ));
+
+        let mut system = StatSyncRuntimeSystem::new(1, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let derived = resources
+            .stat_sync_derived
+            .get(&EntityId(entity.id() as u64))
+            .expect("derived cache should contain alive entity");
+        assert!(derived.iter().any(|value| *value > 0.0));
+        assert_eq!(resources.stat_sync_derived.len(), 1);
+    }
+
+    #[test]
+    fn stat_sync_runtime_system_skips_dead_entities() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 77);
+        let mut resources = SimResources::new(calendar, map, 119);
+        let mut world = World::new();
+
+        let alive = world.spawn((Age::default(), Personality::default()));
+        world.spawn((
+            Age {
+                alive: false,
+                ..Age::default()
+            },
+            Personality::default(),
+        ));
+
+        let mut system = StatSyncRuntimeSystem::new(1, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        assert_eq!(resources.stat_sync_derived.len(), 1);
+        assert!(resources
+            .stat_sync_derived
+            .contains_key(&EntityId(alive.id() as u64)));
     }
 
     #[test]
