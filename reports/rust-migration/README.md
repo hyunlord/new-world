@@ -1087,3 +1087,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 93.48% (43/46)
 - Remaining (strict state-write basis): 2.17%
 - Details: [0132-stat-threshold-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0132-stat-threshold-runtime-active-write-port.md)
+
+### 0133 - behavior runtime active-write port
+- Commit: `[rust-r0-233] Port behavior runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 93.48% (43/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0133-behavior-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0133-behavior-runtime-active-write-port.md)

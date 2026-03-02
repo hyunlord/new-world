@@ -4803,6 +4803,374 @@ impl SimSystem for StatThresholdRuntimeSystem {
     }
 }
 
+const BEHAVIOR_HYSTERESIS_THRESHOLD: f32 = 0.85;
+const BEHAVIOR_WANDER_OFFSETS: [(i32, i32); 8] = [
+    (-1, -1),
+    (0, -1),
+    (1, -1),
+    (-1, 0),
+    (1, 0),
+    (-1, 1),
+    (0, 1),
+    (1, 1),
+];
+
+#[inline]
+fn behavior_urgency(deficit: f32) -> f32 {
+    deficit.clamp(0.0, 1.0).powi(2)
+}
+
+#[inline]
+fn behavior_score_add(scores: &mut HashMap<ActionType, f32>, action: ActionType, delta: f32) {
+    if delta <= 0.0 {
+        return;
+    }
+    let entry = scores.entry(action).or_insert(0.0);
+    *entry += delta;
+}
+
+#[inline]
+fn behavior_score_mul(scores: &mut HashMap<ActionType, f32>, action: ActionType, multiplier: f32) {
+    if let Some(score) = scores.get_mut(&action) {
+        *score = (*score * multiplier.max(0.0)).max(0.0);
+    }
+}
+
+#[inline]
+fn behavior_base_timer(action: ActionType) -> i32 {
+    match action {
+        ActionType::Wander => 5,
+        ActionType::Forage | ActionType::GatherWood | ActionType::GatherStone => 20,
+        ActionType::DeliverToStockpile => 30,
+        ActionType::Build => 25,
+        ActionType::TakeFromStockpile => 15,
+        ActionType::Rest => 10,
+        ActionType::Socialize => 8,
+        ActionType::VisitPartner => 15,
+        ActionType::Drink => 10,
+        ActionType::SitByFire => 20,
+        ActionType::SeekShelter => 15,
+        _ => 10,
+    }
+}
+
+#[inline]
+fn behavior_timer_with_stress(
+    base_timer: i32,
+    stress_level: f32,
+    allostatic_load: f32,
+    stress_exempt: bool,
+) -> i32 {
+    if base_timer <= 0 {
+        return 1;
+    }
+    if stress_exempt {
+        return base_timer;
+    }
+    let level = stress_level.clamp(0.0, 1.0);
+    let mut mult = if level < 0.25 {
+        0.90
+    } else if level < 0.60 {
+        1.0
+    } else if level < 0.85 {
+        1.0 + ((level - 0.60) / 0.25) * 0.30
+    } else {
+        1.30 + ((level - 0.85) / 0.15) * 0.30
+    };
+    if allostatic_load > 0.5 {
+        mult *= 1.0 + (allostatic_load - 0.5) * 0.2;
+    }
+    (base_timer as f32 * mult).round().clamp(1.0, 120.0) as i32
+}
+
+fn behavior_pick_wander_target(
+    position: &Position,
+    resources: &SimResources,
+    tick: u64,
+    entity_raw: u64,
+) -> (i32, i32) {
+    let mut idx = (entity_raw
+        .wrapping_mul(31)
+        .wrapping_add(tick.wrapping_mul(17))
+        % BEHAVIOR_WANDER_OFFSETS.len() as u64) as usize;
+    for _ in 0..BEHAVIOR_WANDER_OFFSETS.len() {
+        let (dx, dy) = BEHAVIOR_WANDER_OFFSETS[idx];
+        let nx = position.x + dx;
+        let ny = position.y + dy;
+        if resources.map.in_bounds(nx, ny) {
+            let tile = resources.map.get(nx as u32, ny as u32);
+            if tile.passable {
+                return (nx, ny);
+            }
+        }
+        idx = (idx + 1) % BEHAVIOR_WANDER_OFFSETS.len();
+    }
+    (position.x, position.y)
+}
+
+fn behavior_select_action(
+    age_stage: GrowthStage,
+    needs: &Needs,
+    stress_opt: Option<&Stress>,
+    emotion_opt: Option<&Emotion>,
+    behavior: &Behavior,
+) -> ActionType {
+    let hunger = needs.get(NeedType::Hunger) as f32;
+    let thirst = needs.get(NeedType::Thirst) as f32;
+    let warmth = needs.get(NeedType::Warmth) as f32;
+    let safety = needs.get(NeedType::Safety) as f32;
+    let social = needs.get(NeedType::Belonging) as f32;
+    let energy = needs.energy as f32;
+
+    let hunger_deficit = behavior_urgency(1.0 - hunger);
+    let energy_deficit = behavior_urgency(1.0 - energy);
+    let social_deficit = behavior_urgency(1.0 - social);
+
+    let mut scores: HashMap<ActionType, f32> = HashMap::new();
+    match age_stage {
+        GrowthStage::Infant | GrowthStage::Toddler => {
+            behavior_score_add(&mut scores, ActionType::Wander, 0.30);
+            behavior_score_add(&mut scores, ActionType::Rest, energy_deficit * 1.20);
+            behavior_score_add(&mut scores, ActionType::Socialize, social_deficit * 0.80);
+        }
+        GrowthStage::Child => {
+            behavior_score_add(&mut scores, ActionType::Wander, 0.30);
+            behavior_score_add(&mut scores, ActionType::Rest, energy_deficit * 1.20);
+            behavior_score_add(&mut scores, ActionType::Socialize, social_deficit * 0.80);
+            behavior_score_add(&mut scores, ActionType::Forage, hunger_deficit * 0.60);
+        }
+        GrowthStage::Teen | GrowthStage::Adult | GrowthStage::Elder => {
+            behavior_score_add(&mut scores, ActionType::Wander, 0.20);
+            behavior_score_add(&mut scores, ActionType::Forage, hunger_deficit * 1.50);
+            behavior_score_add(&mut scores, ActionType::Rest, energy_deficit * 1.20);
+            behavior_score_add(&mut scores, ActionType::Socialize, social_deficit * 0.80);
+        }
+    }
+
+    if hunger < 0.30 {
+        scores.insert(ActionType::Forage, 1.0);
+    }
+
+    if thirst < config::THIRST_LOW as f32 {
+        behavior_score_add(&mut scores, ActionType::Drink, behavior_urgency(1.0 - thirst));
+    }
+    if warmth < config::WARMTH_LOW as f32 {
+        behavior_score_add(
+            &mut scores,
+            ActionType::SitByFire,
+            behavior_urgency(1.0 - warmth) * 0.90,
+        );
+    }
+    if warmth < config::WARMTH_LOW as f32 || safety < config::SAFETY_LOW as f32 {
+        let shelter_score =
+            behavior_urgency(1.0 - warmth) * 0.60 + behavior_urgency(1.0 - safety) * 0.40;
+        behavior_score_add(&mut scores, ActionType::SeekShelter, shelter_score);
+    }
+
+    match behavior.job.as_str() {
+        "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 1.50),
+        "lumberjack" => behavior_score_add(&mut scores, ActionType::GatherWood, 0.45),
+        "miner" => behavior_score_add(&mut scores, ActionType::GatherStone, 0.40),
+        "builder" if matches!(age_stage, GrowthStage::Adult) => {
+            behavior_score_add(&mut scores, ActionType::Build, 0.45);
+        }
+        _ => {}
+    }
+    if matches!(age_stage, GrowthStage::Teen) {
+        scores.remove(&ActionType::GatherStone);
+        behavior_score_mul(&mut scores, ActionType::GatherWood, 0.70);
+    }
+
+    let stress_level = stress_opt
+        .map(|stress| stress.level as f32)
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    if stress_level > 0.65 {
+        behavior_score_mul(&mut scores, ActionType::Rest, 1.0 + stress_level * 0.50);
+        behavior_score_add(
+            &mut scores,
+            ActionType::SeekShelter,
+            (stress_level - 0.60).max(0.0) * 0.80,
+        );
+    }
+
+    if let Some(emotion) = emotion_opt {
+        let fear = emotion.get(EmotionType::Fear) as f32;
+        let sadness = emotion.get(EmotionType::Sadness) as f32;
+        let joy = emotion.get(EmotionType::Joy) as f32;
+        if fear > 0.40 {
+            behavior_score_add(&mut scores, ActionType::SeekShelter, fear * 1.20);
+        }
+        if sadness > 0.40 {
+            behavior_score_add(&mut scores, ActionType::Rest, sadness * 0.60);
+        }
+        if joy > 0.60 {
+            behavior_score_add(&mut scores, ActionType::Socialize, joy * 0.50);
+        }
+    }
+
+    if scores.is_empty() {
+        return ActionType::Wander;
+    }
+
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 13] = [
+        ActionType::SeekShelter,
+        ActionType::Drink,
+        ActionType::SitByFire,
+        ActionType::Forage,
+        ActionType::GatherWood,
+        ActionType::GatherStone,
+        ActionType::Build,
+        ActionType::Socialize,
+        ActionType::Rest,
+        ActionType::VisitPartner,
+        ActionType::TakeFromStockpile,
+        ActionType::DeliverToStockpile,
+        ActionType::Wander,
+    ];
+    let mut best_action = ActionType::Wander;
+    let mut best_score = -1.0_f32;
+    for action in BEHAVIOR_ACTION_ORDER {
+        let score = scores.get(&action).copied().unwrap_or(0.0);
+        if score > best_score + 1e-6 {
+            best_score = score;
+            best_action = action;
+        }
+    }
+
+    if behavior.current_action != ActionType::Idle {
+        if let Some(current_score) = scores.get(&behavior.current_action).copied() {
+            if current_score >= best_score * BEHAVIOR_HYSTERESIS_THRESHOLD {
+                return behavior.current_action;
+            }
+        }
+    }
+    best_action
+}
+
+fn behavior_assign_action(
+    behavior: &mut Behavior,
+    position: &Position,
+    resources: &SimResources,
+    tick: u64,
+    entity_raw: u64,
+    action: ActionType,
+    stress_level: f32,
+    allostatic_load: f32,
+) {
+    let mut target_x = position.x;
+    let mut target_y = position.y;
+    if action == ActionType::Wander {
+        let target = behavior_pick_wander_target(position, resources, tick, entity_raw);
+        target_x = target.0;
+        target_y = target.1;
+    }
+
+    let base_timer = behavior_base_timer(action);
+    let stress_exempt = matches!(
+        action,
+        ActionType::Drink | ActionType::SeekShelter | ActionType::Flee
+    );
+    let timer = behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
+
+    behavior.current_action = action;
+    behavior.action_target_entity = None;
+    behavior.action_target_x = Some(target_x);
+    behavior.action_target_y = Some(target_y);
+    behavior.action_progress = 0.0;
+    behavior.action_duration = timer;
+    behavior.action_timer = timer;
+}
+
+/// Rust runtime system for utility-style behavior selection.
+///
+/// This performs active writes on `Behavior.current_action`,
+/// `Behavior.action_target_*`, `Behavior.action_timer`, and `Behavior.action_duration`,
+/// then emits action-selection events through the runtime event bus.
+#[derive(Debug, Clone)]
+pub struct BehaviorRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl BehaviorRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for BehaviorRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "behavior_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(
+            &Age,
+            &Needs,
+            Option<&Stress>,
+            Option<&Emotion>,
+            &Position,
+            &mut Behavior,
+        )>();
+        for (entity, (age, needs, stress_opt, emotion_opt, position, behavior)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            if behavior.current_action == ActionType::Migrate {
+                continue;
+            }
+            if behavior.action_timer > 0 {
+                continue;
+            }
+
+            let next_action = behavior_select_action(age.stage, needs, stress_opt, emotion_opt, behavior);
+            let previous_action = behavior.current_action;
+            let stress_level = stress_opt
+                .map(|stress| stress.level as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            let allostatic_load = stress_opt
+                .map(|stress| stress.allostatic_load as f32)
+                .unwrap_or(0.0)
+                .clamp(0.0, 1.0);
+            behavior_assign_action(
+                behavior,
+                position,
+                resources,
+                tick,
+                entity.id() as u64,
+                next_action,
+                stress_level,
+                allostatic_load,
+            );
+
+            let changed = previous_action != next_action;
+            let entity_id = EntityId(entity.id() as u64);
+            let event_type = if changed {
+                format!("action_changed:{}->{}", previous_action, next_action)
+            } else {
+                format!("action_chosen:{}", next_action)
+            };
+            resources.event_bus.emit(sim_engine::GameEvent::SocialEventOccurred {
+                event_type,
+                participants: vec![entity_id],
+            });
+        }
+    }
+}
+
 /// Rust runtime system for aggregated simulation stats snapshots.
 ///
 /// This performs active writes on `SimResources.stats_history` and
@@ -6573,6 +6941,7 @@ mod tests {
     use super::{
         AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
         ChildcareRuntimeSystem, ContagionRuntimeSystem,
+        BehaviorRuntimeSystem,
         ConstructionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
         FamilyRuntimeSystem,
@@ -9979,6 +10348,100 @@ mod tests {
             .copied()
             .unwrap_or(0);
         assert_eq!(flags_after_recovery & STAT_THRESHOLD_FLAG_HUNGER_LOW, 0);
+    }
+
+    #[test]
+    fn behavior_runtime_system_assigns_forage_and_emits_event_for_hungry_adult() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 91);
+        let mut resources = SimResources::new(calendar, map, 141);
+        let mut world = World::new();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        needs.set(NeedType::Thirst, 0.80);
+        needs.set(NeedType::Warmth, 0.80);
+        needs.set(NeedType::Safety, 0.80);
+        needs.set(NeedType::Belonging, 0.70);
+        needs.energy = 0.75;
+
+        let entity = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            needs,
+            Stress::default(),
+            Emotion::default(),
+            Position::new(4, 4),
+            Behavior::default(),
+        ));
+
+        let mut system =
+            BehaviorRuntimeSystem::new(20, sim_core::config::BEHAVIOR_TICK_INTERVAL as u64);
+        system.run(&mut world, &mut resources, 50);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Forage);
+        assert!(behavior.action_timer > 0);
+        assert_eq!(behavior.action_duration, behavior.action_timer);
+        assert!(behavior.action_target_x.is_some());
+        assert!(behavior.action_target_y.is_some());
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn behavior_runtime_system_skips_migrate_and_active_timer_entities() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(8, 8, 93);
+        let mut resources = SimResources::new(calendar, map, 143);
+        let mut world = World::new();
+
+        let migrating = world.spawn((
+            Age::default(),
+            Needs::default(),
+            Position::new(2, 2),
+            Behavior {
+                current_action: ActionType::Migrate,
+                action_timer: 0,
+                action_duration: 0,
+                ..Behavior::default()
+            },
+        ));
+        let active = world.spawn((
+            Age::default(),
+            Needs::default(),
+            Position::new(3, 3),
+            Behavior {
+                current_action: ActionType::Forage,
+                action_timer: 6,
+                action_duration: 6,
+                action_target_x: Some(3),
+                action_target_y: Some(3),
+                ..Behavior::default()
+            },
+        ));
+
+        let mut system =
+            BehaviorRuntimeSystem::new(20, sim_core::config::BEHAVIOR_TICK_INTERVAL as u64);
+        system.run(&mut world, &mut resources, 70);
+
+        let migrate_behavior = world
+            .get::<&Behavior>(migrating)
+            .expect("migrating behavior should be queryable");
+        assert_eq!(migrate_behavior.current_action, ActionType::Migrate);
+        assert_eq!(migrate_behavior.action_timer, 0);
+
+        let active_behavior = world
+            .get::<&Behavior>(active)
+            .expect("active behavior should be queryable");
+        assert_eq!(active_behavior.current_action, ActionType::Forage);
+        assert_eq!(active_behavior.action_timer, 6);
+        assert_eq!(resources.event_bus.pending_count(), 0);
     }
 
     #[test]

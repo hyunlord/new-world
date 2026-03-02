@@ -43,7 +43,7 @@ use sim_systems::{
     body,
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
-        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
+        AgeRuntimeSystem, BehaviorRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
         ChildcareRuntimeSystem, ContagionRuntimeSystem,
         CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
         ConstructionRuntimeSystem,
@@ -638,6 +638,7 @@ const RUNTIME_SYSTEM_KEY_PARENTING: &str = "parenting_system";
 const RUNTIME_SYSTEM_KEY_STATS_RECORDER: &str = "stats_recorder";
 const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
 const RUNTIME_SYSTEM_KEY_STAT_THRESHOLD: &str = "stat_threshold_system";
+const RUNTIME_SYSTEM_KEY_BEHAVIOR: &str = "behavior_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -799,6 +800,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_STATS_RECORDER
             | RUNTIME_SYSTEM_KEY_STAT_SYNC
             | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
+            | RUNTIME_SYSTEM_KEY_BEHAVIOR
             | RUNTIME_SYSTEM_KEY_FAMILY
     )
 }
@@ -1001,6 +1003,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(StatThresholdRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_BEHAVIOR => {
+            state
+                .engine
+                .register(BehaviorRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5651,6 +5658,6 @@ mod tests {
         assert!(runtime_supports_rust_system("stats_recorder"));
         assert!(runtime_supports_rust_system("stat_sync_system"));
         assert!(runtime_supports_rust_system("stat_threshold_system"));
-        assert!(!runtime_supports_rust_system("behavior_system"));
+        assert!(runtime_supports_rust_system("behavior_system"));
     }
 }
