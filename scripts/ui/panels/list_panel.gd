@@ -451,10 +451,10 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		draw_string(font, Vector2(col_x, draw_y + 14), died_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[3]) - 2, fs_small, died_color)
 		col_x += col_widths[3] + COL_PAD
 
-			# Job
-			var job_text: String = str(row.get("job_display", Locale.tr_id("JOB", str(row.job))))
-			draw_string(font, Vector2(col_x, draw_y + 14), job_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[4]) - 2, fs_small, text_color)
-			col_x += col_widths[4] + COL_PAD
+		# Job
+		var job_text: String = str(row.get("job_display", Locale.tr_id("JOB", str(row.job))))
+		draw_string(font, Vector2(col_x, draw_y + 14), job_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[4]) - 2, fs_small, text_color)
+		col_x += col_widths[4] + COL_PAD
 
 		# Status
 		var status_text: String = str(row.status)
@@ -509,20 +509,20 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
 	cy += 4.0
 
-		for i in range(buildings.size()):
-			var b = buildings[i]
-			var text_color := Color(0.8, 0.8, 0.8)
+	for i in range(buildings.size()):
+		var b = buildings[i]
+		var text_color := Color(0.8, 0.8, 0.8)
 		if (i % 2) == 1:
 			draw_rect(Rect2(cx, cy, panel_w - 30, ROW_HEIGHT), Color(0.1, 0.1, 0.1, 0.3))
 
-			col_x = cx + 5
-			var building_type_key: String = "BUILDING_TYPE_" + str(b.building_type).to_upper()
-			var building_type_name: String = str(building_type_cache.get(building_type_key, ""))
-			if building_type_name.is_empty():
-				building_type_name = Locale.ltr(building_type_key)
-				building_type_cache[building_type_key] = building_type_name
-			draw_string(font, Vector2(col_x, cy + 14), building_type_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
-			col_x += BUILDING_COLUMNS[0].width + COL_PAD
+		col_x = cx + 5
+		var building_type_key: String = "BUILDING_TYPE_" + str(b.building_type).to_upper()
+		var building_type_name: String = str(building_type_cache.get(building_type_key, ""))
+		if building_type_name.is_empty():
+			building_type_name = Locale.ltr(building_type_key)
+			building_type_cache[building_type_key] = building_type_name
+		draw_string(font, Vector2(col_x, cy + 14), building_type_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		col_x += BUILDING_COLUMNS[0].width + COL_PAD
 
 		var sett_text: String = "S%d" % b.settlement_id if b.settlement_id > 0 else "-"
 		draw_string(font, Vector2(col_x, cy + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
@@ -531,9 +531,9 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
-			var status: String = built_label if b.is_built else "%d%%" % int(b.build_progress * 100)
-			draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
-			cy += ROW_HEIGHT
+		var status: String = built_label if b.is_built else "%d%%" % int(b.build_progress * 100)
+		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
+		cy += ROW_HEIGHT
 
 	_content_height = cy + 40.0
 

@@ -238,12 +238,12 @@ func _check_stabilization(settlement: RefCounted, tech_id: String,
 		SimulationBus.tech_state_changed.emit(
 			settlement.id, tech_id, old_state, "known_stable", tick)
 
-			if _chronicle != null:
-				_chronicle.log_event("tech_stabilized", -1,
-					"[Settlement %d] %s knowledge is now stable" % [settlement.id, tech_id],
-					3, [], tick,
-					{"key": "TECH_STABILIZED_FMT",
-					"params": {"tech": tech_id, "settlement": settlement.id}})
+		if _chronicle != null:
+			_chronicle.log_event("tech_stabilized", -1,
+				"[Settlement %d] %s knowledge is now stable" % [settlement.id, tech_id],
+				3, [], tick,
+				{"key": "TECH_STABILIZED_FMT",
+				"params": {"tech": tech_id, "settlement": settlement.id}})
 
 
 ## KNOWN → FORGOTTEN_RECENT: atrophy exceeded grace period.
@@ -279,25 +279,25 @@ func _transition_to_forgotten(settlement: RefCounted, tech_id: String,
 			"tick": tick,
 		})
 
-			if _chronicle != null:
-				_chronicle.log_event("tech_fallback", -1,
-					"[Settlement %d] fell back to %s after losing %s" \
-						% [settlement.id, fallback, tech_id],
-					4, [], tick,
-					{"key": "TECH_FALLBACK_FMT",
-					"params": {"tech": tech_id, "fallback": fallback,
-						"settlement": settlement.id}})
+		if _chronicle != null:
+			_chronicle.log_event("tech_fallback", -1,
+				"[Settlement %d] fell back to %s after losing %s" \
+					% [settlement.id, fallback, tech_id],
+				4, [], tick,
+				{"key": "TECH_FALLBACK_FMT",
+				"params": {"tech": tech_id, "fallback": fallback,
+					"settlement": settlement.id}})
 
 	## Emit tech_lost signal
 	SimulationBus.tech_lost.emit(
 		settlement.id, tech_id, float(cts.get("cultural_memory", 1.0)), tick)
 
-		if _chronicle != null:
-			_chronicle.log_event("tech_lost", -1,
-				"[Settlement %d] lost %s" % [settlement.id, tech_id],
-				5, [], tick,
-				{"key": "TECH_LOST_FMT",
-				"params": {"tech": tech_id, "settlement": settlement.id}})
+	if _chronicle != null:
+		_chronicle.log_event("tech_lost", -1,
+			"[Settlement %d] lost %s" % [settlement.id, tech_id],
+			5, [], tick,
+			{"key": "TECH_LOST_FMT",
+			"params": {"tech": tech_id, "settlement": settlement.id}})
 
 
 ## FORGOTTEN_RECENT → FORGOTTEN_LONG after N years.

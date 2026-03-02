@@ -113,3 +113,9 @@
 - Completion after commit: 100%
 - Remaining after commit: 0%
 - Details: [0018-phase-h-headless-shadow-verification.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0018-phase-h-headless-shadow-verification.md)
+
+### 0019 - Headless GDScript parse stabilization
+- Commit: `[rust-r0-119] Stabilize GDScript parse path for headless validation`
+- Completion after commit: 100%
+- Remaining after commit: 0%
+- Details: [0019-headless-gdscript-parse-stabilization.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0019-headless-gdscript-parse-stabilization.md)
