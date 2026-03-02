@@ -48,7 +48,7 @@ use sim_systems::{
         JobSatisfactionRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem, MoraleRuntimeSystem,
         MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StressRuntimeSystem,
+        SocialEventRuntimeSystem, StressRuntimeSystem, TraumaScarRuntimeSystem,
         TraitViolationRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     },
     stat_curve,
@@ -589,6 +589,7 @@ const RUNTIME_SYSTEM_KEY_AGE: &str = "age_system";
 const RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT: &str = "job_assignment_system";
 const RUNTIME_SYSTEM_KEY_MORTALITY: &str = "mortality_system";
 const RUNTIME_SYSTEM_KEY_MENTAL_BREAK: &str = "mental_break_system";
+const RUNTIME_SYSTEM_KEY_TRAUMA_SCAR: &str = "trauma_scar_system";
 const RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION: &str = "trait_violation_system";
 const RUNTIME_SYSTEM_KEY_EMOTION: &str = "emotion_system";
 const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
@@ -728,6 +729,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT
             | RUNTIME_SYSTEM_KEY_MORTALITY
             | RUNTIME_SYSTEM_KEY_MENTAL_BREAK
+            | RUNTIME_SYSTEM_KEY_TRAUMA_SCAR
             | RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION
             | RUNTIME_SYSTEM_KEY_JOB_SATISFACTION
             | RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY
@@ -765,6 +767,11 @@ fn register_supported_rust_system(
             state
                 .engine
                 .register(MentalBreakRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_TRAUMA_SCAR => {
+            state
+                .engine
+                .register(TraumaScarRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION => {
             state
@@ -5431,6 +5438,7 @@ mod tests {
         assert!(runtime_supports_rust_system("job_assignment_system"));
         assert!(runtime_supports_rust_system("mortality_system"));
         assert!(runtime_supports_rust_system("mental_break_system"));
+        assert!(runtime_supports_rust_system("trauma_scar_system"));
         assert!(runtime_supports_rust_system("trait_violation_system"));
         assert!(runtime_supports_rust_system("job_satisfaction_system"));
         assert!(runtime_supports_rust_system("economic_tendency_system"));
@@ -5440,7 +5448,6 @@ mod tests {
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
         assert!(!runtime_supports_rust_system("child_stress_processor"));
-        assert!(!runtime_supports_rust_system("trauma_scar_system"));
         assert!(!runtime_supports_rust_system("title_system"));
         assert!(!runtime_supports_rust_system("building_effect_system"));
         assert!(!runtime_supports_rust_system("family_system"));

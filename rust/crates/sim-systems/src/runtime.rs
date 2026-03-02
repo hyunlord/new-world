@@ -846,6 +846,112 @@ impl SimSystem for TraitViolationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for trauma-scar baseline drift.
+///
+/// This performs active writes on `Emotion.baseline` from persistent
+/// `Memory.trauma_scars` entries.
+#[derive(Debug, Clone)]
+pub struct TraumaScarRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TraumaScarRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const TRAUMA_SCAR_BASELINE_SCALE: f32 = 0.001;
+
+#[inline]
+fn trauma_apply_baseline_delta(emotion: &mut Emotion, emotion_type: EmotionType, delta: f32) {
+    let idx = emotion_type as usize;
+    let next = (emotion.baseline[idx] as f32 + delta).clamp(0.0, 1.0);
+    emotion.baseline[idx] = next as f64;
+}
+
+fn trauma_scar_apply_baseline_shifts(emotion: &mut Emotion, scar_id: &str, scale: f32) {
+    match scar_id {
+        "hypervigilance" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Fear, 0.10 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.05 * scale);
+        }
+        "anger_dysregulation" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Anger, 0.08 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.05 * scale);
+        }
+        "violence_imprint" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Fear, 0.08 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.10 * scale);
+        }
+        "emotional_numbness" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Sadness, 0.10 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Trust, -0.10 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.15 * scale);
+        }
+        "compulsive_consumption" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Anticipation, 0.02 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.05 * scale);
+        }
+        "complicated_grief" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Sadness, 0.15 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.15 * scale);
+        }
+        "dissociative_tendency" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Sadness, 0.08 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.08 * scale);
+        }
+        "chronic_paranoia" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Fear, 0.12 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Sadness, 0.15 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.10 * scale);
+        }
+        "anxious_attachment" => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Sadness, 0.12 * scale);
+            trauma_apply_baseline_delta(emotion, EmotionType::Joy, -0.05 * scale);
+        }
+        _ => {
+            trauma_apply_baseline_delta(emotion, EmotionType::Fear, 0.05 * scale);
+        }
+    }
+}
+
+impl SimSystem for TraumaScarRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "trauma_scar_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Memory, &mut Emotion)>();
+        for (_, (memory, emotion)) in &mut query {
+            if memory.trauma_scars.is_empty() {
+                continue;
+            }
+            for scar in &memory.trauma_scars {
+                let severity = (scar.severity as f32).clamp(0.0, 1.0);
+                let base_mult = 1.0 + severity * 0.25;
+                let stacks = (scar.reactivation_count as i32).max(1);
+                let sensitivity = body::trauma_scar_sensitivity_factor(base_mult, stacks)
+                    .clamp(0.5, 3.0);
+                let shift_scale = TRAUMA_SCAR_BASELINE_SCALE * sensitivity;
+                trauma_scar_apply_baseline_shifts(emotion, scar.scar_id.as_str(), shift_scale);
+            }
+        }
+    }
+}
+
 /// Rust runtime system for emotion baseline/primary updates.
 ///
 /// This performs active-write updates on `Emotion.primary` and `Emotion.baseline`
@@ -3160,7 +3266,7 @@ mod tests {
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StressRuntimeSystem, TraitViolationRuntimeSystem,
-        UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -3460,6 +3566,70 @@ mod tests {
         let second_delta = after_second - after_first;
         assert!(first_delta > 0.0);
         assert!(second_delta > first_delta);
+    }
+
+    #[test]
+    fn trauma_scar_runtime_system_applies_baseline_drift_from_scars() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let memory = Memory {
+            trauma_scars: vec![TraumaScar {
+                scar_id: "chronic_paranoia".to_string(),
+                acquired_tick: 100,
+                severity: 0.90,
+                reactivation_count: 2,
+            }],
+            ..Memory::default()
+        };
+        let mut emotion = Emotion::default();
+        emotion.baseline[EmotionType::Joy as usize] = 0.60;
+        emotion.baseline[EmotionType::Fear as usize] = 0.20;
+        emotion.baseline[EmotionType::Sadness as usize] = 0.20;
+        let entity = world.spawn((memory, emotion));
+
+        let mut system = TraumaScarRuntimeSystem::new(36, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let updated = world
+            .get::<&Emotion>(entity)
+            .expect("emotion should be queryable");
+        assert!(updated.baseline[EmotionType::Joy as usize] < 0.60);
+        assert!(updated.baseline[EmotionType::Fear as usize] > 0.20);
+        assert!(updated.baseline[EmotionType::Sadness as usize] > 0.20);
+    }
+
+    #[test]
+    fn trauma_scar_runtime_system_clamps_baseline_with_repeated_updates() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let memory = Memory {
+            trauma_scars: vec![TraumaScar {
+                scar_id: "emotional_numbness".to_string(),
+                acquired_tick: 200,
+                severity: 1.0,
+                reactivation_count: 4,
+            }],
+            ..Memory::default()
+        };
+        let mut emotion = Emotion::default();
+        emotion.baseline[EmotionType::Joy as usize] = 0.01;
+        emotion.baseline[EmotionType::Trust as usize] = 0.01;
+        emotion.baseline[EmotionType::Sadness as usize] = 0.99;
+        let entity = world.spawn((memory, emotion));
+
+        let mut system = TraumaScarRuntimeSystem::new(36, 10);
+        for _ in 0..5000 {
+            system.run(&mut world, &mut resources, 10);
+        }
+
+        let updated = world
+            .get::<&Emotion>(entity)
+            .expect("emotion should be queryable");
+        for idx in 0..updated.baseline.len() {
+            assert!((0.0..=1.0).contains(&updated.baseline[idx]));
+        }
     }
 
     #[test]
