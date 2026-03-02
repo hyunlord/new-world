@@ -1255,3 +1255,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0153-sim-bridge-pathfinding-core-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0153-sim-bridge-pathfinding-core-module-split.md)
+
+### 0154 - sim-bridge runtime events module split
+- Commit: `[rust-r0-254] Extract runtime event mapping helpers from sim-bridge lib`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0154-sim-bridge-runtime-events-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0154-sim-bridge-runtime-events-module-split.md)
