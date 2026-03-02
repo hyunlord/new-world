@@ -1119,3 +1119,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0136-runtime-default-cutover-rust-primary.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0136-runtime-default-cutover-rust-primary.md)
+
+### 0137 - bus v2 event payload expansion
+- Commit: `[rust-r0-237] Expand Bus v2 event mapping and payload coverage`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0137-bus-v2-event-payload-expansion.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0137-bus-v2-event-payload-expansion.md)
