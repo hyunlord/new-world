@@ -711,3 +711,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 43.48% (20/46)
 - Remaining (strict state-write basis): 54.35%
 - Details: [0085-memory-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0085-memory-runtime-active-write-port.md)
+
+### 0086 - owner transfer allowlist phase 14
+- Commit: `[rust-r0-186] Expand owner-ready allowlist with memory system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 45.65% (21/46)
+- Actual state-write coverage (strict): 45.65% (21/46)
+- Owner transfer coverage (`exec_owner=rust`): 45.65% (21/46)
+- Remaining (strict state-write basis): 54.35%
+- Details: [0086-owner-transfer-allowlist-phase14.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0086-owner-transfer-allowlist-phase14.md)
