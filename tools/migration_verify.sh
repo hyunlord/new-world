@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPLY_KEY_FIELDS="false"
 STRIP_INLINE_FIELDS="false"
 WITH_BENCHES="false"
+WITH_SHADOW_LONGRUN="false"
 LOCALIZATION_SOURCE_FORMAT=""
 VERIFY_STARTED_EPOCH="$(date +%s)"
 VERIFY_STARTED_AT_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
@@ -14,6 +15,12 @@ STEP_COMPILE_DURATION=0
 STEP_AUDIT_DURATION=0
 STEP_BENCH_DURATION=0
 STEP_SHADOW_CHECK_DURATION=0
+STEP_SHADOW_LONGRUN_DURATION=0
+shadow_longrun_seed=""
+shadow_longrun_frames=""
+shadow_longrun_delta=""
+shadow_longrun_runtime_mode=""
+shadow_longrun_report_path=""
 
 for arg in "$@"; do
   case "${arg}" in
@@ -27,9 +34,12 @@ for arg in "$@"; do
     --with-benches)
       WITH_BENCHES="true"
       ;;
+    --with-shadow-longrun)
+      WITH_SHADOW_LONGRUN="true"
+      ;;
     *)
       echo "[migration_verify] unknown option: ${arg}" >&2
-      echo "usage: tools/migration_verify.sh [--apply-key-fields] [--strip-inline-fields] [--with-benches]" >&2
+      echo "usage: tools/migration_verify.sh [--apply-key-fields] [--strip-inline-fields] [--with-benches] [--with-shadow-longrun]" >&2
       exit 1
       ;;
   esac
@@ -221,7 +231,53 @@ fi
 "${audit_cmd[@]}"
 STEP_AUDIT_DURATION=$(( $(date +%s) - step_started_epoch ))
 
+if [[ "${WITH_SHADOW_LONGRUN}" == "true" ]]; then
+  echo "[migration_verify] shadow longrun verification"
+  step_started_epoch="$(date +%s)"
+  shadow_longrun_seed="${MIGRATION_SHADOW_LONGRUN_SEED:-20260302}"
+  shadow_longrun_frames="${MIGRATION_SHADOW_LONGRUN_FRAMES:-10000}"
+  shadow_longrun_delta="${MIGRATION_SHADOW_LONGRUN_DELTA:-0.1}"
+  shadow_longrun_runtime_mode="${MIGRATION_SHADOW_LONGRUN_RUNTIME_MODE:-rust_shadow}"
+  shadow_longrun_report_path="${MIGRATION_SHADOW_LONGRUN_REPORT_PATH:-}"
+  shadow_godot_bin="${MIGRATION_SHADOW_GODOT_BIN:-${GODOT_BIN:-}}"
+  if [[ -z "${shadow_godot_bin}" ]]; then
+    echo "[migration_verify] GODOT_BIN (or MIGRATION_SHADOW_GODOT_BIN) is required for --with-shadow-longrun" >&2
+    exit 1
+  fi
+  if ! [[ "${shadow_longrun_seed}" =~ ^[0-9]+$ ]]; then
+    echo "[migration_verify] MIGRATION_SHADOW_LONGRUN_SEED must be an integer" >&2
+    exit 1
+  fi
+  if ! [[ "${shadow_longrun_frames}" =~ ^[0-9]+$ ]] || [[ "${shadow_longrun_frames}" -le 0 ]]; then
+    echo "[migration_verify] MIGRATION_SHADOW_LONGRUN_FRAMES must be a positive integer" >&2
+    exit 1
+  fi
+  if ! [[ "${shadow_longrun_delta}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    echo "[migration_verify] MIGRATION_SHADOW_LONGRUN_DELTA must be a number" >&2
+    exit 1
+  fi
+  if [[ "${shadow_longrun_runtime_mode}" != "gdscript" && "${shadow_longrun_runtime_mode}" != "rust_shadow" && "${shadow_longrun_runtime_mode}" != "rust_primary" ]]; then
+    echo "[migration_verify] MIGRATION_SHADOW_LONGRUN_RUNTIME_MODE must be gdscript, rust_shadow, or rust_primary" >&2
+    exit 1
+  fi
+
+  shadow_longrun_cmd=(
+    bash "${ROOT_DIR}/tools/rust_shadow_longrun_verify.sh"
+  )
+  GODOT_BIN="${shadow_godot_bin}" \
+  SHADOW_SEED="${shadow_longrun_seed}" \
+  SHADOW_FRAMES="${shadow_longrun_frames}" \
+  SHADOW_DELTA="${shadow_longrun_delta}" \
+  SHADOW_RUNTIME_MODE="${shadow_longrun_runtime_mode}" \
+  SHADOW_REPORT_PATH="${shadow_longrun_report_path}" \
+  "${shadow_longrun_cmd[@]}"
+  STEP_SHADOW_LONGRUN_DURATION=$(( $(date +%s) - step_started_epoch ))
+fi
+
 shadow_report_json="${MIGRATION_SHADOW_REPORT_JSON:-}"
+if [[ -z "${shadow_report_json}" && -n "${shadow_longrun_report_path}" ]]; then
+  shadow_report_json="${shadow_longrun_report_path}"
+fi
 shadow_required_min_frames="${MIGRATION_SHADOW_REQUIRED_MIN_FRAMES:-}"
 if [[ -n "${shadow_report_json}" ]]; then
   echo "[migration_verify] shadow cutover gate check"
@@ -1219,6 +1275,9 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     if [[ "${WITH_BENCHES}" == "true" ]]; then
       assert_artifact_exists "bench_report_json" "${bench_report_json}"
     fi
+    if [[ -n "${shadow_report_json}" ]]; then
+      assert_artifact_exists "shadow_report_json" "${shadow_report_json}"
+    fi
     echo "[migration_verify] artifact existence checks passed"
   fi
   verify_report_out="$(to_abs_path "${verify_report_json}")"
@@ -1243,6 +1302,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_owner_policy_markdown_value="$(to_json_opt_path "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_value="$(to_json_opt_path "${audit_owner_policy_compare_report_json}")"
   bench_report_json_value="$(to_json_opt_path "${bench_report_json}")"
+  shadow_report_json_value="$(to_json_opt_path "${shadow_report_json}")"
   compile_report_json_sha256="$(to_json_opt_sha256 "${compile_report_json}")"
   audit_report_json_sha256="$(to_json_opt_sha256 "${audit_report_json}")"
   audit_duplicate_report_json_sha256="$(to_json_opt_sha256 "${audit_duplicate_report_json}")"
@@ -1251,6 +1311,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_owner_policy_markdown_sha256="$(to_json_opt_sha256 "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_sha256="$(to_json_opt_sha256 "${audit_owner_policy_compare_report_json}")"
   bench_report_json_sha256="$(to_json_opt_sha256 "${bench_report_json}")"
+  shadow_report_json_sha256="$(to_json_opt_sha256 "${shadow_report_json}")"
   audit_report_dir_value="$(to_json_opt_path "${audit_report_dir}")"
   audit_compare_key_owner_policy_value="$(to_json_opt_string "${audit_compare_key_owner_policy}")"
   compile_report_json_config_value="$(to_json_opt_path "${compile_report_json}")"
@@ -1266,6 +1327,12 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   bench_path_backend_smoke_expect_auto_value="$(to_json_opt_string "${path_backend_smoke_expect_auto-}")"
   bench_path_backend_smoke_expect_gpu_value="$(to_json_opt_string "${path_backend_smoke_expect_gpu-}")"
   bench_expected_resolved_backend_value="$(to_json_opt_string "${expected_resolved_backend-}")"
+  shadow_required_min_frames_value="$(to_json_opt_int "${shadow_required_min_frames}")"
+  shadow_longrun_seed_value="$(to_json_opt_int "${shadow_longrun_seed}")"
+  shadow_longrun_frames_value="$(to_json_opt_int "${shadow_longrun_frames}")"
+  shadow_longrun_delta_value="$(to_json_opt_string "${shadow_longrun_delta}")"
+  shadow_longrun_runtime_mode_value="$(to_json_opt_string "${shadow_longrun_runtime_mode}")"
+  shadow_longrun_report_path_value="$(to_json_opt_path "${shadow_longrun_report_path}")"
   python3_version_value="$(to_json_opt_string "$(python3 --version 2>/dev/null || true)")"
   cargo_version_value="$(to_json_opt_string "$(cargo --version 2>/dev/null || true)")"
   rustc_version_value="$(to_json_opt_string "$(rustc --version 2>/dev/null || true)")"
@@ -1291,6 +1358,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_owner_policy_markdown_size="$(to_json_opt_size_bytes "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_size="$(to_json_opt_size_bytes "${audit_owner_policy_compare_report_json}")"
   bench_report_json_size="$(to_json_opt_size_bytes "${bench_report_json}")"
+  shadow_report_json_size="$(to_json_opt_size_bytes "${shadow_report_json}")"
   compile_report_json_mtime_utc="$(to_json_opt_mtime_utc "${compile_report_json}")"
   audit_report_json_mtime_utc="$(to_json_opt_mtime_utc "${audit_report_json}")"
   audit_duplicate_report_json_mtime_utc="$(to_json_opt_mtime_utc "${audit_duplicate_report_json}")"
@@ -1299,6 +1367,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_owner_policy_markdown_mtime_utc="$(to_json_opt_mtime_utc "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_mtime_utc="$(to_json_opt_mtime_utc "${audit_owner_policy_compare_report_json}")"
   bench_report_json_mtime_utc="$(to_json_opt_mtime_utc "${bench_report_json}")"
+  shadow_report_json_mtime_utc="$(to_json_opt_mtime_utc "${shadow_report_json}")"
   compile_report_json_exists="$(to_json_opt_exists "${compile_report_json}")"
   audit_report_json_exists="$(to_json_opt_exists "${audit_report_json}")"
   audit_duplicate_report_json_exists="$(to_json_opt_exists "${audit_duplicate_report_json}")"
@@ -1307,6 +1376,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   audit_owner_policy_markdown_exists="$(to_json_opt_exists "${audit_owner_policy_markdown}")"
   audit_owner_policy_compare_report_json_exists="$(to_json_opt_exists "${audit_owner_policy_compare_report_json}")"
   bench_report_json_exists="$(to_json_opt_exists "${bench_report_json}")"
+  shadow_report_json_exists="$(to_json_opt_exists "${shadow_report_json}")"
   audit_parity_issue_count="$(to_json_opt_array_len_from_json_file_key "${audit_report_json}" "parity_issues")"
   audit_duplicate_key_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_key_count")"
   audit_duplicate_conflict_count="$(to_json_opt_int_from_json_file_key "${audit_report_json}" "duplicate_conflict_count")"
@@ -1379,6 +1449,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   count_artifact_presence "${audit_owner_policy_markdown}"
   count_artifact_presence "${audit_owner_policy_compare_report_json}"
   count_artifact_presence "${bench_report_json}"
+  count_artifact_presence "${shadow_report_json}"
   artifact_missing_count=$((artifact_expected_count - artifact_present_count))
   artifacts_complete_status="false"
   if [[ "${artifact_missing_count}" -eq 0 ]]; then
@@ -1402,6 +1473,18 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
       bench_report_present_when_enabled_status="false"
     fi
   fi
+  shadow_cutover_check_executed_status="false"
+  if [[ -n "${shadow_report_json}" ]]; then
+    shadow_cutover_check_executed_status="true"
+  fi
+  shadow_report_present_when_checked_status="null"
+  if [[ "${shadow_cutover_check_executed_status}" == "true" ]]; then
+    if [[ "${shadow_report_json_exists}" == "true" ]]; then
+      shadow_report_present_when_checked_status="true"
+    elif [[ "${shadow_report_json_exists}" == "false" ]]; then
+      shadow_report_present_when_checked_status="false"
+    fi
+  fi
   cat > "${verify_report_out}" <<EOF
 {
   "schema_version": 1,
@@ -1413,6 +1496,7 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
   "git_head": ${git_head_json},
   "git_dirty": ${git_dirty},
   "with_benches": ${WITH_BENCHES},
+  "with_shadow_longrun": ${WITH_SHADOW_LONGRUN},
   "apply_key_fields": ${APPLY_KEY_FIELDS},
   "strip_inline_fields": ${STRIP_INLINE_FIELDS},
   "assert_artifacts": ${verify_assert_artifacts},
@@ -1435,6 +1519,15 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_conflict_preview_limit": ${verify_audit_conflict_preview_limit},
     "compile_report_json": ${compile_report_json_config_value},
     "bench_report_json": ${bench_report_json_config_value},
+    "shadow_report_json": ${shadow_report_json_value},
+    "shadow_required_min_frames": ${shadow_required_min_frames_value},
+    "shadow": {
+      "longrun_seed": ${shadow_longrun_seed_value},
+      "longrun_frames": ${shadow_longrun_frames_value},
+      "longrun_delta": ${shadow_longrun_delta_value},
+      "longrun_runtime_mode": ${shadow_longrun_runtime_mode_value},
+      "longrun_report_path": ${shadow_longrun_report_path_value}
+    },
     "bench": {
       "path_iters": ${bench_path_iters_value},
       "stress_iters": ${bench_stress_iters_value},
@@ -1454,6 +1547,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "data_localization_extract": ${STEP_EXTRACT_DURATION},
     "localization_compile": ${STEP_COMPILE_DURATION},
     "localization_audit": ${STEP_AUDIT_DURATION},
+    "shadow_cutover_check": ${STEP_SHADOW_CHECK_DURATION},
+    "shadow_longrun": ${STEP_SHADOW_LONGRUN_DURATION},
     "rust_bench": ${STEP_BENCH_DURATION}
   },
   "artifacts": {
@@ -1464,7 +1559,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_key_owner_policy_json": ${audit_key_owner_policy_json_value},
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_value},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_value},
-    "bench_report_json": ${bench_report_json_value}
+    "bench_report_json": ${bench_report_json_value},
+    "shadow_report_json": ${shadow_report_json_value}
   },
   "artifact_counts": {
     "expected": ${artifact_expected_count},
@@ -1547,6 +1643,9 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_owner_policy_missing_duplicate_clean": ${audit_owner_policy_missing_duplicate_clean_status},
     "audit_owner_policy_unused_clean": ${audit_owner_policy_unused_clean_status},
     "owner_policy_compare_clean": ${owner_policy_compare_clean_status},
+    "shadow_cutover_check_executed": ${shadow_cutover_check_executed_status},
+    "shadow_report_present_when_checked": ${shadow_report_present_when_checked_status},
+    "shadow_longrun_executed": ${WITH_SHADOW_LONGRUN},
     "bench_report_present_when_enabled": ${bench_report_present_when_enabled_status},
     "compile_thresholds_all_ok": ${compile_thresholds_all_ok}
   },
@@ -1558,7 +1657,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_key_owner_policy_json": ${audit_key_owner_policy_json_sha256},
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_sha256},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_sha256},
-    "bench_report_json": ${bench_report_json_sha256}
+    "bench_report_json": ${bench_report_json_sha256},
+    "shadow_report_json": ${shadow_report_json_sha256}
   },
   "artifact_size_bytes": {
     "compile_report_json": ${compile_report_json_size},
@@ -1568,7 +1668,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_key_owner_policy_json": ${audit_key_owner_policy_json_size},
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_size},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_size},
-    "bench_report_json": ${bench_report_json_size}
+    "bench_report_json": ${bench_report_json_size},
+    "shadow_report_json": ${shadow_report_json_size}
   },
   "artifact_mtime_utc": {
     "compile_report_json": ${compile_report_json_mtime_utc},
@@ -1578,7 +1679,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_key_owner_policy_json": ${audit_key_owner_policy_json_mtime_utc},
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_mtime_utc},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_mtime_utc},
-    "bench_report_json": ${bench_report_json_mtime_utc}
+    "bench_report_json": ${bench_report_json_mtime_utc},
+    "shadow_report_json": ${shadow_report_json_mtime_utc}
   },
   "artifact_exists": {
     "compile_report_json": ${compile_report_json_exists},
@@ -1588,7 +1690,8 @@ print(min(len(keys), limit))' "${abs_path}" "${max_items}" 2>/dev/null || true
     "audit_key_owner_policy_json": ${audit_key_owner_policy_json_exists},
     "audit_owner_policy_markdown": ${audit_owner_policy_markdown_exists},
     "audit_owner_policy_compare_report_json": ${audit_owner_policy_compare_report_json_exists},
-    "bench_report_json": ${bench_report_json_exists}
+    "bench_report_json": ${bench_report_json_exists},
+    "shadow_report_json": ${shadow_report_json_exists}
   }
 }
 EOF
