@@ -2,6 +2,7 @@ extends RefCounted
 
 const RuntimeShadowReporter = preload("res://scripts/core/simulation/runtime_shadow_reporter.gd")
 const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
+const _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray()
 
 var current_tick: int = 0
 var is_paused: bool = false
@@ -421,6 +422,8 @@ func _refresh_runtime_registry_cache() -> void:
 func _is_rust_registered_system(system: RefCounted) -> bool:
 	var key: String = str(_system_key_by_instance_id.get(system.get_instance_id(), ""))
 	if key.is_empty():
+		return false
+	if not _RUST_OWNER_READY_SYSTEM_KEYS.has(key):
 		return false
 	return bool(_runtime_rust_registered_keys.get(key, false))
 

@@ -177,3 +177,13 @@
 - Logic implementation completion after commit: 6.52%
 - Logic implementation remaining after commit: 93.48%
 - Details: [0025-rust-primary-hybrid-execution-gate.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0025-rust-primary-hybrid-execution-gate.md)
+
+### 0026 - Owner-ready gating safety fix
+- Commit: `[rust-r0-126] Enforce owner-ready allowlist for hybrid fallback`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 6.52%
+- Logic implementation remaining after commit: 93.48%
+- Details: [0026-owner-ready-gating-safety-fix.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0026-owner-ready-gating-safety-fix.md)

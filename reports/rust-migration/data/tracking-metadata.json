@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-02 15:18:57 +0900",
-  "base_commit": "ff0db03",
+  "generated_at": "2026-03-02 15:20:43 +0900",
+  "base_commit": "c5a0610",
   "dataset_version": "tracking-v2",
   "offload_rule": "simbridge_pattern_scan_v1",
-  "exec_owner_rule": "runtime_primary_hybrid_v1(stat_sync_system|resource_regen_system|stats_recorder)",
+  "exec_owner_rule": "runtime_primary_hybrid_owner_ready_v1(empty_allowlist)",
   "rust_runtime_impl_rule": "runtime_registry_match_v1(stats_recorder|resource_regen_system|stat_sync_system)",
   "reference_scope": [
     "*.gd",
