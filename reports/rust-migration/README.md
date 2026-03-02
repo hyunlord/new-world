@@ -29,3 +29,9 @@
 - Completion after commit: 57%
 - Remaining after commit: 43%
 - Details: [0004-phase-h-shadow-reporter.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0004-phase-h-shadow-reporter.md)
+
+### 0005 - Domain-based compute backend routing
+- Commit: `[rust-r0-105] Add domain-based compute backend modes`
+- Completion after commit: 62%
+- Remaining after commit: 38%
+- Details: [0005-phase-f-domain-compute-modes.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0005-phase-f-domain-compute-modes.md)

@@ -1,16 +1,26 @@
 extends Node
 
 signal compute_mode_changed(new_mode: String, resolved_mode: String)
+signal compute_domain_mode_changed(domain: String, new_mode: String, resolved_mode: String)
 
 const SETTINGS_PATH: String = "user://settings.json"
 const SUPPORTED_MODES: Array[String] = ["cpu", "gpu_auto", "gpu_force"]
 const DEFAULT_MODE: String = "gpu_auto"
+const COMPUTE_DOMAINS: Array[String] = [
+	"pathfinding",
+	"needs",
+	"stress",
+	"emotion",
+	"orchestration",
+]
 
 var _mode: String = DEFAULT_MODE
+var _domain_modes: Dictionary = {}
 
 
 func _ready() -> void:
 	_load_settings()
+	_ensure_domain_modes()
 	_sync_pathfinding_backend_mode()
 
 
@@ -27,9 +37,48 @@ func set_mode(new_mode: String) -> void:
 	if _mode == new_mode:
 		return
 	_mode = new_mode
+	for i in range(COMPUTE_DOMAINS.size()):
+		var domain: String = COMPUTE_DOMAINS[i]
+		_domain_modes[domain] = _mode
 	_save_settings()
 	_sync_pathfinding_backend_mode()
 	compute_mode_changed.emit(_mode, resolve_mode())
+	_emit_domain_mode_signals()
+
+
+## Returns configured compute mode for a domain.
+func get_mode_for_domain(domain: String) -> String:
+	if domain in _domain_modes:
+		return str(_domain_modes[domain])
+	return _mode
+
+
+## Sets compute mode for a specific domain and persists settings.
+func set_mode_for_domain(domain: String, new_mode: String) -> void:
+	if domain not in COMPUTE_DOMAINS:
+		push_warning("[ComputeBackend] Unsupported compute domain: %s" % domain)
+		return
+	if new_mode not in SUPPORTED_MODES:
+		push_warning("[ComputeBackend] Unsupported mode: %s" % new_mode)
+		return
+	var old_mode: String = get_mode_for_domain(domain)
+	if old_mode == new_mode:
+		return
+	_domain_modes[domain] = new_mode
+	_save_settings()
+	if domain == "pathfinding":
+		_sync_pathfinding_backend_mode()
+	compute_domain_mode_changed.emit(domain, new_mode, resolve_mode_for_domain(domain))
+
+
+## Returns resolved execution mode (`cpu` or `gpu`) for the given domain.
+func resolve_mode_for_domain(domain: String) -> String:
+	var configured: String = get_mode_for_domain(domain)
+	if configured == "cpu":
+		return "cpu"
+	if is_gpu_capable():
+		return "gpu"
+	return "cpu"
 
 
 ## Returns true when current runtime can use GPU compute path.
@@ -52,6 +101,11 @@ func resolve_mode() -> String:
 	return "cpu"
 
 
+## Returns current configured modes for all compute domains.
+func get_domain_modes_snapshot() -> Dictionary:
+	return _domain_modes.duplicate(true)
+
+
 func _load_settings() -> void:
 	if not FileAccess.file_exists(SETTINGS_PATH):
 		return
@@ -62,6 +116,17 @@ func _load_settings() -> void:
 		var saved_mode: String = str(json.data.compute_mode)
 		if saved_mode in SUPPORTED_MODES:
 			_mode = saved_mode
+	if json.data and json.data.has("compute_domain_modes"):
+		var raw_modes: Variant = json.data.compute_domain_modes
+		if raw_modes is Dictionary:
+			var mode_map: Dictionary = raw_modes
+			for i in range(COMPUTE_DOMAINS.size()):
+				var domain: String = COMPUTE_DOMAINS[i]
+				if not mode_map.has(domain):
+					continue
+				var saved_domain_mode: String = str(mode_map[domain])
+				if saved_domain_mode in SUPPORTED_MODES:
+					_domain_modes[domain] = saved_domain_mode
 
 
 func _save_settings() -> void:
@@ -73,14 +138,16 @@ func _save_settings() -> void:
 		if json.data:
 			data = json.data
 	data["compute_mode"] = _mode
+	data["compute_domain_modes"] = _domain_modes
 	var f_write: FileAccess = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
 	f_write.store_string(JSON.stringify(data, "  "))
 
 
 func _resolve_pathfinding_backend_mode() -> String:
-	if _mode == "cpu":
+	var mode: String = get_mode_for_domain("pathfinding")
+	if mode == "cpu":
 		return "cpu"
-	if _mode == "gpu_force":
+	if mode == "gpu_force":
 		return "gpu"
 	return "auto"
 
@@ -91,3 +158,18 @@ func _sync_pathfinding_backend_mode() -> void:
 	if not SimBridge.has_method("set_pathfinding_backend"):
 		return
 	SimBridge.set_pathfinding_backend(_resolve_pathfinding_backend_mode())
+
+
+func _ensure_domain_modes() -> void:
+	for i in range(COMPUTE_DOMAINS.size()):
+		var domain: String = COMPUTE_DOMAINS[i]
+		if _domain_modes.has(domain):
+			continue
+		_domain_modes[domain] = _mode
+
+
+func _emit_domain_mode_signals() -> void:
+	for i in range(COMPUTE_DOMAINS.size()):
+		var domain: String = COMPUTE_DOMAINS[i]
+		var mode: String = get_mode_for_domain(domain)
+		compute_domain_mode_changed.emit(domain, mode, resolve_mode_for_domain(domain))
