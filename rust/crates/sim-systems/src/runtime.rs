@@ -1,7 +1,10 @@
 use hecs::World;
-use sim_core::components::{Behavior, Body as BodyComponent, Identity, Needs, Position, Skills, Social, Values};
+use sim_core::components::{
+    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, Skills, Social, Stress,
+    Values,
+};
 use sim_core::config;
-use sim_core::{ActionType, GrowthStage, NeedType, ValueType};
+use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, ValueType};
 use sim_engine::{SimResources, SimSystem};
 use crate::body;
 
@@ -267,6 +270,61 @@ impl SimSystem for NeedsRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for stress processing.
+///
+/// Full parity requires Rust-owned event/stressor sources and trace queues.
+/// This phase keeps scheduler ownership and registry integration in Rust while
+/// remaining side-effect free.
+#[derive(Debug, Clone)]
+pub struct StressRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StressRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StressRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stress_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Needs, &Stress, Option<&Emotion>)>();
+        for (_, (needs, stress, emotion_opt)) in &mut query {
+            let critical = body::needs_critical_severity_step(
+                needs.get(NeedType::Thirst) as f32,
+                needs.get(NeedType::Warmth) as f32,
+                needs.get(NeedType::Safety) as f32,
+                config::THIRST_CRITICAL as f32,
+                config::WARMTH_CRITICAL as f32,
+                config::SAFETY_CRITICAL as f32,
+            );
+            let _critical_total = critical[0] + critical[1] + critical[2];
+            let _stress_snapshot = stress.level as f32 + stress.reserve as f32 + stress.allostatic_load as f32;
+            if let Some(emotion) = emotion_opt {
+                let _negative_valence = emotion.get(EmotionType::Fear) as f32
+                    + emotion.get(EmotionType::Anger) as f32
+                    + emotion.get(EmotionType::Sadness) as f32;
+            }
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -434,10 +492,13 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::{NeedsRuntimeSystem, ResourceRegenSystem, UpperNeedsRuntimeSystem};
+    use super::{NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem};
     use crate::body;
     use hecs::World;
-    use sim_core::components::{Behavior, Body as BodyComponent, Identity, Needs, Position, SkillEntry, Skills, Social, Values};
+    use sim_core::components::{
+        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, SkillEntry, Skills,
+        Social, Stress, Values,
+    };
     use sim_core::{GameCalendar, GrowthStage, NeedType, ResourceType, SettlementId, ValueType, WorldMap, config::GameConfig};
     use sim_core::world::TileResource;
     use sim_core::ids::EntityId;
@@ -542,6 +603,26 @@ mod tests {
         assert!((updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs() < 1e-6);
         assert!((updated.energy as f32 - expected_energy).abs() < 1e-6);
         assert!((updated.get(NeedType::Sleep) as f32 - expected_energy).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let needs = Needs::default();
+        let stress = Stress::default();
+        let emotion = Emotion::default();
+        let entity = world.spawn((needs, stress, emotion));
+
+        let mut system = StressRuntimeSystem::new(34, 4);
+        system.run(&mut world, &mut resources, 4);
+
+        let after = world
+            .get::<&Stress>(entity)
+            .expect("stress component should remain available");
+        assert!((after.level - 0.0).abs() < 1e-9);
+        assert!((after.reserve - 1.0).abs() < 1e-9);
+        assert!((after.allostatic_load - 0.0).abs() < 1e-9);
     }
 
     #[test]

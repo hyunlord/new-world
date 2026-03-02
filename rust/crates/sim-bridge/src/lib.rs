@@ -27,6 +27,7 @@ use sim_systems::{
     pathfinding::{find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace},
     runtime::{
         NeedsRuntimeSystem, ResourceRegenSystem, StatSyncSystem, StatsRecorderSystem,
+        StressRuntimeSystem,
         UpperNeedsRuntimeSystem,
     },
     stat_curve,
@@ -658,6 +659,7 @@ const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
 const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
 const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
 const EVENT_TYPE_ID_GENERIC: i32 = 9000;
+const RUNTIME_SYSTEM_KEY_STRESS: &str = "stress_system";
 const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
 const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
@@ -786,6 +788,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_STAT_SYNC
             | RUNTIME_SYSTEM_KEY_UPPER_NEEDS
             | RUNTIME_SYSTEM_KEY_NEEDS
+            | RUNTIME_SYSTEM_KEY_STRESS
     )
 }
 
@@ -804,6 +807,11 @@ fn register_supported_rust_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_key {
+        RUNTIME_SYSTEM_KEY_STRESS => {
+            state
+                .engine
+                .register(StressRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
         RUNTIME_SYSTEM_KEY_NEEDS => {
             state
                 .engine
@@ -5514,6 +5522,7 @@ mod tests {
         assert!(runtime_supports_rust_system("stat_sync_system"));
         assert!(runtime_supports_rust_system("upper_needs_system"));
         assert!(runtime_supports_rust_system("needs_system"));
+        assert!(runtime_supports_rust_system("stress_system"));
         assert!(!runtime_supports_rust_system("behavior_system"));
     }
 }

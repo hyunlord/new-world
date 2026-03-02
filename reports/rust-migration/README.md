@@ -207,3 +207,13 @@
 - Logic implementation completion after commit: 10.87%
 - Logic implementation remaining after commit: 89.13%
 - Details: [0028-needs-runtime-rust-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0028-needs-runtime-rust-port.md)
+
+### 0029 - Rust runtime baseline port (stress_system)
+- Commit: `[rust-r0-129] Add stress runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 13.04%
+- Logic implementation remaining after commit: 86.96%
+- Details: [0029-stress-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0029-stress-runtime-rust-baseline.md)
