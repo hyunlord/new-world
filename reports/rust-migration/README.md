@@ -663,3 +663,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 36.96% (17/46)
 - Remaining (strict state-write basis): 60.87%
 - Details: [0079-trait-violation-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0079-trait-violation-runtime-active-write-port.md)
+
+### 0080 - owner transfer allowlist phase 11
+- Commit: `[rust-r0-180] Expand owner-ready allowlist with trait-violation system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 39.13% (18/46)
+- Actual state-write coverage (strict): 39.13% (18/46)
+- Owner transfer coverage (`exec_owner=rust`): 39.13% (18/46)
+- Remaining (strict state-write basis): 60.87%
+- Details: [0080-owner-transfer-allowlist-phase11.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0080-owner-transfer-allowlist-phase11.md)
