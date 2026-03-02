@@ -2658,6 +2658,165 @@ impl SimSystem for OccupationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for movement progression and arrival effects.
+///
+/// This performs active writes on `Position`, `Behavior`, and selected `Needs`
+/// fields by applying movement skip policy, passable-tile step movement, and
+/// action-complete restore effects.
+#[derive(Debug, Clone)]
+pub struct MovementRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MovementRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn movement_skip_mod(stage: GrowthStage) -> i32 {
+    match stage {
+        GrowthStage::Infant => 2,
+        GrowthStage::Toddler => 2,
+        GrowthStage::Child => 3,
+        GrowthStage::Teen => 10,
+        GrowthStage::Elder => 3,
+        GrowthStage::Adult => 0,
+    }
+}
+
+impl SimSystem for MovementRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "movement_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let tick_i32 = (tick.min(i32::MAX as u64)) as i32;
+        let mut query = world.query::<(
+            &mut Position,
+            &mut Behavior,
+            Option<&mut Needs>,
+            Option<&Age>,
+        )>();
+        for (entity, (position, behavior, needs_opt, age_opt)) in &mut query {
+            if behavior.action_timer > 0 {
+                behavior.action_timer -= 1;
+            }
+
+            if behavior.action_timer <= 0 && behavior.current_action != ActionType::Idle {
+                if let Some(needs) = needs_opt {
+                    match behavior.current_action {
+                        ActionType::Eat => {
+                            needs.set(
+                                NeedType::Hunger,
+                                needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
+                            );
+                        }
+                        ActionType::Rest | ActionType::Sleep => {
+                            needs.energy = (needs.energy + 0.5).clamp(0.0, 1.0);
+                            needs.set(NeedType::Sleep, needs.energy);
+                        }
+                        ActionType::Socialize => {
+                            needs.set(
+                                NeedType::Belonging,
+                                needs.get(NeedType::Belonging) + 0.3,
+                            );
+                        }
+                        ActionType::Drink => {
+                            needs.set(
+                                NeedType::Thirst,
+                                needs.get(NeedType::Thirst) + config::THIRST_DRINK_RESTORE,
+                            );
+                        }
+                        ActionType::SitByFire => {
+                            needs.set(
+                                NeedType::Warmth,
+                                needs.get(NeedType::Warmth) + config::WARMTH_FIRE_RESTORE,
+                            );
+                        }
+                        ActionType::SeekShelter => {
+                            needs.set(
+                                NeedType::Warmth,
+                                needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
+                            );
+                            needs.set(
+                                NeedType::Safety,
+                                needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
+                            );
+                        }
+                        _ => {}
+                    }
+                }
+                behavior.current_action = ActionType::Idle;
+                behavior.action_target_x = None;
+                behavior.action_target_y = None;
+                continue;
+            }
+
+            let skip_mod = age_opt.map(|age| movement_skip_mod(age.stage)).unwrap_or(0);
+            let entity_id = entity.id() as i32;
+            if body::movement_should_skip_tick(skip_mod, tick_i32, entity_id) {
+                continue;
+            }
+
+            if matches!(
+                behavior.current_action,
+                ActionType::Idle | ActionType::Rest | ActionType::Sleep
+            ) {
+                continue;
+            }
+
+            let Some(target_x) = behavior.action_target_x else {
+                continue;
+            };
+            let Some(target_y) = behavior.action_target_y else {
+                continue;
+            };
+            if target_x == position.x && target_y == position.y {
+                continue;
+            }
+
+            let dx = (target_x - position.x).signum();
+            let dy = (target_y - position.y).signum();
+            let mut candidates = Vec::with_capacity(3);
+            if dx != 0 && dy != 0 {
+                candidates.push((position.x + dx, position.y + dy));
+            }
+            if dx != 0 {
+                candidates.push((position.x + dx, position.y));
+            }
+            if dy != 0 {
+                candidates.push((position.x, position.y + dy));
+            }
+
+            for (nx, ny) in candidates {
+                if !resources.map.in_bounds(nx, ny) {
+                    continue;
+                }
+                if !resources.map.get(nx as u32, ny as u32).passable {
+                    continue;
+                }
+                position.x = nx;
+                position.y = ny;
+                break;
+            }
+        }
+    }
+}
+
 /// Rust runtime system for emotion/stress contagion propagation.
 ///
 /// This performs active writes to `Emotion.primary` and `Stress.level` using
@@ -3595,7 +3754,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         AgeRuntimeSystem, ChildStressProcessorRuntimeSystem, ContagionRuntimeSystem,
-        EconomicTendencyRuntimeSystem,
+        EconomicTendencyRuntimeSystem, MovementRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
@@ -5007,6 +5166,75 @@ mod tests {
             .expect("low-skill adult behavior should be queryable");
         assert_eq!(low_adult_updated.occupation, "laborer");
         assert_eq!(low_adult_updated.job, "gatherer");
+    }
+
+    #[test]
+    fn movement_runtime_system_moves_toward_target_on_passable_tile() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::Explore,
+            action_target_x: Some(0),
+            action_target_y: Some(0),
+            action_timer: 4,
+            ..Behavior::default()
+        };
+        let entity = world.spawn((Position::new(1, 0), behavior, age));
+
+        let mut system = MovementRuntimeSystem::new(30, sim_core::config::MOVEMENT_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, 10);
+
+        let pos = world
+            .get::<&Position>(entity)
+            .expect("position should exist after movement");
+        let behavior_after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should exist after movement");
+        assert_eq!((pos.x, pos.y), (0, 0));
+        assert_eq!(behavior_after.action_timer, 3);
+    }
+
+    #[test]
+    fn movement_runtime_system_completes_action_and_applies_drink_restore() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::Drink,
+            action_target_x: Some(4),
+            action_target_y: Some(4),
+            action_timer: 1,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Thirst, 0.10);
+        let entity = world.spawn((Position::new(1, 0), behavior, needs, age));
+
+        let mut system = MovementRuntimeSystem::new(30, sim_core::config::MOVEMENT_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, 20);
+
+        let behavior_after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should exist after action completion");
+        let needs_after = world
+            .get::<&Needs>(entity)
+            .expect("needs should exist after action completion");
+        assert_eq!(behavior_after.current_action, ActionType::Idle);
+        assert!(behavior_after.action_target_x.is_none());
+        assert!(behavior_after.action_target_y.is_none());
+        assert!(
+            (needs_after.get(NeedType::Thirst) as f32 - 0.45).abs() < 1e-6,
+            "thirst should increase by THIRST_DRINK_RESTORE"
+        );
     }
 
     #[test]

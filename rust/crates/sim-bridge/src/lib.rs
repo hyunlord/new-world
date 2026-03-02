@@ -47,7 +47,7 @@ use sim_systems::{
         CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
         IntelligenceRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
         MemoryRuntimeSystem, MentalBreakRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
-        NeedsRuntimeSystem, NetworkRuntimeSystem,
+        MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StressRuntimeSystem, TraumaScarRuntimeSystem,
         TraitViolationRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -599,6 +599,7 @@ const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
 const RUNTIME_SYSTEM_KEY_RESOURCE_REGEN: &str = "resource_regen_system";
 const RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR: &str = "child_stress_processor";
+const RUNTIME_SYSTEM_KEY_MOVEMENT: &str = "movement_system";
 const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 const RUNTIME_COMPUTE_DOMAINS: [&str; 5] =
     ["pathfinding", "needs", "stress", "emotion", "orchestration"];
@@ -740,6 +741,7 @@ fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_MEMORY
             | RUNTIME_SYSTEM_KEY_COPING
             | RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR
+            | RUNTIME_SYSTEM_KEY_MOVEMENT
     )
 }
 
@@ -833,6 +835,11 @@ fn register_supported_rust_system(
                 priority_u32,
                 tick_interval_u64,
             ));
+        }
+        RUNTIME_SYSTEM_KEY_MOVEMENT => {
+            state
+                .engine
+                .register(MovementRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_VALUE => {
             state
@@ -5462,6 +5469,7 @@ mod tests {
         assert!(runtime_supports_rust_system("memory_system"));
         assert!(runtime_supports_rust_system("coping_system"));
         assert!(runtime_supports_rust_system("child_stress_processor"));
+        assert!(runtime_supports_rust_system("movement_system"));
         assert!(!runtime_supports_rust_system("stats_recorder"));
         assert!(!runtime_supports_rust_system("stat_sync_system"));
         assert!(!runtime_supports_rust_system("stat_threshold_system"));
