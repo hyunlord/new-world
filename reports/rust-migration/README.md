@@ -911,3 +911,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 71.74% (33/46)
 - Remaining (strict state-write basis): 28.26%
 - Details: [0110-owner-transfer-allowlist-phase26.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0110-owner-transfer-allowlist-phase26.md)
+
+### 0111 - tech-utilization runtime active-write port
+- Commit: `[rust-r0-211] Port tech-utilization runtime to active-write and update strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 73.91% (34/46)
+- Actual state-write coverage (strict): 73.91% (34/46)
+- Owner transfer coverage (`exec_owner=rust`): 71.74% (33/46)
+- Remaining (strict state-write basis): 26.09%
+- Details: [0111-tech-utilization-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0111-tech-utilization-runtime-active-write-port.md)

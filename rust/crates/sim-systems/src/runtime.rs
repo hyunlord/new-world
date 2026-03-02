@@ -10,7 +10,7 @@ use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
     CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, ValueType,
+    SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -3302,6 +3302,73 @@ impl SimSystem for PopulationRuntimeSystem {
     }
 }
 
+/// Rust runtime system for technology utilization era updates.
+///
+/// This performs active writes on `Settlement.current_era` using known-tech counts.
+#[derive(Debug, Clone)]
+pub struct TechUtilizationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechUtilizationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechUtilizationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_utilization_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                continue;
+            };
+            let known_count = settlement
+                .tech_states
+                .values()
+                .filter(|state| matches!(state, TechState::KnownLow | TechState::KnownStable))
+                .count() as u32;
+
+            let next_era = if known_count >= config::TECH_ERA_BRONZE_AGE_COUNT {
+                "bronze_age"
+            } else if known_count >= config::TECH_ERA_TRIBAL_COUNT {
+                "tribal"
+            } else {
+                "stone_age"
+            };
+
+            if settlement.current_era == next_era {
+                continue;
+            }
+            settlement.current_era = next_era.to_string();
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::EraAdvanced {
+                    settlement_id,
+                    new_era: settlement.current_era.clone(),
+                });
+        }
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -4989,6 +5056,7 @@ mod tests {
         MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
         SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TechUtilizationRuntimeSystem,
         TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
     };
@@ -5006,7 +5074,7 @@ mod tests {
         Building, BuildingId,
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
         HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-        SettlementId, Sex, SocialClass, ValueType, WorldMap,
+        SettlementId, Sex, SocialClass, TechState, ValueType, WorldMap,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -7300,6 +7368,40 @@ mod tests {
             }
         }
         assert_eq!(infant_count, 1);
+        assert!(resources.event_bus.pending_count() >= 1);
+    }
+
+    #[test]
+    fn tech_utilization_runtime_system_updates_era_by_known_tech_count() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(32, 32, 3);
+        let mut resources = SimResources::new(calendar, map, 11);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(71);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "delta".to_string(), 4, 7, 0);
+        settlement.current_era = "stone_age".to_string();
+        for index in 0..sim_core::config::TECH_ERA_BRONZE_AGE_COUNT {
+            settlement.tech_states.insert(
+                format!("tech_{}", index),
+                if index % 2 == 0 {
+                    TechState::KnownStable
+                } else {
+                    TechState::KnownLow
+                },
+            );
+        }
+        resources.settlements.insert(settlement_id, settlement);
+
+        let mut system = TechUtilizationRuntimeSystem::new(65, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let settlement_after = resources
+            .settlements
+            .get(&settlement_id)
+            .expect("settlement should exist");
+        assert_eq!(settlement_after.current_era, "bronze_age");
         assert!(resources.event_bus.pending_count() >= 1);
     }
 
