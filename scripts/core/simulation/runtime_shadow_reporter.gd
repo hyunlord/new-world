@@ -13,6 +13,7 @@ var _sum_tick_delta: int = 0
 var _max_event_delta: int = 0
 var _sum_event_delta: int = 0
 var _last_flushed_tick: int = 0
+var _last_approved_for_cutover: bool = false
 
 
 ## Initializes shadow reporter output path and flush interval.
@@ -28,6 +29,7 @@ func setup(
 	_allowed_max_tick_delta = maxi(allowed_max_tick_delta, 0)
 	_allowed_max_event_delta = maxi(allowed_max_event_delta, 0)
 	_allowed_mismatch_ratio = clampf(allowed_mismatch_ratio, 0.0, 1.0)
+	_last_approved_for_cutover = false
 
 
 ## Records one frame of GD vs Rust shadow comparison.
@@ -53,6 +55,11 @@ func flush_now(current_tick: int) -> void:
 	_last_flushed_tick = current_tick
 
 
+## Returns current approval status for Rust primary cutover.
+func is_approved_for_cutover() -> bool:
+	return _last_approved_for_cutover
+
+
 func _flush_report(current_tick: int) -> void:
 	var avg_tick_delta: float = 0.0
 	var avg_event_delta: float = 0.0
@@ -67,6 +74,7 @@ func _flush_report(current_tick: int) -> void:
 			and _max_event_delta <= _allowed_max_event_delta
 			and mismatch_ratio <= _allowed_mismatch_ratio
 		)
+	_last_approved_for_cutover = approved_for_cutover
 
 	var payload: Dictionary = {
 		"current_tick": current_tick,

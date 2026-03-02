@@ -133,6 +133,7 @@ func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
 			_last_gd_ticks_processed,
 			shadow_event_count
 		)
+		_try_shadow_auto_cutover()
 	if shadow_tick == current_tick:
 		return
 	_shadow_mismatch_count += 1
@@ -317,6 +318,22 @@ func _build_runtime_system_payload(system: RefCounted) -> Dictionary:
 	payload["tick_interval"] = int(system.get("tick_interval"))
 	payload["active"] = bool(system.get("is_active"))
 	return payload
+
+
+func _try_shadow_auto_cutover() -> void:
+	if not GameConfig.RUST_SHADOW_AUTO_CUTOVER_ENABLED:
+		return
+	if _runtime_mode != GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW:
+		return
+	if _shadow_reporter == null:
+		return
+	if not _shadow_reporter.has_method("is_approved_for_cutover"):
+		return
+	var approved: bool = bool(_shadow_reporter.call("is_approved_for_cutover"))
+	if not approved:
+		return
+	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
+	push_warning("[SimulationEngine] Shadow cutover approved. Switching runtime mode to rust_primary.")
 
 
 func _expected_runtime_registry_names() -> PackedStringArray:

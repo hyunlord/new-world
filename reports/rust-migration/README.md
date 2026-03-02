@@ -83,3 +83,9 @@
 - Completion after commit: 93%
 - Remaining after commit: 7%
 - Details: [0013-phase-h-shadow-cutover-gating.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0013-phase-h-shadow-cutover-gating.md)
+
+### 0014 - Shadow auto-cutover hook
+- Commit: `[rust-r0-114] Add shadow-approved auto cutover hook`
+- Completion after commit: 95%
+- Remaining after commit: 5%
+- Details: [0014-phase-h-shadow-auto-cutover.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0014-phase-h-shadow-auto-cutover.md)
