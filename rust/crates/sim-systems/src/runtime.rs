@@ -1255,6 +1255,66 @@ impl SimSystem for BuildingEffectRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for family-system evaluation.
+///
+/// Full parity requires Rust-owned partner matching, pregnancy lifecycle state,
+/// birth spawning, and parental/event side effects.
+#[derive(Debug, Clone)]
+pub struct FamilyRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl FamilyRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for FamilyRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "family_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+        let mut query = world.query::<(&Identity, Option<&Needs>, Option<&Social>)>();
+        for (_, (identity, needs_opt, social_opt)) in &mut query {
+            if identity.sex != sim_core::Sex::Female {
+                continue;
+            }
+            let age_years = tick.saturating_sub(identity.birth_tick) as f32 / 8760.0;
+            if !(15.0..=45.0).contains(&age_years) {
+                continue;
+            }
+
+            let has_partner = social_opt.and_then(|social| social.spouse).is_some();
+            if !has_partner {
+                continue;
+            }
+
+            let mother_nutrition = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+
+            let gestation_weeks = 40_i32;
+            let _newborn_health =
+                body::family_newborn_health(gestation_weeks, mother_nutrition, age_years, 1.0, 0.0);
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -1424,7 +1484,7 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 mod tests {
     use super::{
         BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem,
-        JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        FamilyRuntimeSystem, JobAssignmentRuntimeSystem, MentalBreakRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
         OccupationRuntimeSystem, SocialEventRuntimeSystem,
         ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
         TitleRuntimeSystem, TraumaScarRuntimeSystem,
@@ -1890,6 +1950,38 @@ mod tests {
         assert!((after.get(NeedType::Warmth) - 0.6).abs() < 1e-9);
         assert!((after.get(NeedType::Safety) - 0.4).abs() < 1e-9);
         assert!((after.energy - 0.55).abs() < 1e-9);
+    }
+
+    #[test]
+    fn family_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            sex: sim_core::Sex::Female,
+            birth_tick: 0,
+            growth_stage: GrowthStage::Adult,
+            settlement_id: Some(SettlementId(1)),
+            ..Identity::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.7);
+        let social = Social {
+            spouse: Some(EntityId(2)),
+            ..Social::default()
+        };
+        let entity = world.spawn((identity, needs, social));
+
+        let mut system = FamilyRuntimeSystem::new(52, 365);
+        system.run(&mut world, &mut resources, 8760 * 25);
+
+        let after_identity = world
+            .get::<&Identity>(entity)
+            .expect("identity component should remain available");
+        let after_needs = world
+            .get::<&Needs>(entity)
+            .expect("needs component should remain available");
+        assert_eq!(after_identity.sex, sim_core::Sex::Female);
+        assert!((after_needs.get(NeedType::Hunger) - 0.7).abs() < 1e-9);
     }
 
     #[test]
