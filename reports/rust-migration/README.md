@@ -1031,3 +1031,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 86.96% (40/46)
 - Remaining (strict state-write basis): 10.87%
 - Details: [0125-intergenerational-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0125-intergenerational-runtime-active-write-port.md)
+
+### 0126 - owner transfer allowlist phase 34
+- Commit: `[rust-r0-226] Expand owner-ready allowlist with intergenerational system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 89.13% (41/46)
+- Actual state-write coverage (strict): 89.13% (41/46)
+- Owner transfer coverage (`exec_owner=rust`): 89.13% (41/46)
+- Remaining (strict state-write basis): 10.87%
+- Details: [0126-owner-transfer-allowlist-phase34.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0126-owner-transfer-allowlist-phase34.md)
