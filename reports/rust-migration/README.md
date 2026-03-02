@@ -463,3 +463,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
 - Remaining (strict state-write basis): 93.48%
 - Details: [0054-sim-bridge-module-split-and-gpu-placeholder-hardening.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0054-sim-bridge-module-split-and-gpu-placeholder-hardening.md)
+
+### 0055 - stress runtime active-write port (Phase 5 start)
+- Commit: `[rust-r0-155] Port stress runtime to active-write and re-enable strict tracking`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 8.70% (4/46)
+- Actual state-write coverage (strict): 8.70% (4/46)
+- Owner transfer coverage (`exec_owner=rust`): 0.00% (0/46)
+- Remaining (strict state-write basis): 91.30%
+- Details: [0055-stress-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0055-stress-runtime-active-write-port.md)

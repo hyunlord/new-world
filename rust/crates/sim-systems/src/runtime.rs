@@ -1,9 +1,10 @@
 use hecs::World;
 use sim_core::components::{
-    Behavior, Body as BodyComponent, Identity, Needs, Position, Skills, Social, Values,
+    Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, Skills, Social, Stress,
+    Values,
 };
 use sim_core::config;
-use sim_core::{ActionType, GrowthStage, NeedType, ValueType};
+use sim_core::{ActionType, EmotionType, GrowthStage, NeedType, ValueType};
 use sim_engine::{SimResources, SimSystem};
 
 use crate::body;
@@ -188,6 +189,107 @@ impl SimSystem for NeedsRuntimeSystem {
     }
 }
 
+/// Rust runtime system for stress-state updates.
+///
+/// This system performs actual component writes (`Stress.level/reserve/allostatic_load/state`)
+/// and is the first step of the strict Phase-5 active-write migration for stress.
+#[derive(Debug, Clone)]
+pub struct StressRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl StressRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for StressRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "stress_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Needs, &mut Stress, Option<&Emotion>)>();
+        for (_, (needs, stress, emotion_opt)) in &mut query {
+            let hunger: f32 = needs.get(NeedType::Hunger) as f32;
+            let thirst: f32 = needs.get(NeedType::Thirst) as f32;
+            let warmth: f32 = needs.get(NeedType::Warmth) as f32;
+            let safety: f32 = needs.get(NeedType::Safety) as f32;
+            let social: f32 = needs.get(NeedType::Belonging) as f32;
+            let energy: f32 = needs.energy as f32;
+
+            let critical = body::needs_critical_severity_step(
+                thirst,
+                warmth,
+                safety,
+                config::THIRST_CRITICAL as f32,
+                config::WARMTH_CRITICAL as f32,
+                config::SAFETY_CRITICAL as f32,
+            );
+            let hunger_critical: f32 = ((0.15 - hunger) / 0.15).clamp(0.0, 1.0);
+
+            let (negative_emotion, positive_emotion) = if let Some(emotion) = emotion_opt {
+                let neg = (emotion.get(EmotionType::Fear)
+                    + emotion.get(EmotionType::Anger)
+                    + emotion.get(EmotionType::Sadness)
+                    + emotion.get(EmotionType::Disgust)
+                    + emotion.get(EmotionType::Surprise))
+                    as f32
+                    / 5.0;
+                let pos = (emotion.get(EmotionType::Joy)
+                    + emotion.get(EmotionType::Trust)
+                    + emotion.get(EmotionType::Anticipation))
+                    as f32
+                    / 3.0;
+                (neg, pos)
+            } else {
+                (0.0, 0.0)
+            };
+
+            let need_pressure = hunger_critical
+                + critical[0]
+                + critical[1]
+                + critical[2]
+                + (1.0 - energy).clamp(0.0, 1.0)
+                + (1.0 - social).clamp(0.0, 1.0);
+            let stress_delta = need_pressure * 0.02 + negative_emotion * 0.01 - positive_emotion * 0.005;
+
+            let next_level: f32 = (stress.level as f32 + stress_delta).clamp(0.0, 1.0);
+            let reserve_delta: f32 = if next_level > 0.6 {
+                -0.002 * ((next_level - 0.6) / 0.4)
+            } else {
+                0.001 * ((0.6 - next_level) / 0.6)
+            };
+            let next_reserve: f32 = (stress.reserve as f32 + reserve_delta).clamp(0.0, 1.0);
+            let allostatic_delta: f32 = if next_level > 0.7 {
+                0.0015 * ((next_level - 0.7) / 0.3)
+            } else {
+                -0.0005
+            };
+            let next_allostatic: f32 =
+                (stress.allostatic_load as f32 + allostatic_delta).clamp(0.0, 1.0);
+
+            stress.level = next_level as f64;
+            stress.reserve = next_reserve as f64;
+            stress.allostatic_load = next_allostatic as f64;
+            stress.recalculate_state();
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -357,18 +459,18 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::{NeedsRuntimeSystem, ResourceRegenSystem, UpperNeedsRuntimeSystem};
+    use super::{NeedsRuntimeSystem, ResourceRegenSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem};
     use crate::body;
     use hecs::World;
     use sim_core::components::{
-        Behavior, Body as BodyComponent, Identity, Needs, Position, SkillEntry, Skills, Social,
-        Values,
+        Behavior, Body as BodyComponent, Emotion, Identity, Needs, Position, SkillEntry, Skills,
+        Social, Stress, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, GameCalendar, GrowthStage, NeedType, ResourceType,
-        SettlementId, ValueType, WorldMap,
+        SettlementId, ValueType, WorldMap, EmotionType,
     };
     use sim_engine::{SimResources, SimSystem};
 
@@ -470,6 +572,38 @@ mod tests {
         assert!((updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs() < 1e-6);
         assert!((updated.energy as f32 - expected_energy).abs() < 1e-6);
         assert!((updated.get(NeedType::Sleep) as f32 - expected_energy).abs() < 1e-6);
+    }
+
+    #[test]
+    fn stress_runtime_system_updates_stress_state_and_components() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.05);
+        needs.set(NeedType::Thirst, 0.10);
+        needs.set(NeedType::Warmth, 0.08);
+        needs.set(NeedType::Safety, 0.10);
+        needs.set(NeedType::Belonging, 0.20);
+        needs.energy = 0.15;
+
+        let mut emotion = Emotion::default();
+        emotion.add(EmotionType::Fear, 0.7);
+        emotion.add(EmotionType::Anger, 0.6);
+        emotion.add(EmotionType::Sadness, 0.5);
+
+        let stress = Stress::default();
+        let entity = world.spawn((needs, stress, emotion));
+
+        let mut system = StressRuntimeSystem::new(34, 4);
+        system.run(&mut world, &mut resources, 4);
+
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("updated stress component should be queryable");
+        assert!(updated.level > 0.0);
+        assert!(updated.reserve <= 1.0);
+        assert!(updated.allostatic_load >= 0.0);
     }
 
     #[test]
