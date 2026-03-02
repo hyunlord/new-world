@@ -1111,3 +1111,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0135-owner-transfer-allowlist-phase38.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0135-owner-transfer-allowlist-phase38.md)
+
+### 0136 - runtime default cutover to rust primary
+- Commit: `[rust-r0-236] Switch default simulation runtime mode to rust primary`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0136-runtime-default-cutover-rust-primary.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0136-runtime-default-cutover-rust-primary.md)
