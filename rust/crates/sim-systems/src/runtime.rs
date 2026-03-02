@@ -551,6 +551,107 @@ impl SimSystem for JobAssignmentRuntimeSystem {
     }
 }
 
+/// Rust runtime baseline system for child stress processing.
+///
+/// Full parity requires Rust-owned developmental-state metadata and stressor/event queues.
+/// This phase ports child-stage appraisal math into Rust scheduler execution.
+#[derive(Debug, Clone)]
+pub struct ChildStressProcessorRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ChildStressProcessorRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn child_stage_code_from_growth_stage(stage: GrowthStage) -> i32 {
+    match stage {
+        GrowthStage::Infant => 0,
+        GrowthStage::Toddler => 1,
+        GrowthStage::Child => 2,
+        GrowthStage::Teen => 3,
+        _ => 4,
+    }
+}
+
+#[inline]
+fn child_stage_baseline_params(stage_code: i32) -> (f32, bool, f32, f32, f32, f32) {
+    match stage_code {
+        0 => (1.0, true, 0.85, 1.0, 1.2, 1.0),
+        1 => (0.9, false, 0.85, 1.0, 1.1, 1.0),
+        2 => (0.8, false, 0.85, 1.0, 1.0, 1.0),
+        3 => (0.7, false, 0.85, 1.0, 1.0, 1.0),
+        _ => (0.0, false, 0.85, 1.0, 1.0, 1.0),
+    }
+}
+
+impl SimSystem for ChildStressProcessorRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "child_stress_processor"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&Identity, &Stress, Option<&Needs>)>();
+        for (_, (identity, stress, needs_opt)) in &mut query {
+            if !identity.growth_stage.is_child_age() {
+                continue;
+            }
+            let stage_code = child_stage_code_from_growth_stage(identity.growth_stage);
+            let (buffer_power, shrp_active, shrp_override_threshold, spike_mult, vulnerability_mult, break_threshold_mult) =
+                child_stage_baseline_params(stage_code);
+            let intensity = (stress.level as f32).clamp(0.0, 1.0);
+            let attachment_quality = needs_opt
+                .map(|needs| needs.get(NeedType::Belonging) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let caregiver_present = attachment_quality > 0.5;
+            let buffered_intensity = body::child_social_buffered_intensity(
+                intensity,
+                attachment_quality,
+                caregiver_present,
+                buffer_power,
+            );
+            let shrp = body::child_shrp_step(
+                buffered_intensity,
+                shrp_active,
+                shrp_override_threshold,
+                vulnerability_mult,
+            );
+            let stress_type_code = body::child_stress_type_code(
+                shrp[0],
+                caregiver_present,
+                attachment_quality,
+            );
+            let _next = body::child_stress_apply_step(
+                0.5,
+                (stress.reserve as f32 * 100.0).clamp(0.0, 100.0),
+                (stress.level as f32 * 2000.0).clamp(0.0, 2000.0),
+                (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0),
+                shrp[0],
+                spike_mult,
+                vulnerability_mult,
+                break_threshold_mult,
+                stress_type_code,
+            );
+        }
+    }
+}
+
 /// Rust runtime system for upper-needs decay/fulfillment.
 ///
 /// The step formula mirrors the `upper_needs_system.gd` Rust-bridge path.
@@ -719,8 +820,9 @@ impl SimSystem for UpperNeedsRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::{
-        EmotionRuntimeSystem, JobAssignmentRuntimeSystem, NeedsRuntimeSystem, ResourceRegenSystem,
-        StatThresholdRuntimeSystem, StressRuntimeSystem, UpperNeedsRuntimeSystem,
+        ChildStressProcessorRuntimeSystem, EmotionRuntimeSystem, JobAssignmentRuntimeSystem,
+        NeedsRuntimeSystem, ResourceRegenSystem, StatThresholdRuntimeSystem, StressRuntimeSystem,
+        UpperNeedsRuntimeSystem,
     };
     use crate::body;
     use hecs::World;
@@ -917,6 +1019,34 @@ mod tests {
             .get::<&Behavior>(entity)
             .expect("behavior component should remain available");
         assert_eq!(after.job, "builder");
+    }
+
+    #[test]
+    fn child_stress_processor_runtime_system_baseline_runs_without_side_effects() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let identity = Identity {
+            growth_stage: GrowthStage::Child,
+            ..Identity::default()
+        };
+        let needs = Needs::default();
+        let stress = Stress {
+            level: 0.35,
+            reserve: 0.85,
+            allostatic_load: 0.1,
+            ..Stress::default()
+        };
+        let entity = world.spawn((identity, needs, stress));
+
+        let mut system = ChildStressProcessorRuntimeSystem::new(32, 2);
+        system.run(&mut world, &mut resources, 2);
+
+        let after = world
+            .get::<&Stress>(entity)
+            .expect("stress component should remain available");
+        assert!((after.level - 0.35).abs() < 1e-9);
+        assert!((after.reserve - 0.85).abs() < 1e-9);
+        assert!((after.allostatic_load - 0.1).abs() < 1e-9);
     }
 
     #[test]

@@ -247,3 +247,13 @@
 - Logic implementation completion after commit: 19.57%
 - Logic implementation remaining after commit: 80.43%
 - Details: [0032-job-assignment-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0032-job-assignment-runtime-rust-baseline.md)
+
+### 0033 - Rust runtime baseline port (child_stress_processor)
+- Commit: `[rust-r0-133] Add child-stress runtime baseline system in Rust`
+- Infra completion after commit: 100%
+- Infra remaining after commit: 0%
+- Logic port completion after commit: 0.0%
+- Logic port remaining after commit: 100.0%
+- Logic implementation completion after commit: 21.74%
+- Logic implementation remaining after commit: 78.26%
+- Details: [0033-child-stress-runtime-rust-baseline.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0033-child-stress-runtime-rust-baseline.md)
