@@ -951,3 +951,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 76.09% (35/46)
 - Remaining (strict state-write basis): 21.74%
 - Details: [0115-tech-discovery-runtime-active-write-port.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0115-tech-discovery-runtime-active-write-port.md)
+
+### 0116 - owner transfer allowlist phase 29
+- Commit: `[rust-r0-216] Expand owner-ready allowlist with tech-discovery system`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 78.26% (36/46)
+- Actual state-write coverage (strict): 78.26% (36/46)
+- Owner transfer coverage (`exec_owner=rust`): 78.26% (36/46)
+- Remaining (strict state-write basis): 21.74%
+- Details: [0116-owner-transfer-allowlist-phase29.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0116-owner-transfer-allowlist-phase29.md)
