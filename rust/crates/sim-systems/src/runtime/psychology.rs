@@ -825,7 +825,7 @@ impl SimSystem for EmotionRuntimeSystem {
                     .clamp(0.0, 1.0);
 
             let hl = body::emotion_adjusted_half_life(4.0, 0.25, z_c).max(0.001);
-            let k = 0.693_147 / hl;
+            let k = std::f32::consts::LN_2 / hl;
             let decay = (-k).exp();
             let blend = (1.0 - decay).clamp(0.0, 1.0);
 

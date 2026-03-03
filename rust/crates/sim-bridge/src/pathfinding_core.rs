@@ -337,7 +337,7 @@ pub fn pathfind_grid_batch_xy_bytes(
     to_xy: &[i32],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    if from_xy.len() != to_xy.len() || from_xy.len() % 2 != 0 {
+    if from_xy.len() != to_xy.len() || !from_xy.len().is_multiple_of(2) {
         return Err(PathfindError::MismatchedBatchLength {
             from_len: from_xy.len(),
             to_len: to_xy.len(),

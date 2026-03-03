@@ -4,6 +4,9 @@
 //! For now, this module provides pure-Rust conversion helpers that can be
 //! reused by the future FFI layer.
 
+// Bridge functions mirror GDScript signatures which naturally have many parameters.
+#![allow(clippy::too_many_arguments)]
+
 mod body_bindings;
 mod locale_bindings;
 mod pathfinding_bindings;

@@ -228,24 +228,29 @@ impl SimSystem for PopulationRuntimeSystem {
                 (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
         }
 
-        let mut age = Age::default();
-        age.ticks = 0;
-        age.years = 0.0;
-        age.stage = GrowthStage::Infant;
-        age.alive = true;
-
-        let mut identity = Identity::default();
-        identity.birth_tick = tick;
-        identity.settlement_id = Some(settlement_id);
-        identity.growth_stage = GrowthStage::Infant;
-        identity.sex = if resources.rng.gen_bool(0.5) {
-            Sex::Male
-        } else {
-            Sex::Female
+        let age = Age {
+            ticks: 0,
+            years: 0.0,
+            stage: GrowthStage::Infant,
+            alive: true,
         };
 
-        let mut behavior = Behavior::default();
-        behavior.current_action = ActionType::Idle;
+        let identity = Identity {
+            birth_tick: tick,
+            settlement_id: Some(settlement_id),
+            growth_stage: GrowthStage::Infant,
+            sex: if resources.rng.gen_bool(0.5) {
+                Sex::Male
+            } else {
+                Sex::Female
+            },
+            ..Identity::default()
+        };
+
+        let behavior = Behavior {
+            current_action: ActionType::Idle,
+            ..Behavior::default()
+        };
 
         let entity = world.spawn((
             age,

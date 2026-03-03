@@ -39,7 +39,7 @@ impl GameCalendar {
     /// Advance the calendar by 1 tick
     pub fn advance_tick(&mut self) {
         self.tick += 1;
-        if self.tick % self.ticks_per_day as u64 == 0 {
+        if self.tick.is_multiple_of(self.ticks_per_day as u64) {
             self.day_of_year += 1;
             if self.day_of_year > self.days_per_year {
                 self.day_of_year = 1;

@@ -1707,9 +1707,9 @@ pub fn family_newborn_health(
     };
 
     let nutrition_factor = 0.6 + (1.1 - 0.6) * clamp_f32(mother_nutrition, 0.0, 1.0);
-    let age_factor = if mother_age < 16.0 || mother_age > 45.0 {
+    let age_factor = if !(16.0..=45.0).contains(&mother_age) {
         0.7
-    } else if mother_age < 18.0 || mother_age > 40.0 {
+    } else if !(18.0..=40.0).contains(&mother_age) {
         0.85
     } else {
         1.0

@@ -1,3 +1,8 @@
+// Test binary exercises simulation kernels with many-parameter scientific functions.
+#![allow(clippy::too_many_arguments)]
+#![allow(clippy::needless_range_loop)]
+#![allow(clippy::type_complexity)]
+
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,

@@ -38,16 +38,13 @@ pub enum HexacoFacet {
 }
 
 /// Bowlby (1969) attachment types
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum AttachmentType {
+    #[default]
     Secure,    // ~55%
     Anxious,   // ~20%
     Avoidant,  // ~20%
     Fearful,   // ~5%
-}
-
-impl Default for AttachmentType {
-    fn default() -> Self { Self::Secure }
 }
 
 // ═══════════════════════════════════════
@@ -117,17 +114,14 @@ pub const VALUE_COUNT: usize = 33;
 // Stress (Lazarus stress appraisal, 5 states)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum StressState {
+    #[default]
     Calm,
     Alert,
     Resistance,
     Exhaustion,
     Collapse,
-}
-
-impl Default for StressState {
-    fn default() -> Self { Self::Calm }
 }
 
 // ═══════════════════════════════════════
@@ -153,12 +147,13 @@ pub enum MentalBreakType {
 // Thresholds in ticks: infant<13140, toddler<26280, child<52560, teen<65700, adult<245280, elder≥245280
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord, Default)]
 pub enum GrowthStage {
     Infant,   // < 3y  (< 13140 ticks)
     Toddler,  // < 6y  (< 26280 ticks)
     Child,    // < 12y (< 52560 ticks)
     Teen,     // < 15y (< 65700 ticks)
+    #[default]
     Adult,    // < 56y (< 245280 ticks)
     Elder,    // 56+y  (≥ 245280 ticks)
 }
@@ -186,31 +181,25 @@ impl GrowthStage {
     }
 }
 
-impl Default for GrowthStage {
-    fn default() -> Self { Self::Adult }
-}
-
 // ═══════════════════════════════════════
 // Sex
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum Sex {
+    #[default]
     Male,
     Female,
-}
-
-impl Default for Sex {
-    fn default() -> Self { Self::Male }
 }
 
 // ═══════════════════════════════════════
 // Social Class
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord, Default)]
 pub enum SocialClass {
     Outcast,
+    #[default]
     Commoner,
     Artisan,
     Merchant,
@@ -218,16 +207,13 @@ pub enum SocialClass {
     Ruler,
 }
 
-impl Default for SocialClass {
-    fn default() -> Self { Self::Commoner }
-}
-
 // ═══════════════════════════════════════
 // Relationship Type
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum RelationType {
+    #[default]
     Stranger,     // affinity < NETWORK_TIE_WEAK_MIN (5.0)
     Acquaintance, // 5.0 ≤ affinity < 30.0
     Friend,       // 30.0 ≤ affinity < 60.0
@@ -239,10 +225,6 @@ pub enum RelationType {
     Sibling,
     Rival,
     Enemy,
-}
-
-impl Default for RelationType {
-    fn default() -> Self { Self::Stranger }
 }
 
 // ═══════════════════════════════════════
@@ -268,8 +250,9 @@ pub const INTELLIGENCE_COUNT: usize = 8;
 // Action Type
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum ActionType {
+    #[default]
     Idle,
     Forage,
     Hunt,
@@ -298,10 +281,6 @@ pub enum ActionType {
     SeekShelter,
     SitByFire,
     VisitPartner,
-}
-
-impl Default for ActionType {
-    fn default() -> Self { Self::Idle }
 }
 
 // ═══════════════════════════════════════
@@ -336,18 +315,15 @@ pub enum ResourceType {
 // Simulation Speed
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum SimSpeed {
     Paused,
+    #[default]
     Normal,  // 1x
     Fast,    // 2x
     Faster,  // 3x
     Ultra,   // 5x
     Max,     // 10x
-}
-
-impl Default for SimSpeed {
-    fn default() -> Self { Self::Normal }
 }
 
 // ═══════════════════════════════════════
@@ -377,8 +353,9 @@ pub enum CopingStrategyId {
 // Tech State (V2 5-state system)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum TechState {
+    #[default]
     Unknown,
     KnownLow,
     KnownStable,
@@ -386,26 +363,19 @@ pub enum TechState {
     ForgottenLong,
 }
 
-impl Default for TechState {
-    fn default() -> Self { Self::Unknown }
-}
-
 // ═══════════════════════════════════════
 // Tech Era
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter, Default)]
 pub enum TechEra {
     #[strum(serialize = "stone_age")]
+    #[default]
     StoneAge,
     #[strum(serialize = "tribal")]
     Tribal,
     #[strum(serialize = "bronze_age")]
     BronzeAge,
-}
-
-impl Default for TechEra {
-    fn default() -> Self { Self::StoneAge }
 }
 
 // ═══════════════════════════════════════
@@ -429,16 +399,13 @@ pub enum DeathCause {
 // Blood Type (Layer 7)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
 pub enum BloodType {
     A,
     B,
     AB,
+    #[default]
     O,
-}
-
-impl Default for BloodType {
-    fn default() -> Self { Self::O }
 }
 
 // ═══════════════════════════════════════

@@ -739,7 +739,7 @@ impl SimSystem for BuildingEffectRuntimeSystem {
 
         let ticks_per_day = resources.calendar.ticks_per_day.max(1) as u64;
         let hour = ((resources.calendar.tick % ticks_per_day) * config::TICK_HOURS as u64) as i32;
-        let is_night = hour >= 20 || hour < 6;
+        let is_night = !(6..20).contains(&hour);
         let campfire_social_boost = body::building_campfire_social_boost(is_night, 0.01, 0.02);
 
         let mut query = world.query::<(&Position, &mut Needs)>();

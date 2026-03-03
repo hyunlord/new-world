@@ -6,7 +6,6 @@
 ///   reserve:    0-100
 ///   allostatic: 0-100
 ///   resilience: 0-100
-
 const STRESS_SCALE: f64 = 2000.0;
 const PERCENT_SCALE: f64 = 100.0;
 

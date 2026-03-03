@@ -47,6 +47,7 @@ pub(crate) fn encode_path_vec2(path: Vec<GridPos>) -> PackedVector2Array {
     packed
 }
 
+#[allow(dead_code)]
 pub(crate) fn parse_pathfind_backend(mode: &str) -> Option<u8> {
     pathfinding_core::parse_backend_mode(mode)
 }

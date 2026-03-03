@@ -777,7 +777,7 @@ impl SimSystem for MigrationRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
-        if resources.settlements.len() < 1 {
+        if resources.settlements.is_empty() {
             return;
         }
         if resources.settlements.len() as u32 >= config::MAX_SETTLEMENTS {
