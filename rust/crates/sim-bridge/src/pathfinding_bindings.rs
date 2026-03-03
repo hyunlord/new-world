@@ -1,7 +1,7 @@
 use godot::prelude::{Array, PackedInt32Array, PackedVector2Array, Vector2};
 use sim_systems::pathfinding::GridPos;
 
-use crate::pathfinding_backend;
+use crate::pathfinding_core;
 
 pub(crate) fn encode_path_groups_xy(path_groups: Vec<Vec<GridPos>>) -> Array<PackedInt32Array> {
     let mut output: Array<PackedInt32Array> = Array::new();
@@ -48,7 +48,7 @@ pub(crate) fn encode_path_vec2(path: Vec<GridPos>) -> PackedVector2Array {
 }
 
 pub(crate) fn parse_pathfind_backend(mode: &str) -> Option<u8> {
-    pathfinding_backend::parse_backend_mode(mode)
+    pathfinding_core::parse_backend_mode(mode)
 }
 
 #[inline]
@@ -61,13 +61,13 @@ pub(crate) fn normalize_max_steps(max_steps: i32) -> usize {
 }
 
 pub(crate) fn resolve_backend_mode_code(mode: u8) -> u8 {
-    pathfinding_backend::resolve_backend_mode_code(mode)
+    pathfinding_core::resolve_backend_mode_code_core(mode)
 }
 
 pub(crate) fn backend_mode_to_str(mode: u8) -> &'static str {
-    pathfinding_backend::backend_mode_to_str(mode)
+    pathfinding_core::backend_mode_to_str_core(mode)
 }
 
 pub(crate) fn resolve_backend_mode(mode: u8) -> &'static str {
-    pathfinding_backend::resolve_backend_mode_str(mode)
+    pathfinding_core::resolve_backend_mode_str_core(mode)
 }

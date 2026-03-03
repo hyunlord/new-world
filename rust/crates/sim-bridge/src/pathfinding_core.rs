@@ -2,18 +2,100 @@ use godot::prelude::Vector2;
 use sim_systems::pathfinding::{
     find_path, find_path_with_workspace, GridCostMap, GridPos, PathfindWorkspace,
 };
+use std::sync::atomic::{AtomicU64, AtomicU8, Ordering};
 
-use crate::pathfinding_backend::{
-    get_backend_mode, has_gpu_backend, read_dispatch_counts, record_dispatch,
-    reset_dispatch_counts, set_backend_mode, PATHFIND_BACKEND_GPU,
-};
-use crate::pathfinding_bindings::{
-    backend_mode_to_str, parse_pathfind_backend, resolve_backend_mode, resolve_backend_mode_code,
-};
-use crate::pathfinding_gpu::{
-    pathfind_grid_batch_tuple_gpu_bytes, pathfind_grid_batch_vec2_gpu_bytes,
-    pathfind_grid_batch_xy_gpu_bytes, pathfind_grid_gpu_bytes,
-};
+
+pub const PATHFIND_BACKEND_AUTO: u8 = 0;
+pub const PATHFIND_BACKEND_CPU: u8 = 1;
+pub const PATHFIND_BACKEND_GPU: u8 = 2;
+const GPU_BACKEND_ACTIVE: bool = false;
+
+static PATHFIND_BACKEND_MODE: AtomicU8 = AtomicU8::new(PATHFIND_BACKEND_AUTO);
+static CPU_DISPATCH_COUNT: AtomicU64 = AtomicU64::new(0);
+static GPU_DISPATCH_COUNT: AtomicU64 = AtomicU64::new(0);
+
+#[inline]
+pub(crate) fn set_backend_mode(mode: u8) {
+    PATHFIND_BACKEND_MODE.store(mode, Ordering::Relaxed);
+}
+
+#[inline]
+pub(crate) fn get_backend_mode() -> u8 {
+    PATHFIND_BACKEND_MODE.load(Ordering::Relaxed)
+}
+
+#[inline]
+pub(crate) fn parse_backend_mode(mode: &str) -> Option<u8> {
+    match mode.to_ascii_lowercase().as_str() {
+        "auto" => Some(PATHFIND_BACKEND_AUTO),
+        "cpu" => Some(PATHFIND_BACKEND_CPU),
+        "gpu" => Some(PATHFIND_BACKEND_GPU),
+        _ => None,
+    }
+}
+
+#[inline]
+pub(crate) fn backend_mode_to_str_core(mode: u8) -> &'static str {
+    match mode {
+        PATHFIND_BACKEND_CPU => "cpu",
+        PATHFIND_BACKEND_GPU => "gpu",
+        _ => "auto",
+    }
+}
+
+#[inline]
+pub(crate) fn resolve_backend_mode_code_core(mode: u8) -> u8 {
+    match mode {
+        PATHFIND_BACKEND_CPU => PATHFIND_BACKEND_CPU,
+        PATHFIND_BACKEND_GPU => {
+            if cfg!(feature = "gpu") && GPU_BACKEND_ACTIVE {
+                PATHFIND_BACKEND_GPU
+            } else {
+                PATHFIND_BACKEND_CPU
+            }
+        }
+        _ => PATHFIND_BACKEND_CPU,
+    }
+}
+
+#[inline]
+pub(crate) fn resolve_backend_mode_str_core(mode: u8) -> &'static str {
+    match resolve_backend_mode_code_core(mode) {
+        PATHFIND_BACKEND_GPU => "gpu",
+        _ => "cpu",
+    }
+}
+
+#[inline]
+pub(crate) fn has_gpu_backend() -> bool {
+    cfg!(feature = "gpu") && GPU_BACKEND_ACTIVE
+}
+
+#[inline]
+pub(crate) fn record_dispatch(resolved_mode: u8) {
+    match resolved_mode {
+        PATHFIND_BACKEND_GPU => {
+            GPU_DISPATCH_COUNT.fetch_add(1, Ordering::Relaxed);
+        }
+        _ => {
+            CPU_DISPATCH_COUNT.fetch_add(1, Ordering::Relaxed);
+        }
+    }
+}
+
+#[inline]
+pub(crate) fn read_dispatch_counts() -> (u64, u64) {
+    (
+        CPU_DISPATCH_COUNT.load(Ordering::Relaxed),
+        GPU_DISPATCH_COUNT.load(Ordering::Relaxed),
+    )
+}
+
+#[inline]
+pub(crate) fn reset_dispatch_counts() {
+    CPU_DISPATCH_COUNT.store(0, Ordering::Relaxed);
+    GPU_DISPATCH_COUNT.store(0, Ordering::Relaxed);
+}
 
 /// Flat-grid input for pathfinding requests crossing the bridge boundary.
 ///
@@ -98,7 +180,7 @@ pub fn reset_pathfind_backend_dispatch_counts() {
 
 /// Sets configured pathfinding backend mode from string (`auto`, `cpu`, `gpu`).
 pub fn set_pathfind_backend_mode(mode: &str) -> bool {
-    let Some(parsed) = parse_pathfind_backend(mode) else {
+    let Some(parsed) = parse_backend_mode(mode) else {
         return false;
     };
     set_backend_mode(parsed);
@@ -108,13 +190,13 @@ pub fn set_pathfind_backend_mode(mode: &str) -> bool {
 /// Returns configured pathfinding backend mode string.
 pub fn get_pathfind_backend_mode() -> &'static str {
     let mode = get_backend_mode();
-    backend_mode_to_str(mode)
+    backend_mode_to_str_core(mode)
 }
 
 /// Returns resolved pathfinding backend mode string (feature-gated resolution).
 pub fn resolve_pathfind_backend_mode() -> &'static str {
     let mode = get_backend_mode();
-    resolve_backend_mode(mode)
+    resolve_backend_mode_str_core(mode)
 }
 
 /// Returns whether GPU backend is available in this build.
@@ -414,7 +496,7 @@ pub fn pathfind_grid_batch_xy_dispatch_bytes(
 }
 
 pub(crate) fn dispatch_pathfind_grid_bytes(
-    backend_mode: u8,
+    _backend_mode: u8,
     width: i32,
     height: i32,
     walkable: &[u8],
@@ -425,20 +507,12 @@ pub(crate) fn dispatch_pathfind_grid_bytes(
     to_y: i32,
     max_steps: usize,
 ) -> Result<Vec<GridPos>, PathfindError> {
-    let resolved_mode = resolve_backend_mode_code(backend_mode);
-    record_dispatch(resolved_mode);
-    match resolved_mode {
-        PATHFIND_BACKEND_GPU => pathfind_grid_gpu_bytes(
-            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-        ),
-        _ => pathfind_grid_bytes(
-            width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
-        ),
-    }
+    record_dispatch(PATHFIND_BACKEND_CPU);
+    pathfind_grid_bytes(width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps)
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_vec2_bytes(
-    backend_mode: u8,
+    _backend_mode: u8,
     width: i32,
     height: i32,
     walkable: &[u8],
@@ -447,32 +521,12 @@ pub(crate) fn dispatch_pathfind_grid_batch_vec2_bytes(
     to_points: &[Vector2],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    let resolved_mode = resolve_backend_mode_code(backend_mode);
-    record_dispatch(resolved_mode);
-    match resolved_mode {
-        PATHFIND_BACKEND_GPU => pathfind_grid_batch_vec2_gpu_bytes(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_points,
-            to_points,
-            max_steps,
-        ),
-        _ => pathfind_grid_batch_vec2_bytes(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_points,
-            to_points,
-            max_steps,
-        ),
-    }
+    record_dispatch(PATHFIND_BACKEND_CPU);
+    pathfind_grid_batch_vec2_bytes(width, height, walkable, move_cost, from_points, to_points, max_steps)
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_bytes(
-    backend_mode: u8,
+    _backend_mode: u8,
     width: i32,
     height: i32,
     walkable: &[u8],
@@ -481,32 +535,12 @@ pub(crate) fn dispatch_pathfind_grid_batch_bytes(
     to_points: &[(i32, i32)],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    let resolved_mode = resolve_backend_mode_code(backend_mode);
-    record_dispatch(resolved_mode);
-    match resolved_mode {
-        PATHFIND_BACKEND_GPU => pathfind_grid_batch_tuple_gpu_bytes(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_points,
-            to_points,
-            max_steps,
-        ),
-        _ => pathfind_grid_batch_bytes(
-            width,
-            height,
-            walkable,
-            move_cost,
-            from_points,
-            to_points,
-            max_steps,
-        ),
-    }
+    record_dispatch(PATHFIND_BACKEND_CPU);
+    pathfind_grid_batch_bytes(width, height, walkable, move_cost, from_points, to_points, max_steps)
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_xy_bytes(
-    backend_mode: u8,
+    _backend_mode: u8,
     width: i32,
     height: i32,
     walkable: &[u8],
@@ -515,15 +549,7 @@ pub(crate) fn dispatch_pathfind_grid_batch_xy_bytes(
     to_xy: &[i32],
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
-    let resolved_mode = resolve_backend_mode_code(backend_mode);
-    record_dispatch(resolved_mode);
-    match resolved_mode {
-        PATHFIND_BACKEND_GPU => pathfind_grid_batch_xy_gpu_bytes(
-            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
-        ),
-        _ => pathfind_grid_batch_xy_bytes(
-            width, height, walkable, move_cost, from_xy, to_xy, max_steps,
-        ),
-    }
+    record_dispatch(PATHFIND_BACKEND_CPU);
+    pathfind_grid_batch_xy_bytes(width, height, walkable, move_cost, from_xy, to_xy, max_steps)
 }
 

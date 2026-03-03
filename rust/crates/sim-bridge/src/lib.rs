@@ -6,10 +6,8 @@
 
 mod body_bindings;
 mod locale_bindings;
-mod pathfinding_backend;
 mod pathfinding_bindings;
 mod pathfinding_core;
-mod pathfinding_gpu;
 mod runtime_commands;
 mod runtime_bindings;
 mod runtime_dict;
@@ -23,7 +21,7 @@ use body_bindings::{
     vec_i32_to_packed, vec_u8_to_packed,
 };
 use locale_bindings::{clear_fluent_source, format_fluent_message, store_fluent_source};
-use pathfinding_backend::{
+use pathfinding_core::{
     get_backend_mode, has_gpu_backend, read_dispatch_counts, reset_dispatch_counts,
     PATHFIND_BACKEND_GPU,
 };
@@ -3735,7 +3733,7 @@ unsafe impl ExtensionLibrary for SimBridgeExtension {}
 
 #[cfg(test)]
 mod tests {
-    use super::pathfinding_backend::{
+    use super::pathfinding_core::{
         read_dispatch_counts, reset_dispatch_counts, PATHFIND_BACKEND_AUTO, PATHFIND_BACKEND_CPU,
         PATHFIND_BACKEND_GPU,
     };
