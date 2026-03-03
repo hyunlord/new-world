@@ -1303,3 +1303,11 @@
 - Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
 - Remaining (strict state-write basis): 0.00%
 - Details: [0159-runtime-dict-helper-module-split.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0159-runtime-dict-helper-module-split.md)
+
+### 0160 - test re-export cleanup for runtime events
+- Commit: `[rust-r0-260] Remove test-only runtime event re-export from sim-bridge lib`
+- Reported implementation coverage (legacy `rust_runtime_impl`): 100.00% (46/46)
+- Actual state-write coverage (strict): 100.00% (46/46)
+- Owner transfer coverage (`exec_owner=rust`): 100.00% (46/46)
+- Remaining (strict state-write basis): 0.00%
+- Details: [0160-test-reexport-cleanup-for-runtime-events.md](/Users/rexxa/github/new-world-wt/lead/reports/rust-migration/0160-test-reexport-cleanup-for-runtime-events.md)

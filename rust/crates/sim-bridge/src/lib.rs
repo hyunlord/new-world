@@ -63,8 +63,6 @@ use runtime_registry::{
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
 
 use runtime_events::game_event_to_v2_dict;
-#[cfg(test)]
-pub(crate) use runtime_events::game_event_type_id;
 
 #[derive(GodotClass)]
 #[class(base=Object)]
@@ -4334,13 +4332,13 @@ mod tests {
     #[test]
     fn game_event_type_id_maps_new_v2_event_variants() {
         assert_eq!(
-            super::game_event_type_id(&GameEvent::EntitySpawned {
+            super::runtime_events::game_event_type_id(&GameEvent::EntitySpawned {
                 entity_id: EntityId(1),
             }),
             super::runtime_events::EVENT_TYPE_ID_ENTITY_SPAWNED
         );
         assert_eq!(
-            super::game_event_type_id(&GameEvent::ResourceGathered {
+            super::runtime_events::game_event_type_id(&GameEvent::ResourceGathered {
                 entity_id: EntityId(2),
                 resource: "food".to_string(),
                 amount: 3.0,
@@ -4348,21 +4346,21 @@ mod tests {
             super::runtime_events::EVENT_TYPE_ID_RESOURCE_GATHERED
         );
         assert_eq!(
-            super::game_event_type_id(&GameEvent::SocialEventOccurred {
+            super::runtime_events::game_event_type_id(&GameEvent::SocialEventOccurred {
                 event_type: "action_chosen:forage".to_string(),
                 participants: vec![EntityId(4), EntityId(7)],
             }),
             super::runtime_events::EVENT_TYPE_ID_SOCIAL_EVENT_OCCURRED
         );
         assert_eq!(
-            super::game_event_type_id(&GameEvent::TechDiscovered {
+            super::runtime_events::game_event_type_id(&GameEvent::TechDiscovered {
                 settlement_id: SettlementId(5),
                 tech_id: "agriculture".to_string(),
             }),
             super::runtime_events::EVENT_TYPE_ID_TECH_DISCOVERED
         );
         assert_eq!(
-            super::game_event_type_id(&GameEvent::EraAdvanced {
+            super::runtime_events::game_event_type_id(&GameEvent::EraAdvanced {
                 settlement_id: SettlementId(9),
                 new_era: "bronze_age".to_string(),
             }),
