@@ -1,8 +1,8 @@
 use godot::builtin::GString;
 use godot::prelude::{Array, VarDictionary};
 
+use crate::runtime_dict::{dict_get_bool, dict_get_i32, dict_get_string};
 use crate::runtime_bindings::{is_supported_compute_mode, normalize_compute_mode_for_domain};
-use crate::runtime_events::{dict_get_bool, dict_get_i32, dict_get_string};
 use crate::runtime_registry::{
     clamp_speed_index, register_supported_rust_system, runtime_supports_rust_system,
     runtime_system_key_from_name, RuntimeState, RuntimeSystemEntry, RUNTIME_COMPUTE_DOMAINS,

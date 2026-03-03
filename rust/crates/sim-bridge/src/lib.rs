@@ -12,6 +12,7 @@ mod pathfinding_core;
 mod pathfinding_gpu;
 mod runtime_commands;
 mod runtime_bindings;
+mod runtime_dict;
 mod runtime_events;
 mod runtime_registry;
 mod ws2_codec;
