@@ -83,6 +83,11 @@ const VICTIM_MODIFIERS: Dictionary = {
 	"parent": 2.2,
 }
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_CONTEXT_METHOD: String = "body_trait_violation_context_modifier"
+const _SIM_BRIDGE_FACET_METHOD: String = "body_trait_violation_facet_scale"
+const _SIM_BRIDGE_INTRUSIVE_METHOD: String = "body_trait_violation_intrusive_chance"
+
 # ── 멤버 변수 ──────────────────────────────────────────────────────────────────
 var _trait_defs_indexed: Dictionary = {}  # {trait_id: trait_def} — 빠른 lookup용
 var _action_violation_map: Dictionary = {}  # {action_id: [{trait_id, base_stress}]} — 미리 계산
@@ -90,6 +95,8 @@ var _stress_system = null          # 참조 주입 (main.gd)
 var _trauma_scar_system = null     # Phase 3A 연동 (참조 주입)
 var _entity_manager = null         # 참조 주입
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 # PTG 누적 추적: {entity_id: {tick_start, accumulated_stress}}
 var _ptg_tracker: Dictionary = {}
@@ -110,6 +117,25 @@ func init(deps: Dictionary) -> void:
 	_entity_manager = deps.get("entity_manager")
 	_rng.randomize()
 	_load_trait_defs()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_CONTEXT_METHOD) \
+	and node.has_method(_SIM_BRIDGE_FACET_METHOD) \
+	and node.has_method(_SIM_BRIDGE_INTRUSIVE_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## trait_definitions_fixed.json 로드 + action → violation_stress 역색인 구축
@@ -298,12 +324,27 @@ func _process_intrusive_thoughts(entity: RefCounted, current_tick: int) -> void:
 
 		# 시간 경과에 따른 확률 감소 (지수 감쇠)
 		var ticks_since: int = current_tick - int(record.get("last_tick", current_tick))
-		var decay_factor: float = exp(-float(ticks_since) / float(VIOLATION_HISTORY_DECAY_TICKS))
-		var chance: float = INTRUSIVE_BASE_CHANCE * (ptsd_mult - 1.0) * decay_factor
-
-		# Phase 3A trauma_scar 있으면 확률 2배
-		if "trauma_scars" in entity and not entity.trauma_scars.is_empty():
-			chance *= 2.0
+		var has_trauma_scars: bool = "trauma_scars" in entity and not entity.trauma_scars.is_empty()
+		var chance: float = 0.0
+		var used_rust_chance: bool = false
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_chance_variant: Variant = bridge.call(
+				_SIM_BRIDGE_INTRUSIVE_METHOD,
+				INTRUSIVE_BASE_CHANCE,
+				ptsd_mult,
+				ticks_since,
+				VIOLATION_HISTORY_DECAY_TICKS,
+				has_trauma_scars
+			)
+			if rust_chance_variant is float:
+				chance = float(rust_chance_variant)
+				used_rust_chance = true
+		if not used_rust_chance:
+			var decay_factor: float = exp(-float(ticks_since) / float(VIOLATION_HISTORY_DECAY_TICKS))
+			chance = INTRUSIVE_BASE_CHANCE * (ptsd_mult - 1.0) * decay_factor
+			if has_trauma_scars:
+				chance *= 2.0
 
 		if _rng.randf() < chance:
 			var stress_amount: float = 15.0 + _rng.randf() * 25.0  # 15~40
@@ -435,15 +476,36 @@ func _get_settlement_norm_modifier(_settlement, _action: String) -> float:
 
 ## context dict → multiplier
 func _calc_context_modifier(context: Dictionary) -> float:
-	if context.get("is_habit", false):
+	var is_habit: bool = context.get("is_habit", false)
+	var forced_by_authority: bool = context.get("forced_by_authority", false)
+	var survival_necessity: bool = context.get("survival_necessity", false)
+	var witness_rel = context.get("witness_relationship", "")
+	var no_witness: bool = witness_rel == "none" or witness_rel.is_empty()
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_context_variant: Variant = bridge.call(
+			_SIM_BRIDGE_CONTEXT_METHOD,
+			is_habit,
+			forced_by_authority,
+			survival_necessity,
+			no_witness,
+			CONTEXT_MODIFIERS.get("repeated_habit", 0.0),
+			CONTEXT_MODIFIERS.get("forced_by_authority", 0.5),
+			CONTEXT_MODIFIERS.get("survival_necessity", 0.4),
+			CONTEXT_MODIFIERS.get("no_witness", 0.85)
+		)
+		if rust_context_variant is float:
+			return float(rust_context_variant)
+
+	if is_habit:
 		return CONTEXT_MODIFIERS.get("repeated_habit", 0.0)
 	var mult: float = 1.0
-	if context.get("forced_by_authority", false):
+	if forced_by_authority:
 		mult *= CONTEXT_MODIFIERS.get("forced_by_authority", 0.5)
-	if context.get("survival_necessity", false):
+	if survival_necessity:
 		mult *= CONTEXT_MODIFIERS.get("survival_necessity", 0.4)
-	var witness_rel = context.get("witness_relationship", "")
-	if witness_rel == "none" or witness_rel.is_empty():
+	if no_witness:
 		mult *= CONTEXT_MODIFIERS.get("no_witness", 0.85)
 	return mult
 
@@ -474,6 +536,15 @@ func _calc_facet_scale(entity: RefCounted, trait_id: String) -> float:
 		var facets: Dictionary = entity.personality.facets
 		facet_val = float(facets.get(axis, 0.5))
 	var threshold: float = 0.6
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_scale_variant: Variant = bridge.call(
+			_SIM_BRIDGE_FACET_METHOD,
+			facet_val,
+			threshold
+		)
+		if rust_scale_variant is float:
+			return float(rust_scale_variant)
 	if facet_val <= threshold:
 		return 1.0
 	return (facet_val - threshold) / (1.0 - threshold)

@@ -14,11 +14,15 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
 const TechState = preload("res://scripts/core/tech/tech_state.gd")
 const KnowledgeType = preload("res://scripts/core/tech/knowledge_type.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_TECH_MEMORY_DECAY_METHOD: String = "body_tech_cultural_memory_decay"
 
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
 var _chronicle
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -33,6 +37,22 @@ func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
 	_settlement_manager = p_settlement_manager
 	_tech_tree_manager = p_tech_tree_manager
 	_chronicle = p_chronicle
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_TECH_MEMORY_DECAY_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -223,7 +243,7 @@ func _check_stabilization(settlement: RefCounted, tech_id: String,
 				"[Settlement %d] %s knowledge is now stable" % [settlement.id, tech_id],
 				3, [], tick,
 				{"key": "TECH_STABILIZED_FMT",
-				"params": {"tech": tech_id, "settlement": str(settlement.id)}})
+				"params": {"tech": tech_id, "settlement": settlement.id}})
 
 
 ## KNOWN → FORGOTTEN_RECENT: atrophy exceeded grace period.
@@ -266,7 +286,7 @@ func _transition_to_forgotten(settlement: RefCounted, tech_id: String,
 				4, [], tick,
 				{"key": "TECH_FALLBACK_FMT",
 				"params": {"tech": tech_id, "fallback": fallback,
-					"settlement": str(settlement.id)}})
+					"settlement": settlement.id}})
 
 	## Emit tech_lost signal
 	SimulationBus.tech_lost.emit(
@@ -277,7 +297,7 @@ func _transition_to_forgotten(settlement: RefCounted, tech_id: String,
 			"[Settlement %d] lost %s" % [settlement.id, tech_id],
 			5, [], tick,
 			{"key": "TECH_LOST_FMT",
-			"params": {"tech": tech_id, "settlement": str(settlement.id)}})
+			"params": {"tech": tech_id, "settlement": settlement.id}})
 
 
 ## FORGOTTEN_RECENT → FORGOTTEN_LONG after N years.
@@ -319,10 +339,24 @@ func _decay_cultural_memory(_settlement: RefCounted, tech_id: String,
 		## forgotten_long decays slower — oral legends fade slowly
 		decay_rate = base_decay * GameConfig.TECH_FORGOTTEN_LONG_DECAY_MULTIPLIER
 
-	cts["cultural_memory"] = maxf(
-		float(cts.get("cultural_memory", 1.0)) - decay_rate,
+	var current_memory: float = float(cts.get("cultural_memory", 1.0))
+	var next_memory: float = maxf(
+		current_memory - decay_rate,
 		GameConfig.TECH_CULTURAL_MEMORY_FLOOR
 	)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_TECH_MEMORY_DECAY_METHOD,
+			current_memory,
+			base_decay,
+			float(GameConfig.TECH_FORGOTTEN_LONG_DECAY_MULTIPLIER),
+			float(GameConfig.TECH_CULTURAL_MEMORY_FLOOR),
+			state_str == "forgotten_recent",
+		)
+		if rust_variant != null:
+			next_memory = float(rust_variant)
+	cts["cultural_memory"] = next_memory
 
 
 ## ── Building/Institution Helpers ─────────────────────────────────────────────

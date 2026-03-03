@@ -4,6 +4,8 @@
 ## 참조: const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
 extends RefCounted
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+
 ## ── 유전 기반 (태생 결정, 불변) ───────────────────────────
 ## potential: 0~10,000 int. 훈련 없이 나이 커브만 적용한 기준값
 var potential: Dictionary = {}
@@ -59,10 +61,22 @@ const TRAINING_CEILING: Dictionary = {
 	"tou": 0.20,
 	"rec": 0.60,
 }
+const _AGE_CURVE_AXES: Array[String] = ["str", "agi", "end", "tou", "rec", "dr"]
+const _AGE_CURVE_AXIS_COUNT: int = 6
+const _AGE_TRAINABILITY_AXES: Array[String] = ["str", "agi", "end", "tou", "rec"]
+const _AGE_TRAINABILITY_AXIS_COUNT: int = 5
+const _TRAINING_GAIN_AXES: Array[String] = ["str", "agi", "end", "tou", "rec"]
+const _TRAINING_GAIN_AXIS_COUNT: int = 5
+
+static var _bridge_checked: bool = false
+static var _bridge_ref: Object = null
 
 ## 단일 축 나이 커브 계산 (0.02 ~ 1.0)
 ## grow(로지스틱) × decl1(초중년 감쇠) × decl2(노년 가속 감쇠)
 static func compute_age_curve(axis: String, age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_compute_age_curve", [axis, age_years])
+	if rust_result != null:
+		return float(rust_result)
 	if not CURVE_PARAMS.has(axis):
 		return 0.5
 	var p: Dictionary = CURVE_PARAMS[axis]
@@ -75,9 +89,59 @@ static func compute_age_curve(axis: String, age_years: float) -> float:
 		return clampf(raw + maternal_bonus, 0.02, 1.0)
 	return raw
 
+
+## 6축 나이 커브 배치 계산 (str/agi/end/tou/rec/dr)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+static func compute_age_curve_batch(age_years: float) -> Dictionary:
+	var rust_result: Variant = _call_sim_bridge("body_compute_age_curves", [age_years])
+	if rust_result is PackedFloat32Array:
+		var packed: PackedFloat32Array = rust_result
+		if packed.size() >= _AGE_CURVE_AXIS_COUNT:
+			return {
+				"str": float(packed[0]),
+				"agi": float(packed[1]),
+				"end": float(packed[2]),
+				"tou": float(packed[3]),
+				"rec": float(packed[4]),
+				"dr": float(packed[5]),
+			}
+
+	var curves: Dictionary = {}
+	for i in range(_AGE_CURVE_AXES.size()):
+		var axis: String = _AGE_CURVE_AXES[i]
+		curves[axis] = compute_age_curve(axis, age_years)
+	return curves
+
+
+static func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _bridge_ref
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root != null:
+		var node_from_root: Node = tree.root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+		if node_from_root != null:
+			_bridge_ref = node_from_root
+			return _bridge_ref
+	if Engine.has_singleton(_SIM_BRIDGE_NODE_NAME):
+		_bridge_ref = Engine.get_singleton(_SIM_BRIDGE_NODE_NAME)
+	return _bridge_ref
+
+
+static func _call_sim_bridge(method_name: String, args: Array):
+	var bridge: Object = _get_sim_bridge()
+	if bridge == null:
+		return null
+	if not bridge.has_method(method_name):
+		return null
+	return bridge.callv(method_name, args)
+
 ## 나이별 훈련 효율 배수 반환 (0.0~1.0)
 ## 과거 축적 gain은 유지됨 — 오직 "지금 훈련 효과"만 결정
 static func get_age_trainability_modifier(axis: String, age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifier", [axis, age_years])
+	if rust_result != null:
+		return float(rust_result)
 	match axis:
 		"str":
 			if age_years < 13.0: return 0.60
@@ -118,19 +182,252 @@ static func get_age_trainability_modifier(axis: String, age_years: float) -> flo
 			else: return 0.25
 	return 1.00
 
+
+## REC 전용 나이별 훈련 효율 배수 반환 (0.0~1.0)
+## 휴식 경로 hot path 최적화를 위해 전용 bridge 메서드를 우선 사용.
+static func get_rec_age_trainability_modifier(age_years: float) -> float:
+	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifier_rec", [age_years])
+	if rust_result != null:
+		return float(rust_result)
+	return get_age_trainability_modifier("rec", age_years)
+
+
+## 행동 중 에너지 소모량 계산
+## needs_system의 action energy cost 수식을 Rust 우선 + GDScript fallback으로 계산.
+static func compute_action_energy_cost(end_norm: float) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"body_action_energy_cost",
+		[
+			GameConfig.ENERGY_ACTION_COST,
+			end_norm,
+			GameConfig.BODY_END_COST_REDUCTION
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+	return GameConfig.ENERGY_ACTION_COST * (1.0 - GameConfig.BODY_END_COST_REDUCTION * end_norm)
+
+
+## 휴식 중 에너지 회복량 계산
+## needs_system의 rest recovery 수식을 Rust 우선 + GDScript fallback으로 계산.
+static func compute_rest_energy_recovery(rec_norm: float) -> float:
+	var rust_result: Variant = _call_sim_bridge(
+		"body_rest_energy_recovery",
+		[
+			GameConfig.BODY_REST_ENERGY_RECOVERY,
+			rec_norm,
+			GameConfig.BODY_REC_RECOVERY_BONUS
+		]
+	)
+	if rust_result != null:
+		return float(rust_result)
+	return GameConfig.BODY_REST_ENERGY_RECOVERY * (1.0 + GameConfig.BODY_REC_RECOVERY_BONUS * rec_norm)
+
+
+## 5축 나이별 훈련 효율 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+static func get_age_trainability_modifier_packed(age_years: float) -> PackedFloat32Array:
+	var rust_result: Variant = _call_sim_bridge("body_age_trainability_modifiers", [age_years])
+	if rust_result is PackedFloat32Array:
+		var packed: PackedFloat32Array = rust_result
+		if packed.size() >= _AGE_TRAINABILITY_AXIS_COUNT:
+			return packed
+
+	var fallback: PackedFloat32Array = PackedFloat32Array()
+	fallback.resize(_AGE_TRAINABILITY_AXIS_COUNT)
+	for i in range(_AGE_TRAINABILITY_AXES.size()):
+		var axis: String = _AGE_TRAINABILITY_AXES[i]
+		fallback[i] = get_age_trainability_modifier(axis, age_years)
+	return fallback
+
+
+## 5축 나이별 훈련 효율 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+static func get_age_trainability_modifier_batch(age_years: float) -> Dictionary:
+	var packed: PackedFloat32Array = get_age_trainability_modifier_packed(age_years)
+	if packed.size() >= _AGE_TRAINABILITY_AXIS_COUNT:
+		return {
+			"str": float(packed[0]),
+			"agi": float(packed[1]),
+			"end": float(packed[2]),
+			"tou": float(packed[3]),
+			"rec": float(packed[4]),
+		}
+	return {
+		"str": 1.0,
+		"agi": 1.0,
+		"end": 1.0,
+		"tou": 1.0,
+		"rec": 1.0,
+	}
+
 ## 훈련으로 추가된 능력치 반환 (int)
 ## DR은 훈련 미적용 (innate_immunity 고정)
 func calc_training_gain(axis: String) -> int:
 	if axis == "dr" or not trainability.has(axis):
 		return 0
-	var pot: int = potential.get(axis, 700)
-	var max_gain: float = float(pot) * TRAINING_CEILING.get(axis, 0.5)
-	var xp: float = training_xp.get(axis, 0.0)
+	var pot: int = int(potential.get(axis, 700))
+	var training_ceiling: float = float(TRAINING_CEILING.get(axis, 0.5))
+	var trainability_value: int = int(trainability.get(axis, 500))
+	var xp: float = float(training_xp.get(axis, 0.0))
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_training_gain",
+		[
+			pot,
+			trainability_value,
+			xp,
+			training_ceiling,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result != null:
+		return int(rust_result)
+
+	var max_gain: float = float(pot) * training_ceiling
 	var xp_progress: float = clampf(xp / GameConfig.XP_FOR_FULL_PROGRESS, 0.0, 1.0)
 	var xp_factor: float = 1.0 - exp(-3.0 * xp_progress)
-	var train_factor: float = clampf(float(trainability.get(axis, 500)) / 500.0, 0.1, 2.0)
+	var train_factor: float = clampf(float(trainability_value) / 500.0, 0.1, 2.0)
 	var gain: float = max_gain * xp_factor * train_factor
 	return clampi(int(gain), 0, int(max_gain * 2.0))
+
+
+## 훈련 gain 5축 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+func calc_training_gain_packed() -> PackedInt32Array:
+	var potentials: PackedInt32Array = PackedInt32Array()
+	var trainabilities: PackedInt32Array = PackedInt32Array()
+	var xps: PackedFloat32Array = PackedFloat32Array()
+	var training_ceilings: PackedFloat32Array = PackedFloat32Array()
+
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		potentials.append(int(potential.get(axis, 700)))
+		var has_trainability: bool = trainability.has(axis)
+		if has_trainability:
+			trainabilities.append(int(trainability.get(axis, 500)))
+			xps.append(float(training_xp.get(axis, 0.0)))
+			training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+		else:
+			trainabilities.append(-1)
+			xps.append(0.0)
+			training_ceilings.append(0.0)
+
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_training_gains",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result is PackedInt32Array:
+		var packed: PackedInt32Array = rust_result
+		if packed.size() >= _TRAINING_GAIN_AXIS_COUNT:
+			return packed
+
+	var fallback: PackedInt32Array = PackedInt32Array()
+	fallback.resize(_TRAINING_GAIN_AXIS_COUNT)
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		fallback[i] = calc_training_gain(axis)
+	return fallback
+
+
+## 훈련 gain 5축 배치 계산 (str/agi/end/tou/rec)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 단일 계산으로 fallback.
+func calc_training_gain_batch() -> Dictionary:
+	var packed: PackedInt32Array = calc_training_gain_packed()
+	if packed.size() >= _TRAINING_GAIN_AXIS_COUNT:
+		return {
+			"str": int(packed[0]),
+			"agi": int(packed[1]),
+			"end": int(packed[2]),
+			"tou": int(packed[3]),
+			"rec": int(packed[4]),
+		}
+	return {
+		"str": 0,
+		"agi": 0,
+		"end": 0,
+		"tou": 0,
+		"rec": 0,
+	}
+
+
+## 6축 realized 배치 계산 (str/agi/end/tou/rec/dr)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 배치/단건 계산으로 fallback.
+func calc_realized_values_packed(age_years: float) -> PackedInt32Array:
+	var potentials: PackedInt32Array = PackedInt32Array()
+	var trainabilities: PackedInt32Array = PackedInt32Array()
+	var xps: PackedFloat32Array = PackedFloat32Array()
+	var training_ceilings: PackedFloat32Array = PackedFloat32Array()
+
+	for i in range(_TRAINING_GAIN_AXES.size()):
+		var axis: String = _TRAINING_GAIN_AXES[i]
+		potentials.append(int(potential.get(axis, 700)))
+		var has_trainability: bool = trainability.has(axis)
+		if has_trainability:
+			trainabilities.append(int(trainability.get(axis, 500)))
+			xps.append(float(training_xp.get(axis, 0.0)))
+			training_ceilings.append(float(TRAINING_CEILING.get(axis, 0.5)))
+		else:
+			trainabilities.append(-1)
+			xps.append(0.0)
+			training_ceilings.append(0.0)
+	potentials.append(int(potential.get("dr", 700)))
+
+	var rust_result: Variant = _call_sim_bridge(
+		"body_calc_realized_values",
+		[
+			potentials,
+			trainabilities,
+			xps,
+			training_ceilings,
+			age_years,
+			GameConfig.XP_FOR_FULL_PROGRESS
+		]
+	)
+	if rust_result is PackedInt32Array:
+		var packed: PackedInt32Array = rust_result
+		if packed.size() >= _AGE_CURVE_AXIS_COUNT:
+			return packed
+
+	var age_curves: Dictionary = compute_age_curve_batch(age_years)
+	var gains: PackedInt32Array = calc_training_gain_packed()
+	var fallback: PackedInt32Array = PackedInt32Array()
+	fallback.resize(_AGE_CURVE_AXIS_COUNT)
+	fallback[0] = clampi(int(float(potential.get("str", 700) + gains[0]) * float(age_curves.get("str", 0.5))), 0, 15000)
+	fallback[1] = clampi(int(float(potential.get("agi", 700) + gains[1]) * float(age_curves.get("agi", 0.5))), 0, 15000)
+	fallback[2] = clampi(int(float(potential.get("end", 700) + gains[2]) * float(age_curves.get("end", 0.5))), 0, 15000)
+	fallback[3] = clampi(int(float(potential.get("tou", 700) + gains[3]) * float(age_curves.get("tou", 0.5))), 0, 15000)
+	fallback[4] = clampi(int(float(potential.get("rec", 700) + gains[4]) * float(age_curves.get("rec", 0.5))), 0, 15000)
+	fallback[5] = clampi(int(float(potential.get("dr", 700)) * float(age_curves.get("dr", 0.5))), 0, 10000)
+	return fallback
+
+
+## 6축 realized 배치 계산 (str/agi/end/tou/rec/dr)
+## bridge 지원 시 단일 호출로 계산하고, 미지원 시 기존 배치/단건 계산으로 fallback.
+func calc_realized_values_batch(age_years: float) -> Dictionary:
+	var packed: PackedInt32Array = calc_realized_values_packed(age_years)
+	if packed.size() >= _AGE_CURVE_AXIS_COUNT:
+		return {
+			"str": int(packed[0]),
+			"agi": int(packed[1]),
+			"end": int(packed[2]),
+			"tou": int(packed[3]),
+			"rec": int(packed[4]),
+			"dr": int(packed[5]),
+		}
+	return {
+		"str": 0,
+		"agi": 0,
+		"end": 0,
+		"tou": 0,
+		"rec": 0,
+		"dr": 0,
+	}
 
 ## 아동기 환경 평균 → trainability 영구 수정
 ## age_system이 12세 도달 시 1회 호출

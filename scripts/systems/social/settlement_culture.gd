@@ -3,6 +3,8 @@
 extends RefCounted
 
 const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_VALUE_PLASTICITY_METHOD: String = "body_value_plasticity"
 
 ## 정착지 리더 가중치 (리더의 가치관이 문화에 주는 추가 영향)
 const LEADER_INFLUENCE: float = 0.20
@@ -10,6 +12,8 @@ const LEADER_INFLUENCE: float = 0.20
 const DEVIATION_THRESHOLD: float = 0.40
 ## 동조 압력 tick당 드리프트량
 const CONFORMITY_DRIFT_RATE: float = 0.003
+static var _bridge_checked_static: bool = false
+static var _sim_bridge_static: Object = null
 
 
 ## 구성원 가치관 평균 + 리더 보정으로 shared_values 계산
@@ -51,17 +55,7 @@ static func apply_conformity_pressure(
 	enforcement_strength: float,
 	age_years: float,
 ) -> float:
-	var plasticity: float
-	if age_years < 7.0:
-		plasticity = 1.0
-	elif age_years < 15.0:
-		plasticity = lerpf(1.0, 0.70, (age_years - 7.0) / 8.0)
-	elif age_years < 25.0:
-		plasticity = lerpf(0.70, 0.30, (age_years - 15.0) / 10.0)
-	elif age_years < 50.0:
-		plasticity = lerpf(0.30, 0.10, (age_years - 25.0) / 25.0)
-	else:
-		plasticity = 0.10
+	var plasticity: float = _compute_plasticity(age_years)
 	var total_deviation: float = 0.0
 
 	for vkey in ValueDefs.KEYS:
@@ -79,6 +73,39 @@ static func apply_conformity_pressure(
 	if total_deviation > 1.0:
 		return total_deviation * enforcement_strength * 3.0
 	return 0.0
+
+
+static func _compute_plasticity(age_years: float) -> float:
+	var bridge: Object = _get_sim_bridge_static()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_VALUE_PLASTICITY_METHOD, age_years)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.10, 1.0)
+	if age_years < 7.0:
+		return 1.0
+	elif age_years < 15.0:
+		return lerpf(1.0, 0.70, (age_years - 7.0) / 8.0)
+	elif age_years < 25.0:
+		return lerpf(0.70, 0.30, (age_years - 15.0) / 10.0)
+	elif age_years < 50.0:
+		return lerpf(0.30, 0.10, (age_years - 25.0) / 25.0)
+	return 0.10
+
+
+static func _get_sim_bridge_static() -> Object:
+	if _bridge_checked_static:
+		return _sim_bridge_static
+	_bridge_checked_static = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_VALUE_PLASTICITY_METHOD):
+		_sim_bridge_static = node
+	return _sim_bridge_static
 
 
 ## 전체 가치관이 0.0인 중립 딕셔너리 반환 (내부 헬퍼)

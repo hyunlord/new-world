@@ -167,6 +167,73 @@ signal tech_imported(settlement_id: int, tech_id: String, source_settlement: int
 @warning_ignore("unused_signal")
 signal tech_spread_blocked(source_settlement: int, target_settlement: int, tech_id: String, reason: String)
 
+const _EVENT_TICK_COMPLETED: int = 1
+const _EVENT_SIMULATION_PAUSED: int = 2
+const _EVENT_SIMULATION_RESUMED: int = 3
+const _EVENT_SPEED_CHANGED: int = 4
+const _EVENT_ENTITY_SPAWNED: int = 10
+const _EVENT_ENTITY_DIED: int = 11
+const _EVENT_MENTAL_BREAK_TRIGGERED: int = 21
+const _EVENT_FAMILY_FORMED: int = 35
+const _EVENT_ERA_ADVANCED: int = 61
+
+
+func _ready() -> void:
+	var bus_v2: Object = get_node_or_null("/root/SimulationBusV2")
+	if bus_v2 == null:
+		return
+	if not bus_v2.has_signal("event_emitted"):
+		return
+	if bus_v2.is_connected("event_emitted", _on_v2_event_emitted):
+		return
+	bus_v2.connect("event_emitted", _on_v2_event_emitted)
+
+
+func _on_v2_event_emitted(event_type_id: int, payload: Dictionary, tick: int) -> void:
+	match event_type_id:
+		_EVENT_TICK_COMPLETED:
+			tick_completed.emit(tick)
+		_EVENT_SIMULATION_PAUSED:
+			pause_changed.emit(true)
+		_EVENT_SIMULATION_RESUMED:
+			pause_changed.emit(false)
+		_EVENT_SPEED_CHANGED:
+			var new_speed_index: int = int(payload.get("speed_index", -1))
+			if new_speed_index >= 0:
+				speed_changed.emit(new_speed_index)
+		_EVENT_ENTITY_SPAWNED:
+			var entity_id: int = int(payload.get("entity_id", -1))
+			if entity_id >= 0:
+				entity_born.emit(entity_id, "", [], tick)
+		_EVENT_ENTITY_DIED:
+			var entity_id: int = int(payload.get("entity_id", -1))
+			var cause: String = str(payload.get("cause", "unknown"))
+			if entity_id >= 0:
+				entity_died.emit(entity_id, "", cause, 0.0, tick)
+		_EVENT_MENTAL_BREAK_TRIGGERED:
+			var entity_id: int = int(payload.get("entity_id", -1))
+			var break_type: String = str(payload.get("break_type", "panic"))
+			if entity_id >= 0:
+				mental_break_started.emit(entity_id, break_type, tick)
+		_EVENT_FAMILY_FORMED:
+			var entity_a: int = int(payload.get("entity_a", -1))
+			var entity_b: int = int(payload.get("entity_b", -1))
+			if entity_a >= 0 and entity_b >= 0:
+				couple_formed.emit(entity_a, "", entity_b, "", tick)
+		_EVENT_ERA_ADVANCED:
+			var settlement_id: int = int(payload.get("settlement_id", -1))
+			var new_era: String = str(payload.get("new_era", ""))
+			if settlement_id >= 0 and not new_era.is_empty():
+				era_changed.emit(settlement_id, "", new_era)
+		_:
+			simulation_event.emit({
+				"type": "runtime_v2_event",
+				"event_type_id": event_type_id,
+				"payload": payload,
+				"tick": tick,
+				"timestamp": Time.get_ticks_msec(),
+			})
+
 ## Emit a structured simulation event via the bus
 func emit_event(event_type: String, data: Dictionary = {}) -> void:
 	var event := {

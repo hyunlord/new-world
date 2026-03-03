@@ -181,7 +181,7 @@ func _build_ui() -> void:
 
 	## ── 스폰 총 인원 표시 ──
 	_spawn_total_label = Label.new()
-	_spawn_total_label.text = Locale.trf("UI_MAP_SPAWN_TOTAL", {"count": 0})
+	_spawn_total_label.text = Locale.trf1("UI_MAP_SPAWN_TOTAL", "count", 0)
 	_spawn_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(_spawn_total_label)
 
@@ -247,4 +247,4 @@ func _on_start_pressed() -> void:
 ## world_setup.gd에서 스폰 포인트 변경 시 호출
 func update_spawn_total(total: int) -> void:
 	if _spawn_total_label != null:
-		_spawn_total_label.text = Locale.trf("UI_MAP_SPAWN_TOTAL", {"count": total})
+		_spawn_total_label.text = Locale.trf1("UI_MAP_SPAWN_TOTAL", "count", total)

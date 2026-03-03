@@ -35,7 +35,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		var charisma_fmt: String = "%.2f" % charisma_raw
 		var leader_label: String = (
 			"♛ " + Locale.ltr("UI_LEADER") + ": " + leader.entity_name
-			+ " (" + Locale.trf("UI_CHARISMA_FMT", {"value": charisma_fmt}) + ")"
+			+ " (" + Locale.trf1("UI_CHARISMA_FMT", "value", charisma_fmt) + ")"
 		)
 		canvas.draw_string(font, Vector2(cx, cy), leader_label, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, SECTION_HEADER_COLOR)
 		# click region for leader name — measure the name portion width
@@ -84,16 +84,40 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	var progress_val: float = clampf(float(known_count) / float(maxi(required, 1)), 0.0, 1.0)
 	_draw_bar(canvas, cx, cy, BAR_WIDTH, BAR_HEIGHT, progress_val, TAB_ACTIVE_COLOR)
-	var progress_label: String = Locale.trf("UI_ERA_PROGRESS_FMT", {"era": era_badge, "count": known_count, "required": required})
+	var progress_label: String = Locale.trf3(
+		"UI_ERA_PROGRESS_FMT",
+		"era",
+		era_badge,
+		"count",
+		known_count,
+		"required",
+		required
+	)
 	canvas.draw_string(font, Vector2(cx + BAR_WIDTH + 6.0, cy + BAR_HEIGHT - 2.0), progress_label, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 	cy += BAR_HEIGHT + SECTION_GAP
 
 	# ── 3. Population Summary ──────────────────────────────────────────────
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_POP_SUMMARY"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
-	canvas.draw_string(font, Vector2(cx, cy), Locale.trf("UI_TOTAL_POP_FMT", {"n": data.get("population", 0)}), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
+	canvas.draw_string(font, Vector2(cx, cy), Locale.trf1("UI_TOTAL_POP_FMT", "n", data.get("population", 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
 	cy += LINE_HEIGHT
-	canvas.draw_string(font, Vector2(cx, cy), Locale.trf("UI_POP_SUMMARY_FMT", {"adults": data.get("adults", 0), "children": data.get("children", 0), "elders": data.get("elders", 0)}), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
+	canvas.draw_string(
+		font,
+		Vector2(cx, cy),
+		Locale.trf3(
+			"UI_POP_SUMMARY_FMT",
+			"adults",
+			data.get("adults", 0),
+			"children",
+			data.get("children", 0),
+			"elders",
+			data.get("elders", 0)
+		),
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		body_size,
+		NEUTRAL_COLOR
+	)
 	cy += LINE_HEIGHT + SECTION_GAP
 
 	# ── 4. Active Tech Modifiers ───────────────────────────────────────────

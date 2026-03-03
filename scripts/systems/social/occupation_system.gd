@@ -7,6 +7,11 @@ var _entity_manager: RefCounted
 
 ## Reverse: occupation name → legacy job string
 var _occupation_to_job: Dictionary = {}
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_BEST_SKILL_METHOD: String = "body_occupation_best_skill_index"
+const _SIM_BRIDGE_SWITCH_METHOD: String = "body_occupation_should_switch"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -40,6 +45,22 @@ func _load_category_map() -> void:
 			_occupation_to_job[occ] = job_cat
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_BEST_SKILL_METHOD) and node.has_method(_SIM_BRIDGE_SWITCH_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	if _entity_manager == null:
 		return
@@ -58,12 +79,27 @@ func _evaluate_occupation(entity: RefCounted, tick: int) -> void:
 	var best_skill_level: int = 0
 
 	var skill_keys: Array = entity.skill_levels.keys()
+	var skill_levels_packed: PackedInt32Array = PackedInt32Array()
 	for j in range(skill_keys.size()):
 		var sid = skill_keys[j]
-		var lvl: int = int(entity.skill_levels[sid])
-		if lvl > best_skill_level:
-			best_skill_level = lvl
-			best_skill_id = sid
+		skill_levels_packed.append(int(entity.skill_levels[sid]))
+
+	var bridge: Object = _get_sim_bridge()
+	var best_index: int = -1
+	if bridge != null:
+		var idx_variant: Variant = bridge.call(_SIM_BRIDGE_BEST_SKILL_METHOD, skill_levels_packed)
+		if idx_variant != null:
+			best_index = int(idx_variant)
+	if best_index >= 0 and best_index < skill_keys.size():
+		best_skill_id = skill_keys[best_index]
+		best_skill_level = int(skill_levels_packed[best_index])
+	else:
+		for j in range(skill_keys.size()):
+			var sid = skill_keys[j]
+			var lvl: int = int(entity.skill_levels[sid])
+			if lvl > best_skill_level:
+				best_skill_level = lvl
+				best_skill_id = sid
 
 	## Step 2: Check minimum threshold
 	if best_skill_level < GameConfig.OCCUPATION_MIN_SKILL_LEVEL:
@@ -81,8 +117,20 @@ func _evaluate_occupation(entity: RefCounted, tick: int) -> void:
 	if new_occupation != entity.occupation and entity.occupation != "none" and entity.occupation != "laborer":
 		var current_occ_skill: StringName = _occupation_to_skill_id(entity.occupation)
 		var current_level: int = int(entity.skill_levels.get(current_occ_skill, 0))
-		var normalized_margin: float = (float(best_skill_level) - float(current_level)) / 100.0
-		if normalized_margin < GameConfig.OCCUPATION_CHANGE_HYSTERESIS:
+		var should_switch: bool = true
+		if bridge != null:
+			var should_switch_variant: Variant = bridge.call(
+				_SIM_BRIDGE_SWITCH_METHOD,
+				best_skill_level,
+				current_level,
+				float(GameConfig.OCCUPATION_CHANGE_HYSTERESIS)
+			)
+			if should_switch_variant != null:
+				should_switch = bool(should_switch_variant)
+		else:
+			var normalized_margin: float = (float(best_skill_level) - float(current_level)) / 100.0
+			should_switch = normalized_margin >= GameConfig.OCCUPATION_CHANGE_HYSTERESIS
+		if not should_switch:
 			return  ## Not enough margin, keep current
 
 	## Step 5: Apply

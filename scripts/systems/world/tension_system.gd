@@ -11,12 +11,17 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const CombatResolverScript = preload("res://scripts/core/combat/combat_resolver.gd")
 const StatCacheScript = preload("res://scripts/core/stats/stat_cache.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_TENSION_PRESSURE_METHOD: String = "body_tension_scarcity_pressure"
+const _SIM_BRIDGE_TENSION_NEXT_METHOD: String = "body_tension_next_value"
 
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _world_data: RefCounted
 var _chronicle
 var _combat_rng: RandomNumberGenerator
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 ## Settlement pair tension: "min_id:max_id" -> float
 var _tension: Dictionary = {}
@@ -39,6 +44,24 @@ func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
 	_chronicle = p_chronicle
 	_combat_rng = RandomNumberGenerator.new()
 	_combat_rng.seed = p_rng.randi()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_TENSION_PRESSURE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_TENSION_NEXT_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -66,6 +89,7 @@ func _update_pair_tension(s1: RefCounted, s2: RefCounted, _tick: int) -> void:
 
 	var key: String = _pair_key(s1.id, s2.id)
 	var current: float = float(_tension.get(key, 0.0))
+	var current_base: float = current
 
 	## Resource scarcity driver
 	var s1_deficit: bool = _is_food_scarce(s1)
@@ -73,12 +97,33 @@ func _update_pair_tension(s1: RefCounted, s2: RefCounted, _tick: int) -> void:
 	var scarcity_pressure: float = 0.0
 	if s1_deficit or s2_deficit:
 		scarcity_pressure = GameConfig.TENSION_PER_SHARED_RESOURCE * 2.0
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var pressure_variant: Variant = bridge.call(
+			_SIM_BRIDGE_TENSION_PRESSURE_METHOD,
+			s1_deficit,
+			s2_deficit,
+			float(GameConfig.TENSION_PER_SHARED_RESOURCE),
+		)
+		if pressure_variant != null:
+			scarcity_pressure = float(pressure_variant)
 
 	## Natural decay
 	var dt_years: float = float(tick_interval) / float(GameConfig.TICKS_PER_YEAR)
 	var decay: float = GameConfig.TENSION_DECAY_PER_YEAR * dt_years
 
-	current = clampf(current + scarcity_pressure - decay, 0.0, 1.0)
+	var fallback_next: float = clampf(current + scarcity_pressure - decay, 0.0, 1.0)
+	current = fallback_next
+	if bridge != null:
+		var next_variant: Variant = bridge.call(
+			_SIM_BRIDGE_TENSION_NEXT_METHOD,
+			current_base,
+			scarcity_pressure,
+			float(GameConfig.TENSION_DECAY_PER_YEAR),
+			dt_years,
+		)
+		if next_variant != null:
+			current = clampf(float(next_variant), 0.0, 1.0)
 	_tension[key] = current
 
 

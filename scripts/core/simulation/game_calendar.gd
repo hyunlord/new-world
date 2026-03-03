@@ -11,6 +11,11 @@ const TICKS_PER_MONTH_AVG: int = 365  # ~30.4 days × 12 ticks
 
 const MONTH_DAYS: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+static var _ui_age_years_id: int = -1
+static var _ui_age_months_id: int = -1
+static var _ui_age_days_id: int = -1
+static var _locale_key_version: int = -1
+
 
 static func is_leap_year(year: int) -> bool:
 	return (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
@@ -82,62 +87,83 @@ static func get_season(day_of_year: int) -> String:
 static func format_date(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
 	var season: String = get_season(d.day_of_year)
-	return Locale.trf("DATE_FORMAT", {
-		"year": d.year,
-		"month": Locale.get_month_name(d.month),
-		"day": d.day,
-		"hour": "%02d" % d.hour,
-		"season": Locale.tr_id("SEASON", season),
-	})
+	return Locale.trf5(
+		"DATE_FORMAT",
+		"year",
+		d.year,
+		"month",
+		Locale.get_month_name(d.month),
+		"day",
+		d.day,
+		"hour",
+		"%02d" % d.hour,
+		"season",
+		Locale.tr_id("SEASON", season)
+	)
 
 
 ## Format short date (month + day only) for action history display
 static func format_short_date(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
-	return Locale.trf("UI_SHORT_DATE", {"month": str(d.month), "day": str(d.day)})
+	return Locale.trf2("UI_SHORT_DATE", "month", d.month, "day", d.day)
 
 
 ## Format short date with year for cross-year display
 static func format_short_date_with_year(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
-	return Locale.trf("UI_SHORT_DATE_WITH_YEAR", {
-		"year": str(d.year), "month": str(d.month), "day": str(d.day)
-	})
+	return Locale.trf3("UI_SHORT_DATE_WITH_YEAR", "year", d.year, "month", d.month, "day", d.day)
 
 
 ## Format full date + time for HUD (year/month/day + hour:minute)
 static func format_full_datetime(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
-	return Locale.trf("UI_FULL_DATETIME", {
-		"year": str(d.year),
-		"month": str(d.month),
-		"day": str(d.day),
-		"hour": "%02d" % d.hour,
-		"minute": "%02d" % d.get("minute", 0),
-	})
+	return Locale.trf5(
+		"UI_FULL_DATETIME",
+		"year",
+		d.year,
+		"month",
+		d.month,
+		"day",
+		d.day,
+		"hour",
+		"%02d" % d.hour,
+		"minute",
+		"%02d" % d.get("minute", 0)
+	)
 
 
 ## Format short date + time without year (month/day + hour:minute)
 static func format_short_datetime(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
-	return Locale.trf("UI_SHORT_DATETIME", {
-		"month": str(d.month),
-		"day": str(d.day),
-		"hour": "%02d" % d.hour,
-		"minute": "%02d" % d.get("minute", 0),
-	})
+	return Locale.trf4(
+		"UI_SHORT_DATETIME",
+		"month",
+		d.month,
+		"day",
+		d.day,
+		"hour",
+		"%02d" % d.hour,
+		"minute",
+		"%02d" % d.get("minute", 0)
+	)
 
 
 ## Format short date + time with year (year/month/day + hour:minute)
 static func format_short_datetime_with_year(tick: int) -> String:
 	var d: Dictionary = tick_to_date(tick)
-	return Locale.trf("UI_SHORT_DATETIME_WITH_YEAR", {
-		"year": str(d.year),
-		"month": str(d.month),
-		"day": str(d.day),
-		"hour": "%02d" % d.hour,
-		"minute": "%02d" % d.get("minute", 0),
-	})
+	return Locale.trf5(
+		"UI_SHORT_DATETIME_WITH_YEAR",
+		"year",
+		d.year,
+		"month",
+		d.month,
+		"day",
+		d.day,
+		"hour",
+		"%02d" % d.hour,
+		"minute",
+		"%02d" % d.get("minute", 0)
+	)
 
 
 ## Convert age in ticks to years (float)
@@ -213,11 +239,15 @@ static func format_birth_date(bd: Dictionary) -> String:
 	var year: int = bd.get("year", 0)
 	var month: int = bd.get("month", 1)
 	var day: int = bd.get("day", 1)
-	return Locale.trf("BIRTH_DATE_FORMAT", {
-		"year": year,
-		"month": Locale.get_month_name(clampi(month, 1, 12)),
-		"day": day,
-	})
+	return Locale.trf3(
+		"BIRTH_DATE_FORMAT",
+		"year",
+		year,
+		"month",
+		Locale.get_month_name(clampi(month, 1, 12)),
+		"day",
+		day
+	)
 
 
 static func to_julian_day(date: Dictionary) -> int:
@@ -281,23 +311,23 @@ static func format_age_detailed(birth_date: Dictionary, ref_date: Dictionary = {
 	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
 	var parts: Array = []
 	if age.years > 0:
-		parts.append("%d%s" % [age.years, Locale.ltr("UI_AGE_YEARS")])
+		parts.append("%d%s" % [age.years, _age_years_label()])
 	if age.months > 0:
-		parts.append("%d%s" % [age.months, Locale.ltr("UI_AGE_MONTHS")])
-	parts.append("%d%s" % [age.days, Locale.ltr("UI_AGE_DAYS")])
+		parts.append("%d%s" % [age.months, _age_months_label()])
+	parts.append("%d%s" % [age.days, _age_days_label()])
 	var age_str: String = " ".join(parts)
 	var total_str: String = format_number(age.total_days)
-	return "%s %s" % [age_str, Locale.trf("UI_AGE_TOTAL_DAYS_FMT", {"n": total_str})]
+	return "%s %s" % [age_str, Locale.trf1("UI_AGE_TOTAL_DAYS_FMT", "n", total_str)]
 
 
 static func format_age_short(birth_date: Dictionary, ref_date: Dictionary = {}) -> String:
 	var age: Dictionary = calculate_detailed_age(birth_date, ref_date)
 	if age.years > 0:
-		return Locale.trf("UI_AGE_SHORT_FORMAT", {"y": str(age.years), "m": str(age.months), "d": str(age.days)})
+		return Locale.trf3("UI_AGE_SHORT_FORMAT", "y", age.years, "m", age.months, "d", age.days)
 	elif age.months > 0:
-		return "%s%s %s%s" % [str(age.months), Locale.ltr("UI_AGE_MONTHS"), str(age.days), Locale.ltr("UI_AGE_DAYS")]
+		return "%s%s %s%s" % [str(age.months), _age_months_label(), str(age.days), _age_days_label()]
 	else:
-		return "%s%s" % [str(age.days), Locale.ltr("UI_AGE_DAYS")]
+		return "%s%s" % [str(age.days), _age_days_label()]
 
 
 static func format_number(n: int) -> String:
@@ -310,3 +340,40 @@ static func format_number(n: int) -> String:
 	if n < 0:
 		result = "-" + result
 	return result
+
+
+static func _age_years_label() -> String:
+	_ensure_locale_key_cache()
+	if _ui_age_years_id < 0:
+		_ui_age_years_id = Locale.key_id("UI_AGE_YEARS")
+	if _ui_age_years_id >= 0:
+		return Locale.ltr_id(_ui_age_years_id)
+	return Locale.ltr("UI_AGE_YEARS")
+
+
+static func _age_months_label() -> String:
+	_ensure_locale_key_cache()
+	if _ui_age_months_id < 0:
+		_ui_age_months_id = Locale.key_id("UI_AGE_MONTHS")
+	if _ui_age_months_id >= 0:
+		return Locale.ltr_id(_ui_age_months_id)
+	return Locale.ltr("UI_AGE_MONTHS")
+
+
+static func _age_days_label() -> String:
+	_ensure_locale_key_cache()
+	if _ui_age_days_id < 0:
+		_ui_age_days_id = Locale.key_id("UI_AGE_DAYS")
+	if _ui_age_days_id >= 0:
+		return Locale.ltr_id(_ui_age_days_id)
+	return Locale.ltr("UI_AGE_DAYS")
+
+
+static func _ensure_locale_key_cache() -> void:
+	var current_version: int = Locale.key_index_version()
+	if current_version == _locale_key_version:
+		return
+	_locale_key_version = current_version
+	_ui_age_years_id = -1
+	_ui_age_months_id = -1
+	_ui_age_days_id = -1

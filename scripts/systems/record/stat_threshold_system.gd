@@ -5,8 +5,12 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const StatDefinitionScript = preload("res://scripts/core/stats/stat_definition.gd")
 const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_THRESHOLD_METHOD: String = "body_stat_threshold_is_active"
 
 var _entity_manager: RefCounted
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 ## entity_id → { "STAT_ID": ["EFFECT_1", "EFFECT_2"] }
 ## 현재 조건 진입 상태인 threshold 효과 목록
 var _active_effects: Dictionary = {}
@@ -21,6 +25,22 @@ func _init() -> void:
 ## Initializes the threshold system with the entity manager.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_THRESHOLD_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Evaluates all stat thresholds for every alive entity and applies or removes threshold effects.
@@ -80,6 +100,24 @@ func _evaluate_entity(entity: RefCounted, tick: int) -> void:
 func _check_threshold(
 		val: int, thr: int, direction: String, hysteresis: int, currently_active: bool
 ) -> bool:
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var direction_code: int = -1
+		if direction == "below":
+			direction_code = 0
+		elif direction == "above":
+			direction_code = 1
+		if direction_code >= 0:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_THRESHOLD_METHOD,
+				val,
+				thr,
+				direction_code,
+				hysteresis,
+				currently_active,
+			)
+			if rust_variant != null:
+				return bool(rust_variant)
 	match direction:
 		"below":
 			if currently_active:

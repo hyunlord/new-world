@@ -2,6 +2,12 @@ extends RefCounted
 
 const ACE_DEFINITIONS_PATH: String = "res://data/ace_definitions.json"
 const ACE_ADULT_MODIFIERS_PATH: String = "res://data/ace_adult_modifiers.json"
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_ACE_PARTIAL_METHOD: String = "body_ace_partial_score_next"
+const _SIM_BRIDGE_ACE_TOTAL_METHOD: String = "body_ace_score_total_from_partials"
+const _SIM_BRIDGE_ACE_THREAT_DEPRIVATION_METHOD: String = "body_ace_threat_deprivation_totals"
+const _SIM_BRIDGE_ACE_ADULT_MODIFIERS_METHOD: String = "body_ace_adult_modifiers_adjusted"
+const _SIM_BRIDGE_ACE_BACKFILL_METHOD: String = "body_ace_backfill_score"
 const ACE_ITEM_IDS: Array = [
 	"physical_abuse",
 	"emotional_abuse",
@@ -26,6 +32,8 @@ var _curve_table: Dictionary = {}
 var _config: Dictionary = {}
 
 var _protective_factor: float = 0.0
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -61,6 +69,27 @@ func _load_json_dictionary(path: String) -> Dictionary:
 	return json.data
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_ACE_PARTIAL_METHOD) \
+	and node.has_method(_SIM_BRIDGE_ACE_TOTAL_METHOD) \
+	and node.has_method(_SIM_BRIDGE_ACE_THREAT_DEPRIVATION_METHOD) \
+	and node.has_method(_SIM_BRIDGE_ACE_ADULT_MODIFIERS_METHOD) \
+	and node.has_method(_SIM_BRIDGE_ACE_BACKFILL_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 ## [Felitti et al., 1998 - ACE Study] Dose-response: each ACE item accumulates partial_score 0~1; total capped at 10.
 ## [McLaughlin et al., 2014 - Threat vs Deprivation] Threat/deprivation type gates which neural pathway is activated.
 func record_ace_event(item_id: String, severity: float, tick: int, entity_name: String) -> void:
@@ -85,7 +114,15 @@ func record_ace_event(item_id: String, severity: float, tick: int, entity_name: 
 
 	var ace_weight = float(item_def.get("ace_weight", 1.0))
 	var partial_score = float(item_state.get("partial_score", 0.0))
-	partial_score = minf(1.0, partial_score + maxf(0.0, severity) * ace_weight)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_ACE_PARTIAL_METHOD, partial_score, severity, ace_weight)
+		if rust_variant is float:
+			partial_score = float(rust_variant)
+		else:
+			partial_score = minf(1.0, partial_score + maxf(0.0, severity) * ace_weight)
+	else:
+		partial_score = minf(1.0, partial_score + maxf(0.0, severity) * ace_weight)
 
 	item_state["partial_score"] = partial_score
 	item_state["event_count"] = int(item_state.get("event_count", 0)) + 1
@@ -98,7 +135,13 @@ func record_ace_event(item_id: String, severity: float, tick: int, entity_name: 
 		var name_key = str(item_def.get("name_key", item_id))
 		var ace_type_name = Locale.ltr(name_key)
 		var params = {"name": entity_name, "ace_type": ace_type_name}
-		var desc = Locale.trf("ACE_EVENT_RECORDED", params)
+		var desc = Locale.trf2(
+			"ACE_EVENT_RECORDED",
+			"name",
+			params.get("name", ""),
+			"ace_type",
+			params.get("ace_type", "")
+		)
 		var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 		if chronicle != null and chronicle.has_method("log_event"):
 			chronicle.log_event("ace_event", -1, desc, 2, [], tick, {"key": "ACE_EVENT_RECORDED", "params": params})
@@ -113,15 +156,31 @@ func get_threat_deprivation_scores() -> Dictionary:
 	## Reference: McLaughlin, K.A. et al. (2014). Neuroscience & Biobehavioral Reviews, 47.
 	var threat_score: float = 0.0
 	var deprivation_score: float = 0.0
+	var partials: PackedFloat32Array = PackedFloat32Array()
+	var type_codes: PackedInt32Array = PackedInt32Array()
 
 	for item_id in ace_items:
-		var item_state = ace_items.get(item_id, {})
-		var partial_score = float(item_state.get("partial_score", 0.0))
-		var item_type = classify_ace_type(str(item_id))
+		var item_state: Dictionary = ace_items.get(item_id, {})
+		var partial_score: float = float(item_state.get("partial_score", 0.0))
+		var item_type: String = classify_ace_type(str(item_id))
+		var type_code: int = 0
 		if item_type == "threat":
+			type_code = 1
 			threat_score += partial_score
 		elif item_type == "deprivation":
+			type_code = 2
 			deprivation_score += partial_score
+		partials.push_back(partial_score)
+		type_codes.push_back(type_code)
+
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_ACE_THREAT_DEPRIVATION_METHOD, partials, type_codes)
+		if rust_variant is PackedFloat32Array:
+			var out: PackedFloat32Array = rust_variant
+			if out.size() >= 2:
+				threat_score = float(out[0])
+				deprivation_score = float(out[1])
 
 	return {
 		"threat": threat_score,
@@ -153,13 +212,42 @@ func calculate_adult_modifiers() -> Dictionary:
 			"allostatic_base": 0.0,
 		}
 
-	var break_floor: float = _config.get("break_threshold_floor", 0.50)
-	base["break_threshold_mult"] = maxf(float(base.get("break_threshold_mult", 1.0)), float(break_floor))
-
+	var break_floor: float = float(_config.get("break_threshold_floor", 0.50))
 	var pf: float = _calculate_protective_factor()
-	base["stress_gain_mult"] = 1.0 + (float(base.get("stress_gain_mult", 1.0)) - 1.0) * (1.0 - pf)
-	base["break_threshold_mult"] = 1.0 - (1.0 - float(base.get("break_threshold_mult", 1.0))) * (1.0 - pf)
-	base["allostatic_base"] = float(base.get("allostatic_base", 0.0)) * (1.0 - 0.5 * pf)
+	var base_stress_gain_mult: float = float(base.get("stress_gain_mult", 1.0))
+	var base_break_threshold_mult: float = float(base.get("break_threshold_mult", 1.0))
+	var base_allostatic_base: float = float(base.get("allostatic_base", 0.0))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_ACE_ADULT_MODIFIERS_METHOD,
+			base_stress_gain_mult,
+			base_break_threshold_mult,
+			base_allostatic_base,
+			break_floor,
+			pf
+		)
+		if rust_variant is PackedFloat32Array:
+			var out: PackedFloat32Array = rust_variant
+			if out.size() >= 3:
+				base["stress_gain_mult"] = float(out[0])
+				base["break_threshold_mult"] = float(out[1])
+				base["allostatic_base"] = float(out[2])
+			else:
+				base["break_threshold_mult"] = maxf(base_break_threshold_mult, break_floor)
+				base["stress_gain_mult"] = 1.0 + (base_stress_gain_mult - 1.0) * (1.0 - pf)
+				base["break_threshold_mult"] = 1.0 - (1.0 - float(base.get("break_threshold_mult", 1.0))) * (1.0 - pf)
+				base["allostatic_base"] = base_allostatic_base * (1.0 - 0.5 * pf)
+		else:
+			base["break_threshold_mult"] = maxf(base_break_threshold_mult, break_floor)
+			base["stress_gain_mult"] = 1.0 + (base_stress_gain_mult - 1.0) * (1.0 - pf)
+			base["break_threshold_mult"] = 1.0 - (1.0 - float(base.get("break_threshold_mult", 1.0))) * (1.0 - pf)
+			base["allostatic_base"] = base_allostatic_base * (1.0 - 0.5 * pf)
+	else:
+		base["break_threshold_mult"] = maxf(base_break_threshold_mult, break_floor)
+		base["stress_gain_mult"] = 1.0 + (base_stress_gain_mult - 1.0) * (1.0 - pf)
+		base["break_threshold_mult"] = 1.0 - (1.0 - float(base.get("break_threshold_mult", 1.0))) * (1.0 - pf)
+		base["allostatic_base"] = base_allostatic_base * (1.0 - 0.5 * pf)
 
 	var merged_break_probability_mods: Dictionary = {}
 	for item_id in ace_items:
@@ -255,7 +343,7 @@ func apply_hexaco_caps(entity) -> void:
 
 			if chronicle != null and chronicle.has_method("log_event"):
 				var params = {"facet": str(facet_id)}
-				var desc = Locale.trf("HEXACO_CAP_MODIFIED", params)
+				var desc = Locale.trf1("HEXACO_CAP_MODIFIED", "facet", params.get("facet", ""))
 				var entity_id: int = int(entity.get("id")) if entity.get("id") != null else -1
 				var tick: int = int(entity.get_meta("current_tick", -1))
 				if tick >= 0:
@@ -280,19 +368,45 @@ func backfill_ace_for_adult(entity) -> void:
 	var ss = entity.emotion_data
 	var trauma_scars = entity.get_meta("trauma_scars", [])
 	var trauma_count: int = trauma_scars.size() if typeof(trauma_scars) == TYPE_ARRAY else 0
-	var attachment = str(entity.get_meta("attachment_type", "secure"))
-
-	var disorg_bonus: float = 1.5 if attachment == "disorganized" else 0.0
-	var insecure_bonus: float = 0.7 if attachment in ["anxious", "avoidant"] else 0.0
+	var attachment: String = str(entity.get_meta("attachment_type", "secure"))
+	var attachment_code: int = _attachment_code(attachment)
 	var allostatic: float = 0.0
 	if ss != null:
 		allostatic = float(ss.get("allostatic")) if ss.get("allostatic") != null else 0.0
-	var stress_component: float = 0.08 * clampf(allostatic, 0.0, 100.0)
-	var scar_component: float = 0.8 * float(trauma_count)
-	var ace_est: float = stress_component + scar_component + disorg_bonus + insecure_bonus
-
-	ace_score_total = clampf(ace_est, 0.0, 10.0)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_ACE_BACKFILL_METHOD, allostatic, trauma_count, attachment_code)
+		if rust_variant is float:
+			ace_score_total = clampf(float(rust_variant), 0.0, 10.0)
+		else:
+			var disorg_bonus: float = 1.5 if attachment == "disorganized" else 0.0
+			var insecure_bonus: float = 0.7 if attachment in ["anxious", "avoidant"] else 0.0
+			var stress_component: float = 0.08 * clampf(allostatic, 0.0, 100.0)
+			var scar_component: float = 0.8 * float(trauma_count)
+			var ace_est: float = stress_component + scar_component + disorg_bonus + insecure_bonus
+			ace_score_total = clampf(ace_est, 0.0, 10.0)
+	else:
+		var disorg_bonus: float = 1.5 if attachment == "disorganized" else 0.0
+		var insecure_bonus: float = 0.7 if attachment in ["anxious", "avoidant"] else 0.0
+		var stress_component: float = 0.08 * clampf(allostatic, 0.0, 100.0)
+		var scar_component: float = 0.8 * float(trauma_count)
+		var ace_est: float = stress_component + scar_component + disorg_bonus + insecure_bonus
+		ace_score_total = clampf(ace_est, 0.0, 10.0)
 	is_backfilled = true
+
+
+func _attachment_code(attachment: String) -> int:
+	match attachment:
+		"secure":
+			return 0
+		"anxious":
+			return 1
+		"avoidant":
+			return 2
+		"disorganized":
+			return 3
+		_:
+			return 0
 
 
 func classify_ace_type(item_id: String) -> String:
@@ -304,9 +418,18 @@ func classify_ace_type(item_id: String) -> String:
 
 func _recalculate_total_score() -> void:
 	var total: float = 0.0
+	var partials: PackedFloat32Array = PackedFloat32Array()
 	for item_id in ace_items:
-		var item_state = ace_items.get(item_id, {})
-		total += float(item_state.get("partial_score", 0.0))
+		var item_state: Dictionary = ace_items.get(item_id, {})
+		var partial_score: float = float(item_state.get("partial_score", 0.0))
+		total += partial_score
+		partials.push_back(partial_score)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_ACE_TOTAL_METHOD, partials)
+		if rust_variant is float:
+			ace_score_total = clampf(float(rust_variant), 0.0, 10.0)
+			return
 	ace_score_total = clampf(total, 0.0, 10.0)
 
 

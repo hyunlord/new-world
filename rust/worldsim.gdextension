@@ -1,0 +1,11 @@
+[configuration]
+entry_symbol = "worldsim_rust_init"
+compatibility_minimum = "4.2"
+
+[libraries]
+macos.debug = "res://rust/target/debug/libsim_bridge.dylib"
+macos.release = "res://rust/target/release/libsim_bridge.dylib"
+linux.debug.x86_64 = "res://rust/target/debug/libsim_bridge.so"
+linux.release.x86_64 = "res://rust/target/release/libsim_bridge.so"
+windows.debug.x86_64 = "res://rust/target/debug/sim_bridge.dll"
+windows.release.x86_64 = "res://rust/target/release/sim_bridge.dll"

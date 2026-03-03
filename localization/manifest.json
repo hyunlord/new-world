@@ -1,0 +1,38 @@
+{
+  "default_locale": "ko",
+  "supported_locales": [
+    "ko",
+    "en"
+  ],
+  "source_format": "fluent",
+  "categories_order": [
+    "ui",
+    "game",
+    "traits",
+    "emotions",
+    "events",
+    "deaths",
+    "buildings",
+    "tutorial",
+    "debug",
+    "coping",
+    "childhood",
+    "reputation",
+    "economy",
+    "tech",
+    "data_generated"
+  ],
+  "compiled_dir": "compiled",
+  "fluent_dir": "fluent",
+  "use_fluent_runtime": true,
+  "key_registry_path": "key_registry.json",
+  "key_owners_path": "key_owners.json",
+  "preserve_key_ids": true,
+  "embed_keys": false,
+  "max_duplicate_key_count": 248,
+  "max_duplicate_conflict_count": 35,
+  "max_missing_key_fill_count": 0,
+  "max_owner_rule_miss_count": 0,
+  "max_owner_unused_count": 0,
+  "max_duplicate_owner_missing_count": 0
+}

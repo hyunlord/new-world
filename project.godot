@@ -20,12 +20,19 @@ config/icon="res://icon.svg"
 GameConfig="*res://scripts/core/simulation/game_config.gd"
 SpeciesManager="*res://scripts/core/social/species_manager.gd"
 SimulationBus="*res://scripts/core/simulation/simulation_bus.gd"
+SimulationBusV2="*res://scripts/core/simulation/simulation_bus_v2.gd"
 EventLogger="*res://scripts/core/simulation/event_logger.gd"
 DeceasedRegistry="*res://scripts/core/entity/deceased_registry.gd"
 ChronicleSystem="*res://scripts/systems/record/chronicle_system.gd"
 NameGenerator="*res://scripts/core/social/name_generator.gd"
 Locale="*res://scripts/core/simulation/locale.gd"
 StatQuery="*res://scripts/core/stats/stat_query.gd"
+SimBridge="*res://scripts/core/simulation/sim_bridge.gd"
+ComputeBackend="*res://scripts/core/simulation/compute_backend.gd"
+
+[gdextension]
+
+enabled=PackedStringArray("res://rust/worldsim.gdextension")
 
 [display]
 

@@ -2,8 +2,15 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 # NO class_name — headless compatibility
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_HPA_ADJUST_METHOD: String = "body_parenting_hpa_adjusted_stress_gain"
+const _SIM_BRIDGE_BANDURA_RATE_METHOD: String = "body_parenting_bandura_base_rate"
+const _MALADAPTIVE_COPING_IDS: Array = ["substance_use", "behavioral_disengagement", "denial", "self_blame"]
+
 var _entity_manager
 var _attachment_system
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -17,6 +24,24 @@ func init(entity_manager) -> void:
 	_entity_manager = entity_manager
 	var AttachmentSystem = load("res://scripts/systems/development/attachment_system.gd")
 	_attachment_system = AttachmentSystem.new()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_HPA_ADJUST_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BANDURA_RATE_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Updates parenting quality for adults, applies one-time adulthood transitions, and models Bandura coping observation for children.
@@ -78,15 +103,27 @@ func _apply_adulthood_transition(entity, tick: int) -> void:
 
 	# 6. Apply HPA sensitivity from epigenetic load
 	var epi_load: float = float(entity.get_meta("epigenetic_load_effective", 0.05))
-	var hpa_mult: float = 1.0 + epi_load * 0.6
 	var current_stress_mult: float = float(entity.get_meta("ace_stress_gain_mult", 1.0))
-	entity.set_meta("ace_stress_gain_mult", current_stress_mult * hpa_mult)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_HPA_ADJUST_METHOD,
+			current_stress_mult,
+			epi_load,
+			0.6
+		)
+		if rust_variant is float:
+			entity.set_meta("ace_stress_gain_mult", float(rust_variant))
+		else:
+			entity.set_meta("ace_stress_gain_mult", current_stress_mult * (1.0 + epi_load * 0.6))
+	else:
+		entity.set_meta("ace_stress_gain_mult", current_stress_mult * (1.0 + epi_load * 0.6))
 
 	# 7. Chronicle log
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle != null:
 		var params: Dictionary = {"name": entity.entity_name}
-		var desc: String = Locale.trf("ADULTHOOD_TRANSITION", params)
+		var desc: String = Locale.trf1("ADULTHOOD_TRANSITION", "name", params.get("name", ""))
 		chronicle.log_event("adulthood_transition", entity.id, desc, 3, [], tick, {
 			"key": "ADULTHOOD_TRANSITION",
 			"params": params,
@@ -158,9 +195,23 @@ func _apply_bandura_modeling(entity, childhood_data: Dictionary, _tick: int) -> 
 
 	for coping_id in observed_coping:
 		var observation_strength: float = float(observed_coping.get(coping_id, 0.0))
+		var is_maladaptive: bool = coping_id in _MALADAPTIVE_COPING_IDS
 		var base_rate: float = 0.002 * coping_mult * observation_strength
-		# Maladaptive coping modeled more readily (immediate visible relief)
-		if coping_id in ["substance_use", "behavioral_disengagement", "denial", "self_blame"]:
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_BANDURA_RATE_METHOD,
+				0.002,
+				coping_mult,
+				observation_strength,
+				is_maladaptive,
+				1.5
+			)
+			if rust_variant is float:
+				base_rate = float(rust_variant)
+			elif is_maladaptive:
+				base_rate *= 1.5
+		elif is_maladaptive:
 			base_rate *= 1.5
 		var current: float = float(familiarity.get(coping_id, 0.0))
 		familiarity[coping_id] = clampf(current + base_rate, 0.0, 1.0)

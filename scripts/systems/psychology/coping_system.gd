@@ -6,11 +6,16 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const COPING_DEFS_PATH: String = "res://data/coping_definitions.json"
 const COPING_COUNT_MAX: float = 15.0
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_LEARN_PROB_METHOD: String = "body_coping_learn_probability"
+const _SIM_BRIDGE_SOFTMAX_INDEX_METHOD: String = "body_coping_softmax_index"
 
 var _entity_manager: RefCounted
 var _coping_defs: Dictionary = {}   # loaded from JSON
 var _entity_coping: Dictionary = {} # entity_id -> coping state
 var _rng: RandomNumberGenerator
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -26,6 +31,24 @@ func init(entity_manager: RefCounted, rng: RandomNumberGenerator) -> void:
 	if rng != null:
 		_rng = rng
 	_load_coping_defs()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_LEARN_PROB_METHOD) \
+	and node.has_method(_SIM_BRIDGE_SOFTMAX_INDEX_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_coping_defs() -> void:
@@ -214,15 +237,29 @@ func _calculate_learn_probability(entity, coping_state: Dictionary,
 		return 0.0
 	var _unused_break_type: String = break_type
 	var ed = entity.emotion_data
+	var n: int = int(coping_state.get("break_count", 0))
+	var N: int = coping_state.get("owned", {}).size()
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_LEARN_PROB_METHOD,
+			float(ed.stress),
+			float(ed.allostatic),
+			is_recovery,
+			n,
+			N,
+			COPING_COUNT_MAX
+		)
+		if rust_variant is float:
+			return float(rust_variant)
+
 	var stress_norm: float = clampf(ed.stress / 2000.0, 0.0, 1.0)
 	var allostatic_norm: float = ed.allostatic / 100.0
 
 	# K(n): 누적 브레이크 압력 포화형 (n = 브레이크 경험 횟수)
-	var n: int = int(coping_state.get("break_count", 0))
 	var K_n: float = 1.0 - exp(-0.35 * float(n))
 
 	# S(N): 기보유 Coping 포화 (N = 현재 보유 수)
-	var N: int = coping_state.get("owned", {}).size()
 	var S_N: float = log(1.0 + float(N)) / log(1.0 + COPING_COUNT_MAX)
 
 	# logit 계산
@@ -357,6 +394,18 @@ func _calculate_maladaptive_bias(entity, coping_state: Dictionary, K_n: float) -
 func _softmax_select(utilities: Dictionary) -> String:
 	if utilities.is_empty():
 		return ""
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var keys: Array = utilities.keys()
+		var scores: PackedFloat32Array = PackedFloat32Array()
+		for i in range(keys.size()):
+			var key = keys[i]
+			scores.push_back(float(utilities.get(key, -INF)))
+		var idx_variant: Variant = bridge.call(_SIM_BRIDGE_SOFTMAX_INDEX_METHOD, scores, _rng.randf())
+		if idx_variant is int:
+			var idx: int = int(idx_variant)
+			if idx >= 0 and idx < keys.size():
+				return str(keys[idx])
 	# softmax 확률 계산
 	var max_u: float = -INF
 	for k in utilities:
@@ -623,7 +672,7 @@ func _log_coping_acquired(entity, coping_id: String, tick: int) -> void:
 	var name_key: String = coping_id
 	if typeof(cdef) == TYPE_DICTIONARY:
 		name_key = str(cdef.get("name_key", coping_id))
-	var desc: String = Locale.trf("COPING_ACQUIRED", {"name": Locale.ltr(name_key)})
+	var desc: String = Locale.trf1("COPING_ACQUIRED", "name", Locale.ltr(name_key))
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle:
 		chronicle.log_event("coping_acquired", _get_entity_id(entity), desc, 2, [], tick)
@@ -634,7 +683,7 @@ func _log_coping_upgraded(entity, coping_id: String, tick: int) -> void:
 	var name_key: String = coping_id
 	if typeof(cdef) == TYPE_DICTIONARY:
 		name_key = str(cdef.get("name_key", coping_id))
-	var desc: String = Locale.trf("COPING_UPGRADED", {"name": Locale.ltr(name_key)})
+	var desc: String = Locale.trf1("COPING_UPGRADED", "name", Locale.ltr(name_key))
 	var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 	if chronicle:
 		chronicle.log_event("coping_upgraded", _get_entity_id(entity), desc, 2, [], tick)

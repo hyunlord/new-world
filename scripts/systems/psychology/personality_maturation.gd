@@ -7,16 +7,36 @@ extends RefCounted
 
 const PersonalityDataScript = preload("res://scripts/core/entity/personality_data.gd")
 const TraitSystem = preload("res://scripts/systems/psychology/trait_system.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_LINEAR_TARGET_METHOD: String = "body_personality_linear_target"
 
 var _theta: float = 0.03
 var _sigma: float = 0.03
 var _maturation_targets: Dictionary = {}
 var _rng: RandomNumberGenerator
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func init(rng: RandomNumberGenerator) -> void:
 	_rng = rng
 	_load_maturation_parameters()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_LINEAR_TARGET_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_maturation_parameters() -> void:
@@ -74,6 +94,17 @@ func _get_maturation_target(axis_id: String, age: int) -> float:
 
 ## Linear maturation target: 0 at start_age, max_shift at end_age, clamped.
 func _linear_target(age: int, max_shift: float, start_age: int = 18, end_age: int = 60) -> float:
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_LINEAR_TARGET_METHOD,
+			age,
+			max_shift,
+			start_age,
+			end_age,
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 	if age < start_age:
 		return 0.0
 	var span: float = float(end_age - start_age)

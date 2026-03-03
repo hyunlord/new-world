@@ -1,5 +1,30 @@
 extends RefCounted
 
+const _RUST_BRIDGE_NODE_NAME: String = "SimBridge"
+const _RUST_BRIDGE_METHOD_NAME: String = "pathfind_grid"
+const _RUST_BRIDGE_METHOD_XY_NAME: String = "pathfind_grid_xy"
+const _RUST_BRIDGE_BATCH_METHOD_NAME: String = "pathfind_grid_batch"
+const _RUST_BRIDGE_BATCH_XY_METHOD_NAME: String = "pathfind_grid_batch_xy"
+
+var _bridge_checked: bool = false
+var _rust_bridge: Object = null
+var _bridge_methods_cached: bool = false
+var _bridge_has_pathfind: bool = false
+var _bridge_has_pathfind_xy: bool = false
+var _bridge_has_batch: bool = false
+var _bridge_has_batch_xy: bool = false
+
+var _cached_world_data: RefCounted = null
+var _cached_width: int = 0
+var _cached_height: int = 0
+var _cached_world_revision: int = -1
+var _cached_walkable: PackedByteArray = PackedByteArray()
+var _cached_move_cost: PackedFloat32Array = PackedFloat32Array()
+var _batch_from_xy: PackedInt32Array = PackedInt32Array()
+var _batch_to_xy: PackedInt32Array = PackedInt32Array()
+var _batch_from_points: PackedVector2Array = PackedVector2Array()
+var _batch_to_points: PackedVector2Array = PackedVector2Array()
+
 
 ## A* pathfinding with 8-directional movement and Chebyshev heuristic
 func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int = 200) -> Array:
@@ -8,6 +33,397 @@ func find_path(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: 
 	if not world_data.is_walkable(to.x, to.y):
 		return []
 
+	var rust_path: Variant = _find_path_rust(world_data, from, to, max_steps)
+	if rust_path != null:
+		return rust_path
+
+	return _find_path_gd(world_data, from, to, max_steps)
+
+## Batch pathfinding for multiple (from,to) requests.
+## Each request item must be a Dictionary: {"from": Vector2i, "to": Vector2i}
+func find_paths_batch(world_data: RefCounted, requests: Array, max_steps: int = 200) -> Array:
+	if requests.is_empty():
+		return []
+
+	var rust_paths: Variant = _find_paths_rust_batch(world_data, requests, max_steps)
+	if rust_paths != null:
+		return rust_paths
+
+	var out: Array = []
+	out.resize(requests.size())
+	for i in range(requests.size()):
+		var req: Dictionary = requests[i]
+		var from: Vector2i = req.get("from", Vector2i(-1, -1))
+		var to: Vector2i = req.get("to", Vector2i(-1, -1))
+		out[i] = find_path(world_data, from, to, max_steps)
+	return out
+
+
+## Batch pathfinding for packed XY request pairs.
+## Inputs are [x0, y0, x1, y1, ...] for from/to arrays.
+func find_paths_batch_xy(
+	world_data: RefCounted,
+	from_xy: PackedInt32Array,
+	to_xy: PackedInt32Array,
+	max_steps: int = 200
+) -> Array:
+	if from_xy.is_empty() or to_xy.is_empty():
+		return []
+	if from_xy.size() != to_xy.size() or (from_xy.size() % 2) != 0:
+		return []
+
+	var rust_paths: Variant = _find_paths_rust_batch_xy(world_data, from_xy, to_xy, max_steps)
+	if rust_paths != null:
+		return rust_paths
+
+	var out: Array = []
+	var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
+	out.resize(pair_count)
+	for i in range(pair_count):
+		var base_idx: int = i * 2
+		var from: Vector2i = Vector2i(from_xy[base_idx], from_xy[base_idx + 1])
+		var to: Vector2i = Vector2i(to_xy[base_idx], to_xy[base_idx + 1])
+		out[i] = find_path(world_data, from, to, max_steps)
+	return out
+
+
+func _find_path_rust(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int) -> Variant:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return null
+	_ensure_bridge_method_cache(bridge)
+	var has_xy: bool = _bridge_has_pathfind_xy
+	var has_vec2: bool = _bridge_has_pathfind
+	if not has_xy and not has_vec2:
+		return null
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return null
+
+	var result: Variant = null
+	var used_xy: bool = false
+	if has_xy:
+		result = bridge.call(
+			_RUST_BRIDGE_METHOD_XY_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from.x,
+			from.y,
+			to.x,
+			to.y,
+			max_steps
+		)
+		used_xy = (result != null)
+	if result == null and has_vec2:
+		result = bridge.call(
+			_RUST_BRIDGE_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from.x,
+			from.y,
+			to.x,
+			to.y,
+			max_steps
+		)
+	if result == null:
+		return null
+	if used_xy:
+		return _normalize_path_xy_result(result)
+	return _normalize_path_result(result)
+
+
+func _find_paths_rust_batch(world_data: RefCounted, requests: Array, max_steps: int) -> Variant:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return null
+	_ensure_bridge_method_cache(bridge)
+	var has_batch_xy: bool = _bridge_has_batch_xy
+	var has_batch_vec2: bool = _bridge_has_batch
+	if not has_batch_xy and not has_batch_vec2:
+		return null
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return null
+
+	var result: Variant = null
+	var used_batch_xy: bool = false
+	if has_batch_xy:
+		var pair_len: int = requests.size() * 2
+		if _batch_from_xy.size() != pair_len:
+			_batch_from_xy.resize(pair_len)
+		if _batch_to_xy.size() != pair_len:
+			_batch_to_xy.resize(pair_len)
+		for i in range(requests.size()):
+			var req_xy: Dictionary = requests[i]
+			var from_xy_point: Vector2i = req_xy.get("from", Vector2i(-1, -1))
+			var to_xy_point: Vector2i = req_xy.get("to", Vector2i(-1, -1))
+			var base_idx: int = i * 2
+			_batch_from_xy[base_idx] = from_xy_point.x
+			_batch_from_xy[base_idx + 1] = from_xy_point.y
+			_batch_to_xy[base_idx] = to_xy_point.x
+			_batch_to_xy[base_idx + 1] = to_xy_point.y
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_XY_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			_batch_from_xy,
+			_batch_to_xy,
+			max_steps
+		)
+		used_batch_xy = (result != null)
+	if result == null and has_batch_vec2:
+		if _batch_from_points.size() != requests.size():
+			_batch_from_points.resize(requests.size())
+		if _batch_to_points.size() != requests.size():
+			_batch_to_points.resize(requests.size())
+		for i in range(requests.size()):
+			var req: Dictionary = requests[i]
+			var from: Vector2i = req.get("from", Vector2i(-1, -1))
+			var to: Vector2i = req.get("to", Vector2i(-1, -1))
+			_batch_from_points[i] = Vector2(from.x, from.y)
+			_batch_to_points[i] = Vector2(to.x, to.y)
+
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			_batch_from_points,
+			_batch_to_points,
+			max_steps
+		)
+
+	if result == null:
+		return null
+
+	if used_batch_xy:
+		if not (result is Array):
+			return null
+		var xy_groups: Array = result
+		var xy_normalized: Array = []
+		xy_normalized.resize(xy_groups.size())
+		for i in range(xy_groups.size()):
+			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
+		return xy_normalized
+
+	if result == null or not (result is Array):
+		return null
+
+	var groups: Array = result
+	var normalized: Array = []
+	normalized.resize(groups.size())
+	for i in range(groups.size()):
+		normalized[i] = _normalize_path_result(groups[i])
+	return normalized
+
+
+func _find_paths_rust_batch_xy(
+	world_data: RefCounted,
+	from_xy: PackedInt32Array,
+	to_xy: PackedInt32Array,
+	max_steps: int
+) -> Variant:
+	var bridge: Object = _get_rust_bridge()
+	if bridge == null:
+		return null
+	_ensure_bridge_method_cache(bridge)
+	var has_batch_xy: bool = _bridge_has_batch_xy
+	var has_batch_vec2: bool = _bridge_has_batch
+	if not has_batch_xy and not has_batch_vec2:
+		return null
+
+	_ensure_world_cache(world_data)
+	if _cached_width <= 0 or _cached_height <= 0:
+		return null
+
+	var result: Variant = null
+	var used_batch_xy: bool = false
+	if has_batch_xy:
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_XY_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			from_xy,
+			to_xy,
+			max_steps
+		)
+		used_batch_xy = (result != null)
+
+	if result == null and has_batch_vec2:
+		var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
+		if _batch_from_points.size() != pair_count:
+			_batch_from_points.resize(pair_count)
+		if _batch_to_points.size() != pair_count:
+			_batch_to_points.resize(pair_count)
+		for i in range(pair_count):
+			var base_idx: int = i * 2
+			_batch_from_points[i] = Vector2(from_xy[base_idx], from_xy[base_idx + 1])
+			_batch_to_points[i] = Vector2(to_xy[base_idx], to_xy[base_idx + 1])
+		result = bridge.call(
+			_RUST_BRIDGE_BATCH_METHOD_NAME,
+			_cached_width,
+			_cached_height,
+			_cached_walkable,
+			_cached_move_cost,
+			_batch_from_points,
+			_batch_to_points,
+			max_steps
+		)
+
+	if result == null:
+		return null
+
+	if used_batch_xy:
+		if not (result is Array):
+			return null
+		var xy_groups: Array = result
+		var xy_normalized: Array = []
+		xy_normalized.resize(xy_groups.size())
+		for i in range(xy_groups.size()):
+			xy_normalized[i] = _normalize_path_xy_result(xy_groups[i])
+		return xy_normalized
+
+	if not (result is Array):
+		return null
+	var groups: Array = result
+	var normalized: Array = []
+	normalized.resize(groups.size())
+	for i in range(groups.size()):
+		normalized[i] = _normalize_path_result(groups[i])
+	return normalized
+
+
+func _normalize_path_xy_result(result: Variant) -> Array:
+	var path: Array = []
+	if result is PackedInt32Array:
+		var packed: PackedInt32Array = result
+		var pair_count: int = packed.size() / 2
+		path.resize(pair_count)
+		for i in range(pair_count):
+			var base_idx: int = i * 2
+			path[i] = Vector2i(packed[base_idx], packed[base_idx + 1])
+		return path
+	if result is Array:
+		var arr: Array = result
+		path.resize(arr.size())
+		var write_idx: int = 0
+		for i in range(arr.size()):
+			var item: Variant = arr[i]
+			if item is Vector2i:
+				path[write_idx] = item
+				write_idx += 1
+		if write_idx != path.size():
+			path.resize(write_idx)
+	return path
+
+
+func _get_rust_bridge() -> Object:
+	if _bridge_checked:
+		return _rust_bridge
+	_bridge_checked = true
+
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root != null:
+		var node_from_root: Node = tree.root.get_node_or_null(_RUST_BRIDGE_NODE_NAME)
+		if node_from_root != null:
+			_rust_bridge = node_from_root
+			_bridge_methods_cached = false
+			return _rust_bridge
+
+	if Engine.has_singleton(_RUST_BRIDGE_NODE_NAME):
+		_rust_bridge = Engine.get_singleton(_RUST_BRIDGE_NODE_NAME)
+		_bridge_methods_cached = false
+
+	return _rust_bridge
+
+
+func _ensure_bridge_method_cache(bridge: Object) -> void:
+	if _bridge_methods_cached:
+		return
+	_bridge_has_pathfind = bridge.has_method(_RUST_BRIDGE_METHOD_NAME)
+	_bridge_has_pathfind_xy = bridge.has_method(_RUST_BRIDGE_METHOD_XY_NAME)
+	_bridge_has_batch = bridge.has_method(_RUST_BRIDGE_BATCH_METHOD_NAME)
+	_bridge_has_batch_xy = bridge.has_method(_RUST_BRIDGE_BATCH_XY_METHOD_NAME)
+	_bridge_methods_cached = true
+
+
+func _ensure_world_cache(world_data: RefCounted) -> void:
+	var width: int = int(world_data.width)
+	var height: int = int(world_data.height)
+	var world_revision: int = int(world_data.terrain_revision)
+	var expected_size: int = width * height
+	var needs_rebuild: bool = (
+		world_data != _cached_world_data
+		or width != _cached_width
+		or height != _cached_height
+		or world_revision != _cached_world_revision
+		or _cached_walkable.size() != expected_size
+		or _cached_move_cost.size() != expected_size
+	)
+	if not needs_rebuild:
+		return
+
+	_cached_world_data = world_data
+	_cached_width = width
+	_cached_height = height
+	_cached_world_revision = world_revision
+	_cached_walkable.resize(expected_size)
+	_cached_move_cost.resize(expected_size)
+
+	var idx: int = 0
+	for y in range(height):
+		for x in range(width):
+			var walkable: bool = world_data.is_walkable(x, y)
+			_cached_walkable[idx] = 1 if walkable else 0
+			_cached_move_cost[idx] = world_data.get_move_cost(x, y)
+			idx += 1
+
+
+func _normalize_path_result(result: Variant) -> Array:
+	var path: Array = []
+	if result is PackedVector2Array:
+		var packed: PackedVector2Array = result
+		path.resize(packed.size())
+		for i in range(packed.size()):
+			var p: Vector2 = packed[i]
+			path[i] = Vector2i(int(round(p.x)), int(round(p.y)))
+		return path
+
+	if result is Array:
+		var arr: Array = result
+		path.resize(arr.size())
+		var write_idx: int = 0
+		for i in range(arr.size()):
+			var item: Variant = arr[i]
+			if item is Vector2i:
+				path[write_idx] = item
+				write_idx += 1
+			elif item is Vector2:
+				var p2: Vector2 = item
+				path[write_idx] = Vector2i(int(round(p2.x)), int(round(p2.y)))
+				write_idx += 1
+			elif item is Dictionary:
+				var d: Dictionary = item
+				if d.has("x") and d.has("y"):
+					path[write_idx] = Vector2i(int(d["x"]), int(d["y"]))
+					write_idx += 1
+		if write_idx != path.size():
+			path.resize(write_idx)
+	return path
+
+
+func _find_path_gd(world_data: RefCounted, from: Vector2i, to: Vector2i, max_steps: int = 200) -> Array:
 	var open_set: Array = [from]
 	var in_open: Dictionary = {from: true}
 	var came_from: Dictionary = {}

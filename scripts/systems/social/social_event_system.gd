@@ -1,6 +1,9 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 const PersonalitySystem = preload("res://scripts/core/entity/personality_system.gd")
 const MemorySystem = preload("res://scripts/systems/record/memory_system.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_ATTACHMENT_AFFINITY_METHOD: String = "body_social_attachment_affinity_multiplier"
+const _SIM_BRIDGE_PROPOSAL_ACCEPT_METHOD: String = "body_social_proposal_accept_prob"
 
 ## Drives relationship interactions using chunk-based proximity.
 ## Only checks entities in same chunk (16x16 tiles).
@@ -10,6 +13,8 @@ var _relationship_manager: RefCounted
 var _rng: RandomNumberGenerator
 var _stress_system: RefCounted = null
 var _event_deltas: Dictionary = {}
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 ## Map social event names → event_deltas.json keys
 var _rep_event_map: Dictionary = {
@@ -35,6 +40,24 @@ func init(entity_manager: RefCounted, relationship_manager: RefCounted, rng: Ran
 	_relationship_manager = relationship_manager
 	_rng = rng
 	_load_event_deltas()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_ATTACHMENT_AFFINITY_METHOD) \
+	and node.has_method(_SIM_BRIDGE_PROPOSAL_ACCEPT_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_event_deltas() -> void:
@@ -187,6 +210,15 @@ func _apply_event(event_name: String, a: RefCounted, b: RefCounted, rel: RefCoun
 	var _a_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_a_attach, 1.0)
 	var _b_mult: float = GameConfig.ATTACHMENT_SOCIALIZE_MULT.get(_b_attach, 1.0)
 	var _attach_affinity_mult: float = clampf(minf(_a_mult, _b_mult), 0.40, 1.60)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_ATTACHMENT_AFFINITY_METHOD,
+			_a_mult,
+			_b_mult,
+		)
+		if rust_variant != null:
+			_attach_affinity_mult = clampf(float(rust_variant), 0.40, 1.60)
 	match event_name:
 		"casual_talk":
 			rel.affinity = minf(rel.affinity + 2.0 * _attach_affinity_mult, 100.0)
@@ -294,6 +326,15 @@ func _handle_proposal(a: RefCounted, b: RefCounted, rel: RefCounted, tick: int) 
 	# Acceptance probability = (romantic_interest/100) * compatibility
 	var compat: float = PersonalitySystem.personality_compatibility(a.personality, b.personality)
 	var accept_prob: float = (rel.romantic_interest / 100.0) * compat
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_PROPOSAL_ACCEPT_METHOD,
+			float(rel.romantic_interest),
+			compat,
+		)
+		if rust_variant != null:
+			accept_prob = clampf(float(rust_variant), 0.0, 1.0)
 	if _rng.randf() < accept_prob:
 		# Accepted!
 		_relationship_manager.promote_to_partner(a.id, b.id)

@@ -147,11 +147,15 @@ func _draw_known_tech(canvas: Control, font: Font, cx: float, cy: float, width: 
 
 	# Practitioner info
 	var phase_label: String = Locale.ltr("LABEL_ADOPTION_" + phase.to_upper())
-	var prac_text: String = Locale.trf("UI_PRACTITIONERS_FMT", {
-		"count": practitioner_count,
-		"total": population,
-		"phase": phase_label,
-	})
+	var prac_text: String = Locale.trf3(
+		"UI_PRACTITIONERS_FMT",
+		"count",
+		practitioner_count,
+		"total",
+		population,
+		"phase",
+		phase_label
+	)
 	canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), prac_text,
 			HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.0,
 			GameConfig.get_font_size("popup_small"), NEUTRAL_COLOR)
@@ -163,7 +167,7 @@ func _draw_known_tech(canvas: Control, font: Font, cx: float, cy: float, width: 
 		var min_prac: int = maintenance.get("min_practitioners", 3)
 		if practitioner_count < min_prac:
 			var needed: int = min_prac - practitioner_count
-			var needs_text: String = Locale.trf("UI_NEEDS_MORE_FMT", {"count": needed})
+			var needs_text: String = Locale.trf1("UI_NEEDS_MORE_FMT", "count", needed)
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), needs_text,
 					HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.0,
 					GameConfig.get_font_size("popup_small"), KNOWN_LOW_COLOR)
@@ -174,7 +178,7 @@ func _draw_known_tech(canvas: Control, font: Font, cx: float, cy: float, width: 
 		var discoverer = entity_manager.get_entity(discoverer_id)
 		if discoverer != null:
 			var disc_name: String = discoverer.entity_name
-			var disc_text: String = Locale.trf("UI_DISCOVERER_FMT", {"name": disc_name, "tick": discovered_tick})
+			var disc_text: String = Locale.trf2("UI_DISCOVERER_FMT", "name", disc_name, "tick", discovered_tick)
 			var disc_rect := Rect2(cx + INDENT * 2.0, cy, width - INDENT * 2.0, LINE_HEIGHT)
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), disc_text,
 					HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.0,
@@ -284,7 +288,7 @@ func _draw_practitioner_list(canvas: Control, font: Font, cx: float, cy: float, 
 
 	var remaining: int = practitioners.size() - shown
 	if remaining > 0:
-		var more_text: String = Locale.trf("UI_AND_N_MORE", {"n": remaining})
+		var more_text: String = Locale.trf1("UI_AND_N_MORE", "n", remaining)
 		canvas.draw_string(font, Vector2(cx + INDENT * 3.0, cy + 12.0), more_text,
 				HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 3.0,
 				GameConfig.get_font_size("popup_small"), UNKNOWN_COLOR)
@@ -330,7 +334,7 @@ func _draw_forgotten_tech(canvas: Control, font: Font, cx: float, cy: float, wid
 	if discoverer_id > 0 and entity_manager != null:
 		var discoverer = entity_manager.get_entity(discoverer_id)
 		if discoverer != null:
-			var disc_text: String = Locale.trf("UI_DISCOVERER_FMT", {"name": discoverer.entity_name, "tick": discovered_tick})
+			var disc_text: String = Locale.trf2("UI_DISCOVERER_FMT", "name", discoverer.entity_name, "tick", discovered_tick)
 			var disc_rect := Rect2(cx + INDENT * 2.0, cy, width - INDENT * 2.0, LINE_HEIGHT)
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), disc_text,
 					HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.0,
@@ -377,7 +381,7 @@ func _draw_unknown_tech(canvas: Control, font: Font, cx: float, cy: float, width
 	if req_pop > 0:
 		var pop_met: bool = population >= req_pop
 		var pop_color: Color = POSITIVE_COLOR if pop_met else NEGATIVE_COLOR
-		var pop_line: String = "  " + Locale.trf("UI_STAT_POP_FMT", {"n": population}) + " / " + str(req_pop) + " req."
+		var pop_line: String = "  " + Locale.trf1("UI_STAT_POP_FMT", "n", population) + " / " + str(req_pop) + " req."
 		canvas.draw_string(font, Vector2(cx + INDENT * 2.5, cy + 12.0), pop_line,
 				HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.5,
 				GameConfig.get_font_size("popup_small"), pop_color)

@@ -324,7 +324,7 @@ func _show_slots(is_save: bool) -> void:
 
 func _show_overwrite_confirm(slot: int) -> void:
 	_pending_slot = slot
-	_confirm_label.text = Locale.trf("UI_OVERWRITE_CONFIRM", {"slot": slot})
+	_confirm_label.text = Locale.trf1("UI_OVERWRITE_CONFIRM", "slot", slot)
 	_main_container.visible = false
 	_slot_container.visible = false
 	_confirm_container.visible = true
@@ -344,13 +344,19 @@ func _refresh_slot_buttons(is_save: bool) -> void:
 			var month: int = int(info.get("game_month", 0))
 			var pop: int = int(info.get("population", 0))
 			var time_ago: String = _format_time_ago(str(info.get("save_time", "")))
-			btn.text = Locale.trf("UI_SLOT_FORMAT", {
-				"slot": slot,
-				"year": year,
-				"month": month,
-				"pop": pop,
-				"time_ago": time_ago
-			})
+			btn.text = Locale.trf5(
+				"UI_SLOT_FORMAT",
+				"slot",
+				slot,
+				"year",
+				year,
+				"month",
+				month,
+				"pop",
+				pop,
+				"time_ago",
+				time_ago
+			)
 			btn.disabled = false
 			btn.modulate = Color(1, 1, 1, 1)
 		else:
@@ -394,7 +400,7 @@ func _refresh_texts() -> void:
 		_lang_title.text = Locale.ltr("UI_LANGUAGE")
 	if _confirm_label != null:
 		var confirm_slot: int = _pending_slot if _pending_slot >= 1 else 1
-		_confirm_label.text = Locale.trf("UI_OVERWRITE_CONFIRM", {"slot": confirm_slot})
+		_confirm_label.text = Locale.trf1("UI_OVERWRITE_CONFIRM", "slot", confirm_slot)
 	_update_lang_highlight()
 	_refresh_slot_buttons(_state == STATE_SAVE)
 
@@ -469,16 +475,16 @@ func _format_time_ago(save_time_str: String) -> String:
 	if diff < 3600:
 		@warning_ignore("integer_division")
 		var minutes: int = maxi(diff / 60, 1)
-		return Locale.trf("UI_TIME_AGO_MINUTES", {"n": minutes})
+		return Locale.trf1("UI_TIME_AGO_MINUTES", "n", minutes)
 	if diff < 86400:
 		@warning_ignore("integer_division")
 		var hours: int = maxi(diff / 3600, 1)
-		return Locale.trf("UI_TIME_AGO_HOURS", {"n": hours})
+		return Locale.trf1("UI_TIME_AGO_HOURS", "n", hours)
 	if diff < 172800:
 		return Locale.ltr("UI_TIME_AGO_YESTERDAY")
 	@warning_ignore("integer_division")
 	var days: int = diff / 86400
-	return Locale.trf("UI_TIME_AGO_DAYS", {"n": days})
+	return Locale.trf1("UI_TIME_AGO_DAYS", "n", days)
 
 
 func _unhandled_input(event: InputEvent) -> void:

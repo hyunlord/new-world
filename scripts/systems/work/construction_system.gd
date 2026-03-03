@@ -81,8 +81,9 @@ func execute_tick(tick: int) -> void:
 			# [훈련 XP 누적] 건물 완공 보너스 — str + agi (Heritage 1999)
 			if entity.body != null:
 				var _age = float(entity.age)
-				var _m_str = BodyAttributes.get_age_trainability_modifier("str", _age)
-				var _m_agi = BodyAttributes.get_age_trainability_modifier("agi", _age)
+				var _age_mods: PackedFloat32Array = BodyAttributes.get_age_trainability_modifier_packed(_age)
+				var _m_str: float = float(_age_mods[0])
+				var _m_agi: float = float(_age_mods[1])
 				entity.body.training_xp["str"] = entity.body.training_xp.get("str", 0.0) + GameConfig.BODY_XP_BUILD * _m_str
 				entity.body.training_xp["agi"] = entity.body.training_xp.get("agi", 0.0) + GameConfig.BODY_XP_BUILD * 0.6 * _m_agi
 			emit_event("building_completed", {

@@ -152,9 +152,10 @@ func _build_content(t: Dictionary) -> void:
 	else:
 		icon = "🔵"
 
-	var primary_name: String = Locale.ltr(t.get("name_key", "TRAIT_" + id + "_NAME"))
-	if primary_name == "" or primary_name == "???":
-		primary_name = t.get("name_kr", t.get("name_en", id))
+	var name_key: String = str(t.get("name_key", "TRAIT_" + id + "_NAME"))
+	var primary_name: String = Locale.ltr(name_key)
+	if primary_name == "" or primary_name == "???" or primary_name == name_key:
+		primary_name = id.replace("_", " ").capitalize()
 
 	# Salience bar: shown when salience is between 0 and ~99%
 	var salience: float = float(t.get("_salience", 0.0))
@@ -176,9 +177,10 @@ func _build_content(t: Dictionary) -> void:
 	_add_label("%s %s%s" % [icon, primary_name, salience_str], header_color, 12)
 	_add_separator_line()
 
-	var desc: String = Locale.ltr(t.get("desc_key", "TRAIT_" + id + "_DESC"))
-	if desc == "" or desc == "???":
-		desc = t.get("description_kr", t.get("description_en", ""))
+	var desc_key: String = str(t.get("desc_key", "TRAIT_" + id + "_DESC"))
+	var desc: String = Locale.ltr(desc_key)
+	if desc == "" or desc == "???" or desc == desc_key:
+		desc = ""
 	if desc != "":
 		_add_label(desc, Color(0.75, 0.75, 0.75), 10)
 		_add_separator_line()

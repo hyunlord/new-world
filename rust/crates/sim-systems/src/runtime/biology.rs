@@ -1,0 +1,811 @@
+#![allow(unused_imports)]
+
+use hecs::{Entity, World};
+use rand::Rng;
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
+use sim_core::components::{
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
+    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+};
+use sim_core::config;
+use sim_core::{
+    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
+    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    SettlementId, Sex, SocialClass, TechState, ValueType,
+};
+use sim_engine::{SimResources, SimSystem};
+
+use crate::body;
+
+
+/// Rust runtime system for child hunger feeding from settlement stockpiles.
+///
+/// This performs active writes on `Needs.hunger` for child-stage entities and
+/// decrements `Settlement.stockpile_food` according to childcare feed rules.
+#[derive(Debug, Clone)]
+pub struct ChildcareRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ChildcareRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn childcare_profile(stage: GrowthStage) -> Option<(f64, f64)> {
+    match stage {
+        GrowthStage::Infant => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_INFANT,
+            config::CHILDCARE_FEED_AMOUNT_INFANT,
+        )),
+        GrowthStage::Toddler => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_TODDLER,
+            config::CHILDCARE_FEED_AMOUNT_TODDLER,
+        )),
+        GrowthStage::Child => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_CHILD,
+            config::CHILDCARE_FEED_AMOUNT_CHILD,
+        )),
+        GrowthStage::Teen => Some((
+            config::CHILDCARE_HUNGER_THRESHOLD_TEEN,
+            config::CHILDCARE_FEED_AMOUNT_TEEN,
+        )),
+        _ => None,
+    }
+}
+
+impl SimSystem for ChildcareRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "childcare_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut candidates: Vec<(Entity, SettlementId, f64, f64)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Needs, &Identity)>();
+            for (entity, (age, needs, identity)) in &mut query {
+                let Some((threshold, feed_amount)) = childcare_profile(age.stage) else {
+                    continue;
+                };
+                let Some(settlement_id) = identity.settlement_id else {
+                    continue;
+                };
+                let hunger = needs.get(NeedType::Hunger);
+                if hunger >= threshold {
+                    continue;
+                }
+                candidates.push((entity, settlement_id, hunger, feed_amount));
+            }
+        }
+        candidates.sort_by(|left, right| {
+            left.2
+                .partial_cmp(&right.2)
+                .unwrap_or(Ordering::Equal)
+        });
+
+        for (entity, settlement_id, _hunger, feed_amount) in candidates {
+            let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                continue;
+            };
+            let available = settlement.stockpile_food.max(0.0);
+            if available <= 0.0 {
+                continue;
+            }
+            let withdrawn = body::childcare_take_food(available as f32, feed_amount as f32) as f64;
+            if withdrawn <= 0.0 {
+                continue;
+            }
+            settlement.stockpile_food = (available - withdrawn).max(0.0);
+
+            if let Ok(mut needs) = world.get::<&mut Needs>(entity) {
+                let next = body::childcare_hunger_after(
+                    needs.get(NeedType::Hunger) as f32,
+                    withdrawn as f32,
+                    config::FOOD_HUNGER_RESTORE as f32,
+                ) as f64;
+                needs.set(NeedType::Hunger, next);
+            }
+        }
+    }
+}
+
+const POPULATION_MIN_FOR_BIRTH: i32 = 5;
+const POPULATION_FREE_HOUSING_CAP: i32 = 25;
+const POPULATION_SHELTER_CAPACITY: i32 = 6;
+const POPULATION_FOOD_PER_ALIVE: f32 = 0.5;
+
+/// Rust runtime system for population growth births.
+///
+/// This performs active writes on:
+/// - `SimResources.settlements[*].stockpile_food`
+/// - `SimResources.settlements[*].members`
+/// - ECS world via spawning a newborn entity
+#[derive(Debug, Clone)]
+pub struct PopulationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl PopulationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for PopulationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "population_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        if resources.settlements.is_empty() {
+            return;
+        }
+
+        let mut alive_count: i32 = 0;
+        {
+            let mut query = world.query::<&Age>();
+            for (_, age) in &mut query {
+                if age.alive {
+                    alive_count += 1;
+                }
+            }
+        }
+
+        let total_shelters: i32 = resources
+            .buildings
+            .values()
+            .filter(|building| building.building_type == "shelter")
+            .count() as i32;
+
+        let total_food: f32 = resources
+            .settlements
+            .values()
+            .map(|settlement| settlement.stockpile_food.max(0.0) as f32)
+            .sum();
+
+        let block_code = body::population_birth_block_code(
+            alive_count,
+            config::MAX_ENTITIES as i32,
+            total_shelters,
+            total_food,
+            POPULATION_MIN_FOR_BIRTH,
+            POPULATION_FREE_HOUSING_CAP,
+            POPULATION_SHELTER_CAPACITY,
+            POPULATION_FOOD_PER_ALIVE,
+        );
+        if block_code != 0 {
+            return;
+        }
+
+        let mut selected_settlement_id: Option<SettlementId> = None;
+        let mut selected_x: i32 = 0;
+        let mut selected_y: i32 = 0;
+        let mut best_food: f64 = -1.0;
+        for settlement in resources.settlements.values() {
+            if settlement.stockpile_food < config::BIRTH_FOOD_COST {
+                continue;
+            }
+            if settlement.stockpile_food > best_food {
+                best_food = settlement.stockpile_food;
+                selected_settlement_id = Some(settlement.id);
+                selected_x = settlement.x;
+                selected_y = settlement.y;
+            }
+        }
+        let Some(settlement_id) = selected_settlement_id else {
+            return;
+        };
+
+        if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+            settlement.stockpile_food =
+                (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
+        }
+
+        let mut age = Age::default();
+        age.ticks = 0;
+        age.years = 0.0;
+        age.stage = GrowthStage::Infant;
+        age.alive = true;
+
+        let mut identity = Identity::default();
+        identity.birth_tick = tick;
+        identity.settlement_id = Some(settlement_id);
+        identity.growth_stage = GrowthStage::Infant;
+        identity.sex = if resources.rng.gen_bool(0.5) {
+            Sex::Male
+        } else {
+            Sex::Female
+        };
+
+        let mut behavior = Behavior::default();
+        behavior.current_action = ActionType::Idle;
+
+        let entity = world.spawn((
+            age,
+            identity,
+            behavior,
+            Needs::default(),
+            Emotion::default(),
+            Stress::default(),
+            Social::default(),
+            Position::new(selected_x, selected_y),
+        ));
+        let entity_id = EntityId(entity.id() as u64);
+
+        if let Ok(mut one) = world.query_one::<&mut Identity>(entity) {
+            if let Some(identity_mut) = one.get() {
+                identity_mut.name = format!("child_{}", entity.id());
+            }
+        }
+
+        if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+            if !settlement.members.contains(&entity_id) {
+                settlement.members.push(entity_id);
+            }
+        }
+
+        resources
+            .event_bus
+            .emit(sim_engine::GameEvent::EntitySpawned { entity_id });
+    }
+}
+
+const INTERGEN_MEANEY_THRESHOLD: f32 = 0.70;
+const INTERGEN_MEANEY_REPAIR_RATE: f32 = 0.002;
+const INTERGEN_MIN_LOAD: f32 = 0.05;
+const INTERGEN_HPA_LOAD_WEIGHT: f32 = 0.60;
+
+#[derive(Debug, Clone, Copy)]
+struct IntergenParentProfile {
+    load: f32,
+    scar_index: f32,
+    sex: Sex,
+}
+
+#[inline]
+fn intergen_scar_index(memory_opt: Option<&Memory>) -> f32 {
+    let Some(memory) = memory_opt else {
+        return 0.0;
+    };
+    (memory.trauma_scars.len() as f32 / 5.0).clamp(0.0, 1.0)
+}
+
+#[inline]
+fn intergen_parenting_quality(needs_opt: Option<&Needs>, stress: &Stress) -> f32 {
+    let belonging = needs_opt
+        .map(|needs| needs.get(NeedType::Belonging) as f32)
+        .unwrap_or(0.5);
+    let intimacy = needs_opt
+        .map(|needs| needs.get(NeedType::Intimacy) as f32)
+        .unwrap_or(0.5);
+    let safety = needs_opt
+        .map(|needs| needs.get(NeedType::Safety) as f32)
+        .unwrap_or(0.5);
+    let calm_factor = (1.0 - stress.level as f32).clamp(0.0, 1.0);
+    (belonging * 0.35 + intimacy * 0.25 + safety * 0.20 + calm_factor * 0.20).clamp(0.0, 1.0)
+}
+
+/// Rust runtime system for intergenerational epigenetic transfer dynamics.
+///
+/// This performs active writes on `Stress.allostatic_load` and `Stress.level`
+/// for parents (Meaney-style repair) and child-stage entities (transmission).
+#[derive(Debug, Clone)]
+pub struct IntergenerationalRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl IntergenerationalRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for IntergenerationalRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "intergenerational_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut parent_profiles: HashMap<EntityId, IntergenParentProfile> = HashMap::new();
+        {
+            let mut query = world.query::<(&Stress, Option<&Memory>, Option<&Identity>)>();
+            for (entity, (stress, memory_opt, identity_opt)) in &mut query {
+                parent_profiles.insert(
+                    EntityId(entity.id() as u64),
+                    IntergenParentProfile {
+                        load: (stress.allostatic_load as f32).clamp(0.0, 1.0),
+                        scar_index: intergen_scar_index(memory_opt),
+                        sex: identity_opt.map(|identity| identity.sex).unwrap_or(Sex::Male),
+                    },
+                );
+            }
+        }
+
+        let mut parent_updates: Vec<(Entity, f32, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress, Option<&Needs>)>();
+            for (entity, (age, social, stress, needs_opt)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if social.children.is_empty() {
+                    continue;
+                }
+                let current_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let parenting_quality = intergen_parenting_quality(needs_opt, stress);
+                let next_load = body::intergen_meaney_repair_load(
+                    current_load,
+                    parenting_quality,
+                    INTERGEN_MEANEY_THRESHOLD,
+                    INTERGEN_MEANEY_REPAIR_RATE,
+                    INTERGEN_MIN_LOAD,
+                )
+                .clamp(0.0, 1.0);
+                if (next_load - current_load).abs() < 1e-6 {
+                    continue;
+                }
+                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let next_level = ((stress.level as f32) / hpa_sensitivity.max(0.001)).clamp(0.0, 1.0);
+                parent_updates.push((entity, next_load, next_level, stress.level as f32));
+                if let Some(profile) = parent_profiles.get_mut(&EntityId(entity.id() as u64)) {
+                    profile.load = next_load;
+                }
+            }
+        }
+
+        for (entity, next_load, next_level, previous_level) in parent_updates {
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.allostatic_load = next_load as f64;
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                if (next_level - previous_level).abs() >= 1e-6 {
+                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                        entity_id: EntityId(entity.id() as u64),
+                        stress: next_level as f64,
+                    });
+                }
+            }
+        }
+
+        let mut child_updates: Vec<(Entity, f32, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress, Option<&Needs>)>();
+            for (entity, (age, social, stress, needs_opt)) in &mut query {
+                if !age.alive || !age.stage.is_child_age() || social.parents.is_empty() {
+                    continue;
+                }
+                let mut mother_profile: Option<IntergenParentProfile> = None;
+                let mut father_profile: Option<IntergenParentProfile> = None;
+                for parent_id in &social.parents {
+                    let Some(profile) = parent_profiles.get(parent_id).copied() else {
+                        continue;
+                    };
+                    match profile.sex {
+                        Sex::Female if mother_profile.is_none() => mother_profile = Some(profile),
+                        Sex::Male if father_profile.is_none() => father_profile = Some(profile),
+                        _ => {}
+                    }
+                    if mother_profile.is_some() && father_profile.is_some() {
+                        break;
+                    }
+                }
+                let Some(mother) = mother_profile.or(father_profile) else {
+                    continue;
+                };
+                let father = father_profile.or(mother_profile).unwrap_or(mother);
+
+                let hunger = needs_opt
+                    .map(|needs| needs.get(NeedType::Hunger) as f32)
+                    .unwrap_or(0.5)
+                    .clamp(0.0, 1.0);
+                let adversity = (stress.level as f32).clamp(0.0, 1.0);
+                let malnutrition = (1.0 - hunger).clamp(0.0, 1.0);
+                let inputs = [
+                    mother.load,
+                    mother.load,
+                    mother.scar_index,
+                    0.50,
+                    0.30,
+                    0.20,
+                    father.load,
+                    father.load,
+                    father.scar_index,
+                    0.60,
+                    0.25,
+                    0.15,
+                    0.30,
+                    0.40,
+                    0.10,
+                    adversity,
+                    mother.load,
+                    malnutrition,
+                    0.25,
+                    0.10,
+                    0.35,
+                    INTERGEN_MIN_LOAD,
+                    0.65,
+                    0.35,
+                ];
+                let out = body::intergen_child_epigenetic_step(&inputs);
+                let inherited_load = out[0].clamp(0.0, 1.0);
+                let current_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let next_load = (current_load * 0.4 + inherited_load * 0.6).clamp(0.0, 1.0);
+                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let next_level = ((stress.level as f32) * hpa_sensitivity).clamp(0.0, 1.0);
+                if (next_load - current_load).abs() < 1e-6 && (next_level - stress.level as f32).abs() < 1e-6 {
+                    continue;
+                }
+                child_updates.push((entity, next_load, next_level, stress.level as f32));
+            }
+        }
+
+        for (entity, next_load, next_level, previous_level) in child_updates {
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.allostatic_load = next_load as f64;
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                if (next_level - previous_level).abs() >= 1e-6 {
+                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                        entity_id: EntityId(entity.id() as u64),
+                        stress: next_level as f64,
+                    });
+                }
+            }
+        }
+    }
+}
+
+const PARENTING_BASE_RATE: f32 = 0.002;
+const PARENTING_MALADAPTIVE_MULT: f32 = 1.5;
+const PARENTING_STRESS_DELTA_SCALE: f32 = 8.0;
+
+/// Rust runtime system for parenting transition and observational coping updates.
+///
+/// This performs active writes on parent/child `Stress` and child `Coping`
+/// based on parent regulation signals and Bandura-style modeling rates.
+#[derive(Debug, Clone)]
+pub struct ParentingRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl ParentingRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for ParentingRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "parenting_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut parent_signal_by_entity: HashMap<EntityId, f32> = HashMap::new();
+        let mut parent_updates: Vec<(Entity, f32, f32)> = Vec::new();
+        {
+            let mut query = world.query::<(&Age, &Social, &Stress)>();
+            for (entity, (age, social, stress)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if social.children.is_empty() {
+                    continue;
+                }
+
+                let current_level = (stress.level as f32).clamp(0.0, 1.0);
+                let epigenetic_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
+                let adjusted_gain =
+                    body::parenting_hpa_adjusted_stress_gain(1.0, epigenetic_load, INTERGEN_HPA_LOAD_WEIGHT)
+                        .max(0.001);
+                let next_level = (current_level / adjusted_gain).clamp(0.0, 1.0);
+                parent_updates.push((entity, next_level, current_level));
+                parent_signal_by_entity.insert(EntityId(entity.id() as u64), (1.0 - next_level).clamp(0.0, 1.0));
+            }
+        }
+
+        for (entity, next_level, previous_level) in parent_updates {
+            if (next_level - previous_level).abs() < 1e-6 {
+                continue;
+            }
+            if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
+                stress.level = next_level as f64;
+                stress.recalculate_state();
+                resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                    entity_id: EntityId(entity.id() as u64),
+                    stress: next_level as f64,
+                });
+            }
+        }
+
+        let mut query = world.query::<(&Age, &Social, &mut Coping, &mut Stress)>();
+        for (entity, (age, social, coping, stress)) in &mut query {
+            if !age.alive || !age.stage.is_child_age() || social.parents.is_empty() {
+                continue;
+            }
+
+            let mut observation_sum = 0.0_f32;
+            let mut observation_count = 0_u32;
+            for parent_id in &social.parents {
+                let Some(signal) = parent_signal_by_entity.get(parent_id).copied() else {
+                    continue;
+                };
+                observation_sum += signal;
+                observation_count += 1;
+            }
+            if observation_count == 0 {
+                continue;
+            }
+            let observation_strength = (observation_sum / observation_count as f32).clamp(0.0, 1.0);
+            let adaptive_rate = body::parenting_bandura_base_rate(
+                PARENTING_BASE_RATE,
+                1.0,
+                observation_strength,
+                false,
+                PARENTING_MALADAPTIVE_MULT,
+            );
+            let maladaptive_rate = body::parenting_bandura_base_rate(
+                PARENTING_BASE_RATE,
+                1.0,
+                1.0 - observation_strength,
+                true,
+                PARENTING_MALADAPTIVE_MULT,
+            );
+
+            let (next_strategy, stress_delta) = if adaptive_rate >= maladaptive_rate {
+                (
+                    CopingStrategyId::ProblemSolving,
+                    -adaptive_rate * PARENTING_STRESS_DELTA_SCALE,
+                )
+            } else {
+                (
+                    CopingStrategyId::Denial,
+                    maladaptive_rate * PARENTING_STRESS_DELTA_SCALE,
+                )
+            };
+
+            coping.active_strategy = Some(next_strategy);
+            let usage = coping.usage_counts.entry(next_strategy).or_insert(0);
+            *usage = usage.saturating_add(1);
+
+            let previous_level = stress.level as f32;
+            let next_level = (previous_level + stress_delta).clamp(0.0, 1.0);
+            let next_allostatic =
+                ((stress.allostatic_load as f32) + stress_delta * 0.5).clamp(0.0, 1.0);
+            if (next_level - previous_level).abs() < 1e-6 && (next_allostatic - stress.allostatic_load as f32).abs() < 1e-6 {
+                continue;
+            }
+            stress.level = next_level as f64;
+            stress.allostatic_load = next_allostatic as f64;
+            stress.recalculate_state();
+            resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
+                entity_id: EntityId(entity.id() as u64),
+                stress: next_level as f64,
+            });
+        }
+    }
+}
+
+/// Rust runtime system for age progression and growth-stage updates.
+///
+/// This performs active writes on `Age.ticks/years/stage`, mirrors growth
+/// stage into `Identity.growth_stage`, and clears builder job for elders.
+#[derive(Debug, Clone)]
+pub struct AgeRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl AgeRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for AgeRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "age_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        let mut query = world.query::<(&mut Age, Option<&mut Identity>, Option<&mut Behavior>)>();
+        for (_, (age, identity_opt, behavior_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+            age.ticks = age.ticks.saturating_add(self.tick_interval);
+            age.update_derived(config::TICKS_PER_YEAR as u64);
+            if let Some(identity) = identity_opt {
+                identity.growth_stage = age.stage;
+            }
+            if matches!(age.stage, GrowthStage::Elder) {
+                if let Some(behavior) = behavior_opt {
+                    if behavior.job == "builder" {
+                        behavior.job = "none".to_string();
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Rust runtime system for Siler-model mortality checks.
+///
+/// This performs active writes on `Age.alive` based on age-gated
+/// monthly/annual hazard checks using `body::mortality_hazards_and_prob`.
+#[derive(Debug, Clone)]
+pub struct MortalityRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MortalityRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+const MORTALITY_A1: f32 = 0.60;
+const MORTALITY_B1: f32 = 1.30;
+const MORTALITY_A2: f32 = 0.010;
+const MORTALITY_A3: f32 = 0.00006;
+const MORTALITY_B3: f32 = 0.090;
+const MORTALITY_TECH_K1: f32 = 0.30;
+const MORTALITY_TECH_K2: f32 = 0.20;
+const MORTALITY_TECH_K3: f32 = 0.05;
+const MORTALITY_TECH_LEVEL: f32 = 0.0;
+const MORTALITY_CARE_HUNGER_MIN: f32 = 0.3;
+const MORTALITY_CARE_PROTECTION_FACTOR: f32 = 0.6;
+const MORTALITY_SEASON_INFANT_MOD: f32 = 1.0;
+const MORTALITY_SEASON_BACKGROUND_MOD: f32 = 1.0;
+
+impl SimSystem for MortalityRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "mortality_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let ticks_per_year = config::TICKS_PER_YEAR as u64;
+        let ticks_per_month = config::TICKS_PER_MONTH as u64;
+        let mut query = world.query::<(
+            &mut Age,
+            Option<&Needs>,
+            Option<&BodyComponent>,
+            Option<&Stress>,
+        )>();
+        for (_, (age, needs_opt, body_opt, stress_opt)) in &mut query {
+            if !age.alive {
+                continue;
+            }
+
+            let age_ticks = age.ticks;
+            let is_infant = age_ticks < ticks_per_year;
+            let should_check = if is_infant {
+                age_ticks > 0 && age_ticks % ticks_per_month == 0
+            } else {
+                age_ticks > 0 && age_ticks % ticks_per_year == 0
+            };
+            if !should_check {
+                continue;
+            }
+
+            let age_years = (age_ticks as f32 / ticks_per_year as f32).max(0.0);
+            let nutrition = needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0);
+            let dr_norm = body_opt
+                .map(|body| {
+                    (body.dr_realized as f32 / config::BODY_REALIZED_DR_MAX as f32).clamp(0.0, 1.0)
+                })
+                .unwrap_or(0.5);
+            let frailty = stress_opt
+                .map(|stress| (1.0 + stress.allostatic_load as f32 * 2.0).clamp(0.5, 4.0))
+                .unwrap_or(1.0);
+            let hazards = body::mortality_hazards_and_prob(
+                age_years,
+                MORTALITY_A1,
+                MORTALITY_B1,
+                MORTALITY_A2,
+                MORTALITY_A3,
+                MORTALITY_B3,
+                MORTALITY_TECH_K1,
+                MORTALITY_TECH_K2,
+                MORTALITY_TECH_K3,
+                MORTALITY_TECH_LEVEL,
+                nutrition,
+                MORTALITY_CARE_HUNGER_MIN,
+                MORTALITY_CARE_PROTECTION_FACTOR,
+                MORTALITY_SEASON_INFANT_MOD,
+                MORTALITY_SEASON_BACKGROUND_MOD,
+                frailty,
+                dr_norm,
+                config::BODY_DR_MORTALITY_REDUCTION as f32,
+                is_infant,
+            );
+            let q_check = hazards[5].clamp(0.0, 0.999);
+            let roll: f32 = resources.rng.gen_range(0.0..1.0);
+            if q_check >= 0.999 || roll < q_check {
+                age.alive = false;
+            }
+        }
+    }
+}

@@ -4,6 +4,14 @@ var _entity_manager: RefCounted
 var _world_data: RefCounted
 var _pathfinder: RefCounted
 var _building_manager: RefCounted
+var _recalc_from_xy: PackedInt32Array = PackedInt32Array()
+var _recalc_to_xy: PackedInt32Array = PackedInt32Array()
+var _path_entities_scratch: Array = []
+var _recalc_entities_scratch: Array = []
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_MOVE_SKIP_METHOD: String = "body_movement_should_skip_tick"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -20,8 +28,33 @@ func init(entity_manager: RefCounted, world_data: RefCounted, pathfinder: RefCou
 	_building_manager = building_manager
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_MOVE_SKIP_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
+	var path_entities: Array = _path_entities_scratch
+	var recalc_entities: Array = _recalc_entities_scratch
+	var periodic_recalc_tick: bool = (tick % 50) == 0
+	path_entities.clear()
+	recalc_entities.clear()
+	_recalc_from_xy.resize(0)
+	_recalc_to_xy.resize(0)
+	var bridge: Object = _get_sim_bridge()
+
 	for i in range(alive.size()):
 		var entity = alive[i]
 		# Countdown action timer
@@ -33,13 +66,22 @@ func execute_tick(tick: int) -> void:
 			_apply_arrival_effect(entity, tick)
 			entity.current_action = "idle"
 			entity.action_target = Vector2i(-1, -1)
-			entity.cached_path = []
-			entity.path_index = 0
+			_clear_cached_path(entity)
 			continue
 
 		# Age-based movement speed: skip ticks based on config
 		var skip_mod: int = GameConfig.CHILD_MOVE_SKIP_MOD.get(entity.age_stage, 0)
-		if skip_mod > 0 and (tick + entity.id) % skip_mod == 0:
+		var should_skip: bool = skip_mod > 0 and (tick + entity.id) % skip_mod == 0
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_MOVE_SKIP_METHOD,
+				skip_mod,
+				tick,
+				entity.id,
+			)
+			if rust_variant != null:
+				should_skip = bool(rust_variant)
+		if should_skip:
 			continue
 
 		# Skip movement for rest/idle or if already at target
@@ -52,30 +94,41 @@ func execute_tick(tick: int) -> void:
 
 		# Move: A* if pathfinder available, else greedy
 		if _pathfinder != null:
-			_move_with_pathfinding(entity, tick)
+			path_entities.append(entity)
+			if _needs_path_recalc(entity, periodic_recalc_tick):
+				recalc_entities.append(entity)
+				_recalc_from_xy.append(entity.position.x)
+				_recalc_from_xy.append(entity.position.y)
+				_recalc_to_xy.append(entity.action_target.x)
+				_recalc_to_xy.append(entity.action_target.y)
 		else:
 			_move_toward_target(entity, tick)
+
+	if _pathfinder != null and not recalc_entities.is_empty():
+		var paths: Array = _pathfinder.find_paths_batch_xy(
+			_world_data,
+			_recalc_from_xy,
+			_recalc_to_xy
+		)
+		var recalc_count: int = mini(paths.size(), recalc_entities.size())
+		for i in range(recalc_count):
+			_apply_recalculated_path(recalc_entities[i], paths[i])
+		for i in range(recalc_count, recalc_entities.size()):
+			_clear_cached_path(recalc_entities[i])
+
+	if _pathfinder != null:
+		for i in range(path_entities.size()):
+			_move_with_pathfinding(path_entities[i], tick, false)
 
 
 ## ─── A* Pathfinding Movement ─────────────────────────────
 
-func _move_with_pathfinding(entity: RefCounted, tick: int) -> void:
-	var needs_recalc: bool = false
-	if entity.cached_path.is_empty():
-		needs_recalc = true
-	elif entity.path_index >= entity.cached_path.size():
-		needs_recalc = true
-	elif tick % 50 == 0:
-		needs_recalc = true
-
-	if needs_recalc:
-		entity.cached_path = _pathfinder.find_path(
+func _move_with_pathfinding(entity: RefCounted, tick: int, allow_recalc: bool = true) -> void:
+	if allow_recalc and _needs_path_recalc(entity, (tick % 50) == 0):
+		var recalculated_path: Array = _pathfinder.find_path(
 			_world_data, entity.position, entity.action_target
 		)
-		entity.path_index = 0
-		# Skip starting position if it matches current
-		if entity.cached_path.size() > 0 and entity.cached_path[0] == entity.position:
-			entity.path_index = 1
+		_apply_recalculated_path(entity, recalculated_path)
 
 	# Follow cached path
 	if entity.path_index < entity.cached_path.size():
@@ -94,12 +147,42 @@ func _move_with_pathfinding(entity: RefCounted, tick: int) -> void:
 			})
 		else:
 			# Path blocked, clear and fall back to greedy
-			entity.cached_path = []
-			entity.path_index = 0
+			_clear_cached_path(entity)
 			_move_toward_target(entity, tick)
 	else:
 		# Path exhausted, fall back to greedy
 		_move_toward_target(entity, tick)
+
+
+func _needs_path_recalc(entity: RefCounted, periodic_recalc_tick: bool) -> bool:
+	var cached_size: int = entity.cached_path.size()
+	if cached_size <= 0:
+		return true
+	if entity.path_index >= cached_size:
+		return true
+	if periodic_recalc_tick:
+		return true
+	return false
+
+
+func _apply_recalculated_path(entity: RefCounted, path: Array) -> void:
+	var path_size: int = path.size()
+	if path_size <= 0:
+		_clear_cached_path(entity)
+		return
+	entity.cached_path = path
+	entity.path_index = 0
+	# Skip starting position if it matches current
+	if entity.cached_path[0] == entity.position:
+		entity.path_index = 1
+
+
+func _clear_cached_path(entity: RefCounted) -> void:
+	if entity.cached_path is Array:
+		entity.cached_path.clear()
+	else:
+		entity.cached_path = []
+	entity.path_index = 0
 
 
 ## ─── Greedy Fallback Movement ────────────────────────────
@@ -110,29 +193,31 @@ func _move_toward_target(entity: RefCounted, tick: int) -> void:
 	var dx: int = signi(target.x - pos.x)
 	var dy: int = signi(target.y - pos.y)
 
-	# Try diagonal first, then axis-aligned
-	var candidates: Array[Vector2i] = []
+	# Try diagonal first, then axis-aligned (same priority, no temp array allocation).
 	if dx != 0 and dy != 0:
-		candidates.append(Vector2i(pos.x + dx, pos.y + dy))
-	if dx != 0:
-		candidates.append(Vector2i(pos.x + dx, pos.y))
-	if dy != 0:
-		candidates.append(Vector2i(pos.x, pos.y + dy))
-
-	for j in range(candidates.size()):
-		var candidate: Vector2i = candidates[j]
-		if _world_data.is_walkable(candidate.x, candidate.y):
-			var old_pos: Vector2i = entity.position
-			_entity_manager.move_entity(entity, candidate)
-			SimulationBus.emit_event("entity_moved", {
-				"entity_id": entity.id,
-				"from_x": old_pos.x,
-				"from_y": old_pos.y,
-				"to_x": candidate.x,
-				"to_y": candidate.y,
-				"tick": tick,
-			})
+		if _try_move_candidate(entity, tick, Vector2i(pos.x + dx, pos.y + dy)):
 			return
+	if dx != 0:
+		if _try_move_candidate(entity, tick, Vector2i(pos.x + dx, pos.y)):
+			return
+	if dy != 0:
+		_try_move_candidate(entity, tick, Vector2i(pos.x, pos.y + dy))
+
+
+func _try_move_candidate(entity: RefCounted, tick: int, candidate: Vector2i) -> bool:
+	if not _world_data.is_walkable(candidate.x, candidate.y):
+		return false
+	var old_pos: Vector2i = entity.position
+	_entity_manager.move_entity(entity, candidate)
+	SimulationBus.emit_event("entity_moved", {
+		"entity_id": entity.id,
+		"from_x": old_pos.x,
+		"from_y": old_pos.y,
+		"to_x": candidate.x,
+		"to_y": candidate.y,
+		"tick": tick,
+	})
+	return true
 
 
 ## ─── Arrival Effects ─────────────────────────────────────

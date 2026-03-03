@@ -5,10 +5,14 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
 const SettlementCulture = preload("res://scripts/systems/social/settlement_culture.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_VALUE_PLASTICITY_METHOD: String = "body_value_plasticity"
 
 var _entity_manager = null
 var _settlement_manager = null
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+static var _bridge_checked_static: bool = false
+static var _sim_bridge_static: Object = null
 
 ## ── 형성 비율 상수 ────────────────────────────────────────
 const GENETIC_WEIGHT: float = 0.15
@@ -179,6 +183,12 @@ static func initialize_values(
 ## ── 3.3 연령별 Plasticity [Erikson 1950] ─────────────────
 ## 0~7세: 최대, 25세 이후: 거의 고정
 static func get_plasticity(age_years: float) -> float:
+	var bridge: Object = _get_sim_bridge_static()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_VALUE_PLASTICITY_METHOD, age_years)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.10, 1.0)
+
 	if age_years < 7.0:
 		return 1.0
 	elif age_years < 15.0:
@@ -189,6 +199,22 @@ static func get_plasticity(age_years: float) -> float:
 		return lerpf(0.30, 0.10, (age_years - 25.0) / 25.0)
 	else:
 		return 0.10
+
+
+static func _get_sim_bridge_static() -> Object:
+	if _bridge_checked_static:
+		return _sim_bridge_static
+	_bridge_checked_static = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_VALUE_PLASTICITY_METHOD):
+		_sim_bridge_static = node
+	return _sim_bridge_static
 
 
 ## ── 3.4 문화 전파 [Axelrod 1997] ─────────────────────────

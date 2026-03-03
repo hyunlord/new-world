@@ -1,6 +1,11 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
 const BodyAttributes = preload("res://scripts/core/entity/body_attributes.gd")
+const _BASE_DECAY_SCALAR_COUNT: int = 14
+const _BASE_DECAY_FLAG_COUNT: int = 2
+const _CRITICAL_SEVERITY_SCALAR_COUNT: int = 6
+const _ERG_FRUSTRATION_SCALAR_COUNT: int = 10
+const _ERG_FRUSTRATION_FLAG_COUNT: int = 2
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -8,6 +13,11 @@ var _mortality_system: RefCounted
 var _world_data: RefCounted = null
 var _stress_system = null
 var _last_tick: int = 0
+var _base_decay_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _base_decay_flag_inputs: PackedByteArray = PackedByteArray()
+var _critical_severity_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _erg_frustration_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
+var _erg_frustration_flag_inputs: PackedByteArray = PackedByteArray()
 
 
 func _init() -> void:
@@ -25,26 +35,84 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, world_data: 
 
 func execute_tick(tick: int) -> void:
 	_last_tick = tick
+	if _base_decay_scalar_inputs.size() < _BASE_DECAY_SCALAR_COUNT:
+		_base_decay_scalar_inputs.resize(_BASE_DECAY_SCALAR_COUNT)
+	if _base_decay_flag_inputs.size() < _BASE_DECAY_FLAG_COUNT:
+		_base_decay_flag_inputs.resize(_BASE_DECAY_FLAG_COUNT)
+	if _critical_severity_scalar_inputs.size() < _CRITICAL_SEVERITY_SCALAR_COUNT:
+		_critical_severity_scalar_inputs.resize(_CRITICAL_SEVERITY_SCALAR_COUNT)
+	if _erg_frustration_scalar_inputs.size() < _ERG_FRUSTRATION_SCALAR_COUNT:
+		_erg_frustration_scalar_inputs.resize(_ERG_FRUSTRATION_SCALAR_COUNT)
+	if _erg_frustration_flag_inputs.size() < _ERG_FRUSTRATION_FLAG_COUNT:
+		_erg_frustration_flag_inputs.resize(_ERG_FRUSTRATION_FLAG_COUNT)
 	var alive: Array = _entity_manager.get_alive_entities()
 	for i in range(alive.size()):
 		var entity = alive[i]
 		# Decay needs
 		var hunger_mult: float = GameConfig.CHILD_HUNGER_DECAY_MULT.get(entity.age_stage, 1.0)
-		var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
-		entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
-		entity.energy -= GameConfig.ENERGY_DECAY_RATE
-		entity.social -= GameConfig.SOCIAL_DECAY_RATE
 		var tile_temp: float = GameConfig.WARMTH_TEMP_NEUTRAL
 		var has_tile_temp: bool = false
 		if _world_data != null:
 			tile_temp = _world_data.get_temperature(int(entity.position.x), int(entity.position.y))
 			has_tile_temp = true
+		var has_rust_base_decay: bool = false
+		var rust_hunger_decay: float = 0.0
+		var rust_energy_decay: float = 0.0
+		var rust_social_decay: float = 0.0
+		var rust_thirst_decay: float = 0.0
+		var rust_warmth_decay: float = 0.0
+		var rust_safety_decay: float = 0.0
+		_base_decay_scalar_inputs[0] = entity.hunger
+		_base_decay_scalar_inputs[1] = GameConfig.HUNGER_DECAY_RATE
+		_base_decay_scalar_inputs[2] = hunger_mult
+		_base_decay_scalar_inputs[3] = GameConfig.HUNGER_METABOLIC_MIN
+		_base_decay_scalar_inputs[4] = GameConfig.HUNGER_METABOLIC_RANGE
+		_base_decay_scalar_inputs[5] = GameConfig.ENERGY_DECAY_RATE
+		_base_decay_scalar_inputs[6] = GameConfig.SOCIAL_DECAY_RATE
+		_base_decay_scalar_inputs[7] = GameConfig.SAFETY_DECAY_RATE
+		_base_decay_scalar_inputs[8] = GameConfig.THIRST_DECAY_RATE
+		_base_decay_scalar_inputs[9] = GameConfig.WARMTH_DECAY_RATE
+		_base_decay_scalar_inputs[10] = tile_temp
+		_base_decay_scalar_inputs[11] = GameConfig.WARMTH_TEMP_NEUTRAL
+		_base_decay_scalar_inputs[12] = GameConfig.WARMTH_TEMP_FREEZING
+		_base_decay_scalar_inputs[13] = GameConfig.WARMTH_TEMP_COLD
+		_base_decay_flag_inputs[0] = 1 if has_tile_temp else 0
+		_base_decay_flag_inputs[1] = 1 if GameConfig.NEEDS_EXPANSION_ENABLED else 0
+		var base_decay_variant: Variant = SimBridge.body_needs_base_decay_step_packed(
+			_base_decay_scalar_inputs,
+			_base_decay_flag_inputs
+		)
+		if base_decay_variant is PackedFloat32Array:
+			var packed_base_decay: PackedFloat32Array = base_decay_variant
+			if packed_base_decay.size() >= 6:
+				rust_hunger_decay = float(packed_base_decay[0])
+				rust_energy_decay = float(packed_base_decay[1])
+				rust_social_decay = float(packed_base_decay[2])
+				rust_thirst_decay = float(packed_base_decay[3])
+				rust_warmth_decay = float(packed_base_decay[4])
+				rust_safety_decay = float(packed_base_decay[5])
+				has_rust_base_decay = true
+		if has_rust_base_decay:
+			entity.hunger -= rust_hunger_decay
+			entity.energy -= rust_energy_decay
+			entity.social -= rust_social_decay
+			if GameConfig.NEEDS_EXPANSION_ENABLED:
+				entity.safety = maxf(0.0, entity.safety - rust_safety_decay)
+		else:
+			var metabolic_factor: float = GameConfig.HUNGER_METABOLIC_MIN + GameConfig.HUNGER_METABOLIC_RANGE * entity.hunger
+			entity.hunger -= GameConfig.HUNGER_DECAY_RATE * hunger_mult * metabolic_factor
+			entity.energy -= GameConfig.ENERGY_DECAY_RATE
+			entity.social -= GameConfig.SOCIAL_DECAY_RATE
+			if GameConfig.NEEDS_EXPANSION_ENABLED:
+				entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
 
 		## [Maslow (1943) L1 — 갈증 소모]
 		## 기본 소모 + 더운 타일에서 가속 (최대 2배)
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var thirst_decay: float = GameConfig.THIRST_DECAY_RATE
-			if has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
+			if has_rust_base_decay:
+				thirst_decay = rust_thirst_decay
+			elif has_tile_temp and tile_temp > GameConfig.WARMTH_TEMP_NEUTRAL:
 				thirst_decay *= 1.0 + (tile_temp - GameConfig.WARMTH_TEMP_NEUTRAL) * 2.0
 			entity.thirst = maxf(0.0, entity.thirst - thirst_decay)
 
@@ -52,7 +120,9 @@ func execute_tick(tick: int) -> void:
 		## 중립 온도(0.5) 이상이면 소모 없음, 추울수록 가속
 		if GameConfig.NEEDS_EXPANSION_ENABLED:
 			var warmth_decay: float = 0.0
-			if has_tile_temp:
+			if has_rust_base_decay:
+				warmth_decay = rust_warmth_decay
+			elif has_tile_temp:
 				if tile_temp < GameConfig.WARMTH_TEMP_NEUTRAL:
 					if tile_temp < GameConfig.WARMTH_TEMP_FREEZING:
 						warmth_decay = GameConfig.WARMTH_DECAY_RATE * 5.0
@@ -65,25 +135,21 @@ func execute_tick(tick: int) -> void:
 				warmth_decay = GameConfig.WARMTH_DECAY_RATE
 			entity.warmth = maxf(0.0, entity.warmth - warmth_decay)
 
-		## [Maslow (1943) L2 — 안전감 소모]
-		if GameConfig.NEEDS_EXPANSION_ENABLED:
-			entity.safety = maxf(0.0, entity.safety - GameConfig.SAFETY_DECAY_RATE)
-
 		# Extra energy cost when performing actions / recovery when resting
 		if entity.current_action != "idle" and entity.current_action != "rest":
 			var _end_norm: float = 0.5
 			if entity.body != null and entity.body.realized.has("end"):
 				_end_norm = clampf(float(entity.body.realized["end"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
-			var _action_cost: float = GameConfig.ENERGY_ACTION_COST * (1.0 - GameConfig.BODY_END_COST_REDUCTION * _end_norm)
+			var _action_cost: float = BodyAttributes.compute_action_energy_cost(_end_norm)
 			entity.energy -= _action_cost
 		elif entity.current_action == "rest":
 			var _rec_norm: float = 0.5
 			if entity.body != null and entity.body.realized.has("rec"):
 				_rec_norm = clampf(float(entity.body.realized["rec"]) / float(GameConfig.BODY_REALIZED_MAX), 0.0, 1.0)
-			entity.energy += GameConfig.BODY_REST_ENERGY_RECOVERY * (1.0 + GameConfig.BODY_REC_RECOVERY_BONUS * _rec_norm)
+			entity.energy += BodyAttributes.compute_rest_energy_recovery(_rec_norm)
 			# [훈련 XP 누적] 휴식 → 회복력 훈련 (Buchheit & Laursen 2013)
 			if entity.body != null:
-				var _age_mod = BodyAttributes.get_age_trainability_modifier("rec", float(entity.age))
+				var _age_mod: float = BodyAttributes.get_rec_age_trainability_modifier(float(entity.age))
 				entity.body.training_xp["rec"] = entity.body.training_xp.get("rec", 0.0) + GameConfig.BODY_XP_REST * _age_mod * 0.01
 
 		# Age: derive from birth_tick (not incremental — avoids drift)
@@ -110,29 +176,65 @@ func execute_tick(tick: int) -> void:
 
 		## [Lazarus & Folkman (1984) — 욕구 미충족 stressor]
 		if GameConfig.NEEDS_EXPANSION_ENABLED and entity.emotion_data != null:
+			var has_rust_severity: bool = false
+			var rust_sev_thirst: float = 0.0
+			var rust_sev_warmth: float = 0.0
+			var rust_sev_safety: float = 0.0
+			_critical_severity_scalar_inputs[0] = entity.thirst
+			_critical_severity_scalar_inputs[1] = entity.warmth
+			_critical_severity_scalar_inputs[2] = entity.safety
+			_critical_severity_scalar_inputs[3] = GameConfig.THIRST_CRITICAL
+			_critical_severity_scalar_inputs[4] = GameConfig.WARMTH_CRITICAL
+			_critical_severity_scalar_inputs[5] = GameConfig.SAFETY_CRITICAL
+			var severity_variant: Variant = SimBridge.body_needs_critical_severity_step_packed(
+				_critical_severity_scalar_inputs
+			)
+			if severity_variant is PackedFloat32Array:
+				var packed_severity: PackedFloat32Array = severity_variant
+				if packed_severity.size() >= 3:
+					rust_sev_thirst = float(packed_severity[0])
+					rust_sev_warmth = float(packed_severity[1])
+					rust_sev_safety = float(packed_severity[2])
+					has_rust_severity = true
 			if entity.thirst < GameConfig.THIRST_CRITICAL:
 				var sev_thirst: float = 1.0 - (entity.thirst / GameConfig.THIRST_CRITICAL)
+				if has_rust_severity:
+					sev_thirst = rust_sev_thirst
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "dehydration", 3.0 * sev_thirst)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 3.0 * sev_thirst, 0.0, 100.0)
 			if entity.warmth < GameConfig.WARMTH_CRITICAL:
 				var sev_warmth: float = 1.0 - (entity.warmth / GameConfig.WARMTH_CRITICAL)
+				if has_rust_severity:
+					sev_warmth = rust_sev_warmth
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "hypothermia", 4.0 * sev_warmth)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 4.0 * sev_warmth, 0.0, 100.0)
 			if entity.safety < GameConfig.SAFETY_CRITICAL:
 				var sev_safety: float = 1.0 - (entity.safety / GameConfig.SAFETY_CRITICAL)
+				if has_rust_severity:
+					sev_safety = rust_sev_safety
 				if _stress_system != null:
 					_stress_system.inject_stress_event(entity.emotion_data, "constant_threat", 2.0 * sev_safety)
 				else:
 					entity.emotion_data.stress = clampf(entity.emotion_data.stress + 2.0 * sev_safety, 0.0, 100.0)
 			# [Cassidy & Berlin 1994 — Anxious attachment: chronic low-level stress when social need unmet]
 			if str(entity.get_meta("attachment_type", "secure")) == "anxious":
-				if entity.social < GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD:
+				var attachment_stress_delta: float = 0.0
+				var attachment_stress_variant: Variant = SimBridge.body_anxious_attachment_stress_delta(
+					entity.social,
+					GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD,
+					GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE
+				)
+				if attachment_stress_variant != null:
+					attachment_stress_delta = float(attachment_stress_variant)
+				elif entity.social < GameConfig.ATTACHMENT_ANXIOUS_STRESS_THRESHOLD:
+					attachment_stress_delta = GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE
+				if attachment_stress_delta > 0.0:
 					entity.emotion_data.stress = minf(
-						entity.emotion_data.stress + GameConfig.ATTACHMENT_ANXIOUS_STRESS_RATE,
+						entity.emotion_data.stress + attachment_stress_delta,
 						100.0
 					)
 
@@ -244,22 +346,73 @@ func set_stress_system(ss) -> void:
 func _update_erg_frustration(entity: RefCounted) -> void:
 	if not entity.is_alive:
 		return
-	# --- Growth frustration check ---
-	var growth_frustrated: bool = (
-		entity.competence < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
-		entity.autonomy < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
-		entity.self_actualization < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
-	)
-	if growth_frustrated:
-		entity.erg_growth_frustration_ticks += 1
-	else:
-		entity.erg_growth_frustration_ticks = maxi(0, entity.erg_growth_frustration_ticks - 10)
+	var started_growth_regression: bool = false
+	var started_relatedness_regression: bool = false
+	var rust_applied: bool = false
 
-	var was_regressing_growth: bool = entity.erg_regressing_to_existence
-	entity.erg_regressing_to_existence = (
-		entity.erg_growth_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+	_erg_frustration_scalar_inputs[0] = entity.competence
+	_erg_frustration_scalar_inputs[1] = entity.autonomy
+	_erg_frustration_scalar_inputs[2] = entity.self_actualization
+	_erg_frustration_scalar_inputs[3] = entity.belonging
+	_erg_frustration_scalar_inputs[4] = entity.intimacy
+	_erg_frustration_scalar_inputs[5] = GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
+	_erg_frustration_scalar_inputs[6] = GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+	_erg_frustration_scalar_inputs[7] = float(GameConfig.ERG_FRUSTRATION_WINDOW)
+	_erg_frustration_scalar_inputs[8] = float(entity.erg_growth_frustration_ticks)
+	_erg_frustration_scalar_inputs[9] = float(entity.erg_relatedness_frustration_ticks)
+	_erg_frustration_flag_inputs[0] = 1 if entity.erg_regressing_to_existence else 0
+	_erg_frustration_flag_inputs[1] = 1 if entity.erg_regressing_to_relatedness else 0
+
+	var erg_step_variant: Variant = SimBridge.body_erg_frustration_step_packed(
+		_erg_frustration_scalar_inputs,
+		_erg_frustration_flag_inputs
 	)
-	if entity.erg_regressing_to_existence and not was_regressing_growth:
+	if erg_step_variant is PackedInt32Array:
+		var packed_erg_step: PackedInt32Array = erg_step_variant
+		if packed_erg_step.size() >= 6:
+			entity.erg_growth_frustration_ticks = int(packed_erg_step[0])
+			entity.erg_relatedness_frustration_ticks = int(packed_erg_step[1])
+			entity.erg_regressing_to_existence = int(packed_erg_step[2]) != 0
+			started_growth_regression = int(packed_erg_step[3]) != 0
+			entity.erg_regressing_to_relatedness = int(packed_erg_step[4]) != 0
+			started_relatedness_regression = int(packed_erg_step[5]) != 0
+			rust_applied = true
+
+	if not rust_applied:
+		# --- Growth frustration check ---
+		var growth_frustrated: bool = (
+			entity.competence < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+			entity.autonomy < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD and
+			entity.self_actualization < GameConfig.ERG_GROWTH_FRUSTRATION_THRESHOLD
+		)
+		if growth_frustrated:
+			entity.erg_growth_frustration_ticks += 1
+		else:
+			entity.erg_growth_frustration_ticks = maxi(0, entity.erg_growth_frustration_ticks - 10)
+
+		var was_regressing_growth: bool = entity.erg_regressing_to_existence
+		entity.erg_regressing_to_existence = (
+			entity.erg_growth_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+		)
+		started_growth_regression = entity.erg_regressing_to_existence and not was_regressing_growth
+
+		# --- Relatedness frustration check ---
+		var relatedness_frustrated: bool = (
+			entity.belonging < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD and
+			entity.intimacy < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
+		)
+		if relatedness_frustrated:
+			entity.erg_relatedness_frustration_ticks += 1
+		else:
+			entity.erg_relatedness_frustration_ticks = maxi(0, entity.erg_relatedness_frustration_ticks - 10)
+
+		var was_regressing_rel: bool = entity.erg_regressing_to_relatedness
+		entity.erg_regressing_to_relatedness = (
+			entity.erg_relatedness_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
+		)
+		started_relatedness_regression = entity.erg_regressing_to_relatedness and not was_regressing_rel
+
+	if started_growth_regression:
 		if entity.emotion_data != null and _stress_system != null:
 			_stress_system.inject_stress_event(entity.emotion_data, "erg_growth_regression", 5.0)
 		emit_event("erg_regression_started", {
@@ -269,21 +422,7 @@ func _update_erg_frustration(entity: RefCounted) -> void:
 			"tick": _last_tick,
 		})
 
-	# --- Relatedness frustration check ---
-	var relatedness_frustrated: bool = (
-		entity.belonging < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD and
-		entity.intimacy < GameConfig.ERG_RELATEDNESS_FRUSTRATION_THRESHOLD
-	)
-	if relatedness_frustrated:
-		entity.erg_relatedness_frustration_ticks += 1
-	else:
-		entity.erg_relatedness_frustration_ticks = maxi(0, entity.erg_relatedness_frustration_ticks - 10)
-
-	var was_regressing_rel: bool = entity.erg_regressing_to_relatedness
-	entity.erg_regressing_to_relatedness = (
-		entity.erg_relatedness_frustration_ticks >= GameConfig.ERG_FRUSTRATION_WINDOW
-	)
-	if entity.erg_regressing_to_relatedness and not was_regressing_rel:
+	if started_relatedness_regression:
 		if entity.emotion_data != null and _stress_system != null:
 			_stress_system.inject_stress_event(entity.emotion_data, "erg_relatedness_regression", 4.0)
 		emit_event("erg_regression_started", {

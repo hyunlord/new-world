@@ -9,7 +9,13 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 ## priority=18 — after stat_sync(11)/needs(10), before behavior(20)
 ## tick_interval=MEMORY_COMPRESS_INTERVAL_TICKS (annual)
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_DECAY_BATCH_METHOD: String = "body_memory_decay_batch"
+const _SIM_BRIDGE_SUMMARY_METHOD: String = "body_memory_summary_intensity"
+
 var _entity_manager: RefCounted
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -21,6 +27,24 @@ func _init() -> void:
 ## Initializes the memory system with the entity manager.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_DECAY_BATCH_METHOD) \
+	and node.has_method(_SIM_BRIDGE_SUMMARY_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Runs decay, capacity eviction, and compression on all alive entities' working memory each tick.
@@ -41,6 +65,36 @@ func _process_entity(entity: RefCounted, tick: int, dt_years: float) -> void:
 
 ## [Ebbinghaus 1885] Exponential intensity decay. Entries below 0.01 are removed (forgotten).
 func _decay_working_memory(entity: RefCounted, dt_years: float) -> void:
+	var entries: Array = entity.working_memory
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null and not entries.is_empty():
+		var intensities: PackedFloat32Array = PackedFloat32Array()
+		var rates: PackedFloat32Array = PackedFloat32Array()
+		for entry_variant in entries:
+			var entry_dict: Dictionary = entry_variant
+			var intensity_at_encoding: float = float(entry_dict.get("intensity", 0.1))
+			intensities.append(intensity_at_encoding)
+			rates.append(_get_decay_rate(intensity_at_encoding))
+		var decayed_variant: Variant = bridge.call(
+			_SIM_BRIDGE_DECAY_BATCH_METHOD,
+			intensities,
+			rates,
+			dt_years
+		)
+		if decayed_variant is PackedFloat32Array:
+			var decayed: PackedFloat32Array = decayed_variant
+			if decayed.size() == entries.size():
+				var bridged_remaining: Array = []
+				for idx in range(entries.size()):
+					var new_intensity: float = float(decayed[idx])
+					if new_intensity < 0.01:
+						continue
+					var kept_entry: Dictionary = entries[idx]
+					kept_entry["intensity"] = new_intensity
+					bridged_remaining.append(kept_entry)
+				entity.working_memory = bridged_remaining
+				return
+
 	var remaining: Array = []
 	for entry in entity.working_memory:
 		var rate: float = _get_decay_rate(float(entry.get("intensity", 0.1)))
@@ -73,6 +127,7 @@ func _evict_if_over_capacity(entity: RefCounted) -> void:
 ## Groups of >= MEMORY_COMPRESS_MIN_GROUP entries are replaced with a single summary entry.
 func _compress_old_entries(entity: RefCounted, current_tick: int) -> void:
 	var cutoff_tick: int = current_tick - GameConfig.MEMORY_COMPRESS_INTERVAL_TICKS
+	var bridge: Object = _get_sim_bridge()
 
 	var old_entries: Array = []
 	var recent_entries: Array = []
@@ -109,10 +164,19 @@ func _compress_old_entries(entity: RefCounted, current_tick: int) -> void:
 				oldest_tick = int(e["tick"])
 				target_name = e.get("target_name", "")
 		var evt_type: String = group[0].get("type", "interaction")
+		var summary_intensity: float = max_int * 0.7
+		if bridge != null:
+			var rust_summary_variant: Variant = bridge.call(
+				_SIM_BRIDGE_SUMMARY_METHOD,
+				max_int,
+				0.7
+			)
+			if rust_summary_variant is float:
+				summary_intensity = float(rust_summary_variant)
 		compressed.append({
 			"type":         evt_type + "_summary",
 			"tick":         oldest_tick,
-			"intensity":    max_int * 0.7,
+			"intensity":    summary_intensity,
 			"target_id":    int(group[0].get("target_id", -1)),
 			"target_name":  target_name,
 			"summary_key":  "MEMORY_SUMMARY_" + evt_type.to_upper(),

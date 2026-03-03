@@ -5,9 +5,14 @@ const TRAUMA_SCARS_PATH: String = "res://data/trauma_scars.json"
 const KINDLING_FACTOR: float = 0.30
 ## Global scale for tuning scar acquisition rates
 const SCAR_CHANCE_SCALE: float = 1.0
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_ACQUIRE_CHANCE_METHOD: String = "body_trauma_scar_acquire_chance"
+const _SIM_BRIDGE_SENS_FACTOR_METHOD: String = "body_trauma_scar_sensitivity_factor"
 
 var _scar_defs: Dictionary = {}
 var _entity_manager = null
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -22,6 +27,24 @@ func init(deps: Dictionary) -> void:
 	tick_interval = 10
 	_entity_manager = deps.get("entity_manager")
 	_load_scar_defs()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_ACQUIRE_CHANCE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_SENS_FACTOR_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_scar_defs() -> void:
@@ -53,10 +76,25 @@ func try_acquire_scar(entity: RefCounted, scar_id: String, base_chance: float, t
 		return
 
 	# Kindling Theory: 기존 스택이 있을수록 다음 획득 확률 증가
-	var chance: float = base_chance * SCAR_CHANCE_SCALE
-	if existing_stacks > 0:
-		chance *= (1.0 + KINDLING_FACTOR * float(existing_stacks))
-	chance = clampf(chance, 0.0, 1.0)
+	var chance: float = 0.0
+	var used_rust_chance: bool = false
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_chance_variant: Variant = bridge.call(
+			_SIM_BRIDGE_ACQUIRE_CHANCE_METHOD,
+			base_chance,
+			SCAR_CHANCE_SCALE,
+			existing_stacks,
+			KINDLING_FACTOR
+		)
+		if rust_chance_variant is float:
+			chance = float(rust_chance_variant)
+			used_rust_chance = true
+	if not used_rust_chance:
+		chance = base_chance * SCAR_CHANCE_SCALE
+		if existing_stacks > 0:
+			chance *= (1.0 + KINDLING_FACTOR * float(existing_stacks))
+		chance = clampf(chance, 0.0, 1.0)
 
 	if randf() >= chance:
 		return
@@ -77,11 +115,15 @@ func try_acquire_scar(entity: RefCounted, scar_id: String, base_chance: float, t
 		])
 
 	if SimulationBus.has_signal("scar_acquired"):
+		var scar_name: String = _resolve_scar_name(sdef, scar_id)
+		var scar_name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
 		SimulationBus.scar_acquired.emit({
 			"entity_id": entity.id,
 			"entity_name": entity.entity_name,
 			"scar_id": scar_id,
-			"scar_name_kr": sdef.get("name_kr", scar_id),
+			"scar_name": scar_name,
+			"scar_name_key": scar_name_key,
+			"scar_name_kr": scar_name,
 			"stacks": new_stacks,
 			"tick": tick,
 		})
@@ -103,11 +145,15 @@ func check_reactivation(entity: RefCounted, context_type: String, tick: int) -> 
 					entity.entity_name, scar_id, context_type
 				])
 			if SimulationBus.has_signal("scar_reactivated"):
+				var scar_name: String = _resolve_scar_name(sdef, scar_id)
+				var scar_name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
 				SimulationBus.scar_reactivated.emit({
 					"entity_id": entity.id,
 					"entity_name": entity.entity_name,
 					"scar_id": scar_id,
-					"scar_name_kr": sdef.get("name_kr", scar_id),
+					"scar_name": scar_name,
+					"scar_name_key": scar_name_key,
+					"scar_name_kr": scar_name,
 					"trigger": context_type,
 					"tick": tick,
 				})
@@ -128,14 +174,26 @@ func get_scar_threshold_reduction(entity: RefCounted) -> float:
 ## StressSystem.inject_event()에서 호출 — 스트레스 민감도 배수 반환
 func get_scar_stress_sensitivity(entity: RefCounted) -> float:
 	var mult: float = 1.0
+	var bridge: Object = _get_sim_bridge()
 	for scar_entry in entity.trauma_scars:
 		var scar_id: String = scar_entry.get("scar_id", "")
 		var stacks: int = int(scar_entry.get("stacks", 1))
 		var sdef: Dictionary = _scar_defs.get(scar_id, {})
 		var base_mult: float = float(sdef.get("stress_sensitivity_mult", 1.0))
 		# 스택 초과분은 50% 감쇠 (diminishing returns)
-		var delta: float = base_mult - 1.0
-		mult *= (1.0 + delta * (1.0 + 0.5 * float(stacks - 1)))
+		var used_rust_factor: bool = false
+		if bridge != null:
+			var rust_factor_variant: Variant = bridge.call(
+				_SIM_BRIDGE_SENS_FACTOR_METHOD,
+				base_mult,
+				stacks
+			)
+			if rust_factor_variant is float:
+				mult *= float(rust_factor_variant)
+				used_rust_factor = true
+		if not used_rust_factor:
+			var delta: float = base_mult - 1.0
+			mult *= (1.0 + delta * (1.0 + 0.5 * float(stacks - 1)))
 	return clampf(mult, 0.5, 3.0)
 
 
@@ -187,3 +245,11 @@ func _get_scar_stacks(entity: RefCounted, scar_id: String) -> int:
 		if scar_entry.get("scar_id") == scar_id:
 			return int(scar_entry.get("stacks", 0))
 	return 0
+
+
+func _resolve_scar_name(sdef: Dictionary, scar_id: String) -> String:
+	var name_key: String = str(sdef.get("name_key", "SCAR_" + scar_id))
+	var translated: String = Locale.ltr(name_key)
+	if translated == name_key or translated == "???":
+		return scar_id
+	return translated

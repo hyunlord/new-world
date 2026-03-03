@@ -9,11 +9,15 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
 const TechState = preload("res://scripts/core/tech/tech_state.gd")
 const KnowledgeType = preload("res://scripts/core/tech/knowledge_type.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_DISCOVERY_PROB_METHOD: String = "body_tech_discovery_prob"
 
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
 var _chronicle
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -28,6 +32,22 @@ func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
 	_settlement_manager = p_settlement_manager
 	_tech_tree_manager = p_tech_tree_manager
 	_chronicle = p_chronicle
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_DISCOVERY_PROB_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -117,6 +137,23 @@ func _compute_discovery_prob(settlement: RefCounted, tech_id: String) -> float:
 	## P_check = 1 - (1 - P_annual)^(1/checks_per_year)
 	## This preserves the same expected annual discovery rate.
 	var checks_per_year: float = 4380.0 / float(tick_interval)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_DISCOVERY_PROB_METHOD,
+			base,
+			pop_bonus,
+			knowledge_bonus,
+			openness_bonus,
+			logical_bonus,
+			naturalistic_bonus,
+			soft_bonus,
+			rediscovery_bonus,
+			float(GameConfig.TECH_DISCOVERY_MAX_BONUS),
+			checks_per_year,
+		)
+		if rust_variant != null:
+			return clampf(float(rust_variant), 0.0, 1.0)
 	if checks_per_year <= 1.0 or annual_total >= 1.0:
 		return clampf(annual_total, 0.0, 1.0)
 	return 1.0 - pow(1.0 - annual_total, 1.0 / checks_per_year)

@@ -1,0 +1,1088 @@
+#![allow(unused_imports)]
+
+use hecs::{Entity, World};
+use rand::Rng;
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
+use sim_core::components::{
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
+    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+};
+use sim_core::config;
+use sim_core::{
+    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
+    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    SettlementId, Sex, SocialClass, TechState, ValueType,
+};
+use sim_engine::{SimResources, SimSystem};
+
+use crate::body;
+
+
+#[inline]
+fn tension_pair_key(left: SettlementId, right: SettlementId) -> String {
+    let (min_id, max_id) = if left.0 <= right.0 {
+        (left.0, right.0)
+    } else {
+        (right.0, left.0)
+    };
+    format!("{min_id}:{max_id}")
+}
+
+#[inline]
+fn tension_food_scarce(stockpile_food: f64, population: usize) -> bool {
+    if population == 0 {
+        return false;
+    }
+    let monthly_need = population as f32
+        * config::HUNGER_DECAY_RATE as f32
+        * config::TICKS_PER_DAY as f32
+        * 30.0;
+    let ratio = (stockpile_food as f32) / monthly_need.max(1.0);
+    ratio < config::TENSION_RESOURCE_DEFICIT_TRIGGER as f32
+}
+
+#[derive(Debug, Clone, Copy)]
+struct TensionSettlementSnapshot {
+    id: SettlementId,
+    x: i32,
+    y: i32,
+    stockpile_food: f64,
+    population: usize,
+}
+
+/// Rust runtime system for inter-settlement scarcity tension.
+///
+/// This performs active writes on `SimResources.tension_pairs`
+/// using settlement distance, food scarcity pressure, and natural decay.
+#[derive(Debug, Clone)]
+pub struct TensionRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TensionRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TensionRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tension_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        if resources.settlements.len() < 2 {
+            return;
+        }
+        let mut settlements: Vec<TensionSettlementSnapshot> =
+            Vec::with_capacity(resources.settlements.len());
+        for settlement in resources.settlements.values() {
+            settlements.push(TensionSettlementSnapshot {
+                id: settlement.id,
+                x: settlement.x,
+                y: settlement.y,
+                stockpile_food: settlement.stockpile_food,
+                population: settlement.population(),
+            });
+        }
+
+        let proximity_radius = config::TENSION_PROXIMITY_RADIUS as f32;
+        let dt_years = self.tick_interval as f32 / config::TICKS_PER_YEAR as f32;
+        for left_idx in 0..settlements.len() {
+            let left = settlements[left_idx];
+            for right in settlements.iter().skip(left_idx + 1).copied() {
+                let dx = (left.x - right.x) as f32;
+                let dy = (left.y - right.y) as f32;
+                let distance = (dx * dx + dy * dy).sqrt();
+                if distance > proximity_radius {
+                    continue;
+                }
+
+                let left_scarce = tension_food_scarce(left.stockpile_food, left.population);
+                let right_scarce = tension_food_scarce(right.stockpile_food, right.population);
+                let scarcity_pressure = body::tension_scarcity_pressure(
+                    left_scarce,
+                    right_scarce,
+                    config::TENSION_PER_SHARED_RESOURCE as f32,
+                );
+
+                let pair_key = tension_pair_key(left.id, right.id);
+                let current = resources
+                    .tension_pairs
+                    .get(pair_key.as_str())
+                    .copied()
+                    .unwrap_or(0.0);
+                let next = body::tension_next_value(
+                    current as f32,
+                    scarcity_pressure,
+                    config::TENSION_DECAY_PER_YEAR as f32,
+                    dt_years,
+                )
+                .clamp(0.0, 1.0);
+                resources.tension_pairs.insert(pair_key, next as f64);
+            }
+        }
+    }
+}
+
+/// Rust runtime system for technology utilization era updates.
+///
+/// This performs active writes on `Settlement.current_era` using known-tech counts.
+#[derive(Debug, Clone)]
+pub struct TechUtilizationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechUtilizationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechUtilizationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_utilization_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                continue;
+            };
+            let known_count = settlement
+                .tech_states
+                .values()
+                .filter(|state| matches!(state, TechState::KnownLow | TechState::KnownStable))
+                .count() as u32;
+
+            let next_era = if known_count >= config::TECH_ERA_BRONZE_AGE_COUNT {
+                "bronze_age"
+            } else if known_count >= config::TECH_ERA_TRIBAL_COUNT {
+                "tribal"
+            } else {
+                "stone_age"
+            };
+
+            if settlement.current_era == next_era {
+                continue;
+            }
+            settlement.current_era = next_era.to_string();
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::EraAdvanced {
+                    settlement_id,
+                    new_era: settlement.current_era.clone(),
+                });
+        }
+    }
+}
+
+const TECH_MAINT_MIN_PRACTITIONERS: usize = 3;
+const TECH_MAINT_RECOVERY_POP: usize = 6;
+const TECH_MAINT_LONG_RECOVERY_POP: usize = 9;
+
+/// Rust runtime system for technology maintenance state transitions.
+///
+/// This performs active writes on `Settlement.tech_states` and emits
+/// rediscovery events when forgotten tech becomes known again.
+#[derive(Debug, Clone)]
+pub struct TechMaintenanceRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechMaintenanceRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechMaintenanceRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_maintenance_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let population = resources
+                .settlements
+                .get(&settlement_id)
+                .map(|settlement| settlement.members.len())
+                .unwrap_or(0);
+            let mut rediscovered: Vec<String> = Vec::new();
+
+            {
+                let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                    continue;
+                };
+                let mut tech_ids: Vec<String> = settlement.tech_states.keys().cloned().collect();
+                tech_ids.sort();
+
+                for tech_id in tech_ids {
+                    let Some(current_state) = settlement.tech_states.get(&tech_id).copied() else {
+                        continue;
+                    };
+                    let next_state = match current_state {
+                        TechState::KnownStable => {
+                            if population < TECH_MAINT_MIN_PRACTITIONERS {
+                                TechState::KnownLow
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::KnownLow => {
+                            if population < (TECH_MAINT_MIN_PRACTITIONERS / 2).max(1) {
+                                TechState::ForgottenRecent
+                            } else if population >= TECH_MAINT_RECOVERY_POP {
+                                TechState::KnownStable
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::ForgottenRecent => {
+                            if population >= TECH_MAINT_RECOVERY_POP {
+                                rediscovered.push(tech_id.clone());
+                                TechState::KnownLow
+                            } else if population == 0 {
+                                TechState::ForgottenLong
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::ForgottenLong => {
+                            if population >= TECH_MAINT_LONG_RECOVERY_POP {
+                                rediscovered.push(tech_id.clone());
+                                TechState::KnownLow
+                            } else {
+                                current_state
+                            }
+                        }
+                        TechState::Unknown => current_state,
+                    };
+
+                    if next_state != current_state {
+                        settlement.tech_states.insert(tech_id, next_state);
+                    }
+                }
+            }
+
+            for tech_id in rediscovered {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id,
+                        tech_id,
+                    });
+            }
+        }
+    }
+}
+
+const TECH_DISCOVERY_BASE_CHANCE: f32 = 0.02;
+const TECH_DISCOVERY_MIN_POP: usize = 2;
+const TECH_DISCOVERY_FORCE_POP: usize = 180;
+
+/// Rust runtime system for technology discovery progression.
+///
+/// This performs active writes on `Settlement.tech_states` and emits
+/// `TechDiscovered` for newly discovered or rediscovered tech entries.
+#[derive(Debug, Clone)]
+pub struct TechDiscoveryRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechDiscoveryRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechDiscoveryRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_discovery_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, _world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let checks_per_year = (config::TICKS_PER_YEAR as f32 / self.tick_interval as f32).max(1.0);
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for settlement_id in settlement_ids {
+            let population = resources
+                .settlements
+                .get(&settlement_id)
+                .map(|settlement| settlement.members.len())
+                .unwrap_or(0);
+            if population < TECH_DISCOVERY_MIN_POP {
+                continue;
+            }
+
+            let mut discovered: Option<String> = None;
+            {
+                let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
+                    continue;
+                };
+                let mut candidate_ids: Vec<String> = settlement
+                    .tech_states
+                    .iter()
+                    .filter(|(_, state)| {
+                        matches!(
+                            state,
+                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                        )
+                    })
+                    .map(|(tech_id, _)| tech_id.clone())
+                    .collect();
+                candidate_ids.sort();
+
+                for tech_id in candidate_ids {
+                    let pop_bonus = ((population as i32 - 2).max(0) as f32)
+                        * config::TECH_DISCOVERY_POP_SCALE as f32;
+                    let prob = body::tech_discovery_prob(
+                        TECH_DISCOVERY_BASE_CHANCE,
+                        pop_bonus,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        config::TECH_DISCOVERY_MAX_BONUS as f32,
+                        checks_per_year,
+                    )
+                    .clamp(0.0, 1.0);
+                    let should_discover = if population >= TECH_DISCOVERY_FORCE_POP {
+                        true
+                    } else {
+                        resources.rng.gen_range(0.0..1.0) < prob
+                    };
+                    if !should_discover {
+                        continue;
+                    }
+                    settlement
+                        .tech_states
+                        .insert(tech_id.clone(), TechState::KnownLow);
+                    discovered = Some(tech_id);
+                    break;
+                }
+            }
+
+            if let Some(tech_id) = discovered {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id,
+                        tech_id,
+                    });
+            }
+        }
+    }
+}
+
+const TECH_PROP_LANG_PENALTY: f32 = 1.0;
+const TECH_PROP_MAX_PROB: f32 = 0.95;
+const TECH_PROP_CULTURE_KNOWLEDGE_WEIGHT: f32 = 0.3;
+const TECH_PROP_CULTURE_TRADITION_WEIGHT: f32 = 0.4;
+const TECH_PROP_CULTURE_MIN: f32 = 0.1;
+const TECH_PROP_CULTURE_MAX: f32 = 2.0;
+const TECH_PROP_CARRIER_SKILL_DIVISOR: f32 = 20.0;
+const TECH_PROP_CARRIER_WEIGHT: f32 = 0.5;
+const TECH_PROP_STABILITY_BONUS_STABLE: f32 = 1.3;
+const TECH_PROP_STABILITY_BONUS_LOW: f32 = 0.7;
+
+#[derive(Debug, Clone, Copy, Default)]
+struct TechPropagationProfile {
+    knowledge_sum: f32,
+    tradition_sum: f32,
+    member_count: u32,
+    max_skill: i32,
+}
+
+impl TechPropagationProfile {
+    fn record_member(&mut self, knowledge: f32, tradition: f32, skill_level: i32) {
+        self.knowledge_sum += knowledge;
+        self.tradition_sum += tradition;
+        self.member_count += 1;
+        self.max_skill = self.max_skill.max(skill_level);
+    }
+
+    fn knowledge_avg(&self) -> f32 {
+        if self.member_count == 0 {
+            0.0
+        } else {
+            self.knowledge_sum / self.member_count as f32
+        }
+    }
+
+    fn tradition_avg(&self) -> f32 {
+        if self.member_count == 0 {
+            0.0
+        } else {
+            self.tradition_sum / self.member_count as f32
+        }
+    }
+}
+
+/// Rust runtime system for cross-settlement technology propagation.
+///
+/// This performs active writes on `Settlement.tech_states` by importing unknown
+/// or forgotten tech entries from other settlements that already know the tech.
+#[derive(Debug, Clone)]
+pub struct TechPropagationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl TechPropagationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for TechPropagationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "tech_propagation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        if resources.settlements.len() < 2 {
+            return;
+        }
+
+        let mut profiles: HashMap<SettlementId, TechPropagationProfile> = HashMap::new();
+        {
+            let mut query = world.query::<(&Identity, Option<&Values>, Option<&Skills>, Option<&Age>)>();
+            for (_, (identity, values_opt, skills_opt, age_opt)) in &mut query {
+                if let Some(age) = age_opt {
+                    if !age.alive {
+                        continue;
+                    }
+                }
+                let Some(settlement_id) = identity.settlement_id else {
+                    continue;
+                };
+                let knowledge = values_opt
+                    .map(|values| values.get(ValueType::Knowledge) as f32)
+                    .unwrap_or(0.0);
+                let tradition = values_opt
+                    .map(|values| values.get(ValueType::Tradition) as f32)
+                    .unwrap_or(0.0);
+                let best_skill_level =
+                    skills_opt.map(|skills| skills.best_skill_level() as i32).unwrap_or(0);
+
+                profiles
+                    .entry(settlement_id)
+                    .or_default()
+                    .record_member(knowledge, tradition, best_skill_level);
+            }
+        }
+
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for target_id in settlement_ids.iter().copied() {
+            let candidate_tech_ids: Vec<String> = {
+                let Some(target_settlement) = resources.settlements.get(&target_id) else {
+                    continue;
+                };
+                if target_settlement.members.is_empty() {
+                    continue;
+                }
+                let mut ids: Vec<String> = target_settlement
+                    .tech_states
+                    .iter()
+                    .filter(|(_, state)| {
+                        matches!(
+                            state,
+                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                        )
+                    })
+                    .map(|(tech_id, _)| tech_id.clone())
+                    .collect();
+                ids.sort();
+                ids
+            };
+            if candidate_tech_ids.is_empty() {
+                continue;
+            }
+
+            let target_profile = profiles.get(&target_id).copied().unwrap_or_default();
+            let culture_mod = body::tech_propagation_culture_modifier(
+                target_profile.knowledge_avg(),
+                target_profile.tradition_avg(),
+                TECH_PROP_CULTURE_KNOWLEDGE_WEIGHT,
+                TECH_PROP_CULTURE_TRADITION_WEIGHT,
+                TECH_PROP_CULTURE_MIN,
+                TECH_PROP_CULTURE_MAX,
+            );
+
+            for tech_id in candidate_tech_ids {
+                let mut source_pick: Option<(SettlementId, TechState, i32)> = None;
+                for source_id in settlement_ids.iter().copied() {
+                    if source_id == target_id {
+                        continue;
+                    }
+                    let Some(source_settlement) = resources.settlements.get(&source_id) else {
+                        continue;
+                    };
+                    let Some(source_state) = source_settlement.tech_states.get(&tech_id).copied() else {
+                        continue;
+                    };
+                    if !matches!(source_state, TechState::KnownLow | TechState::KnownStable) {
+                        continue;
+                    }
+
+                    let source_skill = profiles
+                        .get(&source_id)
+                        .map(|profile| profile.max_skill)
+                        .unwrap_or(0);
+                    let source_score = source_settlement.members.len() as i32 + source_skill;
+                    match source_pick {
+                        Some((_, _, best_score)) if source_score <= best_score => {}
+                        _ => source_pick = Some((source_id, source_state, source_score)),
+                    }
+                }
+
+                let Some((source_id, source_state, _)) = source_pick else {
+                    continue;
+                };
+                let source_skill = profiles
+                    .get(&source_id)
+                    .map(|profile| profile.max_skill)
+                    .unwrap_or(0);
+                let carrier_bonus = body::tech_propagation_carrier_bonus(
+                    source_skill,
+                    TECH_PROP_CARRIER_SKILL_DIVISOR,
+                    TECH_PROP_CARRIER_WEIGHT,
+                );
+                let stability_bonus = if matches!(source_state, TechState::KnownStable) {
+                    TECH_PROP_STABILITY_BONUS_STABLE
+                } else {
+                    TECH_PROP_STABILITY_BONUS_LOW
+                };
+                let base_prob = if matches!(source_state, TechState::KnownStable) {
+                    config::CROSS_PROP_MIGRATION_BASE as f32
+                } else {
+                    config::CROSS_PROP_TRADE_BASE as f32
+                };
+                let final_prob = body::tech_propagation_final_prob(
+                    base_prob,
+                    TECH_PROP_LANG_PENALTY,
+                    culture_mod,
+                    carrier_bonus,
+                    stability_bonus,
+                    TECH_PROP_MAX_PROB,
+                )
+                .clamp(0.0, TECH_PROP_MAX_PROB);
+                let should_import = if final_prob >= TECH_PROP_MAX_PROB {
+                    true
+                } else {
+                    resources.rng.gen_range(0.0..1.0) < final_prob
+                };
+                if !should_import {
+                    continue;
+                }
+
+                if let Some(target_settlement) = resources.settlements.get_mut(&target_id) {
+                    target_settlement
+                        .tech_states
+                        .insert(tech_id.clone(), TechState::KnownLow);
+                }
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::TechDiscovered {
+                        settlement_id: target_id,
+                        tech_id,
+                    });
+                break;
+            }
+        }
+    }
+}
+
+#[inline]
+fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
+    resources
+        .buildings
+        .values()
+        .filter(|building| {
+            building.is_complete
+                && building.settlement_id == settlement_id
+                && building.building_type == "shelter"
+        })
+        .count()
+}
+
+#[inline]
+fn migration_food_in_radius(resources: &SimResources, cx: i32, cy: i32, radius: i32) -> f32 {
+    let mut total_food = 0.0_f32;
+    for dx in -radius..=radius {
+        for dy in -radius..=radius {
+            if dx.abs() + dy.abs() > radius {
+                continue;
+            }
+            let x = cx + dx;
+            let y = cy + dy;
+            if !resources.map.in_bounds(x, y) {
+                continue;
+            }
+            let tile = resources.map.get(x as u32, y as u32);
+            for deposit in &tile.resources {
+                if deposit.resource_type == ResourceType::Food {
+                    total_food += deposit.amount as f32;
+                }
+            }
+        }
+    }
+    total_food
+}
+
+fn migration_find_site(resources: &mut SimResources, source_x: i32, source_y: i32) -> Option<(i32, i32)> {
+    let min_radius = config::MIGRATION_SEARCH_RADIUS_MIN;
+    let max_radius = config::MIGRATION_SEARCH_RADIUS_MAX;
+    let min_settlement_distance = config::SETTLEMENT_MIN_DISTANCE;
+    let settlement_positions: Vec<(i32, i32)> =
+        resources.settlements.values().map(|s| (s.x, s.y)).collect();
+
+    for _ in 0..20 {
+        let dx = resources.rng.gen_range(-max_radius..=max_radius);
+        let dy = resources.rng.gen_range(-max_radius..=max_radius);
+        let manhattan = dx.abs() + dy.abs();
+        if manhattan < min_radius || manhattan > max_radius {
+            continue;
+        }
+        let x = source_x + dx;
+        let y = source_y + dy;
+        if !resources.map.in_bounds(x, y) {
+            continue;
+        }
+        if !resources.map.get(x as u32, y as u32).passable {
+            continue;
+        }
+        let mut far_enough = true;
+        for (settlement_x, settlement_y) in settlement_positions.iter().copied() {
+            let distance = (settlement_x - x).abs() + (settlement_y - y).abs();
+            if distance < min_settlement_distance {
+                far_enough = false;
+                break;
+            }
+        }
+        if !far_enough {
+            continue;
+        }
+        let food_score = migration_food_in_radius(resources, x, y, 5);
+        if food_score <= 3.0 {
+            continue;
+        }
+        return Some((x, y));
+    }
+    None
+}
+
+/// Rust runtime system for settlement migration and founding.
+///
+/// This performs active writes on `SimResources.settlements`,
+/// `Identity.settlement_id`, and `Behavior` migration fields.
+#[derive(Debug, Clone)]
+pub struct MigrationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MigrationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for MigrationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "migration_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        if resources.settlements.len() < 1 {
+            return;
+        }
+        if resources.settlements.len() as u32 >= config::MAX_SETTLEMENTS {
+            return;
+        }
+
+        for settlement in resources.settlements.values_mut() {
+            if settlement.migration_cooldown > 0 {
+                settlement.migration_cooldown = settlement
+                    .migration_cooldown
+                    .saturating_sub(self.tick_interval as u32);
+            }
+        }
+
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+        for source_id in settlement_ids {
+            if resources.settlements.len() as u32 >= config::MAX_SETTLEMENTS {
+                break;
+            }
+            let Some(source_snapshot) = resources.settlements.get(&source_id) else {
+                continue;
+            };
+            let source_x = source_snapshot.x;
+            let source_y = source_snapshot.y;
+            let source_population = source_snapshot.population();
+            let source_food_stockpile = source_snapshot.stockpile_food;
+            let source_cooldown = source_snapshot.migration_cooldown;
+            if source_population < config::MIGRATION_MIN_POP as usize {
+                continue;
+            }
+            if source_cooldown > 0 {
+                continue;
+            }
+
+            let shelter_count = migration_count_shelters(resources, source_id);
+            let overcrowded = source_population > shelter_count.saturating_mul(8);
+            let nearby_food = migration_food_in_radius(resources, source_x, source_y, 20);
+            let food_scarce =
+                body::migration_food_scarce(nearby_food, source_population as i32, 0.3);
+            let chance_roll: f32 = resources.rng.gen_range(0.0..1.0);
+            let should_attempt = body::migration_should_attempt(
+                overcrowded,
+                food_scarce,
+                chance_roll,
+                config::MIGRATION_CHANCE as f32,
+            );
+            if !should_attempt {
+                continue;
+            }
+            if source_food_stockpile < config::MIGRATION_STARTUP_FOOD {
+                continue;
+            }
+
+            let mut candidates: Vec<Entity> = Vec::new();
+            {
+                let mut query = world.query::<(&Identity, &Age)>();
+                for (entity, (identity, age)) in &mut query {
+                    if !age.alive {
+                        continue;
+                    }
+                    if identity.settlement_id != Some(source_id) {
+                        continue;
+                    }
+                    candidates.push(entity);
+                }
+            }
+            if candidates.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+            candidates.sort_by_key(|entity| entity.id());
+
+            let group_size_roll: u32 = resources.rng.gen_range(
+                config::MIGRATION_GROUP_SIZE_MIN..=config::MIGRATION_GROUP_SIZE_MAX,
+            );
+            let group_size = (group_size_roll as usize).min(candidates.len());
+            let migrants: Vec<Entity> = candidates.into_iter().take(group_size).collect();
+            if migrants.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+
+            let Some((site_x, site_y)) = migration_find_site(resources, source_x, source_y) else {
+                continue;
+            };
+
+            let next_settlement_raw = resources
+                .settlements
+                .keys()
+                .map(|settlement_id| settlement_id.0)
+                .max()
+                .unwrap_or(0)
+                + 1;
+            let next_settlement_id = SettlementId(next_settlement_raw);
+            let mut migrated_member_ids: Vec<EntityId> = Vec::with_capacity(migrants.len());
+            for entity in migrants {
+                if let Ok(mut one) = world.query_one::<(&mut Identity, Option<&mut Behavior>)>(entity)
+                {
+                    if let Some((identity, behavior_opt)) = one.get() {
+                        identity.settlement_id = Some(next_settlement_id);
+                        if let Some(behavior) = behavior_opt {
+                            behavior.current_action = ActionType::Migrate;
+                            behavior.action_target_x = Some(site_x);
+                            behavior.action_target_y = Some(site_y);
+                            behavior.action_timer = 100;
+                        }
+                        migrated_member_ids.push(EntityId(entity.id() as u64));
+                    }
+                }
+            }
+            if migrated_member_ids.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
+                continue;
+            }
+
+            let moved_set: HashSet<EntityId> = migrated_member_ids.iter().copied().collect();
+            if let Some(source_settlement) = resources.settlements.get_mut(&source_id) {
+                source_settlement.stockpile_food =
+                    (source_settlement.stockpile_food - config::MIGRATION_STARTUP_FOOD).max(0.0);
+                source_settlement.migration_cooldown = config::MIGRATION_COOLDOWN_TICKS as u32;
+                source_settlement
+                    .members
+                    .retain(|member_id| !moved_set.contains(member_id));
+            }
+
+            let mut new_settlement = sim_core::Settlement::new(
+                next_settlement_id,
+                format!("settlement_{}", next_settlement_raw),
+                site_x,
+                site_y,
+                tick,
+            );
+            new_settlement.stockpile_food = config::MIGRATION_STARTUP_FOOD;
+            new_settlement.members = migrated_member_ids.clone();
+            resources.settlements.insert(next_settlement_id, new_settlement);
+
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::SettlementFounded {
+                    settlement_id: next_settlement_id,
+                });
+            for entity_id in migrated_member_ids {
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::MigrationOccurred {
+                        entity_id,
+                        from_settlement: source_id,
+                        to_settlement: next_settlement_id,
+                    });
+            }
+            break;
+        }
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct MovementRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl MovementRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+#[inline]
+fn movement_skip_mod(stage: GrowthStage) -> i32 {
+    match stage {
+        GrowthStage::Infant => 2,
+        GrowthStage::Toddler => 2,
+        GrowthStage::Child => 3,
+        GrowthStage::Teen => 10,
+        GrowthStage::Elder => 3,
+        GrowthStage::Adult => 0,
+    }
+}
+
+impl SimSystem for MovementRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "movement_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let tick_i32 = (tick.min(i32::MAX as u64)) as i32;
+        let mut query = world.query::<(
+            &mut Position,
+            &mut Behavior,
+            Option<&mut Needs>,
+            Option<&Age>,
+        )>();
+        for (entity, (position, behavior, needs_opt, age_opt)) in &mut query {
+            if behavior.action_timer > 0 {
+                behavior.action_timer -= 1;
+            }
+
+            if behavior.action_timer <= 0 && behavior.current_action != ActionType::Idle {
+                if let Some(needs) = needs_opt {
+                    match behavior.current_action {
+                        ActionType::Eat => {
+                            needs.set(
+                                NeedType::Hunger,
+                                needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
+                            );
+                        }
+                        ActionType::Rest | ActionType::Sleep => {
+                            needs.energy = (needs.energy + 0.5).clamp(0.0, 1.0);
+                            needs.set(NeedType::Sleep, needs.energy);
+                        }
+                        ActionType::Socialize => {
+                            needs.set(
+                                NeedType::Belonging,
+                                needs.get(NeedType::Belonging) + 0.3,
+                            );
+                        }
+                        ActionType::Drink => {
+                            needs.set(
+                                NeedType::Thirst,
+                                needs.get(NeedType::Thirst) + config::THIRST_DRINK_RESTORE,
+                            );
+                        }
+                        ActionType::SitByFire => {
+                            needs.set(
+                                NeedType::Warmth,
+                                needs.get(NeedType::Warmth) + config::WARMTH_FIRE_RESTORE,
+                            );
+                        }
+                        ActionType::SeekShelter => {
+                            needs.set(
+                                NeedType::Warmth,
+                                needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
+                            );
+                            needs.set(
+                                NeedType::Safety,
+                                needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
+                            );
+                        }
+                        _ => {}
+                    }
+                }
+                behavior.current_action = ActionType::Idle;
+                behavior.action_target_x = None;
+                behavior.action_target_y = None;
+                continue;
+            }
+
+            let skip_mod = age_opt.map(|age| movement_skip_mod(age.stage)).unwrap_or(0);
+            let entity_id = entity.id() as i32;
+            if body::movement_should_skip_tick(skip_mod, tick_i32, entity_id) {
+                continue;
+            }
+
+            if matches!(
+                behavior.current_action,
+                ActionType::Idle | ActionType::Rest | ActionType::Sleep
+            ) {
+                continue;
+            }
+
+            let Some(target_x) = behavior.action_target_x else {
+                continue;
+            };
+            let Some(target_y) = behavior.action_target_y else {
+                continue;
+            };
+            if target_x == position.x && target_y == position.y {
+                continue;
+            }
+
+            let dx = (target_x - position.x).signum();
+            let dy = (target_y - position.y).signum();
+            let mut candidates = Vec::with_capacity(3);
+            if dx != 0 && dy != 0 {
+                candidates.push((position.x + dx, position.y + dy));
+            }
+            if dx != 0 {
+                candidates.push((position.x + dx, position.y));
+            }
+            if dy != 0 {
+                candidates.push((position.x, position.y + dy));
+            }
+
+            for (nx, ny) in candidates {
+                if !resources.map.in_bounds(nx, ny) {
+                    continue;
+                }
+                if !resources.map.get(nx as u32, ny as u32).passable {
+                    continue;
+                }
+                position.x = nx;
+                position.y = ny;
+                break;
+            }
+        }
+    }
+}

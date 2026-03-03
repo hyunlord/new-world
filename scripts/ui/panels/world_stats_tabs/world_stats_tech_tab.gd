@@ -111,7 +111,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 				era_color = NEUTRAL_COLOR
 
 		var era_badge: String = "[" + Locale.ltr("ERA_" + era.to_upper()) + "]"
-		var count_text: String = Locale.trf("UI_TECH_COUNT_FMT", {"known": known_count, "forgotten": forgotten_count})
+		var count_text: String = Locale.trf2("UI_TECH_COUNT_FMT", "known", known_count, "forgotten", forgotten_count)
 		var row_prefix: String = "S" + str(s_id) + ": "
 
 		# Draw prefix

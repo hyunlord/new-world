@@ -124,6 +124,15 @@ var _debug_panel: CanvasLayer = null
 
 # Hunger blink
 var _hunger_blink_timer: float = 0.0
+const _ENTITY_NEED_STAT_IDS: Array[StringName] = [
+	&"NEED_HUNGER",
+	&"NEED_ENERGY",
+	&"NEED_SOCIAL",
+	&"NEED_THIRST",
+	&"NEED_WARMTH",
+	&"NEED_SAFETY",
+]
+var _entity_need_norm_values: PackedFloat32Array = PackedFloat32Array()
 
 # Population milestones
 var _pop_milestone_init: bool = false
@@ -575,7 +584,7 @@ func _process(delta: float) -> void:
 
 	if _entity_manager:
 		var pop: int = _entity_manager.get_alive_count()
-		_pop_label.text = Locale.trf("UI_POP_FMT", {"n": pop})
+		_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
 
 		# Population milestones
 		if not _pop_milestone_init:
@@ -589,27 +598,31 @@ func _process(delta: float) -> void:
 				_last_pop_milestone = m
 				_add_notification("Population: %d!" % m, Color(0.3, 0.9, 0.3))
 
-	# Building count
+	# Building count + resource totals
 	if _building_manager != null:
 		var all_buildings: Array = _building_manager.get_all_buildings()
 		var built_count: int = 0
 		var wip_count: int = 0
+		var total_food: float = 0.0
+		var total_wood: float = 0.0
+		var total_stone: float = 0.0
 		for i in range(all_buildings.size()):
-			if all_buildings[i].is_built:
+			var building = all_buildings[i]
+			if building.is_built:
 				built_count += 1
+				if building.building_type == "stockpile":
+					total_food += float(building.storage.get("food", 0.0))
+					total_wood += float(building.storage.get("wood", 0.0))
+					total_stone += float(building.storage.get("stone", 0.0))
 			else:
 				wip_count += 1
 		if wip_count > 0:
-			_building_label.text = Locale.trf("UI_BLD_WIP_FMT", {"n": built_count, "wip": wip_count})
+			_building_label.text = Locale.trf2("UI_BLD_WIP_FMT", "n", built_count, "wip", wip_count)
 		else:
-			_building_label.text = Locale.trf("UI_BLD_FMT", {"n": built_count})
-
-	# Resource totals (color-coded)
-	if _building_manager != null:
-		var totals: Dictionary = _get_stockpile_totals()
-		_food_label.text = Locale.trf("UI_RES_FOOD_FMT", {"n": int(totals.get("food", 0.0))})
-		_wood_label.text = Locale.trf("UI_RES_WOOD_FMT", {"n": int(totals.get("wood", 0.0))})
-		_stone_label.text = Locale.trf("UI_RES_STONE_FMT", {"n": int(totals.get("stone", 0.0))})
+			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", built_count)
+		_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(total_food))
+		_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(total_wood))
+		_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(total_stone))
 
 	# Update selected entity
 	if _selected_entity_id >= 0 and _entity_manager:
@@ -660,7 +673,13 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_job_label.text = stage_tr + " | " + job_tr + settlement_text + " | " + age_text
 
 	# Position
-	_entity_info_label.text = Locale.trf("UI_POS_FMT", {"x": int(entity.position.x), "y": int(entity.position.y)})
+	_entity_info_label.text = Locale.trf2(
+		"UI_POS_FMT",
+		"x",
+		int(entity.position.x),
+		"y",
+		int(entity.position.y)
+	)
 
 	# Action + path
 	var action_text: String = Locale.tr_id("STATUS", entity.current_action)
@@ -678,38 +697,45 @@ func _update_entity_panel(delta: float) -> void:
 	_entity_action_label.text = action_text
 
 	# Inventory
-	var inv_food_text: String = Locale.trf("UI_RES_FOOD_FMT", {"n": "%.1f" % entity.inventory.get("food", 0.0)})
-	var inv_wood_text: String = Locale.trf("UI_RES_WOOD_FMT", {"n": "%.1f" % entity.inventory.get("wood", 0.0)})
-	var inv_stone_text: String = Locale.trf("UI_RES_STONE_FMT", {"n": "%.1f" % entity.inventory.get("stone", 0.0)})
+	var inv_food_text: String = Locale.trf1("UI_RES_FOOD_FMT", "n", "%.1f" % entity.inventory.get("food", 0.0))
+	var inv_wood_text: String = Locale.trf1("UI_RES_WOOD_FMT", "n", "%.1f" % entity.inventory.get("wood", 0.0))
+	var inv_stone_text: String = Locale.trf1("UI_RES_STONE_FMT", "n", "%.1f" % entity.inventory.get("stone", 0.0))
 	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Need bars + percentage
-	var hunger_pct: float = StatQuery.get_normalized(entity, &"NEED_HUNGER") * 100.0
+	StatQuery.get_normalized_batch_into(
+		entity,
+		_ENTITY_NEED_STAT_IDS,
+		_entity_need_norm_values,
+		true
+	)
+	var hunger_norm: float = _entity_need_norm_values[0]
+	var hunger_pct: float = hunger_norm * 100.0
 	_hunger_bar.value = hunger_pct
 	_hunger_pct_label.text = str(int(hunger_pct)) + "%"
 
-	var energy_pct: float = StatQuery.get_normalized(entity, &"NEED_ENERGY") * 100.0
+	var energy_pct: float = _entity_need_norm_values[1] * 100.0
 	_energy_bar.value = energy_pct
 	_energy_pct_label.text = str(int(energy_pct)) + "%"
 
-	var social_pct: float = StatQuery.get_normalized(entity, &"NEED_SOCIAL") * 100.0
+	var social_pct: float = _entity_need_norm_values[2] * 100.0
 	_social_bar.value = social_pct
 	_social_pct_label.text = str(int(social_pct)) + "%"
 
-	var thirst_pct: float = StatQuery.get_normalized(entity, &"NEED_THIRST") * 100.0
+	var thirst_pct: float = _entity_need_norm_values[3] * 100.0
 	_thirst_bar.value = thirst_pct
 	_thirst_pct_label.text = str(int(thirst_pct)) + "%"
 
-	var warmth_pct: float = StatQuery.get_normalized(entity, &"NEED_WARMTH") * 100.0
+	var warmth_pct: float = _entity_need_norm_values[4] * 100.0
 	_warmth_bar.value = warmth_pct
 	_warmth_pct_label.text = str(int(warmth_pct)) + "%"
 
-	var safety_pct: float = StatQuery.get_normalized(entity, &"NEED_SAFETY") * 100.0
+	var safety_pct: float = _entity_need_norm_values[5] * 100.0
 	_safety_bar.value = safety_pct
 	_safety_pct_label.text = str(int(safety_pct)) + "%"
 
 	# Low hunger blink
-	if StatQuery.get_normalized(entity, &"NEED_HUNGER") < 0.2:
+	if hunger_norm < 0.2:
 		_hunger_blink_timer += delta * 4.0
 		var blink_alpha: float = 0.5 + 0.5 * sin(_hunger_blink_timer)
 		_hunger_bar.modulate = Color(1, 1, 1, blink_alpha)
@@ -717,7 +743,13 @@ func _update_entity_panel(delta: float) -> void:
 		_hunger_bar.modulate = Color.WHITE
 		_hunger_blink_timer = 0.0
 
-	_entity_stats_label.text = Locale.trf("UI_ENTITY_STATS_FMT", {"spd": "%.1f" % entity.speed, "str_val": "%.1f" % entity.strength})
+	_entity_stats_label.text = Locale.trf2(
+		"UI_ENTITY_STATS_FMT",
+		"spd",
+		"%.1f" % entity.speed,
+		"str_val",
+		"%.1f" % entity.strength
+	)
 
 
 func _update_building_panel() -> void:
@@ -743,30 +775,34 @@ func _update_building_panel() -> void:
 	match building.building_type:
 		"stockpile":
 			if building.is_built:
-				_building_storage_label.text = Locale.trf("UI_BUILDING_STORAGE_FMT", {
-					"food": "%.0f" % building.storage.get("food", 0.0),
-					"wood": "%.0f" % building.storage.get("wood", 0.0),
-					"stone": "%.0f" % building.storage.get("stone", 0.0),
-				})
+				_building_storage_label.text = Locale.trf3(
+					"UI_BUILDING_STORAGE_FMT",
+					"food",
+					"%.0f" % building.storage.get("food", 0.0),
+					"wood",
+					"%.0f" % building.storage.get("wood", 0.0),
+					"stone",
+					"%.0f" % building.storage.get("stone", 0.0)
+				)
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		"shelter":
 			if building.is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_SHELTER_DESC")
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		"campfire":
 			if building.is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_CAMPFIRE_DESC")
 			else:
-				_building_storage_label.text = Locale.trf("UI_UNDER_CONSTRUCTION_FMT", {"pct": int(building.build_progress * 100)})
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
 		_:
 			_building_storage_label.text = Locale.ltr("")
 
 	if building.is_built:
 		_building_status_label.text = Locale.ltr("UI_BUILDING_ACTIVE")
 	else:
-		_building_status_label.text = Locale.trf("UI_BUILDING_WIP_FMT", {"pct": int(building.build_progress * 100)})
+		_building_status_label.text = Locale.trf1("UI_BUILDING_WIP_FMT", "pct", int(building.build_progress * 100))
 
 
 func _update_notifications(delta: float) -> void:
@@ -790,28 +826,10 @@ func _update_notifications(delta: float) -> void:
 			_notifications[j].node.position.y = j * 32.0
 
 
-func _get_stockpile_totals() -> Dictionary:
-	var totals: Dictionary = {"food": 0.0, "wood": 0.0, "stone": 0.0}
-	var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-	for i in range(stockpiles.size()):
-		var sp = stockpiles[i]
-		if not sp.is_built:
-			continue
-		var keys: Array = sp.storage.keys()
-		for j in range(keys.size()):
-			var res: String = keys[j]
-			totals[res] = totals.get(res, 0.0) + sp.storage[res]
-	return totals
-
-
 func _get_building_by_id(bid: int):
 	if _building_manager == null:
 		return null
-	var all: Array = _building_manager.get_all_buildings()
-	for i in range(all.size()):
-		if all[i].id == bid:
-			return all[i]
-	return null
+	return _building_manager.get_building(bid)
 
 
 func _add_notification(text: String, color: Color) -> void:
@@ -887,7 +905,7 @@ func _on_building_deselected() -> void:
 
 
 func _on_speed_changed(speed_index: int) -> void:
-	_speed_label.text = Locale.trf("UI_SPEED_MULT_FMT", {"n": GameConfig.SPEED_OPTIONS[speed_index]})
+	_speed_label.text = Locale.trf1("UI_SPEED_MULT_FMT", "n", GameConfig.SPEED_OPTIONS[speed_index])
 
 
 func _on_pause_changed(paused: bool) -> void:
@@ -905,34 +923,42 @@ func _on_simulation_event(event: Dictionary) -> void:
 			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1))
 		"building_completed":
 			var btype: String = event.get("building_type", "building")
-			_add_notification(Locale.trf("UI_NOTIF_BUILDING_BUILT_FMT", {"type": btype.capitalize()}), Color(1.0, 0.9, 0.3))
+			_add_notification(Locale.trf1("UI_NOTIF_BUILDING_BUILT_FMT", "type", btype.capitalize()), Color(1.0, 0.9, 0.3))
 		"entity_starved":
 			var starved_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_DIED_STARVED_FMT", {"name": starved_name}), Color(0.9, 0.2, 0.2))
+			_add_notification(Locale.trf1("UI_NOTIF_DIED_STARVED_FMT", "name", starved_name), Color(0.9, 0.2, 0.2))
 		"entity_died_siler":
 			var died_name: String = event.get("entity_name", "?")
 			var died_cause: String = event.get("cause", "unknown")
 			var died_age: float = event.get("age_years", 0.0)
 			var cause_loc: String = Locale.tr_id("DEATH", died_cause)
 			var age_str: String = "%.0fy" % died_age
-			_add_notification(Locale.trf("UI_NOTIF_DIED_CAUSE_AGE_FMT", {"name": died_name, "cause": cause_loc, "age": age_str}), Color(0.7, 0.3, 0.3))
+			_add_notification(Locale.trf3(
+				"UI_NOTIF_DIED_CAUSE_AGE_FMT",
+				"name",
+				died_name,
+				"cause",
+				cause_loc,
+				"age",
+				age_str
+			), Color(0.7, 0.3, 0.3))
 		"maternal_death":
 			var m_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_MATERNAL_FMT", {"name": m_name}), Color(0.8, 0.3, 0.5))
+			_add_notification(Locale.trf1("UI_NOTIF_MATERNAL_FMT", "name", m_name), Color(0.8, 0.3, 0.5))
 		"stillborn":
 			var s_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf("UI_NOTIF_STILLBORN_FMT", {"name": s_name}), Color(0.6, 0.3, 0.3))
+			_add_notification(Locale.trf1("UI_NOTIF_STILLBORN_FMT", "name", s_name), Color(0.6, 0.3, 0.3))
 		"leader_elected":
 			var lname: String = event.get("leader_name", "?")
 			var sid: int = event.get("settlement_id", 0)
 			_add_notification(
-				Locale.trf("UI_NOTIF_LEADER_ELECTED_FMT", {"name": lname, "sid": sid}),
+				Locale.trf2("UI_NOTIF_LEADER_ELECTED_FMT", "name", lname, "sid", sid),
 				Color(1.0, 0.82, 0.1)
 			)
 		"leader_lost":
 			var sid2: int = event.get("settlement_id", 0)
 			_add_notification(
-				Locale.trf("UI_NOTIF_LEADER_LOST_FMT", {"sid": sid2}),
+				Locale.trf1("UI_NOTIF_LEADER_LOST_FMT", "sid", sid2),
 				Color(0.5, 0.5, 0.5)
 			)
 		"tech_discovered":
@@ -945,28 +971,33 @@ func _on_simulation_event(event: Dictionary) -> void:
 					td_name = td_e.entity_name
 			var td_display: String = Locale.ltr(td_tech)
 			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_DISCOVERED_FMT", {"name": td_name, "tech": td_display}),
+				Locale.trf2("UI_NOTIF_TECH_DISCOVERED_FMT", "name", td_name, "tech", td_display),
 				Color(1.0, 0.85, 0.2))
 		"era_advanced":
 			var ea_era: String = event.get("new_era", "")
 			var ea_display: String = Locale.ltr("ERA_" + ea_era.to_upper())
 			_add_notification(
-				Locale.trf("UI_NOTIF_ERA_ADVANCED_FMT", {"era": ea_display}),
+				Locale.trf1("UI_NOTIF_ERA_ADVANCED_FMT", "era", ea_display),
 				Color(1.0, 0.9, 0.5))
 			_update_era_label()
 		"tech_atrophy_warning":
 			var ta_tech: String = Locale.ltr(event.get("tech_id", ""))
 			var ta_curr: int = event.get("practitioners", 0)
 			var ta_req: int = event.get("min_required", 0)
-			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_ATROPHY_FMT", {
-					"tech": ta_tech, "current": str(ta_curr), "required": str(ta_req)}),
-				Color(0.8, 0.4, 0.1))
+			_add_notification(Locale.trf3(
+				"UI_NOTIF_TECH_ATROPHY_FMT",
+				"tech",
+				ta_tech,
+				"current",
+				ta_curr,
+				"required",
+				ta_req
+			), Color(0.8, 0.4, 0.1))
 		"tech_fallback":
 			var tf_lost: String = Locale.ltr(event.get("lost_tech", ""))
 			var tf_fb: String = Locale.ltr(event.get("fallback_tech", ""))
 			_add_notification(
-				Locale.trf("UI_NOTIF_TECH_FALLBACK_FMT", {"lost": tf_lost, "fallback": tf_fb}),
+				Locale.trf2("UI_NOTIF_TECH_FALLBACK_FMT", "lost", tf_lost, "fallback", tf_fb),
 				Color(0.7, 0.4, 0.1))
 
 
@@ -975,7 +1006,7 @@ func _on_tech_state_changed(_settlement_id: int, tech_id: String,
 	if new_state == "known_stable":
 		var ts_display: String = Locale.ltr(tech_id)
 		_add_notification(
-			Locale.trf("UI_NOTIF_TECH_STABILIZED_FMT", {"tech": ts_display}),
+			Locale.trf1("UI_NOTIF_TECH_STABILIZED_FMT", "tech", ts_display),
 			Color(0.3, 0.8, 0.3))
 
 
@@ -983,7 +1014,7 @@ func _on_tech_regression_started(_settlement_id: int, tech_id: String,
 		_atrophy_years: int, _grace_years: int, _tick: int) -> void:
 	var tr_display: String = Locale.ltr(tech_id)
 	_add_notification(
-		Locale.trf("UI_NOTIF_TECH_REGRESSION_FMT", {"tech": tr_display}),
+		Locale.trf1("UI_NOTIF_TECH_REGRESSION_FMT", "tech", tr_display),
 		Color(0.9, 0.5, 0.1))
 
 
@@ -991,7 +1022,7 @@ func _on_tech_lost(_settlement_id: int, tech_id: String,
 		_cultural_memory: float, _tick: int) -> void:
 	var tl_display: String = Locale.ltr(tech_id)
 	_add_notification(
-		Locale.trf("UI_NOTIF_TECH_LOST_FMT", {"tech": tl_display}),
+		Locale.trf1("UI_NOTIF_TECH_LOST_FMT", "tech", tl_display),
 		Color(0.85, 0.2, 0.2))
 
 
@@ -1149,7 +1180,7 @@ func toggle_debug_panel() -> void:
 
 ## Displays a startup toast notification showing the initial population count.
 func show_startup_toast(pop_count: int) -> void:
-	_add_notification(Locale.trf("UI_NOTIF_WORLDSIM_STARTED_FMT", {"n": pop_count}), Color.WHITE)
+	_add_notification(Locale.trf1("UI_NOTIF_WORLDSIM_STARTED_FMT", "n", pop_count), Color.WHITE)
 
 
 func _on_ui_notification(msg: String, _category: String) -> void:
@@ -1185,10 +1216,10 @@ func _on_follow_entity(entity_id: int) -> void:
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
-			_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": entity.entity_name})
+			_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", entity.entity_name)
 			_follow_label.visible = true
 			return
-	_follow_label.text = Locale.trf("UI_FOLLOWING_FMT", {"name": "#%d" % entity_id})
+	_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", "#%d" % entity_id)
 	_follow_label.visible = true
 
 

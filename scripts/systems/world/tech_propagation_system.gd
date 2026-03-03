@@ -11,11 +11,17 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const CivTechState = preload("res://scripts/core/tech/civ_tech_state.gd")
 const TechState = preload("res://scripts/core/tech/tech_state.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_PROP_CULTURE_METHOD: String = "body_tech_propagation_culture_modifier"
+const _SIM_BRIDGE_PROP_CARRIER_METHOD: String = "body_tech_propagation_carrier_bonus"
+const _SIM_BRIDGE_PROP_FINAL_PROB_METHOD: String = "body_tech_propagation_final_prob"
 
 var _entity_manager: RefCounted
 var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
 var _chronicle
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 ## Active teaching sessions.
 ## Each entry: {teacher_id: int, student_id: int, tech_id: String,
@@ -36,6 +42,25 @@ func init(p_entity_manager: RefCounted, p_settlement_manager: RefCounted,
 	_settlement_manager = p_settlement_manager
 	_tech_tree_manager = p_tech_tree_manager
 	_chronicle = p_chronicle
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_PROP_CULTURE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_PROP_CARRIER_METHOD) \
+	and node.has_method(_SIM_BRIDGE_PROP_FINAL_PROB_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func execute_tick(tick: int) -> void:
@@ -108,10 +133,10 @@ func _update_teaching_sessions(tick: int) -> void:
 					"Learned %s from teacher %d" % [session["skill_id"], session["teacher_id"]],
 					3, [session["teacher_id"]], tick,
 					{"key": "TOAST_TEACHING_COMPLETED",
-					"params": {"student": str(session["student_id"]),
-						"teacher": str(session["teacher_id"]),
+					"params": {"student": session["student_id"],
+						"teacher": session["teacher_id"],
 						"skill": session["skill_id"],
-						"level": str(current_level)}})
+						"level": current_level}})
 
 		## Check abandonment (no progress for too long)
 		var elapsed: int = tick - session["started_tick"]
@@ -136,8 +161,8 @@ func _abandon_session(session: Dictionary, reason: String, tick: int) -> void:
 			"Teaching of %s abandoned: %s" % [session["skill_id"], reason],
 			2, [session["teacher_id"]], tick,
 			{"key": "TOAST_TEACHING_ABANDONED",
-			"params": {"student": str(session["student_id"]),
-				"teacher": str(session["teacher_id"]),
+			"params": {"student": session["student_id"],
+				"teacher": session["teacher_id"],
 				"skill": session["skill_id"]}})
 
 
@@ -252,8 +277,8 @@ func _match_pairs_for_skill(settlement: RefCounted, tech_id: String,
 					"Learning %s from teacher %d" % [skill_id, t_data["id"]],
 					2, [t_data["id"]], tick,
 					{"key": "TOAST_TEACHING_STARTED",
-					"params": {"teacher": str(t_data["id"]),
-						"student": str(s_data["id"]),
+					"params": {"teacher": t_data["id"],
+						"student": s_data["id"],
 						"skill": skill_id}})
 
 			if _count_students(t_data["id"]) >= GameConfig.TEACHING_MAX_STUDENTS:
@@ -593,8 +618,21 @@ func attempt_cross_propagation(event: Dictionary) -> bool:
 		stability_bonus = 0.7
 
 	## Final probability
+	var bridge: Object = _get_sim_bridge()
 	var final_prob: float = base_prob * lang_penalty * culture_mod \
 		* carrier_bonus * stability_bonus
+	if bridge != null:
+		var final_variant: Variant = bridge.call(
+			_SIM_BRIDGE_PROP_FINAL_PROB_METHOD,
+			base_prob,
+			lang_penalty,
+			culture_mod,
+			carrier_bonus,
+			stability_bonus,
+			0.95,
+		)
+		if final_variant != null:
+			final_prob = float(final_variant)
 	final_prob = clampf(final_prob, 0.0, 0.95)
 
 	## Roll
@@ -657,10 +695,10 @@ func _import_tech(target: RefCounted, tech_id: String,
 				% [target.id, tech_id, channel, source_id],
 			4, [], tick,
 			{"key": toast_key,
-			"params": {"settlement": str(target.id),
+			"params": {"settlement": target.id,
 				"tech": tech_id,
-				"source": str(source_id),
-				"carrier": str(carrier_id)}})
+				"source": source_id,
+				"carrier": carrier_id}})
 
 
 ## Calculate cultural modifier for the target settlement.
@@ -668,6 +706,19 @@ func _import_tech(target: RefCounted, tech_id: String,
 func _calculate_culture_modifier(target: RefCounted) -> float:
 	var knowledge_avg: float = _settlement_avg_value(target, &"KNOWLEDGE")
 	var tradition_avg: float = _settlement_avg_value(target, &"TRADITION")
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_PROP_CULTURE_METHOD,
+			knowledge_avg,
+			tradition_avg,
+			0.3,
+			0.4,
+			0.1,
+			2.0,
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 
 	var culture_mod: float = 1.0
 	culture_mod += (knowledge_avg + 1.0) / 2.0 * 0.3
@@ -687,6 +738,16 @@ func _calculate_carrier_bonus(carrier: RefCounted, tech_id: String) -> float:
 	for skill_id in req_skills:
 		var level: int = int(carrier.skill_levels.get(StringName(skill_id), 0))
 		max_skill = maxi(max_skill, level)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_PROP_CARRIER_METHOD,
+			max_skill,
+			20.0,
+			0.5,
+		)
+		if rust_variant != null:
+			return float(rust_variant)
 	return 1.0 + float(max_skill) / 20.0 * 0.5
 
 

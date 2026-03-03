@@ -4,6 +4,9 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 var _entity_manager
 var _stages: Dictionary = {}
+var _stage_age_cutoffs: PackedFloat32Array = PackedFloat32Array([2.0, 5.0, 12.0, 18.0])
+var _simultaneous_ace_severities: PackedFloat32Array = PackedFloat32Array()
+var _simultaneous_ace_scar_candidates: Array = []
 
 
 func _init() -> void:
@@ -36,29 +39,67 @@ func _load_stages() -> void:
 	var data = json.get_data()
 	if data is Dictionary:
 		_stages = data
+	_refresh_stage_age_cutoffs()
+
+
+func _refresh_stage_age_cutoffs() -> void:
+	if _stage_age_cutoffs.size() != 4:
+		_stage_age_cutoffs.resize(4)
+	_stage_age_cutoffs[0] = 2.0
+	_stage_age_cutoffs[1] = 5.0
+	_stage_age_cutoffs[2] = 12.0
+	_stage_age_cutoffs[3] = 18.0
+	var stage_names: Array[String] = ["infant", "toddler", "child", "teen"]
+	for i in range(stage_names.size()):
+		var stage_name: String = stage_names[i]
+		var stage_data_variant: Variant = _stages.get(stage_name, {})
+		if not (stage_data_variant is Dictionary):
+			continue
+		var stage_data: Dictionary = stage_data_variant
+		var age_range_variant: Variant = stage_data.get("age_range", [])
+		if age_range_variant is Array:
+			var age_range: Array = age_range_variant
+			if age_range.size() >= 2:
+				_stage_age_cutoffs[i] = float(age_range[1])
 
 
 func get_current_stage(age_ticks: int) -> String:
-	var years: float = float(age_ticks) / 8760.0
-	for stage_name in ["infant", "toddler", "child", "teen"]:
-		var stage_data = _stages.get(stage_name, {})
-		if not (stage_data is Dictionary):
-			continue
-		var age_range = stage_data.get("age_range", [])
-		if age_range is Array and age_range.size() >= 2:
-			var min_age: float = float(age_range[0])
-			var max_age: float = float(age_range[1])
-			if years >= min_age and years < max_age:
-				return stage_name
+	var infant_max: float = float(_stage_age_cutoffs[0]) if _stage_age_cutoffs.size() > 0 else 2.0
+	var toddler_max: float = float(_stage_age_cutoffs[1]) if _stage_age_cutoffs.size() > 1 else 5.0
+	var child_max: float = float(_stage_age_cutoffs[2]) if _stage_age_cutoffs.size() > 2 else 12.0
+	var teen_max: float = float(_stage_age_cutoffs[3]) if _stage_age_cutoffs.size() > 3 else 18.0
+	var stage_code_variant: Variant = SimBridge.body_child_stage_code_from_age_ticks(
+		age_ticks,
+		infant_max,
+		toddler_max,
+		child_max,
+		teen_max
+	)
+	if stage_code_variant != null:
+		return _stage_name_from_code(int(stage_code_variant))
 
-	if years < 2.0:
+	var years: float = float(age_ticks) / 8760.0
+	if years < infant_max:
 		return "infant"
-	if years < 5.0:
+	if years < toddler_max:
 		return "toddler"
-	if years < 12.0:
+	if years < child_max:
 		return "child"
-	if years < 18.0:
+	if years < teen_max:
 		return "teen"
+	return "adult"
+
+
+func _stage_name_from_code(stage_code: int) -> String:
+	match stage_code:
+		0:
+			return "infant"
+		1:
+			return "toddler"
+		2:
+			return "child"
+		3:
+			return "teen"
 	return "adult"
 
 
@@ -105,29 +146,54 @@ func process_stressor(entity, stressor: Dictionary, tick: int) -> void:
 	var stress_type: String = _classify_stress_type(intensity, caregiver_present, attachment_quality, entity, tick)
 	var spike_mult: float = float(stage_data.get("cortisol_spike_mult", 1.0))
 	var vulnerability_mult: float = float(stage_data.get("vulnerability_mult", 1.0))
-
-	match stress_type:
-		"positive":
-			entity.emotion_data.resilience = clampf(entity.emotion_data.resilience + 0.01 * intensity, 0.0, 1.0)
-			entity.emotion_data.reserve = clampf(entity.emotion_data.reserve + 0.5 * intensity, 0.0, 100.0)
-		"tolerable":
-			var gas_cost: float = intensity * spike_mult * 6.0
-			entity.emotion_data.reserve = clampf(entity.emotion_data.reserve - gas_cost, 0.0, 100.0)
-			entity.emotion_data.stress = clampf(entity.emotion_data.stress + intensity * spike_mult * 8.0, 0.0, 2000.0)
-		"toxic":
-			entity.emotion_data.stress = clampf(
-				entity.emotion_data.stress + intensity * spike_mult * vulnerability_mult * 16.0,
-				0.0,
-				2000.0
-			)
-			entity.emotion_data.allostatic = clampf(
-				entity.emotion_data.allostatic + intensity * vulnerability_mult * 1.5,
-				0.0,
-				100.0
-			)
-			var developmental_damage = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
-			developmental_damage += intensity * float(stage_data.get("break_threshold_mult", 1.0)) * 0.02
-			entity.emotion_data.set_meta("developmental_damage", developmental_damage)
+	var applied_rust: bool = false
+	var break_threshold_mult: float = float(stage_data.get("break_threshold_mult", 1.0))
+	var apply_variant: Variant = SimBridge.body_child_stress_apply_step(
+		float(entity.emotion_data.resilience),
+		float(entity.emotion_data.reserve),
+		float(entity.emotion_data.stress),
+		float(entity.emotion_data.allostatic),
+		intensity,
+		spike_mult,
+		vulnerability_mult,
+		break_threshold_mult,
+		_stress_type_to_code(stress_type)
+	)
+	if apply_variant is PackedFloat32Array:
+		var packed_apply: PackedFloat32Array = apply_variant
+		if packed_apply.size() >= 5:
+			entity.emotion_data.resilience = float(packed_apply[0])
+			entity.emotion_data.reserve = float(packed_apply[1])
+			entity.emotion_data.stress = float(packed_apply[2])
+			entity.emotion_data.allostatic = float(packed_apply[3])
+			var dd_delta: float = float(packed_apply[4])
+			if dd_delta > 0.0:
+				var developmental_damage: float = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+				entity.emotion_data.set_meta("developmental_damage", developmental_damage + dd_delta)
+			applied_rust = true
+	if not applied_rust:
+		match stress_type:
+			"positive":
+				entity.emotion_data.resilience = clampf(entity.emotion_data.resilience + 0.01 * intensity, 0.0, 1.0)
+				entity.emotion_data.reserve = clampf(entity.emotion_data.reserve + 0.5 * intensity, 0.0, 100.0)
+			"tolerable":
+				var gas_cost: float = intensity * spike_mult * 6.0
+				entity.emotion_data.reserve = clampf(entity.emotion_data.reserve - gas_cost, 0.0, 100.0)
+				entity.emotion_data.stress = clampf(entity.emotion_data.stress + intensity * spike_mult * 8.0, 0.0, 2000.0)
+			"toxic":
+				entity.emotion_data.stress = clampf(
+					entity.emotion_data.stress + intensity * spike_mult * vulnerability_mult * 16.0,
+					0.0,
+					2000.0
+				)
+				entity.emotion_data.allostatic = clampf(
+					entity.emotion_data.allostatic + intensity * vulnerability_mult * 1.5,
+					0.0,
+					100.0
+				)
+				var developmental_damage = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+				developmental_damage += intensity * break_threshold_mult * 0.02
+				entity.emotion_data.set_meta("developmental_damage", developmental_damage)
 
 	var stress_type_label: String = Locale.ltr("STRESS_TYPE_" + stress_type.to_upper())
 	emit_event("child_stress_processed", {
@@ -148,13 +214,27 @@ func process_stressor(entity, stressor: Dictionary, tick: int) -> void:
 ##   deprivation bypasses SHRP entirely (handled via developmental_damage channel).
 func _apply_shrp(stressor: Dictionary, stage_data: Dictionary, entity = null) -> float:
 	var intensity: float = float(stressor.get("intensity", 0.0))
-	if not bool(stage_data.get("shrp_active", false)):
+	var shrp_active: bool = bool(stage_data.get("shrp_active", false))
+	if not shrp_active:
 		return intensity
 	var threshold: float = float(stage_data.get("shrp_override_threshold", 0.85))
+	var vulnerability_mult: float = float(stage_data.get("vulnerability_mult", 1.0))
+	var shrp_variant: Variant = SimBridge.body_child_shrp_step(
+		intensity,
+		shrp_active,
+		threshold,
+		vulnerability_mult
+	)
+	if shrp_variant is PackedFloat32Array:
+		var packed_shrp: PackedFloat32Array = shrp_variant
+		if packed_shrp.size() >= 2:
+			if int(round(float(packed_shrp[1]))) != 0:
+				_handle_shrp_override(entity, stressor)
+			return float(packed_shrp[0])
 	if intensity < threshold:
 		return 0.0
 	_handle_shrp_override(entity, stressor)
-	return intensity * float(stage_data.get("vulnerability_mult", 1.0))
+	return intensity * vulnerability_mult
 
 
 func _handle_shrp_override(entity, stressor: Dictionary) -> void:
@@ -167,7 +247,7 @@ func _handle_shrp_override(entity, stressor: Dictionary) -> void:
 	if chronicle != null:
 		var tick: int = int(stressor.get("tick", -1))
 		var params: Dictionary = {"name": entity.entity_name}
-		var desc: String = Locale.trf("SHRP_OVERRIDE", params)
+		var desc: String = Locale.trf1("SHRP_OVERRIDE", "name", params.get("name", ""))
 		chronicle.log_event("child_stress", entity.id, desc, 4, [], tick, {
 			"key": "SHRP_OVERRIDE",
 			"params": params,
@@ -179,6 +259,10 @@ func _accumulate_deprivation_damage(entity, stressor: Dictionary, _stage_data: D
 		return
 	var rate: float = float(stressor.get("developmental_damage_rate", 0.01))
 	var current: float = float(entity.emotion_data.get_meta("developmental_damage", 0.0))
+	var next_variant: Variant = SimBridge.body_child_deprivation_damage_step(current, rate)
+	if next_variant != null:
+		entity.emotion_data.set_meta("developmental_damage", float(next_variant))
+		return
 	entity.emotion_data.set_meta("developmental_damage", current + rate)
 
 
@@ -186,12 +270,23 @@ func _accumulate_deprivation_damage(entity, stressor: Dictionary, _stage_data: D
 ## Key: caregiver presence determines toxic vs tolerable, NOT just intensity.
 func _classify_stress_type(intensity: float, attachment_present: bool, quality: float,
 		entity = null, tick: int = -1) -> String:
-	if intensity < 0.30:
-		return "positive"
-	if attachment_present and quality > 0.50:
-		return "tolerable"
+	var stress_type: String = ""
+	var type_variant: Variant = SimBridge.body_child_stress_type_code(
+		intensity,
+		attachment_present,
+		quality
+	)
+	if type_variant != null:
+		stress_type = _stress_type_from_code(int(type_variant))
+	else:
+		if intensity < 0.30:
+			stress_type = "positive"
+		elif attachment_present and quality > 0.50:
+			stress_type = "tolerable"
+		else:
+			stress_type = "toxic"
 
-	if entity != null:
+	if stress_type == "toxic" and entity != null:
 		var chronicle = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
 		if chronicle != null:
 			var desc: String = Locale.ltr("TOXIC_STRESS_ONSET")
@@ -199,7 +294,25 @@ func _classify_stress_type(intensity: float, attachment_present: bool, quality: 
 				"key": "TOXIC_STRESS_ONSET",
 				"params": {"name": entity.entity_name},
 			})
+	return stress_type
+
+
+func _stress_type_from_code(stress_type_code: int) -> String:
+	match stress_type_code:
+		0:
+			return "positive"
+		1:
+			return "tolerable"
 	return "toxic"
+
+
+func _stress_type_to_code(stress_type: String) -> int:
+	match stress_type:
+		"positive":
+			return 0
+		"tolerable":
+			return 1
+	return 2
 
 
 ## [Hostinar, Sullivan & Gunnar, 2014 - Social Buffering]
@@ -209,8 +322,29 @@ func _apply_social_buffer(intensity: float, stage: String,
 		return intensity
 	var stage_data = _stages.get(stage, {})
 	var buffer_power: float = float(stage_data.get("buffer_power", 0.0))
+	var buffered_variant: Variant = SimBridge.body_child_social_buffered_intensity(
+		intensity,
+		attachment_quality,
+		caregiver_present,
+		buffer_power
+	)
+	if buffered_variant != null:
+		return float(buffered_variant)
 	var social_buffer: float = attachment_quality * buffer_power
 	return intensity * (1.0 - social_buffer)
+
+
+func _attachment_type_to_code(attachment_type: String) -> int:
+	match attachment_type:
+		"secure":
+			return 0
+		"anxious":
+			return 1
+		"avoidant":
+			return 2
+		"disorganized":
+			return 3
+	return -1
 
 
 ## [Conradt et al., 2013 - Co-regulation / Parent→Child stress transfer]
@@ -290,22 +424,47 @@ func execute_tick(tick: int) -> void:
 			entity.set_meta("childhood_data", childhood_data)
 			continue
 
-		# Process parent stress transfer this tick
-		var parent_stress = childhood_data.get("parent_stress_level", 0.0)
-		if parent_stress > 0.1:
-			var contagion_in = entity.emotion_data.get_meta("contagion_stress_this_tick", 0.0)
-			var transferred = _calculate_parent_stress_transfer(
-				parent_stress,
-				_stages.get(stage, {}).get("parent_dependency", 0.5),
-				childhood_data.get("attachment_type", "secure"),
-				childhood_data.get("caregiver_support_active", false),
-				stage,
-				contagion_in
-			)
-			if transferred > 0.05:
-				entity.emotion_data.stress = clampf(
-					entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+			# Process parent stress transfer this tick
+			var parent_stress = childhood_data.get("parent_stress_level", 0.0)
+			if parent_stress > 0.1:
+				var parent_dependency: float = float(_stages.get(stage, {}).get("parent_dependency", 0.5))
+				var attachment_type: String = str(childhood_data.get("attachment_type", "secure"))
+				var caregiver_support_active: bool = bool(childhood_data.get("caregiver_support_active", false))
+				var buffer_power: float = float(_stages.get(stage, {}).get("buffer_power", 0.0))
+				var contagion_in: float = float(entity.emotion_data.get_meta("contagion_stress_this_tick", 0.0))
+				var transferred: float = 0.0
+				var transferred_variant: Variant = SimBridge.body_child_parent_stress_transfer(
+					float(parent_stress),
+					parent_dependency,
+					_attachment_type_to_code(attachment_type),
+					caregiver_support_active,
+					buffer_power,
+					contagion_in
 				)
+				if transferred_variant != null:
+					transferred = float(transferred_variant)
+				else:
+					transferred = _calculate_parent_stress_transfer(
+						float(parent_stress),
+						parent_dependency,
+						attachment_type,
+						caregiver_support_active,
+						stage,
+						contagion_in
+					)
+					var next_stress_variant: Variant = SimBridge.body_child_parent_transfer_apply_step(
+						float(entity.emotion_data.stress),
+						transferred,
+						0.05,
+						20.0,
+						2000.0
+					)
+					if next_stress_variant != null:
+						entity.emotion_data.stress = float(next_stress_variant)
+					elif transferred > 0.05:
+						entity.emotion_data.stress = clampf(
+							entity.emotion_data.stress + transferred * 20.0, 0.0, 2000.0
+						)
 
 		var pending_stressors = childhood_data.get("pending_stressors", [])
 		if pending_stressors is Array:
@@ -318,7 +477,35 @@ func execute_tick(tick: int) -> void:
 		var simultaneous_events = childhood_data.get("simultaneous_ace_events", [])
 		if simultaneous_events is Array and simultaneous_events.size() > 0:
 			var prev_residual: float = float(childhood_data.get("ace_residual_arousal", 0.0))
-			var ace_result: Dictionary = _handle_simultaneous_ace_events(simultaneous_events, prev_residual)
+			var ace_result: Dictionary = {}
+			_simultaneous_ace_severities.resize(0)
+			_simultaneous_ace_scar_candidates.clear()
+			for i in range(simultaneous_events.size()):
+				var event = simultaneous_events[i]
+				if event is Dictionary:
+					_simultaneous_ace_severities.append(float(event.get("severity", 0.0)))
+					_simultaneous_ace_scar_candidates.append(str(event.get("scar_type", "")))
+				else:
+					_simultaneous_ace_severities.append(0.0)
+					_simultaneous_ace_scar_candidates.append("")
+			var ace_variant: Variant = SimBridge.body_child_simultaneous_ace_step(
+				prev_residual,
+				_simultaneous_ace_severities
+			)
+			if ace_variant is PackedFloat32Array:
+				var packed_ace: PackedFloat32Array = ace_variant
+				if packed_ace.size() >= 3:
+					var scar_idx: int = int(round(float(packed_ace[1])))
+					var scar_candidate: String = ""
+					if scar_idx >= 0 and scar_idx < _simultaneous_ace_scar_candidates.size():
+						scar_candidate = str(_simultaneous_ace_scar_candidates[scar_idx])
+					ace_result = {
+						"effective_damage": float(packed_ace[0]),
+						"scar_candidate": scar_candidate,
+						"kindling_bonus": int(round(float(packed_ace[2]))),
+					}
+			if ace_result.is_empty():
+				ace_result = _handle_simultaneous_ace_events(simultaneous_events, prev_residual)
 			childhood_data["ace_residual_arousal"] = ace_result.get("effective_damage", 0.0)
 			if entity.emotion_data != null:
 				entity.emotion_data.set_meta("ace_kindling_bonus", ace_result.get("kindling_bonus", 0))

@@ -7,6 +7,11 @@ var _world_data: RefCounted
 var _resource_map: RefCounted
 var _rng: RandomNumberGenerator
 var _last_migration_tick: int = 0
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_MIGRATION_SCARCE_METHOD: String = "body_migration_food_scarce"
+const _SIM_BRIDGE_MIGRATION_ATTEMPT_METHOD: String = "body_migration_should_attempt"
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -24,6 +29,24 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_m
 	_rng = rng
 
 
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_MIGRATION_SCARCE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_MIGRATION_ATTEMPT_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
+
+
 func execute_tick(tick: int) -> void:
 	## Cleanup empty settlements periodically
 	if tick % GameConfig.SETTLEMENT_CLEANUP_INTERVAL == 0:
@@ -39,6 +62,7 @@ func execute_tick(tick: int) -> void:
 		return
 
 	var settlements: Array = _settlement_manager.get_all_settlements()
+	var bridge: Object = _get_sim_bridge()
 	for i in range(settlements.size()):
 		var settlement: RefCounted = settlements[i]
 		var population: int = _settlement_manager.get_settlement_population(settlement.id)
@@ -56,8 +80,28 @@ func execute_tick(tick: int) -> void:
 
 		var nearby_food: float = _get_food_in_radius(settlement.center_x, settlement.center_y, 20)
 		var food_scarce: bool = nearby_food < float(population) * 0.3
+		if bridge != null:
+			var scarce_variant: Variant = bridge.call(
+				_SIM_BRIDGE_MIGRATION_SCARCE_METHOD,
+				nearby_food,
+				population,
+				0.3,
+			)
+			if scarce_variant != null:
+				food_scarce = bool(scarce_variant)
 
-		var explorer_chance: bool = _rng.randf() < GameConfig.MIGRATION_CHANCE
+		var chance_roll: float = _rng.randf()
+		var explorer_chance: bool = chance_roll < GameConfig.MIGRATION_CHANCE
+		if bridge != null:
+			var attempt_variant: Variant = bridge.call(
+				_SIM_BRIDGE_MIGRATION_ATTEMPT_METHOD,
+				overcrowded,
+				food_scarce,
+				chance_roll,
+				float(GameConfig.MIGRATION_CHANCE),
+			)
+			if attempt_variant != null:
+				explorer_chance = bool(attempt_variant)
 
 		if not overcrowded and not food_scarce and not explorer_chance:
 			continue

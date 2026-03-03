@@ -13,6 +13,7 @@ const WorldGeneratorScript = preload("res://scripts/core/world/world_generator.g
 func generate_preset(world_data: RefCounted, resource_map: RefCounted,
 		preset_id: String, seed_value: int) -> void:
 	var rng := RandomNumberGenerator.new()
+	world_data.begin_tile_update()
 	match preset_id:
 		"island":
 			rng.seed = GameConfig.PRESET_SEED_ISLAND
@@ -26,6 +27,7 @@ func generate_preset(world_data: RefCounted, resource_map: RefCounted,
 		_:  ## "random" or unknown
 			_generate_random(world_data, seed_value)
 			rng.seed = seed_value
+	world_data.end_tile_update()
 	_populate_resources(world_data, resource_map, rng)
 
 

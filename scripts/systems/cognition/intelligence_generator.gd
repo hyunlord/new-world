@@ -8,10 +8,14 @@ const INTEL_KEYS: Array = [
 	"linguistic", "logical", "spatial", "musical",
 	"kinesthetic", "naturalistic", "interpersonal", "intrapersonal",
 ]
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_INTEL_G_METHOD: String = "body_intelligence_g_value"
 
 ## Precomputed lower-triangular Cholesky factor of INTEL_RESIDUAL_CORR.
 var _cholesky_L: Array = []
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func init(rng: RandomNumberGenerator = null) -> void:
@@ -20,6 +24,22 @@ func init(rng: RandomNumberGenerator = null) -> void:
 	else:
 		_rng.randomize()
 	_cholesky_L = _cholesky_decompose(GameConfig.INTEL_RESIDUAL_CORR)
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null and node.has_method(_SIM_BRIDGE_INTEL_G_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Main entry point: generate all intelligence data for a new entity.
@@ -54,18 +74,32 @@ func generate(gender: String, hexaco_facets: Dictionary,
 
 
 func _generate_g(parent_a, parent_b, hexaco_facets: Dictionary) -> float:
-	var base: float
-	if parent_a != null and parent_b != null:
-		var pa_g: float = parent_a.general_intelligence if parent_a != null else 0.5
-		var pb_g: float = parent_b.general_intelligence if parent_b != null else 0.5
-		var h2: float = GameConfig.INTEL_HERITABILITY_G
-		base = ((pa_g + pb_g) / 2.0) * h2 + GameConfig.INTEL_G_MEAN * (1.0 - h2)
-	else:
-		base = GameConfig.INTEL_G_MEAN
-
+	var has_parents: bool = parent_a != null and parent_b != null
+	var pa_g: float = parent_a.general_intelligence if parent_a != null else 0.5
+	var pb_g: float = parent_b.general_intelligence if parent_b != null else 0.5
+	var h2: float = GameConfig.INTEL_HERITABILITY_G
 	var O_mean: float = _get_openness_mean(hexaco_facets)
-	var openness_shift: float = GameConfig.INTEL_OPENNESS_G_WEIGHT * (O_mean - 0.5)
 	var noise: float = _randfn(0.0, GameConfig.INTEL_G_SD * 0.6)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_INTEL_G_METHOD,
+			has_parents,
+			pa_g,
+			pb_g,
+			h2,
+			float(GameConfig.INTEL_G_MEAN),
+			O_mean,
+			float(GameConfig.INTEL_OPENNESS_G_WEIGHT),
+			noise,
+		)
+		if rust_variant != null:
+			return float(rust_variant)
+
+	var base: float = GameConfig.INTEL_G_MEAN
+	if has_parents:
+		base = ((pa_g + pb_g) / 2.0) * h2 + GameConfig.INTEL_G_MEAN * (1.0 - h2)
+	var openness_shift: float = GameConfig.INTEL_OPENNESS_G_WEIGHT * (O_mean - 0.5)
 	return base + openness_shift + noise
 
 

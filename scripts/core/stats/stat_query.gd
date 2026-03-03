@@ -17,6 +17,7 @@ const StatModifierScript = preload("res://scripts/core/stats/stat_modifier.gd")
 const PHASE: int = 2  ## 현재 구현 Phase.
 
 var _affinity_cache: Dictionary = {}
+var _normalized_range_cache: Dictionary = {}
 
 ## [Human Definition v3 §11] Tech era ordering for required_tech gate
 ## Must be kept in sync with SettlementData.tech_era progression.
@@ -33,6 +34,7 @@ func init_settlement_manager(mgr) -> void:
 
 func _ready() -> void:
 	StatDefinitionScript.load_all("res://stats/")
+	_normalized_range_cache.clear()
 	var ok: bool = StatGraphScript.build()
 	if not ok:
 		push_error("StatQuery: StatGraph build failed — check for cycles")
@@ -61,12 +63,63 @@ func get_stat(entity: RefCounted, stat_id: StringName,
 ## 정규화 값 반환 (0.0~1.0)
 ## Returns the stat value normalized to [0.0, 1.0] based on its defined min/max range.
 func get_normalized(entity: RefCounted, stat_id: StringName) -> float:
-	var range_arr: Array = StatDefinitionScript.get_range(stat_id)
-	var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
-	var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+	var range_arr: Array = _get_normalized_range_cached(stat_id)
+	var rmin: int = int(range_arr[0])
+	var rmax: int = int(range_arr[1])
 	if rmax == rmin:
 		return 0.0
 	return float(get_stat(entity, stat_id, rmin) - rmin) / float(rmax - rmin)
+
+
+## Returns normalized values for multiple stats in one pass, using a shared cache lookup path.
+func get_normalized_batch(entity: RefCounted, stat_ids: Array[StringName]) -> PackedFloat32Array:
+	var out_values: PackedFloat32Array = PackedFloat32Array()
+	return get_normalized_batch_into(entity, stat_ids, out_values)
+
+
+## Writes normalized values for multiple stats into a provided buffer and returns that buffer.
+func get_normalized_batch_into(entity: RefCounted, stat_ids: Array[StringName], out_values: PackedFloat32Array,
+		assume_defined: bool = false) -> PackedFloat32Array:
+	if out_values.size() != stat_ids.size():
+		out_values.resize(stat_ids.size())
+	if entity == null:
+		for i in range(stat_ids.size()):
+			out_values[i] = 0.0
+		return out_values
+
+	var cache = entity.get("stat_cache")
+	var cache_dict: Dictionary = {}
+	var has_cache_dict: bool = cache != null and cache is Dictionary
+	if has_cache_dict:
+		cache_dict = cache as Dictionary
+
+	for i in range(stat_ids.size()):
+		var stat_id: StringName = stat_ids[i]
+		if not assume_defined and not StatDefinitionScript.has_def(stat_id):
+			out_values[i] = 0.0
+			continue
+		var range_arr: Array = _get_normalized_range_cached(stat_id)
+		var rmin: int = int(range_arr[0])
+		var rmax: int = int(range_arr[1])
+		if rmax == rmin:
+			out_values[i] = 0.0
+			continue
+		var value: int = rmin
+		if has_cache_dict and cache_dict.has(stat_id) and not bool(cache_dict[stat_id].get("dirty", true)):
+			value = int(cache_dict[stat_id].get("value", rmin))
+		out_values[i] = float(value - rmin) / float(rmax - rmin)
+	return out_values
+
+
+func _get_normalized_range_cached(stat_id: StringName) -> Array:
+	if _normalized_range_cache.has(stat_id):
+		return _normalized_range_cache[stat_id]
+	var range_arr: Array = StatDefinitionScript.get_range(stat_id)
+	var rmin: int = range_arr[0] if range_arr.size() > 0 else 0
+	var rmax: int = range_arr[1] if range_arr.size() > 1 else 1000
+	var cached: Array = [rmin, rmax]
+	_normalized_range_cache[stat_id] = cached
+	return cached
 
 ## 영향력 값 반환 (InfluenceCurve 적용된 float)
 ## Phase 0: stub, 항상 1.0 반환
@@ -183,23 +236,12 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 	## Compute cumulative XP at the start of current level
 	## (sum of XP required for all levels up to but not including current)
 	var params: Dictionary = growth.get("params", {})
-	var base_xp: float = float(params.get("base_xp", 100.0))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var breakpoints: Array = params.get("level_breakpoints", [])
-	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
-
-	var xp_at_level: float = 0.0
-	for l in range(1, level + 1):
-		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
-		xp_at_level += base_xp * pow(float(l), exponent) * mult
-
-	## XP needed to complete current level (reach level + 1)
-	var xp_to_next: float = 0.0
-	if level < max_level:
-		var next_level: int = level + 1
-		var next_mult: float = _get_breakpoint_multiplier(next_level, breakpoints, multipliers)
-		xp_to_next = base_xp * pow(float(next_level), exponent) * next_mult
-	## If at max level, xp_to_next = 0 (no further progress possible)
+	var progress: Dictionary = StatCurveScript.skill_xp_progress(
+		level, current_xp, params, max_level
+	)
+	var xp_at_level: float = float(progress.get("xp_at_level", 0.0))
+	var xp_to_next: float = float(progress.get("xp_to_next", 0.0))
+	var progress_in_level: float = float(progress.get("progress_in_level", 0.0))
 
 	return {
 		"level": level,
@@ -207,7 +249,7 @@ func get_skill_xp_info(entity: RefCounted, skill_id: StringName) -> Dictionary:
 		"current_xp": current_xp,
 		"xp_at_level": xp_at_level,
 		"xp_to_next": xp_to_next,
-		"progress_in_level": current_xp - xp_at_level,
+		"progress_in_level": progress_in_level,
 	}
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -323,38 +365,8 @@ func add_xp(entity: RefCounted, stat_id: StringName,
 ## Total XP to reach level L = sum_{i=1}^{L} xp_per_level(i)
 func _compute_level_from_xp(total_xp: float, growth: Dictionary, max_level: int) -> int:
 	var params: Dictionary = growth.get("params", {})
-	var base_xp: float = float(params.get("base_xp", 100))
-	var exponent: float = float(params.get("exponent", 1.8))
-	var breakpoints: Array = params.get("level_breakpoints", [])
-	var multipliers: Array = params.get("breakpoint_multipliers", [1.0])
-
-	var cumulative_xp: float = 0.0
-	var level: int = 0
-
-	for l in range(1, max_level + 1):
-		var mult: float = _get_breakpoint_multiplier(l, breakpoints, multipliers)
-		var xp_this_level: float = base_xp * pow(float(l), exponent) * mult
-		if cumulative_xp + xp_this_level > total_xp:
-			break
-		cumulative_xp += xp_this_level
-		level = l
-
+	var level: int = StatCurveScript.xp_to_level(total_xp, params, max_level)
 	return clampi(level, 0, max_level)
-
-
-## Get breakpoint multiplier for a given level.
-## breakpoints: [25, 50, 75], multipliers: [1.0, 1.5, 2.0, 3.0]
-## Level < 25 → 1.0, Level 25-49 → 1.5, Level 50-74 → 2.0, Level 75+ → 3.0
-func _get_breakpoint_multiplier(level: int, breakpoints: Array, multipliers: Array) -> float:
-	var mult_idx: int = 0
-	for bp in breakpoints:
-		if level >= int(bp):
-			mult_idx += 1
-		else:
-			break
-	if multipliers.is_empty():
-		return 1.0
-	return float(multipliers[clampi(mult_idx, 0, multipliers.size() - 1)])
 
 
 ## Compute the talent ceiling (max achievable level) for this entity+skill.

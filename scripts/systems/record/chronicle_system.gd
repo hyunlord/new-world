@@ -5,6 +5,11 @@ extends Node
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MemorySystem = preload("res://scripts/systems/record/memory_system.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_SHOULD_PRUNE_METHOD: String = "body_chronicle_should_prune"
+const _SIM_BRIDGE_CUTOFF_TICK_METHOD: String = "body_chronicle_cutoff_tick"
+const _SIM_BRIDGE_KEEP_WORLD_METHOD: String = "body_chronicle_keep_world_event"
+const _SIM_BRIDGE_KEEP_PERSONAL_METHOD: String = "body_chronicle_keep_personal_event"
 
 ## Event type constants
 const EVENT_BIRTH: String = "birth"
@@ -30,11 +35,34 @@ var _last_prune_year: int = 0
 
 ## Entity manager reference (for name lookups)
 var _entity_manager: RefCounted
+var _deceased_registry: Node = null
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 ## Initializes the chronicle system with the entity manager for name lookups.
 func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_SHOULD_PRUNE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CUTOFF_TICK_METHOD) \
+	and node.has_method(_SIM_BRIDGE_KEEP_WORLD_METHOD) \
+	and node.has_method(_SIM_BRIDGE_KEEP_PERSONAL_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Records a simulation event to world and personal event histories with date, importance, and optional localization data.
@@ -57,8 +85,12 @@ func log_event(type: String, entity_id: int, description: String,
 		"importance": importance,
 	}
 	if l10n.size() > 0:
-		entry["l10n_key"] = l10n.get("key", "")
-		entry["l10n_params"] = l10n.get("params", {})
+		var l10n_key: String = str(l10n.get("key", ""))
+		if not l10n_key.is_empty():
+			entry["l10n_key"] = l10n_key
+			var l10n_params: Dictionary = l10n.get("params", {})
+			if not l10n_params.is_empty():
+				entry["l10n_params"] = l10n_params
 
 	_world_events.append(entry)
 
@@ -105,21 +137,69 @@ func get_event_count() -> int:
 func prune_old_events(current_tick: int) -> void:
 	@warning_ignore("integer_division")
 	var current_year: int = current_tick / GameConfig.TICKS_PER_YEAR
-	if current_year - _last_prune_year < PRUNE_INTERVAL_YEARS:
+	var bridge: Object = _get_sim_bridge()
+	var should_prune: bool = current_year - _last_prune_year >= PRUNE_INTERVAL_YEARS
+	if bridge != null:
+		var prune_variant: Variant = bridge.call(
+			_SIM_BRIDGE_SHOULD_PRUNE_METHOD,
+			current_year,
+			_last_prune_year,
+			PRUNE_INTERVAL_YEARS
+		)
+		if prune_variant is bool:
+			should_prune = bool(prune_variant)
+	if not should_prune:
 		return
 	_last_prune_year = current_year
 
 	var low_cutoff: int = (current_year - LOW_IMPORTANCE_MAX_AGE_YEARS) * GameConfig.TICKS_PER_YEAR
 	var med_cutoff: int = (current_year - MED_IMPORTANCE_MAX_AGE_YEARS) * GameConfig.TICKS_PER_YEAR
+	if bridge != null:
+		var low_variant: Variant = bridge.call(
+			_SIM_BRIDGE_CUTOFF_TICK_METHOD,
+			current_year,
+			LOW_IMPORTANCE_MAX_AGE_YEARS,
+			GameConfig.TICKS_PER_YEAR
+		)
+		if low_variant is int:
+			low_cutoff = int(low_variant)
+		var med_variant: Variant = bridge.call(
+			_SIM_BRIDGE_CUTOFF_TICK_METHOD,
+			current_year,
+			MED_IMPORTANCE_MAX_AGE_YEARS,
+			GameConfig.TICKS_PER_YEAR
+		)
+		if med_variant is int:
+			med_cutoff = int(med_variant)
 
 	var kept: Array = []
 	for i in range(_world_events.size()):
 		var e: Dictionary = _world_events[i]
-		var imp: int = e.importance
-		if imp <= 2 and e.tick < low_cutoff:
-			continue  # Drop old low-importance
-		if imp == 3 and e.tick < med_cutoff:
-			continue  # Drop old medium-importance
+		var imp: int = int(e.importance)
+		var event_tick: int = int(e.tick)
+		var keep_event: bool = true
+		if bridge != null:
+			var keep_variant: Variant = bridge.call(
+				_SIM_BRIDGE_KEEP_WORLD_METHOD,
+				event_tick,
+				imp,
+				low_cutoff,
+				med_cutoff
+			)
+			if keep_variant is bool:
+				keep_event = bool(keep_variant)
+			else:
+				if imp <= 2 and event_tick < low_cutoff:
+					keep_event = false
+				elif imp == 3 and event_tick < med_cutoff:
+					keep_event = false
+		else:
+			if imp <= 2 and event_tick < low_cutoff:
+				keep_event = false
+			elif imp == 3 and event_tick < med_cutoff:
+				keep_event = false
+		if not keep_event:
+			continue
 		kept.append(e)
 
 	# Enforce hard limit
@@ -139,7 +219,18 @@ func prune_old_events(current_tick: int) -> void:
 		var events: Array = _personal_events[eid]
 		var filtered: Array = []
 		for j in range(events.size()):
-			if events[j].tick in valid_ticks or events[j].importance >= 4:
+			var has_valid_tick: bool = events[j].tick in valid_ticks
+			var importance: int = int(events[j].importance)
+			var keep_personal: bool = has_valid_tick or importance >= 4
+			if bridge != null:
+				var keep_variant: Variant = bridge.call(
+					_SIM_BRIDGE_KEEP_PERSONAL_METHOD,
+					has_valid_tick,
+					importance
+				)
+				if keep_variant is bool:
+					keep_personal = bool(keep_variant)
+			if keep_personal:
 				filtered.append(events[j])
 		if filtered.size() > 0:
 			_personal_events[eid] = filtered
@@ -155,12 +246,19 @@ func _get_entity_name(entity_id: int) -> String:
 	if entity != null:
 		return entity.entity_name
 	# Check DeceasedRegistry
-	if has_node("/root/DeceasedRegistry"):
-		var registry: Node = get_node("/root/DeceasedRegistry")
+	var registry: Node = _get_deceased_registry()
+	if registry != null:
 		var record: Dictionary = registry.get_record(entity_id)
 		if record.size() > 0:
 			return record.get("name", "?")
 	return "?"
+
+
+func _get_deceased_registry() -> Node:
+	if _deceased_registry != null and is_instance_valid(_deceased_registry):
+		return _deceased_registry
+	_deceased_registry = get_node_or_null("/root/DeceasedRegistry")
+	return _deceased_registry
 
 
 ## Dual-write helper: log to chronicle AND to entity's personal working_memory.

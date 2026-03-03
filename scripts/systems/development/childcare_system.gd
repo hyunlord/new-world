@@ -1,8 +1,14 @@
 extends "res://scripts/core/simulation/simulation_system.gd"
 
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_TAKE_FOOD_METHOD: String = "body_childcare_take_food"
+const _SIM_BRIDGE_HUNGER_AFTER_METHOD: String = "body_childcare_hunger_after"
+
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 const CHILDCARE_DEBUG: bool = false
 
@@ -18,6 +24,24 @@ func init(entity_manager: RefCounted, building_manager: RefCounted, settlement_m
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_TAKE_FOOD_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HUNGER_AFTER_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 ## Feeds hungry infants, toddlers, children, and teens from settlement stockpiles each tick, prioritizing the hungriest.
@@ -62,7 +86,20 @@ func execute_tick(tick: int) -> void:
 		if withdrawn <= 0.0:
 			continue
 
-		child.hunger = minf(child.hunger + withdrawn * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(
+				_SIM_BRIDGE_HUNGER_AFTER_METHOD,
+				float(child.hunger),
+				withdrawn,
+				float(GameConfig.FOOD_HUNGER_RESTORE)
+			)
+			if rust_variant is float:
+				child.hunger = float(rust_variant)
+			else:
+				child.hunger = minf(child.hunger + withdrawn * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
+		else:
+			child.hunger = minf(child.hunger + withdrawn * GameConfig.FOOD_HUNGER_RESTORE, 1.0)
 		if CHILDCARE_DEBUG:
 			var age_str: String = "%dy %dm" % [int(float(child.age) / 4380.0), int(fmod(float(child.age) / 365.0, 12.0))]
 			var sett_food: float = _get_settlement_food(settlement_id)
@@ -107,6 +144,11 @@ func _withdraw_food(settlement_id: int, amount: float) -> float:
 		if available <= 0.0:
 			continue
 		var take: float = minf(available, remaining)
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var rust_variant: Variant = bridge.call(_SIM_BRIDGE_TAKE_FOOD_METHOD, available, remaining)
+			if rust_variant is float:
+				take = float(rust_variant)
 		stockpile.storage["food"] = available - take
 		remaining -= take
 		withdrawn += take

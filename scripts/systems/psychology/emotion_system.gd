@@ -9,6 +9,18 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 
 const EmotionDataScript = preload("res://scripts/core/entity/emotion_data.gd")
 const _TraitEffectCache = preload("res://scripts/systems/psychology/trait_effect_cache.gd")
+const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
+const _SIM_BRIDGE_BREAK_THRESHOLD_METHOD: String = "body_emotion_break_threshold"
+const _SIM_BRIDGE_BREAK_PROB_METHOD: String = "body_emotion_break_trigger_probability"
+const _SIM_BRIDGE_BREAK_TYPE_CODE_METHOD: String = "body_emotion_break_type_code"
+const _SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD: String = "body_psychology_break_type_label"
+const _SIM_BRIDGE_HALF_LIFE_METHOD: String = "body_emotion_adjusted_half_life"
+const _SIM_BRIDGE_BASELINE_METHOD: String = "body_emotion_baseline_value"
+const _SIM_BRIDGE_HABITUATION_METHOD: String = "body_emotion_habituation_factor"
+const _SIM_BRIDGE_CONTAGION_SUS_METHOD: String = "body_emotion_contagion_susceptibility"
+const _SIM_BRIDGE_CONTAGION_DIST_METHOD: String = "body_emotion_contagion_distance_factor"
+const _SIM_BRIDGE_EVENT_IMPULSE_METHOD: String = "body_emotion_event_impulse_from_appraisal"
+const _SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD: String = "body_emotion_event_impulse_batch"
 
 var _entity_manager: RefCounted
 var _event_presets: Dictionary = {}
@@ -31,6 +43,8 @@ var _break_behaviors: Dictionary = {}
 var _personality_sensitivity: Dictionary = {}
 var _baselines: Dictionary = {}
 var _half_life_adjustments: Dictionary = {}
+var _bridge_checked: bool = false
+var _sim_bridge: Object = null
 
 
 func _init() -> void:
@@ -44,6 +58,33 @@ func init(entity_manager: RefCounted) -> void:
 	_entity_manager = entity_manager
 	_load_event_presets()
 	_load_decay_parameters()
+
+
+func _get_sim_bridge() -> Object:
+	if _bridge_checked:
+		return _sim_bridge
+	_bridge_checked = true
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var root: Node = tree.get_root()
+	if root == null:
+		return null
+	var node: Node = root.get_node_or_null(_SIM_BRIDGE_NODE_NAME)
+	if node != null \
+	and node.has_method(_SIM_BRIDGE_BREAK_THRESHOLD_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_PROB_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_CODE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HALF_LIFE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_BASELINE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_HABITUATION_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CONTAGION_SUS_METHOD) \
+	and node.has_method(_SIM_BRIDGE_CONTAGION_DIST_METHOD) \
+	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_METHOD) \
+	and node.has_method(_SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD):
+		_sim_bridge = node
+	return _sim_bridge
 
 
 func _load_event_presets() -> void:
@@ -222,6 +263,58 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 	var total: Dictionary = {}
 	for emo in ed.fast:
 		total[emo] = 0.0
+	if events.is_empty():
+		return total
+
+	var sens: Dictionary = _get_personality_sensitivity(entity, pd)
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var flat_inputs: PackedFloat32Array = PackedFloat32Array()
+		for j in range(events.size()):
+			var ev: Dictionary = events[j]
+			flat_inputs.push_back(float(ev.get("goal_congruence", 0.0)))
+			flat_inputs.push_back(float(ev.get("novelty", 0.0)))
+			flat_inputs.push_back(float(ev.get("controllability", 0.5)))
+			flat_inputs.push_back(float(ev.get("agency", 0.0)))
+			flat_inputs.push_back(float(ev.get("norm_violation", 0.0)))
+			flat_inputs.push_back(float(ev.get("pathogen", 0.0)))
+			flat_inputs.push_back(float(ev.get("social_bond", 0.0)))
+			flat_inputs.push_back(float(ev.get("future_relevance", 0.0)))
+			flat_inputs.push_back(float(ev.get("intensity", 30.0)))
+			flat_inputs.push_back(float(sens.get("joy", 1.0)))
+			flat_inputs.push_back(float(sens.get("sadness", 1.0)))
+			flat_inputs.push_back(float(sens.get("anger", 1.0)))
+			flat_inputs.push_back(float(sens.get("fear", 1.0)))
+			flat_inputs.push_back(float(sens.get("disgust", 1.0)))
+			flat_inputs.push_back(float(sens.get("surprise", 1.0)))
+			flat_inputs.push_back(float(sens.get("trust", 1.0)))
+			flat_inputs.push_back(float(sens.get("anticipation", 1.0)))
+
+		var batch_variant: Variant = bridge.call(_SIM_BRIDGE_EVENT_IMPULSE_BATCH_METHOD, flat_inputs)
+		if batch_variant is PackedFloat32Array:
+			var batch_out: PackedFloat32Array = batch_variant
+			if batch_out.size() >= events.size() * 8:
+				for j in range(events.size()):
+					var event: Dictionary = events[j]
+					var base_intensity: float = float(event.get("intensity", 30.0))
+					var hab: float = _get_habituation(ed, event.get("category", "generic"))
+					var idx: int = j * 8
+					var impulse: Dictionary = {
+						"joy": float(batch_out[idx + 0]),
+						"sadness": float(batch_out[idx + 1]),
+						"anger": float(batch_out[idx + 2]),
+						"fear": float(batch_out[idx + 3]),
+						"disgust": float(batch_out[idx + 4]),
+						"surprise": float(batch_out[idx + 5]),
+						"trust": float(batch_out[idx + 6]),
+						"anticipation": float(batch_out[idx + 7]),
+					}
+					for emo in impulse:
+						impulse[emo] *= hab
+						total[emo] += impulse[emo]
+					if base_intensity >= _memory_trace_threshold:
+						_create_memory_trace(ed, impulse, event)
+				return total
 
 	for j in range(events.size()):
 		var event: Dictionary = events[j]
@@ -238,19 +331,42 @@ func _calculate_event_impulse(events: Array, entity: RefCounted, pd: RefCounted,
 		# Habituation factor
 		var hab: float = _get_habituation(ed, event.get("category", "generic"))
 
-		# Personality sensitivity
-		var sens: Dictionary = _get_personality_sensitivity(entity, pd)
-
 		# Appraisal -> 8 emotion impulses
 		var impulse: Dictionary = {}
-		impulse["joy"] = base_intensity * maxf(0.0, g) * (1.0 + 0.5 * n) * sens.get("joy", 1.0)
-		impulse["sadness"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * sens.get("sadness", 1.0)
-		impulse["anger"] = base_intensity * maxf(0.0, -g) * c * maxf(0.0, -a + m) * sens.get("anger", 1.0)
-		impulse["fear"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * (0.5 + 0.5 * n) * sens.get("fear", 1.0)
-		impulse["disgust"] = base_intensity * (p + 0.7 * m) * (0.5 + 0.5 * maxf(0.0, -g)) * sens.get("disgust", 1.0)
-		impulse["surprise"] = base_intensity * n * sens.get("surprise", 1.0)
-		impulse["trust"] = base_intensity * maxf(0.0, b) * (1.0 - p) * (1.0 - m) * sens.get("trust", 1.0)
-		impulse["anticipation"] = base_intensity * fr * (0.5 + 0.5 * maxf(0.0, g)) * sens.get("anticipation", 1.0)
+		if bridge != null:
+			var rust_inputs: PackedFloat32Array = PackedFloat32Array([
+				g, n, c, a, m, p, b, fr, base_intensity,
+				float(sens.get("joy", 1.0)),
+				float(sens.get("sadness", 1.0)),
+				float(sens.get("anger", 1.0)),
+				float(sens.get("fear", 1.0)),
+				float(sens.get("disgust", 1.0)),
+				float(sens.get("surprise", 1.0)),
+				float(sens.get("trust", 1.0)),
+				float(sens.get("anticipation", 1.0)),
+			])
+			var rust_variant: Variant = bridge.call(_SIM_BRIDGE_EVENT_IMPULSE_METHOD, rust_inputs)
+			if rust_variant is PackedFloat32Array:
+				var out: PackedFloat32Array = rust_variant
+				if out.size() >= 8:
+					impulse["joy"] = float(out[0])
+					impulse["sadness"] = float(out[1])
+					impulse["anger"] = float(out[2])
+					impulse["fear"] = float(out[3])
+					impulse["disgust"] = float(out[4])
+					impulse["surprise"] = float(out[5])
+					impulse["trust"] = float(out[6])
+					impulse["anticipation"] = float(out[7])
+
+		if impulse.is_empty():
+			impulse["joy"] = base_intensity * maxf(0.0, g) * (1.0 + 0.5 * n) * sens.get("joy", 1.0)
+			impulse["sadness"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * sens.get("sadness", 1.0)
+			impulse["anger"] = base_intensity * maxf(0.0, -g) * c * maxf(0.0, -a + m) * sens.get("anger", 1.0)
+			impulse["fear"] = base_intensity * maxf(0.0, -g) * (1.0 - c) * (0.5 + 0.5 * n) * sens.get("fear", 1.0)
+			impulse["disgust"] = base_intensity * (p + 0.7 * m) * (0.5 + 0.5 * maxf(0.0, -g)) * sens.get("disgust", 1.0)
+			impulse["surprise"] = base_intensity * n * sens.get("surprise", 1.0)
+			impulse["trust"] = base_intensity * maxf(0.0, b) * (1.0 - p) * (1.0 - m) * sens.get("trust", 1.0)
+			impulse["anticipation"] = base_intensity * fr * (0.5 + 0.5 * maxf(0.0, g)) * sens.get("anticipation", 1.0)
 
 		# Apply habituation and accumulate
 		for emo in impulse:
@@ -299,6 +415,11 @@ func _get_adjusted_half_life(emo: String, entity: RefCounted, _pd: RefCounted, l
 	var axis_id = str(adj.get("axis", "X"))
 	var coeff = float(adj.get("coeff", 0.0))
 	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_HALF_LIFE_METHOD, base, coeff, z)
+		if rust_variant is float:
+			return float(rust_variant)
 	return base * exp(coeff * z)
 
 
@@ -312,6 +433,18 @@ func _get_baseline(emo: String, entity: RefCounted, _pd: RefCounted) -> float:
 	var min_val = float(cfg.get("min", 0.0))
 	var max_val = float(cfg.get("max", 100.0))
 	var z = _axis_z(entity, StringName("HEXACO_" + axis_id))
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BASELINE_METHOD,
+			base_val,
+			scale_val,
+			z,
+			min_val,
+			max_val
+		)
+		if rust_variant is float:
+			return float(rust_variant)
 	return clampf(base_val + scale_val * z, min_val, max_val)
 
 
@@ -325,6 +458,11 @@ func _get_habituation(ed: RefCounted, category: String) -> float:
 	var data = ed.habituation[category]
 	var n_count: int = int(data.get("count", 0))
 	var eta: float = _habituation_eta
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var rust_variant: Variant = bridge.call(_SIM_BRIDGE_HABITUATION_METHOD, eta, n_count)
+		if rust_variant is float:
+			return float(rust_variant)
 	return exp(-eta * float(n_count))
 
 
@@ -367,6 +505,11 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 		var z_E: float = _axis_z(target, &"HEXACO_E")
 		var z_A: float = _axis_z(target, &"HEXACO_A")
 		var susceptibility: float = exp(0.2 * z_E + 0.1 * z_A)
+		var bridge: Object = _get_sim_bridge()
+		if bridge != null:
+			var susceptibility_variant: Variant = bridge.call(_SIM_BRIDGE_CONTAGION_SUS_METHOD, z_E, z_A)
+			if susceptibility_variant is float:
+				susceptibility = float(susceptibility_variant)
 
 		var delta: Dictionary = {}
 		for emo in _contagion_kappa:
@@ -384,6 +527,10 @@ func _apply_contagion_settlement(members: Array, dt_hours: float) -> void:
 			var dy: float = float(target.position.y - source.position.y)
 			var distance: float = sqrt(dx * dx + dy * dy)
 			var distance_factor: float = exp(-distance / _contagion_distance_scale)
+			if bridge != null:
+				var distance_variant: Variant = bridge.call(_SIM_BRIDGE_CONTAGION_DIST_METHOD, distance, _contagion_distance_scale)
+				if distance_variant is float:
+					distance_factor = float(distance_variant)
 
 			# Skip if too far (optimization)
 			if distance_factor < 0.01:
@@ -447,15 +594,36 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, _tick: int) -> voi
 	# C(Conscientiousness) ↑ → higher threshold (more self-control)
 	var z_C: float = _axis_z(entity, &"HEXACO_C")
 	var threshold: float = 300.0 + 50.0 * z_C
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var threshold_variant: Variant = bridge.call(_SIM_BRIDGE_BREAK_THRESHOLD_METHOD, z_C, 300.0, 50.0)
+		if threshold_variant is float:
+			threshold = float(threshold_variant)
 
 	# Skip check if stress is well below threshold
 	if ed.stress < threshold * 0.5:
 		return
 
 	# Sigmoid probability
-	var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+	var trigger_prob: float = 0.0
+	if bridge != null:
+		var p_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BREAK_PROB_METHOD,
+			float(ed.stress),
+			threshold,
+			_break_beta,
+			_break_tick_prob
+		)
+		if p_variant is float:
+			trigger_prob = float(p_variant)
+		else:
+			var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+			trigger_prob = p * _break_tick_prob
+	else:
+		var p: float = 1.0 / (1.0 + exp(-(ed.stress - threshold) / _break_beta))
+		trigger_prob = p * _break_tick_prob
 
-	if randf() < p * _break_tick_prob:
+	if randf() < trigger_prob:
 		var break_type: String = _determine_break_type(ed)
 		if break_type != "":
 			ed.mental_break_type = break_type
@@ -484,19 +652,38 @@ func _check_mental_break(entity: RefCounted, dt_hours: float, _tick: int) -> voi
 
 ## Determine break type based on dominant negative emotion
 func _determine_break_type(ed: RefCounted) -> String:
-	# Special check: Outrage (Surprise+Anger dyad) > 60 → outrage_violence
+	# Special check + dominant negative emotion selection
 	var outrage: float = ed.get_dyad("outrage")
+	var fear: float = ed.get_emotion("fear")
+	var anger: float = ed.get_emotion("anger")
+	var sadness: float = ed.get_emotion("sadness")
+	var disgust: float = ed.get_emotion("disgust")
+	var bridge: Object = _get_sim_bridge()
+	if bridge != null:
+		var code_variant: Variant = bridge.call(
+			_SIM_BRIDGE_BREAK_TYPE_CODE_METHOD,
+			outrage,
+			fear,
+			anger,
+			sadness,
+			disgust,
+			60.0
+		)
+		if code_variant is int:
+			var label_variant: Variant = bridge.call(_SIM_BRIDGE_BREAK_TYPE_LABEL_METHOD, int(code_variant))
+			if label_variant is String:
+				var label: String = str(label_variant)
+				if not label.is_empty():
+					return label
+
 	if outrage > 60.0:
 		return "outrage_violence"
-
-	# Otherwise, dominant negative emotion determines type
 	var candidates: Dictionary = {
-		"panic": ed.get_emotion("fear"),
-		"rage": ed.get_emotion("anger"),
-		"shutdown": ed.get_emotion("sadness"),
-		"purge": ed.get_emotion("disgust"),
+		"panic": fear,
+		"rage": anger,
+		"shutdown": sadness,
+		"purge": disgust,
 	}
-
 	var max_type: String = "shutdown"  # default fallback
 	var max_val: float = 0.0
 	for btype in candidates:
