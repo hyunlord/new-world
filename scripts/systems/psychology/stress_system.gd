@@ -320,14 +320,14 @@ func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool,
 	for i in range(usable_len):
 		var trace: Dictionary = traces[i]
 		trace["per_tick"] = float(updated[i])
-		var is_active: bool = int(active_mask[i]) != 0
-		if collect_breakdown and is_active:
+		var trace_active: bool = int(active_mask[i]) != 0
+		if collect_breakdown and trace_active:
 			var trace_key: String = String(trace.get("breakdown_key", ""))
 			if trace_key.is_empty():
 				trace_key = "trace_%s" % str(trace.get("source_id", "unknown"))
 				trace["breakdown_key"] = trace_key
 			breakdown[trace_key] = float(_tick_trace_per_tick[i])
-		if is_active:
+		if trace_active:
 			traces[write_idx] = trace
 			write_idx += 1
 	if traces.size() != write_idx:

@@ -140,6 +140,7 @@ var _loading_count_label: Label = null
 
 
 func _ready() -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
 	var seed_value: int = GameConfig.WORLD_SEED
 
 	# Initialize simulation engine

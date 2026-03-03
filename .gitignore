@@ -41,5 +41,8 @@ addons/godot_test_mcp/
 override.cfg
 .mcp.json
 
+# IDE
+.vscode/
+
 # Rust build artifacts
 rust/target/

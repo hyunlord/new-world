@@ -251,7 +251,9 @@ func _build_top_bar() -> void:
 	bar.offset_bottom = 34
 
 	var bg := StyleBoxFlat.new()
-	bg.bg_color = Color(0, 0, 0, 0.6)
+	bg.bg_color = Color(0.05, 0.05, 0.08, 0.92)
+	bg.border_width_bottom = 1
+	bg.border_color = Color(0.3, 0.3, 0.35, 0.6)
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", bg)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL

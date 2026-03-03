@@ -77,6 +77,7 @@ func find_paths_batch_xy(
 		return rust_paths
 
 	var out: Array = []
+	@warning_ignore("integer_division")
 	var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
 	out.resize(pair_count)
 	for i in range(pair_count):
@@ -261,6 +262,7 @@ func _find_paths_rust_batch_xy(
 		used_batch_xy = (result != null)
 
 	if result == null and has_batch_vec2:
+		@warning_ignore("integer_division")
 		var pair_count: int = mini(from_xy.size(), to_xy.size()) / 2
 		if _batch_from_points.size() != pair_count:
 			_batch_from_points.resize(pair_count)
@@ -308,6 +310,7 @@ func _normalize_path_xy_result(result: Variant) -> Array:
 	var path: Array = []
 	if result is PackedInt32Array:
 		var packed: PackedInt32Array = result
+		@warning_ignore("integer_division")
 		var pair_count: int = packed.size() / 2
 		path.resize(pair_count)
 		for i in range(pair_count):

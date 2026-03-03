@@ -2039,7 +2039,7 @@ func body_stress_support_score(strengths: PackedFloat32Array):
 
 func _get_native_bridge() -> Object:
 	_ensure_gdextension_loaded()
-	if _native_checked:
+	if _native_checked and _native_bridge != null:
 		return _native_bridge
 	_native_checked = true
 
@@ -2238,7 +2238,7 @@ func _call_native_if_exists(method_name: String, args: Array):
 
 func _get_native_runtime() -> Object:
 	_ensure_gdextension_loaded()
-	if _native_runtime_checked:
+	if _native_runtime_checked and _native_runtime != null:
 		return _native_runtime
 	_native_runtime_checked = true
 
@@ -2258,7 +2258,7 @@ func _ensure_gdextension_loaded() -> void:
 	if _gdextension_checked:
 		return
 	_gdextension_checked = true
-	if not Engine.has_singleton("GDExtensionManager"):
+	if not ClassDB.class_exists("GDExtensionManager"):
 		return
 	var manager: Object = Engine.get_singleton("GDExtensionManager")
 	if manager == null:
