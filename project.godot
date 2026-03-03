@@ -30,10 +30,6 @@ StatQuery="*res://scripts/core/stats/stat_query.gd"
 SimBridge="*res://scripts/core/simulation/sim_bridge.gd"
 ComputeBackend="*res://scripts/core/simulation/compute_backend.gd"
 
-[gdextension]
-
-enabled=PackedStringArray("res://rust/worldsim.gdextension")
-
 [display]
 
 window/size/viewport_width=1920
@@ -42,6 +38,10 @@ window/size/window_width_override=1920
 window/size/window_height_override=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
+
+[gdextension]
+
+enabled=PackedStringArray("res://rust/worldsim.gdextension")
 
 [physics]
 

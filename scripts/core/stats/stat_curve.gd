@@ -55,8 +55,8 @@ static func xp_to_level(xp: float, params: Dictionary, max_level: int = 100) -> 
 	var xp_meta: Dictionary = _get_xp_curve_meta(params)
 	var base: float = float(xp_meta.get("base", 100.0))
 	var exponent: float = float(xp_meta.get("exponent", 1.8))
-	var bp: Array = xp_meta.get("breakpoints", [])
-	var bm: Array = xp_meta.get("multipliers", [])
+	var _bp: Array = xp_meta.get("breakpoints", [])
+	var _bm: Array = xp_meta.get("multipliers", [])
 	var bp_packed: PackedInt32Array = xp_meta.get("breakpoints_packed", PackedInt32Array())
 	var bm_packed: PackedFloat32Array = xp_meta.get("multipliers_packed", PackedFloat32Array())
 	var rust_result: Variant = _call_sim_bridge(
@@ -92,8 +92,8 @@ static func skill_xp_progress(
 	var xp_meta: Dictionary = _get_xp_curve_meta(params)
 	var base: float = float(xp_meta.get("base", 100.0))
 	var exponent: float = float(xp_meta.get("exponent", 1.8))
-	var bp: Array = xp_meta.get("breakpoints", [])
-	var bm: Array = xp_meta.get("multipliers", [])
+	var _bp: Array = xp_meta.get("breakpoints", [])
+	var _bm: Array = xp_meta.get("multipliers", [])
 	var bp_packed: PackedInt32Array = xp_meta.get("breakpoints_packed", PackedInt32Array())
 	var bm_packed: PackedFloat32Array = xp_meta.get("multipliers_packed", PackedFloat32Array())
 	var rust_result: Variant = _call_sim_bridge(
@@ -763,7 +763,7 @@ static func stress_tick_step(
 		sf.call(10, 0.5),
 		sf.call(11, 0.5)
 	)
-	var tr: Dictionary = stress_trace_emotion_recovery_delta_step(
+	var trace_rec: Dictionary = stress_trace_emotion_recovery_delta_step(
 		per_tick,
 		decay_rate,
 		min_keep,
@@ -792,12 +792,12 @@ static func stress_tick_step(
 		sf.call(30, 0.0),
 		sf.call(31, 800.0)
 	)
-	var next_stress: float = clampf(sf.call(20, 0.0) + float(tr.get("delta", 0.0)), 0.0, 2000.0)
+	var next_stress: float = clampf(sf.call(20, 0.0) + float(trace_rec.get("delta", 0.0)), 0.0, 2000.0)
 	var post: Dictionary = stress_post_update_resilience_step(
 		sf.call(22, 50.0),
 		next_stress,
 		sf.call(21, 0.5),
-		float(tr.get("delta", 0.0)),
+		float(trace_rec.get("delta", 0.0)),
 		int(round(sf.call(24, 0.0))),
 		bf.call(0),
 		sf.call(25, 0.0),
@@ -820,22 +820,22 @@ static func stress_tick_step(
 		"energy_deficit": float(primary.get("energy_deficit", 0.0)),
 		"social_isolation": float(primary.get("social_isolation", 0.0)),
 		"continuous_total": float(primary.get("total", 0.0)),
-		"total_trace_contribution": float(tr.get("total_trace_contribution", 0.0)),
-		"updated_per_tick": tr.get("updated_per_tick", PackedFloat32Array()),
-		"active_mask": tr.get("active_mask", PackedByteArray()),
-		"fear": float(tr.get("fear", 0.0)),
-		"anger": float(tr.get("anger", 0.0)),
-		"sadness": float(tr.get("sadness", 0.0)),
-		"disgust": float(tr.get("disgust", 0.0)),
-		"surprise": float(tr.get("surprise", 0.0)),
-		"joy": float(tr.get("joy", 0.0)),
-		"trust": float(tr.get("trust", 0.0)),
-		"anticipation": float(tr.get("anticipation", 0.0)),
-		"va_composite": float(tr.get("va_composite", 0.0)),
-		"emotion_total": float(tr.get("emotion_total", 0.0)),
-		"recovery": float(tr.get("recovery", 0.0)),
-		"delta": float(tr.get("delta", 0.0)),
-		"hidden_threat_accumulator": float(tr.get("hidden_threat_accumulator", sf.call(30, 0.0))),
+		"total_trace_contribution": float(trace_rec.get("total_trace_contribution", 0.0)),
+		"updated_per_tick": trace_rec.get("updated_per_tick", PackedFloat32Array()),
+		"active_mask": trace_rec.get("active_mask", PackedByteArray()),
+		"fear": float(trace_rec.get("fear", 0.0)),
+		"anger": float(trace_rec.get("anger", 0.0)),
+		"sadness": float(trace_rec.get("sadness", 0.0)),
+		"disgust": float(trace_rec.get("disgust", 0.0)),
+		"surprise": float(trace_rec.get("surprise", 0.0)),
+		"joy": float(trace_rec.get("joy", 0.0)),
+		"trust": float(trace_rec.get("trust", 0.0)),
+		"anticipation": float(trace_rec.get("anticipation", 0.0)),
+		"va_composite": float(trace_rec.get("va_composite", 0.0)),
+		"emotion_total": float(trace_rec.get("emotion_total", 0.0)),
+		"recovery": float(trace_rec.get("recovery", 0.0)),
+		"delta": float(trace_rec.get("delta", 0.0)),
+		"hidden_threat_accumulator": float(trace_rec.get("hidden_threat_accumulator", sf.call(30, 0.0))),
 		"stress": next_stress,
 		"reserve": float(post.get("reserve", sf.call(22, 50.0))),
 		"gas_stage": int(post.get("gas_stage", int(round(sf.call(24, 0.0))))),
@@ -1192,13 +1192,13 @@ static func stress_trace_batch_step(
 	if rust_result is Dictionary:
 		return rust_result
 
-	var len: int = mini(per_tick.size(), decay_rate.size())
+	var trace_len: int = mini(per_tick.size(), decay_rate.size())
 	var updated: PackedFloat32Array = PackedFloat32Array()
 	var active: PackedByteArray = PackedByteArray()
-	updated.resize(len)
-	active.resize(len)
+	updated.resize(trace_len)
+	active.resize(trace_len)
 	var total: float = 0.0
-	for i in range(len):
+	for i in range(trace_len):
 		var contribution: float = float(per_tick[i])
 		total += contribution
 		var next: float = contribution * (1.0 - float(decay_rate[i]))

@@ -39,6 +39,7 @@ impl IntelligenceRuntimeSystem {
         }
     }
 
+    #[allow(dead_code)]
     pub(crate) fn baseline_count(&self) -> usize {
         self.potential_baselines.len()
     }
@@ -160,7 +161,7 @@ impl SimSystem for IntelligenceRuntimeSystem {
                 .unwrap_or(0.0)
                 .max(0.0);
 
-            if age_ticks <= config::INTEL_NUTRITION_CRIT_AGE_TICKS as u64
+            if age_ticks <= config::INTEL_NUTRITION_CRIT_AGE_TICKS
                 && intelligence.nutrition_penalty < config::INTEL_NUTRITION_MAX_PENALTY
             {
                 let hunger = needs_opt

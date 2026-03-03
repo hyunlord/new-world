@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::enums::{HexacoAxis, HexacoFacet, AttachmentType};
+use crate::enums::{HexacoAxis, HexacoFacet};
 
 pub const AXIS_COUNT: usize = 6;
 pub const FACET_COUNT: usize = 24;
@@ -13,8 +13,6 @@ pub struct Personality {
     pub axes: [f64; AXIS_COUNT],
     /// 24 facets: index = axis_index * 4 + facet_offset
     pub facets: [f64; FACET_COUNT],
-    /// Bowlby (1969) attachment style
-    pub attachment: AttachmentType,
 }
 
 impl Default for Personality {
@@ -22,7 +20,6 @@ impl Default for Personality {
         Self {
             axes: [0.5; AXIS_COUNT],
             facets: [0.5; FACET_COUNT],
-            attachment: AttachmentType::Secure,
         }
     }
 }

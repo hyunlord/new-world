@@ -23,7 +23,7 @@ pub fn list_json_files(dir: &Path) -> DataResult<Vec<std::path::PathBuf>> {
     })?;
     for entry in entries.flatten() {
         let path = entry.path();
-        if path.extension().map_or(false, |e| e == "json") {
+        if path.extension().is_some_and(|e| e == "json") {
             files.push(path);
         }
     }
@@ -44,7 +44,7 @@ pub fn list_json_files_recursive(dir: &Path) -> DataResult<Vec<std::path::PathBu
         let path = entry.path();
         if path.is_dir() {
             files.extend(list_json_files(&path)?);
-        } else if path.extension().map_or(false, |e| e == "json") {
+        } else if path.extension().is_some_and(|e| e == "json") {
             files.push(path);
         }
     }

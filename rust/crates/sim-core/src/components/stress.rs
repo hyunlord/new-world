@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::enums::{StressState, MentalBreakType};
+use crate::scales::{NormStress, NativeStress, NormPercent, NativePercent};
 
 /// A single per-tick stress contribution that decays over time.
 /// Corresponds to GDScript `ed.stress_traces` entries.
@@ -45,6 +46,12 @@ pub struct Stress {
     pub shaken_remaining: i32,
     /// Work efficiency penalty from being shaken (Yerkes-Dodson)
     pub shaken_work_penalty: f32,
+    /// ACE score (normalized 0.0..=1.0, maps to native 0..10 scale)
+    /// [Felitti et al. 1998 - Adverse Childhood Experiences Study]
+    pub ace_score: f64,
+    /// Whether ACE score has been computed (backfill guard)
+    #[serde(default)]
+    pub ace_backfilled: bool,
 }
 
 impl Default for Stress {
@@ -64,6 +71,8 @@ impl Default for Stress {
             hidden_threat_accumulator: 0.0,
             shaken_remaining: 0,
             shaken_work_penalty: 0.0,
+            ace_score: 0.0,
+            ace_backfilled: false,
         }
     }
 }
@@ -87,5 +96,49 @@ impl Stress {
 
     pub fn is_in_mental_break(&self) -> bool {
         self.active_mental_break.is_some()
+    }
+
+    // --- Read in native scale ---
+
+    /// Stress level on native 0..2000 scale.
+    pub fn level_native(&self) -> NativeStress {
+        NormStress(self.level).to_native()
+    }
+
+    /// Reserve on native 0..100 scale.
+    pub fn reserve_native(&self) -> NativePercent {
+        NormPercent(self.reserve).to_native()
+    }
+
+    /// Allostatic load on native 0..100 scale.
+    pub fn allostatic_native(&self) -> NativePercent {
+        NormPercent(self.allostatic_load).to_native()
+    }
+
+    /// Resilience on native 0..100 scale.
+    pub fn resilience_native(&self) -> NativePercent {
+        NormPercent(self.resilience).to_native()
+    }
+
+    // --- Write from native scale ---
+
+    /// Set stress level from native 0..2000 value.
+    pub fn set_level_native(&mut self, v: NativeStress) {
+        self.level = v.to_norm().0.clamp(0.0, 1.0);
+    }
+
+    /// Set reserve from native 0..100 value.
+    pub fn set_reserve_native(&mut self, v: NativePercent) {
+        self.reserve = v.to_norm().0.clamp(0.0, 1.0);
+    }
+
+    /// Set allostatic load from native 0..100 value.
+    pub fn set_allostatic_native(&mut self, v: NativePercent) {
+        self.allostatic_load = v.to_norm().0.clamp(0.0, 1.0);
+    }
+
+    /// Set resilience from native 0..100 value.
+    pub fn set_resilience_native(&mut self, v: NativePercent) {
+        self.resilience = v.to_norm().0.clamp(0.0, 1.0);
     }
 }

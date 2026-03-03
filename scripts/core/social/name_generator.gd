@@ -86,7 +86,7 @@ func generate_name(gender: String, culture_id: String = "proto_syllabic", settle
 			else:
 				candidate = generate_syllabic_name(culture, gender)
 		if candidate == "":
-				candidate = "Nameless"
+				candidate = Locale.ltr("UI_NAMELESS")
 		var candidate_full: String = candidate
 		if patronymic_rule != "none" and parent_name_to_use != "":
 			candidate_full = apply_patronymic(candidate, parent_name_to_use, gender, culture)
@@ -98,8 +98,8 @@ func generate_name(gender: String, culture_id: String = "proto_syllabic", settle
 	if chosen_given == "":
 		var fallback_given: String = generate_syllabic_name(culture, gender)
 		if fallback_given == "":
-			fallback_given = "Nameless"
-		chosen_given = fallback_given + " II"
+			fallback_given = Locale.ltr("UI_NAMELESS")
+		chosen_given = fallback_given + " " + Locale.ltr("UI_NAME_DUPLICATE_SUFFIX")
 		chosen_full = chosen_given
 		if patronymic_rule != "none" and parent_name_to_use != "":
 			chosen_full = apply_patronymic(chosen_given, parent_name_to_use, gender, culture)
@@ -184,7 +184,7 @@ func generate_syllabic_name(culture: Dictionary, gender: String) -> String:
 				built += str(coda[coda_idx])
 
 	if built.length() == 0:
-		return "Nameless"
+		return Locale.ltr("UI_NAMELESS")
 	return built.left(1).to_upper() + built.substr(1)
 
 

@@ -9,14 +9,14 @@ const WS2_FILE_NAME: String = "sim.ws2"
 const SAVE_BACKEND_RUST_WS2: String = "rust_ws2"
 const MAX_SLOTS: int = 5
 const SAVE_DIR: String = "user://saves/"
-const LEGACY_ARTIFACTS: PackedStringArray = PackedStringArray([
+const LEGACY_ARTIFACTS := [
 	"entities.bin",
 	"buildings.bin",
 	"relationships.bin",
 	"settlements.bin",
 	"world.bin",
 	"stats.json",
-])
+]
 
 
 ## ═══════════════════════════════════════════════════

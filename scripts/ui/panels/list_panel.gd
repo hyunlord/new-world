@@ -343,7 +343,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 					var detail: Dictionary = GameCalendar.calculate_detailed_age(bd, dd)
 					d_total_days = detail.total_days
 				else:
-					d_age_short = "%dy" % int(r.get("death_age_years", 0.0))
+					d_age_short = Locale.trf1("UI_AGE_YEARS_SHORT_FMT", "n", int(r.get("death_age_years", 0.0)))
 				var cause_raw: String = r.get("death_cause", "unknown")
 				var cause_loc: String = Locale.tr_id("DEATH", cause_raw)
 				var d_born_display: String = _format_date_compact(bd)

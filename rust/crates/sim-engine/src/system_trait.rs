@@ -56,7 +56,7 @@ impl SystemEntry {
         if interval == 0 {
             return false; // disabled
         }
-        current_tick % interval == 0
+        current_tick.is_multiple_of(interval)
     }
 }
 

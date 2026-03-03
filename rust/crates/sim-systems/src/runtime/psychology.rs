@@ -16,6 +16,7 @@ use sim_core::{
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
+use sim_core::scales::{NativeStress, NativePercent};
 
 use crate::body;
 use crate::stat_curve;
@@ -141,10 +142,10 @@ impl SimSystem for StressRuntimeSystem {
                 .unwrap_or(false);
 
             // Scale to stat_curve native scales (stress 0-2000, reserve/allostatic/resilience 0-100)
-            let stress_native = stress.level as f32 * 2000.0;
-            let reserve_native = stress.reserve as f32 * 100.0;
-            let allostatic_native = stress.allostatic_load as f32 * 100.0;
-            let resilience_native = stress.resilience as f32 * 100.0;
+            let stress_native = stress.level_native().0;
+            let reserve_native = stress.reserve_native().0;
+            let allostatic_native = stress.allostatic_native().0;
+            let resilience_native = stress.resilience_native().0;
             let reserve_ratio = stress.reserve as f32; // already 0-1
 
             // Stress trace arrays
@@ -202,10 +203,10 @@ impl SimSystem for StressRuntimeSystem {
             );
 
             // --- Write outputs (scale back to 0-1 normalized) ---
-            stress.level = (result.stress / 2000.0).clamp(0.0, 1.0) as f64;
-            stress.reserve = (result.reserve / 100.0).clamp(0.0, 1.0) as f64;
-            stress.allostatic_load = (result.allostatic / 100.0).clamp(0.0, 1.0) as f64;
-            stress.resilience = (result.resilience / 100.0).clamp(0.0, 1.0) as f64;
+            stress.set_level_native(NativeStress(result.stress));
+            stress.set_reserve_native(NativePercent(result.reserve));
+            stress.set_allostatic_native(NativePercent(result.allostatic));
+            stress.set_resilience_native(NativePercent(result.resilience));
             stress.gas_stage = result.gas_stage;
             stress.stress_delta_last = result.delta;
             stress.hidden_threat_accumulator = result.hidden_threat_accumulator;
@@ -260,7 +261,6 @@ const MENTAL_BREAK_THRESHOLD_MIN: f32 = 420.0;
 const MENTAL_BREAK_THRESHOLD_MAX: f32 = 900.0;
 const MENTAL_BREAK_SCALE: f32 = 6000.0;
 const MENTAL_BREAK_CAP_PER_TICK: f32 = 0.25;
-const MENTAL_BREAK_STRESS_SCALE: f32 = 2000.0;
 const MENTAL_BREAK_OUTRAGE_THRESHOLD: f32 = 60.0;
 
 #[inline]
@@ -343,9 +343,9 @@ impl SimSystem for MentalBreakRuntimeSystem {
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0);
             let resilience = c_axis;
-            let reserve_scaled = (stress.reserve as f32 * 100.0).clamp(0.0, 100.0);
-            let allostatic_scaled = (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0);
-            let stress_scaled = (stress.level as f32 * MENTAL_BREAK_STRESS_SCALE).clamp(0.0, 4000.0);
+            let reserve_scaled = stress.reserve_native().0.clamp(0.0, 100.0);
+            let allostatic_scaled = stress.allostatic_native().0.clamp(0.0, 100.0);
+            let stress_scaled = stress.level_native().0.clamp(0.0, 4000.0);
 
             let threshold = body::mental_break_threshold(
                 MENTAL_BREAK_BASE_THRESHOLD,
@@ -825,7 +825,7 @@ impl SimSystem for EmotionRuntimeSystem {
                     .clamp(0.0, 1.0);
 
             let hl = body::emotion_adjusted_half_life(4.0, 0.25, z_c).max(0.001);
-            let k = 0.693_147 / hl;
+            let k = std::f32::consts::LN_2 / hl;
             let decay = (-k).exp();
             let blend = (1.0 - decay).clamp(0.0, 1.0);
 
@@ -1130,7 +1130,7 @@ impl SimSystem for ContagionRuntimeSystem {
                 y: position.y,
                 settlement_id: identity_opt.and_then(|identity| identity.settlement_id.map(|id| id.0)),
                 emotions,
-                stress_2000: (stress.level as f32 * STRESS_SCALE).clamp(0.0, STRESS_SCALE),
+                stress_2000: stress.level_native().0.clamp(0.0, STRESS_SCALE),
                 valence: contagion_valence(&emotions),
                 x_axis,
                 e_axis,
@@ -1437,20 +1437,20 @@ fn coping_apply_strategy_effects(
         // 72 ticks later (or allostatic > 0.8) the debt explodes at 1.5x.
         CopingStrategyId::Denial => {
             let relief = 150.0 * (0.5 + 0.5 * prof);
-            stress.level = (stress.level - (relief / 2000.0) as f64).clamp(0.0, 1.0);
+            stress.set_level_native(NativeStress(stress.level_native().0 - relief));
             // Hidden debt: 80% of current perceived threat redirected to accumulator
-            let real_threat = stress.level as f32 * 2000.0 * 0.4;
+            let real_threat = stress.level_native().0 * 0.4;
             coping.denial_accumulator += real_threat * 0.8;
             coping.denial_timer = 72;
             // Permanent allostatic penalty
-            stress.allostatic_load = (stress.allostatic_load + 2.0 / 100.0).clamp(0.0, 1.0);
+            stress.set_allostatic_native(NativePercent(stress.allostatic_native().0 + 2.0));
         }
         // C11 Behavioral Disengagement (Seligman 1975): GAS reserve recovery
         // but helplessness accumulates → permanent control_appraisal_cap damage.
         CopingStrategyId::BehavioralDisengagement => {
-            stress.reserve = (stress.reserve + 10.0 / 100.0).clamp(0.0, 1.0);
+            stress.set_reserve_native(NativePercent(stress.reserve_native().0 + 10.0));
             coping.helplessness_score = (coping.helplessness_score + 0.10).min(1.0);
-            stress.allostatic_load = (stress.allostatic_load + 3.0 / 100.0).clamp(0.0, 1.0);
+            stress.set_allostatic_native(NativePercent(stress.allostatic_native().0 + 3.0));
             if coping.helplessness_score > 0.8 {
                 coping.control_appraisal_cap = 0.3;
             }
@@ -1463,13 +1463,14 @@ fn coping_apply_strategy_effects(
             let brooding_weight = 1.0 / (1.0 + (-10.0_f32 * (prof - 0.5)).exp());
             let reflection_weight = 1.0 - brooding_weight;
             if reflection_weight > 0.3 {
-                stress.reserve =
-                    (stress.reserve + (5.0 * reflection_weight / 100.0) as f64).clamp(0.0, 1.0);
+                stress.set_reserve_native(NativePercent(
+                    stress.reserve_native().0 + 5.0 * reflection_weight,
+                ));
             }
             if brooding_weight > 0.3 {
-                stress.allostatic_load =
-                    (stress.allostatic_load + (4.0 * brooding_weight / 100.0) as f64)
-                        .clamp(0.0, 1.0);
+                stress.set_allostatic_native(NativePercent(
+                    stress.allostatic_native().0 + 4.0 * brooding_weight,
+                ));
             }
         }
         // C13 Substance Use (Cooper 1995): strong immediate relief but
@@ -1477,7 +1478,7 @@ fn coping_apply_strategy_effects(
         // Dependency > 0.6 triggers withdrawal stress when substance_recent_timer expires.
         CopingStrategyId::SubstanceUse => {
             let relief = 300.0 * (0.4 + 0.6 * prof);
-            stress.level = (stress.level - (relief / 2000.0) as f64).clamp(0.0, 1.0);
+            stress.set_level_native(NativeStress(stress.level_native().0 - relief));
             coping.rebound_queue.push(CopingRebound {
                 delay: 12,
                 stress_rebound: 0.15 * prof,
@@ -1489,7 +1490,7 @@ fn coping_apply_strategy_effects(
         // Generic adaptive coping: moderate stress relief scaled by proficiency.
         _ => {
             let relief = 80.0 * (0.5 + 0.5 * prof);
-            stress.level = (stress.level - (relief / 2000.0) as f64).clamp(0.0, 1.0);
+            stress.set_level_native(NativeStress(stress.level_native().0 - relief));
         }
     }
     stress.recalculate_state();
@@ -1533,8 +1534,7 @@ impl SimSystem for CopingRuntimeSystem {
                 coping.denial_timer = coping.denial_timer.saturating_sub(dec);
                 if coping.denial_timer == 0 && coping.denial_accumulator > 0.0 {
                     let debt = coping.denial_accumulator;
-                    stress.level =
-                        (stress.level + (debt * 1.5 / 2000.0) as f64).clamp(0.0, 1.0);
+                    stress.set_level_native(NativeStress(stress.level_native().0 + debt * 1.5));
                     coping.denial_accumulator = 0.0;
                     stress.recalculate_state();
                 }
@@ -1543,7 +1543,7 @@ impl SimSystem for CopingRuntimeSystem {
             // Allostatic overload triggers early denial explosion
             if coping.denial_accumulator > 0.01 && stress.allostatic_load > 0.8 {
                 let debt = coping.denial_accumulator;
-                stress.level = (stress.level + (debt * 1.5 / 2000.0) as f64).clamp(0.0, 1.0);
+                stress.set_level_native(NativeStress(stress.level_native().0 + debt * 1.5));
                 coping.denial_accumulator = 0.0;
                 coping.denial_timer = 0;
                 stress.recalculate_state();
@@ -1555,10 +1555,10 @@ impl SimSystem for CopingRuntimeSystem {
                 for mut rb in coping.rebound_queue.drain(..) {
                     rb.delay -= dec as i32;
                     if rb.delay <= 0 {
-                        // Rebound fires: stress += rebound * 300 (scaled to 0-1)
-                        stress.level = (stress.level
-                            + (rb.stress_rebound * 300.0 / 2000.0) as f64)
-                            .clamp(0.0, 1.0);
+                        // Rebound fires: stress += rebound * 300 (native scale)
+                        stress.set_level_native(NativeStress(
+                            stress.level_native().0 + rb.stress_rebound * 300.0,
+                        ));
                         // Allostatic add is already normalized 0-1
                         stress.allostatic_load =
                             (stress.allostatic_load + rb.allostatic_add as f64).clamp(0.0, 1.0);
@@ -1577,8 +1577,8 @@ impl SimSystem for CopingRuntimeSystem {
 
             // Withdrawal stress injection (dependency > 0.6 + timer expired)
             if coping.dependency_score > 0.6 && coping.substance_recent_timer == 0 {
-                // 0.30 * 300 = 90 stress on 0-2000 scale → 0.045 on 0-1
-                stress.level = (stress.level + (90.0 / 2000.0) as f64).clamp(0.0, 1.0);
+                // 90 stress on 0-2000 native scale
+                stress.set_level_native(NativeStress(stress.level_native().0 + 90.0));
                 coping.substance_recent_timer = 24;
                 stress.recalculate_state();
             }
@@ -1603,8 +1603,8 @@ impl SimSystem for CopingRuntimeSystem {
 
             // Lazarus sigmoid learn probability with K(n)/S(N) saturation
             let learn_p = body::coping_learn_probability(
-                stress_norm * 2000.0,
-                allostatic_norm * 100.0,
+                stress.level_native().0,
+                stress.allostatic_native().0,
                 is_recovery,
                 break_count,
                 owned_count,
@@ -1649,6 +1649,278 @@ impl SimSystem for CopingRuntimeSystem {
 
             // === Phase 3: Execute Strategy Effects ===
             coping_apply_strategy_effects(strategy, prof_val, coping, stress);
+        }
+    }
+}
+
+// ── Personality Maturation ───────────────────────────────────────────
+
+/// OU process constants matching personality_maturation.gd
+const MATURATION_THETA: f32 = 0.03;
+const MATURATION_SIGMA: f32 = 0.03;
+
+/// Default maturation targets (Ashton & Lee 2016):
+/// H: +1.0 SD from 18→60, E/X: mild increase
+const MATURATION_TARGETS: [(usize, f32, i32, i32); 3] = [
+    (0, 1.0, 18, 60),  // H: +1.0 shift, ages 18-60
+    (1, 0.3, 18, 60),  // E: +0.3 shift, ages 18-60
+    (2, 0.2, 20, 50),  // X: +0.2 shift, ages 20-50
+];
+
+/// Rust runtime system for age-based personality maturation.
+///
+/// Ports `personality_maturation.gd`: applies an Ornstein-Uhlenbeck (OU) process
+/// to each facet z-score, drifting toward age-appropriate targets. Called once
+/// per game year per entity. [Ashton & Lee 2016]
+#[derive(Debug, Clone)]
+pub struct PersonalityMaturationRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    last_year: i32,
+}
+
+impl PersonalityMaturationRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            last_year: -1,
+        }
+    }
+}
+
+/// Convert facet value (0..1) to z-score
+#[inline]
+fn facet_to_zscore(v: f64) -> f64 {
+    (v - 0.5) * 4.0 // maps 0..1 to -2..+2
+}
+
+/// Convert z-score back to facet value (0..1)
+#[inline]
+fn zscore_to_facet(z: f64) -> f64 {
+    (z / 4.0 + 0.5).clamp(0.0, 1.0)
+}
+
+impl SimSystem for PersonalityMaturationRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "personality_maturation_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        use sim_core::components::personality::AXIS_COUNT;
+
+        let ticks_per_year = config::TICKS_PER_YEAR as i32;
+        if ticks_per_year <= 0 {
+            return;
+        }
+        let current_year = tick as i32 / ticks_per_year;
+        if current_year == self.last_year {
+            return;
+        }
+        self.last_year = current_year;
+
+        let mut query = world.query::<(&Age, &mut Personality)>();
+        for (_, (age, personality)) in &mut query {
+            let age_years = age.years as i32;
+
+            // For each axis, compute target then drift each of its 4 facets
+            for axis_idx in 0..AXIS_COUNT {
+                // Look up maturation target for this axis
+                let target = MATURATION_TARGETS
+                    .iter()
+                    .find(|(idx, _, _, _)| *idx == axis_idx)
+                    .map(|(_, max_shift, start, end)| {
+                        body::personality_linear_target(age_years, *max_shift, *start, *end)
+                    })
+                    .unwrap_or(0.0);
+
+                // Drift each of the 4 facets for this axis
+                let facet_base = axis_idx * 4;
+                for f in 0..4 {
+                    let fi = facet_base + f;
+                    let current_z = facet_to_zscore(personality.facets[fi]);
+                    // OU: dz = theta * (target - current) + N(0, sigma)
+                    let u1 = resources.rng.gen_range(0.0001_f32..1.0_f32);
+                    let u2 = resources.rng.gen_range(0.0_f32..1.0_f32);
+                    let noise =
+                        MATURATION_SIGMA * (-2.0 * u1.ln()).sqrt() * (2.0 * std::f32::consts::PI * u2).cos();
+                    let dz = MATURATION_THETA * (target - current_z as f32) + noise;
+                    personality.facets[fi] = zscore_to_facet(current_z + dz as f64);
+                }
+            }
+            personality.recalculate_axes();
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// TraitRuntimeSystem — v3 Binary Trait Evaluation
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Source type for a trait condition evaluation.
+#[derive(Debug, Clone)]
+pub enum TraitConditionSource {
+    /// HEXACO axis threshold check
+    HexacoAxis(HexacoAxis),
+    /// HEXACO facet threshold check
+    HexacoFacet(HexacoFacet),
+    /// Value threshold check
+    Value(ValueType),
+}
+
+/// Direction of threshold comparison.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum TraitDirection {
+    /// Value must be >= threshold
+    High,
+    /// Value must be <= threshold
+    Low,
+}
+
+/// A single condition that must be met for a trait to activate.
+#[derive(Debug, Clone)]
+pub struct TraitCondition {
+    pub source: TraitConditionSource,
+    pub direction: TraitDirection,
+    pub threshold: f64,
+}
+
+/// Definition of a binary trait with activation conditions.
+#[derive(Debug, Clone)]
+pub struct TraitDefinition {
+    pub id: String,
+    pub conditions: Vec<TraitCondition>,
+    /// Traits that are incompatible (mutually exclusive).
+    pub incompatibles: Vec<String>,
+}
+
+/// Data-driven binary trait evaluator.
+///
+/// Evaluates personality/value conditions to determine which binary traits
+/// should be active on each entity. Supports HEXACO axis, HEXACO facet,
+/// and value-based conditions with high/low thresholds.
+///
+/// Academic basis: v3 binary trait evaluation from trait_system.gd
+/// (threshold-gated personality → trait mapping).
+#[derive(Debug, Clone)]
+pub struct TraitRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    definitions: Vec<TraitDefinition>,
+}
+
+impl TraitRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            definitions: Vec::new(),
+        }
+    }
+
+    pub fn with_definitions(mut self, defs: Vec<TraitDefinition>) -> Self {
+        self.definitions = defs;
+        self
+    }
+
+    /// Evaluate all conditions for a single trait definition.
+    fn evaluate_conditions(
+        def: &TraitDefinition,
+        personality: &Personality,
+        values: &Values,
+    ) -> bool {
+        if def.conditions.is_empty() {
+            return false;
+        }
+        def.conditions.iter().all(|cond| {
+            let val = match &cond.source {
+                TraitConditionSource::HexacoAxis(axis) => personality.axes[*axis as usize],
+                TraitConditionSource::HexacoFacet(facet) => personality.facets[*facet as usize],
+                TraitConditionSource::Value(vtype) => values.values[*vtype as usize],
+            };
+            match cond.direction {
+                TraitDirection::High => val >= cond.threshold,
+                TraitDirection::Low => val <= cond.threshold,
+            }
+        })
+    }
+}
+
+impl SimSystem for TraitRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "trait_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        if self.definitions.is_empty() {
+            return;
+        }
+
+        // Pass 1: Evaluate traits for all entities
+        struct TraitUpdate {
+            entity: Entity,
+            new_active: Vec<String>,
+        }
+
+        let mut updates: Vec<TraitUpdate> = Vec::new();
+
+        {
+            let mut query = world.query::<(&Personality, &Values, &Traits)>();
+            for (entity, (personality, values, current_traits)) in &mut query {
+                let mut new_active: Vec<String> = Vec::new();
+                let mut activated_set: HashSet<String> = HashSet::new();
+
+                // Evaluate each definition
+                for def in &self.definitions {
+                    if Self::evaluate_conditions(def, personality, values) {
+                        // Check incompatibles — first activated wins
+                        let blocked = def
+                            .incompatibles
+                            .iter()
+                            .any(|inc| activated_set.contains(inc));
+                        if !blocked {
+                            activated_set.insert(def.id.clone());
+                            new_active.push(def.id.clone());
+                        }
+                    }
+                }
+
+                // Preserve event-granted traits (those not in any definition)
+                let defined_ids: HashSet<&str> =
+                    self.definitions.iter().map(|d| d.id.as_str()).collect();
+                for existing in &current_traits.active {
+                    if !defined_ids.contains(existing.as_str())
+                        && !activated_set.contains(existing)
+                    {
+                        new_active.push(existing.clone());
+                    }
+                }
+
+                updates.push(TraitUpdate { entity, new_active });
+            }
+        }
+
+        // Pass 2: Apply trait updates
+        for update in updates {
+            if let Ok(mut traits) = world.get::<&mut Traits>(update.entity) {
+                traits.active = update.new_active;
+            }
         }
     }
 }

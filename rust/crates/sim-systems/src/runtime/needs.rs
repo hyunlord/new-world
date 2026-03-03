@@ -15,6 +15,7 @@ use sim_core::{
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
+use sim_core::scales::{NativeStress, NativePercent};
 
 use crate::body;
 
@@ -266,18 +267,18 @@ impl SimSystem for ChildStressProcessorRuntimeSystem {
                 .clamp(0.0, 1.0);
             let out = body::child_stress_apply_step(
                 resilience,
-                (stress.reserve as f32 * 100.0).clamp(0.0, 100.0),
-                (stress.level as f32 * 2000.0).clamp(0.0, 2000.0),
-                (stress.allostatic_load as f32 * 100.0).clamp(0.0, 100.0),
+                stress.reserve_native().0.clamp(0.0, 100.0),
+                stress.level_native().0.clamp(0.0, 2000.0),
+                stress.allostatic_native().0.clamp(0.0, 100.0),
                 buffered_intensity,
                 spike_mult,
                 vulnerability_mult,
                 break_threshold_mult,
                 stress_type,
             );
-            stress.reserve = (out[1] / 100.0).clamp(0.0, 1.0) as f64;
-            stress.level = (out[2] / 2000.0).clamp(0.0, 1.0) as f64;
-            stress.allostatic_load = (out[3] / 100.0).clamp(0.0, 1.0) as f64;
+            stress.set_reserve_native(NativePercent(out[1]));
+            stress.set_level_native(NativeStress(out[2]));
+            stress.set_allostatic_native(NativePercent(out[3]));
             stress.recalculate_state();
         }
     }

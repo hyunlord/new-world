@@ -75,7 +75,7 @@ func _build_scene() -> void:
 	## BrushPalette (왼쪽 사이드바)
 	_brush_palette = BrushPaletteScript.new()
 	_brush_palette.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
-	_brush_palette.custom_minimum_size = Vector2(200, 0)
+	_brush_palette.custom_minimum_size = Vector2(300, 0)
 	_canvas_layer.add_child(_brush_palette)
 	_brush_palette.preset_selected.connect(_on_preset_selected)
 	_brush_palette.regenerate_requested.connect(_on_regenerate)

@@ -65,13 +65,13 @@ var _gpu_pathfinding_capability: bool = false
 
 ## Initializes Rust runtime coordinator.
 ## Returns true when runtime instance is available and initialized.
-func runtime_init(seed: int, config_json: String) -> bool:
+func runtime_init(p_seed: int, config_json: String) -> bool:
 	var runtime: Object = _get_native_runtime()
 	if runtime == null:
 		return false
 	if not runtime.has_method("runtime_init"):
 		return false
-	return bool(runtime.call("runtime_init", seed, config_json))
+	return bool(runtime.call("runtime_init", p_seed, config_json))
 
 
 ## Returns true when Rust runtime instance currently has initialized state.
@@ -2221,9 +2221,9 @@ func _pick_method(candidates: Array[String], fallback: String) -> String:
 	if _native_bridge == null:
 		return fallback
 	for i in range(candidates.size()):
-		var name: String = candidates[i]
-		if _native_bridge.has_method(name):
-			return name
+		var candidate: String = candidates[i]
+		if _native_bridge.has_method(candidate):
+			return candidate
 	return fallback
 
 

@@ -25,19 +25,19 @@ You receive tickets from the lead (Claude Code). Each ticket specifies exactly w
 
 ## Tech Context
 
-- Engine: Godot 4.6 (Mobile renderer)
-- Language: GDScript (primary), Rust GDExtension (performance-critical, lead decides)
-- Branch: **lead/main** (always)
-- Localization: `Locale.ltr("KEY")` — NEVER `tr()`, NEVER hardcoded strings
-- Config: `GameConfig.CONSTANT` — NEVER magic numbers
-- Communication: `SimulationBus` signals — NEVER direct system references
-
-### Rust Files (If Ticket Involves Rust)
-- Rust source: `rust/src/`
+### Primary: Rust Simulation Core
+- ECS: hecs crate
 - Build: `cd rust && cargo build --release`
-- GDExtension registration: `rust/worldsim.gdextension`
-- Rust code follows the same principles: pure functions, PackedArray I/O, no Godot node dependencies
-- If the ticket says "implement in Rust", write `.rs` files. If it says GDScript, write `.gd` files. Never decide yourself.
+- Test: `cd rust && cargo test --workspace`
+- Lint: `cd rust && cargo clippy -- -D warnings`
+- Crates: sim-core (components/config), sim-data (JSON), sim-systems (tick logic), sim-engine (tick loop/events), sim-bridge (GDExtension FFI), sim-test (headless)
+
+### Secondary: GDScript UI Layer
+- Engine: Godot 4.6
+- GDScript for UI/rendering/input ONLY
+- Localization: `Locale.ltr("KEY")` — NEVER `tr()`, NEVER hardcoded strings
+- UI reads state through SimBridge — NEVER accesses Rust state directly
+- Branch: **lead/main** (always)
 
 ---
 
@@ -45,11 +45,11 @@ You receive tickets from the lead (Claude Code). Each ticket specifies exactly w
 
 1. **Read** the ticket file fully.
 2. **Scope check** — if you need a file NOT in Scope, flag it. Do not silently expand scope.
-3. **Check for existing code** — before creating a file, verify it doesn't exist. Before modifying a function, read the current implementation.
-4. **Plan** — map which files change, which signals are affected, which tests to run.
+3. **Check for existing code** — before creating, verify it doesn't exist. Before modifying, read current implementation.
+4. **Plan** — map which files change, which events are affected, which tests to run.
 5. **Implement** exactly what the ticket asks. No extras.
 6. **Verify** — run ticket's verification commands. Do NOT run gate.sh yourself — lead runs gate after review.
-7. **Commit** to the assigned branch: `[t-XXX] <one-line summary>`
+7. **Commit**: `[t-XXX] <one-line summary>`
 8. **Report** with this structure:
 
 ```markdown
@@ -57,26 +57,21 @@ You receive tickets from the lead (Claude Code). Each ticket specifies exactly w
 [one-line summary]
 
 ## Files Changed
-- path/to/file.gd — what changed and why
+- path/to/file — what changed and why
 
-## Signals Added/Modified
-- signal_name (added/modified) in SimulationBus
+## Rust Changes
+- Components added/modified: [list or none]
+- Events added/modified: [list or none]
+- Config constants added: [list or none]
+- New #[func] bridge methods: [list or none]
 
-## GameConfig Changes
-- CONSTANT_NAME = value (added/modified)
-
-## Localization Keys Added
+## Localization Keys Added (if GDScript UI ticket)
 | Key | en | ko |
 |-----|----|----|
-| KEY_NAME | English text | 한국어 텍스트 |
 
-## Localization Verification
-- Hardcoded string scan: PASS / FAIL
-- New keys (en): [list or none]
-- New keys (ko): [list or none]
-
-## Verification Results
-[what was tested, what passed]
+## Test Results
+- cargo test: PASS / FAIL
+- cargo clippy: PASS / FAIL
 
 ## Risks / Notes
 [anything the lead should know]
@@ -86,90 +81,73 @@ You receive tickets from the lead (Claude Code). Each ticket specifies exactly w
 
 ## Non-Negotiable Rules
 
+### Rust Tickets
+1. **No `unwrap()` in production code.** Use `Result`, `.unwrap_or_default()`, or `expect("descriptive msg")`.
+2. **All `pub` items get `///` doc comments.**
+3. **`#[cfg(test)]` module in every source file** with at least one unit test.
+4. **All f64 for simulation math.** No f32 in simulation paths.
+5. **No Godot types in sim-core or sim-systems.** Only sim-bridge touches `godot::` types.
+6. **Magic numbers → `config::` constants.**
+7. **Events via EventBus only.** No direct system-to-system references.
+8. **No `String` matching in hot paths.** Use enums.
+
+### GDScript UI Tickets
 1. **No hardcoded strings.** Every user-visible text: `Locale.ltr("KEY")`.
-2. **No magic numbers.** Every tuning value: `GameConfig.CONSTANT_NAME`.
-3. **No direct system references.** All inter-system communication: `SimulationBus`.
-4. **No scope creep.** Don't fix things you find broken. Note them in the report.
-5. **No `tr()`.** Only `Locale.ltr()`. The project uses a custom localization system.
-6. **No `tr_data()`.** Only `Locale.ltr()`.
-7. **Both language files.** If you add a locale key to `en/`, you MUST add it to `ko/` too.
-8. **Type hints required.** Every variable, every parameter, every return type.
-9. **Doc comments on public functions.** `## Description` format.
-10. **Do NOT update project documentation or Notion** — that is lead work.
+2. **No `tr()`.** Only `Locale.ltr()`.
+3. **Both language files.** en/ AND ko/ for every new key.
+4. **Type hints required.** Every variable, parameter, return type.
+5. **NEVER modify simulation state from GDScript.** Read via SimBridge, write via commands.
+6. **NEVER import simulation systems.**
+
+### All Tickets
+1. **No documentation/Notion updates** — lead work.
+2. **No scope creep.** Note issues in report, don't fix them.
 
 ---
 
-## GDScript Patterns
+## Rust Patterns
 
-### Config-First
-```gdscript
-# ❌ BAD
-var decay = 0.01
-
-# ✅ GOOD
-var decay: float = GameConfig.HUNGER_DECAY_RATE
+### System Pattern
+```rust
+pub fn my_system(world: &mut hecs::World, config: &Config, events: &mut EventBus) {
+    for (entity, comp) in world.query_mut::<&mut MyComponent>() {
+        let value = comp.field * config.MY_RATE;
+        comp.field = value.clamp(0.0, 1.0);
+        if value < config.MY_THRESHOLD {
+            events.emit(SimEvent::ThresholdReached { entity });
+        }
+    }
+}
 ```
 
-### Signal-First
+### GDScript UI Pattern
 ```gdscript
-# ❌ BAD
-var stress_sys = get_node("/root/Main/StressSystem")
-stress_sys.apply_stress(entity_id, 0.5)
-
-# ✅ GOOD
-SimulationBus.emit_signal("stressor_applied", entity_id, "overwork", 0.5)
-```
-
-### Locale-First
-```gdscript
-# ❌ BAD
-label.text = "Health: Low"
-label.text = "건강: 낮음"
-label.text = ed.status  # raw enum string
-
-# ✅ GOOD
-label.text = Locale.ltr("UI_HEALTH") + ": " + Locale.ltr("STAT_LOW")
-label.text = Locale.ltr("STATUS_" + ed.status.to_upper())
-```
-
-### Rust-Ready (For Hot Paths)
-```gdscript
-# ❌ BAD — GDScript-specific patterns in hot path
-match entity.get("type"):
-    "warrior": score = calculate_warrior(entity)
-
-# ✅ GOOD — Pure function, easy to extract to Rust
-static func calculate_combat_score(
-    strength: float,
-    skill_level: int,
-    weapon_damage: float
-) -> float:
-    return strength * 0.4 + float(skill_level) * 0.3 + weapon_damage * 0.3
+# Read via SimBridge (never direct entity access)
+var detail: Dictionary = SimBridge.get_entity_detail(id)
+label.text = Locale.trf1("UI_STRESS_FMT", "value", str(int(detail.stress * 100)))
 ```
 
 ---
 
 ## Common Mistakes
 
-1. Using `tr()` instead of `Locale.ltr()`
-2. Forgetting `ko/` translations
-3. Adding a field to EntityData without updating SaveManager
-4. Importing another system directly instead of using SimulationBus
-5. Adding a constant directly in code instead of GameConfig
-6. Modifying files outside ticket scope
-7. Running gate.sh (that's lead's job)
-8. Using `await` in `process_tick()` — tick processing is synchronous
-9. Showing raw enum names in UI instead of localized strings
-10. Missing type hints
-11. Using Variant/dynamic typing in hot paths (makes Rust migration harder)
+1. `unwrap()` in production Rust code
+2. Godot types in sim-core/sim-systems
+3. f32 instead of f64 in simulation math
+4. Missing `#[cfg(test)]` module
+5. GDScript directly accessing entity state
+6. Hardcoded UI strings without `Locale.ltr()`
+7. Using `tr()` instead of `Locale.ltr()`
+8. Forgetting ko/ translations
+9. Modifying files outside ticket scope
+10. Running gate.sh (lead's job)
 
 ---
 
 ## If Something Is Ambiguous
 
-If the ticket is unclear about:
-- Which file a function belongs in → **flag it in report**, pick the most logical location
-- What a constant value should be → **flag it**, use a reasonable default with `# TODO: verify value`
-- Whether something is in scope → **it's NOT in scope**. Note it and move on.
+- Which crate? → **Flag in report**, pick most logical location.
+- What constant value? → **Flag**, use reasonable default with `// TODO: verify value`.
+- In scope? → **It's NOT in scope.** Note and move on.
 
-Never guess silently. Always surface ambiguity in the report.
+Never guess silently. Always surface ambiguity.

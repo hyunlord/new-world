@@ -19,6 +19,16 @@ use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
 use log::{debug, info};
 
+/// A recorded chronicle event (world or personal history).
+#[derive(Debug, Clone)]
+pub struct ChronicleEvent {
+    pub tick: u64,
+    pub importance: u32,
+    pub event_type: String,
+    pub entity_id: i64,
+    pub description: String,
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct RuntimeStatsSnapshot {
     pub tick: u64,
@@ -66,6 +76,10 @@ pub struct SimResources {
     pub stat_sync_derived: HashMap<EntityId, [f32; 8]>,
     /// Per-entity stat-threshold active flags.
     pub stat_threshold_flags: HashMap<EntityId, u32>,
+    /// Chronicle world-event log (pruned periodically).
+    pub chronicle_world_events: Vec<ChronicleEvent>,
+    /// Chronicle personal-event log keyed by entity ID.
+    pub chronicle_personal_events: HashMap<EntityId, Vec<ChronicleEvent>>,
 }
 
 impl SimResources {
@@ -90,6 +104,8 @@ impl SimResources {
             stats_total_deaths: 0,
             stat_sync_derived: HashMap::new(),
             stat_threshold_flags: HashMap::new(),
+            chronicle_world_events: Vec::new(),
+            chronicle_personal_events: HashMap::new(),
         }
     }
 }

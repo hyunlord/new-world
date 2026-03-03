@@ -66,18 +66,20 @@ func set_controller(controller) -> void:
 
 func _build_ui() -> void:
 	## 배경 패널
-	custom_minimum_size = Vector2(200, 0)
+	custom_minimum_size = Vector2(300, 0)
 	var panel: PanelContainer = PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(panel)
 
 	var vbox: VBoxContainer = VBoxContainer.new()
 	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.add_theme_constant_override("separation", 6)
 	panel.add_child(vbox)
 
 	## ── 프리셋 섹션 ──
 	var preset_lbl: Label = Label.new()
 	preset_lbl.text = Locale.ltr("UI_MAP_EDITOR_TITLE")
+	preset_lbl.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(preset_lbl)
 
 	var preset_hbox: HBoxContainer = HBoxContainer.new()
@@ -86,6 +88,7 @@ func _build_ui() -> void:
 		var key: String = "UI_MAP_PRESET_" + preset_id.to_upper()
 		var preset_btn: Button = Button.new()
 		preset_btn.text = Locale.ltr(key)
+		preset_btn.add_theme_font_size_override("font_size", 16)
 		preset_btn.pressed.connect(_on_preset_btn.bind(preset_id))
 		preset_hbox.add_child(preset_btn)
 
@@ -94,19 +97,23 @@ func _build_ui() -> void:
 	vbox.add_child(seed_hbox)
 	var seed_lbl: Label = Label.new()
 	seed_lbl.text = Locale.ltr("UI_MAP_SEED_LABEL")
+	seed_lbl.add_theme_font_size_override("font_size", 16)
 	seed_hbox.add_child(seed_lbl)
 	_seed_edit = LineEdit.new()
 	_seed_edit.placeholder_text = "0"
 	_seed_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_seed_edit.add_theme_font_size_override("font_size", 16)
 	seed_hbox.add_child(_seed_edit)
 	var regen_btn: Button = Button.new()
 	regen_btn.text = Locale.ltr("UI_MAP_REGENERATE")
+	regen_btn.add_theme_font_size_override("font_size", 16)
 	regen_btn.pressed.connect(_on_regenerate)
 	seed_hbox.add_child(regen_btn)
 
 	## ── 브러시 모드 섹션 ──
 	var brush_lbl: Label = Label.new()
 	brush_lbl.text = Locale.ltr("UI_MAP_BRUSH_TERRAIN")
+	brush_lbl.add_theme_font_size_override("font_size", 18)
 	vbox.add_child(brush_lbl)
 
 	var mode_hbox: HBoxContainer = HBoxContainer.new()
@@ -122,6 +129,7 @@ func _build_ui() -> void:
 	for entry: Array in modes:
 		var mode_btn: Button = Button.new()
 		mode_btn.text = Locale.ltr(entry[0])
+		mode_btn.add_theme_font_size_override("font_size", 15)
 		mode_btn.toggle_mode = true
 		mode_btn.pressed.connect(_on_mode_btn.bind(entry[1]))
 		mode_hbox.add_child(mode_btn)
@@ -133,13 +141,16 @@ func _build_ui() -> void:
 	for i: int in range(9):
 		var biome_btn: Button = Button.new()
 		biome_btn.text = Locale.ltr(_BIOME_KEYS[i])
+		biome_btn.add_theme_font_size_override("font_size", 15)
 		biome_btn.add_theme_color_override("font_color", _BIOME_COLORS[i])
+		biome_btn.custom_minimum_size = Vector2(90, 32)
 		biome_btn.pressed.connect(_on_biome_btn.bind(i))
 		biome_grid.add_child(biome_btn)
 
 	## ── 브러시 크기 슬라이더 ──
 	var size_lbl: Label = Label.new()
 	size_lbl.text = Locale.ltr("UI_MAP_BRUSH_SIZE")
+	size_lbl.add_theme_font_size_override("font_size", 16)
 	vbox.add_child(size_lbl)
 	var size_slider: HSlider = HSlider.new()
 	size_slider.min_value = GameConfig.MAP_EDITOR_BRUSH_MIN
@@ -152,6 +163,7 @@ func _build_ui() -> void:
 	## ── 강도 슬라이더 ──
 	var str_lbl: Label = Label.new()
 	str_lbl.text = Locale.ltr("UI_MAP_BRUSH_STRENGTH")
+	str_lbl.add_theme_font_size_override("font_size", 16)
 	vbox.add_child(str_lbl)
 	var str_slider: HSlider = HSlider.new()
 	str_slider.min_value = GameConfig.MAP_EDITOR_STRENGTH_MIN
@@ -164,6 +176,7 @@ func _build_ui() -> void:
 	## ── 스폰 인원 수 ──
 	var spawn_lbl: Label = Label.new()
 	spawn_lbl.text = Locale.ltr("UI_MAP_SPAWN_COUNT")
+	spawn_lbl.add_theme_font_size_override("font_size", 16)
 	vbox.add_child(spawn_lbl)
 	var spawn_spin: SpinBox = SpinBox.new()
 	spawn_spin.min_value = GameConfig.MAP_EDITOR_SPAWN_MIN
@@ -175,6 +188,7 @@ func _build_ui() -> void:
 	## ── ResourceOverlay 토글 ──
 	var overlay_btn: Button = Button.new()
 	overlay_btn.text = Locale.ltr("UI_MAP_OVERLAY_TOGGLE")
+	overlay_btn.add_theme_font_size_override("font_size", 16)
 	overlay_btn.toggle_mode = true
 	overlay_btn.pressed.connect(_on_overlay_toggle)
 	vbox.add_child(overlay_btn)
@@ -182,12 +196,15 @@ func _build_ui() -> void:
 	## ── 스폰 총 인원 표시 ──
 	_spawn_total_label = Label.new()
 	_spawn_total_label.text = Locale.trf1("UI_MAP_SPAWN_TOTAL", "count", 0)
+	_spawn_total_label.add_theme_font_size_override("font_size", 16)
 	_spawn_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(_spawn_total_label)
 
 	## ── 시작 버튼 ──
 	var start_btn: Button = Button.new()
 	start_btn.text = Locale.ltr("UI_MAP_START_SIM")
+	start_btn.add_theme_font_size_override("font_size", 18)
+	start_btn.custom_minimum_size = Vector2(0, 40)
 	start_btn.pressed.connect(_on_start_pressed)
 	vbox.add_child(start_btn)
 

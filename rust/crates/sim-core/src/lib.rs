@@ -6,6 +6,7 @@ pub mod enums;
 pub mod config;
 pub mod calendar;
 
+pub mod scales;
 pub mod components;
 pub mod world;
 

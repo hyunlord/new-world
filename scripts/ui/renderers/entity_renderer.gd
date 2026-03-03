@@ -222,11 +222,11 @@ func _draw() -> void:
 				var wood: float = _resource_map.get_wood(tx, ty)
 				var stone: float = _resource_map.get_stone(tx, ty)
 				if food > 2.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), "F", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
+					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_FOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
 				elif stone > 2.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), "S", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
+					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
 				elif wood > 3.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), "W", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
+					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
 
 
 func _draw_triangle(center: Vector2, size: float, color: Color) -> void:
