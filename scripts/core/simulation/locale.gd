@@ -457,7 +457,7 @@ func _load_fluent_locale(locale: String) -> bool:
 	_rust_fluent_ready = _prime_rust_fluent(locale, text)
 	if _rust_fluent_ready:
 		var rust_flat: Dictionary = _build_flat_strings_from_rust_fluent(locale)
-		if not rust_flat.is_empty():
+		if not rust_flat.is_empty() and _validate_fluent_results(rust_flat):
 			_strings["fluent"] = rust_flat.duplicate(true)
 			_flat_strings = rust_flat
 			_rebuild_key_index_from_flat()
@@ -496,8 +496,23 @@ func _build_flat_strings_from_rust_fluent(locale: String) -> Dictionary:
 		if key.is_empty():
 			continue
 		var resolved: String = str(SimBridge.locale_format_fluent(locale, key, {}))
-		built[key] = resolved if not resolved.is_empty() else key
+		if resolved.is_empty() or resolved == key:
+			continue
+		built[key] = resolved
 	return built
+
+
+func _validate_fluent_results(flat: Dictionary) -> bool:
+	if flat.is_empty():
+		return false
+	var registry_keys: Array = _load_key_registry_keys()
+	if registry_keys.is_empty():
+		return flat.size() > 0
+	var coverage: float = float(flat.size()) / float(registry_keys.size())
+	if coverage < 0.5:
+		push_warning("[Locale] Rust fluent coverage too low (%.1f%%). Falling back to basic parser." % [coverage * 100.0])
+		return false
+	return true
 
 
 func _parse_fluent_source_basic(source: String) -> Dictionary:

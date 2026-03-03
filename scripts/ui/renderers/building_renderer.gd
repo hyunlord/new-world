@@ -85,7 +85,7 @@ func _draw() -> void:
 			var food: int = int(round(b.storage.get("food", 0.0)))
 			var wood: int = int(round(b.storage.get("wood", 0.0)))
 			var stone: int = int(round(b.storage.get("stone", 0.0)))
-			var text: String = "F:%d W:%d S:%d" % [food, wood, stone]
+			var text: String = Locale.trf3("UI_STATS_RESOURCES_FMT", "food", food, "wood", wood, "stone", stone)
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
 
 	# Settlement labels in LOD 0
@@ -96,7 +96,7 @@ func _draw() -> void:
 			var sx: float = float(s.center_x) * tile_size + half
 			var sy: float = float(s.center_y) * tile_size + half
 			var pop: int = s.member_ids.size()
-			var label: String = "S%d: %d" % [s.id, pop]
+			var label: String = Locale.trf2("UI_SETTLEMENT_LABEL_FMT", "id", s.id, "pop", pop)
 			draw_string(font, Vector2(sx - 15, sy - 8), label, HORIZONTAL_ALIGNMENT_CENTER, -1, 10, Color(1, 1, 0.6, 0.9))
 
 

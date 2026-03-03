@@ -350,7 +350,7 @@ func get_game_time() -> Dictionary:
 		var result_raw: Variant = game_config_singleton.call("tick_to_date", current_tick)
 		if result_raw is Dictionary:
 			return result_raw
-	return {"year": 1, "month": 1, "day": 1}
+	return {"year": 1, "month": 1, "day": 1, "hour": 0, "minute": 0, "day_of_year": 0, "tick": 0}
 
 
 ## Debug: N 틱 즉시 일괄 처리 (debug build 전용)

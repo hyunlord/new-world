@@ -77,7 +77,7 @@ func _draw_resource_graph(font: Font) -> void:
 
 	var history: Array = _stats_recorder.history
 	var latest: Dictionary = history[history.size() - 1]
-	draw_string(font, Vector2(4, y_off + 12), "F:%d W:%d S:%d" % [int(latest.food), int(latest.wood), int(latest.stone)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_body"), Color.WHITE)
+	draw_string(font, Vector2(4, y_off + 12), Locale.trf3("UI_STATS_RESOURCES_FMT", "food", int(latest.food), "wood", int(latest.wood), "stone", int(latest.stone)), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_body"), Color.WHITE)
 	var max_res: float = 1.0
 	for i in range(history.size()):
 		var s: Dictionary = history[i]
@@ -150,7 +150,7 @@ func _draw_job_distribution(font: Font) -> void:
 		draw_rect(Rect2(x, bar_y, nw, bar_h), Color(0.4, 0.4, 0.4))
 
 	var label_y: float = bar_y + bar_h + 10
-	draw_string(font, Vector2(4, label_y), "G:%d L:%d B:%d M:%d" % [snap.gatherers, snap.lumberjacks, snap.builders, snap.miners], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_body"), Color(0.7, 0.7, 0.7))
+	draw_string(font, Vector2(4, label_y), Locale.trf4("UI_STATS_JOBS_FMT", "g", snap.gatherers, "l", snap.lumberjacks, "b", snap.builders, "m", snap.miners), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("stats_body"), Color(0.7, 0.7, 0.7))
 
 	# Click hint
 	draw_string(font, Vector2(panel_w * 0.5 - 20, panel_h - 4), Locale.ltr("UI_STAT_DETAILS_HINT"), HORIZONTAL_ALIGNMENT_CENTER, -1, GameConfig.get_font_size("stats_body"), Color(0.5, 0.5, 0.5))

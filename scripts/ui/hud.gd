@@ -262,12 +262,12 @@ func _build_top_bar() -> void:
 	_status_label = _make_label("▶", "hud")
 	_speed_label = _make_label("1x", "hud")
 	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
-	_pop_label = _make_label("Pop: 0", "hud")
+	_pop_label = _make_label(Locale.trf1("UI_POP_FMT", "n", 0), "hud")
 	_era_label = _make_label("", "hud", Color(1.0, 0.85, 0.4))
-	_food_label = _make_label("F:0", "hud", Color(0.4, 0.8, 0.2))
-	_wood_label = _make_label("W:0", "hud", Color(0.6, 0.4, 0.2))
-	_stone_label = _make_label("S:0", "hud", Color(0.7, 0.7, 0.7))
-	_building_label = _make_label("Bld:0", "hud")
+	_food_label = _make_label(Locale.trf1("UI_RES_FOOD_FMT", "n", 0), "hud", Color(0.4, 0.8, 0.2))
+	_wood_label = _make_label(Locale.trf1("UI_RES_WOOD_FMT", "n", 0), "hud", Color(0.6, 0.4, 0.2))
+	_stone_label = _make_label(Locale.trf1("UI_RES_STONE_FMT", "n", 0), "hud", Color(0.7, 0.7, 0.7))
+	_building_label = _make_label(Locale.trf1("UI_BLD_FMT", "n", 0), "hud")
 	_fps_label = _make_label("60", "hud_secondary", Color(0.5, 0.5, 0.5))
 
 	hbox.add_child(_status_label)
@@ -367,7 +367,7 @@ func _build_entity_panel() -> void:
 	vbox.add_child(social_row[2])
 
 	vbox.add_child(_make_separator())
-	_entity_stats_label = _make_label("SPD: 1.0 | STR: 1.0", "bar_label", Color(0.6, 0.6, 0.6))
+	_entity_stats_label = _make_label("", "bar_label", Color(0.6, 0.6, 0.6))
 	vbox.add_child(_entity_stats_label)
 
 	_entity_detail_btn = Button.new()
@@ -408,7 +408,7 @@ func _build_building_panel() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 4)
 
-	_building_name_label = _make_label("Building", "panel_title")
+	_building_name_label = _make_label(Locale.ltr("UI_BUILDING"), "panel_title")
 	_building_info_label = _make_label("", "panel_body")
 	_building_storage_label = _make_label("", "panel_body")
 	_building_status_label = _make_label("", "panel_body", Color(0.6, 0.6, 0.6))
@@ -472,7 +472,7 @@ func _build_help_overlay() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 6)
 
-	vbox.add_child(_make_label("WorldSim Controls", "help_title"))
+	vbox.add_child(_make_label(Locale.ltr("UI_HELP_TITLE"), "help_title"))
 	vbox.add_child(_make_separator())
 
 	# Two-column layout
@@ -483,44 +483,44 @@ func _build_help_overlay() -> void:
 	var left_col := VBoxContainer.new()
 	left_col.add_theme_constant_override("separation", 3)
 	left_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left_col.add_child(_make_label("Camera", "help_section", Color(0.7, 0.9, 1.0)))
-	left_col.add_child(_make_label("WASD/Arrows   Pan", "help_body"))
-	left_col.add_child(_make_label("Mouse Wheel   Zoom", "help_body"))
-	left_col.add_child(_make_label("Trackpad      Zoom/Pan", "help_body"))
-	left_col.add_child(_make_label("Left Drag     Pan", "help_body"))
-	left_col.add_child(_make_label("Left Click    Select", "help_body"))
-	left_col.add_child(_make_label("Dbl-Click     Detail", "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_CAMERA"), "help_section", Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_WASD_PAN"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_MOUSE_ZOOM"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_TRACKPAD"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_LEFT_DRAG"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_LEFT_CLICK"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_DBL_CLICK"), "help_body"))
 	left_col.add_child(_make_label("", 8))
-	left_col.add_child(_make_label("Panels", "help_section", Color(0.7, 0.9, 1.0)))
-	left_col.add_child(_make_label("M             Minimap", "help_body"))
-	left_col.add_child(_make_label("G             Statistics", "help_body"))
-	left_col.add_child(_make_label("E             Details", "help_body"))
-	left_col.add_child(_make_label("C             Chronicle", "help_body"))
-	left_col.add_child(_make_label("P             Entity List", "help_body"))
-	left_col.add_child(_make_label("H             This help", "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_PANELS"), "help_section", Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_M"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_G"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_E"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_C"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_P"), "help_body"))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_H"), "help_body"))
 
 	# Right column
 	var right_col := VBoxContainer.new()
 	right_col.add_theme_constant_override("separation", 3)
 	right_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right_col.add_child(_make_label("Game", "help_section", Color(0.7, 0.9, 1.0)))
-	right_col.add_child(_make_label("Space         Pause", "help_body"))
-	right_col.add_child(_make_label(". (period)    Speed up", "help_body"))
-	right_col.add_child(_make_label(", (comma)     Speed down", "help_body"))
-	right_col.add_child(_make_label("⌘S            Save", "help_body"))
-	right_col.add_child(_make_label("⌘L            Load", "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_GAME"), "help_section", Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_SPACE"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_PERIOD"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_COMMA"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_SAVE"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_LOAD"), "help_body"))
 	right_col.add_child(_make_label("", 8))
-	right_col.add_child(_make_label("Display", "help_section", Color(0.7, 0.9, 1.0)))
-	right_col.add_child(_make_label("Tab           Resources", "help_body"))
-	right_col.add_child(_make_label("N             Day/Night", "help_body"))
-	right_col.add_child(_make_label("⌘+/-/0        UI Scale", "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_DISPLAY"), "help_section", Color(0.7, 0.9, 1.0)))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_TAB"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_N"), "help_body"))
+	right_col.add_child(_make_label(Locale.ltr("UI_HELP_UI_SCALE"), "help_body"))
 
 	columns.add_child(left_col)
 	columns.add_child(right_col)
 
 	vbox.add_child(columns)
 	vbox.add_child(_make_separator())
-	vbox.add_child(_make_label("Press H to close", "help_footer", Color(0.6, 0.6, 0.6)))
+	vbox.add_child(_make_label(Locale.ltr("UI_HELP_CLOSE"), "help_footer", Color(0.6, 0.6, 0.6)))
 
 	center.add_child(vbox)
 	_help_overlay.add_child(center)
@@ -596,7 +596,7 @@ func _process(delta: float) -> void:
 			var m: int = (pop / 10) * 10
 			if m > _last_pop_milestone and m >= 10:
 				_last_pop_milestone = m
-				_add_notification("Population: %d!" % m, Color(0.3, 0.9, 0.3))
+				_add_notification(Locale.trf1("UI_NOTIF_POP_MILESTONE_FMT", "n", m), Color(0.3, 0.9, 0.3), NotifCategory.POPULATION)
 
 	# Building count + resource totals
 	if _building_manager != null:
@@ -693,7 +693,7 @@ func _update_entity_panel(delta: float) -> void:
 	if entity.cached_path.size() > 0:
 		var remaining: int = entity.cached_path.size() - entity.path_index
 		if remaining > 0:
-			action_text += " | %d steps" % remaining
+			action_text += " | " + Locale.trf1("UI_PATH_STEPS_FMT", "n", remaining)
 	_entity_action_label.text = action_text
 
 	# Inventory
@@ -832,20 +832,22 @@ func _get_building_by_id(bid: int):
 	return _building_manager.get_building(bid)
 
 
-func _add_notification(text: String, color: Color) -> void:
+enum NotifCategory { DEFAULT, POPULATION, CONSTRUCTION, DEATH }
+
+func _add_notification(text: String, color: Color, category: int = NotifCategory.DEFAULT) -> void:
 	if _notifications.size() >= MAX_NOTIFICATIONS:
 		if _notifications[0].node != null:
 			_notifications[0].node.queue_free()
 		_notifications.remove_at(0)
 
-	# Determine background color based on text content
 	var bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)
-	if text.contains("Population") or text.contains("born") or text.contains("founded"):
-		bg_color = Color(0.1, 0.4, 0.1, 0.9)
-	elif text.contains("built") or text.contains("Build") or text.contains("construction"):
-		bg_color = Color(0.4, 0.3, 0.1, 0.9)
-	elif text.contains(Locale.ltr("UI_NOTIFICATION_DIED")) or text.contains(Locale.ltr("UI_NOTIFICATION_STILLBORN")) or text.contains("starved") or text.contains("shortage") or text.contains("famine"):
-		bg_color = Color(0.5, 0.1, 0.1, 0.9)
+	match category:
+		NotifCategory.POPULATION:
+			bg_color = Color(0.1, 0.4, 0.1, 0.9)
+		NotifCategory.CONSTRUCTION:
+			bg_color = Color(0.4, 0.3, 0.1, 0.9)
+		NotifCategory.DEATH:
+			bg_color = Color(0.5, 0.1, 0.1, 0.9)
 
 	var panel := PanelContainer.new()
 	var bg := StyleBoxFlat.new()
@@ -920,13 +922,13 @@ func _on_simulation_event(event: Dictionary) -> void:
 		"game_loaded":
 			_add_notification(Locale.ltr("UI_NOTIF_GAME_LOADED"), Color.WHITE)
 		"settlement_founded":
-			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1))
+			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1), NotifCategory.POPULATION)
 		"building_completed":
 			var btype: String = event.get("building_type", "building")
-			_add_notification(Locale.trf1("UI_NOTIF_BUILDING_BUILT_FMT", "type", btype.capitalize()), Color(1.0, 0.9, 0.3))
+			_add_notification(Locale.trf1("UI_NOTIF_BUILDING_BUILT_FMT", "type", Locale.tr_id("BUILDING", btype)), Color(1.0, 0.9, 0.3), NotifCategory.CONSTRUCTION)
 		"entity_starved":
 			var starved_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf1("UI_NOTIF_DIED_STARVED_FMT", "name", starved_name), Color(0.9, 0.2, 0.2))
+			_add_notification(Locale.trf1("UI_NOTIF_DIED_STARVED_FMT", "name", starved_name), Color(0.9, 0.2, 0.2), NotifCategory.DEATH)
 		"entity_died_siler":
 			var died_name: String = event.get("entity_name", "?")
 			var died_cause: String = event.get("cause", "unknown")
@@ -941,13 +943,13 @@ func _on_simulation_event(event: Dictionary) -> void:
 				cause_loc,
 				"age",
 				age_str
-			), Color(0.7, 0.3, 0.3))
+			), Color(0.7, 0.3, 0.3), NotifCategory.DEATH)
 		"maternal_death":
 			var m_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf1("UI_NOTIF_MATERNAL_FMT", "name", m_name), Color(0.8, 0.3, 0.5))
+			_add_notification(Locale.trf1("UI_NOTIF_MATERNAL_FMT", "name", m_name), Color(0.8, 0.3, 0.5), NotifCategory.DEATH)
 		"stillborn":
 			var s_name: String = event.get("entity_name", "?")
-			_add_notification(Locale.trf1("UI_NOTIF_STILLBORN_FMT", "name", s_name), Color(0.6, 0.3, 0.3))
+			_add_notification(Locale.trf1("UI_NOTIF_STILLBORN_FMT", "name", s_name), Color(0.6, 0.3, 0.3), NotifCategory.DEATH)
 		"leader_elected":
 			var lname: String = event.get("leader_name", "?")
 			var sid: int = event.get("settlement_id", 0)
