@@ -61,27 +61,6 @@ use runtime_registry::{
 #[cfg(test)]
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
 
-const EVENT_TYPE_ID_TICK_COMPLETED: i32 = 1;
-const EVENT_TYPE_ID_SIMULATION_PAUSED: i32 = 2;
-const EVENT_TYPE_ID_SIMULATION_RESUMED: i32 = 3;
-const EVENT_TYPE_ID_SPEED_CHANGED: i32 = 4;
-const EVENT_TYPE_ID_ENTITY_SPAWNED: i32 = 10;
-const EVENT_TYPE_ID_ENTITY_DIED: i32 = 11;
-const EVENT_TYPE_ID_ENTITY_REMOVED: i32 = 12;
-const EVENT_TYPE_ID_STRESS_CHANGED: i32 = 20;
-const EVENT_TYPE_ID_MENTAL_BREAK_TRIGGERED: i32 = 21;
-const EVENT_TYPE_ID_JOB_ASSIGNED: i32 = 30;
-const EVENT_TYPE_ID_RESOURCE_GATHERED: i32 = 31;
-const EVENT_TYPE_ID_BUILDING_CONSTRUCTED: i32 = 32;
-const EVENT_TYPE_ID_MIGRATION_OCCURRED: i32 = 33;
-const EVENT_TYPE_ID_SETTLEMENT_FOUNDED: i32 = 34;
-const EVENT_TYPE_ID_FAMILY_FORMED: i32 = 35;
-const EVENT_TYPE_ID_BIRTH_OCCURRED: i32 = 36;
-const EVENT_TYPE_ID_SOCIAL_EVENT_OCCURRED: i32 = 50;
-const EVENT_TYPE_ID_RELATIONSHIP_CHANGED: i32 = 51;
-const EVENT_TYPE_ID_TECH_DISCOVERED: i32 = 60;
-const EVENT_TYPE_ID_ERA_ADVANCED: i32 = 61;
-const EVENT_TYPE_ID_GENERIC: i32 = 9000;
 use runtime_events::game_event_to_v2_dict;
 #[cfg(test)]
 pub(crate) use runtime_events::game_event_type_id;
@@ -4357,7 +4336,7 @@ mod tests {
             super::game_event_type_id(&GameEvent::EntitySpawned {
                 entity_id: EntityId(1),
             }),
-            super::EVENT_TYPE_ID_ENTITY_SPAWNED
+            super::runtime_events::EVENT_TYPE_ID_ENTITY_SPAWNED
         );
         assert_eq!(
             super::game_event_type_id(&GameEvent::ResourceGathered {
@@ -4365,28 +4344,28 @@ mod tests {
                 resource: "food".to_string(),
                 amount: 3.0,
             }),
-            super::EVENT_TYPE_ID_RESOURCE_GATHERED
+            super::runtime_events::EVENT_TYPE_ID_RESOURCE_GATHERED
         );
         assert_eq!(
             super::game_event_type_id(&GameEvent::SocialEventOccurred {
                 event_type: "action_chosen:forage".to_string(),
                 participants: vec![EntityId(4), EntityId(7)],
             }),
-            super::EVENT_TYPE_ID_SOCIAL_EVENT_OCCURRED
+            super::runtime_events::EVENT_TYPE_ID_SOCIAL_EVENT_OCCURRED
         );
         assert_eq!(
             super::game_event_type_id(&GameEvent::TechDiscovered {
                 settlement_id: SettlementId(5),
                 tech_id: "agriculture".to_string(),
             }),
-            super::EVENT_TYPE_ID_TECH_DISCOVERED
+            super::runtime_events::EVENT_TYPE_ID_TECH_DISCOVERED
         );
         assert_eq!(
             super::game_event_type_id(&GameEvent::EraAdvanced {
                 settlement_id: SettlementId(9),
                 new_era: "bronze_age".to_string(),
             }),
-            super::EVENT_TYPE_ID_ERA_ADVANCED
+            super::runtime_events::EVENT_TYPE_ID_ERA_ADVANCED
         );
     }
 
