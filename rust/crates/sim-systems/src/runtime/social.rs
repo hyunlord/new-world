@@ -15,6 +15,7 @@ use sim_core::{
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
+use sim_core::scales::{NativeStress};
 
 use crate::body;
 
@@ -237,15 +238,13 @@ impl SocialEventRuntimeSystem {
 }
 
 #[inline]
-fn attachment_socialize_mult(personality_opt: Option<&Personality>) -> f32 {
-    let index = personality_opt
-        .map(|personality| match personality.attachment {
-            AttachmentType::Secure => 0,
-            AttachmentType::Anxious => 1,
-            AttachmentType::Avoidant => 2,
-            AttachmentType::Fearful => 3,
-        })
-        .unwrap_or(0);
+fn attachment_socialize_mult(attachment: Option<AttachmentType>) -> f32 {
+    let index = match attachment.unwrap_or(AttachmentType::Secure) {
+        AttachmentType::Secure => 0,
+        AttachmentType::Anxious => 1,
+        AttachmentType::Avoidant => 2,
+        AttachmentType::Fearful => 3,
+    };
     config::ATTACHMENT_SOCIALIZE_MULT[index] as f32
 }
 
@@ -311,7 +310,7 @@ impl SimSystem for SocialEventRuntimeSystem {
 
             let social_drive = action_social_drive(action);
             let attach_mult = body::social_attachment_affinity_multiplier(
-                attachment_socialize_mult(personality_opt),
+                attachment_socialize_mult(social.attachment_type),
                 1.0,
             );
             let compatibility =
@@ -1382,6 +1381,173 @@ impl SimSystem for LeaderRuntimeSystem {
             if best_entity != EntityId::NONE {
                 settlement.leader_id = Some(best_entity);
                 settlement.leader_reelection_countdown = election_interval;
+            }
+        }
+    }
+}
+
+// ── Settlement Culture ───────────────────────────────────────────────
+
+/// Constants matching settlement_culture.gd
+const CULTURE_LEADER_INFLUENCE: f32 = 0.20;
+const CULTURE_DEVIATION_THRESHOLD: f32 = 0.40;
+const CULTURE_CONFORMITY_DRIFT_RATE: f32 = 0.003;
+const CULTURE_STRESS_COEFFICIENT: f32 = 3.0;
+
+/// Rust runtime system for settlement shared values and conformity pressure.
+///
+/// Ports `settlement_culture.gd`: computes weighted-average culture values per
+/// settlement (with leader bonus), then applies conformity drift to members
+/// whose values deviate beyond the threshold. Generates stress when deviation
+/// is high. [Axelrod 1997, Haidt 2012]
+#[derive(Debug, Clone)]
+pub struct SettlementCultureRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl SettlementCultureRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for SettlementCultureRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "settlement_culture_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        use sim_core::VALUE_COUNT;
+
+        // -- Pass 1: snapshot member data keyed by EntityId --
+        struct MemberSnap {
+            entity: Entity,
+            values: [f64; 33],
+            age_years: f32,
+            settlement_id: SettlementId,
+        }
+
+        let mut snaps: HashMap<EntityId, MemberSnap> = HashMap::new();
+        {
+            let mut query = world.query::<(&Identity, &Values, &Age)>();
+            for (entity, (identity, values, age)) in &mut query {
+                let Some(sid) = identity.settlement_id else { continue };
+                let eid = EntityId(entity.id() as u64);
+                snaps.insert(eid, MemberSnap {
+                    entity,
+                    values: values.values,
+                    age_years: age.years as f32,
+                    settlement_id: sid,
+                });
+            }
+        }
+
+        // -- Pass 2: compute culture values per settlement --
+        // culture_map: SettlementId → [f64; VALUE_COUNT]
+        let mut culture_map: HashMap<SettlementId, [f64; 33]> = HashMap::new();
+        for settlement in resources.settlements.values() {
+            if settlement.members.is_empty() {
+                continue;
+            }
+            let mut sum = [0.0_f64; 33];
+            let mut count = 0usize;
+            for member_eid in &settlement.members {
+                if let Some(snap) = snaps.get(member_eid) {
+                    for i in 0..VALUE_COUNT {
+                        sum[i] += snap.values[i];
+                    }
+                    count += 1;
+                }
+            }
+            if count == 0 {
+                continue;
+            }
+            let mut avg = [0.0_f64; 33];
+            let inv = 1.0 / count as f64;
+            for i in 0..VALUE_COUNT {
+                avg[i] = sum[i] * inv;
+            }
+            // Leader bonus
+            if let Some(leader_eid) = settlement.leader_id {
+                if let Some(leader_snap) = snaps.get(&leader_eid) {
+                    let member_w = 1.0 - CULTURE_LEADER_INFLUENCE as f64;
+                    let leader_w = CULTURE_LEADER_INFLUENCE as f64;
+                    for i in 0..VALUE_COUNT {
+                        avg[i] = avg[i] * member_w + leader_snap.values[i] * leader_w;
+                    }
+                }
+            }
+            culture_map.insert(settlement.id, avg);
+        }
+
+        // -- Pass 3: apply conformity pressure (mutate Values + Stress) --
+        // Collect conformity deltas first, then apply
+        struct ConformityDelta {
+            value_drifts: [(usize, f64); 33],
+            drift_count: usize,
+            stress_amount: f32,
+        }
+
+        let mut deltas: Vec<(Entity, ConformityDelta)> = Vec::new();
+        for snap in snaps.values() {
+            let Some(culture) = culture_map.get(&snap.settlement_id) else { continue };
+            let plasticity = body::value_plasticity(snap.age_years).clamp(0.10, 1.0);
+            let enforcement_strength: f32 = 1.0; // default, settlement has no field
+            let mut total_deviation: f32 = 0.0;
+            let mut delta = ConformityDelta {
+                value_drifts: [(0, 0.0); 33],
+                drift_count: 0,
+                stress_amount: 0.0,
+            };
+            for i in 0..VALUE_COUNT {
+                let my_val = snap.values[i] as f32;
+                let cult_val = culture[i] as f32;
+                let dev = (my_val - cult_val).abs();
+                if dev > CULTURE_DEVIATION_THRESHOLD {
+                    total_deviation += dev;
+                    let drift = (cult_val - my_val)
+                        * enforcement_strength
+                        * plasticity
+                        * CULTURE_CONFORMITY_DRIFT_RATE;
+                    let new_val = (my_val + drift).clamp(-1.0, 1.0) as f64;
+                    delta.value_drifts[delta.drift_count] = (i, new_val);
+                    delta.drift_count += 1;
+                }
+            }
+            if total_deviation > 1.0 {
+                delta.stress_amount =
+                    total_deviation * enforcement_strength * CULTURE_STRESS_COEFFICIENT;
+            }
+            if delta.drift_count > 0 || delta.stress_amount > 0.0 {
+                deltas.push((snap.entity, delta));
+            }
+        }
+
+        // Apply mutations
+        for (entity, delta) in &deltas {
+            if let Ok(mut values) = world.get::<&mut Values>(*entity) {
+                for k in 0..delta.drift_count {
+                    let (idx, new_val) = delta.value_drifts[k];
+                    values.values[idx] = new_val;
+                }
+            }
+            if delta.stress_amount > 0.0 {
+                if let Ok(mut stress) = world.get::<&mut Stress>(*entity) {
+                    let current = stress.level_native().0;
+                    stress.set_level_native(NativeStress(current + delta.stress_amount));
+                }
             }
         }
     }

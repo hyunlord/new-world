@@ -809,3 +809,475 @@ impl SimSystem for MortalityRuntimeSystem {
         }
     }
 }
+
+// ── Personality Generator ────────────────────────────────────────────
+
+/// Default HEXACO correlation matrix (Ashton & Lee 2004)
+const HEXACO_CORRELATION: [[f32; 6]; 6] = [
+    [1.00, 0.12, -0.11, 0.26, 0.18, 0.21],
+    [0.12, 1.00, -0.13, -0.08, 0.15, -0.10],
+    [-0.11, -0.13, 1.00, 0.05, 0.10, 0.08],
+    [0.26, -0.08, 0.05, 1.00, 0.01, 0.03],
+    [0.18, 0.15, 0.10, 0.01, 1.00, 0.03],
+    [0.21, -0.10, 0.08, 0.03, 0.03, 1.00],
+];
+
+/// Heritability per axis
+const HEXACO_HERITABILITY: [f32; 6] = [0.45, 0.58, 0.57, 0.47, 0.52, 0.63];
+
+/// Sex difference Cohen's d per axis
+const HEXACO_SEX_DIFF_D: [f32; 6] = [0.41, 0.96, 0.10, 0.28, 0.00, -0.04];
+
+/// Intra-axis facet spread (z-score units)
+const FACET_SPREAD: f32 = 0.75;
+
+/// Cholesky decomposition of a 6x6 matrix (computed at init time)
+fn cholesky_6x6(r: &[[f32; 6]; 6]) -> [[f32; 6]; 6] {
+    let mut l = [[0.0_f32; 6]; 6];
+    for i in 0..6 {
+        for j in 0..=i {
+            let mut sum = 0.0_f32;
+            for k in 0..j {
+                sum += l[i][k] * l[j][k];
+            }
+            if i == j {
+                l[i][j] = (r[i][i] - sum).max(0.0).sqrt();
+            } else if l[j][j].abs() > 1e-12 {
+                l[i][j] = (r[i][j] - sum) / l[j][j];
+            }
+        }
+    }
+    l
+}
+
+/// Convert facet value (0..1) to z-score
+#[inline]
+fn bio_facet_to_zscore(v: f64) -> f32 {
+    ((v - 0.5) * 4.0) as f32
+}
+
+/// Convert z-score to facet value (0..1)
+#[inline]
+fn bio_zscore_to_facet(z: f32) -> f64 {
+    (z as f64 / 4.0 + 0.5).clamp(0.0, 1.0)
+}
+
+/// Rust runtime system for Cholesky-based HEXACO personality generation.
+///
+/// Ports `personality_generator.gd`: generates a new personality for newborn
+/// entities using correlated sampling, parental inheritance, sex differences,
+/// and culture shifts. Runs each tick and processes entities that need
+/// personality initialization (facets all at default 0.5).
+#[derive(Debug, Clone)]
+pub struct PersonalityGeneratorRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    cholesky_l: [[f32; 6]; 6],
+}
+
+impl PersonalityGeneratorRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            cholesky_l: cholesky_6x6(&HEXACO_CORRELATION),
+        }
+    }
+}
+
+impl SimSystem for PersonalityGeneratorRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "personality_generator_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        use sim_core::components::personality::AXIS_COUNT;
+
+        // Identify entities needing personality init: facets all at 0.5 (default)
+        let mut needs_init: Vec<(Entity, Sex, Option<EntityId>, Option<EntityId>)> = Vec::new();
+        {
+            let mut query = world.query::<(&Identity, &Personality, Option<&Social>)>();
+            for (entity, (identity, personality, social_opt)) in &mut query {
+                // Check if personality is at default (all facets ~0.5)
+                let is_default = personality.facets.iter().all(|f| (*f - 0.5).abs() < 1e-6);
+                if !is_default {
+                    continue;
+                }
+                let (parent_a, parent_b) = social_opt
+                    .map(|social| {
+                        let pa = social.parents.first().copied();
+                        let pb = social.parents.get(1).copied();
+                        (pa, pb)
+                    })
+                    .unwrap_or((None, None));
+                needs_init.push((entity, identity.sex, parent_a, parent_b));
+            }
+        }
+
+        if needs_init.is_empty() {
+            return;
+        }
+
+        // Snapshot parent personality z-scores (parent EntityId → axis z-scores)
+        let mut parent_z: HashMap<EntityId, [f32; 6]> = HashMap::new();
+        {
+            // Collect which parent EntityIds we need
+            let needed: HashSet<EntityId> = needs_init
+                .iter()
+                .flat_map(|(_, _, pa, pb)| pa.iter().chain(pb.iter()).copied())
+                .collect();
+            if !needed.is_empty() {
+                let mut query = world.query::<&Personality>();
+                for (entity, personality) in &mut query {
+                    let eid = EntityId(entity.id() as u64);
+                    if needed.contains(&eid) {
+                        let mut zs = [0.0_f32; 6];
+                        for i in 0..6 {
+                            zs[i] = bio_facet_to_zscore(personality.axes[i]);
+                        }
+                        parent_z.insert(eid, zs);
+                    }
+                }
+            }
+        }
+
+        // Generate personalities
+        for (entity, sex, parent_a_eid, parent_b_eid) in &needs_init {
+            let is_female = *sex == Sex::Female;
+            let has_parents = parent_a_eid.is_some() && parent_b_eid.is_some();
+            let z_pa = parent_a_eid
+                .and_then(|eid| parent_z.get(&eid))
+                .copied()
+                .unwrap_or([0.0; 6]);
+            let z_pb = parent_b_eid
+                .and_then(|eid| parent_z.get(&eid))
+                .copied()
+                .unwrap_or([0.0; 6]);
+
+            // Step 1: Sample 6 independent N(0,1) values
+            let mut z_indep = [0.0_f32; 6];
+            for i in 0..6 {
+                let u1 = resources.rng.gen_range(0.0001_f32..1.0_f32);
+                let u2 = resources.rng.gen_range(0.0_f32..1.0_f32);
+                z_indep[i] = (-2.0 * u1.ln()).sqrt() * (2.0 * std::f32::consts::PI * u2).cos();
+            }
+
+            // Apply Cholesky to get correlated z-scores
+            let mut z_random = [0.0_f32; 6];
+            for i in 0..6 {
+                let mut val = 0.0_f32;
+                for j in 0..=i {
+                    val += self.cholesky_l[i][j] * z_indep[j];
+                }
+                z_random[i] = val;
+            }
+
+            // Step 2: Per-axis child z-score using body kernel
+            let mut z_axes = [0.0_f32; 6];
+            for i in 0..AXIS_COUNT {
+                z_axes[i] = body::personality_child_axis_z(
+                    has_parents,
+                    z_pa[i],
+                    z_pb[i],
+                    HEXACO_HERITABILITY[i],
+                    z_random[i],
+                    is_female,
+                    HEXACO_SEX_DIFF_D[i],
+                    0.0, // culture_shift (default)
+                );
+            }
+
+            // Step 3: Distribute axis z-score to 4 facets with intra-axis variation
+            let mut new_facets = [0.5_f64; 24];
+            for axis_idx in 0..AXIS_COUNT {
+                for f in 0..4 {
+                    let u1 = resources.rng.gen_range(0.0001_f32..1.0_f32);
+                    let u2 = resources.rng.gen_range(0.0_f32..1.0_f32);
+                    let noise = FACET_SPREAD
+                        * (-2.0 * u1.ln()).sqrt()
+                        * (2.0 * std::f32::consts::PI * u2).cos();
+                    let facet_z = z_axes[axis_idx] + noise;
+                    new_facets[axis_idx * 4 + f] = bio_zscore_to_facet(facet_z);
+                }
+            }
+
+            // Apply to entity
+            if let Ok(mut personality) = world.get::<&mut Personality>(*entity) {
+                personality.facets = new_facets;
+                personality.recalculate_axes();
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AttachmentRuntimeSystem — Ainsworth (1978) / Bowlby (1969)
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Attachment classification thresholds (from GDScript GameConfig defaults).
+const ATTACHMENT_SENSITIVITY_SECURE: f32 = 0.65;
+const ATTACHMENT_CONSISTENCY_SECURE: f32 = 0.70;
+const ATTACHMENT_SENSITIVITY_ANXIOUS: f32 = 0.45;
+const ATTACHMENT_CONSISTENCY_DISORG: f32 = 0.30;
+const ATTACHMENT_ABUSER_ACE_MIN: f32 = 4.0;
+const ATTACHMENT_AVOIDANT_SENS_MAX: f32 = 0.35;
+const ATTACHMENT_AVOIDANT_CONS_MIN: f32 = 0.50;
+
+/// Age in years at which attachment type is determined (~1 year).
+const ATTACHMENT_DETERMINATION_AGE: f64 = 1.0;
+
+/// Determines attachment type for infants reaching ~1 year of age.
+///
+/// Ainsworth Strange Situation paradigm: caregiver sensitivity and consistency
+/// (derived from parent personality A-axis and stress level) determine the
+/// child's attachment pattern (Secure, Anxious, Avoidant, Fearful/Disorganized).
+#[derive(Debug, Clone)]
+pub struct AttachmentRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl AttachmentRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for AttachmentRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "attachment_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        // Pass 1: Build EntityId→Entity map and collect candidate infants
+        let mut id_map: HashMap<EntityId, Entity> = HashMap::new();
+        let mut candidates: Vec<(Entity, Vec<EntityId>)> = Vec::new();
+
+        {
+            let mut query = world.query::<(&Age, &Social)>();
+            for (entity, (age, social)) in &mut query {
+                let eid = EntityId(entity.id() as u64);
+                id_map.insert(eid, entity);
+
+                // Candidate: age ~1 year, no attachment type yet
+                if age.years == ATTACHMENT_DETERMINATION_AGE
+                    && social.attachment_type.is_none()
+                    && !social.parents.is_empty()
+                {
+                    candidates.push((entity, social.parents.clone()));
+                }
+            }
+        }
+
+        if candidates.is_empty() {
+            return;
+        }
+
+        // Pass 2: Snapshot parent data and compute attachment type
+        struct AttachmentResult {
+            entity: Entity,
+            attachment: AttachmentType,
+        }
+
+        let mut results: Vec<AttachmentResult> = Vec::new();
+
+        for (entity, parent_ids) in &candidates {
+            let mut total_sensitivity = 0.0_f32;
+            let mut total_consistency = 0.0_f32;
+            let mut parent_count = 0_u32;
+
+            for pid in parent_ids {
+                if let Some(&parent_entity) = id_map.get(pid) {
+                    // Read parent personality A-axis for sensitivity
+                    let a_axis = world
+                        .get::<&Personality>(parent_entity)
+                        .map(|p| p.axes[HexacoAxis::A as usize] as f32)
+                        .unwrap_or(0.5);
+
+                    // Read parent stress level for consistency (low stress = high consistency)
+                    let stress_level = world
+                        .get::<&Stress>(parent_entity)
+                        .map(|s| s.level as f32)
+                        .unwrap_or(0.0);
+
+                    total_sensitivity += a_axis;
+                    total_consistency += 1.0 - stress_level;
+                    parent_count += 1;
+                }
+            }
+
+            if parent_count == 0 {
+                // No resolvable parents — default to Secure
+                results.push(AttachmentResult {
+                    entity: *entity,
+                    attachment: AttachmentType::Secure,
+                });
+                continue;
+            }
+
+            let avg_sensitivity = total_sensitivity / parent_count as f32;
+            let avg_consistency = total_consistency / parent_count as f32;
+
+            // Child's ACE score (may be 0 for infants)
+            let child_ace = world
+                .get::<&Stress>(*entity)
+                .map(|s| s.ace_score as f32 * 10.0) // denormalize to native 0..10
+                .unwrap_or(0.0);
+
+            let code = body::attachment_type_code(
+                avg_sensitivity,
+                avg_consistency,
+                child_ace,
+                false, // abuser_is_caregiver — simplified for initial port
+                ATTACHMENT_SENSITIVITY_SECURE,
+                ATTACHMENT_CONSISTENCY_SECURE,
+                ATTACHMENT_SENSITIVITY_ANXIOUS,
+                ATTACHMENT_CONSISTENCY_DISORG,
+                ATTACHMENT_ABUSER_ACE_MIN,
+                ATTACHMENT_AVOIDANT_SENS_MAX,
+                ATTACHMENT_AVOIDANT_CONS_MIN,
+            );
+
+            let attachment = match code {
+                0 => AttachmentType::Secure,
+                1 => AttachmentType::Anxious,
+                2 => AttachmentType::Avoidant,
+                3 => AttachmentType::Fearful,
+                _ => AttachmentType::Anxious, // fallback
+            };
+
+            results.push(AttachmentResult {
+                entity: *entity,
+                attachment,
+            });
+        }
+
+        // Pass 3: Apply mutations
+        for result in results {
+            if let Ok(mut social) = world.get::<&mut Social>(result.entity) {
+                social.attachment_type = Some(result.attachment);
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AceTrackerRuntimeSystem — Felitti et al. (1998) ACE Study
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Minimum age (years) for ACE backfill (adults only).
+const ACE_BACKFILL_MIN_AGE: f64 = 18.0;
+
+/// ACE native scale max (Felitti 0-10).
+const ACE_NATIVE_MAX: f64 = 10.0;
+
+/// Backfills ACE (Adverse Childhood Experiences) scores for adult entities
+/// that lack childhood history data.
+///
+/// Uses allostatic load, trauma scar count, and attachment type as proxies
+/// for childhood adversity (Felitti dose-response model).
+#[derive(Debug, Clone)]
+pub struct AceTrackerRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+}
+
+impl AceTrackerRuntimeSystem {
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+        }
+    }
+}
+
+impl SimSystem for AceTrackerRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "ace_tracker_system"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        // Pass 1: Collect backfill targets — adults without ACE score
+        struct AceTarget {
+            entity: Entity,
+            allostatic: f32,
+            trauma_count: i32,
+            attachment_code: i32,
+        }
+
+        let mut targets: Vec<AceTarget> = Vec::new();
+
+        {
+            let mut query = world.query::<(&Age, &Stress, &Social, &Memory)>();
+            for (entity, (age, stress, social, memory)) in &mut query {
+                if age.years < ACE_BACKFILL_MIN_AGE {
+                    continue;
+                }
+                // Skip if already backfilled
+                if stress.ace_backfilled {
+                    continue;
+                }
+
+                let allostatic = stress.allostatic_load as f32 * 100.0; // to native 0..100
+                let trauma_count = memory.trauma_scars.len() as i32;
+                let attachment_code = match social.attachment_type {
+                    Some(AttachmentType::Secure) => 0,
+                    Some(AttachmentType::Anxious) => 1,
+                    Some(AttachmentType::Avoidant) => 2,
+                    Some(AttachmentType::Fearful) => 3,
+                    None => 0, // default secure if unknown
+                };
+
+                targets.push(AceTarget {
+                    entity,
+                    allostatic,
+                    trauma_count,
+                    attachment_code,
+                });
+            }
+        }
+
+        // Pass 2: Compute and apply ACE scores
+        for target in targets {
+            let raw_ace = body::ace_backfill_score(
+                target.allostatic,
+                target.trauma_count,
+                target.attachment_code,
+            );
+            // Normalize to 0..1 (native scale is 0..10)
+            let normalized = (raw_ace as f64 / ACE_NATIVE_MAX).clamp(0.0, 1.0);
+
+            if let Ok(mut stress) = world.get::<&mut Stress>(target.entity) {
+                stress.ace_score = normalized;
+                stress.ace_backfilled = true;
+            }
+        }
+    }
+}

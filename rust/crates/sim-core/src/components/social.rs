@@ -1,4 +1,4 @@
-use crate::enums::RelationType;
+use crate::enums::{AttachmentType, RelationType};
 use crate::ids::EntityId;
 use serde::{Deserialize, Serialize};
 
@@ -73,6 +73,9 @@ pub struct Social {
     pub titles: Vec<String>,
     /// Social capital (derived from network structure)
     pub social_capital: f64,
+    /// Attachment type (Bowlby 1969 — determined during infancy)
+    #[serde(default)]
+    pub attachment_type: Option<AttachmentType>,
 }
 
 impl Social {

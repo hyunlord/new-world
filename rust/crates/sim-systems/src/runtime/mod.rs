@@ -14,11 +14,14 @@ mod world;
 
 // ---- biology ----
 pub use biology::{
+    AceTrackerRuntimeSystem,
     AgeRuntimeSystem,
+    AttachmentRuntimeSystem,
     ChildcareRuntimeSystem,
     IntergenerationalRuntimeSystem,
     MortalityRuntimeSystem,
     ParentingRuntimeSystem,
+    PersonalityGeneratorRuntimeSystem,
     PopulationRuntimeSystem,
 };
 
@@ -53,13 +56,20 @@ pub use psychology::{
     EmotionRuntimeSystem,
     MentalBreakRuntimeSystem,
     MoraleRuntimeSystem,
+    PersonalityMaturationRuntimeSystem,
     StressRuntimeSystem,
+    TraitCondition,
+    TraitConditionSource,
+    TraitDefinition,
+    TraitDirection,
+    TraitRuntimeSystem,
     TraitViolationRuntimeSystem,
     TraumaScarRuntimeSystem,
 };
 
 // ---- record ----
 pub use record::{
+    ChronicleRuntimeSystem,
     StatSyncRuntimeSystem,
     StatThresholdRuntimeSystem,
     StatsRecorderRuntimeSystem,
@@ -74,6 +84,7 @@ pub use social::{
     NetworkRuntimeSystem,
     OccupationRuntimeSystem,
     ReputationRuntimeSystem,
+    SettlementCultureRuntimeSystem,
     SocialEventRuntimeSystem,
     StratificationMonitorRuntimeSystem,
     TitleRuntimeSystem,
@@ -94,8 +105,9 @@ pub use world::{
 #[cfg(test)]
 mod tests {
     use super::{
-        AgeRuntimeSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
-        ChildcareRuntimeSystem, ContagionRuntimeSystem,
+        AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
+        BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
+        ChildcareRuntimeSystem, ChronicleRuntimeSystem, ContagionRuntimeSystem,
         BehaviorRuntimeSystem,
         ConstructionRuntimeSystem,
         EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
@@ -103,10 +115,13 @@ mod tests {
         GatheringRuntimeSystem,
         IntergenerationalRuntimeSystem,
         ParentingRuntimeSystem,
+        PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
+        SettlementCultureRuntimeSystem,
         StatSyncRuntimeSystem,
         StatThresholdRuntimeSystem,
         STAT_THRESHOLD_FLAG_HUNGER_LOW,
         StatsRecorderRuntimeSystem,
+        TraitCondition, TraitConditionSource, TraitDefinition, TraitDirection, TraitRuntimeSystem,
         CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
         JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
         MigrationRuntimeSystem,
@@ -130,7 +145,7 @@ mod tests {
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
-        Building, BuildingId,
+        AttachmentType, Building, BuildingId,
         config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
         HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
         SettlementId, Sex, SocialClass, TechState, ValueType, WorldMap,
@@ -4385,6 +4400,352 @@ mod tests {
         assert!(
             updated.active_strategy.is_none(),
             "active strategy should be cleared at low stress"
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Settlement Culture Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn settlement_culture_runtime_system_drifts_member_toward_culture() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let sid = SettlementId(1);
+        let mut settlement =
+            sim_core::Settlement::new(sid, "village".to_string(), 0, 0, 0);
+        settlement.leader_id = None;
+
+        // Member 1: high values (0.95)
+        let mut v1 = Values::default();
+        for v in v1.values.iter_mut() { *v = 0.95; }
+        let id1 = Identity { settlement_id: Some(sid), ..Identity::default() };
+        let a1 = Age { years: 25.0, alive: true, ..Age::default() };
+        let e1 = world.spawn((v1, id1, a1.clone()));
+        let eid1 = sim_core::ids::EntityId(e1.id() as u64);
+
+        // Member 2: low values (0.05)
+        let mut v2 = Values::default();
+        for v in v2.values.iter_mut() { *v = 0.05; }
+        let id2 = Identity { settlement_id: Some(sid), ..Identity::default() };
+        let e2 = world.spawn((v2, id2, a1.clone()));
+        let eid2 = sim_core::ids::EntityId(e2.id() as u64);
+
+        // Register both as settlement members
+        settlement.members.push(eid1);
+        settlement.members.push(eid2);
+        resources.settlements.insert(sid, settlement);
+
+        let mut system = SettlementCultureRuntimeSystem::new(350, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        // Entity 1 had values=0.95, culture avg ~0.5, deviation=0.45>0.40 threshold
+        let updated = world.get::<&Values>(e1).unwrap();
+        assert!(
+            updated.values[0] < 0.95,
+            "high-value member should drift toward settlement culture average"
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Chronicle Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn chronicle_runtime_system_prunes_old_low_importance_events() {
+        use sim_engine::ChronicleEvent;
+
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        // TICKS_PER_YEAR = 4380. Run at year 25 (tick 109500).
+        // low_cutoff = (25 - 20) * 4380 = 21900
+        // med_cutoff = (25 - 50) * 4380 = negative → no medium pruning
+        let events = vec![
+            // Old low importance — tick 100 < 21900 → PRUNED
+            ChronicleEvent {
+                tick: 100,
+                importance: 1,
+                event_type: "old_low_1".into(),
+                entity_id: 1,
+                description: "old low".into(),
+            },
+            // Old low importance — tick 1000 < 21900 → PRUNED
+            ChronicleEvent {
+                tick: 1000,
+                importance: 2,
+                event_type: "old_low_2".into(),
+                entity_id: 2,
+                description: "old low 2".into(),
+            },
+            // Recent low importance — tick 30000 >= 21900 → KEPT
+            ChronicleEvent {
+                tick: 30000,
+                importance: 2,
+                event_type: "recent_low".into(),
+                entity_id: 3,
+                description: "recent low".into(),
+            },
+            // Old medium importance — cutoff negative → KEPT
+            ChronicleEvent {
+                tick: 500,
+                importance: 3,
+                event_type: "old_med".into(),
+                entity_id: 4,
+                description: "old medium".into(),
+            },
+            // High importance — always kept regardless of age
+            ChronicleEvent {
+                tick: 50,
+                importance: 5,
+                event_type: "high".into(),
+                entity_id: 5,
+                description: "high importance".into(),
+            },
+        ];
+        resources.chronicle_world_events = events;
+
+        // Personal events: one referencing a pruned world-event tick, one referencing a kept tick
+        let eid_orphaned = EntityId(10);
+        let eid_retained = EntityId(20);
+        resources.chronicle_personal_events.insert(
+            eid_orphaned,
+            vec![ChronicleEvent {
+                tick: 100, // world event at tick=100 will be pruned → orphaned
+                importance: 1,
+                event_type: "personal".into(),
+                entity_id: 10,
+                description: "orphaned".into(),
+            }],
+        );
+        resources.chronicle_personal_events.insert(
+            eid_retained,
+            vec![ChronicleEvent {
+                tick: 30000, // world event at tick=30000 is retained → kept
+                importance: 1,
+                event_type: "personal".into(),
+                entity_id: 20,
+                description: "kept".into(),
+            }],
+        );
+
+        let tick = 25 * 4380; // year 25
+        let mut system = ChronicleRuntimeSystem::new(310, 1);
+        system.run(&mut world, &mut resources, tick as u64);
+
+        // World events: 2 old low-importance pruned, 3 retained
+        assert_eq!(
+            resources.chronicle_world_events.len(),
+            3,
+            "expected 3 world events after pruning old low-importance"
+        );
+        let types: Vec<&str> = resources
+            .chronicle_world_events
+            .iter()
+            .map(|e| e.event_type.as_str())
+            .collect();
+        assert!(types.contains(&"recent_low"), "recent low-importance kept");
+        assert!(types.contains(&"old_med"), "old medium-importance kept");
+        assert!(types.contains(&"high"), "high-importance always kept");
+        assert!(!types.contains(&"old_low_1"), "old low-importance pruned");
+        assert!(!types.contains(&"old_low_2"), "old low-importance 2 pruned");
+
+        // Personal event GC: orphaned entry removed, valid entry kept
+        assert!(
+            !resources.chronicle_personal_events.contains_key(&eid_orphaned),
+            "personal events referencing pruned world ticks should be GC'd"
+        );
+        assert_eq!(
+            resources.chronicle_personal_events.get(&eid_retained).map(|v| v.len()),
+            Some(1),
+            "personal events referencing retained world ticks should be kept"
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Personality Maturation Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn personality_maturation_runtime_system_drifts_facets() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let mut personality = Personality::default();
+        personality.facets = [0.5; 24];
+        personality.recalculate_axes();
+        let age = Age { years: 20.0, alive: true, ..Age::default() };
+        let entity = world.spawn((age, personality));
+
+        let mut system = PersonalityMaturationRuntimeSystem::new(230, 50);
+        // Run multiple ticks so OU process has time to drift
+        for t in (50..=500).step_by(50) {
+            system.run(&mut world, &mut resources, t);
+        }
+
+        let updated = world.get::<&Personality>(entity).unwrap();
+        // At least some facets should have drifted from 0.5
+        let any_changed = updated.facets.iter().any(|&f| (f - 0.5).abs() > 1e-6);
+        assert!(any_changed, "personality facets should drift via OU process over maturation ticks");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Personality Generator Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn personality_generator_runtime_system_initializes_newborn() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let personality = Personality::default(); // all zeros/0.5
+        let age = Age { years: 0.0, alive: true, stage: GrowthStage::Infant, ..Age::default() };
+        let body = BodyComponent::default();
+        let identity = Identity::default();
+        let social = Social::default();
+        let entity = world.spawn((personality, age, body, identity, social));
+
+        let before = world.get::<&Personality>(entity).unwrap().facets;
+        drop(before);
+
+        let mut system = PersonalityGeneratorRuntimeSystem::new(99, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let updated = world.get::<&Personality>(entity).unwrap();
+        // Personality generator should have set facets to non-default values
+        let any_changed = updated.facets.iter().any(|&f| (f - 0.5).abs() > 0.01);
+        assert!(any_changed, "newborn should have personality facets generated");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Attachment Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn attachment_runtime_system_determines_type_for_infant() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        // Create a parent with high Agreeableness and low stress → should produce Secure attachment
+        let mut parent_personality = Personality::default();
+        parent_personality.axes[HexacoAxis::A as usize] = 0.80; // high A-axis → high sensitivity
+        parent_personality.facets = [0.5; 24];
+        let parent_stress = Stress { level: 0.10, ..Stress::default() }; // low stress → high consistency
+        let parent_age = Age { years: 30.0, alive: true, ..Age::default() };
+        let parent_social = Social::default();
+        let parent_entity = world.spawn((parent_personality, parent_stress, parent_age, parent_social));
+        let parent_eid = sim_core::ids::EntityId(parent_entity.id() as u64);
+
+        // Create a 1-year-old infant with the parent
+        let child_age = Age { years: 1.0, alive: true, stage: GrowthStage::Infant, ..Age::default() };
+        let child_stress = Stress::default();
+        let child_social = Social {
+            parents: vec![parent_eid],
+            ..Social::default()
+        };
+        let child_entity = world.spawn((child_age, child_stress, child_social));
+
+        let mut system = AttachmentRuntimeSystem::new(125, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let updated_social = world.get::<&Social>(child_entity).unwrap();
+        assert!(
+            updated_social.attachment_type.is_some(),
+            "1-year-old with parent should have attachment type determined"
+        );
+        assert_eq!(
+            updated_social.attachment_type.unwrap(),
+            AttachmentType::Secure,
+            "high-A low-stress parent should produce Secure attachment"
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // ACE Tracker Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn ace_tracker_runtime_system_backfills_adult_ace_score() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let age = Age { years: 25.0, alive: true, ..Age::default() };
+        let stress = Stress {
+            allostatic_load: 0.40, // moderate allostatic → nonzero ACE
+            ace_score: 0.0,        // no ACE yet
+            ..Stress::default()
+        };
+        let social = Social {
+            attachment_type: Some(AttachmentType::Anxious), // insecure → adds to ACE
+            ..Social::default()
+        };
+        let memory = Memory::default(); // 0 trauma scars
+        let entity = world.spawn((age, stress, social, memory));
+
+        let mut system = AceTrackerRuntimeSystem::new(126, 50);
+        system.run(&mut world, &mut resources, 50);
+
+        let updated_stress = world.get::<&Stress>(entity).unwrap();
+        assert!(
+            updated_stress.ace_score > 0.0,
+            "adult with allostatic load and insecure attachment should get nonzero ACE"
+        );
+        assert!(
+            updated_stress.ace_score <= 1.0,
+            "ACE score should be normalized to 0..1"
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Trait Runtime System
+    // ═══════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn trait_runtime_system_activates_trait_from_personality() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        // Entity with high Agreeableness
+        let mut personality = Personality::default();
+        personality.axes[HexacoAxis::A as usize] = 0.85;
+        personality.facets = [0.5; 24];
+        let values = Values::default();
+        let traits = Traits::default();
+        let entity = world.spawn((personality, values, traits));
+
+        // Define a trait that activates when A >= 0.75
+        let defs = vec![
+            TraitDefinition {
+                id: "compassionate".to_string(),
+                conditions: vec![TraitCondition {
+                    source: TraitConditionSource::HexacoAxis(HexacoAxis::A),
+                    direction: TraitDirection::High,
+                    threshold: 0.75,
+                }],
+                incompatibles: vec![],
+            },
+            TraitDefinition {
+                id: "ruthless".to_string(),
+                conditions: vec![TraitCondition {
+                    source: TraitConditionSource::HexacoAxis(HexacoAxis::A),
+                    direction: TraitDirection::Low,
+                    threshold: 0.25,
+                }],
+                incompatibles: vec!["compassionate".to_string()],
+            },
+        ];
+
+        let mut system = TraitRuntimeSystem::new(232, 50).with_definitions(defs);
+        system.run(&mut world, &mut resources, 50);
+
+        let updated = world.get::<&Traits>(entity).unwrap();
+        assert!(
+            updated.has_trait("compassionate"),
+            "entity with high A should gain 'compassionate' trait"
+        );
+        assert!(
+            !updated.has_trait("ruthless"),
+            "entity with high A should not gain 'ruthless' trait"
         );
     }
 }

@@ -5,22 +5,25 @@ use serde::Deserialize;
 use sim_core::{config::GameConfig, GameCalendar, WorldMap};
 use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::runtime::{
-    AgeRuntimeSystem, BehaviorRuntimeSystem, BuildingEffectRuntimeSystem,
-    ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem, ContagionRuntimeSystem,
-    ConstructionRuntimeSystem, CopingRuntimeSystem, EconomicTendencyRuntimeSystem,
-    EmotionRuntimeSystem, FamilyRuntimeSystem, GatheringRuntimeSystem,
-    IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
-    JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, MemoryRuntimeSystem,
-    MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
-    MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
-    NetworkRuntimeSystem, OccupationRuntimeSystem, ParentingRuntimeSystem,
-    PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-    SocialEventRuntimeSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,
-    StatsRecorderRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
-    TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
+    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
+    BehaviorRuntimeSystem, BuildingEffectRuntimeSystem,
+    ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem, ChronicleRuntimeSystem,
+    ContagionRuntimeSystem, ConstructionRuntimeSystem, CopingRuntimeSystem,
+    EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
+    GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
+    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
+    MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
+    MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem,
+    NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
+    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
+    PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
+    ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
+    StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
+    StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
+    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
     TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem,
-    TraitViolationRuntimeSystem, TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem,
-    ValueRuntimeSystem,
+    TraitRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
+    UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
 
 use crate::runtime_bindings::runtime_default_compute_domain_modes;
@@ -71,6 +74,13 @@ pub(crate) const RUNTIME_SYSTEM_KEY_STATS_RECORDER: &str = "stats_recorder";
 pub(crate) const RUNTIME_SYSTEM_KEY_STAT_SYNC: &str = "stat_sync_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_STAT_THRESHOLD: &str = "stat_threshold_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_BEHAVIOR: &str = "behavior_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_SETTLEMENT_CULTURE: &str = "settlement_culture_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_CHRONICLE: &str = "chronicle_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION: &str = "personality_maturation_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_PERSONALITY_GENERATOR: &str = "personality_generator_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_ATTACHMENT: &str = "attachment_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_ACE_TRACKER: &str = "ace_tracker_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_TRAIT: &str = "trait_system";
 pub(crate) const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 pub(crate) const RUNTIME_COMPUTE_DOMAINS: [&str; 1] = ["pathfinding"];
 
@@ -230,6 +240,13 @@ pub(crate) fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_STAT_THRESHOLD
             | RUNTIME_SYSTEM_KEY_BEHAVIOR
             | RUNTIME_SYSTEM_KEY_FAMILY
+            | RUNTIME_SYSTEM_KEY_SETTLEMENT_CULTURE
+            | RUNTIME_SYSTEM_KEY_CHRONICLE
+            | RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION
+            | RUNTIME_SYSTEM_KEY_PERSONALITY_GENERATOR
+            | RUNTIME_SYSTEM_KEY_ATTACHMENT
+            | RUNTIME_SYSTEM_KEY_ACE_TRACKER
+            | RUNTIME_SYSTEM_KEY_TRAIT
     )
 }
 
@@ -481,6 +498,41 @@ pub(crate) fn register_supported_rust_system(
             state
                 .engine
                 .register(ResourceRegenSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_SETTLEMENT_CULTURE => {
+            state
+                .engine
+                .register(SettlementCultureRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_CHRONICLE => {
+            state
+                .engine
+                .register(ChronicleRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION => {
+            state
+                .engine
+                .register(PersonalityMaturationRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_PERSONALITY_GENERATOR => {
+            state
+                .engine
+                .register(PersonalityGeneratorRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_ATTACHMENT => {
+            state
+                .engine
+                .register(AttachmentRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_ACE_TRACKER => {
+            state
+                .engine
+                .register(AceTrackerRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_TRAIT => {
+            state
+                .engine
+                .register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         _ => {
             return false;
