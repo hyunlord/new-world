@@ -1519,5 +1519,9 @@
 	"UI_RES_FOOD_SHORT": "F",
 	"UI_RES_STONE_SHORT": "S",
 	"UI_RES_WOOD_SHORT": "W",
-	"UI_AGE_YEARS_SHORT_FMT": "{n}y"
+	"UI_AGE_YEARS_SHORT_FMT": "{n}y",
+	"UI_RUNTIME_RUST_ONLY": "Rust simulation active",
+	"UI_RUNTIME_NOT_AVAILABLE": "Simulation engine not loaded",
+	"UI_ENTITY_SNAPSHOT_UNAVAILABLE": "Entity data unavailable",
+	"UI_SIMULATION_HEADLESS": "Running in headless mode"
 }

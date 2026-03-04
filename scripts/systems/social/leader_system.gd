@@ -51,16 +51,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _settlement_manager == null or _entity_manager == null:
-		return
-	var all_settlements: Array = _settlement_manager.get_all_settlements()
-	for i in range(all_settlements.size()):
-		var settlement: RefCounted = all_settlements[i]
-		_check_and_elect(settlement, tick)
-
-
 ## Determine if election should run for this settlement, then execute if needed.
 func _check_and_elect(settlement: RefCounted, tick: int) -> void:
 	## Step 1: Validate existing leader — emit loss if dead or departed

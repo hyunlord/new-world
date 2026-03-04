@@ -73,67 +73,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	var alive: Array = _entity_manager.get_alive_entities()
-	_check_widowhood(alive, tick)
-	_check_coupling(alive, tick)
-	_process_births(alive, tick)
-	_check_pregnancies(alive, tick)
-	# Yearly demography log
-	@warning_ignore("integer_division")
-	var current_year: int = tick / GameConfig.TICKS_PER_YEAR
-	if current_year > _last_log_year:
-		_last_log_year = current_year
-		var pop: int = alive.size()
-		var couples: int = 0
-		var pregnant: int = 0
-		var adults: int = 0
-		var teens: int = 0
-		var children: int = 0
-		var infants: int = 0
-		for i in range(alive.size()):
-			var e: RefCounted = alive[i]
-			if e.partner_id >= 0 and e.id < e.partner_id:
-				couples += 1
-			if e.age_stage == "adult" or e.age_stage == "elder":
-				adults += 1
-			elif e.age_stage == "teen":
-				teens += 1
-			elif e.age_stage == "child" or e.age_stage == "toddler":
-				children += 1
-			elif e.age_stage == "infant":
-				infants += 1
-			if e.gender == "female":
-				if e.pregnancy_tick >= 0:
-					pregnant += 1
-		var settlement_food: float = 0.0
-		if _building_manager != null:
-			var stockpiles: Array = _building_manager.get_buildings_by_type("stockpile")
-			for i in range(stockpiles.size()):
-				var sp: RefCounted = stockpiles[i]
-				if sp.is_built:
-					settlement_food += sp.storage.get("food", 0.0)
-		var date: Dictionary = GameCalendar.tick_to_date(tick)
-		var month_label: String = Locale.get_month_name(date.month)
-		if GameConfig.DEBUG_DEMOGRAPHY_LOG:
-			print("[DEMOGRAPHY] Y%d %s --- Yearly Report ---" % [
-				date.year, month_label,
-			])
-			print("  Pop: %d (Adults: %d, Teens: %d, Children: %d, Infants: %d)" % [
-				pop, adults, teens, children, infants,
-			])
-			print("  Births: %d, Deaths: %d" % [
-				_entity_manager.total_births, _entity_manager.total_deaths,
-			])
-			print("  Couples: %d, Pregnant: %d" % [
-				couples, pregnant,
-			])
-			print("  Settlement food: %.1f" % [
-				settlement_food,
-			])
-
-
 ## ─── Widowhood: detect dead partners ──────────────────────
 
 func _check_widowhood(alive: Array, tick: int) -> void:

@@ -9,10 +9,15 @@ use sim_bridge::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
+use sim_core::components::{Age, Identity, Needs, Position};
 use sim_core::config::GameConfig;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
+use sim_systems::runtime::{
+    AgeRuntimeSystem, EmotionRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem,
+    PopulationRuntimeSystem, StressRuntimeSystem, TraitRuntimeSystem,
+};
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
 use std::sync::{Arc, Mutex};
@@ -49,7 +54,7 @@ fn main() {
 
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
-    println!("[sim-test] WorldSim Phase R-0 headless test");
+    println!("[sim-test] WorldSim Phase R-1 headless test");
 
     // ── Build config + calendar + map ─────────────────────────────────────────
     let config = GameConfig::default();
@@ -99,8 +104,25 @@ fn main() {
         *ec.lock().unwrap() += 1;
     }));
 
-    // ── Create engine (no systems registered in Phase R-0) ───────────────────
+    // ── Create engine ────────────────────────────────────────────────────────
     let mut engine = SimEngine::new(resources);
+
+    // ── Register runtime systems (Phase R-1) ──────────────────────────────────
+    register_all_systems(&mut engine);
+
+    // ── Spawn 2 minimal test agents ──────────────────────────────────────────
+    engine.world_mut().spawn((
+        Identity::default(),
+        Age::default(),
+        Position::new(128, 128),
+        Needs::default(),
+    ));
+    engine.world_mut().spawn((
+        Identity::default(),
+        Age::default(),
+        Position::new(130, 130),
+        Needs::default(),
+    ));
 
     // ── Add one settlement ────────────────────────────────────────────────────
     let s = Settlement::new(
@@ -141,6 +163,17 @@ fn main() {
     );
     assert_eq!(snap.day_of_year, 1, "should be start of year 2");
     assert_eq!(snap.settlement_count, 1, "should have 1 settlement");
+    assert!(snap.system_count > 0, "should have systems registered");
+}
+
+fn register_all_systems(engine: &mut SimEngine) {
+    engine.register(NeedsRuntimeSystem::new(100, 1));
+    engine.register(EmotionRuntimeSystem::new(200, 1));
+    engine.register(StressRuntimeSystem::new(300, 1));
+    engine.register(TraitRuntimeSystem::new(510, 10));
+    engine.register(AgeRuntimeSystem::new(800, 1));
+    engine.register(MortalityRuntimeSystem::new(810, 1));
+    engine.register(PopulationRuntimeSystem::new(820, 10));
 }
 
 fn parse_bench_iterations(args: &[String], default_iterations: u32) -> u32 {

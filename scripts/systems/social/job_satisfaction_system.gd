@@ -127,33 +127,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		if entity.age_stage == "child" or entity.age_stage == "infant":
-			entity.set_meta("job_sat_work_speed_mult", 1.0)
-			continue
-		if entity.job == "none" or entity.job == "":
-			entity.job_satisfaction = 0.50
-			_apply_work_speed_modifier_flag(entity)
-			continue
-		## [Layer 4.5] Try occupation-specific profile first, fall back to legacy job profile
-		var runtime_profile: Dictionary = _profile_runtime.get(entity.occupation, {})
-		if runtime_profile.is_empty():
-			runtime_profile = _profile_runtime.get(entity.job, {})
-		if runtime_profile.is_empty():
-			entity.job_satisfaction = 0.50
-			_apply_work_speed_modifier_flag(entity)
-			continue
-		entity.job_satisfaction = _compute_satisfaction(entity, runtime_profile)
-		_apply_work_speed_modifier_flag(entity)
-		_check_job_drift(entity, tick)
-
-
 func _compute_satisfaction(entity: RefCounted, runtime_profile: Dictionary) -> float:
 	if entity.personality == null:
 		return 0.50

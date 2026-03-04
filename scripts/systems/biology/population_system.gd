@@ -92,13 +92,6 @@ func _population_housing_cap(total_shelters: int) -> int:
 		return _POP_FREE_HOUSING_CAP
 	return total_shelters * _POP_SHELTER_CAPACITY
 
-
-func execute_tick(_tick: int) -> void:
-	# Births disabled: all reproduction handled by FamilySystem (T-1090)
-	# Natural deaths disabled: handled by MortalitySystem (T-2000, Siler model)
-	pass
-
-
 func _check_births(tick: int) -> void:
 	if _building_manager == null:
 		return

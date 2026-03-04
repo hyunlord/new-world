@@ -118,25 +118,6 @@ func _on_tech_state_changed(settlement_id: int, _tech_id: String,
 
 ## ── Tick Processing ─────────────────────────────────────────────────────────
 
-func execute_tick(tick: int) -> void:
-	## On first tick, do a full recalc for all settlements (cold start / save load)
-	if not _first_tick_done:
-		_first_tick_done = true
-		if _settlement_manager != null:
-			for settlement in _settlement_manager.get_all_settlements():
-				if not settlement.tech_states.is_empty():
-					if settlement.id not in _pending_recalc:
-						_pending_recalc.append(settlement.id)
-
-	if _pending_recalc.is_empty():
-		return
-
-	var to_recalc: Array = _pending_recalc.duplicate()
-	_pending_recalc.clear()
-	for sid in to_recalc:
-		_recalculate_pool(sid, tick)
-
-
 ## ── Pool Management ─────────────────────────────────────────────────────────
 
 func _get_or_create_pool(settlement_id: int) -> Dictionary:

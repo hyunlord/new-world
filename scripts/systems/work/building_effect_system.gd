@@ -36,20 +36,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(_tick: int) -> void:
-	var buildings: Array = _building_manager.get_all_buildings()
-	for i in range(buildings.size()):
-		var building = buildings[i]
-		if not building.is_built:
-			continue
-		match building.building_type:
-			"campfire":
-				_apply_campfire(building)
-			"shelter":
-				_apply_shelter(building)
-
-
 func _apply_campfire(building: RefCounted) -> void:
 	var time_data: Dictionary = _sim_engine.get_game_time()
 	var hour: int = time_data.get("hour", 12)

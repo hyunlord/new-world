@@ -61,6 +61,7 @@ func _build_scene() -> void:
 	## Camera2D (에디터 카메라 — CameraController 없이 단순 pan/zoom)
 	_camera = Camera2D.new()
 	_camera.enabled = true
+	_camera.zoom = Vector2(1.5, 1.5)
 	_camera.position = Vector2(
 		GameConfig.WORLD_SIZE.x * GameConfig.TILE_SIZE / 2.0,
 		GameConfig.WORLD_SIZE.y * GameConfig.TILE_SIZE / 2.0

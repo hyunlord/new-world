@@ -49,6 +49,13 @@ static var _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray(
 	"stats_recorder",
 	"stat_sync_system",
 	"stat_threshold_system",
+	"trait_system",
+	"settlement_culture_system",
+	"chronicle_system",
+	"personality_maturation_system",
+	"personality_generator_system",
+	"attachment_system",
+	"ace_tracker_system",
 ])
 
 var current_tick: int = 0
@@ -200,10 +207,6 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 	var ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
-	if ticks_processed > 0 and not _gdscript_fallback_systems.is_empty():
-		var end_tick: int = current_tick
-		var start_tick: int = maxi(1, end_tick - ticks_processed + 1)
-		_run_gdscript_fallback_ticks(start_tick, end_tick)
 	_consume_runtime_events_v2()
 
 

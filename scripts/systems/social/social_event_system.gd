@@ -69,14 +69,6 @@ func _load_event_deltas() -> void:
 		_event_deltas = json.data
 	file.close()
 
-
-func execute_tick(tick: int) -> void:
-	_process_social_events(tick)
-	# Natural relationship decay every 100 ticks
-	if tick % 100 == 0:
-		_relationship_manager.decay_relationships(tick)
-
-
 func _process_social_events(tick: int) -> void:
 	var alive: Array = _entity_manager.get_alive_entities()
 	# Track which entities already had an event this tick to avoid spam
