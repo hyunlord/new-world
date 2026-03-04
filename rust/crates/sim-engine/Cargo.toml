@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 sim-core = { path = "../sim-core" }
+sim-data = { path = "../sim-data" }
 hecs = { workspace = true }
 rand = { workspace = true }
 log = { workspace = true }

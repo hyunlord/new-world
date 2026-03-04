@@ -9,13 +9,9 @@ const _ERG_FRUSTRATION_FLAG_COUNT: int = 2
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
-var _mortality_system: RefCounted
 var _world_data: RefCounted = null
 var _stress_system = null
 var _last_tick: int = 0
-var _base_decay_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
-var _base_decay_flag_inputs: PackedByteArray = PackedByteArray()
-var _critical_severity_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _erg_frustration_scalar_inputs: PackedFloat32Array = PackedFloat32Array()
 var _erg_frustration_flag_inputs: PackedByteArray = PackedByteArray()
 

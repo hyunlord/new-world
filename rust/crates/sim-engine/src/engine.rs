@@ -14,6 +14,7 @@ use hecs::World;
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, WorldMap};
+use sim_data::PersonalityDistribution;
 use crate::event_bus::EventBus;
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
@@ -80,6 +81,8 @@ pub struct SimResources {
     pub chronicle_world_events: Vec<ChronicleEvent>,
     /// Chronicle personal-event log keyed by entity ID.
     pub chronicle_personal_events: HashMap<EntityId, Vec<ChronicleEvent>>,
+    /// Personality distribution data for spawning agents (loaded from JSON at startup).
+    pub personality_distribution: Option<PersonalityDistribution>,
 }
 
 impl SimResources {
@@ -106,6 +109,7 @@ impl SimResources {
             stat_threshold_flags: HashMap::new(),
             chronicle_world_events: Vec::new(),
             chronicle_personal_events: HashMap::new(),
+            personality_distribution: None,
         }
     }
 }
@@ -238,6 +242,12 @@ impl SimEngine {
 
     pub fn resources_mut(&mut self) -> &mut SimResources {
         &mut self.resources
+    }
+
+    /// Returns mutable references to both world and resources simultaneously,
+    /// allowing callers to pass both to functions that need them concurrently.
+    pub fn world_and_resources_mut(&mut self) -> (&mut World, &mut SimResources) {
+        (&mut self.world, &mut self.resources)
     }
 
     pub fn system_count(&self) -> usize {

@@ -9,6 +9,7 @@ sim-data = { path = "../sim-data" }
 sim-engine = { path = "../sim-engine" }
 hecs = { workspace = true }
 rand = { workspace = true }
+rand_distr = { workspace = true }
 rayon = { workspace = true }
 log = { workspace = true }
 

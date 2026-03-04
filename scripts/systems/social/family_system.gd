@@ -39,9 +39,6 @@ const BASE_MONTHLY_FECUNDABILITY: float = 0.12
 ## Per-entity gestation duration (entity_id -> ticks), cleared on birth
 var _gestation_map: Dictionary = {}
 
-## Yearly demography logging
-var _last_log_year: int = 0
-
 
 func _init() -> void:
 	system_name = "family"

@@ -6,7 +6,6 @@ var _settlement_manager: RefCounted
 var _world_data: RefCounted
 var _resource_map: RefCounted
 var _rng: RandomNumberGenerator
-var _last_migration_tick: int = 0
 const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
 const _SIM_BRIDGE_MIGRATION_SCARCE_METHOD: String = "body_migration_food_scarce"
 const _SIM_BRIDGE_MIGRATION_ATTEMPT_METHOD: String = "body_migration_should_attempt"

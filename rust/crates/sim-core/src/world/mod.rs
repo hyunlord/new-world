@@ -50,6 +50,27 @@ impl WorldMap {
     pub fn in_bounds(&self, x: i32, y: i32) -> bool {
         x >= 0 && y >= 0 && x < self.width as i32 && y < self.height as i32
     }
+
+    /// Returns all walkable tile positions within `radius` tiles of (cx, cy).
+    ///
+    /// Searches a square of side (2*radius+1) centered on (cx, cy).
+    /// Only includes tiles that are in-bounds and have `passable == true`.
+    pub fn walkable_tiles_near(&self, cx: i32, cy: i32, radius: i32) -> Vec<(i32, i32)> {
+        let mut result = Vec::new();
+        for dy in -radius..=radius {
+            for dx in -radius..=radius {
+                let x = cx + dx;
+                let y = cy + dy;
+                if self.in_bounds(x, y) {
+                    let tile = self.get(x as u32, y as u32);
+                    if tile.passable {
+                        result.push((x, y));
+                    }
+                }
+            }
+        }
+        result
+    }
 }
 
 #[cfg(test)]
@@ -70,5 +91,16 @@ mod tests {
         let mut world = WorldMap::new(10, 10, 0);
         world.get_mut(5, 5).elevation = 0.8;
         assert!((world.get(5, 5).elevation - 0.8).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_walkable_tiles_near() {
+        let mut map = WorldMap::new(10, 10, 0);
+        // Default tiles have passable=true
+        let tiles = map.walkable_tiles_near(5, 5, 1);
+        // Within bounds at (5,5) with radius 1: should be 3x3 = 9 tiles (all in bounds)
+        assert!(!tiles.is_empty());
+        assert_eq!(tiles.len(), 9);
+        assert!(tiles.iter().all(|(x, y)| *x >= 4 && *x <= 6 && *y >= 4 && *y <= 6));
     }
 }

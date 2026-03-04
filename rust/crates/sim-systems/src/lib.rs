@@ -8,7 +8,9 @@
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::needless_range_loop)]
 
+pub mod math_utils;
 pub mod pathfinding;
 pub mod stat_curve;
 pub mod body;
 pub mod runtime;
+pub mod entity_spawner;

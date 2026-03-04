@@ -3,20 +3,50 @@
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::type_complexity)]
 
+/// Number of RuntimeSystems registered by [`register_all_systems`].
+/// Update this when adding or removing systems from that function.
+const EXPECTED_SYSTEM_COUNT: usize = 53;
+
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
-use sim_core::components::{Age, Identity, Needs, Position};
 use sim_core::config::GameConfig;
+use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
 use sim_systems::runtime::{
-    AgeRuntimeSystem, EmotionRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem,
-    PopulationRuntimeSystem, StressRuntimeSystem, TraitRuntimeSystem,
+    // biology
+    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
+    ChildcareRuntimeSystem, IntergenerationalRuntimeSystem, MortalityRuntimeSystem,
+    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem, PopulationRuntimeSystem,
+    // cognition
+    BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
+    // economy
+    BuildingEffectRuntimeSystem, ConstructionRuntimeSystem, GatheringRuntimeSystem,
+    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
+    // needs
+    ChildStressProcessorRuntimeSystem, NeedsRuntimeSystem, UpperNeedsRuntimeSystem,
+    // psychology
+    ContagionRuntimeSystem, CopingRuntimeSystem, EmotionRuntimeSystem,
+    MentalBreakRuntimeSystem, MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem,
+    StressRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
+    TraumaScarRuntimeSystem,
+    // record
+    ChronicleRuntimeSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,
+    StatsRecorderRuntimeSystem,
+    // social
+    EconomicTendencyRuntimeSystem, FamilyRuntimeSystem, LeaderRuntimeSystem,
+    NetworkRuntimeSystem, OccupationRuntimeSystem, ReputationRuntimeSystem,
+    SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
+    StratificationMonitorRuntimeSystem, TitleRuntimeSystem, ValueRuntimeSystem,
+    // world
+    MigrationRuntimeSystem, MovementRuntimeSystem, TechDiscoveryRuntimeSystem,
+    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
+    TechUtilizationRuntimeSystem, TensionRuntimeSystem,
 };
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
@@ -91,6 +121,7 @@ fn main() {
                 data.occupation.categories.len(),
                 data.occupation.jobs.len(),
             );
+            resources.personality_distribution = Some(data.personality_distribution.clone());
         }
         Err(_) => {
             log::warn!("[sim-test] data not found at {:?}, skipping", data_dir);
@@ -110,20 +141,6 @@ fn main() {
     // ── Register runtime systems (Phase R-1) ──────────────────────────────────
     register_all_systems(&mut engine);
 
-    // ── Spawn 2 minimal test agents ──────────────────────────────────────────
-    engine.world_mut().spawn((
-        Identity::default(),
-        Age::default(),
-        Position::new(128, 128),
-        Needs::default(),
-    ));
-    engine.world_mut().spawn((
-        Identity::default(),
-        Age::default(),
-        Position::new(130, 130),
-        Needs::default(),
-    ));
-
     // ── Add one settlement ────────────────────────────────────────────────────
     let s = Settlement::new(
         SettlementId(1),
@@ -136,6 +153,13 @@ fn main() {
         .resources_mut()
         .settlements
         .insert(SettlementId(1), s);
+
+    // ── Spawn 20 fully-initialized agents via entity_spawner ──────────────────
+    {
+        let (world, resources) = engine.world_and_resources_mut();
+        entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
+    }
+    println!("[sim-test] Spawned 20 agents into hecs::World");
 
     // ── Run one in-game year (12 ticks/day × 365 days = 4380 ticks) ──────────
     engine.run_ticks(4380);
@@ -151,7 +175,7 @@ fn main() {
     println!("[sim-test]   Entities:        {}", snap.entity_count);
     println!("[sim-test]   Settlements:     {}", snap.settlement_count);
     println!("[sim-test]   Events total:    {}", dispatched);
-    println!("[sim-test]   Systems run:     {}", snap.system_count);
+    println!("[sim-test]   Systems run:     {} (full registration)", snap.system_count);
     println!("[sim-test] \u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}");
     println!("[sim-test] PASS");
 
@@ -162,18 +186,77 @@ fn main() {
         "wrong year (should be year 2 after 4380 ticks)"
     );
     assert_eq!(snap.day_of_year, 1, "should be start of year 2");
+    assert!(
+        snap.entity_count >= 1,
+        "expected at least 1 entity after spawning 20, got {} (entity spawner not working)",
+        snap.entity_count
+    );
     assert_eq!(snap.settlement_count, 1, "should have 1 settlement");
     assert!(snap.system_count > 0, "should have systems registered");
+    assert!(
+        snap.system_count >= EXPECTED_SYSTEM_COUNT,
+        "expected {} registered systems, got {}",
+        EXPECTED_SYSTEM_COUNT,
+        snap.system_count
+    );
 }
 
 fn register_all_systems(engine: &mut SimEngine) {
-    engine.register(NeedsRuntimeSystem::new(100, 1));
-    engine.register(EmotionRuntimeSystem::new(200, 1));
-    engine.register(StressRuntimeSystem::new(300, 1));
-    engine.register(TraitRuntimeSystem::new(510, 10));
-    engine.register(AgeRuntimeSystem::new(800, 1));
-    engine.register(MortalityRuntimeSystem::new(810, 1));
-    engine.register(PopulationRuntimeSystem::new(820, 10));
+    // Priority/interval values mirror scripts/scenes/main/main.gd registration.
+    // SimEngine sorts by priority ascending — lower runs first.
+    engine.register(StatSyncRuntimeSystem::new(1, 10));
+    engine.register(ResourceRegenSystem::new(5, 1));
+    engine.register(ChildcareRuntimeSystem::new(8, 2));
+    engine.register(JobAssignmentRuntimeSystem::new(8, 1));
+    engine.register(NeedsRuntimeSystem::new(10, 1));
+    engine.register(StatThresholdRuntimeSystem::new(12, 5));
+    engine.register(UpperNeedsRuntimeSystem::new(12, 1));
+    engine.register(BuildingEffectRuntimeSystem::new(15, 1));
+    engine.register(IntelligenceRuntimeSystem::new(18, 50));
+    engine.register(MemoryRuntimeSystem::new(18, 1));
+    engine.register(BehaviorRuntimeSystem::new(20, 1));
+    engine.register(GatheringRuntimeSystem::new(25, 1));
+    engine.register(ConstructionRuntimeSystem::new(28, 1));
+    engine.register(MovementRuntimeSystem::new(30, 1));
+    engine.register(EmotionRuntimeSystem::new(32, 12));
+    engine.register(ChildStressProcessorRuntimeSystem::new(32, 2));
+    engine.register(StressRuntimeSystem::new(34, 50));
+    engine.register(MentalBreakRuntimeSystem::new(35, 1));
+    engine.register(OccupationRuntimeSystem::new(36, 1));
+    engine.register(TraumaScarRuntimeSystem::new(36, 10));
+    engine.register(TitleRuntimeSystem::new(37, 1));
+    engine.register(TraitViolationRuntimeSystem::new(37, 1));
+    engine.register(SocialEventRuntimeSystem::new(37, 30));
+    engine.register(ContagionRuntimeSystem::new(38, 3));
+    engine.register(ReputationRuntimeSystem::new(38, 1));
+    engine.register(EconomicTendencyRuntimeSystem::new(39, 1));
+    engine.register(MoraleRuntimeSystem::new(40, 5));
+    engine.register(JobSatisfactionRuntimeSystem::new(40, 1));
+    engine.register(CopingRuntimeSystem::new(42, 30));
+    engine.register(IntergenerationalRuntimeSystem::new(45, 240));
+    engine.register(ParentingRuntimeSystem::new(46, 240));
+    engine.register(AgeRuntimeSystem::new(48, 50));
+    engine.register(MortalityRuntimeSystem::new(49, 1));
+    engine.register(PopulationRuntimeSystem::new(50, 1));
+    engine.register(FamilyRuntimeSystem::new(52, 365));
+    engine.register(LeaderRuntimeSystem::new(52, 1));
+    engine.register(ValueRuntimeSystem::new(55, 200));
+    engine.register(NetworkRuntimeSystem::new(58, 1));
+    engine.register(MigrationRuntimeSystem::new(60, 1));
+    engine.register(TechDiscoveryRuntimeSystem::new(62, 1));
+    engine.register(TechPropagationRuntimeSystem::new(62, 1));
+    engine.register(TechMaintenanceRuntimeSystem::new(63, 1));
+    engine.register(TensionRuntimeSystem::new(64, 1));
+    engine.register(TechUtilizationRuntimeSystem::new(65, 1));
+    engine.register(StratificationMonitorRuntimeSystem::new(90, 1));
+    engine.register(StatsRecorderRuntimeSystem::new(90, 200));
+    engine.register(SettlementCultureRuntimeSystem::new(95, 100));
+    engine.register(PersonalityMaturationRuntimeSystem::new(96, 100));
+    engine.register(PersonalityGeneratorRuntimeSystem::new(97, 100));
+    engine.register(AttachmentRuntimeSystem::new(98, 100));
+    engine.register(AceTrackerRuntimeSystem::new(99, 100));
+    engine.register(TraitRuntimeSystem::new(100, 10));
+    engine.register(ChronicleRuntimeSystem::new(101, 1));
 }
 
 fn parse_bench_iterations(args: &[String], default_iterations: u32) -> u32 {

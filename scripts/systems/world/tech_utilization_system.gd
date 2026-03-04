@@ -19,7 +19,6 @@ var _settlement_manager: RefCounted
 var _tech_tree_manager: RefCounted
 var _pools: Dictionary = {}           ## settlement_id -> pool Dictionary
 var _pending_recalc: Array = []       ## settlement_ids needing recalc
-var _first_tick_done: bool = false
 var _bridge_checked: bool = false
 var _sim_bridge: Object = null
 

@@ -784,6 +784,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sim-core",
+ "sim-data",
  "thiserror 2.0.18",
 ]
 
@@ -794,6 +795,7 @@ dependencies = [
  "hecs",
  "log",
  "rand",
+ "rand_distr",
  "rayon",
  "sim-core",
  "sim-data",
