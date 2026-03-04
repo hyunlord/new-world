@@ -178,7 +178,7 @@ mod tests {
         for name in &all_facet_names {
             let idx = facet_index(name);
             assert!(idx.is_some(), "facet_index({:?}) returned None", name);
-            assert!(idx.unwrap() < 24, "facet_index({:?}) out of range: {:?}", name, idx);
+            assert!(idx.expect("is_some checked on line above") < 24, "facet_index({:?}) out of range: {:?}", name, idx);
         }
     }
 

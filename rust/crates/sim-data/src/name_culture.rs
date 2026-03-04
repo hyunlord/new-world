@@ -154,11 +154,11 @@ mod tests {
     fn data_dir() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
-            .unwrap()
+            .expect("crate dir has parent")
             .parent()
-            .unwrap()
+            .expect("crates/ dir has parent")
             .parent()
-            .unwrap()
+            .expect("rust/ dir has parent")
             .join("data")
     }
 
