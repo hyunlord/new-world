@@ -203,6 +203,29 @@ func get_agent_snapshots() -> Array:
 	return _last_agent_snapshots
 
 
+## Spawns agents into the Rust hecs world at the given positions.
+## spawn_list: Array of Dicts with keys: x, y, age_ticks
+## settlement_id: ID for the settlement to assign agents to (creates it if missing)
+## settlement_x/y: Center of the settlement (used if creating new)
+## Returns number of agents spawned.
+func spawn_agents(spawn_list: Array, settlement_id: int, settlement_x: int, settlement_y: int) -> int:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_spawn_agents"):
+		return 0
+	var data: Array = []
+	for sp in spawn_list:
+		data.append({
+			"x": sp.get("x", 0),
+			"y": sp.get("y", 0),
+			"age_ticks": sp.get("age_ticks", 0),
+			"settlement_id": settlement_id,
+			"settlement_x": settlement_x,
+			"settlement_y": settlement_y,
+		})
+	var json_str: String = JSON.stringify(data)
+	return int(sim_bridge.call("runtime_spawn_agents", json_str))
+
+
 func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = false
 	_rust_runtime_available = false

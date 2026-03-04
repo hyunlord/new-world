@@ -564,19 +564,24 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 			var tmp = walkable[i]
 			walkable[i] = walkable[j]
 			walkable[j] = tmp
+		var rust_batch_center: Array = []
 		for i in range(count):
 			var age_years: int = _weighted_random_age(sim_engine.rng)
 			var day_offset: int = sim_engine.rng.randi_range(0, 364)
 			var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
 			entity_manager.spawn_entity(walkable[i], "", initial_age)
+			rust_batch_center.append({"x": walkable[i].x, "y": walkable[i].y, "age_ticks": initial_age})
 			spawned += 1
 			if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
 				_loading_bar.value = float(spawned) / float(total)
 				_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
 					{"current": spawned, "total": total})
 				await get_tree().process_frame
+		# Rust 스폰 (기본 settlement_id=1, 월드 중심)
+		sim_engine.spawn_agents(rust_batch_center, 1, center.x, center.y)
 		print("[Main] Spawned %d entities near world center." % spawned)
 	else:
+		var rust_batch_points: Array = []
 		for sp in spawn_data:
 			var pos: Vector2i = sp.position
 			var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
@@ -589,12 +594,18 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 				var day_offset: int = sim_engine.rng.randi_range(0, 364)
 				var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
 				entity_manager.spawn_entity(tile, "", initial_age)
+				rust_batch_points.append({"x": tile.x, "y": tile.y, "age_ticks": initial_age,
+					"settlement_x": pos.x, "settlement_y": pos.y})
 				spawned += 1
 				if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
 					_loading_bar.value = float(spawned) / float(total)
 					_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
 						{"current": spawned, "total": total})
 					await get_tree().process_frame
+		# Rust 스폰 (settlement_id=1, 첫 스폰 포인트 위치)
+		if not spawn_data.is_empty():
+			var first_pos: Vector2i = spawn_data[0].position
+			sim_engine.spawn_agents(rust_batch_points, 1, first_pos.x, first_pos.y)
 		print("[Main] Spawned entities at %d spawn point(s)." % spawn_data.size())
 
 	# 마지막 배치가 BATCH_SIZE 미만인 경우 최종 업데이트
