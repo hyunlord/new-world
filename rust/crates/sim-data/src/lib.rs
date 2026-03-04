@@ -8,6 +8,7 @@ pub mod loader;
 pub mod mental_breaks;
 pub mod mortality;
 pub mod name_culture;
+pub mod name_generator;
 pub mod occupations;
 pub mod personality_distribution;
 pub mod species;
@@ -29,6 +30,7 @@ pub use mortality::{load_mortality_catalog, MortalityCatalog, MortalityProfile};
 pub use name_culture::{
     load_name_cultures, GivenNames, NameCulture, PatronymicConfig, SyllableCount, SyllablePools,
 };
+pub use name_generator::NameGenerator;
 pub use occupations::{
     load_occupation_data, JobProfile, JobProfiles, OccupationCategories, OccupationData,
 };

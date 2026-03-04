@@ -13,6 +13,7 @@ use sim_bridge::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
+use sim_core::components::{Identity, Values};
 use sim_core::config::GameConfig;
 use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
@@ -122,6 +123,7 @@ fn main() {
                 data.occupation.jobs.len(),
             );
             resources.personality_distribution = Some(data.personality_distribution.clone());
+            resources.name_generator = Some(sim_data::NameGenerator::new(data.name_cultures.clone()));
         }
         Err(_) => {
             log::warn!("[sim-test] data not found at {:?}, skipping", data_dir);
@@ -163,6 +165,42 @@ fn main() {
 
     // ── Run one in-game year (12 ticks/day × 365 days = 4380 ticks) ──────────
     engine.run_ticks(4380);
+
+    // ── Phase A Entity Checks ─────────────────────────────────────────────────
+    println!("[sim-test] === Phase A Entity Checks ===");
+    {
+        let world = engine.world();
+        // Query both Identity and Values together; collect to (bits, name, nonzero_count).
+        let entity_data: Vec<(u64, String, usize)> = world
+            .query::<(&Identity, &Values)>()
+            .iter()
+            .map(|(e, (id, vals))| {
+                let nonzero = vals.values.iter().filter(|v| v.abs() > 0.001).count();
+                (e.to_bits().get(), id.name.clone(), nonzero)
+            })
+            .collect();
+
+        let mut name_set = std::collections::HashSet::new();
+        let mut values_nonzero_count = 0usize;
+
+        for (bits, name, nonzero) in &entity_data {
+            println!("[sim-test]   entity: id={} name={}", bits, name);
+            assert!(!name.starts_with("Agent "), "Name should not be placeholder: {}", name);
+            assert!(!name.is_empty(), "Name should not be empty");
+            assert!(name_set.insert(name.clone()), "Duplicate name: {}", name);
+            println!("[sim-test]   values_nonzero={}", nonzero);
+            if *nonzero >= 10 { values_nonzero_count += 1; }
+        }
+
+        let entity_count = entity_data.len();
+        assert!(entity_count >= 20, "Expected ≥20 entities, got {}", entity_count);
+        assert!(
+            values_nonzero_count >= 18,
+            "Expected ≥18 entities with ≥10 non-zero values, got {}",
+            values_nonzero_count
+        );
+    }
+    println!("[sim-test] === Phase A Entity Checks PASS ===");
 
     // ── Capture snapshot ──────────────────────────────────────────────────────
     let snap = engine.snapshot();
