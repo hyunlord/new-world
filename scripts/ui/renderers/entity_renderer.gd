@@ -7,7 +7,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
-var _sim_engine: Node = null
+var _sim_engine: RefCounted = null
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
@@ -62,7 +62,7 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: Node = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_resource_map = resource_map

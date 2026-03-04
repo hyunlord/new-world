@@ -47,7 +47,7 @@ var _l3_misc: Dictionary = {}
 var _l3_loaded: bool = false
 var _scroll_offset: float = 0.0
 var _content_height: float = 0.0
-var _sim_bridge: Object = null
+var _sim_engine: Object = null
 var _section_rects: Dictionary = {}
 
 var _collapsed: Dictionary = {
@@ -75,9 +75,9 @@ var _collapsed: Dictionary = {
 }
 
 
-## Stores the SimBridge reference for entity data queries.
-func init(sim_bridge: Object) -> void:
-	_sim_bridge = sim_bridge
+## Stores the SimulationEngine reference for entity data queries.
+func init(sim_engine: Object) -> void:
+	_sim_engine = sim_engine
 
 
 ## Shows entity data whether alive or deceased (delegates to set_entity_id).
@@ -99,24 +99,24 @@ func set_entity_id(entity_id: int) -> void:
 	_scroll_offset = 0.0
 	_section_rects = {}
 
-	if _sim_bridge != null and _sim_bridge.has_method("runtime_get_entity_detail"):
-		_l2_data = _sim_bridge.runtime_get_entity_detail(entity_id)
+	if _sim_engine != null and _sim_engine.has_method("get_entity_detail"):
+		_l2_data = _sim_engine.get_entity_detail(entity_id)
 
 	queue_redraw()
 
 
 ## Loads all 6 L3 tabs at once (~3KB total).
 func _load_l3_data() -> void:
-	if _sim_bridge == null or _entity_id < 0:
+	if _sim_engine == null or _entity_id < 0:
 		return
-	if not _sim_bridge.has_method("runtime_get_entity_tab"):
+	if not _sim_engine.has_method("get_entity_tab"):
 		return
-	_l3_mind = _sim_bridge.runtime_get_entity_tab(_entity_id, "mind")
-	_l3_body = _sim_bridge.runtime_get_entity_tab(_entity_id, "body")
-	_l3_skills = _sim_bridge.runtime_get_entity_tab(_entity_id, "skills")
-	_l3_social = _sim_bridge.runtime_get_entity_tab(_entity_id, "social")
-	_l3_memory = _sim_bridge.runtime_get_entity_tab(_entity_id, "memory")
-	_l3_misc = _sim_bridge.runtime_get_entity_tab(_entity_id, "misc")
+	_l3_mind = _sim_engine.get_entity_tab(_entity_id, "mind")
+	_l3_body = _sim_engine.get_entity_tab(_entity_id, "body")
+	_l3_skills = _sim_engine.get_entity_tab(_entity_id, "skills")
+	_l3_social = _sim_engine.get_entity_tab(_entity_id, "social")
+	_l3_memory = _sim_engine.get_entity_tab(_entity_id, "memory")
+	_l3_misc = _sim_engine.get_entity_tab(_entity_id, "misc")
 	_l3_loaded = true
 
 
@@ -165,7 +165,7 @@ func _draw() -> void:
 
 func _draw_header(font: Font, x: float, y: float) -> float:
 	var sex_str: String = _l2_data.get("sex", "")
-	var sex_icon: String = "♂" if sex_str == "Male" else "♀"
+	var sex_icon: String = "♂" if sex_str.to_lower() == "male" else "♀"
 	var entity_name: String = _l2_data.get("name", "???")
 	var age: int = int(_l2_data.get("age_years", 0))
 	var stage_raw: String = str(_l2_data.get("growth_stage", "Adult")).to_upper()
@@ -317,7 +317,7 @@ func _draw_personality(font: Font, x: float, y: float) -> float:
 
 func _generate_personality_narrative(l2: Dictionary) -> String:
 	var sex: String = str(l2.get("sex", "Male"))
-	var pronoun: String = Locale.ltr("UI_PRONOUN_HE") if sex == "Male" else Locale.ltr("UI_PRONOUN_SHE")
+	var pronoun: String = Locale.ltr("UI_PRONOUN_HE") if sex.to_lower() == "male" else Locale.ltr("UI_PRONOUN_SHE")
 
 	var parts: Array = []
 	var axes: Array = [
@@ -714,7 +714,7 @@ func _generate_values_narrative(l3_mind: Dictionary) -> String:
 	pairs.sort_custom(func(a, b): return absf(a.val) > absf(b.val))
 
 	var sex: String = str(_l2_data.get("sex", "Male"))
-	var pronoun: String = Locale.ltr("UI_PRONOUN_HE") if sex == "Male" else Locale.ltr("UI_PRONOUN_SHE")
+	var pronoun: String = Locale.ltr("UI_PRONOUN_HE") if sex.to_lower() == "male" else Locale.ltr("UI_PRONOUN_SHE")
 
 	var loved: Array = []
 	var despised: Array = []

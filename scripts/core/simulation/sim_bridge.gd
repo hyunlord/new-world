@@ -168,6 +168,45 @@ func runtime_get_registry_snapshot() -> Array:
 	return []
 
 
+## Returns entity detail dictionary from Rust runtime.
+func runtime_get_entity_detail(entity_id: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_entity_detail"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_entity_detail", entity_id)
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns entity tab data from Rust runtime.
+func runtime_get_entity_tab(entity_id: int, tab: String) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_entity_tab"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_entity_tab", entity_id, tab)
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns entity list from Rust runtime.
+func runtime_get_entity_list() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("runtime_get_entity_list"):
+		return []
+	var result: Variant = runtime.call("runtime_get_entity_list")
+	if result is Array:
+		return result
+	return []
+
+
 ## Clears registered runtime system metadata.
 func runtime_clear_registry() -> void:
 	var runtime: Object = _get_native_runtime()
