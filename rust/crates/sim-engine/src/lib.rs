@@ -26,6 +26,7 @@
 /// ```
 pub mod events;
 pub mod event_bus;
+pub mod explain_log;
 pub mod system_trait;
 pub mod engine;
 pub mod command;
@@ -35,6 +36,7 @@ pub mod snapshot;
 
 pub use events::GameEvent;
 pub use event_bus::{EventBus, Subscriber};
+pub use explain_log::{ExplainEntry, ExplainLog};
 pub use system_trait::SimSystem;
 pub use engine::{ChronicleEvent, RuntimeStatsSnapshot, SimEngine, SimResources};
 pub use command::{Command, CommandQueue};

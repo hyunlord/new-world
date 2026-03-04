@@ -326,6 +326,9 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 					"status": Locale.tr_id("STATUS", e.current_action), "settlement": e.settlement_id,
 					"hunger": e.hunger, "deceased": false, "is_leader": entity_is_leader,
 				})
+	else:
+		# SimBridge fallback: entity_manager not set, read from Rust ECS
+		rows.append_array(_get_entity_rows_from_bridge())
 
 	# Add deceased
 	if _show_deceased:
@@ -544,3 +547,45 @@ func _on_entity_clicked(entity_id: int, is_deceased: bool) -> void:
 	else:
 		SimulationBus.entity_selected.emit(entity_id)
 		SimulationBus.ui_notification.emit("open_entity_detail", "command")
+
+
+## Returns row dicts from SimBridge runtime_get_entity_list (fallback when entity_manager is null).
+func _get_entity_rows_from_bridge() -> Array:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_entity_list"):
+		return []
+	var raw: Variant = sim_bridge.call("runtime_get_entity_list")
+	if not (raw is Array):
+		return []
+	var rows: Array = []
+	for item_raw: Variant in raw:
+		if not (item_raw is Dictionary):
+			continue
+		var item: Dictionary = item_raw
+		if not item.get("alive", true):
+			continue
+		var age_years: float = float(item.get("age_years", 0.0))
+		var job_raw: String = str(item.get("job", ""))
+		rows.append({
+			"id": int(item.get("entity_id", 0)),
+			"name": str(item.get("name", "")),
+			"age": int(age_years * 365.0),
+			"age_display": Locale.trf1("UI_AGE_YEARS_SHORT_FMT", "n", int(age_years)),
+			"born": 0, "born_display": "-",
+			"died": 9999999, "died_display": "-",
+			"job": job_raw, "job_display": Locale.tr_id("JOB", job_raw),
+			"status": "", "settlement": 0,
+			"hunger": 0.0, "deceased": false, "is_leader": false,
+		})
+	return rows
+
+
+func _get_sim_bridge() -> Object:
+	if Engine.has_singleton("SimBridge"):
+		var bridge: Object = Engine.get_singleton("SimBridge")
+		if bridge != null:
+			return bridge
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return null
+	return tree.root.get_node_or_null("SimBridge")

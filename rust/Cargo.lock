@@ -735,6 +735,7 @@ dependencies = [
  "crc32fast",
  "fluent-bundle",
  "godot",
+ "hecs",
  "log",
  "serde",
  "serde_json",
@@ -768,9 +769,11 @@ version = "0.1.0"
 dependencies = [
  "env_logger",
  "log",
+ "rand",
  "serde",
  "serde_json",
  "sim-core",
+ "strum",
  "thiserror 2.0.18",
 ]
 

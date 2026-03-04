@@ -37,7 +37,10 @@ pub(crate) use ws2_codec::{decode_ws2_blob, encode_ws2_blob};
 use locale_bindings::format_fluent_from_source_args;
 #[cfg(test)]
 use pathfinding_bindings::parse_pathfind_backend;
-use sim_core::components::{Identity, Needs, Position};
+use sim_core::components::{
+    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
+    Memory, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+};
 use sim_core::enums::{GrowthStage, NeedType, Sex};
 use sim_core::{Settlement, SettlementId};
 use sim_engine::{EngineSnapshot, GameEvent};
@@ -348,6 +351,413 @@ impl WorldSimRuntime {
             return;
         };
         apply_commands_v2(state, commands);
+    }
+
+    /// L2: Full entity detail snapshot — all 18 components, ~70 keys.
+    /// Called when the player clicks an entity to open the detail panel.
+    #[func]
+    fn runtime_get_entity_detail(&self, entity_id: i64) -> VarDictionary {
+        let mut dict = VarDictionary::new();
+        let Some(state) = self.state.as_ref() else { return dict };
+        let entity = match hecs::Entity::from_bits(entity_id as u64) {
+            Some(e) => e,
+            None => return dict,
+        };
+        let world = state.engine.world();
+
+        // Identity (required — return empty if missing)
+        let Ok(id) = world.get::<&Identity>(entity) else { return dict };
+        dict.set("entity_id", entity_id);
+        dict.set("name", id.name.clone());
+        dict.set("sex", runtime_sex_to_str(id.sex));
+        dict.set("settlement_id", id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64));
+        dict.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
+        dict.set("zodiac", id.zodiac_sign.clone());
+        dict.set("blood_type", id.blood_type.clone());
+        dict.set("speech_tone", id.speech_tone.clone());
+        dict.set("speech_verbosity", id.speech_verbosity.clone());
+        dict.set("speech_humor", id.speech_humor.clone());
+        drop(id);
+
+        // Age
+        if let Ok(age) = world.get::<&Age>(entity) {
+            dict.set("age_years", age.years as f32);
+            dict.set("alive", age.alive);
+        }
+
+        // HEXACO personality axes (field is `axes`, not `hexaco`)
+        if let Ok(pers) = world.get::<&Personality>(entity) {
+            dict.set("hex_h", pers.axes[0] as f32);
+            dict.set("hex_e", pers.axes[1] as f32);
+            dict.set("hex_x", pers.axes[2] as f32);
+            dict.set("hex_a", pers.axes[3] as f32);
+            dict.set("hex_c", pers.axes[4] as f32);
+            dict.set("hex_o", pers.axes[5] as f32);
+        }
+
+        // Emotions (Plutchik 8)
+        if let Ok(emo) = world.get::<&Emotion>(entity) {
+            dict.set("emo_joy", emo.primary[0] as f32);
+            dict.set("emo_trust", emo.primary[1] as f32);
+            dict.set("emo_fear", emo.primary[2] as f32);
+            dict.set("emo_surprise", emo.primary[3] as f32);
+            dict.set("emo_sadness", emo.primary[4] as f32);
+            dict.set("emo_disgust", emo.primary[5] as f32);
+            dict.set("emo_anger", emo.primary[6] as f32);
+            dict.set("emo_anticipation", emo.primary[7] as f32);
+            let dom_names = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"];
+            let dom = emo.primary.iter().enumerate()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(i, _)| i)
+                .unwrap_or(0);
+            dict.set("dominant_emotion", dom_names[dom]);
+        }
+
+        // Needs (13 + energy)
+        if let Ok(needs) = world.get::<&Needs>(entity) {
+            let nv = &needs.values;
+            dict.set("need_hunger", nv[0] as f32);
+            dict.set("need_thirst", nv[1] as f32);
+            dict.set("need_sleep", nv[2] as f32);
+            dict.set("need_warmth", nv[3] as f32);
+            dict.set("need_safety", nv[4] as f32);
+            dict.set("need_belonging", nv[5] as f32);
+            dict.set("need_intimacy", nv[6] as f32);
+            dict.set("need_recognition", nv[7] as f32);
+            dict.set("need_autonomy", nv[8] as f32);
+            dict.set("need_competence", nv[9] as f32);
+            dict.set("need_self_actualization", nv[10] as f32);
+            dict.set("need_meaning", nv[11] as f32);
+            dict.set("need_transcendence", nv[12] as f32);
+            dict.set("energy", needs.energy as f32);
+        }
+
+        // Stress
+        if let Ok(stress) = world.get::<&Stress>(entity) {
+            dict.set("stress_level", stress.level as f32);
+            dict.set("stress_reserve", stress.reserve as f32);
+            dict.set("allostatic_load", stress.allostatic_load as f32);
+            dict.set("stress_state", format!("{:?}", stress.state));
+            dict.set("active_break", stress.active_mental_break.as_ref()
+                .map(|b| format!("{:?}", b))
+                .unwrap_or_default());
+            dict.set("resilience", stress.resilience as f32);
+        }
+
+        // Body attributes
+        if let Ok(body) = world.get::<&Body>(entity) {
+            dict.set("health", body.health);
+            dict.set("body_str", body.str_realized);
+            dict.set("body_agi", body.agi_realized);
+            dict.set("body_end", body.end_realized);
+            dict.set("body_tou", body.tou_realized);
+            dict.set("body_rec", body.rec_realized);
+            dict.set("body_dr", body.dr_realized);
+            dict.set("attractiveness", body.attractiveness);
+            dict.set("height", body.height);
+        }
+
+        // Behavior / Job
+        if let Ok(beh) = world.get::<&Behavior>(entity) {
+            dict.set("job", beh.job.clone());
+            dict.set("job_satisfaction", beh.job_satisfaction);
+            dict.set("occupation", beh.occupation.clone());
+            dict.set("current_action", format!("{:?}", beh.current_action));
+            dict.set("action_progress", beh.action_progress as f32);
+        }
+
+        // Active traits — PackedStringArray for string collections
+        if let Ok(traits) = world.get::<&Traits>(entity) {
+            let mut arr = PackedStringArray::new();
+            for t in &traits.active {
+                arr.push(&GString::from(t.as_str()));
+            }
+            dict.set("active_traits", arr);
+        }
+
+        // Social summary
+        if let Ok(social) = world.get::<&Social>(entity) {
+            dict.set("spouse_id", social.spouse.map(|s| s.0 as i64).unwrap_or(-1_i64));
+            dict.set("children_count", social.children.len() as i32);
+            dict.set("relationship_count", social.edges.len() as i32);
+        }
+
+        // Faith
+        if let Ok(faith) = world.get::<&Faith>(entity) {
+            dict.set("faith_tradition", faith.tradition.clone());
+            dict.set("faith_strength", faith.strength as f32);
+        }
+
+        // ExplainLog (stub — empty array)
+        dict.set("recent_explains", PackedStringArray::new());
+
+        dict
+    }
+
+    /// L3: Tab-specific deep data. Six tabs: mind / body / skills / social / memory / misc.
+    #[func]
+    fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
+        let mut dict = VarDictionary::new();
+        let Some(state) = self.state.as_ref() else { return dict };
+        let entity = match hecs::Entity::from_bits(entity_id as u64) {
+            Some(e) => e,
+            None => return dict,
+        };
+        let world = state.engine.world();
+
+        match tab.to_string().as_str() {
+            "mind" => {
+                if let Ok(pers) = world.get::<&Personality>(entity) {
+                    let mut facets = PackedFloat32Array::new();
+                    for &f in &pers.facets {
+                        facets.push(f as f32);
+                    }
+                    dict.set("facets", facets);
+                }
+                if let Ok(stress) = world.get::<&Stress>(entity) {
+                    dict.set("gas_stage", stress.gas_stage);
+                    dict.set("ace_score", stress.ace_score as f32);
+                    let mut stressors: Array<VarDictionary> = Array::new();
+                    for tr in &stress.stress_traces {
+                        let mut sd = VarDictionary::new();
+                        sd.set("source_id", tr.source_id.clone());
+                        sd.set("per_tick", tr.per_tick);
+                        sd.set("decay_rate", tr.decay_rate);
+                        stressors.push(&sd);
+                    }
+                    dict.set("stressors", stressors);
+                }
+                if let Ok(mem) = world.get::<&Memory>(entity) {
+                    let mut scars: Array<VarDictionary> = Array::new();
+                    for s in &mem.trauma_scars {
+                        let mut sd = VarDictionary::new();
+                        sd.set("scar_id", s.scar_id.clone());
+                        sd.set("severity", s.severity as f32);
+                        sd.set("acquired_tick", s.acquired_tick as i64);
+                        sd.set("reactivation_count", s.reactivation_count as i32);
+                        scars.push(&sd);
+                    }
+                    dict.set("trauma_scars", scars);
+                }
+                if let Ok(vals) = world.get::<&Values>(entity) {
+                    let mut values_arr = PackedFloat32Array::new();
+                    for &v in &vals.values {
+                        values_arr.push(v as f32);
+                    }
+                    dict.set("values_all", values_arr);
+                }
+                if let Ok(social) = world.get::<&Social>(entity) {
+                    dict.set("attachment_type", social.attachment_type.as_ref()
+                        .map(|a| format!("{:?}", a))
+                        .unwrap_or_else(|| "None".to_string()));
+                }
+                if let Ok(emo) = world.get::<&Emotion>(entity) {
+                    let mut baselines = PackedFloat32Array::new();
+                    for &b in &emo.baseline {
+                        baselines.push(b as f32);
+                    }
+                    dict.set("emotion_baselines", baselines);
+                }
+            }
+            "body" => {
+                if let Ok(body) = world.get::<&Body>(entity) {
+                    dict.set("str_pot", body.str_potential);
+                    dict.set("str_train", body.str_trainability);
+                    dict.set("str_real", body.str_realized);
+                    dict.set("agi_pot", body.agi_potential);
+                    dict.set("agi_train", body.agi_trainability);
+                    dict.set("agi_real", body.agi_realized);
+                    dict.set("end_pot", body.end_potential);
+                    dict.set("end_train", body.end_trainability);
+                    dict.set("end_real", body.end_realized);
+                    dict.set("tou_pot", body.tou_potential);
+                    dict.set("tou_train", body.tou_trainability);
+                    dict.set("tou_real", body.tou_realized);
+                    dict.set("rec_pot", body.rec_potential);
+                    dict.set("rec_train", body.rec_trainability);
+                    dict.set("rec_real", body.rec_realized);
+                    dict.set("dr_pot", body.dr_potential);
+                    dict.set("dr_train", body.dr_trainability);
+                    dict.set("dr_real", body.dr_realized);
+                    dict.set("attractiveness", body.attractiveness);
+                    dict.set("height", body.height);
+                    dict.set("health", body.health);
+                    dict.set("innate_immunity", body.innate_immunity);
+                    dict.set("blood_genotype", body.blood_genotype.clone());
+                    dict.set("distinguishing_mark",
+                        body.distinguishing_mark.clone().unwrap_or_default());
+                }
+                if let Ok(intel) = world.get::<&Intelligence>(entity) {
+                    let mut intel_arr = PackedFloat32Array::new();
+                    for &v in &intel.values {
+                        intel_arr.push(v as f32);
+                    }
+                    dict.set("intelligence", intel_arr);
+                    dict.set("g_factor", intel.g_factor as f32);
+                    dict.set("ace_penalty", intel.ace_penalty as f32);
+                    dict.set("nutrition_penalty", intel.nutrition_penalty as f32);
+                }
+            }
+            "skills" => {
+                if let Ok(skills) = world.get::<&Skills>(entity) {
+                    let mut arr: Array<VarDictionary> = Array::new();
+                    let mut sorted: Vec<_> = skills.entries.iter().collect();
+                    sorted.sort_by_key(|(k, _)| k.as_str());
+                    for (id, entry) in sorted {
+                        let mut sd = VarDictionary::new();
+                        sd.set("id", id.clone());
+                        sd.set("level", entry.level as i32);
+                        sd.set("xp", entry.xp as f32);
+                        arr.push(&sd);
+                    }
+                    dict.set("skills", arr);
+                }
+            }
+            "social" => {
+                if let Ok(social) = world.get::<&Social>(entity) {
+                    let mut spouse_dict = VarDictionary::new();
+                    if let Some(s) = social.spouse {
+                        spouse_dict.set("id", s.0 as i64);
+                    }
+                    dict.set("spouse", spouse_dict);
+                    let mut parents_arr: Array<VarDictionary> = Array::new();
+                    for p in &social.parents {
+                        let mut pd = VarDictionary::new();
+                        pd.set("id", p.0 as i64);
+                        parents_arr.push(&pd);
+                    }
+                    dict.set("parents", parents_arr);
+                    let mut children_arr: Array<VarDictionary> = Array::new();
+                    for c in &social.children {
+                        let mut cd = VarDictionary::new();
+                        cd.set("id", c.0 as i64);
+                        children_arr.push(&cd);
+                    }
+                    dict.set("children", children_arr);
+                    let mut rel_arr: Array<VarDictionary> = Array::new();
+                    for edge in social.edges.iter().take(15) {
+                        let mut ed = VarDictionary::new();
+                        ed.set("target_id", edge.target.0 as i64);
+                        ed.set("affinity", edge.affinity as f32);
+                        ed.set("trust", edge.trust as f32);
+                        ed.set("familiarity", edge.familiarity as f32);
+                        ed.set("relation_type", format!("{:?}", edge.relation_type));
+                        rel_arr.push(&ed);
+                    }
+                    dict.set("relationships", rel_arr);
+                    dict.set("reputation_tags", PackedStringArray::new());
+                    dict.set("social_class", format!("{:?}", social.social_class));
+                }
+                if let Ok(econ) = world.get::<&Economic>(entity) {
+                    dict.set("saving_tendency", econ.saving_tendency as f32);
+                    dict.set("risk_appetite", econ.risk_appetite as f32);
+                    dict.set("generosity", econ.generosity as f32);
+                    dict.set("materialism", econ.materialism as f32);
+                    dict.set("wealth", econ.wealth as f32);
+                }
+            }
+            "memory" => {
+                if let Ok(mem) = world.get::<&Memory>(entity) {
+                    let mut recent_arr: Array<VarDictionary> = Array::new();
+                    for entry in mem.short_term.iter().rev().take(20) {
+                        let mut ed = VarDictionary::new();
+                        ed.set("event_type", entry.event_type.clone());
+                        ed.set("tick", entry.tick as i64);
+                        ed.set("intensity", entry.current_intensity as f32);
+                        ed.set("is_permanent", entry.is_permanent);
+                        recent_arr.push(&ed);
+                    }
+                    dict.set("recent_memories", recent_arr);
+                    let mut perm_arr: Array<VarDictionary> = Array::new();
+                    for entry in mem.permanent.iter().rev().take(20) {
+                        let mut ed = VarDictionary::new();
+                        ed.set("event_type", entry.event_type.clone());
+                        ed.set("tick", entry.tick as i64);
+                        ed.set("intensity", entry.intensity as f32);
+                        ed.set("is_permanent", true);
+                        perm_arr.push(&ed);
+                    }
+                    dict.set("permanent_memories", perm_arr);
+                    let mut scars: Array<VarDictionary> = Array::new();
+                    for s in &mem.trauma_scars {
+                        let mut sd = VarDictionary::new();
+                        sd.set("scar_id", s.scar_id.clone());
+                        sd.set("severity", s.severity as f32);
+                        sd.set("acquired_tick", s.acquired_tick as i64);
+                        sd.set("reactivation_count", s.reactivation_count as i32);
+                        scars.push(&sd);
+                    }
+                    dict.set("trauma_scars", scars);
+                }
+                if let Ok(stress) = world.get::<&Stress>(entity) {
+                    dict.set("ace_score", stress.ace_score as f32);
+                }
+                if let Ok(social) = world.get::<&Social>(entity) {
+                    dict.set("attachment_type", social.attachment_type.as_ref()
+                        .map(|a| format!("{:?}", a))
+                        .unwrap_or_else(|| "None".to_string()));
+                }
+            }
+            "misc" => {
+                if let Ok(id) = world.get::<&Identity>(entity) {
+                    dict.set("zodiac", id.zodiac_sign.clone());
+                    dict.set("blood_type", id.blood_type.clone());
+                    dict.set("speech_tone", id.speech_tone.clone());
+                    dict.set("speech_verbosity", id.speech_verbosity.clone());
+                    dict.set("speech_humor", id.speech_humor.clone());
+                    dict.set("pref_food", id.pref_food.clone());
+                    dict.set("pref_color", id.pref_color.clone());
+                    dict.set("pref_season", id.pref_season.clone());
+                    let mut dislikes_arr = PackedStringArray::new();
+                    for d in &id.dislikes {
+                        dislikes_arr.push(&GString::from(d.as_str()));
+                    }
+                    dict.set("dislikes", dislikes_arr);
+                }
+                if let Ok(faith) = world.get::<&Faith>(entity) {
+                    dict.set("faith_tradition", faith.tradition.clone());
+                    dict.set("faith_strength", faith.strength as f32);
+                    dict.set("is_priest", faith.is_priest);
+                    dict.set("ritual_count", faith.ritual_count as i32);
+                }
+                if let Ok(coping) = world.get::<&Coping>(entity) {
+                    dict.set("active_coping", coping.active_strategy.as_ref()
+                        .map(|s| format!("{:?}", s))
+                        .unwrap_or_default());
+                    dict.set("dependency_score", coping.dependency_score);
+                    dict.set("helplessness_score", coping.helplessness_score);
+                    dict.set("break_count", coping.break_count as i32);
+                }
+            }
+            _ => {} // unknown tab — return empty dict
+        }
+
+        dict
+    }
+
+    /// Entity list snapshot — lightweight summary of every agent.
+    /// Used by the population list panel.
+    #[func]
+    fn runtime_get_entity_list(&self) -> Array<VarDictionary> {
+        let mut result: Array<VarDictionary> = Array::new();
+        let Some(state) = self.state.as_ref() else { return result };
+        let world = state.engine.world();
+
+        for (entity, (id, age)) in world.query::<(&Identity, &Age)>().iter() {
+            let mut d = VarDictionary::new();
+            d.set("entity_id", entity.to_bits().get() as i64);
+            d.set("name", id.name.clone());
+            d.set("age_years", age.years as f32);
+            d.set("sex", runtime_sex_to_str(id.sex));
+            d.set("alive", age.alive);
+            d.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
+            let job = world.get::<&Behavior>(entity)
+                .map(|b| b.job.clone())
+                .unwrap_or_default();
+            d.set("job", job);
+            result.push(&d);
+        }
+        result
     }
 }
 

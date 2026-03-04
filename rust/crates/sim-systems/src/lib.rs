@@ -14,3 +14,5 @@ pub mod stat_curve;
 pub mod body;
 pub mod runtime;
 pub mod entity_spawner;
+pub mod values_init;
+pub mod name_generator;

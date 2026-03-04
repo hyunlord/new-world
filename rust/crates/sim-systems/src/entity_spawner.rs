@@ -11,12 +11,13 @@ use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
     Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, Memory, Needs,
-    Personality, Position, Skills, Social, Stress, Traits, Values,
+    Personality, Position, Skills, Social, Stress, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
 use sim_data::PersonalityDistribution;
 use sim_engine::engine::SimResources;
+use crate::values_init::initialize_values;
 
 // ── Body generation constants ─────────────────────────────────────────────────
 
@@ -632,9 +633,14 @@ pub fn spawn_agent(
     // Blood type derived from genotype
     let blood_type = blood_type_from_genotype(&body.blood_genotype).to_string();
 
-    // Name: placeholder until name-generation system is implemented
-    let entity_count = world.len() as u64;
-    let name = format!("Agent {}", entity_count + 1);
+    // Name: use NameGenerator if available, else placeholder.
+    let settlement_id_u32 = config.settlement_id.map(|s| s.0 as u32).unwrap_or(0u32);
+    let name = if let Some(ref mut ng) = resources.name_generator {
+        ng.generate_name(sex, "proto_nature", settlement_id_u32, None, &mut resources.rng)
+    } else {
+        let entity_count = world.len() as u64;
+        format!("Agent {}", entity_count + 1)
+    };
 
     // Build identity
     let identity = Identity {
@@ -663,6 +669,9 @@ pub fn spawn_agent(
     // Position
     let position = Position::new(config.position.0, config.position.1);
 
+    // Values: initialize from HEXACO personality before personality is moved.
+    let values = initialize_values(&personality, None, None, &mut resources.rng);
+
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
     // We have 18 components total: spawn the first 15, then insert the remaining 3.
     let entity = world.spawn((
@@ -676,7 +685,7 @@ pub fn spawn_agent(
         Stress::default(),
         Behavior::default(),
         Emotion::default(),
-        Values::default(),
+        values,
         Coping::default(),
         Social::default(),
         Economic::default(),

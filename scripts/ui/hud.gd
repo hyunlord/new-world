@@ -4,7 +4,7 @@ const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
-const EntityDetailPanelClass = preload("res://scripts/ui/panels/entity_detail_panel.gd")
+const EntityDetailPanelV2Class = preload("res://scripts/ui/panels/entity_detail_panel_v2.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
@@ -190,9 +190,9 @@ func _build_minimap_and_stats() -> void:
 		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _entity_manager, _relationship_manager)
 		_popup_manager.add_stats_panel(_stats_detail_panel)
 
-	if _entity_manager != null:
-		_entity_detail_panel = EntityDetailPanelClass.new()
-		_entity_detail_panel.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
+	if _sim_engine != null:
+		_entity_detail_panel = EntityDetailPanelV2Class.new()
+		_entity_detail_panel.init(_sim_engine)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
 
 	if _building_manager != null:

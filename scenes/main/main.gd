@@ -234,7 +234,6 @@ func _ready() -> void:
 
 	mortality_system = MortalitySystem.new()
 	mortality_system.init(entity_manager, sim_engine.rng)
-	needs_system._mortality_system = mortality_system
 
 	stress_system = StressSystem.new()
 	stress_system.init(entity_manager)
