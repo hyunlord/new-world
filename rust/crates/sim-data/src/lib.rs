@@ -8,6 +8,7 @@ pub mod loader;
 pub mod mental_breaks;
 pub mod mortality;
 pub mod occupations;
+pub mod personality_distribution;
 pub mod species;
 pub mod stressor_events;
 pub mod tech;
@@ -31,6 +32,10 @@ pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents
 pub use tech::{load_tech_catalog, TechCatalog, TechDef};
 pub use trait_defs::{load_trait_definitions, TraitDefinition, TraitDefinitions};
 pub use value_events::{load_value_events, ValueEvent, ValueEvents};
+pub use personality_distribution::{
+    load_personality_distribution, CorrelationMatrix, MaturationEntry, OuParameters,
+    PersonalityDistribution,
+};
 
 /// Aggregated simulation data snapshot loaded from JSON files.
 #[derive(Debug, Clone)]
@@ -47,6 +52,7 @@ pub struct DataBundle {
     pub developmental_stages: DevelopmentalStages,
     pub attachment: AttachmentConfig,
     pub occupation: OccupationData,
+    pub personality_distribution: PersonalityDistribution,
 }
 
 /// Load all currently-supported data from a base data directory.
@@ -64,6 +70,7 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
     let developmental_stages = load_developmental_stages(base_dir)?;
     let attachment = load_attachment_config(base_dir)?;
     let occupation = load_occupation_data(base_dir)?;
+    let personality_distribution = load_personality_distribution(base_dir)?;
     Ok(DataBundle {
         emotions,
         tech,
@@ -77,6 +84,7 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
         developmental_stages,
         attachment,
         occupation,
+        personality_distribution,
     })
 }
 

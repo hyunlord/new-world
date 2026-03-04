@@ -7,6 +7,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
+var _sim_engine: Node = null
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
@@ -61,11 +62,12 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: Node = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_resource_map = resource_map
 	_settlement_manager = settlement_manager
+	_sim_engine = sim_engine
 
 
 func _is_leader(entity: RefCounted) -> bool:
@@ -73,6 +75,30 @@ func _is_leader(entity: RefCounted) -> bool:
 		return false
 	var s: RefCounted = _settlement_manager.get_settlement(entity.settlement_id)
 	return s != null and s.leader_id == entity.id
+
+
+func _get_snapshots() -> Array:
+	if _sim_engine != null and _sim_engine.has_method("get_agent_snapshots"):
+		var snaps: Array = _sim_engine.get_agent_snapshots()
+		if not snaps.is_empty():
+			return snaps
+	# Legacy fallback: convert EntityData objects to snapshot dicts
+	if _entity_manager != null:
+		var legacy: Array = _entity_manager.get_alive_entities()
+		var result: Array = []
+		for e in legacy:
+			result.append({
+				"x": int(e.position.x),
+				"y": int(e.position.y),
+				"job": str(e.get("job", "none")),
+				"sex": str(e.get("gender", "male")),
+				"growth_stage": str(e.get("age_stage", "adult")),
+				"entity_id": int(e.get("id", -1)),
+				"name": str(e.get("entity_name", "")),
+				"hunger": float(e.get("hunger", 1.0)),
+			})
+		return result
+	return []
 
 
 func _ready() -> void:
@@ -84,7 +110,8 @@ func _on_tick(_tick: int) -> void:
 
 
 func _draw() -> void:
-	if _entity_manager == null:
+	var alive: Array = _get_snapshots()
+	if alive.is_empty() and _entity_manager == null:
 		return
 	var cam := get_viewport().get_camera_2d()
 	var zl: float = cam.zoom.x if cam else 1.0
@@ -108,55 +135,65 @@ func _draw() -> void:
 	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
 	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
 
-	var alive: Array = _entity_manager.get_alive_entities()
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 
 	# LOD 0: draw minimal dots so entities are visible even at max zoom out
 	if _current_lod == 0:
 		for i in range(alive.size()):
-			var entity: RefCounted = alive[i]
-			if entity.position.x < min_tile_x or entity.position.x > max_tile_x:
+			var entity: Dictionary = alive[i]
+			var ex: int = int(entity.get("x", 0))
+			var ey: int = int(entity.get("y", 0))
+			if ex < min_tile_x or ex > max_tile_x:
 				continue
-			if entity.position.y < min_tile_y or entity.position.y > max_tile_y:
+			if ey < min_tile_y or ey > max_tile_y:
 				continue
-			var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
-			var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
+			var pos := Vector2(ex, ey) * GameConfig.TILE_SIZE + half_tile
+			var ejob: String = str(entity.get("job", "none"))
+			var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
 			var color: Color = vis["color"]
-			var tint: Color = MALE_TINT if entity.gender == "male" else FEMALE_TINT
+			var esex: String = str(entity.get("sex", "male"))
+			var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
 			color = color.lerp(tint, GENDER_TINT_WEIGHT)
 			# Minimum 3px dot ensures visibility at any zoom level
 			var dot_size: float = maxf(3.0, 2.0 / zl)
 			draw_circle(pos, dot_size + 1.0, OUTLINE_COLOR)
 			draw_circle(pos, dot_size, color)
 			# Selection highlight even at LOD 0
-			if entity.id == selected_entity_id:
+			if int(entity.get("entity_id", -1)) == selected_entity_id:
 				draw_arc(pos, dot_size + 3.0, 0, TAU, 16, Color.WHITE, 1.5)
 		return
 
 	for i in range(alive.size()):
-		var entity: RefCounted = alive[i]
+		var entity: Dictionary = alive[i]
+		var ex: int = int(entity.get("x", 0))
+		var ey: int = int(entity.get("y", 0))
 
 		# Viewport culling
-		if entity.position.x < min_tile_x or entity.position.x > max_tile_x:
+		if ex < min_tile_x or ex > max_tile_x:
 			continue
-		if entity.position.y < min_tile_y or entity.position.y > max_tile_y:
+		if ey < min_tile_y or ey > max_tile_y:
 			continue
 
-		var pos := Vector2(entity.position) * GameConfig.TILE_SIZE + half_tile
+		var pos := Vector2(ex, ey) * GameConfig.TILE_SIZE + half_tile
+		var ejob: String = str(entity.get("job", "none"))
+		var esex: String = str(entity.get("sex", "male"))
+		var eage_stage: String = str(entity.get("growth_stage", "adult"))
+		var eid: int = int(entity.get("entity_id", -1))
+		var ename: String = str(entity.get("name", ""))
 
-		var vis: Dictionary = JOB_VISUALS.get(entity.job, JOB_VISUALS["none"])
+		var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
 		var base_size: float = vis["size"]
 		var color: Color = vis["color"]
 
 		# Gender tint
-		var tint: Color = MALE_TINT if entity.gender == "male" else FEMALE_TINT
+		var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
 		color = color.lerp(tint, GENDER_TINT_WEIGHT)
 
 		# Age size scaling
-		var size: float = base_size * AGE_SIZE_MULT.get(entity.age_stage, 1.0)
+		var size: float = base_size * AGE_SIZE_MULT.get(eage_stage, 1.0)
 
 		# Draw outlined shape
-		match entity.job:
+		match ejob:
 			"lumberjack":
 				_draw_triangle_outlined(pos, size, color)
 			"builder":
@@ -169,43 +206,34 @@ func _draw() -> void:
 				draw_circle(pos, size, color)
 
 		# Elder white dot (gray hair indicator)
-		if entity.age_stage == "elder":
+		if eage_stage == "elder":
 			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
 		if _current_lod >= 1:
-			# Carrying indicator (small dot above entity)
-			if entity.get_total_carry() > 0.0:
-				var best_res: String = _get_dominant_resource(entity)
-				var dot_color: Color = RES_COLORS.get(best_res, Color.WHITE)
-				draw_circle(pos + Vector2(0, -(size + 3.0)), 1.5, dot_color)
+			# Carrying indicator: skipped for snapshot entities (no carry data)
 
 			# Hunger warning
-			if StatQuery.get_normalized(entity, &"NEED_HUNGER") < HUNGER_WARNING_THRESHOLD:
+			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD:
 				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 
 			## Leader crown [♛ = Unicode U+265B, locale-exempt symbol]
-			if _is_leader(entity):
+			if false: # TODO: leader check needs entity detail panel
 				var crown_font: Font = ThemeDB.fallback_font
 				draw_string(crown_font, pos + Vector2(-3.0, -(size + 10.0)), "\u265B", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.82, 0.1))
 
 			# Selection highlight
-			if entity.id == selected_entity_id:
+			if eid == selected_entity_id:
 				draw_arc(pos, SELECTION_RADIUS, 0, TAU, 24, Color.WHITE, 1.5)
-				# Draw line to action target
-				if entity.action_target != Vector2i(-1, -1):
-					var target_pos := Vector2(entity.action_target) * GameConfig.TILE_SIZE + half_tile
-					draw_dashed_line(pos, target_pos, Color(1, 1, 1, 0.3), 1.0, 4.0)
-				# Partner heart marker
-				if entity.partner_id != -1:
-					var partner: RefCounted = _entity_manager.get_entity(entity.partner_id)
-					if partner != null and partner.is_alive:
-						var ppos := Vector2(partner.position) * GameConfig.TILE_SIZE + half_tile
-						_draw_heart(ppos + Vector2(0, -(size + 6.0)), 3.0, Color(1.0, 0.3, 0.4))
-						draw_dashed_line(pos, ppos, Color(1.0, 0.3, 0.4, 0.3), 1.0, 4.0)
+				# Draw line to action target: skipped for snapshot entities
+				if false: # TODO: action target needs entity detail panel
+					pass
+				# Partner heart marker: skipped for snapshot entities
+				if false: # TODO: partner check needs entity detail panel
+					pass
 
 		# LOD 2: Show names for all entities
 		if _current_lod == 2:
-			var entity_name: String = entity.entity_name
+			var entity_name: String = ename
 			# Background rect for readability
 			var name_font: Font = ThemeDB.fallback_font
 			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
@@ -313,7 +341,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _handle_click(screen_pos: Vector2) -> void:
-	if _entity_manager == null:
+	if _entity_manager == null and _sim_engine == null:
 		return
 	var now: float = Time.get_ticks_msec() / 1000.0
 
@@ -345,29 +373,30 @@ func _handle_click(screen_pos: Vector2) -> void:
 			return
 
 	# Find entity at or near this tile
-	var alive: Array = _entity_manager.get_alive_entities()
-	var best_entity: RefCounted = null
+	var alive: Array = _get_snapshots()
+	var best_entity_id: int = -1
 	var best_dist: float = 3.0  # max click distance in tiles
 	for i in range(alive.size()):
-		var entity: RefCounted = alive[i]
-		var dist: float = Vector2(entity.position - tile).length()
+		var entity: Dictionary = alive[i]
+		var etile := Vector2i(int(entity.get("x", 0)), int(entity.get("y", 0)))
+		var dist: float = Vector2(etile - tile).length()
 		if dist < best_dist:
 			best_dist = dist
-			best_entity = entity
+			best_entity_id = int(entity.get("entity_id", -1))
 
-	if best_entity:
-		var is_double: bool = (best_entity.id == _last_click_entity_id
+	if best_entity_id != -1:
+		var is_double: bool = (best_entity_id == _last_click_entity_id
 			and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
 			and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
 
-		selected_entity_id = best_entity.id
+		selected_entity_id = best_entity_id
 		SimulationBus.building_deselected.emit()
-		SimulationBus.entity_selected.emit(best_entity.id)
+		SimulationBus.entity_selected.emit(best_entity_id)
 
 		if is_double:
 			SimulationBus.ui_notification.emit("open_entity_detail", "command")
 
-		_last_click_entity_id = best_entity.id
+		_last_click_entity_id = best_entity_id
 		_last_click_building_id = -1
 		_last_click_time = now
 		_last_click_pos = screen_pos

@@ -37,9 +37,13 @@ pub(crate) use ws2_codec::{decode_ws2_blob, encode_ws2_blob};
 use locale_bindings::format_fluent_from_source_args;
 #[cfg(test)]
 use pathfinding_bindings::parse_pathfind_backend;
+use sim_core::components::{Identity, Needs, Position};
+use sim_core::enums::{GrowthStage, NeedType, Sex};
+use sim_core::{Settlement, SettlementId};
 use sim_engine::{EngineSnapshot, GameEvent};
 use sim_systems::{
     body,
+    entity_spawner,
     stat_curve,
 };
 use std::fs;
@@ -85,6 +89,43 @@ impl WorldSimRuntime {
     fn runtime_init(&mut self, seed: i64, config_json: GString) -> bool {
         let config = parse_runtime_config(&config_json.to_string());
         self.state = Some(RuntimeState::from_seed(seed.max(0) as u64, config));
+
+        if let Some(state) = self.state.as_mut() {
+            // Try to load personality distribution from data dir (relative to Godot project root)
+            let data_dir = std::path::Path::new("data");
+            match sim_data::load_all(data_dir) {
+                Ok(data) => {
+                    state.engine.resources_mut().personality_distribution =
+                        Some(data.personality_distribution);
+                    log::info!("[SimBridge] Personality distribution loaded");
+                }
+                Err(e) => {
+                    log::warn!(
+                        "[SimBridge] Could not load data (personality uses defaults): {:?}",
+                        e
+                    );
+                }
+            }
+
+            // Create default settlement at map center
+            let center_x = (state.engine.resources().map.width / 2) as i32;
+            let center_y = (state.engine.resources().map.height / 2) as i32;
+            let settlement =
+                Settlement::new(SettlementId(1), "Ember Hold".to_string(), center_x, center_y, 0);
+            state
+                .engine
+                .resources_mut()
+                .settlements
+                .insert(SettlementId(1), settlement);
+
+            // Spawn initial population (20 agents)
+            {
+                let (world, resources) = state.engine.world_and_resources_mut();
+                entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
+            }
+            log::info!("[SimBridge] Spawned 20 agents into hecs::World");
+        }
+
         true
     }
 
@@ -168,6 +209,33 @@ impl WorldSimRuntime {
         out.set("speed_index", state.speed_index as i64);
         out.set("paused", paused);
         out.set("accumulator", state.accumulator);
+
+        // Build per-agent render snapshot for entity_renderer.gd
+        {
+            let world = state.engine.world();
+            let mut agent_arr = Array::<VarDictionary>::new();
+            for (entity, (identity, pos, needs)) in
+                world.query::<(&Identity, &Position, &Needs)>().iter()
+            {
+                let mut d = VarDictionary::new();
+                d.set("entity_id", entity.to_bits().get() as i64);
+                d.set("x", pos.x as i64);
+                d.set("y", pos.y as i64);
+                d.set("name", GString::from(identity.name.as_str()));
+                d.set("sex", GString::from(runtime_sex_to_str(identity.sex)));
+                d.set(
+                    "growth_stage",
+                    GString::from(runtime_growth_stage_to_str(identity.growth_stage)),
+                );
+                d.set("job", GString::from("none"));
+                d.set("action", GString::from("idle"));
+                d.set("hunger", needs.get(NeedType::Hunger));
+                agent_arr.push(&d);
+            }
+            out.set("agent_snapshots", agent_arr);
+            out.set("entity_count", world.len() as i64);
+        }
+
         out
     }
 
@@ -3733,6 +3801,26 @@ struct SimBridgeExtension;
 
 #[gdextension(entry_symbol = worldsim_rust_init)]
 unsafe impl ExtensionLibrary for SimBridgeExtension {}
+
+// ── FrameSnapshot helpers ─────────────────────────────────────────────────────
+
+fn runtime_growth_stage_to_str(gs: GrowthStage) -> &'static str {
+    match gs {
+        GrowthStage::Infant => "infant",
+        GrowthStage::Toddler => "toddler",
+        GrowthStage::Child => "child",
+        GrowthStage::Teen => "teen",
+        GrowthStage::Adult => "adult",
+        GrowthStage::Elder => "elder",
+    }
+}
+
+fn runtime_sex_to_str(sex: Sex) -> &'static str {
+    match sex {
+        Sex::Male => "male",
+        Sex::Female => "female",
+    }
+}
 
 #[cfg(test)]
 mod tests {

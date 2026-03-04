@@ -13,8 +13,8 @@ use sim_bridge::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
-use sim_core::components::{Age, Identity, Needs, Position};
 use sim_core::config::GameConfig;
+use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{SimEngine, SimResources};
@@ -121,6 +121,7 @@ fn main() {
                 data.occupation.categories.len(),
                 data.occupation.jobs.len(),
             );
+            resources.personality_distribution = Some(data.personality_distribution.clone());
         }
         Err(_) => {
             log::warn!("[sim-test] data not found at {:?}, skipping", data_dir);
@@ -140,20 +141,6 @@ fn main() {
     // ── Register runtime systems (Phase R-1) ──────────────────────────────────
     register_all_systems(&mut engine);
 
-    // ── Spawn 2 minimal test agents ──────────────────────────────────────────
-    engine.world_mut().spawn((
-        Identity::default(),
-        Age::default(),
-        Position::new(128, 128),
-        Needs::default(),
-    ));
-    engine.world_mut().spawn((
-        Identity::default(),
-        Age::default(),
-        Position::new(130, 130),
-        Needs::default(),
-    ));
-
     // ── Add one settlement ────────────────────────────────────────────────────
     let s = Settlement::new(
         SettlementId(1),
@@ -166,6 +153,13 @@ fn main() {
         .resources_mut()
         .settlements
         .insert(SettlementId(1), s);
+
+    // ── Spawn 20 fully-initialized agents via entity_spawner ──────────────────
+    {
+        let (world, resources) = engine.world_and_resources_mut();
+        entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
+    }
+    println!("[sim-test] Spawned 20 agents into hecs::World");
 
     // ── Run one in-game year (12 ticks/day × 365 days = 4380 ticks) ──────────
     engine.run_ticks(4380);
@@ -192,6 +186,11 @@ fn main() {
         "wrong year (should be year 2 after 4380 ticks)"
     );
     assert_eq!(snap.day_of_year, 1, "should be start of year 2");
+    assert!(
+        snap.entity_count >= 1,
+        "expected at least 1 entity after spawning 20, got {} (entity spawner not working)",
+        snap.entity_count
+    );
     assert_eq!(snap.settlement_count, 1, "should have 1 settlement");
     assert!(snap.system_count > 0, "should have systems registered");
     assert!(

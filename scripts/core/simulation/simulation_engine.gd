@@ -15,6 +15,7 @@ var _rust_runtime_available: bool = false
 var _registered_system_count: int = 0
 var _registered_system_payloads: Array[Dictionary] = []
 var _system_key_by_instance_id: Dictionary = {}
+var _last_agent_snapshots: Array = []
 
 
 ## Initialize the engine with a deterministic seed
@@ -95,6 +96,7 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 		return
 	var runtime_state: Dictionary = runtime_state_raw
 	current_tick = int(runtime_state.get("current_tick", current_tick))
+	_last_agent_snapshots = runtime_state.get("agent_snapshots", [])
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
 	_consume_runtime_events_v2()
 
@@ -193,6 +195,10 @@ func advance_ticks(n: int) -> void:
 	var tick_duration: float = 1.0 / float(GameConfig.TICKS_PER_SECOND)
 	for i in range(n):
 		_update_rust_primary(tick_duration, false)
+
+
+func get_agent_snapshots() -> Array:
+	return _last_agent_snapshots
 
 
 func _init_rust_runtime() -> void:
