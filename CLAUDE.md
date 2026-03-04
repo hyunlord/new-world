@@ -322,3 +322,51 @@ Before any work touching these areas, read the corresponding SKILL.md:
 | godot | `.claude/skills/godot/SKILL.md` | Godot scene/resource file work |
 | systematic-debugging | `.claude/skills/systematic-debugging/SKILL.md` | Any bug or test failure |
 | verification-before-completion | `.claude/skills/verification-before-completion/SKILL.md` | Before claiming any task complete |
+---
+
+## Harness MCP — Runtime Verification
+
+Installed at `addons/harness/`. Provides MCP tools to run simulation and check invariants from Claude Code.
+
+### Files
+- `addons/harness/harness_server.gd` — WebSocket JSON-RPC server (activates on `--headless`)
+- `addons/harness/harness_router.gd` — Command dispatcher
+- `addons/harness/harness_invariants.gd` — Invariant checks
+- `addons/harness/worldsim_adapter.gd` — **WorldSim-specific API bridge** (edit this when WorldSim API changes)
+- `addons/harness/worldsim_mapping.md` — Interface mapping reference
+
+### MCP Server
+Register in `.mcp.json`:
+```json
+{
+  "mcpServers": {
+    "godot-rust-harness": {
+      "command": "python",
+      "args": ["-m", "godot_rust_harness"],
+      "env": {
+        "PROJECT_ROOT": "/Users/rexxa/github/Godot-Rust-MCP",
+        "GODOT_BIN": "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot"
+      }
+    }
+  }
+}
+```
+
+### Usage
+After simulation code changes:
+- `godot_start` → starts WorldSim headless (HarnessServer auto-activates)
+- `godot_reset(seed=42)` → resets tick counter + RNG
+- `godot_tick(n=100)` → advance 100 ticks via `advance_ticks()`
+- `godot_snapshot` → entity count + positions
+- `godot_invariant` → run all 7 invariant checks
+- `godot_stop` → terminate process
+- `verify()` → full pipeline in one call
+
+### Adapter architecture
+WorldSim's `SimulationEngine` and `EntityManager` are `RefCounted` objects, not autoloads.
+The adapter finds them via `get_tree().root.get_node_or_null("Main")`.
+Edit **only** `worldsim_adapter.gd` when WorldSim's API changes; harness core stays generic.
+
+### Reset limitation
+`godot_reset` calls `sim_engine.init_with_seed(seed)` which resets tick+RNG but NOT entity population.
+For full population reset, use `godot_stop` + `godot_start`.

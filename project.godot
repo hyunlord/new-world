@@ -29,6 +29,7 @@ Locale="*res://scripts/core/simulation/locale.gd"
 StatQuery="*res://scripts/core/stats/stat_query.gd"
 SimBridge="*res://scripts/core/simulation/sim_bridge.gd"
 ComputeBackend="*res://scripts/core/simulation/compute_backend.gd"
+HarnessServer="*res://addons/harness/harness_server.gd"
 
 [display]
 
