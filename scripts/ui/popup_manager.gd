@@ -121,8 +121,8 @@ func open_entity(entity_id: int) -> void:
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
 	_dim_bg.visible = true
-	_panel_ratios[_entity_panel] = Vector2(0.55, 0.85)
-	_center_panel(_entity_panel, 0.55, 0.85)
+	_panel_ratios[_entity_panel] = Vector2(0.42, 0.90)
+	_center_panel(_entity_panel, 0.42, 0.90)
 
 
 ## Opens the entity detail panel without dimming the background or pausing the simulation.
@@ -139,8 +139,8 @@ func open_entity_no_dim(entity_id: int) -> void:
 	_entity_panel.visible = true
 	_dim_bg.visible = false
 	var vp: Vector2 = get_viewport().get_visible_rect().size
-	var panel_w: float = vp.x * 0.50
-	var panel_h: float = vp.y * 0.85
+	var panel_w: float = vp.x * 0.42
+	var panel_h: float = vp.y * 0.90
 	_entity_panel.size = Vector2(panel_w, panel_h)
 	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
 
