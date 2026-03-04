@@ -155,6 +155,16 @@ func runtime_export_events_v2() -> Array:
 	return []
 
 
+## Spawns agents into the Rust hecs world from a JSON string. Returns number spawned.
+func runtime_spawn_agents(spawn_data_json: String) -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0
+	if not runtime.has_method("runtime_spawn_agents"):
+		return 0
+	return int(runtime.call("runtime_spawn_agents", spawn_data_json))
+
+
 ## Returns registered runtime system metadata snapshot.
 func runtime_get_registry_snapshot() -> Array:
 	var runtime: Object = _get_native_runtime()

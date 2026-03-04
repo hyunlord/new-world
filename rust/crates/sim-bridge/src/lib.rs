@@ -72,6 +72,17 @@ use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_nam
 
 use runtime_events::game_event_to_v2_dict;
 
+/// JSON-deserializable entry for runtime_spawn_agents.
+#[derive(serde::Deserialize)]
+struct SpawnEntry {
+    x: i32,
+    y: i32,
+    age_ticks: Option<u64>,
+    settlement_id: Option<u64>,
+    settlement_x: Option<i32>,
+    settlement_y: Option<i32>,
+}
+
 #[derive(GodotClass)]
 #[class(base=Object)]
 pub struct WorldSimRuntime {
@@ -110,23 +121,7 @@ impl WorldSimRuntime {
                 }
             }
 
-            // Create default settlement at map center
-            let center_x = (state.engine.resources().map.width / 2) as i32;
-            let center_y = (state.engine.resources().map.height / 2) as i32;
-            let settlement =
-                Settlement::new(SettlementId(1), "Ember Hold".to_string(), center_x, center_y, 0);
-            state
-                .engine
-                .resources_mut()
-                .settlements
-                .insert(SettlementId(1), settlement);
-
-            // Spawn initial population (20 agents)
-            {
-                let (world, resources) = state.engine.world_and_resources_mut();
-                entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
-            }
-            log::info!("[SimBridge] Spawned 20 agents into hecs::World");
+            log::info!("[SimBridge] Runtime initialized (empty world — awaiting runtime_spawn_agents)");
         }
 
         true
@@ -135,6 +130,56 @@ impl WorldSimRuntime {
     #[func]
     fn runtime_is_initialized(&self) -> bool {
         self.state.is_some()
+    }
+
+    /// Spawns agents into the Rust hecs world from a JSON array of spawn entries.
+    /// Returns the number of agents successfully spawned.
+    #[func]
+    fn runtime_spawn_agents(&mut self, spawn_data_json: GString) -> i64 {
+        let Some(state) = self.state.as_mut() else {
+            return 0;
+        };
+        let json_str = spawn_data_json.to_string();
+        let entries: Vec<SpawnEntry> = match serde_json::from_str(&json_str) {
+            Ok(v) => v,
+            Err(e) => {
+                log::warn!("[SimBridge] runtime_spawn_agents parse error: {e}");
+                return 0;
+            }
+        };
+
+        let mut spawned_count: i64 = 0;
+        for entry in &entries {
+            let settlement_id = SettlementId(entry.settlement_id.unwrap_or(1));
+            // Ensure settlement exists
+            if !state.engine.resources().settlements.contains_key(&settlement_id) {
+                let sx = entry.settlement_x.unwrap_or(entry.x);
+                let sy = entry.settlement_y.unwrap_or(entry.y);
+                let settlement = Settlement::new(
+                    settlement_id,
+                    format!("Settlement {}", settlement_id.0),
+                    sx,
+                    sy,
+                    0,
+                );
+                state.engine.resources_mut().settlements.insert(settlement_id, settlement);
+            }
+
+            let config = entity_spawner::SpawnConfig {
+                settlement_id: Some(settlement_id),
+                position: (entry.x, entry.y),
+                initial_age_ticks: entry.age_ticks.unwrap_or(0),
+                sex: None,
+                parent_a: None,
+                parent_b: None,
+            };
+            let (world, resources) = state.engine.world_and_resources_mut();
+            entity_spawner::spawn_agent(world, resources, &config);
+            spawned_count += 1;
+        }
+
+        log::info!("[SimBridge] Spawned {} agents via runtime_spawn_agents", spawned_count);
+        spawned_count
     }
 
     #[func]
@@ -217,8 +262,8 @@ impl WorldSimRuntime {
         {
             let world = state.engine.world();
             let mut agent_arr = Array::<VarDictionary>::new();
-            for (entity, (identity, pos, needs)) in
-                world.query::<(&Identity, &Position, &Needs)>().iter()
+            for (entity, (identity, pos, needs, behavior_opt, age_opt)) in
+                world.query::<(&Identity, &Position, &Needs, Option<&Behavior>, Option<&Age>)>().iter()
             {
                 let mut d = VarDictionary::new();
                 d.set("entity_id", entity.to_bits().get() as i64);
@@ -230,8 +275,18 @@ impl WorldSimRuntime {
                     "growth_stage",
                     GString::from(runtime_growth_stage_to_str(identity.growth_stage)),
                 );
-                d.set("job", GString::from("none"));
-                d.set("action", GString::from("idle"));
+                if let Some(behavior) = behavior_opt {
+                    d.set("job", GString::from(behavior.job.as_str()));
+                    d.set("action", GString::from(behavior.current_action.to_string().as_str()));
+                } else {
+                    d.set("job", GString::from("none"));
+                    d.set("action", GString::from("idle"));
+                }
+                if let Some(age) = age_opt {
+                    d.set("alive", age.alive);
+                } else {
+                    d.set("alive", true);
+                }
                 d.set("hunger", needs.get(NeedType::Hunger));
                 agent_arr.push(&d);
             }
