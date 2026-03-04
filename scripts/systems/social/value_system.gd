@@ -71,63 +71,6 @@ func init(entity_manager, settlement_manager = null) -> void:
 
 
 ## tick마다 호출: Kohlberg 진급 + peer influence + 정착지 문화 동조 압력
-func execute_tick(_tick: int) -> void:
-	if _entity_manager == null:
-		return
-
-	# ── Phase 1: 정착지 공유 가치관 재계산 [Axelrod 1997] ────────────
-	if _settlement_manager != null:
-		var all_settlements: Array = _settlement_manager.get_all_settlements()
-		for settlement in all_settlements:
-			if settlement.member_ids.is_empty():
-				continue
-			var members: Array = []
-			for mid in settlement.member_ids:
-				var m = _entity_manager.get_entity(mid)
-				if m != null and m.is_alive and not m.values.is_empty():
-					members.append(m)
-			if not members.is_empty():
-				var leader_entity = null
-				if settlement.leader_id > -1:
-					var candidate = _entity_manager.get_entity(settlement.leader_id)
-					if candidate != null and candidate.is_alive:
-						leader_entity = candidate
-				settlement.shared_values = SettlementCulture.compute_shared_values(members, leader_entity)
-
-	var entities: Array = _entity_manager.get_alive_entities()
-
-	for entity in entities:
-		if entity.values.is_empty():
-			continue
-
-		var age_years: float = GameConfig.get_age_years(entity.age)
-		var hexaco_dict: Dictionary = _get_hexaco_dict(entity.personality)
-
-		# [Kohlberg 1969] 도덕 발달 단계 진급 체크
-		check_moral_stage_progression(entity, hexaco_dict, age_years)
-
-		# [Axelrod 1997] peer influence — 근처 엔티티와 가치관 수렴
-		var neighbors: Array = _entity_manager.get_entities_near(entity.position, 5)
-		if neighbors.size() > 1:
-			var other = neighbors[_rng.randi() % neighbors.size()]
-			if other.id != entity.id and not other.values.is_empty():
-				apply_peer_influence(entity, other.values, 0.3, age_years)
-
-		# ── Phase 2: 정착지 문화 동조 압력 [Haidt 2012] ─────────────
-		if _settlement_manager != null and entity.settlement_id > 0:
-			var settlement = _settlement_manager.get_settlement(entity.settlement_id)
-			if settlement != null and not settlement.shared_values.is_empty():
-				## [French & Raven 1959] Wise agents resist cultural homogenization.
-				## wisdom_norm: 0.0~1.0. Effective enforcement reduced by up to 30%.
-				var wisdom_norm: float = StatQuery.get_normalized(entity, &"DERIVED_WISDOM")
-				var effective_enforcement: float = 0.5 * (1.0 - GameConfig.LEADER_WISDOM_RESISTANCE_COEFF * wisdom_norm)
-				SettlementCulture.apply_conformity_pressure(
-					entity,
-					settlement.shared_values,
-					effective_enforcement,
-					age_years,
-				)
-
 
 ## ── 3.2 초기화: 유전 + 문화 + HEXACO + 노이즈 합성 ──────
 ## parent_a_values, parent_b_values: 부모 values dict (없으면 null)

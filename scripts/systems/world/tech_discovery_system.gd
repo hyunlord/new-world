@@ -49,14 +49,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _settlement_manager == null:
-		return
-	for settlement in _settlement_manager.get_all_settlements():
-		_check_discoveries(settlement, tick)
-
-
 func _check_discoveries(settlement: RefCounted, tick: int) -> void:
 	var all_ids: Array = _tech_tree_manager.get_all_ids()
 	for tech_id in all_ids:

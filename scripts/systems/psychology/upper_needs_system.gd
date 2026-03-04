@@ -27,25 +27,6 @@ func init(entity_manager: RefCounted) -> void:
 	SimulationBus.skill_leveled_up.connect(_on_skill_leveled_up)
 
 
-func execute_tick(_tick: int) -> void:
-	if _upper_needs_scalar_inputs.size() < _UPPER_NEEDS_SCALAR_COUNT:
-		_upper_needs_scalar_inputs.resize(_UPPER_NEEDS_SCALAR_COUNT)
-	if _upper_needs_flag_inputs.size() < _UPPER_NEEDS_FLAG_COUNT:
-		_upper_needs_flag_inputs.resize(_UPPER_NEEDS_FLAG_COUNT)
-	if _upper_needs_skill_levels.size() < _UPPER_NEEDS_SKILL_LEVEL_COUNT:
-		_upper_needs_skill_levels.resize(_UPPER_NEEDS_SKILL_LEVEL_COUNT)
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		## 유아(infant/toddler)는 상위 욕구 미적용 — 발달 심리학상 ~4세 이전
-		if entity.age_stage == "infant" or entity.age_stage == "toddler":
-			continue
-		if not _apply_upper_needs_rust_step(entity):
-			_apply_decay(entity)
-			_apply_fulfillment(entity)
-			_clamp_upper_needs(entity)
-
-
 ## Apply one upper-needs step via Rust bridge.
 ## Returns true when Rust path was applied, false when fallback is required.
 func _apply_upper_needs_rust_step(entity: RefCounted) -> bool:

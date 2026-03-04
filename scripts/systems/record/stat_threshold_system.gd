@@ -44,13 +44,6 @@ func _get_sim_bridge() -> Object:
 
 
 ## Evaluates all stat thresholds for every alive entity and applies or removes threshold effects.
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for entity in alive:
-		_evaluate_entity(entity, tick)
-
 
 func _evaluate_entity(entity: RefCounted, tick: int) -> void:
 	var eid: int = entity.id

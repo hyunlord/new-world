@@ -37,13 +37,6 @@ func _get_sim_bridge() -> Object:
 
 
 ## Syncs all alive entities' raw fields (needs, HEXACO, emotions, skills) into their stat_cache each tick.
-func execute_tick(_tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		_sync_entity(alive[i])
-
 
 func _sync_entity(entity: RefCounted) -> void:
 	# Needs: float 0~1 → int 0~1000

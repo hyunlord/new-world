@@ -291,21 +291,6 @@ func on_action_performed(entity: RefCounted, action_id: String, context: Diction
 
 # ── Tick 처리 ─────────────────────────────────────────────────────────────────
 
-## 매 tick: intrusive thought + violation_history 시간 감쇠
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var entities = _entity_manager.get_alive_entities()
-	for entity in entities:
-		if not entity.is_alive:
-			continue
-		if not entity.has_method("get") or not ("violation_history" in entity):
-			continue
-		_decay_violation_history(entity, tick)
-		_process_intrusive_thoughts(entity, tick)
-		_check_ptg(entity, tick)
-
-
 # ── Intrusive Thought ──────────────────────────────────────────────────────────
 
 ## PTSD re-experiencing (DSM-5): 과거 severe 위반이 불시에 플래시백

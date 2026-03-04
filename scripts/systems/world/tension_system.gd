@@ -63,23 +63,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	var settlements: Array = _settlement_manager.get_all_settlements()
-	if settlements.size() < 2:
-		return
-
-	## Update tension for all nearby pairs
-	for i in range(settlements.size()):
-		for j in range(i + 1, settlements.size()):
-			_update_pair_tension(settlements[i], settlements[j], tick)
-
-	## Check skirmish triggers
-	for key in _tension.keys():
-		if float(_tension[key]) > GameConfig.TENSION_SKIRMISH_THRESHOLD:
-			_maybe_trigger_skirmish(key, tick)
-
-
 func _update_pair_tension(s1: RefCounted, s2: RefCounted, _tick: int) -> void:
 	## Proximity gate
 	var dist: float = Vector2(float(s1.center_x), float(s1.center_y)).distance_to(

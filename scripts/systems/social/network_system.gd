@@ -52,17 +52,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _settlement_manager == null or _entity_manager == null:
-		return
-	var settlements: Array = _settlement_manager.get_all_settlements()
-	for settlement in settlements:
-		_update_authority_type(settlement)
-		_compute_settlement_social_capital(settlement)
-		_evaluate_revolution_risk(settlement, tick)
-
-
 ## ── 1. Social Capital ────────────────────────────────────────────────────────
 
 ## Compute social capital for all alive members of a settlement.

@@ -63,27 +63,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	# Apply Meaney repair to entities with high parenting quality.
-	if _entity_manager != null and _entity_manager.has_method("get_alive_entities"):
-		var alive = _entity_manager.get_alive_entities()
-		for i in range(alive.size()):
-			var entity = alive[i]
-			var parenting_quality = entity.get_meta("parenting_quality", 0.5)
-			apply_meaney_repair(entity, parenting_quality, tick)
-
-	# Child epigenetic load is calculated at birth, not every tick.
-	if _settlement_manager == null:
-		return
-	if not _settlement_manager.has_method("get_active_settlements"):
-		return
-	var active_settlements = _settlement_manager.get_active_settlements()
-	for i in range(active_settlements.size()):
-		var settlement = active_settlements[i]
-		check_generational_convergence(settlement.id, tick)
-
-
 ## [Yehuda et al., 2016 - FKBP5 methylation] Transgenerational epigenetic inheritance; T=0.30 (dampened, not copied).
 ## [Meaney, M.J., 2001 - Maternal care and offspring stress reactivity] Nurture > genetics as player lever (65% vs 35%).
 func calculate_child_epigenetic_load(mother, father, adversity_index: float) -> float:

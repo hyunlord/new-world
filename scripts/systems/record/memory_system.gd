@@ -48,14 +48,6 @@ func _get_sim_bridge() -> Object:
 
 
 ## Runs decay, capacity eviction, and compression on all alive entities' working memory each tick.
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var dt_years: float = float(tick_interval) / float(GameConfig.TICKS_PER_YEAR)
-	var alive: Array = _entity_manager.get_alive_entities()
-	for entity in alive:
-		_process_entity(entity, tick, dt_years)
-
 
 func _process_entity(entity: RefCounted, tick: int, dt_years: float) -> void:
 	_decay_working_memory(entity, dt_years)

@@ -82,26 +82,6 @@ func _load_break_definitions() -> void:
 	_break_defs = json.get_data()
 
 
-func execute_tick(tick: int) -> void:
-	_current_tick = tick
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		if entity.emotion_data == null:
-			continue
-		var ed = entity.emotion_data
-		# 이미 브레이크 중이면 카운트다운만
-		if ed.mental_break_type != "":
-			_tick_active_break(entity, ed)
-			continue
-		# break_risk 상태가 아니면 스킵
-		if ed.stress_state < 3:
-			continue
-		_check_mental_break(entity, ed, tick)
-
-
 ## Per-tick: 발동 확률 체크
 func _check_mental_break(entity: RefCounted, ed: RefCounted, tick: int) -> void:
 	var threshold: float = _calc_threshold(entity, ed)

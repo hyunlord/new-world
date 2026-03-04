@@ -74,35 +74,6 @@ func _load_config() -> void:
 		f.close()
 
 
-func execute_tick(tick: int) -> void:
-	## Hatfield et al. (1993): Two-stage contagion - AoE mimicry then network propagation
-	var alive: Array = _entity_manager.get_alive_entities()
-
-	# Reset per-tick spiral flags and refractory countdown
-	for i in range(alive.size()):
-		var entity = alive[i]
-		if entity.emotion_data == null:
-			continue
-		var ed = entity.emotion_data
-
-		# Tick down refractory timer
-		var refrac = ed.get_meta("contagion_refractory", 0)
-		if refrac > 0:
-			ed.set_meta("contagion_refractory", refrac - 1)
-
-		# Reset spiral_applied flag for this tick
-		ed.set_meta("spiral_applied", false)
-
-	# Stage 1: AoE emotional mimicry (Hatfield 1993 - primitive, automatic)
-	_run_aoe_contagion(alive, tick)
-
-	# Stage 2: Social network propagation (Christakis & Fowler 2007 - 2-hop)
-	_run_network_contagion(alive, tick)
-
-	# Stage 3: Spiral dampener check (Le Bon 1895 - crowd emotional amplification)
-	_run_spiral_dampener(alive, tick)
-
-
 func _run_aoe_contagion(alive: Array, _tick: int) -> void:
 	## Hatfield, Cacioppo & Rapson (1993): Emotional Contagion
 	## Mechanism: mimicry drives automatic primitive emotional transfer

@@ -60,19 +60,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		## Skip infants and toddlers — no occupation
-		if entity.age_stage == "infant" or entity.age_stage == "toddler":
-			continue
-		_evaluate_occupation(entity, tick)
-
-
 func _evaluate_occupation(entity: RefCounted, tick: int) -> void:
 	## Step 1: Find highest skill
 	var best_skill_id: StringName = &""

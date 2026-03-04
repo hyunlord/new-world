@@ -62,16 +62,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _settlement_manager == null:
-		return
-	_update_teaching_sessions(tick)
-	for settlement in _settlement_manager.get_all_settlements():
-		_find_new_teaching_pairs(settlement, tick)
-		_update_adoption_phase(settlement)
-
-
 ## ── Session Management ──────────────────────────────────────────────────────
 
 func _update_teaching_sessions(tick: int) -> void:

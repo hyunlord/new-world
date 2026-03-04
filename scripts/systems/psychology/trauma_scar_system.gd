@@ -214,19 +214,6 @@ func get_scar_def(scar_id: String) -> Dictionary:
 	return _scar_defs.get(scar_id, {})
 
 
-## 감정 기준선 드리프트 적용 (매 tick_interval 틱마다)
-func execute_tick(_tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var entities = _entity_manager.get_alive_entities()
-	for entity in entities:
-		if not entity.is_alive:
-			continue
-		if entity.trauma_scars.is_empty():
-			continue
-		_apply_emotion_drift(entity)
-
-
 ## 흉터의 감정 기준선 드리프트를 매우 작은 양으로 적용
 func _apply_emotion_drift(entity: RefCounted) -> void:
 	for scar_entry in entity.trauma_scars:

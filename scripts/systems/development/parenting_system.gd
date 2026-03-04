@@ -45,30 +45,6 @@ func _get_sim_bridge() -> Object:
 
 
 ## Updates parenting quality for adults, applies one-time adulthood transitions, and models Bandura coping observation for children.
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive = _entity_manager.get_alive_entities()
-	for entity in alive:
-		if entity.emotion_data == null:
-			continue
-
-		# Update parenting quality for ALL adults (used by intergenerational each tick)
-		if entity.age_stage == "adult" or entity.age_stage == "elder":
-			var quality: float = _attachment_system.get_full_parenting_quality(entity)
-			entity.set_meta("parenting_quality", quality)
-
-		# One-time adulthood transition for entities that just crossed teen→adult
-		if entity.age_stage == "adult" and not bool(entity.get_meta("adulthood_applied", false)):
-			_apply_adulthood_transition(entity, tick)
-
-		# Bandura coping modeling: children observe parents
-		if not entity.has_meta("childhood_data"):
-			continue
-		var childhood_data = entity.get_meta("childhood_data")
-		if childhood_data is Dictionary:
-			_apply_bandura_modeling(entity, childhood_data, tick)
-
 
 ## [Felitti 1998 + Teicher & Samson 2016 + Bowlby 1969]
 ## One-time permanent embedding of childhood adversity into adult stress parameters.

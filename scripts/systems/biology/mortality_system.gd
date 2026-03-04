@@ -98,14 +98,6 @@ func _load_siler_parameters() -> void:
 	_care_protection_factor = float(care.get("protection_factor", 0.6))
 	_season_modifiers = sp.get("season_modifiers", {})
 
-
-func execute_tick(tick: int) -> void:
-	_check_birthday_mortality(tick)
-	_check_infant_monthly(tick)
-	_check_monthly_pop_log(tick)
-	_check_annual_demography_log(tick)
-
-
 ## ─── Birthday-based annual mortality check ──────────────
 ## Only entities whose birth_tick aligns with current tick (mod TICKS_PER_YEAR)
 

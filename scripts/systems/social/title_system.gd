@@ -40,18 +40,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		_evaluate_age_titles(entity, tick)
-		_evaluate_skill_titles(entity, tick)
-		_evaluate_leadership_titles(entity, tick)
-
-
 ## ── Age-based titles ──────────────────────────────────────────────────────
 
 func _evaluate_age_titles(entity: RefCounted, tick: int) -> void:

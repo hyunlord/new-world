@@ -45,22 +45,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null or _settlement_manager == null:
-		return
-	_current_tick = tick
-	var settlements: Array = _settlement_manager.get_all_settlements()
-	for i in range(settlements.size()):
-		var settlement = settlements[i]
-		if settlement.member_ids.size() < 2:
-			continue
-		_compute_wealth_scores(settlement)
-		_compute_gini(settlement)
-		_compute_status_scores(settlement)
-		_compute_leveling(settlement)
-
-
 ## ── Wealth Scores ─────────────────────────────────────────
 
 func _compute_wealth_scores(settlement: RefCounted) -> void:

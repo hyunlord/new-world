@@ -37,19 +37,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(_tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		# Skip children — keep default 0.0
-		if entity.age_stage == "child" or entity.age_stage == "infant":
-			continue
-		_compute_tendencies(entity)
-
-
 func _compute_tendencies(entity: RefCounted) -> void:
 	if entity.personality == null:
 		return

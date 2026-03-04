@@ -1522,5 +1522,9 @@
 	"UI_RES_FOOD_SHORT": "식",
 	"UI_RES_STONE_SHORT": "석",
 	"UI_RES_WOOD_SHORT": "목",
-	"UI_AGE_YEARS_SHORT_FMT": "{n}세"
+	"UI_AGE_YEARS_SHORT_FMT": "{n}세",
+	"UI_RUNTIME_RUST_ONLY": "Rust 시뮬레이션 가동 중",
+	"UI_RUNTIME_NOT_AVAILABLE": "시뮬레이션 엔진 미로드",
+	"UI_ENTITY_SNAPSHOT_UNAVAILABLE": "개체 데이터 없음",
+	"UI_SIMULATION_HEADLESS": "헤드리스 모드 실행 중"
 }

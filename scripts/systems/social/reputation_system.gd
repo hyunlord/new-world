@@ -66,18 +66,6 @@ func _get_sim_bridge() -> Object:
 func _on_reputation_event(data: Dictionary) -> void:
 	_pending_events.append(data)
 
-
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null or _reputation_manager == null:
-		return
-	# Process queued reputation events
-	_process_events(tick)
-	# Gossip propagation
-	_process_gossip(tick)
-	# Decay
-	_decay_all(tick)
-
-
 ## - Event Processing ----------------------------------------------------------
 
 func _process_events(_tick: int) -> void:

@@ -67,27 +67,6 @@ func _load_config() -> void:
 	_cfg = json.data
 
 
-func execute_tick(tick: int) -> void:
-	if _entity_manager == null:
-		return
-
-	var alive: Array = _entity_manager.get_alive_entities()
-	for i in range(alive.size()):
-		var entity = alive[i]
-		var eid: int = entity.id
-		var morale: float = calculate_personal_morale(entity)
-		_personal_morale[eid] = morale
-		tick_hedonic_treadmill(entity, morale)
-
-	# Settlement aggregation every 20 ticks
-	if tick % 20 == 0:
-		_aggregate_settlement_morales()
-
-	# Grievance update every tick (using settlement morale)
-	if tick % 5 == 0:
-		_update_all_grievances(tick)
-
-
 ## [Diener, Emmons, Larsen & Griffin, 1985 - Subjective Well-Being (SWB)]
 ## SWB 3성분 모델: 긍정 정서(PA) + 부정 정서(NA) + 삶의 만족도(LS).
 ## morale_personal = 0.40*PA - 0.30*NA + 0.30*LS

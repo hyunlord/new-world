@@ -176,21 +176,6 @@ func schedule_rebound(entity_id: int, amount: float, delay_ticks: int) -> void:
 	ed.set_meta(_REBOUND_DELAYS_META_KEY, rebound_delays)
 
 
-## Updates stress for all alive entities each tick: processes rebound queues, continuous stressors, emotion contributions, recovery, allostatic load, and reserve.
-func execute_tick(_tick: int) -> void:
-	var alive: Array = _entity_manager.get_alive_entities()
-	var collect_breakdown: bool = GameConfig.DEBUG_STRESS_LOG
-	for i in range(alive.size()):
-		var entity = alive[i]
-		if entity.emotion_data == null:
-			continue
-		var is_sleeping: bool = entity.current_action == "sleep"
-		var is_safe: bool = entity.settlement_id >= 0
-		# Phase 4: process any scheduled stress rebounds (C05 Denial expiry)
-		_process_rebound_queue(entity.emotion_data)
-		_update_entity_stress(entity, is_sleeping, is_safe, collect_breakdown)
-
-
 func _update_entity_stress(entity: RefCounted, is_sleeping: bool, is_safe: bool, collect_breakdown: bool) -> void:
 	var ed = entity.emotion_data
 

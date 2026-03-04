@@ -36,20 +36,6 @@ func _get_sim_bridge() -> Object:
 		_sim_bridge = node
 	return _sim_bridge
 
-
-func execute_tick(_tick: int) -> void:
-	if _entity_manager == null:
-		return
-	var entities: Array = _entity_manager.get_alive_entities()
-	for entity in entities:
-		if entity.intelligence_potentials.is_empty():
-			continue
-		var age_years: float = GameConfig.get_age_years(entity.age)
-		_check_nutrition_damage(entity)
-		_check_ace_damage(entity, age_years)
-		_update_effective_intelligence(entity, age_years)
-
-
 ## [Georgieff 2007] Monitor hunger in critical window (0~2 years)
 func _check_nutrition_damage(entity: RefCounted) -> void:
 	if entity.age > GameConfig.INTEL_NUTRITION_CRIT_AGE_TICKS:
