@@ -166,7 +166,7 @@ func _draw() -> void:
 func _draw_header(font: Font, x: float, y: float) -> float:
 	var sex_str: String = _l2_data.get("sex", "")
 	var sex_icon: String = "♂" if sex_str == "Male" else "♀"
-	var name: String = _l2_data.get("name", "???")
+	var entity_name: String = _l2_data.get("name", "???")
 	var age: int = int(_l2_data.get("age_years", 0))
 	var stage_raw: String = str(_l2_data.get("growth_stage", "Adult")).to_upper()
 	var stage: String = Locale.ltr("STAGE_" + stage_raw)
@@ -174,7 +174,7 @@ func _draw_header(font: Font, x: float, y: float) -> float:
 	var job: String = Locale.ltr("OCCUPATION_" + occ_raw)
 
 	var header_text: String = "%s %s    %d%s %s    %s" % [
-		sex_icon, name, age, Locale.ltr("UI_AGE_UNIT"), stage, job
+		sex_icon, entity_name, age, Locale.ltr("UI_AGE_UNIT"), stage, job
 	]
 	draw_string(font, Vector2(x, y + 13.0), header_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE_HEADER, CLR_NAME)
@@ -473,7 +473,7 @@ func _draw_traits(font: Font, x: float, y: float) -> float:
 		return y + LINE_HEIGHT_SMALL + SECTION_GAP
 
 	# DF-style badge row: "근면 · 친절 · 불안"
-	var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
+	var _panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
 	var parts: PackedStringArray = PackedStringArray()
 	for t in traits:
 		var tkey: String = "TRAIT_" + str(t).to_upper()
@@ -1003,7 +1003,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _check_section_click(click_pos: Vector2) -> void:
-	var adjusted_y: float = click_pos.y + _scroll_offset
+	var _adjusted_y: float = click_pos.y + _scroll_offset
 	for section_id in _section_rects:
 		var rect: Rect2 = _section_rects[section_id]
 		var adj_rect: Rect2 = Rect2(rect.position.x, rect.position.y + _scroll_offset,

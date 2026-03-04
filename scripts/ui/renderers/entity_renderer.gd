@@ -90,12 +90,12 @@ func _get_snapshots() -> Array:
 			result.append({
 				"x": int(e.position.x),
 				"y": int(e.position.y),
-				"job": str(e.get("job", "none")),
-				"sex": str(e.get("gender", "male")),
-				"growth_stage": str(e.get("age_stage", "adult")),
-				"entity_id": int(e.get("id", -1)),
-				"name": str(e.get("entity_name", "")),
-				"hunger": float(e.get("hunger", 1.0)),
+				"job": str(e.get("job") if e.get("job") != null else "none"),
+				"sex": str(e.get("gender") if e.get("gender") != null else "male"),
+				"growth_stage": str(e.get("age_stage") if e.get("age_stage") != null else "adult"),
+				"entity_id": int(e.get("id") if e.get("id") != null else -1),
+				"name": str(e.get("entity_name") if e.get("entity_name") != null else ""),
+				"hunger": float(e.get("hunger") if e.get("hunger") != null else 1.0),
 			})
 		return result
 	return []
