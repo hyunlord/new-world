@@ -16,6 +16,8 @@ var _registered_system_count: int = 0
 var _registered_system_payloads: Array[Dictionary] = []
 var _system_key_by_instance_id: Dictionary = {}
 var _last_agent_snapshots: Array = []
+var _entity_detail_cache: Dictionary = {}
+var _entity_detail_cache_tick: int = -1
 
 
 ## Initialize the engine with a deterministic seed
@@ -301,6 +303,34 @@ func _runtime_registry_names(runtime_snapshot: Array) -> PackedStringArray:
 		var row: Dictionary = row_raw
 		names.append(str(row.get("name", "")))
 	return names
+
+
+## Returns cached entity detail dictionary from SimBridge, invalidating cache each tick.
+func get_entity_detail(entity_id: int) -> Dictionary:
+	if current_tick != _entity_detail_cache_tick:
+		_entity_detail_cache.clear()
+		_entity_detail_cache_tick = current_tick
+	if _entity_detail_cache.has(entity_id):
+		return _entity_detail_cache[entity_id]
+	var sim_bridge: Object = _get_sim_bridge()
+	var detail: Dictionary = {}
+	if sim_bridge != null and sim_bridge.has_method("runtime_get_entity_detail"):
+		var raw: Variant = sim_bridge.call("runtime_get_entity_detail", entity_id)
+		if raw is Dictionary:
+			detail = raw
+	_entity_detail_cache[entity_id] = detail
+	return detail
+
+
+## Returns entity tab data for the given tab name from SimBridge (no caching — tab data is large).
+func get_entity_tab(entity_id: int, tab: String) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_entity_tab"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_entity_tab", entity_id, tab)
+	if raw is Dictionary:
+		return raw
+	return {}
 
 
 func _get_sim_bridge() -> Object:
