@@ -46,3 +46,6 @@ override.cfg
 
 # Rust build artifacts
 rust/target/
+
+# ralph
+reports/
