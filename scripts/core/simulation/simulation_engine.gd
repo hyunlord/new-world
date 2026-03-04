@@ -1,62 +1,6 @@
 extends RefCounted
 
-const RuntimeShadowReporter = preload("res://scripts/core/simulation/runtime_shadow_reporter.gd")
 const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
-static var _RUST_OWNER_READY_SYSTEM_KEYS: PackedStringArray = PackedStringArray([
-	"job_assignment_system",
-	"resource_regen_system",
-	"needs_system",
-	"upper_needs_system",
-	"building_effect_system",
-	"stress_system",
-	"child_stress_processor",
-	"mental_break_system",
-	"trauma_scar_system",
-	"trait_violation_system",
-	"emotion_system",
-	"reputation_system",
-	"social_event_system",
-	"morale_system",
-	"value_system",
-	"job_satisfaction_system",
-	"economic_tendency_system",
-	"coping_system",
-	"intelligence_system",
-	"memory_system",
-	"behavior_system",
-	"movement_system",
-	"gathering_system",
-	"construction_system",
-	"family_system",
-	"intergenerational_system",
-	"parenting_system",
-	"network_system",
-	"migration_system",
-	"occupation_system",
-	"population_system",
-	"tech_discovery_system",
-	"tech_propagation_system",
-	"tech_maintenance_system",
-	"tech_utilization_system",
-	"childcare_system",
-	"leader_system",
-	"title_system",
-	"stratification_monitor",
-	"tension_system",
-	"age_system",
-	"mortality_system",
-	"contagion_system",
-	"stats_recorder",
-	"stat_sync_system",
-	"stat_threshold_system",
-	"trait_system",
-	"settlement_culture_system",
-	"chronicle_system",
-	"personality_maturation_system",
-	"personality_generator_system",
-	"attachment_system",
-	"ace_tracker_system",
-])
 
 var current_tick: int = 0
 var is_paused: bool = false
@@ -66,19 +10,11 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _accumulator: float = 0.0
 var _systems: Array = []
 var _seed: int = 0
-var _runtime_mode: String = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
-var _runtime_mode_override: String = ""
 var _rust_runtime_initialized: bool = false
 var _rust_runtime_available: bool = false
-var _shadow_mismatch_count: int = 0
-var _last_gd_ticks_processed: int = 0
-var _shadow_reporter: RefCounted = null
 var _registered_system_count: int = 0
 var _registered_system_payloads: Array[Dictionary] = []
 var _system_key_by_instance_id: Dictionary = {}
-var _runtime_rust_registered_keys: Dictionary = {}
-var _gdscript_fallback_systems: Array[RefCounted] = []
-var _gdscript_fallback_system_keys: PackedStringArray = PackedStringArray()
 
 
 ## Initialize the engine with a deterministic seed
@@ -90,26 +26,7 @@ func init_with_seed(seed_value: int) -> void:
 	_registered_system_count = 0
 	_registered_system_payloads.clear()
 	_system_key_by_instance_id.clear()
-	_runtime_rust_registered_keys.clear()
-	_gdscript_fallback_systems.clear()
-	_gdscript_fallback_system_keys.clear()
 	_init_rust_runtime()
-
-
-## Sets an optional runtime mode override used during runtime initialization.
-## Supported values: `gdscript`, `rust_shadow`, `rust_primary`.
-func set_runtime_mode_override(mode: String) -> void:
-	var normalized: String = mode.strip_edges()
-	if normalized.is_empty():
-		_runtime_mode_override = ""
-		return
-	if not _is_supported_runtime_mode(normalized):
-		push_warning(
-			"[SimulationEngine] Unsupported runtime mode override '%s'. Keeping current override." %
-			normalized
-		)
-		return
-	_runtime_mode_override = normalized
 
 
 ## Register a simulation system (sorted by priority)
@@ -124,7 +41,6 @@ func register_system(system: RefCounted) -> void:
 		_queue_runtime_command(StringName("register_system"), system_payload)
 	_systems.append(system)
 	_systems.sort_custom(func(a, b): return a.priority < b.priority)
-	_refresh_gdscript_fallback_cache()
 
 
 ## Validates Rust runtime registry snapshot against GDScript registration metadata.
@@ -162,34 +78,9 @@ func validate_runtime_registry() -> Dictionary:
 
 ## Called every frame from Main._process(delta)
 func update(delta: float) -> void:
-	if _use_rust_primary():
-		_update_rust_primary(delta, is_paused)
+	if not _rust_runtime_available:
 		return
-	if is_paused:
-		if _use_rust_shadow():
-			_last_gd_ticks_processed = 0
-			_run_shadow_runtime(0.0, true)
-		return
-
-	_update_gdscript(delta)
-	if _use_rust_shadow():
-		_run_shadow_runtime(delta, false)
-
-
-func _update_gdscript(delta: float) -> void:
-	_last_gd_ticks_processed = 0
-	var tick_duration: float = 1.0 / GameConfig.TICKS_PER_SECOND
-	var speed: int = GameConfig.SPEED_OPTIONS[speed_index]
-	_accumulator += delta * speed
-	var ticks_this_frame: int = 0
-	while _accumulator >= tick_duration and ticks_this_frame < GameConfig.MAX_TICKS_PER_FRAME:
-		_process_tick()
-		_accumulator -= tick_duration
-		ticks_this_frame += 1
-	_last_gd_ticks_processed = ticks_this_frame
-	# Prevent spiral of death
-	if _accumulator > tick_duration * 3.0:
-		_accumulator = 0.0
+	_update_rust_primary(delta, is_paused)
 
 
 func _update_rust_primary(delta: float, paused: bool) -> void:
@@ -197,60 +88,15 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 	if sim_bridge == null:
 		return
 	_apply_runtime_commands_v2()
-	_refresh_runtime_registry_cache()
 	if not sim_bridge.has_method("runtime_tick_frame"):
 		return
 	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
 	if not (runtime_state_raw is Dictionary):
 		return
 	var runtime_state: Dictionary = runtime_state_raw
-	var ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
 	current_tick = int(runtime_state.get("current_tick", current_tick))
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
 	_consume_runtime_events_v2()
-
-
-func _run_shadow_runtime(delta: float, paused: bool = false) -> void:
-	var sim_bridge: Object = _get_sim_bridge()
-	if sim_bridge == null:
-		return
-	_apply_runtime_commands_v2()
-	_refresh_runtime_registry_cache()
-	if not sim_bridge.has_method("runtime_tick_frame"):
-		return
-	var runtime_state_raw: Variant = sim_bridge.call("runtime_tick_frame", delta, speed_index, paused)
-	if not (runtime_state_raw is Dictionary):
-		return
-	var runtime_state: Dictionary = runtime_state_raw
-	var shadow_tick: int = int(runtime_state.get("current_tick", current_tick))
-	var shadow_ticks_processed: int = int(runtime_state.get("ticks_processed", 0))
-	# Shadow mode: drain v2 events so runtime buffer does not grow,
-	# but do not forward them to avoid duplicate v1/v2 emissions.
-	if not sim_bridge.has_method("runtime_export_events_v2"):
-		return
-	var shadow_events_raw: Variant = sim_bridge.call("runtime_export_events_v2")
-	if not (shadow_events_raw is Array):
-		return
-	var shadow_events: Array = shadow_events_raw
-	var shadow_event_count: int = shadow_events.size()
-	if _shadow_reporter != null and _shadow_reporter.has_method("record_frame"):
-		_shadow_reporter.call(
-			"record_frame",
-			current_tick,
-			current_tick,
-			shadow_tick,
-			_last_gd_ticks_processed,
-			shadow_ticks_processed
-		)
-		_try_shadow_auto_cutover()
-	if shadow_tick == current_tick:
-		return
-	_shadow_mismatch_count += 1
-	if _shadow_mismatch_count <= 5 or _shadow_mismatch_count % 100 == 0:
-		push_warning(
-			"[SimulationEngine] Rust shadow mismatch gd_tick=%d rust_tick=%d gd_ticks=%d rust_ticks=%d rust_events=%d (count=%d)" %
-			[current_tick, shadow_tick, _last_gd_ticks_processed, shadow_ticks_processed, shadow_event_count, _shadow_mismatch_count]
-		)
 
 
 func _consume_runtime_events_v2() -> void:
@@ -304,22 +150,9 @@ func _apply_runtime_commands_v2() -> void:
 	sim_bridge.call("runtime_apply_commands_v2", commands)
 
 
-func _process_tick() -> void:
-	current_tick += 1
-	for i in range(_systems.size()):
-		var system = _systems[i]
-		if system.is_active and current_tick % system.tick_interval == 0:
-			system.execute_tick(current_tick)
-	var simulation_bus: Object = _get_simulation_bus()
-	if simulation_bus != null:
-		simulation_bus.emit_signal("tick_completed", current_tick)
-
-
 ## Toggle pause state
 func toggle_pause() -> void:
 	is_paused = not is_paused
-	if _use_rust_primary():
-		return
 	var simulation_bus: Object = _get_simulation_bus()
 	if simulation_bus != null:
 		simulation_bus.emit_signal("pause_changed", is_paused)
@@ -329,8 +162,6 @@ func toggle_pause() -> void:
 func set_speed(index: int) -> void:
 	speed_index = clampi(index, 0, GameConfig.SPEED_OPTIONS.size() - 1)
 	_queue_runtime_command(StringName("set_speed_index"), {"speed_index": speed_index})
-	if _use_rust_primary():
-		return
 	var simulation_bus: Object = _get_simulation_bus()
 	if simulation_bus != null:
 		simulation_bus.emit_signal("speed_changed", speed_index)
@@ -359,54 +190,29 @@ func get_game_time() -> Dictionary:
 ## Debug: N 틱 즉시 일괄 처리 (debug build 전용)
 ## 시뮬레이션을 N tick 빠르게 진행. 화면 갱신 없음.
 func advance_ticks(n: int) -> void:
-	if _use_rust_primary():
-		var tick_duration: float = 1.0 / float(GameConfig.TICKS_PER_SECOND)
-		for i in range(n):
-			_update_rust_primary(tick_duration, false)
-		return
+	var tick_duration: float = 1.0 / float(GameConfig.TICKS_PER_SECOND)
 	for i in range(n):
-		_process_tick()
+		_update_rust_primary(tick_duration, false)
 
 
 func _init_rust_runtime() -> void:
-	_runtime_mode = _resolve_runtime_mode()
 	_rust_runtime_initialized = false
 	_rust_runtime_available = false
-	_shadow_mismatch_count = 0
-	_last_gd_ticks_processed = 0
-	_shadow_reporter = null
-	if _runtime_mode == GameConfig.SIM_RUNTIME_MODE_GDSCRIPT:
-		return
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null:
-		push_warning("[SimulationEngine] SimBridge autoload missing. Falling back to GDScript runtime.")
-		_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
+		push_warning("[SimulationEngine] SimBridge autoload missing.")
 		return
 	if not sim_bridge.has_method("runtime_init"):
-		push_warning("[SimulationEngine] runtime_init not found. Falling back to GDScript runtime.")
-		_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
+		push_warning("[SimulationEngine] runtime_init not found.")
 		return
-
 	var config_json: String = _build_runtime_config_json()
 	_rust_runtime_initialized = bool(sim_bridge.call("runtime_init", _seed, config_json))
 	_rust_runtime_available = _rust_runtime_initialized
 	if _rust_runtime_available:
 		if sim_bridge.has_method("runtime_clear_registry"):
 			sim_bridge.call("runtime_clear_registry")
-		if _use_rust_shadow():
-			_shadow_reporter = RuntimeShadowReporter.new()
-			_shadow_reporter.call(
-				"setup",
-				GameConfig.RUST_SHADOW_REPORT_PATH,
-				GameConfig.RUST_SHADOW_REPORT_INTERVAL_TICKS,
-				GameConfig.RUST_SHADOW_ALLOWED_MAX_TICK_DELTA,
-				GameConfig.RUST_SHADOW_ALLOWED_MAX_WORK_DELTA,
-				GameConfig.RUST_SHADOW_ALLOWED_MISMATCH_RATIO,
-				GameConfig.RUST_SHADOW_MIN_FRAMES_FOR_CUTOVER
-			)
-			return
-	push_warning("[SimulationEngine] Rust runtime init failed. Falling back to GDScript runtime.")
-	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
+		return
+	push_warning("[SimulationEngine] Rust runtime init failed.")
 
 
 func _build_runtime_config_json() -> String:
@@ -420,25 +226,7 @@ func _build_runtime_config_json() -> String:
 
 
 func _use_rust_primary() -> bool:
-	return _rust_runtime_available and _runtime_mode == GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
-
-
-func _use_rust_shadow() -> bool:
-	return _rust_runtime_available and _runtime_mode == GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW
-
-
-func _resolve_runtime_mode() -> String:
-	if not _runtime_mode_override.is_empty():
-		return _runtime_mode_override
-	return str(GameConfig.SIM_RUNTIME_MODE)
-
-
-func _is_supported_runtime_mode(mode: String) -> bool:
-	return (
-		mode == GameConfig.SIM_RUNTIME_MODE_GDSCRIPT
-		or mode == GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW
-		or mode == GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
-	)
+	return _rust_runtime_available
 
 
 func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void:
@@ -477,111 +265,6 @@ func _runtime_system_key_from_name(name: String) -> String:
 	if tail.ends_with(".gd"):
 		tail = tail.left(tail.length() - 3)
 	return tail
-
-
-func _refresh_runtime_registry_cache() -> void:
-	_runtime_rust_registered_keys.clear()
-	if not _rust_runtime_available:
-		_refresh_gdscript_fallback_cache()
-		return
-	var sim_bridge: Object = _get_sim_bridge()
-	if sim_bridge == null:
-		_refresh_gdscript_fallback_cache()
-		return
-	if not sim_bridge.has_method("runtime_get_registry_snapshot"):
-		_refresh_gdscript_fallback_cache()
-		return
-	var snapshot_raw: Variant = sim_bridge.call("runtime_get_registry_snapshot")
-	if not (snapshot_raw is Array):
-		_refresh_gdscript_fallback_cache()
-		return
-	var snapshot: Array = snapshot_raw
-	for i in range(snapshot.size()):
-		var row_raw: Variant = snapshot[i]
-		if not (row_raw is Dictionary):
-			continue
-		var row: Dictionary = row_raw
-		if not bool(row.get("rust_registered", false)):
-			continue
-		var key: String = str(row.get("system_key", ""))
-		if key.is_empty():
-			key = _runtime_system_key_from_name(str(row.get("name", "")))
-		if key.is_empty():
-			continue
-		_runtime_rust_registered_keys[key] = true
-	_refresh_gdscript_fallback_cache()
-
-
-func _refresh_gdscript_fallback_cache() -> void:
-	_gdscript_fallback_systems.clear()
-	_gdscript_fallback_system_keys.clear()
-	if _systems.is_empty():
-		return
-	for i in range(_systems.size()):
-		var system_raw: Variant = _systems[i]
-		if not (system_raw is RefCounted):
-			continue
-		var system: RefCounted = system_raw
-		var key: String = str(_system_key_by_instance_id.get(system.get_instance_id(), ""))
-		var needs_fallback: bool = false
-		if key.is_empty():
-			needs_fallback = true
-		elif not _RUST_OWNER_READY_SYSTEM_KEYS.has(key):
-			needs_fallback = true
-		elif not bool(_runtime_rust_registered_keys.get(key, false)):
-			needs_fallback = true
-		if needs_fallback:
-			_gdscript_fallback_systems.append(system)
-			_gdscript_fallback_system_keys.append(key)
-
-
-func _is_rust_registered_system(system: RefCounted) -> bool:
-	var key: String = str(_system_key_by_instance_id.get(system.get_instance_id(), ""))
-	if key.is_empty():
-		return false
-	if not _RUST_OWNER_READY_SYSTEM_KEYS.has(key):
-		return false
-	return bool(_runtime_rust_registered_keys.get(key, false))
-
-
-func _run_gdscript_fallback_ticks(start_tick: int, end_tick: int) -> void:
-	if _gdscript_fallback_systems.is_empty():
-		return
-	for tick_value in range(start_tick, end_tick + 1):
-		for i in range(_gdscript_fallback_systems.size()):
-			var system: RefCounted = _gdscript_fallback_systems[i]
-			if not bool(system.get("is_active")):
-				continue
-			var interval: int = maxi(1, int(system.get("tick_interval")))
-			if tick_value % interval == 0:
-				system.execute_tick(tick_value)
-
-
-func _try_shadow_auto_cutover() -> void:
-	if not GameConfig.RUST_SHADOW_AUTO_CUTOVER_ENABLED:
-		return
-	if _runtime_mode != GameConfig.SIM_RUNTIME_MODE_RUST_SHADOW:
-		return
-	if _shadow_reporter == null:
-		return
-	if not _shadow_reporter.has_method("is_approved_for_cutover"):
-		return
-	var approved: bool = bool(_shadow_reporter.call("is_approved_for_cutover"))
-	if not approved:
-		return
-	var summary: Dictionary = {}
-	if _shadow_reporter.has_method("get_report_snapshot"):
-		var summary_raw: Variant = _shadow_reporter.call("get_report_snapshot")
-		if summary_raw is Dictionary:
-			summary = summary_raw
-	_runtime_mode = GameConfig.SIM_RUNTIME_MODE_RUST_PRIMARY
-	push_warning(
-		"[SimulationEngine] Shadow cutover approved at frame=%d mismatch_ratio=%.6f. Switching runtime mode to rust_primary." %
-		[
-			int(summary.get("frames", 0)),
-			float(summary.get("mismatch_ratio", 0.0)),
-		]
-	)
 
 
 func _expected_runtime_registry_names() -> PackedStringArray:
