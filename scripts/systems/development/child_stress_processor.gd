@@ -5,8 +5,6 @@ extends "res://scripts/core/simulation/simulation_system.gd"
 var _entity_manager
 var _stages: Dictionary = {}
 var _stage_age_cutoffs: PackedFloat32Array = PackedFloat32Array([2.0, 5.0, 12.0, 18.0])
-var _simultaneous_ace_severities: PackedFloat32Array = PackedFloat32Array()
-var _simultaneous_ace_scar_candidates: Array = []
 
 
 func _init() -> void:

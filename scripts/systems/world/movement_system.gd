@@ -4,10 +4,6 @@ var _entity_manager: RefCounted
 var _world_data: RefCounted
 var _pathfinder: RefCounted
 var _building_manager: RefCounted
-var _recalc_from_xy: PackedInt32Array = PackedInt32Array()
-var _recalc_to_xy: PackedInt32Array = PackedInt32Array()
-var _path_entities_scratch: Array = []
-var _recalc_entities_scratch: Array = []
 const _SIM_BRIDGE_NODE_NAME: String = "SimBridge"
 const _SIM_BRIDGE_MOVE_SKIP_METHOD: String = "body_movement_should_skip_tick"
 var _bridge_checked: bool = false

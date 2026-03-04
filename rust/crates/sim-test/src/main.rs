@@ -3,6 +3,10 @@
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::type_complexity)]
 
+/// Number of RuntimeSystems registered by [`register_all_systems`].
+/// Update this when adding or removing systems from that function.
+const EXPECTED_SYSTEM_COUNT: usize = 53;
+
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_xy_dispatch_bytes,
@@ -191,8 +195,9 @@ fn main() {
     assert_eq!(snap.settlement_count, 1, "should have 1 settlement");
     assert!(snap.system_count > 0, "should have systems registered");
     assert!(
-        snap.system_count >= 53,
-        "expected 53 registered systems, got {}",
+        snap.system_count >= EXPECTED_SYSTEM_COUNT,
+        "expected {} registered systems, got {}",
+        EXPECTED_SYSTEM_COUNT,
         snap.system_count
     );
 }
