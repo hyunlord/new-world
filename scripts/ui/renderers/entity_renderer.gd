@@ -7,7 +7,7 @@ var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
-var _sim_engine: Node = null
+var _sim_engine: RefCounted = null
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
@@ -62,7 +62,7 @@ const RES_COLORS: Dictionary = {
 
 
 ## Initialize with entity manager reference
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: Node = null) -> void:
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, resource_map: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_resource_map = resource_map
@@ -90,12 +90,12 @@ func _get_snapshots() -> Array:
 			result.append({
 				"x": int(e.position.x),
 				"y": int(e.position.y),
-				"job": str(e.get("job", "none")),
-				"sex": str(e.get("gender", "male")),
-				"growth_stage": str(e.get("age_stage", "adult")),
-				"entity_id": int(e.get("id", -1)),
-				"name": str(e.get("entity_name", "")),
-				"hunger": float(e.get("hunger", 1.0)),
+				"job": str(e.get("job") if e.get("job") != null else "none"),
+				"sex": str(e.get("gender") if e.get("gender") != null else "male"),
+				"growth_stage": str(e.get("age_stage") if e.get("age_stage") != null else "adult"),
+				"entity_id": int(e.get("id") if e.get("id") != null else -1),
+				"name": str(e.get("entity_name") if e.get("entity_name") != null else ""),
+				"hunger": float(e.get("hunger") if e.get("hunger") != null else 1.0),
 			})
 		return result
 	return []

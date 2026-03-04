@@ -394,7 +394,7 @@ func _ready() -> void:
 	sim_engine.validate_runtime_registry()
 
 	# Init renderers with updated references
-	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager)
+	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
 	building_renderer.init(building_manager, settlement_manager)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
