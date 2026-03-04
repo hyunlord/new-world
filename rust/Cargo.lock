@@ -735,6 +735,7 @@ dependencies = [
  "crc32fast",
  "fluent-bundle",
  "godot",
+ "hecs",
  "log",
  "serde",
  "serde_json",

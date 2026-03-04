@@ -15,6 +15,7 @@ sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
 sim-systems = { path = "../sim-systems" }
 sim-data = { path = "../sim-data" }
+hecs = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
