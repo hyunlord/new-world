@@ -119,8 +119,10 @@ func _process(delta: float) -> void:
 		if entity != null and entity.is_alive:
 			var target := Vector2(entity.position) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 			position = position.lerp(target, 5.0 * delta)
-		else:
+		elif entity != null:
+			# GDScript entity confirmed dead — stop following
 			stop_following()
+		# else entity == null: may be Rust-world entity; freeze camera this frame
 
 	# Smooth zoom
 	var new_zoom: float = lerpf(zoom.x, _target_zoom, GameConfig.CAMERA_ZOOM_SPEED)

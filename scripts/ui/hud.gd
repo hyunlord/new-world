@@ -640,7 +640,12 @@ func _process(delta: float) -> void:
 
 func _update_entity_panel(delta: float) -> void:
 	var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
-	if entity == null or not entity.is_alive:
+	if entity == null:
+		# Rust-world entity — entity_detail_panel handles display; skip GDScript mini-panel
+		if _sim_engine == null or _sim_engine.get_entity_detail(_selected_entity_id).is_empty():
+			_on_entity_deselected()
+		return
+	if not entity.is_alive:
 		_on_entity_deselected()
 		return
 
