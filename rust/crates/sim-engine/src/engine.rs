@@ -16,6 +16,7 @@ use rand::SeedableRng;
 use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, WorldMap};
 use sim_data::PersonalityDistribution;
 use crate::event_bus::EventBus;
+use crate::explain_log::ExplainLog;
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
 use log::{debug, info};
@@ -83,6 +84,8 @@ pub struct SimResources {
     pub chronicle_personal_events: HashMap<EntityId, Vec<ChronicleEvent>>,
     /// Personality distribution data for spawning agents (loaded from JSON at startup).
     pub personality_distribution: Option<PersonalityDistribution>,
+    /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
+    pub explain_log: ExplainLog,
 }
 
 impl SimResources {
@@ -110,6 +113,7 @@ impl SimResources {
             chronicle_world_events: Vec::new(),
             chronicle_personal_events: HashMap::new(),
             personality_distribution: None,
+            explain_log: ExplainLog::new(),
         }
     }
 }

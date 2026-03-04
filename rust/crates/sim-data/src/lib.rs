@@ -7,6 +7,7 @@ pub mod error;
 pub mod loader;
 pub mod mental_breaks;
 pub mod mortality;
+pub mod name_culture;
 pub mod occupations;
 pub mod personality_distribution;
 pub mod species;
@@ -14,6 +15,7 @@ pub mod stressor_events;
 pub mod tech;
 pub mod trait_defs;
 pub mod value_events;
+pub mod values_seed;
 
 pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
@@ -24,6 +26,9 @@ pub use emotion_presets::{load_emotion_presets, EmotionPreset, EmotionPresets};
 pub use error::{DataError, DataResult};
 pub use mental_breaks::{load_mental_breaks, MentalBreakCatalog, MentalBreakDef};
 pub use mortality::{load_mortality_catalog, MortalityCatalog, MortalityProfile};
+pub use name_culture::{
+    load_name_cultures, GivenNames, NameCulture, PatronymicConfig, SyllableCount, SyllablePools,
+};
 pub use occupations::{
     load_occupation_data, JobProfile, JobProfiles, OccupationCategories, OccupationData,
 };
@@ -32,6 +37,7 @@ pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents
 pub use tech::{load_tech_catalog, TechCatalog, TechDef};
 pub use trait_defs::{load_trait_definitions, TraitDefinition, TraitDefinitions};
 pub use value_events::{load_value_events, ValueEvent, ValueEvents};
+pub use values_seed::{facet_index, hexaco_seed_map, value_heritability};
 pub use personality_distribution::{
     load_personality_distribution, CorrelationMatrix, MaturationEntry, OuParameters,
     PersonalityDistribution,
@@ -53,6 +59,8 @@ pub struct DataBundle {
     pub attachment: AttachmentConfig,
     pub occupation: OccupationData,
     pub personality_distribution: PersonalityDistribution,
+    /// Naming cultures loaded from `data/naming_cultures/*.json`.
+    pub name_cultures: std::collections::HashMap<String, NameCulture>,
 }
 
 /// Load all currently-supported data from a base data directory.
@@ -71,6 +79,8 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
     let attachment = load_attachment_config(base_dir)?;
     let occupation = load_occupation_data(base_dir)?;
     let personality_distribution = load_personality_distribution(base_dir)?;
+    // Name cultures use a soft-fail loader (returns empty map on error)
+    let name_cultures = load_name_cultures(base_dir);
     Ok(DataBundle {
         emotions,
         tech,
@@ -85,6 +95,7 @@ pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
         attachment,
         occupation,
         personality_distribution,
+        name_cultures,
     })
 }
 
