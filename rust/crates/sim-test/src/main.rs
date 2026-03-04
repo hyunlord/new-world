@@ -13,7 +13,10 @@ use sim_bridge::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
-use sim_core::components::{Identity, Values};
+use sim_core::components::{
+    Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
+    Memory, Needs, Personality, Skills, Social, Stress, Traits, Values,
+};
 use sim_core::config::GameConfig;
 use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
@@ -201,6 +204,50 @@ fn main() {
         );
     }
     println!("[sim-test] === Phase A Entity Checks PASS ===");
+
+    // ── Phase A Comprehensive Validation (T10) ────────────────────────────────
+    println!("[sim-test] === Phase A Comprehensive Validation ===");
+    {
+        let world = engine.world();
+
+        // 4. All 15 component types present on every entity
+        println!("[sim-test] === EntityDetail L2 Data Check ===");
+        for (entity, _) in world.query::<&Identity>().iter() {
+            assert!(world.get::<&Personality>(entity).is_ok(), "Missing Personality");
+            assert!(world.get::<&Values>(entity).is_ok(), "Missing Values");
+            assert!(world.get::<&Emotion>(entity).is_ok(), "Missing Emotion");
+            assert!(world.get::<&Needs>(entity).is_ok(), "Missing Needs");
+            assert!(world.get::<&Stress>(entity).is_ok(), "Missing Stress");
+            assert!(world.get::<&Body>(entity).is_ok(), "Missing Body");
+            assert!(world.get::<&Intelligence>(entity).is_ok(), "Missing Intelligence");
+            assert!(world.get::<&Skills>(entity).is_ok(), "Missing Skills");
+            assert!(world.get::<&Social>(entity).is_ok(), "Missing Social");
+            assert!(world.get::<&Memory>(entity).is_ok(), "Missing Memory");
+            assert!(world.get::<&Economic>(entity).is_ok(), "Missing Economic");
+            assert!(world.get::<&Behavior>(entity).is_ok(), "Missing Behavior");
+            assert!(world.get::<&Coping>(entity).is_ok(), "Missing Coping");
+            assert!(world.get::<&Faith>(entity).is_ok(), "Missing Faith");
+            assert!(world.get::<&Traits>(entity).is_ok(), "Missing Traits");
+        }
+        println!("[sim-test] === EntityDetail L2 Data Check PASS ===");
+
+        // 5. Values are in [-1.0, 1.0] range
+        for (_, vals) in world.query::<&Values>().iter() {
+            for (i, v) in vals.values.iter().enumerate() {
+                assert!(
+                    *v >= -1.0 && *v <= 1.0,
+                    "Value[{}] = {} is out of [-1.0, 1.0] range",
+                    i, v
+                );
+            }
+        }
+        println!("[sim-test]   Values range [-1,1]: OK");
+
+        // 7. ExplainLog exists in resources (stub, may be empty)
+        let _explain = &engine.resources().explain_log;
+        println!("[sim-test]   ExplainLog stub: OK");
+    }
+    println!("[sim-test] === Phase A Comprehensive Validation PASS ===");
 
     // ── Capture snapshot ──────────────────────────────────────────────────────
     let snap = engine.snapshot();
