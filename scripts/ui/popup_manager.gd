@@ -137,7 +137,10 @@ func open_entity_no_dim(entity_id: int) -> void:
 		add_child(_entity_panel)
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
-	_dim_bg.visible = false
+	# ★ FIX: Do NOT touch _dim_bg.visible. If the list panel is open
+	# (dim_bg=true), leave it so the list panel stays visible. The
+	# _process() auto-close fires when dim_bg children go hidden, which
+	# would immediately close the entity panel we just opened.
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	var panel_w: float = vp.x * 0.42
 	var panel_h: float = vp.y * 0.90
@@ -222,7 +225,12 @@ func close_all() -> void:
 
 ## Returns true if any panel is currently visible (dim background is shown).
 func is_any_visible() -> bool:
-	return _dim_bg.visible
+	if _dim_bg.visible:
+		return true
+	# ★ FIX: entity panel can be visible without dim_bg (open_entity_no_dim)
+	if _entity_panel != null and _entity_panel.visible:
+		return true
+	return false
 
 
 ## Returns true if the entity, building, or settlement detail panel is currently visible.

@@ -124,6 +124,10 @@ func set_entity_id(entity_id: int) -> void:
 	if _sim_engine != null and _sim_engine.has_method("get_entity_detail"):
 		_l2_data = _sim_engine.get_entity_detail(entity_id)
 
+	# ★ FIX: Ensure max_scroll > 0 on first open so scroll works immediately.
+	# _content_height is 0.0 until _draw() runs; this temporary value is
+	# overwritten on the very next frame after queue_redraw() triggers _draw().
+	_content_height = 5000.0
 	queue_redraw()
 
 

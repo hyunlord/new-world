@@ -172,7 +172,7 @@ func _build_tooltip_text(entity_id: int) -> void:
 	var job_str: String = str(detail.get("job", "none"))
 	var job_tr: String = Locale.tr_id("JOB", job_str)
 
-	var line1: String = "%s %s %s세 %s" % [name_str, sex_icon, age_str, job_tr]
+	var line1: String = "%s %s %s%s %s" % [name_str, sex_icon, age_str, Locale.ltr("UI_AGE_SUFFIX"), job_tr]
 
 	# Line 2: mood | stress state
 	var mood_val: float = float(detail.get("mood_score", 0.0))
@@ -185,7 +185,17 @@ func _build_tooltip_text(entity_id: int) -> void:
 		mood_text = Locale.ltr("UI_MOOD_BAD")
 
 	var stress_state: String = str(detail.get("stress_state", "calm"))
-	var stress_tr: String = Locale.tr_id("STRESS_STATE", stress_state)
+	# ★ FIX: Map Rust Debug enum names (e.g. "Alert") to locale key suffixes.
+	# Rust sends format!("{:?}", stress.state) = "Calm"/"Alert"/"Resistance"/etc.
+	var _stress_key_map: Dictionary = {
+		"Calm": "CALM", "calm": "CALM",
+		"Alert": "ALERT", "alert": "ALERT",
+		"Resistance": "RESISTANCE", "resistance": "RESISTANCE",
+		"Exhaustion": "EXHAUSTION", "exhaustion": "EXHAUSTION",
+		"Collapse": "COLLAPSE", "collapse": "COLLAPSE",
+	}
+	var stress_suffix: String = _stress_key_map.get(stress_state, stress_state.to_upper())
+	var stress_tr: String = Locale.ltr("STRESS_STATE_" + stress_suffix)
 
 	var line2: String = "%s: %s | %s: %s" % [
 		Locale.ltr("UI_MOOD"), mood_text,
