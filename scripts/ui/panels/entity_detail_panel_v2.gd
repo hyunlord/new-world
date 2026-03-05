@@ -739,8 +739,8 @@ func _draw_values(font: Font, x: float, y: float) -> float:
 				best_abs = absf(float(vals_arr[i]))
 				best_i = i
 		if best_abs > 0.1 and best_i < vnames.size():
-			var sign: String = "+" if float(vals_arr[best_i]) >= 0.0 else ""
-			values_summary = "%s %s%.1f" % [Locale.ltr("VALUE_" + vnames[best_i]), sign, float(vals_arr[best_i])]
+			var sign_str: String = "+" if float(vals_arr[best_i]) >= 0.0 else ""
+			values_summary = "%s %s%.1f" % [Locale.ltr("VALUE_" + vnames[best_i]), sign_str, float(vals_arr[best_i])]
 
 	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_VALUES"), "values", values_summary)
 	if _is_collapsed("values"):

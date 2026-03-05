@@ -644,7 +644,7 @@ func _get_rust_snapshot(entity_id: int) -> Dictionary:
 	return {}
 
 
-func _update_entity_panel_from_rust(delta: float, detail: Dictionary, snap: Dictionary) -> void:
+func _update_entity_panel_from_rust(_delta: float, detail: Dictionary, snap: Dictionary) -> void:
 	var alive: bool = bool(detail.get("alive", true))
 	if not alive:
 		_on_entity_deselected()
@@ -714,7 +714,7 @@ func _update_entity_panel_from_rust(delta: float, detail: Dictionary, snap: Dict
 	_entity_stats_label.text = "S:%.0f%%" % (stress_level * 100.0)
 
 
-func _update_entity_panel_from_gdscript(delta: float, entity: RefCounted) -> void:
+func _update_entity_panel_from_gdscript(_delta: float, entity: RefCounted) -> void:
 	# Job color
 	var job_colors: Dictionary = {
 		"none": Color(0.6, 0.6, 0.6),
