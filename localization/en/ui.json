@@ -199,6 +199,7 @@
   "UI_SURVIVAL_DURATION": "Survival",
   "UI_PREGNANT": "Pregnant",
   "UI_DETAILS_HINT": "▶ Details (E)",
+  "UI_MINI_DETAIL_HINT": "[E] Detail",
   "UI_AGE_YEARS_UNIT": "y",
   "UI_DECEASED_HEADER": "(Deceased)",
   "UI_BUILT_LABEL": "Built",

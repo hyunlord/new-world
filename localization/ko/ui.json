@@ -199,6 +199,7 @@
   "UI_SURVIVAL_DURATION": "생존 기간",
   "UI_PREGNANT": "임신 중",
   "UI_DETAILS_HINT": "▶ 상세 (E)",
+  "UI_MINI_DETAIL_HINT": "[E] 상세보기",
   "UI_AGE_YEARS_UNIT": "세",
   "UI_DECEASED_HEADER": "(사망)",
   "UI_BUILT_LABEL": "건설",
