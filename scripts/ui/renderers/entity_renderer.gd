@@ -200,7 +200,7 @@ func _draw_hover_tooltip() -> void:
 	if _hover_tooltip_lines.is_empty():
 		return
 
-	var font: Font = get_theme_default_font()
+	var font: Font = ThemeDB.fallback_font
 	var font_size: int = 11
 	var line_h: float = 16.0
 	var padding := Vector2(8.0, 5.0)
