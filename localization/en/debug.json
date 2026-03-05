@@ -1,5 +1,21 @@
 {
     "DEBUG_HUD_LINE1": "FPS: {fps} | Tick: {tick_ms}ms / 16ms ({tick_pct}%)",
     "DEBUG_HUD_LINE2": "Pop: {pop} | Entities: {entities} | Events: {events}/tick",
-    "DEBUG_HUD_LINE3": "Season: {season} | Debug: {mode}"
+    "DEBUG_HUD_LINE3": "Season: {season} | Debug: {mode}",
+    "DEBUG_TAB_PERF": "Perf",
+    "DEBUG_TAB_INSPECT": "Inspect",
+    "DEBUG_TAB_SYSTEMS": "Systems",
+    "DEBUG_TAB_EVENTS": "Events",
+    "DEBUG_TAB_BALANCE": "Balance",
+    "DEBUG_TAB_WORLD": "World",
+    "DEBUG_TAB_GUARD": "Guard",
+    "DEBUG_TAB_FFI": "FFI",
+    "DEBUG_TICK_BUDGET": "Tick Budget",
+    "DEBUG_MEMORY": "Memory",
+    "DEBUG_ENTITY_ID": "Entity ID",
+    "DEBUG_SEARCH": "Search",
+    "DEBUG_RESET_ALL": "Reset All",
+    "DEBUG_DEFAULT": "default",
+    "DEBUG_CHANGED": "changed",
+    "DEBUG_NO_DATA": "No data"
 }

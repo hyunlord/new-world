@@ -59,3 +59,27 @@ func get_entity_count() -> int:
 		if list is Array:
 			return list.size()
 	return 0
+
+
+func get_debug_summary() -> Dictionary:
+	if _bridge and _bridge.has_method("get_debug_summary"):
+		var result = _bridge.get_debug_summary()
+		if result is Dictionary:
+			return result
+	return {}
+
+
+func get_guardrail_status() -> Array:
+	if _bridge and _bridge.has_method("get_guardrail_status"):
+		var result = _bridge.get_guardrail_status()
+		if result is Array:
+			return result
+	return []
+
+
+func get_entity_detail(entity_id: int) -> Dictionary:
+	if _bridge and _bridge.has_method("get_entity_detail"):
+		var result = _bridge.get_entity_detail(entity_id)
+		if result is Dictionary:
+			return result
+	return {}

@@ -1,5 +1,21 @@
 {
     "DEBUG_HUD_LINE1": "FPS: {fps} | 틱: {tick_ms}ms / 16ms ({tick_pct}%)",
     "DEBUG_HUD_LINE2": "인구: {pop} | 엔티티: {entities} | 이벤트: {events}/틱",
-    "DEBUG_HUD_LINE3": "계절: {season} | 디버그: {mode}"
+    "DEBUG_HUD_LINE3": "계절: {season} | 디버그: {mode}",
+    "DEBUG_TAB_PERF": "성능",
+    "DEBUG_TAB_INSPECT": "검사",
+    "DEBUG_TAB_SYSTEMS": "시스템",
+    "DEBUG_TAB_EVENTS": "이벤트",
+    "DEBUG_TAB_BALANCE": "밸런스",
+    "DEBUG_TAB_WORLD": "세계",
+    "DEBUG_TAB_GUARD": "가드",
+    "DEBUG_TAB_FFI": "FFI",
+    "DEBUG_TICK_BUDGET": "틱 예산",
+    "DEBUG_MEMORY": "메모리",
+    "DEBUG_ENTITY_ID": "엔티티 ID",
+    "DEBUG_SEARCH": "검색",
+    "DEBUG_RESET_ALL": "전체 초기화",
+    "DEBUG_DEFAULT": "기본값",
+    "DEBUG_CHANGED": "변경됨",
+    "DEBUG_NO_DATA": "데이터 없음"
 }
