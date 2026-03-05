@@ -119,7 +119,7 @@ func _process(_delta: float) -> void:
 
 
 func _update_compact_hud() -> void:
-	var fps: int = Engine.get_frames_per_second()
+	var fps: int = roundi(Engine.get_frames_per_second())
 	var perf: Dictionary = _provider.get_system_perf()
 	var tick_us: float = 0.0
 	for key in perf:

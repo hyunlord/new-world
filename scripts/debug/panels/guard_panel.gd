@@ -34,10 +34,10 @@ func _build_ui() -> void:
 	add_child(HSeparator.new())
 
 	_status_labels.clear()
-	for name in GUARDRAIL_NAMES:
+	for guard_name in GUARDRAIL_NAMES:
 		var hbox := HBoxContainer.new()
 		var lbl := Label.new()
-		lbl.text = name
+		lbl.text = guard_name
 		lbl.custom_minimum_size = Vector2(170, 0)
 		lbl.add_theme_font_size_override("font_size", 11)
 		var status := Label.new()

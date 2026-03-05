@@ -7,7 +7,6 @@ var _provider: DebugDataProvider
 var _update_counter: int = 0
 var _scroll: ScrollContainer
 var _list: VBoxContainer
-var _built_systems: bool = false
 
 
 func init(provider: DebugDataProvider) -> void:
