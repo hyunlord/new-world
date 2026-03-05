@@ -737,21 +737,11 @@ var _last_balance_tick: int = 0
 var _current_day_color: Color = Color(1.0, 1.0, 1.0)
 var _day_night_enabled: bool = true
 
-# TEMPORARY DIAGNOSTIC — DELETE AFTER DEBUGGING
-var _diag_timer: float = 0.0
-var _diag_interval: float = 5.0
-var _diag_count: int = 0
-
 
 func _process(delta: float) -> void:
 	if _world_setup != null:
 		return
 	sim_engine.update(delta)
-	# TEMPORARY DIAGNOSTIC — DELETE AFTER DEBUGGING
-	_diag_timer += delta
-	if _diag_timer >= _diag_interval:
-		_diag_timer = 0.0
-		_run_diagnostic()
 	var current_tick: int = sim_engine.current_tick
 
 	# Refresh resource overlay every 100 ticks
@@ -993,136 +983,6 @@ func _on_entity_died_chronicle(entity_id: int, entity_name: String, cause: Strin
 	var desc: String = "%s died (%s, age %d)" % [entity_name, cause, int(age_years)]
 	ChronicleSystem.log_event(ChronicleSystem.EVENT_DEATH, entity_id, desc, 4, [], tick,
 		{"key": "EVT_DIED", "params": {"name": entity_name, "cause_id": cause, "age": str(int(age_years))}})
-
-
-## ═══════════════════════════════════════════════════
-## TEMPORARY DIAGNOSTIC — DELETE AFTER DEBUGGING
-## ═══════════════════════════════════════════════════
-func _run_diagnostic() -> void:
-	_diag_count += 1
-	print("")
-	print("╔══════════════════════════════════════════════════╗")
-	print("║  DIAGNOSTIC DUMP #%d" % _diag_count)
-	print("╚══════════════════════════════════════════════════╝")
-
-	# ── A. SimulationEngine ──
-	print("")
-	print("── A. SimulationEngine ──")
-	print("  current_tick:                 %d" % sim_engine.current_tick)
-	print("  speed_index:                  %d" % sim_engine.speed_index)
-	print("  is_paused:                    %s" % str(sim_engine.is_paused))
-	print("  _rust_runtime_available:      %s" % str(sim_engine._rust_runtime_available))
-	print("  _registered_system_count:     %d" % sim_engine._registered_system_count)
-	print("  _last_agent_snapshots.size(): %d" % sim_engine._last_agent_snapshots.size())
-
-	# ── B. Rust Registry ──
-	print("")
-	print("── B. Rust Registry (validate) ──")
-	var reg: Dictionary = sim_engine.validate_runtime_registry()
-	print("  runtime_available: %s" % str(reg.get("runtime_available", false)))
-	print("  expected_count:    %d" % int(reg.get("expected_count", 0)))
-	print("  runtime_count:     %d" % int(reg.get("runtime_count", 0)))
-	print("  count_match:       %s" % str(reg.get("count_match", false)))
-	print("  order_match:       %s" % str(reg.get("order_match", false)))
-
-	# ── C. Entity List ──
-	print("")
-	print("── C. Entity List ──")
-	var entity_list: Array = []
-	if SimBridge.has_method("runtime_get_entity_list"):
-		entity_list = SimBridge.runtime_get_entity_list()
-	print("  entity_list.size(): %d" % entity_list.size())
-
-	# ── D. Agent Snapshots (first 3) ──
-	print("")
-	print("── D. Agent Snapshots (first 3) ──")
-	var snaps: Array = sim_engine.get_agent_snapshots()
-	for i in range(mini(3, snaps.size())):
-		var s: Dictionary = snaps[i]
-		print("  [%d] id=%d name=%s x=%d y=%d job=%s action=%s hunger=%.2f alive=%s" % [
-			i,
-			int(s.get("entity_id", -1)),
-			str(s.get("name", "?")),
-			int(s.get("x", 0)),
-			int(s.get("y", 0)),
-			str(s.get("job", "?")),
-			str(s.get("action", "?")),
-			float(s.get("hunger", -1.0)),
-			str(s.get("alive", "?")),
-		])
-
-	# ── E. Entity Detail (first entity) ──
-	print("")
-	print("── E. Entity Detail (first entity) ──")
-	if snaps.size() > 0:
-		var first_eid: int = int(snaps[0].get("entity_id", -1))
-		print("  querying entity_id: %d" % first_eid)
-		var detail: Dictionary = sim_engine.get_entity_detail(first_eid)
-		print("  detail.is_empty():  %s" % str(detail.is_empty()))
-		if not detail.is_empty():
-			print("  name:           %s" % str(detail.get("name", "?")))
-			print("  age_years:      %.1f" % float(detail.get("age_years", 0)))
-			print("  alive:          %s" % str(detail.get("alive", "?")))
-			print("  need_hunger:    %.3f" % float(detail.get("need_hunger", -1)))
-			print("  need_thirst:    %.3f" % float(detail.get("need_thirst", -1)))
-			print("  need_warmth:    %.3f" % float(detail.get("need_warmth", -1)))
-			print("  need_safety:    %.3f" % float(detail.get("need_safety", -1)))
-			print("  energy:         %.3f" % float(detail.get("energy", -1)))
-			print("  need_belonging: %.3f" % float(detail.get("need_belonging", -1)))
-			print("  stress_level:   %.3f" % float(detail.get("stress_level", -1)))
-		else:
-			print("  ⚠ DETAIL IS EMPTY — Rust can't find this entity!")
-	else:
-		print("  ⚠ NO SNAPSHOTS — Rust has no entities!")
-
-	# ── F. Position Change (vs last dump) ──
-	print("")
-	print("── F. Position Change (vs last dump) ──")
-	if not has_meta("_diag_last_positions"):
-		set_meta("_diag_last_positions", {})
-	var last_pos: Dictionary = get_meta("_diag_last_positions")
-	var new_pos: Dictionary = {}
-	var moved_count: int = 0
-	for i in range(mini(5, snaps.size())):
-		var s: Dictionary = snaps[i]
-		var eid: int = int(s.get("entity_id", -1))
-		var x: int = int(s.get("x", 0))
-		var y: int = int(s.get("y", 0))
-		new_pos[eid] = Vector2i(x, y)
-		if last_pos.has(eid):
-			var old: Vector2i = last_pos[eid]
-			if old != Vector2i(x, y):
-				print("  MOVED:  id=%d (%d,%d) -> (%d,%d)" % [eid, old.x, old.y, x, y])
-				moved_count += 1
-			else:
-				print("  STATIC: id=%d at (%d,%d)" % [eid, x, y])
-		else:
-			print("  NEW:    id=%d at (%d,%d)" % [eid, x, y])
-	set_meta("_diag_last_positions", new_pos)
-	print("  moved: %d / %d tracked" % [moved_count, new_pos.size()])
-
-	# ── G. Renderer ──
-	print("")
-	print("── G. Renderer ──")
-	print("  entity_renderer.selected_entity_id: %d" % entity_renderer.selected_entity_id)
-
-	# ── H. Summary ──
-	print("")
-	print("── H. Summary ──")
-	if snaps.is_empty():
-		print("  NO SNAPSHOTS -> either no entities or runtime_tick_frame broken")
-	elif int(reg.get("runtime_count", 0)) == 0:
-		print("  NO SYSTEMS REGISTERED -> register_system commands never reached Rust")
-	elif moved_count == 0 and _diag_count > 1:
-		print("  NO MOVEMENT DETECTED -> behavior/movement systems may not be running")
-		print("     needs decaying? hunger should drop from spawn value over time")
-	else:
-		print("  OK: systems running, entities present, movement detected")
-
-	print("╔══════════════════════════════════════════════════╗")
-	print("║  END DIAGNOSTIC #%d" % _diag_count)
-	print("╚══════════════════════════════════════════════════╝")
-	print("")
 
 
 func _on_couple_formed_chronicle(entity_a_id: int, entity_a_name: String, entity_b_id: int, entity_b_name: String, tick: int) -> void:
