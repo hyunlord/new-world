@@ -1027,6 +1027,20 @@ impl SimSystem for MovementRuntimeSystem {
                                 needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
                             );
                         }
+                        ActionType::Forage | ActionType::Hunt | ActionType::TakeFromStockpile | ActionType::GatherHerbs => {
+                            needs.set(
+                                NeedType::Hunger,
+                                needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
+                            );
+                        }
+                        ActionType::GatherWood => {
+                            behavior.carry =
+                                (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                        }
+                        ActionType::GatherStone => {
+                            behavior.carry =
+                                (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                        }
                         _ => {}
                     }
                 }
