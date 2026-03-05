@@ -54,8 +54,8 @@ var _check_timer: Timer
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		return
-	_build_ui()
 	_file_provider = FileBasedDebugProvider.new()
+	_build_ui()
 	_start_timer()
 	_set_state(ConnectionState.DISCONNECTED)
 

@@ -57,12 +57,17 @@ func get_current_tick() -> int:
 # --- internal ---
 
 func _get_cached(key: String, fetcher: Callable) -> Variant:
-	var current_tick: int = get_current_tick()
 	var interval: int = CACHE_INTERVALS.get(key, 60)
 	if interval == -1:
 		if not _cache.has(key):
 			_cache[key] = fetcher.call()
 		return _cache[key]
+	# Read tick from cache directly to avoid infinite recursion:
+	# get_current_tick() -> get_debug_summary() -> _get_cached("debug_summary") -> ...
+	var cached_summary = _cache.get("debug_summary", null)
+	var current_tick: int = 0
+	if cached_summary is Dictionary:
+		current_tick = int(cached_summary.get("tick", 0))
 	if not _cache.has(key) or (current_tick - _cache_ticks.get(key, 0)) >= interval:
 		_cache[key] = fetcher.call()
 		_cache_ticks[key] = current_tick
