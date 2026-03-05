@@ -250,6 +250,109 @@ func runtime_apply_commands_v2(commands: Array) -> void:
 	runtime.call("runtime_apply_commands_v2", commands)
 
 
+## Enables or disables Rust debug mode (activates PerfTracker).
+func enable_debug_mode(enabled: bool) -> void:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return
+	if not runtime.has_method("enable_debug_mode"):
+		return
+	runtime.call("enable_debug_mode", enabled)
+
+
+## Returns a summary dictionary of current simulation state.
+## Keys: tick, entity_count, population, season, ticks_per_second, paused, current_tick_us.
+func get_debug_summary() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("get_debug_summary"):
+		return {}
+	var result: Variant = runtime.call("get_debug_summary")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns per-system timing data (only populated when debug_mode is true).
+func get_system_perf() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("get_system_perf"):
+		return {}
+	var result: Variant = runtime.call("get_system_perf")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns the last 300 tick durations as PackedFloat32Array in milliseconds.
+func get_tick_history() -> PackedFloat32Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedFloat32Array()
+	if not runtime.has_method("get_tick_history"):
+		return PackedFloat32Array()
+	var result: Variant = runtime.call("get_tick_history")
+	if result is PackedFloat32Array:
+		return result
+	return PackedFloat32Array()
+
+
+## Returns all SimConfig key-value pairs as a flat Dictionary.
+func get_config_values() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("get_config_values"):
+		return {}
+	var result: Variant = runtime.call("get_config_values")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Sets a single SimConfig value by key. Returns true if the key exists.
+func set_config_value(key: String, value: float) -> bool:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return false
+	if not runtime.has_method("set_config_value"):
+		return false
+	var result: Variant = runtime.call("set_config_value", key, value)
+	if result is bool:
+		return result
+	return false
+
+
+## Returns guardrail status array.
+func get_guardrail_status() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("get_guardrail_status"):
+		return []
+	var result: Variant = runtime.call("get_guardrail_status")
+	if result is Array:
+		return result
+	return []
+
+
+## Queries entities matching a condition and returns their IDs.
+## Supported conditions: "stress_gte", "health_lte", "hunger_lte".
+func query_entities_by_condition(condition: String, threshold: float) -> PackedInt32Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedInt32Array()
+	if not runtime.has_method("query_entities_by_condition"):
+		return PackedInt32Array()
+	var result: Variant = runtime.call("query_entities_by_condition", condition, threshold)
+	if result is PackedInt32Array:
+		return result
+	return PackedInt32Array()
+
+
 ## Loads Fluent source text into Rust runtime localization cache.
 func locale_load_fluent(locale: String, source: String) -> bool:
 	var bridge: Object = _get_native_bridge()
