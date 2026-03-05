@@ -31,6 +31,7 @@ pub mod system_trait;
 pub mod engine;
 pub mod command;
 pub mod snapshot;
+pub mod perf_tracker;
 
 // ── Convenience re-exports ────────────────────────────────────────────────────
 
@@ -41,3 +42,4 @@ pub use system_trait::SimSystem;
 pub use engine::{ChronicleEvent, RuntimeStatsSnapshot, SimEngine, SimResources};
 pub use command::{Command, CommandQueue};
 pub use snapshot::EngineSnapshot;
+pub use perf_tracker::PerfTracker;

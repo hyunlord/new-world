@@ -856,6 +856,9 @@ func _unhandled_input(event: InputEvent) -> void:
 					else:
 						hud.open_entity_detail()
 						hud.open_building_detail()
+				KEY_F3:
+					hud.toggle_debug_overlay()
+					get_viewport().set_input_as_handled()
 				KEY_F12:
 					if GameConfig.DEBUG_PANEL_ENABLED:
 						hud.toggle_debug_panel()

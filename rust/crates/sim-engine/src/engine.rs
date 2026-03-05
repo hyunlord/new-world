@@ -13,10 +13,11 @@ use std::collections::HashMap;
 use hecs::World;
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
-use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, WorldMap};
+use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, SimConfig, WorldMap};
 use sim_data::{NameGenerator, PersonalityDistribution};
 use crate::event_bus::EventBus;
 use crate::explain_log::ExplainLog;
+use crate::perf_tracker::PerfTracker;
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
 use log::{debug, info};
@@ -88,6 +89,8 @@ pub struct SimResources {
     pub name_generator: Option<NameGenerator>,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
     pub explain_log: ExplainLog,
+    /// Runtime-mutable simulation balance parameters (debug tuning).
+    pub sim_config: SimConfig,
 }
 
 impl SimResources {
@@ -117,6 +120,7 @@ impl SimResources {
             personality_distribution: None,
             name_generator: None,
             explain_log: ExplainLog::new(),
+            sim_config: SimConfig::default(),
         }
     }
 }
@@ -156,6 +160,10 @@ pub struct SimEngine {
     systems: Vec<SystemEntry>,
     /// Absolute tick counter (0-indexed; incremented after each `tick()` call).
     current_tick: u64,
+    /// When true, per-system performance tracking is active.
+    pub debug_mode: bool,
+    /// Per-system and per-tick timing data (only updated when debug_mode is true).
+    pub perf_tracker: PerfTracker,
 }
 
 impl SimEngine {
@@ -166,6 +174,8 @@ impl SimEngine {
             resources,
             systems: Vec::new(),
             current_tick: 0,
+            debug_mode: false,
+            perf_tracker: PerfTracker::new(),
         }
     }
 
@@ -197,12 +207,26 @@ impl SimEngine {
         let tick = self.current_tick;
         debug!("[SimEngine] ── tick {} ──", tick);
 
+        if self.debug_mode {
+            self.perf_tracker.begin_tick();
+        }
+
         for entry in self.systems.iter_mut() {
             if entry.should_run(tick) {
                 debug!("[SimEngine] running '{}'", entry.system.name());
+                if self.debug_mode {
+                    self.perf_tracker.begin_system(entry.system.name());
+                }
                 entry.system.run(&mut self.world, &mut self.resources, tick);
                 entry.last_run_tick = tick;
+                if self.debug_mode {
+                    self.perf_tracker.end_system(entry.system.name());
+                }
             }
+        }
+
+        if self.debug_mode {
+            self.perf_tracker.end_tick();
         }
 
         // Deliver events collected during this tick.

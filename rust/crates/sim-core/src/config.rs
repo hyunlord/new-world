@@ -692,6 +692,121 @@ impl ConfigSummary {
     }
 }
 
+// ── SimConfig ─────────────────────────────────────────────────────────────────
+
+/// Runtime-mutable simulation balance parameters.
+///
+/// Unlike the module-level constants (which are compile-time fixed), these values
+/// can be changed at runtime via the debug API without recompiling. Used for
+/// live balance tuning during development.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SimConfig {
+    pub need_decay_rate: f64,
+    pub stress_drain_rate: f64,
+    pub emotion_decay_rate: f64,
+    pub contagion_radius: f64,
+    pub contagion_strength: f64,
+    pub resource_regen_r: f64,
+    pub allee_threshold: f64,
+    pub harvest_gamma: f64,
+    pub fallow_half_life: f64,
+    pub surplus_threshold_days: f64,
+    pub legitimacy_tradition_w: f64,
+    pub legitimacy_charisma_w: f64,
+    pub rebel_base_threshold: f64,
+    pub tedium_schism_threshold: f64,
+}
+
+impl Default for SimConfig {
+    fn default() -> Self {
+        Self {
+            need_decay_rate: 0.01,
+            stress_drain_rate: 0.001,
+            emotion_decay_rate: 0.05,
+            contagion_radius: 5.0,
+            contagion_strength: 0.1,
+            resource_regen_r: 0.05,
+            allee_threshold: 0.1,
+            harvest_gamma: 2.0,
+            fallow_half_life: 20.0,
+            surplus_threshold_days: 15.0,
+            legitimacy_tradition_w: 0.4,
+            legitimacy_charisma_w: 0.35,
+            rebel_base_threshold: 0.6,
+            tedium_schism_threshold: 0.8,
+        }
+    }
+}
+
+impl SimConfig {
+    /// Returns the config value for the given key, or `None` if key doesn't exist.
+    pub fn get_by_key(&self, key: &str) -> Option<f64> {
+        match key {
+            "need_decay_rate" => Some(self.need_decay_rate),
+            "stress_drain_rate" => Some(self.stress_drain_rate),
+            "emotion_decay_rate" => Some(self.emotion_decay_rate),
+            "contagion_radius" => Some(self.contagion_radius),
+            "contagion_strength" => Some(self.contagion_strength),
+            "resource_regen_r" => Some(self.resource_regen_r),
+            "allee_threshold" => Some(self.allee_threshold),
+            "harvest_gamma" => Some(self.harvest_gamma),
+            "fallow_half_life" => Some(self.fallow_half_life),
+            "surplus_threshold_days" => Some(self.surplus_threshold_days),
+            "legitimacy_tradition_w" => Some(self.legitimacy_tradition_w),
+            "legitimacy_charisma_w" => Some(self.legitimacy_charisma_w),
+            "rebel_base_threshold" => Some(self.rebel_base_threshold),
+            "tedium_schism_threshold" => Some(self.tedium_schism_threshold),
+            _ => None,
+        }
+    }
+
+    /// Sets a config value by key. Returns `true` if the key exists and was updated.
+    pub fn set_by_key(&mut self, key: &str, value: f64) -> bool {
+        match key {
+            "need_decay_rate" => { self.need_decay_rate = value.clamp(0.001, 0.05); true }
+            "stress_drain_rate" => { self.stress_drain_rate = value.clamp(0.0001, 0.005); true }
+            "emotion_decay_rate" => { self.emotion_decay_rate = value.clamp(0.01, 0.2); true }
+            "contagion_radius" => { self.contagion_radius = value.clamp(1.0, 20.0); true }
+            "contagion_strength" => { self.contagion_strength = value.clamp(0.01, 0.5); true }
+            "resource_regen_r" => { self.resource_regen_r = value.clamp(0.001, 0.2); true }
+            "allee_threshold" => { self.allee_threshold = value.clamp(0.01, 0.2); true }
+            "harvest_gamma" => { self.harvest_gamma = value.clamp(1.0, 5.0); true }
+            "fallow_half_life" => { self.fallow_half_life = value.clamp(5.0, 50.0); true }
+            "surplus_threshold_days" => { self.surplus_threshold_days = value.clamp(5.0, 30.0); true }
+            "legitimacy_tradition_w" => { self.legitimacy_tradition_w = value.clamp(0.0, 1.0); true }
+            "legitimacy_charisma_w" => { self.legitimacy_charisma_w = value.clamp(0.0, 1.0); true }
+            "rebel_base_threshold" => { self.rebel_base_threshold = value.clamp(0.3, 0.9); true }
+            "tedium_schism_threshold" => { self.tedium_schism_threshold = value.clamp(0.5, 1.0); true }
+            _ => false,
+        }
+    }
+
+    /// Returns all config key-value pairs.
+    pub fn to_pairs(&self) -> Vec<(&'static str, f64)> {
+        vec![
+            ("need_decay_rate", self.need_decay_rate),
+            ("stress_drain_rate", self.stress_drain_rate),
+            ("emotion_decay_rate", self.emotion_decay_rate),
+            ("contagion_radius", self.contagion_radius),
+            ("contagion_strength", self.contagion_strength),
+            ("resource_regen_r", self.resource_regen_r),
+            ("allee_threshold", self.allee_threshold),
+            ("harvest_gamma", self.harvest_gamma),
+            ("fallow_half_life", self.fallow_half_life),
+            ("surplus_threshold_days", self.surplus_threshold_days),
+            ("legitimacy_tradition_w", self.legitimacy_tradition_w),
+            ("legitimacy_charisma_w", self.legitimacy_charisma_w),
+            ("rebel_base_threshold", self.rebel_base_threshold),
+            ("tedium_schism_threshold", self.tedium_schism_threshold),
+        ]
+    }
+
+    /// Resets all values to their defaults.
+    pub fn reset_defaults(&mut self) {
+        *self = Self::default();
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
