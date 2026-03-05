@@ -252,6 +252,14 @@ impl WorldSimRuntime {
             }
         }
 
+        // Write debug snapshot for EditorPlugin every 60 ticks (file-based IPC).
+        if state.engine.debug_mode
+            && ticks_processed > 0
+            && state.engine.current_tick() % 60 == 0
+        {
+            debug_api::write_debug_snapshot(state);
+        }
+
         out.set("initialized", true);
         out.set("current_tick", state.engine.current_tick() as i64);
         out.set("ticks_processed", ticks_processed as i64);

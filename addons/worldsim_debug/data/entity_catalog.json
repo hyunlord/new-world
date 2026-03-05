@@ -1,0 +1,117 @@
+[
+  {
+    "type": "agent",
+    "icon": "🧑",
+    "label": "Agent",
+    "label_ko": "에이전트",
+    "count": "10,000",
+    "memory": "13.7KB",
+    "components": [
+      {"name": "Identity", "size": "64B", "tier": "cold", "fields": "name, sex, birth_tick, parents[2]", "writer": "—(immutable)", "ui_level": "L2 header"},
+      {"name": "Position", "size": "16B", "tier": "hot", "fields": "x, y (f64)", "writer": "MovementSys(30)", "ui_level": "L1 map"},
+      {"name": "Age", "size": "24B", "tier": "warm", "fields": "birth_tick, growth_stage, lifespan_ticks", "writer": "AgeSys(15)", "ui_level": "L2 detail"},
+      {"name": "Body", "size": "32B", "tier": "hot", "fields": "health, energy, height_cm, weight_kg, dna[4]", "writer": "BodySys(20), NutritionSys", "ui_level": "L2 detail"},
+      {"name": "Needs", "size": "40B", "tier": "hot", "fields": "values[8]: hunger, thirst, rest, safety, social, esteem, autonomy, purpose", "writer": "NeedsSys(10)", "ui_level": "L2 detail"},
+      {"name": "Stress", "size": "16B", "tier": "hot", "fields": "level, peak_this_cycle, break_threshold", "writer": "StressSys(55)", "ui_level": "L2 detail"},
+      {"name": "Personality", "size": "48B", "tier": "cold", "fields": "hexaco[30]: H,E,X,A,C,O × 5 facets each", "writer": "—(genetic+dev)", "ui_level": "L3 inspector"},
+      {"name": "Emotion", "size": "24B", "tier": "warm", "fields": "valence, arousal, dominance, fast_emotions[6]", "writer": "EmotionSys(60)", "ui_level": "L2 detail"},
+      {"name": "Traits", "size": "32B", "tier": "cold", "fields": "active_traits[8], dormant_traits[8]", "writer": "TraitSys(120)", "ui_level": "L3 inspector"},
+      {"name": "Social", "size": "56B", "tier": "warm", "fields": "relationships[], faction_id, reputation_map, attachment_type", "writer": "SocialSys(200)", "ui_level": "L2 detail"},
+      {"name": "Economic", "size": "32B", "tier": "warm", "fields": "food_stock, labor_output, trade_balance, assigned_role", "writer": "EconSys(90)", "ui_level": "L2 detail"},
+      {"name": "Memory", "size": "80B", "tier": "cold", "fields": "episodic_events[10], scars[4], violation_history[8]", "writer": "MemorySys(160)", "ui_level": "L3 inspector"},
+      {"name": "Behavior", "size": "16B", "tier": "hot", "fields": "current_action, action_progress, target_entity_id", "writer": "BehaviorSys(25)", "ui_level": "L1 map"},
+      {"name": "Faith", "size": "24B", "tier": "cold", "fields": "religion_id, devotion, syncretism_score", "writer": "FaithSys(350)", "ui_level": "L3 inspector"},
+      {"name": "Values", "size": "32B", "tier": "cold", "fields": "moral_foundations[6], coop_threshold, defect_threshold", "writer": "ValuesSys(280)", "ui_level": "L3 inspector"},
+      {"name": "Intelligence", "size": "16B", "tier": "cold", "fields": "iq_proxy, learning_rate, curiosity", "writer": "—(genetic)", "ui_level": "L3 inspector"},
+      {"name": "Skills", "size": "48B", "tier": "warm", "fields": "skill_levels[12]: farming, crafting, combat, medicine, diplomacy…", "writer": "SkillSys(145)", "ui_level": "L2 detail"},
+      {"name": "Coping", "size": "24B", "tier": "warm", "fields": "active_styles[4], ritual_count, suppression_level", "writer": "CopingSys(75)", "ui_level": "L3 inspector"}
+    ]
+  },
+  {
+    "type": "settlement",
+    "icon": "🏘️",
+    "label": "Settlement",
+    "label_ko": "정착지",
+    "count": "~500",
+    "memory": "2.1KB",
+    "components": [
+      {"name": "SettlementCore", "size": "64B", "tier": "hot", "fields": "id, x, y, population, faction_id, name", "writer": "SettlementSys(170)", "ui_level": "L1 map"},
+      {"name": "Economy", "size": "48B", "tier": "warm", "fields": "food_stock, capital_stock, trade_routes[], labor_pool", "writer": "EconSys(90)", "ui_level": "L2 detail"},
+      {"name": "Politics", "size": "32B", "tier": "cold", "fields": "regime_type, legitimacy, tax_rate, leader_id", "writer": "PoliticsSys(260)", "ui_level": "L2 detail"},
+      {"name": "Infrastructure", "size": "24B", "tier": "warm", "fields": "buildings[], defense_rating, road_level", "writer": "BuildingSys(155)", "ui_level": "L2 detail"}
+    ]
+  },
+  {
+    "type": "building",
+    "icon": "🏛️",
+    "label": "Building",
+    "label_ko": "건물",
+    "count": "~5,000",
+    "memory": "0.3KB",
+    "components": [
+      {"name": "BuildingCore", "size": "32B", "tier": "warm", "fields": "building_type, settlement_id, x, y, health, workers_assigned", "writer": "BuildingSys(155)", "ui_level": "L2 detail"},
+      {"name": "Production", "size": "16B", "tier": "hot", "fields": "output_per_tick, efficiency, current_stock", "writer": "EconSys(90)", "ui_level": "L2 detail"}
+    ]
+  },
+  {
+    "type": "herd",
+    "icon": "🦬",
+    "label": "Herd",
+    "label_ko": "무리",
+    "count": "~2,000",
+    "memory": "0.4KB",
+    "components": [
+      {"name": "HerdCore", "size": "24B", "tier": "warm", "fields": "species_id, x, y, size, age_distribution[4]", "writer": "HerdSys(100)", "ui_level": "L1 map"},
+      {"name": "HerdEcology", "size": "16B", "tier": "warm", "fields": "resource_consumption, migration_target, territory_radius", "writer": "HerdSys(100)", "ui_level": "L2 detail"}
+    ]
+  },
+  {
+    "type": "tile",
+    "icon": "🌿",
+    "label": "World Tile",
+    "label_ko": "세계 타일",
+    "count": "262,144 (512×512)",
+    "memory": "48B",
+    "components": [
+      {"name": "TileCore", "size": "16B", "tier": "hot", "fields": "biome_id, elevation, resource_level, fertility", "writer": "EcoSys(40), ClimateSys", "ui_level": "L1 map"},
+      {"name": "TileClimate", "size": "16B", "tier": "warm", "fields": "temperature, precipitation, wind_speed, wind_dir", "writer": "ClimateSys(42)", "ui_level": "L2 detail"},
+      {"name": "TileState", "size": "16B", "tier": "warm", "fields": "fire_state, flood_level, pollution, claimed_by", "writer": "FireSys(380), FloodSys", "ui_level": "L2 detail"}
+    ]
+  },
+  {
+    "type": "faction",
+    "icon": "⚔️",
+    "label": "Faction",
+    "label_ko": "파벌",
+    "count": "~200",
+    "memory": "0.8KB",
+    "components": [
+      {"name": "FactionCore", "size": "32B", "tier": "cold", "fields": "id, name, ideology, member_count, territory[]", "writer": "FactionSys(250)", "ui_level": "L2 detail"},
+      {"name": "FactionPolitics", "size": "24B", "tier": "warm", "fields": "legitimacy, military_strength, alliances[], enemies[]", "writer": "PoliticsSys(260)", "ui_level": "L2 detail"}
+    ]
+  },
+  {
+    "type": "religion",
+    "icon": "✨",
+    "label": "Religion",
+    "label_ko": "종교",
+    "count": "~50",
+    "memory": "0.5KB",
+    "components": [
+      {"name": "ReligionCore", "size": "32B", "tier": "cold", "fields": "id, name, doctrine_id, adherent_count, schism_count", "writer": "FaithSys(350)", "ui_level": "L2 detail"},
+      {"name": "ReligionInfluence", "size": "16B", "tier": "warm", "fields": "spread_rate, radicalism_index, ritual_frequency", "writer": "FaithSys(350)", "ui_level": "L3 inspector"}
+    ]
+  },
+  {
+    "type": "tech_node",
+    "icon": "🔬",
+    "label": "Tech Node",
+    "label_ko": "기술 노드",
+    "count": "~150",
+    "memory": "0.2KB",
+    "components": [
+      {"name": "TechCore", "size": "24B", "tier": "cold", "fields": "tech_id, discovered_by, discovery_tick, propagation_rate", "writer": "TechSys(130)", "ui_level": "L2 detail"},
+      {"name": "TechEffect", "size": "16B", "tier": "cold", "fields": "production_bonus, prereqs[], unlocks[]", "writer": "TechSys(130)", "ui_level": "L3 inspector"}
+    ]
+  }
+]

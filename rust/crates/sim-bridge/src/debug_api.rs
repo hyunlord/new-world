@@ -2,6 +2,8 @@
 //!
 //! All Godot type conversions happen here. sim-engine/sim-core stay Godot-free.
 
+use godot::classes::Os;
+use godot::obj::Singleton;
 use godot::prelude::{Array, PackedFloat32Array, PackedInt32Array, ToGodot, VarDictionary};
 use sim_core::components::{Body, Needs, Stress};
 use sim_core::enums::NeedType;
@@ -225,6 +227,78 @@ pub(crate) fn query_entities_by_condition(
         }
     }
     ids
+}
+
+/// Writes a combined debug snapshot to `user://debug_snapshot.json`.
+///
+/// Called every 60 ticks when `debug_mode` is true. The EditorPlugin reads
+/// this file to display live simulation data in the editor bottom dock.
+///
+/// Snapshot keys: `tick`, `timestamp_msec`, `debug_summary`, `system_perf`, `config`.
+pub(crate) fn write_debug_snapshot(state: &RuntimeState) {
+    use serde_json::{json, Map, Value};
+
+    let resources = state.engine.resources();
+    let world = state.engine.world();
+    let tick = resources.calendar.tick as i64;
+    let entity_count = world.len() as i64;
+    let season_idx = ((resources.calendar.day_of_year.saturating_sub(1)) * 4
+        / resources.calendar.days_per_year.max(1)) as i64;
+    let timestamp_msec = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as i64;
+
+    let debug_summary = json!({
+        "tick": tick,
+        "entity_count": entity_count,
+        "population": entity_count,
+        "season": season_idx,
+        "ticks_per_second": state.ticks_per_second,
+        "paused": state.paused,
+        "current_tick_us": state.engine.perf_tracker.current_tick_us,
+        "memory_estimate_kb": entity_count * 4,
+    });
+
+    let priority_map: std::collections::HashMap<&str, i32> = state
+        .registered_systems
+        .iter()
+        .map(|e| (e.system_key.as_str(), e.priority))
+        .collect();
+    let interval_map: std::collections::HashMap<&str, i32> = state
+        .registered_systems
+        .iter()
+        .map(|e| (e.system_key.as_str(), e.tick_interval))
+        .collect();
+    let mut system_perf: Map<String, Value> = Map::new();
+    for (name, &us) in &state.engine.perf_tracker.system_times {
+        let priority = priority_map.get(name.as_str()).copied().unwrap_or(-1);
+        let interval = interval_map.get(name.as_str()).copied().unwrap_or(-1);
+        system_perf.insert(
+            name.clone(),
+            json!({ "us": us, "ms": us as f64 / 1000.0, "priority": priority, "interval": interval }),
+        );
+    }
+
+    let mut config_map: Map<String, Value> = Map::new();
+    for (key, val) in resources.sim_config.to_pairs() {
+        config_map.insert(key.to_string(), json!(val));
+    }
+
+    let snapshot = json!({
+        "tick": tick,
+        "timestamp_msec": timestamp_msec,
+        "debug_summary": debug_summary,
+        "system_perf": system_perf,
+        "config": config_map,
+        "guardrails": [],
+    });
+
+    if let Ok(json_str) = serde_json::to_string(&snapshot) {
+        let user_dir = Os::singleton().get_user_data_dir().to_string();
+        let path = format!("{}/debug_snapshot.json", user_dir);
+        let _ = std::fs::write(&path, json_str);
+    }
 }
 
 #[cfg(test)]
