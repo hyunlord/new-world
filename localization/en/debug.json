@@ -1,0 +1,5 @@
+{
+    "DEBUG_HUD_LINE1": "FPS: {fps} | Tick: {tick_ms}ms / 16ms ({tick_pct}%)",
+    "DEBUG_HUD_LINE2": "Pop: {pop} | Entities: {entities} | Events: {events}/tick",
+    "DEBUG_HUD_LINE3": "Season: {season} | Debug: {mode}"
+}

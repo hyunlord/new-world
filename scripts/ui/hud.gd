@@ -79,6 +79,9 @@ var _help_overlay: Control
 var _help_visible: bool = false
 var _was_running_before_help: bool = false
 
+# Debug overlay (F3 toggle)
+var _debug_overlay: CanvasLayer
+
 # Resource legend
 var _resource_legend: PanelContainer
 var _legend_title_label: Label
@@ -1218,6 +1221,24 @@ func toggle_minimap() -> void:
 func toggle_stats() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_stats()
+
+
+## Toggles the debug overlay (F3). Cycles OFF -> COMPACT -> OFF.
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_F3:
+			_toggle_debug()
+
+
+func _toggle_debug() -> void:
+	if not _debug_overlay:
+		var bridge: Node = get_node_or_null("/root/SimBridge")
+		var overlay_script: GDScript = load("res://scripts/debug/debug_overlay.gd")
+		_debug_overlay = CanvasLayer.new()
+		_debug_overlay.set_script(overlay_script)
+		add_child(_debug_overlay)
+		_debug_overlay.init(bridge)
+	_debug_overlay.cycle_mode()
 
 
 ## Toggles the keyboard shortcut help overlay, pausing the simulation while it is shown.
