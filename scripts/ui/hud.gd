@@ -1230,6 +1230,8 @@ func close_all_popups() -> bool:
 ## Opens the full entity detail panel for the currently selected entity.
 func open_entity_detail() -> void:
 	if _popup_manager != null and _selected_entity_id >= 0:
+		# ★ FIX: Close any open popup (list/stats/chronicle) before opening entity detail
+		_popup_manager.close_all()
 		if OS.is_debug_build():
 			_popup_manager.open_entity_no_dim(_selected_entity_id)
 		else:

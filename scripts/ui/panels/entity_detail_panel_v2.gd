@@ -47,6 +47,9 @@ const MARGIN_RIGHT := 20.0
 const SCROLLBAR_WIDTH := 8.0
 
 # ── State ────────────────────────────────────────────
+## Shared flag so camera_controller can skip zoom when panel is visible.
+static var is_open: bool = false
+
 var _entity_id: int = -1
 var _l2_data: Dictionary = {}
 var _l3_mind: Dictionary = {}
@@ -98,8 +101,10 @@ func init(sim_engine: Object) -> void:
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
-		grab_focus()
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		is_open = visible
+		if visible:
+			grab_focus()
 
 
 ## Shows entity data whether alive or deceased (delegates to set_entity_id).
