@@ -1230,6 +1230,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			_toggle_debug()
 
 
+func toggle_debug_overlay() -> void:
+	_toggle_debug()
+
+
 func _toggle_debug() -> void:
 	if not _debug_overlay:
 		var bridge: Node = get_node_or_null("/root/SimBridge")
