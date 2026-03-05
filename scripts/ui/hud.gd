@@ -1179,6 +1179,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F3:
 			_toggle_debug()
+		elif event.keycode == KEY_ESCAPE:
+			if close_all_popups():
+				get_viewport().set_input_as_handled()
 
 
 func toggle_debug_overlay() -> void:
@@ -1295,6 +1298,9 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		var id_str: String = msg.replace("open_entity_", "")
 		if id_str.is_valid_int():
 			var eid: int = int(id_str)
+			# ★ FIX: Close list/other panels first so _dim_bg is hidden before entity panel opens
+			if _popup_manager != null:
+				_popup_manager.close_all()
 			if _entity_detail_panel != null and _entity_detail_panel.has_method("show_entity_or_deceased"):
 				_entity_detail_panel.show_entity_or_deceased(eid)
 				if _popup_manager != null:

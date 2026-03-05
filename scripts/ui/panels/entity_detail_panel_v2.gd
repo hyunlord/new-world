@@ -1092,6 +1092,25 @@ func _gui_input(event: InputEvent) -> void:
 				queue_redraw()
 
 
+## Backup scroll handler — catches wheel events that _gui_input() may miss
+## when the panel is a direct child of CanvasLayer rather than a Control tree.
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible or _l2_data.is_empty():
+		return
+	if event is InputEventMouseButton and event.pressed:
+		var mouse_local := get_local_mouse_position()
+		if Rect2(Vector2.ZERO, size).has_point(mouse_local):
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_scroll_offset = maxf(0.0, _scroll_offset - 40.0)
+				queue_redraw()
+				get_viewport().set_input_as_handled()
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				var max_scroll := maxf(0.0, _content_height - size.y)
+				_scroll_offset = minf(max_scroll, _scroll_offset + 40.0)
+				queue_redraw()
+				get_viewport().set_input_as_handled()
+
+
 func _check_section_click(click_pos: Vector2) -> void:
 	var _adjusted_y: float = click_pos.y + _scroll_offset
 	for section_id in _section_rects:
