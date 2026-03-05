@@ -185,17 +185,10 @@ func _build_tooltip_text(entity_id: int) -> void:
 		mood_text = Locale.ltr("UI_MOOD_BAD")
 
 	var stress_state: String = str(detail.get("stress_state", "calm"))
-	# ★ FIX: Map Rust Debug enum names (e.g. "Alert") to locale key suffixes.
-	# Rust sends format!("{:?}", stress.state) = "Calm"/"Alert"/"Resistance"/etc.
-	var _stress_key_map: Dictionary = {
-		"Calm": "CALM", "calm": "CALM",
-		"Alert": "ALERT", "alert": "ALERT",
-		"Resistance": "RESISTANCE", "resistance": "RESISTANCE",
-		"Exhaustion": "EXHAUSTION", "exhaustion": "EXHAUSTION",
-		"Collapse": "COLLAPSE", "collapse": "COLLAPSE",
-	}
-	var stress_suffix: String = _stress_key_map.get(stress_state, stress_state.to_upper())
-	var stress_tr: String = Locale.ltr("STRESS_STATE_" + stress_suffix)
+	# Locale.tr_id() calls .to_upper() internally, so "Alert" → STRESS_STATE_ALERT.
+	# New locale keys STRESS_STATE_ALERT/RESISTANCE/EXHAUSTION/COLLAPSE added to
+	# both en and ko ui.json to cover the Rust enum variants.
+	var stress_tr: String = Locale.tr_id("STRESS_STATE", stress_state)
 
 	var line2: String = "%s: %s | %s: %s" % [
 		Locale.ltr("UI_MOOD"), mood_text,
