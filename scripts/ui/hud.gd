@@ -1147,18 +1147,6 @@ func _refresh_hud_texts() -> void:
 		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
-	if _hunger_name_label != null:
-		_hunger_name_label.text = Locale.ltr("UI_HUNGER") + ":"
-	if _thirst_name_label != null:
-		_thirst_name_label.text = Locale.ltr("NEED_THIRST") + ":"
-	if _energy_name_label != null:
-		_energy_name_label.text = Locale.ltr("UI_ENERGY") + ":"
-	if _warmth_name_label != null:
-		_warmth_name_label.text = Locale.ltr("NEED_WARMTH") + ":"
-	if _safety_name_label != null:
-		_safety_name_label.text = Locale.ltr("NEED_SAFETY") + ":"
-	if _social_name_label != null:
-		_social_name_label.text = Locale.ltr("UI_SOCIAL") + ":"
 	_update_era_label()
 
 
