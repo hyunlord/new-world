@@ -78,6 +78,17 @@ var _collapsed: Dictionary = {
 ## Stores the SimulationEngine reference for entity data queries.
 func init(sim_engine: Object) -> void:
 	_sim_engine = sim_engine
+	# ★ FIX: Ensure mouse wheel events reach this Control for scrolling
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	# ★ FIX: Clip _draw() output to panel bounds so scroll offset is visible
+	clip_contents = true
+	# ★ FIX: Allow keyboard input (PageUp/Down/Home/End) when panel has focus
+	focus_mode = Control.FOCUS_ALL
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		grab_focus()
 
 
 ## Shows entity data whether alive or deceased (delegates to set_entity_id).

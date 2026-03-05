@@ -130,10 +130,10 @@ func open_entity(entity_id: int) -> void:
 func open_entity_no_dim(entity_id: int) -> void:
 	if _entity_panel == null:
 		return
-	## _entity_panel이 _dim_bg 자식이면 CanvasLayer로 reparent
-	## (부모가 invisible이면 자식도 안 보이는 Godot 동작 회피)
-	if _entity_panel.get_parent() == _dim_bg:
-		_dim_bg.remove_child(_entity_panel)
+	# ★ FIX: Always ensure panel is a direct child of this node (not _dim_bg)
+	if _entity_panel.get_parent() != self:
+		if _entity_panel.get_parent() != null:
+			_entity_panel.get_parent().remove_child(_entity_panel)
 		add_child(_entity_panel)
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
@@ -143,6 +143,8 @@ func open_entity_no_dim(entity_id: int) -> void:
 	var panel_h: float = vp.y * 0.90
 	_entity_panel.size = Vector2(panel_w, panel_h)
 	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
+	# ★ FIX: Force panel to front and grab focus for keyboard input
+	_entity_panel.move_to_front()
 
 
 ## Opens the building detail panel for the given building, pausing the simulation.
