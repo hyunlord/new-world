@@ -116,20 +116,21 @@ func _on_tick(_tick: int) -> void:
 
 
 func _process(_delta: float) -> void:
+	# Always track cursor position for smooth tooltip following
+	_hover_screen_pos = get_viewport().get_mouse_position()
 	_update_hover()
 	if _hover_entity_id >= 0:
 		queue_redraw()
 
 
 func _update_hover() -> void:
-	# Only check every 3 frames (avoid per-frame L2 lookups)
+	# Only check entity proximity every 3 frames (avoid per-frame L2 lookups)
 	_hover_check_interval += 1
 	if _hover_check_interval % 3 != 0:
 		return
 
-	var mouse_screen: Vector2 = get_viewport().get_mouse_position()
 	var canvas_xform := get_canvas_transform()
-	var mouse_world: Vector2 = canvas_xform.affine_inverse() * mouse_screen
+	var mouse_world: Vector2 = canvas_xform.affine_inverse() * _hover_screen_pos
 	@warning_ignore("integer_division")
 	var mouse_tile := Vector2i(
 		int(mouse_world.x) / GameConfig.TILE_SIZE,
@@ -153,8 +154,6 @@ func _update_hover() -> void:
 			_build_tooltip_text(best_id)
 		else:
 			_hover_tooltip_lines = PackedStringArray()
-
-	_hover_screen_pos = mouse_screen
 
 
 func _build_tooltip_text(entity_id: int) -> void:
