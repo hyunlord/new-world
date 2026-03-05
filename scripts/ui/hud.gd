@@ -1301,7 +1301,7 @@ func toggle_debug_panel() -> void:
 ## Lazily initialises and cycles the F3 debug overlay (OFF → COMPACT → FULL → OFF).
 func toggle_debug_overlay() -> void:
 	if _debug_overlay == null:
-		var sim_bridge: Node = get_node_or_null("/root/WorldSimRuntime")
+		var sim_bridge: Node = get_node_or_null("/root/SimBridge")
 		if sim_bridge == null:
 			push_warning("toggle_debug_overlay: WorldSimRuntime autoload not found")
 			return

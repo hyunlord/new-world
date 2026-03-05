@@ -62,7 +62,7 @@ func _setup_compact() -> void:
 
 func _update_compact() -> void:
 	var summary: Dictionary = _provider.get_debug_summary()
-	var fps: int = Engine.get_frames_per_second()
+	var fps: int = int(Engine.get_frames_per_second())
 	var tick_us: int = summary.get("tick_us", summary.get("current_tick_us", 0))
 	var pop: int = summary.get("population", 0)
 	_compact_label.text = (

@@ -5,7 +5,6 @@ extends VBoxContainer
 
 var _provider: DebugDataProvider
 var _list: ItemList
-var _max_events: int = 100
 
 
 func init_provider(provider: DebugDataProvider) -> void:
