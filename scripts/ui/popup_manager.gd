@@ -130,19 +130,23 @@ func open_entity(entity_id: int) -> void:
 func open_entity_no_dim(entity_id: int) -> void:
 	if _entity_panel == null:
 		return
-	## _entity_panel이 _dim_bg 자식이면 CanvasLayer로 reparent
-	## (부모가 invisible이면 자식도 안 보이는 Godot 동작 회피)
-	if _entity_panel.get_parent() == _dim_bg:
-		_dim_bg.remove_child(_entity_panel)
+	# ★ FIX: Always ensure panel is a direct child of this node (not _dim_bg)
+	if _entity_panel.get_parent() != self:
+		if _entity_panel.get_parent() != null:
+			_entity_panel.get_parent().remove_child(_entity_panel)
 		add_child(_entity_panel)
 	_entity_panel.set_entity_id(entity_id)
 	_entity_panel.visible = true
+	# ★ RESTORED: dim bg must be hidden so it doesn't consume mouse events.
+	# Callers (hud.gd) must call close_all() first to dismiss list/other panels.
 	_dim_bg.visible = false
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	var panel_w: float = vp.x * 0.42
 	var panel_h: float = vp.y * 0.90
 	_entity_panel.size = Vector2(panel_w, panel_h)
 	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
+	# ★ FIX: Force panel to front and grab focus for keyboard input
+	_entity_panel.move_to_front()
 
 
 ## Opens the building detail panel for the given building, pausing the simulation.
@@ -220,7 +224,12 @@ func close_all() -> void:
 
 ## Returns true if any panel is currently visible (dim background is shown).
 func is_any_visible() -> bool:
-	return _dim_bg.visible
+	if _dim_bg.visible:
+		return true
+	# ★ FIX: entity panel can be visible without dim_bg (open_entity_no_dim)
+	if _entity_panel != null and _entity_panel.visible:
+		return true
+	return false
 
 
 ## Returns true if the entity, building, or settlement detail panel is currently visible.

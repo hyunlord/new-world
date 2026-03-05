@@ -105,8 +105,6 @@ var intergenerational_system: RefCounted
 var parenting_system: RefCounted
 var value_system: RefCounted
 var leader_system: RefCounted
-var debug_console = null
-var debug_panel = null
 var stat_sync_system: RefCounted
 var stat_threshold_system: RefCounted
 var upper_needs_system: RefCounted
@@ -404,40 +402,6 @@ func _ready() -> void:
 	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)
 
-	# Debug Console + Panel (debug build only — self-destructs in release)
-	if OS.is_debug_build():
-		var _dc_script = load("res://scenes/debug/debug_console.gd")
-		if _dc_script != null:
-			debug_console = _dc_script.new()
-			debug_console._entity_manager = entity_manager
-			debug_console._stress_system = stress_system
-			debug_console._mental_break_system = mental_break_system
-			debug_console._trauma_scar_system = trauma_scar_system
-			debug_console._trait_violation_system = trait_violation_system
-			debug_console._sim_engine = sim_engine
-			debug_console._coping_system = coping_system
-			debug_console._morale_system = morale_system
-			debug_console._contagion_system = contagion_system
-			debug_console._settlement_manager = settlement_manager
-			debug_console._child_stress_processor = child_stress_processor
-			debug_console._intergenerational_system = intergenerational_system
-			debug_console._parenting_system = parenting_system
-			debug_console._behavior_system = behavior_system
-			add_child(debug_console)
-			debug_console.init_phase4_commands()
-			debug_console.init_phase5_commands()
-			debug_console.init_behavior_commands()
-		var _dp_script = load("res://scenes/debug/debug_panel.gd")
-		if _dp_script != null:
-			debug_panel = _dp_script.new()
-			debug_panel._entity_manager = entity_manager
-			debug_panel._stress_system = stress_system
-			debug_panel._mental_break_system = mental_break_system
-			debug_panel._trauma_scar_system = trauma_scar_system
-			debug_panel._trait_violation_system = trait_violation_system
-			debug_panel._sim_engine = sim_engine
-			debug_panel._console = debug_console
-			add_child(debug_panel)
 
 	# Initialize name generator with sim RNG and entity manager
 	NameGenerator.init(sim_engine.rng, entity_manager)
@@ -737,6 +701,7 @@ var _last_balance_tick: int = 0
 var _current_day_color: Color = Color(1.0, 1.0, 1.0)
 var _day_night_enabled: bool = true
 
+
 func _process(delta: float) -> void:
 	if _world_setup != null:
 		return
@@ -845,6 +810,9 @@ func _unhandled_input(event: InputEvent) -> void:
 					else:
 						hud.open_entity_detail()
 						hud.open_building_detail()
+				KEY_F3:
+					hud.toggle_debug_overlay()
+					get_viewport().set_input_as_handled()
 				KEY_F12:
 					if GameConfig.DEBUG_PANEL_ENABLED:
 						hud.toggle_debug_panel()

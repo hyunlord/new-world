@@ -12,6 +12,12 @@ var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
 
+## Hover tooltip state
+var _hover_entity_id: int = -1
+var _hover_tooltip_lines: PackedStringArray = PackedStringArray()
+var _hover_screen_pos: Vector2 = Vector2.ZERO
+var _hover_check_interval: int = 0
+
 ## Double-click detection
 var _last_click_time: float = 0.0
 var _last_click_pos: Vector2 = Vector2.ZERO
@@ -107,6 +113,136 @@ func _ready() -> void:
 
 func _on_tick(_tick: int) -> void:
 	queue_redraw()
+
+
+func _process(_delta: float) -> void:
+	# Always track cursor position for smooth tooltip following
+	_hover_screen_pos = get_viewport().get_mouse_position()
+	_update_hover()
+	if _hover_entity_id >= 0:
+		queue_redraw()
+
+
+func _update_hover() -> void:
+	# Only check entity proximity every 3 frames (avoid per-frame L2 lookups)
+	_hover_check_interval += 1
+	if _hover_check_interval % 3 != 0:
+		return
+
+	var canvas_xform := get_canvas_transform()
+	var mouse_world: Vector2 = canvas_xform.affine_inverse() * _hover_screen_pos
+	@warning_ignore("integer_division")
+	var mouse_tile := Vector2i(
+		int(mouse_world.x) / GameConfig.TILE_SIZE,
+		int(mouse_world.y) / GameConfig.TILE_SIZE
+	)
+
+	var alive: Array = _get_snapshots()
+	var best_id: int = -1
+	var best_dist: float = 2.0  # hover radius in tiles
+	for entity in alive:
+		var ex: int = int(entity.get("x", 0))
+		var ey: int = int(entity.get("y", 0))
+		var dist: float = Vector2(ex - mouse_tile.x, ey - mouse_tile.y).length()
+		if dist < best_dist:
+			best_dist = dist
+			best_id = int(entity.get("entity_id", -1))
+
+	if best_id != _hover_entity_id:
+		_hover_entity_id = best_id
+		if best_id >= 0:
+			_build_tooltip_text(best_id)
+		else:
+			_hover_tooltip_lines = PackedStringArray()
+
+
+func _build_tooltip_text(entity_id: int) -> void:
+	var detail: Dictionary = {}
+	if _sim_engine != null and _sim_engine.has_method("get_entity_detail"):
+		detail = _sim_engine.get_entity_detail(entity_id)
+
+	if detail.is_empty():
+		_hover_tooltip_lines = PackedStringArray(["Agent %d" % entity_id])
+		return
+
+	# Line 1: name sex age job
+	var name_str: String = str(detail.get("name", "???"))
+	var sex_icon: String = "♂" if str(detail.get("sex", "")).to_lower() == "male" else "♀"
+	var age_str: String = str(int(detail.get("age_years", 0)))
+	var job_str: String = str(detail.get("job", "none"))
+	var job_tr: String = Locale.tr_id("JOB", job_str)
+
+	var line1: String = "%s %s %s%s %s" % [name_str, sex_icon, age_str, Locale.ltr("UI_AGE_SUFFIX"), job_tr]
+
+	# Line 2: mood | stress state
+	var mood_val: float = float(detail.get("mood_score", 0.0))
+	var mood_text: String
+	if mood_val > 0.3:
+		mood_text = Locale.ltr("UI_MOOD_GOOD")
+	elif mood_val > -0.3:
+		mood_text = Locale.ltr("UI_MOOD_NEUTRAL")
+	else:
+		mood_text = Locale.ltr("UI_MOOD_BAD")
+
+	var stress_state: String = str(detail.get("stress_state", "calm"))
+	# Locale.tr_id() calls .to_upper() internally, so "Alert" → STRESS_STATE_ALERT.
+	# New locale keys STRESS_STATE_ALERT/RESISTANCE/EXHAUSTION/COLLAPSE added to
+	# both en and ko ui.json to cover the Rust enum variants.
+	var stress_tr: String = Locale.tr_id("STRESS_STATE", stress_state)
+
+	var line2: String = "%s: %s | %s: %s" % [
+		Locale.ltr("UI_MOOD"), mood_text,
+		Locale.ltr("UI_STRESS"), stress_tr
+	]
+
+	_hover_tooltip_lines = PackedStringArray([line1, line2])
+
+
+func _draw_hover_tooltip() -> void:
+	if _hover_tooltip_lines.is_empty():
+		return
+
+	var font: Font = ThemeDB.fallback_font
+	var font_size: int = 11
+	var line_h: float = 16.0
+	var padding := Vector2(8.0, 5.0)
+
+	# Measure text width
+	var max_w: float = 0.0
+	for line in _hover_tooltip_lines:
+		var lw: float = font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		max_w = maxf(max_w, lw)
+
+	var box_w: float = max_w + padding.x * 2.0
+	var box_h: float = _hover_tooltip_lines.size() * line_h + padding.y * 2.0
+
+	# Position: offset from cursor, clamped to viewport
+	var pos: Vector2 = _hover_screen_pos + Vector2(16.0, -box_h - 8.0)
+	var vp_size: Vector2 = get_viewport_rect().size
+	pos.x = clampf(pos.x, 4.0, vp_size.x - box_w - 4.0)
+	pos.y = clampf(pos.y, 4.0, vp_size.y - box_h - 4.0)
+
+	# Convert screen position to canvas (draw) coordinates
+	var canvas_xform := get_canvas_transform()
+	var local_pos: Vector2 = canvas_xform.affine_inverse() * pos
+
+	# Background box
+	draw_rect(Rect2(local_pos, Vector2(box_w, box_h)), Color(0.078, 0.078, 0.078, 0.93))
+	# Border
+	draw_rect(Rect2(local_pos, Vector2(box_w, box_h)), Color(0.3, 0.3, 0.3, 0.5), false, 1.0)
+	# Text lines
+	for i in range(_hover_tooltip_lines.size()):
+		var text_color: Color
+		if i == 0:
+			text_color = Color(0.949, 0.851, 0.420)  # gold — name line
+		else:
+			text_color = Color(0.70, 0.70, 0.70)     # gray — info line
+		draw_string(
+			font,
+			local_pos + padding + Vector2(0.0, (i + 1) * line_h - 3.0),
+			_hover_tooltip_lines[i],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_color
+		)
 
 
 func _draw() -> void:
@@ -255,6 +391,8 @@ func _draw() -> void:
 					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
 				elif wood > 3.0:
 					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
+
+	_draw_hover_tooltip()
 
 
 func _draw_triangle(center: Vector2, size: float, color: Color) -> void:

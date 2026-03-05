@@ -9,6 +9,9 @@ var _left_dragging: bool = false
 var _left_drag_start: Vector2 = Vector2.ZERO
 var _left_was_dragged: bool = false
 const DRAG_THRESHOLD: float = 5.0
+## Fraction of viewport width from the left edge where detail panel begins.
+## Right 45% of screen is reserved for the entity detail panel.
+const DETAIL_PANEL_START_X_RATIO: float = 0.55
 
 ## Entity following
 var _following_entity_id: int = -1
@@ -53,6 +56,14 @@ func get_following_id() -> int:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# ★ FIX: When detail panel is open and mouse is over it, skip zoom so panel can scroll
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			if EntityDetailPanelV2.is_open:
+				var vp_w: float = get_viewport().get_visible_rect().size.x
+				if event.position.x > vp_w * DETAIL_PANEL_START_X_RATIO:
+					return  # don't zoom — let entity_detail_panel_v2 scroll
+
 	# Left-click drag pan
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -119,8 +130,10 @@ func _process(delta: float) -> void:
 		if entity != null and entity.is_alive:
 			var target := Vector2(entity.position) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 			position = position.lerp(target, 5.0 * delta)
-		else:
+		elif entity != null:
+			# GDScript entity confirmed dead — stop following
 			stop_following()
+		# else entity == null: may be Rust-world entity; freeze camera this frame
 
 	# Smooth zoom
 	var new_zoom: float = lerpf(zoom.x, _target_zoom, GameConfig.CAMERA_ZOOM_SPEED)

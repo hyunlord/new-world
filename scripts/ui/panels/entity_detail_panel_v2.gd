@@ -2,23 +2,34 @@ class_name EntityDetailPanelV2
 extends Control
 
 # ── Colors ──────────────────────────────────────────
-const CLR_BG := Color(0.08, 0.08, 0.08, 0.95)
-const CLR_TEXT := Color(0.80, 0.80, 0.80)
-const CLR_HEADER := Color(1.0, 1.0, 1.0)
-const CLR_NARRATIVE := Color(0.70, 0.70, 0.70)
-const CLR_NAME := Color(0.95, 0.85, 0.45)
-const CLR_GOOD := Color(0.50, 0.85, 0.50)
-const CLR_WARN := Color(0.95, 0.85, 0.30)
-const CLR_DANGER := Color(0.95, 0.35, 0.30)
-const CLR_CRISIS := Color(1.0, 0.2, 0.2)
-const CLR_DIM := Color(0.45, 0.45, 0.45)
-const CLR_BAR_BG := Color(0.15, 0.15, 0.15)
-const CLR_BAR_FILL := Color(0.30, 0.55, 0.80)
-const CLR_BAR_DANGER := Color(0.80, 0.30, 0.25)
-const CLR_VALUE_POS := Color(0.45, 0.75, 0.95)
-const CLR_VALUE_NEG := Color(0.95, 0.60, 0.30)
-const CLR_SECTION_LINE := Color(0.30, 0.30, 0.30)
-const CLR_COLLAPSE_ARROW := Color(0.60, 0.60, 0.60)
+const CLR_BG := Color(0.078, 0.078, 0.078, 0.95)   # #141414
+const CLR_TEXT := Color(0.80, 0.80, 0.80)            # #CCCCCC
+const CLR_HEADER := Color(1.0, 1.0, 1.0)             # #FFFFFF
+const CLR_NARRATIVE := Color(0.70, 0.70, 0.70)       # #B3B3B3
+const CLR_NAME := Color(0.949, 0.851, 0.420)         # #F2D96B
+const CLR_GOOD := Color(0.502, 0.851, 0.502)         # #80D980
+const CLR_WARN := Color(0.949, 0.851, 0.302)         # #F2D94D
+const CLR_DANGER := Color(0.949, 0.353, 0.302)       # #F25A4D
+const CLR_CRISIS := Color(1.0, 0.2, 0.2)             # #FF3333
+const CLR_DIM := Color(0.451, 0.451, 0.451)          # #737373
+const CLR_BAR_BG := Color(0.149, 0.149, 0.149)       # #262626
+const CLR_BAR_FILL := Color(0.302, 0.549, 0.80)      # #4D8CCC
+const CLR_BAR_DANGER := Color(0.80, 0.302, 0.251)    # #CC4D40
+const CLR_VALUE_POS := Color(0.451, 0.749, 0.949)    # #73BFF2
+const CLR_VALUE_NEG := Color(0.949, 0.600, 0.302)    # #F2994D
+const CLR_SECTION_LINE := Color(0.302, 0.302, 0.302) # #4D4D4D
+const CLR_COLLAPSE_ARROW := Color(0.60, 0.60, 0.60)  # #999999
+
+## Returns bar fill color based on value (0.0-1.0): red<0.15, orange 0.15-0.30, blue 0.30-0.70, green>0.70
+static func _bar_color_for_value(value: float) -> Color:
+	if value <= 0.15:
+		return Color(0.949, 0.353, 0.302)
+	elif value <= 0.30:
+		return Color(0.949, 0.600, 0.302)
+	elif value <= 0.70:
+		return Color(0.302, 0.549, 0.80)
+	else:
+		return Color(0.502, 0.851, 0.502)
 
 # ── Sizes ────────────────────────────────────────────
 const FONT_SIZE_HEADER := 14
@@ -36,6 +47,9 @@ const MARGIN_RIGHT := 20.0
 const SCROLLBAR_WIDTH := 8.0
 
 # ── State ────────────────────────────────────────────
+## Shared flag so camera_controller can skip zoom when panel is visible.
+static var is_open: bool = false
+
 var _entity_id: int = -1
 var _l2_data: Dictionary = {}
 var _l3_mind: Dictionary = {}
@@ -78,6 +92,19 @@ var _collapsed: Dictionary = {
 ## Stores the SimulationEngine reference for entity data queries.
 func init(sim_engine: Object) -> void:
 	_sim_engine = sim_engine
+	# ★ FIX: Ensure mouse wheel events reach this Control for scrolling
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	# ★ FIX: Clip _draw() output to panel bounds so scroll offset is visible
+	clip_contents = true
+	# ★ FIX: Allow keyboard input (PageUp/Down/Home/End) when panel has focus
+	focus_mode = Control.FOCUS_ALL
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		is_open = visible
+		if visible:
+			grab_focus()
 
 
 ## Shows entity data whether alive or deceased (delegates to set_entity_id).
@@ -102,6 +129,10 @@ func set_entity_id(entity_id: int) -> void:
 	if _sim_engine != null and _sim_engine.has_method("get_entity_detail"):
 		_l2_data = _sim_engine.get_entity_detail(entity_id)
 
+	# ★ FIX: Ensure max_scroll > 0 on first open so scroll works immediately.
+	# _content_height is 0.0 until _draw() runs; this temporary value is
+	# overwritten on the very next frame after queue_redraw() triggers _draw().
+	_content_height = 5000.0
 	queue_redraw()
 
 
@@ -244,11 +275,6 @@ func _generate_causal_summary(l2: Dictionary) -> Array:
 # ── Section 3: Needs ─────────────────────────────────
 
 func _draw_needs(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_NEEDS"), "needs")
-	if _is_collapsed("needs"):
-		return y
-
-	var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
 	var need_map: Array = [
 		["need_hunger", "NEED_HUNGER"],
 		["need_thirst", "NEED_THIRST"],
@@ -265,19 +291,29 @@ func _draw_needs(font: Font, x: float, y: float) -> float:
 		["need_meaning", "NEED_MEANING"],
 		["need_transcendence", "NEED_TRANSCENDENCE"],
 	]
+	var low_label: String = ""
+	var low_val: float = 1.0
+	for entry in need_map:
+		var v: float = float(_l2_data.get(entry[0], 1.0))
+		if v < low_val:
+			low_val = v
+			low_label = Locale.ltr(entry[1])
+	var needs_summary: String = ("%s %.2f" % [low_label, low_val]) if low_val < 0.5 else ""
 
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_NEEDS"), "needs", needs_summary)
+	if _is_collapsed("needs"):
+		return y
+
+	var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
 	for entry in need_map:
 		var val: float = float(_l2_data.get(entry[0], 1.0))
 		var label: String = Locale.ltr(entry[1])
-		var bar_color: Color = CLR_BAR_FILL
 		var suffix: String = ""
 		if val < 0.15:
-			bar_color = CLR_DANGER
 			suffix = Locale.ltr("UI_NEED_CRITICAL")
 		elif val < 0.30:
-			bar_color = CLR_BAR_DANGER
 			suffix = Locale.ltr("UI_NEED_LOW")
-		y = _draw_bar(font, x, y, panel_w, label, val, bar_color, suffix)
+		y = _draw_bar(font, x, y, panel_w, label, val, Color(-1.0, -1.0, -1.0), suffix)
 
 	return y + SECTION_GAP
 
@@ -310,7 +346,7 @@ func _draw_personality(font: Font, x: float, y: float) -> float:
 		var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
 		for i in range(mini(facets.size(), facet_keys.size())):
 			var label: String = Locale.ltr(facet_keys[i])
-			y = _draw_bar(font, x + 8.0, y, panel_w - 8.0, label, facets[i], CLR_BAR_FILL)
+			y = _draw_bar(font, x + 8.0, y, panel_w - 8.0, label, facets[i])
 
 	return y + SECTION_GAP
 
@@ -357,7 +393,14 @@ func _generate_personality_narrative(l2: Dictionary) -> String:
 # ── Section 5: Emotions ──────────────────────────────
 
 func _draw_emotions(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_EMOTIONS"), "emotions")
+	var dom_emo: String = str(_l2_data.get("dominant_emotion", ""))
+	var emo_summary: String = ""
+	if dom_emo != "":
+		var emo_val: float = float(_l2_data.get("emo_" + dom_emo, 0.0))
+		var emo_name: String = Locale.ltr("STRESS_EMO_" + dom_emo.to_upper())
+		emo_summary = "%s %.2f" % [emo_name, emo_val]
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_EMOTIONS"), "emotions", emo_summary)
 	if _is_collapsed("emotions"):
 		return y
 
@@ -379,10 +422,7 @@ func _draw_emotions(font: Font, x: float, y: float) -> float:
 	for entry in emo_map:
 		var val: float = float(_l2_data.get(entry[0], 0.0))
 		var label: String = Locale.ltr(entry[1])
-		var bar_color: Color = CLR_BAR_FILL
-		if entry[0] in ["emo_fear", "emo_anger", "emo_disgust"]:
-			bar_color = CLR_BAR_DANGER if val > 0.6 else CLR_BAR_FILL
-		y = _draw_bar(font, x, y, panel_w, label, val, bar_color)
+		y = _draw_bar(font, x, y, panel_w, label, val)
 
 	return y + SECTION_GAP
 
@@ -406,7 +446,11 @@ func _generate_emotion_narrative(l2: Dictionary) -> String:
 # ── Section 6: Stress ────────────────────────────────
 
 func _draw_stress(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_STRESS"), "stress")
+	var stress_level: float = float(_l2_data.get("stress_level", 0.0))
+	var stress_state: String = str(_l2_data.get("stress_state", "Calm"))
+	var stress_summary: String = "%s %.2f" % [stress_state, stress_level]
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_STRESS"), "stress", stress_summary)
 	if _is_collapsed("stress"):
 		return y
 
@@ -415,9 +459,7 @@ func _draw_stress(font: Font, x: float, y: float) -> float:
 	y += 4.0
 
 	var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
-	var stress_level: float = float(_l2_data.get("stress_level", 0.0))
 	var stress_color: Color = CLR_BAR_FILL
-	var stress_state: String = str(_l2_data.get("stress_state", "Calm"))
 	if stress_state in ["Exhaustion", "Collapse"]:
 		stress_color = CLR_DANGER
 	elif stress_state == "Resistance":
@@ -462,11 +504,18 @@ func _generate_stress_narrative(l2: Dictionary) -> String:
 # ── Section 7: Traits ────────────────────────────────
 
 func _draw_traits(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_TRAITS"), "traits")
+	var traits: PackedStringArray = _l2_data.get("active_traits", PackedStringArray())
+	var traits_summary: String = ""
+	if not traits.is_empty():
+		var tnames: Array = []
+		for i in range(mini(traits.size(), 3)):
+			var tkey: String = "TRAIT_" + str(traits[i]).to_upper()
+			tnames.append(Locale.ltr(tkey))
+		traits_summary = " · ".join(tnames)
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_TRAITS"), "traits", traits_summary)
 	if _is_collapsed("traits"):
 		return y
-
-	var traits: PackedStringArray = _l2_data.get("active_traits", PackedStringArray())
 	if traits.is_empty():
 		draw_string(font, Vector2(x, y + 11.0), "-",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE_NARRATIVE, CLR_DIM)
@@ -487,7 +536,10 @@ func _draw_traits(font: Font, x: float, y: float) -> float:
 # ── Section 8: Body ──────────────────────────────────
 
 func _draw_body(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_BODY"), "body")
+	var health: float = float(_l2_data.get("health", 1.0))
+	var body_summary: String = "%s %.2f" % [Locale.ltr("UI_BODY_HEALTH"), health]
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_BODY"), "body", body_summary)
 	if _is_collapsed("body"):
 		return y
 
@@ -496,7 +548,6 @@ func _draw_body(font: Font, x: float, y: float) -> float:
 	y += 4.0
 
 	var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
-	var health: float = float(_l2_data.get("health", 1.0))
 	var health_color: Color = CLR_GOOD if health > 0.6 else (CLR_WARN if health > 0.3 else CLR_DANGER)
 	y = _draw_bar(font, x, y, panel_w, Locale.ltr("UI_BODY_HEALTH"), health, health_color)
 
@@ -553,7 +604,12 @@ func _generate_body_narrative(l2: Dictionary) -> String:
 # ── Section 9: Intelligence ──────────────────────────
 
 func _draw_intelligence(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_INTELLIGENCE"), "intelligence")
+	var intel_summary: String = ""
+	if _l3_loaded:
+		var g: float = float(_l3_body.get("g_factor", 0.5))
+		intel_summary = "g=%.2f" % g
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_INTELLIGENCE"), "intelligence", intel_summary)
 	if _is_collapsed("intelligence"):
 		return y
 
@@ -569,7 +625,7 @@ func _draw_intelligence(font: Font, x: float, y: float) -> float:
 		var intel_arr: PackedFloat32Array = _l3_body.get("intelligence", PackedFloat32Array())
 		var g_factor: float = float(_l3_body.get("g_factor", 0.5))
 		var panel_w: float = size.x - MARGIN_LEFT - MARGIN_RIGHT
-		y = _draw_bar(font, x + 8.0, y, panel_w - 8.0, Locale.ltr("UI_INTEL_GENERAL"), g_factor, CLR_BAR_FILL)
+		y = _draw_bar(font, x + 8.0, y, panel_w - 8.0, Locale.ltr("UI_INTEL_GENERAL"), g_factor)
 		var intel_names: Array = [
 			"UI_INTEL_LINGUISTIC", "UI_INTEL_LOGICAL", "UI_INTEL_SPATIAL",
 			"UI_INTEL_KINESTHETIC", "UI_INTEL_MUSICAL", "UI_INTEL_INTERPERSONAL",
@@ -577,7 +633,7 @@ func _draw_intelligence(font: Font, x: float, y: float) -> float:
 		]
 		for i in range(mini(intel_arr.size(), intel_names.size())):
 			y = _draw_bar(font, x + 8.0, y, panel_w - 8.0,
-				Locale.ltr(intel_names[i]), intel_arr[i], CLR_BAR_FILL)
+				Locale.ltr(intel_names[i]), intel_arr[i])
 
 	return y + SECTION_GAP
 
@@ -616,7 +672,19 @@ func _generate_intelligence_narrative(l3_body: Dictionary) -> String:
 # ── Section 10: Skills ───────────────────────────────
 
 func _draw_skills(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_SKILLS"), "skills")
+	var skills_summary: String = ""
+	if _l3_loaded:
+		var top_skills: Array = _l3_skills.get("skills", [])
+		if not top_skills.is_empty():
+			top_skills = top_skills.filter(func(s): return int(s.get("level", 0)) >= 3)
+			top_skills.sort_custom(func(a, b): return int(a.get("level", 0)) > int(b.get("level", 0)))
+			if not top_skills.is_empty():
+				var s0 = top_skills[0]
+				var sid: String = str(s0.get("id", ""))
+				var slvl: int = int(s0.get("level", 0))
+				skills_summary = "%s(%d)" % [Locale.ltr("UI_SKILL_" + sid.to_upper()), slvl]
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_SKILLS"), "skills", skills_summary)
 	if _is_collapsed("skills"):
 		return y
 
@@ -662,7 +730,28 @@ static func _skill_rank_key(level: int) -> String:
 # ── Section 11: Values ───────────────────────────────
 
 func _draw_values(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_VALUES"), "values")
+	var values_summary: String = ""
+	if _l3_loaded:
+		var vals_arr: PackedFloat32Array = _l3_mind.get("values_all", PackedFloat32Array())
+		var vnames: Array = [
+			"LAW", "LOYALTY", "FAMILY", "FRIENDSHIP", "POWER", "TRUTH", "CUNNING",
+			"ELOQUENCE", "FAIRNESS", "DECORUM", "TRADITION", "ARTWORK", "COOPERATION",
+			"INDEPENDENCE", "STOICISM", "INTROSPECTION", "SELF_CONTROL", "TRANQUILITY",
+			"HARMONY", "MERRIMENT", "CRAFTSMANSHIP", "MARTIAL_PROWESS", "SKILL",
+			"HARD_WORK", "SACRIFICE", "COMPETITION", "PERSEVERANCE", "LEISURE",
+			"COMMERCE", "ROMANCE", "KNOWLEDGE", "NATURE", "PEACE",
+		]
+		var best_i: int = 0
+		var best_abs: float = 0.0
+		for i in range(mini(vals_arr.size(), vnames.size())):
+			if absf(float(vals_arr[i])) > best_abs:
+				best_abs = absf(float(vals_arr[i]))
+				best_i = i
+		if best_abs > 0.1 and best_i < vnames.size():
+			var sign_str: String = "+" if float(vals_arr[best_i]) >= 0.0 else ""
+			values_summary = "%s %s%.1f" % [Locale.ltr("VALUE_" + vnames[best_i]), sign_str, float(vals_arr[best_i])]
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_VALUES"), "values", values_summary)
 	if _is_collapsed("values"):
 		return y
 
@@ -739,7 +828,13 @@ func _generate_values_narrative(l3_mind: Dictionary) -> String:
 # ── Section 12: Relationships ────────────────────────
 
 func _draw_relationships(font: Font, x: float, y: float) -> float:
-	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_RELATIONSHIPS"), "relationships")
+	var rel_summary: String = ""
+	if _l3_loaded:
+		var rels_preview: Array = _l3_social.get("relationships", [])
+		if not rels_preview.is_empty():
+			rel_summary = "%d" % rels_preview.size()
+
+	y = _draw_section_header(font, x, y, Locale.ltr("UI_SECTION_RELATIONSHIPS"), "relationships", rel_summary)
 	if _is_collapsed("relationships"):
 		return y
 
@@ -1002,6 +1097,25 @@ func _gui_input(event: InputEvent) -> void:
 				queue_redraw()
 
 
+## Backup scroll handler — catches wheel events that _gui_input() may miss
+## when the panel is a direct child of CanvasLayer rather than a Control tree.
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible or _l2_data.is_empty():
+		return
+	if event is InputEventMouseButton and event.pressed:
+		var mouse_local := get_local_mouse_position()
+		if Rect2(Vector2.ZERO, size).has_point(mouse_local):
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_scroll_offset = maxf(0.0, _scroll_offset - 40.0)
+				queue_redraw()
+				get_viewport().set_input_as_handled()
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				var max_scroll := maxf(0.0, _content_height - size.y)
+				_scroll_offset = minf(max_scroll, _scroll_offset + 40.0)
+				queue_redraw()
+				get_viewport().set_input_as_handled()
+
+
 func _check_section_click(click_pos: Vector2) -> void:
 	var _adjusted_y: float = click_pos.y + _scroll_offset
 	for section_id in _section_rects:
@@ -1021,20 +1135,31 @@ func _check_section_click(click_pos: Vector2) -> void:
 
 # ── Drawing Helpers ──────────────────────────────────
 
-func _draw_section_header(font: Font, x: float, y: float, title: String, section_id: String) -> float:
+func _draw_section_header(font: Font, x: float, y: float, title: String, section_id: String, summary: String = "") -> float:
 	var arrow: String = "▶" if _is_collapsed(section_id) else "▼"
 	var header_text: String = "%s %s" % [arrow, title]
 	draw_string(font, Vector2(x, y + 12.0), header_text,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE_HEADER, CLR_HEADER)
 
+	if _is_collapsed(section_id) and summary != "":
+		draw_string(font, Vector2(size.x - MARGIN_RIGHT - 150.0, y + 12.0), summary,
+			HORIZONTAL_ALIGNMENT_RIGHT, 150, FONT_SIZE_SMALL, CLR_DIM)
+
 	var panel_w: float = size.x - x - MARGIN_RIGHT
 	_section_rects[section_id] = Rect2(x, y - _scroll_offset, panel_w, LINE_HEIGHT)
+
+	draw_line(
+		Vector2(x, y + LINE_HEIGHT - 2.0),
+		Vector2(size.x - MARGIN_RIGHT, y + LINE_HEIGHT - 2.0),
+		CLR_SECTION_LINE, 1.0
+	)
 
 	return y + LINE_HEIGHT + 2.0
 
 
 func _draw_bar(font: Font, x: float, y: float, w: float,
-		label: String, value: float, color: Color, suffix: String = "") -> float:
+		label: String, value: float, color: Color = Color(-1.0, -1.0, -1.0), suffix: String = "") -> float:
+	var bar_color: Color = color if color.r >= 0.0 else _bar_color_for_value(value)
 	draw_string(font, Vector2(x, y + 11.0), label,
 		HORIZONTAL_ALIGNMENT_LEFT, int(BAR_LABEL_W), FONT_SIZE_BODY, CLR_TEXT)
 
@@ -1046,7 +1171,7 @@ func _draw_bar(font: Font, x: float, y: float, w: float,
 
 	var fill_w: float = bar_w * clampf(value, 0.0, 1.0)
 	if fill_w > 0.0:
-		draw_rect(Rect2(bar_x, y + 2.0, fill_w, BAR_HEIGHT), color)
+		draw_rect(Rect2(bar_x, y + 2.0, fill_w, BAR_HEIGHT), bar_color)
 
 	var val_text: String = "%.2f" % value
 	if suffix != "":

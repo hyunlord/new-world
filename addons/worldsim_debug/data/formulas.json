@@ -1,0 +1,145 @@
+[
+  {
+    "id": "temp",
+    "name": "Temperature",
+    "name_ko": "기온 계산",
+    "category": "climate",
+    "formula": "T = T_base(lat) + T_alt + T_water + T_season",
+    "params": [
+      {"name": "T_base(lat)", "formula": "30 - 0.7 × |lat|", "desc": "Latitude base temperature", "desc_ko": "위도 기반 기온"},
+      {"name": "T_alt", "formula": "-6.5 × (elev_m / 1000)", "desc": "Lapse rate 6.5°C/km", "desc_ko": "환경기온감률"},
+      {"name": "T_water", "formula": "±3°C (ocean proximity)", "desc": "Ocean temperature moderation", "desc_ko": "해양 온도 완화"},
+      {"name": "T_season", "formula": "±A_season × sin(2π × day / 365)", "desc": "Seasonal oscillation amplitude", "desc_ko": "계절 진동 진폭"}
+    ],
+    "source": "Bundle 4, Axis 1 — Latitude-Altitude Climate Model"
+  },
+  {
+    "id": "season_mod",
+    "name": "Season Modifier",
+    "name_ko": "계절 수정자",
+    "category": "economy",
+    "formula": "S_mod = base_yield × (1 + season_amp × sin(2π × day_of_year / days_per_year))",
+    "params": [
+      {"name": "base_yield", "formula": "biome_base × fertility", "desc": "Base resource yield from biome and soil fertility", "desc_ko": "바이옴 기반 자원 산출량"},
+      {"name": "season_amp", "formula": "0.0–0.6 (biome-specific)", "desc": "Amplitude of seasonal variation", "desc_ko": "계절 변동 진폭"},
+      {"name": "day_of_year", "formula": "calendar.day % days_per_year", "desc": "Current day within the year cycle", "desc_ko": "연간 주기 내 현재 일수"},
+      {"name": "days_per_year", "formula": "GameConfig.DAYS_PER_YEAR", "desc": "Configurable year length", "desc_ko": "설정 가능한 연도 길이"}
+    ],
+    "source": "Bundle 4, Axis 3 — Seasonal Resource Cycles"
+  },
+  {
+    "id": "cobb_douglas",
+    "name": "Cobb-Douglas Production",
+    "name_ko": "콥-더글러스 생산 함수",
+    "category": "economy",
+    "formula": "Y = A × L^α × K^β × R^γ",
+    "params": [
+      {"name": "A", "formula": "tech_multiplier × S_mod", "desc": "Total factor productivity (tech level × season)", "desc_ko": "총요소 생산성 (기술 수준 × 계절)"},
+      {"name": "L", "formula": "settlement.workers", "desc": "Labor input (agent count assigned to production)", "desc_ko": "노동 투입 (생산 배정 에이전트 수)"},
+      {"name": "α", "formula": "0.6 (default)", "desc": "Labor elasticity of output", "desc_ko": "노동의 산출 탄력성"},
+      {"name": "K", "formula": "settlement.capital_stock", "desc": "Capital stock (buildings + tools)", "desc_ko": "자본 스톡 (건물 + 도구)"},
+      {"name": "β", "formula": "0.3 (default)", "desc": "Capital elasticity of output", "desc_ko": "자본의 산출 탄력성"},
+      {"name": "R", "formula": "tile.resource_level", "desc": "Resource abundance of the tile", "desc_ko": "타일의 자원 풍요도"},
+      {"name": "γ", "formula": "0.1 (default)", "desc": "Resource elasticity of output", "desc_ko": "자원의 산출 탄력성"}
+    ],
+    "source": "Bundle 1, Axis 4 — Economic Production (Cobb & Douglas, 1928)"
+  },
+  {
+    "id": "logistic_regen",
+    "name": "Logistic Regeneration",
+    "name_ko": "로지스틱 자원 재생",
+    "category": "ecology",
+    "formula": "dR/dt = r × R × (1 - R/K) - H",
+    "params": [
+      {"name": "r", "formula": "biome_growth_rate", "desc": "Intrinsic regeneration rate", "desc_ko": "내재 재생 속도"},
+      {"name": "R", "formula": "tile.resource_level", "desc": "Current resource stock", "desc_ko": "현재 자원 재고"},
+      {"name": "K", "formula": "tile.carrying_capacity", "desc": "Environmental carrying capacity", "desc_ko": "환경 수용 능력"},
+      {"name": "H", "formula": "total_harvest_this_tick", "desc": "Harvest pressure from agents + settlements", "desc_ko": "에이전트 + 정착지의 채집 압력"}
+    ],
+    "source": "Bundle 2, Axis 2 — Ecological Carrying Capacity (Lotka-Volterra)"
+  },
+  {
+    "id": "stress_model",
+    "name": "Stress Pipeline",
+    "name_ko": "스트레스 파이프라인",
+    "category": "psychology",
+    "formula": "σ_total = Σ(stressor_i × weight_i) × personality_mod − coping_reduction",
+    "params": [
+      {"name": "stressor_i", "formula": "0.0–1.0 per stressor type", "desc": "Stressor activation level (hunger, violence, loss, etc.)", "desc_ko": "스트레서 활성화 수준 (기아, 폭력, 상실 등)"},
+      {"name": "weight_i", "formula": "stressor.weight (data-defined)", "desc": "Stressor severity weight from data files", "desc_ko": "데이터 파일에서 정의된 스트레서 심각도 가중치"},
+      {"name": "personality_mod", "formula": "1 ± HEXACO_neuroticism × 0.3", "desc": "Personality amplification of stress response", "desc_ko": "스트레스 반응의 성격 증폭"},
+      {"name": "coping_reduction", "formula": "Σ(active_coping.value)", "desc": "Reduction from active coping behaviors", "desc_ko": "활성 대처 행동의 스트레스 감소량"}
+    ],
+    "source": "Bundle 3, Axis 1 — Psychological Stress Model (Lazarus & Folkman)"
+  },
+  {
+    "id": "legitimacy",
+    "name": "Weber Legitimacy",
+    "name_ko": "베버 정당성",
+    "category": "politics",
+    "formula": "L = w_trad × L_trad + w_char × L_char + w_legal × L_legal",
+    "params": [
+      {"name": "L_trad", "formula": "settlement.tradition_score", "desc": "Traditional authority (ancestry, custom, ritual)", "desc_ko": "전통적 권위 (혈통, 관습, 의례)"},
+      {"name": "L_char", "formula": "leader.charisma × leader.victories", "desc": "Charismatic authority (personal magnetism + record)", "desc_ko": "카리스마적 권위 (개인 매력 + 업적)"},
+      {"name": "L_legal", "formula": "faction.law_compliance_rate", "desc": "Legal-rational authority (rule-following)", "desc_ko": "법-합리적 권위 (규칙 준수율)"},
+      {"name": "w_*", "formula": "regime_type_weights[]", "desc": "Regime-type specific weight distribution", "desc_ko": "정권 유형별 가중치 분배"}
+    ],
+    "source": "Bundle 4, Axis 6 — Political Legitimacy (Weber, 1922)"
+  },
+  {
+    "id": "circumscription",
+    "name": "Carneiro Circumscription",
+    "name_ko": "카르네이로 경계이론",
+    "category": "politics",
+    "formula": "P_war = f(pop_density, resource_scarcity, geographic_constriction)",
+    "params": [
+      {"name": "pop_density", "formula": "settlement.population / tile.habitable_area", "desc": "Population pressure on available land", "desc_ko": "가용 토지 대비 인구 압력"},
+      {"name": "resource_scarcity", "formula": "1 - (resource_level / carrying_capacity)", "desc": "Relative resource deficit", "desc_ko": "상대적 자원 부족도"},
+      {"name": "geographic_constriction", "formula": "fraction of borders that are impassable", "desc": "How constrained expansion options are", "desc_ko": "확장 가능 방향의 제한도"},
+      {"name": "P_war", "formula": "logistic(sum of factors × weights)", "desc": "Probability of initiating conflict", "desc_ko": "갈등 개시 확률"}
+    ],
+    "source": "Bundle 4, Axis 5 — War Emergence (Carneiro, 1970)"
+  },
+  {
+    "id": "fallow_recovery",
+    "name": "Trenbath Fallow Recovery",
+    "name_ko": "휴경지 회복 모델",
+    "category": "ecology",
+    "formula": "F(t) = K × (1 - e^(-λ × t_fallow))",
+    "params": [
+      {"name": "K", "formula": "tile.carrying_capacity", "desc": "Maximum recoverable fertility", "desc_ko": "최대 회복 가능 비옥도"},
+      {"name": "λ", "formula": "biome.recovery_rate", "desc": "Exponential recovery rate constant", "desc_ko": "지수적 회복 속도 상수"},
+      {"name": "t_fallow", "formula": "ticks_since_last_harvest", "desc": "Time elapsed since last harvest event", "desc_ko": "마지막 수확 이후 경과 틱 수"}
+    ],
+    "source": "Bundle 2, Axis 3 — Soil Fertility Recovery (Trenbath, 1984)"
+  },
+  {
+    "id": "fire_spread",
+    "name": "Alexandridis Wildfire CA",
+    "name_ko": "산불 확산 셀룰러 오토마타",
+    "category": "environment",
+    "formula": "P_spread = p0 × (1 + p_veg) × (1 + p_wind) × (1 + p_slope)",
+    "params": [
+      {"name": "p0", "formula": "0.58 (base ignition constant)", "desc": "Base fire spread probability per cell-step", "desc_ko": "셀 단계당 기본 화재 확산 확률"},
+      {"name": "p_veg", "formula": "f(vegetation_density, moisture)", "desc": "Vegetation fuel load modifier", "desc_ko": "식생 연료 부하 수정자"},
+      {"name": "p_wind", "formula": "f(wind_speed, wind_direction)", "desc": "Wind speed and direction modifier", "desc_ko": "풍속 및 풍향 수정자"},
+      {"name": "p_slope", "formula": "f(elevation_gradient)", "desc": "Terrain slope modifier (fire climbs uphill)", "desc_ko": "지형 경사 수정자 (화재는 오르막으로 확산)"}
+    ],
+    "source": "Bundle 3, Axis 5 — Wildfire Spread (Alexandridis et al., 2008)"
+  },
+  {
+    "id": "nonlinear_harvest",
+    "name": "Nonlinear Extraction",
+    "name_ko": "비선형 자원 채집",
+    "category": "economy",
+    "formula": "H = H_max × (R / (R + R_half)) × n_gatherers^α",
+    "params": [
+      {"name": "H_max", "formula": "biome.max_harvest_rate", "desc": "Maximum possible harvest per tick", "desc_ko": "틱당 최대 가능 수확량"},
+      {"name": "R", "formula": "tile.resource_level", "desc": "Current resource stock", "desc_ko": "현재 자원 재고"},
+      {"name": "R_half", "formula": "K / 2", "desc": "Half-saturation constant (Michaelis-Menten)", "desc_ko": "반포화 상수 (미카엘리스-멘텐)"},
+      {"name": "n_gatherers", "formula": "agents_assigned_to_gathering", "desc": "Number of agents collecting resources", "desc_ko": "자원 채집에 배정된 에이전트 수"},
+      {"name": "α", "formula": "0.7 (diminishing returns)", "desc": "Returns-to-scale exponent for labor", "desc_ko": "노동의 수확체감 지수"}
+    ],
+    "source": "Bundle 2, Axis 1 — Resource Extraction (Michaelis-Menten Kinetics)"
+  }
+]

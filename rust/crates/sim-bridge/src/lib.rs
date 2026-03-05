@@ -16,6 +16,7 @@ mod runtime_bindings;
 mod runtime_dict;
 mod runtime_events;
 mod runtime_registry;
+mod debug_api;
 mod ws2_codec;
 
 use godot::prelude::*;
@@ -249,6 +250,14 @@ impl WorldSimRuntime {
             if state.accumulator > tick_duration * 3.0 {
                 state.accumulator = 0.0;
             }
+        }
+
+        // Write debug snapshot for EditorPlugin every 60 ticks (file-based IPC).
+        if state.engine.debug_mode
+            && ticks_processed > 0
+            && state.engine.current_tick() % 60 == 0
+        {
+            debug_api::write_debug_snapshot(state);
         }
 
         out.set("initialized", true);
@@ -813,6 +822,81 @@ impl WorldSimRuntime {
             result.push(&d);
         }
         result
+    }
+
+    // ── Debug API ──────────────────────────────────────────────────────────────
+
+    /// Enables or disables debug mode (controls PerfTracker overhead).
+    #[func]
+    fn enable_debug_mode(&mut self, enabled: bool) {
+        if let Some(state) = self.state.as_mut() {
+            debug_api::enable_debug(state, enabled);
+        }
+    }
+
+    /// Returns a summary of the current simulation state.
+    #[func]
+    fn get_debug_summary(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        debug_api::get_debug_summary(state)
+    }
+
+    /// Returns per-system timing data (populated when debug_mode is true).
+    #[func]
+    fn get_system_perf(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        debug_api::get_system_perf(state)
+    }
+
+    /// Returns last 300 tick durations in milliseconds.
+    #[func]
+    fn get_tick_history(&self) -> PackedFloat32Array {
+        let Some(state) = self.state.as_ref() else {
+            return PackedFloat32Array::new();
+        };
+        debug_api::get_tick_history(state)
+    }
+
+    /// Returns all SimConfig key-value pairs.
+    #[func]
+    fn get_config_values(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        debug_api::get_config_values(state)
+    }
+
+    /// Sets a SimConfig value by key. Returns false if the key doesn't exist.
+    #[func]
+    fn set_config_value(&mut self, key: GString, value: f64) -> bool {
+        let Some(state) = self.state.as_mut() else {
+            return false;
+        };
+        debug_api::set_config_value(state, &key.to_string(), value)
+    }
+
+    /// Returns guardrail status for all 9 guardrails.
+    #[func]
+    fn get_guardrail_status(&self) -> Array<VarDictionary> {
+        let Some(state) = self.state.as_ref() else {
+            return Array::new();
+        };
+        debug_api::get_guardrail_status(state)
+    }
+
+    /// Queries entities by condition and returns matching entity IDs.
+    ///
+    /// Supported conditions: `"stress_gte"`, `"health_lte"`, `"hunger_lte"`.
+    #[func]
+    fn query_entities_by_condition(&self, condition: GString, threshold: f64) -> PackedInt32Array {
+        let Some(state) = self.state.as_ref() else {
+            return PackedInt32Array::new();
+        };
+        debug_api::query_entities_by_condition(state, &condition.to_string(), threshold)
     }
 }
 

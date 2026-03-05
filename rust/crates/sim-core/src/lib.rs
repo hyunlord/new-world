@@ -17,6 +17,7 @@ pub mod building;
 pub use ids::{EntityId, SettlementId, BuildingId, TraitId, SkillId, TechId};
 pub use enums::*;
 pub use config::ConfigSummary;
+pub use config::SimConfig;
 pub use calendar::GameCalendar;
 pub use settlement::Settlement;
 pub use building::Building;

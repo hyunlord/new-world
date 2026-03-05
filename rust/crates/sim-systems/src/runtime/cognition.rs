@@ -12,7 +12,7 @@ use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    SettlementId, Sex, SocialClass, TechState, TerrainType, Tile, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 
@@ -698,6 +698,92 @@ fn behavior_select_action(
     best_action
 }
 
+/// Finds the nearest passable tile matching a predicate within `radius` of position.
+/// Returns `(x, y)` or `None` if nothing found.
+fn find_nearest_tile(
+    position: &Position,
+    resources: &SimResources,
+    radius: i32,
+    predicate: impl Fn(&Tile) -> bool,
+) -> Option<(i32, i32)> {
+    let mut best: Option<(i32, i32)> = None;
+    let mut best_dist = i32::MAX;
+    for dy in -radius..=radius {
+        for dx in -radius..=radius {
+            let x = position.x + dx;
+            let y = position.y + dy;
+            if !resources.map.in_bounds(x, y) {
+                continue;
+            }
+            let tile = resources.map.get(x as u32, y as u32);
+            if !tile.passable {
+                continue;
+            }
+            if !predicate(tile) {
+                continue;
+            }
+            let dist = dx.abs() + dy.abs();
+            if dist > 0 && dist < best_dist {
+                best_dist = dist;
+                best = Some((x, y));
+            }
+        }
+    }
+    best
+}
+
+/// Finds nearest passable tile with a specific resource type that has amount > 0.
+fn find_nearest_resource_tile(
+    position: &Position,
+    resources: &SimResources,
+    radius: i32,
+    resource_type: ResourceType,
+) -> Option<(i32, i32)> {
+    find_nearest_tile(position, resources, radius, |tile| {
+        tile.resources.iter().any(|r| r.resource_type == resource_type && r.amount > 0.0)
+    })
+}
+
+/// Finds nearest passable tile with one of the specified terrain types.
+fn find_nearest_terrain_tile(
+    position: &Position,
+    resources: &SimResources,
+    radius: i32,
+    terrains: &[TerrainType],
+) -> Option<(i32, i32)> {
+    find_nearest_tile(position, resources, radius, |tile| {
+        terrains.contains(&tile.terrain)
+    })
+}
+
+/// Finds a passable tile adjacent (4-directional) to `target`, closest to `position`.
+fn find_passable_adjacent(
+    position: &Position,
+    resources: &SimResources,
+    target: (i32, i32),
+) -> Option<(i32, i32)> {
+    const DELTAS: [(i32, i32); 4] = [(0, -1), (0, 1), (-1, 0), (1, 0)];
+    let mut best: Option<(i32, i32)> = None;
+    let mut best_dist = i32::MAX;
+    for (dx, dy) in DELTAS {
+        let ax = target.0 + dx;
+        let ay = target.1 + dy;
+        if !resources.map.in_bounds(ax, ay) {
+            continue;
+        }
+        let tile = resources.map.get(ax as u32, ay as u32);
+        if !tile.passable {
+            continue;
+        }
+        let dist = (ax - position.x).abs() + (ay - position.y).abs();
+        if dist < best_dist {
+            best_dist = dist;
+            best = Some((ax, ay));
+        }
+    }
+    best
+}
+
 fn behavior_assign_action(
     behavior: &mut Behavior,
     position: &Position,
@@ -708,13 +794,47 @@ fn behavior_assign_action(
     stress_level: f32,
     allostatic_load: f32,
 ) {
-    let mut target_x = position.x;
-    let mut target_y = position.y;
-    if action == ActionType::Wander {
-        let target = behavior_pick_wander_target(position, resources, tick, entity_raw);
-        target_x = target.0;
-        target_y = target.1;
-    }
+    let (target_x, target_y) = match action {
+        ActionType::Wander => {
+            behavior_pick_wander_target(position, resources, tick, entity_raw)
+        }
+        ActionType::Forage | ActionType::Hunt | ActionType::Eat | ActionType::TakeFromStockpile | ActionType::GatherHerbs => {
+            find_nearest_resource_tile(position, resources, 15, ResourceType::Food)
+                .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
+        }
+        ActionType::Drink => {
+            find_nearest_terrain_tile(
+                position,
+                resources,
+                20,
+                &[TerrainType::ShallowWater],
+            )
+            .and_then(|water_pos| find_passable_adjacent(position, resources, water_pos))
+            .unwrap_or((position.x, position.y))
+        }
+        ActionType::GatherWood => {
+            find_nearest_terrain_tile(
+                position,
+                resources,
+                15,
+                &[TerrainType::Forest, TerrainType::DenseForest],
+            )
+            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
+        }
+        ActionType::GatherStone => {
+            find_nearest_terrain_tile(
+                position,
+                resources,
+                15,
+                &[TerrainType::Hill, TerrainType::Mountain],
+            )
+            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
+        }
+        ActionType::Socialize | ActionType::VisitPartner | ActionType::Explore => {
+            behavior_pick_wander_target(position, resources, tick, entity_raw)
+        }
+        _ => (position.x, position.y),
+    };
 
     let base_timer = behavior_base_timer(action);
     let stress_exempt = matches!(

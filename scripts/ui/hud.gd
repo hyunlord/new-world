@@ -41,24 +41,10 @@ var _entity_job_label: Label
 var _entity_info_label: Label
 var _entity_action_label: Label
 var _entity_inventory_label: Label
-var _hunger_bar: ProgressBar
-var _hunger_pct_label: Label
-var _hunger_name_label: Label
-var _energy_bar: ProgressBar
-var _energy_pct_label: Label
-var _energy_name_label: Label
-var _social_bar: ProgressBar
-var _social_pct_label: Label
-var _social_name_label: Label
-var _thirst_bar: ProgressBar
-var _thirst_pct_label: Label
-var _thirst_name_label: Label
-var _warmth_bar: ProgressBar
-var _warmth_pct_label: Label
-var _warmth_name_label: Label
-var _safety_bar: ProgressBar
-var _safety_pct_label: Label
-var _safety_name_label: Label
+var _need_bars: Array[ProgressBar] = []
+var _need_labels: Array[Label] = []
+var _need_pct_labels: Array[Label] = []
+var _need_warn_labels: Array[Label] = []
 var _entity_stats_label: Label
 
 # Building panel
@@ -78,6 +64,9 @@ const NOTIFICATION_DURATION: float = 4.0
 var _help_overlay: Control
 var _help_visible: bool = false
 var _was_running_before_help: bool = false
+
+# Debug overlay (F3 toggle)
+var _debug_overlay: CanvasLayer
 
 # Resource legend
 var _resource_legend: PanelContainer
@@ -122,8 +111,6 @@ var _selected_building_id: int = -1
 # Debug cheat panel (F12 toggle, lazy init)
 var _debug_panel: CanvasLayer = null
 
-# Hunger blink
-var _hunger_blink_timer: float = 0.0
 const _ENTITY_NEED_STAT_IDS: Array[StringName] = [
 	&"NEED_HUNGER",
 	&"NEED_ENERGY",
@@ -293,8 +280,8 @@ func _build_entity_panel() -> void:
 	_entity_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_entity_panel.offset_left = 10
 	_entity_panel.offset_bottom = -10
-	_entity_panel.offset_top = -280
-	_entity_panel.offset_right = 320
+	_entity_panel.offset_top = -230
+	_entity_panel.offset_right = 250
 	_entity_panel.visible = false
 
 	var bg := StyleBoxFlat.new()
@@ -326,54 +313,41 @@ func _build_entity_panel() -> void:
 	vbox.add_child(_entity_inventory_label)
 	vbox.add_child(_make_separator())
 
-	# Hunger bar with percentage
-	var hunger_row := _make_bar_row(Locale.ltr("UI_HUNGER"), Color(0.9, 0.2, 0.2))
-	_hunger_bar = hunger_row[0]
-	_hunger_pct_label = hunger_row[1]
-	_hunger_name_label = hunger_row[3]
-	vbox.add_child(hunger_row[2])
-
-	# Thirst bar
-	var thirst_row := _make_bar_row(Locale.ltr("NEED_THIRST"), Color(0.392, 0.710, 0.965))
-	_thirst_bar = thirst_row[0]
-	_thirst_pct_label = thirst_row[1]
-	_thirst_name_label = thirst_row[3]
-	vbox.add_child(thirst_row[2])
-
-	# Energy bar with percentage
-	var energy_row := _make_bar_row(Locale.ltr("UI_ENERGY"), Color(0.9, 0.8, 0.2))
-	_energy_bar = energy_row[0]
-	_energy_pct_label = energy_row[1]
-	_energy_name_label = energy_row[3]
-	vbox.add_child(energy_row[2])
-
-	# Warmth bar
-	var warmth_row := _make_bar_row(Locale.ltr("NEED_WARMTH"), Color(1.0, 0.541, 0.396))
-	_warmth_bar = warmth_row[0]
-	_warmth_pct_label = warmth_row[1]
-	_warmth_name_label = warmth_row[3]
-	vbox.add_child(warmth_row[2])
-
-	# Safety bar
-	var safety_row := _make_bar_row(Locale.ltr("NEED_SAFETY"), Color(0.584, 0.459, 0.804))
-	_safety_bar = safety_row[0]
-	_safety_pct_label = safety_row[1]
-	_safety_name_label = safety_row[3]
-	vbox.add_child(safety_row[2])
-
-	# Social bar with percentage
-	var social_row := _make_bar_row(Locale.ltr("UI_SOCIAL"), Color(0.3, 0.5, 0.9))
-	_social_bar = social_row[0]
-	_social_pct_label = social_row[1]
-	_social_name_label = social_row[3]
-	vbox.add_child(social_row[2])
+	# 3 dynamic need bar slots (show most critical needs)
+	for i in range(3):
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+		var name_lbl := Label.new()
+		name_lbl.custom_minimum_size.x = 50
+		name_lbl.add_theme_font_size_override("font_size", 11)
+		name_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+		var bar := ProgressBar.new()
+		bar.custom_minimum_size = Vector2(80, 12)
+		bar.max_value = 100
+		bar.show_percentage = false
+		var pct_lbl := Label.new()
+		pct_lbl.custom_minimum_size.x = 35
+		pct_lbl.add_theme_font_size_override("font_size", 10)
+		pct_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		var warn_lbl := Label.new()
+		warn_lbl.add_theme_font_size_override("font_size", 10)
+		warn_lbl.text = ""
+		row.add_child(name_lbl)
+		row.add_child(bar)
+		row.add_child(pct_lbl)
+		row.add_child(warn_lbl)
+		vbox.add_child(row)
+		_need_bars.append(bar)
+		_need_labels.append(name_lbl)
+		_need_pct_labels.append(pct_lbl)
+		_need_warn_labels.append(warn_lbl)
 
 	vbox.add_child(_make_separator())
 	_entity_stats_label = _make_label("", "bar_label", Color(0.6, 0.6, 0.6))
 	vbox.add_child(_entity_stats_label)
 
 	_entity_detail_btn = Button.new()
-	_entity_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
+	_entity_detail_btn.text = Locale.ltr("UI_MINI_DETAIL_HINT")
 	_entity_detail_btn.flat = true
 	_entity_detail_btn.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_hint"))
 	_entity_detail_btn.add_theme_color_override("font_color", Color(0.5, 0.7, 0.5))
@@ -627,7 +601,7 @@ func _process(delta: float) -> void:
 		_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(total_stone))
 
 	# Update selected entity
-	if _selected_entity_id >= 0 and _entity_manager:
+	if _selected_entity_id >= 0:
 		_update_entity_panel(delta)
 
 	# Update selected building
@@ -639,11 +613,108 @@ func _process(delta: float) -> void:
 
 
 func _update_entity_panel(delta: float) -> void:
+	# Rust-first: try live data from sim_engine
+	if _sim_engine != null:
+		var rust_detail: Dictionary = _sim_engine.get_entity_detail(_selected_entity_id)
+		if not rust_detail.is_empty():
+			var snap: Dictionary = _get_rust_snapshot(_selected_entity_id)
+			_update_entity_panel_from_rust(delta, rust_detail, snap)
+			return
+
+	# GDScript fallback (legacy path — no live simulation data)
+	if _entity_manager == null:
+		_on_entity_deselected()
+		return
 	var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
 	if entity == null or not entity.is_alive:
 		_on_entity_deselected()
 		return
+	_update_entity_panel_from_gdscript(delta, entity)
 
+
+## Returns the agent_snapshot dict for the given entity_id, or {} if not found.
+func _get_rust_snapshot(entity_id: int) -> Dictionary:
+	if _sim_engine == null:
+		return {}
+	var snaps: Array = _sim_engine.get_agent_snapshots()
+	for i in range(snaps.size()):
+		var snap: Dictionary = snaps[i]
+		if int(snap.get("entity_id", -1)) == entity_id:
+			return snap
+	return {}
+
+
+func _update_entity_panel_from_rust(_delta: float, detail: Dictionary, snap: Dictionary) -> void:
+	var alive: bool = bool(detail.get("alive", true))
+	if not alive:
+		_on_entity_deselected()
+		return
+
+	var entity_name: String = str(detail.get("name", "???"))
+	var job_str: String = str(snap.get("job", "none"))
+	var action_str: String = str(snap.get("action", "idle"))
+	var growth_str: String = str(detail.get("growth_stage", "adult"))
+	var age_years: float = float(detail.get("age_years", 0.0))
+	var settlement_id: int = int(detail.get("settlement_id", -1))
+
+	# Job color
+	var job_colors: Dictionary = {
+		"none": Color(0.6, 0.6, 0.6),
+		"gatherer": Color(0.3, 0.8, 0.2),
+		"lumberjack": Color(0.6, 0.35, 0.1),
+		"builder": Color(0.9, 0.6, 0.1),
+		"miner": Color(0.5, 0.6, 0.75),
+	}
+	var jc: Color = job_colors.get(job_str, Color.WHITE)
+	_entity_name_label.text = entity_name
+	_entity_name_label.add_theme_color_override("font_color", jc)
+
+	# Info line: stage | job | S# | age
+	var stage_tr: String = Locale.tr_id("STAGE", growth_str)
+	var job_tr: String = Locale.tr_id("JOB", job_str)
+	var settlement_text: String = ""
+	if settlement_id >= 0:
+		settlement_text = " | S%d" % settlement_id
+	var age_text: String = "%dy" % int(age_years)
+	_entity_job_label.text = stage_tr + " | " + job_tr + settlement_text + " | " + age_text
+
+	# Position from snapshot
+	var px: int = int(snap.get("x", 0))
+	var py: int = int(snap.get("y", 0))
+	_entity_info_label.text = Locale.trf2("UI_POS_FMT", "x", px, "y", py)
+
+	# Action
+	_entity_action_label.text = Locale.tr_id("STATUS", action_str)
+
+	# Inventory (carry data not yet in snapshots — show zeros)
+	_entity_inventory_label.text = "%.0f %.0f %.0f / %d" % [
+		float(snap.get("carry_food", 0.0)),
+		float(snap.get("carry_wood", 0.0)),
+		float(snap.get("carry_stone", 0.0)),
+		GameConfig.MAX_CARRY,
+	]
+
+	# Needs bars — show top 3 most critical (lowest value) needs
+	var needs_data: Array[Dictionary] = []
+	var need_keys: Array = [
+		["need_hunger", "NEED_HUNGER"],
+		["need_thirst", "NEED_THIRST"],
+		["energy", "NEED_ENERGY"],
+		["need_warmth", "NEED_WARMTH"],
+		["need_safety", "NEED_SAFETY"],
+		["need_belonging", "NEED_BELONGING"],
+	]
+	for nk: Array in need_keys:
+		var val: float = float(detail.get(nk[0], 1.0))
+		needs_data.append({"label_key": nk[1], "value": val})
+	needs_data.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["value"] < b["value"])
+	_update_need_bars(needs_data)
+
+	var stress_level: float = float(detail.get("stress_level", 0.0))
+	_entity_stats_label.text = "S:%.0f%%" % (stress_level * 100.0)
+
+
+func _update_entity_panel_from_gdscript(_delta: float, entity: RefCounted) -> void:
 	# Job color
 	var job_colors: Dictionary = {
 		"none": Color(0.6, 0.6, 0.6),
@@ -704,46 +775,19 @@ func _update_entity_panel(delta: float) -> void:
 	var inv_stone_text: String = Locale.trf1("UI_RES_STONE_FMT", "n", "%.1f" % entity.inventory.get("stone", 0.0))
 	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
-	# Need bars + percentage
+	# Need bars + percentage — show top 3 most critical needs
 	StatQuery.get_normalized_batch_into(
 		entity,
 		_ENTITY_NEED_STAT_IDS,
 		_entity_need_norm_values,
 		true
 	)
-	var hunger_norm: float = _entity_need_norm_values[0]
-	var hunger_pct: float = hunger_norm * 100.0
-	_hunger_bar.value = hunger_pct
-	_hunger_pct_label.text = str(int(hunger_pct)) + "%"
-
-	var energy_pct: float = _entity_need_norm_values[1] * 100.0
-	_energy_bar.value = energy_pct
-	_energy_pct_label.text = str(int(energy_pct)) + "%"
-
-	var social_pct: float = _entity_need_norm_values[2] * 100.0
-	_social_bar.value = social_pct
-	_social_pct_label.text = str(int(social_pct)) + "%"
-
-	var thirst_pct: float = _entity_need_norm_values[3] * 100.0
-	_thirst_bar.value = thirst_pct
-	_thirst_pct_label.text = str(int(thirst_pct)) + "%"
-
-	var warmth_pct: float = _entity_need_norm_values[4] * 100.0
-	_warmth_bar.value = warmth_pct
-	_warmth_pct_label.text = str(int(warmth_pct)) + "%"
-
-	var safety_pct: float = _entity_need_norm_values[5] * 100.0
-	_safety_bar.value = safety_pct
-	_safety_pct_label.text = str(int(safety_pct)) + "%"
-
-	# Low hunger blink
-	if hunger_norm < 0.2:
-		_hunger_blink_timer += delta * 4.0
-		var blink_alpha: float = 0.5 + 0.5 * sin(_hunger_blink_timer)
-		_hunger_bar.modulate = Color(1, 1, 1, blink_alpha)
-	else:
-		_hunger_bar.modulate = Color.WHITE
-		_hunger_blink_timer = 0.0
+	var gd_needs_data: Array[Dictionary] = []
+	for i in range(_ENTITY_NEED_STAT_IDS.size()):
+		var key: String = String(_ENTITY_NEED_STAT_IDS[i])
+		gd_needs_data.append({"label_key": key, "value": float(_entity_need_norm_values[i])})
+	gd_needs_data.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["value"] < b["value"])
+	_update_need_bars(gd_needs_data)
 
 	_entity_stats_label.text = Locale.trf2(
 		"UI_ENTITY_STATS_FMT",
@@ -752,6 +796,41 @@ func _update_entity_panel(delta: float) -> void:
 		"str_val",
 		"%.1f" % entity.strength
 	)
+
+
+## Updates the 3 dynamic need bar slots with sorted needs_data (ascending value order).
+func _update_need_bars(needs_data: Array[Dictionary]) -> void:
+	for i in range(3):
+		if i < needs_data.size():
+			var nd: Dictionary = needs_data[i]
+			var val: float = nd["value"]
+			_need_labels[i].text = Locale.ltr(nd["label_key"])
+			_need_bars[i].value = val * 100.0
+			_need_pct_labels[i].text = str(int(val * 100.0)) + "%"
+			var bar_style := StyleBoxFlat.new()
+			if val < 0.15:
+				bar_style.bg_color = Color(0.95, 0.35, 0.30)
+				_need_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
+				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
+				_need_warn_labels[i].text = "⚠"
+				_need_warn_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
+			elif val < 0.30:
+				bar_style.bg_color = Color(0.95, 0.60, 0.30)
+				_need_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
+				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
+				_need_warn_labels[i].text = "⚠"
+				_need_warn_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
+			else:
+				bar_style.bg_color = Color(0.30, 0.55, 0.80)
+				_need_labels[i].add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+				_need_warn_labels[i].text = ""
+			_need_bars[i].add_theme_stylebox_override("fill", bar_style)
+		else:
+			_need_labels[i].text = ""
+			_need_bars[i].value = 0
+			_need_pct_labels[i].text = ""
+			_need_warn_labels[i].text = ""
 
 
 func _update_building_panel() -> void:
@@ -1055,7 +1134,7 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 func _refresh_hud_texts() -> void:
 	if _entity_detail_btn != null:
-		_entity_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
+		_entity_detail_btn.text = Locale.ltr("UI_MINI_DETAIL_HINT")
 	if _building_detail_btn != null:
 		_building_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
 	if _hint_label != null:
@@ -1068,18 +1147,6 @@ func _refresh_hud_texts() -> void:
 		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
-	if _hunger_name_label != null:
-		_hunger_name_label.text = Locale.ltr("UI_HUNGER") + ":"
-	if _thirst_name_label != null:
-		_thirst_name_label.text = Locale.ltr("NEED_THIRST") + ":"
-	if _energy_name_label != null:
-		_energy_name_label.text = Locale.ltr("UI_ENERGY") + ":"
-	if _warmth_name_label != null:
-		_warmth_name_label.text = Locale.ltr("NEED_WARMTH") + ":"
-	if _safety_name_label != null:
-		_safety_name_label.text = Locale.ltr("NEED_SAFETY") + ":"
-	if _social_name_label != null:
-		_social_name_label.text = Locale.ltr("UI_SOCIAL") + ":"
 	_update_era_label()
 
 
@@ -1105,6 +1172,31 @@ func toggle_minimap() -> void:
 func toggle_stats() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_stats()
+
+
+## Toggles the debug overlay (F3). Cycles OFF -> COMPACT -> OFF.
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_F3:
+			_toggle_debug()
+		elif event.keycode == KEY_ESCAPE:
+			if close_all_popups():
+				get_viewport().set_input_as_handled()
+
+
+func toggle_debug_overlay() -> void:
+	_toggle_debug()
+
+
+func _toggle_debug() -> void:
+	if not _debug_overlay:
+		var bridge: Node = get_node_or_null("/root/SimBridge")
+		var overlay_script: GDScript = load("res://scripts/debug/debug_overlay.gd")
+		_debug_overlay = CanvasLayer.new()
+		_debug_overlay.set_script(overlay_script)
+		add_child(_debug_overlay)
+		_debug_overlay.init(bridge)
+	_debug_overlay.cycle_mode()
 
 
 ## Toggles the keyboard shortcut help overlay, pausing the simulation while it is shown.
@@ -1138,6 +1230,8 @@ func close_all_popups() -> bool:
 ## Opens the full entity detail panel for the currently selected entity.
 func open_entity_detail() -> void:
 	if _popup_manager != null and _selected_entity_id >= 0:
+		# ★ FIX: Close any open popup (list/stats/chronicle) before opening entity detail
+		_popup_manager.close_all()
 		if OS.is_debug_build():
 			_popup_manager.open_entity_no_dim(_selected_entity_id)
 		else:
@@ -1206,6 +1300,9 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		var id_str: String = msg.replace("open_entity_", "")
 		if id_str.is_valid_int():
 			var eid: int = int(id_str)
+			# ★ FIX: Close list/other panels first so _dim_bg is hidden before entity panel opens
+			if _popup_manager != null:
+				_popup_manager.close_all()
 			if _entity_detail_panel != null and _entity_detail_panel.has_method("show_entity_or_deceased"):
 				_entity_detail_panel.show_entity_or_deceased(eid)
 				if _popup_manager != null:
