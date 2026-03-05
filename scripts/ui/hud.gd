@@ -122,9 +122,6 @@ var _selected_building_id: int = -1
 # Debug cheat panel (F12 toggle, lazy init)
 var _debug_panel: CanvasLayer = null
 
-# Debug overlay (F3 toggle: OFF → COMPACT → FULL → OFF, lazy init)
-var _debug_overlay: CanvasLayer = null
-
 # Hunger blink
 var _hunger_blink_timer: float = 0.0
 const _ENTITY_NEED_STAT_IDS: Array[StringName] = [
@@ -1296,20 +1293,6 @@ func toggle_debug_panel() -> void:
 		_debug_panel.init(_entity_manager, _settlement_manager)
 		add_child(_debug_panel)
 	_debug_panel.toggle()
-
-
-## Lazily initialises and cycles the F3 debug overlay (OFF → COMPACT → FULL → OFF).
-func toggle_debug_overlay() -> void:
-	if _debug_overlay == null:
-		var sim_bridge: Node = get_node_or_null("/root/SimBridge")
-		if sim_bridge == null:
-			push_warning("toggle_debug_overlay: WorldSimRuntime autoload not found")
-			return
-		var overlay_scene: PackedScene = preload("res://scenes/debug/debug_overlay.tscn")
-		_debug_overlay = overlay_scene.instantiate()
-		_debug_overlay.init(sim_bridge)
-		add_child(_debug_overlay)
-	_debug_overlay.cycle_mode()
 
 
 ## Displays a startup toast notification showing the initial population count.
