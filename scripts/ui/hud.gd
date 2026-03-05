@@ -627,7 +627,7 @@ func _process(delta: float) -> void:
 		_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(total_stone))
 
 	# Update selected entity
-	if _selected_entity_id >= 0 and _entity_manager:
+	if _selected_entity_id >= 0:
 		_update_entity_panel(delta)
 
 	# Update selected building
@@ -639,16 +639,124 @@ func _process(delta: float) -> void:
 
 
 func _update_entity_panel(delta: float) -> void:
-	var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
-	if entity == null:
-		# Rust-world entity — entity_detail_panel handles display; skip GDScript mini-panel
-		if _sim_engine == null or _sim_engine.get_entity_detail(_selected_entity_id).is_empty():
-			_on_entity_deselected()
+	# Rust-first: try live data from sim_engine
+	if _sim_engine != null:
+		var rust_detail: Dictionary = _sim_engine.get_entity_detail(_selected_entity_id)
+		if not rust_detail.is_empty():
+			var snap: Dictionary = _get_rust_snapshot(_selected_entity_id)
+			_update_entity_panel_from_rust(delta, rust_detail, snap)
+			return
+
+	# GDScript fallback (legacy path — no live simulation data)
+	if _entity_manager == null:
+		_on_entity_deselected()
 		return
-	if not entity.is_alive:
+	var entity: RefCounted = _entity_manager.get_entity(_selected_entity_id)
+	if entity == null or not entity.is_alive:
+		_on_entity_deselected()
+		return
+	_update_entity_panel_from_gdscript(delta, entity)
+
+
+## Returns the agent_snapshot dict for the given entity_id, or {} if not found.
+func _get_rust_snapshot(entity_id: int) -> Dictionary:
+	if _sim_engine == null:
+		return {}
+	var snaps: Array = _sim_engine.get_agent_snapshots()
+	for i in range(snaps.size()):
+		var snap: Dictionary = snaps[i]
+		if int(snap.get("entity_id", -1)) == entity_id:
+			return snap
+	return {}
+
+
+func _update_entity_panel_from_rust(delta: float, detail: Dictionary, snap: Dictionary) -> void:
+	var alive: bool = bool(detail.get("alive", true))
+	if not alive:
 		_on_entity_deselected()
 		return
 
+	var entity_name: String = str(detail.get("name", "???"))
+	var job_str: String = str(snap.get("job", "none"))
+	var action_str: String = str(snap.get("action", "idle"))
+	var growth_str: String = str(detail.get("growth_stage", "adult"))
+	var age_years: float = float(detail.get("age_years", 0.0))
+	var settlement_id: int = int(detail.get("settlement_id", -1))
+
+	# Job color
+	var job_colors: Dictionary = {
+		"none": Color(0.6, 0.6, 0.6),
+		"gatherer": Color(0.3, 0.8, 0.2),
+		"lumberjack": Color(0.6, 0.35, 0.1),
+		"builder": Color(0.9, 0.6, 0.1),
+		"miner": Color(0.5, 0.6, 0.75),
+	}
+	var jc: Color = job_colors.get(job_str, Color.WHITE)
+	_entity_name_label.text = entity_name
+	_entity_name_label.add_theme_color_override("font_color", jc)
+
+	# Info line: stage | job | S# | age
+	var stage_tr: String = Locale.tr_id("STAGE", growth_str)
+	var job_tr: String = Locale.tr_id("JOB", job_str)
+	var settlement_text: String = ""
+	if settlement_id >= 0:
+		settlement_text = " | S%d" % settlement_id
+	var age_text: String = "%dy" % int(age_years)
+	_entity_job_label.text = stage_tr + " | " + job_tr + settlement_text + " | " + age_text
+
+	# Position from snapshot
+	var px: int = int(snap.get("x", 0))
+	var py: int = int(snap.get("y", 0))
+	_entity_info_label.text = Locale.trf2("UI_POS_FMT", "x", px, "y", py)
+
+	# Action
+	_entity_action_label.text = Locale.tr_id("STATUS", action_str)
+
+	# Inventory (carry data not yet in snapshots — show zeros)
+	_entity_inventory_label.text = "%.0f %.0f %.0f / %d" % [
+		float(snap.get("carry_food", 0.0)),
+		float(snap.get("carry_wood", 0.0)),
+		float(snap.get("carry_stone", 0.0)),
+		GameConfig.MAX_CARRY,
+	]
+
+	# Needs bars — live Rust values (0.0..1.0 → 0..100)
+	var hunger: float = float(detail.get("need_hunger", 0.0))
+	var energy: float = float(detail.get("energy", 0.0))
+	var social: float = float(detail.get("need_belonging", 0.0))
+	var thirst: float = float(detail.get("need_thirst", 0.0))
+	var warmth: float = float(detail.get("need_warmth", 0.0))
+	var safety: float = float(detail.get("need_safety", 0.0))
+
+	_hunger_bar.value = hunger * 100.0
+	_hunger_pct_label.text = str(int(hunger * 100.0)) + "%"
+	_energy_bar.value = energy * 100.0
+	_energy_pct_label.text = str(int(energy * 100.0)) + "%"
+	_social_bar.value = social * 100.0
+	_social_pct_label.text = str(int(social * 100.0)) + "%"
+	_thirst_bar.value = thirst * 100.0
+	_thirst_pct_label.text = str(int(thirst * 100.0)) + "%"
+	_warmth_bar.value = warmth * 100.0
+	_warmth_pct_label.text = str(int(warmth * 100.0)) + "%"
+	_safety_bar.value = safety * 100.0
+	_safety_pct_label.text = str(int(safety * 100.0)) + "%"
+
+	# Low hunger blink
+	if hunger < 0.2:
+		_hunger_blink_timer += delta * 4.0
+		var blink_alpha: float = 0.5 + 0.5 * sin(_hunger_blink_timer)
+		_hunger_bar.modulate = Color(1, 1, 1, blink_alpha)
+		_hunger_name_label.modulate = Color(1, 0.3, 0.3)
+	else:
+		_hunger_bar.modulate = Color.WHITE
+		_hunger_name_label.modulate = Color.WHITE
+		_hunger_blink_timer = 0.0
+
+	var stress_level: float = float(detail.get("stress_level", 0.0))
+	_entity_stats_label.text = "S:%.0f%%" % (stress_level * 100.0)
+
+
+func _update_entity_panel_from_gdscript(delta: float, entity: RefCounted) -> void:
 	# Job color
 	var job_colors: Dictionary = {
 		"none": Color(0.6, 0.6, 0.6),
