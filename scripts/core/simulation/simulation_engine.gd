@@ -226,6 +226,14 @@ func spawn_agents(spawn_list: Array, settlement_id: int, settlement_x: int, sett
 	return int(sim_bridge.call("runtime_spawn_agents", json_str))
 
 
+## Bootstraps the authoritative Rust world from a setup dictionary.
+func bootstrap_world(setup: Dictionary) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_bootstrap_world"):
+		return {}
+	return sim_bridge.call("runtime_bootstrap_world", JSON.stringify(setup))
+
+
 func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = false
 	_rust_runtime_available = false
@@ -351,6 +359,50 @@ func get_entity_tab(entity_id: int, tab: String) -> Dictionary:
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_entity_tab"):
 		return {}
 	var raw: Variant = sim_bridge.call("runtime_get_entity_tab", entity_id, tab)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
+## Returns settlement detail from Rust runtime.
+func get_settlement_detail(settlement_id: int) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_settlement_detail"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_settlement_detail", settlement_id)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
+## Returns building detail from Rust runtime.
+func get_building_detail(building_id: int) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_building_detail"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_building_detail", building_id)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
+## Returns world summary from Rust runtime.
+func get_world_summary() -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_world_summary"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_world_summary")
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
+## Returns minimap snapshot from Rust runtime.
+func get_minimap_snapshot() -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_minimap_snapshot"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_minimap_snapshot")
 	if raw is Dictionary:
 		return raw
 	return {}

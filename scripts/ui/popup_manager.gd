@@ -6,6 +6,7 @@ var _dim_bg: ColorRect
 
 var _stats_panel: Control
 var _entity_panel: Control
+var _legacy_entity_panel: Control
 var _building_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
@@ -45,6 +46,15 @@ func add_stats_panel(panel: Control) -> void:
 ## Registers the entity detail panel and adds it as a child of the dim background.
 func add_entity_panel(panel: Control) -> void:
 	_entity_panel = panel
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.clip_contents = true
+	panel.visible = false
+	_dim_bg.add_child(panel)
+
+
+## Registers the legacy entity detail panel used for deceased records.
+func add_legacy_entity_panel(panel: Control) -> void:
+	_legacy_entity_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.clip_contents = true
 	panel.visible = false
@@ -149,6 +159,26 @@ func open_entity_no_dim(entity_id: int) -> void:
 	_entity_panel.move_to_front()
 
 
+## Opens the legacy entity detail panel for a deceased record, pausing the simulation.
+func open_legacy_entity(entity_id: int) -> void:
+	if _legacy_entity_panel == null:
+		return
+	if _legacy_entity_panel.visible:
+		close_all()
+		return
+	if not _dim_bg.visible:
+		_pause_sim()
+	_hide_all_panels()
+	if _legacy_entity_panel.has_method("show_entity_or_deceased"):
+		_legacy_entity_panel.call("show_entity_or_deceased", entity_id)
+	elif _legacy_entity_panel.has_method("set_entity_id"):
+		_legacy_entity_panel.call("set_entity_id", entity_id)
+	_legacy_entity_panel.visible = true
+	_dim_bg.visible = true
+	_panel_ratios[_legacy_entity_panel] = Vector2(0.42, 0.90)
+	_center_panel(_legacy_entity_panel, 0.42, 0.90)
+
+
 ## Opens the building detail panel for the given building, pausing the simulation.
 func open_building(building_id: int) -> void:
 	if _building_panel == null:
@@ -236,6 +266,8 @@ func is_any_visible() -> bool:
 func is_detail_visible() -> bool:
 	if _entity_panel != null and _entity_panel.visible:
 		return true
+	if _legacy_entity_panel != null and _legacy_entity_panel.visible:
+		return true
 	if _building_panel != null and _building_panel.visible:
 		return true
 	if _settlement_panel != null and _settlement_panel.visible:
@@ -251,6 +283,8 @@ func _process(_delta: float) -> void:
 	if _stats_panel != null and _stats_panel.visible:
 		any = true
 	if _entity_panel != null and _entity_panel.visible:
+		any = true
+	if _legacy_entity_panel != null and _legacy_entity_panel.visible:
 		any = true
 	if _building_panel != null and _building_panel.visible:
 		any = true
@@ -269,6 +303,8 @@ func _hide_all_panels() -> void:
 		_stats_panel.visible = false
 	if _entity_panel != null:
 		_entity_panel.visible = false
+	if _legacy_entity_panel != null:
+		_legacy_entity_panel.visible = false
 	if _building_panel != null:
 		_building_panel.visible = false
 	if _chronicle_panel != null:
@@ -295,7 +331,7 @@ func _resume_sim() -> void:
 
 func _on_viewport_resized() -> void:
 	# Re-center any visible panel on viewport resize
-	for panel in [_stats_panel, _entity_panel, _building_panel, _chronicle_panel, _list_panel, _settlement_panel]:
+	for panel in [_stats_panel, _entity_panel, _legacy_entity_panel, _building_panel, _chronicle_panel, _list_panel, _settlement_panel]:
 		if panel != null and panel.visible and _panel_ratios.has(panel):
 			var ratios: Vector2 = _panel_ratios[panel]
 			_center_panel(panel, ratios.x, ratios.y)

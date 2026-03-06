@@ -5,6 +5,7 @@ const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
 const EntityDetailPanelV2Class = preload("res://scripts/ui/panels/entity_detail_panel_v2.gd")
+const EntityDetailPanelLegacyClass = preload("res://scripts/ui/panels/entity_detail_panel_legacy.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
@@ -92,6 +93,7 @@ var _building_detail_btn: Button
 var _popup_manager: Node
 var _stats_detail_panel: Control
 var _entity_detail_panel: Control
+var _entity_detail_panel_legacy: Control
 var _building_detail_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
@@ -126,6 +128,8 @@ var _entity_need_norm_values: PackedFloat32Array = PackedFloat32Array()
 # Population milestones
 var _pop_milestone_init: bool = false
 var _last_pop_milestone: int = 0
+var _world_summary_cache: Dictionary = {}
+var _world_summary_cache_tick: int = -1
 
 
 ## Stores all manager and engine references required for HUD display and interaction.
@@ -161,7 +165,7 @@ func _ready() -> void:
 func _build_minimap_and_stats() -> void:
 	if _world_data != null and _camera != null:
 		_minimap_panel = MinimapPanelClass.new()
-		_minimap_panel.init(_world_data, _entity_manager, _building_manager, _settlement_manager, _camera)
+		_minimap_panel.init(_world_data, _entity_manager, _building_manager, _settlement_manager, _camera, _sim_engine)
 		add_child(_minimap_panel)
 
 	if _stats_recorder != null:
@@ -174,19 +178,17 @@ func _build_minimap_and_stats() -> void:
 	_popup_manager.init(_sim_engine)
 	add_child(_popup_manager)
 
-	if _stats_recorder != null:
-		_stats_detail_panel = StatsDetailPanelClass.new()
-		_stats_detail_panel.init(_stats_recorder, _settlement_manager, _entity_manager, _relationship_manager)
-		_popup_manager.add_stats_panel(_stats_detail_panel)
-
 	if _sim_engine != null:
 		_entity_detail_panel = EntityDetailPanelV2Class.new()
 		_entity_detail_panel.init(_sim_engine)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
+		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
+		_entity_detail_panel_legacy.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
+		_popup_manager.add_legacy_entity_panel(_entity_detail_panel_legacy)
 
-	if _building_manager != null:
+	if _sim_engine != null:
 		_building_detail_panel = BuildingDetailPanelClass.new()
-		_building_detail_panel.init(_building_manager, _settlement_manager)
+		_building_detail_panel.init(_sim_engine, _building_manager, _settlement_manager)
 		_popup_manager.add_building_panel(_building_detail_panel)
 
 	# Chronicle panel
@@ -200,10 +202,19 @@ func _build_minimap_and_stats() -> void:
 	_popup_manager.add_list_panel(_list_panel)
 
 	# Settlement detail panel
-	if _settlement_manager != null:
+	if _sim_engine != null:
 		_settlement_detail_panel = SettlementDetailPanelClass.new()
-		_settlement_detail_panel.init(_settlement_manager, _entity_manager, _building_manager, null)
+		_settlement_detail_panel.init(_sim_engine, _settlement_manager, _entity_manager, _building_manager, null)
 		_popup_manager.add_settlement_panel(_settlement_detail_panel)
+
+	if _sim_engine != null:
+		_stats_detail_panel = StatsDetailPanelClass.new()
+		_stats_detail_panel.init(_sim_engine, _stats_recorder, _settlement_manager, _entity_manager, null)
+		_popup_manager.add_stats_panel(_stats_detail_panel)
+	elif _stats_recorder != null:
+		_stats_detail_panel = StatsDetailPanelClass.new()
+		_stats_detail_panel.init(null, _stats_recorder, _settlement_manager, _entity_manager, _relationship_manager)
+		_popup_manager.add_stats_panel(_stats_detail_panel)
 
 	# Follow indicator label (top-center)
 	_follow_label = Label.new()
@@ -553,61 +564,61 @@ func _build_key_hints() -> void:
 	add_child(_hint_label)
 
 
+func _get_world_summary() -> Dictionary:
+	if _sim_engine == null:
+		return {}
+	var tick: int = _sim_engine.current_tick
+	if tick != _world_summary_cache_tick:
+		_world_summary_cache_tick = tick
+		_world_summary_cache = _sim_engine.get_world_summary()
+	return _world_summary_cache
+
+
+func _resolve_runtime_entity_name(entity_id: int) -> String:
+	if _sim_engine == null or entity_id < 0:
+		return ""
+	var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
+	return str(detail.get("name", ""))
+
+
 func _process(delta: float) -> void:
 	_fps_label.text = str(Engine.get_frames_per_second())
 
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
 		_time_label.text = GameCalendar.format_full_datetime(tick)
+		var summary: Dictionary = _get_world_summary()
+		if not summary.is_empty():
+			var pop: int = int(summary.get("total_population", 0))
+			_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
+			var building_count: int = int(summary.get("building_count", 0))
+			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", building_count)
+			_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(float(summary.get("food", 0.0))))
+			_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(float(summary.get("wood", 0.0))))
+			_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(float(summary.get("stone", 0.0))))
 
-	if _entity_manager:
-		var pop: int = _entity_manager.get_alive_count()
-		_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
-
-		# Population milestones
-		if not _pop_milestone_init:
-			_pop_milestone_init = true
-			@warning_ignore("integer_division")
-			_last_pop_milestone = (pop / 10) * 10
-		else:
-			@warning_ignore("integer_division")
-			var m: int = (pop / 10) * 10
-			if m > _last_pop_milestone and m >= 10:
-				_last_pop_milestone = m
-				_add_notification(Locale.trf1("UI_NOTIF_POP_MILESTONE_FMT", "n", m), Color(0.3, 0.9, 0.3), NotifCategory.POPULATION)
-
-	# Building count + resource totals
-	if _building_manager != null:
-		var all_buildings: Array = _building_manager.get_all_buildings()
-		var built_count: int = 0
-		var wip_count: int = 0
-		var total_food: float = 0.0
-		var total_wood: float = 0.0
-		var total_stone: float = 0.0
-		for i in range(all_buildings.size()):
-			var building = all_buildings[i]
-			if building.is_built:
-				built_count += 1
-				if building.building_type == "stockpile":
-					total_food += float(building.storage.get("food", 0.0))
-					total_wood += float(building.storage.get("wood", 0.0))
-					total_stone += float(building.storage.get("stone", 0.0))
+			# Population milestones
+			if not _pop_milestone_init:
+				_pop_milestone_init = true
+				@warning_ignore("integer_division")
+				_last_pop_milestone = (pop / 10) * 10
 			else:
-				wip_count += 1
-		if wip_count > 0:
-			_building_label.text = Locale.trf2("UI_BLD_WIP_FMT", "n", built_count, "wip", wip_count)
-		else:
-			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", built_count)
-		_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(total_food))
-		_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(total_wood))
-		_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(total_stone))
+				@warning_ignore("integer_division")
+				var m: int = (pop / 10) * 10
+				if m > _last_pop_milestone and m >= 10:
+					_last_pop_milestone = m
+					_add_notification(Locale.trf1("UI_NOTIF_POP_MILESTONE_FMT", "n", m), Color(0.3, 0.9, 0.3), NotifCategory.POPULATION)
+
+	elif _entity_manager:
+		var fallback_pop: int = _entity_manager.get_alive_count()
+		_pop_label.text = Locale.trf1("UI_POP_FMT", "n", fallback_pop)
 
 	# Update selected entity
 	if _selected_entity_id >= 0:
 		_update_entity_panel(delta)
 
 	# Update selected building
-	if _selected_building_id >= 0 and _building_manager:
+	if _selected_building_id >= 0 and (_building_manager != null or _sim_engine != null):
 		_update_building_panel()
 
 	# Notification fade
@@ -833,15 +844,34 @@ func _update_need_bars(needs_data: Array[Dictionary]) -> void:
 			_need_warn_labels[i].text = _EMPTY_LABEL_TEXT
 
 
+func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:
+	if building is Dictionary:
+		return building.get(key, default_value)
+	if building == null:
+		return default_value
+	return building.get(key)
+
+
 func _update_building_panel() -> void:
 	var building = _get_building_by_id(_selected_building_id)
 	if building == null:
 		_on_building_deselected()
 		return
 
-	var type_name: String = Locale.tr_id("BUILDING_TYPE", building.building_type)
+	var building_type: String = str(_building_value(building, "building_type", ""))
+	var settlement_id: int = int(_building_value(building, "settlement_id", 0))
+	var tile_x: int = int(_building_value(building, "tile_x", 0))
+	var tile_y: int = int(_building_value(building, "tile_y", 0))
+	var is_built: bool = bool(_building_value(building, "is_built", _building_value(building, "is_constructed", false)))
+	var build_progress: float = float(_building_value(building, "build_progress", _building_value(building, "construction_progress", 0.0)))
+	var storage: Dictionary = {}
+	var storage_raw: Variant = _building_value(building, "storage", {})
+	if storage_raw is Dictionary:
+		storage = storage_raw
+
+	var type_name: String = Locale.tr_id("BUILDING_TYPE", building_type)
 	var icon: String = "■"
-	match building.building_type:
+	match building_type:
 		"shelter":
 			icon = "▲"
 		"campfire":
@@ -849,41 +879,41 @@ func _update_building_panel() -> void:
 	_building_name_label.text = icon + " " + type_name
 
 	var settlement_text: String = ""
-	if building.settlement_id > 0:
-		settlement_text = "S%d | " % building.settlement_id
-	_building_info_label.text = settlement_text + "(" + str(building.tile_x) + ", " + str(building.tile_y) + ")"
+	if settlement_id > 0:
+		settlement_text = "S%d | " % settlement_id
+	_building_info_label.text = settlement_text + "(" + str(tile_x) + ", " + str(tile_y) + ")"
 
-	match building.building_type:
+	match building_type:
 		"stockpile":
-			if building.is_built:
+			if is_built:
 				_building_storage_label.text = Locale.trf3(
 					"UI_BUILDING_STORAGE_FMT",
 					"food",
-					"%.0f" % building.storage.get("food", 0.0),
+					"%.0f" % storage.get("food", 0.0),
 					"wood",
-					"%.0f" % building.storage.get("wood", 0.0),
+					"%.0f" % storage.get("wood", 0.0),
 					"stone",
-					"%.0f" % building.storage.get("stone", 0.0)
+					"%.0f" % storage.get("stone", 0.0)
 				)
 			else:
-				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(build_progress * 100))
 		"shelter":
-			if building.is_built:
+			if is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_SHELTER_DESC")
 			else:
-				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(build_progress * 100))
 		"campfire":
-			if building.is_built:
+			if is_built:
 				_building_storage_label.text = Locale.ltr("UI_BUILDING_CAMPFIRE_DESC")
 			else:
-				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(building.build_progress * 100))
+				_building_storage_label.text = Locale.trf1("UI_UNDER_CONSTRUCTION_FMT", "pct", int(build_progress * 100))
 		_:
 			_building_storage_label.text = Locale.ltr("")
 
-	if building.is_built:
+	if is_built:
 		_building_status_label.text = Locale.ltr("UI_BUILDING_ACTIVE")
 	else:
-		_building_status_label.text = Locale.trf1("UI_BUILDING_WIP_FMT", "pct", int(building.build_progress * 100))
+		_building_status_label.text = Locale.trf1("UI_BUILDING_WIP_FMT", "pct", int(build_progress * 100))
 
 
 func _update_notifications(delta: float) -> void:
@@ -908,6 +938,10 @@ func _update_notifications(delta: float) -> void:
 
 
 func _get_building_by_id(bid: int):
+	if _sim_engine != null:
+		var runtime_building: Dictionary = _sim_engine.get_building_detail(bid)
+		if not runtime_building.is_empty():
+			return runtime_building
 	if _building_manager == null:
 		return null
 	return _building_manager.get_building(bid)
@@ -1002,6 +1036,10 @@ func _on_simulation_event(event: Dictionary) -> void:
 			_add_notification(Locale.ltr("UI_NOTIF_GAME_SAVED"), Color.WHITE)
 		"game_loaded":
 			_add_notification(Locale.ltr("UI_NOTIF_GAME_LOADED"), Color.WHITE)
+		"save_not_supported":
+			_add_notification(Locale.ltr("UI_NOTIF_SAVE_UNSUPPORTED"), Color(0.9, 0.5, 0.2))
+		"load_not_supported":
+			_add_notification(Locale.ltr("UI_NOTIF_LOAD_UNSUPPORTED"), Color(0.9, 0.5, 0.2))
 		"settlement_founded":
 			_add_notification(Locale.ltr("UI_NOTIF_SETTLEMENT_FOUNDED"), Color(0.9, 0.6, 0.1), NotifCategory.POPULATION)
 		"building_completed":
@@ -1047,8 +1085,8 @@ func _on_simulation_event(event: Dictionary) -> void:
 		"tech_discovered":
 			var td_tech: String = event.get("tech_id", "")
 			var td_disc_id: int = event.get("discoverer_id", -1)
-			var td_name: String = ""
-			if td_disc_id >= 0 and _entity_manager != null:
+			var td_name: String = _resolve_runtime_entity_name(td_disc_id)
+			if td_name.is_empty() and td_disc_id >= 0 and _entity_manager != null:
 				var td_e: RefCounted = _entity_manager.get_entity(td_disc_id)
 				if td_e != null:
 					td_name = td_e.entity_name
@@ -1113,7 +1151,12 @@ func _update_era_label() -> void:
 	if _era_label == null:
 		return
 	var era: String = "stone_age"
-	if _settlement_manager != null:
+	var summary: Dictionary = _get_world_summary()
+	if not summary.is_empty():
+		var settlements: Array = summary.get("settlement_summaries", [])
+		if not settlements.is_empty():
+			era = str(settlements[0].get("tech_era", era))
+	elif _settlement_manager != null:
 		var setts: Array = _settlement_manager.get_all_settlements()
 		if not setts.is_empty():
 			era = setts[0].tech_era
@@ -1227,15 +1270,20 @@ func close_all_popups() -> bool:
 	return false
 
 
+func _open_runtime_entity_popup(entity_id: int) -> void:
+	if _popup_manager == null or entity_id < 0:
+		return
+	_on_entity_selected(entity_id)
+	_popup_manager.close_all()
+	if OS.is_debug_build():
+		_popup_manager.open_entity_no_dim(entity_id)
+	else:
+		_popup_manager.open_entity(entity_id)
+
+
 ## Opens the full entity detail panel for the currently selected entity.
 func open_entity_detail() -> void:
-	if _popup_manager != null and _selected_entity_id >= 0:
-		# ★ FIX: Close any open popup (list/stats/chronicle) before opening entity detail
-		_popup_manager.close_all()
-		if OS.is_debug_build():
-			_popup_manager.open_entity_no_dim(_selected_entity_id)
-		else:
-			_popup_manager.open_entity(_selected_entity_id)
+	_open_runtime_entity_popup(_selected_entity_id)
 
 
 ## Opens the full building detail panel for the currently selected building.
@@ -1296,20 +1344,15 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		var sid_str: String = msg.replace("open_settlement_", "")
 		if sid_str.is_valid_int():
 			open_settlement_detail(int(sid_str))
+	elif msg.begins_with("open_deceased_"):
+		var deceased_id_str: String = msg.replace("open_deceased_", "")
+		if deceased_id_str.is_valid_int() and _popup_manager != null:
+			_popup_manager.close_all()
+			_popup_manager.open_legacy_entity(int(deceased_id_str))
 	elif msg.begins_with("open_entity_"):
 		var id_str: String = msg.replace("open_entity_", "")
 		if id_str.is_valid_int():
-			var eid: int = int(id_str)
-			# ★ FIX: Close list/other panels first so _dim_bg is hidden before entity panel opens
-			if _popup_manager != null:
-				_popup_manager.close_all()
-			if _entity_detail_panel != null and _entity_detail_panel.has_method("show_entity_or_deceased"):
-				_entity_detail_panel.show_entity_or_deceased(eid)
-				if _popup_manager != null:
-					if OS.is_debug_build():
-						_popup_manager.open_entity_no_dim(eid)
-					else:
-						_popup_manager.open_entity(eid)
+			_open_runtime_entity_popup(int(id_str))
 
 
 func _on_follow_entity(entity_id: int) -> void:
@@ -1320,7 +1363,11 @@ func _on_follow_entity(entity_id: int) -> void:
 			_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", entity.entity_name)
 			_follow_label.visible = true
 			return
-	_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", "#%d" % entity_id)
+	var runtime_name: String = _resolve_runtime_entity_name(entity_id)
+	if not runtime_name.is_empty():
+		_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", runtime_name)
+	else:
+		_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", "#%d" % entity_id)
 	_follow_label.visible = true
 
 

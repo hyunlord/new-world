@@ -16,6 +16,7 @@ const DETAIL_PANEL_START_X_RATIO: float = 0.55
 ## Entity following
 var _following_entity_id: int = -1
 var _entity_manager: RefCounted
+var _sim_engine: RefCounted
 
 
 func _ready() -> void:
@@ -30,6 +31,11 @@ func _ready() -> void:
 ## Sets the entity manager used to look up entity positions during follow mode.
 func set_entity_manager(em: RefCounted) -> void:
 	_entity_manager = em
+
+
+## Sets the simulation engine used to follow Rust-authoritative entity snapshots.
+func set_sim_engine(sim_engine: RefCounted) -> void:
+	_sim_engine = sim_engine
 
 
 ## Begins following the given entity, emitting a follow request on SimulationBus.
@@ -125,15 +131,21 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	# Entity following
-	if _following_entity_id >= 0 and _entity_manager != null:
-		var entity: RefCounted = _entity_manager.get_entity(_following_entity_id)
-		if entity != null and entity.is_alive:
-			var target := Vector2(entity.position) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	if _following_entity_id >= 0:
+		var followed: Dictionary = _get_follow_target_snapshot(_following_entity_id)
+		if not followed.is_empty():
+			var target := Vector2(
+				float(followed.get("x", 0)),
+				float(followed.get("y", 0))
+			) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 			position = position.lerp(target, 5.0 * delta)
-		elif entity != null:
-			# GDScript entity confirmed dead — stop following
-			stop_following()
-		# else entity == null: may be Rust-world entity; freeze camera this frame
+		elif _entity_manager != null:
+			var entity: RefCounted = _entity_manager.get_entity(_following_entity_id)
+			if entity != null and entity.is_alive:
+				var legacy_target := Vector2(entity.position) * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+				position = position.lerp(legacy_target, 5.0 * delta)
+			elif entity != null:
+				stop_following()
 
 	# Smooth zoom
 	var new_zoom: float = lerpf(zoom.x, _target_zoom, GameConfig.CAMERA_ZOOM_SPEED)
@@ -162,3 +174,23 @@ func _process(delta: float) -> void:
 
 func _zoom_at_mouse(delta: float) -> void:
 	_target_zoom = clampf(_target_zoom + delta, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+
+
+func _get_follow_target_snapshot(entity_id: int) -> Dictionary:
+	if _sim_engine != null and _sim_engine.has_method("get_agent_snapshots"):
+		var snapshots: Array = _sim_engine.get_agent_snapshots()
+		for i in range(snapshots.size()):
+			var snapshot_raw: Variant = snapshots[i]
+			if not (snapshot_raw is Dictionary):
+				continue
+			var snapshot: Dictionary = snapshot_raw
+			if int(snapshot.get("entity_id", -1)) == entity_id:
+				return snapshot
+	if _sim_engine != null and _sim_engine.has_method("get_entity_detail"):
+		var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
+		if not detail.is_empty() and bool(detail.get("alive", true)):
+			return {
+				"x": detail.get("x", 0),
+				"y": detail.get("y", 0),
+			}
+	return {}

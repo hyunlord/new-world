@@ -33,6 +33,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	var members: Array = data.get("members", [])
 	var building_manager = data.get("building_manager", null)
+	var buildings: Array = data.get("buildings", [])
 	var population: int = data.get("population", 0)
 
 	# ── 1. Resources Section ───────────────────────────────────────────────
@@ -63,7 +64,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	for res in resource_types:
 		var total: float = 0.0
 		for member in members:
-			total += member.inventory.get(res, 0.0)
+			total += float(_member_inventory(member).get(res, 0.0))
 		var label: String = Locale.ltr(resource_label_keys[res])
 		var current_str: String = str(roundi(total))
 		cy = _draw_resource_row(canvas, font, cx, cy, label, current_str, "—", "—", "—", NEUTRAL_COLOR, body_size)
@@ -74,24 +75,27 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_BUILDINGS_LIST"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 
-	if building_manager == null:
+	if building_manager == null and buildings.is_empty():
 		canvas.draw_string(font, Vector2(cx + 8.0, cy), "—", HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
 		cy += LINE_HEIGHT + SECTION_GAP
 	else:
 		# Group buildings by type
 		var building_counts: Dictionary = {}
-		for bid in settlement.building_ids:
-			var b = building_manager.get_building(bid)
-			if b == null:
-				continue
-			var btype: String = b.building_type
+		var settlement_buildings: Array = buildings
+		if settlement_buildings.is_empty() and building_manager != null:
+			for bid in _settlement_building_ids(settlement):
+				var legacy_building: Variant = building_manager.get_building(bid)
+				if legacy_building != null:
+					settlement_buildings.append(legacy_building)
+		for b in settlement_buildings:
+			var btype: String = str(_building_value(b, "building_type", ""))
 			if not building_counts.has(btype):
 				building_counts[btype] = {"count": 0, "constructing": 0, "progress": 0.0}
-			if b.is_constructed:
+			if bool(_building_value(b, "is_constructed", _building_value(b, "is_built", false))):
 				building_counts[btype]["count"] += 1
 			else:
 				building_counts[btype]["constructing"] += 1
-				building_counts[btype]["progress"] = b.construction_progress
+				building_counts[btype]["progress"] = float(_building_value(b, "construction_progress", _building_value(b, "build_progress", 0.0)))
 
 		var total_built: int = 0
 		var has_any: bool = false
@@ -155,12 +159,17 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	# Calculate housing capacity
 	var housing_cap: int = 0
-	if building_manager != null:
-		for bid in settlement.building_ids:
-			var b = building_manager.get_building(bid)
-			if b == null or not b.is_constructed:
+	if not buildings.is_empty() or building_manager != null:
+		var capacity_buildings: Array = buildings
+		if capacity_buildings.is_empty() and building_manager != null:
+			for bid in _settlement_building_ids(settlement):
+				var legacy_building: Variant = building_manager.get_building(bid)
+				if legacy_building != null:
+					capacity_buildings.append(legacy_building)
+		for b in capacity_buildings:
+			if not bool(_building_value(b, "is_constructed", _building_value(b, "is_built", false))):
 				continue
-			var btype: String = b.building_type
+			var btype: String = str(_building_value(b, "building_type", ""))
 			housing_cap += HOUSING_CAP.get(btype, DEFAULT_HOUSING_CAP)
 	if housing_cap == 0:
 		housing_cap = DEFAULT_HOUSING_CAP
@@ -168,7 +177,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	# Food-based capacity: total food / 2.0
 	var total_food: float = 0.0
 	for member in members:
-		total_food += member.inventory.get("food", 0.0)
+		total_food += float(_member_inventory(member).get("food", 0.0))
 	var food_cap: int = maxi(1, roundi(total_food / 2.0))
 
 	var overall_cap: int = mini(housing_cap, food_cap)
@@ -220,3 +229,29 @@ func _draw_resource_row(canvas: Control, font: Font, x: float, y: float, label: 
 func _draw_bar(canvas: Control, x: float, y: float, w: float, h: float, value: float, fill_color: Color, bg_color: Color = Color(0.15, 0.15, 0.2)) -> void:
 	canvas.draw_rect(Rect2(x, y, w, h), bg_color)
 	canvas.draw_rect(Rect2(x, y, w * clampf(value, 0.0, 1.0), h), fill_color)
+
+
+func _member_inventory(member: Variant) -> Dictionary:
+	if member is Dictionary:
+		var inventory: Variant = member.get("inventory", {})
+		return inventory if inventory is Dictionary else {}
+	if member == null:
+		return {}
+	return member.inventory
+
+
+func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:
+	if building is Dictionary:
+		return building.get(key, default_value)
+	if building == null:
+		return default_value
+	return building.get(key)
+
+
+func _settlement_building_ids(settlement: Variant) -> Array:
+	if settlement is Dictionary:
+		var building_ids: Variant = settlement.get("building_ids", [])
+		return building_ids if building_ids is Array else []
+	if settlement == null:
+		return []
+	return settlement.building_ids

@@ -160,8 +160,8 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		var s_female: int = summary.get("female", 0)
 		var s_happiness: float = summary.get("avg_happiness", 0.5)
 		var s_stress: float = summary.get("avg_stress", 0.0)
-		var s_leader = summary.get("leader", null)
-		var settlement = summary.get("settlement", null)
+		var s_leader: Variant = summary.get("leader", null)
+		var settlement: Variant = summary.get("settlement", null)
 
 		# Population trend for this settlement
 		var s_prev_pop: int = s_pop
@@ -211,12 +211,12 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		# Leader
 		if s_leader != null:
 			var leader_prefix: String = Locale.ltr("UI_LEADER") + ": "
-			var leader_name: String = s_leader.entity_name
+			var leader_name: String = _entity_name(s_leader)
 			canvas.draw_string(font, Vector2(cx + 8.0, cy), leader_prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 			var lp_w: float = font.get_string_size(leader_prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size).x
 			canvas.draw_string(font, Vector2(cx + 8.0 + lp_w, cy), leader_name, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, GOLD_COLOR)
 			var ln_w: float = font.get_string_size(leader_name, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size).x
-			var leader_id = s_leader.id
+			var leader_id: int = _entity_id(s_leader)
 			click_regions.append({
 				"rect": Rect2(cx + 8.0 + lp_w, cy - small_size, ln_w, small_size + 4),
 				"action": "open_entity",
@@ -245,3 +245,19 @@ func _trend_text(current: float, previous: float) -> Dictionary:
 func _draw_bar(canvas: Control, x: float, y: float, w: float, h: float, value: float, fill_color: Color, bg_color: Color = Color(0.15, 0.15, 0.2)) -> void:
 	canvas.draw_rect(Rect2(x, y, w, h), bg_color)
 	canvas.draw_rect(Rect2(x, y, w * clampf(value, 0.0, 1.0), h), fill_color)
+
+
+func _entity_name(entity: Variant) -> String:
+	if entity is Dictionary:
+		return str(entity.get("entity_name", entity.get("name", "?")))
+	if entity == null:
+		return "?"
+	return str(entity.entity_name)
+
+
+func _entity_id(entity: Variant) -> int:
+	if entity is Dictionary:
+		return int(entity.get("id", -1))
+	if entity == null:
+		return -1
+	return int(entity.id)

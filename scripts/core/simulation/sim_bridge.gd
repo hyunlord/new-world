@@ -165,6 +165,19 @@ func runtime_spawn_agents(spawn_data_json: String) -> int:
 	return int(runtime.call("runtime_spawn_agents", spawn_data_json))
 
 
+## Bootstraps the authoritative Rust world from setup JSON and returns a summary dictionary.
+func runtime_bootstrap_world(setup_json: String) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_bootstrap_world"):
+		return {}
+	var result: Variant = runtime.call("runtime_bootstrap_world", setup_json)
+	if result is Dictionary:
+		return result
+	return {}
+
+
 ## Returns registered runtime system metadata snapshot.
 func runtime_get_registry_snapshot() -> Array:
 	var runtime: Object = _get_native_runtime()
@@ -215,6 +228,58 @@ func runtime_get_entity_list() -> Array:
 	if result is Array:
 		return result
 	return []
+
+
+## Returns settlement detail from Rust runtime.
+func runtime_get_settlement_detail(settlement_id: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_settlement_detail"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_settlement_detail", settlement_id)
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns building detail from Rust runtime.
+func runtime_get_building_detail(building_id: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_building_detail"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_building_detail", building_id)
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns a world summary snapshot from Rust runtime.
+func runtime_get_world_summary() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_world_summary"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_world_summary")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Returns a compact minimap snapshot from Rust runtime.
+func runtime_get_minimap_snapshot() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_minimap_snapshot"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_minimap_snapshot")
+	if result is Dictionary:
+		return result
+	return {}
 
 
 ## Clears registered runtime system metadata.

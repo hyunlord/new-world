@@ -30,21 +30,23 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var leader = data.get("leader", null)
 	if leader != null:
 		var charisma_raw: float = 0.5
-		if leader.personality != null:
-			charisma_raw = leader.personality.axes.get("X", 0.5)
+		var leader_axes: Dictionary = _entity_axes(leader)
+		if not leader_axes.is_empty():
+			charisma_raw = float(leader_axes.get("X", 0.5))
 		var charisma_fmt: String = "%.2f" % charisma_raw
 		var leader_label: String = (
-			"♛ " + Locale.ltr("UI_LEADER") + ": " + leader.entity_name
+			"♛ " + Locale.ltr("UI_LEADER") + ": " + _entity_name(leader)
 			+ " (" + Locale.trf1("UI_CHARISMA_FMT", "value", charisma_fmt) + ")"
 		)
 		canvas.draw_string(font, Vector2(cx, cy), leader_label, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, SECTION_HEADER_COLOR)
 		# click region for leader name — measure the name portion width
 		var prefix: String = "♛ " + Locale.ltr("UI_LEADER") + ": "
 		var prefix_w: float = font.get_string_size(prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
-		var name_w: float = font.get_string_size(leader.entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
+		var leader_name: String = _entity_name(leader)
+		var name_w: float = font.get_string_size(leader_name, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
 		click_regions.append({
 			"rect": Rect2(cx + prefix_w, cy - body_size, name_w, body_size + 4),
-			"entity_id": leader.id,
+			"entity_id": _entity_id(leader),
 		})
 	else:
 		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_NO_LEADER"), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
@@ -54,7 +56,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_ERA_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 
-	var tech_era: String = settlement.tech_era
+	var tech_era: String = _settlement_tech_era(settlement)
 	var era_color: Color
 	match tech_era:
 		"stone_age":
@@ -72,7 +74,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	cy += LINE_HEIGHT
 
 	# Era progress bar
-	var known_count: int = settlement.get_known_techs().size()
+	var known_count: int = _settlement_known_techs(settlement).size()
 	var required: int
 	match tech_era:
 		"stone_age":
@@ -122,12 +124,13 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	# ── 4. Active Tech Modifiers ───────────────────────────────────────────
 	var tech_tree_manager = data.get("tech_tree_manager", null)
-	if tech_tree_manager != null and settlement.tech_states.size() > 0:
+	var settlement_tech_states: Dictionary = _settlement_tech_states(settlement)
+	if tech_tree_manager != null and settlement_tech_states.size() > 0:
 		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_ACTIVE_MODIFIERS"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 		cy += LINE_HEIGHT
 		var any_modifier_drawn: bool = false
-		for tech_id in settlement.tech_states:
-			var cts = settlement.tech_states[tech_id]
+		for tech_id in settlement_tech_states:
+			var cts = settlement_tech_states[tech_id]
 			if not CivTechState.is_active(cts):
 				continue
 			var tech_def: Dictionary = tech_tree_manager.get_def(tech_id)
@@ -156,8 +159,8 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_CAPABILITIES"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 		cy += LINE_HEIGHT
 		var cap_drawn: bool = false
-		for tech_id in settlement.tech_states:
-			var cts = settlement.tech_states[tech_id]
+		for tech_id in settlement_tech_states:
+			var cts = settlement_tech_states[tech_id]
 			var tech_def: Dictionary = tech_tree_manager.get_def(tech_id)
 			if tech_def.is_empty():
 				continue
@@ -208,3 +211,61 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 func _draw_bar(canvas: Control, x: float, y: float, w: float, h: float, value: float, fill_color: Color, bg_color: Color = Color(0.15, 0.15, 0.2)) -> void:
 	canvas.draw_rect(Rect2(x, y, w, h), bg_color)
 	canvas.draw_rect(Rect2(x, y, w * clampf(value, 0.0, 1.0), h), fill_color)
+
+
+func _entity_id(entity: Variant) -> int:
+	if entity is Dictionary:
+		return int(entity.get("id", -1))
+	if entity == null:
+		return -1
+	return int(entity.id)
+
+
+func _entity_name(entity: Variant) -> String:
+	if entity is Dictionary:
+		return str(entity.get("entity_name", entity.get("name", "?")))
+	if entity == null:
+		return "?"
+	return str(entity.entity_name)
+
+
+func _entity_axes(entity: Variant) -> Dictionary:
+	if entity is Dictionary:
+		var personality: Variant = entity.get("personality", {})
+		if personality is Dictionary:
+			var axes: Variant = personality.get("axes", {})
+			if axes is Dictionary:
+				return axes
+		return {}
+	if entity == null or entity.personality == null:
+		return {}
+	return entity.personality.axes
+
+
+func _settlement_tech_era(settlement: Variant) -> String:
+	if settlement is Dictionary:
+		return str(settlement.get("tech_era", "stone_age"))
+	if settlement == null:
+		return "stone_age"
+	return str(settlement.tech_era)
+
+
+func _settlement_tech_states(settlement: Variant) -> Dictionary:
+	if settlement is Dictionary:
+		var tech_states: Variant = settlement.get("tech_states", {})
+		return tech_states if tech_states is Dictionary else {}
+	if settlement == null:
+		return {}
+	return settlement.tech_states
+
+
+func _settlement_known_techs(settlement: Variant) -> Array:
+	if settlement != null and not (settlement is Dictionary) and settlement.has_method("get_known_techs"):
+		return settlement.get_known_techs()
+	var tech_states: Dictionary = _settlement_tech_states(settlement)
+	var known: Array = []
+	for tech_id in tech_states.keys():
+		var cts: Dictionary = tech_states[tech_id]
+		if CivTechState.is_active(cts):
+			known.append(tech_id)
+	return known

@@ -38,10 +38,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	# Count unique known techs across all settlements
 	var all_known_ids: Dictionary = {}
 	for summary in settlement_summaries:
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		if settlement == null:
 			continue
-		var tech_states: Dictionary = settlement.tech_states if "tech_states" in settlement else {}
+		var tech_states: Dictionary = _settlement_tech_states(settlement)
 		for tech_id in tech_states:
 			var cts: Dictionary = tech_states[tech_id]
 			var state: String = cts.get("state", "unknown")
@@ -58,10 +58,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var most_advanced_era: String = "stone_age"
 	var most_advanced_era_index: int = 0
 	for summary in settlement_summaries:
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		if settlement == null:
 			continue
-		var era: String = settlement.tech_era if "tech_era" in settlement else "stone_age"
+		var era: String = _settlement_tech_era(settlement)
 		var era_idx: int = ERA_ORDER.find(era)
 		if era_idx < 0:
 			era_idx = 0
@@ -80,12 +80,12 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	cy += LINE_HEIGHT
 
 	for summary in settlement_summaries:
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		if settlement == null:
 			continue
 		var s_id: int = summary.get("id", 0)
-		var tech_states: Dictionary = settlement.tech_states if "tech_states" in settlement else {}
-		var era: String = settlement.tech_era if "tech_era" in settlement else "stone_age"
+		var tech_states: Dictionary = _settlement_tech_states(settlement)
+		var era: String = _settlement_tech_era(settlement)
 
 		# Count known and forgotten
 		var known_count: int = 0
@@ -131,7 +131,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 		# Click region for settlement row
 		var row_rect := Rect2(cx, cy - body_size, width, body_size + 4.0)
-		click_regions.append({"rect": row_rect, "action": "open_settlement", "id": settlement.id})
+		click_regions.append({"rect": row_rect, "action": "open_settlement", "id": _settlement_id(settlement)})
 
 		cy += LINE_HEIGHT
 
@@ -146,10 +146,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		# Collect all unique tech IDs encountered across all settlements
 		var all_tech_ids_dict: Dictionary = {}
 		for summary in settlement_summaries:
-			var settlement = summary.get("settlement", null)
+			var settlement: Variant = summary.get("settlement", null)
 			if settlement == null:
 				continue
-			var tech_states: Dictionary = settlement.tech_states if "tech_states" in settlement else {}
+			var tech_states: Dictionary = _settlement_tech_states(settlement)
 			for tech_id in tech_states:
 				all_tech_ids_dict[tech_id] = true
 
@@ -199,7 +199,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 				for i in range(num_settlements):
 					var summary = settlement_summaries[i]
-					var settlement = summary.get("settlement", null)
+					var settlement: Variant = summary.get("settlement", null)
 					var col_x: float = cx + 8.0 + name_col_w + float(i) * cell_w
 
 					if settlement == null:
@@ -207,7 +207,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 								HORIZONTAL_ALIGNMENT_LEFT, cell_w, small_size, Color(0.4, 0.4, 0.4))
 						continue
 
-					var tech_states: Dictionary = settlement.tech_states if "tech_states" in settlement else {}
+					var tech_states: Dictionary = _settlement_tech_states(settlement)
 					if not tech_states.has(tech_id):
 						canvas.draw_string(font, Vector2(col_x, cy), "—",
 								HORIZONTAL_ALIGNMENT_LEFT, cell_w, small_size, Color(0.4, 0.4, 0.4))
@@ -252,11 +252,11 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	# ── 4. Regression Warnings ──────────────────────────────────────────────
 	var warnings: Array = []
 	for summary in settlement_summaries:
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		if settlement == null:
 			continue
 		var s_id: int = summary.get("id", 0)
-		var tech_states: Dictionary = settlement.tech_states if "tech_states" in settlement else {}
+		var tech_states: Dictionary = _settlement_tech_states(settlement)
 		for tech_id in tech_states:
 			var cts: Dictionary = tech_states[tech_id]
 			var state: String = cts.get("state", "unknown")
@@ -294,3 +294,28 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		cy += SECTION_GAP
 
 	return cy
+
+
+func _settlement_id(settlement: Variant) -> int:
+	if settlement is Dictionary:
+		return int(settlement.get("id", 0))
+	if settlement == null:
+		return 0
+	return int(settlement.id)
+
+
+func _settlement_tech_era(settlement: Variant) -> String:
+	if settlement is Dictionary:
+		return str(settlement.get("tech_era", "stone_age"))
+	if settlement == null:
+		return "stone_age"
+	return str(settlement.tech_era)
+
+
+func _settlement_tech_states(settlement: Variant) -> Dictionary:
+	if settlement is Dictionary:
+		var tech_states: Variant = settlement.get("tech_states", {})
+		return tech_states if tech_states is Dictionary else {}
+	if settlement == null:
+		return {}
+	return settlement.tech_states
