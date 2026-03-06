@@ -62,13 +62,13 @@ func get_following_id() -> int:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# ★ FIX: When detail panel is open and mouse is over it, skip zoom so panel can scroll
+	# ★ FIX: When detail panel is open and pointer is over it, skip camera scroll gestures.
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			if EntityDetailPanelV2.is_open:
-				var vp_w: float = get_viewport().get_visible_rect().size.x
-				if event.position.x > vp_w * DETAIL_PANEL_START_X_RATIO:
-					return  # don't zoom — let entity_detail_panel_v2 scroll
+			if _is_pointer_over_detail_panel():
+				return  # don't zoom — let entity_detail_panel_v2 scroll
+	if event is InputEventPanGesture and _is_pointer_over_detail_panel():
+		return  # don't pan camera — let entity_detail_panel_v2 scroll
 
 	# Left-click drag pan
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -174,6 +174,16 @@ func _process(delta: float) -> void:
 
 func _zoom_at_mouse(delta: float) -> void:
 	_target_zoom = clampf(_target_zoom + delta, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+
+
+func _is_pointer_over_detail_panel() -> bool:
+	if not EntityDetailPanelV2.is_open:
+		return false
+	var viewport: Viewport = get_viewport()
+	if viewport == null:
+		return false
+	var vp_w: float = viewport.get_visible_rect().size.x
+	return viewport.get_mouse_position().x > vp_w * DETAIL_PANEL_START_X_RATIO
 
 
 func _get_follow_target_snapshot(entity_id: int) -> Dictionary:
