@@ -119,6 +119,8 @@ const _ENTITY_NEED_STAT_IDS: Array[StringName] = [
 	&"NEED_WARMTH",
 	&"NEED_SAFETY",
 ]
+const _EMPTY_LABEL_TEXT: String = ""
+const _NEED_WARNING_GLYPH: String = "⚠"
 var _entity_need_norm_values: PackedFloat32Array = PackedFloat32Array()
 
 # Population milestones
@@ -331,7 +333,7 @@ func _build_entity_panel() -> void:
 		pct_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		var warn_lbl := Label.new()
 		warn_lbl.add_theme_font_size_override("font_size", 10)
-		warn_lbl.text = ""
+		warn_lbl.text = _EMPTY_LABEL_TEXT
 		row.add_child(name_lbl)
 		row.add_child(bar)
 		row.add_child(pct_lbl)
@@ -687,12 +689,10 @@ func _update_entity_panel_from_rust(_delta: float, detail: Dictionary, snap: Dic
 	_entity_action_label.text = Locale.tr_id("STATUS", action_str)
 
 	# Inventory (carry data not yet in snapshots — show zeros)
-	_entity_inventory_label.text = "%.0f %.0f %.0f / %d" % [
-		float(snap.get("carry_food", 0.0)),
-		float(snap.get("carry_wood", 0.0)),
-		float(snap.get("carry_stone", 0.0)),
-		GameConfig.MAX_CARRY,
-	]
+	var inv_food_text: String = Locale.trf1("UI_RES_FOOD_FMT", "n", int(float(snap.get("carry_food", 0.0))))
+	var inv_wood_text: String = Locale.trf1("UI_RES_WOOD_FMT", "n", int(float(snap.get("carry_wood", 0.0))))
+	var inv_stone_text: String = Locale.trf1("UI_RES_STONE_FMT", "n", int(float(snap.get("carry_stone", 0.0))))
+	_entity_inventory_label.text = inv_food_text + " " + inv_wood_text + " " + inv_stone_text + " / " + str(GameConfig.MAX_CARRY)
 
 	# Needs bars — show top 3 most critical (lowest value) needs
 	var needs_data: Array[Dictionary] = []
@@ -711,7 +711,7 @@ func _update_entity_panel_from_rust(_delta: float, detail: Dictionary, snap: Dic
 	_update_need_bars(needs_data)
 
 	var stress_level: float = float(detail.get("stress_level", 0.0))
-	_entity_stats_label.text = "S:%.0f%%" % (stress_level * 100.0)
+	_entity_stats_label.text = Locale.ltr("UI_STRESS") + ": " + str(int(stress_level * 100.0)) + "%"
 
 
 func _update_entity_panel_from_gdscript(_delta: float, entity: RefCounted) -> void:
@@ -812,25 +812,25 @@ func _update_need_bars(needs_data: Array[Dictionary]) -> void:
 				bar_style.bg_color = Color(0.95, 0.35, 0.30)
 				_need_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
 				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
-				_need_warn_labels[i].text = "⚠"
+				_need_warn_labels[i].text = _NEED_WARNING_GLYPH
 				_need_warn_labels[i].add_theme_color_override("font_color", Color(0.95, 0.35, 0.30))
 			elif val < 0.30:
 				bar_style.bg_color = Color(0.95, 0.60, 0.30)
 				_need_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
 				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
-				_need_warn_labels[i].text = "⚠"
+				_need_warn_labels[i].text = _NEED_WARNING_GLYPH
 				_need_warn_labels[i].add_theme_color_override("font_color", Color(0.95, 0.85, 0.30))
 			else:
 				bar_style.bg_color = Color(0.30, 0.55, 0.80)
 				_need_labels[i].add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 				_need_pct_labels[i].add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-				_need_warn_labels[i].text = ""
+				_need_warn_labels[i].text = _EMPTY_LABEL_TEXT
 			_need_bars[i].add_theme_stylebox_override("fill", bar_style)
 		else:
-			_need_labels[i].text = ""
+			_need_labels[i].text = _EMPTY_LABEL_TEXT
 			_need_bars[i].value = 0
-			_need_pct_labels[i].text = ""
-			_need_warn_labels[i].text = ""
+			_need_pct_labels[i].text = _EMPTY_LABEL_TEXT
+			_need_warn_labels[i].text = _EMPTY_LABEL_TEXT
 
 
 func _update_building_panel() -> void:

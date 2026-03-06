@@ -32,12 +32,20 @@ You receive tickets from the lead (Claude Code). Each ticket specifies exactly w
 - Lint: `cd rust && cargo clippy -- -D warnings`
 - Crates: sim-core (components/config), sim-data (JSON), sim-systems (tick logic), sim-engine (tick loop/events), sim-bridge (GDExtension FFI), sim-test (headless)
 
-### Secondary: GDScript UI Layer
+### Secondary: GDScript Shell + Legacy Shadow Layer
 - Engine: Godot 4.6
-- GDScript for UI/rendering/input ONLY
+- Target architecture is Rust-first, with new simulation logic in Rust
+- Current repo reality still includes legacy/shadow GDScript state in `scripts/core/`, `scripts/systems/`, and `scripts/ai/`
+- Unless a ticket explicitly performs a migration, preserve Rust/GDScript parity in those areas instead of deleting or "finishing" the migration opportunistically
 - Localization: `Locale.ltr("KEY")` — NEVER `tr()`, NEVER hardcoded strings
-- UI reads state through SimBridge — NEVER accesses Rust state directly
+- New or rewritten UI should read state through SimBridge/runtime getters
 - Branch: **lead/main** (always)
+
+## Scoped AGENTS
+
+- This file sets repo-wide execution rules.
+- When a deeper `AGENTS.md` exists, follow it as the more specific rule set for that subtree.
+- Scoped `AGENTS.md` files exist for `data/`, `rust/`, each Rust crate, `scripts/core/`, `scripts/ui/`, `scripts/debug/`, `scripts/ai/`, and `scripts/systems/`.
 
 ---
 
