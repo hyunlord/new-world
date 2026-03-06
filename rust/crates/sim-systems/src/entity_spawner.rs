@@ -17,6 +17,7 @@ use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
 use sim_data::PersonalityDistribution;
 use sim_engine::engine::SimResources;
+use crate::runtime::derive_steering_params;
 use crate::values_init::initialize_values;
 
 // ── Body generation constants ─────────────────────────────────────────────────
@@ -671,9 +672,10 @@ pub fn spawn_agent(
 
     // Values: initialize from HEXACO personality before personality is moved.
     let values = initialize_values(&personality, None, None, &mut resources.rng);
+    let steering = derive_steering_params(&personality);
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
-    // We have 18 components total: spawn the first 15, then insert the remaining 3.
+    // We have 19 components total: spawn the first 15, then insert the remaining 4.
     let entity = world.spawn((
         identity,
         age,
@@ -692,9 +694,12 @@ pub fn spawn_agent(
         Skills::default(),
     ));
 
-    // Insert remaining 3 components (Memory, Traits, Faith)
+    // Insert remaining components that would exceed the tuple bundle limit.
     world
-        .insert(entity, (Memory::default(), Traits::default(), Faith::default()))
+        .insert(
+            entity,
+            (Memory::default(), Traits::default(), Faith::default(), steering),
+        )
         .unwrap_or_else(|e| log::warn!("[entity_spawner] insert extra components failed: {e}"));
 
     entity

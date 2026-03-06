@@ -209,8 +209,17 @@ pub const REVOLUTION_TICK_INTERVAL: u64 = 4380;    // annual check
 pub const NEEDS_TICK_INTERVAL: u64 = 4;
 pub const STRESS_SYSTEM_TICK_INTERVAL: u64 = 4;
 pub const BEHAVIOR_TICK_INTERVAL: u64 = 10;
-pub const MOVEMENT_TICK_INTERVAL: u64 = 3;
+pub const MOVEMENT_TICK_INTERVAL: u64 = 1;
 pub const UPPER_NEEDS_TICK_INTERVAL: u64 = 5;
+pub const STEERING_SYSTEM_PRIORITY: u32 = 29;
+pub const STEERING_SYSTEM_INTERVAL: u64 = 1;
+pub const MOVEMENT_SYSTEM_PRIORITY: u32 = 30;
+pub const BEHAVIOR_TOP_N_SELECTION: usize = 3;
+pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0;
+pub const STEERING_MAX_FORCE: f64 = 100.0;
+pub const STEERING_MAX_SPEED: f64 = 120.0;
+pub const MOOD_SPEED_MULTIPLIERS: [f64; 5] = [0.7, 0.8, 0.9, 1.0, 1.1];
+pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
 
 // ── Stress → Work Efficiency [Yerkes-Dodson 1908, McEwen 2004] ───────────────
 pub const STRESS_EFFICIENCY_EUSTRESS_PEAK: f64 = 150.0;

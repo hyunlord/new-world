@@ -6,20 +6,57 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
-    Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits,
-    Values,
+    Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, SteeringParams,
+    Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    SettlementId, Sex, SocialClass, StressState, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
 use sim_core::scales::{NativeStress, NativePercent};
 
 use crate::body;
 use crate::stat_curve;
+use super::steering_derive::derive_steering_params;
+
+#[inline]
+fn mood_bucket_from_emotion(emotion: &Emotion) -> usize {
+    let positive = (emotion.get(EmotionType::Joy)
+        + emotion.get(EmotionType::Trust)
+        + emotion.get(EmotionType::Anticipation))
+        / 3.0;
+    let negative = (emotion.get(EmotionType::Fear)
+        + emotion.get(EmotionType::Sadness)
+        + emotion.get(EmotionType::Anger)
+        + emotion.get(EmotionType::Disgust))
+        / 4.0;
+    let mood_score = (positive - negative).clamp(-1.0, 1.0);
+    if mood_score <= -0.6 {
+        0
+    } else if mood_score <= -0.2 {
+        1
+    } else if mood_score < 0.2 {
+        2
+    } else if mood_score < 0.6 {
+        3
+    } else {
+        4
+    }
+}
+
+#[inline]
+fn stress_bucket_from_state(state: StressState) -> usize {
+    match state {
+        StressState::Calm => 0,
+        StressState::Alert => 1,
+        StressState::Resistance => 2,
+        StressState::Exhaustion => 3,
+        StressState::Collapse => 4,
+    }
+}
 
 
 /// Rust runtime system for stress-state updates.
@@ -65,8 +102,9 @@ impl SimSystem for StressRuntimeSystem {
             Option<&Memory>,
             Option<&Behavior>,
             Option<&Identity>,
+            Option<&mut SteeringParams>,
         )>();
-        for (_, (needs, stress, emotion_opt, personality_opt, social_opt, coping_opt, memory_opt, behavior_opt, identity_opt)) in &mut query {
+        for (_, (needs, stress, emotion_opt, personality_opt, social_opt, coping_opt, memory_opt, behavior_opt, identity_opt, steering_opt)) in &mut query {
             // --- Gather inputs ---
 
             // Needs (normalized 0-1)
@@ -211,6 +249,11 @@ impl SimSystem for StressRuntimeSystem {
             stress.stress_delta_last = result.delta;
             stress.hidden_threat_accumulator = result.hidden_threat_accumulator;
             stress.recalculate_state();
+            if let Some(steering) = steering_opt {
+                let bucket = stress_bucket_from_state(stress.state);
+                steering.stress_speed_multiplier =
+                    config::STRESS_SPEED_MULTIPLIERS[bucket];
+            }
 
             // Update stress traces: apply updated per_tick and remove decayed traces
             let mut retained = Vec::new();
@@ -767,8 +810,9 @@ impl SimSystem for EmotionRuntimeSystem {
             Option<&Stress>,
             Option<&Needs>,
             Option<&Personality>,
+            Option<&mut SteeringParams>,
         )>();
-        for (_, (emotion, stress_opt, needs_opt, personality_opt)) in &mut query {
+        for (_, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query {
             let stress_level = stress_opt
                 .map(|stress| stress.level as f32)
                 .unwrap_or(0.0)
@@ -855,6 +899,11 @@ impl SimSystem for EmotionRuntimeSystem {
                 update(emotion.get(EmotionType::Trust), trust_target);
             *emotion.get_mut(EmotionType::Anticipation) =
                 update(emotion.get(EmotionType::Anticipation), anticipation_target);
+            if let Some(steering) = steering_opt {
+                let bucket = mood_bucket_from_emotion(emotion);
+                steering.mood_speed_multiplier =
+                    config::MOOD_SPEED_MULTIPLIERS[bucket];
+            }
         }
     }
 }
@@ -1054,8 +1103,8 @@ impl ContagionRuntimeSystem {
 #[derive(Debug, Clone)]
 struct ContagionSnapshot {
     entity: Entity,
-    x: i32,
-    y: i32,
+    x: f64,
+    y: f64,
     settlement_id: Option<u64>,
     emotions: [f32; 8],
     stress_2000: f32,
@@ -1094,8 +1143,8 @@ impl SimSystem for ContagionRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
-        const AOE_RADIUS: i32 = 3;
-        const NETWORK_HOP_RADIUS: i32 = 15;
+        const AOE_RADIUS: f64 = 3.0;
+        const NETWORK_HOP_RADIUS: f64 = 15.0;
         const CROWD_DILUTE_DIVISOR: f32 = 6.0;
         const REFRACTORY_SUSCEPTIBILITY: f32 = 0.25;
         const BASE_MIMICRY_WEIGHT: f32 = 0.08;
@@ -1727,8 +1776,10 @@ impl SimSystem for PersonalityMaturationRuntimeSystem {
         }
         self.last_year = current_year;
 
-        let mut query = world.query::<(&Age, &mut Personality)>();
-        for (_, (age, personality)) in &mut query {
+        let mut steering_updates: Vec<(Entity, SteeringParams)> = Vec::new();
+        let mut updated_entities: Vec<EntityId> = Vec::new();
+        let mut query = world.query::<(&Age, &mut Personality, Option<&mut SteeringParams>)>();
+        for (entity, (age, personality, steering_opt)) in &mut query {
             let age_years = age.years as i32;
 
             // For each axis, compute target then drift each of its 4 facets
@@ -1757,6 +1808,23 @@ impl SimSystem for PersonalityMaturationRuntimeSystem {
                 }
             }
             personality.recalculate_axes();
+            let next_params = derive_steering_params(personality);
+            if let Some(steering) = steering_opt {
+                *steering = next_params;
+            } else {
+                steering_updates.push((entity, next_params));
+            }
+            updated_entities.push(EntityId(entity.id() as u64));
+        }
+
+        drop(query);
+        for (entity, steering) in steering_updates {
+            let _ = world.insert_one(entity, steering);
+        }
+        for entity_id in updated_entities {
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::SteeringParamsUpdated { entity_id });
         }
     }
 }

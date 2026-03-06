@@ -403,8 +403,8 @@ pub(crate) fn minimap_snapshot(state: &RuntimeState) -> VarDictionary {
         }
         let mut d = VarDictionary::new();
         d.set("entity_id", entity.to_bits().get() as i64);
-        d.set("x", position.x as i64);
-        d.set("y", position.y as i64);
+        d.set("x", position.x);
+        d.set("y", position.y);
         d.set(
             "job",
             behavior_opt

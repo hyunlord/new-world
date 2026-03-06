@@ -948,18 +948,6 @@ impl MovementRuntimeSystem {
     }
 }
 
-#[inline]
-fn movement_skip_mod(stage: GrowthStage) -> i32 {
-    match stage {
-        GrowthStage::Infant => 2,
-        GrowthStage::Toddler => 2,
-        GrowthStage::Child => 3,
-        GrowthStage::Teen => 10,
-        GrowthStage::Elder => 3,
-        GrowthStage::Adult => 0,
-    }
-}
-
 impl SimSystem for MovementRuntimeSystem {
     fn name(&self) -> &'static str {
         "movement_system"
@@ -973,15 +961,22 @@ impl SimSystem for MovementRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
-        let tick_i32 = (tick.min(i32::MAX as u64)) as i32;
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        let max_x = f64::from(resources.map.width.saturating_sub(1));
+        let max_y = f64::from(resources.map.height.saturating_sub(1));
         let mut query = world.query::<(
             &mut Position,
             &mut Behavior,
             Option<&mut Needs>,
             Option<&Age>,
         )>();
-        for (entity, (position, behavior, needs_opt, age_opt)) in &mut query {
+        for (_, (position, behavior, needs_opt, age_opt)) in &mut query {
+            if age_opt.map(|age| !age.alive).unwrap_or(false) {
+                position.vel_x = 0.0;
+                position.vel_y = 0.0;
+                position.movement_dir = 0;
+                continue;
+            }
             if behavior.action_timer > 0 {
                 behavior.action_timer -= 1;
             }
@@ -1047,12 +1042,9 @@ impl SimSystem for MovementRuntimeSystem {
                 behavior.current_action = ActionType::Idle;
                 behavior.action_target_x = None;
                 behavior.action_target_y = None;
-                continue;
-            }
-
-            let skip_mod = age_opt.map(|age| movement_skip_mod(age.stage)).unwrap_or(0);
-            let entity_id = entity.id() as i32;
-            if body::movement_should_skip_tick(skip_mod, tick_i32, entity_id) {
+                position.vel_x = 0.0;
+                position.vel_y = 0.0;
+                position.movement_dir = 0;
                 continue;
             }
 
@@ -1060,43 +1052,50 @@ impl SimSystem for MovementRuntimeSystem {
                 behavior.current_action,
                 ActionType::Idle | ActionType::Rest | ActionType::Sleep
             ) {
+                position.vel_x = 0.0;
+                position.vel_y = 0.0;
+                position.movement_dir = 0;
                 continue;
             }
 
-            let Some(target_x) = behavior.action_target_x else {
-                continue;
-            };
-            let Some(target_y) = behavior.action_target_y else {
-                continue;
-            };
-            if target_x == position.x && target_y == position.y {
-                continue;
-            }
+            let mut next_x = (position.x + position.vel_x).clamp(0.0, max_x);
+            let mut next_y = (position.y + position.vel_y).clamp(0.0, max_y);
 
-            let dx = (target_x - position.x).signum();
-            let dy = (target_y - position.y).signum();
-            let mut candidates = Vec::with_capacity(3);
-            if dx != 0 && dy != 0 {
-                candidates.push((position.x + dx, position.y + dy));
-            }
-            if dx != 0 {
-                candidates.push((position.x + dx, position.y));
-            }
-            if dy != 0 {
-                candidates.push((position.x, position.y + dy));
-            }
-
-            for (nx, ny) in candidates {
-                if !resources.map.in_bounds(nx, ny) {
-                    continue;
+            if let (Some(target_x), Some(target_y)) =
+                (behavior.action_target_x, behavior.action_target_y)
+            {
+                let dist_x = f64::from(target_x) - next_x;
+                let dist_y = f64::from(target_y) - next_y;
+                if (dist_x * dist_x + dist_y * dist_y).sqrt() <= 0.20 {
+                    next_x = f64::from(target_x);
+                    next_y = f64::from(target_y);
                 }
-                if !resources.map.get(nx as u32, ny as u32).passable {
-                    continue;
-                }
-                position.x = nx;
-                position.y = ny;
-                break;
             }
+
+            let tile_x = next_x.round() as i32;
+            let tile_y = next_y.round() as i32;
+            if !resources.map.in_bounds(tile_x, tile_y)
+                || !resources.map.get(tile_x as u32, tile_y as u32).passable
+            {
+                position.vel_x = 0.0;
+                position.vel_y = 0.0;
+                position.movement_dir = 0;
+                continue;
+            }
+
+            position.x = next_x;
+            position.y = next_y;
+            position.movement_dir = movement_direction(position.vel_x, position.vel_y);
         }
     }
+}
+
+#[inline]
+fn movement_direction(vel_x: f64, vel_y: f64) -> u8 {
+    if vel_x.abs() < 0.01 && vel_y.abs() < 0.01 {
+        return 0;
+    }
+    let angle = vel_y.atan2(vel_x);
+    let octant = (angle / (std::f64::consts::PI / 4.0)).round() as i32;
+    octant.rem_euclid(8) as u8
 }

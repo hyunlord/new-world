@@ -133,19 +133,15 @@ func _update_hover() -> void:
 
 	var canvas_xform := get_canvas_transform()
 	var mouse_world: Vector2 = canvas_xform.affine_inverse() * _hover_screen_pos
-	@warning_ignore("integer_division")
-	var mouse_tile := Vector2i(
-		int(mouse_world.x) / GameConfig.TILE_SIZE,
-		int(mouse_world.y) / GameConfig.TILE_SIZE
-	)
+	var mouse_tile: Vector2 = mouse_world / float(GameConfig.TILE_SIZE)
 
 	var alive: Array = _get_snapshots()
 	var best_id: int = -1
 	var best_dist: float = 2.0  # hover radius in tiles
 	for entity in alive:
-		var ex: int = int(entity.get("x", 0))
-		var ey: int = int(entity.get("y", 0))
-		var dist: float = Vector2(ex - mouse_tile.x, ey - mouse_tile.y).length()
+		var ex: float = float(entity.get("x", 0.0))
+		var ey: float = float(entity.get("y", 0.0))
+		var dist: float = Vector2(ex, ey).distance_to(mouse_tile)
 		if dist < best_dist:
 			best_dist = dist
 			best_id = int(entity.get("entity_id", -1))
@@ -279,8 +275,8 @@ func _draw() -> void:
 	if _current_lod == 0:
 		for i in range(alive.size()):
 			var entity: Dictionary = alive[i]
-			var ex: int = int(entity.get("x", 0))
-			var ey: int = int(entity.get("y", 0))
+			var ex: float = float(entity.get("x", 0.0))
+			var ey: float = float(entity.get("y", 0.0))
 			if ex < min_tile_x or ex > max_tile_x:
 				continue
 			if ey < min_tile_y or ey > max_tile_y:
@@ -303,8 +299,8 @@ func _draw() -> void:
 
 	for i in range(alive.size()):
 		var entity: Dictionary = alive[i]
-		var ex: int = int(entity.get("x", 0))
-		var ey: int = int(entity.get("y", 0))
+		var ex: float = float(entity.get("x", 0.0))
+		var ey: float = float(entity.get("y", 0.0))
 
 		# Viewport culling
 		if ex < min_tile_x or ex > max_tile_x:
@@ -488,8 +484,8 @@ func _handle_click(screen_pos: Vector2) -> void:
 	# Convert screen position to world position
 	var canvas_transform := get_canvas_transform()
 	var world_pos: Vector2 = canvas_transform.affine_inverse() * screen_pos
-	@warning_ignore("integer_division")
-	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
+	var tile_pos: Vector2 = world_pos / float(GameConfig.TILE_SIZE)
+	var tile: Vector2i = Vector2i(int(floor(tile_pos.x)), int(floor(tile_pos.y)))
 
 	# Check building at tile first
 	var building: Variant = null
@@ -523,8 +519,11 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var best_dist: float = 3.0  # max click distance in tiles
 	for i in range(alive.size()):
 		var entity: Dictionary = alive[i]
-		var etile := Vector2i(int(entity.get("x", 0)), int(entity.get("y", 0)))
-		var dist: float = Vector2(etile - tile).length()
+		var entity_pos: Vector2 = Vector2(
+			float(entity.get("x", 0.0)),
+			float(entity.get("y", 0.0))
+		)
+		var dist: float = entity_pos.distance_to(tile_pos)
 		if dist < best_dist:
 			best_dist = dist
 			best_entity_id = int(entity.get("entity_id", -1))

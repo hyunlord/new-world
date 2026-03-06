@@ -299,8 +299,8 @@ impl WorldSimRuntime {
             {
                 let mut d = VarDictionary::new();
                 d.set("entity_id", entity.to_bits().get() as i64);
-                d.set("x", pos.x as i64);
-                d.set("y", pos.y as i64);
+                d.set("x", pos.x);
+                d.set("y", pos.y);
                 d.set("name", GString::from(identity.name.as_str()));
                 d.set("sex", GString::from(runtime_sex_to_str(identity.sex)));
                 d.set(
@@ -5119,6 +5119,7 @@ mod tests {
         assert!(runtime_supports_rust_system("memory_system"));
         assert!(runtime_supports_rust_system("coping_system"));
         assert!(runtime_supports_rust_system("child_stress_processor"));
+        assert!(runtime_supports_rust_system("steering_system"));
         assert!(runtime_supports_rust_system("movement_system"));
         assert!(runtime_supports_rust_system("childcare_system"));
         assert!(runtime_supports_rust_system("leader_system"));

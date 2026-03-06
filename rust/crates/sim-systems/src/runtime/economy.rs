@@ -484,13 +484,15 @@ impl SimSystem for GatheringRuntimeSystem {
             else {
                 continue;
             };
-            if !resources.map.in_bounds(position.x, position.y) {
+            let tile_x = position.tile_x();
+            let tile_y = position.tile_y();
+            if !resources.map.in_bounds(tile_x, tile_y) {
                 continue;
             }
 
             let mut harvested = 0.0_f32;
             {
-                let tile = resources.map.get_mut(position.x as u32, position.y as u32);
+                let tile = resources.map.get_mut(tile_x as u32, tile_y as u32);
                 for deposit in &mut tile.resources {
                     if deposit.resource_type != resource_type || deposit.amount <= 0.0 {
                         continue;
@@ -608,9 +610,9 @@ impl SimSystem for ConstructionRuntimeSystem {
                 continue;
             };
 
-            let dx = (position.x - target_x).abs();
-            let dy = (position.y - target_y).abs();
-            if dx > 1 || dy > 1 {
+            let dx = (position.x - f64::from(target_x)).abs();
+            let dy = (position.y - f64::from(target_y)).abs();
+            if dx > 1.0 || dy > 1.0 {
                 continue;
             }
 
@@ -747,9 +749,9 @@ impl SimSystem for BuildingEffectRuntimeSystem {
             for effect in effects.iter().copied() {
                 match effect.kind {
                     BuildingEffectKind::Campfire => {
-                        let dx = (position.x - effect.x).abs();
-                        let dy = (position.y - effect.y).abs();
-                        if dx + dy > config::BUILDING_CAMPFIRE_RADIUS {
+                        let dx = (position.x - f64::from(effect.x)).abs();
+                        let dy = (position.y - f64::from(effect.y)).abs();
+                        if dx + dy > f64::from(config::BUILDING_CAMPFIRE_RADIUS) {
                             continue;
                         }
                         needs.set(
@@ -762,9 +764,9 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                         );
                     }
                     BuildingEffectKind::Shelter => {
-                        let dx = (position.x - effect.x).abs();
-                        let dy = (position.y - effect.y).abs();
-                        if dx + dy > config::BUILDING_SHELTER_RADIUS {
+                        let dx = (position.x - f64::from(effect.x)).abs();
+                        let dy = (position.y - f64::from(effect.y)).abs();
+                        if dx + dy > f64::from(config::BUILDING_SHELTER_RADIUS) {
                             continue;
                         }
                         needs.energy =

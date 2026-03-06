@@ -13,7 +13,7 @@ use sim_systems::runtime::{
     GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
     MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
-    MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem,
+    MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, SteeringRuntimeSystem,
     NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
     ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
     PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
@@ -52,6 +52,7 @@ pub(crate) const RUNTIME_SYSTEM_KEY_NEEDS: &str = "needs_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_UPPER_NEEDS: &str = "upper_needs_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_RESOURCE_REGEN: &str = "resource_regen_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR: &str = "child_stress_processor";
+pub(crate) const RUNTIME_SYSTEM_KEY_STEERING: &str = "steering_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_MOVEMENT: &str = "movement_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_CHILDCARE: &str = "childcare_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_LEADER: &str = "leader_system";
@@ -218,6 +219,7 @@ pub(crate) fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_MEMORY
             | RUNTIME_SYSTEM_KEY_COPING
             | RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR
+            | RUNTIME_SYSTEM_KEY_STEERING
             | RUNTIME_SYSTEM_KEY_MOVEMENT
             | RUNTIME_SYSTEM_KEY_CHILDCARE
             | RUNTIME_SYSTEM_KEY_LEADER
@@ -340,6 +342,11 @@ pub(crate) fn register_supported_rust_system(
                 priority_u32,
                 tick_interval_u64,
             ));
+        }
+        RUNTIME_SYSTEM_KEY_STEERING => {
+            state
+                .engine
+                .register(SteeringRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_MOVEMENT => {
             state

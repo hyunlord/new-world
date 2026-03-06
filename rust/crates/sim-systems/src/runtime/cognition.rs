@@ -539,14 +539,16 @@ fn behavior_pick_wander_target(
     tick: u64,
     entity_raw: u64,
 ) -> (i32, i32) {
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
     let mut idx = (entity_raw
         .wrapping_mul(31)
         .wrapping_add(tick.wrapping_mul(17))
         % BEHAVIOR_WANDER_OFFSETS.len() as u64) as usize;
     for _ in 0..BEHAVIOR_WANDER_OFFSETS.len() {
         let (dx, dy) = BEHAVIOR_WANDER_OFFSETS[idx];
-        let nx = position.x + dx;
-        let ny = position.y + dy;
+        let nx = origin_x + dx;
+        let ny = origin_y + dy;
         if resources.map.in_bounds(nx, ny) {
             let tile = resources.map.get(nx as u32, ny as u32);
             if tile.passable {
@@ -555,7 +557,7 @@ fn behavior_pick_wander_target(
         }
         idx = (idx + 1) % BEHAVIOR_WANDER_OFFSETS.len();
     }
-    (position.x, position.y)
+    (origin_x, origin_y)
 }
 
 fn behavior_select_action(
@@ -563,7 +565,9 @@ fn behavior_select_action(
     needs: &Needs,
     stress_opt: Option<&Stress>,
     emotion_opt: Option<&Emotion>,
+    personality_opt: Option<&Personality>,
     behavior: &Behavior,
+    rng: &mut impl Rng,
 ) -> ActionType {
     let hunger = needs.get(NeedType::Hunger) as f32;
     let thirst = needs.get(NeedType::Thirst) as f32;
@@ -659,6 +663,23 @@ fn behavior_select_action(
         }
     }
 
+    if let Some(personality) = personality_opt {
+        let e_axis = personality.axis(HexacoAxis::E) as f32;
+        let x_axis = personality.axis(HexacoAxis::X) as f32;
+        let a_axis = personality.axis(HexacoAxis::A) as f32;
+        let c_axis = personality.axis(HexacoAxis::C) as f32;
+        let o_axis = personality.axis(HexacoAxis::O) as f32;
+
+        behavior_score_mul(&mut scores, ActionType::Socialize, 0.75 + x_axis * 0.70 + a_axis * 0.25);
+        behavior_score_mul(&mut scores, ActionType::Wander, 0.75 + o_axis * 0.55 + x_axis * 0.20);
+        behavior_score_mul(&mut scores, ActionType::Explore, 0.70 + o_axis * 0.65);
+        behavior_score_mul(&mut scores, ActionType::Build, 0.75 + c_axis * 0.65);
+        behavior_score_mul(&mut scores, ActionType::GatherWood, 0.80 + c_axis * 0.45);
+        behavior_score_mul(&mut scores, ActionType::GatherStone, 0.80 + c_axis * 0.45);
+        behavior_score_mul(&mut scores, ActionType::Rest, 0.80 + e_axis * 0.35);
+        behavior_score_mul(&mut scores, ActionType::SeekShelter, 0.75 + e_axis * 0.60);
+    }
+
     if scores.is_empty() {
         return ActionType::Wander;
     }
@@ -678,15 +699,27 @@ fn behavior_select_action(
         ActionType::DeliverToStockpile,
         ActionType::Wander,
     ];
-    let mut best_action = ActionType::Wander;
-    let mut best_score = -1.0_f32;
-    for action in BEHAVIOR_ACTION_ORDER {
-        let score = scores.get(&action).copied().unwrap_or(0.0);
-        if score > best_score + 1e-6 {
-            best_score = score;
-            best_action = action;
-        }
+    let mut scored_actions: Vec<(ActionType, f32)> = BEHAVIOR_ACTION_ORDER
+        .iter()
+        .filter_map(|action| {
+            let score = scores.get(action).copied().unwrap_or(0.0);
+            if score > 0.0 {
+                Some((*action, score))
+            } else {
+                None
+            }
+        })
+        .collect();
+    if scored_actions.is_empty() {
+        return ActionType::Wander;
     }
+    scored_actions.sort_by(|left, right| {
+        right
+            .1
+            .partial_cmp(&left.1)
+            .unwrap_or(Ordering::Equal)
+    });
+    let best_score = scored_actions[0].1;
 
     if behavior.current_action != ActionType::Idle {
         if let Some(current_score) = scores.get(&behavior.current_action).copied() {
@@ -695,7 +728,31 @@ fn behavior_select_action(
             }
         }
     }
-    best_action
+    select_action_top_n(&mut scored_actions, rng, config::BEHAVIOR_TOP_N_SELECTION)
+}
+
+fn select_action_top_n(
+    scored_actions: &mut [(ActionType, f32)],
+    rng: &mut impl Rng,
+    top_n: usize,
+) -> ActionType {
+    if scored_actions.is_empty() {
+        return ActionType::Idle;
+    }
+    let top_len = top_n.max(1).min(scored_actions.len());
+    let top = &scored_actions[..top_len];
+    let total: f32 = top.iter().map(|(_, score)| score.max(0.01)).sum();
+    if total <= 0.0 {
+        return top[0].0;
+    }
+    let mut roll = rng.gen_range(0.0_f32..total);
+    for (action, score) in top {
+        roll -= score.max(0.01);
+        if roll <= 0.0 {
+            return *action;
+        }
+    }
+    top[0].0
 }
 
 /// Finds the nearest passable tile matching a predicate within `radius` of position.
@@ -706,12 +763,14 @@ fn find_nearest_tile(
     radius: i32,
     predicate: impl Fn(&Tile) -> bool,
 ) -> Option<(i32, i32)> {
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
     let mut best: Option<(i32, i32)> = None;
     let mut best_dist = i32::MAX;
     for dy in -radius..=radius {
         for dx in -radius..=radius {
-            let x = position.x + dx;
-            let y = position.y + dy;
+            let x = origin_x + dx;
+            let y = origin_y + dy;
             if !resources.map.in_bounds(x, y) {
                 continue;
             }
@@ -762,6 +821,8 @@ fn find_passable_adjacent(
     resources: &SimResources,
     target: (i32, i32),
 ) -> Option<(i32, i32)> {
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
     const DELTAS: [(i32, i32); 4] = [(0, -1), (0, 1), (-1, 0), (1, 0)];
     let mut best: Option<(i32, i32)> = None;
     let mut best_dist = i32::MAX;
@@ -775,7 +836,7 @@ fn find_passable_adjacent(
         if !tile.passable {
             continue;
         }
-        let dist = (ax - position.x).abs() + (ay - position.y).abs();
+        let dist = (ax - origin_x).abs() + (ay - origin_y).abs();
         if dist < best_dist {
             best_dist = dist;
             best = Some((ax, ay));
@@ -794,6 +855,8 @@ fn behavior_assign_action(
     stress_level: f32,
     allostatic_load: f32,
 ) {
+    let current_x = position.tile_x();
+    let current_y = position.tile_y();
     let (target_x, target_y) = match action {
         ActionType::Wander => {
             behavior_pick_wander_target(position, resources, tick, entity_raw)
@@ -810,7 +873,7 @@ fn behavior_assign_action(
                 &[TerrainType::ShallowWater],
             )
             .and_then(|water_pos| find_passable_adjacent(position, resources, water_pos))
-            .unwrap_or((position.x, position.y))
+            .unwrap_or((current_x, current_y))
         }
         ActionType::GatherWood => {
             find_nearest_terrain_tile(
@@ -833,7 +896,7 @@ fn behavior_assign_action(
         ActionType::Socialize | ActionType::VisitPartner | ActionType::Explore => {
             behavior_pick_wander_target(position, resources, tick, entity_raw)
         }
-        _ => (position.x, position.y),
+        _ => (current_x, current_y),
     };
 
     let base_timer = behavior_base_timer(action);
@@ -891,10 +954,11 @@ impl SimSystem for BehaviorRuntimeSystem {
             &Needs,
             Option<&Stress>,
             Option<&Emotion>,
+            Option<&Personality>,
             &Position,
             &mut Behavior,
         )>();
-        for (entity, (age, needs, stress_opt, emotion_opt, position, behavior)) in &mut query {
+        for (entity, (age, needs, stress_opt, emotion_opt, personality_opt, position, behavior)) in &mut query {
             if !age.alive {
                 continue;
             }
@@ -905,7 +969,15 @@ impl SimSystem for BehaviorRuntimeSystem {
                 continue;
             }
 
-            let next_action = behavior_select_action(age.stage, needs, stress_opt, emotion_opt, behavior);
+            let next_action = behavior_select_action(
+                age.stage,
+                needs,
+                stress_opt,
+                emotion_opt,
+                personality_opt,
+                behavior,
+                &mut resources.rng,
+            );
             let previous_action = behavior.current_action;
             let stress_level = stress_opt
                 .map(|stress| stress.level as f32)

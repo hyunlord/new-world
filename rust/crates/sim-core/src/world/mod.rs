@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn test_walkable_tiles_near() {
-        let mut map = WorldMap::new(10, 10, 0);
+        let map = WorldMap::new(10, 10, 0);
         // Default tiles have passable=true
         let tiles = map.walkable_tiles_near(5, 5, 1);
         // Within bounds at (5,5) with radius 1: should be 3x3 = 9 tiles (all in bounds)

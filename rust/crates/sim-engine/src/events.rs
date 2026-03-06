@@ -47,6 +47,9 @@ pub enum GameEvent {
         emotion: String,
         intensity: f64,
     },
+    SteeringParamsUpdated {
+        entity_id: EntityId,
+    },
 
     // ── Stress / Mental ───────────────────────────────────────────────────────
     StressChanged {
@@ -134,6 +137,7 @@ impl GameEvent {
             GameEvent::NeedChanged { .. } => "need_changed",
             GameEvent::NeedCritical { .. } => "need_critical",
             GameEvent::EmotionChanged { .. } => "emotion_changed",
+            GameEvent::SteeringParamsUpdated { .. } => "steering_params_updated",
             GameEvent::StressChanged { .. } => "stress_changed",
             GameEvent::MentalBreakTriggered { .. } => "mental_break_triggered",
             GameEvent::TraumaRecorded { .. } => "trauma_recorded",
