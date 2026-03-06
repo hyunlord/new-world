@@ -1095,6 +1095,13 @@ func _gui_input(event: InputEvent) -> void:
 			elif ke.keycode == KEY_END:
 				_scroll_offset = maxf(0.0, _content_height - size.y)
 				queue_redraw()
+	elif event is InputEventPanGesture:
+		var pan: InputEventPanGesture = event
+		var max_scroll: float = maxf(0.0, _content_height - size.y)
+		_scroll_offset += pan.delta.y * 15.0
+		_scroll_offset = clampf(_scroll_offset, 0.0, max_scroll)
+		queue_redraw()
+		get_viewport().set_input_as_handled()
 
 
 ## Backup scroll handler — catches wheel events that _gui_input() may miss
@@ -1114,6 +1121,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				_scroll_offset = minf(max_scroll, _scroll_offset + 40.0)
 				queue_redraw()
 				get_viewport().set_input_as_handled()
+	elif event is InputEventPanGesture:
+		var mouse_local: Vector2 = get_local_mouse_position()
+		if Rect2(Vector2.ZERO, size).has_point(mouse_local):
+			var pan: InputEventPanGesture = event
+			var max_scroll: float = maxf(0.0, _content_height - size.y)
+			_scroll_offset += pan.delta.y * 15.0
+			_scroll_offset = clampf(_scroll_offset, 0.0, max_scroll)
+			queue_redraw()
+			get_viewport().set_input_as_handled()
 
 
 func _check_section_click(click_pos: Vector2) -> void:

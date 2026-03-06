@@ -43,6 +43,12 @@ const _RUNTIME_CLASS_CANDIDATES: Array[String] = [
 	"WorldSimRuntime",
 ]
 const _GDEXTENSION_PATH: String = "res://rust/worldsim.gdextension"
+const _RUNTIME_REQUIRED_METHODS: Array[String] = [
+	"runtime_bootstrap_world",
+	"runtime_get_world_summary",
+	"runtime_get_settlement_detail",
+	"runtime_get_minimap_snapshot",
+]
 
 var _native_checked: bool = false
 var _native_bridge: Object = null
@@ -61,6 +67,7 @@ var _resolved_pathfind_backend_cache: String = ""
 var _resolved_pathfind_backend_cached: bool = false
 var _gpu_pathfinding_capability_cached: bool = false
 var _gpu_pathfinding_capability: bool = false
+var _runtime_recovery_attempted: bool = false
 
 
 ## Initializes Rust runtime coordinator.
@@ -2455,7 +2462,10 @@ func _call_native_if_exists(method_name: String, args: Array):
 
 func _get_native_runtime() -> Object:
 	_ensure_gdextension_loaded()
-	if _native_runtime_checked and _native_runtime != null:
+	if _native_runtime_checked and _native_runtime != null and (
+		_native_runtime_has_required_surface(_native_runtime)
+		or _runtime_recovery_attempted
+	):
 		return _native_runtime
 	_native_runtime_checked = true
 
@@ -2467,7 +2477,11 @@ func _get_native_runtime() -> Object:
 		if instance == null:
 			continue
 		if instance.has_method("runtime_init") and instance.has_method("runtime_tick_frame"):
+			if not _native_runtime_has_required_surface(instance) and _recover_runtime_extension():
+				_native_runtime_checked = false
+				return _get_native_runtime()
 			_native_runtime = instance
+		return _native_runtime
 	return _native_runtime
 
 
@@ -2490,3 +2504,92 @@ func _ensure_gdextension_loaded() -> void:
 	var load_result: int = int(manager.call("load_extension", _GDEXTENSION_PATH))
 	if load_result != OK:
 		push_warning("[SimBridge] Failed to load GDExtension: %s (error=%d)" % [_GDEXTENSION_PATH, load_result])
+
+
+func _native_runtime_has_required_surface(runtime: Object) -> bool:
+	if runtime == null:
+		return false
+	for i in range(_RUNTIME_REQUIRED_METHODS.size()):
+		var method_name: String = _RUNTIME_REQUIRED_METHODS[i]
+		if not runtime.has_method(method_name):
+			return false
+	return true
+
+
+func _recover_runtime_extension() -> bool:
+	if _runtime_recovery_attempted:
+		return false
+	_runtime_recovery_attempted = true
+	if not OS.is_debug_build():
+		push_warning("[SimBridge] Native runtime is stale, but automatic sim-bridge rebuild is only available in debug builds.")
+		return false
+	var build_ok: bool = _rebuild_sim_bridge_extension()
+	if not build_ok:
+		push_warning("[SimBridge] Native runtime is stale and sim-bridge rebuild failed.")
+		return false
+	var reload_ok: bool = _reload_gdextension()
+	if not reload_ok:
+		push_warning("[SimBridge] sim-bridge rebuild completed but GDExtension reload failed.")
+		return false
+	_reset_native_extension_cache()
+	return true
+
+
+func _rebuild_sim_bridge_extension() -> bool:
+	var rust_dir: String = ProjectSettings.globalize_path("res://rust")
+	var escaped_rust_dir: String = rust_dir.replace("\"", "\\\"")
+	var output: Array = []
+	var exit_code: int = 0
+	if OS.has_feature("windows"):
+		exit_code = OS.execute(
+			"cmd",
+			["/c", "cd /d \"%s\" && cargo build -p sim-bridge" % escaped_rust_dir],
+			output,
+			true
+		)
+	else:
+		exit_code = OS.execute(
+			"/bin/zsh",
+			["-lc", "cd \"%s\" && cargo build -p sim-bridge" % escaped_rust_dir],
+			output,
+			true
+		)
+	if exit_code == OK:
+		return true
+	push_warning("[SimBridge] cargo build -p sim-bridge failed: %s" % "\n".join(output))
+	return false
+
+
+func _reload_gdextension() -> bool:
+	if not ClassDB.class_exists("GDExtensionManager"):
+		return false
+	var manager: Object = Engine.get_singleton("GDExtensionManager")
+	if manager == null:
+		return false
+	var unloaded: bool = true
+	if manager.has_method("unload_extension"):
+		unloaded = int(manager.call("unload_extension", _GDEXTENSION_PATH)) == OK
+	if not unloaded:
+		return false
+	if not manager.has_method("load_extension"):
+		return false
+	return int(manager.call("load_extension", _GDEXTENSION_PATH)) == OK
+
+
+func _reset_native_extension_cache() -> void:
+	_native_checked = false
+	_native_bridge = null
+	_native_runtime_checked = false
+	_native_runtime = null
+	_pathfind_method_name = ""
+	_pathfind_xy_method_name = ""
+	_pathfind_batch_method_name = ""
+	_pathfind_batch_xy_method_name = ""
+	_set_pathfind_backend_method_name = ""
+	_get_pathfind_backend_method_name = ""
+	_resolve_pathfind_backend_method_name = ""
+	_last_synced_pathfind_backend_mode = ""
+	_resolved_pathfind_backend_cache = ""
+	_resolved_pathfind_backend_cached = false
+	_gpu_pathfinding_capability_cached = false
+	_gpu_pathfinding_capability = false
