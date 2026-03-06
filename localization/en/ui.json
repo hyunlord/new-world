@@ -130,6 +130,8 @@
   "UI_KEY_HINTS": "Space:Pause  ./:Speed  Tab:Resources  M:Map  H:Help  ESC:Menu",
   "UI_NOTIF_GAME_SAVED": "Game Saved",
   "UI_NOTIF_GAME_LOADED": "Game Loaded",
+  "UI_NOTIF_SAVE_UNSUPPORTED": "Full-state save not implemented",
+  "UI_NOTIF_LOAD_UNSUPPORTED": "Full-state load not implemented",
   "UI_NOTIF_SETTLEMENT_FOUNDED": "New settlement founded!",
   "UI_NOTIF_BUILDING_BUILT_FMT": "{type} built",
   "UI_NOTIF_POPULATION_FMT": "Population: {n}!",

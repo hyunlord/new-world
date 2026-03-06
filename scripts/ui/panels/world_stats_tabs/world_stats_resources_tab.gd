@@ -110,7 +110,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	for summary in summaries:
 		var s_id = summary.get("id", 0)
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		var s_pop: int = summary.get("pop", 0)
 		var s_food: float = summary.get("food", 0.0)
 
@@ -159,10 +159,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	for summary in summaries:
 		var s_id = summary.get("id", 0)
-		var settlement = summary.get("settlement", null)
+		var settlement: Variant = summary.get("settlement", null)
 		var building_count: int = 0
 		if settlement != null:
-			building_count = settlement.building_ids.size()
+			building_count = _settlement_building_count(settlement)
 
 		var building_line: String = (
 			"S" + str(s_id) + ": "
@@ -186,3 +186,12 @@ func _resource_status(days_of_supply: float) -> Dictionary:
 		return {"key": "UI_STATUS_LOW", "color": Color(0.9, 0.7, 0.2)}
 	else:
 		return {"key": "UI_STATUS_CRITICAL", "color": Color(0.9, 0.3, 0.3)}
+
+
+func _settlement_building_count(settlement: Variant) -> int:
+	if settlement is Dictionary:
+		var building_ids: Variant = settlement.get("building_ids", [])
+		return building_ids.size() if building_ids is Array else 0
+	if settlement == null:
+		return 0
+	return settlement.building_ids.size()

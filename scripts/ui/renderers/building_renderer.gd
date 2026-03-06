@@ -2,12 +2,18 @@ extends Node2D
 
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
+var _sim_engine: RefCounted
 var _current_lod: int = 1
+var _runtime_minimap_cache: Dictionary = {}
+var _runtime_minimap_cache_tick: int = -1
+var _runtime_world_summary_cache: Dictionary = {}
+var _runtime_world_summary_cache_tick: int = -1
 
 
-func init(building_manager: RefCounted, settlement_manager: RefCounted = null) -> void:
+func init(building_manager: RefCounted, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+	_sim_engine = sim_engine
 
 
 func _process(_delta: float) -> void:
@@ -15,7 +21,7 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
-	if _building_manager == null:
+	if _building_manager == null and _sim_engine == null:
 		return
 	var cam := get_viewport().get_camera_2d()
 	var zl: float = cam.zoom.x if cam else 1.0
@@ -30,7 +36,11 @@ func _draw() -> void:
 	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
 	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
 
-	var buildings: Array = _building_manager.get_all_buildings()
+	var buildings: Array = []
+	if _building_manager != null:
+		buildings = _building_manager.get_all_buildings()
+	if buildings.is_empty():
+		buildings = _get_runtime_buildings()
 	var tile_size: int = GameConfig.TILE_SIZE
 	var half: float = tile_size * 0.5
 	var font: Font = ThemeDB.fallback_font
@@ -40,18 +50,24 @@ func _draw() -> void:
 		var b = buildings[i]
 
 		# Viewport culling
-		if b.tile_x < min_tile_x or b.tile_x > max_tile_x:
+		var tile_x: int = int(_building_value(b, "tile_x", 0))
+		var tile_y: int = int(_building_value(b, "tile_y", 0))
+		var building_type: String = str(_building_value(b, "building_type", ""))
+		var is_built: bool = bool(_building_value(b, "is_built", _building_value(b, "is_constructed", false)))
+		var build_progress: float = float(_building_value(b, "build_progress", _building_value(b, "construction_progress", 0.0)))
+
+		if tile_x < min_tile_x or tile_x > max_tile_x:
 			continue
-		if b.tile_y < min_tile_y or b.tile_y > max_tile_y:
+		if tile_y < min_tile_y or tile_y > max_tile_y:
 			continue
 
-		var cx: float = float(b.tile_x) * tile_size + half
-		var cy: float = float(b.tile_y) * tile_size + half
-		var alpha: float = 1.0 if b.is_built else 0.4
+		var cx: float = float(tile_x) * tile_size + half
+		var cy: float = float(tile_y) * tile_size + half
+		var alpha: float = 1.0 if is_built else 0.4
 
 		if _current_lod == 0:
 			var strategic_color: Color = Color(0.6, 0.35, 0.15, alpha)
-			match b.building_type:
+			match building_type:
 				"stockpile":
 					strategic_color = Color(0.6, 0.35, 0.15, alpha)
 				"shelter":
@@ -61,7 +77,7 @@ func _draw() -> void:
 			draw_rect(Rect2(cx - 1.5, cy - 1.5, 3.0, 3.0), strategic_color, true)
 			continue
 
-		match b.building_type:
+		match building_type:
 			"stockpile":
 				_draw_stockpile(cx, cy, alpha, tile_size)
 			"shelter":
@@ -72,31 +88,38 @@ func _draw() -> void:
 				pass
 
 		# Construction progress bar
-		if not b.is_built:
+		if not is_built:
 			var building_size: float = tile_size * 0.8
 			var bar_w: float = building_size
 			var bar_h: float = 3.0
 			var bar_x: float = cx - bar_w * 0.5
 			var bar_y: float = cy + building_size * 0.5 + 2.0
 			draw_rect(Rect2(bar_x, bar_y, bar_w, bar_h), Color(0.2, 0.2, 0.2, 0.6))
-			draw_rect(Rect2(bar_x, bar_y, bar_w * b.build_progress, bar_h), Color(0.2, 0.8, 0.2, 0.8))
+			draw_rect(Rect2(bar_x, bar_y, bar_w * build_progress, bar_h), Color(0.2, 0.8, 0.2, 0.8))
 
-		if _current_lod == 2 and b.building_type == "stockpile" and b.is_built:
-			var food: int = int(round(b.storage.get("food", 0.0)))
-			var wood: int = int(round(b.storage.get("wood", 0.0)))
-			var stone: int = int(round(b.storage.get("stone", 0.0)))
+		if _current_lod == 2 and building_type == "stockpile" and is_built:
+			var storage: Dictionary = {}
+			var storage_raw: Variant = _building_value(b, "storage", {})
+			if storage_raw is Dictionary:
+				storage = storage_raw
+			var food: int = int(round(storage.get("food", 0.0)))
+			var wood: int = int(round(storage.get("wood", 0.0)))
+			var stone: int = int(round(storage.get("stone", 0.0)))
 			var text: String = Locale.trf3("UI_STATS_RESOURCES_FMT", "food", food, "wood", wood, "stone", stone)
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
 
 	# Settlement labels in LOD 0
-	if _current_lod == 0 and _settlement_manager != null:
-		var active: Array = _settlement_manager.get_active_settlements()
-		for i in range(active.size()):
-			var s: RefCounted = active[i]
-			var sx: float = float(s.center_x) * tile_size + half
-			var sy: float = float(s.center_y) * tile_size + half
-			var pop: int = s.member_ids.size()
-			var label: String = Locale.trf2("UI_SETTLEMENT_LABEL_FMT", "id", s.id, "pop", pop)
+	if _current_lod == 0:
+		var settlements: Array = _get_runtime_settlements()
+		if settlements.is_empty() and _settlement_manager != null:
+			settlements = _settlement_manager.get_active_settlements()
+		for i in range(settlements.size()):
+			var s: Variant = settlements[i]
+			var sx: float = float(_settlement_value(s, "center_x", 0)) * tile_size + half
+			var sy: float = float(_settlement_value(s, "center_y", 0)) * tile_size + half
+			var sid: int = int(_settlement_value(s, "id", 0))
+			var pop: int = int(_settlement_value(s, "population", _settlement_member_count(s)))
+			var label: String = Locale.trf2("UI_SETTLEMENT_LABEL_FMT", "id", sid, "pop", pop)
 			draw_string(font, Vector2(sx - 15, sy - 8), label, HORIZONTAL_ALIGNMENT_CENTER, -1, 10, Color(1, 1, 0.6, 0.9))
 
 
@@ -149,3 +172,75 @@ func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int) -> void:
 
 	draw_circle(Vector2(cx, cy), radius, fill_color)
 	draw_arc(Vector2(cx, cy), tile_size * 3.0, 0, TAU, 32, glow_color, 1.5)
+
+
+func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:
+	if building is Dictionary:
+		return building.get(key, default_value)
+	if building == null:
+		return default_value
+	return building.get(key)
+
+
+func _settlement_value(settlement: Variant, key: String, default_value: Variant) -> Variant:
+	if settlement is Dictionary:
+		return settlement.get(key, default_value)
+	if settlement == null:
+		return default_value
+	return settlement.get(key)
+
+
+func _settlement_member_count(settlement: Variant) -> int:
+	if settlement is Dictionary:
+		var member_ids: Variant = settlement.get("member_ids", [])
+		if member_ids is Array:
+			return member_ids.size()
+		return int(settlement.get("population", 0))
+	if settlement == null:
+		return 0
+	return settlement.member_ids.size()
+
+
+func _get_runtime_minimap_snapshot() -> Dictionary:
+	if _sim_engine == null or not _sim_engine.has_method("get_minimap_snapshot"):
+		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _runtime_minimap_cache_tick:
+		_runtime_minimap_cache_tick = tick
+		_runtime_minimap_cache = _sim_engine.get_minimap_snapshot()
+	return _runtime_minimap_cache
+
+
+func _get_runtime_buildings() -> Array:
+	var snapshot: Dictionary = _get_runtime_minimap_snapshot()
+	var buildings: Variant = snapshot.get("buildings", [])
+	return buildings if buildings is Array else []
+
+
+func _get_runtime_settlements() -> Array:
+	var summary: Dictionary = _get_runtime_world_summary()
+	var settlement_summaries: Variant = summary.get("settlement_summaries", [])
+	if settlement_summaries is Array:
+		var settlements: Array = []
+		for settlement_summary_raw: Variant in settlement_summaries:
+			if not (settlement_summary_raw is Dictionary):
+				continue
+			var settlement_summary: Dictionary = settlement_summary_raw
+			var settlement_raw: Variant = settlement_summary.get("settlement", {})
+			if settlement_raw is Dictionary:
+				settlements.append(settlement_raw)
+		if not settlements.is_empty():
+			return settlements
+	var snapshot: Dictionary = _get_runtime_minimap_snapshot()
+	var fallback_settlements: Variant = snapshot.get("settlements", [])
+	return fallback_settlements if fallback_settlements is Array else []
+
+
+func _get_runtime_world_summary() -> Dictionary:
+	if _sim_engine == null or not _sim_engine.has_method("get_world_summary"):
+		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _runtime_world_summary_cache_tick:
+		_runtime_world_summary_cache_tick = tick
+		_runtime_world_summary_cache = _sim_engine.get_world_summary()
+	return _runtime_world_summary_cache

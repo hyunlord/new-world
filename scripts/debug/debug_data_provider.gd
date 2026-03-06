@@ -78,8 +78,8 @@ func get_guardrail_status() -> Array:
 
 
 func get_entity_detail(entity_id: int) -> Dictionary:
-	if _bridge and _bridge.has_method("get_entity_detail"):
-		var result = _bridge.get_entity_detail(entity_id)
+	if _bridge and _bridge.has_method("runtime_get_entity_detail"):
+		var result = _bridge.runtime_get_entity_detail(entity_id)
 		if result is Dictionary:
 			return result
 	return {}

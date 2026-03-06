@@ -39,7 +39,9 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var population: int = data.get("population", 0)
 	var entity_manager = data.get("entity_manager")
 	var tech_states: Dictionary = {}
-	if "tech_states" in settlement:
+	if settlement is Dictionary:
+		tech_states = settlement.get("tech_states", {})
+	elif "tech_states" in settlement:
 		tech_states = settlement.tech_states
 
 	for era in ERAS:
@@ -174,10 +176,10 @@ func _draw_known_tech(canvas: Control, font: Font, cx: float, cy: float, width: 
 			cy += LINE_HEIGHT
 
 	# Discoverer
-	if discoverer_id > 0 and entity_manager != null:
-		var discoverer = entity_manager.get_entity(discoverer_id)
+	if discoverer_id > 0:
+		var discoverer = _resolve_entity(entity_manager, members, discoverer_id)
 		if discoverer != null:
-			var disc_name: String = discoverer.entity_name
+			var disc_name: String = _entity_name(discoverer)
 			var disc_text: String = Locale.trf2("UI_DISCOVERER_FMT", "name", disc_name, "tick", discovered_tick)
 			var disc_rect := Rect2(cx + INDENT * 2.0, cy, width - INDENT * 2.0, LINE_HEIGHT)
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), disc_text,
@@ -246,14 +248,16 @@ func _draw_practitioner_list(canvas: Control, font: Font, cx: float, cy: float, 
 	if check_skill_ids.is_empty():
 		# Fallback: use tech_id as skill key (some techs name their skill after themselves)
 		for entity in members:
-			if entity.skill_levels.has(tech_id) and entity.skill_levels[tech_id] > 0:
-				practitioners.append({"entity": entity, "skill_id": tech_id, "level": entity.skill_levels[tech_id]})
+			var skill_levels: Dictionary = _entity_skill_levels(entity)
+			if skill_levels.has(tech_id) and int(skill_levels[tech_id]) > 0:
+				practitioners.append({"entity": entity, "skill_id": tech_id, "level": int(skill_levels[tech_id])})
 	else:
 		for entity in members:
 			var best_skill_id: String = ""
 			var best_level: int = 0
+			var entity_skill_levels: Dictionary = _entity_skill_levels(entity)
 			for sk_id in check_skill_ids:
-				var lvl: int = entity.skill_levels.get(sk_id, 0)
+				var lvl: int = int(entity_skill_levels.get(sk_id, 0))
 				if lvl > best_level:
 					best_level = lvl
 					best_skill_id = sk_id
@@ -272,17 +276,17 @@ func _draw_practitioner_list(canvas: Control, font: Font, cx: float, cy: float, 
 	for prac in practitioners:
 		if shown >= max_shown:
 			break
-		var entity = prac.entity
-		var lvl: int = prac.level
-		var is_teaching: bool = entity.teaching_target_id > -1
+		var entity: Variant = prac.entity
+		var lvl: int = int(prac.level)
+		var is_teaching: bool = int(_entity_value(entity, "teaching_target_id", -1)) > -1
 		var teach_suffix: String = (" " + Locale.ltr("UI_TEACHING_MARKER")) if is_teaching else ""
-		var prac_line: String = "· " + entity.entity_name + " (" + Locale.ltr("UI_LEVEL_ABBREV") + str(lvl) + ")" + teach_suffix
+		var prac_line: String = "· " + _entity_name(entity) + " (" + Locale.ltr("UI_LEVEL_ABBREV") + str(lvl) + ")" + teach_suffix
 		var prac_rect := Rect2(cx + INDENT * 3.0, cy, width - INDENT * 3.0, LINE_HEIGHT)
 		var prac_color: Color = Color(0.6, 0.9, 0.6) if is_teaching else NEUTRAL_COLOR
 		canvas.draw_string(font, Vector2(cx + INDENT * 3.0, cy + 12.0), prac_line,
 				HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 3.0,
 				GameConfig.get_font_size("popup_small"), prac_color)
-		click_regions.append({"rect": prac_rect, "entity_id": entity.id})
+		click_regions.append({"rect": prac_rect, "entity_id": _entity_id(entity)})
 		cy += LINE_HEIGHT
 		shown += 1
 
@@ -332,9 +336,9 @@ func _draw_forgotten_tech(canvas: Control, font: Font, cx: float, cy: float, wid
 
 	# Discoverer
 	if discoverer_id > 0 and entity_manager != null:
-		var discoverer = entity_manager.get_entity(discoverer_id)
+		var discoverer = _resolve_entity(entity_manager, [], discoverer_id)
 		if discoverer != null:
-			var disc_text: String = Locale.trf2("UI_DISCOVERER_FMT", "name", discoverer.entity_name, "tick", discovered_tick)
+			var disc_text: String = Locale.trf2("UI_DISCOVERER_FMT", "name", _entity_name(discoverer), "tick", discovered_tick)
 			var disc_rect := Rect2(cx + INDENT * 2.0, cy, width - INDENT * 2.0, LINE_HEIGHT)
 			canvas.draw_string(font, Vector2(cx + INDENT * 2.0, cy + 12.0), disc_text,
 					HORIZONTAL_ALIGNMENT_LEFT, width - INDENT * 2.0,
@@ -364,7 +368,7 @@ func _draw_unknown_tech(canvas: Control, font: Font, cx: float, cy: float, width
 		var req_level: int = required_skills[skill_id]
 		var best_level: int = 0
 		for entity in members:
-			var lvl: int = entity.skill_levels.get(skill_id, 0)
+			var lvl: int = int(_entity_skill_levels(entity).get(skill_id, 0))
 			if lvl > best_level:
 				best_level = lvl
 		var met: bool = best_level >= req_level
@@ -411,3 +415,41 @@ func handle_click(pos: Vector2) -> bool:
 			_expanded_techs[tid] = not _expanded_techs.get(tid, false)
 			return true
 	return false
+
+
+func _entity_value(entity: Variant, key: String, default_value: Variant) -> Variant:
+	if entity is Dictionary:
+		return entity.get(key, default_value)
+	if entity == null:
+		return default_value
+	return entity.get(key)
+
+
+func _entity_id(entity: Variant) -> int:
+	return int(_entity_value(entity, "id", -1))
+
+
+func _entity_name(entity: Variant) -> String:
+	if entity is Dictionary:
+		return str(entity.get("entity_name", entity.get("name", "?")))
+	if entity == null:
+		return "?"
+	return str(entity.entity_name)
+
+
+func _entity_skill_levels(entity: Variant) -> Dictionary:
+	if entity is Dictionary:
+		var skill_levels: Variant = entity.get("skill_levels", {})
+		return skill_levels if skill_levels is Dictionary else {}
+	if entity == null:
+		return {}
+	return entity.skill_levels
+
+
+func _resolve_entity(entity_manager: Variant, members: Array, entity_id: int) -> Variant:
+	for member in members:
+		if _entity_id(member) == entity_id:
+			return member
+	if entity_manager != null:
+		return entity_manager.get_entity(entity_id)
+	return null

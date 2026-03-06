@@ -110,6 +110,8 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var alive_entities: Array = []
 	if entity_manager != null and entity_manager.has_method("get_alive_entities"):
 		alive_entities = entity_manager.get_alive_entities()
+	if alive_entities.is_empty():
+		alive_entities = _all_summary_members(settlement_summaries)
 
 	if alive_entities.size() > 0:
 		for i in range(hexaco_axes.size()):
@@ -120,14 +122,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			for entity in alive_entities:
 				if entity == null:
 					continue
-				var personality = null
-				if entity is Dictionary:
-					personality = entity.get("personality")
-				elif "personality" in entity:
-					personality = entity.personality
-				if personality == null:
-					continue
-				var axes_dict = personality.axes if "axes" in personality else {}
+				var axes_dict: Dictionary = _entity_axes(entity)
 				if axes_dict.has(axis):
 					total += float(axes_dict[axis])
 					count += 1
@@ -165,7 +160,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		for entity in alive_entities:
 			if entity == null:
 				continue
-			var eid: int = entity.id if "id" in entity else -1
+			var eid: int = _entity_id(entity)
 			if eid < 0:
 				continue
 			var rels: Array = relationship_manager.get_relationships_for(eid)
@@ -207,22 +202,17 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var any_leader: bool = false
 	for summary in settlement_summaries:
 		var sid: int = summary.get("id", 0)
-		var leader_id = summary.get("leader", null)
-		if leader_id == null:
+		var leader_ref: Variant = summary.get("leader", null)
+		if leader_ref == null:
 			var sid_label: String = "S%d: " % sid
 			canvas.draw_string(font, Vector2(cx, cy), sid_label + Locale.ltr("UI_NO_LEADER"), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
 			cy += LINE_HEIGHT
 			any_leader = true
 			continue
 
-		var leader = null
-		if entity_manager != null and entity_manager.has_method("get_entity"):
-			if leader_id is int:
-				leader = entity_manager.get_entity(leader_id)
-			elif "id" in leader_id:
-				leader = entity_manager.get_entity(leader_id.id)
-			else:
-				leader = leader_id
+		var leader: Variant = leader_ref
+		if entity_manager != null and entity_manager.has_method("get_entity") and leader_ref is int:
+			leader = entity_manager.get_entity(leader_ref)
 
 		if leader == null:
 			var sid_label: String = "S%d: " % sid
@@ -232,11 +222,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			continue
 
 		any_leader = true
-		var leader_name: String = leader.entity_name if "entity_name" in leader else "?"
+		var leader_name: String = _entity_name(leader)
 		var extraversion: float = 0.5
-		var personality = leader.personality if "personality" in leader else null
-		if personality != null:
-			var axes_dict = personality.axes if "axes" in personality else {}
+		var axes_dict: Dictionary = _entity_axes(leader)
+		if not axes_dict.is_empty():
 			extraversion = float(axes_dict.get("X", 0.5))
 
 		# "S{id}: {leader_name}"
@@ -251,7 +240,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		click_regions.append({
 			"rect": Rect2(cx + prefix_w, cy - body_size, name_w, body_size + 4),
 			"action": "open_entity",
-			"id": leader.id if "id" in leader else -1,
+			"id": _entity_id(leader),
 		})
 		cy += LINE_HEIGHT - 4.0
 
@@ -278,3 +267,46 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 func _draw_bar(canvas: Control, x: float, y: float, w: float, h: float, value: float, fill_color: Color, bg_color: Color = Color(0.15, 0.15, 0.2)) -> void:
 	canvas.draw_rect(Rect2(x, y, w, h), bg_color)
 	canvas.draw_rect(Rect2(x, y, w * clampf(value, 0.0, 1.0), h), fill_color)
+
+
+func _all_summary_members(settlement_summaries: Array) -> Array:
+	var members: Array = []
+	for summary in settlement_summaries:
+		var settlement: Variant = summary.get("settlement", {})
+		if settlement is Dictionary:
+			var settlement_members: Variant = settlement.get("members", [])
+			if settlement_members is Array:
+				members.append_array(settlement_members)
+	return members
+
+
+func _entity_axes(entity: Variant) -> Dictionary:
+	if entity is Dictionary:
+		var personality: Variant = entity.get("personality", {})
+		if personality is Dictionary:
+			var axes: Variant = personality.get("axes", {})
+			if axes is Dictionary:
+				return axes
+		return {}
+	if entity == null:
+		return {}
+	var personality_ref: Variant = entity.get("personality")
+	if personality_ref == null:
+		return {}
+	return personality_ref.axes
+
+
+func _entity_name(entity: Variant) -> String:
+	if entity is Dictionary:
+		return str(entity.get("entity_name", entity.get("name", "?")))
+	if entity == null:
+		return "?"
+	return str(entity.entity_name)
+
+
+func _entity_id(entity: Variant) -> int:
+	if entity is Dictionary:
+		return int(entity.get("id", -1))
+	if entity == null:
+		return -1
+	return int(entity.id)

@@ -393,7 +393,7 @@ func _ready() -> void:
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
-	building_renderer.init(building_manager, settlement_manager)
+	building_renderer.init(building_manager, settlement_manager, sim_engine)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
 	pause_menu = PauseMenuClass.new()
@@ -464,39 +464,34 @@ func _on_setup_confirmed(spawn_data: Array) -> void:
 
 	world_renderer.render_world(world_data, resource_map)
 	_loading_overlay.visible = true
-	await _spawn_at_points_async(spawn_data)
+	var bootstrap_agents: Array = await _spawn_at_points_async(spawn_data)
 	_loading_overlay.visible = false
 
 	@warning_ignore("integer_division")
 	var center: Vector2i = GameConfig.WORLD_SIZE / 2
-	if not spawn_data.is_empty():
+	if not bootstrap_agents.is_empty():
+		center = Vector2i(int(bootstrap_agents[0].get("x", center.x)), int(bootstrap_agents[0].get("y", center.y)))
+	elif not spawn_data.is_empty():
 		center = spawn_data[0].position
-	var founding: RefCounted = settlement_manager.create_settlement(center.x, center.y, 0)
-	var initial_alive: Array = entity_manager.get_alive_entities()
-	for i in range(initial_alive.size()):
-		var e: RefCounted = initial_alive[i]
-		e.settlement_id = founding.id
-		settlement_manager.add_member(founding.id, e.id)
-		NameGenerator.register_name(e.entity_name, founding.id)
-
-	_bootstrap_stockpile(founding, center)
-	_bootstrap_relationships(initial_alive)
+	var bootstrap_result: Dictionary = sim_engine.bootstrap_world(_build_runtime_bootstrap_payload(center, bootstrap_agents))
 
 	ChronicleSystem.init(entity_manager)
 	camera.set_entity_manager(entity_manager)
+	if camera.has_method("set_sim_engine"):
+		camera.call("set_sim_engine", sim_engine)
 
 	SimulationBus.entity_born.connect(_on_entity_born_chronicle)
 	SimulationBus.entity_died.connect(_on_entity_died_chronicle)
 	SimulationBus.couple_formed.connect(_on_couple_formed_chronicle)
 
 	_print_startup_banner(GameConfig.WORLD_SEED)
-	hud.show_startup_toast(entity_manager.get_alive_count())
+	hud.show_startup_toast(int(bootstrap_result.get("entity_count", bootstrap_agents.size())))
 	sim_engine.is_paused = false
 
 
 ## 스폰 포인트 목록에서 에이전트를 SPAWN_BATCH_SIZE씩 나눠 스폰.
 ## 각 배치 후 await process_frame으로 화면 업데이트 허용.
-func _spawn_at_points_async(spawn_data: Array) -> void:
+func _spawn_at_points_async(spawn_data: Array) -> Array:
 	# 총 스폰 수 미리 계산 (프로그레스 바용)
 	var total: int = 0
 	if spawn_data.is_empty():
@@ -512,6 +507,7 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 	_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT", {"current": 0, "total": total})
 
 	var spawned: int = 0
+	var agents: Array = []
 
 	if spawn_data.is_empty():
 		# 폴백: 월드 중심 근처에서 스폰
@@ -520,7 +516,7 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 		var walkable: Array = _get_walkable_near(center, 30)
 		if walkable.is_empty():
 			push_warning("[Main] No walkable tiles near center!")
-			return
+			return []
 		var count: int = mini(GameConfig.INITIAL_SPAWN_COUNT, walkable.size())
 		# Fisher-Yates shuffle (기존 로직 유지)
 		for i in range(walkable.size() - 1, 0, -1):
@@ -528,24 +524,19 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 			var tmp = walkable[i]
 			walkable[i] = walkable[j]
 			walkable[j] = tmp
-		var rust_batch_center: Array = []
 		for i in range(count):
 			var age_years: int = _weighted_random_age(sim_engine.rng)
 			var day_offset: int = sim_engine.rng.randi_range(0, 364)
 			var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
-			entity_manager.spawn_entity(walkable[i], "", initial_age)
-			rust_batch_center.append({"x": walkable[i].x, "y": walkable[i].y, "age_ticks": initial_age})
+			agents.append({"x": walkable[i].x, "y": walkable[i].y, "age_ticks": initial_age})
 			spawned += 1
 			if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
 				_loading_bar.value = float(spawned) / float(total)
 				_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
 					{"current": spawned, "total": total})
 				await get_tree().process_frame
-		# Rust 스폰 (기본 settlement_id=1, 월드 중심)
-		sim_engine.spawn_agents(rust_batch_center, 1, center.x, center.y)
 		print("[Main] Spawned %d entities near world center." % spawned)
 	else:
-		var rust_batch_points: Array = []
 		for sp in spawn_data:
 			var pos: Vector2i = sp.position
 			var count: int = sp.get("count", GameConfig.MAP_EDITOR_SPAWN_DEFAULT)
@@ -557,19 +548,13 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 				var age_years: int = _weighted_random_age(sim_engine.rng)
 				var day_offset: int = sim_engine.rng.randi_range(0, 364)
 				var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
-				entity_manager.spawn_entity(tile, "", initial_age)
-				rust_batch_points.append({"x": tile.x, "y": tile.y, "age_ticks": initial_age,
-					"settlement_x": pos.x, "settlement_y": pos.y})
+				agents.append({"x": tile.x, "y": tile.y, "age_ticks": initial_age})
 				spawned += 1
 				if spawned % GameConfig.SPAWN_BATCH_SIZE == 0:
 					_loading_bar.value = float(spawned) / float(total)
 					_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
 						{"current": spawned, "total": total})
 					await get_tree().process_frame
-		# Rust 스폰 (settlement_id=1, 첫 스폰 포인트 위치)
-		if not spawn_data.is_empty():
-			var first_pos: Vector2i = spawn_data[0].position
-			sim_engine.spawn_agents(rust_batch_points, 1, first_pos.x, first_pos.y)
 		print("[Main] Spawned entities at %d spawn point(s)." % spawn_data.size())
 
 	# 마지막 배치가 BATCH_SIZE 미만인 경우 최종 업데이트
@@ -577,6 +562,61 @@ func _spawn_at_points_async(spawn_data: Array) -> void:
 	_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT",
 		{"current": spawned, "total": total})
 	await get_tree().process_frame
+	return agents
+
+
+func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array) -> Dictionary:
+	var width: int = world_data.width
+	var height: int = world_data.height
+	var tile_count: int = width * height
+	var biomes: Array = []
+	var elevation: Array = []
+	var moisture: Array = []
+	var temperature: Array = []
+	var food: Array = []
+	var wood: Array = []
+	var stone: Array = []
+	biomes.resize(tile_count)
+	elevation.resize(tile_count)
+	moisture.resize(tile_count)
+	temperature.resize(tile_count)
+	food.resize(tile_count)
+	wood.resize(tile_count)
+	stone.resize(tile_count)
+	var idx: int = 0
+	for y in range(height):
+		for x in range(width):
+			biomes[idx] = world_data.get_biome(x, y)
+			elevation[idx] = world_data.get_elevation(x, y)
+			moisture[idx] = world_data.get_moisture(x, y)
+			temperature[idx] = world_data.get_temperature(x, y)
+			food[idx] = resource_map.get_food(x, y)
+			wood[idx] = resource_map.get_wood(x, y)
+			stone[idx] = resource_map.get_stone(x, y)
+			idx += 1
+	return {
+		"world": {
+			"width": width,
+			"height": height,
+			"biomes": biomes,
+			"elevation": elevation,
+			"moisture": moisture,
+			"temperature": temperature,
+			"food": food,
+			"wood": wood,
+			"stone": stone,
+		},
+		"founding_settlement": {
+			"id": 1,
+			"name": "Settlement 1",
+			"x": center.x,
+			"y": center.y,
+			"stockpile_food": 15.0,
+			"stockpile_wood": 5.0,
+			"stockpile_stone": 2.0,
+		},
+		"agents": agents,
+	}
 
 
 ## 중심 타일 근처의 walkable 타일 목록 반환

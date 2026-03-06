@@ -298,37 +298,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 	var col_widths: Array = _compute_column_widths(ENTITY_COLUMNS, panel_w - 30.0)
 
 	# Gather data
-	var rows: Array = []
-	if _entity_manager != null:
-		var alive: Array = _entity_manager.get_alive_entities()
-		for i in range(alive.size()):
-			var e: RefCounted = alive[i]
-			var current_tick: int = e.birth_tick + e.age
-			var ref_d: Dictionary = GameCalendar.tick_to_date(current_tick)
-			var ref_date: Dictionary = {"year": ref_d.year, "month": ref_d.month, "day": ref_d.day}
-			var age_short: String = GameCalendar.format_age_short(e.birth_date, ref_date)
-			var age_detail: Dictionary = GameCalendar.calculate_detailed_age(e.birth_date, ref_date)
-			var born_display: String = _format_date_compact(e.birth_date)
-			var born_days: int = 0
-			if not e.birth_date.is_empty():
-				born_days = GameCalendar.to_julian_day(e.birth_date)
-			var entity_is_leader: bool = false
-			if _settlement_manager != null and e.settlement_id > 0:
-				var s: RefCounted = _settlement_manager.get_settlement(e.settlement_id)
-				if s != null and s.leader_id == e.id:
-					entity_is_leader = true
-				rows.append({
-					"id": e.id, "name": e.entity_name, "age": age_detail.total_days,
-					"age_display": age_short,
-					"born": born_days, "born_display": born_display,
-					"died": 9999999, "died_display": "-",
-					"job": e.job, "job_display": Locale.tr_id("JOB", str(e.job)),
-					"status": Locale.tr_id("STATUS", e.current_action), "settlement": e.settlement_id,
-					"hunger": e.hunger, "deceased": false, "is_leader": entity_is_leader,
-				})
-	else:
-		# SimBridge fallback: entity_manager not set, read from Rust ECS
-		rows.append_array(_get_entity_rows_from_bridge())
+	var rows: Array = _get_entity_rows_from_bridge()
 
 	# Add deceased
 	if _show_deceased:
@@ -491,13 +461,16 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float, _panel_h: float, fs_body: int, fs_small: int) -> void:
 	var cy: float = start_cy
 
-	if _building_manager == null:
+	var buildings: Array = []
+	if _building_manager != null:
+		buildings = _building_manager.get_all_buildings()
+	if buildings.is_empty():
+		buildings = _get_building_rows_from_bridge()
+	if buildings.is_empty():
 		var missing_manager_text: String = "%s: %s" % [Locale.ltr("UI_BUILDINGS"), Locale.ltr("UI_UNKNOWN")]
 		draw_string(font, Vector2(cx, cy + 14), missing_manager_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body, Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
-
-	var buildings: Array = _building_manager.get_all_buildings()
 	var building_type_cache: Dictionary = {}
 	var built_label: String = Locale.ltr("UI_BUILT_LABEL")
 
@@ -513,13 +486,14 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	cy += 4.0
 
 	for i in range(buildings.size()):
-		var b = buildings[i]
+		var b: Variant = buildings[i]
 		var text_color := Color(0.8, 0.8, 0.8)
 		if (i % 2) == 1:
 			draw_rect(Rect2(cx, cy, panel_w - 30, ROW_HEIGHT), Color(0.1, 0.1, 0.1, 0.3))
 
 		col_x = cx + 5
-		var building_type_key: String = "BUILDING_TYPE_" + str(b.building_type).to_upper()
+		var building_type: String = str(_building_row_value(b, "building_type", ""))
+		var building_type_key: String = "BUILDING_TYPE_" + building_type.to_upper()
 		var building_type_name: String = str(building_type_cache.get(building_type_key, ""))
 		if building_type_name.is_empty():
 			building_type_name = Locale.ltr(building_type_key)
@@ -527,15 +501,20 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 		draw_string(font, Vector2(col_x, cy + 14), building_type_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[0].width + COL_PAD
 
-		var sett_text: String = "S%d" % b.settlement_id if b.settlement_id > 0 else "-"
+		var settlement_id: int = int(_building_row_value(b, "settlement_id", 0))
+		var sett_text: String = "S%d" % settlement_id if settlement_id > 0 else "-"
 		draw_string(font, Vector2(col_x, cy + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[1].width + COL_PAD
 
-		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [b.tile_x, b.tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
+		var tile_x: int = int(_building_row_value(b, "tile_x", 0))
+		var tile_y: int = int(_building_row_value(b, "tile_y", 0))
+		draw_string(font, Vector2(col_x, cy + 14), "(%d,%d)" % [tile_x, tile_y], HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, text_color)
 		col_x += BUILDING_COLUMNS[2].width + COL_PAD
 
-		var status: String = built_label if b.is_built else "%d%%" % int(b.build_progress * 100)
-		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if b.is_built else Color(0.9, 0.7, 0.2))
+		var is_built: bool = bool(_building_row_value(b, "is_built", _building_row_value(b, "is_constructed", false)))
+		var build_progress: float = float(_building_row_value(b, "build_progress", _building_row_value(b, "construction_progress", 0.0)))
+		var status: String = built_label if is_built else "%d%%" % int(build_progress * 100)
+		draw_string(font, Vector2(col_x, cy + 14), status, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.3, 0.8, 0.3) if is_built else Color(0.9, 0.7, 0.2))
 		cy += ROW_HEIGHT
 
 	_content_height = cy + 40.0
@@ -543,7 +522,7 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 
 func _on_entity_clicked(entity_id: int, is_deceased: bool) -> void:
 	if is_deceased:
-		SimulationBus.ui_notification.emit("open_entity_%d" % entity_id, "command")
+		SimulationBus.ui_notification.emit("open_deceased_%d" % entity_id, "command")
 	else:
 		SimulationBus.entity_selected.emit(entity_id)
 		SimulationBus.ui_notification.emit("open_entity_detail", "command")
@@ -578,6 +557,37 @@ func _get_entity_rows_from_bridge() -> Array:
 			"hunger": 0.0, "deceased": false, "is_leader": false,
 		})
 	return rows
+
+
+func _get_building_rows_from_bridge() -> Array:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_world_summary"):
+		return []
+	var raw: Variant = sim_bridge.call("runtime_get_world_summary")
+	if not (raw is Dictionary):
+		return []
+	var summary: Dictionary = raw
+	var rows: Array = []
+	var settlements: Array = summary.get("settlement_summaries", [])
+	for settlement_summary: Variant in settlements:
+		if not (settlement_summary is Dictionary):
+			continue
+		var settlement_detail: Variant = settlement_summary.get("settlement", {})
+		if not (settlement_detail is Dictionary):
+			continue
+		var buildings: Array = settlement_detail.get("buildings", [])
+		for building_raw: Variant in buildings:
+			if building_raw is Dictionary:
+				rows.append(building_raw)
+	return rows
+
+
+func _building_row_value(building: Variant, key: String, default_value: Variant) -> Variant:
+	if building is Dictionary:
+		return building.get(key, default_value)
+	if building == null:
+		return default_value
+	return building.get(key)
 
 
 func _get_sim_bridge() -> Object:

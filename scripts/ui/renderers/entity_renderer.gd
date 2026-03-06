@@ -8,6 +8,8 @@ var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
 var _sim_engine: RefCounted = null
+var _runtime_world_summary_cache: Dictionary = {}
+var _runtime_world_summary_cache_tick: int = -1
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
@@ -490,21 +492,26 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var tile := Vector2i(int(world_pos.x) / GameConfig.TILE_SIZE, int(world_pos.y) / GameConfig.TILE_SIZE)
 
 	# Check building at tile first
+	var building: Variant = null
 	if _building_manager != null:
-		var building = _building_manager.get_building_at(tile.x, tile.y)
-		if building != null:
-			var is_double: bool = (building.id == _last_click_building_id
+		building = _building_manager.get_building_at(tile.x, tile.y)
+	if building == null:
+		building = _get_runtime_building_at(tile.x, tile.y)
+	if building != null:
+		var building_id: int = int(_building_value(building, "id", -1))
+		if building_id >= 0:
+			var is_double: bool = (building_id == _last_click_building_id
 				and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
 				and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
 
 			selected_entity_id = -1
 			SimulationBus.entity_deselected.emit()
-			SimulationBus.building_selected.emit(building.id)
+			SimulationBus.building_selected.emit(building_id)
 
 			if is_double:
 				SimulationBus.ui_notification.emit("open_building_detail", "command")
 
-			_last_click_building_id = building.id
+			_last_click_building_id = building_id
 			_last_click_entity_id = -1
 			_last_click_time = now
 			_last_click_pos = screen_pos
@@ -544,3 +551,43 @@ func _handle_click(screen_pos: Vector2) -> void:
 		_last_click_building_id = -1
 		SimulationBus.entity_deselected.emit()
 		SimulationBus.building_deselected.emit()
+
+
+func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:
+	if building is Dictionary:
+		return building.get(key, default_value)
+	if building == null:
+		return default_value
+	return building.get(key)
+
+
+func _get_runtime_building_at(tile_x: int, tile_y: int) -> Variant:
+	if _sim_engine == null or not _sim_engine.has_method("get_world_summary"):
+		return null
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _runtime_world_summary_cache_tick:
+		_runtime_world_summary_cache_tick = tick
+		_runtime_world_summary_cache = _sim_engine.get_world_summary()
+	var settlement_summaries: Variant = _runtime_world_summary_cache.get("settlement_summaries", [])
+	if not (settlement_summaries is Array):
+		return null
+	for i in range(settlement_summaries.size()):
+		var settlement_summary_raw: Variant = settlement_summaries[i]
+		if not (settlement_summary_raw is Dictionary):
+			continue
+		var settlement_summary: Dictionary = settlement_summary_raw
+		var settlement_raw: Variant = settlement_summary.get("settlement", {})
+		if not (settlement_raw is Dictionary):
+			continue
+		var settlement: Dictionary = settlement_raw
+		var buildings: Variant = settlement.get("buildings", [])
+		if not (buildings is Array):
+			continue
+		for j in range(buildings.size()):
+			var building_raw: Variant = buildings[j]
+			if not (building_raw is Dictionary):
+				continue
+			var building: Dictionary = building_raw
+			if int(building.get("tile_x", -1)) == tile_x and int(building.get("tile_y", -1)) == tile_y:
+				return building
+	return null

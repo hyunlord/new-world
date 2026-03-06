@@ -130,6 +130,8 @@
   "UI_KEY_HINTS": "Space:일시정지  ./:속도  Tab:자원  M:맵  H:도움말  ESC:메뉴",
   "UI_NOTIF_GAME_SAVED": "게임 저장됨",
   "UI_NOTIF_GAME_LOADED": "게임 불러옴",
+  "UI_NOTIF_SAVE_UNSUPPORTED": "전체 상태 저장은 아직 구현되지 않았습니다",
+  "UI_NOTIF_LOAD_UNSUPPORTED": "전체 상태 불러오기는 아직 구현되지 않았습니다",
   "UI_NOTIF_SETTLEMENT_FOUNDED": "새 정착지 설립!",
   "UI_NOTIF_BUILDING_BUILT_FMT": "{type} 건설 완료",
   "UI_NOTIF_POPULATION_FMT": "인구: {n}!",

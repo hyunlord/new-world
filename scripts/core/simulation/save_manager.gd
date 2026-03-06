@@ -24,8 +24,8 @@ const LEGACY_ARTIFACTS := [
 ## ═══════════════════════════════════════════════════
 
 func save_game(
-	dir_path: String,
-	sim_engine: RefCounted,
+	_dir_path: String,
+	_sim_engine: RefCounted,
 	_entity_manager: RefCounted,
 	_building_manager: RefCounted,
 	_resource_map: RefCounted,
@@ -33,11 +33,9 @@ func save_game(
 	_relationship_manager: RefCounted,
 	_stats_recorder: RefCounted
 ) -> bool:
-	DirAccess.make_dir_recursive_absolute(dir_path)
-	if not _is_ws2_runtime_ready():
-		push_warning("[SaveManager] ws2 backend unavailable. Save requires initialized Rust runtime.")
-		return false
-	return _save_game_ws2(dir_path, sim_engine)
+	push_warning("[SaveManager] full-state save not implemented; ws2 snapshot save is disabled for gameplay.")
+	SimulationBus.emit_event("save_not_supported", {})
+	return false
 
 
 ## ═══════════════════════════════════════════════════
@@ -45,8 +43,8 @@ func save_game(
 ## ═══════════════════════════════════════════════════
 
 func load_game(
-	dir_path: String,
-	sim_engine: RefCounted,
+	_dir_path: String,
+	_sim_engine: RefCounted,
 	_entity_manager: RefCounted,
 	_building_manager: RefCounted,
 	_resource_map: RefCounted,
@@ -55,10 +53,9 @@ func load_game(
 	_relationship_manager: RefCounted,
 	_stats_recorder: RefCounted
 ) -> bool:
-	if not _is_ws2_runtime_ready():
-		push_warning("[SaveManager] ws2 backend unavailable. Load requires initialized Rust runtime.")
-		return false
-	return _load_game_ws2(dir_path, sim_engine)
+	push_warning("[SaveManager] full-state save not implemented; ws2 snapshot load is disabled for gameplay.")
+	SimulationBus.emit_event("load_not_supported", {})
+	return false
 
 
 func _is_ws2_runtime_ready() -> bool:

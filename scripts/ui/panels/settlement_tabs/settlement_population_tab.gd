@@ -63,7 +63,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		bracket_counts.append(0)
 
 	for member in members:
-		var age_years: int = int(floorf(float(member.age) / float(GameConfig.TICKS_PER_YEAR)))
+		var age_years: int = int(floorf(float(_member_value(member, "age", 0)) / float(GameConfig.TICKS_PER_YEAR)))
 		for i in range(brackets.size()):
 			var b = brackets[i]
 			if age_years >= b["min"] and age_years <= b["max"]:
@@ -82,7 +82,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 
 	var job_counts: Dictionary = {}
 	for member in members:
-		var job: String = member.job if member.job != null else "none"
+		var job: String = str(_member_value(member, "job", "none"))
 		job_counts[job] = job_counts.get(job, 0) + 1
 
 	# Sort by count descending
@@ -109,9 +109,10 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	var axis_sums: Dictionary = {"H": 0.0, "E": 0.0, "X": 0.0, "A": 0.0, "C": 0.0, "O": 0.0}
 	var personality_count: int = 0
 	for member in members:
-		if member.personality != null:
+		var axes: Dictionary = _member_axes(member)
+		if not axes.is_empty():
 			for axis in axis_sums:
-				axis_sums[axis] += member.personality.axes.get(axis, 0.5)
+				axis_sums[axis] += float(axes.get(axis, 0.5))
 			personality_count += 1
 
 	var axis_order: Array = ["H", "E", "X", "A", "C", "O"]
@@ -150,9 +151,9 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		var best_intimidation_val: float = -1.0
 
 		for member in members:
-			if member.personality == null:
+			var axes: Dictionary = _member_axes(member)
+			if axes.is_empty():
 				continue
-			var axes: Dictionary = member.personality.axes
 			var charisma_val: float = axes.get("X", 0.5)
 			var wisdom_val: float = axes.get("O", 0.5)
 			var creativity_val: float = axes.get("O", 0.5) * 0.7 + axes.get("X", 0.5) * 0.3
@@ -183,7 +184,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			if entity_ref == null:
 				continue
 			var label_text: String = Locale.ltr(entry["label_key"]) + ": "
-			var name_text: String = entity_ref.entity_name
+			var name_text: String = _member_name(entity_ref)
 			var val_text: String = " (%.2f)" % entry["value"]
 			var full_line: String = label_text + name_text + val_text
 
@@ -194,7 +195,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			var name_w: float = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, body_size).x
 			click_regions.append({
 				"rect": Rect2(cx + label_w, cy - body_size, name_w, body_size + 4),
-				"entity_id": entity_ref.id,
+				"entity_id": _member_id(entity_ref),
 			})
 			cy += LINE_HEIGHT
 	else:
@@ -226,3 +227,40 @@ func _draw_bar_row(canvas: Control, font: Font, x: float, y: float, label: Strin
 	canvas.draw_string(font, Vector2(bar_x + bar_max_width + 8.0, y), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, NEUTRAL_COLOR)
 
 	return y + LINE_HEIGHT
+
+
+func _member_value(member: Variant, key: String, default_value: Variant) -> Variant:
+	if member is Dictionary:
+		return member.get(key, default_value)
+	if member == null:
+		return default_value
+	return member.get(key)
+
+
+func _member_axes(member: Variant) -> Dictionary:
+	if member is Dictionary:
+		var personality: Variant = member.get("personality", {})
+		if personality is Dictionary:
+			var axes: Variant = personality.get("axes", {})
+			if axes is Dictionary:
+				return axes
+		return {}
+	if member == null or member.personality == null:
+		return {}
+	return member.personality.axes
+
+
+func _member_name(member: Variant) -> String:
+	if member is Dictionary:
+		return str(member.get("entity_name", member.get("name", "?")))
+	if member == null:
+		return "?"
+	return str(member.entity_name)
+
+
+func _member_id(member: Variant) -> int:
+	if member is Dictionary:
+		return int(member.get("id", -1))
+	if member == null:
+		return -1
+	return int(member.id)

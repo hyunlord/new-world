@@ -15,6 +15,7 @@ mod runtime_commands;
 mod runtime_bindings;
 mod runtime_dict;
 mod runtime_events;
+mod runtime_queries;
 mod runtime_registry;
 mod debug_api;
 mod ws2_codec;
@@ -72,6 +73,11 @@ use runtime_registry::{
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
 
 use runtime_events::game_event_to_v2_dict;
+use runtime_queries::{
+    bootstrap_world as bridge_bootstrap_world, building_detail as bridge_building_detail,
+    runtime_bits_from_raw_id, settlement_detail as bridge_settlement_detail,
+    world_summary as bridge_world_summary, minimap_snapshot as bridge_minimap_snapshot,
+};
 
 /// JSON-deserializable entry for runtime_spawn_agents.
 #[derive(serde::Deserialize)]
@@ -181,6 +187,23 @@ impl WorldSimRuntime {
 
         log::info!("[SimBridge] Spawned {} agents via runtime_spawn_agents", spawned_count);
         spawned_count
+    }
+
+    #[func]
+    fn runtime_bootstrap_world(&mut self, setup_json: GString) -> VarDictionary {
+        let Some(state) = self.state.as_mut() else {
+            return VarDictionary::new();
+        };
+        let payload = match serde_json::from_str::<runtime_queries::RuntimeBootstrapPayload>(
+            &setup_json.to_string(),
+        ) {
+            Ok(payload) => payload,
+            Err(error) => {
+                log::warn!("[SimBridge] runtime_bootstrap_world parse error: {error}");
+                return VarDictionary::new();
+            }
+        };
+        bridge_bootstrap_world(state, payload)
     }
 
     #[func]
@@ -428,6 +451,7 @@ impl WorldSimRuntime {
             None => return dict,
         };
         let world = state.engine.world();
+        let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
 
         // Identity (required — return empty if missing)
         let Ok(id) = world.get::<&Identity>(entity) else { return dict };
@@ -541,7 +565,13 @@ impl WorldSimRuntime {
 
         // Social summary
         if let Ok(social) = world.get::<&Social>(entity) {
-            dict.set("spouse_id", social.spouse.map(|s| s.0 as i64).unwrap_or(-1_i64));
+            dict.set(
+                "spouse_id",
+                social
+                    .spouse
+                    .and_then(|spouse| runtime_bits_from_raw_id(&raw_lookup, spouse.0))
+                    .unwrap_or(-1_i64),
+            );
             dict.set("children_count", social.children.len() as i32);
             dict.set("relationship_count", social.edges.len() as i32);
         }
@@ -568,6 +598,7 @@ impl WorldSimRuntime {
             None => return dict,
         };
         let world = state.engine.world();
+        let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
 
         match tab.to_string().as_str() {
             "mind" => {
@@ -681,27 +712,38 @@ impl WorldSimRuntime {
                 if let Ok(social) = world.get::<&Social>(entity) {
                     let mut spouse_dict = VarDictionary::new();
                     if let Some(s) = social.spouse {
-                        spouse_dict.set("id", s.0 as i64);
+                        if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, s.0) {
+                            spouse_dict.set("id", runtime_id);
+                        }
                     }
                     dict.set("spouse", spouse_dict);
                     let mut parents_arr: Array<VarDictionary> = Array::new();
                     for p in &social.parents {
+                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, p.0) else {
+                            continue;
+                        };
                         let mut pd = VarDictionary::new();
-                        pd.set("id", p.0 as i64);
+                        pd.set("id", runtime_id);
                         parents_arr.push(&pd);
                     }
                     dict.set("parents", parents_arr);
                     let mut children_arr: Array<VarDictionary> = Array::new();
                     for c in &social.children {
+                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, c.0) else {
+                            continue;
+                        };
                         let mut cd = VarDictionary::new();
-                        cd.set("id", c.0 as i64);
+                        cd.set("id", runtime_id);
                         children_arr.push(&cd);
                     }
                     dict.set("children", children_arr);
                     let mut rel_arr: Array<VarDictionary> = Array::new();
                     for edge in social.edges.iter().take(15) {
+                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, edge.target.0) else {
+                            continue;
+                        };
                         let mut ed = VarDictionary::new();
-                        ed.set("target_id", edge.target.0 as i64);
+                        ed.set("target_id", runtime_id);
                         ed.set("affinity", edge.affinity as f32);
                         ed.set("trust", edge.trust as f32);
                         ed.set("familiarity", edge.familiarity as f32);
@@ -797,6 +839,38 @@ impl WorldSimRuntime {
         }
 
         dict
+    }
+
+    #[func]
+    fn runtime_get_settlement_detail(&self, settlement_id: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        bridge_settlement_detail(state, settlement_id)
+    }
+
+    #[func]
+    fn runtime_get_building_detail(&self, building_id: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        bridge_building_detail(state, building_id)
+    }
+
+    #[func]
+    fn runtime_get_world_summary(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        bridge_world_summary(state)
+    }
+
+    #[func]
+    fn runtime_get_minimap_snapshot(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        bridge_minimap_snapshot(state)
     }
 
     /// Entity list snapshot — lightweight summary of every agent.

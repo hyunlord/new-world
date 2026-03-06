@@ -5,6 +5,7 @@ const TechTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_tech
 const PopulationTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_population_tab.gd")
 const EconomyTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_economy_tab.gd")
 
+var _sim_engine: RefCounted
 ## Manager references (injected via init())
 var _settlement_manager: RefCounted
 var _entity_manager: RefCounted
@@ -51,7 +52,8 @@ const TAB_NAMES: Array = ["UI_TAB_OVERVIEW", "UI_TAB_TECHNOLOGY", "UI_TAB_POPULA
 
 
 ## Initializes the panel with manager references and creates tab instances.
-func init(settlement_manager: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, tech_tree_manager: RefCounted) -> void:
+func init(sim_engine: RefCounted, settlement_manager: RefCounted, entity_manager: RefCounted, building_manager: RefCounted, tech_tree_manager: RefCounted) -> void:
+	_sim_engine = sim_engine
 	_settlement_manager = settlement_manager
 	_entity_manager = entity_manager
 	_building_manager = building_manager
@@ -71,7 +73,51 @@ func set_settlement_id(id: int) -> void:
 
 
 func _load_data() -> void:
-	if _settlement_manager == null or _settlement_id < 0:
+	if _settlement_id < 0:
+		_cached_data = {}
+		return
+
+	var runtime_detail: Dictionary = {}
+	if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
+		runtime_detail = _sim_engine.get_settlement_detail(_settlement_id)
+	if not runtime_detail.is_empty():
+		var leader_raw: Variant = runtime_detail.get("leader", {})
+		var runtime_leader: Variant = null
+		if leader_raw is Dictionary and not leader_raw.is_empty():
+			runtime_leader = leader_raw
+		var runtime_settlement: Dictionary = {
+			"id": int(runtime_detail.get("id", _settlement_id)),
+			"tech_era": str(runtime_detail.get("tech_era", "stone_age")),
+			"tech_states": runtime_detail.get("tech_states", {}),
+			"building_ids": runtime_detail.get("building_ids", []),
+			"center_x": int(runtime_detail.get("center_x", 0)),
+			"center_y": int(runtime_detail.get("center_y", 0)),
+		}
+		_cached_data = {
+			"settlement": runtime_settlement,
+			"members": runtime_detail.get("members", []),
+			"leader": runtime_leader,
+			"population": int(runtime_detail.get("population", 0)),
+			"adults": int(runtime_detail.get("adults", 0)),
+			"children": int(runtime_detail.get("children", 0)),
+			"elders": int(runtime_detail.get("elders", 0)),
+			"teens": int(runtime_detail.get("teens", 0)),
+			"male_count": int(runtime_detail.get("male_count", 0)),
+			"female_count": int(runtime_detail.get("female_count", 0)),
+			"avg_happiness": float(runtime_detail.get("avg_happiness", 0.0)),
+			"avg_stress": float(runtime_detail.get("avg_stress", 0.0)),
+			"buildings": runtime_detail.get("buildings", []),
+			"stockpile_food": float(runtime_detail.get("stockpile_food", 0.0)),
+			"stockpile_wood": float(runtime_detail.get("stockpile_wood", 0.0)),
+			"stockpile_stone": float(runtime_detail.get("stockpile_stone", 0.0)),
+			"tech_tree_manager": _tech_tree_manager,
+			"entity_manager": _entity_manager,
+			"building_manager": _building_manager,
+			"settlement_manager": _settlement_manager,
+		}
+		return
+
+	if _settlement_manager == null:
 		_cached_data = {}
 		return
 
@@ -174,12 +220,12 @@ func _draw() -> void:
 	# Header
 	draw_rect(Rect2(0.0, 0.0, panel_w, HEADER_HEIGHT), HEADER_BG)
 
-	var settlement: RefCounted = _cached_data.get("settlement")
+	var settlement: Variant = _cached_data.get("settlement")
 	var settlement_name: String = ""
 	var era_key: String = ""
 	if settlement != null:
-		settlement_name = Locale.ltr("UI_SETTLEMENT") + " %d" % settlement.id
-		era_key = "ERA_" + settlement.tech_era.to_upper()
+		settlement_name = Locale.ltr("UI_SETTLEMENT") + " %d" % int(_settlement_value(settlement, "id", _settlement_id))
+		era_key = "ERA_" + str(_settlement_value(settlement, "tech_era", "stone_age")).to_upper()
 
 	# Settlement name
 	draw_string(font, Vector2(20.0, 28.0), settlement_name,
@@ -187,9 +233,10 @@ func _draw() -> void:
 		GameConfig.get_font_size("popup_title"), Color.WHITE)
 
 	# Era badge
-	if settlement != null and settlement.tech_era != "":
+	var tech_era: String = str(_settlement_value(settlement, "tech_era", ""))
+	if settlement != null and tech_era != "":
 		var era_text: String = "[" + Locale.ltr(era_key) + "]"
-		var era_color: Color = _era_color(settlement.tech_era)
+		var era_color: Color = _era_color(tech_era)
 		var name_width: float = font.get_string_size(settlement_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_title")).x
 		draw_string(font, Vector2(24.0 + name_width, 28.0), era_text,
 			HORIZONTAL_ALIGNMENT_LEFT, -1,
@@ -354,6 +401,14 @@ func _update_scroll_from_mouse(mouse_y: float) -> void:
 	var ratio: float = clampf((mouse_y - track_top) / track_height, 0.0, 1.0)
 	var scroll_max: float = maxf(0.0, _content_height - size.y + 40.0)
 	_scroll_offset = ratio * scroll_max
+
+
+func _settlement_value(settlement: Variant, key: String, default_value: Variant) -> Variant:
+	if settlement is Dictionary:
+		return settlement.get(key, default_value)
+	if settlement == null:
+		return default_value
+	return settlement.get(key)
 
 
 ## Returns a color for the given era string.

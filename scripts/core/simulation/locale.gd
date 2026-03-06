@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 ## Autoload: Locale
@@ -472,8 +473,16 @@ func _load_fluent_locale(locale: String) -> bool:
 	return true
 
 
-func _prime_rust_fluent(locale: String, source: String) -> bool:
+func _can_use_runtime_locale_bridge() -> bool:
+	if Engine.is_editor_hint():
+		return false
 	if SimBridge == null:
+		return false
+	return true
+
+
+func _prime_rust_fluent(locale: String, source: String) -> bool:
+	if not _can_use_runtime_locale_bridge():
 		return false
 	if not SimBridge.has_method("locale_load_fluent"):
 		return false
@@ -484,7 +493,7 @@ func _build_flat_strings_from_rust_fluent(locale: String) -> Dictionary:
 	var built: Dictionary = {}
 	if not _rust_fluent_ready:
 		return built
-	if SimBridge == null:
+	if not _can_use_runtime_locale_bridge():
 		return built
 	if not SimBridge.has_method("locale_format_fluent"):
 		return built
@@ -540,7 +549,7 @@ func _try_rust_fluent_format(key: String, params: Dictionary) -> String:
 		return ""
 	if not _rust_fluent_ready:
 		return ""
-	if SimBridge == null:
+	if not _can_use_runtime_locale_bridge():
 		return ""
 	if not SimBridge.has_method("locale_format_fluent"):
 		return ""

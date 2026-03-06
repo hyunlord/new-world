@@ -5,6 +5,7 @@ const TechTab = preload("res://scripts/ui/panels/world_stats_tabs/world_stats_te
 const ResourcesTab = preload("res://scripts/ui/panels/world_stats_tabs/world_stats_resources_tab.gd")
 const SocialTab = preload("res://scripts/ui/panels/world_stats_tabs/world_stats_social_tab.gd")
 
+var _sim_engine: RefCounted
 ## Manager references (injected via init())
 var _stats_recorder: RefCounted
 var _settlement_manager: RefCounted
@@ -51,7 +52,8 @@ const TAB_NAMES: Array = ["UI_TAB_POP", "UI_TAB_TECH", "UI_TAB_RESOURCES", "UI_T
 
 
 ## Initializes the panel with manager references and creates tab instances.
-func init(stats_recorder: RefCounted, settlement_manager: RefCounted = null, entity_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
+func init(sim_engine: RefCounted, stats_recorder: RefCounted, settlement_manager: RefCounted = null, entity_manager: RefCounted = null, relationship_manager: RefCounted = null) -> void:
+	_sim_engine = sim_engine
 	_stats_recorder = stats_recorder
 	_settlement_manager = settlement_manager
 	_entity_manager = entity_manager
@@ -83,6 +85,18 @@ func _process(_delta: float) -> void:
 
 ## Rebuilds the cached world data from all managers.
 func _load_data() -> void:
+	if _sim_engine != null and _sim_engine.has_method("get_world_summary"):
+		var runtime_summary: Dictionary = _sim_engine.get_world_summary()
+		if not runtime_summary.is_empty():
+			_cached_data = runtime_summary.duplicate(true)
+			_cached_data["settlements"] = _cached_data.get("settlement_summaries", [])
+			_cached_data["tech_tree_manager"] = _tech_tree_manager
+			_cached_data["entity_manager"] = _entity_manager
+			_cached_data["settlement_manager"] = _settlement_manager
+			_cached_data["relationship_manager"] = _relationship_manager
+			_cached_data["stats_recorder"] = _stats_recorder
+			return
+
 	if _stats_recorder == null:
 		_cached_data = {}
 		return
@@ -236,7 +250,7 @@ func _load_data() -> void:
 
 
 func _draw() -> void:
-	if not visible or _stats_recorder == null:
+	if not visible or (_sim_engine == null and _stats_recorder == null):
 		return
 
 	# Force initial load
