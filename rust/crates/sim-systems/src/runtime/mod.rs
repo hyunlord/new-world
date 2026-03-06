@@ -10,6 +10,8 @@ mod needs;
 mod psychology;
 mod record;
 mod social;
+mod steering;
+mod steering_derive;
 mod world;
 
 // ---- biology ----
@@ -90,6 +92,10 @@ pub use social::{
     TitleRuntimeSystem,
     ValueRuntimeSystem,
 };
+
+// ---- steering ----
+pub use steering::SteeringRuntimeSystem;
+pub use steering_derive::derive_steering_params;
 
 // ---- world ----
 pub use world::{
@@ -1780,7 +1786,9 @@ mod tests {
             action_timer: 4,
             ..Behavior::default()
         };
-        let entity = world.spawn((Position::new(1, 0), behavior, age));
+        let mut position = Position::new(1, 0);
+        position.vel_x = -1.0;
+        let entity = world.spawn((position, behavior, age));
 
         let mut system = MovementRuntimeSystem::new(30, sim_core::config::MOVEMENT_TICK_INTERVAL);
         system.run(&mut world, &mut resources, 10);
@@ -1791,7 +1799,7 @@ mod tests {
         let behavior_after = world
             .get::<&Behavior>(entity)
             .expect("behavior should exist after movement");
-        assert_eq!((pos.x, pos.y), (0, 0));
+        assert_eq!((pos.x, pos.y), (0.0, 0.0));
         assert_eq!(behavior_after.action_timer, 3);
     }
 
@@ -4604,9 +4612,6 @@ mod tests {
         let identity = Identity::default();
         let social = Social::default();
         let entity = world.spawn((personality, age, body, identity, social));
-
-        let before = world.get::<&Personality>(entity).unwrap().facets;
-        drop(before);
 
         let mut system = PersonalityGeneratorRuntimeSystem::new(99, 1);
         system.run(&mut world, &mut resources, 1);

@@ -64,8 +64,8 @@ impl SimSystem for NeedsRuntimeSystem {
             let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
             let mut has_tile_temp = false;
             if let Some(position) = position_opt {
-                let x = position.x;
-                let y = position.y;
+                let x = position.tile_x();
+                let y = position.tile_y();
                 if resources.map.in_bounds(x, y) {
                     let tile = resources.map.get(x as u32, y as u32);
                     tile_temp = tile.temperature;

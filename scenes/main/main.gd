@@ -10,6 +10,7 @@ const BuildingManager = preload("res://scripts/core/settlement/building_manager.
 const SaveManager = preload("res://scripts/core/simulation/save_manager.gd")
 const NeedsSystem = preload("res://scripts/systems/psychology/needs_system.gd")
 const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
+const SteeringSystem = preload("res://scripts/systems/world/steering_system.gd")
 const MovementSystem = preload("res://scripts/systems/world/movement_system.gd")
 const ResourceRegenSystem = preload("res://scripts/systems/world/resource_regen_system.gd")
 const GatheringSystem = preload("res://scripts/systems/work/gathering_system.gd")
@@ -23,6 +24,7 @@ const StatsRecorder = preload("res://scripts/systems/record/stats_recorder.gd")
 const RelationshipManagerScript = preload("res://scripts/core/social/relationship_manager.gd")
 const SocialEventSystem = preload("res://scripts/systems/social/social_event_system.gd")
 const EmotionSystem = preload("res://scripts/systems/psychology/emotion_system.gd")
+const PersonalityMaturationSystem = preload("res://scripts/systems/psychology/personality_maturation_system.gd")
 const AgeSystem = preload("res://scripts/systems/biology/age_system.gd")
 const FamilySystem = preload("res://scripts/systems/social/family_system.gd")
 const MortalitySystem = preload("res://scripts/systems/biology/mortality_system.gd")
@@ -78,6 +80,7 @@ var _last_used_slot: int = 1
 
 var needs_system: RefCounted
 var behavior_system: RefCounted
+var steering_system: RefCounted
 var movement_system: RefCounted
 var resource_regen_system: RefCounted
 var gathering_system: RefCounted
@@ -88,6 +91,7 @@ var population_system: RefCounted
 var migration_system: RefCounted
 var social_event_system: RefCounted
 var emotion_system: RefCounted
+var personality_maturation_system: RefCounted
 var age_system: RefCounted
 var family_system: RefCounted
 var mortality_system: RefCounted
@@ -209,6 +213,8 @@ func _ready() -> void:
 	behavior_system = BehaviorSystem.new()
 	behavior_system.init(entity_manager, world_data, sim_engine.rng, resource_map, building_manager, settlement_manager)
 
+	steering_system = SteeringSystem.new()
+
 	gathering_system = GatheringSystem.new()
 	gathering_system.init(entity_manager, resource_map)
 
@@ -226,6 +232,8 @@ func _ready() -> void:
 
 	emotion_system = EmotionSystem.new()
 	emotion_system.init(entity_manager)
+
+	personality_maturation_system = PersonalityMaturationSystem.new()
 
 	age_system = AgeSystem.new()
 	age_system.init(entity_manager, sim_engine.rng)
@@ -356,6 +364,7 @@ func _ready() -> void:
 	sim_engine.register_system(behavior_system)           # priority 20
 	sim_engine.register_system(gathering_system)          # priority 25
 	sim_engine.register_system(construction_system)       # priority 28
+	sim_engine.register_system(steering_system)           # priority 29
 	sim_engine.register_system(movement_system)           # priority 30
 	sim_engine.register_system(emotion_system)            # priority 32
 	sim_engine.register_system(child_stress_processor)   # priority 32 (Phase 5)
@@ -367,6 +376,7 @@ func _ready() -> void:
 	sim_engine.register_system(trait_violation_system)   # priority 37
 	sim_engine.register_system(social_event_system)       # priority 37
 	sim_engine.register_system(age_system)                # priority 48
+	sim_engine.register_system(personality_maturation_system) # priority 49
 	sim_engine.register_system(mortality_system)          # priority 49
 	sim_engine.register_system(population_system)         # priority 50
 	sim_engine.register_system(family_system)             # priority 52

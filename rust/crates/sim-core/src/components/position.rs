@@ -1,24 +1,80 @@
 use serde::{Deserialize, Serialize};
 
-/// World position (tile coordinates)
+/// World position in continuous tile coordinates.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
 pub struct Position {
-    pub x: i32,
-    pub y: i32,
+    /// Continuous tile X coordinate.
+    pub x: f64,
+    /// Continuous tile Y coordinate.
+    pub y: f64,
+    /// Velocity along the tile X axis (tiles per tick).
+    pub vel_x: f64,
+    /// Velocity along the tile Y axis (tiles per tick).
+    pub vel_y: f64,
+    /// Eight-direction facing for renderer consumers.
+    pub movement_dir: u8,
 }
 
 impl Position {
-    pub fn new(x: i32, y: i32) -> Self { Self { x, y } }
+    /// Creates a position from integer tile coordinates.
+    pub fn new(x: i32, y: i32) -> Self {
+        Self::from_f64(f64::from(x), f64::from(y))
+    }
 
-    pub fn distance_to(&self, other: &Position) -> f32 {
-        let dx = (self.x - other.x) as f32;
-        let dy = (self.y - other.y) as f32;
+    /// Creates a position from continuous tile coordinates.
+    pub fn from_f64(x: f64, y: f64) -> Self {
+        Self {
+            x,
+            y,
+            vel_x: 0.0,
+            vel_y: 0.0,
+            movement_dir: 0,
+        }
+    }
+
+    /// Returns the Euclidean distance to another position in tile units.
+    pub fn distance_to(&self, other: &Position) -> f64 {
+        let dx = self.x - other.x;
+        let dy = self.y - other.y;
         (dx * dx + dy * dy).sqrt()
     }
 
-    pub fn distance_sq(&self, other: &Position) -> i32 {
+    /// Returns the squared Euclidean distance to another position in tile units.
+    pub fn distance_sq(&self, other: &Position) -> f64 {
         let dx = self.x - other.x;
         let dy = self.y - other.y;
         dx * dx + dy * dy
+    }
+
+    /// Returns the rounded tile X coordinate for map lookups.
+    pub fn tile_x(&self) -> i32 {
+        self.x.round() as i32
+    }
+
+    /// Returns the rounded tile Y coordinate for map lookups.
+    pub fn tile_y(&self) -> i32 {
+        self.y.round() as i32
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Position;
+
+    #[test]
+    fn new_position_uses_continuous_storage_with_zero_velocity() {
+        let position = Position::new(3, 4);
+        assert_eq!(position.x, 3.0);
+        assert_eq!(position.y, 4.0);
+        assert_eq!(position.vel_x, 0.0);
+        assert_eq!(position.vel_y, 0.0);
+        assert_eq!(position.movement_dir, 0);
+    }
+
+    #[test]
+    fn tile_helpers_round_continuous_coordinates() {
+        let position = Position::from_f64(2.6, 7.4);
+        assert_eq!(position.tile_x(), 3);
+        assert_eq!(position.tile_y(), 7);
     }
 }

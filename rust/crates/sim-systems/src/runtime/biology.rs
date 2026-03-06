@@ -6,7 +6,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    MemoryEntry, Needs, Personality, Position, Skills, Social, SteeringParams, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -258,6 +258,7 @@ impl SimSystem for PopulationRuntimeSystem {
             behavior,
             Needs::default(),
             Emotion::default(),
+            SteeringParams::default(),
             Stress::default(),
             Social::default(),
             Position::new(selected_x, selected_y),

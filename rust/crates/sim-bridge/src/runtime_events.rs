@@ -10,6 +10,7 @@ pub(crate) const EVENT_TYPE_ID_ENTITY_DIED: i32 = 11;
 pub(crate) const EVENT_TYPE_ID_ENTITY_REMOVED: i32 = 12;
 pub(crate) const EVENT_TYPE_ID_STRESS_CHANGED: i32 = 20;
 pub(crate) const EVENT_TYPE_ID_MENTAL_BREAK_TRIGGERED: i32 = 21;
+pub(crate) const EVENT_TYPE_ID_STEERING_PARAMS_UPDATED: i32 = 22;
 pub(crate) const EVENT_TYPE_ID_JOB_ASSIGNED: i32 = 30;
 pub(crate) const EVENT_TYPE_ID_RESOURCE_GATHERED: i32 = 31;
 pub(crate) const EVENT_TYPE_ID_BUILDING_CONSTRUCTED: i32 = 32;
@@ -34,6 +35,7 @@ pub(crate) fn game_event_type_id(event: &GameEvent) -> i32 {
         GameEvent::EntityRemoved { .. } => EVENT_TYPE_ID_ENTITY_REMOVED,
         GameEvent::StressChanged { .. } => EVENT_TYPE_ID_STRESS_CHANGED,
         GameEvent::MentalBreakTriggered { .. } => EVENT_TYPE_ID_MENTAL_BREAK_TRIGGERED,
+        GameEvent::SteeringParamsUpdated { .. } => EVENT_TYPE_ID_STEERING_PARAMS_UPDATED,
         GameEvent::JobAssigned { .. } => EVENT_TYPE_ID_JOB_ASSIGNED,
         GameEvent::ResourceGathered { .. } => EVENT_TYPE_ID_RESOURCE_GATHERED,
         GameEvent::BuildingConstructed { .. } => EVENT_TYPE_ID_BUILDING_CONSTRUCTED,
@@ -78,6 +80,9 @@ fn game_event_payload(event: &GameEvent) -> VarDictionary {
         GameEvent::StressChanged { entity_id, stress } => {
             payload.set("entity_id", entity_id.0 as i64);
             payload.set("stress", *stress);
+        }
+        GameEvent::SteeringParamsUpdated { entity_id } => {
+            payload.set("entity_id", entity_id.0 as i64);
         }
         GameEvent::MentalBreakTriggered {
             entity_id,
