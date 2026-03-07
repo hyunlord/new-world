@@ -1109,3 +1109,17 @@ fn movement_direction(vel_x: f64, vel_y: f64) -> u8 {
     let octant = (angle / (std::f64::consts::PI / 4.0)).round() as i32;
     octant.rem_euclid(8) as u8
 }
+
+#[cfg(test)]
+mod tests {
+    use super::movement_direction;
+
+    #[test]
+    fn stage1_calculate_direction_8way() {
+        assert_eq!(movement_direction(1.0, 0.0), 0);
+        assert_eq!(movement_direction(0.0, -1.0), 6);
+        assert_eq!(movement_direction(-1.0, 0.0), 4);
+        assert_eq!(movement_direction(0.0, 1.0), 2);
+        assert_eq!(movement_direction(0.0, 0.0), 0);
+    }
+}

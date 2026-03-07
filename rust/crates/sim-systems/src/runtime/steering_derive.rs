@@ -36,6 +36,7 @@ fn lerp(low: f64, high: f64, t: f64) -> f64 {
 
 #[cfg(test)]
 mod tests {
+    use sim_core::components::SteeringParams;
     use sim_core::components::Personality;
 
     use super::derive_steering_params;
@@ -49,5 +50,41 @@ mod tests {
         assert_eq!(params.separation_weight, 1.5);
         assert_eq!(params.path_directness, 0.95);
         assert_eq!(params.exploration_radius, 50.0);
+    }
+
+    #[test]
+    fn stage1_derive_steering_extreme_extraversion() {
+        let mut personality = Personality::default();
+        personality.axes[2] = 1.0;
+        let params = derive_steering_params(&personality);
+        assert!(params.base_speed >= 75.0);
+        assert!(params.wander_radius >= 45.0);
+        assert!(params.social_approach_weight >= 0.9);
+    }
+
+    #[test]
+    fn stage1_derive_steering_extreme_conscientiousness() {
+        let mut personality = Personality::default();
+        personality.axes[4] = 1.0;
+        let params = derive_steering_params(&personality);
+        assert!(params.path_directness >= 0.9);
+        assert!(params.wander_suppression >= 0.7);
+    }
+
+    #[test]
+    fn stage1_derive_steering_extreme_emotionality() {
+        let mut personality = Personality::default();
+        personality.axes[1] = 1.0;
+        let params = derive_steering_params(&personality);
+        assert!(params.speed_variance >= 0.18);
+        assert!(params.flee_multiplier >= 1.8);
+    }
+
+    #[test]
+    fn stage1_derive_steering_neutral_personality() {
+        let personality = Personality::default();
+        let params: SteeringParams = derive_steering_params(&personality);
+        assert!(params.base_speed > 50.0 && params.base_speed < 70.0);
+        assert!(params.wander_radius > 25.0 && params.wander_radius < 35.0);
     }
 }

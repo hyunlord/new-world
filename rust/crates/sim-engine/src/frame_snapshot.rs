@@ -295,6 +295,11 @@ mod tests {
     }
 
     #[test]
+    fn stage1_agent_snapshot_is_36_bytes() {
+        assert_eq!(std::mem::size_of::<AgentSnapshot>(), 36);
+    }
+
+    #[test]
     fn write_bytes_produces_fixed_stride() {
         let snapshot = AgentSnapshot {
             entity_id: 7,
@@ -352,5 +357,87 @@ mod tests {
         assert_eq!(snapshots.len(), 1);
         let x = snapshots[0].x;
         assert_eq!(x, 3.0);
+    }
+
+    #[test]
+    fn stage1_agent_snapshot_field_offsets_match_decoder_contract() {
+        let snapshot = AgentSnapshot {
+            entity_id: 42,
+            x: 123.456,
+            y: 789.012,
+            vel_x: 1.5,
+            vel_y: -2.25,
+            mood_color: 3,
+            stress_phase: 2,
+            active_break: 1,
+            sprite_var: 0b1101_0011,
+            ..AgentSnapshot::default()
+        };
+        let mut out = Vec::new();
+        snapshot.write_bytes(&mut out);
+        let expected_x = snapshot.x;
+        let expected_vel_x = snapshot.vel_x;
+        assert_eq!(out.len(), 36);
+        assert_eq!(u32::from_le_bytes(out[0..4].try_into().expect("entity id bytes")), 42);
+        assert_eq!(f32::from_le_bytes(out[4..8].try_into().expect("x bytes")), expected_x);
+        assert_eq!(
+            f32::from_le_bytes(out[12..16].try_into().expect("vel_x bytes")),
+            expected_vel_x
+        );
+        assert_eq!(out[20], 3);
+        assert_eq!(out[25], 2);
+        assert_eq!(out[26], 1);
+        assert_eq!(out[29], 0b1101_0011);
+    }
+
+    #[test]
+    fn stage1_snapshot_serialization_roundtrip() {
+        let snapshot = AgentSnapshot {
+            entity_id: 42,
+            x: 123.456,
+            y: 789.012,
+            vel_x: 1.5,
+            vel_y: -2.3,
+            mood_color: 3,
+            stress_phase: 2,
+            active_break: 0,
+            action_state: 5,
+            movement_dir: 7,
+            sprite_var: 0b1101_0011,
+            ..AgentSnapshot::default()
+        };
+
+        let mut bytes = Vec::new();
+        snapshot.write_bytes(&mut bytes);
+        assert_eq!(bytes.len(), 36);
+        assert_eq!(u32::from_le_bytes(bytes[0..4].try_into().expect("entity bytes")), 42);
+        assert!((f32::from_le_bytes(bytes[4..8].try_into().expect("x bytes")) - 123.456).abs() < 0.001);
+        assert_eq!(bytes[20], 3);
+        assert_eq!(bytes[29], 0b1101_0011);
+    }
+
+    #[test]
+    fn stage1_compute_mood_color_stays_in_range() {
+        let mut emotion = Emotion::default();
+        emotion.primary[EmotionType::Joy as usize] = 1.0;
+        emotion.primary[EmotionType::Sadness as usize] = 0.0;
+        let high = compute_mood_color(&emotion, &Needs::default());
+        emotion.primary[EmotionType::Joy as usize] = 0.0;
+        emotion.primary[EmotionType::Sadness as usize] = 1.0;
+        let low = compute_mood_color(&emotion, &Needs::default());
+        assert!(high <= 4);
+        assert!(low <= 4);
+        assert!(high >= low);
+    }
+
+    #[test]
+    fn stage1_sprite_var_bit_encoding_roundtrips() {
+        let sprite_var: u8 = 0b1101_0011;
+        let hair = (sprite_var >> 5) & 0x07;
+        let body = (sprite_var >> 3) & 0x03;
+        let skin = sprite_var & 0x07;
+        assert_eq!(hair, 6);
+        assert_eq!(body, 2);
+        assert_eq!(skin, 3);
     }
 }

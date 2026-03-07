@@ -5054,6 +5054,37 @@ mod tests {
     }
 
     #[test]
+    fn stage1_archetype_high_extraversion() {
+        let label = archetype_label_key_from_axes([0.5, 0.5, 0.95, 0.5, 0.5, 0.5]);
+        assert_eq!(label, "ARCHETYPE_BOLD_EXPLORER");
+    }
+
+    #[test]
+    fn stage1_archetype_low_honesty() {
+        let label = archetype_label_key_from_axes([0.05, 0.5, 0.5, 0.5, 0.5, 0.5]);
+        assert_eq!(label, "ARCHETYPE_CUNNING_OPPORTUNIST");
+    }
+
+    #[test]
+    fn stage1_all_12_archetypes_reachable() {
+        let mut seen: std::collections::HashSet<&'static str> = std::collections::HashSet::new();
+        for axis in 0..6 {
+            for value in [0.05_f64, 0.95_f64] {
+                let mut axes = [0.5; 6];
+                axes[axis] = value;
+                seen.insert(archetype_label_key_from_axes(axes));
+            }
+        }
+        assert_eq!(seen.len(), 12);
+    }
+
+    #[test]
+    fn stage1_archetype_neutral_returns_something() {
+        let label = archetype_label_key_from_axes([0.5; 6]);
+        assert!(!label.is_empty());
+    }
+
+    #[test]
     fn validates_walkable_length() {
         let mut input = base_input();
         input.walkable.pop();

@@ -892,4 +892,16 @@ mod tests {
         assert!((memory_decay_rate(0.30) - 0.347).abs() < 1e-9); // moderate
         assert!((memory_decay_rate(0.05) - 1.386).abs() < 1e-9); // trivial
     }
+
+    #[test]
+    fn stage1_mood_speed_multipliers_correct() {
+        assert!((MOOD_SPEED_MULTIPLIERS[0] - 0.7).abs() < 0.01);
+        assert!((MOOD_SPEED_MULTIPLIERS[4] - 1.1).abs() < 0.01);
+    }
+
+    #[test]
+    fn stage1_stress_speed_multipliers_correct() {
+        assert!((STRESS_SPEED_MULTIPLIERS[0] - 1.0).abs() < 0.01);
+        assert!((STRESS_SPEED_MULTIPLIERS[4] - 0.5).abs() < 0.01);
+    }
 }

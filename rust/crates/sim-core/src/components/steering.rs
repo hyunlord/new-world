@@ -76,4 +76,20 @@ mod tests {
         assert_eq!(params.mood_speed_multiplier, 1.0);
         assert_eq!(params.stress_speed_multiplier, 1.0);
     }
+
+    #[test]
+    fn stage1_steering_params_has_all_fields() {
+        let params = SteeringParams::default();
+        assert!(params.base_speed > 0.0);
+        assert!(params.speed_variance > 0.0);
+        assert!(params.wander_radius > 0.0);
+        assert!(params.wander_distance > 0.0);
+        assert!(params.wander_jitter > 0.0);
+        assert!(params.cohesion_weight >= 0.0);
+        assert!(params.separation_weight >= 0.0);
+        assert!((0.0..=1.0).contains(&params.path_directness));
+        assert!(params.exploration_radius > 0.0);
+        assert!(params.flee_multiplier > 0.0);
+        assert!(params.personal_space_radius > 0.0);
+    }
 }

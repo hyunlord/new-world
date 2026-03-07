@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 53;
+const EXPECTED_SYSTEM_COUNT: usize = 55;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -46,9 +46,11 @@ use sim_systems::runtime::{
     EconomicTendencyRuntimeSystem, FamilyRuntimeSystem, LeaderRuntimeSystem,
     NetworkRuntimeSystem, OccupationRuntimeSystem, ReputationRuntimeSystem,
     SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
-    StratificationMonitorRuntimeSystem, TitleRuntimeSystem, ValueRuntimeSystem,
+    StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem, TitleRuntimeSystem,
+    ValueRuntimeSystem,
     // world
-    MigrationRuntimeSystem, MovementRuntimeSystem, TechDiscoveryRuntimeSystem,
+    MigrationRuntimeSystem, MovementRuntimeSystem, SteeringRuntimeSystem,
+    TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
     TechUtilizationRuntimeSystem, TensionRuntimeSystem,
 };
@@ -302,6 +304,10 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(BehaviorRuntimeSystem::new(20, 1));
     engine.register(GatheringRuntimeSystem::new(25, 1));
     engine.register(ConstructionRuntimeSystem::new(28, 1));
+    engine.register(SteeringRuntimeSystem::new(
+        sim_core::config::STEERING_SYSTEM_PRIORITY,
+        sim_core::config::STEERING_SYSTEM_INTERVAL,
+    ));
     engine.register(MovementRuntimeSystem::new(30, 1));
     engine.register(EmotionRuntimeSystem::new(32, 12));
     engine.register(ChildStressProcessorRuntimeSystem::new(32, 2));
@@ -335,6 +341,10 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(TechUtilizationRuntimeSystem::new(65, 1));
     engine.register(StratificationMonitorRuntimeSystem::new(90, 1));
     engine.register(StatsRecorderRuntimeSystem::new(90, 200));
+    engine.register(StorySifterRuntimeSystem::new(
+        sim_core::config::STORY_SIFTER_PRIORITY,
+        sim_core::config::STORY_SIFTER_TICK_INTERVAL,
+    ));
     engine.register(SettlementCultureRuntimeSystem::new(95, 100));
     engine.register(PersonalityMaturationRuntimeSystem::new(96, 100));
     engine.register(PersonalityGeneratorRuntimeSystem::new(97, 100));
@@ -551,6 +561,239 @@ fn run_needs_math_bench(args: &[String]) {
         ns_per_iter,
         checksum
     );
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT,
+    };
+    use sim_core::components::{Behavior, Identity, Personality, Position, SteeringParams};
+    use sim_core::config::{GameConfig, TICKS_PER_YEAR};
+    use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, WorldMap};
+    use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
+    use sim_systems::entity_spawner::SpawnConfig;
+    use sim_systems::runtime::derive_steering_params;
+
+    fn make_stage1_engine(seed: u64, agent_count: usize) -> SimEngine {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, seed);
+        let resources = SimResources::new(calendar, map, seed);
+        let mut engine = SimEngine::new(resources);
+        register_all_systems(&mut engine);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 128, 128, 0),
+        );
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, agent_count, SettlementId(1));
+        }
+        engine
+    }
+
+    fn collect_positions(engine: &SimEngine) -> Vec<(u64, (f64, f64))> {
+        let mut positions: Vec<(u64, (f64, f64))> = engine
+            .world()
+            .query::<&Position>()
+            .iter()
+            .map(|(entity, position)| (entity.to_bits().get(), (position.x, position.y)))
+            .collect();
+        positions.sort_by_key(|(entity_id, _)| *entity_id);
+        positions
+    }
+
+    #[test]
+    fn stage1_simulation_100_ticks_no_panic() {
+        let mut engine = make_stage1_engine(42, 20);
+        assert_eq!(engine.system_count(), EXPECTED_SYSTEM_COUNT);
+        engine.run_ticks(100);
+        assert!(
+            engine.world().len() >= 1,
+            "at least one agent should remain after 100 ticks"
+        );
+    }
+
+    #[test]
+    fn stage1_agents_move_after_100_ticks() {
+        let mut engine = make_stage1_engine(42, 10);
+        let initial_positions = collect_positions(&engine);
+        engine.run_ticks(100);
+        let final_positions = collect_positions(&engine);
+
+        let moved_count = initial_positions
+            .iter()
+            .zip(final_positions.iter())
+            .filter(|((initial_id, (initial_x, initial_y)), (final_id, (final_x, final_y)))| {
+                initial_id == final_id
+                    && ((initial_x - final_x).abs() > 0.1 || (initial_y - final_y).abs() > 0.1)
+            })
+            .count();
+
+        assert!(
+            moved_count >= 5,
+            "at least half of agents should move after 100 ticks, only {moved_count} moved"
+        );
+    }
+
+    #[test]
+    fn stage1_personality_affects_speed() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+        register_all_systems(&mut engine);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 128, 128, 0),
+        );
+
+        let adult_ticks = 20_u64 * u64::from(TICKS_PER_YEAR);
+        let extrovert = {
+            let cfg = SpawnConfig {
+                settlement_id: Some(SettlementId(1)),
+                position: (120, 128),
+                initial_age_ticks: adult_ticks,
+                sex: None,
+                parent_a: None,
+                parent_b: None,
+            };
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_agent(world, resources, &cfg)
+        };
+        let introvert = {
+            let cfg = SpawnConfig {
+                settlement_id: Some(SettlementId(1)),
+                position: (136, 128),
+                initial_age_ticks: adult_ticks,
+                sex: None,
+                parent_a: None,
+                parent_b: None,
+            };
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_agent(world, resources, &cfg)
+        };
+
+        let mut high_x = Personality::default();
+        high_x.axes[2] = 0.95;
+        let mut low_x = Personality::default();
+        low_x.axes[2] = 0.05;
+        let high_params = derive_steering_params(&high_x);
+        let low_params = derive_steering_params(&low_x);
+
+        {
+            let mut personality = engine
+                .world_mut()
+                .get::<&mut Personality>(extrovert)
+                .expect("extrovert personality missing");
+            *personality = high_x;
+        }
+        {
+            let mut steering = engine
+                .world_mut()
+                .get::<&mut SteeringParams>(extrovert)
+                .expect("extrovert steering missing");
+            *steering = high_params;
+        }
+        {
+            let mut behavior = engine
+                .world_mut()
+                .get::<&mut Behavior>(extrovert)
+                .expect("extrovert behavior missing");
+            behavior.current_action = ActionType::Wander;
+        }
+        {
+            let mut personality = engine
+                .world_mut()
+                .get::<&mut Personality>(introvert)
+                .expect("introvert personality missing");
+            *personality = low_x;
+        }
+        {
+            let mut steering = engine
+                .world_mut()
+                .get::<&mut SteeringParams>(introvert)
+                .expect("introvert steering missing");
+            *steering = low_params;
+        }
+        {
+            let mut behavior = engine
+                .world_mut()
+                .get::<&mut Behavior>(introvert)
+                .expect("introvert behavior missing");
+            behavior.current_action = ActionType::Wander;
+        }
+
+        let extrovert_base_speed = engine
+            .world()
+            .get::<&SteeringParams>(extrovert)
+            .expect("extrovert steering missing")
+            .base_speed;
+        let introvert_base_speed = engine
+            .world()
+            .get::<&SteeringParams>(introvert)
+            .expect("introvert steering missing")
+            .base_speed;
+        engine.run_ticks(10);
+
+        assert!(
+            (extrovert_base_speed - introvert_base_speed).abs() > 1.0,
+            "different personalities should yield different base speeds ({extrovert_base_speed} vs {introvert_base_speed})"
+        );
+    }
+
+    #[test]
+    fn stage1_event_store_receives_events_after_simulation() {
+        let mut engine = make_stage1_engine(42, 10);
+        engine.run_ticks(200);
+        assert!(
+            engine.resources().event_store.len() > 0,
+            "event store should contain events after 200 ticks"
+        );
+    }
+
+    #[test]
+    fn stage1_frame_snapshot_builds_correctly() {
+        let mut engine = make_stage1_engine(42, 10);
+        engine.tick();
+
+        let snapshots = build_agent_snapshots(engine.world());
+        assert!(
+            snapshots.len() >= 10,
+            "should build at least one snapshot per spawned agent"
+        );
+        for snapshot in &snapshots {
+            assert!(snapshot.mood_color <= 4);
+            assert!(snapshot.stress_phase <= 4);
+        }
+    }
+
+    #[test]
+    fn stage1_simulation_tick_under_budget() {
+        let mut engine = make_stage1_engine(42, 20);
+        let started = std::time::Instant::now();
+        engine.run_ticks(60);
+        let elapsed = started.elapsed();
+        let millis_per_tick = elapsed.as_secs_f64() * 1000.0 / 60.0;
+        assert!(
+            millis_per_tick < 16.0,
+            "tick should stay under 16ms budget, got {millis_per_tick:.3}ms"
+        );
+    }
+
+    #[test]
+    fn stage1_spawned_entities_include_identity_components() {
+        let engine = make_stage1_engine(42, 5);
+        let identities: Vec<u64> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(entity, _)| entity.to_bits().get())
+            .collect();
+        assert_eq!(identities.len(), 5);
+    }
 }
 
 fn pathfind_bench_inputs() -> (

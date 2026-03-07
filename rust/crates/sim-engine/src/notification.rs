@@ -54,4 +54,12 @@ mod tests {
         assert_eq!(NotificationTier::Milestone.as_i64(), 2);
         assert_eq!(NotificationTier::Ambient.as_i64(), 3);
     }
+
+    #[test]
+    fn stage1_notification_tier_mapping_is_stable() {
+        assert_eq!(NotificationTier::Crisis as u8, 0);
+        assert_eq!(NotificationTier::Drama as u8, 1);
+        assert_eq!(NotificationTier::Milestone as u8, 2);
+        assert_eq!(NotificationTier::Ambient as u8, 3);
+    }
 }

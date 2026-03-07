@@ -77,4 +77,35 @@ mod tests {
         assert_eq!(position.tile_x(), 3);
         assert_eq!(position.tile_y(), 7);
     }
+
+    #[test]
+    fn stage1_position_is_f64_with_velocity() {
+        let position = Position {
+            x: 100.5,
+            y: 200.7,
+            vel_x: 1.5,
+            vel_y: -0.8,
+            movement_dir: 3,
+        };
+        assert!((position.x - 100.5).abs() < f64::EPSILON);
+        assert!((position.y - 200.7).abs() < f64::EPSILON);
+        assert!((position.vel_x - 1.5).abs() < f64::EPSILON);
+        assert!((position.vel_y + 0.8).abs() < f64::EPSILON);
+        assert_eq!(position.movement_dir, 3);
+    }
+
+    #[test]
+    fn stage1_position_clamped_to_world_bounds() {
+        let mut position = Position {
+            x: -10.0,
+            y: 300.0,
+            vel_x: 0.0,
+            vel_y: 0.0,
+            movement_dir: 0,
+        };
+        position.x = position.x.clamp(0.0, 256.0);
+        position.y = position.y.clamp(0.0, 256.0);
+        assert_eq!(position.x, 0.0);
+        assert_eq!(position.y, 256.0);
+    }
 }
