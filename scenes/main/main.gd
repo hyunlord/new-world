@@ -41,6 +41,7 @@ const ChildStressProcessor = preload("res://scripts/systems/development/child_st
 const IntergenerationalSystem = preload("res://scripts/systems/development/intergenerational_system.gd")
 const ParentingSystem = preload("res://scripts/systems/development/parenting_system.gd")
 const PauseMenuClass = preload("res://scripts/ui/panels/pause_menu.gd")
+const AmbienceManagerClass = preload("res://scripts/ui/ambience_manager.gd")
 const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
 const StatSyncSystem = preload("res://scripts/systems/record/stat_sync_system.gd")
 const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold_system.gd")
@@ -76,6 +77,7 @@ var settlement_manager: RefCounted
 var stats_recorder: RefCounted
 var relationship_manager: RefCounted
 var pause_menu: CanvasLayer
+var ambience_manager: Node = null
 var _last_used_slot: int = 1
 
 var needs_system: RefCounted
@@ -405,6 +407,7 @@ func _ready() -> void:
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
 	building_renderer.init(building_manager, settlement_manager, sim_engine)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
+	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
 	pause_menu = PauseMenuClass.new()
 	pause_menu.set_save_manager(save_manager)
@@ -465,6 +468,14 @@ func _build_loading_overlay() -> void:
 	_loading_count_label.text = "0 / 0"
 	_loading_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(_loading_count_label)
+
+
+func _ensure_ambience_manager() -> void:
+	if ambience_manager != null:
+		return
+	ambience_manager = AmbienceManagerClass.new()
+	ambience_manager.name = "AmbienceManager"
+	add_child(ambience_manager)
 
 
 ## WorldSetup 완료 시 호출 — 맵 렌더링, 스폰, 시뮬레이션 시작
@@ -840,6 +851,12 @@ func _unhandled_input(event: InputEvent) -> void:
 					hud.set_resource_legend_visible(overlay_vis)
 					entity_renderer.resource_overlay_visible = overlay_vis
 				KEY_M:
+					if ambience_manager != null and ambience_manager.has_method("toggle_mute"):
+						var muted: bool = bool(ambience_manager.call("toggle_mute"))
+						if hud != null and hud.has_method("show_sound_status"):
+							hud.call("show_sound_status", muted)
+					get_viewport().set_input_as_handled()
+				KEY_B:
 					hud.toggle_minimap()
 				KEY_G:
 					hud.toggle_stats()
@@ -930,7 +947,8 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("    . (period)     = Speed up")
 	print("    , (comma)      = Speed down")
 	print("    Tab            = Toggle resource overlay")
-	print("    M              = Toggle minimap")
+	print("    B              = Cycle minimap size")
+	print("    M              = Toggle ambient sound")
 	print("    G              = Statistics detail")
 	print("    E              = Entity/Building detail")
 	print("    C              = Chronicle")

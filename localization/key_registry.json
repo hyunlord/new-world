@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4190,
-  "key_count": 4190,
+  "active_key_count": 4194,
+  "key_count": 4194,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -3609,6 +3609,7 @@
     "UI_FILTER_MILESTONE": 3562,
     "UI_FILTER_SETTLEMENT": 3563,
     "UI_FIRST_GENERATION": 3564,
+    "UI_FOLLOWING": 4190,
     "UI_FOLLOWING_FMT": 3565,
     "UI_FOOD": 3566,
     "UI_FOOD_CAPACITY": 3567,
@@ -3634,6 +3635,7 @@
     "UI_HELP_DBL_CLICK": 4035,
     "UI_HELP_DISPLAY": 4036,
     "UI_HELP_GAME": 4037,
+    "UI_HELP_KEY_B": 4191,
     "UI_HELP_KEY_C": 4038,
     "UI_HELP_KEY_E": 4039,
     "UI_HELP_KEY_G": 4040,
@@ -3969,6 +3971,8 @@
     "UI_SOCIAL_STATUS": 3830,
     "UI_SORT_ASC": 3831,
     "UI_SORT_DESC": 3832,
+    "UI_SOUND_MUTED": 4192,
+    "UI_SOUND_ON": 4193,
     "UI_SPEECH_STYLE": 3833,
     "UI_SPEED": 3834,
     "UI_SPEED_MULT_FMT": 3835,
@@ -8383,7 +8387,11 @@
     "UI_VALUES_BALANCED",
     "UI_VALUES_CHERISH",
     "UI_VALUES_DESPISE",
-    "UI_VALUES_UNKNOWN"
+    "UI_VALUES_UNKNOWN",
+    "UI_FOLLOWING",
+    "UI_HELP_KEY_B",
+    "UI_SOUND_MUTED",
+    "UI_SOUND_ON"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

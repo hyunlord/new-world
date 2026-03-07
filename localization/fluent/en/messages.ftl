@@ -3608,6 +3608,7 @@ UI_FILTER_MARRIAGE = Marriage
 UI_FILTER_MILESTONE = Milestone
 UI_FILTER_SETTLEMENT = Settlement
 UI_FIRST_GENERATION = 1st generation
+UI_FOLLOWING = Following: {name}
 UI_FOLLOWING_FMT = Following: {name}
 UI_FOOD = Food
 UI_FOOD_CAPACITY = Food-based capacity

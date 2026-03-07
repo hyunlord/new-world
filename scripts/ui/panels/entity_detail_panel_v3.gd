@@ -320,7 +320,8 @@ func _refresh_header() -> void:
 	var archetype_key: String = str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER"))
 	var archetype_text: String = Locale.ltr(archetype_key)
 	var name_text: String = str(_detail.get("name", Locale.ltr("UI_UNKNOWN")))
-	_header_name.text = "%s  [%s]" % [name_text, archetype_text]
+	var header_name_text: String = name_text + "  [" + archetype_text + "]"
+	_header_name.text = header_name_text
 
 	var sex_key: String = "UI_MALE" if str(_detail.get("sex", "")).to_lower() == "male" else "UI_FEMALE"
 	var stage_key: String = "STAGE_" + str(_detail.get("growth_stage", "adult")).to_upper()
@@ -331,13 +332,15 @@ func _refresh_header() -> void:
 		Locale.ltr(sex_key),
 		Locale.ltr(occupation_key),
 	])
-	_header_meta.text = " · ".join(meta_parts)
+	var header_meta_text: String = " · ".join(meta_parts)
+	_header_meta.text = header_meta_text
 
 
 func _refresh_summary() -> void:
 	var action_text: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
 	var motivation_text: String = _localized_need_text(str(_detail.get("top_need_key", "NEED_ENERGY")))
-	_summary_label.text = "%s — %s" % [action_text, motivation_text]
+	var summary_text: String = action_text + " — " + motivation_text
+	_summary_label.text = summary_text
 
 
 func _refresh_thought_stream() -> void:
@@ -366,7 +369,8 @@ func _refresh_needs() -> void:
 		name_label.text = Locale.ltr(need_key)
 		bar.value = need_value * 100.0
 		bar.modulate = _need_color(need_value)
-		value_label.text = "%d%%" % int(round(need_value * 100.0))
+		var percent_text: String = str(int(round(need_value * 100.0))) + "%"
+		value_label.text = percent_text
 
 
 func _refresh_emotions() -> void:
@@ -378,9 +382,10 @@ func _refresh_emotions() -> void:
 			"%s %d%%" % [
 				Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
 				int(round(float(entry.get("value", 0.0)) * 100.0)),
-			]
-		)
-	_emotion_text.text = " · ".join(parts)
+				]
+			)
+	var emotion_text: String = " · ".join(parts)
+	_emotion_text.text = emotion_text
 
 
 func _refresh_personality() -> void:
@@ -391,9 +396,10 @@ func _refresh_personality() -> void:
 			"%s %d%%" % [
 				str(row["label"]),
 				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
-			]
-		)
-	_personality_text.text = "%s\n%s" % [archetype_text, " / ".join(hexaco_parts)]
+				]
+			)
+	var personality_text: String = archetype_text + "\n" + " / ".join(hexaco_parts)
+	_personality_text.text = personality_text
 
 
 func _refresh_relationships() -> void:
