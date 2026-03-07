@@ -4,13 +4,15 @@ const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
-const EntityDetailPanelV2Class = preload("res://scripts/ui/panels/entity_detail_panel_v2.gd")
+const EntityDetailPanelV3Class = preload("res://scripts/ui/panels/entity_detail_panel_v3.gd")
 const EntityDetailPanelLegacyClass = preload("res://scripts/ui/panels/entity_detail_panel_legacy.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
 const ListPanelClass = preload("res://scripts/ui/panels/list_panel.gd")
 const SettlementDetailPanelClass = preload("res://scripts/ui/panels/settlement_detail_panel.gd")
+const CastBarClass = preload("res://scripts/ui/cast_bar.gd")
+const NotificationManagerClass = preload("res://scripts/ui/notification_manager.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -98,6 +100,8 @@ var _building_detail_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
 var _settlement_detail_panel: Control
+var _cast_bar = null
+var _story_notification_manager = null
 
 # Follow indicator
 var _follow_label: Label
@@ -179,7 +183,7 @@ func _build_minimap_and_stats() -> void:
 	add_child(_popup_manager)
 
 	if _sim_engine != null:
-		_entity_detail_panel = EntityDetailPanelV2Class.new()
+		_entity_detail_panel = EntityDetailPanelV3Class.new()
 		_entity_detail_panel.init(_sim_engine)
 		_popup_manager.add_entity_panel(_entity_detail_panel)
 		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
@@ -226,6 +230,23 @@ func _build_minimap_and_stats() -> void:
 	_follow_label.offset_top = 36
 	_follow_label.offset_bottom = 56
 	add_child(_follow_label)
+	_build_story_ui()
+
+
+func _build_story_ui() -> void:
+	if _cast_bar == null:
+		_cast_bar = CastBarClass.new()
+		_cast_bar.init(_sim_engine)
+		_cast_bar.agent_selected.connect(_on_cast_bar_agent_selected)
+		_cast_bar.agent_follow_requested.connect(_on_cast_bar_follow_requested)
+		_cast_bar.agent_pinned.connect(_on_cast_bar_agent_pinned)
+		add_child(_cast_bar)
+	if _story_notification_manager == null:
+		_story_notification_manager = NotificationManagerClass.new()
+		_story_notification_manager.init(_sim_engine)
+		_story_notification_manager.notification_clicked.connect(_on_story_notification_clicked)
+		_story_notification_manager.crisis_occurred.connect(_on_story_crisis)
+		add_child(_story_notification_manager)
 
 
 func _connect_signals() -> void:
@@ -1002,11 +1023,15 @@ func _on_entity_selected(entity_id: int) -> void:
 	_entity_panel.visible = true
 	_building_panel.visible = false
 	_selected_building_id = -1
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(entity_id)
 
 
 func _on_entity_deselected() -> void:
 	_selected_entity_id = -1
 	_entity_panel.visible = false
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(-1)
 
 
 func _on_building_selected(building_id: int) -> void:
@@ -1190,6 +1215,14 @@ func _refresh_hud_texts() -> void:
 		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
+	if _cast_bar != null:
+		_cast_bar.refresh_locale()
+	if _story_notification_manager != null:
+		_story_notification_manager.refresh_locale()
+	if _entity_detail_panel != null and _entity_detail_panel.has_method("refresh_locale"):
+		_entity_detail_panel.call("refresh_locale")
+	if _following_entity_id >= 0:
+		_on_follow_entity(_following_entity_id)
 	_update_era_label()
 
 
@@ -1215,6 +1248,17 @@ func toggle_minimap() -> void:
 func toggle_stats() -> void:
 	if _popup_manager != null:
 		_popup_manager.open_stats()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and not event.ctrl_pressed and not event.alt_pressed and not event.meta_pressed:
+		if _cast_bar != null and _cast_bar.handle_hotkey(event):
+			get_viewport().set_input_as_handled()
+			return
+		if event.keycode == KEY_L:
+			toggle_event_log()
+			get_viewport().set_input_as_handled()
+			return
 
 
 ## Toggles the debug overlay (F3). Cycles OFF -> COMPACT -> OFF.
@@ -1263,6 +1307,9 @@ func toggle_help() -> void:
 func close_all_popups() -> bool:
 	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
+		return true
+	if _story_notification_manager != null and _story_notification_manager.is_event_log_visible():
+		_story_notification_manager.close_event_log()
 		return true
 	if _help_visible:
 		toggle_help()
@@ -1314,6 +1361,11 @@ func toggle_list() -> void:
 		_popup_manager.open_list()
 
 
+func toggle_event_log() -> void:
+	if _story_notification_manager != null:
+		_story_notification_manager.toggle_event_log()
+
+
 ## Lazily initialises and toggles the F12 debug cheat panel.
 func toggle_debug_panel() -> void:
 	if _debug_panel == null:
@@ -1360,14 +1412,14 @@ func _on_follow_entity(entity_id: int) -> void:
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
-			_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", entity.entity_name)
+			_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", entity.entity_name)
 			_follow_label.visible = true
 			return
 	var runtime_name: String = _resolve_runtime_entity_name(entity_id)
 	if not runtime_name.is_empty():
-		_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", runtime_name)
+		_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", runtime_name)
 	else:
-		_follow_label.text = Locale.trf1("UI_FOLLOWING_FMT", "name", "#%d" % entity_id)
+		_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", str(entity_id))
 	_follow_label.visible = true
 
 
@@ -1397,6 +1449,50 @@ func is_detail_visible() -> bool:
 func close_detail() -> void:
 	if _popup_manager != null:
 		_popup_manager.close_all()
+
+
+func _focus_camera_on_entity(entity_id: int) -> void:
+	if _camera == null or entity_id < 0:
+		return
+	if _camera.has_method("focus_entity"):
+		_camera.call("focus_entity", entity_id)
+
+
+func _focus_camera_on_world(target_position: Vector2) -> void:
+	if _camera == null:
+		return
+	if _camera.has_method("focus_world_tile"):
+		_camera.call("focus_world_tile", target_position)
+
+
+func _on_cast_bar_agent_selected(entity_id: int) -> void:
+	_focus_camera_on_entity(entity_id)
+	_open_runtime_entity_popup(entity_id)
+
+
+func _on_cast_bar_follow_requested(entity_id: int) -> void:
+	_focus_camera_on_entity(entity_id)
+	_on_entity_selected(entity_id)
+	if _camera != null and _camera.has_method("follow_entity"):
+		_camera.call("follow_entity", entity_id)
+
+
+func _on_cast_bar_agent_pinned(_entity_id: int, _is_pinned: bool) -> void:
+	pass
+
+
+func _on_story_notification_clicked(entity_id: int, target_position: Vector2) -> void:
+	_focus_camera_on_world(target_position)
+	if entity_id >= 0:
+		_focus_camera_on_entity(entity_id)
+		_open_runtime_entity_popup(entity_id)
+
+
+func _on_story_crisis(entity_id: int, target_position: Vector2) -> void:
+	if _sim_engine != null and not _sim_engine.is_paused:
+		_sim_engine.is_paused = true
+		SimulationBus.pause_changed.emit(true)
+	_on_story_notification_clicked(entity_id, target_position)
 
 
 ## Reapplies font sizes and minimap dimensions to all tracked UI elements after a scale change.

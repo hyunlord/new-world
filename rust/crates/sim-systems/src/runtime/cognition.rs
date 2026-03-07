@@ -14,7 +14,7 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, TerrainType, Tile, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 
 use crate::body;
 
@@ -1009,6 +1009,17 @@ impl SimSystem for BehaviorRuntimeSystem {
                 event_type,
                 participants: vec![entity_id],
             });
+            if changed {
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::ActionChanged,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["behavior".to_string(), "action".to_string()],
+                    cause: format!("{}->{}", previous_action, next_action),
+                    value: f64::from(behavior.action_timer),
+                });
+            }
         }
     }
 }

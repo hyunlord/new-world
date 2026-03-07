@@ -48,6 +48,13 @@ const _RUNTIME_REQUIRED_METHODS: Array[String] = [
 	"runtime_get_world_summary",
 	"runtime_get_settlement_detail",
 	"runtime_get_minimap_snapshot",
+	"get_frame_snapshots",
+	"get_prev_frame_snapshots",
+	"get_render_alpha",
+	"get_agent_count",
+	"drain_notifications",
+	"get_archetype_label",
+	"get_thought_text",
 ]
 
 var _native_checked: bool = false
@@ -106,6 +113,52 @@ func runtime_tick_frame(delta_sec: float, speed_index: int, paused: bool) -> Dic
 	return {"initialized": false}
 
 
+## Returns current packed frame snapshots (36 bytes per agent).
+func get_frame_snapshots() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("get_frame_snapshots"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("get_frame_snapshots")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
+## Returns previous packed frame snapshots for interpolation.
+func get_prev_frame_snapshots() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("get_prev_frame_snapshots"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("get_prev_frame_snapshots")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
+## Returns interpolation alpha in the range 0.0..1.0.
+func get_render_alpha() -> float:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0.0
+	if not runtime.has_method("get_render_alpha"):
+		return 0.0
+	return float(runtime.call("get_render_alpha"))
+
+
+## Returns the current number of alive agents in the binary snapshot buffer.
+func get_agent_count() -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0
+	if not runtime.has_method("get_agent_count"):
+		return 0
+	return int(runtime.call("get_agent_count"))
+
+
 ## Returns runtime snapshot bytes.
 func runtime_get_snapshot() -> PackedByteArray:
 	var runtime: Object = _get_native_runtime()
@@ -160,6 +213,39 @@ func runtime_export_events_v2() -> Array:
 	if result is Array:
 		return result
 	return []
+
+
+## Drains sparse story notifications from the Rust runtime.
+func drain_notifications() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("drain_notifications"):
+		return []
+	var result: Variant = runtime.call("drain_notifications")
+	if result is Array:
+		return result
+	return []
+
+
+## Returns the archetype locale key for an entity from Rust runtime.
+func get_archetype_label(entity_id: int) -> String:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return ""
+	if not runtime.has_method("get_archetype_label"):
+		return ""
+	return str(runtime.call("get_archetype_label", entity_id))
+
+
+## Returns the formatted thought-stream text for an entity from Rust runtime.
+func get_thought_text(entity_id: int) -> String:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return ""
+	if not runtime.has_method("get_thought_text"):
+		return ""
+	return str(runtime.call("get_thought_text", entity_id))
 
 
 ## Spawns agents into the Rust hecs world from a JSON string. Returns number spawned.

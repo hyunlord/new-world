@@ -14,7 +14,7 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 
 use crate::body;
 
@@ -970,7 +970,7 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&mut Needs>,
             Option<&Age>,
         )>();
-        for (_, (position, behavior, needs_opt, age_opt)) in &mut query {
+        for (entity, (position, behavior, needs_opt, age_opt)) in &mut query {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
                 position.vel_y = 0.0;
@@ -982,8 +982,9 @@ impl SimSystem for MovementRuntimeSystem {
             }
 
             if behavior.action_timer <= 0 && behavior.current_action != ActionType::Idle {
+                let completed_action = behavior.current_action;
                 if let Some(needs) = needs_opt {
-                    match behavior.current_action {
+                    match completed_action {
                         ActionType::Eat => {
                             needs.set(
                                 NeedType::Hunger,
@@ -1039,6 +1040,15 @@ impl SimSystem for MovementRuntimeSystem {
                         _ => {}
                     }
                 }
+                resources.event_store.push(SimEvent {
+                    tick: _tick,
+                    event_type: SimEventType::TaskCompleted,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["behavior".to_string(), "task".to_string()],
+                    cause: format!("{completed_action}"),
+                    value: f64::from(behavior.action_duration),
+                });
                 behavior.current_action = ActionType::Idle;
                 behavior.action_target_x = None;
                 behavior.action_target_y = None;

@@ -14,7 +14,7 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 
 use crate::body;
 
@@ -280,6 +280,15 @@ impl SimSystem for PopulationRuntimeSystem {
         resources
             .event_bus
             .emit(sim_engine::GameEvent::EntitySpawned { entity_id });
+        resources.event_store.push(SimEvent {
+            tick,
+            event_type: SimEventType::Birth,
+            actor: entity.id(),
+            target: None,
+            tags: vec!["life".to_string(), "birth".to_string()],
+            cause: "birth".to_string(),
+            value: 1.0,
+        });
     }
 }
 
@@ -680,12 +689,13 @@ impl SimSystem for AgeRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut query = world.query::<(&mut Age, Option<&mut Identity>, Option<&mut Behavior>)>();
-        for (_, (age, identity_opt, behavior_opt)) in &mut query {
+        for (entity, (age, identity_opt, behavior_opt)) in &mut query {
             if !age.alive {
                 continue;
             }
+            let previous_stage = age.stage;
             age.ticks = age.ticks.saturating_add(self.tick_interval);
             age.update_derived(config::TICKS_PER_YEAR as u64);
             if let Some(identity) = identity_opt {
@@ -697,6 +707,17 @@ impl SimSystem for AgeRuntimeSystem {
                         behavior.job = "none".to_string();
                     }
                 }
+            }
+            if age.stage != previous_stage {
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::AgeTransition,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["life".to_string(), "age".to_string()],
+                    cause: format!("{}", age.stage),
+                    value: age.years,
+                });
             }
         }
     }
@@ -748,7 +769,7 @@ impl SimSystem for MortalityRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let ticks_per_year = config::TICKS_PER_YEAR as u64;
         let ticks_per_month = config::TICKS_PER_MONTH as u64;
         let mut query = world.query::<(
@@ -757,7 +778,7 @@ impl SimSystem for MortalityRuntimeSystem {
             Option<&BodyComponent>,
             Option<&Stress>,
         )>();
-        for (_, (age, needs_opt, body_opt, stress_opt)) in &mut query {
+        for (entity, (age, needs_opt, body_opt, stress_opt)) in &mut query {
             if !age.alive {
                 continue;
             }
@@ -811,6 +832,19 @@ impl SimSystem for MortalityRuntimeSystem {
             let roll: f32 = resources.rng.gen_range(0.0..1.0);
             if q_check >= 0.999 || roll < q_check {
                 age.alive = false;
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::Death,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["life".to_string(), "death".to_string()],
+                    cause: if is_infant {
+                        "infant_mortality".to_string()
+                    } else {
+                        "mortality_hazard".to_string()
+                    },
+                    value: q_check as f64,
+                });
             }
         }
     }

@@ -26,10 +26,13 @@
 /// ```
 pub mod events;
 pub mod event_bus;
+pub mod event_store;
 pub mod explain_log;
 pub mod system_trait;
 pub mod engine;
 pub mod command;
+pub mod frame_snapshot;
+pub mod notification;
 pub mod snapshot;
 pub mod perf_tracker;
 
@@ -37,9 +40,12 @@ pub mod perf_tracker;
 
 pub use events::GameEvent;
 pub use event_bus::{EventBus, Subscriber};
+pub use event_store::{EventStore, SimEvent, SimEventType};
 pub use explain_log::{ExplainEntry, ExplainLog};
 pub use system_trait::SimSystem;
 pub use engine::{ChronicleEvent, RuntimeStatsSnapshot, SimEngine, SimResources};
 pub use command::{Command, CommandQueue};
+pub use frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+pub use notification::{NotificationTier, SimNotification};
 pub use snapshot::EngineSnapshot;
 pub use perf_tracker::PerfTracker;

@@ -220,6 +220,46 @@ pub const STEERING_MAX_FORCE: f64 = 100.0;
 pub const STEERING_MAX_SPEED: f64 = 120.0;
 pub const MOOD_SPEED_MULTIPLIERS: [f64; 5] = [0.7, 0.8, 0.9, 1.0, 1.1];
 pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
+/// Maximum number of persisted narrative events kept in memory.
+pub const EVENT_STORE_CAPACITY: usize = 10_000;
+/// Story-sifter cadence in ticks.
+pub const STORY_SIFTER_TICK_INTERVAL: u64 = 10;
+/// Priority used by the runtime story sifter.
+pub const STORY_SIFTER_PRIORITY: u32 = 91;
+/// Short lookback window used for local narrative pattern checks.
+pub const STORY_SIFTER_LOOKBACK_TICKS: u64 = 100;
+/// Broader lookback window used for rarity scoring.
+pub const STORY_SIFTER_IMPORTANCE_LOOKBACK_TICKS: u64 = 1_000;
+/// Cooldown applied to repeated notifications of the same kind for one actor.
+pub const NOTIFICATION_COOLDOWN_TICKS: u64 = 50;
+/// Maximum number of pending notifications kept for Godot to drain.
+pub const NOTIFICATION_PENDING_LIMIT: usize = 5;
+/// Threshold below which need events are considered critical.
+pub const NEED_EVENT_CRITICAL_THRESHOLD: f64 = 0.15;
+/// Threshold above which need events are considered satisfied.
+pub const NEED_EVENT_SATISFIED_THRESHOLD: f64 = 0.70;
+/// Maximum window for rapid stress-escalation pattern detection.
+pub const STORY_SIFTER_RAPID_ESCALATION_TICKS: u64 = 50;
+/// Maximum window for simultaneous-crisis clustering.
+pub const STORY_SIFTER_BREAK_CLUSTER_TICKS: u64 = 10;
+/// Minimum persistence window for deadline-approaching need patterns.
+pub const STORY_SIFTER_NEED_PERSISTENCE_TICKS: u64 = 20;
+/// Maximum window for recovery-arc checks after a mental break.
+pub const STORY_SIFTER_RECOVERY_TICKS: u64 = 50;
+/// Affinity threshold treated as a positive social tie by the story sifter.
+pub const STORY_SIFTER_POSITIVE_RELATION_AFFINITY: f64 = 30.0;
+/// Affinity threshold treated as a broken or hostile tie by the story sifter.
+pub const STORY_SIFTER_NEGATIVE_RELATION_AFFINITY: f64 = 5.0;
+/// Minimum average HEXACO distance required for a personality-clash pattern.
+pub const STORY_SIFTER_PERSONALITY_CLASH_DISTANCE: f64 = 0.35;
+/// Minimum gas-stage value required to surface a stress-escalation notification.
+pub const STORY_SIFTER_STRESS_NOTIFY_STAGE: f64 = 2.0;
+/// Lookback window used when composing thought-stream text from recent story events.
+pub const THOUGHT_TEXT_EVENT_LOOKBACK_TICKS: u64 = 120;
+/// Need threshold below which thought-stream text calls out pressing motivation.
+pub const THOUGHT_TEXT_NEED_THRESHOLD: f64 = 0.40;
+/// Maximum number of recent story events exposed to the entity detail panel.
+pub const DETAIL_PANEL_RECENT_EVENT_LIMIT: usize = 5;
 
 // ── Stress → Work Efficiency [Yerkes-Dodson 1908, McEwen 2004] ───────────────
 pub const STRESS_EFFICIENCY_EUSTRESS_PEAK: f64 = 150.0;

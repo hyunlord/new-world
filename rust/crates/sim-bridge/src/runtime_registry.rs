@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use serde::Deserialize;
-use sim_core::{config::GameConfig, GameCalendar, WorldMap};
+use sim_core::{config, config::GameConfig, GameCalendar, WorldMap};
 use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
@@ -22,6 +22,7 @@ use sim_systems::runtime::{
     StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
     TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem,
+    StorySifterRuntimeSystem,
     TraitRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
     UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
@@ -149,7 +150,11 @@ impl RuntimeState {
                     buffer.push(event.clone());
                 }
             }));
-        let engine = SimEngine::new(resources);
+        let mut engine = SimEngine::new(resources);
+        engine.register(StorySifterRuntimeSystem::new(
+            config::STORY_SIFTER_PRIORITY,
+            config::STORY_SIFTER_TICK_INTERVAL,
+        ));
         Self {
             engine,
             accumulator: 0.0,

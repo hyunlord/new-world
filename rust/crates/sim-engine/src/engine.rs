@@ -16,8 +16,11 @@ use rand::SeedableRng;
 use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, SimConfig, WorldMap};
 use sim_data::{NameGenerator, PersonalityDistribution};
 use crate::event_bus::EventBus;
+use crate::event_store::EventStore;
 use crate::explain_log::ExplainLog;
+use crate::notification::SimNotification;
 use crate::perf_tracker::PerfTracker;
+use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
 use log::{debug, info};
@@ -91,6 +94,12 @@ pub struct SimResources {
     pub explain_log: ExplainLog,
     /// Runtime-mutable simulation balance parameters (debug tuning).
     pub sim_config: SimConfig,
+    /// Persisted narrative-analysis event history.
+    pub event_store: EventStore,
+    /// Pending UI-visible notifications waiting for Godot to drain them.
+    pub pending_notifications: Vec<SimNotification>,
+    /// Recent emitted notifications used for cooldown and deduplication.
+    pub notification_history: Vec<SimNotification>,
 }
 
 impl SimResources {
@@ -121,6 +130,9 @@ impl SimResources {
             name_generator: None,
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
+            event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),
+            pending_notifications: Vec::new(),
+            notification_history: Vec::new(),
         }
     }
 }
@@ -137,6 +149,9 @@ impl std::fmt::Debug for SimResources {
             .field("stat_sync_derived", &self.stat_sync_derived.len())
             .field("stat_threshold_flags", &self.stat_threshold_flags.len())
             .field("event_bus", &self.event_bus)
+            .field("event_store", &self.event_store.len())
+            .field("pending_notifications", &self.pending_notifications.len())
+            .field("notification_history", &self.notification_history.len())
             .finish_non_exhaustive()
     }
 }
@@ -164,6 +179,8 @@ pub struct SimEngine {
     pub debug_mode: bool,
     /// Per-system and per-tick timing data (only updated when debug_mode is true).
     pub perf_tracker: PerfTracker,
+    /// Latest per-agent render snapshots in stable raw-id order.
+    frame_snapshots: Vec<AgentSnapshot>,
 }
 
 impl SimEngine {
@@ -176,6 +193,7 @@ impl SimEngine {
             current_tick: 0,
             debug_mode: false,
             perf_tracker: PerfTracker::new(),
+            frame_snapshots: Vec::new(),
         }
     }
 
@@ -236,6 +254,7 @@ impl SimEngine {
         self.resources.calendar.advance_tick();
 
         self.current_tick += 1;
+        self.frame_snapshots = build_agent_snapshots(&self.world);
     }
 
     /// Run ticks until `current_tick == end_tick`.
@@ -283,6 +302,16 @@ impl SimEngine {
 
     pub fn system_count(&self) -> usize {
         self.systems.len()
+    }
+
+    /// Rebuilds the cached per-agent render snapshots from the current ECS world.
+    pub fn rebuild_frame_snapshots(&mut self) {
+        self.frame_snapshots = build_agent_snapshots(&self.world);
+    }
+
+    /// Returns the current cached per-agent render snapshots.
+    pub fn frame_snapshots(&self) -> &[AgentSnapshot] {
+        &self.frame_snapshots
     }
 
     /// Clears all registered systems from the engine.
@@ -442,5 +471,19 @@ mod tests {
             .map(|e| e.system.priority())
             .collect();
         assert_eq!(priorities, vec![10, 10, 50, 200]);
+    }
+
+    #[test]
+    fn rebuild_frame_snapshots_reflects_live_world() {
+        let mut engine = make_engine();
+        engine.world_mut().spawn((
+            sim_core::components::Position::new(2, 3),
+            sim_core::components::Identity::default(),
+            sim_core::components::Age::default(),
+        ));
+        engine.rebuild_frame_snapshots();
+        assert_eq!(engine.frame_snapshots().len(), 1);
+        let x = engine.frame_snapshots()[0].x;
+        assert_eq!(x, 2.0);
     }
 }
