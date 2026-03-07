@@ -15,6 +15,7 @@ var _visible: bool = false
 var _state: int = STATE_MAIN
 var _is_save_mode: bool = false
 var _save_manager: RefCounted
+var _sim_engine: RefCounted
 
 var _main_container: VBoxContainer
 var _slot_container: VBoxContainer
@@ -37,6 +38,10 @@ var _btn_confirm_no: Button
 var _hint_label: Label
 var _lang_title: Label
 var _lang_buttons: Array = []
+var _llm_quality_title: Label
+var _llm_quality_value: Label
+var _llm_quality_desc: Label
+var _llm_quality_slider: HSlider
 var _confirm_label: Label
 var _pending_slot: int = -1
 
@@ -56,6 +61,12 @@ func _ready() -> void:
 ## Provides the SaveManager reference used to read slot info and trigger save/load operations.
 func set_save_manager(sm: RefCounted) -> void:
 	_save_manager = sm
+
+
+## Provides the SimulationEngine reference used for AI narration settings.
+func set_sim_engine(sim_engine: RefCounted) -> void:
+	_sim_engine = sim_engine
+	_sync_llm_quality_from_runtime()
 
 
 func _build_ui() -> void:
@@ -164,6 +175,7 @@ func _build_ui() -> void:
 	_settings_container.add_child(_settings_title)
 	var settings_sep := HSeparator.new()
 	_settings_container.add_child(settings_sep)
+	_settings_container.add_child(_build_llm_quality_section())
 	_settings_container.add_child(_build_language_section())
 	_btn_settings_back = _create_button("", Callable(self, "_on_settings_back"), 16)
 	_settings_container.add_child(_btn_settings_back)
@@ -175,6 +187,7 @@ func _build_ui() -> void:
 
 	_panel.add_child(root)
 	add_child(_panel)
+	_sync_llm_quality_from_runtime()
 	_update_lang_highlight()
 
 
@@ -250,6 +263,84 @@ func _build_language_section() -> Control:
 
 	vbox.add_child(hbox)
 	return vbox
+
+
+func _build_llm_quality_section() -> Control:
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+
+	_llm_quality_title = Label.new()
+	_llm_quality_title.add_theme_font_size_override("font_size", 13)
+	_llm_quality_title.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+	_llm_quality_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_llm_quality_title)
+
+	_llm_quality_value = Label.new()
+	_llm_quality_value.add_theme_font_size_override("font_size", 14)
+	_llm_quality_value.add_theme_color_override("font_color", Color(0.92, 0.92, 0.92))
+	_llm_quality_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(_llm_quality_value)
+
+	_llm_quality_slider = HSlider.new()
+	_llm_quality_slider.min_value = 0.0
+	_llm_quality_slider.max_value = 2.0
+	_llm_quality_slider.step = 1.0
+	_llm_quality_slider.tick_count = 3
+	_llm_quality_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_llm_quality_slider.value_changed.connect(_on_llm_quality_changed)
+	vbox.add_child(_llm_quality_slider)
+
+	_llm_quality_desc = Label.new()
+	_llm_quality_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_llm_quality_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_llm_quality_desc.add_theme_font_size_override("font_size", 12)
+	_llm_quality_desc.add_theme_color_override("font_color", Color(0.65, 0.65, 0.68))
+	vbox.add_child(_llm_quality_desc)
+
+	return vbox
+
+
+func _sync_llm_quality_from_runtime() -> void:
+	if _llm_quality_slider == null:
+		return
+	var quality: int = 1
+	if _sim_engine != null and _sim_engine.has_method("get_llm_quality"):
+		quality = int(_sim_engine.get_llm_quality())
+	_llm_quality_slider.set_value_no_signal(clampi(quality, 0, 2))
+	_refresh_llm_quality_texts()
+
+
+func _quality_key_from_value(value: int) -> String:
+	match clampi(value, 0, 2):
+		0:
+			return "LLM_QUALITY_MINIMAL"
+		1:
+			return "LLM_QUALITY_STANDARD"
+		2:
+			return "LLM_QUALITY_ENHANCED"
+		_:
+			return "LLM_QUALITY_STANDARD"
+
+
+func _refresh_llm_quality_texts() -> void:
+	if _llm_quality_title != null:
+		_llm_quality_title.text = Locale.ltr("LLM_QUALITY_TITLE")
+	if _llm_quality_desc != null:
+		_llm_quality_desc.text = Locale.ltr("LLM_QUALITY_DESC")
+	if _llm_quality_value != null:
+		var quality: int = 1
+		if _llm_quality_slider != null:
+			quality = int(_llm_quality_slider.value)
+		_llm_quality_value.text = Locale.ltr(_quality_key_from_value(quality))
+
+
+func _on_llm_quality_changed(value: float) -> void:
+	var quality: int = clampi(int(round(value)), 0, 2)
+	if _llm_quality_slider != null:
+		_llm_quality_slider.set_value_no_signal(quality)
+	_refresh_llm_quality_texts()
+	if _sim_engine != null and _sim_engine.has_method("set_llm_quality"):
+		_sim_engine.set_llm_quality(quality)
 
 
 func _update_lang_highlight() -> void:
@@ -398,6 +489,7 @@ func _refresh_texts() -> void:
 		_btn_confirm_no.text = Locale.ltr("UI_NO")
 	if _lang_title != null:
 		_lang_title.text = Locale.ltr("UI_LANGUAGE")
+	_refresh_llm_quality_texts()
 	if _confirm_label != null:
 		var confirm_slot: int = _pending_slot if _pending_slot >= 1 else 1
 		_confirm_label.text = Locale.trf1("UI_OVERWRITE_CONFIRM", "slot", confirm_slot)

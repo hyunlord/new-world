@@ -55,6 +55,10 @@ const _RUNTIME_REQUIRED_METHODS: Array[String] = [
 	"drain_notifications",
 	"get_archetype_label",
 	"get_thought_text",
+	"get_narrative_display",
+	"on_entity_narrative_click",
+	"set_llm_quality",
+	"get_llm_quality",
 ]
 
 var _native_checked: bool = false
@@ -246,6 +250,49 @@ func get_thought_text(entity_id: int) -> String:
 	if not runtime.has_method("get_thought_text"):
 		return ""
 	return str(runtime.call("get_thought_text", entity_id))
+
+
+## Returns pre-computed narrative panel display data for an entity from Rust runtime.
+func get_narrative_display(entity_id: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("get_narrative_display"):
+		return {}
+	var result: Variant = runtime.call("get_narrative_display", entity_id)
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## Tells Rust that the player opened the narrative panel for an entity.
+func on_entity_narrative_click(entity_id: int) -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0
+	if not runtime.has_method("on_entity_narrative_click"):
+		return 0
+	return int(runtime.call("on_entity_narrative_click", entity_id))
+
+
+## Updates the runtime AI narration quality tier.
+func set_llm_quality(quality: int) -> void:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return
+	if not runtime.has_method("set_llm_quality"):
+		return
+	runtime.call("set_llm_quality", quality)
+
+
+## Returns the runtime AI narration quality tier.
+func get_llm_quality() -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0
+	if not runtime.has_method("get_llm_quality"):
+		return 0
+	return int(runtime.call("get_llm_quality"))
 
 
 ## Spawns agents into the Rust hecs world from a JSON string. Returns number spawned.

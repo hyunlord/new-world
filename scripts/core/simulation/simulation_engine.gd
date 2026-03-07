@@ -380,6 +380,41 @@ func get_thought_text(entity_id: int) -> String:
 	return str(sim_bridge.call("get_thought_text", entity_id))
 
 
+## Returns pre-computed narrative panel display data for the given entity.
+func get_narrative_display(entity_id: int) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_narrative_display"):
+		return {}
+	var raw: Variant = sim_bridge.call("get_narrative_display", entity_id)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
+## Notifies Rust that the player opened the narrative panel for the given entity.
+func on_entity_narrative_click(entity_id: int) -> int:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("on_entity_narrative_click"):
+		return 0
+	return int(sim_bridge.call("on_entity_narrative_click", entity_id))
+
+
+## Sets the AI narration quality tier handled by the Rust runtime.
+func set_llm_quality(quality: int) -> void:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("set_llm_quality"):
+		return
+	sim_bridge.call("set_llm_quality", quality)
+
+
+## Returns the AI narration quality tier from the Rust runtime.
+func get_llm_quality() -> int:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_llm_quality"):
+		return 0
+	return int(sim_bridge.call("get_llm_quality"))
+
+
 ## Returns settlement detail from Rust runtime.
 func get_settlement_detail(settlement_id: int) -> Dictionary:
 	var sim_bridge: Object = _get_sim_bridge()

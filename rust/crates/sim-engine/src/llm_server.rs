@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
@@ -92,6 +93,11 @@ struct LlmConfigFile {
     healthcheck_attempts: Option<u32>,
     healthcheck_interval_ms: Option<u64>,
     shutdown_grace_ms: Option<u64>,
+}
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+struct LlmUserPreferencesFile {
+    llm_quality: Option<u8>,
 }
 
 struct LlmChannels {
@@ -193,7 +199,7 @@ impl LlmConfig {
             .unwrap_or("qwen3.5-0.8b-q4km")
             .to_string();
 
-        Ok(Self {
+        let mut config = Self {
             enabled_default: file
                 .enabled_default
                 .unwrap_or(config::LLM_ENABLED_DEFAULT),
@@ -230,7 +236,11 @@ impl LlmConfig {
                 .shutdown_grace_ms
                 .unwrap_or(config::LLM_SHUTDOWN_GRACE_MS),
             model_id,
-        })
+        };
+        if let Some(quality) = load_quality_override(&default_user_settings_path()) {
+            apply_quality_to_config(&mut config, quality);
+        }
+        Ok(config)
     }
 
     /// Returns the base HTTP URL for llama-server.
@@ -261,6 +271,41 @@ impl LlmRuntime {
     /// Returns the loaded configuration.
     pub fn config(&self) -> &LlmConfig {
         &self.config
+    }
+
+    /// Returns the persisted AI narration quality tier.
+    pub fn quality(&self) -> u8 {
+        quality_from_config(&self.config)
+    }
+
+    /// Updates the AI narration quality tier, persisting the preference and
+    /// restarting llama-server when the new tier changes runtime settings.
+    pub fn set_quality(&mut self, quality: u8) {
+        if quality > 2 {
+            return;
+        }
+
+        let previous_quality = self.quality();
+        let was_running = self.is_running();
+        apply_quality_to_config(&mut self.config, quality);
+
+        if quality == 0 {
+            self.stop();
+        } else if was_running && quality != previous_quality {
+            self.stop();
+            if let Err(error) = self.start() {
+                log::warn!(
+                    "[llm_runtime] failed to restart llama-server after quality change: {}",
+                    error
+                );
+            }
+        } else if !was_running {
+            let _ = self.start();
+        }
+
+        if let Err(error) = save_quality_override(&default_user_settings_path(), quality) {
+            log::warn!("[llm_runtime] failed to persist quality preference: {}", error);
+        }
     }
 
     /// Starts llama-server and the worker thread if they are not already running.
@@ -448,6 +493,62 @@ fn default_config() -> LlmConfig {
     }
 }
 
+fn quality_from_config(config: &LlmConfig) -> u8 {
+    if !config.enabled_default {
+        return 0;
+    }
+    if config.context_size <= config::LLM_CONTEXT_SIZE_STANDARD {
+        1
+    } else {
+        2
+    }
+}
+
+fn apply_quality_to_config(config: &mut LlmConfig, quality: u8) {
+    match quality {
+        0 => {
+            config.enabled_default = false;
+            config.context_size = config::LLM_CONTEXT_SIZE_STANDARD;
+        }
+        1 => {
+            config.enabled_default = true;
+            config.context_size = config::LLM_CONTEXT_SIZE_STANDARD;
+        }
+        2 => {
+            config.enabled_default = true;
+            config.context_size = config::LLM_CONTEXT_SIZE_ENHANCED;
+        }
+        _ => {}
+    }
+}
+
+fn default_user_settings_path() -> PathBuf {
+    if let Some(home) = env::var_os("HOME") {
+        return PathBuf::from(home)
+            .join(config::LLM_USER_SETTINGS_DIR_NAME)
+            .join(config::LLM_USER_SETTINGS_FILE_NAME);
+    }
+    project_root().join(config::LLM_USER_SETTINGS_FILE_NAME)
+}
+
+fn load_quality_override(path: &Path) -> Option<u8> {
+    let raw = fs::read_to_string(path).ok()?;
+    let prefs = toml::from_str::<LlmUserPreferencesFile>(&raw).ok()?;
+    prefs.llm_quality.filter(|quality| *quality <= 2)
+}
+
+fn save_quality_override(path: &Path, quality: u8) -> std::io::Result<()> {
+    let prefs = LlmUserPreferencesFile {
+        llm_quality: Some(quality.min(2)),
+    };
+    let serialized = toml::to_string(&prefs)
+        .map_err(|error| std::io::Error::other(error.to_string()))?;
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    fs::write(path, serialized)
+}
+
 fn wait_for_health(config: &LlmConfig, process: &mut LlmServerProcess) -> bool {
     for _ in 0..config.healthcheck_attempts {
         if health_check(config) {
@@ -496,7 +597,11 @@ fn project_root() -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use super::{default_config, LlmConfig, LlmRuntime};
+    use super::{
+        default_config, load_quality_override, quality_from_config, save_quality_override,
+        LlmConfig, LlmRuntime,
+    };
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     #[test]
     fn default_config_uses_project_relative_paths() {
@@ -511,5 +616,35 @@ mod tests {
         let status = runtime.status_json();
         assert!(status.contains("\"running\":false"));
         assert!(status.contains("\"queue_depth\":0"));
+    }
+
+    #[test]
+    fn llm_quality_zero_disables_runtime_config() {
+        let mut runtime = LlmRuntime::new(default_config());
+        runtime.set_quality(0);
+        assert_eq!(runtime.quality(), 0);
+        assert!(!runtime.config().enabled_default);
+    }
+
+    #[test]
+    fn quality_persistence_round_trips() {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time should be after epoch")
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!("worldsim-llm-quality-{nonce}.toml"));
+        save_quality_override(path.as_path(), 2).expect("quality preference should persist");
+        assert_eq!(load_quality_override(path.as_path()), Some(2));
+        let _ = std::fs::remove_file(path);
+    }
+
+    #[test]
+    fn quality_from_config_reflects_enabled_and_context() {
+        let mut config = default_config();
+        assert_eq!(quality_from_config(&config), 2);
+        config.context_size = sim_core::config::LLM_CONTEXT_SIZE_STANDARD;
+        assert_eq!(quality_from_config(&config), 1);
+        config.enabled_default = false;
+        assert_eq!(quality_from_config(&config), 0);
     }
 }

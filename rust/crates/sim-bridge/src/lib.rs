@@ -9,6 +9,7 @@
 
 mod body_bindings;
 mod locale_bindings;
+mod narrative_display;
 mod pathfinding_bindings;
 mod pathfinding_core;
 mod runtime_commands;
@@ -27,6 +28,9 @@ use body_bindings::{
     vec_i32_to_packed, vec_u8_to_packed,
 };
 use locale_bindings::{clear_fluent_source, format_fluent_message, store_fluent_source};
+use narrative_display::{
+    build_narrative_display, narrative_display_to_dict, NarrativeDisplayData,
+};
 use pathfinding_core::{
     get_backend_mode, has_gpu_backend, read_dispatch_counts, reset_dispatch_counts,
     PATHFIND_BACKEND_GPU,
@@ -42,11 +46,15 @@ use locale_bindings::format_fluent_from_source_args;
 use pathfinding_bindings::parse_pathfind_backend;
 use sim_core::components::{
     Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
-    Memory, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    LlmCapable, LlmPending, LlmResult, Memory, NarrativeCache, Needs, Personality, Position,
+    Skills, Social, Stress, Traits, Values,
 };
 use sim_core::enums::{GrowthStage, NeedType, Sex};
 use sim_core::{Settlement, SettlementId};
-use sim_engine::{AgentSnapshot, EngineSnapshot, GameEvent, SimEvent, SimEventType};
+use sim_engine::{
+    AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
+    SimEventType,
+};
 use sim_systems::{
     body,
     entity_spawner,
@@ -459,6 +467,213 @@ fn build_thought_text(
     sentences.into_iter().take(4).collect::<Vec<_>>().join(" ")
 }
 
+#[derive(Clone, Debug)]
+struct NarrativeRecentEvent {
+    event_type: SimEventType,
+    cause: String,
+    target_name: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+struct NarrativeRequestPlan {
+    variant: LlmPromptVariant,
+    recent_event_type: Option<String>,
+    recent_event_cause: Option<String>,
+    recent_target_name: Option<String>,
+}
+
+fn build_raw_name_lookup(world: &hecs::World) -> std::collections::HashMap<u32, String> {
+    let mut lookup: std::collections::HashMap<u32, String> = std::collections::HashMap::new();
+    let mut query = world.query::<&Identity>();
+    for (entity, identity) in &mut query {
+        lookup.insert(entity.id(), identity.name.clone());
+    }
+    lookup
+}
+
+fn latest_narrative_event_for_actor(
+    store: &sim_engine::EventStore,
+    actor: u32,
+    since_tick: u64,
+    names: &std::collections::HashMap<u32, String>,
+) -> Option<NarrativeRecentEvent> {
+    store
+        .by_actor(actor, since_tick)
+        .into_iter()
+        .rev()
+        .find(|event| {
+            matches!(
+                event.event_type,
+                SimEventType::NeedCritical
+                    | SimEventType::NeedSatisfied
+                    | SimEventType::EmotionShift
+                    | SimEventType::MoodChanged
+                    | SimEventType::StressEscalated
+                    | SimEventType::MentalBreakStart
+                    | SimEventType::MentalBreakEnd
+                    | SimEventType::RelationshipFormed
+                    | SimEventType::RelationshipBroken
+                    | SimEventType::SocialConflict
+                    | SimEventType::SocialCooperation
+                    | SimEventType::ActionChanged
+                    | SimEventType::TaskCompleted
+                    | SimEventType::Birth
+                    | SimEventType::Death
+                    | SimEventType::AgeTransition
+                    | SimEventType::FirstOccurrence
+            )
+        })
+        .map(|event| NarrativeRecentEvent {
+            event_type: event.event_type.clone(),
+            cause: event.cause.clone(),
+            target_name: event
+                .target
+                .and_then(|target| names.get(&target).cloned()),
+        })
+}
+
+fn narrative_event_type_label(event_type: &SimEventType) -> &'static str {
+    match event_type {
+        SimEventType::NeedCritical => "need_critical",
+        SimEventType::NeedSatisfied => "need_satisfied",
+        SimEventType::EmotionShift => "emotion_shift",
+        SimEventType::MoodChanged => "mood_changed",
+        SimEventType::StressEscalated => "stress_escalated",
+        SimEventType::MentalBreakStart => "mental_break_start",
+        SimEventType::MentalBreakEnd => "mental_break_end",
+        SimEventType::RelationshipFormed => "relationship_formed",
+        SimEventType::RelationshipBroken => "relationship_broken",
+        SimEventType::SocialConflict => "social_conflict",
+        SimEventType::SocialCooperation => "social_cooperation",
+        SimEventType::ActionChanged => "action_changed",
+        SimEventType::TaskCompleted => "task_completed",
+        SimEventType::Birth => "birth",
+        SimEventType::Death => "death",
+        SimEventType::AgeTransition => "age_transition",
+        SimEventType::FirstOccurrence => "first_occurrence",
+        SimEventType::Custom(_) => "custom",
+    }
+}
+
+fn narrative_cache_field_stale(
+    cache: Option<&NarrativeCache>,
+    current_tick: u64,
+    field_present: impl Fn(&NarrativeCache) -> bool,
+) -> bool {
+    match cache {
+        Some(value) if !field_present(value) => true,
+        Some(value) => {
+            current_tick.saturating_sub(value.cache_tick) >= u64::from(value.cache_ttl_ticks)
+        }
+        None => true,
+    }
+}
+
+fn narrative_cache_has_any_text(cache: &NarrativeCache) -> bool {
+    cache.personality_desc.is_some()
+        || cache.last_event_narrative.is_some()
+        || cache.last_inner_monologue.is_some()
+}
+
+fn plan_narrative_request(
+    cache: Option<&NarrativeCache>,
+    current_tick: u64,
+    recent_event: Option<&NarrativeRecentEvent>,
+) -> Option<NarrativeRequestPlan> {
+    if narrative_cache_field_stale(cache, current_tick, |value| value.personality_desc.is_some()) {
+        return Some(NarrativeRequestPlan {
+            variant: LlmPromptVariant::Personality,
+            recent_event_type: None,
+            recent_event_cause: None,
+            recent_target_name: None,
+        });
+    }
+
+    if let Some(event) = recent_event {
+        if narrative_cache_field_stale(cache, current_tick, |value| {
+            value.last_event_narrative.is_some()
+        }) {
+            return Some(NarrativeRequestPlan {
+                variant: LlmPromptVariant::Narrative,
+                recent_event_type: Some(narrative_event_type_label(&event.event_type).to_string()),
+                recent_event_cause: if event.cause.is_empty() {
+                    None
+                } else {
+                    Some(event.cause.clone())
+                },
+                recent_target_name: event.target_name.clone(),
+            });
+        }
+    }
+
+    if narrative_cache_field_stale(cache, current_tick, |value| {
+        value.last_inner_monologue.is_some()
+    }) {
+        return Some(NarrativeRequestPlan {
+            variant: LlmPromptVariant::Narrative,
+            recent_event_type: None,
+            recent_event_cause: None,
+            recent_target_name: None,
+        });
+    }
+
+    None
+}
+
+fn stress_state_code(stress: &Stress) -> u8 {
+    match stress.state {
+        sim_core::enums::StressState::Calm => 0,
+        sim_core::enums::StressState::Alert => 1,
+        sim_core::enums::StressState::Resistance => 2,
+        sim_core::enums::StressState::Exhaustion => 3,
+        sim_core::enums::StressState::Collapse => 4,
+    }
+}
+
+fn build_click_narrative_request(
+    world: &hecs::World,
+    resources: &sim_engine::SimResources,
+    entity: hecs::Entity,
+    current_tick: u64,
+) -> Option<LlmRequest> {
+    let capable = world.get::<&LlmCapable>(entity).ok()?;
+    let cache = world.get::<&NarrativeCache>(entity).ok();
+    let name_lookup = build_raw_name_lookup(world);
+    let recent_event = latest_narrative_event_for_actor(
+        &resources.event_store,
+        entity.id(),
+        current_tick.saturating_sub(u64::from(capable.cooldown_ticks.max(60))),
+        &name_lookup,
+    );
+    let plan = plan_narrative_request(cache.as_deref(), current_tick, recent_event.as_ref())?;
+
+    let identity = world.get::<&Identity>(entity).ok()?;
+    let personality = world.get::<&Personality>(entity).ok()?;
+    let emotion = world.get::<&Emotion>(entity).ok()?;
+    let behavior = world.get::<&Behavior>(entity).ok()?;
+    let needs = world.get::<&Needs>(entity).ok()?;
+    let stress = world.get::<&Stress>(entity).ok()?;
+
+    Some(LlmRequest {
+        request_id: 0,
+        entity_id: entity.to_bits().get(),
+        request_type: sim_core::components::LlmRequestType::Layer4Narrative,
+        variant: plan.variant,
+        entity_name: identity.name.clone(),
+        role: capable.role,
+        action_id: behavior.current_action as u32,
+        action_label: behavior.current_action.to_string(),
+        personality_axes: personality.axes,
+        emotions: emotion.primary,
+        needs: needs.values,
+        stress_level: stress.level,
+        stress_state: stress_state_code(&stress),
+        recent_event_type: plan.recent_event_type,
+        recent_event_cause: plan.recent_event_cause,
+        recent_target_name: plan.recent_target_name,
+    })
+}
+
 #[godot_api]
 impl WorldSimRuntime {
     #[func]
@@ -527,6 +742,22 @@ impl WorldSimRuntime {
         };
         let status = state.engine.resources().llm_status_json();
         GString::from(status.as_str())
+    }
+
+    #[func]
+    fn set_llm_quality(&mut self, quality: u8) {
+        let Some(state) = self.state.as_mut() else {
+            return;
+        };
+        state.engine.resources_mut().set_llm_quality(quality);
+    }
+
+    #[func]
+    fn get_llm_quality(&self) -> u8 {
+        let Some(state) = self.state.as_ref() else {
+            return 0;
+        };
+        state.engine.resources().get_llm_quality()
     }
 
     /// Spawns agents into the Rust hecs world from a JSON array of spawn entries.
@@ -1450,6 +1681,105 @@ impl WorldSimRuntime {
             stress_is_high,
         );
         GString::from(thought_text.as_str())
+    }
+
+    #[func]
+    fn get_narrative_display(&self, entity_id: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return narrative_display_to_dict(&NarrativeDisplayData::default());
+        };
+        let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
+            return narrative_display_to_dict(&NarrativeDisplayData::default());
+        };
+        let display = build_narrative_display(
+            state.engine.world(),
+            state.engine.resources(),
+            entity,
+            entity.to_bits().get(),
+        );
+        narrative_display_to_dict(&display)
+    }
+
+    #[func]
+    fn on_entity_narrative_click(&mut self, entity_id: i64) -> u8 {
+        let Some(state) = self.state.as_mut() else {
+            return 0;
+        };
+        if state.engine.resources().get_llm_quality() == 0
+            || !state.engine.resources().llm_runtime.is_running()
+        {
+            return 3;
+        }
+
+        let current_tick = state.engine.current_tick();
+        let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
+            return 0;
+        };
+        if state.engine.world().get::<&LlmPending>(entity).is_ok() {
+            return 2;
+        }
+
+        if let Ok(cache) = state.engine.world().get::<&NarrativeCache>(entity) {
+            let cache_is_fresh = current_tick.saturating_sub(cache.cache_tick)
+                < u64::from(cache.cache_ttl_ticks);
+            let has_full_cache = cache.personality_desc.is_some()
+                && cache.last_event_narrative.is_some()
+                && cache.last_inner_monologue.is_some();
+            if cache_is_fresh && has_full_cache {
+                return 0;
+            }
+        }
+
+        let should_enforce_cooldown = state
+            .engine
+            .world()
+            .get::<&LlmResult>(entity)
+            .is_ok()
+            || state
+                .engine
+                .world()
+                .get::<&NarrativeCache>(entity)
+                .ok()
+                .map(|cache| narrative_cache_has_any_text(&cache))
+                .unwrap_or(false);
+        if should_enforce_cooldown {
+            if let Ok(capable) = state.engine.world().get::<&LlmCapable>(entity) {
+                if current_tick.saturating_sub(capable.last_request_tick)
+                    < u64::from(capable.cooldown_ticks)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        let request = {
+            let world = state.engine.world();
+            let resources = state.engine.resources();
+            build_click_narrative_request(world, resources, entity, current_tick)
+        };
+        let Some(request) = request else {
+            return 0;
+        };
+
+        let request_id = match state.engine.resources_mut().submit_llm_request(request.clone()) {
+            Ok(value) => value,
+            Err(_) => return 0,
+        };
+
+        {
+            let world = state.engine.world_mut();
+            let pending = LlmPending {
+                request_id,
+                request_type: request.request_type,
+                submitted_tick: current_tick,
+                timeout_ticks: sim_core::config::LLM_TIMEOUT_TICKS,
+            };
+            let _ = world.insert_one(entity, pending);
+            if let Ok(mut capable) = world.get::<&mut LlmCapable>(entity) {
+                capable.last_request_tick = current_tick;
+            }
+        }
+        1
     }
 
     // ── Debug API ──────────────────────────────────────────────────────────────
@@ -5016,11 +5346,13 @@ mod tests {
         pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
         resolve_pathfind_backend_mode, runtime_supports_rust_system,
-        runtime_system_key_from_name, set_pathfind_backend_mode, PathfindError, PathfindInput,
+        runtime_system_key_from_name, set_pathfind_backend_mode, NarrativeDisplayData,
+        PathfindError, PathfindInput,
     };
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
+    use sim_core::components::NarrativeCache;
     use sim_core::{EntityId, SettlementId};
     use sim_engine::{EngineSnapshot, GameEvent};
     use sim_systems::pathfinding::GridPos;
@@ -5084,6 +5416,37 @@ mod tests {
         assert!(text.contains("Hunger is starting to bite."));
         assert!(text.contains("building"));
         assert!(text.contains("Tension is building."));
+    }
+
+    #[test]
+    fn narrative_display_data_includes_labels_and_visibility_flags() {
+        let data = NarrativeDisplayData {
+            personality_text: "성격 서사".to_string(),
+            event_text: String::new(),
+            inner_text: "내면 독백".to_string(),
+            show_personality: true,
+            show_event: false,
+            show_inner: true,
+            show_personality_shimmer: false,
+            show_event_shimmer: true,
+            show_inner_shimmer: false,
+            show_disabled_overlay: false,
+            ai_icon_state: 2,
+            ai_label_tooltip: "AI".to_string(),
+            panel_title: "서사".to_string(),
+            section_labels: [
+                "성격".to_string(),
+                "사건".to_string(),
+                "내면".to_string(),
+            ],
+            disabled_message: String::new(),
+            ai_generated: true,
+            entity_id: 42,
+        };
+        assert_eq!(data.panel_title, "서사");
+        assert!(data.show_personality);
+        assert!(!data.show_event);
+        assert_eq!(data.section_labels[2], "내면");
     }
 
     #[test]
@@ -5756,5 +6119,13 @@ mod tests {
         assert!(runtime_supports_rust_system("stat_sync_system"));
         assert!(runtime_supports_rust_system("stat_threshold_system"));
         assert!(runtime_supports_rust_system("behavior_system"));
+    }
+
+    #[test]
+    fn narrative_cache_any_text_detects_populated_fields() {
+        let mut cache = NarrativeCache::default();
+        assert!(!super::narrative_cache_has_any_text(&cache));
+        cache.last_inner_monologue = Some("생각".to_string());
+        assert!(super::narrative_cache_has_any_text(&cache));
     }
 }
