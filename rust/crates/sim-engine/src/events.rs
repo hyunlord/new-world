@@ -3,7 +3,27 @@
 /// Events are collected during each tick, then drained and published
 /// via EventBus at the end of the tick. This avoids borrow issues.
 use serde::{Deserialize, Serialize};
+use sim_core::components::LlmRequestType;
 use sim_core::ids::{BuildingId, EntityId, SettlementId};
+
+/// LLM lifecycle and request/response events emitted through the engine event bus.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum LlmEvent {
+    RequestSubmitted {
+        entity_id: u64,
+        request_type: LlmRequestType,
+    },
+    ResponseReceived {
+        entity_id: u64,
+        generation_ms: u32,
+    },
+    RequestTimedOut {
+        entity_id: u64,
+    },
+    ServerStarted,
+    ServerStopped,
+    ServerHealthCheckFailed,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum GameEvent {
@@ -121,6 +141,7 @@ pub enum GameEvent {
         settlement_id: SettlementId,
         new_era: String,
     },
+    Llm(LlmEvent),
 }
 
 impl GameEvent {
@@ -152,6 +173,14 @@ impl GameEvent {
             GameEvent::FamilyFormed { .. } => "family_formed",
             GameEvent::TechDiscovered { .. } => "tech_discovered",
             GameEvent::EraAdvanced { .. } => "era_advanced",
+            GameEvent::Llm(event) => match event {
+                LlmEvent::RequestSubmitted { .. } => "llm_request_submitted",
+                LlmEvent::ResponseReceived { .. } => "llm_response_received",
+                LlmEvent::RequestTimedOut { .. } => "llm_request_timed_out",
+                LlmEvent::ServerStarted => "llm_server_started",
+                LlmEvent::ServerStopped => "llm_server_stopped",
+                LlmEvent::ServerHealthCheckFailed => "llm_server_health_check_failed",
+            },
         }
     }
 }
@@ -178,5 +207,11 @@ mod tests {
             entity_id: EntityId(1),
         };
         let _ = e.clone();
+    }
+
+    #[test]
+    fn llm_event_name_is_stable() {
+        let e = GameEvent::Llm(LlmEvent::ServerStarted);
+        assert_eq!(e.name(), "llm_server_started");
     }
 }

@@ -496,6 +496,39 @@ impl WorldSimRuntime {
         self.state.is_some()
     }
 
+    #[func]
+    fn start_llm_server(&mut self) -> bool {
+        let Some(state) = self.state.as_mut() else {
+            return false;
+        };
+        state.engine.resources_mut().start_llm_server()
+    }
+
+    #[func]
+    fn stop_llm_server(&mut self) {
+        let Some(state) = self.state.as_mut() else {
+            return;
+        };
+        state.engine.resources_mut().stop_llm_server();
+    }
+
+    #[func]
+    fn is_llm_available(&self) -> bool {
+        let Some(state) = self.state.as_ref() else {
+            return false;
+        };
+        state.engine.resources().is_llm_available()
+    }
+
+    #[func]
+    fn get_llm_status(&self) -> GString {
+        let Some(state) = self.state.as_ref() else {
+            return GString::from("{\"running\":false,\"model\":\"\",\"queue_depth\":0}");
+        };
+        let status = state.engine.resources().llm_status_json();
+        GString::from(status.as_str())
+    }
+
     /// Spawns agents into the Rust hecs world from a JSON array of spawn entries.
     /// Returns the number of agents successfully spawned.
     #[func]

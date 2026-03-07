@@ -1,0 +1,15 @@
+아래 엔티티의 성격 축을 읽고 2문장 이하의 한국어 인물 묘사를 작성하라.
+
+요구사항:
+- 성격, 태도, 대인 반응을 중심으로 묘사한다.
+- 숫자를 직접 반복하지 말고 해석된 성향으로 바꿔 쓴다.
+- 플레이어가 한눈에 읽을 수 있게 압축한다.
+
+엔티티 상태:
+- name: {{ entity.entity_name }}
+- role: {{ entity.role }}
+- personality_axes: {{ entity.personality_axes }}
+- emotions: {{ entity.emotions }}
+- needs: {{ entity.needs }}
+- stress_level: {{ entity.stress_level }}
+- stress_state: {{ entity.stress_state }}

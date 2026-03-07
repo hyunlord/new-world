@@ -1,0 +1,20 @@
+아래 엔티티 상태를 바탕으로 2~4문장의 짧은 한국어 서사를 작성하라.
+
+요구사항:
+- 내면, 감정, 욕구, 최근 사건, 현재 행동이 자연스럽게 드러나야 한다.
+- 추상적인 설명보다 구체적인 상태 해석을 우선한다.
+- 문체는 관찰자 시점의 간결한 서술문으로 유지한다.
+
+엔티티 상태:
+- name: {{ entity.entity_name }}
+- role: {{ entity.role }}
+- current_action_id: {{ entity.action_id }}
+- current_action_label: {{ entity.action_label }}
+- stress_level: {{ entity.stress_level }}
+- stress_state: {{ entity.stress_state }}
+- personality_axes: {{ entity.personality_axes }}
+- emotions: {{ entity.emotions }}
+- needs: {{ entity.needs }}
+- recent_event_type: {{ entity.recent_event_type }}
+- recent_event_cause: {{ entity.recent_event_cause }}
+- recent_target_name: {{ entity.recent_target_name }}

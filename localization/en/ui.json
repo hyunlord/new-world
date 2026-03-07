@@ -1675,5 +1675,13 @@
   "UI_SUBSECTION_STRESSORS": "stressors",
   "UI_SUBSECTION_ATTRIBUTES": "attributes",
   "UI_SUBSECTION_DETAIL": "detail",
-  "UI_SUBSECTION_ALL_VALUES": "all values"
+  "UI_SUBSECTION_ALL_VALUES": "all values",
+  "LLM_STATUS_STARTING": "AI narrator starting...",
+  "LLM_STATUS_READY": "AI narrator ready",
+  "LLM_STATUS_DISABLED": "AI narrator disabled",
+  "LLM_STATUS_ERROR": "AI narrator unavailable",
+  "LLM_FALLBACK_LABEL": "[System generated]",
+  "LLM_AI_LABEL": "AI-generated text",
+  "LLM_TOGGLE_ON": "Enable AI Narration",
+  "LLM_TOGGLE_OFF": "Disable AI Narration"
 }

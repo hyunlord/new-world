@@ -18,12 +18,15 @@ use sim_data::{NameGenerator, PersonalityDistribution};
 use crate::event_bus::EventBus;
 use crate::event_store::EventStore;
 use crate::explain_log::ExplainLog;
+use crate::events::LlmEvent;
 use crate::notification::SimNotification;
 use crate::perf_tracker::PerfTracker;
 use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+use crate::llm_server::{LlmRuntime, LlmRuntimeError};
+use crate::llm_worker::{LlmRequest, LlmRequestMeta, LlmResponse};
 use crate::system_trait::{SimSystem, SystemEntry};
 use crate::snapshot::EngineSnapshot;
-use log::{debug, info};
+use log::{debug, info, warn};
 
 /// A recorded chronicle event (world or personal history).
 #[derive(Debug, Clone)]
@@ -100,6 +103,8 @@ pub struct SimResources {
     pub pending_notifications: Vec<SimNotification>,
     /// Recent emitted notifications used for cooldown and deduplication.
     pub notification_history: Vec<SimNotification>,
+    /// External llama-server process + worker runtime.
+    pub llm_runtime: LlmRuntime,
 }
 
 impl SimResources {
@@ -133,7 +138,75 @@ impl SimResources {
             event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),
             pending_notifications: Vec::new(),
             notification_history: Vec::new(),
+            llm_runtime: LlmRuntime::default(),
         }
+    }
+
+    /// Starts the LLM server if the default config says it should be enabled.
+    pub fn start_llm_if_enabled(&mut self) -> bool {
+        if !self.llm_runtime.config().enabled_default {
+            return false;
+        }
+        self.start_llm_server()
+    }
+
+    /// Starts the LLM server and emits lifecycle events.
+    pub fn start_llm_server(&mut self) -> bool {
+        match self.llm_runtime.start() {
+            Ok(()) => {
+                self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
+                true
+            }
+            Err(error) => {
+                warn!("[SimResources] failed to start LLM runtime: {}", error);
+                self.event_bus
+                    .emit(crate::events::GameEvent::Llm(LlmEvent::ServerHealthCheckFailed));
+                false
+            }
+        }
+    }
+
+    /// Stops the LLM server and emits lifecycle events.
+    pub fn stop_llm_server(&mut self) {
+        if self.llm_runtime.is_running() {
+            self.llm_runtime.stop();
+            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
+        }
+    }
+
+    /// Returns true when the LLM server and worker can accept requests.
+    pub fn is_llm_available(&self) -> bool {
+        self.llm_runtime.is_available()
+    }
+
+    /// Returns a JSON status string for external callers.
+    pub fn llm_status_json(&self) -> String {
+        self.llm_runtime.status_json()
+    }
+
+    /// Attempts to submit an LLM request without blocking.
+    pub fn submit_llm_request(
+        &mut self,
+        request: LlmRequest,
+    ) -> Result<u64, LlmRuntimeError> {
+        let entity_id = request.entity_id;
+        let request_type = request.request_type;
+        let request_id = self.llm_runtime.submit_request(request)?;
+        self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
+            entity_id,
+            request_type,
+        }));
+        Ok(request_id)
+    }
+
+    /// Drains all available LLM responses.
+    pub fn drain_llm_responses(&mut self) -> Vec<LlmResponse> {
+        self.llm_runtime.drain_responses()
+    }
+
+    /// Removes and returns request metadata for one in-flight LLM request.
+    pub fn take_llm_request_meta(&mut self, request_id: u64) -> Option<LlmRequestMeta> {
+        self.llm_runtime.take_request_meta(request_id)
     }
 }
 
@@ -152,6 +225,7 @@ impl std::fmt::Debug for SimResources {
             .field("event_store", &self.event_store.len())
             .field("pending_notifications", &self.pending_notifications.len())
             .field("notification_history", &self.notification_history.len())
+            .field("llm_available", &self.llm_runtime.is_available())
             .finish_non_exhaustive()
     }
 }
@@ -359,6 +433,12 @@ impl std::fmt::Debug for SimEngine {
     }
 }
 
+impl Drop for SimEngine {
+    fn drop(&mut self) {
+        self.resources.stop_llm_server();
+    }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -485,5 +565,12 @@ mod tests {
         assert_eq!(engine.frame_snapshots().len(), 1);
         let x = engine.frame_snapshots()[0].x;
         assert_eq!(x, 2.0);
+    }
+
+    #[test]
+    fn llm_status_is_json_even_when_runtime_is_unavailable() {
+        let engine = make_engine();
+        let status = engine.resources().llm_status_json();
+        assert!(status.contains("\"running\":false"));
     }
 }

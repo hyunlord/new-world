@@ -12,6 +12,11 @@ log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
+toml = { workspace = true }
+ureq = { workspace = true }
+minijinja = { workspace = true }
+crossbeam-channel = { workspace = true }
+nix = { workspace = true }
 
 [lints]
 workspace = true

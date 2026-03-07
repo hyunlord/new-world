@@ -10,8 +10,8 @@
 use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, Memory, Needs,
-    Personality, Position, Skills, Social, Stress, Traits,
+    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmCapable,
+    Memory, NarrativeCache, Needs, Personality, Position, Skills, Social, Stress, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
@@ -698,7 +698,14 @@ pub fn spawn_agent(
     world
         .insert(
             entity,
-            (Memory::default(), Traits::default(), Faith::default(), steering),
+            (
+                Memory::default(),
+                Traits::default(),
+                Faith::default(),
+                steering,
+                LlmCapable::default(),
+                NarrativeCache::default(),
+            ),
         )
         .unwrap_or_else(|e| log::warn!("[entity_spawner] insert extra components failed: {e}"));
 

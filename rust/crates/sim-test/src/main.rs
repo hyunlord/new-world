@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 55;
+const EXPECTED_SYSTEM_COUNT: usize = 58;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -14,14 +14,17 @@ use sim_bridge::{
     set_pathfind_backend_mode,
 };
 use sim_core::components::{
-    Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
+    Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmRequestType,
     Memory, Needs, Personality, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config::GameConfig;
+use sim_core::components::LlmRole;
 use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
-use sim_engine::{SimEngine, SimResources};
+use sim_engine::{
+    generate_fallback_content, LlmPromptVariant, LlmRequest, LlmRuntime, SimEngine, SimResources,
+};
 use sim_systems::runtime::{
     // biology
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
@@ -34,6 +37,8 @@ use sim_systems::runtime::{
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
     // needs
     ChildStressProcessorRuntimeSystem, NeedsRuntimeSystem, UpperNeedsRuntimeSystem,
+    // llm
+    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
     // psychology
     ContagionRuntimeSystem, CopingRuntimeSystem, EmotionRuntimeSystem,
     MentalBreakRuntimeSystem, MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem,
@@ -85,6 +90,10 @@ fn main() {
     }
     if args.iter().any(|arg| arg == "--bench-stress-math") {
         run_stress_math_bench(&args);
+        return;
+    }
+    if args.iter().any(|arg| arg == "--llm-smoke") {
+        run_llm_smoke();
         return;
     }
 
@@ -332,6 +341,14 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(FamilyRuntimeSystem::new(52, 365));
     engine.register(LeaderRuntimeSystem::new(52, 1));
     engine.register(ValueRuntimeSystem::new(55, 200));
+    engine.register(LlmResponseRuntimeSystem::new(
+        sim_core::config::LLM_RESPONSE_SYSTEM_PRIORITY,
+        sim_core::config::LLM_RESPONSE_SYSTEM_INTERVAL,
+    ));
+    engine.register(LlmTimeoutRuntimeSystem::new(
+        sim_core::config::LLM_TIMEOUT_SYSTEM_PRIORITY,
+        sim_core::config::LLM_TIMEOUT_SYSTEM_INTERVAL,
+    ));
     engine.register(NetworkRuntimeSystem::new(58, 1));
     engine.register(MigrationRuntimeSystem::new(60, 1));
     engine.register(TechDiscoveryRuntimeSystem::new(62, 1));
@@ -345,6 +362,10 @@ fn register_all_systems(engine: &mut SimEngine) {
         sim_core::config::STORY_SIFTER_PRIORITY,
         sim_core::config::STORY_SIFTER_TICK_INTERVAL,
     ));
+    engine.register(LlmRequestRuntimeSystem::new(
+        sim_core::config::LLM_REQUEST_SYSTEM_PRIORITY,
+        sim_core::config::LLM_REQUEST_SYSTEM_INTERVAL,
+    ));
     engine.register(SettlementCultureRuntimeSystem::new(95, 100));
     engine.register(PersonalityMaturationRuntimeSystem::new(96, 100));
     engine.register(PersonalityGeneratorRuntimeSystem::new(97, 100));
@@ -352,6 +373,118 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(AceTrackerRuntimeSystem::new(99, 100));
     engine.register(TraitRuntimeSystem::new(100, 10));
     engine.register(ChronicleRuntimeSystem::new(101, 1));
+}
+
+fn run_llm_smoke() {
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
+    println!("[sim-test] LLM smoke starting");
+
+    let mut runtime = LlmRuntime::default();
+    if let Err(error) = runtime.start() {
+        eprintln!("[sim-test] failed to start llama-server runtime: {error}");
+        std::process::exit(1);
+    }
+
+    let judgment_request = sample_llm_request(
+        LlmRequestType::Layer3Judgment,
+        LlmPromptVariant::Judgment,
+    );
+    let judgment_id = match runtime.submit_request(judgment_request) {
+        Ok(request_id) => request_id,
+        Err(error) => {
+            eprintln!("[sim-test] failed to enqueue Layer 3 request: {error}");
+            runtime.stop();
+            std::process::exit(1);
+        }
+    };
+    let judgment_response = wait_for_llm_response(&mut runtime, judgment_id);
+    let Some(judgment_response) = judgment_response else {
+        eprintln!("[sim-test] timed out waiting for Layer 3 response");
+        runtime.stop();
+        std::process::exit(1);
+    };
+    assert!(judgment_response.success, "Layer 3 request should succeed");
+    assert!(
+        matches!(judgment_response.content, sim_core::components::LlmContent::Judgment(_)),
+        "Layer 3 response should parse as JudgmentData",
+    );
+
+    let narrative_request = sample_llm_request(
+        LlmRequestType::Layer4Narrative,
+        LlmPromptVariant::Narrative,
+    );
+    let narrative_id = match runtime.submit_request(narrative_request) {
+        Ok(request_id) => request_id,
+        Err(error) => {
+            eprintln!("[sim-test] failed to enqueue Layer 4 request: {error}");
+            runtime.stop();
+            std::process::exit(1);
+        }
+    };
+    let narrative_response = wait_for_llm_response(&mut runtime, narrative_id);
+    let Some(narrative_response) = narrative_response else {
+        eprintln!("[sim-test] timed out waiting for Layer 4 response");
+        runtime.stop();
+        std::process::exit(1);
+    };
+    assert!(narrative_response.success, "Layer 4 request should succeed");
+    match narrative_response.content {
+        sim_core::components::LlmContent::Narrative(ref text) => {
+            assert!(
+                !text.trim().is_empty(),
+                "Layer 4 response should be non-empty Korean text",
+            );
+        }
+        _ => panic!("Layer 4 response should be narrative text"),
+    }
+
+    let fallback = generate_fallback_content(LlmRequestType::Layer4Narrative, "카야");
+    match fallback {
+        sim_core::components::LlmContent::Narrative(text) => {
+            assert!(!text.trim().is_empty(), "Fallback narrative should be non-empty");
+        }
+        _ => panic!("Fallback should be a narrative string"),
+    }
+
+    runtime.stop();
+    println!("[sim-test] LLM smoke PASS");
+}
+
+fn sample_llm_request(
+    request_type: LlmRequestType,
+    variant: LlmPromptVariant,
+) -> LlmRequest {
+    LlmRequest {
+        request_id: 0,
+        entity_id: 1,
+        request_type,
+        variant,
+        entity_name: "카야".to_string(),
+        role: LlmRole::Agent,
+        action_id: 3,
+        action_label: "Socialize".to_string(),
+        personality_axes: [0.41, 0.62, 0.78, 0.54, 0.66, 0.58],
+        emotions: [0.2, 0.35, 0.05, 0.1, 0.12, 0.04, 0.08, 0.44],
+        needs: [0.73, 0.91, 0.64, 0.88, 0.76, 0.55, 0.46, 0.61, 0.72, 0.68, 0.59, 0.63, 0.71],
+        stress_level: 0.34,
+        stress_state: 1,
+        recent_event_type: Some("social_conflict".to_string()),
+        recent_event_cause: Some("hurtful_words".to_string()),
+        recent_target_name: Some("하린".to_string()),
+    }
+}
+
+fn wait_for_llm_response(runtime: &mut LlmRuntime, request_id: u64) -> Option<sim_engine::LlmResponse> {
+    let started = Instant::now();
+    while started.elapsed().as_secs_f64() < 30.0 {
+        for response in runtime.drain_responses() {
+            if response.request_id == request_id {
+                return Some(response);
+            }
+        }
+        std::thread::sleep(std::time::Duration::from_millis(50));
+    }
+    None
 }
 
 fn parse_bench_iterations(args: &[String], default_iterations: u32) -> u32 {
