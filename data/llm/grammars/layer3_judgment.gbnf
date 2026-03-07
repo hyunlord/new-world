@@ -1,0 +1,9 @@
+root ::= "{" ws "\"action_id\"" ws ":" ws action-id ws "," ws "\"confidence\"" ws ":" ws confidence ws "," ws "\"reasoning_hint\"" ws ":" ws string ws "}"
+action-id ::= digit | onenine digit
+confidence ::= "0" frac? | "1" (".0"+)?
+frac ::= "." digit+
+string ::= "\"" char* "\""
+char ::= [^"\\] | "\\" .
+digit ::= [0-9]
+onenine ::= [1-9]
+ws ::= [ \t\n]*

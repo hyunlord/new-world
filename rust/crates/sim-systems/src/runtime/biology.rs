@@ -5,8 +5,9 @@ use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, SteeringParams, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    LlmCapable, Memory, MemoryEntry, NarrativeCache, Needs, Personality, Position, Skills, Social,
+    SteeringParams, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -256,6 +257,8 @@ impl SimSystem for PopulationRuntimeSystem {
             age,
             identity,
             behavior,
+            LlmCapable::default(),
+            NarrativeCache::default(),
             Needs::default(),
             Emotion::default(),
             SteeringParams::default(),

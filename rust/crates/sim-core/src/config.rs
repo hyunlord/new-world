@@ -260,6 +260,62 @@ pub const THOUGHT_TEXT_EVENT_LOOKBACK_TICKS: u64 = 120;
 pub const THOUGHT_TEXT_NEED_THRESHOLD: f64 = 0.40;
 /// Maximum number of recent story events exposed to the entity detail panel.
 pub const DETAIL_PANEL_RECENT_EVENT_LIMIT: usize = 5;
+/// Host address used by the external llama-server process.
+pub const LLM_SERVER_HOST: &str = "127.0.0.1";
+/// TCP port used by the external llama-server process.
+pub const LLM_SERVER_PORT: u16 = 8080;
+/// Relative project path to the default GGUF model file.
+pub const LLM_MODEL_PATH: &str = "data/llm/models/Qwen3.5-0.8B-Q4_K_M.gguf";
+/// Relative project path to the llama-server binary.
+pub const LLM_SERVER_BINARY: &str = "bin/llama-server";
+/// Relative project path to the LLM config TOML file.
+pub const LLM_CONFIG_PATH: &str = "data/llm/config.toml";
+/// Relative project path to the prompt template directory.
+pub const LLM_PROMPT_DIR: &str = "data/llm/prompts";
+/// Relative project path to the Layer 3 GBNF grammar file.
+pub const LLM_LAYER3_GRAMMAR_PATH: &str = "data/llm/grammars/layer3_judgment.gbnf";
+/// Context window passed to llama-server.
+pub const LLM_CONTEXT_SIZE: u32 = 2048;
+/// Maximum output tokens for Layer 3 judgment calls.
+pub const LLM_MAX_TOKENS_L3: u32 = 64;
+/// Maximum output tokens for Layer 4 narrative calls.
+pub const LLM_MAX_TOKENS_L4: u32 = 256;
+/// Generation thread count reserved for the LLM server.
+pub const LLM_THREADS: u32 = 3;
+/// Batch-thread count reserved for the LLM server.
+pub const LLM_THREADS_BATCH: u32 = 4;
+/// Near-deterministic temperature for Layer 3 JSON generation.
+pub const LLM_TEMPERATURE_L3: f64 = 0.1;
+/// Narrative temperature for Layer 4 free-text generation.
+pub const LLM_TEMPERATURE_L4: f64 = 0.7;
+/// Minimum per-entity cooldown between submitted requests.
+pub const LLM_COOLDOWN_TICKS: u32 = 300;
+/// Maximum time an LLM request may stay pending before fallback.
+pub const LLM_TIMEOUT_TICKS: u32 = 600;
+/// Narrative cache TTL in ticks.
+pub const LLM_CACHE_TTL_TICKS: u32 = 3600;
+/// Maximum number of requests allowed in the bounded queue.
+pub const LLM_QUEUE_CAPACITY: usize = 8;
+/// Default runtime toggle: when true, runtime init attempts to start the LLM layer.
+pub const LLM_ENABLED_DEFAULT: bool = true;
+/// LLM request runtime-system priority (late, after behavior resolution).
+pub const LLM_REQUEST_SYSTEM_PRIORITY: u32 = 800;
+/// LLM request runtime-system cadence.
+pub const LLM_REQUEST_SYSTEM_INTERVAL: u64 = 1;
+/// LLM response runtime-system priority (early, before dependent consumers).
+pub const LLM_RESPONSE_SYSTEM_PRIORITY: u32 = 50;
+/// LLM response runtime-system cadence.
+pub const LLM_RESPONSE_SYSTEM_INTERVAL: u64 = 1;
+/// LLM timeout runtime-system priority (immediately after response processing).
+pub const LLM_TIMEOUT_SYSTEM_PRIORITY: u32 = 55;
+/// LLM timeout runtime-system cadence.
+pub const LLM_TIMEOUT_SYSTEM_INTERVAL: u64 = 60;
+/// Health-check attempts while waiting for llama-server to start.
+pub const LLM_HEALTHCHECK_ATTEMPTS: u32 = 30;
+/// Delay between llama-server health checks in milliseconds.
+pub const LLM_HEALTHCHECK_INTERVAL_MS: u64 = 500;
+/// Grace period before a stuck llama-server process is force-killed.
+pub const LLM_SHUTDOWN_GRACE_MS: u64 = 5_000;
 
 // ── Stress → Work Efficiency [Yerkes-Dodson 1908, McEwen 2004] ───────────────
 pub const STRESS_EFFICIENCY_EUSTRESS_PEAK: f64 = 150.0;

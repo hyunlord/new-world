@@ -1675,5 +1675,13 @@
   "UI_SUBSECTION_STRESSORS": "스트레스 요인",
   "UI_SUBSECTION_ATTRIBUTES": "신체 속성",
   "UI_SUBSECTION_DETAIL": "상세",
-  "UI_SUBSECTION_ALL_VALUES": "모든 가치관"
+  "UI_SUBSECTION_ALL_VALUES": "모든 가치관",
+  "LLM_STATUS_STARTING": "AI 서사 엔진 시작 중...",
+  "LLM_STATUS_READY": "AI 서사 엔진 준비 완료",
+  "LLM_STATUS_DISABLED": "AI 서사 엔진 비활성화",
+  "LLM_STATUS_ERROR": "AI 서사 엔진 사용 불가",
+  "LLM_FALLBACK_LABEL": "[시스템 생성]",
+  "LLM_AI_LABEL": "AI 생성 텍스트",
+  "LLM_TOGGLE_ON": "AI 서사 활성화",
+  "LLM_TOGGLE_OFF": "AI 서사 비활성화"
 }

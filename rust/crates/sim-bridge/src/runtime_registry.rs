@@ -11,6 +11,7 @@ use sim_systems::runtime::{
     ContagionRuntimeSystem, ConstructionRuntimeSystem, CopingRuntimeSystem,
     EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
     GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
+    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
     MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
     MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, SteeringRuntimeSystem,
@@ -83,6 +84,9 @@ pub(crate) const RUNTIME_SYSTEM_KEY_PERSONALITY_GENERATOR: &str = "personality_g
 pub(crate) const RUNTIME_SYSTEM_KEY_ATTACHMENT: &str = "attachment_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_ACE_TRACKER: &str = "ace_tracker_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_TRAIT: &str = "trait_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_LLM_REQUEST: &str = "llm_request_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_LLM_RESPONSE: &str = "llm_response_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_LLM_TIMEOUT: &str = "llm_timeout_system";
 pub(crate) const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 pub(crate) const RUNTIME_COMPUTE_DOMAINS: [&str; 1] = ["pathfinding"];
 
@@ -151,10 +155,27 @@ impl RuntimeState {
                 }
             }));
         let mut engine = SimEngine::new(resources);
+        engine.register(LlmResponseRuntimeSystem::new(
+            config::LLM_RESPONSE_SYSTEM_PRIORITY,
+            config::LLM_RESPONSE_SYSTEM_INTERVAL,
+        ));
+        engine.register(LlmTimeoutRuntimeSystem::new(
+            config::LLM_TIMEOUT_SYSTEM_PRIORITY,
+            config::LLM_TIMEOUT_SYSTEM_INTERVAL,
+        ));
         engine.register(StorySifterRuntimeSystem::new(
             config::STORY_SIFTER_PRIORITY,
             config::STORY_SIFTER_TICK_INTERVAL,
         ));
+        engine.register(LlmRequestRuntimeSystem::new(
+            config::LLM_REQUEST_SYSTEM_PRIORITY,
+            config::LLM_REQUEST_SYSTEM_INTERVAL,
+        ));
+        let _ = engine.resources_mut().start_llm_if_enabled();
+        let mut rust_registered_systems: HashSet<String> = HashSet::new();
+        rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_REQUEST.to_string());
+        rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_RESPONSE.to_string());
+        rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_TIMEOUT.to_string());
         Self {
             engine,
             accumulator: 0.0,
@@ -164,7 +185,7 @@ impl RuntimeState {
             paused: false,
             captured_events,
             registered_systems: Vec::new(),
-            rust_registered_systems: HashSet::new(),
+            rust_registered_systems,
             compute_domain_modes: runtime_default_compute_domain_modes(&RUNTIME_COMPUTE_DOMAINS),
         }
     }
@@ -254,6 +275,9 @@ pub(crate) fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_ATTACHMENT
             | RUNTIME_SYSTEM_KEY_ACE_TRACKER
             | RUNTIME_SYSTEM_KEY_TRAIT
+            | RUNTIME_SYSTEM_KEY_LLM_REQUEST
+            | RUNTIME_SYSTEM_KEY_LLM_RESPONSE
+            | RUNTIME_SYSTEM_KEY_LLM_TIMEOUT
     )
 }
 
@@ -545,6 +569,21 @@ pub(crate) fn register_supported_rust_system(
             state
                 .engine
                 .register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_LLM_REQUEST => {
+            state
+                .engine
+                .register(LlmRequestRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_LLM_RESPONSE => {
+            state
+                .engine
+                .register(LlmResponseRuntimeSystem::new(priority_u32, tick_interval_u64));
+        }
+        RUNTIME_SYSTEM_KEY_LLM_TIMEOUT => {
+            state
+                .engine
+                .register(LlmTimeoutRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         _ => {
             return false;

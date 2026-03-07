@@ -6,6 +6,9 @@
 mod biology;
 mod cognition;
 mod economy;
+mod llm_request_system;
+mod llm_response_system;
+mod llm_timeout_system;
 mod needs;
 mod psychology;
 mod record;
@@ -44,6 +47,11 @@ pub use economy::{
     JobSatisfactionRuntimeSystem,
     ResourceRegenSystem,
 };
+
+// ---- llm ----
+pub use llm_request_system::LlmRequestRuntimeSystem;
+pub use llm_response_system::LlmResponseRuntimeSystem;
+pub use llm_timeout_system::LlmTimeoutRuntimeSystem;
 
 // ---- needs ----
 pub use needs::{
