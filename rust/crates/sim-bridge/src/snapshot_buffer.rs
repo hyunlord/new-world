@@ -85,4 +85,19 @@ mod tests {
         assert_eq!(prev_x, 10.0);
         assert_eq!(curr_x, 20.0);
     }
+
+    #[test]
+    fn stage1_snapshot_buffer_double_swap() {
+        let mut buffer = SnapshotBuffer::new();
+        let first = vec![snapshot(1, 10.0)];
+        let second = vec![snapshot(1, 20.0)];
+        buffer.swap(first);
+        let first_curr_x = buffer.curr()[0].x;
+        assert_eq!(first_curr_x, 10.0);
+        buffer.swap(second);
+        let prev_x = buffer.prev()[0].x;
+        let curr_x = buffer.curr()[0].x;
+        assert_eq!(prev_x, 10.0);
+        assert_eq!(curr_x, 20.0);
+    }
 }

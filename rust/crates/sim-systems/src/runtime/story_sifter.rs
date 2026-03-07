@@ -886,4 +886,45 @@ mod tests {
         let second = calculate_importance(&SimEventType::Death, &store, 2);
         assert!(first >= second);
     }
+
+    #[test]
+    fn stage1_notification_cooldown_allows_different_actor() {
+        let recent = vec![SimNotification {
+            tick: 80,
+            tier: NotificationTier::Drama,
+            kind: "conflict".to_string(),
+            importance: 0.5,
+            primary_entity: 42,
+            secondary_entity: None,
+            message_key: String::new(),
+            message_fallback: "older".to_string(),
+            position_x: 0.0,
+            position_y: 0.0,
+        }];
+        let next = SimNotification {
+            tick: 100,
+            tier: NotificationTier::Drama,
+            kind: "conflict".to_string(),
+            importance: 0.7,
+            primary_entity: 99,
+            secondary_entity: None,
+            message_key: String::new(),
+            message_fallback: "next".to_string(),
+            position_x: 0.0,
+            position_y: 0.0,
+        };
+        assert!(should_notify(&next, &recent, 100));
+    }
+
+    #[test]
+    fn stage1_importance_scoring_rare_events_higher() {
+        let mut store = EventStore::new(64);
+        for tick in 0..10 {
+            store.push(make_event(tick, 1, SimEventType::ActionChanged));
+        }
+        store.push(make_event(11, 1, SimEventType::MentalBreakStart));
+        let common = calculate_importance(&SimEventType::ActionChanged, &store, 12);
+        let rare = calculate_importance(&SimEventType::MentalBreakStart, &store, 12);
+        assert!(rare > common);
+    }
 }

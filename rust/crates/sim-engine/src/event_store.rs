@@ -158,6 +158,21 @@ mod tests {
     }
 
     #[test]
+    fn stage1_event_store_capacity_eviction() {
+        let mut store = EventStore::new(100);
+        for tick in 0..200 {
+            store.push(make_event(tick, 1, SimEventType::ActionChanged));
+        }
+        assert_eq!(store.len(), 100);
+        let oldest_tick = store
+            .iter()
+            .next()
+            .expect("store should retain recent events")
+            .tick;
+        assert_eq!(oldest_tick, 100);
+    }
+
+    #[test]
     fn by_type_and_actor_filters_respect_tick_cutoff() {
         let mut store = EventStore::new(8);
         store.push(make_event(1, 10, SimEventType::NeedCritical));
@@ -170,5 +185,25 @@ mod tests {
 
         let by_type = store.by_type(&SimEventType::NeedCritical, 0);
         assert_eq!(by_type.len(), 2);
+    }
+
+    #[test]
+    fn stage1_event_store_query_by_actor() {
+        let mut store = EventStore::new(16);
+        store.push(make_event(1, 10, SimEventType::NeedCritical));
+        store.push(make_event(2, 20, SimEventType::NeedCritical));
+        store.push(make_event(3, 10, SimEventType::EmotionShift));
+        let results = store.by_actor(10, 0);
+        assert_eq!(results.len(), 2);
+    }
+
+    #[test]
+    fn stage1_event_store_query_by_type() {
+        let mut store = EventStore::new(16);
+        store.push(make_event(1, 1, SimEventType::MentalBreakStart));
+        store.push(make_event(2, 1, SimEventType::ActionChanged));
+        store.push(make_event(3, 2, SimEventType::MentalBreakStart));
+        let results = store.by_type(&SimEventType::MentalBreakStart, 0);
+        assert_eq!(results.len(), 2);
     }
 }

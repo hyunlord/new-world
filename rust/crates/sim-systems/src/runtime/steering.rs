@@ -279,12 +279,17 @@ fn clamp_magnitude(x: f64, y: f64, max_magnitude: f64) -> (f64, f64) {
 #[cfg(test)]
 mod tests {
     use hecs::World;
+    use rand::SeedableRng;
+    use rand::rngs::SmallRng;
     use sim_core::components::{Age, Behavior, Personality, Position, SteeringParams};
     use sim_core::{config, ActionType, GameCalendar, GrowthStage, WorldMap};
     use sim_core::config::GameConfig;
     use sim_engine::{SimResources, SimSystem};
 
-    use super::{cohesion_force, separation_force, SteeringRuntimeSystem};
+    use super::{
+        arrive_force, cohesion_force, seek_force, separation_force, wander_force,
+        SteeringRuntimeSystem,
+    };
 
     fn resources() -> SimResources {
         let config = GameConfig::default();
@@ -325,5 +330,44 @@ mod tests {
         system.run(&mut world, &mut resources, 1);
         let position = world.get::<&Position>(entity).expect("position exists");
         assert!(position.vel_x.abs() > 0.0 || position.vel_y.abs() > 0.0);
+    }
+
+    #[test]
+    fn stage1_wander_force_produces_nonzero_vector() {
+        let position = Position {
+            x: 100.0,
+            y: 100.0,
+            vel_x: 1.0,
+            vel_y: 0.0,
+            movement_dir: 0,
+        };
+        let params = SteeringParams::default();
+        let mut rng = SmallRng::seed_from_u64(7);
+        let force = wander_force(&position, &params, &mut rng, 1, hecs::Entity::DANGLING);
+        assert!(force.0.abs() + force.1.abs() > 0.0);
+    }
+
+    #[test]
+    fn stage1_seek_force_points_toward_target() {
+        let position = Position::from_f64(0.0, 0.0);
+        let force = seek_force(&position, 100.0, 0.0);
+        assert!(force.0 > 0.0);
+        assert!(force.1.abs() < 0.01);
+    }
+
+    #[test]
+    fn stage1_arrive_force_slows_near_target() {
+        let far_position = Position::from_f64(95.0, 0.0);
+        let near_position = Position::from_f64(98.0, 0.0);
+        let far_force = arrive_force(&far_position, 200.0, 0.0, 30.0);
+        let near_force = arrive_force(&near_position, 100.0, 0.0, 30.0);
+        assert!(near_force.0 < far_force.0);
+    }
+
+    #[test]
+    fn stage1_separation_force_repels_neighbors() {
+        let position = Position::from_f64(50.0, 50.0);
+        let force = separation_force(&position, &[(50.2, 50.0)], 25.0);
+        assert!(force.0 < 0.0);
     }
 }
