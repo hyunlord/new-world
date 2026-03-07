@@ -79,7 +79,8 @@ func add_entry(notif_data: Dictionary) -> void:
 	var button := Button.new()
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	button.text = "%s  %s" % [GameCalendar.format_short_datetime(tick), message_text]
+	var button_text: String = GameCalendar.format_short_datetime(tick) + "  " + message_text
+	button.text = button_text
 	button.flat = true
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size", GameConfig.get_font_size("popup_small"))

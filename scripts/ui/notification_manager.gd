@@ -17,6 +17,8 @@ const DRAMA_CARD_HEIGHT: float = 72.0
 const DRAMA_CARD_GAP: float = 10.0
 const DRAMA_LAYER_RIGHT: float = 16.0
 const DRAMA_LAYER_TOP: float = 124.0
+const CRISIS_EXPIRY_SECONDS: float = 6.0
+const DRAMA_EXPIRY_SECONDS: float = 30.0
 
 var _sim_engine: RefCounted
 var _drama_layer: Control
@@ -28,6 +30,7 @@ var _milestone_position: Vector2 = Vector2.ZERO
 var _card_pool: Array = []
 var _crisis_banner = null
 var _event_log = null
+var _active_notifications: Array[Dictionary] = []
 
 
 func init(sim_engine: RefCounted) -> void:
@@ -45,6 +48,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	_prune_active_notifications()
 	var notifications: Array = SimBridge.drain_notifications()
 	for raw_notification: Variant in notifications:
 		if raw_notification is Dictionary:
@@ -70,6 +74,13 @@ func refresh_locale() -> void:
 		_crisis_banner.refresh_locale()
 	if _event_log != null:
 		_event_log.refresh_locale()
+
+
+func get_active_notifications() -> Array[Dictionary]:
+	var notifications_copy: Array[Dictionary] = []
+	for notif_data: Dictionary in _active_notifications:
+		notifications_copy.append(notif_data.duplicate(true))
+	return notifications_copy
 
 
 func _consume_notification(notif_data: Dictionary) -> void:
@@ -163,6 +174,7 @@ func _build_card_pool() -> void:
 
 
 func _show_crisis(notif_data: Dictionary) -> void:
+	_track_active_notification(notif_data, CRISIS_EXPIRY_SECONDS)
 	_crisis_banner.show_notification(notif_data)
 	_crisis_banner.position.y = -float(_crisis_banner.size.y)
 	var tween: Tween = create_tween()
@@ -177,6 +189,7 @@ func _show_drama(notif_data: Dictionary) -> void:
 	var card = _get_pooled_card()
 	if card == null:
 		return
+	_track_active_notification(notif_data, DRAMA_EXPIRY_SECONDS)
 	card.reset()
 	card.setup(notif_data)
 	card.size = Vector2(DRAMA_CARD_WIDTH, DRAMA_CARD_HEIGHT)
@@ -223,6 +236,7 @@ func _return_to_pool(card) -> void:
 	if card == null or not is_instance_valid(card) or not card.visible:
 		return
 	var notification_id: int = card.notification_id()
+	_remove_active_notification(notification_id)
 	card.reset()
 	_reflow_drama_cards()
 	notification_dismissed.emit(notification_id)
@@ -249,11 +263,13 @@ func _on_banner_activated(entity_id: int, target_position: Vector2) -> void:
 	notification_clicked.emit(entity_id, target_position)
 	if _crisis_banner != null:
 		var notification_id: int = _crisis_banner.notification_id()
+		_remove_active_notification(notification_id)
 		_crisis_banner.hide_banner()
 		notification_dismissed.emit(notification_id)
 
 
 func _on_banner_dismissed(notification_id: int) -> void:
+	_remove_active_notification(notification_id)
 	notification_dismissed.emit(notification_id)
 
 
@@ -265,3 +281,29 @@ func _on_milestone_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		notification_clicked.emit(_milestone_entity_id, _milestone_position)
 		accept_event()
+
+
+func _track_active_notification(notif_data: Dictionary, lifetime_seconds: float) -> void:
+	var tracked: Dictionary = notif_data.duplicate(true)
+	var now_seconds: float = float(Time.get_ticks_msec()) / 1000.0
+	tracked["notification_id"] = int(notif_data.get("tick", 0))
+	tracked["expires_at"] = now_seconds + lifetime_seconds
+	_remove_active_notification(int(tracked.get("notification_id", 0)))
+	_active_notifications.append(tracked)
+
+
+func _remove_active_notification(notification_id: int) -> void:
+	if notification_id <= 0:
+		return
+	for index: int in range(_active_notifications.size() - 1, -1, -1):
+		if int(_active_notifications[index].get("notification_id", 0)) == notification_id:
+			_active_notifications.remove_at(index)
+
+
+func _prune_active_notifications() -> void:
+	if _active_notifications.is_empty():
+		return
+	var now_seconds: float = float(Time.get_ticks_msec()) / 1000.0
+	for index: int in range(_active_notifications.size() - 1, -1, -1):
+		if float(_active_notifications[index].get("expires_at", 0.0)) <= now_seconds:
+			_active_notifications.remove_at(index)

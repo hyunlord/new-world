@@ -50,7 +50,8 @@ func setup(notif_data: Dictionary) -> void:
 	_message_label.add_theme_color_override("default_color", Color(0.94, 0.95, 0.98))
 	_time_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("popup_small"))
 	_time_label.add_theme_color_override("font_color", Color(0.65, 0.7, 0.78))
-	_message_label.text = str(notif_data.get("message", ""))
+	var message_text: String = str(notif_data.get("message", String()))
+	_message_label.text = message_text
 	_time_label.text = GameCalendar.format_short_datetime(int(notif_data.get("tick", 0)))
 	visible = true
 
@@ -59,8 +60,8 @@ func reset() -> void:
 	_notification_id = 0
 	_entity_id = -1
 	_position = Vector2.ZERO
-	_message_label.text = ""
-	_time_label.text = ""
+	_message_label.text = String()
+	_time_label.text = String()
 	visible = false
 
 

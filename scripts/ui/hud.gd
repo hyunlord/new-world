@@ -13,6 +13,7 @@ const ListPanelClass = preload("res://scripts/ui/panels/list_panel.gd")
 const SettlementDetailPanelClass = preload("res://scripts/ui/panels/settlement_detail_panel.gd")
 const CastBarClass = preload("res://scripts/ui/cast_bar.gd")
 const NotificationManagerClass = preload("res://scripts/ui/notification_manager.gd")
+const EdgeAwarenessControllerClass = preload("res://scripts/ui/edge_awareness_controller.gd")
 
 # References
 var _sim_engine: RefCounted
@@ -102,6 +103,7 @@ var _list_panel: Control
 var _settlement_detail_panel: Control
 var _cast_bar = null
 var _story_notification_manager = null
+var _edge_awareness = null
 
 # Follow indicator
 var _follow_label: Label
@@ -234,6 +236,9 @@ func _build_minimap_and_stats() -> void:
 
 
 func _build_story_ui() -> void:
+	if _edge_awareness == null and _camera != null:
+		_edge_awareness = EdgeAwarenessControllerClass.new()
+		add_child(_edge_awareness)
 	if _cast_bar == null:
 		_cast_bar = CastBarClass.new()
 		_cast_bar.init(_sim_engine)
@@ -247,6 +252,10 @@ func _build_story_ui() -> void:
 		_story_notification_manager.notification_clicked.connect(_on_story_notification_clicked)
 		_story_notification_manager.crisis_occurred.connect(_on_story_crisis)
 		add_child(_story_notification_manager)
+	if _edge_awareness != null and _story_notification_manager != null and _edge_awareness.has_method("init"):
+		_edge_awareness.call("init", _camera, _story_notification_manager)
+	if _camera != null and _camera.has_method("connect_ui_sources"):
+		_camera.call("connect_ui_sources", _cast_bar, _story_notification_manager)
 
 
 func _connect_signals() -> void:
@@ -502,6 +511,7 @@ func _build_help_overlay() -> void:
 	left_col.add_child(_make_label(Locale.ltr("UI_HELP_DBL_CLICK"), "help_body"))
 	left_col.add_child(_make_label("", 8))
 	left_col.add_child(_make_label(Locale.ltr("UI_HELP_PANELS"), "help_section", Color(0.7, 0.9, 1.0)))
+	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_B"), "help_body"))
 	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_M"), "help_body"))
 	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_G"), "help_body"))
 	left_col.add_child(_make_label(Locale.ltr("UI_HELP_KEY_E"), "help_body"))
@@ -1366,6 +1376,11 @@ func toggle_event_log() -> void:
 		_story_notification_manager.toggle_event_log()
 
 
+func show_sound_status(is_muted: bool) -> void:
+	var message_key: String = "UI_SOUND_MUTED" if is_muted else "UI_SOUND_ON"
+	_add_notification(Locale.ltr(message_key), Color(0.75, 0.88, 0.98))
+
+
 ## Lazily initialises and toggles the F12 debug cheat panel.
 func toggle_debug_panel() -> void:
 	if _debug_panel == null:
@@ -1412,14 +1427,14 @@ func _on_follow_entity(entity_id: int) -> void:
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
-			_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", entity.entity_name)
+			_follow_label.text = Locale.trf1("UI_FOLLOWING", "name", entity.entity_name)
 			_follow_label.visible = true
 			return
 	var runtime_name: String = _resolve_runtime_entity_name(entity_id)
 	if not runtime_name.is_empty():
-		_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", runtime_name)
+		_follow_label.text = Locale.trf1("UI_FOLLOWING", "name", runtime_name)
 	else:
-		_follow_label.text = Locale.trf1("UI_CAST_BAR_FOLLOW", "name", str(entity_id))
+		_follow_label.text = Locale.trf1("UI_FOLLOWING", "name", str(entity_id))
 	_follow_label.visible = true
 
 
@@ -1466,15 +1481,11 @@ func _focus_camera_on_world(target_position: Vector2) -> void:
 
 
 func _on_cast_bar_agent_selected(entity_id: int) -> void:
-	_focus_camera_on_entity(entity_id)
 	_open_runtime_entity_popup(entity_id)
 
 
 func _on_cast_bar_follow_requested(entity_id: int) -> void:
-	_focus_camera_on_entity(entity_id)
 	_on_entity_selected(entity_id)
-	if _camera != null and _camera.has_method("follow_entity"):
-		_camera.call("follow_entity", entity_id)
 
 
 func _on_cast_bar_agent_pinned(_entity_id: int, _is_pinned: bool) -> void:
@@ -1482,17 +1493,16 @@ func _on_cast_bar_agent_pinned(_entity_id: int, _is_pinned: bool) -> void:
 
 
 func _on_story_notification_clicked(entity_id: int, target_position: Vector2) -> void:
-	_focus_camera_on_world(target_position)
 	if entity_id >= 0:
-		_focus_camera_on_entity(entity_id)
 		_open_runtime_entity_popup(entity_id)
 
 
 func _on_story_crisis(entity_id: int, target_position: Vector2) -> void:
+	if entity_id >= 0:
+		_open_runtime_entity_popup(entity_id)
 	if _sim_engine != null and not _sim_engine.is_paused:
 		_sim_engine.is_paused = true
 		SimulationBus.pause_changed.emit(true)
-	_on_story_notification_clicked(entity_id, target_position)
 
 
 ## Reapplies font sizes and minimap dimensions to all tracked UI elements after a scale change.

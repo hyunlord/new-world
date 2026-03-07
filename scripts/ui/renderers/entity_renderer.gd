@@ -3,6 +3,8 @@ extends Node2D
 const EntityDataClass = preload("res://scripts/core/entity/entity_data.gd")
 const EntityManagerClass = preload("res://scripts/core/entity/entity_manager.gd")
 const SnapshotDecoderClass = preload("res://scripts/rendering/snapshot_decoder.gd")
+const RelationshipOverlayClass = preload("res://scripts/ui/relationship_overlay.gd")
+const SocialBubbleScene = preload("res://scenes/ui/social_bubble.tscn")
 const AGENT_TEXTURE_PATH: String = "res://assets/sprites/agent_base.png"
 const AGENT_PALETTE_LUT_PATH: String = "res://assets/sprites/palette_lut.png"
 const AGENT_VISUAL_SHADER_PATH: String = "res://shaders/stress_phase.gdshader"
@@ -21,9 +23,11 @@ var resource_overlay_visible: bool = false
 var _binary_snapshot_available: bool = false
 var _render_alpha: float = 0.0
 var _agent_sprites: Array[Sprite2D] = []
+var _agent_bubbles: Array = []
 var _agent_texture: Texture2D = null
 var _agent_palette_lut: Texture2D = null
 var _agent_visual_shader: Shader = null
+var _relationship_overlay = null
 
 ## Hover tooltip state
 var _hover_entity_id: int = -1
@@ -98,6 +102,12 @@ const AGENT_FRAME_ROWS: int = 3
 const AGENT_FRAME_TIME_MS: int = 180
 const AGENT_BASE_SPEED: float = 3.75
 const AGENT_TEXTURE_OFFSET: Vector2 = Vector2(0.0, -4.0)
+const ACTION_SOCIALIZE: int = 6
+const ACTION_FIGHT: int = 13
+const ACTION_TEACH: int = 15
+const ACTION_LEARN: int = 16
+const ACTION_VISIT_PARTNER: int = 27
+const SOCIAL_INTERACTION_MAX_DISTANCE: float = 4.0
 const MOOD_COLORS: Array[Color] = [
 	Color("#B71C1C"),
 	Color("#F44336"),
@@ -121,6 +131,7 @@ func init(entity_manager: RefCounted, building_manager: RefCounted = null, resou
 	_resource_map = resource_map
 	_settlement_manager = settlement_manager
 	_sim_engine = sim_engine
+	_ensure_relationship_overlay()
 
 
 func _is_leader(entity: RefCounted) -> bool:
@@ -660,15 +671,19 @@ func _update_agent_sprites() -> void:
 
 	for index in range(_snapshot_decoder.agent_count):
 		var sprite: Sprite2D = _agent_sprites[index]
+		var social_bubble = _agent_bubbles[index]
 		var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
 		if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x or tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
 			sprite.visible = false
+			if social_bubble != null:
+				social_bubble.visible = false
 			continue
 
 		var entity_id: int = _snapshot_decoder.get_entity_id(index)
 		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
 		var velocity: Vector2 = _snapshot_decoder.get_velocity(index)
-		var movement_dir: int = _snapshot_decoder.get_movement_dir(index)
+		var action_state: int = _snapshot_decoder.get_action_state(index)
+		var movement_dir: int = _resolve_social_facing_direction(index, action_state, _snapshot_decoder.get_movement_dir(index))
 		var frame_data: Dictionary = _sprite_frame_data(movement_dir, velocity.length())
 		var shader_material: ShaderMaterial = sprite.material as ShaderMaterial
 
@@ -686,9 +701,13 @@ func _update_agent_sprites() -> void:
 			_snapshot_decoder.get_active_break(index) > 0
 		)
 		_apply_breathing(shader_material, entity_id, velocity.length())
+		if social_bubble != null:
+			social_bubble.update_state(action_state)
 
 	for index in range(_snapshot_decoder.agent_count, _agent_sprites.size()):
 		_agent_sprites[index].visible = false
+		if index < _agent_bubbles.size() and _agent_bubbles[index] != null:
+			_agent_bubbles[index].visible = false
 
 
 func _ensure_agent_sprite_capacity(required: int) -> void:
@@ -707,8 +726,11 @@ func _ensure_agent_sprite_capacity(required: int) -> void:
 		sprite.material = sprite_material
 		sprite.visible = false
 		sprite.z_index = 1
+		var social_bubble = SocialBubbleScene.instantiate()
+		sprite.add_child(social_bubble)
 		add_child(sprite)
 		_agent_sprites.append(sprite)
+		_agent_bubbles.append(social_bubble)
 
 
 func _ensure_agent_visual_resources() -> bool:
@@ -734,6 +756,72 @@ func _load_texture_from_png(resource_path: String) -> Texture2D:
 func _hide_agent_sprites() -> void:
 	for sprite in _agent_sprites:
 		sprite.visible = false
+	for bubble in _agent_bubbles:
+		if bubble != null:
+			bubble.visible = false
+
+
+func _ensure_relationship_overlay() -> void:
+	if _relationship_overlay != null or _sim_engine == null:
+		return
+	_relationship_overlay = RelationshipOverlayClass.new()
+	_relationship_overlay.init(_sim_engine)
+	add_child(_relationship_overlay)
+
+
+func _resolve_social_facing_direction(index: int, action_state: int, default_dir: int) -> int:
+	var partner_index: int = _find_social_partner_index(index, action_state)
+	if partner_index < 0:
+		return default_dir
+	var origin: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+	var partner_pos: Vector2 = _snapshot_decoder.get_interpolated_position(partner_index, _render_alpha)
+	var direction: Vector2 = partner_pos - origin
+	if direction.length_squared() <= 0.0001:
+		return default_dir
+	return _movement_dir_from_vector(direction)
+
+
+func _find_social_partner_index(index: int, action_state: int) -> int:
+	var wants_conflict: bool = _is_conflict_visual_action(action_state)
+	var wants_social: bool = _is_social_visual_action(action_state)
+	if not wants_conflict and not wants_social:
+		return -1
+	var origin: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+	var best_index: int = -1
+	var best_distance_sq: float = SOCIAL_INTERACTION_MAX_DISTANCE * SOCIAL_INTERACTION_MAX_DISTANCE
+	for other_index: int in range(_snapshot_decoder.agent_count):
+		if other_index == index:
+			continue
+		var other_action: int = _snapshot_decoder.get_action_state(other_index)
+		if wants_conflict and not _is_conflict_visual_action(other_action):
+			continue
+		if wants_social and not _is_social_visual_action(other_action):
+			continue
+		var other_pos: Vector2 = _snapshot_decoder.get_interpolated_position(other_index, _render_alpha)
+		var distance_sq: float = origin.distance_squared_to(other_pos)
+		if distance_sq < best_distance_sq:
+			best_distance_sq = distance_sq
+			best_index = other_index
+	return best_index
+
+
+func _is_social_visual_action(action_state: int) -> bool:
+	return action_state == ACTION_SOCIALIZE \
+		or action_state == ACTION_TEACH \
+		or action_state == ACTION_LEARN \
+		or action_state == ACTION_VISIT_PARTNER
+
+
+func _is_conflict_visual_action(action_state: int) -> bool:
+	return action_state == ACTION_FIGHT
+
+
+func _movement_dir_from_vector(direction: Vector2) -> int:
+	if direction.length_squared() <= 0.0001:
+		return 0
+	var angle: float = atan2(direction.y, direction.x)
+	var octant: int = int(round(angle / (PI / 4.0)))
+	return posmod(octant, 8)
 
 
 func _sprite_frame_data(movement_dir: int, speed: float) -> Dictionary:
