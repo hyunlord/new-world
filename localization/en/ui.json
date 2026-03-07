@@ -1268,6 +1268,7 @@
   "STATUS_RAGE": "Rage",
   "STATUS_SHUTDOWN": "Shutdown",
   "STATUS_FORCED_BY_AUTHORITY": "Forced by Authority",
+  "STATUS_FORAGE": "Foraging",
   "STATUS_IDLE": "Idle",
   "UI_SKILL_COOKING": "Cooking",
   "UI_SKILL_FISHING": "Fishing",

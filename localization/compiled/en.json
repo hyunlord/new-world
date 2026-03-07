@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4231,
+    "active_key_count": 4232,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4231,
+    "key_count": 4232,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1465,6 +1465,7 @@
     "STATUS_DRINK_WATER": "Drinking Water",
     "STATUS_EAT": "Eat",
     "STATUS_FINE_WOODWORK": "Fine Woodworking",
+    "STATUS_FORAGE": "Foraging",
     "STATUS_FORCED_BY_AUTHORITY": "Forced by Authority",
     "STATUS_FUGUE": "Fugue State",
     "STATUS_GATHER_FOOD": "Gathering Food",

@@ -66,6 +66,17 @@ pub(crate) fn build_narrative_display(
     };
 
     let llm_enabled = resources.llm_runtime.config().enabled_default;
+    let has_cache = world.get::<&NarrativeCache>(entity).is_ok();
+    let is_loading = world.get::<&LlmPending>(entity).is_ok();
+    let server_running = resources.llm_runtime.is_running();
+    log::info!(
+        "[LLM-DEBUG] build_narrative_display entity={} llm_enabled={} server_running={} is_loading={} has_cache={}",
+        entity_id,
+        llm_enabled,
+        server_running,
+        is_loading,
+        has_cache
+    );
     if !llm_enabled {
         data.show_disabled_overlay = true;
         data.disabled_message = localized_text("LLM_NARRATIVE_DISABLED");
@@ -74,8 +85,6 @@ pub(crate) fn build_narrative_display(
     }
 
     data.ai_icon_state = if resources.is_llm_available() { 1 } else { 4 };
-
-    let is_loading = world.get::<&LlmPending>(entity).is_ok();
     if is_loading {
         data.ai_icon_state = 2;
     }

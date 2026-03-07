@@ -292,14 +292,18 @@ pub const LLM_THREADS_BATCH: u32 = 4;
 pub const LLM_TEMPERATURE_L3: f64 = 0.1;
 /// Narrative temperature for Layer 4 free-text generation.
 pub const LLM_TEMPERATURE_L4: f64 = 0.7;
-/// Minimum per-entity cooldown between submitted requests.
-pub const LLM_COOLDOWN_TICKS: u32 = 300;
-/// Maximum time an LLM request may stay pending before fallback.
-pub const LLM_TIMEOUT_TICKS: u32 = 600;
+/// Minimum per-entity cooldown between submitted requests (5 seconds at 10 ticks/s).
+pub const LLM_COOLDOWN_TICKS: u32 = 50;
+/// Maximum time an LLM request may stay pending before fallback (10 seconds at 10 ticks/s).
+pub const LLM_TIMEOUT_TICKS: u32 = 100;
+/// Age threshold for replacing a stale click-time pending request with a fresh priority request.
+pub const LLM_CLICK_PREEMPT_TICKS: u32 = 30;
 /// Narrative cache TTL in ticks.
 pub const LLM_CACHE_TTL_TICKS: u32 = 3600;
 /// Maximum number of requests allowed in the bounded queue.
 pub const LLM_QUEUE_CAPACITY: usize = 8;
+/// HTTP timeout applied to each llama-server request in milliseconds.
+pub const LLM_HTTP_TIMEOUT_MS: u64 = 10_000;
 /// Default runtime toggle: when true, runtime init attempts to start the LLM layer.
 pub const LLM_ENABLED_DEFAULT: bool = true;
 /// LLM request runtime-system priority (late, after behavior resolution).
@@ -312,8 +316,8 @@ pub const LLM_RESPONSE_SYSTEM_PRIORITY: u32 = 50;
 pub const LLM_RESPONSE_SYSTEM_INTERVAL: u64 = 1;
 /// LLM timeout runtime-system priority (immediately after response processing).
 pub const LLM_TIMEOUT_SYSTEM_PRIORITY: u32 = 55;
-/// LLM timeout runtime-system cadence.
-pub const LLM_TIMEOUT_SYSTEM_INTERVAL: u64 = 60;
+/// LLM timeout runtime-system cadence (1 second at 10 ticks/s).
+pub const LLM_TIMEOUT_SYSTEM_INTERVAL: u64 = 10;
 /// Health-check attempts while waiting for llama-server to start.
 pub const LLM_HEALTHCHECK_ATTEMPTS: u32 = 30;
 /// Delay between llama-server health checks in milliseconds.

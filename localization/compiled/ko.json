@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4231,
+    "active_key_count": 4232,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4231,
+    "key_count": 4232,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1465,6 +1465,7 @@
     "STATUS_DRINK_WATER": "물 마시기",
     "STATUS_EAT": "식사",
     "STATUS_FINE_WOODWORK": "정밀 목공",
+    "STATUS_FORAGE": "채집",
     "STATUS_FORCED_BY_AUTHORITY": "강제 복종",
     "STATUS_FUGUE": "해리 상태",
     "STATUS_GATHER_FOOD": "식량 채집",

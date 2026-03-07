@@ -218,6 +218,21 @@ impl SimResources {
         Ok(request_id)
     }
 
+    /// Attempts to submit a user-priority LLM request without blocking.
+    pub fn submit_priority_llm_request(
+        &mut self,
+        request: LlmRequest,
+    ) -> Result<u64, LlmRuntimeError> {
+        let entity_id = request.entity_id;
+        let request_type = request.request_type;
+        let request_id = self.llm_runtime.submit_priority_request(request)?;
+        self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
+            entity_id,
+            request_type,
+        }));
+        Ok(request_id)
+    }
+
     /// Drains all available LLM responses.
     pub fn drain_llm_responses(&mut self) -> Vec<LlmResponse> {
         self.llm_runtime.drain_responses()

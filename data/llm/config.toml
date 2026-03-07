@@ -16,3 +16,4 @@ queue_capacity = 8
 healthcheck_attempts = 30
 healthcheck_interval_ms = 500
 shutdown_grace_ms = 5000
+http_timeout_ms = 10000
