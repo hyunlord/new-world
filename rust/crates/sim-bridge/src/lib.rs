@@ -17,6 +17,7 @@ mod runtime_dict;
 mod runtime_events;
 mod runtime_queries;
 mod runtime_registry;
+mod snapshot_buffer;
 mod debug_api;
 mod ws2_codec;
 
@@ -45,7 +46,7 @@ use sim_core::components::{
 };
 use sim_core::enums::{GrowthStage, NeedType, Sex};
 use sim_core::{Settlement, SettlementId};
-use sim_engine::{EngineSnapshot, GameEvent};
+use sim_engine::{AgentSnapshot, EngineSnapshot, GameEvent, SimEvent, SimEventType};
 use sim_systems::{
     body,
     entity_spawner,
@@ -69,6 +70,7 @@ use runtime_commands::{apply_commands_v2, clear_registry, registry_snapshot};
 use runtime_registry::{
     clamp_speed_index, parse_runtime_config, runtime_speed_multiplier, RuntimeState,
 };
+use snapshot_buffer::SnapshotBuffer;
 #[cfg(test)]
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
 
@@ -95,13 +97,366 @@ struct SpawnEntry {
 pub struct WorldSimRuntime {
     base: Base<Object>,
     state: Option<RuntimeState>,
+    snapshot_buffer: SnapshotBuffer,
+    render_alpha: f64,
 }
 
 #[godot_api]
 impl IObject for WorldSimRuntime {
     fn init(base: Base<Object>) -> Self {
-        Self { base, state: None }
+        Self {
+            base,
+            state: None,
+            snapshot_buffer: SnapshotBuffer::new(),
+            render_alpha: 0.0,
+        }
     }
+}
+
+fn encode_snapshot_bytes(snapshots: &[AgentSnapshot]) -> PackedByteArray {
+    let mut bytes: Vec<u8> = Vec::with_capacity(std::mem::size_of_val(snapshots));
+    for snapshot in snapshots {
+        snapshot.write_bytes(&mut bytes);
+    }
+    PackedByteArray::from(bytes)
+}
+
+fn resolve_runtime_entity(
+    world: &hecs::World,
+    entity_id_raw_or_bits: i64,
+) -> Option<hecs::Entity> {
+    let raw_or_bits = entity_id_raw_or_bits.max(0) as u64;
+    if let Some(entity) = hecs::Entity::from_bits(raw_or_bits) {
+        if world.contains(entity) {
+            return Some(entity);
+        }
+    }
+    let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+    let runtime_bits = runtime_bits_from_raw_id(&raw_lookup, raw_or_bits)?;
+    let entity = hecs::Entity::from_bits(runtime_bits as u64)?;
+    if world.contains(entity) {
+        return Some(entity);
+    }
+    None
+}
+
+fn archetype_label_key_from_axes(axes: [f64; 6]) -> &'static str {
+    const HIGH_KEYS: [&str; 6] = [
+        "ARCHETYPE_PRINCIPLED_GUARDIAN",
+        "ARCHETYPE_SENSITIVE_SOUL",
+        "ARCHETYPE_BOLD_EXPLORER",
+        "ARCHETYPE_GENTLE_PEACEMAKER",
+        "ARCHETYPE_DILIGENT_PLANNER",
+        "ARCHETYPE_CURIOUS_DREAMER",
+    ];
+    const LOW_KEYS: [&str; 6] = [
+        "ARCHETYPE_CUNNING_OPPORTUNIST",
+        "ARCHETYPE_STOIC_SURVIVOR",
+        "ARCHETYPE_QUIET_OBSERVER",
+        "ARCHETYPE_SHARP_CHALLENGER",
+        "ARCHETYPE_FREE_SPIRIT",
+        "ARCHETYPE_PRACTICAL_REALIST",
+    ];
+
+    let mut max_index: usize = 0;
+    let mut max_deviation: f64 = -1.0;
+    let mut is_high = true;
+    for (index, value) in axes.into_iter().enumerate() {
+        let deviation = (value - 0.5).abs();
+        if deviation > max_deviation {
+            max_deviation = deviation;
+            max_index = index;
+            is_high = value >= 0.5;
+        }
+    }
+
+    if is_high {
+        HIGH_KEYS[max_index]
+    } else {
+        LOW_KEYS[max_index]
+    }
+}
+
+fn humanize_status_text(value: &str) -> String {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return "Idle".to_string();
+    }
+
+    let normalized = trimmed.replace('_', " ");
+    let mut output = String::with_capacity(normalized.len() + 8);
+    let mut previous_is_lowercase = false;
+    for character in normalized.chars() {
+        let is_uppercase = character.is_uppercase();
+        if previous_is_lowercase && is_uppercase {
+            output.push(' ');
+        }
+        if output.is_empty() {
+            output.push(character.to_ascii_uppercase());
+        } else {
+            output.push(character);
+        }
+        previous_is_lowercase = character.is_lowercase();
+    }
+    output
+}
+
+fn top_need_key_and_value(needs: &Needs) -> (&'static str, f64) {
+    let mut best_key = "NEED_HUNGER";
+    let mut best_value = needs.values.first().copied().unwrap_or(1.0);
+    let need_keys = [
+        "NEED_HUNGER",
+        "NEED_THIRST",
+        "NEED_SLEEP",
+        "NEED_WARMTH",
+        "NEED_SAFETY",
+        "NEED_BELONGING",
+        "NEED_INTIMACY",
+        "NEED_RECOGNITION",
+        "NEED_AUTONOMY",
+        "NEED_COMPETENCE",
+        "NEED_SELF_ACTUALIZATION",
+        "NEED_MEANING",
+        "NEED_TRANSCENDENCE",
+    ];
+
+    for (index, key) in need_keys.iter().enumerate().skip(1) {
+        let value = needs.values.get(index).copied().unwrap_or(1.0);
+        if value < best_value {
+            best_key = key;
+            best_value = value;
+        }
+    }
+
+    if needs.energy < best_value {
+        ("NEED_ENERGY", needs.energy)
+    } else {
+        (best_key, best_value)
+    }
+}
+
+fn dominant_emotion_adjective(emotion: &Emotion) -> &'static str {
+    let dominant_index = emotion
+        .primary
+        .iter()
+        .enumerate()
+        .max_by(|left, right| {
+            left.1
+                .partial_cmp(right.1)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
+        .map(|(index, _)| index)
+        .unwrap_or(0);
+    match dominant_index {
+        0 => "joyful",
+        1 => "trusting",
+        2 => "afraid",
+        3 => "surprised",
+        4 => "sad",
+        5 => "disgusted",
+        6 => "angry",
+        7 => "restless",
+        _ => "calm",
+    }
+}
+
+fn need_motivation_sentence(needs: &Needs) -> Option<String> {
+    let (need_key, value) = top_need_key_and_value(needs);
+    if value >= sim_core::config::THOUGHT_TEXT_NEED_THRESHOLD {
+        return None;
+    }
+
+    let sentence = match need_key {
+        "NEED_HUNGER" => "Hunger is starting to bite.",
+        "NEED_THIRST" => "Thirst keeps getting harder to ignore.",
+        "NEED_SLEEP" => "Rest feels overdue.",
+        "NEED_WARMTH" => "Cold is creeping in.",
+        "NEED_SAFETY" => "Nothing feels completely safe right now.",
+        "NEED_BELONGING" => "Being near others suddenly matters more.",
+        "NEED_INTIMACY" => "Closeness feels painfully distant.",
+        "NEED_RECOGNITION" => "Recognition still feels out of reach.",
+        "NEED_AUTONOMY" => "Too much feels out of their control.",
+        "NEED_COMPETENCE" => "They want to prove they can handle this.",
+        "NEED_SELF_ACTUALIZATION" => "A larger purpose keeps tugging at them.",
+        "NEED_MEANING" => "They keep searching for meaning in the moment.",
+        "NEED_TRANSCENDENCE" => "Something beyond daily survival calls to them.",
+        "NEED_ENERGY" => "Energy is running thin.",
+        _ => "Something feels out of balance.",
+    };
+    Some(sentence.to_string())
+}
+
+fn entity_name_from_raw_id(
+    world: &hecs::World,
+    raw_lookup: &std::collections::HashMap<u64, u64>,
+    raw_id: u64,
+) -> Option<String> {
+    let runtime_bits = runtime_bits_from_raw_id(raw_lookup, raw_id)?;
+    let entity = hecs::Entity::from_bits(runtime_bits as u64)?;
+    let identity = world.get::<&Identity>(entity).ok()?;
+    Some(identity.name.clone())
+}
+
+fn format_story_event_message(
+    event: &SimEvent,
+    actor_name: &str,
+    target_name: Option<&str>,
+) -> String {
+    match &event.event_type {
+        SimEventType::NeedCritical => {
+            format!("{actor_name} is struggling with {}.", event.cause.replace('_', " "))
+        }
+        SimEventType::NeedSatisfied => {
+            format!("{actor_name} recovered from {}.", event.cause.replace('_', " "))
+        }
+        SimEventType::EmotionShift => {
+            format!("{actor_name}'s mood shifted toward {}.", event.cause.replace('_', " "))
+        }
+        SimEventType::MoodChanged => format!("{actor_name} feels different now."),
+        SimEventType::StressEscalated => format!("{actor_name}'s stress is rising."),
+        SimEventType::MentalBreakStart => format!("{actor_name} broke down under the strain."),
+        SimEventType::MentalBreakEnd => format!("{actor_name} is starting to recover."),
+        SimEventType::RelationshipFormed => format!(
+            "{actor_name} grew closer to {}.",
+            target_name.unwrap_or("someone")
+        ),
+        SimEventType::RelationshipBroken => format!(
+            "{actor_name} drifted apart from {}.",
+            target_name.unwrap_or("someone")
+        ),
+        SimEventType::SocialConflict => format!(
+            "{actor_name} clashed with {}.",
+            target_name.unwrap_or("someone")
+        ),
+        SimEventType::SocialCooperation => format!(
+            "{actor_name} worked with {}.",
+            target_name.unwrap_or("someone")
+        ),
+        SimEventType::ActionChanged => {
+            format!("{actor_name} switched to {}.", humanize_status_text(&event.cause))
+        }
+        SimEventType::TaskCompleted => {
+            format!("{actor_name} finished {}.", event.cause.replace('_', " "))
+        }
+        SimEventType::Birth => format!("{actor_name} welcomed a new child."),
+        SimEventType::Death => format!("{actor_name} died. {}", event.cause.replace('_', " ")),
+        SimEventType::AgeTransition => {
+            format!("{actor_name} entered a new stage of life.")
+        }
+        SimEventType::FirstOccurrence => format!("A first happened: {}.", event.cause.replace('_', " ")),
+        SimEventType::Custom(label) => format!("{actor_name}: {}", humanize_status_text(label)),
+    }
+}
+
+fn recent_social_observation(
+    store: &sim_engine::EventStore,
+    current_tick: u64,
+    raw_entity_id: u32,
+    world: &hecs::World,
+    raw_lookup: &std::collections::HashMap<u64, u64>,
+) -> Option<String> {
+    let since_tick = current_tick.saturating_sub(sim_core::config::THOUGHT_TEXT_EVENT_LOOKBACK_TICKS);
+    for event in store.recent(store.len()) {
+        if event.tick < since_tick {
+            break;
+        }
+        let involves_entity = event.actor == raw_entity_id || event.target == Some(raw_entity_id);
+        if !involves_entity {
+            continue;
+        }
+        let other_raw_id = if event.actor == raw_entity_id {
+            event.target.map(u64::from)
+        } else {
+            Some(u64::from(event.actor))
+        };
+        let other_name = other_raw_id
+            .and_then(|raw_id| entity_name_from_raw_id(world, raw_lookup, raw_id))
+            .unwrap_or_else(|| "someone nearby".to_string());
+        let observation = match event.event_type {
+            SimEventType::SocialConflict => Some(format!("Tension with {other_name} still lingers.")),
+            SimEventType::SocialCooperation => Some(format!("Working with {other_name} felt steady.")),
+            SimEventType::RelationshipFormed => Some(format!("{other_name} feels a little closer now.")),
+            SimEventType::RelationshipBroken => Some(format!("A bond with {other_name} feels frayed.")),
+            _ => None,
+        };
+        if observation.is_some() {
+            return observation;
+        }
+    }
+    None
+}
+
+fn recent_story_events_for_entity(
+    store: &sim_engine::EventStore,
+    raw_entity_id: u32,
+    world: &hecs::World,
+    raw_lookup: &std::collections::HashMap<u64, u64>,
+) -> Array<VarDictionary> {
+    let mut result: Array<VarDictionary> = Array::new();
+    for event in store.recent(store.len()) {
+        let involves_entity = event.actor == raw_entity_id || event.target == Some(raw_entity_id);
+        if !involves_entity {
+            continue;
+        }
+        let actor_name = entity_name_from_raw_id(world, raw_lookup, u64::from(event.actor))
+            .unwrap_or_else(|| "Someone".to_string());
+        let target_name = event
+            .target
+            .and_then(|raw_id| entity_name_from_raw_id(world, raw_lookup, u64::from(raw_id)));
+        let mut row = VarDictionary::new();
+        row.set("tick", event.tick as i64);
+        row.set("kind", format!("{:?}", event.event_type));
+        row.set("cause", event.cause.clone());
+        row.set(
+            "message",
+            format_story_event_message(event, actor_name.as_str(), target_name.as_deref()),
+        );
+        if let Some(target_raw_id) = event.target {
+            if let Some(runtime_id) = runtime_bits_from_raw_id(raw_lookup, u64::from(target_raw_id)) {
+                row.set("target_id", runtime_id);
+            }
+        }
+        result.push(&row);
+        if result.len() >= sim_core::config::DETAIL_PANEL_RECENT_EVENT_LIMIT {
+            break;
+        }
+    }
+    result
+}
+
+fn build_thought_text(
+    name: &str,
+    emotion_adjective: Option<&str>,
+    need_sentence: Option<&str>,
+    social_sentence: Option<&str>,
+    action_text: Option<&str>,
+    stress_is_high: bool,
+) -> String {
+    let mut sentences: Vec<String> = Vec::new();
+    if let Some(adjective) = emotion_adjective {
+        sentences.push(format!("[b]{name} feels {adjective}.[/b]"));
+    }
+    if let Some(sentence) = need_sentence {
+        sentences.push(sentence.to_string());
+    }
+    if stress_is_high {
+        sentences.push("Tension is building. The weight is getting heavier.".to_string());
+    }
+    if let Some(sentence) = social_sentence {
+        sentences.push(sentence.to_string());
+    }
+    if let Some(action) = action_text {
+        if !action.trim().is_empty() {
+            sentences.push(format!("Right now, {name} is {}.", action.to_lowercase()));
+        }
+    }
+    if sentences.is_empty() {
+        sentences.push(format!("[b]{name} feels steady for now.[/b]"));
+        sentences.push("Nothing stands out enough to break the rhythm.".to_string());
+    } else if sentences.len() == 1 {
+        sentences.push(format!("Right now, {name} is holding to the current rhythm."));
+    }
+    sentences.into_iter().take(4).collect::<Vec<_>>().join(" ")
 }
 
 #[godot_api]
@@ -110,6 +465,8 @@ impl WorldSimRuntime {
     fn runtime_init(&mut self, seed: i64, config_json: GString) -> bool {
         let config = parse_runtime_config(&config_json.to_string());
         self.state = Some(RuntimeState::from_seed(seed.max(0) as u64, config));
+        self.snapshot_buffer = SnapshotBuffer::new();
+        self.render_alpha = 0.0;
 
         if let Some(state) = self.state.as_mut() {
             // Try to load personality distribution from data dir (relative to Godot project root)
@@ -185,6 +542,10 @@ impl WorldSimRuntime {
             spawned_count += 1;
         }
 
+        state.engine.rebuild_frame_snapshots();
+        self.snapshot_buffer
+            .swap(state.engine.frame_snapshots().to_vec());
+
         log::info!("[SimBridge] Spawned {} agents via runtime_spawn_agents", spawned_count);
         spawned_count
     }
@@ -203,7 +564,11 @@ impl WorldSimRuntime {
                 return VarDictionary::new();
             }
         };
-        bridge_bootstrap_world(state, payload)
+        let out = bridge_bootstrap_world(state, payload);
+        state.engine.rebuild_frame_snapshots();
+        self.snapshot_buffer
+            .swap(state.engine.frame_snapshots().to_vec());
+        out
     }
 
     #[func]
@@ -223,6 +588,7 @@ impl WorldSimRuntime {
             out.set("accumulator", 0.0_f64);
             return out;
         };
+        let tick_duration = 1.0_f64 / f64::from(state.ticks_per_second);
 
         if speed_index >= 0 {
             let clamped_speed = clamp_speed_index(speed_index);
@@ -256,7 +622,6 @@ impl WorldSimRuntime {
         let mut ticks_processed: u32 = 0;
 
         if !paused {
-            let tick_duration = 1.0_f64 / f64::from(state.ticks_per_second);
             state.accumulator += delta_sec.max(0.0) * runtime_speed_multiplier(state.speed_index);
             while state.accumulator >= tick_duration && ticks_processed < state.max_ticks_per_frame
             {
@@ -273,6 +638,15 @@ impl WorldSimRuntime {
             if state.accumulator > tick_duration * 3.0 {
                 state.accumulator = 0.0;
             }
+        }
+        self.render_alpha = (state.accumulator / tick_duration).clamp(0.0, 1.0);
+        if ticks_processed > 0 {
+            self.snapshot_buffer
+                .swap(state.engine.frame_snapshots().to_vec());
+        } else if self.snapshot_buffer.agent_count() == 0 && !state.engine.world().is_empty() {
+            state.engine.rebuild_frame_snapshots();
+            self.snapshot_buffer
+                .swap(state.engine.frame_snapshots().to_vec());
         }
 
         // Write debug snapshot for EditorPlugin every 60 ticks (file-based IPC).
@@ -327,6 +701,26 @@ impl WorldSimRuntime {
         }
 
         out
+    }
+
+    #[func]
+    fn get_frame_snapshots(&self) -> PackedByteArray {
+        encode_snapshot_bytes(self.snapshot_buffer.curr())
+    }
+
+    #[func]
+    fn get_prev_frame_snapshots(&self) -> PackedByteArray {
+        encode_snapshot_bytes(self.snapshot_buffer.prev())
+    }
+
+    #[func]
+    fn get_render_alpha(&self) -> f64 {
+        self.render_alpha
+    }
+
+    #[func]
+    fn get_agent_count(&self) -> i64 {
+        self.snapshot_buffer.agent_count() as i64
     }
 
     #[func]
@@ -405,6 +799,37 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn drain_notifications(&mut self) -> Array<VarDictionary> {
+        let mut out: Array<VarDictionary> = Array::new();
+        let Some(state) = self.state.as_mut() else {
+            return out;
+        };
+        let drained: Vec<_> = state
+            .engine
+            .resources_mut()
+            .pending_notifications
+            .drain(..)
+            .collect();
+        for notification in drained {
+            let mut dict = VarDictionary::new();
+            dict.set("tick", notification.tick as i64);
+            dict.set("tier", notification.tier.as_i64());
+            dict.set("kind", notification.kind.as_str());
+            dict.set("importance", notification.importance);
+            dict.set("primary_entity", notification.primary_entity as i64);
+            dict.set(
+                "secondary_entity",
+                notification.secondary_entity.unwrap_or(0) as i64,
+            );
+            dict.set("message", notification.message_fallback.as_str());
+            dict.set("position_x", notification.position_x);
+            dict.set("position_y", notification.position_y);
+            out.push(&dict);
+        }
+        out
+    }
+
+    #[func]
     fn runtime_get_registry_snapshot(&self) -> Array<VarDictionary> {
         let Some(state) = self.state.as_ref() else {
             return Array::new();
@@ -446,7 +871,7 @@ impl WorldSimRuntime {
     fn runtime_get_entity_detail(&self, entity_id: i64) -> VarDictionary {
         let mut dict = VarDictionary::new();
         let Some(state) = self.state.as_ref() else { return dict };
-        let entity = match hecs::Entity::from_bits(entity_id as u64) {
+        let entity = match resolve_runtime_entity(state.engine.world(), entity_id) {
             Some(e) => e,
             None => return dict,
         };
@@ -455,7 +880,7 @@ impl WorldSimRuntime {
 
         // Identity (required — return empty if missing)
         let Ok(id) = world.get::<&Identity>(entity) else { return dict };
-        dict.set("entity_id", entity_id);
+        dict.set("entity_id", entity.to_bits().get() as i64);
         dict.set("name", id.name.clone());
         dict.set("sex", runtime_sex_to_str(id.sex));
         dict.set("settlement_id", id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64));
@@ -466,6 +891,14 @@ impl WorldSimRuntime {
         dict.set("speech_verbosity", id.speech_verbosity.clone());
         dict.set("speech_humor", id.speech_humor.clone());
         drop(id);
+
+        if let Ok(position) = world.get::<&Position>(entity) {
+            dict.set("x", position.x);
+            dict.set("y", position.y);
+            dict.set("vel_x", position.vel_x);
+            dict.set("vel_y", position.vel_y);
+            dict.set("movement_dir", position.movement_dir as i64);
+        }
 
         // Age
         if let Ok(age) = world.get::<&Age>(entity) {
@@ -481,6 +914,7 @@ impl WorldSimRuntime {
             dict.set("hex_a", pers.axes[3] as f32);
             dict.set("hex_c", pers.axes[4] as f32);
             dict.set("hex_o", pers.axes[5] as f32);
+            dict.set("archetype_key", archetype_label_key_from_axes(pers.axes));
         }
 
         // Emotions (Plutchik 8)
@@ -518,6 +952,9 @@ impl WorldSimRuntime {
             dict.set("need_meaning", nv[11] as f32);
             dict.set("need_transcendence", nv[12] as f32);
             dict.set("energy", needs.energy as f32);
+            let (top_need_key, top_need_value) = top_need_key_and_value(&needs);
+            dict.set("top_need_key", top_need_key);
+            dict.set("top_need_value", top_need_value as f32);
         }
 
         // Stress
@@ -593,7 +1030,7 @@ impl WorldSimRuntime {
     fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
         let mut dict = VarDictionary::new();
         let Some(state) = self.state.as_ref() else { return dict };
-        let entity = match hecs::Entity::from_bits(entity_id as u64) {
+        let entity = match resolve_runtime_entity(state.engine.world(), entity_id) {
             Some(e) => e,
             None => return dict,
         };
@@ -795,6 +1232,15 @@ impl WorldSimRuntime {
                     }
                     dict.set("trauma_scars", scars);
                 }
+                dict.set(
+                    "story_events",
+                    recent_story_events_for_entity(
+                        &state.engine.resources().event_store,
+                        entity.id(),
+                        world,
+                        &raw_lookup,
+                    ),
+                );
                 if let Ok(stress) = world.get::<&Stress>(entity) {
                     dict.set("ace_score", stress.ace_score as f32);
                 }
@@ -896,6 +1342,81 @@ impl WorldSimRuntime {
             result.push(&d);
         }
         result
+    }
+
+    #[func]
+    fn get_archetype_label(&self, entity_id: i64) -> GString {
+        let Some(state) = self.state.as_ref() else {
+            return GString::new();
+        };
+        let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
+            return GString::new();
+        };
+        let world = state.engine.world();
+        let Ok(personality) = world.get::<&Personality>(entity) else {
+            return GString::new();
+        };
+        GString::from(archetype_label_key_from_axes(personality.axes))
+    }
+
+    #[func]
+    fn get_thought_text(&self, entity_id: i64) -> GString {
+        let Some(state) = self.state.as_ref() else {
+            return GString::new();
+        };
+        let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
+            return GString::new();
+        };
+        let world = state.engine.world();
+        let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+        let raw_entity_id = entity.id();
+
+        let name = world
+            .get::<&Identity>(entity)
+            .ok()
+            .map(|identity| identity.name.clone())
+            .unwrap_or_else(|| "Someone".to_string());
+        let emotion_adjective = world
+            .get::<&Emotion>(entity)
+            .ok()
+            .map(|emotion| dominant_emotion_adjective(&emotion));
+        let need_sentence = world
+            .get::<&Needs>(entity)
+            .ok()
+            .and_then(|needs| need_motivation_sentence(&needs));
+        let stress_is_high = world
+            .get::<&Stress>(entity)
+            .ok()
+            .map(|stress| {
+                matches!(
+                    stress.state,
+                    sim_core::enums::StressState::Resistance
+                        | sim_core::enums::StressState::Exhaustion
+                        | sim_core::enums::StressState::Collapse
+                ) || stress.active_mental_break.is_some()
+            })
+            .unwrap_or(false);
+        let social_sentence = recent_social_observation(
+            &state.engine.resources().event_store,
+            state.engine.current_tick(),
+            raw_entity_id,
+            world,
+            &raw_lookup,
+        );
+        let action_text = world
+            .get::<&Behavior>(entity)
+            .ok()
+            .map(|behavior| humanize_status_text(format!("{:?}", behavior.current_action).as_str()));
+
+        let thought_text = build_thought_text(
+            name.as_str(),
+            emotion_adjective,
+            need_sentence.as_deref(),
+            social_sentence.as_deref(),
+            action_text.as_deref(),
+            stress_is_high,
+        );
+        GString::from(thought_text.as_str())
     }
 
     // ── Debug API ──────────────────────────────────────────────────────────────
@@ -4452,6 +4973,7 @@ mod tests {
         PATHFIND_BACKEND_GPU,
     };
     use super::{
+        archetype_label_key_from_axes, build_thought_text,
         decode_ws2_blob, dispatch_pathfind_grid_batch_vec2_bytes,
         dispatch_pathfind_grid_batch_xy_bytes, dispatch_pathfind_grid_bytes, encode_ws2_blob,
         format_fluent_from_source_args, get_pathfind_backend_mode, has_gpu_pathfind_backend,
@@ -4501,6 +5023,34 @@ mod tests {
         let value = format_fluent_from_source_args(source, "en-US", "ui-item-count", Some(args))
             .expect("plural message should be formatted");
         assert_eq!(value, "3 items");
+    }
+
+    #[test]
+    fn archetype_label_key_prefers_largest_hexaco_deviation() {
+        assert_eq!(
+            archetype_label_key_from_axes([0.92, 0.50, 0.51, 0.49, 0.48, 0.47]),
+            "ARCHETYPE_PRINCIPLED_GUARDIAN"
+        );
+        assert_eq!(
+            archetype_label_key_from_axes([0.50, 0.51, 0.49, 0.48, 0.52, 0.10]),
+            "ARCHETYPE_PRACTICAL_REALIST"
+        );
+    }
+
+    #[test]
+    fn build_thought_text_bolds_first_sentence_and_mentions_need() {
+        let text = build_thought_text(
+            "Kaya",
+            Some("joyful"),
+            Some("Hunger is starting to bite."),
+            Some("A recent kindness still stands out."),
+            Some("Building"),
+            true,
+        );
+        assert!(text.starts_with("[b]Kaya feels joyful.[/b]"));
+        assert!(text.contains("Hunger is starting to bite."));
+        assert!(text.contains("building"));
+        assert!(text.contains("Tension is building."));
     }
 
     #[test]

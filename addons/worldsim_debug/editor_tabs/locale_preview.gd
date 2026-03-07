@@ -8,6 +8,7 @@ extends Control
 
 const KO_DIR := "res://localization/ko/"
 const EN_DIR := "res://localization/en/"
+const DebugEditorLocale := preload("res://addons/worldsim_debug/debug_editor_locale.gd")
 
 var _ko_keys: Dictionary = {}
 var _en_keys: Dictionary = {}
@@ -36,11 +37,11 @@ func _build_ui() -> void:
 	vbox.add_child(search_row)
 
 	var search_lbl := Label.new()
-	search_lbl.text = Locale.ltr("DEBUG_LOCALE_SEARCH") + " "
+	search_lbl.text = DebugEditorLocale.ltr("DEBUG_LOCALE_SEARCH") + " "
 	search_row.add_child(search_lbl)
 
 	_search_box = LineEdit.new()
-	_search_box.placeholder_text = Locale.ltr("DEBUG_LOCALE_SEARCH")
+	_search_box.placeholder_text = DebugEditorLocale.ltr("DEBUG_LOCALE_SEARCH")
 	_search_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_search_box.text_changed.connect(_on_search_changed)
 	search_row.add_child(_search_box)
@@ -50,8 +51,8 @@ func _build_ui() -> void:
 	_key_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_key_tree.columns = 4
 	_key_tree.set_column_title(0, "Key")
-	_key_tree.set_column_title(1, Locale.ltr("DEBUG_LOCALE_KO"))
-	_key_tree.set_column_title(2, Locale.ltr("DEBUG_LOCALE_EN"))
+	_key_tree.set_column_title(1, DebugEditorLocale.ltr("DEBUG_LOCALE_KO"))
+	_key_tree.set_column_title(2, DebugEditorLocale.ltr("DEBUG_LOCALE_EN"))
 	_key_tree.set_column_title(3, "Status")
 	_key_tree.column_titles_visible = true
 	_key_tree.hide_root = true
@@ -95,9 +96,9 @@ func _update_summary() -> void:
 	var ko_count := _ko_keys.size()
 	var en_count := _en_keys.size()
 	var missing := _count_missing()
-	var ko_lbl := Locale.ltr("DEBUG_LOCALE_KO")
-	var en_lbl := Locale.ltr("DEBUG_LOCALE_EN")
-	var miss_lbl := Locale.ltr("DEBUG_LOCALE_MISSING")
+	var ko_lbl := DebugEditorLocale.ltr("DEBUG_LOCALE_KO")
+	var en_lbl := DebugEditorLocale.ltr("DEBUG_LOCALE_EN")
+	var miss_lbl := DebugEditorLocale.ltr("DEBUG_LOCALE_MISSING")
 	_summary_label.text = "%s: %d  |  %s: %d  |  %s: %d" % [ko_lbl, ko_count, en_lbl, en_count, miss_lbl, missing]
 
 func _count_missing() -> int:
@@ -137,7 +138,7 @@ func _rebuild_tree(filter: String) -> void:
 		row.set_text(0, key)
 		row.set_text(1, ko_val.substr(0, 40))
 		row.set_text(2, en_val.substr(0, 40))
-		row.set_text(3, Locale.ltr("DEBUG_LOCALE_STATUS_OK") if ok else Locale.ltr("DEBUG_LOCALE_STATUS_MISSING"))
+		row.set_text(3, DebugEditorLocale.ltr("DEBUG_LOCALE_STATUS_OK") if ok else DebugEditorLocale.ltr("DEBUG_LOCALE_STATUS_MISSING"))
 		row.set_metadata(0, {"key": key, "ko": ko_val, "en": en_val})
 
 		if not ok:

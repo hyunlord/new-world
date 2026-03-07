@@ -14,7 +14,7 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use sim_core::scales::{NativeStress};
 
 use crate::body;
@@ -279,7 +279,7 @@ impl SimSystem for SocialEventRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut query = world.query::<(
             &mut Social,
             Option<&Personality>,
@@ -287,7 +287,7 @@ impl SimSystem for SocialEventRuntimeSystem {
             Option<&Needs>,
             Option<&Stress>,
         )>();
-        for (_, (social, personality_opt, behavior_opt, needs_opt, stress_opt)) in &mut query {
+        for (entity, (social, personality_opt, behavior_opt, needs_opt, stress_opt)) in &mut query {
             let extraversion = personality_opt
                 .map(|personality| personality.axis(HexacoAxis::X) as f32)
                 .unwrap_or(0.5)
@@ -317,6 +317,9 @@ impl SimSystem for SocialEventRuntimeSystem {
                 (extraversion * 0.45 + agreeableness * 0.35 + social_need * 0.20).clamp(0.0, 1.0);
 
             for edge in &mut social.edges {
+                let previous_relation_type = edge.relation_type;
+                let previous_affinity = edge.affinity;
+                let previous_trust = edge.trust;
                 let romantic_interest = if matches!(
                     edge.relation_type,
                     RelationType::Intimate | RelationType::Spouse
@@ -346,6 +349,66 @@ impl SimSystem for SocialEventRuntimeSystem {
                     ((edge.familiarity as f32 + familiarity_delta).clamp(0.0, 1.0)) as f64;
                 edge.last_interaction_tick = tick;
                 edge.update_type();
+
+                let target = u32::try_from(edge.target.0).ok();
+                if let Some(target_id) = target {
+                    if !matches!(
+                        previous_relation_type,
+                        RelationType::Friend | RelationType::CloseFriend | RelationType::Intimate
+                    ) && matches!(
+                        edge.relation_type,
+                        RelationType::Friend | RelationType::CloseFriend | RelationType::Intimate
+                    ) {
+                        resources.event_store.push(SimEvent {
+                            tick,
+                            event_type: SimEventType::RelationshipFormed,
+                            actor: entity.id(),
+                            target: Some(target_id),
+                            tags: vec!["social".to_string(), "relationship".to_string()],
+                            cause: format!("{:?}", edge.relation_type),
+                            value: edge.affinity,
+                        });
+                    } else if matches!(
+                        previous_relation_type,
+                        RelationType::Friend | RelationType::CloseFriend | RelationType::Intimate
+                    ) && matches!(
+                        edge.relation_type,
+                        RelationType::Stranger | RelationType::Acquaintance
+                    ) {
+                        resources.event_store.push(SimEvent {
+                            tick,
+                            event_type: SimEventType::RelationshipBroken,
+                            actor: entity.id(),
+                            target: Some(target_id),
+                            tags: vec!["social".to_string(), "relationship".to_string()],
+                            cause: format!("{:?}", previous_relation_type),
+                            value: edge.affinity,
+                        });
+                    }
+                    if previous_affinity >= 5.0 && edge.affinity < 5.0
+                        || (previous_trust >= 0.3 && edge.trust < 0.3)
+                    {
+                        resources.event_store.push(SimEvent {
+                            tick,
+                            event_type: SimEventType::SocialConflict,
+                            actor: entity.id(),
+                            target: Some(target_id),
+                            tags: vec!["social".to_string(), "conflict".to_string()],
+                            cause: format!("{:?}", action),
+                            value: edge.affinity,
+                        });
+                    } else if previous_trust < 0.6 && edge.trust >= 0.6 {
+                        resources.event_store.push(SimEvent {
+                            tick,
+                            event_type: SimEventType::SocialCooperation,
+                            actor: entity.id(),
+                            target: Some(target_id),
+                            tags: vec!["social".to_string(), "cooperation".to_string()],
+                            cause: format!("{:?}", edge.relation_type),
+                            value: edge.trust,
+                        });
+                    }
+                }
             }
 
             let mut strong_count = 0.0_f32;

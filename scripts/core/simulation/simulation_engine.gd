@@ -364,6 +364,22 @@ func get_entity_tab(entity_id: int, tab: String) -> Dictionary:
 	return {}
 
 
+## Returns the archetype locale key for the given entity from SimBridge.
+func get_archetype_label(entity_id: int) -> String:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_archetype_label"):
+		return ""
+	return str(sim_bridge.call("get_archetype_label", entity_id))
+
+
+## Returns formatted thought-stream text for the given entity from SimBridge.
+func get_thought_text(entity_id: int) -> String:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_thought_text"):
+		return ""
+	return str(sim_bridge.call("get_thought_text", entity_id))
+
+
 ## Returns settlement detail from Rust runtime.
 func get_settlement_detail(settlement_id: int) -> Dictionary:
 	var sim_bridge: Object = _get_sim_bridge()

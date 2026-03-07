@@ -10,6 +10,7 @@ enum ConnectionState { DISCONNECTED, CONNECTED }
 
 const SNAPSHOT_PATH := "user://debug_snapshot.json"
 const CHECK_INTERVAL_SEC := 1.0
+const DebugEditorLocale := preload("res://addons/worldsim_debug/debug_editor_locale.gd")
 
 # Panel preload paths
 const _PANEL_PATHS := {
@@ -74,7 +75,7 @@ func _build_ui() -> void:
 	_status_bar.add_child(_status_dot)
 
 	_status_text = Label.new()
-	_status_text.text = Locale.ltr("DEBUG_EDITOR_DISCONNECTED")
+	_status_text.text = DebugEditorLocale.ltr("DEBUG_EDITOR_DISCONNECTED")
 	_status_bar.add_child(_status_text)
 
 	var sep := HSeparator.new()
@@ -95,7 +96,7 @@ func _build_live_tabs() -> void:
 
 		# Wrapper control for this tab
 		var wrapper := Control.new()
-		wrapper.name = Locale.ltr(label_key)
+		wrapper.name = DebugEditorLocale.ltr(label_key)
 		wrapper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		_tab_container.add_child(wrapper)
 		_live_wrappers.append(wrapper)
@@ -117,15 +118,15 @@ func _build_live_tabs() -> void:
 
 func _build_static_tabs() -> void:
 	_formula_tab = FormulaReference.new()
-	_formula_tab.name = Locale.ltr("DEBUG_TAB_FORMULAS")
+	_formula_tab.name = DebugEditorLocale.ltr("DEBUG_TAB_FORMULAS")
 	_tab_container.add_child(_formula_tab)
 
 	_architecture_tab = ArchitectureViewer.new()
-	_architecture_tab.name = Locale.ltr("DEBUG_TAB_ARCHITECTURE")
+	_architecture_tab.name = DebugEditorLocale.ltr("DEBUG_TAB_ARCHITECTURE")
 	_tab_container.add_child(_architecture_tab)
 
 	_locale_tab = LocalePreview.new()
-	_locale_tab.name = Locale.ltr("DEBUG_TAB_LOCALE")
+	_locale_tab.name = DebugEditorLocale.ltr("DEBUG_TAB_LOCALE")
 	_tab_container.add_child(_locale_tab)
 
 func _load_live_panel(key: String) -> Control:
@@ -149,18 +150,18 @@ func _make_disconnect_placeholder() -> Control:
 	container.add_child(vbox)
 
 	var dot_label := Label.new()
-	dot_label.text = "🔴 " + Locale.ltr("DEBUG_EDITOR_DISCONNECTED")
+	dot_label.text = "🔴 " + DebugEditorLocale.ltr("DEBUG_EDITOR_DISCONNECTED")
 	dot_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(dot_label)
 
 	var hint_label := Label.new()
-	hint_label.text = Locale.ltr("DEBUG_EDITOR_PRESS_PLAY")
+	hint_label.text = DebugEditorLocale.ltr("DEBUG_EDITOR_PRESS_PLAY")
 	hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	vbox.add_child(hint_label)
 
 	var static_hint := Label.new()
-	static_hint.text = Locale.ltr("DEBUG_EDITOR_STATIC_HINT")
+	static_hint.text = DebugEditorLocale.ltr("DEBUG_EDITOR_STATIC_HINT")
 	static_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	static_hint.add_theme_color_override("font_color", Color(0.5, 0.7, 0.9))
 	vbox.add_child(static_hint)
@@ -219,7 +220,7 @@ func _check_snapshot() -> void:
 
 	# Update status tick
 	var tick: int = int(snapshot.get("tick", 0))
-	_status_text.text = "🟢 %s (tick %d)" % [Locale.ltr("DEBUG_EDITOR_CONNECTED"), tick]
+	_status_text.text = "🟢 %s (tick %d)" % [DebugEditorLocale.ltr("DEBUG_EDITOR_CONNECTED"), tick]
 
 func _set_state(new_state: ConnectionState) -> void:
 	_state = new_state
@@ -227,12 +228,12 @@ func _set_state(new_state: ConnectionState) -> void:
 	match _state:
 		ConnectionState.DISCONNECTED:
 			_status_dot.text = "🔴"
-			_status_text.text = Locale.ltr("DEBUG_EDITOR_DISCONNECTED")
+			_status_text.text = DebugEditorLocale.ltr("DEBUG_EDITOR_DISCONNECTED")
 			_show_placeholders(true)
 
 		ConnectionState.CONNECTED:
 			_status_dot.text = "🟢"
-			_status_text.text = Locale.ltr("DEBUG_EDITOR_CONNECTED")
+			_status_text.text = DebugEditorLocale.ltr("DEBUG_EDITOR_CONNECTED")
 			_show_placeholders(false)
 
 func _show_placeholders(show: bool) -> void:

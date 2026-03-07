@@ -12,6 +12,7 @@ mod record;
 mod social;
 mod steering;
 mod steering_derive;
+mod story_sifter;
 mod world;
 
 // ---- biology ----
@@ -96,6 +97,7 @@ pub use social::{
 // ---- steering ----
 pub use steering::SteeringRuntimeSystem;
 pub use steering_derive::derive_steering_params;
+pub use story_sifter::StorySifterRuntimeSystem;
 
 // ---- world ----
 pub use world::{

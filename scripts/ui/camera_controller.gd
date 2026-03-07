@@ -1,5 +1,7 @@
 extends Camera2D
 
+const EntityDetailPanelV3Class = preload("res://scripts/ui/panels/entity_detail_panel_v3.gd")
+
 var _target_zoom: float = 1.0
 var _is_dragging: bool = false
 var _drag_start: Vector2 = Vector2.ZERO
@@ -59,6 +61,23 @@ func is_following() -> bool:
 ## Returns the ID of the entity currently being followed, or -1 if none.
 func get_following_id() -> int:
 	return _following_entity_id
+
+
+func focus_world_tile(tile_position: Vector2) -> void:
+	if _following_entity_id >= 0:
+		stop_following()
+	var target_px: Vector2 = tile_position * GameConfig.TILE_SIZE + Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	position = _clamp_to_world_position(target_px)
+
+
+func focus_entity(entity_id: int) -> void:
+	var snapshot: Dictionary = _get_follow_target_snapshot(entity_id)
+	if snapshot.is_empty():
+		return
+	focus_world_tile(Vector2(
+		float(snapshot.get("x", 0.0)),
+		float(snapshot.get("y", 0.0))
+	))
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -177,7 +196,7 @@ func _zoom_at_mouse(delta: float) -> void:
 
 
 func _is_pointer_over_detail_panel() -> bool:
-	if not EntityDetailPanelV2.is_open:
+	if not EntityDetailPanelV3Class.is_open:
 		return false
 	var viewport: Viewport = get_viewport()
 	if viewport == null:
@@ -204,3 +223,11 @@ func _get_follow_target_snapshot(entity_id: int) -> Dictionary:
 				"y": detail.get("y", 0),
 			}
 	return {}
+
+
+func _clamp_to_world_position(target_px: Vector2) -> Vector2:
+	var world_px: Vector2 = Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE
+	return Vector2(
+		clampf(target_px.x, 0.0, world_px.x),
+		clampf(target_px.y, 0.0, world_px.y)
+	)

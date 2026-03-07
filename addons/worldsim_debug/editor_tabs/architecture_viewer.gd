@@ -7,6 +7,7 @@ extends Control
 
 const ENTITY_DATA_PATH := "res://addons/worldsim_debug/data/entity_catalog.json"
 const SYSTEM_DATA_PATH := "res://addons/worldsim_debug/data/system_catalog.json"
+const DebugEditorLocale := preload("res://addons/worldsim_debug/debug_editor_locale.gd")
 
 var _entities: Array = []
 var _systems: Array = []
@@ -33,7 +34,7 @@ func _build_ui() -> void:
 
 func _build_entities_tab() -> void:
 	var container := HBoxContainer.new()
-	container.name = Locale.ltr("DEBUG_ARCH_ENTITIES")
+	container.name = DebugEditorLocale.ltr("DEBUG_ARCH_ENTITIES")
 	_sub_tabs.add_child(container)
 
 	_entity_list = ItemList.new()
@@ -49,17 +50,17 @@ func _build_entities_tab() -> void:
 	container.add_child(_entity_detail)
 
 	var detail_header := Label.new()
-	detail_header.text = Locale.ltr("DEBUG_ARCH_COMPONENT") + "s"
+	detail_header.text = DebugEditorLocale.ltr("DEBUG_ARCH_COMPONENT") + "s"
 	detail_header.add_theme_font_size_override("font_size", 14)
 	_entity_detail.add_child(detail_header)
 
 	_entity_components_tree = Tree.new()
 	_entity_components_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_entity_components_tree.columns = 5
-	_entity_components_tree.set_column_title(0, Locale.ltr("DEBUG_ARCH_COMPONENT"))
+	_entity_components_tree.set_column_title(0, DebugEditorLocale.ltr("DEBUG_ARCH_COMPONENT"))
 	_entity_components_tree.set_column_title(1, "Size")
-	_entity_components_tree.set_column_title(2, Locale.ltr("DEBUG_ARCH_TIER"))
-	_entity_components_tree.set_column_title(3, Locale.ltr("DEBUG_ARCH_WRITER"))
+	_entity_components_tree.set_column_title(2, DebugEditorLocale.ltr("DEBUG_ARCH_TIER"))
+	_entity_components_tree.set_column_title(3, DebugEditorLocale.ltr("DEBUG_ARCH_WRITER"))
 	_entity_components_tree.set_column_title(4, "Fields")
 	_entity_components_tree.column_titles_visible = true
 	_entity_components_tree.hide_root = true
@@ -67,29 +68,29 @@ func _build_entities_tab() -> void:
 
 func _build_systems_tab() -> void:
 	var container := VBoxContainer.new()
-	container.name = Locale.ltr("DEBUG_ARCH_SYSTEMS")
+	container.name = DebugEditorLocale.ltr("DEBUG_ARCH_SYSTEMS")
 	_sub_tabs.add_child(container)
 
 	_system_tree = Tree.new()
 	_system_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_system_tree.columns = 6
 	_system_tree.set_column_title(0, "System")
-	_system_tree.set_column_title(1, Locale.ltr("DEBUG_ARCH_PRIORITY"))
-	_system_tree.set_column_title(2, Locale.ltr("DEBUG_ARCH_INTERVAL"))
+	_system_tree.set_column_title(1, DebugEditorLocale.ltr("DEBUG_ARCH_PRIORITY"))
+	_system_tree.set_column_title(2, DebugEditorLocale.ltr("DEBUG_ARCH_INTERVAL"))
 	_system_tree.set_column_title(3, "ms")
-	_system_tree.set_column_title(4, Locale.ltr("DEBUG_ARCH_READS"))
-	_system_tree.set_column_title(5, Locale.ltr("DEBUG_ARCH_WRITES"))
+	_system_tree.set_column_title(4, DebugEditorLocale.ltr("DEBUG_ARCH_READS"))
+	_system_tree.set_column_title(5, DebugEditorLocale.ltr("DEBUG_ARCH_WRITES"))
 	_system_tree.column_titles_visible = true
 	_system_tree.hide_root = true
 	container.add_child(_system_tree)
 
 func _build_memory_tab() -> void:
 	_memory_container = VBoxContainer.new()
-	_memory_container.name = Locale.ltr("DEBUG_ARCH_MEMORY")
+	_memory_container.name = DebugEditorLocale.ltr("DEBUG_ARCH_MEMORY")
 	_sub_tabs.add_child(_memory_container)
 
 	var header := Label.new()
-	header.text = Locale.ltr("DEBUG_ARCH_MEMORY") + " (target: 500 MB)"
+	header.text = DebugEditorLocale.ltr("DEBUG_ARCH_MEMORY") + " (target: 500 MB)"
 	header.add_theme_font_size_override("font_size", 14)
 	_memory_container.add_child(header)
 

@@ -15,7 +15,7 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, StressState, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use sim_core::scales::{NativeStress, NativePercent};
 
 use crate::body;
@@ -58,6 +58,32 @@ fn stress_bucket_from_state(state: StressState) -> usize {
     }
 }
 
+#[inline]
+fn dominant_emotion_index(emotion: &Emotion) -> usize {
+    emotion
+        .primary
+        .iter()
+        .enumerate()
+        .max_by(|left, right| left.1.partial_cmp(right.1).unwrap_or(Ordering::Equal))
+        .map(|(index, _)| index)
+        .unwrap_or(0)
+}
+
+#[inline]
+fn emotion_name(index: usize) -> &'static str {
+    match index {
+        0 => "joy",
+        1 => "trust",
+        2 => "fear",
+        3 => "surprise",
+        4 => "sadness",
+        5 => "disgust",
+        6 => "anger",
+        7 => "anticipation",
+        _ => "unknown",
+    }
+}
+
 
 /// Rust runtime system for stress-state updates.
 ///
@@ -91,7 +117,7 @@ impl SimSystem for StressRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut query = world.query::<(
             &Needs,
             &mut Stress,
@@ -104,7 +130,8 @@ impl SimSystem for StressRuntimeSystem {
             Option<&Identity>,
             Option<&mut SteeringParams>,
         )>();
-        for (_, (needs, stress, emotion_opt, personality_opt, social_opt, coping_opt, memory_opt, behavior_opt, identity_opt, steering_opt)) in &mut query {
+        for (entity, (needs, stress, emotion_opt, personality_opt, social_opt, coping_opt, memory_opt, behavior_opt, identity_opt, steering_opt)) in &mut query {
+            let previous_gas_stage = stress.gas_stage;
             // --- Gather inputs ---
 
             // Needs (normalized 0-1)
@@ -276,6 +303,18 @@ impl SimSystem for StressRuntimeSystem {
                     stress.shaken_work_penalty = 0.0;
                 }
             }
+
+            if stress.gas_stage > previous_gas_stage {
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::StressEscalated,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["stress".to_string(), "escalation".to_string()],
+                    cause: format!("{:?}", stress.state),
+                    value: f64::from(stress.gas_stage),
+                });
+            }
         }
     }
 }
@@ -348,8 +387,9 @@ impl SimSystem for MentalBreakRuntimeSystem {
             Option<&Personality>,
             Option<&Emotion>,
         )>();
-        for (_, (stress, needs_opt, personality_opt, emotion_opt)) in &mut query {
+        for (entity, (stress, needs_opt, personality_opt, emotion_opt)) in &mut query {
             if stress.active_mental_break.is_some() {
+                let previous_break = stress.active_mental_break;
                 let dec = self.tick_interval.min(u32::MAX as u64) as u32;
                 if stress.mental_break_remaining > dec {
                     stress.mental_break_remaining -= dec;
@@ -361,6 +401,17 @@ impl SimSystem for MentalBreakRuntimeSystem {
                     stress.shaken_remaining = 48;
                     stress.shaken_work_penalty = -0.25;
                     stress.recalculate_state();
+                    resources.event_store.push(SimEvent {
+                        tick: _tick,
+                        event_type: SimEventType::MentalBreakEnd,
+                        actor: entity.id(),
+                        target: None,
+                        tags: vec!["stress".to_string(), "mental_break".to_string()],
+                        cause: previous_break
+                            .map(|break_type| format!("{:?}", break_type))
+                            .unwrap_or_else(|| "mental_break".to_string()),
+                        value: stress.level,
+                    });
                 }
                 continue;
             }
@@ -446,6 +497,15 @@ impl SimSystem for MentalBreakRuntimeSystem {
             stress.active_mental_break = Some(break_type);
             stress.mental_break_count = stress.mental_break_count.saturating_add(1);
             stress.mental_break_remaining = mental_break_duration_ticks(break_type);
+            resources.event_store.push(SimEvent {
+                tick: _tick,
+                event_type: SimEventType::MentalBreakStart,
+                actor: entity.id(),
+                target: None,
+                tags: vec!["stress".to_string(), "mental_break".to_string()],
+                cause: format!("{:?}", break_type),
+                value: stress.level,
+            });
         }
     }
 }
@@ -804,7 +864,7 @@ impl SimSystem for EmotionRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut query = world.query::<(
             &mut Emotion,
             Option<&Stress>,
@@ -812,7 +872,9 @@ impl SimSystem for EmotionRuntimeSystem {
             Option<&Personality>,
             Option<&mut SteeringParams>,
         )>();
-        for (_, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query {
+        for (entity, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query {
+            let previous_dominant = dominant_emotion_index(emotion);
+            let previous_mood_bucket = mood_bucket_from_emotion(emotion);
             let stress_level = stress_opt
                 .map(|stress| stress.level as f32)
                 .unwrap_or(0.0)
@@ -903,6 +965,31 @@ impl SimSystem for EmotionRuntimeSystem {
                 let bucket = mood_bucket_from_emotion(emotion);
                 steering.mood_speed_multiplier =
                     config::MOOD_SPEED_MULTIPLIERS[bucket];
+            }
+
+            let new_dominant = dominant_emotion_index(emotion);
+            if new_dominant != previous_dominant {
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::EmotionShift,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["emotion".to_string()],
+                    cause: emotion_name(new_dominant).to_string(),
+                    value: emotion.primary[new_dominant],
+                });
+            }
+            let new_mood_bucket = mood_bucket_from_emotion(emotion);
+            if new_mood_bucket != previous_mood_bucket {
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::MoodChanged,
+                    actor: entity.id(),
+                    target: None,
+                    tags: vec!["emotion".to_string(), "mood".to_string()],
+                    cause: format!("mood_{new_mood_bucket}"),
+                    value: new_mood_bucket as f64,
+                });
             }
         }
     }

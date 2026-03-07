@@ -14,10 +14,65 @@ use sim_core::{
     BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use sim_core::scales::{NativeStress, NativePercent};
 
 use crate::body;
+
+#[inline]
+fn need_event_key(need_type: NeedType) -> &'static str {
+    match need_type {
+        NeedType::Hunger => "hunger",
+        NeedType::Thirst => "thirst",
+        NeedType::Sleep => "sleep",
+        NeedType::Warmth => "warmth",
+        NeedType::Safety => "safety",
+        NeedType::Belonging => "belonging",
+        NeedType::Intimacy => "intimacy",
+        NeedType::Recognition => "recognition",
+        NeedType::Autonomy => "autonomy",
+        NeedType::Competence => "competence",
+        NeedType::SelfActualization => "self_actualization",
+        NeedType::Meaning => "meaning",
+        NeedType::Transcendence => "transcendence",
+    }
+}
+
+#[inline]
+fn record_need_transition(
+    resources: &mut SimResources,
+    tick: u64,
+    actor: u32,
+    need_type: NeedType,
+    previous: f64,
+    next: f64,
+) {
+    let cause = need_event_key(need_type).to_string();
+    if previous >= config::NEED_EVENT_CRITICAL_THRESHOLD && next < config::NEED_EVENT_CRITICAL_THRESHOLD {
+        resources.event_store.push(SimEvent {
+            tick,
+            event_type: SimEventType::NeedCritical,
+            actor,
+            target: None,
+            tags: vec!["needs".to_string(), cause.clone()],
+            cause: cause.clone(),
+            value: next,
+        });
+    }
+    if previous <= config::NEED_EVENT_SATISFIED_THRESHOLD
+        && next > config::NEED_EVENT_SATISFIED_THRESHOLD
+    {
+        resources.event_store.push(SimEvent {
+            tick,
+            event_type: SimEventType::NeedSatisfied,
+            actor,
+            target: None,
+            tags: vec!["needs".to_string(), cause.clone()],
+            cause,
+            value: next,
+        });
+    }
+}
 
 
 /// Rust runtime system for base-needs decay and energy adjustment.
@@ -53,14 +108,20 @@ impl SimSystem for NeedsRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut query = world.query::<(
             &mut Needs,
             Option<&Behavior>,
             Option<&BodyComponent>,
             Option<&Position>,
         )>();
-        for (_, (needs, behavior_opt, body_opt, position_opt)) in &mut query {
+        for (entity, (needs, behavior_opt, body_opt, position_opt)) in &mut query {
+            let previous_hunger = needs.get(NeedType::Hunger);
+            let previous_belonging = needs.get(NeedType::Belonging);
+            let previous_thirst = needs.get(NeedType::Thirst);
+            let previous_warmth = needs.get(NeedType::Warmth);
+            let previous_safety = needs.get(NeedType::Safety);
+            let previous_sleep = needs.get(NeedType::Sleep);
             let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
             let mut has_tile_temp = false;
             if let Some(position) = position_opt {
@@ -147,6 +208,56 @@ impl SimSystem for NeedsRuntimeSystem {
             );
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);
+
+            let actor = entity.id();
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Hunger,
+                previous_hunger,
+                needs.get(NeedType::Hunger),
+            );
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Belonging,
+                previous_belonging,
+                needs.get(NeedType::Belonging),
+            );
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Thirst,
+                previous_thirst,
+                needs.get(NeedType::Thirst),
+            );
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Warmth,
+                previous_warmth,
+                needs.get(NeedType::Warmth),
+            );
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Safety,
+                previous_safety,
+                needs.get(NeedType::Safety),
+            );
+            record_need_transition(
+                resources,
+                tick,
+                actor,
+                NeedType::Sleep,
+                previous_sleep,
+                needs.get(NeedType::Sleep),
+            );
         }
     }
 }

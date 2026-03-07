@@ -6,6 +6,7 @@ extends Control
 ## Static reference — no simulation data needed.
 
 const DATA_PATH := "res://addons/worldsim_debug/data/formulas.json"
+const DebugEditorLocale := preload("res://addons/worldsim_debug/debug_editor_locale.gd")
 
 var _formulas: Array = []
 var _category_tree: Tree
@@ -31,7 +32,7 @@ func _build_ui() -> void:
 	hbox.add_child(left)
 
 	_search_box = LineEdit.new()
-	_search_box.placeholder_text = Locale.ltr("DEBUG_LOCALE_SEARCH")
+	_search_box.placeholder_text = DebugEditorLocale.ltr("DEBUG_LOCALE_SEARCH")
 	_search_box.text_changed.connect(_on_search_changed)
 	left.add_child(_search_box)
 
@@ -56,7 +57,7 @@ func _build_ui() -> void:
 	_detail_panel.add_child(_name_label)
 
 	var formula_section := Label.new()
-	formula_section.text = Locale.ltr("DEBUG_FORMULA_PARAMS")
+	formula_section.text = DebugEditorLocale.ltr("DEBUG_FORMULA_PARAMS")
 	_detail_panel.add_child(formula_section)
 
 	_formula_label = RichTextLabel.new()
@@ -66,7 +67,7 @@ func _build_ui() -> void:
 	_detail_panel.add_child(_formula_label)
 
 	var params_label := Label.new()
-	params_label.text = Locale.ltr("DEBUG_FORMULA_PARAMS")
+	params_label.text = DebugEditorLocale.ltr("DEBUG_FORMULA_PARAMS")
 	_detail_panel.add_child(params_label)
 
 	_params_tree = Tree.new()
@@ -83,7 +84,7 @@ func _build_ui() -> void:
 	var source_row := HBoxContainer.new()
 	_detail_panel.add_child(source_row)
 	var source_key := Label.new()
-	source_key.text = Locale.ltr("DEBUG_FORMULA_SOURCE") + ": "
+	source_key.text = DebugEditorLocale.ltr("DEBUG_FORMULA_SOURCE") + ": "
 	source_row.add_child(source_key)
 	_source_label = Label.new()
 	_source_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
@@ -134,12 +135,12 @@ func _rebuild_tree(filter: String) -> void:
 
 func _category_label(cat: String) -> String:
 	match cat:
-		"climate":    return Locale.ltr("DEBUG_CLIMATE")
-		"ecology":    return Locale.ltr("DEBUG_ECOLOGY")
-		"psychology": return Locale.ltr("DEBUG_PSYCHOLOGY")
-		"environment":return Locale.ltr("DEBUG_ENVIRONMENT")
-		"economy":    return Locale.ltr("DEBUG_SECTION_ECONOMY")
-		"politics":   return Locale.ltr("DEBUG_SECTION_POLITICS")
+		"climate":    return DebugEditorLocale.ltr("DEBUG_CLIMATE")
+		"ecology":    return DebugEditorLocale.ltr("DEBUG_ECOLOGY")
+		"psychology": return DebugEditorLocale.ltr("DEBUG_PSYCHOLOGY")
+		"environment":return DebugEditorLocale.ltr("DEBUG_ENVIRONMENT")
+		"economy":    return DebugEditorLocale.ltr("DEBUG_SECTION_ECONOMY")
+		"politics":   return DebugEditorLocale.ltr("DEBUG_SECTION_POLITICS")
 		_:            return cat.capitalize()
 
 func _on_item_selected() -> void:

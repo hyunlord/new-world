@@ -2,17 +2,28 @@ extends Node2D
 
 const EntityDataClass = preload("res://scripts/core/entity/entity_data.gd")
 const EntityManagerClass = preload("res://scripts/core/entity/entity_manager.gd")
+const SnapshotDecoderClass = preload("res://scripts/rendering/snapshot_decoder.gd")
+const AGENT_TEXTURE_PATH: String = "res://assets/sprites/agent_base.png"
+const AGENT_PALETTE_LUT_PATH: String = "res://assets/sprites/palette_lut.png"
+const AGENT_VISUAL_SHADER_PATH: String = "res://shaders/stress_phase.gdshader"
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
 var _sim_engine: RefCounted = null
+var _snapshot_decoder: SnapshotDecoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
 var selected_entity_id: int = -1
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
+var _binary_snapshot_available: bool = false
+var _render_alpha: float = 0.0
+var _agent_sprites: Array[Sprite2D] = []
+var _agent_texture: Texture2D = null
+var _agent_palette_lut: Texture2D = null
+var _agent_visual_shader: Shader = null
 
 ## Hover tooltip state
 var _hover_entity_id: int = -1
@@ -60,6 +71,21 @@ const JOB_VISUALS: Dictionary = {
 	"builder": {"size": 6.5, "color": Color(0.9, 0.6, 0.1)},
 	"miner": {"size": 5.5, "color": Color(0.5, 0.6, 0.75)},
 }
+const JOB_ICON_TO_KEY: Dictionary = {
+	0: "none",
+	1: "gatherer",
+	2: "lumberjack",
+	3: "builder",
+	4: "miner",
+}
+const GROWTH_STAGE_KEYS: PackedStringArray = [
+	"infant",
+	"toddler",
+	"child",
+	"teen",
+	"adult",
+	"elder",
+]
 
 ## Resource indicator colors
 const RES_COLORS: Dictionary = {
@@ -67,6 +93,25 @@ const RES_COLORS: Dictionary = {
 	"wood": Color(0.2, 0.5, 0.1),
 	"stone": Color(0.7, 0.7, 0.72),
 }
+const AGENT_FRAME_COLUMNS: int = 4
+const AGENT_FRAME_ROWS: int = 3
+const AGENT_FRAME_TIME_MS: int = 180
+const AGENT_BASE_SPEED: float = 3.75
+const AGENT_TEXTURE_OFFSET: Vector2 = Vector2(0.0, -4.0)
+const MOOD_COLORS: Array[Color] = [
+	Color("#B71C1C"),
+	Color("#F44336"),
+	Color("#FF9800"),
+	Color("#CDDC39"),
+	Color("#4CAF50"),
+]
+const STRESS_OUTLINE_COLORS: Array[Color] = [
+	Color(0.0, 0.0, 0.0, 0.0),
+	Color("#FF9800"),
+	Color("#FF5722"),
+	Color("#F44336"),
+	Color("#B71C1C"),
+]
 
 
 ## Initialize with entity manager reference
@@ -85,7 +130,7 @@ func _is_leader(entity: RefCounted) -> bool:
 	return s != null and s.leader_id == entity.id
 
 
-func _get_snapshots() -> Array:
+func _get_legacy_snapshots() -> Array:
 	if _sim_engine != null and _sim_engine.has_method("get_agent_snapshots"):
 		var snaps: Array = _sim_engine.get_agent_snapshots()
 		if not snaps.is_empty():
@@ -109,7 +154,18 @@ func _get_snapshots() -> Array:
 	return []
 
 
+func _update_binary_snapshots() -> void:
+	var curr_bytes: PackedByteArray = SimBridge.get_frame_snapshots()
+	var prev_bytes: PackedByteArray = SimBridge.get_prev_frame_snapshots()
+	var count: int = SimBridge.get_agent_count()
+	_render_alpha = clampf(SimBridge.get_render_alpha(), 0.0, 1.0)
+	_snapshot_decoder.update(curr_bytes, prev_bytes, count)
+	_binary_snapshot_available = _snapshot_decoder.has_data()
+
+
 func _ready() -> void:
+	if _ensure_agent_visual_resources():
+		_ensure_agent_sprite_capacity(32)
 	SimulationBus.tick_completed.connect(_on_tick)
 
 
@@ -118,10 +174,12 @@ func _on_tick(_tick: int) -> void:
 
 
 func _process(_delta: float) -> void:
+	_update_binary_snapshots()
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
 	_update_hover()
-	if _hover_entity_id >= 0:
+	_update_agent_sprites()
+	if _binary_snapshot_available or _hover_entity_id >= 0:
 		queue_redraw()
 
 
@@ -135,16 +193,24 @@ func _update_hover() -> void:
 	var mouse_world: Vector2 = canvas_xform.affine_inverse() * _hover_screen_pos
 	var mouse_tile: Vector2 = mouse_world / float(GameConfig.TILE_SIZE)
 
-	var alive: Array = _get_snapshots()
 	var best_id: int = -1
 	var best_dist: float = 2.0  # hover radius in tiles
-	for entity in alive:
-		var ex: float = float(entity.get("x", 0.0))
-		var ey: float = float(entity.get("y", 0.0))
-		var dist: float = Vector2(ex, ey).distance_to(mouse_tile)
-		if dist < best_dist:
-			best_dist = dist
-			best_id = int(entity.get("entity_id", -1))
+	if _binary_snapshot_available:
+		for index in range(_snapshot_decoder.agent_count):
+			var entity_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+			var dist: float = entity_pos.distance_to(mouse_tile)
+			if dist < best_dist:
+				best_dist = dist
+				best_id = _snapshot_decoder.get_entity_id(index)
+	else:
+		var alive: Array = _get_legacy_snapshots()
+		for entity in alive:
+			var ex: float = float(entity.get("x", 0.0))
+			var ey: float = float(entity.get("y", 0.0))
+			var dist: float = Vector2(ex, ey).distance_to(mouse_tile)
+			if dist < best_dist:
+				best_dist = dist
+				best_id = int(entity.get("entity_id", -1))
 
 	if best_id != _hover_entity_id:
 		_hover_entity_id = best_id
@@ -160,40 +226,117 @@ func _build_tooltip_text(entity_id: int) -> void:
 		detail = _sim_engine.get_entity_detail(entity_id)
 
 	if detail.is_empty():
-		_hover_tooltip_lines = PackedStringArray(["Agent %d" % entity_id])
+		_hover_tooltip_lines = PackedStringArray(["[%s] %s — %s" % [
+			Locale.ltr("ARCHETYPE_QUIET_OBSERVER"),
+			Locale.ltr("STATUS_IDLE"),
+			Locale.ltr("UI_UNKNOWN"),
+		]])
 		return
 
-	# Line 1: name sex age job
-	var name_str: String = str(detail.get("name", "???"))
-	var sex_icon: String = "♂" if str(detail.get("sex", "")).to_lower() == "male" else "♀"
-	var age_str: String = str(int(detail.get("age_years", 0)))
-	var job_str: String = str(detail.get("job", "none"))
-	var job_tr: String = Locale.tr_id("JOB", job_str)
+	var archetype_key: String = str(detail.get("archetype_key", ""))
+	if archetype_key.is_empty() and _sim_engine != null and _sim_engine.has_method("get_archetype_label"):
+		archetype_key = _sim_engine.get_archetype_label(entity_id)
+	if archetype_key.is_empty():
+		archetype_key = "ARCHETYPE_QUIET_OBSERVER"
 
-	var line1: String = "%s %s %s%s %s" % [name_str, sex_icon, age_str, Locale.ltr("UI_AGE_SUFFIX"), job_tr]
-
-	# Line 2: mood | stress state
-	var mood_val: float = float(detail.get("mood_score", 0.0))
-	var mood_text: String
-	if mood_val > 0.3:
-		mood_text = Locale.ltr("UI_MOOD_GOOD")
-	elif mood_val > -0.3:
-		mood_text = Locale.ltr("UI_MOOD_NEUTRAL")
-	else:
-		mood_text = Locale.ltr("UI_MOOD_BAD")
-
-	var stress_state: String = str(detail.get("stress_state", "calm"))
-	# Locale.tr_id() calls .to_upper() internally, so "Alert" → STRESS_STATE_ALERT.
-	# New locale keys STRESS_STATE_ALERT/RESISTANCE/EXHAUSTION/COLLAPSE added to
-	# both en and ko ui.json to cover the Rust enum variants.
-	var stress_tr: String = Locale.tr_id("STRESS_STATE", stress_state)
-
-	var line2: String = "%s: %s | %s: %s" % [
-		Locale.ltr("UI_MOOD"), mood_text,
-		Locale.ltr("UI_STRESS"), stress_tr
+	var action_text: String = _localized_hover_action_text(str(detail.get("current_action", "Idle")))
+	var motivation_text: String = _localized_hover_motivation_text(detail)
+	var hover_line: String = "[%s] %s — %s" % [
+		Locale.ltr(archetype_key),
+		action_text,
+		motivation_text,
 	]
+	_hover_tooltip_lines = PackedStringArray([hover_line])
 
-	_hover_tooltip_lines = PackedStringArray([line1, line2])
+
+func _localized_hover_action_text(action_raw: String) -> String:
+	var normalized: String = _camel_to_upper_snake(action_raw)
+	if normalized.is_empty():
+		normalized = "IDLE"
+	var locale_key: String = "STATUS_" + normalized
+	var localized: String = Locale.ltr(locale_key)
+	if localized == locale_key:
+		return humanize_hover_text(action_raw)
+	return localized
+
+
+func _localized_hover_motivation_text(detail: Dictionary) -> String:
+	var top_need_key: String = str(detail.get("top_need_key", ""))
+	if top_need_key.is_empty():
+		var need_keys: Array[String] = [
+			"NEED_HUNGER",
+			"NEED_THIRST",
+			"NEED_SLEEP",
+			"NEED_WARMTH",
+			"NEED_SAFETY",
+			"NEED_BELONGING",
+			"NEED_INTIMACY",
+			"NEED_RECOGNITION",
+			"NEED_AUTONOMY",
+			"NEED_COMPETENCE",
+			"NEED_SELF_ACTUALIZATION",
+			"NEED_MEANING",
+			"NEED_TRANSCENDENCE",
+			"NEED_ENERGY",
+		]
+		var detail_keys: Array[String] = [
+			"need_hunger",
+			"need_thirst",
+			"need_sleep",
+			"need_warmth",
+			"need_safety",
+			"need_belonging",
+			"need_intimacy",
+			"need_recognition",
+			"need_autonomy",
+			"need_competence",
+			"need_self_actualization",
+			"need_meaning",
+			"need_transcendence",
+			"energy",
+		]
+		var best_value: float = 99.0
+		for index: int in range(detail_keys.size()):
+			var value: float = float(detail.get(detail_keys[index], 99.0))
+			if value < best_value:
+				best_value = value
+				top_need_key = need_keys[index]
+	if top_need_key.is_empty():
+		return Locale.ltr("UI_UNKNOWN")
+	return Locale.ltr(top_need_key)
+
+
+func _camel_to_upper_snake(value: String) -> String:
+	var source: String = value.strip_edges().replace(" ", "_")
+	if source.is_empty():
+		return ""
+	var out: PackedStringArray = PackedStringArray()
+	var buffer: String = ""
+	for index: int in range(source.length()):
+		var character: String = source.substr(index, 1)
+		var is_uppercase: bool = character == character.to_upper() and character != character.to_lower()
+		if index > 0 and is_uppercase:
+			var previous: String = source.substr(index - 1, 1)
+			var prev_is_lower: bool = previous == previous.to_lower() and previous != previous.to_upper()
+			if prev_is_lower and not buffer.is_empty():
+				out.append(buffer)
+				buffer = ""
+		if character == "_":
+			if not buffer.is_empty():
+				out.append(buffer)
+				buffer = ""
+			continue
+		buffer += character.to_upper()
+	if not buffer.is_empty():
+		out.append(buffer)
+	return "_".join(out)
+
+
+func humanize_hover_text(value: String) -> String:
+	var normalized: String = value.strip_edges()
+	if normalized.is_empty():
+		return Locale.ltr("STATUS_IDLE")
+	return normalized.replace("_", " ")
 
 
 func _draw_hover_tooltip() -> void:
@@ -244,21 +387,18 @@ func _draw_hover_tooltip() -> void:
 
 
 func _draw() -> void:
-	var alive: Array = _get_snapshots()
+	if _binary_snapshot_available:
+		_draw_binary_snapshots()
+		return
+
+	var alive: Array = _get_legacy_snapshots()
 	if alive.is_empty() and _entity_manager == null:
 		return
 	var cam := get_viewport().get_camera_2d()
 	var zl: float = cam.zoom.x if cam else 1.0
 
 	# LOD transitions with hysteresis
-	if _current_lod == 0 and zl > 0.9:
-		_current_lod = 1
-	elif _current_lod == 1 and zl < 0.6:
-		_current_lod = 0
-	elif _current_lod == 1 and zl > 4.2:
-		_current_lod = 2
-	elif _current_lod == 2 and zl < 3.8:
-		_current_lod = 1
+	_update_lod(zl)
 
 	# Viewport culling: compute visible tile range
 	var viewport_size := get_viewport_rect().size
@@ -393,6 +533,279 @@ func _draw() -> void:
 	_draw_hover_tooltip()
 
 
+func _draw_binary_snapshots() -> void:
+	if not _snapshot_decoder.has_data():
+		return
+
+	var cam := get_viewport().get_camera_2d()
+	var zl: float = cam.zoom.x if cam else 1.0
+
+	_update_lod(zl)
+
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var cam_pos: Vector2 = cam.global_position if cam else Vector2.ZERO
+	var half_view: Vector2 = viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
+	var min_tile_x: int = int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2
+	var max_tile_x: int = int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2
+	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
+	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
+
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+
+	if _current_lod == 0:
+		for index in range(_snapshot_decoder.agent_count):
+			var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+			if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x:
+				continue
+			if tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
+				continue
+			var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+			var vis: Dictionary = JOB_VISUALS.get(_binary_job_key(_snapshot_decoder.get_job_icon(index)), JOB_VISUALS["none"])
+			var color: Color = vis["color"]
+			var tint: Color = MALE_TINT if _snapshot_decoder.get_sex(index) == 0 else FEMALE_TINT
+			color = color.lerp(tint, GENDER_TINT_WEIGHT)
+			var dot_size: float = maxf(3.0, 2.0 / zl)
+			draw_circle(pos, dot_size + 1.0, OUTLINE_COLOR)
+			draw_circle(pos, dot_size, color)
+			if _snapshot_decoder.get_entity_id(index) == selected_entity_id:
+				draw_arc(pos, dot_size + 3.0, 0, TAU, 16, Color.WHITE, 1.5)
+		_draw_hover_tooltip()
+		return
+
+	for index in range(_snapshot_decoder.agent_count):
+		var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+		if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x:
+			continue
+		if tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
+			continue
+
+		var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+		var job_key: String = _binary_job_key(_snapshot_decoder.get_job_icon(index))
+		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
+		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var vis: Dictionary = JOB_VISUALS.get(job_key, JOB_VISUALS["none"])
+		var size: float = float(vis["size"]) * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
+
+		if _current_lod >= 1:
+			var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
+			if danger_flags & 0b0010 != 0:
+				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
+			if entity_id == selected_entity_id:
+				draw_arc(pos, SELECTION_RADIUS, 0, TAU, 24, Color.WHITE, 1.5)
+
+		if _current_lod == 2:
+			var entity_name: String = _runtime_entity_name(entity_id)
+			if entity_name.is_empty():
+				entity_name = "#%d" % entity_id
+			var name_font: Font = ThemeDB.fallback_font
+			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
+			draw_rect(Rect2(pos.x + size + 2.0, pos.y - size - 4.0 - name_size.y, name_size.x + 4.0, name_size.y + 2.0), Color(0.0, 0.0, 0.0, 0.6))
+			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+
+	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
+		var res_font: Font = ThemeDB.fallback_font
+		for ty in range(maxi(0, min_tile_y), mini(_resource_map.height, max_tile_y + 1)):
+			for tx in range(maxi(0, min_tile_x), mini(_resource_map.width, max_tile_x + 1)):
+				var tpos: Vector2 = Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
+				var food: float = _resource_map.get_food(tx, ty)
+				var wood: float = _resource_map.get_wood(tx, ty)
+				var stone: float = _resource_map.get_stone(tx, ty)
+				if food > 2.0:
+					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_FOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
+				elif stone > 2.0:
+					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
+				elif wood > 3.0:
+					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
+
+	_draw_hover_tooltip()
+
+
+func _update_lod(zoom_level: float) -> void:
+	if _current_lod == 0 and zoom_level > 0.9:
+		_current_lod = 1
+	elif _current_lod == 1 and zoom_level < 0.6:
+		_current_lod = 0
+	elif _current_lod == 1 and zoom_level > 4.2:
+		_current_lod = 2
+	elif _current_lod == 2 and zoom_level < 3.8:
+		_current_lod = 1
+
+
+func _update_agent_sprites() -> void:
+	if not _binary_snapshot_available or not _snapshot_decoder.has_data():
+		_hide_agent_sprites()
+		return
+
+	if not _ensure_agent_visual_resources():
+		_hide_agent_sprites()
+		return
+
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	var zoom_level: float = cam.zoom.x if cam else 1.0
+	_update_lod(zoom_level)
+	if _current_lod == 0:
+		_hide_agent_sprites()
+		return
+
+	_ensure_agent_sprite_capacity(_snapshot_decoder.agent_count)
+
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var cam_pos: Vector2 = cam.global_position if cam else Vector2.ZERO
+	var half_view: Vector2 = viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
+	var min_tile_x: float = float(int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2)
+	var max_tile_x: float = float(int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2)
+	var min_tile_y: float = float(int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2)
+	var max_tile_y: float = float(int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2)
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+
+	for index in range(_snapshot_decoder.agent_count):
+		var sprite: Sprite2D = _agent_sprites[index]
+		var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+		if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x or tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
+			sprite.visible = false
+			continue
+
+		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
+		var velocity: Vector2 = _snapshot_decoder.get_velocity(index)
+		var movement_dir: int = _snapshot_decoder.get_movement_dir(index)
+		var frame_data: Dictionary = _sprite_frame_data(movement_dir, velocity.length())
+		var shader_material: ShaderMaterial = sprite.material as ShaderMaterial
+
+		sprite.position = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+		sprite.scale = Vector2.ONE * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
+		sprite.flip_h = bool(frame_data.get("flip_h", false))
+		sprite.frame = int(frame_data.get("frame", 0))
+		sprite.visible = true
+
+		_apply_palette(shader_material, _snapshot_decoder.get_sprite_var(index))
+		_apply_stress(
+			shader_material,
+			_snapshot_decoder.get_stress_phase(index),
+			_snapshot_decoder.get_mood_color(index),
+			_snapshot_decoder.get_active_break(index) > 0
+		)
+		_apply_breathing(shader_material, entity_id, velocity.length())
+
+	for index in range(_snapshot_decoder.agent_count, _agent_sprites.size()):
+		_agent_sprites[index].visible = false
+
+
+func _ensure_agent_sprite_capacity(required: int) -> void:
+	while _agent_sprites.size() < required:
+		var sprite: Sprite2D = Sprite2D.new()
+		var sprite_material: ShaderMaterial = ShaderMaterial.new()
+		sprite_material.resource_local_to_scene = true
+		sprite_material.shader = _agent_visual_shader
+		sprite_material.set_shader_parameter("palette_lut", _agent_palette_lut)
+		sprite.texture = _agent_texture
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sprite.centered = true
+		sprite.offset = AGENT_TEXTURE_OFFSET
+		sprite.hframes = AGENT_FRAME_COLUMNS
+		sprite.vframes = AGENT_FRAME_ROWS
+		sprite.material = sprite_material
+		sprite.visible = false
+		sprite.z_index = 1
+		add_child(sprite)
+		_agent_sprites.append(sprite)
+
+
+func _ensure_agent_visual_resources() -> bool:
+	if _agent_texture == null:
+		_agent_texture = _load_texture_from_png(AGENT_TEXTURE_PATH)
+	if _agent_palette_lut == null:
+		_agent_palette_lut = _load_texture_from_png(AGENT_PALETTE_LUT_PATH)
+	if _agent_visual_shader == null:
+		var shader_resource: Variant = load(AGENT_VISUAL_SHADER_PATH)
+		if shader_resource is Shader:
+			_agent_visual_shader = shader_resource
+	return _agent_texture != null and _agent_palette_lut != null and _agent_visual_shader != null
+
+
+func _load_texture_from_png(resource_path: String) -> Texture2D:
+	var image: Image = Image.new()
+	var err: Error = image.load(ProjectSettings.globalize_path(resource_path))
+	if err != OK:
+		return null
+	return ImageTexture.create_from_image(image)
+
+
+func _hide_agent_sprites() -> void:
+	for sprite in _agent_sprites:
+		sprite.visible = false
+
+
+func _sprite_frame_data(movement_dir: int, speed: float) -> Dictionary:
+	var frame_column: int = 0
+	if speed >= 0.05:
+		frame_column = int(Time.get_ticks_msec() / float(AGENT_FRAME_TIME_MS)) % AGENT_FRAME_COLUMNS
+
+	var frame_row: int = 1
+	var flip_h: bool = false
+	match movement_dir:
+		1, 2, 3:
+			frame_row = 2
+			flip_h = movement_dir == 3
+		4:
+			frame_row = 1
+			flip_h = true
+		5, 6, 7:
+			frame_row = 0
+			flip_h = movement_dir == 5
+		_:
+			frame_row = 1
+			flip_h = false
+
+	return {
+		"frame": frame_row * AGENT_FRAME_COLUMNS + frame_column,
+		"flip_h": flip_h,
+	}
+
+
+func _apply_palette(shader_material: ShaderMaterial, sprite_var: int) -> void:
+	var hair_index: int = (sprite_var >> 5) & 0x07
+	var body_index: int = (sprite_var >> 3) & 0x03
+	var skin_index: int = sprite_var & 0x07
+	shader_material.set_shader_parameter("hair_index", float(hair_index))
+	shader_material.set_shader_parameter("body_index", float(body_index))
+	shader_material.set_shader_parameter("skin_index", float(skin_index))
+
+
+func _apply_stress(shader_material: ShaderMaterial, stress_phase: int, mood_color_index: int, is_break: bool) -> void:
+	var clamped_stress: int = clampi(stress_phase, 0, STRESS_OUTLINE_COLORS.size() - 1)
+	var clamped_mood: int = clampi(mood_color_index, 0, MOOD_COLORS.size() - 1)
+	shader_material.set_shader_parameter("stress_phase", clamped_stress)
+	shader_material.set_shader_parameter("mood_color", MOOD_COLORS[clamped_mood])
+	shader_material.set_shader_parameter("outline_color", STRESS_OUTLINE_COLORS[clamped_stress])
+	shader_material.set_shader_parameter("active_break", is_break)
+
+
+func _apply_breathing(shader_material: ShaderMaterial, entity_id: int, current_speed: float) -> void:
+	var normalized_speed: float = clampf(current_speed / AGENT_BASE_SPEED, 0.0, 2.0)
+	shader_material.set_shader_parameter("agent_offset", float(entity_id) * 0.37)
+	shader_material.set_shader_parameter("speed_factor", normalized_speed)
+
+
+func _binary_job_key(job_icon: int) -> String:
+	return str(JOB_ICON_TO_KEY.get(job_icon, "none"))
+
+
+func _binary_growth_stage_key(stage_code: int) -> String:
+	if stage_code >= 0 and stage_code < GROWTH_STAGE_KEYS.size():
+		return GROWTH_STAGE_KEYS[stage_code]
+	return "adult"
+
+
+func _runtime_entity_name(entity_id: int) -> String:
+	if _sim_engine == null or not _sim_engine.has_method("get_entity_detail"):
+		return ""
+	var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
+	if detail.is_empty():
+		return ""
+	return str(detail.get("name", ""))
+
+
 func _draw_triangle(center: Vector2, size: float, color: Color) -> void:
 	var points := PackedVector2Array([
 		center + Vector2(0, -size),
@@ -514,19 +927,27 @@ func _handle_click(screen_pos: Vector2) -> void:
 			return
 
 	# Find entity at or near this tile
-	var alive: Array = _get_snapshots()
 	var best_entity_id: int = -1
 	var best_dist: float = 3.0  # max click distance in tiles
-	for i in range(alive.size()):
-		var entity: Dictionary = alive[i]
-		var entity_pos: Vector2 = Vector2(
-			float(entity.get("x", 0.0)),
-			float(entity.get("y", 0.0))
-		)
-		var dist: float = entity_pos.distance_to(tile_pos)
-		if dist < best_dist:
-			best_dist = dist
-			best_entity_id = int(entity.get("entity_id", -1))
+	if _binary_snapshot_available:
+		for index in range(_snapshot_decoder.agent_count):
+			var entity_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+			var dist: float = entity_pos.distance_to(tile_pos)
+			if dist < best_dist:
+				best_dist = dist
+				best_entity_id = _snapshot_decoder.get_entity_id(index)
+	else:
+		var alive: Array = _get_legacy_snapshots()
+		for i in range(alive.size()):
+			var entity: Dictionary = alive[i]
+			var entity_pos: Vector2 = Vector2(
+				float(entity.get("x", 0.0)),
+				float(entity.get("y", 0.0))
+			)
+			var dist: float = entity_pos.distance_to(tile_pos)
+			if dist < best_dist:
+				best_dist = dist
+				best_entity_id = int(entity.get("entity_id", -1))
 
 	if best_entity_id != -1:
 		var is_double: bool = (best_entity_id == _last_click_entity_id
