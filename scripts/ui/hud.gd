@@ -1492,12 +1492,12 @@ func _on_cast_bar_agent_pinned(_entity_id: int, _is_pinned: bool) -> void:
 	pass
 
 
-func _on_story_notification_clicked(entity_id: int, target_position: Vector2) -> void:
+func _on_story_notification_clicked(entity_id: int, _target_position: Vector2) -> void:
 	if entity_id >= 0:
 		_open_runtime_entity_popup(entity_id)
 
 
-func _on_story_crisis(entity_id: int, target_position: Vector2) -> void:
+func _on_story_crisis(entity_id: int, _target_position: Vector2) -> void:
 	if entity_id >= 0:
 		_open_runtime_entity_popup(entity_id)
 	if _sim_engine != null and not _sim_engine.is_paused:

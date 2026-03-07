@@ -47,5 +47,14 @@ override.cfg
 # Rust build artifacts
 rust/target/
 
+# LLM runtime artifacts (generated locally)
+bin/llama-server
+bin/llama-bench
+bin/*.dylib
+bin/*.dylib.*
+bin/*.so
+bin/*.so.*
+data/llm/models/*.gguf
+
 # ralph
 reports/

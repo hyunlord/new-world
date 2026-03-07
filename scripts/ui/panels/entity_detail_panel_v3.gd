@@ -1,6 +1,8 @@
 class_name EntityDetailPanelV3
 extends PanelContainer
 
+const NarrativePanelScene: PackedScene = preload("res://scenes/ui/narrative_panel.tscn")
+
 static var is_open: bool = false
 
 const NEED_ROWS: Array[Dictionary] = [
@@ -45,10 +47,12 @@ var _mind_tab: Dictionary = {}
 var _social_tab: Dictionary = {}
 var _memory_tab: Dictionary = {}
 var _thought_timer: float = 0.0
+var _narrative_refresh_timer: float = 0.0
 
 var _header_name: Label
 var _header_meta: Label
 var _summary_label: Label
+var _narrative_panel: Control
 var _thought_label: RichTextLabel
 var _needs_title: Label
 var _emotion_title: Label
@@ -90,6 +94,10 @@ func _notification(what: int) -> void:
 func _process(delta: float) -> void:
 	if not visible or _selected_entity_id < 0:
 		return
+	_narrative_refresh_timer += delta
+	if _narrative_refresh_timer >= 1.0:
+		_narrative_refresh_timer = 0.0
+		_refresh_narrative_panel()
 	_thought_timer += delta
 	if _thought_timer >= 3.0:
 		_thought_timer = 0.0
@@ -103,6 +111,9 @@ func show_entity_or_deceased(entity_id: int) -> void:
 func set_entity_id(entity_id: int) -> void:
 	_selected_entity_id = entity_id
 	_thought_timer = 0.0
+	_narrative_refresh_timer = 0.0
+	if _sim_engine != null:
+		_sim_engine.on_entity_narrative_click(entity_id)
 	_reload_data()
 
 
@@ -157,6 +168,9 @@ func _build_ui() -> void:
 	_summary_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_body"))
 	_summary_label.add_theme_color_override("font_color", Color(0.86, 0.87, 0.92))
 	root.add_child(_summary_label)
+
+	_narrative_panel = NarrativePanelScene.instantiate() as Control
+	root.add_child(_narrative_panel)
 
 	_thought_label = RichTextLabel.new()
 	_thought_label.bbcode_enabled = true
@@ -307,6 +321,7 @@ func _refresh_all() -> void:
 		return
 	_refresh_header()
 	_refresh_summary()
+	_refresh_narrative_panel()
 	_refresh_thought_stream()
 	_refresh_needs()
 	_refresh_emotions()
@@ -341,6 +356,13 @@ func _refresh_summary() -> void:
 	var motivation_text: String = _localized_need_text(str(_detail.get("top_need_key", "NEED_ENERGY")))
 	var summary_text: String = action_text + " — " + motivation_text
 	_summary_label.text = summary_text
+
+
+func _refresh_narrative_panel() -> void:
+	if _sim_engine == null or _narrative_panel == null or _selected_entity_id < 0:
+		return
+	var display: Dictionary = _sim_engine.get_narrative_display(_selected_entity_id)
+	_narrative_panel.call("render", display)
 
 
 func _refresh_thought_stream() -> void:

@@ -274,8 +274,12 @@ pub const LLM_CONFIG_PATH: &str = "data/llm/config.toml";
 pub const LLM_PROMPT_DIR: &str = "data/llm/prompts";
 /// Relative project path to the Layer 3 GBNF grammar file.
 pub const LLM_LAYER3_GRAMMAR_PATH: &str = "data/llm/grammars/layer3_judgment.gbnf";
-/// Context window passed to llama-server.
-pub const LLM_CONTEXT_SIZE: u32 = 2048;
+/// Context window used for the standard AI narration quality tier.
+pub const LLM_CONTEXT_SIZE_STANDARD: u32 = 1024;
+/// Context window used for the enhanced AI narration quality tier.
+pub const LLM_CONTEXT_SIZE_ENHANCED: u32 = 2048;
+/// Default context window passed to llama-server.
+pub const LLM_CONTEXT_SIZE: u32 = LLM_CONTEXT_SIZE_ENHANCED;
 /// Maximum output tokens for Layer 3 judgment calls.
 pub const LLM_MAX_TOKENS_L3: u32 = 64;
 /// Maximum output tokens for Layer 4 narrative calls.
@@ -316,6 +320,10 @@ pub const LLM_HEALTHCHECK_ATTEMPTS: u32 = 30;
 pub const LLM_HEALTHCHECK_INTERVAL_MS: u64 = 500;
 /// Grace period before a stuck llama-server process is force-killed.
 pub const LLM_SHUTDOWN_GRACE_MS: u64 = 5_000;
+/// User-home directory name used for persisted runtime LLM preferences.
+pub const LLM_USER_SETTINGS_DIR_NAME: &str = ".worldsim";
+/// TOML filename used for persisted runtime LLM preferences.
+pub const LLM_USER_SETTINGS_FILE_NAME: &str = "llm_settings.toml";
 
 // ── Stress → Work Efficiency [Yerkes-Dodson 1908, McEwen 2004] ───────────────
 pub const STRESS_EFFICIENCY_EUSTRESS_PEAK: f64 = 150.0;

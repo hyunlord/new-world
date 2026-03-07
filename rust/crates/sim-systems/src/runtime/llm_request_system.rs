@@ -39,6 +39,12 @@ struct PendingSubmission {
     request: LlmRequest,
 }
 
+fn cache_has_any_text(cache: &NarrativeCache) -> bool {
+    cache.personality_desc.is_some()
+        || cache.last_event_narrative.is_some()
+        || cache.last_inner_monologue.is_some()
+}
+
 impl LlmRequestRuntimeSystem {
     /// Creates a request system with explicit scheduling metadata.
     pub fn new(priority: u32, tick_interval: u64) -> Self {
@@ -78,15 +84,20 @@ impl SimSystem for LlmRequestRuntimeSystem {
                 &LlmCapable,
                 Option<&NarrativeCache>,
                 Option<&LlmPending>,
+                Option<&LlmResult>,
             )>();
 
-            for (entity, (identity, personality, emotion, behavior, needs, stress, capable, cache, pending)) in
+            for (entity, (identity, personality, emotion, behavior, needs, stress, capable, cache, pending, result)) in
                 &mut query
             {
                 if pending.is_some() {
                     continue;
                 }
-                if tick.saturating_sub(capable.last_request_tick) < u64::from(capable.cooldown_ticks)
+                let should_enforce_cooldown =
+                    result.is_some() || cache.map(cache_has_any_text).unwrap_or(false);
+                if should_enforce_cooldown
+                    && tick.saturating_sub(capable.last_request_tick)
+                        < u64::from(capable.cooldown_ticks)
                 {
                     continue;
                 }
@@ -405,8 +416,8 @@ mod tests {
     use super::LlmRequestRuntimeSystem;
     use hecs::World;
     use sim_core::components::{
-        Behavior, Emotion, Identity, LlmCapable, LlmContent, LlmResult, Needs, Personality,
-        Stress,
+        Behavior, Emotion, Identity, LlmCapable, LlmContent, LlmResult, NarrativeCache, Needs,
+        Personality, Stress,
     };
     use sim_core::config::GameConfig;
     use sim_core::{GameCalendar, WorldMap};
@@ -444,5 +455,35 @@ mod tests {
             .expect("capable component should remain present");
         assert_eq!(capable.last_request_tick, 600);
         assert!(world.get::<&sim_core::components::LlmPending>(entity).is_err());
+    }
+
+    #[test]
+    fn request_system_allows_initial_request_before_cooldown_has_elapsed() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 7);
+        let mut resources = SimResources::new(calendar, map, 7);
+        let mut world = World::new();
+        let entity = world.spawn((
+            Identity {
+                name: "Aria".to_string(),
+                ..Identity::default()
+            },
+            Personality::default(),
+            Emotion::default(),
+            Behavior::default(),
+            Needs::default(),
+            Stress::default(),
+            LlmCapable::default(),
+            NarrativeCache::default(),
+        ));
+
+        let mut system = LlmRequestRuntimeSystem::new(800, 1);
+        system.run(&mut world, &mut resources, 0);
+
+        let result = world
+            .get::<&LlmResult>(entity)
+            .expect("initial request should not be blocked by cooldown");
+        assert!(matches!(result.content, LlmContent::Narrative(_)));
     }
 }

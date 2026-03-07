@@ -411,6 +411,7 @@ func _ready() -> void:
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
 	pause_menu = PauseMenuClass.new()
 	pause_menu.set_save_manager(save_manager)
+	pause_menu.set_sim_engine(sim_engine)
 	pause_menu.save_requested.connect(_save_game_slot)
 	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)

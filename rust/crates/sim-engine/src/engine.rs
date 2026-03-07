@@ -174,6 +174,25 @@ impl SimResources {
         }
     }
 
+    /// Returns the currently selected AI narration quality tier.
+    pub fn get_llm_quality(&self) -> u8 {
+        self.llm_runtime.quality()
+    }
+
+    /// Updates the AI narration quality tier and emits lifecycle events when it
+    /// starts or stops the external server.
+    pub fn set_llm_quality(&mut self, quality: u8) {
+        let was_running = self.llm_runtime.is_running();
+        self.llm_runtime.set_quality(quality);
+        let is_running = self.llm_runtime.is_running();
+        if !was_running && is_running {
+            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
+        }
+        if was_running && !is_running {
+            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
+        }
+    }
+
     /// Returns true when the LLM server and worker can accept requests.
     pub fn is_llm_available(&self) -> bool {
         self.llm_runtime.is_available()
