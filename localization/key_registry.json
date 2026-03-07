@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4231,
-  "key_count": 4231,
+  "active_key_count": 4232,
+  "key_count": 4232,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -1427,6 +1427,7 @@
     "STATUS_DRINK_WATER": 1376,
     "STATUS_EAT": 1377,
     "STATUS_FINE_WOODWORK": 1378,
+    "STATUS_FORAGE": 4231,
     "STATUS_FORCED_BY_AUTHORITY": 1379,
     "STATUS_FUGUE": 1380,
     "STATUS_GATHER_FOOD": 1381,
@@ -8465,7 +8466,8 @@
     "PANEL_EXPAND",
     "PANEL_NEEDS_TITLE",
     "PANEL_PERSONALITY_TITLE",
-    "PANEL_RELATIONSHIPS_TITLE"
+    "PANEL_RELATIONSHIPS_TITLE",
+    "STATUS_FORAGE"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

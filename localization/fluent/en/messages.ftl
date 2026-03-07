@@ -1390,6 +1390,7 @@ STATUS_DRINK_WATER = Drinking Water
 STATUS_EAT = Eat
 STATUS_FINE_WOODWORK = Fine Woodworking
 STATUS_FORCED_BY_AUTHORITY = Forced by Authority
+STATUS_FORAGE = Foraging
 STATUS_FUGUE = Fugue State
 STATUS_GATHER_FOOD = Gathering Food
 STATUS_GATHER_STONE = Gathering Stone

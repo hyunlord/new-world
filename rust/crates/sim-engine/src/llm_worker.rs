@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -137,10 +137,22 @@ pub fn llm_worker_loop(
     tx: Sender<LlmResponse>,
     config: LlmConfig,
 ) {
-    let client = ureq::AgentBuilder::new().build();
+    let timeout = Duration::from_millis(config.http_timeout_ms);
+    let client = ureq::AgentBuilder::new()
+        .timeout_connect(timeout)
+        .timeout_read(timeout)
+        .timeout_write(timeout)
+        .build();
     let templates = LlmPromptTemplates::load(&config.prompt_dir).ok();
 
     while let Ok(request) = rx.recv() {
+        log::info!(
+            "[LLM-DEBUG] llm_worker received request: id={}, type={:?}, variant={:?}, entity_id={}",
+            request.request_id,
+            request.request_type,
+            request.variant,
+            request.entity_id
+        );
         let start = Instant::now();
         let response = match templates.as_ref() {
             Some(loaded_templates) => process_request(&client, loaded_templates, &config, &request),

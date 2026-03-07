@@ -58,6 +58,8 @@ pub struct LlmConfig {
     pub healthcheck_interval_ms: u64,
     /// Grace period before force-killing the server process.
     pub shutdown_grace_ms: u64,
+    /// End-to-end HTTP timeout for worker requests.
+    pub http_timeout_ms: u64,
     /// Model identifier emitted for diagnostics.
     pub model_id: String,
 }
@@ -93,6 +95,7 @@ struct LlmConfigFile {
     healthcheck_attempts: Option<u32>,
     healthcheck_interval_ms: Option<u64>,
     shutdown_grace_ms: Option<u64>,
+    http_timeout_ms: Option<u64>,
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -114,6 +117,7 @@ struct LlmServerProcess {
 pub struct LlmRuntime {
     config: LlmConfig,
     server: Option<LlmServerProcess>,
+    attached_external: bool,
     channels: Option<LlmChannels>,
     worker: Option<JoinHandle<()>>,
     in_flight: HashMap<u64, LlmRequestMeta>,
@@ -169,6 +173,7 @@ impl LlmConfig {
                 healthcheck_attempts: None,
                 healthcheck_interval_ms: None,
                 shutdown_grace_ms: None,
+                http_timeout_ms: None,
             }
         };
 
@@ -235,6 +240,9 @@ impl LlmConfig {
             shutdown_grace_ms: file
                 .shutdown_grace_ms
                 .unwrap_or(config::LLM_SHUTDOWN_GRACE_MS),
+            http_timeout_ms: file
+                .http_timeout_ms
+                .unwrap_or(config::LLM_HTTP_TIMEOUT_MS),
             model_id,
         };
         if let Some(quality) = load_quality_override(&default_user_settings_path()) {
@@ -261,6 +269,7 @@ impl LlmRuntime {
         Self {
             config,
             server: None,
+            attached_external: false,
             channels: None,
             worker: None,
             in_flight: HashMap::new(),
@@ -313,6 +322,11 @@ impl LlmRuntime {
         if self.is_running() {
             return Ok(());
         }
+        if health_check(&self.config) {
+            self.attached_external = true;
+            self.start_worker_channels();
+            return Ok(());
+        }
         if !self.config.server_binary.is_file() {
             return Err(LlmRuntimeError::MissingServerBinary(
                 self.config.server_binary.display().to_string(),
@@ -363,21 +377,9 @@ impl LlmRuntime {
             return Err(LlmRuntimeError::HealthCheckFailed);
         }
 
-        let (request_tx, request_rx) = bounded::<LlmRequest>(self.config.queue_capacity);
-        let (response_tx, response_rx) = bounded::<LlmResponse>(self.config.queue_capacity);
-        let worker_config = self.config.clone();
-        let worker_rx = request_rx.clone();
-        let worker_handle = thread::spawn(move || {
-            llm_worker_loop(worker_rx, response_tx, worker_config);
-        });
-
         self.server = Some(process);
-        self.channels = Some(LlmChannels {
-            request_tx,
-            request_rx,
-            response_rx,
-        });
-        self.worker = Some(worker_handle);
+        self.attached_external = false;
+        self.start_worker_channels();
         Ok(())
     }
 
@@ -388,6 +390,7 @@ impl LlmRuntime {
         if let Some(handle) = self.worker.take() {
             let _ = handle.join();
         }
+        self.attached_external = false;
         if let Some(mut process) = self.server.take() {
             let _ = stop_process(&mut process.child, self.config.shutdown_grace_ms);
         }
@@ -395,7 +398,15 @@ impl LlmRuntime {
 
     /// Returns true when the server process is alive.
     pub fn is_running(&self) -> bool {
-        self.server.is_some()
+        let result = self.server.is_some() || self.attached_external;
+        log::info!(
+            "[LLM-DEBUG] is_running() = {} (server={}, attached_external={}, channels={})",
+            result,
+            self.server.is_some(),
+            self.attached_external,
+            self.channels.is_some()
+        );
+        result
     }
 
     /// Returns true when the runtime can currently accept requests.
@@ -426,6 +437,26 @@ impl LlmRuntime {
 
     /// Attempts to enqueue an LLM request without blocking the game thread.
     pub fn submit_request(&mut self, mut request: LlmRequest) -> Result<u64, LlmRuntimeError> {
+        self.submit_request_inner(&mut request, false)
+    }
+
+    /// Attempts to enqueue a user-priority LLM request.
+    ///
+    /// When the worker queue is full, queued background requests are dropped so
+    /// that the urgent request can become the next request after the one
+    /// currently being generated.
+    pub fn submit_priority_request(
+        &mut self,
+        mut request: LlmRequest,
+    ) -> Result<u64, LlmRuntimeError> {
+        self.submit_request_inner(&mut request, true)
+    }
+
+    fn submit_request_inner(
+        &mut self,
+        request: &mut LlmRequest,
+        allow_queue_preemption: bool,
+    ) -> Result<u64, LlmRuntimeError> {
         if !self.is_available() {
             return Err(LlmRuntimeError::Unavailable);
         }
@@ -438,9 +469,51 @@ impl LlmRuntime {
                 self.in_flight.insert(request_id, request.meta());
                 Ok(request_id)
             }
-            Err(TrySendError::Full(_)) => Err(LlmRuntimeError::QueueFull),
+            Err(TrySendError::Full(_)) => {
+                if !allow_queue_preemption {
+                    return Err(LlmRuntimeError::QueueFull);
+                }
+                self.drop_queued_requests();
+                let channels = self.channels.as_ref().ok_or(LlmRuntimeError::Unavailable)?;
+                match channels.request_tx.try_send(request.clone()) {
+                    Ok(()) => {
+                        self.in_flight.insert(request_id, request.meta());
+                        Ok(request_id)
+                    }
+                    Err(TrySendError::Full(_)) => Err(LlmRuntimeError::QueueFull),
+                    Err(TrySendError::Disconnected(_)) => Err(LlmRuntimeError::Unavailable),
+                }
+            }
             Err(TrySendError::Disconnected(_)) => Err(LlmRuntimeError::Unavailable),
         }
+    }
+
+    fn drop_queued_requests(&mut self) {
+        let Some(channels) = self.channels.as_ref() else {
+            return;
+        };
+        while let Ok(evicted_request) = channels.request_rx.try_recv() {
+            self.in_flight.remove(&evicted_request.request_id);
+        }
+    }
+
+    fn start_worker_channels(&mut self) {
+        if self.channels.is_some() {
+            return;
+        }
+        let (request_tx, request_rx) = bounded::<LlmRequest>(self.config.queue_capacity);
+        let (response_tx, response_rx) = bounded::<LlmResponse>(self.config.queue_capacity);
+        let worker_config = self.config.clone();
+        let worker_rx = request_rx.clone();
+        let worker_handle = thread::spawn(move || {
+            llm_worker_loop(worker_rx, response_tx, worker_config);
+        });
+        self.channels = Some(LlmChannels {
+            request_tx,
+            request_rx,
+            response_rx,
+        });
+        self.worker = Some(worker_handle);
     }
 
     /// Drains all currently available worker responses.
@@ -489,6 +562,7 @@ fn default_config() -> LlmConfig {
         healthcheck_attempts: config::LLM_HEALTHCHECK_ATTEMPTS,
         healthcheck_interval_ms: config::LLM_HEALTHCHECK_INTERVAL_MS,
         shutdown_grace_ms: config::LLM_SHUTDOWN_GRACE_MS,
+        http_timeout_ms: config::LLM_HTTP_TIMEOUT_MS,
         model_id: "qwen3.5-0.8b-q4km".to_string(),
     }
 }
@@ -601,6 +675,10 @@ mod tests {
         default_config, load_quality_override, quality_from_config, save_quality_override,
         LlmConfig, LlmRuntime,
     };
+    use crate::llm_worker::{LlmPromptVariant, LlmRequest};
+    use crossbeam_channel::bounded;
+    use sim_core::components::{LlmRequestType, LlmRole};
+    use std::process::{Command, Stdio};
     use std::time::{SystemTime, UNIX_EPOCH};
 
     #[test]
@@ -646,5 +724,77 @@ mod tests {
         assert_eq!(quality_from_config(&config), 1);
         config.enabled_default = false;
         assert_eq!(quality_from_config(&config), 0);
+    }
+
+    #[test]
+    fn external_attachment_counts_as_running_until_stopped() {
+        let mut runtime = LlmRuntime::new(default_config());
+        runtime.attached_external = true;
+        assert!(runtime.is_running());
+        runtime.stop();
+        assert!(!runtime.is_running());
+    }
+
+    #[test]
+    fn priority_submit_can_displace_queued_background_request() {
+        let mut runtime = LlmRuntime::new(default_config());
+        let sleeper = Command::new("sh")
+            .args(["-c", "sleep 60"])
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("sleep helper should spawn");
+        let (request_tx, request_rx) = bounded::<LlmRequest>(1);
+        let (_response_tx, response_rx) = bounded(1);
+        runtime.server = Some(super::LlmServerProcess { child: sleeper });
+        runtime.channels = Some(super::LlmChannels {
+            request_tx,
+            request_rx,
+            response_rx,
+        });
+
+        let background = LlmRequest {
+            request_id: 0,
+            entity_id: 11,
+            request_type: LlmRequestType::Layer4Narrative,
+            variant: LlmPromptVariant::Narrative,
+            entity_name: "background".to_string(),
+            role: LlmRole::Agent,
+            action_id: 0,
+            action_label: "Idle".to_string(),
+            personality_axes: [0.5; 6],
+            emotions: [0.0; 8],
+            needs: [0.5; 13],
+            stress_level: 0.0,
+            stress_state: 0,
+            recent_event_type: None,
+            recent_event_cause: None,
+            recent_target_name: None,
+        };
+        let urgent = LlmRequest {
+            entity_id: 22,
+            entity_name: "urgent".to_string(),
+            ..background.clone()
+        };
+
+        let queued_background_id = runtime
+            .submit_request(background)
+            .expect("background request should fill the queue");
+        let queued_urgent_id = runtime
+            .submit_priority_request(urgent)
+            .expect("priority request should displace background work");
+        assert_ne!(queued_urgent_id, queued_background_id);
+        assert!(runtime.take_request_meta(queued_background_id).is_none());
+        assert!(runtime.take_request_meta(queued_urgent_id).is_some());
+        let queued_request = runtime
+            .channels
+            .as_ref()
+            .expect("channels should remain available")
+            .request_rx
+            .try_recv()
+            .expect("priority request should be queued");
+        assert_eq!(queued_request.entity_id, 22);
+
+        runtime.stop();
     }
 }

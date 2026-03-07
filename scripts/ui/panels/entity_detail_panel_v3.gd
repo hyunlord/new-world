@@ -46,6 +46,7 @@ var _detail: Dictionary = {}
 var _mind_tab: Dictionary = {}
 var _social_tab: Dictionary = {}
 var _memory_tab: Dictionary = {}
+var _last_narrative_display: Dictionary = {}
 var _thought_timer: float = 0.0
 var _narrative_refresh_timer: float = 0.0
 
@@ -97,7 +98,10 @@ func _process(delta: float) -> void:
 	_narrative_refresh_timer += delta
 	if _narrative_refresh_timer >= 1.0:
 		_narrative_refresh_timer = 0.0
+		if _sim_engine != null:
+			_sim_engine.on_entity_narrative_click(_selected_entity_id)
 		_refresh_narrative_panel()
+		_refresh_thought_stream()
 	_thought_timer += delta
 	if _thought_timer >= 3.0:
 		_thought_timer = 0.0
@@ -110,6 +114,7 @@ func show_entity_or_deceased(entity_id: int) -> void:
 
 func set_entity_id(entity_id: int) -> void:
 	_selected_entity_id = entity_id
+	_last_narrative_display.clear()
 	_thought_timer = 0.0
 	_narrative_refresh_timer = 0.0
 	if _sim_engine != null:
@@ -340,7 +345,10 @@ func _refresh_header() -> void:
 
 	var sex_key: String = "UI_MALE" if str(_detail.get("sex", "")).to_lower() == "male" else "UI_FEMALE"
 	var stage_key: String = "STAGE_" + str(_detail.get("growth_stage", "adult")).to_upper()
-	var occupation_key: String = "OCCUPATION_" + str(_detail.get("occupation", "none")).to_upper()
+	var occupation_raw: String = str(_detail.get("occupation", "none")).strip_edges()
+	if occupation_raw.is_empty():
+		occupation_raw = "none"
+	var occupation_key: String = "OCCUPATION_" + occupation_raw.to_upper()
 	var meta_parts: PackedStringArray = PackedStringArray([
 		"%d%s" % [int(round(float(_detail.get("age_years", 0.0)))), Locale.ltr("UI_AGE_UNIT")],
 		Locale.ltr(stage_key),
@@ -362,15 +370,30 @@ func _refresh_narrative_panel() -> void:
 	if _sim_engine == null or _narrative_panel == null or _selected_entity_id < 0:
 		return
 	var display: Dictionary = _sim_engine.get_narrative_display(_selected_entity_id)
+	_last_narrative_display = display
 	_narrative_panel.call("render", display)
 
 
 func _refresh_thought_stream() -> void:
-	var thought_text: String = _sim_engine.get_thought_text(_selected_entity_id)
+	var show_legacy_thought: bool = not _narrative_display_is_active(_last_narrative_display)
+	_thought_label.visible = show_legacy_thought
 	_thought_label.clear()
+	if not show_legacy_thought:
+		return
+	var thought_text: String = _sim_engine.get_thought_text(_selected_entity_id)
 	if thought_text.is_empty():
 		return
 	_thought_label.append_text(thought_text)
+
+
+func _narrative_display_is_active(display: Dictionary) -> bool:
+	return bool(display.get("show_disabled_overlay", false)) \
+		or bool(display.get("show_personality", false)) \
+		or bool(display.get("show_event", false)) \
+		or bool(display.get("show_inner", false)) \
+		or bool(display.get("show_personality_shimmer", false)) \
+		or bool(display.get("show_event_shimmer", false)) \
+		or bool(display.get("show_inner_shimmer", false))
 
 
 func _refresh_needs() -> void:

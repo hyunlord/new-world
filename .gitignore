@@ -58,3 +58,6 @@ data/llm/models/*.gguf
 
 # ralph
 reports/
+
+# Migration commit logs
+migration_commit_logs/

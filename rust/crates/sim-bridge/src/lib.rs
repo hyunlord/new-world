@@ -46,7 +46,7 @@ use locale_bindings::format_fluent_from_source_args;
 use pathfinding_bindings::parse_pathfind_backend;
 use sim_core::components::{
     Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
-    LlmCapable, LlmPending, LlmResult, Memory, NarrativeCache, Needs, Personality, Position,
+    LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position,
     Skills, Social, Stress, Traits, Values,
 };
 use sim_core::enums::{GrowthStage, NeedType, Sex};
@@ -569,10 +569,26 @@ fn narrative_cache_field_stale(
     }
 }
 
+#[cfg(test)]
 fn narrative_cache_has_any_text(cache: &NarrativeCache) -> bool {
     cache.personality_desc.is_some()
         || cache.last_event_narrative.is_some()
         || cache.last_inner_monologue.is_some()
+}
+
+fn narrative_cache_is_complete_and_fresh(cache: &NarrativeCache, current_tick: u64) -> bool {
+    let has_full_cache = cache.personality_desc.is_some()
+        && cache.last_event_narrative.is_some()
+        && cache.last_inner_monologue.is_some();
+    let cache_is_fresh =
+        current_tick.saturating_sub(cache.cache_tick) < u64::from(cache.cache_ttl_ticks);
+    has_full_cache && cache_is_fresh
+}
+
+fn pending_request_should_be_preempted(pending: &LlmPending, current_tick: u64) -> bool {
+    pending.request_type == LlmRequestType::Layer3Judgment
+        || current_tick.saturating_sub(pending.submitted_tick)
+            >= u64::from(sim_core::config::LLM_CLICK_PREEMPT_TICKS)
 }
 
 fn plan_narrative_request(
@@ -638,11 +654,16 @@ fn build_click_narrative_request(
 ) -> Option<LlmRequest> {
     let capable = world.get::<&LlmCapable>(entity).ok()?;
     let cache = world.get::<&NarrativeCache>(entity).ok();
+    let lookback_ticks = cache
+        .as_deref()
+        .map(|value| u64::from(value.cache_ttl_ticks))
+        .unwrap_or(u64::from(sim_core::config::LLM_CACHE_TTL_TICKS))
+        .max(u64::from(capable.cooldown_ticks.max(60)));
     let name_lookup = build_raw_name_lookup(world);
     let recent_event = latest_narrative_event_for_actor(
         &resources.event_store,
         entity.id(),
-        current_tick.saturating_sub(u64::from(capable.cooldown_ticks.max(60))),
+        current_tick.saturating_sub(lookback_ticks),
         &name_lookup,
     );
     let plan = plan_narrative_request(cache.as_deref(), current_tick, recent_event.as_ref())?;
@@ -1702,53 +1723,70 @@ impl WorldSimRuntime {
 
     #[func]
     fn on_entity_narrative_click(&mut self, entity_id: i64) -> u8 {
+        log::info!(
+            "[LLM-DEBUG] on_entity_narrative_click called for entity {}",
+            entity_id
+        );
         let Some(state) = self.state.as_mut() else {
+            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no state)");
             return 0;
         };
-        if state.engine.resources().get_llm_quality() == 0
-            || !state.engine.resources().llm_runtime.is_running()
-        {
+        let llm_quality = state.engine.resources().get_llm_quality();
+        let llm_running = state.engine.resources().llm_runtime.is_running();
+        log::info!(
+            "[LLM-DEBUG] on_entity_narrative_click state quality={} running={}",
+            llm_quality,
+            llm_running
+        );
+        if llm_quality == 0 || !llm_running {
+            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 3");
             return 3;
         }
 
         let current_tick = state.engine.current_tick();
         let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
+            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (entity not found)");
             return 0;
         };
-        if state.engine.world().get::<&LlmPending>(entity).is_ok() {
-            return 2;
+        let pending_info = state
+            .engine
+            .world()
+            .get::<&LlmPending>(entity)
+            .ok()
+            .map(|pending| {
+                (
+                    pending.request_id,
+                    pending.request_type,
+                    current_tick.saturating_sub(pending.submitted_tick),
+                    pending_request_should_be_preempted(&pending, current_tick),
+                )
+            });
+        if let Some((pending_request_id, pending_request_type, pending_age, should_preempt)) =
+            pending_info
+        {
+            log::info!(
+                "[LLM-DEBUG] entity {} already has pending request id={} type={:?} age_ticks={} preempt={}",
+                entity_id,
+                pending_request_id,
+                pending_request_type,
+                pending_age,
+                should_preempt
+            );
+            if !should_preempt {
+                log::info!("[LLM-DEBUG] on_entity_narrative_click returning 2");
+                return 2;
+            }
+            let _ = state
+                .engine
+                .resources_mut()
+                .take_llm_request_meta(pending_request_id);
+            let _ = state.engine.world_mut().remove_one::<LlmPending>(entity);
         }
 
         if let Ok(cache) = state.engine.world().get::<&NarrativeCache>(entity) {
-            let cache_is_fresh = current_tick.saturating_sub(cache.cache_tick)
-                < u64::from(cache.cache_ttl_ticks);
-            let has_full_cache = cache.personality_desc.is_some()
-                && cache.last_event_narrative.is_some()
-                && cache.last_inner_monologue.is_some();
-            if cache_is_fresh && has_full_cache {
+            if narrative_cache_is_complete_and_fresh(&cache, current_tick) {
+                log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (fresh cache)");
                 return 0;
-            }
-        }
-
-        let should_enforce_cooldown = state
-            .engine
-            .world()
-            .get::<&LlmResult>(entity)
-            .is_ok()
-            || state
-                .engine
-                .world()
-                .get::<&NarrativeCache>(entity)
-                .ok()
-                .map(|cache| narrative_cache_has_any_text(&cache))
-                .unwrap_or(false);
-        if should_enforce_cooldown {
-            if let Ok(capable) = state.engine.world().get::<&LlmCapable>(entity) {
-                if current_tick.saturating_sub(capable.last_request_tick)
-                    < u64::from(capable.cooldown_ticks)
-                {
-                    return 0;
-                }
             }
         }
 
@@ -1758,12 +1796,23 @@ impl WorldSimRuntime {
             build_click_narrative_request(world, resources, entity, current_tick)
         };
         let Some(request) = request else {
+            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no request plan)");
             return 0;
         };
 
-        let request_id = match state.engine.resources_mut().submit_llm_request(request.clone()) {
+        let request_id = match state
+            .engine
+            .resources_mut()
+            .submit_priority_llm_request(request.clone())
+        {
             Ok(value) => value,
-            Err(_) => return 0,
+            Err(error) => {
+                log::info!(
+                    "[LLM-DEBUG] on_entity_narrative_click submit failed: {}",
+                    error
+                );
+                return 0;
+            }
         };
 
         {
@@ -1779,6 +1828,10 @@ impl WorldSimRuntime {
                 capable.last_request_tick = current_tick;
             }
         }
+        log::info!(
+            "[LLM-DEBUG] on_entity_narrative_click returning 1 (queued request_id={})",
+            request_id
+        );
         1
     }
 
@@ -5354,7 +5407,7 @@ mod tests {
     use godot::prelude::Vector2;
     use sim_core::components::NarrativeCache;
     use sim_core::{EntityId, SettlementId};
-    use sim_engine::{EngineSnapshot, GameEvent};
+    use sim_engine::{EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType};
     use sim_systems::pathfinding::GridPos;
 
     fn base_input() -> PathfindInput {
@@ -6127,5 +6180,71 @@ mod tests {
         assert!(!super::narrative_cache_has_any_text(&cache));
         cache.last_inner_monologue = Some("생각".to_string());
         assert!(super::narrative_cache_has_any_text(&cache));
+    }
+
+    #[test]
+    fn narrative_cache_complete_and_fresh_requires_all_sections() {
+        let mut cache = NarrativeCache {
+            personality_desc: Some("성격".to_string()),
+            last_event_narrative: Some("사건".to_string()),
+            last_inner_monologue: Some("내면".to_string()),
+            cache_tick: 100,
+            cache_ttl_ticks: 60,
+        };
+        assert!(super::narrative_cache_is_complete_and_fresh(&cache, 120));
+        cache.last_event_narrative = None;
+        assert!(!super::narrative_cache_is_complete_and_fresh(&cache, 120));
+        cache.last_event_narrative = Some("사건".to_string());
+        assert!(!super::narrative_cache_is_complete_and_fresh(&cache, 200));
+    }
+
+    #[test]
+    fn click_narrative_request_sequences_personality_then_event_then_inner() {
+        let current_tick = 500_u64;
+        let recent_event = super::NarrativeRecentEvent {
+            event_type: SimEventType::SocialConflict,
+            cause: "argument".to_string(),
+            target_name: Some("Rin".to_string()),
+        };
+
+        let personality_plan =
+            super::plan_narrative_request(None, current_tick, Some(&recent_event))
+                .expect("personality request should be planned first");
+        assert_eq!(personality_plan.variant, LlmPromptVariant::Personality);
+        assert!(personality_plan.recent_event_type.is_none());
+
+        let cache_after_personality = NarrativeCache {
+            personality_desc: Some("성격".to_string()),
+            cache_tick: current_tick,
+            cache_ttl_ticks: 3600,
+            ..NarrativeCache::default()
+        };
+        let event_plan = super::plan_narrative_request(
+            Some(&cache_after_personality),
+            current_tick,
+            Some(&recent_event),
+        )
+        .expect("event narrative should be planned second");
+        assert_eq!(event_plan.variant, LlmPromptVariant::Narrative);
+        assert_eq!(
+            event_plan.recent_event_type.as_deref(),
+            Some("social_conflict")
+        );
+
+        let cache_after_event = NarrativeCache {
+            personality_desc: Some("성격".to_string()),
+            last_event_narrative: Some("사건".to_string()),
+            cache_tick: current_tick,
+            cache_ttl_ticks: 3600,
+            ..NarrativeCache::default()
+        };
+        let inner_plan = super::plan_narrative_request(
+            Some(&cache_after_event),
+            current_tick,
+            Some(&recent_event),
+        )
+        .expect("inner monologue should be planned last");
+        assert_eq!(inner_plan.variant, LlmPromptVariant::Narrative);
+        assert!(inner_plan.recent_event_type.is_none());
     }
 }

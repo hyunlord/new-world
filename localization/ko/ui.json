@@ -1268,6 +1268,7 @@
   "STATUS_RAGE": "분노 폭발",
   "STATUS_SHUTDOWN": "기능 정지",
   "STATUS_FORCED_BY_AUTHORITY": "강제 복종",
+  "STATUS_FORAGE": "채집",
   "STATUS_IDLE": "대기",
   "UI_SKILL_COOKING": "요리",
   "UI_SKILL_FISHING": "낚시",

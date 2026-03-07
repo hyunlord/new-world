@@ -39,6 +39,12 @@ struct PendingSubmission {
     request: LlmRequest,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum LlmSubmissionStrategy {
+    Queue,
+    Fallback,
+}
+
 fn cache_has_any_text(cache: &NarrativeCache) -> bool {
     cache.personality_desc.is_some()
         || cache.last_event_narrative.is_some()
@@ -71,7 +77,10 @@ impl SimSystem for LlmRequestRuntimeSystem {
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let name_lookup = build_name_lookup(world);
         let llm_available = resources.is_llm_available();
+        let submission_strategy = llm_submission_strategy(llm_available);
         let mut submissions: Vec<PendingSubmission> = Vec::new();
+        let mut total_capable: usize = 0;
+        let mut qualifying_count: usize = 0;
 
         {
             let mut query = world.query::<(
@@ -90,6 +99,7 @@ impl SimSystem for LlmRequestRuntimeSystem {
             for (entity, (identity, personality, emotion, behavior, needs, stress, capable, cache, pending, result)) in
                 &mut query
             {
+                total_capable += 1;
                 if pending.is_some() {
                     continue;
                 }
@@ -109,7 +119,12 @@ impl SimSystem for LlmRequestRuntimeSystem {
                     tick.saturating_sub(lookback_ticks),
                     &name_lookup,
                 );
-                let Some(plan) = plan_request(cache, recent_event.as_ref(), tick) else {
+                let Some(plan) = plan_request(
+                    cache,
+                    recent_event.as_ref(),
+                    tick,
+                    matches!(submission_strategy, LlmSubmissionStrategy::Fallback),
+                ) else {
                     continue;
                 };
 
@@ -134,11 +149,25 @@ impl SimSystem for LlmRequestRuntimeSystem {
                         recent_target_name: plan.recent_target_name,
                     },
                 });
+                qualifying_count += 1;
+                if matches!(submission_strategy, LlmSubmissionStrategy::Queue) {
+                    break;
+                }
             }
         }
 
+        if total_capable > 0 && (qualifying_count > 0 || tick.is_multiple_of(120)) {
+            log::info!(
+                "[LLM-DEBUG] llm_request_system tick={} found {} LlmCapable entities, {} qualify for request, strategy={:?}",
+                tick,
+                total_capable,
+                qualifying_count,
+                submission_strategy
+            );
+        }
+
         for submission in submissions {
-            if llm_available {
+            if matches!(submission_strategy, LlmSubmissionStrategy::Queue) {
                 match resources.submit_llm_request(submission.request.clone()) {
                     Ok(request_id) => {
                         let pending = LlmPending {
@@ -162,6 +191,14 @@ impl SimSystem for LlmRequestRuntimeSystem {
                 apply_fallback_result(world, submission.entity, &submission.request, tick);
             }
         }
+    }
+}
+
+fn llm_submission_strategy(llm_available: bool) -> LlmSubmissionStrategy {
+    if llm_available {
+        LlmSubmissionStrategy::Queue
+    } else {
+        LlmSubmissionStrategy::Fallback
     }
 }
 
@@ -219,7 +256,12 @@ fn plan_request(
     cache: Option<&NarrativeCache>,
     recent_event: Option<&RecentEventInfo>,
     tick: u64,
+    allow_prefill_without_event: bool,
 ) -> Option<RequestPlan> {
+    if recent_event.is_none() && !allow_prefill_without_event {
+        return None;
+    }
+
     if cache_field_stale(cache, tick, |value| value.personality_desc.is_some()) {
         return Some(RequestPlan {
             request_type: LlmRequestType::Layer4Narrative,
@@ -413,7 +455,7 @@ fn update_cache(
 
 #[cfg(test)]
 mod tests {
-    use super::LlmRequestRuntimeSystem;
+    use super::{llm_submission_strategy, LlmRequestRuntimeSystem, LlmSubmissionStrategy};
     use hecs::World;
     use sim_core::components::{
         Behavior, Emotion, Identity, LlmCapable, LlmContent, LlmResult, NarrativeCache, Needs,
@@ -485,5 +527,26 @@ mod tests {
             .get::<&LlmResult>(entity)
             .expect("initial request should not be blocked by cooldown");
         assert!(matches!(result.content, LlmContent::Narrative(_)));
+    }
+
+    #[test]
+    fn auto_request_plan_requires_a_recent_event() {
+        let plan = super::plan_request(None, None, 0, false);
+        assert!(
+            plan.is_none(),
+            "background request planning should not prefill entities with no recent event"
+        );
+    }
+
+    #[test]
+    fn available_runtime_uses_queue_submission_strategy() {
+        assert_eq!(
+            llm_submission_strategy(true),
+            LlmSubmissionStrategy::Queue
+        );
+        assert_eq!(
+            llm_submission_strategy(false),
+            LlmSubmissionStrategy::Fallback
+        );
     }
 }
