@@ -1,0 +1,53 @@
+[
+    RecipeDef(
+        id: "stone_knife",
+        display_name_key: "RECIPE_STONE_KNIFE",
+        inputs: [
+            TagRequirement(
+                tag: "sharp",
+                min_hardness: Some(4.0),
+                min_density: None,
+                max_rarity: None,
+                amount: 1,
+            ),
+        ],
+        requires: None,
+        output: RecipeOutput(
+            template: "knife",
+            material_from_input: 0,
+            count: None,
+        ),
+        time_ticks: 60,
+        skill_tag: Some("knapping"),
+        min_skill_level: Some(0.1),
+    ),
+    RecipeDef(
+        id: "stone_axe",
+        display_name_key: "RECIPE_STONE_AXE",
+        inputs: [
+            TagRequirement(
+                tag: "sharp",
+                min_hardness: Some(4.0),
+                min_density: None,
+                max_rarity: None,
+                amount: 1,
+            ),
+            TagRequirement(
+                tag: "binding",
+                min_hardness: None,
+                min_density: None,
+                max_rarity: None,
+                amount: 1,
+            ),
+        ],
+        requires: None,
+        output: RecipeOutput(
+            template: "axe",
+            material_from_input: 0,
+            count: None,
+        ),
+        time_ticks: 90,
+        skill_tag: Some("knapping"),
+        min_skill_level: Some(0.2),
+    ),
+]

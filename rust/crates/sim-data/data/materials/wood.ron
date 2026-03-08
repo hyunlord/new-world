@@ -1,0 +1,28 @@
+[
+    MaterialDef(
+        id: "oak",
+        display_name_key: "MAT_OAK",
+        category: Wood,
+        tags: ["wood", "building_material", "fuel"],
+        properties: MaterialProperties(
+            hardness: 4.0,
+            density: 0.75,
+            melting_point: None,
+            rarity: 0.2,
+            value: 1.2,
+        ),
+    ),
+    MaterialDef(
+        id: "pine",
+        display_name_key: "MAT_PINE",
+        category: Wood,
+        tags: ["wood", "roof_material", "fuel"],
+        properties: MaterialProperties(
+            hardness: 2.8,
+            density: 0.5,
+            melting_point: None,
+            rarity: 0.2,
+            value: 0.8,
+        ),
+    ),
+]

@@ -1,0 +1,15 @@
+[
+    MaterialDef(
+        id: "clay",
+        display_name_key: "MAT_CLAY",
+        category: Earth,
+        tags: ["earth", "building_material", "moldable"],
+        properties: MaterialProperties(
+            hardness: 1.5,
+            density: 1.6,
+            melting_point: None,
+            rarity: 0.15,
+            value: 0.7,
+        ),
+    ),
+]

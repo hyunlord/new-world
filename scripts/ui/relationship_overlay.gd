@@ -12,7 +12,7 @@ const MIN_LINE_WIDTH: float = 1.0
 const MAX_LINE_WIDTH: float = 4.0
 
 var _sim_engine: RefCounted = null
-var _snapshot_decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _snapshot_decoder = SnapshotDecoderClass.new()
 var _render_alpha: float = 0.0
 var _overlay_enabled: bool = false
 var _selected_entity_id: int = -1

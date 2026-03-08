@@ -56,7 +56,7 @@ var _left_drag_start: Vector2 = Vector2.ZERO
 var _left_was_dragged: bool = false
 var _entity_manager: RefCounted
 var _sim_engine: RefCounted
-var _snapshot_decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _snapshot_decoder = SnapshotDecoderClass.new()
 var _render_alpha: float = 0.0
 var _idle_signal_emitted: bool = false
 var _last_interest_target_id: int = -1
