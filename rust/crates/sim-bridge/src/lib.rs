@@ -57,6 +57,7 @@ use sim_engine::{
 };
 use sim_systems::{
     body,
+    drain_and_apply_llm_responses,
     entity_spawner,
     stat_curve,
 };
@@ -586,9 +587,8 @@ fn narrative_cache_is_complete_and_fresh(cache: &NarrativeCache, current_tick: u
 }
 
 fn pending_request_should_be_preempted(pending: &LlmPending, current_tick: u64) -> bool {
+    let _ = current_tick;
     pending.request_type == LlmRequestType::Layer3Judgment
-        || current_tick.saturating_sub(pending.submitted_tick)
-            >= u64::from(sim_core::config::LLM_CLICK_PREEMPT_TICKS)
 }
 
 fn plan_narrative_request(
@@ -763,6 +763,19 @@ impl WorldSimRuntime {
         };
         let status = state.engine.resources().llm_status_json();
         GString::from(status.as_str())
+    }
+
+    #[func]
+    fn drain_llm_debug_log(&self) -> Array<GString> {
+        let mut output: Array<GString> = Array::new();
+        let Some(state) = self.state.as_ref() else {
+            return output;
+        };
+        for line in state.engine.resources().drain_llm_debug_log() {
+            let godot_line = GString::from(line.as_str());
+            output.push(&godot_line);
+        }
+        output
     }
 
     #[func]
@@ -1705,10 +1718,13 @@ impl WorldSimRuntime {
     }
 
     #[func]
-    fn get_narrative_display(&self, entity_id: i64) -> VarDictionary {
-        let Some(state) = self.state.as_ref() else {
+    fn get_narrative_display(&mut self, entity_id: i64) -> VarDictionary {
+        let Some(state) = self.state.as_mut() else {
             return narrative_display_to_dict(&NarrativeDisplayData::default());
         };
+        let tick = state.engine.current_tick();
+        let (world, resources) = state.engine.world_and_resources_mut();
+        drain_and_apply_llm_responses(world, resources, tick);
         let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
             return narrative_display_to_dict(&NarrativeDisplayData::default());
         };
@@ -1723,29 +1739,47 @@ impl WorldSimRuntime {
 
     #[func]
     fn on_entity_narrative_click(&mut self, entity_id: i64) -> u8 {
-        log::info!(
-            "[LLM-DEBUG] on_entity_narrative_click called for entity {}",
-            entity_id
-        );
         let Some(state) = self.state.as_mut() else {
-            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no state)");
+            eprintln!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no state)");
             return 0;
         };
+        let tick = state.engine.current_tick();
+        let (world, resources) = state.engine.world_and_resources_mut();
+        drain_and_apply_llm_responses(world, resources, tick);
+        state
+            .engine
+            .resources()
+            .llm_runtime
+            .push_debug_log(format!(
+                "[LLM-DEBUG] on_entity_narrative_click called for entity {}",
+                entity_id
+            ));
         let llm_quality = state.engine.resources().get_llm_quality();
         let llm_running = state.engine.resources().llm_runtime.is_running();
-        log::info!(
-            "[LLM-DEBUG] on_entity_narrative_click state quality={} running={}",
-            llm_quality,
-            llm_running
-        );
+        state
+            .engine
+            .resources()
+            .llm_runtime
+            .push_debug_log(format!(
+                "[LLM-DEBUG] on_entity_narrative_click state quality={} running={}",
+                llm_quality,
+                llm_running
+            ));
         if llm_quality == 0 || !llm_running {
-            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 3");
+            state
+                .engine
+                .resources()
+                .llm_runtime
+                .push_debug_log("[LLM-DEBUG] on_entity_narrative_click returning 3".to_string());
             return 3;
         }
 
         let current_tick = state.engine.current_tick();
         let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
-            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (entity not found)");
+            state.engine.resources().llm_runtime.push_debug_log(
+                "[LLM-DEBUG] on_entity_narrative_click returning 0 (entity not found)"
+                    .to_string(),
+            );
             return 0;
         };
         let pending_info = state
@@ -1764,16 +1798,22 @@ impl WorldSimRuntime {
         if let Some((pending_request_id, pending_request_type, pending_age, should_preempt)) =
             pending_info
         {
-            log::info!(
-                "[LLM-DEBUG] entity {} already has pending request id={} type={:?} age_ticks={} preempt={}",
-                entity_id,
-                pending_request_id,
-                pending_request_type,
-                pending_age,
-                should_preempt
-            );
+            state
+                .engine
+                .resources()
+                .llm_runtime
+                .push_debug_log(format!(
+                    "[LLM-DEBUG] entity {} already has pending request id={} type={:?} age_ticks={} preempt={}",
+                    entity_id,
+                    pending_request_id,
+                    pending_request_type,
+                    pending_age,
+                    should_preempt
+                ));
             if !should_preempt {
-                log::info!("[LLM-DEBUG] on_entity_narrative_click returning 2");
+                state.engine.resources().llm_runtime.push_debug_log(
+                    "[LLM-DEBUG] on_entity_narrative_click returning 2".to_string(),
+                );
                 return 2;
             }
             let _ = state
@@ -1785,7 +1825,10 @@ impl WorldSimRuntime {
 
         if let Ok(cache) = state.engine.world().get::<&NarrativeCache>(entity) {
             if narrative_cache_is_complete_and_fresh(&cache, current_tick) {
-                log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (fresh cache)");
+                state.engine.resources().llm_runtime.push_debug_log(
+                    "[LLM-DEBUG] on_entity_narrative_click returning 0 (fresh cache)"
+                        .to_string(),
+                );
                 return 0;
             }
         }
@@ -1796,7 +1839,10 @@ impl WorldSimRuntime {
             build_click_narrative_request(world, resources, entity, current_tick)
         };
         let Some(request) = request else {
-            log::info!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no request plan)");
+            state.engine.resources().llm_runtime.push_debug_log(
+                "[LLM-DEBUG] on_entity_narrative_click returning 0 (no request plan)"
+                    .to_string(),
+            );
             return 0;
         };
 
@@ -1807,10 +1853,14 @@ impl WorldSimRuntime {
         {
             Ok(value) => value,
             Err(error) => {
-                log::info!(
-                    "[LLM-DEBUG] on_entity_narrative_click submit failed: {}",
-                    error
-                );
+                state
+                    .engine
+                    .resources()
+                    .llm_runtime
+                    .push_debug_log(format!(
+                        "[LLM-DEBUG] on_entity_narrative_click submit failed: {}",
+                        error
+                    ));
                 return 0;
             }
         };
@@ -1828,10 +1878,14 @@ impl WorldSimRuntime {
                 capable.last_request_tick = current_tick;
             }
         }
-        log::info!(
-            "[LLM-DEBUG] on_entity_narrative_click returning 1 (queued request_id={})",
-            request_id
-        );
+        state
+            .engine
+            .resources()
+            .llm_runtime
+            .push_debug_log(format!(
+                "[LLM-DEBUG] on_entity_narrative_click returning 1 (queued request_id={})",
+                request_id
+            ));
         1
     }
 
@@ -5405,7 +5459,7 @@ mod tests {
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
-    use sim_core::components::NarrativeCache;
+    use sim_core::components::{LlmPending, LlmRequestType, NarrativeCache};
     use sim_core::{EntityId, SettlementId};
     use sim_engine::{EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType};
     use sim_systems::pathfinding::GridPos;
@@ -6246,5 +6300,17 @@ mod tests {
         .expect("inner monologue should be planned last");
         assert_eq!(inner_plan.variant, LlmPromptVariant::Narrative);
         assert!(inner_plan.recent_event_type.is_none());
+    }
+
+    #[test]
+    fn click_pending_is_not_preempted_before_timeout() {
+        let pending = LlmPending {
+            request_id: 7,
+            request_type: LlmRequestType::Layer4Narrative,
+            submitted_tick: 100,
+            timeout_ticks: 100,
+        };
+        assert!(!super::pending_request_should_be_preempted(&pending, 150));
+        assert!(!super::pending_request_should_be_preempted(&pending, 200));
     }
 }

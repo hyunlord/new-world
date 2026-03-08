@@ -1,8 +1,9 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::thread::JoinHandle;
 use std::time::{Duration, Instant};
@@ -122,6 +123,7 @@ pub struct LlmRuntime {
     worker: Option<JoinHandle<()>>,
     in_flight: HashMap<u64, LlmRequestMeta>,
     next_request_id: u64,
+    debug_log: Arc<Mutex<VecDeque<String>>>,
 }
 
 /// Errors emitted by the LLM runtime manager.
@@ -274,6 +276,7 @@ impl LlmRuntime {
             worker: None,
             in_flight: HashMap::new(),
             next_request_id: 1,
+            debug_log: Arc::new(Mutex::new(VecDeque::new())),
         }
     }
 
@@ -285,6 +288,25 @@ impl LlmRuntime {
     /// Returns the persisted AI narration quality tier.
     pub fn quality(&self) -> u8 {
         quality_from_config(&self.config)
+    }
+
+    /// Appends one line to the in-memory LLM debug log for Godot consumption.
+    pub fn push_debug_log(&self, message: impl Into<String>) {
+        let Ok(mut log) = self.debug_log.lock() else {
+            return;
+        };
+        log.push_back(message.into());
+        while log.len() > config::LLM_DEBUG_LOG_CAPACITY {
+            let _ = log.pop_front();
+        }
+    }
+
+    /// Drains and returns all buffered LLM debug log lines.
+    pub fn drain_debug_log(&self) -> Vec<String> {
+        let Ok(mut log) = self.debug_log.lock() else {
+            return Vec::new();
+        };
+        log.drain(..).collect()
     }
 
     /// Updates the AI narration quality tier, persisting the preference and
@@ -399,13 +421,13 @@ impl LlmRuntime {
     /// Returns true when the server process is alive.
     pub fn is_running(&self) -> bool {
         let result = self.server.is_some() || self.attached_external;
-        log::info!(
+        self.push_debug_log(format!(
             "[LLM-DEBUG] is_running() = {} (server={}, attached_external={}, channels={})",
             result,
             self.server.is_some(),
             self.attached_external,
             self.channels.is_some()
-        );
+        ));
         result
     }
 
@@ -505,8 +527,9 @@ impl LlmRuntime {
         let (response_tx, response_rx) = bounded::<LlmResponse>(self.config.queue_capacity);
         let worker_config = self.config.clone();
         let worker_rx = request_rx.clone();
+        let debug_log = Arc::clone(&self.debug_log);
         let worker_handle = thread::spawn(move || {
-            llm_worker_loop(worker_rx, response_tx, worker_config);
+            llm_worker_loop(worker_rx, response_tx, worker_config, debug_log);
         });
         self.channels = Some(LlmChannels {
             request_tx,
@@ -796,5 +819,17 @@ mod tests {
         assert_eq!(queued_request.entity_id, 22);
 
         runtime.stop();
+    }
+
+    #[test]
+    fn debug_log_drains_in_fifo_order() {
+        let runtime = LlmRuntime::new(default_config());
+        runtime.push_debug_log("first");
+        runtime.push_debug_log("second");
+        assert_eq!(
+            runtime.drain_debug_log(),
+            vec!["first".to_string(), "second".to_string()]
+        );
+        assert!(runtime.drain_debug_log().is_empty());
     }
 }

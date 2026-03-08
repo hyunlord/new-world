@@ -48,6 +48,8 @@ func _process(_delta: float) -> void:
 func _update_data() -> void:
 	if _provider == null or not is_instance_valid(_provider):
 		return
+	if not _provider.has_method("get_system_perf"):
+		return
 	var perf: Dictionary = _provider.get_system_perf()
 
 	if perf.is_empty():

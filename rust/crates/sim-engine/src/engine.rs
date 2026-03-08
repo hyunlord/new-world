@@ -203,6 +203,11 @@ impl SimResources {
         self.llm_runtime.status_json()
     }
 
+    /// Drains recent LLM debug log lines for external diagnostics.
+    pub fn drain_llm_debug_log(&self) -> Vec<String> {
+        self.llm_runtime.drain_debug_log()
+    }
+
     /// Attempts to submit an LLM request without blocking.
     pub fn submit_llm_request(
         &mut self,

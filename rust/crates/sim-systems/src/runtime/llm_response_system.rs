@@ -35,19 +35,41 @@ impl SimSystem for LlmResponseRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
-        let responses = resources.drain_llm_responses();
-        for response in responses {
-            let Some(meta) = resources.take_llm_request_meta(response.request_id) else {
-                continue;
-            };
-            apply_response_to_entity(world, tick, &response, &meta);
-            resources
-                .event_bus
-                .emit(GameEvent::Llm(LlmEvent::ResponseReceived {
-                    entity_id: response.entity_id,
-                    generation_ms: response.generation_ms,
-                }));
-        }
+        drain_and_apply_llm_responses(world, resources, tick);
+    }
+}
+
+/// Drains all available LLM responses, applies them to ECS state, and emits
+/// the corresponding runtime events.
+pub fn drain_and_apply_llm_responses(world: &mut World, resources: &mut SimResources, tick: u64) {
+    let responses = resources.drain_llm_responses();
+    for response in responses {
+        resources.llm_runtime.push_debug_log(format!(
+            "[LLM-DEBUG] llm_response_system received response: id={}, entity_id={}, success={}, generation_ms={}",
+            response.request_id,
+            response.entity_id,
+            response.success,
+            response.generation_ms
+        ));
+        let Some(meta) = resources.take_llm_request_meta(response.request_id) else {
+            resources.llm_runtime.push_debug_log(format!(
+                "[LLM-DEBUG] llm_response_system dropped response without meta: id={}",
+                response.request_id
+            ));
+            continue;
+        };
+        apply_response_to_entity(world, tick, &response, &meta);
+        resources.llm_runtime.push_debug_log(format!(
+            "[LLM-DEBUG] llm_response_system applied response: id={}, variant={:?}",
+            response.request_id,
+            meta.variant
+        ));
+        resources
+            .event_bus
+            .emit(GameEvent::Llm(LlmEvent::ResponseReceived {
+                entity_id: response.entity_id,
+                generation_ms: response.generation_ms,
+            }));
     }
 }
 

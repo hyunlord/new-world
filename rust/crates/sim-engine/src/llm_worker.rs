@@ -1,10 +1,14 @@
+use std::collections::VecDeque;
+use std::process::Command;
+use std::sync::{Arc, Mutex};
+use std::thread;
 use std::time::{Duration, Instant};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use thiserror::Error;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::{bounded, Receiver, RecvTimeoutError, Sender};
 
 use sim_core::components::{JudgmentData, LlmContent, LlmRequestType, LlmRole};
 
@@ -136,31 +140,40 @@ pub fn llm_worker_loop(
     rx: Receiver<LlmRequest>,
     tx: Sender<LlmResponse>,
     config: LlmConfig,
+    debug_log: Arc<Mutex<VecDeque<String>>>,
 ) {
-    let timeout = Duration::from_millis(config.http_timeout_ms);
-    let client = ureq::AgentBuilder::new()
-        .timeout_connect(timeout)
-        .timeout_read(timeout)
-        .timeout_write(timeout)
-        .build();
     let templates = LlmPromptTemplates::load(&config.prompt_dir).ok();
 
     while let Ok(request) = rx.recv() {
-        log::info!(
-            "[LLM-DEBUG] llm_worker received request: id={}, type={:?}, variant={:?}, entity_id={}",
-            request.request_id,
-            request.request_type,
-            request.variant,
-            request.entity_id
+        push_debug_log(
+            &debug_log,
+            format!(
+                "[LLM-DEBUG] llm_worker received request: id={}, type={:?}, variant={:?}, entity_id={}",
+                request.request_id,
+                request.request_type,
+                request.variant,
+                request.entity_id
+            ),
         );
         let start = Instant::now();
         let response = match templates.as_ref() {
-            Some(loaded_templates) => process_request(&client, loaded_templates, &config, &request),
+            Some(loaded_templates) => {
+                process_request(loaded_templates, &config, &request, &debug_log)
+            }
             None => Err(LlmWorkerError::Prompt(LlmPromptError::MissingTemplate(
                 "system.jinja".to_string(),
             ))),
         };
         let elapsed = start.elapsed().as_millis() as u32;
+        push_debug_log(
+            &debug_log,
+            format!(
+                "[LLM-DEBUG] llm_worker request finished: id={}, success={}, elapsed_ms={}",
+                request.request_id,
+                response.is_ok(),
+                elapsed
+            ),
+        );
         let llm_response = match response {
             Ok(content) => LlmResponse {
                 request_id: request.request_id,
@@ -189,37 +202,164 @@ pub fn llm_worker_loop(
                 }
             }
         };
+        push_debug_log(
+            &debug_log,
+            format!(
+                "[LLM-DEBUG] llm_worker sending response: id={}, success={}, model={}",
+                llm_response.request_id,
+                llm_response.success,
+                llm_response.model_id
+            ),
+        );
         if tx.send(llm_response).is_err() {
             break;
         }
     }
 }
 
+fn push_debug_log(debug_log: &Arc<Mutex<VecDeque<String>>>, message: String) {
+    let Ok(mut log) = debug_log.lock() else {
+        return;
+    };
+    log.push_back(message);
+    while log.len() > sim_core::config::LLM_DEBUG_LOG_CAPACITY {
+        let _ = log.pop_front();
+    }
+}
+
 /// Processes a single request by rendering prompts, calling llama-server, and validating output.
 pub fn process_request(
-    client: &ureq::Agent,
     templates: &LlmPromptTemplates,
     config: &LlmConfig,
     request: &LlmRequest,
+    debug_log: &Arc<Mutex<VecDeque<String>>>,
 ) -> Result<LlmContent, LlmWorkerError> {
     let prompt = match request.variant {
         LlmPromptVariant::Judgment => templates.render_layer3_judgment(&request.prompt_context())?,
-        LlmPromptVariant::Narrative => templates.render_layer4_narrative(&request.prompt_context())?,
+        LlmPromptVariant::Narrative => {
+            templates.render_layer4_narrative(&request.prompt_context())?
+        }
         LlmPromptVariant::Personality => {
             templates.render_layer4_personality(&request.prompt_context())?
         }
     };
+    push_debug_log(
+        debug_log,
+        format!(
+            "[LLM-DEBUG] llm_worker prepared prompt: id={}, variant={:?}, system_chars={}, user_chars={}",
+            request.request_id,
+            request.variant,
+            prompt.system.chars().count(),
+            prompt.user.chars().count()
+        ),
+    );
 
-    let body = request_body(config, request, &prompt);
+    let content = process_request_http(config, request, &prompt, debug_log)?;
+    match request.request_type {
+        LlmRequestType::Layer3Judgment => {
+            parse_judgment_content(content.as_str()).map(LlmContent::Judgment)
+        }
+        LlmRequestType::Layer4Narrative => {
+            if looks_like_garbage(content.as_str()) {
+                return Err(LlmWorkerError::MalformedResponse(
+                    "narrative content looked like garbage".to_string(),
+                ));
+            }
+            Ok(LlmContent::Narrative(content))
+        }
+    }
+}
+
+fn process_request_http(
+    config: &LlmConfig,
+    request: &LlmRequest,
+    prompt: &RenderedPrompt,
+    debug_log: &Arc<Mutex<VecDeque<String>>>,
+) -> Result<String, LlmWorkerError> {
+    match process_request_http_with_curl(config, request, prompt, debug_log) {
+        Ok(content) => return Ok(content),
+        Err(error) => {
+            push_debug_log(
+                debug_log,
+                format!(
+                    "[LLM-DEBUG] llm_worker curl fallback to ureq: id={}, reason={}",
+                    request.request_id,
+                    error
+                ),
+            );
+        }
+    }
+
+    process_request_http_with_ureq(config, request, prompt, debug_log)
+}
+
+fn process_request_http_with_curl(
+    config: &LlmConfig,
+    request: &LlmRequest,
+    prompt: &RenderedPrompt,
+    debug_log: &Arc<Mutex<VecDeque<String>>>,
+) -> Result<String, LlmWorkerError> {
     let endpoint = format!("{}/v1/chat/completions", config.base_url());
-    let response = client
-        .post(endpoint.as_str())
-        .set("Content-Type", "application/json")
-        .send_json(body)
+    let body = request_body(config, request, prompt);
+    let body_json = serde_json::to_string(&body)
         .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
-    let response_value: Value = response
-        .into_json()
+    let timeout_secs = config.http_timeout_ms.div_ceil(1000).max(1).to_string();
+    push_debug_log(
+        debug_log,
+        format!(
+            "[LLM-DEBUG] llm_worker HTTP start: id={}, transport=curl, endpoint={}, max_tokens={}, temperature={:.2}",
+            request.request_id,
+            endpoint,
+            match request.request_type {
+                LlmRequestType::Layer3Judgment => config.max_tokens_l3,
+                LlmRequestType::Layer4Narrative => config.max_tokens_l4,
+            },
+            match request.request_type {
+                LlmRequestType::Layer3Judgment => config.temperature_l3,
+                LlmRequestType::Layer4Narrative => config.temperature_l4,
+            }
+        ),
+    );
+
+    let curl_binary = if std::path::Path::new("/usr/bin/curl").is_file() {
+        "/usr/bin/curl"
+    } else {
+        "curl"
+    };
+
+    let output = Command::new(curl_binary)
+        .args([
+            "-sS",
+            "--noproxy",
+            "*",
+            "--max-time",
+            timeout_secs.as_str(),
+            "--connect-timeout",
+            timeout_secs.as_str(),
+            "-H",
+            "Content-Type: application/json",
+            "-X",
+            "POST",
+            endpoint.as_str(),
+            "--data",
+            body_json.as_str(),
+        ])
+        .output()
         .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        return Err(LlmWorkerError::Http(format!(
+            "curl exited with status {}: {}",
+            output.status,
+            stderr
+        )));
+    }
+
+    let stdout = String::from_utf8(output.stdout)
+        .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
+    let response_value: Value = serde_json::from_str(stdout.as_str())
+        .map_err(|error| LlmWorkerError::MalformedResponse(error.to_string()))?;
     let content = response_value
         .get("choices")
         .and_then(Value::as_array)
@@ -230,17 +370,120 @@ pub fn process_request(
         .map(str::trim)
         .filter(|value| !value.is_empty())
         .ok_or_else(|| LlmWorkerError::MalformedResponse("missing message content".to_string()))?;
+    push_debug_log(
+        debug_log,
+        format!(
+            "[LLM-DEBUG] llm_worker HTTP content received: id={}, transport=curl, chars={}",
+            request.request_id,
+            content.chars().count()
+        ),
+    );
+    Ok(content.to_string())
+}
 
-    match request.request_type {
-        LlmRequestType::Layer3Judgment => parse_judgment_content(content).map(LlmContent::Judgment),
-        LlmRequestType::Layer4Narrative => {
-            if looks_like_garbage(content) {
-                return Err(LlmWorkerError::MalformedResponse(
-                    "narrative content looked like garbage".to_string(),
-                ));
-            }
-            Ok(LlmContent::Narrative(content.to_string()))
+fn process_request_http_with_ureq(
+    config: &LlmConfig,
+    request: &LlmRequest,
+    prompt: &RenderedPrompt,
+    debug_log: &Arc<Mutex<VecDeque<String>>>,
+) -> Result<String, LlmWorkerError> {
+    let request_id = request.request_id;
+    let endpoint = format!("{}/v1/chat/completions", config.base_url());
+    let config_for_thread = config.clone();
+    let request_for_thread = request.clone();
+    let prompt_for_thread = prompt.clone();
+    let endpoint_for_thread = endpoint.clone();
+    let debug_log_for_thread = Arc::clone(debug_log);
+    let (response_tx, response_rx) = bounded::<Result<String, LlmWorkerError>>(1);
+
+    thread::spawn(move || {
+        let timeout = Duration::from_millis(config_for_thread.http_timeout_ms);
+        let client = ureq::AgentBuilder::new()
+            .try_proxy_from_env(false)
+            .timeout(timeout)
+            .timeout_connect(timeout)
+            .build();
+        let body = request_body(&config_for_thread, &request_for_thread, &prompt_for_thread);
+        push_debug_log(
+            &debug_log_for_thread,
+            format!(
+                "[LLM-DEBUG] llm_worker HTTP start: id={}, transport=ureq, endpoint={}, max_tokens={}, temperature={:.2}",
+                request_for_thread.request_id,
+                endpoint_for_thread,
+                match request_for_thread.request_type {
+                    LlmRequestType::Layer3Judgment => config_for_thread.max_tokens_l3,
+                    LlmRequestType::Layer4Narrative => config_for_thread.max_tokens_l4,
+                },
+                match request_for_thread.request_type {
+                    LlmRequestType::Layer3Judgment => config_for_thread.temperature_l3,
+                    LlmRequestType::Layer4Narrative => config_for_thread.temperature_l4,
+                }
+            ),
+        );
+
+        let result = (|| -> Result<String, LlmWorkerError> {
+            let response = client
+                .post(endpoint_for_thread.as_str())
+                .set("Content-Type", "application/json")
+                .send_json(body)
+                .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
+            push_debug_log(
+                &debug_log_for_thread,
+                format!(
+                    "[LLM-DEBUG] llm_worker HTTP response headers: id={}, transport=ureq, status={}",
+                    request_for_thread.request_id,
+                    response.status()
+                ),
+            );
+            let response_value: Value = response
+                .into_json()
+                .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
+            let content = response_value
+                .get("choices")
+                .and_then(Value::as_array)
+                .and_then(|choices| choices.first())
+                .and_then(|choice| choice.get("message"))
+                .and_then(|message| message.get("content"))
+                .and_then(Value::as_str)
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| {
+                    LlmWorkerError::MalformedResponse("missing message content".to_string())
+                })?;
+            push_debug_log(
+                &debug_log_for_thread,
+                format!(
+                    "[LLM-DEBUG] llm_worker HTTP content received: id={}, transport=ureq, chars={}",
+                    request_for_thread.request_id,
+                    content.chars().count()
+                ),
+            );
+            Ok(content.to_string())
+        })();
+
+        let _ = response_tx.send(result);
+    });
+
+    match response_rx.recv_timeout(Duration::from_millis(config.http_timeout_ms)) {
+        Ok(Ok(content)) => Ok(content),
+        Ok(Err(error)) => Err(error),
+        Err(RecvTimeoutError::Timeout) => {
+            push_debug_log(
+                debug_log,
+                format!(
+                    "[LLM-DEBUG] llm_worker HTTP timeout: id={}, transport=ureq, timeout_ms={}",
+                    request_id,
+                    config.http_timeout_ms
+                ),
+            );
+            Err(LlmWorkerError::Http(format!(
+                "request timed out after {}ms",
+                config.http_timeout_ms
+            )))
         }
+        Err(RecvTimeoutError::Disconnected) => Err(LlmWorkerError::Http(
+            format!("request worker disconnected for id={request_id}"),
+        )),
     }
 }
 

@@ -77,6 +77,15 @@ impl SimSystem for LlmRequestRuntimeSystem {
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let name_lookup = build_name_lookup(world);
         let llm_available = resources.is_llm_available();
+        if llm_available {
+            if tick.is_multiple_of(120) {
+                resources.llm_runtime.push_debug_log(format!(
+                    "[LLM-DEBUG] llm_request_system tick={} autonomous queue suppressed while LLM is available",
+                    tick
+                ));
+            }
+            return;
+        }
         let submission_strategy = llm_submission_strategy(llm_available);
         let mut submissions: Vec<PendingSubmission> = Vec::new();
         let mut total_capable: usize = 0;
@@ -157,13 +166,13 @@ impl SimSystem for LlmRequestRuntimeSystem {
         }
 
         if total_capable > 0 && (qualifying_count > 0 || tick.is_multiple_of(120)) {
-            log::info!(
+            resources.llm_runtime.push_debug_log(format!(
                 "[LLM-DEBUG] llm_request_system tick={} found {} LlmCapable entities, {} qualify for request, strategy={:?}",
                 tick,
                 total_capable,
                 qualifying_count,
                 submission_strategy
-            );
+            ));
         }
 
         for submission in submissions {
