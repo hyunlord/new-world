@@ -16,6 +16,7 @@
 - Keep the overlay non-blocking and zero-cost when disabled.
 - Use `Locale.*` for visible strings.
 - Use standard command paths for balance/config writes.
+- Treat RuleHistory, CausalLog, temperament state, and faith/oracle traces as read-only diagnostic surfaces.
 
 ## Do Not
 
@@ -23,6 +24,7 @@
 - Do not call SimBridge directly from panels or widgets.
 - Do not hardcode UI strings or use `tr()`.
 - Do not make the overlay pause or own the simulation loop.
+- Do not add debug paths that mutate World Rules or oracle outcomes outside approved command/config routes.
 
 ## Verification
 

@@ -18,6 +18,8 @@
 - Route runtime-facing reads/writes through the existing SimBridge and SimulationBus patterns already used here.
 - Keep user-visible strings on `Locale.*`.
 - Keep save/load comments aligned with actual runtime behavior, not intended future behavior.
+- Keep World Rules flow as Settings -> Compile -> Runtime routed through bridge/runtime layers, not a local GDScript compiler.
+- Treat oracle, observation, and faith interactions here as UI relay/command plumbing only.
 
 ## Do Not
 
@@ -25,6 +27,7 @@
 - Do not delete or replace managers without a migration ticket.
 - Do not add new authoritative gameplay systems here.
 - Do not use `tr()`.
+- Do not derive temperament, room roles, or rule patches locally in GDScript.
 
 ## Verification
 

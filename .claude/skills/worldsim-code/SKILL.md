@@ -224,6 +224,139 @@ cd rust && cargo run -p sim-test
 
 ---
 
+## Crate Responsibilities (v3.1)
+
+### sim-core/
+- ECS components (18+ types: Identity through Faith + Temperament)
+- Influence Grid (influence_grid.rs) -- 8-12 typed channel grid, wall blocking mask
+- Effect Primitives (effect.rs) -- 6-type standard
+- Causal Log (causal_log.rs) -- per-entity ring buffer, CauseRef
+- Tile Grid (tile_grid.rs) -- building structural data, wall/floor/roof
+- Room System (room.rs) -- dirty-flagged BFS, room role auto-detection
+- Temperament (temperament.rs) -- TCI 4-axis (NS/HA/RD/P), latent+expressed, archetype_label()
+- Config constants (config.rs)
+
+### sim-data/
+- RON loader + validation pipeline
+- MaterialDef -- properties (hardness/density/melting/rarity/value), tags
+- FurnitureDef -- type, required materials, influence emission
+- ActionDef -- conditions, effects, duration, tool requirements
+- RecipeDef -- tag+threshold inputs, era gates, outputs
+- StructureDef -- building blueprints (walls, roof, required furniture)
+- WorldRuleset -- 5-slot world rules, composition, priority/merge
+- TemperamentRules -- PRS weight matrix 4x38, bias matrix 4x24, shift rules
+- All content in RON. Zero .rs changes for new content.
+
+### sim-systems/
+- RuntimeSystems (53+ registered, Hot/Warm/Cold)
+- Material auto-derivation (property -> item stat formulas)
+- Room influence aggregation (furniture -> room cache)
+- Building construction AI (GOAP + blueprint)
+- Tag-based recipe resolution
+- Temperament derivation (gene -> TCI) and shift (dramatic event -> axis change)
+- World Rules application (settings -> compile -> parameter override)
+
+### sim-engine/
+- Tick loop, system scheduling by frequency tier
+- Double-buffer swap, damping, Sigmoid
+- World Rules lifecycle management
+
+### sim-bridge/
+- Rust<->Godot FFI (gdext)
+- FrameSnapshot, Influence Grid data texture upload
+- MultiMesh buffer (Vec<f32> -> PackedFloat32Array)
+- Oracle text pipeline boundary (player input -> LLM -> response)
+
+### sim-test/
+- Headless test binary
+- Material auto-derivation tests
+- Room detection tests
+- Tag recipe resolution tests
+- Temperament derivation + shift tests
+- World Rules loading + composition tests
+
+## RON File Standards (v3.1)
+
+### Material (sim-data/materials/*.ron)
+
+```ron
+MaterialDef(
+    name: "copper",
+    category: Metal,
+    tags: ["metal", "soft_metal"],
+    properties: {
+        hardness: 3.0,
+        density: 8.96,
+        melting_point: 1085,
+        rarity: 0.6,
+        value: 5.0,
+    },
+)
+```
+
+### Recipe (sim-data/recipes/*.ron)
+
+```ron
+RecipeDef(
+    name: "bronze_sword",
+    inputs: [{ tag: "metal", min_hardness: 3.0, amount: 2 }],
+    requires: { building_tag: "forge", tech: "metalworking" },
+    output: { template: "sword", material_from_input: 0 },
+)
+```
+
+### Structure (sim-data/structures/*.ron)
+
+```ron
+StructureDef(
+    name: "forge",
+    min_size: (3, 3),
+    required_components: [
+        Wall(count: 4, tags: ["stone"]),
+        Roof(tags: ["thatch"]),
+        Furniture("anvil", 1),
+        Furniture("hearth", 1),
+        Furniture("water_trough", 1),
+    ],
+    role_recognition: "auto",
+    influence: [(channel: "noise", radius: 40, intensity: 0.6)],
+)
+```
+
+### World Rules (sim-data/world_rules/*.ron)
+
+```ron
+WorldRuleset(
+    name: "DungeonEconomy",
+    priority: 100,
+    resource_modifiers: [(target: "surface_foraging", multiplier: 0.1)],
+    special_zones: [(kind: "dungeon_node", count: (3, 7))],
+    special_resources: [(name: "magic_stone", tags: ["currency"])],
+    agent_modifiers: [(system: "essence", effect: "temperament_shift")],
+)
+```
+
+### Temperament Rules (sim-data/temperament/*.ron)
+
+```ron
+TemperamentShiftRule(
+    trigger: Event("family_death"),
+    conditions: [Temperament(axis: "ha", value: ">0.5")],
+    effect: TemperamentShift(axis: "ha", delta: +0.3, paired_axis: "ns", paired_delta: -0.2),
+    cascade: true,
+    causal_log: "family_death->temperament_shift",
+)
+```
+
+### Rules
+- All content is RON. Never hardcode simulation parameters.
+- Material properties auto-derive item stats. Never manually set weapon damage.
+- Recipes use tags, never material IDs.
+- New material/building/world rule = new `.ron` file only. Zero `.rs` changes.
+- Temperament shift rules are data-driven. Never hardcode personality changes.
+
+---
+
 ---
 
 # PART 3 — Prompt Generation Standard
@@ -235,24 +368,28 @@ Every Claude Code prompt MUST contain all 6 sections:
 ### Section 1: Implementation Intent
 **Why does this exist? Why this approach?**
 - Problem being solved, academic reference if applicable, tradeoffs
+- For architecture-doc sync, state that the change applies to Claude-facing `CLAUDE.md`, Codex-facing `AGENTS.md`, and both checked-in `worldsim-code` skill mirrors.
 
 ### Section 2: What to Build
 **Exactly what gets created or changed.**
 - File paths (Rust crate + module, or GDScript path), structs/classes, fields, types, defaults
 - Events to emit, config constants to add, locale keys to add
 - Explicit scope boundary
+- For doc sync prompts, explicitly scope `CLAUDE.md`, `AGENTS.md`, the `.agents` and `.claude` `worldsim-code` skill mirrors, and `all repo AGENTS.md files whose guidance conflicts with v3.1 architecture`.
 
 ### Section 3: How to Implement
 **Step-by-step logic with enough detail for zero follow-up.**
 - Tick priority/interval (for systems), exact formulas, state transitions, code snippets
 - For Rust: which crate, which module, query patterns, event emissions
 - For GDScript: which SimBridge method to call, which signals to connect
+- For doc sync prompts, add an `AGENTS.md` scan step (`rg --files -g 'AGENTS.md'` plus targeted `rg -n`) and update every scoped `AGENTS.md` that needs v3.1 alignment.
 
 ### Section 4: Dispatch Plan
 **How to split into tickets.**
 - Table: Ticket | File/Concern | 🟢 DISPATCH or 🔴 DIRECT | Depends on
 - Dispatch ratio ≥60%
 - DIRECT only for: shared interface changes, integration wiring <50 lines
+- Shared instruction-doc sync (`CLAUDE.md`, `AGENTS.md`, skill docs) may be `🔴 DIRECT` when the change is pure text coordination.
 
 ### Section 5: Localization Checklist
 **Every new text key in both languages.**
@@ -263,6 +400,17 @@ Every Claude Code prompt MUST contain all 6 sections:
 **How to confirm it works.**
 - Gate command, smoke test, expected output
 - Notion page to update
+- For doc sync prompts, require a stale-guidance scan so no conflicting architecture descriptions remain across `CLAUDE.md`, `AGENTS.md`, and both `SKILL.md` mirrors.
+
+## Documentation Sync Prompt Pattern (v3.1)
+
+When the task is architecture-document synchronization for both Claude and Codex:
+- `Implementation Intent` must say the v3.1 decision set is being propagated to `CLAUDE.md`, `AGENTS.md`, and both checked-in `worldsim-code` skill mirrors so Claude and Codex follow the same architecture.
+- `What to Build` must list the primary root docs plus the scoped rule: `all repo AGENTS.md files whose guidance conflicts with v3.1 architecture`.
+- `How to Implement` must include a repo-wide `AGENTS.md` scan, then update every scoped file that still carries stale boundaries.
+- `Dispatch Plan` should include direct tickets for root `AGENTS.md`, root `CLAUDE.md`, both skill mirrors, and scoped `AGENTS.md` cleanup when the work is shared-text maintenance.
+- `Verification & Notion` must include grep checks for `14 Day-1`, `World Rules`, `TCI temperament`, and a conflict scan for stale JSON / v3 language.
+- Final report templates for these prompts should call out which scoped `AGENTS.md` files were updated.
 
 ---
 
