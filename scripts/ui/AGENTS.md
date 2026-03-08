@@ -18,6 +18,9 @@
 - Keep selection, open/close, and camera concerns in UI-local signals; do not turn them into gameplay logic.
 - Use `Locale.ltr()`, `Locale.trf*()`, or `Locale.tr_id()` for user-visible text.
 - If a UI change depends on a new bridge getter, verify the Rust API exists before wiring the UI.
+- Observation/oracle UI is presentation plus command input only; agent interpretation stays in Rust-side systems/bridge boundaries.
+- Display temperament via bridge-provided values or labels; do not derive HEXACO/TCI behavior locally.
+- Treat RuleHistory, CausalLog, and faith economy displays as read-only explanations of Rust-owned state.
 
 ## Do Not
 
@@ -25,6 +28,7 @@
 - Do not mutate live simulation state directly from ordinary UI code.
 - Do not add hardcoded UI strings or `tr()`.
 - Do not claim every UI path is already fully bridged when editing legacy panels.
+- Do not let ordinary UI code patch World Rules or reinterpret oracle text outside command paths.
 
 ## Verification
 

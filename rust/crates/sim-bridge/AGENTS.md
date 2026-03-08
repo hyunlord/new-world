@@ -9,6 +9,7 @@
 - This crate exposes the live runtime and helper API surface to Godot.
 - It translates between Godot types and Rust types; it does not own gameplay rules.
 - Document and extend only the APIs that actually exist in code.
+- This is also the only allowed boundary for future oracle text, faith commands, and player-facing World Rules patch requests.
 
 ## Must Follow
 
@@ -17,6 +18,7 @@
 - Use the current runtime surface when documenting or extending behavior: `runtime_init`, `runtime_tick_frame`, `runtime_get_entity_detail`, `runtime_get_entity_tab`, `runtime_get_entity_list`, `runtime_apply_commands_v2`, save/load, registry, and debug helpers.
 - If you add a new UI-visible getter or event shape, update the corresponding GDScript callers in the same task.
 - Keep bridge comments aligned with actual `runtime_*` and helper APIs.
+- Keep oracle/observation/faith interactions as bridge commands or snapshots; GDScript should not own interpretation or rule mutation logic.
 
 ## Do Not
 
@@ -24,6 +26,7 @@
 - Do not document or add imaginary getters just because old CLAUDE files mention them.
 - Do not let Godot types leak into lower crates.
 - Do not cache Godot objects in ways that create lifetime hazards.
+- Do not let LLM/model concerns leak below the bridge boundary as UI-specific types.
 
 ## Verification
 

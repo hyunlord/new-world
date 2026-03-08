@@ -54,10 +54,10 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **Simulation Core** | Rust (hecs ECS, rayon, serde_json) | All tick logic, state, AI, systems |
+| **Simulation Core** | Rust (hecs ECS, rayon, serde) | All tick logic, state, AI, systems |
 | **Bridge** | Rust GDExtension (gdext crate) | FFI boundary: snapshot out, commands in |
 | **Renderer/UI** | Godot 4.6 GDScript | Panels, renderers, HUD, camera, input |
-| **Data** | JSON (serde) | Species, traits, tech, stressors, buildings |
+| **Data** | RON + validation (legacy JSON migration during A-1) | Materials, recipes, structures, actions, content defs |
 | **Localization** | Custom Autoload `Locale` (GDScript) | UI text only — NOT Godot tr() |
 | **Events** | Rust EventBus | All state changes recorded as events |
 | **AI** | Rust Utility AI → GOAP → ONNX → LLM | Phased evolution, all in Rust |
@@ -70,7 +70,121 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 
 ---
 
-## Architecture: Rust Core + Godot Shell
+## Architecture Decisions (v3.1 — 2026-03-08, final)
+
+### 14 Day-1 Decisions (immutable)
+1. LOD 4-Tier (LodTier component)
+2. System frequency tiering (Hot/Warm/Cold)
+3. Influence Grid (8-12 typed channels, no direct entity refs)
+4. Sparse social relations (cap 100, BTreeMap)
+5. serde on all components
+6. Data-Driven ("Build like a mod" -- all content in RON)
+7. Causal tracking (per-entity 32-event ring buffer)
+8. Double-buffer + damping + Sigmoid saturation
+9. Sim 20-30 TPS + render 60 FPS (Gaffer accumulator)
+10. Reactive ECS (ChangeTracker)
+11. Building 2-layer model (structural grid + furniture ECS)
+12. Tag+threshold recipes (no ID references)
+13. Cloninger TCI temperament 4-axis (gene -> temperament -> HEXACO)
+14. World Rules 5-Slot (resource/space/agent/society/global)
+
+### Material System
+- Material-level (not element, not abstract resource)
+- Material = content generator: properties auto-derive item stats
+- Formula: damage = hardness * 1.2, speed = 5.0 / density, durability = hardness * density * 10
+- All materials in RON: sim-data/materials/
+- Tag+threshold recipes: [tag: "metal", min_hardness: 50] -- never material IDs
+- New material = new `.ron` file only, zero `.rs` changes
+
+### Building System (2-layer)
+- Structural Grid: tile[x][y] = { wall_material, wall_hp, floor_material, roof, room_id }
+  - Walls/floors/roofs = terrain-like data, NEVER ECS entities, zero per-tick updates
+- Interactive Entities: furniture/equipment = hecs Entity, event-driven only
+- Room detection: dirty-flagged BFS flood fill (~0.01ms incremental)
+  - Room role = auto-assigned by furniture (StructureDef matching)
+- Influence shielding: walls block propagation (stone 90%, wood 50%)
+  - Room = Influence container (cached aggregate)
+- Autonomous construction: GOAP + Blueprint templates
+  - need detect -> structure lookup -> site choose -> blueprint stamp -> gather -> build walls -> roof -> furnish -> role recognize
+- Render: 6 layers (floor -> wall_lower -> furniture -> agent -> wall_upper -> roof_alpha)
+
+### Temperament Pipeline (Cloninger TCI temperament)
+- 38D polygenic core -> T = sigma(W_PRS * G + epsilon) -> TCI 4-axis:
+  - NS (Novelty Seeking) = dopamine -> exploration/impulsion
+  - HA (Harm Avoidance) = serotonin -> avoidance/caution
+  - RD (Reward Dependence) = norepinephrine -> sociality/empathy
+  - P (Persistence) = corticostriatal -> perseverance/stubbornness
+- TCI -> HEXACO bias -> 187 traits -> 33 values -> needs -> emotions -> behavior -> skills -> roles
+- Mutable: dramatic events shift axes +/-0.1~0.3, 0~3 times per lifetime, cascading
+- Awakening: latent != expressed, dramatic event releases latent temperament
+- UI: internal f64, display as 4-humor label (choleric/sanguine/phlegmatic/melancholic/mixed)
+- 9th semi-convergence: founder temperament distribution -> civilization direction
+
+### World Rules (5 Slots)
+- Resource Economy: yield modifiers, special resources, conversion prereqs, currency
+- Space & Environment: special zone spawners, terrain mods, movement rules
+- Agent: lifespan, essence/blessing/curse, special abilities
+- Society: tech prereqs, hierarchy, trade/war rules
+- Global Constants: day length, seasons, regen rates, disaster frequency
+- Lifecycle: Settings -> Compile -> Runtime (Factorio-style)
+- Composition: base + world + scenario + oracle, priority/merge/override
+- Dynamic change: event-based only (on_action), no polling
+- Performance: init ~50ms, tick cost 0
+- RuleHistory: "why is this value X?" traceback
+
+### LLM Integration (5 Layers)
+- Layer 0 (pre-game): Natural language -> World Rules JSON IR -> RON (2-step LLM + 1-step compiler)
+- Layer 1-2: Pure code (simulation logic)
+- Layer 3: Leader/priest decisions + oracle text interpretation
+- Layer 5 (oracle): Player oracle text -> agent personality-filtered interpretation
+- Model: Qwen3.5 0.8B (Q4_K_M), llama-cpp-2, GBNF/JSON Schema
+- Fine-tuning: QLoRA, 3 tasks (narrative 60% + oracle interpretation 25% + worldbuilding->IR 15%)
+
+### Oracle System (3 Layers)
+- Layer 1: Observation (always free) -- zoom, inspector, chronicle, "why?" UI
+- Layer 2: Oracle intervention (costs faith 15~35) -- text input -> LLM -> agent interprets via personality
+  - Key: agent can misinterpret oracle based on temperament (dramatic irony)
+- Layer 3: World law intervention (costs faith 80+, irreversible) -- runtime World Rules patch
+- Faith Economy: 0~100, accumulates from prayer, depletes from intervention, natural decay
+- Intervention history UI: timeline of oracle actions + consequences + side effects
+
+### Content Scale
+| Phase | Materials | Objects | Actions | Tech | Agents | Buildings | World Rules |
+|:-----:|:---------:|:-------:|:-------:|:----:|:------:|:---------:|:-----------:|
+| 1     | ~20       | ~50     | ~35     | ~10  | ~1K    | furniture | resource+const |
+| 2     | ~50       | ~100    | ~65     | ~20  | ~5K    | wall+room | +space+agent |
+| 3     | ~75       | ~150    | ~95     | ~40  | ~10K   | +underground | +society+dynamic |
+| 4+    | ~120      | ~200    | ~150    | ~55  | ~100K  | z-level   | all 5 slots |
+
+### Effect Primitive Standard (6 types)
+AddStat / MulStat / SetFlag / EmitStimulus / SpawnEvent / Schedule
+
+### Performance Budget (10K agents)
+- Agent sim: ~0.53ms (parallel)
+- Building: <3ms (room + influence + render)
+- Influence Grid: <0.6ms
+- World Rules: init ~50ms, tick 0
+- Total: ~4ms / 9ms = 44%, headroom 56%
+
+## Current Phase: Pre-requisite Architecture (A-1 through A-10)
+
+### A-1: Data-Driven RON (sim-data/) — MaterialDef/FurnitureDef/ActionDef/RecipeDef/StructureDef
+### A-2: Influence Grid (sim-core/) — 8-12 channels, stamp/sample, wall blocking
+### A-3: Effect Primitive (sim-core/) — 6 types, double-buffer, damping, sigmoid
+### A-4: Causal tracking (sim-core/) — ring buffer 32 events, world log
+### A-5: System frequency tiering — Hot/Warm/Cold tags
+### A-6: Building tile grid (sim-core/) — tile[x][y], BFS room detection
+### A-7: Tag+threshold recipe schema (sim-data/) — no ID refs
+### A-8: Temperament pipeline (sim-core/) — TCI 4-axis, PRS 4x38 weights, bias functions
+### A-9: World Rules slot (sim-data/) — WorldRuleset RON schema, loader, composition, base_rules.ron
+### A-10: Misc — serde, BTreeMap, NetworkId, LodTier, Sparse relations (cap 100)
+
+After A-1~A-10: Phase 1 (Survival + Material + Temperament, ~4 weeks)
+Then: Phase 2 (Social + Band + Building Structure, ~4 weeks)
+
+---
+
+## Runtime Topology
 
 ```
 ┌─────────────────────────────────────────┐
@@ -90,7 +204,7 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 │  sim-engine  → Tick loop, scheduling     │
 │  sim-systems → All 30+ simulation systems│
 │  sim-core    → ECS world, components     │
-│  sim-data    → JSON loaders, definitions │
+│  sim-data    → RON loaders, validation   │
 │  sim-test    → Headless test binary      │
 └──────────────────────────────────────────┘
 ```
@@ -104,7 +218,7 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 | ECS components (entity data) | `rust/crates/sim-core/` | Rust | State ownership |
 | Config constants | `rust/crates/sim-core/config.rs` | Rust | Needed by sim logic |
 | EventBus (inter-system comms) | `rust/crates/sim-engine/event_bus.rs` | Rust | Replaces SimulationBus for sim |
-| Data loading (JSON→structs) | `rust/crates/sim-data/` | Rust | Type-safe parsing |
+| Data loading (RON→structs) | `rust/crates/sim-data/` | Rust | Type-safe parsing |
 | GDExtension bridge | `rust/crates/sim-bridge/` | Rust | FFI boundary |
 | UI Panels | `scripts/ui/panels/` | GDScript | UI is Godot's strength |
 | Renderers | `scripts/ui/renderers/` | GDScript | 2D rendering |
@@ -148,7 +262,7 @@ scripts/
     panels/                    — EntityDetailPanel, BuildingDetailPanel, etc.
     renderers/                 — WorldRenderer, EntityRenderer, BuildingRenderer
     hud.gd, camera_controller.gd
-data/                          ← see data/CLAUDE.md
+data/                          ← legacy JSON content during A-1 migration
   species/, traits/, stressors/, emotions/, buildings/, skills/, tech/
 localization/
   en/, ko/, compiled/
@@ -225,7 +339,7 @@ SimulationBus is now a **read-only relay** for the UI layer.
 - Never use Godot's built-in `tr()` — we use a custom Locale Autoload
 - Both `en/` and `ko/` JSON files must be updated for every new key
 - Debug/log strings are exempt
-- See `.claude/skills/worldsim-code/SKILL.md` for full localization protocol
+- See the checked-in Claude `worldsim-code` skill mirror for full localization protocol
 
 ---
 
@@ -304,10 +418,10 @@ Dispatch ratio: 75% (3/4)
 | `rust/crates/sim-systems/CLAUDE.md` | All simulation systems, priorities, formulas |
 | `rust/crates/sim-engine/CLAUDE.md` | Tick loop, EventBus, system scheduling |
 | `rust/crates/sim-bridge/CLAUDE.md` | GDExtension FFI, snapshot format, command handling |
-| `rust/crates/sim-data/CLAUDE.md` | JSON data loading, serde schemas |
+| `rust/crates/sim-data/CLAUDE.md` | RON data loading, validation, schema structs |
 | `scripts/core/CLAUDE.md` | Locale, SimulationBus (UI relay), GDScript-side shared interfaces |
 | `scripts/ui/CLAUDE.md` | UI layer rules, panel conventions, no simulation logic |
-| `data/CLAUDE.md` | JSON format rules, validation, data file conventions |
+| `data/CLAUDE.md` | Legacy data rules and migration boundaries |
 
 ---
 
@@ -317,7 +431,7 @@ Before any work touching these areas, read the corresponding SKILL.md:
 
 | Skill | Path | When |
 |-------|------|------|
-| worldsim-code | `.claude/skills/worldsim-code/SKILL.md` | Any GDScript UI work (localization, patterns) |
+| worldsim-code | Claude `worldsim-code` skill mirror | Any GDScript UI work (localization, patterns) |
 | kanban-workflow | `.claude/skills/kanban-workflow/SKILL.md` | Dispatch, ticket management, PROGRESS.md |
 | godot | `.claude/skills/godot/SKILL.md` | Godot scene/resource file work |
 | systematic-debugging | `.claude/skills/systematic-debugging/SKILL.md` | Any bug or test failure |

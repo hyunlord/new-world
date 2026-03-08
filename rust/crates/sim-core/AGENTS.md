@@ -2,7 +2,7 @@
 
 ## Purpose
 
-- Foundation schema crate for shared component data, world data, IDs, enums, and config.
+- Foundation schema crate for shared component data, world data, IDs, enums, config, temperament state, and structural tile data.
 
 ## Current Boundary
 
@@ -17,6 +17,9 @@
 - Prefer enums over string categories in shared types.
 - Put new shared constants in `config.rs`.
 - For new simulation math, prefer `f64`; do not change existing public field types without an explicit schema-migration need.
+- Keep structural building state in tile/grid data; walls, floors, and roofs are not ECS entities.
+- Keep temperament data as shared state only: genes, TCI axes, latent/expressed values, and display labels live here, not decision logic.
+- Shared types that cross crate boundaries should remain serde-friendly and deterministic.
 
 ## Do Not
 
@@ -24,6 +27,7 @@
 - Do not change field types casually.
 - Do not add Godot-facing conversion concerns here.
 - Do not hide magic numbers in downstream crates when they belong in shared config.
+- Do not move rule composition, recipe resolution, or oracle interpretation logic into schema types.
 
 ## Verification
 
