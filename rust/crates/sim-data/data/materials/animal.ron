@@ -1,0 +1,41 @@
+[
+    MaterialDef(
+        id: "bone",
+        display_name_key: "MAT_BONE",
+        category: Animal,
+        tags: ["animal", "hard", "tool_material"],
+        properties: MaterialProperties(
+            hardness: 3.5,
+            density: 1.9,
+            melting_point: None,
+            rarity: 0.2,
+            value: 1.5,
+        ),
+    ),
+    MaterialDef(
+        id: "sinew",
+        display_name_key: "MAT_SINEW",
+        category: Animal,
+        tags: ["animal", "binding", "fiber"],
+        properties: MaterialProperties(
+            hardness: 0.8,
+            density: 1.1,
+            melting_point: None,
+            rarity: 0.35,
+            value: 1.2,
+        ),
+    ),
+    MaterialDef(
+        id: "hide",
+        display_name_key: "MAT_HIDE",
+        category: Animal,
+        tags: ["animal", "leather", "flexible"],
+        properties: MaterialProperties(
+            hardness: 1.2,
+            density: 0.95,
+            melting_point: None,
+            rarity: 0.25,
+            value: 1.8,
+        ),
+    ),
+]

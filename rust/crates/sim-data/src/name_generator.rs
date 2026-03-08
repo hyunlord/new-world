@@ -284,11 +284,11 @@ mod tests {
     fn data_dir() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
-            .unwrap()
+            .expect("missing crates parent")
             .parent()
-            .unwrap()
+            .expect("missing rust parent")
             .parent()
-            .unwrap()
+            .expect("missing project root parent")
             .join("data")
     }
 

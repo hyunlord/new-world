@@ -1,0 +1,41 @@
+[
+    MaterialDef(
+        id: "granite",
+        display_name_key: "MAT_GRANITE",
+        category: Stone,
+        tags: ["stone", "heavy", "building_material"],
+        properties: MaterialProperties(
+            hardness: 6.5,
+            density: 2.7,
+            melting_point: None,
+            rarity: 0.1,
+            value: 1.0,
+        ),
+    ),
+    MaterialDef(
+        id: "flint",
+        display_name_key: "MAT_FLINT",
+        category: Stone,
+        tags: ["stone", "sharp", "knappable", "tool_material"],
+        properties: MaterialProperties(
+            hardness: 7.0,
+            density: 2.6,
+            melting_point: None,
+            rarity: 0.3,
+            value: 2.5,
+        ),
+    ),
+    MaterialDef(
+        id: "obsidian",
+        display_name_key: "MAT_OBSIDIAN",
+        category: Stone,
+        tags: ["stone", "sharp", "glass", "knappable", "tool_material"],
+        properties: MaterialProperties(
+            hardness: 5.5,
+            density: 2.4,
+            melting_point: None,
+            rarity: 0.5,
+            value: 4.0,
+        ),
+    ),
+]

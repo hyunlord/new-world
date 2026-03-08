@@ -1,7 +1,8 @@
-//! sim-data: JSON data loaders for simulation content.
+//! sim-data: data loaders and schema types for simulation content.
 pub mod attachment_config;
 pub mod coping;
 pub mod developmental_stages;
+pub mod defs;
 pub mod emotion_presets;
 pub mod error;
 pub mod loader;
@@ -11,10 +12,13 @@ pub mod name_culture;
 pub mod name_generator;
 pub mod occupations;
 pub mod personality_distribution;
+pub mod registry;
 pub mod species;
 pub mod stressor_events;
+pub mod tag_index;
 pub mod tech;
 pub mod trait_defs;
+pub mod validator;
 pub mod value_events;
 pub mod values_seed;
 
@@ -23,8 +27,17 @@ pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
 pub use developmental_stages::{
     load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,
 };
+pub use defs::{
+    ActionCategory, ActionCondition, ActionDef, ActionEffect, AxisShift, BiasMatrixRow,
+    CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceEmission, MaterialCategory,
+    MaterialDef, MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
+    RuleAgentModifier, RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition,
+    StructureDef, StructureRequirement, TagRequirement, TemperamentRules,
+    TemperamentShiftRule, WorldRuleset,
+};
 pub use emotion_presets::{load_emotion_presets, EmotionPreset, EmotionPresets};
 pub use error::{DataError, DataResult};
+pub use loader::{load_ron_directory, load_ron_file, DataLoadError};
 pub use mental_breaks::{load_mental_breaks, MentalBreakCatalog, MentalBreakDef};
 pub use mortality::{load_mortality_catalog, MortalityCatalog, MortalityProfile};
 pub use name_culture::{
@@ -36,8 +49,11 @@ pub use occupations::{
 };
 pub use species::{load_species_catalog, SpeciesCatalog, SpeciesDefinition};
 pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents};
+pub use registry::{DataRegistry, DerivedStats};
+pub use tag_index::TagIndex;
 pub use tech::{load_tech_catalog, TechCatalog, TechDef};
 pub use trait_defs::{load_trait_definitions, TraitDefinition, TraitDefinitions};
+pub use validator::{validate_registry, Severity, ValidationError};
 pub use value_events::{load_value_events, ValueEvent, ValueEvents};
 pub use values_seed::{facet_index, hexaco_seed_map, value_heritability};
 pub use personality_distribution::{
@@ -109,11 +125,11 @@ mod tests {
     fn load_all_from_project_data() {
         let data_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
-            .unwrap() // crates/
+            .expect("missing crates parent")
             .parent()
-            .unwrap() // rust/
+            .expect("missing rust parent")
             .parent()
-            .unwrap() // lead/ (project root)
+            .expect("missing project root parent")
             .join("data");
 
         if !data_dir.exists() {
@@ -147,5 +163,15 @@ mod tests {
             "occupation categories not loaded"
         );
         assert!(!data.occupation.jobs.is_empty(), "job profiles not loaded");
+    }
+
+    #[test]
+    fn load_ron_registry_from_crate_data() {
+        let data_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("data");
+        let registry = DataRegistry::load_from_directory(&data_dir)
+            .expect("expected crate-local RON data to load");
+        assert!(registry.materials.contains_key("flint"));
+        assert!(registry.world_rules.is_some());
+        assert!(registry.temperament_rules.is_some());
     }
 }

@@ -1,0 +1,12 @@
+[
+    WorldRuleset(
+        name: "BaseRules",
+        priority: 0,
+        resource_modifiers: [
+            RuleResourceModifier(target: "surface_foraging", multiplier: 1.0),
+        ],
+        special_zones: [],
+        special_resources: [],
+        agent_modifiers: [],
+    ),
+]

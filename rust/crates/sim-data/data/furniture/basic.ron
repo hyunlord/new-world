@@ -1,0 +1,78 @@
+[
+    FurnitureDef(
+        id: "fire_pit",
+        display_name_key: "FURN_FIRE_PIT",
+        required_materials: [
+            TagRequirement(
+                tag: "stone",
+                min_hardness: Some(4.0),
+                min_density: None,
+                max_rarity: None,
+                amount: 4,
+            ),
+            TagRequirement(
+                tag: "fuel",
+                min_hardness: None,
+                min_density: None,
+                max_rarity: None,
+                amount: 2,
+            ),
+        ],
+        size: (1, 1),
+        influence_emissions: [
+            InfluenceEmission(channel: "warmth", radius: 6.0, intensity: 0.8),
+            InfluenceEmission(channel: "light", radius: 5.0, intensity: 0.6),
+        ],
+        role_contribution: Some("hearth"),
+        stats: {
+            "comfort": 0.2,
+            "durability": 12.0,
+        },
+    ),
+    FurnitureDef(
+        id: "lean_to",
+        display_name_key: "FURN_LEAN_TO",
+        required_materials: [
+            TagRequirement(
+                tag: "wood",
+                min_hardness: Some(2.0),
+                min_density: None,
+                max_rarity: None,
+                amount: 6,
+            ),
+            TagRequirement(
+                tag: "fiber",
+                min_hardness: None,
+                min_density: None,
+                max_rarity: None,
+                amount: 2,
+            ),
+        ],
+        size: (2, 2),
+        influence_emissions: [],
+        role_contribution: Some("shelter"),
+        stats: {
+            "comfort": 0.4,
+            "sleep_quality": 0.3,
+        },
+    ),
+    FurnitureDef(
+        id: "storage_pit",
+        display_name_key: "FURN_STORAGE_PIT",
+        required_materials: [
+            TagRequirement(
+                tag: "earth",
+                min_hardness: None,
+                min_density: None,
+                max_rarity: None,
+                amount: 4,
+            ),
+        ],
+        size: (1, 1),
+        influence_emissions: [],
+        role_contribution: Some("storage"),
+        stats: {
+            "capacity": 25.0,
+        },
+    ),
+]

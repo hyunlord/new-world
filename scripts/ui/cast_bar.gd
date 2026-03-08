@@ -15,7 +15,7 @@ const BAR_WIDTH_RATIO: float = 0.60
 const BAR_HEIGHT: float = 56.0
 
 var _sim_engine: RefCounted
-var _snapshot_decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _snapshot_decoder = SnapshotDecoderClass.new()
 var _cards: Array = []
 var _card_row: HBoxContainer
 var _pinned_by_entity_id: Dictionary = {}

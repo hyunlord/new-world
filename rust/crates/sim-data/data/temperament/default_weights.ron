@@ -1,0 +1,38 @@
+[
+    TemperamentRules(
+        prs_weights: [
+            DerivedRuleOverride(axis: "ns", weights: [0.10, 0.04, -0.02, 0.06]),
+            DerivedRuleOverride(axis: "ha", weights: [0.08, 0.02, 0.05, -0.01]),
+            DerivedRuleOverride(axis: "rd", weights: [0.03, 0.07, 0.01, 0.04]),
+            DerivedRuleOverride(axis: "p", weights: [0.09, 0.05, 0.02, 0.03]),
+        ],
+        bias_matrix: [
+            BiasMatrixRow(
+                axis: "ns",
+                values: {
+                    "X_SOCIAL_BOLDNESS": 0.20,
+                    "O_INQUISITIVENESS": 0.25,
+                },
+            ),
+            BiasMatrixRow(
+                axis: "ha",
+                values: {
+                    "E_ANXIETY": 0.30,
+                    "C_PRUDENCE": 0.15,
+                },
+            ),
+        ],
+        shift_rules: [
+            TemperamentShiftRule(
+                trigger: Event("family_death"),
+                conditions: [Temperament(axis: "ha", value: ">0.5")],
+                effects: [
+                    AxisShift(axis: "ha", delta: 0.3),
+                    AxisShift(axis: "ns", delta: -0.2),
+                ],
+                cascade: true,
+                causal_log: "family_death_temperament_shift",
+            ),
+        ],
+    ),
+]

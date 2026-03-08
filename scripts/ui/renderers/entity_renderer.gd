@@ -14,7 +14,7 @@ var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
 var _sim_engine: RefCounted = null
-var _snapshot_decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _snapshot_decoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
 var selected_entity_id: int = -1

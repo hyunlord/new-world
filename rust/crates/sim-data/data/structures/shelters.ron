@@ -1,0 +1,19 @@
+[
+    StructureDef(
+        id: "lean_to_structure",
+        display_name_key: "STRUCT_LEAN_TO",
+        min_size: (2, 2),
+        required_components: [
+            Roof(tags: ["roof_material", "binding"]),
+            Furniture(id: "lean_to", count: 1),
+            Furniture(id: "fire_pit", count: 1),
+        ],
+        optional_components: [
+            Furniture(id: "storage_pit", count: 1),
+        ],
+        role_recognition: Auto,
+        influence_when_complete: [
+            InfluenceEmission(channel: "shelter", radius: 4.0, intensity: 0.5),
+        ],
+    ),
+]
