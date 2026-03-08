@@ -1,20 +1,28 @@
-아래 엔티티 상태를 읽고 가장 그럴듯한 행동 판단 하나를 JSON으로 출력하라.
+[인물]
+이름: {{ name }}
+나이: {{ age }}
+역할: {{ role }}
+지금 하는 일: {{ action_label }}
 
-출력 규칙:
-- 반드시 JSON 객체 하나만 출력한다.
-- 키 이름은 action_id, confidence, reasoning_hint만 사용한다.
-- reasoning_hint는 한국어 짧은 구절로 작성한다.
+[성격]
+{{ h_desc }}
+{{ e_desc }}
+{{ x_desc }}
+{{ a_desc }}
+{{ c_desc }}
+{{ o_desc }}
 
-엔티티 상태:
-- name: {{ entity.entity_name }}
-- role: {{ entity.role }}
-- current_action_id: {{ entity.action_id }}
-- current_action_label: {{ entity.action_label }}
-- stress_level: {{ entity.stress_level }}
-- stress_state: {{ entity.stress_state }}
-- personality_axes: {{ entity.personality_axes }}
-- emotions: {{ entity.emotions }}
-- needs: {{ entity.needs }}
-- recent_event_type: {{ entity.recent_event_type }}
-- recent_event_cause: {{ entity.recent_event_cause }}
-- recent_target_name: {{ entity.recent_target_name }}
+[지금 마음]
+{{ emotion_context }}
+
+[채워지지 않은 바람]
+{{ need_context }}
+
+[고를 수 있는 움직임]
+{% for option in action_options %}
+- {{ option.id }}: {{ option.label }}
+{% endfor %}
+
+[지시]
+지금 가장 그럴듯한 움직임 하나를 골라라.
+반드시 JSON 하나만 내놓고, reasoning_hint는 짧은 한국말 구절 하나만 써라.

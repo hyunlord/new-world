@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use hecs::{Entity, World};
 use sim_core::components::{
     Behavior, Emotion, Identity, LlmCapable, LlmContent, LlmPending, LlmRequestType, LlmResult,
-    NarrativeCache, Needs, Personality, Stress,
+    NarrativeCache, Needs, Personality, Stress, Values,
 };
 use sim_engine::{
     generate_fallback_content, EventStore, LlmPromptVariant, LlmRequest, SimEventType,
@@ -77,15 +77,6 @@ impl SimSystem for LlmRequestRuntimeSystem {
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let name_lookup = build_name_lookup(world);
         let llm_available = resources.is_llm_available();
-        if llm_available {
-            if tick.is_multiple_of(120) {
-                resources.llm_runtime.push_debug_log(format!(
-                    "[LLM-DEBUG] llm_request_system tick={} autonomous queue suppressed while LLM is available",
-                    tick
-                ));
-            }
-            return;
-        }
         let submission_strategy = llm_submission_strategy(llm_available);
         let mut submissions: Vec<PendingSubmission> = Vec::new();
         let mut total_capable: usize = 0;
@@ -99,13 +90,14 @@ impl SimSystem for LlmRequestRuntimeSystem {
                 &Behavior,
                 &Needs,
                 &Stress,
+                &Values,
                 &LlmCapable,
                 Option<&NarrativeCache>,
                 Option<&LlmPending>,
                 Option<&LlmResult>,
             )>();
 
-            for (entity, (identity, personality, emotion, behavior, needs, stress, capable, cache, pending, result)) in
+            for (entity, (identity, personality, emotion, behavior, needs, stress, values, capable, cache, pending, result)) in
                 &mut query
             {
                 total_capable += 1;
@@ -146,11 +138,15 @@ impl SimSystem for LlmRequestRuntimeSystem {
                         variant: plan.variant,
                         entity_name: identity.name.clone(),
                         role: capable.role,
+                        growth_stage: identity.growth_stage,
+                        sex: identity.sex,
+                        occupation: behavior.occupation.clone(),
                         action_id: behavior.current_action as u32,
                         action_label: behavior.current_action.to_string(),
                         personality_axes: personality.axes,
                         emotions: emotion.primary,
                         needs: needs.values,
+                        values: values.values,
                         stress_level: stress.level,
                         stress_state: stress_state_code(stress),
                         recent_event_type: plan.recent_event_type,
@@ -468,7 +464,7 @@ mod tests {
     use hecs::World;
     use sim_core::components::{
         Behavior, Emotion, Identity, LlmCapable, LlmContent, LlmResult, NarrativeCache, Needs,
-        Personality, Stress,
+        Personality, Stress, Values,
     };
     use sim_core::config::GameConfig;
     use sim_core::{GameCalendar, WorldMap};
@@ -491,6 +487,7 @@ mod tests {
             Behavior::default(),
             Needs::default(),
             Stress::default(),
+            Values::default(),
             LlmCapable::default(),
         ));
 
@@ -525,6 +522,7 @@ mod tests {
             Behavior::default(),
             Needs::default(),
             Stress::default(),
+            Values::default(),
             LlmCapable::default(),
             NarrativeCache::default(),
         ));
