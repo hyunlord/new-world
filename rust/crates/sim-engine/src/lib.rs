@@ -30,6 +30,7 @@ pub mod event_store;
 pub mod explain_log;
 pub mod llm_prompt;
 pub mod llm_server;
+pub mod llm_validator;
 pub mod llm_worker;
 pub mod system_trait;
 pub mod engine;
@@ -45,8 +46,9 @@ pub use events::{GameEvent, LlmEvent};
 pub use event_bus::{EventBus, Subscriber};
 pub use event_store::{EventStore, SimEvent, SimEventType};
 pub use explain_log::{ExplainEntry, ExplainLog};
-pub use llm_prompt::{LlmPromptContext, LlmPromptTemplates, RenderedPrompt};
+pub use llm_prompt::{ActionOption, HexacoDescriptors, LlmPromptContext, LlmPromptTemplates, PromptPayload, SpeechRegister};
 pub use llm_server::{LlmConfig, LlmRuntime, LlmRuntimeError, LlmStatusSnapshot};
+pub use llm_validator::{load_forbidden_word_list, validate_korean_output, ForbiddenWord, ForbiddenWordList, ValidationResult, Violation};
 pub use llm_worker::{
     generate_fallback_content, LlmPromptVariant, LlmRequest, LlmRequestMeta, LlmResponse,
 };
@@ -57,3 +59,13 @@ pub use frame_snapshot::{build_agent_snapshots, AgentSnapshot};
 pub use notification::{NotificationTier, SimNotification};
 pub use snapshot::EngineSnapshot;
 pub use perf_tracker::PerfTracker;
+
+#[cfg(test)]
+mod tests {
+    use super::load_forbidden_word_list;
+
+    #[test]
+    fn llm_validator_exports_project_word_table() {
+        assert!(!load_forbidden_word_list().forbidden.is_empty());
+    }
+}

@@ -274,6 +274,12 @@ pub const LLM_CONFIG_PATH: &str = "data/llm/config.toml";
 pub const LLM_PROMPT_DIR: &str = "data/llm/prompts";
 /// Relative project path to the Layer 3 GBNF grammar file.
 pub const LLM_LAYER3_GRAMMAR_PATH: &str = "data/llm/grammars/layer3_judgment.gbnf";
+/// Relative project path to the optional Layer 4 bounded-text grammar file.
+pub const LLM_LAYER4_BOUNDED_GRAMMAR_PATH: &str = "data/llm/grammars/layer4_bounded.gbnf";
+/// Relative project path to the Korean forbidden-word replacement table.
+pub const LLM_FORBIDDEN_SINOKOREAN_PATH: &str = "data/llm/korean/forbidden_sinokorean.json";
+/// Relative project path to the Korean HEXACO descriptor table.
+pub const LLM_HEXACO_DESCRIPTOR_PATH: &str = "data/llm/korean/hexaco_descriptors.json";
 /// Context window used for the standard AI narration quality tier.
 pub const LLM_CONTEXT_SIZE_STANDARD: u32 = 1024;
 /// Context window used for the enhanced AI narration quality tier.
@@ -284,6 +290,12 @@ pub const LLM_CONTEXT_SIZE: u32 = LLM_CONTEXT_SIZE_ENHANCED;
 pub const LLM_MAX_TOKENS_L3: u32 = 64;
 /// Maximum output tokens for Layer 4 narrative calls.
 pub const LLM_MAX_TOKENS_L4: u32 = 256;
+/// Maximum output tokens for Use Case B personality narration.
+pub const LLM_MAX_TOKENS_L4_PERSONALITY: u32 = 160;
+/// Maximum output tokens for Use Case H notification narration.
+pub const LLM_MAX_TOKENS_L4_NOTIFICATION: u32 = 96;
+/// Maximum output tokens for inner-monologue narration.
+pub const LLM_MAX_TOKENS_L4_INNER: u32 = 128;
 /// Generation thread count reserved for the LLM server.
 pub const LLM_THREADS: u32 = 3;
 /// Batch-thread count reserved for the LLM server.
@@ -292,6 +304,16 @@ pub const LLM_THREADS_BATCH: u32 = 4;
 pub const LLM_TEMPERATURE_L3: f64 = 0.1;
 /// Narrative temperature for Layer 4 free-text generation.
 pub const LLM_TEMPERATURE_L4: f64 = 0.7;
+/// Sampling temperature for Use Case B personality narration.
+pub const LLM_TEMPERATURE_L4_PERSONALITY: f64 = 0.35;
+/// Sampling temperature for Use Case H notification narration.
+pub const LLM_TEMPERATURE_L4_NOTIFICATION: f64 = 0.2;
+/// Sampling temperature for inner-monologue narration.
+pub const LLM_TEMPERATURE_L4_INNER: f64 = 0.35;
+/// Repair-pass sampling temperature used after a failed Layer 4 validation.
+pub const LLM_TEMPERATURE_L4_REPAIR: f64 = 0.1;
+/// Repair-pass token budget used after a failed Layer 4 validation.
+pub const LLM_MAX_TOKENS_L4_REPAIR: u32 = 96;
 /// Minimum per-entity cooldown between submitted requests (5 seconds at 10 ticks/s).
 pub const LLM_COOLDOWN_TICKS: u32 = 50;
 /// Maximum time an LLM request may stay pending before fallback (10 seconds at 10 ticks/s).
@@ -306,6 +328,12 @@ pub const LLM_QUEUE_CAPACITY: usize = 8;
 pub const LLM_DEBUG_LOG_CAPACITY: usize = 1024;
 /// HTTP timeout applied to each llama-server request in milliseconds.
 pub const LLM_HTTP_TIMEOUT_MS: u64 = 10_000;
+/// Minimum accepted character count for validated Korean narrative output.
+pub const LLM_VALIDATION_MIN_CHARS: usize = 10;
+/// Maximum tolerated dominant-character ratio before output is treated as repetitive.
+pub const LLM_VALIDATION_MAX_REPEATED_CHAR_RATIO: f64 = 0.50;
+/// Maximum number of auto-replaced forbidden words allowed before validation fails.
+pub const LLM_VALIDATION_MAX_VIOLATIONS: usize = 8;
 /// Default runtime toggle: when true, runtime init attempts to start the LLM layer.
 pub const LLM_ENABLED_DEFAULT: bool = true;
 /// LLM request runtime-system priority (late, after behavior resolution).

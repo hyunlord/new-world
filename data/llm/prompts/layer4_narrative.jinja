@@ -1,20 +1,5 @@
-아래 엔티티 상태를 바탕으로 2~4문장의 짧은 한국어 서사를 작성하라.
-
-요구사항:
-- 내면, 감정, 욕구, 최근 사건, 현재 행동이 자연스럽게 드러나야 한다.
-- 추상적인 설명보다 구체적인 상태 해석을 우선한다.
-- 문체는 관찰자 시점의 간결한 서술문으로 유지한다.
-
-엔티티 상태:
-- name: {{ entity.entity_name }}
-- role: {{ entity.role }}
-- current_action_id: {{ entity.action_id }}
-- current_action_label: {{ entity.action_label }}
-- stress_level: {{ entity.stress_level }}
-- stress_state: {{ entity.stress_state }}
-- personality_axes: {{ entity.personality_axes }}
-- emotions: {{ entity.emotions }}
-- needs: {{ entity.needs }}
-- recent_event_type: {{ entity.recent_event_type }}
-- recent_event_cause: {{ entity.recent_event_cause }}
-- recent_target_name: {{ entity.recent_target_name }}
+{{ name }}은(는) {{ age }} {{ role }}이며, 지금 {{ action_label }}에 몸을 두고 있다.
+이 사람의 바탕 성정은 {{ hexaco_summary }}이다.
+지금 마음은 {{ emotion_context }}이다.
+채워지지 않은 바람은 이러하다: {{ need_context }}.
+이 인물의 속마음을 2-4문장으로 적어라. 남이 듣지 못하는 마음속 중얼거림처럼 쓰되, 지금 하고 있는 일과 모자란 바람이 함께 드러나야 한다.

@@ -11,9 +11,15 @@ use thiserror::Error;
 use crossbeam_channel::{bounded, Receiver, RecvTimeoutError, Sender};
 
 use sim_core::components::{JudgmentData, LlmContent, LlmRequestType, LlmRole};
+use sim_core::enums::{GrowthStage, Sex};
 
-use crate::llm_prompt::{LlmPromptContext, LlmPromptError, LlmPromptTemplates, RenderedPrompt};
+use crate::llm_prompt::{
+    build_inner_prompt_from_context, build_judgment_prompt_from_context,
+    build_notification_prompt_from_context, build_personality_prompt_from_context, ActionOption,
+    LlmPromptContext, LlmPromptError, LlmPromptTemplates, PromptPayload, SpeechRegister,
+};
 use crate::llm_server::LlmConfig;
+use crate::llm_validator::{load_forbidden_word_list, validate_korean_output};
 
 /// Internal prompt-template variant for Phase 1 LLM generation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -27,7 +33,7 @@ pub enum LlmPromptVariant {
 }
 
 /// Full request payload submitted to the LLM worker thread.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct LlmRequest {
     /// Monotonic request identifier allocated by the runtime.
     pub request_id: u64,
@@ -41,6 +47,12 @@ pub struct LlmRequest {
     pub entity_name: String,
     /// Narrative role label.
     pub role: LlmRole,
+    /// Growth stage used for age-sensitive Korean narration.
+    pub growth_stage: GrowthStage,
+    /// Biological sex used for role-aware wording.
+    pub sex: Sex,
+    /// Occupation or duty label.
+    pub occupation: String,
     /// Closed-set action identifier.
     pub action_id: u32,
     /// Human-readable action label.
@@ -51,6 +63,8 @@ pub struct LlmRequest {
     pub emotions: [f64; 8],
     /// 13-need values.
     pub needs: [f64; 13],
+    /// Personal values that shape narration tone.
+    pub values: [f64; 33],
     /// Current stress level.
     pub stress_level: f64,
     /// Current stress-state bucket.
@@ -78,11 +92,16 @@ impl LlmRequest {
         LlmPromptContext {
             entity_name: self.entity_name.clone(),
             role: format!("{:?}", self.role).to_lowercase(),
+            role_kind: self.role,
+            growth_stage: self.growth_stage,
+            sex: self.sex,
+            occupation: self.occupation.clone(),
             action_id: self.action_id,
             action_label: self.action_label.clone(),
             personality_axes: self.personality_axes,
             emotions: self.emotions,
             needs: self.needs,
+            values: self.values,
             stress_level: self.stress_level,
             stress_state: self.stress_state,
             recent_event_type: self.recent_event_type.clone(),
@@ -234,23 +253,16 @@ pub fn process_request(
     request: &LlmRequest,
     debug_log: &Arc<Mutex<VecDeque<String>>>,
 ) -> Result<LlmContent, LlmWorkerError> {
-    let prompt = match request.variant {
-        LlmPromptVariant::Judgment => templates.render_layer3_judgment(&request.prompt_context())?,
-        LlmPromptVariant::Narrative => {
-            templates.render_layer4_narrative(&request.prompt_context())?
-        }
-        LlmPromptVariant::Personality => {
-            templates.render_layer4_personality(&request.prompt_context())?
-        }
-    };
+    let prompt_context = request.prompt_context();
+    let prompt = build_prompt_payload(templates, request, &prompt_context)?;
     push_debug_log(
         debug_log,
         format!(
             "[LLM-DEBUG] llm_worker prepared prompt: id={}, variant={:?}, system_chars={}, user_chars={}",
             request.request_id,
             request.variant,
-            prompt.system.chars().count(),
-            prompt.user.chars().count()
+            prompt.system_prompt.chars().count(),
+            prompt.user_prompt.chars().count()
         ),
     );
 
@@ -260,20 +272,81 @@ pub fn process_request(
             parse_judgment_content(content.as_str()).map(LlmContent::Judgment)
         }
         LlmRequestType::Layer4Narrative => {
-            if looks_like_garbage(content.as_str()) {
+            let expected_register = expected_register_for_request(request);
+            let validation = validate_korean_output(
+                content.as_str(),
+                load_forbidden_word_list(),
+                expected_register,
+            );
+            if validation.pass {
+                return Ok(LlmContent::Narrative(validation.cleaned_text));
+            }
+            push_debug_log(
+                debug_log,
+                format!(
+                    "[LLM-DEBUG] llm_worker validation failed: id={}, violations={}, register_match={}",
+                    request.request_id,
+                    validation.violations.len(),
+                    validation.register_match
+                ),
+            );
+            let repair_prompt = build_layer4_repair_prompt(&prompt);
+            let repaired_content =
+                process_request_http(config, request, &repair_prompt, debug_log)?;
+            let repaired_validation = validate_korean_output(
+                repaired_content.as_str(),
+                load_forbidden_word_list(),
+                expected_register,
+            );
+            if !repaired_validation.pass {
+                push_debug_log(
+                    debug_log,
+                    format!(
+                        "[LLM-DEBUG] llm_worker repair validation failed: id={}, violations={}, register_match={}",
+                        request.request_id,
+                        repaired_validation.violations.len(),
+                        repaired_validation.register_match
+                    ),
+                );
                 return Err(LlmWorkerError::MalformedResponse(
-                    "narrative content looked like garbage".to_string(),
+                    "narrative content failed Korean validation".to_string(),
                 ));
             }
-            Ok(LlmContent::Narrative(content))
+            Ok(LlmContent::Narrative(repaired_validation.cleaned_text))
         }
     }
+}
+
+fn build_prompt_payload(
+    templates: &LlmPromptTemplates,
+    request: &LlmRequest,
+    context: &LlmPromptContext,
+) -> Result<PromptPayload, LlmWorkerError> {
+    let payload = match request.variant {
+        LlmPromptVariant::Judgment => build_judgment_prompt_from_context(
+            context,
+            &[ActionOption {
+                id: request.action_id,
+                label: request.action_label.clone(),
+            }],
+            templates,
+        )?,
+        LlmPromptVariant::Narrative => {
+            if request.recent_event_type.is_some() {
+                build_notification_prompt_from_context(context, templates)?
+            } else {
+                build_inner_prompt_from_context(context, templates)?
+            }
+        }
+        LlmPromptVariant::Personality => build_personality_prompt_from_context(context, templates)?,
+    };
+    Ok(payload)
 }
 
 fn process_request_http(
     config: &LlmConfig,
     request: &LlmRequest,
-    prompt: &RenderedPrompt,
+    prompt: &PromptPayload,
     debug_log: &Arc<Mutex<VecDeque<String>>>,
 ) -> Result<String, LlmWorkerError> {
     match process_request_http_with_curl(config, request, prompt, debug_log) {
@@ -296,7 +369,7 @@ fn process_request_http(
 fn process_request_http_with_curl(
     config: &LlmConfig,
     request: &LlmRequest,
-    prompt: &RenderedPrompt,
+    prompt: &PromptPayload,
     debug_log: &Arc<Mutex<VecDeque<String>>>,
 ) -> Result<String, LlmWorkerError> {
     let endpoint = format!("{}/v1/chat/completions", config.base_url());
@@ -384,7 +457,7 @@ fn process_request_http_with_curl(
 fn process_request_http_with_ureq(
     config: &LlmConfig,
     request: &LlmRequest,
-    prompt: &RenderedPrompt,
+    prompt: &PromptPayload,
     debug_log: &Arc<Mutex<VecDeque<String>>>,
 ) -> Result<String, LlmWorkerError> {
     let request_id = request.request_id;
@@ -501,30 +574,51 @@ pub fn generate_fallback_content(request_type: LlmRequestType, entity_name: &str
     }
 }
 
-fn request_body(config: &LlmConfig, request: &LlmRequest, prompt: &RenderedPrompt) -> Value {
-    let max_tokens = match request.request_type {
-        LlmRequestType::Layer3Judgment => config.max_tokens_l3,
-        LlmRequestType::Layer4Narrative => config.max_tokens_l4,
-    };
-    let temperature = match request.request_type {
-        LlmRequestType::Layer3Judgment => config.temperature_l3,
-        LlmRequestType::Layer4Narrative => config.temperature_l4,
-    };
-
+fn request_body(config: &LlmConfig, request: &LlmRequest, prompt: &PromptPayload) -> Value {
     let mut body = serde_json::json!({
         "model": config.model_id,
         "messages": [
-            { "role": "system", "content": prompt.system },
-            { "role": "user", "content": prompt.user }
+            { "role": "system", "content": prompt.system_prompt },
+            { "role": "user", "content": prompt.user_prompt }
         ],
-        "max_tokens": max_tokens,
-        "temperature": temperature,
+        "max_tokens": prompt.max_tokens,
+        "temperature": prompt.temperature,
         "stream": false,
     });
-    if matches!(request.request_type, LlmRequestType::Layer3Judgment) {
+    if let Some(grammar) = &prompt.grammar {
+        body["grammar"] = serde_json::json!(grammar);
+    } else if matches!(request.request_type, LlmRequestType::Layer3Judgment) {
         body["grammar"] = serde_json::json!(config.layer3_grammar);
     }
     body
+}
+
+fn expected_register_for_request(request: &LlmRequest) -> SpeechRegister {
+    match request.role {
+        LlmRole::Leader | LlmRole::Shaman | LlmRole::Oracle => SpeechRegister::Hao,
+        LlmRole::Agent => {
+            if request.personality_axes[1] > 0.7 || matches!(
+                request.growth_stage,
+                GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child | GrowthStage::Teen
+            ) {
+                SpeechRegister::Hae
+            } else {
+                SpeechRegister::Haera
+            }
+        }
+    }
+}
+
+fn build_layer4_repair_prompt(prompt: &PromptPayload) -> PromptPayload {
+    let mut repaired = prompt.clone();
+    repaired.user_prompt.push_str(
+        "\n덧붙임: 머릿말과 항목 이름 없이 짧은 본문만 1-2문장으로 다시 적어라.",
+    );
+    repaired.max_tokens = repaired
+        .max_tokens
+        .min(sim_core::config::LLM_MAX_TOKENS_L4_REPAIR);
+    repaired.temperature = sim_core::config::LLM_TEMPERATURE_L4_REPAIR;
+    repaired
 }
 
 fn parse_judgment_content(content: &str) -> Result<JudgmentData, LlmWorkerError> {
@@ -549,6 +643,7 @@ fn extract_json_candidate(content: &str) -> Option<String> {
     Some(content[start..=end].to_string())
 }
 
+#[cfg(test)]
 fn looks_like_garbage(content: &str) -> bool {
     let trimmed = content.trim();
     if trimmed.chars().count() < 10 {
@@ -558,6 +653,7 @@ fn looks_like_garbage(content: &str) -> bool {
     repeated >= 0.9
 }
 
+#[cfg(test)]
 fn repeated_char_ratio(content: &str) -> f64 {
     let total = content.chars().count();
     if total == 0 {

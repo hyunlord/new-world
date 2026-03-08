@@ -674,6 +674,7 @@ fn build_click_narrative_request(
     let behavior = world.get::<&Behavior>(entity).ok()?;
     let needs = world.get::<&Needs>(entity).ok()?;
     let stress = world.get::<&Stress>(entity).ok()?;
+    let values = world.get::<&sim_core::components::Values>(entity).ok()?;
 
     Some(LlmRequest {
         request_id: 0,
@@ -682,11 +683,15 @@ fn build_click_narrative_request(
         variant: plan.variant,
         entity_name: identity.name.clone(),
         role: capable.role,
+        growth_stage: identity.growth_stage,
+        sex: identity.sex,
+        occupation: behavior.occupation.clone(),
         action_id: behavior.current_action as u32,
         action_label: behavior.current_action.to_string(),
         personality_axes: personality.axes,
         emotions: emotion.primary,
         needs: needs.values,
+        values: values.values,
         stress_level: stress.level,
         stress_state: stress_state_code(&stress),
         recent_event_type: plan.recent_event_type,
