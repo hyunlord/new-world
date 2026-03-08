@@ -302,6 +302,8 @@ pub const LLM_CLICK_PREEMPT_TICKS: u32 = 30;
 pub const LLM_CACHE_TTL_TICKS: u32 = 3600;
 /// Maximum number of requests allowed in the bounded queue.
 pub const LLM_QUEUE_CAPACITY: usize = 8;
+/// Maximum number of LLM debug log lines buffered for Godot output.
+pub const LLM_DEBUG_LOG_CAPACITY: usize = 1024;
 /// HTTP timeout applied to each llama-server request in milliseconds.
 pub const LLM_HTTP_TIMEOUT_MS: u64 = 10_000;
 /// Default runtime toggle: when true, runtime init attempts to start the LLM layer.

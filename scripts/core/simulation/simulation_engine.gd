@@ -84,6 +84,7 @@ func update(delta: float) -> void:
 	if not _rust_runtime_available:
 		return
 	_update_rust_primary(delta, is_paused)
+	_flush_llm_debug_log()
 
 
 func _update_rust_primary(delta: float, paused: bool) -> void:
@@ -391,6 +392,20 @@ func get_narrative_display(entity_id: int) -> Dictionary:
 	return {}
 
 
+## Drains queued LLM debug log lines for debug output.
+func drain_llm_debug_log() -> Array[String]:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("drain_llm_debug_log"):
+		return []
+	var raw: Variant = sim_bridge.call("drain_llm_debug_log")
+	if not (raw is Array):
+		return []
+	var lines: Array[String] = []
+	for entry in raw:
+		lines.append(str(entry))
+	return lines
+
+
 ## Notifies Rust that the player opened the narrative panel for the given entity.
 func on_entity_narrative_click(entity_id: int) -> int:
 	var sim_bridge: Object = _get_sim_bridge()
@@ -457,6 +472,13 @@ func get_minimap_snapshot() -> Dictionary:
 	if raw is Dictionary:
 		return raw
 	return {}
+
+
+func _flush_llm_debug_log() -> void:
+	if not OS.is_debug_build():
+		return
+	for line in drain_llm_debug_log():
+		print(str(line))
 
 
 func _get_sim_bridge() -> Object:

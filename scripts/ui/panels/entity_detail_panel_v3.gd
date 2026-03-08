@@ -98,8 +98,6 @@ func _process(delta: float) -> void:
 	_narrative_refresh_timer += delta
 	if _narrative_refresh_timer >= 1.0:
 		_narrative_refresh_timer = 0.0
-		if _sim_engine != null:
-			_sim_engine.on_entity_narrative_click(_selected_entity_id)
 		_refresh_narrative_panel()
 		_refresh_thought_stream()
 	_thought_timer += delta

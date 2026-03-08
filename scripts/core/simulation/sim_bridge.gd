@@ -265,6 +265,22 @@ func get_narrative_display(entity_id: int) -> Dictionary:
 	return {}
 
 
+## Drains queued LLM debug log lines from Rust runtime.
+func drain_llm_debug_log() -> Array[String]:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("drain_llm_debug_log"):
+		return []
+	var result: Variant = runtime.call("drain_llm_debug_log")
+	if not (result is Array):
+		return []
+	var lines: Array[String] = []
+	for entry in result:
+		lines.append(str(entry))
+	return lines
+
+
 ## Tells Rust that the player opened the narrative panel for an entity.
 func on_entity_narrative_click(entity_id: int) -> int:
 	var runtime: Object = _get_native_runtime()

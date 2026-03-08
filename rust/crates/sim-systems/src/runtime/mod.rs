@@ -50,7 +50,7 @@ pub use economy::{
 
 // ---- llm ----
 pub use llm_request_system::LlmRequestRuntimeSystem;
-pub use llm_response_system::LlmResponseRuntimeSystem;
+pub use llm_response_system::{drain_and_apply_llm_responses, LlmResponseRuntimeSystem};
 pub use llm_timeout_system::LlmTimeoutRuntimeSystem;
 
 // ---- needs ----

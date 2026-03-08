@@ -16,3 +16,5 @@ pub mod runtime;
 pub mod entity_spawner;
 pub mod values_init;
 pub mod name_generator;
+
+pub use runtime::drain_and_apply_llm_responses;

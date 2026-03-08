@@ -18,6 +18,7 @@ struct ExpiredRequest {
     request_id: u64,
     request_type: sim_core::components::LlmRequestType,
     entity_name: String,
+    age_ticks: u64,
 }
 
 impl LlmTimeoutRuntimeSystem {
@@ -58,11 +59,18 @@ impl SimSystem for LlmTimeoutRuntimeSystem {
                     entity_name: identity
                         .map(|value| value.name.clone())
                         .unwrap_or_else(|| "누군가".to_string()),
+                    age_ticks: tick.saturating_sub(pending.submitted_tick),
                 });
             }
         }
 
         for request in expired {
+            resources.llm_runtime.push_debug_log(format!(
+                "[LLM-DEBUG] llm_timeout_system expiring request: id={}, entity_id={}, age_ticks={}",
+                request.request_id,
+                request.entity.to_bits().get(),
+                request.age_ticks
+            ));
             let meta = resources.take_llm_request_meta(request.request_id).unwrap_or(LlmRequestMeta {
                 request_type: request.request_type,
                 variant: LlmPromptVariant::Narrative,
