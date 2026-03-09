@@ -48,13 +48,13 @@ pub const TICKS_PER_YEAR: u32 = 4380; // TODO(A-9): -> calendar/global constants
 
 // ── Age Stage Thresholds (in ticks) ──────────────────────────────────────────
 /// 6 stages: infant ≤2y, toddler 3-5y, child 6-11y, teen 12-14y, adult 15-55y, elder 56+
-pub const AGE_INFANT_END: u64 = 13140;   // 3 years
-pub const AGE_TODDLER_END: u64 = 26280;  // 6 years
-pub const AGE_CHILD_END: u64 = 52560;    // 12 years
-pub const AGE_TEEN_END: u64 = 65700;     // 15 years
-pub const AGE_ADULT_END: u64 = 245280;   // 56 years
-pub const AGE_MAX: u64 = 525600;         // 120 years (theoretical max)
-pub const PREGNANCY_DURATION: u64 = 3360;      // 280 days × 12 ticks/day
+pub const AGE_INFANT_END: u64 = 13140; // 3 years
+pub const AGE_TODDLER_END: u64 = 26280; // 6 years
+pub const AGE_CHILD_END: u64 = 52560; // 12 years
+pub const AGE_TEEN_END: u64 = 65700; // 15 years
+pub const AGE_ADULT_END: u64 = 245280; // 56 years
+pub const AGE_MAX: u64 = 525600; // 120 years (theoretical max)
+pub const PREGNANCY_DURATION: u64 = 3360; // 280 days × 12 ticks/day
 pub const PREGNANCY_DURATION_STDEV: u64 = 120; // ~10 days × 12 ticks/day
 
 // ── Body Potential (int scale 0~10,000) ──────────────────────────────────────
@@ -136,10 +136,10 @@ pub const DISTINGUISHING_MARK_CHANCE: f64 = 0.05;
 // ── Memory System [Baddeley 1974, Ebbinghaus 1885] ───────────────────────────
 pub const MEMORY_WORKING_MAX: usize = 100;
 pub const MEMORY_PERMANENT_THRESHOLD: f64 = 0.5;
-pub const MEMORY_DECAY_TRIVIAL: f64 = 1.386;   // half-life 0.5 years
-pub const MEMORY_DECAY_MODERATE: f64 = 0.347;  // half-life 2 years
-pub const MEMORY_DECAY_STRONG: f64 = 0.139;    // half-life 5 years
-pub const MEMORY_DECAY_TRAUMA: f64 = 0.014;    // half-life 50 years
+pub const MEMORY_DECAY_TRIVIAL: f64 = 1.386; // half-life 0.5 years
+pub const MEMORY_DECAY_MODERATE: f64 = 0.347; // half-life 2 years
+pub const MEMORY_DECAY_STRONG: f64 = 0.139; // half-life 5 years
+pub const MEMORY_DECAY_TRAUMA: f64 = 0.014; // half-life 50 years
 pub const MEMORY_COMPRESS_MIN_GROUP: usize = 3;
 pub const MEMORY_COMPRESS_INTERVAL_TICKS: u64 = 4380; // 1 year
 
@@ -147,35 +147,41 @@ pub const MEMORY_COMPRESS_INTERVAL_TICKS: u64 = 4380; // 1 year
 /// Returns the intensity value (0.0–1.0) for a known event type, or 0.05 as default.
 pub fn memory_intensity(event_type: &str) -> f64 {
     match event_type {
-        "casual_talk"    => 0.05,
-        "share_food"     => 0.10,
-        "deep_talk"      => 0.25,
-        "argument"       => 0.30,
-        "helped_work"    => 0.15,
-        "comforted"      => 0.35,
-        "flirt"          => 0.40,
-        "proposal"       => 0.70,
-        "marriage"       => 0.90,
-        "child_born"     => 0.85,
-        "partner_died"   => 0.95,
-        "betrayal"       => 0.80,
-        "trauma"         => 0.90,
-        "promotion"      => 0.65,
-        "achievement"    => 0.60,
-        "migration"      => 0.55,
-        "skill_unlock"   => 0.30,
-        "first_meeting"  => 0.20,
-        _                => 0.05,
+        "casual_talk" => 0.05,
+        "share_food" => 0.10,
+        "deep_talk" => 0.25,
+        "argument" => 0.30,
+        "helped_work" => 0.15,
+        "comforted" => 0.35,
+        "flirt" => 0.40,
+        "proposal" => 0.70,
+        "marriage" => 0.90,
+        "child_born" => 0.85,
+        "partner_died" => 0.95,
+        "betrayal" => 0.80,
+        "trauma" => 0.90,
+        "promotion" => 0.65,
+        "achievement" => 0.60,
+        "migration" => 0.55,
+        "skill_unlock" => 0.30,
+        "first_meeting" => 0.20,
+        _ => 0.05,
     }
 }
 
 /// Ebbinghaus decay rate by intensity threshold.
 /// Returns the decay rate for the first matching [threshold, rate] pair.
 pub fn memory_decay_rate(intensity: f64) -> f64 {
-    if intensity >= 0.80 { return 0.014; }  // trauma-class
-    if intensity >= 0.50 { return 0.139; }  // strong
-    if intensity >= 0.20 { return 0.347; }  // moderate
-    1.386                                   // trivial
+    if intensity >= 0.80 {
+        return 0.014;
+    } // trauma-class
+    if intensity >= 0.50 {
+        return 0.139;
+    } // strong
+    if intensity >= 0.20 {
+        return 0.347;
+    } // moderate
+    1.386 // trivial
 }
 
 // ── Social Network [Granovetter 1973] ────────────────────────────────────────
@@ -216,9 +222,9 @@ pub const OBEDIENCE_CONFLICT_THRESHOLD: f64 = 0.50;
 
 // ── Revolution Risk [Tilly 1978] ──────────────────────────────────────────────
 pub const REVOLUTION_RISK_THRESHOLD: f64 = 0.70;
-pub const REVOLUTION_COOLDOWN_TICKS: u64 = 8760;   // 2 years
+pub const REVOLUTION_COOLDOWN_TICKS: u64 = 8760; // 2 years
 pub const REVOLUTION_CHARISMA_MULTIPLIER: f64 = 2.0;
-pub const REVOLUTION_TICK_INTERVAL: u64 = 4380;    // annual check
+pub const REVOLUTION_TICK_INTERVAL: u64 = 4380; // annual check
 
 // === CATEGORY B: System tuning migration targets (A-5) ===
 // ── System Tick Intervals ─────────────────────────────────────────────────────
@@ -535,6 +541,16 @@ pub const CONSTRUCTION_TICK_INTERVAL: u64 = 5;
 pub const BUILDING_EFFECT_TICK_INTERVAL: u64 = 10;
 pub const BUILDING_STOCKPILE_RADIUS: i32 = 8;
 pub const BUILDING_SHELTER_RADIUS: i32 = 0;
+/// Wood stockpile required before the runtime opens an early stockpile site.
+pub const BUILDING_STOCKPILE_COST_WOOD: f64 = 2.0;
+/// Wood stockpile required before the runtime opens an early campfire site.
+pub const BUILDING_CAMPFIRE_COST_WOOD: f64 = 1.0;
+/// Wood stockpile required before the runtime opens an early shelter site.
+pub const BUILDING_SHELTER_COST_WOOD: f64 = 4.0;
+/// Stone stockpile required before the runtime opens an early shelter site.
+pub const BUILDING_SHELTER_COST_STONE: f64 = 1.0;
+/// Resident capacity contributed by one completed shelter in the early loop.
+pub const BUILDING_SHELTER_CAPACITY: usize = 6;
 /// One-tile shelter interior uses a one-tile wall ring for runtime blocking.
 pub const BUILDING_SHELTER_WALL_RING_RADIUS: i32 = 1;
 /// Current shelter doorway x offset inside the wall ring footprint.
@@ -545,6 +561,10 @@ pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 1;
 pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
 pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
+/// Minimum hunger level for builders to keep construction as their forced action.
+pub const BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN: f64 = 0.30;
+/// Minimum energy level for builders to keep construction as their forced action.
+pub const BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN: f64 = 0.25;
 
 // ── Settlement & Migration ────────────────────────────────────────────────────
 pub const SETTLEMENT_MIN_DISTANCE: i32 = 25;
@@ -799,14 +819,14 @@ pub const COMBAT_MORALE_W_CAUSE_BELIEF: f64 = 0.40;
 pub const COMBAT_ROLL_RANDOM_RANGE: f64 = 0.30;
 
 // ── Inter-settlement Tension [Tilly 1978, Keeley 1996] ────────────────────────
-pub const TENSION_CHECK_INTERVAL_TICKS: u64 = 2190;  // twice yearly
+pub const TENSION_CHECK_INTERVAL_TICKS: u64 = 2190; // twice yearly
 pub const TENSION_RESOURCE_DEFICIT_TRIGGER: f64 = 0.30;
 pub const TENSION_PROXIMITY_RADIUS: i32 = 20;
 pub const TENSION_PER_SHARED_RESOURCE: f64 = 0.05;
 pub const TENSION_DECAY_PER_YEAR: f64 = 0.15;
 pub const TENSION_SKIRMISH_THRESHOLD: f64 = 0.60;
 pub const TENSION_SKIRMISH_CHANCE: f64 = 0.35;
-pub const TENSION_SKIRMISH_COOLDOWN: u64 = 4380;  // 1 year
+pub const TENSION_SKIRMISH_COOLDOWN: u64 = 4380; // 1 year
 pub const TENSION_WINNER_REDUCTION: f64 = 0.30;
 pub const TENSION_LOSER_INCREASE: f64 = 0.20;
 
@@ -833,32 +853,32 @@ pub fn intel_group(index: usize) -> &'static str {
         5 => "crystallized", // naturalistic
         6 => "crystallized", // interpersonal
         7 => "crystallized", // intrapersonal
-        _  => "crystallized",
+        _ => "crystallized",
     }
 }
 
 /// Returns value heritability for a value key (Knafo & Schwartz 2004).
 pub fn value_heritability(key: &str) -> f64 {
     match key {
-        "TRADITION" | "LAW"           => 0.10,
-        "DECORUM"   | "LOYALTY"       => 0.11,
-        "STOICISM"  | "HARMONY"       => 0.11,
-        "PEACE"     | "FAMILY"        => 0.12,
-        "COOPERATION" | "SACRIFICE"   => 0.12,
-        "FAIRNESS"  | "FRIENDSHIP"    => 0.13,
-        "TRUTH"     | "INTROSPECTION" => 0.14,
-        "TRANQUILITY" | "COMMERCE"    => 0.14,
-        "KNOWLEDGE" | "INDEPENDENCE"  => 0.15,
-        "NATURE"    | "SKILL"         => 0.15,
-        "ROMANCE"   | "CRAFTSMANSHIP" => 0.15,
-        "ELOQUENCE" | "ARTWORK"       => 0.16,
-        "MERRIMENT" | "LEISURE"       => 0.16,
-        "PERSEVERANCE"                => 0.17,
-        "SELF_CONTROL" | "HARD_WORK"  => 0.18,
-        "CUNNING"   | "COMPETITION"   => 0.18,
-        "MARTIAL_PROWESS"             => 0.19,
-        "POWER"                       => 0.20,
-        _                             => 0.15, // default
+        "TRADITION" | "LAW" => 0.10,
+        "DECORUM" | "LOYALTY" => 0.11,
+        "STOICISM" | "HARMONY" => 0.11,
+        "PEACE" | "FAMILY" => 0.12,
+        "COOPERATION" | "SACRIFICE" => 0.12,
+        "FAIRNESS" | "FRIENDSHIP" => 0.13,
+        "TRUTH" | "INTROSPECTION" => 0.14,
+        "TRANQUILITY" | "COMMERCE" => 0.14,
+        "KNOWLEDGE" | "INDEPENDENCE" => 0.15,
+        "NATURE" | "SKILL" => 0.15,
+        "ROMANCE" | "CRAFTSMANSHIP" => 0.15,
+        "ELOQUENCE" | "ARTWORK" => 0.16,
+        "MERRIMENT" | "LEISURE" => 0.16,
+        "PERSEVERANCE" => 0.17,
+        "SELF_CONTROL" | "HARD_WORK" => 0.18,
+        "CUNNING" | "COMPETITION" => 0.18,
+        "MARTIAL_PROWESS" => 0.19,
+        "POWER" => 0.20,
+        _ => 0.15, // default
     }
 }
 
@@ -984,20 +1004,62 @@ impl SimConfig {
     /// Sets a config value by key. Returns `true` if the key exists and was updated.
     pub fn set_by_key(&mut self, key: &str, value: f64) -> bool {
         match key {
-            "need_decay_rate" => { self.need_decay_rate = value.clamp(0.001, 0.05); true }
-            "stress_drain_rate" => { self.stress_drain_rate = value.clamp(0.0001, 0.005); true }
-            "emotion_decay_rate" => { self.emotion_decay_rate = value.clamp(0.01, 0.2); true }
-            "contagion_radius" => { self.contagion_radius = value.clamp(1.0, 20.0); true }
-            "contagion_strength" => { self.contagion_strength = value.clamp(0.01, 0.5); true }
-            "resource_regen_r" => { self.resource_regen_r = value.clamp(0.001, 0.2); true }
-            "allee_threshold" => { self.allee_threshold = value.clamp(0.01, 0.2); true }
-            "harvest_gamma" => { self.harvest_gamma = value.clamp(1.0, 5.0); true }
-            "fallow_half_life" => { self.fallow_half_life = value.clamp(5.0, 50.0); true }
-            "surplus_threshold_days" => { self.surplus_threshold_days = value.clamp(5.0, 30.0); true }
-            "legitimacy_tradition_w" => { self.legitimacy_tradition_w = value.clamp(0.0, 1.0); true }
-            "legitimacy_charisma_w" => { self.legitimacy_charisma_w = value.clamp(0.0, 1.0); true }
-            "rebel_base_threshold" => { self.rebel_base_threshold = value.clamp(0.3, 0.9); true }
-            "tedium_schism_threshold" => { self.tedium_schism_threshold = value.clamp(0.5, 1.0); true }
+            "need_decay_rate" => {
+                self.need_decay_rate = value.clamp(0.001, 0.05);
+                true
+            }
+            "stress_drain_rate" => {
+                self.stress_drain_rate = value.clamp(0.0001, 0.005);
+                true
+            }
+            "emotion_decay_rate" => {
+                self.emotion_decay_rate = value.clamp(0.01, 0.2);
+                true
+            }
+            "contagion_radius" => {
+                self.contagion_radius = value.clamp(1.0, 20.0);
+                true
+            }
+            "contagion_strength" => {
+                self.contagion_strength = value.clamp(0.01, 0.5);
+                true
+            }
+            "resource_regen_r" => {
+                self.resource_regen_r = value.clamp(0.001, 0.2);
+                true
+            }
+            "allee_threshold" => {
+                self.allee_threshold = value.clamp(0.01, 0.2);
+                true
+            }
+            "harvest_gamma" => {
+                self.harvest_gamma = value.clamp(1.0, 5.0);
+                true
+            }
+            "fallow_half_life" => {
+                self.fallow_half_life = value.clamp(5.0, 50.0);
+                true
+            }
+            "surplus_threshold_days" => {
+                self.surplus_threshold_days = value.clamp(5.0, 30.0);
+                true
+            }
+            "legitimacy_tradition_w" => {
+                self.legitimacy_tradition_w = value.clamp(0.0, 1.0);
+                true
+            }
+            "legitimacy_charisma_w" => {
+                self.legitimacy_charisma_w = value.clamp(0.0, 1.0);
+                true
+            }
+            "rebel_base_threshold" => {
+                self.rebel_base_threshold = value.clamp(0.3, 0.9);
+                true
+            }
+            "tedium_schism_threshold" => {
+                self.tedium_schism_threshold = value.clamp(0.5, 1.0);
+                true
+            }
             _ => false,
         }
     }
