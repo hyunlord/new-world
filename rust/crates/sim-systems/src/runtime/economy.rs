@@ -12,7 +12,8 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    BuildingId, ChannelId, CopingStrategyId, EmitterRecord, EntityId, FalloffType,
+    IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
@@ -684,6 +685,30 @@ struct BuildingEffectSnapshot {
     y: i32,
 }
 
+#[inline]
+fn refresh_campfire_warmth_emitter(resources: &mut SimResources, x: i32, y: i32) {
+    if x < 0 || y < 0 {
+        return;
+    }
+    let x_u32 = x as u32;
+    let y_u32 = y as u32;
+    if !resources.map.in_bounds(x, y) {
+        return;
+    }
+    resources
+        .influence_grid
+        .remove_emitter(x_u32, y_u32, ChannelId::Warmth);
+    resources.influence_grid.register_emitter(EmitterRecord {
+        x: x_u32,
+        y: y_u32,
+        channel: ChannelId::Warmth,
+        radius: f64::from(config::BUILDING_CAMPFIRE_RADIUS.max(1)),
+        intensity: config::WARMTH_CAMPFIRE_EMITTER_INTENSITY,
+        falloff: FalloffType::Linear,
+        dirty: false,
+    });
+}
+
 /// Rust runtime system for passive building aura effects.
 ///
 /// This performs active writes on `Needs.belonging`, `Needs.warmth`,
@@ -722,6 +747,7 @@ impl SimSystem for BuildingEffectRuntimeSystem {
             return;
         }
         let mut effects: Vec<BuildingEffectSnapshot> = Vec::new();
+        let mut campfire_positions: Vec<(i32, i32)> = Vec::new();
         for building in resources.buildings.values() {
             if !building.is_complete {
                 continue;
@@ -731,6 +757,9 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                 "shelter" => BuildingEffectKind::Shelter,
                 _ => continue,
             };
+            if matches!(kind, BuildingEffectKind::Campfire) {
+                campfire_positions.push((building.x, building.y));
+            }
             effects.push(BuildingEffectSnapshot {
                 kind,
                 x: building.x,
@@ -739,6 +768,11 @@ impl SimSystem for BuildingEffectRuntimeSystem {
         }
         if effects.is_empty() {
             return;
+        }
+        for (x, y) in campfire_positions {
+            // Campfire warmth is now routed through the influence grid so
+            // nearby agents must sample the Warmth channel on later ticks.
+            refresh_campfire_warmth_emitter(resources, x, y);
         }
 
         let ticks_per_day = resources.calendar.ticks_per_day.max(1) as u64;
@@ -759,10 +793,6 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                         needs.set(
                             NeedType::Belonging,
                             needs.get(NeedType::Belonging) + campfire_social_boost as f64,
-                        );
-                        needs.set(
-                            NeedType::Warmth,
-                            needs.get(NeedType::Warmth) + config::WARMTH_FIRE_RESTORE,
                         );
                     }
                     BuildingEffectKind::Shelter => {

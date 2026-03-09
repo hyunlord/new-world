@@ -50,7 +50,7 @@ use sim_core::components::{
     Skills, Social, Stress, Traits, Values,
 };
 use sim_core::enums::{GrowthStage, NeedType, Sex};
-use sim_core::{Settlement, SettlementId};
+use sim_core::{ChannelId, Settlement, SettlementId};
 use sim_engine::{
     AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
     SimEventType,
@@ -1240,6 +1240,16 @@ impl WorldSimRuntime {
             dict.set("vel_x", position.vel_x);
             dict.set("vel_y", position.vel_y);
             dict.set("movement_dir", position.movement_dir as i64);
+            let tile_x = position.tile_x();
+            let tile_y = position.tile_y();
+            if tile_x >= 0 && tile_y >= 0 && state.engine.resources().map.in_bounds(tile_x, tile_y) {
+                let warmth_influence = state
+                    .engine
+                    .resources()
+                    .influence_grid
+                    .sample(tile_x as u32, tile_y as u32, ChannelId::Warmth);
+                dict.set("warmth_influence", warmth_influence as f32);
+            }
         }
 
         // Age
@@ -1784,7 +1794,6 @@ impl WorldSimRuntime {
     #[func]
     fn on_entity_narrative_click(&mut self, entity_id: i64) -> u8 {
         let Some(state) = self.state.as_mut() else {
-            eprintln!("[LLM-DEBUG] on_entity_narrative_click returning 0 (no state)");
             return 0;
         };
         let tick = state.engine.current_tick();

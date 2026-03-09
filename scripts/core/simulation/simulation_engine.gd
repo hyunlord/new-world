@@ -475,10 +475,9 @@ func get_minimap_snapshot() -> Dictionary:
 
 
 func _flush_llm_debug_log() -> void:
-	if not OS.is_debug_build():
-		return
-	for line in drain_llm_debug_log():
-		print(str(line))
+	# Keep draining the bridge-side debug ring buffer so it does not retain stale
+	# lines between frames, but stop mirroring `[LLM-DEBUG]` traffic to stdout.
+	drain_llm_debug_log()
 
 
 func _get_sim_bridge() -> Object:

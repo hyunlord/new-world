@@ -446,6 +446,8 @@ pub const THIRST_LOW: f64 = 0.35;
 
 /// [Cannon 1932 — warmth / homeostasis]
 pub const WARMTH_DECAY_RATE: f64 = 0.0016;
+/// Raw campfire emitter strength stamped into the Warmth influence channel.
+pub const WARMTH_CAMPFIRE_EMITTER_INTENSITY: f64 = 0.8;
 pub const WARMTH_FIRE_RESTORE: f64 = 0.035;
 pub const WARMTH_SHELTER_RESTORE: f64 = 0.018;
 pub const WARMTH_CRITICAL: f64 = 0.10;
