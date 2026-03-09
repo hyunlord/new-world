@@ -13,7 +13,7 @@ use std::collections::HashMap;
 use hecs::World;
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
-use sim_core::{Building, BuildingId, EntityId, GameCalendar, Settlement, SettlementId, SimConfig, WorldMap};
+use sim_core::{Building, BuildingId, ChannelId, EntityId, GameCalendar, InfluenceGrid, Settlement, SettlementId, SimConfig, WorldMap};
 use sim_data::{NameGenerator, PersonalityDistribution};
 use crate::event_bus::EventBus;
 use crate::event_store::EventStore;
@@ -93,6 +93,8 @@ pub struct SimResources {
     pub personality_distribution: Option<PersonalityDistribution>,
     /// Name generator — generates culturally-appropriate names for new agents.
     pub name_generator: Option<NameGenerator>,
+    /// Double-buffered spatial influence field shared across all systems.
+    pub influence_grid: InfluenceGrid,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
     pub explain_log: ExplainLog,
     /// Runtime-mutable simulation balance parameters (debug tuning).
@@ -115,6 +117,7 @@ impl SimResources {
     /// - `map`: world map (call `WorldMap::new(...)` or use world gen)
     /// - `seed`: RNG seed — same seed = identical simulation run
     pub fn new(calendar: GameCalendar, map: WorldMap, seed: u64) -> Self {
+        let influence_grid = InfluenceGrid::new(map.width, map.height, ChannelId::default_channels());
         Self {
             calendar,
             map,
@@ -133,6 +136,7 @@ impl SimResources {
             chronicle_personal_events: HashMap::new(),
             personality_distribution: None,
             name_generator: None,
+            influence_grid,
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
             event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),
@@ -262,6 +266,8 @@ impl std::fmt::Debug for SimResources {
             .field("stat_threshold_flags", &self.stat_threshold_flags.len())
             .field("event_bus", &self.event_bus)
             .field("event_store", &self.event_store.len())
+            .field("influence_grid_dims", &self.influence_grid.dimensions())
+            .field("influence_emitters", &self.influence_grid.active_emitter_count())
             .field("pending_notifications", &self.pending_notifications.len())
             .field("notification_history", &self.notification_history.len())
             .field("llm_available", &self.llm_runtime.is_available())
@@ -359,6 +365,8 @@ impl SimEngine {
         if self.debug_mode {
             self.perf_tracker.end_tick();
         }
+
+        self.resources.influence_grid.tick_update();
 
         // Deliver events collected during this tick.
         self.resources.event_bus.flush();
@@ -485,6 +493,7 @@ mod tests {
     use super::*;
     use hecs::World;
     use sim_core::config::GameConfig;
+    use sim_core::{ChannelId, EmitterRecord, FalloffType};
 
     fn make_engine() -> SimEngine {
         let config = GameConfig::default();
@@ -611,5 +620,32 @@ mod tests {
         let engine = make_engine();
         let status = engine.resources().llm_status_json();
         assert!(status.contains("\"running\":false"));
+    }
+
+    #[test]
+    fn sim_resources_initialize_influence_grid_from_map_dimensions() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(24, 12, 0);
+        let resources = SimResources::new(calendar, map, 7);
+        assert_eq!(resources.influence_grid.dimensions(), (24, 12));
+    }
+
+    #[test]
+    fn engine_tick_updates_influence_grid_buffers() {
+        let mut engine = make_engine();
+        engine.resources_mut().influence_grid.register_emitter(EmitterRecord {
+            x: 4,
+            y: 4,
+            channel: ChannelId::Warmth,
+            radius: 3.0,
+            intensity: 0.8,
+            falloff: FalloffType::Constant,
+            dirty: false,
+        });
+
+        assert_eq!(engine.resources().influence_grid.sample(4, 4, ChannelId::Warmth), 0.0);
+        engine.tick();
+        assert!(engine.resources().influence_grid.sample(4, 4, ChannelId::Warmth) > 0.0);
     }
 }

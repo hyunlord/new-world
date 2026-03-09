@@ -258,6 +258,54 @@ pub const NEED_EVENT_SATISFIED_THRESHOLD: f64 = 0.70;
 pub const STORY_SIFTER_RAPID_ESCALATION_TICKS: u64 = 50;
 /// Maximum window for simultaneous-crisis clustering.
 pub const STORY_SIFTER_BREAK_CLUSTER_TICKS: u64 = 10;
+/// Warmth channel per-tick decay rate.
+pub const INFLUENCE_WARMTH_DECAY_RATE: f64 = 0.15;
+/// Warmth channel propagation depth processed per tick.
+pub const INFLUENCE_WARMTH_PROPAGATION_SPEED: u32 = 3;
+/// Warmth channel default wall attenuation coefficient.
+pub const INFLUENCE_WARMTH_WALL_BLOCK: f64 = 0.7;
+/// Light channel per-tick decay rate.
+pub const INFLUENCE_LIGHT_DECAY_RATE: f64 = 0.20;
+/// Light channel propagation depth processed per tick.
+pub const INFLUENCE_LIGHT_PROPAGATION_SPEED: u32 = 5;
+/// Light channel default wall attenuation coefficient.
+pub const INFLUENCE_LIGHT_WALL_BLOCK: f64 = 0.9;
+/// Noise channel per-tick decay rate.
+pub const INFLUENCE_NOISE_DECAY_RATE: f64 = 0.10;
+/// Noise channel propagation depth processed per tick.
+pub const INFLUENCE_NOISE_PROPAGATION_SPEED: u32 = 5;
+/// Noise channel default wall attenuation coefficient.
+pub const INFLUENCE_NOISE_WALL_BLOCK: f64 = 0.5;
+/// Danger channel per-tick decay rate.
+pub const INFLUENCE_DANGER_DECAY_RATE: f64 = 0.25;
+/// Danger channel propagation depth processed per tick.
+pub const INFLUENCE_DANGER_PROPAGATION_SPEED: u32 = 4;
+/// Danger channel default wall attenuation coefficient.
+pub const INFLUENCE_DANGER_WALL_BLOCK: f64 = 0.0;
+/// Food aroma channel per-tick decay rate.
+pub const INFLUENCE_FOOD_AROMA_DECAY_RATE: f64 = 0.20;
+/// Food aroma channel propagation depth processed per tick.
+pub const INFLUENCE_FOOD_AROMA_PROPAGATION_SPEED: u32 = 3;
+/// Food aroma channel default wall attenuation coefficient.
+pub const INFLUENCE_FOOD_AROMA_WALL_BLOCK: f64 = 0.3;
+/// Spiritual channel per-tick decay rate.
+pub const INFLUENCE_SPIRITUAL_DECAY_RATE: f64 = 0.05;
+/// Spiritual channel propagation depth processed per tick.
+pub const INFLUENCE_SPIRITUAL_PROPAGATION_SPEED: u32 = 2;
+/// Spiritual channel default wall attenuation coefficient.
+pub const INFLUENCE_SPIRITUAL_WALL_BLOCK: f64 = 0.2;
+/// Authority channel per-tick decay rate.
+pub const INFLUENCE_AUTHORITY_DECAY_RATE: f64 = 0.10;
+/// Authority channel propagation depth processed per tick.
+pub const INFLUENCE_AUTHORITY_PROPAGATION_SPEED: u32 = 3;
+/// Authority channel default wall attenuation coefficient.
+pub const INFLUENCE_AUTHORITY_WALL_BLOCK: f64 = 0.1;
+/// Beauty channel per-tick decay rate.
+pub const INFLUENCE_BEAUTY_DECAY_RATE: f64 = 0.08;
+/// Beauty channel propagation depth processed per tick.
+pub const INFLUENCE_BEAUTY_PROPAGATION_SPEED: u32 = 2;
+/// Beauty channel default wall attenuation coefficient.
+pub const INFLUENCE_BEAUTY_WALL_BLOCK: f64 = 0.4;
 /// Minimum persistence window for deadline-approaching need patterns.
 pub const STORY_SIFTER_NEED_PERSISTENCE_TICKS: u64 = 20;
 /// Maximum window for recovery-arc checks after a mental break.
