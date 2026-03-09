@@ -1,8 +1,10 @@
 use std::collections::{HashMap, HashSet};
+use std::path::Path;
 use std::sync::{Arc, Mutex};
 
 use serde::Deserialize;
 use sim_core::{config, config::GameConfig, GameCalendar, WorldMap};
+use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
 use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
@@ -111,6 +113,7 @@ impl Default for RuntimeConfig {
 
 pub(crate) struct RuntimeState {
     pub(crate) engine: SimEngine,
+    pub(crate) data_registry: Option<Arc<DataRegistry>>,
     pub(crate) accumulator: f64,
     pub(crate) ticks_per_second: u32,
     pub(crate) max_ticks_per_frame: u32,
@@ -133,6 +136,11 @@ pub(crate) struct RuntimeSystemEntry {
     pub(crate) rust_implemented: bool,
     pub(crate) rust_registered: bool,
     pub(crate) exec_backend: String,
+}
+
+pub(crate) struct LegacyRuntimeBootstrap {
+    pub(crate) personality_distribution: PersonalityDistribution,
+    pub(crate) name_generator: NameGenerator,
 }
 
 impl RuntimeState {
@@ -178,6 +186,7 @@ impl RuntimeState {
         rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_TIMEOUT.to_string());
         Self {
             engine,
+            data_registry: None,
             accumulator: 0.0,
             ticks_per_second,
             max_ticks_per_frame,
@@ -189,6 +198,16 @@ impl RuntimeState {
             compute_domain_modes: runtime_default_compute_domain_modes(&RUNTIME_COMPUTE_DOMAINS),
         }
     }
+}
+
+pub(crate) fn load_legacy_runtime_bootstrap(
+    data_dir: &Path,
+) -> Result<LegacyRuntimeBootstrap, sim_data::DataError> {
+    let data = sim_data::load_all(data_dir)?;
+    Ok(LegacyRuntimeBootstrap {
+        personality_distribution: data.personality_distribution,
+        name_generator: NameGenerator::new(data.name_cultures),
+    })
 }
 
 pub(crate) fn parse_runtime_config(config_json: &str) -> RuntimeConfig {

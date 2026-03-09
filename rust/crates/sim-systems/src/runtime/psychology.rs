@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - psychology systems must migrate from HEXACO-only drift toward TCI temperament and causal shift rules.
 
 use hecs::{Entity, World};
 use rand::Rng;

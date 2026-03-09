@@ -61,8 +61,23 @@ use sim_systems::runtime::{
 };
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
+
+fn authoritative_ron_data_dir() -> Option<PathBuf> {
+    let crates_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent()?.to_path_buf();
+    Some(crates_dir.join("sim-data").join("data"))
+}
+
+fn legacy_json_data_dir() -> Option<PathBuf> {
+    let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()?
+        .parent()?
+        .parent()?
+        .to_path_buf();
+    Some(project_root.join("data"))
+}
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -110,38 +125,54 @@ fn main() {
     let mut resources = SimResources::new(calendar, map, 0xDEAD_BEEF);
 
     // ── Attempt data load ─────────────────────────────────────────────────────
-    let data_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap() // crates/
-        .parent()
-        .unwrap() // rust/
-        .parent()
-        .unwrap() // lead/ project root
-        .join("data");
+    if let Some(registry_dir) = authoritative_ron_data_dir() {
+        match sim_data::DataRegistry::load_from_directory(&registry_dir) {
+            Ok(registry) => {
+                log::info!(
+                    "[sim-test] authoritative RON registry loaded: {} materials, {} recipes, {} furniture, {} structures, {} actions",
+                    registry.materials.len(),
+                    registry.recipes.len(),
+                    registry.furniture.len(),
+                    registry.structures.len(),
+                    registry.actions.len(),
+                );
+            }
+            Err(errors) => {
+                log::warn!(
+                    "[sim-test] authoritative RON registry not available at {:?}: {:?}",
+                    registry_dir,
+                    errors
+                );
+            }
+        }
+    } else {
+        log::warn!("[sim-test] could not resolve authoritative RON registry path");
+    }
 
-    match sim_data::load_all(&data_dir) {
-        Ok(data) => {
-            log::info!(
-                "[sim-test] data loaded: {} emotions, {} techs, {} value_events, {} stressors, {} coping_defs, {} mental_breaks, {} traits, {} species, {} mortality_profiles, {} developmental_stages, {} occupation_categories, {} job_profiles",
-                data.emotions.len(),
-                data.tech.len(),
-                data.values.len(),
-                data.stressors.len(),
-                data.coping.len(),
-                data.mental_breaks.len(),
-                data.traits.len(),
-                data.species.len(),
-                data.mortality.len(),
-                data.developmental_stages.len(),
-                data.occupation.categories.len(),
-                data.occupation.jobs.len(),
-            );
-            resources.personality_distribution = Some(data.personality_distribution.clone());
-            resources.name_generator = Some(sim_data::NameGenerator::new(data.name_cultures.clone()));
+    if let Some(data_dir) = legacy_json_data_dir() {
+        match sim_data::load_personality_distribution(&data_dir) {
+            Ok(distribution) => {
+                resources.personality_distribution = Some(distribution);
+                log::info!("[sim-test] legacy personality distribution compatibility data loaded");
+            }
+            Err(error) => {
+                log::warn!(
+                    "[sim-test] legacy personality distribution not available at {:?}: {:?}",
+                    data_dir,
+                    error
+                );
+            }
         }
-        Err(_) => {
-            log::warn!("[sim-test] data not found at {:?}, skipping", data_dir);
+
+        let name_cultures = sim_data::load_name_cultures(&data_dir);
+        if !name_cultures.is_empty() {
+            resources.name_generator = Some(sim_data::NameGenerator::new(name_cultures));
+            log::info!("[sim-test] legacy naming cultures compatibility data loaded");
+        } else {
+            log::warn!("[sim-test] legacy naming cultures not found at {:?}, skipping", data_dir);
         }
+    } else {
+        log::warn!("[sim-test] could not resolve legacy JSON data path");
     }
 
     // ── Subscribe event counter ───────────────────────────────────────────────

@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - biology systems still carry v2 developmental/personality assumptions and heavy config:: coupling.
 
 use hecs::{Entity, World};
 use rand::Rng;
@@ -335,6 +336,7 @@ fn intergen_parenting_quality(needs_opt: Option<&Needs>, stress: &Stress) -> f32
 /// This performs active writes on `Stress.allostatic_load` and `Stress.level`
 /// for parents (Meaney-style repair) and child-stage entities (transmission).
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace with causal temperament/family pipeline once A-8 is in place.
 pub struct IntergenerationalRuntimeSystem {
     priority: u32,
     tick_interval: u64,
@@ -524,6 +526,7 @@ const PARENTING_STRESS_DELTA_SCALE: f32 = 8.0;
 /// This performs active writes on parent/child `Stress` and child `Coping`
 /// based on parent regulation signals and Bandura-style modeling rates.
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace with causal temperament/family pipeline once A-8 is in place.
 pub struct ParentingRuntimeSystem {
     priority: u32,
     tick_interval: u64,
@@ -912,6 +915,7 @@ fn bio_zscore_to_facet(z: f32) -> f64 {
 /// and culture shifts. Runs each tick and processes entities that need
 /// personality initialization (facets all at default 0.5).
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace HEXACO-at-birth generation with gene -> TCI -> HEXACO pipeline (A-8).
 pub struct PersonalityGeneratorRuntimeSystem {
     priority: u32,
     tick_interval: u64,
@@ -1083,6 +1087,7 @@ const ATTACHMENT_DETERMINATION_AGE: f64 = 1.0;
 /// (derived from parent personality A-axis and stress level) determine the
 /// child's attachment pattern (Secure, Anxious, Avoidant, Fearful/Disorganized).
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace with temperament/attachment derivation in the v3.1 developmental pipeline.
 pub struct AttachmentRuntimeSystem {
     priority: u32,
     tick_interval: u64,
@@ -1239,6 +1244,7 @@ const ACE_NATIVE_MAX: f64 = 10.0;
 /// Uses allostatic load, trauma scar count, and attachment type as proxies
 /// for childhood adversity (Felitti dose-response model).
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace ACE accumulation with event-driven temperament/causal tracking pipeline.
 pub struct AceTrackerRuntimeSystem {
     priority: u32,
     tick_interval: u64,

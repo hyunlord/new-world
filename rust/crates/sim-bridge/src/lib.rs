@@ -62,6 +62,8 @@ use sim_systems::{
     stat_curve,
 };
 use std::fs;
+use std::path::PathBuf;
+use std::sync::Arc;
 
 pub use pathfinding_core::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -77,7 +79,8 @@ use pathfinding_core::{
 };
 use runtime_commands::{apply_commands_v2, clear_registry, registry_snapshot};
 use runtime_registry::{
-    clamp_speed_index, parse_runtime_config, runtime_speed_multiplier, RuntimeState,
+    clamp_speed_index, load_legacy_runtime_bootstrap, parse_runtime_config,
+    runtime_speed_multiplier, RuntimeState,
 };
 use snapshot_buffer::SnapshotBuffer;
 #[cfg(test)]
@@ -128,6 +131,17 @@ fn encode_snapshot_bytes(snapshots: &[AgentSnapshot]) -> PackedByteArray {
         snapshot.write_bytes(&mut bytes);
     }
     PackedByteArray::from(bytes)
+}
+
+fn authoritative_ron_data_dir() -> PathBuf {
+    PathBuf::from("rust")
+        .join("crates")
+        .join("sim-data")
+        .join("data")
+}
+
+fn legacy_json_data_dir() -> PathBuf {
+    PathBuf::from("data")
 }
 
 fn resolve_runtime_entity(
@@ -710,18 +724,43 @@ impl WorldSimRuntime {
         self.render_alpha = 0.0;
 
         if let Some(state) = self.state.as_mut() {
-            // Try to load personality distribution from data dir (relative to Godot project root)
-            let data_dir = std::path::Path::new("data");
-            match sim_data::load_all(data_dir) {
-                Ok(data) => {
-                    state.engine.resources_mut().personality_distribution =
-                        Some(data.personality_distribution);
-                    log::info!("[SimBridge] Personality distribution loaded");
+            let registry_dir = authoritative_ron_data_dir();
+            match sim_data::DataRegistry::load_from_directory(&registry_dir) {
+                Ok(registry) => {
+                    log::info!(
+                        "[SimBridge] Authoritative RON registry loaded from {:?}: {} materials, {} recipes, {} furniture, {} structures, {} actions",
+                        registry_dir,
+                        registry.materials.len(),
+                        registry.recipes.len(),
+                        registry.furniture.len(),
+                        registry.structures.len(),
+                        registry.actions.len(),
+                    );
+                    state.data_registry = Some(Arc::new(registry));
                 }
-                Err(e) => {
+                Err(errors) => {
                     log::warn!(
-                        "[SimBridge] Could not load data (personality uses defaults): {:?}",
-                        e
+                        "[SimBridge] Could not load authoritative RON registry at {:?}: {:?}",
+                        registry_dir,
+                        errors
+                    );
+                }
+            }
+
+            let legacy_dir = legacy_json_data_dir();
+            match load_legacy_runtime_bootstrap(&legacy_dir) {
+                Ok(bootstrap) => {
+                    state.engine.resources_mut().personality_distribution =
+                        Some(bootstrap.personality_distribution);
+                    state.engine.resources_mut().name_generator =
+                        Some(bootstrap.name_generator);
+                    log::info!("[SimBridge] Legacy JSON compatibility bootstrap loaded");
+                }
+                Err(error) => {
+                    log::warn!(
+                        "[SimBridge] Could not load legacy JSON compatibility bootstrap at {:?}: {:?}",
+                        legacy_dir,
+                        error
                     );
                 }
             }
