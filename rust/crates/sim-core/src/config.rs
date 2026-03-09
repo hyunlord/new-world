@@ -535,6 +535,14 @@ pub const CONSTRUCTION_TICK_INTERVAL: u64 = 5;
 pub const BUILDING_EFFECT_TICK_INTERVAL: u64 = 10;
 pub const BUILDING_STOCKPILE_RADIUS: i32 = 8;
 pub const BUILDING_SHELTER_RADIUS: i32 = 0;
+/// One-tile shelter interior uses a one-tile wall ring for runtime blocking.
+pub const BUILDING_SHELTER_WALL_RING_RADIUS: i32 = 1;
+/// Current shelter doorway x offset inside the wall ring footprint.
+pub const BUILDING_SHELTER_DOOR_OFFSET_X: i32 = 0;
+/// Current shelter doorway y offset inside the wall ring footprint.
+pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 1;
+/// Runtime wall blocking coefficient stamped by completed shelter walls.
+pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
 pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
 

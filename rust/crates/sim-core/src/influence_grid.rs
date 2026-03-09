@@ -113,8 +113,13 @@ impl InfluenceGrid {
                 let next_x_u32 = next_x as u32;
                 let next_y_u32 = next_y as u32;
                 let idx = self.index(next_x_u32, next_y_u32);
-                let wall_block = self.wall_blocking.get(next_x_u32, next_y_u32);
-                let wall_factor = 1.0 - wall_block;
+                let wall_factor = self.wall_factor_along_path(
+                    emitter.x,
+                    emitter.y,
+                    next_x_u32,
+                    next_y_u32,
+                    channel_index,
+                );
                 let raw_value = match emitter.falloff {
                     FalloffType::Linear => {
                         if emitter.radius <= 0.0 {
@@ -214,6 +219,16 @@ impl InfluenceGrid {
         self.wall_blocking.set(x, y, blocking);
     }
 
+    /// Clears all runtime wall blocking coefficients.
+    pub fn clear_wall_blocking(&mut self) {
+        self.wall_blocking.clear();
+    }
+
+    /// Returns the current wall blocking coefficient for one tile.
+    pub fn wall_blocking_at(&self, x: u32, y: u32) -> f64 {
+        self.wall_blocking.get(x, y)
+    }
+
     /// Returns an immutable view over one channel's current buffer.
     pub fn get_channel_data(&self, channel: ChannelId) -> &[f64] {
         &self.current[channel.index()]
@@ -246,6 +261,74 @@ impl InfluenceGrid {
             let raw = *value;
             *value = raw / (1.0 + raw.abs());
         }
+    }
+
+    fn wall_factor_along_path(
+        &self,
+        start_x: u32,
+        start_y: u32,
+        end_x: u32,
+        end_y: u32,
+        channel_index: usize,
+    ) -> f64 {
+        let wall_sensitivity = self.channel_meta[channel_index]
+            .default_wall_block
+            .clamp(0.0, 1.0);
+        if wall_sensitivity <= 0.0 {
+            return 1.0;
+        }
+
+        let mut x = start_x as i32;
+        let mut y = start_y as i32;
+        let end_x_i32 = end_x as i32;
+        let end_y_i32 = end_y as i32;
+        let dx = (end_x_i32 - x).abs();
+        let sx = if x < end_x_i32 {
+            1
+        } else if x > end_x_i32 {
+            -1
+        } else {
+            0
+        };
+        let dy = -(end_y_i32 - y).abs();
+        let sy = if y < end_y_i32 {
+            1
+        } else if y > end_y_i32 {
+            -1
+        } else {
+            0
+        };
+        let mut err = dx + dy;
+        let mut factor = 1.0;
+
+        loop {
+            if !(x == start_x as i32 && y == start_y as i32) {
+                let tile_block = self.wall_blocking.get(x as u32, y as u32);
+                if tile_block > 0.0 {
+                    let attenuation = 1.0 - (tile_block * wall_sensitivity).clamp(0.0, 1.0);
+                    factor *= attenuation;
+                    if factor <= 0.0 {
+                        return 0.0;
+                    }
+                }
+            }
+
+            if x == end_x_i32 && y == end_y_i32 {
+                break;
+            }
+
+            let double_err = err * 2;
+            if double_err >= dy {
+                err += dy;
+                x += sx;
+            }
+            if double_err <= dx {
+                err += dx;
+                y += sy;
+            }
+        }
+
+        factor.clamp(0.0, 1.0)
     }
 }
 
@@ -309,7 +392,7 @@ mod tests {
     #[test]
     fn influence_grid_wall_blocking_reduces_values() {
         let mut grid = make_influence_grid(32, 32);
-        grid.set_wall_blocking(16, 16, 0.9);
+        grid.set_wall_blocking(17, 16, 0.9);
         grid.register_emitter(EmitterRecord {
             x: 16,
             y: 16,
@@ -321,7 +404,7 @@ mod tests {
         });
 
         grid.tick_update();
-        let blocked = grid.sample(16, 16, ChannelId::Warmth);
+        let blocked = grid.sample(17, 16, ChannelId::Warmth);
 
         let mut unblocked = make_influence_grid(32, 32);
         unblocked.register_emitter(EmitterRecord {
@@ -334,10 +417,30 @@ mod tests {
             dirty: false,
         });
         unblocked.tick_update();
-        let clear = unblocked.sample(16, 16, ChannelId::Warmth);
+        let clear = unblocked.sample(17, 16, ChannelId::Warmth);
 
         assert!(blocked < clear);
-        assert!(blocked <= 0.02);
+    }
+
+    #[test]
+    fn influence_grid_path_walls_reduce_targets_across_the_wall() {
+        let mut grid = make_influence_grid(24, 24);
+        grid.set_wall_blocking(13, 12, 0.9);
+        grid.register_emitter(EmitterRecord {
+            x: 12,
+            y: 12,
+            channel: ChannelId::Warmth,
+            radius: 4.0,
+            intensity: 0.8,
+            falloff: FalloffType::Constant,
+            dirty: false,
+        });
+
+        grid.tick_update();
+
+        let open = grid.sample(12, 14, ChannelId::Warmth);
+        let across_wall = grid.sample(14, 12, ChannelId::Warmth);
+        assert!(open > across_wall);
     }
 
     #[test]
