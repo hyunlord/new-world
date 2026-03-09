@@ -1,3 +1,4 @@
+// TODO(v3.1): Convert remaining f32 fields to f64 for determinism.
 use serde::{Deserialize, Serialize};
 use crate::enums::{StressState, MentalBreakType};
 use crate::scales::{NormStress, NativeStress, NormPercent, NativePercent};

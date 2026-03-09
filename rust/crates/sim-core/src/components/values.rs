@@ -1,3 +1,4 @@
+// TODO(v3.1): Keep manual serde until the toolchain supports deriving for `[f64; 33]`.
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::de::Error;
 use serde::ser::SerializeSeq;
@@ -72,5 +73,24 @@ impl Values {
             .map(|(a, b)| a * b)
             .sum();
         (dot / VALUE_COUNT as f64 + 1.0) / 2.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn serde_roundtrip_keeps_transparent_array_shape() {
+        let mut values = Values::default();
+        values.set(ValueType::Power, 0.75);
+        values.set(ValueType::Tradition, -0.25);
+
+        let json = serde_json::to_string(&values).expect("serialize values");
+        assert!(json.starts_with('['), "values should serialize as a bare array");
+
+        let roundtrip: Values = serde_json::from_str(&json).expect("deserialize values");
+        assert!((roundtrip.get(ValueType::Power) - 0.75).abs() < f64::EPSILON);
+        assert!((roundtrip.get(ValueType::Tradition) + 0.25).abs() < f64::EPSILON);
     }
 }

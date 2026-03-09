@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - economy/building logic is still v2-style and should move toward material/tag recipes and the 2-layer building model.
 
 use hecs::{Entity, World};
 use rand::Rng;
@@ -688,6 +689,7 @@ struct BuildingEffectSnapshot {
 /// This performs active writes on `Needs.belonging`, `Needs.warmth`,
 /// `Needs.safety`, and `Needs.energy` based on nearby completed buildings.
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace building aura scans with room caches and Influence Grid propagation (A-6/A-2).
 pub struct BuildingEffectRuntimeSystem {
     priority: u32,
     tick_interval: u64,

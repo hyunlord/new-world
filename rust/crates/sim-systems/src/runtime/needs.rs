@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - move need cadence/tuning from config.rs into scheduler metadata and data-driven system tuning.
 
 use hecs::{Entity, World};
 use rand::Rng;

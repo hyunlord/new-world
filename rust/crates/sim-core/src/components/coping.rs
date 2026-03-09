@@ -1,3 +1,4 @@
+// TODO(v3.1): Convert remaining f32 fields and HashMap usage to deterministic equivalents.
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use crate::enums::CopingStrategyId;

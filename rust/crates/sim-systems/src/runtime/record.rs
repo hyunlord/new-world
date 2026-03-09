@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - split legacy threshold/chronicle behaviors from reusable observation and telemetry paths.
 
 use hecs::{Entity, World};
 use rand::Rng;
@@ -380,6 +381,7 @@ const CHRONICLE_MED_IMPORTANCE_MAX_AGE_YEARS: i32 = 50;
 /// their retention window, enforces the hard cap on world events, and
 /// garbage-collects orphaned personal events.
 #[derive(Debug, Clone)]
+// TODO(v3.1): DELETE - replace legacy chronicle pruning path with v3.1 causal log + observation/oracle layers.
 pub struct ChronicleRuntimeSystem {
     priority: u32,
     tick_interval: u64,

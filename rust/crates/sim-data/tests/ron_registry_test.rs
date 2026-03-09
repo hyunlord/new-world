@@ -80,6 +80,21 @@ fn ron_registry_resolves_tag_threshold_queries() {
 }
 
 #[test]
+fn ron_registry_loads_authoritative_crate_fixture() {
+    let data_dir = crate_data_dir();
+    let registry = DataRegistry::load_from_directory(&data_dir)
+        .expect("expected authoritative crate-local RON data to load");
+
+    assert!(!registry.materials.is_empty(), "materials empty");
+    assert!(!registry.furniture.is_empty(), "furniture empty");
+    assert!(!registry.recipes.is_empty(), "recipes empty");
+    assert!(!registry.structures.is_empty(), "structures empty");
+    assert!(!registry.actions.is_empty(), "actions empty");
+    assert!(registry.world_rules.is_some(), "world rules missing");
+    assert!(registry.temperament_rules.is_some(), "temperament rules missing");
+}
+
+#[test]
 fn ron_registry_reports_validation_errors_for_unknown_recipe_tags() {
     let temp = TempDirGuard::new("unknown_recipe_tag");
     write_ron_file(

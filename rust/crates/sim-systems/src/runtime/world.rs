@@ -1,4 +1,6 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - move world/tech/migration tuning into World Rules compile/runtime data.
+// TODO(v3.1): REFACTOR - replace direct settlement mutation paths with explicit World Rules and event-driven transitions.
 
 use hecs::{Entity, World};
 use rand::Rng;
