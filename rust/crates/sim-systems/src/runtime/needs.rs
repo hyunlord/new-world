@@ -12,7 +12,8 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
+    BuildingId, ChannelId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType,
+    NeedType, RelationType, ResourceType,
     SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
@@ -125,6 +126,7 @@ impl SimSystem for NeedsRuntimeSystem {
             let previous_sleep = needs.get(NeedType::Sleep);
             let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
             let mut has_tile_temp = false;
+            let mut warmth_influence = 0.0_f64;
             if let Some(position) = position_opt {
                 let x = position.tile_x();
                 let y = position.tile_y();
@@ -132,6 +134,10 @@ impl SimSystem for NeedsRuntimeSystem {
                     let tile = resources.map.get(x as u32, y as u32);
                     tile_temp = tile.temperature;
                     has_tile_temp = true;
+                    warmth_influence = resources
+                        .influence_grid
+                        .sample(x as u32, y as u32, ChannelId::Warmth)
+                        .max(0.0);
                 }
             }
 
@@ -201,7 +207,9 @@ impl SimSystem for NeedsRuntimeSystem {
             );
             needs.set(
                 NeedType::Warmth,
-                (needs.get(NeedType::Warmth) as f32 - decays[4]) as f64,
+                (needs.get(NeedType::Warmth) as f32 - decays[4]) as f64
+                    + (warmth_influence * config::WARMTH_FIRE_RESTORE)
+                        .clamp(0.0, config::WARMTH_FIRE_RESTORE),
             );
             needs.set(
                 NeedType::Safety,

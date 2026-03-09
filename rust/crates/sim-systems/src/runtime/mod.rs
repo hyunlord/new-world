@@ -164,11 +164,11 @@ mod tests {
     use sim_core::world::TileResource;
     use sim_core::{
         AttachmentType, Building, BuildingId,
-        config::GameConfig, ActionType, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
+        config::GameConfig, ActionType, ChannelId, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
         HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
         SettlementId, Sex, SocialClass, TechState, ValueType, WorldMap,
     };
-    use sim_engine::{SimResources, SimSystem};
+    use sim_engine::{SimEngine, SimResources, SimSystem};
 
     fn make_resources() -> SimResources {
         let config = GameConfig::default();
@@ -1691,7 +1691,7 @@ mod tests {
     }
 
     #[test]
-    fn building_effect_runtime_system_applies_campfire_social_and_warmth() {
+    fn building_effect_runtime_system_applies_campfire_social_and_registers_warmth_emitter() {
         let mut world = World::new();
         let mut resources = make_resources();
         resources.calendar.tick = 10; // hour=20 => night boost path
@@ -1724,10 +1724,111 @@ mod tests {
 
         let updated = world.get::<&Needs>(entity).expect("needs should be queryable");
         assert!((updated.get(NeedType::Belonging) as f32 - 0.42).abs() < 1e-6);
-        assert!(
-            (updated.get(NeedType::Warmth) as f32 - (0.30 + sim_core::config::WARMTH_FIRE_RESTORE as f32)).abs()
-                < 1e-6
+        assert!((updated.get(NeedType::Warmth) as f32 - 0.30).abs() < 1e-6);
+        drop(updated);
+
+        resources.influence_grid.tick_update();
+        assert_eq!(resources.influence_grid.active_emitter_count(), 1);
+        assert!(resources.influence_grid.sample(0, 0, ChannelId::Warmth) > 0.0);
+    }
+
+    #[test]
+    fn campfire_warmth_vertical_slice_uses_influence_grid_for_near_far_and_blocked_agents() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let mut map = WorldMap::new(12, 12, 123);
+        map.get_mut(5, 5).temperature = 0.5;
+        map.get_mut(6, 5).temperature = 0.5;
+        map.get_mut(11, 11).temperature = 0.5;
+        let resources = SimResources::new(calendar, map, 999);
+        let mut engine = SimEngine::new(resources);
+        engine.register(NeedsRuntimeSystem::new(10, 1));
+        engine.register(BuildingEffectRuntimeSystem::new(15, 1));
+        engine.resources_mut().calendar.tick = 10; // night, so belonging boost still uses night path
+        engine.resources_mut().buildings.insert(
+            BuildingId(50),
+            Building {
+                id: BuildingId(50),
+                building_type: "campfire".to_string(),
+                settlement_id: SettlementId(1),
+                x: 5,
+                y: 5,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
         );
+        engine.resources_mut().influence_grid.set_wall_blocking(6, 5, 0.9);
+
+        let mut near_needs = Needs::default();
+        near_needs.set(NeedType::Warmth, 0.20);
+        let near = engine.world_mut().spawn((Position::new(5, 5), near_needs));
+
+        let mut blocked_needs = Needs::default();
+        blocked_needs.set(NeedType::Warmth, 0.20);
+        let blocked = engine.world_mut().spawn((Position::new(6, 5), blocked_needs));
+
+        let mut far_needs = Needs::default();
+        far_needs.set(NeedType::Warmth, 0.20);
+        let far = engine.world_mut().spawn((Position::new(11, 11), far_needs));
+
+        engine.tick();
+
+        let near_after_first = engine
+            .world()
+            .get::<&Needs>(near)
+            .expect("near needs after first tick");
+        let blocked_after_first = engine
+            .world()
+            .get::<&Needs>(blocked)
+            .expect("blocked needs after first tick");
+        let far_after_first = engine
+            .world()
+            .get::<&Needs>(far)
+            .expect("far needs after first tick");
+        let expected_after_first = 0.20_f64;
+        assert!((near_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
+        assert!((blocked_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
+        assert!((far_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
+        drop(near_after_first);
+        drop(blocked_after_first);
+        drop(far_after_first);
+
+        let center_signal = engine
+            .resources()
+            .influence_grid
+            .sample(5, 5, ChannelId::Warmth);
+        let blocked_signal = engine
+            .resources()
+            .influence_grid
+            .sample(6, 5, ChannelId::Warmth);
+        let far_signal = engine
+            .resources()
+            .influence_grid
+            .sample(11, 11, ChannelId::Warmth);
+        assert!(center_signal > blocked_signal);
+        assert!(blocked_signal > far_signal);
+
+        engine.tick();
+
+        let near_after_second = engine
+            .world()
+            .get::<&Needs>(near)
+            .expect("near needs after second tick");
+        let blocked_after_second = engine
+            .world()
+            .get::<&Needs>(blocked)
+            .expect("blocked needs after second tick");
+        let far_after_second = engine
+            .world()
+            .get::<&Needs>(far)
+            .expect("far needs after second tick");
+
+        assert!(near_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth));
+        assert!(blocked_after_second.get(NeedType::Warmth) > far_after_second.get(NeedType::Warmth));
+        assert!(near_after_second.get(NeedType::Warmth) > expected_after_first);
+        assert!((far_after_second.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
     }
 
     #[test]
