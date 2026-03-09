@@ -32,6 +32,11 @@ impl WallBlockingMask {
         self.data[(y * self.width + x) as usize] = blocking.clamp(0.0, 1.0);
     }
 
+    /// Clears all blocking coefficients back to zero.
+    pub fn clear(&mut self) {
+        self.data.fill(0.0);
+    }
+
     /// Derives a wall-blocking coefficient from material density.
     pub fn set_from_material_density(&mut self, x: u32, y: u32, density: f64) {
         let blocking = (density * 0.15).clamp(0.0, 1.0);
@@ -63,5 +68,15 @@ mod tests {
         assert!((mask.get(0, 0) - 0.9).abs() < 1e-6);
         assert!((mask.get(1, 0) - 0.495).abs() < 1e-6);
         assert!((mask.get(0, 1) - 0.201).abs() < 1e-6);
+    }
+
+    #[test]
+    fn wall_mask_clear_resets_previous_blockers() {
+        let mut mask = WallBlockingMask::new(3, 3);
+        mask.set(1, 1, 0.9);
+        mask.set(2, 2, 0.3);
+        mask.clear();
+        assert_eq!(mask.get(1, 1), 0.0);
+        assert_eq!(mask.get(2, 2), 0.0);
     }
 }

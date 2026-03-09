@@ -1733,13 +1733,10 @@ mod tests {
     }
 
     #[test]
-    fn campfire_warmth_vertical_slice_uses_influence_grid_for_near_far_and_blocked_agents() {
+    fn campfire_warmth_vertical_slice_uses_shelter_walls_for_inside_open_and_blocked_agents() {
         let config = GameConfig::default();
         let calendar = GameCalendar::new(&config);
-        let mut map = WorldMap::new(12, 12, 123);
-        map.get_mut(5, 5).temperature = 0.5;
-        map.get_mut(6, 5).temperature = 0.5;
-        map.get_mut(11, 11).temperature = 0.5;
+        let map = WorldMap::new(12, 12, 123);
         let resources = SimResources::new(calendar, map, 999);
         let mut engine = SimEngine::new(resources);
         engine.register(NeedsRuntimeSystem::new(10, 1));
@@ -1759,76 +1756,96 @@ mod tests {
                 condition: 1.0,
             },
         );
-        engine.resources_mut().influence_grid.set_wall_blocking(6, 5, 0.9);
+        engine.resources_mut().buildings.insert(
+            BuildingId(51),
+            Building {
+                id: BuildingId(51),
+                building_type: "shelter".to_string(),
+                settlement_id: SettlementId(1),
+                x: 5,
+                y: 5,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
 
-        let mut near_needs = Needs::default();
-        near_needs.set(NeedType::Warmth, 0.20);
-        let near = engine.world_mut().spawn((Position::new(5, 5), near_needs));
+        let mut inside_needs = Needs::default();
+        inside_needs.set(NeedType::Warmth, 0.20);
+        let inside = engine.world_mut().spawn((Position::new(5, 5), inside_needs));
+
+        let mut open_needs = Needs::default();
+        open_needs.set(NeedType::Warmth, 0.20);
+        let open = engine.world_mut().spawn((Position::new(5, 7), open_needs));
 
         let mut blocked_needs = Needs::default();
         blocked_needs.set(NeedType::Warmth, 0.20);
-        let blocked = engine.world_mut().spawn((Position::new(6, 5), blocked_needs));
-
-        let mut far_needs = Needs::default();
-        far_needs.set(NeedType::Warmth, 0.20);
-        let far = engine.world_mut().spawn((Position::new(11, 11), far_needs));
+        let blocked = engine.world_mut().spawn((Position::new(7, 5), blocked_needs));
 
         engine.tick();
 
-        let near_after_first = engine
+        let inside_after_first = engine
             .world()
-            .get::<&Needs>(near)
-            .expect("near needs after first tick");
+            .get::<&Needs>(inside)
+            .expect("inside needs after first tick");
+        let open_after_first = engine
+            .world()
+            .get::<&Needs>(open)
+            .expect("open needs after first tick");
         let blocked_after_first = engine
             .world()
             .get::<&Needs>(blocked)
             .expect("blocked needs after first tick");
-        let far_after_first = engine
-            .world()
-            .get::<&Needs>(far)
-            .expect("far needs after first tick");
         let expected_after_first = 0.20_f64;
-        assert!((near_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
+        assert!(inside_after_first.get(NeedType::Warmth) > expected_after_first);
+        assert!((open_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
         assert!((blocked_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
-        assert!((far_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
-        drop(near_after_first);
+        drop(inside_after_first);
+        drop(open_after_first);
         drop(blocked_after_first);
-        drop(far_after_first);
 
-        let center_signal = engine
+        assert!(
+            (engine.resources().influence_grid.wall_blocking_at(6, 5)
+                - sim_core::config::BUILDING_SHELTER_WALL_BLOCK)
+                .abs()
+                < 1e-6
+        );
+        assert_eq!(engine.resources().influence_grid.wall_blocking_at(5, 6), 0.0);
+
+        let inside_signal = engine
             .resources()
             .influence_grid
             .sample(5, 5, ChannelId::Warmth);
+        let open_signal = engine
+            .resources()
+            .influence_grid
+            .sample(5, 7, ChannelId::Warmth);
         let blocked_signal = engine
             .resources()
             .influence_grid
-            .sample(6, 5, ChannelId::Warmth);
-        let far_signal = engine
-            .resources()
-            .influence_grid
-            .sample(11, 11, ChannelId::Warmth);
-        assert!(center_signal > blocked_signal);
-        assert!(blocked_signal > far_signal);
+            .sample(7, 5, ChannelId::Warmth);
+        assert!(inside_signal > open_signal);
+        assert!(open_signal > blocked_signal);
 
         engine.tick();
 
-        let near_after_second = engine
+        let inside_after_second = engine
             .world()
-            .get::<&Needs>(near)
-            .expect("near needs after second tick");
+            .get::<&Needs>(inside)
+            .expect("inside needs after second tick");
+        let open_after_second = engine
+            .world()
+            .get::<&Needs>(open)
+            .expect("open needs after second tick");
         let blocked_after_second = engine
             .world()
             .get::<&Needs>(blocked)
             .expect("blocked needs after second tick");
-        let far_after_second = engine
-            .world()
-            .get::<&Needs>(far)
-            .expect("far needs after second tick");
 
-        assert!(near_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth));
-        assert!(blocked_after_second.get(NeedType::Warmth) > far_after_second.get(NeedType::Warmth));
-        assert!(near_after_second.get(NeedType::Warmth) > expected_after_first);
-        assert!((far_after_second.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
+        assert!(inside_after_second.get(NeedType::Warmth) > open_after_second.get(NeedType::Warmth));
+        assert!(open_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth));
+        assert!(open_after_second.get(NeedType::Warmth) > expected_after_first);
     }
 
     #[test]

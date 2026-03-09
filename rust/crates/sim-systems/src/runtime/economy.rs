@@ -685,6 +685,13 @@ struct BuildingEffectSnapshot {
     y: i32,
 }
 
+const SHELTER_WALL_CARDINAL_OFFSETS: [(i32, i32); 4] = [
+    (0, -1),
+    (1, 0),
+    (0, 1),
+    (-1, 0),
+];
+
 #[inline]
 fn refresh_campfire_warmth_emitter(resources: &mut SimResources, x: i32, y: i32) {
     if x < 0 || y < 0 {
@@ -707,6 +714,46 @@ fn refresh_campfire_warmth_emitter(resources: &mut SimResources, x: i32, y: i32)
         falloff: FalloffType::Linear,
         dirty: false,
     });
+}
+
+#[inline]
+fn refresh_structure_wall_blocking(resources: &mut SimResources) {
+    resources.influence_grid.clear_wall_blocking();
+
+    let shelter_centers: Vec<(i32, i32)> = resources
+        .buildings
+        .values()
+        .filter(|building| building.is_complete && building.building_type == "shelter")
+        .map(|building| (building.x, building.y))
+        .collect();
+
+    for (center_x, center_y) in shelter_centers {
+        apply_shelter_wall_blocking(resources, center_x, center_y);
+    }
+}
+
+#[inline]
+fn apply_shelter_wall_blocking(resources: &mut SimResources, center_x: i32, center_y: i32) {
+    let wall_radius = config::BUILDING_SHELTER_WALL_RING_RADIUS.max(1);
+    for (offset_x, offset_y) in SHELTER_WALL_CARDINAL_OFFSETS {
+        if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
+            && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
+        {
+            continue;
+        }
+
+        let tile_x = center_x + offset_x * wall_radius;
+        let tile_y = center_y + offset_y * wall_radius;
+        if !resources.map.in_bounds(tile_x, tile_y) {
+            continue;
+        }
+
+        resources.influence_grid.set_wall_blocking(
+            tile_x as u32,
+            tile_y as u32,
+            config::BUILDING_SHELTER_WALL_BLOCK,
+        );
+    }
 }
 
 /// Rust runtime system for passive building aura effects.
@@ -743,6 +790,7 @@ impl SimSystem for BuildingEffectRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+        refresh_structure_wall_blocking(resources);
         if resources.buildings.is_empty() {
             return;
         }
@@ -815,5 +863,43 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::{Building, BuildingId, GameCalendar, SettlementId, WorldMap};
+    use sim_core::config::GameConfig;
+    use sim_engine::SimResources;
+
+    #[test]
+    fn refresh_structure_wall_blocking_builds_shelter_ring_with_doorway_gap() {
+        let game_config = GameConfig::default();
+        let calendar = GameCalendar::new(&game_config);
+        let mut resources = SimResources::new(calendar, WorldMap::new(12, 12, 7), 99);
+        resources.buildings.insert(
+            BuildingId(9),
+            Building {
+                id: BuildingId(9),
+                building_type: "shelter".to_string(),
+                settlement_id: SettlementId(1),
+                x: 5,
+                y: 5,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        refresh_structure_wall_blocking(&mut resources);
+
+        assert!(
+            (resources.influence_grid.wall_blocking_at(6, 5) - config::BUILDING_SHELTER_WALL_BLOCK)
+                .abs()
+                < 1e-6
+        );
+        assert_eq!(resources.influence_grid.wall_blocking_at(5, 6), 0.0);
     }
 }
