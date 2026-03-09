@@ -2,11 +2,11 @@
 
 ## 1. A-1 Authoritative Path
 
-- 전환 파일: `rust/crates/sim-bridge/src/lib.rs`, `rust/crates/sim-bridge/src/runtime_registry.rs`, `rust/crates/sim-test/src/main.rs`, `rust/tests/data_loading_test.rs`
+- 전환 파일: `rust/crates/sim-bridge/src/lib.rs`, `rust/crates/sim-bridge/src/runtime_registry.rs`, `rust/crates/sim-test/src/main.rs`, `rust/crates/sim-data/tests/ron_registry_test.rs`
 - 결과: `DataRegistry::load_from_directory()`가 런타임과 headless 테스트의 authoritative RON 경로가 됨
 - RON 경로: `rust/crates/sim-data/data`
-- JSON 로더: 병렬 유지. 런타임 호환을 위해 `personality_distribution`와 `name_generator` bootstrap만 legacy JSON에서 계속 로드
-- 회귀 방지: 기존 `load_all()` 기반 JSON 테스트는 유지하고, RON registry 전용 테스트를 병행 추가
+- JSON 로더: 병렬 유지. 런타임 호환을 위해 `load_personality_distribution()`와 `load_name_cultures()`만 legacy JSON에서 계속 로드
+- 회귀 방지: 기존 `load_all()` 기반 JSON 테스트는 유지하고, 실행되는 `sim-data` integration test에 authoritative RON fixture 검증을 추가
 
 ## 2. GDScript 계획
 
@@ -19,7 +19,7 @@
 ## 3. sim-core 정리
 
 - `Skills.entries`: `HashMap` -> `BTreeMap` 전환
-- `Values`: 수동 serde 구현 제거, derive 기반 직렬화/역직렬화로 정리
+- `Values`: `[f64; 33]` serde 한계 때문에 수동 구현 유지, 대신 TODO와 roundtrip 테스트로 상태를 명시
 - `f32` 마킹: 5개 컴포넌트 파일에 `TODO(v3.1)` 추가
 - 남아 있는 `pub ...: f32` 필드: 23개
 - `Social`: `Vec` 기반 관계 저장소는 영향 범위가 커서 이번 단계에서는 `TODO(v3.1)`만 추가

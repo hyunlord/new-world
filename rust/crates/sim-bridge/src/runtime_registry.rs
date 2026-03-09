@@ -4,7 +4,10 @@ use std::sync::{Arc, Mutex};
 
 use serde::Deserialize;
 use sim_core::{config, config::GameConfig, GameCalendar, WorldMap};
-use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
+use sim_data::{
+    load_name_cultures, load_personality_distribution, DataRegistry, NameGenerator,
+    PersonalityDistribution,
+};
 use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
@@ -203,10 +206,11 @@ impl RuntimeState {
 pub(crate) fn load_legacy_runtime_bootstrap(
     data_dir: &Path,
 ) -> Result<LegacyRuntimeBootstrap, sim_data::DataError> {
-    let data = sim_data::load_all(data_dir)?;
+    let personality_distribution = load_personality_distribution(data_dir)?;
+    let name_cultures = load_name_cultures(data_dir);
     Ok(LegacyRuntimeBootstrap {
-        personality_distribution: data.personality_distribution,
-        name_generator: NameGenerator::new(data.name_cultures),
+        personality_distribution,
+        name_generator: NameGenerator::new(name_cultures),
     })
 }
 
@@ -612,4 +616,82 @@ pub(crate) fn register_supported_rust_system(
         .rust_registered_systems
         .insert(system_key.to_string());
     true
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::path::{Path, PathBuf};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn temp_dir(name: &str) -> PathBuf {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock error")
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "worldsim_runtime_registry_{}_{}_{}",
+            name,
+            std::process::id(),
+            nonce
+        ));
+        fs::create_dir_all(&path).expect("failed to create temp dir");
+        path
+    }
+
+    fn write_json(path: &Path, content: &str) {
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).expect("failed to create json parent");
+        }
+        fs::write(path, content).expect("failed to write json");
+    }
+
+    #[test]
+    fn legacy_runtime_bootstrap_only_requires_personality_and_names() {
+        let temp = temp_dir("bootstrap_minimal");
+        write_json(
+            &temp.join("species/human/personality/distribution.json"),
+            r#"{
+                "sd": 0.25,
+                "correlation_matrix": {
+                    "axes_order": ["H", "E", "X", "A", "C", "O"],
+                    "matrix": [
+                        [1.00, 0.12, -0.11, 0.26, 0.18, 0.21],
+                        [0.12, 1.00, -0.13, -0.08, 0.15, -0.10],
+                        [-0.11, -0.13, 1.00, 0.05, 0.10, 0.08],
+                        [0.26, -0.08, 0.05, 1.00, 0.01, 0.03],
+                        [0.18, 0.15, 0.10, 0.01, 1.00, 0.03],
+                        [0.21, -0.10, 0.08, 0.03, 0.03, 1.00]
+                    ]
+                },
+                "heritability": {
+                    "H": 0.45, "E": 0.58, "X": 0.57, "A": 0.47, "C": 0.52, "O": 0.63
+                },
+                "sex_difference_d": {
+                    "H": 0.41, "E": 0.96, "X": 0.10, "A": 0.28, "C": 0.00, "O": -0.04
+                },
+                "maturation": {
+                    "H": {"target_shift": 1.0, "age_range": [18, 60]},
+                    "E": {"target_shift": 0.3, "age_range": [18, 60]},
+                    "X": {"target_shift": 0.3, "age_range": [18, 60]},
+                    "A": {"target_shift": 0.0, "age_range": [18, 60]},
+                    "C": {"target_shift": 0.0, "age_range": [18, 60]},
+                    "O": {"target_shift": 0.0, "age_range": [18, 60]}
+                },
+                "facet_spread": 0.75,
+                "ou_parameters": {
+                    "theta": 0.03,
+                    "sigma": 0.03
+                }
+            }"#,
+        );
+
+        let bootstrap = load_legacy_runtime_bootstrap(&temp)
+            .expect("bootstrap should not require the full JSON bundle");
+
+        assert!((bootstrap.personality_distribution.sd - 0.25).abs() < f64::EPSILON);
+
+        let _ = fs::remove_dir_all(temp);
+    }
 }
