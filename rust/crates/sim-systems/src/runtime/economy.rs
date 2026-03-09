@@ -9,7 +9,7 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, BuildingId, ChannelId, CopingStrategyId, EmitterRecord,
+    ActionType, AttachmentType, Building, BuildingId, ChannelId, CopingStrategyId, EmitterRecord,
     EmotionType, EntityId, FalloffType, GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType,
     MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass,
     TechState, ValueType,
@@ -98,6 +98,36 @@ const JOB_ASSIGNMENT_CRISIS_RATIOS: [f32; 4] = [0.6, 0.2, 0.1, 0.1];
 const JOB_ASSIGNMENT_DEFAULT_RATIOS: [f32; 4] = [0.5, 0.25, 0.15, 0.1];
 const JOB_ASSIGNMENT_CRISIS_FOOD_PER_ALIVE: f32 = 1.5;
 const JOB_ASSIGNMENT_REBALANCE_THRESHOLD: f32 = 1.5;
+const BUILDING_TYPE_STOCKPILE: &str = "stockpile";
+const BUILDING_TYPE_CAMPFIRE: &str = "campfire";
+const BUILDING_TYPE_SHELTER: &str = "shelter";
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum EarlyStructurePlan {
+    Stockpile,
+    Campfire,
+    Shelter,
+}
+
+impl EarlyStructurePlan {
+    #[inline]
+    fn building_type(self) -> &'static str {
+        match self {
+            Self::Stockpile => BUILDING_TYPE_STOCKPILE,
+            Self::Campfire => BUILDING_TYPE_CAMPFIRE,
+            Self::Shelter => BUILDING_TYPE_SHELTER,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+struct SettlementConstructionSnapshot {
+    has_stockpile: bool,
+    has_campfire: bool,
+    has_incomplete_site: bool,
+    complete_shelter_count: usize,
+    has_incomplete_shelter: bool,
+}
 
 #[inline]
 fn job_assignment_job_index(job: &str) -> Option<usize> {
@@ -107,6 +137,305 @@ fn job_assignment_job_index(job: &str) -> Option<usize> {
         "builder" => Some(2),
         "miner" => Some(3),
         _ => None,
+    }
+}
+
+#[inline]
+fn collect_alive_adult_counts(world: &World) -> HashMap<SettlementId, usize> {
+    let mut counts: HashMap<SettlementId, usize> = HashMap::new();
+    let mut query = world.query::<(Option<&Age>, Option<&Identity>)>();
+    for (_, (age_opt, identity_opt)) in &mut query {
+        let Some(age) = age_opt else {
+            continue;
+        };
+        if !age.alive || age.stage != GrowthStage::Adult {
+            continue;
+        }
+        let Some(settlement_id) = identity_opt.and_then(|identity| identity.settlement_id) else {
+            continue;
+        };
+        *counts.entry(settlement_id).or_insert(0) += 1;
+    }
+    counts
+}
+
+#[inline]
+fn settlement_construction_snapshot(
+    resources: &SimResources,
+    settlement_id: SettlementId,
+) -> SettlementConstructionSnapshot {
+    let mut snapshot = SettlementConstructionSnapshot::default();
+    for building in resources.buildings.values() {
+        if building.settlement_id != settlement_id {
+            continue;
+        }
+        if !building.is_complete {
+            snapshot.has_incomplete_site = true;
+        }
+        match building.building_type.as_str() {
+            BUILDING_TYPE_STOCKPILE => snapshot.has_stockpile = true,
+            BUILDING_TYPE_CAMPFIRE => snapshot.has_campfire = true,
+            BUILDING_TYPE_SHELTER => {
+                if building.is_complete {
+                    snapshot.complete_shelter_count += 1;
+                } else {
+                    snapshot.has_incomplete_shelter = true;
+                }
+            }
+            _ => {}
+        }
+    }
+    snapshot
+}
+
+#[inline]
+fn settlement_can_afford_plan(settlement: &sim_core::Settlement, plan: EarlyStructurePlan) -> bool {
+    match plan {
+        EarlyStructurePlan::Stockpile => {
+            settlement.stockpile_wood >= config::BUILDING_STOCKPILE_COST_WOOD
+        }
+        EarlyStructurePlan::Campfire => {
+            settlement.stockpile_wood >= config::BUILDING_CAMPFIRE_COST_WOOD
+        }
+        EarlyStructurePlan::Shelter => {
+            settlement.stockpile_wood >= config::BUILDING_SHELTER_COST_WOOD
+                && settlement.stockpile_stone >= config::BUILDING_SHELTER_COST_STONE
+        }
+    }
+}
+
+#[inline]
+fn choose_early_structure_plan(
+    settlement: &sim_core::Settlement,
+    alive_adults: usize,
+    snapshot: SettlementConstructionSnapshot,
+) -> Option<EarlyStructurePlan> {
+    if snapshot.has_incomplete_site {
+        return None;
+    }
+    if !snapshot.has_stockpile
+        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Stockpile)
+    {
+        return Some(EarlyStructurePlan::Stockpile);
+    }
+    if !snapshot.has_campfire
+        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Campfire)
+    {
+        return Some(EarlyStructurePlan::Campfire);
+    }
+    let shelter_capacity = snapshot.complete_shelter_count * config::BUILDING_SHELTER_CAPACITY;
+    if shelter_capacity < alive_adults
+        && !snapshot.has_incomplete_shelter
+        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Shelter)
+    {
+        return Some(EarlyStructurePlan::Shelter);
+    }
+    None
+}
+
+#[inline]
+fn building_site_is_available(resources: &SimResources, x: i32, y: i32) -> bool {
+    if !resources.map.in_bounds(x, y) {
+        return false;
+    }
+    if !resources.map.get(x as u32, y as u32).passable {
+        return false;
+    }
+    for building in resources.buildings.values() {
+        if (building.x - x).abs() <= config::BUILDING_MIN_SPACING
+            && (building.y - y).abs() <= config::BUILDING_MIN_SPACING
+        {
+            return false;
+        }
+    }
+    true
+}
+
+#[inline]
+fn find_build_site(resources: &SimResources, origin_x: i32, origin_y: i32) -> Option<(i32, i32)> {
+    let search_radius = config::SETTLEMENT_BUILD_RADIUS.max(1);
+    for radius in 1..=search_radius {
+        for dy in -radius..=radius {
+            for dx in -radius..=radius {
+                if dx.abs() != radius && dy.abs() != radius {
+                    continue;
+                }
+                let x = origin_x + dx;
+                let y = origin_y + dy;
+                if building_site_is_available(resources, x, y) {
+                    return Some((x, y));
+                }
+            }
+        }
+    }
+    None
+}
+
+#[inline]
+fn next_building_id(resources: &SimResources) -> BuildingId {
+    BuildingId(
+        resources
+            .buildings
+            .keys()
+            .map(|building_id| building_id.0)
+            .max()
+            .unwrap_or(0)
+            + 1,
+    )
+}
+
+#[inline]
+fn place_early_structure_site(
+    resources: &mut SimResources,
+    settlement_id: SettlementId,
+    plan: EarlyStructurePlan,
+    tick: u64,
+) -> Option<BuildingId> {
+    let (origin_x, origin_y) = resources
+        .settlements
+        .get(&settlement_id)
+        .map(|settlement| (settlement.x, settlement.y))?;
+    let (site_x, site_y) = find_build_site(resources, origin_x, origin_y)?;
+    let building_id = next_building_id(resources);
+    let building = Building::new(
+        building_id,
+        plan.building_type().to_string(),
+        settlement_id,
+        site_x,
+        site_y,
+        tick,
+    );
+    resources.buildings.insert(building_id, building);
+    if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
+        if !settlement.buildings.contains(&building_id) {
+            settlement.buildings.push(building_id);
+        }
+    }
+    Some(building_id)
+}
+
+#[inline]
+fn ensure_early_construction_sites(world: &World, resources: &mut SimResources, tick: u64) {
+    let alive_adults = collect_alive_adult_counts(world);
+    let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+    settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+
+    for settlement_id in settlement_ids {
+        let Some(settlement) = resources.settlements.get(&settlement_id) else {
+            continue;
+        };
+        let snapshot = settlement_construction_snapshot(resources, settlement_id);
+        let Some(plan) = choose_early_structure_plan(
+            settlement,
+            alive_adults.get(&settlement_id).copied().unwrap_or(0),
+            snapshot,
+        ) else {
+            continue;
+        };
+        let _ = place_early_structure_site(resources, settlement_id, plan, tick);
+    }
+}
+
+#[inline]
+fn collect_pending_site_targets(
+    resources: &SimResources,
+) -> HashMap<SettlementId, HashSet<(i32, i32)>> {
+    let mut out: HashMap<SettlementId, HashSet<(i32, i32)>> = HashMap::new();
+    for building in resources.buildings.values() {
+        if building.is_complete {
+            continue;
+        }
+        out.entry(building.settlement_id)
+            .or_default()
+            .insert((building.x, building.y));
+    }
+    out
+}
+
+#[inline]
+fn retask_builder_for_construction(world: &mut World, entity: Entity) {
+    if let Ok(mut one) = world.query_one::<&mut Behavior>(entity) {
+        if let Some(behavior) = one.get() {
+            behavior.job = "builder".to_string();
+            behavior.current_action = ActionType::Idle;
+            behavior.action_target_entity = None;
+            behavior.action_target_x = None;
+            behavior.action_target_y = None;
+            behavior.action_progress = 0.0;
+            behavior.action_duration = 0;
+            behavior.action_timer = 0;
+        }
+    }
+}
+
+#[inline]
+fn ensure_pending_sites_have_builder(world: &mut World, resources: &SimResources) {
+    let pending_sites = collect_pending_site_targets(resources);
+    if pending_sites.is_empty() {
+        return;
+    }
+
+    #[derive(Default)]
+    struct SettlementBuilderStatus {
+        assigned_builder_count: usize,
+        available_builders: Vec<Entity>,
+        fallback_candidates: Vec<Entity>,
+    }
+
+    let mut statuses: HashMap<SettlementId, SettlementBuilderStatus> = HashMap::new();
+    let mut query = world.query::<(Option<&Age>, Option<&Identity>, &Behavior)>();
+    for (entity, (age_opt, identity_opt, behavior)) in &mut query {
+        let Some(age) = age_opt else {
+            continue;
+        };
+        if !age.alive || age.stage != GrowthStage::Adult {
+            continue;
+        }
+        let Some(settlement_id) = identity_opt.and_then(|identity| identity.settlement_id) else {
+            continue;
+        };
+        let Some(targets) = pending_sites.get(&settlement_id) else {
+            continue;
+        };
+        let status = statuses.entry(settlement_id).or_default();
+        let target_matches = matches!(
+            (behavior.action_target_x, behavior.action_target_y),
+            (Some(x), Some(y)) if targets.contains(&(x, y))
+        );
+        if behavior.job == "builder" {
+            if behavior.current_action == ActionType::Build && target_matches {
+                status.assigned_builder_count += 1;
+            } else {
+                status.available_builders.push(entity);
+            }
+            continue;
+        }
+        if behavior.occupation.is_empty()
+            || behavior.occupation == "none"
+            || behavior.occupation == "laborer"
+        {
+            status.fallback_candidates.push(entity);
+        }
+    }
+    drop(query);
+
+    let mut settlement_ids: Vec<SettlementId> = pending_sites.keys().copied().collect();
+    settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
+    for settlement_id in settlement_ids {
+        let Some(status) = statuses.get(&settlement_id) else {
+            continue;
+        };
+        if status.assigned_builder_count > 0 {
+            continue;
+        }
+        if let Some(entity) = status
+            .available_builders
+            .first()
+            .copied()
+            .or_else(|| status.fallback_candidates.first().copied())
+        {
+            retask_builder_for_construction(world, entity);
+        }
     }
 }
 
@@ -149,7 +478,7 @@ impl SimSystem for JobAssignmentRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let mut alive_count: i32 = 0;
         let mut job_counts: [i32; 4] = [0; 4];
         let mut unassigned: Vec<(Entity, GrowthStage)> = Vec::new();
@@ -248,6 +577,9 @@ impl SimSystem for JobAssignmentRuntimeSystem {
                 }
             }
         }
+
+        ensure_early_construction_sites(world, resources, tick);
+        ensure_pending_sites_have_builder(world, resources);
     }
 }
 
@@ -933,7 +1265,7 @@ impl SimSystem for BuildingEffectRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sim_core::components::{Age, Behavior, Position, Skills};
+    use sim_core::components::{Age, Behavior, Identity, Position, Skills};
     use sim_core::config::GameConfig;
     use sim_core::{
         ActionType, Building, BuildingId, GameCalendar, GrowthStage, SettlementId, WorldMap,
@@ -968,6 +1300,86 @@ mod tests {
                 < 1e-6
         );
         assert_eq!(resources.influence_grid.wall_blocking_at(5, 6), 0.0);
+    }
+
+    #[test]
+    fn job_assignment_runtime_system_places_campfire_site_and_promotes_builder() {
+        let game_config = GameConfig::default();
+        let calendar = GameCalendar::new(&game_config);
+        let mut resources = SimResources::new(calendar, WorldMap::new(18, 18, 11), 77);
+        let settlement_id = SettlementId(1);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "alpha".to_string(), 9, 9, 0);
+        settlement.stockpile_food = 20.0;
+        settlement.stockpile_wood = 3.0;
+        settlement.stockpile_stone = 1.0;
+        settlement.buildings.push(BuildingId(1));
+        resources.settlements.insert(settlement_id, settlement);
+        resources.buildings.insert(
+            BuildingId(1),
+            Building {
+                id: BuildingId(1),
+                building_type: "stockpile".to_string(),
+                settlement_id,
+                x: 9,
+                y: 9,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut world = World::new();
+        for offset in 0..3 {
+            world.spawn((
+                Age {
+                    stage: GrowthStage::Adult,
+                    ..Age::default()
+                },
+                Identity {
+                    settlement_id: Some(settlement_id),
+                    name: format!("worker_{offset}"),
+                    ..Identity::default()
+                },
+                Position::new(9 + offset, 10),
+                Behavior {
+                    job: "gatherer".to_string(),
+                    current_action: ActionType::Forage,
+                    action_timer: 5,
+                    action_duration: 5,
+                    ..Behavior::default()
+                },
+            ));
+        }
+
+        let mut system =
+            JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL,
+        );
+
+        let campfire = resources
+            .buildings
+            .values()
+            .find(|building| building.building_type == "campfire" && !building.is_complete)
+            .expect("job assignment should place an early campfire site");
+        assert_eq!(campfire.settlement_id, settlement_id);
+
+        let mut builder_count = 0_usize;
+        let mut query = world.query::<(&Identity, &Behavior)>();
+        for (_, (identity, behavior)) in &mut query {
+            if identity.settlement_id != Some(settlement_id) {
+                continue;
+            }
+            if behavior.job == "builder" {
+                builder_count += 1;
+                assert_eq!(behavior.current_action, ActionType::Idle);
+                assert_eq!(behavior.action_timer, 0);
+            }
+        }
+        assert_eq!(builder_count, 1);
     }
 
     #[test]

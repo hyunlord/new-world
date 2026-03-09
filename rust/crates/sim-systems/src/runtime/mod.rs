@@ -22,32 +22,18 @@ mod world;
 
 // ---- biology ----
 pub use biology::{
-    AceTrackerRuntimeSystem,
-    AgeRuntimeSystem,
-    AttachmentRuntimeSystem,
-    ChildcareRuntimeSystem,
-    IntergenerationalRuntimeSystem,
-    MortalityRuntimeSystem,
-    ParentingRuntimeSystem,
-    PersonalityGeneratorRuntimeSystem,
-    PopulationRuntimeSystem,
+    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, ChildcareRuntimeSystem,
+    IntergenerationalRuntimeSystem, MortalityRuntimeSystem, ParentingRuntimeSystem,
+    PersonalityGeneratorRuntimeSystem, PopulationRuntimeSystem,
 };
 
 // ---- cognition ----
-pub use cognition::{
-    BehaviorRuntimeSystem,
-    IntelligenceRuntimeSystem,
-    MemoryRuntimeSystem,
-};
+pub use cognition::{BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem};
 
 // ---- economy ----
 pub use economy::{
-    BuildingEffectRuntimeSystem,
-    ConstructionRuntimeSystem,
-    GatheringRuntimeSystem,
-    JobAssignmentRuntimeSystem,
-    JobSatisfactionRuntimeSystem,
-    ResourceRegenSystem,
+    BuildingEffectRuntimeSystem, ConstructionRuntimeSystem, GatheringRuntimeSystem,
+    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
 };
 
 // ---- llm ----
@@ -56,51 +42,27 @@ pub use llm_response_system::{drain_and_apply_llm_responses, LlmResponseRuntimeS
 pub use llm_timeout_system::LlmTimeoutRuntimeSystem;
 
 // ---- needs ----
-pub use needs::{
-    ChildStressProcessorRuntimeSystem,
-    NeedsRuntimeSystem,
-    UpperNeedsRuntimeSystem,
-};
+pub use needs::{ChildStressProcessorRuntimeSystem, NeedsRuntimeSystem, UpperNeedsRuntimeSystem};
 
 // ---- psychology ----
 pub use psychology::{
-    ContagionRuntimeSystem,
-    CopingRuntimeSystem,
-    EmotionRuntimeSystem,
-    MentalBreakRuntimeSystem,
-    MoraleRuntimeSystem,
-    PersonalityMaturationRuntimeSystem,
-    StressRuntimeSystem,
-    TraitCondition,
-    TraitConditionSource,
-    TraitDefinition,
-    TraitDirection,
-    TraitRuntimeSystem,
-    TraitViolationRuntimeSystem,
-    TraumaScarRuntimeSystem,
+    ContagionRuntimeSystem, CopingRuntimeSystem, EmotionRuntimeSystem, MentalBreakRuntimeSystem,
+    MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem, StressRuntimeSystem, TraitCondition,
+    TraitConditionSource, TraitDefinition, TraitDirection, TraitRuntimeSystem,
+    TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
 };
 
 // ---- record ----
 pub use record::{
-    ChronicleRuntimeSystem,
-    StatSyncRuntimeSystem,
-    StatThresholdRuntimeSystem,
-    StatsRecorderRuntimeSystem,
-    STAT_THRESHOLD_FLAG_HUNGER_LOW,
+    ChronicleRuntimeSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,
+    StatsRecorderRuntimeSystem, STAT_THRESHOLD_FLAG_HUNGER_LOW,
 };
 
 // ---- social ----
 pub use social::{
-    EconomicTendencyRuntimeSystem,
-    FamilyRuntimeSystem,
-    LeaderRuntimeSystem,
-    NetworkRuntimeSystem,
-    OccupationRuntimeSystem,
-    ReputationRuntimeSystem,
-    SettlementCultureRuntimeSystem,
-    SocialEventRuntimeSystem,
-    StratificationMonitorRuntimeSystem,
-    TitleRuntimeSystem,
+    EconomicTendencyRuntimeSystem, FamilyRuntimeSystem, LeaderRuntimeSystem, NetworkRuntimeSystem,
+    OccupationRuntimeSystem, ReputationRuntimeSystem, SettlementCultureRuntimeSystem,
+    SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, TitleRuntimeSystem,
     ValueRuntimeSystem,
 };
 
@@ -111,62 +73,48 @@ pub use story_sifter::StorySifterRuntimeSystem;
 
 // ---- world ----
 pub use world::{
-    MigrationRuntimeSystem,
-    MovementRuntimeSystem,
-    TechDiscoveryRuntimeSystem,
-    TechMaintenanceRuntimeSystem,
-    TechPropagationRuntimeSystem,
-    TechUtilizationRuntimeSystem,
+    MigrationRuntimeSystem, MovementRuntimeSystem, TechDiscoveryRuntimeSystem,
+    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
     TensionRuntimeSystem,
 };
 
 #[cfg(test)]
 mod tests {
     use super::{
-        AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
-        BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
-        ChildcareRuntimeSystem, ChronicleRuntimeSystem, ContagionRuntimeSystem,
-        BehaviorRuntimeSystem,
-        ConstructionRuntimeSystem,
-        EconomicTendencyRuntimeSystem, LeaderRuntimeSystem, MovementRuntimeSystem,
-        FamilyRuntimeSystem,
-        GatheringRuntimeSystem,
-        IntergenerationalRuntimeSystem,
-        ParentingRuntimeSystem,
+        AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
+        BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
+        ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem,
+        CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
+        FamilyRuntimeSystem, GatheringRuntimeSystem, IntelligenceRuntimeSystem,
+        IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
+        LeaderRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
+        MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
+        NetworkRuntimeSystem, OccupationRuntimeSystem, ParentingRuntimeSystem,
         PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
-        SettlementCultureRuntimeSystem,
-        StatSyncRuntimeSystem,
-        StatThresholdRuntimeSystem,
-        STAT_THRESHOLD_FLAG_HUNGER_LOW,
-        StatsRecorderRuntimeSystem,
-        TraitCondition, TraitConditionSource, TraitDefinition, TraitDirection, TraitRuntimeSystem,
-        CopingRuntimeSystem, EmotionRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
-        JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, MoraleRuntimeSystem,
-        MigrationRuntimeSystem,
-        MentalBreakRuntimeSystem, MortalityRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-        OccupationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SocialEventRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
-        TechDiscoveryRuntimeSystem,
-        TechMaintenanceRuntimeSystem,
-        TechPropagationRuntimeSystem,
-        TechUtilizationRuntimeSystem,
-        TensionRuntimeSystem, TitleRuntimeSystem, TraitViolationRuntimeSystem,
+        PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+        SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
+        StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, SteeringRuntimeSystem,
+        StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
+        TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
+        TensionRuntimeSystem, TitleRuntimeSystem, TraitCondition, TraitConditionSource,
+        TraitDefinition, TraitDirection, TraitRuntimeSystem, TraitViolationRuntimeSystem,
         TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+        STAT_THRESHOLD_FLAG_HUNGER_LOW,
     };
     use crate::body;
     use hecs::World;
     use sim_core::components::{
         Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
-        Needs, Personality, Position, SkillEntry, Skills, Social, Stress, StressTrace, Traits,
-        Values, Intelligence, Memory, MemoryEntry, TraumaScar,
+        Intelligence, Memory, MemoryEntry, Needs, Personality, Position, SkillEntry, Skills,
+        Social, Stress, StressTrace, Traits, TraumaScar, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
-        AttachmentType, Building, BuildingId,
-        config::GameConfig, ActionType, ChannelId, EmotionType, GameCalendar, GrowthStage, HexacoAxis,
-        HexacoFacet, CopingStrategyId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-        SettlementId, Sex, SocialClass, TechState, ValueType, WorldMap,
+        config::GameConfig, ActionType, AttachmentType, Building, BuildingId, ChannelId,
+        CopingStrategyId, EmotionType, GameCalendar, GrowthStage, HexacoAxis, HexacoFacet,
+        IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex,
+        SocialClass, TechState, ValueType, WorldMap,
     };
     use sim_engine::{SimEngine, SimResources, SimSystem};
 
@@ -261,11 +209,23 @@ mod tests {
         let updated = world
             .get::<&Needs>(entity)
             .expect("updated needs component should be queryable");
-        assert!((updated.get(NeedType::Hunger) as f32 - (0.6 - decays[0]).clamp(0.0, 1.0)).abs() < 1e-6);
-        assert!((updated.get(NeedType::Belonging) as f32 - (0.7 - decays[2]).clamp(0.0, 1.0)).abs() < 1e-6);
-        assert!((updated.get(NeedType::Thirst) as f32 - (0.8 - decays[3]).clamp(0.0, 1.0)).abs() < 1e-6);
-        assert!((updated.get(NeedType::Warmth) as f32 - (0.9 - decays[4]).clamp(0.0, 1.0)).abs() < 1e-6);
-        assert!((updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs() < 1e-6);
+        assert!(
+            (updated.get(NeedType::Hunger) as f32 - (0.6 - decays[0]).clamp(0.0, 1.0)).abs() < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Belonging) as f32 - (0.7 - decays[2]).clamp(0.0, 1.0)).abs()
+                < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Thirst) as f32 - (0.8 - decays[3]).clamp(0.0, 1.0)).abs() < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Warmth) as f32 - (0.9 - decays[4]).clamp(0.0, 1.0)).abs() < 1e-6
+        );
+        assert!(
+            (updated.get(NeedType::Safety) as f32 - (0.85 - decays[5]).clamp(0.0, 1.0)).abs()
+                < 1e-6
+        );
         assert!((updated.energy as f32 - expected_energy).abs() < 1e-6);
         assert!((updated.get(NeedType::Sleep) as f32 - expected_energy).abs() < 1e-6);
     }
@@ -274,13 +234,8 @@ mod tests {
     fn childcare_runtime_system_feeds_hungry_child_and_decrements_stockpile() {
         let mut world = World::new();
         let mut resources = make_resources();
-        let mut settlement = sim_core::Settlement::new(
-            SettlementId(1),
-            "alpha".to_string(),
-            0,
-            0,
-            0,
-        );
+        let mut settlement =
+            sim_core::Settlement::new(SettlementId(1), "alpha".to_string(), 0, 0, 0);
         settlement.stockpile_food = 1.5;
         resources.settlements.insert(settlement.id, settlement);
 
@@ -297,7 +252,11 @@ mod tests {
         let entity = world.spawn((age, needs, identity));
 
         let mut system = ChildcareRuntimeSystem::new(8, sim_core::config::CHILDCARE_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::CHILDCARE_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::CHILDCARE_TICK_INTERVAL,
+        );
 
         let updated_needs = world
             .get::<&Needs>(entity)
@@ -319,13 +278,8 @@ mod tests {
     fn childcare_runtime_system_prioritizes_more_hungry_child_when_food_limited() {
         let mut world = World::new();
         let mut resources = make_resources();
-        let mut settlement = sim_core::Settlement::new(
-            SettlementId(3),
-            "beta".to_string(),
-            0,
-            0,
-            0,
-        );
+        let mut settlement =
+            sim_core::Settlement::new(SettlementId(3), "beta".to_string(), 0, 0, 0);
         settlement.stockpile_food = 0.5;
         resources.settlements.insert(settlement.id, settlement);
 
@@ -339,7 +293,8 @@ mod tests {
             settlement_id: Some(SettlementId(3)),
             ..Identity::default()
         };
-        let low_hunger_entity = world.spawn((low_hunger_age, low_hunger_needs, low_hunger_identity));
+        let low_hunger_entity =
+            world.spawn((low_hunger_age, low_hunger_needs, low_hunger_identity));
 
         let high_hunger_age = Age {
             stage: GrowthStage::Toddler,
@@ -355,7 +310,11 @@ mod tests {
             world.spawn((high_hunger_age, high_hunger_needs, high_hunger_identity));
 
         let mut system = ChildcareRuntimeSystem::new(8, sim_core::config::CHILDCARE_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::CHILDCARE_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::CHILDCARE_TICK_INTERVAL,
+        );
 
         let low_hunger_after = world
             .get::<&Needs>(low_hunger_entity)
@@ -433,13 +392,17 @@ mod tests {
         let mut system = MentalBreakRuntimeSystem::new(35, 1);
         for _ in 0..200 {
             system.run(&mut world, &mut resources, 1);
-            let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+            let updated = world
+                .get::<&Stress>(entity)
+                .expect("stress should be queryable");
             if updated.active_mental_break.is_some() {
                 break;
             }
         }
 
-        let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("stress should be queryable");
         assert!(updated.active_mental_break.is_some());
         assert!(updated.mental_break_remaining > 0);
         assert!(updated.mental_break_count >= 1);
@@ -465,7 +428,9 @@ mod tests {
         let mut system = MentalBreakRuntimeSystem::new(35, 1);
         system.run(&mut world, &mut resources, 1);
 
-        let updated = world.get::<&Stress>(entity).expect("stress should be queryable");
+        let updated = world
+            .get::<&Stress>(entity)
+            .expect("stress should be queryable");
         assert!(updated.active_mental_break.is_none());
         assert_eq!(updated.mental_break_remaining, 0);
         assert!(updated.level <= 0.90);
@@ -634,7 +599,9 @@ mod tests {
         let mut system = CopingRuntimeSystem::new(42, 30);
         system.run(&mut world, &mut resources, 30);
 
-        let updated = world.get::<&Coping>(entity).expect("coping should be queryable");
+        let updated = world
+            .get::<&Coping>(entity)
+            .expect("coping should be queryable");
         let remaining = updated
             .strategy_cooldowns
             .get(&CopingStrategyId::Denial)
@@ -670,7 +637,9 @@ mod tests {
             system.run(&mut world, &mut resources, step * 30);
         }
 
-        let updated = world.get::<&Coping>(entity).expect("coping should be queryable");
+        let updated = world
+            .get::<&Coping>(entity)
+            .expect("coping should be queryable");
         assert!(updated.active_strategy.is_some());
         let total_uses: u32 = updated.usage_counts.values().copied().sum();
         assert!(total_uses >= 1);
@@ -835,7 +804,10 @@ mod tests {
         assert!((0.0..=1.0).contains(&updated.reputation_local));
         assert!((0.0..=1.0).contains(&updated.reputation_regional));
         assert!(
-            updated.reputation_tags.iter().any(|tag| tag == "suspect" || tag == "outcast"),
+            updated
+                .reputation_tags
+                .iter()
+                .any(|tag| tag == "suspect" || tag == "outcast"),
             "negative reputation tier tag should be assigned"
         );
     }
@@ -1006,8 +978,13 @@ mod tests {
             female_identity,
         ));
 
-        let mut system = EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::ECON_TICK_INTERVAL);
+        let mut system =
+            EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::ECON_TICK_INTERVAL,
+        );
 
         let male_updated = world
             .get::<&Economic>(male)
@@ -1071,8 +1048,13 @@ mod tests {
         };
         let entity = world.spawn((economic, personality, values, needs, age));
 
-        let mut system = EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::ECON_TICK_INTERVAL);
+        let mut system =
+            EconomicTendencyRuntimeSystem::new(39, sim_core::config::ECON_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::ECON_TICK_INTERVAL,
+        );
 
         let updated = world
             .get::<&Economic>(entity)
@@ -1168,7 +1150,10 @@ mod tests {
         let updated = world
             .get::<&Intelligence>(entity)
             .expect("intelligence should be queryable");
-        assert!((updated.ace_penalty as f32 - sim_core::config::INTEL_ACE_PENALTY_MAJOR as f32).abs() < 1e-6);
+        assert!(
+            (updated.ace_penalty as f32 - sim_core::config::INTEL_ACE_PENALTY_MAJOR as f32).abs()
+                < 1e-6
+        );
         assert!(
             updated.values[IntelligenceType::Logical as usize]
                 < updated.values[IntelligenceType::Linguistic as usize]
@@ -1235,7 +1220,8 @@ mod tests {
         });
 
         let entity = world.spawn((memory,));
-        let mut system = MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
+        let mut system =
+            MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
         system.run(
             &mut world,
             &mut resources,
@@ -1245,20 +1231,24 @@ mod tests {
         let updated = world
             .get::<&Memory>(entity)
             .expect("memory component should be queryable");
-        assert_eq!(updated.short_term.len(), sim_core::config::MEMORY_WORKING_MAX);
-        assert!(updated.short_term.iter().all(|entry| entry.event_type != "forgettable"));
-        assert!(
-            updated
-                .short_term
-                .iter()
-                .any(|entry| entry.event_type == "proposal" && entry.is_permanent)
+        assert_eq!(
+            updated.short_term.len(),
+            sim_core::config::MEMORY_WORKING_MAX
         );
-        assert!(
-            updated
-                .permanent
-                .iter()
-                .any(|entry| entry.event_type == "proposal" && entry.tick == 9_999 && entry.is_permanent)
-        );
+        assert!(updated
+            .short_term
+            .iter()
+            .all(|entry| entry.event_type != "forgettable"));
+        assert!(updated
+            .short_term
+            .iter()
+            .any(|entry| entry.event_type == "proposal" && entry.is_permanent));
+        assert!(updated
+            .permanent
+            .iter()
+            .any(|entry| entry.event_type == "proposal"
+                && entry.tick == 9_999
+                && entry.is_permanent));
     }
 
     #[test]
@@ -1301,7 +1291,8 @@ mod tests {
         });
 
         let entity = world.spawn((memory,));
-        let mut system = MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
+        let mut system =
+            MemoryRuntimeSystem::new(18, sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS);
         let tick = sim_core::config::MEMORY_COMPRESS_INTERVAL_TICKS * 3;
         system.run(&mut world, &mut resources, tick);
 
@@ -1310,7 +1301,10 @@ mod tests {
             .expect("memory component should be queryable");
         assert_eq!(updated.short_term.len(), 2);
         assert_eq!(updated.last_compression_tick, tick);
-        assert!(updated.short_term.iter().any(|entry| entry.event_type == "casual_talk"));
+        assert!(updated
+            .short_term
+            .iter()
+            .any(|entry| entry.event_type == "casual_talk"));
 
         let summary = updated
             .short_term
@@ -1320,7 +1314,11 @@ mod tests {
         assert_eq!(summary.target_id, Some(42));
         assert_eq!(summary.tick, 10);
 
-        let decayed = body::memory_decay_intensity(0.90, sim_core::config::memory_decay_rate(0.90) as f32, 1.0);
+        let decayed = body::memory_decay_intensity(
+            0.90,
+            sim_core::config::memory_decay_rate(0.90) as f32,
+            1.0,
+        );
         let expected_summary = body::memory_summary_intensity(decayed, 0.70);
         assert!((summary.current_intensity as f32 - expected_summary).abs() < 1e-5);
     }
@@ -1461,7 +1459,8 @@ mod tests {
         };
         let infant = world.spawn((infant_age, infant_behavior));
 
-        let mut system = JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        let mut system =
+            JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -1545,7 +1544,8 @@ mod tests {
         assert_eq!(before_builder, 5);
         assert_eq!(before_gatherer, 1);
 
-        let mut system = JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
+        let mut system =
+            JobAssignmentRuntimeSystem::new(8, sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -1587,7 +1587,11 @@ mod tests {
 
         let entity = world.spawn((social,));
         let mut system = NetworkRuntimeSystem::new(58, sim_core::config::REVOLUTION_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::REVOLUTION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::REVOLUTION_TICK_INTERVAL,
+        );
 
         let updated = world
             .get::<&Social>(entity)
@@ -1664,7 +1668,8 @@ mod tests {
         };
         let low_adult_entity = world.spawn((low_adult_age, low_adult_skills, low_adult_behavior));
 
-        let mut system = OccupationRuntimeSystem::new(36, sim_core::config::OCCUPATION_EVAL_INTERVAL);
+        let mut system =
+            OccupationRuntimeSystem::new(36, sim_core::config::OCCUPATION_EVAL_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -1715,14 +1720,17 @@ mod tests {
         needs.set(NeedType::Warmth, 0.30);
         let entity = world.spawn((Position::new(1, 1), needs));
 
-        let mut system = BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        let mut system =
+            BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
             sim_core::config::BUILDING_EFFECT_TICK_INTERVAL,
         );
 
-        let updated = world.get::<&Needs>(entity).expect("needs should be queryable");
+        let updated = world
+            .get::<&Needs>(entity)
+            .expect("needs should be queryable");
         assert!((updated.get(NeedType::Belonging) as f32 - 0.42).abs() < 1e-6);
         assert!((updated.get(NeedType::Warmth) as f32 - 0.30).abs() < 1e-6);
         drop(updated);
@@ -1773,7 +1781,9 @@ mod tests {
 
         let mut inside_needs = Needs::default();
         inside_needs.set(NeedType::Warmth, 0.20);
-        let inside = engine.world_mut().spawn((Position::new(5, 5), inside_needs));
+        let inside = engine
+            .world_mut()
+            .spawn((Position::new(5, 5), inside_needs));
 
         let mut open_needs = Needs::default();
         open_needs.set(NeedType::Warmth, 0.20);
@@ -1781,7 +1791,9 @@ mod tests {
 
         let mut blocked_needs = Needs::default();
         blocked_needs.set(NeedType::Warmth, 0.20);
-        let blocked = engine.world_mut().spawn((Position::new(7, 5), blocked_needs));
+        let blocked = engine
+            .world_mut()
+            .spawn((Position::new(7, 5), blocked_needs));
 
         engine.tick();
 
@@ -1811,7 +1823,10 @@ mod tests {
                 .abs()
                 < 1e-6
         );
-        assert_eq!(engine.resources().influence_grid.wall_blocking_at(5, 6), 0.0);
+        assert_eq!(
+            engine.resources().influence_grid.wall_blocking_at(5, 6),
+            0.0
+        );
 
         let inside_signal = engine
             .resources()
@@ -1843,8 +1858,12 @@ mod tests {
             .get::<&Needs>(blocked)
             .expect("blocked needs after second tick");
 
-        assert!(inside_after_second.get(NeedType::Warmth) > open_after_second.get(NeedType::Warmth));
-        assert!(open_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth));
+        assert!(
+            inside_after_second.get(NeedType::Warmth) > open_after_second.get(NeedType::Warmth)
+        );
+        assert!(
+            open_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth)
+        );
         assert!(open_after_second.get(NeedType::Warmth) > expected_after_first);
     }
 
@@ -1873,16 +1892,20 @@ mod tests {
         needs.set(NeedType::Safety, 0.10);
         let entity = world.spawn((Position::new(2, 0), needs));
 
-        let mut system = BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        let mut system =
+            BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
             sim_core::config::BUILDING_EFFECT_TICK_INTERVAL,
         );
 
-        let updated = world.get::<&Needs>(entity).expect("needs should be queryable");
+        let updated = world
+            .get::<&Needs>(entity)
+            .expect("needs should be queryable");
         assert!(
-            (updated.energy as f32 - (0.25 + sim_core::config::BUILDING_SHELTER_ENERGY_RESTORE as f32))
+            (updated.energy as f32
+                - (0.25 + sim_core::config::BUILDING_SHELTER_ENERGY_RESTORE as f32))
                 .abs()
                 < 1e-6
         );
@@ -1977,9 +2000,10 @@ mod tests {
         let mut resources = make_resources();
 
         let settlement_id = SettlementId(17);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "delta".to_string(), 0, 0, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "delta".to_string(), 0, 0, 0),
+        );
 
         let mut low_personality = Personality::default();
         low_personality.axes[HexacoAxis::X as usize] = 0.20;
@@ -2081,7 +2105,11 @@ mod tests {
         ));
 
         let mut system = LeaderRuntimeSystem::new(52, sim_core::config::LEADER_CHECK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::LEADER_CHECK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::LEADER_CHECK_INTERVAL,
+        );
 
         let settlement = resources
             .settlements
@@ -2243,7 +2271,11 @@ mod tests {
         ));
 
         let mut system = LeaderRuntimeSystem::new(52, sim_core::config::LEADER_CHECK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::LEADER_CHECK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::LEADER_CHECK_INTERVAL,
+        );
 
         let settlement_after = resources
             .settlements
@@ -2274,10 +2306,7 @@ mod tests {
         let mut skills = Skills::default();
         skills.entries.insert(
             "SKILL_FORAGING".to_string(),
-            SkillEntry {
-                level: 85,
-                xp: 0.0,
-            },
+            SkillEntry { level: 85, xp: 0.0 },
         );
         let social = Social {
             titles: vec!["TITLE_EXPERT_FORAGING".to_string()],
@@ -2303,9 +2332,15 @@ mod tests {
         }
 
         let mut system = TitleRuntimeSystem::new(37, sim_core::config::TITLE_EVAL_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::TITLE_EVAL_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TITLE_EVAL_INTERVAL,
+        );
 
-        let updated = world.get::<&Social>(entity).expect("social should be queryable");
+        let updated = world
+            .get::<&Social>(entity)
+            .expect("social should be queryable");
         assert!(updated.has_title("TITLE_ELDER"));
         assert!(updated.has_title("TITLE_MASTER_FORAGING"));
         assert!(!updated.has_title("TITLE_EXPERT_FORAGING"));
@@ -2326,10 +2361,7 @@ mod tests {
         let mut skills = Skills::default();
         skills.entries.insert(
             "SKILL_FORAGING".to_string(),
-            SkillEntry {
-                level: 20,
-                xp: 0.0,
-            },
+            SkillEntry { level: 20, xp: 0.0 },
         );
         let social = Social {
             titles: vec![
@@ -2352,9 +2384,15 @@ mod tests {
         ));
 
         let mut system = TitleRuntimeSystem::new(37, sim_core::config::TITLE_EVAL_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::TITLE_EVAL_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::TITLE_EVAL_INTERVAL,
+        );
 
-        let updated = world.get::<&Social>(entity).expect("social should be queryable");
+        let updated = world
+            .get::<&Social>(entity)
+            .expect("social should be queryable");
         assert!(!updated.has_title("TITLE_ELDER"));
         assert!(!updated.has_title("TITLE_CHIEF"));
         assert!(updated.has_title("TITLE_FORMER_CHIEF"));
@@ -2368,13 +2406,8 @@ mod tests {
         let mut resources = make_resources();
 
         let settlement_id = SettlementId(41);
-        let mut settlement = sim_core::Settlement::new(
-            settlement_id,
-            "strat-a".to_string(),
-            0,
-            0,
-            0,
-        );
+        let mut settlement =
+            sim_core::Settlement::new(settlement_id, "strat-a".to_string(), 0, 0, 0);
         settlement.stockpile_food = 120.0;
         resources.settlements.insert(settlement_id, settlement);
 
@@ -2453,8 +2486,13 @@ mod tests {
             settlement_mut.leader_id = Some(EntityId(leader_entity.id() as u64));
         }
 
-        let mut system = StratificationMonitorRuntimeSystem::new(90, sim_core::config::STRAT_TICK_INTERVAL);
-        system.run(&mut world, &mut resources, sim_core::config::STRAT_TICK_INTERVAL);
+        let mut system =
+            StratificationMonitorRuntimeSystem::new(90, sim_core::config::STRAT_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            sim_core::config::STRAT_TICK_INTERVAL,
+        );
 
         let settlement_after = resources
             .settlements
@@ -2495,11 +2533,10 @@ mod tests {
         beta.members = vec![EntityId(11), EntityId(12), EntityId(13), EntityId(14)];
         resources.settlements.insert(beta.id, beta);
 
-        resources
-            .tension_pairs
-            .insert("51:52".to_string(), 0.30);
+        resources.tension_pairs.insert("51:52".to_string(), 0.30);
 
-        let mut system = TensionRuntimeSystem::new(64, sim_core::config::TENSION_CHECK_INTERVAL_TICKS);
+        let mut system =
+            TensionRuntimeSystem::new(64, sim_core::config::TENSION_CHECK_INTERVAL_TICKS);
         system.run(
             &mut world,
             &mut resources,
@@ -2536,7 +2573,8 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(61);
-        let mut settlement = sim_core::Settlement::new(settlement_id, "core".to_string(), 12, 14, 0);
+        let mut settlement =
+            sim_core::Settlement::new(settlement_id, "core".to_string(), 12, 14, 0);
         settlement.stockpile_food = 120.0;
         resources.settlements.insert(settlement_id, settlement);
         resources.buildings.insert(
@@ -2582,7 +2620,8 @@ mod tests {
             .members = member_ids;
 
         let world_before = world.len();
-        let mut system = PopulationRuntimeSystem::new(50, sim_core::config::POPULATION_TICK_INTERVAL);
+        let mut system =
+            PopulationRuntimeSystem::new(50, sim_core::config::POPULATION_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -2664,7 +2703,8 @@ mod tests {
             .insert("fishing".to_string(), TechState::KnownLow);
         resources.settlements.insert(settlement_id, settlement);
 
-        let mut system = TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        let mut system =
+            TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
         system.run(
             &mut world,
             &mut resources,
@@ -2694,16 +2734,16 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(82);
-        let mut settlement = sim_core::Settlement::new(settlement_id, "lambda".to_string(), 8, 8, 0);
-        settlement.members = (0..6_u64)
-            .map(EntityId)
-            .collect();
+        let mut settlement =
+            sim_core::Settlement::new(settlement_id, "lambda".to_string(), 8, 8, 0);
+        settlement.members = (0..6_u64).map(EntityId).collect();
         settlement
             .tech_states
             .insert("weaving".to_string(), TechState::ForgottenRecent);
         resources.settlements.insert(settlement_id, settlement);
 
-        let mut system = TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
+        let mut system =
+            TechMaintenanceRuntimeSystem::new(63, sim_core::config::TECH_DISCOVERY_INTERVAL_TICKS);
         system.run(
             &mut world,
             &mut resources,
@@ -2810,7 +2850,10 @@ mod tests {
         let mut source_skills = Skills::default();
         source_skills.entries.insert(
             "SKILL_FORAGING".to_string(),
-            sim_core::components::SkillEntry { level: 100, xp: 0.0 },
+            sim_core::components::SkillEntry {
+                level: 100,
+                xp: 0.0,
+            },
         );
         let source_entity = world.spawn((
             Identity {
@@ -2844,7 +2887,8 @@ mod tests {
         target.members = vec![EntityId(target_entity.id() as u64)];
         resources.settlements.insert(target_id, target);
 
-        let mut system = TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
+        let mut system =
+            TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -2884,7 +2928,8 @@ mod tests {
             .insert("pottery".to_string(), TechState::Unknown);
         resources.settlements.insert(target_id, target);
 
-        let mut system = TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
+        let mut system =
+            TechPropagationRuntimeSystem::new(62, sim_core::config::TEACHING_TICK_INTERVAL);
         system.run(
             &mut world,
             &mut resources,
@@ -2917,9 +2962,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(91);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "wood".to_string(), 2, 3, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "wood".to_string(), 2, 3, 0),
+        );
 
         let entity = world.spawn((
             Behavior {
@@ -2959,7 +3005,10 @@ mod tests {
             .settlements
             .get(&settlement_id)
             .expect("settlement should exist");
-        assert!((settlement_after.stockpile_wood as f32 - sim_core::config::GATHER_AMOUNT as f32).abs() < 1e-6);
+        assert!(
+            (settlement_after.stockpile_wood as f32 - sim_core::config::GATHER_AMOUNT as f32).abs()
+                < 1e-6
+        );
         assert!(resources.event_bus.pending_count() >= 1);
     }
 
@@ -2978,9 +3027,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(92);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "food".to_string(), 1, 1, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "food".to_string(), 1, 1, 0),
+        );
 
         world.spawn((
             Behavior {
@@ -3030,9 +3080,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(93);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "build".to_string(), 4, 4, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "build".to_string(), 4, 4, 0),
+        );
 
         let building_id = BuildingId(901);
         resources.buildings.insert(
@@ -3053,7 +3104,10 @@ mod tests {
         let mut skills = Skills::default();
         skills.entries.insert(
             "SKILL_CONSTRUCTION".to_string(),
-            SkillEntry { level: 100, xp: 0.0 },
+            SkillEntry {
+                level: 100,
+                xp: 0.0,
+            },
         );
         world.spawn((
             Behavior {
@@ -3110,9 +3164,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(94);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "teen".to_string(), 4, 4, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "teen".to_string(), 4, 4, 0),
+        );
 
         let building_id = BuildingId(902);
         resources.buildings.insert(
@@ -3162,6 +3217,146 @@ mod tests {
     }
 
     #[test]
+    fn early_construction_loop_places_assigns_and_completes_a_campfire() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(12, 12, 211);
+        let resources = SimResources::new(calendar, map, 144);
+        let mut engine = SimEngine::new(resources);
+        engine.register(JobAssignmentRuntimeSystem::new(
+            8,
+            sim_core::config::JOB_ASSIGNMENT_TICK_INTERVAL,
+        ));
+        engine.register(BehaviorRuntimeSystem::new(
+            20,
+            sim_core::config::BEHAVIOR_TICK_INTERVAL as u64,
+        ));
+        engine.register(ConstructionRuntimeSystem::new(
+            28,
+            sim_core::config::CONSTRUCTION_TICK_INTERVAL,
+        ));
+        engine.register(SteeringRuntimeSystem::new(
+            sim_core::config::STEERING_SYSTEM_PRIORITY,
+            sim_core::config::STEERING_SYSTEM_INTERVAL,
+        ));
+        engine.register(MovementRuntimeSystem::new(
+            sim_core::config::MOVEMENT_SYSTEM_PRIORITY,
+            sim_core::config::MOVEMENT_TICK_INTERVAL,
+        ));
+
+        let settlement_id = SettlementId(1);
+        let mut settlement = sim_core::Settlement::new(settlement_id, "alpha".to_string(), 4, 4, 0);
+        settlement.stockpile_food = 20.0;
+        settlement.stockpile_wood = 4.0;
+        settlement.stockpile_stone = 2.0;
+        settlement.buildings.push(BuildingId(1));
+        engine
+            .resources_mut()
+            .settlements
+            .insert(settlement_id, settlement);
+        engine.resources_mut().buildings.insert(
+            BuildingId(1),
+            Building {
+                id: BuildingId(1),
+                building_type: "stockpile".to_string(),
+                settlement_id,
+                x: 4,
+                y: 4,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        for (name, x, y) in [
+            ("builder_a", 2, 1),
+            ("builder_b", 3, 1),
+            ("builder_c", 2, 2),
+        ] {
+            engine.world_mut().spawn((
+                Age {
+                    stage: GrowthStage::Adult,
+                    ..Age::default()
+                },
+                Identity {
+                    settlement_id: Some(settlement_id),
+                    name: name.to_string(),
+                    ..Identity::default()
+                },
+                Needs::default(),
+                Position::new(x, y),
+                Behavior::default(),
+                Skills::default(),
+            ));
+        }
+
+        engine.tick();
+
+        let (campfire_id, campfire_x, campfire_y) = engine
+            .resources()
+            .buildings
+            .iter()
+            .find_map(|(building_id, building)| {
+                (building.building_type == "campfire" && !building.is_complete).then_some((
+                    *building_id,
+                    building.x,
+                    building.y,
+                ))
+            })
+            .expect("job assignment should place an early campfire site on the first tick");
+
+        let mut builder_count = 0_usize;
+        let mut assigned_builders = 0_usize;
+        let mut query = engine
+            .world()
+            .query::<(&Identity, &Behavior, Option<&Age>)>();
+        for (_, (identity, behavior, age_opt)) in &mut query {
+            let Some(age) = age_opt else {
+                continue;
+            };
+            if !age.alive || age.stage != GrowthStage::Adult {
+                continue;
+            }
+            if identity.settlement_id != Some(settlement_id) {
+                continue;
+            }
+            if behavior.job == "builder" {
+                builder_count += 1;
+            }
+            if behavior.current_action == ActionType::Build
+                && behavior.action_target_x == Some(campfire_x)
+                && behavior.action_target_y == Some(campfire_y)
+            {
+                assigned_builders += 1;
+            }
+        }
+        assert_eq!(builder_count, 1);
+        assert_eq!(assigned_builders, 1);
+        drop(query);
+
+        engine.run_ticks(40);
+
+        let mid_progress = engine
+            .resources()
+            .buildings
+            .get(&campfire_id)
+            .expect("campfire should still exist")
+            .construction_progress;
+        assert!(mid_progress > 0.0);
+
+        engine.run_ticks(80);
+
+        let campfire_after = engine
+            .resources()
+            .buildings
+            .get(&campfire_id)
+            .expect("campfire should exist after completion");
+        assert!(campfire_after.is_complete);
+        assert!((campfire_after.construction_progress - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
     fn family_runtime_system_pairs_single_adults_in_same_settlement() {
         let config = GameConfig::default();
         let calendar = GameCalendar::new(&config);
@@ -3170,9 +3365,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(95);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "fam".to_string(), 2, 2, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "fam".to_string(), 2, 2, 0),
+        );
 
         let male = world.spawn((
             Age {
@@ -3236,9 +3432,10 @@ mod tests {
         let mut world = World::new();
 
         let settlement_id = SettlementId(96);
-        resources
-            .settlements
-            .insert(settlement_id, sim_core::Settlement::new(settlement_id, "fam2".to_string(), 3, 3, 0));
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "fam2".to_string(), 3, 3, 0),
+        );
 
         let teen_male = world.spawn((
             Age {
@@ -3268,7 +3465,10 @@ mod tests {
             .settlements
             .get_mut(&settlement_id)
             .expect("settlement should exist")
-            .members = vec![EntityId(teen_male.id() as u64), EntityId(adult_female.id() as u64)];
+            .members = vec![
+            EntityId(teen_male.id() as u64),
+            EntityId(adult_female.id() as u64),
+        ];
 
         let mut system = FamilyRuntimeSystem::new(52, 365);
         for _ in 0..64 {
@@ -3960,13 +4160,12 @@ mod tests {
             .expect("new settlement should exist");
         assert!(source_after.migration_cooldown > 0);
         assert!(source_after.stockpile_food < 200.0);
-        assert_eq!(new_settlement.stockpile_food, sim_core::config::MIGRATION_STARTUP_FOOD);
-        assert!(
-            new_settlement.members.len() as u32 >= sim_core::config::MIGRATION_GROUP_SIZE_MIN
+        assert_eq!(
+            new_settlement.stockpile_food,
+            sim_core::config::MIGRATION_STARTUP_FOOD
         );
-        assert!(
-            new_settlement.members.len() as u32 <= sim_core::config::MIGRATION_GROUP_SIZE_MAX
-        );
+        assert!(new_settlement.members.len() as u32 >= sim_core::config::MIGRATION_GROUP_SIZE_MIN);
+        assert!(new_settlement.members.len() as u32 <= sim_core::config::MIGRATION_GROUP_SIZE_MAX);
 
         let mut moved_count: usize = 0;
         let mut query = world.query::<(&Identity, &Behavior)>();
@@ -4280,7 +4479,12 @@ mod tests {
         let stress1 = Stress::default();
         let stress2 = Stress::default();
 
-        let e1 = world.spawn((needs.clone(), stress1, emotion.clone(), personality_reactive));
+        let e1 = world.spawn((
+            needs.clone(),
+            stress1,
+            emotion.clone(),
+            personality_reactive,
+        ));
         let e2 = world.spawn((needs.clone(), stress2, emotion.clone(), personality_calm));
 
         let mut system = StressRuntimeSystem::new(34, 4);
@@ -4292,7 +4496,10 @@ mod tests {
         let s1 = world.get::<&Stress>(e1).unwrap();
         let s2 = world.get::<&Stress>(e2).unwrap();
         // Both should have stress > 0 under these conditions
-        assert!(s1.level > 0.0, "reactive entity should have positive stress");
+        assert!(
+            s1.level > 0.0,
+            "reactive entity should have positive stress"
+        );
         assert!(s2.level > 0.0, "calm entity should have positive stress");
         // Different personality profiles should produce different stress outcomes
         // (direction depends on complex multi-axis formula interactions)
@@ -4379,9 +4586,15 @@ mod tests {
             !updated.stress_traces.is_empty(),
             "at least one trace should remain"
         );
-        let has_a = updated.stress_traces.iter().any(|t| t.source_id == "stressor_a");
+        let has_a = updated
+            .stress_traces
+            .iter()
+            .any(|t| t.source_id == "stressor_a");
         assert!(has_a, "stressor_a should survive with non-trivial per_tick");
-        let has_b = updated.stress_traces.iter().any(|t| t.source_id == "stressor_b");
+        let has_b = updated
+            .stress_traces
+            .iter()
+            .any(|t| t.source_id == "stressor_b");
         assert!(!has_b, "stressor_b should be removed after decay");
     }
 
@@ -4524,7 +4737,7 @@ mod tests {
         coping.active_strategy = Some(CopingStrategyId::Acceptance);
 
         let stress = Stress {
-            level: 0.10, // below COPING_CLEAR_STRESS_MAX (0.20)
+            level: 0.10,           // below COPING_CLEAR_STRESS_MAX (0.20)
             allostatic_load: 0.10, // below COPING_CLEAR_ALLOSTATIC_MAX (0.20)
             ..Stress::default()
         };
@@ -4550,22 +4763,35 @@ mod tests {
         let mut world = World::new();
         let mut resources = make_resources();
         let sid = SettlementId(1);
-        let mut settlement =
-            sim_core::Settlement::new(sid, "village".to_string(), 0, 0, 0);
+        let mut settlement = sim_core::Settlement::new(sid, "village".to_string(), 0, 0, 0);
         settlement.leader_id = None;
 
         // Member 1: high values (0.95)
         let mut v1 = Values::default();
-        for v in v1.values.iter_mut() { *v = 0.95; }
-        let id1 = Identity { settlement_id: Some(sid), ..Identity::default() };
-        let a1 = Age { years: 25.0, alive: true, ..Age::default() };
+        for v in v1.values.iter_mut() {
+            *v = 0.95;
+        }
+        let id1 = Identity {
+            settlement_id: Some(sid),
+            ..Identity::default()
+        };
+        let a1 = Age {
+            years: 25.0,
+            alive: true,
+            ..Age::default()
+        };
         let e1 = world.spawn((v1, id1, a1.clone()));
         let eid1 = sim_core::ids::EntityId(e1.id() as u64);
 
         // Member 2: low values (0.05)
         let mut v2 = Values::default();
-        for v in v2.values.iter_mut() { *v = 0.05; }
-        let id2 = Identity { settlement_id: Some(sid), ..Identity::default() };
+        for v in v2.values.iter_mut() {
+            *v = 0.05;
+        }
+        let id2 = Identity {
+            settlement_id: Some(sid),
+            ..Identity::default()
+        };
         let e2 = world.spawn((v2, id2, a1.clone()));
         let eid2 = sim_core::ids::EntityId(e2.id() as u64);
 
@@ -4690,11 +4916,16 @@ mod tests {
 
         // Personal event GC: orphaned entry removed, valid entry kept
         assert!(
-            !resources.chronicle_personal_events.contains_key(&eid_orphaned),
+            !resources
+                .chronicle_personal_events
+                .contains_key(&eid_orphaned),
             "personal events referencing pruned world ticks should be GC'd"
         );
         assert_eq!(
-            resources.chronicle_personal_events.get(&eid_retained).map(|v| v.len()),
+            resources
+                .chronicle_personal_events
+                .get(&eid_retained)
+                .map(|v| v.len()),
             Some(1),
             "personal events referencing retained world ticks should be kept"
         );
@@ -4712,7 +4943,11 @@ mod tests {
         let mut personality = Personality::default();
         personality.facets = [0.5; 24];
         personality.recalculate_axes();
-        let age = Age { years: 20.0, alive: true, ..Age::default() };
+        let age = Age {
+            years: 20.0,
+            alive: true,
+            ..Age::default()
+        };
         let entity = world.spawn((age, personality));
 
         let mut system = PersonalityMaturationRuntimeSystem::new(230, 50);
@@ -4724,7 +4959,10 @@ mod tests {
         let updated = world.get::<&Personality>(entity).unwrap();
         // At least some facets should have drifted from 0.5
         let any_changed = updated.facets.iter().any(|&f| (f - 0.5).abs() > 1e-6);
-        assert!(any_changed, "personality facets should drift via OU process over maturation ticks");
+        assert!(
+            any_changed,
+            "personality facets should drift via OU process over maturation ticks"
+        );
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -4737,7 +4975,12 @@ mod tests {
         let mut resources = make_resources();
 
         let personality = Personality::default(); // all zeros/0.5
-        let age = Age { years: 0.0, alive: true, stage: GrowthStage::Infant, ..Age::default() };
+        let age = Age {
+            years: 0.0,
+            alive: true,
+            stage: GrowthStage::Infant,
+            ..Age::default()
+        };
         let body = BodyComponent::default();
         let identity = Identity::default();
         let social = Social::default();
@@ -4749,7 +4992,10 @@ mod tests {
         let updated = world.get::<&Personality>(entity).unwrap();
         // Personality generator should have set facets to non-default values
         let any_changed = updated.facets.iter().any(|&f| (f - 0.5).abs() > 0.01);
-        assert!(any_changed, "newborn should have personality facets generated");
+        assert!(
+            any_changed,
+            "newborn should have personality facets generated"
+        );
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -4765,14 +5011,27 @@ mod tests {
         let mut parent_personality = Personality::default();
         parent_personality.axes[HexacoAxis::A as usize] = 0.80; // high A-axis → high sensitivity
         parent_personality.facets = [0.5; 24];
-        let parent_stress = Stress { level: 0.10, ..Stress::default() }; // low stress → high consistency
-        let parent_age = Age { years: 30.0, alive: true, ..Age::default() };
+        let parent_stress = Stress {
+            level: 0.10,
+            ..Stress::default()
+        }; // low stress → high consistency
+        let parent_age = Age {
+            years: 30.0,
+            alive: true,
+            ..Age::default()
+        };
         let parent_social = Social::default();
-        let parent_entity = world.spawn((parent_personality, parent_stress, parent_age, parent_social));
+        let parent_entity =
+            world.spawn((parent_personality, parent_stress, parent_age, parent_social));
         let parent_eid = sim_core::ids::EntityId(parent_entity.id() as u64);
 
         // Create a 1-year-old infant with the parent
-        let child_age = Age { years: 1.0, alive: true, stage: GrowthStage::Infant, ..Age::default() };
+        let child_age = Age {
+            years: 1.0,
+            alive: true,
+            stage: GrowthStage::Infant,
+            ..Age::default()
+        };
         let child_stress = Stress::default();
         let child_social = Social {
             parents: vec![parent_eid],
@@ -4804,7 +5063,11 @@ mod tests {
         let mut world = World::new();
         let mut resources = make_resources();
 
-        let age = Age { years: 25.0, alive: true, ..Age::default() };
+        let age = Age {
+            years: 25.0,
+            alive: true,
+            ..Age::default()
+        };
         let stress = Stress {
             allostatic_load: 0.40, // moderate allostatic → nonzero ACE
             ace_score: 0.0,        // no ACE yet

@@ -3,22 +3,21 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, TerrainType, Tile, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, TechState, TerrainType, Tile, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 /// Rust runtime system for age/environment-adjusted intelligence updates.
 ///
@@ -133,7 +132,8 @@ impl SimSystem for IntelligenceRuntimeSystem {
 
     fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
         // Clean up baselines for despawned entities to prevent memory leak
-        self.potential_baselines.retain(|&entity, _| world.contains(entity));
+        self.potential_baselines
+            .retain(|&entity, _| world.contains(entity));
 
         let mut query = world.query::<(
             &mut Intelligence,
@@ -144,7 +144,19 @@ impl SimSystem for IntelligenceRuntimeSystem {
             Option<&Identity>,
             Option<&Personality>,
         )>();
-        for (entity, (intelligence, age_opt, needs_opt, skills_opt, memory_opt, identity_opt, personality_opt)) in &mut query {
+        for (
+            entity,
+            (
+                intelligence,
+                age_opt,
+                needs_opt,
+                skills_opt,
+                memory_opt,
+                identity_opt,
+                personality_opt,
+            ),
+        ) in &mut query
+        {
             let baseline = self.potential_baselines.entry(entity).or_insert_with(|| {
                 intelligence
                     .values
@@ -170,8 +182,7 @@ impl SimSystem for IntelligenceRuntimeSystem {
                     .unwrap_or(1.0)
                     .clamp(0.0, 1.0);
                 if hunger < config::INTEL_NUTRITION_HUNGER_THRESHOLD as f32 {
-                    let severity = 1.0
-                        - hunger / config::INTEL_NUTRITION_HUNGER_THRESHOLD as f32;
+                    let severity = 1.0 - hunger / config::INTEL_NUTRITION_HUNGER_THRESHOLD as f32;
                     let delta = config::INTEL_NUTRITION_PENALTY_PER_TICK as f32 * severity;
                     intelligence.nutrition_penalty = (intelligence.nutrition_penalty as f32 + delta)
                         .min(config::INTEL_NUTRITION_MAX_PENALTY as f32)
@@ -182,9 +193,12 @@ impl SimSystem for IntelligenceRuntimeSystem {
             if age_years >= config::INTEL_ACE_CRIT_AGE_YEARS as f32
                 && intelligence.ace_penalty <= 0.0
             {
-                let birth_tick = identity_opt.map(|identity| identity.birth_tick).unwrap_or(0);
-                let cutoff = birth_tick + (config::INTEL_ACE_CRIT_AGE_YEARS as f32
-                    * config::TICKS_PER_YEAR as f32) as u64;
+                let birth_tick = identity_opt
+                    .map(|identity| identity.birth_tick)
+                    .unwrap_or(0);
+                let cutoff = birth_tick
+                    + (config::INTEL_ACE_CRIT_AGE_YEARS as f32 * config::TICKS_PER_YEAR as f32)
+                        as u64;
                 let scar_count = memory_opt
                     .map(|memory| {
                         memory
@@ -222,8 +236,7 @@ impl SimSystem for IntelligenceRuntimeSystem {
                 config::INTEL_ACE_PENALTY_MINOR as f32,
                 config::INTEL_ACE_FLUID_DECLINE_MULT as f32,
             );
-            let env_penalty =
-                (intelligence.nutrition_penalty + intelligence.ace_penalty) as f32;
+            let env_penalty = (intelligence.nutrition_penalty + intelligence.ace_penalty) as f32;
 
             let intel_order = [
                 IntelligenceType::Linguistic,
@@ -381,7 +394,8 @@ impl SimSystem for MemoryRuntimeSystem {
                 }
             }
 
-            let mut rebuilt: Vec<MemoryEntry> = Vec::with_capacity(old_entries.len() + recent_entries.len());
+            let mut rebuilt: Vec<MemoryEntry> =
+                Vec::with_capacity(old_entries.len() + recent_entries.len());
             if old_entries.len() >= config::MEMORY_COMPRESS_MIN_GROUP {
                 let mut groups: HashMap<(String, Option<u64>), Vec<MemoryEntry>> = HashMap::new();
                 for entry in old_entries {
@@ -406,11 +420,9 @@ impl SimSystem for MemoryRuntimeSystem {
                     }
                     let event_type = group[0].event_type.clone();
                     let target_id = group[0].target_id;
-                    let summary_intensity = body::memory_summary_intensity(
-                        max_intensity,
-                        MEMORY_SUMMARY_SCALE,
-                    )
-                    .clamp(0.0, 1.0);
+                    let summary_intensity =
+                        body::memory_summary_intensity(max_intensity, MEMORY_SUMMARY_SCALE)
+                            .clamp(0.0, 1.0);
                     rebuilt.push(MemoryEntry {
                         event_type: format!("{event_type}_summary"),
                         target_id,
@@ -568,6 +580,7 @@ fn behavior_select_action(
     emotion_opt: Option<&Emotion>,
     personality_opt: Option<&Personality>,
     behavior: &Behavior,
+    has_build_target: bool,
     rng: &mut impl Rng,
 ) -> ActionType {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -580,6 +593,18 @@ fn behavior_select_action(
     let hunger_deficit = behavior_urgency(1.0 - hunger);
     let energy_deficit = behavior_urgency(1.0 - energy);
     let social_deficit = behavior_urgency(1.0 - social);
+
+    if matches!(age_stage, GrowthStage::Adult)
+        && behavior.job == "builder"
+        && has_build_target
+        && hunger >= config::BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN as f32
+        && thirst >= config::THIRST_LOW as f32
+        && warmth >= config::WARMTH_LOW as f32
+        && safety >= config::SAFETY_LOW as f32
+        && energy >= config::BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN as f32
+    {
+        return ActionType::Build;
+    }
 
     let mut scores: HashMap<ActionType, f32> = HashMap::new();
     match age_stage {
@@ -607,7 +632,11 @@ fn behavior_select_action(
     }
 
     if thirst < config::THIRST_LOW as f32 {
-        behavior_score_add(&mut scores, ActionType::Drink, behavior_urgency(1.0 - thirst));
+        behavior_score_add(
+            &mut scores,
+            ActionType::Drink,
+            behavior_urgency(1.0 - thirst),
+        );
     }
     if warmth < config::WARMTH_LOW as f32 {
         behavior_score_add(
@@ -626,7 +655,7 @@ fn behavior_select_action(
         "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 1.50),
         "lumberjack" => behavior_score_add(&mut scores, ActionType::GatherWood, 0.45),
         "miner" => behavior_score_add(&mut scores, ActionType::GatherStone, 0.40),
-        "builder" if matches!(age_stage, GrowthStage::Adult) => {
+        "builder" if matches!(age_stage, GrowthStage::Adult) && has_build_target => {
             behavior_score_add(&mut scores, ActionType::Build, 0.45);
         }
         _ => {}
@@ -671,8 +700,16 @@ fn behavior_select_action(
         let c_axis = personality.axis(HexacoAxis::C) as f32;
         let o_axis = personality.axis(HexacoAxis::O) as f32;
 
-        behavior_score_mul(&mut scores, ActionType::Socialize, 0.75 + x_axis * 0.70 + a_axis * 0.25);
-        behavior_score_mul(&mut scores, ActionType::Wander, 0.75 + o_axis * 0.55 + x_axis * 0.20);
+        behavior_score_mul(
+            &mut scores,
+            ActionType::Socialize,
+            0.75 + x_axis * 0.70 + a_axis * 0.25,
+        );
+        behavior_score_mul(
+            &mut scores,
+            ActionType::Wander,
+            0.75 + o_axis * 0.55 + x_axis * 0.20,
+        );
         behavior_score_mul(&mut scores, ActionType::Explore, 0.70 + o_axis * 0.65);
         behavior_score_mul(&mut scores, ActionType::Build, 0.75 + c_axis * 0.65);
         behavior_score_mul(&mut scores, ActionType::GatherWood, 0.80 + c_axis * 0.45);
@@ -714,12 +751,7 @@ fn behavior_select_action(
     if scored_actions.is_empty() {
         return ActionType::Wander;
     }
-    scored_actions.sort_by(|left, right| {
-        right
-            .1
-            .partial_cmp(&left.1)
-            .unwrap_or(Ordering::Equal)
-    });
+    scored_actions.sort_by(|left, right| right.1.partial_cmp(&left.1).unwrap_or(Ordering::Equal));
     let best_score = scored_actions[0].1;
 
     if behavior.current_action != ActionType::Idle {
@@ -800,7 +832,9 @@ fn find_nearest_resource_tile(
     resource_type: ResourceType,
 ) -> Option<(i32, i32)> {
     find_nearest_tile(position, resources, radius, |tile| {
-        tile.resources.iter().any(|r| r.resource_type == resource_type && r.amount > 0.0)
+        tile.resources
+            .iter()
+            .any(|r| r.resource_type == resource_type && r.amount > 0.0)
     })
 }
 
@@ -846,6 +880,36 @@ fn find_passable_adjacent(
     best
 }
 
+fn find_nearest_incomplete_building(
+    position: &Position,
+    resources: &SimResources,
+    settlement_id: Option<SettlementId>,
+) -> Option<(i32, i32)> {
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
+    let mut best: Option<(i32, i32)> = None;
+    let mut best_dist = i32::MAX;
+    let mut best_building_id = u64::MAX;
+
+    for (building_id, building) in &resources.buildings {
+        if building.is_complete {
+            continue;
+        }
+        if settlement_id.is_some() && settlement_id != Some(building.settlement_id) {
+            continue;
+        }
+
+        let dist = (building.x - origin_x).abs() + (building.y - origin_y).abs();
+        if dist < best_dist || (dist == best_dist && building_id.0 < best_building_id) {
+            best_dist = dist;
+            best_building_id = building_id.0;
+            best = Some((building.x, building.y));
+        }
+    }
+
+    best
+}
+
 fn behavior_assign_action(
     behavior: &mut Behavior,
     position: &Position,
@@ -853,47 +917,44 @@ fn behavior_assign_action(
     tick: u64,
     entity_raw: u64,
     action: ActionType,
+    build_target: Option<(i32, i32)>,
     stress_level: f32,
     allostatic_load: f32,
 ) {
     let current_x = position.tile_x();
     let current_y = position.tile_y();
     let (target_x, target_y) = match action {
-        ActionType::Wander => {
-            behavior_pick_wander_target(position, resources, tick, entity_raw)
-        }
-        ActionType::Forage | ActionType::Hunt | ActionType::Eat | ActionType::TakeFromStockpile | ActionType::GatherHerbs => {
-            find_nearest_resource_tile(position, resources, 15, ResourceType::Food)
-                .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
+        ActionType::Wander => behavior_pick_wander_target(position, resources, tick, entity_raw),
+        ActionType::Forage
+        | ActionType::Hunt
+        | ActionType::Eat
+        | ActionType::TakeFromStockpile
+        | ActionType::GatherHerbs => {
+            find_nearest_resource_tile(position, resources, 15, ResourceType::Food).unwrap_or_else(
+                || behavior_pick_wander_target(position, resources, tick, entity_raw),
+            )
         }
         ActionType::Drink => {
-            find_nearest_terrain_tile(
-                position,
-                resources,
-                20,
-                &[TerrainType::ShallowWater],
-            )
-            .and_then(|water_pos| find_passable_adjacent(position, resources, water_pos))
-            .unwrap_or((current_x, current_y))
+            find_nearest_terrain_tile(position, resources, 20, &[TerrainType::ShallowWater])
+                .and_then(|water_pos| find_passable_adjacent(position, resources, water_pos))
+                .unwrap_or((current_x, current_y))
         }
-        ActionType::GatherWood => {
-            find_nearest_terrain_tile(
-                position,
-                resources,
-                15,
-                &[TerrainType::Forest, TerrainType::DenseForest],
-            )
-            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
-        }
-        ActionType::GatherStone => {
-            find_nearest_terrain_tile(
-                position,
-                resources,
-                15,
-                &[TerrainType::Hill, TerrainType::Mountain],
-            )
-            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
-        }
+        ActionType::GatherWood => find_nearest_terrain_tile(
+            position,
+            resources,
+            15,
+            &[TerrainType::Forest, TerrainType::DenseForest],
+        )
+        .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
+        ActionType::GatherStone => find_nearest_terrain_tile(
+            position,
+            resources,
+            15,
+            &[TerrainType::Hill, TerrainType::Mountain],
+        )
+        .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
+        ActionType::Build => build_target
+            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
         ActionType::Socialize | ActionType::VisitPartner | ActionType::Explore => {
             behavior_pick_wander_target(position, resources, tick, entity_raw)
         }
@@ -905,7 +966,8 @@ fn behavior_assign_action(
         action,
         ActionType::Drink | ActionType::SeekShelter | ActionType::Flee
     );
-    let timer = behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
+    let timer =
+        behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
 
     behavior.current_action = action;
     behavior.action_target_entity = None;
@@ -956,10 +1018,24 @@ impl SimSystem for BehaviorRuntimeSystem {
             Option<&Stress>,
             Option<&Emotion>,
             Option<&Personality>,
+            Option<&Identity>,
             &Position,
             &mut Behavior,
         )>();
-        for (entity, (age, needs, stress_opt, emotion_opt, personality_opt, position, behavior)) in &mut query {
+        for (
+            entity,
+            (
+                age,
+                needs,
+                stress_opt,
+                emotion_opt,
+                personality_opt,
+                identity_opt,
+                position,
+                behavior,
+            ),
+        ) in &mut query
+        {
             if !age.alive {
                 continue;
             }
@@ -970,6 +1046,11 @@ impl SimSystem for BehaviorRuntimeSystem {
                 continue;
             }
 
+            let build_target = find_nearest_incomplete_building(
+                position,
+                resources,
+                identity_opt.and_then(|identity| identity.settlement_id),
+            );
             let next_action = behavior_select_action(
                 age.stage,
                 needs,
@@ -977,6 +1058,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 emotion_opt,
                 personality_opt,
                 behavior,
+                build_target.is_some(),
                 &mut resources.rng,
             );
             let previous_action = behavior.current_action;
@@ -995,6 +1077,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 tick,
                 entity.id() as u64,
                 next_action,
+                build_target,
                 stress_level,
                 allostatic_load,
             );
@@ -1006,10 +1089,12 @@ impl SimSystem for BehaviorRuntimeSystem {
             } else {
                 format!("action_chosen:{}", next_action)
             };
-            resources.event_bus.emit(sim_engine::GameEvent::SocialEventOccurred {
-                event_type,
-                participants: vec![entity_id],
-            });
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::SocialEventOccurred {
+                    event_type,
+                    participants: vec![entity_id],
+                });
             if changed {
                 resources.event_store.push(SimEvent {
                     tick,
@@ -1022,5 +1107,92 @@ impl SimSystem for BehaviorRuntimeSystem {
                 });
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::components::{Identity, Needs};
+    use sim_core::config::GameConfig;
+    use sim_core::{Building, GameCalendar, SettlementId, WorldMap};
+
+    #[test]
+    fn behavior_runtime_system_targets_nearest_incomplete_building_for_builder() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(12, 12, 17);
+        let mut resources = SimResources::new(calendar, map, 33);
+        let mut world = World::new();
+
+        let settlement_id = SettlementId(7);
+        resources.settlements.insert(
+            settlement_id,
+            sim_core::Settlement::new(settlement_id, "alpha".to_string(), 5, 5, 0),
+        );
+        resources.buildings.insert(
+            BuildingId(90),
+            Building {
+                id: BuildingId(90),
+                building_type: "campfire".to_string(),
+                settlement_id,
+                x: 6,
+                y: 5,
+                construction_progress: 0.0,
+                is_complete: false,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+        resources.buildings.insert(
+            BuildingId(91),
+            Building {
+                id: BuildingId(91),
+                building_type: "shelter".to_string(),
+                settlement_id,
+                x: 9,
+                y: 9,
+                construction_progress: 0.0,
+                is_complete: false,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.90);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.set(NeedType::Belonging, 0.80);
+        needs.energy = 0.90;
+
+        let entity = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            needs,
+            Position::new(5, 5),
+            Identity {
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Behavior {
+                job: "builder".to_string(),
+                current_action: ActionType::Build,
+                ..Behavior::default()
+            },
+        ));
+
+        let mut system = BehaviorRuntimeSystem::new(20, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("builder behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Build);
+        assert_eq!(behavior.action_target_x, Some(6));
+        assert_eq!(behavior.action_target_y, Some(5));
     }
 }
