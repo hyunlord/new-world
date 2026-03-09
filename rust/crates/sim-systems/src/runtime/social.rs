@@ -1,4 +1,6 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - high config:: coupling remains here; move social tuning into data-driven rules.
+// TODO(v3.1): REFACTOR - migrate direct relationship/entity coupling toward sparse BTreeMap relations and Influence surfaces.
 
 use hecs::{Entity, World};
 use rand::Rng;

@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+// TODO(v3.1): REFACTOR - reduce direct entity/string coupling in cognition systems and consume authoritative data-driven runtime state.
 
 use hecs::{Entity, World};
 use rand::Rng;

@@ -1,3 +1,4 @@
+// TODO(v3.1): Keep manual serde until the toolchain supports deriving for `[f64; 33]`.
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::de::Error;
 use serde::ser::SerializeSeq;

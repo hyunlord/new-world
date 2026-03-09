@@ -2,6 +2,8 @@
 //!
 //! All public types are re-exported here so that external consumers
 //! (e.g. `sim-bridge`) can continue to use `crate::runtime::XxxSystem`.
+// TODO(v3.1): REFACTOR - this module still centralizes v2-era scheduler wiring and many config:: references.
+// TODO(v3.1): REFACTOR - move system cadence toward Hot/Warm/Cold metadata as A-5 lands.
 
 mod biology;
 mod cognition;

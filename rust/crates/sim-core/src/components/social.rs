@@ -1,3 +1,4 @@
+// TODO(v3.1): Migrate relationship storage from Vec to sparse capped BTreeMap.
 use crate::enums::{AttachmentType, RelationType};
 use crate::ids::EntityId;
 use serde::{Deserialize, Serialize};

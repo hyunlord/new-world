@@ -1,3 +1,4 @@
+// TODO(v3.1): Convert remaining f32 fields and helpers to f64 for determinism.
 use serde::{Deserialize, Serialize};
 
 /// Body attribute axes (potential/trainability/realized 3-layer system)

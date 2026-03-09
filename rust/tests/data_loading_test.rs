@@ -13,6 +13,13 @@ fn project_data_dir() -> PathBuf {
         .join("data")
 }
 
+fn ron_data_dir() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("crates")
+        .join("sim-data")
+        .join("data")
+}
+
 struct TempDirGuard {
     path: PathBuf,
 }
@@ -82,6 +89,25 @@ fn load_all_contains_r1_core_datasets() {
     );
     assert!(!data.occupation.jobs.is_empty(), "job profiles empty");
     assert_eq!(data.occupation.categories.default_job(), "laborer");
+}
+
+#[test]
+fn data_registry_loads_authoritative_ron_datasets() {
+    let data_dir = ron_data_dir();
+    if !data_dir.exists() {
+        eprintln!("Skipping: RON data dir not found at {:?}", data_dir);
+        return;
+    }
+
+    let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+        .expect("DataRegistry::load_from_directory failed");
+    assert!(!registry.materials.is_empty(), "materials empty");
+    assert!(!registry.furniture.is_empty(), "furniture empty");
+    assert!(!registry.recipes.is_empty(), "recipes empty");
+    assert!(!registry.structures.is_empty(), "structures empty");
+    assert!(!registry.actions.is_empty(), "actions empty");
+    assert!(registry.world_rules.is_some(), "world rules missing");
+    assert!(registry.temperament_rules.is_some(), "temperament rules missing");
 }
 
 #[test]

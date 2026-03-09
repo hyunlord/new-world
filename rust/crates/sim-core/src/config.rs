@@ -6,30 +6,45 @@
 /// Dictionary constants with axis keys (body, intel) are provided as arrays indexed by enum.
 use serde::{Deserialize, Serialize};
 
+// NOTE(v3.1): This file still carries hundreds of v2-era constants.
+// Migration plan:
+//   Category A (World Rules): move world/scenario/global constants into WorldRules RON (A-9)
+//   Category B (System Tuning): move system cadence/tuning into scheduler metadata and data-driven config (A-5)
+//   Category C (Engine Internal): keep engine/bootstrap-only constants here
+//   Category D (Uncategorized): review incrementally during Phase 1-3
+// See CODEBASE_AUDIT.md Section 6 for the current mapping baseline.
+
+// === CATEGORY A: World Rules migration targets (A-9) ===
 // ── World ─────────────────────────────────────────────────────────────────────
-pub const WORLD_WIDTH: u32 = 256;
-pub const WORLD_HEIGHT: u32 = 256;
+pub const WORLD_WIDTH: u32 = 256; // TODO(A-9): -> WorldRuleset.global.world_width
+pub const WORLD_HEIGHT: u32 = 256; // TODO(A-9): -> WorldRuleset.global.world_height
+
+// === CATEGORY C: Engine-internal constants (keep in config.rs) ===
 pub const TILE_SIZE: u32 = 16;
 pub const CHUNK_SIZE: u32 = 32;
 
+// === CATEGORY A: World Rules migration targets (A-9) ===
 // ── Simulation Parameters ─────────────────────────────────────────────────────
-pub const TICKS_PER_SECOND: u32 = 10;
-pub const MAX_ENTITIES: u32 = 500;
-pub const INITIAL_SPAWN_COUNT: u32 = 20;
-pub const SPAWN_BATCH_SIZE: u32 = 5;
-pub const MAX_TICKS_PER_FRAME: u32 = 5;
+pub const TICKS_PER_SECOND: u32 = 10; // TODO(A-9): -> WorldRuleset.global.ticks_per_second
+pub const MAX_ENTITIES: u32 = 500; // TODO(A-9): -> scenario/bootstrap population cap
+pub const INITIAL_SPAWN_COUNT: u32 = 20; // TODO(A-9): -> scenario/bootstrap initial spawn count
+pub const SPAWN_BATCH_SIZE: u32 = 5; // TODO(A-9): -> scenario/bootstrap spawn batching
 
+// === CATEGORY C: Engine-internal constants (keep in config.rs) ===
+pub const MAX_TICKS_PER_FRAME: u32 = 5; // engine frame budget, stays here
+
+// === CATEGORY A: World Rules migration targets (A-9) ===
 // ── Time ──────────────────────────────────────────────────────────────────────
 /// 1 tick = 2 game hours
-pub const TICK_HOURS: u32 = 2;
+pub const TICK_HOURS: u32 = 2; // TODO(A-9): -> WorldRuleset.global.tick_hours
 /// 12 ticks = 1 day
-pub const TICKS_PER_DAY: u32 = 12;
+pub const TICKS_PER_DAY: u32 = 12; // TODO(A-9): -> WorldRuleset.global.ticks_per_day
 /// 365 days = 1 year
-pub const DAYS_PER_YEAR: u32 = 365;
+pub const DAYS_PER_YEAR: u32 = 365; // TODO(A-9): -> WorldRuleset.global.days_per_year
 /// ~30.4 days × 12 ticks/day (display utility only)
-pub const TICKS_PER_MONTH: u32 = 365;
+pub const TICKS_PER_MONTH: u32 = 365; // TODO(A-9): -> calendar/global constants
 /// 365 × 12 = 4380 ticks per year
-pub const TICKS_PER_YEAR: u32 = 4380;
+pub const TICKS_PER_YEAR: u32 = 4380; // TODO(A-9): -> calendar/global constants
 
 // ── Age Stage Thresholds (in ticks) ──────────────────────────────────────────
 /// 6 stages: infant ≤2y, toddler 3-5y, child 6-11y, teen 12-14y, adult 15-55y, elder 56+
@@ -205,19 +220,20 @@ pub const REVOLUTION_COOLDOWN_TICKS: u64 = 8760;   // 2 years
 pub const REVOLUTION_CHARISMA_MULTIPLIER: f64 = 2.0;
 pub const REVOLUTION_TICK_INTERVAL: u64 = 4380;    // annual check
 
+// === CATEGORY B: System tuning migration targets (A-5) ===
 // ── System Tick Intervals ─────────────────────────────────────────────────────
-pub const NEEDS_TICK_INTERVAL: u64 = 4;
-pub const STRESS_SYSTEM_TICK_INTERVAL: u64 = 4;
-pub const BEHAVIOR_TICK_INTERVAL: u64 = 10;
-pub const MOVEMENT_TICK_INTERVAL: u64 = 1;
-pub const UPPER_NEEDS_TICK_INTERVAL: u64 = 5;
-pub const STEERING_SYSTEM_PRIORITY: u32 = 29;
-pub const STEERING_SYSTEM_INTERVAL: u64 = 1;
-pub const MOVEMENT_SYSTEM_PRIORITY: u32 = 30;
-pub const BEHAVIOR_TOP_N_SELECTION: usize = 3;
-pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0;
-pub const STEERING_MAX_FORCE: f64 = 100.0;
-pub const STEERING_MAX_SPEED: f64 = 120.0;
+pub const NEEDS_TICK_INTERVAL: u64 = 4; // TODO(A-5): -> NeedsSystem frequency metadata
+pub const STRESS_SYSTEM_TICK_INTERVAL: u64 = 4; // TODO(A-5): -> StressSystem frequency metadata
+pub const BEHAVIOR_TICK_INTERVAL: u64 = 10; // TODO(A-5): -> BehaviorSystem frequency metadata
+pub const MOVEMENT_TICK_INTERVAL: u64 = 1; // TODO(A-5): -> MovementSystem frequency metadata
+pub const UPPER_NEEDS_TICK_INTERVAL: u64 = 5; // TODO(A-5): -> UpperNeedsSystem frequency metadata
+pub const STEERING_SYSTEM_PRIORITY: u32 = 29; // TODO(A-5): -> SteeringSystem scheduler metadata
+pub const STEERING_SYSTEM_INTERVAL: u64 = 1; // TODO(A-5): -> SteeringSystem frequency metadata
+pub const MOVEMENT_SYSTEM_PRIORITY: u32 = 30; // TODO(A-5): -> MovementSystem scheduler metadata
+pub const BEHAVIOR_TOP_N_SELECTION: usize = 3; // TODO(A-5): -> BehaviorSystem tuning data
+pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0; // TODO(A-5): -> steering metadata
+pub const STEERING_MAX_FORCE: f64 = 100.0; // TODO(A-5): -> steering metadata
+pub const STEERING_MAX_SPEED: f64 = 120.0; // TODO(A-5): -> steering metadata
 pub const MOOD_SPEED_MULTIPLIERS: [f64; 5] = [0.7, 0.8, 0.9, 1.0, 1.1];
 pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
 /// Maximum number of persisted narrative events kept in memory.

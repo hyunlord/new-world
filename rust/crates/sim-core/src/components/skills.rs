@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use crate::ids::SkillId;
 
 /// A single skill entry
@@ -18,7 +18,7 @@ impl Default for SkillEntry {
 /// All skills for one entity
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Skills {
-    pub entries: HashMap<SkillId, SkillEntry>,
+    pub entries: BTreeMap<SkillId, SkillEntry>,
 }
 
 impl Skills {
