@@ -72,6 +72,21 @@ func _draw() -> void:
 	# Status
 	var is_built: bool = bool(_building_value(building, "is_built", _building_value(building, "is_constructed", false)))
 	var build_progress: float = float(_building_value(building, "build_progress", _building_value(building, "construction_progress", 0.0)))
+	var build_progress_delta: float = float(_building_value(building, "construction_progress_delta", _building_value(building, "recent_progress_delta", 0.0)))
+	var construction_state: String = str(_building_value(building, "construction_state", "stalled"))
+	var stall_reason: String = str(_building_value(building, "stall_reason", "unknown"))
+	var assigned_builder_count: int = int(_building_value(building, "assigned_builder_count", 0))
+	var settlement_builder_count: int = int(_building_value(building, "settlement_builder_count", 0))
+	var adjacent_builder_count: int = int(_building_value(building, "adjacent_builder_count", 0))
+	var assigned_builders: Array = []
+	var assigned_builders_raw: Variant = _building_value(building, "assigned_builders", [])
+	if assigned_builders_raw is Array:
+		assigned_builders = assigned_builders_raw
+	var storage: Dictionary = {}
+	var storage_raw: Variant = _building_value(building, "storage", {})
+	if storage_raw is Dictionary:
+		storage = storage_raw
+	var cost: Dictionary = GameConfig.BUILDING_TYPES.get(building_type, {}).get("cost", {})
 	if is_built:
 		draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_STATUS_ACTIVE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.3, 0.9, 0.3))
 	else:
@@ -83,14 +98,28 @@ func _draw() -> void:
 		draw_rect(Rect2(cx + 10, cy, bar_w * build_progress, 12), Color(0.2, 0.8, 0.2, 0.8))
 	cy += 22.0
 
+	if not is_built:
+		draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_DIAGNOSTICS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+		cy += 18.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_CONSTRUCTION_STATE"), Locale.ltr(_construction_state_key(construction_state))], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.82, 0.82, 0.82))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_RECENT_DELTA"), _format_signed_percent(build_progress_delta)], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.82, 0.82, 0.82))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %d / %d" % [Locale.ltr("UI_ASSIGNED_BUILDERS"), assigned_builder_count, settlement_builder_count], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.82, 0.82, 0.82))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %d" % [Locale.ltr("UI_IN_RANGE"), adjacent_builder_count], HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.82, 0.82, 0.82))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_STALL_REASON"), Locale.ltr(_stall_reason_key(stall_reason))], HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40.0, GameConfig.get_font_size("popup_body"), Color(0.95, 0.85, 0.55))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_BUILDERS"), _builder_names_summary(assigned_builders)], HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40.0, GameConfig.get_font_size("popup_body"), Color(0.72, 0.78, 0.84))
+		cy += 16.0
+		draw_string(font, Vector2(cx + 10, cy + 12), "%s: %s" % [Locale.ltr("UI_MISSING_INPUTS"), _missing_input_summary(cost, storage)], HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40.0, GameConfig.get_font_size("popup_body"), Color(0.82, 0.82, 0.82))
+		cy += 24.0
+
 	# Type-specific info
 	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_DETAILS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
 
-	var storage: Dictionary = {}
-	var storage_raw: Variant = _building_value(building, "storage", {})
-	if storage_raw is Dictionary:
-		storage = storage_raw
 	match building_type:
 		"stockpile":
 			if is_built:
@@ -151,7 +180,6 @@ func _draw() -> void:
 	cy += 28.0
 	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILD_COST"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
 	cy += 18.0
-	var cost: Dictionary = GameConfig.BUILDING_TYPES.get(building_type, {}).get("cost", {})
 	var cost_parts: Array = []
 	var cost_keys: Array = cost.keys()
 	for i in range(cost_keys.size()):
@@ -186,3 +214,83 @@ func _building_value(building: Variant, key: String, default_value: Variant) -> 
 	if building == null:
 		return default_value
 	return building.get(key)
+
+
+func _format_signed_percent(value: float) -> String:
+	var pct: int = int(round(value * 100.0))
+	if pct > 0:
+		return "+%d%%" % pct
+	if pct < 0:
+		return "%d%%" % pct
+	return "0%"
+
+
+func _stall_reason_key(reason: String) -> String:
+	match reason:
+		"complete":
+			return "UI_STALL_COMPLETE"
+		"advancing":
+			return "UI_STALL_ADVANCING"
+		"no_builder":
+			return "UI_STALL_NO_BUILDER"
+		"priority_too_low":
+			return "UI_STALL_PRIORITY_TOO_LOW"
+		"builder_travel":
+			return "UI_STALL_BUILDER_TRAVEL"
+		"waiting_tick":
+			return "UI_STALL_WAITING_TICK"
+		_:
+			return "UI_STALL_UNKNOWN"
+
+
+func _construction_state_key(state: String) -> String:
+	match state:
+		"complete":
+			return "UI_CONSTRUCTION_STATE_COMPLETE"
+		"advancing":
+			return "UI_CONSTRUCTION_STATE_ADVANCING"
+		_:
+			return "UI_CONSTRUCTION_STATE_STALLED"
+
+
+func _builder_names_summary(builders: Array) -> String:
+	if builders.is_empty():
+		return Locale.ltr("UI_NONE")
+	var names: PackedStringArray = PackedStringArray()
+	for i in range(min(builders.size(), 3)):
+		var entry: Variant = builders[i]
+		if entry is Dictionary:
+			var name_text: String = str(entry.get("name", Locale.ltr("UI_UNKNOWN")))
+			if bool(entry.get("in_range", false)):
+				names.append(name_text)
+			else:
+				names.append("%s*" % name_text)
+	if names.is_empty():
+		return Locale.ltr("UI_NONE")
+	return ", ".join(names)
+
+
+func _missing_input_summary(cost: Dictionary, storage: Dictionary) -> String:
+	var missing_parts: PackedStringArray = PackedStringArray()
+	for resource_key in cost.keys():
+		var required: float = float(cost.get(resource_key, 0.0))
+		var available: float = float(storage.get(resource_key, 0.0))
+		var shortfall: float = maxf(0.0, required - available)
+		if shortfall <= 0.0:
+			continue
+		missing_parts.append("%s %.0f" % [_resource_label(str(resource_key)), shortfall])
+	if missing_parts.is_empty():
+		return Locale.ltr("UI_NONE")
+	return ", ".join(missing_parts)
+
+
+func _resource_label(resource_key: String) -> String:
+	match resource_key:
+		"food":
+			return Locale.ltr("UI_FOOD")
+		"wood":
+			return Locale.ltr("UI_WOOD")
+		"stone":
+			return Locale.ltr("UI_STONE")
+		_:
+			return resource_key

@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://og6d26ev02gv" path="res://scripts/ui/renderers/entity_renderer.gd" id="3_entity"]
 [ext_resource type="Script" uid="uid://dntiv3p0wiayy" path="res://scripts/ui/camera_controller.gd" id="4_camera"]
 [ext_resource type="Script" uid="uid://bxptgpumrlfvy" path="res://scripts/ui/hud.gd" id="5_hud"]
-[ext_resource type="Script" uid="uid://fx6cmex3j0dp" path="res://scripts/ui/renderers/building_renderer.gd" id="6_building"]
+[ext_resource type="Script" uid="uid://dofq544iuxx5r" path="res://scripts/ui/renderers/building_renderer.gd" id="6_building"]
 
 [node name="Main" type="Node2D" unique_id=519280224]
 script = ExtResource("1_main")

@@ -1,3 +1,7 @@
+pub mod command;
+pub mod engine;
+pub mod event_bus;
+pub mod event_store;
 /// sim-engine: Tick loop, event system, and system registry.
 ///
 /// This crate is the execution heart of the simulation. It wires together:
@@ -25,40 +29,45 @@
 /// engine.run_until(4380); // one in-game year
 /// ```
 pub mod events;
-pub mod event_bus;
-pub mod event_store;
 pub mod explain_log;
+pub mod frame_snapshot;
 pub mod llm_prompt;
 pub mod llm_server;
 pub mod llm_validator;
 pub mod llm_worker;
-pub mod system_trait;
-pub mod engine;
-pub mod command;
-pub mod frame_snapshot;
 pub mod notification;
-pub mod snapshot;
 pub mod perf_tracker;
+pub mod snapshot;
+pub mod system_trait;
 
 // ── Convenience re-exports ────────────────────────────────────────────────────
 
-pub use events::{GameEvent, LlmEvent};
+pub use command::{Command, CommandQueue};
+pub use engine::{
+    AgentNeedDiagnostics, ChronicleEvent, ConstructionDiagnostics, DiagnosticDelta,
+    RuntimeStatsSnapshot, SimEngine, SimResources,
+};
 pub use event_bus::{EventBus, Subscriber};
 pub use event_store::{EventStore, SimEvent, SimEventType};
+pub use events::{GameEvent, LlmEvent};
 pub use explain_log::{ExplainEntry, ExplainLog};
-pub use llm_prompt::{ActionOption, HexacoDescriptors, LlmPromptContext, LlmPromptTemplates, PromptPayload, SpeechRegister};
+pub use frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+pub use llm_prompt::{
+    ActionOption, HexacoDescriptors, LlmPromptContext, LlmPromptTemplates, PromptPayload,
+    SpeechRegister,
+};
 pub use llm_server::{LlmConfig, LlmRuntime, LlmRuntimeError, LlmStatusSnapshot};
-pub use llm_validator::{load_forbidden_word_list, validate_korean_output, ForbiddenWord, ForbiddenWordList, ValidationResult, Violation};
+pub use llm_validator::{
+    load_forbidden_word_list, validate_korean_output, ForbiddenWord, ForbiddenWordList,
+    ValidationResult, Violation,
+};
 pub use llm_worker::{
     generate_fallback_content, LlmPromptVariant, LlmRequest, LlmRequestMeta, LlmResponse,
 };
-pub use system_trait::SimSystem;
-pub use engine::{ChronicleEvent, RuntimeStatsSnapshot, SimEngine, SimResources};
-pub use command::{Command, CommandQueue};
-pub use frame_snapshot::{build_agent_snapshots, AgentSnapshot};
 pub use notification::{NotificationTier, SimNotification};
-pub use snapshot::EngineSnapshot;
 pub use perf_tracker::PerfTracker;
+pub use snapshot::EngineSnapshot;
+pub use system_trait::SimSystem;
 
 #[cfg(test)]
 mod tests {

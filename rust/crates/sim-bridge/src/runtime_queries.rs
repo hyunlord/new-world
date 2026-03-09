@@ -3,7 +3,8 @@ use hecs::{Entity, World};
 use sim_core::components::{
     Age, Behavior, Emotion, Identity, Personality, Position, Skills, Social, Stress,
 };
-use sim_core::enums::{RelationType, Sex, TechState, TerrainType};
+use sim_core::config;
+use sim_core::enums::{ActionType, RelationType, Sex, TechState, TerrainType};
 use sim_core::world::TileResource;
 use sim_core::{Building, BuildingId, EntityId, Settlement, SettlementId};
 use sim_engine::RuntimeStatsSnapshot;
@@ -95,7 +96,10 @@ struct BootstrapWorldResult {
 }
 
 /// Applies startup bootstrap data into the live runtime and returns a summary.
-pub(crate) fn bootstrap_world(state: &mut RuntimeState, payload: RuntimeBootstrapPayload) -> VarDictionary {
+pub(crate) fn bootstrap_world(
+    state: &mut RuntimeState,
+    payload: RuntimeBootstrapPayload,
+) -> VarDictionary {
     let mut out = VarDictionary::new();
     let Some(result) = bootstrap_world_core(state, payload) else {
         return out;
@@ -125,7 +129,11 @@ fn bootstrap_world_core(
     *state.engine.world_mut() = World::new();
     {
         let resources = state.engine.resources_mut();
-        resources.map = sim_core::WorldMap::new(payload.world.width, payload.world.height, resources.map.seed);
+        resources.map = sim_core::WorldMap::new(
+            payload.world.width,
+            payload.world.height,
+            resources.map.seed,
+        );
         resources.settlements.clear();
         resources.buildings.clear();
         resources.tension_pairs.clear();
@@ -157,7 +165,10 @@ fn bootstrap_world_core(
     settlement.stockpile_stone = payload.founding_settlement.stockpile_stone.max(0.0);
 
     let stockpile_building_id = BuildingId(1);
-    if settlement.stockpile_food > 0.0 || settlement.stockpile_wood > 0.0 || settlement.stockpile_stone > 0.0 {
+    if settlement.stockpile_food > 0.0
+        || settlement.stockpile_wood > 0.0
+        || settlement.stockpile_stone > 0.0
+    {
         let mut stockpile = Building::new(
             stockpile_building_id,
             "stockpile".to_string(),
@@ -169,7 +180,11 @@ fn bootstrap_world_core(
         stockpile.construction_progress = 1.0;
         stockpile.is_complete = true;
         settlement.buildings.push(stockpile_building_id);
-        state.engine.resources_mut().buildings.insert(stockpile_building_id, stockpile);
+        state
+            .engine
+            .resources_mut()
+            .buildings
+            .insert(stockpile_building_id, stockpile);
     }
 
     let mut spawned_entities: Vec<Entity> = Vec::with_capacity(payload.agents.len());
@@ -190,7 +205,11 @@ fn bootstrap_world_core(
 
     settlement.leader_id = pick_leader(state.engine.world(), &spawned_entities)
         .map(|entity| EntityId(entity.id() as u64));
-    state.engine.resources_mut().settlements.insert(settlement_id, settlement);
+    state
+        .engine
+        .resources_mut()
+        .settlements
+        .insert(settlement_id, settlement);
     seed_initial_relationships(state.engine.world_mut(), &spawned_entities);
 
     Some(BootstrapWorldResult {
@@ -245,14 +264,16 @@ pub(crate) fn settlement_detail(state: &RuntimeState, settlement_id_raw: i64) ->
     out.set("members", members);
     out.set("leader", leader.unwrap_or_default());
     out.set("buildings", buildings);
-    out.set("building_ids", int_id_array_from_u64_ids(settlement.buildings.iter().map(|id| id.0)));
+    out.set(
+        "building_ids",
+        int_id_array_from_u64_ids(settlement.buildings.iter().map(|id| id.0)),
+    );
     out.set(
         "member_ids",
         int_id_array_from_u64_ids(
-            settlement
-                .members
-                .iter()
-                .filter_map(|id| runtime_bits_from_raw_id(&raw_lookup, id.0).map(|bits| bits as u64)),
+            settlement.members.iter().filter_map(|id| {
+                runtime_bits_from_raw_id(&raw_lookup, id.0).map(|bits| bits as u64)
+            }),
         ),
     );
     out.set("tech_states", tech_states_dict(settlement));
@@ -266,7 +287,34 @@ pub(crate) fn building_detail(state: &RuntimeState, building_id_raw: i64) -> Var
     let Some(building) = state.engine.resources().buildings.get(&building_id) else {
         return out;
     };
-    let settlement = state.engine.resources().settlements.get(&building.settlement_id);
+    let progress_diag = state
+        .engine
+        .resources()
+        .construction_diagnostics
+        .get(&building_id)
+        .copied()
+        .unwrap_or_default();
+    let current_tick = state.engine.current_tick();
+    let ticks_since_progress = if progress_diag.last_progress_tick == 0 {
+        current_tick
+    } else {
+        current_tick.saturating_sub(progress_diag.last_progress_tick)
+    };
+    let (settlement_builder_count, adjacent_builder_count, assigned_builders) =
+        collect_construction_assignments(state.engine.world(), building);
+    let stall_reason = construction_stall_reason(
+        building,
+        progress_diag.progress_delta,
+        settlement_builder_count,
+        assigned_builders.len() as u32,
+        adjacent_builder_count,
+        ticks_since_progress,
+    );
+    let settlement = state
+        .engine
+        .resources()
+        .settlements
+        .get(&building.settlement_id);
     out.set("id", building.id.0 as i64);
     out.set("building_type", building.building_type.clone());
     out.set("settlement_id", building.settlement_id.0 as i64);
@@ -274,8 +322,26 @@ pub(crate) fn building_detail(state: &RuntimeState, building_id_raw: i64) -> Var
     out.set("tile_y", building.y as i64);
     out.set("is_constructed", building.is_complete);
     out.set("is_built", building.is_complete);
-    out.set("construction_progress", building.construction_progress as f64);
+    out.set(
+        "construction_progress",
+        building.construction_progress as f64,
+    );
     out.set("build_progress", building.construction_progress as f64);
+    out.set("construction_progress_delta", progress_diag.progress_delta);
+    out.set("recent_progress_delta", progress_diag.progress_delta);
+    out.set("ticks_since_progress", ticks_since_progress as i64);
+    out.set(
+        "construction_state",
+        construction_state_label(building, progress_diag.progress_delta),
+    );
+    out.set("stall_reason", stall_reason);
+    out.set("assigned_builder_count", assigned_builders.len() as i64);
+    out.set("settlement_builder_count", settlement_builder_count as i64);
+    out.set("adjacent_builder_count", adjacent_builder_count as i64);
+    out.set(
+        "assigned_builders",
+        builder_assignment_array(&assigned_builders),
+    );
     out.set("condition", building.condition as f64);
     out.set(
         "tech_era",
@@ -283,11 +349,130 @@ pub(crate) fn building_detail(state: &RuntimeState, building_id_raw: i64) -> Var
             .map(|entry| entry.current_era.clone())
             .unwrap_or_else(|| "stone_age".to_string()),
     );
-    out.set(
-        "storage",
-        stockpile_storage_dict(settlement),
-    );
+    out.set("storage", stockpile_storage_dict(settlement));
     out
+}
+
+#[derive(Debug, Clone)]
+struct BuilderAssignmentSummary {
+    runtime_id: i64,
+    name: String,
+    in_range: bool,
+    distance_tiles: f64,
+}
+
+fn collect_construction_assignments(
+    world: &World,
+    building: &Building,
+) -> (u32, u32, Vec<BuilderAssignmentSummary>) {
+    let mut settlement_builder_count = 0_u32;
+    let mut adjacent_builder_count = 0_u32;
+    let mut assigned_builders: Vec<BuilderAssignmentSummary> = Vec::new();
+
+    let mut query = world.query::<(&Identity, &Behavior, Option<&Age>, Option<&Position>)>();
+    for (entity, (identity, behavior, age_opt, position_opt)) in &mut query {
+        if identity.settlement_id != Some(building.settlement_id) {
+            continue;
+        }
+        let Some(age) = age_opt else {
+            continue;
+        };
+        if !age.alive || age.stage != sim_core::GrowthStage::Adult {
+            continue;
+        }
+        if behavior.job == "builder" {
+            settlement_builder_count = settlement_builder_count.saturating_add(1);
+        }
+        if behavior.current_action != ActionType::Build
+            || behavior.action_target_x != Some(building.x)
+            || behavior.action_target_y != Some(building.y)
+        {
+            continue;
+        }
+
+        let (in_range, distance_tiles) = position_opt
+            .map(|position| {
+                let dx = (position.x - f64::from(building.x)).abs();
+                let dy = (position.y - f64::from(building.y)).abs();
+                let chebyshev = dx.max(dy);
+                (dx <= 1.0 && dy <= 1.0, chebyshev)
+            })
+            .unwrap_or((false, f64::INFINITY));
+        if in_range {
+            adjacent_builder_count = adjacent_builder_count.saturating_add(1);
+        }
+        assigned_builders.push(BuilderAssignmentSummary {
+            runtime_id: entity.to_bits().get() as i64,
+            name: identity.name.clone(),
+            in_range,
+            distance_tiles,
+        });
+    }
+
+    assigned_builders.sort_by(|left, right| {
+        left.distance_tiles
+            .partial_cmp(&right.distance_tiles)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then_with(|| left.name.cmp(&right.name))
+    });
+
+    (
+        settlement_builder_count,
+        adjacent_builder_count,
+        assigned_builders,
+    )
+}
+
+fn builder_assignment_array(assignments: &[BuilderAssignmentSummary]) -> Array<VarDictionary> {
+    let mut out = Array::<VarDictionary>::new();
+    for assignment in assignments {
+        let mut row = VarDictionary::new();
+        row.set("entity_id", assignment.runtime_id);
+        row.set("name", assignment.name.clone());
+        row.set("in_range", assignment.in_range);
+        row.set("distance_tiles", assignment.distance_tiles);
+        out.push(&row);
+    }
+    out
+}
+
+fn construction_state_label(building: &Building, progress_delta: f64) -> &'static str {
+    if building.is_complete {
+        "complete"
+    } else if progress_delta > f64::EPSILON {
+        "advancing"
+    } else {
+        "stalled"
+    }
+}
+
+fn construction_stall_reason(
+    building: &Building,
+    progress_delta: f64,
+    settlement_builder_count: u32,
+    assigned_builder_count: u32,
+    adjacent_builder_count: u32,
+    ticks_since_progress: u64,
+) -> &'static str {
+    if building.is_complete {
+        return "complete";
+    }
+    if progress_delta > f64::EPSILON {
+        return "advancing";
+    }
+    if settlement_builder_count == 0 {
+        return "no_builder";
+    }
+    if assigned_builder_count == 0 {
+        return "priority_too_low";
+    }
+    if adjacent_builder_count == 0 {
+        return "builder_travel";
+    }
+    if ticks_since_progress < config::CONSTRUCTION_TICK_INTERVAL {
+        return "waiting_tick";
+    }
+    "unknown"
 }
 
 /// Returns a bridge-friendly world summary snapshot for HUD and stats UI.
@@ -307,7 +492,10 @@ pub(crate) fn world_summary(state: &RuntimeState) -> VarDictionary {
         summary.set("pop", detail.get("population").unwrap_or_default());
         summary.set("male", detail.get("male_count").unwrap_or_default());
         summary.set("female", detail.get("female_count").unwrap_or_default());
-        summary.set("avg_happiness", detail.get("avg_happiness").unwrap_or_default());
+        summary.set(
+            "avg_happiness",
+            detail.get("avg_happiness").unwrap_or_default(),
+        );
         summary.set("avg_stress", detail.get("avg_stress").unwrap_or_default());
         summary.set("leader", detail.get("leader").unwrap_or_default());
         summary.set("tech_era", detail.get("tech_era").unwrap_or_default());
@@ -395,8 +583,9 @@ pub(crate) fn minimap_snapshot(state: &RuntimeState) -> VarDictionary {
     }
 
     let mut entities = Array::<VarDictionary>::new();
-    for (entity, (position, behavior_opt, age_opt)) in
-        world.query::<(&Position, Option<&Behavior>, Option<&Age>)>().iter()
+    for (entity, (position, behavior_opt, age_opt)) in world
+        .query::<(&Position, Option<&Behavior>, Option<&Age>)>()
+        .iter()
     {
         if age_opt.map(|age| !age.alive).unwrap_or(false) {
             continue;
@@ -526,14 +715,21 @@ fn pick_leader(world: &World, spawned: &[Entity]) -> Option<Entity> {
         let Ok(age) = world.get::<&Age>(*entity) else {
             continue;
         };
-        if matches!(age.stage, sim_core::enums::GrowthStage::Adult | sim_core::enums::GrowthStage::Elder) {
+        if matches!(
+            age.stage,
+            sim_core::enums::GrowthStage::Adult | sim_core::enums::GrowthStage::Elder
+        ) {
             let score = age.ticks;
-            if best.map(|(_, best_score)| score > best_score).unwrap_or(true) {
+            if best
+                .map(|(_, best_score)| score > best_score)
+                .unwrap_or(true)
+            {
                 best = Some((*entity, score));
             }
         }
     }
-    best.map(|(entity, _)| entity).or_else(|| spawned.first().copied())
+    best.map(|(entity, _)| entity)
+        .or_else(|| spawned.first().copied())
 }
 
 fn seed_initial_relationships(world: &mut World, spawned: &[Entity]) {
@@ -550,7 +746,10 @@ fn seed_initial_relationships(world: &mut World, spawned: &[Entity]) {
         let Ok(age) = world.get::<&Age>(*entity) else {
             continue;
         };
-        if !matches!(age.stage, sim_core::enums::GrowthStage::Adult | sim_core::enums::GrowthStage::Elder) {
+        if !matches!(
+            age.stage,
+            sim_core::enums::GrowthStage::Adult | sim_core::enums::GrowthStage::Elder
+        ) {
             continue;
         }
         match identity.sex {
@@ -559,13 +758,23 @@ fn seed_initial_relationships(world: &mut World, spawned: &[Entity]) {
         }
     }
 
-    if let (Some(male), Some(female)) = (adult_males.first().copied(), adult_females.first().copied()) {
+    if let (Some(male), Some(female)) =
+        (adult_males.first().copied(), adult_females.first().copied())
+    {
         apply_relationship(world, male, female, 90.0, 1.0, RelationType::Spouse, true);
     }
 
     for pair in spawned.chunks(2).take(4) {
         if pair.len() == 2 {
-            apply_relationship(world, pair[0], pair[1], 45.0, 0.7, RelationType::Friend, false);
+            apply_relationship(
+                world,
+                pair[0],
+                pair[1],
+                45.0,
+                0.7,
+                RelationType::Friend,
+                false,
+            );
         }
     }
 }
@@ -660,7 +869,12 @@ fn member_summary_by_runtime_id(world: &World, entity_id_raw: i64) -> Option<Var
     member_summary(world, entity, &identity, &age)
 }
 
-fn member_summary(world: &World, entity: Entity, identity: &Identity, age: &Age) -> Option<VarDictionary> {
+fn member_summary(
+    world: &World,
+    entity: Entity,
+    identity: &Identity,
+    age: &Age,
+) -> Option<VarDictionary> {
     if !age.alive {
         return None;
     }
@@ -669,7 +883,10 @@ fn member_summary(world: &World, entity: Entity, identity: &Identity, age: &Age)
     out.set("entity_name", identity.name.clone());
     out.set("name", identity.name.clone());
     out.set("gender", format!("{:?}", identity.sex).to_lowercase());
-    out.set("settlement_id", identity.settlement_id.map(|id| id.0 as i64).unwrap_or(-1));
+    out.set(
+        "settlement_id",
+        identity.settlement_id.map(|id| id.0 as i64).unwrap_or(-1),
+    );
     out.set("is_alive", true);
     out.set("age", age.ticks as i64);
     out.set("age_years", age.years);
@@ -718,7 +935,10 @@ fn member_summary(world: &World, entity: Entity, identity: &Identity, age: &Age)
     Some(out)
 }
 
-fn collect_building_summaries(state: &RuntimeState, settlement: &Settlement) -> Array<VarDictionary> {
+fn collect_building_summaries(
+    state: &RuntimeState,
+    settlement: &Settlement,
+) -> Array<VarDictionary> {
     let mut buildings = Array::<VarDictionary>::new();
     for building_id in &settlement.buildings {
         if let Some(building) = state.engine.resources().buildings.get(building_id) {
@@ -730,7 +950,10 @@ fn collect_building_summaries(state: &RuntimeState, settlement: &Settlement) -> 
             out.set("settlement_id", building.settlement_id.0 as i64);
             out.set("is_constructed", building.is_complete);
             out.set("is_built", building.is_complete);
-            out.set("construction_progress", building.construction_progress as f64);
+            out.set(
+                "construction_progress",
+                building.construction_progress as f64,
+            );
             out.set("build_progress", building.construction_progress as f64);
             out.set("storage", stockpile_storage_dict(Some(settlement)));
             buildings.push(&out);
@@ -741,9 +964,18 @@ fn collect_building_summaries(state: &RuntimeState, settlement: &Settlement) -> 
 
 fn stockpile_storage_dict(settlement: Option<&Settlement>) -> VarDictionary {
     let mut storage = VarDictionary::new();
-    storage.set("food", settlement.map(|entry| entry.stockpile_food).unwrap_or(0.0));
-    storage.set("wood", settlement.map(|entry| entry.stockpile_wood).unwrap_or(0.0));
-    storage.set("stone", settlement.map(|entry| entry.stockpile_stone).unwrap_or(0.0));
+    storage.set(
+        "food",
+        settlement.map(|entry| entry.stockpile_food).unwrap_or(0.0),
+    );
+    storage.set(
+        "wood",
+        settlement.map(|entry| entry.stockpile_wood).unwrap_or(0.0),
+    );
+    storage.set(
+        "stone",
+        settlement.map(|entry| entry.stockpile_stone).unwrap_or(0.0),
+    );
     storage
 }
 
@@ -850,8 +1082,14 @@ fn member_aggregates(members: &Array<VarDictionary>) -> MemberAggregates {
             .get("emotions")
             .map(|value| value.to::<VarDictionary>())
             .unwrap_or_default();
-        total_happiness += emotions.get("happiness").map(|value| value.to::<f64>()).unwrap_or(0.0);
-        total_stress += emotions.get("stress").map(|value| value.to::<f64>()).unwrap_or(0.0);
+        total_happiness += emotions
+            .get("happiness")
+            .map(|value| value.to::<f64>())
+            .unwrap_or(0.0);
+        total_stress += emotions
+            .get("stress")
+            .map(|value| value.to::<f64>())
+            .unwrap_or(0.0);
     }
 
     let population = members.len();
@@ -910,7 +1148,9 @@ fn runtime_history_array(history: &[RuntimeStatsSnapshot]) -> Array<VarDictionar
 mod tests {
     use super::*;
     use crate::runtime_registry::RuntimeConfig;
+    use sim_core::components::{Age, Behavior, Identity, Position, Skills};
     use sim_core::config::TICKS_PER_YEAR;
+    use sim_core::{ActionType, Building, BuildingId, SettlementId};
 
     fn test_bootstrap_payload() -> RuntimeBootstrapPayload {
         RuntimeBootstrapPayload {
@@ -956,9 +1196,18 @@ mod tests {
 
     #[test]
     fn biome_mapping_round_trips_known_ids() {
-        assert_eq!(terrain_from_biome_id(BIOME_DEEP_WATER), TerrainType::DeepWater);
-        assert_eq!(biome_id_from_terrain(TerrainType::DenseForest), BIOME_DENSE_FOREST);
-        assert_eq!(move_cost_from_biome_id(BIOME_MOUNTAIN), BIOME_MOVE_COST_MOUNTAIN);
+        assert_eq!(
+            terrain_from_biome_id(BIOME_DEEP_WATER),
+            TerrainType::DeepWater
+        );
+        assert_eq!(
+            biome_id_from_terrain(TerrainType::DenseForest),
+            BIOME_DENSE_FOREST
+        );
+        assert_eq!(
+            move_cost_from_biome_id(BIOME_MOUNTAIN),
+            BIOME_MOVE_COST_MOUNTAIN
+        );
     }
 
     #[test]
@@ -975,7 +1224,8 @@ mod tests {
     #[test]
     fn bootstrap_world_core_populates_runtime_state() {
         let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
-        let result = bootstrap_world_core(&mut state, test_bootstrap_payload()).expect("bootstrap should succeed");
+        let result = bootstrap_world_core(&mut state, test_bootstrap_payload())
+            .expect("bootstrap should succeed");
         assert_eq!(result.entity_count, 3);
         assert_eq!(result.building_count, 1);
         assert_eq!(result.settlement_id, 1);
@@ -993,5 +1243,79 @@ mod tests {
         assert!(settlement.leader_id.is_some());
         assert_eq!(resources.buildings.len(), 1);
         assert_eq!(state.engine.world().len(), 3);
+    }
+
+    #[test]
+    fn collect_construction_assignments_counts_targeted_builder() {
+        let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
+        let settlement_id = SettlementId(1);
+        state.engine.world_mut().spawn((
+            Identity {
+                name: "Builder One".to_string(),
+                settlement_id: Some(settlement_id),
+                ..Identity::default()
+            },
+            Behavior {
+                job: "builder".to_string(),
+                current_action: ActionType::Build,
+                action_target_x: Some(6),
+                action_target_y: Some(6),
+                ..Behavior::default()
+            },
+            Age {
+                alive: true,
+                ..Age::default()
+            },
+            Position {
+                x: 6.0,
+                y: 5.0,
+                ..Position::default()
+            },
+            Skills::default(),
+        ));
+        let building = Building {
+            id: BuildingId(9),
+            building_type: "campfire".to_string(),
+            settlement_id,
+            x: 6,
+            y: 6,
+            construction_progress: 0.4,
+            is_complete: false,
+            construction_started_tick: 0,
+            condition: 1.0,
+        };
+
+        let (settlement_builders, adjacent_builders, assignments) =
+            collect_construction_assignments(state.engine.world(), &building);
+        assert_eq!(settlement_builders, 1);
+        assert_eq!(adjacent_builders, 1);
+        assert_eq!(assignments.len(), 1);
+        assert_eq!(assignments[0].name, "Builder One");
+        assert!(assignments[0].in_range);
+    }
+
+    #[test]
+    fn construction_stall_reason_identifies_priority_gap() {
+        assert_eq!(
+            construction_stall_reason(
+                &Building {
+                    id: BuildingId(9),
+                    building_type: "campfire".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 6,
+                    y: 6,
+                    construction_progress: 0.4,
+                    is_complete: false,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+                0.0,
+                2,
+                0,
+                0,
+                sim_core::config::CONSTRUCTION_TICK_INTERVAL,
+            ),
+            "priority_too_low"
+        );
     }
 }
