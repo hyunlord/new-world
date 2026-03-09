@@ -8,63 +8,59 @@
 #![allow(clippy::too_many_arguments)]
 
 mod body_bindings;
+mod debug_api;
 mod locale_bindings;
 mod narrative_display;
 mod pathfinding_bindings;
 mod pathfinding_core;
-mod runtime_commands;
 mod runtime_bindings;
+mod runtime_commands;
 mod runtime_dict;
 mod runtime_events;
 mod runtime_queries;
 mod runtime_registry;
 mod snapshot_buffer;
-mod debug_api;
 mod ws2_codec;
 
-use godot::prelude::*;
 use body_bindings::{
     build_step_pairs, packed_f32_to_vec, packed_i32_to_vec, packed_u8_to_vec, vec_f32_to_packed,
     vec_i32_to_packed, vec_u8_to_packed,
 };
+use godot::prelude::*;
+#[cfg(test)]
+use locale_bindings::format_fluent_from_source_args;
 use locale_bindings::{clear_fluent_source, format_fluent_message, store_fluent_source};
-use narrative_display::{
-    build_narrative_display, narrative_display_to_dict, NarrativeDisplayData,
+use narrative_display::{build_narrative_display, narrative_display_to_dict, NarrativeDisplayData};
+#[cfg(test)]
+use pathfinding_bindings::parse_pathfind_backend;
+use pathfinding_bindings::{
+    backend_mode_to_str, encode_path_groups_vec2, encode_path_groups_xy, encode_path_vec2,
+    encode_path_xy, normalize_max_steps, resolve_backend_mode, resolve_backend_mode_code,
 };
 use pathfinding_core::{
     get_backend_mode, has_gpu_backend, read_dispatch_counts, reset_dispatch_counts,
     PATHFIND_BACKEND_GPU,
 };
-use pathfinding_bindings::{
-    backend_mode_to_str, encode_path_groups_vec2, encode_path_groups_xy, encode_path_vec2,
-    encode_path_xy, normalize_max_steps, resolve_backend_mode, resolve_backend_mode_code,
-};
-pub(crate) use ws2_codec::{decode_ws2_blob, encode_ws2_blob};
-#[cfg(test)]
-use locale_bindings::format_fluent_from_source_args;
-#[cfg(test)]
-use pathfinding_bindings::parse_pathfind_backend;
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence,
-    LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position,
-    Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmCapable,
+    LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position, Skills,
+    Social, Stress, Traits, Values,
 };
 use sim_core::enums::{GrowthStage, NeedType, Sex};
-use sim_core::{ChannelId, Settlement, SettlementId};
+use sim_core::{ChannelId, EntityId, Settlement, SettlementId};
 use sim_engine::{
-    AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
-    SimEventType,
+    AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
 };
-use sim_systems::{
-    body,
-    drain_and_apply_llm_responses,
-    entity_spawner,
-    stat_curve,
-};
+use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
+pub(crate) use ws2_codec::{decode_ws2_blob, encode_ws2_blob};
 
+use pathfinding_core::{
+    dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
+    dispatch_pathfind_grid_bytes,
+};
 pub use pathfinding_core::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
@@ -73,24 +69,20 @@ pub use pathfinding_core::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode, PathfindError, PathfindInput,
 };
-use pathfinding_core::{
-    dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
-    dispatch_pathfind_grid_bytes,
-};
 use runtime_commands::{apply_commands_v2, clear_registry, registry_snapshot};
 use runtime_registry::{
     clamp_speed_index, load_legacy_runtime_bootstrap, parse_runtime_config,
     runtime_speed_multiplier, RuntimeState,
 };
-use snapshot_buffer::SnapshotBuffer;
 #[cfg(test)]
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
+use snapshot_buffer::SnapshotBuffer;
 
 use runtime_events::game_event_to_v2_dict;
 use runtime_queries::{
     bootstrap_world as bridge_bootstrap_world, building_detail as bridge_building_detail,
-    runtime_bits_from_raw_id, settlement_detail as bridge_settlement_detail,
-    world_summary as bridge_world_summary, minimap_snapshot as bridge_minimap_snapshot,
+    minimap_snapshot as bridge_minimap_snapshot, runtime_bits_from_raw_id,
+    settlement_detail as bridge_settlement_detail, world_summary as bridge_world_summary,
 };
 
 /// JSON-deserializable entry for runtime_spawn_agents.
@@ -144,10 +136,7 @@ fn legacy_json_data_dir() -> PathBuf {
     PathBuf::from("data")
 }
 
-fn resolve_runtime_entity(
-    world: &hecs::World,
-    entity_id_raw_or_bits: i64,
-) -> Option<hecs::Entity> {
+fn resolve_runtime_entity(world: &hecs::World, entity_id_raw_or_bits: i64) -> Option<hecs::Entity> {
     let raw_or_bits = entity_id_raw_or_bits.max(0) as u64;
     if let Some(entity) = hecs::Entity::from_bits(raw_or_bits) {
         if world.contains(entity) {
@@ -258,6 +247,10 @@ fn top_need_key_and_value(needs: &Needs) -> (&'static str, f64) {
     }
 }
 
+fn diagnostic_comfort_score(warmth: f64, safety: f64, sleep: f64) -> f64 {
+    ((warmth + safety + sleep) / 3.0).clamp(0.0, 1.0)
+}
+
 fn dominant_emotion_adjective(emotion: &Emotion) -> &'static str {
     let dominant_index = emotion
         .primary
@@ -327,13 +320,22 @@ fn format_story_event_message(
 ) -> String {
     match &event.event_type {
         SimEventType::NeedCritical => {
-            format!("{actor_name} is struggling with {}.", event.cause.replace('_', " "))
+            format!(
+                "{actor_name} is struggling with {}.",
+                event.cause.replace('_', " ")
+            )
         }
         SimEventType::NeedSatisfied => {
-            format!("{actor_name} recovered from {}.", event.cause.replace('_', " "))
+            format!(
+                "{actor_name} recovered from {}.",
+                event.cause.replace('_', " ")
+            )
         }
         SimEventType::EmotionShift => {
-            format!("{actor_name}'s mood shifted toward {}.", event.cause.replace('_', " "))
+            format!(
+                "{actor_name}'s mood shifted toward {}.",
+                event.cause.replace('_', " ")
+            )
         }
         SimEventType::MoodChanged => format!("{actor_name} feels different now."),
         SimEventType::StressEscalated => format!("{actor_name}'s stress is rising."),
@@ -356,7 +358,10 @@ fn format_story_event_message(
             target_name.unwrap_or("someone")
         ),
         SimEventType::ActionChanged => {
-            format!("{actor_name} switched to {}.", humanize_status_text(&event.cause))
+            format!(
+                "{actor_name} switched to {}.",
+                humanize_status_text(&event.cause)
+            )
         }
         SimEventType::TaskCompleted => {
             format!("{actor_name} finished {}.", event.cause.replace('_', " "))
@@ -366,7 +371,9 @@ fn format_story_event_message(
         SimEventType::AgeTransition => {
             format!("{actor_name} entered a new stage of life.")
         }
-        SimEventType::FirstOccurrence => format!("A first happened: {}.", event.cause.replace('_', " ")),
+        SimEventType::FirstOccurrence => {
+            format!("A first happened: {}.", event.cause.replace('_', " "))
+        }
         SimEventType::Custom(label) => format!("{actor_name}: {}", humanize_status_text(label)),
     }
 }
@@ -378,7 +385,8 @@ fn recent_social_observation(
     world: &hecs::World,
     raw_lookup: &std::collections::HashMap<u64, u64>,
 ) -> Option<String> {
-    let since_tick = current_tick.saturating_sub(sim_core::config::THOUGHT_TEXT_EVENT_LOOKBACK_TICKS);
+    let since_tick =
+        current_tick.saturating_sub(sim_core::config::THOUGHT_TEXT_EVENT_LOOKBACK_TICKS);
     for event in store.recent(store.len()) {
         if event.tick < since_tick {
             break;
@@ -396,10 +404,18 @@ fn recent_social_observation(
             .and_then(|raw_id| entity_name_from_raw_id(world, raw_lookup, raw_id))
             .unwrap_or_else(|| "someone nearby".to_string());
         let observation = match event.event_type {
-            SimEventType::SocialConflict => Some(format!("Tension with {other_name} still lingers.")),
-            SimEventType::SocialCooperation => Some(format!("Working with {other_name} felt steady.")),
-            SimEventType::RelationshipFormed => Some(format!("{other_name} feels a little closer now.")),
-            SimEventType::RelationshipBroken => Some(format!("A bond with {other_name} feels frayed.")),
+            SimEventType::SocialConflict => {
+                Some(format!("Tension with {other_name} still lingers."))
+            }
+            SimEventType::SocialCooperation => {
+                Some(format!("Working with {other_name} felt steady."))
+            }
+            SimEventType::RelationshipFormed => {
+                Some(format!("{other_name} feels a little closer now."))
+            }
+            SimEventType::RelationshipBroken => {
+                Some(format!("A bond with {other_name} feels frayed."))
+            }
             _ => None,
         };
         if observation.is_some() {
@@ -435,7 +451,8 @@ fn recent_story_events_for_entity(
             format_story_event_message(event, actor_name.as_str(), target_name.as_deref()),
         );
         if let Some(target_raw_id) = event.target {
-            if let Some(runtime_id) = runtime_bits_from_raw_id(raw_lookup, u64::from(target_raw_id)) {
+            if let Some(runtime_id) = runtime_bits_from_raw_id(raw_lookup, u64::from(target_raw_id))
+            {
                 row.set("target_id", runtime_id);
             }
         }
@@ -477,7 +494,9 @@ fn build_thought_text(
         sentences.push(format!("[b]{name} feels steady for now.[/b]"));
         sentences.push("Nothing stands out enough to break the rhythm.".to_string());
     } else if sentences.len() == 1 {
-        sentences.push(format!("Right now, {name} is holding to the current rhythm."));
+        sentences.push(format!(
+            "Right now, {name} is holding to the current rhythm."
+        ));
     }
     sentences.into_iter().take(4).collect::<Vec<_>>().join(" ")
 }
@@ -541,9 +560,7 @@ fn latest_narrative_event_for_actor(
         .map(|event| NarrativeRecentEvent {
             event_type: event.event_type.clone(),
             cause: event.cause.clone(),
-            target_name: event
-                .target
-                .and_then(|target| names.get(&target).cloned()),
+            target_name: event.target.and_then(|target| names.get(&target).cloned()),
         })
 }
 
@@ -610,7 +627,9 @@ fn plan_narrative_request(
     current_tick: u64,
     recent_event: Option<&NarrativeRecentEvent>,
 ) -> Option<NarrativeRequestPlan> {
-    if narrative_cache_field_stale(cache, current_tick, |value| value.personality_desc.is_some()) {
+    if narrative_cache_field_stale(cache, current_tick, |value| {
+        value.personality_desc.is_some()
+    }) {
         return Some(NarrativeRequestPlan {
             variant: LlmPromptVariant::Personality,
             recent_event_type: None,
@@ -752,8 +771,7 @@ impl WorldSimRuntime {
                 Ok(bootstrap) => {
                     state.engine.resources_mut().personality_distribution =
                         Some(bootstrap.personality_distribution);
-                    state.engine.resources_mut().name_generator =
-                        Some(bootstrap.name_generator);
+                    state.engine.resources_mut().name_generator = Some(bootstrap.name_generator);
                     log::info!("[SimBridge] Legacy JSON compatibility bootstrap loaded");
                 }
                 Err(error) => {
@@ -765,7 +783,9 @@ impl WorldSimRuntime {
                 }
             }
 
-            log::info!("[SimBridge] Runtime initialized (empty world — awaiting runtime_spawn_agents)");
+            log::info!(
+                "[SimBridge] Runtime initialized (empty world — awaiting runtime_spawn_agents)"
+            );
         }
 
         true
@@ -858,7 +878,12 @@ impl WorldSimRuntime {
         for entry in &entries {
             let settlement_id = SettlementId(entry.settlement_id.unwrap_or(1));
             // Ensure settlement exists
-            if !state.engine.resources().settlements.contains_key(&settlement_id) {
+            if !state
+                .engine
+                .resources()
+                .settlements
+                .contains_key(&settlement_id)
+            {
                 let sx = entry.settlement_x.unwrap_or(entry.x);
                 let sy = entry.settlement_y.unwrap_or(entry.y);
                 let settlement = Settlement::new(
@@ -868,7 +893,11 @@ impl WorldSimRuntime {
                     sy,
                     0,
                 );
-                state.engine.resources_mut().settlements.insert(settlement_id, settlement);
+                state
+                    .engine
+                    .resources_mut()
+                    .settlements
+                    .insert(settlement_id, settlement);
             }
 
             let config = entity_spawner::SpawnConfig {
@@ -888,7 +917,10 @@ impl WorldSimRuntime {
         self.snapshot_buffer
             .swap(state.engine.frame_snapshots().to_vec());
 
-        log::info!("[SimBridge] Spawned {} agents via runtime_spawn_agents", spawned_count);
+        log::info!(
+            "[SimBridge] Spawned {} agents via runtime_spawn_agents",
+            spawned_count
+        );
         spawned_count
     }
 
@@ -992,10 +1024,7 @@ impl WorldSimRuntime {
         }
 
         // Write debug snapshot for EditorPlugin every 60 ticks (file-based IPC).
-        if state.engine.debug_mode
-            && ticks_processed > 0
-            && state.engine.current_tick() % 60 == 0
-        {
+        if state.engine.debug_mode && ticks_processed > 0 && state.engine.current_tick() % 60 == 0 {
             debug_api::write_debug_snapshot(state);
         }
 
@@ -1010,8 +1039,15 @@ impl WorldSimRuntime {
         {
             let world = state.engine.world();
             let mut agent_arr = Array::<VarDictionary>::new();
-            for (entity, (identity, pos, needs, behavior_opt, age_opt)) in
-                world.query::<(&Identity, &Position, &Needs, Option<&Behavior>, Option<&Age>)>().iter()
+            for (entity, (identity, pos, needs, behavior_opt, age_opt)) in world
+                .query::<(
+                    &Identity,
+                    &Position,
+                    &Needs,
+                    Option<&Behavior>,
+                    Option<&Age>,
+                )>()
+                .iter()
             {
                 let mut d = VarDictionary::new();
                 d.set("entity_id", entity.to_bits().get() as i64);
@@ -1025,7 +1061,10 @@ impl WorldSimRuntime {
                 );
                 if let Some(behavior) = behavior_opt {
                     d.set("job", GString::from(behavior.job.as_str()));
-                    d.set("action", GString::from(behavior.current_action.to_string().as_str()));
+                    d.set(
+                        "action",
+                        GString::from(behavior.current_action.to_string().as_str()),
+                    );
                 } else {
                     d.set("job", GString::from("none"));
                     d.set("action", GString::from("idle"));
@@ -1212,7 +1251,9 @@ impl WorldSimRuntime {
     #[func]
     fn runtime_get_entity_detail(&self, entity_id: i64) -> VarDictionary {
         let mut dict = VarDictionary::new();
-        let Some(state) = self.state.as_ref() else { return dict };
+        let Some(state) = self.state.as_ref() else {
+            return dict;
+        };
         let entity = match resolve_runtime_entity(state.engine.world(), entity_id) {
             Some(e) => e,
             None => return dict,
@@ -1221,11 +1262,16 @@ impl WorldSimRuntime {
         let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
 
         // Identity (required — return empty if missing)
-        let Ok(id) = world.get::<&Identity>(entity) else { return dict };
+        let Ok(id) = world.get::<&Identity>(entity) else {
+            return dict;
+        };
         dict.set("entity_id", entity.to_bits().get() as i64);
         dict.set("name", id.name.clone());
         dict.set("sex", runtime_sex_to_str(id.sex));
-        dict.set("settlement_id", id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64));
+        dict.set(
+            "settlement_id",
+            id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64),
+        );
         dict.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
         dict.set("zodiac", id.zodiac_sign.clone());
         dict.set("blood_type", id.blood_type.clone());
@@ -1242,12 +1288,13 @@ impl WorldSimRuntime {
             dict.set("movement_dir", position.movement_dir as i64);
             let tile_x = position.tile_x();
             let tile_y = position.tile_y();
-            if tile_x >= 0 && tile_y >= 0 && state.engine.resources().map.in_bounds(tile_x, tile_y) {
-                let warmth_influence = state
-                    .engine
-                    .resources()
-                    .influence_grid
-                    .sample(tile_x as u32, tile_y as u32, ChannelId::Warmth);
+            if tile_x >= 0 && tile_y >= 0 && state.engine.resources().map.in_bounds(tile_x, tile_y)
+            {
+                let warmth_influence = state.engine.resources().influence_grid.sample(
+                    tile_x as u32,
+                    tile_y as u32,
+                    ChannelId::Warmth,
+                );
                 dict.set("warmth_influence", warmth_influence as f32);
             }
         }
@@ -1279,8 +1326,20 @@ impl WorldSimRuntime {
             dict.set("emo_disgust", emo.primary[5] as f32);
             dict.set("emo_anger", emo.primary[6] as f32);
             dict.set("emo_anticipation", emo.primary[7] as f32);
-            let dom_names = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"];
-            let dom = emo.primary.iter().enumerate()
+            let dom_names = [
+                "joy",
+                "trust",
+                "fear",
+                "surprise",
+                "sadness",
+                "disgust",
+                "anger",
+                "anticipation",
+            ];
+            let dom = emo
+                .primary
+                .iter()
+                .enumerate()
                 .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
                 .map(|(i, _)| i)
                 .unwrap_or(0);
@@ -1307,6 +1366,41 @@ impl WorldSimRuntime {
             let (top_need_key, top_need_value) = top_need_key_and_value(&needs);
             dict.set("top_need_key", top_need_key);
             dict.set("top_need_value", top_need_value as f32);
+            let diagnostics = state
+                .engine
+                .resources()
+                .agent_need_diagnostics
+                .get(&EntityId(entity.id() as u64))
+                .copied();
+            dict.set(
+                "need_hunger_delta",
+                diagnostics.map(|entry| entry.hunger.delta).unwrap_or(0.0) as f32,
+            );
+            dict.set(
+                "need_warmth_delta",
+                diagnostics.map(|entry| entry.warmth.delta).unwrap_or(0.0) as f32,
+            );
+            dict.set(
+                "need_safety_delta",
+                diagnostics.map(|entry| entry.safety.delta).unwrap_or(0.0) as f32,
+            );
+            dict.set(
+                "need_comfort",
+                diagnostics
+                    .map(|entry| entry.comfort.current)
+                    .unwrap_or_else(|| diagnostic_comfort_score(nv[3], nv[4], nv[2]))
+                    as f32,
+            );
+            dict.set(
+                "need_comfort_delta",
+                diagnostics.map(|entry| entry.comfort.delta).unwrap_or(0.0) as f32,
+            );
+            dict.set(
+                "need_diagnostic_tick",
+                diagnostics
+                    .map(|entry| entry.last_tick as i64)
+                    .unwrap_or(0_i64),
+            );
         }
 
         // Stress
@@ -1315,9 +1409,14 @@ impl WorldSimRuntime {
             dict.set("stress_reserve", stress.reserve as f32);
             dict.set("allostatic_load", stress.allostatic_load as f32);
             dict.set("stress_state", format!("{:?}", stress.state));
-            dict.set("active_break", stress.active_mental_break.as_ref()
-                .map(|b| format!("{:?}", b))
-                .unwrap_or_default());
+            dict.set(
+                "active_break",
+                stress
+                    .active_mental_break
+                    .as_ref()
+                    .map(|b| format!("{:?}", b))
+                    .unwrap_or_default(),
+            );
             dict.set("resilience", stress.resilience as f32);
         }
 
@@ -1381,7 +1480,9 @@ impl WorldSimRuntime {
     #[func]
     fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
         let mut dict = VarDictionary::new();
-        let Some(state) = self.state.as_ref() else { return dict };
+        let Some(state) = self.state.as_ref() else {
+            return dict;
+        };
         let entity = match resolve_runtime_entity(state.engine.world(), entity_id) {
             Some(e) => e,
             None => return dict,
@@ -1431,9 +1532,14 @@ impl WorldSimRuntime {
                     dict.set("values_all", values_arr);
                 }
                 if let Ok(social) = world.get::<&Social>(entity) {
-                    dict.set("attachment_type", social.attachment_type.as_ref()
-                        .map(|a| format!("{:?}", a))
-                        .unwrap_or_else(|| "None".to_string()));
+                    dict.set(
+                        "attachment_type",
+                        social
+                            .attachment_type
+                            .as_ref()
+                            .map(|a| format!("{:?}", a))
+                            .unwrap_or_else(|| "None".to_string()),
+                    );
                 }
                 if let Ok(emo) = world.get::<&Emotion>(entity) {
                     let mut baselines = PackedFloat32Array::new();
@@ -1468,8 +1574,10 @@ impl WorldSimRuntime {
                     dict.set("health", body.health);
                     dict.set("innate_immunity", body.innate_immunity);
                     dict.set("blood_genotype", body.blood_genotype.clone());
-                    dict.set("distinguishing_mark",
-                        body.distinguishing_mark.clone().unwrap_or_default());
+                    dict.set(
+                        "distinguishing_mark",
+                        body.distinguishing_mark.clone().unwrap_or_default(),
+                    );
                 }
                 if let Ok(intel) = world.get::<&Intelligence>(entity) {
                     let mut intel_arr = PackedFloat32Array::new();
@@ -1528,7 +1636,8 @@ impl WorldSimRuntime {
                     dict.set("children", children_arr);
                     let mut rel_arr: Array<VarDictionary> = Array::new();
                     for edge in social.edges.iter().take(15) {
-                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, edge.target.0) else {
+                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, edge.target.0)
+                        else {
                             continue;
                         };
                         let mut ed = VarDictionary::new();
@@ -1597,9 +1706,14 @@ impl WorldSimRuntime {
                     dict.set("ace_score", stress.ace_score as f32);
                 }
                 if let Ok(social) = world.get::<&Social>(entity) {
-                    dict.set("attachment_type", social.attachment_type.as_ref()
-                        .map(|a| format!("{:?}", a))
-                        .unwrap_or_else(|| "None".to_string()));
+                    dict.set(
+                        "attachment_type",
+                        social
+                            .attachment_type
+                            .as_ref()
+                            .map(|a| format!("{:?}", a))
+                            .unwrap_or_else(|| "None".to_string()),
+                    );
                 }
             }
             "misc" => {
@@ -1625,9 +1739,14 @@ impl WorldSimRuntime {
                     dict.set("ritual_count", faith.ritual_count as i32);
                 }
                 if let Ok(coping) = world.get::<&Coping>(entity) {
-                    dict.set("active_coping", coping.active_strategy.as_ref()
-                        .map(|s| format!("{:?}", s))
-                        .unwrap_or_default());
+                    dict.set(
+                        "active_coping",
+                        coping
+                            .active_strategy
+                            .as_ref()
+                            .map(|s| format!("{:?}", s))
+                            .unwrap_or_default(),
+                    );
                     dict.set("dependency_score", coping.dependency_score);
                     dict.set("helplessness_score", coping.helplessness_score);
                     dict.set("break_count", coping.break_count as i32);
@@ -1676,7 +1795,9 @@ impl WorldSimRuntime {
     #[func]
     fn runtime_get_entity_list(&self) -> Array<VarDictionary> {
         let mut result: Array<VarDictionary> = Array::new();
-        let Some(state) = self.state.as_ref() else { return result };
+        let Some(state) = self.state.as_ref() else {
+            return result;
+        };
         let world = state.engine.world();
 
         for (entity, (id, age)) in world.query::<(&Identity, &Age)>().iter() {
@@ -1687,7 +1808,8 @@ impl WorldSimRuntime {
             d.set("sex", runtime_sex_to_str(id.sex));
             d.set("alive", age.alive);
             d.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
-            let job = world.get::<&Behavior>(entity)
+            let job = world
+                .get::<&Behavior>(entity)
                 .map(|b| b.job.clone())
                 .unwrap_or_default();
             d.set("job", job);
@@ -1755,10 +1877,9 @@ impl WorldSimRuntime {
             world,
             &raw_lookup,
         );
-        let action_text = world
-            .get::<&Behavior>(entity)
-            .ok()
-            .map(|behavior| humanize_status_text(format!("{:?}", behavior.current_action).as_str()));
+        let action_text = world.get::<&Behavior>(entity).ok().map(|behavior| {
+            humanize_status_text(format!("{:?}", behavior.current_action).as_str())
+        });
 
         let thought_text = build_thought_text(
             name.as_str(),
@@ -1799,25 +1920,16 @@ impl WorldSimRuntime {
         let tick = state.engine.current_tick();
         let (world, resources) = state.engine.world_and_resources_mut();
         drain_and_apply_llm_responses(world, resources, tick);
-        state
-            .engine
-            .resources()
-            .llm_runtime
-            .push_debug_log(format!(
-                "[LLM-DEBUG] on_entity_narrative_click called for entity {}",
-                entity_id
-            ));
+        state.engine.resources().llm_runtime.push_debug_log(format!(
+            "[LLM-DEBUG] on_entity_narrative_click called for entity {}",
+            entity_id
+        ));
         let llm_quality = state.engine.resources().get_llm_quality();
         let llm_running = state.engine.resources().llm_runtime.is_running();
-        state
-            .engine
-            .resources()
-            .llm_runtime
-            .push_debug_log(format!(
-                "[LLM-DEBUG] on_entity_narrative_click state quality={} running={}",
-                llm_quality,
-                llm_running
-            ));
+        state.engine.resources().llm_runtime.push_debug_log(format!(
+            "[LLM-DEBUG] on_entity_narrative_click state quality={} running={}",
+            llm_quality, llm_running
+        ));
         if llm_quality == 0 || !llm_running {
             state
                 .engine
@@ -1830,8 +1942,7 @@ impl WorldSimRuntime {
         let current_tick = state.engine.current_tick();
         let Some(entity) = resolve_runtime_entity(state.engine.world(), entity_id) else {
             state.engine.resources().llm_runtime.push_debug_log(
-                "[LLM-DEBUG] on_entity_narrative_click returning 0 (entity not found)"
-                    .to_string(),
+                "[LLM-DEBUG] on_entity_narrative_click returning 0 (entity not found)".to_string(),
             );
             return 0;
         };
@@ -1879,8 +1990,7 @@ impl WorldSimRuntime {
         if let Ok(cache) = state.engine.world().get::<&NarrativeCache>(entity) {
             if narrative_cache_is_complete_and_fresh(&cache, current_tick) {
                 state.engine.resources().llm_runtime.push_debug_log(
-                    "[LLM-DEBUG] on_entity_narrative_click returning 0 (fresh cache)"
-                        .to_string(),
+                    "[LLM-DEBUG] on_entity_narrative_click returning 0 (fresh cache)".to_string(),
                 );
                 return 0;
             }
@@ -1893,8 +2003,7 @@ impl WorldSimRuntime {
         };
         let Some(request) = request else {
             state.engine.resources().llm_runtime.push_debug_log(
-                "[LLM-DEBUG] on_entity_narrative_click returning 0 (no request plan)"
-                    .to_string(),
+                "[LLM-DEBUG] on_entity_narrative_click returning 0 (no request plan)".to_string(),
             );
             return 0;
         };
@@ -1906,14 +2015,10 @@ impl WorldSimRuntime {
         {
             Ok(value) => value,
             Err(error) => {
-                state
-                    .engine
-                    .resources()
-                    .llm_runtime
-                    .push_debug_log(format!(
-                        "[LLM-DEBUG] on_entity_narrative_click submit failed: {}",
-                        error
-                    ));
+                state.engine.resources().llm_runtime.push_debug_log(format!(
+                    "[LLM-DEBUG] on_entity_narrative_click submit failed: {}",
+                    error
+                ));
                 return 0;
             }
         };
@@ -1931,14 +2036,10 @@ impl WorldSimRuntime {
                 capable.last_request_tick = current_tick;
             }
         }
-        state
-            .engine
-            .resources()
-            .llm_runtime
-            .push_debug_log(format!(
-                "[LLM-DEBUG] on_entity_narrative_click returning 1 (queued request_id={})",
-                request_id
-            ));
+        state.engine.resources().llm_runtime.push_debug_log(format!(
+            "[LLM-DEBUG] on_entity_narrative_click returning 1 (queued request_id={})",
+            request_id
+        ));
         1
     }
 
@@ -5496,18 +5597,16 @@ mod tests {
         PATHFIND_BACKEND_GPU,
     };
     use super::{
-        archetype_label_key_from_axes, build_thought_text,
-        decode_ws2_blob, dispatch_pathfind_grid_batch_vec2_bytes,
-        dispatch_pathfind_grid_batch_xy_bytes, dispatch_pathfind_grid_bytes, encode_ws2_blob,
-        format_fluent_from_source_args, get_pathfind_backend_mode, has_gpu_pathfind_backend,
-        parse_pathfind_backend, pathfind_backend_dispatch_counts, pathfind_from_flat,
-        pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
-        pathfind_grid_batch_vec2_bytes, pathfind_grid_batch_xy_bytes,
-        pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
+        archetype_label_key_from_axes, build_thought_text, decode_ws2_blob,
+        dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
+        dispatch_pathfind_grid_bytes, encode_ws2_blob, format_fluent_from_source_args,
+        get_pathfind_backend_mode, has_gpu_pathfind_backend, parse_pathfind_backend,
+        pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
+        pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
+        pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
-        resolve_pathfind_backend_mode, runtime_supports_rust_system,
-        runtime_system_key_from_name, set_pathfind_backend_mode, NarrativeDisplayData,
-        PathfindError, PathfindInput,
+        resolve_pathfind_backend_mode, runtime_supports_rust_system, runtime_system_key_from_name,
+        set_pathfind_backend_mode, NarrativeDisplayData, PathfindError, PathfindInput,
     };
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
@@ -5594,11 +5693,7 @@ mod tests {
             ai_icon_state: 2,
             ai_label_tooltip: "AI".to_string(),
             panel_title: "서사".to_string(),
-            section_labels: [
-                "성격".to_string(),
-                "사건".to_string(),
-                "내면".to_string(),
-            ],
+            section_labels: ["성격".to_string(), "사건".to_string(), "내면".to_string()],
             disabled_message: String::new(),
             ai_generated: true,
             entity_id: 42,
@@ -6227,7 +6322,10 @@ mod tests {
             runtime_system_key_from_name("res:\\scripts\\systems\\record\\stats_recorder.gd"),
             "stats_recorder"
         );
-        assert_eq!(runtime_system_key_from_name("stats_recorder"), "stats_recorder");
+        assert_eq!(
+            runtime_system_key_from_name("stats_recorder"),
+            "stats_recorder"
+        );
     }
 
     #[test]

@@ -56,6 +56,7 @@ var _summary_label: Label
 var _narrative_panel: Control
 var _thought_label: RichTextLabel
 var _needs_title: Label
+var _needs_diag_label: Label
 var _emotion_title: Label
 var _personality_title: Label
 var _relationships_title: Label
@@ -186,6 +187,11 @@ func _build_ui() -> void:
 
 	_needs_title = _make_section_title()
 	root.add_child(_needs_title)
+	_needs_diag_label = Label.new()
+	_needs_diag_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_needs_diag_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_small"))
+	_needs_diag_label.add_theme_color_override("font_color", Color(0.76, 0.80, 0.86))
+	root.add_child(_needs_diag_label)
 	for _index: int in range(3):
 		var row: Dictionary = _build_need_row()
 		_need_rows.append(row)
@@ -326,6 +332,7 @@ func _refresh_all() -> void:
 	_refresh_summary()
 	_refresh_narrative_panel()
 	_refresh_thought_stream()
+	_refresh_survival_diagnostics()
 	_refresh_needs()
 	_refresh_emotions()
 	_refresh_personality()
@@ -414,6 +421,35 @@ func _refresh_needs() -> void:
 		bar.modulate = _need_color(need_value)
 		var percent_text: String = str(int(round(need_value * 100.0))) + "%"
 		value_label.text = percent_text
+
+
+func _refresh_survival_diagnostics() -> void:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(_format_survival_diag_line("NEED_HUNGER", "need_hunger", "need_hunger_delta"))
+	lines.append(_format_survival_diag_line("NEED_WARMTH", "need_warmth", "need_warmth_delta"))
+	lines.append(_format_survival_diag_line("NEED_SAFETY", "need_safety", "need_safety_delta"))
+	lines.append(_format_survival_diag_line("UI_DIAGNOSTIC_COMFORT", "need_comfort", "need_comfort_delta"))
+	var line_break: String = char(10)
+	_needs_diag_label.text = line_break.join(lines)
+
+
+func _format_survival_diag_line(label_key: String, value_field: String, delta_field: String) -> String:
+	var current_value: float = float(_detail.get(value_field, 0.0))
+	var delta_value: float = float(_detail.get(delta_field, 0.0))
+	return "%s %d%%  %s" % [
+		Locale.ltr(label_key),
+		int(round(current_value * 100.0)),
+		_format_signed_percent(delta_value),
+	]
+
+
+func _format_signed_percent(value: float) -> String:
+	var pct: int = int(round(value * 100.0))
+	if pct > 0:
+		return "+%d%%" % pct
+	if pct < 0:
+		return "%d%%" % pct
+	return "0%"
 
 
 func _refresh_emotions() -> void:

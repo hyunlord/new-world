@@ -3,21 +3,22 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
+use sim_core::scales::{NativePercent, NativeStress};
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, ChannelId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType,
-    NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, ChannelId, CopingStrategyId, EmotionType, EntityId,
+    GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType,
+    RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
-use sim_core::scales::{NativeStress, NativePercent};
+use sim_engine::{
+    AgentNeedDiagnostics, DiagnosticDelta, SimEvent, SimEventType, SimResources, SimSystem,
+};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
 
@@ -50,7 +51,9 @@ fn record_need_transition(
     next: f64,
 ) {
     let cause = need_event_key(need_type).to_string();
-    if previous >= config::NEED_EVENT_CRITICAL_THRESHOLD && next < config::NEED_EVENT_CRITICAL_THRESHOLD {
+    if previous >= config::NEED_EVENT_CRITICAL_THRESHOLD
+        && next < config::NEED_EVENT_CRITICAL_THRESHOLD
+    {
         resources.event_store.push(SimEvent {
             tick,
             event_type: SimEventType::NeedCritical,
@@ -76,6 +79,44 @@ fn record_need_transition(
     }
 }
 
+#[inline]
+fn diagnostic_comfort_score(warmth: f64, safety: f64, sleep: f64) -> f64 {
+    ((warmth + safety + sleep) / 3.0).clamp(0.0, 1.0)
+}
+
+#[inline]
+fn update_need_diagnostics(
+    resources: &mut SimResources,
+    entity_id: EntityId,
+    tick: u64,
+    hunger: (f64, f64),
+    warmth: (f64, f64),
+    safety: (f64, f64),
+    comfort: (f64, f64),
+) {
+    resources.agent_need_diagnostics.insert(
+        entity_id,
+        AgentNeedDiagnostics {
+            hunger: DiagnosticDelta {
+                current: hunger.1,
+                delta: hunger.1 - hunger.0,
+            },
+            warmth: DiagnosticDelta {
+                current: warmth.1,
+                delta: warmth.1 - warmth.0,
+            },
+            safety: DiagnosticDelta {
+                current: safety.1,
+                delta: safety.1 - safety.0,
+            },
+            comfort: DiagnosticDelta {
+                current: comfort.1,
+                delta: comfort.1 - comfort.0,
+            },
+            last_tick: tick,
+        },
+    );
+}
 
 /// Rust runtime system for base-needs decay and energy adjustment.
 ///
@@ -111,6 +152,7 @@ impl SimSystem for NeedsRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let mut seen_entities: HashSet<EntityId> = HashSet::new();
         let mut query = world.query::<(
             &mut Needs,
             Option<&Behavior>,
@@ -124,6 +166,8 @@ impl SimSystem for NeedsRuntimeSystem {
             let previous_warmth = needs.get(NeedType::Warmth);
             let previous_safety = needs.get(NeedType::Safety);
             let previous_sleep = needs.get(NeedType::Sleep);
+            let previous_comfort =
+                diagnostic_comfort_score(previous_warmth, previous_safety, previous_sleep);
             let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
             let mut has_tile_temp = false;
             let mut warmth_influence = 0.0_f64;
@@ -218,6 +262,25 @@ impl SimSystem for NeedsRuntimeSystem {
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);
 
+            let entity_id = EntityId(entity.id() as u64);
+            seen_entities.insert(entity_id);
+            update_need_diagnostics(
+                resources,
+                entity_id,
+                tick,
+                (previous_hunger, needs.get(NeedType::Hunger)),
+                (previous_warmth, needs.get(NeedType::Warmth)),
+                (previous_safety, needs.get(NeedType::Safety)),
+                (
+                    previous_comfort,
+                    diagnostic_comfort_score(
+                        needs.get(NeedType::Warmth),
+                        needs.get(NeedType::Safety),
+                        needs.get(NeedType::Sleep),
+                    ),
+                ),
+            );
+
             let actor = entity.id();
             record_need_transition(
                 resources,
@@ -268,6 +331,9 @@ impl SimSystem for NeedsRuntimeSystem {
                 needs.get(NeedType::Sleep),
             );
         }
+        resources
+            .agent_need_diagnostics
+            .retain(|entity_id, _| seen_entities.contains(entity_id));
     }
 }
 
@@ -354,7 +420,8 @@ impl SimSystem for ChildStressProcessorRuntimeSystem {
                 .map(|needs| needs.get(NeedType::Hunger) as f32)
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0);
-            let base_intensity = (1.0 - (belonging * 0.35 + safety * 0.35 + energy * 0.20 + hunger * 0.10))
+            let base_intensity = (1.0
+                - (belonging * 0.35 + safety * 0.35 + energy * 0.20 + hunger * 0.10))
                 .clamp(0.0, 1.0);
             if base_intensity <= 0.05 {
                 continue;
@@ -462,7 +529,10 @@ impl SimSystem for UpperNeedsRuntimeSystem {
             &mut query
         {
             if let Some(identity) = identity_opt {
-                if matches!(identity.growth_stage, GrowthStage::Infant | GrowthStage::Toddler) {
+                if matches!(
+                    identity.growth_stage,
+                    GrowthStage::Infant | GrowthStage::Toddler
+                ) {
                     continue;
                 }
             }
@@ -568,5 +638,53 @@ impl SimSystem for UpperNeedsRuntimeSystem {
             needs.set(NeedType::Belonging, out[6] as f64);
             needs.set(NeedType::Intimacy, out[7] as f64);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::components::Position;
+    use sim_core::config::GameConfig;
+    use sim_core::{GameCalendar, WorldMap};
+
+    fn make_resources() -> SimResources {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(16, 16, 7);
+        SimResources::new(calendar, map, 7)
+    }
+
+    #[test]
+    fn needs_runtime_system_records_survival_diagnostic_deltas() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.80);
+        needs.set(NeedType::Warmth, 0.55);
+        needs.set(NeedType::Safety, 0.65);
+        needs.set(NeedType::Sleep, 0.70);
+        needs.energy = 0.70;
+        let entity = world.spawn((
+            needs,
+            Position {
+                x: 4.0,
+                y: 4.0,
+                ..Position::default()
+            },
+        ));
+
+        let mut system = NeedsRuntimeSystem::new(18, config::NEEDS_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, config::NEEDS_TICK_INTERVAL);
+
+        let diagnostics = resources
+            .agent_need_diagnostics
+            .get(&EntityId(entity.id() as u64))
+            .expect("need diagnostics should be recorded");
+        assert!(diagnostics.hunger.delta < 0.0);
+        assert_ne!(diagnostics.warmth.delta, 0.0);
+        assert!(diagnostics.safety.delta <= 0.0);
+        assert_ne!(diagnostics.comfort.delta, 0.0);
+        assert!((0.0..=1.0).contains(&diagnostics.comfort.current));
     }
 }

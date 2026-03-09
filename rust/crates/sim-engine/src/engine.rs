@@ -1,3 +1,23 @@
+use crate::event_bus::EventBus;
+use crate::event_store::EventStore;
+use crate::events::LlmEvent;
+use crate::explain_log::ExplainLog;
+use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+use crate::llm_server::{LlmRuntime, LlmRuntimeError};
+use crate::llm_worker::{LlmRequest, LlmRequestMeta, LlmResponse};
+use crate::notification::SimNotification;
+use crate::perf_tracker::PerfTracker;
+use crate::snapshot::EngineSnapshot;
+use crate::system_trait::{SimSystem, SystemEntry};
+use hecs::World;
+use log::{debug, info, warn};
+use rand::rngs::SmallRng;
+use rand::SeedableRng;
+use sim_core::{
+    Building, BuildingId, ChannelId, EntityId, GameCalendar, InfluenceGrid, Settlement,
+    SettlementId, SimConfig, WorldMap,
+};
+use sim_data::{NameGenerator, PersonalityDistribution};
 /// SimEngine — the central tick loop coordinator.
 ///
 /// Owns the ECS world, shared simulation resources, and the registered system list.
@@ -10,23 +30,6 @@
 /// Seed the RNG at construction to get reproducible runs.
 /// System ordering is stable (sorted by priority at registration time).
 use std::collections::HashMap;
-use hecs::World;
-use rand::rngs::SmallRng;
-use rand::SeedableRng;
-use sim_core::{Building, BuildingId, ChannelId, EntityId, GameCalendar, InfluenceGrid, Settlement, SettlementId, SimConfig, WorldMap};
-use sim_data::{NameGenerator, PersonalityDistribution};
-use crate::event_bus::EventBus;
-use crate::event_store::EventStore;
-use crate::explain_log::ExplainLog;
-use crate::events::LlmEvent;
-use crate::notification::SimNotification;
-use crate::perf_tracker::PerfTracker;
-use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
-use crate::llm_server::{LlmRuntime, LlmRuntimeError};
-use crate::llm_worker::{LlmRequest, LlmRequestMeta, LlmResponse};
-use crate::system_trait::{SimSystem, SystemEntry};
-use crate::snapshot::EngineSnapshot;
-use log::{debug, info, warn};
 
 /// A recorded chronicle event (world or personal history).
 #[derive(Debug, Clone)]
@@ -50,6 +53,32 @@ pub struct RuntimeStatsSnapshot {
     pub builders: u32,
     pub miners: u32,
     pub none_job: u32,
+}
+
+/// Current value plus recent delta for one inspectable diagnostic scalar.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct DiagnosticDelta {
+    pub current: f64,
+    pub delta: f64,
+}
+
+/// Recent survival-need diagnostics for one entity.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct AgentNeedDiagnostics {
+    pub hunger: DiagnosticDelta,
+    pub warmth: DiagnosticDelta,
+    pub safety: DiagnosticDelta,
+    pub comfort: DiagnosticDelta,
+    pub last_tick: u64,
+}
+
+/// Recent construction-progress diagnostics for one building.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ConstructionDiagnostics {
+    pub last_observed_progress: f64,
+    pub progress_delta: f64,
+    pub last_progress_tick: u64,
+    pub last_sample_tick: u64,
 }
 
 // ── SimResources ──────────────────────────────────────────────────────────────
@@ -85,6 +114,10 @@ pub struct SimResources {
     pub stat_sync_derived: HashMap<EntityId, [f32; 8]>,
     /// Per-entity stat-threshold active flags.
     pub stat_threshold_flags: HashMap<EntityId, u32>,
+    /// Recent survival-need diagnostics keyed by entity ID.
+    pub agent_need_diagnostics: HashMap<EntityId, AgentNeedDiagnostics>,
+    /// Recent construction diagnostics keyed by building ID.
+    pub construction_diagnostics: HashMap<BuildingId, ConstructionDiagnostics>,
     /// Chronicle world-event log (pruned periodically).
     pub chronicle_world_events: Vec<ChronicleEvent>,
     /// Chronicle personal-event log keyed by entity ID.
@@ -117,7 +150,8 @@ impl SimResources {
     /// - `map`: world map (call `WorldMap::new(...)` or use world gen)
     /// - `seed`: RNG seed — same seed = identical simulation run
     pub fn new(calendar: GameCalendar, map: WorldMap, seed: u64) -> Self {
-        let influence_grid = InfluenceGrid::new(map.width, map.height, ChannelId::default_channels());
+        let influence_grid =
+            InfluenceGrid::new(map.width, map.height, ChannelId::default_channels());
         Self {
             calendar,
             map,
@@ -132,6 +166,8 @@ impl SimResources {
             stats_total_deaths: 0,
             stat_sync_derived: HashMap::new(),
             stat_threshold_flags: HashMap::new(),
+            agent_need_diagnostics: HashMap::new(),
+            construction_diagnostics: HashMap::new(),
             chronicle_world_events: Vec::new(),
             chronicle_personal_events: HashMap::new(),
             personality_distribution: None,
@@ -158,13 +194,15 @@ impl SimResources {
     pub fn start_llm_server(&mut self) -> bool {
         match self.llm_runtime.start() {
             Ok(()) => {
-                self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
+                self.event_bus
+                    .emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
                 true
             }
             Err(error) => {
                 warn!("[SimResources] failed to start LLM runtime: {}", error);
-                self.event_bus
-                    .emit(crate::events::GameEvent::Llm(LlmEvent::ServerHealthCheckFailed));
+                self.event_bus.emit(crate::events::GameEvent::Llm(
+                    LlmEvent::ServerHealthCheckFailed,
+                ));
                 false
             }
         }
@@ -174,7 +212,8 @@ impl SimResources {
     pub fn stop_llm_server(&mut self) {
         if self.llm_runtime.is_running() {
             self.llm_runtime.stop();
-            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
+            self.event_bus
+                .emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
         }
     }
 
@@ -190,10 +229,12 @@ impl SimResources {
         self.llm_runtime.set_quality(quality);
         let is_running = self.llm_runtime.is_running();
         if !was_running && is_running {
-            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
+            self.event_bus
+                .emit(crate::events::GameEvent::Llm(LlmEvent::ServerStarted));
         }
         if was_running && !is_running {
-            self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
+            self.event_bus
+                .emit(crate::events::GameEvent::Llm(LlmEvent::ServerStopped));
         }
     }
 
@@ -213,17 +254,15 @@ impl SimResources {
     }
 
     /// Attempts to submit an LLM request without blocking.
-    pub fn submit_llm_request(
-        &mut self,
-        request: LlmRequest,
-    ) -> Result<u64, LlmRuntimeError> {
+    pub fn submit_llm_request(&mut self, request: LlmRequest) -> Result<u64, LlmRuntimeError> {
         let entity_id = request.entity_id;
         let request_type = request.request_type;
         let request_id = self.llm_runtime.submit_request(request)?;
-        self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
-            entity_id,
-            request_type,
-        }));
+        self.event_bus
+            .emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
+                entity_id,
+                request_type,
+            }));
         Ok(request_id)
     }
 
@@ -235,10 +274,11 @@ impl SimResources {
         let entity_id = request.entity_id;
         let request_type = request.request_type;
         let request_id = self.llm_runtime.submit_priority_request(request)?;
-        self.event_bus.emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
-            entity_id,
-            request_type,
-        }));
+        self.event_bus
+            .emit(crate::events::GameEvent::Llm(LlmEvent::RequestSubmitted {
+                entity_id,
+                request_type,
+            }));
         Ok(request_id)
     }
 
@@ -264,10 +304,18 @@ impl std::fmt::Debug for SimResources {
             .field("stats_peak_population", &self.stats_peak_population)
             .field("stat_sync_derived", &self.stat_sync_derived.len())
             .field("stat_threshold_flags", &self.stat_threshold_flags.len())
+            .field("agent_need_diagnostics", &self.agent_need_diagnostics.len())
+            .field(
+                "construction_diagnostics",
+                &self.construction_diagnostics.len(),
+            )
             .field("event_bus", &self.event_bus)
             .field("event_store", &self.event_store.len())
             .field("influence_grid_dims", &self.influence_grid.dimensions())
-            .field("influence_emitters", &self.influence_grid.active_emitter_count())
+            .field(
+                "influence_emitters",
+                &self.influence_grid.active_emitter_count(),
+            )
             .field("pending_notifications", &self.pending_notifications.len())
             .field("notification_history", &self.notification_history.len())
             .field("llm_available", &self.llm_runtime.is_available())
@@ -326,11 +374,18 @@ impl SimEngine {
         let name = system.name();
         let priority = system.priority();
         let mut entry = SystemEntry::new(Box::new(system));
-        entry.system.on_register(&mut self.world, &mut self.resources);
+        entry
+            .system
+            .on_register(&mut self.world, &mut self.resources);
         // Stable insertion: find first entry with strictly higher priority.
-        let pos = self.systems.partition_point(|e| e.system.priority() <= priority);
+        let pos = self
+            .systems
+            .partition_point(|e| e.system.priority() <= priority);
         self.systems.insert(pos, entry);
-        info!("[SimEngine] registered '{}' (priority={}, pos={})", name, priority, pos);
+        info!(
+            "[SimEngine] registered '{}' (priority={}, pos={})",
+            name, priority, pos
+        );
     }
 
     /// Advance the simulation by exactly one tick.
@@ -561,8 +616,12 @@ mod tests {
         count: u32,
     }
     impl crate::system_trait::SimSystem for CountSystem {
-        fn name(&self) -> &'static str { "counter" }
-        fn tick_interval(&self) -> u64 { 1 }
+        fn name(&self) -> &'static str {
+            "counter"
+        }
+        fn tick_interval(&self) -> u64 {
+            1
+        }
         fn run(&mut self, _w: &mut World, _r: &mut SimResources, _t: u64) {
             self.count += 1;
         }
@@ -582,9 +641,15 @@ mod tests {
     fn systems_registered_in_priority_order() {
         struct P(u32);
         impl crate::system_trait::SimSystem for P {
-            fn name(&self) -> &'static str { "p" }
-            fn tick_interval(&self) -> u64 { 1 }
-            fn priority(&self) -> u32 { self.0 }
+            fn name(&self) -> &'static str {
+                "p"
+            }
+            fn tick_interval(&self) -> u64 {
+                1
+            }
+            fn priority(&self) -> u32 {
+                self.0
+            }
             fn run(&mut self, _w: &mut World, _r: &mut SimResources, _t: u64) {}
         }
 
@@ -595,9 +660,7 @@ mod tests {
         engine.register(P(10)); // duplicate priority — second slot
 
         // Internal ordering: 10, 10, 50, 200
-        let priorities: Vec<u32> = engine.systems.iter()
-            .map(|e| e.system.priority())
-            .collect();
+        let priorities: Vec<u32> = engine.systems.iter().map(|e| e.system.priority()).collect();
         assert_eq!(priorities, vec![10, 10, 50, 200]);
     }
 
@@ -634,18 +697,33 @@ mod tests {
     #[test]
     fn engine_tick_updates_influence_grid_buffers() {
         let mut engine = make_engine();
-        engine.resources_mut().influence_grid.register_emitter(EmitterRecord {
-            x: 4,
-            y: 4,
-            channel: ChannelId::Warmth,
-            radius: 3.0,
-            intensity: 0.8,
-            falloff: FalloffType::Constant,
-            dirty: false,
-        });
+        engine
+            .resources_mut()
+            .influence_grid
+            .register_emitter(EmitterRecord {
+                x: 4,
+                y: 4,
+                channel: ChannelId::Warmth,
+                radius: 3.0,
+                intensity: 0.8,
+                falloff: FalloffType::Constant,
+                dirty: false,
+            });
 
-        assert_eq!(engine.resources().influence_grid.sample(4, 4, ChannelId::Warmth), 0.0);
+        assert_eq!(
+            engine
+                .resources()
+                .influence_grid
+                .sample(4, 4, ChannelId::Warmth),
+            0.0
+        );
         engine.tick();
-        assert!(engine.resources().influence_grid.sample(4, 4, ChannelId::Warmth) > 0.0);
+        assert!(
+            engine
+                .resources()
+                .influence_grid
+                .sample(4, 4, ChannelId::Warmth)
+                > 0.0
+        );
     }
 }

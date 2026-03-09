@@ -3,23 +3,22 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, ChannelId, CopingStrategyId, EmitterRecord, EntityId, FalloffType,
-    IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, ChannelId, CopingStrategyId, EmitterRecord,
+    EmotionType, EntityId, FalloffType, GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType,
+    MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass,
+    TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{ConstructionDiagnostics, SimResources, SimSystem};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 /// Rust runtime system for tile resource regeneration.
 ///
@@ -343,9 +342,14 @@ impl SimSystem for JobSatisfactionRuntimeSystem {
             Option<&Skills>,
             Option<&Age>,
         )>();
-        for (_, (behavior, personality_opt, values_opt, needs_opt, skills_opt, age_opt)) in &mut query {
+        for (_, (behavior, personality_opt, values_opt, needs_opt, skills_opt, age_opt)) in
+            &mut query
+        {
             if let Some(age) = age_opt {
-                if matches!(age.stage, GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child) {
+                if matches!(
+                    age.stage,
+                    GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child
+                ) {
                     behavior.job_satisfaction = 0.50;
                     behavior.occupation_satisfaction = 0.50;
                     continue;
@@ -482,7 +486,8 @@ impl SimSystem for GatheringRuntimeSystem {
                 }
             }
 
-            let Some((resource_type, resource_name)) = gathering_target_resource(behavior.current_action)
+            let Some((resource_type, resource_name)) =
+                gathering_target_resource(behavior.current_action)
             else {
                 continue;
             };
@@ -516,13 +521,16 @@ impl SimSystem for GatheringRuntimeSystem {
                     let gathered_f64 = harvested as f64;
                     match resource_type {
                         ResourceType::Food => {
-                            settlement.stockpile_food = (settlement.stockpile_food + gathered_f64).max(0.0);
+                            settlement.stockpile_food =
+                                (settlement.stockpile_food + gathered_f64).max(0.0);
                         }
                         ResourceType::Wood => {
-                            settlement.stockpile_wood = (settlement.stockpile_wood + gathered_f64).max(0.0);
+                            settlement.stockpile_wood =
+                                (settlement.stockpile_wood + gathered_f64).max(0.0);
                         }
                         ResourceType::Stone => {
-                            settlement.stockpile_stone = (settlement.stockpile_stone + gathered_f64).max(0.0);
+                            settlement.stockpile_stone =
+                                (settlement.stockpile_stone + gathered_f64).max(0.0);
                         }
                     }
                 }
@@ -560,6 +568,59 @@ fn construction_skill_multiplier(skills_opt: Option<&Skills>) -> f32 {
     1.0 + (level / 100.0) * 0.70
 }
 
+#[inline]
+fn refresh_construction_diagnostics(
+    resources: &mut SimResources,
+    tick: u64,
+    progress_before: &HashMap<BuildingId, f64>,
+) {
+    let snapshot_ids: HashSet<BuildingId> = resources.buildings.keys().copied().collect();
+    resources
+        .construction_diagnostics
+        .retain(|building_id, _| snapshot_ids.contains(building_id));
+
+    let progress_snapshots: Vec<(BuildingId, f64)> = resources
+        .buildings
+        .iter()
+        .map(|(building_id, building)| (*building_id, f64::from(building.construction_progress)))
+        .collect();
+
+    for (building_id, progress) in progress_snapshots {
+        let baseline_progress = progress_before
+            .get(&building_id)
+            .copied()
+            .or_else(|| {
+                resources
+                    .construction_diagnostics
+                    .get(&building_id)
+                    .map(|entry| entry.last_observed_progress)
+            })
+            .unwrap_or(progress);
+        let delta = progress - baseline_progress;
+        match resources.construction_diagnostics.get_mut(&building_id) {
+            Some(diagnostics) => {
+                diagnostics.progress_delta = delta;
+                diagnostics.last_observed_progress = progress;
+                diagnostics.last_sample_tick = tick;
+                if delta.abs() > f64::EPSILON {
+                    diagnostics.last_progress_tick = tick;
+                }
+            }
+            None => {
+                resources.construction_diagnostics.insert(
+                    building_id,
+                    ConstructionDiagnostics {
+                        last_observed_progress: progress,
+                        progress_delta: delta,
+                        last_progress_tick: if progress > 0.0 { tick } else { 0 },
+                        last_sample_tick: tick,
+                    },
+                );
+            }
+        }
+    }
+}
+
 /// Rust runtime system for construction progress updates.
 ///
 /// This performs active writes on `Building.construction_progress` and
@@ -592,7 +653,14 @@ impl SimSystem for ConstructionRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        let progress_before: HashMap<BuildingId, f64> = resources
+            .buildings
+            .iter()
+            .map(|(building_id, building)| {
+                (*building_id, f64::from(building.construction_progress))
+            })
+            .collect();
         let mut query = world.query::<(&Behavior, &Position, Option<&Age>, Option<&Skills>)>();
         for (_, (behavior, position, age_opt, skills_opt)) in &mut query {
             if behavior.current_action != ActionType::Build {
@@ -664,6 +732,7 @@ impl SimSystem for ConstructionRuntimeSystem {
                     building_type: building.building_type.clone(),
                 });
         }
+        refresh_construction_diagnostics(resources, tick, &progress_before);
     }
 }
 
@@ -685,12 +754,7 @@ struct BuildingEffectSnapshot {
     y: i32,
 }
 
-const SHELTER_WALL_CARDINAL_OFFSETS: [(i32, i32); 4] = [
-    (0, -1),
-    (1, 0),
-    (0, 1),
-    (-1, 0),
-];
+const SHELTER_WALL_CARDINAL_OFFSETS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
 #[inline]
 fn refresh_campfire_warmth_emitter(resources: &mut SimResources, x: i32, y: i32) {
@@ -849,8 +913,8 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                         if dx + dy > f64::from(config::BUILDING_SHELTER_RADIUS) {
                             continue;
                         }
-                        needs.energy =
-                            (needs.energy + config::BUILDING_SHELTER_ENERGY_RESTORE).clamp(0.0, 1.0);
+                        needs.energy = (needs.energy + config::BUILDING_SHELTER_ENERGY_RESTORE)
+                            .clamp(0.0, 1.0);
                         needs.set(
                             NeedType::Warmth,
                             needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
@@ -869,8 +933,11 @@ impl SimSystem for BuildingEffectRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sim_core::{Building, BuildingId, GameCalendar, SettlementId, WorldMap};
+    use sim_core::components::{Age, Behavior, Position, Skills};
     use sim_core::config::GameConfig;
+    use sim_core::{
+        ActionType, Building, BuildingId, GameCalendar, GrowthStage, SettlementId, WorldMap,
+    };
     use sim_engine::SimResources;
 
     #[test]
@@ -901,5 +968,64 @@ mod tests {
                 < 1e-6
         );
         assert_eq!(resources.influence_grid.wall_blocking_at(5, 6), 0.0);
+    }
+
+    #[test]
+    fn construction_runtime_system_records_recent_progress_delta() {
+        let game_config = GameConfig::default();
+        let calendar = GameCalendar::new(&game_config);
+        let mut resources = SimResources::new(calendar, WorldMap::new(12, 12, 7), 99);
+        resources.buildings.insert(
+            BuildingId(3),
+            Building {
+                id: BuildingId(3),
+                building_type: "campfire".to_string(),
+                settlement_id: SettlementId(1),
+                x: 5,
+                y: 5,
+                construction_progress: 0.0,
+                is_complete: false,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut world = World::new();
+        world.spawn((
+            Behavior {
+                job: "builder".to_string(),
+                current_action: ActionType::Build,
+                action_target_x: Some(5),
+                action_target_y: Some(5),
+                ..Behavior::default()
+            },
+            Position {
+                x: 5.0,
+                y: 4.0,
+                ..Position::default()
+            },
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            Skills::default(),
+        ));
+
+        let mut system = ConstructionRuntimeSystem::new(28, config::CONSTRUCTION_TICK_INTERVAL);
+        system.run(
+            &mut world,
+            &mut resources,
+            config::CONSTRUCTION_TICK_INTERVAL,
+        );
+
+        let diagnostics = resources
+            .construction_diagnostics
+            .get(&BuildingId(3))
+            .expect("construction diagnostics should exist");
+        assert!(diagnostics.progress_delta > 0.0);
+        assert_eq!(
+            diagnostics.last_progress_tick,
+            config::CONSTRUCTION_TICK_INTERVAL
+        );
     }
 }
