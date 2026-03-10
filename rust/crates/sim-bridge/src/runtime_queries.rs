@@ -1,10 +1,10 @@
 use godot::builtin::{Array, PackedInt32Array, VarDictionary};
 use hecs::{Entity, World};
 use sim_core::components::{
-    Age, Behavior, Emotion, Identity, Personality, Position, Skills, Social, Stress,
+    Age, Behavior, Emotion, Identity, Needs, Personality, Position, Skills, Social, Stress,
 };
 use sim_core::config;
-use sim_core::enums::{ActionType, RelationType, Sex, TechState, TerrainType};
+use sim_core::enums::{ActionType, NeedType, RelationType, Sex, TechState, TerrainType};
 use sim_core::world::TileResource;
 use sim_core::{Building, BuildingId, EntityId, Settlement, SettlementId};
 use sim_engine::RuntimeStatsSnapshot;
@@ -36,10 +36,30 @@ const BIOME_MOVE_COST_SNOW: f32 = 2.0;
 /// One-time bootstrap payload copied from the Godot-generated world.
 #[derive(Debug, Clone, serde::Deserialize)]
 pub(crate) struct RuntimeBootstrapPayload {
+    #[serde(default)]
+    pub(crate) startup_mode: RuntimeBootstrapMode,
     pub(crate) world: RuntimeBootstrapWorld,
     pub(crate) founding_settlement: RuntimeBootstrapSettlement,
     #[serde(default)]
     pub(crate) agents: Vec<RuntimeBootstrapAgent>,
+}
+
+/// Startup bootstrap modes exposed from the Godot setup flow.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum RuntimeBootstrapMode {
+    Probe,
+    #[default]
+    Sandbox,
+}
+
+impl RuntimeBootstrapMode {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Probe => "probe",
+            Self::Sandbox => "sandbox",
+        }
+    }
 }
 
 /// Full flat world payload copied from `WorldData` and `ResourceMap`.
@@ -85,6 +105,25 @@ pub(crate) struct RuntimeBootstrapAgent {
     pub(crate) y: i32,
     #[serde(default)]
     pub(crate) age_ticks: u64,
+    #[serde(default)]
+    pub(crate) sex: Option<RuntimeBootstrapSex>,
+}
+
+/// Optional spawn-time sex override carried by the Godot bootstrap payload.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum RuntimeBootstrapSex {
+    Male,
+    Female,
+}
+
+impl RuntimeBootstrapSex {
+    fn as_sim_sex(self) -> Sex {
+        match self {
+            Self::Male => Sex::Male,
+            Self::Female => Sex::Female,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -93,6 +132,47 @@ struct BootstrapWorldResult {
     settlement_id: u64,
     building_count: usize,
     entity_count: usize,
+    startup_mode: RuntimeBootstrapMode,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct ProbeBootstrapProfile {
+    hunger: f64,
+    sleep: f64,
+    energy: f64,
+}
+
+fn probe_bootstrap_profile(index: usize) -> Option<ProbeBootstrapProfile> {
+    match index {
+        0 => Some(ProbeBootstrapProfile {
+            hunger: config::PROBE_START_PRIMARY_HUNGER,
+            sleep: 0.80,
+            energy: config::PROBE_START_PRIMARY_ENERGY,
+        }),
+        1 => Some(ProbeBootstrapProfile {
+            hunger: config::PROBE_START_SECONDARY_HUNGER,
+            sleep: config::PROBE_START_SECONDARY_SLEEP,
+            energy: config::PROBE_START_SECONDARY_ENERGY,
+        }),
+        _ => None,
+    }
+}
+
+fn apply_probe_survival_bootstrap(world: &mut World, entity: Entity, index: usize) {
+    let Some(profile) = probe_bootstrap_profile(index) else {
+        return;
+    };
+    let Ok(mut query) = world.query_one::<&mut Needs>(entity) else {
+        return;
+    };
+    let Some(needs) = query.get() else {
+        return;
+    };
+    needs.set(NeedType::Hunger, profile.hunger);
+    needs.set(NeedType::Sleep, profile.sleep);
+    needs.set(NeedType::Warmth, config::PROBE_START_BASE_WARMTH);
+    needs.set(NeedType::Safety, config::PROBE_START_BASE_SAFETY);
+    needs.energy = profile.energy.clamp(0.0, 1.0);
 }
 
 /// Applies startup bootstrap data into the live runtime and returns a summary.
@@ -109,6 +189,7 @@ pub(crate) fn bootstrap_world(
     out.set("settlement_id", result.settlement_id as i64);
     out.set("building_count", result.building_count as i64);
     out.set("entity_count", result.entity_count as i64);
+    out.set("startup_mode", result.startup_mode.as_str());
     out
 }
 
@@ -116,6 +197,7 @@ fn bootstrap_world_core(
     state: &mut RuntimeState,
     payload: RuntimeBootstrapPayload,
 ) -> Option<BootstrapWorldResult> {
+    let startup_mode = payload.startup_mode;
     if payload.world.width == 0 || payload.world.height == 0 {
         return None;
     }
@@ -188,17 +270,20 @@ fn bootstrap_world_core(
     }
 
     let mut spawned_entities: Vec<Entity> = Vec::with_capacity(payload.agents.len());
-    for agent in &payload.agents {
+    for (spawn_index, agent) in payload.agents.iter().enumerate() {
         let config = SpawnConfig {
             settlement_id: Some(settlement_id),
             position: (agent.x, agent.y),
             initial_age_ticks: agent.age_ticks,
-            sex: None,
+            sex: agent.sex.map(RuntimeBootstrapSex::as_sim_sex),
             parent_a: None,
             parent_b: None,
         };
         let (world, resources) = state.engine.world_and_resources_mut();
         let entity = entity_spawner::spawn_agent(world, resources, &config);
+        if startup_mode == RuntimeBootstrapMode::Probe {
+            apply_probe_survival_bootstrap(world, entity, spawn_index);
+        }
         settlement.members.push(EntityId(entity.id() as u64));
         spawned_entities.push(entity);
     }
@@ -217,6 +302,7 @@ fn bootstrap_world_core(
         settlement_id: settlement_id.0,
         building_count: state.engine.resources().buildings.len(),
         entity_count: state.engine.world().len() as usize,
+        startup_mode,
     })
 }
 
@@ -1150,10 +1236,15 @@ mod tests {
     use crate::runtime_registry::RuntimeConfig;
     use sim_core::components::{Age, Behavior, Identity, Position, Skills};
     use sim_core::config::TICKS_PER_YEAR;
+    use sim_core::NeedType;
     use sim_core::{ActionType, Building, BuildingId, SettlementId};
+    use sim_systems::runtime::{
+        BehaviorRuntimeSystem, GatheringRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
+    };
 
     fn test_bootstrap_payload() -> RuntimeBootstrapPayload {
         RuntimeBootstrapPayload {
+            startup_mode: RuntimeBootstrapMode::Probe,
             world: RuntimeBootstrapWorld {
                 width: 4,
                 height: 4,
@@ -1179,16 +1270,13 @@ mod tests {
                     x: 1,
                     y: 1,
                     age_ticks: 20 * TICKS_PER_YEAR as u64,
+                    sex: Some(RuntimeBootstrapSex::Male),
                 },
                 RuntimeBootstrapAgent {
                     x: 2,
                     y: 1,
                     age_ticks: 24 * TICKS_PER_YEAR as u64,
-                },
-                RuntimeBootstrapAgent {
-                    x: 2,
-                    y: 2,
-                    age_ticks: 12 * TICKS_PER_YEAR as u64,
+                    sex: Some(RuntimeBootstrapSex::Female),
                 },
             ],
         }
@@ -1226,23 +1314,168 @@ mod tests {
         let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
         let result = bootstrap_world_core(&mut state, test_bootstrap_payload())
             .expect("bootstrap should succeed");
-        assert_eq!(result.entity_count, 3);
+        assert_eq!(result.entity_count, 2);
         assert_eq!(result.building_count, 1);
         assert_eq!(result.settlement_id, 1);
+        assert_eq!(result.startup_mode, RuntimeBootstrapMode::Probe);
 
         let resources = state.engine.resources();
         let settlement = resources
             .settlements
             .get(&SettlementId(1))
             .expect("settlement should exist");
-        assert_eq!(settlement.members.len(), 3);
+        assert_eq!(settlement.members.len(), 2);
         assert_eq!(settlement.buildings.len(), 1);
         assert_eq!(settlement.stockpile_food, 15.0);
         assert_eq!(settlement.stockpile_wood, 5.0);
         assert_eq!(settlement.stockpile_stone, 2.0);
         assert!(settlement.leader_id.is_some());
         assert_eq!(resources.buildings.len(), 1);
-        assert_eq!(state.engine.world().len(), 3);
+        assert_eq!(state.engine.world().len(), 2);
+
+        let mut male_count = 0;
+        let mut female_count = 0;
+        let mut query = state.engine.world().query::<&Identity>();
+        for (_, identity) in &mut query {
+            match identity.sex {
+                Sex::Male => male_count += 1,
+                Sex::Female => female_count += 1,
+            }
+        }
+        assert_eq!(male_count, 1);
+        assert_eq!(female_count, 1);
+    }
+
+    #[test]
+    fn probe_bootstrap_applies_survival_profiles_to_initial_agents() {
+        let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
+        bootstrap_world_core(&mut state, test_bootstrap_payload()).expect("bootstrap should work");
+
+        let mut entries: Vec<(String, f64, f64, f64)> = Vec::new();
+        let mut query = state.engine.world().query::<(&Identity, &Needs)>();
+        for (_, (identity, needs)) in &mut query {
+            entries.push((
+                identity.name.clone(),
+                needs.get(NeedType::Hunger),
+                needs.get(NeedType::Sleep),
+                needs.energy,
+            ));
+        }
+        entries.sort_by(|left, right| left.0.cmp(&right.0));
+
+        assert_eq!(entries.len(), 2);
+        assert_eq!(entries[0].0, "Agent 1");
+        assert!((entries[0].1 - config::PROBE_START_PRIMARY_HUNGER).abs() < 1e-6);
+        assert!((entries[0].3 - config::PROBE_START_PRIMARY_ENERGY).abs() < 1e-6);
+
+        assert_eq!(entries[1].0, "Agent 2");
+        assert!((entries[1].1 - config::PROBE_START_SECONDARY_HUNGER).abs() < 1e-6);
+        assert!((entries[1].2 - config::PROBE_START_SECONDARY_SLEEP).abs() < 1e-6);
+        assert!((entries[1].3 - config::PROBE_START_SECONDARY_ENERGY).abs() < 1e-6);
+    }
+
+    #[test]
+    fn probe_bootstrap_drives_visible_survival_actions_and_recovery() {
+        let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
+        bootstrap_world_core(&mut state, test_bootstrap_payload()).expect("bootstrap should work");
+
+        state
+            .engine
+            .register(NeedsRuntimeSystem::new(10, config::NEEDS_TICK_INTERVAL));
+        state.engine.register(BehaviorRuntimeSystem::new(
+            20,
+            config::BEHAVIOR_TICK_INTERVAL,
+        ));
+        state.engine.register(GatheringRuntimeSystem::new(
+            25,
+            config::GATHERING_TICK_INTERVAL,
+        ));
+        state.engine.register(MovementRuntimeSystem::new(
+            30,
+            config::MOVEMENT_TICK_INTERVAL,
+        ));
+
+        let initial_food = state
+            .engine
+            .resources()
+            .settlements
+            .get(&SettlementId(1))
+            .expect("settlement should exist")
+            .stockpile_food;
+
+        let mut agent_one_saw_forage = false;
+        let mut agent_two_saw_rest = false;
+        for _ in 0..12 {
+            state.engine.tick();
+            let mut query = state.engine.world().query::<(&Identity, &Behavior)>();
+            for (_, (identity, behavior)) in &mut query {
+                match identity.name.as_str() {
+                    "Agent 1" if behavior.current_action == ActionType::Forage => {
+                        agent_one_saw_forage = true;
+                    }
+                    "Agent 2" if behavior.current_action == ActionType::Rest => {
+                        agent_two_saw_rest = true;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        assert!(agent_one_saw_forage);
+        assert!(agent_two_saw_rest);
+
+        for _ in 0..25 {
+            state.engine.tick();
+        }
+
+        let mut after_by_name: HashMap<String, (f64, f64, f64)> = HashMap::new();
+        {
+            let mut query = state.engine.world().query::<(&Identity, &Needs)>();
+            for (_, (identity, needs)) in &mut query {
+                after_by_name.insert(
+                    identity.name.clone(),
+                    (
+                        needs.get(NeedType::Hunger),
+                        needs.get(NeedType::Sleep),
+                        needs.energy,
+                    ),
+                );
+            }
+        }
+
+        let agent_one = after_by_name
+            .get("Agent 1")
+            .copied()
+            .expect("Agent 1 needs should exist");
+        let agent_two = after_by_name
+            .get("Agent 2")
+            .copied()
+            .expect("Agent 2 needs should exist");
+        assert!(agent_one.0 > config::PROBE_START_PRIMARY_HUNGER);
+        assert!(agent_two.1 > config::PROBE_START_SECONDARY_SLEEP);
+        assert!(agent_two.2 > config::PROBE_START_SECONDARY_ENERGY);
+        assert!(
+            state
+                .engine
+                .resources()
+                .settlements
+                .get(&SettlementId(1))
+                .expect("settlement should exist")
+                .stockpile_food
+                > initial_food
+        );
+    }
+
+    #[test]
+    fn bootstrap_payload_defaults_to_sandbox_mode() {
+        let payload: RuntimeBootstrapPayload = serde_json::from_str(
+            r#"{
+                "world": {"width": 1, "height": 1},
+                "founding_settlement": {"id": 1, "name": "", "x": 0, "y": 0},
+                "agents": []
+            }"#,
+        )
+        .expect("payload should deserialize");
+        assert_eq!(payload.startup_mode, RuntimeBootstrapMode::Sandbox);
     }
 
     #[test]

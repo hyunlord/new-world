@@ -83,6 +83,7 @@ var _legend_stone_label: Label
 var _minimap_panel: Control
 var _stats_panel: Control
 var _minimap_visible: bool = true
+var _probe_observation_mode: bool = false
 ## Reserved: stats panel toggle (currently always visible)
 
 var _minimap_size_index: int = 0
@@ -178,6 +179,8 @@ func _build_minimap_and_stats() -> void:
 		_stats_panel = StatsPanelClass.new()
 		_stats_panel.init(_stats_recorder)
 		add_child(_stats_panel)
+
+	set_probe_observation_mode(_probe_observation_mode)
 
 	# PopupManager owns all detail panels
 	_popup_manager = PopupManagerClass.new()
@@ -1391,9 +1394,16 @@ func toggle_debug_panel() -> void:
 	_debug_panel.toggle()
 
 
-## Displays a startup toast notification showing the initial population count.
-func show_startup_toast(pop_count: int) -> void:
-	_add_notification(Locale.trf1("UI_NOTIF_WORLDSIM_STARTED_FMT", "n", pop_count), Color.WHITE)
+## Displays a startup toast notification showing the selected startup mode and initial population.
+func show_startup_toast(pop_count: int, startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX) -> void:
+	var mode_key: String = "UI_STARTUP_MODE_SANDBOX"
+	if startup_mode == GameConfig.STARTUP_MODE_PROBE:
+		mode_key = "UI_STARTUP_MODE_PROBE"
+	_add_notification(
+		Locale.trf2("UI_NOTIF_WORLDSIM_STARTED_MODE_FMT",
+			"mode", Locale.ltr(mode_key),
+			"n", pop_count),
+		Color.WHITE)
 
 
 func _on_ui_notification(msg: String, _category: String) -> void:
@@ -1446,6 +1456,17 @@ func _on_follow_stopped() -> void:
 ## Shows or hides the resource overlay colour legend.
 func set_resource_legend_visible(vis: bool) -> void:
 	_resource_legend.visible = vis
+
+
+## Applies Probe Start presentation defaults without affecting later manual toggles.
+func set_probe_observation_mode(enabled: bool) -> void:
+	_probe_observation_mode = enabled
+	if _resource_legend != null and enabled:
+		_resource_legend.visible = false
+	if _minimap_panel != null:
+		_minimap_panel.visible = (not enabled) and _minimap_visible
+	if _stats_panel != null:
+		_stats_panel.visible = not enabled
 
 
 ## Returns the minimap panel control, or null if it has not been created yet.

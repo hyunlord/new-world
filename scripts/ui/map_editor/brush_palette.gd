@@ -12,7 +12,7 @@ signal spawn_count_changed(count: int)
 signal preset_selected(preset_id: String)
 signal seed_changed(seed_value: int)
 signal regenerate_requested
-signal start_simulation_requested
+signal start_simulation_requested(startup_mode: String)
 signal resource_overlay_toggled
 
 var _controller = null ## MapEditorController ref (untyped, injected by WorldSetup)
@@ -71,10 +71,17 @@ func _build_ui() -> void:
 	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(panel)
 
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	panel.add_child(scroll)
+
 	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.custom_minimum_size = Vector2(280, 0)
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_theme_constant_override("separation", 6)
-	panel.add_child(vbox)
+	scroll.add_child(vbox)
 
 	## ── 프리셋 섹션 ──
 	var preset_lbl: Label = Label.new()
@@ -201,12 +208,51 @@ func _build_ui() -> void:
 	vbox.add_child(_spawn_total_label)
 
 	## ── 시작 버튼 ──
-	var start_btn: Button = Button.new()
-	start_btn.text = Locale.ltr("UI_MAP_START_SIM")
-	start_btn.add_theme_font_size_override("font_size", 18)
-	start_btn.custom_minimum_size = Vector2(0, 40)
-	start_btn.pressed.connect(_on_start_pressed)
-	vbox.add_child(start_btn)
+	var start_section: PanelContainer = PanelContainer.new()
+	vbox.add_child(start_section)
+
+	var start_margin: MarginContainer = MarginContainer.new()
+	start_margin.add_theme_constant_override("margin_left", 10)
+	start_margin.add_theme_constant_override("margin_right", 10)
+	start_margin.add_theme_constant_override("margin_top", 8)
+	start_margin.add_theme_constant_override("margin_bottom", 10)
+	start_section.add_child(start_margin)
+
+	var start_box: VBoxContainer = VBoxContainer.new()
+	start_box.add_theme_constant_override("separation", 6)
+	start_margin.add_child(start_box)
+
+	var start_mode_lbl: Label = Label.new()
+	start_mode_lbl.text = Locale.ltr("UI_MAP_START_MODE_LABEL")
+	start_mode_lbl.add_theme_font_size_override("font_size", 17)
+	start_box.add_child(start_mode_lbl)
+
+	var start_hint_lbl: Label = Label.new()
+	start_hint_lbl.text = Locale.ltr("UI_MAP_START_MODE_HINT")
+	start_hint_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	start_hint_lbl.add_theme_font_size_override("font_size", 13)
+	start_hint_lbl.add_theme_color_override("font_color", Color(0.75, 0.78, 0.82))
+	start_box.add_child(start_hint_lbl)
+
+	var start_buttons: VBoxContainer = VBoxContainer.new()
+	start_buttons.add_theme_constant_override("separation", 6)
+	start_box.add_child(start_buttons)
+
+	var probe_btn: Button = Button.new()
+	probe_btn.text = Locale.ltr("UI_MAP_START_PROBE")
+	probe_btn.add_theme_font_size_override("font_size", 17)
+	probe_btn.custom_minimum_size = Vector2(0, 36)
+	probe_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	probe_btn.pressed.connect(_on_start_pressed.bind(GameConfig.STARTUP_MODE_PROBE))
+	start_buttons.add_child(probe_btn)
+
+	var sandbox_btn: Button = Button.new()
+	sandbox_btn.text = Locale.ltr("UI_MAP_START_SANDBOX")
+	sandbox_btn.add_theme_font_size_override("font_size", 17)
+	sandbox_btn.custom_minimum_size = Vector2(0, 36)
+	sandbox_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sandbox_btn.pressed.connect(_on_start_pressed.bind(GameConfig.STARTUP_MODE_SANDBOX))
+	start_buttons.add_child(sandbox_btn)
 
 
 # ── 시그널 핸들러 ────────────────────────────────────────────
@@ -257,8 +303,8 @@ func _on_overlay_toggle() -> void:
 	resource_overlay_toggled.emit()
 
 
-func _on_start_pressed() -> void:
-	start_simulation_requested.emit()
+func _on_start_pressed(startup_mode: String) -> void:
+	start_simulation_requested.emit(startup_mode)
 
 
 ## world_setup.gd에서 스폰 포인트 변경 시 호출

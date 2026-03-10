@@ -594,6 +594,17 @@ fn behavior_select_action(
     let energy_deficit = behavior_urgency(1.0 - energy);
     let social_deficit = behavior_urgency(1.0 - social);
 
+    if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
+        return ActionType::Forage;
+    }
+    if energy < config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32
+        && thirst >= config::THIRST_LOW as f32
+        && warmth >= config::WARMTH_LOW as f32
+        && safety >= config::SAFETY_LOW as f32
+    {
+        return ActionType::Rest;
+    }
+
     if matches!(age_stage, GrowthStage::Adult)
         && behavior.job == "builder"
         && has_build_target
@@ -627,7 +638,7 @@ fn behavior_select_action(
         }
     }
 
-    if hunger < 0.30 {
+    if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
         scores.insert(ActionType::Forage, 1.0);
     }
 
@@ -1194,5 +1205,44 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Build);
         assert_eq!(behavior.action_target_x, Some(6));
         assert_eq!(behavior.action_target_y, Some(5));
+    }
+
+    #[test]
+    fn behavior_runtime_system_prioritizes_rest_for_critical_energy_probe_case() {
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(8, 8, 213);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 377);
+        let mut world = hecs::World::new();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.85);
+        needs.set(NeedType::Thirst, 0.85);
+        needs.set(NeedType::Warmth, 0.75);
+        needs.set(NeedType::Safety, 0.80);
+        needs.energy = config::BEHAVIOR_FORCE_REST_ENERGY_MAX * 0.5;
+
+        let entity = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            needs,
+            Stress::default(),
+            Emotion::default(),
+            Position::new(4, 4),
+            Behavior::default(),
+        ));
+
+        let mut system =
+            BehaviorRuntimeSystem::new(20, sim_core::config::BEHAVIOR_TICK_INTERVAL as u64);
+        system.run(&mut world, &mut resources, 50);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Rest);
+        assert_eq!(behavior.action_target_x, Some(4));
+        assert_eq!(behavior.action_target_y, Some(4));
     }
 }
