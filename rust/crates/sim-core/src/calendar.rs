@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::config::GameConfig;
+use serde::{Deserialize, Serialize};
 
 /// Game calendar — tracks simulation time.
 ///

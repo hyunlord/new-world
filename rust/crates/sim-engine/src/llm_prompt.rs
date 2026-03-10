@@ -190,10 +190,39 @@ const NEED_LABELS: [&str; 13] = [
 ];
 
 const VALUE_LABELS: [&str; 33] = [
-    "법도", "한패 의리", "집안", "벗됨", "힘", "참말", "꾀", "말재주", "곧음", "예절",
-    "옛법", "꾸밈결", "서로 도움", "홀로섬", "굳셈", "제 마음 들여다봄", "절제", "고요함",
-    "화목", "흥겨움", "손솜씨", "싸움 기운", "재주", "부지런함", "내어줌", "겨룸",
-    "버팀", "쉼", "바꾸기", "사랑", "앎", "온 누리", "평온",
+    "법도",
+    "한패 의리",
+    "집안",
+    "벗됨",
+    "힘",
+    "참말",
+    "꾀",
+    "말재주",
+    "곧음",
+    "예절",
+    "옛법",
+    "꾸밈결",
+    "서로 도움",
+    "홀로섬",
+    "굳셈",
+    "제 마음 들여다봄",
+    "절제",
+    "고요함",
+    "화목",
+    "흥겨움",
+    "손솜씨",
+    "싸움 기운",
+    "재주",
+    "부지런함",
+    "내어줌",
+    "겨룸",
+    "버팀",
+    "쉼",
+    "바꾸기",
+    "사랑",
+    "앎",
+    "온 누리",
+    "평온",
 ];
 
 static HEXACO_DESCRIPTOR_TABLE: OnceLock<HexacoDescriptorTable> = OnceLock::new();
@@ -292,7 +321,15 @@ pub fn build_judgment_prompt(
     action_options: &[ActionOption],
     templates: &LlmPromptTemplates,
 ) -> Result<PromptPayload, LlmPromptError> {
-    let context = context_from_components(identity, role, personality, emotion, Some(behavior), values, None);
+    let context = context_from_components(
+        identity,
+        role,
+        personality,
+        emotion,
+        Some(behavior),
+        values,
+        None,
+    );
     build_judgment_prompt_from_context(&context, action_options, templates)
 }
 
@@ -326,20 +363,13 @@ pub fn hexaco_to_korean_descriptors(
         c_desc: select_axis_descriptor(&table.C, levels[4]).to_string(),
         o_desc: select_axis_descriptor(&table.O, levels[5]).to_string(),
         dominant_traits,
-        dominant_values: values
-            .map(values_to_korean_descriptors)
-            .unwrap_or_default(),
+        dominant_values: values.map(values_to_korean_descriptors).unwrap_or_default(),
     }
 }
 
 /// Maps current Plutchik intensities to a short Korean emotional context.
 pub fn emotion_to_korean_context(emotion: &Emotion) -> String {
-    let mut ranked: Vec<(usize, f64)> = emotion
-        .primary
-        .iter()
-        .copied()
-        .enumerate()
-        .collect();
+    let mut ranked: Vec<(usize, f64)> = emotion.primary.iter().copied().enumerate().collect();
     ranked.sort_by(|left, right| right.1.total_cmp(&left.1));
 
     let (dominant_idx, dominant_value) = ranked.first().copied().unwrap_or((0, 0.0));
@@ -587,7 +617,9 @@ fn context_from_components(
             .map(|value| value.occupation.clone())
             .filter(|value| !value.is_empty())
             .unwrap_or_else(|| "없음".to_string()),
-        action_id: behavior.map(|value| value.current_action as u32).unwrap_or_default(),
+        action_id: behavior
+            .map(|value| value.current_action as u32)
+            .unwrap_or_default(),
         action_label: behavior
             .map(|value| value.current_action.to_string())
             .unwrap_or_else(|| "Idle".to_string()),
@@ -778,12 +810,7 @@ fn dominant_trait_for_axis(axis: usize, score: f64) -> String {
 }
 
 fn values_to_korean_descriptors(values: &Values) -> Vec<String> {
-    let mut ranked: Vec<(usize, f64)> = values
-        .values
-        .iter()
-        .copied()
-        .enumerate()
-        .collect();
+    let mut ranked: Vec<(usize, f64)> = values.values.iter().copied().enumerate().collect();
     ranked.sort_by(|left, right| right.1.total_cmp(&left.1));
     ranked
         .into_iter()
@@ -924,8 +951,8 @@ mod tests {
     use super::{
         build_inner_prompt_from_context, build_judgment_prompt_from_context,
         build_notification_prompt_from_context, build_personality_prompt_from_context,
-        default_prompt_dir, emotion_to_korean_context, hexaco_to_korean_descriptors,
-        ActionOption, LlmPromptContext, LlmPromptTemplates, SpeechRegister,
+        default_prompt_dir, emotion_to_korean_context, hexaco_to_korean_descriptors, ActionOption,
+        LlmPromptContext, LlmPromptTemplates, SpeechRegister,
     };
     use sim_core::components::{Emotion, LlmRole, Personality, Values};
     use sim_core::enums::{GrowthStage, Sex};
@@ -946,7 +973,9 @@ mod tests {
             action_label: "Forage".to_string(),
             personality_axes: [0.82, 0.15, 0.73, 0.48, 0.66, 0.92],
             emotions: [0.1, 0.2, 0.82, 0.1, 0.0, 0.0, 0.15, 0.32],
-            needs: [0.8, 0.7, 0.2, 0.6, 0.7, 0.5, 0.4, 0.3, 0.6, 0.7, 0.5, 0.2, 0.4],
+            needs: [
+                0.8, 0.7, 0.2, 0.6, 0.7, 0.5, 0.4, 0.3, 0.6, 0.7, 0.5, 0.2, 0.4,
+            ],
             values,
             stress_level: 0.3,
             stress_state: 1,
@@ -1004,7 +1033,9 @@ mod tests {
         assert!(personality.system_prompt.contains("월드심"));
         assert!(personality.user_prompt.contains("카야"));
         assert!(notification.user_prompt.contains("서로 맞부딪쳤다"));
-        assert!(notification.user_prompt.contains("먹거리 나눔을 두고 다투었다"));
+        assert!(notification
+            .user_prompt
+            .contains("먹거리 나눔을 두고 다투었다"));
         assert!(inner.user_prompt.contains("속마음"));
         assert!(judgment.grammar.is_some());
     }

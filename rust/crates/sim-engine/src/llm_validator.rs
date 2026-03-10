@@ -70,7 +70,8 @@ pub fn validate_korean_output(
     expected_register: SpeechRegister,
 ) -> ValidationResult {
     let original_text = text.trim().to_string();
-    let (cleaned_text, violations) = replace_forbidden_words(original_text.as_str(), forbidden_words);
+    let (cleaned_text, violations) =
+        replace_forbidden_words(original_text.as_str(), forbidden_words);
     let register_match = expected_register.matches_text(cleaned_text.as_str());
     let too_short = cleaned_text.chars().count() < config::LLM_VALIDATION_MIN_CHARS;
     let too_repetitive =

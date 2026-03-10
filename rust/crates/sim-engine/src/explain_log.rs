@@ -116,7 +116,12 @@ mod tests {
 
         // Should only retain last 20
         let recent = log.get_recent(entity_bits, 100);
-        assert_eq!(recent.len(), 20, "Expected 20 entries, got {}", recent.len());
+        assert_eq!(
+            recent.len(),
+            20,
+            "Expected 20 entries, got {}",
+            recent.len()
+        );
 
         // Most recent should be tick 24 (newest first)
         assert_eq!(recent[0].tick, 24, "First entry should be tick 24");

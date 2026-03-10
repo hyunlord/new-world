@@ -1,7 +1,7 @@
 // TODO(v3.1): Convert remaining f32 fields to f64 for determinism.
+use crate::enums::{MentalBreakType, StressState};
+use crate::scales::{NativePercent, NativeStress, NormPercent, NormStress};
 use serde::{Deserialize, Serialize};
-use crate::enums::{StressState, MentalBreakType};
-use crate::scales::{NormStress, NativeStress, NormPercent, NativePercent};
 
 /// A single per-tick stress contribution that decays over time.
 /// Corresponds to GDScript `ed.stress_traces` entries.

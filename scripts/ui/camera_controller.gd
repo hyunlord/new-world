@@ -64,6 +64,7 @@ var _flash_layer: CanvasLayer
 var _flash_rect: ColorRect
 var _cast_bar: Variant = null
 var _notification_manager: Variant = null
+var _probe_observation_mode: bool = false
 
 
 func _ready() -> void:
@@ -84,6 +85,15 @@ func set_sim_engine(sim_engine: RefCounted) -> void:
 	_sim_engine = sim_engine
 
 
+func set_probe_observation_mode(enabled: bool) -> void:
+	_probe_observation_mode = enabled
+	_clear_active_tween()
+	if follow_target_id >= 0:
+		stop_following()
+	elif enabled and current_state != CameraState.IDLE_MEDIUM:
+		_transition_to(CameraState.IDLE_MEDIUM)
+
+
 func connect_ui_sources(cast_bar: Variant, notification_manager: Variant) -> void:
 	if cast_bar != null:
 		_cast_bar = cast_bar
@@ -101,6 +111,11 @@ func connect_ui_sources(cast_bar: Variant, notification_manager: Variant) -> voi
 
 func follow_entity(entity_id: int) -> void:
 	if entity_id < 0:
+		return
+	if _probe_observation_mode:
+		if follow_target_id >= 0:
+			stop_following()
+		focus_entity(entity_id)
 		return
 	_mark_player_input(false)
 	_clear_active_tween()
@@ -167,6 +182,8 @@ func handle_crisis(entity_id: int, target_position: Vector2) -> void:
 
 
 func trigger_hard_cut(target_position: Vector2) -> void:
+	if _probe_observation_mode:
+		return
 	_clear_active_tween()
 	if follow_target_id >= 0:
 		stop_following()
@@ -181,6 +198,8 @@ func trigger_hard_cut(target_position: Vector2) -> void:
 
 
 func trigger_drone_shot(target_position: Vector2, force: bool = false) -> void:
+	if _probe_observation_mode:
+		return
 	if not force and _is_player_active():
 		return
 	_clear_active_tween()
@@ -196,6 +215,8 @@ func trigger_drone_shot(target_position: Vector2, force: bool = false) -> void:
 
 
 func trigger_drift(target_position: Vector2) -> void:
+	if _probe_observation_mode:
+		return
 	if _is_player_active() or current_state == CameraState.FOLLOW:
 		return
 	drift_target = _clamp_to_world_position(target_position)
@@ -279,6 +300,12 @@ func _process(delta: float) -> void:
 	if not _idle_signal_emitted and last_input_time >= IDLE_SIGNAL_DURATION:
 		_idle_signal_emitted = true
 		camera_idle.emit()
+
+	if _probe_observation_mode:
+		_smooth_zoom(Vector2(_target_zoom, _target_zoom), delta)
+		_process_manual_pan(delta)
+		position = _clamp_to_world_position(position)
+		return
 
 	match current_state:
 		CameraState.IDLE_WIDE:
@@ -603,16 +630,25 @@ func _show_flash() -> void:
 
 
 func _on_ui_agent_selected(entity_id: int) -> void:
+	if _probe_observation_mode:
+		return
 	focus_entity(entity_id)
 
 
 func _on_ui_agent_follow_requested(entity_id: int) -> void:
+	if _probe_observation_mode:
+		focus_entity(entity_id)
+		return
 	follow_entity(entity_id)
 
 
 func _on_ui_notification_clicked(entity_id: int, target_position: Vector2) -> void:
+	if _probe_observation_mode:
+		return
 	handle_notification_clicked(entity_id, target_position)
 
 
 func _on_ui_crisis_occurred(entity_id: int, target_position: Vector2) -> void:
+	if _probe_observation_mode:
+		return
 	handle_crisis(entity_id, target_position)

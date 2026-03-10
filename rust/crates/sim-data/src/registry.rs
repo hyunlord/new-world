@@ -8,9 +8,7 @@ use crate::defs::{ActionDef, FurnitureDef, MaterialDef, RecipeDef, StructureDef}
 use crate::loader::{load_ron_directory, DataLoadError};
 use crate::tag_index::TagIndex;
 use crate::validator::{validate_registry, Severity};
-use crate::{
-    MaterialProperties, TagRequirement, TemperamentRules, ValidationError, WorldRuleset,
-};
+use crate::{MaterialProperties, TagRequirement, TemperamentRules, ValidationError, WorldRuleset};
 
 /// Immutable registry of data-driven simulation definitions.
 #[derive(Debug, Clone)]

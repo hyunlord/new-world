@@ -1,9 +1,9 @@
+use crate::engine::SimResources;
 /// SimSystem trait — the contract every simulation system must implement.
 ///
 /// Systems are registered with SimEngine and called every `tick_interval` ticks.
 /// They receive mutable access to the ECS world and shared simulation resources.
 use hecs::World;
-use crate::engine::SimResources;
 
 /// Core simulation system trait.
 ///
@@ -47,7 +47,10 @@ pub(crate) struct SystemEntry {
 
 impl SystemEntry {
     pub fn new(system: Box<dyn SimSystem>) -> Self {
-        Self { system, last_run_tick: 0 }
+        Self {
+            system,
+            last_run_tick: 0,
+        }
     }
 
     /// Returns true if this system should run on `current_tick`.
@@ -66,8 +69,12 @@ mod tests {
 
     struct NullSystem;
     impl SimSystem for NullSystem {
-        fn name(&self) -> &'static str { "null" }
-        fn tick_interval(&self) -> u64 { 5 }
+        fn name(&self) -> &'static str {
+            "null"
+        }
+        fn tick_interval(&self) -> u64 {
+            5
+        }
         fn run(&mut self, _w: &mut World, _r: &mut SimResources, _t: u64) {}
     }
 

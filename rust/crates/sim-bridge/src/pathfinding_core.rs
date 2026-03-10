@@ -4,7 +4,6 @@ use sim_systems::pathfinding::{
 };
 use std::sync::atomic::{AtomicU64, AtomicU8, Ordering};
 
-
 pub const PATHFIND_BACKEND_AUTO: u8 = 0;
 pub const PATHFIND_BACKEND_CPU: u8 = 1;
 pub const PATHFIND_BACKEND_GPU: u8 = 2;
@@ -508,7 +507,9 @@ pub(crate) fn dispatch_pathfind_grid_bytes(
     max_steps: usize,
 ) -> Result<Vec<GridPos>, PathfindError> {
     record_dispatch(PATHFIND_BACKEND_CPU);
-    pathfind_grid_bytes(width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps)
+    pathfind_grid_bytes(
+        width, height, walkable, move_cost, from_x, from_y, to_x, to_y, max_steps,
+    )
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_vec2_bytes(
@@ -522,7 +523,15 @@ pub(crate) fn dispatch_pathfind_grid_batch_vec2_bytes(
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
     record_dispatch(PATHFIND_BACKEND_CPU);
-    pathfind_grid_batch_vec2_bytes(width, height, walkable, move_cost, from_points, to_points, max_steps)
+    pathfind_grid_batch_vec2_bytes(
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        max_steps,
+    )
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_bytes(
@@ -536,7 +545,15 @@ pub(crate) fn dispatch_pathfind_grid_batch_bytes(
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
     record_dispatch(PATHFIND_BACKEND_CPU);
-    pathfind_grid_batch_bytes(width, height, walkable, move_cost, from_points, to_points, max_steps)
+    pathfind_grid_batch_bytes(
+        width,
+        height,
+        walkable,
+        move_cost,
+        from_points,
+        to_points,
+        max_steps,
+    )
 }
 
 pub(crate) fn dispatch_pathfind_grid_batch_xy_bytes(
@@ -550,6 +567,7 @@ pub(crate) fn dispatch_pathfind_grid_batch_xy_bytes(
     max_steps: usize,
 ) -> Result<Vec<Vec<GridPos>>, PathfindError> {
     record_dispatch(PATHFIND_BACKEND_CPU);
-    pathfind_grid_batch_xy_bytes(width, height, walkable, move_cost, from_xy, to_xy, max_steps)
+    pathfind_grid_batch_xy_bytes(
+        width, height, walkable, move_cost, from_xy, to_xy, max_steps,
+    )
 }
-

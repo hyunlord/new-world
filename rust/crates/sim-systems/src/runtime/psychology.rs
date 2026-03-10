@@ -3,25 +3,25 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
-    Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, SteeringParams,
-    Stress, Traits, Values,
+    Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
+    SteeringParams, Stress, Traits, Values,
 };
 use sim_core::config;
+use sim_core::scales::{NativePercent, NativeStress};
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, StressState, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, StressState, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
-use sim_core::scales::{NativeStress, NativePercent};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
+use super::steering_derive::derive_steering_params;
 use crate::body;
 use crate::stat_curve;
-use super::steering_derive::derive_steering_params;
 
 #[inline]
 fn mood_bucket_from_emotion(emotion: &Emotion) -> usize {
@@ -85,7 +85,6 @@ fn emotion_name(index: usize) -> &'static str {
     }
 }
 
-
 /// Rust runtime system for stress-state updates.
 ///
 /// This system performs actual component writes (`Stress.level/reserve/allostatic_load/state`)
@@ -131,7 +130,22 @@ impl SimSystem for StressRuntimeSystem {
             Option<&Identity>,
             Option<&mut SteeringParams>,
         )>();
-        for (entity, (needs, stress, emotion_opt, personality_opt, social_opt, coping_opt, memory_opt, behavior_opt, identity_opt, steering_opt)) in &mut query {
+        for (
+            entity,
+            (
+                needs,
+                stress,
+                emotion_opt,
+                personality_opt,
+                social_opt,
+                coping_opt,
+                memory_opt,
+                behavior_opt,
+                identity_opt,
+                steering_opt,
+            ),
+        ) in &mut query
+        {
             let previous_gas_stage = stress.gas_stage;
             // --- Gather inputs ---
 
@@ -141,12 +155,24 @@ impl SimSystem for StressRuntimeSystem {
             let social = needs.get(NeedType::Belonging) as f32;
 
             // HEXACO personality axes (0-1)
-            let e_axis = personality_opt.map(|p| p.axis(HexacoAxis::E) as f32).unwrap_or(0.5);
-            let c_axis = personality_opt.map(|p| p.axis(HexacoAxis::C) as f32).unwrap_or(0.5);
-            let x_axis = personality_opt.map(|p| p.axis(HexacoAxis::X) as f32).unwrap_or(0.5);
-            let o_axis = personality_opt.map(|p| p.axis(HexacoAxis::O) as f32).unwrap_or(0.5);
-            let a_axis = personality_opt.map(|p| p.axis(HexacoAxis::A) as f32).unwrap_or(0.5);
-            let h_axis = personality_opt.map(|p| p.axis(HexacoAxis::H) as f32).unwrap_or(0.5);
+            let e_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::E) as f32)
+                .unwrap_or(0.5);
+            let c_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::C) as f32)
+                .unwrap_or(0.5);
+            let x_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::X) as f32)
+                .unwrap_or(0.5);
+            let o_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::O) as f32)
+                .unwrap_or(0.5);
+            let a_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::A) as f32)
+                .unwrap_or(0.5);
+            let h_axis = personality_opt
+                .map(|p| p.axis(HexacoAxis::H) as f32)
+                .unwrap_or(0.5);
 
             // Emotion values (0-1)
             let (fear, anger, sadness, disgust, surprise, joy, trust_val, anticipation) =
@@ -173,11 +199,8 @@ impl SimSystem for StressRuntimeSystem {
 
             // Support score from relationship trust values
             let support_score = if let Some(social_comp) = social_opt {
-                let strengths: Vec<f32> = social_comp
-                    .edges
-                    .iter()
-                    .map(|e| e.trust as f32)
-                    .collect();
+                let strengths: Vec<f32> =
+                    social_comp.edges.iter().map(|e| e.trust as f32).collect();
                 body::stress_support_score(&strengths)
             } else {
                 0.3
@@ -279,8 +302,7 @@ impl SimSystem for StressRuntimeSystem {
             stress.recalculate_state();
             if let Some(steering) = steering_opt {
                 let bucket = stress_bucket_from_state(stress.state);
-                steering.stress_speed_multiplier =
-                    config::STRESS_SPEED_MULTIPLIERS[bucket];
+                steering.stress_speed_multiplier = config::STRESS_SPEED_MULTIPLIERS[bucket];
             }
 
             // Update stress traces: apply updated per_tick and remove decayed traces
@@ -569,14 +591,22 @@ fn trait_violation_matching_facet(
     let personality = personality_opt?;
     let match_trait = |id: &str| traits.has_trait(id);
     match action_key {
-        "steal" if match_trait("f_fair_minded") => Some(personality.facet(HexacoFacet::Fairness) as f32),
-        "steal" if match_trait("f_sincere") => Some(personality.facet(HexacoFacet::Sincerity) as f32),
+        "steal" if match_trait("f_fair_minded") => {
+            Some(personality.facet(HexacoFacet::Fairness) as f32)
+        }
+        "steal" if match_trait("f_sincere") => {
+            Some(personality.facet(HexacoFacet::Sincerity) as f32)
+        }
         "harm_innocent" if match_trait("f_sentimental") => {
             Some(personality.facet(HexacoFacet::Sentimentality) as f32)
         }
-        "harm_innocent" if match_trait("f_gentle") => Some(personality.facet(HexacoFacet::Gentleness) as f32),
+        "harm_innocent" if match_trait("f_gentle") => {
+            Some(personality.facet(HexacoFacet::Gentleness) as f32)
+        }
         "panic" if match_trait("f_calm") => Some(personality.facet(HexacoFacet::Anxiety) as f32),
-        "retreat" if match_trait("f_fearless") => Some(personality.facet(HexacoFacet::Fearfulness) as f32),
+        "retreat" if match_trait("f_fearless") => {
+            Some(personality.facet(HexacoFacet::Fearfulness) as f32)
+        }
         _ => None,
     }
 }
@@ -606,12 +636,16 @@ impl SimSystem for TraitViolationRuntimeSystem {
         for (entity, (stress, behavior_opt, needs_opt, social_opt, traits_opt, personality_opt)) in
             &mut query
         {
-            let mut history = self.history.get(&entity).copied().unwrap_or(TraitViolationHistory {
-                desensitize_mult: 1.0,
-                ptsd_mult: 1.0,
-                repeats: 0,
-                last_violation_tick: tick,
-            });
+            let mut history = self
+                .history
+                .get(&entity)
+                .copied()
+                .unwrap_or(TraitViolationHistory {
+                    desensitize_mult: 1.0,
+                    ptsd_mult: 1.0,
+                    repeats: 0,
+                    last_violation_tick: tick,
+                });
 
             if let Some(behavior) = behavior_opt {
                 if let Some((action_key, base_stress)) =
@@ -650,8 +684,10 @@ impl SimSystem for TraitViolationRuntimeSystem {
                                 / 400.0)
                                 .clamp(0.0, 0.25);
                             if stress_delta > 0.0 {
-                                let next_level = (stress.level as f32 + stress_delta).clamp(0.0, 1.0);
-                                let next_allostatic = (stress.allostatic_load as f32 + stress_delta * 0.45)
+                                let next_level =
+                                    (stress.level as f32 + stress_delta).clamp(0.0, 1.0);
+                                let next_allostatic = (stress.allostatic_load as f32
+                                    + stress_delta * 0.45)
                                     .clamp(0.0, 1.0);
                                 let next_reserve =
                                     (stress.reserve as f32 - stress_delta * 0.35).clamp(0.0, 1.0);
@@ -694,7 +730,8 @@ impl SimSystem for TraitViolationRuntimeSystem {
                 if roll < intrusive_p {
                     let intrusive_stress = (0.004 * history.ptsd_mult).clamp(0.0, 0.03);
                     stress.level = (stress.level as f32 + intrusive_stress).clamp(0.0, 1.0) as f64;
-                    stress.allostatic_load = (stress.allostatic_load as f32 + intrusive_stress * 0.20)
+                    stress.allostatic_load = (stress.allostatic_load as f32
+                        + intrusive_stress * 0.20)
                         .clamp(0.0, 1.0) as f64;
                     stress.recalculate_state();
                 }
@@ -808,8 +845,8 @@ impl SimSystem for TraumaScarRuntimeSystem {
                 let severity = (scar.severity as f32).clamp(0.0, 1.0);
                 let base_mult = 1.0 + severity * 0.25;
                 let stacks = (scar.reactivation_count as i32).max(1);
-                let sensitivity = body::trauma_scar_sensitivity_factor(base_mult, stacks)
-                    .clamp(0.5, 3.0);
+                let sensitivity =
+                    body::trauma_scar_sensitivity_factor(base_mult, stacks).clamp(0.5, 3.0);
                 let shift_scale = TRAUMA_SCAR_BASELINE_SCALE * sensitivity;
                 trauma_scar_apply_baseline_shifts(emotion, scar.scar_id.as_str(), shift_scale);
             }
@@ -873,7 +910,8 @@ impl SimSystem for EmotionRuntimeSystem {
             Option<&Personality>,
             Option<&mut SteeringParams>,
         )>();
-        for (entity, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query {
+        for (entity, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query
+        {
             let previous_dominant = dominant_emotion_index(emotion);
             let previous_mood_bucket = mood_bucket_from_emotion(emotion);
             let stress_level = stress_opt
@@ -911,22 +949,23 @@ impl SimSystem for EmotionRuntimeSystem {
             let baseline_trust = body::emotion_baseline_value(0.22, 0.02, z_a, 0.0, 1.0);
             let baseline_anticipation = body::emotion_baseline_value(0.20, 0.01, z_c, 0.0, 1.0);
 
-            let fear_target = (baseline_fear + stress_level * 0.50 + deficit_safety * 0.35).clamp(0.0, 1.0);
-            let anger_target = (baseline_anger + stress_level * 0.35 + deficit_hunger * 0.20).clamp(0.0, 1.0);
-            let sadness_target = (baseline_sadness + stress_level * 0.30 + deficit_social * 0.30).clamp(0.0, 1.0);
+            let fear_target =
+                (baseline_fear + stress_level * 0.50 + deficit_safety * 0.35).clamp(0.0, 1.0);
+            let anger_target =
+                (baseline_anger + stress_level * 0.35 + deficit_hunger * 0.20).clamp(0.0, 1.0);
+            let sadness_target =
+                (baseline_sadness + stress_level * 0.30 + deficit_social * 0.30).clamp(0.0, 1.0);
             let disgust_target = (baseline_disgust
                 + stress_level * 0.18
                 + (deficit_thirst * 0.10 + deficit_warmth * 0.10))
                 .clamp(0.0, 1.0);
             let surprise_target = (baseline_surprise + stress_level * 0.15).clamp(0.0, 1.0);
-            let joy_target = (baseline_joy
-                - stress_level * 0.35
-                + social * 0.20
-                + energy * 0.15
+            let joy_target = (baseline_joy - stress_level * 0.35 + social * 0.20 + energy * 0.15
                 - deficit_energy * 0.10)
                 .clamp(0.0, 1.0);
-            let trust_target = (baseline_trust - stress_level * 0.25 + social * 0.20 + safety * 0.20)
-                .clamp(0.0, 1.0);
+            let trust_target =
+                (baseline_trust - stress_level * 0.25 + social * 0.20 + safety * 0.20)
+                    .clamp(0.0, 1.0);
             let anticipation_target =
                 (baseline_anticipation - stress_level * 0.20 + energy * 0.20 + safety * 0.15)
                     .clamp(0.0, 1.0);
@@ -949,8 +988,10 @@ impl SimSystem for EmotionRuntimeSystem {
             emotion.baseline[EmotionType::Trust as usize] = baseline_trust as f64;
             emotion.baseline[EmotionType::Anticipation as usize] = baseline_anticipation as f64;
 
-            *emotion.get_mut(EmotionType::Fear) = update(emotion.get(EmotionType::Fear), fear_target);
-            *emotion.get_mut(EmotionType::Anger) = update(emotion.get(EmotionType::Anger), anger_target);
+            *emotion.get_mut(EmotionType::Fear) =
+                update(emotion.get(EmotionType::Fear), fear_target);
+            *emotion.get_mut(EmotionType::Anger) =
+                update(emotion.get(EmotionType::Anger), anger_target);
             *emotion.get_mut(EmotionType::Sadness) =
                 update(emotion.get(EmotionType::Sadness), sadness_target);
             *emotion.get_mut(EmotionType::Disgust) =
@@ -964,8 +1005,7 @@ impl SimSystem for EmotionRuntimeSystem {
                 update(emotion.get(EmotionType::Anticipation), anticipation_target);
             if let Some(steering) = steering_opt {
                 let bucket = mood_bucket_from_emotion(emotion);
-                steering.mood_speed_multiplier =
-                    config::MOOD_SPEED_MULTIPLIERS[bucket];
+                steering.mood_speed_multiplier = config::MOOD_SPEED_MULTIPLIERS[bucket];
             }
 
             let new_dominant = dominant_emotion_index(emotion);
@@ -1055,7 +1095,9 @@ impl SimSystem for MoraleRuntimeSystem {
             Option<&Personality>,
             Option<&Social>,
         )>();
-        for (_, (needs, behavior, emotion_opt, stress_opt, personality_opt, social_opt)) in &mut query {
+        for (_, (needs, behavior, emotion_opt, stress_opt, personality_opt, social_opt)) in
+            &mut query
+        {
             let hunger = needs.get(NeedType::Hunger) as f32;
             let energy = needs.energy as f32;
             let safety = needs.get(NeedType::Safety) as f32;
@@ -1134,16 +1176,7 @@ impl SimSystem for MoraleRuntimeSystem {
             );
 
             let behavior_weight = body::morale_behavior_weight_multiplier(
-                morale,
-                0.6,
-                1.2,
-                1.55,
-                0.85,
-                1.2,
-                0.55,
-                0.85,
-                0.30,
-                0.55,
+                morale, 0.6, 1.2, 1.55, 0.85, 1.2, 0.55, 0.85, 0.30, 0.55,
             );
             let stress_penalty = (stress_level * 0.12).clamp(0.0, 0.12);
             behavior.job_satisfaction =
@@ -1155,9 +1188,9 @@ impl SimSystem for MoraleRuntimeSystem {
                 .clamp(0.0, 1.0);
 
             let morale_unit = ((morale + 1.0) * 0.5).clamp(0.0, 1.0);
-            let next_meaning =
-                (needs.get(NeedType::Meaning) as f32 * 0.85 + morale_unit * 0.15 - migration_p * 0.05)
-                    .clamp(0.0, 1.0);
+            let next_meaning = (needs.get(NeedType::Meaning) as f32 * 0.85 + morale_unit * 0.15
+                - migration_p * 0.05)
+                .clamp(0.0, 1.0);
             let next_transcendence = (needs.get(NeedType::Transcendence) as f32 * 0.90
                 + morale_unit * 0.10
                 - migration_p * 0.03)
@@ -1186,7 +1219,6 @@ impl ContagionRuntimeSystem {
         }
     }
 }
-
 
 #[derive(Debug, Clone)]
 struct ContagionSnapshot {
@@ -1242,9 +1274,15 @@ impl SimSystem for ContagionRuntimeSystem {
         const NETWORK_DECAY: f32 = 0.5;
 
         let mut snapshots: Vec<ContagionSnapshot> = Vec::new();
-        let mut read_query =
-            world.query::<(&Position, &Emotion, &Stress, Option<&Personality>, Option<&Identity>)>();
-        for (entity, (position, emotion, stress, personality_opt, identity_opt)) in &mut read_query {
+        let mut read_query = world.query::<(
+            &Position,
+            &Emotion,
+            &Stress,
+            Option<&Personality>,
+            Option<&Identity>,
+        )>();
+        for (entity, (position, emotion, stress, personality_opt, identity_opt)) in &mut read_query
+        {
             let mut emotions = [0.0_f32; 8];
             for (idx, value) in emotion.primary.iter().enumerate() {
                 emotions[idx] = *value as f32;
@@ -1265,7 +1303,8 @@ impl SimSystem for ContagionRuntimeSystem {
                 entity,
                 x: position.x,
                 y: position.y,
-                settlement_id: identity_opt.and_then(|identity| identity.settlement_id.map(|id| id.0)),
+                settlement_id: identity_opt
+                    .and_then(|identity| identity.settlement_id.map(|id| id.0)),
                 emotions,
                 stress_2000: stress.level_native().0.clamp(0.0, STRESS_SCALE),
                 valence: contagion_valence(&emotions),
@@ -1368,7 +1407,8 @@ impl SimSystem for ContagionRuntimeSystem {
                 continue;
             }
             let donor_count = donors.len() as i32;
-            let avg_valence = donors.iter().map(|donor| donor.valence).sum::<f32>() / donor_count as f32;
+            let avg_valence =
+                donors.iter().map(|donor| donor.valence).sum::<f32>() / donor_count as f32;
             let valence_gap = avg_valence - recipient.valence;
             let valence_delta = body::contagion_network_delta(
                 donor_count,
@@ -1386,7 +1426,9 @@ impl SimSystem for ContagionRuntimeSystem {
             }
             let joy_delta = (valence_delta / 100.0).clamp(-0.04, 0.04);
             let sadness_delta = (-valence_delta / 100.0).clamp(-0.04, 0.04);
-            let entry = emotion_deltas.entry(recipient.entity).or_insert([0.0_f32; 8]);
+            let entry = emotion_deltas
+                .entry(recipient.entity)
+                .or_insert([0.0_f32; 8]);
             entry[EmotionType::Joy as usize] += joy_delta;
             entry[EmotionType::Trust as usize] += joy_delta * 0.5;
             entry[EmotionType::Sadness as usize] += sadness_delta;
@@ -1424,8 +1466,8 @@ impl SimSystem for ContagionRuntimeSystem {
                 let next_level = (stress.level as f32 + *stress_delta).clamp(0.0, 1.0);
                 stress.level = next_level as f64;
                 if *stress_delta > 0.0 {
-                    let next_allostatic = (stress.allostatic_load as f32 + *stress_delta * 0.25)
-                        .clamp(0.0, 1.0);
+                    let next_allostatic =
+                        (stress.allostatic_load as f32 + *stress_delta * 0.25).clamp(0.0, 1.0);
                     stress.allostatic_load = next_allostatic as f64;
                 }
                 stress.recalculate_state();
@@ -1433,7 +1475,6 @@ impl SimSystem for ContagionRuntimeSystem {
         }
     }
 }
-
 
 /// Rust runtime system for coping strategy cooldown/selection updates.
 ///
@@ -1799,9 +1840,9 @@ const MATURATION_SIGMA: f32 = 0.03;
 /// Default maturation targets (Ashton & Lee 2016):
 /// H: +1.0 SD from 18→60, E/X: mild increase
 const MATURATION_TARGETS: [(usize, f32, i32, i32); 3] = [
-    (0, 1.0, 18, 60),  // H: +1.0 shift, ages 18-60
-    (1, 0.3, 18, 60),  // E: +0.3 shift, ages 18-60
-    (2, 0.2, 20, 50),  // X: +0.2 shift, ages 20-50
+    (0, 1.0, 18, 60), // H: +1.0 shift, ages 18-60
+    (1, 0.3, 18, 60), // E: +0.3 shift, ages 18-60
+    (2, 0.2, 20, 50), // X: +0.2 shift, ages 20-50
 ];
 
 /// Rust runtime system for age-based personality maturation.
@@ -1889,8 +1930,9 @@ impl SimSystem for PersonalityMaturationRuntimeSystem {
                     // OU: dz = theta * (target - current) + N(0, sigma)
                     let u1 = resources.rng.gen_range(0.0001_f32..1.0_f32);
                     let u2 = resources.rng.gen_range(0.0_f32..1.0_f32);
-                    let noise =
-                        MATURATION_SIGMA * (-2.0 * u1.ln()).sqrt() * (2.0 * std::f32::consts::PI * u2).cos();
+                    let noise = MATURATION_SIGMA
+                        * (-2.0 * u1.ln()).sqrt()
+                        * (2.0 * std::f32::consts::PI * u2).cos();
                     let dz = MATURATION_THETA * (target - current_z as f32) + noise;
                     personality.facets[fi] = zscore_to_facet(current_z + dz as f64);
                 }
@@ -2061,8 +2103,7 @@ impl SimSystem for TraitRuntimeSystem {
                 let defined_ids: HashSet<&str> =
                     self.definitions.iter().map(|d| d.id.as_str()).collect();
                 for existing in &current_traits.active {
-                    if !defined_ids.contains(existing.as_str())
-                        && !activated_set.contains(existing)
+                    if !defined_ids.contains(existing.as_str()) && !activated_set.contains(existing)
                     {
                         new_active.push(existing.clone());
                     }

@@ -3,10 +3,10 @@
 //! Each culture defines name pools, syllabic generation parameters,
 //! and patronymic rules for agent name generation.
 
+use crate::loader::list_json_files;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::Path;
-use serde::{Deserialize, Serialize};
-use crate::loader::list_json_files;
 
 // ── Structs ───────────────────────────────────────────────────────────────────
 
@@ -170,41 +170,81 @@ mod tests {
             return;
         }
         let cultures = load_name_cultures(&dir);
-        assert!(cultures.len() >= 3, "Expected at least 3 cultures, got {}", cultures.len());
-        assert!(cultures.contains_key("proto_nature"), "Missing proto_nature");
-        assert!(cultures.contains_key("proto_syllabic"), "Missing proto_syllabic");
-        assert!(cultures.contains_key("tribal_totemic"), "Missing tribal_totemic");
+        assert!(
+            cultures.len() >= 3,
+            "Expected at least 3 cultures, got {}",
+            cultures.len()
+        );
+        assert!(
+            cultures.contains_key("proto_nature"),
+            "Missing proto_nature"
+        );
+        assert!(
+            cultures.contains_key("proto_syllabic"),
+            "Missing proto_syllabic"
+        );
+        assert!(
+            cultures.contains_key("tribal_totemic"),
+            "Missing tribal_totemic"
+        );
     }
 
     #[test]
     fn proto_nature_has_name_pools() {
         let dir = data_dir();
-        if !dir.exists() { return; }
+        if !dir.exists() {
+            return;
+        }
         let cultures = load_name_cultures(&dir);
         let culture = &cultures["proto_nature"];
-        assert!(!culture.given_names.male.is_empty(), "proto_nature male names should not be empty");
-        assert!(!culture.given_names.female.is_empty(), "proto_nature female names should not be empty");
-        assert!(!culture.allow_markov_generation, "proto_nature should not use markov generation");
+        assert!(
+            !culture.given_names.male.is_empty(),
+            "proto_nature male names should not be empty"
+        );
+        assert!(
+            !culture.given_names.female.is_empty(),
+            "proto_nature female names should not be empty"
+        );
+        assert!(
+            !culture.allow_markov_generation,
+            "proto_nature should not use markov generation"
+        );
     }
 
     #[test]
     fn proto_syllabic_has_syllable_pools() {
         let dir = data_dir();
-        if !dir.exists() { return; }
+        if !dir.exists() {
+            return;
+        }
         let cultures = load_name_cultures(&dir);
         let culture = &cultures["proto_syllabic"];
-        assert!(culture.allow_markov_generation, "proto_syllabic should use markov generation");
-        let pools = culture.syllable_pools.as_ref().expect("proto_syllabic should have syllable pools");
-        assert!(!pools.nucleus.is_empty(), "Nucleus pool should not be empty");
+        assert!(
+            culture.allow_markov_generation,
+            "proto_syllabic should use markov generation"
+        );
+        let pools = culture
+            .syllable_pools
+            .as_ref()
+            .expect("proto_syllabic should have syllable pools");
+        assert!(
+            !pools.nucleus.is_empty(),
+            "Nucleus pool should not be empty"
+        );
     }
 
     #[test]
     fn tribal_totemic_has_patronymic() {
         let dir = data_dir();
-        if !dir.exists() { return; }
+        if !dir.exists() {
+            return;
+        }
         let cultures = load_name_cultures(&dir);
         let culture = &cultures["tribal_totemic"];
         assert_eq!(culture.patronymic_rule, "prefix");
-        assert!(culture.patronymic_config.is_some(), "tribal_totemic should have patronymic_config");
+        assert!(
+            culture.patronymic_config.is_some(),
+            "tribal_totemic should have patronymic_config"
+        );
     }
 }

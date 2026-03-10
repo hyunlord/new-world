@@ -8,7 +8,9 @@ use strum_macros::{Display, EnumIter, EnumString};
 // ═══════════════════════════════════════
 
 /// HEXACO 6-axis personality model (Ashton & Lee)
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum HexacoAxis {
     H = 0, // Honesty-Humility
@@ -20,38 +22,62 @@ pub enum HexacoAxis {
 }
 
 /// HEXACO 24 facets (4 per axis). Index = axis*4 + facet_offset.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum HexacoFacet {
     // H (0-3)
-    Sincerity = 0, Fairness = 1, GreedAvoidance = 2, Modesty = 3,
+    Sincerity = 0,
+    Fairness = 1,
+    GreedAvoidance = 2,
+    Modesty = 3,
     // E (4-7)
-    Fearfulness = 4, Anxiety = 5, Dependence = 6, Sentimentality = 7,
+    Fearfulness = 4,
+    Anxiety = 5,
+    Dependence = 6,
+    Sentimentality = 7,
     // X (8-11)
-    SocialSelfEsteem = 8, SocialBoldness = 9, Sociability = 10, Liveliness = 11,
+    SocialSelfEsteem = 8,
+    SocialBoldness = 9,
+    Sociability = 10,
+    Liveliness = 11,
     // A (12-15)
-    Forgiveness = 12, Gentleness = 13, Flexibility = 14, Patience = 15,
+    Forgiveness = 12,
+    Gentleness = 13,
+    Flexibility = 14,
+    Patience = 15,
     // C (16-19)
-    Organization = 16, Diligence = 17, Perfectionism = 18, Prudence = 19,
+    Organization = 16,
+    Diligence = 17,
+    Perfectionism = 18,
+    Prudence = 19,
     // O (20-23)
-    AestheticAppreciation = 20, Inquisitiveness = 21, Creativity = 22, Unconventionality = 23,
+    AestheticAppreciation = 20,
+    Inquisitiveness = 21,
+    Creativity = 22,
+    Unconventionality = 23,
 }
 
 /// Bowlby (1969) attachment types
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum AttachmentType {
     #[default]
-    Secure,    // ~55%
-    Anxious,   // ~20%
-    Avoidant,  // ~20%
-    Fearful,   // ~5%
+    Secure, // ~55%
+    Anxious,  // ~20%
+    Avoidant, // ~20%
+    Fearful,  // ~5%
 }
 
 // ═══════════════════════════════════════
 // Emotion (Plutchik wheel)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum EmotionType {
     Joy = 0,
@@ -68,7 +94,9 @@ pub enum EmotionType {
 // Needs (Maslow + Alderfer ERG, 13 total)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum NeedType {
     // L1: Existence
@@ -95,17 +123,44 @@ pub const NEED_COUNT: usize = 13;
 // Values (33 types)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum ValueType {
-    Law = 0, Loyalty = 1, Family = 2, Friendship = 3, Power = 4,
-    Truth = 5, Cunning = 6, Eloquence = 7, Fairness = 8, Decorum = 9,
-    Tradition = 10, Artwork = 11, Cooperation = 12, Independence = 13,
-    Stoicism = 14, Introspection = 15, SelfControl = 16, Tranquility = 17,
-    Harmony = 18, Merriment = 19, Craftsmanship = 20, MartialProwess = 21,
-    Skill = 22, HardWork = 23, Sacrifice = 24, Competition = 25,
-    Perseverance = 26, Leisure = 27, Commerce = 28, Romance = 29,
-    Knowledge = 30, Nature = 31, Peace = 32,
+    Law = 0,
+    Loyalty = 1,
+    Family = 2,
+    Friendship = 3,
+    Power = 4,
+    Truth = 5,
+    Cunning = 6,
+    Eloquence = 7,
+    Fairness = 8,
+    Decorum = 9,
+    Tradition = 10,
+    Artwork = 11,
+    Cooperation = 12,
+    Independence = 13,
+    Stoicism = 14,
+    Introspection = 15,
+    SelfControl = 16,
+    Tranquility = 17,
+    Harmony = 18,
+    Merriment = 19,
+    Craftsmanship = 20,
+    MartialProwess = 21,
+    Skill = 22,
+    HardWork = 23,
+    Sacrifice = 24,
+    Competition = 25,
+    Perseverance = 26,
+    Leisure = 27,
+    Commerce = 28,
+    Romance = 29,
+    Knowledge = 30,
+    Nature = 31,
+    Peace = 32,
 }
 
 pub const VALUE_COUNT: usize = 33;
@@ -114,7 +169,9 @@ pub const VALUE_COUNT: usize = 33;
 // Stress (Lazarus stress appraisal, 5 states)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum StressState {
     #[default]
     Calm,
@@ -147,15 +204,29 @@ pub enum MentalBreakType {
 // Thresholds in ticks: infant<13140, toddler<26280, child<52560, teen<65700, adult<245280, elder≥245280
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord, Default)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    EnumString,
+    PartialOrd,
+    Ord,
+    Default,
+)]
 pub enum GrowthStage {
-    Infant,   // < 3y  (< 13140 ticks)
-    Toddler,  // < 6y  (< 26280 ticks)
-    Child,    // < 12y (< 52560 ticks)
-    Teen,     // < 15y (< 65700 ticks)
+    Infant,  // < 3y  (< 13140 ticks)
+    Toddler, // < 6y  (< 26280 ticks)
+    Child,   // < 12y (< 52560 ticks)
+    Teen,    // < 15y (< 65700 ticks)
     #[default]
-    Adult,    // < 56y (< 245280 ticks)
-    Elder,    // 56+y  (≥ 245280 ticks)
+    Adult, // < 56y (< 245280 ticks)
+    Elder,   // 56+y  (≥ 245280 ticks)
 }
 
 impl GrowthStage {
@@ -177,7 +248,10 @@ impl GrowthStage {
     }
 
     pub fn is_child_age(&self) -> bool {
-        matches!(self, GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child | GrowthStage::Teen)
+        matches!(
+            self,
+            GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child | GrowthStage::Teen
+        )
     }
 }
 
@@ -185,7 +259,9 @@ impl GrowthStage {
 // Sex
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum Sex {
     #[default]
     Male,
@@ -196,7 +272,21 @@ pub enum Sex {
 // Social Class
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, PartialOrd, Ord, Default)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    EnumString,
+    PartialOrd,
+    Ord,
+    Default,
+)]
 pub enum SocialClass {
     Outcast,
     #[default]
@@ -211,10 +301,12 @@ pub enum SocialClass {
 // Relationship Type
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum RelationType {
     #[default]
-    Stranger,     // affinity < NETWORK_TIE_WEAK_MIN (5.0)
+    Stranger, // affinity < NETWORK_TIE_WEAK_MIN (5.0)
     Acquaintance, // 5.0 ≤ affinity < 30.0
     Friend,       // 30.0 ≤ affinity < 60.0
     CloseFriend,  // 60.0 ≤ affinity < 85.0
@@ -231,7 +323,9 @@ pub enum RelationType {
 // Intelligence (Gardner 8)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, EnumIter, Display, EnumString,
+)]
 #[repr(u8)]
 pub enum IntelligenceType {
     Linguistic = 0,
@@ -250,7 +344,9 @@ pub const INTELLIGENCE_COUNT: usize = 8;
 // Action Type
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum ActionType {
     #[default]
     Idle,
@@ -304,7 +400,9 @@ pub enum TerrainType {
 // Resource (from GameConfig ResourceType enum)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter,
+)]
 pub enum ResourceType {
     Food,
     Wood,
@@ -315,22 +413,26 @@ pub enum ResourceType {
 // Simulation Speed
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum SimSpeed {
     Paused,
     #[default]
-    Normal,  // 1x
-    Fast,    // 2x
-    Faster,  // 3x
-    Ultra,   // 5x
-    Max,     // 10x
+    Normal, // 1x
+    Fast,   // 2x
+    Faster, // 3x
+    Ultra,  // 5x
+    Max,    // 10x
 }
 
 // ═══════════════════════════════════════
 // Coping Strategy (15 types — from coping_definitions.json C01-C15)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter,
+)]
 pub enum CopingStrategyId {
     StrategicPlanning,       // C01
     InstrumentalSupport,     // C02
@@ -353,7 +455,9 @@ pub enum CopingStrategyId {
 // Tech State (V2 5-state system)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum TechState {
     #[default]
     Unknown,
@@ -367,7 +471,20 @@ pub enum TechState {
 // Tech Era
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter, Default)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumIter,
+    Default,
+)]
 pub enum TechEra {
     #[strum(serialize = "stone_age")]
     #[default]
@@ -399,7 +516,9 @@ pub enum DeathCause {
 // Blood Type (Layer 7)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
 pub enum BloodType {
     A,
     B,
@@ -412,10 +531,22 @@ pub enum BloodType {
 // Zodiac Sign (Layer 7)
 // ═══════════════════════════════════════
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter,
+)]
 pub enum ZodiacSign {
-    Aries, Taurus, Gemini, Cancer, Leo, Virgo,
-    Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces,
+    Aries,
+    Taurus,
+    Gemini,
+    Cancer,
+    Leo,
+    Virgo,
+    Libra,
+    Scorpio,
+    Sagittarius,
+    Capricorn,
+    Aquarius,
+    Pisces,
 }
 
 #[cfg(test)]
@@ -459,9 +590,15 @@ mod tests {
         use strum::IntoEnumIterator;
         // Cannot use EnumIter without adding it; just check variant count manually
         let breaks = [
-            MentalBreakType::Panic, MentalBreakType::Rage, MentalBreakType::OutrageViolence,
-            MentalBreakType::Shutdown, MentalBreakType::Purge, MentalBreakType::GriefWithdrawal,
-            MentalBreakType::Fugue, MentalBreakType::Paranoia, MentalBreakType::CompulsiveRitual,
+            MentalBreakType::Panic,
+            MentalBreakType::Rage,
+            MentalBreakType::OutrageViolence,
+            MentalBreakType::Shutdown,
+            MentalBreakType::Purge,
+            MentalBreakType::GriefWithdrawal,
+            MentalBreakType::Fugue,
+            MentalBreakType::Paranoia,
+            MentalBreakType::CompulsiveRitual,
             MentalBreakType::HystericalBonding,
         ];
         assert_eq!(breaks.len(), 10);

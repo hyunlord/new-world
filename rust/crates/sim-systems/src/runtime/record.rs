@@ -3,22 +3,21 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimResources, SimSystem};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 const STATS_RECORDER_MAX_HISTORY: usize = 200;
 
@@ -65,7 +64,11 @@ impl SimSystem for StatSyncRuntimeSystem {
             Option<&Needs>,
             Option<&Intelligence>,
         )>();
-        for (entity, (age, personality_opt, emotion_opt, body_opt, values_opt, needs_opt, intel_opt)) in &mut query {
+        for (
+            entity,
+            (age, personality_opt, emotion_opt, body_opt, values_opt, needs_opt, intel_opt),
+        ) in &mut query
+        {
             if !age.alive {
                 continue;
             }
@@ -104,8 +107,12 @@ impl SimSystem for StatSyncRuntimeSystem {
                         .clamp(0.0, 1.0)
                 })
                 .unwrap_or(0.5);
-            let attractiveness = body_opt.map(|body_component| body_component.attractiveness).unwrap_or(0.5);
-            let height = body_opt.map(|body_component| body_component.height).unwrap_or(0.5);
+            let attractiveness = body_opt
+                .map(|body_component| body_component.attractiveness)
+                .unwrap_or(0.5);
+            let height = body_opt
+                .map(|body_component| body_component.height)
+                .unwrap_or(0.5);
 
             let value_norm = |value_type: ValueType| -> f32 {
                 values_opt
@@ -267,7 +274,10 @@ impl SimSystem for StatThresholdRuntimeSystem {
                 behavior.current_action = ActionType::Rest;
             } else if hunger_active {
                 behavior.current_action = ActionType::Forage;
-            } else if matches!(behavior.current_action, ActionType::Rest | ActionType::Forage) {
+            } else if matches!(
+                behavior.current_action,
+                ActionType::Rest | ActionType::Forage
+            ) {
                 behavior.current_action = ActionType::Idle;
             }
         }
@@ -347,18 +357,20 @@ impl SimSystem for StatsRecorderRuntimeSystem {
         if pop > resources.stats_peak_population {
             resources.stats_peak_population = pop;
         }
-        resources.stats_history.push(sim_engine::RuntimeStatsSnapshot {
-            tick,
-            pop,
-            food,
-            wood,
-            stone,
-            gatherers,
-            lumberjacks,
-            builders,
-            miners,
-            none_job,
-        });
+        resources
+            .stats_history
+            .push(sim_engine::RuntimeStatsSnapshot {
+                tick,
+                pop,
+                food,
+                wood,
+                stone,
+                gatherers,
+                lumberjacks,
+                builders,
+                miners,
+                none_job,
+            });
         if resources.stats_history.len() > STATS_RECORDER_MAX_HISTORY {
             let overflow = resources.stats_history.len() - STATS_RECORDER_MAX_HISTORY;
             resources.stats_history.drain(0..overflow);
@@ -450,8 +462,7 @@ impl SimSystem for ChronicleRuntimeSystem {
 
         // Enforce hard cap (keep newest)
         if resources.chronicle_world_events.len() > CHRONICLE_MAX_WORLD_EVENTS {
-            let overflow =
-                resources.chronicle_world_events.len() - CHRONICLE_MAX_WORLD_EVENTS;
+            let overflow = resources.chronicle_world_events.len() - CHRONICLE_MAX_WORLD_EVENTS;
             resources.chronicle_world_events.drain(0..overflow);
         }
 

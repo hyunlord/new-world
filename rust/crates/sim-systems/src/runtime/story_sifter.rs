@@ -5,8 +5,7 @@ use sim_core::components::{Identity, Personality, Position, Social, Stress};
 use sim_core::config;
 use sim_core::{RelationType, StressState};
 use sim_engine::{
-    EventStore, NotificationTier, SimEvent, SimEventType, SimNotification, SimResources,
-    SimSystem,
+    EventStore, NotificationTier, SimEvent, SimEventType, SimNotification, SimResources, SimSystem,
 };
 
 #[derive(Clone, Debug)]
@@ -111,9 +110,9 @@ fn build_story_contexts(world: &World) -> HashMap<u32, EntityStoryContext> {
                     .edges
                     .iter()
                     .filter_map(|edge| {
-                        u32::try_from(edge.target.0).ok().map(|target| {
-                            (target, edge.affinity, edge.relation_type)
-                        })
+                        u32::try_from(edge.target.0)
+                            .ok()
+                            .map(|target| (target, edge.affinity, edge.relation_type))
                     })
                     .collect()
             })
@@ -133,8 +132,13 @@ fn build_story_contexts(world: &World) -> HashMap<u32, EntityStoryContext> {
     contexts
 }
 
-fn queue_notification(resources: &mut SimResources, notification: SimNotification, current_tick: u64) {
-    let history_cutoff = current_tick.saturating_sub(config::STORY_SIFTER_IMPORTANCE_LOOKBACK_TICKS);
+fn queue_notification(
+    resources: &mut SimResources,
+    notification: SimNotification,
+    current_tick: u64,
+) {
+    let history_cutoff =
+        current_tick.saturating_sub(config::STORY_SIFTER_IMPORTANCE_LOOKBACK_TICKS);
     resources
         .notification_history
         .retain(|recent| recent.tick >= history_cutoff);
@@ -421,7 +425,11 @@ fn sift_deadline_approaching(
             actor,
             None,
             "NOTIF_NEED_CRITICAL",
-            format!("{} is in desperate need. {}", context_name(contexts, actor), cause),
+            format!(
+                "{} is in desperate need. {}",
+                context_name(contexts, actor),
+                cause
+            ),
             contexts,
         ));
     }
@@ -486,7 +494,9 @@ fn sift_personality_clash(
         let Some(target) = event.target else {
             continue;
         };
-        *pair_counts.entry(ordered_pair(event.actor, target)).or_insert(0) += 1;
+        *pair_counts
+            .entry(ordered_pair(event.actor, target))
+            .or_insert(0) += 1;
     }
     for ((left, right), count) in pair_counts {
         if count < 2 {
@@ -546,7 +556,10 @@ fn sift_recovery_arc(
             start.actor,
             None,
             "NOTIF_STRESS_RISING",
-            format!("{} found calm again after breaking down.", context_name(contexts, start.actor)),
+            format!(
+                "{} found calm again after breaking down.",
+                context_name(contexts, start.actor)
+            ),
             contexts,
         ));
     }
@@ -620,7 +633,9 @@ fn immediate_notification_for_event(
             ),
             contexts,
         )),
-        SimEventType::StressEscalated if event.value >= config::STORY_SIFTER_STRESS_NOTIFY_STAGE => {
+        SimEventType::StressEscalated
+            if event.value >= config::STORY_SIFTER_STRESS_NOTIFY_STAGE =>
+        {
             Some(make_notification(
                 event.tick,
                 NotificationTier::Drama,
@@ -629,7 +644,10 @@ fn immediate_notification_for_event(
                 event.actor,
                 event.target,
                 "NOTIF_STRESS_RISING",
-                format!("Something is building in {}.", context_name(contexts, event.actor)),
+                format!(
+                    "Something is building in {}.",
+                    context_name(contexts, event.actor)
+                ),
                 contexts,
             ))
         }
@@ -652,7 +670,11 @@ fn immediate_notification_for_event(
             event.actor,
             event.target,
             "",
-            format!("{} reached {}.", context_name(contexts, event.actor), event.cause),
+            format!(
+                "{} reached {}.",
+                context_name(contexts, event.actor),
+                event.cause
+            ),
             contexts,
         )),
         _ => None,
@@ -750,11 +772,7 @@ fn unique_ordered(values: &[u32]) -> Vec<u32> {
     out
 }
 
-fn personality_distance(
-    contexts: &HashMap<u32, EntityStoryContext>,
-    left: u32,
-    right: u32,
-) -> f64 {
+fn personality_distance(contexts: &HashMap<u32, EntityStoryContext>, left: u32, right: u32) -> f64 {
     let Some(left_context) = contexts.get(&left) else {
         return 0.0;
     };
@@ -770,11 +788,7 @@ fn personality_distance(
         / 6.0
 }
 
-fn relation_affinity(
-    contexts: &HashMap<u32, EntityStoryContext>,
-    left: u32,
-    right: u32,
-) -> f64 {
+fn relation_affinity(contexts: &HashMap<u32, EntityStoryContext>, left: u32, right: u32) -> f64 {
     contexts
         .get(&left)
         .and_then(|context| {
@@ -797,7 +811,9 @@ fn is_positive_relation(relation_type: RelationType, affinity: f64) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{calculate_importance, should_notify, sift_first_occurrence, StorySifterRuntimeSystem};
+    use super::{
+        calculate_importance, should_notify, sift_first_occurrence, StorySifterRuntimeSystem,
+    };
     use hecs::World;
     use sim_core::{config::GameConfig, GameCalendar, WorldMap};
     use sim_engine::{
@@ -865,16 +881,15 @@ mod tests {
     fn runtime_system_promotes_mental_break_events() {
         let mut world = World::new();
         let mut resources = make_resources();
-        resources.event_store.push(make_event(10, 7, SimEventType::MentalBreakStart));
-        let mut system =
-            StorySifterRuntimeSystem::new(sim_core::config::STORY_SIFTER_PRIORITY, 10);
+        resources
+            .event_store
+            .push(make_event(10, 7, SimEventType::MentalBreakStart));
+        let mut system = StorySifterRuntimeSystem::new(sim_core::config::STORY_SIFTER_PRIORITY, 10);
         system.run(&mut world, &mut resources, 10);
-        assert!(
-            resources
-                .pending_notifications
-                .iter()
-                .any(|notification| notification.kind == "mental_break")
-        );
+        assert!(resources
+            .pending_notifications
+            .iter()
+            .any(|notification| notification.kind == "mental_break"));
     }
 
     #[test]

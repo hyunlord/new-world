@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::GrowthStage;
+use serde::{Deserialize, Serialize};
 
 /// Current age tracking
 #[derive(Debug, Clone, Serialize, Deserialize)]

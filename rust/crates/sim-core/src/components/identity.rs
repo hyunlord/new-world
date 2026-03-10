@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-use crate::enums::{Sex, GrowthStage};
+use crate::enums::{GrowthStage, Sex};
 use crate::ids::SettlementId;
+use serde::{Deserialize, Serialize};
 
 /// Core identity for every entity
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -8,7 +8,7 @@ pub struct Identity {
     pub name: String,
     pub birth_tick: u64,
     pub sex: Sex,
-    pub species_id: String,  // "human"
+    pub species_id: String, // "human"
     pub settlement_id: Option<SettlementId>,
     /// Current growth stage (derived from age)
     pub growth_stage: GrowthStage,

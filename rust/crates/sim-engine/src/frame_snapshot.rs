@@ -96,19 +96,21 @@ impl AgentSnapshot {
 pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
     let mut snapshots: Vec<AgentSnapshot> = Vec::new();
 
-    for (entity, (position, identity, age, emotion_opt, needs_opt, stress_opt, behavior_opt, body_opt)) in
-        world
-            .query::<(
-                &Position,
-                &Identity,
-                &Age,
-                Option<&Emotion>,
-                Option<&Needs>,
-                Option<&Stress>,
-                Option<&Behavior>,
-                Option<&Body>,
-            )>()
-            .iter()
+    for (
+        entity,
+        (position, identity, age, emotion_opt, needs_opt, stress_opt, behavior_opt, body_opt),
+    ) in world
+        .query::<(
+            &Position,
+            &Identity,
+            &Age,
+            Option<&Emotion>,
+            Option<&Needs>,
+            Option<&Stress>,
+            Option<&Behavior>,
+            Option<&Body>,
+        )>()
+        .iter()
     {
         if !age.alive {
             continue;
@@ -324,7 +326,10 @@ mod tests {
         let mut out = Vec::new();
         snapshot.write_bytes(&mut out);
         assert_eq!(out.len(), 36);
-        assert_eq!(u32::from_le_bytes(out[0..4].try_into().unwrap_or([0_u8; 4])), 7);
+        assert_eq!(
+            u32::from_le_bytes(out[0..4].try_into().unwrap_or([0_u8; 4])),
+            7
+        );
     }
 
     #[test]
@@ -378,8 +383,14 @@ mod tests {
         let expected_x = snapshot.x;
         let expected_vel_x = snapshot.vel_x;
         assert_eq!(out.len(), 36);
-        assert_eq!(u32::from_le_bytes(out[0..4].try_into().expect("entity id bytes")), 42);
-        assert_eq!(f32::from_le_bytes(out[4..8].try_into().expect("x bytes")), expected_x);
+        assert_eq!(
+            u32::from_le_bytes(out[0..4].try_into().expect("entity id bytes")),
+            42
+        );
+        assert_eq!(
+            f32::from_le_bytes(out[4..8].try_into().expect("x bytes")),
+            expected_x
+        );
         assert_eq!(
             f32::from_le_bytes(out[12..16].try_into().expect("vel_x bytes")),
             expected_vel_x
@@ -410,8 +421,13 @@ mod tests {
         let mut bytes = Vec::new();
         snapshot.write_bytes(&mut bytes);
         assert_eq!(bytes.len(), 36);
-        assert_eq!(u32::from_le_bytes(bytes[0..4].try_into().expect("entity bytes")), 42);
-        assert!((f32::from_le_bytes(bytes[4..8].try_into().expect("x bytes")) - 123.456).abs() < 0.001);
+        assert_eq!(
+            u32::from_le_bytes(bytes[0..4].try_into().expect("entity bytes")),
+            42
+        );
+        assert!(
+            (f32::from_le_bytes(bytes[4..8].try_into().expect("x bytes")) - 123.456).abs() < 0.001
+        );
         assert_eq!(bytes[20], 3);
         assert_eq!(bytes[29], 0b1101_0011);
     }

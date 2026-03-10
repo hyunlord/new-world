@@ -36,8 +36,8 @@ fn lerp(low: f64, high: f64, t: f64) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use sim_core::components::SteeringParams;
     use sim_core::components::Personality;
+    use sim_core::components::SteeringParams;
 
     use super::derive_steering_params;
 

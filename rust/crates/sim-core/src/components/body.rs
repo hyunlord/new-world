@@ -49,7 +49,7 @@ pub struct Body {
     pub health: f32,
 
     // === Blood type genetics ===
-    pub blood_genotype: String,  // "AA", "AO", "AB", "BB", "BO", "OO"
+    pub blood_genotype: String, // "AA", "AO", "AB", "BB", "BO", "OO"
 
     // === Distinguishing mark ===
     pub distinguishing_mark: Option<String>,
@@ -58,14 +58,30 @@ pub struct Body {
 impl Default for Body {
     fn default() -> Self {
         Self {
-            str_potential: 1050, agi_potential: 1050, end_potential: 1050,
-            tou_potential: 1050, rec_potential: 1050, dr_potential: 1050,
-            str_trainability: 500, agi_trainability: 500, end_trainability: 500,
-            tou_trainability: 500, rec_trainability: 500, dr_trainability: 500,
-            str_realized: 1000, agi_realized: 700, end_realized: 700,
-            tou_realized: 700, rec_realized: 700, dr_realized: 500,
-            str_xp: 0.0, agi_xp: 0.0, end_xp: 0.0,
-            tou_xp: 0.0, rec_xp: 0.0, dr_xp: 0.0,
+            str_potential: 1050,
+            agi_potential: 1050,
+            end_potential: 1050,
+            tou_potential: 1050,
+            rec_potential: 1050,
+            dr_potential: 1050,
+            str_trainability: 500,
+            agi_trainability: 500,
+            end_trainability: 500,
+            tou_trainability: 500,
+            rec_trainability: 500,
+            dr_trainability: 500,
+            str_realized: 1000,
+            agi_realized: 700,
+            end_realized: 700,
+            tou_realized: 700,
+            rec_realized: 700,
+            dr_realized: 500,
+            str_xp: 0.0,
+            agi_xp: 0.0,
+            end_xp: 0.0,
+            tou_xp: 0.0,
+            rec_xp: 0.0,
+            dr_xp: 0.0,
             innate_immunity: 500,
             attractiveness: 0.5,
             height: 0.5,

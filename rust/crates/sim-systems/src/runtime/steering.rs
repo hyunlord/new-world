@@ -60,7 +60,9 @@ impl SimSystem for SteeringRuntimeSystem {
                 Option<&Personality>,
                 Option<&Age>,
             )>();
-            for (entity, (position, behavior_opt, steering_opt, personality_opt, age_opt)) in &mut query {
+            for (entity, (position, behavior_opt, steering_opt, personality_opt, age_opt)) in
+                &mut query
+            {
                 if age_opt.map(|age| !age.alive).unwrap_or(false) {
                     velocities.push((entity, 0.0, 0.0));
                     continue;
@@ -73,7 +75,12 @@ impl SimSystem for SteeringRuntimeSystem {
                     inserts.push((entity, params));
                 }
 
-                let neighbors = find_neighbors(&snapshots, entity, position, config::STEERING_NEIGHBOR_RADIUS);
+                let neighbors = find_neighbors(
+                    &snapshots,
+                    entity,
+                    position,
+                    config::STEERING_NEIGHBOR_RADIUS,
+                );
                 let desired_force = desired_force_for_action(
                     position,
                     behavior_opt,
@@ -82,7 +89,8 @@ impl SimSystem for SteeringRuntimeSystem {
                     tick,
                     entity,
                 );
-                let separation = separation_force(position, &neighbors, params.personal_space_radius);
+                let separation =
+                    separation_force(position, &neighbors, params.personal_space_radius);
                 let cohesion = cohesion_force(position, &neighbors);
 
                 let mut force_x = desired_force.0
@@ -105,7 +113,8 @@ impl SimSystem for SteeringRuntimeSystem {
                     }
                 }
 
-                let (force_x, force_y) = clamp_magnitude(force_x, force_y, config::STEERING_MAX_FORCE);
+                let (force_x, force_y) =
+                    clamp_magnitude(force_x, force_y, config::STEERING_MAX_FORCE);
                 let speed_px = params.base_speed
                     * params.mood_speed_multiplier
                     * params.stress_speed_multiplier
@@ -157,7 +166,12 @@ fn desired_force_for_action(
             let target_x = behavior.action_target_x.map(f64::from);
             let target_y = behavior.action_target_y.map(f64::from);
             match (target_x, target_y) {
-                (Some(tx), Some(ty)) => arrive_force(position, tx, ty, params.wander_radius / f64::from(config::TILE_SIZE)),
+                (Some(tx), Some(ty)) => arrive_force(
+                    position,
+                    tx,
+                    ty,
+                    params.wander_radius / f64::from(config::TILE_SIZE),
+                ),
                 _ => wander_force(position, params, rng, tick, entity),
             }
         }
@@ -178,8 +192,10 @@ fn wander_force(
     };
     let jitter = rng.gen_range(-1.0..=1.0) * params.wander_jitter.to_radians();
     let angle = heading + jitter;
-    let ahead_x = position.x + heading.cos() * (params.wander_distance / f64::from(config::TILE_SIZE));
-    let ahead_y = position.y + heading.sin() * (params.wander_distance / f64::from(config::TILE_SIZE));
+    let ahead_x =
+        position.x + heading.cos() * (params.wander_distance / f64::from(config::TILE_SIZE));
+    let ahead_y =
+        position.y + heading.sin() * (params.wander_distance / f64::from(config::TILE_SIZE));
     let target_x = ahead_x + angle.cos() * (params.wander_radius / f64::from(config::TILE_SIZE));
     let target_y = ahead_y + angle.sin() * (params.wander_radius / f64::from(config::TILE_SIZE));
     seek_force(position, target_x, target_y)
@@ -191,7 +207,12 @@ fn seek_force(position: &Position, target_x: f64, target_y: f64) -> (f64, f64) {
     normalize(dx, dy)
 }
 
-fn arrive_force(position: &Position, target_x: f64, target_y: f64, slowing_radius: f64) -> (f64, f64) {
+fn arrive_force(
+    position: &Position,
+    target_x: f64,
+    target_y: f64,
+    slowing_radius: f64,
+) -> (f64, f64) {
     let dx = target_x - position.x;
     let dy = target_y - position.y;
     let dist = (dx * dx + dy * dy).sqrt();
@@ -206,7 +227,11 @@ fn arrive_force(position: &Position, target_x: f64, target_y: f64, slowing_radiu
     (dx / dist * speed_factor, dy / dist * speed_factor)
 }
 
-fn separation_force(position: &Position, neighbors: &[(f64, f64)], personal_space_radius_px: f64) -> (f64, f64) {
+fn separation_force(
+    position: &Position,
+    neighbors: &[(f64, f64)],
+    personal_space_radius_px: f64,
+) -> (f64, f64) {
     let personal_space = personal_space_radius_px / f64::from(config::TILE_SIZE);
     let mut fx = 0.0;
     let mut fy = 0.0;
@@ -279,11 +304,11 @@ fn clamp_magnitude(x: f64, y: f64, max_magnitude: f64) -> (f64, f64) {
 #[cfg(test)]
 mod tests {
     use hecs::World;
-    use rand::SeedableRng;
     use rand::rngs::SmallRng;
+    use rand::SeedableRng;
     use sim_core::components::{Age, Behavior, Personality, Position, SteeringParams};
-    use sim_core::{config, ActionType, GameCalendar, GrowthStage, WorldMap};
     use sim_core::config::GameConfig;
+    use sim_core::{config, ActionType, GameCalendar, GrowthStage, WorldMap};
     use sim_engine::{SimResources, SimSystem};
 
     use super::{
@@ -325,7 +350,13 @@ mod tests {
             stage: GrowthStage::Adult,
             ..Age::default()
         };
-        let entity = world.spawn((Position::new(5, 5), behavior, personality, SteeringParams::default(), age));
+        let entity = world.spawn((
+            Position::new(5, 5),
+            behavior,
+            personality,
+            SteeringParams::default(),
+            age,
+        ));
         let mut system = SteeringRuntimeSystem::new(config::STEERING_SYSTEM_PRIORITY, 1);
         system.run(&mut world, &mut resources, 1);
         let position = world.get::<&Position>(entity).expect("position exists");

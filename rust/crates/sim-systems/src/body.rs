@@ -854,7 +854,11 @@ pub fn stat_sync_derived_scores(inputs: &[f32]) -> [f32; 8] {
         0.0,
         1.0,
     );
-    let allure = clamp_f32(attract * 0.35 + charisma * 0.35 + romance * 0.20 + x * 0.10, 0.0, 1.0);
+    let allure = clamp_f32(
+        attract * 0.35 + charisma * 0.35 + romance * 0.20 + x * 0.10,
+        0.0,
+        1.0,
+    );
     let trustworthiness = clamp_f32(h * 0.40 + a * 0.30 + truth * 0.30, 0.0, 1.0);
     let creativity = clamp_f32(
         i_spa * 0.15
@@ -882,8 +886,16 @@ pub fn stat_sync_derived_scores(inputs: &[f32]) -> [f32; 8] {
         0.0,
         1.0,
     );
-    let popularity = clamp_f32(charisma * 0.50 + merriment * 0.25 + friendship * 0.25, 0.0, 1.0);
-    let risk_tolerance = clamp_f32((1.0 - e) * 0.40 + o * 0.30 + competition * 0.15 + (1.0 - c) * 0.15, 0.0, 1.0);
+    let popularity = clamp_f32(
+        charisma * 0.50 + merriment * 0.25 + friendship * 0.25,
+        0.0,
+        1.0,
+    );
+    let risk_tolerance = clamp_f32(
+        (1.0 - e) * 0.40 + o * 0.30 + competition * 0.15 + (1.0 - c) * 0.15,
+        0.0,
+        1.0,
+    );
 
     [
         charisma,
@@ -933,7 +945,11 @@ pub fn contagion_stress_delta(
     if stress_gap <= stress_gap_threshold {
         return 0.0;
     }
-    clamp_f32(stress_gap * transfer_rate * total_susceptibility, 0.0, max_delta)
+    clamp_f32(
+        stress_gap * transfer_rate * total_susceptibility,
+        0.0,
+        max_delta,
+    )
 }
 
 /// Network contagion valence delta from social susceptibility and crowd dilution.
@@ -963,7 +979,11 @@ pub fn contagion_network_delta(
     base_weight *= network_decay;
     base_weight *= 0.8 + 0.4 * a_axis;
     base_weight *= crowd_factor;
-    clamp_f32(valence_gap * base_weight * delta_scale, -max_abs_delta, max_abs_delta)
+    clamp_f32(
+        valence_gap * base_weight * delta_scale,
+        -max_abs_delta,
+        max_abs_delta,
+    )
 }
 
 /// Spiral amplification increment for high-stress negative-valence states.
@@ -992,7 +1012,11 @@ pub fn contagion_spiral_increment(
         } else {
             valence_divisor
         };
-    clamp_f32(intensity_scale * stress_norm * valence_norm, 0.0, max_increment)
+    clamp_f32(
+        intensity_scale * stress_norm * valence_norm,
+        0.0,
+        max_increment,
+    )
 }
 
 /// Mental-break threshold from resilience, personality, resources, and trauma modifiers.
@@ -1140,7 +1164,11 @@ pub fn memory_decay_batch(intensities: &[f32], rates: &[f32], dt_years: f32) -> 
     let len = intensities.len().min(rates.len());
     let mut out = Vec::with_capacity(len);
     for idx in 0..len {
-        out.push(memory_decay_intensity(intensities[idx], rates[idx], dt_years));
+        out.push(memory_decay_intensity(
+            intensities[idx],
+            rates[idx],
+            dt_years,
+        ));
     }
     out
 }
@@ -1167,9 +1195,7 @@ pub fn attachment_type_code(
     avoidant_sensitivity_max: f32,
     avoidant_consistency_min: f32,
 ) -> i32 {
-    if sensitivity >= sensitivity_threshold_secure
-        && consistency >= consistency_threshold_secure
-    {
+    if sensitivity >= sensitivity_threshold_secure && consistency >= consistency_threshold_secure {
         return 0;
     }
     if sensitivity >= sensitivity_threshold_anxious
@@ -1296,8 +1322,16 @@ pub fn intergen_child_epigenetic_step(inputs: &[f32]) -> [f32; 2] {
     let maternal_weight = inputs[22];
     let paternal_weight = inputs[23];
 
-    let mother_state = clamp_f32(mw_epi * epi_m + mw_allo * allo_m + mw_scar * scar_m, 0.0, 1.0);
-    let father_state = clamp_f32(fw_epi * epi_f + fw_allo * allo_f + fw_scar * scar_f, 0.0, 1.0);
+    let mother_state = clamp_f32(
+        mw_epi * epi_m + mw_allo * allo_m + mw_scar * scar_m,
+        0.0,
+        1.0,
+    );
+    let father_state = clamp_f32(
+        fw_epi * epi_f + fw_allo * allo_f + fw_scar * scar_f,
+        0.0,
+        1.0,
+    );
 
     let transmission_rate = clamp_f32(base_t + bonus_t * adversity, base_t, max_t);
     let prenatal = clamp_f32(
@@ -1306,7 +1340,9 @@ pub fn intergen_child_epigenetic_step(inputs: &[f32]) -> [f32; 2] {
         prenatal_max,
     );
     let child = clamp_f32(
-        baseline + transmission_rate * (maternal_weight * mother_state + paternal_weight * father_state) + prenatal,
+        baseline
+            + transmission_rate * (maternal_weight * mother_state + paternal_weight * father_state)
+            + prenatal,
         0.0,
         1.0,
     );
@@ -1358,11 +1394,7 @@ pub fn parenting_bandura_base_rate(
 
 /// Next ACE partial score after applying one event.
 pub fn ace_partial_score_next(current_partial: f32, severity: f32, ace_weight: f32) -> f32 {
-    clamp_f32(
-        current_partial + severity.max(0.0) * ace_weight,
-        0.0,
-        1.0,
-    )
+    clamp_f32(current_partial + severity.max(0.0) * ace_weight, 0.0, 1.0)
 }
 
 /// Aggregate ACE total from all item partial scores.
@@ -1957,8 +1989,8 @@ pub fn coping_learn_probability(
     } else {
         coping_count_max
     };
-    let s_n = ((1.0 + owned_count.max(0) as f32).ln() / (1.0 + safe_count_max).ln())
-        .clamp(0.0, 1.0);
+    let s_n =
+        ((1.0 + owned_count.max(0) as f32).ln() / (1.0 + safe_count_max).ln()).clamp(0.0, 1.0);
 
     let mut logit = -2.5;
     logit += clamp_f32((stress_norm - 0.6) / 0.4, 0.0, 1.0);
@@ -2219,7 +2251,11 @@ pub fn childcare_take_food(available: f32, remaining: f32) -> f32 {
 }
 
 /// Childcare hunger update after food withdrawal.
-pub fn childcare_hunger_after(current_hunger: f32, withdrawn: f32, food_hunger_restore: f32) -> f32 {
+pub fn childcare_hunger_after(
+    current_hunger: f32,
+    withdrawn: f32,
+    food_hunger_restore: f32,
+) -> f32 {
     clamp_f32(current_hunger + withdrawn * food_hunger_restore, 0.0, 1.0)
 }
 
@@ -2315,7 +2351,14 @@ pub fn mortality_hazards_and_prob(
         q_annual
     };
 
-    [h_infant, h_background, h_senescence, mu_total, q_annual, q_check]
+    [
+        h_infant,
+        h_background,
+        h_senescence,
+        mu_total,
+        q_annual,
+        q_check,
+    ]
 }
 
 /// Intelligence activity modifier ("use it or lose it").
@@ -2815,58 +2858,52 @@ pub fn age_trainability_modifiers(age_years: f32) -> [f32; 5] {
 #[cfg(test)]
 mod tests {
     use super::{
-        action_energy_cost, age_trainability_modifier, age_trainability_modifiers,
-        anxious_attachment_stress_delta, calc_realized_values, calc_training_gain,
-        calc_training_gains, child_deprivation_damage_step, child_parent_stress_transfer,
-        child_parent_transfer_apply_step, child_shrp_step, child_simultaneous_ace_step,
-        child_social_buffered_intensity, child_stage_code_from_age_ticks, child_stress_apply_step,
-        child_stress_type_code, compute_age_curve, compute_age_curves, critical_severity,
-        economic_tendencies_step, erg_frustration_step, job_satisfaction_score,
-        job_satisfaction_score_batch, leader_age_respect, leader_score, needs_base_decay_step,
-        needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
-        occupation_should_switch, job_assignment_best_job_code, job_assignment_rebalance_codes,
-        stat_threshold_is_active, stats_resource_deltas_per_100,
-        personality_linear_target, intelligence_effective_value,
-        intelligence_g_value, personality_child_axis_z,
+        ace_adult_modifiers_adjusted, ace_backfill_score, ace_partial_score_next,
+        ace_score_total_from_partials, ace_threat_deprivation_totals, action_energy_cost,
+        age_body_speed, age_body_strength, age_trainability_modifier, age_trainability_modifiers,
+        anxious_attachment_stress_delta, attachment_coping_quality_step,
+        attachment_protective_factor, attachment_raw_parenting_quality, attachment_type_code,
+        building_add_capped, building_campfire_social_boost, calc_realized_values,
+        calc_training_gain, calc_training_gains, child_deprivation_damage_step,
+        child_parent_stress_transfer, child_parent_transfer_apply_step, child_shrp_step,
+        child_simultaneous_ace_step, child_social_buffered_intensity,
+        child_stage_code_from_age_ticks, child_stress_apply_step, child_stress_type_code,
+        childcare_hunger_after, childcare_take_food, chronicle_cutoff_tick,
+        chronicle_keep_personal_event, chronicle_keep_world_event, chronicle_should_prune,
+        cognition_ace_fluid_decline_mult, cognition_activity_modifier, compute_age_curve,
+        compute_age_curves, contagion_aoe_total_susceptibility, contagion_network_delta,
+        contagion_spiral_increment, contagion_stress_delta, coping_learn_probability,
+        coping_softmax_index, critical_severity, economic_tendencies_step,
+        emotion_adjusted_half_life, emotion_baseline_value, emotion_break_threshold,
+        emotion_break_trigger_probability, emotion_break_type_code,
+        emotion_contagion_distance_factor, emotion_contagion_susceptibility,
+        emotion_event_impulse_batch, emotion_event_impulse_from_appraisal,
+        emotion_habituation_factor, erg_frustration_step, family_newborn_health,
+        intelligence_effective_value, intelligence_g_value, intergen_child_epigenetic_step,
+        intergen_hpa_sensitivity, intergen_meaney_repair_load, intergen_scar_index,
+        job_assignment_best_job_code, job_assignment_rebalance_codes, job_satisfaction_score,
+        job_satisfaction_score_batch, leader_age_respect, leader_score, memory_decay_batch,
+        memory_decay_intensity, memory_summary_intensity, mental_break_chance,
+        mental_break_threshold, migration_food_scarce, migration_should_attempt,
         morale_behavior_weight_multiplier, morale_migration_probability,
-        stat_sync_derived_scores, contagion_aoe_total_susceptibility,
-        contagion_stress_delta, contagion_network_delta, contagion_spiral_increment,
-        mental_break_threshold, mental_break_chance,
+        mortality_hazards_and_prob, movement_should_skip_tick, needs_base_decay_step,
+        needs_critical_severity_step, network_social_capital_norm, occupation_best_skill_index,
+        occupation_should_switch, parenting_bandura_base_rate, parenting_hpa_adjusted_stress_gain,
+        personality_child_axis_z, personality_linear_target, population_birth_block_code,
+        population_housing_cap, psychology_break_type_code, psychology_break_type_label,
+        reputation_decay_value, reputation_event_delta, resource_regen_next, rest_energy_recovery,
+        revolution_risk_score, social_attachment_affinity_multiplier, social_proposal_accept_prob,
+        stat_sync_derived_scores, stat_threshold_is_active, stats_resource_deltas_per_100,
+        stratification_gini, stratification_status_score, stratification_wealth_score,
+        stress_injection_apply_step, stress_rebound_apply_step, stress_shaken_countdown_step,
+        stress_support_score, tech_cultural_memory_decay, tech_discovery_prob,
+        tech_modifier_stack_clamp, tech_propagation_carrier_bonus,
+        tech_propagation_culture_modifier, tech_propagation_final_prob, tension_next_value,
+        tension_scarcity_pressure, thirst_decay, title_is_elder, title_skill_tier,
         trait_violation_context_modifier, trait_violation_facet_scale,
-        trait_violation_intrusive_chance,
-        trauma_scar_acquire_chance, trauma_scar_sensitivity_factor,
-        memory_decay_intensity, memory_decay_batch, memory_summary_intensity,
-        attachment_type_code, attachment_raw_parenting_quality,
-        attachment_coping_quality_step, attachment_protective_factor,
-        intergen_scar_index, intergen_child_epigenetic_step,
-        intergen_hpa_sensitivity, intergen_meaney_repair_load,
-        parenting_hpa_adjusted_stress_gain, parenting_bandura_base_rate,
-        ace_partial_score_next, ace_score_total_from_partials,
-        ace_threat_deprivation_totals, ace_adult_modifiers_adjusted, ace_backfill_score,
-        reputation_decay_value, reputation_event_delta,
-        rest_energy_recovery, revolution_risk_score, stratification_gini,
-        stratification_status_score, stratification_wealth_score, stress_injection_apply_step,
-        stress_rebound_apply_step, stress_shaken_countdown_step, stress_support_score,
-        thirst_decay, upper_needs_best_skill_normalized, upper_needs_job_alignment, upper_needs_step,
-        value_plasticity, warmth_decay, family_newborn_health, title_is_elder, title_skill_tier,
-        social_attachment_affinity_multiplier, social_proposal_accept_prob,
-        tension_scarcity_pressure, tension_next_value, resource_regen_next,
-        age_body_speed, age_body_strength, tech_discovery_prob, migration_food_scarce,
-        migration_should_attempt, population_housing_cap, population_birth_block_code,
-        chronicle_should_prune, chronicle_cutoff_tick, chronicle_keep_world_event,
-        chronicle_keep_personal_event, psychology_break_type_code, psychology_break_type_label,
-        coping_learn_probability, coping_softmax_index,
-        emotion_break_threshold, emotion_break_trigger_probability, emotion_break_type_code,
-        emotion_adjusted_half_life, emotion_baseline_value, emotion_habituation_factor,
-        emotion_contagion_susceptibility, emotion_contagion_distance_factor,
-        emotion_event_impulse_from_appraisal, emotion_event_impulse_batch,
-        tech_cultural_memory_decay, tech_modifier_stack_clamp,
-        movement_should_skip_tick, building_campfire_social_boost, building_add_capped,
-        childcare_take_food, childcare_hunger_after,
-        tech_propagation_culture_modifier, tech_propagation_carrier_bonus,
-        tech_propagation_final_prob, mortality_hazards_and_prob,
-        cognition_activity_modifier,
-        cognition_ace_fluid_decline_mult,
+        trait_violation_intrusive_chance, trauma_scar_acquire_chance,
+        trauma_scar_sensitivity_factor, upper_needs_best_skill_normalized,
+        upper_needs_job_alignment, upper_needs_step, value_plasticity, warmth_decay,
     };
 
     #[test]
@@ -3459,9 +3496,15 @@ mod tests {
 
     #[test]
     fn attachment_type_code_follows_threshold_ordering() {
-        let secure = attachment_type_code(0.8, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
-        let anxious = attachment_type_code(0.5, 0.2, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
-        let avoidant = attachment_type_code(0.2, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
+        let secure = attachment_type_code(
+            0.8, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50,
+        );
+        let anxious = attachment_type_code(
+            0.5, 0.2, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50,
+        );
+        let avoidant = attachment_type_code(
+            0.2, 0.8, 2.0, false, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50,
+        );
         let disorganized =
             attachment_type_code(0.2, 0.2, 5.0, true, 0.65, 0.60, 0.40, 0.35, 4.0, 0.35, 0.50);
         assert_eq!(secure, 0);
@@ -3506,8 +3549,8 @@ mod tests {
     #[test]
     fn intergen_child_epigenetic_step_returns_load_and_t() {
         let inputs = [
-            0.2, 0.3, 0.1, 0.5, 0.3, 0.2, 0.1, 0.2, 0.1, 0.6, 0.25, 0.15, 0.3, 0.4, 0.1, 0.5,
-            0.4, 0.2, 0.25, 0.10, 0.35, 0.05, 0.65, 0.35,
+            0.2, 0.3, 0.1, 0.5, 0.3, 0.2, 0.1, 0.2, 0.1, 0.6, 0.25, 0.15, 0.3, 0.4, 0.1, 0.5, 0.4,
+            0.2, 0.25, 0.10, 0.35, 0.05, 0.65, 0.35,
         ];
         let out = intergen_child_epigenetic_step(&inputs);
         assert_eq!(out.len(), 2);
@@ -3564,10 +3607,7 @@ mod tests {
 
     #[test]
     fn ace_threat_deprivation_totals_routes_by_type_code() {
-        let out = ace_threat_deprivation_totals(
-            &[0.5, 0.8, 0.2, 1.0, 0.1],
-            &[1, 2, 1, 0, 2],
-        );
+        let out = ace_threat_deprivation_totals(&[0.5, 0.8, 0.2, 1.0, 0.1], &[1, 2, 1, 0, 2]);
         assert!((out[0] - 0.7).abs() < 1e-6);
         assert!((out[1] - 0.9).abs() < 1e-6);
     }
@@ -3670,8 +3710,7 @@ mod tests {
 
     #[test]
     fn stratification_status_score_matches_weighted_formula() {
-        let out =
-            stratification_status_score(0.4, 0.7, 0.6, 50.0, 0.3, 0.3, 0.2, 0.1, 0.2, 0.2);
+        let out = stratification_status_score(0.4, 0.7, 0.6, 50.0, 0.3, 0.3, 0.2, 0.1, 0.2, 0.2);
         assert!((out - 0.48).abs() < 1e-6);
 
         let clipped =
@@ -3871,10 +3910,22 @@ mod tests {
 
     #[test]
     fn emotion_break_type_code_prioritizes_outrage_then_dominant_emotion() {
-        assert_eq!(emotion_break_type_code(80.0, 10.0, 20.0, 30.0, 40.0, 60.0), 1);
-        assert_eq!(emotion_break_type_code(20.0, 50.0, 30.0, 10.0, 20.0, 60.0), 2);
-        assert_eq!(emotion_break_type_code(20.0, 10.0, 55.0, 10.0, 20.0, 60.0), 3);
-        assert_eq!(emotion_break_type_code(20.0, 10.0, 10.0, 15.0, 20.0, 60.0), 5);
+        assert_eq!(
+            emotion_break_type_code(80.0, 10.0, 20.0, 30.0, 40.0, 60.0),
+            1
+        );
+        assert_eq!(
+            emotion_break_type_code(20.0, 50.0, 30.0, 10.0, 20.0, 60.0),
+            2
+        );
+        assert_eq!(
+            emotion_break_type_code(20.0, 10.0, 55.0, 10.0, 20.0, 60.0),
+            3
+        );
+        assert_eq!(
+            emotion_break_type_code(20.0, 10.0, 10.0, 15.0, 20.0, 60.0),
+            5
+        );
     }
 
     #[test]
@@ -4013,12 +4064,12 @@ mod tests {
     #[test]
     fn mortality_hazards_and_prob_applies_care_protection_and_dr_reduction() {
         let no_protection = mortality_hazards_and_prob(
-            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 2.0, 0.6, 1.0,
-            1.0, 1.0, 0.0, 0.35, false,
+            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 2.0, 0.6, 1.0, 1.0,
+            1.0, 0.0, 0.35, false,
         );
         let with_protection = mortality_hazards_and_prob(
-            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 0.3, 0.6, 1.0,
-            1.0, 1.0, 1.0, 0.35, false,
+            1.0, 0.60, 1.30, 0.010, 0.00006, 0.090, 0.30, 0.20, 0.05, 0.0, 1.0, 0.3, 0.6, 1.0, 1.0,
+            1.0, 1.0, 0.35, false,
         );
         assert!(with_protection[0] < no_protection[0]);
         assert!(with_protection[3] < no_protection[3]);

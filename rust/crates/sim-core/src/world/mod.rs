@@ -1,8 +1,8 @@
-pub mod tile;
 pub mod resource_map;
+pub mod tile;
 
-pub use tile::{Tile, TileResource};
 pub use resource_map::ResourceMap;
+pub use tile::{Tile, TileResource};
 
 use serde::{Deserialize, Serialize};
 
@@ -101,6 +101,8 @@ mod tests {
         // Within bounds at (5,5) with radius 1: should be 3x3 = 9 tiles (all in bounds)
         assert!(!tiles.is_empty());
         assert_eq!(tiles.len(), 9);
-        assert!(tiles.iter().all(|(x, y)| *x >= 4 && *x <= 6 && *y >= 4 && *y <= 6));
+        assert!(tiles
+            .iter()
+            .all(|(x, y)| *x >= 4 && *x <= 6 && *y >= 4 && *y <= 6));
     }
 }

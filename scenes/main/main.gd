@@ -664,6 +664,8 @@ func _apply_startup_mode_presentation(startup_mode: String, center: Vector2i) ->
 		hud.call("set_probe_observation_mode", is_probe)
 	if entity_renderer.has_method("set_probe_observation_mode"):
 		entity_renderer.call("set_probe_observation_mode", is_probe)
+	if camera.has_method("set_probe_observation_mode"):
+		camera.call("set_probe_observation_mode", is_probe)
 	if is_probe:
 		if world_renderer.has_method("set_resource_overlay_visible"):
 			world_renderer.call("set_resource_overlay_visible", false)

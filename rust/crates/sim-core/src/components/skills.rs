@@ -1,6 +1,6 @@
+use crate::ids::SkillId;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use crate::ids::SkillId;
 
 /// A single skill entry
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12,7 +12,9 @@ pub struct SkillEntry {
 }
 
 impl Default for SkillEntry {
-    fn default() -> Self { Self { level: 0, xp: 0.0 } }
+    fn default() -> Self {
+        Self { level: 0, xp: 0.0 }
+    }
 }
 
 /// All skills for one entity

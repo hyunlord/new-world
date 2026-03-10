@@ -8,13 +8,13 @@
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::needless_range_loop)]
 
-pub mod math_utils;
-pub mod pathfinding;
-pub mod stat_curve;
 pub mod body;
-pub mod runtime;
 pub mod entity_spawner;
-pub mod values_init;
+pub mod math_utils;
 pub mod name_generator;
+pub mod pathfinding;
+pub mod runtime;
+pub mod stat_curve;
+pub mod values_init;
 
 pub use runtime::drain_and_apply_llm_responses;

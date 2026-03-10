@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::EmotionType;
+use serde::{Deserialize, Serialize};
 
 pub const EMOTION_COUNT: usize = 8;
 

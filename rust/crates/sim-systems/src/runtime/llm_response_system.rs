@@ -61,8 +61,7 @@ pub fn drain_and_apply_llm_responses(world: &mut World, resources: &mut SimResou
         apply_response_to_entity(world, tick, &response, &meta);
         resources.llm_runtime.push_debug_log(format!(
             "[LLM-DEBUG] llm_response_system applied response: id={}, variant={:?}",
-            response.request_id,
-            meta.variant
+            response.request_id, meta.variant
         ));
         resources
             .event_bus
@@ -157,9 +156,7 @@ fn update_cache(
 mod tests {
     use super::apply_response_to_entity;
     use hecs::World;
-    use sim_core::components::{
-        LlmContent, LlmPending, LlmRequestType, NarrativeCache,
-    };
+    use sim_core::components::{LlmContent, LlmPending, LlmRequestType, NarrativeCache};
     use sim_engine::{LlmPromptVariant, LlmRequestMeta, LlmResponse};
 
     #[test]

@@ -1,8 +1,8 @@
 use godot::builtin::GString;
 use godot::prelude::{Array, VarDictionary};
 
-use crate::runtime_dict::{dict_get_bool, dict_get_i32, dict_get_string};
 use crate::runtime_bindings::{is_supported_compute_mode, normalize_compute_mode_for_domain};
+use crate::runtime_dict::{dict_get_bool, dict_get_i32, dict_get_string};
 use crate::runtime_registry::{
     clamp_speed_index, register_supported_rust_system, runtime_supports_rust_system,
     runtime_system_key_from_name, RuntimeState, RuntimeSystemEntry, RUNTIME_COMPUTE_DOMAINS,
@@ -69,7 +69,8 @@ pub(crate) fn apply_commands_v2(state: &mut RuntimeState, commands: Array<VarDic
             let priority = dict_get_i32(&payload, "priority").unwrap_or(100);
             let tick_interval = dict_get_i32(&payload, "tick_interval").unwrap_or(1);
             let active = dict_get_bool(&payload, "active").unwrap_or(true);
-            let registration_index = dict_get_i32(&payload, "registration_index").unwrap_or(i32::MAX);
+            let registration_index =
+                dict_get_i32(&payload, "registration_index").unwrap_or(i32::MAX);
             let system_key = runtime_system_key_from_name(&name);
             let rust_implemented = runtime_supports_rust_system(system_key.as_str());
             let rust_registered = if rust_implemented {
@@ -153,7 +154,8 @@ pub(crate) fn apply_commands_v2(state: &mut RuntimeState, commands: Array<VarDic
                 continue;
             }
             for domain in RUNTIME_COMPUTE_DOMAINS {
-                let Some(normalized_mode) = normalize_compute_mode_for_domain(domain, mode.as_str())
+                let Some(normalized_mode) =
+                    normalize_compute_mode_for_domain(domain, mode.as_str())
                 else {
                     continue;
                 };

@@ -123,7 +123,9 @@ mod tests {
     #[test]
     fn begin_tick_clears_section_times() {
         let mut tracker = PerfTracker::new();
-        tracker.section_times.insert("A".to_string(), ("Survival".to_string(), 1000, 3));
+        tracker
+            .section_times
+            .insert("A".to_string(), ("Survival".to_string(), 1000, 3));
         tracker.begin_tick();
         assert!(tracker.section_times.is_empty());
     }

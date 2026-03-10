@@ -14,8 +14,8 @@ pub use material::{MaterialCategory, MaterialDef, MaterialProperties};
 pub use recipe::{RecipeDef, RecipeOutput, RecipeRequires, TagRequirement};
 pub use structure::{RoleRecognition, StructureDef, StructureRequirement};
 pub use temperament::{
-    AxisShift, BiasMatrixRow, CauseTrigger, DerivedRuleOverride, ShiftCondition,
-    TemperamentRules, TemperamentShiftRule,
+    AxisShift, BiasMatrixRow, CauseTrigger, DerivedRuleOverride, ShiftCondition, TemperamentRules,
+    TemperamentShiftRule,
 };
 pub use world_rules::{
     RuleAgentModifier, RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, WorldRuleset,

@@ -1,5 +1,5 @@
+use crate::enums::{ResourceType, TerrainType};
 use serde::{Deserialize, Serialize};
-use crate::enums::{TerrainType, ResourceType};
 
 /// Resource deposit on a tile
 #[derive(Debug, Clone, Serialize, Deserialize)]

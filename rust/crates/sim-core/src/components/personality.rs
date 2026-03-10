@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::{HexacoAxis, HexacoFacet};
+use serde::{Deserialize, Serialize};
 
 pub const AXIS_COUNT: usize = 6;
 pub const FACET_COUNT: usize = 24;
