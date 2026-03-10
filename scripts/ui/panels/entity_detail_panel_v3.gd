@@ -53,6 +53,7 @@ var _narrative_refresh_timer: float = 0.0
 var _header_name: Label
 var _header_meta: Label
 var _summary_label: Label
+var _forage_label: Label
 var _narrative_panel: Control
 var _thought_label: RichTextLabel
 var _needs_title: Label
@@ -172,6 +173,13 @@ func _build_ui() -> void:
 	_summary_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_body"))
 	_summary_label.add_theme_color_override("font_color", Color(0.86, 0.87, 0.92))
 	root.add_child(_summary_label)
+
+	_forage_label = Label.new()
+	_forage_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_forage_label.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_small"))
+	_forage_label.add_theme_color_override("font_color", Color(0.94, 0.82, 0.46))
+	_forage_label.visible = false
+	root.add_child(_forage_label)
 
 	_narrative_panel = NarrativePanelScene.instantiate() as Control
 	root.add_child(_narrative_panel)
@@ -330,6 +338,7 @@ func _refresh_all() -> void:
 		return
 	_refresh_header()
 	_refresh_summary()
+	_refresh_forage_context()
 	_refresh_narrative_panel()
 	_refresh_thought_stream()
 	_refresh_survival_diagnostics()
@@ -369,6 +378,42 @@ func _refresh_summary() -> void:
 	var motivation_text: String = _localized_need_text(str(_detail.get("top_need_key", "NEED_ENERGY")))
 	var summary_text: String = action_text + " — " + motivation_text
 	_summary_label.text = summary_text
+
+
+func _refresh_forage_context() -> void:
+	var target_resource: String = str(_detail.get("action_target_resource", ""))
+	var target_x: int = int(_detail.get("action_target_x", -1))
+	var target_y: int = int(_detail.get("action_target_y", -1))
+	var hunger_delta: float = float(_detail.get("need_hunger_delta", 0.0))
+	var food_delta: float = _probe_food_delta()
+	var lines: PackedStringArray = PackedStringArray()
+	if target_resource == "food" and target_x >= 0 and target_y >= 0:
+		lines.append(
+			Locale.trf3(
+				"UI_PROBE_FORAGE_TARGET_FMT",
+				"resource",
+				Locale.ltr("UI_PROBE_FOOD_SOURCE"),
+				"x",
+				target_x,
+				"y",
+				target_y
+			)
+		)
+	if hunger_delta > 0.0001 or food_delta > 0.0001:
+		lines.append(
+			Locale.trf2(
+				"UI_PROBE_FORAGE_RESULT_FMT",
+				"hunger",
+				_format_signed_percent(hunger_delta),
+				"food",
+				_format_signed_resource_delta(food_delta)
+			)
+		)
+	elif target_resource == "food":
+		lines.append(Locale.ltr("UI_PROBE_FORAGE_RESULT_WAITING"))
+	var line_break: String = char(10)
+	_forage_label.text = line_break.join(lines)
+	_forage_label.visible = not lines.is_empty()
 
 
 func _refresh_narrative_panel() -> void:
@@ -450,6 +495,25 @@ func _format_signed_percent(value: float) -> String:
 	if pct < 0:
 		return "%d%%" % pct
 	return "0%"
+
+
+func _format_signed_resource_delta(value: float) -> String:
+	var rounded: float = snappedf(value, 0.1)
+	if rounded > 0.0:
+		return "+%.1f" % rounded
+	if rounded < 0.0:
+		return "%.1f" % rounded
+	return "0.0"
+
+
+func _probe_food_delta() -> float:
+	if _sim_engine == null or not _sim_engine.has_method("get_world_summary"):
+		return 0.0
+	var summary: Dictionary = _sim_engine.get_world_summary()
+	var deltas_raw: Variant = summary.get("resource_deltas", {})
+	if not (deltas_raw is Dictionary):
+		return 0.0
+	return float((deltas_raw as Dictionary).get("food", 0.0))
 
 
 func _refresh_emotions() -> void:

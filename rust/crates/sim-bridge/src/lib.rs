@@ -46,7 +46,7 @@ use sim_core::components::{
     LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position, Skills,
     Social, Stress, Traits, Values,
 };
-use sim_core::enums::{GrowthStage, NeedType, Sex};
+use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelId, EntityId, Settlement, SettlementId};
 use sim_engine::{
     AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
@@ -249,6 +249,16 @@ fn top_need_key_and_value(needs: &Needs) -> (&'static str, f64) {
 
 fn diagnostic_comfort_score(warmth: f64, safety: f64, sleep: f64) -> f64 {
     ((warmth + safety + sleep) / 3.0).clamp(0.0, 1.0)
+}
+
+fn action_target_resource_key(action: ActionType) -> &'static str {
+    match action {
+        ActionType::Forage | ActionType::GatherHerbs => "food",
+        ActionType::GatherWood => "wood",
+        ActionType::GatherStone => "stone",
+        ActionType::Build => "building",
+        _ => "",
+    }
 }
 
 fn dominant_emotion_adjective(emotion: &Emotion) -> &'static str {
@@ -1440,6 +1450,12 @@ impl WorldSimRuntime {
             dict.set("occupation", beh.occupation.clone());
             dict.set("current_action", format!("{:?}", beh.current_action));
             dict.set("action_progress", beh.action_progress as f32);
+            dict.set("action_target_x", beh.action_target_x.unwrap_or(-1));
+            dict.set("action_target_y", beh.action_target_y.unwrap_or(-1));
+            dict.set(
+                "action_target_resource",
+                action_target_resource_key(beh.current_action),
+            );
         }
 
         // Active traits — PackedStringArray for string collections
@@ -5612,6 +5628,7 @@ mod tests {
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
     use sim_core::components::{LlmPending, LlmRequestType, NarrativeCache};
+    use sim_core::enums::ActionType;
     use sim_core::{EntityId, SettlementId};
     use sim_engine::{EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType};
     use sim_systems::pathfinding::GridPos;
@@ -6377,6 +6394,16 @@ mod tests {
         assert!(runtime_supports_rust_system("stat_sync_system"));
         assert!(runtime_supports_rust_system("stat_threshold_system"));
         assert!(runtime_supports_rust_system("behavior_system"));
+    }
+
+    #[test]
+    fn action_target_resource_key_maps_foraging_actions() {
+        assert_eq!(super::action_target_resource_key(ActionType::Forage), "food");
+        assert_eq!(super::action_target_resource_key(ActionType::GatherHerbs), "food");
+        assert_eq!(super::action_target_resource_key(ActionType::GatherWood), "wood");
+        assert_eq!(super::action_target_resource_key(ActionType::GatherStone), "stone");
+        assert_eq!(super::action_target_resource_key(ActionType::Build), "building");
+        assert_eq!(super::action_target_resource_key(ActionType::Idle), "");
     }
 
     #[test]
