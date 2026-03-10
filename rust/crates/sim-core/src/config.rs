@@ -440,8 +440,13 @@ pub const STRESS_EFFICIENCY_MAX_PENALTY: f64 = 1.60;
 pub const HUNGER_DECAY_RATE: f64 = 0.002;
 pub const HUNGER_METABOLIC_MIN: f64 = 0.3;
 pub const HUNGER_METABOLIC_RANGE: f64 = 0.7;
+/// Hunger level below which behavior should immediately prioritize food-seeking.
+pub const BEHAVIOR_FORCE_FORAGE_HUNGER_MAX: f64 = 0.30;
 pub const ENERGY_DECAY_RATE: f64 = 0.003;
 pub const ENERGY_ACTION_COST: f64 = 0.005;
+/// Energy level below which behavior should immediately prioritize resting
+/// when no more urgent survival deficit is active.
+pub const BEHAVIOR_FORCE_REST_ENERGY_MAX: f64 = 0.18;
 pub const SOCIAL_DECAY_RATE: f64 = 0.001;
 
 /// [Maslow L1 — thirst]
@@ -480,6 +485,21 @@ pub const ERG_STRESS_INJECT_RATE: f64 = 1.5;
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;
 pub const HUNGER_EAT_THRESHOLD: f64 = 0.5;
+/// Probe bootstrap hunger for the primary observed settler.
+pub const PROBE_START_PRIMARY_HUNGER: f64 = 0.22;
+/// Probe bootstrap energy for the primary observed settler.
+pub const PROBE_START_PRIMARY_ENERGY: f64 = 0.78;
+/// Probe bootstrap hunger for the secondary observed settler.
+pub const PROBE_START_SECONDARY_HUNGER: f64 = 0.82;
+/// Probe bootstrap sleep value for the secondary observed settler so resting
+/// is easy to observe.
+pub const PROBE_START_SECONDARY_SLEEP: f64 = 0.18;
+/// Probe bootstrap energy for the secondary observed settler.
+pub const PROBE_START_SECONDARY_ENERGY: f64 = 0.12;
+/// Probe bootstrap warmth baseline to reduce unrelated cold noise.
+pub const PROBE_START_BASE_WARMTH: f64 = 0.72;
+/// Probe bootstrap safety baseline to reduce unrelated panic noise.
+pub const PROBE_START_BASE_SAFETY: f64 = 0.75;
 
 // ── Upper Needs [Deci & Ryan 1985, Maslow 1943] ───────────────────────────────
 pub const UPPER_NEEDS_COMPETENCE_DECAY: f64 = 0.000149;
