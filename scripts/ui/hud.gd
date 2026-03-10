@@ -112,10 +112,18 @@ var _following_entity_id: int = -1
 
 # Key hints
 var _hint_label: Label
+var _probe_verify_panel: PanelContainer
+var _probe_mode_label: Label
+var _probe_camera_label: Label
+var _probe_selected_label: Label
+var _probe_needs_label: Label
+var _probe_target_label: Label
+var _probe_context_label: Label
 
 # Selection state
 var _selected_entity_id: int = -1
 var _selected_building_id: int = -1
+var _startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX
 
 # Debug cheat panel (F12 toggle, lazy init)
 var _debug_panel: CanvasLayer = null
@@ -160,6 +168,7 @@ func _ready() -> void:
 	_build_notification_area()
 	_build_help_overlay()
 	_build_resource_legend()
+	_build_probe_verification_overlay()
 	_build_key_hints()
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
@@ -583,6 +592,58 @@ func _build_resource_legend() -> void:
 	add_child(_resource_legend)
 
 
+func _build_probe_verification_overlay() -> void:
+	_probe_verify_panel = PanelContainer.new()
+	_probe_verify_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_probe_verify_panel.offset_top = 40
+	_probe_verify_panel.offset_right = -12
+	_probe_verify_panel.offset_left = -364
+	_probe_verify_panel.offset_bottom = 182
+	_probe_verify_panel.visible = false
+	_probe_verify_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.04, 0.05, 0.08, 0.90)
+	bg.border_color = Color(0.45, 0.55, 0.68, 0.9)
+	bg.border_width_left = 1
+	bg.border_width_top = 1
+	bg.border_width_right = 1
+	bg.border_width_bottom = 1
+	bg.corner_radius_top_left = 5
+	bg.corner_radius_top_right = 5
+	bg.corner_radius_bottom_left = 5
+	bg.corner_radius_bottom_right = 5
+	bg.content_margin_left = 10
+	bg.content_margin_right = 10
+	bg.content_margin_top = 8
+	bg.content_margin_bottom = 8
+	_probe_verify_panel.add_theme_stylebox_override("panel", bg)
+
+	var vbox: VBoxContainer = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 4)
+
+	_probe_mode_label = _make_label("", "panel_body", Color(0.96, 0.87, 0.52))
+	_probe_camera_label = _make_label("", "panel_small", Color(0.82, 0.87, 0.96))
+	_probe_selected_label = _make_label("", "panel_body", Color(0.92, 0.95, 0.98))
+	_probe_needs_label = _make_label("", "panel_small", Color(0.76, 0.83, 0.89))
+	_probe_target_label = _make_label("", "panel_small", Color(0.92, 0.82, 0.46))
+	_probe_context_label = _make_label("", "panel_small", Color(0.82, 0.91, 0.77))
+
+	for label: Label in [
+		_probe_mode_label,
+		_probe_camera_label,
+		_probe_selected_label,
+		_probe_needs_label,
+		_probe_target_label,
+		_probe_context_label,
+	]:
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		vbox.add_child(label)
+
+	_probe_verify_panel.add_child(vbox)
+	add_child(_probe_verify_panel)
+
+
 func _build_key_hints() -> void:
 	_hint_label = Label.new()
 	_hint_label.text = Locale.ltr("UI_KEY_HINTS")
@@ -657,6 +718,7 @@ func _process(delta: float) -> void:
 
 	# Notification fade
 	_update_notifications(delta)
+	_update_probe_verification_overlay()
 
 
 func _update_entity_panel(delta: float) -> void:
@@ -1237,6 +1299,7 @@ func _refresh_hud_texts() -> void:
 	if _following_entity_id >= 0:
 		_on_follow_entity(_following_entity_id)
 	_update_era_label()
+	_update_probe_verification_overlay()
 
 
 # --- Toggle functions ---
@@ -1467,6 +1530,13 @@ func set_probe_observation_mode(enabled: bool) -> void:
 		_minimap_panel.visible = (not enabled) and _minimap_visible
 	if _stats_panel != null:
 		_stats_panel.visible = not enabled
+	if _probe_verify_panel != null:
+		_probe_verify_panel.visible = enabled
+
+
+func set_startup_mode(startup_mode: String) -> void:
+	_startup_mode = startup_mode
+	_update_probe_verification_overlay()
 
 
 ## Returns the minimap panel control, or null if it has not been created yet.
@@ -1499,6 +1569,285 @@ func _focus_camera_on_world(target_position: Vector2) -> void:
 		return
 	if _camera.has_method("focus_world_tile"):
 		_camera.call("focus_world_tile", target_position)
+
+
+func _update_probe_verification_overlay() -> void:
+	if _probe_verify_panel == null:
+		return
+	_probe_verify_panel.visible = _probe_observation_mode
+	if not _probe_observation_mode:
+		return
+	_probe_mode_label.text = Locale.trf2(
+		"UI_PROBE_VERIFY_MODE_FMT",
+		"mode",
+		Locale.ltr(_startup_mode_key(_startup_mode)),
+		"probe",
+		Locale.ltr("UI_PROBE_VERIFY_ACTIVE")
+	)
+	_probe_camera_label.text = Locale.trf2(
+		"UI_PROBE_VERIFY_CAMERA_FMT",
+		"state",
+		Locale.ltr(_camera_state_key()),
+		"reason",
+		Locale.ltr(_camera_reason_key())
+	)
+	_probe_selected_label.text = _probe_selected_summary()
+	_probe_needs_label.text = _probe_needs_summary()
+	_probe_target_label.text = _probe_target_summary()
+	_probe_context_label.text = _probe_construction_summary()
+
+
+func _camera_debug_dict() -> Dictionary:
+	if _camera == null or not _camera.has_method("get_verification_camera_debug"):
+		return {}
+	var result: Variant = _camera.call("get_verification_camera_debug")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+func _camera_state_key() -> String:
+	var debug: Dictionary = _camera_debug_dict()
+	var state_name: String = str(debug.get("state", "idle_medium"))
+	return "UI_CAMERA_STATE_" + state_name.to_upper()
+
+
+func _camera_reason_key() -> String:
+	var debug: Dictionary = _camera_debug_dict()
+	var reason_name: String = str(debug.get("last_move_reason", "none"))
+	return "UI_CAMERA_REASON_" + reason_name.to_upper()
+
+
+func _startup_mode_key(startup_mode: String) -> String:
+	if startup_mode == GameConfig.STARTUP_MODE_PROBE:
+		return "UI_STARTUP_MODE_PROBE"
+	return "UI_STARTUP_MODE_SANDBOX"
+
+
+func _selected_runtime_detail() -> Dictionary:
+	if _sim_engine == null or _selected_entity_id < 0:
+		return {}
+	return _sim_engine.get_entity_detail(_selected_entity_id)
+
+
+func _probe_selected_summary() -> String:
+	var detail: Dictionary = _selected_runtime_detail()
+	if detail.is_empty():
+		return Locale.ltr("UI_PROBE_VERIFY_SELECTED_NONE")
+	var current_action: String = Locale.tr_id("STATUS", str(detail.get("current_action", "idle")))
+	return Locale.trf3(
+		"UI_PROBE_VERIFY_SELECTED_FMT",
+		"name",
+		str(detail.get("name", Locale.ltr("UI_UNKNOWN"))),
+		"id",
+		_selected_entity_id,
+		"action",
+		current_action
+	)
+
+
+func _probe_needs_summary() -> String:
+	var detail: Dictionary = _selected_runtime_detail()
+	if detail.is_empty():
+		return Locale.ltr("UI_PROBE_VERIFY_TARGET_NONE")
+	var first_line: String = Locale.trf4(
+		"UI_PROBE_VERIFY_NEEDS_FMT",
+		"a_label",
+		Locale.ltr("NEED_HUNGER"),
+		"a_value",
+		_probe_percent_with_delta(float(detail.get("need_hunger", 0.0)), float(detail.get("need_hunger_delta", 0.0))),
+		"b_label",
+		Locale.ltr("NEED_WARMTH"),
+		"b_value",
+		_probe_percent_with_delta(float(detail.get("need_warmth", 0.0)), float(detail.get("need_warmth_delta", 0.0)))
+	)
+	var second_line: String = Locale.trf4(
+		"UI_PROBE_VERIFY_NEEDS_FMT",
+		"a_label",
+		Locale.ltr("NEED_SAFETY"),
+		"a_value",
+		_probe_percent_with_delta(float(detail.get("need_safety", 0.0)), float(detail.get("need_safety_delta", 0.0))),
+		"b_label",
+		Locale.ltr("UI_DIAGNOSTIC_COMFORT"),
+		"b_value",
+		_probe_percent_with_delta(float(detail.get("need_comfort", 0.0)), float(detail.get("need_comfort_delta", 0.0)))
+	)
+	var line_break: String = char(10)
+	return first_line + line_break + second_line
+
+
+func _probe_target_summary() -> String:
+	var detail: Dictionary = _selected_runtime_detail()
+	if detail.is_empty():
+		return Locale.ltr("UI_PROBE_VERIFY_TARGET_NONE")
+	var target_resource: String = str(detail.get("action_target_resource", ""))
+	var target_x: int = int(detail.get("action_target_x", -1))
+	var target_y: int = int(detail.get("action_target_y", -1))
+	if target_resource == "food" and target_x >= 0 and target_y >= 0:
+		return Locale.trf1(
+			"UI_PROBE_VERIFY_TARGET_FMT",
+			"target",
+			Locale.trf3(
+				"UI_PROBE_FORAGE_TARGET_FMT",
+				"resource",
+				Locale.ltr("UI_PROBE_FOOD_SOURCE"),
+				"x",
+				target_x,
+				"y",
+				target_y
+			)
+		)
+	if target_x >= 0 and target_y >= 0:
+		return Locale.trf1(
+			"UI_PROBE_VERIFY_TARGET_FMT",
+			"target",
+			Locale.trf2("UI_POS_FMT", "x", target_x, "y", target_y)
+		)
+	return Locale.ltr("UI_PROBE_VERIFY_TARGET_NONE")
+
+
+func _probe_construction_summary() -> String:
+	var detail: Dictionary = _resolve_probe_construction_detail()
+	if detail.is_empty():
+		var hunger_delta: float = 0.0
+		var selected_detail: Dictionary = _selected_runtime_detail()
+		if not selected_detail.is_empty():
+			hunger_delta = float(selected_detail.get("need_hunger_delta", 0.0))
+		var food_delta: float = _probe_food_delta()
+		if hunger_delta > 0.0001 or food_delta > 0.0001:
+			return Locale.trf2(
+				"UI_PROBE_FORAGE_RESULT_FMT",
+				"hunger",
+				_format_signed_percent(hunger_delta),
+				"food",
+				_format_signed_resource_delta(food_delta)
+			)
+		return Locale.ltr("UI_PROBE_VERIFY_CONTEXT_NONE")
+	var building_name: String = Locale.tr_id("BUILDING_TYPE", str(detail.get("building_type", "stockpile")))
+	var state_key: String = _construction_state_key(str(detail.get("construction_state", "stalled")))
+	var stall_key: String = _stall_reason_key(str(detail.get("stall_reason", "unknown")))
+	var progress_pct: int = int(round(float(detail.get("construction_progress", 0.0)) * 100.0))
+	var progress_delta: String = _format_signed_percent(float(detail.get("construction_progress_delta", 0.0)))
+	var builders: int = int(detail.get("assigned_builder_count", 0))
+	var first_line: String = Locale.trf4(
+		"UI_PROBE_VERIFY_CONSTRUCTION_FMT",
+		"building",
+		building_name,
+		"state",
+		Locale.ltr(state_key),
+		"progress",
+		progress_pct,
+		"delta",
+		progress_delta
+	)
+	var second_line: String = Locale.trf2(
+		"UI_PROBE_VERIFY_CONSTRUCTION_STALL_FMT",
+		"builders",
+		builders,
+		"reason",
+		Locale.ltr(stall_key)
+	)
+	var line_break: String = char(10)
+	return first_line + line_break + second_line
+
+
+func _resolve_probe_construction_detail() -> Dictionary:
+	if _sim_engine == null:
+		return {}
+	if _selected_building_id >= 0:
+		return _sim_engine.get_building_detail(_selected_building_id)
+	var detail: Dictionary = _selected_runtime_detail()
+	if detail.is_empty():
+		return {}
+	var settlement_id: int = int(detail.get("settlement_id", -1))
+	if settlement_id < 0:
+		return {}
+	var settlement_detail: Dictionary = _sim_engine.get_settlement_detail(settlement_id)
+	if settlement_detail.is_empty():
+		return {}
+	var buildings_raw: Variant = settlement_detail.get("buildings", [])
+	if not (buildings_raw is Array):
+		return {}
+	var entity_x: int = int(detail.get("x", 0))
+	var entity_y: int = int(detail.get("y", 0))
+	var best_id: int = -1
+	var best_dist: int = 1_000_000
+	for building_raw: Variant in buildings_raw:
+		if not (building_raw is Dictionary):
+			continue
+		var building_summary: Dictionary = building_raw
+		if bool(building_summary.get("is_constructed", true)):
+			continue
+		var tile_x: int = int(building_summary.get("tile_x", 0))
+		var tile_y: int = int(building_summary.get("tile_y", 0))
+		var dist: int = absi(tile_x - entity_x) + absi(tile_y - entity_y)
+		if dist < best_dist:
+			best_dist = dist
+			best_id = int(building_summary.get("id", -1))
+	if best_id < 0:
+		return {}
+	return _sim_engine.get_building_detail(best_id)
+
+
+func _construction_state_key(state: String) -> String:
+	match state:
+		"complete":
+			return "UI_CONSTRUCTION_STATE_COMPLETE"
+		"advancing":
+			return "UI_CONSTRUCTION_STATE_ADVANCING"
+		_:
+			return "UI_CONSTRUCTION_STATE_STALLED"
+
+
+func _stall_reason_key(reason: String) -> String:
+	match reason:
+		"complete":
+			return "UI_STALL_COMPLETE"
+		"advancing":
+			return "UI_STALL_ADVANCING"
+		"no_builder":
+			return "UI_STALL_NO_BUILDER"
+		"priority_too_low":
+			return "UI_STALL_PRIORITY_TOO_LOW"
+		"builder_travel":
+			return "UI_STALL_BUILDER_TRAVEL"
+		"waiting_tick":
+			return "UI_STALL_WAITING_TICK"
+		_:
+			return "UI_STALL_UNKNOWN"
+
+
+func _probe_percent_with_delta(current_value: float, delta_value: float) -> String:
+	return "%d%% (%s)" % [
+		int(round(current_value * 100.0)),
+		_format_signed_percent(delta_value),
+	]
+
+
+func _format_signed_percent(value: float) -> String:
+	var pct: int = int(round(value * 100.0))
+	if pct > 0:
+		return "+%d%%" % pct
+	if pct < 0:
+		return "%d%%" % pct
+	return "0%"
+
+
+func _format_signed_resource_delta(value: float) -> String:
+	var rounded: float = snappedf(value, 0.1)
+	if rounded > 0.0:
+		return "+%.1f" % rounded
+	if rounded < 0.0:
+		return "%.1f" % rounded
+	return "0.0"
+
+
+func _probe_food_delta() -> float:
+	var summary: Dictionary = _get_world_summary()
+	var deltas_raw: Variant = summary.get("resource_deltas", {})
+	if not (deltas_raw is Dictionary):
+		return 0.0
+	return float((deltas_raw as Dictionary).get("food", 0.0))
 
 
 func _on_cast_bar_agent_selected(entity_id: int) -> void:

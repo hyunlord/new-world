@@ -65,6 +65,7 @@ var _flash_rect: ColorRect
 var _cast_bar: Variant = null
 var _notification_manager: Variant = null
 var _probe_observation_mode: bool = false
+var _last_move_reason: String = "none"
 
 
 func _ready() -> void:
@@ -94,6 +95,15 @@ func set_probe_observation_mode(enabled: bool) -> void:
 		_transition_to(CameraState.IDLE_MEDIUM)
 
 
+func get_verification_camera_debug() -> Dictionary:
+	return {
+		"probe_mode": _probe_observation_mode,
+		"state": _camera_state_name(current_state),
+		"last_move_reason": _last_move_reason,
+		"follow_target_id": follow_target_id,
+	}
+
+
 func connect_ui_sources(cast_bar: Variant, notification_manager: Variant) -> void:
 	if cast_bar != null:
 		_cast_bar = cast_bar
@@ -115,12 +125,13 @@ func follow_entity(entity_id: int) -> void:
 	if _probe_observation_mode:
 		if follow_target_id >= 0:
 			stop_following()
-		focus_entity(entity_id)
+		focus_entity(entity_id, "follow_request")
 		return
 	_mark_player_input(false)
 	_clear_active_tween()
 	follow_target_id = entity_id
 	position_smoothing_enabled = false
+	_note_camera_move("follow_request")
 	_transition_to(CameraState.FOLLOW)
 	SimulationBus.follow_entity_requested.emit(entity_id)
 
@@ -130,6 +141,7 @@ func stop_following() -> void:
 		return
 	follow_target_id = -1
 	position_smoothing_enabled = true
+	_note_camera_move("stop_follow")
 	_transition_to(CameraState.IDLE_MEDIUM)
 	SimulationBus.follow_entity_stopped.emit()
 
@@ -142,16 +154,17 @@ func get_following_id() -> int:
 	return follow_target_id
 
 
-func focus_world_tile(tile_position: Vector2) -> void:
+func focus_world_tile(tile_position: Vector2, reason: String = "manual_focus") -> void:
 	_mark_player_input(false)
 	_clear_active_tween()
 	if follow_target_id >= 0:
 		stop_following()
 	position = _clamp_to_world_position(_tile_to_world_position(tile_position))
+	_note_camera_move(reason)
 	_transition_to(CameraState.IDLE_MEDIUM)
 
 
-func focus_entity(entity_id: int) -> void:
+func focus_entity(entity_id: int, reason: String = "manual_focus") -> void:
 	if entity_id < 0:
 		return
 	var target_pos: Vector2 = _get_agent_world_position(entity_id)
@@ -164,6 +177,7 @@ func focus_entity(entity_id: int) -> void:
 	_last_interest_target_id = interest_target_id
 	interest_target_id = entity_id
 	position = _clamp_to_world_position(target_pos)
+	_note_camera_move(reason)
 	_transition_to(CameraState.IDLE_CLOSE)
 
 
@@ -171,6 +185,7 @@ func handle_notification_clicked(entity_id: int, target_position: Vector2) -> vo
 	if entity_id >= 0:
 		_last_interest_target_id = interest_target_id
 		interest_target_id = entity_id
+	_note_camera_move("notification")
 	trigger_drone_shot(_tile_to_world_position(target_position), true)
 
 
@@ -178,6 +193,7 @@ func handle_crisis(entity_id: int, target_position: Vector2) -> void:
 	if entity_id >= 0:
 		_last_interest_target_id = interest_target_id
 		interest_target_id = entity_id
+	_note_camera_move("crisis")
 	trigger_hard_cut(_tile_to_world_position(target_position))
 
 
@@ -190,6 +206,7 @@ func trigger_hard_cut(target_position: Vector2) -> void:
 	position = _clamp_to_world_position(target_position)
 	zoom = ZOOM_CLOSE
 	_target_zoom = ZOOM_CLOSE.x
+	_note_camera_move("crisis")
 	_transition_to(CameraState.HARD_CUT)
 	_show_flash()
 	active_tween = create_tween()
@@ -205,6 +222,7 @@ func trigger_drone_shot(target_position: Vector2, force: bool = false) -> void:
 	_clear_active_tween()
 	if follow_target_id >= 0:
 		stop_following()
+	_note_camera_move("notification")
 	_transition_to(CameraState.DRONE)
 	var clamped_target: Vector2 = _clamp_to_world_position(target_position)
 	active_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -220,6 +238,7 @@ func trigger_drift(target_position: Vector2) -> void:
 	if _is_player_active() or current_state == CameraState.FOLLOW:
 		return
 	drift_target = _clamp_to_world_position(target_position)
+	_note_camera_move("idle_drift")
 	_transition_to(CameraState.DRIFT)
 
 
@@ -245,14 +264,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				_mark_player_input(false)
+				_note_camera_move("manual_input")
 				_zoom_at_mouse(GameConfig.CAMERA_ZOOM_STEP)
 				get_viewport().set_input_as_handled()
 			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				_mark_player_input(false)
+				_note_camera_move("manual_input")
 				_zoom_at_mouse(-GameConfig.CAMERA_ZOOM_STEP)
 				get_viewport().set_input_as_handled()
 			elif event.button_index == MOUSE_BUTTON_MIDDLE:
 				_mark_player_input(true)
+				_note_camera_move("manual_input")
 				_is_dragging = true
 				_drag_start = event.position
 				get_viewport().set_input_as_handled()
@@ -262,6 +284,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if _is_dragging:
 			_mark_player_input(true)
+			_note_camera_move("manual_input")
 			position += (_drag_start - event.position) / zoom.x
 			_drag_start = event.position
 			get_viewport().set_input_as_handled()
@@ -271,17 +294,20 @@ func _unhandled_input(event: InputEvent) -> void:
 				_left_was_dragged = true
 			if _left_was_dragged:
 				_mark_player_input(true)
+				_note_camera_move("manual_input")
 				position += -event.relative / zoom.x
 				get_viewport().set_input_as_handled()
 
 	if event is InputEventMagnifyGesture:
 		_mark_player_input(false)
+		_note_camera_move("manual_input")
 		var zoom_delta: float = (event.factor - 1.0) * 0.5
 		_zoom_at_mouse(zoom_delta)
 		get_viewport().set_input_as_handled()
 
 	if event is InputEventPanGesture:
 		_mark_player_input(true)
+		_note_camera_move("manual_input")
 		position += event.delta * 2.0 / zoom.x
 		get_viewport().set_input_as_handled()
 
@@ -420,6 +446,7 @@ func _process_manual_pan(delta: float) -> void:
 	if pan_dir == Vector2.ZERO:
 		return
 	_mark_player_input(true)
+	_note_camera_move("manual_input")
 	position += pan_dir.normalized() * GameConfig.CAMERA_PAN_SPEED * delta / max(zoom.x, 0.001)
 
 
@@ -632,12 +659,12 @@ func _show_flash() -> void:
 func _on_ui_agent_selected(entity_id: int) -> void:
 	if _probe_observation_mode:
 		return
-	focus_entity(entity_id)
+	focus_entity(entity_id, "selection")
 
 
 func _on_ui_agent_follow_requested(entity_id: int) -> void:
 	if _probe_observation_mode:
-		focus_entity(entity_id)
+		focus_entity(entity_id, "follow_request")
 		return
 	follow_entity(entity_id)
 
@@ -652,3 +679,28 @@ func _on_ui_crisis_occurred(entity_id: int, target_position: Vector2) -> void:
 	if _probe_observation_mode:
 		return
 	handle_crisis(entity_id, target_position)
+
+
+func _camera_state_name(state: int) -> String:
+	match state:
+		CameraState.IDLE_WIDE:
+			return "idle_wide"
+		CameraState.IDLE_MEDIUM:
+			return "idle_medium"
+		CameraState.IDLE_CLOSE:
+			return "idle_close"
+		CameraState.IDLE_BREATHE:
+			return "idle_breathe"
+		CameraState.FOLLOW:
+			return "follow"
+		CameraState.DRONE:
+			return "drone"
+		CameraState.HARD_CUT:
+			return "hard_cut"
+		CameraState.DRIFT:
+			return "drift"
+	return "idle_medium"
+
+
+func _note_camera_move(reason: String) -> void:
+	_last_move_reason = reason
