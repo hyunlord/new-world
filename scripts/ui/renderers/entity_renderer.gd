@@ -17,6 +17,9 @@ var _sim_engine: RefCounted = null
 var _snapshot_decoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
+var _selected_runtime_detail_cache: Dictionary = {}
+var _selected_runtime_detail_cache_tick: int = -1
+var _selected_runtime_detail_cache_id: int = -1
 var selected_entity_id: int = -1
 var probe_observation_mode: bool = false
 var _current_lod: int = 1
@@ -62,6 +65,9 @@ const PROBE_OUTLINE_ALPHA: float = 0.28
 const PROBE_SELECTION_COLOR: Color = Color(1.0, 0.92, 0.35, 0.98)
 const PROBE_SELECTION_RING_WIDTH: float = 2.5
 const PROBE_SELECTION_HALO_ALPHA: float = 0.14
+const PROBE_FORAGE_TARGET_COLOR: Color = Color(1.0, 0.86, 0.22, 0.95)
+const PROBE_FORAGE_TARGET_PENDING_ALPHA: float = 0.32
+const PROBE_FORAGE_LINE_WIDTH: float = 2.0
 
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
@@ -432,6 +438,7 @@ func _draw() -> void:
 	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
 
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	var selected_probe_pos: Vector2 = Vector2.INF
 
 	# LOD 0: draw minimal dots so entities are visible even at max zoom out
 	if _current_lod == 0:
@@ -460,6 +467,9 @@ func _draw() -> void:
 			# Selection highlight even at LOD 0
 			if is_selected:
 				_draw_selection_indicator(pos, dot_size + 3.0, 16)
+				selected_probe_pos = pos
+		if selected_probe_pos != Vector2.INF:
+			_draw_probe_selected_forage_overlay(selected_probe_pos)
 		return
 
 	for i in range(alive.size()):
@@ -526,9 +536,7 @@ func _draw() -> void:
 			# Selection highlight
 			if is_selected:
 				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
-				# Draw line to action target: skipped for snapshot entities
-				if false: # TODO: action target needs entity detail panel
-					pass
+				selected_probe_pos = pos
 				# Partner heart marker: skipped for snapshot entities
 				if false: # TODO: partner check needs entity detail panel
 					pass
@@ -560,6 +568,9 @@ func _draw() -> void:
 				elif wood > 3.0:
 					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
 
+	if selected_probe_pos != Vector2.INF:
+		_draw_probe_selected_forage_overlay(selected_probe_pos)
+
 	_draw_hover_tooltip()
 
 
@@ -581,6 +592,7 @@ func _draw_binary_snapshots() -> void:
 	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
 
 	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	var selected_probe_pos: Vector2 = Vector2.INF
 
 	if _current_lod == 0:
 		for index in range(_snapshot_decoder.agent_count):
@@ -602,6 +614,9 @@ func _draw_binary_snapshots() -> void:
 			draw_circle(pos, dot_size, color)
 			if is_selected:
 				_draw_selection_indicator(pos, dot_size + 3.0, 16)
+				selected_probe_pos = pos
+		if selected_probe_pos != Vector2.INF:
+			_draw_probe_selected_forage_overlay(selected_probe_pos)
 		_draw_hover_tooltip()
 		return
 
@@ -626,6 +641,7 @@ func _draw_binary_snapshots() -> void:
 				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 			if is_selected:
 				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
+				selected_probe_pos = pos
 
 		if _should_draw_name(is_selected):
 			var entity_name: String = _runtime_entity_name(entity_id)
@@ -652,6 +668,9 @@ func _draw_binary_snapshots() -> void:
 					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
 				elif wood > 3.0:
 					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
+
+	if selected_probe_pos != Vector2.INF:
+		_draw_probe_selected_forage_overlay(selected_probe_pos)
 
 	_draw_hover_tooltip()
 
@@ -691,6 +710,53 @@ func _draw_selection_indicator(pos: Vector2, radius: float, points: int) -> void
 		draw_arc(pos, radius + 1.0, 0.0, TAU, points, PROBE_SELECTION_COLOR, PROBE_SELECTION_RING_WIDTH)
 		return
 	draw_arc(pos, radius, 0.0, TAU, points, Color.WHITE, 1.5)
+
+
+func _draw_probe_selected_forage_overlay(selected_pos: Vector2) -> void:
+	if not probe_observation_mode or _sim_engine == null or _resource_map == null or selected_entity_id < 0:
+		return
+	var detail: Dictionary = _get_selected_runtime_detail()
+	if detail.is_empty():
+		return
+	if str(detail.get("action_target_resource", "")) != "food":
+		return
+	var target_x: int = int(detail.get("action_target_x", -1))
+	var target_y: int = int(detail.get("action_target_y", -1))
+	if target_x < 0 or target_y < 0:
+		return
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	var target_pos: Vector2 = Vector2(target_x, target_y) * float(GameConfig.TILE_SIZE) + half_tile
+	var remaining_food: float = _resource_map.get_food(target_x, target_y)
+	var marker_color: Color = PROBE_FORAGE_TARGET_COLOR
+	var halo_alpha: float = PROBE_FORAGE_TARGET_PENDING_ALPHA
+	if remaining_food <= 0.0:
+		marker_color = Color(1.0, 0.42, 0.30, 0.95)
+		halo_alpha = 0.22
+	draw_line(selected_pos, target_pos, marker_color, PROBE_FORAGE_LINE_WIDTH, true)
+	draw_circle(target_pos, 9.0, Color(marker_color.r, marker_color.g, marker_color.b, halo_alpha))
+	draw_arc(target_pos, 7.5, 0.0, TAU, 24, marker_color, 2.0)
+	if _current_lod >= 1:
+		var resource_font: Font = ThemeDB.fallback_font
+		draw_string(
+			resource_font,
+			target_pos + Vector2(0.0, -8.0),
+			Locale.ltr("UI_RES_FOOD_SHORT"),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			-1,
+			9,
+			marker_color
+		)
+
+
+func _get_selected_runtime_detail() -> Dictionary:
+	if _sim_engine == null or not _sim_engine.has_method("get_entity_detail") or selected_entity_id < 0:
+		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _selected_runtime_detail_cache_tick or selected_entity_id != _selected_runtime_detail_cache_id:
+		_selected_runtime_detail_cache_tick = tick
+		_selected_runtime_detail_cache_id = selected_entity_id
+		_selected_runtime_detail_cache = _sim_engine.get_entity_detail(selected_entity_id)
+	return _selected_runtime_detail_cache
 
 
 func _update_agent_sprites() -> void:
