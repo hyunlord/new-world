@@ -36,10 +36,30 @@ const BIOME_MOVE_COST_SNOW: f32 = 2.0;
 /// One-time bootstrap payload copied from the Godot-generated world.
 #[derive(Debug, Clone, serde::Deserialize)]
 pub(crate) struct RuntimeBootstrapPayload {
+    #[serde(default)]
+    pub(crate) startup_mode: RuntimeBootstrapMode,
     pub(crate) world: RuntimeBootstrapWorld,
     pub(crate) founding_settlement: RuntimeBootstrapSettlement,
     #[serde(default)]
     pub(crate) agents: Vec<RuntimeBootstrapAgent>,
+}
+
+/// Startup bootstrap modes exposed from the Godot setup flow.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum RuntimeBootstrapMode {
+    Probe,
+    #[default]
+    Sandbox,
+}
+
+impl RuntimeBootstrapMode {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Probe => "probe",
+            Self::Sandbox => "sandbox",
+        }
+    }
 }
 
 /// Full flat world payload copied from `WorldData` and `ResourceMap`.
@@ -85,6 +105,25 @@ pub(crate) struct RuntimeBootstrapAgent {
     pub(crate) y: i32,
     #[serde(default)]
     pub(crate) age_ticks: u64,
+    #[serde(default)]
+    pub(crate) sex: Option<RuntimeBootstrapSex>,
+}
+
+/// Optional spawn-time sex override carried by the Godot bootstrap payload.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum RuntimeBootstrapSex {
+    Male,
+    Female,
+}
+
+impl RuntimeBootstrapSex {
+    fn as_sim_sex(self) -> Sex {
+        match self {
+            Self::Male => Sex::Male,
+            Self::Female => Sex::Female,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -93,6 +132,7 @@ struct BootstrapWorldResult {
     settlement_id: u64,
     building_count: usize,
     entity_count: usize,
+    startup_mode: RuntimeBootstrapMode,
 }
 
 /// Applies startup bootstrap data into the live runtime and returns a summary.
@@ -109,6 +149,7 @@ pub(crate) fn bootstrap_world(
     out.set("settlement_id", result.settlement_id as i64);
     out.set("building_count", result.building_count as i64);
     out.set("entity_count", result.entity_count as i64);
+    out.set("startup_mode", result.startup_mode.as_str());
     out
 }
 
@@ -116,6 +157,7 @@ fn bootstrap_world_core(
     state: &mut RuntimeState,
     payload: RuntimeBootstrapPayload,
 ) -> Option<BootstrapWorldResult> {
+    let startup_mode = payload.startup_mode;
     if payload.world.width == 0 || payload.world.height == 0 {
         return None;
     }
@@ -193,7 +235,7 @@ fn bootstrap_world_core(
             settlement_id: Some(settlement_id),
             position: (agent.x, agent.y),
             initial_age_ticks: agent.age_ticks,
-            sex: None,
+            sex: agent.sex.map(RuntimeBootstrapSex::as_sim_sex),
             parent_a: None,
             parent_b: None,
         };
@@ -217,6 +259,7 @@ fn bootstrap_world_core(
         settlement_id: settlement_id.0,
         building_count: state.engine.resources().buildings.len(),
         entity_count: state.engine.world().len() as usize,
+        startup_mode,
     })
 }
 
@@ -1154,6 +1197,7 @@ mod tests {
 
     fn test_bootstrap_payload() -> RuntimeBootstrapPayload {
         RuntimeBootstrapPayload {
+            startup_mode: RuntimeBootstrapMode::Probe,
             world: RuntimeBootstrapWorld {
                 width: 4,
                 height: 4,
@@ -1179,16 +1223,19 @@ mod tests {
                     x: 1,
                     y: 1,
                     age_ticks: 20 * TICKS_PER_YEAR as u64,
+                    sex: Some(RuntimeBootstrapSex::Male),
                 },
                 RuntimeBootstrapAgent {
                     x: 2,
                     y: 1,
                     age_ticks: 24 * TICKS_PER_YEAR as u64,
+                    sex: Some(RuntimeBootstrapSex::Female),
                 },
                 RuntimeBootstrapAgent {
                     x: 2,
                     y: 2,
                     age_ticks: 12 * TICKS_PER_YEAR as u64,
+                    sex: Some(RuntimeBootstrapSex::Male),
                 },
             ],
         }
@@ -1229,6 +1276,7 @@ mod tests {
         assert_eq!(result.entity_count, 3);
         assert_eq!(result.building_count, 1);
         assert_eq!(result.settlement_id, 1);
+        assert_eq!(result.startup_mode, RuntimeBootstrapMode::Probe);
 
         let resources = state.engine.resources();
         let settlement = resources
@@ -1243,6 +1291,31 @@ mod tests {
         assert!(settlement.leader_id.is_some());
         assert_eq!(resources.buildings.len(), 1);
         assert_eq!(state.engine.world().len(), 3);
+
+        let mut male_count = 0;
+        let mut female_count = 0;
+        let mut query = state.engine.world().query::<&Identity>();
+        for (_, identity) in &mut query {
+            match identity.sex {
+                Sex::Male => male_count += 1,
+                Sex::Female => female_count += 1,
+            }
+        }
+        assert_eq!(male_count, 2);
+        assert_eq!(female_count, 1);
+    }
+
+    #[test]
+    fn bootstrap_payload_defaults_to_sandbox_mode() {
+        let payload: RuntimeBootstrapPayload = serde_json::from_str(
+            r#"{
+                "world": {"width": 1, "height": 1},
+                "founding_settlement": {"id": 1, "name": "", "x": 0, "y": 0},
+                "agents": []
+            }"#,
+        )
+        .expect("payload should deserialize");
+        assert_eq!(payload.startup_mode, RuntimeBootstrapMode::Sandbox);
     }
 
     #[test]

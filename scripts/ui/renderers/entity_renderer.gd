@@ -18,6 +18,7 @@ var _snapshot_decoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
 var selected_entity_id: int = -1
+var probe_observation_mode: bool = false
 var _current_lod: int = 1
 var resource_overlay_visible: bool = false
 var _binary_snapshot_available: bool = false
@@ -56,6 +57,11 @@ const GENDER_TINT_WEIGHT: float = 0.2
 const OUTLINE_COLOR: Color = Color(1.0, 1.0, 1.0, 0.7)
 const OUTLINE_WIDTH: float = 1.5
 const FOLLOW_HIGHLIGHT_COLOR: Color = Color(0.3, 0.6, 1.0)
+const PROBE_FADED_ALPHA: float = 0.48
+const PROBE_OUTLINE_ALPHA: float = 0.28
+const PROBE_SELECTION_COLOR: Color = Color(1.0, 0.92, 0.35, 0.98)
+const PROBE_SELECTION_RING_WIDTH: float = 2.5
+const PROBE_SELECTION_HALO_ALPHA: float = 0.14
 
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
@@ -178,6 +184,11 @@ func _ready() -> void:
 	if _ensure_agent_visual_resources():
 		_ensure_agent_sprite_capacity(32)
 	SimulationBus.tick_completed.connect(_on_tick)
+
+
+func set_probe_observation_mode(enabled: bool) -> void:
+	probe_observation_mode = enabled
+	queue_redraw()
 
 
 func _on_tick(_tick: int) -> void:
@@ -439,13 +450,16 @@ func _draw() -> void:
 			var esex: String = str(entity.get("sex", "male"))
 			var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
 			color = color.lerp(tint, GENDER_TINT_WEIGHT)
+			var is_selected: bool = int(entity.get("entity_id", -1)) == selected_entity_id
+			var outline_color: Color = _outline_color_for_probe(is_selected)
+			color = _entity_color_for_probe(color, is_selected)
 			# Minimum 3px dot ensures visibility at any zoom level
 			var dot_size: float = maxf(3.0, 2.0 / zl)
-			draw_circle(pos, dot_size + 1.0, OUTLINE_COLOR)
+			draw_circle(pos, dot_size + 1.0, outline_color)
 			draw_circle(pos, dot_size, color)
 			# Selection highlight even at LOD 0
-			if int(entity.get("entity_id", -1)) == selected_entity_id:
-				draw_arc(pos, dot_size + 3.0, 0, TAU, 16, Color.WHITE, 1.5)
+			if is_selected:
+				_draw_selection_indicator(pos, dot_size + 3.0, 16)
 		return
 
 	for i in range(alive.size()):
@@ -469,10 +483,13 @@ func _draw() -> void:
 		var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
 		var base_size: float = vis["size"]
 		var color: Color = vis["color"]
+		var is_selected: bool = eid == selected_entity_id
 
 		# Gender tint
 		var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
 		color = color.lerp(tint, GENDER_TINT_WEIGHT)
+		color = _entity_color_for_probe(color, is_selected)
+		var outline_color: Color = _outline_color_for_probe(is_selected)
 
 		# Age size scaling
 		var size: float = base_size * AGE_SIZE_MULT.get(eage_stage, 1.0)
@@ -487,7 +504,7 @@ func _draw() -> void:
 				_draw_diamond_outlined(pos, size, color)
 			_:
 				# Circle with outline
-				draw_circle(pos, size + OUTLINE_WIDTH, OUTLINE_COLOR)
+				draw_circle(pos, size + OUTLINE_WIDTH, outline_color)
 				draw_circle(pos, size, color)
 
 		# Elder white dot (gray hair indicator)
@@ -498,7 +515,7 @@ func _draw() -> void:
 			# Carrying indicator: skipped for snapshot entities (no carry data)
 
 			# Hunger warning
-			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD:
+			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD and (not probe_observation_mode or is_selected):
 				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 
 			## Leader crown [♛ = Unicode U+265B, locale-exempt symbol]
@@ -507,8 +524,8 @@ func _draw() -> void:
 				draw_string(crown_font, pos + Vector2(-3.0, -(size + 10.0)), "\u265B", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.82, 0.1))
 
 			# Selection highlight
-			if eid == selected_entity_id:
-				draw_arc(pos, SELECTION_RADIUS, 0, TAU, 24, Color.WHITE, 1.5)
+			if is_selected:
+				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
 				# Draw line to action target: skipped for snapshot entities
 				if false: # TODO: action target needs entity detail panel
 					pass
@@ -517,13 +534,15 @@ func _draw() -> void:
 					pass
 
 		# LOD 2: Show names for all entities
-		if _current_lod == 2:
+		if _should_draw_name(is_selected):
 			var entity_name: String = ename
 			# Background rect for readability
 			var name_font: Font = ThemeDB.fallback_font
 			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
-			draw_rect(Rect2(pos.x + size + 2, pos.y - size - 4 - name_size.y, name_size.x + 4, name_size.y + 2), Color(0, 0, 0, 0.6))
-			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+			var bg_alpha: float = 0.82 if probe_observation_mode and is_selected else 0.6
+			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
+			draw_rect(Rect2(pos.x + size + 2, pos.y - size - 4 - name_size.y, name_size.x + 4, name_size.y + 2), Color(0, 0, 0, bg_alpha))
+			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
 
 	# Resource text markers at high zoom (LOD 2)
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
@@ -575,11 +594,14 @@ func _draw_binary_snapshots() -> void:
 			var color: Color = vis["color"]
 			var tint: Color = MALE_TINT if _snapshot_decoder.get_sex(index) == 0 else FEMALE_TINT
 			color = color.lerp(tint, GENDER_TINT_WEIGHT)
+			var is_selected: bool = _snapshot_decoder.get_entity_id(index) == selected_entity_id
+			var outline_color: Color = _outline_color_for_probe(is_selected)
+			color = _entity_color_for_probe(color, is_selected)
 			var dot_size: float = maxf(3.0, 2.0 / zl)
-			draw_circle(pos, dot_size + 1.0, OUTLINE_COLOR)
+			draw_circle(pos, dot_size + 1.0, outline_color)
 			draw_circle(pos, dot_size, color)
-			if _snapshot_decoder.get_entity_id(index) == selected_entity_id:
-				draw_arc(pos, dot_size + 3.0, 0, TAU, 16, Color.WHITE, 1.5)
+			if is_selected:
+				_draw_selection_indicator(pos, dot_size + 3.0, 16)
 		_draw_hover_tooltip()
 		return
 
@@ -594,24 +616,27 @@ func _draw_binary_snapshots() -> void:
 		var job_key: String = _binary_job_key(_snapshot_decoder.get_job_icon(index))
 		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
 		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var is_selected: bool = entity_id == selected_entity_id
 		var vis: Dictionary = JOB_VISUALS.get(job_key, JOB_VISUALS["none"])
 		var size: float = float(vis["size"]) * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
 
 		if _current_lod >= 1:
 			var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
-			if danger_flags & 0b0010 != 0:
+			if danger_flags & 0b0010 != 0 and (not probe_observation_mode or is_selected):
 				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
-			if entity_id == selected_entity_id:
-				draw_arc(pos, SELECTION_RADIUS, 0, TAU, 24, Color.WHITE, 1.5)
+			if is_selected:
+				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
 
-		if _current_lod == 2:
+		if _should_draw_name(is_selected):
 			var entity_name: String = _runtime_entity_name(entity_id)
 			if entity_name.is_empty():
 				entity_name = "#%d" % entity_id
 			var name_font: Font = ThemeDB.fallback_font
 			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
-			draw_rect(Rect2(pos.x + size + 2.0, pos.y - size - 4.0 - name_size.y, name_size.x + 4.0, name_size.y + 2.0), Color(0.0, 0.0, 0.0, 0.6))
-			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+			var bg_alpha: float = 0.82 if probe_observation_mode and is_selected else 0.6
+			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
+			draw_rect(Rect2(pos.x + size + 2.0, pos.y - size - 4.0 - name_size.y, name_size.x + 4.0, name_size.y + 2.0), Color(0.0, 0.0, 0.0, bg_alpha))
+			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
 
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
 		var res_font: Font = ThemeDB.fallback_font
@@ -640,6 +665,32 @@ func _update_lod(zoom_level: float) -> void:
 		_current_lod = 2
 	elif _current_lod == 2 and zoom_level < 3.8:
 		_current_lod = 1
+
+
+func _entity_color_for_probe(color: Color, is_selected: bool) -> Color:
+	if not probe_observation_mode or is_selected:
+		return color
+	return Color(color.r, color.g, color.b, PROBE_FADED_ALPHA)
+
+
+func _outline_color_for_probe(is_selected: bool) -> Color:
+	if not probe_observation_mode or is_selected:
+		return OUTLINE_COLOR
+	return Color(OUTLINE_COLOR.r, OUTLINE_COLOR.g, OUTLINE_COLOR.b, PROBE_OUTLINE_ALPHA)
+
+
+func _should_draw_name(is_selected: bool) -> bool:
+	if probe_observation_mode:
+		return is_selected and _current_lod >= 1
+	return _current_lod == 2
+
+
+func _draw_selection_indicator(pos: Vector2, radius: float, points: int) -> void:
+	if probe_observation_mode:
+		draw_circle(pos, radius + 1.5, Color(PROBE_SELECTION_COLOR.r, PROBE_SELECTION_COLOR.g, PROBE_SELECTION_COLOR.b, PROBE_SELECTION_HALO_ALPHA))
+		draw_arc(pos, radius + 1.0, 0.0, TAU, points, PROBE_SELECTION_COLOR, PROBE_SELECTION_RING_WIDTH)
+		return
+	draw_arc(pos, radius, 0.0, TAU, points, Color.WHITE, 1.5)
 
 
 func _update_agent_sprites() -> void:
@@ -680,6 +731,8 @@ func _update_agent_sprites() -> void:
 			continue
 
 		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var is_selected: bool = entity_id == selected_entity_id
+		var emphasize_probe: bool = probe_observation_mode and selected_entity_id >= 0
 		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
 		var velocity: Vector2 = _snapshot_decoder.get_velocity(index)
 		var action_state: int = _snapshot_decoder.get_action_state(index)
@@ -691,6 +744,8 @@ func _update_agent_sprites() -> void:
 		sprite.scale = Vector2.ONE * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
 		sprite.flip_h = bool(frame_data.get("flip_h", false))
 		sprite.frame = int(frame_data.get("frame", 0))
+		sprite.modulate = Color(1.0, 1.0, 1.0, 1.0 if (not emphasize_probe or is_selected) else 0.58)
+		sprite.z_index = 2 if is_selected else 1
 		sprite.visible = true
 
 		_apply_palette(shader_material, _snapshot_decoder.get_sprite_var(index))
@@ -703,6 +758,8 @@ func _update_agent_sprites() -> void:
 		_apply_breathing(shader_material, entity_id, velocity.length())
 		if social_bubble != null:
 			social_bubble.update_state(action_state)
+			if emphasize_probe and not is_selected:
+				social_bubble.visible = false
 
 	for index in range(_snapshot_decoder.agent_count, _agent_sprites.size()):
 		_agent_sprites[index].visible = false

@@ -65,6 +65,12 @@ func is_resource_overlay_visible() -> bool:
 	return _resource_overlay != null and _resource_overlay.visible
 
 
+## Forces the resource overlay visibility without toggling current state.
+func set_resource_overlay_visible(visible: bool) -> void:
+	if _resource_overlay != null:
+		_resource_overlay.visible = visible
+
+
 ## Update resource overlay texture (call periodically, e.g., every 100 ticks)
 func update_resource_overlay() -> void:
 	if _resource_map_ref == null or _world_data_ref == null:

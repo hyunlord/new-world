@@ -1,6 +1,6 @@
 {
   "duplicate_report_locale": "ko",
-  "owner_key_count": 248,
+  "owner_key_count": 255,
   "owners": {
     "COPING_ACQUIRED": "ui",
     "EVT_BORN": "ui",
@@ -249,7 +249,14 @@
     "TRAIT_F_TOUGH_MINDED": "ui",
     "TRAIT_F_TRADITIONALIST": "ui",
     "TRAIT_F_UTILITARIAN": "ui",
-    "TRAIT_F_VENGEFUL": "ui"
+    "TRAIT_F_VENGEFUL": "ui",
+    "UI_MAP_START_MODE_HINT": "ui",
+    "UI_MAP_START_MODE_LABEL": "ui",
+    "UI_MAP_START_PROBE": "ui",
+    "UI_MAP_START_SANDBOX": "ui",
+    "UI_NOTIF_WORLDSIM_STARTED_MODE_FMT": "ui",
+    "UI_STARTUP_MODE_PROBE": "ui",
+    "UI_STARTUP_MODE_SANDBOX": "ui"
   },
   "version": 1
 }

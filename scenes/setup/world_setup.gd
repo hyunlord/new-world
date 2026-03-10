@@ -4,7 +4,7 @@
 extends Node2D
 
 ## 설정 완료 시그널. spawn_data: Array[{position:Vector2i, count:int}]
-signal setup_confirmed(spawn_data: Array)
+signal setup_confirmed(spawn_data: Array, startup_mode: String)
 
 ## 의존 스크립트 사전 로드 (class_name 없는 RefCounted 스크립트들)
 const PresetMapGeneratorScript = preload("res://scripts/core/world/preset_map_generator.gd")
@@ -177,7 +177,7 @@ func _on_seed_changed(seed_val: int) -> void:
 	_current_seed = seed_val
 
 
-func _on_start_pressed() -> void:
+func _on_start_pressed(startup_mode: String) -> void:
 	var spawn_data: Array = _editor_ctrl.get_spawn_points()
 	## 스폰 포인트 없으면 PresetMapGenerator 추천 사용
 	if spawn_data.is_empty():
@@ -193,7 +193,7 @@ func _on_start_pressed() -> void:
 			## walkable 타일 없음 — 경고 (시작 금지)
 			push_warning("WorldSetup: No walkable tiles. Cannot start simulation.")
 			return
-	setup_confirmed.emit(spawn_data)
+	setup_confirmed.emit(spawn_data, startup_mode)
 
 
 func _on_resource_changed() -> void:

@@ -428,6 +428,7 @@ func _ready() -> void:
 
 ## WorldSetup 씬 생성 및 world_data/resource_map 주입
 func _enter_setup_mode() -> void:
+	hud.visible = false
 	_world_setup = WorldSetupScript.new()
 	_world_setup.setup(world_data, resource_map)
 	add_child(_world_setup)
@@ -480,13 +481,14 @@ func _ensure_ambience_manager() -> void:
 
 
 ## WorldSetup 완료 시 호출 — 맵 렌더링, 스폰, 시뮬레이션 시작
-func _on_setup_confirmed(spawn_data: Array) -> void:
+func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
+	var resolved_startup_mode: String = _normalize_startup_mode(startup_mode)
 	_world_setup.queue_free()
 	_world_setup = null
 
 	world_renderer.render_world(world_data, resource_map)
 	_loading_overlay.visible = true
-	var bootstrap_agents: Array = await _spawn_at_points_async(spawn_data)
+	var bootstrap_agents: Array = await _spawn_at_points_async(spawn_data, resolved_startup_mode)
 	_loading_overlay.visible = false
 
 	@warning_ignore("integer_division")
@@ -495,7 +497,9 @@ func _on_setup_confirmed(spawn_data: Array) -> void:
 		center = Vector2i(int(bootstrap_agents[0].get("x", center.x)), int(bootstrap_agents[0].get("y", center.y)))
 	elif not spawn_data.is_empty():
 		center = spawn_data[0].position
-	var bootstrap_result: Dictionary = sim_engine.bootstrap_world(_build_runtime_bootstrap_payload(center, bootstrap_agents))
+	var bootstrap_result: Dictionary = sim_engine.bootstrap_world(
+		_build_runtime_bootstrap_payload(center, bootstrap_agents, resolved_startup_mode)
+	)
 
 	ChronicleSystem.init(entity_manager)
 	camera.set_entity_manager(entity_manager)
@@ -506,14 +510,22 @@ func _on_setup_confirmed(spawn_data: Array) -> void:
 	SimulationBus.entity_died.connect(_on_entity_died_chronicle)
 	SimulationBus.couple_formed.connect(_on_couple_formed_chronicle)
 
+	hud.visible = true
+	_apply_startup_mode_presentation(resolved_startup_mode, center)
 	_print_startup_banner(GameConfig.WORLD_SEED)
-	hud.show_startup_toast(int(bootstrap_result.get("entity_count", bootstrap_agents.size())))
+	hud.show_startup_toast(
+		int(bootstrap_result.get("entity_count", bootstrap_agents.size())),
+		resolved_startup_mode
+	)
 	sim_engine.is_paused = false
 
 
 ## 스폰 포인트 목록에서 에이전트를 SPAWN_BATCH_SIZE씩 나눠 스폰.
 ## 각 배치 후 await process_frame으로 화면 업데이트 허용.
-func _spawn_at_points_async(spawn_data: Array) -> Array:
+func _spawn_at_points_async(spawn_data: Array, startup_mode: String) -> Array:
+	if startup_mode == GameConfig.STARTUP_MODE_PROBE:
+		return await _spawn_probe_agents_async(spawn_data)
+
 	# 총 스폰 수 미리 계산 (프로그레스 바용)
 	var total: int = 0
 	if spawn_data.is_empty():
@@ -587,7 +599,114 @@ func _spawn_at_points_async(spawn_data: Array) -> Array:
 	return agents
 
 
-func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array) -> Dictionary:
+func _spawn_probe_agents_async(spawn_data: Array) -> Array:
+	var center: Vector2i = _probe_spawn_anchor(spawn_data)
+	var walkable: Array = _get_sorted_walkable_near(center, GameConfig.PROBE_START_SPAWN_RADIUS)
+	if walkable.is_empty():
+		push_warning("[Main] No walkable tiles for Probe Start!")
+		return []
+
+	var total: int = GameConfig.PROBE_START_POPULATION
+	_loading_bar.value = 0.0
+	_loading_count_label.text = Locale.trf("UI_LOADING_COUNT_FMT", {"current": 0, "total": total})
+
+	var agents: Array = []
+	for i in range(total):
+		var tile: Vector2i = walkable[min(i, walkable.size() - 1)]
+		var age_years: int = GameConfig.PROBE_START_AGE_YEARS[i % GameConfig.PROBE_START_AGE_YEARS.size()]
+		var day_offset: int = GameConfig.PROBE_START_DAY_OFFSETS[i % GameConfig.PROBE_START_DAY_OFFSETS.size()]
+		var initial_age: int = age_years * GameConfig.TICKS_PER_YEAR + day_offset * 12
+		agents.append({
+			"x": tile.x,
+			"y": tile.y,
+			"age_ticks": initial_age,
+			"sex": GameConfig.PROBE_START_SEXES[i % GameConfig.PROBE_START_SEXES.size()],
+		})
+		_loading_bar.value = float(i + 1) / float(total)
+		_loading_count_label.text = Locale.trf(
+			"UI_LOADING_COUNT_FMT",
+			{"current": i + 1, "total": total})
+		await get_tree().process_frame
+
+	return agents
+
+
+func _normalize_startup_mode(startup_mode: String) -> String:
+	if startup_mode == GameConfig.STARTUP_MODE_PROBE:
+		return GameConfig.STARTUP_MODE_PROBE
+	return GameConfig.STARTUP_MODE_SANDBOX
+
+
+func _probe_spawn_anchor(spawn_data: Array) -> Vector2i:
+	if not spawn_data.is_empty():
+		return spawn_data[0].position
+	@warning_ignore("integer_division")
+	return GameConfig.WORLD_SIZE / 2
+
+
+func _get_sorted_walkable_near(center: Vector2i, radius: int) -> Array:
+	var result: Array = _get_walkable_near(center, radius)
+	result.sort_custom(func(left: Vector2i, right: Vector2i) -> bool:
+		var left_dist: int = absi(left.x - center.x) + absi(left.y - center.y)
+		var right_dist: int = absi(right.x - center.x) + absi(right.y - center.y)
+		if left_dist != right_dist:
+			return left_dist < right_dist
+		if left.y != right.y:
+			return left.y < right.y
+		return left.x < right.x
+	)
+	return result
+
+
+func _apply_startup_mode_presentation(startup_mode: String, center: Vector2i) -> void:
+	var is_probe: bool = startup_mode == GameConfig.STARTUP_MODE_PROBE
+	if hud.has_method("set_probe_observation_mode"):
+		hud.call("set_probe_observation_mode", is_probe)
+	if entity_renderer.has_method("set_probe_observation_mode"):
+		entity_renderer.call("set_probe_observation_mode", is_probe)
+	if is_probe:
+		if world_renderer.has_method("set_resource_overlay_visible"):
+			world_renderer.call("set_resource_overlay_visible", false)
+		hud.set_resource_legend_visible(false)
+		entity_renderer.resource_overlay_visible = false
+	else:
+		if world_renderer.has_method("is_resource_overlay_visible"):
+			entity_renderer.resource_overlay_visible = bool(world_renderer.call("is_resource_overlay_visible"))
+		return
+
+	var focus_entity_id: int = _probe_focus_entity_id()
+	if focus_entity_id >= 0:
+		SimulationBus.entity_selected.emit(focus_entity_id)
+		if camera.has_method("focus_entity"):
+			camera.call("focus_entity", focus_entity_id)
+		return
+
+	if camera.has_method("focus_world_tile"):
+		camera.call("focus_world_tile", Vector2(center.x, center.y))
+
+
+func _probe_focus_entity_id() -> int:
+	var summary: Dictionary = sim_engine.get_world_summary()
+	if summary.is_empty():
+		return -1
+	var settlement_summaries: Array = summary.get("settlement_summaries", [])
+	if settlement_summaries.is_empty():
+		return -1
+	var first_summary_raw: Variant = settlement_summaries[0]
+	if not (first_summary_raw is Dictionary):
+		return -1
+	var first_summary: Dictionary = first_summary_raw
+	var settlement_detail_raw: Variant = first_summary.get("settlement", {})
+	if not (settlement_detail_raw is Dictionary):
+		return -1
+	var settlement_detail: Dictionary = settlement_detail_raw
+	var member_ids: Variant = settlement_detail.get("member_ids", [])
+	if not (member_ids is Array) or member_ids.is_empty():
+		return -1
+	return int(member_ids[0])
+
+
+func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array, startup_mode: String) -> Dictionary:
 	var width: int = world_data.width
 	var height: int = world_data.height
 	var tile_count: int = width * height
@@ -616,7 +735,9 @@ func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array) -> Dictio
 			wood[idx] = resource_map.get_wood(x, y)
 			stone[idx] = resource_map.get_stone(x, y)
 			idx += 1
+	var stockpile: Dictionary = _startup_stockpile_for_mode(startup_mode)
 	return {
+		"startup_mode": startup_mode,
 		"world": {
 			"width": width,
 			"height": height,
@@ -633,11 +754,25 @@ func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array) -> Dictio
 			"name": "Settlement 1",
 			"x": center.x,
 			"y": center.y,
-			"stockpile_food": 15.0,
-			"stockpile_wood": 5.0,
-			"stockpile_stone": 2.0,
+			"stockpile_food": float(stockpile.get("food", 0.0)),
+			"stockpile_wood": float(stockpile.get("wood", 0.0)),
+			"stockpile_stone": float(stockpile.get("stone", 0.0)),
 		},
 		"agents": agents,
+	}
+
+
+func _startup_stockpile_for_mode(startup_mode: String) -> Dictionary:
+	if startup_mode == GameConfig.STARTUP_MODE_PROBE:
+		return {
+			"food": GameConfig.PROBE_START_SETTLEMENT_FOOD,
+			"wood": GameConfig.PROBE_START_SETTLEMENT_WOOD,
+			"stone": GameConfig.PROBE_START_SETTLEMENT_STONE,
+		}
+	return {
+		"food": GameConfig.SANDBOX_START_SETTLEMENT_FOOD,
+		"wood": GameConfig.SANDBOX_START_SETTLEMENT_WOOD,
+		"stone": GameConfig.SANDBOX_START_SETTLEMENT_STONE,
 	}
 
 
