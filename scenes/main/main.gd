@@ -660,6 +660,8 @@ func _get_sorted_walkable_near(center: Vector2i, radius: int) -> Array:
 
 func _apply_startup_mode_presentation(startup_mode: String, center: Vector2i) -> void:
 	var is_probe: bool = startup_mode == GameConfig.STARTUP_MODE_PROBE
+	if hud.has_method("set_startup_mode"):
+		hud.call("set_startup_mode", startup_mode)
 	if hud.has_method("set_probe_observation_mode"):
 		hud.call("set_probe_observation_mode", is_probe)
 	if entity_renderer.has_method("set_probe_observation_mode"):
@@ -680,11 +682,11 @@ func _apply_startup_mode_presentation(startup_mode: String, center: Vector2i) ->
 	if focus_entity_id >= 0:
 		SimulationBus.entity_selected.emit(focus_entity_id)
 		if camera.has_method("focus_entity"):
-			camera.call("focus_entity", focus_entity_id)
+			camera.call("focus_entity", focus_entity_id, "startup_focus")
 		return
 
 	if camera.has_method("focus_world_tile"):
-		camera.call("focus_world_tile", Vector2(center.x, center.y))
+		camera.call("focus_world_tile", Vector2(center.x, center.y), "startup_focus")
 
 
 func _probe_focus_entity_id() -> int:
