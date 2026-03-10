@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::ids::TraitId;
+use serde::{Deserialize, Serialize};
 
 /// Active personality/archetype traits
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

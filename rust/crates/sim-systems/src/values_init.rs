@@ -33,10 +33,10 @@ pub fn initialize_values(
     parent_b_values: Option<&Values>,
     rng: &mut impl Rng,
 ) -> Values {
-    let noise_dist = Normal::new(0.0_f64, 0.5)
-        .expect("N(0, 0.5): std-dev is a valid positive constant");
-    let genetic_noise_dist = Normal::new(0.0_f64, 0.1)
-        .expect("N(0, 0.1): std-dev is a valid positive constant");
+    let noise_dist =
+        Normal::new(0.0_f64, 0.5).expect("N(0, 0.5): std-dev is a valid positive constant");
+    let genetic_noise_dist =
+        Normal::new(0.0_f64, 0.1).expect("N(0, 0.1): std-dev is a valid positive constant");
 
     let mut values = Values::default();
 
@@ -86,8 +86,8 @@ pub fn initialize_values(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::SeedableRng;
     use rand::rngs::SmallRng;
+    use rand::SeedableRng;
     use sim_core::enums::ValueType;
 
     fn make_personality(facet_idx: usize, val: f64) -> Personality {
@@ -104,7 +104,11 @@ mod tests {
         let mut rng = SmallRng::seed_from_u64(42);
         let values = initialize_values(&personality, None, None, &mut rng);
         let nonzero = values.values.iter().filter(|v| v.abs() > 0.001).count();
-        assert!(nonzero >= 20, "Expected ≥20 non-zero values, got {}", nonzero);
+        assert!(
+            nonzero >= 20,
+            "Expected ≥20 non-zero values, got {}",
+            nonzero
+        );
     }
 
     #[test]
@@ -116,7 +120,8 @@ mod tests {
             assert!(
                 *v >= -1.0 && *v <= 1.0,
                 "values[{}] = {} is out of [-1.0, 1.0]",
-                i, v
+                i,
+                v
             );
         }
     }
@@ -134,7 +139,11 @@ mod tests {
                 positive += 1;
             }
         }
-        assert!(positive >= 18, "High H_fairness should produce positive FAIRNESS in ≥18/30 trials, got {}", positive);
+        assert!(
+            positive >= 18,
+            "High H_fairness should produce positive FAIRNESS in ≥18/30 trials, got {}",
+            positive
+        );
     }
 
     #[test]

@@ -1,8 +1,8 @@
 use hecs::{Entity, World};
 use sim_core::components::{LlmContent, LlmPending, LlmResult, NarrativeCache};
 use sim_engine::{
-    generate_fallback_content, GameEvent, LlmEvent, LlmPromptVariant, LlmRequestMeta,
-    SimResources, SimSystem,
+    generate_fallback_content, GameEvent, LlmEvent, LlmPromptVariant, LlmRequestMeta, SimResources,
+    SimSystem,
 };
 
 /// Runtime system that resolves expired in-flight LLM requests with deterministic fallback text.
@@ -71,12 +71,14 @@ impl SimSystem for LlmTimeoutRuntimeSystem {
                 request.entity.to_bits().get(),
                 request.age_ticks
             ));
-            let meta = resources.take_llm_request_meta(request.request_id).unwrap_or(LlmRequestMeta {
-                request_type: request.request_type,
-                variant: LlmPromptVariant::Narrative,
-                entity_name: request.entity_name.clone(),
-                recent_event_type: None,
-            });
+            let meta = resources
+                .take_llm_request_meta(request.request_id)
+                .unwrap_or(LlmRequestMeta {
+                    request_type: request.request_type,
+                    variant: LlmPromptVariant::Narrative,
+                    entity_name: request.entity_name.clone(),
+                    recent_event_type: None,
+                });
             apply_timeout_result(
                 world,
                 tick,

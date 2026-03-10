@@ -4,10 +4,10 @@
 //! syllabic (Markov-style) generation or pre-built name pools.
 //! Tracks used names per settlement to avoid duplicates.
 
-use std::collections::{HashMap, HashSet};
+use crate::NameCulture;
 use rand::Rng;
 use sim_core::enums::Sex;
-use crate::NameCulture;
+use std::collections::{HashMap, HashSet};
 
 // Minimal fallback pools used when no cultures are loaded at all.
 const FALLBACK_MALE: &[&str] = &["Oak", "Ash", "Elm", "Birch", "Cedar"];
@@ -177,7 +177,11 @@ impl NameGenerator {
             .map(|sc| (sc.min as usize, sc.max as usize))
             .unwrap_or((2, 3));
 
-        let count = if min >= max { min } else { rng.gen_range(min..=max) };
+        let count = if min >= max {
+            min
+        } else {
+            rng.gen_range(min..=max)
+        };
 
         let mut result = String::new();
 
@@ -277,9 +281,9 @@ fn capitalize_first(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::SeedableRng;
-    use rand::rngs::SmallRng;
     use crate::load_name_cultures;
+    use rand::rngs::SmallRng;
+    use rand::SeedableRng;
 
     fn data_dir() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -294,13 +298,19 @@ mod tests {
 
     fn load_cultures() -> HashMap<String, NameCulture> {
         let dir = data_dir();
-        if dir.exists() { load_name_cultures(&dir) } else { HashMap::new() }
+        if dir.exists() {
+            load_name_cultures(&dir)
+        } else {
+            HashMap::new()
+        }
     }
 
     #[test]
     fn generates_20_unique_names() {
         let cultures = load_cultures();
-        if cultures.is_empty() { return; }
+        if cultures.is_empty() {
+            return;
+        }
 
         let mut gen = NameGenerator::new(cultures);
         let mut rng = SmallRng::seed_from_u64(42);
@@ -309,14 +319,20 @@ mod tests {
         for _ in 0..20 {
             let name = gen.generate_name(Sex::Male, "proto_nature", 1, None, &mut rng);
             assert!(!name.is_empty(), "Name should not be empty");
-            assert!(names.insert(name.clone()), "Duplicate name generated: '{}'", name);
+            assert!(
+                names.insert(name.clone()),
+                "Duplicate name generated: '{}'",
+                name
+            );
         }
     }
 
     #[test]
     fn names_start_with_uppercase() {
         let cultures = load_cultures();
-        if cultures.is_empty() { return; }
+        if cultures.is_empty() {
+            return;
+        }
 
         let mut gen = NameGenerator::new(cultures);
         let mut rng = SmallRng::seed_from_u64(99);
@@ -343,14 +359,19 @@ mod tests {
     #[test]
     fn syllabic_culture_generates_nonempty_names() {
         let cultures = load_cultures();
-        if !cultures.contains_key("proto_syllabic") { return; }
+        if !cultures.contains_key("proto_syllabic") {
+            return;
+        }
 
         let mut gen = NameGenerator::new(cultures);
         let mut rng = SmallRng::seed_from_u64(7);
 
         for _ in 0..10 {
             let name = gen.generate_name(Sex::Female, "proto_syllabic", 3, None, &mut rng);
-            assert!(!name.is_empty(), "Syllabic culture should produce non-empty names");
+            assert!(
+                !name.is_empty(),
+                "Syllabic culture should produce non-empty names"
+            );
         }
     }
 
@@ -366,7 +387,9 @@ mod tests {
     #[test]
     fn different_settlements_can_have_same_name() {
         let cultures = load_cultures();
-        if cultures.is_empty() { return; }
+        if cultures.is_empty() {
+            return;
+        }
 
         let mut gen = NameGenerator::new(cultures);
         // Manually register "Oak" in settlement 1

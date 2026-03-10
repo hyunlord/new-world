@@ -72,7 +72,10 @@ fn ron_registry_resolves_tag_threshold_queries() {
         .expect("missing stone_knife recipe");
 
     let matches = registry.find_materials_by_tag(&recipe.inputs[0]);
-    let ids: Vec<&str> = matches.iter().map(|material| material.id.as_str()).collect();
+    let ids: Vec<&str> = matches
+        .iter()
+        .map(|material| material.id.as_str())
+        .collect();
 
     assert!(ids.contains(&"flint"));
     assert!(ids.contains(&"obsidian"));
@@ -91,7 +94,10 @@ fn ron_registry_loads_authoritative_crate_fixture() {
     assert!(!registry.structures.is_empty(), "structures empty");
     assert!(!registry.actions.is_empty(), "actions empty");
     assert!(registry.world_rules.is_some(), "world rules missing");
-    assert!(registry.temperament_rules.is_some(), "temperament rules missing");
+    assert!(
+        registry.temperament_rules.is_some(),
+        "temperament rules missing"
+    );
 }
 
 #[test]
@@ -115,18 +121,9 @@ fn ron_registry_reports_validation_errors_for_unknown_recipe_tags() {
     ),
 ]"#,
     );
-    write_ron_file(
-        &temp.path.join("furniture").join("basic.ron"),
-        "[]",
-    );
-    write_ron_file(
-        &temp.path.join("structures").join("basic.ron"),
-        "[]",
-    );
-    write_ron_file(
-        &temp.path.join("actions").join("basic.ron"),
-        "[]",
-    );
+    write_ron_file(&temp.path.join("furniture").join("basic.ron"), "[]");
+    write_ron_file(&temp.path.join("structures").join("basic.ron"), "[]");
+    write_ron_file(&temp.path.join("actions").join("basic.ron"), "[]");
     write_ron_file(
         &temp.path.join("recipes").join("invalid.ron"),
         r#"[

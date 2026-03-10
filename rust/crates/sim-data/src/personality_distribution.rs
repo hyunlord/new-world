@@ -81,15 +81,14 @@ pub fn load_personality_distribution(base_dir: &Path) -> DataResult<PersonalityD
     let mut maturation: HashMap<String, MaturationEntry> = HashMap::new();
     for (k, v) in raw.maturation {
         if v.is_object() {
-            let entry: MaturationEntry = serde_json::from_value(v).map_err(|e| {
-                crate::DataError::Json {
+            let entry: MaturationEntry =
+                serde_json::from_value(v).map_err(|e| crate::DataError::Json {
                     path: base_dir
                         .join("species/human/personality/distribution.json")
                         .display()
                         .to_string(),
                     source: e,
-                }
-            })?;
+                })?;
             maturation.insert(k, entry);
         }
     }

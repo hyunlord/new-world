@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-use crate::ids::{SettlementId, EntityId, BuildingId, TechId};
 use crate::enums::TechState;
+use crate::ids::{BuildingId, EntityId, SettlementId, TechId};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Settlement data

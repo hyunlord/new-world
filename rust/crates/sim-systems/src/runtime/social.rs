@@ -4,23 +4,22 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
+use sim_core::scales::NativeStress;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
-use sim_core::scales::{NativeStress};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 /// Rust runtime system for reputation decay/event application.
 ///
@@ -44,7 +43,10 @@ impl ReputationRuntimeSystem {
 #[inline]
 fn reputation_domain_code(action: ActionType) -> i32 {
     match action {
-        ActionType::Socialize | ActionType::Teach | ActionType::Learn | ActionType::VisitPartner => 1, // sociability
+        ActionType::Socialize
+        | ActionType::Teach
+        | ActionType::Learn
+        | ActionType::VisitPartner => 1, // sociability
         ActionType::Build
         | ActionType::Craft
         | ActionType::Forage
@@ -54,9 +56,9 @@ fn reputation_domain_code(action: ActionType) -> i32 {
         | ActionType::GatherStone
         | ActionType::GatherHerbs
         | ActionType::DeliverToStockpile => 2, // competence
-        ActionType::Fight => 3, // dominance
+        ActionType::Fight => 3,             // dominance
         ActionType::TakeFromStockpile => 4, // generosity
-        _ => 0,                 // morality
+        _ => 0,                             // morality
     }
 }
 
@@ -110,7 +112,9 @@ impl SimSystem for ReputationRuntimeSystem {
             Option<&Behavior>,
             Option<&Values>,
         )>();
-        for (_, (social, emotion_opt, stress_opt, needs_opt, behavior_opt, values_opt)) in &mut query {
+        for (_, (social, emotion_opt, stress_opt, needs_opt, behavior_opt, values_opt)) in
+            &mut query
+        {
             let stress_level = stress_opt
                 .map(|stress| stress.level as f32)
                 .unwrap_or(0.0)
@@ -148,7 +152,10 @@ impl SimSystem for ReputationRuntimeSystem {
                 .map(|behavior| behavior.current_action)
                 .unwrap_or(ActionType::Idle);
             let action_signal = match action {
-                ActionType::Socialize | ActionType::Teach | ActionType::Learn | ActionType::VisitPartner => 0.10,
+                ActionType::Socialize
+                | ActionType::Teach
+                | ActionType::Learn
+                | ActionType::VisitPartner => 0.10,
                 ActionType::Fight | ActionType::MentalBreak | ActionType::Flee => -0.15,
                 ActionType::Build
                 | ActionType::Craft
@@ -161,9 +168,9 @@ impl SimSystem for ReputationRuntimeSystem {
                 _ => 0.0,
             };
 
-            let valence =
-                (positive_emotion - negative_emotion + action_signal - stress_level * 0.25)
-                    .clamp(-1.0, 1.0);
+            let valence = (positive_emotion - negative_emotion + action_signal
+                - stress_level * 0.25)
+                .clamp(-1.0, 1.0);
             let magnitude = (0.25
                 + stress_level * 0.35
                 + (1.0 - social_need) * 0.20
@@ -184,10 +191,16 @@ impl SimSystem for ReputationRuntimeSystem {
                 neg_bias,
             );
 
-            let decayed_local =
-                body::reputation_decay_value(reputation_to_signed(social.reputation_local), pos_decay, neg_decay);
-            let decayed_regional =
-                body::reputation_decay_value(reputation_to_signed(social.reputation_regional), pos_decay, neg_decay);
+            let decayed_local = body::reputation_decay_value(
+                reputation_to_signed(social.reputation_local),
+                pos_decay,
+                neg_decay,
+            );
+            let decayed_regional = body::reputation_decay_value(
+                reputation_to_signed(social.reputation_regional),
+                pos_decay,
+                neg_decay,
+            );
             let next_local = (decayed_local + event_delta).clamp(-1.0, 1.0);
             let next_regional = (decayed_regional + event_delta * 0.5).clamp(-1.0, 1.0);
 
@@ -334,15 +347,14 @@ impl SimSystem for SocialEventRuntimeSystem {
                     body::social_proposal_accept_prob(romantic_interest, compatibility);
                 let interaction = (social_drive * 0.5 + proposal_prob * 0.5).clamp(0.0, 1.0);
 
-                let mut affinity_delta = ((interaction - 0.35) * 6.0
-                    - stress_level * 1.5
+                let mut affinity_delta = ((interaction - 0.35) * 6.0 - stress_level * 1.5
                     + (social_need - 0.5) * 1.2)
                     * attach_mult;
                 if stress_level > 0.7 && agreeableness < 0.4 {
                     affinity_delta -= 1.5;
                 }
-                let trust_delta =
-                    (interaction * 0.04 + agreeableness * 0.02 - stress_level * 0.03).clamp(-0.06, 0.06);
+                let trust_delta = (interaction * 0.04 + agreeableness * 0.02 - stress_level * 0.03)
+                    .clamp(-0.06, 0.06);
                 let familiarity_delta = (0.01 + interaction * 0.02).clamp(0.0, 0.04);
 
                 edge.affinity = ((edge.affinity as f32 + affinity_delta).clamp(0.0, 100.0)) as f64;
@@ -426,7 +438,8 @@ impl SimSystem for SocialEventRuntimeSystem {
                     bridge_count += 1.0;
                 }
             }
-            let rep_score = ((social.reputation_local as f32 + social.reputation_regional as f32) * 0.5)
+            let rep_score = ((social.reputation_local as f32 + social.reputation_regional as f32)
+                * 0.5)
                 .clamp(0.0, 1.0);
             social.social_capital = body::network_social_capital_norm(
                 strong_count,
@@ -466,7 +479,9 @@ impl EconomicTendencyRuntimeSystem {
 
 #[inline]
 fn value_or_default(values_opt: Option<&Values>, key: ValueType) -> f32 {
-    values_opt.map(|values| values.get(key) as f32).unwrap_or(0.0)
+    values_opt
+        .map(|values| values.get(key) as f32)
+        .unwrap_or(0.0)
 }
 
 impl SimSystem for EconomicTendencyRuntimeSystem {
@@ -598,7 +613,8 @@ impl SimSystem for ValueRuntimeSystem {
             Option<&Stress>,
             Option<&Social>,
         )>();
-        for (_, (values, age_opt, personality_opt, needs_opt, stress_opt, social_opt)) in &mut query {
+        for (_, (values, age_opt, personality_opt, needs_opt, stress_opt, social_opt)) in &mut query
+        {
             let age_years = age_opt.map(|age| age.years as f32).unwrap_or(25.0).max(0.0);
             let plasticity = body::value_plasticity(age_years).clamp(0.10, 1.0);
 
@@ -640,7 +656,8 @@ impl SimSystem for ValueRuntimeSystem {
             let target_family = to_bipolar((belonging + h) * 0.5);
             let target_friendship = to_bipolar((belonging + x) * 0.5);
             let target_law = to_bipolar((safety + h) * 0.5);
-            let target_power = to_bipolar((pressure + (1.0 - a) * 0.5 + (1.0 - h) * 0.5).clamp(0.0, 1.0));
+            let target_power =
+                to_bipolar((pressure + (1.0 - a) * 0.5 + (1.0 - h) * 0.5).clamp(0.0, 1.0));
             let target_competition = to_bipolar(((pressure + x) * 0.5).clamp(0.0, 1.0));
             let target_peace = to_bipolar(((1.0 - stress_level) * 0.6 + a * 0.4).clamp(0.0, 1.0));
 
@@ -709,7 +726,10 @@ impl SimSystem for NetworkRuntimeSystem {
                         RelationType::CloseFriend | RelationType::Intimate | RelationType::Spouse
                     );
                 let weak_tie = affinity >= config::NETWORK_TIE_WEAK_MIN as f32
-                    || matches!(edge.relation_type, RelationType::Friend | RelationType::Acquaintance);
+                    || matches!(
+                        edge.relation_type,
+                        RelationType::Friend | RelationType::Acquaintance
+                    );
 
                 if strong_tie {
                     if edge.is_bridge {
@@ -726,9 +746,9 @@ impl SimSystem for NetworkRuntimeSystem {
                 }
             }
 
-            let rep_score =
-                ((social.reputation_local as f32 + social.reputation_regional as f32) * 0.5)
-                    .clamp(0.0, 1.0);
+            let rep_score = ((social.reputation_local as f32 + social.reputation_regional as f32)
+                * 0.5)
+                .clamp(0.0, 1.0);
             social.social_capital = body::network_social_capital_norm(
                 strong_count,
                 weak_count,
@@ -1083,21 +1103,20 @@ impl SimSystem for StratificationMonitorRuntimeSystem {
             let pop = members.len() as f32;
             let dunbar_factor = (config::LEVELING_DUNBAR_N as f32 / pop.max(1.0)).min(1.0);
             let mobility_factor = (1.0 - config::LEVELING_SEDENTISM_DEFAULT as f32).clamp(0.0, 1.0);
-            let need_30days = pop
-                * config::HUNGER_DECAY_RATE as f32
-                * config::TICKS_PER_DAY as f32
-                * 30.0;
+            let need_30days =
+                pop * config::HUNGER_DECAY_RATE as f32 * config::TICKS_PER_DAY as f32 * 30.0;
             let surplus_ratio = (settlement.stockpile_food as f32) / need_30days.max(1.0);
-            let leveling = (dunbar_factor * mobility_factor * (1.0 / (1.0 + surplus_ratio)))
-                .clamp(0.0, 1.0);
+            let leveling =
+                (dunbar_factor * mobility_factor * (1.0 / (1.0 + surplus_ratio))).clamp(0.0, 1.0);
             settlement.leveling_effectiveness = leveling as f64;
-            settlement.stratification_phase = if gini < config::GINI_UNREST_THRESHOLD as f32 && leveling > 0.5 {
-                "egalitarian".to_string()
-            } else if gini < config::GINI_ENTRENCHED_THRESHOLD as f32 && leveling > 0.2 {
-                "transitional".to_string()
-            } else {
-                "stratified".to_string()
-            };
+            settlement.stratification_phase =
+                if gini < config::GINI_UNREST_THRESHOLD as f32 && leveling > 0.5 {
+                    "egalitarian".to_string()
+                } else if gini < config::GINI_ENTRENCHED_THRESHOLD as f32 && leveling > 0.2 {
+                    "transitional".to_string()
+                } else {
+                    "stratified".to_string()
+                };
 
             for member in members {
                 let entity_id = EntityId(member.entity.id() as u64);
@@ -1124,7 +1143,9 @@ impl SimSystem for StratificationMonitorRuntimeSystem {
                     config::STATUS_W_COMPETENCE as f32,
                 );
                 let class = stratification_social_class(status_score, is_leader);
-                if let Ok(mut one) = world.query_one::<(&mut Social, Option<&mut Economic>)>(member.entity) {
+                if let Ok(mut one) =
+                    world.query_one::<(&mut Social, Option<&mut Economic>)>(member.entity)
+                {
                     if let Some((social, economic_opt)) = one.get() {
                         social.social_class = class;
                         if let Some(economic) = economic_opt {
@@ -1242,10 +1263,12 @@ impl SimSystem for FamilyRuntimeSystem {
                     }
                 }
 
-                resources.event_bus.emit(sim_engine::GameEvent::FamilyFormed {
-                    entity_a: male_id,
-                    entity_b: female_id,
-                });
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::FamilyFormed {
+                        entity_a: male_id,
+                        entity_b: female_id,
+                    });
             }
         }
     }
@@ -1296,7 +1319,8 @@ impl SimSystem for LeaderRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
-        let mut candidates_by_settlement: HashMap<SettlementId, Vec<LeaderCandidateSnapshot>> = HashMap::new();
+        let mut candidates_by_settlement: HashMap<SettlementId, Vec<LeaderCandidateSnapshot>> =
+            HashMap::new();
         let mut alive_settlement_by_entity: HashMap<EntityId, SettlementId> = HashMap::new();
 
         let mut query = world.query::<(
@@ -1307,7 +1331,9 @@ impl SimSystem for LeaderRuntimeSystem {
             Option<&Intelligence>,
             Option<&BodyComponent>,
         )>();
-        for (entity, (age, identity, personality_opt, social_opt, intelligence_opt, body_opt)) in &mut query {
+        for (entity, (age, identity, personality_opt, social_opt, intelligence_opt, body_opt)) in
+            &mut query
+        {
             if !age.alive {
                 continue;
             }
@@ -1328,17 +1354,25 @@ impl SimSystem for LeaderRuntimeSystem {
                 .clamp(0.0, 1.0);
             let wisdom = intelligence_opt
                 .map(|intelligence| intelligence.g_factor as f32)
-                .or_else(|| personality_opt.map(|personality| personality.axis(HexacoAxis::O) as f32))
+                .or_else(|| {
+                    personality_opt.map(|personality| personality.axis(HexacoAxis::O) as f32)
+                })
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0);
             let trustworthiness = social_opt
                 .map(|social| social.reputation_local as f32)
-                .or_else(|| personality_opt.map(|personality| personality.axis(HexacoAxis::H) as f32))
+                .or_else(|| {
+                    personality_opt.map(|personality| personality.axis(HexacoAxis::H) as f32)
+                })
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0);
             let intimidation = body_opt
                 .map(|body| body.strength_norm())
-                .or_else(|| personality_opt.map(|personality| (1.0 - personality.axis(HexacoAxis::A) as f32).clamp(0.0, 1.0)))
+                .or_else(|| {
+                    personality_opt.map(|personality| {
+                        (1.0 - personality.axis(HexacoAxis::A) as f32).clamp(0.0, 1.0)
+                    })
+                })
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0);
             let social_capital = social_opt
@@ -1385,8 +1419,9 @@ impl SimSystem for LeaderRuntimeSystem {
                     settlement.leader_reelection_countdown = 0;
                     needs_election = true;
                 } else {
-                    settlement.leader_reelection_countdown =
-                        settlement.leader_reelection_countdown.saturating_sub(decrement);
+                    settlement.leader_reelection_countdown = settlement
+                        .leader_reelection_countdown
+                        .saturating_sub(decrement);
                     if settlement.leader_reelection_countdown == 0 {
                         needs_election = true;
                     }
@@ -1508,14 +1543,19 @@ impl SimSystem for SettlementCultureRuntimeSystem {
         {
             let mut query = world.query::<(&Identity, &Values, &Age)>();
             for (entity, (identity, values, age)) in &mut query {
-                let Some(sid) = identity.settlement_id else { continue };
+                let Some(sid) = identity.settlement_id else {
+                    continue;
+                };
                 let eid = EntityId(entity.id() as u64);
-                snaps.insert(eid, MemberSnap {
-                    entity,
-                    values: values.values,
-                    age_years: age.years as f32,
-                    settlement_id: sid,
-                });
+                snaps.insert(
+                    eid,
+                    MemberSnap {
+                        entity,
+                        values: values.values,
+                        age_years: age.years as f32,
+                        settlement_id: sid,
+                    },
+                );
             }
         }
 
@@ -1567,7 +1607,9 @@ impl SimSystem for SettlementCultureRuntimeSystem {
 
         let mut deltas: Vec<(Entity, ConformityDelta)> = Vec::new();
         for snap in snaps.values() {
-            let Some(culture) = culture_map.get(&snap.settlement_id) else { continue };
+            let Some(culture) = culture_map.get(&snap.settlement_id) else {
+                continue;
+            };
             let plasticity = body::value_plasticity(snap.age_years).clamp(0.10, 1.0);
             let enforcement_strength: f32 = 1.0; // default, settlement has no field
             let mut total_deviation: f32 = 0.0;

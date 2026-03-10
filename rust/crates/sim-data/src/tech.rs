@@ -1,8 +1,8 @@
+use crate::error::DataResult;
+use crate::loader::{list_json_files_recursive, load_json};
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::Path;
-use serde::Deserialize;
-use crate::error::DataResult;
-use crate::loader::{load_json, list_json_files_recursive};
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(untagged)]

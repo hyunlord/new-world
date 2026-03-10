@@ -1,3 +1,5 @@
+use crate::engine::SimResources;
+use crate::events::GameEvent;
 /// Command — deferred world mutation queue.
 ///
 /// Systems must not mutate the ECS world or emit events in ways that would
@@ -11,8 +13,6 @@
 /// (InsertComponent, RemoveComponent) require type-erased bundles and are
 /// deferred to Phase R-1 when concrete systems need them.
 use hecs::{Entity, World};
-use crate::engine::SimResources;
-use crate::events::GameEvent;
 use log::debug;
 
 // ── Command ───────────────────────────────────────────────────────────────────
@@ -24,17 +24,13 @@ pub enum Command {
     ///
     /// Safe to emit even if the entity is already dead — `despawn` is
     /// idempotent when the entity does not exist.
-    DespawnEntity {
-        entity: Entity,
-    },
+    DespawnEntity { entity: Entity },
 
     /// Enqueue an event into the event bus.
     ///
     /// Events pushed here are delivered on the *same* tick's flush pass,
     /// indistinguishable from events emitted directly via `resources.event_bus.emit()`.
-    EmitEvent {
-        event: GameEvent,
-    },
+    EmitEvent { event: GameEvent },
 }
 
 // ── CommandQueue ──────────────────────────────────────────────────────────────
@@ -62,7 +58,9 @@ pub struct CommandQueue {
 
 impl CommandQueue {
     pub fn new() -> Self {
-        Self { pending: Vec::with_capacity(64) }
+        Self {
+            pending: Vec::with_capacity(64),
+        }
     }
 
     /// Push a command to be applied at the end of the tick.
@@ -120,11 +118,11 @@ impl CommandQueue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sim_core::ids::EntityId;
-    use sim_core::config::GameConfig;
-    use sim_core::{GameCalendar, WorldMap};
     use crate::engine::SimResources;
     use crate::events::GameEvent;
+    use sim_core::config::GameConfig;
+    use sim_core::ids::EntityId;
+    use sim_core::{GameCalendar, WorldMap};
 
     fn make_resources() -> SimResources {
         let config = GameConfig::default();
@@ -166,7 +164,9 @@ mod tests {
         let mut resources = make_resources();
 
         let mut queue = CommandQueue::new();
-        queue.emit(GameEvent::EntitySpawned { entity_id: EntityId(42) });
+        queue.emit(GameEvent::EntitySpawned {
+            entity_id: EntityId(42),
+        });
         queue.flush(&mut world, &mut resources);
 
         // Event is in the bus, pending flush

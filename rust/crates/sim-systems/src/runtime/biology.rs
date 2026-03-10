@@ -3,8 +3,6 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
     LlmCapable, Memory, MemoryEntry, NarrativeCache, Needs, Personality, Position, Skills, Social,
@@ -12,14 +10,15 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 /// Rust runtime system for child hunger feeding from settlement stockpiles.
 ///
@@ -94,11 +93,7 @@ impl SimSystem for ChildcareRuntimeSystem {
                 candidates.push((entity, settlement_id, hunger, feed_amount));
             }
         }
-        candidates.sort_by(|left, right| {
-            left.2
-                .partial_cmp(&right.2)
-                .unwrap_or(Ordering::Equal)
-        });
+        candidates.sort_by(|left, right| left.2.partial_cmp(&right.2).unwrap_or(Ordering::Equal));
 
         for (entity, settlement_id, _hunger, feed_amount) in candidates {
             let Some(settlement) = resources.settlements.get_mut(&settlement_id) else {
@@ -374,7 +369,9 @@ impl SimSystem for IntergenerationalRuntimeSystem {
                     IntergenParentProfile {
                         load: (stress.allostatic_load as f32).clamp(0.0, 1.0),
                         scar_index: intergen_scar_index(memory_opt),
-                        sex: identity_opt.map(|identity| identity.sex).unwrap_or(Sex::Male),
+                        sex: identity_opt
+                            .map(|identity| identity.sex)
+                            .unwrap_or(Sex::Male),
                     },
                 );
             }
@@ -406,8 +403,10 @@ impl SimSystem for IntergenerationalRuntimeSystem {
                 if (next_load - current_load).abs() < 1e-6 {
                     continue;
                 }
-                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
-                let next_level = ((stress.level as f32) / hpa_sensitivity.max(0.001)).clamp(0.0, 1.0);
+                let hpa_sensitivity =
+                    body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let next_level =
+                    ((stress.level as f32) / hpa_sensitivity.max(0.001)).clamp(0.0, 1.0);
                 parent_updates.push((entity, next_load, next_level, stress.level as f32));
                 if let Some(profile) = parent_profiles.get_mut(&EntityId(entity.id() as u64)) {
                     profile.load = next_load;
@@ -421,10 +420,12 @@ impl SimSystem for IntergenerationalRuntimeSystem {
                 stress.level = next_level as f64;
                 stress.recalculate_state();
                 if (next_level - previous_level).abs() >= 1e-6 {
-                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
-                        entity_id: EntityId(entity.id() as u64),
-                        stress: next_level as f64,
-                    });
+                    resources
+                        .event_bus
+                        .emit(sim_engine::GameEvent::StressChanged {
+                            entity_id: EntityId(entity.id() as u64),
+                            stress: next_level as f64,
+                        });
                 }
             }
         }
@@ -492,9 +493,12 @@ impl SimSystem for IntergenerationalRuntimeSystem {
                 let inherited_load = out[0].clamp(0.0, 1.0);
                 let current_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
                 let next_load = (current_load * 0.4 + inherited_load * 0.6).clamp(0.0, 1.0);
-                let hpa_sensitivity = body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
+                let hpa_sensitivity =
+                    body::intergen_hpa_sensitivity(next_load, INTERGEN_HPA_LOAD_WEIGHT);
                 let next_level = ((stress.level as f32) * hpa_sensitivity).clamp(0.0, 1.0);
-                if (next_load - current_load).abs() < 1e-6 && (next_level - stress.level as f32).abs() < 1e-6 {
+                if (next_load - current_load).abs() < 1e-6
+                    && (next_level - stress.level as f32).abs() < 1e-6
+                {
                     continue;
                 }
                 child_updates.push((entity, next_load, next_level, stress.level as f32));
@@ -507,10 +511,12 @@ impl SimSystem for IntergenerationalRuntimeSystem {
                 stress.level = next_level as f64;
                 stress.recalculate_state();
                 if (next_level - previous_level).abs() >= 1e-6 {
-                    resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
-                        entity_id: EntityId(entity.id() as u64),
-                        stress: next_level as f64,
-                    });
+                    resources
+                        .event_bus
+                        .emit(sim_engine::GameEvent::StressChanged {
+                            entity_id: EntityId(entity.id() as u64),
+                            stress: next_level as f64,
+                        });
                 }
             }
         }
@@ -572,12 +578,18 @@ impl SimSystem for ParentingRuntimeSystem {
 
                 let current_level = (stress.level as f32).clamp(0.0, 1.0);
                 let epigenetic_load = (stress.allostatic_load as f32).clamp(0.0, 1.0);
-                let adjusted_gain =
-                    body::parenting_hpa_adjusted_stress_gain(1.0, epigenetic_load, INTERGEN_HPA_LOAD_WEIGHT)
-                        .max(0.001);
+                let adjusted_gain = body::parenting_hpa_adjusted_stress_gain(
+                    1.0,
+                    epigenetic_load,
+                    INTERGEN_HPA_LOAD_WEIGHT,
+                )
+                .max(0.001);
                 let next_level = (current_level / adjusted_gain).clamp(0.0, 1.0);
                 parent_updates.push((entity, next_level, current_level));
-                parent_signal_by_entity.insert(EntityId(entity.id() as u64), (1.0 - next_level).clamp(0.0, 1.0));
+                parent_signal_by_entity.insert(
+                    EntityId(entity.id() as u64),
+                    (1.0 - next_level).clamp(0.0, 1.0),
+                );
             }
         }
 
@@ -588,10 +600,12 @@ impl SimSystem for ParentingRuntimeSystem {
             if let Ok(mut stress) = world.get::<&mut Stress>(entity) {
                 stress.level = next_level as f64;
                 stress.recalculate_state();
-                resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
-                    entity_id: EntityId(entity.id() as u64),
-                    stress: next_level as f64,
-                });
+                resources
+                    .event_bus
+                    .emit(sim_engine::GameEvent::StressChanged {
+                        entity_id: EntityId(entity.id() as u64),
+                        stress: next_level as f64,
+                    });
             }
         }
 
@@ -649,16 +663,20 @@ impl SimSystem for ParentingRuntimeSystem {
             let next_level = (previous_level + stress_delta).clamp(0.0, 1.0);
             let next_allostatic =
                 ((stress.allostatic_load as f32) + stress_delta * 0.5).clamp(0.0, 1.0);
-            if (next_level - previous_level).abs() < 1e-6 && (next_allostatic - stress.allostatic_load as f32).abs() < 1e-6 {
+            if (next_level - previous_level).abs() < 1e-6
+                && (next_allostatic - stress.allostatic_load as f32).abs() < 1e-6
+            {
                 continue;
             }
             stress.level = next_level as f64;
             stress.allostatic_load = next_allostatic as f64;
             stress.recalculate_state();
-            resources.event_bus.emit(sim_engine::GameEvent::StressChanged {
-                entity_id: EntityId(entity.id() as u64),
-                stress: next_level as f64,
-            });
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::StressChanged {
+                    entity_id: EntityId(entity.id() as u64),
+                    stress: next_level as f64,
+                });
         }
     }
 }

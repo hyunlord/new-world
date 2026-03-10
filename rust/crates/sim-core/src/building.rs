@@ -1,11 +1,11 @@
-use serde::{Deserialize, Serialize};
 use crate::ids::{BuildingId, SettlementId};
+use serde::{Deserialize, Serialize};
 
 /// A constructed building in a settlement
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Building {
     pub id: BuildingId,
-    pub building_type: String,  // e.g., "stockpile", "shelter", "campfire"
+    pub building_type: String, // e.g., "stockpile", "shelter", "campfire"
     pub settlement_id: SettlementId,
     /// Tile position
     pub x: i32,

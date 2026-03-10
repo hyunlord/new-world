@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-use std::path::Path;
-use serde::Deserialize;
 use crate::error::DataResult;
 use crate::loader::load_json;
+use serde::Deserialize;
+use std::collections::HashMap;
+use std::path::Path;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct EmotionPreset {

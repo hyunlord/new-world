@@ -19,13 +19,7 @@ pub struct DataLoadError {
 impl fmt::Display for DataLoadError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.line {
-            Some(line) => write!(
-                f,
-                "{}:{}: {}",
-                self.file.display(),
-                line,
-                self.message
-            ),
+            Some(line) => write!(f, "{}:{}: {}", self.file.display(), line, self.message),
             None => write!(f, "{}: {}", self.file.display(), self.message),
         }
     }
@@ -101,7 +95,11 @@ pub fn load_ron_file<T: DeserializeOwned>(path: &Path) -> Result<T, DataLoadErro
     serde_path_to_error::deserialize(&mut deserializer).map_err(|error| DataLoadError {
         file: path.to_path_buf(),
         line: None,
-        message: format!("deserialization error at {}: {}", error.path(), error.inner()),
+        message: format!(
+            "deserialization error at {}: {}",
+            error.path(),
+            error.inner()
+        ),
     })
 }
 
@@ -193,11 +191,8 @@ mod tests {
     #[test]
     fn load_ron_directory_reads_sorted_files() {
         let temp = TempDirGuard::new("load_ron_directory");
-        fs::write(
-            temp.path.join("b.ron"),
-            "[LoaderExample(id: \"second\")]",
-        )
-        .expect("failed to write b.ron");
+        fs::write(temp.path.join("b.ron"), "[LoaderExample(id: \"second\")]")
+            .expect("failed to write b.ron");
         fs::write(temp.path.join("a.ron"), "[LoaderExample(id: \"first\")]")
             .expect("failed to write a.ron");
 
@@ -221,8 +216,7 @@ mod tests {
     fn load_ron_file_reports_parse_errors() {
         let temp = TempDirGuard::new("load_ron_file_error");
         let file = temp.path.join("broken.ron");
-        fs::write(&file, "[LoaderExample(id: \"broken\")")
-            .expect("failed to write broken.ron");
+        fs::write(&file, "[LoaderExample(id: \"broken\")").expect("failed to write broken.ron");
 
         let error = load_ron_file::<Vec<LoaderExample>>(&file).expect_err("expected parse error");
         assert!(!error.message.is_empty());

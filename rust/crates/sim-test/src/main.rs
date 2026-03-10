@@ -13,51 +13,86 @@ use sim_bridge::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode,
 };
+use sim_core::components::LlmRole;
 use sim_core::components::{
     Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmRequestType,
     Memory, Needs, Personality, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config::GameConfig;
-use sim_core::components::LlmRole;
-use sim_systems::entity_spawner;
 use sim_core::ids::SettlementId;
 use sim_core::{GameCalendar, Settlement, WorldMap};
 use sim_engine::{
     generate_fallback_content, LlmPromptVariant, LlmRequest, LlmRuntime, SimEngine, SimResources,
 };
+use sim_systems::entity_spawner;
 use sim_systems::runtime::{
     // biology
-    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
-    ChildcareRuntimeSystem, IntergenerationalRuntimeSystem, MortalityRuntimeSystem,
-    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem, PopulationRuntimeSystem,
+    AceTrackerRuntimeSystem,
+    AgeRuntimeSystem,
+    AttachmentRuntimeSystem,
     // cognition
-    BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem,
+    BehaviorRuntimeSystem,
     // economy
-    BuildingEffectRuntimeSystem, ConstructionRuntimeSystem, GatheringRuntimeSystem,
-    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
+    BuildingEffectRuntimeSystem,
     // needs
-    ChildStressProcessorRuntimeSystem, NeedsRuntimeSystem, UpperNeedsRuntimeSystem,
-    // llm
-    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
-    // psychology
-    ContagionRuntimeSystem, CopingRuntimeSystem, EmotionRuntimeSystem,
-    MentalBreakRuntimeSystem, MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem,
-    StressRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
-    TraumaScarRuntimeSystem,
+    ChildStressProcessorRuntimeSystem,
+    ChildcareRuntimeSystem,
     // record
-    ChronicleRuntimeSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,
-    StatsRecorderRuntimeSystem,
+    ChronicleRuntimeSystem,
+    ConstructionRuntimeSystem,
+    // psychology
+    ContagionRuntimeSystem,
+    CopingRuntimeSystem,
     // social
-    EconomicTendencyRuntimeSystem, FamilyRuntimeSystem, LeaderRuntimeSystem,
-    NetworkRuntimeSystem, OccupationRuntimeSystem, ReputationRuntimeSystem,
-    SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
-    StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem, TitleRuntimeSystem,
-    ValueRuntimeSystem,
+    EconomicTendencyRuntimeSystem,
+    EmotionRuntimeSystem,
+    FamilyRuntimeSystem,
+    GatheringRuntimeSystem,
+    IntelligenceRuntimeSystem,
+    IntergenerationalRuntimeSystem,
+    JobAssignmentRuntimeSystem,
+    JobSatisfactionRuntimeSystem,
+    LeaderRuntimeSystem,
+    // llm
+    LlmRequestRuntimeSystem,
+    LlmResponseRuntimeSystem,
+    LlmTimeoutRuntimeSystem,
+    MemoryRuntimeSystem,
+    MentalBreakRuntimeSystem,
     // world
-    MigrationRuntimeSystem, MovementRuntimeSystem, SteeringRuntimeSystem,
+    MigrationRuntimeSystem,
+    MoraleRuntimeSystem,
+    MortalityRuntimeSystem,
+    MovementRuntimeSystem,
+    NeedsRuntimeSystem,
+    NetworkRuntimeSystem,
+    OccupationRuntimeSystem,
+    ParentingRuntimeSystem,
+    PersonalityGeneratorRuntimeSystem,
+    PersonalityMaturationRuntimeSystem,
+    PopulationRuntimeSystem,
+    ReputationRuntimeSystem,
+    ResourceRegenSystem,
+    SettlementCultureRuntimeSystem,
+    SocialEventRuntimeSystem,
+    StatSyncRuntimeSystem,
+    StatThresholdRuntimeSystem,
+    StatsRecorderRuntimeSystem,
+    SteeringRuntimeSystem,
+    StorySifterRuntimeSystem,
+    StratificationMonitorRuntimeSystem,
+    StressRuntimeSystem,
     TechDiscoveryRuntimeSystem,
-    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
-    TechUtilizationRuntimeSystem, TensionRuntimeSystem,
+    TechMaintenanceRuntimeSystem,
+    TechPropagationRuntimeSystem,
+    TechUtilizationRuntimeSystem,
+    TensionRuntimeSystem,
+    TitleRuntimeSystem,
+    TraitRuntimeSystem,
+    TraitViolationRuntimeSystem,
+    TraumaScarRuntimeSystem,
+    UpperNeedsRuntimeSystem,
+    ValueRuntimeSystem,
 };
 use sim_systems::{body, stat_curve};
 use std::hint::black_box;
@@ -66,7 +101,9 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 fn authoritative_ron_data_dir() -> Option<PathBuf> {
-    let crates_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent()?.to_path_buf();
+    let crates_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()?
+        .to_path_buf();
     Some(crates_dir.join("sim-data").join("data"))
 }
 
@@ -169,7 +206,10 @@ fn main() {
             resources.name_generator = Some(sim_data::NameGenerator::new(name_cultures));
             log::info!("[sim-test] legacy naming cultures compatibility data loaded");
         } else {
-            log::warn!("[sim-test] legacy naming cultures not found at {:?}, skipping", data_dir);
+            log::warn!(
+                "[sim-test] legacy naming cultures not found at {:?}, skipping",
+                data_dir
+            );
         }
     } else {
         log::warn!("[sim-test] could not resolve legacy JSON data path");
@@ -230,15 +270,25 @@ fn main() {
 
         for (bits, name, nonzero) in &entity_data {
             println!("[sim-test]   entity: id={} name={}", bits, name);
-            assert!(!name.starts_with("Agent "), "Name should not be placeholder: {}", name);
+            assert!(
+                !name.starts_with("Agent "),
+                "Name should not be placeholder: {}",
+                name
+            );
             assert!(!name.is_empty(), "Name should not be empty");
             assert!(name_set.insert(name.clone()), "Duplicate name: {}", name);
             println!("[sim-test]   values_nonzero={}", nonzero);
-            if *nonzero >= 10 { values_nonzero_count += 1; }
+            if *nonzero >= 10 {
+                values_nonzero_count += 1;
+            }
         }
 
         let entity_count = entity_data.len();
-        assert!(entity_count >= 20, "Expected ≥20 entities, got {}", entity_count);
+        assert!(
+            entity_count >= 20,
+            "Expected ≥20 entities, got {}",
+            entity_count
+        );
         assert!(
             values_nonzero_count >= 18,
             "Expected ≥18 entities with ≥10 non-zero values, got {}",
@@ -255,13 +305,19 @@ fn main() {
         // 4. All 15 component types present on every entity
         println!("[sim-test] === EntityDetail L2 Data Check ===");
         for (entity, _) in world.query::<&Identity>().iter() {
-            assert!(world.get::<&Personality>(entity).is_ok(), "Missing Personality");
+            assert!(
+                world.get::<&Personality>(entity).is_ok(),
+                "Missing Personality"
+            );
             assert!(world.get::<&Values>(entity).is_ok(), "Missing Values");
             assert!(world.get::<&Emotion>(entity).is_ok(), "Missing Emotion");
             assert!(world.get::<&Needs>(entity).is_ok(), "Missing Needs");
             assert!(world.get::<&Stress>(entity).is_ok(), "Missing Stress");
             assert!(world.get::<&Body>(entity).is_ok(), "Missing Body");
-            assert!(world.get::<&Intelligence>(entity).is_ok(), "Missing Intelligence");
+            assert!(
+                world.get::<&Intelligence>(entity).is_ok(),
+                "Missing Intelligence"
+            );
             assert!(world.get::<&Skills>(entity).is_ok(), "Missing Skills");
             assert!(world.get::<&Social>(entity).is_ok(), "Missing Social");
             assert!(world.get::<&Memory>(entity).is_ok(), "Missing Memory");
@@ -279,7 +335,8 @@ fn main() {
                 assert!(
                     *v >= -1.0 && *v <= 1.0,
                     "Value[{}] = {} is out of [-1.0, 1.0] range",
-                    i, v
+                    i,
+                    v
                 );
             }
         }
@@ -302,7 +359,10 @@ fn main() {
     println!("[sim-test]   Entities:        {}", snap.entity_count);
     println!("[sim-test]   Settlements:     {}", snap.settlement_count);
     println!("[sim-test]   Events total:    {}", dispatched);
-    println!("[sim-test]   Systems run:     {} (full registration)", snap.system_count);
+    println!(
+        "[sim-test]   Systems run:     {} (full registration)",
+        snap.system_count
+    );
     println!("[sim-test] \u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}");
     println!("[sim-test] PASS");
 
@@ -416,10 +476,8 @@ fn run_llm_smoke() {
         std::process::exit(1);
     }
 
-    let judgment_request = sample_llm_request(
-        LlmRequestType::Layer3Judgment,
-        LlmPromptVariant::Judgment,
-    );
+    let judgment_request =
+        sample_llm_request(LlmRequestType::Layer3Judgment, LlmPromptVariant::Judgment);
     let judgment_id = match runtime.submit_request(judgment_request) {
         Ok(request_id) => request_id,
         Err(error) => {
@@ -436,14 +494,15 @@ fn run_llm_smoke() {
     };
     assert!(judgment_response.success, "Layer 3 request should succeed");
     assert!(
-        matches!(judgment_response.content, sim_core::components::LlmContent::Judgment(_)),
+        matches!(
+            judgment_response.content,
+            sim_core::components::LlmContent::Judgment(_)
+        ),
         "Layer 3 response should parse as JudgmentData",
     );
 
-    let narrative_request = sample_llm_request(
-        LlmRequestType::Layer4Narrative,
-        LlmPromptVariant::Narrative,
-    );
+    let narrative_request =
+        sample_llm_request(LlmRequestType::Layer4Narrative, LlmPromptVariant::Narrative);
     let narrative_id = match runtime.submit_request(narrative_request) {
         Ok(request_id) => request_id,
         Err(error) => {
@@ -472,7 +531,10 @@ fn run_llm_smoke() {
     let fallback = generate_fallback_content(LlmRequestType::Layer4Narrative, "카야");
     match fallback {
         sim_core::components::LlmContent::Narrative(text) => {
-            assert!(!text.trim().is_empty(), "Fallback narrative should be non-empty");
+            assert!(
+                !text.trim().is_empty(),
+                "Fallback narrative should be non-empty"
+            );
         }
         _ => panic!("Fallback should be a narrative string"),
     }
@@ -481,10 +543,7 @@ fn run_llm_smoke() {
     println!("[sim-test] LLM smoke PASS");
 }
 
-fn sample_llm_request(
-    request_type: LlmRequestType,
-    variant: LlmPromptVariant,
-) -> LlmRequest {
+fn sample_llm_request(request_type: LlmRequestType, variant: LlmPromptVariant) -> LlmRequest {
     LlmRequest {
         request_id: 0,
         entity_id: 1,
@@ -499,7 +558,9 @@ fn sample_llm_request(
         action_label: "Socialize".to_string(),
         personality_axes: [0.41, 0.62, 0.78, 0.54, 0.66, 0.58],
         emotions: [0.2, 0.35, 0.05, 0.1, 0.12, 0.04, 0.08, 0.44],
-        needs: [0.73, 0.91, 0.64, 0.88, 0.76, 0.55, 0.46, 0.61, 0.72, 0.68, 0.59, 0.63, 0.71],
+        needs: [
+            0.73, 0.91, 0.64, 0.88, 0.76, 0.55, 0.46, 0.61, 0.72, 0.68, 0.59, 0.63, 0.71,
+        ],
         values: [0.0; 33],
         stress_level: 0.34,
         stress_state: 1,
@@ -509,7 +570,10 @@ fn sample_llm_request(
     }
 }
 
-fn wait_for_llm_response(runtime: &mut LlmRuntime, request_id: u64) -> Option<sim_engine::LlmResponse> {
+fn wait_for_llm_response(
+    runtime: &mut LlmRuntime,
+    request_id: u64,
+) -> Option<sim_engine::LlmResponse> {
     let started = Instant::now();
     while started.elapsed().as_secs_f64() < 30.0 {
         for response in runtime.drain_responses() {
@@ -733,9 +797,7 @@ fn run_needs_math_bench(args: &[String]) {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT,
-    };
+    use super::{entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT};
     use sim_core::components::{Behavior, Identity, Personality, Position, SteeringParams};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
     use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, WorldMap};
@@ -756,7 +818,12 @@ mod tests {
         );
         {
             let (world, resources) = engine.world_and_resources_mut();
-            entity_spawner::spawn_initial_population(world, resources, agent_count, SettlementId(1));
+            entity_spawner::spawn_initial_population(
+                world,
+                resources,
+                agent_count,
+                SettlementId(1),
+            );
         }
         engine
     }
@@ -793,10 +860,12 @@ mod tests {
         let moved_count = initial_positions
             .iter()
             .zip(final_positions.iter())
-            .filter(|((initial_id, (initial_x, initial_y)), (final_id, (final_x, final_y)))| {
-                initial_id == final_id
-                    && ((initial_x - final_x).abs() > 0.1 || (initial_y - final_y).abs() > 0.1)
-            })
+            .filter(
+                |((initial_id, (initial_x, initial_y)), (final_id, (final_x, final_y)))| {
+                    initial_id == final_id
+                        && ((initial_x - final_x).abs() > 0.1 || (initial_y - final_y).abs() > 0.1)
+                },
+            )
             .count();
 
         assert!(

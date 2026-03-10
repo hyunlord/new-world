@@ -4,22 +4,21 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence, Memory,
-    MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, EmotionType, GrowthStage, HexacoAxis, HexacoFacet,
-    BuildingId, CopingStrategyId, EntityId, IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType,
-    SettlementId, Sex, SocialClass, TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
+    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
+    ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::body;
-
 
 #[inline]
 fn tension_pair_key(left: SettlementId, right: SettlementId) -> String {
@@ -36,10 +35,8 @@ fn tension_food_scarce(stockpile_food: f64, population: usize) -> bool {
     if population == 0 {
         return false;
     }
-    let monthly_need = population as f32
-        * config::HUNGER_DECAY_RATE as f32
-        * config::TICKS_PER_DAY as f32
-        * 30.0;
+    let monthly_need =
+        population as f32 * config::HUNGER_DECAY_RATE as f32 * config::TICKS_PER_DAY as f32 * 30.0;
     let ratio = (stockpile_food as f32) / monthly_need.max(1.0);
     ratio < config::TENSION_RESOURCE_DEFICIT_TRIGGER as f32
 }
@@ -384,7 +381,9 @@ impl SimSystem for TechDiscoveryRuntimeSystem {
                     .filter(|(_, state)| {
                         matches!(
                             state,
-                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                            TechState::Unknown
+                                | TechState::ForgottenRecent
+                                | TechState::ForgottenLong
                         )
                     })
                     .map(|(tech_id, _)| tech_id.clone())
@@ -518,7 +517,8 @@ impl SimSystem for TechPropagationRuntimeSystem {
 
         let mut profiles: HashMap<SettlementId, TechPropagationProfile> = HashMap::new();
         {
-            let mut query = world.query::<(&Identity, Option<&Values>, Option<&Skills>, Option<&Age>)>();
+            let mut query =
+                world.query::<(&Identity, Option<&Values>, Option<&Skills>, Option<&Age>)>();
             for (_, (identity, values_opt, skills_opt, age_opt)) in &mut query {
                 if let Some(age) = age_opt {
                     if !age.alive {
@@ -534,13 +534,15 @@ impl SimSystem for TechPropagationRuntimeSystem {
                 let tradition = values_opt
                     .map(|values| values.get(ValueType::Tradition) as f32)
                     .unwrap_or(0.0);
-                let best_skill_level =
-                    skills_opt.map(|skills| skills.best_skill_level() as i32).unwrap_or(0);
+                let best_skill_level = skills_opt
+                    .map(|skills| skills.best_skill_level() as i32)
+                    .unwrap_or(0);
 
-                profiles
-                    .entry(settlement_id)
-                    .or_default()
-                    .record_member(knowledge, tradition, best_skill_level);
+                profiles.entry(settlement_id).or_default().record_member(
+                    knowledge,
+                    tradition,
+                    best_skill_level,
+                );
             }
         }
 
@@ -561,7 +563,9 @@ impl SimSystem for TechPropagationRuntimeSystem {
                     .filter(|(_, state)| {
                         matches!(
                             state,
-                            TechState::Unknown | TechState::ForgottenRecent | TechState::ForgottenLong
+                            TechState::Unknown
+                                | TechState::ForgottenRecent
+                                | TechState::ForgottenLong
                         )
                     })
                     .map(|(tech_id, _)| tech_id.clone())
@@ -592,7 +596,8 @@ impl SimSystem for TechPropagationRuntimeSystem {
                     let Some(source_settlement) = resources.settlements.get(&source_id) else {
                         continue;
                     };
-                    let Some(source_state) = source_settlement.tech_states.get(&tech_id).copied() else {
+                    let Some(source_state) = source_settlement.tech_states.get(&tech_id).copied()
+                    else {
                         continue;
                     };
                     if !matches!(source_state, TechState::KnownLow | TechState::KnownStable) {
@@ -704,7 +709,11 @@ fn migration_food_in_radius(resources: &SimResources, cx: i32, cy: i32, radius: 
     total_food
 }
 
-fn migration_find_site(resources: &mut SimResources, source_x: i32, source_y: i32) -> Option<(i32, i32)> {
+fn migration_find_site(
+    resources: &mut SimResources,
+    source_x: i32,
+    source_y: i32,
+) -> Option<(i32, i32)> {
     let min_radius = config::MIGRATION_SEARCH_RADIUS_MIN;
     let max_radius = config::MIGRATION_SEARCH_RADIUS_MAX;
     let min_settlement_distance = config::SETTLEMENT_MIN_DISTANCE;
@@ -853,9 +862,9 @@ impl SimSystem for MigrationRuntimeSystem {
             }
             candidates.sort_by_key(|entity| entity.id());
 
-            let group_size_roll: u32 = resources.rng.gen_range(
-                config::MIGRATION_GROUP_SIZE_MIN..=config::MIGRATION_GROUP_SIZE_MAX,
-            );
+            let group_size_roll: u32 = resources
+                .rng
+                .gen_range(config::MIGRATION_GROUP_SIZE_MIN..=config::MIGRATION_GROUP_SIZE_MAX);
             let group_size = (group_size_roll as usize).min(candidates.len());
             let migrants: Vec<Entity> = candidates.into_iter().take(group_size).collect();
             if migrants.len() < config::MIGRATION_GROUP_SIZE_MIN as usize {
@@ -876,7 +885,8 @@ impl SimSystem for MigrationRuntimeSystem {
             let next_settlement_id = SettlementId(next_settlement_raw);
             let mut migrated_member_ids: Vec<EntityId> = Vec::with_capacity(migrants.len());
             for entity in migrants {
-                if let Ok(mut one) = world.query_one::<(&mut Identity, Option<&mut Behavior>)>(entity)
+                if let Ok(mut one) =
+                    world.query_one::<(&mut Identity, Option<&mut Behavior>)>(entity)
                 {
                     if let Some((identity, behavior_opt)) = one.get() {
                         identity.settlement_id = Some(next_settlement_id);
@@ -913,7 +923,9 @@ impl SimSystem for MigrationRuntimeSystem {
             );
             new_settlement.stockpile_food = config::MIGRATION_STARTUP_FOOD;
             new_settlement.members = migrated_member_ids.clone();
-            resources.settlements.insert(next_settlement_id, new_settlement);
+            resources
+                .settlements
+                .insert(next_settlement_id, new_settlement);
 
             resources
                 .event_bus
@@ -933,7 +945,6 @@ impl SimSystem for MigrationRuntimeSystem {
         }
     }
 }
-
 
 #[derive(Debug, Clone)]
 pub struct MovementRuntimeSystem {
@@ -998,10 +1009,7 @@ impl SimSystem for MovementRuntimeSystem {
                             needs.set(NeedType::Sleep, needs.energy);
                         }
                         ActionType::Socialize => {
-                            needs.set(
-                                NeedType::Belonging,
-                                needs.get(NeedType::Belonging) + 0.3,
-                            );
+                            needs.set(NeedType::Belonging, needs.get(NeedType::Belonging) + 0.3);
                         }
                         ActionType::Drink => {
                             needs.set(
@@ -1025,19 +1033,20 @@ impl SimSystem for MovementRuntimeSystem {
                                 needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
                             );
                         }
-                        ActionType::Forage | ActionType::Hunt | ActionType::TakeFromStockpile | ActionType::GatherHerbs => {
+                        ActionType::Forage
+                        | ActionType::Hunt
+                        | ActionType::TakeFromStockpile
+                        | ActionType::GatherHerbs => {
                             needs.set(
                                 NeedType::Hunger,
                                 needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
                             );
                         }
                         ActionType::GatherWood => {
-                            behavior.carry =
-                                (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                            behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
                         }
                         ActionType::GatherStone => {
-                            behavior.carry =
-                                (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                            behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
                         }
                         _ => {}
                     }

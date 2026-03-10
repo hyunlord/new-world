@@ -125,7 +125,12 @@ impl GridCostMap {
     /// Builds a grid directly from flat bool/cost slices without per-cell setters.
     ///
     /// Caller must ensure lengths match `width * height`.
-    pub fn from_flat_unchecked(width: i32, height: i32, walkable: &[bool], move_cost: &[f32]) -> Self {
+    pub fn from_flat_unchecked(
+        width: i32,
+        height: i32,
+        walkable: &[bool],
+        move_cost: &[f32],
+    ) -> Self {
         debug_assert_eq!(walkable.len(), (width * height) as usize);
         debug_assert_eq!(move_cost.len(), (width * height) as usize);
         let mut clamped_move_cost: Vec<f32> = Vec::with_capacity(move_cost.len());
@@ -335,7 +340,9 @@ pub fn find_path_with_workspace(
                 let tentative_g =
                     workspace.g_score[current_idx] + (step_cost * grid.move_cost[neighbor_idx]);
 
-                if workspace.seen_gen[neighbor_idx] != query_id || tentative_g < workspace.g_score[neighbor_idx] {
+                if workspace.seen_gen[neighbor_idx] != query_id
+                    || tentative_g < workspace.g_score[neighbor_idx]
+                {
                     workspace.seen_gen[neighbor_idx] = query_id;
                     workspace.came_from[neighbor_idx] = current_idx;
                     workspace.g_score[neighbor_idx] = tentative_g;
@@ -467,8 +474,10 @@ mod tests {
         grid.set_walkable(3, 3, false);
 
         let mut ws = PathfindWorkspace::new(64);
-        let path_a = find_path_with_workspace(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300, &mut ws);
-        let path_b = find_path_with_workspace(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300, &mut ws);
+        let path_a =
+            find_path_with_workspace(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300, &mut ws);
+        let path_b =
+            find_path_with_workspace(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300, &mut ws);
 
         let expected_a = find_path(&grid, GridPos::new(0, 0), GridPos::new(7, 7), 300);
         let expected_b = find_path(&grid, GridPos::new(7, 0), GridPos::new(0, 7), 300);

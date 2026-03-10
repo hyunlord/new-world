@@ -207,9 +207,7 @@ impl LlmConfig {
             .to_string();
 
         let mut config = Self {
-            enabled_default: file
-                .enabled_default
-                .unwrap_or(config::LLM_ENABLED_DEFAULT),
+            enabled_default: file.enabled_default.unwrap_or(config::LLM_ENABLED_DEFAULT),
             host,
             port,
             server_binary,
@@ -221,18 +219,10 @@ impl LlmConfig {
             max_tokens_l3: file.max_tokens_l3.unwrap_or(config::LLM_MAX_TOKENS_L3),
             max_tokens_l4: file.max_tokens_l4.unwrap_or(config::LLM_MAX_TOKENS_L4),
             threads: file.threads.unwrap_or(config::LLM_THREADS),
-            threads_batch: file
-                .threads_batch
-                .unwrap_or(config::LLM_THREADS_BATCH),
-            temperature_l3: file
-                .temperature_l3
-                .unwrap_or(config::LLM_TEMPERATURE_L3),
-            temperature_l4: file
-                .temperature_l4
-                .unwrap_or(config::LLM_TEMPERATURE_L4),
-            queue_capacity: file
-                .queue_capacity
-                .unwrap_or(config::LLM_QUEUE_CAPACITY),
+            threads_batch: file.threads_batch.unwrap_or(config::LLM_THREADS_BATCH),
+            temperature_l3: file.temperature_l3.unwrap_or(config::LLM_TEMPERATURE_L3),
+            temperature_l4: file.temperature_l4.unwrap_or(config::LLM_TEMPERATURE_L4),
+            queue_capacity: file.queue_capacity.unwrap_or(config::LLM_QUEUE_CAPACITY),
             healthcheck_attempts: file
                 .healthcheck_attempts
                 .unwrap_or(config::LLM_HEALTHCHECK_ATTEMPTS),
@@ -242,9 +232,7 @@ impl LlmConfig {
             shutdown_grace_ms: file
                 .shutdown_grace_ms
                 .unwrap_or(config::LLM_SHUTDOWN_GRACE_MS),
-            http_timeout_ms: file
-                .http_timeout_ms
-                .unwrap_or(config::LLM_HTTP_TIMEOUT_MS),
+            http_timeout_ms: file.http_timeout_ms.unwrap_or(config::LLM_HTTP_TIMEOUT_MS),
             model_id,
         };
         if let Some(quality) = load_quality_override(&default_user_settings_path()) {
@@ -335,7 +323,10 @@ impl LlmRuntime {
         }
 
         if let Err(error) = save_quality_override(&default_user_settings_path(), quality) {
-            log::warn!("[llm_runtime] failed to persist quality preference: {}", error);
+            log::warn!(
+                "[llm_runtime] failed to persist quality preference: {}",
+                error
+            );
         }
     }
 
@@ -452,9 +443,8 @@ impl LlmRuntime {
             },
             queue_depth,
         };
-        serde_json::to_string(&snapshot).unwrap_or_else(|_| {
-            "{\"running\":false,\"model\":\"\",\"queue_depth\":0}".to_string()
-        })
+        serde_json::to_string(&snapshot)
+            .unwrap_or_else(|_| "{\"running\":false,\"model\":\"\",\"queue_depth\":0}".to_string())
     }
 
     /// Attempts to enqueue an LLM request without blocking the game thread.
@@ -638,8 +628,8 @@ fn save_quality_override(path: &Path, quality: u8) -> std::io::Result<()> {
     let prefs = LlmUserPreferencesFile {
         llm_quality: Some(quality.min(2)),
     };
-    let serialized = toml::to_string(&prefs)
-        .map_err(|error| std::io::Error::other(error.to_string()))?;
+    let serialized =
+        toml::to_string(&prefs).map_err(|error| std::io::Error::other(error.to_string()))?;
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;
     }
@@ -708,7 +698,9 @@ mod tests {
     fn default_config_uses_project_relative_paths() {
         let config = LlmConfig::load_default().unwrap_or_else(|_| default_config());
         assert!(config.prompt_dir.ends_with("data/llm/prompts"));
-        assert!(config.grammar_path.ends_with("data/llm/grammars/layer3_judgment.gbnf"));
+        assert!(config
+            .grammar_path
+            .ends_with("data/llm/grammars/layer3_judgment.gbnf"));
     }
 
     #[test]

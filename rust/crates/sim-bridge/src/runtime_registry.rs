@@ -10,26 +10,23 @@ use sim_data::{
 };
 use sim_engine::{GameEvent, SimEngine, SimResources};
 use sim_systems::runtime::{
-    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem,
-    BehaviorRuntimeSystem, BuildingEffectRuntimeSystem,
-    ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem, ChronicleRuntimeSystem,
-    ContagionRuntimeSystem, ConstructionRuntimeSystem, CopingRuntimeSystem,
+    AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
+    BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
+    ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
     EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
     GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
-    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
-    MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
-    MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, SteeringRuntimeSystem,
-    NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
+    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
+    MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
+    MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+    OccupationRuntimeSystem, ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
     PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
     ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
     StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
-    StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
-    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
-    TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem,
-    StorySifterRuntimeSystem,
-    TraitRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
+    SteeringRuntimeSystem, StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem,
+    StressRuntimeSystem, TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem,
+    TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem, TensionRuntimeSystem,
+    TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
     UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
 
@@ -330,24 +327,28 @@ pub(crate) fn register_supported_rust_system(
                 .register(MortalityRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_MENTAL_BREAK => {
-            state
-                .engine
-                .register(MentalBreakRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(MentalBreakRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TRAUMA_SCAR => {
-            state
-                .engine
-                .register(TraumaScarRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TraumaScarRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION => {
-            state
-                .engine
-                .register(TraitViolationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TraitViolationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT => {
-            state
-                .engine
-                .register(JobAssignmentRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(JobAssignmentRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_CONTAGION => {
             state
@@ -355,9 +356,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(ContagionRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_OCCUPATION => {
-            state
-                .engine
-                .register(OccupationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(OccupationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_NETWORK => {
             state
@@ -365,19 +367,22 @@ pub(crate) fn register_supported_rust_system(
                 .register(NetworkRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_JOB_SATISFACTION => {
-            state
-                .engine
-                .register(JobSatisfactionRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(JobSatisfactionRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY => {
-            state
-                .engine
-                .register(EconomicTendencyRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(EconomicTendencyRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_INTELLIGENCE => {
-            state
-                .engine
-                .register(IntelligenceRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(IntelligenceRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_MEMORY => {
             state
@@ -390,10 +395,12 @@ pub(crate) fn register_supported_rust_system(
                 .register(CopingRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR => {
-            state.engine.register(ChildStressProcessorRuntimeSystem::new(
-                priority_u32,
-                tick_interval_u64,
-            ));
+            state
+                .engine
+                .register(ChildStressProcessorRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
         }
         RUNTIME_SYSTEM_KEY_STEERING => {
             state
@@ -434,9 +441,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(TensionRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_BUILDING_EFFECT => {
-            state
-                .engine
-                .register(BuildingEffectRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(BuildingEffectRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_MIGRATION => {
             state
@@ -444,29 +452,34 @@ pub(crate) fn register_supported_rust_system(
                 .register(MigrationRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_POPULATION => {
-            state
-                .engine
-                .register(PopulationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(PopulationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TECH_UTILIZATION => {
-            state
-                .engine
-                .register(TechUtilizationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TechUtilizationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TECH_MAINTENANCE => {
-            state
-                .engine
-                .register(TechMaintenanceRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TechMaintenanceRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TECH_DISCOVERY => {
-            state
-                .engine
-                .register(TechDiscoveryRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TechDiscoveryRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TECH_PROPAGATION => {
-            state
-                .engine
-                .register(TechPropagationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(TechPropagationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_GATHERING => {
             state
@@ -474,9 +487,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(GatheringRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_CONSTRUCTION => {
-            state
-                .engine
-                .register(ConstructionRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(ConstructionRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_FAMILY => {
             state
@@ -484,9 +498,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(FamilyRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_INTERGENERATIONAL => {
-            state
-                .engine
-                .register(IntergenerationalRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(IntergenerationalRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_PARENTING => {
             state
@@ -494,9 +509,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(ParentingRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_STATS_RECORDER => {
-            state
-                .engine
-                .register(StatsRecorderRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(StatsRecorderRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_STAT_SYNC => {
             state
@@ -504,9 +520,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(StatSyncRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_STAT_THRESHOLD => {
-            state
-                .engine
-                .register(StatThresholdRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(StatThresholdRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_BEHAVIOR => {
             state
@@ -524,14 +541,16 @@ pub(crate) fn register_supported_rust_system(
                 .register(MoraleRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_SOCIAL_EVENT => {
-            state
-                .engine
-                .register(SocialEventRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(SocialEventRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_REPUTATION => {
-            state
-                .engine
-                .register(ReputationRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(ReputationRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_EMOTION => {
             state
@@ -549,9 +568,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(NeedsRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_UPPER_NEEDS => {
-            state
-                .engine
-                .register(UpperNeedsRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(UpperNeedsRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_RESOURCE_REGEN => {
             state
@@ -559,9 +579,10 @@ pub(crate) fn register_supported_rust_system(
                 .register(ResourceRegenSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_SETTLEMENT_CULTURE => {
-            state
-                .engine
-                .register(SettlementCultureRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(SettlementCultureRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_CHRONICLE => {
             state
@@ -571,22 +592,30 @@ pub(crate) fn register_supported_rust_system(
         RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION => {
             state
                 .engine
-                .register(PersonalityMaturationRuntimeSystem::new(priority_u32, tick_interval_u64));
+                .register(PersonalityMaturationRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
         }
         RUNTIME_SYSTEM_KEY_PERSONALITY_GENERATOR => {
             state
                 .engine
-                .register(PersonalityGeneratorRuntimeSystem::new(priority_u32, tick_interval_u64));
+                .register(PersonalityGeneratorRuntimeSystem::new(
+                    priority_u32,
+                    tick_interval_u64,
+                ));
         }
         RUNTIME_SYSTEM_KEY_ATTACHMENT => {
-            state
-                .engine
-                .register(AttachmentRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(AttachmentRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_ACE_TRACKER => {
-            state
-                .engine
-                .register(AceTrackerRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(AceTrackerRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_TRAIT => {
             state
@@ -594,27 +623,28 @@ pub(crate) fn register_supported_rust_system(
                 .register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64));
         }
         RUNTIME_SYSTEM_KEY_LLM_REQUEST => {
-            state
-                .engine
-                .register(LlmRequestRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(LlmRequestRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_LLM_RESPONSE => {
-            state
-                .engine
-                .register(LlmResponseRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(LlmResponseRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         RUNTIME_SYSTEM_KEY_LLM_TIMEOUT => {
-            state
-                .engine
-                .register(LlmTimeoutRuntimeSystem::new(priority_u32, tick_interval_u64));
+            state.engine.register(LlmTimeoutRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
         }
         _ => {
             return false;
         }
     }
-    state
-        .rust_registered_systems
-        .insert(system_key.to_string());
+    state.rust_registered_systems.insert(system_key.to_string());
     true
 }
 

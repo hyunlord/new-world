@@ -1,7 +1,7 @@
 // TODO(v3.1): Convert remaining f32 fields and HashMap usage to deterministic equivalents.
+use crate::enums::CopingStrategyId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::enums::CopingStrategyId;
 
 /// A delayed stress rebound entry (from C13 Substance Use — Cooper 1995).
 #[derive(Debug, Clone, Serialize, Deserialize)]

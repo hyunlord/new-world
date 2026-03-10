@@ -225,9 +225,7 @@ pub fn llm_worker_loop(
             &debug_log,
             format!(
                 "[LLM-DEBUG] llm_worker sending response: id={}, success={}, model={}",
-                llm_response.request_id,
-                llm_response.success,
-                llm_response.model_id
+                llm_response.request_id, llm_response.success, llm_response.model_id
             ),
         );
         if tx.send(llm_response).is_err() {
@@ -356,8 +354,7 @@ fn process_request_http(
                 debug_log,
                 format!(
                     "[LLM-DEBUG] llm_worker curl fallback to ureq: id={}, reason={}",
-                    request.request_id,
-                    error
+                    request.request_id, error
                 ),
             );
         }
@@ -374,8 +371,8 @@ fn process_request_http_with_curl(
 ) -> Result<String, LlmWorkerError> {
     let endpoint = format!("{}/v1/chat/completions", config.base_url());
     let body = request_body(config, request, prompt);
-    let body_json = serde_json::to_string(&body)
-        .map_err(|error| LlmWorkerError::Http(error.to_string()))?;
+    let body_json =
+        serde_json::to_string(&body).map_err(|error| LlmWorkerError::Http(error.to_string()))?;
     let timeout_secs = config.http_timeout_ms.div_ceil(1000).max(1).to_string();
     push_debug_log(
         debug_log,
@@ -424,8 +421,7 @@ fn process_request_http_with_curl(
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
         return Err(LlmWorkerError::Http(format!(
             "curl exited with status {}: {}",
-            output.status,
-            stderr
+            output.status, stderr
         )));
     }
 
@@ -545,8 +541,7 @@ fn process_request_http_with_ureq(
                 debug_log,
                 format!(
                     "[LLM-DEBUG] llm_worker HTTP timeout: id={}, transport=ureq, timeout_ms={}",
-                    request_id,
-                    config.http_timeout_ms
+                    request_id, config.http_timeout_ms
                 ),
             );
             Err(LlmWorkerError::Http(format!(
@@ -554,9 +549,9 @@ fn process_request_http_with_ureq(
                 config.http_timeout_ms
             )))
         }
-        Err(RecvTimeoutError::Disconnected) => Err(LlmWorkerError::Http(
-            format!("request worker disconnected for id={request_id}"),
-        )),
+        Err(RecvTimeoutError::Disconnected) => Err(LlmWorkerError::Http(format!(
+            "request worker disconnected for id={request_id}"
+        ))),
     }
 }
 
@@ -597,10 +592,15 @@ fn expected_register_for_request(request: &LlmRequest) -> SpeechRegister {
     match request.role {
         LlmRole::Leader | LlmRole::Shaman | LlmRole::Oracle => SpeechRegister::Hao,
         LlmRole::Agent => {
-            if request.personality_axes[1] > 0.7 || matches!(
-                request.growth_stage,
-                GrowthStage::Infant | GrowthStage::Toddler | GrowthStage::Child | GrowthStage::Teen
-            ) {
+            if request.personality_axes[1] > 0.7
+                || matches!(
+                    request.growth_stage,
+                    GrowthStage::Infant
+                        | GrowthStage::Toddler
+                        | GrowthStage::Child
+                        | GrowthStage::Teen
+                )
+            {
                 SpeechRegister::Hae
             } else {
                 SpeechRegister::Haera
@@ -611,9 +611,9 @@ fn expected_register_for_request(request: &LlmRequest) -> SpeechRegister {
 
 fn build_layer4_repair_prompt(prompt: &PromptPayload) -> PromptPayload {
     let mut repaired = prompt.clone();
-    repaired.user_prompt.push_str(
-        "\n덧붙임: 머릿말과 항목 이름 없이 짧은 본문만 1-2문장으로 다시 적어라.",
-    );
+    repaired
+        .user_prompt
+        .push_str("\n덧붙임: 머릿말과 항목 이름 없이 짧은 본문만 1-2문장으로 다시 적어라.");
     repaired.max_tokens = repaired
         .max_tokens
         .min(sim_core::config::LLM_MAX_TOKENS_L4_REPAIR);
@@ -630,8 +630,7 @@ fn parse_judgment_content(content: &str) -> Result<JudgmentData, LlmWorkerError>
 }
 
 fn parse_judgment_json(content: &str) -> Result<JudgmentData, LlmWorkerError> {
-    serde_json::from_str::<JudgmentData>(content)
-        .map_err(|_| LlmWorkerError::JudgmentParseFailed)
+    serde_json::from_str::<JudgmentData>(content).map_err(|_| LlmWorkerError::JudgmentParseFailed)
 }
 
 fn extract_json_candidate(content: &str) -> Option<String> {
@@ -661,10 +660,13 @@ fn repeated_char_ratio(content: &str) -> f64 {
     }
     let repeated = content
         .chars()
-        .fold(std::collections::HashMap::<char, usize>::new(), |mut acc, ch| {
-            *acc.entry(ch).or_insert(0) += 1;
-            acc
-        })
+        .fold(
+            std::collections::HashMap::<char, usize>::new(),
+            |mut acc, ch| {
+                *acc.entry(ch).or_insert(0) += 1;
+                acc
+            },
+        )
         .values()
         .copied()
         .max()
@@ -699,7 +701,9 @@ mod tests {
     fn garbage_detector_flags_repeated_text() {
         assert!(looks_like_garbage("aaaaaaaaaaaaaaaaaaaa"));
         assert!(repeated_char_ratio("bbbbbbbbbb") > 0.9);
-        assert!(!looks_like_garbage("이 사람은 오늘도 조용히 주변을 살폈다."));
+        assert!(!looks_like_garbage(
+            "이 사람은 오늘도 조용히 주변을 살폈다."
+        ));
     }
 
     #[test]

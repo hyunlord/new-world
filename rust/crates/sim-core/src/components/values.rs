@@ -1,8 +1,8 @@
 // TODO(v3.1): Keep manual serde until the toolchain supports deriving for `[f64; 33]`.
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use crate::enums::ValueType;
 use serde::de::Error;
 use serde::ser::SerializeSeq;
-use crate::enums::ValueType;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 pub const VALUE_COUNT: usize = 33;
 
@@ -47,7 +47,9 @@ impl<'de> Deserialize<'de> for Values {
 
 impl Default for Values {
     fn default() -> Self {
-        Self { values: [0.0; VALUE_COUNT] }
+        Self {
+            values: [0.0; VALUE_COUNT],
+        }
     }
 }
 
@@ -69,7 +71,10 @@ impl Values {
 
     /// Value alignment score with another Values component (0.0..=1.0)
     pub fn alignment_with(&self, other: &Values) -> f64 {
-        let dot: f64 = self.values.iter().zip(other.values.iter())
+        let dot: f64 = self
+            .values
+            .iter()
+            .zip(other.values.iter())
             .map(|(a, b)| a * b)
             .sum();
         (dot / VALUE_COUNT as f64 + 1.0) / 2.0
@@ -87,7 +92,10 @@ mod tests {
         values.set(ValueType::Tradition, -0.25);
 
         let json = serde_json::to_string(&values).expect("serialize values");
-        assert!(json.starts_with('['), "values should serialize as a bare array");
+        assert!(
+            json.starts_with('['),
+            "values should serialize as a bare array"
+        );
 
         let roundtrip: Values = serde_json::from_str(&json).expect("deserialize values");
         assert!((roundtrip.get(ValueType::Power) - 0.75).abs() < f64::EPSILON);

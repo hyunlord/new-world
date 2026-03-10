@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::NeedType;
+use serde::{Deserialize, Serialize};
 
 pub const NEED_COUNT: usize = 13;
 

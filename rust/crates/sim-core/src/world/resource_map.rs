@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::ResourceType;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Global resource tracking (settlement-level aggregates)

@@ -61,12 +61,21 @@ mod tests {
     use super::*;
     use std::collections::{BTreeSet, HashMap};
 
-    fn sample_material(id: &str, tags: &[&str], hardness: f64, density: f64, rarity: f64) -> MaterialDef {
+    fn sample_material(
+        id: &str,
+        tags: &[&str],
+        hardness: f64,
+        density: f64,
+        rarity: f64,
+    ) -> MaterialDef {
         MaterialDef {
             id: id.to_string(),
             display_name_key: format!("MAT_{}", id.to_ascii_uppercase()),
             category: crate::MaterialCategory::Stone,
-            tags: tags.iter().map(|tag| (*tag).to_string()).collect::<BTreeSet<_>>(),
+            tags: tags
+                .iter()
+                .map(|tag| (*tag).to_string())
+                .collect::<BTreeSet<_>>(),
             properties: crate::MaterialProperties {
                 hardness,
                 density,

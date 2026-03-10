@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::enums::IntelligenceType;
+use serde::{Deserialize, Serialize};
 
 pub const INTELLIGENCE_COUNT: usize = 8;
 

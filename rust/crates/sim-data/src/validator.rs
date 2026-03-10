@@ -285,14 +285,24 @@ fn load_locale_keys(base_path: &Path) -> HashSet<String> {
                 continue;
             }
             match fs::read_to_string(&path) {
-                Ok(content) => match serde_json::from_str::<HashMap<String, serde_json::Value>>(&content) {
-                    Ok(map) => keys.extend(map.into_keys()),
-                    Err(error) => {
-                        log::warn!("failed to parse localization file {}: {}", path.display(), error);
+                Ok(content) => {
+                    match serde_json::from_str::<HashMap<String, serde_json::Value>>(&content) {
+                        Ok(map) => keys.extend(map.into_keys()),
+                        Err(error) => {
+                            log::warn!(
+                                "failed to parse localization file {}: {}",
+                                path.display(),
+                                error
+                            );
+                        }
                     }
-                },
+                }
                 Err(error) => {
-                    log::warn!("failed to read localization file {}: {}", path.display(), error);
+                    log::warn!(
+                        "failed to read localization file {}: {}",
+                        path.display(),
+                        error
+                    );
                 }
             }
         }
@@ -324,7 +334,9 @@ mod tests {
             id: "flint".to_string(),
             display_name_key: "MAT_FLINT".to_string(),
             category: MaterialCategory::Stone,
-            tags: ["stone".to_string(), "sharp".to_string()].into_iter().collect(),
+            tags: ["stone".to_string(), "sharp".to_string()]
+                .into_iter()
+                .collect(),
             properties: MaterialProperties {
                 hardness: 7.0,
                 density: 2.6,
@@ -394,7 +406,9 @@ mod tests {
         let registry = sample_registry();
         let errors = validate_registry(&registry);
 
-        assert!(errors.iter().all(|error| error.severity == Severity::Warning));
+        assert!(errors
+            .iter()
+            .all(|error| error.severity == Severity::Warning));
     }
 
     #[test]

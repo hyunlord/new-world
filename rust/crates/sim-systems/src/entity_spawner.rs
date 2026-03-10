@@ -7,6 +7,8 @@
 //! - Intelligence: Gardner (1983), Bouchard & McGue (2003)
 //! - Appearance: Eagly (1991), Stulp (2015)
 
+use crate::runtime::derive_steering_params;
+use crate::values_init::initialize_values;
 use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
@@ -17,8 +19,6 @@ use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
 use sim_data::PersonalityDistribution;
 use sim_engine::engine::SimResources;
-use crate::runtime::derive_steering_params;
-use crate::values_init::initialize_values;
 
 // ── Body generation constants ─────────────────────────────────────────────────
 
@@ -304,12 +304,14 @@ fn generate_body(sex: Sex, rng: &mut impl Rng) -> Body {
     let str_t_base: f64 = Normal::new(TRAINABILITY_MEAN, TRAINABILITY_SD)
         .unwrap()
         .sample(rng);
-    let str_t = ((str_t_base + actn3 * 75.0).round() as i32).clamp(TRAINABILITY_MIN, TRAINABILITY_MAX);
+    let str_t =
+        ((str_t_base + actn3 * 75.0).round() as i32).clamp(TRAINABILITY_MIN, TRAINABILITY_MAX);
 
     let end_t_base: f64 = Normal::new(TRAINABILITY_MEAN, TRAINABILITY_SD)
         .unwrap()
         .sample(rng);
-    let end_t = ((end_t_base - actn3 * 50.0).round() as i32).clamp(TRAINABILITY_MIN, TRAINABILITY_MAX);
+    let end_t =
+        ((end_t_base - actn3 * 50.0).round() as i32).clamp(TRAINABILITY_MIN, TRAINABILITY_MAX);
 
     let tou_ind: f64 = Normal::new(TRAINABILITY_MEAN, TRAINABILITY_SD)
         .unwrap()
@@ -402,14 +404,14 @@ fn generate_intelligence(personality: &Personality, rng: &mut impl Rng) -> Intel
     // Personality correlations per Gardner type (approximate)
     // [Linguistic, Logical, Spatial, Musical, Kinesthetic, Interpersonal, Intrapersonal, Naturalistic]
     let pers_cors = [
-        personality.axes[5], // Openness → Linguistic
-        personality.axes[4], // Conscientiousness → Logical
-        personality.axes[5], // Openness → Spatial
+        personality.axes[5],                                   // Openness → Linguistic
+        personality.axes[4],                                   // Conscientiousness → Logical
+        personality.axes[5],                                   // Openness → Spatial
         personality.axes[5] * 0.5 + personality.axes[2] * 0.5, // Openness+Extraversion → Musical
-        personality.axes[0].max(personality.axes[2]),           // Honesty/Extraversion → Kinesthetic
-        personality.axes[2],                                    // Extraversion → Interpersonal
-        personality.axes[1],                                    // Emotionality → Intrapersonal
-        personality.axes[5],                                    // Openness → Naturalistic
+        personality.axes[0].max(personality.axes[2]),          // Honesty/Extraversion → Kinesthetic
+        personality.axes[2],                                   // Extraversion → Interpersonal
+        personality.axes[1],                                   // Emotionality → Intrapersonal
+        personality.axes[5],                                   // Openness → Naturalistic
     ];
 
     let mut values = [0.0f64; 8];
@@ -417,8 +419,8 @@ fn generate_intelligence(personality: &Personality, rng: &mut impl Rng) -> Intel
         let genetic: f64 = Normal::new(0.5, 0.10).unwrap().sample(rng);
         let genetic = genetic.clamp(0.0, 1.0);
         let rand_noise: f64 = Normal::new(0.0, 0.05).unwrap().sample(rng);
-        values[i] = (g * 0.4 + pers_cors[i] * 0.2 + genetic * 0.2 + rand_noise + 0.2 * 0.5)
-            .clamp(0.0, 1.0);
+        values[i] =
+            (g * 0.4 + pers_cors[i] * 0.2 + genetic * 0.2 + rand_noise + 0.2 * 0.5).clamp(0.0, 1.0);
     }
 
     Intelligence {
@@ -442,14 +444,14 @@ fn generate_needs(rng: &mut impl Rng) -> Needs {
         0.80 + rng.gen::<f64>() * 0.15, // Sleep (2)
         0.85 + rng.gen::<f64>() * 0.10, // Warmth (3)
         0.55 + rng.gen::<f64>() * 0.10, // Safety (4)
-        0.70,                            // Belonging (5)
-        0.70,                            // Intimacy (6)
-        0.60,                            // Recognition (7)
-        0.60,                            // Autonomy (8)
-        0.60,                            // Competence (9)
-        0.50,                            // SelfActualization (10)
-        0.50,                            // Meaning (11)
-        0.40,                            // Transcendence (12)
+        0.70,                           // Belonging (5)
+        0.70,                           // Intimacy (6)
+        0.60,                           // Recognition (7)
+        0.60,                           // Autonomy (8)
+        0.60,                           // Competence (9)
+        0.50,                           // SelfActualization (10)
+        0.50,                           // Meaning (11)
+        0.40,                           // Transcendence (12)
     ];
     Needs {
         values,
@@ -471,7 +473,7 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
     let a = personality.axes[3]; // Agreeableness
     let c = personality.axes[4]; // Conscientiousness
     let o = personality.axes[5]; // Openness
-    // Spawn-time emotions are zero
+                                 // Spawn-time emotions are zero
     let anger = 0.0_f64;
     let joy = 0.0_f64;
     let fear = 0.0_f64;
@@ -483,9 +485,8 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
         + 0.20 * anger
         + 0.05 * (1.0 - fear))
         .clamp(0.0, 1.0);
-    let gent =
-        (0.30 * a + 0.20 * h + 0.15 * e + 0.10 * c + 0.15 * (1.0 - anger) + 0.10 * joy)
-            .clamp(0.0, 1.0);
+    let gent = (0.30 * a + 0.20 * h + 0.15 * e + 0.10 * c + 0.15 * (1.0 - anger) + 0.10 * joy)
+        .clamp(0.0, 1.0);
     let form = (0.35 * c
         + 0.25 * h
         + 0.15 * (1.0 - x)
@@ -493,20 +494,12 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
         + 0.10 * fear
         + 0.05 * (1.0 - joy))
         .clamp(0.0, 1.0);
-    let cas = (0.35 * x
-        + 0.20 * o
-        + 0.15 * joy
-        + 0.15 * (1.0 - c)
-        + 0.10 * a
-        + 0.05 * (1.0 - fear))
-        .clamp(0.0, 1.0);
-    let sarc = (0.30 * o
-        + 0.25 * (1.0 - a)
-        + 0.15 * x
-        + 0.15 * anger
-        + 0.10 * joy
-        + 0.05 * (1.0 - h))
-        .clamp(0.0, 1.0);
+    let cas =
+        (0.35 * x + 0.20 * o + 0.15 * joy + 0.15 * (1.0 - c) + 0.10 * a + 0.05 * (1.0 - fear))
+            .clamp(0.0, 1.0);
+    let sarc =
+        (0.30 * o + 0.25 * (1.0 - a) + 0.15 * x + 0.15 * anger + 0.10 * joy + 0.05 * (1.0 - h))
+            .clamp(0.0, 1.0);
 
     let tone = if agg >= 0.65 && anger >= 0.55 {
         "aggressive"
@@ -531,13 +524,9 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
             .0
     };
 
-    let ver = (0.55 * x
-        + 0.15 * o
-        + 0.10 * joy
-        + 0.05 * anger
-        + 0.10 * (1.0 - fear)
-        + 0.05 * (1.0 - c))
-        .clamp(0.0, 1.0);
+    let ver =
+        (0.55 * x + 0.15 * o + 0.10 * joy + 0.05 * anger + 0.10 * (1.0 - fear) + 0.05 * (1.0 - c))
+            .clamp(0.0, 1.0);
     let verbosity = if ver >= 0.67 || x >= 0.75 {
         "talkative"
     } else if ver <= 0.33 || x <= 0.25 || (fear >= 0.70 && x <= 0.55) {
@@ -556,13 +545,11 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
     let humor = if hum < 0.40 {
         "none"
     } else {
-        let slap =
-            (0.45 * x + 0.30 * joy + 0.15 * (1.0 - c) + 0.10 * (1.0 - fear)).clamp(0.0, 1.0);
-        let wit = (0.45 * o + 0.20 * x + 0.15 * joy + 0.10 * c + 0.10 * h - 0.20 * anger)
+        let slap = (0.45 * x + 0.30 * joy + 0.15 * (1.0 - c) + 0.10 * (1.0 - fear)).clamp(0.0, 1.0);
+        let wit =
+            (0.45 * o + 0.20 * x + 0.15 * joy + 0.10 * c + 0.10 * h - 0.20 * anger).clamp(0.0, 1.0);
+        let dry = (0.35 * c + 0.25 * (1.0 - x) + 0.20 * o + 0.10 * (1.0 - joy) + 0.10 * anger)
             .clamp(0.0, 1.0);
-        let dry =
-            (0.35 * c + 0.25 * (1.0 - x) + 0.20 * o + 0.10 * (1.0 - joy) + 0.10 * anger)
-                .clamp(0.0, 1.0);
         if slap >= 0.60 && x >= 0.65 && joy >= 0.55 {
             "slapstick"
         } else if wit >= 0.60 && o >= 0.60 {
@@ -637,7 +624,13 @@ pub fn spawn_agent(
     // Name: use NameGenerator if available, else placeholder.
     let settlement_id_u32 = config.settlement_id.map(|s| s.0 as u32).unwrap_or(0u32);
     let name = if let Some(ref mut ng) = resources.name_generator {
-        ng.generate_name(sex, "proto_nature", settlement_id_u32, None, &mut resources.rng)
+        ng.generate_name(
+            sex,
+            "proto_nature",
+            settlement_id_u32,
+            None,
+            &mut resources.rng,
+        )
     } else {
         let entity_count = world.len() as u64;
         format!("Agent {}", entity_count + 1)
@@ -746,10 +739,7 @@ pub fn spawn_initial_population(
 
         spawn_agent(world, resources, &config);
     }
-    log::info!(
-        "[entity_spawner] Spawned {} agents into hecs::World",
-        count
-    );
+    log::info!("[entity_spawner] Spawned {} agents into hecs::World", count);
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────

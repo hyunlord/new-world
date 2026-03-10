@@ -97,8 +97,22 @@ impl SimSystem for LlmRequestRuntimeSystem {
                 Option<&LlmResult>,
             )>();
 
-            for (entity, (identity, personality, emotion, behavior, needs, stress, values, capable, cache, pending, result)) in
-                &mut query
+            for (
+                entity,
+                (
+                    identity,
+                    personality,
+                    emotion,
+                    behavior,
+                    needs,
+                    stress,
+                    values,
+                    capable,
+                    cache,
+                    pending,
+                    result,
+                ),
+            ) in &mut query
             {
                 total_capable += 1;
                 if pending.is_some() {
@@ -230,9 +244,7 @@ fn latest_event_for_actor(
         .map(|event| RecentEventInfo {
             event_type: event.event_type.clone(),
             cause: event.cause.clone(),
-            target_name: event
-                .target
-                .and_then(|target| names.get(&target).cloned()),
+            target_name: event.target.and_then(|target| names.get(&target).cloned()),
         })
 }
 
@@ -379,7 +391,8 @@ fn stress_state_code(stress: &Stress) -> u8 {
 }
 
 fn apply_fallback_result(world: &mut World, entity: Entity, request: &LlmRequest, tick: u64) {
-    let fallback_content = generate_fallback_content(request.request_type, request.entity_name.as_str());
+    let fallback_content =
+        generate_fallback_content(request.request_type, request.entity_name.as_str());
     let result = LlmResult {
         request_id: request.request_id,
         content: fallback_content.clone(),
@@ -502,7 +515,9 @@ mod tests {
             .get::<&LlmCapable>(entity)
             .expect("capable component should remain present");
         assert_eq!(capable.last_request_tick, 600);
-        assert!(world.get::<&sim_core::components::LlmPending>(entity).is_err());
+        assert!(world
+            .get::<&sim_core::components::LlmPending>(entity)
+            .is_err());
     }
 
     #[test]
@@ -547,10 +562,7 @@ mod tests {
 
     #[test]
     fn available_runtime_uses_queue_submission_strategy() {
-        assert_eq!(
-            llm_submission_strategy(true),
-            LlmSubmissionStrategy::Queue
-        );
+        assert_eq!(llm_submission_strategy(true), LlmSubmissionStrategy::Queue);
         assert_eq!(
             llm_submission_strategy(false),
             LlmSubmissionStrategy::Fallback

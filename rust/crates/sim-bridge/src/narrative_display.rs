@@ -1,4 +1,4 @@
-use godot::builtin::{Array, GString, Variant, VarDictionary};
+use godot::builtin::{Array, GString, VarDictionary, Variant};
 use hecs::{Entity, World};
 use sim_core::components::{LlmPending, LlmResult, NarrativeCache};
 use sim_engine::SimResources;
@@ -127,7 +127,10 @@ pub(crate) fn build_narrative_display(
 /// Converts a Rust-side narrative display payload into a Godot dictionary.
 pub(crate) fn narrative_display_to_dict(data: &NarrativeDisplayData) -> VarDictionary {
     let mut dict = VarDictionary::new();
-    dict.set("personality_text", GString::from(data.personality_text.as_str()));
+    dict.set(
+        "personality_text",
+        GString::from(data.personality_text.as_str()),
+    );
     dict.set("event_text", GString::from(data.event_text.as_str()));
     dict.set("inner_text", GString::from(data.inner_text.as_str()));
     dict.set("show_personality", data.show_personality);
@@ -138,14 +141,20 @@ pub(crate) fn narrative_display_to_dict(data: &NarrativeDisplayData) -> VarDicti
     dict.set("show_inner_shimmer", data.show_inner_shimmer);
     dict.set("show_disabled_overlay", data.show_disabled_overlay);
     dict.set("ai_icon_state", i64::from(data.ai_icon_state));
-    dict.set("ai_label_tooltip", GString::from(data.ai_label_tooltip.as_str()));
+    dict.set(
+        "ai_label_tooltip",
+        GString::from(data.ai_label_tooltip.as_str()),
+    );
     dict.set("panel_title", GString::from(data.panel_title.as_str()));
     let mut labels: Array<Variant> = Array::new();
     for label in &data.section_labels {
         labels.push(&Variant::from(GString::from(label.as_str())));
     }
     dict.set("section_labels", labels);
-    dict.set("disabled_message", GString::from(data.disabled_message.as_str()));
+    dict.set(
+        "disabled_message",
+        GString::from(data.disabled_message.as_str()),
+    );
     dict.set("ai_generated", data.ai_generated);
     dict.set("entity_id", data.entity_id as i64);
     dict

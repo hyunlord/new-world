@@ -1,8 +1,8 @@
 //! sim-data: data loaders and schema types for simulation content.
 pub mod attachment_config;
 pub mod coping;
-pub mod developmental_stages;
 pub mod defs;
+pub mod developmental_stages;
 pub mod emotion_presets;
 pub mod error;
 pub mod loader;
@@ -24,16 +24,16 @@ pub mod values_seed;
 
 pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
-pub use developmental_stages::{
-    load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,
-};
 pub use defs::{
     ActionCategory, ActionCondition, ActionDef, ActionEffect, AxisShift, BiasMatrixRow,
     CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceEmission, MaterialCategory,
     MaterialDef, MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
     RuleAgentModifier, RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition,
-    StructureDef, StructureRequirement, TagRequirement, TemperamentRules,
-    TemperamentShiftRule, WorldRuleset,
+    StructureDef, StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule,
+    WorldRuleset,
+};
+pub use developmental_stages::{
+    load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,
 };
 pub use emotion_presets::{load_emotion_presets, EmotionPreset, EmotionPresets};
 pub use error::{DataError, DataResult};
@@ -47,19 +47,19 @@ pub use name_generator::NameGenerator;
 pub use occupations::{
     load_occupation_data, JobProfile, JobProfiles, OccupationCategories, OccupationData,
 };
+pub use personality_distribution::{
+    load_personality_distribution, CorrelationMatrix, MaturationEntry, OuParameters,
+    PersonalityDistribution,
+};
+pub use registry::{DataRegistry, DerivedStats};
 pub use species::{load_species_catalog, SpeciesCatalog, SpeciesDefinition};
 pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents};
-pub use registry::{DataRegistry, DerivedStats};
 pub use tag_index::TagIndex;
 pub use tech::{load_tech_catalog, TechCatalog, TechDef};
 pub use trait_defs::{load_trait_definitions, TraitDefinition, TraitDefinitions};
 pub use validator::{validate_registry, Severity, ValidationError};
 pub use value_events::{load_value_events, ValueEvent, ValueEvents};
 pub use values_seed::{facet_index, hexaco_seed_map, value_heritability};
-pub use personality_distribution::{
-    load_personality_distribution, CorrelationMatrix, MaturationEntry, OuParameters,
-    PersonalityDistribution,
-};
 
 /// Aggregated simulation data snapshot loaded from JSON files.
 #[derive(Debug, Clone)]
