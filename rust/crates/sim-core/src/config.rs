@@ -312,6 +312,10 @@ pub const INFLUENCE_BEAUTY_DECAY_RATE: f64 = 0.08;
 pub const INFLUENCE_BEAUTY_PROPAGATION_SPEED: u32 = 2;
 /// Beauty channel default wall attenuation coefficient.
 pub const INFLUENCE_BEAUTY_WALL_BLOCK: f64 = 0.4;
+/// Per-entity causal ring-buffer capacity.
+pub const CAUSAL_LOG_MAX_PER_ENTITY: usize = 32;
+/// Shared default axis value for scaffold temperament state.
+pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.
 pub const STORY_SIFTER_NEED_PERSISTENCE_TICKS: u64 = 20;
 /// Maximum window for recovery-arc checks after a mental break.

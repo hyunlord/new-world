@@ -81,6 +81,13 @@ pub struct DataBundle {
     pub name_cultures: std::collections::HashMap<String, NameCulture>,
 }
 
+impl DataBundle {
+    /// Returns one legacy trait definition by id.
+    pub fn trait_definition(&self, id: &str) -> Option<&TraitDefinition> {
+        self.traits.get(id)
+    }
+}
+
 /// Load all currently-supported data from a base data directory.
 /// If any individual loader fails, returns that error.
 pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
@@ -173,5 +180,25 @@ mod tests {
         assert!(registry.materials.contains_key("flint"));
         assert!(registry.world_rules.is_some());
         assert!(registry.temperament_rules.is_some());
+    }
+
+    #[test]
+    fn data_bundle_trait_lookup_returns_loaded_trait() {
+        let data_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .expect("missing crates parent")
+            .parent()
+            .expect("missing rust parent")
+            .parent()
+            .expect("missing project root parent")
+            .join("data");
+
+        if !data_dir.exists() {
+            eprintln!("Skipping: data dir not found at {:?}", data_dir);
+            return;
+        }
+
+        let data = load_all(&data_dir).expect("load_all failed");
+        assert!(data.trait_definition("f_sincere").is_some());
     }
 }

@@ -13,7 +13,8 @@ use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
     Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmCapable,
-    Memory, NarrativeCache, Needs, Personality, Position, Skills, Social, Stress, Traits,
+    InfluenceReceiver, Memory, NarrativeCache, Needs, Personality, Position, Skills, Social,
+    Stress, Temperament, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
@@ -566,6 +567,10 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
     (tone.to_string(), verbosity.to_string(), humor.to_string())
 }
 
+fn generate_temperament(personality: &Personality) -> Temperament {
+    Temperament::from_personality(personality)
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
 /// Spawn a single agent into the ECS world with all components initialized.
@@ -666,6 +671,7 @@ pub fn spawn_agent(
     // Values: initialize from HEXACO personality before personality is moved.
     let values = initialize_values(&personality, None, None, &mut resources.rng);
     let steering = derive_steering_params(&personality);
+    let temperament = generate_temperament(&personality);
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
     // We have 19 components total: spawn the first 15, then insert the remaining 4.
@@ -696,6 +702,8 @@ pub fn spawn_agent(
                 Traits::default(),
                 Faith::default(),
                 steering,
+                temperament,
+                InfluenceReceiver::default(),
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),
@@ -926,6 +934,14 @@ mod tests {
         assert!(
             world.get::<&Faith>(entity).is_ok(),
             "Faith component should be present"
+        );
+        assert!(
+            world.get::<&Temperament>(entity).is_ok(),
+            "Temperament component should be present"
+        );
+        assert!(
+            world.get::<&InfluenceReceiver>(entity).is_ok(),
+            "InfluenceReceiver component should be present"
         );
     }
 }

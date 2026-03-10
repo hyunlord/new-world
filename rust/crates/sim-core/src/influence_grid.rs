@@ -1,5 +1,6 @@
 use crate::influence_channel::{ChannelId, ChannelMeta};
 use crate::wall_mask::WallBlockingMask;
+use serde::{Deserialize, Serialize};
 
 /// A record describing one active influence emitter.
 #[derive(Debug, Clone)]
@@ -21,7 +22,7 @@ pub struct EmitterRecord {
 }
 
 /// Distance attenuation profile used during stamping.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum FalloffType {
     /// `intensity * (1 - dist / radius)`.
     Linear,

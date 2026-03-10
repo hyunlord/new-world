@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Unique entity ID
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct EntityId(pub u64);
 
 /// Unique settlement ID
