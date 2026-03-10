@@ -14,8 +14,8 @@ use log::{debug, info, warn};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{
-    Building, BuildingId, ChannelId, EntityId, GameCalendar, InfluenceGrid, Settlement,
-    SettlementId, SimConfig, WorldMap,
+    Building, BuildingId, CausalLog, ChannelId, EntityId, GameCalendar, InfluenceGrid, Room,
+    Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
 };
 use sim_data::{NameGenerator, PersonalityDistribution};
 /// SimEngine — the central tick loop coordinator.
@@ -128,6 +128,12 @@ pub struct SimResources {
     pub name_generator: Option<NameGenerator>,
     /// Double-buffered spatial influence field shared across all systems.
     pub influence_grid: InfluenceGrid,
+    /// Shared structural tile grid scaffold for future building/room systems.
+    pub tile_grid: TileGrid,
+    /// Shared detected room cache scaffold.
+    pub rooms: Vec<Room>,
+    /// Shared per-entity causal ring buffer scaffold.
+    pub causal_log: CausalLog,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
     pub explain_log: ExplainLog,
     /// Runtime-mutable simulation balance parameters (debug tuning).
@@ -152,6 +158,7 @@ impl SimResources {
     pub fn new(calendar: GameCalendar, map: WorldMap, seed: u64) -> Self {
         let influence_grid =
             InfluenceGrid::new(map.width, map.height, ChannelId::default_channels());
+        let tile_grid = TileGrid::new(map.width, map.height);
         Self {
             calendar,
             map,
@@ -173,6 +180,9 @@ impl SimResources {
             personality_distribution: None,
             name_generator: None,
             influence_grid,
+            tile_grid,
+            rooms: Vec::new(),
+            causal_log: CausalLog::new(),
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
             event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),
@@ -692,6 +702,9 @@ mod tests {
         let map = WorldMap::new(24, 12, 0);
         let resources = SimResources::new(calendar, map, 7);
         assert_eq!(resources.influence_grid.dimensions(), (24, 12));
+        assert_eq!(resources.tile_grid.dimensions(), (24, 12));
+        assert!(resources.rooms.is_empty());
+        assert_eq!(resources.causal_log.total_entries(), 0);
     }
 
     #[test]

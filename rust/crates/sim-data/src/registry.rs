@@ -4,7 +4,9 @@ use std::sync::Arc;
 
 use serde::de::DeserializeOwned;
 
-use crate::defs::{ActionDef, FurnitureDef, MaterialDef, RecipeDef, StructureDef};
+use crate::defs::{
+    ActionDef, ActionEffect, FurnitureDef, InfluenceEmission, MaterialDef, RecipeDef, StructureDef,
+};
 use crate::loader::{load_ron_directory, DataLoadError};
 use crate::tag_index::TagIndex;
 use crate::validator::{validate_registry, Severity};
@@ -150,6 +152,50 @@ impl DataRegistry {
     pub fn derive_item_stats(&self, _template: &str, material: &MaterialDef) -> DerivedStats {
         derive_stats_from_properties(&material.properties)
     }
+
+    /// Returns a wall-blocking hint derived from a material's density.
+    pub fn material_wall_blocking_hint(&self, material_id: &str) -> Option<f64> {
+        self.materials
+            .get(material_id)
+            .map(|material| (material.properties.density * 0.15).clamp(0.0, 1.0))
+    }
+
+    /// Returns influence emissions configured for the given furniture id.
+    pub fn furniture_influence_emissions(
+        &self,
+        furniture_id: &str,
+    ) -> Option<&[InfluenceEmission]> {
+        self.furniture
+            .get(furniture_id)
+            .map(|furniture| furniture.influence_emissions.as_slice())
+    }
+
+    /// Returns influence emissions configured for a completed structure.
+    pub fn structure_completion_influence(
+        &self,
+        structure_id: &str,
+    ) -> Option<&[InfluenceEmission]> {
+        self.structures
+            .get(structure_id)
+            .map(|structure| structure.influence_when_complete.as_slice())
+    }
+
+    /// Returns declarative action effects configured for the given action.
+    pub fn action_effects(&self, action_id: &str) -> Option<&[ActionEffect]> {
+        self.actions
+            .get(action_id)
+            .map(|action| action.effects.as_slice())
+    }
+
+    /// Returns the authoritative world-rules schema bundle when present.
+    pub fn world_rules_ref(&self) -> Option<&WorldRuleset> {
+        self.world_rules.as_ref()
+    }
+
+    /// Returns the authoritative temperament-rules schema bundle when present.
+    pub fn temperament_rules_ref(&self) -> Option<&TemperamentRules> {
+        self.temperament_rules.as_ref()
+    }
 }
 
 fn load_defs<T, F>(
@@ -267,5 +313,23 @@ mod tests {
 
         assert!(registry.world_rules.is_some());
         assert!(registry.temperament_rules.is_some());
+    }
+
+    #[test]
+    fn foundation_helpers_expose_loaded_schema_hooks() {
+        let data_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data");
+        let registry = DataRegistry::load_from_directory(&data_dir)
+            .expect("expected sample crate data to load");
+
+        let emissions = registry
+            .furniture_influence_emissions("fire_pit")
+            .expect("expected fire_pit emissions");
+
+        assert!(!emissions.is_empty());
+        assert!(registry.material_wall_blocking_hint("flint").is_some());
+        assert!(registry.structure_completion_influence("lean_to_structure").is_some());
+        assert!(registry.action_effects("forage").is_some());
+        assert!(registry.world_rules_ref().is_some());
+        assert!(registry.temperament_rules_ref().is_some());
     }
 }
