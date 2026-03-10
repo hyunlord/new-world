@@ -20,6 +20,8 @@ var _runtime_world_summary_cache_tick: int = -1
 var _selected_runtime_detail_cache: Dictionary = {}
 var _selected_runtime_detail_cache_tick: int = -1
 var _selected_runtime_detail_cache_id: int = -1
+var _probe_runtime_detail_cache: Dictionary = {}
+var _probe_runtime_detail_cache_tick: int = -1
 var selected_entity_id: int = -1
 var probe_observation_mode: bool = false
 var _current_lod: int = 1
@@ -68,6 +70,22 @@ const PROBE_SELECTION_HALO_ALPHA: float = 0.14
 const PROBE_FORAGE_TARGET_COLOR: Color = Color(1.0, 0.86, 0.22, 0.95)
 const PROBE_FORAGE_TARGET_PENDING_ALPHA: float = 0.32
 const PROBE_FORAGE_LINE_WIDTH: float = 2.0
+const PROBE_SURVIVAL_HUNGER_THRESHOLD: float = 0.35
+const PROBE_SURVIVAL_WARMTH_THRESHOLD: float = 0.35
+const PROBE_SURVIVAL_ENERGY_THRESHOLD: float = 0.30
+const PROBE_SURVIVAL_SAFETY_THRESHOLD: float = 0.30
+const PROBE_SURVIVAL_SELECTED_BADGE_SIZE: float = 5.6
+const PROBE_SURVIVAL_UNSELECTED_BADGE_SIZE: float = 4.0
+const PROBE_SURVIVAL_BADGE_GAP: float = 2.5
+const PROBE_SURVIVAL_MAX_UNSELECTED: int = 2
+const PROBE_SURVIVAL_SELECTED_ALPHA: float = 0.96
+const PROBE_SURVIVAL_UNSELECTED_ALPHA: float = 0.74
+const PROBE_SURVIVAL_LABEL_FONT_SIZE: int = 9
+const PROBE_SURVIVAL_HALO_ALPHA: float = 0.18
+const PROBE_SURVIVAL_HUNGER_COLOR: Color = Color(1.0, 0.79, 0.20, 1.0)
+const PROBE_SURVIVAL_WARMTH_COLOR: Color = Color(0.35, 0.84, 1.0, 1.0)
+const PROBE_SURVIVAL_ENERGY_COLOR: Color = Color(0.76, 0.56, 1.0, 1.0)
+const PROBE_SURVIVAL_SAFETY_COLOR: Color = Color(1.0, 0.38, 0.34, 1.0)
 
 ## Age size multipliers
 const AGE_SIZE_MULT: Dictionary = {
@@ -198,6 +216,8 @@ func set_probe_observation_mode(enabled: bool) -> void:
 
 
 func _on_tick(_tick: int) -> void:
+	_probe_runtime_detail_cache_tick = -1
+	_probe_runtime_detail_cache.clear()
 	queue_redraw()
 
 
@@ -525,7 +545,7 @@ func _draw() -> void:
 			# Carrying indicator: skipped for snapshot entities (no carry data)
 
 			# Hunger warning
-			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD and (not probe_observation_mode or is_selected):
+			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD and not probe_observation_mode:
 				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 
 			## Leader crown [♛ = Unicode U+265B, locale-exempt symbol]
@@ -540,6 +560,8 @@ func _draw() -> void:
 				# Partner heart marker: skipped for snapshot entities
 				if false: # TODO: partner check needs entity detail panel
 					pass
+
+			_draw_probe_survival_indicators(pos, size, eid, is_selected)
 
 		# LOD 2: Show names for all entities
 		if _should_draw_name(is_selected):
@@ -637,11 +659,13 @@ func _draw_binary_snapshots() -> void:
 
 		if _current_lod >= 1:
 			var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
-			if danger_flags & 0b0010 != 0 and (not probe_observation_mode or is_selected):
+			if danger_flags & 0b0010 != 0 and not probe_observation_mode:
 				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 			if is_selected:
 				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
 				selected_probe_pos = pos
+
+			_draw_probe_survival_indicators(pos, size, entity_id, is_selected, danger_flags)
 
 		if _should_draw_name(is_selected):
 			var entity_name: String = _runtime_entity_name(entity_id)
@@ -748,6 +772,155 @@ func _draw_probe_selected_forage_overlay(selected_pos: Vector2) -> void:
 		)
 
 
+func _draw_probe_survival_indicators(
+	pos: Vector2,
+	size: float,
+	entity_id: int,
+	is_selected: bool,
+	danger_flags: int = -1
+) -> void:
+	if not probe_observation_mode or _current_lod < 1:
+		return
+	var indicators: Array[Dictionary] = _probe_survival_indicators(entity_id, danger_flags)
+	if indicators.is_empty():
+		return
+	var visible_count: int = indicators.size() if is_selected else mini(indicators.size(), PROBE_SURVIVAL_MAX_UNSELECTED)
+	var badge_size: float = PROBE_SURVIVAL_SELECTED_BADGE_SIZE if is_selected else PROBE_SURVIVAL_UNSELECTED_BADGE_SIZE
+	var step: float = badge_size * 2.0 + PROBE_SURVIVAL_BADGE_GAP
+	var row_width: float = step * float(visible_count - 1)
+	var start_x: float = pos.x - row_width * 0.5
+	var baseline_y: float = pos.y - size - (16.0 if is_selected else 12.0)
+	for indicator_index: int in range(visible_count):
+		var indicator: Dictionary = indicators[indicator_index]
+		var badge_pos: Vector2 = Vector2(start_x + step * float(indicator_index), baseline_y)
+		_draw_probe_survival_badge(badge_pos, badge_size, indicator, is_selected)
+
+
+func _draw_probe_survival_badge(
+	center: Vector2,
+	size: float,
+	indicator: Dictionary,
+	is_selected: bool
+) -> void:
+	var color: Color = indicator.get("color", Color.WHITE)
+	var alpha: float = PROBE_SURVIVAL_SELECTED_ALPHA if is_selected else PROBE_SURVIVAL_UNSELECTED_ALPHA
+	var badge_color: Color = Color(color.r, color.g, color.b, alpha)
+	if is_selected:
+		draw_circle(center, size + 3.0, Color(color.r, color.g, color.b, PROBE_SURVIVAL_HALO_ALPHA))
+	var outline_color: Color = Color(0.05, 0.05, 0.05, 0.88)
+	var shape: String = str(indicator.get("shape", "circle"))
+	match shape:
+		"triangle":
+			_draw_triangle_outlined(center, size + 0.2, badge_color)
+		"square":
+			_draw_square_outlined(center, size + 0.2, badge_color)
+		"diamond":
+			_draw_diamond_outlined(center, size + 0.2, badge_color)
+		_:
+			draw_circle(center, size + OUTLINE_WIDTH, outline_color)
+			draw_circle(center, size, badge_color)
+	if is_selected:
+		var label: String = str(indicator.get("label", ""))
+		if not label.is_empty():
+			var font: Font = ThemeDB.fallback_font
+			var label_size: Vector2 = font.get_string_size(
+				label,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				PROBE_SURVIVAL_LABEL_FONT_SIZE
+			)
+			draw_string(
+				font,
+				center + Vector2(-label_size.x * 0.5, label_size.y * 0.35),
+				label,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				PROBE_SURVIVAL_LABEL_FONT_SIZE,
+				Color.WHITE
+			)
+
+
+func _probe_survival_indicators(entity_id: int, danger_flags: int = -1) -> Array[Dictionary]:
+	var indicators: Array[Dictionary] = []
+	var detail: Dictionary = _get_probe_entity_detail(entity_id)
+	if detail.is_empty():
+		if danger_flags >= 0 and danger_flags & 0b0010 != 0:
+			indicators.append(_probe_indicator_spec(
+				Locale.ltr("UI_PROBE_NEED_HUNGER_SHORT"),
+				PROBE_SURVIVAL_HUNGER_COLOR,
+				"circle",
+				0.0
+			))
+		if danger_flags >= 0 and danger_flags & 0b0101 != 0:
+			indicators.append(_probe_indicator_spec(
+				Locale.ltr("UI_PROBE_NEED_DANGER_SHORT"),
+				PROBE_SURVIVAL_SAFETY_COLOR,
+				"triangle",
+				0.0
+			))
+		return indicators
+
+	var hunger: float = float(detail.get("need_hunger", 1.0))
+	var warmth: float = float(detail.get("need_warmth", 1.0))
+	var energy: float = float(detail.get("energy", 1.0))
+	var safety: float = float(detail.get("need_safety", 1.0))
+
+	if hunger <= PROBE_SURVIVAL_HUNGER_THRESHOLD:
+		indicators.append(_probe_indicator_spec(
+			Locale.ltr("UI_PROBE_NEED_HUNGER_SHORT"),
+			PROBE_SURVIVAL_HUNGER_COLOR,
+			"circle",
+			hunger
+		))
+	if warmth <= PROBE_SURVIVAL_WARMTH_THRESHOLD:
+		indicators.append(_probe_indicator_spec(
+			Locale.ltr("UI_PROBE_NEED_WARMTH_SHORT"),
+			PROBE_SURVIVAL_WARMTH_COLOR,
+			"diamond",
+			warmth
+		))
+	if energy <= PROBE_SURVIVAL_ENERGY_THRESHOLD:
+		indicators.append(_probe_indicator_spec(
+			Locale.ltr("UI_PROBE_NEED_FATIGUE_SHORT"),
+			PROBE_SURVIVAL_ENERGY_COLOR,
+			"square",
+			energy
+		))
+	if safety <= PROBE_SURVIVAL_SAFETY_THRESHOLD:
+		indicators.append(_probe_indicator_spec(
+			Locale.ltr("UI_PROBE_NEED_DANGER_SHORT"),
+			PROBE_SURVIVAL_SAFETY_COLOR,
+			"triangle",
+			safety
+		))
+
+	indicators.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.get("severity", 1.0)) < float(b.get("severity", 1.0))
+	)
+	return indicators
+
+
+func _probe_indicator_spec(label: String, color: Color, shape: String, severity: float) -> Dictionary:
+	return {
+		"label": label,
+		"color": color,
+		"shape": shape,
+		"severity": severity,
+	}
+
+
+func _get_probe_entity_detail(entity_id: int) -> Dictionary:
+	if _sim_engine == null or not _sim_engine.has_method("get_entity_detail") or entity_id < 0:
+		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _probe_runtime_detail_cache_tick:
+		_probe_runtime_detail_cache_tick = tick
+		_probe_runtime_detail_cache.clear()
+	if not _probe_runtime_detail_cache.has(entity_id):
+		_probe_runtime_detail_cache[entity_id] = _sim_engine.get_entity_detail(entity_id)
+	return _probe_runtime_detail_cache.get(entity_id, {})
+
+
 func _get_selected_runtime_detail() -> Dictionary:
 	if _sim_engine == null or not _sim_engine.has_method("get_entity_detail") or selected_entity_id < 0:
 		return {}
@@ -755,7 +928,7 @@ func _get_selected_runtime_detail() -> Dictionary:
 	if tick != _selected_runtime_detail_cache_tick or selected_entity_id != _selected_runtime_detail_cache_id:
 		_selected_runtime_detail_cache_tick = tick
 		_selected_runtime_detail_cache_id = selected_entity_id
-		_selected_runtime_detail_cache = _sim_engine.get_entity_detail(selected_entity_id)
+		_selected_runtime_detail_cache = _get_probe_entity_detail(selected_entity_id)
 	return _selected_runtime_detail_cache
 
 
