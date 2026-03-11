@@ -8,13 +8,10 @@ var speed_index: int = 0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var _accumulator: float = 0.0
-var _systems: Array = []
 var _seed: int = 0
 var _rust_runtime_initialized: bool = false
 var _rust_runtime_available: bool = false
 var _registered_system_count: int = 0
-var _registered_system_payloads: Array[Dictionary] = []
-var _system_key_by_instance_id: Dictionary = {}
 var _last_agent_snapshots: Array = []
 var _entity_detail_cache: Dictionary = {}
 var _entity_detail_cache_tick: int = -1
@@ -27,33 +24,16 @@ func init_with_seed(seed_value: int) -> void:
 	current_tick = 0
 	_accumulator = 0.0
 	_registered_system_count = 0
-	_registered_system_payloads.clear()
-	_system_key_by_instance_id.clear()
 	_init_rust_runtime()
 
-
-## Register a simulation system (sorted by priority)
-func register_system(system: RefCounted) -> void:
-	var system_payload: Dictionary = _build_runtime_system_payload(system, _registered_system_count)
-	_registered_system_count += 1
-	_registered_system_payloads.append(system_payload)
-	var key: String = _runtime_system_key_from_name(str(system_payload.get("name", "")))
-	if not key.is_empty():
-		_system_key_by_instance_id[system.get_instance_id()] = key
-	if _rust_runtime_available:
-		_queue_runtime_command(StringName("register_system"), system_payload)
-	_systems.append(system)
-	_systems.sort_custom(func(a, b): return a.priority < b.priority)
-
-
-## Validates Rust runtime registry snapshot against GDScript registration metadata.
+## Validates that the runtime registry is populated and fully Rust-backed.
 func validate_runtime_registry() -> Dictionary:
 	var result: Dictionary = {
 		"runtime_available": _rust_runtime_available,
 		"expected_count": _registered_system_count,
 		"runtime_count": 0,
 		"count_match": false,
-		"order_match": false,
+		"all_rust": false,
 	}
 	if not _rust_runtime_available:
 		return result
@@ -67,14 +47,21 @@ func validate_runtime_registry() -> Dictionary:
 	var runtime_count: int = runtime_snapshot.size()
 	result["runtime_count"] = runtime_count
 	result["count_match"] = runtime_count == _registered_system_count
-	var expected_names: PackedStringArray = _expected_runtime_registry_names()
-	var runtime_names: PackedStringArray = _runtime_registry_names(runtime_snapshot)
-	result["order_match"] = expected_names == runtime_names
-	if bool(result["count_match"]) and bool(result["order_match"]):
+	var all_rust: bool = true
+	for row_raw in runtime_snapshot:
+		if not (row_raw is Dictionary):
+			all_rust = false
+			break
+		var row: Dictionary = row_raw
+		if str(row.get("exec_backend", "")) != "rust" or not bool(row.get("rust_registered", false)):
+			all_rust = false
+			break
+	result["all_rust"] = all_rust
+	if bool(result["count_match"]) and bool(result["all_rust"]):
 		return result
 	push_warning(
-		"[SimulationEngine] Runtime registry mismatch expected=%d runtime=%d order_match=%s" %
-		[_registered_system_count, runtime_count, str(result["order_match"])]
+		"[SimulationEngine] Runtime registry mismatch expected=%d runtime=%d all_rust=%s" %
+		[_registered_system_count, runtime_count, str(result["all_rust"])]
 	)
 	return result
 
@@ -249,8 +236,8 @@ func _init_rust_runtime() -> void:
 	_rust_runtime_initialized = bool(sim_bridge.call("runtime_init", _seed, config_json))
 	_rust_runtime_available = _rust_runtime_initialized
 	if _rust_runtime_available:
-		if sim_bridge.has_method("runtime_clear_registry"):
-			sim_bridge.call("runtime_clear_registry")
+		if sim_bridge.has_method("runtime_register_default_systems"):
+			_registered_system_count = int(sim_bridge.call("runtime_register_default_systems"))
 		return
 	push_warning("[SimulationEngine] Rust runtime init failed.")
 
@@ -278,63 +265,6 @@ func _queue_runtime_command(command_id: StringName, payload: Dictionary) -> void
 	if not bus_v2.has_method("queue_runtime_command"):
 		return
 	bus_v2.call("queue_runtime_command", command_id, payload)
-
-
-func _build_runtime_system_payload(system: RefCounted, registration_index: int) -> Dictionary:
-	var payload: Dictionary = {}
-	var script_name: String = ""
-	var script_ref: Variant = system.get_script()
-	if script_ref is GDScript:
-		script_name = str(script_ref.resource_path)
-	if script_name.is_empty():
-		script_name = system.get_class()
-	payload["name"] = script_name
-	payload["priority"] = int(system.get("priority"))
-	payload["tick_interval"] = int(system.get("tick_interval"))
-	payload["active"] = bool(system.get("is_active"))
-	payload["registration_index"] = registration_index
-	return payload
-
-
-func _runtime_system_key_from_name(name: String) -> String:
-	var trimmed: String = name.strip_edges()
-	if trimmed.is_empty():
-		return ""
-	var normalized: String = trimmed.replace("\\", "/").to_lower()
-	var tail: String = normalized.get_file()
-	if tail.ends_with(".gd"):
-		tail = tail.left(tail.length() - 3)
-	return tail
-
-
-func _expected_runtime_registry_names() -> PackedStringArray:
-	var sorted_payloads: Array = _registered_system_payloads.duplicate(true)
-	sorted_payloads.sort_custom(func(a, b):
-		var a_priority: int = int(a.get("priority", 100))
-		var b_priority: int = int(b.get("priority", 100))
-		if a_priority == b_priority:
-			return int(a.get("registration_index", 0)) < int(b.get("registration_index", 0))
-		return a_priority < b_priority
-	)
-	var names: PackedStringArray = PackedStringArray()
-	for i in range(sorted_payloads.size()):
-		var payload_raw: Variant = sorted_payloads[i]
-		if not (payload_raw is Dictionary):
-			continue
-		var payload: Dictionary = payload_raw
-		names.append(str(payload.get("name", "")))
-	return names
-
-
-func _runtime_registry_names(runtime_snapshot: Array) -> PackedStringArray:
-	var names: PackedStringArray = PackedStringArray()
-	for i in range(runtime_snapshot.size()):
-		var row_raw: Variant = runtime_snapshot[i]
-		if not (row_raw is Dictionary):
-			continue
-		var row: Dictionary = row_raw
-		names.append(str(row.get("name", "")))
-	return names
 
 
 ## Returns cached entity detail dictionary from SimBridge, invalidating cache each tick.
@@ -461,6 +391,11 @@ func get_world_summary() -> Dictionary:
 	if raw is Dictionary:
 		return raw
 	return {}
+
+
+## Returns the number of runtime systems registered in the authoritative Rust manifest.
+func get_registered_system_count() -> int:
+	return _registered_system_count
 
 
 ## Returns minimap snapshot from Rust runtime.

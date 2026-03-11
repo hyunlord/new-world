@@ -4,8 +4,8 @@ use godot::prelude::{Array, VarDictionary};
 use crate::runtime_bindings::{is_supported_compute_mode, normalize_compute_mode_for_domain};
 use crate::runtime_dict::{dict_get_bool, dict_get_i32, dict_get_string};
 use crate::runtime_registry::{
-    clamp_speed_index, register_supported_rust_system, runtime_supports_rust_system,
-    runtime_system_key_from_name, RuntimeState, RuntimeSystemEntry, RUNTIME_COMPUTE_DOMAINS,
+    clamp_speed_index, runtime_system_key_from_name, upsert_runtime_system_entry, RuntimeState,
+    RUNTIME_COMPUTE_DOMAINS,
 };
 
 pub(crate) fn registry_snapshot(state: &RuntimeState) -> Array<VarDictionary> {
@@ -72,49 +72,15 @@ pub(crate) fn apply_commands_v2(state: &mut RuntimeState, commands: Array<VarDic
             let registration_index =
                 dict_get_i32(&payload, "registration_index").unwrap_or(i32::MAX);
             let system_key = runtime_system_key_from_name(&name);
-            let rust_implemented = runtime_supports_rust_system(system_key.as_str());
-            let rust_registered = if rust_implemented {
-                register_supported_rust_system(state, system_key.as_str(), priority, tick_interval)
-            } else {
-                false
-            };
-            let exec_backend = if rust_registered {
-                "rust".to_string()
-            } else {
-                "gdscript".to_string()
-            };
-            if let Some(existing) = state
-                .registered_systems
-                .iter_mut()
-                .find(|entry| entry.name == name)
-            {
-                existing.system_key = system_key;
-                existing.priority = priority;
-                existing.tick_interval = tick_interval;
-                existing.active = active;
-                existing.registration_index = registration_index;
-                existing.rust_implemented = rust_implemented;
-                existing.rust_registered = rust_registered;
-                existing.exec_backend = exec_backend;
-            } else {
-                state.registered_systems.push(RuntimeSystemEntry {
-                    name,
-                    system_key,
-                    priority,
-                    tick_interval,
-                    active,
-                    registration_index,
-                    rust_implemented,
-                    rust_registered,
-                    exec_backend,
-                });
-            }
-            state.registered_systems.sort_by(|a, b| {
-                a.priority
-                    .cmp(&b.priority)
-                    .then(a.registration_index.cmp(&b.registration_index))
-                    .then(a.name.cmp(&b.name))
-            });
+            upsert_runtime_system_entry(
+                state,
+                &name,
+                system_key.as_str(),
+                priority,
+                tick_interval,
+                active,
+                registration_index,
+            );
             continue;
         }
         if command_id == "set_compute_domain_mode" {

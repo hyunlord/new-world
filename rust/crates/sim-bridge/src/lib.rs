@@ -72,7 +72,7 @@ pub use pathfinding_core::{
 use runtime_commands::{apply_commands_v2, clear_registry, registry_snapshot};
 use runtime_registry::{
     clamp_speed_index, load_legacy_runtime_bootstrap, parse_runtime_config,
-    runtime_speed_multiplier, RuntimeState,
+    register_default_runtime_systems, runtime_speed_multiplier, RuntimeState,
 };
 #[cfg(test)]
 use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
@@ -1226,6 +1226,14 @@ impl WorldSimRuntime {
             return Array::new();
         };
         registry_snapshot(state)
+    }
+
+    #[func]
+    fn runtime_register_default_systems(&mut self) -> i64 {
+        let Some(state) = self.state.as_mut() else {
+            return 0;
+        };
+        register_default_runtime_systems(state) as i64
     }
 
     #[func]

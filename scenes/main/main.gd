@@ -8,61 +8,12 @@ const ResourceMap = preload("res://scripts/core/world/resource_map.gd")
 const Pathfinder = preload("res://scripts/core/world/pathfinder.gd")
 const BuildingManager = preload("res://scripts/core/settlement/building_manager.gd")
 const SaveManager = preload("res://scripts/core/simulation/save_manager.gd")
-const NeedsSystem = preload("res://scripts/systems/psychology/needs_system.gd")
-const BehaviorSystem = preload("res://scripts/ai/behavior_system.gd")
-const SteeringSystem = preload("res://scripts/systems/world/steering_system.gd")
-const MovementSystem = preload("res://scripts/systems/world/movement_system.gd")
-const ResourceRegenSystem = preload("res://scripts/systems/world/resource_regen_system.gd")
-const GatheringSystem = preload("res://scripts/systems/work/gathering_system.gd")
-const ConstructionSystem = preload("res://scripts/systems/work/construction_system.gd")
-const BuildingEffectSystem = preload("res://scripts/systems/work/building_effect_system.gd")
-const JobAssignmentSystem = preload("res://scripts/systems/work/job_assignment_system.gd")
-const PopulationSystem = preload("res://scripts/systems/biology/population_system.gd")
 const SettlementManager = preload("res://scripts/core/settlement/settlement_manager.gd")
-const MigrationSystem = preload("res://scripts/systems/world/migration_system.gd")
-const StatsRecorder = preload("res://scripts/systems/record/stats_recorder.gd")
 const RelationshipManagerScript = preload("res://scripts/core/social/relationship_manager.gd")
-const SocialEventSystem = preload("res://scripts/systems/social/social_event_system.gd")
-const EmotionSystem = preload("res://scripts/systems/psychology/emotion_system.gd")
-const PersonalityMaturationSystem = preload("res://scripts/systems/psychology/personality_maturation_system.gd")
-const AgeSystem = preload("res://scripts/systems/biology/age_system.gd")
-const FamilySystem = preload("res://scripts/systems/social/family_system.gd")
-const MortalitySystem = preload("res://scripts/systems/biology/mortality_system.gd")
-const ChildcareSystem = preload("res://scripts/systems/development/childcare_system.gd")
-const StressSystem = preload("res://scripts/systems/psychology/stress_system.gd")
-const MentalBreakSystem = preload("res://scripts/systems/psychology/mental_break_system.gd")
-const TraumaScarSystem = preload("res://scripts/systems/psychology/trauma_scar_system.gd")
-const TraitViolationSystem = preload("res://scripts/systems/psychology/trait_violation_system.gd")
-const CopingSystem = preload("res://scripts/systems/psychology/coping_system.gd")
-const MoraleSystem = preload("res://scripts/systems/psychology/morale_system.gd")
-const ContagionSystem = preload("res://scripts/systems/psychology/contagion_system.gd")
-const PsychologyCoordinatorScript = preload("res://scripts/systems/psychology/psychology_coordinator.gd")
-const ChildStressProcessor = preload("res://scripts/systems/development/child_stress_processor.gd")
-const IntergenerationalSystem = preload("res://scripts/systems/development/intergenerational_system.gd")
-const ParentingSystem = preload("res://scripts/systems/development/parenting_system.gd")
 const PauseMenuClass = preload("res://scripts/ui/panels/pause_menu.gd")
 const AmbienceManagerClass = preload("res://scripts/ui/ambience_manager.gd")
-const ValueSystem = preload("res://scripts/systems/social/value_system.gd")
-const StatSyncSystem = preload("res://scripts/systems/record/stat_sync_system.gd")
-const StatThresholdSystem = preload("res://scripts/systems/record/stat_threshold_system.gd")
-const UpperNeedsSystem = preload("res://scripts/systems/psychology/upper_needs_system.gd")
-const LeaderSystem = preload("res://scripts/systems/social/leader_system.gd")
-const IntelligenceSystem = preload("res://scripts/systems/cognition/intelligence_system.gd")
 const ReputationManagerScript = preload("res://scripts/core/social/reputation_manager.gd")
-const ReputationSystem = preload("res://scripts/systems/social/reputation_system.gd")
-const EconomicTendencySystem = preload("res://scripts/systems/social/economic_tendency_system.gd")
-const JobSatisfactionSystem = preload("res://scripts/systems/social/job_satisfaction_system.gd")
-const StratificationMonitor = preload("res://scripts/systems/social/stratification_monitor.gd")
-const MemorySystemScript = preload("res://scripts/systems/record/memory_system.gd")
-const NetworkSystemScript = preload("res://scripts/systems/social/network_system.gd")
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
-const TechDiscoverySystemScript = preload("res://scripts/systems/world/tech_discovery_system.gd")
-const TechMaintenanceSystemScript = preload("res://scripts/systems/world/tech_maintenance_system.gd")
-const TechPropagationSystemScript = preload("res://scripts/systems/world/tech_propagation_system.gd")
-const TensionSystemScript = preload("res://scripts/systems/world/tension_system.gd")
-const TechUtilizationSystemScript = preload("res://scripts/systems/world/tech_utilization_system.gd")
-const OccupationSystem = preload("res://scripts/systems/social/occupation_system.gd")
-const TitleSystem = preload("res://scripts/systems/social/title_system.gd")
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
 
 var sim_engine: RefCounted
@@ -74,62 +25,12 @@ var pathfinder: RefCounted
 var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
-var stats_recorder: RefCounted
 var relationship_manager: RefCounted
+var reputation_manager: RefCounted
+var tech_tree_manager: RefCounted
 var pause_menu: CanvasLayer
 var ambience_manager: Node = null
 var _last_used_slot: int = 1
-
-var needs_system: RefCounted
-var behavior_system: RefCounted
-var steering_system: RefCounted
-var movement_system: RefCounted
-var resource_regen_system: RefCounted
-var gathering_system: RefCounted
-var construction_system: RefCounted
-var building_effect_system: RefCounted
-var job_assignment_system: RefCounted
-var population_system: RefCounted
-var migration_system: RefCounted
-var social_event_system: RefCounted
-var emotion_system: RefCounted
-var personality_maturation_system: RefCounted
-var age_system: RefCounted
-var family_system: RefCounted
-var mortality_system: RefCounted
-var childcare_system: RefCounted
-var stress_system: RefCounted
-var mental_break_system: RefCounted
-var trauma_scar_system: RefCounted
-var trait_violation_system: RefCounted
-var coping_system: RefCounted
-var morale_system: RefCounted
-var contagion_system: RefCounted
-var psychology_coordinator: Node
-var child_stress_processor: RefCounted
-var intergenerational_system: RefCounted
-var parenting_system: RefCounted
-var value_system: RefCounted
-var leader_system: RefCounted
-var stat_sync_system: RefCounted
-var stat_threshold_system: RefCounted
-var upper_needs_system: RefCounted
-var intelligence_system: RefCounted
-var reputation_manager: RefCounted
-var reputation_system: RefCounted
-var economic_tendency_system: RefCounted
-var job_satisfaction_system: RefCounted
-var stratification_monitor: RefCounted
-var memory_system: RefCounted
-var network_system: RefCounted
-var tech_tree_manager: RefCounted
-var tech_discovery_system: RefCounted
-var tech_maintenance_system: RefCounted
-var tech_propagation_system: RefCounted
-var tension_system: RefCounted
-var tech_utilization_system: RefCounted
-var occupation_system: RefCounted
-var title_system: RefCounted
 var _world_setup: Node = null
 var _loading_overlay: CanvasLayer = null
 var _loading_bar: ProgressBar = null
@@ -180,233 +81,19 @@ func _ready() -> void:
 	# Initialize relationship manager
 	relationship_manager = RelationshipManagerScript.new()
 
-	# ── Create simulation systems ──────────────────────────
-	stat_sync_system = StatSyncSystem.new()
-	stat_sync_system.init(entity_manager)
-
-	stat_threshold_system = StatThresholdSystem.new()
-	stat_threshold_system.init(entity_manager)
-
-	intelligence_system = IntelligenceSystem.new()
-	intelligence_system.init(entity_manager)
-
-	## [Baddeley & Hitch 1974] Layer 6 working memory decay + compression (annual)
-	memory_system = MemorySystemScript.new()
-	memory_system.init(entity_manager)
-
-	resource_regen_system = ResourceRegenSystem.new()
-	resource_regen_system.init(resource_map, world_data)
-
-	job_assignment_system = JobAssignmentSystem.new()
-	job_assignment_system.init(entity_manager, building_manager)
-
-	needs_system = NeedsSystem.new()
-	needs_system.init(entity_manager, building_manager, world_data)
-
-	upper_needs_system = UpperNeedsSystem.new()
-	upper_needs_system.init(entity_manager)
-
-	childcare_system = ChildcareSystem.new()
-	childcare_system.init(entity_manager, building_manager, settlement_manager)
-
-	building_effect_system = BuildingEffectSystem.new()
-	building_effect_system.init(entity_manager, building_manager, sim_engine)
-
-	behavior_system = BehaviorSystem.new()
-	behavior_system.init(entity_manager, world_data, sim_engine.rng, resource_map, building_manager, settlement_manager)
-
-	steering_system = SteeringSystem.new()
-
-	gathering_system = GatheringSystem.new()
-	gathering_system.init(entity_manager, resource_map)
-
-	construction_system = ConstructionSystem.new()
-	construction_system.init(entity_manager, building_manager)
-
-	movement_system = MovementSystem.new()
-	movement_system.init(entity_manager, world_data, pathfinder, building_manager)
-
-	population_system = PopulationSystem.new()
-	population_system.init(entity_manager, building_manager, world_data, sim_engine.rng, settlement_manager)
-
-	migration_system = MigrationSystem.new()
-	migration_system.init(entity_manager, building_manager, settlement_manager, world_data, resource_map, sim_engine.rng)
-
-	emotion_system = EmotionSystem.new()
-	emotion_system.init(entity_manager)
-
-	personality_maturation_system = PersonalityMaturationSystem.new()
-
-	age_system = AgeSystem.new()
-	age_system.init(entity_manager, sim_engine.rng)
-
-	mortality_system = MortalitySystem.new()
-	mortality_system.init(entity_manager, sim_engine.rng)
-
-	stress_system = StressSystem.new()
-	stress_system.init(entity_manager)
-	mortality_system._stress_system = stress_system
-
-	mental_break_system = MentalBreakSystem.new()
-	mental_break_system.init(entity_manager, sim_engine.rng)
-
-	trauma_scar_system = TraumaScarSystem.new()
-	trauma_scar_system.init({"entity_manager": entity_manager})
-	mental_break_system.set_trauma_scar_system(trauma_scar_system)
-	stress_system.set_trauma_scar_system(trauma_scar_system)
-
-	trait_violation_system = TraitViolationSystem.new()
-	trait_violation_system.init({"entity_manager": entity_manager})
-	trait_violation_system._stress_system = stress_system
-	trait_violation_system._trauma_scar_system = trauma_scar_system
-	behavior_system.set_trait_violation_system(trait_violation_system)
-
-	social_event_system = SocialEventSystem.new()
-	social_event_system.init(entity_manager, relationship_manager, sim_engine.rng)
-	social_event_system._stress_system = stress_system
-
-	family_system = FamilySystem.new()
-	family_system.init(entity_manager, relationship_manager, building_manager, settlement_manager, sim_engine.rng, mortality_system)
-	family_system._stress_system = stress_system
-
-	stats_recorder = StatsRecorder.new()
-	stats_recorder.init(entity_manager, building_manager, settlement_manager)
-
-	# ── Phase 4: Coping / Morale / Contagion ───────────────
-	coping_system = CopingSystem.new()
-	coping_system.init(entity_manager, sim_engine.rng)
-
-	morale_system = MoraleSystem.new()
-	morale_system.init(entity_manager)
-	behavior_system.set_morale_system(morale_system)
-
-	contagion_system = ContagionSystem.new()
-	contagion_system.init(entity_manager)
-
-	psychology_coordinator = PsychologyCoordinatorScript.new()
-	add_child(psychology_coordinator)
-	psychology_coordinator.init_phase4(coping_system, morale_system, contagion_system, stress_system, entity_manager)
-
-	# ── Phase 5: Childhood / ACE / Parenting ──────────────
-	child_stress_processor = ChildStressProcessor.new()
-	child_stress_processor.init(entity_manager)
-	intergenerational_system = IntergenerationalSystem.new()
-	intergenerational_system.init(entity_manager, settlement_manager)
-	parenting_system = ParentingSystem.new()
-	parenting_system.init(entity_manager)
-
-	value_system = ValueSystem.new()
-	value_system.init(entity_manager, settlement_manager)
-
-	leader_system = LeaderSystem.new()
-	leader_system.init(entity_manager, settlement_manager, relationship_manager)
-
 	# ── Bug #2 fix: StatQuery needs settlement_manager for skill XP gating ──
 	StatQuery.init_settlement_manager(settlement_manager)
-
-	# ── Layer 4.5: Occupation & Title Systems ─────────────
-	occupation_system = OccupationSystem.new()
-	occupation_system.init(entity_manager)
-
-	title_system = TitleSystem.new()
-	title_system.init(entity_manager, settlement_manager)
-
-	# ── Phase 6: Social Identity & Economic Behavior ──────
 	reputation_manager = ReputationManagerScript.new()
-
-	reputation_system = ReputationSystem.new()
-	reputation_system.init(entity_manager, settlement_manager, reputation_manager, relationship_manager, sim_engine.rng)
-
-	economic_tendency_system = EconomicTendencySystem.new()
-	economic_tendency_system.init(entity_manager, settlement_manager)
-
-	job_satisfaction_system = JobSatisfactionSystem.new()
-	job_satisfaction_system.init(entity_manager, settlement_manager, sim_engine.rng)
-
-	stratification_monitor = StratificationMonitor.new()
-	stratification_monitor.init(entity_manager, settlement_manager, reputation_manager)
-
-	# Wire reputation_manager into leader_system for reputation-weighted scoring
-	leader_system._reputation_manager = reputation_manager
-
-	## [Granovetter 1973, Weber 1922, Tilly 1978] Social network + authority + revolution
-	network_system = NetworkSystemScript.new()
-	network_system.init(entity_manager, settlement_manager, relationship_manager, reputation_manager)
-
-	## ── Phase 3A: Tech Tree + Combat + Tension ────────────────────────────────
 	tech_tree_manager = TechTreeManagerScript.new()
 	tech_tree_manager.load_all()
-
-	tech_discovery_system = TechDiscoverySystemScript.new()
-	tech_discovery_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
-
-	tech_maintenance_system = TechMaintenanceSystemScript.new()
-	tech_maintenance_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
-
-	tech_propagation_system = TechPropagationSystemScript.new()
-	tech_propagation_system.init(entity_manager, settlement_manager, tech_tree_manager, ChronicleSystem)
-
-	tension_system = TensionSystemScript.new()
-	tension_system.init(entity_manager, settlement_manager, world_data, ChronicleSystem, sim_engine.rng)
-
-	tech_utilization_system = TechUtilizationSystemScript.new()
-	tech_utilization_system.init(settlement_manager, tech_tree_manager)
-
-	# ── Register all systems (auto-sorted by priority) ─────
-	sim_engine.register_system(stat_sync_system)          # priority 1
-	sim_engine.register_system(resource_regen_system)     # priority 5
-	sim_engine.register_system(childcare_system)          # priority 8 (before needs — feed children first)
-	sim_engine.register_system(job_assignment_system)     # priority 8
-	sim_engine.register_system(needs_system)              # priority 10
-	sim_engine.register_system(stat_threshold_system)    # priority 12
-	sim_engine.register_system(upper_needs_system)       # priority 12
-	sim_engine.register_system(building_effect_system)    # priority 15
-	sim_engine.register_system(intelligence_system)       # priority 18
-	sim_engine.register_system(memory_system)             # priority 18 (annual decay+compress)
-	sim_engine.register_system(behavior_system)           # priority 20
-	sim_engine.register_system(gathering_system)          # priority 25
-	sim_engine.register_system(construction_system)       # priority 28
-	sim_engine.register_system(steering_system)           # priority 29
-	sim_engine.register_system(movement_system)           # priority 30
-	sim_engine.register_system(emotion_system)            # priority 32
-	sim_engine.register_system(child_stress_processor)   # priority 32 (Phase 5)
-	sim_engine.register_system(stress_system)             # priority 34
-	sim_engine.register_system(mental_break_system)       # priority 35
-	sim_engine.register_system(occupation_system)          # priority 36 (Layer 4.5)
-	sim_engine.register_system(trauma_scar_system)        # priority 36
-	sim_engine.register_system(title_system)              # priority 37 (Layer 4.5)
-	sim_engine.register_system(trait_violation_system)   # priority 37
-	sim_engine.register_system(social_event_system)       # priority 37
-	sim_engine.register_system(age_system)                # priority 48
-	sim_engine.register_system(personality_maturation_system) # priority 49
-	sim_engine.register_system(mortality_system)          # priority 49
-	sim_engine.register_system(population_system)         # priority 50
-	sim_engine.register_system(family_system)             # priority 52
-	sim_engine.register_system(leader_system)             # priority 52
-	sim_engine.register_system(value_system)              # priority 55
-	sim_engine.register_system(network_system)            # priority 58 (annual: social capital + authority + revolution)
-	sim_engine.register_system(migration_system)          # priority 60
-	sim_engine.register_system(tech_discovery_system)     # priority 62 (annual tech discovery)
-	sim_engine.register_system(tech_maintenance_system)   # priority 63 (annual tech regression)
-	sim_engine.register_system(tech_propagation_system)  # priority 62 (daily teacher-student propagation)
-	sim_engine.register_system(tension_system)            # priority 64 (bi-annual tension + skirmish)
-	sim_engine.register_system(tech_utilization_system)  # priority 65 (tech utilization modifiers)
-	sim_engine.register_system(stratification_monitor)    # priority 90
-	sim_engine.register_system(stats_recorder)            # priority 90
-	sim_engine.register_system(contagion_system)          # priority 38
-	sim_engine.register_system(reputation_system)         # priority 38
-	sim_engine.register_system(economic_tendency_system)  # priority 39
-	sim_engine.register_system(morale_system)             # priority 40
-	sim_engine.register_system(job_satisfaction_system)   # priority 40
-	sim_engine.register_system(coping_system)             # priority 42
-	sim_engine.register_system(intergenerational_system) # priority 45 (Phase 5)
-	sim_engine.register_system(parenting_system)         # priority 46 (Phase 5)
-	sim_engine.validate_runtime_registry()
+	var registry_validation: Dictionary = sim_engine.validate_runtime_registry()
+	if not bool(registry_validation.get("count_match", false)) or not bool(registry_validation.get("all_rust", false)):
+		push_warning("[Main] Rust runtime registry did not initialize cleanly.")
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
 	building_renderer.init(building_manager, settlement_manager, sim_engine)
-	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, stats_recorder, relationship_manager, reputation_manager)
+	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, null, relationship_manager, reputation_manager)
 	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
 	pause_menu = PauseMenuClass.new()
@@ -820,82 +507,6 @@ func _weighted_random_age(rng: RandomNumberGenerator) -> int:
 		return rng.randi_range(70, 80)
 
 
-## Bootstrap initial relationships so couples can form quickly
-func _bootstrap_relationships(alive: Array) -> void:
-	if alive.size() < 4:
-		return
-	# Separate by gender for close_friend pairing (opposite gender needed for romance)
-	var males: Array = []
-	var females: Array = []
-	for i in range(alive.size()):
-		var e: RefCounted = alive[i]
-		if e.gender == "male":
-			males.append(e)
-		else:
-			females.append(e)
-
-	# 3-4 friend pairs (same or mixed gender)
-	@warning_ignore("integer_division")
-	var friend_count: int = mini(4, alive.size() / 4)
-	for i in range(friend_count):
-		var idx_a: int = (i * 2) % alive.size()
-		var idx_b: int = (i * 2 + 1) % alive.size()
-		if idx_a == idx_b:
-			continue
-		var rel: RefCounted = relationship_manager.get_or_create(alive[idx_a].id, alive[idx_b].id)
-		rel.affinity = 40.0
-		rel.trust = 55.0
-		rel.interaction_count = 12
-		rel.type = "friend"
-
-	# 2-3 partner pairs (opposite gender, adults only)
-	var partner_count: int = mini(3, mini(males.size(), females.size()))
-	var adult_males: Array = []
-	var adult_females: Array = []
-	for i in range(males.size()):
-		if males[i].age_stage == "adult":
-			adult_males.append(males[i])
-	for i in range(females.size()):
-		if females[i].age_stage == "adult":
-			adult_females.append(females[i])
-	partner_count = mini(partner_count, mini(adult_males.size(), adult_females.size()))
-	for i in range(partner_count):
-		var m: RefCounted = adult_males[i]
-		var f: RefCounted = adult_females[i]
-		var rel: RefCounted = relationship_manager.get_or_create(m.id, f.id)
-		rel.affinity = 85.0
-		rel.trust = 75.0
-		rel.romantic_interest = 90.0
-		rel.interaction_count = 25
-		rel.type = "partner"
-		m.partner_id = f.id
-		f.partner_id = m.id
-		m.emotions["love"] = 0.5
-		f.emotions["love"] = 0.5
-
-
-
-## Bootstrap a pre-built stockpile with starter resources
-func _bootstrap_stockpile(settlement: RefCounted, center: Vector2i) -> void:
-	# Find a walkable tile near center for the stockpile
-	for dy in range(-3, 4):
-		for dx in range(-3, 4):
-			var sx: int = center.x + dx
-			var sy: int = center.y + dy
-			if world_data.is_walkable(sx, sy):
-				var sp: RefCounted = building_manager.place_building("stockpile", sx, sy)
-				if sp != null:
-					sp.is_built = true
-					sp.build_progress = 1.0
-					sp.settlement_id = settlement.id
-					sp.storage["food"] = 15.0
-					sp.storage["wood"] = 5.0
-					sp.storage["stone"] = 2.0
-					settlement.building_ids.append(sp.id)
-					return
-	push_warning("[Main] Could not place bootstrap stockpile near center!")
-
-
 var _last_overlay_tick: int = 0
 var _last_minimap_tick: int = 0
 var _last_balance_tick: int = 0
@@ -1039,10 +650,9 @@ func _save_game_slot(slot: int) -> void:
 	var path: String = save_manager.get_slot_dir(slot)
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
-	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, stats_recorder)
+	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, null)
 	if success:
 		NameGenerator.save_registry(path + "/names.json")
-		save_manager.save_tension(path + "/tension.json", tension_system)
 	else:
 		push_warning("[Main] Save failed!")
 	sim_engine.is_paused = was_paused
@@ -1052,16 +662,12 @@ func _load_game_slot(slot: int) -> void:
 	_last_used_slot = slot
 	var path: String = save_manager.get_slot_dir(slot)
 	sim_engine.is_paused = true
-	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager, relationship_manager, stats_recorder)
+	var success: bool = save_manager.load_game(path, sim_engine, entity_manager, building_manager, resource_map, world_data, settlement_manager, relationship_manager, null)
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
-		# Sync death/birth counters from loaded stats to entity manager
-		entity_manager.total_deaths = stats_recorder.total_deaths
-		entity_manager.total_births = stats_recorder.total_births
 		# Restore name registry
 		NameGenerator.load_registry(path + "/names.json")
-		save_manager.load_tension(path + "/tension.json", tension_system)
 	else:
 		push_warning("[Main] Load failed!")
 	sim_engine.is_paused = false
@@ -1073,7 +679,7 @@ func _print_startup_banner(seed_value: int) -> void:
 	print("  WorldSim Phase 2-A1")
 	print("  Seed: %d" % seed_value)
 	print("  World: %dx%d  |  Entities: %d" % [GameConfig.WORLD_SIZE.x, GameConfig.WORLD_SIZE.y, GameConfig.INITIAL_SPAWN_COUNT])
-	print("  Systems: %d registered" % sim_engine._systems.size())
+	print("  Systems: %d registered" % sim_engine.get_registered_system_count())
 	print("======================================")
 	print("")
 	print("  Controls:")

@@ -89,6 +89,7 @@ pub(crate) const RUNTIME_SYSTEM_KEY_TRAIT: &str = "trait_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_LLM_REQUEST: &str = "llm_request_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_LLM_RESPONSE: &str = "llm_response_system";
 pub(crate) const RUNTIME_SYSTEM_KEY_LLM_TIMEOUT: &str = "llm_timeout_system";
+pub(crate) const RUNTIME_SYSTEM_KEY_STORY_SIFTER: &str = "story_sifter_system";
 pub(crate) const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 pub(crate) const RUNTIME_COMPUTE_DOMAINS: [&str; 1] = ["pathfinding"];
 
@@ -184,6 +185,7 @@ impl RuntimeState {
         rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_REQUEST.to_string());
         rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_RESPONSE.to_string());
         rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_LLM_TIMEOUT.to_string());
+        rust_registered_systems.insert(RUNTIME_SYSTEM_KEY_STORY_SIFTER.to_string());
         Self {
             engine,
             data_registry: None,
@@ -199,6 +201,69 @@ impl RuntimeState {
         }
     }
 }
+
+#[derive(Debug, Clone, Copy)]
+struct DefaultRuntimeSystemSpec {
+    name: &'static str,
+    system_key: &'static str,
+    priority: i32,
+    tick_interval: i32,
+}
+
+const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 52] = [
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STAT_SYNC, system_key: RUNTIME_SYSTEM_KEY_STAT_SYNC, priority: 1, tick_interval: 10 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_RESOURCE_REGEN, system_key: RUNTIME_SYSTEM_KEY_RESOURCE_REGEN, priority: 5, tick_interval: config::RESOURCE_REGEN_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_CHILDCARE, system_key: RUNTIME_SYSTEM_KEY_CHILDCARE, priority: 8, tick_interval: 2 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT, system_key: RUNTIME_SYSTEM_KEY_JOB_ASSIGNMENT, priority: 8, tick_interval: config::JOB_ASSIGNMENT_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_NEEDS, system_key: RUNTIME_SYSTEM_KEY_NEEDS, priority: 10, tick_interval: config::NEEDS_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STAT_THRESHOLD, system_key: RUNTIME_SYSTEM_KEY_STAT_THRESHOLD, priority: 12, tick_interval: 5 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_UPPER_NEEDS, system_key: RUNTIME_SYSTEM_KEY_UPPER_NEEDS, priority: 12, tick_interval: config::UPPER_NEEDS_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_BUILDING_EFFECT, system_key: RUNTIME_SYSTEM_KEY_BUILDING_EFFECT, priority: 15, tick_interval: config::BUILDING_EFFECT_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_INTELLIGENCE, system_key: RUNTIME_SYSTEM_KEY_INTELLIGENCE, priority: 18, tick_interval: 50 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MEMORY, system_key: RUNTIME_SYSTEM_KEY_MEMORY, priority: 18, tick_interval: config::MEMORY_COMPRESS_INTERVAL_TICKS as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_BEHAVIOR, system_key: RUNTIME_SYSTEM_KEY_BEHAVIOR, priority: 20, tick_interval: config::BEHAVIOR_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_GATHERING, system_key: RUNTIME_SYSTEM_KEY_GATHERING, priority: 25, tick_interval: config::GATHERING_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_CONSTRUCTION, system_key: RUNTIME_SYSTEM_KEY_CONSTRUCTION, priority: 28, tick_interval: config::CONSTRUCTION_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STEERING, system_key: RUNTIME_SYSTEM_KEY_STEERING, priority: config::STEERING_SYSTEM_PRIORITY as i32, tick_interval: config::STEERING_SYSTEM_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MOVEMENT, system_key: RUNTIME_SYSTEM_KEY_MOVEMENT, priority: 30, tick_interval: config::MOVEMENT_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_EMOTION, system_key: RUNTIME_SYSTEM_KEY_EMOTION, priority: 32, tick_interval: 12 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR, system_key: RUNTIME_SYSTEM_KEY_CHILD_STRESS_PROCESSOR, priority: 32, tick_interval: 2 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STRESS, system_key: RUNTIME_SYSTEM_KEY_STRESS, priority: 34, tick_interval: config::STRESS_SYSTEM_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MENTAL_BREAK, system_key: RUNTIME_SYSTEM_KEY_MENTAL_BREAK, priority: 35, tick_interval: 1 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_OCCUPATION, system_key: RUNTIME_SYSTEM_KEY_OCCUPATION, priority: 36, tick_interval: config::OCCUPATION_EVAL_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TRAUMA_SCAR, system_key: RUNTIME_SYSTEM_KEY_TRAUMA_SCAR, priority: 36, tick_interval: 10 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TITLE, system_key: RUNTIME_SYSTEM_KEY_TITLE, priority: 37, tick_interval: config::TITLE_EVAL_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION, system_key: RUNTIME_SYSTEM_KEY_TRAIT_VIOLATION, priority: 37, tick_interval: 1 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_SOCIAL_EVENT, system_key: RUNTIME_SYSTEM_KEY_SOCIAL_EVENT, priority: 37, tick_interval: 30 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_CONTAGION, system_key: RUNTIME_SYSTEM_KEY_CONTAGION, priority: 38, tick_interval: 3 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_REPUTATION, system_key: RUNTIME_SYSTEM_KEY_REPUTATION, priority: 38, tick_interval: config::REPUTATION_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY, system_key: RUNTIME_SYSTEM_KEY_ECONOMIC_TENDENCY, priority: 39, tick_interval: config::ECON_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MORALE, system_key: RUNTIME_SYSTEM_KEY_MORALE, priority: 40, tick_interval: 5 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_JOB_SATISFACTION, system_key: RUNTIME_SYSTEM_KEY_JOB_SATISFACTION, priority: 40, tick_interval: config::JOB_SAT_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_COPING, system_key: RUNTIME_SYSTEM_KEY_COPING, priority: 42, tick_interval: 30 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_INTERGENERATIONAL, system_key: RUNTIME_SYSTEM_KEY_INTERGENERATIONAL, priority: 45, tick_interval: 240 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_PARENTING, system_key: RUNTIME_SYSTEM_KEY_PARENTING, priority: 46, tick_interval: 240 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_AGE, system_key: RUNTIME_SYSTEM_KEY_AGE, priority: 48, tick_interval: 50 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION, system_key: RUNTIME_SYSTEM_KEY_PERSONALITY_MATURATION, priority: 49, tick_interval: config::TICKS_PER_YEAR as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MORTALITY, system_key: RUNTIME_SYSTEM_KEY_MORTALITY, priority: 49, tick_interval: 1 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_POPULATION, system_key: RUNTIME_SYSTEM_KEY_POPULATION, priority: 50, tick_interval: config::POPULATION_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_FAMILY, system_key: RUNTIME_SYSTEM_KEY_FAMILY, priority: 52, tick_interval: 365 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_LEADER, system_key: RUNTIME_SYSTEM_KEY_LEADER, priority: 52, tick_interval: config::LEADER_CHECK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_VALUE, system_key: RUNTIME_SYSTEM_KEY_VALUE, priority: 55, tick_interval: 200 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_NETWORK, system_key: RUNTIME_SYSTEM_KEY_NETWORK, priority: 58, tick_interval: config::REVOLUTION_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_MIGRATION, system_key: RUNTIME_SYSTEM_KEY_MIGRATION, priority: 60, tick_interval: config::MIGRATION_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TECH_DISCOVERY, system_key: RUNTIME_SYSTEM_KEY_TECH_DISCOVERY, priority: 62, tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TECH_PROPAGATION, system_key: RUNTIME_SYSTEM_KEY_TECH_PROPAGATION, priority: 62, tick_interval: config::TEACHING_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TECH_MAINTENANCE, system_key: RUNTIME_SYSTEM_KEY_TECH_MAINTENANCE, priority: 63, tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TENSION, system_key: RUNTIME_SYSTEM_KEY_TENSION, priority: 64, tick_interval: config::TENSION_CHECK_INTERVAL_TICKS as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_TECH_UTILIZATION, system_key: RUNTIME_SYSTEM_KEY_TECH_UTILIZATION, priority: 65, tick_interval: 1 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR, system_key: RUNTIME_SYSTEM_KEY_STRATIFICATION_MONITOR, priority: 90, tick_interval: config::STRAT_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STATS_RECORDER, system_key: RUNTIME_SYSTEM_KEY_STATS_RECORDER, priority: 90, tick_interval: 200 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_STORY_SIFTER, system_key: RUNTIME_SYSTEM_KEY_STORY_SIFTER, priority: config::STORY_SIFTER_PRIORITY as i32, tick_interval: config::STORY_SIFTER_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_LLM_RESPONSE, system_key: RUNTIME_SYSTEM_KEY_LLM_RESPONSE, priority: config::LLM_RESPONSE_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_RESPONSE_SYSTEM_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_LLM_TIMEOUT, system_key: RUNTIME_SYSTEM_KEY_LLM_TIMEOUT, priority: config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { name: RUNTIME_SYSTEM_KEY_LLM_REQUEST, system_key: RUNTIME_SYSTEM_KEY_LLM_REQUEST, priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32 },
+];
 
 pub(crate) fn load_legacy_runtime_bootstrap(
     data_dir: &Path,
@@ -298,7 +363,81 @@ pub(crate) fn runtime_supports_rust_system(system_key: &str) -> bool {
             | RUNTIME_SYSTEM_KEY_LLM_REQUEST
             | RUNTIME_SYSTEM_KEY_LLM_RESPONSE
             | RUNTIME_SYSTEM_KEY_LLM_TIMEOUT
+            | RUNTIME_SYSTEM_KEY_STORY_SIFTER
     )
+}
+
+/// Applies or updates one runtime registry entry and eagerly registers the Rust
+/// implementation when the system is supported.
+pub(crate) fn upsert_runtime_system_entry(
+    state: &mut RuntimeState,
+    name: &str,
+    system_key: &str,
+    priority: i32,
+    tick_interval: i32,
+    active: bool,
+    registration_index: i32,
+) {
+    let rust_implemented = runtime_supports_rust_system(system_key);
+    let rust_registered = if rust_implemented {
+        register_supported_rust_system(state, system_key, priority, tick_interval)
+    } else {
+        false
+    };
+    let exec_backend = if rust_registered {
+        "rust".to_string()
+    } else {
+        "gdscript".to_string()
+    };
+    if let Some(existing) = state
+        .registered_systems
+        .iter_mut()
+        .find(|entry| entry.name == name)
+    {
+        existing.system_key = system_key.to_string();
+        existing.priority = priority;
+        existing.tick_interval = tick_interval;
+        existing.active = active;
+        existing.registration_index = registration_index;
+        existing.rust_implemented = rust_implemented;
+        existing.rust_registered = rust_registered;
+        existing.exec_backend = exec_backend;
+    } else {
+        state.registered_systems.push(RuntimeSystemEntry {
+            name: name.to_string(),
+            system_key: system_key.to_string(),
+            priority,
+            tick_interval,
+            active,
+            registration_index,
+            rust_implemented,
+            rust_registered,
+            exec_backend,
+        });
+    }
+    state.registered_systems.sort_by(|a, b| {
+        a.priority
+            .cmp(&b.priority)
+            .then(a.registration_index.cmp(&b.registration_index))
+            .then(a.name.cmp(&b.name))
+    });
+}
+
+/// Registers the authoritative default Rust runtime manifest and returns the
+/// resulting registry entry count.
+pub(crate) fn register_default_runtime_systems(state: &mut RuntimeState) -> usize {
+    for (registration_index, spec) in DEFAULT_RUNTIME_SYSTEMS.iter().enumerate() {
+        upsert_runtime_system_entry(
+            state,
+            spec.name,
+            spec.system_key,
+            spec.priority,
+            spec.tick_interval.max(1),
+            true,
+            registration_index as i32,
+        );
+    }
+    state.registered_systems.len()
 }
 
 pub(crate) fn register_supported_rust_system(
@@ -640,6 +779,12 @@ pub(crate) fn register_supported_rust_system(
                 tick_interval_u64,
             ));
         }
+        RUNTIME_SYSTEM_KEY_STORY_SIFTER => {
+            state.engine.register(StorySifterRuntimeSystem::new(
+                priority_u32,
+                tick_interval_u64,
+            ));
+        }
         _ => {
             return false;
         }
@@ -723,5 +868,27 @@ mod tests {
         assert!((bootstrap.personality_distribution.sd - 0.25).abs() < f64::EPSILON);
 
         let _ = fs::remove_dir_all(temp);
+    }
+
+    #[test]
+    fn default_runtime_manifest_registers_rust_backed_entries() {
+        let mut state = RuntimeState::from_seed(7, RuntimeConfig::default());
+
+        let count = register_default_runtime_systems(&mut state);
+
+        assert_eq!(count, DEFAULT_RUNTIME_SYSTEMS.len());
+        assert_eq!(state.registered_systems.len(), DEFAULT_RUNTIME_SYSTEMS.len());
+        assert!(state
+            .registered_systems
+            .iter()
+            .all(|entry| entry.exec_backend == "rust" && entry.rust_registered));
+        assert!(state
+            .registered_systems
+            .iter()
+            .any(|entry| entry.system_key == RUNTIME_SYSTEM_KEY_NEEDS));
+        assert!(state
+            .registered_systems
+            .iter()
+            .any(|entry| entry.system_key == RUNTIME_SYSTEM_KEY_STORY_SIFTER));
     }
 }
