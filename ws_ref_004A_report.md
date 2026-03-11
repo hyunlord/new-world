@@ -1,99 +1,79 @@
-# ws_ref_004A_report
+# WS-REF-004A Report
 
 ## Implementation Intent
 
-This ticket focused on one architectural ambiguity: Godot boot still looked like the source of simulation truth because it instantiated and registered legacy GDScript systems during startup.
+This ticket focused on one narrow question: does boot still leak simulation authority into Godot?
 
-That was the wrong ownership model for the current WorldSim architecture. The correct boundary is:
+The highest-value ambiguity to remove was not gameplay logic in general. It was boot-time truth:
 
-`Godot shell -> sim-bridge -> Rust runtime registry -> Rust ECS tick`
+- who loads data first
+- who builds the runtime first
+- who owns scheduler registration
+- who owns the first active simulation tick
 
-So the implementation targeted the boot path only:
-
-- remove boot-time simulation authority leakage from `main.gd`
-- stop `simulation_engine.gd` from acting like a GDScript registry owner
-- make Rust register the default startup manifest itself
-
-This stayed intentionally narrow. It did not try to delete every legacy GDScript system file on disk. It only removed their role in active boot authority.
+This stayed small on purpose. It did not attempt a full deletion of every shadow manager. It only tightened the active boot path and refreshed the audit artifacts so they match the current repository truth.
 
 ## How It Was Implemented
 
-The refactor had three parts.
-
-### 1. Rust default runtime manifest
-
-[runtime_registry.rs](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/rust/crates/sim-bridge/src/runtime_registry.rs) now exposes:
-
-- a default runtime manifest
-- a shared `upsert_runtime_system_entry(...)`
-- `register_default_runtime_systems(...)`
-
-This makes Rust the authoritative startup source for simulation-system registration.
-
-### 2. Bridge exposure
-
-[lib.rs](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/rust/crates/sim-bridge/src/lib.rs) now exposes `runtime_register_default_systems()`, and [sim_bridge.gd](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/scripts/core/simulation/sim_bridge.gd) forwards it to GDScript.
-
-### 3. Godot boot cleanup
-
-[simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/scripts/core/simulation/simulation_engine.gd) now:
-
-- calls `runtime_init(...)`
-- calls `runtime_register_default_systems()`
-- validates the Rust registry snapshot
-- ticks via `runtime_tick_frame(...)`
-
-It no longer:
-
-- clears the Rust registry after init
-- keeps GDScript-side startup registry payload lists
-- builds the authoritative boot registry from local system instances
-
-[main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/scenes/main/main.gd) no longer instantiates or registers the legacy GDScript simulation systems during startup. It remains a shell/bootstrap scene for:
-
-- setup flow
-- camera/UI/rendering init
-- save/load plumbing
-- bootstrap payload handoff to Rust
+- Re-scanned the boot entry points:
+  - [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot)
+  - [scenes/main/main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd)
+  - [scripts/core/simulation/simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd)
+  - [scripts/core/simulation/sim_bridge.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/sim_bridge.gd)
+- Refreshed the boot truth docs:
+  - [boot_pipeline_map.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/boot_pipeline_map.md)
+  - [godot_authority_scan.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/godot_authority_scan.md)
+  - [simulation_ownership_map.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/simulation_ownership_map.md)
+  - [verify_boot_authority.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/verify_boot_authority.md)
+- Tightened [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd) so Rust runtime registry validation happens immediately after `SimulationEngine` startup and aborts boot before shadow/bootstrap managers are created if authority validation fails.
 
 ## What Feature It Adds
 
-This refactor adds a concrete architectural guarantee:
+This ticket adds a safer and more legible boot contract.
 
-- startup simulation-system registration is Rust-owned
-- startup simulation ticking is Rust-owned
-- Godot boot no longer pretends to be the simulation registry source of truth
+After this change:
 
-For developers, that means the boot path is now much easier to reason about:
+- Rust authority is checked before Godot builds the rest of the shell/bootstrap graph
+- startup fails fast when the runtime registry is not fully Rust-backed
+- boot ownership is documented with explicit responsibility maps instead of assumption
 
-- there is one authoritative runtime-system manifest
-- registry truth lives in Rust
-- Godot boot is reduced to shell/bootstrap responsibilities
+That makes it much easier to trust that the active simulation boot path is Rust-first, even though residual hybrid helpers still remain on disk.
 
 ## Verification After Implementation
 
-The following checks were used after implementation:
-
 - `git diff --check`
-- `cd rust && cargo test -p sim-bridge`
-- `cd rust && cargo test --workspace`
-- `cd rust && cargo clippy --workspace -- -D warnings`
-- `cd rust && cargo build -p sim-bridge`
-- `/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot --headless --path /Users/rexxa/github/new-world-wt/codex-refactor-boot-authority --quit`
+- `cargo check --workspace`
+- `cargo build -p sim-bridge`
+- `cargo test --workspace`
+- `cargo clippy --workspace -- -D warnings`
+- Godot headless boot:
+  - `"/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot" --headless --path /Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a --quit`
 
-Static verification also checked:
+Result:
 
-- no `register_system(...)` calls remain in [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/scenes/main/main.gd)
-- [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-boot-authority/scripts/core/simulation/simulation_engine.gd) no longer calls `runtime_clear_registry`
-- startup now calls `runtime_register_default_systems()`
-- the Rust default manifest test passes and reports Rust-backed registry entries
-- Godot headless boot exits with code `0` after the debug `sim-bridge` library is built; existing UID fallback and shutdown leak warnings remain pre-existing project warnings
+- Rust build/test/lint passed
+- Godot headless boot passed
+- static boot-authority scans passed
+
+## Remaining Authority Risks
+
+- `main.gd` still instantiates mutable shadow/bootstrap managers after Rust validation succeeds
+- `main.gd` still wires `ChronicleSystem` and `SimulationBus` observer compatibility hooks after bootstrap
+- legacy helper scripts under `scripts/core/**` and `scripts/systems/**` still exist on disk
+- some UI/panel paths still depend on legacy managers for fallback or compatibility behavior
+- boot now fails fast on registry mismatch, but there is no richer fallback/error UI yet
+
+So the accurate state is:
+
+- active boot authority: Rust
+- active tick authority: Rust
+- full shadow deletion: not complete
 
 ## In-Game Checks (한국어)
 
-- 게임 시작 직후 시뮬레이션이 정상적으로 계속 진행되는지 본다.
-- Probe/Sandbox 어느 쪽이든 시작 후 에이전트가 실제로 움직이고 행동하는지 확인한다.
-- 시작 로그에 GDScript 시스템을 다시 등록했다는 경고가 없는지 본다.
-- 부트 직후 디버그/검증 오버레이가 있다면 행동, need 변화, 건설 상태가 계속 들어오는지 확인한다.
-- UI는 뜨는데 시뮬레이션만 멈추면 Rust runtime registry 초기화 경로를 다시 봐야 한다.
-- 반대로 legacy GDScript 시스템이 다시 authority를 잡은 흔적이 보이면 `main.gd`나 `simulation_engine.gd`에서 boot registration 경로가 되살아난 것이다.
+- 게임이 정상적으로 부팅되는지 확인한다.
+- 시작 직후 에이전트가 정상적으로 생성되고 움직이는지 확인한다.
+- 시뮬레이션 tick이 Rust에서만 실행되는지 확인한다.
+- Rust runtime registry가 비정상일 때는 부팅이 계속 진행되지 않아야 한다.
+- UI와 렌더링은 정상 동작하지만, Godot이 simulation state의 source of truth가 아닌지 확인한다.
+- 여전히 일부 legacy manager 기반 패널이 남아 있어도, 그것이 active tick authority를 다시 가져오지 않는지 확인한다.
