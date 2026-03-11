@@ -20,6 +20,9 @@ pub struct WorldRuleset {
     /// Agent-facing modifiers.
     #[serde(default)]
     pub agent_modifiers: Vec<RuleAgentModifier>,
+    /// Optional influence-channel metadata overrides.
+    #[serde(default)]
+    pub influence_channels: Vec<InfluenceChannelRule>,
 }
 
 /// Resource-economy modifier rule.
@@ -62,6 +65,33 @@ pub struct RuleAgentModifier {
     pub effect: String,
 }
 
+/// Declarative override for one influence-channel metadata entry.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct InfluenceChannelRule {
+    /// Stable influence channel id.
+    pub channel: String,
+    /// Optional decay-rate override.
+    pub decay_rate: Option<f64>,
+    /// Optional default-radius override.
+    pub default_radius: Option<f64>,
+    /// Optional maximum-radius override.
+    pub max_radius: Option<u32>,
+    /// Optional wall-blocking sensitivity override.
+    pub wall_blocking_sensitivity: Option<f64>,
+    /// Optional clamp policy override.
+    pub clamp_policy: Option<InfluenceClampPolicyDef>,
+}
+
+/// Declarative influence clamp policy.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum InfluenceClampPolicyDef {
+    /// Compress values with a sigmoid policy.
+    Sigmoid,
+    /// Clamp values directly into `[0.0, 1.0]`.
+    UnitInterval,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -78,11 +108,22 @@ mod tests {
                 special_zones: [],
                 special_resources: [],
                 agent_modifiers: [],
+                influence_channels: [
+                    InfluenceChannelRule(
+                        channel: "food",
+                        decay_rate: Some(0.18),
+                        default_radius: Some(7.0),
+                        max_radius: Some(14),
+                        wall_blocking_sensitivity: Some(0.2),
+                        clamp_policy: Some(UnitInterval),
+                    ),
+                ],
             )"#,
         )
         .expect("expected world rules ron to parse");
 
         assert_eq!(ruleset.name, "BaseRules");
         assert_eq!(ruleset.resource_modifiers.len(), 1);
+        assert_eq!(ruleset.influence_channels.len(), 1);
     }
 }

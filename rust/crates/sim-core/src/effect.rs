@@ -36,10 +36,15 @@ pub struct InfluenceEmitter {
     pub channel: ChannelId,
     /// Influence radius in tiles.
     pub radius: f64,
-    /// Raw intensity before sigmoid saturation.
-    pub intensity: f64,
+    /// Raw base intensity before normalization and clamp.
+    pub base_intensity: f64,
     /// Falloff profile for propagation.
     pub falloff: FalloffType,
+    /// Optional per-emitter source attenuation applied during stamping.
+    pub decay_rate: Option<f64>,
+    /// Optional semantic tags for downstream rule/debug consumers.
+    #[serde(default)]
+    pub tags: Vec<String>,
     /// Whether the emitter is active.
     pub enabled: bool,
 }
@@ -52,8 +57,10 @@ impl InfluenceEmitter {
             y,
             channel: self.channel,
             radius: self.radius,
-            intensity: self.intensity,
+            base_intensity: self.base_intensity,
             falloff: self.falloff,
+            decay_rate: self.decay_rate,
+            tags: self.tags.clone(),
             dirty: self.enabled,
         }
     }
@@ -64,8 +71,10 @@ impl Default for InfluenceEmitter {
         Self {
             channel: ChannelId::Warmth,
             radius: 0.0,
-            intensity: 0.0,
+            base_intensity: 0.0,
             falloff: FalloffType::Linear,
+            decay_rate: None,
+            tags: Vec::new(),
             enabled: false,
         }
     }
@@ -122,8 +131,10 @@ mod tests {
         let emitter = InfluenceEmitter {
             channel: ChannelId::Light,
             radius: 4.0,
-            intensity: 0.6,
-            falloff: FalloffType::InverseSquare,
+            base_intensity: 0.6,
+            falloff: FalloffType::Exponential,
+            decay_rate: Some(0.1),
+            tags: vec!["light_source".to_string()],
             enabled: true,
         };
 
@@ -133,6 +144,7 @@ mod tests {
         assert_eq!(record.y, 7);
         assert_eq!(record.channel, ChannelId::Light);
         assert!(record.dirty);
+        assert_eq!(record.tags, vec!["light_source".to_string()]);
     }
 
     #[test]

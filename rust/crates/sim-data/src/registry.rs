@@ -5,7 +5,8 @@ use std::sync::Arc;
 use serde::de::DeserializeOwned;
 
 use crate::defs::{
-    ActionDef, ActionEffect, FurnitureDef, InfluenceEmission, MaterialDef, RecipeDef, StructureDef,
+    ActionDef, ActionEffect, FurnitureDef, InfluenceChannelRule, InfluenceEmission, MaterialDef,
+    RecipeDef, StructureDef,
 };
 use crate::loader::{load_ron_directory, DataLoadError};
 use crate::tag_index::TagIndex;
@@ -192,6 +193,13 @@ impl DataRegistry {
         self.world_rules.as_ref()
     }
 
+    /// Returns influence-channel metadata overrides from the world rules when present.
+    pub fn influence_channel_rules(&self) -> Option<&[InfluenceChannelRule]> {
+        self.world_rules
+            .as_ref()
+            .map(|ruleset| ruleset.influence_channels.as_slice())
+    }
+
     /// Returns the authoritative temperament-rules schema bundle when present.
     pub fn temperament_rules_ref(&self) -> Option<&TemperamentRules> {
         self.temperament_rules.as_ref()
@@ -330,6 +338,13 @@ mod tests {
         assert!(registry.structure_completion_influence("lean_to_structure").is_some());
         assert!(registry.action_effects("forage").is_some());
         assert!(registry.world_rules_ref().is_some());
+        assert!(
+            registry
+                .influence_channel_rules()
+                .expect("expected influence channel overrides")
+                .len()
+                >= 3
+        );
         assert!(registry.temperament_rules_ref().is_some());
     }
 }

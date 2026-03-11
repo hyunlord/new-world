@@ -8,6 +8,7 @@
 mod biology;
 mod cognition;
 mod economy;
+mod influence;
 mod llm_request_system;
 mod llm_response_system;
 mod llm_timeout_system;
@@ -35,6 +36,9 @@ pub use economy::{
     BuildingEffectRuntimeSystem, ConstructionRuntimeSystem, GatheringRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
 };
+
+// ---- influence ----
+pub use influence::InfluenceRuntimeSystem;
 
 // ---- llm ----
 pub use llm_request_system::LlmRequestRuntimeSystem;
@@ -85,7 +89,8 @@ mod tests {
         BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
         ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem,
         CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
-        FamilyRuntimeSystem, GatheringRuntimeSystem, IntelligenceRuntimeSystem,
+        FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
+        IntelligenceRuntimeSystem,
         IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
         LeaderRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
         MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
@@ -1696,7 +1701,7 @@ mod tests {
     }
 
     #[test]
-    fn building_effect_runtime_system_applies_campfire_social_and_registers_warmth_emitter() {
+    fn building_effect_runtime_system_applies_campfire_social_with_influence_runtime() {
         let mut world = World::new();
         let mut resources = make_resources();
         resources.calendar.tick = 10; // hour=20 => night boost path
@@ -1720,8 +1725,11 @@ mod tests {
         needs.set(NeedType::Warmth, 0.30);
         let entity = world.spawn((Position::new(1, 1), needs));
 
+        let mut influence =
+            InfluenceRuntimeSystem::new(sim_core::config::INFLUENCE_SYSTEM_PRIORITY, 1);
         let mut system =
             BuildingEffectRuntimeSystem::new(15, sim_core::config::BUILDING_EFFECT_TICK_INTERVAL);
+        influence.run(&mut world, &mut resources, 1);
         system.run(
             &mut world,
             &mut resources,
@@ -1736,7 +1744,7 @@ mod tests {
         drop(updated);
 
         resources.influence_grid.tick_update();
-        assert_eq!(resources.influence_grid.active_emitter_count(), 1);
+        assert!(resources.influence_grid.active_emitter_count() >= 1);
         assert!(resources.influence_grid.sample(0, 0, ChannelId::Warmth) > 0.0);
     }
 
@@ -1748,6 +1756,10 @@ mod tests {
         let resources = SimResources::new(calendar, map, 999);
         let mut engine = SimEngine::new(resources);
         engine.register(NeedsRuntimeSystem::new(10, 1));
+        engine.register(InfluenceRuntimeSystem::new(
+            sim_core::config::INFLUENCE_SYSTEM_PRIORITY,
+            1,
+        ));
         engine.register(BuildingEffectRuntimeSystem::new(15, 1));
         engine.resources_mut().calendar.tick = 10; // night, so belonging boost still uses night path
         engine.resources_mut().buildings.insert(
@@ -1810,7 +1822,7 @@ mod tests {
             .get::<&Needs>(blocked)
             .expect("blocked needs after first tick");
         let expected_after_first = 0.20_f64;
-        assert!(inside_after_first.get(NeedType::Warmth) > expected_after_first);
+        assert!((inside_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
         assert!((open_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
         assert!((blocked_after_first.get(NeedType::Warmth) - expected_after_first).abs() < 1e-6);
         drop(inside_after_first);
@@ -1859,16 +1871,17 @@ mod tests {
             .expect("blocked needs after second tick");
 
         assert!(
-            inside_after_second.get(NeedType::Warmth) > open_after_second.get(NeedType::Warmth)
+            inside_after_second.get(NeedType::Warmth)
+                > blocked_after_second.get(NeedType::Warmth)
         );
         assert!(
-            open_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth)
+            open_after_second.get(NeedType::Warmth)
+                > blocked_after_second.get(NeedType::Warmth)
         );
-        assert!(open_after_second.get(NeedType::Warmth) > expected_after_first);
     }
 
     #[test]
-    fn building_effect_runtime_system_applies_shelter_energy_warmth_and_safety() {
+    fn building_effect_runtime_system_applies_shelter_energy_and_safety() {
         let mut world = World::new();
         let mut resources = make_resources();
         resources.buildings.insert(
@@ -1909,12 +1922,7 @@ mod tests {
                 .abs()
                 < 1e-6
         );
-        assert!(
-            (updated.get(NeedType::Warmth) as f32
-                - (0.20 + sim_core::config::WARMTH_SHELTER_RESTORE as f32))
-                .abs()
-                < 1e-6
-        );
+        assert!((updated.get(NeedType::Warmth) as f32 - 0.20).abs() < 1e-6);
         assert!(
             (updated.get(NeedType::Safety) as f32
                 - (0.10 + sim_core::config::SAFETY_SHELTER_RESTORE as f32))

@@ -1,7 +1,10 @@
 use hecs::{Entity, World};
 use rand::Rng;
-use sim_core::components::{Age, Behavior, Personality, Position, SteeringParams};
-use sim_core::{config, ActionType};
+use sim_core::components::{
+    Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
+    Temperament,
+};
+use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
 use sim_engine::{SimResources, SimSystem};
 
 use super::steering_derive::derive_steering_params;
@@ -58,10 +61,26 @@ impl SimSystem for SteeringRuntimeSystem {
                 Option<&Behavior>,
                 Option<&SteeringParams>,
                 Option<&Personality>,
+                Option<&InfluenceReceiver>,
+                Option<&Needs>,
+                Option<&Stress>,
+                Option<&Temperament>,
                 Option<&Age>,
             )>();
-            for (entity, (position, behavior_opt, steering_opt, personality_opt, age_opt)) in
-                &mut query
+            for (
+                entity,
+                (
+                    position,
+                    behavior_opt,
+                    steering_opt,
+                    personality_opt,
+                    receiver_opt,
+                    needs_opt,
+                    stress_opt,
+                    temperament_opt,
+                    age_opt,
+                ),
+            ) in &mut query
             {
                 if age_opt.map(|age| !age.alive).unwrap_or(false) {
                     velocities.push((entity, 0.0, 0.0));
@@ -89,14 +108,24 @@ impl SimSystem for SteeringRuntimeSystem {
                     tick,
                     entity,
                 );
+                let (influence_force, influence_cause) = influence_force_for_entity(
+                    resources,
+                    position,
+                    receiver_opt,
+                    needs_opt,
+                    stress_opt,
+                    temperament_opt,
+                );
                 let separation =
                     separation_force(position, &neighbors, params.personal_space_radius);
                 let cohesion = cohesion_force(position, &neighbors);
 
                 let mut force_x = desired_force.0
+                    + influence_force.0 * config::STEERING_INFLUENCE_FORCE_WEIGHT
                     + separation.0 * params.separation_weight
                     + cohesion.0 * params.cohesion_weight;
                 let mut force_y = desired_force.1
+                    + influence_force.1 * config::STEERING_INFLUENCE_FORCE_WEIGHT
                     + separation.1 * params.separation_weight
                     + cohesion.1 * params.cohesion_weight;
 
@@ -129,6 +158,24 @@ impl SimSystem for SteeringRuntimeSystem {
 
                 let (dir_x, dir_y) = normalize(force_x, force_y);
                 velocities.push((entity, dir_x * speed_tiles, dir_y * speed_tiles));
+                if let Some(cause) = influence_cause {
+                    resources.causal_log.push(
+                        EntityId(entity.id() as u64),
+                        CausalEvent {
+                            tick,
+                            cause: CauseRef {
+                                system: "steering_system".to_string(),
+                                kind: cause.kind.to_string(),
+                                entity: Some(EntityId(entity.id() as u64)),
+                                building: None,
+                                settlement: None,
+                            },
+                            effect_key: "steering_velocity".to_string(),
+                            summary_key: cause.summary_key.to_string(),
+                            magnitude: cause.magnitude,
+                        },
+                    );
+                }
             }
         }
 
@@ -142,6 +189,143 @@ impl SimSystem for SteeringRuntimeSystem {
             }
         }
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct InfluenceCause {
+    kind: &'static str,
+    summary_key: &'static str,
+    magnitude: f64,
+}
+
+fn influence_force_for_entity(
+    resources: &SimResources,
+    position: &Position,
+    receiver_opt: Option<&InfluenceReceiver>,
+    needs_opt: Option<&Needs>,
+    stress_opt: Option<&Stress>,
+    temperament_opt: Option<&Temperament>,
+) -> ((f64, f64), Option<InfluenceCause>) {
+    let tile_x = position.tile_x();
+    let tile_y = position.tile_y();
+    if !resources.map.in_bounds(tile_x, tile_y) {
+        return ((0.0, 0.0), None);
+    }
+    let x = tile_x as u32;
+    let y = tile_y as u32;
+
+    let hunger_drive = needs_opt
+        .map(|needs| 1.0 - needs.get(sim_core::NeedType::Hunger))
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    let warmth_drive = needs_opt
+        .map(|needs| 1.0 - needs.get(sim_core::NeedType::Warmth))
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    let danger_drive = needs_opt
+        .map(|needs| 1.0 - needs.get(sim_core::NeedType::Safety))
+        .unwrap_or(0.0)
+        .max(stress_opt.map(|stress| stress.level).unwrap_or(0.0))
+        .clamp(0.0, 1.0);
+
+    let novelty_scale = temperament_opt
+        .map(|temperament| 0.75 + temperament.expressed.ns * 0.5)
+        .unwrap_or(1.0);
+    let fear_scale = temperament_opt
+        .map(|temperament| 0.75 + temperament.expressed.ha * 0.75)
+        .unwrap_or(1.0);
+    let warmth_scale = temperament_opt
+        .map(|temperament| 0.75 + temperament.expressed.rd * 0.5)
+        .unwrap_or(1.0);
+
+    let food = weighted_gradient(
+        resources,
+        x,
+        y,
+        receiver_opt,
+        ChannelId::Food,
+        hunger_drive * config::STEERING_HUNGER_INFLUENCE_WEIGHT * novelty_scale,
+    );
+    let warmth = weighted_gradient(
+        resources,
+        x,
+        y,
+        receiver_opt,
+        ChannelId::Warmth,
+        warmth_drive * config::STEERING_WARMTH_INFLUENCE_WEIGHT * warmth_scale,
+    );
+    let danger = weighted_gradient(
+        resources,
+        x,
+        y,
+        receiver_opt,
+        ChannelId::Danger,
+        danger_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
+    );
+
+    let force_x = food.0 + warmth.0 - danger.0;
+    let force_y = food.1 + warmth.1 - danger.1;
+    let cause = dominant_influence_cause(food, warmth, danger);
+    ((force_x, force_y), cause)
+}
+
+fn weighted_gradient(
+    resources: &SimResources,
+    x: u32,
+    y: u32,
+    receiver_opt: Option<&InfluenceReceiver>,
+    channel: ChannelId,
+    weight: f64,
+) -> (f64, f64) {
+    if weight <= 0.0 || !receiver_listens_to(receiver_opt, channel) {
+        return (0.0, 0.0);
+    }
+    let gradient = resources.influence_grid.sample_gradient(channel, x, y);
+    if gradient.0.abs() + gradient.1.abs() < config::STEERING_INFLUENCE_MIN_GRADIENT {
+        return (0.0, 0.0);
+    }
+    (gradient.0 * weight, gradient.1 * weight)
+}
+
+fn receiver_listens_to(receiver_opt: Option<&InfluenceReceiver>, channel: ChannelId) -> bool {
+    receiver_opt
+        .map(|receiver| receiver.listens_to(channel))
+        .unwrap_or(true)
+}
+
+fn dominant_influence_cause(
+    food: (f64, f64),
+    warmth: (f64, f64),
+    danger: (f64, f64),
+) -> Option<InfluenceCause> {
+    let candidates = [
+        (
+            "food_gradient",
+            "CAUSE_INFLUENCE_FOOD_GRADIENT",
+            (food.0 * food.0 + food.1 * food.1).sqrt(),
+        ),
+        (
+            "warmth_gradient",
+            "CAUSE_INFLUENCE_WARMTH_GRADIENT",
+            (warmth.0 * warmth.0 + warmth.1 * warmth.1).sqrt(),
+        ),
+        (
+            "danger_gradient",
+            "CAUSE_INFLUENCE_DANGER_GRADIENT",
+            (danger.0 * danger.0 + danger.1 * danger.1).sqrt(),
+        ),
+    ];
+    let best = candidates
+        .into_iter()
+        .max_by(|left, right| left.2.partial_cmp(&right.2).unwrap_or(std::cmp::Ordering::Equal))?;
+    if best.2 < config::STEERING_INFLUENCE_MIN_GRADIENT {
+        return None;
+    }
+    Some(InfluenceCause {
+        kind: best.0,
+        summary_key: best.1,
+        magnitude: best.2,
+    })
 }
 
 fn desired_force_for_action(
@@ -306,13 +490,17 @@ mod tests {
     use hecs::World;
     use rand::rngs::SmallRng;
     use rand::SeedableRng;
-    use sim_core::components::{Age, Behavior, Personality, Position, SteeringParams};
+    use sim_core::components::{
+        Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
+        Temperament,
+    };
     use sim_core::config::GameConfig;
-    use sim_core::{config, ActionType, GameCalendar, GrowthStage, WorldMap};
+    use sim_core::{config, ActionType, ChannelId, EmitterRecord, FalloffType, GameCalendar, GrowthStage, NeedType, WorldMap};
     use sim_engine::{SimResources, SimSystem};
 
     use super::{
-        arrive_force, cohesion_force, seek_force, separation_force, wander_force,
+        arrive_force, cohesion_force, influence_force_for_entity, seek_force, separation_force,
+        wander_force,
         SteeringRuntimeSystem,
     };
 
@@ -400,5 +588,69 @@ mod tests {
         let position = Position::from_f64(50.0, 50.0);
         let force = separation_force(&position, &[(50.2, 50.0)], 25.0);
         assert!(force.0 < 0.0);
+    }
+
+    #[test]
+    fn influence_force_moves_hungry_agents_toward_food_gradient() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Food,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Gaussian,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.1);
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(force.0 > 0.0);
+        assert_eq!(cause.expect("food cause").kind, "food_gradient");
+    }
+
+    #[test]
+    fn influence_force_avoids_danger_when_safety_is_low() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Danger,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Exponential,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Safety, 0.1);
+        let mut stress = Stress::default();
+        stress.level = 0.8;
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            Some(&stress),
+            Some(&Temperament::default()),
+        );
+
+        assert!(force.0 < 0.0);
+        assert_eq!(cause.expect("danger cause").kind, "danger_gradient");
     }
 }

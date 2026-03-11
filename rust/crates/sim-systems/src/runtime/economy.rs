@@ -9,10 +9,9 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, Building, BuildingId, ChannelId, CopingStrategyId, EmitterRecord,
-    EmotionType, EntityId, FalloffType, GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType,
-    MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass,
-    TechState, ValueType,
+    ActionType, AttachmentType, Building, BuildingId, CopingStrategyId, EmotionType, EntityId,
+    GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType,
+    RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{ConstructionDiagnostics, SimResources, SimSystem};
 use std::cmp::Ordering;
@@ -1086,72 +1085,6 @@ struct BuildingEffectSnapshot {
     y: i32,
 }
 
-const SHELTER_WALL_CARDINAL_OFFSETS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
-
-#[inline]
-fn refresh_campfire_warmth_emitter(resources: &mut SimResources, x: i32, y: i32) {
-    if x < 0 || y < 0 {
-        return;
-    }
-    let x_u32 = x as u32;
-    let y_u32 = y as u32;
-    if !resources.map.in_bounds(x, y) {
-        return;
-    }
-    resources
-        .influence_grid
-        .remove_emitter(x_u32, y_u32, ChannelId::Warmth);
-    resources.influence_grid.register_emitter(EmitterRecord {
-        x: x_u32,
-        y: y_u32,
-        channel: ChannelId::Warmth,
-        radius: f64::from(config::BUILDING_CAMPFIRE_RADIUS.max(1)),
-        intensity: config::WARMTH_CAMPFIRE_EMITTER_INTENSITY,
-        falloff: FalloffType::Linear,
-        dirty: false,
-    });
-}
-
-#[inline]
-fn refresh_structure_wall_blocking(resources: &mut SimResources) {
-    resources.influence_grid.clear_wall_blocking();
-
-    let shelter_centers: Vec<(i32, i32)> = resources
-        .buildings
-        .values()
-        .filter(|building| building.is_complete && building.building_type == "shelter")
-        .map(|building| (building.x, building.y))
-        .collect();
-
-    for (center_x, center_y) in shelter_centers {
-        apply_shelter_wall_blocking(resources, center_x, center_y);
-    }
-}
-
-#[inline]
-fn apply_shelter_wall_blocking(resources: &mut SimResources, center_x: i32, center_y: i32) {
-    let wall_radius = config::BUILDING_SHELTER_WALL_RING_RADIUS.max(1);
-    for (offset_x, offset_y) in SHELTER_WALL_CARDINAL_OFFSETS {
-        if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
-            && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
-        {
-            continue;
-        }
-
-        let tile_x = center_x + offset_x * wall_radius;
-        let tile_y = center_y + offset_y * wall_radius;
-        if !resources.map.in_bounds(tile_x, tile_y) {
-            continue;
-        }
-
-        resources.influence_grid.set_wall_blocking(
-            tile_x as u32,
-            tile_y as u32,
-            config::BUILDING_SHELTER_WALL_BLOCK,
-        );
-    }
-}
-
 /// Rust runtime system for passive building aura effects.
 ///
 /// This performs active writes on `Needs.belonging`, `Needs.warmth`,
@@ -1186,12 +1119,10 @@ impl SimSystem for BuildingEffectRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
-        refresh_structure_wall_blocking(resources);
         if resources.buildings.is_empty() {
             return;
         }
         let mut effects: Vec<BuildingEffectSnapshot> = Vec::new();
-        let mut campfire_positions: Vec<(i32, i32)> = Vec::new();
         for building in resources.buildings.values() {
             if !building.is_complete {
                 continue;
@@ -1201,9 +1132,6 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                 "shelter" => BuildingEffectKind::Shelter,
                 _ => continue,
             };
-            if matches!(kind, BuildingEffectKind::Campfire) {
-                campfire_positions.push((building.x, building.y));
-            }
             effects.push(BuildingEffectSnapshot {
                 kind,
                 x: building.x,
@@ -1212,11 +1140,6 @@ impl SimSystem for BuildingEffectRuntimeSystem {
         }
         if effects.is_empty() {
             return;
-        }
-        for (x, y) in campfire_positions {
-            // Campfire warmth is now routed through the influence grid so
-            // nearby agents must sample the Warmth channel on later ticks.
-            refresh_campfire_warmth_emitter(resources, x, y);
         }
 
         let ticks_per_day = resources.calendar.ticks_per_day.max(1) as u64;
@@ -1248,10 +1171,6 @@ impl SimSystem for BuildingEffectRuntimeSystem {
                         needs.energy = (needs.energy + config::BUILDING_SHELTER_ENERGY_RESTORE)
                             .clamp(0.0, 1.0);
                         needs.set(
-                            NeedType::Warmth,
-                            needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
-                        );
-                        needs.set(
                             NeedType::Safety,
                             needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
                         );
@@ -1271,36 +1190,6 @@ mod tests {
         ActionType, Building, BuildingId, GameCalendar, GrowthStage, SettlementId, WorldMap,
     };
     use sim_engine::SimResources;
-
-    #[test]
-    fn refresh_structure_wall_blocking_builds_shelter_ring_with_doorway_gap() {
-        let game_config = GameConfig::default();
-        let calendar = GameCalendar::new(&game_config);
-        let mut resources = SimResources::new(calendar, WorldMap::new(12, 12, 7), 99);
-        resources.buildings.insert(
-            BuildingId(9),
-            Building {
-                id: BuildingId(9),
-                building_type: "shelter".to_string(),
-                settlement_id: SettlementId(1),
-                x: 5,
-                y: 5,
-                construction_progress: 1.0,
-                is_complete: true,
-                construction_started_tick: 0,
-                condition: 1.0,
-            },
-        );
-
-        refresh_structure_wall_blocking(&mut resources);
-
-        assert!(
-            (resources.influence_grid.wall_blocking_at(6, 5) - config::BUILDING_SHELTER_WALL_BLOCK)
-                .abs()
-                < 1e-6
-        );
-        assert_eq!(resources.influence_grid.wall_blocking_at(5, 6), 0.0);
-    }
 
     #[test]
     fn job_assignment_runtime_system_places_campfire_site_and_promotes_builder() {

@@ -26,11 +26,11 @@ pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
 pub use defs::{
     ActionCategory, ActionCondition, ActionDef, ActionEffect, AxisShift, BiasMatrixRow,
-    CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceEmission, MaterialCategory,
-    MaterialDef, MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
-    RuleAgentModifier, RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition,
-    StructureDef, StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule,
-    WorldRuleset,
+    CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceChannelRule,
+    InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory, MaterialDef, MaterialProperties,
+    RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition, RuleAgentModifier,
+    RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition, StructureDef,
+    StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule, WorldRuleset,
 };
 pub use developmental_stages::{
     load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,

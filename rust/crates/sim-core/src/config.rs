@@ -235,11 +235,18 @@ pub const MOVEMENT_TICK_INTERVAL: u64 = 1; // TODO(A-5): -> MovementSystem frequ
 pub const UPPER_NEEDS_TICK_INTERVAL: u64 = 5; // TODO(A-5): -> UpperNeedsSystem frequency metadata
 pub const STEERING_SYSTEM_PRIORITY: u32 = 29; // TODO(A-5): -> SteeringSystem scheduler metadata
 pub const STEERING_SYSTEM_INTERVAL: u64 = 1; // TODO(A-5): -> SteeringSystem frequency metadata
+pub const INFLUENCE_SYSTEM_PRIORITY: u32 = 14; // TODO(A-5): -> InfluenceRuntimeSystem scheduler metadata
+pub const INFLUENCE_SYSTEM_INTERVAL: u64 = 2; // TODO(A-5): -> InfluenceRuntimeSystem frequency metadata
 pub const MOVEMENT_SYSTEM_PRIORITY: u32 = 30; // TODO(A-5): -> MovementSystem scheduler metadata
 pub const BEHAVIOR_TOP_N_SELECTION: usize = 3; // TODO(A-5): -> BehaviorSystem tuning data
 pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0; // TODO(A-5): -> steering metadata
 pub const STEERING_MAX_FORCE: f64 = 100.0; // TODO(A-5): -> steering metadata
 pub const STEERING_MAX_SPEED: f64 = 120.0; // TODO(A-5): -> steering metadata
+pub const STEERING_INFLUENCE_FORCE_WEIGHT: f64 = 0.85; // TODO(A-5): -> steering metadata
+pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering metadata
+pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
+pub const STEERING_DANGER_INFLUENCE_WEIGHT: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
+pub const STEERING_WARMTH_INFLUENCE_WEIGHT: f64 = 0.95; // TODO(A-5): -> behavior/influence metadata
 pub const MOOD_SPEED_MULTIPLIERS: [f64; 5] = [0.7, 0.8, 0.9, 1.0, 1.1];
 pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
 /// Maximum number of persisted narrative events kept in memory.
@@ -264,54 +271,96 @@ pub const NEED_EVENT_SATISFIED_THRESHOLD: f64 = 0.70;
 pub const STORY_SIFTER_RAPID_ESCALATION_TICKS: u64 = 50;
 /// Maximum window for simultaneous-crisis clustering.
 pub const STORY_SIFTER_BREAK_CLUSTER_TICKS: u64 = 10;
+/// Shared epsilon used by influence-grid normalization.
+pub const INFLUENCE_NORMALIZATION_EPSILON: f64 = 1e-6;
 /// Warmth channel per-tick decay rate.
 pub const INFLUENCE_WARMTH_DECAY_RATE: f64 = 0.15;
-/// Warmth channel propagation depth processed per tick.
-pub const INFLUENCE_WARMTH_PROPAGATION_SPEED: u32 = 3;
-/// Warmth channel default wall attenuation coefficient.
+/// Warmth channel default radius in tiles.
+pub const INFLUENCE_WARMTH_DEFAULT_RADIUS: f64 = 6.0;
+/// Warmth channel maximum propagation radius in tiles.
+pub const INFLUENCE_WARMTH_MAX_RADIUS: u32 = 10;
+/// Warmth channel default wall attenuation sensitivity.
 pub const INFLUENCE_WARMTH_WALL_BLOCK: f64 = 0.7;
+/// Food channel per-tick decay rate.
+pub const INFLUENCE_FOOD_DECAY_RATE: f64 = 0.20;
+/// Food channel default radius in tiles.
+pub const INFLUENCE_FOOD_DEFAULT_RADIUS: f64 = 6.0;
+/// Food channel maximum propagation radius in tiles.
+pub const INFLUENCE_FOOD_MAX_RADIUS: u32 = 12;
+/// Food channel default wall attenuation sensitivity.
+pub const INFLUENCE_FOOD_WALL_BLOCK: f64 = 0.3;
 /// Light channel per-tick decay rate.
 pub const INFLUENCE_LIGHT_DECAY_RATE: f64 = 0.20;
-/// Light channel propagation depth processed per tick.
-pub const INFLUENCE_LIGHT_PROPAGATION_SPEED: u32 = 5;
-/// Light channel default wall attenuation coefficient.
+/// Light channel default radius in tiles.
+pub const INFLUENCE_LIGHT_DEFAULT_RADIUS: f64 = 5.0;
+/// Light channel maximum propagation radius in tiles.
+pub const INFLUENCE_LIGHT_MAX_RADIUS: u32 = 10;
+/// Light channel default wall attenuation sensitivity.
 pub const INFLUENCE_LIGHT_WALL_BLOCK: f64 = 0.9;
 /// Noise channel per-tick decay rate.
 pub const INFLUENCE_NOISE_DECAY_RATE: f64 = 0.10;
-/// Noise channel propagation depth processed per tick.
-pub const INFLUENCE_NOISE_PROPAGATION_SPEED: u32 = 5;
-/// Noise channel default wall attenuation coefficient.
+/// Noise channel default radius in tiles.
+pub const INFLUENCE_NOISE_DEFAULT_RADIUS: f64 = 7.0;
+/// Noise channel maximum propagation radius in tiles.
+pub const INFLUENCE_NOISE_MAX_RADIUS: u32 = 12;
+/// Noise channel default wall attenuation sensitivity.
 pub const INFLUENCE_NOISE_WALL_BLOCK: f64 = 0.5;
 /// Danger channel per-tick decay rate.
 pub const INFLUENCE_DANGER_DECAY_RATE: f64 = 0.25;
-/// Danger channel propagation depth processed per tick.
-pub const INFLUENCE_DANGER_PROPAGATION_SPEED: u32 = 4;
-/// Danger channel default wall attenuation coefficient.
-pub const INFLUENCE_DANGER_WALL_BLOCK: f64 = 0.0;
-/// Food aroma channel per-tick decay rate.
-pub const INFLUENCE_FOOD_AROMA_DECAY_RATE: f64 = 0.20;
-/// Food aroma channel propagation depth processed per tick.
-pub const INFLUENCE_FOOD_AROMA_PROPAGATION_SPEED: u32 = 3;
-/// Food aroma channel default wall attenuation coefficient.
-pub const INFLUENCE_FOOD_AROMA_WALL_BLOCK: f64 = 0.3;
+/// Danger channel default radius in tiles.
+pub const INFLUENCE_DANGER_DEFAULT_RADIUS: f64 = 5.0;
+/// Danger channel maximum propagation radius in tiles.
+pub const INFLUENCE_DANGER_MAX_RADIUS: u32 = 10;
+/// Danger channel default wall attenuation sensitivity.
+pub const INFLUENCE_DANGER_WALL_BLOCK: f64 = 0.1;
+/// Social channel per-tick decay rate.
+pub const INFLUENCE_SOCIAL_DECAY_RATE: f64 = 0.10;
+/// Social channel default radius in tiles.
+pub const INFLUENCE_SOCIAL_DEFAULT_RADIUS: f64 = 5.0;
+/// Social channel maximum propagation radius in tiles.
+pub const INFLUENCE_SOCIAL_MAX_RADIUS: u32 = 8;
+/// Social channel default wall attenuation sensitivity.
+pub const INFLUENCE_SOCIAL_WALL_BLOCK: f64 = 0.2;
 /// Spiritual channel per-tick decay rate.
 pub const INFLUENCE_SPIRITUAL_DECAY_RATE: f64 = 0.05;
-/// Spiritual channel propagation depth processed per tick.
-pub const INFLUENCE_SPIRITUAL_PROPAGATION_SPEED: u32 = 2;
-/// Spiritual channel default wall attenuation coefficient.
+/// Spiritual channel default radius in tiles.
+pub const INFLUENCE_SPIRITUAL_DEFAULT_RADIUS: f64 = 4.0;
+/// Spiritual channel maximum propagation radius in tiles.
+pub const INFLUENCE_SPIRITUAL_MAX_RADIUS: u32 = 8;
+/// Spiritual channel default wall attenuation sensitivity.
 pub const INFLUENCE_SPIRITUAL_WALL_BLOCK: f64 = 0.2;
 /// Authority channel per-tick decay rate.
 pub const INFLUENCE_AUTHORITY_DECAY_RATE: f64 = 0.10;
-/// Authority channel propagation depth processed per tick.
-pub const INFLUENCE_AUTHORITY_PROPAGATION_SPEED: u32 = 3;
-/// Authority channel default wall attenuation coefficient.
+/// Authority channel default radius in tiles.
+pub const INFLUENCE_AUTHORITY_DEFAULT_RADIUS: f64 = 5.0;
+/// Authority channel maximum propagation radius in tiles.
+pub const INFLUENCE_AUTHORITY_MAX_RADIUS: u32 = 8;
+/// Authority channel default wall attenuation sensitivity.
 pub const INFLUENCE_AUTHORITY_WALL_BLOCK: f64 = 0.1;
+/// Disease channel per-tick decay rate.
+pub const INFLUENCE_DISEASE_DECAY_RATE: f64 = 0.18;
+/// Disease channel default radius in tiles.
+pub const INFLUENCE_DISEASE_DEFAULT_RADIUS: f64 = 4.0;
+/// Disease channel maximum propagation radius in tiles.
+pub const INFLUENCE_DISEASE_MAX_RADIUS: u32 = 8;
+/// Disease channel default wall attenuation sensitivity.
+pub const INFLUENCE_DISEASE_WALL_BLOCK: f64 = 0.25;
 /// Beauty channel per-tick decay rate.
 pub const INFLUENCE_BEAUTY_DECAY_RATE: f64 = 0.08;
-/// Beauty channel propagation depth processed per tick.
-pub const INFLUENCE_BEAUTY_PROPAGATION_SPEED: u32 = 2;
-/// Beauty channel default wall attenuation coefficient.
+/// Beauty channel default radius in tiles.
+pub const INFLUENCE_BEAUTY_DEFAULT_RADIUS: f64 = 4.0;
+/// Beauty channel maximum propagation radius in tiles.
+pub const INFLUENCE_BEAUTY_MAX_RADIUS: u32 = 8;
+/// Beauty channel default wall attenuation sensitivity.
 pub const INFLUENCE_BEAUTY_WALL_BLOCK: f64 = 0.4;
+/// Room enclosure leakage penalty applied when warmth crosses an open doorway.
+pub const INFLUENCE_ROOM_OPEN_LEAK_PENALTY: f64 = 0.85;
+/// Base intensity emitted by one food-bearing tile.
+pub const INFLUENCE_FOOD_TILE_BASE_INTENSITY: f64 = 0.65;
+/// Base intensity emitted by one dangerous terrain tile.
+pub const INFLUENCE_DANGER_TILE_BASE_INTENSITY: f64 = 0.55;
+/// Base warmth intensity emitted by one completed shelter when RON data is unavailable.
+pub const INFLUENCE_SHELTER_BASE_INTENSITY: f64 = 0.5;
 /// Per-entity causal ring-buffer capacity.
 pub const CAUSAL_LOG_MAX_PER_ENTITY: usize = 32;
 /// Shared default axis value for scaffold temperament state.
