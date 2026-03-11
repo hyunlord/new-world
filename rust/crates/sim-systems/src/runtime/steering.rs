@@ -226,6 +226,10 @@ fn influence_force_for_entity(
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Warmth))
         .unwrap_or(0.0)
         .clamp(0.0, 1.0);
+    let loneliness_drive = needs_opt
+        .map(|needs| 1.0 - needs.get(sim_core::NeedType::Belonging))
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
     let safety_drive = needs_opt
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Safety))
         .unwrap_or(0.0)
@@ -263,6 +267,19 @@ fn influence_force_for_entity(
         ChannelId::Warmth,
         warmth_drive * config::STEERING_WARMTH_INFLUENCE_WEIGHT * warmth_scale,
     );
+    let social_weight = if loneliness_drive >= config::STEERING_SOCIAL_MIN_LONELINESS {
+        loneliness_drive * config::STEERING_SOCIAL_INFLUENCE_WEIGHT
+    } else {
+        0.0
+    };
+    let social = weighted_gradient(
+        resources,
+        x,
+        y,
+        receiver_opt,
+        ChannelId::Social,
+        social_weight,
+    );
     let shelter = room_shelter_force(
         resources,
         x,
@@ -280,9 +297,9 @@ fn influence_force_for_entity(
         fear_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
     );
 
-    let force_x = food.0 + warmth.0 + shelter.0 - danger.0;
-    let force_y = food.1 + warmth.1 + shelter.1 - danger.1;
-    let cause = dominant_influence_cause(food, warmth, shelter, danger);
+    let force_x = food.0 + warmth.0 + shelter.0 + social.0 - danger.0;
+    let force_y = food.1 + warmth.1 + shelter.1 + social.1 - danger.1;
+    let cause = dominant_influence_cause(food, warmth, shelter, social, danger);
     ((force_x, force_y), cause)
 }
 
@@ -390,6 +407,7 @@ fn dominant_influence_cause(
     food: (f64, f64),
     warmth: (f64, f64),
     shelter: (f64, f64),
+    social: (f64, f64),
     danger: (f64, f64),
 ) -> Option<InfluenceCause> {
     let candidates = [
@@ -407,6 +425,11 @@ fn dominant_influence_cause(
             "shelter_gradient",
             "CAUSE_INFLUENCE_SHELTER_GRADIENT",
             (shelter.0 * shelter.0 + shelter.1 * shelter.1).sqrt(),
+        ),
+        (
+            "social_gradient",
+            "CAUSE_INFLUENCE_SOCIAL_GRADIENT",
+            (social.0 * social.0 + social.1 * social.1).sqrt(),
         ),
         (
             "danger_gradient",
@@ -886,6 +909,164 @@ mod tests {
 
         assert_eq!(force, (0.0, 0.0));
         assert!(cause.is_none());
+    }
+
+    #[test]
+    fn influence_force_moves_lonely_agents_toward_social_gradient() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Social,
+            radius: 4.0,
+            base_intensity: 0.7,
+            falloff: FalloffType::Linear,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.10);
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(force.0 > 0.0);
+        assert_eq!(cause.expect("social cause").kind, "social_gradient");
+    }
+
+    #[test]
+    fn influence_force_ignores_social_gradient_when_belonging_is_satisfied() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Social,
+            radius: 4.0,
+            base_intensity: 0.7,
+            falloff: FalloffType::Linear,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.95);
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert_eq!(force, (0.0, 0.0));
+        assert!(cause.is_none());
+    }
+
+    #[test]
+    fn lonely_agents_cluster_toward_shared_social_anchor() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Social,
+            radius: 5.0,
+            base_intensity: 0.9,
+            falloff: FalloffType::Linear,
+            decay_rate: None,
+            tags: vec!["campfire".to_string()],
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut left_needs = Needs::default();
+        left_needs.set(NeedType::Belonging, 0.10);
+        let mut right_needs = Needs::default();
+        right_needs.set(NeedType::Belonging, 0.10);
+
+        let (left_force, left_cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&left_needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+        let (right_force, right_cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(14, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&right_needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(left_force.0 > 0.0);
+        assert!(right_force.0 < 0.0);
+        assert_eq!(left_cause.expect("left social cause").kind, "social_gradient");
+        assert_eq!(right_cause.expect("right social cause").kind, "social_gradient");
+    }
+
+    #[test]
+    fn danger_outweighs_social_gathering_when_fear_is_high() {
+        let mut resources = resources();
+        resources.influence_grid.replace_emitters(vec![
+            EmitterRecord {
+                x: 11,
+                y: 8,
+                channel: ChannelId::Social,
+                radius: 5.0,
+                base_intensity: 0.9,
+                falloff: FalloffType::Linear,
+                decay_rate: None,
+                tags: vec!["campfire".to_string()],
+                dirty: true,
+            },
+            EmitterRecord {
+                x: 9,
+                y: 8,
+                channel: ChannelId::Danger,
+                radius: 4.0,
+                base_intensity: 0.95,
+                falloff: FalloffType::Exponential,
+                decay_rate: None,
+                tags: vec!["fire".to_string()],
+                dirty: true,
+            },
+        ]);
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Belonging, 0.10);
+        let mut fear = Emotion::default();
+        *fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            Some(&fear),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(force.0 < 0.0);
+        assert_eq!(cause.expect("danger cause").kind, "danger_gradient");
     }
 
     #[test]
