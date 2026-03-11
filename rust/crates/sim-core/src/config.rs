@@ -389,12 +389,32 @@ pub const CAUSAL_LOG_MAX_PER_ENTITY: usize = 32;
 pub const CHRONICLE_LOG_MAX_EVENTS: usize = 1000;
 /// Maximum bounded per-entity entries kept in the chronicle log.
 pub const CHRONICLE_LOG_MAX_PER_ENTITY: usize = 20;
+/// Maximum summarized entries kept in the chronicle timeline.
+pub const CHRONICLE_TIMELINE_MAX_ENTRIES: usize = 200;
 /// Minimum significance treated as medium importance in chronicle pruning.
 pub const CHRONICLE_MEDIUM_SIGNIFICANCE_THRESHOLD: f64 = 0.35;
 /// Minimum significance treated as high importance in chronicle pruning.
 pub const CHRONICLE_HIGH_SIGNIFICANCE_THRESHOLD: f64 = 0.70;
 /// Minimum steering significance required before creating a chronicle event.
 pub const CHRONICLE_SIGNIFICANCE_THRESHOLD: f64 = 0.18;
+/// Tick interval between chronicle summarization passes.
+pub const CHRONICLE_SUMMARY_INTERVAL_TICKS: u64 = 200;
+/// Maximum temporal gap between raw events in one chronicle cluster.
+pub const CHRONICLE_CLUSTER_WINDOW_TICKS: u64 = 30;
+/// Minimum accepted significance score for one chronicle summary.
+pub const CHRONICLE_SUMMARY_SIGNIFICANCE_THRESHOLD: f64 = 6.0;
+/// Bonus added when a cluster contains danger-driven movement.
+pub const CHRONICLE_DANGER_BONUS: f64 = 5.0;
+/// Bonus added when a cluster contains food-driven movement.
+pub const CHRONICLE_FOOD_BONUS: f64 = 3.0;
+/// Bonus added when a cluster contains warmth-driven shelter seeking.
+pub const CHRONICLE_WARMTH_BONUS: f64 = 2.5;
+/// Bonus added when a cluster contains social gathering behavior.
+pub const CHRONICLE_SOCIAL_BONUS: f64 = 2.5;
+/// Minimum number of distinct agents required for one group-gathering chronicle.
+pub const CHRONICLE_SOCIAL_GROUP_SIZE_THRESHOLD: usize = 3;
+/// Spatial bucket size in tiles for social-gathering chronicle clustering.
+pub const CHRONICLE_SOCIAL_BUCKET_SIZE: i32 = 3;
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.

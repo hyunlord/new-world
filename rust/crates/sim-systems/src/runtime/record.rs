@@ -13,9 +13,12 @@ use sim_core::{
     HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
     ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{
+    ChronicleCluster, ChronicleEvent, ChronicleEventCause, ChronicleEventType, ChronicleSummary,
+    SimResources, SimSystem,
+};
 use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use crate::body;
 
@@ -395,6 +398,7 @@ pub struct ChronicleRuntimeSystem {
     priority: u32,
     tick_interval: u64,
     last_prune_year: i32,
+    last_summarized_tick: u64,
 }
 
 impl ChronicleRuntimeSystem {
@@ -403,6 +407,7 @@ impl ChronicleRuntimeSystem {
             priority,
             tick_interval: tick_interval.max(1),
             last_prune_year: 0,
+            last_summarized_tick: 0,
         }
     }
 }
@@ -421,6 +426,11 @@ impl SimSystem for ChronicleRuntimeSystem {
     }
 
     fn run(&mut self, _world: &mut World, resources: &mut SimResources, tick: u64) {
+        if should_summarize_chronicle(tick, self.last_summarized_tick) {
+            summarize_recent_chronicle_events(_world, resources, self.last_summarized_tick);
+            self.last_summarized_tick = tick;
+        }
+
         let ticks_per_year = config::TICKS_PER_YEAR as i32;
         if ticks_per_year <= 0 {
             return;
@@ -452,5 +462,473 @@ impl SimSystem for ChronicleRuntimeSystem {
         resources
             .chronicle_log
             .prune_by_significance(low_cutoff, med_cutoff);
+    }
+}
+
+fn should_summarize_chronicle(tick: u64, last_summarized_tick: u64) -> bool {
+    tick.saturating_sub(last_summarized_tick) >= config::CHRONICLE_SUMMARY_INTERVAL_TICKS
+}
+
+fn summarize_recent_chronicle_events(
+    world: &World,
+    resources: &mut SimResources,
+    last_summarized_tick: u64,
+) {
+    let recent_events: Vec<ChronicleEvent> = resources
+        .chronicle_log
+        .events_since(last_summarized_tick)
+        .into_iter()
+        .cloned()
+        .collect();
+    if recent_events.is_empty() {
+        return;
+    }
+
+    let mut consumed_social_events: BTreeSet<(u64, EntityId, i32, i32)> = BTreeSet::new();
+    for summary in build_social_gathering_summaries(&recent_events) {
+        for event in &summary.events {
+            consumed_social_events.insert((event.tick, event.entity_id, event.tile_x, event.tile_y));
+        }
+        if let Some(entry) = summary_to_timeline_summary(world, &summary) {
+            append_chronicle_summary(resources, entry);
+        }
+    }
+
+    let mut clusters_by_entity: BTreeMap<EntityId, Vec<ChronicleCluster>> = BTreeMap::new();
+    for event in &recent_events {
+        let event_key = (event.tick, event.entity_id, event.tile_x, event.tile_y);
+        if consumed_social_events.contains(&event_key) {
+            continue;
+        }
+        let clusters = clusters_by_entity.entry(event.entity_id).or_default();
+        if let Some(last_cluster) = clusters.last_mut() {
+            if chronicle_events_can_cluster(last_cluster.events.last(), event) {
+                last_cluster.push(event.clone());
+                continue;
+            }
+        }
+        clusters.push(ChronicleCluster::new(event.clone()));
+    }
+
+    for clusters in clusters_by_entity.into_values() {
+        for cluster in clusters {
+            if let Some(summary) = cluster_to_timeline_summary(world, &cluster) {
+                append_chronicle_summary(resources, summary);
+            }
+        }
+    }
+}
+
+fn build_social_gathering_summaries(events: &[ChronicleEvent]) -> Vec<ChronicleCluster> {
+    let mut grouped: BTreeMap<(i32, i32), Vec<ChronicleEvent>> = BTreeMap::new();
+    let bucket_size = config::CHRONICLE_SOCIAL_BUCKET_SIZE.max(1);
+
+    for event in events {
+        if event.cause != ChronicleEventCause::Social {
+            continue;
+        }
+        let key = (
+            event.tile_x.div_euclid(bucket_size),
+            event.tile_y.div_euclid(bucket_size),
+        );
+        grouped
+            .entry(key)
+            .or_default()
+            .push(event.clone());
+    }
+
+    let mut clusters: Vec<ChronicleCluster> = Vec::new();
+    for mut bucket_events in grouped.into_values() {
+        bucket_events.sort_by_key(|event| event.tick);
+        for event in bucket_events {
+            if let Some(last_cluster) = clusters.last_mut() {
+                if chronicle_events_can_cluster(last_cluster.events.last(), &event) {
+                    last_cluster.push(event);
+                    continue;
+                }
+            }
+            clusters.push(ChronicleCluster {
+                start_tick: event.tick,
+                end_tick: event.tick,
+                entity_id: None,
+                events: vec![event],
+            });
+        }
+    }
+
+    clusters
+        .into_iter()
+        .filter(|cluster| {
+            cluster
+                .events
+                .iter()
+                .map(|event| event.entity_id)
+                .collect::<BTreeSet<_>>()
+                .len()
+                >= config::CHRONICLE_SOCIAL_GROUP_SIZE_THRESHOLD
+        })
+        .collect()
+}
+
+fn chronicle_events_can_cluster(
+    previous: Option<&ChronicleEvent>,
+    next: &ChronicleEvent,
+) -> bool {
+    let Some(previous) = previous else {
+        return false;
+    };
+    next.tick.saturating_sub(previous.tick) <= config::CHRONICLE_CLUSTER_WINDOW_TICKS
+        && previous.cause == next.cause
+        && previous.event_type == next.event_type
+}
+
+fn cluster_to_timeline_summary(
+    world: &World,
+    cluster: &ChronicleCluster,
+) -> Option<ChronicleSummary> {
+    let dominant = dominant_event(cluster.events.as_slice())?;
+    let score = cluster_significance(cluster.events.as_slice());
+    if score < config::CHRONICLE_SUMMARY_SIGNIFICANCE_THRESHOLD {
+        log::debug!(
+            "[Chronicle] cluster_rejected entity={} cause={} score={:.2}",
+            cluster
+                .entity_id
+                .map(|entity_id| entity_id.0.to_string())
+                .unwrap_or_else(|| "group".to_string()),
+            dominant.cause.id(),
+            score
+        );
+        return None;
+    }
+
+    let tile = cluster.events.last().map(|event| (event.tile_x, event.tile_y))?;
+    let agent_label = cluster
+        .entity_id
+        .map(|entity_id| chronicle_entity_label(world, entity_id))
+        .unwrap_or_default();
+    let (title_key, description_key) =
+        chronicle_template_keys(dominant.event_type, dominant.cause, false);
+    let mut params = BTreeMap::new();
+    if !agent_label.is_empty() {
+        params.insert("agent".to_string(), agent_label);
+    }
+    params.insert("count".to_string(), cluster.events.len().to_string());
+
+    log::debug!(
+        "[Chronicle] summary_generated entity={} cause={} score={:.2}",
+        cluster
+            .entity_id
+            .map(|entity_id| entity_id.0.to_string())
+            .unwrap_or_else(|| "group".to_string()),
+        dominant.cause.id(),
+        score
+    );
+
+    Some(ChronicleSummary {
+        start_tick: cluster.start_tick,
+        end_tick: cluster.end_tick,
+        entity_id: cluster.entity_id,
+        event_type: dominant.event_type,
+        cause: dominant.cause,
+        title: title_key.to_string(),
+        description: description_key.to_string(),
+        params,
+        tile_x: tile.0,
+        tile_y: tile.1,
+        significance: score,
+    })
+}
+
+fn summary_to_timeline_summary(
+    _world: &World,
+    cluster: &ChronicleCluster,
+) -> Option<ChronicleSummary> {
+    let dominant = dominant_event(cluster.events.as_slice())?;
+    let unique_entities = cluster
+        .events
+        .iter()
+        .map(|event| event.entity_id)
+        .collect::<BTreeSet<_>>();
+    let score = social_cluster_significance(cluster.events.as_slice(), unique_entities.len());
+    if score < config::CHRONICLE_SUMMARY_SIGNIFICANCE_THRESHOLD {
+        log::debug!(
+            "[Chronicle] cluster_rejected entity=group cause={} score={:.2}",
+            dominant.cause.id(),
+            score
+        );
+        return None;
+    }
+
+    let tile = cluster.events.last().map(|event| (event.tile_x, event.tile_y))?;
+    let (title_key, description_key) =
+        chronicle_template_keys(dominant.event_type, dominant.cause, true);
+    let mut params = BTreeMap::new();
+    params.insert("count".to_string(), unique_entities.len().to_string());
+
+    log::debug!(
+        "[Chronicle] cluster_created entity=group cause={} size={} score={:.2}",
+        dominant.cause.id(),
+        unique_entities.len(),
+        score
+    );
+
+    Some(ChronicleSummary {
+        start_tick: cluster.start_tick,
+        end_tick: cluster.end_tick,
+        entity_id: None,
+        event_type: ChronicleEventType::GatheringFormation,
+        cause: ChronicleEventCause::Social,
+        title: title_key.to_string(),
+        description: description_key.to_string(),
+        params,
+        tile_x: tile.0,
+        tile_y: tile.1,
+        significance: score,
+    })
+}
+
+fn dominant_event(events: &[ChronicleEvent]) -> Option<&ChronicleEvent> {
+    events.iter().max_by(|left, right| {
+        left.magnitude
+            .significance
+            .partial_cmp(&right.magnitude.significance)
+            .unwrap_or(Ordering::Equal)
+    })
+}
+
+fn cluster_significance(events: &[ChronicleEvent]) -> f64 {
+    let base = events
+        .iter()
+        .map(|event| event.magnitude.significance * 2.0)
+        .sum::<f64>();
+    base + chronicle_cause_bonus(dominant_event(events).map(|event| event.cause))
+}
+
+fn social_cluster_significance(events: &[ChronicleEvent], unique_entities: usize) -> f64 {
+    cluster_significance(events) + unique_entities as f64
+}
+
+fn chronicle_cause_bonus(cause: Option<ChronicleEventCause>) -> f64 {
+    match cause.unwrap_or(ChronicleEventCause::Unknown) {
+        ChronicleEventCause::Danger => config::CHRONICLE_DANGER_BONUS,
+        ChronicleEventCause::Food => config::CHRONICLE_FOOD_BONUS,
+        ChronicleEventCause::Warmth => config::CHRONICLE_WARMTH_BONUS,
+        ChronicleEventCause::Social => config::CHRONICLE_SOCIAL_BONUS,
+        _ => 0.0,
+    }
+}
+
+fn chronicle_entity_label(world: &World, entity_id: EntityId) -> String {
+    let Some(entity) = world
+        .query::<&Identity>()
+        .iter()
+        .find_map(|(entity, _)| (entity.id() as u64 == entity_id.0).then_some(entity))
+    else {
+        return format!("#{}", entity_id.0);
+    };
+    world.get::<&Identity>(entity)
+        .map(|identity| identity.name.clone())
+        .unwrap_or_else(|_| format!("#{}", entity_id.0))
+}
+
+fn chronicle_template_keys(
+    event_type: ChronicleEventType,
+    cause: ChronicleEventCause,
+    is_group: bool,
+) -> (&'static str, &'static str) {
+    if is_group && cause == ChronicleEventCause::Social {
+        return (
+            "CHRONICLE_TITLE_SOCIAL_GATHERING",
+            "CHRONICLE_SUMMARY_SOCIAL_GATHERING",
+        );
+    }
+    match (event_type, cause) {
+        (ChronicleEventType::InfluenceAvoidance, ChronicleEventCause::Danger) => (
+            "CHRONICLE_TITLE_ESCAPE_DANGER",
+            "CHRONICLE_SUMMARY_ESCAPE_DANGER",
+        ),
+        (ChronicleEventType::ShelterSeeking, ChronicleEventCause::Warmth) => (
+            "CHRONICLE_TITLE_SHELTER_SEEKING",
+            "CHRONICLE_SUMMARY_SHELTER_SEEKING",
+        ),
+        (ChronicleEventType::GatheringFormation, ChronicleEventCause::Social) => (
+            "CHRONICLE_TITLE_SOCIAL_ATTRACTION",
+            "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION",
+        ),
+        _ => (
+            "CHRONICLE_TITLE_FOOD_ATTRACTION",
+            "CHRONICLE_SUMMARY_FOOD_ATTRACTION",
+        ),
+    }
+}
+
+fn append_chronicle_summary(resources: &mut SimResources, summary: ChronicleSummary) {
+    if resources.chronicle_timeline.append_summary(summary) {
+        log::debug!("[Chronicle] timeline_pruned");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::config::GameConfig;
+    use sim_core::{GameCalendar, WorldMap};
+
+    fn make_resources() -> SimResources {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(32, 32, 77);
+        SimResources::new(calendar, map, 77)
+    }
+
+    fn make_entity(world: &mut World, name: &str) -> EntityId {
+        let entity = world.spawn((Identity {
+            name: name.to_string(),
+            ..Identity::default()
+        },));
+        EntityId(entity.id() as u64)
+    }
+
+    fn make_event(
+        tick: u64,
+        entity_id: EntityId,
+        event_type: ChronicleEventType,
+        cause: ChronicleEventCause,
+        significance: f64,
+        tile_x: i32,
+        tile_y: i32,
+    ) -> ChronicleEvent {
+        ChronicleEvent {
+            tick,
+            entity_id,
+            event_type,
+            cause,
+            magnitude: sim_engine::ChronicleEventMagnitude {
+                influence: significance,
+                steering: significance,
+                significance,
+            },
+            tile_x,
+            tile_y,
+            summary_key: "CAUSE_TEST".to_string(),
+            effect_key: "steering_velocity".to_string(),
+        }
+    }
+
+    #[test]
+    fn low_significance_cluster_is_rejected() {
+        let mut world = World::new();
+        let entity_id = make_entity(&mut world, "Ari");
+        let cluster = ChronicleCluster::new(make_event(
+            10,
+            entity_id,
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            0.20,
+            2,
+            3,
+        ));
+
+        assert!(cluster_to_timeline_summary(&world, &cluster).is_none());
+    }
+
+    #[test]
+    fn danger_cluster_generates_escape_summary() {
+        let mut world = World::new();
+        let entity_id = make_entity(&mut world, "Mina");
+        let mut cluster = ChronicleCluster::new(make_event(
+            10,
+            entity_id,
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            0.65,
+            5,
+            7,
+        ));
+        cluster.push(make_event(
+            20,
+            entity_id,
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            0.40,
+            6,
+            7,
+        ));
+
+        let summary = cluster_to_timeline_summary(&world, &cluster).expect("danger summary");
+        assert_eq!(summary.cause, ChronicleEventCause::Danger);
+        assert_eq!(summary.description, "CHRONICLE_SUMMARY_ESCAPE_DANGER");
+        assert_eq!(summary.params.get("agent"), Some(&"Mina".to_string()));
+    }
+
+    #[test]
+    fn social_group_cluster_requires_multiple_entities() {
+        let mut world = World::new();
+        let entity_a = make_entity(&mut world, "A");
+        let entity_b = make_entity(&mut world, "B");
+        let entity_c = make_entity(&mut world, "C");
+        let events = vec![
+            make_event(
+                200,
+                entity_a,
+                ChronicleEventType::GatheringFormation,
+                ChronicleEventCause::Social,
+                0.50,
+                10,
+                10,
+            ),
+            make_event(
+                205,
+                entity_b,
+                ChronicleEventType::GatheringFormation,
+                ChronicleEventCause::Social,
+                0.45,
+                11,
+                10,
+            ),
+            make_event(
+                210,
+                entity_c,
+                ChronicleEventType::GatheringFormation,
+                ChronicleEventCause::Social,
+                0.48,
+                10,
+                11,
+            ),
+        ];
+
+        let clusters = build_social_gathering_summaries(&events);
+        assert_eq!(clusters.len(), 1);
+        let summary = summary_to_timeline_summary(&world, &clusters[0]).expect("group summary");
+        assert_eq!(summary.entity_id, None);
+        assert_eq!(summary.description, "CHRONICLE_SUMMARY_SOCIAL_GATHERING");
+        assert_eq!(summary.params.get("count"), Some(&"3".to_string()));
+    }
+
+    #[test]
+    fn summarization_appends_recent_timeline_entries() {
+        let mut world = World::new();
+        let entity_id = make_entity(&mut world, "Daro");
+        let mut resources = make_resources();
+        resources.chronicle_log.append_event(make_event(
+            210,
+            entity_id,
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            0.70,
+            3,
+            4,
+        ));
+
+        summarize_recent_chronicle_events(&world, &mut resources, 0);
+
+        assert_eq!(resources.chronicle_timeline.len(), 1);
+        let summary = resources
+            .chronicle_timeline
+            .recent_summaries(1)
+            .first()
+            .copied()
+            .expect("one summary");
+        assert_eq!(summary.cause, ChronicleEventCause::Danger);
     }
 }

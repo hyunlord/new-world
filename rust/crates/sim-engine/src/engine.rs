@@ -3,7 +3,7 @@ use crate::event_store::EventStore;
 use crate::events::LlmEvent;
 use crate::explain_log::ExplainLog;
 use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
-use crate::chronicle::ChronicleLog;
+use crate::chronicle::{ChronicleLog, ChronicleTimeline};
 use crate::llm_server::{LlmRuntime, LlmRuntimeError};
 use crate::llm_worker::{LlmRequest, LlmRequestMeta, LlmResponse};
 use crate::notification::SimNotification;
@@ -112,6 +112,8 @@ pub struct SimResources {
     pub construction_diagnostics: HashMap<BuildingId, ConstructionDiagnostics>,
     /// Structured chronicle log with bounded world and personal events.
     pub chronicle_log: ChronicleLog,
+    /// Summarized chronicle timeline built from clustered raw events.
+    pub chronicle_timeline: ChronicleTimeline,
     /// Personality distribution data for spawning agents (loaded from JSON at startup).
     pub personality_distribution: Option<PersonalityDistribution>,
     /// Name generator — generates culturally-appropriate names for new agents.
@@ -168,6 +170,7 @@ impl SimResources {
             agent_need_diagnostics: HashMap::new(),
             construction_diagnostics: HashMap::new(),
             chronicle_log: ChronicleLog::new(),
+            chronicle_timeline: ChronicleTimeline::new(),
             personality_distribution: None,
             name_generator: None,
             data_registry: None,
@@ -312,6 +315,7 @@ impl std::fmt::Debug for SimResources {
                 &self.construction_diagnostics.len(),
             )
             .field("chronicle_world_events", &self.chronicle_log.world_len())
+            .field("chronicle_summaries", &self.chronicle_timeline.len())
             .field("event_bus", &self.event_bus)
             .field("event_store", &self.event_store.len())
             .field("influence_grid_dims", &self.influence_grid.dimensions())
