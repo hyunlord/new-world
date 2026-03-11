@@ -5,7 +5,10 @@ use sim_core::components::{
     Temperament,
 };
 use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{
+    ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, SimResources,
+    SimSystem,
+};
 
 use super::steering_derive::derive_steering_params;
 
@@ -191,6 +194,15 @@ impl SimSystem for InfluenceSteeringSystem {
                             magnitude: cause.magnitude,
                         },
                     );
+                    if let Some(event) = chronicle_event_for_decision(
+                        tick,
+                        EntityId(entity.id() as u64),
+                        position,
+                        cause,
+                        (dir_x * speed_tiles, dir_y * speed_tiles),
+                    ) {
+                        resources.chronicle_log.append_event(event);
+                    }
                 }
             }
         }
@@ -209,6 +221,8 @@ impl SimSystem for InfluenceSteeringSystem {
 
 #[derive(Debug, Clone, Copy)]
 struct InfluenceCause {
+    channel: ChannelId,
+    event_type: ChronicleEventType,
     kind: &'static str,
     summary_key: &'static str,
     magnitude: f64,
@@ -575,6 +589,8 @@ fn dominant_influence_cause(
 ) -> Option<InfluenceCause> {
     if danger_overrides {
         return influence_cause_from_sample(
+            ChannelId::Danger,
+            ChronicleEventType::InfluenceAvoidance,
             "danger_gradient",
             "CAUSE_INFLUENCE_DANGER_GRADIENT",
             context.danger,
@@ -583,26 +599,36 @@ fn dominant_influence_cause(
 
     let candidates = [
         (
+            ChannelId::Food,
+            ChronicleEventType::InfluenceAttraction,
             "food_gradient",
             "CAUSE_INFLUENCE_FOOD_GRADIENT",
             context.food.magnitude(),
         ),
         (
+            ChannelId::Warmth,
+            ChronicleEventType::ShelterSeeking,
             "warmth_gradient",
             "CAUSE_INFLUENCE_WARMTH_GRADIENT",
             context.warmth.magnitude(),
         ),
         (
+            ChannelId::Warmth,
+            ChronicleEventType::ShelterSeeking,
             "shelter_gradient",
             "CAUSE_INFLUENCE_SHELTER_GRADIENT",
             context.shelter.magnitude(),
         ),
         (
+            ChannelId::Social,
+            ChronicleEventType::GatheringFormation,
             "social_gradient",
             "CAUSE_INFLUENCE_SOCIAL_GRADIENT",
             context.social.magnitude(),
         ),
         (
+            ChannelId::Danger,
+            ChronicleEventType::InfluenceAvoidance,
             "danger_gradient",
             "CAUSE_INFLUENCE_DANGER_GRADIENT",
             context.danger.magnitude(),
@@ -610,18 +636,22 @@ fn dominant_influence_cause(
     ];
     let best = candidates
         .into_iter()
-        .max_by(|left, right| left.2.partial_cmp(&right.2).unwrap_or(std::cmp::Ordering::Equal))?;
-    if best.2 < config::STEERING_INFLUENCE_MIN_GRADIENT {
+        .max_by(|left, right| left.4.partial_cmp(&right.4).unwrap_or(std::cmp::Ordering::Equal))?;
+    if best.4 < config::STEERING_INFLUENCE_MIN_GRADIENT {
         return None;
     }
     Some(InfluenceCause {
-        kind: best.0,
-        summary_key: best.1,
-        magnitude: best.2,
+        channel: best.0,
+        event_type: best.1,
+        kind: best.2,
+        summary_key: best.3,
+        magnitude: best.4,
     })
 }
 
 fn influence_cause_from_sample(
+    channel: ChannelId,
+    event_type: ChronicleEventType,
     kind: &'static str,
     summary_key: &'static str,
     sample: SteeringSignalSample,
@@ -631,9 +661,41 @@ fn influence_cause_from_sample(
         return None;
     }
     Some(InfluenceCause {
+        channel,
+        event_type,
         kind,
         summary_key,
         magnitude,
+    })
+}
+
+fn chronicle_event_for_decision(
+    tick: u64,
+    entity_id: EntityId,
+    position: &Position,
+    cause: InfluenceCause,
+    final_velocity: (f64, f64),
+) -> Option<ChronicleEvent> {
+    let steering_magnitude = vector_magnitude(final_velocity.0, final_velocity.1);
+    let significance = cause.magnitude.max(steering_magnitude);
+    if significance < config::CHRONICLE_SIGNIFICANCE_THRESHOLD {
+        return None;
+    }
+
+    Some(ChronicleEvent {
+        tick,
+        entity_id,
+        event_type: cause.event_type,
+        cause: ChronicleEventCause::from(cause.channel),
+        magnitude: ChronicleEventMagnitude {
+            influence: cause.magnitude,
+            steering: steering_magnitude,
+            significance,
+        },
+        tile_x: position.tile_x(),
+        tile_y: position.tile_y(),
+        summary_key: cause.summary_key.to_string(),
+        effect_key: "steering_velocity".to_string(),
     })
 }
 
@@ -794,6 +856,10 @@ fn clamp_magnitude(x: f64, y: f64, max_magnitude: f64) -> (f64, f64) {
     }
 }
 
+fn vector_magnitude(x: f64, y: f64) -> f64 {
+    (x * x + y * y).sqrt()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::runtime::MovementRuntimeSystem;
@@ -809,11 +875,12 @@ mod tests {
         config, ActionType, ChannelId, EmitterRecord, FalloffType, GameCalendar, GrowthStage,
         NeedType, RoomId, WorldMap,
     };
-    use sim_engine::{SimResources, SimSystem};
+    use sim_engine::{ChronicleEventType, SimResources, SimSystem};
 
     use super::{
-        arrive_force, cohesion_force, influence_force_for_entity, room_shelter_force, seek_force,
-        separation_force, wander_force, SteeringRuntimeSystem,
+        arrive_force, chronicle_event_for_decision, cohesion_force, influence_force_for_entity,
+        room_shelter_force, seek_force, separation_force, wander_force, InfluenceCause,
+        SteeringRuntimeSystem,
     };
 
     fn resources() -> SimResources {
@@ -861,6 +928,136 @@ mod tests {
         system.run(&mut world, &mut resources, 1);
         let position = world.get::<&Position>(entity).expect("position exists");
         assert!(position.vel_x.abs() > 0.0 || position.vel_y.abs() > 0.0);
+    }
+
+    #[test]
+    fn chronicle_event_for_decision_filters_low_significance_force() {
+        let cause = InfluenceCause {
+            channel: ChannelId::Food,
+            event_type: ChronicleEventType::InfluenceAttraction,
+            kind: "food_gradient",
+            summary_key: "CAUSE_INFLUENCE_FOOD_GRADIENT",
+            magnitude: config::CHRONICLE_SIGNIFICANCE_THRESHOLD * 0.5,
+        };
+
+        let event = chronicle_event_for_decision(
+            12,
+            sim_core::EntityId(9),
+            &Position::new(4, 4),
+            cause,
+            (0.0, 0.0),
+        );
+
+        assert!(event.is_none());
+    }
+
+    #[test]
+    fn steering_runtime_system_appends_food_chronicle_event() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 9,
+            y: 5,
+            channel: ChannelId::Food,
+            radius: 5.0,
+            base_intensity: 0.9,
+            falloff: FalloffType::Linear,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.05);
+        let entity = world.spawn((
+            Position::new(5, 5),
+            Behavior::default(),
+            Personality::default(),
+            SteeringParams::default(),
+            InfluenceReceiver::default(),
+            needs,
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+        ));
+
+        let mut system = SteeringRuntimeSystem::new(config::STEERING_SYSTEM_PRIORITY, 1);
+        system.run(&mut world, &mut resources, 20);
+
+        let event = resources
+            .chronicle_log
+            .latest_for_entity(sim_core::EntityId(entity.id() as u64))
+            .expect("food chronicle event");
+        assert_eq!(event.event_type, ChronicleEventType::InfluenceAttraction);
+        assert_eq!(event.cause.id(), "food");
+        assert!(event.magnitude.significance >= config::CHRONICLE_SIGNIFICANCE_THRESHOLD);
+    }
+
+    #[test]
+    fn steering_runtime_system_records_danger_as_dominant_chronicle_cause() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.influence_grid.replace_emitters(vec![
+            EmitterRecord {
+                x: 9,
+                y: 5,
+                channel: ChannelId::Food,
+                radius: 6.0,
+                base_intensity: 0.9,
+                falloff: FalloffType::Linear,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            },
+            EmitterRecord {
+                x: 6,
+                y: 5,
+                channel: ChannelId::Danger,
+                radius: 6.0,
+                base_intensity: 1.0,
+                falloff: FalloffType::Exponential,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            },
+        ]);
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.05);
+        needs.set(NeedType::Safety, 0.15);
+        let mut emotion = Emotion::default();
+        *emotion.get_mut(sim_core::EmotionType::Fear) = 0.95;
+        let entity = world.spawn((
+            Position::new(5, 5),
+            Behavior::default(),
+            Personality::default(),
+            SteeringParams::default(),
+            InfluenceReceiver::default(),
+            needs,
+            emotion,
+            Stress {
+                level: 0.75,
+                ..Stress::default()
+            },
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+        ));
+
+        let mut system = SteeringRuntimeSystem::new(config::STEERING_SYSTEM_PRIORITY, 1);
+        system.run(&mut world, &mut resources, 30);
+
+        let event = resources
+            .chronicle_log
+            .latest_for_entity(sim_core::EntityId(entity.id() as u64))
+            .expect("danger chronicle event");
+        assert_eq!(event.event_type, ChronicleEventType::InfluenceAvoidance);
+        assert_eq!(event.cause.id(), "danger");
+        assert!(event.magnitude.steering > 0.0);
     }
 
     #[test]

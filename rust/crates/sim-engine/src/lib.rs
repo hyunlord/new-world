@@ -1,4 +1,5 @@
 pub mod command;
+pub mod chronicle;
 pub mod engine;
 pub mod event_bus;
 pub mod event_store;
@@ -43,9 +44,12 @@ pub mod system_trait;
 // ── Convenience re-exports ────────────────────────────────────────────────────
 
 pub use command::{Command, CommandQueue};
+pub use chronicle::{
+    ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, ChronicleLog,
+};
 pub use engine::{
-    AgentNeedDiagnostics, ChronicleEvent, ConstructionDiagnostics, DiagnosticDelta,
-    RuntimeStatsSnapshot, SimEngine, SimResources,
+    AgentNeedDiagnostics, ConstructionDiagnostics, DiagnosticDelta, RuntimeStatsSnapshot,
+    SimEngine, SimResources,
 };
 pub use event_bus::{EventBus, Subscriber};
 pub use event_store::{EventStore, SimEvent, SimEventType};
