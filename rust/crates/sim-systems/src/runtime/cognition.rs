@@ -9,9 +9,10 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
-    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
-    ResourceType, SettlementId, Sex, SocialClass, TechState, TerrainType, Tile, ValueType,
+    ActionType, AttachmentType, BuildingId, ChannelId, CopingStrategyId, EmotionType, EntityId,
+    GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType,
+    RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, TerrainType, Tile,
+    ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use std::cmp::Ordering;
@@ -835,18 +836,55 @@ fn find_nearest_tile(
     best
 }
 
-/// Finds nearest passable tile with a specific resource type that has amount > 0.
-fn find_nearest_resource_tile(
+/// Finds the strongest local influence tile for one channel within a bounded radius.
+fn find_best_influence_tile(
     position: &Position,
     resources: &SimResources,
     radius: i32,
-    resource_type: ResourceType,
+    channel: ChannelId,
 ) -> Option<(i32, i32)> {
-    find_nearest_tile(position, resources, radius, |tile| {
-        tile.resources
-            .iter()
-            .any(|r| r.resource_type == resource_type && r.amount > 0.0)
-    })
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
+    let mut best: Option<(i32, i32)> = None;
+    let mut best_signal = config::BEHAVIOR_FOOD_TARGET_MIN_SIGNAL;
+    let mut best_dist = i32::MAX;
+
+    for dy in -radius..=radius {
+        for dx in -radius..=radius {
+            let x = origin_x + dx;
+            let y = origin_y + dy;
+            if !resources.map.in_bounds(x, y) {
+                continue;
+            }
+            let tile = resources.map.get(x as u32, y as u32);
+            if !tile.passable {
+                continue;
+            }
+            let signal = resources.influence_grid.sample(x as u32, y as u32, channel);
+            if signal < best_signal {
+                continue;
+            }
+
+            let dist = dx.abs() + dy.abs();
+            let is_better_signal = signal > best_signal + f64::EPSILON;
+            let same_signal_closer = (signal - best_signal).abs() <= f64::EPSILON && dist < best_dist;
+            let same_signal_same_dist =
+                (signal - best_signal).abs() <= f64::EPSILON && dist == best_dist;
+            if is_better_signal
+                || same_signal_closer
+                || (same_signal_same_dist
+                    && best
+                        .map(|(best_x, best_y)| (x, y) < (best_x, best_y))
+                        .unwrap_or(true))
+            {
+                best_signal = signal;
+                best_dist = dist;
+                best = Some((x, y));
+            }
+        }
+    }
+
+    best
 }
 
 /// Finds nearest passable tile with one of the specified terrain types.
@@ -941,9 +979,13 @@ fn behavior_assign_action(
         | ActionType::Eat
         | ActionType::TakeFromStockpile
         | ActionType::GatherHerbs => {
-            find_nearest_resource_tile(position, resources, 15, ResourceType::Food).unwrap_or_else(
-                || behavior_pick_wander_target(position, resources, tick, entity_raw),
+            find_best_influence_tile(
+                position,
+                resources,
+                config::BEHAVIOR_FOOD_TARGET_INFLUENCE_RADIUS,
+                ChannelId::Food,
             )
+            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
         }
         ActionType::Drink => {
             find_nearest_terrain_tile(position, resources, 20, &[TerrainType::ShallowWater])
@@ -1124,6 +1166,7 @@ impl SimSystem for BehaviorRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sim_core::{EmitterRecord, FalloffType};
     use sim_core::components::{Identity, Needs};
     use sim_core::config::GameConfig;
     use sim_core::{Building, GameCalendar, SettlementId, WorldMap};
@@ -1244,5 +1287,115 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Rest);
         assert_eq!(behavior.action_target_x, Some(4));
         assert_eq!(behavior.action_target_y, Some(4));
+    }
+
+    #[test]
+    fn behavior_runtime_system_targets_strongest_local_food_influence_for_forage() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(12, 12, 215);
+        let mut resources = SimResources::new(calendar, map, 401);
+        let mut world = World::new();
+
+        resources.influence_grid.replace_emitters(vec![
+            EmitterRecord {
+                x: 5,
+                y: 4,
+                channel: ChannelId::Food,
+                radius: 3.0,
+                base_intensity: 0.30,
+                falloff: FalloffType::Gaussian,
+                decay_rate: None,
+                tags: vec!["test_food".to_string()],
+                dirty: true,
+            },
+            EmitterRecord {
+                x: 8,
+                y: 4,
+                channel: ChannelId::Food,
+                radius: 4.0,
+                base_intensity: 0.95,
+                falloff: FalloffType::Gaussian,
+                decay_rate: None,
+                tags: vec!["test_food".to_string()],
+                dirty: true,
+            },
+        ]);
+        resources.influence_grid.tick_update();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.energy = 0.90;
+
+        let entity = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            needs,
+            Stress::default(),
+            Emotion::default(),
+            Position::new(4, 4),
+            Behavior::default(),
+        ));
+
+        let mut system = BehaviorRuntimeSystem::new(20, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Forage);
+        let target_x = behavior.action_target_x.expect("food target x");
+        let target_y = behavior.action_target_y.expect("food target y");
+        let chosen_signal = resources
+            .influence_grid
+            .sample(target_x as u32, target_y as u32, ChannelId::Food);
+        let closer_signal = resources.influence_grid.sample(5, 4, ChannelId::Food);
+        assert_eq!(target_y, 4);
+        assert!(chosen_signal >= closer_signal);
+        assert!(chosen_signal > 0.0);
+    }
+
+    #[test]
+    fn behavior_runtime_system_falls_back_when_food_influence_is_absent() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(12, 12, 217);
+        let mut resources = SimResources::new(calendar, map, 403);
+        let mut world = World::new();
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.energy = 0.90;
+
+        let entity = world.spawn((
+            Age {
+                stage: GrowthStage::Adult,
+                ..Age::default()
+            },
+            needs,
+            Stress::default(),
+            Emotion::default(),
+            Position::new(4, 4),
+            Behavior::default(),
+        ));
+
+        let mut system = BehaviorRuntimeSystem::new(20, 1);
+        system.run(&mut world, &mut resources, 1);
+
+        let behavior = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should be queryable");
+        assert_eq!(behavior.current_action, ActionType::Forage);
+        assert!(behavior.action_target_x.is_some());
+        assert!(behavior.action_target_y.is_some());
+        assert_ne!(behavior.action_target_x, Some(8));
     }
 }

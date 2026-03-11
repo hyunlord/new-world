@@ -1,7 +1,7 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
+    Age, Behavior, Emotion, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
     Temperament,
 };
 use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
@@ -63,6 +63,7 @@ impl SimSystem for SteeringRuntimeSystem {
                 Option<&Personality>,
                 Option<&InfluenceReceiver>,
                 Option<&Needs>,
+                Option<&Emotion>,
                 Option<&Stress>,
                 Option<&Temperament>,
                 Option<&Age>,
@@ -76,6 +77,7 @@ impl SimSystem for SteeringRuntimeSystem {
                     personality_opt,
                     receiver_opt,
                     needs_opt,
+                    emotion_opt,
                     stress_opt,
                     temperament_opt,
                     age_opt,
@@ -113,6 +115,7 @@ impl SimSystem for SteeringRuntimeSystem {
                     position,
                     receiver_opt,
                     needs_opt,
+                    emotion_opt,
                     stress_opt,
                     temperament_opt,
                 );
@@ -203,6 +206,7 @@ fn influence_force_for_entity(
     position: &Position,
     receiver_opt: Option<&InfluenceReceiver>,
     needs_opt: Option<&Needs>,
+    emotion_opt: Option<&Emotion>,
     stress_opt: Option<&Stress>,
     temperament_opt: Option<&Temperament>,
 ) -> ((f64, f64), Option<InfluenceCause>) {
@@ -222,10 +226,15 @@ fn influence_force_for_entity(
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Warmth))
         .unwrap_or(0.0)
         .clamp(0.0, 1.0);
-    let danger_drive = needs_opt
+    let safety_drive = needs_opt
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Safety))
         .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    let fear_drive = emotion_opt
+        .map(|emotion| emotion.get(sim_core::EmotionType::Fear))
+        .unwrap_or(0.0)
         .max(stress_opt.map(|stress| stress.level).unwrap_or(0.0))
+        .max(safety_drive)
         .clamp(0.0, 1.0);
 
     let novelty_scale = temperament_opt
@@ -254,18 +263,26 @@ fn influence_force_for_entity(
         ChannelId::Warmth,
         warmth_drive * config::STEERING_WARMTH_INFLUENCE_WEIGHT * warmth_scale,
     );
+    let shelter = room_shelter_force(
+        resources,
+        x,
+        y,
+        receiver_opt,
+        warmth_drive,
+        warmth_scale,
+    );
     let danger = weighted_gradient(
         resources,
         x,
         y,
         receiver_opt,
         ChannelId::Danger,
-        danger_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
+        fear_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
     );
 
-    let force_x = food.0 + warmth.0 - danger.0;
-    let force_y = food.1 + warmth.1 - danger.1;
-    let cause = dominant_influence_cause(food, warmth, danger);
+    let force_x = food.0 + warmth.0 + shelter.0 - danger.0;
+    let force_y = food.1 + warmth.1 + shelter.1 - danger.1;
+    let cause = dominant_influence_cause(food, warmth, shelter, danger);
     ((force_x, force_y), cause)
 }
 
@@ -287,6 +304,82 @@ fn weighted_gradient(
     (gradient.0 * weight, gradient.1 * weight)
 }
 
+fn room_shelter_force(
+    resources: &SimResources,
+    x: u32,
+    y: u32,
+    receiver_opt: Option<&InfluenceReceiver>,
+    warmth_drive: f64,
+    warmth_scale: f64,
+) -> (f64, f64) {
+    if warmth_drive < config::STEERING_SHELTER_MIN_COLD_PRESSURE
+        || !receiver_listens_to(receiver_opt, ChannelId::Warmth)
+    {
+        return (0.0, 0.0);
+    }
+
+    let current_score = shelter_tile_score(resources, x, y);
+    let mut best_candidate: Option<(u32, u32, f64)> = None;
+
+    for (next_x, next_y) in orthogonal_tile_candidates(resources, x, y) {
+        let score = shelter_tile_score(resources, next_x, next_y);
+        if score <= current_score + config::STEERING_SHELTER_ROOM_MIN_SCORE_DELTA {
+            continue;
+        }
+        match best_candidate {
+            Some((_, _, best_score)) if score <= best_score => {}
+            _ => best_candidate = Some((next_x, next_y, score)),
+        }
+    }
+
+    let Some((best_x, best_y, best_score)) = best_candidate else {
+        return (0.0, 0.0);
+    };
+
+    let (dir_x, dir_y) = normalize(f64::from(best_x) - f64::from(x), f64::from(best_y) - f64::from(y));
+    let magnitude = ((best_score - current_score)
+        * warmth_drive
+        * warmth_scale
+        * config::STEERING_SHELTER_ROOM_BIAS_WEIGHT)
+        .clamp(0.0, config::STEERING_SHELTER_ROOM_BIAS_WEIGHT);
+    (dir_x * magnitude, dir_y * magnitude)
+}
+
+fn shelter_tile_score(resources: &SimResources, x: u32, y: u32) -> f64 {
+    if !resources.map.in_bounds(x as i32, y as i32) {
+        return 0.0;
+    }
+    let warmth = resources.influence_grid.sample(x, y, ChannelId::Warmth).max(0.0);
+    if warmth <= 0.0 {
+        return 0.0;
+    }
+    let room_multiplier = if resources.tile_grid.get(x, y).room_id.is_some() {
+        config::STEERING_SHELTER_ROOM_WARMTH_MULTIPLIER
+    } else {
+        1.0
+    };
+    warmth * room_multiplier
+}
+
+fn orthogonal_tile_candidates(resources: &SimResources, x: u32, y: u32) -> [(u32, u32); 4] {
+    let center_x = x as i32;
+    let center_y = y as i32;
+    let mut candidates = [(x, y); 4];
+    let offsets = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+    for (index, (dx, dy)) in offsets.into_iter().enumerate() {
+        let next_x = center_x + dx;
+        let next_y = center_y + dy;
+        candidates[index] = if resources.map.in_bounds(next_x, next_y)
+            && resources.map.get(next_x as u32, next_y as u32).passable
+        {
+            (next_x as u32, next_y as u32)
+        } else {
+            (x, y)
+        };
+    }
+    candidates
+}
+
 fn receiver_listens_to(receiver_opt: Option<&InfluenceReceiver>, channel: ChannelId) -> bool {
     receiver_opt
         .map(|receiver| receiver.listens_to(channel))
@@ -296,6 +389,7 @@ fn receiver_listens_to(receiver_opt: Option<&InfluenceReceiver>, channel: Channe
 fn dominant_influence_cause(
     food: (f64, f64),
     warmth: (f64, f64),
+    shelter: (f64, f64),
     danger: (f64, f64),
 ) -> Option<InfluenceCause> {
     let candidates = [
@@ -308,6 +402,11 @@ fn dominant_influence_cause(
             "warmth_gradient",
             "CAUSE_INFLUENCE_WARMTH_GRADIENT",
             (warmth.0 * warmth.0 + warmth.1 * warmth.1).sqrt(),
+        ),
+        (
+            "shelter_gradient",
+            "CAUSE_INFLUENCE_SHELTER_GRADIENT",
+            (shelter.0 * shelter.0 + shelter.1 * shelter.1).sqrt(),
         ),
         (
             "danger_gradient",
@@ -487,21 +586,24 @@ fn clamp_magnitude(x: f64, y: f64, max_magnitude: f64) -> (f64, f64) {
 
 #[cfg(test)]
 mod tests {
+    use crate::runtime::MovementRuntimeSystem;
     use hecs::World;
     use rand::rngs::SmallRng;
     use rand::SeedableRng;
     use sim_core::components::{
-        Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
-        Temperament,
+        Age, Behavior, Emotion, InfluenceReceiver, Needs, Personality, Position, SteeringParams,
+        Stress, Temperament,
     };
     use sim_core::config::GameConfig;
-    use sim_core::{config, ActionType, ChannelId, EmitterRecord, FalloffType, GameCalendar, GrowthStage, NeedType, WorldMap};
+    use sim_core::{
+        config, ActionType, ChannelId, EmitterRecord, FalloffType, GameCalendar, GrowthStage,
+        NeedType, RoomId, WorldMap,
+    };
     use sim_engine::{SimResources, SimSystem};
 
     use super::{
-        arrive_force, cohesion_force, influence_force_for_entity, seek_force, separation_force,
-        wander_force,
-        SteeringRuntimeSystem,
+        arrive_force, cohesion_force, influence_force_for_entity, room_shelter_force, seek_force,
+        separation_force, wander_force, SteeringRuntimeSystem,
     };
 
     fn resources() -> SimResources {
@@ -614,6 +716,7 @@ mod tests {
             Some(&InfluenceReceiver::default()),
             Some(&needs),
             None,
+            None,
             Some(&Temperament::default()),
         );
 
@@ -646,11 +749,401 @@ mod tests {
             &Position::new(8, 8),
             Some(&InfluenceReceiver::default()),
             Some(&needs),
+            None,
             Some(&stress),
             Some(&Temperament::default()),
         );
 
         assert!(force.0 < 0.0);
         assert_eq!(cause.expect("danger cause").kind, "danger_gradient");
+    }
+
+    #[test]
+    fn influence_force_scales_with_hunger_pressure() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Food,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Gaussian,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut high_hunger = Needs::default();
+        high_hunger.set(NeedType::Hunger, 0.1);
+        let mut low_hunger = Needs::default();
+        low_hunger.set(NeedType::Hunger, 0.85);
+
+        let (high_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&high_hunger),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&low_hunger),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        let high_magnitude = (high_force.0 * high_force.0 + high_force.1 * high_force.1).sqrt();
+        let low_magnitude = (low_force.0 * low_force.0 + low_force.1 * low_force.1).sqrt();
+        assert!(high_magnitude > low_magnitude);
+    }
+
+    #[test]
+    fn influence_force_scales_with_fear_pressure() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Danger,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Exponential,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut low_fear = Emotion::default();
+        *low_fear.get_mut(sim_core::EmotionType::Fear) = 0.05;
+        let mut high_fear = Emotion::default();
+        *high_fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&low_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+        let (high_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&high_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        let low_magnitude = (low_force.0 * low_force.0 + low_force.1 * low_force.1).sqrt();
+        let high_magnitude = (high_force.0 * high_force.0 + high_force.1 * high_force.1).sqrt();
+        assert!(high_magnitude > low_magnitude);
+    }
+
+    #[test]
+    fn influence_force_has_no_false_food_attraction_without_signal() {
+        let resources = resources();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.05);
+
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert_eq!(force, (0.0, 0.0));
+        assert!(cause.is_none());
+    }
+
+    #[test]
+    fn influence_force_has_no_false_danger_avoidance_without_signal() {
+        let resources = resources();
+        let mut fear = Emotion::default();
+        *fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&fear),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert_eq!(force, (0.0, 0.0));
+        assert!(cause.is_none());
+    }
+
+    #[test]
+    fn hungry_agent_moves_closer_to_food_than_sated_agent() {
+        fn run_entity_step(hunger: f64) -> (f64, ActionType) {
+            let mut world = World::new();
+            let mut resources = resources();
+            resources.influence_grid.register_emitter(EmitterRecord {
+                x: 12,
+                y: 8,
+                channel: ChannelId::Food,
+                radius: 5.0,
+                base_intensity: 0.9,
+                falloff: FalloffType::Gaussian,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            });
+            resources.influence_grid.tick_update();
+
+            let mut needs = Needs::default();
+            needs.set(NeedType::Hunger, hunger);
+            let entity = world.spawn((
+                Position::new(6, 8),
+                Behavior::default(),
+                InfluenceReceiver::default(),
+                needs,
+                SteeringParams::default(),
+                Age {
+                    stage: GrowthStage::Adult,
+                    ..Age::default()
+                },
+                Temperament::default(),
+            ));
+
+            let mut behavior_system = crate::runtime::BehaviorRuntimeSystem::new(20, 1);
+            behavior_system.run(&mut world, &mut resources, 1);
+            let mut steering = SteeringRuntimeSystem::new(config::STEERING_SYSTEM_PRIORITY, 1);
+            steering.run(&mut world, &mut resources, 1);
+            let mut movement = MovementRuntimeSystem::new(
+                config::MOVEMENT_SYSTEM_PRIORITY,
+                config::MOVEMENT_TICK_INTERVAL,
+            );
+            movement.run(&mut world, &mut resources, 1);
+
+            let position = world.get::<&Position>(entity).expect("position should exist");
+            let behavior = world.get::<&Behavior>(entity).expect("behavior should exist");
+            (position.x, behavior.current_action)
+        }
+
+        let (hungry_x, hungry_action) = run_entity_step(0.10);
+        let (sated_x, sated_action) = run_entity_step(0.85);
+        assert_eq!(hungry_action, ActionType::Forage);
+        assert_ne!(sated_action, ActionType::Forage);
+        assert!(hungry_x > sated_x);
+    }
+
+    #[test]
+    fn danger_overrides_food_when_fear_is_high() {
+        let mut resources = resources();
+        resources.influence_grid.replace_emitters(vec![
+            EmitterRecord {
+                x: 11,
+                y: 8,
+                channel: ChannelId::Food,
+                radius: 5.0,
+                base_intensity: 0.8,
+                falloff: FalloffType::Gaussian,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            },
+            EmitterRecord {
+                x: 9,
+                y: 8,
+                channel: ChannelId::Danger,
+                radius: 4.0,
+                base_intensity: 0.95,
+                falloff: FalloffType::Exponential,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            },
+        ]);
+        resources.influence_grid.tick_update();
+
+        let mut hungry = Needs::default();
+        hungry.set(NeedType::Hunger, 0.10);
+        hungry.set(NeedType::Safety, 0.90);
+
+        let mut low_fear = Emotion::default();
+        *low_fear.get_mut(sim_core::EmotionType::Fear) = 0.05;
+        let mut high_fear = Emotion::default();
+        *high_fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&hungry),
+            Some(&low_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+        let (high_force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&hungry),
+            Some(&high_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(low_force.0 > 0.0);
+        assert!(high_force.0 < 0.0);
+        assert_eq!(cause.expect("danger should dominate").kind, "danger_gradient");
+    }
+
+    #[test]
+    fn room_shelter_force_prefers_neighboring_room_tile_when_cold() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 5,
+            y: 5,
+            channel: ChannelId::Warmth,
+            radius: 2.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+        resources.tile_grid.assign_room(5, 5, RoomId(1));
+
+        let force = room_shelter_force(
+            &resources,
+            5,
+            6,
+            Some(&InfluenceReceiver::default()),
+            0.9,
+            1.0,
+        );
+
+        assert!(force.1 < 0.0);
+        assert!(force.0.abs() < 0.01);
+    }
+
+    #[test]
+    fn room_shelter_force_is_zero_when_warmth_need_is_satisfied() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 5,
+            y: 5,
+            channel: ChannelId::Warmth,
+            radius: 2.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+        resources.tile_grid.assign_room(5, 5, RoomId(1));
+
+        let force = room_shelter_force(
+            &resources,
+            5,
+            6,
+            Some(&InfluenceReceiver::default()),
+            0.05,
+            1.0,
+        );
+
+        assert_eq!(force, (0.0, 0.0));
+    }
+
+    #[test]
+    fn influence_force_reports_shelter_cause_when_room_bias_applies() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 5,
+            y: 5,
+            channel: ChannelId::Warmth,
+            radius: 2.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+        resources.tile_grid.assign_room(5, 5, RoomId(1));
+
+        let mut needs = Needs::default();
+        needs.set(NeedType::Warmth, 0.1);
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(5, 6),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(force.1 < 0.0);
+        assert_eq!(cause.expect("shelter cause").kind, "shelter_gradient");
+    }
+
+    #[test]
+    fn cold_agent_prefers_room_warmth_more_than_comfortable_agent() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 5,
+            y: 5,
+            channel: ChannelId::Warmth,
+            radius: 2.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+        resources.tile_grid.assign_room(5, 5, RoomId(1));
+
+        let mut cold_needs = Needs::default();
+        cold_needs.set(NeedType::Warmth, 0.10);
+        let mut comfortable_needs = Needs::default();
+        comfortable_needs.set(NeedType::Warmth, 0.90);
+
+        let (cold_force, cold_cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(5, 6),
+            Some(&InfluenceReceiver::default()),
+            Some(&cold_needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+        let (comfortable_force, comfortable_cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(5, 6),
+            Some(&InfluenceReceiver::default()),
+            Some(&comfortable_needs),
+            None,
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(cold_force.1 < 0.0);
+        assert_eq!(
+            cold_cause.expect("cold shelter cause").kind,
+            "shelter_gradient"
+        );
+        assert_eq!(comfortable_force, (0.0, 0.0));
+        assert!(comfortable_cause.is_none());
     }
 }
