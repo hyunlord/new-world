@@ -27,15 +27,24 @@ func init(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	_world_data = world_data
 	_rng = rng
 	chunk_index = ChunkIndex.new()
-	_personality_generator = PersonalityGeneratorScript.new()
-	_personality_generator.init(rng)
-	_intelligence_generator = IntelligenceGeneratorScript.new()
-	_intelligence_generator.init(rng)
+
+
+## Lazily initializes the legacy spawn helpers only if the deprecated GDScript spawn path is used.
+func _ensure_legacy_spawn_generators() -> void:
+	if _personality_generator == null:
+		_personality_generator = PersonalityGeneratorScript.new()
+		_personality_generator.init(_rng)
+	if _intelligence_generator == null:
+		_intelligence_generator = IntelligenceGeneratorScript.new()
+		_intelligence_generator.init(_rng)
+	if NameGenerator != null and NameGenerator.has_method("init"):
+		NameGenerator.init(_rng, self)
 
 
 ## Spawn a new entity at the given position
 ## initial_age: age in ticks (0 = newborn child, use AGE_TEEN_END+ for adults)
 func spawn_entity(pos: Vector2i, gender_override: String = "", initial_age: int = 0, parent_a: RefCounted = null, parent_b: RefCounted = null) -> RefCounted:
+	_ensure_legacy_spawn_generators()
 	var entity = EntityDataScript.new()
 	entity.id = _next_id
 	_next_id += 1

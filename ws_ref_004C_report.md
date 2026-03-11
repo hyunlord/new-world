@@ -1,57 +1,88 @@
 # WS-REF-004C Report
 
 ## Implementation Intent
-- Finalize the active simulation authority cutover so that boot and tick ownership live in Rust ECS only.
-- Remove dead legacy GDScript runtime residue that still made the repository look dual-authority.
-- Refresh the authority audit so active Rust ownership and residual non-authoritative helpers are explicit instead of ambiguous.
+This pass tightened the final simulation authority cutover at the active boot/runtime boundary. The main remaining ambiguity was that Godot still booted several legacy shadow helpers before proving Rust runtime authority, and it still initialized deprecated local spawn helpers that are not used by the active runtime. The goal here was to make the active gameplay path more explicitly Rust-owned without breaking the existing UI/setup shell.
 
 ## How It Was Implemented
-- Reused the WS-REF-004A boot refactor:
-  - `SimulationEngine` initializes Rust runtime and registers default systems through `sim-bridge`
-  - `main.gd` no longer instantiates or registers legacy GDScript runtime systems
-- Reused the WS-REF-004B typed runtime registry:
-  - runtime registration is now backed by typed Rust system ids, not legacy string keys
-- Removed additional dead GDScript authority residue:
-  - `scripts/core/combat/combat_resolver.gd`
-  - `scripts/core/simulation/runtime_shadow_reporter.gd`
-- Added:
-  - `gdscript_authority_map.md`
-  - `verify_simulation_authority.md`
-  - this final report
+- [scenes/main/main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/scenes/main/main.gd)
+  - moved Rust registry validation to immediately after `SimulationEngine.init_with_seed()`
+  - aborts boot before shadow/bootstrap managers initialize if Rust registry authority is invalid
+  - removed unused `Pathfinder` boot residue
+  - removed active boot/save/load calls to `NameGenerator`
+  - switched active boot wiring so:
+    - `building_renderer` uses runtime-backed data only
+    - camera no longer receives legacy `entity_manager` fallback on boot
+- [scripts/core/entity/entity_manager.gd](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/scripts/core/entity/entity_manager.gd)
+  - converted personality/intelligence/name legacy spawn helpers to lazy init
+  - deprecated local spawn logic is no longer initialized during normal boot
+- Added/refreshed reports:
+  - [gdscript_full_authority_scan.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/gdscript_full_authority_scan.md)
+  - [gdscript_authority_map.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/gdscript_authority_map.md)
+  - [simulation_ownership_cutover_map.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/simulation_ownership_cutover_map.md)
+  - [simulation_cutover_migration_plan.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/simulation_cutover_migration_plan.md)
+  - [bridge_boundary_enforcement.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/bridge_boundary_enforcement.md)
+  - [legacy_deletion_report.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/legacy_deletion_report.md)
+  - [post_cutover_boot_validation.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/post_cutover_boot_validation.md)
+  - [verify_simulation_authority_cutover.md](/Users/rexxa/github/new-world-wt/codex-refactor-sim-authority-cutover/verify_simulation_authority_cutover.md)
 
 ## What Feature It Adds
-- The repository now has a clear active authority boundary:
-  - Godot boots the shell, relays commands/events, and renders state
-  - Rust sim-bridge and ECS own runtime system registration and simulation ticking
-- Dead legacy runtime system files that could falsely imply GDScript tick authority are removed.
-- Remaining shadow/bootstrap helpers are explicitly documented as non-authoritative residue instead of implicit sources of confusion.
+The active runtime path is now harder to misread as hybrid-authoritative:
+- Rust registry authority is proven before Godot builds its legacy shadow shell
+- boot no longer initializes deprecated local spawn-generation helpers that are unused by the active runtime
+- active camera/render boot wiring leans further toward runtime-backed state and away from shadow-manager fallback
+
+In practice, this makes the repository’s real authority boundary easier to trust:
+- Rust owns runtime registration
+- Rust owns the tick
+- Rust owns gameplay mutation
+- Godot remains shell/setup/UI/render/bridge, with legacy shadow helpers explicitly demoted
 
 ## Verification After Implementation
-- Static verification:
-  - no `register_system(...)` calls remain in `main.gd` or `simulation_engine.gd`
-  - no `runtime_clear_registry` use remains in the active boot path
-  - Rust default runtime registration is referenced by both GDScript bridge and Rust sim-bridge
-  - removed dead files are absent from disk
+- Static evidence:
+  - no active `register_system(...)` or `runtime_clear_registry` path on boot
+  - no `NameGenerator.init/save_registry/load_registry` remains on the active gameplay path
+  - `EntityManager.spawn_entity()` still exists, but has no repository callers
 - Rust verification:
-  - `cargo build -p sim-bridge`
-  - `cargo test -p sim-bridge`
+  - `cargo check --workspace`
   - `cargo test --workspace`
   - `cargo clippy --workspace -- -D warnings`
 - Godot verification:
-  - headless startup exits successfully
+  - headless boot exits successfully
+  - direct headless runtime harness passes
 
-Residual note:
-- `scripts/core/entity/entity_manager.gd` and a small set of helper generators/chronicle/value files still exist as shadow/bootstrap/observer residue.
-- They are not part of the active runtime scheduler and do not own the simulation tick.
+## Deleted Legacy Scripts
+- No new script files were deleted in this pass.
+- Previously deleted on the 004C branch and preserved:
+  - `scripts/core/combat/combat_resolver.gd`
+  - `scripts/core/simulation/runtime_shadow_reporter.gd`
+
+## Remaining Technical Debt
+- Godot still instantiates shadow managers (`EntityManager`, `BuildingManager`, `SettlementManager`, `RelationshipManager`, `ReputationManager`, `ResourceMap`) for UI/setup/save fallback.
+- `ChronicleSystem` and `MemorySystem` are still Godot-side observer/archive logic.
+- Pre-runtime setup world generation and resource painting still happen in Godot before Rust bootstrap.
+- Several legacy scripts remain on disk and are only demoted, not deleted, because dependency chains still exist through fallback UI or deprecated local spawn paths.
+
+## Follow-Up Refactors
+- Replace remaining UI fallbacks on `entity_manager` / `building_manager` / `relationship_manager` with runtime-backed bridge getters.
+- Move setup/editor world/resource authority into a Rust-backed bootstrap model.
+- Delete `personality_generator.gd`, `intelligence_generator.gd`, `value_system.gd`, and `settlement_culture.gd` once the deprecated local spawn path is removed.
+- Move chronicle/archive ownership behind Rust or a pure read-only bridge feed.
 
 ## In-Game Checks (한국어)
-- 게임 시작 후 시뮬레이션이 정상 진행되더라도, GDScript 쪽 시스템 등록 에러나 누락 경고가 새로 뜨지 않는지 확인한다.
-- Probe/Sandbox 시작 후 에이전트 이동, needs 변화, 건설 진행이 계속 보이는지 확인한다.
-- 일시정지/속도 변경/선택/디버그 오버레이가 기존처럼 동작하는지 확인한다.
-- 런타임이 시작될 때 GDScript 시스템을 수동 등록했다는 흔적이 없어야 한다.
-- 이미 종료된 legacy parity/shadow report 파일이 필요 이상으로 언급되거나 참조되지 않는지 확인한다.
-- 문제가 있으면 이런 증상이 보인다:
-  - 시작 직후 registry mismatch 경고가 반복된다
-  - 에이전트가 전혀 갱신되지 않는다
-  - UI는 뜨지만 tick이 진행되지 않는다
-  - 특정 GDScript 시스템 preload 실패로 시작이 멈춘다
+- 게임이 정상적으로 부팅되는지 확인한다.
+  - Rust registry 검증이 실패하면 초반에 바로 부팅이 중단되어야 하고, 실패 원인이 경고로 남아야 한다.
+- 에이전트가 정상적으로 생성되는지 확인한다.
+  - setup 이후 bootstrap이 끝나면 Probe/Sandbox 모두 정상 인구가 보여야 한다.
+- 시뮬레이션 tick이 Rust에서만 실행되는지 확인한다.
+  - GDScript 쪽 시스템 등록/재등록 경고 없이 `runtime_tick_frame` 기반으로 상태가 변해야 한다.
+- Godot 스크립트가 simulation state를 직접 변경하지 않는지 확인한다.
+  - 카메라/렌더/UI를 움직여도 시뮬레이션이 그 때문에 재초기화되거나 registry가 바뀌면 안 된다.
+- UI가 정상적으로 월드 상태를 렌더링하는지 확인한다.
+  - building/entity render, HUD, detail panel, debug overlay가 그대로 떠야 한다.
+- bridge를 통해 상태 스냅샷이 정상 전달되는지 확인한다.
+  - headless harness와 runtime detail/summary 표시가 계속 동작해야 한다.
+- 이상하면 이런 증상이 보인다:
+  - 부팅 직후 registry mismatch로 멈춤
+  - 에이전트가 spawn되지만 상태가 갱신되지 않음
+  - 카메라/렌더러가 runtime-backed 데이터를 못 읽어 빈 화면처럼 보임
+  - setup 이후에는 괜찮지만 legacy panel만 비어 있으면 shadow fallback 의존이 남아 있는 것이다

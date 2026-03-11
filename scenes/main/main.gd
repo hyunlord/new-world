@@ -5,7 +5,6 @@ const WorldData = preload("res://scripts/core/world/world_data.gd")
 const WorldGenerator = preload("res://scripts/core/world/world_generator.gd")
 const EntityManager = preload("res://scripts/core/entity/entity_manager.gd")
 const ResourceMap = preload("res://scripts/core/world/resource_map.gd")
-const Pathfinder = preload("res://scripts/core/world/pathfinder.gd")
 const BuildingManager = preload("res://scripts/core/settlement/building_manager.gd")
 const SaveManager = preload("res://scripts/core/simulation/save_manager.gd")
 const SettlementManager = preload("res://scripts/core/settlement/settlement_manager.gd")
@@ -21,7 +20,6 @@ var world_data: RefCounted
 var world_generator: RefCounted
 var entity_manager: RefCounted
 var resource_map: RefCounted
-var pathfinder: RefCounted
 var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
@@ -51,6 +49,10 @@ func _ready() -> void:
 	# Initialize simulation engine
 	sim_engine = SimulationEngine.new()
 	sim_engine.init_with_seed(seed_value)
+	var registry_validation: Dictionary = sim_engine.validate_runtime_registry()
+	if not bool(registry_validation.get("count_match", false)) or not bool(registry_validation.get("all_rust", false)):
+		push_error("[Main] Rust runtime registry authority validation failed; aborting boot.")
+		return
 
 	# Generate world
 	world_data = WorldData.new()
@@ -64,9 +66,6 @@ func _ready() -> void:
 	# Initialize entity manager
 	entity_manager = EntityManager.new()
 	entity_manager.init(world_data, sim_engine.rng)
-
-	# Initialize pathfinder
-	pathfinder = Pathfinder.new()
 
 	# Initialize building manager
 	building_manager = BuildingManager.new()
@@ -86,13 +85,10 @@ func _ready() -> void:
 	reputation_manager = ReputationManagerScript.new()
 	tech_tree_manager = TechTreeManagerScript.new()
 	tech_tree_manager.load_all()
-	var registry_validation: Dictionary = sim_engine.validate_runtime_registry()
-	if not bool(registry_validation.get("count_match", false)) or not bool(registry_validation.get("all_rust", false)):
-		push_warning("[Main] Rust runtime registry did not initialize cleanly.")
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
-	building_renderer.init(building_manager, settlement_manager, sim_engine)
+	building_renderer.init(null, null, sim_engine)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, null, relationship_manager, reputation_manager)
 	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
@@ -102,10 +98,6 @@ func _ready() -> void:
 	pause_menu.save_requested.connect(_save_game_slot)
 	pause_menu.load_requested.connect(_load_game_slot)
 	add_child(pause_menu)
-
-
-	# Initialize name generator with sim RNG and entity manager
-	NameGenerator.init(sim_engine.rng, entity_manager)
 
 	## 시뮬레이션 일시정지 후 맵 에디터/프리셋 선택 화면 표시
 	sim_engine.is_paused = true
@@ -189,7 +181,6 @@ func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
 	)
 
 	ChronicleSystem.init(entity_manager)
-	camera.set_entity_manager(entity_manager)
 	if camera.has_method("set_sim_engine"):
 		camera.call("set_sim_engine", sim_engine)
 
@@ -651,9 +642,7 @@ func _save_game_slot(slot: int) -> void:
 	var was_paused: bool = sim_engine.is_paused
 	sim_engine.is_paused = true
 	var success: bool = save_manager.save_game(path, sim_engine, entity_manager, building_manager, resource_map, settlement_manager, relationship_manager, null)
-	if success:
-		NameGenerator.save_registry(path + "/names.json")
-	else:
+	if not success:
 		push_warning("[Main] Save failed!")
 	sim_engine.is_paused = was_paused
 
@@ -666,8 +655,6 @@ func _load_game_slot(slot: int) -> void:
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
-		# Restore name registry
-		NameGenerator.load_registry(path + "/names.json")
 	else:
 		push_warning("[Main] Load failed!")
 	sim_engine.is_paused = false

@@ -1,149 +1,53 @@
 # GDScript Authority Map
 
-## Scope
-- Scanned:
-  - `project.godot`
-  - `scenes/main/main.gd`
-  - `scripts/core/**`
-  - `scripts/systems/**`
-  - `scripts/ai/**`
-  - `scripts/agents/**`
-  - `scripts/world/**`
-- Missing directories in this repo:
-  - `scripts/agents`
-  - `scripts/world`
+## Category Definitions
+- `ui_only`: presentation, layout, input routing, or static data formatting only
+- `render_only`: draws world/entity/building state without owning gameplay mutation
+- `bridge_only`: forwards commands or snapshots to/from `sim-bridge`
+- `mixed_authority`: active path still instantiates or carries legacy shadow/bootstrap state alongside UI
+- `debug_only`: read-only debug/archive/history surface
+- `dead_legacy`: no active boot/tick ownership; retained only through deprecated fallback paths or not referenced at all
 
-## Active Authority Boundary
-- Active runtime authority path:
-  - `Godot shell/UI`
-  - `scripts/core/simulation/sim_bridge.gd`
-  - `rust/crates/sim-bridge`
-  - `Rust ECS runtime + scheduler`
-- Active boot/tick path:
-  - `scenes/main/main.gd` creates the shell and setup flow
-  - `scripts/core/simulation/simulation_engine.gd` calls `runtime_init()`
-  - `simulation_engine.gd` then calls `runtime_register_default_systems()`
-  - every frame tick goes through `runtime_tick_frame()`
-  - UI/render paths pull state through runtime getters and snapshots
+## Active Boot / Runtime Path
+- `scenes/main/main.gd` → `scripts/core/simulation/simulation_engine.gd`
+- `simulation_engine.gd` → `scripts/core/simulation/sim_bridge.gd`
+- `sim_bridge.gd` → `rust/crates/sim-bridge`
+- `sim-bridge` → Rust ECS runtime / typed runtime registry / scheduler
 
 ## Classification
 
-### bridge_only
-- `scripts/core/simulation/sim_bridge.gd`
-- `scripts/core/simulation/simulation_engine.gd`
-- `scripts/core/simulation/simulation_bus.gd`
-- `scripts/core/simulation/simulation_bus_v2.gd`
-- `scripts/core/simulation/compute_backend.gd`
+| Path | Category | Why |
+|---|---|---|
+| `scenes/main/main.gd` | `mixed_authority` | Active shell/bootstrap entry. Rust owns tick authority, but this file still instantiates legacy shadow managers for UI/setup compatibility. |
+| `scripts/core/simulation/simulation_engine.gd` | `bridge_only` | Calls `runtime_init`, `runtime_register_default_systems`, `runtime_tick_frame`, runtime getters, and command relay only. |
+| `scripts/core/simulation/sim_bridge.gd` | `bridge_only` | Godot wrapper over native bridge methods. |
+| `scripts/core/simulation/simulation_bus.gd` | `bridge_only` | Legacy signal relay/event fanout only. |
+| `scripts/core/simulation/simulation_bus_v2.gd` | `bridge_only` | Runtime command/event relay only. |
+| `scripts/core/simulation/compute_backend.gd` | `bridge_only` | Sends runtime compute-mode commands through approved command path. |
+| `scripts/ui/**` | `ui_only` or `render_only` | UI/render tree. Reads snapshots/getters or legacy shadow managers; does not own simulation tick. |
+| `scripts/debug/**` | `debug_only` | Read-only runtime inspection surfaces. |
+| `scripts/rendering/**` | `render_only` | Snapshot decode and rendering helpers only. |
+| `scripts/core/entity/entity_manager.gd` | `mixed_authority` | Legacy shadow entity store plus deprecated local spawn path. Active runtime does not call `spawn_entity()`, but UI fallback still reads it. |
+| `scripts/core/settlement/building_manager.gd` | `mixed_authority` | Legacy building shadow manager still passed into UI/render fallbacks. |
+| `scripts/core/settlement/settlement_manager.gd` | `mixed_authority` | Legacy settlement shadow/cache path still present for UI fallback. |
+| `scripts/core/social/relationship_manager.gd` | `mixed_authority` | Legacy relationship shadow data used by legacy UI panels. |
+| `scripts/core/social/reputation_manager.gd` | `mixed_authority` | Legacy reputation shadow data used by legacy UI panels. |
+| `scripts/core/world/resource_map.gd` | `mixed_authority` | Pre-runtime setup/editor resource authority plus render fallback after bootstrap. Not the live Rust tick owner. |
+| `scripts/core/social/name_generator.gd` | `debug_only` | Naming culture loader/autoload; no active runtime spawn path uses it after this cutover pass. |
+| `scripts/systems/record/chronicle_system.gd` | `debug_only` | Autoloaded observer/archive system; stores history for UI, not gameplay tick ownership. |
+| `scripts/systems/record/memory_system.gd` | `debug_only` | Read-only chronicle support path; not active gameplay scheduler authority. |
+| `scripts/systems/biology/personality_generator.gd` | `dead_legacy` | Only reachable through deprecated `EntityManager.spawn_entity()` path; not used by active boot/runtime. |
+| `scripts/systems/cognition/intelligence_generator.gd` | `dead_legacy` | Only reachable through deprecated `EntityManager.spawn_entity()` path. |
+| `scripts/systems/social/value_system.gd` | `dead_legacy` | Only used by deprecated local spawn/value bootstrap path. |
+| `scripts/systems/social/settlement_culture.gd` | `dead_legacy` | Only referenced by deprecated `value_system.gd`. |
+| `scripts/systems/psychology/trait_system.gd` | `mixed_authority` | Not scheduler-owned, but still referenced by legacy tooltip/entity shadow code. |
+| `scripts/systems/psychology/trait_effect_cache.gd` | `mixed_authority` | Supports legacy stat-query / trait tooltip path. |
 
-Evidence:
-- These files initialize the native runtime, queue runtime commands, relay runtime events, or expose bridge getters.
-- They do not register per-system GDScript schedulers or own simulation ticks.
+## Active Simulation Authority Leaks
+- No active GDScript file owns the authoritative simulation tick.
+- No active boot path registers runtime systems from GDScript.
+- No active boot path clears/rebuilds the runtime registry in GDScript.
 
-### render_only
-- `scripts/ui/**`
-- `scripts/rendering/**`
-
-Evidence:
-- Renderers and panels read runtime snapshots/detail queries and draw them.
-- Probe overlays, HUD, minimap, and camera logic do not mutate ECS state directly.
-
-### ui_only
-- `scenes/main/main.gd`
-- `scripts/core/simulation/event_logger.gd`
-- `scripts/core/entity/deceased_registry.gd`
-- `scripts/systems/record/chronicle_system.gd`
-- `scripts/systems/record/memory_system.gd`
-- `scripts/core/tech/tech_tree_manager.gd`
-- `scripts/core/social/name_generator.gd`
-
-Evidence:
-- These files bootstrap the shell, log/format events, keep UI-facing archives, or load static definition data.
-- They may store observer-facing history or fallback metadata, but they do not drive the active ECS scheduler.
-
-### simulation_authority
-- Active boot/tick authority leaks: **none found**
-
-Evidence:
-- `scenes/main/main.gd` has no `register_system(...)` calls.
-- `scripts/core/simulation/simulation_engine.gd` has no legacy `runtime_clear_registry` or GDScript scheduler rebuild path.
-- Active frame ticks are issued only through `runtime_tick_frame()`.
-- Runtime registry population happens through Rust default registration.
-
-Residual shadow/bootstrap helpers with simulation-shaped logic but no active scheduler authority:
-- `scripts/core/entity/entity_manager.gd`
-- `scripts/core/settlement/building_manager.gd`
-- `scripts/core/social/relationship_manager.gd`
-- `scripts/core/social/reputation_manager.gd`
-- `scripts/core/world/resource_map.gd`
-- `scripts/systems/biology/personality_generator.gd`
-- `scripts/systems/cognition/intelligence_generator.gd`
-- `scripts/systems/psychology/trait_system.gd`
-- `scripts/systems/psychology/trait_effect_cache.gd`
-- `scripts/systems/social/value_system.gd`
-- `scripts/systems/social/settlement_culture.gd`
-
-Status:
-- These files remain as shadow/bootstrap/reference helpers and legacy UI fallbacks.
-- They are not registered into the active runtime scheduler and do not own the authoritative tick.
-- They remain cleanup targets, but they are not active authority blockers for the current cutover.
-
-### dead_legacy
-Deleted or removed from active authority:
-- `scripts/ai/behavior_system.gd`
-- `scripts/systems/biology/age_system.gd`
-- `scripts/systems/biology/mortality_system.gd`
-- `scripts/systems/biology/population_system.gd`
-- `scripts/systems/cognition/intelligence_curves.gd`
-- `scripts/systems/cognition/intelligence_system.gd`
-- `scripts/systems/development/ace_tracker.gd`
-- `scripts/systems/development/attachment_system.gd`
-- `scripts/systems/development/child_stress_processor.gd`
-- `scripts/systems/development/childcare_system.gd`
-- `scripts/systems/development/intergenerational_system.gd`
-- `scripts/systems/development/parenting_system.gd`
-- `scripts/systems/psychology/contagion_system.gd`
-- `scripts/systems/psychology/coping_system.gd`
-- `scripts/systems/psychology/emotion_system.gd`
-- `scripts/systems/psychology/mental_break_system.gd`
-- `scripts/systems/psychology/morale_system.gd`
-- `scripts/systems/psychology/needs_system.gd`
-- `scripts/systems/psychology/personality_maturation.gd`
-- `scripts/systems/psychology/personality_maturation_system.gd`
-- `scripts/systems/psychology/psychology_coordinator.gd`
-- `scripts/systems/psychology/stress_system.gd`
-- `scripts/systems/psychology/trait_violation_system.gd`
-- `scripts/systems/psychology/trauma_scar_system.gd`
-- `scripts/systems/psychology/upper_needs_system.gd`
-- `scripts/systems/record/stat_sync_system.gd`
-- `scripts/systems/record/stats_recorder.gd`
-- `scripts/systems/record/stat_threshold_system.gd`
-- `scripts/systems/social/economic_tendency_system.gd`
-- `scripts/systems/social/family_system.gd`
-- `scripts/systems/social/job_satisfaction_system.gd`
-- `scripts/systems/social/leader_system.gd`
-- `scripts/systems/social/network_system.gd`
-- `scripts/systems/social/occupation_system.gd`
-- `scripts/systems/social/reputation_system.gd`
-- `scripts/systems/social/social_event_system.gd`
-- `scripts/systems/social/stratification_monitor.gd`
-- `scripts/systems/social/title_system.gd`
-- `scripts/systems/work/building_effect_system.gd`
-- `scripts/systems/work/construction_system.gd`
-- `scripts/systems/work/gathering_system.gd`
-- `scripts/systems/work/job_assignment_system.gd`
-- `scripts/systems/world/migration_system.gd`
-- `scripts/systems/world/movement_system.gd`
-- `scripts/systems/world/resource_regen_system.gd`
-- `scripts/systems/world/steering_system.gd`
-- `scripts/systems/world/tech_discovery_system.gd`
-- `scripts/systems/world/tech_maintenance_system.gd`
-- `scripts/systems/world/tech_propagation_system.gd`
-- `scripts/systems/world/tech_utilization_system.gd`
-- `scripts/systems/world/tension_system.gd`
-- `scripts/core/combat/combat_resolver.gd`
-- `scripts/core/simulation/runtime_shadow_reporter.gd`
-
-## Final Authority Statement
-- `simulation_authority = rust_only` for the active runtime boot and tick path.
-- Godot boots the shell, forwards commands, renders state, and keeps observer/debug archives.
-- Remaining GDScript shadow helpers are non-authoritative residuals, not active simulation schedulers.
+## Remaining Residue
+- Mixed-authority shadow managers still exist for UI/setup/save fallback paths.
+- Dead-legacy spawn/value generator scripts still exist on disk, but the active runtime no longer initializes them during boot.

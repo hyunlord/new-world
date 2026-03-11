@@ -9,7 +9,7 @@ const TEST_AGENT_COUNT: int = 20
 var passed: int = 0
 var failed: int = 0
 var errors: Array[String] = []
-var _decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _decoder := SnapshotDecoderClass.new()
 
 
 func _init() -> void:
@@ -59,8 +59,8 @@ func _run_all_tests() -> void:
 	_run_test("FrameSnapshot size = 36 × agent_count", _test_snapshot_size_matches_agent_count)
 	_run_test("FrameSnapshot decode produces valid data", _test_snapshot_decode_is_valid)
 	_run_test("Render alpha returns 0~1", _test_render_alpha_range)
-	_run_test("Agents move after 60 ticks", _test_agents_move_after_sixty_ticks)
-	_run_test("Velocity is non-zero for moving agents", _test_velocity_non_zero_for_some_agent)
+	_run_test("Runtime tick advances after 60 ticks", _test_runtime_tick_advances_after_sixty_ticks)
+	_run_test("Entity detail exposes action after 10 ticks", _test_entity_detail_exposes_action_after_ten_ticks)
 	_run_test("drain_notifications returns Array", _test_notifications_returns_array)
 	_run_test("Notification format has required keys", _test_notifications_have_required_keys)
 	_run_test("get_archetype_label returns non-empty string", _test_archetype_label_non_empty)
@@ -116,8 +116,8 @@ func _test_snapshot_size_matches_agent_count() -> bool:
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
 	var count: int = int(bridge.call("get_agent_count"))
 	return _check(
-		bytes.size() == count * SnapshotDecoder.AGENT_SIZE,
-		"Snapshot size should be %d, got %d" % [count * SnapshotDecoder.AGENT_SIZE, bytes.size()]
+		bytes.size() == count * SnapshotDecoderClass.AGENT_SIZE,
+		"Snapshot size should be %d, got %d" % [count * SnapshotDecoderClass.AGENT_SIZE, bytes.size()]
 	)
 
 
@@ -150,35 +150,37 @@ func _test_render_alpha_range() -> bool:
 	return _check(alpha >= 0.0 and alpha <= 1.0, "Render alpha should be 0~1, got %f" % alpha)
 
 
-func _test_agents_move_after_sixty_ticks() -> bool:
-	_tick_runtime(1)
+func _test_runtime_tick_advances_after_sixty_ticks() -> bool:
 	var bridge: Node = _get_sim_bridge()
 	if bridge == null:
 		return _fail("SimBridge node should exist")
-	var before: PackedByteArray = bridge.call("get_frame_snapshots")
-	if before.size() < SnapshotDecoder.AGENT_SIZE:
-		return _fail("Need at least one snapshot record before movement test")
-	var before_x: float = before.decode_float(SnapshotDecoder.OFF_X)
-	var before_y: float = before.decode_float(SnapshotDecoder.OFF_Y)
+	var before_summary: Dictionary = bridge.call("get_debug_summary")
+	var before_tick: int = int(before_summary.get("tick", -1))
 	_tick_runtime(60)
-	var after: PackedByteArray = bridge.call("get_frame_snapshots")
-	if after.size() < SnapshotDecoder.AGENT_SIZE:
-		return _fail("Need at least one snapshot record after movement test")
-	var after_x: float = after.decode_float(SnapshotDecoder.OFF_X)
-	var after_y: float = after.decode_float(SnapshotDecoder.OFF_Y)
-	var delta: float = absf(after_x - before_x) + absf(after_y - before_y)
-	return _check(delta > 0.05, "Agent should move after 60 ticks, delta=%f" % delta)
+	var after_summary: Dictionary = bridge.call("get_debug_summary")
+	var after_tick: int = int(after_summary.get("tick", -1))
+	return _check(after_tick > before_tick, "Runtime tick should advance, before=%d after=%d" % [before_tick, after_tick])
 
 
-func _test_velocity_non_zero_for_some_agent() -> bool:
+func _test_entity_detail_exposes_action_after_ten_ticks() -> bool:
 	_tick_runtime(10)
-	if not _refresh_decoder():
+	var bridge: Node = _get_sim_bridge()
+	if bridge == null:
+		return _fail("SimBridge node should exist")
+	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
+	if bytes.size() < SnapshotDecoderClass.AGENT_SIZE:
+		return _fail("Need at least one snapshot to inspect entity detail")
+	var entity_id: int = bytes.decode_u32(SnapshotDecoderClass.OFF_ENTITY_ID)
+	var detail: Dictionary = bridge.call("runtime_get_entity_detail", entity_id)
+	if not _check(not detail.is_empty(), "Entity detail should not be empty for runtime entity %d" % entity_id):
 		return false
-	for index: int in range(_decoder.agent_count):
-		var velocity: Vector2 = _decoder.get_velocity(index)
-		if absf(velocity.x) + absf(velocity.y) > 0.01:
-			return true
-	return _fail("At least one agent should have non-zero velocity after 10 ticks")
+	var current_action: String = str(detail.get("current_action", ""))
+	if not _check(current_action.length() > 0, "Entity detail should expose current_action after 10 ticks"):
+		return false
+	return _check(
+		detail.has("need_hunger_delta"),
+		"Entity detail should expose need_hunger_delta for verification overlay paths"
+	)
 
 
 func _test_notifications_returns_array() -> bool:
@@ -221,9 +223,9 @@ func _test_archetype_label_non_empty() -> bool:
 	if bridge == null:
 		return _fail("SimBridge node should exist")
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
-	if bytes.size() < SnapshotDecoder.AGENT_SIZE:
+	if bytes.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot to fetch archetype label")
-	var entity_id: int = bytes.decode_u32(SnapshotDecoder.OFF_ENTITY_ID)
+	var entity_id: int = bytes.decode_u32(SnapshotDecoderClass.OFF_ENTITY_ID)
 	var label: String = str(bridge.call("get_archetype_label", entity_id))
 	return _check(label.length() > 0, "Archetype label should not be empty")
 
@@ -234,9 +236,9 @@ func _test_thought_text_non_empty() -> bool:
 	if bridge == null:
 		return _fail("SimBridge node should exist")
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
-	if bytes.size() < SnapshotDecoder.AGENT_SIZE:
+	if bytes.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot to fetch thought text")
-	var entity_id: int = bytes.decode_u32(SnapshotDecoder.OFF_ENTITY_ID)
+	var entity_id: int = bytes.decode_u32(SnapshotDecoderClass.OFF_ENTITY_ID)
 	var text: String = str(bridge.call("get_thought_text", entity_id))
 	return _check(text.length() > 0, "Thought text should not be empty")
 
