@@ -71,7 +71,7 @@ pub use social::{
 };
 
 // ---- steering ----
-pub use steering::SteeringRuntimeSystem;
+pub use steering::{InfluenceSteeringSystem, SteeringRuntimeSystem};
 pub use steering_derive::derive_steering_params;
 pub use story_sifter::StorySifterRuntimeSystem;
 

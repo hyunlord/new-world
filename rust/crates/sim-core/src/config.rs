@@ -246,6 +246,8 @@ pub const STEERING_INFLUENCE_FORCE_WEIGHT: f64 = 0.85; // TODO(A-5): -> steering
 pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering metadata
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_DANGER_INFLUENCE_WEIGHT: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
+/// Minimum local danger signal required before danger avoidance overrides other influence terms.
+pub const STEERING_DANGER_PRIORITY_SIGNAL_THRESHOLD: f64 = 0.18; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_WARMTH_INFLUENCE_WEIGHT: f64 = 0.95; // TODO(A-5): -> behavior/influence metadata
 /// Additional local steering weight applied to social influence when loneliness is meaningful.
 pub const STEERING_SOCIAL_INFLUENCE_WEIGHT: f64 = 0.70; // TODO(A-5): -> behavior/influence metadata
