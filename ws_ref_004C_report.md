@@ -2,8 +2,8 @@
 
 ## Implementation Intent
 - Finalize the active simulation authority cutover so that boot and tick ownership live in Rust ECS only.
-- Remove dead legacy GDScript runtime systems that were no longer referenced after the WS-REF-004A/004B boot and registry refactors.
-- Document the remaining non-authoritative shadow/bootstrap helpers so the repository truth is explicit instead of ambiguous.
+- Remove dead legacy GDScript runtime residue that still made the repository look dual-authority.
+- Refresh the authority audit so active Rust ownership and residual non-authoritative helpers are explicit instead of ambiguous.
 
 ## How It Was Implemented
 - Reused the WS-REF-004A boot refactor:
@@ -11,19 +11,12 @@
   - `main.gd` no longer instantiates or registers legacy GDScript runtime systems
 - Reused the WS-REF-004B typed runtime registry:
   - runtime registration is now backed by typed Rust system ids, not legacy string keys
-- Removed runtime-unused legacy authority scripts under:
-  - `scripts/ai`
-  - `scripts/systems/biology`
-  - `scripts/systems/cognition`
-  - `scripts/systems/development`
-  - `scripts/systems/psychology`
-  - `scripts/systems/record`
-  - `scripts/systems/social`
-  - `scripts/systems/work`
-  - `scripts/systems/world`
+- Removed additional dead GDScript authority residue:
+  - `scripts/core/combat/combat_resolver.gd`
+  - `scripts/core/simulation/runtime_shadow_reporter.gd`
 - Added:
   - `gdscript_authority_map.md`
-  - `verify_sim_authority_cutover.md`
+  - `verify_simulation_authority.md`
   - this final report
 
 ## What Feature It Adds
@@ -38,6 +31,7 @@
   - no `register_system(...)` calls remain in `main.gd` or `simulation_engine.gd`
   - no `runtime_clear_registry` use remains in the active boot path
   - Rust default runtime registration is referenced by both GDScript bridge and Rust sim-bridge
+  - removed dead files are absent from disk
 - Rust verification:
   - `cargo build -p sim-bridge`
   - `cargo test -p sim-bridge`
@@ -55,6 +49,7 @@ Residual note:
 - Probe/Sandbox 시작 후 에이전트 이동, needs 변화, 건설 진행이 계속 보이는지 확인한다.
 - 일시정지/속도 변경/선택/디버그 오버레이가 기존처럼 동작하는지 확인한다.
 - 런타임이 시작될 때 GDScript 시스템을 수동 등록했다는 흔적이 없어야 한다.
+- 이미 종료된 legacy parity/shadow report 파일이 필요 이상으로 언급되거나 참조되지 않는지 확인한다.
 - 문제가 있으면 이런 증상이 보인다:
   - 시작 직후 registry mismatch 경고가 반복된다
   - 에이전트가 전혀 갱신되지 않는다
