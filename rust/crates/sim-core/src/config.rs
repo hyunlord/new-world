@@ -385,6 +385,16 @@ pub const INFLUENCE_CAMPFIRE_SOCIAL_INTENSITY: f64 = 0.28;
 pub const INFLUENCE_SHELTER_BASE_INTENSITY: f64 = 0.5;
 /// Per-entity causal ring-buffer capacity.
 pub const CAUSAL_LOG_MAX_PER_ENTITY: usize = 32;
+/// Maximum bounded world-event entries kept in the chronicle log.
+pub const CHRONICLE_LOG_MAX_EVENTS: usize = 1000;
+/// Maximum bounded per-entity entries kept in the chronicle log.
+pub const CHRONICLE_LOG_MAX_PER_ENTITY: usize = 20;
+/// Minimum significance treated as medium importance in chronicle pruning.
+pub const CHRONICLE_MEDIUM_SIGNIFICANCE_THRESHOLD: f64 = 0.35;
+/// Minimum significance treated as high importance in chronicle pruning.
+pub const CHRONICLE_HIGH_SIGNIFICANCE_THRESHOLD: f64 = 0.70;
+/// Minimum steering significance required before creating a chronicle event.
+pub const CHRONICLE_SIGNIFICANCE_THRESHOLD: f64 = 0.18;
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.

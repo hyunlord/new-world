@@ -50,7 +50,8 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelClampPolicy, ChannelId, ChannelMeta, EntityId, Settlement, SettlementId};
 use sim_engine::{
-    AgentSnapshot, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
+    AgentSnapshot, ChronicleEvent, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest,
+    SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -292,6 +293,30 @@ fn action_target_resource_key(action: ActionType) -> &'static str {
         ActionType::Build => "building",
         _ => "",
     }
+}
+
+fn chronicle_event_to_dict(event: &ChronicleEvent) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("tick", event.tick as i64);
+    dict.set("event_type", format!("{:?}", event.event_type));
+    dict.set("entity_id", event.entity_id.0 as i64);
+    dict.set("influence_channel_id", event.cause.id());
+    dict.set("summary_key", event.summary_key.clone());
+    dict.set("effect_key", event.effect_key.clone());
+    dict.set("tile_x", event.tile_x);
+    dict.set("tile_y", event.tile_y);
+    dict.set("influence_magnitude", event.magnitude.influence as f32);
+    dict.set("steering_magnitude", event.magnitude.steering as f32);
+    dict.set("significance", event.magnitude.significance as f32);
+    dict
+}
+
+fn chronicle_summary_keys(events: &[&ChronicleEvent]) -> PackedStringArray {
+    let mut out = PackedStringArray::new();
+    for event in events {
+        out.push(&GString::from(event.summary_key.as_str()));
+    }
+    out
 }
 
 fn dominant_emotion_adjective(emotion: &Emotion) -> &'static str {
@@ -1527,8 +1552,25 @@ impl WorldSimRuntime {
             dict.set("faith_strength", faith.strength as f32);
         }
 
-        // ExplainLog (stub — empty array)
-        dict.set("recent_explains", PackedStringArray::new());
+        let entity_id = EntityId(entity.id() as u64);
+        let recent_chronicle = state
+            .engine
+            .resources()
+            .chronicle_log
+            .query_by_entity(entity_id, sim_core::config::DETAIL_PANEL_RECENT_EVENT_LIMIT);
+        let mut chronicle_arr: Array<VarDictionary> = Array::new();
+        for event in &recent_chronicle {
+            chronicle_arr.push(&chronicle_event_to_dict(event));
+        }
+        dict.set("recent_chronicle_events", chronicle_arr);
+        dict.set("recent_explains", chronicle_summary_keys(&recent_chronicle));
+        if let Some(event) = recent_chronicle.first() {
+            dict.set("recent_dominant_cause_key", event.summary_key.clone());
+            dict.set("recent_influence_channel_id", event.cause.id());
+        } else {
+            dict.set("recent_dominant_cause_key", "");
+            dict.set("recent_influence_channel_id", "");
+        }
 
         dict
     }
