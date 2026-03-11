@@ -448,16 +448,6 @@ func runtime_get_minimap_snapshot() -> Dictionary:
 	return {}
 
 
-## Clears registered runtime system metadata.
-func runtime_clear_registry() -> void:
-	var runtime: Object = _get_native_runtime()
-	if runtime == null:
-		return
-	if not runtime.has_method("runtime_clear_registry"):
-		return
-	runtime.call("runtime_clear_registry")
-
-
 ## Returns runtime compute-domain modes snapshot.
 func runtime_get_compute_domain_modes() -> Dictionary:
 	var runtime: Object = _get_native_runtime()

@@ -102,13 +102,13 @@ pub(crate) fn get_system_perf(state: &RuntimeState) -> VarDictionary {
     let priority_map: std::collections::HashMap<&str, i32> = state
         .registered_systems
         .iter()
-        .map(|e| (e.system_key.as_str(), e.priority))
+        .map(|e| (e.system_id.registry_name(), e.priority))
         .collect();
 
     let interval_map: std::collections::HashMap<&str, i32> = state
         .registered_systems
         .iter()
-        .map(|e| (e.system_key.as_str(), e.tick_interval))
+        .map(|e| (e.system_id.registry_name(), e.tick_interval))
         .collect();
 
     for (name, &us) in &state.engine.perf_tracker.system_times {
@@ -263,12 +263,12 @@ pub(crate) fn write_debug_snapshot(state: &RuntimeState) {
     let priority_map: std::collections::HashMap<&str, i32> = state
         .registered_systems
         .iter()
-        .map(|e| (e.system_key.as_str(), e.priority))
+        .map(|e| (e.system_id.registry_name(), e.priority))
         .collect();
     let interval_map: std::collections::HashMap<&str, i32> = state
         .registered_systems
         .iter()
-        .map(|e| (e.system_key.as_str(), e.tick_interval))
+        .map(|e| (e.system_id.registry_name(), e.tick_interval))
         .collect();
     let mut system_perf: Map<String, Value> = Map::new();
     for (name, &us) in &state.engine.perf_tracker.system_times {
