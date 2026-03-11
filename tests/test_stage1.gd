@@ -9,7 +9,7 @@ const TEST_AGENT_COUNT: int = 20
 var passed: int = 0
 var failed: int = 0
 var errors: Array[String] = []
-var _decoder: SnapshotDecoder = SnapshotDecoderClass.new()
+var _decoder := SnapshotDecoderClass.new()
 
 
 func _init() -> void:
@@ -33,7 +33,8 @@ func _boot_main_scene() -> bool:
 	var initialized: bool = bool(bridge.call("runtime_init", TEST_SEED, "{}"))
 	if not initialized:
 		return _record_boot_failure("runtime_init returned false")
-	_register_runtime_systems(bridge)
+	if bridge.has_method("runtime_register_default_systems"):
+		bridge.call("runtime_register_default_systems")
 	var payload_json: String = JSON.stringify(_build_bootstrap_payload())
 	var bootstrap_result: Dictionary = bridge.call("runtime_bootstrap_world", payload_json)
 	if bootstrap_result.is_empty():
@@ -116,8 +117,8 @@ func _test_snapshot_size_matches_agent_count() -> bool:
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
 	var count: int = int(bridge.call("get_agent_count"))
 	return _check(
-		bytes.size() == count * SnapshotDecoder.AGENT_SIZE,
-		"Snapshot size should be %d, got %d" % [count * SnapshotDecoder.AGENT_SIZE, bytes.size()]
+		bytes.size() == count * SnapshotDecoderClass.AGENT_SIZE,
+		"Snapshot size should be %d, got %d" % [count * SnapshotDecoderClass.AGENT_SIZE, bytes.size()]
 	)
 
 
@@ -156,16 +157,16 @@ func _test_agents_move_after_sixty_ticks() -> bool:
 	if bridge == null:
 		return _fail("SimBridge node should exist")
 	var before: PackedByteArray = bridge.call("get_frame_snapshots")
-	if before.size() < SnapshotDecoder.AGENT_SIZE:
+	if before.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot record before movement test")
-	var before_x: float = before.decode_float(SnapshotDecoder.OFF_X)
-	var before_y: float = before.decode_float(SnapshotDecoder.OFF_Y)
+	var before_x: float = before.decode_float(SnapshotDecoderClass.OFF_X)
+	var before_y: float = before.decode_float(SnapshotDecoderClass.OFF_Y)
 	_tick_runtime(60)
 	var after: PackedByteArray = bridge.call("get_frame_snapshots")
-	if after.size() < SnapshotDecoder.AGENT_SIZE:
+	if after.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot record after movement test")
-	var after_x: float = after.decode_float(SnapshotDecoder.OFF_X)
-	var after_y: float = after.decode_float(SnapshotDecoder.OFF_Y)
+	var after_x: float = after.decode_float(SnapshotDecoderClass.OFF_X)
+	var after_y: float = after.decode_float(SnapshotDecoderClass.OFF_Y)
 	var delta: float = absf(after_x - before_x) + absf(after_y - before_y)
 	return _check(delta > 0.05, "Agent should move after 60 ticks, delta=%f" % delta)
 
@@ -221,9 +222,9 @@ func _test_archetype_label_non_empty() -> bool:
 	if bridge == null:
 		return _fail("SimBridge node should exist")
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
-	if bytes.size() < SnapshotDecoder.AGENT_SIZE:
+	if bytes.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot to fetch archetype label")
-	var entity_id: int = bytes.decode_u32(SnapshotDecoder.OFF_ENTITY_ID)
+	var entity_id: int = bytes.decode_u32(SnapshotDecoderClass.OFF_ENTITY_ID)
 	var label: String = str(bridge.call("get_archetype_label", entity_id))
 	return _check(label.length() > 0, "Archetype label should not be empty")
 
@@ -234,9 +235,9 @@ func _test_thought_text_non_empty() -> bool:
 	if bridge == null:
 		return _fail("SimBridge node should exist")
 	var bytes: PackedByteArray = bridge.call("get_frame_snapshots")
-	if bytes.size() < SnapshotDecoder.AGENT_SIZE:
+	if bytes.size() < SnapshotDecoderClass.AGENT_SIZE:
 		return _fail("Need at least one snapshot to fetch thought text")
-	var entity_id: int = bytes.decode_u32(SnapshotDecoder.OFF_ENTITY_ID)
+	var entity_id: int = bytes.decode_u32(SnapshotDecoderClass.OFF_ENTITY_ID)
 	var text: String = str(bridge.call("get_thought_text", entity_id))
 	return _check(text.length() > 0, "Thought text should not be empty")
 
@@ -354,78 +355,6 @@ func _build_bootstrap_payload() -> Dictionary:
 		},
 		"agents": agents,
 	}
-
-
-func _register_runtime_systems(bridge: Node) -> void:
-	var commands: Array[Dictionary] = []
-	var registration_index: int = 0
-	for spec: Dictionary in _runtime_system_specs():
-		commands.append({
-			"command_id": "register_system",
-			"payload": {
-				"name": spec.get("name", ""),
-				"priority": spec.get("priority", 0),
-				"tick_interval": spec.get("tick_interval", 1),
-				"active": true,
-				"registration_index": registration_index,
-			},
-		})
-		registration_index += 1
-	bridge.call("runtime_apply_commands_v2", commands)
-
-
-func _runtime_system_specs() -> Array[Dictionary]:
-	return [
-		{"name": "stat_sync_system.gd", "priority": 1, "tick_interval": 10},
-		{"name": "resource_regen_system.gd", "priority": 5, "tick_interval": 1},
-		{"name": "childcare_system.gd", "priority": 8, "tick_interval": 2},
-		{"name": "job_assignment_system.gd", "priority": 8, "tick_interval": 1},
-		{"name": "needs_system.gd", "priority": 10, "tick_interval": 1},
-		{"name": "stat_threshold_system.gd", "priority": 12, "tick_interval": 5},
-		{"name": "upper_needs_system.gd", "priority": 12, "tick_interval": 1},
-		{"name": "building_effect_system.gd", "priority": 15, "tick_interval": 1},
-		{"name": "intelligence_system.gd", "priority": 18, "tick_interval": 50},
-		{"name": "memory_system.gd", "priority": 18, "tick_interval": 1},
-		{"name": "behavior_system.gd", "priority": 20, "tick_interval": 1},
-		{"name": "gathering_system.gd", "priority": 25, "tick_interval": 1},
-		{"name": "construction_system.gd", "priority": 28, "tick_interval": 1},
-		{"name": "steering_system.gd", "priority": 29, "tick_interval": 1},
-		{"name": "movement_system.gd", "priority": 30, "tick_interval": 1},
-		{"name": "emotion_system.gd", "priority": 32, "tick_interval": 12},
-		{"name": "child_stress_processor.gd", "priority": 32, "tick_interval": 2},
-		{"name": "stress_system.gd", "priority": 34, "tick_interval": 50},
-		{"name": "mental_break_system.gd", "priority": 35, "tick_interval": 1},
-		{"name": "occupation_system.gd", "priority": 36, "tick_interval": 1},
-		{"name": "trauma_scar_system.gd", "priority": 36, "tick_interval": 10},
-		{"name": "title_system.gd", "priority": 37, "tick_interval": 1},
-		{"name": "trait_violation_system.gd", "priority": 37, "tick_interval": 1},
-		{"name": "social_event_system.gd", "priority": 37, "tick_interval": 30},
-		{"name": "contagion_system.gd", "priority": 38, "tick_interval": 3},
-		{"name": "reputation_system.gd", "priority": 38, "tick_interval": 1},
-		{"name": "economic_tendency_system.gd", "priority": 39, "tick_interval": 1},
-		{"name": "morale_system.gd", "priority": 40, "tick_interval": 5},
-		{"name": "job_satisfaction_system.gd", "priority": 40, "tick_interval": 1},
-		{"name": "coping_system.gd", "priority": 42, "tick_interval": 30},
-		{"name": "intergenerational_system.gd", "priority": 45, "tick_interval": 240},
-		{"name": "parenting_system.gd", "priority": 46, "tick_interval": 240},
-		{"name": "age_system.gd", "priority": 48, "tick_interval": 50},
-		{"name": "personality_maturation_system.gd", "priority": 49, "tick_interval": 100},
-		{"name": "mortality_system.gd", "priority": 49, "tick_interval": 1},
-		{"name": "population_system.gd", "priority": 50, "tick_interval": 1},
-		{"name": "family_system.gd", "priority": 52, "tick_interval": 365},
-		{"name": "leader_system.gd", "priority": 52, "tick_interval": 1},
-		{"name": "value_system.gd", "priority": 55, "tick_interval": 200},
-		{"name": "network_system.gd", "priority": 58, "tick_interval": 1},
-		{"name": "migration_system.gd", "priority": 60, "tick_interval": 1},
-		{"name": "tech_discovery_system.gd", "priority": 62, "tick_interval": 1},
-		{"name": "tech_propagation_system.gd", "priority": 62, "tick_interval": 1},
-		{"name": "tech_maintenance_system.gd", "priority": 63, "tick_interval": 1},
-		{"name": "tension_system.gd", "priority": 64, "tick_interval": 1},
-		{"name": "tech_utilization_system.gd", "priority": 65, "tick_interval": 1},
-		{"name": "stratification_monitor.gd", "priority": 90, "tick_interval": 1},
-		{"name": "stats_recorder.gd", "priority": 90, "tick_interval": 200},
-	]
-
 
 func _check(condition: bool, message: String) -> bool:
 	if condition:

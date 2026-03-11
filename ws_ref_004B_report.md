@@ -10,10 +10,13 @@ This ticket removes the remaining string-key dependency from the runtime system 
     - `perf_label()` for internal engine perf lookup only
 - [rust/crates/sim-bridge/src/runtime_registry.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/rust/crates/sim-bridge/src/runtime_registry.rs)
   - changed deterministic tie-break from string name ordering to `RuntimeSystemId`
+  - strengthened the manifest-coverage test so boot registration must cover every typed runtime system
 - [rust/crates/sim-bridge/src/runtime_commands.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/rust/crates/sim-bridge/src/runtime_commands.rs)
   - registry snapshot now exposes display names layered on top of typed `system_id`, not legacy registry key strings
 - [rust/crates/sim-bridge/src/debug_api.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/rust/crates/sim-bridge/src/debug_api.rs)
   - perf/debug output now iterates typed registered systems first and only uses `perf_label()` as an internal compatibility lookup
+- [tests/test_stage1.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/tests/test_stage1.gd)
+  - headless GDScript harness now uses `runtime_register_default_systems()` instead of sending legacy `register_system` command payloads
 - Added/refreshed:
   - [runtime_system_registry_map.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/runtime_system_registry_map.md)
   - [runtime_system_classification.md](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004b/runtime_system_classification.md)
@@ -28,6 +31,7 @@ The runtime registry now has a cleaner authority boundary:
 - bridge/debug readability = display labels only
 
 That means legacy `*_system` strings are no longer acting as registry keys even indirectly.
+It also means the default boot manifest can no longer silently omit typed runtime systems.
 
 ## Verification After Implementation
 - Static legacy-key scan:
@@ -42,6 +46,12 @@ That means legacy `*_system` strings are no longer acting as registry keys even 
 - `cargo test --workspace`
 - `cargo clippy --workspace -- -D warnings`
 - Godot headless boot
+- source-tree GDScript harness no longer posts `register_system` commands
+
+## Remaining Runtime Risks
+- `SimSystem::name()` still exists in the generic engine trait and returns string labels for logs/perf timing.
+- `perf_label()` still preserves legacy `*_system` names for debug/perf compatibility.
+- Those strings are no longer registry keys, registration inputs, dispatch selectors, or sort keys, but the engine perf/debug layer is not yet fully type-keyed.
 
 ## In-Game Checks (한국어)
 - 게임 시작 후 부트가 정상적으로 올라오고 runtime registry mismatch 경고가 없는지 본다.

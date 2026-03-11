@@ -29,6 +29,7 @@ SimulationEngine.init_with_seed()
   - typed scheduler registration entrypoint
 - `register_default_runtime_systems(state)`
   - applies the default typed manifest into the runtime
+  - manifest coverage now matches every `RuntimeSystemId` variant
 
 ## Registration Order
 - Primary sort key: `priority`
@@ -50,6 +51,9 @@ This means registry ordering no longer depends on string key ordering.
 - `get_system_perf()`
   - now iterates typed registered systems and looks up perf data by internal engine perf labels
   - exports display labels plus `system_id`
+- `SimSystem::name()`
+  - still exists in the engine trait for logs/perf timing
+  - no longer participates in registry registration, alias dispatch, or ordering
 
 ## Legacy/Compatibility Boundary
 - Removed as authority:
@@ -65,5 +69,6 @@ This means registry ordering no longer depends on string key ordering.
 ## Current Truth
 - Runtime registration authority is typed.
 - Boot registration is Rust-owned.
+- The default runtime manifest covers every typed runtime system ID.
 - Registry snapshot identity is numeric `system_id`, with display names layered on top.
-- Remaining string labels are diagnostic compatibility, not runtime authority.
+- Remaining string labels are diagnostic/perf compatibility, not runtime authority.

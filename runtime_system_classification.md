@@ -67,6 +67,9 @@ The following runtime systems are registered through typed `RuntimeSystemId` man
   - debug/UI readability only
 - `perf_label()`
   - compatibility lookup for existing engine perf names only
+- `SimSystem::name()`
+  - engine log/perf string only
+  - not used for registry identity, registration, ordering, or boot dispatch
 - `runtime_get_registry_snapshot()`
   - exposes typed IDs with display labels to Godot
 
