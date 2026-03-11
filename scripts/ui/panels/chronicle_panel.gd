@@ -6,14 +6,22 @@ var _entity_manager: RefCounted
 
 ## Filter state
 var _filter_type: String = ""  # "" = all
-const FILTER_OPTIONS: Array = ["", "birth", "death", "marriage", "settlement_founded", "population_milestone"]
-const FILTER_LABEL_KEYS: Array = [
+const LEGACY_FILTER_OPTIONS: Array = ["", "birth", "death", "marriage", "settlement_founded", "population_milestone"]
+const LEGACY_FILTER_LABEL_KEYS: Array = [
 	"UI_FILTER_ALL",
 	"UI_FILTER_BIRTH",
 	"UI_FILTER_DEATH",
 	"UI_FILTER_MARRIAGE",
 	"UI_FILTER_SETTLEMENT",
 	"UI_FILTER_MILESTONE",
+]
+const RUNTIME_FILTER_OPTIONS: Array = ["", "food", "danger", "warmth", "social"]
+const RUNTIME_FILTER_LABEL_KEYS: Array = [
+	"UI_FILTER_ALL",
+	"UI_FILTER_FOOD",
+	"UI_FILTER_DANGER",
+	"UI_FILTER_SHELTER",
+	"UI_FILTER_SOCIAL",
 ]
 var _filter_index: int = 0
 
@@ -40,6 +48,10 @@ const EVENT_STYLES: Dictionary = {
 	"famine": {"icon": "!", "color": Color(0.9, 0.2, 0.1)},
 	"became_adult": {"icon": "A", "color": Color(0.5, 0.7, 0.9)},
 	"trait_violation": {"icon": "V", "color": Color(0.9, 0.5, 0.1)},
+	"food": {"icon": "F", "color": Color(0.50, 0.85, 0.35)},
+	"danger": {"icon": "!", "color": Color(0.95, 0.30, 0.28)},
+	"warmth": {"icon": "H", "color": Color(0.95, 0.70, 0.30)},
+	"social": {"icon": "G", "color": Color(0.40, 0.75, 0.95)},
 }
 
 ## Filter button rects for click detection
@@ -96,7 +108,7 @@ func _gui_input(event: InputEvent) -> void:
 			for fr in _filter_rects:
 				if fr.rect.has_point(event.position):
 					_filter_index = fr.index
-					_filter_type = FILTER_OPTIONS[_filter_index]
+					_filter_type = _current_filter_options()[_filter_index]
 					_scroll_offset = 0.0
 					_invalidate_desc_cache()
 					accept_event()
@@ -128,6 +140,7 @@ func _update_scroll_from_mouse(mouse_y: float) -> void:
 func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	var cx: float = 20.0
 	var cy: float = 28.0
+	var filter_label_keys: Array = _current_filter_label_keys()
 
 	# Opaque header background
 	draw_rect(Rect2(0, 0, panel_w, 76.0), Color(0.05, 0.05, 0.08, 0.95))
@@ -140,8 +153,8 @@ func _draw_header(font: Font, panel_w: float, events_count: int) -> float:
 	_filter_rects.clear()
 	var btn_x: float = cx
 	var btn_y: float = cy + 4.0
-	for i in range(FILTER_LABEL_KEYS.size()):
-		var label: String = Locale.ltr(FILTER_LABEL_KEYS[i])
+	for i in range(filter_label_keys.size()):
+		var label: String = Locale.ltr(filter_label_keys[i])
 		var label_size: Vector2 = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"))
 		var btn_w: float = label_size.x + 12
 		var btn_h: float = 20.0
@@ -181,17 +194,13 @@ func _draw() -> void:
 
 	var font: Font = ThemeDB.fallback_font
 
-	# Get events from ChronicleSystem
-	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-	var events: Array = []
-	if chronicle != null:
-		events = chronicle.get_world_events(_filter_type, 200)
+	var events: Array = _get_display_events()
 
 	# Draw header first pass (establishes cy)
 	var cy: float = _draw_header(font, panel_w, events.size())
 	var cx: float = 20.0
 
-	if chronicle == null:
+	if events.is_empty() and not _chronicle_data_available():
 		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_CHRONICLE_UNAVAILABLE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.5, 0.5, 0.5))
 		_content_height = cy + 40.0
 		return
@@ -213,7 +222,10 @@ func _draw() -> void:
 	var deceased_registry: Node = get_node_or_null("/root/DeceasedRegistry")
 	for i in range(events.size()):
 		var evt: Dictionary = events[i]
-		var year: int = evt.get("year", 0)
+		var year: int = int(evt.get("year", -1))
+		if year < 0 and evt.has("tick"):
+			var tick_date: Dictionary = GameCalendar.tick_to_date(int(evt.get("tick", 0)))
+			year = int(tick_date.get("year", 0))
 
 		# Year header
 		if year != current_year:
@@ -231,8 +243,7 @@ func _draw() -> void:
 			continue
 
 		# Event entry
-		var event_type: String = evt.get("event_type", "")
-		var style: Dictionary = EVENT_STYLES.get(event_type, {"icon": "?", "color": Color(0.6, 0.6, 0.6)})
+		var style: Dictionary = _event_style(evt)
 		var icon_color: Color = style.color
 
 		# Date
@@ -402,3 +413,52 @@ func _resolve_event_description(evt: Dictionary) -> String:
 	if desc.length() > 55:
 		return desc.substr(0, 52) + "..."
 	return desc
+
+
+func _using_runtime_chronicle() -> bool:
+	return SimBridge.runtime_is_initialized()
+
+
+func _current_filter_options() -> Array:
+	return RUNTIME_FILTER_OPTIONS if _using_runtime_chronicle() else LEGACY_FILTER_OPTIONS
+
+
+func _current_filter_label_keys() -> Array:
+	return RUNTIME_FILTER_LABEL_KEYS if _using_runtime_chronicle() else LEGACY_FILTER_LABEL_KEYS
+
+
+func _chronicle_data_available() -> bool:
+	if _using_runtime_chronicle():
+		return true
+	return Engine.get_main_loop().root.get_node_or_null("ChronicleSystem") != null
+
+
+func _get_display_events() -> Array:
+	if _using_runtime_chronicle():
+		return _runtime_chronicle_events()
+	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
+	if chronicle == null:
+		return []
+	return chronicle.get_world_events(_filter_type, 200)
+
+
+func _runtime_chronicle_events() -> Array:
+	var events: Array = SimBridge.runtime_get_chronicle_timeline(200)
+	if _filter_type.is_empty():
+		return events
+	var filtered: Array = []
+	for evt in events:
+		if not (evt is Dictionary):
+			continue
+		var dict: Dictionary = evt
+		if str(dict.get("cause_id", "")) == _filter_type:
+			filtered.append(dict)
+	return filtered
+
+
+func _event_style(evt: Dictionary) -> Dictionary:
+	var cause_id: String = str(evt.get("cause_id", ""))
+	if not cause_id.is_empty():
+		return EVENT_STYLES.get(cause_id, {"icon": "?", "color": Color(0.6, 0.6, 0.6)})
+	var event_type: String = str(evt.get("event_type", ""))
+	return EVENT_STYLES.get(event_type, {"icon": "?", "color": Color(0.6, 0.6, 0.6)})

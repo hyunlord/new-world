@@ -75,6 +75,10 @@
   "UI_FILTER_MARRIAGE": "결합",
   "UI_FILTER_SETTLEMENT": "정착지",
   "UI_FILTER_MILESTONE": "이정표",
+  "UI_FILTER_FOOD": "식량",
+  "UI_FILTER_DANGER": "위험",
+  "UI_FILTER_SHELTER": "피난처",
+  "UI_FILTER_SOCIAL": "사회",
   "UI_FILTER_FAMINE": "기근",
   "UI_FILTER_BECAME_ADULT": "성인",
   "UI_NO_EVENTS": "기록된 사건이 없습니다",
@@ -1759,5 +1763,15 @@
   "LLM_QUALITY_ENHANCED": "향상",
   "LLM_QUALITY_DESC": "AI 텍스트 생성을 제어합니다. 높을수록 메모리를 더 사용합니다.",
   "LLM_TOGGLE_ON": "AI 서사 활성화",
-  "LLM_TOGGLE_OFF": "AI 서사 비활성화"
+  "LLM_TOGGLE_OFF": "AI 서사 비활성화",
+  "CHRONICLE_TITLE_FOOD_ATTRACTION": "식량 탐색",
+  "CHRONICLE_SUMMARY_FOOD_ATTRACTION": "{agent}은(는) 굶주림 끝에 식량을 찾아냈다.",
+  "CHRONICLE_TITLE_ESCAPE_DANGER": "위험 탈출",
+  "CHRONICLE_SUMMARY_ESCAPE_DANGER": "{agent}은(는) 위험에서 가까스로 벗어났다.",
+  "CHRONICLE_TITLE_SHELTER_SEEKING": "피난처 발견",
+  "CHRONICLE_SUMMARY_SHELTER_SEEKING": "{agent}은(는) 추위를 피해 몸을 숨길 곳을 찾았다.",
+  "CHRONICLE_TITLE_SOCIAL_ATTRACTION": "무리 합류",
+  "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION": "{agent}은(는) 주변 무리 쪽으로 자연스럽게 이끌렸다.",
+  "CHRONICLE_TITLE_SOCIAL_GATHERING": "모임 형성",
+  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count}명의 정착민이 하나의 중심을 따라 모여들었다."
 }

@@ -226,6 +226,7 @@ fn bootstrap_world_core(
         resources.stat_sync_derived.clear();
         resources.stat_threshold_flags.clear();
         resources.chronicle_log.clear();
+        resources.chronicle_timeline.clear();
         sync_world_tiles(resources, &payload.world);
     }
 

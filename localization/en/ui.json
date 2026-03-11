@@ -75,6 +75,10 @@
   "UI_FILTER_MARRIAGE": "Marriage",
   "UI_FILTER_SETTLEMENT": "Settlement",
   "UI_FILTER_MILESTONE": "Milestone",
+  "UI_FILTER_FOOD": "Food",
+  "UI_FILTER_DANGER": "Danger",
+  "UI_FILTER_SHELTER": "Shelter",
+  "UI_FILTER_SOCIAL": "Social",
   "UI_FILTER_FAMINE": "Famine",
   "UI_FILTER_BECAME_ADULT": "Adult",
   "UI_NO_EVENTS": "No events recorded yet",
@@ -1759,5 +1763,15 @@
   "LLM_QUALITY_ENHANCED": "Enhanced",
   "LLM_QUALITY_DESC": "Controls AI text generation. Higher = more RAM.",
   "LLM_TOGGLE_ON": "Enable AI Narration",
-  "LLM_TOGGLE_OFF": "Disable AI Narration"
+  "LLM_TOGGLE_OFF": "Disable AI Narration",
+  "CHRONICLE_TITLE_FOOD_ATTRACTION": "Food Search",
+  "CHRONICLE_SUMMARY_FOOD_ATTRACTION": "{agent} struggled with hunger before discovering food.",
+  "CHRONICLE_TITLE_ESCAPE_DANGER": "Escape",
+  "CHRONICLE_SUMMARY_ESCAPE_DANGER": "{agent} narrowly escaped danger.",
+  "CHRONICLE_TITLE_SHELTER_SEEKING": "Shelter",
+  "CHRONICLE_SUMMARY_SHELTER_SEEKING": "{agent} found shelter from the cold.",
+  "CHRONICLE_TITLE_SOCIAL_ATTRACTION": "Gathering",
+  "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION": "{agent} drifted toward a nearby group.",
+  "CHRONICLE_TITLE_SOCIAL_GATHERING": "Gathering Formed",
+  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count} settlers gathered around a shared focal point."
 }
