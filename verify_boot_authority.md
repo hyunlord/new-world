@@ -1,138 +1,93 @@
 # Verify Boot Authority
 
-## Goal
+## Static checks
 
-Confirm that Godot boot no longer owns simulation-system registration and that Rust runtime remains the only authoritative simulation tick path.
-
-## Static Checks
-
-### 1. No startup `register_system(...)` calls remain in main boot
+### No boot-time legacy system registration remains
 
 ```bash
-rg -n "register_system\\(" scenes/main/main.gd
+rg -n "register_system\\(" scenes/main/main.gd scripts/core/simulation/simulation_engine.gd
+# expect: 0 hits
 ```
 
-Expected:
-
-- no hits
-
-### 2. `simulation_engine.gd` no longer clears the runtime registry after init
+### No boot-time registry clearing remains
 
 ```bash
-rg -n "runtime_clear_registry" scripts/core/simulation/simulation_engine.gd
+rg -n "runtime_clear_registry" scripts/core/simulation
+# expect: 0 hits
 ```
 
-Expected:
-
-- no hits
-
-### 3. Startup uses the Rust default manifest
+### Rust default registration path is active
 
 ```bash
-rg -n "runtime_register_default_systems" scripts/core/simulation/simulation_engine.gd scripts/core/simulation/sim_bridge.gd rust/crates/sim-bridge/src/lib.rs
+rg -n "runtime_register_default_systems" \
+  scripts/core/simulation/simulation_engine.gd \
+  scripts/core/simulation/sim_bridge.gd \
+  rust/crates/sim-bridge/src
+# expect: hits in GDScript bridge/wrapper and Rust bridge
 ```
 
-Expected:
-
-- one startup call in `simulation_engine.gd`
-- one wrapper in `sim_bridge.gd`
-- one native `#[func]` in `sim-bridge`
-
-### 4. Legacy registry bookkeeping is removed from `simulation_engine.gd`
+### `main.gd` now fails fast if Rust registry authority validation fails
 
 ```bash
-rg -n "^[[:space:]]*var[[:space:]]+_systems\\b|_registered_system_payloads|_system_key_by_instance_id|_build_runtime_system_payload|_runtime_system_key_from_name" scripts/core/simulation/simulation_engine.gd
+rg -n "validate_runtime_registry|aborting boot" scenes/main/main.gd
+# expect: hits before shadow/bootstrap manager initialization
 ```
 
-Expected:
-
-- no hits
-
-### 5. Boot registry is Rust-backed
+### No direct `scripts/systems` or `scripts/ai` preload remains in `main.gd`
 
 ```bash
-cd rust && cargo test -p sim-bridge default_runtime_manifest_registers_rust_backed_entries -- --nocapture
+rg -n 'const .*preload\\("res://scripts/(systems|ai)/' scenes/main/main.gd
+# expect: 0 hits
 ```
 
-Expected:
+## Boot truth checks
 
-- PASS
-- manifest entries are marked `exec_backend = "rust"`
-
-## Runtime Verification
-
-### 6. Workspace tests
+### RON registry loads during runtime init
 
 ```bash
+rg -n "DataRegistry::load_from_directory" \
+  rust/crates/sim-bridge/src/lib.rs \
+  rust/crates/sim-test/src/main.rs
+# expect: hits
+```
+
+### Simulation tick exists only through Rust runtime
+
+```bash
+rg -n "runtime_tick_frame" \
+  scripts/core/simulation/simulation_engine.gd \
+  scripts/core/simulation/sim_bridge.gd \
+  rust/crates/sim-bridge/src/lib.rs
+# expect: hits in all three layers
+```
+
+### Godot boot still instantiates residual shadow/bootstrap managers
+
+```bash
+rg -n "EntityManager\\.new|BuildingManager\\.new|SettlementManager\\.new|ResourceMap\\.new" scenes/main/main.gd
+# expect: hits
+```
+
+This is allowed as documented technical debt, but these objects must not become the active tick owner.
+
+## Verification commands
+
+```bash
+cd rust && cargo check --workspace
+cd rust && cargo build -p sim-bridge
 cd rust && cargo test --workspace
-```
-
-Expected:
-
-- PASS
-
-### 7. Workspace lint
-
-```bash
 cd rust && cargo clippy --workspace -- -D warnings
+"/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot" \
+  --headless \
+  --path /Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a \
+  --quit
 ```
 
-Expected:
+## Acceptance criteria
 
-- PASS
-
-### 8. Godot headless startup smoke
-
-```bash
-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot --headless --path /Users/rexxa/github/new-world-wt/codex-refactor-boot-authority --quit
-```
-
-Expected:
-
-- exit code `0`
-- existing project warnings may remain
-- no new parse/runtime crash from boot refactor
-
-## Runtime Truth Checks
-
-### 9. Rust owns frame stepping
-
-```bash
-rg -n "runtime_tick_frame" scripts/core/simulation/simulation_engine.gd scripts/core/simulation/sim_bridge.gd rust/crates/sim-bridge/src/lib.rs
-```
-
-Expected:
-
-- GDScript forwards to Rust
-- native `runtime_tick_frame` exists in `sim-bridge`
-
-### 10. Boot validates Rust registry rather than rebuilding it
-
-```bash
-rg -n "validate_runtime_registry|get_registered_system_count" scenes/main/main.gd scripts/core/simulation/simulation_engine.gd
-```
-
-Expected:
-
-- startup performs registry validation
-- banner/debug reads registered system count from Rust-backed startup state
-
-## Acceptance Criteria
-
-Boot authority is secure when all are true:
-
-- startup no longer registers runtime systems from GDScript
-- startup no longer clears native registry after init
-- Rust default manifest populates the runtime registry
-- simulation ticks through Rust only
-- tests and clippy pass
-- Godot headless startup exits successfully
-
-## Residual Legacy Allowed By This Ticket
-
-The following may still exist on disk after this ticket without violating the boot boundary:
-
-- `scripts/systems/**`
-- `scripts/ai/behavior_system.gd`
-- GDScript shell/bootstrap managers used by UI/save/setup
-- `runtime_clear_registry()` wrapper still exposed but unused in boot
+- Godot does not register or clear runtime systems during boot.
+- Rust loads authoritative RON data before ECS bootstrap.
+- Rust owns default runtime system registration.
+- Rust owns the active frame tick.
+- `main.gd` aborts boot if runtime registry authority validation fails.
+- Godot shell/UI still boots successfully when validation passes.
