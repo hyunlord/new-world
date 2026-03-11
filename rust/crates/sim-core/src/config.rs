@@ -247,6 +247,10 @@ pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_DANGER_INFLUENCE_WEIGHT: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_WARMTH_INFLUENCE_WEIGHT: f64 = 0.95; // TODO(A-5): -> behavior/influence metadata
+/// Additional local steering weight applied to social influence when loneliness is meaningful.
+pub const STEERING_SOCIAL_INFLUENCE_WEIGHT: f64 = 0.70; // TODO(A-5): -> behavior/influence metadata
+/// Minimum loneliness pressure required before explicit social gathering bias activates.
+pub const STEERING_SOCIAL_MIN_LONELINESS: f64 = 0.20; // TODO(A-5): -> behavior/influence metadata
 /// Minimum cold-pressure required before explicit shelter bias activates.
 pub const STEERING_SHELTER_MIN_COLD_PRESSURE: f64 = 0.20; // TODO(A-5): -> behavior/influence metadata
 /// Extra local weight applied when a colder agent detects a warmer room tile nearby.
@@ -373,6 +377,8 @@ pub const INFLUENCE_FOOD_TILE_BASE_INTENSITY: f64 = 0.65;
 pub const INFLUENCE_DANGER_TILE_BASE_INTENSITY: f64 = 0.55;
 /// Raw danger intensity emitted by one completed campfire when registry data is unavailable.
 pub const INFLUENCE_CAMPFIRE_DANGER_INTENSITY: f64 = 0.35;
+/// Raw social intensity emitted by one completed campfire when registry data is unavailable.
+pub const INFLUENCE_CAMPFIRE_SOCIAL_INTENSITY: f64 = 0.28;
 /// Base warmth intensity emitted by one completed shelter when RON data is unavailable.
 pub const INFLUENCE_SHELTER_BASE_INTENSITY: f64 = 0.5;
 /// Per-entity causal ring-buffer capacity.

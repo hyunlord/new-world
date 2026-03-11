@@ -227,6 +227,17 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
                 emitters.push(EmitterRecord {
                     x: building.x as u32,
                     y: building.y as u32,
+                    channel: ChannelId::Social,
+                    radius: config::INFLUENCE_SOCIAL_DEFAULT_RADIUS.max(1.0),
+                    base_intensity: config::INFLUENCE_CAMPFIRE_SOCIAL_INTENSITY,
+                    falloff: FalloffType::Linear,
+                    decay_rate: None,
+                    tags: vec!["campfire".to_string(), "fallback".to_string(), "social".to_string()],
+                    dirty: true,
+                });
+                emitters.push(EmitterRecord {
+                    x: building.x as u32,
+                    y: building.y as u32,
                     channel: ChannelId::Danger,
                     radius: f64::from(config::BUILDING_CAMPFIRE_RADIUS.max(1)),
                     base_intensity: config::INFLUENCE_CAMPFIRE_DANGER_INTENSITY,
@@ -577,10 +588,11 @@ mod tests {
         assert!(resources.influence_grid.sample(4, 4, ChannelId::Warmth) > 0.0);
         assert!(resources.influence_grid.sample(4, 4, ChannelId::Danger) > 0.0);
         assert!(resources.influence_grid.sample(8, 8, ChannelId::Social) > 0.0);
+        assert!(resources.influence_grid.sample(4, 4, ChannelId::Social) > 0.0);
     }
 
     #[test]
-    fn influence_runtime_system_registry_campfire_uses_registry_only_light_emission() {
+    fn influence_runtime_system_registry_campfire_uses_registry_social_emission() {
         let mut world = World::new();
         let mut resources = resources();
         resources.data_registry = Some(std::sync::Arc::new(
@@ -608,10 +620,11 @@ mod tests {
         resources.influence_grid.tick_update();
 
         assert!(resources.influence_grid.sample(4, 4, ChannelId::Light) > 0.0);
+        assert!(resources.influence_grid.sample(4, 4, ChannelId::Social) > 0.0);
     }
 
     #[test]
-    fn influence_runtime_system_fallback_campfire_emits_danger() {
+    fn influence_runtime_system_fallback_campfire_emits_social_and_danger() {
         let mut world = World::new();
         let mut resources = resources();
         resources.buildings.insert(
@@ -634,8 +647,38 @@ mod tests {
         system.run(&mut world, &mut resources, 1);
         resources.influence_grid.tick_update();
 
+        assert!(resources.influence_grid.sample(4, 4, ChannelId::Social) > 0.0);
         assert!(resources.influence_grid.sample(4, 4, ChannelId::Danger) > 0.0);
         assert_eq!(resources.influence_grid.sample(4, 4, ChannelId::Light), 0.0);
+    }
+
+    #[test]
+    fn influence_runtime_system_campfire_social_attenuates_with_distance() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.buildings.insert(
+            BuildingId(16),
+            Building {
+                id: BuildingId(16),
+                building_type: "campfire".to_string(),
+                settlement_id: SettlementId(1),
+                x: 4,
+                y: 4,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut system =
+            InfluenceRuntimeSystem::new(config::INFLUENCE_SYSTEM_PRIORITY, config::INFLUENCE_SYSTEM_INTERVAL);
+        system.run(&mut world, &mut resources, 1);
+        resources.influence_grid.tick_update();
+
+        let near_signal = resources.influence_grid.sample(5, 4, ChannelId::Social);
+        let far_signal = resources.influence_grid.sample(8, 4, ChannelId::Social);
+        assert!(near_signal > far_signal);
     }
 
     #[test]
