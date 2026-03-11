@@ -6,11 +6,12 @@ use sim_systems::runtime::{
     ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
     EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
     GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
-    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
-    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
-    MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
-    MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
-    OccupationRuntimeSystem, ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
+    InfluenceRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
+    LeaderRuntimeSystem, LlmRequestRuntimeSystem, LlmResponseRuntimeSystem,
+    LlmTimeoutRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem,
+    MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem,
+    NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
+    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
     PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
     ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
     StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
@@ -83,6 +84,7 @@ pub(crate) enum RuntimeSystemId {
     LlmResponse = 55,
     LlmTimeout = 56,
     StorySifter = 57,
+    Influence = 58,
 }
 
 impl RuntimeSystemId {
@@ -147,6 +149,7 @@ impl RuntimeSystemId {
             Self::LlmResponse => "llm_response_system",
             Self::LlmTimeout => "llm_timeout_system",
             Self::StorySifter => "story_sifter_system",
+            Self::Influence => "influence_system",
         }
     }
 
@@ -211,6 +214,7 @@ impl RuntimeSystemId {
             Self::LlmResponse,
             Self::LlmTimeout,
             Self::StorySifter,
+            Self::Influence,
         ]
     }
 }
@@ -224,7 +228,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 58] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 59] = [
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatSync, priority: 1, tick_interval: 10 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::ResourceRegen, priority: 5, tick_interval: config::RESOURCE_REGEN_TICK_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Childcare, priority: 8, tick_interval: 2 },
@@ -232,6 +236,7 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 58] = [
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Needs, priority: 10, tick_interval: config::NEEDS_TICK_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatThreshold, priority: 12, tick_interval: 5 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::UpperNeeds, priority: 12, tick_interval: config::UPPER_NEEDS_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Influence, priority: config::INFLUENCE_SYSTEM_PRIORITY as i32, tick_interval: config::INFLUENCE_SYSTEM_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::BuildingEffect, priority: 15, tick_interval: config::BUILDING_EFFECT_TICK_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Intelligence, priority: 18, tick_interval: 50 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Memory, priority: 18, tick_interval: config::MEMORY_COMPRESS_INTERVAL_TICKS as i32 },
@@ -319,6 +324,7 @@ pub(crate) fn register_runtime_system(
         RuntimeSystemId::StratificationMonitor => engine.register(StratificationMonitorRuntimeSystem::new(priority_u32, tick_interval_u64)),
         RuntimeSystemId::Tension => engine.register(TensionRuntimeSystem::new(priority_u32, tick_interval_u64)),
         RuntimeSystemId::BuildingEffect => engine.register(BuildingEffectRuntimeSystem::new(priority_u32, tick_interval_u64)),
+        RuntimeSystemId::Influence => engine.register(InfluenceRuntimeSystem::new(priority_u32, tick_interval_u64)),
         RuntimeSystemId::Migration => engine.register(MigrationRuntimeSystem::new(priority_u32, tick_interval_u64)),
         RuntimeSystemId::Population => engine.register(PopulationRuntimeSystem::new(priority_u32, tick_interval_u64)),
         RuntimeSystemId::TechUtilization => engine.register(TechUtilizationRuntimeSystem::new(priority_u32, tick_interval_u64)),

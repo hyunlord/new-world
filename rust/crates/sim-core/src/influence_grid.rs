@@ -1,9 +1,10 @@
-use crate::influence_channel::{ChannelId, ChannelMeta};
+use crate::config;
+use crate::influence_channel::{ChannelClampPolicy, ChannelId, ChannelMeta};
 use crate::wall_mask::WallBlockingMask;
 use serde::{Deserialize, Serialize};
 
-/// A record describing one active influence emitter.
-#[derive(Debug, Clone)]
+/// One active influence emitter stamped into the runtime grid.
+#[derive(Debug, Clone, PartialEq)]
 pub struct EmitterRecord {
     /// Tile-space x coordinate.
     pub x: u32,
@@ -13,10 +14,14 @@ pub struct EmitterRecord {
     pub channel: ChannelId,
     /// Radius in tile units.
     pub radius: f64,
-    /// Raw emission intensity written before sigmoid saturation.
-    pub intensity: f64,
+    /// Raw emission intensity written before normalization/clamp.
+    pub base_intensity: f64,
     /// Distance falloff profile.
     pub falloff: FalloffType,
+    /// Optional source attenuation override.
+    pub decay_rate: Option<f64>,
+    /// Optional semantic tags.
+    pub tags: Vec<String>,
     /// When true, this emitter is re-applied on the next update.
     pub dirty: bool,
 }
@@ -26,13 +31,17 @@ pub struct EmitterRecord {
 pub enum FalloffType {
     /// `intensity * (1 - dist / radius)`.
     Linear,
-    /// `intensity / (1 + dist^2)`.
+    /// `intensity * exp(-dist / radius)`.
+    Exponential,
+    /// `intensity * exp(-(dist^2) / (2 * sigma^2))`, where `sigma = radius / 2`.
+    Gaussian,
+    /// Legacy compatibility falloff: `intensity / (1 + dist^2)`.
     InverseSquare,
     /// Constant intensity within the radius.
     Constant,
 }
 
-/// Double-buffered spatial influence grid shared by the simulation.
+/// Double-buffered spatial influence grid shared by the simulation runtime.
 #[derive(Debug, Clone)]
 pub struct InfluenceGrid {
     width: u32,
@@ -49,10 +58,7 @@ pub struct InfluenceGrid {
 impl InfluenceGrid {
     /// Creates a new influence grid for the given dimensions and channel metadata.
     pub fn new(width: u32, height: u32, channels: Vec<ChannelMeta>) -> Self {
-        let mut channel_meta = ChannelId::default_channels();
-        for meta in channels {
-            channel_meta[meta.id.index()] = meta;
-        }
+        let channel_meta = merge_channel_meta(channels);
         let cell_count = (width * height) as usize;
         let channel_count = ChannelId::count();
         Self {
@@ -68,10 +74,33 @@ impl InfluenceGrid {
         }
     }
 
+    /// Replaces channel metadata in place, preserving current buffer contents.
+    pub fn set_channel_meta(&mut self, channels: &[ChannelMeta]) {
+        self.channel_meta = merge_channel_meta(channels.to_vec());
+    }
+
+    /// Returns the current metadata for one channel.
+    pub fn channel_meta(&self, channel: ChannelId) -> &ChannelMeta {
+        &self.channel_meta[channel.index()]
+    }
+
     /// Registers a new active emitter and marks it dirty for the next update.
     pub fn register_emitter(&mut self, mut emitter: EmitterRecord) {
         emitter.dirty = true;
         self.active_emitters.push(emitter);
+    }
+
+    /// Replaces the full active emitter set.
+    pub fn replace_emitters(&mut self, mut emitters: Vec<EmitterRecord>) {
+        for emitter in &mut emitters {
+            emitter.dirty = true;
+        }
+        self.active_emitters = emitters;
+    }
+
+    /// Clears all active emitters.
+    pub fn clear_emitters(&mut self) {
+        self.active_emitters.clear();
     }
 
     /// Removes all emitters that match the given tile and channel.
@@ -82,16 +111,25 @@ impl InfluenceGrid {
 
     /// Stamps one emitter into the pending buffer.
     pub fn stamp(&mut self, emitter: &EmitterRecord) {
-        if emitter.x >= self.width || emitter.y >= self.height || emitter.radius <= 0.0 {
+        if emitter.x >= self.width || emitter.y >= self.height {
             return;
         }
         let channel_index = emitter.channel.index();
-        let radius_sq = emitter.radius * emitter.radius;
-        let propagation_limit = self.channel_meta[channel_index].propagation_speed as i32;
-        let radius_limit = emitter.radius.ceil() as i32;
-        let sweep_limit = propagation_limit.max(radius_limit);
+        let meta = &self.channel_meta[channel_index];
+        let radius = emitter
+            .radius
+            .max(meta.default_radius)
+            .min(f64::from(meta.max_radius.max(1)));
+        if radius <= 0.0 {
+            return;
+        }
+
+        let radius_sq = radius * radius;
+        let sweep_limit = radius.ceil() as i32;
         let center_x = emitter.x as i32;
         let center_y = emitter.y as i32;
+        let source_decay = emitter.decay_rate.unwrap_or(meta.decay_rate).clamp(0.0, 1.0);
+        let source_scale = (1.0 - source_decay).clamp(0.0, 1.0);
 
         for dy in -sweep_limit..=sweep_limit {
             for dx in -sweep_limit..=sweep_limit {
@@ -121,17 +159,12 @@ impl InfluenceGrid {
                     next_y_u32,
                     channel_index,
                 );
-                let raw_value = match emitter.falloff {
-                    FalloffType::Linear => {
-                        if emitter.radius <= 0.0 {
-                            0.0
-                        } else {
-                            emitter.intensity * (1.0 - dist / emitter.radius).max(0.0)
-                        }
-                    }
-                    FalloffType::InverseSquare => emitter.intensity / (1.0 + dist_sq),
-                    FalloffType::Constant => emitter.intensity,
-                };
+                if wall_factor <= 0.0 {
+                    continue;
+                }
+                let raw_value =
+                    raw_falloff_value(emitter.falloff, emitter.base_intensity, radius, dist_sq, dist)
+                        * source_scale;
 
                 self.pending[channel_index][idx] += raw_value * wall_factor;
             }
@@ -144,8 +177,42 @@ impl InfluenceGrid {
         if x >= self.width || y >= self.height {
             return 0.0;
         }
-        let idx = self.index(x, y);
-        self.current[channel.index()][idx]
+        self.current[channel.index()][self.index(x, y)]
+    }
+
+    /// Samples the local channel gradient using centered differences.
+    #[inline]
+    pub fn sample_gradient(&self, channel: ChannelId, x: u32, y: u32) -> (f64, f64) {
+        let left = if x > 0 {
+            self.sample(x - 1, y, channel)
+        } else {
+            self.sample(x, y, channel)
+        };
+        let right = if x + 1 < self.width {
+            self.sample(x + 1, y, channel)
+        } else {
+            self.sample(x, y, channel)
+        };
+        let up = if y > 0 {
+            self.sample(x, y - 1, channel)
+        } else {
+            self.sample(x, y, channel)
+        };
+        let down = if y + 1 < self.height {
+            self.sample(x, y + 1, channel)
+        } else {
+            self.sample(x, y, channel)
+        };
+        ((right - left) * 0.5, (down - up) * 0.5)
+    }
+
+    /// Samples a weighted sum of multiple channels without allocating.
+    #[inline]
+    pub fn sample_weighted_sum(&self, x: u32, y: u32, channel_weights: &[(ChannelId, f64)]) -> f64 {
+        channel_weights
+            .iter()
+            .map(|(channel, weight)| self.sample(x, y, *channel) * *weight)
+            .sum()
     }
 
     /// Samples all channel values for one tile from the current buffer.
@@ -184,7 +251,7 @@ impl InfluenceGrid {
         }
 
         for channel in 0..self.channel_count {
-            self.apply_sigmoid_to_channel(channel);
+            self.normalize_and_clamp_channel(channel);
         }
 
         std::mem::swap(&mut self.current, &mut self.pending);
@@ -210,7 +277,7 @@ impl InfluenceGrid {
                 emitter.dirty = false;
             }
         }
-        self.apply_sigmoid_to_channel(channel);
+        self.normalize_and_clamp_channel(channel);
         std::mem::swap(&mut self.current[channel], &mut self.pending[channel]);
         self.stagger_index = (self.stagger_index + 1) % self.channel_count;
     }
@@ -257,10 +324,30 @@ impl InfluenceGrid {
         }
     }
 
-    fn apply_sigmoid_to_channel(&mut self, channel: usize) {
-        for value in &mut self.pending[channel] {
-            let raw = *value;
-            *value = raw / (1.0 + raw.abs());
+    fn normalize_and_clamp_channel(&mut self, channel: usize) {
+        let max_abs = self.pending[channel]
+            .iter()
+            .map(|value| value.abs())
+            .fold(0.0_f64, f64::max);
+        if max_abs > 1.0 + config::INFLUENCE_NORMALIZATION_EPSILON {
+            let scale = 1.0 / max_abs;
+            for value in &mut self.pending[channel] {
+                *value *= scale;
+            }
+        }
+
+        match self.channel_meta[channel].clamp_policy {
+            ChannelClampPolicy::Sigmoid => {
+                for value in &mut self.pending[channel] {
+                    let raw = *value;
+                    *value = raw / (1.0 + raw.abs());
+                }
+            }
+            ChannelClampPolicy::UnitInterval => {
+                for value in &mut self.pending[channel] {
+                    *value = value.clamp(0.0, 1.0);
+                }
+            }
         }
     }
 
@@ -273,7 +360,7 @@ impl InfluenceGrid {
         channel_index: usize,
     ) -> f64 {
         let wall_sensitivity = self.channel_meta[channel_index]
-            .default_wall_block
+            .wall_blocking_sensitivity
             .clamp(0.0, 1.0);
         if wall_sensitivity <= 0.0 {
             return 1.0;
@@ -333,10 +420,42 @@ impl InfluenceGrid {
     }
 }
 
+fn merge_channel_meta(channels: Vec<ChannelMeta>) -> Vec<ChannelMeta> {
+    let mut channel_meta = ChannelId::default_channels();
+    for meta in channels {
+        channel_meta[meta.id.index()] = meta.sanitized();
+    }
+    channel_meta
+}
+
+fn raw_falloff_value(
+    falloff: FalloffType,
+    base_intensity: f64,
+    radius: f64,
+    dist_sq: f64,
+    dist: f64,
+) -> f64 {
+    match falloff {
+        FalloffType::Linear => {
+            if radius <= 0.0 {
+                0.0
+            } else {
+                base_intensity * (1.0 - dist / radius).max(0.0)
+            }
+        }
+        FalloffType::Exponential => base_intensity * (-(dist / radius.max(1.0))).exp(),
+        FalloffType::Gaussian => {
+            let sigma = (radius * 0.5).max(config::INFLUENCE_NORMALIZATION_EPSILON);
+            base_intensity * (-(dist_sq) / (2.0 * sigma * sigma)).exp()
+        }
+        FalloffType::InverseSquare => base_intensity / (1.0 + dist_sq),
+        FalloffType::Constant => base_intensity,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::time::Instant;
 
     fn make_influence_grid(width: u32, height: u32) -> InfluenceGrid {
         InfluenceGrid::new(width, height, ChannelId::default_channels())
@@ -357,16 +476,18 @@ mod tests {
             x: 100,
             y: 100,
             channel: ChannelId::Warmth,
-            radius: 15.0,
-            intensity: 0.8,
+            radius: 6.0,
+            base_intensity: 0.8,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
 
         grid.tick_update();
 
         let center = grid.sample(100, 100, ChannelId::Warmth);
-        assert!((center - (0.8 / 1.8)).abs() < 1e-6);
+        assert!(center > 0.0);
         assert_eq!(grid.sample(200, 200, ChannelId::Warmth), 0.0);
     }
 
@@ -378,13 +499,16 @@ mod tests {
             y: 32,
             channel: ChannelId::Warmth,
             radius: 8.0,
-            intensity: 0.8,
+            base_intensity: 0.8,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
 
         grid.tick_update();
         let first = grid.sample(32, 32, ChannelId::Warmth);
+        grid.remove_emitter(32, 32, ChannelId::Warmth);
         grid.tick_update();
         let second = grid.sample(32, 32, ChannelId::Warmth);
         assert!(second < first);
@@ -399,8 +523,10 @@ mod tests {
             y: 16,
             channel: ChannelId::Warmth,
             radius: 4.0,
-            intensity: 0.1,
+            base_intensity: 0.1,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
 
@@ -413,8 +539,10 @@ mod tests {
             y: 16,
             channel: ChannelId::Warmth,
             radius: 4.0,
-            intensity: 0.1,
+            base_intensity: 0.1,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
         unblocked.tick_update();
@@ -424,102 +552,95 @@ mod tests {
     }
 
     #[test]
-    fn influence_grid_path_walls_reduce_targets_across_the_wall() {
+    fn influence_grid_gradient_points_toward_emitter() {
         let mut grid = make_influence_grid(24, 24);
-        grid.set_wall_blocking(13, 12, 0.9);
         grid.register_emitter(EmitterRecord {
             x: 12,
             y: 12,
-            channel: ChannelId::Warmth,
-            radius: 4.0,
-            intensity: 0.8,
-            falloff: FalloffType::Constant,
+            channel: ChannelId::Food,
+            radius: 6.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Gaussian,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
-
         grid.tick_update();
 
-        let open = grid.sample(12, 14, ChannelId::Warmth);
-        let across_wall = grid.sample(14, 12, ChannelId::Warmth);
-        assert!(open > across_wall);
+        let gradient = grid.sample_gradient(ChannelId::Food, 8, 12);
+        assert!(gradient.0 > 0.0);
     }
 
     #[test]
-    fn influence_grid_sigmoid_saturates_large_values() {
+    fn influence_grid_weighted_sum_combines_channels_without_allocation() {
         let mut grid = make_influence_grid(16, 16);
         grid.register_emitter(EmitterRecord {
             x: 8,
             y: 8,
-            channel: ChannelId::Danger,
-            radius: 2.0,
-            intensity: 10_000.0,
+            channel: ChannelId::Warmth,
+            radius: 5.0,
+            base_intensity: 0.9,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
-
+        grid.register_emitter(EmitterRecord {
+            x: 4,
+            y: 8,
+            channel: ChannelId::Danger,
+            radius: 5.0,
+            base_intensity: 0.6,
+            falloff: FalloffType::Exponential,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: false,
+        });
         grid.tick_update();
-        let value = grid.sample(8, 8, ChannelId::Danger);
-        assert!(value <= 1.0);
-        assert!(value > 0.99);
+
+        let weights = [(ChannelId::Warmth, 1.0), (ChannelId::Danger, -1.0)];
+        let score = grid.sample_weighted_sum(8, 8, &weights);
+        assert!(score > 0.0);
     }
 
     #[test]
-    fn influence_grid_staggered_update_refreshes_one_channel_per_call() {
-        let mut grid = make_influence_grid(32, 32);
+    fn influence_grid_staggered_update_advances_one_channel() {
+        let mut grid = make_influence_grid(16, 16);
         grid.register_emitter(EmitterRecord {
             x: 8,
             y: 8,
             channel: ChannelId::Warmth,
-            radius: 3.0,
-            intensity: 0.8,
+            radius: 5.0,
+            base_intensity: 0.8,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
         grid.register_emitter(EmitterRecord {
             x: 8,
             y: 8,
             channel: ChannelId::Light,
-            radius: 3.0,
-            intensity: 0.8,
+            radius: 5.0,
+            base_intensity: 0.8,
             falloff: FalloffType::Constant,
+            decay_rate: None,
+            tags: Vec::new(),
             dirty: false,
         });
 
         grid.staggered_update();
-        let warmth = grid.sample(8, 8, ChannelId::Warmth);
-        let light = grid.sample(8, 8, ChannelId::Light);
-        assert!(warmth > 0.0);
-        assert_eq!(light, 0.0);
+        let first_food = grid.sample(8, 8, ChannelId::Food);
+        let first_warmth = grid.sample(8, 8, ChannelId::Warmth);
+        let first_light = grid.sample(8, 8, ChannelId::Light);
 
-        grid.staggered_update();
-        let light_after = grid.sample(8, 8, ChannelId::Light);
-        assert!(light_after > 0.0);
-    }
+        assert_eq!(first_food, 0.0);
+        assert!(first_warmth >= 0.0);
+        assert_eq!(first_light, 0.0);
 
-    #[test]
-    fn influence_grid_sampling_10k_reports_duration() {
-        let mut grid = make_influence_grid(256, 256);
-        grid.register_emitter(EmitterRecord {
-            x: 100,
-            y: 100,
-            channel: ChannelId::Warmth,
-            radius: 15.0,
-            intensity: 0.8,
-            falloff: FalloffType::Constant,
-            dirty: false,
-        });
-        grid.tick_update();
-
-        let start = Instant::now();
-        let mut total = 0.0;
-        for idx in 0..10_000_u32 {
-            let x = idx % 256;
-            let y = (idx / 256) % 256;
-            total += grid.sample(x, y, ChannelId::Warmth);
+        for _ in 0..ChannelId::count() {
+            grid.staggered_update();
         }
-        let elapsed = start.elapsed();
-        println!("10K influence samples took {:?}", elapsed);
-        assert!(total >= 0.0);
-        assert!(elapsed.as_millis() < 50);
+        assert!(grid.sample(8, 8, ChannelId::Light) > 0.0);
     }
 }

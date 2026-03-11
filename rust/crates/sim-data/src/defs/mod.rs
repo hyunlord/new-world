@@ -18,7 +18,8 @@ pub use temperament::{
     TemperamentShiftRule,
 };
 pub use world_rules::{
-    RuleAgentModifier, RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, WorldRuleset,
+    InfluenceChannelRule, InfluenceClampPolicyDef, RuleAgentModifier, RuleResourceModifier,
+    RuleResourceSpawn, RuleSpecialZone, WorldRuleset,
 };
 
 #[cfg(test)]

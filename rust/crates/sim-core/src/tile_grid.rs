@@ -75,6 +75,13 @@ impl TileGrid {
         }
     }
 
+    /// Clears all structural layers and room ids in place.
+    pub fn clear(&mut self) {
+        for tile in &mut self.tiles {
+            *tile = StructuralTile::default();
+        }
+    }
+
     /// Sets the wall material and hp on a tile.
     pub fn set_wall(&mut self, x: u32, y: u32, material_id: impl Into<String>, wall_hp: f64) {
         let tile = self.get_mut(x, y);
@@ -137,5 +144,17 @@ mod tests {
         let grid = TileGrid::new(2, 2);
         let neighbors = grid.orthogonal_neighbors(0, 0);
         assert_eq!(neighbors, vec![(1, 0), (0, 1)]);
+    }
+
+    #[test]
+    fn tile_grid_clear_resets_structure_layers() {
+        let mut grid = TileGrid::new(3, 3);
+        grid.set_wall(1, 1, "stone", 12.0);
+        grid.set_floor(1, 2, "wood");
+        grid.clear();
+
+        assert!(grid.get(1, 1).wall_material.is_none());
+        assert!(grid.get(1, 2).floor_material.is_none());
+        assert_eq!(grid.get(1, 1).wall_hp, 0.0);
     }
 }

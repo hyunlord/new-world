@@ -30,7 +30,7 @@ pub use config::SimConfig;
 pub use effect::{EffectFlag, EffectPrimitive, EffectStat, InfluenceEmitter, InfluenceReceiver};
 pub use enums::*;
 pub use ids::{BuildingId, EntityId, SettlementId, SkillId, TechId, TraitId};
-pub use influence_channel::{ChannelId, ChannelMeta};
+pub use influence_channel::{ChannelClampPolicy, ChannelId, ChannelMeta};
 pub use influence_grid::{EmitterRecord, FalloffType, InfluenceGrid};
 pub use room::{assign_room_ids, detect_rooms, Room, RoomId, RoomRole};
 pub use settlement::Settlement;

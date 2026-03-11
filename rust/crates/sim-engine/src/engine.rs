@@ -17,7 +17,7 @@ use sim_core::{
     Building, BuildingId, CausalLog, ChannelId, EntityId, GameCalendar, InfluenceGrid, Room,
     Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
 };
-use sim_data::{NameGenerator, PersonalityDistribution};
+use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
 /// SimEngine — the central tick loop coordinator.
 ///
 /// Owns the ECS world, shared simulation resources, and the registered system list.
@@ -30,6 +30,7 @@ use sim_data::{NameGenerator, PersonalityDistribution};
 /// Seed the RNG at construction to get reproducible runs.
 /// System ordering is stable (sorted by priority at registration time).
 use std::collections::HashMap;
+use std::sync::Arc;
 
 /// A recorded chronicle event (world or personal history).
 #[derive(Debug, Clone)]
@@ -126,6 +127,8 @@ pub struct SimResources {
     pub personality_distribution: Option<PersonalityDistribution>,
     /// Name generator — generates culturally-appropriate names for new agents.
     pub name_generator: Option<NameGenerator>,
+    /// Authoritative immutable runtime registry loaded from RON at startup.
+    pub data_registry: Option<Arc<DataRegistry>>,
     /// Double-buffered spatial influence field shared across all systems.
     pub influence_grid: InfluenceGrid,
     /// Shared structural tile grid scaffold for future building/room systems.
@@ -179,6 +182,7 @@ impl SimResources {
             chronicle_personal_events: HashMap::new(),
             personality_distribution: None,
             name_generator: None,
+            data_registry: None,
             influence_grid,
             tile_grid,
             rooms: Vec::new(),
@@ -718,8 +722,10 @@ mod tests {
                 y: 4,
                 channel: ChannelId::Warmth,
                 radius: 3.0,
-                intensity: 0.8,
+                base_intensity: 0.8,
                 falloff: FalloffType::Constant,
+                decay_rate: None,
+                tags: Vec::new(),
                 dirty: false,
             });
 

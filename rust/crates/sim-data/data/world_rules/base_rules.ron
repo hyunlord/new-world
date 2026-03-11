@@ -8,5 +8,31 @@
         special_zones: [],
         special_resources: [],
         agent_modifiers: [],
+        influence_channels: [
+            InfluenceChannelRule(
+                channel: "food",
+                decay_rate: Some(0.18),
+                default_radius: Some(7.0),
+                max_radius: Some(14),
+                wall_blocking_sensitivity: Some(0.2),
+                clamp_policy: Some(UnitInterval),
+            ),
+            InfluenceChannelRule(
+                channel: "warmth",
+                decay_rate: Some(0.12),
+                default_radius: Some(6.0),
+                max_radius: Some(10),
+                wall_blocking_sensitivity: Some(0.75),
+                clamp_policy: Some(UnitInterval),
+            ),
+            InfluenceChannelRule(
+                channel: "danger",
+                decay_rate: Some(0.22),
+                default_radius: Some(5.0),
+                max_radius: Some(10),
+                wall_blocking_sensitivity: Some(0.1),
+                clamp_policy: Some(UnitInterval),
+            ),
+        ],
     ),
 ]
