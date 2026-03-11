@@ -45,7 +45,8 @@ pub mod system_trait;
 
 pub use command::{Command, CommandQueue};
 pub use chronicle::{
-    ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, ChronicleLog,
+    ChronicleCluster, ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude,
+    ChronicleEventType, ChronicleLog, ChronicleSummary, ChronicleTimeline,
 };
 pub use engine::{
     AgentNeedDiagnostics, ConstructionDiagnostics, DiagnosticDelta, RuntimeStatsSnapshot,

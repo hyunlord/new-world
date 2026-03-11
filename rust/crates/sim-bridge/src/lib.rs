@@ -50,8 +50,8 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelClampPolicy, ChannelId, ChannelMeta, EntityId, Settlement, SettlementId};
 use sim_engine::{
-    AgentSnapshot, ChronicleEvent, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest,
-    SimEvent, SimEventType,
+    AgentSnapshot, ChronicleEvent, ChronicleSummary, EngineSnapshot, GameEvent,
+    LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -308,6 +308,34 @@ fn chronicle_event_to_dict(event: &ChronicleEvent) -> VarDictionary {
     dict.set("influence_magnitude", event.magnitude.influence as f32);
     dict.set("steering_magnitude", event.magnitude.steering as f32);
     dict.set("significance", event.magnitude.significance as f32);
+    dict
+}
+
+fn chronicle_summary_to_dict(summary: &ChronicleSummary) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("tick", summary.end_tick as i64);
+    dict.set("start_tick", summary.start_tick as i64);
+    dict.set("end_tick", summary.end_tick as i64);
+    dict.set("event_type", format!("{:?}", summary.event_type));
+    dict.set(
+        "entity_id",
+        summary.entity_id.map(|entity_id| entity_id.0 as i64).unwrap_or(-1),
+    );
+    dict.set("cause_id", summary.cause.id());
+    dict.set("title_key", summary.title.clone());
+    dict.set("description", summary.description.clone());
+    dict.set("l10n_key", summary.description.clone());
+    dict.set("tile_x", summary.tile_x);
+    dict.set("tile_y", summary.tile_y);
+    dict.set("significance", summary.significance as f32);
+    let mut params = VarDictionary::new();
+    for (key, value) in &summary.params {
+        params.set(key.as_str(), value.as_str());
+    }
+    dict.set("l10n_params", params);
+    if let Some(agent_name) = summary.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    }
     dict
 }
 
@@ -1295,6 +1323,23 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn runtime_get_chronicle_timeline(&self, limit: i64) -> Array<VarDictionary> {
+        let mut out: Array<VarDictionary> = Array::new();
+        let Some(state) = self.state.as_ref() else {
+            return out;
+        };
+        for summary in state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .recent_summaries(limit.max(0) as usize)
+        {
+            out.push(&chronicle_summary_to_dict(summary));
+        }
+        out
+    }
+
+    #[func]
     fn runtime_register_default_systems(&mut self) -> i64 {
         let Some(state) = self.state.as_mut() else {
             return 0;
@@ -1571,6 +1616,16 @@ impl WorldSimRuntime {
             dict.set("recent_dominant_cause_key", "");
             dict.set("recent_influence_channel_id", "");
         }
+        let recent_summaries = state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .query_by_entity(entity_id, 3);
+        let mut chronicle_summary_arr: Array<VarDictionary> = Array::new();
+        for summary in recent_summaries {
+            chronicle_summary_arr.push(&chronicle_summary_to_dict(summary));
+        }
+        dict.set("recent_chronicle_summaries", chronicle_summary_arr);
 
         dict
     }
