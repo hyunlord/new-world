@@ -19,6 +19,7 @@ mod runtime_dict;
 mod runtime_events;
 mod runtime_queries;
 mod runtime_registry;
+mod runtime_system;
 mod snapshot_buffer;
 mod ws2_codec;
 
@@ -69,13 +70,11 @@ pub use pathfinding_core::{
     reset_pathfind_backend_dispatch_counts, resolve_pathfind_backend_mode,
     set_pathfind_backend_mode, PathfindError, PathfindInput,
 };
-use runtime_commands::{apply_commands_v2, clear_registry, registry_snapshot};
+use runtime_commands::{apply_commands_v2, registry_snapshot};
 use runtime_registry::{
     clamp_speed_index, load_legacy_runtime_bootstrap, parse_runtime_config,
-    runtime_speed_multiplier, RuntimeState,
+    register_default_runtime_systems, runtime_speed_multiplier, RuntimeState,
 };
-#[cfg(test)]
-use runtime_registry::{runtime_supports_rust_system, runtime_system_key_from_name};
 use snapshot_buffer::SnapshotBuffer;
 
 use runtime_events::game_event_to_v2_dict;
@@ -1229,6 +1228,14 @@ impl WorldSimRuntime {
     }
 
     #[func]
+    fn runtime_register_default_systems(&mut self) -> i64 {
+        let Some(state) = self.state.as_mut() else {
+            return 0;
+        };
+        register_default_runtime_systems(state) as i64
+    }
+
+    #[func]
     fn runtime_get_compute_domain_modes(&self) -> VarDictionary {
         let mut out = VarDictionary::new();
         let Some(state) = self.state.as_ref() else {
@@ -1238,14 +1245,6 @@ impl WorldSimRuntime {
             out.set(domain.as_str(), mode.as_str());
         }
         out
-    }
-
-    #[func]
-    fn runtime_clear_registry(&mut self) {
-        let Some(state) = self.state.as_mut() else {
-            return;
-        };
-        clear_registry(state);
     }
 
     #[func]
@@ -5621,8 +5620,8 @@ mod tests {
         pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
         pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
-        resolve_pathfind_backend_mode, runtime_supports_rust_system, runtime_system_key_from_name,
-        set_pathfind_backend_mode, NarrativeDisplayData, PathfindError, PathfindInput,
+        resolve_pathfind_backend_mode, set_pathfind_backend_mode, NarrativeDisplayData,
+        PathfindError, PathfindInput,
     };
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
@@ -6327,73 +6326,6 @@ mod tests {
             }),
             super::runtime_events::EVENT_TYPE_ID_ERA_ADVANCED
         );
-    }
-
-    #[test]
-    fn runtime_system_key_normalizes_script_paths() {
-        assert_eq!(
-            runtime_system_key_from_name("res://scripts/systems/record/stats_recorder.gd"),
-            "stats_recorder"
-        );
-        assert_eq!(
-            runtime_system_key_from_name("res:\\scripts\\systems\\record\\stats_recorder.gd"),
-            "stats_recorder"
-        );
-        assert_eq!(
-            runtime_system_key_from_name("stats_recorder"),
-            "stats_recorder"
-        );
-    }
-
-    #[test]
-    fn runtime_supports_expected_ported_systems() {
-        assert!(runtime_supports_rust_system("resource_regen_system"));
-        assert!(runtime_supports_rust_system("upper_needs_system"));
-        assert!(runtime_supports_rust_system("needs_system"));
-        assert!(runtime_supports_rust_system("stress_system"));
-        assert!(runtime_supports_rust_system("emotion_system"));
-        assert!(runtime_supports_rust_system("reputation_system"));
-        assert!(runtime_supports_rust_system("social_event_system"));
-        assert!(runtime_supports_rust_system("morale_system"));
-        assert!(runtime_supports_rust_system("value_system"));
-        assert!(runtime_supports_rust_system("network_system"));
-        assert!(runtime_supports_rust_system("occupation_system"));
-        assert!(runtime_supports_rust_system("contagion_system"));
-        assert!(runtime_supports_rust_system("age_system"));
-        assert!(runtime_supports_rust_system("job_assignment_system"));
-        assert!(runtime_supports_rust_system("mortality_system"));
-        assert!(runtime_supports_rust_system("mental_break_system"));
-        assert!(runtime_supports_rust_system("trauma_scar_system"));
-        assert!(runtime_supports_rust_system("trait_violation_system"));
-        assert!(runtime_supports_rust_system("job_satisfaction_system"));
-        assert!(runtime_supports_rust_system("economic_tendency_system"));
-        assert!(runtime_supports_rust_system("intelligence_system"));
-        assert!(runtime_supports_rust_system("memory_system"));
-        assert!(runtime_supports_rust_system("coping_system"));
-        assert!(runtime_supports_rust_system("child_stress_processor"));
-        assert!(runtime_supports_rust_system("steering_system"));
-        assert!(runtime_supports_rust_system("movement_system"));
-        assert!(runtime_supports_rust_system("childcare_system"));
-        assert!(runtime_supports_rust_system("leader_system"));
-        assert!(runtime_supports_rust_system("title_system"));
-        assert!(runtime_supports_rust_system("stratification_monitor"));
-        assert!(runtime_supports_rust_system("tension_system"));
-        assert!(runtime_supports_rust_system("building_effect_system"));
-        assert!(runtime_supports_rust_system("migration_system"));
-        assert!(runtime_supports_rust_system("population_system"));
-        assert!(runtime_supports_rust_system("tech_utilization_system"));
-        assert!(runtime_supports_rust_system("tech_maintenance_system"));
-        assert!(runtime_supports_rust_system("tech_discovery_system"));
-        assert!(runtime_supports_rust_system("tech_propagation_system"));
-        assert!(runtime_supports_rust_system("gathering_system"));
-        assert!(runtime_supports_rust_system("construction_system"));
-        assert!(runtime_supports_rust_system("family_system"));
-        assert!(runtime_supports_rust_system("intergenerational_system"));
-        assert!(runtime_supports_rust_system("parenting_system"));
-        assert!(runtime_supports_rust_system("stats_recorder"));
-        assert!(runtime_supports_rust_system("stat_sync_system"));
-        assert!(runtime_supports_rust_system("stat_threshold_system"));
-        assert!(runtime_supports_rust_system("behavior_system"));
     }
 
     #[test]

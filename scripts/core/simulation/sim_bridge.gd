@@ -347,6 +347,16 @@ func runtime_get_registry_snapshot() -> Array:
 	return []
 
 
+## Registers the authoritative default Rust runtime manifest and returns the entry count.
+func runtime_register_default_systems() -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return 0
+	if not runtime.has_method("runtime_register_default_systems"):
+		return 0
+	return int(runtime.call("runtime_register_default_systems"))
+
+
 ## Returns entity detail dictionary from Rust runtime.
 func runtime_get_entity_detail(entity_id: int) -> Dictionary:
 	var runtime: Object = _get_native_runtime()
@@ -436,16 +446,6 @@ func runtime_get_minimap_snapshot() -> Dictionary:
 	if result is Dictionary:
 		return result
 	return {}
-
-
-## Clears registered runtime system metadata.
-func runtime_clear_registry() -> void:
-	var runtime: Object = _get_native_runtime()
-	if runtime == null:
-		return
-	if not runtime.has_method("runtime_clear_registry"):
-		return
-	runtime.call("runtime_clear_registry")
 
 
 ## Returns runtime compute-domain modes snapshot.
