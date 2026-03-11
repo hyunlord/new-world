@@ -247,6 +247,14 @@ pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_DANGER_INFLUENCE_WEIGHT: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_WARMTH_INFLUENCE_WEIGHT: f64 = 0.95; // TODO(A-5): -> behavior/influence metadata
+/// Minimum cold-pressure required before explicit shelter bias activates.
+pub const STEERING_SHELTER_MIN_COLD_PRESSURE: f64 = 0.20; // TODO(A-5): -> behavior/influence metadata
+/// Extra local weight applied when a colder agent detects a warmer room tile nearby.
+pub const STEERING_SHELTER_ROOM_BIAS_WEIGHT: f64 = 0.80; // TODO(A-5): -> behavior/influence metadata
+/// Multiplicative preference applied to warmth scores on tiles with detected room ids.
+pub const STEERING_SHELTER_ROOM_WARMTH_MULTIPLIER: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
+/// Minimum local warmth-score improvement required before shelter bias changes movement.
+pub const STEERING_SHELTER_ROOM_MIN_SCORE_DELTA: f64 = 0.02; // TODO(A-5): -> behavior/influence metadata
 /// Local search radius in tiles for choosing a forage target from Food influence.
 pub const BEHAVIOR_FOOD_TARGET_INFLUENCE_RADIUS: i32 = 15;
 /// Minimum Food signal required before behavior commits to an influence-driven forage target.
