@@ -224,7 +224,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 52] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 58] = [
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatSync, priority: 1, tick_interval: 10 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::ResourceRegen, priority: 5, tick_interval: config::RESOURCE_REGEN_TICK_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Childcare, priority: 8, tick_interval: 2 },
@@ -274,6 +274,12 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 52] = [
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StratificationMonitor, priority: 90, tick_interval: config::STRAT_TICK_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatsRecorder, priority: 90, tick_interval: 200 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StorySifter, priority: config::STORY_SIFTER_PRIORITY as i32, tick_interval: config::STORY_SIFTER_TICK_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::SettlementCulture, priority: 95, tick_interval: 100 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::PersonalityGenerator, priority: 97, tick_interval: 100 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Attachment, priority: 98, tick_interval: 100 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::AceTracker, priority: 99, tick_interval: 100 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Trait, priority: 100, tick_interval: 10 },
+    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Chronicle, priority: 101, tick_interval: 1 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmResponse, priority: config::LLM_RESPONSE_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_RESPONSE_SYSTEM_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmTimeout, priority: config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32 },
     DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmRequest, priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32 },
@@ -371,6 +377,8 @@ mod tests {
             assert!(ids.insert(spec.system_id));
             assert!(spec.tick_interval > 0);
         }
+        let all_ids: HashSet<RuntimeSystemId> = RuntimeSystemId::all().iter().copied().collect();
+        assert_eq!(ids, all_ids);
         assert_eq!(DEFAULT_RUNTIME_SYSTEMS[0].system_id, RuntimeSystemId::StatSync);
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,

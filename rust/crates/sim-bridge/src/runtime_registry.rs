@@ -303,8 +303,9 @@ mod tests {
 
         let count = register_default_runtime_systems(&mut state);
 
+        assert_eq!(count, RuntimeSystemId::all().len());
         assert_eq!(count, DEFAULT_RUNTIME_SYSTEMS.len());
-        assert_eq!(state.registered_systems.len(), DEFAULT_RUNTIME_SYSTEMS.len());
+        assert_eq!(state.registered_systems.len(), RuntimeSystemId::all().len());
         assert!(state
             .registered_systems
             .iter()
@@ -317,5 +318,13 @@ mod tests {
             .registered_systems
             .iter()
             .any(|entry| entry.system_id == RuntimeSystemId::StorySifter));
+        assert!(state
+            .registered_systems
+            .iter()
+            .any(|entry| entry.system_id == RuntimeSystemId::Chronicle));
+        assert!(state
+            .registered_systems
+            .iter()
+            .any(|entry| entry.system_id == RuntimeSystemId::Trait));
     }
 }
