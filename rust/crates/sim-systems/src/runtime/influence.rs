@@ -442,6 +442,49 @@ mod tests {
 
         assert!(resources.influence_grid.sample(2, 2, ChannelId::Food) > 0.0);
         assert!(resources.influence_grid.sample(3, 4, ChannelId::Danger) > 0.0);
+        assert_eq!(resources.influence_grid.active_emitter_count(), 2);
+    }
+
+    #[test]
+    fn influence_runtime_system_refreshes_food_emitters_without_stale_leaks() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.map.get_mut(2, 2).resources.push(sim_core::world::TileResource {
+            resource_type: ResourceType::Food,
+            amount: 3.0,
+            max_amount: 3.0,
+            regen_rate: 0.0,
+        });
+
+        let mut system =
+            InfluenceRuntimeSystem::new(config::INFLUENCE_SYSTEM_PRIORITY, config::INFLUENCE_SYSTEM_INTERVAL);
+        system.run(&mut world, &mut resources, 1);
+        assert_eq!(resources.influence_grid.active_emitter_count(), 1);
+
+        resources.map.get_mut(2, 2).resources.clear();
+        system.run(&mut world, &mut resources, 2);
+        assert_eq!(resources.influence_grid.active_emitter_count(), 0);
+    }
+
+    #[test]
+    fn influence_runtime_system_food_signal_is_stronger_near_source_than_far() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.map.get_mut(2, 2).resources.push(sim_core::world::TileResource {
+            resource_type: ResourceType::Food,
+            amount: 3.0,
+            max_amount: 3.0,
+            regen_rate: 0.0,
+        });
+
+        let mut system =
+            InfluenceRuntimeSystem::new(config::INFLUENCE_SYSTEM_PRIORITY, config::INFLUENCE_SYSTEM_INTERVAL);
+        system.run(&mut world, &mut resources, 1);
+        resources.influence_grid.tick_update();
+
+        let near = resources.influence_grid.sample(3, 2, ChannelId::Food);
+        let far = resources.influence_grid.sample(7, 2, ChannelId::Food);
+        assert!(near > far);
     }
 
     #[test]

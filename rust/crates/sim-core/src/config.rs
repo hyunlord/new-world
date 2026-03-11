@@ -247,6 +247,10 @@ pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_DANGER_INFLUENCE_WEIGHT: f64 = 1.35; // TODO(A-5): -> behavior/influence metadata
 pub const STEERING_WARMTH_INFLUENCE_WEIGHT: f64 = 0.95; // TODO(A-5): -> behavior/influence metadata
+/// Local search radius in tiles for choosing a forage target from Food influence.
+pub const BEHAVIOR_FOOD_TARGET_INFLUENCE_RADIUS: i32 = 15;
+/// Minimum Food signal required before behavior commits to an influence-driven forage target.
+pub const BEHAVIOR_FOOD_TARGET_MIN_SIGNAL: f64 = 0.02;
 pub const MOOD_SPEED_MULTIPLIERS: [f64; 5] = [0.7, 0.8, 0.9, 1.0, 1.1];
 pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
 /// Maximum number of persisted narrative events kept in memory.

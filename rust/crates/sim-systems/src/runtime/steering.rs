@@ -487,6 +487,7 @@ fn clamp_magnitude(x: f64, y: f64, max_magnitude: f64) -> (f64, f64) {
 
 #[cfg(test)]
 mod tests {
+    use crate::runtime::MovementRuntimeSystem;
     use hecs::World;
     use rand::rngs::SmallRng;
     use rand::SeedableRng;
@@ -652,5 +653,120 @@ mod tests {
 
         assert!(force.0 < 0.0);
         assert_eq!(cause.expect("danger cause").kind, "danger_gradient");
+    }
+
+    #[test]
+    fn influence_force_scales_with_hunger_pressure() {
+        let mut resources = resources();
+        resources.influence_grid.register_emitter(EmitterRecord {
+            x: 10,
+            y: 8,
+            channel: ChannelId::Food,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Gaussian,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+        resources.influence_grid.tick_update();
+
+        let mut high_hunger = Needs::default();
+        high_hunger.set(NeedType::Hunger, 0.1);
+        let mut low_hunger = Needs::default();
+        low_hunger.set(NeedType::Hunger, 0.85);
+
+        let (high_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&high_hunger),
+            None,
+            Some(&Temperament::default()),
+        );
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&low_hunger),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        let high_magnitude = (high_force.0 * high_force.0 + high_force.1 * high_force.1).sqrt();
+        let low_magnitude = (low_force.0 * low_force.0 + low_force.1 * low_force.1).sqrt();
+        assert!(high_magnitude > low_magnitude);
+    }
+
+    #[test]
+    fn influence_force_has_no_false_food_attraction_without_signal() {
+        let resources = resources();
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.05);
+
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(6, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&needs),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert_eq!(force, (0.0, 0.0));
+        assert!(cause.is_none());
+    }
+
+    #[test]
+    fn hungry_agent_moves_closer_to_food_than_sated_agent() {
+        fn run_entity_step(hunger: f64) -> (f64, ActionType) {
+            let mut world = World::new();
+            let mut resources = resources();
+            resources.influence_grid.register_emitter(EmitterRecord {
+                x: 12,
+                y: 8,
+                channel: ChannelId::Food,
+                radius: 5.0,
+                base_intensity: 0.9,
+                falloff: FalloffType::Gaussian,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            });
+            resources.influence_grid.tick_update();
+
+            let mut needs = Needs::default();
+            needs.set(NeedType::Hunger, hunger);
+            let entity = world.spawn((
+                Position::new(6, 8),
+                Behavior::default(),
+                InfluenceReceiver::default(),
+                needs,
+                SteeringParams::default(),
+                Age {
+                    stage: GrowthStage::Adult,
+                    ..Age::default()
+                },
+                Temperament::default(),
+            ));
+
+            let mut behavior_system = crate::runtime::BehaviorRuntimeSystem::new(20, 1);
+            behavior_system.run(&mut world, &mut resources, 1);
+            let mut steering = SteeringRuntimeSystem::new(config::STEERING_SYSTEM_PRIORITY, 1);
+            steering.run(&mut world, &mut resources, 1);
+            let mut movement =
+                MovementRuntimeSystem::new(config::MOVEMENT_SYSTEM_PRIORITY, config::MOVEMENT_TICK_INTERVAL);
+            movement.run(&mut world, &mut resources, 1);
+
+            let position = world.get::<&Position>(entity).expect("position should exist");
+            let behavior = world.get::<&Behavior>(entity).expect("behavior should exist");
+            (position.x, behavior.current_action)
+        }
+
+        let (hungry_x, hungry_action) = run_entity_step(0.10);
+        let (sated_x, sated_action) = run_entity_step(0.85);
+        assert_eq!(hungry_action, ActionType::Forage);
+        assert_ne!(sated_action, ActionType::Forage);
+        assert!(hungry_x > sated_x);
     }
 }
