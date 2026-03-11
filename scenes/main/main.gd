@@ -5,7 +5,6 @@ const WorldData = preload("res://scripts/core/world/world_data.gd")
 const WorldGenerator = preload("res://scripts/core/world/world_generator.gd")
 const EntityManager = preload("res://scripts/core/entity/entity_manager.gd")
 const ResourceMap = preload("res://scripts/core/world/resource_map.gd")
-const Pathfinder = preload("res://scripts/core/world/pathfinder.gd")
 const BuildingManager = preload("res://scripts/core/settlement/building_manager.gd")
 const SaveManager = preload("res://scripts/core/simulation/save_manager.gd")
 const SettlementManager = preload("res://scripts/core/settlement/settlement_manager.gd")
@@ -21,7 +20,6 @@ var world_data: RefCounted
 var world_generator: RefCounted
 var entity_manager: RefCounted
 var resource_map: RefCounted
-var pathfinder: RefCounted
 var building_manager: RefCounted
 var save_manager: RefCounted
 var settlement_manager: RefCounted
@@ -65,9 +63,6 @@ func _ready() -> void:
 	entity_manager = EntityManager.new()
 	entity_manager.init(world_data, sim_engine.rng)
 
-	# Initialize pathfinder
-	pathfinder = Pathfinder.new()
-
 	# Initialize building manager
 	building_manager = BuildingManager.new()
 
@@ -92,7 +87,7 @@ func _ready() -> void:
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
-	building_renderer.init(building_manager, settlement_manager, sim_engine)
+	building_renderer.init(null, null, sim_engine)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, null, relationship_manager, reputation_manager)
 	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
@@ -189,7 +184,6 @@ func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
 	)
 
 	ChronicleSystem.init(entity_manager)
-	camera.set_entity_manager(entity_manager)
 	if camera.has_method("set_sim_engine"):
 		camera.call("set_sim_engine", sim_engine)
 
