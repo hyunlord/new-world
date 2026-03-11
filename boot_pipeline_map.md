@@ -1,97 +1,98 @@
-# Godot Boot Pipeline Map
+# Boot Pipeline Map
 
 ## Scope
+
 - [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot)
 - [scenes/main/main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd)
 - [scripts/core/simulation/simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd)
 - [scripts/core/simulation/sim_bridge.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/sim_bridge.gd)
-- active autoloads declared in [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot)
+- [rust/crates/sim-bridge/src/lib.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/lib.rs)
+- [rust/crates/sim-bridge/src/runtime_registry.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/runtime_registry.rs)
 
 ## Boot Order
-1. Godot starts and loads autoloads from [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot).
-2. Main scene [scenes/main/main.tscn](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.tscn) enters [scenes/main/main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd).
-3. [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd) builds shell/bootstrap objects:
-   - `SimulationEngine`
-   - `WorldData`
-   - `ResourceMap`
-   - `EntityManager`
-   - `BuildingManager`
-   - `SettlementManager`
-   - `RelationshipManager`
-   - `ReputationManager`
-   - `TechTreeManager`
-4. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_init(seed, config_json)`.
-5. Rust `sim-bridge` initializes and loads the authoritative RON registry before any world bootstrap.
-6. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_register_default_systems()`.
-7. [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd) validates the runtime registry snapshot and only warns if it is not fully Rust-backed.
-8. Setup scene confirms spawn/bootstrap parameters.
-9. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_bootstrap_world(...)`.
-10. Frame stepping runs through `update(delta)` -> `runtime_tick_frame(...)` -> Rust ECS tick.
 
-## Autoload Scripts
-Autoloads in [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot):
-- `GameConfig` — config mirror / startup constants
-- `SpeciesManager` — species helper
-- `SimulationBus` — legacy UI event relay
-- `SimulationBusV2` — runtime command/event relay
-- `EventLogger` — event observer/log sink
-- `DeceasedRegistry` — deceased archive / lookup helper
-- `ChronicleSystem` — chronicle observer store
-- `NameGenerator` — naming helper
-- `Locale` — localization
-- `StatQuery` — stat lookup helper
-- `SimBridge` — GDExtension wrapper
-- `ComputeBackend` — compute/pathfinding mode shell
-- `HarnessServer` — test harness
+1. Godot loads autoloads from [project.godot](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/project.godot).
+2. Main scene enters [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd).
+3. [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd) creates [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd).
+4. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_init(seed, config_json)`.
+5. Rust runtime loads authoritative RON data during `runtime_init`.
+6. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_register_default_systems()`.
+7. [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd) validates the Rust-owned registry immediately and aborts boot if authority is not Rust-backed.
+8. Only after that validation passes does Godot build shell/bootstrap helpers such as `WorldData`, `ResourceMap`, `EntityManager`, `BuildingManager`, `SettlementManager`, and UI managers.
+9. Setup UI submits bootstrap payload.
+10. [simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) calls `runtime_bootstrap_world(...)`.
+11. After bootstrap, `main.gd` still wires `ChronicleSystem.init(entity_manager)` and `SimulationBus` chronicle hooks for observer/compatibility behavior.
+12. Frame stepping runs through `update(delta)` -> `runtime_tick_frame(...)` -> Rust ECS tick.
+
+## Autoload Script List
+
+- `GameConfig`
+- `SpeciesManager`
+- `SimulationBus`
+- `SimulationBusV2`
+- `EventLogger`
+- `DeceasedRegistry`
+- `ChronicleSystem`
+- `NameGenerator`
+- `Locale`
+- `StatQuery`
+- `SimBridge`
+- `ComputeBackend`
+- `HarnessServer`
 
 ## Scene Preload Chain
-Active preloads in [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd):
-- `simulation_engine.gd`
-- world/map/bootstrap helpers
-- save/load helpers
-- settlement/social bootstrap managers
-- UI/pause/setup classes
 
-Removed from active boot authority:
-- legacy preloads from `scripts/systems/**`
-- `scripts/ai/behavior_system.gd`
+### Active startup preloads in [main.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scenes/main/main.gd)
 
-## Bridge Initialization
+- runtime wrapper: `simulation_engine.gd`
+- setup shell: `world_setup.gd`
+- world/bootstrap helpers: `world_data.gd`, `world_generator.gd`, `resource_map.gd`
+- legacy/shadow helper managers: `entity_manager.gd`, `building_manager.gd`, `settlement_manager.gd`, `relationship_manager.gd`, `reputation_manager.gd`
+- UI shell helpers: `pause_menu.gd`, `ambience_manager.gd`
+
+### Not part of active boot authority
+
+- no preload from `scripts/systems/**`
+- no preload from `scripts/ai/**`
+
+## sim-bridge Initialization
+
 ### Godot side
-[scripts/core/simulation/sim_bridge.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/sim_bridge.gd):
-- resolves the native runtime singleton
-- forwards `runtime_init`
-- forwards `runtime_register_default_systems`
-- forwards `runtime_bootstrap_world`
-- forwards `runtime_tick_frame`
-- exposes read/query methods for UI/rendering
 
-[scripts/core/simulation/simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd):
-- assembles startup config
-- initializes the native runtime
-- validates the registry snapshot
-- ticks Rust every frame
-- relays commands/events via `SimulationBusV2`
+[sim_bridge.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/sim_bridge.gd) provides:
+
+- `runtime_init`
+- `runtime_register_default_systems`
+- `runtime_bootstrap_world`
+- `runtime_tick_frame`
+- runtime getters for snapshots/details/debug
+
+[simulation_engine.gd](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/scripts/core/simulation/simulation_engine.gd) provides:
+
+- startup config packaging
+- runtime init
+- default system registration
+- frame tick relay
+- command/event relay via `SimulationBusV2`
 
 ### Rust side
-[rust/crates/sim-bridge/src/lib.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/lib.rs):
-- exposes `runtime_init`
-- exposes `runtime_register_default_systems`
-- exposes `runtime_bootstrap_world`
-- exposes `runtime_tick_frame`
 
-[rust/crates/sim-bridge/src/runtime_system.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/runtime_system.rs):
-- defines typed `RuntimeSystemId`
-- defines the authoritative default runtime manifest
+[lib.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/lib.rs) exposes the runtime entrypoints.
 
-[rust/crates/sim-bridge/src/runtime_registry.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/runtime_registry.rs):
-- stores typed runtime registry entries
-- registers only Rust-backed systems in the boot manifest
+[runtime_registry.rs](/Users/rexxa/github/new-world-wt/codex-refactor-ws-ref-004a/rust/crates/sim-bridge/src/runtime_registry.rs) owns runtime state and typed registry entries.
 
-## Current Boot Authority Statement
-The active boot pipeline is authoritative when all are true:
-- Godot starts the runtime but does not register simulation systems itself.
-- Rust loads the RON registry during runtime init.
-- Rust registers the default scheduler manifest.
-- Rust owns frame stepping through `runtime_tick_frame`.
-- Godot only boots shell/UI/render/bootstrap layers and reads runtime state through the bridge.
+## Rust Runtime Initialization
+
+- first runtime state creation: `RuntimeState::from_seed(...)`
+- first ECS world creation: inside Rust runtime state/engine setup during `runtime_init`
+- first authoritative registry load: `DataRegistry::load_from_directory(...)`
+- first simulation scheduler registration: `runtime_register_default_systems()`
+- first simulation tick location: Rust `runtime_tick_frame(...)`
+
+## Boot Truth
+
+- active boot registry authority: Rust
+- active simulation tick authority: Rust
+- active bridge boundary: Godot -> `sim-bridge` -> Rust ECS
+- residual shadow/bootstrap managers and chronicle/bus observer hookups still exist, but boot now refuses to continue if the Rust registry authority check fails
+- boot is Rust-authoritative, not pure Rust-only

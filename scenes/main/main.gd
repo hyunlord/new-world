@@ -49,6 +49,10 @@ func _ready() -> void:
 	# Initialize simulation engine
 	sim_engine = SimulationEngine.new()
 	sim_engine.init_with_seed(seed_value)
+	var registry_validation: Dictionary = sim_engine.validate_runtime_registry()
+	if not bool(registry_validation.get("count_match", false)) or not bool(registry_validation.get("all_rust", false)):
+		push_error("[Main] Rust runtime registry authority validation failed; aborting boot.")
+		return
 
 	# Generate world
 	world_data = WorldData.new()
@@ -81,9 +85,6 @@ func _ready() -> void:
 	reputation_manager = ReputationManagerScript.new()
 	tech_tree_manager = TechTreeManagerScript.new()
 	tech_tree_manager.load_all()
-	var registry_validation: Dictionary = sim_engine.validate_runtime_registry()
-	if not bool(registry_validation.get("count_match", false)) or not bool(registry_validation.get("all_rust", false)):
-		push_warning("[Main] Rust runtime registry did not initialize cleanly.")
 
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
