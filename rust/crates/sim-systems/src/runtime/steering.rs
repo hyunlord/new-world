@@ -1,7 +1,7 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
+    Age, Behavior, Emotion, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
     Temperament,
 };
 use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
@@ -63,6 +63,7 @@ impl SimSystem for SteeringRuntimeSystem {
                 Option<&Personality>,
                 Option<&InfluenceReceiver>,
                 Option<&Needs>,
+                Option<&Emotion>,
                 Option<&Stress>,
                 Option<&Temperament>,
                 Option<&Age>,
@@ -76,6 +77,7 @@ impl SimSystem for SteeringRuntimeSystem {
                     personality_opt,
                     receiver_opt,
                     needs_opt,
+                    emotion_opt,
                     stress_opt,
                     temperament_opt,
                     age_opt,
@@ -113,6 +115,7 @@ impl SimSystem for SteeringRuntimeSystem {
                     position,
                     receiver_opt,
                     needs_opt,
+                    emotion_opt,
                     stress_opt,
                     temperament_opt,
                 );
@@ -203,6 +206,7 @@ fn influence_force_for_entity(
     position: &Position,
     receiver_opt: Option<&InfluenceReceiver>,
     needs_opt: Option<&Needs>,
+    emotion_opt: Option<&Emotion>,
     stress_opt: Option<&Stress>,
     temperament_opt: Option<&Temperament>,
 ) -> ((f64, f64), Option<InfluenceCause>) {
@@ -222,10 +226,15 @@ fn influence_force_for_entity(
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Warmth))
         .unwrap_or(0.0)
         .clamp(0.0, 1.0);
-    let danger_drive = needs_opt
+    let safety_drive = needs_opt
         .map(|needs| 1.0 - needs.get(sim_core::NeedType::Safety))
         .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    let fear_drive = emotion_opt
+        .map(|emotion| emotion.get(sim_core::EmotionType::Fear))
+        .unwrap_or(0.0)
         .max(stress_opt.map(|stress| stress.level).unwrap_or(0.0))
+        .max(safety_drive)
         .clamp(0.0, 1.0);
 
     let novelty_scale = temperament_opt
@@ -260,7 +269,7 @@ fn influence_force_for_entity(
         y,
         receiver_opt,
         ChannelId::Danger,
-        danger_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
+        fear_drive * config::STEERING_DANGER_INFLUENCE_WEIGHT * fear_scale,
     );
 
     let force_x = food.0 + warmth.0 - danger.0;
@@ -492,7 +501,7 @@ mod tests {
     use rand::rngs::SmallRng;
     use rand::SeedableRng;
     use sim_core::components::{
-        Age, Behavior, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
+        Age, Behavior, Emotion, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
         Temperament,
     };
     use sim_core::config::GameConfig;
@@ -615,6 +624,7 @@ mod tests {
             Some(&InfluenceReceiver::default()),
             Some(&needs),
             None,
+            None,
             Some(&Temperament::default()),
         );
 
@@ -647,6 +657,7 @@ mod tests {
             &Position::new(8, 8),
             Some(&InfluenceReceiver::default()),
             Some(&needs),
+            None,
             Some(&stress),
             Some(&Temperament::default()),
         );
@@ -656,21 +667,33 @@ mod tests {
     }
 
     #[test]
+<<<<<<< HEAD
     fn influence_force_scales_with_hunger_pressure() {
+=======
+    fn influence_force_scales_with_fear_pressure() {
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
         let mut resources = resources();
         resources.influence_grid.register_emitter(EmitterRecord {
             x: 10,
             y: 8,
+<<<<<<< HEAD
             channel: ChannelId::Food,
             radius: 4.0,
             base_intensity: 0.8,
             falloff: FalloffType::Gaussian,
+=======
+            channel: ChannelId::Danger,
+            radius: 4.0,
+            base_intensity: 0.8,
+            falloff: FalloffType::Exponential,
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
             decay_rate: None,
             tags: Vec::new(),
             dirty: true,
         });
         resources.influence_grid.tick_update();
 
+<<<<<<< HEAD
         let mut high_hunger = Needs::default();
         high_hunger.set(NeedType::Hunger, 0.1);
         let mut low_hunger = Needs::default();
@@ -689,16 +712,44 @@ mod tests {
             &Position::new(6, 8),
             Some(&InfluenceReceiver::default()),
             Some(&low_hunger),
+=======
+        let mut low_fear = Emotion::default();
+        *low_fear.get_mut(sim_core::EmotionType::Fear) = 0.05;
+        let mut high_fear = Emotion::default();
+        *high_fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&low_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+        let (high_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&high_fear),
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
             None,
             Some(&Temperament::default()),
         );
 
+<<<<<<< HEAD
         let high_magnitude = (high_force.0 * high_force.0 + high_force.1 * high_force.1).sqrt();
         let low_magnitude = (low_force.0 * low_force.0 + low_force.1 * low_force.1).sqrt();
+=======
+        let low_magnitude = (low_force.0 * low_force.0 + low_force.1 * low_force.1).sqrt();
+        let high_magnitude = (high_force.0 * high_force.0 + high_force.1 * high_force.1).sqrt();
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
         assert!(high_magnitude > low_magnitude);
     }
 
     #[test]
+<<<<<<< HEAD
     fn influence_force_has_no_false_food_attraction_without_signal() {
         let resources = resources();
         let mut needs = Needs::default();
@@ -709,6 +760,19 @@ mod tests {
             &Position::new(6, 8),
             Some(&InfluenceReceiver::default()),
             Some(&needs),
+=======
+    fn influence_force_has_no_false_danger_avoidance_without_signal() {
+        let resources = resources();
+        let mut fear = Emotion::default();
+        *fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            None,
+            Some(&fear),
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
             None,
             Some(&Temperament::default()),
         );
@@ -718,6 +782,7 @@ mod tests {
     }
 
     #[test]
+<<<<<<< HEAD
     fn hungry_agent_moves_closer_to_food_than_sated_agent() {
         fn run_entity_step(hunger: f64) -> (f64, ActionType) {
             let mut world = World::new();
@@ -728,10 +793,22 @@ mod tests {
                 channel: ChannelId::Food,
                 radius: 5.0,
                 base_intensity: 0.9,
+=======
+    fn danger_overrides_food_when_fear_is_high() {
+        let mut resources = resources();
+        resources.influence_grid.replace_emitters(vec![
+            EmitterRecord {
+                x: 11,
+                y: 8,
+                channel: ChannelId::Food,
+                radius: 5.0,
+                base_intensity: 0.8,
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
                 falloff: FalloffType::Gaussian,
                 decay_rate: None,
                 tags: Vec::new(),
                 dirty: true,
+<<<<<<< HEAD
             });
             resources.influence_grid.tick_update();
 
@@ -768,5 +845,53 @@ mod tests {
         assert_eq!(hungry_action, ActionType::Forage);
         assert_ne!(sated_action, ActionType::Forage);
         assert!(hungry_x > sated_x);
+=======
+            },
+            EmitterRecord {
+                x: 9,
+                y: 8,
+                channel: ChannelId::Danger,
+                radius: 4.0,
+                base_intensity: 0.95,
+                falloff: FalloffType::Exponential,
+                decay_rate: None,
+                tags: Vec::new(),
+                dirty: true,
+            },
+        ]);
+        resources.influence_grid.tick_update();
+
+        let mut hungry = Needs::default();
+        hungry.set(NeedType::Hunger, 0.10);
+        hungry.set(NeedType::Safety, 0.90);
+
+        let mut low_fear = Emotion::default();
+        *low_fear.get_mut(sim_core::EmotionType::Fear) = 0.05;
+        let mut high_fear = Emotion::default();
+        *high_fear.get_mut(sim_core::EmotionType::Fear) = 0.95;
+
+        let (low_force, _) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&hungry),
+            Some(&low_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+        let (high_force, cause) = influence_force_for_entity(
+            &resources,
+            &Position::new(8, 8),
+            Some(&InfluenceReceiver::default()),
+            Some(&hungry),
+            Some(&high_fear),
+            None,
+            Some(&Temperament::default()),
+        );
+
+        assert!(low_force.0 > 0.0);
+        assert!(high_force.0 < 0.0);
+        assert_eq!(cause.expect("danger should dominate").kind, "danger_gradient");
+>>>>>>> 9ad6746 ([t-000] add danger avoidance vertical slice)
     }
 }

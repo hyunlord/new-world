@@ -21,6 +21,7 @@
         size: (1, 1),
         influence_emissions: [
             InfluenceEmission(channel: "warmth", radius: 6.0, intensity: 0.8),
+            InfluenceEmission(channel: "danger", radius: 3.0, intensity: 0.35),
             InfluenceEmission(channel: "light", radius: 5.0, intensity: 0.6),
         ],
         role_contribution: Some("hearth"),

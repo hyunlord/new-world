@@ -363,6 +363,8 @@ pub const INFLUENCE_ROOM_OPEN_LEAK_PENALTY: f64 = 0.85;
 pub const INFLUENCE_FOOD_TILE_BASE_INTENSITY: f64 = 0.65;
 /// Base intensity emitted by one dangerous terrain tile.
 pub const INFLUENCE_DANGER_TILE_BASE_INTENSITY: f64 = 0.55;
+/// Raw danger intensity emitted by one completed campfire when registry data is unavailable.
+pub const INFLUENCE_CAMPFIRE_DANGER_INTENSITY: f64 = 0.35;
 /// Base warmth intensity emitted by one completed shelter when RON data is unavailable.
 pub const INFLUENCE_SHELTER_BASE_INTENSITY: f64 = 0.5;
 /// Per-entity causal ring-buffer capacity.

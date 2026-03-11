@@ -334,6 +334,7 @@ mod tests {
             .expect("expected fire_pit emissions");
 
         assert!(!emissions.is_empty());
+        assert!(emissions.iter().any(|emission| emission.channel == "danger"));
         assert!(registry.material_wall_blocking_hint("flint").is_some());
         assert!(registry.structure_completion_influence("lean_to_structure").is_some());
         assert!(registry.action_effects("forage").is_some());
