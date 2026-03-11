@@ -98,32 +98,24 @@ pub(crate) fn get_debug_summary(state: &RuntimeState) -> VarDictionary {
 pub(crate) fn get_system_perf(state: &RuntimeState) -> VarDictionary {
     let mut out = VarDictionary::new();
 
-    // Build priority lookup from registered_systems
-    let priority_map: std::collections::HashMap<&str, i32> = state
-        .registered_systems
-        .iter()
-        .map(|e| (e.system_id.registry_name(), e.priority))
-        .collect();
+    for registered in &state.registered_systems {
+        let us = state
+            .engine
+            .perf_tracker
+            .system_times
+            .get(registered.system_id.perf_label())
+            .copied()
+            .unwrap_or(0);
+        let section = priority_to_section(registered.priority);
+        let mut row = VarDictionary::new();
+        row.set("us", us as i64);
+        row.set("ms", us as f64 / 1000.0);
+        row.set("section", section.to_godot());
+        row.set("priority", registered.priority as i64);
+        row.set("interval", registered.tick_interval as i64);
+        row.set("system_id", registered.system_id as i64);
 
-    let interval_map: std::collections::HashMap<&str, i32> = state
-        .registered_systems
-        .iter()
-        .map(|e| (e.system_id.registry_name(), e.tick_interval))
-        .collect();
-
-    for (name, &us) in &state.engine.perf_tracker.system_times {
-        let priority = priority_map.get(name.as_str()).copied().unwrap_or(-1);
-        let interval = interval_map.get(name.as_str()).copied().unwrap_or(-1);
-        let section = priority_to_section(priority);
-
-        let mut entry = VarDictionary::new();
-        entry.set("us", us as i64);
-        entry.set("ms", us as f64 / 1000.0);
-        entry.set("section", section.to_godot());
-        entry.set("priority", priority as i64);
-        entry.set("interval", interval as i64);
-
-        out.set(name.as_str().to_godot(), entry.to_variant());
+        out.set(registered.system_id.display_label().to_godot(), row.to_variant());
     }
     out
 }
@@ -260,23 +252,24 @@ pub(crate) fn write_debug_snapshot(state: &RuntimeState) {
         "memory_estimate_kb": entity_count * 4,
     });
 
-    let priority_map: std::collections::HashMap<&str, i32> = state
-        .registered_systems
-        .iter()
-        .map(|e| (e.system_id.registry_name(), e.priority))
-        .collect();
-    let interval_map: std::collections::HashMap<&str, i32> = state
-        .registered_systems
-        .iter()
-        .map(|e| (e.system_id.registry_name(), e.tick_interval))
-        .collect();
     let mut system_perf: Map<String, Value> = Map::new();
-    for (name, &us) in &state.engine.perf_tracker.system_times {
-        let priority = priority_map.get(name.as_str()).copied().unwrap_or(-1);
-        let interval = interval_map.get(name.as_str()).copied().unwrap_or(-1);
+    for registered in &state.registered_systems {
+        let us = state
+            .engine
+            .perf_tracker
+            .system_times
+            .get(registered.system_id.perf_label())
+            .copied()
+            .unwrap_or(0);
         system_perf.insert(
-            name.clone(),
-            json!({ "us": us, "ms": us as f64 / 1000.0, "priority": priority, "interval": interval }),
+            registered.system_id.display_label().to_string(),
+            json!({
+                "system_id": registered.system_id as i64,
+                "us": us,
+                "ms": us as f64 / 1000.0,
+                "priority": registered.priority,
+                "interval": registered.tick_interval
+            }),
         );
     }
 

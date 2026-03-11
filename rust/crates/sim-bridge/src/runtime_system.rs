@@ -86,8 +86,75 @@ pub(crate) enum RuntimeSystemId {
 }
 
 impl RuntimeSystemId {
-    /// Returns the stable registry name exposed to debug/UI callers.
-    pub(crate) const fn registry_name(self) -> &'static str {
+    /// Returns a compact display label for debug/UI callers.
+    pub(crate) const fn display_label(self) -> &'static str {
+        match self {
+            Self::Reputation => "Reputation",
+            Self::SocialEvent => "SocialEvent",
+            Self::Morale => "Morale",
+            Self::Value => "Value",
+            Self::JobSatisfaction => "JobSatisfaction",
+            Self::EconomicTendency => "EconomicTendency",
+            Self::Intelligence => "Intelligence",
+            Self::Memory => "Memory",
+            Self::Coping => "Coping",
+            Self::Network => "Network",
+            Self::Occupation => "Occupation",
+            Self::Contagion => "Contagion",
+            Self::Age => "Age",
+            Self::JobAssignment => "JobAssignment",
+            Self::Mortality => "Mortality",
+            Self::MentalBreak => "MentalBreak",
+            Self::TraumaScar => "TraumaScar",
+            Self::TraitViolation => "TraitViolation",
+            Self::Emotion => "Emotion",
+            Self::Stress => "Stress",
+            Self::Needs => "Needs",
+            Self::UpperNeeds => "UpperNeeds",
+            Self::ResourceRegen => "ResourceRegen",
+            Self::ChildStressProcessor => "ChildStressProcessor",
+            Self::Steering => "Steering",
+            Self::Movement => "Movement",
+            Self::Childcare => "Childcare",
+            Self::Leader => "Leader",
+            Self::Title => "Title",
+            Self::StratificationMonitor => "StratificationMonitor",
+            Self::Tension => "Tension",
+            Self::BuildingEffect => "BuildingEffect",
+            Self::Migration => "Migration",
+            Self::Population => "Population",
+            Self::TechUtilization => "TechUtilization",
+            Self::TechMaintenance => "TechMaintenance",
+            Self::TechDiscovery => "TechDiscovery",
+            Self::TechPropagation => "TechPropagation",
+            Self::Gathering => "Gathering",
+            Self::Construction => "Construction",
+            Self::Family => "Family",
+            Self::Intergenerational => "Intergenerational",
+            Self::Parenting => "Parenting",
+            Self::StatsRecorder => "StatsRecorder",
+            Self::StatSync => "StatSync",
+            Self::StatThreshold => "StatThreshold",
+            Self::Behavior => "Behavior",
+            Self::SettlementCulture => "SettlementCulture",
+            Self::Chronicle => "Chronicle",
+            Self::PersonalityMaturation => "PersonalityMaturation",
+            Self::PersonalityGenerator => "PersonalityGenerator",
+            Self::Attachment => "Attachment",
+            Self::AceTracker => "AceTracker",
+            Self::Trait => "Trait",
+            Self::LlmRequest => "LlmRequest",
+            Self::LlmResponse => "LlmResponse",
+            Self::LlmTimeout => "LlmTimeout",
+            Self::StorySifter => "StorySifter",
+        }
+    }
+
+    /// Returns the internal engine/perf label for a runtime system.
+    ///
+    /// These labels are retained only to read existing scheduler/perf output.
+    /// They are no longer used as registration identity.
+    pub(crate) const fn perf_label(self) -> &'static str {
         match self {
             Self::Reputation => "reputation_system",
             Self::SocialEvent => "social_event_system",
@@ -357,10 +424,18 @@ mod tests {
     use std::collections::HashSet;
 
     #[test]
-    fn runtime_system_ids_have_unique_registry_names() {
+    fn runtime_system_perf_labels_are_unique() {
         let mut names: HashSet<&'static str> = HashSet::new();
         for system_id in RuntimeSystemId::all() {
-            assert!(names.insert(system_id.registry_name()));
+            assert!(names.insert(system_id.perf_label()));
+        }
+    }
+
+    #[test]
+    fn runtime_system_display_labels_are_unique() {
+        let mut labels: HashSet<&'static str> = HashSet::new();
+        for system_id in RuntimeSystemId::all() {
+            assert!(labels.insert(system_id.display_label()));
         }
     }
 

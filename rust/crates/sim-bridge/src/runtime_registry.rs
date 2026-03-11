@@ -200,7 +200,7 @@ pub(crate) fn upsert_runtime_system_entry(
         a.priority
             .cmp(&b.priority)
             .then(a.registration_index.cmp(&b.registration_index))
-            .then(a.system_id.registry_name().cmp(b.system_id.registry_name()))
+            .then(a.system_id.cmp(&b.system_id))
     });
 }
 

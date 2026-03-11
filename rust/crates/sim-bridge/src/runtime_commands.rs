@@ -4,13 +4,19 @@ use godot::prelude::{Array, VarDictionary};
 use crate::runtime_bindings::{is_supported_compute_mode, normalize_compute_mode_for_domain};
 use crate::runtime_dict::dict_get_string;
 use crate::runtime_registry::{clamp_speed_index, RuntimeState, RUNTIME_COMPUTE_DOMAINS};
+use crate::runtime_system::RuntimeSystemId;
+
+/// Returns the display label exported for one typed runtime system row.
+fn registry_row_name(system_id: RuntimeSystemId) -> &'static str {
+    system_id.display_label()
+}
 
 /// Exports the current typed runtime registry for debug and validation callers.
 pub(crate) fn registry_snapshot(state: &RuntimeState) -> Array<VarDictionary> {
     let mut out: Array<VarDictionary> = Array::new();
     for entry in &state.registered_systems {
         let mut dict = VarDictionary::new();
-        dict.set("name", entry.system_id.registry_name());
+        dict.set("name", registry_row_name(entry.system_id));
         dict.set("system_id", entry.system_id as i64);
         dict.set("priority", entry.priority);
         dict.set("tick_interval", entry.tick_interval);
@@ -99,5 +105,16 @@ pub(crate) fn apply_commands_v2(state: &mut RuntimeState, commands: Array<VarDic
             }
             continue;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn registry_row_name_uses_display_labels() {
+        assert_eq!(registry_row_name(RuntimeSystemId::StatSync), "StatSync");
+        assert_eq!(registry_row_name(RuntimeSystemId::Needs), "Needs");
     }
 }
