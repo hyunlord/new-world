@@ -181,7 +181,7 @@ func _ready() -> void:
 func _build_minimap_and_stats() -> void:
 	if _world_data != null and _camera != null:
 		_minimap_panel = MinimapPanelClass.new()
-		_minimap_panel.init(_world_data, _entity_manager, _building_manager, _settlement_manager, _camera, _sim_engine)
+		_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
 		add_child(_minimap_panel)
 
 	if _stats_recorder != null:

@@ -61,7 +61,11 @@ pub use validator::{validate_registry, Severity, ValidationError};
 pub use value_events::{load_value_events, ValueEvent, ValueEvents};
 pub use values_seed::{facet_index, hexaco_seed_map, value_heritability};
 
-/// Aggregated simulation data snapshot loaded from JSON files.
+/// Aggregated legacy JSON compatibility snapshot.
+///
+/// Authoritative simulation content lives in [`DataRegistry`], which loads the
+/// RON registry. This bundle remains for compatibility-only consumers that have
+/// not been migrated yet.
 #[derive(Debug, Clone)]
 pub struct DataBundle {
     pub emotions: EmotionPresets,
@@ -88,9 +92,14 @@ impl DataBundle {
     }
 }
 
-/// Load all currently-supported data from a base data directory.
-/// If any individual loader fails, returns that error.
+/// Load the legacy JSON compatibility bundle from a base data directory.
+///
+/// If any individual loader fails, returns that error. New runtime authority
+/// should prefer [`DataRegistry::load_from_directory`].
 pub fn load_all(base_dir: &std::path::Path) -> DataResult<DataBundle> {
+    log::warn!(
+        "sim_data::load_all is loading legacy JSON compatibility data; authoritative content lives in DataRegistry::load_from_directory"
+    );
     let emotions = load_emotion_presets(base_dir)?;
     let tech = load_tech_catalog(base_dir)?;
     let values = load_value_events(base_dir)?;
