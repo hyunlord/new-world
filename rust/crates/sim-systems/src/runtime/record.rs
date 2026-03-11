@@ -381,17 +381,14 @@ impl SimSystem for StatsRecorderRuntimeSystem {
 // ── Chronicle System ─────────────────────────────────────────────────
 
 /// Constants matching chronicle_system.gd
-const CHRONICLE_MAX_WORLD_EVENTS: usize = 1000;
 const CHRONICLE_PRUNE_INTERVAL_YEARS: i32 = 10;
 const CHRONICLE_LOW_IMPORTANCE_MAX_AGE_YEARS: i32 = 20;
 const CHRONICLE_MED_IMPORTANCE_MAX_AGE_YEARS: i32 = 50;
 
 /// Rust runtime system for chronicle event pruning.
 ///
-/// Ports the `prune_old_events()` path of `chronicle_system.gd`.
-/// Periodically removes low/medium-importance world events older than
-/// their retention window, enforces the hard cap on world events, and
-/// garbage-collects orphaned personal events.
+/// Periodically removes old low-significance chronicle entries while keeping
+/// bounded high-significance history intact.
 #[derive(Debug, Clone)]
 // TODO(v3.1): DELETE - replace legacy chronicle pruning path with v3.1 causal log + observation/oracle layers.
 pub struct ChronicleRuntimeSystem {
@@ -443,45 +440,17 @@ impl SimSystem for ChronicleRuntimeSystem {
             current_year,
             CHRONICLE_LOW_IMPORTANCE_MAX_AGE_YEARS,
             ticks_per_year,
-        );
+        )
+        .max(0) as u64;
         let med_cutoff = body::chronicle_cutoff_tick(
             current_year,
             CHRONICLE_MED_IMPORTANCE_MAX_AGE_YEARS,
             ticks_per_year,
-        );
+        )
+        .max(0) as u64;
 
-        // Prune world events
-        resources.chronicle_world_events.retain(|event| {
-            body::chronicle_keep_world_event(
-                event.tick as i32,
-                event.importance as i32,
-                low_cutoff,
-                med_cutoff,
-            )
-        });
-
-        // Enforce hard cap (keep newest)
-        if resources.chronicle_world_events.len() > CHRONICLE_MAX_WORLD_EVENTS {
-            let overflow = resources.chronicle_world_events.len() - CHRONICLE_MAX_WORLD_EVENTS;
-            resources.chronicle_world_events.drain(0..overflow);
-        }
-
-        // Build set of retained world-event ticks for personal event GC
-        let valid_ticks: HashSet<u64> = resources
-            .chronicle_world_events
-            .iter()
-            .map(|e| e.tick)
-            .collect();
-
-        // Prune personal events
-        for events in resources.chronicle_personal_events.values_mut() {
-            events.retain(|event| {
-                let has_valid = valid_ticks.contains(&event.tick);
-                body::chronicle_keep_personal_event(has_valid, event.importance as i32)
-            });
-        }
         resources
-            .chronicle_personal_events
-            .retain(|_eid, events| !events.is_empty());
+            .chronicle_log
+            .prune_by_significance(low_cutoff, med_cutoff);
     }
 }

@@ -225,8 +225,7 @@ fn bootstrap_world_core(
         resources.stats_total_deaths = 0;
         resources.stat_sync_derived.clear();
         resources.stat_threshold_flags.clear();
-        resources.chronicle_world_events.clear();
-        resources.chronicle_personal_events.clear();
+        resources.chronicle_log.clear();
         sync_world_tiles(resources, &payload.world);
     }
 

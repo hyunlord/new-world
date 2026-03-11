@@ -4825,96 +4825,60 @@ mod tests {
 
     #[test]
     fn chronicle_runtime_system_prunes_old_low_importance_events() {
-        use sim_engine::ChronicleEvent;
+        use sim_engine::{
+            ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType,
+        };
 
         let mut world = World::new();
         let mut resources = make_resources();
 
-        // TICKS_PER_YEAR = 4380. Run at year 25 (tick 109500).
-        // low_cutoff = (25 - 20) * 4380 = 21900
-        // med_cutoff = (25 - 50) * 4380 = negative → no medium pruning
-        let events = vec![
-            // Old low importance — tick 100 < 21900 → PRUNED
+        let make_event = |tick: u64, entity_id: u64, significance: f64, summary_key: &str| {
             ChronicleEvent {
-                tick: 100,
-                importance: 1,
-                event_type: "old_low_1".into(),
-                entity_id: 1,
-                description: "old low".into(),
-            },
-            // Old low importance — tick 1000 < 21900 → PRUNED
-            ChronicleEvent {
-                tick: 1000,
-                importance: 2,
-                event_type: "old_low_2".into(),
-                entity_id: 2,
-                description: "old low 2".into(),
-            },
-            // Recent low importance — tick 30000 >= 21900 → KEPT
-            ChronicleEvent {
-                tick: 30000,
-                importance: 2,
-                event_type: "recent_low".into(),
-                entity_id: 3,
-                description: "recent low".into(),
-            },
-            // Old medium importance — cutoff negative → KEPT
-            ChronicleEvent {
-                tick: 500,
-                importance: 3,
-                event_type: "old_med".into(),
-                entity_id: 4,
-                description: "old medium".into(),
-            },
-            // High importance — always kept regardless of age
-            ChronicleEvent {
-                tick: 50,
-                importance: 5,
-                event_type: "high".into(),
-                entity_id: 5,
-                description: "high importance".into(),
-            },
-        ];
-        resources.chronicle_world_events = events;
-
-        // Personal events: one referencing a pruned world-event tick, one referencing a kept tick
-        let eid_orphaned = EntityId(10);
-        let eid_retained = EntityId(20);
-        resources.chronicle_personal_events.insert(
-            eid_orphaned,
-            vec![ChronicleEvent {
-                tick: 100, // world event at tick=100 will be pruned → orphaned
-                importance: 1,
-                event_type: "personal".into(),
-                entity_id: 10,
-                description: "orphaned".into(),
-            }],
-        );
-        resources.chronicle_personal_events.insert(
-            eid_retained,
-            vec![ChronicleEvent {
-                tick: 30000, // world event at tick=30000 is retained → kept
-                importance: 1,
-                event_type: "personal".into(),
-                entity_id: 20,
-                description: "kept".into(),
-            }],
-        );
+                tick,
+                entity_id: EntityId(entity_id),
+                event_type: ChronicleEventType::MovementDecision,
+                cause: ChronicleEventCause::Food,
+                magnitude: ChronicleEventMagnitude {
+                    influence: significance,
+                    steering: significance,
+                    significance,
+                },
+                tile_x: 0,
+                tile_y: 0,
+                summary_key: summary_key.to_string(),
+                effect_key: "steering_velocity".to_string(),
+            }
+        };
+        resources
+            .chronicle_log
+            .append_event(make_event(100, 10, 0.10, "old_low_1"));
+        resources
+            .chronicle_log
+            .append_event(make_event(1000, 11, 0.20, "old_low_2"));
+        resources
+            .chronicle_log
+            .append_event(make_event(30000, 20, 0.20, "recent_low"));
+        resources
+            .chronicle_log
+            .append_event(make_event(500, 21, 0.40, "old_med"));
+        resources
+            .chronicle_log
+            .append_event(make_event(50, 22, 0.90, "high"));
 
         let tick = 25 * 4380; // year 25
         let mut system = ChronicleRuntimeSystem::new(310, 1);
         system.run(&mut world, &mut resources, tick as u64);
 
-        // World events: 2 old low-importance pruned, 3 retained
         assert_eq!(
-            resources.chronicle_world_events.len(),
+            resources.chronicle_log.world_len(),
             3,
             "expected 3 world events after pruning old low-importance"
         );
         let types: Vec<&str> = resources
-            .chronicle_world_events
+            .chronicle_log
+            .recent_events(8)
             .iter()
-            .map(|e| e.event_type.as_str())
+            .map(|event| event.summary_key.as_str())
             .collect();
         assert!(types.contains(&"recent_low"), "recent low-importance kept");
         assert!(types.contains(&"old_med"), "old medium-importance kept");
@@ -4922,19 +4886,16 @@ mod tests {
         assert!(!types.contains(&"old_low_1"), "old low-importance pruned");
         assert!(!types.contains(&"old_low_2"), "old low-importance 2 pruned");
 
-        // Personal event GC: orphaned entry removed, valid entry kept
         assert!(
-            !resources
-                .chronicle_personal_events
-                .contains_key(&eid_orphaned),
-            "personal events referencing pruned world ticks should be GC'd"
+            resources.chronicle_log.latest_for_entity(EntityId(10)).is_none(),
+            "personal events referencing pruned low-significance world ticks should be GC'd"
         );
         assert_eq!(
             resources
-                .chronicle_personal_events
-                .get(&eid_retained)
-                .map(|v| v.len()),
-            Some(1),
+                .chronicle_log
+                .query_by_entity(EntityId(20), 4)
+                .len(),
+            1,
             "personal events referencing retained world ticks should be kept"
         );
     }

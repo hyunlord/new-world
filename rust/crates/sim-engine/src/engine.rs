@@ -3,6 +3,7 @@ use crate::event_store::EventStore;
 use crate::events::LlmEvent;
 use crate::explain_log::ExplainLog;
 use crate::frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+use crate::chronicle::ChronicleLog;
 use crate::llm_server::{LlmRuntime, LlmRuntimeError};
 use crate::llm_worker::{LlmRequest, LlmRequestMeta, LlmResponse};
 use crate::notification::SimNotification;
@@ -31,16 +32,6 @@ use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
 /// System ordering is stable (sorted by priority at registration time).
 use std::collections::HashMap;
 use std::sync::Arc;
-
-/// A recorded chronicle event (world or personal history).
-#[derive(Debug, Clone)]
-pub struct ChronicleEvent {
-    pub tick: u64,
-    pub importance: u32,
-    pub event_type: String,
-    pub entity_id: i64,
-    pub description: String,
-}
 
 #[derive(Debug, Clone, Default)]
 pub struct RuntimeStatsSnapshot {
@@ -119,10 +110,8 @@ pub struct SimResources {
     pub agent_need_diagnostics: HashMap<EntityId, AgentNeedDiagnostics>,
     /// Recent construction diagnostics keyed by building ID.
     pub construction_diagnostics: HashMap<BuildingId, ConstructionDiagnostics>,
-    /// Chronicle world-event log (pruned periodically).
-    pub chronicle_world_events: Vec<ChronicleEvent>,
-    /// Chronicle personal-event log keyed by entity ID.
-    pub chronicle_personal_events: HashMap<EntityId, Vec<ChronicleEvent>>,
+    /// Structured chronicle log with bounded world and personal events.
+    pub chronicle_log: ChronicleLog,
     /// Personality distribution data for spawning agents (loaded from JSON at startup).
     pub personality_distribution: Option<PersonalityDistribution>,
     /// Name generator — generates culturally-appropriate names for new agents.
@@ -178,8 +167,7 @@ impl SimResources {
             stat_threshold_flags: HashMap::new(),
             agent_need_diagnostics: HashMap::new(),
             construction_diagnostics: HashMap::new(),
-            chronicle_world_events: Vec::new(),
-            chronicle_personal_events: HashMap::new(),
+            chronicle_log: ChronicleLog::new(),
             personality_distribution: None,
             name_generator: None,
             data_registry: None,
@@ -323,6 +311,7 @@ impl std::fmt::Debug for SimResources {
                 "construction_diagnostics",
                 &self.construction_diagnostics.len(),
             )
+            .field("chronicle_world_events", &self.chronicle_log.world_len())
             .field("event_bus", &self.event_bus)
             .field("event_store", &self.event_store.len())
             .field("influence_grid_dims", &self.influence_grid.dimensions())
