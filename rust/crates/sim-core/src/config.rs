@@ -429,6 +429,8 @@ pub const CHRONICLE_REPEAT_SUPPRESSION_WINDOW_TICKS: u64 = 600;
 pub const CHRONICLE_REPEAT_SUPPRESSION_STEP: f64 = 2.0;
 /// Tick window after which the best background Chronicle is promoted if nothing surfaced.
 pub const CHRONICLE_VISIBLE_STARVATION_TICKS: u64 = 1800;
+/// Maximum entries retained in the chronicle archive (cold storage).
+pub const CHRONICLE_ARCHIVE_MAX_ENTRIES: usize = 512;
 
 // --- Chronicle Thread ---
 

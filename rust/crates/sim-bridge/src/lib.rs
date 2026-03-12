@@ -451,6 +451,21 @@ fn chronicle_feed_item_snapshot_to_dict(item: &ChronicleFeedItemSnapshot) -> Var
     dict
 }
 
+fn chronicle_telemetry_to_dict(telemetry: &sim_engine::ChronicleTelemetry) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("total_routed", telemetry.total_routed as i64);
+    dict.set("visible_count", telemetry.visible_count as i64);
+    dict.set("background_count", telemetry.background_count as i64);
+    dict.set("recall_count", telemetry.recall_count as i64);
+    dict.set("drop_count", telemetry.drop_count as i64);
+    dict.set("displacement_count", telemetry.displacement_count as i64);
+    dict.set("archive_count", telemetry.archive_count as i64);
+    dict.set("promotion_count", telemetry.promotion_count as i64);
+    dict.set("thread_create_count", telemetry.thread_create_count as i64);
+    dict.set("thread_evict_count", telemetry.thread_evict_count as i64);
+    dict
+}
+
 /// Temporary migration adapter for legacy timeline consumers.
 ///
 /// The legacy timeline endpoint now delegates to the new feed snapshot family and derives the
@@ -671,6 +686,7 @@ fn chronicle_feed_response_to_dict(response: &ChronicleFeedResponse) -> VarDicti
     dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
     dict.set("revision_unavailable", response.revision_unavailable);
     dict.set("items", items);
+    dict.set("telemetry", chronicle_telemetry_to_dict(&response.telemetry));
     dict
 }
 
@@ -717,11 +733,15 @@ fn chronicle_recall_slice_response_to_dict(
 fn chronicle_history_slice_response_to_dict(
     response: &ChronicleHistorySliceResponse,
 ) -> VarDictionary {
-    let mut dict = chronicle_feed_response_to_dict(&ChronicleFeedResponse {
-        snapshot_revision: response.snapshot_revision,
-        revision_unavailable: response.revision_unavailable,
-        items: response.items.clone(),
-    });
+    let mut dict = VarDictionary::new();
+    let mut items: Array<VarDictionary> = Array::new();
+    for item in &response.items {
+        items.push(&chronicle_feed_item_snapshot_to_dict(item));
+    }
+    dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
+    dict.set("revision_unavailable", response.revision_unavailable);
+    dict.set("items", items);
+    dict.set("telemetry", chronicle_telemetry_to_dict(&response.telemetry));
     dict.set(
         "next_cursor_before_tick",
         response

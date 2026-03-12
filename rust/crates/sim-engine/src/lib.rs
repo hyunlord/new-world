@@ -52,6 +52,7 @@ pub use chronicle::{
     ChronicleQueueKind, ChronicleQueueTransition, ChronicleRecallItemSnapshot,
     ChronicleRecallSliceResponse, ChronicleRouteResult, ChronicleSignificanceCategory,
     ChronicleSignificanceMeta, ChronicleSnapshotRevision, ChronicleSubjectRefLite,
+    ChronicleTelemetry,
     ChronicleSummary, ChronicleThreadListResponse, ChronicleThreadSnapshot, ChronicleTimeline,
 };
 pub use command::{Command, CommandQueue};
