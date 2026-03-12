@@ -15,9 +15,10 @@ use sim_core::{
 };
 use sim_engine::{
     ChronicleCapsule, ChronicleCluster, ChronicleDossierStub, ChronicleEntryLite,
-    ChronicleEntryStatus, ChronicleEvent, ChronicleEventCause, ChronicleEventType,
-    ChronicleHeadline, ChronicleLocationRefLite, ChronicleQueueBucket,
-    ChronicleSignificanceCategory, ChronicleSubjectRefLite, SimResources, SimSystem,
+    ChronicleEntityRefState, ChronicleEntryStatus, ChronicleEvent, ChronicleEventCause,
+    ChronicleEventType, ChronicleHeadline, ChronicleLocationRefLite, ChronicleQueueBucket,
+    ChronicleQueueTransition, ChronicleSignificanceCategory, ChronicleSignificanceMeta,
+    ChronicleSubjectRefLite, SimResources, SimSystem,
 };
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
@@ -601,13 +602,17 @@ fn cluster_to_timeline_entry(
     cluster: &ChronicleCluster,
 ) -> Option<ChronicleEntryLite> {
     let dominant = dominant_event(cluster.events.as_slice())?;
+    let base_score = cluster_base_score(cluster.events.as_slice());
+    let cause_bonus = chronicle_cause_bonus(Some(dominant.cause));
+    let raw_score = base_score + cause_bonus;
     let score = adjusted_cluster_significance(
         resources,
         dominant.event_type,
         dominant.cause,
         cluster.end_tick,
-        cluster_significance(cluster.events.as_slice()),
+        raw_score,
     );
+    let repeat_penalty = (raw_score - score).max(0.0);
     let category = chronicle_category(score);
     if category < ChronicleSignificanceCategory::Notable {
         log::debug!(
@@ -673,16 +678,31 @@ fn cluster_to_timeline_entry(
         entity_ref: ChronicleSubjectRefLite {
             entity_id: cluster.entity_id,
             display_name: (!agent_label.is_empty()).then_some(agent_label),
+            ref_state: cluster
+                .entity_id
+                .map(|_| ChronicleEntityRefState::Alive)
+                .unwrap_or(ChronicleEntityRefState::Unknown),
         },
         location_ref: ChronicleLocationRefLite {
             tile_x: tile.0,
             tile_y: tile.1,
+            region_label: None,
         },
         significance: score,
         significance_category: category,
+        significance_meta: ChronicleSignificanceMeta {
+            base_score,
+            cause_bonus,
+            group_bonus: 0.0,
+            repeat_penalty,
+            final_score: score,
+            reason_tags: vec![format!("cause:{}", dominant.cause.id())],
+        },
         queue_bucket: ChronicleQueueBucket::Dropped,
         status: ChronicleEntryStatus::Pending,
         surfaced_tick: None,
+        displacement_reason: None,
+        queue_transitions: Vec::new(),
         thread_id: None,
     })
 }
@@ -698,13 +718,18 @@ fn summary_to_timeline_entry(
         .iter()
         .map(|event| event.entity_id)
         .collect::<BTreeSet<_>>();
+    let base_score = cluster_base_score(cluster.events.as_slice());
+    let cause_bonus = chronicle_cause_bonus(Some(ChronicleEventCause::Social));
+    let group_bonus = unique_entities.len() as f64;
+    let raw_score = base_score + cause_bonus + group_bonus;
     let score = adjusted_cluster_significance(
         resources,
         ChronicleEventType::GatheringFormation,
         ChronicleEventCause::Social,
         cluster.end_tick,
-        social_cluster_significance(cluster.events.as_slice(), unique_entities.len()),
+        raw_score,
     );
+    let repeat_penalty = (raw_score - score).max(0.0);
     let category = chronicle_category(score);
     if category < ChronicleSignificanceCategory::Notable {
         log::debug!(
@@ -756,18 +781,40 @@ fn summary_to_timeline_entry(
         entity_ref: ChronicleSubjectRefLite {
             entity_id: None,
             display_name: None,
+            ref_state: ChronicleEntityRefState::Unknown,
         },
         location_ref: ChronicleLocationRefLite {
             tile_x: tile.0,
             tile_y: tile.1,
+            region_label: None,
         },
         significance: score,
         significance_category: category,
+        significance_meta: ChronicleSignificanceMeta {
+            base_score,
+            cause_bonus,
+            group_bonus,
+            repeat_penalty,
+            final_score: score,
+            reason_tags: vec![
+                format!("cause:{}", ChronicleEventCause::Social.id()),
+                format!("group_size:{}", unique_entities.len()),
+            ],
+        },
         queue_bucket: ChronicleQueueBucket::Dropped,
         status: ChronicleEntryStatus::Pending,
         surfaced_tick: None,
+        displacement_reason: None,
+        queue_transitions: Vec::new(),
         thread_id: None,
     })
+}
+
+fn cluster_base_score(events: &[ChronicleEvent]) -> f64 {
+    events
+        .iter()
+        .map(|event| event.magnitude.significance * 2.0)
+        .sum::<f64>()
 }
 
 fn dominant_event(events: &[ChronicleEvent]) -> Option<&ChronicleEvent> {
@@ -777,18 +824,6 @@ fn dominant_event(events: &[ChronicleEvent]) -> Option<&ChronicleEvent> {
             .partial_cmp(&right.magnitude.significance)
             .unwrap_or(Ordering::Equal)
     })
-}
-
-fn cluster_significance(events: &[ChronicleEvent]) -> f64 {
-    let base = events
-        .iter()
-        .map(|event| event.magnitude.significance * 2.0)
-        .sum::<f64>();
-    base + chronicle_cause_bonus(dominant_event(events).map(|event| event.cause))
-}
-
-fn social_cluster_significance(events: &[ChronicleEvent], unique_entities: usize) -> f64 {
-    cluster_significance(events) + unique_entities as f64
 }
 
 fn adjusted_cluster_significance(
@@ -1205,16 +1240,28 @@ mod tests {
                 entity_ref: ChronicleSubjectRefLite {
                     entity_id: Some(entity_id),
                     display_name: None,
+                    ref_state: ChronicleEntityRefState::Alive,
                 },
                 location_ref: ChronicleLocationRefLite {
                     tile_x: 2,
                     tile_y: 2,
+                    region_label: None,
                 },
                 significance: 7.0,
                 significance_category: ChronicleSignificanceCategory::Major,
+                significance_meta: ChronicleSignificanceMeta {
+                    base_score: 7.0,
+                    cause_bonus: 0.0,
+                    group_bonus: 0.0,
+                    repeat_penalty: 0.0,
+                    final_score: 7.0,
+                    reason_tags: vec!["seed".to_string()],
+                },
                 queue_bucket: ChronicleQueueBucket::Dropped,
                 status: ChronicleEntryStatus::Pending,
                 surfaced_tick: None,
+                displacement_reason: None,
+                queue_transitions: Vec::new(),
                 thread_id: None,
             },
             50,
@@ -1271,16 +1318,28 @@ mod tests {
                 entity_ref: ChronicleSubjectRefLite {
                     entity_id: None,
                     display_name: None,
+                    ref_state: ChronicleEntityRefState::Unknown,
                 },
                 location_ref: ChronicleLocationRefLite {
                     tile_x: 4,
                     tile_y: 5,
+                    region_label: None,
                 },
                 significance: 5.0,
                 significance_category: ChronicleSignificanceCategory::Notable,
+                significance_meta: ChronicleSignificanceMeta {
+                    base_score: 5.0,
+                    cause_bonus: 0.0,
+                    group_bonus: 0.0,
+                    repeat_penalty: 0.0,
+                    final_score: 5.0,
+                    reason_tags: vec!["seed".to_string()],
+                },
                 queue_bucket: ChronicleQueueBucket::Dropped,
                 status: ChronicleEntryStatus::Pending,
                 surfaced_tick: None,
+                displacement_reason: None,
+                queue_transitions: Vec::new(),
                 thread_id: None,
             },
             10,
