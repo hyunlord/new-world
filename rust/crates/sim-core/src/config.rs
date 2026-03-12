@@ -429,6 +429,19 @@ pub const CHRONICLE_REPEAT_SUPPRESSION_WINDOW_TICKS: u64 = 600;
 pub const CHRONICLE_REPEAT_SUPPRESSION_STEP: f64 = 2.0;
 /// Tick window after which the best background Chronicle is promoted if nothing surfaced.
 pub const CHRONICLE_VISIBLE_STARVATION_TICKS: u64 = 1800;
+
+// --- Chronicle Thread ---
+
+/// Spatial bucket size for location-scoped threads (in tiles).
+pub const CHRONICLE_THREAD_LOCATION_BUCKET_SIZE: i32 = 8;
+/// Maximum number of active threads tracked by the timeline.
+pub const CHRONICLE_THREAD_MAX_ACTIVE: usize = 32;
+/// Ticks without a new entry before a Developing thread becomes Resolved.
+pub const CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS: u64 = 1200;
+/// Half-life in ticks for tension score exponential decay.
+pub const CHRONICLE_THREAD_TENSION_HALF_LIFE_TICKS: f64 = 400.0;
+/// Minimum tension score below which a Resolved thread is eligible for eviction.
+pub const CHRONICLE_THREAD_EVICTION_TENSION_THRESHOLD: f64 = 0.1;
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.

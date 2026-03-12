@@ -708,6 +708,10 @@ fn chronicle_thread_list_response_to_dict(response: &ChronicleThreadListResponse
             chronicle_layer_params_to_dict(&item.headline.params),
         );
         item_dict.set("entry_ids", entry_ids);
+        item_dict.set("scope", item.scope.as_str());
+        item_dict.set("started_tick", item.started_tick as i64);
+        item_dict.set("last_entry_tick", item.last_entry_tick as i64);
+        item_dict.set("entry_count", item.entry_count as i64);
         items.push(&item_dict);
     }
     dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
@@ -7121,6 +7125,7 @@ mod tests {
             queue_bucket: ChronicleQueueBucket::Visible,
             status: ChronicleEntryStatus::Published,
             surfaced_tick: Some(21),
+            thread_id: None,
         };
         let summary = entry.to_legacy_summary();
         assert_eq!(summary.title, "CHRONICLE_HEADLINE_TEST");
