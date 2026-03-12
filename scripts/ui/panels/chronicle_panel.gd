@@ -26,8 +26,9 @@ var _scrollbar_rect: Rect2 = Rect2()
 
 ## Clickable regions
 var _click_regions: Array = []  # [{rect: Rect2, entity_id: int}]
-var _desc_cache: PackedStringArray = PackedStringArray()
-var _desc_cache_signature: String = ""
+var _headline_cache: PackedStringArray = PackedStringArray()
+var _capsule_cache: PackedStringArray = PackedStringArray()
+var _text_cache_signature: String = ""
 var _legacy_fallback_logged: bool = false
 
 ## Event type icons and colors
@@ -57,7 +58,7 @@ func init(entity_manager: RefCounted) -> void:
 
 func _ready() -> void:
 	Locale.locale_changed.connect(func(_l):
-		_invalidate_desc_cache()
+		_invalidate_text_cache()
 		queue_redraw()
 	)
 
@@ -102,7 +103,7 @@ func _gui_input(event: InputEvent) -> void:
 					_filter_index = fr.index
 					_filter_type = _current_filter_options()[_filter_index]
 					_scroll_offset = 0.0
-					_invalidate_desc_cache()
+					_invalidate_text_cache()
 					accept_event()
 					return
 			# Check entity click regions
@@ -209,7 +210,7 @@ func _draw() -> void:
 	cy -= _scroll_offset
 
 	# Draw events grouped by year
-	_ensure_desc_cache(events)
+	_ensure_text_cache(events)
 	var current_year: int = -1
 	var deceased_registry: Node = get_node_or_null("/root/DeceasedRegistry")
 	for i in range(events.size()):
@@ -226,12 +227,16 @@ func _draw() -> void:
 				draw_string(font, Vector2(cx, cy + 14), "── Y%d ──" % year, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color(0.7, 0.7, 0.8))
 			cy += 22.0
 
+		var headline: String = _headline_cache[i] if i < _headline_cache.size() else _resolve_event_headline(evt)
+		var capsule: String = _capsule_cache[i] if i < _capsule_cache.size() else _resolve_event_capsule(evt)
+		var entry_height: float = 28.0 if not capsule.is_empty() else 16.0
+
 		# Skip if off screen (use header_bottom instead of -20)
-		if cy + 16 < header_bottom:
-			cy += 16.0
+		if cy + entry_height < header_bottom:
+			cy += entry_height
 			continue
 		if cy > panel_h + 20:
-			cy += 16.0
+			cy += entry_height
 			continue
 
 		# Event entry
@@ -260,22 +265,28 @@ func _draw() -> void:
 		var icon_x: float = cx + 10 + date_width + 8.0
 		draw_string(font, Vector2(icon_x, cy + 12), style.icon, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), icon_color)
 
-		# Description (localized if l10n_key present, fallback to stored description)
-		var desc: String = _desc_cache[i] if i < _desc_cache.size() else _resolve_event_description(evt)
-		draw_string(font, Vector2(icon_x + 18, cy + 12), desc, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.8, 0.8, 0.8))
+		# Headline / capsule layered text
+		draw_string(font, Vector2(icon_x + 18, cy + 12), headline, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.92, 0.92, 0.92))
+		if not capsule.is_empty():
+			draw_string(font, Vector2(icon_x + 18, cy + 24), capsule, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.62, 0.62, 0.68))
 
 		# Make entity name clickable
 		var entity_id: int = evt.get("entity_id", -1)
 		if entity_id >= 0:
 			var entity_name: String = evt.get("entity_name", "")
 			if entity_name.length() > 0:
-				# Find name position in description
-				var name_start: int = desc.find(entity_name)
+				var clickable_text: String = capsule
+				var clickable_y: float = cy + 24
+				if clickable_text.find(entity_name) < 0:
+					clickable_text = headline
+					clickable_y = cy + 12
+				# Find name position in the most descriptive visible line.
+				var name_start: int = clickable_text.find(entity_name)
 				if name_start >= 0:
-					var pre_text: String = desc.substr(0, name_start)
+					var pre_text: String = clickable_text.substr(0, name_start)
 					var pre_w: float = font.get_string_size(pre_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
 					var name_w: float = font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
-					var name_pos := Vector2(icon_x + 18 + pre_w, cy + 12)
+					var name_pos := Vector2(icon_x + 18 + pre_w, clickable_y)
 					_click_regions.append({"rect": Rect2(name_pos.x, name_pos.y - GameConfig.get_font_size("popup_small"), name_w, GameConfig.get_font_size("popup_small") + 4), "entity_id": entity_id})
 
 		# Make related entity names clickable
@@ -292,16 +303,21 @@ func _draw() -> void:
 					rname = deceased_registry.get_record(rid).get("name", "")
 			if rname.length() == 0:
 				continue
-			var rstart: int = desc.find(rname)
+			var related_clickable_text: String = capsule
+			var related_clickable_y: float = cy + 24
+			if related_clickable_text.find(rname) < 0:
+				related_clickable_text = headline
+				related_clickable_y = cy + 12
+			var rstart: int = related_clickable_text.find(rname)
 			if rstart < 0:
 				continue
-			var rpre_text: String = desc.substr(0, rstart)
+			var rpre_text: String = related_clickable_text.substr(0, rstart)
 			var rpre_w: float = font.get_string_size(rpre_text, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
 			var rname_w: float = font.get_string_size(rname, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small")).x
-			var rname_pos := Vector2(icon_x + 18 + rpre_w, cy + 12)
+			var rname_pos := Vector2(icon_x + 18 + rpre_w, related_clickable_y)
 			_click_regions.append({"rect": Rect2(rname_pos.x, rname_pos.y - GameConfig.get_font_size("popup_small"), rname_w, GameConfig.get_font_size("popup_small") + 4), "entity_id": rid})
 
-		cy += 16.0
+		cy += entry_height
 
 	_content_height = cy + _scroll_offset + 40.0
 
@@ -357,22 +373,25 @@ func _navigate_to_entity(entity_id: int) -> void:
 		SimulationBus.ui_notification.emit("open_deceased_%d" % entity_id, "command")
 
 
-func _invalidate_desc_cache() -> void:
-	_desc_cache_signature = ""
-	_desc_cache.resize(0)
+func _invalidate_text_cache() -> void:
+	_text_cache_signature = ""
+	_headline_cache.resize(0)
+	_capsule_cache.resize(0)
 
 
-func _ensure_desc_cache(events: Array) -> void:
-	var signature: String = _compute_desc_cache_signature(events)
-	if _desc_cache_signature == signature and _desc_cache.size() == events.size():
+func _ensure_text_cache(events: Array) -> void:
+	var signature: String = _compute_text_cache_signature(events)
+	if _text_cache_signature == signature and _capsule_cache.size() == events.size() and _headline_cache.size() == events.size():
 		return
-	_desc_cache_signature = signature
-	_desc_cache.resize(events.size())
+	_text_cache_signature = signature
+	_headline_cache.resize(events.size())
+	_capsule_cache.resize(events.size())
 	for i in range(events.size()):
-		_desc_cache[i] = _resolve_event_description(events[i])
+		_headline_cache[i] = _resolve_event_headline(events[i])
+		_capsule_cache[i] = _resolve_event_capsule(events[i])
 
 
-func _compute_desc_cache_signature(events: Array) -> String:
+func _compute_text_cache_signature(events: Array) -> String:
 	var locale_key: String = str(Locale.current_locale)
 	if events.is_empty():
 		return locale_key + "|" + _filter_type + "|0"
@@ -390,21 +409,47 @@ func _compute_desc_cache_signature(events: Array) -> String:
 	]
 
 
-func _resolve_event_description(evt: Dictionary) -> String:
-	var desc: String = str(evt.get("description", "?"))
-	if evt.has("l10n_key"):
-		var l10n_key: String = str(evt.get("l10n_key", ""))
+func _resolve_chronicle_text(evt: Dictionary, key_field: String, params_field: String, fallback_field: String) -> String:
+	var desc: String = str(evt.get(fallback_field, ""))
+	if evt.has(key_field):
+		var l10n_key: String = str(evt.get(key_field, ""))
 		if not l10n_key.is_empty():
-			var l10n_params: Dictionary = evt.get("l10n_params", {})
+			var l10n_params: Dictionary = evt.get(params_field, {})
 			if l10n_params.has("cause_id"):
 				var l10n_params_with_cause: Dictionary = l10n_params.duplicate()
 				l10n_params_with_cause["cause"] = Locale.tr_id("DEATH", l10n_params["cause_id"])
 				desc = Locale.trf(l10n_key, l10n_params_with_cause)
 			else:
 				desc = Locale.trf(l10n_key, l10n_params)
-	if desc.length() > 55:
-		return desc.substr(0, 52) + "..."
 	return desc
+
+
+func _resolve_event_headline(evt: Dictionary) -> String:
+	var headline: String = _resolve_chronicle_text(evt, "headline_key", "headline_params", "title_key")
+	var legacy_title_key: String = str(evt.get("title_key", ""))
+	if headline == legacy_title_key and not legacy_title_key.is_empty():
+		var legacy_title_params: Dictionary = {}
+		if evt.has("headline_params"):
+			legacy_title_params = evt.get("headline_params", {})
+		elif evt.has("l10n_params"):
+			legacy_title_params = evt.get("l10n_params", {})
+		headline = Locale.trf(legacy_title_key, legacy_title_params)
+	if headline == legacy_title_key and evt.has("l10n_key"):
+		headline = _resolve_chronicle_text(evt, "l10n_key", "l10n_params", "description")
+	return _trim_chronicle_line(headline, 34)
+
+
+func _resolve_event_capsule(evt: Dictionary) -> String:
+	var capsule: String = _resolve_chronicle_text(evt, "capsule_key", "capsule_params", "description")
+	if capsule.is_empty() or capsule == str(evt.get("description", "")):
+		capsule = _resolve_chronicle_text(evt, "l10n_key", "l10n_params", "description")
+	return _trim_chronicle_line(capsule, 55)
+
+
+func _trim_chronicle_line(text: String, max_chars: int) -> String:
+	if text.length() > max_chars:
+		return text.substr(0, max_chars - 3) + "..."
+	return text
 
 
 func _using_runtime_chronicle() -> bool:
@@ -425,14 +470,20 @@ func _chronicle_data_available() -> bool:
 
 func _get_display_events() -> Array:
 	if _using_runtime_chronicle():
-		_legacy_fallback_logged = false
 		return _runtime_chronicle_events()
 	_log_legacy_chronicle_fallback()
 	return []
 
 
 func _runtime_chronicle_events() -> Array:
-	var events: Array = SimBridge.runtime_get_chronicle_timeline(200)
+	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
+	if bool(response.get("revision_unavailable", false)) and int(response.get("snapshot_revision", -1)) < 0:
+		if not _legacy_fallback_logged:
+			_legacy_fallback_logged = true
+			push_warning("[Chronicle] runtime chronicle feed unavailable; falling back to legacy timeline adapter")
+		return SimBridge.runtime_get_chronicle_timeline(200)
+	_legacy_fallback_logged = false
+	var events: Array = response.get("items", [])
 	if _filter_type.is_empty():
 		return events
 	var filtered: Array = []

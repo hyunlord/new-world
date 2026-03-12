@@ -1766,12 +1766,17 @@
   "LLM_TOGGLE_OFF": "Disable AI Narration",
   "CHRONICLE_TITLE_FOOD_ATTRACTION": "Food Search",
   "CHRONICLE_SUMMARY_FOOD_ATTRACTION": "{agent} struggled with hunger before discovering food.",
+  "CHRONICLE_DOSSIER_STUB_FOOD_ATTRACTION": "{agent} followed a food signal near ({x}, {y}).",
   "CHRONICLE_TITLE_ESCAPE_DANGER": "Escape",
   "CHRONICLE_SUMMARY_ESCAPE_DANGER": "{agent} narrowly escaped danger.",
+  "CHRONICLE_DOSSIER_STUB_ESCAPE_DANGER": "{agent} changed course after danger intensified near ({x}, {y}).",
   "CHRONICLE_TITLE_SHELTER_SEEKING": "Shelter",
   "CHRONICLE_SUMMARY_SHELTER_SEEKING": "{agent} found shelter from the cold.",
+  "CHRONICLE_DOSSIER_STUB_SHELTER_SEEKING": "{agent} leaned toward warmth and shelter near ({x}, {y}).",
   "CHRONICLE_TITLE_SOCIAL_ATTRACTION": "Gathering",
   "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION": "{agent} drifted toward a nearby group.",
+  "CHRONICLE_DOSSIER_STUB_SOCIAL_ATTRACTION": "{agent} was pulled toward nearby company around ({x}, {y}).",
   "CHRONICLE_TITLE_SOCIAL_GATHERING": "Gathering Formed",
-  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count} settlers gathered around a shared focal point."
+  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count} settlers gathered around a shared focal point.",
+  "CHRONICLE_DOSSIER_STUB_SOCIAL_GATHERING": "{count} settlers converged on the same gathering point near ({x}, {y})."
 }

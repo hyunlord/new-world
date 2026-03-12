@@ -44,9 +44,15 @@ pub mod system_trait;
 // ── Convenience re-exports ────────────────────────────────────────────────────
 
 pub use chronicle::{
-    ChronicleCluster, ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude,
-    ChronicleEventType, ChronicleLog, ChronicleQueueKind, ChronicleRouteResult,
-    ChronicleSignificanceCategory, ChronicleSummary, ChronicleTimeline,
+    ChronicleCapsule, ChronicleCluster, ChronicleDossierStub, ChronicleEntryDetailSnapshot,
+    ChronicleEntryId, ChronicleEntryLite, ChronicleEntryStatus, ChronicleEvent,
+    ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, ChronicleFeedItemSnapshot,
+    ChronicleFeedRenderHint, ChronicleFeedResponse, ChronicleHeadline,
+    ChronicleHistorySliceResponse, ChronicleLocationRefLite, ChronicleLog, ChronicleQueueBucket,
+    ChronicleQueueKind, ChronicleRecallItemSnapshot, ChronicleRecallSliceResponse,
+    ChronicleRouteResult, ChronicleSignificanceCategory, ChronicleSnapshotRevision,
+    ChronicleSubjectRefLite, ChronicleSummary, ChronicleThreadListResponse,
+    ChronicleThreadSnapshot, ChronicleTimeline,
 };
 pub use command::{Command, CommandQueue};
 pub use engine::{

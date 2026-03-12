@@ -45,6 +45,11 @@ const _RUNTIME_CLASS_CANDIDATES: Array[String] = [
 const _GDEXTENSION_PATH: String = "res://rust/worldsim.gdextension"
 const _RUNTIME_REQUIRED_METHODS: Array[String] = [
 	"runtime_bootstrap_world",
+	"runtime_get_chronicle_feed",
+	"runtime_get_chronicle_entry_detail",
+	"runtime_get_story_threads",
+	"runtime_get_history_slice",
+	"runtime_get_recall_slice",
 	"runtime_get_world_summary",
 	"runtime_get_settlement_detail",
 	"runtime_get_minimap_snapshot",
@@ -370,7 +375,7 @@ func runtime_get_entity_detail(entity_id: int) -> Dictionary:
 	return {}
 
 
-## Returns recent chronicle timeline summaries from Rust runtime.
+## Returns the temporary legacy chronicle timeline adapter from Rust runtime.
 func runtime_get_chronicle_timeline(limit: int) -> Array:
 	var runtime: Object = _get_native_runtime()
 	if runtime == null:
@@ -381,6 +386,71 @@ func runtime_get_chronicle_timeline(limit: int) -> Array:
 	if result is Array:
 		return result
 	return []
+
+
+## Returns the runtime Chronicle feed snapshot family response.
+func runtime_get_chronicle_feed(limit: int, snapshot_revision: int = -1) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	if not runtime.has_method("runtime_get_chronicle_feed"):
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	var result: Variant = runtime.call("runtime_get_chronicle_feed", limit, snapshot_revision)
+	if result is Dictionary:
+		return result
+	return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+
+
+## Returns one Chronicle entry detail snapshot from Rust runtime.
+func runtime_get_chronicle_entry_detail(entry_id: int, snapshot_revision: int = -1) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"snapshot_revision": -1, "revision_unavailable": true, "available": false}
+	if not runtime.has_method("runtime_get_chronicle_entry_detail"):
+		return {"snapshot_revision": -1, "revision_unavailable": true, "available": false}
+	var result: Variant = runtime.call("runtime_get_chronicle_entry_detail", entry_id, snapshot_revision)
+	if result is Dictionary:
+		return result
+	return {"snapshot_revision": -1, "revision_unavailable": true, "available": false}
+
+
+## Returns the current story thread snapshot list from Rust runtime.
+func runtime_get_story_threads(limit: int, snapshot_revision: int = -1) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	if not runtime.has_method("runtime_get_story_threads"):
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	var result: Variant = runtime.call("runtime_get_story_threads", limit, snapshot_revision)
+	if result is Dictionary:
+		return result
+	return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+
+
+## Returns an archive/history slice snapshot from Rust runtime.
+func runtime_get_history_slice(limit: int, cursor_before_tick: int = -1, cursor_before_entry_id: int = -1, snapshot_revision: int = -1) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": [], "next_cursor_before_tick": -1, "next_cursor_before_entry_id": -1}
+	if not runtime.has_method("runtime_get_history_slice"):
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": [], "next_cursor_before_tick": -1, "next_cursor_before_entry_id": -1}
+	var result: Variant = runtime.call("runtime_get_history_slice", limit, cursor_before_tick, cursor_before_entry_id, snapshot_revision)
+	if result is Dictionary:
+		return result
+	return {"snapshot_revision": -1, "revision_unavailable": true, "items": [], "next_cursor_before_tick": -1, "next_cursor_before_entry_id": -1}
+
+
+## Returns the current recall queue snapshot from Rust runtime.
+func runtime_get_recall_slice(limit: int, snapshot_revision: int = -1) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	if not runtime.has_method("runtime_get_recall_slice"):
+		return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
+	var result: Variant = runtime.call("runtime_get_recall_slice", limit, snapshot_revision)
+	if result is Dictionary:
+		return result
+	return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
 
 
 ## Returns entity tab data from Rust runtime.

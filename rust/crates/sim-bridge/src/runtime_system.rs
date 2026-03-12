@@ -5,21 +5,20 @@ use sim_systems::runtime::{
     BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
     ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
     EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
-    GatheringRuntimeSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
-    InfluenceRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
-    LeaderRuntimeSystem, LlmRequestRuntimeSystem, LlmResponseRuntimeSystem,
-    LlmTimeoutRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem,
-    MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem,
-    NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
-    PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
-    ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
-    InfluenceSteeringSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,
-    StatsRecorderRuntimeSystem, StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem,
-    StressRuntimeSystem, TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem,
-    TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem, TensionRuntimeSystem,
-    TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
-    UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+    GatheringRuntimeSystem, InfluenceRuntimeSystem, InfluenceSteeringSystem,
+    IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
+    JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, LlmRequestRuntimeSystem,
+    LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem, MemoryRuntimeSystem,
+    MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
+    MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
+    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
+    PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+    SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
+    StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, StorySifterRuntimeSystem,
+    StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
+    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
+    TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
+    TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
 
 /// Stable typed runtime-system identifier used by the Rust registry.
@@ -229,65 +228,301 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
 pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 59] = [
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatSync, priority: 1, tick_interval: 10 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::ResourceRegen, priority: 5, tick_interval: config::RESOURCE_REGEN_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Childcare, priority: 8, tick_interval: 2 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::JobAssignment, priority: 8, tick_interval: config::JOB_ASSIGNMENT_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Needs, priority: 10, tick_interval: config::NEEDS_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatThreshold, priority: 12, tick_interval: 5 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::UpperNeeds, priority: 12, tick_interval: config::UPPER_NEEDS_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Influence, priority: config::INFLUENCE_SYSTEM_PRIORITY as i32, tick_interval: config::INFLUENCE_SYSTEM_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::BuildingEffect, priority: 15, tick_interval: config::BUILDING_EFFECT_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Intelligence, priority: 18, tick_interval: 50 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Memory, priority: 18, tick_interval: config::MEMORY_COMPRESS_INTERVAL_TICKS as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Behavior, priority: 20, tick_interval: config::BEHAVIOR_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Gathering, priority: 25, tick_interval: config::GATHERING_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Construction, priority: 28, tick_interval: config::CONSTRUCTION_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Steering, priority: config::STEERING_SYSTEM_PRIORITY as i32, tick_interval: config::STEERING_SYSTEM_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Movement, priority: 30, tick_interval: config::MOVEMENT_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Emotion, priority: 32, tick_interval: 12 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::ChildStressProcessor, priority: 32, tick_interval: 2 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Stress, priority: 34, tick_interval: config::STRESS_SYSTEM_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::MentalBreak, priority: 35, tick_interval: 1 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Occupation, priority: 36, tick_interval: config::OCCUPATION_EVAL_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TraumaScar, priority: 36, tick_interval: 10 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Title, priority: 37, tick_interval: config::TITLE_EVAL_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TraitViolation, priority: 37, tick_interval: 1 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::SocialEvent, priority: 37, tick_interval: 30 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Contagion, priority: 38, tick_interval: 3 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Reputation, priority: 38, tick_interval: config::REPUTATION_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::EconomicTendency, priority: 39, tick_interval: config::ECON_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Morale, priority: 40, tick_interval: 5 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::JobSatisfaction, priority: 40, tick_interval: config::JOB_SAT_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Coping, priority: 42, tick_interval: 30 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Intergenerational, priority: 45, tick_interval: 240 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Parenting, priority: 46, tick_interval: 240 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Age, priority: 48, tick_interval: 50 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::PersonalityMaturation, priority: 49, tick_interval: config::TICKS_PER_YEAR as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Mortality, priority: 49, tick_interval: 1 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Population, priority: 50, tick_interval: config::POPULATION_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Family, priority: 52, tick_interval: 365 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Leader, priority: 52, tick_interval: config::LEADER_CHECK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Value, priority: 55, tick_interval: 200 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Network, priority: 58, tick_interval: config::REVOLUTION_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Migration, priority: 60, tick_interval: config::MIGRATION_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TechDiscovery, priority: 62, tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TechPropagation, priority: 62, tick_interval: config::TEACHING_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TechMaintenance, priority: 63, tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Tension, priority: 64, tick_interval: config::TENSION_CHECK_INTERVAL_TICKS as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::TechUtilization, priority: 65, tick_interval: 1 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StratificationMonitor, priority: 90, tick_interval: config::STRAT_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StatsRecorder, priority: 90, tick_interval: 200 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::StorySifter, priority: config::STORY_SIFTER_PRIORITY as i32, tick_interval: config::STORY_SIFTER_TICK_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::SettlementCulture, priority: 95, tick_interval: 100 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::PersonalityGenerator, priority: 97, tick_interval: 100 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Attachment, priority: 98, tick_interval: 100 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::AceTracker, priority: 99, tick_interval: 100 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Trait, priority: 100, tick_interval: 10 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::Chronicle, priority: 101, tick_interval: 1 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmResponse, priority: config::LLM_RESPONSE_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_RESPONSE_SYSTEM_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmTimeout, priority: config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32 },
-    DefaultRuntimeSystemSpec { system_id: RuntimeSystemId::LlmRequest, priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32, tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32 },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::StatSync,
+        priority: 1,
+        tick_interval: 10,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::ResourceRegen,
+        priority: 5,
+        tick_interval: config::RESOURCE_REGEN_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Childcare,
+        priority: 8,
+        tick_interval: 2,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::JobAssignment,
+        priority: 8,
+        tick_interval: config::JOB_ASSIGNMENT_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Needs,
+        priority: 10,
+        tick_interval: config::NEEDS_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::StatThreshold,
+        priority: 12,
+        tick_interval: 5,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::UpperNeeds,
+        priority: 12,
+        tick_interval: config::UPPER_NEEDS_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Influence,
+        priority: config::INFLUENCE_SYSTEM_PRIORITY as i32,
+        tick_interval: config::INFLUENCE_SYSTEM_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::BuildingEffect,
+        priority: 15,
+        tick_interval: config::BUILDING_EFFECT_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Intelligence,
+        priority: 18,
+        tick_interval: 50,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Memory,
+        priority: 18,
+        tick_interval: config::MEMORY_COMPRESS_INTERVAL_TICKS as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Behavior,
+        priority: 20,
+        tick_interval: config::BEHAVIOR_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Gathering,
+        priority: 25,
+        tick_interval: config::GATHERING_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Construction,
+        priority: 28,
+        tick_interval: config::CONSTRUCTION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Steering,
+        priority: config::STEERING_SYSTEM_PRIORITY as i32,
+        tick_interval: config::STEERING_SYSTEM_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Movement,
+        priority: 30,
+        tick_interval: config::MOVEMENT_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Emotion,
+        priority: 32,
+        tick_interval: 12,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::ChildStressProcessor,
+        priority: 32,
+        tick_interval: 2,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Stress,
+        priority: 34,
+        tick_interval: config::STRESS_SYSTEM_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::MentalBreak,
+        priority: 35,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Occupation,
+        priority: 36,
+        tick_interval: config::OCCUPATION_EVAL_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TraumaScar,
+        priority: 36,
+        tick_interval: 10,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Title,
+        priority: 37,
+        tick_interval: config::TITLE_EVAL_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TraitViolation,
+        priority: 37,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::SocialEvent,
+        priority: 37,
+        tick_interval: 30,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Contagion,
+        priority: 38,
+        tick_interval: 3,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Reputation,
+        priority: 38,
+        tick_interval: config::REPUTATION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::EconomicTendency,
+        priority: 39,
+        tick_interval: config::ECON_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Morale,
+        priority: 40,
+        tick_interval: 5,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::JobSatisfaction,
+        priority: 40,
+        tick_interval: config::JOB_SAT_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Coping,
+        priority: 42,
+        tick_interval: 30,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Intergenerational,
+        priority: 45,
+        tick_interval: 240,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Parenting,
+        priority: 46,
+        tick_interval: 240,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Age,
+        priority: 48,
+        tick_interval: 50,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::PersonalityMaturation,
+        priority: 49,
+        tick_interval: config::TICKS_PER_YEAR as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Mortality,
+        priority: 49,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Population,
+        priority: 50,
+        tick_interval: config::POPULATION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Family,
+        priority: 52,
+        tick_interval: 365,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Leader,
+        priority: 52,
+        tick_interval: config::LEADER_CHECK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Value,
+        priority: 55,
+        tick_interval: 200,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Network,
+        priority: 58,
+        tick_interval: config::REVOLUTION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Migration,
+        priority: 60,
+        tick_interval: config::MIGRATION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TechDiscovery,
+        priority: 62,
+        tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TechPropagation,
+        priority: 62,
+        tick_interval: config::TEACHING_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TechMaintenance,
+        priority: 63,
+        tick_interval: config::TECH_DISCOVERY_INTERVAL_TICKS as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Tension,
+        priority: 64,
+        tick_interval: config::TENSION_CHECK_INTERVAL_TICKS as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TechUtilization,
+        priority: 65,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::StratificationMonitor,
+        priority: 90,
+        tick_interval: config::STRAT_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::StatsRecorder,
+        priority: 90,
+        tick_interval: 200,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::StorySifter,
+        priority: config::STORY_SIFTER_PRIORITY as i32,
+        tick_interval: config::STORY_SIFTER_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::SettlementCulture,
+        priority: 95,
+        tick_interval: 100,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::PersonalityGenerator,
+        priority: 97,
+        tick_interval: 100,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Attachment,
+        priority: 98,
+        tick_interval: 100,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::AceTracker,
+        priority: 99,
+        tick_interval: 100,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Trait,
+        priority: 100,
+        tick_interval: 10,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Chronicle,
+        priority: 101,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::LlmResponse,
+        priority: config::LLM_RESPONSE_SYSTEM_PRIORITY as i32,
+        tick_interval: config::LLM_RESPONSE_SYSTEM_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::LlmTimeout,
+        priority: config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32,
+        tick_interval: config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::LlmRequest,
+        priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32,
+        tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32,
+    },
 ];
 
 /// Registers one typed Rust runtime system into the scheduler.
@@ -301,65 +536,212 @@ pub(crate) fn register_runtime_system(
     let priority_u32 = priority.max(0) as u32;
     let tick_interval_u64 = tick_interval.max(1) as u64;
     match system_id {
-        RuntimeSystemId::Age => engine.register(AgeRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Mortality => engine.register(MortalityRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::MentalBreak => engine.register(MentalBreakRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TraumaScar => engine.register(TraumaScarRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TraitViolation => engine.register(TraitViolationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::JobAssignment => engine.register(JobAssignmentRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Contagion => engine.register(ContagionRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Occupation => engine.register(OccupationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Network => engine.register(NetworkRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::JobSatisfaction => engine.register(JobSatisfactionRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::EconomicTendency => engine.register(EconomicTendencyRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Intelligence => engine.register(IntelligenceRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Memory => engine.register(MemoryRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Coping => engine.register(CopingRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::ChildStressProcessor => engine.register(ChildStressProcessorRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Steering => engine.register(InfluenceSteeringSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Movement => engine.register(MovementRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Childcare => engine.register(ChildcareRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Leader => engine.register(LeaderRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Title => engine.register(TitleRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::StratificationMonitor => engine.register(StratificationMonitorRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Tension => engine.register(TensionRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::BuildingEffect => engine.register(BuildingEffectRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Influence => engine.register(InfluenceRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Migration => engine.register(MigrationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Population => engine.register(PopulationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TechUtilization => engine.register(TechUtilizationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TechMaintenance => engine.register(TechMaintenanceRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TechDiscovery => engine.register(TechDiscoveryRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::TechPropagation => engine.register(TechPropagationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Gathering => engine.register(GatheringRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Construction => engine.register(ConstructionRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Family => engine.register(FamilyRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Intergenerational => engine.register(IntergenerationalRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Parenting => engine.register(ParentingRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::StatsRecorder => engine.register(StatsRecorderRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::StatSync => engine.register(StatSyncRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::StatThreshold => engine.register(StatThresholdRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Behavior => engine.register(BehaviorRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Value => engine.register(ValueRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Morale => engine.register(MoraleRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::SocialEvent => engine.register(SocialEventRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Reputation => engine.register(ReputationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Emotion => engine.register(EmotionRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Stress => engine.register(StressRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Needs => engine.register(NeedsRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::UpperNeeds => engine.register(UpperNeedsRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::ResourceRegen => engine.register(ResourceRegenSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::SettlementCulture => engine.register(SettlementCultureRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Chronicle => engine.register(ChronicleRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::PersonalityMaturation => engine.register(PersonalityMaturationRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::PersonalityGenerator => engine.register(PersonalityGeneratorRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Attachment => engine.register(AttachmentRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::AceTracker => engine.register(AceTrackerRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::Trait => engine.register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::LlmRequest => engine.register(LlmRequestRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::LlmResponse => engine.register(LlmResponseRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::LlmTimeout => engine.register(LlmTimeoutRuntimeSystem::new(priority_u32, tick_interval_u64)),
-        RuntimeSystemId::StorySifter => engine.register(StorySifterRuntimeSystem::new(priority_u32, tick_interval_u64)),
+        RuntimeSystemId::Age => {
+            engine.register(AgeRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Mortality => {
+            engine.register(MortalityRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::MentalBreak => engine.register(MentalBreakRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TraumaScar => engine.register(TraumaScarRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TraitViolation => engine.register(TraitViolationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::JobAssignment => engine.register(JobAssignmentRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Contagion => {
+            engine.register(ContagionRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Occupation => engine.register(OccupationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Network => {
+            engine.register(NetworkRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::JobSatisfaction => engine.register(JobSatisfactionRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::EconomicTendency => engine.register(EconomicTendencyRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Intelligence => engine.register(IntelligenceRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Memory => {
+            engine.register(MemoryRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Coping => {
+            engine.register(CopingRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::ChildStressProcessor => engine.register(
+            ChildStressProcessorRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
+        RuntimeSystemId::Steering => engine.register(InfluenceSteeringSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Movement => {
+            engine.register(MovementRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Childcare => {
+            engine.register(ChildcareRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Leader => {
+            engine.register(LeaderRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Title => {
+            engine.register(TitleRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::StratificationMonitor => engine.register(
+            StratificationMonitorRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
+        RuntimeSystemId::Tension => {
+            engine.register(TensionRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::BuildingEffect => engine.register(BuildingEffectRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Influence => {
+            engine.register(InfluenceRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Migration => {
+            engine.register(MigrationRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Population => engine.register(PopulationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TechUtilization => engine.register(TechUtilizationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TechMaintenance => engine.register(TechMaintenanceRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TechDiscovery => engine.register(TechDiscoveryRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::TechPropagation => engine.register(TechPropagationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Gathering => {
+            engine.register(GatheringRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Construction => engine.register(ConstructionRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Family => {
+            engine.register(FamilyRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Intergenerational => engine.register(IntergenerationalRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Parenting => {
+            engine.register(ParentingRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::StatsRecorder => engine.register(StatsRecorderRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::StatSync => {
+            engine.register(StatSyncRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::StatThreshold => engine.register(StatThresholdRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Behavior => {
+            engine.register(BehaviorRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Value => {
+            engine.register(ValueRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Morale => {
+            engine.register(MoraleRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::SocialEvent => engine.register(SocialEventRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Reputation => engine.register(ReputationRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Emotion => {
+            engine.register(EmotionRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Stress => {
+            engine.register(StressRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Needs => {
+            engine.register(NeedsRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::UpperNeeds => engine.register(UpperNeedsRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::ResourceRegen => {
+            engine.register(ResourceRegenSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::SettlementCulture => engine.register(SettlementCultureRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Chronicle => {
+            engine.register(ChronicleRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::PersonalityMaturation => engine.register(
+            PersonalityMaturationRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
+        RuntimeSystemId::PersonalityGenerator => engine.register(
+            PersonalityGeneratorRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
+        RuntimeSystemId::Attachment => engine.register(AttachmentRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::AceTracker => engine.register(AceTrackerRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::Trait => {
+            engine.register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::LlmRequest => engine.register(LlmRequestRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::LlmResponse => engine.register(LlmResponseRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::LlmTimeout => engine.register(LlmTimeoutRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::StorySifter => engine.register(StorySifterRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
     }
 }
 
@@ -385,7 +767,10 @@ mod tests {
         }
         let all_ids: HashSet<RuntimeSystemId> = RuntimeSystemId::all().iter().copied().collect();
         assert_eq!(ids, all_ids);
-        assert_eq!(DEFAULT_RUNTIME_SYSTEMS[0].system_id, RuntimeSystemId::StatSync);
+        assert_eq!(
+            DEFAULT_RUNTIME_SYSTEMS[0].system_id,
+            RuntimeSystemId::StatSync
+        );
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,
             RuntimeSystemId::LlmRequest

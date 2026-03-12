@@ -1766,12 +1766,17 @@
   "LLM_TOGGLE_OFF": "AI 서사 비활성화",
   "CHRONICLE_TITLE_FOOD_ATTRACTION": "식량 탐색",
   "CHRONICLE_SUMMARY_FOOD_ATTRACTION": "{agent}은(는) 굶주림 끝에 식량을 찾아냈다.",
+  "CHRONICLE_DOSSIER_STUB_FOOD_ATTRACTION": "{agent}은(는) ({x}, {y}) 근처의 식량 신호를 따라 움직였다.",
   "CHRONICLE_TITLE_ESCAPE_DANGER": "위험 탈출",
   "CHRONICLE_SUMMARY_ESCAPE_DANGER": "{agent}은(는) 위험에서 가까스로 벗어났다.",
+  "CHRONICLE_DOSSIER_STUB_ESCAPE_DANGER": "{agent}은(는) ({x}, {y}) 부근에서 위험이 강해지자 경로를 바꾸었다.",
   "CHRONICLE_TITLE_SHELTER_SEEKING": "피난처 발견",
   "CHRONICLE_SUMMARY_SHELTER_SEEKING": "{agent}은(는) 추위를 피해 몸을 숨길 곳을 찾았다.",
+  "CHRONICLE_DOSSIER_STUB_SHELTER_SEEKING": "{agent}은(는) ({x}, {y}) 근처의 따뜻함과 은신처 쪽으로 기울었다.",
   "CHRONICLE_TITLE_SOCIAL_ATTRACTION": "무리 합류",
   "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION": "{agent}은(는) 주변 무리 쪽으로 자연스럽게 이끌렸다.",
+  "CHRONICLE_DOSSIER_STUB_SOCIAL_ATTRACTION": "{agent}은(는) ({x}, {y}) 주변의 사회적 신호에 끌려 이동했다.",
   "CHRONICLE_TITLE_SOCIAL_GATHERING": "모임 형성",
-  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count}명의 정착민이 하나의 중심을 따라 모여들었다."
+  "CHRONICLE_SUMMARY_SOCIAL_GATHERING": "{count}명의 정착민이 하나의 중심을 따라 모여들었다.",
+  "CHRONICLE_DOSSIER_STUB_SOCIAL_GATHERING": "{count}명의 정착민이 ({x}, {y}) 부근의 같은 모임 지점으로 합류했다."
 }

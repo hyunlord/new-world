@@ -50,8 +50,11 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelClampPolicy, ChannelId, ChannelMeta, EntityId, Settlement, SettlementId};
 use sim_engine::{
-    AgentSnapshot, ChronicleEvent, ChronicleSummary, EngineSnapshot, GameEvent, LlmPromptVariant,
-    LlmRequest, SimEvent, SimEventType,
+    AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
+    ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
+    ChronicleHistorySliceResponse, ChronicleRecallSliceResponse, ChronicleSnapshotRevision,
+    ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
+    SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -309,35 +312,407 @@ fn chronicle_event_to_dict(event: &ChronicleEvent) -> VarDictionary {
     dict
 }
 
-fn chronicle_summary_to_dict(summary: &ChronicleSummary) -> VarDictionary {
+/// Temporary migration adapter for legacy Chronicle UI consumers.
+///
+/// Runtime chronicle authority now lives in `ChronicleEntryLite`. This adapter preserves the
+/// existing dictionary shape while bridge/UI callers migrate off summary-centric contracts.
+fn chronicle_layer_params_to_dict(
+    params: &std::collections::BTreeMap<String, String>,
+) -> VarDictionary {
     let mut dict = VarDictionary::new();
-    dict.set("tick", summary.end_tick as i64);
-    dict.set("start_tick", summary.start_tick as i64);
-    dict.set("end_tick", summary.end_tick as i64);
-    dict.set("event_type", format!("{:?}", summary.event_type));
+    for (key, value) in params {
+        dict.set(key.as_str(), value.as_str());
+    }
+    dict
+}
+
+fn chronicle_detail_tags_to_array(tags: &[String]) -> PackedStringArray {
+    let mut out = PackedStringArray::new();
+    for tag in tags {
+        out.push(tag.as_str());
+    }
+    out
+}
+
+fn chronicle_snapshot_revision_from_arg(value: i64) -> Option<ChronicleSnapshotRevision> {
+    (value >= 0).then_some(ChronicleSnapshotRevision(value as u64))
+}
+
+fn chronicle_entry_status_id(entry: &ChronicleEntryLite) -> &'static str {
+    match entry.status {
+        sim_engine::ChronicleEntryStatus::Pending => "pending",
+        sim_engine::ChronicleEntryStatus::Published => "published",
+        sim_engine::ChronicleEntryStatus::Suppressed => "suppressed",
+        sim_engine::ChronicleEntryStatus::Archived => "archived",
+    }
+}
+
+fn chronicle_subject_ref_lite_to_dict(
+    subject: &sim_engine::ChronicleSubjectRefLite,
+) -> VarDictionary {
+    let mut dict = VarDictionary::new();
     dict.set(
         "entity_id",
-        summary
+        subject
             .entity_id
             .map(|entity_id| entity_id.0 as i64)
             .unwrap_or(-1),
     );
-    dict.set("cause_id", summary.cause.id());
-    dict.set("title_key", summary.title.clone());
-    dict.set("description", summary.description.clone());
-    dict.set("l10n_key", summary.description.clone());
-    dict.set("tile_x", summary.tile_x);
-    dict.set("tile_y", summary.tile_y);
-    dict.set("significance", summary.significance as f32);
-    dict.set("category_id", summary.category.id());
-    let mut params = VarDictionary::new();
-    for (key, value) in &summary.params {
-        params.set(key.as_str(), value.as_str());
+    dict.set(
+        "display_name",
+        subject.display_name.as_deref().unwrap_or_default(),
+    );
+    dict
+}
+
+fn chronicle_location_ref_lite_to_dict(
+    location: sim_engine::ChronicleLocationRefLite,
+) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("tile_x", location.tile_x);
+    dict.set("tile_y", location.tile_y);
+    dict
+}
+
+fn chronicle_feed_item_snapshot_to_dict(item: &ChronicleFeedItemSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let mut primary_subjects: Array<VarDictionary> = Array::new();
+    for subject in &item.primary_subjects {
+        primary_subjects.push(&chronicle_subject_ref_lite_to_dict(subject));
     }
-    dict.set("l10n_params", params);
-    if let Some(agent_name) = summary.params.get("agent") {
+    let mut render_hint = VarDictionary::new();
+    render_hint.set("icon_id", item.render_hint.icon_id.as_str());
+    render_hint.set("color_token", item.render_hint.color_token.as_str());
+
+    dict.set("entry_id", item.entry_id.0 as i64);
+    dict.set(
+        "thread_id",
+        item.thread_id
+            .map(|thread_id| thread_id as i64)
+            .unwrap_or(-1),
+    );
+    dict.set("event_type", format!("{:?}", item.event_type));
+    dict.set("cause_id", item.cause.id());
+    dict.set("queue_bucket", item.queue_bucket.id());
+    dict.set("category_id", item.category.id());
+    dict.set("significance", item.significance as f32);
+    dict.set("start_tick", item.start_tick as i64);
+    dict.set("end_tick", item.end_tick as i64);
+    dict.set("tick", item.end_tick as i64);
+    dict.set("headline_key", item.headline.locale_key.as_str());
+    dict.set(
+        "headline_params",
+        chronicle_layer_params_to_dict(&item.headline.params),
+    );
+    dict.set("capsule_key", item.capsule.locale_key.as_str());
+    dict.set(
+        "capsule_params",
+        chronicle_layer_params_to_dict(&item.capsule.params),
+    );
+    dict.set("tile_x", item.location_ref.tile_x);
+    dict.set("tile_y", item.location_ref.tile_y);
+    dict.set(
+        "location",
+        chronicle_location_ref_lite_to_dict(item.location_ref),
+    );
+    dict.set("primary_subjects", primary_subjects);
+    dict.set("render_hint", render_hint);
+    let entity_id = item
+        .primary_subjects
+        .first()
+        .and_then(|subject| subject.entity_id)
+        .map(|entity_id| entity_id.0 as i64)
+        .unwrap_or(-1);
+    dict.set("entity_id", entity_id);
+    if let Some(subject) = item.primary_subjects.first() {
+        if let Some(display_name) = subject.display_name.as_deref() {
+            dict.set("entity_name", display_name);
+        } else if let Some(agent_name) = item.capsule.params.get("agent") {
+            dict.set("entity_name", agent_name.as_str());
+        } else if let Some(agent_name) = item.headline.params.get("agent") {
+            dict.set("entity_name", agent_name.as_str());
+        }
+    } else if let Some(agent_name) = item.capsule.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    } else if let Some(agent_name) = item.headline.params.get("agent") {
         dict.set("entity_name", agent_name.as_str());
     }
+    dict
+}
+
+/// Temporary migration adapter for legacy timeline consumers.
+///
+/// The legacy timeline endpoint now delegates to the new feed snapshot family and derives the
+/// old flat summary fields from feed-level payloads.
+fn chronicle_feed_item_snapshot_to_legacy_dict(item: &ChronicleFeedItemSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let primary_subject = item.primary_subjects.first();
+    let entity_id = primary_subject
+        .and_then(|subject| subject.entity_id)
+        .map(|id| id.0 as i64)
+        .unwrap_or(-1);
+    dict.set("entry_id", item.entry_id.0 as i64);
+    dict.set("event_type", format!("{:?}", item.event_type));
+    dict.set("cause_id", item.cause.id());
+    dict.set("tick", item.end_tick as i64);
+    dict.set("start_tick", item.start_tick as i64);
+    dict.set("end_tick", item.end_tick as i64);
+    dict.set("entity_id", entity_id);
+    dict.set("significance", item.significance as f32);
+    dict.set("title_key", item.headline.locale_key.as_str());
+    dict.set("description", item.capsule.locale_key.as_str());
+    dict.set("l10n_key", item.capsule.locale_key.as_str());
+    dict.set("headline_key", item.headline.locale_key.as_str());
+    dict.set(
+        "headline_params",
+        chronicle_layer_params_to_dict(&item.headline.params),
+    );
+    dict.set("capsule_key", item.capsule.locale_key.as_str());
+    dict.set(
+        "capsule_params",
+        chronicle_layer_params_to_dict(&item.capsule.params),
+    );
+    dict.set("tile_x", item.location_ref.tile_x);
+    dict.set("tile_y", item.location_ref.tile_y);
+    dict.set("category_id", item.category.id());
+    dict.set("queue_bucket", item.queue_bucket.id());
+    dict.set(
+        "l10n_params",
+        chronicle_layer_params_to_dict(&item.capsule.params),
+    );
+    if let Some(subject) = primary_subject {
+        if let Some(agent_name) = subject.display_name.as_deref() {
+            dict.set("entity_name", agent_name);
+        } else if let Some(agent_name) = item.capsule.params.get("agent") {
+            dict.set("entity_name", agent_name.as_str());
+        } else if let Some(agent_name) = item.headline.params.get("agent") {
+            dict.set("entity_name", agent_name.as_str());
+        }
+    } else if let Some(agent_name) = item.capsule.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    } else if let Some(agent_name) = item.headline.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    }
+    dict
+}
+
+fn chronicle_entry_lite_to_legacy_dict(entry: &ChronicleEntryLite) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("entry_id", entry.entry_id.0 as i64);
+    dict.set("tick", entry.end_tick as i64);
+    dict.set("start_tick", entry.start_tick as i64);
+    dict.set("end_tick", entry.end_tick as i64);
+    dict.set("event_family", entry.event_family.as_str());
+    dict.set("event_type", format!("{:?}", entry.event_type));
+    dict.set(
+        "entity_id",
+        entry
+            .entity_ref
+            .entity_id
+            .map(|entity_id| entity_id.0 as i64)
+            .unwrap_or(-1),
+    );
+    dict.set("cause_id", entry.cause.id());
+    dict.set("title_key", entry.headline.locale_key.as_str());
+    dict.set("description", entry.capsule.locale_key.as_str());
+    dict.set("l10n_key", entry.capsule.locale_key.as_str());
+    dict.set("headline_key", entry.headline.locale_key.as_str());
+    dict.set(
+        "headline_params",
+        chronicle_layer_params_to_dict(&entry.headline.params),
+    );
+    dict.set("capsule_key", entry.capsule.locale_key.as_str());
+    dict.set(
+        "capsule_params",
+        chronicle_layer_params_to_dict(&entry.capsule.params),
+    );
+    dict.set("dossier_stub_key", entry.dossier_stub.locale_key.as_str());
+    dict.set(
+        "dossier_stub_params",
+        chronicle_layer_params_to_dict(&entry.dossier_stub.params),
+    );
+    dict.set(
+        "dossier_stub_tags",
+        chronicle_detail_tags_to_array(&entry.dossier_stub.detail_tags),
+    );
+    dict.set("tile_x", entry.location_ref.tile_x);
+    dict.set("tile_y", entry.location_ref.tile_y);
+    dict.set("significance", entry.significance as f32);
+    dict.set("category_id", entry.significance_category.id());
+    dict.set("queue_bucket", entry.queue_bucket.id());
+    dict.set("status", chronicle_entry_status_id(entry));
+    dict.set(
+        "surfaced_tick",
+        entry.surfaced_tick.map(|tick| tick as i64).unwrap_or(-1),
+    );
+    dict.set(
+        "l10n_params",
+        chronicle_layer_params_to_dict(&entry.capsule.params),
+    );
+    if let Some(agent_name) = entry.entity_ref.display_name.as_deref() {
+        dict.set("entity_name", agent_name);
+    } else if let Some(agent_name) = entry.capsule.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    } else if let Some(agent_name) = entry.headline.params.get("agent") {
+        dict.set("entity_name", agent_name.as_str());
+    }
+    dict
+}
+
+fn chronicle_entry_detail_snapshot_to_dict(
+    snapshot: &ChronicleEntryDetailSnapshot,
+) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("snapshot_revision", snapshot.snapshot_revision.0 as i64);
+    dict.set("revision_unavailable", snapshot.revision_unavailable);
+    dict.set("available", snapshot.entry.is_some());
+    if let Some(entry) = snapshot.entry.as_ref() {
+        let mut subjects: Array<VarDictionary> = Array::new();
+        subjects.push(&chronicle_subject_ref_lite_to_dict(&entry.entity_ref));
+        dict.set("entry_id", entry.entry_id.0 as i64);
+        dict.set("start_tick", entry.start_tick as i64);
+        dict.set("end_tick", entry.end_tick as i64);
+        dict.set("event_family", entry.event_family.as_str());
+        dict.set("event_type", format!("{:?}", entry.event_type));
+        dict.set("cause_id", entry.cause.id());
+        dict.set("headline_key", entry.headline.locale_key.as_str());
+        dict.set(
+            "headline_params",
+            chronicle_layer_params_to_dict(&entry.headline.params),
+        );
+        dict.set("capsule_key", entry.capsule.locale_key.as_str());
+        dict.set(
+            "capsule_params",
+            chronicle_layer_params_to_dict(&entry.capsule.params),
+        );
+        dict.set("dossier_stub_key", entry.dossier_stub.locale_key.as_str());
+        dict.set(
+            "dossier_stub_params",
+            chronicle_layer_params_to_dict(&entry.dossier_stub.params),
+        );
+        dict.set(
+            "dossier_stub_tags",
+            chronicle_detail_tags_to_array(&entry.dossier_stub.detail_tags),
+        );
+        dict.set("subjects", subjects);
+        dict.set(
+            "location",
+            chronicle_location_ref_lite_to_dict(entry.location_ref),
+        );
+        dict.set("significance", entry.significance as f32);
+        dict.set("category_id", entry.significance_category.id());
+        dict.set("queue_bucket", entry.queue_bucket.id());
+        dict.set("status", chronicle_entry_status_id(entry));
+        dict.set(
+            "surfaced_tick",
+            entry.surfaced_tick.map(|tick| tick as i64).unwrap_or(-1),
+        );
+        let causal_links: Array<VarDictionary> = Array::new();
+        dict.set("causal_links", causal_links);
+    }
+    dict
+}
+
+fn chronicle_feed_response_to_dict(response: &ChronicleFeedResponse) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let mut items: Array<VarDictionary> = Array::new();
+    for item in &response.items {
+        items.push(&chronicle_feed_item_snapshot_to_dict(item));
+    }
+    dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
+    dict.set("revision_unavailable", response.revision_unavailable);
+    dict.set("items", items);
+    dict
+}
+
+fn chronicle_feed_response_to_legacy_array(
+    response: &ChronicleFeedResponse,
+) -> Array<VarDictionary> {
+    let mut out: Array<VarDictionary> = Array::new();
+    for item in &response.items {
+        out.push(&chronicle_feed_item_snapshot_to_legacy_dict(item));
+    }
+    out
+}
+
+fn chronicle_recall_slice_response_to_dict(
+    response: &ChronicleRecallSliceResponse,
+) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let mut items: Array<VarDictionary> = Array::new();
+    for item in &response.items {
+        let mut item_dict = VarDictionary::new();
+        item_dict.set("entry_id", item.entry_id.0 as i64);
+        item_dict.set("queue_bucket", item.queue_bucket.id());
+        item_dict.set("suppression_reason", item.suppression_reason.as_str());
+        item_dict.set("suppressed_tick", item.suppressed_tick as i64);
+        item_dict.set("recall_priority", item.recall_priority as f32);
+        item_dict.set("cause_id", item.cause.id());
+        item_dict.set("headline_key", item.headline.locale_key.as_str());
+        item_dict.set(
+            "headline_params",
+            chronicle_layer_params_to_dict(&item.headline.params),
+        );
+        item_dict.set(
+            "location",
+            chronicle_location_ref_lite_to_dict(item.location_ref),
+        );
+        items.push(&item_dict);
+    }
+    dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
+    dict.set("revision_unavailable", response.revision_unavailable);
+    dict.set("items", items);
+    dict
+}
+
+fn chronicle_history_slice_response_to_dict(
+    response: &ChronicleHistorySliceResponse,
+) -> VarDictionary {
+    let mut dict = chronicle_feed_response_to_dict(&ChronicleFeedResponse {
+        snapshot_revision: response.snapshot_revision,
+        revision_unavailable: response.revision_unavailable,
+        items: response.items.clone(),
+    });
+    dict.set(
+        "next_cursor_before_tick",
+        response
+            .next_cursor_before_tick
+            .map(|tick| tick as i64)
+            .unwrap_or(-1),
+    );
+    dict.set(
+        "next_cursor_before_entry_id",
+        response
+            .next_cursor_before_entry_id
+            .map(|entry_id| entry_id.0 as i64)
+            .unwrap_or(-1),
+    );
+    dict
+}
+
+fn chronicle_thread_list_response_to_dict(response: &ChronicleThreadListResponse) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let mut items: Array<VarDictionary> = Array::new();
+    for item in &response.items {
+        let mut item_dict = VarDictionary::new();
+        let mut entry_ids = PackedInt64Array::new();
+        for entry_id in &item.entry_ids {
+            entry_ids.push(entry_id.0 as i64);
+        }
+        item_dict.set("thread_id", item.thread_id as i64);
+        item_dict.set("state_id", item.state_id.as_str());
+        item_dict.set("tension_score", item.tension_score as f32);
+        item_dict.set("headline_key", item.headline.locale_key.as_str());
+        item_dict.set(
+            "headline_params",
+            chronicle_layer_params_to_dict(&item.headline.params),
+        );
+        item_dict.set("entry_ids", entry_ids);
+        items.push(&item_dict);
+    }
+    dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
+    dict.set("revision_unavailable", response.revision_unavailable);
+    dict.set("items", items);
     dict
 }
 
@@ -1325,20 +1700,145 @@ impl WorldSimRuntime {
     }
 
     #[func]
-    fn runtime_get_chronicle_timeline(&self, limit: i64) -> Array<VarDictionary> {
-        let mut out: Array<VarDictionary> = Array::new();
+    fn runtime_get_chronicle_feed(&self, limit: i64, snapshot_revision: i64) -> VarDictionary {
         let Some(state) = self.state.as_ref() else {
+            let mut out = VarDictionary::new();
+            out.set("snapshot_revision", -1);
+            out.set("revision_unavailable", true);
+            out.set("items", Array::<VarDictionary>::new());
             return out;
         };
-        for summary in state
+        let response = state.engine.resources().chronicle_timeline.feed_snapshot(
+            limit.max(0) as usize,
+            chronicle_snapshot_revision_from_arg(snapshot_revision),
+        );
+        chronicle_feed_response_to_dict(&response)
+    }
+
+    #[func]
+    fn runtime_get_chronicle_entry_detail(
+        &self,
+        entry_id: i64,
+        snapshot_revision: i64,
+    ) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            let mut out = VarDictionary::new();
+            out.set("snapshot_revision", -1);
+            out.set("revision_unavailable", true);
+            out.set("available", false);
+            return out;
+        };
+        let entry_id = match (entry_id > 0).then_some(entry_id as u64) {
+            Some(raw_id) => ChronicleEntryId(raw_id),
+            None => {
+                let mut out = VarDictionary::new();
+                out.set(
+                    "snapshot_revision",
+                    state
+                        .engine
+                        .resources()
+                        .chronicle_timeline
+                        .snapshot_revision()
+                        .0 as i64,
+                );
+                out.set("revision_unavailable", false);
+                out.set("available", false);
+                return out;
+            }
+        };
+        let response = state
             .engine
             .resources()
             .chronicle_timeline
-            .recent_summaries(limit.max(0) as usize)
-        {
-            out.push(&chronicle_summary_to_dict(summary));
-        }
-        out
+            .entry_detail_snapshot(
+                entry_id,
+                chronicle_snapshot_revision_from_arg(snapshot_revision),
+            );
+        chronicle_entry_detail_snapshot_to_dict(&response)
+    }
+
+    #[func]
+    fn runtime_get_story_threads(&self, limit: i64, snapshot_revision: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            let mut out = VarDictionary::new();
+            out.set("snapshot_revision", -1);
+            out.set("revision_unavailable", true);
+            out.set("items", Array::<VarDictionary>::new());
+            return out;
+        };
+        let response = state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .story_threads_snapshot(
+                limit.max(0) as usize,
+                chronicle_snapshot_revision_from_arg(snapshot_revision),
+            );
+        chronicle_thread_list_response_to_dict(&response)
+    }
+
+    #[func]
+    fn runtime_get_history_slice(
+        &self,
+        limit: i64,
+        cursor_before_tick: i64,
+        cursor_before_entry_id: i64,
+        snapshot_revision: i64,
+    ) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            let mut out = VarDictionary::new();
+            out.set("snapshot_revision", -1);
+            out.set("revision_unavailable", true);
+            out.set("items", Array::<VarDictionary>::new());
+            out.set("next_cursor_before_tick", -1);
+            out.set("next_cursor_before_entry_id", -1);
+            return out;
+        };
+        let response = state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .history_slice_snapshot(
+                limit.max(0) as usize,
+                (cursor_before_tick >= 0).then_some(cursor_before_tick as u64),
+                (cursor_before_entry_id > 0)
+                    .then_some(ChronicleEntryId(cursor_before_entry_id as u64)),
+                chronicle_snapshot_revision_from_arg(snapshot_revision),
+            );
+        chronicle_history_slice_response_to_dict(&response)
+    }
+
+    #[func]
+    fn runtime_get_recall_slice(&self, limit: i64, snapshot_revision: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            let mut out = VarDictionary::new();
+            out.set("snapshot_revision", -1);
+            out.set("revision_unavailable", true);
+            out.set("items", Array::<VarDictionary>::new());
+            return out;
+        };
+        let response = state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .recall_slice_snapshot(
+                limit.max(0) as usize,
+                chronicle_snapshot_revision_from_arg(snapshot_revision),
+            );
+        chronicle_recall_slice_response_to_dict(&response)
+    }
+
+    #[func]
+    fn runtime_get_chronicle_timeline(&self, limit: i64) -> Array<VarDictionary> {
+        let Some(state) = self.state.as_ref() else {
+            return Array::new();
+        };
+        let response = state
+            .engine
+            .resources()
+            .chronicle_timeline
+            .feed_snapshot(limit.max(0) as usize, None);
+        chronicle_feed_response_to_legacy_array(&response)
     }
 
     #[func]
@@ -1618,14 +2118,14 @@ impl WorldSimRuntime {
             dict.set("recent_dominant_cause_key", "");
             dict.set("recent_influence_channel_id", "");
         }
-        let recent_summaries = state
+        let recent_entries = state
             .engine
             .resources()
             .chronicle_timeline
-            .query_by_entity(entity_id, 3);
+            .query_entries_by_entity(entity_id, 3);
         let mut chronicle_summary_arr: Array<VarDictionary> = Array::new();
-        for summary in recent_summaries {
-            chronicle_summary_arr.push(&chronicle_summary_to_dict(summary));
+        for entry in recent_entries {
+            chronicle_summary_arr.push(&chronicle_entry_lite_to_legacy_dict(entry));
         }
         dict.set("recent_chronicle_summaries", chronicle_summary_arr);
 
@@ -5770,8 +6270,14 @@ mod tests {
     use sim_core::components::{LlmPending, LlmRequestType, NarrativeCache};
     use sim_core::enums::ActionType;
     use sim_core::{EntityId, SettlementId};
-    use sim_engine::{EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType};
+    use sim_engine::{
+        ChronicleCapsule, ChronicleDossierStub, ChronicleEntryId, ChronicleEntryLite,
+        ChronicleEntryStatus, ChronicleEventCause, ChronicleEventType, ChronicleHeadline,
+        ChronicleLocationRefLite, ChronicleQueueBucket, ChronicleSignificanceCategory,
+        ChronicleSubjectRefLite, EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType,
+    };
     use sim_systems::pathfinding::GridPos;
+    use std::collections::BTreeMap;
 
     fn base_input() -> PathfindInput {
         PathfindInput {
@@ -6578,5 +7084,56 @@ mod tests {
         };
         assert!(!super::pending_request_should_be_preempted(&pending, 150));
         assert!(!super::pending_request_should_be_preempted(&pending, 200));
+    }
+
+    #[test]
+    fn chronicle_entry_lite_legacy_summary_keeps_layered_fields() {
+        let entry = ChronicleEntryLite {
+            entry_id: ChronicleEntryId(4),
+            start_tick: 20,
+            end_tick: 21,
+            event_family: "chronicle.test.food".to_string(),
+            event_type: ChronicleEventType::InfluenceAttraction,
+            cause: ChronicleEventCause::Food,
+            headline: ChronicleHeadline {
+                locale_key: "CHRONICLE_HEADLINE_TEST".to_string(),
+                params: BTreeMap::new(),
+            },
+            capsule: ChronicleCapsule {
+                locale_key: "CHRONICLE_CAPSULE_TEST".to_string(),
+                params: BTreeMap::new(),
+            },
+            dossier_stub: ChronicleDossierStub {
+                locale_key: "CHRONICLE_DOSSIER_STUB_TEST".to_string(),
+                params: BTreeMap::new(),
+                detail_tags: vec!["cause".to_string()],
+            },
+            entity_ref: ChronicleSubjectRefLite {
+                entity_id: Some(EntityId(11)),
+                display_name: Some("Aria".to_string()),
+            },
+            location_ref: ChronicleLocationRefLite {
+                tile_x: 1,
+                tile_y: 2,
+            },
+            significance: 7.0,
+            significance_category: ChronicleSignificanceCategory::Major,
+            queue_bucket: ChronicleQueueBucket::Visible,
+            status: ChronicleEntryStatus::Published,
+            surfaced_tick: Some(21),
+        };
+        let summary = entry.to_legacy_summary();
+        assert_eq!(summary.title, "CHRONICLE_HEADLINE_TEST");
+        assert_eq!(summary.description, "CHRONICLE_CAPSULE_TEST");
+        assert_eq!(summary.category, ChronicleSignificanceCategory::Major);
+    }
+
+    #[test]
+    fn chronicle_snapshot_revision_from_arg_accepts_only_non_negative_values() {
+        assert_eq!(
+            super::chronicle_snapshot_revision_from_arg(7),
+            Some(sim_engine::ChronicleSnapshotRevision(7))
+        );
+        assert_eq!(super::chronicle_snapshot_revision_from_arg(-1), None);
     }
 }
