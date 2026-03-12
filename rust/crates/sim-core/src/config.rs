@@ -391,6 +391,10 @@ pub const CHRONICLE_LOG_MAX_EVENTS: usize = 1000;
 pub const CHRONICLE_LOG_MAX_PER_ENTITY: usize = 20;
 /// Maximum summarized entries kept in the chronicle timeline.
 pub const CHRONICLE_TIMELINE_MAX_ENTRIES: usize = 200;
+/// Maximum surfaced Chronicle entries visible to the player at once.
+pub const CHRONICLE_VISIBLE_MAX_ENTRIES: usize = 5;
+/// Maximum suppressed important Chronicle entries kept for recall.
+pub const CHRONICLE_RECALL_MAX_ENTRIES: usize = 64;
 /// Minimum significance treated as medium importance in chronicle pruning.
 pub const CHRONICLE_MEDIUM_SIGNIFICANCE_THRESHOLD: f64 = 0.35;
 /// Minimum significance treated as high importance in chronicle pruning.
@@ -403,6 +407,10 @@ pub const CHRONICLE_SUMMARY_INTERVAL_TICKS: u64 = 200;
 pub const CHRONICLE_CLUSTER_WINDOW_TICKS: u64 = 30;
 /// Minimum accepted significance score for one chronicle summary.
 pub const CHRONICLE_SUMMARY_SIGNIFICANCE_THRESHOLD: f64 = 6.0;
+/// Minimum score required before a summary is considered notable background context.
+pub const CHRONICLE_SUMMARY_NOTABLE_THRESHOLD: f64 = 4.0;
+/// Minimum score required before a summary is considered critical attention.
+pub const CHRONICLE_SUMMARY_CRITICAL_THRESHOLD: f64 = 10.0;
 /// Bonus added when a cluster contains danger-driven movement.
 pub const CHRONICLE_DANGER_BONUS: f64 = 5.0;
 /// Bonus added when a cluster contains food-driven movement.
@@ -415,6 +423,12 @@ pub const CHRONICLE_SOCIAL_BONUS: f64 = 2.5;
 pub const CHRONICLE_SOCIAL_GROUP_SIZE_THRESHOLD: usize = 3;
 /// Spatial bucket size in tiles for social-gathering chronicle clustering.
 pub const CHRONICLE_SOCIAL_BUCKET_SIZE: i32 = 3;
+/// Tick window over which repeated Chronicle families receive a suppression penalty.
+pub const CHRONICLE_REPEAT_SUPPRESSION_WINDOW_TICKS: u64 = 600;
+/// Significance penalty applied for each recent repeat of the same Chronicle family.
+pub const CHRONICLE_REPEAT_SUPPRESSION_STEP: f64 = 2.0;
+/// Tick window after which the best background Chronicle is promoted if nothing surfaced.
+pub const CHRONICLE_VISIBLE_STARVATION_TICKS: u64 = 1800;
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.
