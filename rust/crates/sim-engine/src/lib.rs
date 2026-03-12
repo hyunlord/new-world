@@ -45,14 +45,14 @@ pub mod system_trait;
 
 pub use chronicle::{
     ChronicleCapsule, ChronicleCluster, ChronicleDossierStub, ChronicleEntryDetailSnapshot,
-    ChronicleEntryId, ChronicleEntryLite, ChronicleEntryStatus, ChronicleEvent,
-    ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, ChronicleFeedItemSnapshot,
-    ChronicleFeedRenderHint, ChronicleFeedResponse, ChronicleHeadline,
+    ChronicleEntityRefState, ChronicleEntryId, ChronicleEntryLite, ChronicleEntryStatus,
+    ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType,
+    ChronicleFeedItemSnapshot, ChronicleFeedRenderHint, ChronicleFeedResponse, ChronicleHeadline,
     ChronicleHistorySliceResponse, ChronicleLocationRefLite, ChronicleLog, ChronicleQueueBucket,
-    ChronicleQueueKind, ChronicleRecallItemSnapshot, ChronicleRecallSliceResponse,
-    ChronicleRouteResult, ChronicleSignificanceCategory, ChronicleSnapshotRevision,
-    ChronicleSubjectRefLite, ChronicleSummary, ChronicleThreadListResponse,
-    ChronicleThreadSnapshot, ChronicleTimeline,
+    ChronicleQueueKind, ChronicleQueueTransition, ChronicleRecallItemSnapshot,
+    ChronicleRecallSliceResponse, ChronicleRouteResult, ChronicleSignificanceCategory,
+    ChronicleSignificanceMeta, ChronicleSnapshotRevision, ChronicleSubjectRefLite,
+    ChronicleSummary, ChronicleThreadListResponse, ChronicleThreadSnapshot, ChronicleTimeline,
 };
 pub use command::{Command, CommandQueue};
 pub use engine::{

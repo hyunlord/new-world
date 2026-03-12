@@ -351,15 +351,42 @@ pub struct ChronicleSubjectRefLite {
     pub entity_id: Option<EntityId>,
     /// Frozen display name used for legacy bridge/UI consumers.
     pub display_name: Option<String>,
+    /// Entity alive/dead/unknown state frozen at entry creation time.
+    pub ref_state: ChronicleEntityRefState,
+}
+
+/// Entity reference state for chronicle tombstone handling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum ChronicleEntityRefState {
+    /// Entity was alive at the time of entry creation.
+    Alive,
+    /// Entity was dead at the time of entry creation.
+    Dead,
+    /// Entity state is unknown or not applicable.
+    #[default]
+    Unknown,
+}
+
+impl ChronicleEntityRefState {
+    /// Returns a stable machine-readable identifier for bridge/debug serialization.
+    pub fn id(&self) -> &'static str {
+        match self {
+            Self::Alive => "alive",
+            Self::Dead => "dead",
+            Self::Unknown => "unknown",
+        }
+    }
 }
 
 /// Minimal location reference carried by one chronicle entry.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ChronicleLocationRefLite {
     /// Representative tile-space X location of the entry.
     pub tile_x: i32,
     /// Representative tile-space Y location of the entry.
     pub tile_y: i32,
+    /// Human-readable region or settlement label frozen at entry creation time.
+    pub region_label: Option<String>,
 }
 
 /// Minimal feed render hint returned by chronicle snapshot endpoints.
@@ -461,12 +488,18 @@ pub struct ChronicleEntryLite {
     pub significance: f64,
     /// Attention category assigned during summarization.
     pub significance_category: ChronicleSignificanceCategory,
+    /// Decomposed significance scoring for debug and tuning transparency.
+    pub significance_meta: ChronicleSignificanceMeta,
     /// Current runtime queue bucket.
     pub queue_bucket: ChronicleQueueBucket,
     /// Current lifecycle status.
     pub status: ChronicleEntryStatus,
     /// Tick when the entry first surfaced in the visible queue.
     pub surfaced_tick: Option<u64>,
+    /// Machine-readable reason for the most recent displacement, if any.
+    pub displacement_reason: Option<String>,
+    /// Ordered history of queue bucket transitions.
+    pub queue_transitions: Vec<ChronicleQueueTransition>,
     /// Thread this entry belongs to, if any.
     pub thread_id: Option<ChronicleThreadId>,
 }
@@ -483,6 +516,12 @@ impl ChronicleEntryLite {
         self.headline.validate()?;
         self.capsule.validate()?;
         self.dossier_stub.validate()?;
+        if !self.queue_transitions.is_empty() {
+            let first_transition = &self.queue_transitions[0];
+            if first_transition.to == ChronicleQueueBucket::Dropped {
+                return Err("queue_transitions must not transition into dropped");
+            }
+        }
         Ok(())
     }
 
@@ -547,6 +586,49 @@ pub struct ChronicleSummary {
     pub significance: f64,
     /// Attention category assigned during summarization.
     pub category: ChronicleSignificanceCategory,
+}
+
+/// Decomposed significance scoring for debug and tuning transparency.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ChronicleSignificanceMeta {
+    /// Raw sum of event magnitudes before bonuses.
+    pub base_score: f64,
+    /// Cause-specific bonus applied on top of the base score.
+    pub cause_bonus: f64,
+    /// Social group-size bonus (0.0 for non-social entries).
+    pub group_bonus: f64,
+    /// Penalty applied for repeated event families in the suppression window.
+    pub repeat_penalty: f64,
+    /// Final computed significance score.
+    pub final_score: f64,
+    /// Machine-readable tags describing why this score was assigned.
+    pub reason_tags: Vec<String>,
+}
+
+impl Default for ChronicleSignificanceMeta {
+    fn default() -> Self {
+        Self {
+            base_score: 0.0,
+            cause_bonus: 0.0,
+            group_bonus: 0.0,
+            repeat_penalty: 0.0,
+            final_score: 0.0,
+            reason_tags: Vec::new(),
+        }
+    }
+}
+
+/// One queue transition event in an entry lifecycle.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ChronicleQueueTransition {
+    /// The queue bucket before this transition.
+    pub from: ChronicleQueueBucket,
+    /// The queue bucket after this transition.
+    pub to: ChronicleQueueBucket,
+    /// Tick when this transition occurred.
+    pub tick: u64,
+    /// Machine-readable reason for the transition.
+    pub reason: String,
 }
 
 /// Feed-ready chronicle item returned by the bridge snapshot family.
@@ -758,11 +840,25 @@ impl ChronicleTimeline {
                 entry.queue_bucket = ChronicleQueueBucket::Visible;
                 entry.status = ChronicleEntryStatus::Published;
                 entry.surfaced_tick = Some(surfaced_tick);
+                entry.queue_transitions.push(ChronicleQueueTransition {
+                    from: ChronicleQueueBucket::Dropped,
+                    to: ChronicleQueueBucket::Visible,
+                    tick: surfaced_tick,
+                    reason: "routed_critical".to_string(),
+                });
                 entry.thread_id = Some(thread_id);
                 let displaced = self.push_visible(entry, surfaced_tick);
                 let displaced_visible = displaced.is_some();
                 let mut pruned = false;
                 if let Some(mut displaced_entry) = displaced {
+                    displaced_entry.displacement_reason =
+                        Some("displaced_by_critical".to_string());
+                    displaced_entry.queue_transitions.push(ChronicleQueueTransition {
+                        from: ChronicleQueueBucket::Visible,
+                        to: ChronicleQueueBucket::Recall,
+                        tick: surfaced_tick,
+                        reason: "displaced_by_critical".to_string(),
+                    });
                     displaced_entry.queue_bucket = ChronicleQueueBucket::Recall;
                     displaced_entry.status = ChronicleEntryStatus::Published;
                     pruned = self.push_recall(displaced_entry).is_some();
@@ -788,11 +884,25 @@ impl ChronicleTimeline {
                     entry.queue_bucket = ChronicleQueueBucket::Visible;
                     entry.status = ChronicleEntryStatus::Published;
                     entry.surfaced_tick = Some(surfaced_tick);
+                    entry.queue_transitions.push(ChronicleQueueTransition {
+                        from: ChronicleQueueBucket::Dropped,
+                        to: ChronicleQueueBucket::Visible,
+                        tick: surfaced_tick,
+                        reason: "routed_major".to_string(),
+                    });
                     entry.thread_id = Some(thread_id);
                     let displaced = self.push_visible(entry, surfaced_tick);
                     let displaced_visible = displaced.is_some();
                     let mut pruned = false;
                     if let Some(mut displaced_entry) = displaced {
+                        displaced_entry.displacement_reason =
+                            Some("displaced_by_major".to_string());
+                        displaced_entry.queue_transitions.push(ChronicleQueueTransition {
+                            from: ChronicleQueueBucket::Visible,
+                            to: ChronicleQueueBucket::Recall,
+                            tick: surfaced_tick,
+                            reason: "displaced_by_major".to_string(),
+                        });
                         displaced_entry.queue_bucket = ChronicleQueueBucket::Recall;
                         displaced_entry.status = ChronicleEntryStatus::Published;
                         pruned = self.push_recall(displaced_entry).is_some();
@@ -815,6 +925,12 @@ impl ChronicleTimeline {
                     );
                     entry.queue_bucket = ChronicleQueueBucket::Recall;
                     entry.status = ChronicleEntryStatus::Published;
+                    entry.queue_transitions.push(ChronicleQueueTransition {
+                        from: ChronicleQueueBucket::Dropped,
+                        to: ChronicleQueueBucket::Recall,
+                        tick: surfaced_tick,
+                        reason: "routed_major_overflow".to_string(),
+                    });
                     entry.thread_id = Some(thread_id);
                     let pruned = self.push_recall(entry).is_some();
                     self.update_thread_states(surfaced_tick);
@@ -837,6 +953,12 @@ impl ChronicleTimeline {
                 );
                 entry.queue_bucket = ChronicleQueueBucket::Background;
                 entry.status = ChronicleEntryStatus::Published;
+                entry.queue_transitions.push(ChronicleQueueTransition {
+                    from: ChronicleQueueBucket::Dropped,
+                    to: ChronicleQueueBucket::Background,
+                    tick: surfaced_tick,
+                    reason: "routed_notable".to_string(),
+                });
                 entry.thread_id = Some(thread_id);
                 let pruned = self.push_background(entry).is_some();
                 self.update_thread_states(surfaced_tick);
@@ -886,10 +1008,24 @@ impl ChronicleTimeline {
         if entry.surfaced_tick.is_none() {
             entry.surfaced_tick = Some(current_tick);
         }
+        entry.queue_transitions.push(ChronicleQueueTransition {
+            from: ChronicleQueueBucket::Background,
+            to: ChronicleQueueBucket::Visible,
+            tick: current_tick,
+            reason: "starvation_promotion".to_string(),
+        });
         let displaced = self.push_visible(entry, current_tick);
         let displaced_visible = displaced.is_some();
         let mut pruned = false;
         if let Some(mut displaced_entry) = displaced {
+            displaced_entry.displacement_reason =
+                Some("displaced_by_background_promotion".to_string());
+            displaced_entry.queue_transitions.push(ChronicleQueueTransition {
+                from: ChronicleQueueBucket::Visible,
+                to: ChronicleQueueBucket::Recall,
+                tick: current_tick,
+                reason: "displaced_by_background_promotion".to_string(),
+            });
             displaced_entry.queue_bucket = ChronicleQueueBucket::Recall;
             displaced_entry.status = ChronicleEntryStatus::Published;
             pruned = self.push_recall(displaced_entry).is_some();
@@ -1215,7 +1351,7 @@ impl ChronicleTimeline {
             end_tick: entry.end_tick,
             headline: entry.headline.clone(),
             capsule: entry.capsule.clone(),
-            location_ref: entry.location_ref,
+            location_ref: entry.location_ref.clone(),
             primary_subjects: vec![entry.entity_ref.clone()],
             render_hint: ChronicleFeedRenderHint {
                 icon_id: entry.cause.id().to_string(),
@@ -1228,15 +1364,14 @@ impl ChronicleTimeline {
         ChronicleRecallItemSnapshot {
             entry_id: entry.entry_id,
             queue_bucket: entry.queue_bucket,
-            suppression_reason: if entry.surfaced_tick.is_some() {
-                "visible_displacement".to_string()
-            } else {
-                "attention_budget".to_string()
-            },
+            suppression_reason: entry
+                .displacement_reason
+                .clone()
+                .unwrap_or_else(|| "attention_budget".to_string()),
             suppressed_tick: entry.surfaced_tick.unwrap_or(entry.end_tick),
             recall_priority: entry.significance,
             headline: entry.headline.clone(),
-            location_ref: entry.location_ref,
+            location_ref: entry.location_ref.clone(),
             cause: entry.cause,
         }
     }
@@ -1609,16 +1744,30 @@ mod tests {
             entity_ref: ChronicleSubjectRefLite {
                 entity_id,
                 display_name: None,
+                ref_state: entity_id
+                    .map(|_| ChronicleEntityRefState::Alive)
+                    .unwrap_or(ChronicleEntityRefState::Unknown),
             },
             location_ref: ChronicleLocationRefLite {
                 tile_x: 0,
                 tile_y: 0,
+                region_label: None,
             },
             significance,
             significance_category,
+            significance_meta: ChronicleSignificanceMeta {
+                base_score: significance,
+                cause_bonus: 0.0,
+                group_bonus: 0.0,
+                repeat_penalty: 0.0,
+                final_score: significance,
+                reason_tags: vec!["test".to_string()],
+            },
             queue_bucket: ChronicleQueueBucket::Dropped,
             status: ChronicleEntryStatus::Pending,
             surfaced_tick: None,
+            displacement_reason: None,
+            queue_transitions: Vec::new(),
             thread_id: None,
         }
     }
@@ -1698,6 +1847,7 @@ mod tests {
                 location_ref: ChronicleLocationRefLite {
                     tile_x: 1,
                     tile_y: 2,
+                    region_label: None,
                 },
                 ..sample_entry(
                     &mut timeline,
@@ -1748,6 +1898,7 @@ mod tests {
             location_ref: ChronicleLocationRefLite {
                 tile_x: 1,
                 tile_y: 1,
+                region_label: None,
             },
             ..sample_entry(
                 &mut timeline,
@@ -2213,5 +2364,142 @@ mod tests {
         let response = timeline.feed_snapshot(1, Some(timeline.snapshot_revision()));
         assert_eq!(response.items.len(), 1);
         assert_eq!(response.items[0].thread_id, Some(thread_id.0));
+    }
+
+    #[test]
+    fn chronicle_subject_ref_state_defaults_to_unknown() {
+        assert_eq!(ChronicleEntityRefState::default(), ChronicleEntityRefState::Unknown);
+    }
+
+    #[test]
+    fn chronicle_subject_ref_preserves_frozen_state() {
+        let mut timeline = ChronicleTimeline::new();
+        let mut entry = sample_entry(
+            &mut timeline,
+            5,
+            Some(EntityId(77)),
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            9.0,
+            ChronicleSignificanceCategory::Critical,
+        );
+        entry.entity_ref.ref_state = ChronicleEntityRefState::Dead;
+        let entry_id = entry.entry_id;
+        let _ = timeline.route_entry(entry, 5);
+
+        assert_eq!(
+            timeline
+                .entry_detail_snapshot(entry_id, Some(timeline.snapshot_revision()))
+                .entry
+                .as_ref()
+                .map(|item| item.entity_ref.ref_state),
+            Some(ChronicleEntityRefState::Dead)
+        );
+    }
+
+    #[test]
+    fn chronicle_significance_meta_decomposes_score() {
+        let meta = ChronicleSignificanceMeta {
+            base_score: 4.0,
+            cause_bonus: 3.0,
+            group_bonus: 2.0,
+            repeat_penalty: 1.5,
+            final_score: 7.5,
+            reason_tags: vec!["cause:danger".to_string()],
+        };
+
+        let recomposed = meta.base_score + meta.cause_bonus + meta.group_bonus - meta.repeat_penalty;
+        assert!((recomposed - meta.final_score).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn chronicle_significance_meta_captures_repeat_penalty() {
+        let mut timeline = ChronicleTimeline::new();
+        for tick in 0..config::CHRONICLE_VISIBLE_MAX_ENTRIES as u64 {
+            let mut entry = sample_entry(
+                &mut timeline,
+                tick,
+                Some(EntityId(88)),
+                ChronicleEventType::InfluenceAttraction,
+                ChronicleEventCause::Food,
+                7.0,
+                ChronicleSignificanceCategory::Major,
+            );
+            entry.significance_meta.repeat_penalty = 1.5;
+            let _ = timeline.route_entry(entry, tick);
+        }
+
+        let latest = timeline.recent_entries(1).first().copied().expect("latest entry");
+        assert!(latest.significance_meta.repeat_penalty > 0.0);
+    }
+
+    #[test]
+    fn chronicle_lifecycle_records_initial_routing_transition() {
+        let mut timeline = ChronicleTimeline::new();
+        let entry = sample_entry(
+            &mut timeline,
+            15,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            7.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let entry_id = entry.entry_id;
+        let _ = timeline.route_entry(entry, 15);
+        let entry = timeline.find_entry(entry_id).expect("entry");
+
+        assert_eq!(entry.queue_transitions.len(), 1);
+        assert_eq!(entry.queue_transitions[0].from, ChronicleQueueBucket::Dropped);
+        assert_eq!(entry.queue_transitions[0].to, ChronicleQueueBucket::Visible);
+    }
+
+    #[test]
+    fn chronicle_lifecycle_records_displacement() {
+        let mut timeline = ChronicleTimeline::new();
+        for index in 0..config::CHRONICLE_VISIBLE_MAX_ENTRIES {
+            let entry = sample_entry(
+                &mut timeline,
+                index as u64,
+                Some(EntityId(index as u64 + 1)),
+                ChronicleEventType::InfluenceAttraction,
+                ChronicleEventCause::Food,
+                7.0,
+                ChronicleSignificanceCategory::Major,
+            );
+            let _ = timeline.route_entry(entry, index as u64);
+        }
+
+        let critical = sample_entry(
+            &mut timeline,
+            999,
+            Some(EntityId(999)),
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            9.0,
+            ChronicleSignificanceCategory::Critical,
+        );
+        let _ = timeline.route_entry(critical, 999);
+
+        let recalled = timeline
+            .recall_slice_snapshot(1, Some(timeline.snapshot_revision()))
+            .items
+            .into_iter()
+            .next()
+            .expect("recalled entry");
+        let detail = timeline
+            .entry_detail_snapshot(recalled.entry_id, Some(timeline.snapshot_revision()))
+            .entry
+            .expect("detail");
+
+        assert_eq!(
+            detail.displacement_reason.as_deref(),
+            Some("displaced_by_critical")
+        );
+        assert!(detail.queue_transitions.len() >= 2);
+        assert_eq!(
+            detail.queue_transitions.last().map(|transition| transition.to),
+            Some(ChronicleQueueBucket::Recall)
+        );
     }
 }

@@ -362,15 +362,20 @@ fn chronicle_subject_ref_lite_to_dict(
         "display_name",
         subject.display_name.as_deref().unwrap_or_default(),
     );
+    dict.set("ref_state", subject.ref_state.id());
     dict
 }
 
 fn chronicle_location_ref_lite_to_dict(
-    location: sim_engine::ChronicleLocationRefLite,
+    location: &sim_engine::ChronicleLocationRefLite,
 ) -> VarDictionary {
     let mut dict = VarDictionary::new();
     dict.set("tile_x", location.tile_x);
     dict.set("tile_y", location.tile_y);
+    dict.set(
+        "region_label",
+        location.region_label.as_deref().unwrap_or_default(),
+    );
     dict
 }
 
@@ -413,8 +418,14 @@ fn chronicle_feed_item_snapshot_to_dict(item: &ChronicleFeedItemSnapshot) -> Var
     dict.set("tile_y", item.location_ref.tile_y);
     dict.set(
         "location",
-        chronicle_location_ref_lite_to_dict(item.location_ref),
+        chronicle_location_ref_lite_to_dict(&item.location_ref),
     );
+    if let Some(subject) = item.primary_subjects.first() {
+        dict.set("ref_state", subject.ref_state.id());
+    }
+    if let Some(region_label) = item.location_ref.region_label.as_deref() {
+        dict.set("region_label", region_label);
+    }
     dict.set("primary_subjects", primary_subjects);
     dict.set("render_hint", render_hint);
     let entity_id = item
@@ -539,11 +550,24 @@ fn chronicle_entry_lite_to_legacy_dict(entry: &ChronicleEntryLite) -> VarDiction
     dict.set("tile_y", entry.location_ref.tile_y);
     dict.set("significance", entry.significance as f32);
     dict.set("category_id", entry.significance_category.id());
+    dict.set("base_score", entry.significance_meta.base_score as f32);
+    dict.set("cause_bonus", entry.significance_meta.cause_bonus as f32);
+    dict.set("group_bonus", entry.significance_meta.group_bonus as f32);
+    dict.set("repeat_penalty", entry.significance_meta.repeat_penalty as f32);
+    dict.set("final_score", entry.significance_meta.final_score as f32);
+    dict.set(
+        "significance_reason_tags",
+        chronicle_detail_tags_to_array(&entry.significance_meta.reason_tags),
+    );
     dict.set("queue_bucket", entry.queue_bucket.id());
     dict.set("status", chronicle_entry_status_id(entry));
     dict.set(
         "surfaced_tick",
         entry.surfaced_tick.map(|tick| tick as i64).unwrap_or(-1),
+    );
+    dict.set(
+        "displacement_reason",
+        entry.displacement_reason.as_deref().unwrap_or_default(),
     );
     dict.set(
         "l10n_params",
@@ -597,16 +621,41 @@ fn chronicle_entry_detail_snapshot_to_dict(
         dict.set("subjects", subjects);
         dict.set(
             "location",
-            chronicle_location_ref_lite_to_dict(entry.location_ref),
+            chronicle_location_ref_lite_to_dict(&entry.location_ref),
         );
         dict.set("significance", entry.significance as f32);
         dict.set("category_id", entry.significance_category.id());
+        let mut significance_meta = VarDictionary::new();
+        significance_meta.set("base_score", entry.significance_meta.base_score as f32);
+        significance_meta.set("cause_bonus", entry.significance_meta.cause_bonus as f32);
+        significance_meta.set("group_bonus", entry.significance_meta.group_bonus as f32);
+        significance_meta.set("repeat_penalty", entry.significance_meta.repeat_penalty as f32);
+        significance_meta.set("final_score", entry.significance_meta.final_score as f32);
+        significance_meta.set(
+            "reason_tags",
+            chronicle_detail_tags_to_array(&entry.significance_meta.reason_tags),
+        );
+        dict.set("significance_meta", significance_meta);
         dict.set("queue_bucket", entry.queue_bucket.id());
         dict.set("status", chronicle_entry_status_id(entry));
         dict.set(
             "surfaced_tick",
             entry.surfaced_tick.map(|tick| tick as i64).unwrap_or(-1),
         );
+        dict.set(
+            "displacement_reason",
+            entry.displacement_reason.as_deref().unwrap_or_default(),
+        );
+        let mut queue_transitions: Array<VarDictionary> = Array::new();
+        for transition in &entry.queue_transitions {
+            let mut transition_dict = VarDictionary::new();
+            transition_dict.set("from", transition.from.id());
+            transition_dict.set("to", transition.to.id());
+            transition_dict.set("tick", transition.tick as i64);
+            transition_dict.set("reason", transition.reason.as_str());
+            queue_transitions.push(&transition_dict);
+        }
+        dict.set("queue_transitions", queue_transitions);
         let causal_links: Array<VarDictionary> = Array::new();
         dict.set("causal_links", causal_links);
     }
@@ -655,7 +704,7 @@ fn chronicle_recall_slice_response_to_dict(
         );
         item_dict.set(
             "location",
-            chronicle_location_ref_lite_to_dict(item.location_ref),
+            chronicle_location_ref_lite_to_dict(&item.location_ref),
         );
         items.push(&item_dict);
     }
@@ -6275,10 +6324,11 @@ mod tests {
     use sim_core::enums::ActionType;
     use sim_core::{EntityId, SettlementId};
     use sim_engine::{
-        ChronicleCapsule, ChronicleDossierStub, ChronicleEntryId, ChronicleEntryLite,
-        ChronicleEntryStatus, ChronicleEventCause, ChronicleEventType, ChronicleHeadline,
-        ChronicleLocationRefLite, ChronicleQueueBucket, ChronicleSignificanceCategory,
-        ChronicleSubjectRefLite, EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType,
+        ChronicleCapsule, ChronicleDossierStub, ChronicleEntityRefState, ChronicleEntryId,
+        ChronicleEntryLite, ChronicleEntryStatus, ChronicleEventCause, ChronicleEventType,
+        ChronicleHeadline, ChronicleLocationRefLite, ChronicleQueueBucket,
+        ChronicleSignificanceCategory, ChronicleSignificanceMeta, ChronicleSubjectRefLite,
+        EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType,
     };
     use sim_systems::pathfinding::GridPos;
     use std::collections::BTreeMap;
@@ -7115,16 +7165,28 @@ mod tests {
             entity_ref: ChronicleSubjectRefLite {
                 entity_id: Some(EntityId(11)),
                 display_name: Some("Aria".to_string()),
+                ref_state: ChronicleEntityRefState::Alive,
             },
             location_ref: ChronicleLocationRefLite {
                 tile_x: 1,
                 tile_y: 2,
+                region_label: None,
             },
             significance: 7.0,
             significance_category: ChronicleSignificanceCategory::Major,
+            significance_meta: ChronicleSignificanceMeta {
+                base_score: 6.0,
+                cause_bonus: 1.0,
+                group_bonus: 0.0,
+                repeat_penalty: 0.0,
+                final_score: 7.0,
+                reason_tags: vec!["cause:food".to_string()],
+            },
             queue_bucket: ChronicleQueueBucket::Visible,
             status: ChronicleEntryStatus::Published,
             surfaced_tick: Some(21),
+            displacement_reason: None,
+            queue_transitions: Vec::new(),
             thread_id: None,
         };
         let summary = entry.to_legacy_summary();
