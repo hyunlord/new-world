@@ -266,6 +266,84 @@ impl ChronicleSnapshotRevision {
     }
 }
 
+/// Stable thread identifier, monotonically allocated by `ChronicleTimeline`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct ChronicleThreadId(pub u64);
+
+/// Thread grouping key. Two entries with the same key belong to the same thread.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct ChronicleThreadKey {
+    /// Stable event-family identifier for grouped entries.
+    pub event_family: String,
+    /// Entity or spatial scope used to keep threads local and deterministic.
+    pub scope: ChronicleThreadScope,
+}
+
+/// Discriminator for thread entity scope.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum ChronicleThreadScope {
+    /// Thread tracks one agent's recurring pattern.
+    Agent(EntityId),
+    /// Thread tracks recurring events in one spatial bucket.
+    Location(i32, i32),
+    /// Thread has no subject or location scope.
+    Global,
+}
+
+impl ChronicleThreadScope {
+    /// Returns a stable machine-readable scope identifier for bridge consumers.
+    pub fn to_id_string(&self) -> String {
+        match self {
+            Self::Agent(id) => format!("agent:{}", id.0),
+            Self::Location(bucket_x, bucket_y) => format!("location:{bucket_x},{bucket_y}"),
+            Self::Global => "global".to_string(),
+        }
+    }
+}
+
+/// Thread lifecycle state.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ChronicleThreadState {
+    /// Thread has exactly one entry and is not yet an established pattern.
+    Emerging,
+    /// Thread has received multiple entries and remains active.
+    Developing,
+    /// Thread has gone stale and is only retained for recall/debug queries.
+    Resolved,
+}
+
+impl ChronicleThreadState {
+    /// Returns a stable machine-readable state identifier.
+    pub fn id(&self) -> &'static str {
+        match self {
+            Self::Emerging => "emerging",
+            Self::Developing => "developing",
+            Self::Resolved => "resolved",
+        }
+    }
+}
+
+/// Runtime thread object grouping related chronicle entries.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChronicleThread {
+    /// Stable thread identifier.
+    pub thread_id: ChronicleThreadId,
+    /// Compound grouping key.
+    pub key: ChronicleThreadKey,
+    /// Current lifecycle state.
+    pub state: ChronicleThreadState,
+    /// Tick when the first entry was attached to this thread.
+    pub started_tick: u64,
+    /// Tick when the most recent entry was attached.
+    pub last_entry_tick: u64,
+    /// Ordered entry membership (chronological, oldest first).
+    pub entry_ids: Vec<ChronicleEntryId>,
+    /// Recency-weighted tension score used for ranking.
+    pub tension_score: f64,
+    /// Thread headline derived from the most recent entry headline.
+    pub headline: ChronicleHeadline,
+}
+
 /// Minimal subject reference carried by one chronicle entry.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ChronicleSubjectRefLite {
@@ -389,6 +467,8 @@ pub struct ChronicleEntryLite {
     pub status: ChronicleEntryStatus,
     /// Tick when the entry first surfaced in the visible queue.
     pub surfaced_tick: Option<u64>,
+    /// Thread this entry belongs to, if any.
+    pub thread_id: Option<ChronicleThreadId>,
 }
 
 impl ChronicleEntryLite {
@@ -569,6 +649,14 @@ pub struct ChronicleThreadSnapshot {
     pub tension_score: f64,
     /// Entry membership in chronological order.
     pub entry_ids: Vec<ChronicleEntryId>,
+    /// Machine-readable scope identifier.
+    pub scope: String,
+    /// Tick when the thread started.
+    pub started_tick: u64,
+    /// Tick when the most recent entry was attached.
+    pub last_entry_tick: u64,
+    /// Number of chronicle entries currently attached to the thread.
+    pub entry_count: usize,
 }
 
 /// Story-thread list response returned by the chronicle snapshot family.
@@ -578,7 +666,7 @@ pub struct ChronicleThreadListResponse {
     pub snapshot_revision: ChronicleSnapshotRevision,
     /// `true` when the requested revision is no longer available.
     pub revision_unavailable: bool,
-    /// Thread snapshots. Empty until Chronicle thread migration lands.
+    /// Thread snapshots ordered by runtime tension score.
     pub items: Vec<ChronicleThreadSnapshot>,
 }
 
@@ -609,6 +697,9 @@ pub struct ChronicleTimeline {
     last_visible_tick: Option<u64>,
     next_entry_id: u64,
     snapshot_revision: ChronicleSnapshotRevision,
+    thread_registry: BTreeMap<ChronicleThreadKey, ChronicleThreadId>,
+    threads: BTreeMap<ChronicleThreadId, ChronicleThread>,
+    next_thread_id: u64,
 }
 
 impl ChronicleTimeline {
@@ -624,6 +715,9 @@ impl ChronicleTimeline {
             last_visible_tick: None,
             next_entry_id: 1,
             snapshot_revision: ChronicleSnapshotRevision(1),
+            thread_registry: BTreeMap::new(),
+            threads: BTreeMap::new(),
+            next_thread_id: 1,
         }
     }
 
@@ -631,6 +725,12 @@ impl ChronicleTimeline {
     pub fn allocate_entry_id(&mut self) -> ChronicleEntryId {
         let id = ChronicleEntryId::from_counter(self.next_entry_id);
         self.next_entry_id = self.next_entry_id.saturating_add(1).max(1);
+        id
+    }
+
+    fn allocate_thread_id(&mut self) -> ChronicleThreadId {
+        let id = ChronicleThreadId(self.next_thread_id);
+        self.next_thread_id = self.next_thread_id.saturating_add(1).max(1);
         id
     }
 
@@ -648,9 +748,17 @@ impl ChronicleTimeline {
         match entry.significance_category {
             ChronicleSignificanceCategory::Critical => {
                 self.bump_snapshot_revision();
+                let thread_key = Self::derive_thread_key(&entry);
+                let thread_id = self.attach_entry_to_thread(
+                    thread_key,
+                    entry.entry_id,
+                    entry.end_tick,
+                    &entry.headline,
+                );
                 entry.queue_bucket = ChronicleQueueBucket::Visible;
                 entry.status = ChronicleEntryStatus::Published;
                 entry.surfaced_tick = Some(surfaced_tick);
+                entry.thread_id = Some(thread_id);
                 let displaced = self.push_visible(entry, surfaced_tick);
                 let displaced_visible = displaced.is_some();
                 let mut pruned = false;
@@ -659,6 +767,7 @@ impl ChronicleTimeline {
                     displaced_entry.status = ChronicleEntryStatus::Published;
                     pruned = self.push_recall(displaced_entry).is_some();
                 }
+                self.update_thread_states(surfaced_tick);
                 ChronicleRouteResult {
                     queue: ChronicleQueueBucket::Visible,
                     pruned,
@@ -669,9 +778,17 @@ impl ChronicleTimeline {
             ChronicleSignificanceCategory::Major => {
                 if self.has_visible_capacity() {
                     self.bump_snapshot_revision();
+                    let thread_key = Self::derive_thread_key(&entry);
+                    let thread_id = self.attach_entry_to_thread(
+                        thread_key,
+                        entry.entry_id,
+                        entry.end_tick,
+                        &entry.headline,
+                    );
                     entry.queue_bucket = ChronicleQueueBucket::Visible;
                     entry.status = ChronicleEntryStatus::Published;
                     entry.surfaced_tick = Some(surfaced_tick);
+                    entry.thread_id = Some(thread_id);
                     let displaced = self.push_visible(entry, surfaced_tick);
                     let displaced_visible = displaced.is_some();
                     let mut pruned = false;
@@ -680,6 +797,7 @@ impl ChronicleTimeline {
                         displaced_entry.status = ChronicleEntryStatus::Published;
                         pruned = self.push_recall(displaced_entry).is_some();
                     }
+                    self.update_thread_states(surfaced_tick);
                     ChronicleRouteResult {
                         queue: ChronicleQueueBucket::Visible,
                         pruned,
@@ -688,11 +806,21 @@ impl ChronicleTimeline {
                     }
                 } else {
                     self.bump_snapshot_revision();
+                    let thread_key = Self::derive_thread_key(&entry);
+                    let thread_id = self.attach_entry_to_thread(
+                        thread_key,
+                        entry.entry_id,
+                        entry.end_tick,
+                        &entry.headline,
+                    );
                     entry.queue_bucket = ChronicleQueueBucket::Recall;
                     entry.status = ChronicleEntryStatus::Published;
+                    entry.thread_id = Some(thread_id);
+                    let pruned = self.push_recall(entry).is_some();
+                    self.update_thread_states(surfaced_tick);
                     ChronicleRouteResult {
                         queue: ChronicleQueueBucket::Recall,
-                        pruned: self.push_recall(entry).is_some(),
+                        pruned,
                         displaced_visible: false,
                         promoted_background: false,
                     }
@@ -700,11 +828,21 @@ impl ChronicleTimeline {
             }
             ChronicleSignificanceCategory::Notable => {
                 self.bump_snapshot_revision();
+                let thread_key = Self::derive_thread_key(&entry);
+                let thread_id = self.attach_entry_to_thread(
+                    thread_key,
+                    entry.entry_id,
+                    entry.end_tick,
+                    &entry.headline,
+                );
                 entry.queue_bucket = ChronicleQueueBucket::Background;
                 entry.status = ChronicleEntryStatus::Published;
+                entry.thread_id = Some(thread_id);
+                let pruned = self.push_background(entry).is_some();
+                self.update_thread_states(surfaced_tick);
                 ChronicleRouteResult {
                     queue: ChronicleQueueBucket::Background,
-                    pruned: self.push_background(entry).is_some(),
+                    pruned,
                     displaced_visible: false,
                     promoted_background: false,
                 }
@@ -884,7 +1022,7 @@ impl ChronicleTimeline {
     /// Thread snapshots are intentionally empty until Chronicle thread migration lands.
     pub fn story_threads_snapshot(
         &self,
-        _count: usize,
+        count: usize,
         requested_revision: Option<ChronicleSnapshotRevision>,
     ) -> ChronicleThreadListResponse {
         if !self.is_revision_available(requested_revision) {
@@ -895,10 +1033,32 @@ impl ChronicleTimeline {
             };
         }
 
+        let mut sorted_threads: Vec<&ChronicleThread> = self.threads.values().collect();
+        sorted_threads.sort_by(|left, right| {
+            right
+                .tension_score
+                .partial_cmp(&left.tension_score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+
         ChronicleThreadListResponse {
             snapshot_revision: self.snapshot_revision,
             revision_unavailable: false,
-            items: Vec::new(),
+            items: sorted_threads
+                .into_iter()
+                .take(count)
+                .map(|thread| ChronicleThreadSnapshot {
+                    thread_id: thread.thread_id.0,
+                    state_id: thread.state.id().to_string(),
+                    headline: thread.headline.clone(),
+                    tension_score: thread.tension_score,
+                    entry_ids: thread.entry_ids.clone(),
+                    scope: thread.key.scope.to_id_string(),
+                    started_tick: thread.started_tick,
+                    last_entry_tick: thread.last_entry_tick,
+                    entry_count: thread.entry_ids.len(),
+                })
+                .collect(),
         }
     }
 
@@ -972,6 +1132,9 @@ impl ChronicleTimeline {
         self.recall_queue.clear();
         self.last_visible_tick = None;
         self.next_entry_id = 1;
+        self.thread_registry.clear();
+        self.threads.clear();
+        self.next_thread_id = 1;
     }
 
     /// Returns the total number of stored entries across all queues.
@@ -1042,7 +1205,7 @@ impl ChronicleTimeline {
     fn feed_item_from_entry(entry: &ChronicleEntryLite) -> ChronicleFeedItemSnapshot {
         ChronicleFeedItemSnapshot {
             entry_id: entry.entry_id,
-            thread_id: None,
+            thread_id: entry.thread_id.map(|thread_id| thread_id.0),
             event_type: entry.event_type,
             cause: entry.cause,
             queue_bucket: entry.queue_bucket,
@@ -1075,6 +1238,169 @@ impl ChronicleTimeline {
             headline: entry.headline.clone(),
             location_ref: entry.location_ref,
             cause: entry.cause,
+        }
+    }
+
+    fn derive_thread_key(entry: &ChronicleEntryLite) -> ChronicleThreadKey {
+        let scope = if let Some(entity_id) = entry.entity_ref.entity_id {
+            ChronicleThreadScope::Agent(entity_id)
+        } else if entry.location_ref.tile_x != 0 || entry.location_ref.tile_y != 0 {
+            ChronicleThreadScope::Location(
+                entry.location_ref.tile_x / config::CHRONICLE_THREAD_LOCATION_BUCKET_SIZE,
+                entry.location_ref.tile_y / config::CHRONICLE_THREAD_LOCATION_BUCKET_SIZE,
+            )
+        } else {
+            ChronicleThreadScope::Global
+        };
+        ChronicleThreadKey {
+            event_family: entry.event_family.clone(),
+            scope,
+        }
+    }
+
+    fn attach_entry_to_thread(
+        &mut self,
+        key: ChronicleThreadKey,
+        entry_id: ChronicleEntryId,
+        tick: u64,
+        headline: &ChronicleHeadline,
+    ) -> ChronicleThreadId {
+        if let Some(&thread_id) = self.thread_registry.get(&key) {
+            let entry_ids = if let Some(thread) = self.threads.get_mut(&thread_id) {
+                thread.entry_ids.push(entry_id);
+                thread.last_entry_tick = tick;
+                thread.headline = headline.clone();
+                thread.state = if thread.entry_ids.len() >= 2 {
+                    ChronicleThreadState::Developing
+                } else {
+                    ChronicleThreadState::Emerging
+                };
+                thread.entry_ids.clone()
+            } else {
+                Vec::new()
+            };
+            let mut tension_score = self.compute_tension_for_thread_entries(&entry_ids, tick);
+            if self.find_entry(entry_id).is_none() {
+                tension_score += 1.0;
+            }
+            if let Some(thread) = self.threads.get_mut(&thread_id) {
+                thread.tension_score = tension_score;
+            }
+            return thread_id;
+        }
+
+        let thread_id = self.allocate_thread_id();
+        let thread = ChronicleThread {
+            thread_id,
+            key: key.clone(),
+            state: ChronicleThreadState::Emerging,
+            started_tick: tick,
+            last_entry_tick: tick,
+            entry_ids: vec![entry_id],
+            tension_score: 1.0,
+            headline: headline.clone(),
+        };
+        self.thread_registry.insert(key, thread_id);
+        self.threads.insert(thread_id, thread);
+        self.evict_stale_threads_if_needed(tick);
+        thread_id
+    }
+
+    fn compute_tension_for_thread_entries(
+        &self,
+        entry_ids: &[ChronicleEntryId],
+        current_tick: u64,
+    ) -> f64 {
+        let half_life = config::CHRONICLE_THREAD_TENSION_HALF_LIFE_TICKS;
+        if half_life <= 0.0 {
+            return entry_ids.len() as f64;
+        }
+
+        let mut tension = 0.0_f64;
+        for &entry_id in entry_ids {
+            if let Some(entry) = self.find_entry(entry_id) {
+                let age = current_tick.saturating_sub(entry.end_tick) as f64;
+                tension += 0.5_f64.powf(age / half_life);
+            }
+        }
+        tension
+    }
+
+    fn update_thread_states(&mut self, current_tick: u64) {
+        let updates: Vec<(ChronicleThreadId, f64, ChronicleThreadState)> = self
+            .threads
+            .iter()
+            .map(|(&thread_id, thread)| {
+                let tension_score =
+                    self.compute_tension_for_thread_entries(&thread.entry_ids, current_tick);
+                let state = match thread.state {
+                    ChronicleThreadState::Developing | ChronicleThreadState::Emerging => {
+                        if current_tick.saturating_sub(thread.last_entry_tick)
+                            >= config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS
+                        {
+                            ChronicleThreadState::Resolved
+                        } else if thread.entry_ids.len() >= 2 {
+                            ChronicleThreadState::Developing
+                        } else {
+                            ChronicleThreadState::Emerging
+                        }
+                    }
+                    ChronicleThreadState::Resolved => ChronicleThreadState::Resolved,
+                };
+                (thread_id, tension_score, state)
+            })
+            .collect();
+
+        for (thread_id, tension_score, state) in updates {
+            if let Some(thread) = self.threads.get_mut(&thread_id) {
+                thread.tension_score = tension_score;
+                thread.state = state;
+            }
+        }
+    }
+
+    fn evict_stale_threads_if_needed(&mut self, current_tick: u64) {
+        while self.threads.len() > config::CHRONICLE_THREAD_MAX_ACTIVE {
+            let evict_candidate = self
+                .threads
+                .iter()
+                .filter(|(_, thread)| thread.state == ChronicleThreadState::Resolved)
+                .map(|(&thread_id, thread)| {
+                    (
+                        thread_id,
+                        self.compute_tension_for_thread_entries(&thread.entry_ids, current_tick),
+                        thread.key.clone(),
+                    )
+                })
+                .min_by(|left, right| {
+                    left.1
+                        .partial_cmp(&right.1)
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                });
+
+            let Some((thread_id, tension_score, key)) = evict_candidate else {
+                break;
+            };
+            if tension_score >= config::CHRONICLE_THREAD_EVICTION_TENSION_THRESHOLD {
+                break;
+            }
+
+            self.threads.remove(&thread_id);
+            self.thread_registry.remove(&key);
+            self.clear_thread_id_on_entries(thread_id);
+        }
+    }
+
+    fn clear_thread_id_on_entries(&mut self, thread_id: ChronicleThreadId) {
+        for entry in self
+            .visible_queue
+            .iter_mut()
+            .chain(self.background_queue.iter_mut())
+            .chain(self.recall_queue.iter_mut())
+        {
+            if entry.thread_id == Some(thread_id) {
+                entry.thread_id = None;
+            }
         }
     }
 }
@@ -1293,6 +1619,7 @@ mod tests {
             queue_bucket: ChronicleQueueBucket::Dropped,
             status: ChronicleEntryStatus::Pending,
             surfaced_tick: None,
+            thread_id: None,
         }
     }
 
@@ -1567,5 +1894,324 @@ mod tests {
         assert!(recall.revision_unavailable);
         assert!(threads.revision_unavailable);
         assert!(history.revision_unavailable);
+    }
+
+    #[test]
+    fn chronicle_thread_attaches_entries_with_same_key() {
+        let mut timeline = ChronicleTimeline::new();
+        let first = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let first_id = first.entry_id;
+        let _ = timeline.route_entry(first, 10);
+
+        let second = sample_entry(
+            &mut timeline,
+            20,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.5,
+            ChronicleSignificanceCategory::Major,
+        );
+        let second_id = second.entry_id;
+        let _ = timeline.route_entry(second, 20);
+
+        let first_thread_id = timeline.find_entry(first_id).and_then(|entry| entry.thread_id);
+        let second_thread_id = timeline.find_entry(second_id).and_then(|entry| entry.thread_id);
+        assert_eq!(first_thread_id, second_thread_id);
+        let thread = timeline.threads.get(&second_thread_id.unwrap()).unwrap();
+        assert_eq!(thread.state, ChronicleThreadState::Developing);
+        assert_eq!(thread.entry_ids, vec![first_id, second_id]);
+    }
+
+    #[test]
+    fn chronicle_thread_separates_different_event_families() {
+        let mut timeline = ChronicleTimeline::new();
+        let first = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let first_id = first.entry_id;
+        let _ = timeline.route_entry(first, 10);
+
+        let second = sample_entry(
+            &mut timeline,
+            20,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let second_id = second.entry_id;
+        let _ = timeline.route_entry(second, 20);
+
+        let first_thread_id = timeline.find_entry(first_id).and_then(|entry| entry.thread_id);
+        let second_thread_id = timeline.find_entry(second_id).and_then(|entry| entry.thread_id);
+        assert_ne!(first_thread_id, second_thread_id);
+    }
+
+    #[test]
+    fn chronicle_thread_separates_different_entities() {
+        let mut timeline = ChronicleTimeline::new();
+        let first = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let first_id = first.entry_id;
+        let _ = timeline.route_entry(first, 10);
+
+        let second = sample_entry(
+            &mut timeline,
+            20,
+            Some(EntityId(8)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let second_id = second.entry_id;
+        let _ = timeline.route_entry(second, 20);
+
+        let first_thread_id = timeline.find_entry(first_id).and_then(|entry| entry.thread_id);
+        let second_thread_id = timeline.find_entry(second_id).and_then(|entry| entry.thread_id);
+        assert_ne!(first_thread_id, second_thread_id);
+    }
+
+    #[test]
+    fn chronicle_thread_resolves_after_window() {
+        let mut timeline = ChronicleTimeline::new();
+        let first = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let first_id = first.entry_id;
+        let _ = timeline.route_entry(first, 10);
+
+        let second = sample_entry(
+            &mut timeline,
+            11,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let _ = timeline.route_entry(second, 11);
+
+        let thread_id = timeline.find_entry(first_id).and_then(|entry| entry.thread_id).unwrap();
+        timeline.update_thread_states(11 + config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS);
+        assert_eq!(
+            timeline.threads.get(&thread_id).map(|thread| thread.state),
+            Some(ChronicleThreadState::Resolved)
+        );
+    }
+
+    #[test]
+    fn chronicle_thread_reactivates_on_new_entry() {
+        let mut timeline = ChronicleTimeline::new();
+        let first = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let first_id = first.entry_id;
+        let _ = timeline.route_entry(first, 10);
+
+        let second = sample_entry(
+            &mut timeline,
+            11,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let _ = timeline.route_entry(second, 11);
+        let thread_id = timeline.find_entry(first_id).and_then(|entry| entry.thread_id).unwrap();
+
+        timeline.update_thread_states(11 + config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS);
+        assert_eq!(
+            timeline.threads.get(&thread_id).map(|thread| thread.state),
+            Some(ChronicleThreadState::Resolved)
+        );
+
+        let third = sample_entry(
+            &mut timeline,
+            12 + config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS,
+            Some(EntityId(9)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let third_id = third.entry_id;
+        let _ = timeline.route_entry(third, 12 + config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS);
+
+        assert_eq!(
+            timeline.find_entry(third_id).and_then(|entry| entry.thread_id),
+            Some(thread_id)
+        );
+        assert_eq!(
+            timeline.threads.get(&thread_id).map(|thread| thread.state),
+            Some(ChronicleThreadState::Developing)
+        );
+    }
+
+    #[test]
+    fn chronicle_thread_evicts_lowest_tension_resolved() {
+        let mut timeline = ChronicleTimeline::new();
+        let mut first_entry_id = None;
+        let mut first_thread_id = None;
+
+        for index in 0..config::CHRONICLE_THREAD_MAX_ACTIVE {
+            let entry = sample_entry(
+                &mut timeline,
+                index as u64,
+                Some(EntityId(index as u64 + 1)),
+                ChronicleEventType::InfluenceAttraction,
+                ChronicleEventCause::Food,
+                8.0,
+                ChronicleSignificanceCategory::Major,
+            );
+            let entry_id = entry.entry_id;
+            let _ = timeline.route_entry(entry, index as u64);
+            if index == 0 {
+                first_entry_id = Some(entry_id);
+                first_thread_id = timeline.find_entry(entry_id).and_then(|item| item.thread_id);
+            }
+        }
+
+        let current_tick = config::CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS + 1000;
+        timeline.update_thread_states(current_tick);
+
+        let overflow_entry = sample_entry(
+            &mut timeline,
+            current_tick,
+            Some(EntityId(9999)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let _ = timeline.route_entry(overflow_entry, current_tick);
+
+        let first_thread_id = first_thread_id.unwrap();
+        let first_entry_id = first_entry_id.unwrap();
+        assert!(timeline.threads.len() <= config::CHRONICLE_THREAD_MAX_ACTIVE);
+        assert!(!timeline.threads.contains_key(&first_thread_id));
+        assert_eq!(
+            timeline.find_entry(first_entry_id).and_then(|entry| entry.thread_id),
+            None
+        );
+    }
+
+    #[test]
+    fn chronicle_thread_tension_decays_with_age() {
+        let mut timeline = ChronicleTimeline::new();
+        let entry = sample_entry(
+            &mut timeline,
+            0,
+            Some(EntityId(55)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let entry_id = entry.entry_id;
+        let _ = timeline.route_entry(entry, 0);
+
+        let thread_id = timeline.find_entry(entry_id).and_then(|item| item.thread_id).unwrap();
+        let initial_tension = timeline.threads.get(&thread_id).unwrap().tension_score;
+        timeline.update_thread_states(config::CHRONICLE_THREAD_TENSION_HALF_LIFE_TICKS as u64);
+        let decayed_tension = timeline.threads.get(&thread_id).unwrap().tension_score;
+
+        assert!(decayed_tension < initial_tension);
+    }
+
+    #[test]
+    fn chronicle_thread_story_threads_snapshot_returns_by_tension() {
+        let mut timeline = ChronicleTimeline::new();
+        let old_entry = sample_entry(
+            &mut timeline,
+            0,
+            Some(EntityId(1)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let old_id = old_entry.entry_id;
+        let _ = timeline.route_entry(old_entry, 0);
+
+        timeline.update_thread_states(800);
+
+        let new_entry = sample_entry(
+            &mut timeline,
+            800,
+            Some(EntityId(2)),
+            ChronicleEventType::InfluenceAvoidance,
+            ChronicleEventCause::Danger,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let new_id = new_entry.entry_id;
+        let _ = timeline.route_entry(new_entry, 800);
+
+        let old_thread_id = timeline.find_entry(old_id).and_then(|entry| entry.thread_id).unwrap();
+        let new_thread_id = timeline.find_entry(new_id).and_then(|entry| entry.thread_id).unwrap();
+        let threads = timeline.story_threads_snapshot(2, Some(timeline.snapshot_revision()));
+
+        assert_eq!(threads.items.len(), 2);
+        assert_eq!(threads.items[0].thread_id, new_thread_id.0);
+        assert_eq!(threads.items[1].thread_id, old_thread_id.0);
+        assert!(threads.items[0].tension_score >= threads.items[1].tension_score);
+    }
+
+    #[test]
+    fn chronicle_thread_feed_item_propagates_thread_id() {
+        let mut timeline = ChronicleTimeline::new();
+        let entry = sample_entry(
+            &mut timeline,
+            10,
+            Some(EntityId(7)),
+            ChronicleEventType::InfluenceAttraction,
+            ChronicleEventCause::Food,
+            8.0,
+            ChronicleSignificanceCategory::Major,
+        );
+        let entry_id = entry.entry_id;
+        let _ = timeline.route_entry(entry, 10);
+
+        let thread_id = timeline.find_entry(entry_id).and_then(|item| item.thread_id).unwrap();
+        let response = timeline.feed_snapshot(1, Some(timeline.snapshot_revision()));
+        assert_eq!(response.items.len(), 1);
+        assert_eq!(response.items[0].thread_id, Some(thread_id.0));
     }
 }

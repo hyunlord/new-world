@@ -683,6 +683,7 @@ fn cluster_to_timeline_entry(
         queue_bucket: ChronicleQueueBucket::Dropped,
         status: ChronicleEntryStatus::Pending,
         surfaced_tick: None,
+        thread_id: None,
     })
 }
 
@@ -765,6 +766,7 @@ fn summary_to_timeline_entry(
         queue_bucket: ChronicleQueueBucket::Dropped,
         status: ChronicleEntryStatus::Pending,
         surfaced_tick: None,
+        thread_id: None,
     })
 }
 
@@ -1213,6 +1215,7 @@ mod tests {
                 queue_bucket: ChronicleQueueBucket::Dropped,
                 status: ChronicleEntryStatus::Pending,
                 surfaced_tick: None,
+                thread_id: None,
             },
             50,
         );
@@ -1278,6 +1281,7 @@ mod tests {
                 queue_bucket: ChronicleQueueBucket::Dropped,
                 status: ChronicleEntryStatus::Pending,
                 surfaced_tick: None,
+                thread_id: None,
             },
             10,
         );
