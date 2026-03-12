@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 //   Category B (System Tuning): move system cadence/tuning into scheduler metadata and data-driven config (A-5)
 //   Category C (Engine Internal): keep engine/bootstrap-only constants here
 //   Category D (Uncategorized): review incrementally during Phase 1-3
-// See CODEBASE_AUDIT.md Section 6 for the current mapping baseline.
+// Keep the category mapping in sync with the ongoing migration notes in this file.
 
 // === CATEGORY A: World Rules migration targets (A-9) ===
 // ── World ─────────────────────────────────────────────────────────────────────
