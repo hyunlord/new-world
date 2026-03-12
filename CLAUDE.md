@@ -376,7 +376,7 @@ Rust crate work?
 
 ---
 
-## PROGRESS.md Format
+## Dispatch Tracking Format
 
 ```markdown
 | Ticket | Description | 🟢/🔴 | Tool | Status |
@@ -401,7 +401,7 @@ Dispatch ratio: 75% (3/4)
 8. Modifying ECS component structs without updating SimBridge snapshot serialization
 9. "Improving" code outside ticket scope
 10. Using `Task` tool for DISPATCH tickets — Task ≠ Codex
-11. Implementing directly without justification in PROGRESS.md
+11. Implementing directly without justification in the task tracker
 12. Dispatch ratio below 60%
 13. Forgetting `ko/` translations when adding localization keys
 14. Adding Godot-specific types in hot-path Rust code
@@ -432,7 +432,7 @@ Before any work touching these areas, read the corresponding SKILL.md:
 | Skill | Path | When |
 |-------|------|------|
 | worldsim-code | Claude `worldsim-code` skill mirror | Any GDScript UI work (localization, patterns) |
-| kanban-workflow | `.claude/skills/kanban-workflow/SKILL.md` | Dispatch, ticket management, PROGRESS.md |
+| kanban-workflow | `.claude/skills/kanban-workflow/SKILL.md` | Dispatch and ticket management |
 | godot | `.claude/skills/godot/SKILL.md` | Godot scene/resource file work |
 | systematic-debugging | `.claude/skills/systematic-debugging/SKILL.md` | Any bug or test failure |
 | verification-before-completion | `.claude/skills/verification-before-completion/SKILL.md` | Before claiming any task complete |
