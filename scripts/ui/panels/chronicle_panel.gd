@@ -26,10 +26,15 @@ var _scrollbar_rect: Rect2 = Rect2()
 
 ## Clickable regions
 var _click_regions: Array = []  # [{rect: Rect2, entity_id: int}]
+var _entry_click_regions: Array = []  # [{rect: Rect2, entry_id: int}]
 var _headline_cache: PackedStringArray = PackedStringArray()
 var _capsule_cache: PackedStringArray = PackedStringArray()
 var _text_cache_signature: String = ""
 var _legacy_fallback_logged: bool = false
+var _feed_snapshot_revision: int = -1
+var _selected_entry_id: int = -1
+var _selected_entry_snapshot_revision: int = -1
+var _selected_entry_detail: Dictionary = {}
 
 ## Event type icons and colors
 const EVENT_STYLES: Dictionary = {
@@ -112,6 +117,11 @@ func _gui_input(event: InputEvent) -> void:
 					_navigate_to_entity(region.entity_id)
 					accept_event()
 					return
+			for region in _entry_click_regions:
+				if region.rect.has_point(event.position):
+					_toggle_entry_detail(region.entry_id)
+					accept_event()
+					return
 	elif event is InputEventPanGesture:
 		_scroll_offset += event.delta.y * 15.0
 		_scroll_offset = clampf(_scroll_offset, 0.0, maxf(0.0, _content_height - size.y + 60.0))
@@ -177,6 +187,7 @@ func _draw() -> void:
 	if not visible:
 		return
 	_click_regions.clear()
+	_entry_click_regions.clear()
 
 	var panel_w: float = size.x
 	var panel_h: float = size.y
@@ -215,6 +226,7 @@ func _draw() -> void:
 	var deceased_registry: Node = get_node_or_null("/root/DeceasedRegistry")
 	for i in range(events.size()):
 		var evt: Dictionary = events[i]
+		var entry_id: int = int(evt.get("entry_id", -1))
 		var year: int = int(evt.get("year", -1))
 		if year < 0 and evt.has("tick"):
 			var tick_date: Dictionary = GameCalendar.tick_to_date(int(evt.get("tick", 0)))
@@ -229,7 +241,16 @@ func _draw() -> void:
 
 		var headline: String = _headline_cache[i] if i < _headline_cache.size() else _resolve_event_headline(evt)
 		var capsule: String = _capsule_cache[i] if i < _capsule_cache.size() else _resolve_event_capsule(evt)
+		var is_selected: bool = entry_id >= 0 and entry_id == _selected_entry_id
+		var detail_snapshot: Dictionary = _selected_entry_detail_for(entry_id) if is_selected else {}
+		if not detail_snapshot.is_empty():
+			var detail_capsule: String = _resolve_event_capsule(detail_snapshot)
+			if not detail_capsule.is_empty():
+				capsule = detail_capsule
+		var dossier_stub: String = _resolve_event_dossier_stub(detail_snapshot) if is_selected else ""
 		var entry_height: float = 28.0 if not capsule.is_empty() else 16.0
+		if not dossier_stub.is_empty():
+			entry_height += 12.0
 
 		# Skip if off screen (use header_bottom instead of -20)
 		if cy + entry_height < header_bottom:
@@ -242,6 +263,11 @@ func _draw() -> void:
 		# Event entry
 		var style: Dictionary = _event_style(evt)
 		var icon_color: Color = style.color
+		if is_selected:
+			draw_rect(
+				Rect2(cx - 4.0, cy - 2.0, panel_w - (cx * 2.0) + 8.0, entry_height),
+				Color(0.18, 0.22, 0.28, 0.75)
+			)
 
 		# Date
 		var date_str: String
@@ -269,6 +295,14 @@ func _draw() -> void:
 		draw_string(font, Vector2(icon_x + 18, cy + 12), headline, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.92, 0.92, 0.92))
 		if not capsule.is_empty():
 			draw_string(font, Vector2(icon_x + 18, cy + 24), capsule, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.62, 0.62, 0.68))
+		if not dossier_stub.is_empty():
+			draw_string(font, Vector2(icon_x + 18, cy + 36), dossier_stub, HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_small"), Color(0.48, 0.56, 0.66))
+
+		if entry_id >= 0:
+			_entry_click_regions.append({
+				"rect": Rect2(cx - 4.0, cy - 2.0, panel_w - (cx * 2.0) + 8.0, entry_height),
+				"entry_id": entry_id,
+			})
 
 		# Make entity name clickable
 		var entity_id: int = evt.get("entity_id", -1)
@@ -394,10 +428,10 @@ func _ensure_text_cache(events: Array) -> void:
 func _compute_text_cache_signature(events: Array) -> String:
 	var locale_key: String = str(Locale.current_locale)
 	if events.is_empty():
-		return locale_key + "|" + _filter_type + "|0"
+		return "%s|%s|0|%d|%d" % [locale_key, _filter_type, _selected_entry_id, _selected_entry_snapshot_revision]
 	var first_evt: Dictionary = events[0]
 	var last_evt: Dictionary = events[events.size() - 1]
-	return "%s|%s|%d|%d|%s|%d|%s|%d" % [
+	return "%s|%s|%d|%d|%s|%d|%s|%d|%d|%d" % [
 		locale_key,
 		_filter_type,
 		events.size(),
@@ -405,10 +439,14 @@ func _compute_text_cache_signature(events: Array) -> String:
 		str(first_evt.get("event_type", "")),
 		int(last_evt.get("tick", -1)),
 		str(last_evt.get("event_type", "")),
-		int(last_evt.get("entity_id", -1))
+		int(last_evt.get("entity_id", -1)),
+		_selected_entry_id,
+		_selected_entry_snapshot_revision
 	]
 
 
+## Temporary migration fallback:
+## if the layered snapshot fields are missing, use legacy flat fields derived by the bridge.
 func _resolve_chronicle_text(evt: Dictionary, key_field: String, params_field: String, fallback_field: String) -> String:
 	var desc: String = str(evt.get(fallback_field, ""))
 	if evt.has(key_field):
@@ -446,6 +484,13 @@ func _resolve_event_capsule(evt: Dictionary) -> String:
 	return _trim_chronicle_line(capsule, 55)
 
 
+func _resolve_event_dossier_stub(evt: Dictionary) -> String:
+	if evt.is_empty():
+		return ""
+	var dossier: String = _resolve_chronicle_text(evt, "dossier_stub_key", "dossier_stub_params", "")
+	return _trim_chronicle_line(dossier, 72)
+
+
 func _trim_chronicle_line(text: String, max_chars: int) -> String:
 	if text.length() > max_chars:
 		return text.substr(0, max_chars - 3) + "..."
@@ -472,19 +517,34 @@ func _get_display_events() -> Array:
 	if _using_runtime_chronicle():
 		return _runtime_chronicle_events()
 	_log_legacy_chronicle_fallback()
+	_feed_snapshot_revision = -1
+	_clear_selected_entry_detail()
 	return []
 
 
 func _runtime_chronicle_events() -> Array:
 	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
-	if bool(response.get("revision_unavailable", false)) and int(response.get("snapshot_revision", -1)) < 0:
+	var revision: int = int(response.get("snapshot_revision", -1))
+	if bool(response.get("revision_unavailable", false)) and revision < 0:
 		if not _legacy_fallback_logged:
 			_legacy_fallback_logged = true
-			push_warning("[Chronicle] runtime chronicle feed unavailable; falling back to legacy timeline adapter")
-		return SimBridge.runtime_get_chronicle_timeline(200)
+			push_warning("[Chronicle] runtime chronicle feed unavailable; legacy timeline adapter is compatibility-only and not used by the live panel")
+		_feed_snapshot_revision = -1
+		_clear_selected_entry_detail()
+		return []
 	_legacy_fallback_logged = false
+	_feed_snapshot_revision = revision
 	var events: Array = response.get("items", [])
+	var selected_entry_visible: bool = false
 	if _filter_type.is_empty():
+		for evt in events:
+			if evt is Dictionary:
+				var dict: Dictionary = evt
+				if int(dict.get("entry_id", -1)) == _selected_entry_id:
+					selected_entry_visible = true
+					break
+		if not selected_entry_visible:
+			_clear_selected_entry_detail()
 		return events
 	var filtered: Array = []
 	for evt in events:
@@ -493,6 +553,10 @@ func _runtime_chronicle_events() -> Array:
 		var dict: Dictionary = evt
 		if str(dict.get("cause_id", "")) == _filter_type:
 			filtered.append(dict)
+			if int(dict.get("entry_id", -1)) == _selected_entry_id:
+				selected_entry_visible = true
+	if not selected_entry_visible:
+		_clear_selected_entry_detail()
 	return filtered
 
 
@@ -509,3 +573,48 @@ func _log_legacy_chronicle_fallback() -> void:
 		return
 	_legacy_fallback_logged = true
 	push_warning("[Chronicle] runtime timeline unavailable; legacy ChronicleSystem fallback is disabled")
+
+
+func _toggle_entry_detail(entry_id: int) -> void:
+	if entry_id < 0:
+		return
+	if _selected_entry_id == entry_id:
+		_clear_selected_entry_detail()
+	else:
+		_selected_entry_id = entry_id
+		_selected_entry_snapshot_revision = -1
+		_selected_entry_detail = {}
+		_refresh_selected_entry_detail()
+	_invalidate_text_cache()
+	queue_redraw()
+
+
+func _selected_entry_detail_for(entry_id: int) -> Dictionary:
+	if entry_id < 0 or entry_id != _selected_entry_id:
+		return {}
+	if _selected_entry_detail.is_empty() or _selected_entry_snapshot_revision != _feed_snapshot_revision:
+		_refresh_selected_entry_detail()
+	return _selected_entry_detail
+
+
+func _refresh_selected_entry_detail() -> void:
+	if _selected_entry_id < 0 or not _using_runtime_chronicle():
+		_clear_selected_entry_detail()
+		return
+	var response: Dictionary = SimBridge.runtime_get_chronicle_entry_detail(_selected_entry_id, _feed_snapshot_revision)
+	if bool(response.get("revision_unavailable", false)):
+		_selected_entry_detail = {}
+		_selected_entry_snapshot_revision = -1
+		return
+	if not bool(response.get("available", false)):
+		_selected_entry_detail = {}
+		_selected_entry_snapshot_revision = int(response.get("snapshot_revision", -1))
+		return
+	_selected_entry_detail = response
+	_selected_entry_snapshot_revision = int(response.get("snapshot_revision", -1))
+
+
+func _clear_selected_entry_detail() -> void:
+	_selected_entry_id = -1
+	_selected_entry_snapshot_revision = -1
+	_selected_entry_detail = {}

@@ -376,6 +376,8 @@ func runtime_get_entity_detail(entity_id: int) -> Dictionary:
 
 
 ## Returns the temporary legacy chronicle timeline adapter from Rust runtime.
+## Migration compatibility only: live Chronicle panel consumers should use
+## `runtime_get_chronicle_feed()` and `runtime_get_chronicle_entry_detail()`.
 func runtime_get_chronicle_timeline(limit: int) -> Array:
 	var runtime: Object = _get_native_runtime()
 	if runtime == null:
@@ -388,7 +390,7 @@ func runtime_get_chronicle_timeline(limit: int) -> Array:
 	return []
 
 
-## Returns the runtime Chronicle feed snapshot family response.
+## Returns the canonical runtime Chronicle feed snapshot family response.
 func runtime_get_chronicle_feed(limit: int, snapshot_revision: int = -1) -> Dictionary:
 	var runtime: Object = _get_native_runtime()
 	if runtime == null:
@@ -401,7 +403,7 @@ func runtime_get_chronicle_feed(limit: int, snapshot_revision: int = -1) -> Dict
 	return {"snapshot_revision": -1, "revision_unavailable": true, "items": []}
 
 
-## Returns one Chronicle entry detail snapshot from Rust runtime.
+## Returns one canonical Chronicle entry detail snapshot from Rust runtime.
 func runtime_get_chronicle_entry_detail(entry_id: int, snapshot_revision: int = -1) -> Dictionary:
 	var runtime: Object = _get_native_runtime()
 	if runtime == null:
