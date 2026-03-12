@@ -4,7 +4,7 @@ description: |
   Kanban board integration, Codex dispatch rules, autopilot/ultrapilot workflow,
   ticket management, and batch lifecycle. Use when dispatching tickets via
   codex_dispatch.sh, creating batches, running autopilot workflow, or managing
-  PROGRESS.md and ticket templates.
+  progress tracker files and ticket templates.
   Updated for Rust-first development: dispatch routing for Rust vs GDScript tickets.
 ---
 
@@ -87,7 +87,7 @@ DIRECT only if ALL THREE:
    sim-core changes → sim-systems → sim-engine → sim-bridge → GDScript UI
    ```
 3. **Classify** — 🟢 DISPATCH (≥60%) or 🔴 DIRECT (shared interfaces only)
-4. **Write PROGRESS.md FIRST**
+4. **Write the progress tracker FIRST**
 5. **Dispatch Rust tickets first** — they don't need Godot
 6. **Then dispatch GDScript tickets** — may depend on Rust results
 7. **Gate** — `cargo test --workspace && bash scripts/gate.sh`
@@ -109,7 +109,7 @@ Dispatch ratio: 4/7 = 57% → split Step 1 if possible to hit ≥60%
 
 ---
 
-## Part 4: PROGRESS.md — Mandatory Logging
+## Part 4: Progress Tracker — Mandatory Logging
 
 Same format as before, with added fields:
 
