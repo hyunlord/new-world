@@ -50,8 +50,8 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelClampPolicy, ChannelId, ChannelMeta, EntityId, Settlement, SettlementId};
 use sim_engine::{
-    AgentSnapshot, ChronicleEvent, ChronicleSummary, EngineSnapshot, GameEvent,
-    LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
+    AgentSnapshot, ChronicleEvent, ChronicleSummary, EngineSnapshot, GameEvent, LlmPromptVariant,
+    LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -140,9 +140,7 @@ fn channel_clamp_policy_from_rule(
     value: Option<&sim_data::InfluenceClampPolicyDef>,
 ) -> ChannelClampPolicy {
     match value {
-        Some(sim_data::InfluenceClampPolicyDef::UnitInterval) => {
-            ChannelClampPolicy::UnitInterval
-        }
+        Some(sim_data::InfluenceClampPolicyDef::UnitInterval) => ChannelClampPolicy::UnitInterval,
         _ => ChannelClampPolicy::Sigmoid,
     }
 }
@@ -319,7 +317,10 @@ fn chronicle_summary_to_dict(summary: &ChronicleSummary) -> VarDictionary {
     dict.set("event_type", format!("{:?}", summary.event_type));
     dict.set(
         "entity_id",
-        summary.entity_id.map(|entity_id| entity_id.0 as i64).unwrap_or(-1),
+        summary
+            .entity_id
+            .map(|entity_id| entity_id.0 as i64)
+            .unwrap_or(-1),
     );
     dict.set("cause_id", summary.cause.id());
     dict.set("title_key", summary.title.clone());
@@ -328,6 +329,7 @@ fn chronicle_summary_to_dict(summary: &ChronicleSummary) -> VarDictionary {
     dict.set("tile_x", summary.tile_x);
     dict.set("tile_y", summary.tile_y);
     dict.set("significance", summary.significance as f32);
+    dict.set("category_id", summary.category.id());
     let mut params = VarDictionary::new();
     for (key, value) in &summary.params {
         params.set(key.as_str(), value.as_str());
@@ -6469,11 +6471,26 @@ mod tests {
 
     #[test]
     fn action_target_resource_key_maps_foraging_actions() {
-        assert_eq!(super::action_target_resource_key(ActionType::Forage), "food");
-        assert_eq!(super::action_target_resource_key(ActionType::GatherHerbs), "food");
-        assert_eq!(super::action_target_resource_key(ActionType::GatherWood), "wood");
-        assert_eq!(super::action_target_resource_key(ActionType::GatherStone), "stone");
-        assert_eq!(super::action_target_resource_key(ActionType::Build), "building");
+        assert_eq!(
+            super::action_target_resource_key(ActionType::Forage),
+            "food"
+        );
+        assert_eq!(
+            super::action_target_resource_key(ActionType::GatherHerbs),
+            "food"
+        );
+        assert_eq!(
+            super::action_target_resource_key(ActionType::GatherWood),
+            "wood"
+        );
+        assert_eq!(
+            super::action_target_resource_key(ActionType::GatherStone),
+            "stone"
+        );
+        assert_eq!(
+            super::action_target_resource_key(ActionType::Build),
+            "building"
+        );
         assert_eq!(super::action_target_resource_key(ActionType::Idle), "");
     }
 

@@ -6,15 +6,6 @@ var _entity_manager: RefCounted
 
 ## Filter state
 var _filter_type: String = ""  # "" = all
-const LEGACY_FILTER_OPTIONS: Array = ["", "birth", "death", "marriage", "settlement_founded", "population_milestone"]
-const LEGACY_FILTER_LABEL_KEYS: Array = [
-	"UI_FILTER_ALL",
-	"UI_FILTER_BIRTH",
-	"UI_FILTER_DEATH",
-	"UI_FILTER_MARRIAGE",
-	"UI_FILTER_SETTLEMENT",
-	"UI_FILTER_MILESTONE",
-]
 const RUNTIME_FILTER_OPTIONS: Array = ["", "food", "danger", "warmth", "social"]
 const RUNTIME_FILTER_LABEL_KEYS: Array = [
 	"UI_FILTER_ALL",
@@ -37,6 +28,7 @@ var _scrollbar_rect: Rect2 = Rect2()
 var _click_regions: Array = []  # [{rect: Rect2, entity_id: int}]
 var _desc_cache: PackedStringArray = PackedStringArray()
 var _desc_cache_signature: String = ""
+var _legacy_fallback_logged: bool = false
 
 ## Event type icons and colors
 const EVENT_STYLES: Dictionary = {
@@ -420,26 +412,23 @@ func _using_runtime_chronicle() -> bool:
 
 
 func _current_filter_options() -> Array:
-	return RUNTIME_FILTER_OPTIONS if _using_runtime_chronicle() else LEGACY_FILTER_OPTIONS
+	return RUNTIME_FILTER_OPTIONS
 
 
 func _current_filter_label_keys() -> Array:
-	return RUNTIME_FILTER_LABEL_KEYS if _using_runtime_chronicle() else LEGACY_FILTER_LABEL_KEYS
+	return RUNTIME_FILTER_LABEL_KEYS
 
 
 func _chronicle_data_available() -> bool:
-	if _using_runtime_chronicle():
-		return true
-	return Engine.get_main_loop().root.get_node_or_null("ChronicleSystem") != null
+	return _using_runtime_chronicle()
 
 
 func _get_display_events() -> Array:
 	if _using_runtime_chronicle():
+		_legacy_fallback_logged = false
 		return _runtime_chronicle_events()
-	var chronicle: Node = Engine.get_main_loop().root.get_node_or_null("ChronicleSystem")
-	if chronicle == null:
-		return []
-	return chronicle.get_world_events(_filter_type, 200)
+	_log_legacy_chronicle_fallback()
+	return []
 
 
 func _runtime_chronicle_events() -> Array:
@@ -462,3 +451,10 @@ func _event_style(evt: Dictionary) -> Dictionary:
 		return EVENT_STYLES.get(cause_id, {"icon": "?", "color": Color(0.6, 0.6, 0.6)})
 	var event_type: String = str(evt.get("event_type", ""))
 	return EVENT_STYLES.get(event_type, {"icon": "?", "color": Color(0.6, 0.6, 0.6)})
+
+
+func _log_legacy_chronicle_fallback() -> void:
+	if _legacy_fallback_logged:
+		return
+	_legacy_fallback_logged = true
+	push_warning("[Chronicle] runtime timeline unavailable; legacy ChronicleSystem fallback is disabled")
