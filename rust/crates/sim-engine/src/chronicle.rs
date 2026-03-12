@@ -153,6 +153,71 @@ impl ChronicleCluster {
 /// Narrative-ready summary entry stored in the bounded chronicle timeline.
 ///
 /// `title` and `description` are locale keys resolved by Godot UI code.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum ChronicleSignificanceCategory {
+    /// The summary should be ignored by the active timeline.
+    Ignore,
+    /// The summary is too weak for the timeline and is dropped.
+    Minor,
+    /// The summary is relevant but should stay in the background queue.
+    Notable,
+    /// The summary is important enough for the visible queue when slots exist.
+    Major,
+    /// The summary must surface even if another visible item must be displaced.
+    Critical,
+}
+
+impl ChronicleSignificanceCategory {
+    /// Returns a stable identifier for bridge/UI consumers.
+    pub fn id(self) -> &'static str {
+        match self {
+            Self::Ignore => "ignore",
+            Self::Minor => "minor",
+            Self::Notable => "notable",
+            Self::Major => "major",
+            Self::Critical => "critical",
+        }
+    }
+}
+
+/// Queue selected for one summarized chronicle entry.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChronicleQueueKind {
+    /// The summary was surfaced in the visible queue.
+    Visible,
+    /// The summary was stored in the background queue.
+    Background,
+    /// The summary was stored in the recall queue.
+    Recall,
+    /// The summary was dropped.
+    Dropped,
+}
+
+/// Result of routing one chronicle summary through the attention budget.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ChronicleRouteResult {
+    /// Queue that received the summary.
+    pub queue: ChronicleQueueKind,
+    /// Whether one queue pruned its oldest entry.
+    pub pruned: bool,
+    /// Whether a visible entry had to be displaced into recall.
+    pub displaced_visible: bool,
+    /// Whether this visible entry was promoted from the background queue.
+    pub promoted_background: bool,
+}
+
+impl ChronicleRouteResult {
+    /// Returns a route result for one dropped summary.
+    pub fn dropped() -> Self {
+        Self {
+            queue: ChronicleQueueKind::Dropped,
+            pruned: false,
+            displaced_visible: false,
+            promoted_background: false,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ChronicleSummary {
     /// Inclusive first tick represented by the summary.
@@ -177,63 +242,247 @@ pub struct ChronicleSummary {
     pub tile_y: i32,
     /// Significance score assigned during summarization.
     pub significance: f64,
+    /// Attention category assigned during summarization.
+    pub category: ChronicleSignificanceCategory,
 }
 
 /// Bounded recent world-history timeline built from raw chronicle events.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ChronicleTimeline {
-    summaries: VecDeque<ChronicleSummary>,
-    max_summaries: usize,
+    visible_queue: VecDeque<ChronicleSummary>,
+    background_queue: VecDeque<ChronicleSummary>,
+    recall_queue: VecDeque<ChronicleSummary>,
+    max_visible: usize,
+    max_background: usize,
+    max_recall: usize,
+    last_visible_tick: Option<u64>,
 }
 
 impl ChronicleTimeline {
     /// Creates a new bounded chronicle timeline.
     pub fn new() -> Self {
         Self {
-            summaries: VecDeque::with_capacity(config::CHRONICLE_TIMELINE_MAX_ENTRIES),
-            max_summaries: config::CHRONICLE_TIMELINE_MAX_ENTRIES,
+            visible_queue: VecDeque::with_capacity(config::CHRONICLE_VISIBLE_MAX_ENTRIES),
+            background_queue: VecDeque::with_capacity(config::CHRONICLE_TIMELINE_MAX_ENTRIES),
+            recall_queue: VecDeque::with_capacity(config::CHRONICLE_RECALL_MAX_ENTRIES),
+            max_visible: config::CHRONICLE_VISIBLE_MAX_ENTRIES,
+            max_background: config::CHRONICLE_TIMELINE_MAX_ENTRIES,
+            max_recall: config::CHRONICLE_RECALL_MAX_ENTRIES,
+            last_visible_tick: None,
         }
     }
 
-    /// Appends one summary and prunes the oldest entry when capacity is exceeded.
-    pub fn append_summary(&mut self, summary: ChronicleSummary) -> bool {
-        let mut pruned = false;
-        if self.summaries.len() >= self.max_summaries {
-            self.summaries.pop_front();
-            pruned = true;
+    /// Routes one summary through the attention budget.
+    pub fn route_summary(
+        &mut self,
+        summary: ChronicleSummary,
+        surfaced_tick: u64,
+    ) -> ChronicleRouteResult {
+        match summary.category {
+            ChronicleSignificanceCategory::Critical => {
+                let displaced = self.push_visible(summary, surfaced_tick);
+                let displaced_visible = displaced.is_some();
+                let mut pruned = false;
+                if let Some(displaced_summary) = displaced {
+                    pruned = self.push_recall(displaced_summary).is_some();
+                }
+                ChronicleRouteResult {
+                    queue: ChronicleQueueKind::Visible,
+                    pruned,
+                    displaced_visible,
+                    promoted_background: false,
+                }
+            }
+            ChronicleSignificanceCategory::Major => {
+                if self.has_visible_capacity() {
+                    let displaced = self.push_visible(summary, surfaced_tick);
+                    let displaced_visible = displaced.is_some();
+                    let mut pruned = false;
+                    if let Some(displaced_summary) = displaced {
+                        pruned = self.push_recall(displaced_summary).is_some();
+                    }
+                    ChronicleRouteResult {
+                        queue: ChronicleQueueKind::Visible,
+                        pruned,
+                        displaced_visible,
+                        promoted_background: false,
+                    }
+                } else {
+                    ChronicleRouteResult {
+                        queue: ChronicleQueueKind::Recall,
+                        pruned: self.push_recall(summary).is_some(),
+                        displaced_visible: false,
+                        promoted_background: false,
+                    }
+                }
+            }
+            ChronicleSignificanceCategory::Notable => ChronicleRouteResult {
+                queue: ChronicleQueueKind::Background,
+                pruned: self.push_background(summary).is_some(),
+                displaced_visible: false,
+                promoted_background: false,
+            },
+            ChronicleSignificanceCategory::Minor | ChronicleSignificanceCategory::Ignore => {
+                ChronicleRouteResult::dropped()
+            }
         }
-        self.summaries.push_back(summary);
-        pruned
+    }
+
+    /// Promotes the highest-significance background summary when attention has been starved.
+    pub fn promote_background_if_starved(
+        &mut self,
+        current_tick: u64,
+    ) -> Option<ChronicleRouteResult> {
+        let last_visible_tick = self.last_visible_tick.unwrap_or(0);
+        if current_tick.saturating_sub(last_visible_tick)
+            < config::CHRONICLE_VISIBLE_STARVATION_TICKS
+            || self.background_queue.is_empty()
+        {
+            return None;
+        }
+
+        let best_index = self
+            .background_queue
+            .iter()
+            .enumerate()
+            .max_by(|(_, left), (_, right)| {
+                left.significance
+                    .partial_cmp(&right.significance)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+                    .then_with(|| left.end_tick.cmp(&right.end_tick))
+            })
+            .map(|(index, _)| index)?;
+        let summary = self.background_queue.remove(best_index)?;
+        let displaced = self.push_visible(summary, current_tick);
+        let displaced_visible = displaced.is_some();
+        let mut pruned = false;
+        if let Some(displaced_summary) = displaced {
+            pruned = self.push_recall(displaced_summary).is_some();
+        }
+        Some(ChronicleRouteResult {
+            queue: ChronicleQueueKind::Visible,
+            pruned,
+            displaced_visible,
+            promoted_background: true,
+        })
     }
 
     /// Returns recent summaries, newest first.
     pub fn recent_summaries(&self, count: usize) -> Vec<&ChronicleSummary> {
-        self.summaries.iter().rev().take(count).collect()
+        self.visible_queue.iter().rev().take(count).collect()
     }
 
-    /// Returns recent summaries for one entity, newest first.
+    /// Returns recent summaries for one entity across all queues, newest first.
     pub fn query_by_entity(&self, entity_id: EntityId, count: usize) -> Vec<&ChronicleSummary> {
-        self.summaries
+        let mut summaries: Vec<&ChronicleSummary> = self
+            .visible_queue
             .iter()
-            .rev()
+            .chain(self.background_queue.iter())
+            .chain(self.recall_queue.iter())
             .filter(|summary| summary.entity_id == Some(entity_id))
-            .take(count)
-            .collect()
+            .collect();
+        summaries.sort_by(|left, right| right.end_tick.cmp(&left.end_tick));
+        summaries.truncate(count);
+        summaries
+    }
+
+    /// Returns the current number of visible summaries.
+    pub fn visible_len(&self) -> usize {
+        self.visible_queue.len()
+    }
+
+    /// Returns the current number of background summaries.
+    pub fn background_len(&self) -> usize {
+        self.background_queue.len()
+    }
+
+    /// Returns the current number of recall summaries.
+    pub fn recall_len(&self) -> usize {
+        self.recall_queue.len()
+    }
+
+    /// Returns `true` when another summary can be surfaced immediately.
+    pub fn has_visible_capacity(&self) -> bool {
+        self.visible_queue.len() < self.max_visible
+    }
+
+    /// Returns the tick at which the most recent visible summary was surfaced.
+    pub fn last_visible_tick(&self) -> Option<u64> {
+        self.last_visible_tick
+    }
+
+    /// Returns how many summaries of one event family were seen since `since_tick`.
+    pub fn recent_family_count(
+        &self,
+        event_type: ChronicleEventType,
+        cause: ChronicleEventCause,
+        since_tick: u64,
+    ) -> usize {
+        self.visible_queue
+            .iter()
+            .chain(self.background_queue.iter())
+            .chain(self.recall_queue.iter())
+            .filter(|summary| {
+                summary.end_tick >= since_tick
+                    && summary.event_type == event_type
+                    && summary.cause == cause
+            })
+            .count()
     }
 
     /// Clears all stored summaries.
     pub fn clear(&mut self) {
-        self.summaries.clear();
+        self.visible_queue.clear();
+        self.background_queue.clear();
+        self.recall_queue.clear();
+        self.last_visible_tick = None;
     }
 
-    /// Returns the number of stored summaries.
+    /// Returns the total number of stored summaries across all queues.
     pub fn len(&self) -> usize {
-        self.summaries.len()
+        self.visible_queue.len() + self.background_queue.len() + self.recall_queue.len()
     }
 
     /// Returns `true` when no summaries are currently stored.
     pub fn is_empty(&self) -> bool {
-        self.summaries.is_empty()
+        self.visible_queue.is_empty()
+            && self.background_queue.is_empty()
+            && self.recall_queue.is_empty()
+    }
+
+    fn push_visible(
+        &mut self,
+        summary: ChronicleSummary,
+        surfaced_tick: u64,
+    ) -> Option<ChronicleSummary> {
+        let displaced = if self.visible_queue.len() >= self.max_visible {
+            self.visible_queue.pop_front()
+        } else {
+            None
+        };
+        self.last_visible_tick = Some(surfaced_tick);
+        self.visible_queue.push_back(summary);
+        displaced
+    }
+
+    fn push_background(&mut self, summary: ChronicleSummary) -> Option<ChronicleSummary> {
+        let pruned = if self.background_queue.len() >= self.max_background {
+            self.background_queue.pop_front()
+        } else {
+            None
+        };
+        self.background_queue.push_back(summary);
+        pruned
+    }
+
+    fn push_recall(&mut self, summary: ChronicleSummary) -> Option<ChronicleSummary> {
+        let pruned = if self.recall_queue.len() >= self.max_recall {
+            self.recall_queue.pop_front()
+        } else {
+            None
+        };
+        self.recall_queue.push_back(summary);
+        pruned
     }
 }
 
@@ -397,35 +646,45 @@ mod tests {
 
         assert!(log.latest_for_entity(low_entity).is_none());
         assert!(log.latest_for_entity(medium_entity).is_none());
-        assert_eq!(log.latest_for_entity(high_entity).map(|event| event.tick), Some(30));
+        assert_eq!(
+            log.latest_for_entity(high_entity).map(|event| event.tick),
+            Some(30)
+        );
     }
 
     #[test]
     fn chronicle_timeline_keeps_recent_entries_bounded() {
         let mut timeline = ChronicleTimeline::new();
-        for index in 0..(config::CHRONICLE_TIMELINE_MAX_ENTRIES + 5) {
-            timeline.append_summary(ChronicleSummary {
-                start_tick: index as u64,
-                end_tick: index as u64,
-                entity_id: Some(EntityId(index as u64)),
-                event_type: ChronicleEventType::InfluenceAttraction,
-                cause: ChronicleEventCause::Food,
-                title: "CHRONICLE_TITLE_FOOD_ATTRACTION".to_string(),
-                description: "CHRONICLE_SUMMARY_FOOD_ATTRACTION".to_string(),
-                params: BTreeMap::new(),
-                tile_x: 0,
-                tile_y: 0,
-                significance: 8.0,
-            });
+        for index in 0..(config::CHRONICLE_VISIBLE_MAX_ENTRIES + 5) {
+            timeline.route_summary(
+                ChronicleSummary {
+                    start_tick: index as u64,
+                    end_tick: index as u64,
+                    entity_id: Some(EntityId(index as u64)),
+                    event_type: ChronicleEventType::InfluenceAttraction,
+                    cause: ChronicleEventCause::Food,
+                    title: "CHRONICLE_TITLE_FOOD_ATTRACTION".to_string(),
+                    description: "CHRONICLE_SUMMARY_FOOD_ATTRACTION".to_string(),
+                    params: BTreeMap::new(),
+                    tile_x: 0,
+                    tile_y: 0,
+                    significance: 8.0,
+                    category: ChronicleSignificanceCategory::Critical,
+                },
+                index as u64,
+            );
         }
 
-        assert_eq!(timeline.len(), config::CHRONICLE_TIMELINE_MAX_ENTRIES);
+        assert_eq!(
+            timeline.visible_len(),
+            config::CHRONICLE_VISIBLE_MAX_ENTRIES
+        );
         assert_eq!(
             timeline
                 .recent_summaries(1)
                 .first()
                 .and_then(|summary| summary.entity_id),
-            Some(EntityId((config::CHRONICLE_TIMELINE_MAX_ENTRIES + 4) as u64))
+            Some(EntityId((config::CHRONICLE_VISIBLE_MAX_ENTRIES + 4) as u64))
         );
     }
 
@@ -434,24 +693,96 @@ mod tests {
         let mut timeline = ChronicleTimeline::new();
         let entity_id = EntityId(44);
         for tick in 0..3_u64 {
-            timeline.append_summary(ChronicleSummary {
-                start_tick: tick,
-                end_tick: tick,
-                entity_id: Some(entity_id),
-                event_type: ChronicleEventType::ShelterSeeking,
-                cause: ChronicleEventCause::Warmth,
-                title: "CHRONICLE_TITLE_SHELTER_SEEKING".to_string(),
-                description: "CHRONICLE_SUMMARY_SHELTER_SEEKING".to_string(),
-                params: BTreeMap::new(),
-                tile_x: 1,
-                tile_y: 2,
-                significance: 7.5,
-            });
+            timeline.route_summary(
+                ChronicleSummary {
+                    start_tick: tick,
+                    end_tick: tick,
+                    entity_id: Some(entity_id),
+                    event_type: ChronicleEventType::ShelterSeeking,
+                    cause: ChronicleEventCause::Warmth,
+                    title: "CHRONICLE_TITLE_SHELTER_SEEKING".to_string(),
+                    description: "CHRONICLE_SUMMARY_SHELTER_SEEKING".to_string(),
+                    params: BTreeMap::new(),
+                    tile_x: 1,
+                    tile_y: 2,
+                    significance: 7.5,
+                    category: ChronicleSignificanceCategory::Major,
+                },
+                tick,
+            );
         }
 
         let summaries = timeline.query_by_entity(entity_id, 2);
         assert_eq!(summaries.len(), 2);
         assert_eq!(summaries[0].start_tick, 2);
         assert_eq!(summaries[1].start_tick, 1);
+    }
+
+    #[test]
+    fn chronicle_timeline_routes_notable_to_background_and_major_to_recall_when_full() {
+        let mut timeline = ChronicleTimeline::new();
+        for index in 0..config::CHRONICLE_VISIBLE_MAX_ENTRIES {
+            let _ = timeline.route_summary(
+                ChronicleSummary {
+                    start_tick: index as u64,
+                    end_tick: index as u64,
+                    entity_id: Some(EntityId(index as u64)),
+                    event_type: ChronicleEventType::InfluenceAttraction,
+                    cause: ChronicleEventCause::Food,
+                    title: "CHRONICLE_TITLE_FOOD_ATTRACTION".to_string(),
+                    description: "CHRONICLE_SUMMARY_FOOD_ATTRACTION".to_string(),
+                    params: BTreeMap::new(),
+                    tile_x: 0,
+                    tile_y: 0,
+                    significance: 7.0,
+                    category: ChronicleSignificanceCategory::Major,
+                },
+                index as u64,
+            );
+        }
+
+        let notable = timeline.route_summary(
+            ChronicleSummary {
+                start_tick: 99,
+                end_tick: 99,
+                entity_id: Some(EntityId(99)),
+                event_type: ChronicleEventType::GatheringFormation,
+                cause: ChronicleEventCause::Social,
+                title: "CHRONICLE_TITLE_SOCIAL_ATTRACTION".to_string(),
+                description: "CHRONICLE_SUMMARY_SOCIAL_ATTRACTION".to_string(),
+                params: BTreeMap::new(),
+                tile_x: 0,
+                tile_y: 0,
+                significance: 5.0,
+                category: ChronicleSignificanceCategory::Notable,
+            },
+            99,
+        );
+        let major = timeline.route_summary(
+            ChronicleSummary {
+                start_tick: 100,
+                end_tick: 100,
+                entity_id: Some(EntityId(100)),
+                event_type: ChronicleEventType::ShelterSeeking,
+                cause: ChronicleEventCause::Warmth,
+                title: "CHRONICLE_TITLE_SHELTER_SEEKING".to_string(),
+                description: "CHRONICLE_SUMMARY_SHELTER_SEEKING".to_string(),
+                params: BTreeMap::new(),
+                tile_x: 1,
+                tile_y: 1,
+                significance: 8.0,
+                category: ChronicleSignificanceCategory::Major,
+            },
+            100,
+        );
+
+        assert_eq!(notable.queue, ChronicleQueueKind::Background);
+        assert_eq!(major.queue, ChronicleQueueKind::Recall);
+        assert_eq!(
+            timeline.visible_len(),
+            config::CHRONICLE_VISIBLE_MAX_ENTRIES
+        );
+        assert_eq!(timeline.background_len(), 1);
+        assert_eq!(timeline.recall_len(), 1);
     }
 }
