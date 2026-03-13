@@ -1070,6 +1070,7 @@ name = "sim-core"
 version = "0.1.0"
 dependencies = [
  "ahash",
+ "log",
  "ordered-float",
  "rand",
  "rand_distr",
