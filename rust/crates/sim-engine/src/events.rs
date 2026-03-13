@@ -105,6 +105,10 @@ pub enum GameEvent {
         building_id: BuildingId,
         building_type: String,
     },
+    EffectEventTriggered {
+        entity_id: EntityId,
+        event_key: String,
+    },
     ResourceGathered {
         entity_id: EntityId,
         resource: String,
@@ -166,6 +170,7 @@ impl GameEvent {
             GameEvent::SocialEventOccurred { .. } => "social_event_occurred",
             GameEvent::JobAssigned { .. } => "job_assigned",
             GameEvent::BuildingConstructed { .. } => "building_constructed",
+            GameEvent::EffectEventTriggered { .. } => "effect_event_triggered",
             GameEvent::ResourceGathered { .. } => "resource_gathered",
             GameEvent::SettlementFounded { .. } => "settlement_founded",
             GameEvent::MigrationOccurred { .. } => "migration_occurred",

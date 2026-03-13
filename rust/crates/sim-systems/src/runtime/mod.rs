@@ -8,6 +8,7 @@
 mod biology;
 mod cognition;
 mod economy;
+mod effect_apply;
 mod influence;
 mod llm_request_system;
 mod llm_response_system;
@@ -36,6 +37,7 @@ pub use economy::{
     BuildingEffectRuntimeSystem, ConstructionRuntimeSystem, GatheringRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, ResourceRegenSystem,
 };
+pub use effect_apply::EffectApplySystem;
 
 // ---- influence ----
 pub use influence::InfluenceRuntimeSystem;
@@ -90,21 +92,20 @@ mod tests {
         ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem,
         CopingRuntimeSystem, EconomicTendencyRuntimeSystem, EmotionRuntimeSystem,
         FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
-        IntelligenceRuntimeSystem,
-        IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem,
-        LeaderRuntimeSystem, MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem,
-        MoraleRuntimeSystem, MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
-        NetworkRuntimeSystem, OccupationRuntimeSystem, ParentingRuntimeSystem,
-        PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
-        PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-        SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
-        StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, SteeringRuntimeSystem,
-        StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
-        TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
-        TensionRuntimeSystem, TitleRuntimeSystem, TraitCondition, TraitConditionSource,
-        TraitDefinition, TraitDirection, TraitRuntimeSystem, TraitViolationRuntimeSystem,
-        TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
-        STAT_THRESHOLD_FLAG_HUNGER_LOW,
+        IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
+        JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, MemoryRuntimeSystem,
+        MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
+        MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+        OccupationRuntimeSystem, ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
+        PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
+        ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
+        StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
+        SteeringRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+        TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
+        TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem, TraitCondition,
+        TraitConditionSource, TraitDefinition, TraitDirection, TraitRuntimeSystem,
+        TraitViolationRuntimeSystem, TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem,
+        ValueRuntimeSystem, STAT_THRESHOLD_FLAG_HUNGER_LOW,
     };
     use crate::body;
     use hecs::World;
@@ -1871,12 +1872,10 @@ mod tests {
             .expect("blocked needs after second tick");
 
         assert!(
-            inside_after_second.get(NeedType::Warmth)
-                > blocked_after_second.get(NeedType::Warmth)
+            inside_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth)
         );
         assert!(
-            open_after_second.get(NeedType::Warmth)
-                > blocked_after_second.get(NeedType::Warmth)
+            open_after_second.get(NeedType::Warmth) > blocked_after_second.get(NeedType::Warmth)
         );
     }
 
@@ -4832,8 +4831,8 @@ mod tests {
         let mut world = World::new();
         let mut resources = make_resources();
 
-        let make_event = |tick: u64, entity_id: u64, significance: f64, summary_key: &str| {
-            ChronicleEvent {
+        let make_event =
+            |tick: u64, entity_id: u64, significance: f64, summary_key: &str| ChronicleEvent {
                 tick,
                 entity_id: EntityId(entity_id),
                 event_type: ChronicleEventType::MovementDecision,
@@ -4847,8 +4846,7 @@ mod tests {
                 tile_y: 0,
                 summary_key: summary_key.to_string(),
                 effect_key: "steering_velocity".to_string(),
-            }
-        };
+            };
         resources
             .chronicle_log
             .append_event(make_event(100, 10, 0.10, "old_low_1"));
@@ -4887,7 +4885,10 @@ mod tests {
         assert!(!types.contains(&"old_low_2"), "old low-importance 2 pruned");
 
         assert!(
-            resources.chronicle_log.latest_for_entity(EntityId(10)).is_none(),
+            resources
+                .chronicle_log
+                .latest_for_entity(EntityId(10))
+                .is_none(),
             "personal events referencing pruned low-significance world ticks should be GC'd"
         );
         assert_eq!(

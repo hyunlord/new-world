@@ -111,6 +111,13 @@ fn game_event_payload(event: &GameEvent) -> VarDictionary {
             payload.set("building_id", building_id.0 as i64);
             payload.set("building_type", building_type.clone());
         }
+        GameEvent::EffectEventTriggered {
+            entity_id,
+            event_key,
+        } => {
+            payload.set("entity_id", entity_id.0 as i64);
+            payload.set("event_key", event_key.clone());
+        }
         GameEvent::MigrationOccurred {
             entity_id,
             from_settlement,
