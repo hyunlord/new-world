@@ -181,6 +181,30 @@ impl DataRegistry {
             .map(|structure| structure.influence_when_complete.as_slice())
     }
 
+    /// Returns the immutable structure definition for the given runtime building id.
+    pub fn structure_def(&self, structure_id: &str) -> Option<&StructureDef> {
+        self.structures.get(structure_id).map(Arc::as_ref)
+    }
+
+    /// Returns the configured construction time for a structure.
+    pub fn structure_build_ticks(&self, structure_id: &str) -> Option<u64> {
+        self.structure_def(structure_id).map(|structure| structure.build_ticks)
+    }
+
+    /// Returns the configured resource cost for a structure and resource tag.
+    pub fn structure_resource_cost(&self, structure_id: &str, resource_tag: &str) -> Option<f64> {
+        self.structure_def(structure_id)
+            .and_then(|structure| structure.resource_costs.get(resource_tag))
+            .copied()
+    }
+
+    /// Returns wall hit points derived from authoritative material properties.
+    pub fn material_wall_hit_points(&self, material_id: &str) -> Option<f64> {
+        self.materials.get(material_id).map(|material| {
+            material.properties.hardness * material.properties.density * 10.0
+        })
+    }
+
     /// Returns declarative action effects configured for the given action.
     pub fn action_effects(&self, action_id: &str) -> Option<&[ActionEffect]> {
         self.actions
@@ -337,7 +361,12 @@ mod tests {
         assert!(emissions.iter().any(|emission| emission.channel == "danger"));
         assert!(emissions.iter().any(|emission| emission.channel == "social"));
         assert!(registry.material_wall_blocking_hint("flint").is_some());
-        assert!(registry.structure_completion_influence("lean_to_structure").is_some());
+        assert_eq!(registry.structure_build_ticks("stockpile"), Some(36));
+        assert_eq!(registry.structure_build_ticks("campfire"), Some(24));
+        assert_eq!(registry.structure_resource_cost("shelter", "wood"), Some(4.0));
+        assert_eq!(registry.structure_resource_cost("shelter", "stone"), Some(1.0));
+        assert_eq!(registry.material_wall_hit_points("oak"), Some(30.0));
+        assert!(registry.structure_completion_influence("shelter").is_some());
         assert!(registry.action_effects("forage").is_some());
         assert!(registry.world_rules_ref().is_some());
         assert!(

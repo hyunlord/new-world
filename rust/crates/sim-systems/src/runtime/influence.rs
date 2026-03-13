@@ -3,13 +3,14 @@ use sim_core::components::{InfluenceEmitter, Position};
 use sim_core::config;
 use sim_core::{
     assign_room_ids, detect_rooms, BuildingId, ChannelId, EmitterRecord, FalloffType, ResourceType,
-    TerrainType,
+    SettlementId, TerrainType,
 };
-use sim_data::InfluenceEmission;
+use sim_data::{DataRegistry, InfluenceEmission, StructureRequirement};
 use sim_engine::{SimResources, SimSystem};
 
+const BUILDING_TYPE_CAMPFIRE: &str = "campfire";
+const BUILDING_TYPE_SHELTER: &str = "shelter";
 const DEFAULT_WALL_MATERIAL_ID: &str = "oak";
-const DEFAULT_FLOOR_MATERIAL_ID: &str = "oak";
 const DEFAULT_ROOF_MATERIAL_ID: &str = "oak";
 
 /// Runtime system that rebuilds spatial influence fields from world state.
@@ -63,7 +64,7 @@ fn shelter_structure_signature(resources: &SimResources) -> u64 {
         let Some(building) = resources.buildings.get(&building_id) else {
             continue;
         };
-        if !building.is_complete || building.building_type != "shelter" {
+        if !building.is_complete || building.building_type != BUILDING_TYPE_SHELTER {
             continue;
         }
         signature = signature
@@ -179,6 +180,18 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
 
         let mut emitted_any = false;
         if let Some(registry) = resources.data_registry.as_deref() {
+            if let Some(registry_emissions) =
+                registry.structure_completion_influence(building.building_type.as_str())
+            {
+                append_registry_emissions(
+                    emitters,
+                    building.x as u32,
+                    building.y as u32,
+                    registry_emissions,
+                    &[building.building_type.as_str(), "registry_structure"],
+                );
+                emitted_any = !registry_emissions.is_empty() || emitted_any;
+            }
             if let Some(furniture_id) = furniture_registry_id(building.building_type.as_str()) {
                 if let Some(registry_emissions) = registry.furniture_influence_emissions(furniture_id)
                 {
@@ -192,19 +205,6 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
                     emitted_any = !registry_emissions.is_empty() || emitted_any;
                 }
             }
-            if let Some(structure_id) = structure_registry_id(building.building_type.as_str()) {
-                if let Some(registry_emissions) = registry.structure_completion_influence(structure_id)
-                {
-                    append_registry_emissions(
-                        emitters,
-                        building.x as u32,
-                        building.y as u32,
-                        registry_emissions,
-                        &[building.building_type.as_str(), "registry_structure"],
-                    );
-                    emitted_any = !registry_emissions.is_empty() || emitted_any;
-                }
-            }
         }
 
         if emitted_any {
@@ -212,7 +212,7 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
         }
 
         match building.building_type.as_str() {
-            "campfire" => {
+            BUILDING_TYPE_CAMPFIRE => {
                 emitters.push(EmitterRecord {
                     x: building.x as u32,
                     y: building.y as u32,
@@ -247,7 +247,7 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
                     dirty: true,
                 });
             }
-            "shelter" => emitters.push(EmitterRecord {
+            BUILDING_TYPE_SHELTER => emitters.push(EmitterRecord {
                 x: building.x as u32,
                 y: building.y as u32,
                 channel: ChannelId::Warmth,
@@ -300,16 +300,108 @@ fn default_falloff_for_channel(channel: ChannelId) -> FalloffType {
 
 fn furniture_registry_id(building_type: &str) -> Option<&'static str> {
     match building_type {
-        "campfire" => Some("fire_pit"),
+        BUILDING_TYPE_CAMPFIRE => Some("fire_pit"),
         _ => None,
     }
 }
 
-fn structure_registry_id(building_type: &str) -> Option<&'static str> {
-    match building_type {
-        "shelter" => Some("lean_to_structure"),
-        _ => None,
+fn preferred_structure_material_tag(settlement: Option<&sim_core::Settlement>) -> &'static str {
+    if settlement
+        .map(|known| known.stockpile_stone > known.stockpile_wood)
+        .unwrap_or(false)
+    {
+        "stone"
+    } else {
+        "wood"
     }
+}
+
+fn structure_requirement_tags(
+    registry: Option<&DataRegistry>,
+    structure_id: &str,
+    predicate: impl Fn(&StructureRequirement) -> Option<&Vec<String>>,
+    fallback_tag: &str,
+) -> Vec<String> {
+    registry
+        .and_then(|loaded| loaded.structure_def(structure_id))
+        .and_then(|structure| {
+            structure
+                .required_components
+                .iter()
+                .find_map(predicate)
+                .filter(|tags| !tags.is_empty())
+                .cloned()
+        })
+        .unwrap_or_else(|| vec![fallback_tag.to_string()])
+}
+
+fn select_material_for_tags(
+    registry: &DataRegistry,
+    required_tags: &[String],
+    preferred_tag: Option<&str>,
+) -> Option<String> {
+    let mut material_ids: Vec<&str> = registry.materials.keys().map(|id| id.as_str()).collect();
+    material_ids.sort_unstable();
+
+    let mut fallback_match: Option<String> = None;
+    for material_id in material_ids {
+        let Some(material) = registry.materials.get(material_id) else {
+            continue;
+        };
+        if !required_tags.iter().all(|tag| material.tags.contains(tag)) {
+            continue;
+        }
+        if preferred_tag
+            .map(|tag| material.tags.contains(tag))
+            .unwrap_or(false)
+        {
+            return Some(material_id.to_string());
+        }
+        if fallback_match.is_none() {
+            fallback_match = Some(material_id.to_string());
+        }
+    }
+    fallback_match
+}
+
+fn resolve_shelter_wall_material(resources: &SimResources, settlement_id: SettlementId) -> String {
+    let registry = resources.data_registry.as_deref();
+    let wall_tags = structure_requirement_tags(
+        registry,
+        BUILDING_TYPE_SHELTER,
+        |requirement| match requirement {
+            StructureRequirement::Wall { tags, .. } => Some(tags),
+            _ => None,
+        },
+        "building_material",
+    );
+    let preferred_tag =
+        preferred_structure_material_tag(resources.settlements.get(&settlement_id));
+    registry
+        .and_then(|loaded| select_material_for_tags(loaded, &wall_tags, Some(preferred_tag)))
+        .unwrap_or_else(|| DEFAULT_WALL_MATERIAL_ID.to_string())
+}
+
+fn resolve_shelter_roof_material(resources: &SimResources) -> String {
+    let registry = resources.data_registry.as_deref();
+    let roof_tags = structure_requirement_tags(
+        registry,
+        BUILDING_TYPE_SHELTER,
+        |requirement| match requirement {
+            StructureRequirement::Roof { tags } => Some(tags),
+            _ => None,
+        },
+        "roof_material",
+    );
+    registry
+        .and_then(|loaded| select_material_for_tags(loaded, &roof_tags, Some("wood")))
+        .unwrap_or_else(|| DEFAULT_ROOF_MATERIAL_ID.to_string())
+}
+
+fn wall_hp_from_material(registry: Option<&DataRegistry>, material_id: &str) -> f64 {
+    registry
+        .and_then(|loaded| loaded.material_wall_hit_points(material_id))
+        .unwrap_or(10.0)
 }
 
 fn collect_component_emitters(world: &World, emitters: &mut Vec<EmitterRecord>) {
@@ -345,8 +437,8 @@ fn refresh_structural_context(resources: &mut SimResources) {
         if !building.is_complete {
             continue;
         }
-        if building.building_type == "shelter" {
-            stamp_shelter_structure(resources, building.x, building.y);
+        if building.building_type == BUILDING_TYPE_SHELTER {
+            stamp_shelter_structure(resources, building.x, building.y, building.settlement_id);
         }
     }
 
@@ -356,18 +448,27 @@ fn refresh_structural_context(resources: &mut SimResources) {
     apply_wall_blocking_from_tile_grid(resources);
 }
 
-fn stamp_shelter_structure(resources: &mut SimResources, center_x: i32, center_y: i32) {
+fn stamp_shelter_structure(
+    resources: &mut SimResources,
+    center_x: i32,
+    center_y: i32,
+    settlement_id: SettlementId,
+) {
     if !resources.map.in_bounds(center_x, center_y) {
         return;
     }
+    let wall_material = resolve_shelter_wall_material(resources, settlement_id);
+    let floor_material = wall_material.clone();
+    let roof_material = resolve_shelter_roof_material(resources);
+    let wall_hp = wall_hp_from_material(resources.data_registry.as_deref(), wall_material.as_str());
     let center_x_u32 = center_x as u32;
     let center_y_u32 = center_y as u32;
     resources
         .tile_grid
-        .set_floor(center_x_u32, center_y_u32, DEFAULT_FLOOR_MATERIAL_ID);
+        .set_floor(center_x_u32, center_y_u32, floor_material);
     resources
         .tile_grid
-        .set_roof(center_x_u32, center_y_u32, DEFAULT_ROOF_MATERIAL_ID);
+        .set_roof(center_x_u32, center_y_u32, roof_material);
 
     let wall_radius = config::BUILDING_SHELTER_WALL_RING_RADIUS.max(1);
     for offset_y in -wall_radius..=wall_radius {
@@ -390,8 +491,8 @@ fn stamp_shelter_structure(resources: &mut SimResources, center_x: i32, center_y
             resources.tile_grid.set_wall(
                 tile_x as u32,
                 tile_y as u32,
-                DEFAULT_WALL_MATERIAL_ID,
-                10.0,
+                wall_material.clone(),
+                wall_hp,
             );
         }
     }
@@ -751,5 +852,80 @@ mod tests {
         let open_signal = resources.influence_grid.sample(5, 6, ChannelId::Danger);
         let blocked_signal = resources.influence_grid.sample(7, 5, ChannelId::Danger);
         assert!(open_signal > blocked_signal);
+    }
+
+    #[test]
+    fn influence_runtime_system_wall_hp_derived_from_material_properties() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.data_registry = Some(std::sync::Arc::new(
+            sim_data::DataRegistry::load_from_directory(&registry_data_path())
+                .expect("registry should load for influence test"),
+        ));
+        let settlement_id = SettlementId(1);
+        let mut settlement =
+            sim_core::Settlement::new(settlement_id, "alpha".to_string(), 5, 5, 0);
+        settlement.stockpile_wood = 4.0;
+        settlement.stockpile_stone = 0.0;
+        resources.settlements.insert(settlement_id, settlement);
+        resources.buildings.insert(
+            BuildingId(17),
+            Building {
+                id: BuildingId(17),
+                building_type: BUILDING_TYPE_SHELTER.to_string(),
+                settlement_id,
+                x: 5,
+                y: 5,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut system = InfluenceRuntimeSystem::new(
+            config::INFLUENCE_SYSTEM_PRIORITY,
+            config::INFLUENCE_SYSTEM_INTERVAL,
+        );
+        system.run(&mut world, &mut resources, 1);
+
+        assert_eq!(
+            resources.tile_grid.get(6, 5).wall_material.as_deref(),
+            Some("oak")
+        );
+        assert!((resources.tile_grid.get(6, 5).wall_hp - 30.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn influence_runtime_system_structure_completion_influence_stamps_grid() {
+        let mut world = World::new();
+        let mut resources = resources();
+        resources.data_registry = Some(std::sync::Arc::new(
+            sim_data::DataRegistry::load_from_directory(&registry_data_path())
+                .expect("registry should load for influence test"),
+        ));
+        resources.buildings.insert(
+            BuildingId(18),
+            Building {
+                id: BuildingId(18),
+                building_type: BUILDING_TYPE_SHELTER.to_string(),
+                settlement_id: SettlementId(1),
+                x: 5,
+                y: 5,
+                construction_progress: 1.0,
+                is_complete: true,
+                construction_started_tick: 0,
+                condition: 1.0,
+            },
+        );
+
+        let mut system = InfluenceRuntimeSystem::new(
+            config::INFLUENCE_SYSTEM_PRIORITY,
+            config::INFLUENCE_SYSTEM_INTERVAL,
+        );
+        system.run(&mut world, &mut resources, 1);
+        resources.influence_grid.tick_update();
+
+        assert!(resources.influence_grid.sample(5, 5, ChannelId::Warmth) > 0.0);
     }
 }
