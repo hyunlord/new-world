@@ -3,6 +3,7 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
+use sim_data::DataRegistry;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
     Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
@@ -188,19 +189,89 @@ fn settlement_construction_snapshot(
 }
 
 #[inline]
-fn settlement_can_afford_plan(settlement: &sim_core::Settlement, plan: EarlyStructurePlan) -> bool {
-    match plan {
-        EarlyStructurePlan::Stockpile => {
-            settlement.stockpile_wood >= config::BUILDING_STOCKPILE_COST_WOOD
-        }
-        EarlyStructurePlan::Campfire => {
-            settlement.stockpile_wood >= config::BUILDING_CAMPFIRE_COST_WOOD
-        }
-        EarlyStructurePlan::Shelter => {
-            settlement.stockpile_wood >= config::BUILDING_SHELTER_COST_WOOD
-                && settlement.stockpile_stone >= config::BUILDING_SHELTER_COST_STONE
+fn legacy_structure_resource_cost(building_type: &str, resource_tag: &str) -> f64 {
+    const LEGACY_COSTS: [(&str, &str, f64); 4] = [
+        (BUILDING_TYPE_STOCKPILE, "wood", config::BUILDING_STOCKPILE_COST_WOOD),
+        (BUILDING_TYPE_CAMPFIRE, "wood", config::BUILDING_CAMPFIRE_COST_WOOD),
+        (BUILDING_TYPE_SHELTER, "wood", config::BUILDING_SHELTER_COST_WOOD),
+        (BUILDING_TYPE_SHELTER, "stone", config::BUILDING_SHELTER_COST_STONE),
+    ];
+
+    LEGACY_COSTS
+        .iter()
+        .find(|(legacy_building_type, legacy_resource_tag, _)| {
+            *legacy_building_type == building_type && *legacy_resource_tag == resource_tag
+        })
+        .map(|(_, _, amount)| *amount)
+        .unwrap_or(0.0)
+}
+
+#[inline]
+fn structure_resource_cost(
+    building_type: &str,
+    resource_tag: &str,
+    registry: Option<&DataRegistry>,
+) -> f64 {
+    registry
+        .and_then(|loaded| loaded.structure_resource_cost(building_type, resource_tag))
+        .unwrap_or_else(|| legacy_structure_resource_cost(building_type, resource_tag))
+}
+
+#[inline]
+fn settlement_resource_amount(settlement: &sim_core::Settlement, resource_tag: &str) -> f64 {
+    match resource_tag {
+        "food" => settlement.stockpile_food,
+        "wood" => settlement.stockpile_wood,
+        "stone" => settlement.stockpile_stone,
+        _ => 0.0,
+    }
+}
+
+#[inline]
+fn settlement_can_afford_structure(
+    settlement: &sim_core::Settlement,
+    building_type: &str,
+    registry: Option<&DataRegistry>,
+) -> bool {
+    if let Some(structure_def) = registry.and_then(|loaded| loaded.structure_def(building_type)) {
+        if !structure_def.resource_costs.is_empty() {
+            return structure_def.resource_costs.iter().all(|(resource_tag, amount)| {
+                settlement_resource_amount(settlement, resource_tag.as_str()) + f64::EPSILON
+                    >= *amount
+            });
         }
     }
+
+    ["food", "wood", "stone"].iter().copied().all(|resource_tag| {
+        settlement_resource_amount(settlement, resource_tag) + f64::EPSILON
+            >= structure_resource_cost(building_type, resource_tag, registry)
+    })
+}
+
+#[inline]
+fn settlement_can_afford_plan(
+    settlement: &sim_core::Settlement,
+    plan: EarlyStructurePlan,
+    registry: Option<&DataRegistry>,
+) -> bool {
+    settlement_can_afford_structure(settlement, plan.building_type(), registry)
+}
+
+#[inline]
+fn structure_is_runtime_defined(building_type: &str, registry: Option<&DataRegistry>) -> bool {
+    registry
+        .map(|loaded| loaded.structure_def(building_type).is_some())
+        .unwrap_or(true)
+}
+
+#[inline]
+fn can_place_early_structure_plan(
+    settlement: &sim_core::Settlement,
+    plan: EarlyStructurePlan,
+    registry: Option<&DataRegistry>,
+) -> bool {
+    structure_is_runtime_defined(plan.building_type(), registry)
+        && settlement_can_afford_plan(settlement, plan, registry)
 }
 
 #[inline]
@@ -208,24 +279,25 @@ fn choose_early_structure_plan(
     settlement: &sim_core::Settlement,
     alive_adults: usize,
     snapshot: SettlementConstructionSnapshot,
+    registry: Option<&DataRegistry>,
 ) -> Option<EarlyStructurePlan> {
     if snapshot.has_incomplete_site {
         return None;
     }
     if !snapshot.has_stockpile
-        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Stockpile)
+        && can_place_early_structure_plan(settlement, EarlyStructurePlan::Stockpile, registry)
     {
         return Some(EarlyStructurePlan::Stockpile);
     }
     if !snapshot.has_campfire
-        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Campfire)
+        && can_place_early_structure_plan(settlement, EarlyStructurePlan::Campfire, registry)
     {
         return Some(EarlyStructurePlan::Campfire);
     }
     let shelter_capacity = snapshot.complete_shelter_count * config::BUILDING_SHELTER_CAPACITY;
     if shelter_capacity < alive_adults
         && !snapshot.has_incomplete_shelter
-        && settlement_can_afford_plan(settlement, EarlyStructurePlan::Shelter)
+        && can_place_early_structure_plan(settlement, EarlyStructurePlan::Shelter, registry)
     {
         return Some(EarlyStructurePlan::Shelter);
     }
@@ -320,15 +392,19 @@ fn ensure_early_construction_sites(world: &World, resources: &mut SimResources, 
     settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
 
     for settlement_id in settlement_ids {
-        let Some(settlement) = resources.settlements.get(&settlement_id) else {
-            continue;
+        let plan = {
+            let Some(settlement) = resources.settlements.get(&settlement_id) else {
+                continue;
+            };
+            let snapshot = settlement_construction_snapshot(resources, settlement_id);
+            choose_early_structure_plan(
+                settlement,
+                alive_adults.get(&settlement_id).copied().unwrap_or(0),
+                snapshot,
+                resources.data_registry.as_deref(),
+            )
         };
-        let snapshot = settlement_construction_snapshot(resources, settlement_id);
-        let Some(plan) = choose_early_structure_plan(
-            settlement,
-            alive_adults.get(&settlement_id).copied().unwrap_or(0),
-            snapshot,
-        ) else {
+        let Some(plan) = plan else {
             continue;
         };
         let _ = place_early_structure_site(resources, settlement_id, plan, tick);
@@ -881,13 +957,26 @@ impl SimSystem for GatheringRuntimeSystem {
 const CONSTRUCTION_BUILD_TICKS_DEFAULT: i32 = 50;
 
 #[inline]
-fn construction_build_ticks(building_type: &str) -> i32 {
-    match building_type {
-        "stockpile" => 36,
-        "shelter" => 60,
-        "campfire" => 24,
-        _ => CONSTRUCTION_BUILD_TICKS_DEFAULT,
-    }
+fn legacy_construction_build_ticks(building_type: &str) -> Option<i32> {
+    const LEGACY_BUILD_TICKS: [(&str, i32); 3] = [
+        (BUILDING_TYPE_STOCKPILE, 36),
+        (BUILDING_TYPE_SHELTER, 60),
+        (BUILDING_TYPE_CAMPFIRE, 24),
+    ];
+
+    LEGACY_BUILD_TICKS
+        .iter()
+        .find(|(legacy_building_type, _)| *legacy_building_type == building_type)
+        .map(|(_, ticks)| *ticks)
+}
+
+#[inline]
+fn construction_build_ticks(building_type: &str, registry: Option<&DataRegistry>) -> i32 {
+    registry
+        .and_then(|loaded| loaded.structure_build_ticks(building_type))
+        .map(|ticks| ticks as i32)
+        .or_else(|| legacy_construction_build_ticks(building_type))
+        .unwrap_or(CONSTRUCTION_BUILD_TICKS_DEFAULT)
 }
 
 #[inline]
@@ -1037,7 +1126,11 @@ impl SimSystem for ConstructionRuntimeSystem {
             let Some(building) = resources.buildings.get_mut(&building_id) else {
                 continue;
             };
-            let build_ticks = construction_build_ticks(building.building_type.as_str()).max(1);
+            let build_ticks = construction_build_ticks(
+                building.building_type.as_str(),
+                resources.data_registry.as_deref(),
+            )
+            .max(1);
             let mut ticks_per_cycle = build_ticks / config::CONSTRUCTION_TICK_INTERVAL as i32;
             if ticks_per_cycle < 1 {
                 ticks_per_cycle = 1;
@@ -1190,6 +1283,19 @@ mod tests {
         ActionType, Building, BuildingId, GameCalendar, GrowthStage, SettlementId, WorldMap,
     };
     use sim_engine::SimResources;
+    use sim_data::DataRegistry;
+
+    fn registry_data_path() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../sim-data/data")
+            .canonicalize()
+            .expect("registry data path should resolve")
+    }
+
+    fn load_registry() -> DataRegistry {
+        DataRegistry::load_from_directory(&registry_data_path())
+            .expect("registry should load for economy tests")
+    }
 
     #[test]
     fn job_assignment_runtime_system_places_campfire_site_and_promotes_builder() {
@@ -1327,6 +1433,54 @@ mod tests {
         assert_eq!(
             diagnostics.last_progress_tick,
             config::CONSTRUCTION_TICK_INTERVAL
+        );
+    }
+
+    #[test]
+    fn construction_build_ticks_reads_from_registry() {
+        let registry = load_registry();
+
+        assert_eq!(construction_build_ticks("campfire", Some(&registry)), 24);
+        assert_eq!(construction_build_ticks("stockpile", Some(&registry)), 36);
+        assert_eq!(construction_build_ticks("unknown_structure", Some(&registry)), 50);
+    }
+
+    #[test]
+    fn construction_cost_reads_from_registry() {
+        let registry = load_registry();
+        let mut settlement = sim_core::Settlement::new(SettlementId(1), "alpha".to_string(), 0, 0, 0);
+        settlement.stockpile_wood = 4.0;
+        settlement.stockpile_stone = 1.0;
+
+        assert_eq!(structure_resource_cost("shelter", "wood", Some(&registry)), 4.0);
+        assert_eq!(structure_resource_cost("shelter", "stone", Some(&registry)), 1.0);
+        assert!(settlement_can_afford_plan(
+            &settlement,
+            EarlyStructurePlan::Shelter,
+            Some(&registry),
+        ));
+
+        settlement.stockpile_wood = 3.0;
+        assert!(!settlement_can_afford_plan(
+            &settlement,
+            EarlyStructurePlan::Shelter,
+            Some(&registry),
+        ));
+    }
+
+    #[test]
+    fn legacy_fallback_when_registry_missing() {
+        assert_eq!(
+            construction_build_ticks(BUILDING_TYPE_CAMPFIRE, None),
+            24
+        );
+        assert_eq!(
+            structure_resource_cost(BUILDING_TYPE_STOCKPILE, "wood", None),
+            config::BUILDING_STOCKPILE_COST_WOOD
+        );
+        assert_eq!(
+            structure_resource_cost(BUILDING_TYPE_SHELTER, "stone", None),
+            config::BUILDING_SHELTER_COST_STONE
         );
     }
 }
