@@ -1,10 +1,11 @@
 [
     StructureDef(
-        id: "lean_to_structure",
-        display_name_key: "STRUCT_LEAN_TO",
+        id: "shelter",
+        display_name_key: "BUILDING_TYPE_SHELTER",
         min_size: (2, 2),
         required_components: [
-            Roof(tags: ["roof_material", "binding"]),
+            Wall(count: 8, tags: ["building_material"]),
+            Roof(tags: ["roof_material"]),
             Furniture(id: "lean_to", count: 1),
             Furniture(id: "fire_pit", count: 1),
         ],
@@ -12,6 +13,11 @@
             Furniture(id: "storage_pit", count: 1),
         ],
         role_recognition: Auto,
+        build_ticks: 60,
+        resource_costs: {
+            "wood": 4.0,
+            "stone": 1.0,
+        },
         influence_when_complete: [
             InfluenceEmission(channel: "shelter", radius: 4.0, intensity: 0.5),
         ],

@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 use super::InfluenceEmission;
@@ -19,9 +21,19 @@ pub struct StructureDef {
     pub optional_components: Vec<StructureRequirement>,
     /// Role recognition policy for the structure.
     pub role_recognition: RoleRecognition,
+    /// Base construction time in ticks.
+    #[serde(default = "default_build_ticks")]
+    pub build_ticks: u64,
+    /// Flat resource costs keyed by resource tag (for example `wood`, `stone`).
+    #[serde(default)]
+    pub resource_costs: BTreeMap<String, f64>,
     /// Influence emitted when the structure is complete.
     #[serde(default)]
     pub influence_when_complete: Vec<InfluenceEmission>,
+}
+
+fn default_build_ticks() -> u64 {
+    60
 }
 
 /// Requirement entry for a structure blueprint.
@@ -52,21 +64,29 @@ mod tests {
     fn parses_structure_def_from_ron() {
         let structure: StructureDef = ron::from_str(
             r#"StructureDef(
-                id: "lean_to_structure",
-                display_name_key: "STRUCT_LEAN_TO",
+                id: "shelter",
+                display_name_key: "BUILDING_TYPE_SHELTER",
                 min_size: (2, 2),
                 required_components: [
-                    Roof(tags: ["wood", "plant_fiber"]),
+                    Wall(count: 8, tags: ["building_material"]),
+                    Roof(tags: ["roof_material"]),
                     Furniture(id: "fire_pit", count: 1),
                 ],
                 optional_components: [],
                 role_recognition: Auto,
+                build_ticks: 60,
+                resource_costs: {
+                    "wood": 4.0,
+                    "stone": 1.0,
+                },
                 influence_when_complete: [],
             )"#,
         )
         .expect("expected structure ron to parse");
 
-        assert_eq!(structure.id, "lean_to_structure");
-        assert_eq!(structure.required_components.len(), 2);
+        assert_eq!(structure.id, "shelter");
+        assert_eq!(structure.required_components.len(), 3);
+        assert_eq!(structure.build_ticks, 60);
+        assert_eq!(structure.resource_costs.get("wood"), Some(&4.0));
     }
 }

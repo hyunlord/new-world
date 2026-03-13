@@ -41,6 +41,7 @@ pub fn validate_registry(registry: &DataRegistry) -> Vec<ValidationError> {
     let mut errors = Vec::new();
     validate_recipe_tags(registry, &mut errors);
     validate_structure_furniture(registry, &mut errors);
+    validate_structure_runtime_fields(registry, &mut errors);
     validate_action_tool_tags(registry, &mut errors);
     validate_recipe_cycles(registry, &mut errors);
     validate_material_ranges(registry, &mut errors);
@@ -82,6 +83,40 @@ fn validate_structure_furniture(registry: &DataRegistry, errors: &mut Vec<Valida
                         message: format!("references missing furniture id '{id}'"),
                     });
                 }
+            }
+        }
+    }
+}
+
+fn validate_structure_runtime_fields(registry: &DataRegistry, errors: &mut Vec<ValidationError>) {
+    for structure in registry.structures.values() {
+        if structure.build_ticks == 0 {
+            errors.push(ValidationError {
+                severity: Severity::Error,
+                def_type: "StructureDef",
+                def_id: structure.id.clone(),
+                message: "build_ticks must be > 0".to_string(),
+            });
+        }
+
+        for (resource_tag, amount) in &structure.resource_costs {
+            if resource_tag.trim().is_empty() {
+                errors.push(ValidationError {
+                    severity: Severity::Error,
+                    def_type: "StructureDef",
+                    def_id: structure.id.clone(),
+                    message: "resource_costs keys must not be empty".to_string(),
+                });
+            }
+            if *amount < 0.0 {
+                errors.push(ValidationError {
+                    severity: Severity::Error,
+                    def_type: "StructureDef",
+                    def_id: structure.id.clone(),
+                    message: format!(
+                        "resource_costs['{resource_tag}'] must be >= 0.0"
+                    ),
+                });
             }
         }
     }
