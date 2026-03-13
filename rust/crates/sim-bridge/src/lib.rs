@@ -48,7 +48,7 @@ use sim_core::components::{
     Social, Stress, Traits, Values,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
-use sim_core::{ChannelClampPolicy, ChannelId, ChannelMeta, EntityId, Settlement, SettlementId};
+use sim_core::{ChannelId, EntityId, Settlement, SettlementId};
 use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
@@ -137,38 +137,6 @@ fn authoritative_ron_data_dir() -> PathBuf {
 
 fn legacy_json_data_dir() -> PathBuf {
     PathBuf::from("data")
-}
-
-fn channel_clamp_policy_from_rule(
-    value: Option<&sim_data::InfluenceClampPolicyDef>,
-) -> ChannelClampPolicy {
-    match value {
-        Some(sim_data::InfluenceClampPolicyDef::UnitInterval) => ChannelClampPolicy::UnitInterval,
-        _ => ChannelClampPolicy::Sigmoid,
-    }
-}
-
-fn influence_channel_meta_from_registry(registry: &sim_data::DataRegistry) -> Vec<ChannelMeta> {
-    let mut channels = ChannelId::default_channels();
-    let Some(rules) = registry.influence_channel_rules() else {
-        return channels;
-    };
-
-    for rule in rules {
-        let Some(channel_id) = ChannelId::from_key(&rule.channel) else {
-            continue;
-        };
-        let meta = &mut channels[channel_id.index()];
-        meta.decay_rate = rule.decay_rate.unwrap_or(meta.decay_rate);
-        meta.default_radius = rule.default_radius.unwrap_or(meta.default_radius);
-        meta.max_radius = rule.max_radius.unwrap_or(meta.max_radius);
-        meta.wall_blocking_sensitivity = rule
-            .wall_blocking_sensitivity
-            .unwrap_or(meta.wall_blocking_sensitivity);
-        meta.clamp_policy = channel_clamp_policy_from_rule(rule.clamp_policy.as_ref());
-    }
-
-    channels.into_iter().map(|meta| meta.sanitized()).collect()
 }
 
 fn resolve_runtime_entity(world: &hecs::World, entity_id_raw_or_bits: i64) -> Option<hecs::Entity> {
@@ -568,7 +536,10 @@ fn chronicle_entry_lite_to_legacy_dict(entry: &ChronicleEntryLite) -> VarDiction
     dict.set("base_score", entry.significance_meta.base_score as f32);
     dict.set("cause_bonus", entry.significance_meta.cause_bonus as f32);
     dict.set("group_bonus", entry.significance_meta.group_bonus as f32);
-    dict.set("repeat_penalty", entry.significance_meta.repeat_penalty as f32);
+    dict.set(
+        "repeat_penalty",
+        entry.significance_meta.repeat_penalty as f32,
+    );
     dict.set("final_score", entry.significance_meta.final_score as f32);
     dict.set(
         "significance_reason_tags",
@@ -644,7 +615,10 @@ fn chronicle_entry_detail_snapshot_to_dict(
         significance_meta.set("base_score", entry.significance_meta.base_score as f32);
         significance_meta.set("cause_bonus", entry.significance_meta.cause_bonus as f32);
         significance_meta.set("group_bonus", entry.significance_meta.group_bonus as f32);
-        significance_meta.set("repeat_penalty", entry.significance_meta.repeat_penalty as f32);
+        significance_meta.set(
+            "repeat_penalty",
+            entry.significance_meta.repeat_penalty as f32,
+        );
         significance_meta.set("final_score", entry.significance_meta.final_score as f32);
         significance_meta.set(
             "reason_tags",
@@ -686,7 +660,10 @@ fn chronicle_feed_response_to_dict(response: &ChronicleFeedResponse) -> VarDicti
     dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
     dict.set("revision_unavailable", response.revision_unavailable);
     dict.set("items", items);
-    dict.set("telemetry", chronicle_telemetry_to_dict(&response.telemetry));
+    dict.set(
+        "telemetry",
+        chronicle_telemetry_to_dict(&response.telemetry),
+    );
     dict
 }
 
@@ -741,7 +718,10 @@ fn chronicle_history_slice_response_to_dict(
     dict.set("snapshot_revision", response.snapshot_revision.0 as i64);
     dict.set("revision_unavailable", response.revision_unavailable);
     dict.set("items", items);
-    dict.set("telemetry", chronicle_telemetry_to_dict(&response.telemetry));
+    dict.set(
+        "telemetry",
+        chronicle_telemetry_to_dict(&response.telemetry),
+    );
     dict.set(
         "next_cursor_before_tick",
         response
@@ -1292,7 +1272,6 @@ impl WorldSimRuntime {
             let registry_dir = authoritative_ron_data_dir();
             match sim_data::DataRegistry::load_from_directory(&registry_dir) {
                 Ok(registry) => {
-                    let channel_meta = influence_channel_meta_from_registry(&registry);
                     let registry = Arc::new(registry);
                     log::info!(
                         "[SimBridge] Authoritative RON registry loaded from {:?}: {} materials, {} recipes, {} furniture, {} structures, {} actions",
@@ -1303,12 +1282,8 @@ impl WorldSimRuntime {
                         registry.structures.len(),
                         registry.actions.len(),
                     );
-                    state
-                        .engine
-                        .resources_mut()
-                        .influence_grid
-                        .set_channel_meta(&channel_meta);
                     state.engine.resources_mut().data_registry = Some(Arc::clone(&registry));
+                    state.engine.resources_mut().apply_world_rules();
                     state.data_registry = Some(registry);
                 }
                 Err(errors) => {

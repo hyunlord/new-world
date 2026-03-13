@@ -3,7 +3,6 @@
 
 use hecs::{Entity, World};
 use rand::Rng;
-use sim_data::DataRegistry;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
     Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
@@ -14,6 +13,7 @@ use sim_core::{
     GrowthStage, HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType,
     RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
+use sim_data::DataRegistry;
 use sim_engine::{ConstructionDiagnostics, SimResources, SimSystem};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
@@ -35,6 +35,15 @@ impl ResourceRegenSystem {
             priority,
             tick_interval: tick_interval.max(1),
         }
+    }
+}
+
+#[inline]
+fn resource_type_to_rule_tag(resource_type: ResourceType) -> &'static str {
+    match resource_type {
+        ResourceType::Food => "surface_foraging",
+        ResourceType::Wood => "wood_harvesting",
+        ResourceType::Stone => "stone_mining",
     }
 }
 
@@ -61,7 +70,12 @@ impl SimSystem for ResourceRegenSystem {
                     if deposit.regen_rate <= 0.0 || deposit.amount >= deposit.max_amount {
                         continue;
                     }
-                    let next_amount = deposit.amount + deposit.regen_rate;
+                    let multiplier = resources
+                        .resource_regen_multipliers
+                        .get(resource_type_to_rule_tag(deposit.resource_type))
+                        .copied()
+                        .unwrap_or(1.0);
+                    let next_amount = deposit.amount + deposit.regen_rate * multiplier;
                     deposit.amount = next_amount.min(deposit.max_amount);
                 }
             }
@@ -191,10 +205,26 @@ fn settlement_construction_snapshot(
 #[inline]
 fn legacy_structure_resource_cost(building_type: &str, resource_tag: &str) -> f64 {
     const LEGACY_COSTS: [(&str, &str, f64); 4] = [
-        (BUILDING_TYPE_STOCKPILE, "wood", config::BUILDING_STOCKPILE_COST_WOOD),
-        (BUILDING_TYPE_CAMPFIRE, "wood", config::BUILDING_CAMPFIRE_COST_WOOD),
-        (BUILDING_TYPE_SHELTER, "wood", config::BUILDING_SHELTER_COST_WOOD),
-        (BUILDING_TYPE_SHELTER, "stone", config::BUILDING_SHELTER_COST_STONE),
+        (
+            BUILDING_TYPE_STOCKPILE,
+            "wood",
+            config::BUILDING_STOCKPILE_COST_WOOD,
+        ),
+        (
+            BUILDING_TYPE_CAMPFIRE,
+            "wood",
+            config::BUILDING_CAMPFIRE_COST_WOOD,
+        ),
+        (
+            BUILDING_TYPE_SHELTER,
+            "wood",
+            config::BUILDING_SHELTER_COST_WOOD,
+        ),
+        (
+            BUILDING_TYPE_SHELTER,
+            "stone",
+            config::BUILDING_SHELTER_COST_STONE,
+        ),
     ];
 
     LEGACY_COSTS
@@ -235,17 +265,23 @@ fn settlement_can_afford_structure(
 ) -> bool {
     if let Some(structure_def) = registry.and_then(|loaded| loaded.structure_def(building_type)) {
         if !structure_def.resource_costs.is_empty() {
-            return structure_def.resource_costs.iter().all(|(resource_tag, amount)| {
-                settlement_resource_amount(settlement, resource_tag.as_str()) + f64::EPSILON
-                    >= *amount
-            });
+            return structure_def
+                .resource_costs
+                .iter()
+                .all(|(resource_tag, amount)| {
+                    settlement_resource_amount(settlement, resource_tag.as_str()) + f64::EPSILON
+                        >= *amount
+                });
         }
     }
 
-    ["food", "wood", "stone"].iter().copied().all(|resource_tag| {
-        settlement_resource_amount(settlement, resource_tag) + f64::EPSILON
-            >= structure_resource_cost(building_type, resource_tag, registry)
-    })
+    ["food", "wood", "stone"]
+        .iter()
+        .copied()
+        .all(|resource_tag| {
+            settlement_resource_amount(settlement, resource_tag) + f64::EPSILON
+                >= structure_resource_cost(building_type, resource_tag, registry)
+        })
 }
 
 #[inline]
@@ -1282,8 +1318,8 @@ mod tests {
     use sim_core::{
         ActionType, Building, BuildingId, GameCalendar, GrowthStage, SettlementId, WorldMap,
     };
-    use sim_engine::SimResources;
     use sim_data::DataRegistry;
+    use sim_engine::SimResources;
 
     fn registry_data_path() -> std::path::PathBuf {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -1442,18 +1478,28 @@ mod tests {
 
         assert_eq!(construction_build_ticks("campfire", Some(&registry)), 24);
         assert_eq!(construction_build_ticks("stockpile", Some(&registry)), 36);
-        assert_eq!(construction_build_ticks("unknown_structure", Some(&registry)), 50);
+        assert_eq!(
+            construction_build_ticks("unknown_structure", Some(&registry)),
+            50
+        );
     }
 
     #[test]
     fn construction_cost_reads_from_registry() {
         let registry = load_registry();
-        let mut settlement = sim_core::Settlement::new(SettlementId(1), "alpha".to_string(), 0, 0, 0);
+        let mut settlement =
+            sim_core::Settlement::new(SettlementId(1), "alpha".to_string(), 0, 0, 0);
         settlement.stockpile_wood = 4.0;
         settlement.stockpile_stone = 1.0;
 
-        assert_eq!(structure_resource_cost("shelter", "wood", Some(&registry)), 4.0);
-        assert_eq!(structure_resource_cost("shelter", "stone", Some(&registry)), 1.0);
+        assert_eq!(
+            structure_resource_cost("shelter", "wood", Some(&registry)),
+            4.0
+        );
+        assert_eq!(
+            structure_resource_cost("shelter", "stone", Some(&registry)),
+            1.0
+        );
         assert!(settlement_can_afford_plan(
             &settlement,
             EarlyStructurePlan::Shelter,
@@ -1470,10 +1516,7 @@ mod tests {
 
     #[test]
     fn legacy_fallback_when_registry_missing() {
-        assert_eq!(
-            construction_build_ticks(BUILDING_TYPE_CAMPFIRE, None),
-            24
-        );
+        assert_eq!(construction_build_ticks(BUILDING_TYPE_CAMPFIRE, None), 24);
         assert_eq!(
             structure_resource_cost(BUILDING_TYPE_STOCKPILE, "wood", None),
             config::BUILDING_STOCKPILE_COST_WOOD
@@ -1482,5 +1525,66 @@ mod tests {
             structure_resource_cost(BUILDING_TYPE_SHELTER, "stone", None),
             config::BUILDING_SHELTER_COST_STONE
         );
+    }
+
+    #[test]
+    fn world_rules_resource_modifier_scales_regen() {
+        let game_config = GameConfig::default();
+        let calendar = GameCalendar::new(&game_config);
+        let mut resources = SimResources::new(calendar, WorldMap::new(4, 4, 3), 77);
+        resources
+            .resource_regen_multipliers
+            .insert("surface_foraging".to_string(), 2.0);
+        resources
+            .map
+            .get_mut(1, 1)
+            .resources
+            .push(sim_core::world::tile::TileResource {
+                resource_type: ResourceType::Food,
+                amount: 1.0,
+                max_amount: 10.0,
+                regen_rate: 0.75,
+            });
+
+        let mut world = World::new();
+        let mut system = ResourceRegenSystem::new(5, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let tile = resources.map.get_mut(1, 1);
+        let deposit = tile
+            .resources
+            .iter()
+            .find(|resource| resource.resource_type == ResourceType::Food)
+            .expect("food deposit should remain present");
+        assert!((deposit.amount - 2.5).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn world_rules_absent_modifier_keeps_regen_default() {
+        let game_config = GameConfig::default();
+        let calendar = GameCalendar::new(&game_config);
+        let mut resources = SimResources::new(calendar, WorldMap::new(4, 4, 3), 77);
+        resources
+            .map
+            .get_mut(1, 1)
+            .resources
+            .push(sim_core::world::tile::TileResource {
+                resource_type: ResourceType::Food,
+                amount: 1.0,
+                max_amount: 10.0,
+                regen_rate: 0.75,
+            });
+
+        let mut world = World::new();
+        let mut system = ResourceRegenSystem::new(5, 10);
+        system.run(&mut world, &mut resources, 10);
+
+        let tile = resources.map.get_mut(1, 1);
+        let deposit = tile
+            .resources
+            .iter()
+            .find(|resource| resource.resource_type == ResourceType::Food)
+            .expect("food deposit should remain present");
+        assert!((deposit.amount - 1.75).abs() < f64::EPSILON);
     }
 }
