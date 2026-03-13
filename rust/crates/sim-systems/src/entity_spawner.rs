@@ -13,8 +13,8 @@ use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
     Age, Behavior, Body, Coping, Economic, EffectFlags, Emotion, Faith, Identity,
-    InfluenceReceiver, Intelligence, LlmCapable, Memory, NarrativeCache, Needs, Personality,
-    Position, Skills, Social, Stress, Temperament, Traits,
+    InfluenceReceiver, Intelligence, Inventory, LlmCapable, Memory, NarrativeCache, Needs,
+    Personality, Position, Skills, Social, Stress, Temperament, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::{
@@ -753,6 +753,7 @@ pub fn spawn_agent(
                 temperament,
                 InfluenceReceiver::default(),
                 EffectFlags::default(),
+                Inventory::new(),
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),
@@ -994,6 +995,10 @@ mod tests {
             world.get::<&InfluenceReceiver>(entity).is_ok(),
             "InfluenceReceiver component should be present"
         );
+        assert!(
+            world.get::<&Inventory>(entity).is_ok(),
+            "Inventory component should be present"
+        );
     }
 
     #[test]
@@ -1003,8 +1008,7 @@ mod tests {
             facets: [0.0; 24],
         };
         let mut resources = make_resources();
-        let data_dir =
-            Path::new(env!("CARGO_MANIFEST_DIR")).join("../sim-data/data");
+        let data_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../sim-data/data");
         let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
             .expect("expected sim-data registry fixture to load");
         let rules = registry

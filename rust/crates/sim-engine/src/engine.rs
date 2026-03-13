@@ -16,7 +16,8 @@ use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{
     Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, EffectQueue, EntityId,
-    GameCalendar, InfluenceGrid, Room, Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
+    GameCalendar, InfluenceGrid, ItemStore, Room, Settlement, SettlementId, SimConfig, TileGrid,
+    WorldMap,
 };
 use sim_data::{
     DataRegistry, InfluenceClampPolicyDef, NameGenerator, PersonalityDistribution, WorldRuleset,
@@ -132,6 +133,8 @@ pub struct SimResources {
     pub causal_log: CausalLog,
     /// Double-buffered effect queue shared across all runtime systems.
     pub effect_queue: EffectQueue,
+    /// Central item registry for all world items.
+    pub item_store: ItemStore,
     /// World-rules resource regen multipliers keyed by rule target tag.
     pub resource_regen_multipliers: BTreeMap<String, f64>,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
@@ -241,6 +244,7 @@ impl SimResources {
             rooms: Vec::new(),
             causal_log: CausalLog::new(),
             effect_queue: EffectQueue::new(),
+            item_store: ItemStore::new(),
             resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),

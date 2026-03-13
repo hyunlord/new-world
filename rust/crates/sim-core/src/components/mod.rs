@@ -8,6 +8,7 @@ pub mod emotion;
 pub mod faith;
 pub mod identity;
 pub mod intelligence;
+pub mod inventory;
 pub mod llm;
 pub mod memory;
 pub mod needs;
@@ -33,6 +34,7 @@ pub use emotion::Emotion;
 pub use faith::Faith;
 pub use identity::Identity;
 pub use intelligence::Intelligence;
+pub use inventory::Inventory;
 pub use llm::{
     JudgmentData, LlmCapable, LlmContent, LlmPending, LlmRequestType, LlmResult, LlmRole,
     NarrativeCache,
