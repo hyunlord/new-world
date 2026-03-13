@@ -38,7 +38,10 @@ pub use influence_channel::{ChannelClampPolicy, ChannelId, ChannelMeta};
 pub use influence_grid::{EmitterRecord, FalloffType, InfluenceGrid};
 pub use room::{assign_room_ids, detect_rooms, Room, RoomId, RoomRole};
 pub use settlement::Settlement;
-pub use temperament::{Temperament, TemperamentAxes};
+pub use temperament::{
+    Temperament, TemperamentAxes, TemperamentBiasRow, TemperamentPrsWeightRow,
+    TemperamentRuleSet, TemperamentShiftRuleView,
+};
 pub use tile_grid::{StructuralTile, TileGrid};
 pub use wall_mask::WallBlockingMask;
 pub use world::{Tile, WorldMap};

@@ -17,8 +17,11 @@ use sim_core::components::{
     Position, Skills, Social, Stress, Temperament, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
-use sim_core::SettlementId;
-use sim_data::PersonalityDistribution;
+use sim_core::{
+    SettlementId, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
+    TemperamentShiftRuleView,
+};
+use sim_data::{PersonalityDistribution, TemperamentRules};
 use sim_engine::engine::SimResources;
 
 // ── Body generation constants ─────────────────────────────────────────────────
@@ -567,8 +570,50 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
     (tone.to_string(), verbosity.to_string(), humor.to_string())
 }
 
-fn generate_temperament(personality: &Personality) -> Temperament {
-    Temperament::from_personality(personality)
+fn temperament_rule_set_from_data_rules(rules: &TemperamentRules) -> TemperamentRuleSet {
+    TemperamentRuleSet {
+        prs_weights: rules
+            .prs_weights
+            .iter()
+            .map(|row| TemperamentPrsWeightRow {
+                axis: row.axis.clone(),
+                weights: row.weights.clone(),
+            })
+            .collect(),
+        bias_matrix: rules
+            .bias_matrix
+            .iter()
+            .map(|row| TemperamentBiasRow {
+                axis: row.axis.clone(),
+                values: row.values.clone(),
+            })
+            .collect(),
+        shift_rules: rules
+            .shift_rules
+            .iter()
+            .map(|rule| {
+                let trigger_event = match &rule.trigger {
+                    sim_data::CauseTrigger::Event(event_key) => event_key.clone(),
+                };
+                TemperamentShiftRuleView {
+                    trigger_event,
+                    causal_log: rule.causal_log.clone(),
+                }
+            })
+            .collect(),
+    }
+}
+
+fn generate_temperament(
+    personality: &Personality,
+    registry: Option<&sim_data::DataRegistry>,
+) -> Temperament {
+    if let Some(rules) = registry.and_then(|data_registry| data_registry.temperament_rules_ref()) {
+        let shared_rules = temperament_rule_set_from_data_rules(rules);
+        Temperament::from_personality_with_rules(personality, &shared_rules)
+    } else {
+        Temperament::from_personality(personality)
+    }
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -671,7 +716,10 @@ pub fn spawn_agent(
     // Values: initialize from HEXACO personality before personality is moved.
     let values = initialize_values(&personality, None, None, &mut resources.rng);
     let steering = derive_steering_params(&personality);
-    let temperament = generate_temperament(&personality);
+    let temperament = generate_temperament(
+        &personality,
+        resources.data_registry.as_ref().map(std::sync::Arc::as_ref),
+    );
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
     // We have 19 components total: spawn the first 15, then insert the remaining 4.
@@ -756,6 +804,8 @@ pub fn spawn_initial_population(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::Path;
+
     use sim_core::config::GameConfig;
     use sim_core::{GameCalendar, WorldMap};
 
@@ -944,5 +994,33 @@ mod tests {
             world.get::<&InfluenceReceiver>(entity).is_ok(),
             "InfluenceReceiver component should be present"
         );
+    }
+
+    #[test]
+    fn generate_temperament_uses_registry_rules_when_present() {
+        let personality = Personality {
+            axes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+            facets: [0.0; 24],
+        };
+        let mut resources = make_resources();
+        let data_dir =
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../sim-data/data");
+        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("expected sim-data registry fixture to load");
+        let rules = registry
+            .temperament_rules_ref()
+            .expect("expected temperament rules fixture");
+        assert_eq!(rules.prs_weights.len(), 4);
+        resources.data_registry = Some(std::sync::Arc::new(registry));
+
+        let generated = generate_temperament(
+            &personality,
+            resources.data_registry.as_ref().map(std::sync::Arc::as_ref),
+        );
+
+        assert!((generated.latent.ns - 0.036).abs() < 1e-9);
+        assert!((generated.latent.ha - 0.023).abs() < 1e-9);
+        assert!((generated.latent.rd - 0.036).abs() < 1e-9);
+        assert!((generated.latent.p - 0.037).abs() < 1e-9);
     }
 }
