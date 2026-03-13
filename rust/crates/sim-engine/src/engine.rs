@@ -15,10 +15,12 @@ use log::{debug, info, warn};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{
-    Building, BuildingId, CausalLog, ChannelId, EffectQueue, EntityId, GameCalendar, InfluenceGrid,
-    Room, Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
+    Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, EffectQueue, EntityId,
+    GameCalendar, InfluenceGrid, Room, Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
 };
-use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
+use sim_data::{
+    DataRegistry, InfluenceClampPolicyDef, NameGenerator, PersonalityDistribution, WorldRuleset,
+};
 /// SimEngine — the central tick loop coordinator.
 ///
 /// Owns the ECS world, shared simulation resources, and the registered system list.
@@ -30,7 +32,7 @@ use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
 /// # Determinism
 /// Seed the RNG at construction to get reproducible runs.
 /// System ordering is stable (sorted by priority at registration time).
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::sync::Arc;
 
 #[derive(Debug, Clone, Default)]
@@ -130,6 +132,8 @@ pub struct SimResources {
     pub causal_log: CausalLog,
     /// Double-buffered effect queue shared across all runtime systems.
     pub effect_queue: EffectQueue,
+    /// World-rules resource regen multipliers keyed by rule target tag.
+    pub resource_regen_multipliers: BTreeMap<String, f64>,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
     pub explain_log: ExplainLog,
     /// Runtime-mutable simulation balance parameters (debug tuning).
@@ -142,6 +146,62 @@ pub struct SimResources {
     pub notification_history: Vec<SimNotification>,
     /// External llama-server process + worker runtime.
     pub llm_runtime: LlmRuntime,
+}
+
+fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
+    match value {
+        InfluenceClampPolicyDef::Sigmoid => ChannelClampPolicy::Sigmoid,
+        InfluenceClampPolicyDef::UnitInterval => ChannelClampPolicy::UnitInterval,
+    }
+}
+
+fn apply_world_rules_to_grid(grid: &mut InfluenceGrid, rules: &WorldRuleset) {
+    let mut channels = ChannelId::default_channels();
+    let mut applied_overrides = 0_usize;
+
+    for rule in &rules.influence_channels {
+        let Some(channel_id) = ChannelId::from_key(&rule.channel) else {
+            warn!(
+                "[WorldRules] unknown influence channel override: {}",
+                rule.channel
+            );
+            continue;
+        };
+
+        let meta = &mut channels[channel_id.index()];
+        if let Some(decay_rate) = rule.decay_rate {
+            meta.decay_rate = decay_rate;
+        }
+        if let Some(default_radius) = rule.default_radius {
+            meta.default_radius = default_radius;
+        }
+        if let Some(max_radius) = rule.max_radius {
+            meta.max_radius = max_radius;
+        }
+        if let Some(wall_blocking_sensitivity) = rule.wall_blocking_sensitivity {
+            meta.wall_blocking_sensitivity = wall_blocking_sensitivity;
+        }
+        if let Some(clamp_policy) = rule.clamp_policy.as_ref() {
+            meta.clamp_policy = clamp_policy_from_def(clamp_policy);
+        }
+        applied_overrides += 1;
+    }
+
+    grid.set_channel_meta(&channels);
+    if applied_overrides > 0 {
+        info!(
+            "[WorldRules] applied {} influence channel overrides",
+            applied_overrides
+        );
+    }
+}
+
+fn extract_resource_multipliers(rules: &WorldRuleset) -> BTreeMap<String, f64> {
+    let mut multipliers = BTreeMap::new();
+    for modifier in &rules.resource_modifiers {
+        multipliers.insert(modifier.target.clone(), modifier.multiplier);
+    }
+    multipliers
 }
 
 impl SimResources {
@@ -181,6 +241,7 @@ impl SimResources {
             rooms: Vec::new(),
             causal_log: CausalLog::new(),
             effect_queue: EffectQueue::new(),
+            resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
             event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),
@@ -188,6 +249,33 @@ impl SimResources {
             notification_history: Vec::new(),
             llm_runtime: LlmRuntime::default(),
         }
+    }
+
+    /// Applies world-rules overrides from the authoritative data registry.
+    ///
+    /// This is an init/lifecycle hook, not a hot-tick polling path.
+    pub fn apply_world_rules(&mut self) {
+        self.influence_grid
+            .set_channel_meta(&ChannelId::default_channels());
+        self.resource_regen_multipliers.clear();
+
+        let rules = self
+            .data_registry
+            .as_ref()
+            .and_then(|registry| registry.world_rules_ref())
+            .cloned();
+        let Some(rules) = rules else {
+            return;
+        };
+
+        apply_world_rules_to_grid(&mut self.influence_grid, &rules);
+        self.resource_regen_multipliers = extract_resource_multipliers(&rules);
+
+        info!(
+            "[WorldRules] applied ruleset '{}' with {} resource modifiers",
+            rules.name,
+            rules.resource_modifiers.len()
+        );
     }
 
     /// Starts the LLM server if the default config says it should be enabled.
@@ -559,6 +647,21 @@ mod tests {
     use hecs::World;
     use sim_core::config::GameConfig;
     use sim_core::{ChannelId, EmitterRecord, FalloffType};
+    use sim_data::{InfluenceChannelRule, WorldRuleset};
+    use std::path::{Path, PathBuf};
+    use std::sync::Arc;
+
+    fn registry_data_path() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../sim-data/data")
+            .canonicalize()
+            .expect("registry data path should resolve")
+    }
+
+    fn load_registry() -> DataRegistry {
+        DataRegistry::load_from_directory(&registry_data_path())
+            .expect("registry should load for engine tests")
+    }
 
     fn make_engine() -> SimEngine {
         let config = GameConfig::default();
@@ -740,5 +843,87 @@ mod tests {
                 .sample(4, 4, ChannelId::Warmth)
                 > 0.0
         );
+    }
+
+    #[test]
+    fn world_rules_apply_channel_overrides_to_grid() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(24, 12, 0);
+        let mut resources = SimResources::new(calendar, map, 7);
+        resources.data_registry = Some(Arc::new(load_registry()));
+
+        resources.apply_world_rules();
+
+        let food_meta = resources.influence_grid.channel_meta(ChannelId::Food);
+        assert!((food_meta.decay_rate - 0.18).abs() < f64::EPSILON);
+        assert!((food_meta.default_radius - 7.0).abs() < f64::EPSILON);
+        assert_eq!(food_meta.max_radius, 14);
+        assert!((food_meta.wall_blocking_sensitivity - 0.2).abs() < f64::EPSILON);
+        assert_eq!(food_meta.clamp_policy, ChannelClampPolicy::UnitInterval);
+        assert_eq!(
+            resources
+                .resource_regen_multipliers
+                .get("surface_foraging")
+                .copied(),
+            Some(1.0)
+        );
+    }
+
+    #[test]
+    fn world_rules_partial_override_preserves_defaults() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(24, 12, 0);
+        let mut resources = SimResources::new(calendar, map, 7);
+        let mut registry = load_registry();
+        registry.world_rules = Some(WorldRuleset {
+            name: "PartialRules".to_string(),
+            priority: 1,
+            resource_modifiers: Vec::new(),
+            special_zones: Vec::new(),
+            special_resources: Vec::new(),
+            agent_modifiers: Vec::new(),
+            influence_channels: vec![InfluenceChannelRule {
+                channel: "food".to_string(),
+                decay_rate: Some(0.42),
+                default_radius: None,
+                max_radius: None,
+                wall_blocking_sensitivity: None,
+                clamp_policy: None,
+            }],
+        });
+        resources.data_registry = Some(Arc::new(registry));
+
+        resources.apply_world_rules();
+
+        let food_meta = resources.influence_grid.channel_meta(ChannelId::Food);
+        let default_food_meta = ChannelId::Food.default_meta();
+        assert!((food_meta.decay_rate - 0.42).abs() < f64::EPSILON);
+        assert_eq!(food_meta.default_radius, default_food_meta.default_radius);
+        assert_eq!(food_meta.max_radius, default_food_meta.max_radius);
+        assert_eq!(
+            food_meta.wall_blocking_sensitivity,
+            default_food_meta.wall_blocking_sensitivity
+        );
+        assert_eq!(food_meta.clamp_policy, default_food_meta.clamp_policy);
+    }
+
+    #[test]
+    fn world_rules_absent_rules_keep_defaults() {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(24, 12, 0);
+        let mut resources = SimResources::new(calendar, map, 7);
+        resources
+            .resource_regen_multipliers
+            .insert("surface_foraging".to_string(), 2.5);
+
+        resources.apply_world_rules();
+
+        let food_meta = resources.influence_grid.channel_meta(ChannelId::Food);
+        let default_food_meta = ChannelId::Food.default_meta();
+        assert_eq!(food_meta, &default_food_meta);
+        assert!(resources.resource_regen_multipliers.is_empty());
     }
 }
