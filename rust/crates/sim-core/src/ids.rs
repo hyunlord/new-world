@@ -5,11 +5,11 @@ use serde::{Deserialize, Serialize};
 pub struct EntityId(pub u64);
 
 /// Unique settlement ID
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct SettlementId(pub u64);
 
 /// Unique building ID
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct BuildingId(pub u64);
 
 /// Trait ID referencing trait_definitions_fixed.json (e.g., "f_sincere")
