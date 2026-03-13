@@ -15,8 +15,8 @@ use log::{debug, info, warn};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{
-    Building, BuildingId, CausalLog, ChannelId, EntityId, GameCalendar, InfluenceGrid, Room,
-    Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
+    Building, BuildingId, CausalLog, ChannelId, EffectQueue, EntityId, GameCalendar, InfluenceGrid,
+    Room, Settlement, SettlementId, SimConfig, TileGrid, WorldMap,
 };
 use sim_data::{DataRegistry, NameGenerator, PersonalityDistribution};
 /// SimEngine — the central tick loop coordinator.
@@ -128,6 +128,8 @@ pub struct SimResources {
     pub rooms: Vec<Room>,
     /// Shared per-entity causal ring buffer scaffold.
     pub causal_log: CausalLog,
+    /// Double-buffered effect queue shared across all runtime systems.
+    pub effect_queue: EffectQueue,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
     pub explain_log: ExplainLog,
     /// Runtime-mutable simulation balance parameters (debug tuning).
@@ -178,6 +180,7 @@ impl SimResources {
             tile_grid,
             rooms: Vec::new(),
             causal_log: CausalLog::new(),
+            effect_queue: EffectQueue::new(),
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
             event_store: EventStore::new(sim_core::config::EVENT_STORE_CAPACITY),

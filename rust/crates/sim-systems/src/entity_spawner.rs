@@ -12,9 +12,9 @@ use crate::values_init::initialize_values;
 use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmCapable,
-    InfluenceReceiver, Memory, NarrativeCache, Needs, Personality, Position, Skills, Social,
-    Stress, Temperament, Traits,
+    Age, Behavior, Body, Coping, Economic, EffectFlags, Emotion, Faith, Identity,
+    InfluenceReceiver, Intelligence, LlmCapable, Memory, NarrativeCache, Needs, Personality,
+    Position, Skills, Social, Stress, Temperament, Traits,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::SettlementId;
@@ -704,6 +704,7 @@ pub fn spawn_agent(
                 steering,
                 temperament,
                 InfluenceReceiver::default(),
+                EffectFlags::default(),
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),

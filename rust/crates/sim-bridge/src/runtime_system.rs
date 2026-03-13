@@ -4,7 +4,7 @@ use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
     BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
     ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
-    EconomicTendencyRuntimeSystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
+    EconomicTendencyRuntimeSystem, EffectApplySystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
     GatheringRuntimeSystem, InfluenceRuntimeSystem, InfluenceSteeringSystem,
     IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
     JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, LlmRequestRuntimeSystem,
@@ -84,6 +84,7 @@ pub(crate) enum RuntimeSystemId {
     LlmTimeout = 56,
     StorySifter = 57,
     Influence = 58,
+    EffectApply = 59,
 }
 
 impl RuntimeSystemId {
@@ -149,6 +150,7 @@ impl RuntimeSystemId {
             Self::LlmTimeout => "llm_timeout_system",
             Self::StorySifter => "story_sifter_system",
             Self::Influence => "influence_system",
+            Self::EffectApply => "effect_apply_system",
         }
     }
 
@@ -214,6 +216,7 @@ impl RuntimeSystemId {
             Self::LlmTimeout,
             Self::StorySifter,
             Self::Influence,
+            Self::EffectApply,
         ]
     }
 }
@@ -227,7 +230,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 59] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -523,6 +526,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 59] = [
         priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32,
         tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32,
     },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::EffectApply,
+        priority: 9999,
+        tick_interval: 1,
+    },
 ];
 
 /// Registers one typed Rust runtime system into the scheduler.
@@ -742,6 +750,9 @@ pub(crate) fn register_runtime_system(
             priority_u32,
             tick_interval_u64,
         )),
+        RuntimeSystemId::EffectApply => {
+            engine.register(EffectApplySystem::new(priority_u32, tick_interval_u64))
+        }
     }
 }
 
@@ -773,7 +784,7 @@ mod tests {
         );
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,
-            RuntimeSystemId::LlmRequest
+            RuntimeSystemId::EffectApply
         );
     }
 }

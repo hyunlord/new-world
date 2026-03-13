@@ -444,6 +444,19 @@ pub const CHRONICLE_THREAD_RESOLVE_WINDOW_TICKS: u64 = 1200;
 pub const CHRONICLE_THREAD_TENSION_HALF_LIFE_TICKS: f64 = 400.0;
 /// Minimum tension score below which a Resolved thread is eligible for eviction.
 pub const CHRONICLE_THREAD_EVICTION_TENSION_THRESHOLD: f64 = 0.1;
+
+// --- Effect Queue ---
+
+/// Maximum scheduled effects retained in the shared effect queue.
+pub const EFFECT_QUEUE_MAX_SCHEDULED: usize = 256;
+/// Maximum pending effects retained before the queue starts dropping overflow.
+pub const EFFECT_QUEUE_MAX_PENDING: usize = 2048;
+/// Default damping factor applied to additive effect deltas.
+pub const EFFECT_DAMPING_FACTOR: f64 = 0.0;
+/// Shared lower clamp for effect-driven scalar state updates.
+pub const EFFECT_STAT_CLAMP_MIN: f64 = 0.0;
+/// Shared upper clamp for effect-driven scalar state updates.
+pub const EFFECT_STAT_CLAMP_MAX: f64 = 1.0;
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.

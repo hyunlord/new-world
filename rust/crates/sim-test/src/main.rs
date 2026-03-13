@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 58;
+const EXPECTED_SYSTEM_COUNT: usize = 59;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -45,6 +45,7 @@ use sim_systems::runtime::{
     CopingRuntimeSystem,
     // social
     EconomicTendencyRuntimeSystem,
+    EffectApplySystem,
     EmotionRuntimeSystem,
     FamilyRuntimeSystem,
     GatheringRuntimeSystem,
@@ -464,6 +465,7 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(AceTrackerRuntimeSystem::new(99, 100));
     engine.register(TraitRuntimeSystem::new(100, 10));
     engine.register(ChronicleRuntimeSystem::new(101, 1));
+    engine.register(EffectApplySystem::new(9999, 1));
 }
 
 fn run_llm_smoke() {

@@ -2,8 +2,8 @@
 // All components, world data, config, and IDs live here.
 
 pub mod calendar;
-pub mod config;
 pub mod causal_log;
+pub mod config;
 pub mod effect;
 pub mod enums;
 pub mod ids;
@@ -24,10 +24,14 @@ pub mod settlement;
 // Re-export commonly used types for convenience
 pub use building::Building;
 pub use calendar::GameCalendar;
-pub use causal_log::{CauseRef, CausalEvent, CausalLog};
+pub use causal_log::{CausalEvent, CausalLog, CauseRef};
+pub use components::EffectFlags;
 pub use config::ConfigSummary;
 pub use config::SimConfig;
-pub use effect::{EffectFlag, EffectPrimitive, EffectStat, InfluenceEmitter, InfluenceReceiver};
+pub use effect::{
+    EffectEntry, EffectFlag, EffectPrimitive, EffectQueue, EffectSource, EffectStat,
+    InfluenceEmitter, InfluenceReceiver, ScheduledEffect,
+};
 pub use enums::*;
 pub use ids::{BuildingId, EntityId, SettlementId, SkillId, TechId, TraitId};
 pub use influence_channel::{ChannelClampPolicy, ChannelId, ChannelMeta};
