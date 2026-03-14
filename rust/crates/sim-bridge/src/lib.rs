@@ -1050,53 +1050,75 @@ struct EntityListRowSnapshot {
     age_years: f32,
     sex: String,
     alive: bool,
+    settlement_id: i64,
     band_id: i64,
     growth_stage: String,
     job: String,
+    current_action: String,
     hunger: f32,
+    is_leader: bool,
 }
 
-fn collect_entity_list_rows(world: &hecs::World) -> Vec<EntityListRowSnapshot> {
+fn collect_entity_list_rows(
+    world: &hecs::World,
+    band_store: &sim_core::band::BandStore,
+) -> Vec<EntityListRowSnapshot> {
     let mut result: Vec<EntityListRowSnapshot> = Vec::new();
 
-    for (entity, (id, age, needs_opt)) in world.query::<(&Identity, &Age, Option<&Needs>)>().iter()
+    for (entity, (id, age, needs_opt, behavior_opt)) in world
+        .query::<(&Identity, &Age, Option<&Needs>, Option<&Behavior>)>()
+        .iter()
     {
-        let job = world
-            .get::<&Behavior>(entity)
-            .map(|b| b.job.clone())
-            .unwrap_or_default();
+        let job = behavior_opt.map(|behavior| behavior.job.clone()).unwrap_or_default();
+        let current_action = behavior_opt
+            .map(|behavior| format!("{:?}", behavior.current_action))
+            .unwrap_or_else(|| "Idle".to_string());
+        let entity_id = EntityId(entity.id() as u64);
         result.push(EntityListRowSnapshot {
             entity_id: entity.to_bits().get() as i64,
             name: id.name.clone(),
             age_years: age.years as f32,
             sex: runtime_sex_to_str(id.sex).to_string(),
             alive: age.alive,
+            settlement_id: id.settlement_id.map(|settlement| settlement.0 as i64).unwrap_or(-1),
             band_id: runtime_queries::runtime_band_id_raw(id.band_id),
             growth_stage: runtime_growth_stage_to_str(id.growth_stage).to_string(),
             job,
+            current_action,
             hunger: needs_opt
                 .map(|needs| needs.get(NeedType::Hunger) as f32)
                 .unwrap_or(0.0_f32),
+            is_leader: id
+                .band_id
+                .and_then(|band_id| band_store.get(band_id))
+                .map(|band| band.leader == Some(entity_id))
+                .unwrap_or(false),
         });
     }
 
     result
 }
 
-fn bridge_entity_list(world: &hecs::World) -> Array<VarDictionary> {
+fn bridge_entity_list(
+    world: &hecs::World,
+    band_store: &sim_core::band::BandStore,
+) -> Array<VarDictionary> {
     let mut result: Array<VarDictionary> = Array::new();
 
-    for row in collect_entity_list_rows(world) {
+    for row in collect_entity_list_rows(world, band_store) {
         let mut d = VarDictionary::new();
         d.set("entity_id", row.entity_id);
         d.set("name", row.name);
         d.set("age_years", row.age_years);
         d.set("sex", row.sex);
         d.set("alive", row.alive);
+        d.set("settlement_id", row.settlement_id);
         d.set("band_id", row.band_id);
         d.set("growth_stage", row.growth_stage);
         d.set("job", row.job);
+        d.set("current_action", row.current_action);
         d.set("hunger", row.hunger);
+        d.set("is_leader", row.is_leader);
         result.push(&d);
     }
 
@@ -2661,7 +2683,7 @@ impl WorldSimRuntime {
         let Some(state) = self.state.as_ref() else {
             return Array::new();
         };
-        bridge_entity_list(state.engine.world())
+        bridge_entity_list(state.engine.world(), &state.engine.resources().band_store)
     }
 
     #[func]
@@ -6454,14 +6476,17 @@ mod tests {
         pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
         reset_pathfind_backend_dispatch_counts, resolve_backend_mode,
         resolve_pathfind_backend_mode, set_pathfind_backend_mode, NarrativeDisplayData,
-        PathfindError, PathfindInput,
+        EntityListRowSnapshot, PathfindError, PathfindInput,
     };
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
-    use sim_core::components::{Age, Identity, LlmPending, LlmRequestType, NarrativeCache, Needs};
+    use sim_core::band::{Band, BandStore};
+    use sim_core::components::{
+        Age, Behavior, Identity, LlmPending, LlmRequestType, NarrativeCache, Needs,
+    };
     use sim_core::enums::{ActionType, NeedType};
-    use sim_core::{EntityId, SettlementId};
+    use sim_core::{BandId, EntityId, SettlementId};
     use sim_engine::{
         ChronicleCapsule, ChronicleDossierStub, ChronicleEntityRefState, ChronicleEntryId,
         ChronicleEntryLite, ChronicleEntryStatus, ChronicleEventCause, ChronicleEventType,
@@ -6571,14 +6596,25 @@ mod tests {
     #[test]
     fn bridge_entity_list_surfaces_hunger_and_missing_needs_fallback() {
         let mut world = hecs::World::new();
+        let mut band_store = BandStore::new();
+        let band_id = BandId(7);
 
         let mut hungry_identity = Identity::default();
         hungry_identity.name = "Kaya".to_string();
+        hungry_identity.band_id = Some(band_id);
+        hungry_identity.settlement_id = Some(SettlementId(5));
         let mut hungry_age = Age::default();
         hungry_age.years = 12.0;
         let mut hungry_needs = Needs::default();
         hungry_needs.set(NeedType::Hunger, 0.42);
-        world.spawn((hungry_identity, hungry_age, hungry_needs));
+        let mut hungry_behavior = Behavior::default();
+        hungry_behavior.job = "builder".to_string();
+        hungry_behavior.current_action = ActionType::GatherWood;
+        let hungry_entity = world.spawn((hungry_identity, hungry_age, hungry_needs, hungry_behavior));
+        let hungry_entity_id = EntityId(hungry_entity.id() as u64);
+        let mut band = Band::new(band_id, "Oak".to_string(), vec![hungry_entity_id], 0);
+        band.leader = Some(hungry_entity_id);
+        band_store.insert(band);
 
         let mut fallback_identity = Identity::default();
         fallback_identity.name = "NoNeeds".to_string();
@@ -6586,19 +6622,25 @@ mod tests {
         fallback_age.years = 8.0;
         world.spawn((fallback_identity, fallback_age));
 
-        let rows = collect_entity_list_rows(&world);
-        let mut hunger_by_name: std::collections::BTreeMap<String, f32> =
+        let rows = collect_entity_list_rows(&world, &band_store);
+        let mut rows_by_name: std::collections::BTreeMap<String, EntityListRowSnapshot> =
             std::collections::BTreeMap::new();
 
         for row in rows {
-            hunger_by_name.insert(row.name, row.hunger);
+            rows_by_name.insert(row.name.clone(), row);
         }
 
-        let kaya_hunger = hunger_by_name.get("Kaya").copied().unwrap_or(-1.0);
-        let fallback_hunger = hunger_by_name.get("NoNeeds").copied().unwrap_or(-1.0);
+        let kaya = rows_by_name.get("Kaya").expect("Kaya row");
+        let fallback = rows_by_name.get("NoNeeds").expect("NoNeeds row");
 
-        assert!((kaya_hunger - 0.42).abs() < 1.0e-6);
-        assert_eq!(fallback_hunger, 0.0);
+        assert!((kaya.hunger - 0.42).abs() < 1.0e-6);
+        assert_eq!(kaya.settlement_id, 5);
+        assert_eq!(kaya.current_action, "GatherWood");
+        assert!(kaya.is_leader);
+        assert_eq!(fallback.hunger, 0.0);
+        assert_eq!(fallback.settlement_id, -1);
+        assert_eq!(fallback.current_action, "Idle");
+        assert!(!fallback.is_leader);
     }
 
     #[test]

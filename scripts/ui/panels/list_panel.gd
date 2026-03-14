@@ -334,7 +334,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 						"died": d_died_days, "died_display": d_died_display,
 						"job": r.get("job", ""),
 						"job_display": Locale.tr_id("JOB", str(r.get("job", ""))),
-						"status": Locale.trf1("UI_DECEASED_STATUS_FMT", "cause", cause_loc), "settlement": r.get("settlement_id", 0),
+						"status": Locale.trf1("UI_DECEASED_STATUS_FMT", "cause", cause_loc), "settlement": r.get("settlement_id", -1),
 						"hunger": 0.0, "deceased": true, "is_leader": false,
 					})
 
@@ -438,7 +438,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		col_x += col_widths[5] + COL_PAD
 
 		# Settlement
-		var sett_text: String = "S%d" % row.settlement if row.settlement > 0 else "-"
+		var sett_text: String = "S%d" % row.settlement if row.settlement >= 0 else "-"
 		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[6]) - 2, fs_small, text_color)
 		col_x += col_widths[6] + COL_PAD
 
@@ -545,6 +545,8 @@ func _get_entity_rows_from_bridge() -> Array:
 			continue
 		var age_years: float = float(item.get("age_years", 0.0))
 		var job_raw: String = str(item.get("job", ""))
+		var settlement_id: int = int(item.get("settlement_id", -1))
+		var action_raw: String = str(item.get("current_action", "Idle"))
 		rows.append({
 			"id": int(item.get("entity_id", 0)),
 			"name": str(item.get("name", "")),
@@ -553,10 +555,33 @@ func _get_entity_rows_from_bridge() -> Array:
 			"born": 0, "born_display": "-",
 			"died": 9999999, "died_display": "-",
 			"job": job_raw, "job_display": Locale.tr_id("JOB", job_raw),
-			"status": "", "settlement": 0,
-			"hunger": float(item.get("hunger", 0.0)), "deceased": false, "is_leader": false,
+			"status": _localized_status_text(action_raw), "settlement": settlement_id,
+			"hunger": float(item.get("hunger", 0.0)),
+			"deceased": false,
+			"is_leader": bool(item.get("is_leader", false)),
 		})
 	return rows
+
+
+func _localized_status_text(action_raw: String) -> String:
+	if action_raw.is_empty():
+		return Locale.ltr("STATUS_IDLE")
+	return Locale.ltr("STATUS_" + _camel_to_upper_snake(action_raw))
+
+
+func _camel_to_upper_snake(value: String) -> String:
+	if value.is_empty():
+		return ""
+	var chars: PackedStringArray = PackedStringArray()
+	for index: int in range(value.length()):
+		var current: String = value.substr(index, 1)
+		var lower: String = current.to_lower()
+		var upper: String = current.to_upper()
+		var is_uppercase: bool = current == upper and current != lower
+		if index > 0 and is_uppercase:
+			chars.append("_")
+		chars.append(upper)
+	return "".join(chars)
 
 
 func _get_building_rows_from_bridge() -> Array:
