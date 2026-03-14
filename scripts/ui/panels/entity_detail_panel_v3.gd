@@ -131,16 +131,16 @@ func refresh_locale() -> void:
 
 func _build_ui() -> void:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.06, 0.08, 0.10, 0.97)
-	style.border_color = Color(0.27, 0.33, 0.38, 0.95)
+	style.bg_color = Color(0.05, 0.07, 0.10, 0.92)
+	style.border_color = Color(0.20, 0.25, 0.30, 0.70)
 	style.border_width_left = 1
 	style.border_width_top = 1
-	style.border_width_right = 1
+	style.border_width_right = 0
 	style.border_width_bottom = 1
-	style.corner_radius_top_left = 6
-	style.corner_radius_top_right = 6
-	style.corner_radius_bottom_left = 6
-	style.corner_radius_bottom_right = 6
+	style.corner_radius_top_left = 8
+	style.corner_radius_top_right = 0
+	style.corner_radius_bottom_left = 8
+	style.corner_radius_bottom_right = 0
 	style.content_margin_left = 14
 	style.content_margin_right = 14
 	style.content_margin_top = 12

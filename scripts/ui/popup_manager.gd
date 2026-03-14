@@ -5,7 +5,6 @@ var _was_paused: bool = false
 var _dim_bg: ColorRect
 
 var _stats_panel: Control
-var _entity_panel: Control
 var _legacy_entity_panel: Control
 var _building_panel: Control
 var _chronicle_panel: Control
@@ -37,15 +36,6 @@ func _ready() -> void:
 ## Registers the statistics panel and adds it as a child of the dim background.
 func add_stats_panel(panel: Control) -> void:
 	_stats_panel = panel
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	panel.clip_contents = true
-	panel.visible = false
-	_dim_bg.add_child(panel)
-
-
-## Registers the entity detail panel and adds it as a child of the dim background.
-func add_entity_panel(panel: Control) -> void:
-	_entity_panel = panel
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.clip_contents = true
 	panel.visible = false
@@ -116,47 +106,6 @@ func open_stats() -> void:
 	_dim_bg.visible = true
 	_panel_ratios[_stats_panel] = Vector2(0.75, 0.8)
 	_center_panel(_stats_panel, 0.75, 0.8)
-
-
-## Opens the entity detail panel for the given entity, pausing the simulation.
-func open_entity(entity_id: int) -> void:
-	if _entity_panel == null:
-		return
-	if _entity_panel.visible:
-		close_all()
-		return
-	if not _dim_bg.visible:
-		_pause_sim()
-	_hide_all_panels()
-	_entity_panel.set_entity_id(entity_id)
-	_entity_panel.visible = true
-	_dim_bg.visible = true
-	_panel_ratios[_entity_panel] = Vector2(0.42, 0.90)
-	_center_panel(_entity_panel, 0.42, 0.90)
-
-
-## Opens the entity detail panel without dimming the background or pausing the simulation.
-## Intended for simultaneous use with the debug panel; panel closes via its own close button.
-func open_entity_no_dim(entity_id: int) -> void:
-	if _entity_panel == null:
-		return
-	# ★ FIX: Always ensure panel is a direct child of this node (not _dim_bg)
-	if _entity_panel.get_parent() != self:
-		if _entity_panel.get_parent() != null:
-			_entity_panel.get_parent().remove_child(_entity_panel)
-		add_child(_entity_panel)
-	_entity_panel.set_entity_id(entity_id)
-	_entity_panel.visible = true
-	# ★ RESTORED: dim bg must be hidden so it doesn't consume mouse events.
-	# Callers (hud.gd) must call close_all() first to dismiss list/other panels.
-	_dim_bg.visible = false
-	var vp: Vector2 = get_viewport().get_visible_rect().size
-	var panel_w: float = vp.x * 0.42
-	var panel_h: float = vp.y * 0.90
-	_entity_panel.size = Vector2(panel_w, panel_h)
-	_entity_panel.position = Vector2(vp.x - panel_w - 8.0, (vp.y - panel_h) * 0.5)
-	# ★ FIX: Force panel to front and grab focus for keyboard input
-	_entity_panel.move_to_front()
 
 
 ## Opens the legacy entity detail panel for a deceased record, pausing the simulation.
@@ -256,16 +205,11 @@ func close_all() -> void:
 func is_any_visible() -> bool:
 	if _dim_bg.visible:
 		return true
-	# ★ FIX: entity panel can be visible without dim_bg (open_entity_no_dim)
-	if _entity_panel != null and _entity_panel.visible:
-		return true
 	return false
 
 
 ## Returns true if the entity, building, or settlement detail panel is currently visible.
 func is_detail_visible() -> bool:
-	if _entity_panel != null and _entity_panel.visible:
-		return true
 	if _legacy_entity_panel != null and _legacy_entity_panel.visible:
 		return true
 	if _building_panel != null and _building_panel.visible:
@@ -281,8 +225,6 @@ func _process(_delta: float) -> void:
 	# Auto-close if all panels hid themselves (e.g. entity died)
 	var any: bool = false
 	if _stats_panel != null and _stats_panel.visible:
-		any = true
-	if _entity_panel != null and _entity_panel.visible:
 		any = true
 	if _legacy_entity_panel != null and _legacy_entity_panel.visible:
 		any = true
@@ -301,8 +243,6 @@ func _process(_delta: float) -> void:
 func _hide_all_panels() -> void:
 	if _stats_panel != null:
 		_stats_panel.visible = false
-	if _entity_panel != null:
-		_entity_panel.visible = false
 	if _legacy_entity_panel != null:
 		_legacy_entity_panel.visible = false
 	if _building_panel != null:
@@ -331,7 +271,7 @@ func _resume_sim() -> void:
 
 func _on_viewport_resized() -> void:
 	# Re-center any visible panel on viewport resize
-	for panel in [_stats_panel, _entity_panel, _legacy_entity_panel, _building_panel, _chronicle_panel, _list_panel, _settlement_panel]:
+	for panel in [_stats_panel, _legacy_entity_panel, _building_panel, _chronicle_panel, _list_panel, _settlement_panel]:
 		if panel != null and panel.visible and _panel_ratios.has(panel):
 			var ratios: Vector2 = _panel_ratios[panel]
 			_center_panel(panel, ratios.x, ratios.y)
