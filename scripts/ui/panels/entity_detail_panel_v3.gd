@@ -61,11 +61,13 @@ var _needs_diag_label: Label
 var _emotion_title: Label
 var _personality_title: Label
 var _inventory_title: Label
+var _band_title: Label
 var _relationships_title: Label
 var _events_title: Label
 var _personality_text: Label
 var _emotion_text: Label
 var _inventory_box: VBoxContainer
+var _band_box: VBoxContainer
 var _relationships_box: VBoxContainer
 var _events_box: VBoxContainer
 var _expand_button: Button
@@ -229,6 +231,12 @@ func _build_ui() -> void:
 	_inventory_box.add_theme_constant_override("separation", 4)
 	root.add_child(_inventory_box)
 
+	_band_title = _make_section_title()
+	root.add_child(_band_title)
+	_band_box = VBoxContainer.new()
+	_band_box.add_theme_constant_override("separation", 4)
+	root.add_child(_band_box)
+
 	_relationships_title = _make_section_title()
 	root.add_child(_relationships_title)
 	_relationships_box = VBoxContainer.new()
@@ -315,6 +323,7 @@ func _apply_locale() -> void:
 	_emotion_title.text = Locale.ltr("PANEL_EMOTION_TITLE")
 	_personality_title.text = Locale.ltr("PANEL_PERSONALITY_TITLE")
 	_inventory_title.text = Locale.ltr("UI_INVENTORY")
+	_band_title.text = Locale.ltr("PANEL_BAND_TITLE")
 	_relationships_title.text = Locale.ltr("PANEL_RELATIONSHIPS_TITLE")
 	_events_title.text = Locale.ltr("PANEL_EVENTS_TITLE")
 	_expand_button.text = Locale.ltr("PANEL_EXPAND")
@@ -355,6 +364,7 @@ func _refresh_all() -> void:
 	_refresh_emotions()
 	_refresh_personality()
 	_refresh_inventory()
+	_refresh_band()
 	_refresh_relationships()
 	_refresh_events()
 	_refresh_expand_tabs()
@@ -637,22 +647,59 @@ func _refresh_inventory() -> void:
 			_inventory_box.add_child(_make_simple_row(item_text))
 
 
+func _refresh_band() -> void:
+	for child: Node in _band_box.get_children():
+		child.queue_free()
+	var band_name: String = str(_detail.get("band_name", ""))
+	if band_name.is_empty():
+		_band_box.add_child(_make_simple_row(Locale.ltr("UI_NO_BAND")))
+		return
+	var member_count: int = int(_detail.get("band_member_count", 0))
+	var is_promoted: bool = bool(_detail.get("band_is_promoted", false))
+	var is_leader: bool = bool(_detail.get("band_is_leader", false))
+	var status_key: String = "UI_BAND_PROMOTED" if is_promoted else "UI_BAND_PROVISIONAL"
+	_band_box.add_child(
+		_make_simple_row(
+			"%s  [%s]  %d%s" % [
+				band_name,
+				Locale.ltr(status_key),
+				member_count,
+				Locale.ltr("UI_MEMBERS_SUFFIX"),
+			]
+		)
+	)
+	var leader_name: String = str(_detail.get("band_leader_name", ""))
+	if not leader_name.is_empty():
+		_band_box.add_child(
+			_make_simple_row("%s: %s" % [Locale.ltr("UI_BAND_LEADER_ROLE"), leader_name])
+		)
+	if is_leader:
+		_band_box.add_child(_make_simple_row("* " + Locale.ltr("UI_BAND_LEADER_ROLE")))
+	var members: Array = _detail.get("band_members", [])
+	var names: PackedStringArray = PackedStringArray()
+	for member_raw: Variant in members:
+		if not (member_raw is Dictionary):
+			continue
+		var member: Dictionary = member_raw
+		var member_name: String = str(member.get("name", ""))
+		if member_name.is_empty():
+			continue
+		if bool(member.get("is_leader", false)):
+			member_name = "*" + member_name
+		names.append(member_name)
+	if not names.is_empty():
+		_band_box.add_child(_make_simple_row(", ".join(names)))
+
+
 func _refresh_relationships() -> void:
 	for child: Node in _relationships_box.get_children():
 		child.queue_free()
-	var entries: Array[Dictionary] = _build_relationship_entries(3)
+	var entries: Array[Dictionary] = _build_relationship_entries(5)
 	if entries.is_empty():
-		_relationships_box.add_child(_make_simple_row(Locale.ltr("UI_UNKNOWN")))
+		_relationships_box.add_child(_make_simple_row(Locale.ltr("UI_NO_RELATIONSHIPS")))
 		return
 	for entry: Dictionary in entries:
-		var name_text: String = _resolve_entity_name(int(entry.get("target_id", -1)))
-		var affinity_value: int = int(round(float(entry.get("affinity", 0.0)) * 100.0))
-		var trust_value: int = int(round(float(entry.get("trust", 0.0)) * 100.0))
-		_relationships_box.add_child(
-			_make_simple_row(
-				"%s  %+d / %s %d" % [name_text, affinity_value, Locale.ltr("UI_TRUST"), trust_value]
-			)
-		)
+		_relationships_box.add_child(_make_simple_row(_format_relationship_entry(entry)))
 
 
 func _refresh_events() -> void:
@@ -729,18 +776,10 @@ func _format_personality_tab_text() -> String:
 func _format_relationships_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	for entry: Dictionary in _build_relationship_entries(15):
-		var target_id: int = int(entry.get("target_id", -1))
-		lines.append(
-			"%s  %+d / %s %d" % [
-				_resolve_entity_name(target_id),
-				int(round(float(entry.get("affinity", 0.0)) * 100.0)),
-				Locale.ltr("UI_TRUST"),
-				int(round(float(entry.get("trust", 0.0)) * 100.0)),
-			]
-		)
+		lines.append(_format_relationship_entry(entry))
 	if lines.is_empty():
-		lines.append(Locale.ltr("UI_UNKNOWN"))
-	return "\n".join(lines)
+		lines.append(Locale.ltr("UI_NO_RELATIONSHIPS"))
+	return "\n\n".join(lines)
 
 
 func _format_events_tab_text() -> String:
@@ -808,6 +847,75 @@ func _build_relationship_entries(limit: int) -> Array[Dictionary]:
 	if entries.size() > limit:
 		entries.resize(limit)
 	return entries
+
+
+func _format_relationship_entry(entry: Dictionary) -> String:
+	var relation_type: String = str(entry.get("relation_type", ""))
+	var marker_parts: PackedStringArray = PackedStringArray()
+	if bool(entry.get("is_band_mate", false)):
+		marker_parts.append("[B]")
+	var relation_marker: String = _relationship_marker(relation_type)
+	if not relation_marker.is_empty():
+		marker_parts.append(relation_marker)
+	var prefix: String = ""
+	if not marker_parts.is_empty():
+		prefix = " ".join(marker_parts) + " "
+	var relation_text: String = _localized_relation_text(relation_type)
+	var headline: String = prefix + _resolve_entity_name(int(entry.get("target_id", -1)))
+	if not relation_text.is_empty():
+		headline += " (%s)" % relation_text
+	headline += "  %+d / %s %d" % [
+		int(round(float(entry.get("affinity", 0.0)) * 100.0)),
+		Locale.ltr("UI_TRUST"),
+		int(round(float(entry.get("trust", 0.0)) * 100.0)),
+	]
+	headline += "\n%s %s %d" % [
+		Locale.ltr("UI_FAMILIARITY"),
+		_familiarity_bar(float(entry.get("familiarity", 0.0))),
+		int(round(float(entry.get("familiarity", 0.0)) * 100.0)),
+	]
+	return headline
+
+
+func _localized_relation_text(relation_type: String) -> String:
+	if relation_type.is_empty():
+		return ""
+	var relation_key: String = "RELATION_" + _camel_to_upper_snake(relation_type)
+	var localized: String = Locale.ltr(relation_key)
+	if localized == relation_key:
+		return relation_type
+	return localized
+
+
+func _relationship_marker(relation_type: String) -> String:
+	match relation_type:
+		"Parent":
+			return "[P]"
+		"Child":
+			return "[C]"
+		"Spouse":
+			return "[S]"
+		"Sibling":
+			return "[Sb]"
+		"Intimate":
+			return "[I]"
+		"CloseFriend":
+			return "[CF]"
+		"Friend":
+			return "[F]"
+		"Acquaintance":
+			return "[A]"
+		"Rival":
+			return "[R]"
+		"Enemy":
+			return "[E]"
+		_:
+			return ""
+
+
+func _familiarity_bar(value: float) -> String:
+	var filled: int = clampi(int(round(clampf(value, 0.0, 1.0) * 5.0)), 0, 5)
+	return "[" + "#".repeat(filled) + "-".repeat(5 - filled) + "]"
 
 
 func _make_simple_row(text: String) -> Label:

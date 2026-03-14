@@ -2302,12 +2302,15 @@ impl WorldSimRuntime {
             None => return dict,
         };
         let world = state.engine.world();
+        let resources = state.engine.resources();
         let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
 
         // Identity (required — return empty if missing)
         let Ok(id) = world.get::<&Identity>(entity) else {
             return dict;
         };
+        let entity_raw_id = EntityId(entity.id() as u64);
+        let selected_band_id = id.band_id;
         dict.set("entity_id", entity.to_bits().get() as i64);
         dict.set("name", id.name.clone());
         dict.set("sex", runtime_sex_to_str(id.sex));
@@ -2316,6 +2319,42 @@ impl WorldSimRuntime {
             id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64),
         );
         dict.set("band_id", runtime_queries::runtime_band_id_raw(id.band_id));
+        dict.set("band_name", "");
+        dict.set("band_member_count", 0_i64);
+        dict.set("band_is_promoted", false);
+        dict.set("band_is_leader", false);
+        dict.set("band_leader_name", "");
+        let empty_band_members: Array<VarDictionary> = Array::new();
+        dict.set("band_members", empty_band_members);
+        if let Some(band_id) = selected_band_id {
+            if let Some(band) = resources.band_store.get(band_id) {
+                dict.set("band_name", band.name.as_str());
+                dict.set("band_member_count", band.member_count() as i64);
+                dict.set("band_is_promoted", band.is_promoted);
+                dict.set("band_is_leader", band.leader == Some(entity_raw_id));
+                dict.set(
+                    "band_leader_name",
+                    band.leader
+                        .and_then(|leader_id| entity_name_from_raw_id(world, &raw_lookup, leader_id.0))
+                        .unwrap_or_default(),
+                );
+                let mut member_arr: Array<VarDictionary> = Array::new();
+                for &member_id in &band.members {
+                    let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, member_id.0) else {
+                        continue;
+                    };
+                    let mut member_dict = VarDictionary::new();
+                    member_dict.set("entity_id", runtime_id);
+                    member_dict.set(
+                        "name",
+                        entity_name_from_raw_id(world, &raw_lookup, member_id.0).unwrap_or_default(),
+                    );
+                    member_dict.set("is_leader", band.leader == Some(member_id));
+                    member_arr.push(&member_dict);
+                }
+                dict.set("band_members", member_arr);
+            }
+        }
         dict.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
         dict.set("zodiac", id.zodiac_sign.clone());
         dict.set("blood_type", id.blood_type.clone());
@@ -2332,9 +2371,9 @@ impl WorldSimRuntime {
             dict.set("movement_dir", position.movement_dir as i64);
             let tile_x = position.tile_x();
             let tile_y = position.tile_y();
-            if tile_x >= 0 && tile_y >= 0 && state.engine.resources().map.in_bounds(tile_x, tile_y)
+            if tile_x >= 0 && tile_y >= 0 && resources.map.in_bounds(tile_x, tile_y)
             {
-                let warmth_influence = state.engine.resources().influence_grid.sample(
+                let warmth_influence = resources.influence_grid.sample(
                     tile_x as u32,
                     tile_y as u32,
                     ChannelId::Warmth,
@@ -2599,7 +2638,9 @@ impl WorldSimRuntime {
             None => return dict,
         };
         let world = state.engine.world();
+        let resources = state.engine.resources();
         let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+        let selected_band_id = world.get::<&Identity>(entity).ok().and_then(|id| id.band_id);
 
         match tab.to_string().as_str() {
             "mind" => {
@@ -2718,6 +2759,9 @@ impl WorldSimRuntime {
             }
             "social" => {
                 if let Ok(social) = world.get::<&Social>(entity) {
+                    let selected_band_members: Option<Vec<EntityId>> = selected_band_id
+                        .and_then(|band_id| resources.band_store.get(band_id))
+                        .map(|band| band.members.clone());
                     let mut spouse_dict = VarDictionary::new();
                     if let Some(s) = social.spouse {
                         if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, s.0) {
@@ -2757,6 +2801,14 @@ impl WorldSimRuntime {
                         ed.set("trust", edge.trust as f32);
                         ed.set("familiarity", edge.familiarity as f32);
                         ed.set("relation_type", format!("{:?}", edge.relation_type));
+                        ed.set(
+                            "is_band_mate",
+                            selected_band_members
+                                .as_ref()
+                                .map(|members| members.contains(&edge.target))
+                                .unwrap_or(false),
+                        );
+                        ed.set("last_interaction_tick", edge.last_interaction_tick as i64);
                         rel_arr.push(&ed);
                     }
                     dict.set("relationships", rel_arr);
