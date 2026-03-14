@@ -19,8 +19,8 @@ use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
-use crate::body;
 use super::crafting;
+use crate::body;
 
 #[inline]
 fn tension_pair_key(left: SettlementId, right: SettlementId) -> String {
@@ -1084,6 +1084,24 @@ impl SimSystem for MovementRuntimeSystem {
                         }
                     }
                     _ => {}
+                }
+                let tool_item_id =
+                    crafting::action_tool_tag(completed_action).and_then(|tool_tag| {
+                        inventory_opt
+                            .as_deref()
+                            .and_then(|inventory| {
+                                crafting::find_best_tool(inventory, &resources.item_store, tool_tag)
+                            })
+                            .map(|(item_id, _)| item_id)
+                    });
+                if let Some(item_id) = tool_item_id {
+                    let destroyed =
+                        crafting::use_tool(EntityId(entity.id() as u64), item_id, resources, _tick);
+                    if destroyed {
+                        if let Some(inventory) = inventory_opt.as_mut() {
+                            inventory.remove(item_id);
+                        }
+                    }
                 }
                 resources.event_store.push(SimEvent {
                     tick: _tick,
