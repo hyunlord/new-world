@@ -659,7 +659,7 @@ func _refresh_events() -> void:
 	for index: int in range(min(5, story_events.size())):
 		var entry_raw: Variant = story_events[index]
 		if entry_raw is Dictionary:
-			_events_box.add_child(_make_simple_row(str(entry_raw.get("message", Locale.ltr("UI_UNKNOWN")))))
+			_events_box.add_child(_make_simple_row(_story_event_text(entry_raw as Dictionary)))
 
 
 func _refresh_expand_tabs() -> void:
@@ -742,10 +742,24 @@ func _format_events_tab_text() -> String:
 	var story_events: Array = _memory_tab.get("story_events", [])
 	for entry_raw: Variant in story_events:
 		if entry_raw is Dictionary:
-			lines.append(str((entry_raw as Dictionary).get("message", Locale.ltr("UI_UNKNOWN"))))
+			lines.append(_story_event_text(entry_raw as Dictionary))
 	if lines.is_empty():
 		lines.append(Locale.ltr("UI_UNKNOWN"))
 	return "\n".join(lines)
+
+
+func _story_event_text(entry: Dictionary) -> String:
+	var message_key: String = str(entry.get("message_key", ""))
+	if not message_key.is_empty():
+		var params_raw: Variant = entry.get("message_params", {})
+		if params_raw is Dictionary:
+			var localized: String = Locale.trf(message_key, params_raw as Dictionary)
+			if localized != message_key:
+				return localized
+		var fallback_localized: String = Locale.ltr(message_key)
+		if fallback_localized != message_key:
+			return fallback_localized
+	return str(entry.get("message", Locale.ltr("UI_UNKNOWN")))
 
 
 func _build_need_entries() -> Array[Dictionary]:

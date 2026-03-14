@@ -12,8 +12,9 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::{
     ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
-    HexacoAxis, HexacoFacet, IntelligenceType, MentalBreakType, NeedType, RelationType,
-    ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
+    HexacoAxis, HexacoFacet, IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner,
+    MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass,
+    TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use std::cmp::Ordering;
@@ -49,6 +50,41 @@ fn is_food_template(template: &str) -> bool {
         template,
         "raw_meat" | "berries" | "raw_fish" | "cooked_meat" | "dried_meat"
     )
+}
+
+#[inline]
+fn maybe_grant_forage_berries(
+    entity_id: EntityId,
+    inventory: &mut Option<&mut Inventory>,
+    resources: &mut SimResources,
+    tick: u64,
+) {
+    let Some(inventory) = inventory.as_deref_mut() else {
+        return;
+    };
+    let inventory_cap = inventory.max_tool_slots as usize + config::FORAGE_FOOD_BUFFER_SLOTS;
+    if inventory.count() >= inventory_cap {
+        return;
+    }
+    if resources.rng.gen_range(0.0..1.0) >= config::FORAGE_BERRIES_DROP_CHANCE {
+        return;
+    }
+
+    let item_id = resources.item_store.allocate_id();
+    resources.item_store.insert(ItemInstance {
+        id: item_id,
+        template_id: "berries".to_string(),
+        material_id: "plant".to_string(),
+        derived_stats: ItemDerivedStats::default(),
+        current_durability: 100.0,
+        quality: 0.5,
+        owner: ItemOwner::Agent(entity_id),
+        stack_count: 1,
+        created_tick: tick,
+        creator_id: Some(entity_id),
+        equipped_slot: None,
+    });
+    inventory.add(item_id);
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -1081,6 +1117,14 @@ impl SimSystem for MovementRuntimeSystem {
                             needs.set(
                                 NeedType::Hunger,
                                 needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
+                            );
+                        }
+                        if matches!(completed_action, ActionType::Forage) {
+                            maybe_grant_forage_berries(
+                                EntityId(entity.id() as u64),
+                                &mut inventory_opt,
+                                resources,
+                                _tick,
                             );
                         }
                     }

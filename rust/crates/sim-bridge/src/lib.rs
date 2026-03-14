@@ -30,7 +30,9 @@ use body_bindings::{
 use godot::prelude::*;
 #[cfg(test)]
 use locale_bindings::format_fluent_from_source_args;
-use locale_bindings::{clear_fluent_source, format_fluent_message, store_fluent_source};
+use locale_bindings::{
+    clear_fluent_source, format_active_fluent_message, format_fluent_message, store_fluent_source,
+};
 use narrative_display::{build_narrative_display, narrative_display_to_dict, NarrativeDisplayData};
 #[cfg(test)]
 use pathfinding_bindings::parse_pathfind_backend;
@@ -214,6 +216,64 @@ fn humanize_status_text(value: &str) -> String {
         previous_is_lowercase = character.is_lowercase();
     }
     output
+}
+
+fn identifier_to_upper_snake(value: &str) -> String {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+
+    let mut output = String::with_capacity(trimmed.len() + 8);
+    let mut previous_is_lowercase = false;
+    for character in trimmed.chars() {
+        if matches!(character, ' ' | '-' | '_') {
+            if !output.ends_with('_') && !output.is_empty() {
+                output.push('_');
+            }
+            previous_is_lowercase = false;
+            continue;
+        }
+        let is_uppercase = character.is_uppercase();
+        if previous_is_lowercase && is_uppercase && !output.ends_with('_') {
+            output.push('_');
+        }
+        output.push(character.to_ascii_uppercase());
+        previous_is_lowercase = character.is_lowercase();
+    }
+    output
+}
+
+fn active_fluent_or_humanized(key: &str, fallback: &str) -> String {
+    format_active_fluent_message(key).unwrap_or_else(|| fallback.to_string())
+}
+
+fn localized_need_label(cause: &str) -> String {
+    let key = format!("NEED_{}", identifier_to_upper_snake(cause));
+    active_fluent_or_humanized(&key, &humanize_status_text(cause))
+}
+
+fn localized_emotion_label(cause: &str) -> String {
+    let key = format!("EMO_{}", identifier_to_upper_snake(cause));
+    active_fluent_or_humanized(&key, &humanize_status_text(cause))
+}
+
+fn localized_status_label(cause: &str) -> String {
+    let key = format!("STATUS_{}", identifier_to_upper_snake(cause));
+    active_fluent_or_humanized(&key, &humanize_status_text(cause))
+}
+
+fn localized_stage_label(cause: &str) -> String {
+    let key = format!("STAGE_{}", identifier_to_upper_snake(cause));
+    active_fluent_or_humanized(&key, &humanize_status_text(cause))
+}
+
+fn localized_death_label(cause: &str) -> String {
+    let key = match cause.trim() {
+        "mortality_hazard" => "DEATH_BACKGROUND".to_string(),
+        other => format!("DEATH_{}", identifier_to_upper_snake(other)),
+    };
+    active_fluent_or_humanized(&key, &humanize_status_text(cause))
 }
 
 fn top_need_key_and_value(needs: &Needs) -> (&'static str, f64) {
@@ -839,6 +899,163 @@ fn entity_name_from_raw_id(
     Some(identity.name.clone())
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct StoryEventMessage {
+    locale_key: String,
+    params: Vec<(String, String)>,
+}
+
+fn format_story_event_locale(
+    event: &SimEvent,
+    actor_name: &str,
+    target_name: Option<&str>,
+) -> StoryEventMessage {
+    let actor = actor_name.to_string();
+    let target = target_name.unwrap_or("someone").to_string();
+    match &event.event_type {
+        SimEventType::NeedCritical => StoryEventMessage {
+            locale_key: "STORY_NEED_CRITICAL".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("need".to_string(), localized_need_label(&event.cause)),
+            ],
+        },
+        SimEventType::NeedSatisfied => StoryEventMessage {
+            locale_key: "STORY_NEED_SATISFIED".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("need".to_string(), localized_need_label(&event.cause)),
+            ],
+        },
+        SimEventType::EmotionShift => StoryEventMessage {
+            locale_key: "STORY_EMOTION_SHIFT".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("emotion".to_string(), localized_emotion_label(&event.cause)),
+            ],
+        },
+        SimEventType::MoodChanged => StoryEventMessage {
+            locale_key: "STORY_MOOD_CHANGED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::StressEscalated => StoryEventMessage {
+            locale_key: "STORY_STRESS_ESCALATED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::MentalBreakStart => StoryEventMessage {
+            locale_key: "STORY_MENTAL_BREAK".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::MentalBreakEnd => StoryEventMessage {
+            locale_key: "STORY_MENTAL_BREAK_END".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::RelationshipFormed => StoryEventMessage {
+            locale_key: "STORY_RELATIONSHIP_FORMED".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("target".to_string(), target),
+            ],
+        },
+        SimEventType::RelationshipBroken => StoryEventMessage {
+            locale_key: "STORY_RELATIONSHIP_BROKEN".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("target".to_string(), target),
+            ],
+        },
+        SimEventType::SocialConflict => StoryEventMessage {
+            locale_key: "STORY_SOCIAL_CONFLICT".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("target".to_string(), target),
+            ],
+        },
+        SimEventType::SocialCooperation => StoryEventMessage {
+            locale_key: "STORY_SOCIAL_COOPERATION".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("target".to_string(), target),
+            ],
+        },
+        SimEventType::BandFormed => StoryEventMessage {
+            locale_key: "STORY_BAND_FORMED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::BandPromoted => StoryEventMessage {
+            locale_key: "STORY_BAND_PROMOTED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::BandSplit => StoryEventMessage {
+            locale_key: "STORY_BAND_SPLIT".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::BandDissolved => StoryEventMessage {
+            locale_key: "STORY_BAND_DISSOLVED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::BandLeaderElected => StoryEventMessage {
+            locale_key: "STORY_BAND_LEADER".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::LonerJoinedBand => StoryEventMessage {
+            locale_key: "STORY_LONER_JOINED".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::ActionChanged => {
+            let action = action_transition_parts(&event.cause)
+                .map(|(_, to)| localized_status_label(to))
+                .unwrap_or_else(|| localized_status_label(&event.cause));
+            StoryEventMessage {
+                locale_key: "STORY_ACTION_CHANGED".to_string(),
+                params: vec![
+                    ("actor".to_string(), actor),
+                    ("action".to_string(), action),
+                ],
+            }
+        }
+        SimEventType::TaskCompleted => StoryEventMessage {
+            locale_key: "STORY_TASK_COMPLETED".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("task".to_string(), localized_status_label(&event.cause)),
+            ],
+        },
+        SimEventType::Birth => StoryEventMessage {
+            locale_key: "STORY_BIRTH".to_string(),
+            params: vec![("actor".to_string(), actor)],
+        },
+        SimEventType::Death => StoryEventMessage {
+            locale_key: "STORY_DEATH".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("cause".to_string(), localized_death_label(&event.cause)),
+            ],
+        },
+        SimEventType::AgeTransition => StoryEventMessage {
+            locale_key: "STORY_AGE_TRANSITION".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("stage".to_string(), localized_stage_label(&event.cause)),
+            ],
+        },
+        SimEventType::FirstOccurrence => StoryEventMessage {
+            locale_key: "STORY_FIRST_OCCURRENCE".to_string(),
+            params: vec![(
+                "detail".to_string(),
+                humanize_status_text(&event.cause),
+            )],
+        },
+        SimEventType::Custom(label) => StoryEventMessage {
+            locale_key: "STORY_GENERIC".to_string(),
+            params: vec![
+                ("actor".to_string(), actor),
+                ("detail".to_string(), humanize_status_text(label.as_str())),
+            ],
+        },
+    }
+}
+
 fn format_story_event_message(
     event: &SimEvent,
     actor_name: &str,
@@ -1021,10 +1238,18 @@ fn recent_story_events_for_entity(
         let target_name = event
             .target
             .and_then(|raw_id| entity_name_from_raw_id(world, raw_lookup, u64::from(raw_id)));
+        let localized_message =
+            format_story_event_locale(event, actor_name.as_str(), target_name.as_deref());
         let mut row = VarDictionary::new();
         row.set("tick", event.tick as i64);
         row.set("kind", format!("{:?}", event.event_type));
         row.set("cause", event.cause.clone());
+        row.set("message_key", localized_message.locale_key.as_str());
+        let mut message_params = VarDictionary::new();
+        for (key, value) in &localized_message.params {
+            message_params.set(key.as_str(), value.as_str());
+        }
+        row.set("message_params", message_params);
         row.set(
             "message",
             format_story_event_message(event, actor_name.as_str(), target_name.as_deref()),
@@ -6469,8 +6694,8 @@ mod tests {
         decode_ws2_blob,
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
         dispatch_pathfind_grid_bytes, encode_ws2_blob, format_fluent_from_source_args,
-        get_pathfind_backend_mode, has_gpu_pathfind_backend, is_significant_story_event,
-        parse_pathfind_backend,
+        format_story_event_locale, get_pathfind_backend_mode, has_gpu_pathfind_backend,
+        is_significant_story_event, parse_pathfind_backend,
         pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
         pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
         pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
@@ -6478,6 +6703,7 @@ mod tests {
         resolve_pathfind_backend_mode, set_pathfind_backend_mode, NarrativeDisplayData,
         EntityListRowSnapshot, PathfindError, PathfindInput,
     };
+    use crate::locale_bindings::{clear_fluent_source, locale_test_lock, store_fluent_source};
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
@@ -6591,6 +6817,68 @@ mod tests {
         assert!(!is_significant_story_event(&idle_to_gather));
         assert!(!is_significant_story_event(&rest_to_sleep));
         assert!(is_significant_story_event(&flee_to_fight));
+    }
+
+    #[test]
+    fn format_story_event_locale_uses_active_locale_for_need_labels() {
+        let _guard = locale_test_lock().lock().expect("locale test lock");
+        assert!(store_fluent_source(
+            "ko",
+            "NEED_HUNGER = 허기\nSTORY_NEED_CRITICAL = {$actor}이(가) {$need}(으)로 고통받고 있다"
+        ));
+
+        let event = SimEvent {
+            tick: 10,
+            event_type: SimEventType::NeedCritical,
+            actor: 1,
+            target: None,
+            tags: vec!["needs".to_string()],
+            cause: "hunger".to_string(),
+            value: 0.1,
+        };
+
+        let message = format_story_event_locale(&event, "Kaya", None);
+        assert_eq!(message.locale_key, "STORY_NEED_CRITICAL");
+        assert_eq!(
+            message.params,
+            vec![
+                ("actor".to_string(), "Kaya".to_string()),
+                ("need".to_string(), "허기".to_string()),
+            ]
+        );
+
+        clear_fluent_source("ko");
+    }
+
+    #[test]
+    fn format_story_event_locale_localizes_task_completed_params() {
+        let _guard = locale_test_lock().lock().expect("locale test lock");
+        assert!(store_fluent_source(
+            "en",
+            "STATUS_GATHER_WOOD = Gathering Wood\nSTORY_TASK_COMPLETED = {actor} finished {task}"
+        ));
+
+        let event = SimEvent {
+            tick: 12,
+            event_type: SimEventType::TaskCompleted,
+            actor: 1,
+            target: None,
+            tags: vec!["task".to_string()],
+            cause: "GatherWood".to_string(),
+            value: 1.0,
+        };
+
+        let message = format_story_event_locale(&event, "Kaya", None);
+        assert_eq!(message.locale_key, "STORY_TASK_COMPLETED");
+        assert_eq!(
+            message.params,
+            vec![
+                ("actor".to_string(), "Kaya".to_string()),
+                ("task".to_string(), "Gathering Wood".to_string()),
+            ]
+        );
+
+        clear_fluent_source("en");
     }
 
     #[test]
