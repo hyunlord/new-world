@@ -2,24 +2,25 @@ use sim_core::config;
 use sim_engine::SimEngine;
 use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
-    BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
-    ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
-    CraftingRuntimeSystem, EconomicTendencyRuntimeSystem, EffectApplySystem, EmotionRuntimeSystem,
-    FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem, InfluenceSteeringSystem,
-    IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
-    JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, LlmRequestRuntimeSystem,
-    LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem, MemoryRuntimeSystem,
-    MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
-    MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-    PairwiseInteractionSystem, ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
-    PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
-    ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
-    StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
-    StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
-    TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
-    TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem,
-    TraitViolationRuntimeSystem, TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem,
-    ValueRuntimeSystem,
+    BandFormationSystem, BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem,
+    ChildcareRuntimeSystem, ChronicleRuntimeSystem, ConstructionRuntimeSystem,
+    ContagionRuntimeSystem, CopingRuntimeSystem, CraftingRuntimeSystem,
+    EconomicTendencyRuntimeSystem, EffectApplySystem, EmotionRuntimeSystem,
+    FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
+    InfluenceSteeringSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
+    JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
+    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
+    MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
+    MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
+    OccupationRuntimeSystem, PairwiseInteractionSystem, ParentingRuntimeSystem,
+    PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
+    PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
+    SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
+    StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, StorySifterRuntimeSystem,
+    StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
+    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
+    TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
+    TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
 
 /// Stable typed runtime-system identifier used by the Rust registry.
@@ -88,6 +89,7 @@ pub(crate) enum RuntimeSystemId {
     EffectApply = 59,
     Crafting = 60,
     PairwiseInteraction = 61,
+    BandFormation = 62,
 }
 
 impl RuntimeSystemId {
@@ -156,6 +158,7 @@ impl RuntimeSystemId {
             Self::EffectApply => "effect_apply_system",
             Self::Crafting => "crafting_system",
             Self::PairwiseInteraction => "pairwise_interaction_system",
+            Self::BandFormation => "band_formation_system",
         }
     }
 
@@ -223,6 +226,7 @@ impl RuntimeSystemId {
             Self::Influence,
             Self::Crafting,
             Self::PairwiseInteraction,
+            Self::BandFormation,
             Self::EffectApply,
         ]
     }
@@ -237,7 +241,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 62] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 63] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -372,6 +376,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 62] = [
         system_id: RuntimeSystemId::SocialEvent,
         priority: 37,
         tick_interval: 30,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::BandFormation,
+        priority: config::BAND_FORMATION_SYSTEM_PRIORITY as i32,
+        tick_interval: config::BAND_FORMATION_TICK_INTERVAL as i32,
     },
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::Contagion,
@@ -711,6 +720,9 @@ pub(crate) fn register_runtime_system(
             priority_u32,
             tick_interval_u64,
         )),
+        RuntimeSystemId::BandFormation => {
+            engine.register(BandFormationSystem::new(priority_u32, tick_interval_u64))
+        }
         RuntimeSystemId::Reputation => engine.register(ReputationRuntimeSystem::new(
             priority_u32,
             tick_interval_u64,

@@ -6,6 +6,7 @@
 // TODO(v3.1): REFACTOR - move system cadence toward Hot/Warm/Cold metadata as A-5 lands.
 
 mod biology;
+mod band;
 mod cognition;
 mod crafting;
 mod economy;
@@ -30,6 +31,7 @@ pub use biology::{
     IntergenerationalRuntimeSystem, MortalityRuntimeSystem, ParentingRuntimeSystem,
     PersonalityGeneratorRuntimeSystem, PopulationRuntimeSystem,
 };
+pub use band::{calculate_gfs, BandFormationSystem};
 
 // ---- cognition ----
 pub use cognition::{BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem};

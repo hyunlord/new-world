@@ -235,6 +235,25 @@ pub const INTERACTION_COMFORT_AFFINITY_DELTA: f64 = 2.0;
 /// Familiarity gain per interaction.
 pub const INTERACTION_FAMILIARITY_DELTA: f64 = 0.02;
 
+/// Minimum GFS required to create a social graph edge for band formation.
+pub const GFS_THRESHOLD: f64 = 0.6;
+/// Maximum distance for proximity-based GFS contribution.
+pub const GFS_PROXIMITY_MAX_DISTANCE: f64 = 30.0;
+/// Minimum connected-component size needed to create a provisional band.
+pub const BAND_MIN_SIZE_PROVISIONAL: usize = 3;
+/// Minimum member count required before promotion to an established band.
+pub const BAND_MIN_SIZE_PROMOTED: usize = 5;
+/// Maximum stable band size before truncation.
+pub const BAND_MAX_SIZE: usize = 30;
+/// Ticks a provisional group must survive before promotion.
+pub const BAND_PROMOTION_TICKS: u64 = 2400;
+/// Baseline Granovetter participation threshold before personality shifts.
+pub const BAND_GRANOVETTER_BASE_THRESHOLD: f64 = 0.5;
+/// Scheduler priority for band formation.
+pub const BAND_FORMATION_SYSTEM_PRIORITY: u32 = 38;
+/// Cold-tier interval for band formation checks.
+pub const BAND_FORMATION_TICK_INTERVAL: u64 = 60;
+
 // ── Weber Authority [Weber 1922] ──────────────────────────────────────────────
 pub const AUTHORITY_TRADITIONAL_TRADITION_MIN: f64 = 0.30;
 pub const AUTHORITY_TRADITIONAL_LAW_MAX: f64 = 0.10;

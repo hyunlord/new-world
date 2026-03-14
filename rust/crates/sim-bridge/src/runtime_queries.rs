@@ -218,6 +218,7 @@ fn bootstrap_world_core(
         );
         resources.settlements.clear();
         resources.buildings.clear();
+        resources.band_store = sim_core::BandStore::new();
         resources.tension_pairs.clear();
         resources.stats_history.clear();
         resources.stats_peak_population = 0;
@@ -955,6 +956,10 @@ fn member_summary_by_runtime_id(world: &World, entity_id_raw: i64) -> Option<Var
     member_summary(world, entity, &identity, &age)
 }
 
+pub(crate) fn runtime_band_id_raw(band_id: Option<sim_core::BandId>) -> i64 {
+    band_id.map(|band_id| band_id.0 as i64).unwrap_or(-1)
+}
+
 fn member_summary(
     world: &World,
     entity: Entity,
@@ -973,6 +978,7 @@ fn member_summary(
         "settlement_id",
         identity.settlement_id.map(|id| id.0 as i64).unwrap_or(-1),
     );
+    out.set("band_id", runtime_band_id_raw(identity.band_id));
     out.set("is_alive", true);
     out.set("age", age.ticks as i64);
     out.set("age_years", age.years);
@@ -1237,7 +1243,7 @@ mod tests {
     use sim_core::components::{Age, Behavior, Identity, Position, Skills};
     use sim_core::config::TICKS_PER_YEAR;
     use sim_core::NeedType;
-    use sim_core::{ActionType, Building, BuildingId, SettlementId};
+    use sim_core::{ActionType, BandId, Building, BuildingId, SettlementId};
     use sim_systems::runtime::{
         BehaviorRuntimeSystem, GatheringRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem,
     };
@@ -1525,6 +1531,12 @@ mod tests {
         assert_eq!(assignments.len(), 1);
         assert_eq!(assignments[0].name, "Builder One");
         assert!(assignments[0].in_range);
+    }
+
+    #[test]
+    fn runtime_band_id_raw_maps_optional_band_ids() {
+        assert_eq!(runtime_band_id_raw(Some(BandId(4))), 4);
+        assert_eq!(runtime_band_id_raw(None), -1);
     }
 
     #[test]

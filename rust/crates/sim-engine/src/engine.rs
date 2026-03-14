@@ -15,9 +15,9 @@ use log::{debug, info, warn};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use sim_core::{
-    Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, EffectQueue, EntityId,
-    GameCalendar, InfluenceGrid, ItemStore, Room, Settlement, SettlementId, SimConfig, TileGrid,
-    WorldMap,
+    BandStore, Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, EffectQueue,
+    EntityId, GameCalendar, InfluenceGrid, ItemStore, Room, Settlement, SettlementId, SimConfig,
+    TileGrid, WorldMap,
 };
 use sim_data::{
     DataRegistry, InfluenceClampPolicyDef, NameGenerator, PersonalityDistribution, WorldRuleset,
@@ -135,6 +135,8 @@ pub struct SimResources {
     pub effect_queue: EffectQueue,
     /// Central item registry for all world items.
     pub item_store: ItemStore,
+    /// Central registry for provisional and promoted bands.
+    pub band_store: BandStore,
     /// World-rules resource regen multipliers keyed by rule target tag.
     pub resource_regen_multipliers: BTreeMap<String, f64>,
     /// Per-entity ring-buffer of recent explanation log entries (stub — no systems write yet).
@@ -245,6 +247,7 @@ impl SimResources {
             causal_log: CausalLog::new(),
             effect_queue: EffectQueue::new(),
             item_store: ItemStore::new(),
+            band_store: BandStore::new(),
             resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),
             sim_config: SimConfig::default(),
@@ -413,6 +416,7 @@ impl std::fmt::Debug for SimResources {
             .field("chronicle_summaries", &self.chronicle_timeline.len())
             .field("event_bus", &self.event_bus)
             .field("event_store", &self.event_store.len())
+            .field("band_store", &self.band_store.len())
             .field("influence_grid_dims", &self.influence_grid.dimensions())
             .field(
                 "influence_emitters",

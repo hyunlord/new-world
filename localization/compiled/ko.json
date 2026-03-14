@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4262,
+    "active_key_count": 4266,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4262,
+    "key_count": 4266,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -206,6 +206,10 @@
     "AUTHORITY_TYPE_CHARISMATIC": "카리스마적",
     "AUTHORITY_TYPE_RATIONAL_LEGAL": "합리적-법적",
     "AUTHORITY_TYPE_TRADITIONAL": "전통적",
+    "BAND_DISSOLVED": "무리 해산",
+    "BAND_FORMED": "무리 형성",
+    "BAND_LEADER_ELECTED": "리더 선출",
+    "BAND_PROMOTED": "무리 확립",
     "BIRTH_DATE_FORMAT": "Y{year} {month} {day}일생",
     "BLOOD_TYPE_A": "A형",
     "BLOOD_TYPE_AB": "AB형",

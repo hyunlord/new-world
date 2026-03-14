@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 60;
+const EXPECTED_SYSTEM_COUNT: usize = 61;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -31,6 +31,7 @@ use sim_systems::runtime::{
     AgeRuntimeSystem,
     AttachmentRuntimeSystem,
     // cognition
+    BandFormationSystem,
     BehaviorRuntimeSystem,
     // economy
     BuildingEffectRuntimeSystem,
@@ -421,6 +422,10 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(TitleRuntimeSystem::new(37, 1));
     engine.register(TraitViolationRuntimeSystem::new(37, 1));
     engine.register(SocialEventRuntimeSystem::new(37, 30));
+    engine.register(BandFormationSystem::new(
+        sim_core::config::BAND_FORMATION_SYSTEM_PRIORITY,
+        sim_core::config::BAND_FORMATION_TICK_INTERVAL,
+    ));
     engine.register(ContagionRuntimeSystem::new(38, 3));
     engine.register(ReputationRuntimeSystem::new(38, 1));
     engine.register(EconomicTendencyRuntimeSystem::new(39, 1));

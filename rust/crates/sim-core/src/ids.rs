@@ -8,6 +8,10 @@ pub struct EntityId(pub u64);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct SettlementId(pub u64);
 
+/// Unique band ID
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct BandId(pub u64);
+
 /// Unique building ID
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct BuildingId(pub u64);
@@ -29,6 +33,10 @@ impl SettlementId {
     pub const NONE: SettlementId = SettlementId(u64::MAX);
 }
 
+impl BandId {
+    pub const NONE: BandId = BandId(u64::MAX);
+}
+
 impl BuildingId {
     pub const NONE: BuildingId = BuildingId(u64::MAX);
 }
@@ -42,6 +50,12 @@ impl std::fmt::Display for EntityId {
 impl std::fmt::Display for SettlementId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Settlement({})", self.0)
+    }
+}
+
+impl std::fmt::Display for BandId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Band({})", self.0)
     }
 }
 
