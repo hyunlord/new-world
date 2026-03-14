@@ -7,6 +7,7 @@
 
 mod biology;
 mod cognition;
+mod crafting;
 mod economy;
 mod effect_apply;
 mod influence;
@@ -31,6 +32,7 @@ pub use biology::{
 
 // ---- cognition ----
 pub use cognition::{BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem};
+pub use crafting::CraftingRuntimeSystem;
 
 // ---- economy ----
 pub use economy::{

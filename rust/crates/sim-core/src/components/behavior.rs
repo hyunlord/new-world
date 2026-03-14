@@ -25,6 +25,12 @@ pub struct Behavior {
     /// Occupation title
     pub occupation: String,
     pub occupation_satisfaction: f32,
+    /// Recipe ID being crafted for the current craft action.
+    #[serde(default)]
+    pub craft_recipe_id: Option<String>,
+    /// Primary material selected for the current craft action.
+    #[serde(default)]
+    pub craft_material_id: Option<String>,
 }
 
 impl Default for Behavior {
@@ -42,6 +48,8 @@ impl Default for Behavior {
             job_satisfaction: 0.5,
             occupation: String::new(),
             occupation_satisfaction: 0.5,
+            craft_recipe_id: None,
+            craft_material_id: None,
         }
     }
 }
