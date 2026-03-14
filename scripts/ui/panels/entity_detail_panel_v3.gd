@@ -533,6 +533,10 @@ func _refresh_emotions() -> void:
 
 func _refresh_personality() -> void:
 	var archetype_text: String = Locale.ltr(str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER")))
+	var temperament_key: String = str(_detail.get("temperament_label_key", ""))
+	var temperament_text: String = ""
+	if not temperament_key.is_empty():
+		temperament_text = Locale.ltr(temperament_key)
 	var hexaco_parts: PackedStringArray = PackedStringArray()
 	for row: Dictionary in HEXACO_ROWS:
 		hexaco_parts.append(
@@ -541,7 +545,10 @@ func _refresh_personality() -> void:
 				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
 				]
 			)
-	var personality_text: String = archetype_text + "\n" + " / ".join(hexaco_parts)
+	var personality_text: String = archetype_text
+	if not temperament_text.is_empty():
+		personality_text += "\n" + temperament_text
+	personality_text += "\n" + " / ".join(hexaco_parts)
 	_personality_text.text = personality_text
 
 
@@ -616,6 +623,9 @@ func _format_emotion_tab_text() -> String:
 func _format_personality_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	lines.append(Locale.ltr(str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER"))))
+	var temperament_key: String = str(_detail.get("temperament_label_key", ""))
+	if not temperament_key.is_empty():
+		lines.append(Locale.ltr(temperament_key))
 	for row: Dictionary in HEXACO_ROWS:
 		lines.append(
 			"%s  %d%%" % [

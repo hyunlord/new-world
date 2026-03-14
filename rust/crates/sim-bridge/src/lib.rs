@@ -48,7 +48,7 @@ use sim_core::components::{
     Social, Stress, Traits, Values,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
-use sim_core::{ChannelId, EntityId, Settlement, SettlementId};
+use sim_core::{ChannelId, EntityId, Settlement, SettlementId, Temperament};
 use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
@@ -1985,6 +1985,13 @@ impl WorldSimRuntime {
             dict.set("hex_c", pers.axes[4] as f32);
             dict.set("hex_o", pers.axes[5] as f32);
             dict.set("archetype_key", archetype_label_key_from_axes(pers.axes));
+        }
+        if let Ok(temperament) = world.get::<&Temperament>(entity) {
+            dict.set("tci_ns", temperament.expressed.ns as f32);
+            dict.set("tci_ha", temperament.expressed.ha as f32);
+            dict.set("tci_rd", temperament.expressed.rd as f32);
+            dict.set("tci_p", temperament.expressed.p as f32);
+            dict.set("temperament_label_key", temperament.archetype_label_key());
         }
 
         // Emotions (Plutchik 8)
