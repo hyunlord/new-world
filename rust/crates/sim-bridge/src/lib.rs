@@ -961,6 +961,46 @@ fn recent_social_observation(
     None
 }
 
+fn is_low_significance_action_name(action: &str) -> bool {
+    matches!(
+        action,
+        "Idle"
+            | "Rest"
+            | "Sleep"
+            | "Eat"
+            | "Drink"
+            | "Wander"
+            | "Forage"
+            | "GatherWood"
+            | "GatherStone"
+            | "GatherHerbs"
+            | "DeliverToStockpile"
+            | "TakeFromStockpile"
+            | "SeekShelter"
+            | "SitByFire"
+    )
+}
+
+fn action_transition_parts(cause: &str) -> Option<(&str, &str)> {
+    let (from, to) = cause.split_once("->")?;
+    Some((from.trim(), to.trim()))
+}
+
+fn is_significant_story_event(event: &SimEvent) -> bool {
+    match event.event_type {
+        SimEventType::ActionChanged => {
+            let Some((from, to)) = action_transition_parts(&event.cause) else {
+                return true;
+            };
+            if from == "Idle" || to == "Idle" {
+                return false;
+            }
+            !(is_low_significance_action_name(from) && is_low_significance_action_name(to))
+        }
+        _ => true,
+    }
+}
+
 fn recent_story_events_for_entity(
     store: &sim_engine::EventStore,
     raw_entity_id: u32,
@@ -971,6 +1011,9 @@ fn recent_story_events_for_entity(
     for event in store.recent(store.len()) {
         let involves_entity = event.actor == raw_entity_id || event.target == Some(raw_entity_id);
         if !involves_entity {
+            continue;
+        }
+        if !is_significant_story_event(event) {
             continue;
         }
         let actor_name = entity_name_from_raw_id(world, raw_lookup, u64::from(event.actor))
@@ -6362,7 +6405,8 @@ mod tests {
         archetype_label_key_from_axes, build_thought_text, decode_ws2_blob,
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
         dispatch_pathfind_grid_bytes, encode_ws2_blob, format_fluent_from_source_args,
-        get_pathfind_backend_mode, has_gpu_pathfind_backend, parse_pathfind_backend,
+        get_pathfind_backend_mode, has_gpu_pathfind_backend, is_significant_story_event,
+        parse_pathfind_backend,
         pathfind_backend_dispatch_counts, pathfind_from_flat, pathfind_grid_batch_bytes,
         pathfind_grid_batch_dispatch_bytes, pathfind_grid_batch_vec2_bytes,
         pathfind_grid_batch_xy_bytes, pathfind_grid_batch_xy_dispatch_bytes, pathfind_grid_bytes,
@@ -6381,7 +6425,7 @@ mod tests {
         ChronicleEntryLite, ChronicleEntryStatus, ChronicleEventCause, ChronicleEventType,
         ChronicleHeadline, ChronicleLocationRefLite, ChronicleQueueBucket,
         ChronicleSignificanceCategory, ChronicleSignificanceMeta, ChronicleSubjectRefLite,
-        EngineSnapshot, GameEvent, LlmPromptVariant, SimEventType,
+        EngineSnapshot, GameEvent, LlmPromptVariant, SimEvent, SimEventType,
     };
     use sim_systems::pathfinding::GridPos;
     use std::collections::BTreeMap;
@@ -6445,6 +6489,41 @@ mod tests {
         assert!(text.contains("Hunger is starting to bite."));
         assert!(text.contains("building"));
         assert!(text.contains("Tension is building."));
+    }
+
+    #[test]
+    fn story_event_significance_filters_idle_and_routine_action_changes() {
+        let idle_to_gather = SimEvent {
+            tick: 10,
+            event_type: SimEventType::ActionChanged,
+            actor: 1,
+            target: None,
+            tags: vec!["behavior".to_string()],
+            cause: "Idle->GatherWood".to_string(),
+            value: 0.0,
+        };
+        let rest_to_sleep = SimEvent {
+            tick: 11,
+            event_type: SimEventType::ActionChanged,
+            actor: 1,
+            target: None,
+            tags: vec!["behavior".to_string()],
+            cause: "Rest->Sleep".to_string(),
+            value: 0.0,
+        };
+        let flee_to_fight = SimEvent {
+            tick: 12,
+            event_type: SimEventType::ActionChanged,
+            actor: 1,
+            target: None,
+            tags: vec!["behavior".to_string()],
+            cause: "Flee->Fight".to_string(),
+            value: 0.0,
+        };
+
+        assert!(!is_significant_story_event(&idle_to_gather));
+        assert!(!is_significant_story_event(&rest_to_sleep));
+        assert!(is_significant_story_event(&flee_to_fight));
     }
 
     #[test]
