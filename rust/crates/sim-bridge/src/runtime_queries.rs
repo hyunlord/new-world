@@ -1423,7 +1423,7 @@ mod tests {
         assert!(agent_one_saw_forage);
         assert!(agent_two_saw_rest);
 
-        for _ in 0..25 {
+        for _ in 0..220 {
             state.engine.tick();
         }
 

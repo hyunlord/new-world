@@ -513,7 +513,7 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::Build => 25,
         ActionType::Craft => 30,
         ActionType::TakeFromStockpile => 15,
-        ActionType::Rest => 10,
+        ActionType::Rest => 200,
         ActionType::Sleep => 400,
         ActionType::Socialize => 8,
         ActionType::VisitPartner => 15,
@@ -1079,7 +1079,7 @@ fn behavior_assign_action(
     let base_timer = behavior_base_timer(action);
     let stress_exempt = matches!(
         action,
-        ActionType::Drink | ActionType::SeekShelter | ActionType::Flee
+        ActionType::Drink | ActionType::SeekShelter | ActionType::Flee | ActionType::Rest
     );
     let timer =
         behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
@@ -1275,6 +1275,11 @@ mod tests {
     use sim_core::{EmitterRecord, FalloffType};
 
     #[test]
+    fn behavior_base_timer_keeps_rest_long_enough_for_recovery() {
+        assert_eq!(behavior_base_timer(ActionType::Rest), 200);
+    }
+
+    #[test]
     fn behavior_runtime_system_targets_nearest_incomplete_building_for_builder() {
         let config = GameConfig::default();
         let calendar = GameCalendar::new(&config);
@@ -1390,6 +1395,8 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Rest);
         assert_eq!(behavior.action_target_x, Some(4));
         assert_eq!(behavior.action_target_y, Some(4));
+        assert_eq!(behavior.action_duration, 200);
+        assert_eq!(behavior.action_timer, 200);
     }
 
     #[test]

@@ -2118,8 +2118,12 @@ impl WorldSimRuntime {
             dict.set("occupation", beh.occupation.clone());
             dict.set("current_action", format!("{:?}", beh.current_action));
             dict.set("action_progress", beh.action_progress as f32);
+            dict.set("action_timer", beh.action_timer);
+            dict.set("action_duration", beh.action_duration);
             dict.set("action_target_x", beh.action_target_x.unwrap_or(-1));
             dict.set("action_target_y", beh.action_target_y.unwrap_or(-1));
+            dict.set("carry_total", beh.carry);
+            dict.set("carry_capacity", sim_core::config::MAX_CARRY as f32);
             dict.set(
                 "action_target_resource",
                 action_target_resource_key(beh.current_action),
