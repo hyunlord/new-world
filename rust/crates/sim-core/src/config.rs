@@ -250,7 +250,7 @@ pub const BAND_PROMOTION_TICKS: u64 = 2400;
 /// Baseline Granovetter participation threshold before personality shifts.
 pub const BAND_GRANOVETTER_BASE_THRESHOLD: f64 = 0.5;
 /// Scheduler priority for band formation.
-pub const BAND_FORMATION_SYSTEM_PRIORITY: u32 = 38;
+pub const BAND_FORMATION_SYSTEM_PRIORITY: u32 = 27;
 /// Cold-tier interval for band formation checks.
 pub const BAND_FORMATION_TICK_INTERVAL: u64 = 60;
 /// Scheduler priority for band behavior updates.
