@@ -4,8 +4,9 @@ use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
     BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
     ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
-    EconomicTendencyRuntimeSystem, EffectApplySystem, EmotionRuntimeSystem, FamilyRuntimeSystem,
-    GatheringRuntimeSystem, InfluenceRuntimeSystem, InfluenceSteeringSystem,
+    CraftingRuntimeSystem, EconomicTendencyRuntimeSystem, EffectApplySystem,
+    EmotionRuntimeSystem, FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
+    InfluenceSteeringSystem,
     IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
     JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, LlmRequestRuntimeSystem,
     LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem, MemoryRuntimeSystem,
@@ -85,6 +86,7 @@ pub(crate) enum RuntimeSystemId {
     StorySifter = 57,
     Influence = 58,
     EffectApply = 59,
+    Crafting = 60,
 }
 
 impl RuntimeSystemId {
@@ -151,6 +153,7 @@ impl RuntimeSystemId {
             Self::StorySifter => "story_sifter_system",
             Self::Influence => "influence_system",
             Self::EffectApply => "effect_apply_system",
+            Self::Crafting => "crafting_system",
         }
     }
 
@@ -216,6 +219,7 @@ impl RuntimeSystemId {
             Self::LlmTimeout,
             Self::StorySifter,
             Self::Influence,
+            Self::Crafting,
             Self::EffectApply,
         ]
     }
@@ -230,7 +234,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -300,6 +304,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
         system_id: RuntimeSystemId::Construction,
         priority: 28,
         tick_interval: config::CONSTRUCTION_TICK_INTERVAL as i32,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Crafting,
+        priority: 29,
+        tick_interval: 10,
     },
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::Steering,
@@ -750,6 +759,9 @@ pub(crate) fn register_runtime_system(
             priority_u32,
             tick_interval_u64,
         )),
+        RuntimeSystemId::Crafting => {
+            engine.register(CraftingRuntimeSystem::new(priority_u32, tick_interval_u64))
+        }
         RuntimeSystemId::EffectApply => {
             engine.register(EffectApplySystem::new(priority_u32, tick_interval_u64))
         }

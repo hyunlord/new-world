@@ -6,7 +6,8 @@ use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
-    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits,
+    Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -19,6 +20,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 use crate::body;
+use super::crafting;
 
 #[inline]
 fn tension_pair_key(left: SettlementId, right: SettlementId) -> String {
@@ -982,8 +984,10 @@ impl SimSystem for MovementRuntimeSystem {
             &mut Behavior,
             Option<&mut Needs>,
             Option<&Age>,
+            Option<&mut Inventory>,
         )>();
-        for (entity, (position, behavior, needs_opt, age_opt)) in &mut query {
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt)) in &mut query
+        {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
                 position.vel_y = 0.0;
@@ -996,34 +1000,44 @@ impl SimSystem for MovementRuntimeSystem {
 
             if behavior.action_timer <= 0 && behavior.current_action != ActionType::Idle {
                 let completed_action = behavior.current_action;
-                if let Some(needs) = needs_opt {
-                    match completed_action {
-                        ActionType::Eat => {
+                match completed_action {
+                    ActionType::Eat => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Hunger,
                                 needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
                             );
                         }
-                        ActionType::Rest | ActionType::Sleep => {
+                    }
+                    ActionType::Rest | ActionType::Sleep => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.energy = (needs.energy + 0.5).clamp(0.0, 1.0);
                             needs.set(NeedType::Sleep, needs.energy);
                         }
-                        ActionType::Socialize => {
+                    }
+                    ActionType::Socialize => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(NeedType::Belonging, needs.get(NeedType::Belonging) + 0.3);
                         }
-                        ActionType::Drink => {
+                    }
+                    ActionType::Drink => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Thirst,
                                 needs.get(NeedType::Thirst) + config::THIRST_DRINK_RESTORE,
                             );
                         }
-                        ActionType::SitByFire => {
+                    }
+                    ActionType::SitByFire => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Warmth,
                                 needs.get(NeedType::Warmth) + config::WARMTH_FIRE_RESTORE,
                             );
                         }
-                        ActionType::SeekShelter => {
+                    }
+                    ActionType::SeekShelter => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Warmth,
                                 needs.get(NeedType::Warmth) + config::WARMTH_SHELTER_RESTORE,
@@ -1033,23 +1047,43 @@ impl SimSystem for MovementRuntimeSystem {
                                 needs.get(NeedType::Safety) + config::SAFETY_SHELTER_RESTORE,
                             );
                         }
-                        ActionType::Forage
-                        | ActionType::Hunt
-                        | ActionType::TakeFromStockpile
-                        | ActionType::GatherHerbs => {
+                    }
+                    ActionType::Forage
+                    | ActionType::Hunt
+                    | ActionType::TakeFromStockpile
+                    | ActionType::GatherHerbs => {
+                        if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Hunger,
                                 needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
                             );
                         }
-                        ActionType::GatherWood => {
-                            behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
-                        }
-                        ActionType::GatherStone => {
-                            behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
-                        }
-                        _ => {}
                     }
+                    ActionType::GatherWood => {
+                        behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                    }
+                    ActionType::GatherStone => {
+                        behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
+                    }
+                    ActionType::Craft => {
+                        let recipe_id = behavior.craft_recipe_id.take();
+                        let material_id = behavior.craft_material_id.take();
+                        if let (Some(recipe_id), Some(material_id)) = (recipe_id, material_id) {
+                            let created_ids = crafting::craft_complete(
+                                EntityId(entity.id() as u64),
+                                recipe_id.as_str(),
+                                material_id.as_str(),
+                                resources,
+                                _tick,
+                            );
+                            if let Some(inventory) = inventory_opt.as_mut() {
+                                for item_id in created_ids {
+                                    inventory.add(item_id);
+                                }
+                            }
+                        }
+                    }
+                    _ => {}
                 }
                 resources.event_store.push(SimEvent {
                     tick: _tick,
@@ -1063,6 +1097,8 @@ impl SimSystem for MovementRuntimeSystem {
                 behavior.current_action = ActionType::Idle;
                 behavior.action_target_x = None;
                 behavior.action_target_y = None;
+                behavior.craft_recipe_id = None;
+                behavior.craft_material_id = None;
                 position.vel_x = 0.0;
                 position.vel_y = 0.0;
                 position.movement_dir = 0;

@@ -5,7 +5,8 @@ use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
-    Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits,
+    Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -19,6 +20,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 use crate::body;
+use super::crafting;
 
 /// Rust runtime system for age/environment-adjusted intelligence updates.
 ///
@@ -507,6 +509,7 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::Forage | ActionType::GatherWood | ActionType::GatherStone => 20,
         ActionType::DeliverToStockpile => 30,
         ActionType::Build => 25,
+        ActionType::Craft => 30,
         ActionType::TakeFromStockpile => 15,
         ActionType::Rest => 10,
         ActionType::Socialize => 8,
@@ -582,6 +585,8 @@ fn behavior_select_action(
     personality_opt: Option<&Personality>,
     behavior: &Behavior,
     has_build_target: bool,
+    has_settlement: bool,
+    has_tool: bool,
     rng: &mut impl Rng,
 ) -> ActionType {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -636,6 +641,14 @@ fn behavior_select_action(
             behavior_score_add(&mut scores, ActionType::Forage, hunger_deficit * 1.50);
             behavior_score_add(&mut scores, ActionType::Rest, energy_deficit * 1.20);
             behavior_score_add(&mut scores, ActionType::Socialize, social_deficit * 0.80);
+            if has_settlement
+                && !has_tool
+                && hunger >= 0.4
+                && energy >= 0.3
+                && thirst >= config::THIRST_LOW as f32
+            {
+                behavior_score_add(&mut scores, ActionType::Craft, 0.35);
+            }
         }
     }
 
@@ -734,7 +747,7 @@ fn behavior_select_action(
         return ActionType::Wander;
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 13] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 14] = [
         ActionType::SeekShelter,
         ActionType::Drink,
         ActionType::SitByFire,
@@ -742,6 +755,7 @@ fn behavior_select_action(
         ActionType::GatherWood,
         ActionType::GatherStone,
         ActionType::Build,
+        ActionType::Craft,
         ActionType::Socialize,
         ActionType::Rest,
         ActionType::VisitPartner,
@@ -1022,6 +1036,8 @@ fn behavior_assign_action(
     let timer =
         behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
 
+    behavior.craft_recipe_id = None;
+    behavior.craft_material_id = None;
     behavior.current_action = action;
     behavior.action_target_entity = None;
     behavior.action_target_x = Some(target_x);
@@ -1072,6 +1088,7 @@ impl SimSystem for BehaviorRuntimeSystem {
             Option<&Emotion>,
             Option<&Personality>,
             Option<&Identity>,
+            Option<&Inventory>,
             &Position,
             &mut Behavior,
         )>();
@@ -1084,6 +1101,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 emotion_opt,
                 personality_opt,
                 identity_opt,
+                inventory_opt,
                 position,
                 behavior,
             ),
@@ -1104,6 +1122,10 @@ impl SimSystem for BehaviorRuntimeSystem {
                 resources,
                 identity_opt.and_then(|identity| identity.settlement_id),
             );
+            let has_settlement = identity_opt
+                .and_then(|identity| identity.settlement_id)
+                .is_some();
+            let has_tool = crafting::inventory_has_tool(inventory_opt, resources);
             let next_action = behavior_select_action(
                 age.stage,
                 needs,
@@ -1112,6 +1134,8 @@ impl SimSystem for BehaviorRuntimeSystem {
                 personality_opt,
                 behavior,
                 build_target.is_some(),
+                has_settlement,
+                has_tool,
                 &mut resources.rng,
             );
             let previous_action = behavior.current_action;
