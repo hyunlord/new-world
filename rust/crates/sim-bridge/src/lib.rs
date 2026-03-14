@@ -883,6 +883,16 @@ fn format_story_event_message(
             "{actor_name} worked with {}.",
             target_name.unwrap_or("someone")
         ),
+        SimEventType::BandFormed => format!("{actor_name} helped form a new band."),
+        SimEventType::BandPromoted => {
+            format!("{actor_name}'s band is now established.")
+        }
+        SimEventType::BandSplit => format!("{actor_name}'s band split apart."),
+        SimEventType::BandDissolved => format!("{actor_name}'s band dissolved."),
+        SimEventType::BandLeaderElected => {
+            format!("{actor_name} was chosen to lead the band.")
+        }
+        SimEventType::LonerJoinedBand => format!("{actor_name} joined a nearby band."),
         SimEventType::ActionChanged => {
             format!(
                 "{actor_name} switched to {}.",
@@ -1075,6 +1085,12 @@ fn latest_narrative_event_for_actor(
                     | SimEventType::RelationshipBroken
                     | SimEventType::SocialConflict
                     | SimEventType::SocialCooperation
+                    | SimEventType::BandFormed
+                    | SimEventType::BandPromoted
+                    | SimEventType::BandSplit
+                    | SimEventType::BandDissolved
+                    | SimEventType::BandLeaderElected
+                    | SimEventType::LonerJoinedBand
                     | SimEventType::ActionChanged
                     | SimEventType::TaskCompleted
                     | SimEventType::Birth
@@ -1103,6 +1119,12 @@ fn narrative_event_type_label(event_type: &SimEventType) -> &'static str {
         SimEventType::RelationshipBroken => "relationship_broken",
         SimEventType::SocialConflict => "social_conflict",
         SimEventType::SocialCooperation => "social_cooperation",
+        SimEventType::BandFormed => "band_formed",
+        SimEventType::BandPromoted => "band_promoted",
+        SimEventType::BandSplit => "band_split",
+        SimEventType::BandDissolved => "band_dissolved",
+        SimEventType::BandLeaderElected => "band_leader_elected",
+        SimEventType::LonerJoinedBand => "loner_joined_band",
         SimEventType::ActionChanged => "action_changed",
         SimEventType::TaskCompleted => "task_completed",
         SimEventType::Birth => "birth",

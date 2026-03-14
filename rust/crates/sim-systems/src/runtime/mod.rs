@@ -4912,6 +4912,7 @@ mod tests {
                 tile_x: 0,
                 tile_y: 0,
                 summary_key: summary_key.to_string(),
+                summary_params: std::collections::BTreeMap::new(),
                 effect_key: "steering_velocity".to_string(),
             };
         resources

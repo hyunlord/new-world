@@ -44,6 +44,18 @@ pub enum SimEventType {
     SocialConflict,
     /// A social cooperation event occurred.
     SocialCooperation,
+    /// A provisional band formed.
+    BandFormed,
+    /// A provisional band was promoted to a full band.
+    BandPromoted,
+    /// A band split into smaller groups.
+    BandSplit,
+    /// A band dissolved.
+    BandDissolved,
+    /// A leader was elected for a band.
+    BandLeaderElected,
+    /// A loner joined an existing band.
+    LonerJoinedBand,
     /// The agent changed to a different action.
     ActionChanged,
     /// A non-idle action completed.

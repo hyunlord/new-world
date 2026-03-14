@@ -354,6 +354,10 @@ fn is_judgment_event(event_type: &SimEventType) -> bool {
             | SimEventType::NeedSatisfied
             | SimEventType::StressEscalated
             | SimEventType::MentalBreakStart
+            | SimEventType::BandFormed
+            | SimEventType::BandPromoted
+            | SimEventType::BandSplit
+            | SimEventType::BandDissolved
     )
 }
 
@@ -370,6 +374,12 @@ fn label_for_event_type(event_type: &SimEventType) -> &'static str {
         SimEventType::RelationshipBroken => "relationship_broken",
         SimEventType::SocialConflict => "social_conflict",
         SimEventType::SocialCooperation => "social_cooperation",
+        SimEventType::BandFormed => "band_formed",
+        SimEventType::BandPromoted => "band_promoted",
+        SimEventType::BandSplit => "band_split",
+        SimEventType::BandDissolved => "band_dissolved",
+        SimEventType::BandLeaderElected => "band_leader_elected",
+        SimEventType::LonerJoinedBand => "loner_joined_band",
         SimEventType::ActionChanged => "action_changed",
         SimEventType::TaskCompleted => "task_completed",
         SimEventType::Birth => "birth",
