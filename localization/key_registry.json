@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4266,
-  "key_count": 4266,
+  "active_key_count": 4268,
+  "key_count": 4268,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -172,6 +172,7 @@
     "BAND_FORMED": 4263,
     "BAND_LEADER_ELECTED": 4264,
     "BAND_PROMOTED": 4265,
+    "BAND_SPLIT": 4266,
     "BIRTH_DATE_FORMAT": 154,
     "BLOOD_TYPE_A": 155,
     "BLOOD_TYPE_AB": 156,
@@ -1108,6 +1109,7 @@
     "LLM_STATUS_STARTING": 4217,
     "LLM_TOGGLE_OFF": 4218,
     "LLM_TOGGLE_ON": 4219,
+    "LONER_JOINED": 4267,
     "MARK_BIRTHMARK_CHEEK": 1058,
     "MARK_BIRTHMARK_NECK": 1059,
     "MARK_DIMPLES": 1060,
@@ -8535,7 +8537,9 @@
     "BAND_DISSOLVED",
     "BAND_FORMED",
     "BAND_LEADER_ELECTED",
-    "BAND_PROMOTED"
+    "BAND_PROMOTED",
+    "BAND_SPLIT",
+    "LONER_JOINED"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

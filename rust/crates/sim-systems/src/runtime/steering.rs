@@ -1,9 +1,10 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, Emotion, InfluenceReceiver, Needs, Personality, Position, SteeringParams, Stress,
-    Temperament,
+    Age, Behavior, Emotion, Identity, InfluenceReceiver, Needs, Personality, Position,
+    SteeringParams, Stress, Temperament,
 };
+use sim_core::ids::BandId;
 use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
 use sim_engine::{
     ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, SimResources,
@@ -32,6 +33,22 @@ impl InfluenceSteeringSystem {
 /// Backward-compatible alias for the unified influence steering runtime system.
 pub type SteeringRuntimeSystem = InfluenceSteeringSystem;
 
+#[derive(Debug, Clone, Copy)]
+struct SteeringSnapshot {
+    entity: Entity,
+    x: f64,
+    y: f64,
+    alive: bool,
+    band_id: Option<BandId>,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct NeighborSnapshot {
+    x: f64,
+    y: f64,
+    band_id: Option<BandId>,
+}
+
 impl SimSystem for InfluenceSteeringSystem {
     fn name(&self) -> &'static str {
         "steering_system"
@@ -46,16 +63,17 @@ impl SimSystem for InfluenceSteeringSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
-        let snapshots: Vec<(Entity, f64, f64, bool)> = world
-            .query::<(&Position, Option<&Age>)>()
+        let snapshots: Vec<SteeringSnapshot> = world
+            .query::<(&Position, Option<&Age>, Option<&Identity>)>()
             .iter()
-            .map(|(entity, (position, age_opt))| {
-                (
+            .map(|(entity, (position, age_opt, identity_opt))| {
+                SteeringSnapshot {
                     entity,
-                    position.x,
-                    position.y,
-                    age_opt.map(|age| age.alive).unwrap_or(true),
-                )
+                    x: position.x,
+                    y: position.y,
+                    alive: age_opt.map(|age| age.alive).unwrap_or(true),
+                    band_id: identity_opt.and_then(|identity| identity.band_id),
+                }
             })
             .collect();
 
@@ -68,6 +86,7 @@ impl SimSystem for InfluenceSteeringSystem {
                 Option<&Behavior>,
                 Option<&SteeringParams>,
                 Option<&Personality>,
+                Option<&Identity>,
                 Option<&InfluenceReceiver>,
                 Option<&Needs>,
                 Option<&Emotion>,
@@ -82,6 +101,7 @@ impl SimSystem for InfluenceSteeringSystem {
                     behavior_opt,
                     steering_opt,
                     personality_opt,
+                    identity_opt,
                     receiver_opt,
                     needs_opt,
                     emotion_opt,
@@ -109,6 +129,7 @@ impl SimSystem for InfluenceSteeringSystem {
                     position,
                     config::STEERING_NEIGHBOR_RADIUS,
                 );
+                let self_band_id = identity_opt.and_then(|identity| identity.band_id);
                 let desired_force = desired_force_for_action(
                     position,
                     behavior_opt,
@@ -133,18 +154,26 @@ impl SimSystem for InfluenceSteeringSystem {
                 } else {
                     desired_force
                 };
-                let separation =
-                    separation_force(position, &neighbors, params.personal_space_radius);
+                let separation = separation_force(
+                    position,
+                    &neighbors,
+                    params.personal_space_radius,
+                    self_band_id,
+                    separation_multiplier_for_behavior(behavior_opt),
+                );
                 let cohesion = cohesion_force(position, &neighbors);
+                let band_cohesion = band_cohesion_force(position, behavior_opt);
 
                 let mut force_x = desired_force.0
                     + influence_force.0 * config::STEERING_INFLUENCE_FORCE_WEIGHT
                     + separation.0 * params.separation_weight
-                    + cohesion.0 * params.cohesion_weight;
+                    + cohesion.0 * params.cohesion_weight
+                    + band_cohesion.0 * config::BAND_COHESION_WEIGHT;
                 let mut force_y = desired_force.1
                     + influence_force.1 * config::STEERING_INFLUENCE_FORCE_WEIGHT
                     + separation.1 * params.separation_weight
-                    + cohesion.1 * params.cohesion_weight;
+                    + cohesion.1 * params.cohesion_weight
+                    + band_cohesion.1 * config::BAND_COHESION_WEIGHT;
 
                 if !influence_decision.suppress_action_target_blend {
                     if let Some(behavior) = behavior_opt {
@@ -784,18 +813,26 @@ fn arrive_force(
 
 fn separation_force(
     position: &Position,
-    neighbors: &[(f64, f64)],
+    neighbors: &[NeighborSnapshot],
     personal_space_radius_px: f64,
+    self_band_id: Option<BandId>,
+    outsider_separation_mult: f64,
 ) -> (f64, f64) {
     let personal_space = personal_space_radius_px / f64::from(config::TILE_SIZE);
     let mut fx = 0.0;
     let mut fy = 0.0;
-    for (nx, ny) in neighbors {
-        let dx = position.x - *nx;
-        let dy = position.y - *ny;
+    for neighbor in neighbors {
+        let dx = position.x - neighbor.x;
+        let dy = position.y - neighbor.y;
         let dist = (dx * dx + dy * dy).sqrt().max(0.001);
         if dist < personal_space {
-            let strength = (personal_space - dist) / personal_space.max(0.001);
+            let is_outsider = self_band_id.is_some() && neighbor.band_id != self_band_id;
+            let band_mult = if is_outsider {
+                outsider_separation_mult.max(1.0)
+            } else {
+                1.0
+            };
+            let strength = ((personal_space - dist) / personal_space.max(0.001)) * band_mult;
             fx += dx / dist * strength;
             fy += dy / dist * strength;
         }
@@ -803,33 +840,53 @@ fn separation_force(
     (fx, fy)
 }
 
-fn cohesion_force(position: &Position, neighbors: &[(f64, f64)]) -> (f64, f64) {
+fn cohesion_force(position: &Position, neighbors: &[NeighborSnapshot]) -> (f64, f64) {
     if neighbors.is_empty() {
         return (0.0, 0.0);
     }
-    let center_x = neighbors.iter().map(|entry| entry.0).sum::<f64>() / neighbors.len() as f64;
-    let center_y = neighbors.iter().map(|entry| entry.1).sum::<f64>() / neighbors.len() as f64;
+    let center_x = neighbors.iter().map(|entry| entry.x).sum::<f64>() / neighbors.len() as f64;
+    let center_y = neighbors.iter().map(|entry| entry.y).sum::<f64>() / neighbors.len() as f64;
     seek_force(position, center_x, center_y)
 }
 
+fn band_cohesion_force(position: &Position, behavior_opt: Option<&Behavior>) -> (f64, f64) {
+    let Some(behavior) = behavior_opt else {
+        return (0.0, 0.0);
+    };
+    let (Some(center_x), Some(center_y)) = (behavior.band_center_x, behavior.band_center_y) else {
+        return (0.0, 0.0);
+    };
+    seek_force(position, center_x, center_y)
+}
+
+fn separation_multiplier_for_behavior(behavior_opt: Option<&Behavior>) -> f64 {
+    behavior_opt
+        .map(|behavior| behavior.outsider_separation_mult.max(1.0))
+        .unwrap_or(1.0)
+}
+
 fn find_neighbors(
-    snapshots: &[(Entity, f64, f64, bool)],
+    snapshots: &[SteeringSnapshot],
     self_entity: Entity,
     self_position: &Position,
     radius_px: f64,
-) -> Vec<(f64, f64)> {
+) -> Vec<NeighborSnapshot> {
     let radius_tiles = radius_px / f64::from(config::TILE_SIZE);
     let radius_sq = radius_tiles * radius_tiles;
     snapshots
         .iter()
-        .filter_map(|(entity, x, y, alive)| {
-            if *entity == self_entity || !*alive {
+        .filter_map(|snapshot| {
+            if snapshot.entity == self_entity || !snapshot.alive {
                 return None;
             }
-            let dx = *x - self_position.x;
-            let dy = *y - self_position.y;
+            let dx = snapshot.x - self_position.x;
+            let dy = snapshot.y - self_position.y;
             if dx * dx + dy * dy <= radius_sq {
-                Some((*x, *y))
+                Some(NeighborSnapshot {
+                    x: snapshot.x,
+                    y: snapshot.y,
+                    band_id: snapshot.band_id,
+                })
             } else {
                 None
             }
@@ -872,15 +929,15 @@ mod tests {
     };
     use sim_core::config::GameConfig;
     use sim_core::{
-        config, ActionType, ChannelId, EmitterRecord, FalloffType, GameCalendar, GrowthStage,
-        NeedType, RoomId, WorldMap,
+        config, ActionType, BandId, ChannelId, EmitterRecord, FalloffType, GameCalendar,
+        GrowthStage, NeedType, RoomId, WorldMap,
     };
     use sim_engine::{ChronicleEventType, SimResources, SimSystem};
 
     use super::{
-        arrive_force, chronicle_event_for_decision, cohesion_force, influence_force_for_entity,
-        room_shelter_force, seek_force, separation_force, wander_force, InfluenceCause,
-        SteeringRuntimeSystem,
+        arrive_force, band_cohesion_force, chronicle_event_for_decision, cohesion_force,
+        influence_force_for_entity, room_shelter_force, seek_force, separation_force,
+        wander_force, InfluenceCause, NeighborSnapshot, SteeringRuntimeSystem,
     };
 
     fn resources() -> SimResources {
@@ -893,15 +950,82 @@ mod tests {
     #[test]
     fn separation_force_pushes_away_from_close_neighbors() {
         let position = Position::from_f64(5.0, 5.0);
-        let force = separation_force(&position, &[(5.2, 5.0)], 25.0);
+        let force = separation_force(
+            &position,
+            &[NeighborSnapshot {
+                x: 5.2,
+                y: 5.0,
+                band_id: None,
+            }],
+            25.0,
+            None,
+            1.0,
+        );
         assert!(force.0 < 0.0);
     }
 
     #[test]
     fn cohesion_force_pulls_toward_neighbor_center() {
         let position = Position::from_f64(1.0, 1.0);
-        let force = cohesion_force(&position, &[(3.0, 1.0), (5.0, 1.0)]);
+        let force = cohesion_force(
+            &position,
+            &[
+                NeighborSnapshot {
+                    x: 3.0,
+                    y: 1.0,
+                    band_id: None,
+                },
+                NeighborSnapshot {
+                    x: 5.0,
+                    y: 1.0,
+                    band_id: None,
+                },
+            ],
+        );
         assert!(force.0 > 0.0);
+    }
+
+    #[test]
+    fn band_cohesion_force_steers_toward_band_center() {
+        let position = Position::from_f64(1.0, 1.0);
+        let behavior = Behavior {
+            band_center_x: Some(4.0),
+            band_center_y: Some(1.0),
+            ..Behavior::default()
+        };
+        let force = band_cohesion_force(&position, Some(&behavior));
+        assert!(force.0 > 0.0);
+        assert!(force.1.abs() < 1e-6);
+    }
+
+    #[test]
+    fn outsider_separation_multiplier_does_not_apply_to_same_band_members() {
+        let position = Position::from_f64(5.0, 5.0);
+        let same_band_force = separation_force(
+            &position,
+            &[NeighborSnapshot {
+                x: 5.2,
+                y: 5.0,
+                band_id: Some(BandId(1)),
+            }],
+            25.0,
+            Some(BandId(1)),
+            1.5,
+        );
+        let outsider_force = separation_force(
+            &position,
+            &[NeighborSnapshot {
+                x: 5.2,
+                y: 5.0,
+                band_id: Some(BandId(2)),
+            }],
+            25.0,
+            Some(BandId(1)),
+            1.5,
+        );
+
+        assert!(outsider_force.0 < same_band_force.0);
+        assert!(outsider_force.0.abs() > same_band_force.0.abs());
     }
 
     #[test]
@@ -1184,7 +1308,17 @@ mod tests {
     #[test]
     fn stage1_separation_force_repels_neighbors() {
         let position = Position::from_f64(50.0, 50.0);
-        let force = separation_force(&position, &[(50.2, 50.0)], 25.0);
+        let force = separation_force(
+            &position,
+            &[NeighborSnapshot {
+                x: 50.2,
+                y: 50.0,
+                band_id: None,
+            }],
+            25.0,
+            None,
+            1.0,
+        );
         assert!(force.0 < 0.0);
     }
 

@@ -7,6 +7,7 @@
 
 mod biology;
 mod band;
+mod band_behavior;
 mod cognition;
 mod crafting;
 mod economy;
@@ -32,6 +33,7 @@ pub use biology::{
     PersonalityGeneratorRuntimeSystem, PopulationRuntimeSystem,
 };
 pub use band::{calculate_gfs, BandFormationSystem};
+pub use band_behavior::BandBehaviorSystem;
 
 // ---- cognition ----
 pub use cognition::{BehaviorRuntimeSystem, IntelligenceRuntimeSystem, MemoryRuntimeSystem};

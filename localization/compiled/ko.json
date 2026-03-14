@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4266,
+    "active_key_count": 4268,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4266,
+    "key_count": 4268,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -210,6 +210,7 @@
     "BAND_FORMED": "무리 형성",
     "BAND_LEADER_ELECTED": "리더 선출",
     "BAND_PROMOTED": "무리 확립",
+    "BAND_SPLIT": "무리 분열",
     "BIRTH_DATE_FORMAT": "Y{year} {month} {day}일생",
     "BLOOD_TYPE_A": "A형",
     "BLOOD_TYPE_AB": "AB형",
@@ -1146,6 +1147,7 @@
     "LLM_STATUS_STARTING": "AI 서사 엔진 시작 중...",
     "LLM_TOGGLE_OFF": "AI 서사 비활성화",
     "LLM_TOGGLE_ON": "AI 서사 활성화",
+    "LONER_JOINED": "무리 합류",
     "MARK_BIRTHMARK_CHEEK": "볼 점",
     "MARK_BIRTHMARK_NECK": "목 점",
     "MARK_DIMPLES": "보조개",

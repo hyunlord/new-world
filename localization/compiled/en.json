@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4266,
+    "active_key_count": 4268,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4266,
+    "key_count": 4268,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -210,6 +210,7 @@
     "BAND_FORMED": "Band formed",
     "BAND_LEADER_ELECTED": "Leader elected",
     "BAND_PROMOTED": "Band established",
+    "BAND_SPLIT": "Band split",
     "BIRTH_DATE_FORMAT": "Y{year} {month} {day}",
     "BLOOD_TYPE_A": "Blood Type A",
     "BLOOD_TYPE_AB": "Blood Type AB",
@@ -1146,6 +1147,7 @@
     "LLM_STATUS_STARTING": "AI narrator starting...",
     "LLM_TOGGLE_OFF": "Disable AI Narration",
     "LLM_TOGGLE_ON": "Enable AI Narration",
+    "LONER_JOINED": "Joined band",
     "MARK_BIRTHMARK_CHEEK": "Cheek Birthmark",
     "MARK_BIRTHMARK_NECK": "Neck Birthmark",
     "MARK_DIMPLES": "Dimples",

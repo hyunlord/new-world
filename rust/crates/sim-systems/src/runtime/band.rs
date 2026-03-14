@@ -11,6 +11,8 @@ use sim_core::ids::{BandId, EntityId, SettlementId};
 use sim_core::Settlement;
 use sim_engine::{SimResources, SimSystem};
 
+use super::band_behavior::refresh_band_behavior_state;
+
 /// Cold-tier runtime system that turns pairwise trust into provisional and promoted bands.
 #[derive(Debug, Clone)]
 pub struct BandFormationSystem {
@@ -46,6 +48,30 @@ struct AgentSnapshot {
 struct ProposedBand {
     existing_band_ids: Vec<BandId>,
     members: Vec<EntityId>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum BandSplitCause {
+    TrustCollapse,
+    ValueClash,
+    Overpopulation,
+}
+
+#[derive(Debug, Clone)]
+struct BandFissionPlan {
+    retained_band: Band,
+    split_band: Option<Band>,
+    loners: Vec<EntityId>,
+    cause: BandSplitCause,
+    original_members: Vec<EntityId>,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct PairMetric {
+    left: EntityId,
+    right: EntityId,
+    trust: f64,
+    value_alignment: f64,
 }
 
 /// Calculates the group-formation score between two agents.
@@ -117,6 +143,8 @@ impl SimSystem for BandFormationSystem {
             .cloned()
             .map(|agent| (agent.id, agent))
             .collect();
+        let social_refs: Vec<(EntityId, &Social)> =
+            all_agents.iter().map(|agent| (agent.id, &agent.social)).collect();
         let existing_bands: Vec<Band> = resources.band_store.all().cloned().collect();
         let provisional_ids: BTreeSet<BandId> = existing_bands
             .iter()
@@ -141,6 +169,8 @@ impl SimSystem for BandFormationSystem {
         let mut promoted_events: Vec<(BandId, Vec<EntityId>)> = Vec::new();
         let mut dissolved_events: Vec<(BandId, Vec<EntityId>)> = Vec::new();
         let mut leader_events: Vec<(BandId, EntityId, Vec<EntityId>)> = Vec::new();
+        let mut split_events: Vec<(BandId, Vec<EntityId>, BandSplitCause)> = Vec::new();
+        let mut loner_join_events: Vec<(BandId, EntityId)> = Vec::new();
         let mut final_bands: BTreeMap<BandId, Band> = BTreeMap::new();
 
         if candidates.len() >= config::BAND_MIN_SIZE_PROVISIONAL {
@@ -149,8 +179,6 @@ impl SimSystem for BandFormationSystem {
                 .cloned()
                 .map(|agent| (agent.id, agent))
                 .collect();
-            let social_refs: Vec<(EntityId, &Social)> =
-                all_agents.iter().map(|agent| (agent.id, &agent.social)).collect();
             let adjacency = build_adjacency_graph(&candidates, resources, &social_refs);
             let candidate_ids: Vec<EntityId> = candidates.iter().map(|agent| agent.id).collect();
             let components = find_connected_components(&candidate_ids, &adjacency);
@@ -158,12 +186,7 @@ impl SimSystem for BandFormationSystem {
             for proposed in components
                 .into_iter()
                 .filter_map(|component| {
-                    build_proposed_band(
-                        &component,
-                        &candidate_by_id,
-                        &adjacency,
-                        existing_bands.as_slice(),
-                    )
+                    build_proposed_band(&component, &candidate_by_id, existing_bands.as_slice())
                 })
             {
                 let primary_band_id = proposed
@@ -233,29 +256,32 @@ impl SimSystem for BandFormationSystem {
 
             let mut kept = band.clone();
             kept.members = live_members.clone();
-            let leader = elect_leader(&kept.members, &agent_by_id);
-            if leader != kept.leader {
-                if let Some(leader_id) = leader {
-                    leader_events.push((kept.id, leader_id, kept.members.clone()));
-                }
-                kept.leader = leader;
-            }
             final_bands.insert(kept.id, kept);
         }
 
-        for band_id in &dissolved_band_ids {
-            if let Some(old_band) = existing_bands.iter().find(|band| band.id == *band_id) {
-                dissolved_events.push((old_band.id, old_band.members.clone()));
-            }
+        let candidate_band_ids: Vec<BandId> = final_bands.keys().copied().collect();
+        for band_id in candidate_band_ids {
+            apply_band_fission(
+                band_id,
+                &mut final_bands,
+                &agent_by_id,
+                tick,
+                resources,
+                &mut split_events,
+                &mut formed_events,
+                &mut promoted_events,
+            );
         }
 
-        for band in final_bands.values_mut() {
-            if band.member_count() > config::BAND_MAX_SIZE {
-                band.members =
-                    truncate_members_to_band_cap(&band.members, &agent_by_id, resources, tick);
-                band.members.sort_by_key(|member| member.0);
-            }
+        recruit_loners_into_bands(
+            &mut final_bands,
+            &agent_by_id,
+            resources,
+            &social_refs,
+            &mut loner_join_events,
+        );
 
+        for band in final_bands.values_mut() {
             if !band.is_promoted
                 && band.member_count() >= config::BAND_MIN_SIZE_PROMOTED
                 && tick.saturating_sub(band.provisional_since) >= config::BAND_PROMOTION_TICKS
@@ -263,11 +289,24 @@ impl SimSystem for BandFormationSystem {
                 band.is_promoted = true;
                 band.promoted_tick = Some(tick);
                 promoted_events.push((band.id, band.members.clone()));
+            }
+
+            if band.is_promoted {
                 let leader = elect_leader(&band.members, &agent_by_id);
-                if let Some(leader_id) = leader {
-                    leader_events.push((band.id, leader_id, band.members.clone()));
+                if leader != band.leader {
+                    if let Some(leader_id) = leader {
+                        leader_events.push((band.id, leader_id, band.members.clone()));
+                    }
+                    band.leader = leader;
                 }
-                band.leader = leader;
+            } else {
+                band.leader = None;
+            }
+        }
+
+        for band_id in &dissolved_band_ids {
+            if let Some(old_band) = existing_bands.iter().find(|band| band.id == *band_id) {
+                dissolved_events.push((old_band.id, old_band.members.clone()));
             }
         }
 
@@ -279,6 +318,7 @@ impl SimSystem for BandFormationSystem {
         for band in final_bands.values().cloned() {
             resources.band_store.insert(band);
         }
+        refresh_band_behavior_state(world, resources);
 
         for (band_id, members) in formed_events {
             push_band_causal(
@@ -302,6 +342,17 @@ impl SimSystem for BandFormationSystem {
                 members.len() as f64,
             );
         }
+        for (band_id, members, cause) in split_events {
+            push_band_causal(
+                resources,
+                tick,
+                band_id,
+                &members,
+                cause.as_kind(),
+                "BAND_SPLIT",
+                members.len() as f64,
+            );
+        }
         for (band_id, members) in dissolved_events {
             push_band_causal(
                 resources,
@@ -311,6 +362,17 @@ impl SimSystem for BandFormationSystem {
                 "band_dissolved",
                 "BAND_DISSOLVED",
                 members.len() as f64,
+            );
+        }
+        for (band_id, loner_id) in loner_join_events {
+            push_band_causal(
+                resources,
+                tick,
+                band_id,
+                &[loner_id],
+                "loner_joined_band",
+                "LONER_JOINED",
+                1.0,
             );
         }
         for (band_id, leader_id, members) in leader_events {
@@ -342,7 +404,16 @@ fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
         return;
     }
 
-    apply_identity_band_ids(world, &BTreeMap::new());
+    let dissolved_ids: BTreeSet<BandId> = dissolved.iter().map(|(band_id, _)| *band_id).collect();
+    let retained_bands: BTreeMap<BandId, Band> = resources
+        .band_store
+        .all()
+        .filter(|band| !dissolved_ids.contains(&band.id))
+        .cloned()
+        .map(|band| (band.id, band))
+        .collect();
+
+    apply_identity_band_ids(world, &retained_bands);
 
     let tick = resources.calendar.tick;
     for (band_id, members) in dissolved {
@@ -357,6 +428,7 @@ fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
             members.len() as f64,
         );
     }
+    refresh_band_behavior_state(world, resources);
 }
 
 fn collect_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
@@ -516,7 +588,6 @@ fn find_connected_components(
 fn build_proposed_band(
     component: &[EntityId],
     candidate_by_id: &BTreeMap<EntityId, AgentSnapshot>,
-    adjacency: &BTreeMap<EntityId, Vec<EntityId>>,
     existing_bands: &[Band],
 ) -> Option<ProposedBand> {
     if component.len() < config::BAND_MIN_SIZE_PROVISIONAL {
@@ -538,24 +609,6 @@ fn build_proposed_band(
     joined.dedup();
     if joined.len() < config::BAND_MIN_SIZE_PROVISIONAL {
         return None;
-    }
-
-    if joined.len() > config::BAND_MAX_SIZE {
-        joined.sort_by(|left, right| {
-            let left_support = adjacency
-                .get(left)
-                .map(|neighbors| neighbors.len())
-                .unwrap_or_default();
-            let right_support = adjacency
-                .get(right)
-                .map(|neighbors| neighbors.len())
-                .unwrap_or_default();
-            right_support
-                .cmp(&left_support)
-                .then_with(|| left.0.cmp(&right.0))
-        });
-        joined.truncate(config::BAND_MAX_SIZE);
-        joined.sort_by_key(|member| member.0);
     }
 
     let mut existing_band_ids: Vec<BandId> = joined
@@ -633,64 +686,554 @@ fn elect_leader(
         .map(|(id, _)| id)
 }
 
-fn truncate_members_to_band_cap(
+impl BandSplitCause {
+    fn as_kind(self) -> &'static str {
+        match self {
+            Self::TrustCollapse => "band_split_trust_collapse",
+            Self::ValueClash => "band_split_value_clash",
+            Self::Overpopulation => "band_split_overpopulation",
+        }
+    }
+}
+
+fn apply_band_fission(
+    band_id: BandId,
+    final_bands: &mut BTreeMap<BandId, Band>,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+    tick: u64,
+    resources: &mut SimResources,
+    split_events: &mut Vec<(BandId, Vec<EntityId>, BandSplitCause)>,
+    formed_events: &mut Vec<(BandId, Vec<EntityId>)>,
+    promoted_events: &mut Vec<(BandId, Vec<EntityId>)>,
+) {
+    let mut pending = vec![band_id];
+    while let Some(current_band_id) = pending.pop() {
+        let Some(current_band) = final_bands.get(&current_band_id).cloned() else {
+            continue;
+        };
+        let Some(plan) = plan_band_fission(&current_band, agent_by_id, tick, resources) else {
+            continue;
+        };
+
+        if plan.retained_band.members == current_band.members
+            && plan.split_band.is_none()
+            && plan.loners.is_empty()
+        {
+            continue;
+        }
+
+        final_bands.insert(current_band_id, plan.retained_band.clone());
+        pending.push(current_band_id);
+
+        if let Some(split_band) = plan.split_band.clone() {
+            let split_band_id = split_band.id;
+            formed_events.push((split_band_id, split_band.members.clone()));
+            if split_band.is_promoted {
+                promoted_events.push((split_band_id, split_band.members.clone()));
+            }
+            final_bands.insert(split_band_id, split_band);
+            pending.push(split_band_id);
+        }
+
+        split_events.push((current_band_id, plan.original_members, plan.cause));
+    }
+}
+
+fn plan_band_fission(
+    band: &Band,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+    tick: u64,
+    resources: &mut SimResources,
+) -> Option<BandFissionPlan> {
+    if band.members.len() < config::BAND_MIN_SIZE_PROVISIONAL {
+        return None;
+    }
+
+    let pair_metrics = pair_metrics_for_band(&band.members, agent_by_id);
+    let avg_trust = average_metric(&pair_metrics, |metric| metric.trust);
+    let avg_values = average_metric(&pair_metrics, |metric| metric.value_alignment);
+    let cause = determine_split_cause(band, avg_trust, avg_values)?;
+
+    let (group_a, group_b) = if cause == BandSplitCause::Overpopulation {
+        split_members_by_position(&band.members, agent_by_id)?
+    } else {
+        split_members_by_social_graph(&band.members, &pair_metrics).or_else(|| {
+            split_members_by_seed_preference(&band.members, &pair_metrics, agent_by_id)
+        })?
+    };
+
+    if group_a.is_empty() || group_b.is_empty() {
+        return None;
+    }
+
+    let (mut retained_members, mut split_members) = if group_a.len() >= group_b.len() {
+        (group_a, group_b)
+    } else {
+        (group_b, group_a)
+    };
+    retained_members.sort_by_key(|member| member.0);
+    split_members.sort_by_key(|member| member.0);
+
+    if retained_members.len() < config::BAND_MIN_SIZE_PROVISIONAL {
+        return None;
+    }
+
+    let mut retained_band = band.clone();
+    retained_band.members = retained_members;
+    retained_band.leader = None;
+
+    let (split_band, loners) = if split_members.len() >= config::BAND_MIN_SIZE_PROVISIONAL {
+        let new_band_id = resources.band_store.allocate_id();
+        let mut new_band = Band::new(
+            new_band_id,
+            generate_band_name(new_band_id),
+            split_members,
+            tick,
+        );
+        if band.is_promoted {
+            new_band.is_promoted = true;
+            new_band.promoted_tick = Some(tick);
+        }
+        (Some(new_band), Vec::new())
+    } else {
+        (None, split_members)
+    };
+
+    Some(BandFissionPlan {
+        retained_band,
+        split_band,
+        loners,
+        cause,
+        original_members: band.members.clone(),
+    })
+}
+
+fn determine_split_cause(
+    band: &Band,
+    avg_trust: f64,
+    avg_values: f64,
+) -> Option<BandSplitCause> {
+    if band.member_count() > config::BAND_MAX_SIZE {
+        Some(BandSplitCause::Overpopulation)
+    } else if band.is_promoted && avg_trust < config::BAND_FISSION_TRUST_THRESHOLD {
+        Some(BandSplitCause::TrustCollapse)
+    } else if band.is_promoted && avg_values < config::BAND_FISSION_VALUES_THRESHOLD {
+        Some(BandSplitCause::ValueClash)
+    } else {
+        None
+    }
+}
+
+fn pair_metrics_for_band(
     members: &[EntityId],
     agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
-    resources: &SimResources,
-    _tick: u64,
-) -> Vec<EntityId> {
-    let social_refs: Vec<(EntityId, &Social)> = members
-        .iter()
-        .filter_map(|member_id| agent_by_id.get(member_id).map(|agent| (agent.id, &agent.social)))
-        .collect();
+) -> Vec<PairMetric> {
+    let mut metrics = Vec::new();
+    for left_index in 0..members.len() {
+        for right_index in (left_index + 1)..members.len() {
+            let Some(left) = agent_by_id.get(&members[left_index]) else {
+                continue;
+            };
+            let Some(right) = agent_by_id.get(&members[right_index]) else {
+                continue;
+            };
+            metrics.push(PairMetric {
+                left: left.id,
+                right: right.id,
+                trust: reciprocal_trust(left, right),
+                value_alignment: left.values.alignment_with(&right.values),
+            });
+        }
+    }
+    metrics
+}
 
-    let mut scored: Vec<(EntityId, f64)> = members
-        .iter()
-        .filter_map(|member_id| agent_by_id.get(member_id))
-        .map(|agent| {
-            let support_score: f64 = members
-                .iter()
-                .copied()
-                .filter(|other| *other != agent.id)
-                .filter_map(|other| agent_by_id.get(&other))
-                .map(|other| {
-                    calculate_gfs(
-                        agent.id,
-                        other.id,
-                        (agent.x, agent.y),
-                        (other.x, other.y),
-                        agent.settlement_id,
-                        other.settlement_id,
-                        &agent.social,
-                        &other.social,
-                        &agent.values,
-                        &other.values,
-                        agent.safety,
-                        other.safety,
-                        settlement_resource_score(
-                            resources,
-                            agent.settlement_id,
-                            other.settlement_id,
-                        ),
-                        &social_refs,
-                    )
+fn average_metric(pair_metrics: &[PairMetric], select: impl Fn(&PairMetric) -> f64) -> f64 {
+    if pair_metrics.is_empty() {
+        1.0
+    } else {
+        pair_metrics.iter().map(select).sum::<f64>() / pair_metrics.len() as f64
+    }
+}
+
+fn reciprocal_trust(left: &AgentSnapshot, right: &AgentSnapshot) -> f64 {
+    let left_trust = left
+        .social
+        .find_edge(right.id)
+        .map(|edge| edge.trust)
+        .unwrap_or(0.0);
+    let right_trust = right
+        .social
+        .find_edge(left.id)
+        .map(|edge| edge.trust)
+        .unwrap_or(0.0);
+    (left_trust + right_trust) * 0.5
+}
+
+fn split_members_by_position(
+    members: &[EntityId],
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+) -> Option<(Vec<EntityId>, Vec<EntityId>)> {
+    if members.len() < config::BAND_MIN_SIZE_PROVISIONAL * 2 {
+        return None;
+    }
+
+    let mut ordered = members.to_vec();
+    ordered.sort_by(|left, right| {
+        let left_agent = agent_by_id.get(left);
+        let right_agent = agent_by_id.get(right);
+        match (left_agent, right_agent) {
+            (Some(left_agent), Some(right_agent)) => left_agent
+                .x
+                .partial_cmp(&right_agent.x)
+                .unwrap_or(Ordering::Equal)
+                .then_with(|| {
+                    left_agent
+                        .y
+                        .partial_cmp(&right_agent.y)
+                        .unwrap_or(Ordering::Equal)
                 })
-                .sum();
-            (agent.id, support_score)
-        })
-        .collect();
-
-    scored.sort_by(|left, right| {
-        right
-            .1
-            .partial_cmp(&left.1)
-            .unwrap_or(Ordering::Equal)
-            .then_with(|| left.0.0.cmp(&right.0.0))
+                .then_with(|| left.0.cmp(&right.0)),
+            _ => left.0.cmp(&right.0),
+        }
     });
-    scored.truncate(config::BAND_MAX_SIZE);
-    let mut kept: Vec<EntityId> = scored.into_iter().map(|(id, _)| id).collect();
-    kept.sort_by_key(|member| member.0);
-    kept
+
+    let split_at = ordered.len() / 2;
+    let right = ordered.split_off(split_at);
+    Some((ordered, right))
+}
+
+fn split_members_by_social_graph(
+    members: &[EntityId],
+    pair_metrics: &[PairMetric],
+) -> Option<(Vec<EntityId>, Vec<EntityId>)> {
+    let mut adjacency: BTreeMap<EntityId, Vec<EntityId>> =
+        members.iter().copied().map(|member| (member, Vec::new())).collect();
+
+    for metric in pair_metrics {
+        if metric.trust >= config::BAND_FISSION_TRUST_THRESHOLD
+            && metric.value_alignment >= config::BAND_FISSION_VALUES_THRESHOLD
+        {
+            adjacency.entry(metric.left).or_default().push(metric.right);
+            adjacency.entry(metric.right).or_default().push(metric.left);
+        }
+    }
+
+    for neighbors in adjacency.values_mut() {
+        neighbors.sort_by_key(|neighbor| neighbor.0);
+        neighbors.dedup();
+    }
+
+    let mut components = find_connected_components(members, &adjacency);
+    if components.len() < 2 {
+        return None;
+    }
+
+    components.sort_by(|left, right| {
+        right
+            .len()
+            .cmp(&left.len())
+            .then_with(|| left.first().cmp(&right.first()))
+    });
+
+    let mut primary = components.remove(0);
+    let mut secondary = components.remove(0);
+    for component in components {
+        if component_connection_score(&component, &primary, pair_metrics)
+            >= component_connection_score(&component, &secondary, pair_metrics)
+        {
+            primary.extend(component);
+        } else {
+            secondary.extend(component);
+        }
+    }
+    primary.sort_by_key(|member| member.0);
+    primary.dedup();
+    secondary.sort_by_key(|member| member.0);
+    secondary.dedup();
+
+    if primary.is_empty() || secondary.is_empty() {
+        None
+    } else {
+        Some((primary, secondary))
+    }
+}
+
+fn component_connection_score(
+    component: &[EntityId],
+    target: &[EntityId],
+    pair_metrics: &[PairMetric],
+) -> f64 {
+    let mut score = 0.0;
+    let mut count = 0_u32;
+    for member in component {
+        for other in target {
+            if let Some(metric) = pair_metrics.iter().find(|metric| {
+                (metric.left == *member && metric.right == *other)
+                    || (metric.left == *other && metric.right == *member)
+            }) {
+                score += metric.trust + metric.value_alignment;
+                count = count.saturating_add(1);
+            }
+        }
+    }
+    if count == 0 {
+        0.0
+    } else {
+        score / count as f64
+    }
+}
+
+fn split_members_by_seed_preference(
+    members: &[EntityId],
+    pair_metrics: &[PairMetric],
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+) -> Option<(Vec<EntityId>, Vec<EntityId>)> {
+    if members.len() < config::BAND_MIN_SIZE_PROVISIONAL * 2 {
+        return None;
+    }
+
+    let seed_pair = pair_metrics.iter().min_by(|left, right| {
+        left.trust
+            .partial_cmp(&right.trust)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| {
+                left.value_alignment
+                    .partial_cmp(&right.value_alignment)
+                    .unwrap_or(Ordering::Equal)
+            })
+            .then_with(|| left.left.0.cmp(&right.left.0))
+            .then_with(|| left.right.0.cmp(&right.right.0))
+    })?;
+
+    let seed_a = seed_pair.left;
+    let seed_b = seed_pair.right;
+    let mut group_a = vec![seed_a];
+    let mut group_b = vec![seed_b];
+    let mut assignments = Vec::new();
+
+    for member in members.iter().copied() {
+        if member == seed_a || member == seed_b {
+            continue;
+        }
+        let score_a = seed_preference_score(member, seed_a, agent_by_id);
+        let score_b = seed_preference_score(member, seed_b, agent_by_id);
+        assignments.push((member, score_a, score_b, (score_a - score_b).abs()));
+    }
+
+    assignments.sort_by(|left, right| {
+        right
+            .3
+            .partial_cmp(&left.3)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| left.0 .0.cmp(&right.0 .0))
+    });
+
+    for (member, score_a, score_b, _) in assignments {
+        let assign_to_a = score_a
+            .partial_cmp(&score_b)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| group_b.len().cmp(&group_a.len()))
+            .is_ge();
+        if assign_to_a {
+            group_a.push(member);
+        } else {
+            group_b.push(member);
+        }
+    }
+
+    rebalance_groups(&mut group_a, &mut group_b, seed_a, seed_b, agent_by_id);
+    if group_a.len() < config::BAND_MIN_SIZE_PROVISIONAL
+        || group_b.len() < config::BAND_MIN_SIZE_PROVISIONAL
+    {
+        return None;
+    }
+
+    group_a.sort_by_key(|member| member.0);
+    group_b.sort_by_key(|member| member.0);
+    Some((group_a, group_b))
+}
+
+fn seed_preference_score(
+    member: EntityId,
+    seed: EntityId,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+) -> f64 {
+    let Some(member_agent) = agent_by_id.get(&member) else {
+        return 0.0;
+    };
+    let Some(seed_agent) = agent_by_id.get(&seed) else {
+        return 0.0;
+    };
+    (reciprocal_trust(member_agent, seed_agent) * 0.7)
+        + (member_agent.values.alignment_with(&seed_agent.values) * 0.3)
+}
+
+fn rebalance_groups(
+    group_a: &mut Vec<EntityId>,
+    group_b: &mut Vec<EntityId>,
+    seed_a: EntityId,
+    seed_b: EntityId,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+) {
+    rebalance_one_side(group_a, group_b, seed_a, seed_b, agent_by_id);
+    rebalance_one_side(group_b, group_a, seed_b, seed_a, agent_by_id);
+}
+
+fn rebalance_one_side(
+    source: &mut Vec<EntityId>,
+    target: &mut Vec<EntityId>,
+    source_seed: EntityId,
+    target_seed: EntityId,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+) {
+    while target.len() < config::BAND_MIN_SIZE_PROVISIONAL
+        && source.len() > config::BAND_MIN_SIZE_PROVISIONAL
+    {
+        let Some((move_index, _)) = source
+            .iter()
+            .enumerate()
+            .filter(|(_, member)| **member != source_seed)
+            .map(|(index, member)| {
+                let stay_score = seed_preference_score(*member, source_seed, agent_by_id);
+                let switch_score = seed_preference_score(*member, target_seed, agent_by_id);
+                (index, stay_score - switch_score)
+            })
+            .min_by(|left, right| {
+                left.1
+                    .partial_cmp(&right.1)
+                    .unwrap_or(Ordering::Equal)
+                    .then_with(|| source[left.0].0.cmp(&source[right.0].0))
+            })
+        else {
+            break;
+        };
+        let moved = source.remove(move_index);
+        target.push(moved);
+    }
+}
+
+fn recruit_loners_into_bands(
+    final_bands: &mut BTreeMap<BandId, Band>,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+    resources: &SimResources,
+    all_socials: &[(EntityId, &Social)],
+    loner_join_events: &mut Vec<(BandId, EntityId)>,
+) {
+    let mut assigned_members: BTreeSet<EntityId> = final_bands
+        .values()
+        .flat_map(|band| band.members.iter().copied())
+        .collect();
+    let mut loners: Vec<EntityId> = agent_by_id
+        .keys()
+        .copied()
+        .filter(|entity_id| !assigned_members.contains(entity_id))
+        .collect();
+    loners.sort_by_key(|entity_id| entity_id.0);
+
+    for loner_id in loners {
+        let Some(loner) = agent_by_id.get(&loner_id) else {
+            continue;
+        };
+        let nearby_count = nearby_agent_count(loner, agent_by_id.values()) as f64;
+        let mut best_band: Option<(BandId, f64)> = None;
+
+        let band_ids: Vec<BandId> = final_bands.keys().copied().collect();
+        for band_id in band_ids {
+            let Some(band) = final_bands.get(&band_id) else {
+                continue;
+            };
+            if !band.is_promoted || band.member_count() >= config::BAND_MAX_SIZE {
+                continue;
+            }
+            if !band_has_nearby_member(loner, band, agent_by_id, config::LONER_SEARCH_RADIUS) {
+                continue;
+            }
+            let joined_ratio = (band.member_count() as f64 / nearby_count.max(1.0)).clamp(0.0, 1.0);
+            if joined_ratio < granovetter_threshold(loner) {
+                continue;
+            }
+            let avg_gfs = average_gfs_to_band(loner, band, agent_by_id, resources, all_socials);
+            if avg_gfs < config::LONER_JOIN_GFS_THRESHOLD {
+                continue;
+            }
+
+            let should_replace = match best_band {
+                Some((best_id, best_score)) => {
+                    avg_gfs > best_score
+                        || ((avg_gfs - best_score).abs() < 1e-9 && band_id.0 < best_id.0)
+                }
+                None => true,
+            };
+            if should_replace {
+                best_band = Some((band_id, avg_gfs));
+            }
+        }
+
+        if let Some((band_id, _)) = best_band {
+            if let Some(band) = final_bands.get_mut(&band_id) {
+                band.add_member(loner_id);
+                assigned_members.insert(loner_id);
+                loner_join_events.push((band_id, loner_id));
+            }
+        }
+    }
+}
+
+fn band_has_nearby_member(
+    loner: &AgentSnapshot,
+    band: &Band,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+    radius: f64,
+) -> bool {
+    let radius_sq = radius * radius;
+    band.members.iter().any(|member_id| {
+        agent_by_id.get(member_id).is_some_and(|member| {
+            let dx = loner.x - member.x;
+            let dy = loner.y - member.y;
+            dx * dx + dy * dy <= radius_sq
+        })
+    })
+}
+
+fn average_gfs_to_band(
+    loner: &AgentSnapshot,
+    band: &Band,
+    agent_by_id: &BTreeMap<EntityId, AgentSnapshot>,
+    resources: &SimResources,
+    all_socials: &[(EntityId, &Social)],
+) -> f64 {
+    let mut total = 0.0;
+    let mut count = 0_u32;
+    for member_id in &band.members {
+        let Some(member) = agent_by_id.get(member_id) else {
+            continue;
+        };
+        let gfs = calculate_gfs(
+            loner.id,
+            member.id,
+            (loner.x, loner.y),
+            (member.x, member.y),
+            loner.settlement_id,
+            member.settlement_id,
+            &loner.social,
+            &member.social,
+            &loner.values,
+            &member.values,
+            loner.safety,
+            member.safety,
+            settlement_resource_score(resources, loner.settlement_id, member.settlement_id),
+            all_socials,
+        );
+        total += gfs;
+        count = count.saturating_add(1);
+    }
+
+    if count == 0 {
+        0.0
+    } else {
+        total / count as f64
+    }
 }
 
 fn apply_identity_band_ids(world: &mut World, final_bands: &BTreeMap<BandId, Band>) {
@@ -846,6 +1389,32 @@ mod tests {
                 sim_core::enums::RelationType::Friend
             };
         }
+    }
+
+    fn set_mutual_trust(world: &mut World, left: Entity, right: Entity, trust: f64) {
+        set_trust(world, left, right, trust);
+        set_trust(world, right, left, trust);
+    }
+
+    fn seed_band(
+        resources: &mut SimResources,
+        band_id: BandId,
+        members: &[Entity],
+        promoted: bool,
+        provisional_since: u64,
+    ) {
+        resources.band_store.insert(Band {
+            id: band_id,
+            name: generate_band_name(band_id),
+            members: members
+                .iter()
+                .map(|entity| EntityId(entity.id() as u64))
+                .collect(),
+            leader: None,
+            provisional_since,
+            promoted_tick: promoted.then_some(provisional_since),
+            is_promoted: promoted,
+        });
     }
 
     #[test]
@@ -1181,6 +1750,120 @@ mod tests {
     }
 
     #[test]
+    fn dissolving_small_band_preserves_other_band_memberships() {
+        let mut resources = make_resources();
+        let mut world = World::new();
+        let small_band_id = BandId(1);
+        let kept_band_id = BandId(2);
+
+        let a = spawn_agent(
+            &mut world,
+            "A",
+            0,
+            0,
+            Some(SettlementId(1)),
+            Some(small_band_id),
+            0.5,
+            0.5,
+            0.5,
+        );
+        let b = spawn_agent(
+            &mut world,
+            "B",
+            1,
+            0,
+            Some(SettlementId(1)),
+            Some(small_band_id),
+            0.5,
+            0.5,
+            0.5,
+        );
+        let c = spawn_agent(
+            &mut world,
+            "C",
+            4,
+            0,
+            Some(SettlementId(1)),
+            Some(kept_band_id),
+            0.5,
+            0.5,
+            0.5,
+        );
+        let d = spawn_agent(
+            &mut world,
+            "D",
+            5,
+            0,
+            Some(SettlementId(1)),
+            Some(kept_band_id),
+            0.5,
+            0.5,
+            0.5,
+        );
+        let e = spawn_agent(
+            &mut world,
+            "E",
+            6,
+            0,
+            Some(SettlementId(1)),
+            Some(kept_band_id),
+            0.5,
+            0.5,
+            0.5,
+        );
+
+        resources.band_store = BandStore::new();
+        resources.band_store.insert(Band {
+            id: small_band_id,
+            name: "Small".to_string(),
+            members: vec![EntityId(a.id() as u64), EntityId(b.id() as u64)],
+            leader: None,
+            provisional_since: 10,
+            promoted_tick: None,
+            is_promoted: false,
+        });
+        resources.band_store.insert(Band {
+            id: kept_band_id,
+            name: "Kept".to_string(),
+            members: vec![
+                EntityId(c.id() as u64),
+                EntityId(d.id() as u64),
+                EntityId(e.id() as u64),
+            ],
+            leader: None,
+            provisional_since: 10,
+            promoted_tick: None,
+            is_promoted: false,
+        });
+
+        cleanup_small_bands(&mut world, &mut resources);
+
+        assert!(resources.band_store.get(small_band_id).is_none());
+        assert!(resources.band_store.get(kept_band_id).is_some());
+        assert_eq!(
+            world
+                .get::<&Identity>(c)
+                .expect("identity")
+                .band_id,
+            Some(kept_band_id)
+        );
+        assert_eq!(
+            world
+                .get::<&Identity>(d)
+                .expect("identity")
+                .band_id,
+            Some(kept_band_id)
+        );
+        assert_eq!(
+            world
+                .get::<&Identity>(e)
+                .expect("identity")
+                .band_id,
+            Some(kept_band_id)
+        );
+    }
+
+    #[test]
     fn leader_elected_by_extraversion_and_trust() {
         let (mut world, mut resources) = (World::new(), make_resources());
         let a = spawn_agent(
@@ -1326,6 +2009,325 @@ mod tests {
         assert!(world.get::<&Identity>(a).expect("identity").band_id.is_none());
         assert!(world.get::<&Identity>(b).expect("identity").band_id.is_none());
         assert!(world.get::<&Identity>(c).expect("identity").band_id.is_none());
+    }
+
+    #[test]
+    fn fission_triggers_when_trust_below_threshold() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..6 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("M{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.6,
+                0.7,
+                0.7,
+            ));
+        }
+        seed_band(&mut resources, band_id, &members, true, 10);
+
+        for left in 0..3 {
+            for right in (left + 1)..3 {
+                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+            }
+        }
+        for left in 3..6 {
+            for right in (left + 1)..6 {
+                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+            }
+        }
+
+        BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
+
+        assert_eq!(resources.band_store.len(), 2);
+        let sizes: Vec<usize> = resources.band_store.all().map(Band::member_count).collect();
+        assert!(sizes.contains(&3));
+        let split_band = resources
+            .band_store
+            .all()
+            .find(|band| band.id != band_id)
+            .expect("split band");
+        assert_eq!(split_band.provisional_since, 60);
+        assert_eq!(split_band.promoted_tick, Some(60));
+        let split_member = split_band.members[0];
+        let split_member_events = resources.causal_log.recent(split_member, 8);
+        assert!(split_member_events
+            .iter()
+            .any(|event| event.summary_key == "BAND_FORMED"));
+        assert!(split_member_events
+            .iter()
+            .any(|event| event.summary_key == "BAND_PROMOTED"));
+        let recent = resources
+            .causal_log
+            .recent(EntityId(members[0].id() as u64), 8)
+            .into_iter()
+            .map(|event| event.summary_key.as_str())
+            .collect::<Vec<_>>();
+        assert!(recent.contains(&"BAND_SPLIT"));
+    }
+
+    #[test]
+    fn fission_triggers_when_over_max_size() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..31 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("M{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.8,
+                0.6,
+                0.6,
+            ));
+        }
+        seed_band(&mut resources, band_id, &members, true, 10);
+        for left in 0..members.len() {
+            for right in (left + 1)..members.len() {
+                set_mutual_trust(&mut world, members[left], members[right], 0.8);
+            }
+        }
+
+        BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
+
+        assert_eq!(resources.band_store.len(), 2);
+        let total_members: usize = resources.band_store.all().map(Band::member_count).sum();
+        assert_eq!(total_members, 31);
+        assert!(resources
+            .band_store
+            .all()
+            .all(|band| band.member_count() <= config::BAND_MAX_SIZE));
+    }
+
+    #[test]
+    fn no_fission_when_trust_healthy() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..6 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("M{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.7,
+                0.6,
+                0.6,
+            ));
+        }
+        seed_band(&mut resources, band_id, &members, true, 10);
+
+        for left in 0..members.len() {
+            for right in (left + 1)..members.len() {
+                set_mutual_trust(&mut world, members[left], members[right], 0.8);
+            }
+        }
+
+        BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
+
+        assert_eq!(resources.band_store.len(), 1);
+        let band = resources.band_store.get(band_id).expect("band");
+        assert_eq!(band.member_count(), 6);
+    }
+
+    #[test]
+    fn fission_creates_two_valid_sub_bands() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..6 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("M{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.6,
+                if index < 3 { 0.9 } else { 0.4 },
+                0.7,
+            ));
+        }
+        seed_band(&mut resources, band_id, &members, true, 10);
+
+        for left in 0..3 {
+            for right in (left + 1)..3 {
+                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+            }
+        }
+        for left in 3..6 {
+            for right in (left + 1)..6 {
+                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+            }
+        }
+
+        BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
+
+        let bands: Vec<&Band> = resources.band_store.all().collect();
+        assert_eq!(bands.len(), 2);
+        assert!(bands.iter().all(|band| band.member_count() >= 3));
+        assert!(bands.iter().all(|band| band.leader.is_some()));
+    }
+
+    #[test]
+    fn loner_joins_nearby_band_when_gfs_sufficient() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..5 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("B{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.7,
+                0.7,
+                0.8,
+            ));
+        }
+        let loner = spawn_agent(
+            &mut world,
+            "Loner",
+            2,
+            1,
+            Some(SettlementId(1)),
+            None,
+            0.7,
+            0.8,
+            0.9,
+        );
+        seed_band(&mut resources, band_id, &members, true, 10);
+        resources.settlements.insert(
+            SettlementId(1),
+            settlement_with_stockpile(
+                SettlementId(1),
+                members
+                    .iter()
+                    .map(|entity| EntityId(entity.id() as u64))
+                    .chain(std::iter::once(EntityId(loner.id() as u64)))
+                    .collect(),
+            ),
+        );
+
+        for left in 0..members.len() {
+            for right in (left + 1)..members.len() {
+                set_mutual_trust(&mut world, members[left], members[right], 0.8);
+            }
+        }
+        for &member in &members {
+            set_mutual_trust(&mut world, loner, member, 0.8);
+        }
+
+        BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
+
+        let band = resources.band_store.get(band_id).expect("band");
+        assert_eq!(band.member_count(), 6);
+        assert_eq!(
+            world.get::<&Identity>(loner).expect("identity").band_id,
+            Some(band_id)
+        );
+        let loner_events = resources.causal_log.recent(EntityId(loner.id() as u64), 8);
+        assert!(loner_events
+            .iter()
+            .any(|event| event.summary_key == "LONER_JOINED"));
+        let member_events = resources
+            .causal_log
+            .recent(EntityId(members[0].id() as u64), 8);
+        assert!(!member_events
+            .iter()
+            .any(|event| event.summary_key == "LONER_JOINED"));
+    }
+
+    #[test]
+    fn oversized_provisional_band_splits_before_promotion() {
+        let (mut world, mut resources) = (World::new(), make_resources());
+        let band_id = resources.band_store.allocate_id();
+        let mut members = Vec::new();
+        for index in 0..31 {
+            members.push(spawn_agent(
+                &mut world,
+                &format!("M{index}"),
+                index,
+                0,
+                Some(SettlementId(1)),
+                Some(band_id),
+                0.7,
+                0.7,
+                0.7,
+            ));
+        }
+        for left in 0..members.len() {
+            for right in (left + 1)..members.len() {
+                set_mutual_trust(&mut world, members[left], members[right], 0.8);
+            }
+        }
+        let agent_by_id: BTreeMap<EntityId, AgentSnapshot> = collect_agent_snapshots(&world)
+            .into_iter()
+            .map(|agent| (agent.id, agent))
+            .collect();
+        let band = Band {
+            id: band_id,
+            name: generate_band_name(band_id),
+            members: members
+                .iter()
+                .map(|entity| EntityId(entity.id() as u64))
+                .collect(),
+            leader: None,
+            provisional_since: 10,
+            promoted_tick: None,
+            is_promoted: false,
+        };
+
+        let plan =
+            plan_band_fission(&band, &agent_by_id, 60, &mut resources).expect("fission plan");
+        let split_band = plan.split_band.expect("split band");
+        assert!(!plan.retained_band.is_promoted);
+        assert!(!split_band.is_promoted);
+        assert_eq!(split_band.provisional_since, 60);
+        assert_eq!(split_band.promoted_tick, None);
+        assert_eq!(
+            plan.retained_band.member_count() + split_band.member_count() + plan.loners.len(),
+            31
+        );
+        assert!(plan.retained_band.member_count() <= config::BAND_MAX_SIZE);
+        assert!(split_band.member_count() <= config::BAND_MAX_SIZE);
+    }
+
+    #[test]
+    fn determine_split_cause_prefers_value_clash_when_values_are_low() {
+        let band = Band {
+            id: BandId(7),
+            name: "band_7".to_string(),
+            members: vec![
+                EntityId(1),
+                EntityId(2),
+                EntityId(3),
+                EntityId(4),
+                EntityId(5),
+                EntityId(6),
+            ],
+            leader: None,
+            provisional_since: 10,
+            promoted_tick: Some(20),
+            is_promoted: true,
+        };
+
+        assert_eq!(
+            determine_split_cause(&band, 0.8, 0.2),
+            Some(BandSplitCause::ValueClash)
+        );
     }
 
     #[test]
