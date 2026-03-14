@@ -210,8 +210,8 @@ func _ready() -> void:
 	SimulationBus.tick_completed.connect(_on_tick)
 
 
-func set_probe_observation_mode(enabled: bool) -> void:
-	probe_observation_mode = enabled
+func set_probe_observation_mode(probe_enabled: bool) -> void:
+	probe_observation_mode = probe_enabled
 	queue_redraw()
 
 
