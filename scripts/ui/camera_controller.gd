@@ -64,7 +64,7 @@ var _flash_layer: CanvasLayer
 var _flash_rect: ColorRect
 var _cast_bar: Variant = null
 var _notification_manager: Variant = null
-var _probe_observation_mode: bool = false
+var _probe_observation_mode: bool = true
 var _last_move_reason: String = "none"
 
 
