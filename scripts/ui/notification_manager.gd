@@ -189,9 +189,10 @@ func _show_drama(notif_data: Dictionary) -> void:
 	var card = _get_pooled_card()
 	if card == null:
 		return
-	_track_active_notification(notif_data, DRAMA_EXPIRY_SECONDS)
 	card.reset()
-	card.setup(notif_data)
+	if not card.setup(notif_data):
+		return
+	_track_active_notification(notif_data, DRAMA_EXPIRY_SECONDS)
 	card.size = Vector2(DRAMA_CARD_WIDTH, DRAMA_CARD_HEIGHT)
 	card.visible = true
 	_reflow_drama_cards()
