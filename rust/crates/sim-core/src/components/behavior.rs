@@ -3,6 +3,10 @@ use crate::enums::ActionType;
 use crate::ids::EntityId;
 use serde::{Deserialize, Serialize};
 
+fn default_one() -> f64 {
+    1.0
+}
+
 /// Current behavior / action state
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Behavior {
@@ -31,6 +35,15 @@ pub struct Behavior {
     /// Primary material selected for the current craft action.
     #[serde(default)]
     pub craft_material_id: Option<String>,
+    /// Band center X coordinate used by steering cohesion.
+    #[serde(default)]
+    pub band_center_x: Option<f64>,
+    /// Band center Y coordinate used by steering cohesion.
+    #[serde(default)]
+    pub band_center_y: Option<f64>,
+    /// Multiplier applied when separating from non-band outsiders.
+    #[serde(default = "default_one")]
+    pub outsider_separation_mult: f64,
 }
 
 impl Default for Behavior {
@@ -50,6 +63,9 @@ impl Default for Behavior {
             occupation_satisfaction: 0.5,
             craft_recipe_id: None,
             craft_material_id: None,
+            band_center_x: None,
+            band_center_y: None,
+            outsider_separation_mult: 1.0,
         }
     }
 }

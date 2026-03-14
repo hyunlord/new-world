@@ -253,6 +253,22 @@ pub const BAND_GRANOVETTER_BASE_THRESHOLD: f64 = 0.5;
 pub const BAND_FORMATION_SYSTEM_PRIORITY: u32 = 38;
 /// Cold-tier interval for band formation checks.
 pub const BAND_FORMATION_TICK_INTERVAL: u64 = 60;
+/// Scheduler priority for band behavior updates.
+pub const BAND_BEHAVIOR_SYSTEM_PRIORITY: u32 = 28;
+/// Warm-tier interval for band behavior updates.
+pub const BAND_BEHAVIOR_TICK_INTERVAL: u64 = 10;
+/// Cohesion force weight pulling members toward band center.
+pub const BAND_COHESION_WEIGHT: f64 = 0.8;
+/// Extra separation multiplier applied against non-band outsiders.
+pub const BAND_OUTSIDER_SEPARATION_MULT: f64 = 1.5;
+/// Average trust threshold below which a band may split.
+pub const BAND_FISSION_TRUST_THRESHOLD: f64 = 0.3;
+/// Average value alignment threshold below which a band may split.
+pub const BAND_FISSION_VALUES_THRESHOLD: f64 = 0.4;
+/// Search radius used when loners evaluate nearby promoted bands.
+pub const LONER_SEARCH_RADIUS: f64 = 15.0;
+/// Minimum average GFS needed for a loner to join a band.
+pub const LONER_JOIN_GFS_THRESHOLD: f64 = 0.5;
 
 // ── Weber Authority [Weber 1922] ──────────────────────────────────────────────
 pub const AUTHORITY_TRADITIONAL_TRADITION_MIN: f64 = 0.30;
