@@ -15,6 +15,7 @@ mod llm_request_system;
 mod llm_response_system;
 mod llm_timeout_system;
 mod needs;
+mod pairwise;
 mod psychology;
 mod record;
 mod social;
@@ -67,6 +68,7 @@ pub use record::{
 };
 
 // ---- social ----
+pub use pairwise::PairwiseInteractionSystem;
 pub use social::{
     EconomicTendencyRuntimeSystem, FamilyRuntimeSystem, LeaderRuntimeSystem, NetworkRuntimeSystem,
     OccupationRuntimeSystem, ReputationRuntimeSystem, SettlementCultureRuntimeSystem,
@@ -121,9 +123,8 @@ mod tests {
     use sim_core::{
         config::GameConfig, ActionType, AttachmentType, Building, BuildingId, ChannelId,
         CopingStrategyId, EmotionType, GameCalendar, GrowthStage, HexacoAxis, HexacoFacet,
-        IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner, MentalBreakType,
-        NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
-        WorldMap,
+        IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner, MentalBreakType, NeedType,
+        RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType, WorldMap,
     };
     use sim_engine::{SimEngine, SimResources, SimSystem};
 

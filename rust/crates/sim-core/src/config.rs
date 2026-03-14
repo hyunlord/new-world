@@ -203,6 +203,38 @@ pub const NETWORK_PROPAGATION_BRIDGE: f64 = 0.50;
 
 pub const SOCIAL_SHARED_PREFERENCE_AFFINITY_GAIN: f64 = 3.0;
 
+/// Maximum tile distance for pairwise interactions.
+pub const INTERACTION_MAX_DISTANCE: f64 = 5.0;
+/// Limit the number of interactions an agent can initiate per tick.
+pub const INTERACTION_MAX_PER_TICK: u32 = 1;
+/// Cap on stored social edges per agent when pruning least familiar ties.
+pub const SOCIAL_EDGE_CAP: usize = 50;
+
+/// Talk trust delta.
+pub const INTERACTION_TALK_TRUST_DELTA: f64 = 0.01;
+/// Cooperate trust delta.
+pub const INTERACTION_COOPERATE_TRUST_DELTA: f64 = 0.03;
+/// Share trust delta.
+pub const INTERACTION_SHARE_TRUST_DELTA: f64 = 0.05;
+/// Conflict trust delta.
+pub const INTERACTION_CONFLICT_TRUST_DELTA: f64 = -0.05;
+/// Comfort trust delta.
+pub const INTERACTION_COMFORT_TRUST_DELTA: f64 = 0.02;
+
+/// Talk affinity delta.
+pub const INTERACTION_TALK_AFFINITY_DELTA: f64 = 1.0;
+/// Cooperate affinity delta.
+pub const INTERACTION_COOPERATE_AFFINITY_DELTA: f64 = 3.0;
+/// Share affinity delta.
+pub const INTERACTION_SHARE_AFFINITY_DELTA: f64 = 5.0;
+/// Conflict affinity delta.
+pub const INTERACTION_CONFLICT_AFFINITY_DELTA: f64 = -5.0;
+/// Comfort affinity delta.
+pub const INTERACTION_COMFORT_AFFINITY_DELTA: f64 = 2.0;
+
+/// Familiarity gain per interaction.
+pub const INTERACTION_FAMILIARITY_DELTA: f64 = 0.02;
+
 // ── Weber Authority [Weber 1922] ──────────────────────────────────────────────
 pub const AUTHORITY_TRADITIONAL_TRADITION_MIN: f64 = 0.30;
 pub const AUTHORITY_TRADITIONAL_LAW_MAX: f64 = 0.10;
