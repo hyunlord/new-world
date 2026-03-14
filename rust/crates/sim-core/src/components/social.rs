@@ -97,6 +97,15 @@ impl Social {
         }
     }
 
+    /// Returns the direct kinship coefficient for immediate relations.
+    pub fn kinship_r_direct(&self, target: EntityId) -> f64 {
+        if self.parents.contains(&target) || self.children.contains(&target) {
+            0.5
+        } else {
+            0.0
+        }
+    }
+
     pub fn has_title(&self, title_id: &str) -> bool {
         self.titles.iter().any(|title| title == title_id)
     }
@@ -110,5 +119,111 @@ impl Social {
 
     pub fn revoke_title(&mut self, title_id: &str) {
         self.titles.retain(|title| title != title_id);
+    }
+}
+
+/// Hamilton's coefficient of relatedness between two agents.
+pub fn kinship_r(
+    subject: &Social,
+    target_id: EntityId,
+    all_socials: &[(EntityId, &Social)],
+) -> f64 {
+    let direct = subject.kinship_r_direct(target_id);
+    if direct > 0.0 {
+        return direct;
+    }
+
+    if subject.spouse == Some(target_id) {
+        return 0.0;
+    }
+
+    let target_social = all_socials
+        .iter()
+        .find(|(id, _)| *id == target_id)
+        .map(|(_, social)| *social);
+
+    if let Some(target) = target_social {
+        let shared_parents = subject
+            .parents
+            .iter()
+            .filter(|parent| target.parents.contains(parent))
+            .count();
+        if shared_parents > 0 {
+            return if shared_parents == 2 { 0.5 } else { 0.25 };
+        }
+
+        for parent_id in &subject.parents {
+            if let Some((_, parent_social)) = all_socials.iter().find(|(id, _)| id == parent_id) {
+                if parent_social.parents.contains(&target_id) {
+                    return 0.25;
+                }
+            }
+        }
+
+        for child_id in &subject.children {
+            if let Some((_, child_social)) = all_socials.iter().find(|(id, _)| id == child_id) {
+                if child_social.children.contains(&target_id) {
+                    return 0.25;
+                }
+            }
+        }
+    }
+
+    0.0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ids::EntityId;
+
+    fn make_social(parents: Vec<EntityId>, children: Vec<EntityId>) -> Social {
+        Social {
+            parents,
+            children,
+            ..Social::default()
+        }
+    }
+
+    #[test]
+    fn kinship_parent_child() {
+        let parent = EntityId(1);
+        let child = EntityId(2);
+        let subject = make_social(vec![parent], vec![]);
+        let all = vec![(child, make_social(vec![parent], vec![]))];
+        let all_refs: Vec<(EntityId, &Social)> = all.iter().map(|(id, s)| (*id, s)).collect();
+        assert_eq!(subject.kinship_r_direct(parent), 0.5);
+        assert_eq!(kinship_r(&subject, parent, &all_refs), 0.5);
+    }
+
+    #[test]
+    fn kinship_unrelated() {
+        let subject = Social::default();
+        let target = Social::default();
+        let all = vec![(EntityId(3), target)];
+        let all_refs: Vec<(EntityId, &Social)> = all.iter().map(|(id, s)| (*id, s)).collect();
+        assert_eq!(kinship_r(&subject, EntityId(3), &all_refs), 0.0);
+    }
+
+    #[test]
+    fn kinship_sibling() {
+        let common_parent = EntityId(5);
+        let subject = make_social(vec![common_parent], vec![]);
+        let sibling = make_social(vec![common_parent], vec![]);
+        let all = vec![(EntityId(10), sibling)];
+        let all_refs: Vec<(EntityId, &Social)> = all.iter().map(|(id, s)| (*id, s)).collect();
+        assert_eq!(kinship_r(&subject, EntityId(10), &all_refs), 0.25);
+    }
+
+    #[test]
+    fn kinship_grandparent() {
+        let grandparent = EntityId(7);
+        let parent = EntityId(8);
+        let child = EntityId(9);
+        let subject = make_social(vec![parent], vec![child]);
+        let mut all = vec![(parent, make_social(vec![grandparent], vec![child]))];
+        all.push((grandparent, Social::default()));
+        let all_refs: Vec<(EntityId, &Social)> = all.iter().map(|(id, s)| (*id, s)).collect();
+        assert_eq!(kinship_r(&subject, grandparent, &all_refs), 0.25);
     }
 }

@@ -1,5 +1,45 @@
 # WorldSim Codex Agent Instructions (v3.1)
 
+## Pre-flight (MANDATORY — every task)
+
+모든 작업 시작 전 반드시 실행. 예외 없음.
+```bash
+# 1. Sync with remote
+git fetch origin
+git checkout lead/main
+git reset --hard origin/lead/main
+
+# 2. Verify clean state
+git status
+# EXPECTED: "nothing to commit, working tree clean"
+# If dirty: git reset --hard origin/lead/main
+
+# 3. Gate check
+cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+# If fails: STOP and report. Do not start work on broken baseline.
+```
+
+### Post-work (MANDATORY — after every task)
+```bash
+# 1. Gate must pass
+cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+
+# 2. Commit to lead/main directly
+git add -A
+git commit -m "[t-000] <description>"
+git push origin lead/main
+
+# 3. Create PR: lead/main → main, merge immediately
+# Do NOT create separate worktrees or branches unless explicitly asked.
+```
+
+### Rules
+- Always work directly on lead/main branch
+- Always reset to origin/lead/main before starting
+- Never leave uncommitted changes
+- Never create worktrees unless the prompt explicitly requests it
+- PR target is always lead/main → main
+
 ## Project Overview
 WorldSim: god simulation where autonomous agents form civilizations from the Stone Age.
 Rust (hecs ECS, rayon) + Godot 4 (render only). 1-person dev. Data-driven via RON.

@@ -4,22 +4,22 @@ use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
     BuildingEffectRuntimeSystem, ChildStressProcessorRuntimeSystem, ChildcareRuntimeSystem,
     ChronicleRuntimeSystem, ConstructionRuntimeSystem, ContagionRuntimeSystem, CopingRuntimeSystem,
-    CraftingRuntimeSystem, EconomicTendencyRuntimeSystem, EffectApplySystem,
-    EmotionRuntimeSystem, FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
-    InfluenceSteeringSystem,
+    CraftingRuntimeSystem, EconomicTendencyRuntimeSystem, EffectApplySystem, EmotionRuntimeSystem,
+    FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem, InfluenceSteeringSystem,
     IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem, JobAssignmentRuntimeSystem,
     JobSatisfactionRuntimeSystem, LeaderRuntimeSystem, LlmRequestRuntimeSystem,
     LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem, MemoryRuntimeSystem,
     MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem, MortalityRuntimeSystem,
     MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem, OccupationRuntimeSystem,
-    ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
-    PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
-    SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
-    StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, StorySifterRuntimeSystem,
-    StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
-    TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
-    TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
-    TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
+    PairwiseInteractionSystem, ParentingRuntimeSystem, PersonalityGeneratorRuntimeSystem,
+    PersonalityMaturationRuntimeSystem, PopulationRuntimeSystem, ReputationRuntimeSystem,
+    ResourceRegenSystem, SettlementCultureRuntimeSystem, SocialEventRuntimeSystem,
+    StatSyncRuntimeSystem, StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
+    StorySifterRuntimeSystem, StratificationMonitorRuntimeSystem, StressRuntimeSystem,
+    TechDiscoveryRuntimeSystem, TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem,
+    TechUtilizationRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem,
+    TraitViolationRuntimeSystem, TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem,
+    ValueRuntimeSystem,
 };
 
 /// Stable typed runtime-system identifier used by the Rust registry.
@@ -87,6 +87,7 @@ pub(crate) enum RuntimeSystemId {
     Influence = 58,
     EffectApply = 59,
     Crafting = 60,
+    PairwiseInteraction = 61,
 }
 
 impl RuntimeSystemId {
@@ -154,6 +155,7 @@ impl RuntimeSystemId {
             Self::Influence => "influence_system",
             Self::EffectApply => "effect_apply_system",
             Self::Crafting => "crafting_system",
+            Self::PairwiseInteraction => "pairwise_interaction_system",
         }
     }
 
@@ -220,6 +222,7 @@ impl RuntimeSystemId {
             Self::StorySifter,
             Self::Influence,
             Self::Crafting,
+            Self::PairwiseInteraction,
             Self::EffectApply,
         ]
     }
@@ -234,7 +237,7 @@ pub(crate) struct DefaultRuntimeSystemSpec {
 }
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 62] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -347,6 +350,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
     },
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::TraumaScar,
+        priority: 36,
+        tick_interval: 10,
+    },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::PairwiseInteraction,
         priority: 36,
         tick_interval: 10,
     },
@@ -696,6 +704,10 @@ pub(crate) fn register_runtime_system(
             engine.register(MoraleRuntimeSystem::new(priority_u32, tick_interval_u64))
         }
         RuntimeSystemId::SocialEvent => engine.register(SocialEventRuntimeSystem::new(
+            priority_u32,
+            tick_interval_u64,
+        )),
+        RuntimeSystemId::PairwiseInteraction => engine.register(PairwiseInteractionSystem::new(
             priority_u32,
             tick_interval_u64,
         )),

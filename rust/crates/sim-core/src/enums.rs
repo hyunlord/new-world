@@ -320,6 +320,28 @@ pub enum RelationType {
 }
 
 // ═══════════════════════════════════════
+// Interaction Type
+// ═══════════════════════════════════════
+
+/// Types of pairwise social interactions.
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
+)]
+pub enum InteractionType {
+    /// Casual conversation with baseline trust and affinity gain.
+    #[default]
+    Talk,
+    /// Coordinated work on the same productive action.
+    Cooperate,
+    /// Sharing resources with another agent in need.
+    Share,
+    /// Resource competition or value clash.
+    Conflict,
+    /// Comforting a stressed agent.
+    Comfort,
+}
+
+// ═══════════════════════════════════════
 // Intelligence (Gardner 8)
 // ═══════════════════════════════════════
 
