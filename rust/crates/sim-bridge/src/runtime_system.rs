@@ -10,14 +10,13 @@ use sim_systems::runtime::{
     FamilyRuntimeSystem, GatheringRuntimeSystem, InfluenceRuntimeSystem,
     InfluenceSteeringSystem, IntelligenceRuntimeSystem, IntergenerationalRuntimeSystem,
     JobAssignmentRuntimeSystem, JobSatisfactionRuntimeSystem, LeaderRuntimeSystem,
-    LlmRequestRuntimeSystem, LlmResponseRuntimeSystem, LlmTimeoutRuntimeSystem,
     MemoryRuntimeSystem, MentalBreakRuntimeSystem, MigrationRuntimeSystem, MoraleRuntimeSystem,
     MortalityRuntimeSystem, MovementRuntimeSystem, NeedsRuntimeSystem, NetworkRuntimeSystem,
     OccupationRuntimeSystem, PairwiseInteractionSystem, ParentingRuntimeSystem,
     PersonalityGeneratorRuntimeSystem, PersonalityMaturationRuntimeSystem,
     PopulationRuntimeSystem, ReputationRuntimeSystem, ResourceRegenSystem,
     SettlementCultureRuntimeSystem, SocialEventRuntimeSystem, StatSyncRuntimeSystem,
-    StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem, StorySifterRuntimeSystem,
+    StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
     StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
     TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
@@ -244,8 +243,16 @@ pub(crate) struct DefaultRuntimeSystemSpec {
     pub(crate) tick_interval: i32,
 }
 
+/// Systems kept in the typed registry but disabled by default when no LLM is connected.
+pub(crate) const DEFAULT_DISABLED_RUNTIME_SYSTEMS: [RuntimeSystemId; 4] = [
+    RuntimeSystemId::LlmRequest,
+    RuntimeSystemId::LlmResponse,
+    RuntimeSystemId::LlmTimeout,
+    RuntimeSystemId::StorySifter,
+];
+
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 64] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -512,11 +519,6 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 64] = [
         tick_interval: 200,
     },
     DefaultRuntimeSystemSpec {
-        system_id: RuntimeSystemId::StorySifter,
-        priority: config::STORY_SIFTER_PRIORITY as i32,
-        tick_interval: config::STORY_SIFTER_TICK_INTERVAL as i32,
-    },
-    DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::SettlementCulture,
         priority: 95,
         tick_interval: 100,
@@ -545,21 +547,6 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 64] = [
         system_id: RuntimeSystemId::Chronicle,
         priority: 101,
         tick_interval: 1,
-    },
-    DefaultRuntimeSystemSpec {
-        system_id: RuntimeSystemId::LlmResponse,
-        priority: config::LLM_RESPONSE_SYSTEM_PRIORITY as i32,
-        tick_interval: config::LLM_RESPONSE_SYSTEM_INTERVAL as i32,
-    },
-    DefaultRuntimeSystemSpec {
-        system_id: RuntimeSystemId::LlmTimeout,
-        priority: config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32,
-        tick_interval: config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32,
-    },
-    DefaultRuntimeSystemSpec {
-        system_id: RuntimeSystemId::LlmRequest,
-        priority: config::LLM_REQUEST_SYSTEM_PRIORITY as i32,
-        tick_interval: config::LLM_REQUEST_SYSTEM_INTERVAL as i32,
     },
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::EffectApply,
@@ -779,22 +766,18 @@ pub(crate) fn register_runtime_system(
         RuntimeSystemId::Trait => {
             engine.register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64))
         }
-        RuntimeSystemId::LlmRequest => engine.register(LlmRequestRuntimeSystem::new(
-            priority_u32,
-            tick_interval_u64,
-        )),
-        RuntimeSystemId::LlmResponse => engine.register(LlmResponseRuntimeSystem::new(
-            priority_u32,
-            tick_interval_u64,
-        )),
-        RuntimeSystemId::LlmTimeout => engine.register(LlmTimeoutRuntimeSystem::new(
-            priority_u32,
-            tick_interval_u64,
-        )),
-        RuntimeSystemId::StorySifter => engine.register(StorySifterRuntimeSystem::new(
-            priority_u32,
-            tick_interval_u64,
-        )),
+        RuntimeSystemId::LlmRequest => {
+            // Disabled by default when no LLM runtime is attached.
+        }
+        RuntimeSystemId::LlmResponse => {
+            // Disabled by default when no LLM runtime is attached.
+        }
+        RuntimeSystemId::LlmTimeout => {
+            // Disabled by default when no LLM runtime is attached.
+        }
+        RuntimeSystemId::StorySifter => {
+            // Disabled by default to avoid duplicate narrative notifications.
+        }
         RuntimeSystemId::Crafting => {
             engine.register(CraftingRuntimeSystem::new(priority_u32, tick_interval_u64))
         }
@@ -824,7 +807,11 @@ mod tests {
             assert!(ids.insert(spec.system_id));
             assert!(spec.tick_interval > 0);
         }
-        let all_ids: HashSet<RuntimeSystemId> = RuntimeSystemId::all().iter().copied().collect();
+        let all_ids: HashSet<RuntimeSystemId> = RuntimeSystemId::all()
+            .iter()
+            .copied()
+            .filter(|system_id| !DEFAULT_DISABLED_RUNTIME_SYSTEMS.contains(system_id))
+            .collect();
         assert_eq!(ids, all_ids);
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[0].system_id,
@@ -834,6 +821,9 @@ mod tests {
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,
             RuntimeSystemId::EffectApply
         );
+        for disabled_id in DEFAULT_DISABLED_RUNTIME_SYSTEMS {
+            assert!(!ids.contains(&disabled_id));
+        }
     }
 
     #[test]
