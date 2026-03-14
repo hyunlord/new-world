@@ -3,7 +3,7 @@ use std::path::Path;
 use std::sync::{Arc, Mutex};
 
 use serde::Deserialize;
-use sim_core::{config, config::GameConfig, GameCalendar, WorldMap};
+use sim_core::{config::GameConfig, GameCalendar, WorldMap};
 use sim_data::{
     load_name_cultures, load_personality_distribution, DataRegistry, NameGenerator,
     PersonalityDistribution,
@@ -11,7 +11,10 @@ use sim_data::{
 use sim_engine::{GameEvent, SimEngine, SimResources};
 
 use crate::runtime_bindings::runtime_default_compute_domain_modes;
-use crate::runtime_system::{register_runtime_system, RuntimeSystemId, DEFAULT_RUNTIME_SYSTEMS};
+use crate::runtime_system::{
+    register_runtime_system, RuntimeSystemId, DEFAULT_DISABLED_RUNTIME_SYSTEMS,
+    DEFAULT_RUNTIME_SYSTEMS,
+};
 
 pub(crate) const RUNTIME_SPEED_OPTIONS: [u32; 5] = [1, 2, 3, 5, 10];
 pub(crate) const RUNTIME_COMPUTE_DOMAINS: [&str; 1] = ["pathfinding"];
@@ -87,36 +90,7 @@ impl RuntimeState {
                 }
             }));
         let mut engine = SimEngine::new(resources);
-        register_runtime_system(
-            &mut engine,
-            RuntimeSystemId::LlmResponse,
-            config::LLM_RESPONSE_SYSTEM_PRIORITY as i32,
-            config::LLM_RESPONSE_SYSTEM_INTERVAL as i32,
-        );
-        register_runtime_system(
-            &mut engine,
-            RuntimeSystemId::LlmTimeout,
-            config::LLM_TIMEOUT_SYSTEM_PRIORITY as i32,
-            config::LLM_TIMEOUT_SYSTEM_INTERVAL as i32,
-        );
-        register_runtime_system(
-            &mut engine,
-            RuntimeSystemId::StorySifter,
-            config::STORY_SIFTER_PRIORITY as i32,
-            config::STORY_SIFTER_TICK_INTERVAL as i32,
-        );
-        register_runtime_system(
-            &mut engine,
-            RuntimeSystemId::LlmRequest,
-            config::LLM_REQUEST_SYSTEM_PRIORITY as i32,
-            config::LLM_REQUEST_SYSTEM_INTERVAL as i32,
-        );
         let _ = engine.resources_mut().start_llm_if_enabled();
-        let mut rust_registered_systems: HashSet<RuntimeSystemId> = HashSet::new();
-        rust_registered_systems.insert(RuntimeSystemId::LlmRequest);
-        rust_registered_systems.insert(RuntimeSystemId::LlmResponse);
-        rust_registered_systems.insert(RuntimeSystemId::LlmTimeout);
-        rust_registered_systems.insert(RuntimeSystemId::StorySifter);
         Self {
             engine,
             data_registry: None,
@@ -127,7 +101,7 @@ impl RuntimeState {
             paused: false,
             captured_events,
             registered_systems: Vec::new(),
-            rust_registered_systems,
+            rust_registered_systems: HashSet::new(),
             compute_domain_modes: runtime_default_compute_domain_modes(&RUNTIME_COMPUTE_DOMAINS),
         }
     }
@@ -174,6 +148,13 @@ pub(crate) fn upsert_runtime_system_entry(
     active: bool,
     registration_index: i32,
 ) {
+    if DEFAULT_DISABLED_RUNTIME_SYSTEMS.contains(&system_id) {
+        state.rust_registered_systems.remove(&system_id);
+        state
+            .registered_systems
+            .retain(|entry| entry.system_id != system_id);
+        return;
+    }
     if !state.rust_registered_systems.contains(&system_id) {
         register_runtime_system(&mut state.engine, system_id, priority, tick_interval);
         state.rust_registered_systems.insert(system_id);
@@ -303,9 +284,8 @@ mod tests {
 
         let count = register_default_runtime_systems(&mut state);
 
-        assert_eq!(count, RuntimeSystemId::all().len());
         assert_eq!(count, DEFAULT_RUNTIME_SYSTEMS.len());
-        assert_eq!(state.registered_systems.len(), RuntimeSystemId::all().len());
+        assert_eq!(state.registered_systems.len(), DEFAULT_RUNTIME_SYSTEMS.len());
         assert!(state
             .registered_systems
             .iter()
@@ -317,7 +297,7 @@ mod tests {
         assert!(state
             .registered_systems
             .iter()
-            .any(|entry| entry.system_id == RuntimeSystemId::StorySifter));
+            .all(|entry| !DEFAULT_DISABLED_RUNTIME_SYSTEMS.contains(&entry.system_id)));
         assert!(state
             .registered_systems
             .iter()
@@ -326,5 +306,27 @@ mod tests {
             .registered_systems
             .iter()
             .any(|entry| entry.system_id == RuntimeSystemId::Trait));
+    }
+
+    #[test]
+    fn disabled_runtime_systems_are_ignored_on_upsert() {
+        let mut state = RuntimeState::from_seed(11, RuntimeConfig::default());
+
+        upsert_runtime_system_entry(
+            &mut state,
+            RuntimeSystemId::StorySifter,
+            900,
+            60,
+            true,
+            0,
+        );
+
+        assert!(!state
+            .registered_systems
+            .iter()
+            .any(|entry| entry.system_id == RuntimeSystemId::StorySifter));
+        assert!(!state
+            .rust_registered_systems
+            .contains(&RuntimeSystemId::StorySifter));
     }
 }
