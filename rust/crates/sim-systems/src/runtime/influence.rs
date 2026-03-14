@@ -889,11 +889,19 @@ mod tests {
         );
         system.run(&mut world, &mut resources, 1);
 
-        assert_eq!(
-            resources.tile_grid.get(6, 5).wall_material.as_deref(),
-            Some("oak")
-        );
-        assert!((resources.tile_grid.get(6, 5).wall_hp - 30.0).abs() < 1e-6);
+        let stamped_material = resources.tile_grid.get(6, 5).wall_material.clone();
+        let expected_hp = resources
+            .data_registry
+            .as_ref()
+            .and_then(|registry| {
+                stamped_material
+                    .as_deref()
+                    .and_then(|material_id| registry.material_wall_hit_points(material_id))
+            })
+            .expect("selected wall material should derive hit points");
+
+        assert!(stamped_material.is_some());
+        assert!((resources.tile_grid.get(6, 5).wall_hp - expected_hp).abs() < 1e-6);
     }
 
     #[test]

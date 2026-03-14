@@ -507,14 +507,18 @@ fn behavior_base_timer(action: ActionType) -> i32 {
     match action {
         ActionType::Wander => 5,
         ActionType::Forage | ActionType::GatherWood | ActionType::GatherStone => 20,
+        ActionType::Eat => 20,
+        ActionType::Hunt => 120,
         ActionType::DeliverToStockpile => 30,
         ActionType::Build => 25,
         ActionType::Craft => 30,
         ActionType::TakeFromStockpile => 15,
         ActionType::Rest => 10,
+        ActionType::Sleep => 400,
         ActionType::Socialize => 8,
         ActionType::VisitPartner => 15,
         ActionType::Drink => 10,
+        ActionType::Flee => 30,
         ActionType::SitByFire => 20,
         ActionType::SeekShelter => 15,
         _ => 10,
@@ -586,6 +590,7 @@ fn behavior_select_action(
     behavior: &Behavior,
     has_build_target: bool,
     has_settlement: bool,
+    has_food_item: bool,
     has_tool: bool,
     rng: &mut impl Rng,
 ) -> ActionType {
@@ -599,16 +604,35 @@ fn behavior_select_action(
     let hunger_deficit = behavior_urgency(1.0 - hunger);
     let energy_deficit = behavior_urgency(1.0 - energy);
     let social_deficit = behavior_urgency(1.0 - social);
+    let safe_for_sleep = thirst >= config::THIRST_LOW as f32
+        && warmth >= config::WARMTH_LOW as f32
+        && safety >= config::SAFETY_LOW as f32;
 
+    if safety < 0.20 {
+        return ActionType::Flee;
+    }
+    if has_food_item
+        && hunger < 0.6
+        && hunger >= config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32
+    {
+        return ActionType::Eat;
+    }
+    if matches!(
+        age_stage,
+        GrowthStage::Teen | GrowthStage::Adult | GrowthStage::Elder
+    ) && hunger < 0.35
+        && hunger >= config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32
+    {
+        return ActionType::Hunt;
+    }
+    if energy < 0.25 && energy >= config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32 && safe_for_sleep {
+        return ActionType::Sleep;
+    }
+    if energy < config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32 && safe_for_sleep {
+        return ActionType::Rest;
+    }
     if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
         return ActionType::Forage;
-    }
-    if energy < config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32
-        && thirst >= config::THIRST_LOW as f32
-        && warmth >= config::WARMTH_LOW as f32
-        && safety >= config::SAFETY_LOW as f32
-    {
-        return ActionType::Rest;
     }
 
     if matches!(age_stage, GrowthStage::Adult)
@@ -641,6 +665,26 @@ fn behavior_select_action(
             behavior_score_add(&mut scores, ActionType::Forage, hunger_deficit * 1.50);
             behavior_score_add(&mut scores, ActionType::Rest, energy_deficit * 1.20);
             behavior_score_add(&mut scores, ActionType::Socialize, social_deficit * 0.80);
+            if hunger < 0.6 && has_food_item {
+                behavior_score_add(&mut scores, ActionType::Eat, hunger_deficit * 1.80);
+            }
+            if hunger < 0.35 {
+                behavior_score_add(&mut scores, ActionType::Hunt, hunger_deficit * 1.60);
+            }
+            if energy < 0.25 && safe_for_sleep {
+                behavior_score_add(
+                    &mut scores,
+                    ActionType::Sleep,
+                    behavior_urgency(1.0 - energy) * 1.50,
+                );
+            }
+            if safety < 0.25 {
+                behavior_score_add(
+                    &mut scores,
+                    ActionType::Flee,
+                    behavior_urgency(1.0 - safety) * 2.00,
+                );
+            }
             if has_settlement
                 && !has_tool
                 && hunger >= 0.4
@@ -747,16 +791,20 @@ fn behavior_select_action(
         return ActionType::Wander;
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 14] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 18] = [
+        ActionType::Flee,
         ActionType::SeekShelter,
         ActionType::Drink,
+        ActionType::Eat,
         ActionType::SitByFire,
+        ActionType::Hunt,
         ActionType::Forage,
         ActionType::GatherWood,
         ActionType::GatherStone,
         ActionType::Build,
         ActionType::Craft,
         ActionType::Socialize,
+        ActionType::Sleep,
         ActionType::Rest,
         ActionType::VisitPartner,
         ActionType::TakeFromStockpile,
@@ -1133,6 +1181,26 @@ impl SimSystem for BehaviorRuntimeSystem {
             let has_settlement = identity_opt
                 .and_then(|identity| identity.settlement_id)
                 .is_some();
+            let has_food_item = inventory_opt
+                .map(|inventory| {
+                    inventory.items.iter().any(|item_id| {
+                        resources
+                            .item_store
+                            .get(*item_id)
+                            .map(|item| {
+                                matches!(
+                                    item.template_id.as_str(),
+                                    "raw_meat"
+                                        | "berries"
+                                        | "raw_fish"
+                                        | "cooked_meat"
+                                        | "dried_meat"
+                                )
+                            })
+                            .unwrap_or(false)
+                    })
+                })
+                .unwrap_or(false);
             let has_tool = crafting::inventory_has_tool(inventory_opt, resources);
             let next_action = behavior_select_action(
                 age.stage,
@@ -1143,6 +1211,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 behavior,
                 build_target.is_some(),
                 has_settlement,
+                has_food_item,
                 has_tool,
                 &mut resources.rng,
             );
@@ -1199,6 +1268,7 @@ impl SimSystem for BehaviorRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::{rngs::StdRng, SeedableRng};
     use sim_core::components::{Identity, Needs};
     use sim_core::config::GameConfig;
     use sim_core::{Building, GameCalendar, SettlementId, WorldMap};
@@ -1431,5 +1501,113 @@ mod tests {
         assert!(behavior.action_target_x.is_some());
         assert!(behavior.action_target_y.is_some());
         assert_ne!(behavior.action_target_x, Some(8));
+    }
+
+    #[test]
+    fn behavior_select_action_scores_eat_when_hungry_with_food_item() {
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.45);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.energy = 0.90;
+        let mut rng = StdRng::seed_from_u64(11);
+
+        let action = behavior_select_action(
+            GrowthStage::Adult,
+            &needs,
+            None,
+            None,
+            None,
+            &Behavior::default(),
+            false,
+            true,
+            true,
+            false,
+            &mut rng,
+        );
+
+        assert_eq!(action, ActionType::Eat);
+    }
+
+    #[test]
+    fn behavior_select_action_scores_hunt_when_very_hungry() {
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.32);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.energy = 0.90;
+        let mut rng = StdRng::seed_from_u64(12);
+
+        let action = behavior_select_action(
+            GrowthStage::Adult,
+            &needs,
+            None,
+            None,
+            None,
+            &Behavior::default(),
+            false,
+            true,
+            false,
+            false,
+            &mut rng,
+        );
+
+        assert_eq!(action, ActionType::Hunt);
+    }
+
+    #[test]
+    fn behavior_select_action_scores_sleep_when_exhausted_and_safe() {
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.80);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.90);
+        needs.set(NeedType::Safety, 0.90);
+        needs.energy = 0.20;
+        let mut rng = StdRng::seed_from_u64(13);
+
+        let action = behavior_select_action(
+            GrowthStage::Adult,
+            &needs,
+            None,
+            None,
+            None,
+            &Behavior::default(),
+            false,
+            true,
+            false,
+            false,
+            &mut rng,
+        );
+
+        assert_eq!(action, ActionType::Sleep);
+    }
+
+    #[test]
+    fn behavior_select_action_forces_flee_when_safety_critical() {
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.70);
+        needs.set(NeedType::Thirst, 0.90);
+        needs.set(NeedType::Warmth, 0.80);
+        needs.set(NeedType::Safety, 0.10);
+        needs.energy = 0.70;
+        let mut rng = StdRng::seed_from_u64(14);
+
+        let action = behavior_select_action(
+            GrowthStage::Adult,
+            &needs,
+            None,
+            None,
+            None,
+            &Behavior::default(),
+            false,
+            true,
+            false,
+            false,
+            &mut rng,
+        );
+
+        assert_eq!(action, ActionType::Flee);
     }
 }

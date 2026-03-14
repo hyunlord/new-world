@@ -113,16 +113,17 @@ mod tests {
     use hecs::World;
     use sim_core::components::{
         Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
-        Intelligence, Memory, MemoryEntry, Needs, Personality, Position, SkillEntry, Skills,
-        Social, Stress, StressTrace, Traits, TraumaScar, Values,
+        Intelligence, Inventory, Memory, MemoryEntry, Needs, Personality, Position, SkillEntry,
+        Skills, Social, Stress, StressTrace, Traits, TraumaScar, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
     use sim_core::{
         config::GameConfig, ActionType, AttachmentType, Building, BuildingId, ChannelId,
         CopingStrategyId, EmotionType, GameCalendar, GrowthStage, HexacoAxis, HexacoFacet,
-        IntelligenceType, MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex,
-        SocialClass, TechState, ValueType, WorldMap,
+        IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner, MentalBreakType,
+        NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
+        WorldMap,
     };
     use sim_engine::{SimEngine, SimResources, SimSystem};
 
@@ -2000,6 +2001,65 @@ mod tests {
         assert!(
             (needs_after.get(NeedType::Thirst) as f32 - 0.45).abs() < 1e-6,
             "thirst should increase by THIRST_DRINK_RESTORE"
+        );
+    }
+
+    #[test]
+    fn movement_runtime_system_eat_consumes_food_item_from_inventory() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+
+        let food_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: food_id,
+            template_id: "berries".to_string(),
+            material_id: "birch".to_string(),
+            derived_stats: ItemDerivedStats::default(),
+            current_durability: 100.0,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(1)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(1)),
+            equipped_slot: None,
+        });
+
+        let age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::Eat,
+            action_target_x: Some(1),
+            action_target_y: Some(0),
+            action_timer: 1,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        let mut inventory = Inventory::new();
+        inventory.add(food_id);
+        let entity = world.spawn((Position::new(1, 0), behavior, needs, age, inventory));
+
+        let mut system = MovementRuntimeSystem::new(30, sim_core::config::MOVEMENT_TICK_INTERVAL);
+        system.run(&mut world, &mut resources, 21);
+
+        let behavior_after = world
+            .get::<&Behavior>(entity)
+            .expect("behavior should exist after eat completion");
+        let needs_after = world
+            .get::<&Needs>(entity)
+            .expect("needs should exist after eat completion");
+        let inventory_after = world
+            .get::<&Inventory>(entity)
+            .expect("inventory should exist after eat completion");
+
+        assert_eq!(behavior_after.current_action, ActionType::Idle);
+        assert!(!inventory_after.contains(food_id));
+        assert!(resources.item_store.get(food_id).is_none());
+        assert!(
+            needs_after.get(NeedType::Hunger) > 0.10,
+            "eat should still restore hunger after consuming an item"
         );
     }
 

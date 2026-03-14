@@ -43,6 +43,14 @@ fn tension_food_scarce(stockpile_food: f64, population: usize) -> bool {
     ratio < config::TENSION_RESOURCE_DEFICIT_TRIGGER as f32
 }
 
+#[inline]
+fn is_food_template(template: &str) -> bool {
+    matches!(
+        template,
+        "raw_meat" | "berries" | "raw_fish" | "cooked_meat" | "dried_meat"
+    )
+}
+
 #[derive(Debug, Clone, Copy)]
 struct TensionSettlementSnapshot {
     id: SettlementId,
@@ -1002,6 +1010,23 @@ impl SimSystem for MovementRuntimeSystem {
                 let completed_action = behavior.current_action;
                 match completed_action {
                     ActionType::Eat => {
+                        if let Some(inventory) = inventory_opt.as_mut() {
+                            let food_item_id = inventory
+                                .items
+                                .iter()
+                                .find(|item_id| {
+                                    resources
+                                        .item_store
+                                        .get(**item_id)
+                                        .map(|item| is_food_template(item.template_id.as_str()))
+                                        .unwrap_or(false)
+                                })
+                                .copied();
+                            if let Some(food_id) = food_item_id {
+                                inventory.remove(food_id);
+                                resources.item_store.remove(food_id);
+                            }
+                        }
                         if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Hunger,

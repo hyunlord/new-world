@@ -38,4 +38,43 @@
             value: 1.8,
         ),
     ),
+    MaterialDef(
+        id: "antler",
+        display_name_key: "MAT_ANTLER",
+        category: Animal,
+        tags: ["bone", "hard", "tool_material"],
+        properties: MaterialProperties(
+            hardness: 5.0,
+            density: 1.8,
+            melting_point: None,
+            rarity: 0.4,
+            value: 3.0,
+        ),
+    ),
+    MaterialDef(
+        id: "tusk",
+        display_name_key: "MAT_TUSK",
+        category: Animal,
+        tags: ["bone", "hard", "tool_material", "sharp"],
+        properties: MaterialProperties(
+            hardness: 5.5,
+            density: 1.9,
+            melting_point: None,
+            rarity: 0.5,
+            value: 4.0,
+        ),
+    ),
+    MaterialDef(
+        id: "feather",
+        display_name_key: "MAT_FEATHER",
+        category: Animal,
+        tags: ["light", "fletching"],
+        properties: MaterialProperties(
+            hardness: 0.5,
+            density: 0.1,
+            melting_point: None,
+            rarity: 0.2,
+            value: 0.5,
+        ),
+    ),
 ]

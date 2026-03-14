@@ -7,6 +7,16 @@
   "MAT_BONE": "뼈",
   "MAT_SINEW": "힘줄",
   "MAT_HIDE": "가죽",
+  "MAT_ANTLER": "뿔",
+  "MAT_TUSK": "상아",
+  "MAT_FEATHER": "깃털",
   "MAT_CLAY": "점토",
-  "MAT_NATIVE_COPPER": "자연동"
+  "MAT_CHARCOAL": "숯",
+  "MAT_NATIVE_COPPER": "자연동",
+  "MAT_SANDSTONE": "사암",
+  "MAT_SLATE": "점판암",
+  "MAT_CHALK": "백악",
+  "MAT_BIRCH": "자작나무",
+  "MAT_WILLOW": "버드나무",
+  "MAT_BAMBOO": "대나무"
 }

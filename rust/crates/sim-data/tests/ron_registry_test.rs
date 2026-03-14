@@ -54,7 +54,7 @@ fn ron_registry_loads_sample_data_and_derives_stats() {
         .expect("missing flint material");
     let stats = registry.derive_item_stats("knife", flint);
 
-    assert_eq!(registry.materials.len(), 10);
+    assert_eq!(registry.materials.len(), 20);
     assert!(registry.recipes.contains_key("stone_knife"));
     assert!((stats.damage - 8.4).abs() < f64::EPSILON);
     assert!((stats.speed - (5.0 / 2.6)).abs() < f64::EPSILON);

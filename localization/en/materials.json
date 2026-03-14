@@ -7,6 +7,16 @@
   "MAT_BONE": "Bone",
   "MAT_SINEW": "Sinew",
   "MAT_HIDE": "Hide",
+  "MAT_ANTLER": "Antler",
+  "MAT_TUSK": "Tusk",
+  "MAT_FEATHER": "Feather",
   "MAT_CLAY": "Clay",
-  "MAT_NATIVE_COPPER": "Native Copper"
+  "MAT_CHARCOAL": "Charcoal",
+  "MAT_NATIVE_COPPER": "Native Copper",
+  "MAT_SANDSTONE": "Sandstone",
+  "MAT_SLATE": "Slate",
+  "MAT_CHALK": "Chalk",
+  "MAT_BIRCH": "Birch",
+  "MAT_WILLOW": "Willow",
+  "MAT_BAMBOO": "Bamboo"
 }
