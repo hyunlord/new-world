@@ -16,9 +16,13 @@ var _entity_id: int = -1
 var _position: Vector2 = Vector2.ZERO
 var _notification_id: int = 0
 
-@onready var _tier_pip: ColorRect = %TierPip
-@onready var _message_label: RichTextLabel = %MessageLabel
-@onready var _time_label: Label = %TimeLabel
+const TIER_PIP_PATH: NodePath = ^"HBox/TierPip"
+const MESSAGE_LABEL_PATH: NodePath = ^"HBox/VBox/MessageLabel"
+const TIME_LABEL_PATH: NodePath = ^"HBox/VBox/TimeLabel"
+
+var _tier_pip: ColorRect = null
+var _message_label: RichTextLabel = null
+var _time_label: Label = null
 
 
 func _ready() -> void:
@@ -44,11 +48,11 @@ func _ready() -> void:
 
 func _ensure_ui_nodes() -> bool:
 	if _tier_pip == null:
-		_tier_pip = get_node_or_null("%TierPip") as ColorRect
+		_tier_pip = get_node_or_null(TIER_PIP_PATH) as ColorRect
 	if _message_label == null:
-		_message_label = get_node_or_null("%MessageLabel") as RichTextLabel
+		_message_label = get_node_or_null(MESSAGE_LABEL_PATH) as RichTextLabel
 	if _time_label == null:
-		_time_label = get_node_or_null("%TimeLabel") as Label
+		_time_label = get_node_or_null(TIME_LABEL_PATH) as Label
 	return _tier_pip != null and _message_label != null and _time_label != null
 
 
