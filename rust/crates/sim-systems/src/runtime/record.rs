@@ -591,6 +591,11 @@ fn chronicle_events_can_cluster(previous: Option<&ChronicleEvent>, next: &Chroni
     let Some(previous) = previous else {
         return false;
     };
+    if previous.event_type == ChronicleEventType::BandLifecycle
+        || next.event_type == ChronicleEventType::BandLifecycle
+    {
+        return false;
+    }
     next.tick.saturating_sub(previous.tick) <= config::CHRONICLE_CLUSTER_WINDOW_TICKS
         && previous.cause == next.cause
         && previous.event_type == next.event_type
@@ -602,6 +607,11 @@ fn cluster_to_timeline_entry(
     cluster: &ChronicleCluster,
 ) -> Option<ChronicleEntryLite> {
     let dominant = dominant_event(cluster.events.as_slice())?;
+    if dominant.event_type == ChronicleEventType::BandLifecycle
+        && dominant.cause == ChronicleEventCause::SocialGroup
+    {
+        return band_lifecycle_to_timeline_entry(world, resources, cluster, dominant);
+    }
     let base_score = cluster_base_score(cluster.events.as_slice());
     let cause_bonus = chronicle_cause_bonus(Some(dominant.cause));
     let raw_score = base_score + cause_bonus;
@@ -697,6 +707,104 @@ fn cluster_to_timeline_entry(
             repeat_penalty,
             final_score: score,
             reason_tags: vec![format!("cause:{}", dominant.cause.id())],
+        },
+        queue_bucket: ChronicleQueueBucket::Dropped,
+        status: ChronicleEntryStatus::Pending,
+        surfaced_tick: None,
+        displacement_reason: None,
+        queue_transitions: Vec::new(),
+        thread_id: None,
+    })
+}
+
+fn band_lifecycle_to_timeline_entry(
+    world: &World,
+    resources: &mut SimResources,
+    cluster: &ChronicleCluster,
+    dominant: &ChronicleEvent,
+) -> Option<ChronicleEntryLite> {
+    let base_score = cluster_base_score(cluster.events.as_slice());
+    let cause_bonus = chronicle_cause_bonus(Some(dominant.cause));
+    let raw_score = base_score + cause_bonus;
+    let score = adjusted_cluster_significance(
+        resources,
+        dominant.event_type,
+        dominant.cause,
+        cluster.end_tick,
+        raw_score,
+    );
+    let repeat_penalty = (raw_score - score).max(0.0);
+    let category = chronicle_category(score);
+    if category < ChronicleSignificanceCategory::Notable {
+        return None;
+    }
+
+    let tile = cluster
+        .events
+        .last()
+        .map(|event| (event.tile_x, event.tile_y))?;
+    let agent_label = cluster
+        .entity_id
+        .map(|entity_id| chronicle_entity_label(world, entity_id))
+        .unwrap_or_default();
+    let mut params = dominant.summary_params.clone();
+    params
+        .entry("x".to_string())
+        .or_insert_with(|| tile.0.to_string());
+    params
+        .entry("y".to_string())
+        .or_insert_with(|| tile.1.to_string());
+    if !agent_label.is_empty() {
+        params
+            .entry("agent".to_string())
+            .or_insert_with(|| agent_label.clone());
+    }
+
+    Some(ChronicleEntryLite {
+        entry_id: resources.chronicle_timeline.allocate_entry_id(),
+        start_tick: cluster.start_tick,
+        end_tick: cluster.end_tick,
+        event_family: band_lifecycle_event_family(dominant.summary_key.as_str()),
+        event_type: dominant.event_type,
+        cause: dominant.cause,
+        headline: ChronicleHeadline {
+            locale_key: dominant.summary_key.clone(),
+            params: params.clone(),
+        },
+        capsule: ChronicleCapsule {
+            locale_key: dominant.summary_key.clone(),
+            params: params.clone(),
+        },
+        dossier_stub: ChronicleDossierStub {
+            locale_key: dominant.summary_key.clone(),
+            params,
+            detail_tags: band_lifecycle_dossier_stub_tags(dominant.summary_key.as_str()),
+        },
+        entity_ref: ChronicleSubjectRefLite {
+            entity_id: cluster.entity_id,
+            display_name: (!agent_label.is_empty()).then_some(agent_label),
+            ref_state: cluster
+                .entity_id
+                .map(|_| ChronicleEntityRefState::Alive)
+                .unwrap_or(ChronicleEntityRefState::Unknown),
+        },
+        location_ref: ChronicleLocationRefLite {
+            tile_x: tile.0,
+            tile_y: tile.1,
+            region_label: None,
+        },
+        significance: score,
+        significance_category: category,
+        significance_meta: ChronicleSignificanceMeta {
+            base_score,
+            cause_bonus,
+            group_bonus: 0.0,
+            repeat_penalty,
+            final_score: score,
+            reason_tags: vec![
+                format!("cause:{}", dominant.cause.id()),
+                format!("summary:{}", dominant.summary_key),
+            ],
         },
         queue_bucket: ChronicleQueueBucket::Dropped,
         status: ChronicleEntryStatus::Pending,
@@ -863,7 +971,35 @@ fn chronicle_cause_bonus(cause: Option<ChronicleEventCause>) -> f64 {
         ChronicleEventCause::Food => config::CHRONICLE_FOOD_BONUS,
         ChronicleEventCause::Warmth => config::CHRONICLE_WARMTH_BONUS,
         ChronicleEventCause::Social => config::CHRONICLE_SOCIAL_BONUS,
+        ChronicleEventCause::SocialGroup => config::CHRONICLE_SOCIAL_BONUS,
         _ => 0.0,
+    }
+}
+
+fn band_lifecycle_dossier_stub_tags(summary_key: &str) -> Vec<String> {
+    let mut tags = vec!["band".to_string(), "social".to_string()];
+    let kind = match summary_key {
+        "CHRONICLE_BAND_FORMED" => "formed",
+        "CHRONICLE_BAND_PROMOTED" => "promoted",
+        "CHRONICLE_BAND_SPLIT" => "split",
+        "CHRONICLE_BAND_DISSOLVED" => "dissolved",
+        "CHRONICLE_BAND_LEADER" => "leader",
+        "CHRONICLE_LONER_JOINED" => "recruitment",
+        _ => "lifecycle",
+    };
+    tags.push(kind.to_string());
+    tags
+}
+
+fn band_lifecycle_event_family(summary_key: &str) -> String {
+    match summary_key {
+        "CHRONICLE_BAND_FORMED" => "band.lifecycle.formed".to_string(),
+        "CHRONICLE_BAND_PROMOTED" => "band.lifecycle.promoted".to_string(),
+        "CHRONICLE_BAND_SPLIT" => "band.lifecycle.split".to_string(),
+        "CHRONICLE_BAND_DISSOLVED" => "band.lifecycle.dissolved".to_string(),
+        "CHRONICLE_BAND_LEADER" => "band.lifecycle.leader".to_string(),
+        "CHRONICLE_LONER_JOINED" => "band.lifecycle.joined".to_string(),
+        _ => "band.lifecycle.unknown".to_string(),
     }
 }
 
@@ -1065,7 +1201,32 @@ mod tests {
             tile_x,
             tile_y,
             summary_key: "CAUSE_TEST".to_string(),
+            summary_params: BTreeMap::new(),
             effect_key: "steering_velocity".to_string(),
+        }
+    }
+
+    fn make_band_event(
+        tick: u64,
+        entity_id: EntityId,
+        summary_key: &str,
+        params: BTreeMap<String, String>,
+    ) -> ChronicleEvent {
+        ChronicleEvent {
+            tick,
+            entity_id,
+            event_type: ChronicleEventType::BandLifecycle,
+            cause: ChronicleEventCause::SocialGroup,
+            magnitude: sim_engine::ChronicleEventMagnitude {
+                influence: 3.0,
+                steering: 0.0,
+                significance: 3.0,
+            },
+            tile_x: 8,
+            tile_y: 13,
+            summary_key: summary_key.to_string(),
+            summary_params: params,
+            effect_key: "band:test".to_string(),
         }
     }
 
@@ -1127,6 +1288,37 @@ mod tests {
             entry.significance_category,
             ChronicleSignificanceCategory::Major
         );
+    }
+
+    #[test]
+    fn band_lifecycle_cluster_uses_raw_summary_key_and_params() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let entity_id = make_entity(&mut world, "Ari");
+        let mut params = BTreeMap::new();
+        params.insert("name".to_string(), "band_7".to_string());
+        params.insert("leader".to_string(), "Ari".to_string());
+        let cluster = ChronicleCluster::new(make_band_event(
+            40,
+            entity_id,
+            "CHRONICLE_BAND_LEADER",
+            params,
+        ));
+
+        let entry = cluster_to_timeline_entry(&world, &mut resources, &cluster)
+            .expect("band lifecycle entry");
+
+        assert_eq!(entry.headline.locale_key, "CHRONICLE_BAND_LEADER");
+        assert_eq!(entry.capsule.locale_key, "CHRONICLE_BAND_LEADER");
+        assert_eq!(
+            entry.headline.params.get("name").map(String::as_str),
+            Some("band_7")
+        );
+        assert_eq!(
+            entry.headline.params.get("leader").map(String::as_str),
+            Some("Ari")
+        );
+        assert_eq!(entry.cause, ChronicleEventCause::SocialGroup);
     }
 
     #[test]

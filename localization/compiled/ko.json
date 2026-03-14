@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4268,
+    "active_key_count": 4274,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4268,
+    "key_count": 4274,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -239,6 +239,12 @@
     "BUILDING_TYPE_CAMPFIRE": "모닥불",
     "BUILDING_TYPE_SHELTER": "거처",
     "BUILDING_TYPE_STOCKPILE": "보관소",
+    "CHRONICLE_BAND_DISSOLVED": "무리 \"{name}\"이(가) 해산했다",
+    "CHRONICLE_BAND_FORMED": "{count}명이 무리를 이루었다",
+    "CHRONICLE_BAND_LEADER": "{leader}이(가) \"{name}\"의 리더가 되었다",
+    "CHRONICLE_BAND_PROMOTED": "무리 \"{name}\"이(가) 확립되었다",
+    "CHRONICLE_BAND_SPLIT": "무리 \"{name}\"이(가) 분열했다",
+    "CHRONICLE_LONER_JOINED": "{agent}이(가) \"{name}\"에 합류했다",
     "CHRONICLE_MENTAL_BREAK_END": "{name}(이)가 {break_type}에서 회복되었습니다.",
     "CHRONICLE_MENTAL_BREAK_START": "{name}(이)가 {break_type}에 빠졌습니다.",
     "CHRONICLE_SCAR_ACQUIRED": "{name}에게 '{scar}' 흉터가 생겼습니다",

@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
@@ -724,6 +726,7 @@ fn chronicle_event_for_decision(
         tile_x: position.tile_x(),
         tile_y: position.tile_y(),
         summary_key: cause.summary_key.to_string(),
+        summary_params: BTreeMap::new(),
         effect_key: "steering_velocity".to_string(),
     })
 }

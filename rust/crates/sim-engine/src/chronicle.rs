@@ -18,6 +18,8 @@ pub enum ChronicleEventType {
     ShelterSeeking,
     /// The entity discovered or biased toward a resource-rich location.
     ResourceDiscovery,
+    /// A band lifecycle event surfaced in the social narrative.
+    BandLifecycle,
 }
 
 /// Typed dominant cause categories for chronicle attribution.
@@ -37,6 +39,8 @@ pub enum ChronicleEventCause {
     Noise,
     /// Disease influence dominated the decision.
     Disease,
+    /// Social-group dynamics drove the event.
+    SocialGroup,
     /// No typed influence channel was available.
     Unknown,
 }
@@ -52,6 +56,7 @@ impl ChronicleEventCause {
             Self::Authority => "authority",
             Self::Noise => "noise",
             Self::Disease => "disease",
+            Self::SocialGroup => "social_group",
             Self::Unknown => "unknown",
         }
     }
@@ -114,6 +119,9 @@ pub struct ChronicleEvent {
     pub tile_y: i32,
     /// Locale key summarizing the event for later UI translation.
     pub summary_key: String,
+    /// Locale parameters used when the event is summarized into the timeline.
+    #[serde(default)]
+    pub summary_params: BTreeMap<String, String>,
     /// Stable effect identifier for debugging.
     pub effect_key: String,
 }
@@ -1947,6 +1955,7 @@ mod tests {
             tile_x: 4,
             tile_y: 9,
             summary_key: "CAUSE_INFLUENCE_FOOD_GRADIENT".to_string(),
+            summary_params: BTreeMap::new(),
             effect_key: "steering_velocity".to_string(),
         }
     }

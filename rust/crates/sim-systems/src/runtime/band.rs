@@ -9,7 +9,10 @@ use sim_core::config;
 use sim_core::enums::{HexacoAxis, NeedType};
 use sim_core::ids::{BandId, EntityId, SettlementId};
 use sim_core::Settlement;
-use sim_engine::{SimResources, SimSystem};
+use sim_engine::{
+    ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, SimEvent,
+    SimEventType, SimResources, SimSystem,
+};
 
 use super::band_behavior::refresh_band_behavior_state;
 
@@ -167,7 +170,7 @@ impl SimSystem for BandFormationSystem {
         let mut dissolved_band_ids: BTreeSet<BandId> = BTreeSet::new();
         let mut formed_events: Vec<(BandId, Vec<EntityId>)> = Vec::new();
         let mut promoted_events: Vec<(BandId, Vec<EntityId>)> = Vec::new();
-        let mut dissolved_events: Vec<(BandId, Vec<EntityId>)> = Vec::new();
+        let mut dissolved_events: Vec<(BandId, String, Vec<EntityId>)> = Vec::new();
         let mut leader_events: Vec<(BandId, EntityId, Vec<EntityId>)> = Vec::new();
         let mut split_events: Vec<(BandId, Vec<EntityId>, BandSplitCause)> = Vec::new();
         let mut loner_join_events: Vec<(BandId, EntityId)> = Vec::new();
@@ -306,7 +309,7 @@ impl SimSystem for BandFormationSystem {
 
         for band_id in &dissolved_band_ids {
             if let Some(old_band) = existing_bands.iter().find(|band| band.id == *band_id) {
-                dissolved_events.push((old_band.id, old_band.members.clone()));
+                dissolved_events.push((old_band.id, old_band.name.clone(), old_band.members.clone()));
             }
         }
 
@@ -330,6 +333,7 @@ impl SimSystem for BandFormationSystem {
                 "BAND_FORMED",
                 members.len() as f64,
             );
+            emit_band_formed_narrative(world, resources, tick, band_id, &members);
         }
         for (band_id, members) in promoted_events {
             push_band_causal(
@@ -341,6 +345,7 @@ impl SimSystem for BandFormationSystem {
                 "BAND_PROMOTED",
                 members.len() as f64,
             );
+            emit_band_promoted_narrative(world, resources, tick, band_id, &members);
         }
         for (band_id, members, cause) in split_events {
             push_band_causal(
@@ -352,8 +357,9 @@ impl SimSystem for BandFormationSystem {
                 "BAND_SPLIT",
                 members.len() as f64,
             );
+            emit_band_split_narrative(world, resources, tick, band_id, &members, cause);
         }
-        for (band_id, members) in dissolved_events {
+        for (band_id, band_name, members) in dissolved_events {
             push_band_causal(
                 resources,
                 tick,
@@ -363,6 +369,7 @@ impl SimSystem for BandFormationSystem {
                 "BAND_DISSOLVED",
                 members.len() as f64,
             );
+            emit_band_dissolved_narrative(world, resources, tick, band_id, band_name.as_str(), &members);
         }
         for (band_id, loner_id) in loner_join_events {
             push_band_causal(
@@ -374,9 +381,11 @@ impl SimSystem for BandFormationSystem {
                 "LONER_JOINED",
                 1.0,
             );
+            emit_loner_join_narrative(world, resources, tick, band_id, loner_id);
         }
         for (band_id, leader_id, members) in leader_events {
             push_band_leader_causal(resources, tick, band_id, leader_id, &members);
+            emit_band_leader_narrative(world, resources, tick, band_id, leader_id, &members);
         }
     }
 }
@@ -397,14 +406,15 @@ fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
     for band in resources.band_store.all() {
         let member_count = live_band_members.get(&band.id).map(Vec::len).unwrap_or(0);
         if member_count < config::BAND_MIN_SIZE_PROVISIONAL {
-            dissolved.push((band.id, band.members.clone()));
+            dissolved.push((band.id, band.name.clone(), band.members.clone()));
         }
     }
     if dissolved.is_empty() {
         return;
     }
 
-    let dissolved_ids: BTreeSet<BandId> = dissolved.iter().map(|(band_id, _)| *band_id).collect();
+    let dissolved_ids: BTreeSet<BandId> =
+        dissolved.iter().map(|(band_id, _, _)| *band_id).collect();
     let retained_bands: BTreeMap<BandId, Band> = resources
         .band_store
         .all()
@@ -416,7 +426,7 @@ fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
     apply_identity_band_ids(world, &retained_bands);
 
     let tick = resources.calendar.tick;
-    for (band_id, members) in dissolved {
+    for (band_id, band_name, members) in dissolved {
         resources.band_store.remove(band_id);
         push_band_causal(
             resources,
@@ -427,6 +437,7 @@ fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
             "BAND_DISSOLVED",
             members.len() as f64,
         );
+        emit_band_dissolved_narrative(world, resources, tick, band_id, band_name.as_str(), &members);
     }
     refresh_band_behavior_state(world, resources);
 }
@@ -1314,13 +1325,353 @@ fn push_band_leader_causal(
     }
 }
 
+fn emit_band_formed_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    members: &[EntityId],
+) {
+    let Some(actor_id) = band_actor_entity_id(resources, band_id, members) else {
+        return;
+    };
+    let band_name = band_name_for(resources, band_id);
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::BandFormed,
+        actor_id,
+        None,
+        &["band", "social", "formation"],
+        format!("provisional_formed_{}", band_id.0),
+        members.len() as f64,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("count".to_string(), members.len().to_string());
+    params.insert("name".to_string(), band_name.clone());
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        actor_id,
+        members,
+        "CHRONICLE_BAND_FORMED",
+        params,
+        format!("band_formed:{}", band_id.0),
+        members.len() as f64,
+    );
+}
+
+fn emit_band_promoted_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    members: &[EntityId],
+) {
+    let Some(actor_id) = band_actor_entity_id(resources, band_id, members) else {
+        return;
+    };
+    let band_name = band_name_for(resources, band_id);
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::BandPromoted,
+        actor_id,
+        None,
+        &["band", "social", "promotion"],
+        format!("band_promoted_{}", band_id.0),
+        members.len() as f64,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("name".to_string(), band_name);
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        actor_id,
+        members,
+        "CHRONICLE_BAND_PROMOTED",
+        params,
+        format!("band_promoted:{}", band_id.0),
+        members.len() as f64,
+    );
+}
+
+fn emit_band_split_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    members: &[EntityId],
+    cause: BandSplitCause,
+) {
+    let Some(actor_id) = band_actor_entity_id(resources, band_id, members) else {
+        return;
+    };
+    let band_name = band_name_for(resources, band_id);
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::BandSplit,
+        actor_id,
+        None,
+        &["band", "social", "split"],
+        cause.as_kind().to_string(),
+        members.len() as f64,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("name".to_string(), band_name);
+    params.insert("cause".to_string(), cause.as_kind().to_string());
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        actor_id,
+        members,
+        "CHRONICLE_BAND_SPLIT",
+        params,
+        format!("band_split:{}:{}", band_id.0, cause.as_kind()),
+        members.len() as f64,
+    );
+}
+
+fn emit_band_dissolved_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    band_name: &str,
+    members: &[EntityId],
+) {
+    let Some(actor_id) = members.first().copied() else {
+        return;
+    };
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::BandDissolved,
+        actor_id,
+        None,
+        &["band", "social", "dissolution"],
+        format!("band_dissolved_{}", band_id.0),
+        members.len() as f64,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("name".to_string(), band_name.to_string());
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        actor_id,
+        members,
+        "CHRONICLE_BAND_DISSOLVED",
+        params,
+        format!("band_dissolved:{}", band_id.0),
+        members.len() as f64,
+    );
+}
+
+fn emit_band_leader_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    leader_id: EntityId,
+    members: &[EntityId],
+) {
+    let band_name = band_name_for(resources, band_id);
+    let leader_name = entity_label(world, leader_id);
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::BandLeaderElected,
+        leader_id,
+        None,
+        &["band", "social", "leadership"],
+        format!("band_leader_elected_{}", band_id.0),
+        1.0,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("name".to_string(), band_name);
+    params.insert("leader".to_string(), leader_name);
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        leader_id,
+        members,
+        "CHRONICLE_BAND_LEADER",
+        params,
+        format!("band_leader:{}:{}", band_id.0, leader_id.0),
+        3.0,
+    );
+}
+
+fn emit_loner_join_narrative(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    band_id: BandId,
+    loner_id: EntityId,
+) {
+    let band_name = band_name_for(resources, band_id);
+    let agent_name = entity_label(world, loner_id);
+    push_band_sim_event(
+        resources,
+        tick,
+        SimEventType::LonerJoinedBand,
+        loner_id,
+        None,
+        &["band", "social", "recruitment"],
+        format!("loner_joined_band_{}", band_id.0),
+        1.0,
+    );
+
+    let mut params = BTreeMap::new();
+    params.insert("name".to_string(), band_name);
+    params.insert("agent".to_string(), agent_name);
+    append_band_chronicle_event(
+        world,
+        resources,
+        tick,
+        loner_id,
+        &[loner_id],
+        "CHRONICLE_LONER_JOINED",
+        params,
+        format!("band_join:{}", band_id.0),
+        3.0,
+    );
+}
+
+fn push_band_sim_event(
+    resources: &mut SimResources,
+    tick: u64,
+    event_type: SimEventType,
+    actor_id: EntityId,
+    target_id: Option<EntityId>,
+    tags: &[&str],
+    cause: String,
+    value: f64,
+) {
+    let Some(actor) = raw_entity_id(actor_id) else {
+        return;
+    };
+    resources.event_store.push(SimEvent {
+        tick,
+        event_type,
+        actor,
+        target: target_id.and_then(raw_entity_id),
+        tags: tags.iter().map(|tag| (*tag).to_string()).collect(),
+        cause,
+        value,
+    });
+}
+
+fn append_band_chronicle_event(
+    world: &World,
+    resources: &mut SimResources,
+    tick: u64,
+    entity_id: EntityId,
+    members: &[EntityId],
+    summary_key: &str,
+    summary_params: BTreeMap<String, String>,
+    effect_key: String,
+    magnitude: f64,
+) {
+    let (tile_x, tile_y) = band_event_tile(world, members);
+    resources.chronicle_log.append_event(ChronicleEvent {
+        tick,
+        entity_id,
+        event_type: ChronicleEventType::BandLifecycle,
+        cause: ChronicleEventCause::SocialGroup,
+        magnitude: ChronicleEventMagnitude {
+            influence: magnitude,
+            steering: 0.0,
+            significance: magnitude.max(3.0),
+        },
+        tile_x,
+        tile_y,
+        summary_key: summary_key.to_string(),
+        summary_params,
+        effect_key,
+    });
+}
+
+fn band_name_for(resources: &SimResources, band_id: BandId) -> String {
+    resources
+        .band_store
+        .get(band_id)
+        .map(|band| band.name.clone())
+        .unwrap_or_else(|| generate_band_name(band_id))
+}
+
+fn band_actor_entity_id(
+    resources: &SimResources,
+    band_id: BandId,
+    members: &[EntityId],
+) -> Option<EntityId> {
+    resources
+        .band_store
+        .get(band_id)
+        .and_then(|band| band.leader.or_else(|| band.members.first().copied()))
+        .or_else(|| members.first().copied())
+}
+
+fn raw_entity_id(entity_id: EntityId) -> Option<u32> {
+    u32::try_from(entity_id.0).ok()
+}
+
+fn entity_label(world: &World, entity_id: EntityId) -> String {
+    let mut query = world.query::<&Identity>();
+    query
+        .iter()
+        .find_map(|(entity, identity)| {
+            (entity.id() as u64 == entity_id.0).then(|| identity.name.clone())
+        })
+        .unwrap_or_else(|| format!("#{}", entity_id.0))
+}
+
+fn band_event_tile(world: &World, members: &[EntityId]) -> (i32, i32) {
+    let member_ids: BTreeSet<EntityId> = members.iter().copied().collect();
+    if member_ids.is_empty() {
+        return (0, 0);
+    }
+
+    let mut sum_x = 0.0;
+    let mut sum_y = 0.0;
+    let mut count = 0usize;
+    let mut query = world.query::<&Position>();
+    for (entity, position) in &mut query {
+        if member_ids.contains(&EntityId(entity.id() as u64)) {
+            sum_x += position.x;
+            sum_y += position.y;
+            count += 1;
+        }
+    }
+
+    if count == 0 {
+        (0, 0)
+    } else {
+        (
+            (sum_x / count as f64).round() as i32,
+            (sum_y / count as f64).round() as i32,
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use hecs::Entity;
     use sim_core::band::BandStore;
     use sim_core::{config::GameConfig, GameCalendar, WorldMap};
-    use sim_engine::SimResources;
+    use sim_engine::{SimEventType, SimResources};
 
     fn make_resources() -> SimResources {
         let config = GameConfig::default();
@@ -1654,6 +2005,21 @@ mod tests {
             .expect("identity")
             .band_id
             .is_some());
+        assert_eq!(
+            resources
+                .event_store
+                .by_type(&SimEventType::BandFormed, 0)
+                .len(),
+            1
+        );
+        let chronicle = resources.chronicle_log.recent_events(4);
+        assert!(chronicle
+            .iter()
+            .any(|event| event.summary_key == "CHRONICLE_BAND_FORMED"));
+        assert!(chronicle.iter().any(|event| {
+            event.summary_key == "CHRONICLE_BAND_FORMED"
+                && event.summary_params.get("count").map(String::as_str) == Some("3")
+        }));
     }
 
     #[test]
@@ -2069,6 +2435,19 @@ mod tests {
             .map(|event| event.summary_key.as_str())
             .collect::<Vec<_>>();
         assert!(recent.contains(&"BAND_SPLIT"));
+        assert_eq!(
+            resources.event_store.by_type(&SimEventType::BandSplit, 0).len(),
+            1
+        );
+        let chronicle = resources.chronicle_log.recent_events(8);
+        assert!(chronicle
+            .iter()
+            .any(|event| event.summary_key == "CHRONICLE_BAND_SPLIT"));
+        assert!(chronicle.iter().any(|event| {
+            event.summary_key == "CHRONICLE_BAND_SPLIT"
+                && event.summary_params.get("cause").map(String::as_str)
+                    == Some(BandSplitCause::TrustCollapse.as_kind())
+        }));
     }
 
     #[test]
@@ -2248,6 +2627,21 @@ mod tests {
         assert!(!member_events
             .iter()
             .any(|event| event.summary_key == "LONER_JOINED"));
+        assert_eq!(
+            resources
+                .event_store
+                .by_type(&SimEventType::LonerJoinedBand, 0)
+                .len(),
+            1
+        );
+        let chronicle = resources.chronicle_log.recent_events(8);
+        assert!(chronicle
+            .iter()
+            .any(|event| event.summary_key == "CHRONICLE_LONER_JOINED"));
+        assert!(chronicle.iter().any(|event| {
+            event.summary_key == "CHRONICLE_LONER_JOINED"
+                && event.summary_params.get("agent").map(String::as_str) == Some("Loner")
+        }));
     }
 
     #[test]

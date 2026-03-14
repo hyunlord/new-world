@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4268,
+    "active_key_count": 4274,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4268,
+    "key_count": 4274,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -239,6 +239,12 @@
     "BUILDING_TYPE_CAMPFIRE": "Campfire",
     "BUILDING_TYPE_SHELTER": "Shelter",
     "BUILDING_TYPE_STOCKPILE": "Stockpile",
+    "CHRONICLE_BAND_DISSOLVED": "The band \"{name}\" has disbanded",
+    "CHRONICLE_BAND_FORMED": "A group of {count} has banded together",
+    "CHRONICLE_BAND_LEADER": "{leader} now leads \"{name}\"",
+    "CHRONICLE_BAND_PROMOTED": "The band \"{name}\" is now established",
+    "CHRONICLE_BAND_SPLIT": "The band \"{name}\" has split apart",
+    "CHRONICLE_LONER_JOINED": "{agent} joined \"{name}\"",
     "CHRONICLE_MENTAL_BREAK_END": "{name} recovered from {break_type}.",
     "CHRONICLE_MENTAL_BREAK_START": "{name} fell into {break_type}.",
     "CHRONICLE_SCAR_ACQUIRED": "{name} developed a '{scar}' scar",
