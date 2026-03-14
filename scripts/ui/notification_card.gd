@@ -16,9 +16,9 @@ var _entity_id: int = -1
 var _position: Vector2 = Vector2.ZERO
 var _notification_id: int = 0
 
-@onready var _tier_pip: ColorRect = get_node("TierPip") as ColorRect
-@onready var _message_label: RichTextLabel = get_node("VBox/MessageLabel") as RichTextLabel
-@onready var _time_label: Label = get_node("VBox/TimeLabel") as Label
+@onready var _tier_pip: ColorRect = get_node("HBox/TierPip") as ColorRect
+@onready var _message_label: RichTextLabel = get_node("HBox/VBox/MessageLabel") as RichTextLabel
+@onready var _time_label: Label = get_node("HBox/VBox/TimeLabel") as Label
 
 
 func _ready() -> void:
@@ -30,6 +30,10 @@ func _ready() -> void:
 	style.border_width_top = 1
 	style.border_width_right = 1
 	style.border_width_bottom = 1
+	style.content_margin_left = 0
+	style.content_margin_top = 8
+	style.content_margin_right = 10
+	style.content_margin_bottom = 8
 	style.corner_radius_top_left = 6
 	style.corner_radius_top_right = 6
 	style.corner_radius_bottom_left = 6
