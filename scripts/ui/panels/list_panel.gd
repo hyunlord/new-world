@@ -554,7 +554,7 @@ func _get_entity_rows_from_bridge() -> Array:
 			"died": 9999999, "died_display": "-",
 			"job": job_raw, "job_display": Locale.tr_id("JOB", job_raw),
 			"status": "", "settlement": 0,
-			"hunger": 0.0, "deceased": false, "is_leader": false,
+			"hunger": float(item.get("hunger", 0.0)), "deceased": false, "is_leader": false,
 		})
 	return rows
 

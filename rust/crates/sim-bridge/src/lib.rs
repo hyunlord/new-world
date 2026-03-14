@@ -1043,6 +1043,66 @@ fn recent_story_events_for_entity(
     result
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct EntityListRowSnapshot {
+    entity_id: i64,
+    name: String,
+    age_years: f32,
+    sex: String,
+    alive: bool,
+    band_id: i64,
+    growth_stage: String,
+    job: String,
+    hunger: f32,
+}
+
+fn collect_entity_list_rows(world: &hecs::World) -> Vec<EntityListRowSnapshot> {
+    let mut result: Vec<EntityListRowSnapshot> = Vec::new();
+
+    for (entity, (id, age, needs_opt)) in world.query::<(&Identity, &Age, Option<&Needs>)>().iter()
+    {
+        let job = world
+            .get::<&Behavior>(entity)
+            .map(|b| b.job.clone())
+            .unwrap_or_default();
+        result.push(EntityListRowSnapshot {
+            entity_id: entity.to_bits().get() as i64,
+            name: id.name.clone(),
+            age_years: age.years as f32,
+            sex: runtime_sex_to_str(id.sex).to_string(),
+            alive: age.alive,
+            band_id: runtime_queries::runtime_band_id_raw(id.band_id),
+            growth_stage: runtime_growth_stage_to_str(id.growth_stage).to_string(),
+            job,
+            hunger: needs_opt
+                .map(|needs| needs.get(NeedType::Hunger) as f32)
+                .unwrap_or(0.0_f32),
+        });
+    }
+
+    result
+}
+
+fn bridge_entity_list(world: &hecs::World) -> Array<VarDictionary> {
+    let mut result: Array<VarDictionary> = Array::new();
+
+    for row in collect_entity_list_rows(world) {
+        let mut d = VarDictionary::new();
+        d.set("entity_id", row.entity_id);
+        d.set("name", row.name);
+        d.set("age_years", row.age_years);
+        d.set("sex", row.sex);
+        d.set("alive", row.alive);
+        d.set("band_id", row.band_id);
+        d.set("growth_stage", row.growth_stage);
+        d.set("job", row.job);
+        d.set("hunger", row.hunger);
+        result.push(&d);
+    }
+
+    result
+}
+
 fn build_thought_text(
     name: &str,
     emotion_adjective: Option<&str>,
@@ -2598,29 +2658,10 @@ impl WorldSimRuntime {
     /// Used by the population list panel.
     #[func]
     fn runtime_get_entity_list(&self) -> Array<VarDictionary> {
-        let mut result: Array<VarDictionary> = Array::new();
         let Some(state) = self.state.as_ref() else {
-            return result;
+            return Array::new();
         };
-        let world = state.engine.world();
-
-        for (entity, (id, age)) in world.query::<(&Identity, &Age)>().iter() {
-            let mut d = VarDictionary::new();
-            d.set("entity_id", entity.to_bits().get() as i64);
-            d.set("name", id.name.clone());
-            d.set("age_years", age.years as f32);
-            d.set("sex", runtime_sex_to_str(id.sex));
-            d.set("alive", age.alive);
-            d.set("band_id", runtime_queries::runtime_band_id_raw(id.band_id));
-            d.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
-            let job = world
-                .get::<&Behavior>(entity)
-                .map(|b| b.job.clone())
-                .unwrap_or_default();
-            d.set("job", job);
-            result.push(&d);
-        }
-        result
+        bridge_entity_list(state.engine.world())
     }
 
     #[func]
@@ -6402,7 +6443,8 @@ mod tests {
         PATHFIND_BACKEND_GPU,
     };
     use super::{
-        archetype_label_key_from_axes, build_thought_text, decode_ws2_blob,
+        archetype_label_key_from_axes, build_thought_text, collect_entity_list_rows,
+        decode_ws2_blob,
         dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
         dispatch_pathfind_grid_bytes, encode_ws2_blob, format_fluent_from_source_args,
         get_pathfind_backend_mode, has_gpu_pathfind_backend, is_significant_story_event,
@@ -6417,8 +6459,8 @@ mod tests {
     use fluent_bundle::types::FluentNumber;
     use fluent_bundle::{FluentArgs, FluentValue};
     use godot::prelude::Vector2;
-    use sim_core::components::{LlmPending, LlmRequestType, NarrativeCache};
-    use sim_core::enums::ActionType;
+    use sim_core::components::{Age, Identity, LlmPending, LlmRequestType, NarrativeCache, Needs};
+    use sim_core::enums::{ActionType, NeedType};
     use sim_core::{EntityId, SettlementId};
     use sim_engine::{
         ChronicleCapsule, ChronicleDossierStub, ChronicleEntityRefState, ChronicleEntryId,
@@ -6524,6 +6566,39 @@ mod tests {
         assert!(!is_significant_story_event(&idle_to_gather));
         assert!(!is_significant_story_event(&rest_to_sleep));
         assert!(is_significant_story_event(&flee_to_fight));
+    }
+
+    #[test]
+    fn bridge_entity_list_surfaces_hunger_and_missing_needs_fallback() {
+        let mut world = hecs::World::new();
+
+        let mut hungry_identity = Identity::default();
+        hungry_identity.name = "Kaya".to_string();
+        let mut hungry_age = Age::default();
+        hungry_age.years = 12.0;
+        let mut hungry_needs = Needs::default();
+        hungry_needs.set(NeedType::Hunger, 0.42);
+        world.spawn((hungry_identity, hungry_age, hungry_needs));
+
+        let mut fallback_identity = Identity::default();
+        fallback_identity.name = "NoNeeds".to_string();
+        let mut fallback_age = Age::default();
+        fallback_age.years = 8.0;
+        world.spawn((fallback_identity, fallback_age));
+
+        let rows = collect_entity_list_rows(&world);
+        let mut hunger_by_name: std::collections::BTreeMap<String, f32> =
+            std::collections::BTreeMap::new();
+
+        for row in rows {
+            hunger_by_name.insert(row.name, row.hunger);
+        }
+
+        let kaya_hunger = hunger_by_name.get("Kaya").copied().unwrap_or(-1.0);
+        let fallback_hunger = hunger_by_name.get("NoNeeds").copied().unwrap_or(-1.0);
+
+        assert!((kaya_hunger - 0.42).abs() < 1.0e-6);
+        assert_eq!(fallback_hunger, 0.0);
     }
 
     #[test]
