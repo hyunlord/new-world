@@ -505,23 +505,25 @@ fn behavior_score_mul(scores: &mut HashMap<ActionType, f32>, action: ActionType,
 #[inline]
 fn behavior_base_timer(action: ActionType) -> i32 {
     match action {
-        ActionType::Wander => 5,
-        ActionType::Forage | ActionType::GatherWood | ActionType::GatherStone => 20,
-        ActionType::Eat => 20,
-        ActionType::Hunt => 120,
-        ActionType::DeliverToStockpile => 30,
-        ActionType::Build => 25,
-        ActionType::Craft => 30,
-        ActionType::TakeFromStockpile => 15,
-        ActionType::Rest => 200,
-        ActionType::Sleep => 400,
-        ActionType::Socialize => 8,
-        ActionType::VisitPartner => 15,
-        ActionType::Drink => 10,
-        ActionType::Flee => 30,
-        ActionType::SitByFire => 20,
-        ActionType::SeekShelter => 15,
-        _ => 10,
+        ActionType::Wander => config::ACTION_TIMER_WANDER,
+        ActionType::Forage | ActionType::GatherWood | ActionType::GatherStone => {
+            config::ACTION_TIMER_FORAGE
+        }
+        ActionType::Eat => config::ACTION_TIMER_EAT,
+        ActionType::Hunt => config::ACTION_TIMER_HUNT,
+        ActionType::DeliverToStockpile => config::ACTION_TIMER_DELIVER,
+        ActionType::Build => config::ACTION_TIMER_BUILD,
+        ActionType::Craft => config::ACTION_TIMER_CRAFT,
+        ActionType::TakeFromStockpile => config::ACTION_TIMER_TAKE_STOCKPILE,
+        ActionType::Rest => config::ACTION_TIMER_REST,
+        ActionType::Sleep => config::ACTION_TIMER_SLEEP,
+        ActionType::Socialize => config::ACTION_TIMER_SOCIALIZE,
+        ActionType::VisitPartner => config::ACTION_TIMER_VISIT_PARTNER,
+        ActionType::Drink => config::ACTION_TIMER_DRINK,
+        ActionType::Flee => config::ACTION_TIMER_FLEE,
+        ActionType::SitByFire => config::ACTION_TIMER_SIT_BY_FIRE,
+        ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
+        _ => config::ACTION_TIMER_DEFAULT,
     }
 }
 
@@ -1276,7 +1278,12 @@ mod tests {
 
     #[test]
     fn behavior_base_timer_keeps_rest_long_enough_for_recovery() {
-        assert_eq!(behavior_base_timer(ActionType::Rest), 200);
+        assert_eq!(behavior_base_timer(ActionType::Rest), config::ACTION_TIMER_REST);
+        assert_eq!(behavior_base_timer(ActionType::Sleep), config::ACTION_TIMER_SLEEP);
+        assert_eq!(
+            behavior_base_timer(ActionType::Forage),
+            config::ACTION_TIMER_FORAGE
+        );
     }
 
     #[test]
@@ -1395,8 +1402,8 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Rest);
         assert_eq!(behavior.action_target_x, Some(4));
         assert_eq!(behavior.action_target_y, Some(4));
-        assert_eq!(behavior.action_duration, 200);
-        assert_eq!(behavior.action_timer, 200);
+        assert_eq!(behavior.action_duration, config::ACTION_TIMER_REST);
+        assert_eq!(behavior.action_timer, config::ACTION_TIMER_REST);
     }
 
     #[test]

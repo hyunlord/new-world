@@ -2069,6 +2069,61 @@ mod tests {
     }
 
     #[test]
+    fn movement_runtime_system_forage_can_grant_berries_to_inventory() {
+        let mut world = World::new();
+        let mut resources = make_resources();
+        let age = Age {
+            stage: GrowthStage::Adult,
+            ..Age::default()
+        };
+        let behavior = Behavior {
+            current_action: ActionType::Forage,
+            action_target_x: Some(0),
+            action_target_y: Some(0),
+            action_timer: 1,
+            ..Behavior::default()
+        };
+        let mut needs = Needs::default();
+        needs.set(NeedType::Hunger, 0.10);
+        let inventory = Inventory::new();
+        let entity = world.spawn((Position::new(0, 0), behavior, needs, age, inventory));
+
+        let mut system = MovementRuntimeSystem::new(30, sim_core::config::MOVEMENT_TICK_INTERVAL);
+        let mut found_berries = false;
+        for step in 0..32 {
+            {
+                let mut behavior = world
+                    .get::<&mut Behavior>(entity)
+                    .expect("behavior should exist before forage tick");
+                behavior.current_action = ActionType::Forage;
+                behavior.action_target_x = Some(0);
+                behavior.action_target_y = Some(0);
+                behavior.action_timer = 1;
+            }
+            system.run(&mut world, &mut resources, 30 + step);
+
+            let inventory_after = world
+                .get::<&Inventory>(entity)
+                .expect("inventory should exist after forage tick");
+            found_berries = inventory_after.items.iter().any(|item_id| {
+                resources
+                    .item_store
+                    .get(*item_id)
+                    .map(|item| item.template_id == "berries")
+                    .unwrap_or(false)
+            });
+            if found_berries {
+                break;
+            }
+        }
+
+        assert!(
+            found_berries,
+            "deterministic forage loop should eventually award berries"
+        );
+    }
+
+    #[test]
     fn leader_runtime_system_elects_best_candidate_and_sets_countdown() {
         let mut world = World::new();
         let mut resources = make_resources();

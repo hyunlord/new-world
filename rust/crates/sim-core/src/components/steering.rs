@@ -1,3 +1,4 @@
+use crate::config;
 use serde::{Deserialize, Serialize};
 
 /// Per-agent steering parameters derived from HEXACO personality.
@@ -42,8 +43,8 @@ pub struct SteeringParams {
 impl Default for SteeringParams {
     fn default() -> Self {
         Self {
-            base_speed: 60.0,
-            speed_variance: 0.08,
+            base_speed: config::AGENT_BASE_SPEED,
+            speed_variance: config::AGENT_SPEED_VARIANCE,
             wander_radius: 30.0,
             wander_distance: 40.0,
             wander_jitter: 15.0,
@@ -66,11 +67,13 @@ impl Default for SteeringParams {
 #[cfg(test)]
 mod tests {
     use super::SteeringParams;
+    use crate::config;
 
     #[test]
     fn default_steering_params_match_ticket_baseline() {
         let params = SteeringParams::default();
-        assert_eq!(params.base_speed, 60.0);
+        assert_eq!(params.base_speed, config::AGENT_BASE_SPEED);
+        assert_eq!(params.speed_variance, config::AGENT_SPEED_VARIANCE);
         assert_eq!(params.wander_radius, 30.0);
         assert_eq!(params.personal_space_radius, 25.0);
         assert_eq!(params.mood_speed_multiplier, 1.0);

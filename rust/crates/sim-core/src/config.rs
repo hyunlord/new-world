@@ -309,6 +309,10 @@ pub const BEHAVIOR_TOP_N_SELECTION: usize = 3; // TODO(A-5): -> BehaviorSystem t
 pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0; // TODO(A-5): -> steering metadata
 pub const STEERING_MAX_FORCE: f64 = 100.0; // TODO(A-5): -> steering metadata
 pub const STEERING_MAX_SPEED: f64 = 120.0; // TODO(A-5): -> steering metadata
+/// Base agent movement speed in pixels per second.
+pub const AGENT_BASE_SPEED: f64 = 30.0;
+/// Random per-tick speed variation as a fraction of `AGENT_BASE_SPEED`.
+pub const AGENT_SPEED_VARIANCE: f64 = 0.08;
 pub const STEERING_INFLUENCE_FORCE_WEIGHT: f64 = 0.85; // TODO(A-5): -> steering metadata
 pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering metadata
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
@@ -708,9 +712,31 @@ pub const ERG_RELATEDNESS_SCORE_BOOST: f64 = 0.25;
 pub const ERG_STRESS_INJECT_RATE: f64 = 1.5;
 
 // ── Eating ────────────────────────────────────────────────────────────────────
+// --- Action Base Timers (ticks) ---
+// TICKS_PER_DAY = 12, so these represent fractions of a game day.
+pub const ACTION_TIMER_WANDER: i32 = 8;
+pub const ACTION_TIMER_FORAGE: i32 = 6;
+pub const ACTION_TIMER_EAT: i32 = 3;
+pub const ACTION_TIMER_HUNT: i32 = 12;
+pub const ACTION_TIMER_DELIVER: i32 = 4;
+pub const ACTION_TIMER_BUILD: i32 = 8;
+pub const ACTION_TIMER_CRAFT: i32 = 10;
+pub const ACTION_TIMER_TAKE_STOCKPILE: i32 = 3;
+pub const ACTION_TIMER_REST: i32 = 8;
+pub const ACTION_TIMER_SLEEP: i32 = 10;
+pub const ACTION_TIMER_SOCIALIZE: i32 = 4;
+pub const ACTION_TIMER_VISIT_PARTNER: i32 = 4;
+pub const ACTION_TIMER_DRINK: i32 = 3;
+pub const ACTION_TIMER_FLEE: i32 = 6;
+pub const ACTION_TIMER_SIT_BY_FIRE: i32 = 6;
+pub const ACTION_TIMER_SEEK_SHELTER: i32 = 4;
+pub const ACTION_TIMER_DEFAULT: i32 = 4;
+
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;
 pub const HUNGER_EAT_THRESHOLD: f64 = 0.5;
+pub const FORAGE_BERRIES_DROP_CHANCE: f64 = 0.30;
+pub const FORAGE_FOOD_BUFFER_SLOTS: usize = 3;
 /// Probe bootstrap hunger for the primary observed settler.
 pub const PROBE_START_PRIMARY_HUNGER: f64 = 0.22;
 /// Probe bootstrap energy for the primary observed settler.
