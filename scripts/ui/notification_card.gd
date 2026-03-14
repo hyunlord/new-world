@@ -16,9 +16,9 @@ var _entity_id: int = -1
 var _position: Vector2 = Vector2.ZERO
 var _notification_id: int = 0
 
-@onready var _tier_pip: ColorRect = get_node("HBox/TierPip") as ColorRect
-@onready var _message_label: RichTextLabel = get_node("HBox/VBox/MessageLabel") as RichTextLabel
-@onready var _time_label: Label = get_node("HBox/VBox/TimeLabel") as Label
+@onready var _tier_pip: ColorRect = %TierPip
+@onready var _message_label: RichTextLabel = %MessageLabel
+@onready var _time_label: Label = %TimeLabel
 
 
 func _ready() -> void:
@@ -39,9 +39,24 @@ func _ready() -> void:
 	style.corner_radius_bottom_left = 6
 	style.corner_radius_bottom_right = 6
 	add_theme_stylebox_override("panel", style)
+	_ensure_ui_nodes()
 
 
-func setup(notif_data: Dictionary) -> void:
+func _ensure_ui_nodes() -> bool:
+	if _tier_pip == null:
+		_tier_pip = get_node_or_null("%TierPip") as ColorRect
+	if _message_label == null:
+		_message_label = get_node_or_null("%MessageLabel") as RichTextLabel
+	if _time_label == null:
+		_time_label = get_node_or_null("%TimeLabel") as Label
+	return _tier_pip != null and _message_label != null and _time_label != null
+
+
+func setup(notif_data: Dictionary) -> bool:
+	if not _ensure_ui_nodes():
+		visible = false
+		push_warning("NotificationCard UI nodes are not ready yet.")
+		return false
 	_notification_id = int(notif_data.get("tick", 0))
 	_entity_id = int(notif_data.get("primary_entity", -1))
 	_position = Vector2(
@@ -58,9 +73,12 @@ func setup(notif_data: Dictionary) -> void:
 	_message_label.text = message_text
 	_time_label.text = GameCalendar.format_short_datetime(int(notif_data.get("tick", 0)))
 	visible = true
+	return true
 
 
 func reset() -> void:
+	if not _ensure_ui_nodes():
+		return
 	_notification_id = 0
 	_entity_id = -1
 	_position = Vector2.ZERO
