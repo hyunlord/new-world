@@ -43,9 +43,9 @@ use pathfinding_core::{
     PATHFIND_BACKEND_GPU,
 };
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, LlmCapable,
-    LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position, Skills,
-    Social, Stress, Traits, Values,
+    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, Inventory,
+    LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position,
+    Skills, Social, Stress, Traits, Values,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelId, EntityId, Settlement, SettlementId, Temperament};
@@ -1994,6 +1994,29 @@ impl WorldSimRuntime {
             dict.set("temperament_label_key", temperament.archetype_label_key());
         }
 
+        // Personal inventory (ItemStore-backed)
+        if let Ok(inventory) = world.get::<&Inventory>(entity) {
+            let mut inv_items: Array<VarDictionary> = Array::new();
+            for &item_id in &inventory.items {
+                if let Some(item) = state.engine.resources().item_store.get(item_id) {
+                    let mut item_dict = VarDictionary::new();
+                    item_dict.set("id", item.id.0 as i64);
+                    item_dict.set("template_id", item.template_id.as_str());
+                    item_dict.set("material_id", item.material_id.as_str());
+                    item_dict.set("damage", item.derived_stats.damage as f32);
+                    item_dict.set("speed", item.derived_stats.speed as f32);
+                    item_dict.set("max_durability", item.derived_stats.max_durability as f32);
+                    item_dict.set("current_durability", item.current_durability as f32);
+                    item_dict.set("quality", item.quality as f32);
+                    item_dict.set("stack_count", item.stack_count as i64);
+                    inv_items.push(&item_dict);
+                }
+            }
+            dict.set("inv_items", inv_items);
+            dict.set("inv_item_count", inventory.count() as i64);
+            dict.set("inv_max_tools", inventory.max_tool_slots as i64);
+        }
+
         // Emotions (Plutchik 8)
         if let Ok(emo) = world.get::<&Emotion>(entity) {
             dict.set("emo_joy", emo.primary[0] as f32);
@@ -2118,8 +2141,12 @@ impl WorldSimRuntime {
             dict.set("occupation", beh.occupation.clone());
             dict.set("current_action", format!("{:?}", beh.current_action));
             dict.set("action_progress", beh.action_progress as f32);
+            dict.set("action_timer", beh.action_timer);
+            dict.set("action_duration", beh.action_duration);
             dict.set("action_target_x", beh.action_target_x.unwrap_or(-1));
             dict.set("action_target_y", beh.action_target_y.unwrap_or(-1));
+            dict.set("carry_total", beh.carry);
+            dict.set("carry_capacity", sim_core::config::MAX_CARRY as f32);
             dict.set(
                 "action_target_resource",
                 action_target_resource_key(beh.current_action),
