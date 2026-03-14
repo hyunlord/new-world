@@ -457,6 +457,18 @@ pub const EFFECT_DAMPING_FACTOR: f64 = 0.0;
 pub const EFFECT_STAT_CLAMP_MIN: f64 = 0.0;
 /// Shared upper clamp for effect-driven scalar state updates.
 pub const EFFECT_STAT_CLAMP_MAX: f64 = 1.0;
+
+// --- Tool Usage ---
+
+/// Durability points consumed per tool use.
+pub const TOOL_DURABILITY_COST_PER_USE: f64 = 1.0;
+/// Base speed assumed when no tool is available.
+pub const TOOL_BASE_SPEED: f64 = 1.0;
+/// Minimum action timer after tool speed reduction.
+pub const TOOL_MIN_ACTION_TIMER: i32 = 5;
+/// Scaling factor for tool speed reducing action timers.
+pub const TOOL_SPEED_EFFECT_SCALE: f64 = 0.5;
+
 /// Shared default axis value for scaffold temperament state.
 pub const TEMPERAMENT_DEFAULT_AXIS_VALUE: f64 = 0.5;
 /// Minimum persistence window for deadline-approaching need patterns.

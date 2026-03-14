@@ -1522,6 +1522,7 @@
   "EFFECT_GATHER_EFFICIENCY": "Gather Efficiency",
   "EFFECT_HUNTING_EFFICIENCY": "Hunting Efficiency",
   "EFFECT_CRAFT_QUALITY": "Craft Quality",
+  "TOOL_BROKEN": "Tool broken",
   "EFFECT_TRADE_RANGE": "Trade Range",
   "MOD_TARGET_FOOD_PRODUCTION": "Food Production",
   "MOD_TARGET_WOOD_PRODUCTION": "Wood Production",

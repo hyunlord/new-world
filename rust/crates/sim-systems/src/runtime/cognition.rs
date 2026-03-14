@@ -19,8 +19,8 @@ use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
-use crate::body;
 use super::crafting;
+use crate::body;
 
 /// Rust runtime system for age/environment-adjusted intelligence updates.
 ///
@@ -881,7 +881,8 @@ fn find_best_influence_tile(
 
             let dist = dx.abs() + dy.abs();
             let is_better_signal = signal > best_signal + f64::EPSILON;
-            let same_signal_closer = (signal - best_signal).abs() <= f64::EPSILON && dist < best_dist;
+            let same_signal_closer =
+                (signal - best_signal).abs() <= f64::EPSILON && dist < best_dist;
             let same_signal_same_dist =
                 (signal - best_signal).abs() <= f64::EPSILON && dist == best_dist;
             if is_better_signal
@@ -976,6 +977,7 @@ fn find_nearest_incomplete_building(
 fn behavior_assign_action(
     behavior: &mut Behavior,
     position: &Position,
+    inventory_opt: Option<&Inventory>,
     resources: &SimResources,
     tick: u64,
     entity_raw: u64,
@@ -992,15 +994,13 @@ fn behavior_assign_action(
         | ActionType::Hunt
         | ActionType::Eat
         | ActionType::TakeFromStockpile
-        | ActionType::GatherHerbs => {
-            find_best_influence_tile(
-                position,
-                resources,
-                config::BEHAVIOR_FOOD_TARGET_INFLUENCE_RADIUS,
-                ChannelId::Food,
-            )
-            .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw))
-        }
+        | ActionType::GatherHerbs => find_best_influence_tile(
+            position,
+            resources,
+            config::BEHAVIOR_FOOD_TARGET_INFLUENCE_RADIUS,
+            ChannelId::Food,
+        )
+        .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
         ActionType::Drink => {
             find_nearest_terrain_tile(position, resources, 20, &[TerrainType::ShallowWater])
                 .and_then(|water_pos| find_passable_adjacent(position, resources, water_pos))
@@ -1035,6 +1035,14 @@ fn behavior_assign_action(
     );
     let timer =
         behavior_timer_with_stress(base_timer, stress_level, allostatic_load, stress_exempt);
+    let tool_timer = crafting::action_tool_tag(action)
+        .and_then(|tool_tag| {
+            inventory_opt.and_then(|inventory| {
+                crafting::find_best_tool(inventory, &resources.item_store, tool_tag)
+                    .map(|(_, stats)| crafting::tool_adjusted_action_timer(timer, stats.speed))
+            })
+        })
+        .unwrap_or(timer);
 
     behavior.craft_recipe_id = None;
     behavior.craft_material_id = None;
@@ -1043,8 +1051,8 @@ fn behavior_assign_action(
     behavior.action_target_x = Some(target_x);
     behavior.action_target_y = Some(target_y);
     behavior.action_progress = 0.0;
-    behavior.action_duration = timer;
-    behavior.action_timer = timer;
+    behavior.action_duration = tool_timer;
+    behavior.action_timer = tool_timer;
 }
 
 /// Rust runtime system for utility-style behavior selection.
@@ -1150,6 +1158,7 @@ impl SimSystem for BehaviorRuntimeSystem {
             behavior_assign_action(
                 behavior,
                 position,
+                inventory_opt,
                 resources,
                 tick,
                 entity.id() as u64,
@@ -1190,10 +1199,10 @@ impl SimSystem for BehaviorRuntimeSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sim_core::{EmitterRecord, FalloffType};
     use sim_core::components::{Identity, Needs};
     use sim_core::config::GameConfig;
     use sim_core::{Building, GameCalendar, SettlementId, WorldMap};
+    use sim_core::{EmitterRecord, FalloffType};
 
     #[test]
     fn behavior_runtime_system_targets_nearest_incomplete_building_for_builder() {
@@ -1375,9 +1384,10 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Forage);
         let target_x = behavior.action_target_x.expect("food target x");
         let target_y = behavior.action_target_y.expect("food target y");
-        let chosen_signal = resources
-            .influence_grid
-            .sample(target_x as u32, target_y as u32, ChannelId::Food);
+        let chosen_signal =
+            resources
+                .influence_grid
+                .sample(target_x as u32, target_y as u32, ChannelId::Food);
         let closer_signal = resources.influence_grid.sample(5, 4, ChannelId::Food);
         assert_eq!(target_y, 4);
         assert!(chosen_signal >= closer_signal);

@@ -3,9 +3,10 @@ use std::collections::BTreeMap;
 
 use hecs::World;
 use sim_core::components::{Behavior, Identity, Inventory};
+use sim_core::config;
 use sim_core::{
-    ActionType, CausalEvent, CauseRef, EntityId, ItemDerivedStats, ItemId, ItemInstance,
-    ItemOwner, Settlement,
+    ActionType, CausalEvent, CauseRef, EntityId, ItemDerivedStats, ItemId, ItemInstance, ItemOwner,
+    Settlement,
 };
 use sim_data::defs::RecipeDef;
 use sim_data::DataRegistry;
@@ -97,7 +98,10 @@ impl SimSystem for CraftingRuntimeSystem {
     }
 }
 
-pub(crate) fn inventory_has_tool(inventory_opt: Option<&Inventory>, resources: &SimResources) -> bool {
+pub(crate) fn inventory_has_tool(
+    inventory_opt: Option<&Inventory>,
+    resources: &SimResources,
+) -> bool {
     let Some(inventory) = inventory_opt else {
         return false;
     };
@@ -108,6 +112,102 @@ pub(crate) fn inventory_has_tool(inventory_opt: Option<&Inventory>, resources: &
             .map(|item| is_tool_template(item.template_id.as_str()))
             .unwrap_or(false)
     })
+}
+
+pub fn action_tool_tag(action: ActionType) -> Option<&'static str> {
+    match action {
+        ActionType::Forage | ActionType::GatherHerbs | ActionType::Hunt => Some("knife"),
+        ActionType::GatherWood => Some("axe"),
+        _ => None,
+    }
+}
+
+pub fn find_best_tool(
+    inventory: &Inventory,
+    item_store: &sim_core::ItemStore,
+    tool_tag: &str,
+) -> Option<(ItemId, ItemDerivedStats)> {
+    let mut best: Option<(ItemId, ItemDerivedStats)> = None;
+
+    for &item_id in &inventory.items {
+        let Some(item) = item_store.get(item_id) else {
+            continue;
+        };
+        if item.is_broken() || item.template_id != tool_tag {
+            continue;
+        }
+
+        let candidate = (item_id, item.derived_stats);
+        let replace = match best {
+            None => true,
+            Some((best_id, best_stats)) => {
+                candidate.1.damage > best_stats.damage + f64::EPSILON
+                    || ((candidate.1.damage - best_stats.damage).abs() <= f64::EPSILON
+                        && (candidate.1.speed > best_stats.speed + f64::EPSILON
+                            || ((candidate.1.speed - best_stats.speed).abs() <= f64::EPSILON
+                                && candidate.0 < best_id)))
+            }
+        };
+
+        if replace {
+            best = Some(candidate);
+        }
+    }
+
+    best
+}
+
+pub fn tool_adjusted_action_timer(base_timer: i32, tool_speed: f64) -> i32 {
+    let adjusted = ((base_timer as f64)
+        / (1.0
+            + (tool_speed.max(config::TOOL_BASE_SPEED) - config::TOOL_BASE_SPEED)
+                * config::TOOL_SPEED_EFFECT_SCALE))
+        .round() as i32;
+    adjusted.max(config::TOOL_MIN_ACTION_TIMER)
+}
+
+pub fn use_tool(
+    entity_id: EntityId,
+    item_id: ItemId,
+    resources: &mut SimResources,
+    tick: u64,
+) -> bool {
+    let Some((template_id, material_id)) = ({
+        let Some(item) = resources.item_store.get_mut(item_id) else {
+            return false;
+        };
+        item.current_durability -= config::TOOL_DURABILITY_COST_PER_USE;
+        if !item.is_broken() {
+            None
+        } else {
+            Some((item.template_id.clone(), item.material_id.clone()))
+        }
+    }) else {
+        return false;
+    };
+
+    if resources.item_store.remove(item_id).is_none() {
+        return false;
+    }
+
+    resources.causal_log.push(
+        entity_id,
+        CausalEvent {
+            tick,
+            cause: CauseRef {
+                system: "tool_system".to_string(),
+                kind: "tool_broken".to_string(),
+                entity: Some(entity_id),
+                building: None,
+                settlement: None,
+            },
+            effect_key: format!("item_destroyed:{template_id}:{material_id}"),
+            summary_key: "TOOL_BROKEN".to_string(),
+            magnitude: -1.0,
+        },
+    );
+
+    true
 }
 
 pub fn craft_complete(
@@ -129,7 +229,8 @@ pub fn craft_complete(
     };
 
     let stats = registry.derive_item_stats(recipe.output.template.as_str(), material);
-    let derived = ItemDerivedStats::from_material_stats(stats.damage, stats.speed, stats.durability);
+    let derived =
+        ItemDerivedStats::from_material_stats(stats.damage, stats.speed, stats.durability);
     let count = recipe.output.count.unwrap_or(1);
     let mut created_ids = Vec::with_capacity(count as usize);
 
@@ -275,7 +376,13 @@ fn select_best_recipe(registry: &DataRegistry, settlement: &Settlement) -> Optio
                 .damage
                 .partial_cmp(&left_stats.damage)
                 .unwrap_or(Ordering::Equal)
-                .then_with(|| right.properties.hardness.partial_cmp(&left.properties.hardness).unwrap_or(Ordering::Equal))
+                .then_with(|| {
+                    right
+                        .properties
+                        .hardness
+                        .partial_cmp(&left.properties.hardness)
+                        .unwrap_or(Ordering::Equal)
+                })
                 .then_with(|| left.id.cmp(&right.id))
         });
 
@@ -309,11 +416,13 @@ fn select_best_recipe(registry: &DataRegistry, settlement: &Settlement) -> Optio
         }
     }
 
-    best.map(|(_, recipe_id, material_id, duration_ticks)| CraftSelection {
-        recipe_id,
-        material_id,
-        duration_ticks,
-    })
+    best.map(
+        |(_, recipe_id, material_id, duration_ticks)| CraftSelection {
+            recipe_id,
+            material_id,
+            duration_ticks,
+        },
+    )
 }
 
 fn deduct_recipe_costs(settlement: &mut Settlement, recipe: &RecipeDef) -> bool {
@@ -337,8 +446,8 @@ fn deduct_recipe_costs(settlement: &mut Settlement, recipe: &RecipeDef) -> bool 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
     use std::path::Path;
+    use std::path::PathBuf;
     use std::sync::{Arc, OnceLock};
 
     use sim_core::components::{Inventory, Needs};
@@ -527,5 +636,131 @@ mod tests {
         assert_eq!(behavior.current_action, ActionType::Idle);
         assert!(behavior.craft_recipe_id.is_none());
         assert!(behavior.craft_material_id.is_none());
+    }
+
+    #[test]
+    fn tool_lookup_finds_best_by_damage() {
+        let mut resources = make_resources();
+        let mut inventory = Inventory::new();
+
+        let weaker_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: weaker_id,
+            template_id: "knife".to_string(),
+            material_id: "granite".to_string(),
+            derived_stats: ItemDerivedStats::from_material_stats(7.8, 1.8, 175.5),
+            current_durability: 175.5,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(4)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(4)),
+            equipped_slot: None,
+        });
+        inventory.add(weaker_id);
+
+        let stronger_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: stronger_id,
+            template_id: "knife".to_string(),
+            material_id: "obsidian".to_string(),
+            derived_stats: ItemDerivedStats::from_material_stats(9.0, 2.2, 184.0),
+            current_durability: 184.0,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(4)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(4)),
+            equipped_slot: None,
+        });
+        inventory.add(stronger_id);
+
+        let found = find_best_tool(&inventory, &resources.item_store, "knife");
+        assert_eq!(found.map(|(item_id, _)| item_id), Some(stronger_id));
+    }
+
+    #[test]
+    fn tool_speed_reduces_action_timer() {
+        let base_timer = 30;
+        let adjusted = tool_adjusted_action_timer(base_timer, 2.0);
+        assert!(adjusted < base_timer);
+        assert!(adjusted >= config::TOOL_MIN_ACTION_TIMER);
+    }
+
+    #[test]
+    fn tool_use_decreases_durability() {
+        let mut resources = make_resources();
+        let item_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: item_id,
+            template_id: "axe".to_string(),
+            material_id: "flint".to_string(),
+            derived_stats: ItemDerivedStats::from_material_stats(8.4, 2.0, 50.0),
+            current_durability: 10.0,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(11)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(11)),
+            equipped_slot: None,
+        });
+
+        let broken = use_tool(EntityId(11), item_id, &mut resources, 12);
+        assert!(!broken);
+        let item = resources
+            .item_store
+            .get(item_id)
+            .expect("tool should still exist after first use");
+        assert_eq!(
+            item.current_durability,
+            10.0 - config::TOOL_DURABILITY_COST_PER_USE
+        );
+    }
+
+    #[test]
+    fn tool_destruction_removes_from_store() {
+        let mut resources = make_resources();
+        let item_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: item_id,
+            template_id: "knife".to_string(),
+            material_id: "obsidian".to_string(),
+            derived_stats: ItemDerivedStats::from_material_stats(9.0, 2.2, 1.0),
+            current_durability: 1.0,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(13)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(13)),
+            equipped_slot: None,
+        });
+
+        let broken = use_tool(EntityId(13), item_id, &mut resources, 21);
+        assert!(broken);
+        assert!(resources.item_store.get(item_id).is_none());
+    }
+
+    #[test]
+    fn tool_break_writes_causal_log() {
+        let mut resources = make_resources();
+        let item_id = resources.item_store.allocate_id();
+        resources.item_store.insert(ItemInstance {
+            id: item_id,
+            template_id: "axe".to_string(),
+            material_id: "native_copper".to_string(),
+            derived_stats: ItemDerivedStats::from_material_stats(4.8, 1.5, 1.0),
+            current_durability: 1.0,
+            quality: 0.5,
+            owner: ItemOwner::Agent(EntityId(17)),
+            stack_count: 1,
+            created_tick: 0,
+            creator_id: Some(EntityId(17)),
+            equipped_slot: None,
+        });
+
+        assert!(use_tool(EntityId(17), item_id, &mut resources, 33));
+        let recent = resources.causal_log.recent(EntityId(17), 4);
+        assert_eq!(recent.len(), 1);
+        assert_eq!(recent[0].summary_key, "TOOL_BROKEN");
     }
 }
