@@ -345,7 +345,8 @@ func _apply_startup_mode_presentation(startup_mode: String, center: Vector2i) ->
 	if entity_renderer.has_method("set_probe_observation_mode"):
 		entity_renderer.call("set_probe_observation_mode", is_probe)
 	if camera.has_method("set_probe_observation_mode"):
-		camera.call("set_probe_observation_mode", is_probe)
+		# Keep the camera in manual observation mode across startup presets.
+		camera.call("set_probe_observation_mode", true)
 	if is_probe:
 		if world_renderer.has_method("set_resource_overlay_visible"):
 			world_renderer.call("set_resource_overlay_visible", false)
