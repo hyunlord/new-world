@@ -490,16 +490,22 @@ func _refresh_needs() -> void:
 
 func _refresh_survival_diagnostics() -> void:
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append(_format_survival_diag_line("NEED_HUNGER", "need_hunger"))
-	lines.append(_format_survival_diag_line("NEED_WARMTH", "need_warmth"))
-	lines.append(_format_survival_diag_line("NEED_SAFETY", "need_safety"))
+	lines.append(_format_survival_diag_line("NEED_HUNGER", "need_hunger", "need_hunger_delta"))
+	lines.append(_format_survival_diag_line("NEED_WARMTH", "need_warmth", "need_warmth_delta"))
+	lines.append(_format_survival_diag_line("NEED_SAFETY", "need_safety", "need_safety_delta"))
+	lines.append(_format_survival_diag_line("UI_DIAGNOSTIC_COMFORT", "need_comfort", "need_comfort_delta"))
 	var line_break: String = char(10)
 	_needs_diag_label.text = line_break.join(lines)
 
 
-func _format_survival_diag_line(label_key: String, value_field: String) -> String:
+func _format_survival_diag_line(label_key: String, value_field: String, delta_field: String) -> String:
 	var current_value: float = float(_detail.get(value_field, 0.0))
-	return "%s %d%%" % [Locale.ltr(label_key), int(round(current_value * 100.0))]
+	var delta_value: float = float(_detail.get(delta_field, 0.0))
+	var delta_text: String = ""
+	if abs(delta_value) > 0.001:
+		var sign: String = "+" if delta_value > 0.0 else ""
+		delta_text = "  %s%.1f%%" % [sign, delta_value * 100.0]
+	return "%s %d%%%s" % [Locale.ltr(label_key), int(round(current_value * 100.0)), delta_text]
 
 
 func _format_signed_percent(value: float) -> String:

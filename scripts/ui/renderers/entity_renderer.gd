@@ -185,10 +185,26 @@ func _get_legacy_snapshots() -> Array:
 				"x": int(e.position.x),
 				"y": int(e.position.y),
 				"job": str(e.get("job") if e.get("job") != null else "none"),
-				"sex": str(e.get("gender") if e.get("gender") != null else "male"),
-				"growth_stage": str(e.get("age_stage") if e.get("age_stage") != null else "adult"),
-				"entity_id": int(e.get("id") if e.get("id") != null else -1),
-				"name": str(e.get("entity_name") if e.get("entity_name") != null else ""),
+				"sex": str(
+					e.get("sex")
+					if e.get("sex") != null
+					else (e.get("gender") if e.get("gender") != null else "male")
+				),
+				"growth_stage": str(
+					e.get("growth_stage")
+					if e.get("growth_stage") != null
+					else (e.get("age_stage") if e.get("age_stage") != null else "adult")
+				),
+				"entity_id": int(
+					e.get("entity_id")
+					if e.get("entity_id") != null
+					else (e.get("id") if e.get("id") != null else -1)
+				),
+				"name": str(
+					e.get("name")
+					if e.get("name") != null
+					else (e.get("entity_name") if e.get("entity_name") != null else "")
+				),
 				"hunger": float(e.get("hunger") if e.get("hunger") != null else 1.0),
 			})
 		return result
