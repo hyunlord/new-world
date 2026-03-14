@@ -14,6 +14,10 @@ const SettlementDetailPanelClass = preload("res://scripts/ui/panels/settlement_d
 const CastBarClass = preload("res://scripts/ui/cast_bar.gd")
 const NotificationManagerClass = preload("res://scripts/ui/notification_manager.gd")
 const EdgeAwarenessControllerClass = preload("res://scripts/ui/edge_awareness_controller.gd")
+const ENTITY_DETAIL_SIDEBAR_TOP: float = 40.0
+const ENTITY_DETAIL_SIDEBAR_BOTTOM: float = 48.0
+const ENTITY_DETAIL_SIDEBAR_MAX_WIDTH: float = 380.0
+const ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION: float = 0.25
 
 # References
 var _sim_engine: RefCounted
@@ -105,6 +109,8 @@ var _settlement_detail_panel: Control
 var _cast_bar = null
 var _story_notification_manager = null
 var _edge_awareness = null
+var _entity_detail_panel_tween: Tween
+var _entity_detail_panel_open: bool = false
 
 # Follow indicator
 var _follow_label: Label
@@ -173,6 +179,9 @@ func _ready() -> void:
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
+	var on_viewport_size_changed := Callable(self, "_on_viewport_size_changed")
+	if not get_viewport().size_changed.is_connected(on_viewport_size_changed):
+		get_viewport().size_changed.connect(on_viewport_size_changed)
 	_connect_signals()
 	_update_era_label()
 	call_deferred("_build_minimap_and_stats")
@@ -199,7 +208,12 @@ func _build_minimap_and_stats() -> void:
 	if _sim_engine != null:
 		_entity_detail_panel = EntityDetailPanelV3Class.new()
 		_entity_detail_panel.init(_sim_engine)
-		_popup_manager.add_entity_panel(_entity_detail_panel)
+		_entity_detail_panel.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
+		_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+		_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+		_entity_detail_panel.visible = false
+		add_child(_entity_detail_panel)
+		_layout_entity_detail_sidebar(false)
 		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
 		_entity_detail_panel_legacy.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
 		_popup_manager.add_legacy_entity_panel(_entity_detail_panel_legacy)
@@ -1100,6 +1114,7 @@ func _on_entity_selected(entity_id: int) -> void:
 	_selected_building_id = -1
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
+	_open_entity_detail_sidebar(entity_id)
 
 
 func _on_entity_deselected() -> void:
@@ -1107,6 +1122,7 @@ func _on_entity_deselected() -> void:
 	_entity_panel.visible = false
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(-1)
+	_close_entity_detail_sidebar()
 
 
 func _on_building_selected(building_id: int) -> void:
@@ -1114,6 +1130,7 @@ func _on_building_selected(building_id: int) -> void:
 	_building_panel.visible = true
 	_entity_panel.visible = false
 	_selected_entity_id = -1
+	_close_entity_detail_sidebar()
 
 
 func _on_building_deselected() -> void:
@@ -1323,6 +1340,7 @@ func toggle_minimap() -> void:
 ## Opens or closes the statistics detail panel via the popup manager.
 func toggle_stats() -> void:
 	if _popup_manager != null:
+		_close_entity_detail_sidebar()
 		_popup_manager.open_stats()
 
 
@@ -1342,7 +1360,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F3:
 			_toggle_debug()
+		elif event.keycode == KEY_TAB:
+			if (_selected_entity_id >= 0 or _entity_detail_panel_open) and (_popup_manager == null or not _popup_manager.is_any_visible()):
+				_toggle_entity_detail_sidebar()
+				get_viewport().set_input_as_handled()
+				return
 		elif event.keycode == KEY_ESCAPE:
+			if _entity_detail_panel_open:
+				_close_entity_detail_sidebar()
+				get_viewport().set_input_as_handled()
+				return
 			if close_all_popups():
 				get_viewport().set_input_as_handled()
 
@@ -1381,6 +1408,9 @@ func toggle_help() -> void:
 
 ## Closes any open popup panel or the help overlay. Returns true if something was closed.
 func close_all_popups() -> bool:
+	if _entity_detail_panel_open:
+		_close_entity_detail_sidebar()
+		return true
 	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
 		return true
@@ -1394,14 +1424,11 @@ func close_all_popups() -> bool:
 
 
 func _open_runtime_entity_popup(entity_id: int) -> void:
-	if _popup_manager == null or entity_id < 0:
+	if entity_id < 0:
 		return
+	if _popup_manager != null and _popup_manager.is_any_visible():
+		_popup_manager.close_all()
 	_on_entity_selected(entity_id)
-	_popup_manager.close_all()
-	if OS.is_debug_build():
-		_popup_manager.open_entity_no_dim(entity_id)
-	else:
-		_popup_manager.open_entity(entity_id)
 
 
 ## Opens the full entity detail panel for the currently selected entity.
@@ -1412,12 +1439,14 @@ func open_entity_detail() -> void:
 ## Opens the full building detail panel for the currently selected building.
 func open_building_detail() -> void:
 	if _popup_manager != null and _selected_building_id >= 0:
+		_close_entity_detail_sidebar()
 		_popup_manager.open_building(_selected_building_id)
 
 
 ## Opens the settlement detail panel for the given settlement.
 func open_settlement_detail(settlement_id: int) -> void:
 	if _popup_manager != null and settlement_id >= 0:
+		_close_entity_detail_sidebar()
 		_popup_manager.open_settlement(settlement_id)
 
 
@@ -1428,12 +1457,14 @@ func _on_settlement_panel_requested(settlement_id: int) -> void:
 ## Opens or closes the chronicle event history panel.
 func toggle_chronicle() -> void:
 	if _popup_manager != null:
+		_close_entity_detail_sidebar()
 		_popup_manager.open_chronicle()
 
 
 ## Opens or closes the entity list panel.
 func toggle_list() -> void:
 	if _popup_manager != null:
+		_close_entity_detail_sidebar()
 		_popup_manager.open_list()
 
 
@@ -1487,6 +1518,7 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 	elif msg.begins_with("open_deceased_"):
 		var deceased_id_str: String = msg.replace("open_deceased_", "")
 		if deceased_id_str.is_valid_int() and _popup_manager != null:
+			_close_entity_detail_sidebar()
 			_popup_manager.close_all()
 			_popup_manager.open_legacy_entity(int(deceased_id_str))
 	elif msg.begins_with("open_entity_"):
@@ -1546,6 +1578,8 @@ func get_minimap() -> Control:
 
 ## Returns true if an entity or building detail panel is currently open.
 func is_detail_visible() -> bool:
+	if _entity_detail_panel_open:
+		return true
 	if _popup_manager != null:
 		return _popup_manager.is_detail_visible()
 	return false
@@ -1553,8 +1587,85 @@ func is_detail_visible() -> bool:
 
 ## Closes all popup panels managed by the popup manager.
 func close_detail() -> void:
-	if _popup_manager != null:
+	if _entity_detail_panel_open:
+		_close_entity_detail_sidebar()
+	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
+
+
+func _entity_detail_sidebar_width() -> float:
+	return minf(ENTITY_DETAIL_SIDEBAR_MAX_WIDTH, get_viewport().get_visible_rect().size.x * 0.38)
+
+
+func _layout_entity_detail_sidebar(is_open: bool) -> void:
+	if _entity_detail_panel == null:
+		return
+	var panel_width: float = _entity_detail_sidebar_width()
+	_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+	_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+	if is_open:
+		_entity_detail_panel.offset_left = -panel_width
+		_entity_detail_panel.offset_right = 0.0
+	else:
+		_entity_detail_panel.offset_left = 0.0
+		_entity_detail_panel.offset_right = panel_width
+
+
+func _open_entity_detail_sidebar(entity_id: int) -> void:
+	if _entity_detail_panel == null or entity_id < 0:
+		return
+	_entity_detail_panel.set_entity_id(entity_id)
+	var panel_width: float = _entity_detail_sidebar_width()
+	if _entity_detail_panel_tween != null:
+		_entity_detail_panel_tween.kill()
+	_entity_detail_panel.visible = true
+	_entity_detail_panel.move_to_front()
+	if _entity_detail_panel_open:
+		_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+		_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+		_entity_detail_panel.offset_left = -panel_width
+		_entity_detail_panel.offset_right = 0.0
+		return
+	_entity_detail_panel_open = true
+	_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+	_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+	_entity_detail_panel.offset_left = 0.0
+	_entity_detail_panel.offset_right = panel_width
+	_entity_detail_panel_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_entity_detail_panel_tween.tween_property(_entity_detail_panel, "offset_left", -panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.parallel().tween_property(_entity_detail_panel, "offset_right", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+
+
+func _close_entity_detail_sidebar() -> void:
+	if _entity_detail_panel == null:
+		return
+	if _entity_detail_panel_tween != null:
+		_entity_detail_panel_tween.kill()
+	var panel_width: float = _entity_detail_sidebar_width()
+	if not _entity_detail_panel_open:
+		_entity_detail_panel.visible = false
+		_entity_detail_panel.offset_left = 0.0
+		_entity_detail_panel.offset_right = panel_width
+		return
+	_entity_detail_panel_open = false
+	_entity_detail_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	_entity_detail_panel_tween.tween_property(_entity_detail_panel, "offset_left", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.parallel().tween_property(_entity_detail_panel, "offset_right", panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.tween_callback(func() -> void:
+		if _entity_detail_panel != null and not _entity_detail_panel_open:
+			_entity_detail_panel.visible = false
+	)
+
+
+func _toggle_entity_detail_sidebar() -> void:
+	if _entity_detail_panel_open:
+		_close_entity_detail_sidebar()
+	elif _selected_entity_id >= 0:
+		_open_entity_detail_sidebar(_selected_entity_id)
+
+
+func _on_viewport_size_changed() -> void:
+	_layout_entity_detail_sidebar(_entity_detail_panel_open)
 
 
 func _focus_camera_on_entity(entity_id: int) -> void:
