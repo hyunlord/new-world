@@ -575,27 +575,66 @@ func _refresh_personality() -> void:
 func _refresh_inventory() -> void:
 	for child: Node in _inventory_box.get_children():
 		child.queue_free()
-	var carry_total: float = float(_detail.get("carry_total", 0.0))
-	var carry_capacity: float = float(_detail.get("carry_capacity", 0.0))
-	if carry_capacity <= 0.0:
-		_inventory_box.add_child(_make_simple_row(Locale.ltr("UI_INVENTORY_EMPTY")))
-		return
-	if carry_total <= 0.0:
-		_inventory_box.add_child(_make_simple_row(Locale.ltr("UI_INVENTORY_EMPTY")))
-		return
-	var carry_total_text: String = str(snappedf(carry_total, 0.1))
-	var carry_capacity_text: String = str(snappedf(carry_capacity, 0.1))
-	_inventory_box.add_child(
-		_make_simple_row(
-			Locale.trf2(
-				"UI_INVENTORY_CARRY_FMT",
-				"current",
-				carry_total_text,
-				"max",
-				carry_capacity_text
+	var inv_items_raw: Array = _detail.get("inv_items", [])
+	if inv_items_raw.is_empty():
+		var carry_total: float = float(_detail.get("carry_total", 0.0))
+		var carry_capacity: float = float(_detail.get("carry_capacity", 0.0))
+		if carry_capacity <= 0.0 or carry_total <= 0.0:
+			_inventory_box.add_child(_make_simple_row(Locale.ltr("UI_INVENTORY_EMPTY")))
+			return
+		var carry_total_text: String = str(snappedf(carry_total, 0.1))
+		var carry_capacity_text: String = str(snappedf(carry_capacity, 0.1))
+		_inventory_box.add_child(
+			_make_simple_row(
+				Locale.trf2(
+					"UI_INVENTORY_CARRY_FMT",
+					"current",
+					carry_total_text,
+					"max",
+					carry_capacity_text
+				)
 			)
 		)
-	)
+		return
+	for item_raw: Variant in inv_items_raw:
+		if item_raw is Dictionary:
+			var item: Dictionary = item_raw
+			var template_id: String = str(item.get("template_id", ""))
+			var template_text: String = Locale.tr_id("ITEM_TEMPLATE", template_id)
+			if template_text == template_id:
+				template_text = Locale.ltr("UI_UNKNOWN")
+			var material_id: String = str(item.get("material_id", ""))
+			var material_text: String = Locale.tr_id("MAT", material_id)
+			if material_text == material_id:
+				material_text = Locale.ltr("UI_UNKNOWN")
+			var current_durability: float = float(item.get("current_durability", 100.0))
+			var max_durability: float = float(item.get("max_durability", 100.0))
+			var stack_count: int = max(1, int(item.get("stack_count", 1)))
+			var item_text: String = Locale.trf2(
+				"UI_INVENTORY_ITEM_FMT",
+				"item",
+				template_text,
+				"material",
+				material_text
+			)
+			if stack_count > 1:
+				item_text = Locale.trf2(
+					"UI_INVENTORY_ITEM_STACK_FMT",
+					"item",
+					item_text,
+					"count",
+					stack_count
+				)
+			elif not (is_equal_approx(max_durability, 100.0) and is_equal_approx(current_durability, 100.0)):
+				var durability_pct: int = int(round((current_durability / maxf(max_durability, 1.0)) * 100.0))
+				item_text = Locale.trf2(
+					"UI_INVENTORY_ITEM_DURABILITY_FMT",
+					"item",
+					item_text,
+					"durability",
+					durability_pct
+				)
+			_inventory_box.add_child(_make_simple_row(item_text))
 
 
 func _refresh_relationships() -> void:
