@@ -1,5 +1,5 @@
 use crate::enums::{GrowthStage, Sex};
-use crate::ids::SettlementId;
+use crate::ids::{BandId, SettlementId};
 use serde::{Deserialize, Serialize};
 
 /// Core identity for every entity
@@ -10,6 +10,9 @@ pub struct Identity {
     pub sex: Sex,
     pub species_id: String, // "human"
     pub settlement_id: Option<SettlementId>,
+    /// Current band membership. `None` means not currently in a band.
+    #[serde(default)]
+    pub band_id: Option<BandId>,
     /// Current growth stage (derived from age)
     pub growth_stage: GrowthStage,
     /// Zodiac sign (from birth day_of_year)
@@ -35,6 +38,7 @@ impl Default for Identity {
             sex: Sex::Male,
             species_id: "human".to_string(),
             settlement_id: None,
+            band_id: None,
             growth_stage: GrowthStage::Adult,
             zodiac_sign: "aries".to_string(),
             blood_type: "O".to_string(),

@@ -21,9 +21,11 @@ pub mod scales;
 pub mod world;
 
 pub mod building;
+pub mod band;
 pub mod settlement;
 
 // Re-export commonly used types for convenience
+pub use band::{Band, BandStore};
 pub use building::Building;
 pub use calendar::GameCalendar;
 pub use causal_log::{CausalEvent, CausalLog, CauseRef};
@@ -35,7 +37,7 @@ pub use effect::{
     InfluenceEmitter, InfluenceReceiver, ScheduledEffect,
 };
 pub use enums::*;
-pub use ids::{BuildingId, EntityId, SettlementId, SkillId, TechId, TraitId};
+pub use ids::{BandId, BuildingId, EntityId, SettlementId, SkillId, TechId, TraitId};
 pub use influence_channel::{ChannelClampPolicy, ChannelId, ChannelMeta};
 pub use influence_grid::{EmitterRecord, FalloffType, InfluenceGrid};
 pub use item::{EquipSlot, ItemDerivedStats, ItemId, ItemInstance, ItemOwner};

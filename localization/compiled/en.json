@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4262,
+    "active_key_count": 4266,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4262,
+    "key_count": 4266,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -206,6 +206,10 @@
     "AUTHORITY_TYPE_CHARISMATIC": "Charismatic",
     "AUTHORITY_TYPE_RATIONAL_LEGAL": "Rational-Legal",
     "AUTHORITY_TYPE_TRADITIONAL": "Traditional",
+    "BAND_DISSOLVED": "Band dissolved",
+    "BAND_FORMED": "Band formed",
+    "BAND_LEADER_ELECTED": "Leader elected",
+    "BAND_PROMOTED": "Band established",
     "BIRTH_DATE_FORMAT": "Y{year} {month} {day}",
     "BLOOD_TYPE_A": "Blood Type A",
     "BLOOD_TYPE_AB": "Blood Type AB",

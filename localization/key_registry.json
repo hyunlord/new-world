@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4262,
-  "key_count": 4262,
+  "active_key_count": 4266,
+  "key_count": 4266,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -168,6 +168,10 @@
     "AUTHORITY_TYPE_CHARISMATIC": 151,
     "AUTHORITY_TYPE_RATIONAL_LEGAL": 152,
     "AUTHORITY_TYPE_TRADITIONAL": 153,
+    "BAND_DISSOLVED": 4262,
+    "BAND_FORMED": 4263,
+    "BAND_LEADER_ELECTED": 4264,
+    "BAND_PROMOTED": 4265,
     "BIRTH_DATE_FORMAT": 154,
     "BLOOD_TYPE_A": 155,
     "BLOOD_TYPE_AB": 156,
@@ -8527,7 +8531,11 @@
     "UI_INVENTORY_EMPTY",
     "UI_INVENTORY_ITEM_DURABILITY_FMT",
     "UI_INVENTORY_ITEM_FMT",
-    "UI_INVENTORY_ITEM_STACK_FMT"
+    "UI_INVENTORY_ITEM_STACK_FMT",
+    "BAND_DISSOLVED",
+    "BAND_FORMED",
+    "BAND_LEADER_ELECTED",
+    "BAND_PROMOTED"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

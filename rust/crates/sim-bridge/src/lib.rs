@@ -1943,6 +1943,7 @@ impl WorldSimRuntime {
             "settlement_id",
             id.settlement_id.map(|s| s.0 as i64).unwrap_or(-1_i64),
         );
+        dict.set("band_id", runtime_queries::runtime_band_id_raw(id.band_id));
         dict.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
         dict.set("zodiac", id.zodiac_sign.clone());
         dict.set("blood_type", id.blood_type.clone());
@@ -2545,6 +2546,7 @@ impl WorldSimRuntime {
             d.set("age_years", age.years as f32);
             d.set("sex", runtime_sex_to_str(id.sex));
             d.set("alive", age.alive);
+            d.set("band_id", runtime_queries::runtime_band_id_raw(id.band_id));
             d.set("growth_stage", runtime_growth_stage_to_str(id.growth_stage));
             let job = world
                 .get::<&Behavior>(entity)
