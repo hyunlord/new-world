@@ -835,4 +835,23 @@ mod tests {
             RuntimeSystemId::EffectApply
         );
     }
+
+    #[test]
+    fn band_runtime_order_keeps_formation_before_steering() {
+        let formation = DEFAULT_RUNTIME_SYSTEMS
+            .iter()
+            .find(|spec| spec.system_id == RuntimeSystemId::BandFormation)
+            .expect("band formation spec");
+        let behavior = DEFAULT_RUNTIME_SYSTEMS
+            .iter()
+            .find(|spec| spec.system_id == RuntimeSystemId::BandBehavior)
+            .expect("band behavior spec");
+        let steering = DEFAULT_RUNTIME_SYSTEMS
+            .iter()
+            .find(|spec| spec.system_id == RuntimeSystemId::Steering)
+            .expect("steering spec");
+
+        assert!(formation.priority < behavior.priority);
+        assert!(behavior.priority < steering.priority);
+    }
 }
