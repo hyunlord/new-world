@@ -32,12 +32,12 @@ const EMOTION_ROWS: Array[Dictionary] = [
 	{"field": "emo_anticipation", "key": "TRAIT_KEY_ANTICIPATION"},
 ]
 const HEXACO_ROWS: Array[Dictionary] = [
-	{"field": "hex_h", "label": "H"},
-	{"field": "hex_e", "label": "E"},
-	{"field": "hex_x", "label": "X"},
-	{"field": "hex_a", "label": "A"},
-	{"field": "hex_c", "label": "C"},
-	{"field": "hex_o", "label": "O"},
+	{"field": "hex_h", "key": "UI_HEXACO_H"},
+	{"field": "hex_e", "key": "UI_HEXACO_E"},
+	{"field": "hex_x", "key": "UI_HEXACO_X"},
+	{"field": "hex_a", "key": "UI_HEXACO_A"},
+	{"field": "hex_c", "key": "UI_HEXACO_C"},
+	{"field": "hex_o", "key": "UI_HEXACO_O"},
 ]
 
 var _sim_engine: RefCounted
@@ -60,10 +60,12 @@ var _needs_title: Label
 var _needs_diag_label: Label
 var _emotion_title: Label
 var _personality_title: Label
+var _inventory_title: Label
 var _relationships_title: Label
 var _events_title: Label
 var _personality_text: Label
 var _emotion_text: Label
+var _inventory_box: VBoxContainer
 var _relationships_box: VBoxContainer
 var _events_box: VBoxContainer
 var _expand_button: Button
@@ -221,6 +223,12 @@ func _build_ui() -> void:
 	_personality_text.add_theme_color_override("font_color", Color(0.82, 0.85, 0.90))
 	root.add_child(_personality_text)
 
+	_inventory_title = _make_section_title()
+	root.add_child(_inventory_title)
+	_inventory_box = VBoxContainer.new()
+	_inventory_box.add_theme_constant_override("separation", 4)
+	root.add_child(_inventory_box)
+
 	_relationships_title = _make_section_title()
 	root.add_child(_relationships_title)
 	_relationships_box = VBoxContainer.new()
@@ -306,6 +314,7 @@ func _apply_locale() -> void:
 	_needs_title.text = Locale.ltr("PANEL_NEEDS_TITLE")
 	_emotion_title.text = Locale.ltr("PANEL_EMOTION_TITLE")
 	_personality_title.text = Locale.ltr("PANEL_PERSONALITY_TITLE")
+	_inventory_title.text = Locale.ltr("UI_INVENTORY")
 	_relationships_title.text = Locale.ltr("PANEL_RELATIONSHIPS_TITLE")
 	_events_title.text = Locale.ltr("PANEL_EVENTS_TITLE")
 	_expand_button.text = Locale.ltr("PANEL_EXPAND")
@@ -345,6 +354,7 @@ func _refresh_all() -> void:
 	_refresh_needs()
 	_refresh_emotions()
 	_refresh_personality()
+	_refresh_inventory()
 	_refresh_relationships()
 	_refresh_events()
 	_refresh_expand_tabs()
@@ -375,8 +385,18 @@ func _refresh_header() -> void:
 
 func _refresh_summary() -> void:
 	var action_text: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
+	var action_timer: int = int(_detail.get("action_timer", 0))
+	var action_duration: int = int(_detail.get("action_duration", 0))
 	var motivation_text: String = _localized_need_text(str(_detail.get("top_need_key", "NEED_ENERGY")))
 	var summary_text: String = action_text + " — " + motivation_text
+	if action_duration > 0:
+		summary_text += "\n" + Locale.trf2(
+			"UI_ACTION_TIMER_FMT",
+			"current",
+			action_timer,
+			"total",
+			action_duration
+		)
 	_summary_label.text = summary_text
 
 
@@ -541,7 +561,7 @@ func _refresh_personality() -> void:
 	for row: Dictionary in HEXACO_ROWS:
 		hexaco_parts.append(
 			"%s %d%%" % [
-				str(row["label"]),
+				Locale.ltr(str(row["key"])),
 				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
 				]
 			)
@@ -550,6 +570,71 @@ func _refresh_personality() -> void:
 		personality_text += "\n" + temperament_text
 	personality_text += "\n" + " / ".join(hexaco_parts)
 	_personality_text.text = personality_text
+
+
+func _refresh_inventory() -> void:
+	for child: Node in _inventory_box.get_children():
+		child.queue_free()
+	var inv_items_raw: Array = _detail.get("inv_items", [])
+	if inv_items_raw.is_empty():
+		var carry_total: float = float(_detail.get("carry_total", 0.0))
+		var carry_capacity: float = float(_detail.get("carry_capacity", 0.0))
+		if carry_capacity <= 0.0 or carry_total <= 0.0:
+			_inventory_box.add_child(_make_simple_row(Locale.ltr("UI_INVENTORY_EMPTY")))
+			return
+		var carry_total_text: String = str(snappedf(carry_total, 0.1))
+		var carry_capacity_text: String = str(snappedf(carry_capacity, 0.1))
+		_inventory_box.add_child(
+			_make_simple_row(
+				Locale.trf2(
+					"UI_INVENTORY_CARRY_FMT",
+					"current",
+					carry_total_text,
+					"max",
+					carry_capacity_text
+				)
+			)
+		)
+		return
+	for item_raw: Variant in inv_items_raw:
+		if item_raw is Dictionary:
+			var item: Dictionary = item_raw
+			var template_id: String = str(item.get("template_id", ""))
+			var template_text: String = Locale.tr_id("ITEM_TEMPLATE", template_id)
+			if template_text == template_id:
+				template_text = Locale.ltr("UI_UNKNOWN")
+			var material_id: String = str(item.get("material_id", ""))
+			var material_text: String = Locale.tr_id("MAT", material_id)
+			if material_text == material_id:
+				material_text = Locale.ltr("UI_UNKNOWN")
+			var current_durability: float = float(item.get("current_durability", 100.0))
+			var max_durability: float = float(item.get("max_durability", 100.0))
+			var stack_count: int = max(1, int(item.get("stack_count", 1)))
+			var item_text: String = Locale.trf2(
+				"UI_INVENTORY_ITEM_FMT",
+				"item",
+				template_text,
+				"material",
+				material_text
+			)
+			if stack_count > 1:
+				item_text = Locale.trf2(
+					"UI_INVENTORY_ITEM_STACK_FMT",
+					"item",
+					item_text,
+					"count",
+					stack_count
+				)
+			elif not (is_equal_approx(max_durability, 100.0) and is_equal_approx(current_durability, 100.0)):
+				var durability_pct: int = int(round((current_durability / maxf(max_durability, 1.0)) * 100.0))
+				item_text = Locale.trf2(
+					"UI_INVENTORY_ITEM_DURABILITY_FMT",
+					"item",
+					item_text,
+					"durability",
+					durability_pct
+				)
+			_inventory_box.add_child(_make_simple_row(item_text))
 
 
 func _refresh_relationships() -> void:
@@ -629,7 +714,7 @@ func _format_personality_tab_text() -> String:
 	for row: Dictionary in HEXACO_ROWS:
 		lines.append(
 			"%s  %d%%" % [
-				str(row["label"]),
+				Locale.ltr(str(row["key"])),
 				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
 			]
 		)
