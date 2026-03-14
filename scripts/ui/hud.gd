@@ -1522,16 +1522,16 @@ func set_resource_legend_visible(vis: bool) -> void:
 
 
 ## Applies Probe Start presentation defaults without affecting later manual toggles.
-func set_probe_observation_mode(enabled: bool) -> void:
-	_probe_observation_mode = enabled
-	if _resource_legend != null and enabled:
+func set_probe_observation_mode(probe_enabled: bool) -> void:
+	_probe_observation_mode = probe_enabled
+	if _resource_legend != null and probe_enabled:
 		_resource_legend.visible = false
 	if _minimap_panel != null:
-		_minimap_panel.visible = (not enabled) and _minimap_visible
+		_minimap_panel.visible = (not probe_enabled) and _minimap_visible
 	if _stats_panel != null:
-		_stats_panel.visible = not enabled
+		_stats_panel.visible = not probe_enabled
 	if _probe_verify_panel != null:
-		_probe_verify_panel.visible = enabled
+		_probe_verify_panel.visible = probe_enabled
 
 
 func set_startup_mode(startup_mode: String) -> void:

@@ -66,9 +66,9 @@ func is_resource_overlay_visible() -> bool:
 
 
 ## Forces the resource overlay visibility without toggling current state.
-func set_resource_overlay_visible(visible: bool) -> void:
+func set_resource_overlay_visible(overlay_visible: bool) -> void:
 	if _resource_overlay != null:
-		_resource_overlay.visible = visible
+		_resource_overlay.visible = overlay_visible
 
 
 ## Update resource overlay texture (call periodically, e.g., every 100 ticks)

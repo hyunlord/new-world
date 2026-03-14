@@ -86,12 +86,12 @@ func set_sim_engine(sim_engine: RefCounted) -> void:
 	_sim_engine = sim_engine
 
 
-func set_probe_observation_mode(enabled: bool) -> void:
-	_probe_observation_mode = enabled
+func set_probe_observation_mode(probe_enabled: bool) -> void:
+	_probe_observation_mode = probe_enabled
 	_clear_active_tween()
 	if follow_target_id >= 0:
 		stop_following()
-	elif enabled and current_state != CameraState.IDLE_MEDIUM:
+	elif probe_enabled and current_state != CameraState.IDLE_MEDIUM:
 		_transition_to(CameraState.IDLE_MEDIUM)
 
 
