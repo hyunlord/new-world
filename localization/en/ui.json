@@ -18,6 +18,8 @@
   "UI_DECEASED": "Deceased",
   "UI_DETAILS": "Details",
   "UI_CHRONICLE": "Chronicle",
+  "UI_TAB_INSPECTOR": "Inspector",
+  "UI_TAB_CHRONICLE": "Chronicle",
   "UI_STATISTICS": "Statistics",
   "UI_MINIMAP": "Minimap",
   "UI_HELP": "Help",

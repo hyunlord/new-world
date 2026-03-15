@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4413,
+    "active_key_count": 4415,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4413,
+    "key_count": 4415,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4311,7 +4311,9 @@
     "UI_SUMMARY_STRESS_EXHAUSTION": "Collapsing from extreme stress.",
     "UI_SUMMARY_STRESS_RESISTANCE": "Fighting stress and holding on.",
     "UI_SURVIVAL_DURATION": "Survival",
+    "UI_TAB_CHRONICLE": "Chronicle",
     "UI_TAB_ECONOMY": "Economy",
+    "UI_TAB_INSPECTOR": "Inspector",
     "UI_TAB_OVERVIEW": "Overview",
     "UI_TAB_POP": "Population",
     "UI_TAB_POPULATION": "Population",

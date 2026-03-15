@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4413,
+    "active_key_count": 4415,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4413,
+    "key_count": 4415,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4311,7 +4311,9 @@
     "UI_SUMMARY_STRESS_EXHAUSTION": "극심한 스트레스로 무너지고 있다.",
     "UI_SUMMARY_STRESS_RESISTANCE": "스트레스와 싸우며 버티고 있다.",
     "UI_SURVIVAL_DURATION": "생존 기간",
+    "UI_TAB_CHRONICLE": "연대기",
     "UI_TAB_ECONOMY": "경제",
+    "UI_TAB_INSPECTOR": "인스펙터",
     "UI_TAB_OVERVIEW": "개요",
     "UI_TAB_POP": "인구",
     "UI_TAB_POPULATION": "인구",
