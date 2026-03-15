@@ -22,6 +22,9 @@ const RIGHT_PANEL_TAB_INSPECTOR: int = 0
 const RIGHT_PANEL_TAB_CHRONICLE: int = 1
 const RIGHT_PANEL_CHRONICLE_FLASH_DURATION: float = 2.0
 const RIGHT_PANEL_CHRONICLE_POLL_INTERVAL: float = 1.0
+const BOTTOM_BAR_HEIGHT: float = 40.0
+const BOTTOM_BAR_CLEARANCE: float = 48.0
+const BOTTOM_BAR_PERF_SAMPLE_WINDOW: float = 0.25
 
 # References
 var _sim_engine: RefCounted
@@ -124,6 +127,18 @@ var _current_right_panel_tab: int = RIGHT_PANEL_TAB_INSPECTOR
 var _chronicle_tab_flash_timer: float = 0.0
 var _chronicle_poll_timer: float = 0.0
 var _last_chronicle_snapshot_revision: int = -1
+var _bottom_bar: PanelContainer
+var _bottom_bar_tps_label: Label
+var _bottom_bar_fps_label: Label
+var _bottom_bar_zoom_buttons: Array[Button] = []
+var _bottom_bar_overlay_buttons: Dictionary = {}
+var _bottom_bar_overlay_accents: Dictionary = {}
+var _bottom_bar_active_overlays: Array[String] = []
+var _bottom_bar_current_zoom_level: int = 0
+var _bottom_bar_perf_elapsed: float = 0.0
+var _bottom_bar_perf_ticks: int = 0
+var _bottom_bar_last_tick: int = -1
+var _bottom_bar_smoothed_tps: float = 0.0
 
 # Follow indicator
 var _follow_label: Label
@@ -189,6 +204,7 @@ func _ready() -> void:
 	_build_resource_legend()
 	_build_probe_verification_overlay()
 	_build_key_hints()
+	_build_bottom_bar()
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
@@ -431,6 +447,8 @@ func _build_story_ui() -> void:
 		_cast_bar.agent_follow_requested.connect(_on_cast_bar_follow_requested)
 		_cast_bar.agent_pinned.connect(_on_cast_bar_agent_pinned)
 		add_child(_cast_bar)
+		_cast_bar.visible = false
+		_cast_bar.set_process(false)
 	if _story_notification_manager == null:
 		_story_notification_manager = NotificationManagerClass.new()
 		_story_notification_manager.init(_sim_engine)
@@ -441,6 +459,222 @@ func _build_story_ui() -> void:
 		_edge_awareness.call("init", _camera, _story_notification_manager)
 	if _camera != null and _camera.has_method("connect_ui_sources"):
 		_camera.call("connect_ui_sources", _cast_bar, _story_notification_manager)
+	if _bottom_bar != null:
+		_bottom_bar.move_to_front()
+
+
+func _build_bottom_bar() -> void:
+	if _bottom_bar != null:
+		return
+	_bottom_bar = PanelContainer.new()
+	_bottom_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_bottom_bar.offset_top = -BOTTOM_BAR_HEIGHT
+	_bottom_bar.offset_bottom = 0.0
+	_bottom_bar.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.04, 0.05, 0.08, 0.88)
+	bg.border_color = Color(0.20, 0.25, 0.30, 0.50)
+	bg.border_width_top = 1
+	bg.content_margin_left = 12
+	bg.content_margin_right = 12
+	bg.content_margin_top = 6
+	bg.content_margin_bottom = 6
+	_bottom_bar.add_theme_stylebox_override("panel", bg)
+
+	var root: HBoxContainer = HBoxContainer.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_theme_constant_override("separation", 12)
+	root.alignment = BoxContainer.ALIGNMENT_CENTER
+	_bottom_bar.add_child(root)
+
+	root.add_child(_build_bottom_bar_zoom_section())
+	root.add_child(_make_vertical_separator())
+	root.add_child(_build_bottom_bar_overlay_section())
+	root.add_child(_make_vertical_separator())
+	root.add_child(_build_bottom_bar_perf_section())
+
+	add_child(_bottom_bar)
+	_bottom_bar.move_to_front()
+	if _fps_label != null:
+		_fps_label.visible = false
+	_refresh_bottom_bar_locale()
+	_update_bottom_bar_button_states()
+
+
+func _build_bottom_bar_zoom_section() -> HBoxContainer:
+	var section := HBoxContainer.new()
+	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	section.alignment = BoxContainer.ALIGNMENT_CENTER
+	section.add_theme_constant_override("separation", 6)
+
+	var zoom_labels: Array[String] = ["1:1", "1:4", "1:16"]
+	for level: int in range(zoom_labels.size()):
+		var button: Button = _make_bottom_bar_button(zoom_labels[level])
+		button.pressed.connect(_on_bottom_bar_zoom_pressed.bind(level))
+		section.add_child(button)
+		_bottom_bar_zoom_buttons.append(button)
+
+	return section
+
+
+func _build_bottom_bar_overlay_section() -> HBoxContainer:
+	var section := HBoxContainer.new()
+	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	section.alignment = BoxContainer.ALIGNMENT_CENTER
+	section.add_theme_constant_override("separation", 6)
+
+	var overlays: Array[Dictionary] = [
+		{"key": "food", "label": "UI_OVERLAY_FOOD", "color": Color(0.30, 0.80, 0.20)},
+		{"key": "danger", "label": "UI_OVERLAY_DANGER", "color": Color(0.90, 0.20, 0.15)},
+		{"key": "warmth", "label": "UI_OVERLAY_WARMTH", "color": Color(0.90, 0.60, 0.10)},
+		{"key": "social", "label": "UI_OVERLAY_SOCIAL", "color": Color(0.30, 0.50, 0.90)},
+	]
+	for overlay: Dictionary in overlays:
+		var channel: String = str(overlay.get("key", ""))
+		var button: Button = _make_bottom_bar_button(Locale.ltr(str(overlay.get("label", ""))))
+		button.set_meta("locale_key", str(overlay.get("label", "")))
+		button.pressed.connect(_on_bottom_bar_overlay_pressed.bind(channel))
+		section.add_child(button)
+		_bottom_bar_overlay_buttons[channel] = button
+		_bottom_bar_overlay_accents[channel] = overlay.get("color", Color(0.50, 0.60, 0.70))
+
+	return section
+
+
+func _build_bottom_bar_perf_section() -> HBoxContainer:
+	var section := HBoxContainer.new()
+	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	section.alignment = BoxContainer.ALIGNMENT_CENTER
+	section.add_theme_constant_override("separation", 12)
+
+	_bottom_bar_tps_label = _make_label("TPS 0.0", "hud_secondary", Color(0.64, 0.72, 0.80))
+	_bottom_bar_fps_label = _make_label("FPS 0", "hud_secondary", Color(0.64, 0.72, 0.80))
+	section.add_child(_bottom_bar_tps_label)
+	section.add_child(_bottom_bar_fps_label)
+
+	return section
+
+
+func _make_bottom_bar_button(text_value: String) -> Button:
+	var button := Button.new()
+	button.text = text_value
+	button.flat = true
+	button.toggle_mode = true
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.custom_minimum_size = Vector2(56, 28)
+	button.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
+	return button
+
+
+func _apply_bottom_bar_button_style(button: Button, is_active: bool, accent_color: Color) -> void:
+	if button == null:
+		return
+	var bg_color: Color = Color(0.08, 0.10, 0.14, 0.88)
+	var border_color: Color = Color(0.22, 0.28, 0.36, 0.76)
+	var font_color: Color = Color(0.70, 0.76, 0.82)
+	if is_active:
+		bg_color = accent_color.lerp(Color(0.09, 0.11, 0.15, 0.96), 0.72)
+		border_color = accent_color
+		font_color = Color.WHITE
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = bg_color
+	style.border_color = border_color
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	style.content_margin_left = 10
+	style.content_margin_right = 10
+	style.content_margin_top = 6
+	style.content_margin_bottom = 6
+	button.add_theme_stylebox_override("normal", style)
+	button.add_theme_stylebox_override("hover", style.duplicate())
+	button.add_theme_stylebox_override("pressed", style.duplicate())
+	button.add_theme_stylebox_override("focus", style.duplicate())
+	button.add_theme_color_override("font_color", font_color)
+	button.add_theme_color_override("font_hover_color", font_color)
+	button.add_theme_color_override("font_pressed_color", font_color)
+	button.add_theme_color_override("font_focus_color", font_color)
+	button.button_pressed = is_active
+
+
+func _update_bottom_bar_button_states() -> void:
+	for index: int in range(_bottom_bar_zoom_buttons.size()):
+		_apply_bottom_bar_button_style(
+			_bottom_bar_zoom_buttons[index],
+			index == _bottom_bar_current_zoom_level,
+			Color(0.34, 0.56, 0.92)
+		)
+	for channel_variant: Variant in _bottom_bar_overlay_buttons.keys():
+		var channel: String = str(channel_variant)
+		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+		var accent: Color = _bottom_bar_overlay_accents.get(channel, Color(0.50, 0.60, 0.70))
+		_apply_bottom_bar_button_style(button, channel in _bottom_bar_active_overlays, accent)
+
+
+func _refresh_bottom_bar_locale() -> void:
+	for channel_variant: Variant in _bottom_bar_overlay_buttons.keys():
+		var channel: String = str(channel_variant)
+		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+		if button == null:
+			continue
+		var locale_key: String = str(button.get_meta("locale_key", ""))
+		if not locale_key.is_empty():
+			button.text = Locale.ltr(locale_key)
+
+
+func _on_bottom_bar_zoom_pressed(level: int) -> void:
+	_bottom_bar_current_zoom_level = clampi(level, 0, _bottom_bar_zoom_buttons.size() - 1)
+	_update_bottom_bar_button_states()
+
+
+func _on_bottom_bar_overlay_pressed(channel: String) -> void:
+	if channel in _bottom_bar_active_overlays:
+		_bottom_bar_active_overlays.erase(channel)
+	else:
+		_bottom_bar_active_overlays.append(channel)
+	_update_bottom_bar_button_states()
+
+
+func _update_bottom_bar_perf(delta: float) -> void:
+	if _bottom_bar_tps_label == null or _bottom_bar_fps_label == null:
+		return
+	var fps: int = Engine.get_frames_per_second()
+	_bottom_bar_fps_label.text = "FPS %d" % fps
+
+	if _sim_engine == null:
+		_bottom_bar_tps_label.text = "TPS 0.0"
+		return
+
+	var current_tick: int = _sim_engine.current_tick
+	if _bottom_bar_last_tick < 0:
+		_bottom_bar_last_tick = current_tick
+	var tick_delta: int = maxi(0, current_tick - _bottom_bar_last_tick)
+	_bottom_bar_last_tick = current_tick
+	_bottom_bar_perf_elapsed += maxf(delta, 0.0)
+	_bottom_bar_perf_ticks += tick_delta
+
+	if _sim_engine.is_paused:
+		_bottom_bar_perf_elapsed = 0.0
+		_bottom_bar_perf_ticks = 0
+		_bottom_bar_smoothed_tps = move_toward(_bottom_bar_smoothed_tps, 0.0, delta * 30.0)
+	elif _bottom_bar_perf_elapsed >= BOTTOM_BAR_PERF_SAMPLE_WINDOW:
+		var instant_tps: float = float(_bottom_bar_perf_ticks) / maxf(_bottom_bar_perf_elapsed, 0.001)
+		if _bottom_bar_smoothed_tps <= 0.0:
+			_bottom_bar_smoothed_tps = instant_tps
+		else:
+			_bottom_bar_smoothed_tps = lerpf(_bottom_bar_smoothed_tps, instant_tps, 0.45)
+		_bottom_bar_perf_elapsed = 0.0
+		_bottom_bar_perf_ticks = 0
+
+	_bottom_bar_tps_label.text = "TPS %.1f" % _bottom_bar_smoothed_tps
 
 
 func _connect_signals() -> void:
@@ -507,8 +741,8 @@ func _build_entity_panel() -> void:
 	_entity_panel = PanelContainer.new()
 	_entity_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_entity_panel.offset_left = 10
-	_entity_panel.offset_bottom = -10
-	_entity_panel.offset_top = -230
+	_entity_panel.offset_bottom = -BOTTOM_BAR_CLEARANCE
+	_entity_panel.offset_top = -(220.0 + BOTTOM_BAR_CLEARANCE)
 	_entity_panel.offset_right = 250
 	_entity_panel.visible = false
 
@@ -592,8 +826,8 @@ func _build_building_panel() -> void:
 	_building_panel = PanelContainer.new()
 	_building_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_building_panel.offset_left = 10
-	_building_panel.offset_bottom = -10
-	_building_panel.offset_top = -190
+	_building_panel.offset_bottom = -BOTTOM_BAR_CLEARANCE
+	_building_panel.offset_top = -(180.0 + BOTTOM_BAR_CLEARANCE)
 	_building_panel.offset_right = 320
 	_building_panel.visible = false
 
@@ -825,10 +1059,10 @@ func _build_key_hints() -> void:
 	_tracked_labels.append({"node": _hint_label, "key": "hint"})
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hint_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_hint_label.offset_bottom = -6
+	_hint_label.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
 	_hint_label.offset_right = -10
 	_hint_label.offset_left = -500
-	_hint_label.offset_top = -20
+	_hint_label.offset_top = -(BOTTOM_BAR_HEIGHT + 20.0)
 	add_child(_hint_label)
 
 
@@ -850,7 +1084,9 @@ func _resolve_runtime_entity_name(entity_id: int) -> String:
 
 
 func _process(delta: float) -> void:
-	_fps_label.text = str(Engine.get_frames_per_second())
+	if _fps_label != null and _fps_label.visible:
+		_fps_label.text = str(Engine.get_frames_per_second())
+	_update_bottom_bar_perf(delta)
 
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
@@ -1472,6 +1708,7 @@ func _refresh_hud_texts() -> void:
 		_legend_wood_label.text = Locale.ltr("UI_WOOD_LEGEND")
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
+	_refresh_bottom_bar_locale()
 	if _cast_bar != null:
 		_cast_bar.refresh_locale()
 	if _story_notification_manager != null:
@@ -2214,6 +2451,13 @@ func apply_ui_scale() -> void:
 		_entity_detail_btn.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_hint"))
 	if _building_detail_btn != null:
 		_building_detail_btn.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_hint"))
+	for button: Button in _bottom_bar_zoom_buttons:
+		if button != null:
+			button.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
+	for button_variant: Variant in _bottom_bar_overlay_buttons.values():
+		var button: Button = button_variant
+		if button != null:
+			button.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
 
 	# Update minimap size
 	if _minimap_panel != null and _minimap_visible:
@@ -2278,5 +2522,11 @@ func _make_bar_row(label_text: String, color: Color) -> Array:
 
 func _make_separator() -> HSeparator:
 	var sep := HSeparator.new()
+	sep.add_theme_constant_override("separation", 4)
+	return sep
+
+
+func _make_vertical_separator() -> VSeparator:
+	var sep := VSeparator.new()
 	sep.add_theme_constant_override("separation", 4)
 	return sep

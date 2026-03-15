@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4415,
+    "active_key_count": 4419,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4415,
+    "key_count": 4419,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4040,6 +4040,10 @@
     "UI_NO_RECORDED_EVENTS": "No recorded events",
     "UI_NO_RELATIONSHIPS": "No relationships yet",
     "UI_NO_SIGNIFICANT_VALUES": "No significant values",
+    "UI_OVERLAY_DANGER": "Danger",
+    "UI_OVERLAY_FOOD": "Food",
+    "UI_OVERLAY_SOCIAL": "Social",
+    "UI_OVERLAY_WARMTH": "Warmth",
     "UI_OVERWRITE_CONFIRM": "Overwrite save in Slot {slot}?",
     "UI_PANEL_ACE": "ACE Score",
     "UI_PANEL_ATTACHMENT": "Attachment",
