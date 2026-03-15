@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4415,
+    "active_key_count": 4419,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4415,
+    "key_count": 4419,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4040,6 +4040,10 @@
     "UI_NO_RECORDED_EVENTS": "기록된 사건 없음",
     "UI_NO_RELATIONSHIPS": "관계 없음",
     "UI_NO_SIGNIFICANT_VALUES": "유의미한 가치관 없음",
+    "UI_OVERLAY_DANGER": "위험",
+    "UI_OVERLAY_FOOD": "식량",
+    "UI_OVERLAY_SOCIAL": "사회",
+    "UI_OVERLAY_WARMTH": "온도",
     "UI_OVERWRITE_CONFIRM": "슬롯 {slot}의 기존 세이브를 덮어씁니다. 계속할까요?",
     "UI_PANEL_ACE": "역경 점수",
     "UI_PANEL_ATTACHMENT": "애착",

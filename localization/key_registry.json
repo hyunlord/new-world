@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4415,
-  "key_count": 4415,
+  "active_key_count": 4419,
+  "key_count": 4419,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4002,6 +4002,10 @@
     "UI_NO_RECORDED_EVENTS": 3723,
     "UI_NO_RELATIONSHIPS": 3724,
     "UI_NO_SIGNIFICANT_VALUES": 3725,
+    "UI_OVERLAY_DANGER": 4415,
+    "UI_OVERLAY_FOOD": 4416,
+    "UI_OVERLAY_SOCIAL": 4417,
+    "UI_OVERLAY_WARMTH": 4418,
     "UI_OVERWRITE_CONFIRM": 3726,
     "UI_PANEL_ACE": 3727,
     "UI_PANEL_ATTACHMENT": 3728,
@@ -8833,7 +8837,11 @@
     "UI_MEMBERS_SUFFIX",
     "UI_NO_BAND",
     "UI_TAB_CHRONICLE",
-    "UI_TAB_INSPECTOR"
+    "UI_TAB_INSPECTOR",
+    "UI_OVERLAY_DANGER",
+    "UI_OVERLAY_FOOD",
+    "UI_OVERLAY_SOCIAL",
+    "UI_OVERLAY_WARMTH"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
