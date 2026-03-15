@@ -18,6 +18,10 @@ const ENTITY_DETAIL_SIDEBAR_TOP: float = 40.0
 const ENTITY_DETAIL_SIDEBAR_BOTTOM: float = 48.0
 const ENTITY_DETAIL_SIDEBAR_MAX_WIDTH: float = 380.0
 const ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION: float = 0.25
+const RIGHT_PANEL_TAB_INSPECTOR: int = 0
+const RIGHT_PANEL_TAB_CHRONICLE: int = 1
+const RIGHT_PANEL_CHRONICLE_FLASH_DURATION: float = 2.0
+const RIGHT_PANEL_CHRONICLE_POLL_INTERVAL: float = 1.0
 
 # References
 var _sim_engine: RefCounted
@@ -100,6 +104,9 @@ var _building_detail_btn: Button
 # Detail panels (managed by PopupManager)
 var _popup_manager: Node
 var _stats_detail_panel: Control
+var _right_panel_container: Control
+var _right_panel_tab_bar: HBoxContainer
+var _right_panel_tab_content: Control
 var _entity_detail_panel: Control
 var _entity_detail_panel_legacy: Control
 var _building_detail_panel: Control
@@ -111,6 +118,12 @@ var _story_notification_manager = null
 var _edge_awareness = null
 var _entity_detail_panel_tween: Tween
 var _entity_detail_panel_open: bool = false
+var _tab_inspector_btn: Button
+var _tab_chronicle_btn: Button
+var _current_right_panel_tab: int = RIGHT_PANEL_TAB_INSPECTOR
+var _chronicle_tab_flash_timer: float = 0.0
+var _chronicle_poll_timer: float = 0.0
+var _last_chronicle_snapshot_revision: int = -1
 
 # Follow indicator
 var _follow_label: Label
@@ -208,12 +221,6 @@ func _build_minimap_and_stats() -> void:
 	if _sim_engine != null:
 		_entity_detail_panel = EntityDetailPanelV3Class.new()
 		_entity_detail_panel.init(_sim_engine)
-		_entity_detail_panel.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
-		_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
-		_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
-		_entity_detail_panel.visible = false
-		add_child(_entity_detail_panel)
-		_layout_entity_detail_sidebar(false)
 		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
 		_entity_detail_panel_legacy.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
 		_popup_manager.add_legacy_entity_panel(_entity_detail_panel_legacy)
@@ -226,7 +233,7 @@ func _build_minimap_and_stats() -> void:
 	# Chronicle panel
 	_chronicle_panel = ChroniclePanelClass.new()
 	_chronicle_panel.init(_entity_manager)
-	_popup_manager.add_chronicle_panel(_chronicle_panel)
+	_build_right_sidebar()
 
 	# List panel
 	_list_panel = ListPanelClass.new()
@@ -259,6 +266,158 @@ func _build_minimap_and_stats() -> void:
 	_follow_label.offset_bottom = 56
 	add_child(_follow_label)
 	_build_story_ui()
+
+
+func _build_right_sidebar() -> void:
+	if _entity_detail_panel == null and _chronicle_panel == null:
+		return
+	_right_panel_container = Control.new()
+	_right_panel_container.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
+	_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+	_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+	_right_panel_container.visible = false
+	_right_panel_container.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(_right_panel_container)
+
+	var root: VBoxContainer = VBoxContainer.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_theme_constant_override("separation", 0)
+	_right_panel_container.add_child(root)
+
+	var tab_bar_shell: PanelContainer = PanelContainer.new()
+	tab_bar_shell.custom_minimum_size.y = 38.0
+	tab_bar_shell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var tab_shell_style := StyleBoxFlat.new()
+	tab_shell_style.bg_color = Color(0.05, 0.07, 0.10, 0.94)
+	tab_shell_style.border_color = Color(0.24, 0.30, 0.38, 0.72)
+	tab_shell_style.border_width_left = 1
+	tab_shell_style.border_width_top = 1
+	tab_shell_style.border_width_right = 0
+	tab_shell_style.border_width_bottom = 1
+	tab_shell_style.corner_radius_top_left = 8
+	tab_shell_style.corner_radius_top_right = 0
+	tab_shell_style.corner_radius_bottom_left = 0
+	tab_shell_style.corner_radius_bottom_right = 0
+	tab_bar_shell.add_theme_stylebox_override("panel", tab_shell_style)
+	root.add_child(tab_bar_shell)
+
+	_right_panel_tab_bar = HBoxContainer.new()
+	_right_panel_tab_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_right_panel_tab_bar.add_theme_constant_override("separation", 0)
+	tab_bar_shell.add_child(_right_panel_tab_bar)
+
+	_tab_inspector_btn = _make_right_panel_tab_button("UI_TAB_INSPECTOR")
+	_tab_inspector_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
+	)
+	_right_panel_tab_bar.add_child(_tab_inspector_btn)
+
+	_tab_chronicle_btn = _make_right_panel_tab_button("UI_TAB_CHRONICLE")
+	_tab_chronicle_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_CHRONICLE)
+	)
+	_right_panel_tab_bar.add_child(_tab_chronicle_btn)
+
+	_right_panel_tab_content = Control.new()
+	_right_panel_tab_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_right_panel_tab_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_right_panel_tab_content.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.add_child(_right_panel_tab_content)
+
+	if _entity_detail_panel != null:
+		_entity_detail_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_entity_detail_panel.offset_left = 0.0
+		_entity_detail_panel.offset_top = 0.0
+		_entity_detail_panel.offset_right = 0.0
+		_entity_detail_panel.offset_bottom = 0.0
+		_entity_detail_panel.visible = true
+		_right_panel_tab_content.add_child(_entity_detail_panel)
+
+	if _chronicle_panel != null:
+		_chronicle_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_chronicle_panel.offset_left = 0.0
+		_chronicle_panel.offset_top = 0.0
+		_chronicle_panel.offset_right = 0.0
+		_chronicle_panel.offset_bottom = 0.0
+		_chronicle_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+		_chronicle_panel.visible = false
+		_right_panel_tab_content.add_child(_chronicle_panel)
+
+	_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
+	_layout_entity_detail_sidebar(false)
+
+
+func _make_right_panel_tab_button(locale_key: String) -> Button:
+	var button: Button = Button.new()
+	button.text = Locale.ltr(locale_key)
+	button.flat = true
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.custom_minimum_size.y = 38.0
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_body"))
+	return button
+
+
+func _apply_right_panel_tab_style(button: Button, is_active: bool, is_flashing: bool = false) -> void:
+	if button == null:
+		return
+	var bg_color: Color = Color(0.09, 0.11, 0.15, 0.92)
+	var border_color: Color = Color(0.24, 0.30, 0.38, 0.72)
+	var font_color: Color = Color(0.64, 0.70, 0.77)
+	if is_flashing:
+		bg_color = Color(0.29, 0.23, 0.08, 0.95)
+		border_color = Color(0.88, 0.68, 0.28, 0.90)
+		font_color = Color(1.0, 0.90, 0.62)
+	elif is_active:
+		bg_color = Color(0.16, 0.20, 0.28, 0.95)
+		border_color = Color(0.42, 0.54, 0.68, 0.88)
+		font_color = Color.WHITE
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = bg_color
+	style.border_color = border_color
+	style.border_width_left = 1
+	style.border_width_top = 0
+	style.border_width_right = 0
+	style.border_width_bottom = 1
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	button.add_theme_stylebox_override("normal", style)
+	button.add_theme_stylebox_override("hover", style.duplicate())
+	button.add_theme_stylebox_override("pressed", style.duplicate())
+	button.add_theme_stylebox_override("focus", style.duplicate())
+	button.add_theme_color_override("font_color", font_color)
+	button.add_theme_color_override("font_hover_color", font_color)
+	button.add_theme_color_override("font_pressed_color", font_color)
+	button.add_theme_color_override("font_focus_color", font_color)
+
+
+func _switch_right_panel_tab(index: int) -> void:
+	_current_right_panel_tab = index
+	if _entity_detail_panel != null:
+		_entity_detail_panel.visible = (index == RIGHT_PANEL_TAB_INSPECTOR)
+	if _chronicle_panel != null:
+		_chronicle_panel.visible = (index == RIGHT_PANEL_TAB_CHRONICLE)
+	if index == RIGHT_PANEL_TAB_CHRONICLE:
+		_chronicle_tab_flash_timer = 0.0
+	_set_right_panel_tab_state()
+
+
+func _set_right_panel_tab_state() -> void:
+	_apply_right_panel_tab_style(
+		_tab_inspector_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_INSPECTOR
+	)
+	_apply_right_panel_tab_style(
+		_tab_chronicle_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_CHRONICLE,
+		_chronicle_tab_flash_timer > 0.0 and _current_right_panel_tab != RIGHT_PANEL_TAB_CHRONICLE
+	)
 
 
 func _build_story_ui() -> void:
@@ -732,6 +891,7 @@ func _process(delta: float) -> void:
 
 	# Notification fade
 	_update_notifications(delta)
+	_update_right_panel_chronicle_attention(delta)
 	_update_probe_verification_overlay()
 
 
@@ -1297,6 +1457,11 @@ func _refresh_hud_texts() -> void:
 		_entity_detail_btn.text = Locale.ltr("UI_MINI_DETAIL_HINT")
 	if _building_detail_btn != null:
 		_building_detail_btn.text = Locale.ltr("UI_DETAILS_HINT")
+	if _tab_inspector_btn != null:
+		_tab_inspector_btn.text = Locale.ltr("UI_TAB_INSPECTOR")
+	if _tab_chronicle_btn != null:
+		_tab_chronicle_btn.text = Locale.ltr("UI_TAB_CHRONICLE")
+	_set_right_panel_tab_state()
 	if _hint_label != null:
 		_hint_label.text = Locale.ltr("UI_KEY_HINTS")
 	if _legend_title_label != null:
@@ -1456,9 +1621,13 @@ func _on_settlement_panel_requested(settlement_id: int) -> void:
 
 ## Opens or closes the chronicle event history panel.
 func toggle_chronicle() -> void:
-	if _popup_manager != null:
+	if _popup_manager != null and _popup_manager.is_any_visible():
+		_popup_manager.close_all()
+	if _entity_detail_panel_open and _current_right_panel_tab == RIGHT_PANEL_TAB_CHRONICLE:
 		_close_entity_detail_sidebar()
-		_popup_manager.open_chronicle()
+		return
+	_switch_right_panel_tab(RIGHT_PANEL_TAB_CHRONICLE)
+	_open_right_sidebar()
 
 
 ## Opens or closes the entity list panel.
@@ -1598,62 +1767,69 @@ func _entity_detail_sidebar_width() -> float:
 
 
 func _layout_entity_detail_sidebar(is_open: bool) -> void:
-	if _entity_detail_panel == null:
+	if _right_panel_container == null:
 		return
 	var panel_width: float = _entity_detail_sidebar_width()
-	_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
-	_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+	_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+	_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
 	if is_open:
-		_entity_detail_panel.offset_left = -panel_width
-		_entity_detail_panel.offset_right = 0.0
+		_right_panel_container.offset_left = -panel_width
+		_right_panel_container.offset_right = 0.0
 	else:
-		_entity_detail_panel.offset_left = 0.0
-		_entity_detail_panel.offset_right = panel_width
+		_right_panel_container.offset_left = 0.0
+		_right_panel_container.offset_right = panel_width
+
+
+func _open_right_sidebar() -> void:
+	if _right_panel_container == null:
+		return
+	var panel_width: float = _entity_detail_sidebar_width()
+	if _entity_detail_panel_tween != null:
+		_entity_detail_panel_tween.kill()
+	_right_panel_container.visible = true
+	_right_panel_container.move_to_front()
+	if _entity_detail_panel_open:
+		_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+		_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+		_right_panel_container.offset_left = -panel_width
+		_right_panel_container.offset_right = 0.0
+		return
+	_entity_detail_panel_open = true
+	_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+	_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
+	_right_panel_container.offset_left = 0.0
+	_right_panel_container.offset_right = panel_width
+	_entity_detail_panel_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_entity_detail_panel_tween.tween_property(_right_panel_container, "offset_left", -panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.parallel().tween_property(_right_panel_container, "offset_right", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
 
 
 func _open_entity_detail_sidebar(entity_id: int) -> void:
 	if _entity_detail_panel == null or entity_id < 0:
 		return
 	_entity_detail_panel.set_entity_id(entity_id)
-	var panel_width: float = _entity_detail_sidebar_width()
-	if _entity_detail_panel_tween != null:
-		_entity_detail_panel_tween.kill()
-	_entity_detail_panel.visible = true
-	_entity_detail_panel.move_to_front()
-	if _entity_detail_panel_open:
-		_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
-		_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
-		_entity_detail_panel.offset_left = -panel_width
-		_entity_detail_panel.offset_right = 0.0
-		return
-	_entity_detail_panel_open = true
-	_entity_detail_panel.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
-	_entity_detail_panel.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
-	_entity_detail_panel.offset_left = 0.0
-	_entity_detail_panel.offset_right = panel_width
-	_entity_detail_panel_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	_entity_detail_panel_tween.tween_property(_entity_detail_panel, "offset_left", -panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
-	_entity_detail_panel_tween.parallel().tween_property(_entity_detail_panel, "offset_right", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
+	_open_right_sidebar()
 
 
 func _close_entity_detail_sidebar() -> void:
-	if _entity_detail_panel == null:
+	if _right_panel_container == null:
 		return
 	if _entity_detail_panel_tween != null:
 		_entity_detail_panel_tween.kill()
 	var panel_width: float = _entity_detail_sidebar_width()
 	if not _entity_detail_panel_open:
-		_entity_detail_panel.visible = false
-		_entity_detail_panel.offset_left = 0.0
-		_entity_detail_panel.offset_right = panel_width
+		_right_panel_container.visible = false
+		_right_panel_container.offset_left = 0.0
+		_right_panel_container.offset_right = panel_width
 		return
 	_entity_detail_panel_open = false
 	_entity_detail_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	_entity_detail_panel_tween.tween_property(_entity_detail_panel, "offset_left", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
-	_entity_detail_panel_tween.parallel().tween_property(_entity_detail_panel, "offset_right", panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.tween_property(_right_panel_container, "offset_left", 0.0, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
+	_entity_detail_panel_tween.parallel().tween_property(_right_panel_container, "offset_right", panel_width, ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION)
 	_entity_detail_panel_tween.tween_callback(func() -> void:
-		if _entity_detail_panel != null and not _entity_detail_panel_open:
-			_entity_detail_panel.visible = false
+		if _right_panel_container != null and not _entity_detail_panel_open:
+			_right_panel_container.visible = false
 	)
 
 
@@ -1666,6 +1842,46 @@ func _toggle_entity_detail_sidebar() -> void:
 
 func _on_viewport_size_changed() -> void:
 	_layout_entity_detail_sidebar(_entity_detail_panel_open)
+
+
+func _update_right_panel_chronicle_attention(delta: float) -> void:
+	if _tab_chronicle_btn == null:
+		return
+	if _chronicle_tab_flash_timer > 0.0:
+		_chronicle_tab_flash_timer = maxf(0.0, _chronicle_tab_flash_timer - delta)
+		if _chronicle_tab_flash_timer <= 0.0:
+			_set_right_panel_tab_state()
+	if not _entity_detail_panel_open or _current_right_panel_tab == RIGHT_PANEL_TAB_CHRONICLE:
+		return
+	if not SimBridge.runtime_is_initialized():
+		return
+	_chronicle_poll_timer += delta
+	if _chronicle_poll_timer < RIGHT_PANEL_CHRONICLE_POLL_INTERVAL:
+		return
+	_chronicle_poll_timer = 0.0
+	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(1)
+	if bool(response.get("revision_unavailable", false)):
+		return
+	var revision: int = int(response.get("snapshot_revision", -1))
+	if revision < 0:
+		return
+	if _last_chronicle_snapshot_revision < 0:
+		_last_chronicle_snapshot_revision = revision
+		return
+	if revision == _last_chronicle_snapshot_revision:
+		return
+	_last_chronicle_snapshot_revision = revision
+	var items: Variant = response.get("items", [])
+	if not (items is Array):
+		return
+	var items_arr: Array = items
+	if items_arr.is_empty():
+		return
+	var latest_item: Dictionary = items_arr[0]
+	var headline_key: String = str(latest_item.get("headline_key", ""))
+	if headline_key.begins_with("CHRONICLE_BAND_"):
+		_chronicle_tab_flash_timer = RIGHT_PANEL_CHRONICLE_FLASH_DURATION
+		_set_right_panel_tab_state()
 
 
 func _focus_camera_on_entity(entity_id: int) -> void:

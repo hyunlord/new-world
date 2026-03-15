@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4413,
-  "key_count": 4413,
+  "active_key_count": 4415,
+  "key_count": 4415,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4273,7 +4273,9 @@
     "UI_SUMMARY_STRESS_EXHAUSTION": 4191,
     "UI_SUMMARY_STRESS_RESISTANCE": 4192,
     "UI_SURVIVAL_DURATION": 3898,
+    "UI_TAB_CHRONICLE": 4413,
     "UI_TAB_ECONOMY": 3899,
+    "UI_TAB_INSPECTOR": 4414,
     "UI_TAB_OVERVIEW": 3900,
     "UI_TAB_POP": 3901,
     "UI_TAB_POPULATION": 3902,
@@ -8829,7 +8831,9 @@
     "UI_BAND_PROVISIONAL",
     "UI_FAMILIARITY",
     "UI_MEMBERS_SUFFIX",
-    "UI_NO_BAND"
+    "UI_NO_BAND",
+    "UI_TAB_CHRONICLE",
+    "UI_TAB_INSPECTOR"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
