@@ -17,11 +17,22 @@ var _sim_engine: RefCounted = null
 var _snapshot_decoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
+var _runtime_band_list_cache: Array = []
+var _runtime_band_list_cache_tick: int = -1
 var _selected_runtime_detail_cache: Dictionary = {}
 var _selected_runtime_detail_cache_tick: int = -1
 var _selected_runtime_detail_cache_id: int = -1
 var _probe_runtime_detail_cache: Dictionary = {}
 var _probe_runtime_detail_cache_tick: int = -1
+var active_layers: Dictionary = {
+	"band": true,
+	"settlement": true,
+	"culture": false,
+	"nation": false,
+	"army": false,
+	"religion": false,
+	"border": false,
+}
 var selected_entity_id: int = -1
 var probe_observation_mode: bool = false
 var _current_lod: int = 1
@@ -224,6 +235,9 @@ func _ready() -> void:
 	if _ensure_agent_visual_resources():
 		_ensure_agent_sprite_capacity(32)
 	SimulationBus.tick_completed.connect(_on_tick)
+	var on_sim_event := Callable(self, "_on_simulation_event")
+	if not SimulationBus.simulation_event.is_connected(on_sim_event):
+		SimulationBus.simulation_event.connect(on_sim_event)
 
 
 func set_probe_observation_mode(probe_enabled: bool) -> void:
@@ -235,6 +249,15 @@ func _on_tick(_tick: int) -> void:
 	_probe_runtime_detail_cache_tick = -1
 	_probe_runtime_detail_cache.clear()
 	queue_redraw()
+
+
+func _on_simulation_event(event: Dictionary) -> void:
+	if str(event.get("type", "")) != "layer_changed":
+		return
+	var layers_raw: Variant = event.get("layers", {})
+	if layers_raw is Dictionary:
+		active_layers = layers_raw.duplicate(true)
+		queue_redraw()
 
 
 func _process(_delta: float) -> void:
@@ -475,37 +498,15 @@ func _draw() -> void:
 
 	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 	var selected_probe_pos: Vector2 = Vector2.INF
+	_draw_civilization_regions(zl)
+	if bool(active_layers.get("settlement", false)):
+		_draw_settlement_boundaries(zl)
+	if bool(active_layers.get("band", false)):
+		_draw_band_territories(zl)
+	_draw_resource_nodes(zl, min_tile_x, max_tile_x, min_tile_y, max_tile_y, half_tile)
 
-	# LOD 0: draw minimal dots so entities are visible even at max zoom out
 	if _current_lod == 0:
-		for i in range(alive.size()):
-			var entity: Dictionary = alive[i]
-			var ex: float = float(entity.get("x", 0.0))
-			var ey: float = float(entity.get("y", 0.0))
-			if ex < min_tile_x or ex > max_tile_x:
-				continue
-			if ey < min_tile_y or ey > max_tile_y:
-				continue
-			var pos := Vector2(ex, ey) * GameConfig.TILE_SIZE + half_tile
-			var ejob: String = str(entity.get("job", "none"))
-			var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
-			var color: Color = vis["color"]
-			var esex: String = str(entity.get("sex", "male"))
-			var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
-			color = color.lerp(tint, GENDER_TINT_WEIGHT)
-			var is_selected: bool = int(entity.get("entity_id", -1)) == selected_entity_id
-			var outline_color: Color = _outline_color_for_probe(is_selected)
-			color = _entity_color_for_probe(color, is_selected)
-			# Minimum 3px dot ensures visibility at any zoom level
-			var dot_size: float = maxf(3.0, 2.0 / zl)
-			draw_circle(pos, dot_size + 1.0, outline_color)
-			draw_circle(pos, dot_size, color)
-			# Selection highlight even at LOD 0
-			if is_selected:
-				_draw_selection_indicator(pos, dot_size + 3.0, 16)
-				selected_probe_pos = pos
-		if selected_probe_pos != Vector2.INF:
-			_draw_probe_selected_forage_overlay(selected_probe_pos)
+		_draw_hover_tooltip()
 		return
 
 	for i in range(alive.size()):
@@ -589,6 +590,7 @@ func _draw() -> void:
 			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
 			draw_rect(Rect2(pos.x + size + 2, pos.y - size - 4 - name_size.y, name_size.x + 4, name_size.y + 2), Color(0, 0, 0, bg_alpha))
 			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
+			_draw_action_icon(eid, pos, size)
 
 	# Resource text markers at high zoom (LOD 2)
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
@@ -631,30 +633,14 @@ func _draw_binary_snapshots() -> void:
 
 	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 	var selected_probe_pos: Vector2 = Vector2.INF
+	_draw_civilization_regions(zl)
+	if bool(active_layers.get("settlement", false)):
+		_draw_settlement_boundaries(zl)
+	if bool(active_layers.get("band", false)):
+		_draw_band_territories(zl)
+	_draw_resource_nodes(zl, min_tile_x, max_tile_x, min_tile_y, max_tile_y, half_tile)
 
 	if _current_lod == 0:
-		for index in range(_snapshot_decoder.agent_count):
-			var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
-			if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x:
-				continue
-			if tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
-				continue
-			var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
-			var vis: Dictionary = JOB_VISUALS.get(_binary_job_key(_snapshot_decoder.get_job_icon(index)), JOB_VISUALS["none"])
-			var color: Color = vis["color"]
-			var tint: Color = MALE_TINT if _snapshot_decoder.get_sex(index) == 0 else FEMALE_TINT
-			color = color.lerp(tint, GENDER_TINT_WEIGHT)
-			var is_selected: bool = _snapshot_decoder.get_entity_id(index) == selected_entity_id
-			var outline_color: Color = _outline_color_for_probe(is_selected)
-			color = _entity_color_for_probe(color, is_selected)
-			var dot_size: float = maxf(3.0, 2.0 / zl)
-			draw_circle(pos, dot_size + 1.0, outline_color)
-			draw_circle(pos, dot_size, color)
-			if is_selected:
-				_draw_selection_indicator(pos, dot_size + 3.0, 16)
-				selected_probe_pos = pos
-		if selected_probe_pos != Vector2.INF:
-			_draw_probe_selected_forage_overlay(selected_probe_pos)
 		_draw_hover_tooltip()
 		return
 
@@ -693,6 +679,7 @@ func _draw_binary_snapshots() -> void:
 			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
 			draw_rect(Rect2(pos.x + size + 2.0, pos.y - size - 4.0 - name_size.y, name_size.x + 4.0, name_size.y + 2.0), Color(0.0, 0.0, 0.0, bg_alpha))
 			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
+			_draw_action_icon(entity_id, pos, size)
 
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
 		var res_font: Font = ThemeDB.fallback_font
@@ -716,13 +703,13 @@ func _draw_binary_snapshots() -> void:
 
 
 func _update_lod(zoom_level: float) -> void:
-	if _current_lod == 0 and zoom_level > 0.9:
+	if _current_lod == 0 and zoom_level >= 0.8:
 		_current_lod = 1
-	elif _current_lod == 1 and zoom_level < 0.6:
+	elif _current_lod == 1 and zoom_level < 0.8:
 		_current_lod = 0
-	elif _current_lod == 1 and zoom_level > 4.2:
+	elif _current_lod == 1 and zoom_level >= 2.0:
 		_current_lod = 2
-	elif _current_lod == 2 and zoom_level < 3.8:
+	elif _current_lod == 2 and zoom_level < 2.0:
 		_current_lod = 1
 
 
@@ -1206,6 +1193,217 @@ func _runtime_entity_name(entity_id: int) -> String:
 	return str(detail.get("name", ""))
 
 
+func _draw_action_icon(entity_id: int, pos: Vector2, size: float) -> void:
+	if _current_lod != 2:
+		return
+	var detail: Dictionary = _get_probe_entity_detail(entity_id)
+	if detail.is_empty():
+		return
+	var icon: String = _action_to_icon(str(detail.get("current_action", "")))
+	if icon.is_empty():
+		return
+	var font: Font = ThemeDB.fallback_font
+	draw_string(
+		font,
+		pos + Vector2(0.0, -(size + 10.0)),
+		icon,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		-1,
+		9,
+		Color(1.0, 1.0, 1.0, 0.95)
+	)
+
+
+func _action_to_icon(action: String) -> String:
+	match action.to_lower():
+		"build", "construct":
+			return "🔨"
+		"gather_wood", "gatherwood", "chop", "woodcut":
+			return "🪓"
+		"forage", "gather", "gather_food":
+			return "🌿"
+		"socialize", "chat", "social":
+			return "💬"
+		"eat", "consume":
+			return "🍖"
+		"rest", "sleep":
+			return "💤"
+		"wander", "explore":
+			return "👣"
+		"gather_stone", "gatherstone", "mine":
+			return "⛏️"
+		"fight", "combat":
+			return "⚔️"
+		"hunt":
+			return "🏹"
+		_:
+			return ""
+
+
+func _draw_resource_nodes(
+	zoom_level: float,
+	min_tile_x: int,
+	max_tile_x: int,
+	min_tile_y: int,
+	max_tile_y: int,
+	half_tile: Vector2
+) -> void:
+	if zoom_level < 0.8 or _resource_map == null:
+		return
+	var font: Font = ThemeDB.fallback_font
+	var icon_font_size: int = 9 if zoom_level >= 2.0 else 7
+	var max_y: int = mini(_resource_map.height - 1, max_tile_y)
+	var max_x: int = mini(_resource_map.width - 1, max_tile_x)
+	for ty in range(maxi(0, min_tile_y), max_y + 1, 3):
+		for tx in range(maxi(0, min_tile_x), max_x + 1, 3):
+			var food: float = _resource_map.get_food(tx, ty)
+			var wood: float = _resource_map.get_wood(tx, ty)
+			var stone: float = _resource_map.get_stone(tx, ty)
+			var icon: String = ""
+			var tint: Color = Color(1.0, 1.0, 1.0, 0.92)
+			if food >= wood and food >= stone and food > 2.0:
+				icon = "🫐"
+				tint = Color(0.92, 0.82, 0.46, 0.95)
+			elif wood >= stone and wood > 3.0:
+				icon = "🌳"
+				tint = Color(0.48, 0.84, 0.40, 0.95)
+			elif stone > 2.0:
+				icon = "🪨"
+				tint = Color(0.72, 0.80, 0.92, 0.95)
+			if icon.is_empty():
+				continue
+			var draw_pos: Vector2 = Vector2(tx, ty) * float(GameConfig.TILE_SIZE) + half_tile + Vector2(0.0, 3.0)
+			draw_string(font, draw_pos, icon, HORIZONTAL_ALIGNMENT_CENTER, -1, icon_font_size, tint)
+
+
+func _draw_settlement_boundaries(zoom_level: float) -> void:
+	if zoom_level > 2.0:
+		return
+	var summary: Dictionary = _get_runtime_world_summary()
+	var settlements_raw: Variant = summary.get("settlement_summaries", [])
+	if not (settlements_raw is Array):
+		return
+	var font: Font = ThemeDB.fallback_font
+	var tile_size: float = float(GameConfig.TILE_SIZE)
+	for settlement_summary_raw: Variant in settlements_raw:
+		if not (settlement_summary_raw is Dictionary):
+			continue
+		var settlement_summary: Dictionary = settlement_summary_raw
+		var settlement_raw: Variant = settlement_summary.get("settlement", {})
+		if not (settlement_raw is Dictionary):
+			continue
+		var settlement: Dictionary = settlement_raw
+		var center: Vector2 = Vector2(
+			float(settlement.get("center_x", 0.0)) * tile_size + tile_size * 0.5,
+			float(settlement.get("center_y", 0.0)) * tile_size + tile_size * 0.5
+		)
+		var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
+		if zoom_level < 0.4:
+			draw_circle(center, 4.0, Color(0.88, 0.72, 0.52, 0.85))
+			continue
+		var radius: float = tile_size * (3.5 + sqrt(float(maxi(population, 1))) * 1.4)
+		var color: Color = Color(0.82, 0.46, 0.34, 0.20)
+		_draw_dashed_circle(center, radius, color, 1.0)
+		if zoom_level >= 0.8:
+			var settlement_name: String = str(settlement.get("name", ""))
+			if settlement_name.is_empty():
+				continue
+			var label: String = "%s · %s" % [settlement_name, Locale.trf1("UI_POP_FMT", "n", population)]
+			draw_string(
+				font,
+				center + Vector2(0.0, -radius - 6.0),
+				label,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				120.0,
+				8,
+				Color(0.88, 0.82, 0.66, 0.95)
+			)
+
+
+func _draw_band_territories(zoom_level: float) -> void:
+	if zoom_level < 0.4 or zoom_level > 2.0:
+		return
+	var bands: Array = _get_runtime_band_list()
+	if bands.is_empty():
+		return
+	var font: Font = ThemeDB.fallback_font
+	var tile_size: float = float(GameConfig.TILE_SIZE)
+	for band_raw: Variant in bands:
+		if not (band_raw is Dictionary):
+			continue
+		var band: Dictionary = band_raw
+		var leader_id: int = int(band.get("leader_id", -1))
+		var member_count: int = int(band.get("member_count", 0))
+		if leader_id < 0 or member_count < 2:
+			continue
+		var center: Vector2 = _get_entity_world_position(leader_id)
+		if center == Vector2.INF:
+			continue
+		var band_name: String = str(band.get("name", ""))
+		var base_radius: float = tile_size * (2.4 + float(member_count) * 0.8)
+		var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
+		var points: PackedVector2Array = PackedVector2Array()
+		for point_index: int in range(16):
+			var angle: float = float(point_index) / 16.0 * TAU
+			var noise: float = sin(angle * 3.0 + phase) * 0.15 + cos(angle * 5.0 + phase * 0.5) * 0.10
+			var radius: float = base_radius * (1.0 + noise)
+			points.append(center + Vector2(cos(angle), sin(angle)) * radius)
+		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.08))
+		for point_index: int in range(points.size()):
+			var next_index: int = (point_index + 1) % points.size()
+			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.22), 1.0, true)
+		if not band_name.is_empty():
+			draw_string(
+				font,
+				center + Vector2(0.0, -base_radius - 6.0),
+				"%s · %d" % [band_name, member_count],
+				HORIZONTAL_ALIGNMENT_CENTER,
+				110.0,
+				8,
+				Color(0.86, 0.66, 0.28, 0.95)
+			)
+
+
+func _draw_civilization_regions(_zoom_level: float) -> void:
+	# Phase 4+: civilization territory blobs render here.
+	pass
+
+
+func _draw_dashed_circle(center: Vector2, radius: float, color: Color, width: float) -> void:
+	var segments: int = 32
+	var dash_on: int = 2
+	var dash_off: int = 1
+	for segment: int in range(segments):
+		if segment % (dash_on + dash_off) >= dash_on:
+			continue
+		var angle_from: float = float(segment) / float(segments) * TAU
+		var angle_to: float = float(segment + 1) / float(segments) * TAU
+		draw_line(
+			center + Vector2(cos(angle_from), sin(angle_from)) * radius,
+			center + Vector2(cos(angle_to), sin(angle_to)) * radius,
+			color,
+			width,
+			true
+		)
+
+
+func _get_entity_world_position(entity_id: int) -> Vector2:
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	if _snapshot_decoder.has_data():
+		for index: int in range(_snapshot_decoder.agent_count):
+			if _snapshot_decoder.get_entity_id(index) != entity_id:
+				continue
+			return _snapshot_decoder.get_interpolated_position(index, _render_alpha) * float(GameConfig.TILE_SIZE) + half_tile
+	for entity_raw: Variant in _get_legacy_snapshots():
+		if not (entity_raw is Dictionary):
+			continue
+		var entity: Dictionary = entity_raw
+		if int(entity.get("entity_id", -1)) != entity_id:
+			continue
+		return Vector2(float(entity.get("x", 0.0)), float(entity.get("y", 0.0))) * float(GameConfig.TILE_SIZE) + half_tile
+	return Vector2.INF
+
+
 func _draw_triangle(center: Vector2, size: float, color: Color) -> void:
 	var points := PackedVector2Array([
 		center + Vector2(0, -size),
@@ -1381,14 +1579,31 @@ func _building_value(building: Variant, key: String, default_value: Variant) -> 
 	return building.get(key)
 
 
-func _get_runtime_building_at(tile_x: int, tile_y: int) -> Variant:
+func _get_runtime_world_summary() -> Dictionary:
 	if _sim_engine == null or not _sim_engine.has_method("get_world_summary"):
-		return null
+		return {}
 	var tick: int = int(_sim_engine.current_tick)
 	if tick != _runtime_world_summary_cache_tick:
 		_runtime_world_summary_cache_tick = tick
 		_runtime_world_summary_cache = _sim_engine.get_world_summary()
-	var settlement_summaries: Variant = _runtime_world_summary_cache.get("settlement_summaries", [])
+	return _runtime_world_summary_cache
+
+
+func _get_runtime_band_list() -> Array:
+	if _sim_engine == null or not _sim_engine.has_method("get_band_list"):
+		return []
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _runtime_band_list_cache_tick:
+		_runtime_band_list_cache_tick = tick
+		_runtime_band_list_cache = _sim_engine.get_band_list()
+	return _runtime_band_list_cache
+
+
+func _get_runtime_building_at(tile_x: int, tile_y: int) -> Variant:
+	var summary: Dictionary = _get_runtime_world_summary()
+	if summary.is_empty():
+		return null
+	var settlement_summaries: Variant = summary.get("settlement_summaries", [])
 	if not (settlement_summaries is Array):
 		return null
 	for i in range(settlement_summaries.size()):

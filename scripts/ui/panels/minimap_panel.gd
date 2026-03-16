@@ -27,11 +27,11 @@ func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: 
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	offset_right = -10
-	offset_left = -(10 + minimap_size)
-	offset_top = 38
-	offset_bottom = 38 + minimap_size
+	set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	offset_left = 8
+	offset_right = 8 + minimap_size
+	offset_bottom = -46
+	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 
 	_minimap_rect = TextureRect.new()
@@ -84,6 +84,11 @@ func _draw() -> void:
 
 
 func _process(_delta: float) -> void:
+	if _sim_engine != null:
+		var tick: int = int(_sim_engine.current_tick)
+		if tick != _runtime_snapshot_cache_tick:
+			_needs_update = true
+	update_minimap()
 	queue_redraw()
 
 
@@ -185,8 +190,10 @@ func _draw_marker(img: Image, tx: int, ty: int, color: Color, w: int, h: int) ->
 
 func resize(new_size: int) -> void:
 	minimap_size = new_size
-	offset_left = -(10 + minimap_size)
-	offset_bottom = 38 + minimap_size
+	offset_left = 8
+	offset_right = 8 + minimap_size
+	offset_bottom = -46
+	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
 	_needs_update = true

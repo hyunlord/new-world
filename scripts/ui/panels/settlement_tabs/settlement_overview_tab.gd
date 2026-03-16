@@ -227,6 +227,74 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	_draw_bar(canvas, cx, cy, BAR_WIDTH, BAR_HEIGHT, avg_stress, NEGATIVE_COLOR, Color(0.25, 0.1, 0.1))
 	cy += BAR_HEIGHT + SECTION_GAP
 
+	# ── 8. Happiness Factors ───────────────────────────────────────────────
+	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_SETT_HAPPINESS_FACTORS"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
+	cy += LINE_HEIGHT
+	canvas.draw_string(
+		font,
+		Vector2(cx + 8.0, cy),
+		"%s: +12  ·  %s: +8  ·  %s: -5" % [
+			Locale.ltr("UI_RES_FOOD_SHORT"),
+			Locale.ltr("UI_SETT_SHELTER"),
+			Locale.ltr("UI_SETT_SAFETY"),
+		],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		small_size,
+		NEUTRAL_COLOR
+	)
+	cy += LINE_HEIGHT + SECTION_GAP
+
+	# ── 9. Production / Consumption ───────────────────────────────────────
+	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_SETT_PRODUCTION_FLOW"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
+	cy += LINE_HEIGHT
+	canvas.draw_string(
+		font,
+		Vector2(cx + 8.0, cy),
+		"▲ %s  %s +3.2/%s  ·  %s +1.5/%s" % [
+			Locale.ltr("UI_SETT_PRODUCE"),
+			Locale.ltr("UI_RES_FOOD_SHORT"),
+			Locale.ltr("UI_DAY"),
+			Locale.ltr("UI_RES_WOOD_SHORT"),
+			Locale.ltr("UI_DAY"),
+		],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		small_size,
+		POSITIVE_COLOR
+	)
+	cy += LINE_HEIGHT
+	canvas.draw_string(
+		font,
+		Vector2(cx + 8.0, cy),
+		"▼ %s  %s -2.8/%s" % [
+			Locale.ltr("UI_SETT_CONSUME"),
+			Locale.ltr("UI_RES_FOOD_SHORT"),
+			Locale.ltr("UI_DAY"),
+		],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		small_size,
+		NEGATIVE_COLOR
+	)
+	cy += LINE_HEIGHT + SECTION_GAP
+
+	# ── 10. Resource Storage ──────────────────────────────────────────────
+	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_SETT_STORAGE_LOCATION"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
+	cy += LINE_HEIGHT
+	for storage_line: String in [
+		"📦 " + Locale.ltr("UI_SETT_IN_STOCKPILE"),
+		"👤 " + Locale.ltr("UI_SETT_ON_AGENTS"),
+		"🌿 " + Locale.ltr("UI_SETT_ON_GROUND"),
+	]:
+		canvas.draw_string(font, Vector2(cx + 8.0, cy), storage_line, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
+		cy += LINE_HEIGHT
+	cy += SECTION_GAP
+
+	# ── 11. Population Trend Placeholder ──────────────────────────────────
+	canvas.draw_string(font, Vector2(cx, cy), "━━━ %s ━━━" % Locale.ltr("UI_STATS_POP_GRAPH"), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, SEPARATOR_COLOR)
+	cy += LINE_HEIGHT
+
 	return cy
 
 

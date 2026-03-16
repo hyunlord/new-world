@@ -154,6 +154,26 @@ func get_following_id() -> int:
 	return follow_target_id
 
 
+func set_target_zoom(value: float) -> void:
+	_mark_player_input(false)
+	_note_camera_move("manual_input")
+	_target_zoom = clampf(value, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+	zoom = zoom.lerp(Vector2(_target_zoom, _target_zoom), GameConfig.CAMERA_ZOOM_SPEED)
+
+
+func get_zoom_level() -> int:
+	var zoom_value: float = _target_zoom if _is_player_active() else zoom.x
+	if zoom_value >= 2.0:
+		return 0
+	if zoom_value >= 0.8:
+		return 1
+	if zoom_value >= 0.4:
+		return 2
+	if zoom_value >= 0.25:
+		return 3
+	return 4
+
+
 func focus_world_tile(tile_position: Vector2, reason: String = "manual_focus") -> void:
 	_mark_player_input(false)
 	_clear_active_tween()
@@ -547,7 +567,15 @@ func _smooth_zoom(target: Vector2, delta: float) -> void:
 
 
 func _zoom_at_mouse(delta: float) -> void:
-	_target_zoom = clampf(_target_zoom + delta, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+	var direction: int = 0
+	if delta > 0.0:
+		direction = -1
+	elif delta < 0.0:
+		direction = 1
+	if direction == 0:
+		return
+	var next_level: int = clampi(get_zoom_level() + direction, 0, GameConfig.CAMERA_ZOOM_LEVELS.size() - 1)
+	set_target_zoom(float(GameConfig.CAMERA_ZOOM_LEVELS[next_level]))
 	zoom = zoom.lerp(Vector2(_target_zoom, _target_zoom), GameConfig.CAMERA_ZOOM_SPEED)
 
 

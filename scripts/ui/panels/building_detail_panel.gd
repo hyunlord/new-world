@@ -145,6 +145,44 @@ func _draw() -> void:
 			var radius: int = GameConfig.BUILDING_TYPES.get("campfire", {}).get("radius", 5)
 			draw_string(font, Vector2(cx + 10, cy + 12), Locale.trf1("UI_DETAIL_EFFECT_RADIUS_FMT", "n", radius), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_body"), Color(0.8, 0.8, 0.8))
 
+	cy += 24.0
+	draw_line(Vector2(cx, cy), Vector2(panel_w - 20, cy), Color(0.3, 0.3, 0.3), 1.0)
+	cy += 10.0
+	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILDING_EFFECTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	cy += 18.0
+	draw_string(
+		font,
+		Vector2(cx + 10, cy + 12),
+		_building_effect_text(building_type),
+		HORIZONTAL_ALIGNMENT_LEFT,
+		panel_w - 40.0,
+		GameConfig.get_font_size("popup_body"),
+		Color(0.78, 0.62, 0.22)
+	)
+	cy += 20.0
+
+	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILDING_RECIPE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	cy += 18.0
+	draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_BUILDING_RECIPE_PLACEHOLDER"), HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40.0, GameConfig.get_font_size("popup_body"), Color(0.45, 0.49, 0.56))
+	cy += 20.0
+
+	draw_string(font, Vector2(cx, cy + 12), Locale.ltr("UI_BUILDING_IO"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	cy += 18.0
+	draw_string(
+		font,
+		Vector2(cx + 10, cy + 12),
+		"%s: --  ·  %s: --" % [Locale.ltr("UI_INPUT"), Locale.ltr("UI_OUTPUT")],
+		HORIZONTAL_ALIGNMENT_LEFT,
+		panel_w - 40.0,
+		GameConfig.get_font_size("popup_body"),
+		Color(0.45, 0.49, 0.56)
+	)
+	cy += 20.0
+
+	draw_string(font, Vector2(cx, cy + 12), "%s [Phase 3]" % Locale.ltr("UI_BUILDING_STRUCTURE"), HORIZONTAL_ALIGNMENT_LEFT, -1, GameConfig.get_font_size("popup_heading"), Color.WHITE)
+	cy += 18.0
+	draw_string(font, Vector2(cx + 10, cy + 12), Locale.ltr("UI_BUILDING_STRUCTURE_PLACEHOLDER"), HORIZONTAL_ALIGNMENT_LEFT, panel_w - 40.0, GameConfig.get_font_size("popup_body"), Color(0.45, 0.49, 0.56))
+
 	# Settlement tech era + discoveries
 	var tech_era: String = str(_building_value(building, "tech_era", ""))
 	if settlement_id > 0:
@@ -294,3 +332,15 @@ func _resource_label(resource_key: String) -> String:
 			return Locale.ltr("UI_STONE")
 		_:
 			return resource_key
+
+
+func _building_effect_text(building_type: String) -> String:
+	match building_type:
+		"stockpile":
+			return Locale.ltr("UI_BUILDING_EFFECT_STOCKPILE")
+		"shelter":
+			return Locale.ltr("UI_BUILDING_EFFECT_SHELTER")
+		"campfire":
+			return Locale.ltr("UI_BUILDING_EFFECT_CAMPFIRE")
+		_:
+			return Locale.ltr("UI_NOT_IMPLEMENTED")
