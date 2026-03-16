@@ -45,9 +45,10 @@ use pathfinding_core::{
     PATHFIND_BACKEND_GPU,
 };
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, Emotion, Faith, Identity, Intelligence, Inventory,
-    LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs, Personality, Position,
-    Skills, Social, Stress, Traits, Values,
+    Age, Behavior, Body, BodyHealth, Coping, Economic, Emotion, Faith, Identity, Intelligence,
+    Inventory, LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs,
+    Personality, Position, Skills, Social, Stress, Traits, Values, PART_NAMES, PART_TO_GROUP,
+    PART_VITAL,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelId, EntityId, Settlement, SettlementId, Temperament};
@@ -2534,8 +2535,16 @@ impl WorldSimRuntime {
         }
 
         // Body attributes
+        dict.set("aggregate_hp", 1.0_f64);
+        dict.set("damaged_groups", 0_i64);
+        dict.set("active_conditions", 0_i64);
+        dict.set("move_mult", 1.0_f64);
+        dict.set("work_mult", 1.0_f64);
+        dict.set("combat_mult", 1.0_f64);
+        dict.set("pain", 0.0_f64);
         if let Ok(body) = world.get::<&Body>(entity) {
             dict.set("health", body.health);
+            dict.set("aggregate_hp", f64::from(body.health));
             dict.set("body_str", body.str_realized);
             dict.set("body_agi", body.agi_realized);
             dict.set("body_end", body.end_realized);
@@ -2544,6 +2553,15 @@ impl WorldSimRuntime {
             dict.set("body_dr", body.dr_realized);
             dict.set("attractiveness", body.attractiveness);
             dict.set("height", body.height);
+        }
+        if let Ok(body_health) = world.get::<&BodyHealth>(entity) {
+            dict.set("aggregate_hp", body_health.aggregate_hp);
+            dict.set("damaged_groups", body_health.damaged_groups as i64);
+            dict.set("active_conditions", body_health.active_conditions as i64);
+            dict.set("move_mult", body_health.move_mult());
+            dict.set("work_mult", body_health.work_mult());
+            dict.set("combat_mult", body_health.combat_mult());
+            dict.set("pain", body_health.pain());
         }
 
         // Behavior / Job
@@ -2626,7 +2644,7 @@ impl WorldSimRuntime {
         dict
     }
 
-    /// L3: Tab-specific deep data. Six tabs: mind / body / skills / social / memory / misc.
+    /// L3: Tab-specific deep data. Tabs: mind / body / health / skills / social / memory / misc.
     #[func]
     fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
         let mut dict = VarDictionary::new();
@@ -2740,6 +2758,52 @@ impl WorldSimRuntime {
                     dict.set("g_factor", intel.g_factor as f32);
                     dict.set("ace_penalty", intel.ace_penalty as f32);
                     dict.set("nutrition_penalty", intel.nutrition_penalty as f32);
+                }
+            }
+            "health" => {
+                dict.set("aggregate_hp", 1.0_f64);
+                dict.set("damaged_groups", 0_i64);
+                dict.set("lod_tier", 3_i64);
+                dict.set("active_conditions", 0_i64);
+                dict.set("move_mult", 1.0_f64);
+                dict.set("work_mult", 1.0_f64);
+                dict.set("combat_mult", 1.0_f64);
+                dict.set("pain", 0.0_f64);
+                dict.set("group_hp", vec_u8_to_packed(vec![100_u8; 10]));
+                let empty_damaged_parts: Array<VarDictionary> = Array::new();
+                dict.set("damaged_parts", empty_damaged_parts);
+                if let Ok(body) = world.get::<&Body>(entity) {
+                    dict.set("health", body.health);
+                    dict.set("aggregate_hp", f64::from(body.health));
+                }
+                if let Ok(body_health) = world.get::<&BodyHealth>(entity) {
+                    dict.set("aggregate_hp", body_health.aggregate_hp);
+                    dict.set("damaged_groups", body_health.damaged_groups as i64);
+                    dict.set("lod_tier", body_health.lod_tier as i64);
+                    dict.set("active_conditions", body_health.active_conditions as i64);
+                    dict.set("move_mult", body_health.move_mult());
+                    dict.set("work_mult", body_health.work_mult());
+                    dict.set("combat_mult", body_health.combat_mult());
+                    dict.set("pain", body_health.pain());
+                    dict.set("group_hp", vec_u8_to_packed(body_health.group_hp.to_vec()));
+
+                    let mut damaged_parts: Array<VarDictionary> = Array::new();
+                    for (index, part) in body_health.parts.iter().enumerate() {
+                        if part.hp == 100 && !part.flags.any() {
+                            continue;
+                        }
+                        let mut part_dict = VarDictionary::new();
+                        part_dict.set("index", index as i64);
+                        part_dict.set("name", PART_NAMES[index]);
+                        part_dict.set("group", PART_TO_GROUP[index] as i64);
+                        part_dict.set("hp", part.hp as i64);
+                        part_dict.set("flags", part.flags.0 as i64);
+                        part_dict.set("bleed_rate", part.bleed_rate as i64);
+                        part_dict.set("infection_sev", part.infection_sev as i64);
+                        part_dict.set("vital", PART_VITAL[index]);
+                        damaged_parts.push(&part_dict);
+                    }
+                    dict.set("damaged_parts", damaged_parts);
                 }
             }
             "skills" => {

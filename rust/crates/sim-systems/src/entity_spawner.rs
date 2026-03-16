@@ -12,7 +12,7 @@ use crate::values_init::initialize_values;
 use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
-    Age, Behavior, Body, Coping, Economic, EffectFlags, Emotion, Faith, Identity,
+    Age, Behavior, Body, BodyHealth, Coping, Economic, EffectFlags, Emotion, Faith, Identity,
     InfluenceReceiver, Intelligence, Inventory, LlmCapable, Memory, NarrativeCache, Needs,
     Personality, Position, Skills, Social, Stress, Temperament, Traits,
 };
@@ -722,7 +722,8 @@ pub fn spawn_agent(
     );
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
-    // We have 19 components total: spawn the first 15, then insert the remaining 4.
+    // We currently spawn 26 components total: the first 15 in the spawn bundle,
+    // then insert the remaining 11 overflow components.
     let entity = world.spawn((
         identity,
         age,
@@ -754,6 +755,7 @@ pub fn spawn_agent(
                 InfluenceReceiver::default(),
                 EffectFlags::default(),
                 Inventory::new(),
+                BodyHealth::default(),
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),

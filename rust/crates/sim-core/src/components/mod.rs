@@ -1,6 +1,7 @@
 pub mod age;
 pub mod behavior;
 pub mod body;
+pub mod body_health;
 pub mod coping;
 pub mod economic;
 pub mod effect_flags;
@@ -27,6 +28,10 @@ pub use crate::temperament::Temperament;
 pub use age::Age;
 pub use behavior::Behavior;
 pub use body::Body;
+pub use body_health::{
+    BodyHealth, HealthLod, LimbGroup, PartFlags, PartState, PART_NAMES, PART_RELSIZE,
+    PART_TO_GROUP, PART_VITAL,
+};
 pub use coping::{Coping, CopingRebound};
 pub use economic::Economic;
 pub use effect_flags::EffectFlags;
