@@ -393,6 +393,26 @@ func get_world_summary() -> Dictionary:
 	return {}
 
 
+func get_influence_texture(channel: String) -> PackedByteArray:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_texture"):
+		return PackedByteArray()
+	var raw: Variant = sim_bridge.call("runtime_get_influence_texture", channel)
+	if raw is PackedByteArray:
+		return raw
+	return PackedByteArray()
+
+
+func get_influence_grid_size() -> Vector2i:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_grid_size"):
+		return Vector2i.ZERO
+	var raw: Variant = sim_bridge.call("runtime_get_influence_grid_size")
+	if raw is Vector2i:
+		return raw
+	return Vector2i.ZERO
+
+
 ## Returns the number of runtime systems registered in the authoritative Rust manifest.
 func get_registered_system_count() -> int:
 	return _registered_system_count

@@ -48,6 +48,8 @@ var _stone_label: Label
 var _building_label: Label
 var _fps_label: Label
 var _era_label: Label
+var _weather_label: Label
+var _alert_badge: Label
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -179,6 +181,19 @@ var _pop_milestone_init: bool = false
 var _last_pop_milestone: int = 0
 var _world_summary_cache: Dictionary = {}
 var _world_summary_cache_tick: int = -1
+var _alert_count: int = 0
+var _alert_details: Array = []
+var _alert_refresh_timer: float = 0.0
+var _resource_trend_timer: float = 0.0
+var _prev_food: float = 0.0
+var _prev_wood: float = 0.0
+var _prev_stone: float = 0.0
+var _food_trend: String = ""
+var _wood_trend: String = ""
+var _stone_trend: String = ""
+var _resource_trends_initialized: bool = false
+const ALERT_REFRESH_INTERVAL: float = 2.0
+const RESOURCE_TREND_INTERVAL: float = 3.0
 
 
 ## Stores all manager and engine references required for HUD display and interaction.
@@ -529,6 +544,8 @@ func _build_bottom_bar_overlay_section() -> HBoxContainer:
 		{"key": "danger", "label": "UI_OVERLAY_DANGER", "color": Color(0.90, 0.20, 0.15)},
 		{"key": "warmth", "label": "UI_OVERLAY_WARMTH", "color": Color(0.90, 0.60, 0.10)},
 		{"key": "social", "label": "UI_OVERLAY_SOCIAL", "color": Color(0.30, 0.50, 0.90)},
+		{"key": "knowledge", "label": "UI_OVERLAY_KNOWLEDGE", "color": Color(0.70, 0.40, 0.80)},
+		{"key": "resource", "label": "UI_OVERLAY_RESOURCE", "color": Color(0.80, 0.60, 0.20)},
 	]
 	for overlay: Dictionary in overlays:
 		var channel: String = str(overlay.get("key", ""))
@@ -637,10 +654,14 @@ func _on_bottom_bar_zoom_pressed(level: int) -> void:
 
 func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	if channel in _bottom_bar_active_overlays:
-		_bottom_bar_active_overlays.erase(channel)
+		_bottom_bar_active_overlays.clear()
 	else:
+		_bottom_bar_active_overlays.clear()
 		_bottom_bar_active_overlays.append(channel)
 	_update_bottom_bar_button_states()
+	SimulationBus.overlay_channel_changed.emit(
+		_bottom_bar_active_overlays[0] if not _bottom_bar_active_overlays.is_empty() else ""
+	)
 
 
 func _update_bottom_bar_perf(delta: float) -> void:
@@ -719,6 +740,9 @@ func _build_top_bar() -> void:
 	_wood_label = _make_label(Locale.trf1("UI_RES_WOOD_FMT", "n", 0), "hud", Color(0.6, 0.4, 0.2))
 	_stone_label = _make_label(Locale.trf1("UI_RES_STONE_FMT", "n", 0), "hud", Color(0.7, 0.7, 0.7))
 	_building_label = _make_label(Locale.trf1("UI_BLD_FMT", "n", 0), "hud")
+	_weather_label = _make_label("", "hud", Color(0.6, 0.75, 0.85))
+	_alert_badge = _make_label("", "hud", Color(0.9, 0.3, 0.2))
+	_alert_badge.visible = false
 	_fps_label = _make_label("60", "hud_secondary", Color(0.5, 0.5, 0.5))
 
 	hbox.add_child(_status_label)
@@ -730,6 +754,8 @@ func _build_top_bar() -> void:
 	hbox.add_child(_wood_label)
 	hbox.add_child(_stone_label)
 	hbox.add_child(_building_label)
+	hbox.add_child(_weather_label)
+	hbox.add_child(_alert_badge)
 	hbox.add_child(_fps_label)
 
 	panel.add_child(hbox)
@@ -1076,6 +1102,82 @@ func _get_world_summary() -> Dictionary:
 	return _world_summary_cache
 
 
+func _get_season_text(tick: int) -> String:
+	var date: Dictionary = GameCalendar.tick_to_date(tick)
+	var month: int = int(date.get("month", 1))
+	var icon: String = "☀️"
+	var temp_base: int = 22
+	var season_key: String = "SEASON_SUMMER"
+	if month >= 3 and month <= 5:
+		icon = "🌸"
+		temp_base = 16
+		season_key = "SEASON_SPRING"
+	elif month >= 6 and month <= 8:
+		icon = "☀️"
+		temp_base = 28
+		season_key = "SEASON_SUMMER"
+	elif month >= 9 and month <= 11:
+		icon = "🍂"
+		temp_base = 14
+		season_key = "SEASON_AUTUMN"
+	else:
+		icon = "❄️"
+		temp_base = 2
+		season_key = "SEASON_WINTER"
+	return "%s %d° %s" % [icon, temp_base, Locale.ltr(season_key)]
+
+
+func _trend_arrow(current: float, previous: float) -> String:
+	var diff: float = current - previous
+	if diff > 1.0:
+		return " ▲"
+	if diff < -1.0:
+		return " ▼"
+	return ""
+
+
+func _refresh_alert_badges() -> void:
+	_alert_details.clear()
+	if _sim_engine == null:
+		_alert_count = 0
+		if _alert_badge != null:
+			_alert_badge.visible = false
+		return
+
+	var summary: Dictionary = _get_world_summary()
+	var food: float = float(summary.get("food", 100.0))
+	var pop: int = int(summary.get("total_population", 1))
+	if pop > 0 and food / float(pop) < 5.0:
+		_alert_details.append({
+			"text": Locale.ltr("ALERT_HUD_LOW_FOOD"),
+			"color": Color(0.9, 0.3, 0.2),
+		})
+
+	var injured: int = int(summary.get("injured_count", 0))
+	if injured > 0:
+		_alert_details.append({
+			"text": Locale.trf1("ALERT_HUD_INJURED_FMT", "n", injured),
+			"color": Color(0.9, 0.5, 0.2),
+		})
+
+	var at_risk: int = int(summary.get("tech_at_risk_count", 0))
+	if at_risk > 0:
+		_alert_details.append({
+			"text": Locale.trf1("ALERT_HUD_TECH_RISK_FMT", "n", at_risk),
+			"color": Color(0.9, 0.7, 0.2),
+		})
+
+	_alert_count = _alert_details.size()
+	if _alert_badge == null:
+		return
+	if _alert_count > 0:
+		_alert_badge.text = "⚠ %d" % _alert_count
+		_alert_badge.add_theme_color_override("font_color", Color(0.9, 0.3, 0.2))
+		_alert_badge.visible = true
+	else:
+		_alert_badge.visible = false
+
+
 func _resolve_runtime_entity_name(entity_id: int) -> String:
 	if _sim_engine == null or entity_id < 0:
 		return ""
@@ -1091,15 +1193,44 @@ func _process(delta: float) -> void:
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
 		_time_label.text = GameCalendar.format_full_datetime(tick)
+		if _weather_label != null:
+			_weather_label.text = _get_season_text(tick)
 		var summary: Dictionary = _get_world_summary()
 		if not summary.is_empty():
 			var pop: int = int(summary.get("total_population", 0))
+			var food: float = float(summary.get("food", 0.0))
+			var wood: float = float(summary.get("wood", 0.0))
+			var stone: float = float(summary.get("stone", 0.0))
 			_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
 			var building_count: int = int(summary.get("building_count", 0))
 			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", building_count)
-			_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(float(summary.get("food", 0.0))))
-			_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(float(summary.get("wood", 0.0))))
-			_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(float(summary.get("stone", 0.0))))
+			_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(food)) + _food_trend
+			_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(wood)) + _wood_trend
+			_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(stone)) + _stone_trend
+
+			_resource_trend_timer += maxf(delta, 0.0)
+			if not _resource_trends_initialized:
+				_prev_food = food
+				_prev_wood = wood
+				_prev_stone = stone
+				_resource_trends_initialized = true
+				_resource_trend_timer = 0.0
+			elif _resource_trend_timer >= RESOURCE_TREND_INTERVAL:
+				_resource_trend_timer = 0.0
+				_food_trend = _trend_arrow(food, _prev_food)
+				_wood_trend = _trend_arrow(wood, _prev_wood)
+				_stone_trend = _trend_arrow(stone, _prev_stone)
+				_prev_food = food
+				_prev_wood = wood
+				_prev_stone = stone
+				_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(food)) + _food_trend
+				_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(wood)) + _wood_trend
+				_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(stone)) + _stone_trend
+
+			_alert_refresh_timer += maxf(delta, 0.0)
+			if _alert_refresh_timer >= ALERT_REFRESH_INTERVAL:
+				_alert_refresh_timer = 0.0
+				_refresh_alert_badges()
 
 			# Population milestones
 			if not _pop_milestone_init:
@@ -1116,6 +1247,10 @@ func _process(delta: float) -> void:
 	elif _entity_manager:
 		var fallback_pop: int = _entity_manager.get_alive_count()
 		_pop_label.text = Locale.trf1("UI_POP_FMT", "n", fallback_pop)
+		if _weather_label != null:
+			_weather_label.text = ""
+		if _alert_badge != null:
+			_alert_badge.visible = false
 
 	# Update selected entity
 	if _selected_entity_id >= 0:
@@ -1709,6 +1844,9 @@ func _refresh_hud_texts() -> void:
 	if _legend_stone_label != null:
 		_legend_stone_label.text = Locale.ltr("UI_STONE_LEGEND")
 	_refresh_bottom_bar_locale()
+	if _sim_engine != null and _weather_label != null:
+		_weather_label.text = _get_season_text(_sim_engine.current_tick)
+	_refresh_alert_badges()
 	if _cast_bar != null:
 		_cast_bar.refresh_locale()
 	if _story_notification_manager != null:

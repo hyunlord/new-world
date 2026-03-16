@@ -14,6 +14,7 @@ const AmbienceManagerClass = preload("res://scripts/ui/ambience_manager.gd")
 const ReputationManagerScript = preload("res://scripts/core/social/reputation_manager.gd")
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
+const OverlayRendererClass = preload("res://scripts/ui/renderers/overlay_renderer.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -34,6 +35,7 @@ var _loading_overlay: CanvasLayer = null
 var _loading_bar: ProgressBar = null
 var _loading_label: Label = null
 var _loading_count_label: Label = null
+var _overlay_renderer: Sprite2D = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -89,6 +91,11 @@ func _ready() -> void:
 	# Init renderers with updated references
 	entity_renderer.init(entity_manager, building_manager, resource_map, settlement_manager, sim_engine)
 	building_renderer.init(null, null, sim_engine)
+	_overlay_renderer = OverlayRendererClass.new()
+	_overlay_renderer.name = "OverlayRenderer"
+	add_child(_overlay_renderer)
+	move_child(_overlay_renderer, world_renderer.get_index() + 1)
+	_overlay_renderer.init(sim_engine, world_renderer)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, null, relationship_manager, reputation_manager)
 	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
@@ -166,6 +173,8 @@ func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
 	_world_setup = null
 
 	world_renderer.render_world(world_data, resource_map)
+	if _overlay_renderer != null and _overlay_renderer.has_method("sync_with_world_renderer"):
+		_overlay_renderer.call("sync_with_world_renderer", world_renderer)
 	_loading_overlay.visible = true
 	var bootstrap_agents: Array = await _spawn_at_points_async(spawn_data, resolved_startup_mode)
 	_loading_overlay.visible = false
@@ -656,6 +665,8 @@ func _load_game_slot(slot: int) -> void:
 	if success:
 		# Re-render world with loaded resource data
 		world_renderer.render_world(world_data, resource_map)
+		if _overlay_renderer != null and _overlay_renderer.has_method("sync_with_world_renderer"):
+			_overlay_renderer.call("sync_with_world_renderer", world_renderer)
 	else:
 		push_warning("[Main] Load failed!")
 	sim_engine.is_paused = false
