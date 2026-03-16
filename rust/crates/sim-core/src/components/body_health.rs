@@ -199,7 +199,7 @@ pub const PART_VITAL: [bool; 85] = [
     false, false, false, false, false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false, false, false, false, false, false,
-    false, false, true, true, false, false, false, false, false, false, false, false, false,
+    false, false, false, true, true, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false,
 ];
 
@@ -360,5 +360,27 @@ mod tests {
         let mut health = BodyHealth::default();
         health.parts[34].hp = 0;
         assert!(!health.is_dead());
+    }
+
+    #[test]
+    fn vital_parts_are_correct() {
+        let expected_vital = [1, 13, 16, 68, 69];
+        let actual_vital: Vec<usize> = PART_VITAL
+            .iter()
+            .enumerate()
+            .filter(|(_, vital)| **vital)
+            .map(|(index, _)| index)
+            .collect();
+        assert_eq!(
+            actual_vital,
+            expected_vital,
+            "Vital parts mismatch. Expected {:?}, got {:?}. Names: {:?}",
+            expected_vital,
+            actual_vital,
+            actual_vital
+                .iter()
+                .map(|&index| PART_NAMES[index])
+                .collect::<Vec<_>>()
+        );
     }
 }
