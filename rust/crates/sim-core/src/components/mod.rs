@@ -10,6 +10,7 @@ pub mod faith;
 pub mod identity;
 pub mod intelligence;
 pub mod inventory;
+pub mod knowledge;
 pub mod llm;
 pub mod memory;
 pub mod needs;
@@ -40,6 +41,7 @@ pub use faith::Faith;
 pub use identity::Identity;
 pub use intelligence::Intelligence;
 pub use inventory::Inventory;
+pub use knowledge::{AgentKnowledge, KnowledgeEntry, LearningState, TransmissionSource};
 pub use llm::{
     JudgmentData, LlmCapable, LlmContent, LlmPending, LlmRequestType, LlmResult, LlmRole,
     NarrativeCache,

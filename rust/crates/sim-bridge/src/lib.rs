@@ -45,8 +45,8 @@ use pathfinding_core::{
     PATHFIND_BACKEND_GPU,
 };
 use sim_core::components::{
-    Age, Behavior, Body, BodyHealth, Coping, Economic, Emotion, Faith, Identity, Intelligence,
-    Inventory, LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs,
+    Age, AgentKnowledge, Behavior, Body, BodyHealth, Coping, Economic, Emotion, Faith, Identity,
+    Intelligence, Inventory, LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs,
     Personality, Position, Skills, Social, Stress, Traits, Values, PART_NAMES, PART_TO_GROUP,
     PART_VITAL,
 };
@@ -2604,6 +2604,16 @@ impl WorldSimRuntime {
             dict.set("children_count", social.children.len() as i32);
             dict.set("relationship_count", social.edges.len() as i32);
         }
+        dict.set("knowledge_count", 0_i64);
+        dict.set("is_learning", false);
+        dict.set("is_teaching", false);
+        dict.set("innovation_potential", 0.0_f64);
+        if let Ok(knowledge) = world.get::<&AgentKnowledge>(entity) {
+            dict.set("knowledge_count", knowledge.known_count() as i64);
+            dict.set("is_learning", knowledge.learning.is_some());
+            dict.set("is_teaching", knowledge.teaching_target.is_some());
+            dict.set("innovation_potential", knowledge.innovation_potential);
+        }
 
         // Faith
         if let Ok(faith) = world.get::<&Faith>(entity) {
@@ -2644,7 +2654,7 @@ impl WorldSimRuntime {
         dict
     }
 
-    /// L3: Tab-specific deep data. Tabs: mind / body / health / skills / social / memory / misc.
+    /// L3: Tab-specific deep data. Tabs: mind / body / health / knowledge / skills / social / memory / misc.
     #[func]
     fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
         let mut dict = VarDictionary::new();
@@ -2804,6 +2814,42 @@ impl WorldSimRuntime {
                         damaged_parts.push(&part_dict);
                     }
                     dict.set("damaged_parts", damaged_parts);
+                }
+            }
+            "knowledge" => {
+                dict.set("innovation_potential", 0.0_f64);
+                let empty_known: Array<VarDictionary> = Array::new();
+                dict.set("known", empty_known);
+                if let Ok(knowledge) = world.get::<&AgentKnowledge>(entity) {
+                    dict.set("innovation_potential", knowledge.innovation_potential);
+                    let mut known_arr: Array<VarDictionary> = Array::new();
+                    for entry in &knowledge.known {
+                        let mut kd = VarDictionary::new();
+                        kd.set("id", entry.knowledge_id.as_str());
+                        kd.set("proficiency", entry.proficiency);
+                        kd.set("source", entry.source as i64);
+                        kd.set("acquired_tick", entry.acquired_tick as i64);
+                        kd.set("last_used_tick", entry.last_used_tick as i64);
+                        kd.set("teacher_id", entry.teacher_id as i64);
+                        known_arr.push(&kd);
+                    }
+                    dict.set("known", known_arr);
+
+                    if let Some(learning) = &knowledge.learning {
+                        let mut learning_dict = VarDictionary::new();
+                        learning_dict.set("knowledge_id", learning.knowledge_id.as_str());
+                        learning_dict.set("progress", learning.progress);
+                        learning_dict.set("source", learning.source as i64);
+                        learning_dict.set("teacher_id", learning.teacher_id as i64);
+                        dict.set("learning", learning_dict);
+                    }
+
+                    if let Some((student_id, knowledge_id)) = &knowledge.teaching_target {
+                        let mut teaching_dict = VarDictionary::new();
+                        teaching_dict.set("student_id", *student_id as i64);
+                        teaching_dict.set("knowledge_id", knowledge_id.as_str());
+                        dict.set("teaching", teaching_dict);
+                    }
                 }
             }
             "skills" => {

@@ -12,9 +12,10 @@ use crate::values_init::initialize_values;
 use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
-    Age, Behavior, Body, BodyHealth, Coping, Economic, EffectFlags, Emotion, Faith, Identity,
-    InfluenceReceiver, Intelligence, Inventory, LlmCapable, Memory, NarrativeCache, Needs,
-    Personality, Position, Skills, Social, Stress, Temperament, Traits,
+    Age, AgentKnowledge, Behavior, Body, BodyHealth, Coping, Economic, EffectFlags, Emotion, Faith,
+    Identity, InfluenceReceiver, Intelligence, Inventory, KnowledgeEntry, LlmCapable, Memory,
+    NarrativeCache, Needs, Personality, Position, Skills, Social, Stress, Temperament, Traits,
+    TransmissionSource,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::{
@@ -720,10 +721,18 @@ pub fn spawn_agent(
         &personality,
         resources.data_registry.as_ref().map(std::sync::Arc::as_ref),
     );
+    let openness = (personality.facets[20]
+        + personality.facets[21]
+        + personality.facets[22]
+        + personality.facets[23])
+        / 4.0;
+    let innovation_potential =
+        (intelligence.g_factor * 0.5 + openness * 0.3 + resources.rng.gen::<f64>() * 0.2)
+            .clamp(0.2, 0.8);
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
-    // We currently spawn 26 components total: the first 15 in the spawn bundle,
-    // then insert the remaining 11 overflow components.
+    // We currently spawn 27 components total: the first 15 in the spawn bundle,
+    // then insert the remaining 12 overflow components.
     let entity = world.spawn((
         identity,
         age,
@@ -756,11 +765,42 @@ pub fn spawn_agent(
                 EffectFlags::default(),
                 Inventory::new(),
                 BodyHealth::default(),
+                AgentKnowledge::default(),
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),
         )
         .unwrap_or_else(|e| log::warn!("[entity_spawner] insert extra components failed: {e}"));
+
+    if age_years >= 15.0 {
+        if let Ok(mut knowledge) = world.get::<&mut AgentKnowledge>(entity) {
+            knowledge.learn(KnowledgeEntry {
+                knowledge_id: "TECH_FIRE_MAKING".to_string(),
+                proficiency: 0.6 + resources.rng.gen::<f64>() * 0.3,
+                source: TransmissionSource::Oral,
+                acquired_tick: 0,
+                last_used_tick: 0,
+                teacher_id: 0,
+            });
+            knowledge.learn(KnowledgeEntry {
+                knowledge_id: "TECH_STONE_KNAPPING".to_string(),
+                proficiency: 0.5 + resources.rng.gen::<f64>() * 0.3,
+                source: TransmissionSource::Observed,
+                acquired_tick: 0,
+                last_used_tick: 0,
+                teacher_id: 0,
+            });
+            knowledge.learn(KnowledgeEntry {
+                knowledge_id: "TECH_FORAGING".to_string(),
+                proficiency: 0.7 + resources.rng.gen::<f64>() * 0.2,
+                source: TransmissionSource::Oral,
+                acquired_tick: 0,
+                last_used_tick: 0,
+                teacher_id: 0,
+            });
+            knowledge.innovation_potential = innovation_potential;
+        }
+    }
 
     entity
 }
@@ -942,6 +982,60 @@ mod tests {
             (body.health - 1.0).abs() < f32::EPSILON,
             "health should be 1.0 at spawn"
         );
+    }
+
+    #[test]
+    fn adult_spawn_starts_with_three_knowledge_entries() {
+        let mut world = hecs::World::new();
+        let mut resources = make_resources();
+
+        let cfg = SpawnConfig {
+            settlement_id: None,
+            position: (0, 0),
+            initial_age_ticks: 20 * TICKS_PER_YEAR,
+            sex: Some(Sex::Female),
+            parent_a: None,
+            parent_b: None,
+        };
+
+        let entity = spawn_agent(&mut world, &mut resources, &cfg);
+        let knowledge = world
+            .get::<&AgentKnowledge>(entity)
+            .expect("AgentKnowledge missing");
+
+        assert_eq!(knowledge.known_count(), 3);
+        assert!(knowledge.has_knowledge("TECH_FIRE_MAKING"));
+        assert!(knowledge.has_knowledge("TECH_STONE_KNAPPING"));
+        assert!(knowledge.has_knowledge("TECH_FORAGING"));
+        assert!(knowledge.learning.is_none());
+        assert!(knowledge.teaching_target.is_none());
+        assert!(
+            (0.2..=0.8).contains(&knowledge.innovation_potential),
+            "innovation potential should be clamped into expected range"
+        );
+    }
+
+    #[test]
+    fn child_spawn_starts_without_knowledge_entries() {
+        let mut world = hecs::World::new();
+        let mut resources = make_resources();
+
+        let cfg = SpawnConfig {
+            settlement_id: None,
+            position: (0, 0),
+            initial_age_ticks: 10 * TICKS_PER_YEAR,
+            sex: Some(Sex::Male),
+            parent_a: None,
+            parent_b: None,
+        };
+
+        let entity = spawn_agent(&mut world, &mut resources, &cfg);
+        let knowledge = world
+            .get::<&AgentKnowledge>(entity)
+            .expect("AgentKnowledge missing");
+
+        assert_eq!(knowledge.known_count(), 0);
+        assert_eq!(knowledge.innovation_potential, 0.0);
     }
 
     #[test]
