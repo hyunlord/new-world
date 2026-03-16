@@ -46,6 +46,9 @@ var _detail: Dictionary = {}
 var _mind_tab: Dictionary = {}
 var _social_tab: Dictionary = {}
 var _memory_tab: Dictionary = {}
+var _health_tab: Dictionary = {}
+var _knowledge_tab: Dictionary = {}
+var _family_tab: Dictionary = {}
 var _last_narrative_display: Dictionary = {}
 var _thought_timer: float = 0.0
 var _narrative_refresh_timer: float = 0.0
@@ -72,10 +75,14 @@ var _relationships_box: VBoxContainer
 var _events_box: VBoxContainer
 var _expand_button: Button
 var _expand_tabs: TabContainer
+var _tab_overview_text: RichTextLabel
 var _tab_needs_text: RichTextLabel
 var _tab_emotion_text: RichTextLabel
 var _tab_personality_text: RichTextLabel
+var _tab_health_text: RichTextLabel
+var _tab_knowledge_text: RichTextLabel
 var _tab_relationships_text: RichTextLabel
+var _tab_family_text: RichTextLabel
 var _tab_events_text: RichTextLabel
 var _need_rows: Array[Dictionary] = []
 
@@ -259,10 +266,14 @@ func _build_ui() -> void:
 	_expand_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(_expand_tabs)
 
+	_tab_overview_text = _add_text_tab()
 	_tab_needs_text = _add_text_tab()
 	_tab_emotion_text = _add_text_tab()
 	_tab_personality_text = _add_text_tab()
+	_tab_health_text = _add_text_tab()
+	_tab_knowledge_text = _add_text_tab()
 	_tab_relationships_text = _add_text_tab()
+	_tab_family_text = _add_text_tab()
 	_tab_events_text = _add_text_tab()
 
 	_apply_locale()
@@ -327,11 +338,15 @@ func _apply_locale() -> void:
 	_relationships_title.text = Locale.ltr("PANEL_RELATIONSHIPS_TITLE")
 	_events_title.text = Locale.ltr("PANEL_EVENTS_TITLE")
 	_expand_button.text = Locale.ltr("PANEL_EXPAND")
-	_expand_tabs.set_tab_title(0, Locale.ltr("PANEL_NEEDS_TITLE"))
-	_expand_tabs.set_tab_title(1, Locale.ltr("PANEL_EMOTION_TITLE"))
-	_expand_tabs.set_tab_title(2, Locale.ltr("PANEL_PERSONALITY_TITLE"))
-	_expand_tabs.set_tab_title(3, Locale.ltr("PANEL_RELATIONSHIPS_TITLE"))
-	_expand_tabs.set_tab_title(4, Locale.ltr("PANEL_EVENTS_TITLE"))
+	_expand_tabs.set_tab_title(0, Locale.ltr("PANEL_OVERVIEW_TITLE"))
+	_expand_tabs.set_tab_title(1, Locale.ltr("PANEL_NEEDS_TITLE"))
+	_expand_tabs.set_tab_title(2, Locale.ltr("PANEL_EMOTION_TITLE"))
+	_expand_tabs.set_tab_title(3, Locale.ltr("PANEL_PERSONALITY_TITLE"))
+	_expand_tabs.set_tab_title(4, Locale.ltr("PANEL_HEALTH_TITLE"))
+	_expand_tabs.set_tab_title(5, Locale.ltr("PANEL_KNOWLEDGE_TITLE"))
+	_expand_tabs.set_tab_title(6, Locale.ltr("PANEL_RELATIONSHIPS_TITLE"))
+	_expand_tabs.set_tab_title(7, Locale.ltr("PANEL_FAMILY_TITLE"))
+	_expand_tabs.set_tab_title(8, Locale.ltr("PANEL_EVENTS_TITLE"))
 
 
 func _toggle_expand_tabs() -> void:
@@ -348,6 +363,9 @@ func _reload_data() -> void:
 	_mind_tab = _sim_engine.get_entity_tab(_selected_entity_id, "mind")
 	_social_tab = _sim_engine.get_entity_tab(_selected_entity_id, "social")
 	_memory_tab = _sim_engine.get_entity_tab(_selected_entity_id, "memory")
+	_health_tab = _sim_engine.get_entity_tab(_selected_entity_id, "health")
+	_knowledge_tab = _sim_engine.get_entity_tab(_selected_entity_id, "knowledge")
+	_family_tab = _sim_engine.get_entity_tab(_selected_entity_id, "family")
 	_refresh_all()
 
 
@@ -716,16 +734,103 @@ func _refresh_events() -> void:
 
 
 func _refresh_expand_tabs() -> void:
+	_tab_overview_text.clear()
+	_tab_overview_text.append_text(_format_overview_tab_text())
 	_tab_needs_text.clear()
 	_tab_needs_text.append_text(_format_needs_tab_text())
 	_tab_emotion_text.clear()
 	_tab_emotion_text.append_text(_format_emotion_tab_text())
 	_tab_personality_text.clear()
 	_tab_personality_text.append_text(_format_personality_tab_text())
+	_tab_health_text.clear()
+	_tab_health_text.append_text(_format_health_tab_text())
+	_tab_knowledge_text.clear()
+	_tab_knowledge_text.append_text(_format_knowledge_tab_text())
 	_tab_relationships_text.clear()
 	_tab_relationships_text.append_text(_format_relationships_tab_text())
+	_tab_family_text.clear()
+	_tab_family_text.append_text(_format_family_tab_text())
 	_tab_events_text.clear()
 	_tab_events_text.append_text(_format_events_tab_text())
+
+
+func _format_overview_tab_text() -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_TITLE"))
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_ALERTS"))
+	var has_alert: bool = false
+	var hunger: float = float(_detail.get("need_hunger", 1.0))
+	var energy: float = float(_detail.get("energy", 1.0))
+	var aggregate_hp: float = float(_health_tab.get("aggregate_hp", _detail.get("aggregate_hp", 1.0)))
+	var conditions: int = int(_health_tab.get("active_conditions", _detail.get("active_conditions", 0)))
+	var known_count: int = int(_detail.get("knowledge_count", 0))
+	if hunger < 0.35:
+		lines.append("  [color=red]⚠ %s[/color]" % Locale.ltr("ALERT_HUNGER"))
+		has_alert = true
+	if energy < 0.30:
+		lines.append("  [color=yellow]⚠ %s[/color]" % Locale.ltr("ALERT_FATIGUE"))
+		has_alert = true
+	if aggregate_hp < 0.80:
+		lines.append(
+			"  [color=red]⚠ %s (%.0f%%)[/color]" % [
+				Locale.ltr("ALERT_INJURED"),
+				aggregate_hp * 100.0,
+			]
+		)
+		has_alert = true
+	if conditions > 0:
+		lines.append(
+			"  [color=red]⚠ %s (%d)[/color]" % [
+				Locale.ltr("ALERT_CONDITIONS"),
+				conditions,
+			]
+		)
+		has_alert = true
+	if not has_alert:
+		lines.append("  [color=green]✓ %s[/color]" % Locale.ltr("ALERT_ALL_GOOD"))
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_INFO"))
+	lines.append(
+		"  %s: %s" % [
+			Locale.ltr("PANEL_OVERVIEW_JOB"),
+			_localized_action_text(str(_detail.get("current_action", "Idle"))),
+		]
+	)
+	lines.append(
+		"  %s: %d" % [
+			Locale.ltr("PANEL_OVERVIEW_AGE"),
+			int(round(float(_detail.get("age_years", 0.0)))),
+		]
+	)
+	var band_name: String = str(_detail.get("band_name", ""))
+	if band_name.is_empty():
+		band_name = Locale.ltr("UI_NO_BAND")
+	lines.append("  %s: %s" % [Locale.ltr("PANEL_OVERVIEW_BAND"), band_name])
+	lines.append("  %s: %d" % [Locale.ltr("PANEL_OVERVIEW_KNOWLEDGE"), known_count])
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_NEEDS"))
+	var need_summaries: Array[Dictionary] = [
+		{"key": "NEED_HUNGER", "value": hunger},
+		{"key": "NEED_SLEEP", "value": float(_detail.get("need_sleep", energy))},
+		{"key": "NEED_WARMTH", "value": float(_detail.get("need_warmth", 0.5))},
+		{"key": "NEED_SAFETY", "value": float(_detail.get("need_safety", 0.5))},
+	]
+	for entry: Dictionary in need_summaries:
+		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+		var color_name: String = "green"
+		if value <= 0.30:
+			color_name = "red"
+		elif value <= 0.50:
+			color_name = "yellow"
+		lines.append(
+			"  %s: [color=%s]%.0f%%[/color]" % [
+				Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
+				color_name,
+				value * 100.0,
+			]
+		)
+	return "\n".join(lines)
 
 
 func _format_needs_tab_text() -> String:
@@ -773,6 +878,211 @@ func _format_personality_tab_text() -> String:
 	return "\n".join(lines)
 
 
+func _format_health_tab_text() -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	var aggregate_hp: float = float(_health_tab.get("aggregate_hp", 1.0))
+	var health_color: String = "green"
+	if aggregate_hp <= 0.50:
+		health_color = "red"
+	elif aggregate_hp <= 0.80:
+		health_color = "yellow"
+	lines.append(
+		"[b]%s[/b]: [color=%s]%.0f%%[/color]" % [
+			Locale.ltr("PANEL_HEALTH_AGGREGATE"),
+			health_color,
+			aggregate_hp * 100.0,
+		]
+	)
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_HEALTH_GROUPS"))
+	var group_hp: PackedByteArray = _health_tab.get("group_hp", PackedByteArray())
+	var group_names: Array[String] = [
+		"BODY_GROUP_HEAD",
+		"BODY_GROUP_NECK",
+		"BODY_GROUP_UPPER_TORSO",
+		"BODY_GROUP_LOWER_TORSO",
+		"BODY_GROUP_ARM_L",
+		"BODY_GROUP_ARM_R",
+		"BODY_GROUP_LEG_L",
+		"BODY_GROUP_LEG_R",
+		"BODY_GROUP_HAND_L",
+		"BODY_GROUP_HAND_R",
+	]
+	for index: int in range(mini(group_hp.size(), group_names.size())):
+		var hp: int = int(group_hp[index])
+		var color_name: String = "green"
+		if hp <= 50:
+			color_name = "red"
+		elif hp <= 80:
+			color_name = "yellow"
+		var filled: int = clampi(hp / 10, 0, 10)
+		var bar: String = "█".repeat(filled) + "░".repeat(10 - filled)
+		lines.append(
+			"  %s: [color=%s]%s %d%%[/color]" % [
+				Locale.ltr(group_names[index]),
+				color_name,
+				bar,
+				hp,
+			]
+		)
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_HEALTH_CAPABILITIES"))
+	lines.append(
+		"  %s: %.0f%%" % [
+			Locale.ltr("PANEL_HEALTH_MOVE"),
+			float(_health_tab.get("move_mult", 1.0)) * 100.0,
+		]
+	)
+	lines.append(
+		"  %s: %.0f%%" % [
+			Locale.ltr("PANEL_HEALTH_WORK"),
+			float(_health_tab.get("work_mult", 1.0)) * 100.0,
+		]
+	)
+	lines.append(
+		"  %s: %.0f%%" % [
+			Locale.ltr("PANEL_HEALTH_COMBAT"),
+			float(_health_tab.get("combat_mult", 1.0)) * 100.0,
+		]
+	)
+	lines.append(
+		"  %s: %.0f%%" % [
+			Locale.ltr("PANEL_HEALTH_PAIN"),
+			float(_health_tab.get("pain", 0.0)) * 100.0,
+		]
+	)
+	var damaged_parts: Array = _health_tab.get("damaged_parts", [])
+	if damaged_parts.is_empty():
+		lines.append("")
+		lines.append("[color=green]%s[/color]" % Locale.ltr("PANEL_HEALTH_HEALTHY"))
+		return "\n".join(lines)
+	lines.append("")
+	lines.append("[b][color=red]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_INJURIES"))
+	for part_raw: Variant in damaged_parts:
+		if not (part_raw is Dictionary):
+			continue
+		var part: Dictionary = part_raw
+		var icons: PackedStringArray = PackedStringArray()
+		var flags: int = int(part.get("flags", 0))
+		if (flags & 0x01) != 0:
+			icons.append("🩸")
+		if (flags & 0x02) != 0:
+			icons.append("🦴")
+		if (flags & 0x04) != 0:
+			icons.append("🔥")
+		if (flags & 0x10) != 0:
+			icons.append("🦠")
+		var hp: int = int(part.get("hp", 0))
+		var part_color: String = "white"
+		if hp < 30:
+			part_color = "red"
+		elif hp < 70:
+			part_color = "yellow"
+		var line: String = "  "
+		if bool(part.get("vital", false)):
+			line += "⚠ "
+		line += "%s: [color=%s]%d%%[/color]" % [
+			_localized_body_part_name(str(part.get("name", ""))),
+			part_color,
+			hp,
+		]
+		if not icons.is_empty():
+			line += " " + "".join(icons)
+		lines.append(line)
+	return "\n".join(lines)
+
+
+func _format_knowledge_tab_text() -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	var known: Array = _knowledge_tab.get("known", [])
+	var innovation_potential: float = float(_knowledge_tab.get("innovation_potential", 0.0))
+	var source_names: Array[String] = [
+		"KNOWLEDGE_SRC_SELF",
+		"KNOWLEDGE_SRC_ORAL",
+		"KNOWLEDGE_SRC_OBSERVED",
+		"KNOWLEDGE_SRC_APPRENTICE",
+		"KNOWLEDGE_SRC_RECORDED",
+		"KNOWLEDGE_SRC_SCHOOL",
+	]
+	var source_icons: PackedStringArray = PackedStringArray(["💡", "🗣️", "👁️", "🔨", "📜", "🏛️"])
+	lines.append("[b]%s[/b] (%d)" % [Locale.ltr("PANEL_KNOWLEDGE_OWNED"), known.size()])
+	lines.append("")
+	for knowledge_raw: Variant in known:
+		if not (knowledge_raw is Dictionary):
+			continue
+		var knowledge: Dictionary = knowledge_raw
+		var knowledge_id: String = str(knowledge.get("id", Locale.ltr("UI_UNKNOWN")))
+		var display_name: String = Locale.ltr(knowledge_id) if Locale.has_key(knowledge_id) else knowledge_id
+		var proficiency: float = clampf(float(knowledge.get("proficiency", 0.0)), 0.0, 1.0)
+		var source_index: int = clampi(int(knowledge.get("source", 0)), 0, source_names.size() - 1)
+		var filled: int = clampi(int(proficiency * 10.0), 0, 10)
+		var bar: String = "█".repeat(filled) + "░".repeat(10 - filled)
+		var prof_color: String = "green"
+		if proficiency <= 0.40:
+			prof_color = "red"
+		elif proficiency <= 0.70:
+			prof_color = "yellow"
+		lines.append("%s [b]%s[/b]" % [source_icons[source_index], display_name])
+		lines.append(
+			"  [color=%s]%s %.0f%%[/color] — %s" % [
+				prof_color,
+				bar,
+				proficiency * 100.0,
+				Locale.ltr(source_names[source_index]),
+			]
+		)
+		lines.append("")
+	var learning_raw: Variant = _knowledge_tab.get("learning", null)
+	if learning_raw is Dictionary and not (learning_raw as Dictionary).is_empty():
+		var learning: Dictionary = learning_raw
+		var learning_id: String = str(learning.get("knowledge_id", Locale.ltr("UI_UNKNOWN")))
+		var learning_name: String = Locale.ltr(learning_id) if Locale.has_key(learning_id) else learning_id
+		var learning_source: int = clampi(int(learning.get("source", 0)), 0, source_names.size() - 1)
+		lines.append("[b]%s[/b]" % Locale.ltr("PANEL_KNOWLEDGE_LEARNING"))
+		lines.append("  %s — %.0f%%" % [learning_name, float(learning.get("progress", 0.0)) * 100.0])
+		lines.append(
+			"  %s: %s" % [
+				Locale.ltr("PANEL_KNOWLEDGE_METHOD"),
+				Locale.ltr(source_names[learning_source]),
+			]
+		)
+		lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_KNOWLEDGE_CHANNELS"))
+	var channels: Array[Dictionary] = [
+		{"key": "KNOWLEDGE_CH_ORAL", "icon": "🗣️", "active": true},
+		{"key": "KNOWLEDGE_CH_OBSERVE", "icon": "👁️", "active": true},
+		{"key": "KNOWLEDGE_CH_APPRENTICE", "icon": "🔨", "active": true},
+		{"key": "KNOWLEDGE_CH_RECORD", "icon": "📜", "active": false},
+		{"key": "KNOWLEDGE_CH_SCHOOL", "icon": "🏛️", "active": false},
+		{"key": "KNOWLEDGE_CH_SELF", "icon": "💡", "active": true},
+	]
+	for channel: Dictionary in channels:
+		var active: bool = bool(channel.get("active", false))
+		lines.append(
+			"  %s [color=%s]%s[/color] — %s" % [
+				str(channel.get("icon", "")),
+				"green" if active else "gray",
+				Locale.ltr(str(channel.get("key", "UI_UNKNOWN"))),
+				Locale.ltr("PANEL_ACTIVE") if active else Locale.ltr("PANEL_LOCKED"),
+			]
+		)
+	lines.append("")
+	lines.append(
+		"[b]%s[/b]: %.0f%%" % [
+			Locale.ltr("PANEL_KNOWLEDGE_INNOVATION"),
+			innovation_potential * 100.0,
+		]
+	)
+	return "\n".join(lines)
+
+
+func _localized_body_part_name(raw_name: String) -> String:
+	if raw_name.is_empty():
+		return Locale.ltr("UI_UNKNOWN")
+	var locale_key: String = "BODY_PART_" + raw_name.to_upper().replace(" ", "_")
+	return Locale.ltr(locale_key) if Locale.has_key(locale_key) else raw_name
+
+
 func _format_relationships_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	for entry: Dictionary in _build_relationship_entries(15):
@@ -780,6 +1090,61 @@ func _format_relationships_tab_text() -> String:
 	if lines.is_empty():
 		lines.append(Locale.ltr("UI_NO_RELATIONSHIPS"))
 	return "\n\n".join(lines)
+
+
+func _format_family_tab_text() -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	var kinship_names: Array[String] = [
+		"KINSHIP_BILATERAL",
+		"KINSHIP_PATRILINEAL",
+		"KINSHIP_MATRILINEAL",
+	]
+	var father_raw: Variant = _family_tab.get("father", {})
+	var mother_raw: Variant = _family_tab.get("mother", {})
+	var spouse_raw: Variant = _family_tab.get("spouse", {})
+	var father_name: String = Locale.ltr("PANEL_FAMILY_UNKNOWN")
+	if father_raw is Dictionary and not (father_raw as Dictionary).is_empty():
+		father_name = str((father_raw as Dictionary).get("name", father_name))
+	var mother_name: String = Locale.ltr("PANEL_FAMILY_UNKNOWN")
+	if mother_raw is Dictionary and not (mother_raw as Dictionary).is_empty():
+		mother_name = str((mother_raw as Dictionary).get("name", mother_name))
+	var spouse_name: String = ""
+	if spouse_raw is Dictionary and not (spouse_raw as Dictionary).is_empty():
+		spouse_name = str((spouse_raw as Dictionary).get("name", ""))
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_FAMILY_TITLE"))
+	lines.append("")
+	lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_FATHER"), father_name])
+	lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_MOTHER"), mother_name])
+	if spouse_name.is_empty():
+		lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_SPOUSE"), Locale.ltr("PANEL_FAMILY_NONE")])
+	else:
+		lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_SPOUSE"), spouse_name])
+	var children: Array = _family_tab.get("children", [])
+	if children.is_empty():
+		lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_CHILDREN"), Locale.ltr("PANEL_FAMILY_NONE")])
+	else:
+		var child_names: PackedStringArray = PackedStringArray()
+		for child_raw: Variant in children:
+			if not (child_raw is Dictionary):
+				continue
+			var child: Dictionary = child_raw
+			child_names.append("%s(%d)" % [str(child.get("name", "?")), int(child.get("age", 0))])
+		lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_CHILDREN"), ", ".join(child_names)])
+	lines.append("")
+	lines.append("  %s: %d" % [Locale.ltr("PANEL_FAMILY_GENERATION"), int(_family_tab.get("generation", 0))])
+	var kinship_index: int = clampi(int(_family_tab.get("kinship_type", 0)), 0, kinship_names.size() - 1)
+	lines.append(
+		"  %s: %s" % [
+			Locale.ltr("PANEL_FAMILY_KINSHIP"),
+			Locale.ltr(kinship_names[kinship_index]),
+		]
+	)
+	var clan_id: int = int(_family_tab.get("clan_id", -1))
+	if clan_id >= 0:
+		lines.append("  %s: #%d" % [Locale.ltr("PANEL_FAMILY_CLAN"), clan_id])
+	else:
+		lines.append("  %s: %s" % [Locale.ltr("PANEL_FAMILY_CLAN"), Locale.ltr("PANEL_FAMILY_NONE_YET")])
+	return "\n".join(lines)
 
 
 func _format_events_tab_text() -> String:
