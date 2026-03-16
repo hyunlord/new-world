@@ -1,9 +1,11 @@
 extends Control
 
 const OverviewTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_overview_tab.gd")
+const BuildingsTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_buildings_tab.gd")
 const TechTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_tech_tab.gd")
 const PopulationTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_population_tab.gd")
 const EconomyTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_economy_tab.gd")
+const MilitaryTab = preload("res://scripts/ui/panels/settlement_tabs/settlement_military_tab.gd")
 
 var _sim_engine: RefCounted
 ## Manager references (injected via init())
@@ -14,15 +16,17 @@ var _tech_tree_manager: RefCounted
 
 ## State
 var _settlement_id: int = -1
-var _current_tab: int = 0  # 0=Overview, 1=Tech, 2=Population, 3=Economy
+var _current_tab: int = 0  # 0=Overview, 1=Buildings, 2=Population, 3=Economy, 4=Tech, 5=Military
 var _cached_data: Dictionary = {}
 var _refresh_counter: int = 0
 
 ## Tab instances
 var _overview_tab: RefCounted
+var _buildings_tab: RefCounted
 var _tech_tab: RefCounted
 var _population_tab: RefCounted
 var _economy_tab: RefCounted
+var _military_tab: RefCounted
 
 ## Scroll state (same as stats_detail_panel.gd)
 var _scroll_offset: float = 0.0
@@ -48,7 +52,7 @@ const NEUTRAL_COLOR: Color = Color(0.7, 0.7, 0.7)
 const SEPARATOR_COLOR: Color = Color(0.3, 0.3, 0.4)
 const HEADER_HEIGHT: float = 55.0
 const TAB_BAR_HEIGHT: float = 35.0
-const TAB_NAMES: Array = ["UI_TAB_OVERVIEW", "UI_TAB_TECHNOLOGY", "UI_TAB_POPULATION", "UI_TAB_ECONOMY"]
+const TAB_NAMES: Array = ["UI_TAB_OVERVIEW", "UI_TAB_BUILDINGS", "UI_TAB_POPULATION", "UI_TAB_ECONOMY", "UI_TAB_TECHNOLOGY", "UI_TAB_MILITARY"]
 
 
 ## Initializes the panel with manager references and creates tab instances.
@@ -59,9 +63,11 @@ func init(sim_engine: RefCounted, settlement_manager: RefCounted, entity_manager
 	_building_manager = building_manager
 	_tech_tree_manager = tech_tree_manager
 	_overview_tab = OverviewTab.new()
+	_buildings_tab = BuildingsTab.new()
 	_tech_tab = TechTab.new()
 	_population_tab = PopulationTab.new()
 	_economy_tab = EconomyTab.new()
+	_military_tab = MilitaryTab.new()
 
 
 ## Sets the active settlement and reloads data.
@@ -181,6 +187,10 @@ func _load_data() -> void:
 		"female_count": female_count,
 		"avg_happiness": avg_happiness,
 		"avg_stress": avg_stress,
+		"buildings": _legacy_settlement_buildings(settlement),
+		"stockpile_food": 0.0,
+		"stockpile_wood": 0.0,
+		"stockpile_stone": 0.0,
 		"tech_tree_manager": _tech_tree_manager,
 		"entity_manager": _entity_manager,
 		"building_manager": _building_manager,
@@ -286,11 +296,15 @@ func _draw() -> void:
 		0:
 			end_y = _overview_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
 		1:
-			end_y = _tech_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
+			end_y = _buildings_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
 		2:
 			end_y = _population_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
 		3:
 			end_y = _economy_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
+		4:
+			end_y = _tech_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
+		5:
+			end_y = _military_tab.draw_content(self, _cached_data, font, content_x, content_y, content_width, _click_regions)
 
 	_content_height = end_y + _scroll_offset + 40.0
 
@@ -380,7 +394,7 @@ func _gui_input(event: InputEvent) -> void:
 				return
 
 		# Tech tab toggle clicks (practitioner list expand/collapse)
-		if _current_tab == 1 and _tech_tab.handle_click(event.position):
+		if _current_tab == 4 and _tech_tab.handle_click(event.position):
 			_scroll_offset = _scroll_offset  # preserve scroll
 			accept_event()
 			return
@@ -388,7 +402,10 @@ func _gui_input(event: InputEvent) -> void:
 		# Entity name clicks
 		for region in _click_regions:
 			if region.rect.has_point(event.position):
-				SimulationBus.emit_signal("entity_selected", region.entity_id)
+				if region.has("entity_id"):
+					SimulationBus.emit_signal("entity_selected", region.entity_id)
+				elif region.has("building_id"):
+					SimulationBus.building_selected.emit(int(region.building_id))
 				accept_event()
 				return
 
@@ -409,6 +426,17 @@ func _settlement_value(settlement: Variant, key: String, default_value: Variant)
 	if settlement == null:
 		return default_value
 	return settlement.get(key)
+
+
+func _legacy_settlement_buildings(settlement: Variant) -> Array:
+	var buildings: Array = []
+	if settlement == null or _building_manager == null:
+		return buildings
+	for building_id in settlement.building_ids:
+		var building: Variant = _building_manager.get_building(building_id)
+		if building != null:
+			buildings.append(building)
+	return buildings
 
 
 ## Returns a color for the given era string.
