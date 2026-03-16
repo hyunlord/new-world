@@ -331,19 +331,17 @@ func _format_tech_modifiers(tech_def: Dictionary) -> PackedStringArray:
 				lines.append("%s +%.2f" % [target_label, mod_value])
 	if not lines.is_empty():
 		return lines
-	var discovery_raw: Variant = tech_def.get("discovery", {})
-	if discovery_raw is Dictionary:
-		var discovery: Dictionary = discovery_raw
-		var discovery_modifiers: Variant = discovery.get("modifiers", {})
-		if discovery_modifiers is Dictionary:
-			for target_variant: Variant in discovery_modifiers.keys():
-				var target_name: String = str(target_variant)
-				lines.append(
-					"%s +%.2f" % [
-						_modifier_target_label(target_name),
-						float(discovery_modifiers[target_name]),
-					]
-				)
+	var effects_raw: Variant = tech_def.get("effects", {})
+	if effects_raw is Dictionary:
+		var effects: Dictionary = effects_raw
+		for target_variant: Variant in effects.keys():
+			var target_name: String = str(target_variant)
+			lines.append(
+				"%s %+.2f" % [
+					_modifier_target_label(target_name),
+					float(effects[target_name]),
+				]
+			)
 	return lines
 
 
