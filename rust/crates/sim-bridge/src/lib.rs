@@ -3163,6 +3163,54 @@ impl WorldSimRuntime {
         bridge_world_summary(state)
     }
 
+    /// Exports one influence-grid channel as normalized `u8` bytes for GPU heatmap rendering.
+    #[func]
+    fn runtime_get_influence_texture(&self, channel_name: GString) -> PackedByteArray {
+        let Some(state) = self.state.as_ref() else {
+            return PackedByteArray::new();
+        };
+        let channel_name = channel_name.to_string();
+        let Some(channel) = ChannelId::from_key(channel_name.as_str()) else {
+            return PackedByteArray::new();
+        };
+        let grid = &state.engine.resources().influence_grid;
+        let (width, height) = grid.dimensions();
+        let cell_count = (width * height) as usize;
+        if cell_count == 0 {
+            return PackedByteArray::new();
+        }
+
+        let data = grid.get_channel_data(channel);
+        let mut min_val = f64::INFINITY;
+        let mut max_val = f64::NEG_INFINITY;
+        for &value in data.iter().take(cell_count) {
+            min_val = min_val.min(value);
+            max_val = max_val.max(value);
+        }
+
+        let mut bytes = Vec::with_capacity(cell_count);
+        let range = max_val - min_val;
+        if !min_val.is_finite() || !max_val.is_finite() || range.abs() <= f64::EPSILON {
+            bytes.resize(cell_count, 0_u8);
+        } else {
+            for &value in data.iter().take(cell_count) {
+                let normalized = ((value - min_val) / range).clamp(0.0, 1.0);
+                bytes.push((normalized * 255.0).round() as u8);
+            }
+        }
+
+        PackedByteArray::from(bytes)
+    }
+
+    #[func]
+    fn runtime_get_influence_grid_size(&self) -> Vector2i {
+        let Some(state) = self.state.as_ref() else {
+            return Vector2i::new(0, 0);
+        };
+        let (width, height) = state.engine.resources().influence_grid.dimensions();
+        Vector2i::new(width as i32, height as i32)
+    }
+
     #[func]
     fn runtime_get_minimap_snapshot(&self) -> VarDictionary {
         let Some(state) = self.state.as_ref() else {
