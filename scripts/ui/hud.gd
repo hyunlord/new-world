@@ -1933,7 +1933,7 @@ func _update_overlay_buttons_for_zoom() -> void:
 func _update_bottom_bar_perf(delta: float) -> void:
 	if _bottom_bar_tps_label == null or _bottom_bar_fps_label == null:
 		return
-	var fps: int = Engine.get_frames_per_second()
+	var fps: int = int(Engine.get_frames_per_second())
 	_bottom_bar_fps_label.text = "FPS %d" % fps
 
 	if _sim_engine == null:

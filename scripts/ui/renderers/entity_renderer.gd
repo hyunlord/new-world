@@ -595,8 +595,10 @@ func _draw() -> void:
 	# Resource text markers at high zoom (LOD 2)
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
 		var res_font: Font = ThemeDB.fallback_font
-		for ty in range(maxi(0, min_tile_y), mini(_resource_map.height, max_tile_y + 1)):
-			for tx in range(maxi(0, min_tile_x), mini(_resource_map.width, max_tile_x + 1)):
+		var resource_map_height: int = _resource_map.get_height()
+		var resource_map_width: int = _resource_map.get_width()
+		for ty in range(maxi(0, min_tile_y), mini(resource_map_height, max_tile_y + 1)):
+			for tx in range(maxi(0, min_tile_x), mini(resource_map_width, max_tile_x + 1)):
 				var tpos := Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
 				var food: float = _resource_map.get_food(tx, ty)
 				var wood: float = _resource_map.get_wood(tx, ty)
@@ -683,8 +685,10 @@ func _draw_binary_snapshots() -> void:
 
 	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
 		var res_font: Font = ThemeDB.fallback_font
-		for ty in range(maxi(0, min_tile_y), mini(_resource_map.height, max_tile_y + 1)):
-			for tx in range(maxi(0, min_tile_x), mini(_resource_map.width, max_tile_x + 1)):
+		var resource_map_height: int = _resource_map.get_height()
+		var resource_map_width: int = _resource_map.get_width()
+		for ty in range(maxi(0, min_tile_y), mini(resource_map_height, max_tile_y + 1)):
+			for tx in range(maxi(0, min_tile_x), mini(resource_map_width, max_tile_x + 1)):
 				var tpos: Vector2 = Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
 				var food: float = _resource_map.get_food(tx, ty)
 				var wood: float = _resource_map.get_wood(tx, ty)
@@ -1252,8 +1256,10 @@ func _draw_resource_nodes(
 		return
 	var font: Font = ThemeDB.fallback_font
 	var icon_font_size: int = 9 if zoom_level >= 2.0 else 7
-	var max_y: int = mini(_resource_map.height - 1, max_tile_y)
-	var max_x: int = mini(_resource_map.width - 1, max_tile_x)
+	var resource_map_height: int = _resource_map.get_height()
+	var resource_map_width: int = _resource_map.get_width()
+	var max_y: int = mini(resource_map_height - 1, max_tile_y)
+	var max_x: int = mini(resource_map_width - 1, max_tile_x)
 	for ty in range(maxi(0, min_tile_y), max_y + 1, 3):
 		for tx in range(maxi(0, min_tile_x), max_x + 1, 3):
 			var food: float = _resource_map.get_food(tx, ty)

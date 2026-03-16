@@ -531,8 +531,8 @@ func _format_survival_diag_line(label_key: String, value_field: String, delta_fi
 	var delta_value: float = float(_detail.get(delta_field, 0.0))
 	var delta_text: String = ""
 	if abs(delta_value) > 0.001:
-		var sign: String = "+" if delta_value > 0.0 else ""
-		delta_text = "  %s%.1f%%" % [sign, delta_value * 100.0]
+		var delta_prefix: String = "+" if delta_value > 0.0 else ""
+		delta_text = "  %s%.1f%%" % [delta_prefix, delta_value * 100.0]
 	return "%s %d%%%s" % [Locale.ltr(label_key), int(round(current_value * 100.0)), delta_text]
 
 
@@ -915,7 +915,7 @@ func _format_health_tab_text() -> String:
 			color_name = "red"
 		elif hp <= 80:
 			color_name = "yellow"
-		var filled: int = clampi(hp / 10, 0, 10)
+		var filled: int = clampi(int(hp / 10.0), 0, 10)
 		var bar: String = "█".repeat(filled) + "░".repeat(10 - filled)
 		lines.append(
 			"  %s: [color=%s]%s %d%%[/color]" % [

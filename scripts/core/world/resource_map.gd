@@ -24,6 +24,14 @@ func is_valid(x: int, y: int) -> bool:
 	return x >= 0 and x < _width and y >= 0 and y < _height
 
 
+func get_width() -> int:
+	return _width
+
+
+func get_height() -> int:
+	return _height
+
+
 ## Fill resource arrays based on biome-resource mapping
 func populate_from_biomes(world_data: RefCounted, rng: RandomNumberGenerator) -> void:
 	for y in range(_height):
