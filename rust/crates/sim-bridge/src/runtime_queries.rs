@@ -632,6 +632,7 @@ pub(crate) fn world_summary(state: &RuntimeState) -> VarDictionary {
     out.set("avg_stress", aggregates.avg_stress);
     out.set("entity_count", world.len() as i64);
     out.set("settlement_count", resources.settlements.len() as i64);
+    out.set("band_count", resources.band_store.len() as i64);
     out.set("building_count", resources.buildings.len() as i64);
     out.set("food", total_food);
     out.set("wood", total_wood);

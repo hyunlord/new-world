@@ -50,6 +50,10 @@ var _fps_label: Label
 var _era_label: Label
 var _weather_label: Label
 var _alert_badge: Label
+var _band_badge: Label
+var _settlement_badge: Label
+var _overlay_legend: Label
+var _bottom_bar_sel_label: Label
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -220,6 +224,7 @@ func _ready() -> void:
 	_build_probe_verification_overlay()
 	_build_key_hints()
 	_build_bottom_bar()
+	_build_overlay_legend()
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
@@ -503,6 +508,10 @@ func _build_bottom_bar() -> void:
 	root.alignment = BoxContainer.ALIGNMENT_CENTER
 	_bottom_bar.add_child(root)
 
+	_bottom_bar_sel_label = _make_label("", "hud_secondary", Color(0.31, 0.41, 0.47))
+	_bottom_bar_sel_label.custom_minimum_size = Vector2(120.0, 0.0)
+	root.add_child(_bottom_bar_sel_label)
+	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_zoom_section())
 	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_overlay_section())
@@ -645,6 +654,8 @@ func _refresh_bottom_bar_locale() -> void:
 		var locale_key: String = str(button.get_meta("locale_key", ""))
 		if not locale_key.is_empty():
 			button.text = Locale.ltr(locale_key)
+	_refresh_overlay_legend()
+	_refresh_selection_summary()
 
 
 func _on_bottom_bar_zoom_pressed(level: int) -> void:
@@ -662,6 +673,42 @@ func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	SimulationBus.overlay_channel_changed.emit(
 		_bottom_bar_active_overlays[0] if not _bottom_bar_active_overlays.is_empty() else ""
 	)
+	_refresh_overlay_legend()
+
+
+func _build_overlay_legend() -> void:
+	if _overlay_legend != null:
+		return
+	_overlay_legend = _make_label("", "hud_secondary", Color(0.53, 0.60, 0.65))
+	_overlay_legend.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_overlay_legend.offset_left = 12.0
+	_overlay_legend.offset_top = -(BOTTOM_BAR_HEIGHT + 28.0)
+	_overlay_legend.offset_right = 240.0
+	_overlay_legend.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
+	_overlay_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_overlay_legend.visible = false
+	add_child(_overlay_legend)
+
+
+func _refresh_overlay_legend() -> void:
+	if _overlay_legend == null:
+		return
+	if _bottom_bar_active_overlays.is_empty():
+		_overlay_legend.text = ""
+		_overlay_legend.visible = false
+		return
+	var channel: String = _bottom_bar_active_overlays[0]
+	var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+	var locale_key: String = ""
+	if button != null:
+		locale_key = str(button.get_meta("locale_key", ""))
+	var legend_text: String = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
+	_overlay_legend.text = "▮ " + legend_text
+	_overlay_legend.add_theme_color_override(
+		"font_color",
+		_bottom_bar_overlay_accents.get(channel, Color(0.53, 0.60, 0.65))
+	)
+	_overlay_legend.visible = true
 
 
 func _update_bottom_bar_perf(delta: float) -> void:
@@ -743,7 +790,13 @@ func _build_top_bar() -> void:
 	_weather_label = _make_label("", "hud", Color(0.6, 0.75, 0.85))
 	_alert_badge = _make_label("", "hud", Color(0.9, 0.3, 0.2))
 	_alert_badge.visible = false
+	_band_badge = _make_label("", "hud_secondary", Color(0.28, 0.64, 0.28))
+	_band_badge.visible = false
+	_settlement_badge = _make_label("", "hud_secondary", Color(0.41, 0.53, 0.66))
+	_settlement_badge.visible = false
 	_fps_label = _make_label("60", "hud_secondary", Color(0.5, 0.5, 0.5))
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	hbox.add_child(_status_label)
 	hbox.add_child(_speed_label)
@@ -754,8 +807,11 @@ func _build_top_bar() -> void:
 	hbox.add_child(_wood_label)
 	hbox.add_child(_stone_label)
 	hbox.add_child(_building_label)
+	hbox.add_child(spacer)
 	hbox.add_child(_weather_label)
 	hbox.add_child(_alert_badge)
+	hbox.add_child(_band_badge)
+	hbox.add_child(_settlement_badge)
 	hbox.add_child(_fps_label)
 
 	panel.add_child(hbox)
@@ -1201,12 +1257,20 @@ func _process(delta: float) -> void:
 			var food: float = float(summary.get("food", 0.0))
 			var wood: float = float(summary.get("wood", 0.0))
 			var stone: float = float(summary.get("stone", 0.0))
+			var band_count: int = int(summary.get("band_count", 0))
+			var settlement_count: int = int(summary.get("settlement_count", 0))
 			_pop_label.text = Locale.trf1("UI_POP_FMT", "n", pop)
 			var building_count: int = int(summary.get("building_count", 0))
 			_building_label.text = Locale.trf1("UI_BLD_FMT", "n", building_count)
 			_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(food)) + _food_trend
 			_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(wood)) + _wood_trend
 			_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(stone)) + _stone_trend
+			if _band_badge != null:
+				_band_badge.text = Locale.trf1("UI_BADGE_BAND_FMT", "n", band_count)
+				_band_badge.visible = band_count > 0
+			if _settlement_badge != null:
+				_settlement_badge.text = Locale.trf1("UI_BADGE_SETT_FMT", "n", settlement_count)
+				_settlement_badge.visible = settlement_count > 0
 
 			_resource_trend_timer += maxf(delta, 0.0)
 			if not _resource_trends_initialized:
@@ -1251,6 +1315,10 @@ func _process(delta: float) -> void:
 			_weather_label.text = ""
 		if _alert_badge != null:
 			_alert_badge.visible = false
+		if _band_badge != null:
+			_band_badge.visible = false
+		if _settlement_badge != null:
+			_settlement_badge.visible = false
 
 	# Update selected entity
 	if _selected_entity_id >= 0:
@@ -1643,6 +1711,7 @@ func _on_entity_selected(entity_id: int) -> void:
 	_entity_panel.visible = true
 	_building_panel.visible = false
 	_selected_building_id = -1
+	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
 	_open_entity_detail_sidebar(entity_id)
@@ -1651,6 +1720,7 @@ func _on_entity_selected(entity_id: int) -> void:
 func _on_entity_deselected() -> void:
 	_selected_entity_id = -1
 	_entity_panel.visible = false
+	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(-1)
 	_close_entity_detail_sidebar()
@@ -1661,12 +1731,14 @@ func _on_building_selected(building_id: int) -> void:
 	_building_panel.visible = true
 	_entity_panel.visible = false
 	_selected_entity_id = -1
+	_refresh_selection_summary()
 	_close_entity_detail_sidebar()
 
 
 func _on_building_deselected() -> void:
 	_selected_building_id = -1
 	_building_panel.visible = false
+	_refresh_selection_summary()
 
 
 func _on_speed_changed(speed_index: int) -> void:
@@ -1847,6 +1919,7 @@ func _refresh_hud_texts() -> void:
 	if _sim_engine != null and _weather_label != null:
 		_weather_label.text = _get_season_text(_sim_engine.current_tick)
 	_refresh_alert_badges()
+	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.refresh_locale()
 	if _story_notification_manager != null:
@@ -2668,3 +2741,23 @@ func _make_vertical_separator() -> VSeparator:
 	var sep := VSeparator.new()
 	sep.add_theme_constant_override("separation", 4)
 	return sep
+
+
+func _refresh_selection_summary() -> void:
+	if _bottom_bar_sel_label == null:
+		return
+	if _selected_entity_id >= 0 and _sim_engine != null:
+		var detail: Dictionary = _sim_engine.get_entity_detail(_selected_entity_id)
+		var entity_name: String = str(detail.get("name", ""))
+		_bottom_bar_sel_label.text = "👤 " + entity_name if not entity_name.is_empty() else ""
+		return
+	if _selected_building_id >= 0:
+		var building = _get_building_by_id(_selected_building_id)
+		if building != null:
+			var building_type: String = str(_building_value(building, "building_type", ""))
+			var building_name: String = Locale.tr_id("BUILDING_TYPE", building_type)
+			if building_name == building_type or building_name.is_empty():
+				building_name = building_type
+			_bottom_bar_sel_label.text = "🏗 " + building_name
+			return
+	_bottom_bar_sel_label.text = ""
