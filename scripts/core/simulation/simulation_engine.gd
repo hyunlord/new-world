@@ -403,6 +403,16 @@ func get_band_list() -> Array:
 	return []
 
 
+func get_band_detail(band_id: int) -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_band_detail"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_band_detail", band_id)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
 func get_influence_texture(channel: String) -> PackedByteArray:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_texture"):

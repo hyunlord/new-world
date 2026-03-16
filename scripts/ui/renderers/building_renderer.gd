@@ -66,6 +66,8 @@ func _draw() -> void:
 		var alpha: float = 1.0 if is_built else 0.4
 
 		if _current_lod == 0:
+			if zl < 0.4:
+				continue
 			var strategic_color: Color = Color(0.6, 0.35, 0.15, alpha)
 			match building_type:
 				"stockpile":
@@ -86,6 +88,7 @@ func _draw() -> void:
 				_draw_campfire(cx, cy, alpha, tile_size)
 			_:
 				pass
+		_draw_building_interior(b, tile_x, tile_y, tile_size, zl)
 
 		# Construction progress bar
 		if not is_built:
@@ -108,8 +111,8 @@ func _draw() -> void:
 			var text: String = Locale.trf3("UI_STATS_RESOURCES_FMT", "food", food, "wood", wood, "stone", stone)
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
 
-	# Settlement labels in LOD 0
-	if _current_lod == 0:
+	# Settlement labels at settlement-scale zoom
+	if _current_lod == 0 and zl >= 0.4 and zl < 0.8:
 		var settlements: Array = _get_runtime_settlements()
 		if settlements.is_empty() and _settlement_manager != null:
 			settlements = _settlement_manager.get_active_settlements()
@@ -172,6 +175,83 @@ func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int) -> void:
 
 	draw_circle(Vector2(cx, cy), radius, fill_color)
 	draw_arc(Vector2(cx, cy), tile_size * 3.0, 0, TAU, 32, glow_color, 1.5)
+
+
+func _draw_building_interior(building: Variant, tile_x: int, tile_y: int, tile_size: int, zoom_level: float) -> void:
+	if zoom_level < 2.0:
+		return
+	var building_type: String = str(_building_value(building, "building_type", ""))
+	var dimensions: Vector2i = _building_dimensions(building_type, building)
+	var width_tiles: int = maxi(1, dimensions.x)
+	var height_tiles: int = maxi(1, dimensions.y)
+	var px: float = float(tile_x) * tile_size
+	var py: float = float(tile_y) * tile_size
+	var width_px: float = float(width_tiles * tile_size)
+	var height_px: float = float(height_tiles * tile_size)
+
+	if building_type != "campfire":
+		draw_rect(Rect2(px, py, width_px, height_px), Color(0.10, 0.08, 0.03, 0.32), true)
+
+	if building_type in ["shelter", "stockpile", "workshop"]:
+		var wall_color := Color(0.35, 0.29, 0.16, 0.8)
+		var wall_width: float = maxf(2.0, tile_size * 0.18)
+		var door_left: float = px + width_px * 0.5 - tile_size * 0.4
+		var door_right: float = door_left + tile_size * 0.8
+		draw_line(Vector2(px, py), Vector2(px + width_px, py), wall_color, wall_width)
+		draw_line(Vector2(px, py), Vector2(px, py + height_px), wall_color, wall_width)
+		draw_line(Vector2(px + width_px, py), Vector2(px + width_px, py + height_px), wall_color, wall_width)
+		draw_line(Vector2(px, py + height_px), Vector2(door_left, py + height_px), wall_color, wall_width)
+		draw_line(Vector2(door_right, py + height_px), Vector2(px + width_px, py + height_px), wall_color, wall_width)
+		draw_line(
+			Vector2(door_left + tile_size * 0.1, py + height_px),
+			Vector2(door_right - tile_size * 0.1, py + height_px),
+			Color(0.41, 0.28, 0.09, 0.85),
+			maxf(1.0, wall_width * 0.5)
+		)
+
+	var font: Font = ThemeDB.fallback_font
+	var icon_size: int = maxi(7, int(tile_size * 0.55))
+	match building_type:
+		"stockpile":
+			_draw_furniture_icon(font, px + tile_size * 1.0, py + tile_size * 1.1, "📦", icon_size)
+			_draw_furniture_icon(font, px + tile_size * 2.0, py + tile_size * 1.1, "📦", icon_size)
+		"shelter":
+			for fy: int in range(mini(height_tiles, 2)):
+				for fx: int in range(mini(width_tiles, 3)):
+					_draw_furniture_icon(
+						font,
+						px + (float(fx) + 0.5) * tile_size,
+						py + (float(fy) + 1.2) * tile_size,
+						"🛏️",
+						icon_size
+					)
+		"campfire":
+			_draw_furniture_icon(font, px + width_px * 0.5, py + height_px * 0.5 + tile_size * 0.15, "🔥", maxi(9, int(tile_size * 0.7)))
+		"workshop":
+			_draw_furniture_icon(font, px + tile_size * 1.0, py + tile_size * 1.1, "🪓", icon_size)
+			_draw_furniture_icon(font, px + tile_size * 2.0, py + tile_size * 1.1, "⚒️", icon_size)
+		_:
+			pass
+
+
+func _draw_furniture_icon(font: Font, x: float, y: float, icon: String, size: int) -> void:
+	draw_string(font, Vector2(x, y), icon, HORIZONTAL_ALIGNMENT_CENTER, -1, size, Color(1.0, 1.0, 1.0, 0.92))
+
+
+func _building_dimensions(building_type: String, building: Variant) -> Vector2i:
+	var width_tiles: int = int(_building_value(building, "width", _building_value(building, "tile_w", 0)))
+	var height_tiles: int = int(_building_value(building, "height", _building_value(building, "tile_h", 0)))
+	if width_tiles > 0 and height_tiles > 0:
+		return Vector2i(width_tiles, height_tiles)
+	match building_type:
+		"campfire":
+			return Vector2i(1, 1)
+		"shelter":
+			return Vector2i(3, 2)
+		"stockpile", "workshop":
+			return Vector2i(3, 3)
+		_:
+			return Vector2i(2, 2)
 
 
 func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:

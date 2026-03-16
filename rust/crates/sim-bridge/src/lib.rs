@@ -51,7 +51,7 @@ use sim_core::components::{
     PART_NAMES, PART_TO_GROUP, PART_VITAL,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
-use sim_core::{ChannelId, EntityId, Settlement, SettlementId, Temperament};
+use sim_core::{BandId, ChannelId, EntityId, Settlement, SettlementId, Temperament};
 use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
@@ -3196,6 +3196,123 @@ impl WorldSimRuntime {
         }
 
         result
+    }
+
+    /// `runtime_get_band_detail` returns one band snapshot for the sidebar inspector.
+    #[func]
+    fn runtime_get_band_detail(&self, band_id: i64) -> VarDictionary {
+        let mut dict = VarDictionary::new();
+        let Some(state) = self.state.as_ref() else {
+            return dict;
+        };
+
+        let world = state.engine.world();
+        let resources = state.engine.resources();
+        let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+        let Some(band) = resources.band_store.get(BandId(band_id.max(0) as u64)) else {
+            return dict;
+        };
+
+        dict.set("id", band.id.0 as i64);
+        dict.set("name", band.name.as_str());
+        dict.set("member_count", band.member_count() as i64);
+        dict.set("is_promoted", band.is_promoted);
+        dict.set("provisional_since", band.provisional_since as i64);
+        dict.set(
+            "promoted_tick",
+            band.promoted_tick.map(|tick| tick as i64).unwrap_or(-1_i64),
+        );
+
+        let mut leader_dict = VarDictionary::new();
+        if let Some(leader_id) = band.leader {
+            if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, leader_id.0) {
+                leader_dict.set("id", runtime_id);
+                leader_dict.set(
+                    "name",
+                    entity_name_from_raw_id(world, &raw_lookup, leader_id.0).unwrap_or_default(),
+                );
+            }
+        }
+        dict.set("leader", leader_dict);
+
+        let mut settlement_id: i64 = -1;
+        let mut settlement_name = String::new();
+        for member_id in &band.members {
+            let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, member_id.0) else {
+                continue;
+            };
+            let Some(member_entity) = resolve_runtime_entity(world, runtime_id) else {
+                continue;
+            };
+            let Ok(identity) = world.get::<&Identity>(member_entity) else {
+                continue;
+            };
+            let Some(member_settlement_id) = identity.settlement_id else {
+                continue;
+            };
+            settlement_id = member_settlement_id.0 as i64;
+            if let Some(settlement) = resources.settlements.get(&member_settlement_id) {
+                settlement_name = settlement.name.clone();
+            }
+            break;
+        }
+        dict.set("settlement_id", settlement_id);
+        dict.set("settlement_name", settlement_name);
+
+        let mut members = Array::<VarDictionary>::new();
+        for member_id in &band.members {
+            let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, member_id.0) else {
+                continue;
+            };
+            let Some(member_entity) = resolve_runtime_entity(world, runtime_id) else {
+                continue;
+            };
+            let mut member_dict = VarDictionary::new();
+            member_dict.set("id", runtime_id);
+            member_dict.set(
+                "is_leader",
+                band.leader.map(|leader_id| leader_id == *member_id).unwrap_or(false),
+            );
+
+            if let Ok(identity) = world.get::<&Identity>(member_entity) {
+                member_dict.set("name", identity.name.clone());
+                member_dict.set("sex", format!("{:?}", identity.sex).to_lowercase());
+            }
+            if let Ok(age) = world.get::<&Age>(member_entity) {
+                member_dict.set("age_years", age.years as f32);
+            }
+            if let Ok(behavior) = world.get::<&Behavior>(member_entity) {
+                member_dict.set("current_action", behavior.current_action.to_string());
+                member_dict.set("job", behavior.job.clone());
+            }
+            members.push(&member_dict);
+        }
+        dict.set("members", members);
+
+        let mut aggregated_events: Vec<&ChronicleEvent> = Vec::new();
+        for member_id in &band.members {
+            aggregated_events.extend(resources.chronicle_log.query_by_entity(*member_id, 8));
+        }
+        aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
+        aggregated_events.dedup_by(|left, right| {
+            left.tick == right.tick
+                && left.entity_id == right.entity_id
+                && left.summary_key == right.summary_key
+                && left.effect_key == right.effect_key
+        });
+
+        let mut event_arr = Array::<VarDictionary>::new();
+        for event in aggregated_events.into_iter().take(20) {
+            let mut event_dict = VarDictionary::new();
+            event_dict.set("tick", event.tick as i64);
+            event_dict.set("text", event.summary_key.clone());
+            event_dict.set("text_key", event.summary_key.clone());
+            event_dict.set("type", format!("{:?}", event.event_type));
+            event_arr.push(&event_dict);
+        }
+        dict.set("events", event_arr);
+
+        dict
     }
 
     /// Exports one influence-grid channel as normalized `u8` bytes for GPU heatmap rendering.

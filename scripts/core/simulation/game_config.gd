@@ -309,8 +309,8 @@ const UI_FONT_SIZES: Dictionary = {
 
 ## Base UI element sizes (multiplied by ui_scale)
 const UI_SIZES: Dictionary = {
-	"minimap": 250,
-	"minimap_large": 350,
+	"minimap": 96,
+	"minimap_large": 148,
 	"mini_stats_width": 250,
 	"mini_stats_height": 220,
 	"select_panel_width": 320,
@@ -400,9 +400,10 @@ const BIOME_MOVE_COST: Dictionary = {
 }
 
 ## Camera settings
-const CAMERA_ZOOM_MIN: float = 0.25
-const CAMERA_ZOOM_MAX: float = 10.0
+const CAMERA_ZOOM_MIN: float = 0.15
+const CAMERA_ZOOM_MAX: float = 6.0
 const CAMERA_ZOOM_STEP: float = 0.15
+const CAMERA_ZOOM_LEVELS := [3.0, 1.2, 0.6, 0.3, 0.18]
 const CAMERA_PAN_SPEED: float = 500.0
 const CAMERA_ZOOM_SPEED: float = 0.15
 

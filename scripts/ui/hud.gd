@@ -6,6 +6,9 @@ const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
 const EntityDetailPanelV4Class = preload("res://scripts/ui/panels/entity_detail_panel_v4.gd")
 const EntityDetailPanelLegacyClass = preload("res://scripts/ui/panels/entity_detail_panel_legacy.gd")
+const BandDetailPanelClass = preload("res://scripts/ui/panels/band_detail_panel.gd")
+const CivDetailPanelClass = preload("res://scripts/ui/panels/civilization_detail_panel.gd")
+const OraclePanelClass = preload("res://scripts/ui/panels/oracle_panel.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
 const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
@@ -29,6 +32,38 @@ const RIGHT_PANEL_CHRONICLE_POLL_INTERVAL: float = 1.0
 const BOTTOM_BAR_HEIGHT: float = 40.0
 const BOTTOM_BAR_CLEARANCE: float = 48.0
 const BOTTOM_BAR_PERF_SAMPLE_WINDOW: float = 0.25
+const ZOOM_LEVEL_LABELS: Array[String] = ["Z1", "Z2", "Z3", "Z4", "Z5"]
+const ZOOM_LEVEL_TOOLTIP_KEYS: Array[String] = [
+	"UI_ZOOM_Z1",
+	"UI_ZOOM_Z2",
+	"UI_ZOOM_Z3",
+	"UI_ZOOM_Z4",
+	"UI_ZOOM_Z5",
+]
+const OVERLAY_BUTTON_DEFS: Array[Dictionary] = [
+	{"key": "food", "label": "UI_OVERLAY_FOOD", "color": Color(0.30, 0.80, 0.20)},
+	{"key": "danger", "label": "UI_OVERLAY_DANGER", "color": Color(0.90, 0.20, 0.15)},
+	{"key": "warmth", "label": "UI_OVERLAY_WARMTH", "color": Color(0.90, 0.60, 0.10)},
+	{"key": "social", "label": "UI_OVERLAY_SOCIAL", "color": Color(0.30, 0.50, 0.90)},
+	{"key": "knowledge", "label": "UI_OVERLAY_KNOWLEDGE", "color": Color(0.70, 0.40, 0.80)},
+	{"key": "resource", "label": "UI_OVERLAY_RESOURCE", "color": Color(0.80, 0.60, 0.20)},
+]
+const LAYER_BUTTON_DEFS: Array[Dictionary] = [
+	{"key": "band", "label": "UI_LAYER_BAND", "color": Color(0.78, 0.56, 0.19)},
+	{"key": "settlement", "label": "UI_LAYER_SETTLEMENT", "color": Color(0.83, 0.33, 0.33)},
+	{"key": "culture", "label": "UI_LAYER_CULTURE", "color": Color(0.53, 0.41, 0.75)},
+	{"key": "nation", "label": "UI_LAYER_NATION", "color": Color(0.28, 0.66, 0.28)},
+	{"key": "army", "label": "UI_LAYER_ARMY", "color": Color(0.78, 0.20, 0.20)},
+	{"key": "religion", "label": "UI_LAYER_RELIGION", "color": Color(0.53, 0.41, 0.75)},
+	{"key": "border", "label": "UI_LAYER_BORDER", "color": Color(0.78, 0.75, 0.60)},
+]
+const OVERLAY_BY_ZOOM := [
+	["food", "danger", "warmth", "social", "resource"],
+	["food", "danger", "warmth", "social", "resource"],
+	["food", "danger", "knowledge"],
+	["danger", "knowledge"],
+	["danger"],
+]
 
 # References
 var _sim_engine: RefCounted
@@ -57,11 +92,16 @@ var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
+var _overlay_probe_label: PanelContainer
+var _overlay_probe_text: Label
 var _bottom_bar_sel_label: Label
 var _resource_popup: PanelContainer
 var _band_popup: PanelContainer
 var _pause_overlay: Control = null
 var _pause_overlay_was_running: bool = false
+var _oracle_button: Button
+var _oracle_panel: Control
+var _alert_card_container: VBoxContainer
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -88,6 +128,7 @@ var _notification_container: Control
 var _notifications: Array = []
 const MAX_NOTIFICATIONS: int = 5
 const NOTIFICATION_DURATION: float = 4.0
+const ALERT_CARD_DURATION: float = 8.0
 
 # Help overlay
 var _help_overlay: Control
@@ -126,6 +167,8 @@ var _right_panel_tab_bar: HBoxContainer
 var _right_panel_tab_content: Control
 var _entity_detail_panel: Control
 var _entity_detail_panel_legacy: Control
+var _band_detail_panel: Control
+var _civ_detail_panel: Control
 var _building_detail_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
@@ -153,9 +196,20 @@ var _bottom_bar: PanelContainer
 var _bottom_bar_tps_label: Label
 var _bottom_bar_fps_label: Label
 var _bottom_bar_zoom_buttons: Array[Button] = []
+var _bottom_bar_overlay_section: HBoxContainer
 var _bottom_bar_overlay_buttons: Dictionary = {}
 var _bottom_bar_overlay_accents: Dictionary = {}
 var _bottom_bar_active_overlays: Array[String] = []
+var _layer_button_container: HBoxContainer
+var _active_layers: Dictionary = {
+	"band": true,
+	"settlement": true,
+	"culture": false,
+	"nation": false,
+	"army": false,
+	"religion": false,
+	"border": false,
+}
 var _bottom_bar_current_zoom_level: int = 0
 var _bottom_bar_perf_elapsed: float = 0.0
 var _bottom_bar_perf_ticks: int = 0
@@ -179,6 +233,8 @@ var _probe_context_label: Label
 # Selection state
 var _selected_entity_id: int = -1
 var _selected_building_id: int = -1
+var _selected_band_id: int = -1
+var _selected_civ_id: int = -1
 var _startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX
 
 # Debug cheat panel (F12 toggle, lazy init)
@@ -239,13 +295,16 @@ func _ready() -> void:
 	_build_entity_panel()
 	_build_building_panel()
 	_build_notification_area()
+	_build_alert_cards()
 	_build_help_overlay()
 	_build_resource_legend()
 	_build_probe_verification_overlay()
 	_build_key_hints()
 	_build_bottom_bar()
 	_build_overlay_legend()
+	_build_overlay_probe()
 	_build_pause_overlay()
+	_build_oracle_panel()
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
@@ -258,10 +317,7 @@ func _ready() -> void:
 
 
 func _build_minimap_and_stats() -> void:
-	if _world_data != null and _camera != null:
-		_minimap_panel = MinimapPanelClass.new()
-		_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
-		add_child(_minimap_panel)
+	_build_minimap()
 
 	if _stats_recorder != null:
 		_stats_panel = StatsPanelClass.new()
@@ -278,6 +334,10 @@ func _build_minimap_and_stats() -> void:
 	if _sim_engine != null:
 		_entity_detail_panel = EntityDetailPanelV4Class.new()
 		_entity_detail_panel.init(_sim_engine)
+		_band_detail_panel = BandDetailPanelClass.new()
+		_band_detail_panel.init(_sim_engine)
+		_civ_detail_panel = CivDetailPanelClass.new()
+		_civ_detail_panel.init(_sim_engine)
 		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
 		_entity_detail_panel_legacy.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
 		_popup_manager.add_legacy_entity_panel(_entity_detail_panel_legacy)
@@ -323,6 +383,19 @@ func _build_minimap_and_stats() -> void:
 	_follow_label.offset_bottom = 56
 	add_child(_follow_label)
 	_build_story_ui()
+
+
+func _build_minimap() -> void:
+	if _world_data == null or _camera == null:
+		return
+	_minimap_panel = MinimapPanelClass.new()
+	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
+	add_child(_minimap_panel)
+	if _minimap_panel.has_method("resize"):
+		_minimap_panel.call("resize", GameConfig.get_ui_size("minimap"))
+	if _minimap_panel.has_method("request_update"):
+		_minimap_panel.call("request_update")
+	call_deferred("_layout_overlay_legend")
 
 
 func _build_right_sidebar() -> void:
@@ -426,6 +499,24 @@ func _build_right_sidebar() -> void:
 		_chronicle_panel.visible = false
 		_right_panel_tab_content.add_child(_chronicle_panel)
 
+	if _band_detail_panel != null:
+		_band_detail_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_band_detail_panel.offset_left = 0.0
+		_band_detail_panel.offset_top = 0.0
+		_band_detail_panel.offset_right = 0.0
+		_band_detail_panel.offset_bottom = 0.0
+		_band_detail_panel.visible = false
+		_right_panel_tab_content.add_child(_band_detail_panel)
+
+	if _civ_detail_panel != null:
+		_civ_detail_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_civ_detail_panel.offset_left = 0.0
+		_civ_detail_panel.offset_top = 0.0
+		_civ_detail_panel.offset_right = 0.0
+		_civ_detail_panel.offset_bottom = 0.0
+		_civ_detail_panel.visible = false
+		_right_panel_tab_content.add_child(_civ_detail_panel)
+
 	_factions_panel = _build_factions_panel()
 	_factions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_factions_panel.visible = false
@@ -500,10 +591,31 @@ func _apply_right_panel_tab_style(button: Button, is_active: bool, is_flashing: 
 
 func _switch_right_panel_tab(index: int) -> void:
 	_current_right_panel_tab = index
+	var show_band_detail: bool = (
+		index == RIGHT_PANEL_TAB_INSPECTOR
+		and _selected_band_id >= 0
+		and _selected_entity_id < 0
+		and _selected_civ_id < 0
+		and _band_detail_panel != null
+	)
+	var show_civ_detail: bool = (
+		index == RIGHT_PANEL_TAB_INSPECTOR
+		and _selected_civ_id >= 0
+		and _selected_entity_id < 0
+		and _civ_detail_panel != null
+	)
 	if _entity_detail_panel != null:
-		_entity_detail_panel.visible = (index == RIGHT_PANEL_TAB_INSPECTOR)
+		_entity_detail_panel.visible = (
+			index == RIGHT_PANEL_TAB_INSPECTOR
+			and not show_band_detail
+			and not show_civ_detail
+		)
 	if _chronicle_panel != null:
 		_chronicle_panel.visible = (index == RIGHT_PANEL_TAB_CHRONICLE)
+	if _band_detail_panel != null:
+		_band_detail_panel.visible = show_band_detail
+	if _civ_detail_panel != null:
+		_civ_detail_panel.visible = show_civ_detail
 	if _factions_panel != null:
 		_factions_panel.visible = (index == RIGHT_PANEL_TAB_FACTIONS)
 	if _sidebar_stats_panel != null:
@@ -523,6 +635,25 @@ func _switch_right_panel_tab(index: int) -> void:
 	elif index == RIGHT_PANEL_TAB_DIPLOMACY:
 		_refresh_diplomacy_panel()
 	_set_right_panel_tab_state()
+
+
+func _hide_all_sidebar_tab_panels() -> void:
+	if _entity_detail_panel != null:
+		_entity_detail_panel.visible = false
+	if _chronicle_panel != null:
+		_chronicle_panel.visible = false
+	if _band_detail_panel != null:
+		_band_detail_panel.visible = false
+	if _civ_detail_panel != null:
+		_civ_detail_panel.visible = false
+	if _factions_panel != null:
+		_factions_panel.visible = false
+	if _sidebar_stats_panel != null:
+		_sidebar_stats_panel.visible = false
+	if _history_panel != null:
+		_history_panel.visible = false
+	if _diplomacy_panel != null:
+		_diplomacy_panel.visible = false
 
 
 func _set_right_panel_tab_state() -> void:
@@ -605,10 +736,18 @@ func _on_sidebar_meta_clicked(meta: Variant) -> void:
 		var entity_id: int = int(target.substr(7))
 		if entity_id >= 0:
 			SimulationBus.entity_selected.emit(entity_id)
+	elif target.begins_with("band:"):
+		var band_id: int = int(target.substr(5))
+		if band_id >= 0:
+			SimulationBus.band_selected.emit(band_id)
 	elif target.begins_with("sett:"):
 		var settlement_id: int = int(target.substr(5))
 		if settlement_id >= 0:
 			SimulationBus.settlement_panel_requested.emit(settlement_id)
+	elif target.begins_with("civ:"):
+		var civ_id: int = int(target.substr(4))
+		if civ_id >= 0:
+			SimulationBus.civilization_selected.emit(civ_id)
 
 
 func _refresh_factions_panel() -> void:
@@ -627,14 +766,18 @@ func _refresh_factions_panel() -> void:
 		if not (band_raw is Dictionary):
 			continue
 		var band: Dictionary = band_raw
+		var band_id: int = int(band.get("id", -1))
 		var band_name: String = str(band.get("name", Locale.ltr("UI_UNKNOWN")))
 		var member_count: int = int(band.get("member_count", 0))
 		var leader_name: String = str(band.get("leader_name", ""))
 		var leader_id: int = int(band.get("leader_id", -1))
 		var is_promoted: bool = bool(band.get("is_promoted", false))
 		var status_text: String = Locale.ltr("UI_BAND_PROMOTED") if is_promoted else Locale.ltr("UI_BAND_PROVISIONAL")
-		text += "[color=#c89030]■[/color] [b]%s[/b] [color=#506878][%s][/color] %s\n" % [
-			band_name,
+		var band_title: String = "[b]%s[/b]" % band_name
+		if band_id >= 0:
+			band_title = "[url=band:%d][b]%s[/b][/url]" % [band_id, band_name]
+		text += "[color=#c89030]■[/color] %s [color=#506878][%s][/color] %s\n" % [
+			band_title,
 			status_text,
 			"%d%s" % [member_count, Locale.ltr("UI_MEMBERS_SUFFIX")],
 		]
@@ -868,7 +1011,17 @@ func _build_bottom_bar() -> void:
 	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_zoom_section())
 	root.add_child(_make_vertical_separator())
-	root.add_child(_build_bottom_bar_overlay_section())
+	_bottom_bar_overlay_section = _build_bottom_bar_overlay_section()
+	root.add_child(_bottom_bar_overlay_section)
+	root.add_child(_make_vertical_separator())
+	_layer_button_container = _build_bottom_bar_layer_section()
+	root.add_child(_layer_button_container)
+	root.add_child(_make_vertical_separator())
+	_oracle_button = _make_bottom_bar_button("⚡ " + Locale.ltr("UI_ORACLE_BUTTON"))
+	_oracle_button.add_theme_color_override("font_color", Color(0.78, 0.66, 0.92))
+	_oracle_button.add_theme_color_override("font_hover_color", Color(0.86, 0.76, 0.96))
+	_oracle_button.pressed.connect(_toggle_oracle_panel)
+	root.add_child(_oracle_button)
 	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_perf_section())
 
@@ -877,6 +1030,8 @@ func _build_bottom_bar() -> void:
 	if _fps_label != null:
 		_fps_label.visible = false
 	_refresh_bottom_bar_locale()
+	_sync_zoom_level_from_camera(true)
+	_update_overlay_buttons_for_zoom()
 	_update_bottom_bar_button_states()
 
 
@@ -884,11 +1039,13 @@ func _build_bottom_bar_zoom_section() -> HBoxContainer:
 	var section := HBoxContainer.new()
 	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	section.alignment = BoxContainer.ALIGNMENT_CENTER
-	section.add_theme_constant_override("separation", 6)
+	section.add_theme_constant_override("separation", 3)
 
-	var zoom_labels: Array[String] = ["1:1", "1:4", "1:16"]
-	for level: int in range(zoom_labels.size()):
-		var button: Button = _make_bottom_bar_button(zoom_labels[level])
+	_bottom_bar_zoom_buttons.clear()
+	for level: int in range(ZOOM_LEVEL_LABELS.size()):
+		var button: Button = _make_bottom_bar_button(ZOOM_LEVEL_LABELS[level])
+		button.tooltip_text = Locale.ltr(ZOOM_LEVEL_TOOLTIP_KEYS[level])
+		button.set_meta("locale_key", ZOOM_LEVEL_TOOLTIP_KEYS[level])
 		button.pressed.connect(_on_bottom_bar_zoom_pressed.bind(level))
 		section.add_child(button)
 		_bottom_bar_zoom_buttons.append(button)
@@ -902,15 +1059,9 @@ func _build_bottom_bar_overlay_section() -> HBoxContainer:
 	section.alignment = BoxContainer.ALIGNMENT_CENTER
 	section.add_theme_constant_override("separation", 6)
 
-	var overlays: Array[Dictionary] = [
-		{"key": "food", "label": "UI_OVERLAY_FOOD", "color": Color(0.30, 0.80, 0.20)},
-		{"key": "danger", "label": "UI_OVERLAY_DANGER", "color": Color(0.90, 0.20, 0.15)},
-		{"key": "warmth", "label": "UI_OVERLAY_WARMTH", "color": Color(0.90, 0.60, 0.10)},
-		{"key": "social", "label": "UI_OVERLAY_SOCIAL", "color": Color(0.30, 0.50, 0.90)},
-		{"key": "knowledge", "label": "UI_OVERLAY_KNOWLEDGE", "color": Color(0.70, 0.40, 0.80)},
-		{"key": "resource", "label": "UI_OVERLAY_RESOURCE", "color": Color(0.80, 0.60, 0.20)},
-	]
-	for overlay: Dictionary in overlays:
+	_bottom_bar_overlay_buttons.clear()
+	_bottom_bar_overlay_accents.clear()
+	for overlay: Dictionary in OVERLAY_BUTTON_DEFS:
 		var channel: String = str(overlay.get("key", ""))
 		var button: Button = _make_bottom_bar_button(Locale.ltr(str(overlay.get("label", ""))))
 		button.set_meta("locale_key", str(overlay.get("label", "")))
@@ -918,6 +1069,25 @@ func _build_bottom_bar_overlay_section() -> HBoxContainer:
 		section.add_child(button)
 		_bottom_bar_overlay_buttons[channel] = button
 		_bottom_bar_overlay_accents[channel] = overlay.get("color", Color(0.50, 0.60, 0.70))
+
+	return section
+
+
+func _build_bottom_bar_layer_section() -> HBoxContainer:
+	var section := HBoxContainer.new()
+	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	section.alignment = BoxContainer.ALIGNMENT_CENTER
+	section.add_theme_constant_override("separation", 2)
+
+	for layer_def: Dictionary in LAYER_BUTTON_DEFS:
+		var button: Button = _make_bottom_bar_button(Locale.ltr(str(layer_def.get("label", ""))))
+		button.custom_minimum_size = Vector2(44.0, 28.0)
+		button.add_theme_font_size_override("font_size", 8)
+		button.set_meta("layer_key", str(layer_def.get("key", "")))
+		button.set_meta("locale_key", str(layer_def.get("label", "")))
+		button.set_meta("layer_color", layer_def.get("color", Color(0.50, 0.60, 0.70)))
+		button.pressed.connect(_on_layer_toggle.bind(str(layer_def.get("key", ""))))
+		section.add_child(button)
 
 	return section
 
@@ -997,9 +1167,23 @@ func _update_bottom_bar_button_states() -> void:
 		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
 		var accent: Color = _bottom_bar_overlay_accents.get(channel, Color(0.50, 0.60, 0.70))
 		_apply_bottom_bar_button_style(button, channel in _bottom_bar_active_overlays, accent)
+	if _oracle_button != null:
+		_apply_bottom_bar_button_style(
+			_oracle_button,
+			_oracle_panel != null and _oracle_panel.visible,
+			Color(0.53, 0.41, 0.75)
+		)
+	_update_layer_button_states()
 
 
 func _refresh_bottom_bar_locale() -> void:
+	for index: int in range(_bottom_bar_zoom_buttons.size()):
+		var zoom_button: Button = _bottom_bar_zoom_buttons[index]
+		if zoom_button == null:
+			continue
+		zoom_button.text = ZOOM_LEVEL_LABELS[index]
+		if index < ZOOM_LEVEL_TOOLTIP_KEYS.size():
+			zoom_button.tooltip_text = Locale.ltr(ZOOM_LEVEL_TOOLTIP_KEYS[index])
 	for channel_variant: Variant in _bottom_bar_overlay_buttons.keys():
 		var channel: String = str(channel_variant)
 		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
@@ -1008,12 +1192,27 @@ func _refresh_bottom_bar_locale() -> void:
 		var locale_key: String = str(button.get_meta("locale_key", ""))
 		if not locale_key.is_empty():
 			button.text = Locale.ltr(locale_key)
+	if _layer_button_container != null:
+		for child: Node in _layer_button_container.get_children():
+			if not (child is Button):
+				continue
+			var layer_button: Button = child
+			var layer_locale_key: String = str(layer_button.get_meta("locale_key", ""))
+			if not layer_locale_key.is_empty():
+				layer_button.text = Locale.ltr(layer_locale_key)
 	_refresh_overlay_legend()
 	_refresh_selection_summary()
 
 
 func _on_bottom_bar_zoom_pressed(level: int) -> void:
-	_bottom_bar_current_zoom_level = clampi(level, 0, _bottom_bar_zoom_buttons.size() - 1)
+	_bottom_bar_current_zoom_level = clampi(level, 0, ZOOM_LEVEL_LABELS.size() - 1)
+	if _camera != null:
+		var target_zoom: float = float(GameConfig.CAMERA_ZOOM_LEVELS[_bottom_bar_current_zoom_level])
+		if _camera.has_method("set_target_zoom"):
+			_camera.call("set_target_zoom", target_zoom)
+		else:
+			_camera.zoom = Vector2.ONE * target_zoom
+	_update_overlay_buttons_for_zoom()
 	_update_bottom_bar_button_states()
 
 
@@ -1030,18 +1229,122 @@ func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	_refresh_overlay_legend()
 
 
+func _on_layer_toggle(layer_key: String) -> void:
+	if layer_key.is_empty():
+		return
+	_active_layers[layer_key] = not bool(_active_layers.get(layer_key, false))
+	_update_layer_button_states()
+	SimulationBus.emit_event("layer_changed", {"layers": _active_layers.duplicate(true)})
+
+
+func _update_layer_button_states() -> void:
+	if _layer_button_container == null:
+		return
+	for child: Node in _layer_button_container.get_children():
+		if not (child is Button):
+			continue
+		var button: Button = child
+		var layer_key: String = str(button.get_meta("layer_key", ""))
+		var accent: Color = button.get_meta("layer_color", Color(0.50, 0.60, 0.70))
+		var is_active: bool = bool(_active_layers.get(layer_key, false))
+		_apply_bottom_bar_button_style(
+			button,
+			is_active,
+			accent if is_active else Color(0.22, 0.28, 0.35)
+		)
+
+
 func _build_overlay_legend() -> void:
 	if _overlay_legend != null:
 		return
 	_overlay_legend = _make_label("", "hud_secondary", Color(0.53, 0.60, 0.65))
 	_overlay_legend.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_overlay_legend.offset_left = 12.0
 	_overlay_legend.offset_top = -(BOTTOM_BAR_HEIGHT + 28.0)
-	_overlay_legend.offset_right = 240.0
 	_overlay_legend.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
 	_overlay_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_overlay_legend.visible = false
 	add_child(_overlay_legend)
+	_layout_overlay_legend()
+
+
+func _layout_overlay_legend() -> void:
+	if _overlay_legend == null:
+		return
+	var left_offset: float = 12.0
+	if _minimap_panel != null and _minimap_panel.visible:
+		var minimap_width: float = _minimap_panel.size.x
+		if minimap_width <= 0.0:
+			minimap_width = _minimap_panel.custom_minimum_size.x
+		left_offset += minimap_width + 10.0
+	_overlay_legend.offset_left = left_offset
+	_overlay_legend.offset_right = left_offset + 240.0
+
+
+func _build_overlay_probe() -> void:
+	if _overlay_probe_label != null:
+		return
+	_overlay_probe_label = PanelContainer.new()
+	_overlay_probe_label.visible = false
+	_overlay_probe_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var probe_style := StyleBoxFlat.new()
+	probe_style.bg_color = Color(0.06, 0.09, 0.12, 0.92)
+	probe_style.border_color = Color(0.16, 0.22, 0.30)
+	probe_style.border_width_left = 1
+	probe_style.border_width_top = 1
+	probe_style.border_width_right = 1
+	probe_style.border_width_bottom = 1
+	probe_style.corner_radius_top_left = 4
+	probe_style.corner_radius_top_right = 4
+	probe_style.corner_radius_bottom_left = 4
+	probe_style.corner_radius_bottom_right = 4
+	probe_style.content_margin_left = 5
+	probe_style.content_margin_right = 5
+	probe_style.content_margin_top = 2
+	probe_style.content_margin_bottom = 2
+	_overlay_probe_label.add_theme_stylebox_override("panel", probe_style)
+	_overlay_probe_text = _make_label("", 9, Color(0.66, 0.73, 0.78))
+	_overlay_probe_label.add_child(_overlay_probe_text)
+	add_child(_overlay_probe_label)
+	_overlay_probe_label.move_to_front()
+
+
+func _update_overlay_probe() -> void:
+	if _overlay_probe_label == null or _overlay_probe_text == null:
+		return
+	if _bottom_bar_active_overlays.is_empty() or _camera == null:
+		_overlay_probe_label.visible = false
+		return
+	var mouse_pos: Vector2 = get_viewport().get_mouse_position()
+	if _bottom_bar != null and _bottom_bar.get_global_rect().has_point(mouse_pos):
+		_overlay_probe_label.visible = false
+		return
+	var top_bar: Variant = _status_label.get_parent() if _status_label != null else null
+	if top_bar != null and top_bar.get_global_rect().has_point(mouse_pos):
+		_overlay_probe_label.visible = false
+		return
+	var world_pos: Vector2 = _camera.get_global_mouse_position()
+	var tile_x: int = int(floor(world_pos.x / float(GameConfig.TILE_SIZE)))
+	var tile_y: int = int(floor(world_pos.y / float(GameConfig.TILE_SIZE)))
+	if tile_x < 0 or tile_y < 0 or tile_x >= GameConfig.WORLD_SIZE.x or tile_y >= GameConfig.WORLD_SIZE.y:
+		_overlay_probe_label.visible = false
+		return
+	var channel: String = _bottom_bar_active_overlays[0]
+	var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+	var locale_key: String = str(button.get_meta("locale_key", "")) if button != null else ""
+	var channel_label: String = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
+	var probe_text: String = "%s @ (%d,%d)" % [channel_label, tile_x, tile_y]
+	if _sim_engine != null and _sim_engine.has_method("runtime_sample_influence"):
+		var influence_value: float = float(_sim_engine.call("runtime_sample_influence", channel, tile_x, tile_y))
+		probe_text = "%s: %.0f%%" % [channel_label, clampf(influence_value, 0.0, 1.0) * 100.0]
+	_overlay_probe_text.text = probe_text
+	var probe_size: Vector2 = _overlay_probe_label.get_combined_minimum_size()
+	_overlay_probe_label.size = probe_size
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var probe_pos: Vector2 = mouse_pos + Vector2(12.0, -20.0)
+	probe_pos.x = clampf(probe_pos.x, 4.0, viewport_size.x - probe_size.x - 4.0)
+	probe_pos.y = clampf(probe_pos.y, 4.0, viewport_size.y - probe_size.y - 4.0)
+	_overlay_probe_label.position = probe_pos
+	_overlay_probe_label.visible = true
 
 
 func _build_pause_overlay() -> void:
@@ -1104,6 +1407,23 @@ func _build_pause_overlay() -> void:
 	center.add_child(panel)
 	add_child(_pause_overlay)
 	_pause_overlay.move_to_front()
+
+
+func _build_oracle_panel() -> void:
+	if _oracle_panel != null:
+		return
+	_oracle_panel = OraclePanelClass.new()
+	_oracle_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_oracle_panel.offset_left = -190.0
+	_oracle_panel.offset_right = 190.0
+	_oracle_panel.offset_bottom = -(BOTTOM_BAR_HEIGHT + 12.0)
+	_oracle_panel.offset_top = _oracle_panel.offset_bottom - 88.0
+	_oracle_panel.visible = false
+	_oracle_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	if _oracle_panel.has_signal("oracle_action"):
+		_oracle_panel.connect("oracle_action", Callable(self, "_on_oracle_action"))
+	add_child(_oracle_panel)
+	_oracle_panel.move_to_front()
 
 
 func _show_pause_overlay() -> void:
@@ -1301,7 +1621,7 @@ func _show_band_popup() -> void:
 			if not (band_raw is Dictionary):
 				continue
 			var band: Dictionary = band_raw
-			var leader_id: int = int(band.get("leader_id", -1))
+			var band_id: int = int(band.get("id", -1))
 			var band_name: String = str(band.get("name", Locale.ltr("UI_UNKNOWN")))
 			var member_count: int = int(band.get("member_count", 0))
 			var is_promoted: bool = bool(band.get("is_promoted", false))
@@ -1318,7 +1638,7 @@ func _show_band_popup() -> void:
 			button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			button.focus_mode = Control.FOCUS_NONE
 			button.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_small"))
-			button.pressed.connect(_on_band_popup_band_pressed.bind(leader_id))
+			button.pressed.connect(_on_band_popup_band_pressed.bind(band_id))
 			box.add_child(button)
 
 			if not leader_name.is_empty():
@@ -1343,7 +1663,206 @@ func _close_hud_popups() -> bool:
 	if _band_popup != null and _band_popup.visible:
 		_band_popup.visible = false
 		closed = true
+	if _oracle_panel != null and _oracle_panel.visible:
+		_oracle_panel.visible = false
+		_update_bottom_bar_button_states()
+		closed = true
 	return closed
+
+
+func _toggle_oracle_panel() -> void:
+	if _oracle_panel == null:
+		return
+	if not _oracle_panel.visible:
+		_close_hud_popups()
+	_oracle_panel.visible = not _oracle_panel.visible
+	if _oracle_panel.visible:
+		_oracle_panel.move_to_front()
+	_update_bottom_bar_button_states()
+
+
+func _on_oracle_action(action_type: String) -> void:
+	var action_label: String = ""
+	match action_type:
+		"prophecy":
+			action_label = Locale.ltr("UI_ORACLE_PROPHECY")
+		"miracle":
+			action_label = Locale.ltr("UI_ORACLE_MIRACLE")
+		"disaster":
+			action_label = Locale.ltr("UI_ORACLE_DISASTER")
+		"blessing":
+			action_label = Locale.ltr("UI_ORACLE_BLESSING")
+		"worldrule":
+			action_label = Locale.ltr("UI_ORACLE_WORLDRULE")
+		_:
+			action_label = action_type
+	SimulationBus.notify("%s [%s]" % [action_label, Locale.ltr("UI_NOT_IMPLEMENTED")], "info")
+
+
+func _build_alert_cards() -> void:
+	if _alert_card_container != null:
+		return
+	_alert_card_container = VBoxContainer.new()
+	_alert_card_container.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_alert_card_container.offset_top = 42.0
+	_alert_card_container.offset_left = -246.0
+	_alert_card_container.offset_right = -6.0
+	_alert_card_container.add_theme_constant_override("separation", 4)
+	_alert_card_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_alert_card_container)
+
+
+func _maybe_show_alert_card(event: Dictionary) -> void:
+	if _alert_card_container == null:
+		return
+	var event_type: String = str(event.get("type", ""))
+	if event_type not in [
+		"band_formed",
+		"band_promoted",
+		"leader_elected",
+		"entity_starved",
+		"entity_died_siler",
+		"mental_break",
+		"tech_discovered",
+		"era_advanced",
+	]:
+		return
+	var alert_text: String = _alert_event_text(event)
+	if alert_text.is_empty():
+		return
+	_show_alert_card(event_type, alert_text, event)
+
+
+func _show_alert_card(event_type: String, text: String, event: Dictionary) -> void:
+	if _alert_card_container == null:
+		return
+	var card := PanelContainer.new()
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color(0.03, 0.04, 0.06, 0.95)
+	card_style.border_color = _alert_type_color(event_type)
+	card_style.border_width_left = 3
+	card_style.border_width_top = 1
+	card_style.border_width_right = 1
+	card_style.border_width_bottom = 1
+	card_style.corner_radius_top_left = 4
+	card_style.corner_radius_top_right = 4
+	card_style.corner_radius_bottom_left = 4
+	card_style.corner_radius_bottom_right = 4
+	card_style.content_margin_left = 6
+	card_style.content_margin_right = 6
+	card_style.content_margin_top = 4
+	card_style.content_margin_bottom = 4
+	card.add_theme_stylebox_override("panel", card_style)
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 2)
+
+	var header := HBoxContainer.new()
+	var type_label := Label.new()
+	type_label.text = _alert_type_label(event_type)
+	type_label.add_theme_font_size_override("font_size", 9)
+	type_label.add_theme_color_override("font_color", _alert_type_color(event_type))
+	header.add_child(type_label)
+
+	var time_label := Label.new()
+	time_label.text = str(event.get("tick", ""))
+	time_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	time_label.add_theme_font_size_override("font_size", 8)
+	time_label.add_theme_color_override("font_color", Color(0.22, 0.25, 0.31))
+	header.add_child(time_label)
+	box.add_child(header)
+
+	var desc := Label.new()
+	desc.text = text
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.add_theme_font_size_override("font_size", 9)
+	desc.add_theme_color_override("font_color", Color(0.44, 0.53, 0.63))
+	box.add_child(desc)
+
+	card.add_child(box)
+	_alert_card_container.add_child(card)
+
+	var timer := get_tree().create_timer(ALERT_CARD_DURATION)
+	timer.timeout.connect(func() -> void:
+		if is_instance_valid(card):
+			card.queue_free()
+	)
+	while _alert_card_container.get_child_count() > 5:
+		_alert_card_container.get_child(0).queue_free()
+
+
+func _alert_event_text(event: Dictionary) -> String:
+	var event_type: String = str(event.get("type", ""))
+	var direct_text: String = str(event.get("description", event.get("text", "")))
+	if not direct_text.is_empty():
+		return direct_text
+	match event_type:
+		"band_formed":
+			var formed_name: String = str(event.get("band_name", ""))
+			return "%s: %s" % [Locale.ltr("UI_ALERT_BAND_FORMED"), formed_name] if not formed_name.is_empty() else Locale.ltr("UI_ALERT_BAND_FORMED")
+		"band_promoted":
+			var promoted_name: String = str(event.get("band_name", ""))
+			return "%s: %s" % [Locale.ltr("UI_ALERT_BAND_PROMOTED"), promoted_name] if not promoted_name.is_empty() else Locale.ltr("UI_ALERT_BAND_PROMOTED")
+		"leader_elected":
+			var leader_name: String = str(event.get("leader_name", Locale.ltr("UI_UNKNOWN")))
+			var settlement_id: int = int(event.get("settlement_id", 0))
+			return Locale.trf2("UI_NOTIF_LEADER_ELECTED_FMT", "name", leader_name, "sid", settlement_id)
+		"entity_starved":
+			return Locale.trf1("UI_NOTIF_DIED_STARVED_FMT", "name", str(event.get("entity_name", Locale.ltr("UI_UNKNOWN"))))
+		"entity_died_siler":
+			var died_name: String = str(event.get("entity_name", Locale.ltr("UI_UNKNOWN")))
+			var cause_key: String = str(event.get("cause", "unknown"))
+			var cause_text: String = Locale.tr_id("DEATH", cause_key)
+			var age_text: String = "%.0fy" % float(event.get("age_years", 0.0))
+			return Locale.trf3("UI_NOTIF_DIED_CAUSE_AGE_FMT", "name", died_name, "cause", cause_text, "age", age_text)
+		"mental_break":
+			return str(event.get("entity_name", Locale.ltr("UI_UNKNOWN")))
+		"tech_discovered":
+			var tech_id: String = str(event.get("tech_id", ""))
+			var discoverer_name: String = _resolve_runtime_entity_name(int(event.get("discoverer_id", -1)))
+			return Locale.trf2("UI_NOTIF_TECH_DISCOVERED_FMT", "name", discoverer_name, "tech", Locale.ltr(tech_id))
+		"era_advanced":
+			var era_key: String = "ERA_" + str(event.get("new_era", "")).to_upper()
+			return Locale.trf1("UI_NOTIF_ERA_ADVANCED_FMT", "era", Locale.ltr(era_key))
+		_:
+			return ""
+
+
+func _alert_type_color(event_type: String) -> Color:
+	match event_type:
+		"band_formed", "band_promoted":
+			return Color(0.72, 0.56, 0.19)
+		"leader_elected":
+			return Color(0.81, 0.63, 0.19)
+		"entity_starved", "entity_died_siler", "mental_break":
+			return Color(0.81, 0.25, 0.31)
+		"tech_discovered":
+			return Color(0.28, 0.66, 0.16)
+		"era_advanced":
+			return Color(0.25, 0.69, 0.69)
+		_:
+			return Color(0.38, 0.44, 0.50)
+
+
+func _alert_type_label(event_type: String) -> String:
+	match event_type:
+		"band_formed":
+			return Locale.ltr("UI_ALERT_BAND_FORMED")
+		"band_promoted":
+			return Locale.ltr("UI_ALERT_BAND_PROMOTED")
+		"leader_elected":
+			return Locale.ltr("UI_ALERT_LEADER")
+		"entity_starved", "entity_died_siler":
+			return Locale.ltr("UI_ALERT_DEATH")
+		"mental_break":
+			return Locale.ltr("UI_ALERT_CRISIS")
+		"tech_discovered":
+			return Locale.ltr("UI_ALERT_TECH")
+		"era_advanced":
+			return Locale.ltr("UI_ALERT_ERA")
+		_:
+			return event_type
 
 
 func _on_resource_popup_settlement_pressed(settlement_id: int) -> void:
@@ -1352,15 +1871,16 @@ func _on_resource_popup_settlement_pressed(settlement_id: int) -> void:
 		SimulationBus.settlement_panel_requested.emit(settlement_id)
 
 
-func _on_band_popup_band_pressed(leader_id: int) -> void:
+func _on_band_popup_band_pressed(band_id: int) -> void:
 	_close_hud_popups()
-	if leader_id >= 0:
-		SimulationBus.entity_selected.emit(leader_id)
+	if band_id >= 0:
+		SimulationBus.band_selected.emit(band_id)
 
 
 func _refresh_overlay_legend() -> void:
 	if _overlay_legend == null:
 		return
+	_layout_overlay_legend()
 	if _bottom_bar_active_overlays.is_empty():
 		_overlay_legend.text = ""
 		_overlay_legend.visible = false
@@ -1377,6 +1897,37 @@ func _refresh_overlay_legend() -> void:
 		_bottom_bar_overlay_accents.get(channel, Color(0.53, 0.60, 0.65))
 	)
 	_overlay_legend.visible = true
+
+
+func _sync_zoom_level_from_camera(force_refresh: bool = false) -> void:
+	if _camera == null or not _camera.has_method("get_zoom_level"):
+		return
+	var zoom_level: int = int(_camera.call("get_zoom_level"))
+	zoom_level = clampi(zoom_level, 0, ZOOM_LEVEL_LABELS.size() - 1)
+	if zoom_level == _bottom_bar_current_zoom_level and not force_refresh:
+		return
+	_bottom_bar_current_zoom_level = zoom_level
+	_update_overlay_buttons_for_zoom()
+	_update_bottom_bar_button_states()
+
+
+func _update_overlay_buttons_for_zoom() -> void:
+	if _bottom_bar_overlay_buttons.is_empty():
+		return
+	var allowed_channels: Array = OVERLAY_BY_ZOOM[clampi(_bottom_bar_current_zoom_level, 0, OVERLAY_BY_ZOOM.size() - 1)]
+	var allowed_lookup: Dictionary = {}
+	for channel_value: Variant in allowed_channels:
+		allowed_lookup[str(channel_value)] = true
+	var active_channel: String = _bottom_bar_active_overlays[0] if not _bottom_bar_active_overlays.is_empty() else ""
+	if not active_channel.is_empty() and not allowed_lookup.has(active_channel):
+		_bottom_bar_active_overlays.clear()
+		SimulationBus.overlay_channel_changed.emit("")
+	for channel_variant: Variant in _bottom_bar_overlay_buttons.keys():
+		var channel: String = str(channel_variant)
+		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+		if button != null:
+			button.visible = allowed_lookup.has(channel)
+	_refresh_overlay_legend()
 
 
 func _update_bottom_bar_perf(delta: float) -> void:
@@ -1416,6 +1967,10 @@ func _update_bottom_bar_perf(delta: float) -> void:
 func _connect_signals() -> void:
 	SimulationBus.entity_selected.connect(_on_entity_selected)
 	SimulationBus.entity_deselected.connect(_on_entity_deselected)
+	SimulationBus.band_selected.connect(open_band_detail)
+	SimulationBus.band_deselected.connect(_on_band_deselected)
+	SimulationBus.civilization_selected.connect(open_civ_detail)
+	SimulationBus.civilization_deselected.connect(_on_civ_deselected)
 	SimulationBus.building_selected.connect(_on_building_selected)
 	SimulationBus.building_deselected.connect(_on_building_deselected)
 	SimulationBus.speed_changed.connect(_on_speed_changed)
@@ -1920,6 +2475,7 @@ func _process(delta: float) -> void:
 	if _fps_label != null and _fps_label.visible:
 		_fps_label.text = str(Engine.get_frames_per_second())
 	_update_bottom_bar_perf(delta)
+	_sync_zoom_level_from_camera()
 
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
@@ -2026,6 +2582,7 @@ func _process(delta: float) -> void:
 		if _diplomacy_refresh_timer >= 5.0:
 			_diplomacy_refresh_timer = 0.0
 			_refresh_diplomacy_panel()
+	_update_overlay_probe()
 	_update_probe_verification_overlay()
 
 
@@ -2403,6 +2960,8 @@ func _add_notification(text: String, color: Color, category: int = NotifCategory
 
 func _on_entity_selected(entity_id: int) -> void:
 	_selected_entity_id = entity_id
+	_selected_band_id = -1
+	_selected_civ_id = -1
 	_close_hud_popups()
 	_entity_panel.visible = true
 	_building_panel.visible = false
@@ -2424,6 +2983,8 @@ func _on_entity_deselected() -> void:
 
 func _on_building_selected(building_id: int) -> void:
 	_selected_building_id = building_id
+	_selected_band_id = -1
+	_selected_civ_id = -1
 	_close_hud_popups()
 	_building_panel.visible = true
 	_entity_panel.visible = false
@@ -2438,6 +2999,20 @@ func _on_building_deselected() -> void:
 	_refresh_selection_summary()
 
 
+func _on_band_deselected() -> void:
+	_selected_band_id = -1
+	_refresh_selection_summary()
+	if _band_detail_panel != null:
+		_band_detail_panel.visible = false
+
+
+func _on_civ_deselected() -> void:
+	_selected_civ_id = -1
+	_refresh_selection_summary()
+	if _civ_detail_panel != null:
+		_civ_detail_panel.visible = false
+
+
 func _on_speed_changed(speed_index: int) -> void:
 	_speed_label.text = Locale.trf1("UI_SPEED_MULT_FMT", "n", GameConfig.SPEED_OPTIONS[speed_index])
 
@@ -2448,6 +3023,13 @@ func _on_pause_changed(paused: bool) -> void:
 
 func _on_simulation_event(event: Dictionary) -> void:
 	var event_type: String = event.get("type", "")
+	if event_type == "layer_changed":
+		var layers_raw: Variant = event.get("layers", {})
+		if layers_raw is Dictionary:
+			_active_layers = layers_raw.duplicate(true)
+			_update_layer_button_states()
+		return
+	_maybe_show_alert_card(event)
 	match event_type:
 		"game_saved":
 			_add_notification(Locale.ltr("UI_NOTIF_GAME_SAVED"), Color.WHITE)
@@ -2593,6 +3175,8 @@ func _on_locale_changed(_new_locale: String) -> void:
 
 
 func _refresh_hud_texts() -> void:
+	if _oracle_button != null:
+		_oracle_button.text = "⚡ " + Locale.ltr("UI_ORACLE_BUTTON")
 	if _entity_detail_btn != null:
 		_entity_detail_btn.text = Locale.ltr("UI_MINI_DETAIL_HINT")
 	if _building_detail_btn != null:
@@ -2644,6 +3228,12 @@ func _refresh_hud_texts() -> void:
 		_story_notification_manager.refresh_locale()
 	if _entity_detail_panel != null and _entity_detail_panel.has_method("refresh_locale"):
 		_entity_detail_panel.call("refresh_locale")
+	if _band_detail_panel != null and _band_detail_panel.has_method("refresh_locale"):
+		_band_detail_panel.call("refresh_locale")
+	if _civ_detail_panel != null and _civ_detail_panel.has_method("refresh_locale"):
+		_civ_detail_panel.call("refresh_locale")
+	if _oracle_panel != null and _oracle_panel.has_method("refresh_locale"):
+		_oracle_panel.call("refresh_locale")
 	if _following_entity_id >= 0:
 		_on_follow_entity(_following_entity_id)
 	_update_era_label()
@@ -2666,6 +3256,9 @@ func toggle_minimap() -> void:
 		_minimap_visible = true
 		_minimap_panel.visible = true
 		_minimap_panel.resize(new_size)
+		if _minimap_panel.has_method("request_update"):
+			_minimap_panel.call("request_update")
+	_layout_overlay_legend()
 
 
 ## Opens or closes the statistics detail panel via the popup manager.
@@ -2797,6 +3390,50 @@ func open_settlement_detail(settlement_id: int) -> void:
 func _on_settlement_panel_requested(settlement_id: int) -> void:
 	_close_hud_popups()
 	open_settlement_detail(settlement_id)
+
+
+func open_band_detail(band_id: int) -> void:
+	if _band_detail_panel == null or band_id < 0:
+		return
+	_selected_band_id = band_id
+	_selected_civ_id = -1
+	_selected_entity_id = -1
+	_selected_building_id = -1
+	_close_hud_popups()
+	_entity_panel.visible = false
+	_building_panel.visible = false
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(-1)
+	if _band_detail_panel.has_method("set_band_id"):
+		_band_detail_panel.call("set_band_id", band_id)
+	_hide_all_sidebar_tab_panels()
+	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
+	_band_detail_panel.visible = true
+	_set_right_panel_tab_state()
+	_open_right_sidebar()
+	_refresh_selection_summary()
+
+
+func open_civ_detail(civ_id: int) -> void:
+	if _civ_detail_panel == null or civ_id < 0:
+		return
+	_selected_civ_id = civ_id
+	_selected_band_id = -1
+	_selected_entity_id = -1
+	_selected_building_id = -1
+	_close_hud_popups()
+	_entity_panel.visible = false
+	_building_panel.visible = false
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(-1)
+	if _civ_detail_panel.has_method("set_civ_id"):
+		_civ_detail_panel.call("set_civ_id", civ_id)
+	_hide_all_sidebar_tab_panels()
+	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
+	_civ_detail_panel.visible = true
+	_set_right_panel_tab_state()
+	_open_right_sidebar()
+	_refresh_selection_summary()
 
 
 ## Opens or closes the chronicle event history panel.
@@ -3022,6 +3659,7 @@ func _toggle_entity_detail_sidebar() -> void:
 
 func _on_viewport_size_changed() -> void:
 	_layout_entity_detail_sidebar(_entity_detail_panel_open)
+	_layout_overlay_legend()
 
 
 func _update_right_panel_chronicle_attention(delta: float) -> void:
@@ -3408,6 +4046,7 @@ func apply_ui_scale() -> void:
 		var current_size: int = sizes[_minimap_size_index]
 		if current_size > 0:
 			_minimap_panel.resize(current_size)
+	_layout_overlay_legend()
 
 	# Update stats panel
 	if _stats_panel != null and _stats_panel.has_method("apply_ui_scale"):
@@ -3482,6 +4121,14 @@ func _refresh_selection_summary() -> void:
 		var detail: Dictionary = _sim_engine.get_entity_detail(_selected_entity_id)
 		var entity_name: String = str(detail.get("name", ""))
 		_bottom_bar_sel_label.text = "👤 " + entity_name if not entity_name.is_empty() else ""
+		return
+	if _selected_band_id >= 0 and _sim_engine != null:
+		var band_detail: Dictionary = _sim_engine.get_band_detail(_selected_band_id)
+		var band_name: String = str(band_detail.get("name", ""))
+		_bottom_bar_sel_label.text = "🏕 " + band_name if not band_name.is_empty() else ""
+		return
+	if _selected_civ_id >= 0:
+		_bottom_bar_sel_label.text = "🏛 " + Locale.ltr("UI_CIV_TITLE")
 		return
 	if _selected_building_id >= 0:
 		var building = _get_building_by_id(_selected_building_id)
