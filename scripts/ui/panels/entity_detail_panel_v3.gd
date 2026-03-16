@@ -1234,9 +1234,8 @@ func _format_relationship_entry(entry: Dictionary) -> String:
 		Locale.ltr("UI_TRUST"),
 		int(round(float(entry.get("trust", 0.0)) * 100.0)),
 	]
-	headline += "\n%s %s %d" % [
+	headline += "\n%s %d" % [
 		Locale.ltr("UI_FAMILIARITY"),
-		_familiarity_bar(float(entry.get("familiarity", 0.0))),
 		int(round(float(entry.get("familiarity", 0.0)) * 100.0)),
 	]
 	return headline
@@ -1278,9 +1277,8 @@ func _relationship_marker(relation_type: String) -> String:
 			return ""
 
 
-func _familiarity_bar(value: float) -> String:
-	var filled: int = clampi(int(round(clampf(value, 0.0, 1.0) * 5.0)), 0, 5)
-	return "[" + "#".repeat(filled) + "-".repeat(5 - filled) + "]"
+func _familiarity_bar(_value: float) -> String:
+	return ""
 
 
 func _make_simple_row(text: String) -> Label:

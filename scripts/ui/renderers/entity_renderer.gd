@@ -36,7 +36,6 @@ var active_layers: Dictionary = {
 var selected_entity_id: int = -1
 var probe_observation_mode: bool = false
 var _current_lod: int = 1
-var resource_overlay_visible: bool = false
 var _binary_snapshot_available: bool = false
 var _render_alpha: float = 0.0
 var _agent_sprites: Array[Sprite2D] = []
@@ -592,24 +591,6 @@ func _draw() -> void:
 			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
 			_draw_action_icon(eid, pos, size)
 
-	# Resource text markers at high zoom (LOD 2)
-	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
-		var res_font: Font = ThemeDB.fallback_font
-		var resource_map_height: int = _resource_map.get_height()
-		var resource_map_width: int = _resource_map.get_width()
-		for ty in range(maxi(0, min_tile_y), mini(resource_map_height, max_tile_y + 1)):
-			for tx in range(maxi(0, min_tile_x), mini(resource_map_width, max_tile_x + 1)):
-				var tpos := Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
-				var food: float = _resource_map.get_food(tx, ty)
-				var wood: float = _resource_map.get_wood(tx, ty)
-				var stone: float = _resource_map.get_stone(tx, ty)
-				if food > 2.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_FOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
-				elif stone > 2.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
-				elif wood > 3.0:
-					draw_string(res_font, tpos + Vector2(-3, 4), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
-
 	if selected_probe_pos != Vector2.INF:
 		_draw_probe_selected_forage_overlay(selected_probe_pos)
 
@@ -683,23 +664,6 @@ func _draw_binary_snapshots() -> void:
 			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
 			_draw_action_icon(entity_id, pos, size)
 
-	if _current_lod == 2 and resource_overlay_visible and _resource_map != null:
-		var res_font: Font = ThemeDB.fallback_font
-		var resource_map_height: int = _resource_map.get_height()
-		var resource_map_width: int = _resource_map.get_width()
-		for ty in range(maxi(0, min_tile_y), mini(resource_map_height, max_tile_y + 1)):
-			for tx in range(maxi(0, min_tile_x), mini(resource_map_width, max_tile_x + 1)):
-				var tpos: Vector2 = Vector2(tx, ty) * GameConfig.TILE_SIZE + half_tile
-				var food: float = _resource_map.get_food(tx, ty)
-				var wood: float = _resource_map.get_wood(tx, ty)
-				var stone: float = _resource_map.get_stone(tx, ty)
-				if food > 2.0:
-					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_FOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 0.85, 0.0, 0.9))
-				elif stone > 2.0:
-					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_STONE_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.4, 0.6, 1.0, 0.9))
-				elif wood > 3.0:
-					draw_string(res_font, tpos + Vector2(-3.0, 4.0), Locale.ltr("UI_RES_WOOD_SHORT"), HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(0.0, 0.8, 0.2, 0.9))
-
 	if selected_probe_pos != Vector2.INF:
 		_draw_probe_selected_forage_overlay(selected_probe_pos)
 
@@ -768,13 +732,16 @@ func _draw_probe_selected_forage_overlay(selected_pos: Vector2) -> void:
 	draw_arc(target_pos, 7.5, 0.0, TAU, 24, marker_color, 2.0)
 	if _current_lod >= 1:
 		var resource_font: Font = ThemeDB.fallback_font
+		var camera: Camera2D = get_viewport().get_camera_2d()
+		var camera_zoom: float = camera.zoom.x if camera != null else 1.0
+		var resource_icon_size: int = int(clampf(10.0 / maxf(camera_zoom, 0.2), 10.0, 36.0))
 		draw_string(
 			resource_font,
 			target_pos + Vector2(0.0, -8.0),
-			Locale.ltr("UI_RES_FOOD_SHORT"),
+			"🫐",
 			HORIZONTAL_ALIGNMENT_CENTER,
 			-1,
-			9,
+			resource_icon_size,
 			marker_color
 		)
 
@@ -1260,20 +1227,20 @@ func _draw_resource_nodes(
 	var resource_map_width: int = _resource_map.get_width()
 	var max_y: int = mini(resource_map_height - 1, max_tile_y)
 	var max_x: int = mini(resource_map_width - 1, max_tile_x)
-	for ty in range(maxi(0, min_tile_y), max_y + 1, 3):
-		for tx in range(maxi(0, min_tile_x), max_x + 1, 3):
+	for ty in range(maxi(0, min_tile_y), max_y + 1, 5):
+		for tx in range(maxi(0, min_tile_x), max_x + 1, 5):
 			var food: float = _resource_map.get_food(tx, ty)
 			var wood: float = _resource_map.get_wood(tx, ty)
 			var stone: float = _resource_map.get_stone(tx, ty)
 			var icon: String = ""
 			var tint: Color = Color(1.0, 1.0, 1.0, 0.92)
-			if food >= wood and food >= stone and food > 2.0:
+			if food >= wood and food >= stone and food > 5.0:
 				icon = "🫐"
 				tint = Color(0.92, 0.82, 0.46, 0.95)
-			elif wood >= stone and wood > 3.0:
+			elif wood >= stone and wood > 6.0:
 				icon = "🌳"
 				tint = Color(0.48, 0.84, 0.40, 0.95)
-			elif stone > 2.0:
+			elif stone > 4.0:
 				icon = "🪨"
 				tint = Color(0.72, 0.80, 0.92, 0.95)
 			if icon.is_empty():
@@ -1305,7 +1272,21 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 		)
 		var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
 		if zoom_level < 0.4:
-			draw_circle(center, 4.0, Color(0.88, 0.72, 0.52, 0.85))
+			var dot_radius: float = clampf(8.0 / maxf(zoom_level, 0.18), 8.0, 40.0)
+			draw_circle(center, dot_radius, Color(0.88, 0.72, 0.52, 0.85))
+			if zoom_level >= 0.25:
+				var settlement_name_far: String = str(settlement.get("name", ""))
+				if not settlement_name_far.is_empty():
+					var label_font_size_far: int = int(clampf(9.0 / maxf(zoom_level, 0.18), 10.0, 40.0))
+					draw_string(
+						font,
+						center + Vector2(0.0, -dot_radius - 6.0),
+						settlement_name_far,
+						HORIZONTAL_ALIGNMENT_CENTER,
+						100.0,
+						label_font_size_far,
+						Color(0.88, 0.82, 0.66, 0.95)
+					)
 			continue
 		var radius: float = tile_size * (3.5 + sqrt(float(maxi(population, 1))) * 1.4)
 		var color: Color = Color(0.82, 0.46, 0.34, 0.20)
@@ -1327,7 +1308,7 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 
 
 func _draw_band_territories(zoom_level: float) -> void:
-	if zoom_level < 0.4 or zoom_level > 2.0:
+	if zoom_level < 0.2 or zoom_level > 2.0:
 		return
 	var bands: Array = _get_runtime_band_list()
 	if bands.is_empty():
@@ -1359,13 +1340,14 @@ func _draw_band_territories(zoom_level: float) -> void:
 			var next_index: int = (point_index + 1) % points.size()
 			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.22), 1.0, true)
 		if not band_name.is_empty():
+			var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
 			draw_string(
 				font,
 				center + Vector2(0.0, -base_radius - 6.0),
 				"%s · %d" % [band_name, member_count],
 				HORIZONTAL_ALIGNMENT_CENTER,
 				110.0,
-				8,
+				label_font_size,
 				Color(0.86, 0.66, 0.28, 0.95)
 			)
 

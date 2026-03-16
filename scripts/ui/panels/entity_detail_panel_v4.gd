@@ -167,9 +167,10 @@ func _build_ui() -> void:
 		tab_label.meta_clicked.connect(_on_tab_meta_clicked)
 
 	var tab_bar: TabBar = _expand_tabs.get_tab_bar()
-	tab_bar.clip_tabs = false
+	_expand_tabs.clip_tabs = true
+	tab_bar.clip_tabs = true
 	tab_bar.tab_alignment = TabBar.ALIGNMENT_LEFT
-	tab_bar.add_theme_font_size_override("font_size", max(8, GameConfig.get_font_size("panel_small") - 1))
+	tab_bar.add_theme_font_size_override("font_size", 7)
 	tab_bar.add_theme_stylebox_override("tab_selected", _make_tab_style(Color(0.10, 0.14, 0.20, 1.0), Color(0.80, 0.56, 0.18), 2))
 	tab_bar.add_theme_stylebox_override("tab_unselected", _make_tab_style(Color(0.06, 0.08, 0.12, 1.0)))
 	tab_bar.add_theme_stylebox_override("tab_hovered", _make_tab_style(Color(0.08, 0.11, 0.16, 1.0)))
@@ -352,7 +353,7 @@ func _format_personality_tab_text() -> String:
 		for value_entry: Dictionary in values_ranked:
 			lines.append(
 				"%s %s" % [
-					Locale.ltr(str(value_entry.get("key", "UI_UNKNOWN"))),
+					_fixed_label(Locale.ltr(str(value_entry.get("key", "UI_UNKNOWN"))), 8),
 					_bbcode_bar_inline(float(value_entry.get("value", 0.0)), Color(0.66, 0.60, 0.28)),
 				]
 			)
@@ -371,13 +372,11 @@ func _format_health_tab_text() -> String:
 	)
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_GROUPS"))
-	lines.append("[center]%s[/center]" % _health_silhouette_bbcode())
-	lines.append("")
 	for group_entry: Dictionary in _merged_health_groups():
 		var hp_value: float = clampf(float(group_entry.get("value", 0.0)), 0.0, 1.0)
 		lines.append(
 			"%s %s" % [
-				Locale.ltr(str(group_entry.get("label", "UI_UNKNOWN"))),
+				_fixed_label(Locale.ltr(str(group_entry.get("label", "UI_UNKNOWN"))), 8),
 				_bbcode_bar_inline(hp_value, _need_color(hp_value)),
 			]
 		)
@@ -398,7 +397,7 @@ func _format_health_tab_text() -> String:
 			var part_hp: float = clampf(float(part.get("hp", 0)) / 100.0, 0.0, 1.0)
 			var part_line: String = "%s%s %s" % [
 				"⚠ " if bool(part.get("vital", false)) else "",
-				_localized_body_part_name(str(part.get("name", ""))),
+				_fixed_label(_localized_body_part_name(str(part.get("name", ""))), 8),
 				_bbcode_bar_inline(part_hp, _need_color(part_hp)),
 			]
 			lines.append(part_line)
@@ -430,7 +429,7 @@ func _format_knowledge_tab_text() -> String:
 				"KNOWLEDGE_SRC_SCHOOL",
 			]
 			lines.append("[color=#6888a8]%s[/color] %s" % [
-				display_name,
+				_fixed_label(display_name, 10),
 				_bbcode_bar_inline(proficiency, Color(0.45, 0.62, 0.84)),
 			])
 			lines.append("  [color=#506878]%s[/color] %s" % [
@@ -499,7 +498,7 @@ func _format_inventory_tab_text() -> String:
 				lines.append(" ".join(row_tokens))
 				row_tokens.clear()
 			detail_lines.append("  [color=#506878]%s[/color] %s" % [
-				display_name,
+				_fixed_label(display_name, 10),
 				_bbcode_bar_inline(clampf(float(item.get("quality", 0.5)), 0.0, 1.0), Color(0.58, 0.68, 0.32)),
 			])
 		if not row_tokens.is_empty():
@@ -625,9 +624,8 @@ func _format_relationship_entry(entry: Dictionary) -> String:
 		Locale.ltr("UI_TRUST"),
 		int(round(float(entry.get("trust", 0.0)) * 100.0)),
 	]
-	headline += "\n%s %s %d" % [
+	headline += "\n%s %d" % [
 		Locale.ltr("UI_FAMILIARITY"),
-		_familiarity_bar(float(entry.get("familiarity", 0.0))),
 		int(round(float(entry.get("familiarity", 0.0)) * 100.0)),
 	]
 	return headline
@@ -654,10 +652,10 @@ func _make_tab_panel_style() -> StyleBoxFlat:
 func _make_tab_style(bg_color: Color, border_color: Color = Color.TRANSPARENT, border_bottom: int = 0) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = bg_color
-	style.content_margin_left = 6
-	style.content_margin_right = 6
-	style.content_margin_top = 4
-	style.content_margin_bottom = 4
+	style.content_margin_left = 3
+	style.content_margin_right = 3
+	style.content_margin_top = 3
+	style.content_margin_bottom = 3
 	style.border_color = border_color
 	style.border_width_bottom = border_bottom
 	return style
@@ -677,6 +675,7 @@ func _draw_portrait() -> void:
 		return
 	var rect := Rect2(Vector2.ZERO, PORTRAIT_SIZE)
 	var emotion: String = str(_detail.get("dominant_emotion", ""))
+	var emotion_category: String = _emotion_category(emotion)
 	var stress: float = _normalized_stress()
 	var sex: String = str(_detail.get("sex", "male")).to_lower()
 	var age: float = float(_detail.get("age_years", 20.0))
@@ -689,10 +688,10 @@ func _draw_portrait() -> void:
 	_portrait.draw_circle(Vector2(24.0, 14.0), 13.0, hair)
 	_portrait.draw_circle(Vector2(24.0, 22.0), 11.0, skin)
 
-	if emotion.contains("joy"):
+	if emotion_category == "joy" or emotion_category == "positive":
 		_portrait.draw_arc(Vector2(19.0, 20.0), 2.0, 0.0, PI, 6, Color(0.22, 0.16, 0.09), 1.5)
 		_portrait.draw_arc(Vector2(29.0, 20.0), 2.0, 0.0, PI, 6, Color(0.22, 0.16, 0.09), 1.5)
-	elif emotion.contains("fear") or emotion.contains("sad"):
+	elif emotion_category == "fear" or emotion_category == "sad":
 		_portrait.draw_circle(Vector2(19.0, 20.0), 2.5, Color.WHITE)
 		_portrait.draw_circle(Vector2(19.0, 20.0), 1.3, Color(0.22, 0.16, 0.09))
 		_portrait.draw_circle(Vector2(29.0, 20.0), 2.5, Color.WHITE)
@@ -701,9 +700,9 @@ func _draw_portrait() -> void:
 		_portrait.draw_circle(Vector2(19.0, 20.0), 1.8, Color(0.22, 0.16, 0.09))
 		_portrait.draw_circle(Vector2(29.0, 20.0), 1.8, Color(0.22, 0.16, 0.09))
 
-	if emotion.contains("joy"):
+	if emotion_category == "joy" or emotion_category == "positive":
 		_portrait.draw_arc(Vector2(24.0, 27.0), 4.0, 0.0, PI, 8, Color(0.50, 0.31, 0.25), 1.2)
-	elif emotion.contains("anger"):
+	elif emotion_category == "anger":
 		_portrait.draw_line(Vector2(20.0, 28.0), Vector2(28.0, 28.0), Color(0.50, 0.31, 0.25), 1.2)
 	else:
 		_portrait.draw_line(Vector2(21.0, 28.0), Vector2(27.0, 28.0), Color(0.50, 0.31, 0.25), 1.0)
@@ -715,33 +714,39 @@ func _draw_portrait() -> void:
 
 
 func _emotion_to_color(emotion: String) -> Color:
-	if emotion.contains("joy") or emotion.contains("trust"):
-		return Color(0.28, 0.66, 0.16)
-	if emotion.contains("fear") or emotion.contains("surprise"):
-		return Color(0.78, 0.55, 0.10)
-	if emotion.contains("anger") or emotion.contains("disgust"):
-		return Color(0.78, 0.22, 0.22)
-	if emotion.contains("sad"):
-		return Color(0.34, 0.41, 0.66)
-	return Color(0.38, 0.44, 0.50)
+	match _emotion_category(emotion):
+		"joy", "positive":
+			return Color(0.28, 0.66, 0.16)
+		"fear":
+			return Color(0.78, 0.55, 0.10)
+		"anger":
+			return Color(0.78, 0.22, 0.22)
+		"sad":
+			return Color(0.34, 0.41, 0.66)
+		_:
+			return Color(0.38, 0.44, 0.50)
+
+
+func _emotion_category(emotion: String) -> String:
+	var emotion_key: String = emotion.strip_edges().to_lower()
+	if emotion_key.contains("joy") or emotion_key.contains("기쁨") or emotion_key.contains("trust") or emotion_key.contains("신뢰"):
+		return "joy"
+	if emotion_key.contains("fear") or emotion_key.contains("공포") or emotion_key.contains("surprise") or emotion_key.contains("놀람"):
+		return "fear"
+	if emotion_key.contains("anger") or emotion_key.contains("분노") or emotion_key.contains("disgust") or emotion_key.contains("혐오"):
+		return "anger"
+	if emotion_key.contains("sad") or emotion_key.contains("슬픔"):
+		return "sad"
+	if emotion_key.contains("positive") or emotion_key.contains("행복"):
+		return "positive"
+	return "neutral"
 
 
 func _bbcode_bar(label: String, value: float, color: Color) -> String:
 	var clamped: float = clampf(value, 0.0, 1.0)
-	var filled: int = clampi(int(round(clamped * 20.0)), 0, 20)
-	return "%s [color=%s]%s[/color][color=#182430]%s[/color] %d%%" % [
-		label,
-		_color_hex(color),
-		"█".repeat(filled),
-		"░".repeat(20 - filled),
-		int(round(clamped * 100.0)),
-	]
-
-
-func _bbcode_bar_inline(value: float, color: Color) -> String:
-	var clamped: float = clampf(value, 0.0, 1.0)
 	var filled: int = clampi(int(round(clamped * 10.0)), 0, 10)
-	return "[color=%s]%s[/color][color=#182430]%s[/color] %d%%" % [
+	return "%s [color=%s]%s[/color][color=#182430]%s[/color] [color=#8898a8]%d%%[/color]" % [
+		_fixed_label(label, 8),
 		_color_hex(color),
 		"█".repeat(filled),
 		"░".repeat(10 - filled),
@@ -749,8 +754,28 @@ func _bbcode_bar_inline(value: float, color: Color) -> String:
 	]
 
 
+func _bbcode_bar_inline(value: float, color: Color) -> String:
+	var clamped: float = clampf(value, 0.0, 1.0)
+	var filled: int = clampi(int(round(clamped * 8.0)), 0, 8)
+	return "[color=%s]%s[/color][color=#182430]%s[/color] %d%%" % [
+		_color_hex(color),
+		"█".repeat(filled),
+		"░".repeat(8 - filled),
+		int(round(clamped * 100.0)),
+	]
+
+
 func _color_hex(color: Color) -> String:
 	return "#" + color.to_html(false)
+
+
+func _fixed_label(label: String, width: int) -> String:
+	var padded: String = label.strip_edges()
+	if padded.length() > width:
+		padded = padded.substr(0, width)
+	while padded.length() < width:
+		padded += " "
+	return "[code]%s[/code]" % padded
 
 
 func _card_line(color_hex: String, title: String, detail: String) -> String:
@@ -823,33 +848,6 @@ func _merged_health_groups() -> Array[Dictionary]:
 		{"label": "BODY_GROUP_LEG_L", "value": values[6]},
 		{"label": "BODY_GROUP_LEG_R", "value": values[7]},
 	]
-
-
-func _health_silhouette_bbcode() -> String:
-	var groups: Array[Dictionary] = _merged_health_groups()
-	if groups.size() < 8:
-		return ""
-	var head: String = _silhouette_block(float(groups[0].get("value", 1.0)))
-	var neck: String = _silhouette_block(float(groups[1].get("value", 1.0)))
-	var chest: String = _silhouette_block(float(groups[2].get("value", 1.0)))
-	var abdomen: String = _silhouette_block(float(groups[3].get("value", 1.0)))
-	var arm_l: String = _silhouette_block(float(groups[4].get("value", 1.0)))
-	var arm_r: String = _silhouette_block(float(groups[5].get("value", 1.0)))
-	var leg_l: String = _silhouette_block(float(groups[6].get("value", 1.0)))
-	var leg_r: String = _silhouette_block(float(groups[7].get("value", 1.0)))
-	return "\n".join([
-		"    %s" % head,
-		"    %s" % neck,
-		"  %s%s%s" % [arm_l, chest, arm_r],
-		"  %s%s%s" % [arm_l, abdomen, arm_r],
-		"    %s %s" % [leg_l, leg_r],
-		"    %s %s" % [leg_l, leg_r],
-	])
-
-
-func _silhouette_block(value: float) -> String:
-	var color := _need_color(value)
-	return "[color=%s]█[/color]" % _color_hex(color)
 
 
 func _knowledge_channels() -> Array[Dictionary]:

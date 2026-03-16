@@ -2963,7 +2963,7 @@ func _on_entity_selected(entity_id: int) -> void:
 	_selected_band_id = -1
 	_selected_civ_id = -1
 	_close_hud_popups()
-	_entity_panel.visible = true
+	_entity_panel.visible = false
 	_building_panel.visible = false
 	_selected_building_id = -1
 	_refresh_selection_summary()

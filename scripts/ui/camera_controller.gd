@@ -73,6 +73,7 @@ func _ready() -> void:
 	position = center_px
 	zoom = ZOOM_WIDE
 	_target_zoom = ZOOM_WIDE.x
+	_update_camera_limits()
 	make_current()
 	_build_flash_overlay()
 	_transition_to(CameraState.IDLE_WIDE)
@@ -159,6 +160,7 @@ func set_target_zoom(value: float) -> void:
 	_note_camera_move("manual_input")
 	_target_zoom = clampf(value, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
 	zoom = zoom.lerp(Vector2(_target_zoom, _target_zoom), GameConfig.CAMERA_ZOOM_SPEED)
+	position = _clamp_to_world_position(position)
 
 
 func get_zoom_level() -> int:
@@ -652,10 +654,38 @@ func _world_center_px() -> Vector2:
 
 func _clamp_to_world_position(target_px: Vector2) -> Vector2:
 	var world_px: Vector2 = Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE
+	var half_view: Vector2 = _viewport_world_half_extents()
+	var min_x: float = half_view.x
+	var min_y: float = half_view.y
+	var max_x: float = world_px.x - half_view.x
+	var max_y: float = world_px.y - half_view.y
+	if min_x > max_x:
+		min_x = world_px.x * 0.5
+		max_x = min_x
+	if min_y > max_y:
+		min_y = world_px.y * 0.5
+		max_y = min_y
 	return Vector2(
-		clampf(target_px.x, 0.0, world_px.x),
-		clampf(target_px.y, 0.0, world_px.y)
+		clampf(target_px.x, min_x, max_x),
+		clampf(target_px.y, min_y, max_y)
 	)
+
+
+func _viewport_world_half_extents() -> Vector2:
+	var viewport: Viewport = get_viewport()
+	if viewport == null:
+		return Vector2.ZERO
+	var visible_rect: Rect2 = viewport.get_visible_rect()
+	var current_zoom: float = maxf(zoom.x, GameConfig.CAMERA_ZOOM_MIN)
+	return visible_rect.size / current_zoom * 0.5
+
+
+func _update_camera_limits() -> void:
+	var world_px: Vector2 = Vector2(GameConfig.WORLD_SIZE) * GameConfig.TILE_SIZE
+	limit_left = 0
+	limit_top = 0
+	limit_right = int(world_px.x)
+	limit_bottom = int(world_px.y)
 
 
 func _build_flash_overlay() -> void:
