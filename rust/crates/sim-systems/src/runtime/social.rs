@@ -5,7 +5,7 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
+    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, FamilyComponent, Identity, Intelligence,
     Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
 };
 use sim_core::config;
@@ -1260,6 +1260,16 @@ impl SimSystem for FamilyRuntimeSystem {
                 if let Ok(mut query) = world.query_one::<&mut Social>(female_entity) {
                     if let Some(social) = query.get() {
                         social.spouse = Some(male_id);
+                    }
+                }
+                if let Ok(mut query) = world.query_one::<&mut FamilyComponent>(male_entity) {
+                    if let Some(family) = query.get() {
+                        family.spouse = Some(female_id);
+                    }
+                }
+                if let Ok(mut query) = world.query_one::<&mut FamilyComponent>(female_entity) {
+                    if let Some(family) = query.get() {
+                        family.spouse = Some(male_id);
                     }
                 }
 

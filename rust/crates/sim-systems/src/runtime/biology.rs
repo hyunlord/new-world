@@ -226,6 +226,58 @@ impl SimSystem for PopulationRuntimeSystem {
                 (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
         }
 
+        let mut adults_by_id: HashMap<EntityId, (Entity, Sex, Option<EntityId>)> = HashMap::new();
+        {
+            let mut query = world.query::<(&Age, &Identity, &Social)>();
+            for (entity, (age, identity, social)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if identity.settlement_id != Some(settlement_id) {
+                    continue;
+                }
+                adults_by_id.insert(
+                    EntityId(entity.id() as u64),
+                    (entity, identity.sex, social.spouse),
+                );
+            }
+        }
+        let mut parent_a = None;
+        let mut parent_b = None;
+        let mut adult_ids: Vec<EntityId> = adults_by_id.keys().copied().collect();
+        adult_ids.sort_unstable_by_key(|entity_id| entity_id.0);
+        for adult_id in adult_ids {
+            let Some((adult_entity, adult_sex, spouse_raw)) = adults_by_id.get(&adult_id).copied()
+            else {
+                continue;
+            };
+            let Some(spouse_id) = spouse_raw else {
+                continue;
+            };
+            let Some((spouse_entity, spouse_sex, spouse_spouse)) =
+                adults_by_id.get(&spouse_id).copied()
+            else {
+                continue;
+            };
+            if spouse_spouse != Some(adult_id) || adult_sex == spouse_sex {
+                continue;
+            }
+            match adult_sex {
+                Sex::Male => {
+                    parent_a = Some(adult_entity);
+                    parent_b = Some(spouse_entity);
+                }
+                Sex::Female => {
+                    parent_a = Some(spouse_entity);
+                    parent_b = Some(adult_entity);
+                }
+            }
+            break;
+        }
+
         let newborn_sex = if resources.rng.gen_bool(0.5) {
             Sex::Male
         } else {
@@ -239,8 +291,8 @@ impl SimSystem for PopulationRuntimeSystem {
                 position: (selected_x, selected_y),
                 initial_age_ticks: 0,
                 sex: Some(newborn_sex),
-                parent_a: None,
-                parent_b: None,
+                parent_a,
+                parent_b,
             },
         );
         let entity_id = EntityId(entity.id() as u64);

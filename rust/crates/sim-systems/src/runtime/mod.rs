@@ -116,11 +116,12 @@ mod tests {
         ValueRuntimeSystem, STAT_THRESHOLD_FLAG_HUNGER_LOW,
     };
     use crate::body;
-    use hecs::World;
+    use hecs::{Entity, World};
     use sim_core::components::{
-        Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
-        Intelligence, Inventory, Memory, MemoryEntry, Needs, Personality, Position, SkillEntry,
-        Skills, Social, Stress, StressTrace, Traits, TraumaScar, Values,
+        Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion,
+        FamilyComponent, Identity, Intelligence, Inventory, Memory, MemoryEntry, Needs,
+        Personality, Position, SkillEntry, Skills, Social, Stress, StressTrace, Traits,
+        TraumaScar, Values,
     };
     use sim_core::ids::EntityId;
     use sim_core::world::TileResource;
@@ -2722,7 +2723,10 @@ mod tests {
         );
 
         let mut member_ids: Vec<EntityId> = Vec::new();
-        for _ in 0..8 {
+        let mut paired_male: Option<(Entity, EntityId)> = None;
+        let mut paired_female: Option<(Entity, EntityId)> = None;
+        for idx in 0..8 {
+            let sex = if idx % 2 == 0 { Sex::Male } else { Sex::Female };
             let entity = world.spawn((
                 Age {
                     alive: true,
@@ -2732,6 +2736,7 @@ mod tests {
                 },
                 Identity {
                     settlement_id: Some(settlement_id),
+                    sex,
                     growth_stage: GrowthStage::Adult,
                     ..Identity::default()
                 },
@@ -2739,9 +2744,27 @@ mod tests {
                 Needs::default(),
                 Emotion::default(),
                 Stress::default(),
+                Social::default(),
+                FamilyComponent::default(),
             ));
-            member_ids.push(EntityId(entity.id() as u64));
+            let entity_id = EntityId(entity.id() as u64);
+            if paired_male.is_none() && sex == Sex::Male {
+                paired_male = Some((entity, entity_id));
+            } else if paired_female.is_none() && sex == Sex::Female {
+                paired_female = Some((entity, entity_id));
+            }
+            member_ids.push(entity_id);
         }
+        let (father_entity, father_id) = paired_male.expect("paired male should exist");
+        let (mother_entity, mother_id) = paired_female.expect("paired female should exist");
+        world
+            .get::<&mut Social>(father_entity)
+            .expect("father social should be queryable")
+            .spouse = Some(mother_id);
+        world
+            .get::<&mut Social>(mother_entity)
+            .expect("mother social should be queryable")
+            .spouse = Some(father_id);
         resources
             .settlements
             .get_mut(&settlement_id)
@@ -2769,13 +2792,20 @@ mod tests {
         assert_eq!(settlement_after.members.len(), 9);
 
         let mut infant_count: usize = 0;
-        let mut query = world.query::<(&Age, &Identity)>();
-        for (_, (age, identity)) in &mut query {
+        let mut newborn_family: Option<FamilyComponent> = None;
+        let mut query = world.query::<(&Age, &Identity, &FamilyComponent)>();
+        for (_, (age, identity, family)) in &mut query {
             if age.stage == GrowthStage::Infant && identity.settlement_id == Some(settlement_id) {
                 infant_count += 1;
+                newborn_family = Some(family.clone());
             }
         }
         assert_eq!(infant_count, 1);
+        let newborn_family = newborn_family.expect("newborn family should be captured");
+        assert_eq!(newborn_family.father, Some(father_id));
+        assert_eq!(newborn_family.mother, Some(mother_id));
+        assert_eq!(resources.children_index.child_count(father_id), 1);
+        assert_eq!(resources.children_index.child_count(mother_id), 1);
         assert!(resources.event_bus.pending_count() >= 1);
     }
 
@@ -3510,6 +3540,7 @@ mod tests {
                 ..Identity::default()
             },
             Social::default(),
+            FamilyComponent::default(),
         ));
         let female = world.spawn((
             Age {
@@ -3522,6 +3553,7 @@ mod tests {
                 ..Identity::default()
             },
             Social::default(),
+            FamilyComponent::default(),
         ));
         resources
             .settlements
@@ -3547,8 +3579,16 @@ mod tests {
         let female_social = world
             .get::<&Social>(female)
             .expect("female social should be queryable");
+        let male_family = world
+            .get::<&FamilyComponent>(male)
+            .expect("male family should be queryable");
+        let female_family = world
+            .get::<&FamilyComponent>(female)
+            .expect("female family should be queryable");
         assert_eq!(male_social.spouse, Some(EntityId(female.id() as u64)));
         assert_eq!(female_social.spouse, Some(EntityId(male.id() as u64)));
+        assert_eq!(male_family.spouse, Some(EntityId(female.id() as u64)));
+        assert_eq!(female_family.spouse, Some(EntityId(male.id() as u64)));
         assert!(resources.event_bus.pending_count() >= 1);
     }
 
