@@ -393,6 +393,16 @@ func get_world_summary() -> Dictionary:
 	return {}
 
 
+func get_band_list() -> Array:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_band_list"):
+		return []
+	var raw: Variant = sim_bridge.call("runtime_get_band_list")
+	if raw is Array:
+		return raw
+	return []
+
+
 func get_influence_texture(channel: String) -> PackedByteArray:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_texture"):
