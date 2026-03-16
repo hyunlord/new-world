@@ -20,6 +20,10 @@ const ENTITY_DETAIL_SIDEBAR_MAX_WIDTH: float = 380.0
 const ENTITY_DETAIL_SIDEBAR_SLIDE_DURATION: float = 0.25
 const RIGHT_PANEL_TAB_INSPECTOR: int = 0
 const RIGHT_PANEL_TAB_CHRONICLE: int = 1
+const RIGHT_PANEL_TAB_FACTIONS: int = 2
+const RIGHT_PANEL_TAB_STATS: int = 3
+const RIGHT_PANEL_TAB_HISTORY: int = 4
+const RIGHT_PANEL_TAB_DIPLOMACY: int = 5
 const RIGHT_PANEL_CHRONICLE_FLASH_DURATION: float = 2.0
 const RIGHT_PANEL_CHRONICLE_POLL_INTERVAL: float = 1.0
 const BOTTOM_BAR_HEIGHT: float = 40.0
@@ -56,6 +60,8 @@ var _overlay_legend: Label
 var _bottom_bar_sel_label: Label
 var _resource_popup: PanelContainer
 var _band_popup: PanelContainer
+var _pause_overlay: Control = null
+var _pause_overlay_was_running: bool = false
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -131,10 +137,18 @@ var _entity_detail_panel_tween: Tween
 var _entity_detail_panel_open: bool = false
 var _tab_inspector_btn: Button
 var _tab_chronicle_btn: Button
+var _tab_factions_btn: Button
+var _tab_stats_btn: Button
+var _tab_history_btn: Button
+var _tab_diplomacy_btn: Button
 var _current_right_panel_tab: int = RIGHT_PANEL_TAB_INSPECTOR
 var _chronicle_tab_flash_timer: float = 0.0
 var _chronicle_poll_timer: float = 0.0
 var _last_chronicle_snapshot_revision: int = -1
+var _factions_panel: Control
+var _sidebar_stats_panel: Control
+var _history_panel: Control
+var _diplomacy_panel: Control
 var _bottom_bar: PanelContainer
 var _bottom_bar_tps_label: Label
 var _bottom_bar_fps_label: Label
@@ -200,6 +214,10 @@ var _stone_trend: String = ""
 var _resource_trends_initialized: bool = false
 const ALERT_REFRESH_INTERVAL: float = 2.0
 const RESOURCE_TREND_INTERVAL: float = 3.0
+var _factions_refresh_timer: float = 0.0
+var _stats_refresh_timer: float = 0.0
+var _history_refresh_timer: float = 0.0
+var _diplomacy_refresh_timer: float = 0.0
 
 
 ## Stores all manager and engine references required for HUD display and interaction.
@@ -227,6 +245,7 @@ func _ready() -> void:
 	_build_key_hints()
 	_build_bottom_bar()
 	_build_overlay_legend()
+	_build_pause_overlay()
 	var on_locale_changed := Callable(self, "_on_locale_changed")
 	if not Locale.locale_changed.is_connected(on_locale_changed):
 		Locale.locale_changed.connect(on_locale_changed)
@@ -358,6 +377,30 @@ func _build_right_sidebar() -> void:
 	)
 	_right_panel_tab_bar.add_child(_tab_chronicle_btn)
 
+	_tab_factions_btn = _make_right_panel_tab_button("UI_TAB_FACTIONS")
+	_tab_factions_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_FACTIONS)
+	)
+	_right_panel_tab_bar.add_child(_tab_factions_btn)
+
+	_tab_stats_btn = _make_right_panel_tab_button("UI_TAB_STATS")
+	_tab_stats_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_STATS)
+	)
+	_right_panel_tab_bar.add_child(_tab_stats_btn)
+
+	_tab_history_btn = _make_right_panel_tab_button("UI_TAB_HISTORY")
+	_tab_history_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_HISTORY)
+	)
+	_right_panel_tab_bar.add_child(_tab_history_btn)
+
+	_tab_diplomacy_btn = _make_right_panel_tab_button("UI_TAB_DIPLOMACY")
+	_tab_diplomacy_btn.pressed.connect(func() -> void:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_DIPLOMACY)
+	)
+	_right_panel_tab_bar.add_child(_tab_diplomacy_btn)
+
 	_right_panel_tab_content = Control.new()
 	_right_panel_tab_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_right_panel_tab_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -383,6 +426,26 @@ func _build_right_sidebar() -> void:
 		_chronicle_panel.visible = false
 		_right_panel_tab_content.add_child(_chronicle_panel)
 
+	_factions_panel = _build_factions_panel()
+	_factions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_factions_panel.visible = false
+	_right_panel_tab_content.add_child(_factions_panel)
+
+	_sidebar_stats_panel = _build_sidebar_stats_panel()
+	_sidebar_stats_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_sidebar_stats_panel.visible = false
+	_right_panel_tab_content.add_child(_sidebar_stats_panel)
+
+	_history_panel = _build_history_panel()
+	_history_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_history_panel.visible = false
+	_right_panel_tab_content.add_child(_history_panel)
+
+	_diplomacy_panel = _build_diplomacy_panel()
+	_diplomacy_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_diplomacy_panel.visible = false
+	_right_panel_tab_content.add_child(_diplomacy_panel)
+
 	_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
 	_layout_entity_detail_sidebar(false)
 
@@ -395,7 +458,7 @@ func _make_right_panel_tab_button(locale_key: String) -> Button:
 	button.custom_minimum_size.y = 38.0
 	button.focus_mode = Control.FOCUS_NONE
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	button.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_body"))
+	button.add_theme_font_size_override("font_size", 9)
 	return button
 
 
@@ -441,8 +504,24 @@ func _switch_right_panel_tab(index: int) -> void:
 		_entity_detail_panel.visible = (index == RIGHT_PANEL_TAB_INSPECTOR)
 	if _chronicle_panel != null:
 		_chronicle_panel.visible = (index == RIGHT_PANEL_TAB_CHRONICLE)
+	if _factions_panel != null:
+		_factions_panel.visible = (index == RIGHT_PANEL_TAB_FACTIONS)
+	if _sidebar_stats_panel != null:
+		_sidebar_stats_panel.visible = (index == RIGHT_PANEL_TAB_STATS)
+	if _history_panel != null:
+		_history_panel.visible = (index == RIGHT_PANEL_TAB_HISTORY)
+	if _diplomacy_panel != null:
+		_diplomacy_panel.visible = (index == RIGHT_PANEL_TAB_DIPLOMACY)
 	if index == RIGHT_PANEL_TAB_CHRONICLE:
 		_chronicle_tab_flash_timer = 0.0
+	elif index == RIGHT_PANEL_TAB_FACTIONS:
+		_refresh_factions_panel()
+	elif index == RIGHT_PANEL_TAB_STATS:
+		_refresh_sidebar_stats()
+	elif index == RIGHT_PANEL_TAB_HISTORY:
+		_refresh_history_panel()
+	elif index == RIGHT_PANEL_TAB_DIPLOMACY:
+		_refresh_diplomacy_panel()
 	_set_right_panel_tab_state()
 
 
@@ -456,6 +535,279 @@ func _set_right_panel_tab_state() -> void:
 		_current_right_panel_tab == RIGHT_PANEL_TAB_CHRONICLE,
 		_chronicle_tab_flash_timer > 0.0 and _current_right_panel_tab != RIGHT_PANEL_TAB_CHRONICLE
 	)
+	_apply_right_panel_tab_style(
+		_tab_factions_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_FACTIONS
+	)
+	_apply_right_panel_tab_style(
+		_tab_stats_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_STATS
+	)
+	_apply_right_panel_tab_style(
+		_tab_history_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_HISTORY
+	)
+	_apply_right_panel_tab_style(
+		_tab_diplomacy_btn,
+		_current_right_panel_tab == RIGHT_PANEL_TAB_DIPLOMACY
+	)
+
+
+func _build_sidebar_text_panel(content_name: String, meta_handler: Callable = Callable()) -> Control:
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.07, 0.10, 0.95)
+	style.content_margin_left = 10
+	style.content_margin_right = 10
+	style.content_margin_top = 10
+	style.content_margin_bottom = 10
+	panel.add_theme_stylebox_override("panel", style)
+
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+
+	var content := RichTextLabel.new()
+	content.name = content_name
+	content.bbcode_enabled = true
+	content.fit_content = true
+	content.scroll_active = false
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_font_size_override("normal_font_size", 10)
+	content.add_theme_color_override("default_color", Color(0.66, 0.73, 0.78))
+	if meta_handler.is_valid():
+		content.meta_clicked.connect(meta_handler)
+
+	scroll.add_child(content)
+	panel.add_child(scroll)
+	return panel
+
+
+func _build_factions_panel() -> Control:
+	return _build_sidebar_text_panel("FactionContent", _on_sidebar_meta_clicked)
+
+
+func _build_sidebar_stats_panel() -> Control:
+	return _build_sidebar_text_panel("StatsContent")
+
+
+func _build_history_panel() -> Control:
+	return _build_sidebar_text_panel("HistoryContent", _on_sidebar_meta_clicked)
+
+
+func _build_diplomacy_panel() -> Control:
+	return _build_sidebar_text_panel("DiplomacyContent")
+
+
+func _on_sidebar_meta_clicked(meta: Variant) -> void:
+	var target: String = str(meta)
+	if target.begins_with("entity:"):
+		var entity_id: int = int(target.substr(7))
+		if entity_id >= 0:
+			SimulationBus.entity_selected.emit(entity_id)
+	elif target.begins_with("sett:"):
+		var settlement_id: int = int(target.substr(5))
+		if settlement_id >= 0:
+			SimulationBus.settlement_panel_requested.emit(settlement_id)
+
+
+func _refresh_factions_panel() -> void:
+	if _factions_panel == null:
+		return
+	var content_node: Node = _factions_panel.find_child("FactionContent", true, false)
+	if not (content_node is RichTextLabel):
+		return
+	var content: RichTextLabel = content_node
+	content.clear()
+
+	var text := ""
+	var bands: Array = _sim_engine.get_band_list() if _sim_engine != null and _sim_engine.has_method("get_band_list") else []
+	text += "[b]%s (%d)[/b]\n\n" % [Locale.ltr("UI_TAB_FACTIONS_BANDS"), bands.size()]
+	for band_raw: Variant in bands:
+		if not (band_raw is Dictionary):
+			continue
+		var band: Dictionary = band_raw
+		var band_name: String = str(band.get("name", Locale.ltr("UI_UNKNOWN")))
+		var member_count: int = int(band.get("member_count", 0))
+		var leader_name: String = str(band.get("leader_name", ""))
+		var leader_id: int = int(band.get("leader_id", -1))
+		var is_promoted: bool = bool(band.get("is_promoted", false))
+		var status_text: String = Locale.ltr("UI_BAND_PROMOTED") if is_promoted else Locale.ltr("UI_BAND_PROVISIONAL")
+		text += "[color=#c89030]■[/color] [b]%s[/b] [color=#506878][%s][/color] %s\n" % [
+			band_name,
+			status_text,
+			"%d%s" % [member_count, Locale.ltr("UI_MEMBERS_SUFFIX")],
+		]
+		if not leader_name.is_empty() and leader_id >= 0:
+			text += "  %s: [url=entity:%d]%s[/url]\n" % [Locale.ltr("UI_LEADER"), leader_id, leader_name]
+		text += "\n"
+
+	var summary: Dictionary = _get_world_summary()
+	var settlements: Array = summary.get("settlement_summaries", [])
+	text += "[b]%s (%d)[/b]\n\n" % [Locale.ltr("UI_TAB_FACTIONS_SETTS"), settlements.size()]
+	for settlement_raw: Variant in settlements:
+		if not (settlement_raw is Dictionary):
+			continue
+		var settlement_summary: Dictionary = settlement_raw
+		var settlement_id: int = int(settlement_summary.get("id", -1))
+		var settlement_detail_raw: Variant = settlement_summary.get("settlement", {})
+		var settlement_detail: Dictionary = settlement_detail_raw if settlement_detail_raw is Dictionary else {}
+		var settlement_name: String = str(settlement_detail.get("name", settlement_summary.get("name", Locale.ltr("UI_UNKNOWN"))))
+		var population: int = int(settlement_summary.get("pop", 0))
+		if settlement_id >= 0:
+			text += "[color=#d45454]■[/color] [url=sett:%d][b]%s[/b][/url] %s\n\n" % [
+				settlement_id,
+				settlement_name,
+				Locale.trf1("UI_POP_FMT", "n", population),
+			]
+		else:
+			text += "[color=#d45454]■[/color] [b]%s[/b] %s\n\n" % [
+				settlement_name,
+				Locale.trf1("UI_POP_FMT", "n", population),
+			]
+
+	content.append_text(text)
+
+
+func _refresh_sidebar_stats() -> void:
+	if _sidebar_stats_panel == null:
+		return
+	var content_node: Node = _sidebar_stats_panel.find_child("StatsContent", true, false)
+	if not (content_node is RichTextLabel):
+		return
+	var content: RichTextLabel = content_node
+	content.clear()
+
+	var summary: Dictionary = _get_world_summary()
+	var text := ""
+	text += "[b]%s[/b]\n\n" % Locale.ltr("UI_STATS_WORLD")
+	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_POP"), int(summary.get("total_population", 0))]
+	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_PEAK"), int(summary.get("peak_pop", 0))]
+	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_SETTLEMENTS"), int(summary.get("settlement_count", 0))]
+	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_BANDS"), int(summary.get("band_count", 0))]
+	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_BUILDINGS"), int(summary.get("building_count", 0))]
+	text += "%s: [b]%d[/b] / %s: [b]%d[/b]\n" % [
+		Locale.ltr("UI_STATS_BIRTHS"),
+		int(summary.get("total_births", 0)),
+		Locale.ltr("UI_STATS_DEATHS"),
+		int(summary.get("total_deaths", 0)),
+	]
+	text += "%s: [b]%.1f[/b]\n" % [Locale.ltr("UI_STATS_AVG_AGE"), float(summary.get("avg_age_years", 0.0))]
+	text += "%s: [b]%d%%[/b]\n" % [Locale.ltr("UI_STATS_AVG_HAPPY"), int(round(float(summary.get("avg_happiness", 0.0)) * 100.0))]
+
+	text += "\n[b]%s[/b]\n" % Locale.ltr("UI_STATS_RESOURCES")
+	text += "%s: [color=#48a828]%.0f[/color]\n" % [Locale.ltr("UI_RES_FOOD_SHORT"), float(summary.get("food", 0.0))]
+	text += "%s: [color=#8a5828]%.0f[/color]\n" % [Locale.ltr("UI_RES_WOOD_SHORT"), float(summary.get("wood", 0.0))]
+	text += "%s: [color=#6888a8]%.0f[/color]\n" % [Locale.ltr("UI_RES_STONE_SHORT"), float(summary.get("stone", 0.0))]
+
+	var settlements: Array = summary.get("settlement_summaries", [])
+	if not settlements.is_empty():
+		text += "\n[b]%s[/b]\n\n" % Locale.ltr("UI_STATS_PER_SETT")
+		for settlement_raw: Variant in settlements:
+			if not (settlement_raw is Dictionary):
+				continue
+			var settlement_summary: Dictionary = settlement_raw
+			var settlement_detail_raw: Variant = settlement_summary.get("settlement", {})
+			var settlement_detail: Dictionary = settlement_detail_raw if settlement_detail_raw is Dictionary else {}
+			var settlement_name: String = str(settlement_detail.get("name", settlement_summary.get("name", Locale.ltr("UI_UNKNOWN"))))
+			var population: int = int(settlement_summary.get("pop", 0))
+			text += "[b]%s[/b] — %s\n" % [settlement_name, Locale.trf1("UI_POP_FMT", "n", population)]
+
+	text += "\n[color=#283838]━━━ %s ━━━[/color]\n" % Locale.ltr("UI_STATS_POP_GRAPH")
+	text += "[color=#283838]%s[/color]\n" % Locale.ltr("UI_STATS_GRAPH_PLACEHOLDER")
+	content.append_text(text)
+
+
+func _refresh_history_panel() -> void:
+	if _history_panel == null:
+		return
+	var content_node: Node = _history_panel.find_child("HistoryContent", true, false)
+	if not (content_node is RichTextLabel):
+		return
+	var content: RichTextLabel = content_node
+	content.clear()
+
+	var text := "[b]%s[/b]\n\n" % Locale.ltr("UI_HISTORY_TITLE")
+	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
+	var events_raw: Variant = response.get("items", [])
+	var events: Array = events_raw if events_raw is Array else []
+	if events.is_empty():
+		text += "[color=#354050]%s[/color]\n" % Locale.ltr("UI_HISTORY_EMPTY")
+	else:
+		for event_raw: Variant in events:
+			if not (event_raw is Dictionary):
+				continue
+			var event: Dictionary = event_raw
+			var tick: int = int(event.get("tick", event.get("end_tick", 0)))
+			var date: String = GameCalendar.format_short_date(tick)
+			var desc: String = _history_event_text(event)
+			var event_type: String = str(event.get("cause_id", event.get("event_type", "")))
+			text += "[color=#506878]%s[/color]  [color=%s]%s[/color]\n\n" % [
+				date,
+				_history_type_color(event_type),
+				desc,
+			]
+
+	content.append_text(text)
+
+
+func _refresh_diplomacy_panel() -> void:
+	if _diplomacy_panel == null:
+		return
+	var content_node: Node = _diplomacy_panel.find_child("DiplomacyContent", true, false)
+	if not (content_node is RichTextLabel):
+		return
+	var content: RichTextLabel = content_node
+	content.clear()
+
+	var text := ""
+	text += "[b]%s[/b]\n\n" % Locale.ltr("UI_DIPLOMACY_TITLE")
+	text += "[color=#283838]%s[/color]\n\n" % Locale.ltr("UI_DIPLOMACY_PLACEHOLDER")
+	text += "[color=#283838]%s[/color]\n" % Locale.ltr("UI_DIPLOMACY_TREATIES_PLACEHOLDER")
+	text += "[color=#283838]%s[/color]\n" % Locale.ltr("UI_DIPLOMACY_WARS_PLACEHOLDER")
+	content.append_text(text)
+
+
+func _history_event_text(event: Dictionary) -> String:
+	var capsule: String = _localized_chronicle_text(event, "capsule_key", "capsule_params", "description")
+	if not capsule.is_empty():
+		return capsule
+	var headline: String = _localized_chronicle_text(event, "headline_key", "headline_params", "description")
+	if not headline.is_empty():
+		return headline
+	return str(event.get("description", Locale.ltr("UI_HISTORY_EMPTY")))
+
+
+func _localized_chronicle_text(event: Dictionary, key_field: String, params_field: String, fallback_field: String) -> String:
+	var locale_key: String = str(event.get(key_field, ""))
+	var params_raw: Variant = event.get(params_field, {})
+	var params: Dictionary = params_raw if params_raw is Dictionary else {}
+	if not locale_key.is_empty():
+		return Locale.trf(locale_key, params)
+	var fallback: String = str(event.get(fallback_field, ""))
+	if fallback.is_empty():
+		return ""
+	return Locale.ltr(fallback) if Locale.has_key(fallback) else fallback
+
+
+func _history_type_color(event_type: String) -> String:
+	match event_type:
+		"band", "band_formation", "band.promotion":
+			return "#b89030"
+		"leader", "band.leader_elected":
+			return "#d0a030"
+		"build", "construction", "build_complete":
+			return "#c88818"
+		"death", "death_event":
+			return "#c04050"
+		"birth", "birth_event":
+			return "#40a080"
+		"diplomacy":
+			return "#8868c0"
+		"craft":
+			return "#48a828"
+		_:
+			return "#7088a0"
 
 
 func _build_story_ui() -> void:
@@ -690,6 +1042,106 @@ func _build_overlay_legend() -> void:
 	_overlay_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_overlay_legend.visible = false
 	add_child(_overlay_legend)
+
+
+func _build_pause_overlay() -> void:
+	_pause_overlay = Control.new()
+	_pause_overlay.name = "PauseOverlay"
+	_pause_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_pause_overlay.visible = false
+	_pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.7)
+	_pause_overlay.add_child(dimmer)
+
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_pause_overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(260, 0)
+	var ps := StyleBoxFlat.new()
+	ps.bg_color = Color(0.03, 0.04, 0.06, 0.97)
+	ps.border_color = Color(0.16, 0.22, 0.30)
+	ps.set_border_width_all(1)
+	ps.set_corner_radius_all(8)
+	ps.content_margin_left = 28
+	ps.content_margin_right = 28
+	ps.content_margin_top = 24
+	ps.content_margin_bottom = 24
+	panel.add_theme_stylebox_override("panel", ps)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 8)
+
+	var title := Label.new()
+	title.name = "PauseTitle"
+	title.text = Locale.ltr("UI_PAUSE_TITLE")
+	title.add_theme_font_size_override("font_size", 18)
+	title.add_theme_color_override("font_color", Color(0.78, 0.82, 0.85))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(title)
+	vbox.add_child(HSeparator.new())
+
+	var continue_btn := Button.new()
+	continue_btn.name = "PauseContinueButton"
+	continue_btn.text = Locale.ltr("UI_PAUSE_CONTINUE")
+	continue_btn.focus_mode = Control.FOCUS_NONE
+	continue_btn.pressed.connect(_hide_pause_overlay)
+	vbox.add_child(continue_btn)
+
+	for key: String in ["UI_PAUSE_SAVE", "UI_PAUSE_LOAD", "UI_PAUSE_SETTINGS"]:
+		var btn := Button.new()
+		btn.name = key
+		btn.text = Locale.ltr(key)
+		btn.disabled = true
+		btn.focus_mode = Control.FOCUS_NONE
+		vbox.add_child(btn)
+
+	panel.add_child(vbox)
+	center.add_child(panel)
+	add_child(_pause_overlay)
+	_pause_overlay.move_to_front()
+
+
+func _show_pause_overlay() -> void:
+	if _pause_overlay == null:
+		return
+	if _sim_engine != null and not _sim_engine.is_paused:
+		_pause_overlay_was_running = true
+		_sim_engine.is_paused = true
+		SimulationBus.pause_changed.emit(true)
+	else:
+		_pause_overlay_was_running = false
+	_pause_overlay.visible = true
+	_pause_overlay.move_to_front()
+
+
+func _hide_pause_overlay() -> void:
+	if _pause_overlay == null:
+		return
+	_pause_overlay.visible = false
+	if _pause_overlay_was_running and _sim_engine != null:
+		_sim_engine.is_paused = false
+		SimulationBus.pause_changed.emit(false)
+	_pause_overlay_was_running = false
+
+
+func _refresh_pause_overlay_texts() -> void:
+	if _pause_overlay == null:
+		return
+	var title_node: Node = _pause_overlay.find_child("PauseTitle", true, false)
+	if title_node is Label:
+		(title_node as Label).text = Locale.ltr("UI_PAUSE_TITLE")
+	var continue_node: Node = _pause_overlay.find_child("PauseContinueButton", true, false)
+	if continue_node is Button:
+		(continue_node as Button).text = Locale.ltr("UI_PAUSE_CONTINUE")
+	for key: String in ["UI_PAUSE_SAVE", "UI_PAUSE_LOAD", "UI_PAUSE_SETTINGS"]:
+		var button_node: Node = _pause_overlay.find_child(key, true, false)
+		if button_node is Button:
+			(button_node as Button).text = Locale.ltr(key)
 
 
 func _on_resource_bar_clicked(event: InputEvent) -> void:
@@ -1554,6 +2006,26 @@ func _process(delta: float) -> void:
 	# Notification fade
 	_update_notifications(delta)
 	_update_right_panel_chronicle_attention(delta)
+	if _factions_panel != null and _factions_panel.visible:
+		_factions_refresh_timer += maxf(delta, 0.0)
+		if _factions_refresh_timer >= 2.0:
+			_factions_refresh_timer = 0.0
+			_refresh_factions_panel()
+	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible:
+		_stats_refresh_timer += maxf(delta, 0.0)
+		if _stats_refresh_timer >= 3.0:
+			_stats_refresh_timer = 0.0
+			_refresh_sidebar_stats()
+	if _history_panel != null and _history_panel.visible:
+		_history_refresh_timer += maxf(delta, 0.0)
+		if _history_refresh_timer >= 3.0:
+			_history_refresh_timer = 0.0
+			_refresh_history_panel()
+	if _diplomacy_panel != null and _diplomacy_panel.visible:
+		_diplomacy_refresh_timer += maxf(delta, 0.0)
+		if _diplomacy_refresh_timer >= 5.0:
+			_diplomacy_refresh_timer = 0.0
+			_refresh_diplomacy_panel()
 	_update_probe_verification_overlay()
 
 
@@ -2129,7 +2601,16 @@ func _refresh_hud_texts() -> void:
 		_tab_inspector_btn.text = Locale.ltr("UI_TAB_INSPECTOR")
 	if _tab_chronicle_btn != null:
 		_tab_chronicle_btn.text = Locale.ltr("UI_TAB_CHRONICLE")
+	if _tab_factions_btn != null:
+		_tab_factions_btn.text = Locale.ltr("UI_TAB_FACTIONS")
+	if _tab_stats_btn != null:
+		_tab_stats_btn.text = Locale.ltr("UI_TAB_STATS")
+	if _tab_history_btn != null:
+		_tab_history_btn.text = Locale.ltr("UI_TAB_HISTORY")
+	if _tab_diplomacy_btn != null:
+		_tab_diplomacy_btn.text = Locale.ltr("UI_TAB_DIPLOMACY")
 	_set_right_panel_tab_state()
+	_refresh_pause_overlay_texts()
 	if _hint_label != null:
 		_hint_label.text = Locale.ltr("UI_KEY_HINTS")
 	if _legend_title_label != null:
@@ -2149,6 +2630,14 @@ func _refresh_hud_texts() -> void:
 		_show_resource_popup()
 	if _band_popup != null and _band_popup.visible:
 		_show_band_popup()
+	if _factions_panel != null and _factions_panel.visible:
+		_refresh_factions_panel()
+	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible:
+		_refresh_sidebar_stats()
+	if _history_panel != null and _history_panel.visible:
+		_refresh_history_panel()
+	if _diplomacy_panel != null and _diplomacy_panel.visible:
+		_refresh_diplomacy_panel()
 	if _cast_bar != null:
 		_cast_bar.refresh_locale()
 	if _story_notification_manager != null:
@@ -2208,12 +2697,20 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 		elif event.keycode == KEY_ESCAPE:
+			if _pause_overlay != null and _pause_overlay.visible:
+				_hide_pause_overlay()
+				get_viewport().set_input_as_handled()
+				return
 			if _entity_detail_panel_open:
 				_close_entity_detail_sidebar()
 				get_viewport().set_input_as_handled()
 				return
 			if close_all_popups():
 				get_viewport().set_input_as_handled()
+				return
+			if _pause_overlay != null:
+				_show_pause_overlay()
+			get_viewport().set_input_as_handled()
 
 
 func toggle_debug_overlay() -> void:
@@ -2250,6 +2747,9 @@ func toggle_help() -> void:
 
 ## Closes any open popup panel or the help overlay. Returns true if something was closed.
 func close_all_popups() -> bool:
+	if _pause_overlay != null and _pause_overlay.visible:
+		_hide_pause_overlay()
+		return true
 	if _entity_detail_panel_open:
 		_close_entity_detail_sidebar()
 		return true
