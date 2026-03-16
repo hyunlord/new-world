@@ -13,9 +13,9 @@ use rand::Rng;
 use rand_distr::{Distribution, Normal, StandardNormal};
 use sim_core::components::{
     Age, AgentKnowledge, Behavior, Body, BodyHealth, Coping, Economic, EffectFlags, Emotion, Faith,
-    Identity, InfluenceReceiver, Intelligence, Inventory, KnowledgeEntry, LlmCapable, Memory,
-    NarrativeCache, Needs, Personality, Position, Skills, Social, Stress, Temperament, Traits,
-    TransmissionSource,
+    FamilyComponent, Identity, InfluenceReceiver, Intelligence, Inventory, KinshipType,
+    KnowledgeEntry, LlmCapable, Memory, NarrativeCache, Needs, Personality, Position, Skills,
+    Social, Stress, Temperament, Traits, TransmissionSource,
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::{
@@ -729,10 +729,19 @@ pub fn spawn_agent(
     let innovation_potential =
         (intelligence.g_factor * 0.5 + openness * 0.3 + resources.rng.gen::<f64>() * 0.2)
             .clamp(0.2, 0.8);
+    let family = FamilyComponent {
+        father: None,
+        mother: None,
+        spouse: None,
+        clan_id: None,
+        generation: 0,
+        birth_tick: 0,
+        kinship_type: KinshipType::Bilateral,
+    };
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
-    // We currently spawn 27 components total: the first 15 in the spawn bundle,
-    // then insert the remaining 12 overflow components.
+    // We currently spawn 28 components total: the first 15 in the spawn bundle,
+    // then insert the remaining 13 overflow components.
     let entity = world.spawn((
         identity,
         age,
@@ -766,6 +775,7 @@ pub fn spawn_agent(
                 Inventory::new(),
                 BodyHealth::default(),
                 AgentKnowledge::default(),
+                family,
                 LlmCapable::default(),
                 NarrativeCache::default(),
             ),
@@ -1036,6 +1046,34 @@ mod tests {
 
         assert_eq!(knowledge.known_count(), 0);
         assert_eq!(knowledge.innovation_potential, 0.0);
+    }
+
+    #[test]
+    fn spawn_agent_includes_default_family_component() {
+        let mut world = hecs::World::new();
+        let mut resources = make_resources();
+
+        let cfg = SpawnConfig {
+            settlement_id: None,
+            position: (0, 0),
+            initial_age_ticks: 25 * TICKS_PER_YEAR,
+            sex: Some(Sex::Female),
+            parent_a: None,
+            parent_b: None,
+        };
+
+        let entity = spawn_agent(&mut world, &mut resources, &cfg);
+        let family = world
+            .get::<&FamilyComponent>(entity)
+            .expect("FamilyComponent missing");
+
+        assert!(family.father.is_none());
+        assert!(family.mother.is_none());
+        assert!(family.spouse.is_none());
+        assert!(family.clan_id.is_none());
+        assert_eq!(family.generation, 0);
+        assert_eq!(family.birth_tick, 0);
+        assert_eq!(family.kinship_type, KinshipType::Bilateral);
     }
 
     #[test]

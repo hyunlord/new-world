@@ -45,10 +45,10 @@ use pathfinding_core::{
     PATHFIND_BACKEND_GPU,
 };
 use sim_core::components::{
-    Age, AgentKnowledge, Behavior, Body, BodyHealth, Coping, Economic, Emotion, Faith, Identity,
-    Intelligence, Inventory, LlmCapable, LlmPending, LlmRequestType, Memory, NarrativeCache, Needs,
-    Personality, Position, Skills, Social, Stress, Traits, Values, PART_NAMES, PART_TO_GROUP,
-    PART_VITAL,
+    Age, AgentKnowledge, Behavior, Body, BodyHealth, Coping, Economic, Emotion, Faith,
+    FamilyComponent, Identity, Intelligence, Inventory, LlmCapable, LlmPending, LlmRequestType,
+    Memory, NarrativeCache, Needs, Personality, Position, Skills, Social, Stress, Traits, Values,
+    PART_NAMES, PART_TO_GROUP, PART_VITAL,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{ChannelId, EntityId, Settlement, SettlementId, Temperament};
@@ -2604,6 +2604,20 @@ impl WorldSimRuntime {
             dict.set("children_count", social.children.len() as i32);
             dict.set("relationship_count", social.edges.len() as i32);
         }
+        dict.set("generation", 0_i64);
+        dict.set("clan_id", -1_i64);
+        dict.set("kinship_type", 0_i64);
+        dict.set("has_father", false);
+        dict.set("has_mother", false);
+        dict.set("has_spouse", false);
+        if let Ok(family) = world.get::<&FamilyComponent>(entity) {
+            dict.set("generation", family.generation as i64);
+            dict.set("clan_id", family.clan_id.map(i64::from).unwrap_or(-1_i64));
+            dict.set("kinship_type", family.kinship_type as i64);
+            dict.set("has_father", family.father.is_some());
+            dict.set("has_mother", family.mother.is_some());
+            dict.set("has_spouse", family.spouse.is_some());
+        }
         dict.set("knowledge_count", 0_i64);
         dict.set("is_learning", false);
         dict.set("is_teaching", false);
@@ -2654,7 +2668,7 @@ impl WorldSimRuntime {
         dict
     }
 
-    /// L3: Tab-specific deep data. Tabs: mind / body / health / knowledge / skills / social / memory / misc.
+    /// L3: Tab-specific deep data. Tabs: mind / body / health / knowledge / family / skills / social / memory / misc.
     #[func]
     fn runtime_get_entity_tab(&self, entity_id: i64, tab: GString) -> VarDictionary {
         let mut dict = VarDictionary::new();
@@ -2668,6 +2682,7 @@ impl WorldSimRuntime {
         let world = state.engine.world();
         let resources = state.engine.resources();
         let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+        let entity_raw_id = EntityId(entity.id() as u64);
         let selected_band_id = world.get::<&Identity>(entity).ok().and_then(|id| id.band_id);
 
         match tab.to_string().as_str() {
@@ -2850,6 +2865,83 @@ impl WorldSimRuntime {
                         teaching_dict.set("knowledge_id", knowledge_id.as_str());
                         dict.set("teaching", teaching_dict);
                     }
+                }
+            }
+            "family" => {
+                dict.set("generation", 0_i64);
+                dict.set("clan_id", -1_i64);
+                dict.set("kinship_type", 0_i64);
+                dict.set("birth_tick", 0_i64);
+                dict.set("father", VarDictionary::new());
+                dict.set("mother", VarDictionary::new());
+                dict.set("spouse", VarDictionary::new());
+                let empty_children: Array<VarDictionary> = Array::new();
+                dict.set("children", empty_children);
+                if let Ok(family) = world.get::<&FamilyComponent>(entity) {
+                    dict.set("generation", family.generation as i64);
+                    dict.set("clan_id", family.clan_id.map(i64::from).unwrap_or(-1_i64));
+                    dict.set("kinship_type", family.kinship_type as i64);
+                    dict.set("birth_tick", family.birth_tick as i64);
+
+                    let mut father_dict = VarDictionary::new();
+                    if let Some(father) = family.father {
+                        if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, father.0) {
+                            father_dict.set("id", runtime_id);
+                            father_dict.set(
+                                "name",
+                                entity_name_from_raw_id(world, &raw_lookup, father.0)
+                                    .unwrap_or_default(),
+                            );
+                        }
+                    }
+                    dict.set("father", father_dict);
+
+                    let mut mother_dict = VarDictionary::new();
+                    if let Some(mother) = family.mother {
+                        if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, mother.0) {
+                            mother_dict.set("id", runtime_id);
+                            mother_dict.set(
+                                "name",
+                                entity_name_from_raw_id(world, &raw_lookup, mother.0)
+                                    .unwrap_or_default(),
+                            );
+                        }
+                    }
+                    dict.set("mother", mother_dict);
+
+                    let mut spouse_dict = VarDictionary::new();
+                    if let Some(spouse) = family.spouse {
+                        if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, spouse.0) {
+                            spouse_dict.set("id", runtime_id);
+                            spouse_dict.set(
+                                "name",
+                                entity_name_from_raw_id(world, &raw_lookup, spouse.0)
+                                    .unwrap_or_default(),
+                            );
+                        }
+                    }
+                    dict.set("spouse", spouse_dict);
+
+                    let mut children_arr: Array<VarDictionary> = Array::new();
+                    for &child_raw in resources.children_index.children_of(entity_raw_id) {
+                        let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, child_raw.0)
+                        else {
+                            continue;
+                        };
+                        let Some(child_entity) = resolve_runtime_entity(world, runtime_id) else {
+                            continue;
+                        };
+                        let mut child_dict = VarDictionary::new();
+                        child_dict.set("id", runtime_id);
+                        if let Ok(identity) = world.get::<&Identity>(child_entity) {
+                            child_dict.set("name", identity.name.clone());
+                        }
+                        if let Ok(age) = world.get::<&Age>(child_entity) {
+                            child_dict.set("age", age.years.round() as i64);
+                        }
+                        children_arr.push(&child_dict);
+                    }
+                    dict.set("children", children_arr);
                 }
             }
             "skills" => {
