@@ -1,9 +1,10 @@
 use crate::ids::EntityId;
+use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
 use std::collections::HashMap;
 
 /// Global reverse index from parent id to child ids.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ChildrenIndex {
     /// Parent entity id → owned child list.
     pub map: HashMap<EntityId, SmallVec<[EntityId; 8]>>,

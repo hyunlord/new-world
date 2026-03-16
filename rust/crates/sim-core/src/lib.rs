@@ -3,6 +3,7 @@
 
 pub mod calendar;
 pub mod causal_log;
+pub mod children_index;
 pub mod config;
 pub mod effect;
 pub mod enums;
@@ -29,6 +30,7 @@ pub use band::{Band, BandStore};
 pub use building::Building;
 pub use calendar::GameCalendar;
 pub use causal_log::{CausalEvent, CausalLog, CauseRef};
+pub use children_index::ChildrenIndex;
 pub use components::{EffectFlags, Inventory};
 pub use config::ConfigSummary;
 pub use config::SimConfig;
