@@ -45,6 +45,7 @@ var _overlay_renderer: Sprite2D = null
 
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color(0.024, 0.031, 0.063, 1.0))
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
 	var seed_value: int = GameConfig.WORLD_SEED
 

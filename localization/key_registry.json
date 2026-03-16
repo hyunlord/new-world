@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4607,
-  "key_count": 4607,
+  "active_key_count": 4613,
+  "key_count": 4613,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -3764,6 +3764,8 @@
     "UI_AVG_HAPPINESS": 3452,
     "UI_AVG_STRESS": 3453,
     "UI_BACK": 3454,
+    "UI_BADGE_BAND_FMT": 4607,
+    "UI_BADGE_SETT_FMT": 4608,
     "UI_BAND_LEADER_ROLE": 4407,
     "UI_BAND_PROMOTED": 4408,
     "UI_BAND_PROVISIONAL": 4409,
@@ -4183,6 +4185,10 @@
     "UI_PARTNER": 3733,
     "UI_PATH_STEPS_FMT": 4068,
     "UI_PAUSE": 3734,
+    "UI_PAUSE_CONTINUE": 4609,
+    "UI_PAUSE_LOAD": 4610,
+    "UI_PAUSE_SAVE": 4611,
+    "UI_PAUSE_SETTINGS": 4612,
     "UI_PERSONALITY": 3735,
     "UI_PERSONALITY_AVERAGE": 4136,
     "UI_PERSONALITY_AVG": 3736,
@@ -9217,7 +9223,13 @@
     "ALERT_HUD_LOW_FOOD",
     "ALERT_HUD_TECH_RISK_FMT",
     "UI_OVERLAY_KNOWLEDGE",
-    "UI_OVERLAY_RESOURCE"
+    "UI_OVERLAY_RESOURCE",
+    "UI_BADGE_BAND_FMT",
+    "UI_BADGE_SETT_FMT",
+    "UI_PAUSE_CONTINUE",
+    "UI_PAUSE_LOAD",
+    "UI_PAUSE_SAVE",
+    "UI_PAUSE_SETTINGS"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

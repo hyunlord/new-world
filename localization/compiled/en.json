@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4607,
+    "active_key_count": 4613,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4607,
+    "key_count": 4613,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -3802,6 +3802,8 @@
     "UI_AVG_HAPPINESS": "Average Happiness",
     "UI_AVG_STRESS": "Average Stress",
     "UI_BACK": "<- Back",
+    "UI_BADGE_BAND_FMT": "Band {n}",
+    "UI_BADGE_SETT_FMT": "Settle {n}",
     "UI_BAND_LEADER_ROLE": "Leader",
     "UI_BAND_PROMOTED": "Established",
     "UI_BAND_PROVISIONAL": "Provisional",
@@ -4221,6 +4223,10 @@
     "UI_PARTNER": "Partner",
     "UI_PATH_STEPS_FMT": "{n} steps",
     "UI_PAUSE": "Pause",
+    "UI_PAUSE_CONTINUE": "Continue",
+    "UI_PAUSE_LOAD": "Load [Not Implemented]",
+    "UI_PAUSE_SAVE": "Save [Not Implemented]",
+    "UI_PAUSE_SETTINGS": "Settings [Not Implemented]",
     "UI_PERSONALITY": "Personality",
     "UI_PERSONALITY_AVERAGE": "has a balanced, unremarkable personality.",
     "UI_PERSONALITY_AVG": "Average Personality (HEXACO)",

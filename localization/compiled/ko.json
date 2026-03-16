@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4607,
+    "active_key_count": 4613,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4607,
+    "key_count": 4613,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -3802,6 +3802,8 @@
     "UI_AVG_HAPPINESS": "평균 행복도",
     "UI_AVG_STRESS": "평균 스트레스",
     "UI_BACK": "<- 뒤로",
+    "UI_BADGE_BAND_FMT": "무리 {n}",
+    "UI_BADGE_SETT_FMT": "정착지 {n}",
     "UI_BAND_LEADER_ROLE": "리더",
     "UI_BAND_PROMOTED": "확립됨",
     "UI_BAND_PROVISIONAL": "잠정",
@@ -4221,6 +4223,10 @@
     "UI_PARTNER": "파트너",
     "UI_PATH_STEPS_FMT": "{n}걸음",
     "UI_PAUSE": "일시정지",
+    "UI_PAUSE_CONTINUE": "계속하기",
+    "UI_PAUSE_LOAD": "불러오기 [미구현]",
+    "UI_PAUSE_SAVE": "저장 [미구현]",
+    "UI_PAUSE_SETTINGS": "설정 [미구현]",
     "UI_PERSONALITY": "성격",
     "UI_PERSONALITY_AVERAGE": "무난하고 평범한 성격이다.",
     "UI_PERSONALITY_AVG": "평균 성격 (HEXACO)",
