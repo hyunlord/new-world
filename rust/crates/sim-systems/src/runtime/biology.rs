@@ -19,6 +19,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 use crate::body;
+use crate::entity_spawner::{spawn_agent, SpawnConfig};
 
 /// Rust runtime system for child hunger feeding from settlement stockpiles.
 ///
@@ -225,43 +226,75 @@ impl SimSystem for PopulationRuntimeSystem {
                 (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
         }
 
-        let age = Age {
-            ticks: 0,
-            years: 0.0,
-            stage: GrowthStage::Infant,
-            alive: true,
-        };
+        let mut adults_by_id: HashMap<EntityId, (Entity, Sex, Option<EntityId>)> = HashMap::new();
+        {
+            let mut query = world.query::<(&Age, &Identity, &Social)>();
+            for (entity, (age, identity, social)) in &mut query {
+                if !age.alive {
+                    continue;
+                }
+                if !matches!(age.stage, GrowthStage::Adult | GrowthStage::Elder) {
+                    continue;
+                }
+                if identity.settlement_id != Some(settlement_id) {
+                    continue;
+                }
+                adults_by_id.insert(
+                    EntityId(entity.id() as u64),
+                    (entity, identity.sex, social.spouse),
+                );
+            }
+        }
+        let mut parent_a = None;
+        let mut parent_b = None;
+        let mut adult_ids: Vec<EntityId> = adults_by_id.keys().copied().collect();
+        adult_ids.sort_unstable_by_key(|entity_id| entity_id.0);
+        for adult_id in adult_ids {
+            let Some((adult_entity, adult_sex, spouse_raw)) = adults_by_id.get(&adult_id).copied()
+            else {
+                continue;
+            };
+            let Some(spouse_id) = spouse_raw else {
+                continue;
+            };
+            let Some((spouse_entity, spouse_sex, spouse_spouse)) =
+                adults_by_id.get(&spouse_id).copied()
+            else {
+                continue;
+            };
+            if spouse_spouse != Some(adult_id) || adult_sex == spouse_sex {
+                continue;
+            }
+            match adult_sex {
+                Sex::Male => {
+                    parent_a = Some(adult_entity);
+                    parent_b = Some(spouse_entity);
+                }
+                Sex::Female => {
+                    parent_a = Some(spouse_entity);
+                    parent_b = Some(adult_entity);
+                }
+            }
+            break;
+        }
 
-        let identity = Identity {
-            birth_tick: tick,
-            settlement_id: Some(settlement_id),
-            growth_stage: GrowthStage::Infant,
-            sex: if resources.rng.gen_bool(0.5) {
-                Sex::Male
-            } else {
-                Sex::Female
+        let newborn_sex = if resources.rng.gen_bool(0.5) {
+            Sex::Male
+        } else {
+            Sex::Female
+        };
+        let entity = spawn_agent(
+            world,
+            resources,
+            &SpawnConfig {
+                settlement_id: Some(settlement_id),
+                position: (selected_x, selected_y),
+                initial_age_ticks: 0,
+                sex: Some(newborn_sex),
+                parent_a,
+                parent_b,
             },
-            ..Identity::default()
-        };
-
-        let behavior = Behavior {
-            current_action: ActionType::Idle,
-            ..Behavior::default()
-        };
-
-        let entity = world.spawn((
-            age,
-            identity,
-            behavior,
-            LlmCapable::default(),
-            NarrativeCache::default(),
-            Needs::default(),
-            Emotion::default(),
-            SteeringParams::default(),
-            Stress::default(),
-            Social::default(),
-            Position::new(selected_x, selected_y),
-        ));
+        );
         let entity_id = EntityId(entity.id() as u64);
 
         if let Ok(mut one) = world.query_one::<&mut Identity>(entity) {

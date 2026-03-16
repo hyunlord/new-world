@@ -19,7 +19,7 @@ use sim_core::components::{
 };
 use sim_core::enums::{GrowthStage, Sex};
 use sim_core::{
-    SettlementId, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
+    EntityId, SettlementId, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
     TemperamentShiftRuleView,
 };
 use sim_data::{PersonalityDistribution, TemperamentRules};
@@ -729,15 +729,47 @@ pub fn spawn_agent(
     let innovation_potential =
         (intelligence.g_factor * 0.5 + openness * 0.3 + resources.rng.gen::<f64>() * 0.2)
             .clamp(0.2, 0.8);
+    let mut father = None;
+    let mut mother = None;
+    let mut generation = 0_u16;
+    let mut parent_kinship_types = Vec::with_capacity(2);
+    for parent_entity in [config.parent_a, config.parent_b].into_iter().flatten() {
+        let parent_id = EntityId(parent_entity.id() as u64);
+        let parent_sex = world
+            .get::<&Identity>(parent_entity)
+            .ok()
+            .map(|identity| identity.sex);
+        match parent_sex {
+            Some(Sex::Male) if father.is_none() => father = Some(parent_id),
+            Some(Sex::Female) if mother.is_none() => mother = Some(parent_id),
+            _ if father.is_none() => father = Some(parent_id),
+            _ if mother.is_none() => mother = Some(parent_id),
+            _ => {}
+        }
+
+        if let Ok(parent_family) = world.get::<&FamilyComponent>(parent_entity) {
+            generation = generation.max(parent_family.generation.saturating_add(1));
+            parent_kinship_types.push(parent_family.kinship_type);
+        }
+    }
+    parent_kinship_types.sort_unstable_by_key(|kinship| *kinship as u8);
+    parent_kinship_types.dedup();
+    let kinship_type = if parent_kinship_types.len() == 1 {
+        parent_kinship_types[0]
+    } else {
+        KinshipType::Bilateral
+    };
+
     let family = FamilyComponent {
-        father: None,
-        mother: None,
+        father,
+        mother,
         spouse: None,
         clan_id: None,
-        generation: 0,
-        birth_tick: 0,
-        kinship_type: KinshipType::Bilateral,
+        generation,
+        birth_tick: birth_tick.min(u64::from(u32::MAX)) as u32,
+        kinship_type,
     };
+    let family_parent_ids = [family.father, family.mother];
 
     // hecs DynamicBundle is implemented for tuples up to 15 elements.
     // We currently spawn 28 components total: the first 15 in the spawn bundle,
@@ -809,6 +841,33 @@ pub fn spawn_agent(
                 teacher_id: 0,
             });
             knowledge.innovation_potential = innovation_potential;
+        }
+    }
+
+    let child_id = EntityId(entity.id() as u64);
+    let mut parent_ids = Vec::with_capacity(2);
+    for parent_id in family_parent_ids.into_iter().flatten() {
+        if !parent_ids.contains(&parent_id) {
+            parent_ids.push(parent_id);
+        }
+    }
+    if !parent_ids.is_empty() {
+        if let Ok(mut social) = world.get::<&mut Social>(entity) {
+            social.parents = parent_ids.clone();
+        }
+    }
+    let mut linked_parent_ids = Vec::with_capacity(2);
+    for parent_entity in [config.parent_a, config.parent_b].into_iter().flatten() {
+        let parent_id = EntityId(parent_entity.id() as u64);
+        if linked_parent_ids.contains(&parent_id) {
+            continue;
+        }
+        linked_parent_ids.push(parent_id);
+        resources.children_index.add_child(parent_id, child_id);
+        if let Ok(mut social) = world.get::<&mut Social>(parent_entity) {
+            if !social.children.contains(&child_id) {
+                social.children.push(child_id);
+            }
         }
     }
 
@@ -1074,6 +1133,86 @@ mod tests {
         assert_eq!(family.generation, 0);
         assert_eq!(family.birth_tick, 0);
         assert_eq!(family.kinship_type, KinshipType::Bilateral);
+    }
+
+    #[test]
+    fn spawn_agent_with_parents_updates_family_and_children_index() {
+        let mut world = hecs::World::new();
+        let mut resources = make_resources();
+
+        let father = world.spawn((
+            Identity {
+                sex: Sex::Male,
+                ..Identity::default()
+            },
+            FamilyComponent {
+                generation: 2,
+                kinship_type: KinshipType::Patrilineal,
+                ..FamilyComponent::default()
+            },
+            Social::default(),
+        ));
+        let mother = world.spawn((
+            Identity {
+                sex: Sex::Female,
+                ..Identity::default()
+            },
+            FamilyComponent {
+                generation: 1,
+                kinship_type: KinshipType::Matrilineal,
+                ..FamilyComponent::default()
+            },
+            Social::default(),
+        ));
+
+        resources.calendar.tick = 144;
+        let cfg = SpawnConfig {
+            settlement_id: None,
+            position: (0, 0),
+            initial_age_ticks: 0,
+            sex: Some(Sex::Female),
+            parent_a: Some(father),
+            parent_b: Some(mother),
+        };
+
+        let child = spawn_agent(&mut world, &mut resources, &cfg);
+        let child_raw = EntityId(child.id() as u64);
+        let family = world
+            .get::<&FamilyComponent>(child)
+            .expect("FamilyComponent missing");
+        let social = world.get::<&Social>(child).expect("Social missing");
+
+        assert_eq!(family.father, Some(EntityId(father.id() as u64)));
+        assert_eq!(family.mother, Some(EntityId(mother.id() as u64)));
+        assert_eq!(family.generation, 3);
+        assert_eq!(family.birth_tick, 144);
+        assert_eq!(family.kinship_type, KinshipType::Bilateral);
+        assert_eq!(
+            social.parents,
+            vec![EntityId(father.id() as u64), EntityId(mother.id() as u64)]
+        );
+        assert_eq!(
+            resources.children_index.children_of(EntityId(father.id() as u64)),
+            &[child_raw]
+        );
+        assert_eq!(
+            resources.children_index.children_of(EntityId(mother.id() as u64)),
+            &[child_raw]
+        );
+        assert!(
+            world
+                .get::<&Social>(father)
+                .expect("father social missing")
+                .children
+                .contains(&child_raw)
+        );
+        assert!(
+            world
+                .get::<&Social>(mother)
+                .expect("mother social missing")
+                .children
+                .contains(&child_raw)
+        );
     }
 
     #[test]
