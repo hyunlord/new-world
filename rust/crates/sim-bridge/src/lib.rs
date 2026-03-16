@@ -2592,6 +2592,7 @@ impl WorldSimRuntime {
             dict.set("active_traits", arr);
         }
 
+        let social_spouse = world.get::<&Social>(entity).ok().and_then(|social| social.spouse);
         // Social summary
         if let Ok(social) = world.get::<&Social>(entity) {
             dict.set(
@@ -2616,7 +2617,7 @@ impl WorldSimRuntime {
             dict.set("kinship_type", family.kinship_type as i64);
             dict.set("has_father", family.father.is_some());
             dict.set("has_mother", family.mother.is_some());
-            dict.set("has_spouse", family.spouse.is_some());
+            dict.set("has_spouse", family.spouse.or(social_spouse).is_some());
         }
         dict.set("knowledge_count", 0_i64);
         dict.set("is_learning", false);
@@ -2910,7 +2911,10 @@ impl WorldSimRuntime {
                     dict.set("mother", mother_dict);
 
                     let mut spouse_dict = VarDictionary::new();
-                    if let Some(spouse) = family.spouse {
+                    let spouse = family
+                        .spouse
+                        .or_else(|| world.get::<&Social>(entity).ok().and_then(|social| social.spouse));
+                    if let Some(spouse) = spouse {
                         if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, spouse.0) {
                             spouse_dict.set("id", runtime_id);
                             spouse_dict.set(
@@ -2923,7 +2927,16 @@ impl WorldSimRuntime {
                     dict.set("spouse", spouse_dict);
 
                     let mut children_arr: Array<VarDictionary> = Array::new();
-                    for &child_raw in resources.children_index.children_of(entity_raw_id) {
+                    let mut child_ids: Vec<EntityId> =
+                        resources.children_index.children_of(entity_raw_id).to_vec();
+                    if child_ids.is_empty() {
+                        if let Ok(social) = world.get::<&Social>(entity) {
+                            child_ids.extend(social.children.iter().copied());
+                        }
+                    }
+                    child_ids.sort_unstable_by_key(|child| child.0);
+                    child_ids.dedup();
+                    for child_raw in child_ids {
                         let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, child_raw.0)
                         else {
                             continue;
