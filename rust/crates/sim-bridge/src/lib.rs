@@ -3163,6 +3163,41 @@ impl WorldSimRuntime {
         bridge_world_summary(state)
     }
 
+    #[func]
+    fn runtime_get_band_list(&self) -> Array<VarDictionary> {
+        let Some(state) = self.state.as_ref() else {
+            return Array::new();
+        };
+        let world = state.engine.world();
+        let resources = state.engine.resources();
+        let raw_lookup = runtime_queries::build_raw_entity_id_lookup(world);
+        let mut result: Array<VarDictionary> = Array::new();
+
+        for band in resources.band_store.all() {
+            let mut dict = VarDictionary::new();
+            dict.set("id", band.id.0 as i64);
+            dict.set("name", band.name.as_str());
+            dict.set("member_count", band.member_count() as i64);
+            dict.set("is_promoted", band.is_promoted);
+
+            let mut leader_runtime_id: i64 = -1;
+            let mut leader_name = String::new();
+            if let Some(leader_id) = band.leader {
+                if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, leader_id.0) {
+                    leader_runtime_id = runtime_id;
+                }
+                leader_name =
+                    entity_name_from_raw_id(world, &raw_lookup, leader_id.0).unwrap_or_default();
+            }
+
+            dict.set("leader_id", leader_runtime_id);
+            dict.set("leader_name", leader_name);
+            result.push(&dict);
+        }
+
+        result
+    }
+
     /// Exports one influence-grid channel as normalized `u8` bytes for GPU heatmap rendering.
     #[func]
     fn runtime_get_influence_texture(&self, channel_name: GString) -> PackedByteArray {

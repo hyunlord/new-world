@@ -54,6 +54,8 @@ var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
 var _bottom_bar_sel_label: Label
+var _resource_popup: PanelContainer
+var _band_popup: PanelContainer
 
 # Entity panel
 var _entity_panel: PanelContainer
@@ -690,6 +692,220 @@ func _build_overlay_legend() -> void:
 	add_child(_overlay_legend)
 
 
+func _on_resource_bar_clicked(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_toggle_resource_popup()
+		get_viewport().set_input_as_handled()
+
+
+func _toggle_resource_popup() -> void:
+	if _resource_popup != null and _resource_popup.visible:
+		_resource_popup.visible = false
+		return
+	if _band_popup != null:
+		_band_popup.visible = false
+	_show_resource_popup()
+
+
+func _show_resource_popup() -> void:
+	if _resource_popup == null:
+		_resource_popup = PanelContainer.new()
+		var popup_style := StyleBoxFlat.new()
+		popup_style.bg_color = Color(0.03, 0.04, 0.06, 0.97)
+		popup_style.border_color = Color(0.09, 0.14, 0.19)
+		popup_style.border_width_left = 1
+		popup_style.border_width_top = 1
+		popup_style.border_width_right = 1
+		popup_style.border_width_bottom = 1
+		popup_style.corner_radius_top_left = 6
+		popup_style.corner_radius_top_right = 6
+		popup_style.corner_radius_bottom_left = 6
+		popup_style.corner_radius_bottom_right = 6
+		popup_style.content_margin_left = 10
+		popup_style.content_margin_right = 10
+		popup_style.content_margin_top = 8
+		popup_style.content_margin_bottom = 8
+		_resource_popup.add_theme_stylebox_override("panel", popup_style)
+		_resource_popup.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		_resource_popup.offset_left = 192.0
+		_resource_popup.offset_top = 38.0
+		_resource_popup.custom_minimum_size = Vector2(260.0, 0.0)
+		_resource_popup.mouse_filter = Control.MOUSE_FILTER_STOP
+		add_child(_resource_popup)
+
+	for child: Node in _resource_popup.get_children():
+		child.queue_free()
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 6)
+	box.add_child(_make_label(Locale.ltr("UI_RES_POPUP_HEADER"), "panel_small", Color(0.62, 0.68, 0.75)))
+
+	var summary: Dictionary = _get_world_summary()
+	var settlements: Array = summary.get("settlement_summaries", [])
+	if settlements.is_empty():
+		box.add_child(_make_label(Locale.ltr("UI_NONE"), "panel_small", Color(0.56, 0.62, 0.69)))
+	else:
+		for settlement_raw: Variant in settlements:
+			if not (settlement_raw is Dictionary):
+				continue
+			var settlement_summary: Dictionary = settlement_raw
+			var settlement_id: int = int(settlement_summary.get("id", -1))
+			var settlement_detail_raw: Variant = settlement_summary.get("settlement", {})
+			var settlement_detail: Dictionary = settlement_detail_raw if settlement_detail_raw is Dictionary else {}
+			var settlement_name: String = str(settlement_detail.get("name", settlement_summary.get("name", Locale.ltr("UI_UNKNOWN"))))
+			var population: int = int(settlement_summary.get("pop", 0))
+			var food: float = float(settlement_summary.get("food", settlement_detail.get("stockpile_food", 0.0)))
+			var wood: float = float(settlement_summary.get("wood", settlement_detail.get("stockpile_wood", 0.0)))
+			var stone: float = float(settlement_summary.get("stone", settlement_detail.get("stockpile_stone", 0.0)))
+
+			var card := VBoxContainer.new()
+			card.add_theme_constant_override("separation", 2)
+
+			var open_button := Button.new()
+			open_button.text = "%s (%s)" % [settlement_name, Locale.trf1("UI_POP_FMT", "n", population)]
+			open_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			open_button.focus_mode = Control.FOCUS_NONE
+			open_button.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_small"))
+			open_button.pressed.connect(_on_resource_popup_settlement_pressed.bind(settlement_id))
+			card.add_child(open_button)
+
+			card.add_child(
+				_make_label(
+					"%s: %.0f  %s: %.0f  %s: %.0f" % [
+						Locale.ltr("UI_RES_FOOD_SHORT"),
+						food,
+						Locale.ltr("UI_RES_WOOD_SHORT"),
+						wood,
+						Locale.ltr("UI_RES_STONE_SHORT"),
+						stone,
+					],
+					"panel_small",
+					Color(0.44, 0.53, 0.60)
+				)
+			)
+			box.add_child(card)
+
+	_resource_popup.add_child(box)
+	_resource_popup.visible = true
+	_resource_popup.move_to_front()
+
+
+func _on_band_badge_clicked(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_toggle_band_popup()
+		get_viewport().set_input_as_handled()
+
+
+func _toggle_band_popup() -> void:
+	if _band_popup != null and _band_popup.visible:
+		_band_popup.visible = false
+		return
+	if _resource_popup != null:
+		_resource_popup.visible = false
+	_show_band_popup()
+
+
+func _show_band_popup() -> void:
+	if _band_popup == null:
+		_band_popup = PanelContainer.new()
+		var popup_style := StyleBoxFlat.new()
+		popup_style.bg_color = Color(0.03, 0.04, 0.06, 0.97)
+		popup_style.border_color = Color(0.09, 0.14, 0.19)
+		popup_style.border_width_left = 1
+		popup_style.border_width_top = 1
+		popup_style.border_width_right = 1
+		popup_style.border_width_bottom = 1
+		popup_style.corner_radius_top_left = 6
+		popup_style.corner_radius_top_right = 6
+		popup_style.corner_radius_bottom_left = 6
+		popup_style.corner_radius_bottom_right = 6
+		popup_style.content_margin_left = 10
+		popup_style.content_margin_right = 10
+		popup_style.content_margin_top = 8
+		popup_style.content_margin_bottom = 8
+		_band_popup.add_theme_stylebox_override("panel", popup_style)
+		_band_popup.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		_band_popup.offset_top = 38.0
+		_band_popup.offset_left = -250.0
+		_band_popup.offset_right = -12.0
+		_band_popup.custom_minimum_size = Vector2(238.0, 0.0)
+		_band_popup.mouse_filter = Control.MOUSE_FILTER_STOP
+		add_child(_band_popup)
+
+	for child: Node in _band_popup.get_children():
+		child.queue_free()
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 4)
+	box.add_child(_make_label(Locale.ltr("UI_POPUP_BAND_LIST"), "panel_small", Color(0.62, 0.68, 0.75)))
+
+	var bands: Array = []
+	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
+		bands = _sim_engine.get_band_list()
+	if bands.is_empty():
+		box.add_child(_make_label(Locale.ltr("UI_POPUP_NO_BANDS"), "panel_small", Color(0.56, 0.62, 0.69)))
+	else:
+		for band_raw: Variant in bands:
+			if not (band_raw is Dictionary):
+				continue
+			var band: Dictionary = band_raw
+			var leader_id: int = int(band.get("leader_id", -1))
+			var band_name: String = str(band.get("name", Locale.ltr("UI_UNKNOWN")))
+			var member_count: int = int(band.get("member_count", 0))
+			var is_promoted: bool = bool(band.get("is_promoted", false))
+			var leader_name: String = str(band.get("leader_name", ""))
+			var status_text: String = Locale.ltr("UI_BAND_PROMOTED") if is_promoted else Locale.ltr("UI_BAND_PROVISIONAL")
+
+			var button := Button.new()
+			button.text = "%s [%s] %d%s" % [
+				band_name,
+				status_text,
+				member_count,
+				Locale.ltr("UI_MEMBERS_SUFFIX"),
+			]
+			button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			button.focus_mode = Control.FOCUS_NONE
+			button.add_theme_font_size_override("font_size", GameConfig.get_font_size("panel_small"))
+			button.pressed.connect(_on_band_popup_band_pressed.bind(leader_id))
+			box.add_child(button)
+
+			if not leader_name.is_empty():
+				box.add_child(
+					_make_label(
+						"%s: %s" % [Locale.ltr("UI_BAND_LEADER_ROLE"), leader_name],
+						"panel_small",
+						Color(0.44, 0.53, 0.60)
+					)
+				)
+
+	_band_popup.add_child(box)
+	_band_popup.visible = true
+	_band_popup.move_to_front()
+
+
+func _close_hud_popups() -> bool:
+	var closed: bool = false
+	if _resource_popup != null and _resource_popup.visible:
+		_resource_popup.visible = false
+		closed = true
+	if _band_popup != null and _band_popup.visible:
+		_band_popup.visible = false
+		closed = true
+	return closed
+
+
+func _on_resource_popup_settlement_pressed(settlement_id: int) -> void:
+	_close_hud_popups()
+	if settlement_id >= 0:
+		SimulationBus.settlement_panel_requested.emit(settlement_id)
+
+
+func _on_band_popup_band_pressed(leader_id: int) -> void:
+	_close_hud_popups()
+	if leader_id >= 0:
+		SimulationBus.entity_selected.emit(leader_id)
+
+
 func _refresh_overlay_legend() -> void:
 	if _overlay_legend == null:
 		return
@@ -786,12 +1002,21 @@ func _build_top_bar() -> void:
 	_food_label = _make_label(Locale.trf1("UI_RES_FOOD_FMT", "n", 0), "hud", Color(0.4, 0.8, 0.2))
 	_wood_label = _make_label(Locale.trf1("UI_RES_WOOD_FMT", "n", 0), "hud", Color(0.6, 0.4, 0.2))
 	_stone_label = _make_label(Locale.trf1("UI_RES_STONE_FMT", "n", 0), "hud", Color(0.7, 0.7, 0.7))
+	var resource_container := HBoxContainer.new()
+	resource_container.add_theme_constant_override("separation", 14)
+	resource_container.mouse_filter = Control.MOUSE_FILTER_STOP
+	resource_container.gui_input.connect(_on_resource_bar_clicked)
+	for resource_label: Label in [_food_label, _wood_label, _stone_label]:
+		resource_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		resource_container.add_child(resource_label)
 	_building_label = _make_label(Locale.trf1("UI_BLD_FMT", "n", 0), "hud")
 	_weather_label = _make_label("", "hud", Color(0.6, 0.75, 0.85))
 	_alert_badge = _make_label("", "hud", Color(0.9, 0.3, 0.2))
 	_alert_badge.visible = false
 	_band_badge = _make_label("", "hud_secondary", Color(0.28, 0.64, 0.28))
 	_band_badge.visible = false
+	_band_badge.mouse_filter = Control.MOUSE_FILTER_STOP
+	_band_badge.gui_input.connect(_on_band_badge_clicked)
 	_settlement_badge = _make_label("", "hud_secondary", Color(0.41, 0.53, 0.66))
 	_settlement_badge.visible = false
 	_fps_label = _make_label("60", "hud_secondary", Color(0.5, 0.5, 0.5))
@@ -803,9 +1028,7 @@ func _build_top_bar() -> void:
 	hbox.add_child(_time_label)
 	hbox.add_child(_pop_label)
 	hbox.add_child(_era_label)
-	hbox.add_child(_food_label)
-	hbox.add_child(_wood_label)
-	hbox.add_child(_stone_label)
+	hbox.add_child(resource_container)
 	hbox.add_child(_building_label)
 	hbox.add_child(spacer)
 	hbox.add_child(_weather_label)
@@ -1708,6 +1931,7 @@ func _add_notification(text: String, color: Color, category: int = NotifCategory
 
 func _on_entity_selected(entity_id: int) -> void:
 	_selected_entity_id = entity_id
+	_close_hud_popups()
 	_entity_panel.visible = true
 	_building_panel.visible = false
 	_selected_building_id = -1
@@ -1728,6 +1952,7 @@ func _on_entity_deselected() -> void:
 
 func _on_building_selected(building_id: int) -> void:
 	_selected_building_id = building_id
+	_close_hud_popups()
 	_building_panel.visible = true
 	_entity_panel.visible = false
 	_selected_entity_id = -1
@@ -1920,6 +2145,10 @@ func _refresh_hud_texts() -> void:
 		_weather_label.text = _get_season_text(_sim_engine.current_tick)
 	_refresh_alert_badges()
 	_refresh_selection_summary()
+	if _resource_popup != null and _resource_popup.visible:
+		_show_resource_popup()
+	if _band_popup != null and _band_popup.visible:
+		_show_band_popup()
 	if _cast_bar != null:
 		_cast_bar.refresh_locale()
 	if _story_notification_manager != null:
@@ -2024,6 +2253,8 @@ func close_all_popups() -> bool:
 	if _entity_detail_panel_open:
 		_close_entity_detail_sidebar()
 		return true
+	if _close_hud_popups():
+		return true
 	if _popup_manager != null and _popup_manager.is_any_visible():
 		_popup_manager.close_all()
 		return true
@@ -2064,6 +2295,7 @@ func open_settlement_detail(settlement_id: int) -> void:
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
+	_close_hud_popups()
 	open_settlement_detail(settlement_id)
 
 
