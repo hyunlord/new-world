@@ -26,7 +26,40 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	if settlement == null:
 		return cy
 
-	# ── 1. Leader Section ──────────────────────────────────────────────────
+	# ── 1. Alerts Section ──────────────────────────────────────────────────
+	var alerts: Array[Dictionary] = []
+	var stockpile_food: float = float(data.get("stockpile_food", 0.0))
+	if stockpile_food < 20.0:
+		alerts.append({
+			"text": Locale.ltr("ALERT_SETTLEMENT_FOOD"),
+			"color": NEGATIVE_COLOR,
+		})
+	var at_risk_tech_names: PackedStringArray = _at_risk_tech_names(settlement)
+	if not at_risk_tech_names.is_empty():
+		alerts.append({
+			"text": "%s: %s" % [
+				Locale.ltr("ALERT_SETTLEMENT_TECH_RISK"),
+				", ".join(at_risk_tech_names),
+			],
+			"color": Color(0.9, 0.7, 0.2),
+		})
+	if not alerts.is_empty():
+		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("PANEL_OVERVIEW_ALERTS"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
+		cy += LINE_HEIGHT
+		for alert: Dictionary in alerts:
+			canvas.draw_string(
+				font,
+				Vector2(cx + 8.0, cy),
+				"⚠ " + str(alert.get("text", "")),
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				body_size,
+				alert.get("color", NEGATIVE_COLOR)
+			)
+			cy += LINE_HEIGHT
+		cy += SECTION_GAP
+
+	# ── 2. Leader Section ──────────────────────────────────────────────────
 	var leader = data.get("leader", null)
 	if leader != null:
 		var charisma_raw: float = 0.5
@@ -52,7 +85,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_NO_LEADER"), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, NEUTRAL_COLOR)
 	cy += LINE_HEIGHT + SECTION_GAP
 
-	# ── 2. Era Section ─────────────────────────────────────────────────────
+	# ── 3. Era Section ─────────────────────────────────────────────────────
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_ERA_SECTION"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 
@@ -98,7 +131,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	canvas.draw_string(font, Vector2(cx + BAR_WIDTH + 6.0, cy + BAR_HEIGHT - 2.0), progress_label, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, NEUTRAL_COLOR)
 	cy += BAR_HEIGHT + SECTION_GAP
 
-	# ── 3. Population Summary ──────────────────────────────────────────────
+	# ── 4. Population Summary ──────────────────────────────────────────────
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_POP_SUMMARY"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 	canvas.draw_string(font, Vector2(cx, cy), Locale.trf1("UI_TOTAL_POP_FMT", "n", data.get("population", 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, body_size, Color.WHITE)
@@ -122,7 +155,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 	)
 	cy += LINE_HEIGHT + SECTION_GAP
 
-	# ── 4. Active Tech Modifiers ───────────────────────────────────────────
+	# ── 5. Active Tech Modifiers ───────────────────────────────────────────
 	var tech_tree_manager = data.get("tech_tree_manager", null)
 	var settlement_tech_states: Dictionary = _settlement_tech_states(settlement)
 	if tech_tree_manager != null and settlement_tech_states.size() > 0:
@@ -136,17 +169,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			var tech_def: Dictionary = tech_tree_manager.get_def(tech_id)
 			if tech_def.is_empty():
 				continue
-			var modifiers = tech_def.get("modifiers", [])
-			for mod in modifiers:
-				var target_name: String = mod.get("target", "")
-				var target_label: String = Locale.ltr("MOD_TARGET_" + target_name.to_upper())
-				var mod_value = mod.get("value", 1.0)
-				var mod_type: String = mod.get("type", "multiplier")
-				var mod_text: String
-				if mod_type == "multiplier":
-					mod_text = target_label + " ×" + "%.2f" % float(mod_value)
-				else:
-					mod_text = target_label + " +" + "%.2f" % float(mod_value)
+			for mod_text: String in _format_tech_modifiers(tech_def):
 				canvas.draw_string(font, Vector2(cx + 8.0, cy), mod_text, HORIZONTAL_ALIGNMENT_LEFT, -1, small_size, POSITIVE_COLOR)
 				cy += LINE_HEIGHT
 				any_modifier_drawn = true
@@ -154,7 +177,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			cy -= LINE_HEIGHT  # remove header gap if nothing drawn, re-add section gap below
 		cy += SECTION_GAP
 
-	# ── 5. Capabilities ────────────────────────────────────────────────────
+	# ── 6. Capabilities ────────────────────────────────────────────────────
 	if tech_tree_manager != null:
 		canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_CAPABILITIES"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 		cy += LINE_HEIGHT
@@ -178,7 +201,7 @@ func draw_content(canvas: Control, data: Dictionary, font: Font, cx: float, cy: 
 			cy -= LINE_HEIGHT
 		cy += SECTION_GAP
 
-	# ── 6. Settlement State ────────────────────────────────────────────────
+	# ── 7. Settlement State ────────────────────────────────────────────────
 	canvas.draw_string(font, Vector2(cx, cy), Locale.ltr("UI_SETTLEMENT_STATE"), HORIZONTAL_ALIGNMENT_LEFT, -1, heading_size, SECTION_HEADER_COLOR)
 	cy += LINE_HEIGHT
 
@@ -269,3 +292,66 @@ func _settlement_known_techs(settlement: Variant) -> Array:
 		if CivTechState.is_active(cts):
 			known.append(tech_id)
 	return known
+
+
+func _at_risk_tech_names(settlement: Variant) -> PackedStringArray:
+	var names: PackedStringArray = PackedStringArray()
+	var tech_states: Dictionary = _settlement_tech_states(settlement)
+	for tech_id_variant: Variant in tech_states.keys():
+		var tech_id: String = str(tech_id_variant)
+		var cts: Dictionary = tech_states[tech_id]
+		if not CivTechState.is_active(cts):
+			continue
+		if int(cts.get("practitioner_count", 0)) != 1:
+			continue
+		if Locale.has_key(tech_id):
+			names.append(Locale.ltr(tech_id))
+		else:
+			names.append(tech_id)
+	return names
+
+
+func _format_tech_modifiers(tech_def: Dictionary) -> PackedStringArray:
+	var lines: PackedStringArray = PackedStringArray()
+	var direct_modifiers: Variant = tech_def.get("modifiers", [])
+	if direct_modifiers is Array:
+		for mod_raw: Variant in direct_modifiers:
+			if not (mod_raw is Dictionary):
+				continue
+			var mod: Dictionary = mod_raw
+			var target_name: String = str(mod.get("target", ""))
+			if target_name.is_empty():
+				continue
+			var target_label: String = _modifier_target_label(target_name)
+			var mod_value: float = float(mod.get("value", 1.0))
+			var mod_type: String = str(mod.get("type", "multiplier"))
+			if mod_type == "multiplier":
+				lines.append("%s ×%.2f" % [target_label, mod_value])
+			else:
+				lines.append("%s +%.2f" % [target_label, mod_value])
+	if not lines.is_empty():
+		return lines
+	var discovery_raw: Variant = tech_def.get("discovery", {})
+	if discovery_raw is Dictionary:
+		var discovery: Dictionary = discovery_raw
+		var discovery_modifiers: Variant = discovery.get("modifiers", {})
+		if discovery_modifiers is Dictionary:
+			for target_variant: Variant in discovery_modifiers.keys():
+				var target_name: String = str(target_variant)
+				lines.append(
+					"%s +%.2f" % [
+						_modifier_target_label(target_name),
+						float(discovery_modifiers[target_name]),
+					]
+				)
+	return lines
+
+
+func _modifier_target_label(target_name: String) -> String:
+	var locale_key: String = "MOD_TARGET_" + target_name.to_upper()
+	if Locale.has_key(locale_key):
+		return Locale.ltr(locale_key)
+	var words: PackedStringArray = PackedStringArray()
+	for word: String in target_name.split("_", false):
+		words.append(word.capitalize())
+	return " ".join(words)
