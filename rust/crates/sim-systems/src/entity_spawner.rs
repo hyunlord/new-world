@@ -732,7 +732,7 @@ pub fn spawn_agent(
     let mut father = None;
     let mut mother = None;
     let mut generation = 0_u16;
-    let mut kinship_type = KinshipType::Bilateral;
+    let mut parent_kinship_types = Vec::with_capacity(2);
     for parent_entity in [config.parent_a, config.parent_b].into_iter().flatten() {
         let parent_id = EntityId(parent_entity.id() as u64);
         let parent_sex = world
@@ -749,9 +749,16 @@ pub fn spawn_agent(
 
         if let Ok(parent_family) = world.get::<&FamilyComponent>(parent_entity) {
             generation = generation.max(parent_family.generation.saturating_add(1));
-            kinship_type = parent_family.kinship_type;
+            parent_kinship_types.push(parent_family.kinship_type);
         }
     }
+    parent_kinship_types.sort_unstable_by_key(|kinship| *kinship as u8);
+    parent_kinship_types.dedup();
+    let kinship_type = if parent_kinship_types.len() == 1 {
+        parent_kinship_types[0]
+    } else {
+        KinshipType::Bilateral
+    };
 
     let family = FamilyComponent {
         father,
@@ -1179,7 +1186,7 @@ mod tests {
         assert_eq!(family.mother, Some(EntityId(mother.id() as u64)));
         assert_eq!(family.generation, 3);
         assert_eq!(family.birth_tick, 144);
-        assert_eq!(family.kinship_type, KinshipType::Matrilineal);
+        assert_eq!(family.kinship_type, KinshipType::Bilateral);
         assert_eq!(
             social.parents,
             vec![EntityId(father.id() as u64), EntityId(mother.id() as u64)]

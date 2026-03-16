@@ -19,6 +19,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 use crate::body;
+use crate::entity_spawner::{spawn_agent, SpawnConfig};
 
 /// Rust runtime system for child hunger feeding from settlement stockpiles.
 ///
@@ -225,43 +226,23 @@ impl SimSystem for PopulationRuntimeSystem {
                 (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
         }
 
-        let age = Age {
-            ticks: 0,
-            years: 0.0,
-            stage: GrowthStage::Infant,
-            alive: true,
+        let newborn_sex = if resources.rng.gen_bool(0.5) {
+            Sex::Male
+        } else {
+            Sex::Female
         };
-
-        let identity = Identity {
-            birth_tick: tick,
-            settlement_id: Some(settlement_id),
-            growth_stage: GrowthStage::Infant,
-            sex: if resources.rng.gen_bool(0.5) {
-                Sex::Male
-            } else {
-                Sex::Female
+        let entity = spawn_agent(
+            world,
+            resources,
+            &SpawnConfig {
+                settlement_id: Some(settlement_id),
+                position: (selected_x, selected_y),
+                initial_age_ticks: 0,
+                sex: Some(newborn_sex),
+                parent_a: None,
+                parent_b: None,
             },
-            ..Identity::default()
-        };
-
-        let behavior = Behavior {
-            current_action: ActionType::Idle,
-            ..Behavior::default()
-        };
-
-        let entity = world.spawn((
-            age,
-            identity,
-            behavior,
-            LlmCapable::default(),
-            NarrativeCache::default(),
-            Needs::default(),
-            Emotion::default(),
-            SteeringParams::default(),
-            Stress::default(),
-            Social::default(),
-            Position::new(selected_x, selected_y),
-        ));
+        );
         let entity_id = EntityId(entity.id() as u64);
 
         if let Ok(mut one) = world.query_one::<&mut Identity>(entity) {
