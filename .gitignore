@@ -4,6 +4,9 @@
 *.import
 *.translation
 *.uid
+!scripts/ui/panels/oracle_panel.gd.uid
+!scripts/ui/panels/band_detail_panel.gd.uid
+!scripts/ui/panels/civilization_detail_panel.gd.uid
 export_presets.cfg
 error.log
 
