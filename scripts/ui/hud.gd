@@ -4,7 +4,7 @@ const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
 const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
-const EntityDetailPanelV3Class = preload("res://scripts/ui/panels/entity_detail_panel_v3.gd")
+const EntityDetailPanelV4Class = preload("res://scripts/ui/panels/entity_detail_panel_v4.gd")
 const EntityDetailPanelLegacyClass = preload("res://scripts/ui/panels/entity_detail_panel_legacy.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_detail_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
@@ -250,7 +250,7 @@ func _build_minimap_and_stats() -> void:
 	add_child(_popup_manager)
 
 	if _sim_engine != null:
-		_entity_detail_panel = EntityDetailPanelV3Class.new()
+		_entity_detail_panel = EntityDetailPanelV4Class.new()
 		_entity_detail_panel.init(_sim_engine)
 		_entity_detail_panel_legacy = EntityDetailPanelLegacyClass.new()
 		_entity_detail_panel_legacy.init(_entity_manager, _building_manager, _relationship_manager, _settlement_manager, _reputation_manager)
