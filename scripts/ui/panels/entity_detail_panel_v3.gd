@@ -128,8 +128,6 @@ func set_entity_id(entity_id: int) -> void:
 	_last_narrative_display.clear()
 	_thought_timer = 0.0
 	_narrative_refresh_timer = 0.0
-	if _sim_engine != null and entity_id >= 0 and _sim_engine.has_method("on_entity_narrative_click"):
-		_sim_engine.on_entity_narrative_click(entity_id)
 	_reload_data()
 
 
