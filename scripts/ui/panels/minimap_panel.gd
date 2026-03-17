@@ -13,7 +13,7 @@ var _needs_update: bool = true
 var _runtime_snapshot_cache: Dictionary = {}
 var _runtime_snapshot_cache_tick: int = -1
 
-var minimap_size: int = 250
+var minimap_size: int = 140
 
 
 ## Initializes the panel with WorldData, EntityManager, BuildingManager, SettlementManager, and the main Camera2D.
@@ -30,7 +30,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	offset_left = 8
 	offset_right = 8 + minimap_size
-	offset_bottom = -46
+	offset_bottom = -52
 	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 
@@ -46,9 +46,9 @@ func _ready() -> void:
 
 func _draw() -> void:
 	# Background
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.7))
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.03, 0.06, 0.85))
 	# Border
-	draw_rect(Rect2(Vector2.ZERO, size), Color.WHITE, false, 1.0)
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.25, 0.30, 0.38), false, 1.5)
 
 	# Camera viewport rectangle
 	if _camera == null:
@@ -192,7 +192,7 @@ func resize(new_size: int) -> void:
 	minimap_size = new_size
 	offset_left = 8
 	offset_right = 8 + minimap_size
-	offset_bottom = -46
+	offset_bottom = -52
 	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)

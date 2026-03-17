@@ -288,31 +288,45 @@ func _format_overview_tab_text() -> String:
 	)
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_OVERVIEW_NEEDS"))
-	lines.append(_bbcode_bar(Locale.ltr("NEED_HUNGER"), hunger, _need_color(hunger)))
-	lines.append(_bbcode_bar(Locale.ltr("NEED_SLEEP"), sleep_need, _need_color(sleep_need)))
-	lines.append(_bbcode_bar(Locale.ltr("NEED_WARMTH"), clampf(float(_detail.get("need_warmth", 0.5)), 0.0, 1.0), _need_color(float(_detail.get("need_warmth", 0.5)))))
-	lines.append(_bbcode_bar(Locale.ltr("NEED_SAFETY"), clampf(float(_detail.get("need_safety", 0.5)), 0.0, 1.0), _need_color(float(_detail.get("need_safety", 0.5)))))
+	lines.append(_format_bar_table([
+		{"label": Locale.ltr("NEED_HUNGER"), "value": hunger, "color": _need_color(hunger)},
+		{"label": Locale.ltr("NEED_SLEEP"), "value": sleep_need, "color": _need_color(sleep_need)},
+		{"label": Locale.ltr("NEED_WARMTH"), "value": clampf(float(_detail.get("need_warmth", 0.5)), 0.0, 1.0), "color": _need_color(float(_detail.get("need_warmth", 0.5)))},
+		{"label": Locale.ltr("NEED_SAFETY"), "value": clampf(float(_detail.get("need_safety", 0.5)), 0.0, 1.0), "color": _need_color(float(_detail.get("need_safety", 0.5)))},
+	]))
 
 	return "\n".join(lines)
 
 
 func _format_needs_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
+	var entries: Array[Dictionary] = []
 	for entry: Dictionary in _build_need_entries():
 		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
-		lines.append(_bbcode_bar(Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))), value, _need_color(value)))
+		entries.append({
+			"label": Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
+			"value": value,
+			"color": _need_color(value),
+		})
+	lines.append(_format_bar_table(entries))
 	return "\n".join(lines)
 
 
 func _format_emotion_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
+	var entries: Array[Dictionary] = []
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_EMOTION_TITLE"))
 	lines.append("")
 	for entry: Dictionary in _build_emotion_entries():
 		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
-		lines.append(_bbcode_bar(Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))), value, _emotion_to_color(str(entry.get("key", "")))))
+		entries.append({
+			"label": Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
+			"value": value,
+			"color": _emotion_to_color(str(entry.get("key", ""))),
+		})
 	lines.append("")
-	lines.append(_bbcode_bar(Locale.ltr("UI_STRESS"), _normalized_stress(), Color(0.78, 0.34, 0.28)))
+	entries.append({"label": Locale.ltr("UI_STRESS"), "value": _normalized_stress(), "color": Color(0.78, 0.34, 0.28)})
+	lines.append(_format_bar_table(entries))
 	return "\n".join(lines)
 
 
@@ -327,15 +341,23 @@ func _format_personality_tab_text() -> String:
 		lines.append("[color=#7088a0]%s[/color]" % Locale.ltr(temperament_key))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_TCI_TITLE"))
-	lines.append(_bbcode_bar(Locale.ltr("UI_TCI_NS"), clampf(float(_detail.get("tci_ns", 0.5)), 0.0, 1.0), Color(0.51, 0.62, 0.78)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_TCI_HA"), clampf(float(_detail.get("tci_ha", 0.5)), 0.0, 1.0), Color(0.68, 0.58, 0.80)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_TCI_RD"), clampf(float(_detail.get("tci_rd", 0.5)), 0.0, 1.0), Color(0.62, 0.74, 0.48)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_TCI_P"), clampf(float(_detail.get("tci_p", 0.5)), 0.0, 1.0), Color(0.80, 0.65, 0.36)))
+	lines.append(_format_bar_table([
+		{"label": Locale.ltr("UI_TCI_NS"), "value": clampf(float(_detail.get("tci_ns", 0.5)), 0.0, 1.0), "color": Color(0.51, 0.62, 0.78)},
+		{"label": Locale.ltr("UI_TCI_HA"), "value": clampf(float(_detail.get("tci_ha", 0.5)), 0.0, 1.0), "color": Color(0.68, 0.58, 0.80)},
+		{"label": Locale.ltr("UI_TCI_RD"), "value": clampf(float(_detail.get("tci_rd", 0.5)), 0.0, 1.0), "color": Color(0.62, 0.74, 0.48)},
+		{"label": Locale.ltr("UI_TCI_P"), "value": clampf(float(_detail.get("tci_p", 0.5)), 0.0, 1.0), "color": Color(0.80, 0.65, 0.36)},
+	]))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_HEXACO_TITLE"))
+	var hexaco_entries: Array[Dictionary] = []
 	for axis_row: Dictionary in HEXACO_ROWS:
 		var axis_value: float = clampf(float(_detail.get(str(axis_row.get("field", "")), 0.0)), 0.0, 1.0)
-		lines.append(_bbcode_bar(Locale.ltr(str(axis_row.get("key", "UI_UNKNOWN"))), axis_value, Color(0.41, 0.53, 0.66)))
+		hexaco_entries.append({
+			"label": Locale.ltr(str(axis_row.get("key", "UI_UNKNOWN"))),
+			"value": axis_value,
+			"color": Color(0.41, 0.53, 0.66),
+		})
+	lines.append(_format_bar_table(hexaco_entries))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_TRAITS_TITLE"))
 	var trait_tags: PackedStringArray = _trait_tags()
@@ -350,13 +372,14 @@ func _format_personality_tab_text() -> String:
 	if values_ranked.is_empty():
 		lines.append("[color=#384850]—[/color]")
 	else:
+		var value_entries: Array[Dictionary] = []
 		for value_entry: Dictionary in values_ranked:
-			lines.append(
-				"%s %s" % [
-					_fixed_label(Locale.ltr(str(value_entry.get("key", "UI_UNKNOWN"))), 8),
-					_bbcode_bar_inline(float(value_entry.get("value", 0.0)), Color(0.66, 0.60, 0.28)),
-				]
-			)
+			value_entries.append({
+				"label": Locale.ltr(str(value_entry.get("key", "UI_UNKNOWN"))),
+				"value": float(value_entry.get("value", 0.0)),
+				"color": Color(0.66, 0.60, 0.28),
+			})
+		lines.append(_format_bar_table(value_entries))
 	return "\n".join(lines)
 
 
@@ -364,43 +387,45 @@ func _format_health_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_HEALTH_TITLE"))
 	lines.append("")
-	lines.append(
-		"[b]%s[/b]: %s" % [
-			Locale.ltr("PANEL_HEALTH_AGGREGATE"),
-			_bbcode_bar_inline(clampf(float(_health_tab.get("aggregate_hp", 1.0)), 0.0, 1.0), _need_color(float(_health_tab.get("aggregate_hp", 1.0)))),
-		]
-	)
+	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_AGGREGATE"))
+	lines.append(_format_bar_table([
+		{"label": Locale.ltr("PANEL_HEALTH_AGGREGATE"), "value": clampf(float(_health_tab.get("aggregate_hp", 1.0)), 0.0, 1.0), "color": _need_color(float(_health_tab.get("aggregate_hp", 1.0)))}
+	]))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_GROUPS"))
+	var health_entries: Array[Dictionary] = []
 	for group_entry: Dictionary in _merged_health_groups():
 		var hp_value: float = clampf(float(group_entry.get("value", 0.0)), 0.0, 1.0)
-		lines.append(
-			"%s %s" % [
-				_fixed_label(Locale.ltr(str(group_entry.get("label", "UI_UNKNOWN"))), 8),
-				_bbcode_bar_inline(hp_value, _need_color(hp_value)),
-			]
-		)
+		health_entries.append({
+			"label": Locale.ltr(str(group_entry.get("label", "UI_UNKNOWN"))),
+			"value": hp_value,
+			"color": _need_color(hp_value),
+		})
+	lines.append(_format_bar_table(health_entries))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_DERIVED_STATS"))
-	lines.append(_bbcode_bar(Locale.ltr("UI_MOVE"), clampf(float(_health_tab.get("move_mult", 1.0)) / 1.5, 0.0, 1.0), Color(0.36, 0.76, 0.48)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_WORK"), clampf(float(_health_tab.get("work_mult", 1.0)) / 1.5, 0.0, 1.0), Color(0.42, 0.56, 0.82)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_COMBAT"), clampf(float(_health_tab.get("combat_mult", 1.0)) / 1.5, 0.0, 1.0), Color(0.82, 0.34, 0.28)))
-	lines.append(_bbcode_bar(Locale.ltr("UI_PAIN"), clampf(float(_health_tab.get("pain", 0.0)), 0.0, 1.0), Color(0.86, 0.68, 0.24)))
+	lines.append(_format_bar_table([
+		{"label": Locale.ltr("UI_MOVE"), "value": clampf(float(_health_tab.get("move_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.36, 0.76, 0.48)},
+		{"label": Locale.ltr("UI_WORK"), "value": clampf(float(_health_tab.get("work_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.42, 0.56, 0.82)},
+		{"label": Locale.ltr("UI_COMBAT"), "value": clampf(float(_health_tab.get("combat_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.82, 0.34, 0.28)},
+		{"label": Locale.ltr("UI_PAIN"), "value": clampf(float(_health_tab.get("pain", 0.0)), 0.0, 1.0), "color": Color(0.86, 0.68, 0.24)},
+	]))
 	var damaged_parts: Array = _health_tab.get("damaged_parts", [])
 	if not damaged_parts.is_empty():
 		lines.append("")
 		lines.append("[b][color=#c84a32]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_INJURIES"))
+		var injury_entries: Array[Dictionary] = []
 		for part_raw: Variant in damaged_parts:
 			if not (part_raw is Dictionary):
 				continue
 			var part: Dictionary = part_raw
 			var part_hp: float = clampf(float(part.get("hp", 0)) / 100.0, 0.0, 1.0)
-			var part_line: String = "%s%s %s" % [
-				"⚠ " if bool(part.get("vital", false)) else "",
-				_fixed_label(_localized_body_part_name(str(part.get("name", ""))), 8),
-				_bbcode_bar_inline(part_hp, _need_color(part_hp)),
-			]
-			lines.append(part_line)
+			injury_entries.append({
+				"label": ("%s%s" % ["⚠ " if bool(part.get("vital", false)) else "", _localized_body_part_name(str(part.get("name", "")))]).strip_edges(),
+				"value": part_hp,
+				"color": _need_color(part_hp),
+			})
+		lines.append(_format_bar_table(injury_entries))
 	return "\n".join(lines)
 
 
@@ -412,6 +437,8 @@ func _format_knowledge_tab_text() -> String:
 	if known.is_empty():
 		lines.append("[color=#384850]%s[/color]" % Locale.ltr("UI_NO_KNOWLEDGE"))
 	else:
+		var knowledge_entries: Array[Dictionary] = []
+		var source_lines: PackedStringArray = PackedStringArray()
 		for knowledge_raw: Variant in known:
 			if not (knowledge_raw is Dictionary):
 				continue
@@ -428,14 +455,18 @@ func _format_knowledge_tab_text() -> String:
 				"KNOWLEDGE_SRC_RECORDED",
 				"KNOWLEDGE_SRC_SCHOOL",
 			]
-			lines.append("[color=#6888a8]%s[/color] %s" % [
-				_fixed_label(display_name, 10),
-				_bbcode_bar_inline(proficiency, Color(0.45, 0.62, 0.84)),
-			])
-			lines.append("  [color=#506878]%s[/color] %s" % [
+			knowledge_entries.append({
+				"label": display_name,
+				"value": proficiency,
+				"color": Color(0.45, 0.62, 0.84),
+			})
+			source_lines.append("  [color=#506878]%s[/color] %s" % [
 				Locale.ltr("UI_KNOWLEDGE_SOURCE"),
 				Locale.ltr(source_key[source_index]),
 			])
+		lines.append(_format_bar_table(knowledge_entries))
+		for source_line: String in source_lines:
+			lines.append(source_line)
 		lines.append("")
 
 	var skill_tokens: PackedStringArray = PackedStringArray()
@@ -468,7 +499,9 @@ func _format_knowledge_tab_text() -> String:
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_RECORDS_TITLE"))
 	lines.append("[color=#384850]%s[/color]" % Locale.ltr("UI_RECORDS_PLACEHOLDER"))
 	lines.append("")
-	lines.append(_bbcode_bar(Locale.ltr("UI_INNOVATION"), clampf(float(_knowledge_tab.get("innovation_potential", 0.0)), 0.0, 1.0), Color(0.78, 0.56, 0.19)))
+	lines.append(_format_bar_table([
+		{"label": Locale.ltr("UI_INNOVATION"), "value": clampf(float(_knowledge_tab.get("innovation_potential", 0.0)), 0.0, 1.0), "color": Color(0.78, 0.56, 0.19)}
+	]))
 	return "\n".join(lines)
 
 
@@ -485,7 +518,7 @@ func _format_inventory_tab_text() -> String:
 		lines.append("[color=#384850]%s[/color]" % Locale.ltr("UI_NO_ITEMS"))
 	else:
 		var row_tokens: PackedStringArray = PackedStringArray()
-		var detail_lines: PackedStringArray = PackedStringArray()
+		var item_quality_entries: Array[Dictionary] = []
 		for index: int in range(items.size()):
 			if not (items[index] is Dictionary):
 				continue
@@ -497,16 +530,16 @@ func _format_inventory_tab_text() -> String:
 			if row_tokens.size() == 5:
 				lines.append(" ".join(row_tokens))
 				row_tokens.clear()
-			detail_lines.append("  [color=#506878]%s[/color] %s" % [
-				_fixed_label(display_name, 10),
-				_bbcode_bar_inline(clampf(float(item.get("quality", 0.5)), 0.0, 1.0), Color(0.58, 0.68, 0.32)),
-			])
+			item_quality_entries.append({
+				"label": display_name,
+				"value": clampf(float(item.get("quality", 0.5)), 0.0, 1.0),
+				"color": Color(0.58, 0.68, 0.32),
+			})
 		if not row_tokens.is_empty():
 			lines.append(" ".join(row_tokens))
-		if not detail_lines.is_empty():
+		if not item_quality_entries.is_empty():
 			lines.append("")
-			for detail_line: String in detail_lines:
-				lines.append(detail_line)
+			lines.append(_format_bar_table(item_quality_entries))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_EQUIPMENT_TITLE"))
 	var equipment: Dictionary = _equipment_slots()
@@ -743,39 +776,36 @@ func _emotion_category(emotion: String) -> String:
 
 
 func _bbcode_bar(label: String, value: float, color: Color) -> String:
-	var clamped: float = clampf(value, 0.0, 1.0)
-	var filled: int = clampi(int(round(clamped * 10.0)), 0, 10)
-	return "%s [color=%s]%s[/color][color=#182430]%s[/color] [color=#8898a8]%d%%[/color]" % [
-		_fixed_label(label, 8),
-		_color_hex(color),
-		"█".repeat(filled),
-		"░".repeat(10 - filled),
-		int(round(clamped * 100.0)),
-	]
+	return _format_bar_table([{"label": label, "value": value, "color": color}])
 
 
 func _bbcode_bar_inline(value: float, color: Color) -> String:
-	var clamped: float = clampf(value, 0.0, 1.0)
-	var filled: int = clampi(int(round(clamped * 8.0)), 0, 8)
-	return "[color=%s]%s[/color][color=#182430]%s[/color] %d%%" % [
-		_color_hex(color),
-		"█".repeat(filled),
-		"░".repeat(8 - filled),
-		int(round(clamped * 100.0)),
-	]
+	return _format_bar_table([{"label": "", "value": value, "color": color}], 8)
+
+
+func _format_bar_table(entries: Array[Dictionary], block_count: int = 12) -> String:
+	if entries.is_empty():
+		return ""
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("[table=3]")
+	for entry: Dictionary in entries:
+		var label: String = str(entry.get("label", ""))
+		var clamped: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+		var filled: int = clampi(int(round(clamped * float(block_count))), 0, block_count)
+		var color: Color = entry.get("color", Color(0.5, 0.6, 0.7))
+		lines.append("[cell][color=#506878]%s[/color][/cell][cell][color=%s]%s[/color][color=#182430]%s[/color][/cell][cell][color=#8898a8]%d%%[/color][/cell]" % [
+			label,
+			_color_hex(color),
+			"█".repeat(filled),
+			"░".repeat(block_count - filled),
+			int(round(clamped * 100.0)),
+		])
+	lines.append("[/table]")
+	return "\n".join(lines)
 
 
 func _color_hex(color: Color) -> String:
 	return "#" + color.to_html(false)
-
-
-func _fixed_label(label: String, width: int) -> String:
-	var padded: String = label.strip_edges()
-	if padded.length() > width:
-		padded = padded.substr(0, width)
-	while padded.length() < width:
-		padded += " "
-	return "[code]%s[/code]" % padded
 
 
 func _card_line(color_hex: String, title: String, detail: String) -> String:

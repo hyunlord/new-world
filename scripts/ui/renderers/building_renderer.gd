@@ -8,6 +8,10 @@ var _runtime_minimap_cache: Dictionary = {}
 var _runtime_minimap_cache_tick: int = -1
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
+var _last_redraw_cam_pos: Vector2 = Vector2.INF
+var _last_redraw_zoom: float = -1.0
+var _last_redraw_tick: int = -1
+var _redraw_cooldown: float = 0.0
 
 
 func init(building_manager: RefCounted, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
@@ -16,7 +20,35 @@ func init(building_manager: RefCounted, settlement_manager: RefCounted = null, s
 	_sim_engine = sim_engine
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_redraw_cooldown = maxf(0.0, _redraw_cooldown - delta)
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	if cam == null:
+		return
+	var cam_pos: Vector2 = cam.global_position
+	var cam_zoom: float = cam.zoom.x
+	var runtime_tick: int = -1
+	if _sim_engine != null:
+		runtime_tick = int(_sim_engine.get("current_tick"))
+	var camera_changed: bool = (
+		_last_redraw_cam_pos == Vector2.INF
+		or cam_pos.distance_to(_last_redraw_cam_pos) > 8.0
+		or absf(cam_zoom - _last_redraw_zoom) > 0.01
+	)
+	var data_changed: bool = runtime_tick != _last_redraw_tick
+	if _redraw_cooldown > 0.0 and not data_changed:
+		return
+	if camera_changed or data_changed:
+		_last_redraw_cam_pos = cam_pos
+		_last_redraw_zoom = cam_zoom
+		_last_redraw_tick = runtime_tick
+		_redraw_cooldown = 0.1
+		queue_redraw()
+
+
+func force_redraw() -> void:
+	_redraw_cooldown = 0.0
+	_last_redraw_cam_pos = Vector2.INF
 	queue_redraw()
 
 
@@ -79,15 +111,15 @@ func _draw() -> void:
 			draw_rect(Rect2(cx - 1.5, cy - 1.5, 3.0, 3.0), strategic_color, true)
 			continue
 
-		match building_type:
-			"stockpile":
-				_draw_stockpile(cx, cy, alpha, tile_size)
-			"shelter":
-				_draw_shelter(cx, cy, alpha, tile_size)
-			"campfire":
-				_draw_campfire(cx, cy, alpha, tile_size)
-			_:
-				pass
+			match building_type:
+				"stockpile":
+					_draw_stockpile(cx, cy, alpha, tile_size, zl)
+				"shelter":
+					_draw_shelter(cx, cy, alpha, tile_size, zl)
+				"campfire":
+					_draw_campfire(cx, cy, alpha, tile_size, zl)
+				_:
+					pass
 		_draw_building_interior(b, tile_x, tile_y, tile_size, zl)
 
 		# Construction progress bar
@@ -110,6 +142,21 @@ func _draw() -> void:
 			var stone: int = int(round(storage.get("stone", 0.0)))
 			var text: String = Locale.trf3("UI_STATS_RESOURCES_FMT", "food", food, "wood", wood, "stone", stone)
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
+		elif _current_lod >= 1:
+			var building_label: String = Locale.tr_id("BUILDING", building_type)
+			if building_label.is_empty() or building_label == building_type:
+				building_label = Locale.tr_id("BUILDING_TYPE", building_type)
+			if building_label.is_empty() or building_label == building_type:
+				building_label = building_type.capitalize()
+			draw_string(
+				font,
+				Vector2(cx, cy - (tile_size * 0.8) - 4.0),
+				building_label,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				64.0,
+				9,
+				Color(0.95, 0.84, 0.58, 0.92)
+			)
 
 	# Settlement labels at settlement-scale zoom
 	if _current_lod == 0 and zl >= 0.4 and zl < 0.8:
@@ -129,20 +176,20 @@ func _draw() -> void:
 func _update_lod(zl: float) -> void:
 	match _current_lod:
 		0:
-			if zl >= 1.7:
+			if zl >= 0.9:
 				_current_lod = 1
 		1:
-			if zl < 1.3:
+			if zl < 0.75:
 				_current_lod = 0
-			elif zl >= 4.2:
+			elif zl >= 2.2:
 				_current_lod = 2
 		2:
-			if zl < 3.8:
+			if zl < 2.0:
 				_current_lod = 1
 
 
-func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int) -> void:
-	var size: float = tile_size * 0.8
+func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var half_size: float = size * 0.5
 	var fill_color := Color(0.55, 0.35, 0.15, alpha)
 	var outline_color := Color(0.9, 0.7, 0.3, alpha)
@@ -151,8 +198,8 @@ func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int) -> void
 	draw_rect(Rect2(cx - half_size, cy - half_size, size, size), outline_color, false, 2.0)
 
 
-func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int) -> void:
-	var size: float = tile_size * 0.8
+func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var half_size: float = size * 0.5
 	var fill_color := Color(0.7, 0.4, 0.2, alpha)
 	var outline_color := Color(1.0, 0.8, 0.4, alpha)
@@ -167,14 +214,18 @@ func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int) -> void:
 	draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[0]]), outline_color, 2.0)
 
 
-func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int) -> void:
-	var size: float = tile_size * 0.8
+func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var radius: float = size * 0.35
 	var fill_color := Color(1.0, 0.4, 0.1, alpha)
 	var glow_color := Color(1.0, 0.4, 0.1, alpha * 0.15)
 
 	draw_circle(Vector2(cx, cy), radius, fill_color)
 	draw_arc(Vector2(cx, cy), tile_size * 3.0, 0, TAU, 32, glow_color, 1.5)
+
+
+func _zoom_shape_scale(zoom_level: float) -> float:
+	return clampf(2.5 / maxf(zoom_level, 0.5), 0.9, 2.2)
 
 
 func _draw_building_interior(building: Variant, tile_x: int, tile_y: int, tile_size: int, zoom_level: float) -> void:
