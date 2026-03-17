@@ -3503,6 +3503,10 @@ func open_settlement_detail(settlement_id: int) -> void:
 	_set_right_panel_tab_state()
 	_open_right_sidebar()
 	_refresh_selection_summary()
+	if _settlement_detail_panel.has_method("force_redraw"):
+		_settlement_detail_panel.call_deferred("force_redraw")
+	else:
+		_settlement_detail_panel.call_deferred("queue_redraw")
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
