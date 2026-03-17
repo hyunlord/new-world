@@ -19,6 +19,7 @@ var _settlement_id: int = -1
 var _current_tab: int = 0  # 0=Overview, 1=Buildings, 2=Population, 3=Economy, 4=Tech, 5=Military
 var _cached_data: Dictionary = {}
 var _refresh_counter: int = 0
+var _redraw_timer: float = 0.0
 
 ## Tab instances
 var _overview_tab: RefCounted
@@ -75,6 +76,7 @@ func set_settlement_id(id: int) -> void:
 	_settlement_id = id
 	_scroll_offset = 0.0
 	_current_tab = 0
+	_redraw_timer = 0.0
 	_load_data()
 
 
@@ -205,11 +207,20 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not visible:
 		return
-	queue_redraw()
+	_redraw_timer += _delta
 	_refresh_counter += 1
-	if _refresh_counter >= GameConfig.SETTLEMENT_PANEL_REFRESH_TICKS:
+	if _redraw_timer >= 1.0 or _refresh_counter >= GameConfig.SETTLEMENT_PANEL_REFRESH_TICKS:
+		_redraw_timer = 0.0
 		_refresh_counter = 0
 		_load_data()
+		queue_redraw()
+
+
+func force_redraw() -> void:
+	_redraw_timer = 0.0
+	_refresh_counter = 0
+	_load_data()
+	queue_redraw()
 
 
 func _draw() -> void:

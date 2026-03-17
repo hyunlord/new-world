@@ -1473,11 +1473,11 @@ func _handle_click(screen_pos: Vector2) -> void:
 			_last_click_pos = screen_pos
 			return
 
-	# Prioritize settlement selection over individual agents at mid zoom.
+	# Prioritize settlement selection over individual agents only once agents are no longer the main target.
 	if _sim_engine != null:
 		var cam: Camera2D = get_viewport().get_camera_2d()
 		var zoom_level: float = cam.zoom.x if cam != null else 1.0
-		if zoom_level < 2.0 and zoom_level >= 0.3:
+		if zoom_level < 0.8 and zoom_level >= 0.2:
 			var summary: Dictionary = _get_runtime_world_summary()
 			var settlements_raw: Variant = summary.get("settlement_summaries", [])
 			if settlements_raw is Array:
