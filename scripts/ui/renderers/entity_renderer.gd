@@ -1227,9 +1227,12 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 		if not (settlement_raw is Dictionary):
 			continue
 		var settlement: Dictionary = settlement_raw
+		var center_tile: Vector2 = _settlement_center_tile(settlement)
+		if center_tile == Vector2.INF:
+			continue
 		var center: Vector2 = Vector2(
-			float(settlement.get("center_x", 0.0)) * tile_size + tile_size * 0.5,
-			float(settlement.get("center_y", 0.0)) * tile_size + tile_size * 0.5
+			center_tile.x * tile_size + tile_size * 0.5,
+			center_tile.y * tile_size + tile_size * 0.5
 		)
 		var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
 		if zoom_level < 0.4:
@@ -1489,11 +1492,21 @@ func _handle_click(screen_pos: Vector2) -> void:
 					if not (settlement_raw is Dictionary):
 						continue
 					var settlement: Dictionary = settlement_raw
-					var center_x: float = float(settlement.get("center_x", 0.0))
-					var center_y: float = float(settlement.get("center_y", 0.0))
+					var center_tile: Vector2 = _settlement_center_tile(settlement)
+					if center_tile == Vector2.INF:
+						continue
 					var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
 					var radius: float = 3.5 + sqrt(float(maxi(population, 1))) * 1.4
-					if tile_pos.distance_to(Vector2(center_x + 0.5, center_y + 0.5)) >= radius:
+					var click_dist: float = tile_pos.distance_to(center_tile + Vector2(0.5, 0.5))
+					print("[CLICK-DEBUG] Settlement center=(%d,%d) radius=%.1f click_tile=(%d,%d) dist=%.1f" % [
+						int(center_tile.x),
+						int(center_tile.y),
+						radius,
+						int(tile_pos.x),
+						int(tile_pos.y),
+						click_dist,
+					])
+					if click_dist >= radius:
 						continue
 					var settlement_id: int = int(settlement.get("id", settlement_summary.get("id", -1)))
 					if settlement_id < 0:
@@ -1553,6 +1566,22 @@ func _handle_click(screen_pos: Vector2) -> void:
 		_last_click_building_id = -1
 		SimulationBus.entity_deselected.emit()
 		SimulationBus.building_deselected.emit()
+
+
+func _settlement_center_tile(settlement: Dictionary) -> Vector2:
+	var center_x: float = float(settlement.get("center_x", 0.0))
+	var center_y: float = float(settlement.get("center_y", 0.0))
+	if center_x == 0.0 and center_y == 0.0:
+		var buildings_raw: Variant = settlement.get("buildings", [])
+		if buildings_raw is Array and not buildings_raw.is_empty():
+			var first_building_raw: Variant = buildings_raw[0]
+			if first_building_raw is Dictionary:
+				var first_building: Dictionary = first_building_raw
+				center_x = float(first_building.get("tile_x", 0.0))
+				center_y = float(first_building.get("tile_y", 0.0))
+	if center_x == 0.0 and center_y == 0.0:
+		return Vector2.INF
+	return Vector2(center_x, center_y)
 
 
 func _building_value(building: Variant, key: String, default_value: Variant) -> Variant:
