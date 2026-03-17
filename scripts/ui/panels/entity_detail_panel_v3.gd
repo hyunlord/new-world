@@ -124,11 +124,13 @@ func show_entity_or_deceased(entity_id: int) -> void:
 
 
 func set_entity_id(entity_id: int) -> void:
+	print("[PANEL] set_entity_id id=%d" % entity_id)
 	_selected_entity_id = entity_id
 	_last_narrative_display.clear()
 	_thought_timer = 0.0
 	_narrative_refresh_timer = 0.0
-	_reload_data()
+	print("[PANEL] deferring _reload_data")
+	call_deferred("_reload_data")
 
 
 func refresh_locale() -> void:
@@ -352,23 +354,37 @@ func _toggle_expand_tabs() -> void:
 
 
 func _reload_data() -> void:
+	print("[PANEL] _reload_data START")
 	if not is_inside_tree():
+		print("[PANEL] _reload_data ABORT not in tree")
 		return
 	if _expand_tabs == null:
+		print("[PANEL] _reload_data ABORT no tabs")
 		return
 	if _sim_engine == null or _selected_entity_id < 0:
+		print("[PANEL] _reload_data ABORT no engine or bad id")
 		return
+	print("[PANEL] calling get_entity_detail")
 	_detail = _sim_engine.get_entity_detail(_selected_entity_id)
+	print("[PANEL] get_entity_detail returned size=%d" % _detail.size())
 	if _detail.is_empty():
 		visible = false
 		return
+	print("[PANEL] calling get_entity_tab mind")
 	_mind_tab = _sim_engine.get_entity_tab(_selected_entity_id, "mind")
+	print("[PANEL] calling get_entity_tab social")
 	_social_tab = _sim_engine.get_entity_tab(_selected_entity_id, "social")
+	print("[PANEL] calling get_entity_tab memory")
 	_memory_tab = _sim_engine.get_entity_tab(_selected_entity_id, "memory")
+	print("[PANEL] calling get_entity_tab health")
 	_health_tab = _sim_engine.get_entity_tab(_selected_entity_id, "health")
+	print("[PANEL] calling get_entity_tab knowledge")
 	_knowledge_tab = _sim_engine.get_entity_tab(_selected_entity_id, "knowledge")
+	print("[PANEL] calling get_entity_tab family")
 	_family_tab = _sim_engine.get_entity_tab(_selected_entity_id, "family")
+	print("[PANEL] all tabs loaded, calling _refresh_all")
 	_refresh_all()
+	print("[PANEL] _reload_data DONE")
 
 
 func _refresh_all() -> void:

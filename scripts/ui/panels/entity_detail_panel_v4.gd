@@ -213,43 +213,65 @@ func _apply_locale() -> void:
 
 
 func _refresh_all() -> void:
+	print("[V4] _refresh_all START")
 	if not is_inside_tree():
+		print("[V4] _refresh_all ABORT not in tree")
 		return
 	if _expand_tabs == null:
+		print("[V4] _refresh_all ABORT no tabs")
 		return
 	if _detail.is_empty():
+		print("[V4] _refresh_all ABORT empty detail")
 		return
+	print("[V4] _refresh_header")
 	_refresh_header()
+	print("[V4] _refresh_summary")
 	_refresh_summary()
+	print("[V4] _update_breadcrumb")
 	_update_breadcrumb()
+	print("[V4] _refresh_expand_tabs")
 	_refresh_expand_tabs()
+	print("[V4] portrait queue_redraw")
 	if _portrait != null:
 		_portrait.queue_redraw()
+	print("[V4] _refresh_all DONE")
 
 
 func _refresh_expand_tabs() -> void:
 	if _tab_overview_text == null:
+		print("[V4] _refresh_expand_tabs ABORT null overview")
 		return
+	print("[V4] format overview")
 	_tab_overview_text.clear()
 	_tab_overview_text.append_text(_format_overview_tab_text())
+	print("[V4] format needs")
 	_tab_needs_text.clear()
 	_tab_needs_text.append_text(_format_needs_tab_text())
+	print("[V4] format emotion")
 	_tab_emotion_text.clear()
 	_tab_emotion_text.append_text(_format_emotion_tab_text())
+	print("[V4] format personality")
 	_tab_personality_text.clear()
 	_tab_personality_text.append_text(_format_personality_tab_text())
+	print("[V4] format health")
 	_tab_health_text.clear()
 	_tab_health_text.append_text(_format_health_tab_text())
+	print("[V4] format knowledge")
 	_tab_knowledge_text.clear()
 	_tab_knowledge_text.append_text(_format_knowledge_tab_text())
+	print("[V4] format relationships")
 	_tab_relationships_text.clear()
 	_tab_relationships_text.append_text(_format_relationships_tab_text())
+	print("[V4] format inventory")
 	_tab_inventory_text.clear()
 	_tab_inventory_text.append_text(_format_inventory_tab_text())
+	print("[V4] format family")
 	_tab_family_text.clear()
 	_tab_family_text.append_text(_format_family_tab_text())
+	print("[V4] format events")
 	_tab_events_text.clear()
 	_tab_events_text.append_text(_format_events_tab_text())
+	print("[V4] _refresh_expand_tabs DONE")
 
 
 func _format_overview_tab_text() -> String:
