@@ -40,6 +40,7 @@ var _binary_snapshot_available: bool = false
 var _render_alpha: float = 0.0
 var _agent_sprites: Array[Sprite2D] = []
 var _agent_bubbles: Array = []
+var resource_overlay_visible: bool = false
 var _agent_texture: Texture2D = null
 var _agent_palette_lut: Texture2D = null
 var _agent_visual_shader: Shader = null
@@ -502,7 +503,6 @@ func _draw() -> void:
 		_draw_settlement_boundaries(zl)
 	if bool(active_layers.get("band", false)):
 		_draw_band_territories(zl)
-	_draw_resource_nodes(zl, min_tile_x, max_tile_x, min_tile_y, max_tile_y, half_tile)
 
 	if _current_lod == 0:
 		_draw_hover_tooltip()
@@ -621,7 +621,6 @@ func _draw_binary_snapshots() -> void:
 		_draw_settlement_boundaries(zl)
 	if bool(active_layers.get("band", false)):
 		_draw_band_territories(zl)
-	_draw_resource_nodes(zl, min_tile_x, max_tile_x, min_tile_y, max_tile_y, half_tile)
 
 	if _current_lod == 0:
 		_draw_hover_tooltip()
@@ -1209,44 +1208,6 @@ func _action_to_icon(action: String) -> String:
 			return "🏹"
 		_:
 			return ""
-
-
-func _draw_resource_nodes(
-	zoom_level: float,
-	min_tile_x: int,
-	max_tile_x: int,
-	min_tile_y: int,
-	max_tile_y: int,
-	half_tile: Vector2
-) -> void:
-	if zoom_level < 0.8 or _resource_map == null:
-		return
-	var font: Font = ThemeDB.fallback_font
-	var icon_font_size: int = 9 if zoom_level >= 2.0 else 7
-	var resource_map_height: int = _resource_map.get_height()
-	var resource_map_width: int = _resource_map.get_width()
-	var max_y: int = mini(resource_map_height - 1, max_tile_y)
-	var max_x: int = mini(resource_map_width - 1, max_tile_x)
-	for ty in range(maxi(0, min_tile_y), max_y + 1, 5):
-		for tx in range(maxi(0, min_tile_x), max_x + 1, 5):
-			var food: float = _resource_map.get_food(tx, ty)
-			var wood: float = _resource_map.get_wood(tx, ty)
-			var stone: float = _resource_map.get_stone(tx, ty)
-			var icon: String = ""
-			var tint: Color = Color(1.0, 1.0, 1.0, 0.92)
-			if food >= wood and food >= stone and food > 5.0:
-				icon = "🫐"
-				tint = Color(0.92, 0.82, 0.46, 0.95)
-			elif wood >= stone and wood > 6.0:
-				icon = "🌳"
-				tint = Color(0.48, 0.84, 0.40, 0.95)
-			elif stone > 4.0:
-				icon = "🪨"
-				tint = Color(0.72, 0.80, 0.92, 0.95)
-			if icon.is_empty():
-				continue
-			var draw_pos: Vector2 = Vector2(tx, ty) * float(GameConfig.TILE_SIZE) + half_tile + Vector2(0.0, 3.0)
-			draw_string(font, draw_pos, icon, HORIZONTAL_ALIGNMENT_CENTER, -1, icon_font_size, tint)
 
 
 func _draw_settlement_boundaries(zoom_level: float) -> void:

@@ -233,6 +233,7 @@ var _probe_context_label: Label
 # Selection state
 var _selected_entity_id: int = -1
 var _selected_building_id: int = -1
+var _selected_settlement_id: int = -1
 var _selected_band_id: int = -1
 var _selected_civ_id: int = -1
 var _startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX
@@ -326,7 +327,7 @@ func _build_minimap_and_stats() -> void:
 
 	set_probe_observation_mode(_probe_observation_mode)
 
-	# PopupManager owns all detail panels
+	# PopupManager owns modal and list-style panels only
 	_popup_manager = PopupManagerClass.new()
 	_popup_manager.init(_sim_engine)
 	add_child(_popup_manager)
@@ -345,7 +346,6 @@ func _build_minimap_and_stats() -> void:
 	if _sim_engine != null:
 		_building_detail_panel = BuildingDetailPanelClass.new()
 		_building_detail_panel.init(_sim_engine, _building_manager, _settlement_manager)
-		_popup_manager.add_building_panel(_building_detail_panel)
 
 	# Chronicle panel
 	_chronicle_panel = ChroniclePanelClass.new()
@@ -361,7 +361,6 @@ func _build_minimap_and_stats() -> void:
 	if _sim_engine != null:
 		_settlement_detail_panel = SettlementDetailPanelClass.new()
 		_settlement_detail_panel.init(_sim_engine, _settlement_manager, _entity_manager, _building_manager, null)
-		_popup_manager.add_settlement_panel(_settlement_detail_panel)
 
 	if _sim_engine != null:
 		_stats_detail_panel = StatsDetailPanelClass.new()
@@ -392,7 +391,7 @@ func _build_minimap() -> void:
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
 	add_child(_minimap_panel)
 	if _minimap_panel.has_method("resize"):
-		_minimap_panel.call("resize", GameConfig.get_ui_size("minimap"))
+		_minimap_panel.call("resize", 140)
 	if _minimap_panel.has_method("request_update"):
 		_minimap_panel.call("request_update")
 	call_deferred("_layout_overlay_legend")
@@ -517,6 +516,24 @@ func _build_right_sidebar() -> void:
 		_civ_detail_panel.visible = false
 		_right_panel_tab_content.add_child(_civ_detail_panel)
 
+	if _building_detail_panel != null:
+		_building_detail_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_building_detail_panel.offset_left = 0.0
+		_building_detail_panel.offset_top = 0.0
+		_building_detail_panel.offset_right = 0.0
+		_building_detail_panel.offset_bottom = 0.0
+		_building_detail_panel.visible = false
+		_right_panel_tab_content.add_child(_building_detail_panel)
+
+	if _settlement_detail_panel != null:
+		_settlement_detail_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_settlement_detail_panel.offset_left = 0.0
+		_settlement_detail_panel.offset_top = 0.0
+		_settlement_detail_panel.offset_right = 0.0
+		_settlement_detail_panel.offset_bottom = 0.0
+		_settlement_detail_panel.visible = false
+		_right_panel_tab_content.add_child(_settlement_detail_panel)
+
 	_factions_panel = _build_factions_panel()
 	_factions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_factions_panel.visible = false
@@ -604,11 +621,30 @@ func _switch_right_panel_tab(index: int) -> void:
 		and _selected_entity_id < 0
 		and _civ_detail_panel != null
 	)
+	var show_building_detail: bool = (
+		index == RIGHT_PANEL_TAB_INSPECTOR
+		and _selected_building_id >= 0
+		and _selected_entity_id < 0
+		and _selected_band_id < 0
+		and _selected_civ_id < 0
+		and _building_detail_panel != null
+	)
+	var show_settlement_detail: bool = (
+		index == RIGHT_PANEL_TAB_INSPECTOR
+		and _selected_settlement_id >= 0
+		and _selected_entity_id < 0
+		and _selected_building_id < 0
+		and _selected_band_id < 0
+		and _selected_civ_id < 0
+		and _settlement_detail_panel != null
+	)
 	if _entity_detail_panel != null:
 		_entity_detail_panel.visible = (
 			index == RIGHT_PANEL_TAB_INSPECTOR
 			and not show_band_detail
 			and not show_civ_detail
+			and not show_building_detail
+			and not show_settlement_detail
 		)
 	if _chronicle_panel != null:
 		_chronicle_panel.visible = (index == RIGHT_PANEL_TAB_CHRONICLE)
@@ -616,6 +652,10 @@ func _switch_right_panel_tab(index: int) -> void:
 		_band_detail_panel.visible = show_band_detail
 	if _civ_detail_panel != null:
 		_civ_detail_panel.visible = show_civ_detail
+	if _building_detail_panel != null:
+		_building_detail_panel.visible = show_building_detail
+	if _settlement_detail_panel != null:
+		_settlement_detail_panel.visible = show_settlement_detail
 	if _factions_panel != null:
 		_factions_panel.visible = (index == RIGHT_PANEL_TAB_FACTIONS)
 	if _sidebar_stats_panel != null:
@@ -646,6 +686,10 @@ func _hide_all_sidebar_tab_panels() -> void:
 		_band_detail_panel.visible = false
 	if _civ_detail_panel != null:
 		_civ_detail_panel.visible = false
+	if _building_detail_panel != null:
+		_building_detail_panel.visible = false
+	if _settlement_detail_panel != null:
+		_settlement_detail_panel.visible = false
 	if _factions_panel != null:
 		_factions_panel.visible = false
 	if _sidebar_stats_panel != null:
@@ -2960,6 +3004,7 @@ func _add_notification(text: String, color: Color, category: int = NotifCategory
 
 func _on_entity_selected(entity_id: int) -> void:
 	_selected_entity_id = entity_id
+	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
 	_close_hud_popups()
@@ -2983,10 +3028,11 @@ func _on_entity_deselected() -> void:
 
 func _on_building_selected(building_id: int) -> void:
 	_selected_building_id = building_id
+	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
 	_close_hud_popups()
-	_building_panel.visible = true
+	_building_panel.visible = false
 	_entity_panel.visible = false
 	_selected_entity_id = -1
 	_refresh_selection_summary()
@@ -2996,6 +3042,8 @@ func _on_building_selected(building_id: int) -> void:
 func _on_building_deselected() -> void:
 	_selected_building_id = -1
 	_building_panel.visible = false
+	if _building_detail_panel != null:
+		_building_detail_panel.visible = false
 	_refresh_selection_summary()
 
 
@@ -3246,7 +3294,7 @@ func _refresh_hud_texts() -> void:
 func toggle_minimap() -> void:
 	if _minimap_panel == null:
 		return
-	var sizes: Array[int] = [GameConfig.get_ui_size("minimap"), GameConfig.get_ui_size("minimap_large"), 0]
+	var sizes: Array[int] = [140, 180, 0]
 	_minimap_size_index = (_minimap_size_index + 1) % sizes.size()
 	var new_size: int = sizes[_minimap_size_index]
 	if new_size == 0:
@@ -3375,16 +3423,49 @@ func open_entity_detail() -> void:
 
 ## Opens the full building detail panel for the currently selected building.
 func open_building_detail() -> void:
-	if _popup_manager != null and _selected_building_id >= 0:
-		_close_entity_detail_sidebar()
-		_popup_manager.open_building(_selected_building_id)
+	if _building_detail_panel == null or _selected_building_id < 0:
+		return
+	_selected_entity_id = -1
+	_selected_settlement_id = -1
+	_selected_band_id = -1
+	_selected_civ_id = -1
+	_close_hud_popups()
+	_entity_panel.visible = false
+	_building_panel.visible = false
+	if _popup_manager != null:
+		_popup_manager.close_all()
+	_building_detail_panel.call("set_building_id", _selected_building_id)
+	_hide_all_sidebar_tab_panels()
+	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
+	_building_detail_panel.visible = true
+	_set_right_panel_tab_state()
+	_open_right_sidebar()
+	_refresh_selection_summary()
 
 
 ## Opens the settlement detail panel for the given settlement.
 func open_settlement_detail(settlement_id: int) -> void:
-	if _popup_manager != null and settlement_id >= 0:
-		_close_entity_detail_sidebar()
-		_popup_manager.open_settlement(settlement_id)
+	if _settlement_detail_panel == null or settlement_id < 0:
+		return
+	_selected_settlement_id = settlement_id
+	_selected_entity_id = -1
+	_selected_building_id = -1
+	_selected_band_id = -1
+	_selected_civ_id = -1
+	_close_hud_popups()
+	_entity_panel.visible = false
+	_building_panel.visible = false
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(-1)
+	if _popup_manager != null:
+		_popup_manager.close_all()
+	_settlement_detail_panel.call("set_settlement_id", settlement_id)
+	_hide_all_sidebar_tab_panels()
+	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
+	_settlement_detail_panel.visible = true
+	_set_right_panel_tab_state()
+	_open_right_sidebar()
+	_refresh_selection_summary()
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
@@ -3396,6 +3477,7 @@ func open_band_detail(band_id: int) -> void:
 	if _band_detail_panel == null or band_id < 0:
 		return
 	_selected_band_id = band_id
+	_selected_settlement_id = -1
 	_selected_civ_id = -1
 	_selected_entity_id = -1
 	_selected_building_id = -1
@@ -3418,6 +3500,7 @@ func open_civ_detail(civ_id: int) -> void:
 	if _civ_detail_panel == null or civ_id < 0:
 		return
 	_selected_civ_id = civ_id
+	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_entity_id = -1
 	_selected_building_id = -1
@@ -4126,6 +4209,15 @@ func _refresh_selection_summary() -> void:
 		var band_detail: Dictionary = _sim_engine.get_band_detail(_selected_band_id)
 		var band_name: String = str(band_detail.get("name", ""))
 		_bottom_bar_sel_label.text = "🏕 " + band_name if not band_name.is_empty() else ""
+		return
+	if _selected_settlement_id >= 0:
+		var settlement_name: String = ""
+		if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
+			var settlement_detail: Dictionary = _sim_engine.get_settlement_detail(_selected_settlement_id)
+			settlement_name = str(settlement_detail.get("name", settlement_detail.get("settlement_name", "")))
+		if settlement_name.is_empty():
+			settlement_name = "%s %d" % [Locale.ltr("UI_SETTLEMENT"), _selected_settlement_id]
+		_bottom_bar_sel_label.text = "🏘 " + settlement_name
 		return
 	if _selected_civ_id >= 0:
 		_bottom_bar_sel_label.text = "🏛 " + Locale.ltr("UI_CIV_TITLE")
