@@ -3023,6 +3023,7 @@ func _add_notification(text: String, color: Color, category: int = NotifCategory
 # --- Signal handlers ---
 
 func _on_entity_selected(entity_id: int) -> void:
+	print("[CLICK] _on_entity_selected id=%d" % entity_id)
 	_selected_entity_id = entity_id
 	_selected_settlement_id = -1
 	_selected_band_id = -1
@@ -3039,7 +3040,9 @@ func _on_entity_selected(entity_id: int) -> void:
 	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
+	print("[CLICK] calling _open_entity_detail_sidebar")
 	_open_entity_detail_sidebar(entity_id)
+	print("[CLICK] _on_entity_selected DONE")
 
 
 func _on_entity_deselected() -> void:
@@ -3746,11 +3749,17 @@ func _open_right_sidebar() -> void:
 
 
 func _open_entity_detail_sidebar(entity_id: int) -> void:
+	print("[CLICK] _open_entity_detail_sidebar id=%d" % entity_id)
 	if _entity_detail_panel == null or entity_id < 0:
+		print("[CLICK] _open_entity_detail_sidebar ABORT (null panel or bad id)")
 		return
+	print("[CLICK] calling set_entity_id")
 	_entity_detail_panel.set_entity_id(entity_id)
+	print("[CLICK] calling _switch_right_panel_tab")
 	_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
+	print("[CLICK] calling _open_right_sidebar")
 	_open_right_sidebar()
+	print("[CLICK] _open_entity_detail_sidebar DONE")
 
 
 func _close_entity_detail_sidebar() -> void:
