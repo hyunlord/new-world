@@ -128,7 +128,7 @@ func set_entity_id(entity_id: int) -> void:
 	_last_narrative_display.clear()
 	_thought_timer = 0.0
 	_narrative_refresh_timer = 0.0
-	if _sim_engine != null:
+	if _sim_engine != null and entity_id >= 0 and _sim_engine.has_method("on_entity_narrative_click"):
 		_sim_engine.on_entity_narrative_click(entity_id)
 	_reload_data()
 
@@ -354,6 +354,10 @@ func _toggle_expand_tabs() -> void:
 
 
 func _reload_data() -> void:
+	if not is_inside_tree():
+		return
+	if _expand_tabs == null:
+		return
 	if _sim_engine == null or _selected_entity_id < 0:
 		return
 	_detail = _sim_engine.get_entity_detail(_selected_entity_id)
@@ -370,6 +374,10 @@ func _reload_data() -> void:
 
 
 func _refresh_all() -> void:
+	if not is_inside_tree():
+		return
+	if _expand_tabs == null:
+		return
 	if _detail.is_empty():
 		return
 	_refresh_header()
