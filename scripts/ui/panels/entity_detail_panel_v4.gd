@@ -213,6 +213,10 @@ func _apply_locale() -> void:
 
 
 func _refresh_all() -> void:
+	if not is_inside_tree():
+		return
+	if _expand_tabs == null:
+		return
 	if _detail.is_empty():
 		return
 	_refresh_header()
@@ -224,6 +228,8 @@ func _refresh_all() -> void:
 
 
 func _refresh_expand_tabs() -> void:
+	if _tab_overview_text == null:
+		return
 	_tab_overview_text.clear()
 	_tab_overview_text.append_text(_format_overview_tab_text())
 	_tab_needs_text.clear()

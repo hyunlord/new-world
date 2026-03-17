@@ -1473,6 +1473,41 @@ func _handle_click(screen_pos: Vector2) -> void:
 			_last_click_pos = screen_pos
 			return
 
+	# Prioritize settlement selection over individual agents at mid zoom.
+	if _sim_engine != null:
+		var cam: Camera2D = get_viewport().get_camera_2d()
+		var zoom_level: float = cam.zoom.x if cam != null else 1.0
+		if zoom_level < 2.0 and zoom_level >= 0.3:
+			var summary: Dictionary = _get_runtime_world_summary()
+			var settlements_raw: Variant = summary.get("settlement_summaries", [])
+			if settlements_raw is Array:
+				for settlement_summary_raw: Variant in settlements_raw:
+					if not (settlement_summary_raw is Dictionary):
+						continue
+					var settlement_summary: Dictionary = settlement_summary_raw
+					var settlement_raw: Variant = settlement_summary.get("settlement", {})
+					if not (settlement_raw is Dictionary):
+						continue
+					var settlement: Dictionary = settlement_raw
+					var center_x: float = float(settlement.get("center_x", 0.0))
+					var center_y: float = float(settlement.get("center_y", 0.0))
+					var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
+					var radius: float = 3.5 + sqrt(float(maxi(population, 1))) * 1.4
+					if tile_pos.distance_to(Vector2(center_x + 0.5, center_y + 0.5)) >= radius:
+						continue
+					var settlement_id: int = int(settlement.get("id", settlement_summary.get("id", -1)))
+					if settlement_id < 0:
+						continue
+					selected_entity_id = -1
+					_last_click_entity_id = -1
+					_last_click_building_id = -1
+					_last_click_time = now
+					_last_click_pos = screen_pos
+					SimulationBus.entity_deselected.emit()
+					SimulationBus.building_deselected.emit()
+					SimulationBus.settlement_panel_requested.emit(settlement_id)
+					return
+
 	# Find entity at or near this tile
 	var best_entity_id: int = -1
 	var best_dist: float = 3.0  # max click distance in tiles

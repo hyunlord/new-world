@@ -237,6 +237,13 @@ var _selected_settlement_id: int = -1
 var _selected_band_id: int = -1
 var _selected_civ_id: int = -1
 var _startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX
+var _entity_panel_update_timer: float = 0.0
+var _building_panel_update_timer: float = 0.0
+var _cached_rust_snapshot: Dictionary = {}
+var _cached_rust_snapshot_tick: int = -1
+var _cached_rust_snapshot_id: int = -1
+const ENTITY_PANEL_UPDATE_INTERVAL: float = 0.5
+const BUILDING_PANEL_UPDATE_INTERVAL: float = 1.0
 
 # Debug cheat panel (F12 toggle, lazy init)
 var _debug_panel: CanvasLayer = null
@@ -2596,12 +2603,18 @@ func _process(delta: float) -> void:
 			_settlement_badge.visible = false
 
 	# Update selected entity
-	if _selected_entity_id >= 0:
-		_update_entity_panel(delta)
+	if _selected_entity_id >= 0 and _entity_panel != null and _entity_panel.visible:
+		_entity_panel_update_timer += maxf(delta, 0.0)
+		if _entity_panel_update_timer >= ENTITY_PANEL_UPDATE_INTERVAL:
+			_entity_panel_update_timer = 0.0
+			_update_entity_panel(delta)
 
 	# Update selected building
-	if _selected_building_id >= 0 and (_building_manager != null or _sim_engine != null):
-		_update_building_panel()
+	if _selected_building_id >= 0 and (_building_manager != null or _sim_engine != null) and _building_panel != null and _building_panel.visible:
+		_building_panel_update_timer += maxf(delta, 0.0)
+		if _building_panel_update_timer >= BUILDING_PANEL_UPDATE_INTERVAL:
+			_building_panel_update_timer = 0.0
+			_update_building_panel()
 
 	# Notification fade
 	_update_notifications(delta)
@@ -2652,13 +2665,20 @@ func _update_entity_panel(delta: float) -> void:
 
 ## Returns the agent_snapshot dict for the given entity_id, or {} if not found.
 func _get_rust_snapshot(entity_id: int) -> Dictionary:
-	if _sim_engine == null:
+	if _sim_engine == null or not _sim_engine.has_method("get_agent_snapshots"):
 		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick == _cached_rust_snapshot_tick and entity_id == _cached_rust_snapshot_id:
+		return _cached_rust_snapshot
+	_cached_rust_snapshot_tick = tick
+	_cached_rust_snapshot_id = entity_id
 	var snaps: Array = _sim_engine.get_agent_snapshots()
 	for i in range(snaps.size()):
 		var snap: Dictionary = snaps[i]
 		if int(snap.get("entity_id", -1)) == entity_id:
+			_cached_rust_snapshot = snap
 			return snap
+	_cached_rust_snapshot = {}
 	return {}
 
 
@@ -3007,10 +3027,15 @@ func _on_entity_selected(entity_id: int) -> void:
 	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
+	_entity_panel_update_timer = ENTITY_PANEL_UPDATE_INTERVAL
+	_cached_rust_snapshot = {}
+	_cached_rust_snapshot_tick = -1
+	_cached_rust_snapshot_id = -1
 	_close_hud_popups()
 	_entity_panel.visible = false
 	_building_panel.visible = false
 	_selected_building_id = -1
+	_building_panel_update_timer = 0.0
 	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
@@ -3019,6 +3044,10 @@ func _on_entity_selected(entity_id: int) -> void:
 
 func _on_entity_deselected() -> void:
 	_selected_entity_id = -1
+	_entity_panel_update_timer = 0.0
+	_cached_rust_snapshot = {}
+	_cached_rust_snapshot_tick = -1
+	_cached_rust_snapshot_id = -1
 	_entity_panel.visible = false
 	_refresh_selection_summary()
 	if _cast_bar != null:
@@ -3031,16 +3060,24 @@ func _on_building_selected(building_id: int) -> void:
 	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
+	_building_panel_update_timer = BUILDING_PANEL_UPDATE_INTERVAL
 	_close_hud_popups()
 	_building_panel.visible = false
 	_entity_panel.visible = false
 	_selected_entity_id = -1
+	_entity_panel_update_timer = 0.0
+	_cached_rust_snapshot = {}
+	_cached_rust_snapshot_tick = -1
+	_cached_rust_snapshot_id = -1
+	if _cast_bar != null:
+		_cast_bar.set_selected_entity(-1)
 	_refresh_selection_summary()
-	_close_entity_detail_sidebar()
+	open_building_detail()
 
 
 func _on_building_deselected() -> void:
 	_selected_building_id = -1
+	_building_panel_update_timer = 0.0
 	_building_panel.visible = false
 	if _building_detail_panel != null:
 		_building_detail_panel.visible = false
