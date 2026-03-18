@@ -109,6 +109,10 @@ pub struct WorldSimRuntime {
     state: Option<RuntimeState>,
     snapshot_buffer: SnapshotBuffer,
     render_alpha: f64,
+    /// Cached per-frame agent snapshot array to avoid rebuilding every render frame.
+    cached_agent_snapshots: Array<VarDictionary>,
+    /// Tick number when `cached_agent_snapshots` was last rebuilt.
+    last_agent_snapshot_tick: u64,
 }
 
 #[godot_api]
@@ -119,6 +123,8 @@ impl IObject for WorldSimRuntime {
             state: None,
             snapshot_buffer: SnapshotBuffer::new(),
             render_alpha: 0.0,
+            cached_agent_snapshots: Array::new(),
+            last_agent_snapshot_tick: 0,
         }
     }
 }
@@ -1640,6 +1646,8 @@ impl WorldSimRuntime {
         self.state = Some(RuntimeState::from_seed(seed.max(0) as u64, config));
         self.snapshot_buffer = SnapshotBuffer::new();
         self.render_alpha = 0.0;
+        self.cached_agent_snapshots = Array::new();
+        self.last_agent_snapshot_tick = 0;
 
         if let Some(state) = self.state.as_mut() {
             let registry_dir = authoritative_ron_data_dir();
@@ -1938,7 +1946,8 @@ impl WorldSimRuntime {
         out.set("accumulator", state.accumulator);
 
         // Build per-agent render snapshot for entity_renderer.gd
-        {
+        // Only rebuild when ticks were processed or no cached snapshot exists yet.
+        if ticks_processed > 0 || self.last_agent_snapshot_tick == 0 {
             let world = state.engine.world();
             let mut agent_arr = Array::<VarDictionary>::new();
             for (entity, (identity, pos, needs, behavior_opt, age_opt)) in world
@@ -1979,9 +1988,25 @@ impl WorldSimRuntime {
                 d.set("hunger", needs.get(NeedType::Hunger));
                 agent_arr.push(&d);
             }
-            out.set("agent_snapshots", agent_arr);
-            out.set("entity_count", world.len() as i64);
+            let count = agent_arr.len();
+            self.cached_agent_snapshots = agent_arr;
+            self.last_agent_snapshot_tick = state.engine.current_tick();
+            if state.engine.current_tick() % 60 == 0 {
+                godot_print!(
+                    "[BRIDGE-DIAG] agent_snapshots rebuilt: tick={} agents={}",
+                    state.engine.current_tick(),
+                    count
+                );
+            }
+        } else if state.engine.current_tick() % 300 == 0 {
+            godot_print!(
+                "[BRIDGE-DIAG] agent_snapshots CACHED (skip rebuild): tick={} cached_tick={}",
+                state.engine.current_tick(),
+                self.last_agent_snapshot_tick
+            );
         }
+        out.set("agent_snapshots", self.cached_agent_snapshots.clone());
+        out.set("entity_count", state.engine.world().len() as i64);
 
         out
     }
@@ -7131,7 +7156,27 @@ impl WorldSimBridge {
 struct SimBridgeExtension;
 
 #[gdextension(entry_symbol = worldsim_rust_init)]
-unsafe impl ExtensionLibrary for SimBridgeExtension {}
+unsafe impl ExtensionLibrary for SimBridgeExtension {
+    fn on_level_init(_level: godot::init::InitLevel) {
+        if _level == godot::init::InitLevel::Scene {
+            std::panic::set_hook(Box::new(|info| {
+                let payload = if let Some(s) = info.payload().downcast_ref::<&str>() {
+                    s.to_string()
+                } else if let Some(s) = info.payload().downcast_ref::<String>() {
+                    s.clone()
+                } else {
+                    "unknown panic".to_string()
+                };
+                let location = info
+                    .location()
+                    .map(|l| format!("{}:{}:{}", l.file(), l.line(), l.column()))
+                    .unwrap_or_else(|| "unknown location".to_string());
+                eprintln!("[RUST PANIC] {} at {}", payload, location);
+                eprintln!("[RUST PANIC] backtrace:\n{}", std::backtrace::Backtrace::force_capture());
+            }));
+        }
+    }
+}
 
 // ── FrameSnapshot helpers ─────────────────────────────────────────────────────
 

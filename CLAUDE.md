@@ -15,7 +15,7 @@ When working on this project:
 - Think like an engine programmer. Cache-friendly data, minimal allocations per tick, deterministic simulation.
 - **ALL simulation logic is Rust.** GDScript exists only for UI, rendering, input, and localization.
 - Simulation correctness > rendering polish. Always.
-- **Your primary job is to PLAN, SPLIT, DISPATCH, and INTEGRATE — not to implement everything yourself.**
+- **Your primary job is to implement correctly, test thoroughly, and commit cleanly.**
 
 ---
 
@@ -267,7 +267,7 @@ data/                          ← legacy JSON content during A-1 migration
 localization/
   en/, ko/, compiled/
 tools/
-  codex_dispatch.sh, gate.sh, ralph_loop.sh
+  gate.sh
 ```
 
 ---
@@ -343,49 +343,41 @@ SimulationBus is now a **read-only relay** for the UI layer.
 
 ---
 
-## Codex Auto-Dispatch [MANDATORY]
+## Execution Workflow
 
-Claude Code delegates implementation tickets to Codex via Codex CLI.
+Claude Code receives implementation prompts from claude.ai web (architecture/design layer).
 
-### ⚠️ DISPATCH TOOL ROUTING [ABSOLUTE RULE]
-
-**✅ VALID Codex dispatch methods:**
-- `bash tools/codex_dispatch.sh tickets/<file>.md`
-- `mcp__plugin_oh-my-claudecode_x__ask_codex`
-
-**❌ INVALID — NOT Codex dispatch:**
-- `Task` tool (Claude sub-agent) — counts as DIRECT, not dispatch
-- Implementing the code yourself — obviously not dispatch
-
-### Default is DISPATCH. DIRECT is the exception.
-
-You may only implement directly if **ALL THREE** are true:
-1. The change modifies shared interfaces (EventBus events, ECS component structs, bridge API)
-2. The change is pure integration wiring (<50 lines)
-3. The change cannot be split into any smaller independent unit
-
-**Dispatch ratio MUST be ≥60%.** If below 60%, stop and re-split before continuing.
-
-### Dispatch Route Selection
-
+### Workflow
 ```
-Rust crate work?
-  ├─ YES → ask_codex MCP (with Rust-specific AGENTS.md instructions)
-  └─ NO (GDScript UI) → codex_dispatch.sh or ask_codex MCP
+claude.ai web              → Architecture design, prompt authoring (.md files)
+  ↓ copy-paste .md prompt
+Claude Code (lead/main)    → Direct implementation, testing, commit
 ```
 
----
-
-## Dispatch Tracking Format
-
-```markdown
-| Ticket | Description | 🟢/🔴 | Tool | Status |
-|--------|-------------|--------|------|--------|
-| t-301 | ResourceMap | 🟢 DISPATCH | ask_codex | ✅ Done |
-| t-303 | Signal wiring | 🔴 DIRECT | — | ✅ Done |
-
-Dispatch ratio: 75% (3/4)
+### Pre-flight (every task)
+```bash
+git fetch origin
+git checkout lead/main
+git pull origin lead/main
 ```
+
+### Post-work (every task)
+```bash
+# Gate MUST pass before commit
+cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+
+# Commit
+git add -A
+git commit -m "[t-000] <description>"
+git push origin lead/main
+```
+
+### Rules
+- Always work directly on `lead/main` branch
+- Always pull before starting
+- Never leave uncommitted changes
+- Gate (cargo test + clippy) must pass before every commit
+- When a prompt has `<promise>TAG</promise>`, output the tag ONLY when ALL stories pass
 
 ---
 
@@ -400,9 +392,9 @@ Dispatch ratio: 75% (3/4)
 7. Using `unwrap()` in production Rust code
 8. Modifying ECS component structs without updating SimBridge snapshot serialization
 9. "Improving" code outside ticket scope
-10. Using `Task` tool for DISPATCH tickets — Task ≠ Codex
-11. Implementing directly without justification in the task tracker
-12. Dispatch ratio below 60%
+10. Not pulling latest before starting work (stale base → merge conflicts)
+11. Committing without running gate (cargo test + clippy)
+12. Modifying files outside the prompt's explicit scope
 13. Forgetting `ko/` translations when adding localization keys
 14. Adding Godot-specific types in hot-path Rust code
 15. Using `String` matching in Rust hot paths instead of enums
@@ -431,11 +423,56 @@ Before any work touching these areas, read the corresponding SKILL.md:
 
 | Skill | Path | When |
 |-------|------|------|
-| worldsim-code | Claude `worldsim-code` skill mirror | Any GDScript UI work (localization, patterns) |
-| kanban-workflow | `.claude/skills/kanban-workflow/SKILL.md` | Dispatch and ticket management |
+| worldsim-code | `.claude/skills/worldsim-code/SKILL.md` | Any GDScript UI work (localization, patterns) |
 | godot | `.claude/skills/godot/SKILL.md` | Godot scene/resource file work |
 | systematic-debugging | `.claude/skills/systematic-debugging/SKILL.md` | Any bug or test failure |
 | verification-before-completion | `.claude/skills/verification-before-completion/SKILL.md` | Before claiming any task complete |
+---
+
+## Current State (2026-03-17)
+
+### UI Architecture — Migration In Progress
+- **Agent inspector**: `entity_detail_panel_v4.gd` (1015 lines) — BBCode RichTextLabel based
+  - Known crash: `float()` on non-numeric Variant from Rust FFI → use `_safe_float()` helper
+  - Known issue: [table=3] BBCode alignment imperfect for CJK labels
+  - **Planned: Phase 1 redesign → Godot UI nodes (ProgressBar + Container) to replace BBCode**
+- **Settlement/Building detail**: moved from center popup to sidebar, `_draw()` based
+- **Sidebar**: 6 tabs (상세정보/연대기/세력/통계/역사/외교) + band/civ/settlement/building panels
+- **Bottom bar**: Z1-Z5 zoom | overlays (food/danger/warmth/social/knowledge/resource) | 7 layers | Oracle | TPS/FPS
+- **Minimap**: 140×140, bottom-left
+- **Performance**: building_renderer conditional redraw, entity panel 0.5s throttle, snapshot cache
+
+### Key Files (most frequently edited)
+| File | Lines | What |
+|------|:-----:|------|
+| `scripts/ui/hud.gd` | ~4200 | Master HUD — bottom bar, sidebar, popups, all signal handling |
+| `scripts/ui/panels/entity_detail_panel_v4.gd` | ~1015 | Agent inspector (extends v3) |
+| `scripts/ui/panels/entity_detail_panel_v3.gd` | ~1330 | Base inspector — data loading, tab infrastructure |
+| `scripts/ui/renderers/entity_renderer.gd` | ~1590 | Agent rendering + click handling + settlement boundaries |
+| `scripts/ui/renderers/building_renderer.gd` | ~330 | Building shapes + interiors + conditional redraw |
+| `scripts/ui/camera_controller.gd` | ~735 | 5-stage zoom + camera limits |
+| `rust/crates/sim-bridge/src/lib.rs` | ~8200 | ALL Rust↔Godot FFI |
+
+### Known Crash Pattern
+When accessing Rust FFI data in GDScript, field types can vary by entity:
+- Entity A: `hex_c = 0.65` (float) → `float(0.65)` OK
+- Entity B: `hex_c = {facets: [...]}` (Dictionary) → `float(Dictionary)` → CRASH
+
+**Rule: NEVER use raw `float(dict.get("key"))`. Always use `_safe_float(dict, "key", default)`.**
+
+### GDScript Safety Pattern
+```gdscript
+# BAD — crashes on non-numeric Variant:
+var value: float = float(_detail.get("hex_c", 0.0))
+
+# GOOD — safe type conversion:
+func _safe_float(dict: Dictionary, key: String, default_value: float) -> float:
+    var raw: Variant = dict.get(key, default_value)
+    if raw is float or raw is int:
+        return clampf(float(raw), 0.0, 1.0)
+    return clampf(default_value, 0.0, 1.0)
+```
+
 ---
 
 ## Harness MCP — Runtime Verification
