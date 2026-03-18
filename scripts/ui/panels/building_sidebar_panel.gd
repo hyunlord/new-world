@@ -45,7 +45,6 @@ func set_building_id(id: int) -> void:
 
 func _ready() -> void:
 	_ensure_ui()
-		_refresh()
 
 
 func force_redraw() -> void:
