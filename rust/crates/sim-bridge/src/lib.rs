@@ -1988,22 +1988,8 @@ impl WorldSimRuntime {
                 d.set("hunger", needs.get(NeedType::Hunger));
                 agent_arr.push(&d);
             }
-            let count = agent_arr.len();
             self.cached_agent_snapshots = agent_arr;
             self.last_agent_snapshot_tick = state.engine.current_tick();
-            if state.engine.current_tick() % 60 == 0 {
-                godot_print!(
-                    "[BRIDGE-DIAG] agent_snapshots rebuilt: tick={} agents={}",
-                    state.engine.current_tick(),
-                    count
-                );
-            }
-        } else if state.engine.current_tick() % 300 == 0 {
-            godot_print!(
-                "[BRIDGE-DIAG] agent_snapshots CACHED (skip rebuild): tick={} cached_tick={}",
-                state.engine.current_tick(),
-                self.last_agent_snapshot_tick
-            );
         }
         out.set("agent_snapshots", self.cached_agent_snapshots.clone());
         out.set("entity_count", state.engine.world().len() as i64);

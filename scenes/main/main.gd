@@ -120,10 +120,16 @@ const SKIP_SETUP: bool = true
 ## WorldSetup 씬 생성 및 world_data/resource_map 주입
 func _enter_setup_mode() -> void:
 	if SKIP_SETUP:
-		print("[Main] SKIP_SETUP=true — bypassing world setup, auto-starting sandbox")
 		@warning_ignore("integer_division")
-		var center: Vector2i = GameConfig.WORLD_SIZE / 2
-		var spawn_data: Array = [{position = center, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT}]
+		var preset_gen = preload("res://scripts/core/world/preset_map_generator.gd").new()
+		preset_gen.generate_preset(world_data, resource_map, "island", GameConfig.PRESET_SEED_ISLAND)
+		var suggestions: Array = preset_gen.get_spawn_suggestions(world_data, resource_map)
+		var spawn_data: Array = []
+		for s in suggestions:
+			spawn_data.append({position = s, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT})
+		if spawn_data.is_empty():
+			var center: Vector2i = GameConfig.WORLD_SIZE / 2
+			spawn_data.append({position = center, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT})
 		_on_setup_confirmed(spawn_data, GameConfig.STARTUP_MODE_SANDBOX)
 		return
 	hud.visible = false

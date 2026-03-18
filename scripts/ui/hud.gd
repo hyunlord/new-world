@@ -2603,11 +2603,16 @@ func _process(delta: float) -> void:
 			_settlement_badge.visible = false
 
 	# Update selected entity
-	if _selected_entity_id >= 0 and _entity_panel != null and _entity_panel.visible:
-		_entity_panel_update_timer += maxf(delta, 0.0)
-		if _entity_panel_update_timer >= ENTITY_PANEL_UPDATE_INTERVAL:
-			_entity_panel_update_timer = 0.0
-			_update_entity_panel(delta)
+	if _selected_entity_id >= 0:
+		# Skip hud entity panel updates when v4 sidebar is active and visible
+		# (v4 has its own _process with _reload_data on the same 0.5s interval)
+		if _entity_detail_panel != null and _entity_detail_panel.visible:
+			pass  # v4 handles its own updates
+		else:
+			_entity_panel_update_timer += maxf(delta, 0.0)
+			if _entity_panel_update_timer >= ENTITY_PANEL_UPDATE_INTERVAL:
+				_entity_panel_update_timer = 0.0
+				_update_entity_panel(delta)
 
 	# Update selected building
 	if _selected_building_id >= 0 and (_building_manager != null or _sim_engine != null) and _building_panel != null and _building_panel.visible:
@@ -3023,7 +3028,6 @@ func _add_notification(text: String, color: Color, category: int = NotifCategory
 # --- Signal handlers ---
 
 func _on_entity_selected(entity_id: int) -> void:
-	print("[CLICK] _on_entity_selected id=%d" % entity_id)
 	_selected_entity_id = entity_id
 	_selected_settlement_id = -1
 	_selected_band_id = -1
@@ -3040,9 +3044,7 @@ func _on_entity_selected(entity_id: int) -> void:
 	_refresh_selection_summary()
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
-	print("[CLICK] calling _open_entity_detail_sidebar")
 	_open_entity_detail_sidebar(entity_id)
-	print("[CLICK] _on_entity_selected DONE")
 
 
 func _on_entity_deselected() -> void:
@@ -3749,17 +3751,11 @@ func _open_right_sidebar() -> void:
 
 
 func _open_entity_detail_sidebar(entity_id: int) -> void:
-	print("[CLICK] _open_entity_detail_sidebar id=%d" % entity_id)
 	if _entity_detail_panel == null or entity_id < 0:
-		print("[CLICK] _open_entity_detail_sidebar ABORT (null panel or bad id)")
 		return
-	print("[CLICK] calling set_entity_id")
 	_entity_detail_panel.set_entity_id(entity_id)
-	print("[CLICK] calling _switch_right_panel_tab")
 	_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
-	print("[CLICK] calling _open_right_sidebar")
 	_open_right_sidebar()
-	print("[CLICK] _open_entity_detail_sidebar DONE")
 
 
 func _close_entity_detail_sidebar() -> void:

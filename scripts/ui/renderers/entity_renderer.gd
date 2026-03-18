@@ -1498,14 +1498,6 @@ func _handle_click(screen_pos: Vector2) -> void:
 					var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
 					var radius: float = 3.5 + sqrt(float(maxi(population, 1))) * 1.4
 					var click_dist: float = tile_pos.distance_to(center_tile + Vector2(0.5, 0.5))
-					print("[CLICK-DEBUG] Settlement center=(%d,%d) radius=%.1f click_tile=(%d,%d) dist=%.1f" % [
-						int(center_tile.x),
-						int(center_tile.y),
-						radius,
-						int(tile_pos.x),
-						int(tile_pos.y),
-						click_dist,
-					])
 					if click_dist >= radius:
 						continue
 					var settlement_id: int = int(settlement.get("id", settlement_summary.get("id", -1)))
