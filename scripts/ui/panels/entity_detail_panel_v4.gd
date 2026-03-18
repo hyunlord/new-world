@@ -229,7 +229,6 @@ func _apply_locale() -> void:
 
 
 func _refresh_all() -> void:
-	print("[V4] _refresh_all START entity=%d keys=%d" % [_selected_entity_id, _detail.size()])
 	if not is_inside_tree():
 		return
 	if _expand_tabs == null:
@@ -242,12 +241,10 @@ func _refresh_all() -> void:
 	_refresh_expand_tabs()
 	if _portrait != null:
 		_portrait.queue_redraw()
-	print("[V4] _refresh_all DONE")
 
 
 func _refresh_expand_tabs() -> void:
 	if _tab_overview_text == null:
-		print("[V4] _refresh_expand_tabs ABORT: null tab")
 		return
 	var overview_text: String = _format_overview_tab_text()
 	_set_text_tab_content(_tab_overview_text, overview_text, "overview")
@@ -269,7 +266,6 @@ func _refresh_expand_tabs() -> void:
 	_set_text_tab_content(_tab_family_text, family_text, "family")
 	var events_text: String = _format_events_tab_text()
 	_set_text_tab_content(_tab_events_text, events_text, "events")
-	print("[V4] _refresh_expand_tabs DONE")
 
 
 func _format_overview_tab_text() -> String:
@@ -814,6 +810,7 @@ func _format_bar_table(entries: Array[Dictionary], block_count: int = 12) -> Str
 	if entries.is_empty():
 		return ""
 	var lines: PackedStringArray = PackedStringArray()
+	lines.append("[table=3]")
 	for entry: Dictionary in entries:
 		var label: String = str(entry.get("label", ""))
 		var clamped: float = _sanitize_unit_float(entry.get("value", 0.0), 0.0)
@@ -823,8 +820,9 @@ func _format_bar_table(entries: Array[Dictionary], block_count: int = 12) -> Str
 		var bar_filled: String = "█".repeat(filled)
 		var bar_empty: String = "░".repeat(block_count - filled)
 		var pct: String = str(int(round(clamped * 100.0)))
-		# Single format allocation instead of 8-way + concatenation to reduce heap pressure
-		lines.append("[color=#506878]%s[/color] [color=%s]%s[/color][color=#182430]%s[/color] [color=#8898a8]%s%%[/color]" % [label, _color_hex(color), bar_filled, bar_empty, pct])
+		lines.append("[cell][color=#506878]%s[/color][/cell][cell][color=%s]%s[/color][color=#182430]%s[/color][/cell][cell] [color=#8898a8]%s%%[/color][/cell]" % [
+			label, _color_hex(color), bar_filled, bar_empty, pct])
+	lines.append("[/table]")
 	return "\n".join(lines)
 
 
