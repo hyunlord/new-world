@@ -1474,11 +1474,9 @@ func _handle_click(screen_pos: Vector2) -> void:
 	if _sim_engine != null:
 		var cam: Camera2D = get_viewport().get_camera_2d()
 		var zoom_level: float = cam.zoom.x if cam != null else 1.0
-		print("[CLICK-DIAG] zoom=%.2f tile=(%d,%d)" % [zoom_level, tile.x, tile.y])
 		if zoom_level < 0.8 and zoom_level >= 0.2:
 			var summary: Dictionary = _get_runtime_world_summary()
 			var settlements_raw: Variant = summary.get("settlement_summaries", [])
-			print("[CLICK-DIAG] settlement_summaries count=%d" % (settlements_raw.size() if settlements_raw is Array else -1))
 			if settlements_raw is Array:
 				for settlement_summary_raw: Variant in settlements_raw:
 					if not (settlement_summary_raw is Dictionary):
@@ -1486,26 +1484,17 @@ func _handle_click(screen_pos: Vector2) -> void:
 					var settlement_summary: Dictionary = settlement_summary_raw
 					var settlement_raw: Variant = settlement_summary.get("settlement", {})
 					if not (settlement_raw is Dictionary):
-						print("[CLICK-DIAG] settlement_raw is NOT Dictionary: %s" % str(typeof(settlement_raw)))
 						continue
 					var settlement: Dictionary = settlement_raw
 					var center_tile: Vector2 = _settlement_center_tile(settlement)
-					print("[CLICK-DIAG] center_tile=%s center_x=%s center_y=%s" % [
-						str(center_tile),
-						str(settlement.get("center_x", "MISSING")),
-						str(settlement.get("center_y", "MISSING"))])
 					if center_tile == Vector2.INF:
-						print("[CLICK-DIAG] SKIP: center_tile is INF")
 						continue
 					var population: int = int(settlement_summary.get("pop", settlement.get("population", 0)))
 					var radius: float = 3.5 + sqrt(float(maxi(population, 1))) * 1.4
 					var click_dist: float = tile_pos.distance_to(center_tile + Vector2(0.5, 0.5))
-					print("[CLICK-DIAG] pop=%d radius=%.1f click_dist=%.1f" % [population, radius, click_dist])
 					if click_dist >= radius:
-						print("[CLICK-DIAG] SKIP: click_dist >= radius")
 						continue
 					var settlement_id: int = int(settlement.get("id", settlement_summary.get("id", -1)))
-					print("[CLICK-DIAG] MATCH! settlement_id=%d" % settlement_id)
 					if settlement_id < 0:
 						continue
 					selected_entity_id = -1

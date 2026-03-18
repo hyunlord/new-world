@@ -66,7 +66,27 @@ func init(sim_engine: RefCounted, _sm, _em, _bm, _extra) -> void:
 
 
 func set_settlement_id(id: int) -> void:
+	print("[SETT] set_settlement_id=%d sim_engine=%s" % [id, str(_sim_engine != null)])
 	_settlement_id = id
+	# Guard: if _build_ui hasn't run yet (not in tree), defer
+	if _title_label == null:
+		if not is_inside_tree():
+			print("[SETT] WARNING: set_settlement_id before _ready, deferring")
+			call_deferred("_deferred_load")
+			return
+		else:
+			print("[SETT] WARNING: _title_label null but in tree, forcing _build_ui")
+			_build_ui()
+	_load_data()
+	print("[SETT] cached_data size=%d keys=%s" % [_cached_data.size(), str(_cached_data.keys().slice(0, 5))])
+	print("[SETT] _title_label=%s visible=%s size=%s" % [str(_title_label != null), str(visible), str(size)])
+	_refresh_all()
+	print("[SETT] after refresh: title='%s'" % [_title_label.text if _title_label != null else "NULL"])
+
+
+func _deferred_load() -> void:
+	if _title_label == null:
+		_build_ui()
 	_load_data()
 	_refresh_all()
 
@@ -95,6 +115,7 @@ func force_redraw() -> void:
 # ---------------------------------------------------------------------------
 
 func _build_ui() -> void:
+	print("[SETT] _build_ui START")
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_BG
 	style.border_color = COLOR_BORDER
@@ -124,6 +145,7 @@ func _build_ui() -> void:
 	_build_tech_tab()
 	_build_military_tab()
 	_switch_tab(0)
+	print("[SETT] _build_ui DONE — _title_label=%s _content=%s" % [str(_title_label != null), str(_content != null)])
 	_title_label.text = "..."
 	_era_label.text = "..."
 	_pop_label.text = "..."
