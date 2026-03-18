@@ -41,6 +41,8 @@ var _render_alpha: float = 0.0
 var _agent_sprites: Array[Sprite2D] = []
 var _agent_bubbles: Array = []
 var resource_overlay_visible: bool = false
+var _legacy_snapshot_cache: Array = []
+var _legacy_snapshot_cache_tick: int = -1
 var _agent_texture: Texture2D = null
 var _agent_palette_lut: Texture2D = null
 var _agent_visual_shader: Shader = null
@@ -183,10 +185,16 @@ func _is_leader(entity: RefCounted) -> bool:
 
 
 func _get_legacy_snapshots() -> Array:
-	if _sim_engine != null and _sim_engine.has_method("get_agent_snapshots"):
-		var snaps: Array = _sim_engine.get_agent_snapshots()
-		if not snaps.is_empty():
-			return snaps
+	if _sim_engine != null:
+		var tick: int = int(_sim_engine.current_tick)
+		if tick == _legacy_snapshot_cache_tick and not _legacy_snapshot_cache.is_empty():
+			return _legacy_snapshot_cache
+		_legacy_snapshot_cache_tick = tick
+		if _sim_engine.has_method("get_agent_snapshots"):
+			var snaps: Array = _sim_engine.get_agent_snapshots()
+			if not snaps.is_empty():
+				_legacy_snapshot_cache = snaps
+				return snaps
 	# Legacy fallback: convert EntityData objects to snapshot dicts
 	if _entity_manager != null:
 		var legacy: Array = _entity_manager.get_alive_entities()
@@ -623,6 +631,18 @@ func _draw_binary_snapshots() -> void:
 		_draw_band_territories(zl)
 
 	if _current_lod == 0:
+		_draw_hover_tooltip()
+		return
+
+	# At LOD1+, sprites handle agent rendering — only draw selection + tooltip
+	if _current_lod >= 1:
+		if selected_entity_id >= 0 and _snapshot_decoder.has_data():
+			for index in range(_snapshot_decoder.agent_count):
+				if _snapshot_decoder.get_entity_id(index) == selected_entity_id:
+					var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+					var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+					_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
+					break
 		_draw_hover_tooltip()
 		return
 

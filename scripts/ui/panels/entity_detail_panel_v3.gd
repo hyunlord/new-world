@@ -1321,7 +1321,10 @@ func _resolve_entity_name(entity_id: int) -> String:
 
 func _localized_action_text(action_raw: String) -> String:
 	var status_key: String = "STATUS_" + _camel_to_upper_snake(action_raw)
-	return Locale.ltr(status_key)
+	var localized: String = Locale.ltr(status_key)
+	if localized == status_key:
+		return action_raw
+	return localized
 
 
 func _localized_need_text(need_key: String) -> String:
