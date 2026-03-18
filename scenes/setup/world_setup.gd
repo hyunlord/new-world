@@ -42,10 +42,17 @@ func setup(world_data, resource_map) -> void:
 	_resource_map = resource_map
 
 
+## true → 맵 에디터 없이 바로 샌드박스 시작 (디버그용, 평소 false)
+const AUTO_START_SANDBOX: bool = false
+
+
 func _ready() -> void:
 	_build_scene()
 	## 초기 프리셋 로드 (섬)
 	_apply_preset("island")
+	if AUTO_START_SANDBOX:
+		print("[WorldSetup] AUTO_START_SANDBOX: auto-confirming sandbox mode")
+		call_deferred("_on_start_pressed", GameConfig.STARTUP_MODE_SANDBOX)
 
 
 # ── 씬 구성 ─────────────────────────────────────────────────

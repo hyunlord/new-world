@@ -113,8 +113,19 @@ func _ready() -> void:
 	_enter_setup_mode()
 
 
+## true → 맵 에디터를 건너뛰고 바로 샌드박스 모드로 시작 (디버그용)
+const SKIP_SETUP: bool = true
+
+
 ## WorldSetup 씬 생성 및 world_data/resource_map 주입
 func _enter_setup_mode() -> void:
+	if SKIP_SETUP:
+		print("[Main] SKIP_SETUP=true — bypassing world setup, auto-starting sandbox")
+		@warning_ignore("integer_division")
+		var center: Vector2i = GameConfig.WORLD_SIZE / 2
+		var spawn_data: Array = [{position = center, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT}]
+		_on_setup_confirmed(spawn_data, GameConfig.STARTUP_MODE_SANDBOX)
+		return
 	hud.visible = false
 	_world_setup = WorldSetupScript.new()
 	_world_setup.setup(world_data, resource_map)
@@ -170,8 +181,9 @@ func _ensure_ambience_manager() -> void:
 ## WorldSetup 완료 시 호출 — 맵 렌더링, 스폰, 시뮬레이션 시작
 func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
 	var resolved_startup_mode: String = _normalize_startup_mode(startup_mode)
-	_world_setup.queue_free()
-	_world_setup = null
+	if _world_setup != null:
+		_world_setup.queue_free()
+		_world_setup = null
 
 	world_renderer.render_world(world_data, resource_map)
 	if _overlay_renderer != null and _overlay_renderer.has_method("sync_with_world_renderer"):
@@ -518,6 +530,8 @@ var _day_night_enabled: bool = true
 
 func _process(delta: float) -> void:
 	if _world_setup != null:
+		return
+	if sim_engine == null:
 		return
 	sim_engine.update(delta)
 	var current_tick: int = sim_engine.current_tick

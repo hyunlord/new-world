@@ -14,6 +14,22 @@ var _follow_button: Button
 var _favorite_button: Button
 var _tab_inventory_text: RichTextLabel
 var _nav_stack: Array[Dictionary] = []
+var _v4_refresh_timer: float = 0.0
+
+
+func _process(delta: float) -> void:
+	# v4 overrides v3._process — eliminates the 3s race condition
+	if not visible or _selected_entity_id < 0:
+		return
+	_v4_refresh_timer += delta
+	if _v4_refresh_timer >= 0.5:
+		if _is_reloading:
+			# Safety: force-reset stuck flag (can happen if _refresh_all crashes)
+			_is_reloading = false
+			_v4_refresh_timer = 0.0
+		else:
+			_v4_refresh_timer = 0.0
+			_reload_data()
 
 
 func _build_ui() -> void:
@@ -213,25 +229,17 @@ func _apply_locale() -> void:
 
 
 func _refresh_all() -> void:
-	print("[V4] _refresh_all START")
+	print("[V4] _refresh_all START entity=%d keys=%d" % [_selected_entity_id, _detail.size()])
 	if not is_inside_tree():
-		print("[V4] _refresh_all ABORT not in tree")
 		return
 	if _expand_tabs == null:
-		print("[V4] _refresh_all ABORT no tabs")
 		return
 	if _detail.is_empty():
-		print("[V4] _refresh_all ABORT empty detail")
 		return
-	print("[V4] _refresh_header")
 	_refresh_header()
-	print("[V4] _refresh_summary")
 	_refresh_summary()
-	print("[V4] _update_breadcrumb")
 	_update_breadcrumb()
-	print("[V4] _refresh_expand_tabs")
 	_refresh_expand_tabs()
-	print("[V4] portrait queue_redraw")
 	if _portrait != null:
 		_portrait.queue_redraw()
 	print("[V4] _refresh_all DONE")
@@ -239,90 +247,70 @@ func _refresh_all() -> void:
 
 func _refresh_expand_tabs() -> void:
 	if _tab_overview_text == null:
-		print("[V4] _refresh_expand_tabs ABORT null overview")
+		print("[V4] _refresh_expand_tabs ABORT: null tab")
 		return
-	print("[V4] format overview")
-	_tab_overview_text.clear()
-	_tab_overview_text.append_text(_format_overview_tab_text())
-	print("[V4] format needs")
-	_tab_needs_text.clear()
-	_tab_needs_text.append_text(_format_needs_tab_text())
-	print("[V4] format emotion")
-	_tab_emotion_text.clear()
-	_tab_emotion_text.append_text(_format_emotion_tab_text())
-	print("[V4] format personality")
-	_tab_personality_text.clear()
-	_tab_personality_text.append_text(_format_personality_tab_text())
-	print("[V4] format health")
-	_tab_health_text.clear()
-	_tab_health_text.append_text(_format_health_tab_text())
-	print("[V4] format knowledge")
-	_tab_knowledge_text.clear()
-	_tab_knowledge_text.append_text(_format_knowledge_tab_text())
-	print("[V4] format relationships")
-	_tab_relationships_text.clear()
-	_tab_relationships_text.append_text(_format_relationships_tab_text())
-	print("[V4] format inventory")
-	_tab_inventory_text.clear()
-	_tab_inventory_text.append_text(_format_inventory_tab_text())
-	print("[V4] format family")
-	_tab_family_text.clear()
-	_tab_family_text.append_text(_format_family_tab_text())
-	print("[V4] format events")
-	_tab_events_text.clear()
-	_tab_events_text.append_text(_format_events_tab_text())
+	var overview_text: String = _format_overview_tab_text()
+	_set_text_tab_content(_tab_overview_text, overview_text, "overview")
+	var needs_text: String = _format_needs_tab_text()
+	_set_text_tab_content(_tab_needs_text, needs_text, "needs")
+	var emotion_text: String = _format_emotion_tab_text()
+	_set_text_tab_content(_tab_emotion_text, emotion_text, "emotion")
+	var personality_text: String = _format_personality_tab_text()
+	_set_text_tab_content(_tab_personality_text, personality_text, "personality")
+	var health_text: String = _format_health_tab_text()
+	_set_text_tab_content(_tab_health_text, health_text, "health")
+	var knowledge_text: String = _format_knowledge_tab_text()
+	_set_text_tab_content(_tab_knowledge_text, knowledge_text, "knowledge")
+	var relationships_text: String = _format_relationships_tab_text()
+	_set_text_tab_content(_tab_relationships_text, relationships_text, "relationships")
+	var inventory_text: String = _format_inventory_tab_text()
+	_set_text_tab_content(_tab_inventory_text, inventory_text, "inventory")
+	var family_text: String = _format_family_tab_text()
+	_set_text_tab_content(_tab_family_text, family_text, "family")
+	var events_text: String = _format_events_tab_text()
+	_set_text_tab_content(_tab_events_text, events_text, "events")
 	print("[V4] _refresh_expand_tabs DONE")
 
 
 func _format_overview_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_OVERVIEW_ALERTS"))
 
-	var alerts: PackedStringArray = PackedStringArray()
-	var hunger: float = clampf(float(_detail.get("need_hunger", 1.0)), 0.0, 1.0)
-	var sleep_need: float = clampf(float(_detail.get("need_sleep", _detail.get("energy", 1.0))), 0.0, 1.0)
+	# --- Section 1: Alerts ---
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_ALERTS"))
+	var hunger: float = _safe_float(_detail, "need_hunger", 1.0)
+	var sleep_default: float = _safe_scalar(_detail.get("energy", 1.0), 1.0)
+	var sleep_need: float = _safe_float(_detail, "need_sleep", sleep_default)
 	var stress_value: float = _normalized_stress()
 	if hunger < 0.35:
-		alerts.append(_card_line("#c83838", Locale.ltr("ALERT_HUNGRY"), Locale.ltr("ALERT_FOOD_LOW")))
+		lines.append("  [color=#c83838]⚠ %s[/color]" % Locale.ltr("ALERT_HUNGRY"))
 	if sleep_need < 0.30:
-		alerts.append(_card_line("#c88818", Locale.ltr("ALERT_TIRED"), Locale.ltr("ALERT_SLEEP_LOW")))
+		lines.append("  [color=#c88818]⚠ %s[/color]" % Locale.ltr("ALERT_TIRED"))
 	if stress_value > 0.30:
-		alerts.append(_card_line("#c84a32", Locale.ltr("ALERT_STRESSED"), Locale.ltr("ALERT_STRESS_HIGH")))
+		lines.append("  [color=#c84a32]⚠ %s[/color]" % Locale.ltr("ALERT_STRESSED"))
+	if hunger >= 0.35 and sleep_need >= 0.30 and stress_value <= 0.30:
+		lines.append("  [color=#48a828]✓ %s[/color]" % Locale.ltr("ALERT_ALL_GOOD"))
 
-	if alerts.is_empty():
-		lines.append("[color=#48a828]✓ %s[/color]" % Locale.ltr("ALERT_ALL_GOOD"))
-	else:
-		for alert_line: String in alerts:
-			lines.append(alert_line)
+	# --- Section 2: Info ---
+	lines.append("")
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_INFO"))
+	var occupation_text: String = _localized_action_text(str(_detail.get("occupation", "none")))
+	var age_val: int = int(round(_safe_scalar(_detail.get("age_years", 0.0), 0.0)))
+	var action_text: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
+	var band_text: String = _band_label()
+	lines.append("  %s: %s  |  %s: %d%s" % [Locale.ltr("UI_JOB"), occupation_text, Locale.ltr("UI_AGE"), age_val, Locale.ltr("UI_AGE_UNIT")])
+	lines.append("  %s: %s  |  %s: %s" % [Locale.ltr("UI_ACTION"), action_text, Locale.ltr("UI_BAND"), band_text])
 
+	# --- Section 3: Needs bar ---
 	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_OVERVIEW_INFO"))
-	lines.append(
-		"[color=#506878]%s[/color] [b]%s[/b]   [color=#506878]%s[/color] [b]%d%s[/b]" % [
-			Locale.ltr("UI_JOB"),
-			_localized_action_text(str(_detail.get("occupation", "none"))),
-			Locale.ltr("UI_AGE"),
-			int(round(float(_detail.get("age_years", 0.0)))),
-			Locale.ltr("UI_AGE_UNIT"),
-		]
-	)
-	lines.append(
-		"[color=#506878]%s[/color] [b]%s[/b]   [color=#506878]%s[/color] [b]%s[/b]" % [
-			Locale.ltr("UI_ACTION"),
-			_localized_action_text(str(_detail.get("current_action", "Idle"))),
-			Locale.ltr("UI_BAND"),
-			_band_label(),
-		]
-	)
-	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_OVERVIEW_NEEDS"))
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_NEEDS"))
+	var warmth_need: float = _safe_float(_detail, "need_warmth", 0.5)
+	var safety_need: float = _safe_float(_detail, "need_safety", 0.5)
 	lines.append(_format_bar_table([
 		{"label": Locale.ltr("NEED_HUNGER"), "value": hunger, "color": _need_color(hunger)},
 		{"label": Locale.ltr("NEED_SLEEP"), "value": sleep_need, "color": _need_color(sleep_need)},
-		{"label": Locale.ltr("NEED_WARMTH"), "value": clampf(float(_detail.get("need_warmth", 0.5)), 0.0, 1.0), "color": _need_color(float(_detail.get("need_warmth", 0.5)))},
-		{"label": Locale.ltr("NEED_SAFETY"), "value": clampf(float(_detail.get("need_safety", 0.5)), 0.0, 1.0), "color": _need_color(float(_detail.get("need_safety", 0.5)))},
+		{"label": Locale.ltr("NEED_WARMTH"), "value": warmth_need, "color": _need_color(warmth_need)},
+		{"label": Locale.ltr("NEED_SAFETY"), "value": safety_need, "color": _need_color(safety_need)},
 	]))
-
 	return "\n".join(lines)
 
 
@@ -330,9 +318,10 @@ func _format_needs_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	var entries: Array[Dictionary] = []
 	for entry: Dictionary in _build_need_entries():
-		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+		var key_name: String = str(entry.get("key", "UI_UNKNOWN"))
+		var value: float = _sanitize_unit_float(entry.get("value", 0.0), 0.0)
 		entries.append({
-			"label": Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
+			"label": Locale.ltr(key_name),
 			"value": value,
 			"color": _need_color(value),
 		})
@@ -343,71 +332,76 @@ func _format_needs_tab_text() -> String:
 func _format_emotion_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	var entries: Array[Dictionary] = []
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_EMOTION_TITLE"))
+	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_EMOTION_TITLE"))
 	lines.append("")
-	for entry: Dictionary in _build_emotion_entries():
-		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+	for row: Dictionary in EMOTION_ROWS:
+		var field_name: String = str(row.get("field", ""))
+		var value: float = _sanitize_unit_float(_detail.get(field_name, 0.0), 0.0)
+		var key_str: String = str(row.get("key", "UI_UNKNOWN"))
 		entries.append({
-			"label": Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
+			"label": Locale.ltr(key_str),
 			"value": value,
-			"color": _emotion_to_color(str(entry.get("key", ""))),
+			"color": _emotion_to_color(key_str),
 		})
+	entries.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		return float(left.get("value", 0.0)) > float(right.get("value", 0.0))
+	)
+	var stress_val: float = _normalized_stress()
 	lines.append("")
-	entries.append({"label": Locale.ltr("UI_STRESS"), "value": _normalized_stress(), "color": Color(0.78, 0.34, 0.28)})
+	entries.append({"label": Locale.ltr("UI_STRESS"), "value": stress_val, "color": Color(0.78, 0.34, 0.28)})
 	lines.append(_format_bar_table(entries))
 	return "\n".join(lines)
 
 
 func _format_personality_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append("[b]%s[/b]: %s" % [
-		Locale.ltr("PANEL_PERSONALITY_TITLE"),
-		Locale.ltr(str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER"))),
-	])
+	var archetype_key: String = str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER"))
+	lines.append("[b]%s[/b]: %s" % [Locale.ltr("PANEL_PERSONALITY_TITLE"), Locale.ltr(archetype_key)])
 	var temperament_key: String = str(_detail.get("temperament_label_key", ""))
 	if not temperament_key.is_empty():
-		lines.append("[color=#7088a0]%s[/color]" % Locale.ltr(temperament_key))
+		lines.append(Locale.ltr(temperament_key))
 	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_TCI_TITLE"))
-	lines.append(_format_bar_table([
-		{"label": Locale.ltr("UI_TCI_NS"), "value": clampf(float(_detail.get("tci_ns", 0.5)), 0.0, 1.0), "color": Color(0.51, 0.62, 0.78)},
-		{"label": Locale.ltr("UI_TCI_HA"), "value": clampf(float(_detail.get("tci_ha", 0.5)), 0.0, 1.0), "color": Color(0.68, 0.58, 0.80)},
-		{"label": Locale.ltr("UI_TCI_RD"), "value": clampf(float(_detail.get("tci_rd", 0.5)), 0.0, 1.0), "color": Color(0.62, 0.74, 0.48)},
-		{"label": Locale.ltr("UI_TCI_P"), "value": clampf(float(_detail.get("tci_p", 0.5)), 0.0, 1.0), "color": Color(0.80, 0.65, 0.36)},
-	]))
+
+	lines.append("[b]%s[/b]" % Locale.ltr("UI_TCI_TITLE"))
+	var tci_ns: float = _safe_float(_detail, "tci_ns", 0.5)
+	var tci_ha: float = _safe_float(_detail, "tci_ha", 0.5)
+	var tci_rd: float = _safe_float(_detail, "tci_rd", 0.5)
+	var tci_p: float = _safe_float(_detail, "tci_p", 0.5)
+	lines.append("%s %d%%  %s %d%%  %s %d%%  %s %d%%" % [
+		Locale.ltr("UI_TCI_NS"), int(round(tci_ns * 100.0)),
+		Locale.ltr("UI_TCI_HA"), int(round(tci_ha * 100.0)),
+		Locale.ltr("UI_TCI_RD"), int(round(tci_rd * 100.0)),
+		Locale.ltr("UI_TCI_P"), int(round(tci_p * 100.0)),
+	])
 	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_HEXACO_TITLE"))
-	var hexaco_entries: Array[Dictionary] = []
+
+	lines.append("[b]%s[/b]" % Locale.ltr("UI_HEXACO_TITLE"))
 	for axis_row: Dictionary in HEXACO_ROWS:
-		var axis_value: float = clampf(float(_detail.get(str(axis_row.get("field", "")), 0.0)), 0.0, 1.0)
-		hexaco_entries.append({
-			"label": Locale.ltr(str(axis_row.get("key", "UI_UNKNOWN"))),
-			"value": axis_value,
-			"color": Color(0.41, 0.53, 0.66),
-		})
-	lines.append(_format_bar_table(hexaco_entries))
+		var field_name: String = str(axis_row.get("field", ""))
+		var axis_value: float = _sanitize_unit_float(_detail.get(field_name, 0.0), 0.0)
+		lines.append("%s %d%%" % [Locale.ltr(str(axis_row.get("key", "UI_UNKNOWN"))), int(round(axis_value * 100.0))])
 	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_TRAITS_TITLE"))
+
+	lines.append("[b]%s[/b]" % Locale.ltr("UI_TRAITS_TITLE"))
 	var trait_tags: PackedStringArray = _trait_tags()
 	if trait_tags.is_empty():
-		lines.append("[color=#384850]—[/color]")
+		lines.append("—")
 	else:
 		lines.append(" ".join(trait_tags))
-		lines.append("[color=#506878]%d%s[/color]" % [trait_tags.size(), Locale.ltr("UI_TRAITS_TOTAL")])
+		lines.append(str(trait_tags.size()) + Locale.ltr("UI_TRAITS_TOTAL"))
 	lines.append("")
-	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_VALUES_TITLE"))
+
+	lines.append("[b]%s[/b]" % Locale.ltr("UI_VALUES_TITLE"))
 	var values_ranked: Array[Dictionary] = _value_rankings()
 	if values_ranked.is_empty():
-		lines.append("[color=#384850]—[/color]")
+		lines.append("—")
 	else:
-		var value_entries: Array[Dictionary] = []
 		for value_entry: Dictionary in values_ranked:
-			value_entries.append({
-				"label": Locale.ltr(str(value_entry.get("key", "UI_UNKNOWN"))),
-				"value": float(value_entry.get("value", 0.0)),
-				"color": Color(0.66, 0.60, 0.28),
-			})
-		lines.append(_format_bar_table(value_entries))
+			var val_key: String = str(value_entry.get("key", "UI_UNKNOWN"))
+			if val_key.is_empty():
+				val_key = "UI_UNKNOWN"
+			var val_score: float = _safe_scalar(value_entry.get("value", 0.0), 0.0)
+			lines.append("%s %d%%" % [Locale.ltr(val_key), int(round(val_score * 100.0))])
 	return "\n".join(lines)
 
 
@@ -416,14 +410,15 @@ func _format_health_tab_text() -> String:
 	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_HEALTH_TITLE"))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_AGGREGATE"))
+	var aggregate_hp: float = _safe_float(_health_tab, "aggregate_hp", 1.0)
 	lines.append(_format_bar_table([
-		{"label": Locale.ltr("PANEL_HEALTH_AGGREGATE"), "value": clampf(float(_health_tab.get("aggregate_hp", 1.0)), 0.0, 1.0), "color": _need_color(float(_health_tab.get("aggregate_hp", 1.0)))}
+		{"label": Locale.ltr("PANEL_HEALTH_AGGREGATE"), "value": aggregate_hp, "color": _need_color(aggregate_hp)}
 	]))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("PANEL_HEALTH_GROUPS"))
 	var health_entries: Array[Dictionary] = []
 	for group_entry: Dictionary in _merged_health_groups():
-		var hp_value: float = clampf(float(group_entry.get("value", 0.0)), 0.0, 1.0)
+		var hp_value: float = clampf(_safe_scalar(group_entry.get("value", 0.0), 0.0), 0.0, 1.0)
 		health_entries.append({
 			"label": Locale.ltr(str(group_entry.get("label", "UI_UNKNOWN"))),
 			"value": hp_value,
@@ -432,11 +427,15 @@ func _format_health_tab_text() -> String:
 	lines.append(_format_bar_table(health_entries))
 	lines.append("")
 	lines.append("[b][color=#283848]%s[/color][/b]" % Locale.ltr("UI_DERIVED_STATS"))
+	var move_mult: float = clampf(_safe_scalar(_health_tab.get("move_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var work_mult: float = clampf(_safe_scalar(_health_tab.get("work_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var combat_mult: float = clampf(_safe_scalar(_health_tab.get("combat_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var pain_value: float = _safe_float(_health_tab, "pain", 0.0)
 	lines.append(_format_bar_table([
-		{"label": Locale.ltr("UI_MOVE"), "value": clampf(float(_health_tab.get("move_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.36, 0.76, 0.48)},
-		{"label": Locale.ltr("UI_WORK"), "value": clampf(float(_health_tab.get("work_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.42, 0.56, 0.82)},
-		{"label": Locale.ltr("UI_COMBAT"), "value": clampf(float(_health_tab.get("combat_mult", 1.0)) / 1.5, 0.0, 1.0), "color": Color(0.82, 0.34, 0.28)},
-		{"label": Locale.ltr("UI_PAIN"), "value": clampf(float(_health_tab.get("pain", 0.0)), 0.0, 1.0), "color": Color(0.86, 0.68, 0.24)},
+		{"label": Locale.ltr("UI_MOVE"), "value": move_mult, "color": Color(0.36, 0.76, 0.48)},
+		{"label": Locale.ltr("UI_WORK"), "value": work_mult, "color": Color(0.42, 0.56, 0.82)},
+		{"label": Locale.ltr("UI_COMBAT"), "value": combat_mult, "color": Color(0.82, 0.34, 0.28)},
+		{"label": Locale.ltr("UI_PAIN"), "value": pain_value, "color": Color(0.86, 0.68, 0.24)},
 	]))
 	var damaged_parts: Array = _health_tab.get("damaged_parts", [])
 	if not damaged_parts.is_empty():
@@ -447,7 +446,7 @@ func _format_health_tab_text() -> String:
 			if not (part_raw is Dictionary):
 				continue
 			var part: Dictionary = part_raw
-			var part_hp: float = clampf(float(part.get("hp", 0)) / 100.0, 0.0, 1.0)
+			var part_hp: float = clampf(_safe_scalar(part.get("hp", 0), 0.0) / 100.0, 0.0, 1.0)
 			injury_entries.append({
 				"label": ("%s%s" % ["⚠ " if bool(part.get("vital", false)) else "", _localized_body_part_name(str(part.get("name", "")))]).strip_edges(),
 				"value": part_hp,
@@ -473,7 +472,7 @@ func _format_knowledge_tab_text() -> String:
 			var knowledge: Dictionary = knowledge_raw
 			var knowledge_id: String = str(knowledge.get("id", Locale.ltr("UI_UNKNOWN")))
 			var display_name: String = Locale.ltr(knowledge_id) if Locale.has_key(knowledge_id) else _display_token(knowledge_id)
-			var proficiency: float = clampf(float(knowledge.get("proficiency", 0.0)), 0.0, 1.0)
+			var proficiency: float = clampf(_safe_scalar(knowledge.get("proficiency", 0.0), 0.0), 0.0, 1.0)
 			var source_index: int = clampi(int(knowledge.get("source", 0)), 0, 5)
 			var source_key: Array[String] = [
 				"KNOWLEDGE_SRC_SELF",
@@ -528,7 +527,7 @@ func _format_knowledge_tab_text() -> String:
 	lines.append("[color=#384850]%s[/color]" % Locale.ltr("UI_RECORDS_PLACEHOLDER"))
 	lines.append("")
 	lines.append(_format_bar_table([
-		{"label": Locale.ltr("UI_INNOVATION"), "value": clampf(float(_knowledge_tab.get("innovation_potential", 0.0)), 0.0, 1.0), "color": Color(0.78, 0.56, 0.19)}
+		{"label": Locale.ltr("UI_INNOVATION"), "value": _safe_float(_knowledge_tab, "innovation_potential", 0.0), "color": Color(0.78, 0.56, 0.19)}
 	]))
 	return "\n".join(lines)
 
@@ -560,7 +559,7 @@ func _format_inventory_tab_text() -> String:
 				row_tokens.clear()
 			item_quality_entries.append({
 				"label": display_name,
-				"value": clampf(float(item.get("quality", 0.5)), 0.0, 1.0),
+				"value": clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0),
 				"color": Color(0.58, 0.68, 0.32),
 			})
 		if not row_tokens.is_empty():
@@ -681,13 +680,13 @@ func _format_relationship_entry(entry: Dictionary) -> String:
 	if not relation_text.is_empty():
 		headline += " (%s)" % relation_text
 	headline += "  %+d / %s %d" % [
-		int(round(float(entry.get("affinity", 0.0)) * 100.0)),
+		int(round(_safe_scalar(entry.get("affinity", 0.0), 0.0) * 100.0)),
 		Locale.ltr("UI_TRUST"),
-		int(round(float(entry.get("trust", 0.0)) * 100.0)),
+		int(round(_safe_scalar(entry.get("trust", 0.0), 0.0) * 100.0)),
 	]
 	headline += "\n%s %d" % [
 		Locale.ltr("UI_FAMILIARITY"),
-		int(round(float(entry.get("familiarity", 0.0)) * 100.0)),
+		int(round(_safe_scalar(entry.get("familiarity", 0.0), 0.0) * 100.0)),
 	]
 	return headline
 
@@ -739,7 +738,7 @@ func _draw_portrait() -> void:
 	var emotion_category: String = _emotion_category(emotion)
 	var stress: float = _normalized_stress()
 	var sex: String = str(_detail.get("sex", "male")).to_lower()
-	var age: float = float(_detail.get("age_years", 20.0))
+	var age: float = _safe_scalar(_detail.get("age_years", 20.0), 20.0)
 	var emotion_color: Color = _emotion_to_color(emotion)
 	var skin: Color = Color(0.78, 0.66, 0.53) if sex == "female" else Color(0.72, 0.60, 0.47)
 	var hair: Color = Color(0.66, 0.41, 0.19) if age < 40.0 else Color(0.50, 0.48, 0.45)
@@ -815,21 +814,36 @@ func _format_bar_table(entries: Array[Dictionary], block_count: int = 12) -> Str
 	if entries.is_empty():
 		return ""
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append("[table=3]")
 	for entry: Dictionary in entries:
 		var label: String = str(entry.get("label", ""))
-		var clamped: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+		var clamped: float = _sanitize_unit_float(entry.get("value", 0.0), 0.0)
 		var filled: int = clampi(int(round(clamped * float(block_count))), 0, block_count)
-		var color: Color = entry.get("color", Color(0.5, 0.6, 0.7))
-		lines.append("[cell][color=#506878]%s[/color][/cell][cell][color=%s]%s[/color][color=#182430]%s[/color][/cell][cell][color=#8898a8]%d%%[/color][/cell]" % [
-			label,
-			_color_hex(color),
-			"█".repeat(filled),
-			"░".repeat(block_count - filled),
-			int(round(clamped * 100.0)),
-		])
-	lines.append("[/table]")
+		var raw_color: Variant = entry.get("color", Color(0.5, 0.6, 0.7))
+		var color: Color = raw_color if raw_color is Color else Color(0.5, 0.6, 0.7)
+		var bar_filled: String = "█".repeat(filled)
+		var bar_empty: String = "░".repeat(block_count - filled)
+		var pct: String = str(int(round(clamped * 100.0)))
+		# Single format allocation instead of 8-way + concatenation to reduce heap pressure
+		lines.append("[color=#506878]%s[/color] [color=%s]%s[/color][color=#182430]%s[/color] [color=#8898a8]%s%%[/color]" % [label, _color_hex(color), bar_filled, bar_empty, pct])
 	return "\n".join(lines)
+
+
+func _format_percent_list(entries: Array[Dictionary]) -> String:
+	if entries.is_empty():
+		return ""
+	var lines: PackedStringArray = PackedStringArray()
+	for entry: Dictionary in entries:
+		var label: String = str(entry.get("label", ""))
+		var clamped: float = _sanitize_unit_float(entry.get("value", 0.0), 0.0)
+		lines.append(label + " " + str(int(round(clamped * 100.0))) + "%")
+	return "\n".join(lines)
+
+
+func _set_text_tab_content(label: RichTextLabel, content: String, _tag: String) -> void:
+	if label == null:
+		return
+	label.clear()
+	label.append_text(content)
 
 
 func _color_hex(color: Color) -> String:
@@ -846,43 +860,106 @@ func _band_label() -> String:
 
 
 func _normalized_stress() -> float:
-	var raw_value: float = float(_detail.get("stress_level", 0.0))
+	var raw_value: float = _safe_scalar(_detail.get("stress_level", 0.0), 0.0)
 	if raw_value <= 1.0:
 		return clampf(raw_value, 0.0, 1.0)
 	return clampf(raw_value / 1000.0, 0.0, 1.0)
 
 
+func _safe_locale_text(key: String) -> String:
+	if key.is_empty():
+		return ""
+	var key_id: int = Locale.key_id(key)
+	if key_id >= 0:
+		var direct_text: String = Locale.ltr_id(key_id)
+		if not direct_text.is_empty():
+			return direct_text
+	if Locale.has_key(key):
+		return key
+	return key
+
+
+func _safe_scalar(raw: Variant, default_value: float) -> float:
+	if raw is float or raw is int:
+		var numeric_value: float = float(raw)
+		if is_nan(numeric_value) or is_inf(numeric_value):
+			return default_value
+		return numeric_value
+	if raw is String:
+		var text: String = raw.strip_edges()
+		if text.is_empty():
+			return default_value
+		if not text.is_valid_float():
+			return default_value
+		var parsed_value: float = text.to_float()
+		if is_nan(parsed_value) or is_inf(parsed_value):
+			return default_value
+		return parsed_value
+	# Non-numeric Variant from FFI — this would have crashed with raw float()
+	return default_value
+
+
+func _safe_float(dict: Dictionary, key: String, default_value: float) -> float:
+	return _sanitize_unit_float(dict.get(key, default_value), default_value)
+
+
+func _sanitize_unit_float(raw: Variant, default_value: float) -> float:
+	var scalar_value: float = _safe_scalar(raw, default_value)
+	if is_nan(scalar_value) or is_inf(scalar_value):
+		return clampf(default_value, 0.0, 1.0)
+	return clampf(scalar_value, 0.0, 1.0)
+
+
 func _trait_tags() -> PackedStringArray:
 	var tags: PackedStringArray = PackedStringArray()
-	if float(_detail.get("hex_c", 0.0)) >= 0.65:
+	var hex_c: float = _sanitize_unit_float(_detail.get("hex_c", 0.0), 0.0)
+	var hex_a: float = _sanitize_unit_float(_detail.get("hex_a", 0.0), 0.0)
+	var hex_o: float = _sanitize_unit_float(_detail.get("hex_o", 0.0), 0.0)
+	var hex_x: float = _sanitize_unit_float(_detail.get("hex_x", 0.0), 0.0)
+	var hex_h: float = _sanitize_unit_float(_detail.get("hex_h", 0.0), 0.0)
+	var hex_e: float = _sanitize_unit_float(_detail.get("hex_e", 0.0), 0.0)
+	var tci_ns: float = _sanitize_unit_float(_detail.get("tci_ns", 0.0), 0.0)
+	var tci_p: float = _sanitize_unit_float(_detail.get("tci_p", 0.0), 0.0)
+	if hex_c >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_HARD_WORK"))
-	if float(_detail.get("hex_a", 0.0)) >= 0.65:
+	if hex_a >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_HARMONY"))
-	if float(_detail.get("hex_o", 0.0)) >= 0.65:
+	if hex_o >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_KNOWLEDGE"))
-	if float(_detail.get("hex_x", 0.0)) >= 0.65:
+	if hex_x >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_FRIENDSHIP"))
-	if float(_detail.get("hex_h", 0.0)) >= 0.65:
+	if hex_h >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_TRUTH"))
-	if float(_detail.get("hex_e", 0.0)) >= 0.65:
+	if hex_e >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_FAMILY"))
-	if float(_detail.get("tci_ns", 0.0)) >= 0.65:
+	if tci_ns >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_INDEPENDENCE"))
-	if float(_detail.get("tci_p", 0.0)) >= 0.65:
+	if tci_p >= 0.65:
 		tags.append("[color=#6888a8][%s][/color]" % Locale.ltr("VALUE_PERSEVERANCE"))
 	return tags
 
 
 func _value_rankings() -> Array[Dictionary]:
-	var values_all: PackedFloat32Array = _mind_tab.get("values_all", PackedFloat32Array())
+	var values_raw: Variant = _mind_tab.get("values_all", null)
 	var ranked: Array[Dictionary] = []
-	for index: int in range(mini(values_all.size(), VALUE_LABELS.size())):
-		ranked.append({
-			"key": String(VALUE_LABELS[index]),
-			"value": float(values_all[index]),
-		})
+	if values_raw == null:
+		return ranked
+	# Build label lookup from ValueDefs.KEYS (StringName→String safe)
+	var labels: Array = ValueDefs.KEYS
+	var count: int = 0
+	if values_raw is PackedFloat32Array:
+		var pf: PackedFloat32Array = values_raw
+		count = mini(pf.size(), labels.size())
+		for index: int in range(count):
+			ranked.append({"key": str(labels[index]), "value": float(pf[index])})
+	elif values_raw is Array:
+		count = mini(values_raw.size(), labels.size())
+		for index: int in range(count):
+			ranked.append({"key": str(labels[index]), "value": _safe_scalar(values_raw[index], 0.0)})
+	else:
+		return ranked
 	ranked.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
-		return float(left.get("value", 0.0)) > float(right.get("value", 0.0))
+		return _safe_scalar(left.get("value", 0.0), 0.0) > _safe_scalar(right.get("value", 0.0), 0.0)
 	)
 	if ranked.size() > 5:
 		ranked.resize(5)

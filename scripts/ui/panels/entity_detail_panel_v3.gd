@@ -52,6 +52,7 @@ var _family_tab: Dictionary = {}
 var _last_narrative_display: Dictionary = {}
 var _thought_timer: float = 0.0
 var _narrative_refresh_timer: float = 0.0
+var _is_reloading: bool = false
 
 var _header_name: Label
 var _header_meta: Label
@@ -124,13 +125,11 @@ func show_entity_or_deceased(entity_id: int) -> void:
 
 
 func set_entity_id(entity_id: int) -> void:
-	print("[PANEL] set_entity_id id=%d" % entity_id)
 	_selected_entity_id = entity_id
 	_last_narrative_display.clear()
 	_thought_timer = 0.0
 	_narrative_refresh_timer = 0.0
-	print("[PANEL] deferring _reload_data")
-	call_deferred("_reload_data")
+	_reload_data()
 
 
 func refresh_locale() -> void:
@@ -354,37 +353,28 @@ func _toggle_expand_tabs() -> void:
 
 
 func _reload_data() -> void:
-	print("[PANEL] _reload_data START")
+	if _is_reloading:
+		return
 	if not is_inside_tree():
-		print("[PANEL] _reload_data ABORT not in tree")
 		return
 	if _expand_tabs == null:
-		print("[PANEL] _reload_data ABORT no tabs")
 		return
 	if _sim_engine == null or _selected_entity_id < 0:
-		print("[PANEL] _reload_data ABORT no engine or bad id")
 		return
-	print("[PANEL] calling get_entity_detail")
+	_is_reloading = true
 	_detail = _sim_engine.get_entity_detail(_selected_entity_id)
-	print("[PANEL] get_entity_detail returned size=%d" % _detail.size())
 	if _detail.is_empty():
+		_is_reloading = false
 		visible = false
 		return
-	print("[PANEL] calling get_entity_tab mind")
 	_mind_tab = _sim_engine.get_entity_tab(_selected_entity_id, "mind")
-	print("[PANEL] calling get_entity_tab social")
 	_social_tab = _sim_engine.get_entity_tab(_selected_entity_id, "social")
-	print("[PANEL] calling get_entity_tab memory")
 	_memory_tab = _sim_engine.get_entity_tab(_selected_entity_id, "memory")
-	print("[PANEL] calling get_entity_tab health")
 	_health_tab = _sim_engine.get_entity_tab(_selected_entity_id, "health")
-	print("[PANEL] calling get_entity_tab knowledge")
 	_knowledge_tab = _sim_engine.get_entity_tab(_selected_entity_id, "knowledge")
-	print("[PANEL] calling get_entity_tab family")
 	_family_tab = _sim_engine.get_entity_tab(_selected_entity_id, "family")
-	print("[PANEL] all tabs loaded, calling _refresh_all")
 	_refresh_all()
-	print("[PANEL] _reload_data DONE")
+	_is_reloading = false
 
 
 func _refresh_all() -> void:
@@ -424,7 +414,7 @@ func _refresh_header() -> void:
 		occupation_raw = "none"
 	var occupation_key: String = "OCCUPATION_" + occupation_raw.to_upper()
 	var meta_parts: PackedStringArray = PackedStringArray([
-		"%d%s" % [int(round(float(_detail.get("age_years", 0.0)))), Locale.ltr("UI_AGE_UNIT")],
+		"%d%s" % [int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0))), Locale.ltr("UI_AGE_UNIT")],
 		Locale.ltr(stage_key),
 		Locale.ltr(sex_key),
 		Locale.ltr(occupation_key),
@@ -434,9 +424,12 @@ func _refresh_header() -> void:
 
 
 func _refresh_summary() -> void:
-	var action_text: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
-	var action_timer: int = int(_detail.get("action_timer", 0))
-	var action_duration: int = int(_detail.get("action_duration", 0))
+	var action_raw: String = str(_detail.get("current_action", "Idle"))
+	var action_text: String = _localized_action_text(action_raw)
+	var raw_timer: Variant = _detail.get("action_timer", 0)
+	var raw_duration: Variant = _detail.get("action_duration", 0)
+	var action_timer: int = int(raw_timer) if (raw_timer is int or raw_timer is float) else 0
+	var action_duration: int = int(raw_duration) if (raw_duration is int or raw_duration is float) else 0
 	var motivation_text: String = _localized_need_text(str(_detail.get("top_need_key", "NEED_ENERGY")))
 	var summary_text: String = action_text + " — " + motivation_text
 	if action_duration > 0:
@@ -447,14 +440,15 @@ func _refresh_summary() -> void:
 			"total",
 			action_duration
 		)
-	_summary_label.text = summary_text
+	if _summary_label != null:
+		_summary_label.text = summary_text
 
 
 func _refresh_forage_context() -> void:
 	var target_resource: String = str(_detail.get("action_target_resource", ""))
 	var target_x: int = int(_detail.get("action_target_x", -1))
 	var target_y: int = int(_detail.get("action_target_y", -1))
-	var hunger_delta: float = float(_detail.get("need_hunger_delta", 0.0))
+	var hunger_delta: float = _safe_panel_scalar(_detail.get("need_hunger_delta", 0.0), 0.0)
 	var food_delta: float = _probe_food_delta()
 	var lines: PackedStringArray = PackedStringArray()
 	if target_resource == "food" and target_x >= 0 and target_y >= 0:
@@ -549,8 +543,8 @@ func _refresh_survival_diagnostics() -> void:
 
 
 func _format_survival_diag_line(label_key: String, value_field: String, delta_field: String) -> String:
-	var current_value: float = float(_detail.get(value_field, 0.0))
-	var delta_value: float = float(_detail.get(delta_field, 0.0))
+	var current_value: float = _safe_panel_scalar(_detail.get(value_field, 0.0), 0.0)
+	var delta_value: float = _safe_panel_scalar(_detail.get(delta_field, 0.0), 0.0)
 	var delta_text: String = ""
 	if abs(delta_value) > 0.001:
 		var delta_prefix: String = "+" if delta_value > 0.0 else ""
@@ -594,7 +588,7 @@ func _refresh_emotions() -> void:
 		parts.append(
 			"%s %d%%" % [
 				Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
-				int(round(float(entry.get("value", 0.0)) * 100.0)),
+				int(round(_safe_panel_scalar(entry.get("value", 0.0), 0.0) * 100.0)),
 				]
 			)
 	var emotion_text: String = " · ".join(parts)
@@ -609,10 +603,11 @@ func _refresh_personality() -> void:
 		temperament_text = Locale.ltr(temperament_key)
 	var hexaco_parts: PackedStringArray = PackedStringArray()
 	for row: Dictionary in HEXACO_ROWS:
+		var field_name: String = str(row["field"])
 		hexaco_parts.append(
 			"%s %d%%" % [
 				Locale.ltr(str(row["key"])),
-				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
+				int(round(_safe_panel_scalar(_detail.get(field_name, 0.0), 0.0) * 100.0)),
 				]
 			)
 	var personality_text: String = archetype_text
@@ -627,8 +622,8 @@ func _refresh_inventory() -> void:
 		child.queue_free()
 	var inv_items_raw: Array = _detail.get("inv_items", [])
 	if inv_items_raw.is_empty():
-		var carry_total: float = float(_detail.get("carry_total", 0.0))
-		var carry_capacity: float = float(_detail.get("carry_capacity", 0.0))
+		var carry_total: float = _safe_panel_scalar(_detail.get("carry_total", 0.0), 0.0)
+		var carry_capacity: float = _safe_panel_scalar(_detail.get("carry_capacity", 0.0), 0.0)
 		if carry_capacity <= 0.0 or carry_total <= 0.0:
 			_inventory_box.add_child(_make_simple_row(Locale.ltr("UI_INVENTORY_EMPTY")))
 			return
@@ -657,8 +652,8 @@ func _refresh_inventory() -> void:
 			var material_text: String = Locale.tr_id("MAT", material_id)
 			if material_text == material_id:
 				material_text = Locale.ltr("UI_UNKNOWN")
-			var current_durability: float = float(item.get("current_durability", 100.0))
-			var max_durability: float = float(item.get("max_durability", 100.0))
+			var current_durability: float = _safe_panel_scalar(item.get("current_durability", 100.0), 100.0)
+			var max_durability: float = _safe_panel_scalar(item.get("max_durability", 100.0), 100.0)
 			var stack_count: int = max(1, int(item.get("stack_count", 1)))
 			var item_text: String = Locale.trf2(
 				"UI_INVENTORY_ITEM_FMT",
@@ -782,9 +777,9 @@ func _format_overview_tab_text() -> String:
 	lines.append("")
 	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_ALERTS"))
 	var has_alert: bool = false
-	var hunger: float = float(_detail.get("need_hunger", 1.0))
-	var energy: float = float(_detail.get("energy", 1.0))
-	var aggregate_hp: float = float(_health_tab.get("aggregate_hp", _detail.get("aggregate_hp", 1.0)))
+	var hunger: float = _safe_panel_scalar(_detail.get("need_hunger", 1.0), 1.0)
+	var energy: float = _safe_panel_scalar(_detail.get("energy", 1.0), 1.0)
+	var aggregate_hp: float = _safe_panel_scalar(_health_tab.get("aggregate_hp", _detail.get("aggregate_hp", 1.0)), 1.0)
 	var conditions: int = int(_health_tab.get("active_conditions", _detail.get("active_conditions", 0)))
 	var known_count: int = int(_detail.get("knowledge_count", 0))
 	if hunger < 0.35:
@@ -822,7 +817,7 @@ func _format_overview_tab_text() -> String:
 	lines.append(
 		"  %s: %d" % [
 			Locale.ltr("PANEL_OVERVIEW_AGE"),
-			int(round(float(_detail.get("age_years", 0.0)))),
+			int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0))),
 		]
 	)
 	var band_name: String = str(_detail.get("band_name", ""))
@@ -834,12 +829,12 @@ func _format_overview_tab_text() -> String:
 	lines.append("[b]%s[/b]" % Locale.ltr("PANEL_OVERVIEW_NEEDS"))
 	var need_summaries: Array[Dictionary] = [
 		{"key": "NEED_HUNGER", "value": hunger},
-		{"key": "NEED_SLEEP", "value": float(_detail.get("need_sleep", energy))},
-		{"key": "NEED_WARMTH", "value": float(_detail.get("need_warmth", 0.5))},
-		{"key": "NEED_SAFETY", "value": float(_detail.get("need_safety", 0.5))},
+		{"key": "NEED_SLEEP", "value": _safe_panel_scalar(_detail.get("need_sleep", energy), energy)},
+		{"key": "NEED_WARMTH", "value": _safe_panel_scalar(_detail.get("need_warmth", 0.5), 0.5)},
+		{"key": "NEED_SAFETY", "value": _safe_panel_scalar(_detail.get("need_safety", 0.5), 0.5)},
 	]
 	for entry: Dictionary in need_summaries:
-		var value: float = clampf(float(entry.get("value", 0.0)), 0.0, 1.0)
+		var value: float = clampf(_safe_panel_scalar(entry.get("value", 0.0), 0.0), 0.0, 1.0)
 		var color_name: String = "green"
 		if value <= 0.30:
 			color_name = "red"
@@ -861,7 +856,7 @@ func _format_needs_tab_text() -> String:
 		lines.append(
 			"%s  %d%%" % [
 				Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
-				int(round(float(entry.get("value", 0.0)) * 100.0)),
+				int(round(_safe_panel_scalar(entry.get("value", 0.0), 0.0) * 100.0)),
 			]
 		)
 	return "\n".join(lines)
@@ -873,7 +868,7 @@ func _format_emotion_tab_text() -> String:
 		lines.append(
 			"%s  %d%%" % [
 				Locale.ltr(str(entry.get("key", "UI_UNKNOWN"))),
-				int(round(float(entry.get("value", 0.0)) * 100.0)),
+				int(round(_safe_panel_scalar(entry.get("value", 0.0), 0.0) * 100.0)),
 			]
 		)
 	return "\n".join(lines)
@@ -886,10 +881,11 @@ func _format_personality_tab_text() -> String:
 	if not temperament_key.is_empty():
 		lines.append(Locale.ltr(temperament_key))
 	for row: Dictionary in HEXACO_ROWS:
+		var field_name: String = str(row["field"])
 		lines.append(
 			"%s  %d%%" % [
 				Locale.ltr(str(row["key"])),
-				int(round(float(_detail.get(str(row["field"]), 0.0)) * 100.0)),
+				int(round(_safe_panel_scalar(_detail.get(field_name, 0.0), 0.0) * 100.0)),
 			]
 		)
 	var values_all: PackedFloat32Array = _mind_tab.get("values_all", PackedFloat32Array())
@@ -902,7 +898,7 @@ func _format_personality_tab_text() -> String:
 
 func _format_health_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	var aggregate_hp: float = float(_health_tab.get("aggregate_hp", 1.0))
+	var aggregate_hp: float = _safe_panel_scalar(_health_tab.get("aggregate_hp", 1.0), 1.0)
 	var health_color: String = "green"
 	if aggregate_hp <= 0.50:
 		health_color = "red"
@@ -952,25 +948,25 @@ func _format_health_tab_text() -> String:
 	lines.append(
 		"  %s: %.0f%%" % [
 			Locale.ltr("PANEL_HEALTH_MOVE"),
-			float(_health_tab.get("move_mult", 1.0)) * 100.0,
+			_safe_panel_scalar(_health_tab.get("move_mult", 1.0), 1.0) * 100.0,
 		]
 	)
 	lines.append(
 		"  %s: %.0f%%" % [
 			Locale.ltr("PANEL_HEALTH_WORK"),
-			float(_health_tab.get("work_mult", 1.0)) * 100.0,
+			_safe_panel_scalar(_health_tab.get("work_mult", 1.0), 1.0) * 100.0,
 		]
 	)
 	lines.append(
 		"  %s: %.0f%%" % [
 			Locale.ltr("PANEL_HEALTH_COMBAT"),
-			float(_health_tab.get("combat_mult", 1.0)) * 100.0,
+			_safe_panel_scalar(_health_tab.get("combat_mult", 1.0), 1.0) * 100.0,
 		]
 	)
 	lines.append(
 		"  %s: %.0f%%" % [
 			Locale.ltr("PANEL_HEALTH_PAIN"),
-			float(_health_tab.get("pain", 0.0)) * 100.0,
+			_safe_panel_scalar(_health_tab.get("pain", 0.0), 0.0) * 100.0,
 		]
 	)
 	var damaged_parts: Array = _health_tab.get("damaged_parts", [])
@@ -1017,7 +1013,7 @@ func _format_health_tab_text() -> String:
 func _format_knowledge_tab_text() -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	var known: Array = _knowledge_tab.get("known", [])
-	var innovation_potential: float = float(_knowledge_tab.get("innovation_potential", 0.0))
+	var innovation_potential: float = _safe_panel_scalar(_knowledge_tab.get("innovation_potential", 0.0), 0.0)
 	var source_names: Array[String] = [
 		"KNOWLEDGE_SRC_SELF",
 		"KNOWLEDGE_SRC_ORAL",
@@ -1035,7 +1031,7 @@ func _format_knowledge_tab_text() -> String:
 		var knowledge: Dictionary = knowledge_raw
 		var knowledge_id: String = str(knowledge.get("id", Locale.ltr("UI_UNKNOWN")))
 		var display_name: String = Locale.ltr(knowledge_id) if Locale.has_key(knowledge_id) else knowledge_id
-		var proficiency: float = clampf(float(knowledge.get("proficiency", 0.0)), 0.0, 1.0)
+		var proficiency: float = clampf(_safe_panel_scalar(knowledge.get("proficiency", 0.0), 0.0), 0.0, 1.0)
 		var source_index: int = clampi(int(knowledge.get("source", 0)), 0, source_names.size() - 1)
 		var filled: int = clampi(int(proficiency * 10.0), 0, 10)
 		var bar: String = "█".repeat(filled) + "░".repeat(10 - filled)
@@ -1197,10 +1193,11 @@ func _story_event_text(entry: Dictionary) -> String:
 func _build_need_entries() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for row: Dictionary in NEED_ROWS:
+		var field_name: String = str(row["field"])
 		result.append({
-			"field": row["field"],
+			"field": field_name,
 			"key": row["key"],
-			"value": float(_detail.get(str(row["field"]), 0.0)),
+			"value": _safe_panel_scalar(_detail.get(field_name, 0.0), 0.0),
 		})
 	result.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
 		return float(left.get("value", 0.0)) < float(right.get("value", 0.0))
@@ -1211,10 +1208,11 @@ func _build_need_entries() -> Array[Dictionary]:
 func _build_emotion_entries() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for row: Dictionary in EMOTION_ROWS:
+		var field_name: String = str(row["field"])
 		result.append({
-			"field": row["field"],
+			"field": field_name,
 			"key": row["key"],
-			"value": float(_detail.get(str(row["field"]), 0.0)),
+			"value": _safe_panel_scalar(_detail.get(field_name, 0.0), 0.0),
 		})
 	result.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
 		return float(left.get("value", 0.0)) > float(right.get("value", 0.0))
@@ -1252,13 +1250,13 @@ func _format_relationship_entry(entry: Dictionary) -> String:
 	if not relation_text.is_empty():
 		headline += " (%s)" % relation_text
 	headline += "  %+d / %s %d" % [
-		int(round(float(entry.get("affinity", 0.0)) * 100.0)),
+		int(round(_safe_panel_scalar(entry.get("affinity", 0.0), 0.0) * 100.0)),
 		Locale.ltr("UI_TRUST"),
-		int(round(float(entry.get("trust", 0.0)) * 100.0)),
+		int(round(_safe_panel_scalar(entry.get("trust", 0.0), 0.0) * 100.0)),
 	]
 	headline += "\n%s %d" % [
 		Locale.ltr("UI_FAMILIARITY"),
-		int(round(float(entry.get("familiarity", 0.0)) * 100.0)),
+		int(round(_safe_panel_scalar(entry.get("familiarity", 0.0), 0.0) * 100.0)),
 	]
 	return headline
 
@@ -1328,6 +1326,37 @@ func _localized_action_text(action_raw: String) -> String:
 
 func _localized_need_text(need_key: String) -> String:
 	return Locale.ltr(need_key)
+
+
+func _safe_panel_scalar(raw: Variant, default_value: float) -> float:
+	if raw is float or raw is int:
+		var numeric_value: float = float(raw)
+		if is_nan(numeric_value) or is_inf(numeric_value):
+			return default_value
+		return numeric_value
+	if raw is String:
+		var text: String = raw.strip_edges()
+		if text.is_empty() or not text.is_valid_float():
+			return default_value
+		var parsed_value: float = text.to_float()
+		if is_nan(parsed_value) or is_inf(parsed_value):
+			return default_value
+		return parsed_value
+	return default_value
+
+
+func _to_plain_variant(value: Variant) -> Variant:
+	if value is Dictionary:
+		var plain_dict: Dictionary = {}
+		for key: Variant in (value as Dictionary).keys():
+			plain_dict[key] = _to_plain_variant((value as Dictionary).get(key))
+		return plain_dict
+	if value is Array:
+		var plain_array: Array = []
+		for item: Variant in value:
+			plain_array.append(_to_plain_variant(item))
+		return plain_array
+	return value
 
 
 func _camel_to_upper_snake(value: String) -> String:
