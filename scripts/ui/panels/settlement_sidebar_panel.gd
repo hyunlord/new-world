@@ -124,6 +124,9 @@ func _build_ui() -> void:
 	_build_tech_tab()
 	_build_military_tab()
 	_switch_tab(0)
+	_title_label.text = "..."
+	_era_label.text = "..."
+	_pop_label.text = "..."
 
 
 func _build_header() -> void:
@@ -260,7 +263,12 @@ func _load_data() -> void:
 # ---------------------------------------------------------------------------
 
 func _refresh_all() -> void:
-	if _cached_data.is_empty() or _title_label == null:
+	if _title_label == null:
+		return
+	if _cached_data.is_empty():
+		_title_label.text = "Settlement %d" % _settlement_id if _settlement_id >= 0 else "..."
+		_era_label.text = ""
+		_pop_label.text = ""
 		return
 	var name_text: String = str(_get_data_value("name", "Settlement %d" % _settlement_id))
 	var era_key: String = "ERA_" + str(_get_data_value("tech_era", "stone_age")).to_upper()
