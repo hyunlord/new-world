@@ -2202,5 +2202,17 @@
   "UI_INPUT": "입력",
   "UI_OUTPUT": "출력",
   "UI_BUILDING_STRUCTURE": "구조",
-  "UI_BUILDING_STRUCTURE_PLACEHOLDER": "컴포넌트 기반: 벽, 지붕, 바닥, 가구 레이어"
+  "UI_BUILDING_STRUCTURE_PLACEHOLDER": "컴포넌트 기반: 벽, 지붕, 바닥, 가구 레이어",
+  "UI_CAMPFIRE_EFFECT": "온기와 모임의 중심점을 제공합니다",
+  "UI_SHELTER_EFFECT": "거주자에게 안식처를 제공합니다",
+  "UI_STOCKPILE_EFFECT": "자원을 저장하고 보관합니다",
+  "UI_PROGRESS": "진행률",
+  "UI_LEADER": "리더",
+  "UI_CHARISMA": "카리스마",
+  "UI_NO_LEADER": "리더 없음",
+  "UI_ADULTS": "성인",
+  "UI_ELDERS": "노인",
+  "UI_PRODUCTION_CONSUMPTION": "생산/소비",
+  "UI_SETTLEMENT_STATUS": "정착지 상태",
+  "UI_HAPPINESS_FACTORS": "행복도 요인"
 }

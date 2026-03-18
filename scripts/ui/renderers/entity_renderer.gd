@@ -1470,12 +1470,20 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var tile_pos: Vector2 = world_pos / float(GameConfig.TILE_SIZE)
 	var tile: Vector2i = Vector2i(int(floor(tile_pos.x)), int(floor(tile_pos.y)))
 
-	# Check building at tile first
+	# Check building at tile and adjacent tiles (3x3 area for easier clicking)
 	var building: Variant = null
-	if _building_manager != null:
-		building = _building_manager.get_building_at(tile.x, tile.y)
-	if building == null:
-		building = _get_runtime_building_at(tile.x, tile.y)
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var check_x: int = tile.x + dx
+			var check_y: int = tile.y + dy
+			if _building_manager != null:
+				building = _building_manager.get_building_at(check_x, check_y)
+			if building == null:
+				building = _get_runtime_building_at(check_x, check_y)
+			if building != null:
+				break
+		if building != null:
+			break
 	if building != null:
 		var building_id: int = int(_building_value(building, "id", -1))
 		if building_id >= 0:
