@@ -1502,8 +1502,6 @@ func _handle_click(screen_pos: Vector2) -> void:
 					_last_click_building_id = -1
 					_last_click_time = now
 					_last_click_pos = screen_pos
-					SimulationBus.entity_deselected.emit()
-					SimulationBus.building_deselected.emit()
 					SimulationBus.settlement_panel_requested.emit(settlement_id)
 					return
 
