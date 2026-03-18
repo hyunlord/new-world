@@ -6,7 +6,8 @@ var _sim_engine: RefCounted
 var _settlement_id: int = -1
 var _cached_data: Dictionary = {}
 var _refresh_timer: float = 0.0
-var _tech_tree_manager = null
+@warning_ignore("unused_private_class_variable")
+var _tech_tree_manager = null  # Set externally by hud.gd
 
 var _scroll: ScrollContainer
 var _content: VBoxContainer
@@ -26,7 +27,6 @@ var _leader_label: Label
 var _tech_progress_label: Label
 var _stability_bar: Dictionary = {}
 var _happiness_bar: Dictionary = {}
-var _production_label: Label
 var _storage_label: Label
 
 # Tab 1: Buildings
