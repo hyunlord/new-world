@@ -3501,16 +3501,15 @@ func open_settlement_detail(settlement_id: int) -> void:
 		_cast_bar.set_selected_entity(-1)
 	if _popup_manager != null:
 		_popup_manager.close_all()
+	# DATA FIRST — build UI + load data BEFORE making visible
+	_settlement_detail_panel.call("set_settlement_id", settlement_id)
+	# THEN show
 	_hide_all_sidebar_tab_panels()
 	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
 	_settlement_detail_panel.visible = true
 	_set_right_panel_tab_state()
 	_open_right_sidebar()
-	# Set data AFTER panel is visible and sized
-	_settlement_detail_panel.call("set_settlement_id", settlement_id)
 	_refresh_selection_summary()
-	if _settlement_detail_panel.has_method("force_redraw"):
-		_settlement_detail_panel.call_deferred("force_redraw")
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
