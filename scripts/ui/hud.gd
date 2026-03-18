@@ -3,7 +3,7 @@ extends CanvasLayer
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 const MinimapPanelClass = preload("res://scripts/ui/panels/minimap_panel.gd")
 const StatsPanelClass = preload("res://scripts/ui/panels/stats_panel.gd")
-const StatsDetailPanelClass = preload("res://scripts/ui/panels/world_stats_panel.gd")
+const StatsDetailPanelClass = preload("res://scripts/ui/panels/stats_sidebar_panel.gd")
 const EntityDetailPanelV5Class = preload("res://scripts/ui/panels/entity_detail_panel_v5.gd")
 const EntityDetailPanelLegacyClass = preload("res://scripts/ui/panels/entity_detail_panel_legacy.gd")
 const BandDetailPanelClass = preload("res://scripts/ui/panels/band_detail_panel.gd")
@@ -11,7 +11,7 @@ const CivDetailPanelClass = preload("res://scripts/ui/panels/civilization_detail
 const OraclePanelClass = preload("res://scripts/ui/panels/oracle_panel.gd")
 const BuildingDetailPanelClass = preload("res://scripts/ui/panels/building_sidebar_panel.gd")
 const PopupManagerClass = preload("res://scripts/ui/popup_manager.gd")
-const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_panel.gd")
+const ChroniclePanelClass = preload("res://scripts/ui/panels/chronicle_sidebar_panel.gd")
 const ListPanelClass = preload("res://scripts/ui/panels/list_panel.gd")
 const SettlementDetailPanelClass = preload("res://scripts/ui/panels/settlement_sidebar_panel.gd")
 const CastBarClass = preload("res://scripts/ui/cast_bar.gd")
@@ -3501,17 +3501,16 @@ func open_settlement_detail(settlement_id: int) -> void:
 		_cast_bar.set_selected_entity(-1)
 	if _popup_manager != null:
 		_popup_manager.close_all()
-	_settlement_detail_panel.call("set_settlement_id", settlement_id)
 	_hide_all_sidebar_tab_panels()
 	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
 	_settlement_detail_panel.visible = true
 	_set_right_panel_tab_state()
 	_open_right_sidebar()
+	# Set data AFTER panel is visible and sized
+	_settlement_detail_panel.call("set_settlement_id", settlement_id)
 	_refresh_selection_summary()
 	if _settlement_detail_panel.has_method("force_redraw"):
 		_settlement_detail_panel.call_deferred("force_redraw")
-	else:
-		_settlement_detail_panel.call_deferred("queue_redraw")
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
