@@ -12,7 +12,6 @@ var _seed: int = 0
 var _rust_runtime_initialized: bool = false
 var _rust_runtime_available: bool = false
 var _registered_system_count: int = 0
-var _last_agent_snapshots: Array = []
 var _entity_detail_cache: Dictionary = {}
 var _entity_detail_cache_tick: int = -1
 

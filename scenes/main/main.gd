@@ -128,6 +128,7 @@ func _enter_setup_mode() -> void:
 		for s in suggestions:
 			spawn_data.append({position = s, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT})
 		if spawn_data.is_empty():
+			@warning_ignore("integer_division")
 			var center: Vector2i = GameConfig.WORLD_SIZE / 2
 			spawn_data.append({position = center, count = GameConfig.MAP_EDITOR_SPAWN_DEFAULT})
 		_on_setup_confirmed(spawn_data, GameConfig.STARTUP_MODE_SANDBOX)

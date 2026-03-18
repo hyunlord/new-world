@@ -15,7 +15,7 @@ const BAR_HEIGHT: float = 18.0
 const LABEL_MIN_WIDTH: float = 72.0
 const PCT_MIN_WIDTH: float = 38.0
 const SECTION_SPACING: float = 12.0
-const ROW_SPACING: float = 2.0
+const ROW_SPACING: int = 2
 
 # Colors
 const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
@@ -69,6 +69,35 @@ var _health_group_rows: Array[Dictionary] = []
 var _health_derived_rows: Array[Dictionary] = []
 var _health_injury_container: VBoxContainer
 var _health_injury_rows: Array[Dictionary] = []
+
+# Knowledge tab
+var _knowledge_panel: VBoxContainer
+var _knowledge_empty_label: Label
+var _knowledge_rows: Array[Dictionary] = []
+var _knowledge_channel_container: VBoxContainer
+
+# Relationships tab
+var _relationships_panel: VBoxContainer
+var _relationships_empty_label: Label
+var _relationships_container: VBoxContainer
+
+# Inventory tab
+var _inventory_panel: VBoxContainer
+var _inventory_empty_label: Label
+var _inventory_container: VBoxContainer
+
+# Family tab
+var _family_panel: VBoxContainer
+var _family_father_label: Label
+var _family_mother_label: Label
+var _family_spouse_label: Label
+var _family_children_label: Label
+var _family_kinship_label: Label
+
+# Events tab
+var _events_panel: VBoxContainer
+var _events_empty_label: Label
+var _events_container: VBoxContainer
 
 # Refresh
 var _v5_refresh_timer: float = 0.0
@@ -150,6 +179,11 @@ func _build_ui() -> void:
 	_build_emotion_tab()
 	_build_personality_tab()
 	_build_health_tab()
+	_build_knowledge_tab()
+	_build_relationships_tab()
+	_build_inventory_tab()
+	_build_family_tab()
+	_build_events_tab()
 
 	_switch_tab(0)
 
@@ -216,6 +250,9 @@ func _build_tab_bar() -> void:
 	_tab_bar.add_tab(Locale.ltr("PANEL_HEALTH_TITLE"))
 	_tab_bar.add_tab(Locale.ltr("PANEL_KNOWLEDGE_TITLE"))
 	_tab_bar.add_tab(Locale.ltr("PANEL_RELATIONSHIPS_TITLE"))
+	_tab_bar.add_tab(Locale.ltr("UI_INVENTORY"))
+	_tab_bar.add_tab(Locale.ltr("PANEL_FAMILY_TITLE"))
+	_tab_bar.add_tab(Locale.ltr("PANEL_EVENTS_TITLE"))
 	_tab_bar.tab_changed.connect(_on_tab_changed)
 	_content.add_child(_tab_bar)
 
@@ -240,6 +277,16 @@ func _switch_tab(index: int) -> void:
 		_personality_panel.visible = (index == 3)
 	if _health_panel != null:
 		_health_panel.visible = (index == 4)
+	if _knowledge_panel != null:
+		_knowledge_panel.visible = (index == 5)
+	if _relationships_panel != null:
+		_relationships_panel.visible = (index == 6)
+	if _inventory_panel != null:
+		_inventory_panel.visible = (index == 7)
+	if _family_panel != null:
+		_family_panel.visible = (index == 8)
+	if _events_panel != null:
+		_events_panel.visible = (index == 9)
 
 
 # ---------------------------------------------------------------------------
@@ -366,6 +413,11 @@ func _refresh_all() -> void:
 	_refresh_emotion()
 	_refresh_personality()
 	_refresh_health()
+	_refresh_knowledge()
+	_refresh_relationships()
+	_refresh_inventory()
+	_refresh_family()
+	_refresh_events()
 
 
 func _refresh_header() -> void:
@@ -675,6 +727,379 @@ func _refresh_health() -> void:
 
 
 # ---------------------------------------------------------------------------
+# Knowledge tab
+# ---------------------------------------------------------------------------
+
+func _build_knowledge_tab() -> void:
+	_knowledge_panel = VBoxContainer.new()
+	_knowledge_panel.add_theme_constant_override("separation", ROW_SPACING)
+	_tab_container.add_child(_knowledge_panel)
+
+	_add_section_title(_knowledge_panel, "PANEL_KNOWLEDGE_TITLE")
+
+	_knowledge_empty_label = Label.new()
+	_knowledge_empty_label.text = Locale.ltr("UI_NO_KNOWLEDGE")
+	_knowledge_empty_label.add_theme_font_size_override("font_size", 10)
+	_knowledge_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
+	_knowledge_panel.add_child(_knowledge_empty_label)
+
+	_knowledge_channel_container = VBoxContainer.new()
+	_knowledge_channel_container.add_theme_constant_override("separation", ROW_SPACING)
+	_knowledge_panel.add_child(_knowledge_channel_container)
+
+
+func _refresh_knowledge() -> void:
+	if _knowledge_panel == null:
+		return
+	for child in _knowledge_channel_container.get_children():
+		child.queue_free()
+	_knowledge_rows.clear()
+
+	var known_raw: Variant = _knowledge_tab.get("known", [])
+	var known: Array = known_raw if known_raw is Array else []
+	_knowledge_empty_label.visible = known.is_empty()
+	if known.is_empty():
+		return
+
+	for knowledge_raw: Variant in known:
+		if not (knowledge_raw is Dictionary):
+			continue
+		var knowledge: Dictionary = knowledge_raw
+		var knowledge_id: String = str(knowledge.get("id", ""))
+		var display_name: String = _display_token(knowledge_id)
+		var proficiency: float = clampf(_safe_scalar(knowledge.get("proficiency", 0.0), 0.0), 0.0, 1.0)
+		var row: Dictionary = _create_bar_row(_knowledge_channel_container)
+		_update_bar_row(row, {
+			"label": display_name,
+			"value": proficiency,
+			"color": Color(0.45, 0.62, 0.84),
+		})
+		_knowledge_rows.append(row)
+
+	_add_section_spacer(_knowledge_channel_container)
+	_add_section_title(_knowledge_channel_container, "PANEL_KNOWLEDGE_CHANNELS")
+	for channel: Dictionary in _knowledge_channels():
+		var channel_label := Label.new()
+		var icon: String = str(channel.get("icon", ""))
+		var name_text: String = Locale.ltr(str(channel.get("label", "")))
+		var status_text: String = Locale.ltr(str(channel.get("status", "")))
+		var locked: bool = bool(channel.get("locked", false))
+		channel_label.text = "%s %s — %s" % [icon, name_text, status_text]
+		channel_label.add_theme_font_size_override("font_size", 10)
+		channel_label.add_theme_color_override("font_color", Color(0.35, 0.40, 0.48) if locked else Color(0.50, 0.60, 0.70))
+		_knowledge_channel_container.add_child(channel_label)
+
+
+# ---------------------------------------------------------------------------
+# Relationships tab
+# ---------------------------------------------------------------------------
+
+func _build_relationships_tab() -> void:
+	_relationships_panel = VBoxContainer.new()
+	_relationships_panel.add_theme_constant_override("separation", 4)
+	_tab_container.add_child(_relationships_panel)
+
+	_add_section_title(_relationships_panel, "PANEL_RELATIONSHIPS_TITLE")
+
+	_relationships_empty_label = Label.new()
+	_relationships_empty_label.text = Locale.ltr("UI_NO_RELATIONSHIPS")
+	_relationships_empty_label.add_theme_font_size_override("font_size", 10)
+	_relationships_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
+	_relationships_panel.add_child(_relationships_empty_label)
+
+	_relationships_container = VBoxContainer.new()
+	_relationships_container.add_theme_constant_override("separation", 6)
+	_relationships_panel.add_child(_relationships_container)
+
+
+func _refresh_relationships() -> void:
+	if _relationships_panel == null:
+		return
+	for child in _relationships_container.get_children():
+		child.queue_free()
+
+	var entries: Array[Dictionary] = _build_relationship_entries(15)
+	_relationships_empty_label.visible = entries.is_empty()
+	if entries.is_empty():
+		return
+
+	for entry: Dictionary in entries:
+		var row_panel := PanelContainer.new()
+		var row_style := StyleBoxFlat.new()
+		row_style.bg_color = Color(0.08, 0.10, 0.14, 0.6)
+		row_style.corner_radius_top_left = 3
+		row_style.corner_radius_top_right = 3
+		row_style.corner_radius_bottom_left = 3
+		row_style.corner_radius_bottom_right = 3
+		row_style.content_margin_left = 6
+		row_style.content_margin_right = 6
+		row_style.content_margin_top = 4
+		row_style.content_margin_bottom = 4
+		row_panel.add_theme_stylebox_override("panel", row_style)
+		_relationships_container.add_child(row_panel)
+
+		var vbox := VBoxContainer.new()
+		vbox.add_theme_constant_override("separation", 1)
+		row_panel.add_child(vbox)
+
+		var name_label := Label.new()
+		var target_name: String = _resolve_entity_name(int(entry.get("target_id", -1)))
+		var relation_type: String = str(entry.get("relation_type", ""))
+		var relation_text: String = _localized_relation_text(relation_type)
+		var markers: PackedStringArray = PackedStringArray()
+		if bool(entry.get("is_band_mate", false)):
+			markers.append("[B]")
+		var marker_str: String = (" ".join(markers) + " ") if not markers.is_empty() else ""
+		var display: String = marker_str + target_name
+		if not relation_text.is_empty():
+			display += " (%s)" % relation_text
+		name_label.text = display
+		name_label.add_theme_font_size_override("font_size", 10)
+		name_label.add_theme_color_override("font_color", Color.WHITE)
+		vbox.add_child(name_label)
+
+		var stats_label := Label.new()
+		var affinity: int = int(round(_safe_panel_scalar(entry.get("affinity", 0.0), 0.0) * 100.0))
+		var trust: int = int(round(_safe_panel_scalar(entry.get("trust", 0.0), 0.0) * 100.0))
+		stats_label.text = "%s %+d   %s %d" % [Locale.ltr("UI_AFFINITY"), affinity, Locale.ltr("UI_TRUST"), trust]
+		stats_label.add_theme_font_size_override("font_size", 9)
+		stats_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.65))
+		vbox.add_child(stats_label)
+
+
+# ---------------------------------------------------------------------------
+# Inventory tab
+# ---------------------------------------------------------------------------
+
+func _build_inventory_tab() -> void:
+	_inventory_panel = VBoxContainer.new()
+	_inventory_panel.add_theme_constant_override("separation", ROW_SPACING)
+	_tab_container.add_child(_inventory_panel)
+
+	_add_section_title(_inventory_panel, "PANEL_INVENTORY_TITLE")
+
+	_inventory_empty_label = Label.new()
+	_inventory_empty_label.text = Locale.ltr("UI_NO_ITEMS")
+	_inventory_empty_label.add_theme_font_size_override("font_size", 10)
+	_inventory_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
+	_inventory_panel.add_child(_inventory_empty_label)
+
+	_inventory_container = VBoxContainer.new()
+	_inventory_container.add_theme_constant_override("separation", ROW_SPACING)
+	_inventory_panel.add_child(_inventory_container)
+
+
+func _refresh_inventory() -> void:
+	if _inventory_panel == null:
+		return
+	for child in _inventory_container.get_children():
+		child.queue_free()
+
+	var items_raw: Variant = _detail.get("inv_items", [])
+	var items: Array = items_raw if items_raw is Array else []
+	_inventory_empty_label.visible = items.is_empty()
+	if items.is_empty():
+		return
+
+	for item_raw: Variant in items:
+		if not (item_raw is Dictionary):
+			continue
+		var item: Dictionary = item_raw
+		var template_id: String = str(item.get("template_id", ""))
+		var icon: String = _inventory_icon(template_id)
+		var display_name: String = _display_token(template_id)
+		var stack_count: int = maxi(1, int(item.get("stack_count", 1)))
+		var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
+
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 6)
+		_inventory_container.add_child(hbox)
+
+		var item_label := Label.new()
+		var count_text: String = " ×%d" % stack_count if stack_count > 1 else ""
+		item_label.text = "%s %s%s" % [icon, display_name, count_text]
+		item_label.custom_minimum_size.x = 120.0
+		item_label.add_theme_font_size_override("font_size", 10)
+		item_label.add_theme_color_override("font_color", Color(0.85, 0.82, 0.63))
+		hbox.add_child(item_label)
+
+		var bar := ProgressBar.new()
+		bar.min_value = 0.0
+		bar.max_value = 1.0
+		bar.value = quality
+		bar.show_percentage = false
+		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bar.custom_minimum_size.y = BAR_HEIGHT
+		var bar_bg := StyleBoxFlat.new()
+		bar_bg.bg_color = Color(0.09, 0.14, 0.19)
+		bar_bg.corner_radius_top_left = 2
+		bar_bg.corner_radius_top_right = 2
+		bar_bg.corner_radius_bottom_left = 2
+		bar_bg.corner_radius_bottom_right = 2
+		bar.add_theme_stylebox_override("background", bar_bg)
+		var bar_fill := StyleBoxFlat.new()
+		bar_fill.bg_color = Color(0.58, 0.68, 0.32)
+		bar_fill.corner_radius_top_left = 2
+		bar_fill.corner_radius_top_right = 2
+		bar_fill.corner_radius_bottom_left = 2
+		bar_fill.corner_radius_bottom_right = 2
+		bar.add_theme_stylebox_override("fill", bar_fill)
+		hbox.add_child(bar)
+
+		var pct_label := Label.new()
+		pct_label.text = "%d%%" % int(round(quality * 100.0))
+		pct_label.custom_minimum_size.x = PCT_MIN_WIDTH
+		pct_label.add_theme_font_size_override("font_size", 10)
+		pct_label.add_theme_color_override("font_color", COLOR_PCT)
+		pct_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		hbox.add_child(pct_label)
+
+
+# ---------------------------------------------------------------------------
+# Family tab
+# ---------------------------------------------------------------------------
+
+func _build_family_tab() -> void:
+	_family_panel = VBoxContainer.new()
+	_family_panel.add_theme_constant_override("separation", 4)
+	_tab_container.add_child(_family_panel)
+
+	_add_section_title(_family_panel, "PANEL_FAMILY_TITLE")
+
+	var pairs: Array[Array] = [
+		["UI_FATHER", "_family_father_label"],
+		["UI_MOTHER", "_family_mother_label"],
+		["UI_SPOUSE", "_family_spouse_label"],
+		["UI_CHILDREN", "_family_children_label"],
+	]
+	for pair: Array in pairs:
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 8)
+		_family_panel.add_child(hbox)
+		var key_label := Label.new()
+		key_label.text = Locale.ltr(str(pair[0]))
+		key_label.custom_minimum_size.x = 50.0
+		key_label.add_theme_font_size_override("font_size", 10)
+		key_label.add_theme_color_override("font_color", COLOR_LABEL)
+		hbox.add_child(key_label)
+		var val_label := Label.new()
+		val_label.add_theme_font_size_override("font_size", 10)
+		val_label.add_theme_color_override("font_color", Color.WHITE)
+		val_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		val_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hbox.add_child(val_label)
+		set(str(pair[1]), val_label)
+
+	_add_section_spacer(_family_panel)
+	_family_kinship_label = Label.new()
+	_family_kinship_label.add_theme_font_size_override("font_size", 10)
+	_family_kinship_label.add_theme_color_override("font_color", Color(0.40, 0.48, 0.55))
+	_family_panel.add_child(_family_kinship_label)
+
+
+func _refresh_family() -> void:
+	if _family_panel == null:
+		return
+	if _family_tab.is_empty():
+		_family_father_label.text = Locale.ltr("PANEL_FAMILY_UNKNOWN")
+		_family_mother_label.text = Locale.ltr("PANEL_FAMILY_UNKNOWN")
+		_family_spouse_label.text = Locale.ltr("UI_NONE")
+		_family_children_label.text = Locale.ltr("UI_NONE")
+		_family_kinship_label.text = "%s: %s" % [Locale.ltr("PANEL_FAMILY_KINSHIP"), Locale.ltr("KINSHIP_BILATERAL")]
+		return
+
+	var father_raw: Variant = _family_tab.get("father", {})
+	var mother_raw: Variant = _family_tab.get("mother", {})
+	var spouse_raw: Variant = _family_tab.get("spouse", {})
+	var children_raw: Variant = _family_tab.get("children", [])
+	var children: Array = children_raw if children_raw is Array else []
+
+	_family_father_label.text = _family_member_name(father_raw)
+	_family_mother_label.text = _family_member_name(mother_raw)
+	_family_spouse_label.text = _family_member_name(spouse_raw, Locale.ltr("UI_NONE"))
+
+	if children.is_empty():
+		_family_children_label.text = Locale.ltr("UI_NONE")
+	else:
+		var names: PackedStringArray = PackedStringArray()
+		for child_raw: Variant in children:
+			if child_raw is Dictionary:
+				names.append(str((child_raw as Dictionary).get("name", "?")))
+		_family_children_label.text = ", ".join(names) if not names.is_empty() else Locale.ltr("UI_NONE")
+
+	var kinship_index: int = clampi(int(_family_tab.get("kinship_system", 0)), 0, 2)
+	var kinship_keys: Array[String] = ["KINSHIP_BILATERAL", "KINSHIP_PATRILINEAL", "KINSHIP_MATRILINEAL"]
+	_family_kinship_label.text = "%s: %s" % [Locale.ltr("PANEL_FAMILY_KINSHIP"), Locale.ltr(kinship_keys[kinship_index])]
+
+
+func _family_member_name(raw: Variant, fallback: String = "") -> String:
+	if raw is Dictionary and not (raw as Dictionary).is_empty():
+		return str((raw as Dictionary).get("name", fallback if not fallback.is_empty() else Locale.ltr("PANEL_FAMILY_UNKNOWN")))
+	return fallback if not fallback.is_empty() else Locale.ltr("PANEL_FAMILY_UNKNOWN")
+
+
+# ---------------------------------------------------------------------------
+# Events tab
+# ---------------------------------------------------------------------------
+
+func _build_events_tab() -> void:
+	_events_panel = VBoxContainer.new()
+	_events_panel.add_theme_constant_override("separation", 4)
+	_tab_container.add_child(_events_panel)
+
+	_add_section_title(_events_panel, "PANEL_EVENTS_TITLE")
+
+	_events_empty_label = Label.new()
+	_events_empty_label.text = Locale.ltr("UI_NO_EVENTS")
+	_events_empty_label.add_theme_font_size_override("font_size", 10)
+	_events_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
+	_events_panel.add_child(_events_empty_label)
+
+	_events_container = VBoxContainer.new()
+	_events_container.add_theme_constant_override("separation", 4)
+	_events_panel.add_child(_events_container)
+
+
+func _refresh_events() -> void:
+	if _events_panel == null:
+		return
+	for child in _events_container.get_children():
+		child.queue_free()
+
+	var story_events_raw: Variant = _memory_tab.get("story_events", [])
+	var story_events: Array = story_events_raw if story_events_raw is Array else []
+	_events_empty_label.visible = story_events.is_empty()
+	if story_events.is_empty():
+		return
+
+	for entry_raw: Variant in story_events:
+		if not (entry_raw is Dictionary):
+			continue
+		var entry: Dictionary = entry_raw
+		var event_label := Label.new()
+		event_label.text = _story_event_display(entry)
+		event_label.add_theme_font_size_override("font_size", 10)
+		event_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+		event_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_events_container.add_child(event_label)
+
+
+func _story_event_display(entry: Dictionary) -> String:
+	var message_key: String = str(entry.get("message_key", ""))
+	if not message_key.is_empty():
+		var params_raw: Variant = entry.get("message_params", {})
+		if params_raw is Dictionary:
+			var localized: String = Locale.trf(message_key, params_raw as Dictionary)
+			if localized != message_key:
+				return localized
+		var fallback: String = Locale.ltr(message_key)
+		if fallback != message_key:
+			return fallback
+	var raw_text: String = str(entry.get("text", str(entry.get("description", ""))))
+	return raw_text if not raw_text.is_empty() else Locale.ltr("UI_UNKNOWN")
+
+
+# ---------------------------------------------------------------------------
 # Helpers (from v4, needed by v5 since we extend v3 directly)
 # ---------------------------------------------------------------------------
 
@@ -773,6 +1198,44 @@ func _merged_health_groups() -> Array[Dictionary]:
 		{"label": "BODY_GROUP_LEG_L", "value": values[6]},
 		{"label": "BODY_GROUP_LEG_R", "value": values[7]},
 	]
+
+
+func _knowledge_channels() -> Array[Dictionary]:
+	return [
+		{"icon": "🗣️", "label": "UI_CHANNEL_ORAL", "status": "UI_ACTIVE", "locked": false},
+		{"icon": "👁️", "label": "UI_CHANNEL_OBSERVE", "status": "UI_ACTIVE", "locked": false},
+		{"icon": "🔨", "label": "UI_CHANNEL_APPRENTICE", "status": "UI_ACTIVE", "locked": false},
+		{"icon": "📜", "label": "UI_CHANNEL_RECORD", "status": "UI_REQUIRES_WRITING", "locked": true},
+		{"icon": "🏛️", "label": "UI_CHANNEL_SCHOOL", "status": "UI_REQUIRES_WRITING", "locked": true},
+		{"icon": "💡", "label": "UI_CHANNEL_DISCOVERY", "status": "UI_ACTIVE", "locked": false},
+	]
+
+
+func _inventory_icon(template_id: String) -> String:
+	var token: String = template_id.to_lower()
+	if token.contains("axe"):
+		return "🪓"
+	if token.contains("spear") or token.contains("knife"):
+		return "🗡️"
+	if token.contains("stone"):
+		return "🪨"
+	if token.contains("wood") or token.contains("log"):
+		return "🪵"
+	if token.contains("food") or token.contains("meat"):
+		return "🍖"
+	if token.contains("fiber") or token.contains("cloth"):
+		return "🧵"
+	return "📦"
+
+
+func _display_token(token: String) -> String:
+	if token.is_empty():
+		return Locale.ltr("UI_UNKNOWN")
+	var locale_key: String = token.to_upper()
+	if Locale.has_key(locale_key):
+		return Locale.ltr(locale_key)
+	var display_text: String = token.replace("_", " ")
+	return display_text.capitalize()
 
 
 func _build_trait_tag_texts() -> PackedStringArray:
