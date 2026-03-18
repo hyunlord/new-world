@@ -138,6 +138,9 @@ func _build_ui() -> void:
 	_title_label.text = "..."
 	_era_label.text = "..."
 	_pop_label.text = "..."
+	# NUCLEAR TEST
+	print("[NUCLEAR-PANEL] _build_ui complete: _title_label=%s _scroll=%s _content=%s child_count=%d" % [
+		str(_title_label != null), str(_scroll != null), str(_content != null), get_child_count()])
 
 
 func _build_header() -> void:
@@ -295,6 +298,7 @@ func _refresh_all() -> void:
 	_refresh_economy()
 	_refresh_tech()
 	_refresh_military()
+	_post_refresh_log()
 
 
 func _refresh_overview() -> void:
@@ -407,6 +411,11 @@ func _refresh_military() -> void:
 		return
 	_military_label.text = Locale.ltr("UI_SETTLEMENT_NO_FORTIFICATIONS")
 
+
+func _post_refresh_log() -> void:
+	print("[NUCLEAR-PANEL] _refresh_all done: title='%s' visible=%s size=%s" % [
+		_title_label.text if _title_label else "NULL",
+		str(visible), str(size)])
 
 # ---------------------------------------------------------------------------
 # Helpers

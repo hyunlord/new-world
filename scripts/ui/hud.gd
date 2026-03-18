@@ -3510,6 +3510,21 @@ func open_settlement_detail(settlement_id: int) -> void:
 	_set_right_panel_tab_state()
 	_open_right_sidebar()
 	_refresh_selection_summary()
+	# NUCLEAR TEST: add giant red label to prove panel renders
+	print("[NUCLEAR] settlement panel: visible=%s size=%s in_tree=%s child_count=%d" % [
+		str(_settlement_detail_panel.visible),
+		str(_settlement_detail_panel.size),
+		str(_settlement_detail_panel.is_inside_tree()),
+		_settlement_detail_panel.get_child_count()])
+	var test_label := Label.new()
+	test_label.text = "=== SETTLEMENT TEST === ID=%d ===" % settlement_id
+	test_label.add_theme_font_size_override("font_size", 20)
+	test_label.add_theme_color_override("font_color", Color.RED)
+	test_label.name = "NuclearTest"
+	var old_test = _settlement_detail_panel.find_child("NuclearTest", false)
+	if old_test != null:
+		old_test.queue_free()
+	_settlement_detail_panel.add_child(test_label)
 
 
 func _on_settlement_panel_requested(settlement_id: int) -> void:
