@@ -1,6 +1,8 @@
 extends "res://scripts/ui/panels/entity_detail_panel_v3.gd"
 class_name EntityDetailPanelV5
 
+const ValueDefs = preload("res://scripts/core/social/value_defs.gd")
+
 # v5 replaces BBCode RichTextLabel with Godot UI nodes.
 # Inherits from v3: _sim_engine, _detail, _mind_tab, _health_tab, etc.
 # Inherits from v3: set_entity_id(), _reload_data(), _refresh_all() (overridden)
@@ -45,6 +47,28 @@ var _overview_need_rows: Array[Dictionary] = []
 
 # Need rows cache (reusable — update values, don't recreate)
 var _v5_need_rows: Array[Dictionary] = []
+
+# Emotion tab
+var _emotion_panel: VBoxContainer
+var _emotion_rows: Array[Dictionary] = []
+var _stress_row: Dictionary = {}
+
+# Personality tab
+var _personality_panel: VBoxContainer
+var _personality_archetype_label: Label
+var _personality_temperament_label: Label
+var _tci_rows: Array[Dictionary] = []
+var _hexaco_rows: Array[Dictionary] = []
+var _trait_tags_label: Label
+var _value_rows: Array[Dictionary] = []
+
+# Health tab
+var _health_panel: VBoxContainer
+var _health_aggregate_row: Dictionary = {}
+var _health_group_rows: Array[Dictionary] = []
+var _health_derived_rows: Array[Dictionary] = []
+var _health_injury_container: VBoxContainer
+var _health_injury_rows: Array[Dictionary] = []
 
 # Refresh
 var _v5_refresh_timer: float = 0.0
@@ -123,6 +147,9 @@ func _build_ui() -> void:
 	_build_tab_bar()
 	_build_overview_tab()
 	_build_needs_tab()
+	_build_emotion_tab()
+	_build_personality_tab()
+	_build_health_tab()
 
 	_switch_tab(0)
 
@@ -207,6 +234,12 @@ func _switch_tab(index: int) -> void:
 		_overview_panel.visible = (index == 0)
 	if _needs_panel != null:
 		_needs_panel.visible = (index == 1)
+	if _emotion_panel != null:
+		_emotion_panel.visible = (index == 2)
+	if _personality_panel != null:
+		_personality_panel.visible = (index == 3)
+	if _health_panel != null:
+		_health_panel.visible = (index == 4)
 
 
 # ---------------------------------------------------------------------------
@@ -312,7 +345,10 @@ func _update_bar_row(row: Dictionary, entry: Dictionary) -> void:
 	label_node.text = str(entry.get("label", ""))
 	bar_node.value = value
 	pct_node.text = "%d%%" % int(round(value * 100.0))
-	fill.bg_color = _need_color(value)
+	if entry.has("color"):
+		fill.bg_color = entry.color
+	else:
+		fill.bg_color = _need_color(value)
 
 
 # ---------------------------------------------------------------------------
@@ -327,6 +363,9 @@ func _refresh_all() -> void:
 	_refresh_header()
 	_refresh_overview()
 	_refresh_needs()
+	_refresh_emotion()
+	_refresh_personality()
+	_refresh_health()
 
 
 func _refresh_header() -> void:
@@ -415,6 +454,227 @@ func _refresh_needs() -> void:
 
 
 # ---------------------------------------------------------------------------
+# Emotion tab
+# ---------------------------------------------------------------------------
+
+func _build_emotion_tab() -> void:
+	_emotion_panel = VBoxContainer.new()
+	_emotion_panel.add_theme_constant_override("separation", ROW_SPACING)
+	_tab_container.add_child(_emotion_panel)
+
+	var title := Label.new()
+	title.text = Locale.ltr("PANEL_EMOTION_TITLE")
+	title.add_theme_font_size_override("font_size", 11)
+	title.add_theme_color_override("font_color", COLOR_SECTION_TITLE)
+	_emotion_panel.add_child(title)
+
+	for row: Dictionary in EMOTION_ROWS:
+		_emotion_rows.append(_create_bar_row(_emotion_panel))
+
+	var spacer := Control.new()
+	spacer.custom_minimum_size.y = 6.0
+	_emotion_panel.add_child(spacer)
+
+	_stress_row = _create_bar_row(_emotion_panel)
+
+
+func _refresh_emotion() -> void:
+	if _emotion_panel == null or _detail.is_empty():
+		return
+	for i in range(EMOTION_ROWS.size()):
+		if i >= _emotion_rows.size():
+			break
+		var row_def: Dictionary = EMOTION_ROWS[i]
+		var value: float = _safe_float(_detail, str(row_def["field"]), 0.0)
+		var key_str: String = str(row_def["key"])
+		_update_bar_row(_emotion_rows[i], {
+			"label": Locale.ltr(key_str),
+			"value": value,
+			"color": _emotion_to_color(key_str),
+		})
+	var stress: float = _normalized_stress()
+	_update_bar_row(_stress_row, {
+		"label": Locale.ltr("UI_STRESS"),
+		"value": stress,
+		"color": Color(0.78, 0.34, 0.28),
+	})
+
+
+# ---------------------------------------------------------------------------
+# Personality tab
+# ---------------------------------------------------------------------------
+
+func _build_personality_tab() -> void:
+	_personality_panel = VBoxContainer.new()
+	_personality_panel.add_theme_constant_override("separation", ROW_SPACING)
+	_tab_container.add_child(_personality_panel)
+
+	_personality_archetype_label = Label.new()
+	_personality_archetype_label.add_theme_font_size_override("font_size", 11)
+	_personality_archetype_label.add_theme_color_override("font_color", Color.WHITE)
+	_personality_archetype_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_personality_panel.add_child(_personality_archetype_label)
+
+	_personality_temperament_label = Label.new()
+	_personality_temperament_label.add_theme_font_size_override("font_size", 10)
+	_personality_temperament_label.add_theme_color_override("font_color", Color(0.44, 0.53, 0.63))
+	_personality_panel.add_child(_personality_temperament_label)
+
+	_add_section_spacer(_personality_panel)
+
+	_add_section_title(_personality_panel, "UI_TCI_TITLE")
+	for i in range(4):
+		_tci_rows.append(_create_bar_row(_personality_panel))
+
+	_add_section_spacer(_personality_panel)
+
+	_add_section_title(_personality_panel, "UI_HEXACO_TITLE")
+	for row: Dictionary in HEXACO_ROWS:
+		_hexaco_rows.append(_create_bar_row(_personality_panel))
+
+	_add_section_spacer(_personality_panel)
+
+	_add_section_title(_personality_panel, "UI_TRAITS_TITLE")
+	_trait_tags_label = Label.new()
+	_trait_tags_label.add_theme_font_size_override("font_size", 10)
+	_trait_tags_label.add_theme_color_override("font_color", Color(0.41, 0.53, 0.66))
+	_trait_tags_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_personality_panel.add_child(_trait_tags_label)
+
+	_add_section_spacer(_personality_panel)
+
+	_add_section_title(_personality_panel, "UI_VALUES_TITLE")
+	for i in range(5):
+		_value_rows.append(_create_bar_row(_personality_panel))
+
+
+func _refresh_personality() -> void:
+	if _personality_panel == null or _detail.is_empty():
+		return
+
+	var archetype_key: String = str(_detail.get("archetype_key", "ARCHETYPE_QUIET_OBSERVER"))
+	_personality_archetype_label.text = "%s: %s" % [Locale.ltr("PANEL_PERSONALITY_TITLE"), Locale.ltr(archetype_key)]
+	var temp_key: String = str(_detail.get("temperament_label_key", ""))
+	_personality_temperament_label.text = Locale.ltr(temp_key) if not temp_key.is_empty() else ""
+	_personality_temperament_label.visible = not temp_key.is_empty()
+
+	var tci_fields: Array[String] = ["tci_ns", "tci_ha", "tci_rd", "tci_p"]
+	var tci_keys: Array[String] = ["UI_TCI_NS", "UI_TCI_HA", "UI_TCI_RD", "UI_TCI_P"]
+	var tci_colors: Array[Color] = [Color(0.51, 0.62, 0.78), Color(0.68, 0.58, 0.80), Color(0.62, 0.74, 0.48), Color(0.80, 0.65, 0.36)]
+	for i in range(mini(_tci_rows.size(), 4)):
+		_update_bar_row(_tci_rows[i], {
+			"label": Locale.ltr(tci_keys[i]),
+			"value": _safe_float(_detail, tci_fields[i], 0.5),
+			"color": tci_colors[i],
+		})
+
+	for i in range(mini(_hexaco_rows.size(), HEXACO_ROWS.size())):
+		var field: String = str(HEXACO_ROWS[i]["field"])
+		_update_bar_row(_hexaco_rows[i], {
+			"label": Locale.ltr(str(HEXACO_ROWS[i]["key"])),
+			"value": _safe_float(_detail, field, 0.0),
+			"color": Color(0.41, 0.53, 0.66),
+		})
+
+	var tags: PackedStringArray = _build_trait_tag_texts()
+	_trait_tags_label.text = ", ".join(tags) if not tags.is_empty() else "—"
+
+	var ranked: Array[Dictionary] = _value_rankings()
+	for i in range(5):
+		if i < ranked.size():
+			_update_bar_row(_value_rows[i], {
+				"label": Locale.ltr(str(ranked[i].get("key", "UI_UNKNOWN"))),
+				"value": clampf(float(ranked[i].get("value", 0.0)), 0.0, 1.0),
+				"color": Color(0.66, 0.60, 0.28),
+			})
+			_value_rows[i].container.visible = true
+		else:
+			_value_rows[i].container.visible = false
+
+
+# ---------------------------------------------------------------------------
+# Health tab
+# ---------------------------------------------------------------------------
+
+func _build_health_tab() -> void:
+	_health_panel = VBoxContainer.new()
+	_health_panel.add_theme_constant_override("separation", ROW_SPACING)
+	_tab_container.add_child(_health_panel)
+
+	_add_section_title(_health_panel, "PANEL_HEALTH_AGGREGATE")
+	_health_aggregate_row = _create_bar_row(_health_panel)
+
+	_add_section_spacer(_health_panel)
+
+	_add_section_title(_health_panel, "PANEL_HEALTH_GROUPS")
+	for i in range(8):
+		_health_group_rows.append(_create_bar_row(_health_panel))
+
+	_add_section_spacer(_health_panel)
+
+	_add_section_title(_health_panel, "UI_DERIVED_STATS")
+	for i in range(4):
+		_health_derived_rows.append(_create_bar_row(_health_panel))
+
+	_health_injury_container = VBoxContainer.new()
+	_health_injury_container.add_theme_constant_override("separation", ROW_SPACING)
+	_health_panel.add_child(_health_injury_container)
+
+
+func _refresh_health() -> void:
+	if _health_panel == null or _health_tab.is_empty():
+		return
+
+	var agg_hp: float = _safe_float(_health_tab, "aggregate_hp", 1.0)
+	_update_bar_row(_health_aggregate_row, {
+		"label": Locale.ltr("PANEL_HEALTH_AGGREGATE"),
+		"value": agg_hp,
+		"color": _need_color(agg_hp),
+	})
+
+	var groups: Array[Dictionary] = _merged_health_groups()
+	for i in range(mini(_health_group_rows.size(), groups.size())):
+		var hp: float = clampf(float(groups[i].get("value", 1.0)), 0.0, 1.0)
+		_update_bar_row(_health_group_rows[i], {
+			"label": Locale.ltr(str(groups[i].get("label", ""))),
+			"value": hp,
+			"color": _need_color(hp),
+		})
+
+	var move_mult: float = clampf(_safe_scalar(_health_tab.get("move_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var work_mult: float = clampf(_safe_scalar(_health_tab.get("work_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var combat_mult: float = clampf(_safe_scalar(_health_tab.get("combat_mult", 1.0), 1.0) / 1.5, 0.0, 1.0)
+	var pain: float = _safe_float(_health_tab, "pain", 0.0)
+	var derived: Array[Dictionary] = [
+		{"label": Locale.ltr("UI_MOVE"), "value": move_mult, "color": Color(0.36, 0.76, 0.48)},
+		{"label": Locale.ltr("UI_WORK"), "value": work_mult, "color": Color(0.42, 0.56, 0.82)},
+		{"label": Locale.ltr("UI_COMBAT"), "value": combat_mult, "color": Color(0.82, 0.34, 0.28)},
+		{"label": Locale.ltr("UI_PAIN"), "value": pain, "color": Color(0.86, 0.68, 0.24)},
+	]
+	for i in range(mini(_health_derived_rows.size(), derived.size())):
+		_update_bar_row(_health_derived_rows[i], derived[i])
+
+	for child in _health_injury_container.get_children():
+		child.queue_free()
+	_health_injury_rows.clear()
+	var damaged: Array = _health_tab.get("damaged_parts", [])
+	if not damaged.is_empty():
+		_add_section_title(_health_injury_container, "PANEL_HEALTH_INJURIES")
+		for part_raw: Variant in damaged:
+			if not (part_raw is Dictionary):
+				continue
+			var part: Dictionary = part_raw
+			var hp: float = clampf(_safe_scalar(part.get("hp", 0), 0.0) / 100.0, 0.0, 1.0)
+			var vital: bool = bool(part.get("vital", false))
+			var part_name: String = _localized_body_part_name(str(part.get("name", "")))
+			if vital:
+				part_name = "⚠ " + part_name
+			var row: Dictionary = _create_bar_row(_health_injury_container)
+			_update_bar_row(row, {"label": part_name, "value": hp, "color": _need_color(hp)})
+			_health_injury_rows.append(row)
+
+
+# ---------------------------------------------------------------------------
 # Helpers (from v4, needed by v5 since we extend v3 directly)
 # ---------------------------------------------------------------------------
 
@@ -466,3 +726,109 @@ func _normalized_stress() -> float:
 func _band_label() -> String:
 	var band_name: String = str(_detail.get("band_name", ""))
 	return band_name if not band_name.is_empty() else Locale.ltr("UI_NONE")
+
+
+func _emotion_to_color(emotion: String) -> Color:
+	match _emotion_category(emotion):
+		"joy":
+			return Color(0.28, 0.66, 0.16)
+		"fear":
+			return Color(0.78, 0.55, 0.10)
+		"anger":
+			return Color(0.78, 0.22, 0.22)
+		"sad":
+			return Color(0.34, 0.41, 0.66)
+		_:
+			return Color(0.38, 0.44, 0.50)
+
+
+func _emotion_category(emotion: String) -> String:
+	var ek: String = emotion.strip_edges().to_lower()
+	if ek.contains("joy") or ek.contains("trust"):
+		return "joy"
+	if ek.contains("fear") or ek.contains("surprise"):
+		return "fear"
+	if ek.contains("anger") or ek.contains("disgust"):
+		return "anger"
+	if ek.contains("sad"):
+		return "sad"
+	return "neutral"
+
+
+func _merged_health_groups() -> Array[Dictionary]:
+	var hp_raw: Variant = _health_tab.get("group_hp", PackedByteArray())
+	var values: Array[float] = []
+	if hp_raw is PackedByteArray:
+		for hp_value: int in hp_raw:
+			values.append(clampf(float(hp_value) / 100.0, 0.0, 1.0))
+	while values.size() < 10:
+		values.append(1.0)
+	return [
+		{"label": "BODY_GROUP_HEAD", "value": values[0]},
+		{"label": "BODY_GROUP_NECK", "value": values[1]},
+		{"label": "BODY_GROUP_UPPER_TORSO", "value": values[2]},
+		{"label": "BODY_GROUP_LOWER_TORSO", "value": values[3]},
+		{"label": "BODY_GROUP_ARM_L", "value": (values[4] + values[8]) * 0.5},
+		{"label": "BODY_GROUP_ARM_R", "value": (values[5] + values[9]) * 0.5},
+		{"label": "BODY_GROUP_LEG_L", "value": values[6]},
+		{"label": "BODY_GROUP_LEG_R", "value": values[7]},
+	]
+
+
+func _build_trait_tag_texts() -> PackedStringArray:
+	var tags: PackedStringArray = PackedStringArray()
+	if _safe_float(_detail, "hex_c", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_HARD_WORK"))
+	if _safe_float(_detail, "hex_a", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_HARMONY"))
+	if _safe_float(_detail, "hex_o", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_KNOWLEDGE"))
+	if _safe_float(_detail, "hex_x", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_FRIENDSHIP"))
+	if _safe_float(_detail, "hex_h", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_TRUTH"))
+	if _safe_float(_detail, "hex_e", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_FAMILY"))
+	if _safe_float(_detail, "tci_ns", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_INDEPENDENCE"))
+	if _safe_float(_detail, "tci_p", 0.0) >= 0.65:
+		tags.append(Locale.ltr("VALUE_PERSEVERANCE"))
+	return tags
+
+
+func _value_rankings() -> Array[Dictionary]:
+	var values_raw: Variant = _mind_tab.get("values_all", null)
+	var ranked: Array[Dictionary] = []
+	if values_raw == null:
+		return ranked
+	var labels: Array = ValueDefs.KEYS
+	var count: int = 0
+	if values_raw is PackedFloat32Array:
+		var pf: PackedFloat32Array = values_raw
+		count = mini(pf.size(), labels.size())
+		for index: int in range(count):
+			ranked.append({"key": str(labels[index]), "value": float(pf[index])})
+	elif values_raw is Array:
+		count = mini(values_raw.size(), labels.size())
+		for index: int in range(count):
+			var v: float = float(values_raw[index]) if (values_raw[index] is float or values_raw[index] is int) else 0.0
+			ranked.append({"key": str(labels[index]), "value": v})
+	ranked.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.get("value", 0.0)) > float(b.get("value", 0.0)))
+	if ranked.size() > 5:
+		ranked.resize(5)
+	return ranked
+
+
+func _add_section_title(parent: Control, locale_key: String) -> void:
+	var title := Label.new()
+	title.text = Locale.ltr(locale_key)
+	title.add_theme_font_size_override("font_size", 11)
+	title.add_theme_color_override("font_color", COLOR_SECTION_TITLE)
+	parent.add_child(title)
+
+
+func _add_section_spacer(parent: Control) -> void:
+	var spacer := Control.new()
+	spacer.custom_minimum_size.y = SECTION_SPACING
+	parent.add_child(spacer)
