@@ -1470,41 +1470,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 	var tile_pos: Vector2 = world_pos / float(GameConfig.TILE_SIZE)
 	var tile: Vector2i = Vector2i(int(floor(tile_pos.x)), int(floor(tile_pos.y)))
 
-	# Check building at tile and adjacent tiles (3x3 area for easier clicking)
-	var building: Variant = null
-	for dy in range(-1, 2):
-		for dx in range(-1, 2):
-			var check_x: int = tile.x + dx
-			var check_y: int = tile.y + dy
-			if _building_manager != null:
-				building = _building_manager.get_building_at(check_x, check_y)
-			if building == null:
-				building = _get_runtime_building_at(check_x, check_y)
-			if building != null:
-				break
-		if building != null:
-			break
-	if building != null:
-		var building_id: int = int(_building_value(building, "id", -1))
-		if building_id >= 0:
-			var is_double: bool = (building_id == _last_click_building_id
-				and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
-				and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
-
-			selected_entity_id = -1
-			SimulationBus.entity_deselected.emit()
-			SimulationBus.building_selected.emit(building_id)
-
-			if is_double:
-				SimulationBus.ui_notification.emit("open_building_detail", "command")
-
-			_last_click_building_id = building_id
-			_last_click_entity_id = -1
-			_last_click_time = now
-			_last_click_pos = screen_pos
-			return
-
-	# Prioritize settlement selection over individual agents only once agents are no longer the main target.
+	# At Z3-Z4 (zoom < 0.8), prioritize settlement click before building
 	if _sim_engine != null:
 		var cam: Camera2D = get_viewport().get_camera_2d()
 		var zoom_level: float = cam.zoom.x if cam != null else 1.0
@@ -1540,6 +1506,40 @@ func _handle_click(screen_pos: Vector2) -> void:
 					SimulationBus.building_deselected.emit()
 					SimulationBus.settlement_panel_requested.emit(settlement_id)
 					return
+
+	# Check building at tile and adjacent tiles (3x3 area for easier clicking)
+	var building: Variant = null
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var check_x: int = tile.x + dx
+			var check_y: int = tile.y + dy
+			if _building_manager != null:
+				building = _building_manager.get_building_at(check_x, check_y)
+			if building == null:
+				building = _get_runtime_building_at(check_x, check_y)
+			if building != null:
+				break
+		if building != null:
+			break
+	if building != null:
+		var building_id: int = int(_building_value(building, "id", -1))
+		if building_id >= 0:
+			var is_double: bool = (building_id == _last_click_building_id
+				and (now - _last_click_time) < DOUBLE_CLICK_THRESHOLD
+				and screen_pos.distance_to(_last_click_pos) < DOUBLE_CLICK_DRAG_THRESHOLD)
+
+			selected_entity_id = -1
+			SimulationBus.entity_deselected.emit()
+			SimulationBus.building_selected.emit(building_id)
+
+			if is_double:
+				SimulationBus.ui_notification.emit("open_building_detail", "command")
+
+			_last_click_building_id = building_id
+			_last_click_entity_id = -1
+			_last_click_time = now
+			_last_click_pos = screen_pos
+			return
 
 	# Find entity at or near this tile
 	var best_entity_id: int = -1

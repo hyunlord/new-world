@@ -4753,3 +4753,16 @@ ZODIAC_SAGITTARIUS = 사수자리
 ZODIAC_SCORPIO = 전갈자리
 ZODIAC_TAURUS = 황소자리
 ZODIAC_VIRGO = 처녀자리
+
+# Building effects
+UI_CAMPFIRE_EFFECT = 온기와 모임의 중심점을 제공합니다
+UI_SHELTER_EFFECT = 거주자에게 안식처를 제공합니다
+UI_STOCKPILE_EFFECT = 자원을 저장하고 보관합니다
+
+# Settlement panel
+UI_PROGRESS = 진행률
+UI_ADULTS = 성인
+UI_ELDERS = 노인
+UI_PRODUCTION_CONSUMPTION = 생산/소비
+UI_SETTLEMENT_STATUS = 정착지 상태
+UI_HAPPINESS_FACTORS = 행복도 요인
