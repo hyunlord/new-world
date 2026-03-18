@@ -86,7 +86,7 @@ func _update_rust_primary(delta: float, paused: bool) -> void:
 		return
 	var runtime_state: Dictionary = runtime_state_raw
 	current_tick = int(runtime_state.get("current_tick", current_tick))
-	_last_agent_snapshots = runtime_state.get("agent_snapshots", [])
+	# agent_snapshots removed from tick return; fetched on-demand via get_agent_snapshots()
 	_accumulator = float(runtime_state.get("accumulator", _accumulator))
 	_consume_runtime_events_v2()
 
@@ -188,7 +188,10 @@ func advance_ticks(n: int) -> void:
 
 
 func get_agent_snapshots() -> Array:
-	return _last_agent_snapshots
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_agent_snapshots"):
+		return []
+	return sim_bridge.get_agent_snapshots()
 
 
 ## Spawns agents into the Rust hecs world at the given positions.

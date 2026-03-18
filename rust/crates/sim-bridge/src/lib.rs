@@ -1991,10 +1991,15 @@ impl WorldSimRuntime {
             self.cached_agent_snapshots = agent_arr;
             self.last_agent_snapshot_tick = state.engine.current_tick();
         }
-        out.set("agent_snapshots", self.cached_agent_snapshots.clone());
         out.set("entity_count", state.engine.world().len() as i64);
 
         out
+    }
+
+    /// Returns cached agent snapshot Dictionaries (on-demand, not per-frame).
+    #[func]
+    fn get_agent_snapshots(&self) -> Array<VarDictionary> {
+        self.cached_agent_snapshots.clone()
     }
 
     #[func]
