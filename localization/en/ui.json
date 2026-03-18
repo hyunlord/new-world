@@ -2202,5 +2202,17 @@
   "UI_INPUT": "Input",
   "UI_OUTPUT": "Output",
   "UI_BUILDING_STRUCTURE": "Structure",
-  "UI_BUILDING_STRUCTURE_PLACEHOLDER": "Component-based: wall, roof, floor, and furniture layers"
+  "UI_BUILDING_STRUCTURE_PLACEHOLDER": "Component-based: wall, roof, floor, and furniture layers",
+  "UI_CAMPFIRE_EFFECT": "Provides warmth and a gathering point",
+  "UI_SHELTER_EFFECT": "Provides shelter for residents",
+  "UI_STOCKPILE_EFFECT": "Stores and preserves resources",
+  "UI_PROGRESS": "Progress",
+  "UI_LEADER": "Leader",
+  "UI_CHARISMA": "Charisma",
+  "UI_NO_LEADER": "No Leader",
+  "UI_ADULTS": "Adults",
+  "UI_ELDERS": "Elders",
+  "UI_PRODUCTION_CONSUMPTION": "Production / Consumption",
+  "UI_SETTLEMENT_STATUS": "Settlement Status",
+  "UI_HAPPINESS_FACTORS": "Happiness Factors"
 }

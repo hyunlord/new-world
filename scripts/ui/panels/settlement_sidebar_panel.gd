@@ -262,9 +262,9 @@ func _load_data() -> void:
 func _refresh_all() -> void:
 	if _cached_data.is_empty() or _title_label == null:
 		return
-	var name_text: String = str(_cached_data.get("name", "Settlement %d" % _settlement_id))
-	var era_key: String = "ERA_" + str(_cached_data.get("tech_era", "stone_age")).to_upper()
-	var pop: int = int(_cached_data.get("population", 0))
+	var name_text: String = str(_get_data_value("name", "Settlement %d" % _settlement_id))
+	var era_key: String = "ERA_" + str(_get_data_value("tech_era", "stone_age")).to_upper()
+	var pop: int = int(_get_data_value("population", 0))
 
 	_title_label.text = "%s [%s]" % [name_text, Locale.ltr(era_key)]
 	_era_label.text = Locale.ltr(era_key)
@@ -281,7 +281,7 @@ func _refresh_all() -> void:
 func _refresh_overview() -> void:
 	if _overview_panel == null:
 		return
-	var leader: Variant = _cached_data.get("leader", {})
+	var leader: Variant = _get_data_value("leader", {})
 	if leader is Dictionary and not (leader as Dictionary).is_empty():
 		var leader_name: String = str((leader as Dictionary).get("name", ""))
 		var charisma_raw: Variant = (leader as Dictionary).get("charisma", 0.0)
@@ -290,10 +290,10 @@ func _refresh_overview() -> void:
 	else:
 		_leader_label.text = Locale.ltr("UI_NO_LEADER")
 
-	var tech_era: String = str(_cached_data.get("tech_era", "stone_age"))
+	var tech_era: String = str(_get_data_value("tech_era", "stone_age"))
 	_tech_progress_label.text = "%s: %s" % [Locale.ltr("UI_ERA_SECTION"), Locale.ltr("ERA_" + tech_era.to_upper())]
 
-	var aggregates: Variant = _cached_data.get("aggregates", {})
+	var aggregates: Variant = _get_data_value("aggregates", {})
 	if aggregates is Dictionary:
 		var avg_happiness_raw: Variant = (aggregates as Dictionary).get("avg_happiness", 0.5)
 		var avg_happiness: float = float(avg_happiness_raw) if (avg_happiness_raw is float or avg_happiness_raw is int) else 0.5
@@ -314,7 +314,7 @@ func _refresh_buildings() -> void:
 		return
 	for child in _buildings_container.get_children():
 		child.queue_free()
-	var buildings_raw: Variant = _cached_data.get("buildings", [])
+	var buildings_raw: Variant = _get_data_value("buildings", [])
 	var buildings: Array = buildings_raw if buildings_raw is Array else []
 	if buildings.is_empty():
 		var empty := Label.new()
@@ -340,9 +340,9 @@ func _refresh_buildings() -> void:
 func _refresh_population() -> void:
 	if _pop_detail_label == null:
 		return
-	var members_raw: Variant = _cached_data.get("members", [])
+	var members_raw: Variant = _get_data_value("members", [])
 	var members: Array = members_raw if members_raw is Array else []
-	var pop: int = int(_cached_data.get("population", members.size()))
+	var pop: int = int(_get_data_value("population", members.size()))
 	var adults: int = 0
 	var children: int = 0
 	var elders: int = 0
@@ -375,7 +375,7 @@ func _refresh_tech() -> void:
 		return
 	for child in _tech_container.get_children():
 		child.queue_free()
-	var era: String = str(_cached_data.get("tech_era", "stone_age"))
+	var era: String = str(_get_data_value("tech_era", "stone_age"))
 	var tech_label := Label.new()
 	tech_label.text = "%s: %s" % [Locale.ltr("UI_CURRENT_ERA"), Locale.ltr("ERA_" + era.to_upper())]
 	tech_label.add_theme_font_size_override("font_size", 10)
@@ -393,8 +393,17 @@ func _refresh_military() -> void:
 # Helpers
 # ---------------------------------------------------------------------------
 
+func _get_data_value(key: String, default_value: Variant = "") -> Variant:
+	if _cached_data.has(key):
+		return _cached_data.get(key, default_value)
+	var sett: Variant = _cached_data.get("settlement", {})
+	if sett is Dictionary:
+		return (sett as Dictionary).get(key, default_value)
+	return default_value
+
+
 func _safe_resource(key: String) -> float:
-	var raw: Variant = _cached_data.get(key, 0.0)
+	var raw: Variant = _get_data_value(key, 0.0)
 	if raw is float or raw is int:
 		return float(raw)
 	return 0.0
