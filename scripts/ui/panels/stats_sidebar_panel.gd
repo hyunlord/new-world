@@ -57,6 +57,10 @@ func force_redraw() -> void:
 	_refresh()
 
 
+func set_tech_tree_manager(_ttm: RefCounted) -> void:
+	pass  # Not used by node-based stats panel, kept for API compatibility
+
+
 func _build_ui() -> void:
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_BG
