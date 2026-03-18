@@ -6,7 +6,7 @@ var _sim_engine: RefCounted
 var _settlement_id: int = -1
 var _cached_data: Dictionary = {}
 var _refresh_timer: float = 0.0
-var _pending_settlement_id: int = -1
+var _ui_built: bool = false
 @warning_ignore("unused_private_class_variable")
 var _tech_tree_manager = null  # Set externally by hud.gd
 
@@ -66,37 +66,28 @@ func init(sim_engine: RefCounted, _sm, _em, _bm, _extra) -> void:
 	_sim_engine = sim_engine
 
 
-func set_settlement_id(id: int) -> void:
-	print("[SETT] set_settlement_id(%d) _title_label=%s" % [id, str(_title_label != null)])
-	_settlement_id = id
-	if _title_label == null:
-		_pending_settlement_id = id
-		print("[SETT] DEFERRED: pending=%d" % id)
+func _ensure_ui() -> void:
+	if _ui_built:
 		return
+	_build_ui()
+	_ui_built = true
+
+
+func set_settlement_id(id: int) -> void:
+	_settlement_id = id
+	_ensure_ui()
 	_load_data()
-	print("[SETT] after _load_data: cached=%d keys" % _cached_data.size())
-	if not _cached_data.is_empty():
-		print("[SETT] data keys: %s" % str(_cached_data.keys().slice(0, 8)))
 	_refresh_all()
-	print("[SETT] after _refresh_all: title='%s'" % [_title_label.text if _title_label else "NULL"])
 
 
 func _ready() -> void:
-	print("[SETT] _ready START")
-	_build_ui()
-	print("[SETT] _ready: pending=%d _title_label=%s" % [_pending_settlement_id, str(_title_label != null)])
-	if _pending_settlement_id >= 0:
-		_settlement_id = _pending_settlement_id
-		_pending_settlement_id = -1
-		_load_data()
-		print("[SETT] _ready deferred load: cached=%d" % _cached_data.size())
-		_refresh_all()
-		print("[SETT] _ready deferred refresh: title='%s'" % [_title_label.text if _title_label else "NULL"])
+	_ensure_ui()
 
 
 func _process(delta: float) -> void:
 	if not visible or _settlement_id < 0:
 		return
+	_ensure_ui()
 	_refresh_timer += delta
 	if _refresh_timer >= 1.0:
 		_refresh_timer = 0.0
@@ -105,6 +96,7 @@ func _process(delta: float) -> void:
 
 
 func force_redraw() -> void:
+	_ensure_ui()
 	_load_data()
 	_refresh_all()
 
@@ -282,13 +274,9 @@ func _load_data() -> void:
 # ---------------------------------------------------------------------------
 
 func _refresh_all() -> void:
-	print("[SETT] _refresh_all: _title_label=%s _cached_data.size=%d visible=%s size=%s" % [
-		str(_title_label != null), _cached_data.size(), str(visible), str(size)])
 	if _title_label == null:
-		print("[SETT] _refresh_all BAIL: _title_label null")
 		return
 	if _cached_data.is_empty():
-		print("[SETT] _refresh_all: empty data, showing fallback")
 		_title_label.text = "Settlement %d" % _settlement_id if _settlement_id >= 0 else "..."
 		_era_label.text = ""
 		_pop_label.text = ""

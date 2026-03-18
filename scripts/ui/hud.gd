@@ -3487,9 +3487,7 @@ func open_building_detail() -> void:
 
 ## Opens the settlement detail panel for the given settlement.
 func open_settlement_detail(settlement_id: int) -> void:
-	print("[HUD-SETT] open_settlement_detail(%d) panel=%s" % [settlement_id, str(_settlement_detail_panel != null)])
 	if _settlement_detail_panel == null or settlement_id < 0:
-		print("[HUD-SETT] BAIL: panel null or id < 0")
 		return
 	_selected_settlement_id = settlement_id
 	_selected_entity_id = -1
@@ -3506,14 +3504,10 @@ func open_settlement_detail(settlement_id: int) -> void:
 	_hide_all_sidebar_tab_panels()
 	_current_right_panel_tab = RIGHT_PANEL_TAB_INSPECTOR
 	_settlement_detail_panel.visible = true
-	print("[HUD-SETT] after show: sett_visible=%s entity_visible=%s" % [
-		str(_settlement_detail_panel.visible),
-		str(_entity_detail_panel.visible if _entity_detail_panel else "NULL")])
 	_set_right_panel_tab_state()
 	_open_right_sidebar()
 	# Set data AFTER panel is visible and sized
 	_settlement_detail_panel.call("set_settlement_id", settlement_id)
-	print("[HUD-SETT] after set_settlement_id: sett_panel.size=%s" % str(_settlement_detail_panel.size))
 	_refresh_selection_summary()
 	if _settlement_detail_panel.has_method("force_redraw"):
 		_settlement_detail_panel.call_deferred("force_redraw")
