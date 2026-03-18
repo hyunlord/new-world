@@ -5,7 +5,7 @@ const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
 var _sim_engine: RefCounted
 var _building_manager: RefCounted
 var _building_id: int = -1
-var _pending_building_id: int = -1
+var _ui_built: bool = false
 
 var _scroll: ScrollContainer
 var _content: VBoxContainer
@@ -30,20 +30,21 @@ func init(sim_engine: RefCounted, building_manager, _extra) -> void:
 		_building_manager = building_manager
 
 
+func _ensure_ui() -> void:
+	if _ui_built:
+		return
+	_build_ui()
+	_ui_built = true
+
+
 func set_building_id(id: int) -> void:
 	_building_id = id
-	if _title_label == null:
-		_pending_building_id = id
-		return
+	_ensure_ui()
 	_refresh()
 
 
 func _ready() -> void:
-	_build_ui()
-	if _pending_building_id >= 0:
-		_building_id = _pending_building_id
-		_pending_building_id = -1
-		_refresh()
+	_ensure_ui()
 
 
 func force_redraw() -> void:

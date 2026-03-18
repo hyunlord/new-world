@@ -6,7 +6,7 @@ var _sim_engine: RefCounted
 var _settlement_id: int = -1
 var _cached_data: Dictionary = {}
 var _refresh_timer: float = 0.0
-var _pending_settlement_id: int = -1
+var _ui_built: bool = false
 @warning_ignore("unused_private_class_variable")
 var _tech_tree_manager = null  # Set externally by hud.gd
 
@@ -66,29 +66,28 @@ func init(sim_engine: RefCounted, _sm, _em, _bm, _extra) -> void:
 	_sim_engine = sim_engine
 
 
+func _ensure_ui() -> void:
+	if _ui_built:
+		return
+	_build_ui()
+	_ui_built = true
+
+
 func set_settlement_id(id: int) -> void:
 	_settlement_id = id
-	if _title_label == null:
-		# _build_ui hasn't run yet — save and apply in _ready
-		_pending_settlement_id = id
-		return
+	_ensure_ui()
 	_load_data()
 	_refresh_all()
 
 
 func _ready() -> void:
-	_build_ui()
-	# Apply pending settlement if set_settlement_id was called before _ready
-	if _pending_settlement_id >= 0:
-		_settlement_id = _pending_settlement_id
-		_pending_settlement_id = -1
-		_load_data()
-		_refresh_all()
+	_ensure_ui()
 
 
 func _process(delta: float) -> void:
 	if not visible or _settlement_id < 0:
 		return
+	_ensure_ui()
 	_refresh_timer += delta
 	if _refresh_timer >= 1.0:
 		_refresh_timer = 0.0
@@ -97,6 +96,7 @@ func _process(delta: float) -> void:
 
 
 func force_redraw() -> void:
+	_ensure_ui()
 	_load_data()
 	_refresh_all()
 
