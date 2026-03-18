@@ -4753,3 +4753,16 @@ ZODIAC_SAGITTARIUS = Sagittarius
 ZODIAC_SCORPIO = Scorpio
 ZODIAC_TAURUS = Taurus
 ZODIAC_VIRGO = Virgo
+
+# Building effects
+UI_CAMPFIRE_EFFECT = Provides warmth and a gathering point
+UI_SHELTER_EFFECT = Provides shelter for residents
+UI_STOCKPILE_EFFECT = Stores and preserves resources
+
+# Settlement panel
+UI_PROGRESS = Progress
+UI_ADULTS = Adults
+UI_ELDERS = Elders
+UI_PRODUCTION_CONSUMPTION = Production / Consumption
+UI_SETTLEMENT_STATUS = Settlement Status
+UI_HAPPINESS_FACTORS = Happiness Factors
