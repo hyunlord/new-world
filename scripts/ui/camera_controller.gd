@@ -123,18 +123,12 @@ func connect_ui_sources(cast_bar: Variant, notification_manager: Variant) -> voi
 func follow_entity(entity_id: int) -> void:
 	if entity_id < 0:
 		return
-	if _probe_observation_mode:
-		if follow_target_id >= 0:
-			stop_following()
-		focus_entity(entity_id, "follow_request")
-		return
 	_mark_player_input(false)
 	_clear_active_tween()
 	follow_target_id = entity_id
 	position_smoothing_enabled = false
 	_note_camera_move("follow_request")
 	_transition_to(CameraState.FOLLOW)
-	SimulationBus.follow_entity_requested.emit(entity_id)
 
 
 func stop_following() -> void:
@@ -350,7 +344,11 @@ func _process(delta: float) -> void:
 		camera_idle.emit()
 
 	if _probe_observation_mode:
-		_smooth_zoom(Vector2(_target_zoom, _target_zoom), delta)
+		# Allow follow even in probe mode
+		if follow_target_id >= 0 and current_state == CameraState.FOLLOW:
+			_process_follow(delta)
+		else:
+			_smooth_zoom(Vector2(_target_zoom, _target_zoom), delta)
 		_process_manual_pan(delta)
 		position = _clamp_to_world_position(position)
 		return
