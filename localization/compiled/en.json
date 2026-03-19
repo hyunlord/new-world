@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4772,
+    "active_key_count": 4773,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4772,
+    "key_count": 4773,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4285,6 +4285,7 @@
     "UI_NOTIF_WORLDSIM_STARTED_MODE_FMT": "{mode} ready! Pop: {n}",
     "UI_NOT_IMPLEMENTED": "Not Implemented",
     "UI_NO_BAND": "No band (wanderer)",
+    "UI_NO_BANDS": "No bands",
     "UI_NO_DATA": "No data",
     "UI_NO_EVENTS": "No events recorded yet",
     "UI_NO_ITEMS": "No items",
