@@ -129,12 +129,42 @@ func _refresh() -> void:
 		time_label.add_theme_color_override("font_color", Color(0.40, 0.46, 0.55))
 		vbox.add_child(time_label)
 
+		# Make card clickable if event has a subject
+		var subjects: Variant = event.get("primary_subjects", [])
+		var first_subject_id: int = -1
+		if subjects is Array and not subjects.is_empty():
+			var first: Variant = subjects[0]
+			if first is Dictionary:
+				first_subject_id = int(first.get("entity_id", first.get("id", -1)))
+		var settlement_id: int = int(event.get("settlement_id", -1))
+
 		var msg_label := Label.new()
 		msg_label.text = desc
 		msg_label.add_theme_font_size_override("font_size", 10)
-		msg_label.add_theme_color_override("font_color", COLOR_VALUE)
 		msg_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		vbox.add_child(msg_label)
+
+		if first_subject_id >= 0:
+			card.mouse_filter = Control.MOUSE_FILTER_STOP
+			card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			var captured_id: int = first_subject_id
+			card.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.entity_selected.emit(captured_id)
+					SimulationBus.ui_notification.emit("focus_entity_%d" % captured_id, "command")
+			)
+			msg_label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
+		elif settlement_id >= 0:
+			card.mouse_filter = Control.MOUSE_FILTER_STOP
+			card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			var captured_sett_id: int = settlement_id
+			card.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.settlement_panel_requested.emit(captured_sett_id)
+			)
+			msg_label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
+		else:
+			msg_label.add_theme_color_override("font_color", COLOR_VALUE)
 
 
 func _event_text(event: Dictionary) -> String:
