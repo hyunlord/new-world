@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4775,
-  "key_count": 4775,
+  "active_key_count": 4776,
+  "key_count": 4776,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -3817,6 +3817,7 @@
     "UI_BORN": 3468,
     "UI_BTN_FAVORITE": 4773,
     "UI_BTN_FOLLOW": 4774,
+    "UI_BTN_FOLLOWING": 4775,
     "UI_BUILDERS": 4303,
     "UI_BUILDING": 4038,
     "UI_BUILDINGS": 3469,
@@ -9553,7 +9554,8 @@
     "UI_WORLD_STATS",
     "UI_NO_BANDS",
     "UI_BTN_FAVORITE",
-    "UI_BTN_FOLLOW"
+    "UI_BTN_FOLLOW",
+    "UI_BTN_FOLLOWING"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
