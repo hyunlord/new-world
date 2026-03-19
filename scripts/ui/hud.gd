@@ -3239,7 +3239,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 			if _entity_detail_panel_open:
+				_selected_entity_id = -1
+				_selected_building_id = -1
+				_selected_settlement_id = -1
+				_selected_band_id = -1
+				_selected_civ_id = -1
+				SimulationBus.entity_deselected.emit()
+				SimulationBus.building_deselected.emit()
 				_close_entity_detail_sidebar()
+				_refresh_selection_summary()
 				get_viewport().set_input_as_handled()
 				return
 			if close_all_popups():

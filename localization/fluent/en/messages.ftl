@@ -4778,3 +4778,5 @@ UI_EVENTS = events
 UI_KINSHIP_SYSTEM = Kinship System
 UI_LEARNING_CHANNELS = Learning Channels
 UI_NO_BANDS = No bands
+UI_BTN_FOLLOW = Follow
+UI_BTN_FAVORITE = Favorite
