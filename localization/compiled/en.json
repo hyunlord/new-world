@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4776,
+    "active_key_count": 4779,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4776,
+    "key_count": 4779,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4333,6 +4333,7 @@
     "UI_PAUSE_SAVE": "Save [Not Implemented]",
     "UI_PAUSE_SETTINGS": "Settings [Not Implemented]",
     "UI_PAUSE_TITLE": "WorldSim",
+    "UI_PEOPLE_SUFFIX": "{ \" \" }people",
     "UI_PERSONALITY": "Personality",
     "UI_PERSONALITY_AVERAGE": "has a balanced, unremarkable personality.",
     "UI_PERSONALITY_AVG": "Average Personality (HEXACO)",
@@ -4738,7 +4739,9 @@
     "UI_WORK": "Work",
     "UI_WORLD_STATISTICS": "World Statistics",
     "UI_WORLD_STATS": "World Stats",
+    "UI_WORLD_VIEW": "World View",
     "UI_YES": "Yes",
+    "UI_ZOOM_NEARBY": "active nearby",
     "UI_ZOOM_Z1": "Z1 Individual",
     "UI_ZOOM_Z2": "Z2 Village",
     "UI_ZOOM_Z3": "Z3 Settlement",

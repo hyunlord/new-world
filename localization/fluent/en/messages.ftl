@@ -4781,3 +4781,6 @@ UI_NO_BANDS = No bands
 UI_BTN_FOLLOW = Follow
 UI_BTN_FAVORITE = Favorite
 UI_BTN_FOLLOWING = Following
+UI_PEOPLE_SUFFIX = { " " }people
+UI_ZOOM_NEARBY = active nearby
+UI_WORLD_VIEW = World View
