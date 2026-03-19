@@ -279,7 +279,6 @@ var _resource_trends_initialized: bool = false
 const ALERT_REFRESH_INTERVAL: float = 2.0
 const RESOURCE_TREND_INTERVAL: float = 3.0
 var _factions_refresh_timer: float = 0.0
-var _stats_refresh_timer: float = 0.0
 var _history_refresh_timer: float = 0.0
 var _diplomacy_refresh_timer: float = 0.0
 
@@ -546,8 +545,14 @@ func _build_right_sidebar() -> void:
 	_factions_panel.visible = false
 	_right_panel_tab_content.add_child(_factions_panel)
 
-	_sidebar_stats_panel = _build_sidebar_stats_panel()
+	var StatsSidebarClass = preload("res://scripts/ui/panels/stats_sidebar_panel.gd")
+	_sidebar_stats_panel = StatsSidebarClass.new()
+	_sidebar_stats_panel.init(_sim_engine, _stats_recorder, _settlement_manager, _entity_manager, null)
 	_sidebar_stats_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_sidebar_stats_panel.offset_left = 0.0
+	_sidebar_stats_panel.offset_top = 0.0
+	_sidebar_stats_panel.offset_right = 0.0
+	_sidebar_stats_panel.offset_bottom = 0.0
 	_sidebar_stats_panel.visible = false
 	_right_panel_tab_content.add_child(_sidebar_stats_panel)
 
@@ -666,6 +671,9 @@ func _switch_right_panel_tab(index: int) -> void:
 	if _factions_panel != null:
 		_factions_panel.visible = (index == RIGHT_PANEL_TAB_FACTIONS)
 	if _sidebar_stats_panel != null:
+		if not _sidebar_stats_panel.is_inside_tree() and _right_panel_tab_content != null:
+			_sidebar_stats_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_right_panel_tab_content.add_child(_sidebar_stats_panel)
 		_sidebar_stats_panel.visible = (index == RIGHT_PANEL_TAB_STATS)
 	if _history_panel != null:
 		_history_panel.visible = (index == RIGHT_PANEL_TAB_HISTORY)
@@ -676,7 +684,7 @@ func _switch_right_panel_tab(index: int) -> void:
 	elif index == RIGHT_PANEL_TAB_FACTIONS:
 		_refresh_factions_panel()
 	elif index == RIGHT_PANEL_TAB_STATS:
-		_refresh_sidebar_stats()
+		pass
 	elif index == RIGHT_PANEL_TAB_HISTORY:
 		_refresh_history_panel()
 	elif index == RIGHT_PANEL_TAB_DIPLOMACY:
@@ -769,8 +777,6 @@ func _build_factions_panel() -> Control:
 	return _build_sidebar_text_panel("FactionContent", _on_sidebar_meta_clicked)
 
 
-func _build_sidebar_stats_panel() -> Control:
-	return _build_sidebar_text_panel("StatsContent")
 
 
 func _build_history_panel() -> Control:
@@ -863,53 +869,6 @@ func _refresh_factions_panel() -> void:
 	content.append_text(text)
 
 
-func _refresh_sidebar_stats() -> void:
-	if _sidebar_stats_panel == null:
-		return
-	var content_node: Node = _sidebar_stats_panel.find_child("StatsContent", true, false)
-	if not (content_node is RichTextLabel):
-		return
-	var content: RichTextLabel = content_node
-	content.clear()
-
-	var summary: Dictionary = _get_world_summary()
-	var text := ""
-	text += "[b]%s[/b]\n\n" % Locale.ltr("UI_STATS_WORLD")
-	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_POP"), int(summary.get("total_population", 0))]
-	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_PEAK"), int(summary.get("peak_pop", 0))]
-	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_SETTLEMENTS"), int(summary.get("settlement_count", 0))]
-	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_BANDS"), int(summary.get("band_count", 0))]
-	text += "%s: [b]%d[/b]\n" % [Locale.ltr("UI_STATS_BUILDINGS"), int(summary.get("building_count", 0))]
-	text += "%s: [b]%d[/b] / %s: [b]%d[/b]\n" % [
-		Locale.ltr("UI_STATS_BIRTHS"),
-		int(summary.get("total_births", 0)),
-		Locale.ltr("UI_STATS_DEATHS"),
-		int(summary.get("total_deaths", 0)),
-	]
-	text += "%s: [b]%.1f[/b]\n" % [Locale.ltr("UI_STATS_AVG_AGE"), float(summary.get("avg_age_years", 0.0))]
-	text += "%s: [b]%d%%[/b]\n" % [Locale.ltr("UI_STATS_AVG_HAPPY"), int(round(float(summary.get("avg_happiness", 0.0)) * 100.0))]
-
-	text += "\n[b]%s[/b]\n" % Locale.ltr("UI_STATS_RESOURCES")
-	text += "%s: [color=#48a828]%.0f[/color]\n" % [Locale.ltr("UI_RES_FOOD_SHORT"), float(summary.get("food", 0.0))]
-	text += "%s: [color=#8a5828]%.0f[/color]\n" % [Locale.ltr("UI_RES_WOOD_SHORT"), float(summary.get("wood", 0.0))]
-	text += "%s: [color=#6888a8]%.0f[/color]\n" % [Locale.ltr("UI_RES_STONE_SHORT"), float(summary.get("stone", 0.0))]
-
-	var settlements: Array = summary.get("settlement_summaries", [])
-	if not settlements.is_empty():
-		text += "\n[b]%s[/b]\n\n" % Locale.ltr("UI_STATS_PER_SETT")
-		for settlement_raw: Variant in settlements:
-			if not (settlement_raw is Dictionary):
-				continue
-			var settlement_summary: Dictionary = settlement_raw
-			var settlement_detail_raw: Variant = settlement_summary.get("settlement", {})
-			var settlement_detail: Dictionary = settlement_detail_raw if settlement_detail_raw is Dictionary else {}
-			var settlement_name: String = str(settlement_detail.get("name", settlement_summary.get("name", Locale.ltr("UI_UNKNOWN"))))
-			var population: int = int(settlement_summary.get("pop", 0))
-			text += "[b]%s[/b] — %s\n" % [settlement_name, Locale.trf1("UI_POP_FMT", "n", population)]
-
-	text += "\n[color=#283838]━━━ %s ━━━[/color]\n" % Locale.ltr("UI_STATS_POP_GRAPH")
-	text += "[color=#283838]%s[/color]\n" % Locale.ltr("UI_STATS_GRAPH_PLACEHOLDER")
-	content.append_text(text)
 
 
 func _refresh_history_panel() -> void:
@@ -2629,11 +2588,7 @@ func _process(delta: float) -> void:
 		if _factions_refresh_timer >= 2.0:
 			_factions_refresh_timer = 0.0
 			_refresh_factions_panel()
-	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible:
-		_stats_refresh_timer += maxf(delta, 0.0)
-		if _stats_refresh_timer >= 3.0:
-			_stats_refresh_timer = 0.0
-			_refresh_sidebar_stats()
+	# stats_sidebar_panel has its own _process with refresh timer — no hud refresh needed
 	if _history_panel != null and _history_panel.visible:
 		_history_refresh_timer += maxf(delta, 0.0)
 		if _history_refresh_timer >= 3.0:
@@ -3306,8 +3261,8 @@ func _refresh_hud_texts() -> void:
 		_show_band_popup()
 	if _factions_panel != null and _factions_panel.visible:
 		_refresh_factions_panel()
-	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible:
-		_refresh_sidebar_stats()
+	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible and _sidebar_stats_panel.has_method("_refresh"):
+		_sidebar_stats_panel._refresh()
 	if _history_panel != null and _history_panel.visible:
 		_refresh_history_panel()
 	if _diplomacy_panel != null and _diplomacy_panel.visible:
