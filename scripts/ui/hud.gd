@@ -3506,6 +3506,13 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		var sid_str: String = msg.replace("open_settlement_", "")
 		if sid_str.is_valid_int():
 			open_settlement_detail(int(sid_str))
+	elif msg.begins_with("focus_entity_"):
+		var eid_str: String = msg.replace("focus_entity_", "")
+		if eid_str.is_valid_int():
+			var eid: int = int(eid_str)
+			if eid >= 0 and _camera != null and _camera.has_method("focus_entity"):
+				_camera.focus_entity(eid, "name_click")
+			_open_entity_detail_sidebar(eid)
 	elif msg.begins_with("open_deceased_"):
 		var deceased_id_str: String = msg.replace("open_deceased_", "")
 		if deceased_id_str.is_valid_int() and _popup_manager != null:
@@ -3520,6 +3527,8 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 
 func _on_follow_entity(entity_id: int) -> void:
 	_following_entity_id = entity_id
+	if _camera != null and _camera.has_method("follow_entity"):
+		_camera.follow_entity(entity_id)
 	if _entity_manager != null:
 		var entity: RefCounted = _entity_manager.get_entity(entity_id)
 		if entity != null:
