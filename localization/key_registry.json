@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4772,
-  "key_count": 4772,
+  "active_key_count": 4773,
+  "key_count": 4773,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4247,6 +4247,7 @@
     "UI_NOTIF_WORLDSIM_STARTED_MODE_FMT": 3717,
     "UI_NOT_IMPLEMENTED": 4727,
     "UI_NO_BAND": 4412,
+    "UI_NO_BANDS": 4772,
     "UI_NO_DATA": 3720,
     "UI_NO_EVENTS": 3721,
     "UI_NO_ITEMS": 4692,
@@ -9547,7 +9548,8 @@
     "UI_MAX_POP",
     "UI_PER_SETTLEMENT",
     "UI_SETTLEMENTS",
-    "UI_WORLD_STATS"
+    "UI_WORLD_STATS",
+    "UI_NO_BANDS"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

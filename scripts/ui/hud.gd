@@ -841,46 +841,6 @@ func _refresh_diplomacy_panel() -> void:
 	content.append_text(text)
 
 
-func _history_event_text(event: Dictionary) -> String:
-	var capsule: String = _localized_chronicle_text(event, "capsule_key", "capsule_params", "description")
-	if not capsule.is_empty():
-		return capsule
-	var headline: String = _localized_chronicle_text(event, "headline_key", "headline_params", "description")
-	if not headline.is_empty():
-		return headline
-	return str(event.get("description", Locale.ltr("UI_HISTORY_EMPTY")))
-
-
-func _localized_chronicle_text(event: Dictionary, key_field: String, params_field: String, fallback_field: String) -> String:
-	var locale_key: String = str(event.get(key_field, ""))
-	var params_raw: Variant = event.get(params_field, {})
-	var params: Dictionary = params_raw if params_raw is Dictionary else {}
-	if not locale_key.is_empty():
-		return Locale.trf(locale_key, params)
-	var fallback: String = str(event.get(fallback_field, ""))
-	if fallback.is_empty():
-		return ""
-	return Locale.ltr(fallback) if Locale.has_key(fallback) else fallback
-
-
-func _history_type_color(event_type: String) -> String:
-	match event_type:
-		"band", "band_formation", "band.promotion":
-			return "#b89030"
-		"leader", "band.leader_elected":
-			return "#d0a030"
-		"build", "construction", "build_complete":
-			return "#c88818"
-		"death", "death_event":
-			return "#c04050"
-		"birth", "birth_event":
-			return "#40a080"
-		"diplomacy":
-			return "#8868c0"
-		"craft":
-			return "#48a828"
-		_:
-			return "#7088a0"
 
 
 func _build_story_ui() -> void:

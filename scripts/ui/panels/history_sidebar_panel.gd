@@ -76,6 +76,13 @@ func _refresh() -> void:
 	var events_raw: Variant = response.get("items", [])
 	var events: Array = events_raw if events_raw is Array else []
 
+	# Sort by tick descending (newest first)
+	events.sort_custom(func(a: Variant, b: Variant) -> bool:
+		var tick_a: int = int(a.get("tick", a.get("end_tick", 0))) if a is Dictionary else 0
+		var tick_b: int = int(b.get("tick", b.get("end_tick", 0))) if b is Dictionary else 0
+		return tick_a > tick_b
+	)
+
 	if events.is_empty():
 		var empty := Label.new()
 		empty.text = Locale.ltr("UI_HISTORY_EMPTY")

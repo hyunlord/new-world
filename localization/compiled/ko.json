@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4772,
+    "active_key_count": 4773,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4772,
+    "key_count": 4773,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4285,6 +4285,7 @@
     "UI_NOTIF_WORLDSIM_STARTED_MODE_FMT": "{mode} 준비 완료! 인구: {n}",
     "UI_NOT_IMPLEMENTED": "미구현",
     "UI_NO_BAND": "무리 없음 (방랑자)",
+    "UI_NO_BANDS": "소속된 밴드가 없습니다",
     "UI_NO_DATA": "데이터 없음",
     "UI_NO_EVENTS": "기록된 사건이 없습니다",
     "UI_NO_ITEMS": "소지품 없음",
