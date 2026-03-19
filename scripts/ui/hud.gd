@@ -1807,15 +1807,6 @@ func _sync_zoom_level_from_camera(force_refresh: bool = false) -> void:
 	_update_bottom_bar_button_states()
 	_update_zoom_context_text(zoom_level)
 	_refresh_selection_summary()
-	# Fade sidebar when zoom level makes current inspector irrelevant
-	if _right_panel_container != null and _entity_detail_panel_open:
-		if zoom_level >= 3 and _selected_entity_id >= 0 and _current_right_panel_tab == RIGHT_PANEL_TAB_INSPECTOR:
-			if _right_panel_container.modulate.a > 0.55:
-				var fade_tween := create_tween()
-				fade_tween.tween_property(_right_panel_container, "modulate:a", 0.5, 0.3)
-		elif _right_panel_container.modulate.a < 0.95:
-			var restore_tween := create_tween()
-			restore_tween.tween_property(_right_panel_container, "modulate:a", 1.0, 0.2)
 
 
 func _update_overlay_buttons_for_zoom() -> void:
@@ -2427,6 +2418,18 @@ func _process(delta: float) -> void:
 	_update_bottom_bar_perf(delta)
 	_sync_zoom_level_from_camera()
 
+	# Sidebar fade at irrelevant zoom (lerpf per frame for smooth transition)
+	if _right_panel_container != null and _entity_detail_panel_open:
+		var should_fade: bool = (
+			_bottom_bar_current_zoom_level >= 3
+			and _selected_entity_id >= 0
+			and _current_right_panel_tab == RIGHT_PANEL_TAB_INSPECTOR
+		)
+		if should_fade and _right_panel_container.modulate.a > 0.55:
+			_right_panel_container.modulate.a = lerpf(_right_panel_container.modulate.a, 0.5, 0.1)
+		elif not should_fade and _right_panel_container.modulate.a < 0.95:
+			_right_panel_container.modulate.a = lerpf(_right_panel_container.modulate.a, 1.0, 0.15)
+
 	if _sim_engine:
 		var tick: int = _sim_engine.current_tick
 		_time_label.text = GameCalendar.format_full_datetime(tick)
@@ -2471,6 +2474,9 @@ func _process(delta: float) -> void:
 				_food_label.text = Locale.trf1("UI_RES_FOOD_FMT", "n", int(food)) + _food_trend
 				_wood_label.text = Locale.trf1("UI_RES_WOOD_FMT", "n", int(wood)) + _wood_trend
 				_stone_label.text = Locale.trf1("UI_RES_STONE_FMT", "n", int(stone)) + _stone_trend
+
+			# Update zoom context text with latest data
+			_update_zoom_context_text(_bottom_bar_current_zoom_level)
 
 			_alert_refresh_timer += maxf(delta, 0.0)
 			if _alert_refresh_timer >= ALERT_REFRESH_INTERVAL:
