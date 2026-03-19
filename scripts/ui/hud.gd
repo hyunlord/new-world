@@ -824,9 +824,6 @@ func _on_sidebar_meta_clicked(meta: Variant) -> void:
 
 
 
-	content.append_text(text)
-
-
 func _refresh_diplomacy_panel() -> void:
 	if _diplomacy_panel == null:
 		return
