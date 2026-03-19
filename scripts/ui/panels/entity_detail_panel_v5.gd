@@ -1078,17 +1078,42 @@ func _on_favorite_pressed() -> void:
 	pass
 
 
+var _clickable_callables: Dictionary = {}
+
 func _make_clickable_label(label: Label, entity_id: int) -> void:
+	var key: int = label.get_instance_id()
 	if entity_id < 0:
+		label.mouse_default_cursor_shape = Control.CURSOR_ARROW
+		label.remove_theme_color_override("font_color")
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if _clickable_callables.has(key):
+			if label.gui_input.is_connected(_clickable_callables[key]):
+				label.gui_input.disconnect(_clickable_callables[key])
+			_clickable_callables.erase(key)
 		return
+
 	label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
-	var captured_id: int = entity_id
-	label.gui_input.connect(func(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			SimulationBus.entity_selected.emit(captured_id)
-	)
 	label.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	# Disconnect old callable if exists
+	if _clickable_callables.has(key):
+		if label.gui_input.is_connected(_clickable_callables[key]):
+			label.gui_input.disconnect(_clickable_callables[key])
+
+	var captured_id: int = entity_id
+	var callable: Callable = func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_navigate_to_entity(captured_id)
+	_clickable_callables[key] = callable
+	label.gui_input.connect(callable)
+
+
+func _navigate_to_entity(entity_id: int) -> void:
+	if entity_id < 0:
+		return
+	SimulationBus.entity_selected.emit(entity_id)
+	SimulationBus.ui_notification.emit("focus_entity_%d" % entity_id, "command")
 
 
 # ---------------------------------------------------------------------------
