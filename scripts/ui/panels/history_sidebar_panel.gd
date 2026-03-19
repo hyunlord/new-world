@@ -4,6 +4,7 @@ const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
 var _ui_built: bool = false
 var _refresh_timer: float = 0.0
+var _cached_event_count: int = -1
 
 var _scroll: ScrollContainer
 var _content: VBoxContainer
@@ -82,6 +83,11 @@ func _refresh() -> void:
 		var tick_b: int = int(b.get("tick", b.get("end_tick", 0))) if b is Dictionary else 0
 		return tick_a > tick_b
 	)
+
+	# Skip rebuild if event count unchanged
+	if events.size() == _cached_event_count:
+		return
+	_cached_event_count = events.size()
 
 	if events.is_empty():
 		var empty := Label.new()

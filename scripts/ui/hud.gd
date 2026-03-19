@@ -708,6 +708,11 @@ func _switch_right_panel_tab(index: int) -> void:
 	elif index == RIGHT_PANEL_TAB_DIPLOMACY:
 		_refresh_diplomacy_panel()
 	_set_right_panel_tab_state()
+	# Open sidebar if switching to any non-inspector tab
+	if index != RIGHT_PANEL_TAB_INSPECTOR:
+		_open_right_sidebar()
+	elif _selected_entity_id >= 0 or _selected_building_id >= 0 or _selected_settlement_id >= 0:
+		_open_right_sidebar()
 
 
 func _hide_all_sidebar_tab_panels() -> void:
@@ -3204,6 +3209,30 @@ func _unhandled_input(event: InputEvent) -> void:
 				_toggle_entity_detail_sidebar()
 				get_viewport().set_input_as_handled()
 				return
+		elif event.keycode == KEY_G:
+			# Toggle Stats sidebar
+			if _entity_detail_panel_open and _current_right_panel_tab == RIGHT_PANEL_TAB_STATS:
+				_close_entity_detail_sidebar()
+			else:
+				_switch_right_panel_tab(RIGHT_PANEL_TAB_STATS)
+			get_viewport().set_input_as_handled()
+			return
+		elif event.keycode == KEY_C:
+			# Toggle Chronicle sidebar
+			if _entity_detail_panel_open and _current_right_panel_tab == RIGHT_PANEL_TAB_CHRONICLE:
+				_close_entity_detail_sidebar()
+			else:
+				_switch_right_panel_tab(RIGHT_PANEL_TAB_CHRONICLE)
+			get_viewport().set_input_as_handled()
+			return
+		elif event.keycode == KEY_E:
+			# Toggle Entity detail sidebar
+			if _entity_detail_panel_open and _current_right_panel_tab == RIGHT_PANEL_TAB_INSPECTOR:
+				_close_entity_detail_sidebar()
+			elif _selected_entity_id >= 0 or _selected_building_id >= 0 or _selected_settlement_id >= 0:
+				_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
+			get_viewport().set_input_as_handled()
+			return
 		elif event.keycode == KEY_ESCAPE:
 			if _pause_overlay != null and _pause_overlay.visible:
 				_hide_pause_overlay()
