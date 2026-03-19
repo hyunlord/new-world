@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4773,
+    "active_key_count": 4775,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4773,
+    "key_count": 4775,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -3853,6 +3853,8 @@
     "UI_BODY_STR": "근력",
     "UI_BODY_TOU": "강인함",
     "UI_BORN": "출생",
+    "UI_BTN_FAVORITE": "즐겨찾기",
+    "UI_BTN_FOLLOW": "추적",
     "UI_BUILDERS": "건설자",
     "UI_BUILDING": "건물",
     "UI_BUILDINGS": "건물",

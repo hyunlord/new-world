@@ -33,6 +33,8 @@ var _header_panel: PanelContainer
 var _header_name_label: Label
 var _header_meta_label: Label
 var _header_action_label: Label
+var _follow_button: Button
+var _favorite_button: Button
 var _tab_bar: TabBar
 var _tab_container: VBoxContainer
 
@@ -233,6 +235,25 @@ func _build_header() -> void:
 	_header_action_label.add_theme_font_size_override("font_size", 10)
 	_header_action_label.add_theme_color_override("font_color", Color(0.5, 0.58, 0.65))
 	info_vbox.add_child(_header_action_label)
+
+	# Action buttons (right side of header)
+	var action_col := VBoxContainer.new()
+	action_col.add_theme_constant_override("separation", 4)
+	hbox.add_child(action_col)
+
+	_follow_button = Button.new()
+	_follow_button.text = Locale.ltr("UI_BTN_FOLLOW")
+	_follow_button.custom_minimum_size = Vector2(28, 28)
+	_follow_button.add_theme_font_size_override("font_size", 10)
+	_follow_button.pressed.connect(_on_follow_pressed)
+	action_col.add_child(_follow_button)
+
+	_favorite_button = Button.new()
+	_favorite_button.text = Locale.ltr("UI_BTN_FAVORITE")
+	_favorite_button.custom_minimum_size = Vector2(28, 28)
+	_favorite_button.add_theme_font_size_override("font_size", 10)
+	_favorite_button.pressed.connect(_on_favorite_pressed)
+	action_col.add_child(_favorite_button)
 
 
 # ---------------------------------------------------------------------------
@@ -856,6 +877,7 @@ func _refresh_relationships() -> void:
 		name_label.text = display
 		name_label.add_theme_font_size_override("font_size", 10)
 		name_label.add_theme_color_override("font_color", Color.WHITE)
+		_make_clickable_label(name_label, int(entry.get("target_id", -1)))
 		vbox.add_child(name_label)
 
 		var stats_label := Label.new()
@@ -1015,8 +1037,11 @@ func _refresh_family() -> void:
 	var children: Array = children_raw if children_raw is Array else []
 
 	_family_father_label.text = _family_member_name(father_raw)
+	_make_clickable_label(_family_father_label, _family_member_id(father_raw))
 	_family_mother_label.text = _family_member_name(mother_raw)
+	_make_clickable_label(_family_mother_label, _family_member_id(mother_raw))
 	_family_spouse_label.text = _family_member_name(spouse_raw, Locale.ltr("UI_NONE"))
+	_make_clickable_label(_family_spouse_label, _family_member_id(spouse_raw))
 
 	if children.is_empty():
 		_family_children_label.text = Locale.ltr("UI_NONE")
@@ -1032,10 +1057,38 @@ func _refresh_family() -> void:
 	_family_kinship_label.text = "%s: %s" % [Locale.ltr("PANEL_FAMILY_KINSHIP"), Locale.ltr(kinship_keys[kinship_index])]
 
 
+func _family_member_id(raw: Variant) -> int:
+	if raw is Dictionary and not (raw as Dictionary).is_empty():
+		return int((raw as Dictionary).get("id", -1))
+	return -1
+
+
 func _family_member_name(raw: Variant, fallback: String = "") -> String:
 	if raw is Dictionary and not (raw as Dictionary).is_empty():
 		return str((raw as Dictionary).get("name", fallback if not fallback.is_empty() else Locale.ltr("PANEL_FAMILY_UNKNOWN")))
 	return fallback if not fallback.is_empty() else Locale.ltr("PANEL_FAMILY_UNKNOWN")
+
+
+func _on_follow_pressed() -> void:
+	if _selected_entity_id >= 0:
+		SimulationBus.follow_entity_requested.emit(_selected_entity_id)
+
+
+func _on_favorite_pressed() -> void:
+	pass
+
+
+func _make_clickable_label(label: Label, entity_id: int) -> void:
+	if entity_id < 0:
+		return
+	label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
+	var captured_id: int = entity_id
+	label.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			SimulationBus.entity_selected.emit(captured_id)
+	)
+	label.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 # ---------------------------------------------------------------------------
