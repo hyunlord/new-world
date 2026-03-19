@@ -1458,9 +1458,31 @@ func _show_resource_popup() -> void:
 	_resource_popup.move_to_front()
 
 
+func _on_alert_badge_clicked(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_STATS)
+		get_viewport().set_input_as_handled()
+
+
 func _on_band_badge_clicked(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_toggle_band_popup()
+		get_viewport().set_input_as_handled()
+
+
+func _on_settlement_badge_clicked(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var summary: Dictionary = _get_world_summary()
+		var settlements: Variant = summary.get("settlement_summaries", [])
+		if settlements is Array and not settlements.is_empty():
+			var first: Variant = settlements[0]
+			if first is Dictionary:
+				var sett_id: int = int(first.get("id", -1))
+				if sett_id >= 0:
+					open_settlement_detail(sett_id)
+					get_viewport().set_input_as_handled()
+					return
+		_switch_right_panel_tab(RIGHT_PANEL_TAB_STATS)
 		get_viewport().set_input_as_handled()
 
 
@@ -1957,12 +1979,18 @@ func _build_top_bar() -> void:
 	_weather_label = _make_label("", "hud", Color(0.6, 0.75, 0.85))
 	_alert_badge = _make_label("", "hud", Color(0.9, 0.3, 0.2))
 	_alert_badge.visible = false
+	_alert_badge.mouse_filter = Control.MOUSE_FILTER_STOP
+	_alert_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_alert_badge.gui_input.connect(_on_alert_badge_clicked)
 	_band_badge = _make_label("", "hud_secondary", Color(0.28, 0.64, 0.28))
 	_band_badge.visible = false
 	_band_badge.mouse_filter = Control.MOUSE_FILTER_STOP
 	_band_badge.gui_input.connect(_on_band_badge_clicked)
 	_settlement_badge = _make_label("", "hud_secondary", Color(0.41, 0.53, 0.66))
 	_settlement_badge.visible = false
+	_settlement_badge.mouse_filter = Control.MOUSE_FILTER_STOP
+	_settlement_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_settlement_badge.gui_input.connect(_on_settlement_badge_clicked)
 	_fps_label = _make_label("60", "hud_secondary", Color(0.5, 0.5, 0.5))
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -2477,6 +2505,35 @@ func _process(delta: float) -> void:
 
 			# Update zoom context text with latest data
 			_update_zoom_context_text(_bottom_bar_current_zoom_level)
+
+			# Per-settlement resource tooltip (only with 2+ settlements)
+			var settlements_raw: Variant = summary.get("settlement_summaries", [])
+			if settlements_raw is Array and settlements_raw.size() > 1:
+				var tooltip_lines: PackedStringArray = PackedStringArray()
+				for sett_raw: Variant in settlements_raw:
+					if not (sett_raw is Dictionary):
+						continue
+					var sett: Dictionary = sett_raw
+					var sett_detail: Variant = sett.get("settlement", {})
+					var sett_name: String = str(sett_detail.get("name", "")) if sett_detail is Dictionary else ""
+					var s_food: int = int(sett.get("food", 0))
+					var s_wood: int = int(sett.get("wood", 0))
+					var s_stone: int = int(sett.get("stone", 0))
+					if not sett_name.is_empty():
+						tooltip_lines.append("%s: %s%d %s%d %s%d" % [
+							sett_name,
+							Locale.ltr("UI_RES_FOOD_SHORT"), s_food,
+							Locale.ltr("UI_RES_WOOD_SHORT"), s_wood,
+							Locale.ltr("UI_RES_STONE_SHORT"), s_stone])
+				if not tooltip_lines.is_empty():
+					var tooltip_text: String = "\n".join(tooltip_lines)
+					_food_label.tooltip_text = tooltip_text
+					_wood_label.tooltip_text = tooltip_text
+					_stone_label.tooltip_text = tooltip_text
+			elif _food_label.tooltip_text != "":
+				_food_label.tooltip_text = ""
+				_wood_label.tooltip_text = ""
+				_stone_label.tooltip_text = ""
 
 			_alert_refresh_timer += maxf(delta, 0.0)
 			if _alert_refresh_timer >= ALERT_REFRESH_INTERVAL:
