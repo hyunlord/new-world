@@ -3,6 +3,7 @@ extends PanelContainer
 var _sim_engine: RefCounted
 var _ui_built: bool = false
 var _refresh_timer: float = 0.0
+var _cached_band_count: int = -1
 
 var _scroll: ScrollContainer
 var _content: VBoxContainer
@@ -81,6 +82,11 @@ func _refresh() -> void:
 		bands = _sim_engine.get_band_list()
 
 	_title_label.text = "%s (%d)" % [Locale.ltr("UI_TAB_FACTIONS_BANDS"), bands.size()]
+
+	# Skip rebuild if band count unchanged
+	if bands.size() == _cached_band_count:
+		return
+	_cached_band_count = bands.size()
 
 	if bands.is_empty():
 		var empty := Label.new()
