@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4776,
-  "key_count": 4776,
+  "active_key_count": 4779,
+  "key_count": 4779,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4295,6 +4295,7 @@
     "UI_PAUSE_SAVE": 4611,
     "UI_PAUSE_SETTINGS": 4612,
     "UI_PAUSE_TITLE": 4619,
+    "UI_PEOPLE_SUFFIX": 4776,
     "UI_PERSONALITY": 3735,
     "UI_PERSONALITY_AVERAGE": 4136,
     "UI_PERSONALITY_AVG": 3736,
@@ -4700,7 +4701,9 @@
     "UI_WORK": 4708,
     "UI_WORLD_STATISTICS": 3963,
     "UI_WORLD_STATS": 4771,
+    "UI_WORLD_VIEW": 4777,
     "UI_YES": 3964,
+    "UI_ZOOM_NEARBY": 4778,
     "UI_ZOOM_Z1": 4649,
     "UI_ZOOM_Z2": 4650,
     "UI_ZOOM_Z3": 4651,
@@ -9555,7 +9558,10 @@
     "UI_NO_BANDS",
     "UI_BTN_FAVORITE",
     "UI_BTN_FOLLOW",
-    "UI_BTN_FOLLOWING"
+    "UI_BTN_FOLLOWING",
+    "UI_PEOPLE_SUFFIX",
+    "UI_WORLD_VIEW",
+    "UI_ZOOM_NEARBY"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

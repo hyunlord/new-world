@@ -81,6 +81,7 @@ var _status_label: Label
 var _time_label: Label
 var _speed_label: Label
 var _pop_label: Label
+var _zoom_context_label: Label
 var _food_label: Label
 var _wood_label: Label
 var _stone_label: Label
@@ -1804,6 +1805,17 @@ func _sync_zoom_level_from_camera(force_refresh: bool = false) -> void:
 	_bottom_bar_current_zoom_level = zoom_level
 	_update_overlay_buttons_for_zoom()
 	_update_bottom_bar_button_states()
+	_update_zoom_context_text(zoom_level)
+	_refresh_selection_summary()
+	# Fade sidebar when zoom level makes current inspector irrelevant
+	if _right_panel_container != null and _entity_detail_panel_open:
+		if zoom_level >= 3 and _selected_entity_id >= 0 and _current_right_panel_tab == RIGHT_PANEL_TAB_INSPECTOR:
+			if _right_panel_container.modulate.a > 0.55:
+				var fade_tween := create_tween()
+				fade_tween.tween_property(_right_panel_container, "modulate:a", 0.5, 0.3)
+		elif _right_panel_container.modulate.a < 0.95:
+			var restore_tween := create_tween()
+			restore_tween.tween_property(_right_panel_container, "modulate:a", 1.0, 0.2)
 
 
 func _update_overlay_buttons_for_zoom() -> void:
@@ -1821,8 +1833,47 @@ func _update_overlay_buttons_for_zoom() -> void:
 		var channel: String = str(channel_variant)
 		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
 		if button != null:
+			var was_visible: bool = button.visible
 			button.visible = allowed_lookup.has(channel)
+			if button.visible and not was_visible:
+				button.modulate = Color(1.3, 1.3, 1.3, 1.0)
+				var flash_tween := create_tween()
+				flash_tween.tween_property(button, "modulate", Color.WHITE, 0.4)
 	_refresh_overlay_legend()
+
+
+func _update_zoom_context_text(zoom_level: int) -> void:
+	if _zoom_context_label == null:
+		return
+	var summary: Dictionary = _get_world_summary()
+	var pop: int = int(summary.get("total_population", 0))
+	var settlement_count: int = int(summary.get("settlement_count", 0))
+	var band_count: int = int(summary.get("band_count", 0))
+	var building_count: int = int(summary.get("building_count", 0))
+
+	match zoom_level:
+		0:
+			_zoom_context_label.text = "%d%s %s" % [pop, Locale.ltr("UI_PEOPLE_SUFFIX"), Locale.ltr("UI_ZOOM_NEARBY")]
+		1:
+			if settlement_count > 0:
+				_zoom_context_label.text = "%s %d · %s %d" % [
+					Locale.ltr("UI_SETTLEMENTS"), settlement_count,
+					Locale.ltr("UI_BUILDINGS"), building_count]
+			else:
+				_zoom_context_label.text = "%d%s" % [pop, Locale.ltr("UI_PEOPLE_SUFFIX")]
+		2:
+			_zoom_context_label.text = "%s %d · %s %d" % [
+				Locale.ltr("UI_SETTLEMENTS"), settlement_count,
+				Locale.ltr("UI_BANDS"), band_count]
+		3, 4:
+			var era_key: String = "ERA_STONE_AGE"
+			var summaries: Variant = summary.get("settlement_summaries", [])
+			if summaries is Array and not summaries.is_empty():
+				var first: Variant = summaries[0]
+				if first is Dictionary:
+					era_key = "ERA_" + str(first.get("tech_era", "stone_age")).to_upper()
+			_zoom_context_label.text = "%s · %s %d" % [
+				Locale.ltr(era_key), Locale.ltr("UI_TOTAL_POP"), pop]
 
 
 func _update_bottom_bar_perf(delta: float) -> void:
@@ -1932,6 +1983,10 @@ func _build_top_bar() -> void:
 	hbox.add_child(_era_label)
 	hbox.add_child(resource_container)
 	hbox.add_child(_building_label)
+	_zoom_context_label = Label.new()
+	_zoom_context_label.add_theme_font_size_override("font_size", 10)
+	_zoom_context_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+	hbox.add_child(_zoom_context_label)
 	hbox.add_child(spacer)
 	hbox.add_child(_weather_label)
 	hbox.add_child(_alert_badge)
@@ -4166,4 +4221,13 @@ func _refresh_selection_summary() -> void:
 				building_name = building_type
 			_bottom_bar_sel_label.text = "🏗 " + building_name
 			return
-	_bottom_bar_sel_label.text = ""
+	# No selection — show zoom-dependent context
+	match _bottom_bar_current_zoom_level:
+		2:
+			var summary: Dictionary = _get_world_summary()
+			var sc: int = int(summary.get("settlement_count", 0))
+			_bottom_bar_sel_label.text = "%s %d" % [Locale.ltr("UI_SETTLEMENTS"), sc] if sc > 0 else ""
+		3, 4:
+			_bottom_bar_sel_label.text = Locale.ltr("UI_WORLD_VIEW")
+		_:
+			_bottom_bar_sel_label.text = ""

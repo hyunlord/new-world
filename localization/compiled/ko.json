@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4776,
+    "active_key_count": 4779,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4776,
+    "key_count": 4779,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4333,6 +4333,7 @@
     "UI_PAUSE_SAVE": "저장 [미구현]",
     "UI_PAUSE_SETTINGS": "설정 [미구현]",
     "UI_PAUSE_TITLE": "WorldSim",
+    "UI_PEOPLE_SUFFIX": "명",
     "UI_PERSONALITY": "성격",
     "UI_PERSONALITY_AVERAGE": "무난하고 평범한 성격이다.",
     "UI_PERSONALITY_AVG": "평균 성격 (HEXACO)",
@@ -4738,7 +4739,9 @@
     "UI_WORK": "작업",
     "UI_WORLD_STATISTICS": "세계 통계",
     "UI_WORLD_STATS": "세계 통계",
+    "UI_WORLD_VIEW": "세계 전경",
     "UI_YES": "예",
+    "UI_ZOOM_NEARBY": "활동 중",
     "UI_ZOOM_Z1": "Z1 개인",
     "UI_ZOOM_Z2": "Z2 마을",
     "UI_ZOOM_Z3": "Z3 정착지",
